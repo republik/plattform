@@ -1,3 +1,0 @@
-Contact: mailto:security@republik.ch
-Contact: https://www.republik.ch/security
-Expires: 2023-12-31T23:59:00.000Z

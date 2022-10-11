@@ -14,7 +14,7 @@
     },
     {
       "key": "api/reclaim/verified",
-      "value": "Die von Ihnen eingegebene E-Mail-Adresse ist schon besetzt. Wir können Ihren Kauf daher nicht übertragen. Bitte melden Sie sich bei kontakt@republik.ch. (Pledge E-Mail: {pledgeEmail}, gewünschte E-Mail: {targetEmail})"
+      "value": "Die von Ihnen eingegebene E-Mail-Adresse ist schon besetzt. Wir können Ihren Kauf daher nicht übertragen. Bitte melden Sie sich bei info@lobbywatch.ch. (Pledge E-Mail: {pledgeEmail}, gewünschte E-Mail: {targetEmail})"
     },
     {
       "key": "api/membership/activate/hasPeriods",
@@ -54,7 +54,7 @@
     },
     {
       "key": "api/membership/monthly/reactivate",
-      "value": "Sie können nicht noch einmal ein Monatsabonnement kaufen. Bitte verlängern Sie Ihr Abonnement stattdessen in Ihrem Konto (www.republik.ch/konto)."
+      "value": "Sie können nicht noch einmal ein Monatsabonnement kaufen. Bitte verlängern Sie Ihr Abonnement stattdessen in Ihrem Konto (lobbywatch.ch/de/merci)."
     },
     {
       "key": "api/membership/reactivate/otherActive",
@@ -138,7 +138,7 @@
     },
     {
       "key": "api/pledge/paymentMethod/notAllowed",
-      "value": "Die von Ihnen gewählte Zahlungsart wird für das gewünschte Produkt nicht unterstützt. Bitte kontaktieren Sie uns unter kontakt@republik.ch."
+      "value": "Die von Ihnen gewählte Zahlungsart wird für das gewünschte Produkt nicht unterstützt. Bitte kontaktieren Sie uns unter info@lobbywatch.ch."
     },
     {
       "key": "api/pledge/reason",
@@ -202,7 +202,7 @@
     },
     {
       "key": "api/pay/stripe/subscription_payment_intent_requires_action",
-      "value": "Ihre Kreditkarte lässt sich nicht dazu verwenden, um ein Monats-Abo zu reaktivieren. Bitte melden Sie sich bei kontakt@republik.ch"
+      "value": "Ihre Kreditkarte lässt sich nicht dazu verwenden, um ein Monats-Abo zu reaktivieren. Bitte melden Sie sich bei info@lobbywatch.ch"
     },
     {
       "key": "api/paypal/deny",
@@ -210,11 +210,11 @@
     },
     {
       "key": "api/paypal/contactUs",
-      "value": "Während des Zahlungsverfahrens mit PayPal ist ein Problem aufgetreten, das zu einem nicht vorhersehbaren Resultat geführt hat. Bitte nehmen Sie Kontakt mit uns auf unter kontakt@republik.ch. Sie sollten es nicht erneut versuchen, da die Buchung möglicherweise bereits akzeptiert wurde."
+      "value": "Während des Zahlungsverfahrens mit PayPal ist ein Problem aufgetreten, das zu einem nicht vorhersehbaren Resultat geführt hat. Bitte nehmen Sie Kontakt mit uns auf unter info@lobbywatch.ch. Sie sollten es nicht erneut versuchen, da die Buchung möglicherweise bereits akzeptiert wurde."
     },
     {
       "key": "api/paypal/delayed",
-      "value": "Ihre PayPal-Zahlung ist noch nicht bei uns eingetroffen. Falls Sie innerhalb von einigen Stunden nichts von uns hören, kontaktieren Sie uns bitte unter kontakt@republik.ch. Sie sollten es nicht erneut versuchen, da die Buchung höchstwahrscheinlich bereits akzeptiert wurde und noch verarbeitet wird."
+      "value": "Ihre PayPal-Zahlung ist noch nicht bei uns eingetroffen. Falls Sie innerhalb von einigen Stunden nichts von uns hören, kontaktieren Sie uns bitte unter info@lobbywatch.ch. Sie sollten es nicht erneut versuchen, da die Buchung höchstwahrscheinlich bereits akzeptiert wurde und noch verarbeitet wird."
     },
     {
       "key": "api/pay/pspPayload/parseFailed",
@@ -226,7 +226,7 @@
     },
     {
       "key": "api/pledge/mail/subject",
-      "value": "Ihr Republik-Abo: Willkommen bei der Republik!"
+      "value": "Ihre Lobbywatch-Mitgliedschaft: Willkommen!"
     },
     {
       "key": "api/payment/received/mail/subject",
@@ -234,15 +234,15 @@
     },
     {
       "key": "api/email/subscription/payment/failed/subject",
-      "value": "Ihr Republik-Abo: Ihre Kreditkarte funktioniert nicht mehr"
+      "value": "Ihre Lobbywatch-Mitgliedschaft: Ihre Kreditkarte funktioniert nicht mehr"
     },
     {
       "key": "api/email/subscription/deactivated/subject",
-      "value": "Ihr letzter Tag an Bord der Republik"
+      "value": "Ihr letzter Tag an Bord von Lobbywatch"
     },
     {
       "key": "api/email/subscription/reactivated/subject",
-      "value": "Ihr Republik-Abo: Sie sind wieder da!"
+      "value": "Ihre Lobbywatch-Mitgliedschaft: Sie sind wieder da!"
     },
     {
       "key": "api/users/merge/sourceAndTargetIdentical",
@@ -254,7 +254,7 @@
     },
     {
       "key": "api/email/payment/reminder/subject",
-      "value": "Erinnerung: Republik-Abonnement"
+      "value": "Erinnerung: Lobbywatch-Mitgliedschaft"
     },
     {
       "key": "api/pledge/404",
@@ -302,7 +302,7 @@
     },
     {
       "key": "api/payment/subscription/threeDsecure/notSupported",
-      "value": "Es tut uns leid, aus technischen Gründen können wir zurzeit kein Abonnement auf eine Kreditkarte buchen, die 3D Secure voraussetzt. Sie können es entweder mit einer anderen Karte versuchen oder uns kontaktieren unter: kontakt@republik.ch. "
+      "value": "Es tut uns leid, aus technischen Gründen können wir zurzeit kein Abonnement auf eine Kreditkarte buchen, die 3D Secure voraussetzt. Sie können es entweder mit einer anderen Karte versuchen oder uns kontaktieren unter: info@lobbywatch.ch. "
     },
     {
       "key": "api/email/change/exists",
@@ -326,11 +326,11 @@
     },
     {
       "key": "api/email/membership_prolong_notice/subject",
-      "value": "Ihre Republik-Mitgliedschaft wurde verlängert"
+      "value": "Ihre Lobbywatch-Mitgliedschaft wurde verlängert"
     },
     {
       "key": "api/email/pledge_abo/subject",
-      "value": "Ihre Mitgliedschaft: Willkommen bei der Republik"
+      "value": "Ihre Mitgliedschaft: Willkommen bei Lobbywatch"
     },
     {
       "key": "api/email/pledge_abo_give/subject",
@@ -342,7 +342,7 @@
     },
     {
       "key": "api/email/pledge_monthly_abo/subject",
-      "value": "Ihr Abo: Willkommen bei der Republik"
+      "value": "Ihr Abo: Willkommen bei Lobbywatch"
     },
     {
       "key": "api/email/pledge_donate/subject",
@@ -350,7 +350,7 @@
     },
     {
       "key": "api/email/pledge_benefactor/subject",
-      "value": "Ihre Mitgliedschaft: Willkommen bei der Republik"
+      "value": "Ihre Mitgliedschaft: Willkommen bei Lobbywatch"
     },
     {
       "key": "api/email/pledge_prolong/subject",
@@ -358,7 +358,7 @@
     },
     {
       "key": "api/email/pledge_tablebook/subject",
-      "value": "Ihre Bestellung: Buch «Republik bei Stromausfall»"
+      "value": "Ihre Bestellung: Buch «Lobbywatch bei Stromausfall»"
     },
     {
       "key": "api/email/payment_successful_abo/subject",
@@ -406,27 +406,27 @@
     },
     {
       "key": "api/email/option/goodie/tablebook/1",
-      "value": "Buch «Republik bei Stromausfall»"
+      "value": "Buch «Lobbywatch bei Stromausfall»"
     },
     {
       "key": "api/email/option/goodie/tablebook/other",
-      "value": "Bücher «Republik bei Stromausfall»"
+      "value": "Bücher «Lobbywatch bei Stromausfall»"
     },
     {
       "key": "api/email/option/goodie/mask/1",
-      "value": "Republik-Maske"
+      "value": "Lobbywatch-Maske"
     },
     {
       "key": "api/email/option/goodie/mask/other",
-      "value": "Republik-Masken"
+      "value": "Lobbywatch-Masken"
     },
     {
       "key": "api/email/option/goodie/fondue/1",
-      "value": "Republik-Fondue"
+      "value": "Lobbywatch-Fondue"
     },
     {
       "key": "api/email/option/goodie/fondue/other",
-      "value": "Republik-Fondues"
+      "value": "Lobbywatch-Fondues"
     },
     {
       "key": "api/email/option/membershiptype/abo/1",
@@ -558,7 +558,7 @@
     },
     {
       "key": "api/membership/cancel/category/UNCERTAIN_FUTURE",
-      "value": "Unsichere Zukunft der Republik"
+      "value": "Ihr Abo: Willkommen bei Lobbywatch"
     },
     {
       "key": "api/email/membership_cancel_notice/subject",
@@ -577,20 +577,20 @@
       "value": "Geschenk eingelöst"
     },
     {
-      "key": "api/email/membership_claimer_onboarding/REPUBLIK/subject",
-      "value": "Ihr Abo: Willkommen bei der Republik"
+      "key": "api/email/membership_claimer_onboarding/Lobbywatch/subject",
+      "value": "Ihr Abo: Willkommen bei Lobbywatch"
     },
     {
       "key": "api/email/membership_claimer_onboarding/PROJECT_R/subject",
-      "value": "Ihre Mitgliedschaft: Willkommen bei der Republik"
+      "value": "Ihre Mitgliedschaft: Willkommen bei Lobbywatch"
     },
     {
       "key": "api/email/membership_claimer_onboarding/subject",
-      "value": "Willkommen bei der Republik"
+      "value": "Willkommen bei Lobbywatch"
     },
     {
       "key": "api/email/membership_winback_NO_TIME/subject",
-      "value": "Das Beste der Republik"
+      "value": "Das Beste von Lobbywatch"
     },
     {
       "key": "api/email/membership_winback_TOO_EXPENSIVE/subject",
@@ -606,7 +606,7 @@
     },
     {
       "key": "api/email/membership_winback/fromEmail",
-      "value": "kontakt@republik.ch"
+      "value": "info@lobbywatch.ch"
     },
     {
       "key": "api/email/membership_winback/fromName",
@@ -614,7 +614,7 @@
     },
     {
       "key": "api/email/membership_owner_prolong_notice/subject",
-      "value": "Bleiben Sie an Bord oder möchten Sie die Republik verlassen? Sie haben die Wahl"
+      "value": "Bleiben Sie an Bord oder möchten Sie die Lobbywatch verlassen? Sie haben die Wahl"
     },
     {
       "key": "api/email/membership_owner_prolong_notice_7/subject",
@@ -658,7 +658,7 @@
     },
     {
       "key": "api/email/membership_deactivated_abo_give_months_uncancelled/subject",
-      "value": "Ihr Republik-Abonnement wurde deaktiviert"
+      "value": "Ihre Lobbywatch-Mitgliedschaft wurde deaktiviert"
     },
     {
       "key": "api/email/membership_deactivated/subject",
@@ -721,6 +721,10 @@
       "value": "Anonym"
     },
     {
+      "key": "api/comment/id/invalid",
+      "value": "Das hat nicht geklappt. Die Kommentar-ID scheint ungültig. Bitte laden Sie die Seite neu und versuchen Sie den Komentar erneut abzusenden."
+    },
+    {
       "key": "api/comment/id/duplicate",
       "value": "ID-Kollision! Ups, da ist etwas schiefgelaufen. Bitte laden Sie die Seite neu und versuchen Sie den Komentar erneut abzusenden."
     },
@@ -734,7 +738,7 @@
     },
     {
       "key": "api/comment/notification/new/app/icon",
-      "value": "https://cdn.repub.ch/frontend/static/apple-touch-icon.png"
+      "value": "https://lobbywatch.ch/apple-touch-icon.png"
     },
     {
       "key": "api/comment/notification/new/app/subject",
@@ -794,7 +798,7 @@
     },
     {
       "key": "api/newsletters/update/token/invalid",
-      "value": "Ihre Newsletter-Einstellungen konnten nicht aktualisiert werden, bitte melden Sie sich bei kontakt@republik.ch."
+      "value": "Ihre Newsletter-Einstellungen konnten nicht aktualisiert werden, bitte melden Sie sich bei info@lobbywatch.ch."
     },
     {
       "key": "api/newsletters/update/interestIdNotSupported",
@@ -822,7 +826,7 @@
     },
     {
       "key": "api/newsletters/request/READALOUD/subject",
-      "value": "Die Republik zum Hören: Anmeldung bestätigen"
+      "value": "Die Lobbywatch zum Hören: Anmeldung bestätigen"
     },
     {
       "key": "api/newsletters/request/notSupported",
@@ -1162,7 +1166,7 @@
     },
     {
       "key": "api/access/email/recipient/invitation_kampa202202/subject",
-      "value": "Einladung von {granterName} für acht Wochen Republik"
+      "value": "Einladung von {granterName} für acht Wochen Lobbywatch"
     },
     {
       "key": "api/access/email/recipient/invitation_gifted_membership/subject",
@@ -1170,11 +1174,11 @@
     },
     {
       "key": "api/access/email/recipient/onboarding/subject",
-      "value": "Ihr Republik-Testzugang: Willkommen!"
+      "value": "Ihr Lobbywatch-Testzugang: Willkommen!"
     },
     {
       "key": "api/access/email/recipient/onboarding_kampa202202/subject",
-      "value": "Ihr Republik-Probezugang: Willkommen!"
+      "value": "Ihr Lobbywatch-Probezugang: Willkommen!"
     },
     {
       "key": "api/access/email/recipient/onboarding_gifted_membership/subject",
@@ -1182,7 +1186,7 @@
     },
     {
       "key": "api/access/email/recipient/recommendations/subject",
-      "value": "Leseempfehlungen aus der Republik"
+      "value": "Leseempfehlungen von Lobbywatch"
     },
     {
       "key": "api/access/email/recipient/expired/subject",
@@ -1198,7 +1202,7 @@
     },
     {
       "key": "api/access/email/granter/claim_notice/subject",
-      "value": "Republik-Testzugang von {recipientName} aktiviert"
+      "value": "Lobbywatch-Testzugang von {recipientName} aktiviert"
     },
     {
       "key": "api/access/email/granter/claim_notice_gifted_membership/subject",
@@ -1218,6 +1222,10 @@
     },
     {
       "key": "api/access/revoke/role/error",
+      "value": "Sie besitzen nicht die erforderliche Berechtigung."
+    },
+    {
+      "key": "api/access/terminate/role/error",
       "value": "Sie besitzen nicht die erforderliche Berechtigung."
     },
     {
@@ -1694,7 +1702,7 @@
     },
     {
       "key": "api/signin/app/title",
-      "value": "Republik"
+      "value": "Lobbywatch"
     },
     {
       "key": "api/signin/app/body",
@@ -1982,43 +1990,43 @@
     },
     {
       "key": "api/email/payment/reminder/default/subject",
-      "value": "Zahlungserinnerung Republik"
+      "value": "Zahlungserinnerung Lobbywatch"
     },
     {
       "key": "api/email/payment/reminder/ABO/subject",
-      "value": "Zahlungserinnerung Republik-Mitgliedschaft"
+      "value": "Zahlungserinnerung Lobbywatch-Mitgliedschaft"
     },
     {
       "key": "api/email/payment/reminder/PROLONG/subject",
-      "value": "Zahlungserinnerung Republik-Mitgliedschaft"
+      "value": "Zahlungserinnerung Lobbywatch-Mitgliedschaft"
     },
     {
       "key": "api/email/payment/reminder/DONATE/subject",
-      "value": "Zahlungserinnerung Republik-Spende"
+      "value": "Zahlungserinnerung Lobbywatch-Spende"
     },
     {
       "key": "api/email/payment/reminder/BENEFACTOR/subject",
-      "value": "Zahlungserinnerung Republik-Mitgliedschaft"
+      "value": "Zahlungserinnerung Lobbywatch-Mitgliedschaft"
     },
     {
       "key": "api/email/payment/reminder/last/default/subject",
-      "value": "LETZTE MAHNUNG Republik"
+      "value": "LETZTE MAHNUNG Lobbywatch"
     },
     {
       "key": "api/email/payment/reminder/last/ABO/subject",
-      "value": "LETZTE MAHNUNG Republik-Mitgliedschaft"
+      "value": "LETZTE MAHNUNG Lobbywatch-Mitgliedschaft"
     },
     {
       "key": "api/email/payment/reminder/last/PROLONG/subject",
-      "value": "LETZTE MAHNUNG Republik-Mitgliedschaft"
+      "value": "LETZTE MAHNUNG Lobbywatch-Mitgliedschaft"
     },
     {
       "key": "api/email/payment/reminder/last/DONATE/subject",
-      "value": "LETZTE MAHNUNG Republik-Spende"
+      "value": "LETZTE MAHNUNG Lobbywatch-Spende"
     },
     {
       "key": "api/email/payment/reminder/last/BENEFACTOR/subject",
-      "value": "LETZTE MAHNUNG Republik-Mitgliedschaft"
+      "value": "LETZTE MAHNUNG Lobbywatch-Mitgliedschaft"
     },
     {
       "key": "api/repo/phase/draft",
@@ -2082,7 +2090,7 @@
     },
     {
       "key": "api/invoices/creditor/PROJECT_R",
-      "value": "{address}\n\nwww.republik.ch\nkontakt@republik.ch"
+      "value": "{address}\n\nlobbywatch.ch\ninfo@lobbywatch.ch"
     },
     {
       "key": "api/invoices/creditor",
@@ -2150,27 +2158,27 @@
     },
     {
       "key": "api/invoices/option/Goodie/TABLEBOOK/1",
-      "value": "Buch «Republik bei Stromausfall»"
+      "value": "Buch «Lobbywatch bei Stromausfall»"
     },
     {
       "key": "api/invoices/option/Goodie/TABLEBOOK/other",
-      "value": "Bücher «Republik bei Stromausfall»"
+      "value": "Bücher «Lobbywatch bei Stromausfall»"
     },
     {
       "key": "api/invoices/option/Goodie/MASK/1",
-      "value": "Republik-Maske"
+      "value": "Lobbywatch-Maske"
     },
     {
       "key": "api/invoices/option/Goodie/MASK/other",
-      "value": "Republik-Masken"
+      "value": "Lobbywatch-Masken"
     },
     {
       "key": "api/invoices/option/Goodie/FONDUE/1",
-      "value": "Republik-Fondue"
+      "value": "Lobbywatch-Fondue"
     },
     {
       "key": "api/invoices/option/Goodie/FONDUE/other",
-      "value": "Republik-Fondues"
+      "value": "Lobbywatch-Fondues"
     },
     {
       "key": "api/invoices/option/MembershipType/ABO/1",
@@ -2241,23 +2249,23 @@
       "value": "#{sequenceNumber}\n{period}"
     },
     {
-      "key": "api/republik/revenueStats/segment/membership",
+      "key": "api/Lobbywatch/revenueStats/segment/membership",
       "value": "Jahresmitgliedschaften"
     },
     {
-      "key": "api/republik/revenueStats/segment/give",
+      "key": "api/Lobbywatch/revenueStats/segment/give",
       "value": "Mitgliedschaften und Monats-Abos als Geschenk"
     },
     {
-      "key": "api/republik/revenueStats/segment/abo",
+      "key": "api/Lobbywatch/revenueStats/segment/abo",
       "value": "Monats-Abos"
     },
     {
-      "key": "api/republik/revenueStats/segment/goodie",
+      "key": "api/Lobbywatch/revenueStats/segment/goodie",
       "value": "Waren wie Bücher, Taschen, Masken und Fondues"
     },
     {
-      "key": "api/republik/revenueStats/segment/donation",
+      "key": "api/Lobbywatch/revenueStats/segment/donation",
       "value": "Spenden"
     },
     {
@@ -2291,6 +2299,130 @@
     {
       "key": "api/email/card/visa",
       "value": "Visa-Kreditkarte"
+    },
+    {
+      "key": "api/offer/status/label",
+      "value": "{type} {since}"
+    },
+    {
+      "key": "api/offer/status/label/type",
+      "value": "Zugang"
+    },
+    {
+      "key": "api/offer/status/label/type/ABO",
+      "value": "Mitglied"
+    },
+    {
+      "key": "api/offer/status/label/type/BENEFACTOR_ABO",
+      "value": "Mitglied"
+    },
+    {
+      "key": "api/offer/status/label/type/MONTHLY_ABO",
+      "value": "Abo"
+    },
+    {
+      "key": "api/offer/status/label/type/ABO_GIVE_MONTHS",
+      "value": "Abo"
+    },
+    {
+      "key": "api/offer/status/label/since",
+      "value": "seit {firstDay}"
+    },
+    {
+      "key": "api/offer/status/description",
+      "value": "{due}"
+    },
+    {
+      "key": "api/offer/status/description/type",
+      "value": "Ihr Zugriff"
+    },
+    {
+      "key": "api/offer/status/description/type/ABO",
+      "value": "Ihre Jahresmitgliedschaft"
+    },
+    {
+      "key": "api/offer/status/description/type/BENEFACTOR_ABO",
+      "value": "Ihre Gönner-Mitgliedschaft"
+    },
+    {
+      "key": "api/offer/status/description/type/MONTHLY_ABO",
+      "value": "Ihr Monats-Abo"
+    },
+    {
+      "key": "api/offer/status/description/type/ABO_GIVE_MONTHS",
+      "value": "Ihr Monats-Abo"
+    },
+    {
+      "key": "api/offer/status/description/due/active:false/renew:false",
+      "value": "{type} endete am {endDate}."
+    },
+    {
+      "key": "api/offer/status/description/due/active:true/renew:false",
+      "value": "{type} läuft noch bis zum {endDate}."
+    },
+    {
+      "key": "api/offer/status/description/due/active:false/renew:true",
+      "value": "{type} lief am {endDate} aus."
+    },
+    {
+      "key": "api/offer/status/description/due/active:true/renew:true",
+      "value": "Ihr nächster Beitrag ist am {endDate} fällig."
+    },
+    {
+      "key": "api/offer/status/description/due/active:true/renew:true/ABO",
+      "value": "Ihr nächster Mitgliederbeitrag ist am {endDate} fällig."
+    },
+    {
+      "key": "api/offer/status/description/due/active:true/renew:true/BENEFACTOR_ABO",
+      "value": "Ihr nächster Mitgliederbeitrag ist am {endDate} fällig."
+    },
+    {
+      "key": "api/offer/status/description/due/active:true/renew:true/MONTHLY_ABO",
+      "value": "Ihr Monats-Abo wird am {endDate} verlängert."
+    },
+    {
+      "key": "api/offer/status/description/due/active:true/renew:true/ABO_GIVE_MONTHS",
+      "value": "Ihr Monats-Abo als Geschenk wird am {endDate} verlängert."
+    },
+    {
+      "key": "api/package/option/reward:MembershipType:ABO",
+      "value": "Regulär"
+    },
+    {
+      "key": "api/package/option/reward:MembershipType:BENEFACTOR_ABO",
+      "value": "Gönner"
+    },
+    {
+      "key": "api/package/option/reward:MembershipType:MONTHLY_ABO",
+      "value": "Regulär"
+    },
+    {
+      "key": "api/package/option/reward:MembershipType:ABO_GIVE_MONTHS",
+      "value": "Regulär"
+    },
+    {
+      "key": "api/package/option/reward:Goodie:NOTEBOOK",
+      "value": "Notizbuch"
+    },
+    {
+      "key": "api/package/option/reward:Goodie:TOTEBAG",
+      "value": "Tasche"
+    },
+    {
+      "key": "api/package/option/reward:Goodie:TABLEBOOK",
+      "value": "Buch «Lobbywatch bei Stromausfall»"
+    },
+    {
+      "key": "api/package/option/reward:Goodie:MASK",
+      "value": "Lobbywatch-Maske"
+    },
+    {
+      "key": "api/package/option/reward:Goodie:FONDUE",
+      "value": "Lobbywatch-Fondue"
+    },
+    {
+      "key": "api/package:DONATE/option/order:100",
+      "value": "Spende"
     },
     {
       "key": "api/publikator/editMemo/error/404",
@@ -2347,6 +2479,30 @@
     {
       "key": "api/calendar/slot/error/404",
       "value": "Kalendereintrag nicht gefunden"
+    },
+    {
+      "key": "api/publikator/repo/404",
+      "value": "Repo existiert nicht"
+    },
+    {
+      "key": "api/publikator/file/404",
+      "value": "Datei existiert nicht"
+    },
+    {
+      "key": "api/publikator/file/commitError",
+      "value": "Datei kann nicht mehr committed werden."
+    },
+    {
+      "key": "api/publikator/file/notYours",
+      "value": "Datei wurde von anderem Nutzer angelegt."
+    },
+    {
+      "key": "api/publikator/file/updateError",
+      "value": "Datei kann nicht geändert werden."
+    },
+    {
+      "key": "api/publikator/file/changePublicError",
+      "value": "Die Veröffentlichung der Datei kann nicht zurückgezogen werden."
     }
   ]
 }
