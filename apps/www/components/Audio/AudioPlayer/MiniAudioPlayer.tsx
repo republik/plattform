@@ -89,6 +89,8 @@ const MiniAudioPlayer = ({
   handleOpenArticle,
   hasError,
 }: MiniAudioPlayerProps) => {
+  if (!activeItem) return null
+
   const {
     document: {
       meta: { title, path, image, format, audioCoverCrop },
