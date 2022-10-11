@@ -41,27 +41,29 @@ const FilesPage = ({ router }) => {
       <Frame.Body raw>
         <Container>
           <Upload repoId={repoId} />
-          <Table>
-            <thead>
-              <Tr>
-                <Th style={{ width: '70%' }}>Datei</Th>
-                <Th style={{ width: '30%' }}></Th>
-              </Tr>
-            </thead>
-            <tbody>
-              {data?.repo?.files?.map((file) => (
-                <Tr key={file.id}>
-                  <Td>
-                    <File file={file} />
-                    <Details file={file} />
-                  </Td>
-                  <Td style={{ textAlign: 'right' }}>
-                    <Publish file={file} />
-                  </Td>
+          {data?.repo?.files?.length && (
+            <Table>
+              <thead>
+                <Tr>
+                  <Th style={{ width: '70%' }}>Datei</Th>
+                  <Th style={{ width: '30%' }}></Th>
                 </Tr>
-              ))}
-            </tbody>
-          </Table>
+              </thead>
+              <tbody>
+                {data.repo.files.map((file) => (
+                  <Tr key={file.id}>
+                    <Td>
+                      <File file={file} />
+                      <Details file={file} />
+                    </Td>
+                    <Td style={{ textAlign: 'right' }}>
+                      <Publish file={file} />
+                    </Td>
+                  </Tr>
+                ))}
+              </tbody>
+            </Table>
+          )}
         </Container>
       </Frame.Body>
     </Frame>
