@@ -5,6 +5,7 @@ import {
   mediaQueries,
   fontStyles,
   useColorContext,
+  SearchMenuIcon,
 } from '@project-r/styleguide'
 
 import withT from '../../lib/withT'
@@ -79,6 +80,15 @@ export const SecondaryNav = ({
           >
             {t('navbar/discussion')}
           </NavLink>
+          <NavLink
+            href='/suche'
+            active={active}
+            title={t('pages/search/title')}
+            noPlaceholder
+            minifeed
+          >
+            <SearchMenuIcon {...colorScheme.set('fill', 'text')} size={18} />
+          </NavLink>
         </div>
       ) : (
         secondaryNav && (
@@ -122,6 +132,8 @@ const styles = {
     height: SUBHEADER_HEIGHT,
     left: 0,
     right: 0,
+    display: 'flex',
+    alignItems: 'baseline',
     WebkitOverflowScrolling: 'touch',
     scrollbarWidth: 'none' /* Firefox */,
     msOverflowStyle: 'none' /* IE 10+ */,
@@ -129,7 +141,7 @@ const styles = {
       display: 'none',
     },
     [mediaQueries.mUp]: {
-      textAlign: 'center',
+      justifyContent: 'center',
     },
     '& a': {
       display: 'inline-block',
@@ -140,7 +152,7 @@ const styles = {
       '::after': {
         ...fontStyles.sansSerifMedium,
         display: 'block',
-        content: 'attr(title)',
+        content: 'attr(data-placeholder)',
         height: 0,
         overflow: 'hidden',
         visibility: 'hidden',
