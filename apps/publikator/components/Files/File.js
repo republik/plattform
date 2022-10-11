@@ -1,8 +1,7 @@
 import LockIcon from 'react-icons/lib/md/lock'
 import PublicIcon from 'react-icons/lib/md/public'
 
-import { IconButton } from '@project-r/styleguide'
-import { ReadingTimeIcon } from '@project-r/styleguide/dist/components/Icons'
+import { IconButton, ReadingTimeIcon } from '@project-r/styleguide'
 
 export default ({ file }) => {
   const isPublic = file.status === 'PUBLIC'
