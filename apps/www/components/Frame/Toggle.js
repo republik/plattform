@@ -16,6 +16,7 @@ import {
 } from '../constants'
 import useAudioQueue from '../Audio/hooks/useAudioQueue'
 import { useAudioContext } from '../Audio/AudioProvider'
+import { trackEvent } from '../../lib/matomo'
 
 const SIZE = 28
 const PADDING_MOBILE = Math.floor((HEADER_HEIGHT_MOBILE - SIZE) / 2)
@@ -46,8 +47,13 @@ const Toggle = ({ expanded, closeOverlay, ...props }) => {
     if (expanded) {
       return closeOverlay && closeOverlay()
     }
-    setAudioPlayerExpanded(true)
-    setAudioPlayerVisible(true)
+    if (!audioPlayerExpanded) {
+      setAudioPlayerExpanded(true)
+    }
+    if (!audioPlayerVisible) {
+      trackEvent(['Navigation', 'toggleAudioPlayer', audioItemsCount])
+      setAudioPlayerVisible(true)
+    }
   }
 
   return (

@@ -234,7 +234,7 @@ const ActionBar = ({
 
   const play = (trackKey) => (e) => {
     e.preventDefault()
-    trackEvent(['ActionBar', trackKey, meta.url])
+    trackEvent(['ActionBar', trackKey, document.id])
     toggleAudioPlayer({
       id: document.id,
       meta: {
@@ -474,8 +474,10 @@ const ActionBar = ({
         e.preventDefault()
         if (itemInAudioQueue) {
           await removeAudioQueueItem(itemInAudioQueue.id)
+          trackEvent(['ActionBar', 'rmAudioQueue', document.id])
         } else {
           await addAudioQueueItem(document)
+          trackEvent(['ActionBar', 'addToAudioQueue', document.id])
         }
         // TODO: handle error
       },
