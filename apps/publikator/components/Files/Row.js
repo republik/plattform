@@ -60,7 +60,7 @@ const File = ({ file }) => {
       <Td>
         <IconButton
           Icon={Icon}
-          href={!disabled && file.url}
+          href={!disabled ? file.url : undefined}
           target='_blank'
           label={file.name}
           labelShort={file.name}
