@@ -3,7 +3,7 @@ import PublicIcon from 'react-icons/lib/md/public'
 
 import { IconButton, ReadingTimeIcon } from '@project-r/styleguide'
 
-export default ({ file }) => {
+const File = ({ file }) => {
   const isPublic = file.status === 'PUBLIC'
   const isReady = ['PUBLIC', 'PRIVATE'].includes(file.status)
 
@@ -26,3 +26,5 @@ export default ({ file }) => {
     />
   )
 }
+
+export default File

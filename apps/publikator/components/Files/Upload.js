@@ -38,7 +38,7 @@ const styles = {
   }),
 }
 
-export default ({ repoId }) => {
+const Upload = ({ repoId }) => {
   const [uploading, setUploading] = useState(false)
   const [progress, setProgress] = useState(100)
 
@@ -135,3 +135,5 @@ export default ({ repoId }) => {
     </Dropzone>
   )
 }
+
+export default Upload

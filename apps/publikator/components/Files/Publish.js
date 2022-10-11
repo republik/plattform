@@ -13,7 +13,7 @@ const UPDATE_ASSET = gql`
   ${RepoFile}
 `
 
-export default ({ file }) => {
+const Publish = ({ file }) => {
   const [update, { loading }] = useMutation(UPDATE_ASSET)
 
   const onClick = () => {
@@ -34,3 +34,5 @@ export default ({ file }) => {
 
   return null
 }
+
+export default Publish

@@ -8,7 +8,7 @@ const styles = {
   }),
 }
 
-export default ({ file }) => {
+const Details = ({ file }) => {
   const isReady = ['PUBLIC', 'PRIVATE'].includes(file.status)
   const isPublic = file.status === 'PUBLIC'
 
@@ -28,3 +28,5 @@ export default ({ file }) => {
     </div>
   )
 }
+
+export default Details
