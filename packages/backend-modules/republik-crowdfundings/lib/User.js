@@ -16,6 +16,10 @@ const getCustomPackages = async ({ user, crowdfundingName, pgdb }) => {
         'endDate >': now,
       })
 
+  if (crowdfundings.length === 0) {
+    return []
+  }
+
   const packages = await pgdb.public.packages.find({
     crowdfundingId: crowdfundings.map((crowdfunding) => crowdfunding.id),
     custom: true,
