@@ -121,7 +121,7 @@ export default withT(({ t, editor, node, onInputChange, format }) => {
           </MetaOption>
         )}
       </MetaOptionGroup>
-      {/*<MetaOptionGroupTitle>Audio-Cover und Vorschau</MetaOptionGroupTitle>
+      <MetaOptionGroupTitle>Audio-Cover und Vorschau</MetaOptionGroupTitle>
       <MetaOption>
         <ImageCrop
           image={node.data.get('image')}
@@ -129,7 +129,7 @@ export default withT(({ t, editor, node, onInputChange, format }) => {
           onChange={(crop) => onChange('audioCoverCrop')(crop)}
           format={format}
         />
-      </MetaOption>*/}
+      </MetaOption>
     </MetaSection>
   )
 })

@@ -309,7 +309,7 @@ const Header = ({
                   </a>
                 </Link>
               ) : (
-                <Link href='/angebote' passHref>
+                <Link href='/angebote' passHref prefetch={false}>
                   <a
                     data-hide-if-me='true'
                     {...styles.button}
