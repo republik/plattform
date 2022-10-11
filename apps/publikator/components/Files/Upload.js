@@ -1,10 +1,10 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { gql, useMutation } from '@apollo/client'
 import Dropzone from 'react-dropzone'
 import axios from 'axios'
 import { css } from 'glamor'
 
-import { ProgressCircle } from '@project-r/styleguide'
+import { ProgressCircle, useColorContext } from '@project-r/styleguide'
 
 import { RepoFile } from '../../lib/graphql/fragments'
 
@@ -28,24 +28,33 @@ const UPLOAD_COMMIT = gql`
   ${RepoFile}
 `
 
-const styles = {
-  dropzone: css({
-    height: '15rem',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    margin: '2rem 0',
-  }),
-}
-
 const Upload = ({ repoId }) => {
+  const [colorScheme] = useColorContext()
   const [uploading, setUploading] = useState(false)
   const [progress, setProgress] = useState(100)
 
   const [uploadBegin] = useMutation(UPLOAD_BEGIN)
   const [uploadCommit] = useMutation(UPLOAD_COMMIT)
 
-  // @TODO handle rejected files
+  const styles = useMemo(
+    () => ({
+      dropzone: css({
+        height: '11rem',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        border: '3px dashed',
+        margin: '2rem 0',
+        borderColor: colorScheme.getCSSColor('divider'),
+      }),
+      dropzoneActive: css({
+        borderColor: colorScheme.getCSSColor('primary'),
+        backgroundColor: colorScheme.getCSSColor('alert'),
+      }),
+    }),
+    [colorScheme],
+  )
+
   const onDrop = async (accepted) => {
     setUploading(true)
     setProgress(0)
@@ -110,6 +119,7 @@ const Upload = ({ repoId }) => {
       disablePreview
       disabled={uploading}
       className={styles.dropzone.toString()}
+      activeClassName={styles.dropzoneActive.toString()}
       onDrop={onDrop}
     >
       {({ isDragActive }) => {
