@@ -6,8 +6,9 @@ import { RepoFile } from '../../lib/graphql/fragments'
 
 import Frame from '../Frame'
 import Nav from '../Edit/Nav'
-import { Table, Tr, Th, Td } from '../Table'
+import { Table, Tr, Th } from '../Table'
 
+import Info from './Info'
 import Upload from './Upload'
 import Row from './Row'
 
@@ -38,6 +39,7 @@ const FilesPage = ({ router }) => {
       </Frame.Header>
       <Frame.Body raw>
         <Container>
+          <Info />
           <Upload repoId={repoId} />
           {!!data?.repo?.files?.length && (
             <Table>
