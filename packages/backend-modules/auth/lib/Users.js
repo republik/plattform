@@ -799,7 +799,7 @@ const updateUserEmail = async ({ pgdb, user, email }) => {
       globalMergeVars: [
         {
           name: 'LOGIN_LINK',
-          content: `${FRONTEND_BASE_URL}/konto?${querystring.stringify({
+          content: `${FRONTEND_BASE_URL}/de/merci?${querystring.stringify({
             email,
           })}`,
         },

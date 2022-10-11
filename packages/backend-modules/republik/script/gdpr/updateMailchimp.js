@@ -112,12 +112,12 @@ PgDb.connect()
     })
     console.log(`#users: ${users.length}`)
 
-    let operations = []
+    const operations = []
 
     const newsletterName = 'PROJECTR'
     const subscribed = 1
     let numSubscribeUrls = 0
-    let emailsWithSubscribeUrl = diffInput && []
+    const emailsWithSubscribeUrl = diffInput && []
 
     // this is only correct as long as PRIVACY is not REVOKEable
     const privacyConsentsUserIds = await pgdb.queryOneColumn(`
@@ -145,7 +145,7 @@ PgDb.connect()
         if (!user || missingConsent(user.id)) {
           const mac = authenticate(email, newsletterName, subscribed)
           const base64uMail = base64u.encode(email)
-          subscribeUrl = `https://www.republik.ch/mitteilung?type=newsletter-subscription&name=${newsletterName}&subscribed=${subscribed}&context=gdpr&email=${base64uMail}&mac=${mac}`
+          subscribeUrl = `https://lobbywatch.ch/de/message?type=newsletter-subscription&name=${newsletterName}&subscribed=${subscribed}&context=gdpr&email=${base64uMail}&mac=${mac}`
         }
         operations.push({
           method: 'PUT',

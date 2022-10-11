@@ -24,7 +24,7 @@ const argv: { email: string; name: string } = yargs
 const { email, name } = argv
 
 const hmac = authenticate(email, name, 1, t)
-const confirmLink = `${FRONTEND_BASE_URL}/mitteilung?type=newsletter&name=${name}&subscribed=1&email=${base64u.encode(
+const confirmLink = `${FRONTEND_BASE_URL}/de/message?type=newsletter&name=${name}&subscribed=1&email=${base64u.encode(
   email,
 )}&mac=${hmac}&context=newsletter`
 

@@ -72,127 +72,15 @@ const envMergeVars = [
   },
   {
     name: 'link_signin',
-    content: `${FRONTEND_BASE_URL}/anmelden`,
-  },
-  {
-    name: 'link_claim_contextless',
-    content: `${FRONTEND_BASE_URL}/abholen`,
+    content: `${FRONTEND_BASE_URL}/de/merci`,
   },
   {
     name: 'link_account',
-    content: `${FRONTEND_BASE_URL}/konto`,
-  },
-  {
-    name: 'link_account_goto',
-    content: `${FRONTEND_BASE_URL}/angebote?goto=account`,
-  },
-  {
-    name: 'link_account_abos',
-    content: `${FRONTEND_BASE_URL}/konto#abos`,
-  },
-  {
-    name: 'link_account_abos_goto',
-    content: `${FRONTEND_BASE_URL}/angebote?goto=account`,
-  },
-  {
-    name: 'link_account_newsletter',
-    content: `${FRONTEND_BASE_URL}/konto/newsletter`,
+    content: `${FRONTEND_BASE_URL}/de/merci`,
   },
   {
     name: 'link_account_share',
     content: `${FRONTEND_BASE_URL}/teilen`,
-  },
-  {
-    name: 'link_account_account',
-    content: `${FRONTEND_BASE_URL}/konto#account`,
-  },
-  {
-    name: 'link_account_notifications',
-    content: `${FRONTEND_BASE_URL}/konto/benachrichtigungen`,
-  },
-  {
-    name: 'link_account_progress',
-    content: `${FRONTEND_BASE_URL}/konto/einstellungen#position`,
-  },
-  {
-    name: 'link_account_signin_method',
-    content: `${FRONTEND_BASE_URL}/konto/einstellungen#anmeldung`,
-  },
-  {
-    name: 'link_profile',
-    content: `${FRONTEND_BASE_URL}/~me`,
-  },
-  {
-    name: 'link_bookmarks',
-    content: `${FRONTEND_BASE_URL}/lesezeichen`,
-  },
-  {
-    name: 'link_offers_overview',
-    content: `${FRONTEND_BASE_URL}/angebote`,
-  },
-  {
-    name: 'link_offers',
-    content: `${FRONTEND_BASE_URL}/angebote?package=ABO`,
-  },
-  {
-    name: 'link_offer_abo',
-    content: `${FRONTEND_BASE_URL}/angebote?package=ABO`,
-  },
-  {
-    name: 'link_offer_monthly_abo',
-    content: `${FRONTEND_BASE_URL}/angebote?package=MONTHLY_ABO`,
-  },
-  {
-    name: 'link_offer_benefactor',
-    content: `${FRONTEND_BASE_URL}/angebote?package=BENEFACTOR`,
-  },
-  {
-    name: 'link_offer_donate',
-    content: `${FRONTEND_BASE_URL}/angebote?package=DONATE`,
-  },
-  {
-    name: 'link_offer_abo_give',
-    content: `${FRONTEND_BASE_URL}/angebote?package=ABO_GIVE`,
-  },
-  {
-    name: 'link_offer_reduced_ausbildung',
-    content: `${FRONTEND_BASE_URL}/angebote?package=ABO&userPrice=1&price=14000&reason=Ausbildung%3A%20`,
-  },
-  {
-    name: 'link_dialog',
-    content: `${FRONTEND_BASE_URL}/dialog`,
-  },
-  {
-    name: 'link_app',
-    content: `${FRONTEND_BASE_URL}/app`,
-  },
-  {
-    name: 'link_manual',
-    content: `${FRONTEND_BASE_URL}/anleitung`,
-  },
-  {
-    name: 'link_listen',
-    content: `${FRONTEND_BASE_URL}/vorgelesen`,
-  },
-  {
-    name: 'link_cockpit',
-    content: `${FRONTEND_BASE_URL}/cockpit`,
-  },
-  {
-    name: 'link_about',
-    content: `${FRONTEND_BASE_URL}/about`,
-  },
-  {
-    name: 'link_publisher',
-    content: `${FRONTEND_BASE_URL}/verlag`,
-  },
-  {
-    name: 'link_projectr',
-    content: 'https://project-r.construction/',
-  },
-  {
-    name: 'link_project_r',
-    content: 'https://project-r.construction/news',
   },
 ]
 

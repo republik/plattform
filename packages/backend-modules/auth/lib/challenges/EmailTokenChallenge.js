@@ -44,7 +44,7 @@ module.exports = {
     const geoString = country === 'Schweiz' ? 'der Schweiz' : country
 
     const verificationUrl =
-      `${FRONTEND_BASE_URL}/mitteilung?` +
+      `${FRONTEND_BASE_URL}/de/message?` +
       querystring.stringify({
         context,
         type: 'token-authorization',
