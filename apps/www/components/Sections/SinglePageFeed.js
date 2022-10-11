@@ -38,7 +38,7 @@ const getFeedDocuments = gql`
 
 const mapNodes = (node) => node.entity
 
-const SectionFeed = ({ t, formats, variables: variablesObject }) => {
+const SinglePageFeed = ({ t, formats, variables: variablesObject }) => {
   if (!variablesObject && !(formats && formats.length)) {
     return null
   }
@@ -60,4 +60,4 @@ const SectionFeed = ({ t, formats, variables: variablesObject }) => {
   )
 }
 
-export default compose(withT)(SectionFeed)
+export default compose(withT)(SinglePageFeed)

@@ -19,7 +19,6 @@ import {
   colors,
   plainLinkRule,
   Interaction,
-  mediaQueries,
   TitleBlock,
   Editorial,
   Flyer,
@@ -67,8 +66,8 @@ import FormatFeed from '../Feed/Format'
 import StatusError from '../StatusError'
 import NewsletterSignUp from '../Auth/NewsletterSignUp'
 import ArticleGallery from '../Gallery/ArticleGallery'
-import SectionNav from '../Sections/SectionNav'
-import SectionFeed from '../Sections/SectionFeed'
+import SectionNav from '../Sections/SinglePageNav'
+import SectionFeed from '../Sections/SinglePageFeed'
 import HrefLink from '../Link/Href'
 import { withMarkAsReadMutation } from '../Notifications/enhancers'
 import { cleanAsPath } from '../../lib/utils/link'

@@ -1,13 +1,13 @@
 import compose from 'lodash/flowRight'
 import { withRouter } from 'next/router'
 import Frame from '../components/Frame'
-import Nav from '../components/Frame/Popover/Nav'
 import Search from '../components/Search'
 import { enforceMembership } from '../components/Auth/withMembership'
 import withT from '../lib/withT'
 
 import { CDN_FRONTEND_BASE_URL } from '../lib/constants'
 import { withDefaultSSR } from '../lib/apollo/helpers'
+import FeaturedSections from '../components/Sections/Featured'
 
 const SearchPage = ({ router, t }) => {
   const meta = {
@@ -19,7 +19,7 @@ const SearchPage = ({ router, t }) => {
     <Frame hasOverviewNav meta={meta}>
       <Search query={router.query} />
       {router.query && Object.keys(router.query).length === 0 && (
-        <Nav router={router} />
+        <FeaturedSections />
       )}
     </Frame>
   )

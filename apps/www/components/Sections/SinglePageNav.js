@@ -29,7 +29,7 @@ const styles = {
   }),
 }
 
-const SectionNav = ({ color, linkedDocuments = { nodes: [] } }) => {
+const SinglePageNav = ({ color, linkedDocuments = { nodes: [] } }) => {
   if (linkedDocuments.nodes.length < 1) {
     return null
   }
@@ -57,4 +57,4 @@ const SectionNav = ({ color, linkedDocuments = { nodes: [] } }) => {
   )
 }
 
-export default SectionNav
+export default SinglePageNav
