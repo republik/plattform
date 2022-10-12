@@ -54,7 +54,7 @@ import createLiveTeasers from './liveTeasers'
 import { ColorContextProvider } from '../../components/Colors/ColorContext'
 
 const playFn = (onPlay, { urlMeta }) =>
-  urlMeta?.audioSourceKind === 'readAloud' && (() => onplay(urlMeta.documentId))
+  urlMeta?.audioSourceKind === 'readAloud' && (() => onPlay(urlMeta.documentId))
 
 export const subject = {
   matchMdast: matchHeading(2),

@@ -32,6 +32,8 @@ import Link from 'next/link'
 import { useGetFrontQuery } from './graphql/getFrontQuery.graphql'
 import { useRouter } from 'next/router'
 import { useMe } from '../../lib/context/MeContext'
+import { useAudioContext } from '../Audio/AudioProvider'
+import useAudioQueue from '../Audio/hooks/useAudioQueue'
 
 const styles = {
   prepublicationNotice: css({
@@ -48,12 +50,19 @@ const styles = {
 
 export const RenderFront = ({ isEditor, front, nodes }) => {
   const { t } = useTranslation()
+  const { addAudioQueueItem } = useAudioQueue()
+  const { toggleAudioPlayer } = useAudioContext()
+
   const schema = useMemo(
     () =>
       createFrontSchema({
-        // TODO: fix this link
         Link: HrefLink,
-        playAudio: (x) => console.log('play from schema', x),
+        playAudio: (id) => {
+          addAudioQueueItem({ id }).then(({ data: { audioQueueItems } }) => {
+            const item = audioQueueItems.find((i) => i.document.id === id)
+            toggleAudioPlayer(item.document)
+          })
+        },
         CommentLink,
         DiscussionLink,
         ...withData,
