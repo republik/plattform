@@ -18,7 +18,11 @@ export type AudioElementState = {
 
 type AudioPlaybackElementProps = Pick<
   AudioPlayerProps,
-  'activeItem' | 'autoPlay' | 'playbackRate' | 'setWebHandlers'
+  | 'activeItem'
+  | 'autoPlay'
+  | 'playbackRate'
+  | 'setWebHandlers'
+  | 'setHasAutoPlayed'
 > & {
   actions: Pick<
     AudioPlayerProps['actions'],
@@ -31,12 +35,14 @@ const AudioPlaybackElement = ({
   autoPlay,
   playbackRate,
   setWebHandlers,
+  setHasAutoPlayed,
   actions: { onEnded, handleError, syncWithMediaElement },
 }: AudioPlaybackElementProps) => {
   const mediaRef = useRef<HTMLMediaElement>(null)
   const trackedPlayerItem = useRef<AudioQueueItem>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [isPlaying, setIsPlaying] = useState(false)
+  const [preventOnCanPlay, setPreventOnCanPlay] = useState(false)
 
   // Pass on the state of the media-element to the UI
   const syncStateWithUI = useCallback(() => {
@@ -91,6 +97,7 @@ const AudioPlaybackElement = ({
 
       // Don't call on play if already playing, unless the activeItem has changed
       if ((activeItemHasChanged || !isPlaying) && autoPlay) {
+        setHasAutoPlayed()
         await onPlay()
       }
     } catch (error) {

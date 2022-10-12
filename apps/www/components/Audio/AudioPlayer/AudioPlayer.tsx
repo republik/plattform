@@ -76,6 +76,7 @@ const styles = {
 const AudioPlayer = ({
   isVisible,
   setWebHandlers,
+  setHasAutoPlayed,
   activeItem,
   queue,
   autoPlay,
@@ -245,6 +246,7 @@ const AudioPlayer = ({
           {activeItem && !inNativeApp && (
             <AudioPlaybackElement
               setWebHandlers={setWebHandlers}
+              setHasAutoPlayed={setHasAutoPlayed}
               activeItem={activeItem}
               playbackRate={playbackRate}
               autoPlay={autoPlay}

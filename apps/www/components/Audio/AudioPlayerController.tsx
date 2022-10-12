@@ -41,6 +41,7 @@ enum NativeAudioPlayerState {
 export type AudioPlayerProps = {
   isVisible: boolean
   setWebHandlers: (handlers: AudioEventHandlers) => void
+  setHasAutoPlayed: () => void
   activeItem: AudioQueueItem | null
   queue: AudioQueueItem[]
   autoPlay?: boolean
@@ -396,6 +397,7 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
         setShouldAutoPlay(true)
         return
       }
+
       const nextUp = audioQueue[0]
       setActivePlayerItem(nextUp)
       setOptimisticTimeUI(nextUp)
@@ -488,6 +490,7 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
       {children({
         isVisible,
         setWebHandlers,
+        setHasAutoPlayed: () => setShouldAutoPlay(false),
         activeItem: activePlayerItem,
         queue: audioQueue,
         autoPlay: shouldAutoPlay,
