@@ -798,7 +798,7 @@ const updateUserEmail = async ({ pgdb, user, email }) => {
       templateName: 'cf_email_change_new_address',
       globalMergeVars: [
         {
-          name: 'LOGIN_LINK',
+          name: 'LOGIN_LINK', // ToDo: multi language
           content: `${FRONTEND_BASE_URL}/de/merci?${querystring.stringify({
             email,
           })}`,

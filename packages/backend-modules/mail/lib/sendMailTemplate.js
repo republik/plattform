@@ -71,11 +71,11 @@ const envMergeVars = [
     content: ASSETS_SERVER_BASE_URL,
   },
   {
-    name: 'link_signin',
+    name: 'link_signin', // ToDo: multi language
     content: `${FRONTEND_BASE_URL}/de/merci`,
   },
   {
-    name: 'link_account',
+    name: 'link_account', // ToDo: multi language
     content: `${FRONTEND_BASE_URL}/de/merci`,
   },
   {

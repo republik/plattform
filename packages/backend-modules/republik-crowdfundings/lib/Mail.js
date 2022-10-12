@@ -21,44 +21,19 @@ const dateFormat = timeFormat('%x')
 const {
   MAILCHIMP_INTEREST_PLEDGE,
   MAILCHIMP_INTEREST_MEMBER,
-  MAILCHIMP_INTEREST_MEMBER_BENEFACTOR,
-  MAILCHIMP_INTEREST_GRANTED_ACCESS,
-  MAILCHIMP_INTEREST_NEWSLETTER_DAILY,
-  MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY,
-  MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR,
-  MAILCHIMP_INTEREST_NEWSLETTER_ACCOMPLICE,
-  MAILCHIMP_INTEREST_NEWSLETTER_CLIMATE,
-  MAILCHIMP_INTEREST_NEWSLETTER_READALOUD,
+  MAILCHIMP_INTEREST_NEWSLETTER_GERMAN,
+  MAILCHIMP_INTEREST_NEWSLETTER_FRENCH,
   FRONTEND_BASE_URL,
 } = process.env
 
 const mail = createMail([
   {
-    name: 'DAILY',
-    interestId: MAILCHIMP_INTEREST_NEWSLETTER_DAILY,
+    name: 'GERMAN',
+    interestId: MAILCHIMP_INTEREST_NEWSLETTER_GERMAN,
   },
   {
-    name: 'WEEKLY',
-    interestId: MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY,
-  },
-  {
-    name: 'PROJECTR',
-    interestId: MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR,
-  },
-  {
-    name: 'ACCOMPLICE',
-    interestId: MAILCHIMP_INTEREST_NEWSLETTER_ACCOMPLICE,
-    visibleToRoles: ['accomplice'],
-  },
-  {
-    name: 'CLIMATE',
-    interestId: MAILCHIMP_INTEREST_NEWSLETTER_CLIMATE,
-    invisible: true,
-  },
-  {
-    name: 'READALOUD',
-    interestId: MAILCHIMP_INTEREST_NEWSLETTER_READALOUD,
-    invisible: true,
+    name: 'FRENCH',
+    interestId: MAILCHIMP_INTEREST_NEWSLETTER_FRENCH,
   },
 ])
 
@@ -108,15 +83,12 @@ const getInterestsForUser = async ({
   const interests = {
     [MAILCHIMP_INTEREST_PLEDGE]: hasPledge,
     [MAILCHIMP_INTEREST_MEMBER]: hasMembership,
-    [MAILCHIMP_INTEREST_MEMBER_BENEFACTOR]: isBenefactor,
-    [MAILCHIMP_INTEREST_GRANTED_ACCESS]: hasGrantedAccess,
   }
 
   if (subscribeToEditorialNewsletters && (hasMembership || hasGrantedAccess)) {
-    // Autosubscribe all newsletters when new user just paid the membersh.
-    interests[MAILCHIMP_INTEREST_NEWSLETTER_DAILY] = true
-    interests[MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY] = true
-    interests[MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR] = true
+    // Autosubscribe newsletter when new user just paid the membersh.
+    interests[MAILCHIMP_INTEREST_NEWSLETTER_GERMAN] = true // ToDo: multi language
+    interests[MAILCHIMP_INTEREST_NEWSLETTER_FRENCH] = false
   }
 
   return interests
