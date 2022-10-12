@@ -54,7 +54,9 @@ import createLiveTeasers from './liveTeasers'
 import { ColorContextProvider } from '../../components/Colors/ColorContext'
 
 const playFn = (onPlay, { urlMeta }) =>
-  urlMeta?.audioSourceKind === 'readAloud' && (() => onPlay(urlMeta.documentId))
+  onPlay &&
+  urlMeta?.audioSourceKind === 'readAloud' &&
+  (() => onPlay(urlMeta.documentId))
 
 export const subject = {
   matchMdast: matchHeading(2),
@@ -87,7 +89,7 @@ const DefaultLink = ({ children }) => children
 const createFrontSchema = ({
   Link = DefaultLink,
   t = () => '',
-  playAudio = (x) => console.log('playing', x),
+  playAudio,
   noEmpty = true,
   ...rest
 } = {}) => {

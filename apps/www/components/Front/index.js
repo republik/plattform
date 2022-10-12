@@ -51,20 +51,22 @@ const styles = {
 
 export const RenderFront = ({ isEditor, front, nodes }) => {
   const { t } = useTranslation()
-  const { addAudioQueueItem } = useAudioQueue()
+  const { addAudioQueueItem, isAudioQueueAvailable } = useAudioQueue()
   const { toggleAudioPlayer } = useAudioContext()
 
   const schema = useMemo(
     () =>
       createFrontSchema({
         Link: HrefLink,
-        playAudio: (id) => {
-          addAudioQueueItem({ id }).then(({ data: { audioQueueItems } }) => {
-            const item = audioQueueItems.find((i) => i.document.id === id)
-            toggleAudioPlayer(item.document)
-            trackEvent(['Front', 'playAudio', id])
-          })
-        },
+        playAudio:
+          isAudioQueueAvailable &&
+          ((id) => {
+            addAudioQueueItem({ id }).then(({ data: { audioQueueItems } }) => {
+              const item = audioQueueItems.find((i) => i.document.id === id)
+              toggleAudioPlayer(item.document)
+              trackEvent(['Front', 'playAudio', id])
+            })
+          }),
         CommentLink,
         DiscussionLink,
         ...withData,
