@@ -82,6 +82,7 @@ export const subject = {
 const DefaultLink = ({ children }) => children
 
 const createFrontSchema = ({
+  onPlay = (x) => console.log('onPlay', x),
   Link = DefaultLink,
   t = () => '',
   noEmpty = true,
@@ -242,7 +243,11 @@ const createFrontSchema = ({
     }),
     component: ({ children, attributes, ...props }) => (
       <Link href={props.url}>
-        <TeaserFrontImage attributes={attributes} {...props}>
+        <TeaserFrontImage
+          onPlay={() => onPlay(props)}
+          attributes={attributes}
+          {...props}
+        >
           {children}
         </TeaserFrontImage>
       </Link>
@@ -297,7 +302,11 @@ const createFrontSchema = ({
     matchMdast: matchTeaserType('frontSplit'),
     component: ({ children, attributes, ...props }) => (
       <Link href={props.url}>
-        <TeaserFrontSplit attributes={attributes} {...props}>
+        <TeaserFrontSplit
+          onPlay={() => onPlay(props)}
+          attributes={attributes}
+          {...props}
+        >
           {children}
         </TeaserFrontSplit>
       </Link>
@@ -355,7 +364,11 @@ const createFrontSchema = ({
     matchMdast: matchTeaserType('frontTypo'),
     component: ({ children, attributes, ...props }) => (
       <Link href={props.url}>
-        <TeaserFrontTypo attributes={attributes} {...props}>
+        <TeaserFrontTypo
+          onPlay={() => onPlay(props)}
+          attributes={attributes}
+          {...props}
+        >
           {children}
         </TeaserFrontTypo>
       </Link>
@@ -408,7 +421,11 @@ const createFrontSchema = ({
     component: ({ children, attributes, ...props }) => (
       <ColorContextProvider colorSchemeKey='light'>
         <Link href={props.url}>
-          <TeaserFrontTile attributes={attributes} {...props}>
+          <TeaserFrontTile
+            onPlay={() => onPlay(props)}
+            attributes={attributes}
+            {...props}
+          >
             {children}
           </TeaserFrontTile>
         </Link>
@@ -542,7 +559,11 @@ const createFrontSchema = ({
     component: ({ children, attributes, ...props }) => {
       return (
         <Link href={props.url}>
-          <TeaserCarouselTile attributes={attributes} {...props}>
+          <TeaserCarouselTile
+            onPlay={() => onPlay(props)}
+            attributes={attributes}
+            {...props}
+          >
             {children}
           </TeaserCarouselTile>
         </Link>
@@ -614,7 +635,11 @@ const createFrontSchema = ({
     matchMdast: matchTeaserType('carousel'),
     component: ({ children, attributes, ...props }) => {
       return (
-        <TeaserCarousel attributes={attributes} {...props}>
+        <TeaserCarousel
+          onPlay={() => onPlay(props)}
+          attributes={attributes}
+          {...props}
+        >
           {children}
         </TeaserCarousel>
       )
