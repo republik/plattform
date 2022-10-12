@@ -76,7 +76,7 @@ const handleSubscribe = (data) => {
   return {
     email: data.email,
     customer: getGroups('Customer', data),
-    newsletter: getGroups('Republik NL', data),
+    newsletter: getGroups('Newsletter', data),
   }
 }
 
@@ -101,7 +101,7 @@ const handleUnsubscribe = (data) => {
     reason: data.reason,
     campaign: data.campaign_id,
     customer: getGroups('Customer', data),
-    newsletter: getGroups('Republik NL', data),
+    newsletter: getGroups('Newsletter', data),
   }
 }
 
@@ -120,7 +120,7 @@ const handleProfile = (data) => {
   return {
     email: data.email,
     customer: getGroups('Customer', data),
-    newsletter: getGroups('Republik NL', data),
+    newsletter: getGroups('Newsletter', data),
   }
 }
 
