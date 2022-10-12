@@ -5,6 +5,7 @@ import {
   mediaQueries,
   plainButtonRule,
   useColorContext,
+  fontStyles,
 } from '@project-r/styleguide'
 import { css } from 'glamor'
 import {
@@ -105,6 +106,7 @@ const styles = {
     },
   }),
   audioCount: css({
+    ...fontStyles.sansSerifMedium,
     position: 'absolute',
     fontSize: 10,
     top: 15,
