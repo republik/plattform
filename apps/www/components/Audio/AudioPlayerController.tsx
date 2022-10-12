@@ -178,30 +178,17 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
   const syncWithNativeApp = useCallback(
     (state: AppAudioPlayerState) => {
       if (!inNativeApp) return
-      // If the update provides an ID, and the ID is not equal to the active item,
-      // Skip the UI update.
-      if (
-        state.itemId &&
-        activePlayerItem &&
-        state.itemId !== activePlayerItem.id
-      ) {
-        console.log(
-          'Received update for outdated track-item. Skipping UI update',
-        )
-        return
-      }
-      // only update the optimistic UI if the track-player has started to play
       console.log(
         'update from app',
         JSON.stringify({
           playerState: state.playerState,
         }),
       )
+      // only update the optimistic UI if the track-player has started to play
       if (
         ![
           NativeAudioPlayerState.None,
           NativeAudioPlayerState.Connecting,
-          NativeAudioPlayerState.Ready,
         ].includes(state.playerState)
       ) {
         setDuration(state.duration)
