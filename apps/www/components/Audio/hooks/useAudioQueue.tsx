@@ -1,6 +1,9 @@
 import { useInNativeApp } from '../../../lib/withInNativeApp'
 import compareVersion from '../../../lib/react-native/CompareVersion'
-import { NEW_AUDIO_API_VERSION } from '../constants'
+import {
+  AUDIO_PLAYER_TRACK_CATEGORY,
+  NEW_AUDIO_API_VERSION,
+} from '../constants'
 import {
   AddAudioQueueItemMutationData,
   AUDIO_QUEUE_QUERY,
@@ -20,12 +23,22 @@ import { useMe } from '../../../lib/context/MeContext'
 import createPersistedState from '../../../lib/hooks/use-persisted-state'
 import { AudioPlayerItem } from '../types/AudioPlayerItem'
 import { ApolloError, FetchResult } from '@apollo/client'
+import { trackEvent } from '../../../lib/matomo'
+import OptimisticQueueResponseHelper from '../helpers/OptimisticQueueResponseHelper'
 
-const usePersistedAudioState =
-  createPersistedState<AudioQueueItem>('audioState')
+const TRACK_NAME = 'AudioQueue'
+
+const usePersistedAudioState = createPersistedState<AudioQueueItem>(
+  'audio-player-local-state',
+)
 
 /**
- * useAudioQueue provides all playlist-data as well as operations to manage the playlist.
+ * useAudioQueue acts as a provider for the audio queue and all it's mutations.
+ * Additionally, it provides the user-progress for all queued audio-items.
+ *d
+ * For users with an active membership, the queue is synchronized with the server.
+ * For users without an active membership, the queue is persisted in local storage.
+ * The local storage however doesn't allow for more than one item to be saved.
  */
 const useAudioQueue = (): {
   audioQueue: AudioQueueItem[]
@@ -65,6 +78,11 @@ const useAudioQueue = (): {
   const [localAudioItem, setLocalAudioItem] =
     usePersistedAudioState<AudioQueueItem>(null)
 
+  /**
+   *
+   * @param cache
+   * @param audioQueueItems
+   */
   const modifyApolloCacheWithUpdatedPlaylist = (
     cache,
     { data: { audioQueueItems } },
@@ -81,10 +99,31 @@ const useAudioQueue = (): {
   const [addAudioQueueItem] = useAddAudioQueueItemMutation({
     update: modifyApolloCacheWithUpdatedPlaylist,
   })
+  const [removeAudioQueueItem] = useRemoveAudioQueueItemMutation({
+    update: modifyApolloCacheWithUpdatedPlaylist,
+  })
+  const [moveAudioQueueItem] = useMoveAudioQueueItemMutation({
+    update: modifyApolloCacheWithUpdatedPlaylist,
+  })
+  const [clearAudioQueue] = useClearAudioQueueMutation({
+    update: modifyApolloCacheWithUpdatedPlaylist,
+  })
+  const [reorderAudioQueue] = useReorderAudioQueueMutation({
+    update: modifyApolloCacheWithUpdatedPlaylist,
+  })
+
+  /**
+   * Add an audio item to the queue or to the local storage if the user is not a member.
+   * @param item partial of a document with all the required meta fields
+   * @param position position in the queue. To push to front of queue, pass 1
+   */
   const handleAddQueueItem = async (
     item: AudioPlayerItem,
     position?: number,
   ): Promise<FetchResult<AddAudioQueueItemMutationData>> => {
+    if (position && position == 1) {
+      trackEvent([AUDIO_PLAYER_TRACK_CATEGORY, TRACK_NAME, 'addItemToFront'])
+    }
     if (hasAccess) {
       return addAudioQueueItem({
         variables: {
@@ -110,16 +149,24 @@ const useAudioQueue = (): {
     }
   }
 
-  const [removeAudioQueueItem] = useRemoveAudioQueueItemMutation({
-    update: modifyApolloCacheWithUpdatedPlaylist,
-  })
+  /**
+   * Remove an item from the queue or from the local storage if the user is not a member.
+   * @param audioItemId
+   */
   const handleRemoveQueueItem = async (
     audioItemId: string,
   ): Promise<FetchResult<RemoveAudioQueueItemMutationData>> => {
+    trackEvent([AUDIO_PLAYER_TRACK_CATEGORY, TRACK_NAME, 'removeItem'])
     if (hasAccess) {
+      const audioQueueItems = meWithAudioQueue?.me?.audioQueue || []
       return removeAudioQueueItem({
         variables: {
           id: audioItemId,
+        },
+        optimisticResponse: {
+          audioQueueItems: audioQueueItems.filter(
+            (item) => item.id !== audioItemId,
+          ),
         },
       })
     } else {
@@ -132,19 +179,24 @@ const useAudioQueue = (): {
     }
   }
 
-  const [moveAudioQueueItem] = useMoveAudioQueueItemMutation({
-    update: modifyApolloCacheWithUpdatedPlaylist,
-  })
   const handleMoveQueueItem = async (
     audioItemId: string,
     position: number,
   ): Promise<FetchResult<MoveAudioQueueItemMutationData>> => {
+    trackEvent([AUDIO_PLAYER_TRACK_CATEGORY, TRACK_NAME, 'moveItem'])
     if (hasAccess) {
+      const audioQueueItems = meWithAudioQueue?.me?.audioQueue || []
       return moveAudioQueueItem({
         variables: {
           id: audioItemId,
           sequence: position,
         },
+        optimisticResponse:
+          OptimisticQueueResponseHelper.makeMoveQueueItemResponse(
+            audioQueueItems,
+            audioItemId,
+            position,
+          ),
       })
     } else {
       return Promise.resolve({
@@ -155,14 +207,15 @@ const useAudioQueue = (): {
     }
   }
 
-  const [clearAudioQueue] = useClearAudioQueueMutation({
-    update: modifyApolloCacheWithUpdatedPlaylist,
-  })
   const handleClearQueue = async (): Promise<
     FetchResult<ClearAudioQueueMutationData>
   > => {
     if (hasAccess) {
-      return clearAudioQueue()
+      return clearAudioQueue({
+        optimisticResponse: {
+          audioQueueItems: [],
+        },
+      })
     } else {
       setLocalAudioItem(null)
       return Promise.resolve({
@@ -173,12 +226,10 @@ const useAudioQueue = (): {
     }
   }
 
-  const [reorderAudioQueue] = useReorderAudioQueueMutation({
-    update: modifyApolloCacheWithUpdatedPlaylist,
-  })
   const handleQueueReorder = async (
     reorderedQueue: AudioQueueItem[],
   ): Promise<FetchResult<ReorderAudioQueueMutationData>> => {
+    trackEvent([AUDIO_PLAYER_TRACK_CATEGORY, TRACK_NAME, 'reorder'])
     if (hasAccess) {
       return reorderAudioQueue({
         variables: {

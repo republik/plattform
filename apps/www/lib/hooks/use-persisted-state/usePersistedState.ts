@@ -49,7 +49,7 @@ const usePersistedState = <T>(
   // Only persist to storage if state changes.
   useEffect(() => {
     // do not write data recieved from storage event
-    if (storageEventValue.current === state) {
+    if (state !== null && storageEventValue.current === state) {
       return
     }
     // persist to localStorage

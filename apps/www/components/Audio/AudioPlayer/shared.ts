@@ -16,12 +16,10 @@ export type AudioPlayerProps = {
   queuedItems: AudioQueueItem[]
   isPlaying?: boolean
   isLoading?: boolean
-  //
   currentTime?: number
   duration?: number
   playbackRate: number
   buffered?: TimeRanges
-  //
   actions: AudioPlayerActions
   t: any
   hasError?: boolean

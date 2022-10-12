@@ -21,49 +21,62 @@ type ToggleAudioPlayerFunc = (playerItem: AudioPlayerItem) => void
 
 export const AudioEventEmitter = new EventEmitter()
 
-type EventHandler<E> = (eventData: E) => Promise<void>
+type EventHandler<E> = (eventData: E) => Promise<void> | void
 
 /**
  * useAudioEvent allows to subscribe to events emitted by the audio-context.
  * @param eventName The name of the event to subscribe to.
- * @param handler The handler to call when the event is emitted.
+ * @param callback The handler to call when the event is emitted.
  */
 export function useAudioContextEvent<E = Event>(
   eventName: string,
-  handler: EventHandler<E>,
+  callback: EventHandler<E>,
 ) {
+  const savedCallback = useRef<EventHandler<E>>(callback)
+
   useEffect(() => {
+    savedCallback.current = callback
+  })
+
+  useEffect(() => {
+    const handler = (eventData: E) => {
+      console.log('useAudioContextEvent: received', eventName, eventData)
+      return savedCallback?.current(eventData)
+    }
+
+    console.log('useAudioContextEvent setup listener', eventName)
     AudioEventEmitter.addListener(eventName, handler)
     return () => {
+      console.log('useAudioContextEvent remove listener', eventName)
       AudioEventEmitter.removeListener(eventName, handler)
     }
-  }, [eventName, handler])
+  }, [eventName])
 }
 
 type AudioContextValue = {
   activePlayerItem: AudioPlayerItem | null
-  audioPlayerVisible: boolean
-  setAudioPlayerVisible: Dispatch<SetStateAction<boolean>>
+  isVisible: boolean
+  setIsVisible: Dispatch<SetStateAction<boolean>>
   audioPlayerExpanded: boolean
   setAudioPlayerExpanded: Dispatch<SetStateAction<boolean>>
-  audioPlayerPlaying: boolean
-  setAudioPlayerPlaying: Dispatch<SetStateAction<boolean>>
+  isPlaying: boolean
+  setIsPlaying: Dispatch<SetStateAction<boolean>>
   autoPlayActive: boolean
   toggleAudioPlayer: ToggleAudioPlayerFunc
   onCloseAudioPlayer: () => void
 }
 
 export const AudioContext = createContext<AudioContextValue>({
-  audioPlayerVisible: false,
+  isVisible: false,
   audioPlayerExpanded: false,
-  audioPlayerPlaying: false,
-  setAudioPlayerVisible: () => {
+  isPlaying: false,
+  setIsVisible: () => {
     throw new Error('not implemented')
   },
   setAudioPlayerExpanded: () => {
     throw new Error('not implemented')
   },
-  setAudioPlayerPlaying: () => {
+  setIsPlaying: () => {
     throw new Error('not implemented')
   },
   toggleAudioPlayer: () => {
@@ -83,15 +96,15 @@ const usePersistedPlayerItem = createPersistedState<AudioPlayerItem>(
 )
 
 const AudioProvider = ({ children }) => {
-  const { inNativeIOSApp } = useInNativeApp()
+  const { inNativeApp, inNativeIOSApp } = useInNativeApp()
   const [activePlayerItem, setActivePlayerItem] = usePersistedPlayerItem<
     AudioPlayerItem | undefined
   >(undefined)
   const [autoPlayAudioPlayerItem, setAutoPlayAudioPlayerItem] =
     useState<AudioPlayerItem | null>(null)
-  const [audioPlayerVisible, setAudioPlayerVisible] = useState(false)
+  const [isVisible, setIsVisible] = useState(false)
   const [audioPlayerExpanded, setAudioPlayerExpanded] = useState(false)
-  const [audioPlayerPlaying, setAudioPlayerPlaying] = useState(false)
+  const [isPlaying, setIsPlaying] = useState(false)
   const clearTimeoutId = useRef<NodeJS.Timeout | null>()
 
   const { addAudioQueueItem, clearAudioQueue, isAudioQueueAvailable } =
@@ -121,26 +134,28 @@ const AudioProvider = ({ children }) => {
       await addAudioQueueItem(playerItem, 1)
       AudioEventEmitter.emit('togglePlayer')
     } else {
-      let currentTime
-      if (mediaId) {
-        currentTime = await getMediaProgress({ mediaId })
+      if (inNativeApp) {
+        let currentTime
+        if (mediaId) {
+          currentTime = await getMediaProgress({ mediaId })
+        }
+        // The below constructed payload is required by the legacy in-app
+        // audio player.
+        const payload = {
+          audioSource,
+          url,
+          title,
+          sourcePath: path,
+          mediaId,
+        }
+        postMessage({
+          type: 'play-audio',
+          payload: {
+            ...payload,
+            currentTime,
+          },
+        })
       }
-      // The below constructed payload is required by the legacy in-app
-      // audio player.
-      const payload = {
-        audioSource,
-        url,
-        title,
-        sourcePath: path,
-        mediaId,
-      }
-      postMessage({
-        type: 'play-audio',
-        payload: {
-          ...payload,
-          currentTime,
-        },
-      })
       setActivePlayerItem(playerItem)
       setAutoPlayAudioPlayerItem(playerItem)
     }
@@ -148,26 +163,26 @@ const AudioProvider = ({ children }) => {
   }
 
   const onCloseAudioPlayer = () => {
-    setAudioPlayerVisible(false)
+    setIsVisible(false)
     clearTimeoutId.current = setTimeout(() => {
       setActivePlayerItem(undefined)
     }, 300)
   }
 
   useEffect(() => {
-    setAudioPlayerVisible(!!activePlayerItem)
+    setIsVisible(!!activePlayerItem)
   }, [activePlayerItem])
 
   return (
     <AudioContext.Provider
       value={{
         activePlayerItem,
-        audioPlayerVisible,
-        setAudioPlayerVisible,
+        isVisible,
+        setIsVisible,
         audioPlayerExpanded,
         setAudioPlayerExpanded,
-        audioPlayerPlaying,
-        setAudioPlayerPlaying,
+        isPlaying,
+        setIsPlaying,
         autoPlayActive: autoPlayAudioPlayerItem === activePlayerItem,
         toggleAudioPlayer,
         onCloseAudioPlayer,

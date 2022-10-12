@@ -161,12 +161,10 @@ const ExpandedAudioPlayer = ({
     return () => router.beforePopState(() => true)
   }, [router.beforePopState, handleMinimize])
 
-  const handleDownload = async (item: AudioQueueItem) => {
+  const handleDownload = async (item: AudioQueueItem['document']) => {
     try {
       const {
-        document: {
-          meta: { audioSource, title },
-        },
+        meta: { audioSource, title },
       } = item
       const downloadSource =
         audioSource.mp3 || audioSource.aac || audioSource.ogg
@@ -214,6 +212,7 @@ const ExpandedAudioPlayer = ({
             currentTime={currentTime}
             duration={duration}
             buffered={buffered}
+            isLastItem={queuedItems.length === 0}
           />
           {hasError && <AudioError />}
         </div>

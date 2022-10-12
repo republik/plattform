@@ -7,7 +7,7 @@ import MdHearingIcon from 'react-icons/lib/md/hearing'
 import MdPlayArrow from 'react-icons/lib/md/play-arrow'
 import {
   IconButton,
-  LegacyAudioPlayer,
+  AudioPlayer,
   mediaQueries,
   Overlay,
   OverlayBody,
@@ -135,7 +135,7 @@ const SynthesizedAudio = withT(({ t, derivative, onClickGenerate }) => {
       {showAudioPlayer && (
         <diy {...styles.audioPlayerContainer}>
           <div {...styles.audioPlayer}>
-            <LegacyAudioPlayer
+            <AudioPlayer
               src={{
                 mp3: derivative.result.audioAssetsUrl,
               }}

@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { AudioPlayerProps } from '../AudioPlayerContainer'
+import { useEffect, useState } from 'react'
+import { AudioPlayerProps } from '../AudioPlayerController'
 import { useInNativeApp } from '../../../lib/withInNativeApp'
 import { useTranslation } from '../../../lib/withT'
 import ExpandedAudioPlayer from './ExpandedAudioPlayer'
@@ -15,9 +15,11 @@ import {
 import { AnimatePresence, motion } from 'framer-motion'
 import { css } from 'glamor'
 import AudioPlaybackElement from './AudioPlaybackElement'
+import { useUserAgent } from '../../../lib/context/UserAgentContext'
 import { useAudioContext } from '../AudioProvider'
 
 const MARGIN = 15
+const AUDIO_PLAYER_WRAPPER_ID = 'audio-player-wrapper'
 
 // TODO: handle previously stored audio-player state
 // this is detectable if the stored object has an audioSource element in the top
@@ -31,7 +33,6 @@ const styles = {
     right: 0,
     display: 'flex',
     boxShadow: '0px -5px 15px -3px rgba(0,0,0,0.1)',
-    maxHeight: '100vh',
     [mediaQueries.mUp]: {
       right: 15,
       width: ['290px', `calc(100% - ${MARGIN * 2}px)`],
@@ -47,14 +48,23 @@ const styles = {
     marginLeft: ['15px', 'max(15px, env(safe-area-inset-left))'],
     marginBottom: ['24px', 'max(24px, env(safe-area-inset-bottom))'],
     width: ['290px', `calc(100% - ${MARGIN * 2}px)`],
+    maxHeight: '100vh',
   }),
   wrapperExpanded: css({
+    maxHeight: '100vh',
+    height: [
+      '100vh',
+      '-moz-available',
+      '-webkit-fill-available',
+      'fill-available',
+    ],
     margin: 0,
     paddingLeft: ['15px', 'max(15px, env(safe-area-inset-left))'],
     paddingRight: ['15px', 'max(15px, env(safe-area-inset-right))'],
     paddingBottom: 0,
     width: '100%',
     [mediaQueries.mUp]: {
+      height: 'auto',
       paddingTop: ['15px', 'max(15px, env(safe-area-inset-top))'],
       marginRight: ['15px', 'max(15px, env(safe-area-inset-right))'],
       marginLeft: ['15px', 'max(15px, env(safe-area-inset-left))'],
@@ -65,7 +75,7 @@ const styles = {
 
 const AudioPlayer = ({
   isVisible,
-  mediaRef,
+  setWebHandlers,
   activeItem,
   queue,
   autoPlay,
@@ -83,10 +93,10 @@ const AudioPlayer = ({
     audioPlayerExpanded: isExpanded,
     setAudioPlayerExpanded: setIsExpanded,
   } = useAudioContext()
+  const { isAndroid, isFirefox } = useUserAgent()
   const isDesktop = useMediaQuery(mediaQueries.mUp)
   const [forceScrollLock, setForceScrollLock] = useState(false)
   const [ref] = useBodyScrollLock((isExpanded && !isDesktop) || forceScrollLock)
-
   const { t } = useTranslation()
   const router = useRouter()
   const [colorScheme] = useColorContext()
@@ -139,15 +149,49 @@ const AudioPlayer = ({
       },
   })
 
+  // Mobile browser on android can't seem to handle fill-available
+  // thus we must fallback to the following JS solution as described here:
+  // Source: https://ilxanlar.medium.com/you-shouldnt-rely-on-css-100vh-and-here-s-why-1b4721e74487
+  useEffect(() => {
+    if (!isDesktop && !inNativeApp && isAndroid && isFirefox && isExpanded) {
+      const calculateVh = () => {
+        const vh = window.innerHeight * 0.01
+        const wrapperElement = document.getElementById(AUDIO_PLAYER_WRAPPER_ID)
+        wrapperElement?.style?.setProperty('--vh', vh + 'px')
+      }
+
+      // Initial calculation
+      calculateVh()
+      // Re-calculate on resize
+      window.addEventListener('resize', calculateVh)
+      // Re-calculate on device orientation change
+      window.addEventListener('orientationchange', calculateVh)
+      document
+        .getElementById(AUDIO_PLAYER_WRAPPER_ID)
+        ?.style?.setProperty('height', 'calc(var(--vh) * 100)')
+
+      return () => {
+        window.removeEventListener('resize', calculateVh)
+        window.removeEventListener('orientationchange', calculateVh)
+        document
+          .getElementById(AUDIO_PLAYER_WRAPPER_ID)
+          ?.style?.removeProperty('height')
+      }
+    }
+
+    return
+  }, [isDesktop, inNativeApp, isAndroid, isFirefox, isExpanded])
+
   return (
     <AnimatePresence>
-      {isVisible && (
+      {isVisible && activeItem && (
         <>
           <Backdrop
             isExpanded={isExpanded}
             onBackdropClick={() => setIsExpanded(false)}
           >
             <motion.div
+              id={AUDIO_PLAYER_WRAPPER_ID}
               {...(inNativeApp && inIOS && !isExpanded && iOSSafeInsets)}
               ref={ref}
               initial={{ opacity: 0, y: 50 }}
@@ -203,8 +247,9 @@ const AudioPlayer = ({
           </Backdrop>
           {activeItem && !inNativeApp && (
             <AudioPlaybackElement
-              mediaRef={mediaRef}
+              setWebHandlers={setWebHandlers}
               activeItem={activeItem}
+              playbackRate={playbackRate}
               autoPlay={autoPlay}
               actions={actions}
             />

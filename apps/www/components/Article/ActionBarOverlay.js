@@ -15,7 +15,7 @@ const ActionBarOverlay = ({ children }) => {
   const [overlayVisible, setOverlayVisible] = useState(false)
   const isDesktop = useMediaQuery(mediaQueries.mUp)
   const { isAudioQueueAvailable } = useAudioQueue()
-  const { audioPlayerVisible } = useAudioContext()
+  const { isVisible: audioPlayerVisible } = useAudioContext()
 
   const audioPlayerOffset = audioPlayerVisible
     ? isAudioQueueAvailable

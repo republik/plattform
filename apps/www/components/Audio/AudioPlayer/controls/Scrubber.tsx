@@ -17,12 +17,11 @@ import {
 } from '../constants'
 import { useColorContext, fontStyles } from '@project-r/styleguide'
 import { renderTime } from '../shared'
+import { clamp } from '../../helpers/clamp'
 
 function times(x) {
   return Array.from({ length: x }, (_, i) => i)
 }
-
-const clamp = (num, min, max) => Math.min(Math.max(num, min), max)
 
 const styles = {
   progressRoot: css({
@@ -123,7 +122,7 @@ const Scrubber = ({
   }, [audioProgress, setInternalProgress])
 
   const debouncedSeek = useMemo(
-    () => debounce((progress) => onSeek(progress), 1000 / 60),
+    () => debounce((progress) => onSeek(progress), 1000 / 30),
     [onSeek],
   )
 
