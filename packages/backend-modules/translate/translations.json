@@ -2350,27 +2350,31 @@
     },
     {
       "key": "api/publikator/repo/404",
-      "value": "Repo existiert nicht"
+      "value": "Repo nicht gefunden"
     },
     {
       "key": "api/publikator/file/404",
-      "value": "Datei existiert nicht"
+      "value": "Datei nicht gefunden"
     },
     {
-      "key": "api/publikator/file/commitError",
-      "value": "Datei kann nicht mehr committed werden."
+      "key": "api/publikator/file/error/notFailure",
+      "value": "Datei nicht als «fehlgeschlagen» markiert"
     },
     {
-      "key": "api/publikator/file/notYours",
-      "value": "Datei wurde von anderem Nutzer angelegt."
+      "key": "api/publikator/file/error/publicAlready",
+      "value": "Datei bereits veröffentlicht"
     },
     {
-      "key": "api/publikator/file/updateError",
-      "value": "Datei kann nicht geändert werden."
+      "key": "api/publikator/file/error/notPrivate",
+      "value": "Datei nicht als «privat» markiert"
     },
     {
-      "key": "api/publikator/file/changePublicError",
-      "value": "Die Veröffentlichung der Datei kann nicht zurückgezogen werden."
+      "key": "api/publikator/file/error/notPending",
+      "value": "Datei nicht in Bearbeitung"
+    },
+    {
+      "key": "api/publikator/file/error/notYours",
+      "value": "Datei gehört nicht Ihnen"
     }
   ]
 }
