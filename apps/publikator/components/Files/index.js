@@ -12,6 +12,7 @@ import { Table, Tr, Th } from '../Table'
 import Info from './Info'
 import Upload from './Upload'
 import Row from './Row'
+import { css, style } from 'glamor'
 
 const GET_FILES = gql`
   query getFiles($id: ID!) {
@@ -25,6 +26,12 @@ const GET_FILES = gql`
 
   ${RepoFile}
 `
+
+const styles = {
+  container: css({
+    overflow: 'hidden',
+  }),
+}
 
 const FilesPage = ({ router }) => {
   const repoId = getRepoIdFromQuery(router.query)
@@ -48,19 +55,21 @@ const FilesPage = ({ router }) => {
               <Info />
               <Upload repoId={data.repo.id} />
               {!!data.repo.files.length && (
-                <Table>
-                  <thead>
-                    <Tr>
-                      <Th style={{ width: '70%' }}>Datei</Th>
-                      <Th style={{ width: '30%' }}></Th>
-                    </Tr>
-                  </thead>
-                  <tbody>
-                    {data.repo.files.map((file) => (
-                      <Row key={file.id} file={file} />
-                    ))}
-                  </tbody>
-                </Table>
+                <div {...styles.container}>
+                  <Table>
+                    <thead>
+                      <Tr>
+                        <Th style={{ width: '70%' }}>Datei</Th>
+                        <Th style={{ width: '30%' }}></Th>
+                      </Tr>
+                    </thead>
+                    <tbody>
+                      {data.repo.files.map((file) => (
+                        <Row key={file.id} file={file} />
+                      ))}
+                    </tbody>
+                  </Table>
+                </div>
               )}
             </Container>
           )}
