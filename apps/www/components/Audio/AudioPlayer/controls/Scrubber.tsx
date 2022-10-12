@@ -124,11 +124,7 @@ const Scrubber = ({
   }, [audioProgress, setInternalProgress])
 
   const debouncedSeek = useMemo(
-    () =>
-      debounce((progress) => {
-        console.log('seek', progress)
-        return onSeek(progress)
-      }, 300),
+    () => debounce((progress) => onSeek(progress), 300),
     [onSeek],
   )
 
@@ -140,7 +136,6 @@ const Scrubber = ({
     const progress = scrubberLeft / scrubberWidth
     setInternalProgress(progress)
     // Debounce syncing to the audio-container
-    console.log('scrub', progress, { force, isAndroid })
     if (force) {
       // Cancel the debounced seek to prevent a duplicate update
       debouncedSeek.cancel()
