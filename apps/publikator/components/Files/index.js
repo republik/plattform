@@ -29,7 +29,7 @@ const GET_FILES = gql`
 
 const styles = {
   container: css({
-    overflow: 'hidden',
+    overflow: 'scroll',
   }),
 }
 
