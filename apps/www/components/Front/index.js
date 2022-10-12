@@ -34,6 +34,7 @@ import { useRouter } from 'next/router'
 import { useMe } from '../../lib/context/MeContext'
 import { useAudioContext } from '../Audio/AudioProvider'
 import useAudioQueue from '../Audio/hooks/useAudioQueue'
+import { trackEvent } from '../../lib/matomo'
 
 const styles = {
   prepublicationNotice: css({
@@ -61,6 +62,7 @@ export const RenderFront = ({ isEditor, front, nodes }) => {
           addAudioQueueItem({ id }).then(({ data: { audioQueueItems } }) => {
             const item = audioQueueItems.find((i) => i.document.id === id)
             toggleAudioPlayer(item.document)
+            trackEvent(['Front', 'playAudio', id])
           })
         },
         CommentLink,
