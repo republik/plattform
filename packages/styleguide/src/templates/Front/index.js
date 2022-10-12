@@ -82,9 +82,9 @@ export const subject = {
 const DefaultLink = ({ children }) => children
 
 const createFrontSchema = ({
-  onPlay = (x) => console.log('onPlay', x),
   Link = DefaultLink,
   t = () => '',
+  playAudio = (x) => console.log('playing', x),
   noEmpty = true,
   ...rest
 } = {}) => {
@@ -244,7 +244,7 @@ const createFrontSchema = ({
     component: ({ children, attributes, ...props }) => (
       <Link href={props.url}>
         <TeaserFrontImage
-          onPlay={() => onPlay(props)}
+          onPlay={() => playAudio(props)}
           attributes={attributes}
           {...props}
         >
@@ -303,7 +303,7 @@ const createFrontSchema = ({
     component: ({ children, attributes, ...props }) => (
       <Link href={props.url}>
         <TeaserFrontSplit
-          onPlay={() => onPlay(props)}
+          onPlay={() => playAudio(props)}
           attributes={attributes}
           {...props}
         >
@@ -365,7 +365,7 @@ const createFrontSchema = ({
     component: ({ children, attributes, ...props }) => (
       <Link href={props.url}>
         <TeaserFrontTypo
-          onPlay={() => onPlay(props)}
+          onPlay={() => playAudio(props)}
           attributes={attributes}
           {...props}
         >
@@ -422,7 +422,7 @@ const createFrontSchema = ({
       <ColorContextProvider colorSchemeKey='light'>
         <Link href={props.url}>
           <TeaserFrontTile
-            onPlay={() => onPlay(props)}
+            onPlay={() => playAudio(props)}
             attributes={attributes}
             {...props}
           >
@@ -560,7 +560,7 @@ const createFrontSchema = ({
       return (
         <Link href={props.url}>
           <TeaserCarouselTile
-            onPlay={() => onPlay(props)}
+            onPlay={() => playAudio(props)}
             attributes={attributes}
             {...props}
           >
@@ -635,11 +635,7 @@ const createFrontSchema = ({
     matchMdast: matchTeaserType('carousel'),
     component: ({ children, attributes, ...props }) => {
       return (
-        <TeaserCarousel
-          onPlay={() => onPlay(props)}
-          attributes={attributes}
-          {...props}
-        >
+        <TeaserCarousel attributes={attributes} {...props}>
           {children}
         </TeaserCarousel>
       )

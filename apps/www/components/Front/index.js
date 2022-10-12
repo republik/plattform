@@ -53,6 +53,7 @@ export const RenderFront = ({ isEditor, front, nodes }) => {
       createFrontSchema({
         // TODO: fix this link
         Link: HrefLink,
+        playAudio: (x) => console.log('play from schema', x),
         CommentLink,
         DiscussionLink,
         ...withData,

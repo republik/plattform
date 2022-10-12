@@ -3,9 +3,7 @@ import PropTypes from 'prop-types'
 import { css } from 'glamor'
 import { mUp, tUp } from './mediaQueries'
 import { useColorContext } from '../Colors/useColorContext'
-import { PlayCircleIcon } from '../Icons'
-import IconButton from '../IconButton'
-import { plainButtonRule } from '../Button'
+import PlayAudio from './PlayAudio'
 
 const TEXT_PADDING = 50
 
@@ -144,17 +142,7 @@ const Text = ({
         style={{ maxWidth, margin }}
       >
         {children}
-        <button
-          {...plainButtonRule}
-          title='Beitrag hören'
-          style={{ marginTop: 24 }}
-          onClick={(e) => {
-            e.stopPropagation()
-            onPlay()
-          }}
-        >
-          <PlayCircleIcon size={36} />
-        </button>
+        <PlayAudio onPlay={onPlay} style={{ marginTop: 20 }} />
       </div>
     </div>
   )
