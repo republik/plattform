@@ -67,7 +67,13 @@ export const isPublished = (publication) =>
 export const getTemplateRepoPrefix = (templateId) =>
   templateId.split('/')[1].replace(TEMPLATE_PREFIX, '')
 
-export const containsRepoFromTemplate = (repos, templateRepoId) =>
-  !!repos.find((repo) =>
-    repo.id.split('/')[1].startsWith(getTemplateRepoPrefix(templateRepoId)),
-  )
+export const existsAlready = (repos, template) =>
+  !!repos.find((repo) => {
+    const { repoId, template: repoTemplate } = template
+    return (
+      (repoId &&
+        repo.id.split('/')[1].startsWith(getTemplateRepoPrefix(repoId))) ||
+      (repoTemplate &&
+        repo.latestCommit.document.meta.template === repoTemplate)
+    )
+  })

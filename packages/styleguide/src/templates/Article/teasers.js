@@ -527,6 +527,12 @@ const createTeasers = ({
   const seriesNav = {
     matchMdast: matchZone('SERIES_NAV'),
     component: ({ ...props }) => {
+      // HOTFIX: prevent Errors when navigation to an article with a seriesNav
+      // when series is null.
+      if (!props.series) {
+        return null
+      }
+
       return <SeriesNav t={t} {...props} />
     },
     props: (node, index, parent, { ancestors }) => {

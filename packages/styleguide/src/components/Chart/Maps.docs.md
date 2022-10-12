@@ -300,7 +300,7 @@ Supported replacements:
 
 ### World Wide Country Choropleth
 
-Use `missingDataLegend` to define a label for missing data. Without `missingDataLegend` it will complain about missing data, ensuring that you do not miss or miss match a country (or with other base data e.g. a small municipality).
+Use `missingDataLegend` to define a label for missing data. Without `missingDataLegend` it will complain about missing data, ensuring that you do not miss or miss match a country (or with other base data e.g. a small municipality). Use `missingDataColor` to customize the color if necessary.
 
 ```react
 <div>
@@ -940,6 +940,8 @@ JU,0.257,French
 
 ### Municipalities Example
 
+With `highlighted`—a column/propery name; in csv any non empty value will highlight; when using programmatically any not falsy value— and `highlightedColor` you can draw attention with a stroke to a particular feature. Make sure the color does not conflict with the black hover stroke, by default highlights are dark red.
+
 ```react
 <div>
   <ChartTitle>Zersiedelungsindex 2010</ChartTitle>
@@ -948,8 +950,9 @@ JU,0.257,French
       "type": "SwissMap",
       "legendTitle": "Indexwert",
       "choropleth": true,
+      "highlighted": "favorite",
       "thresholds": [3,6,10,20],
-      "colorRange": ["rgb(24,100,170)", "rgb(75,151,201)", "rgb(239,69,51)", "rgb(187,21,26)", "rgb(103,0,13)"],
+      "colorRange": ['#01665e', '#5ab4ac', '#f6e8c3', '#d8b365', '#8c510a'],
       "numberFormat": "s",
       "feature": "bfs",
       "features": {

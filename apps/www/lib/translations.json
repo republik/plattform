@@ -33,6 +33,10 @@
       "value": "Mitglied werden"
     },
     {
+      "key": "nav/sections",
+      "value": "Alle Rubriken"
+    },
+    {
       "key": "navbar/front",
       "value": "Magazin"
     },
@@ -41,12 +45,8 @@
       "value": "Feed"
     },
     {
-      "key": "navbar/feuilleton",
-      "value": "Feuilleton"
-    },
-    {
-      "key": "navbar/sections",
-      "value": "Alle Rubriken"
+      "key": "navbar/flyer",
+      "value": "Journal"
     },
     {
       "key": "navbar/discussion",
@@ -471,6 +471,18 @@
     {
       "key": "marketing/page/sections/lead",
       "value": "Die Republik ist eine Dienstleistung für interessierte Menschen in einer komplexen Welt. Wir recherchieren, fragen nach, ordnen ein und decken auf. Und liefern Ihnen Fakten und Zusammenhänge als Grundlage für Ihre eigenen Überlegungen und Entscheidungen."
+    },
+    {
+      "key": "marketing/readAloud/title",
+      "value": "Die Republik zum Hören"
+    },
+    {
+      "key": "marketing/readAloud/lead1",
+      "value": "Demnächst werden alle unsere Texte von Sprecherinnen vorgelesen."
+    },
+    {
+      "key": "marketing/readAloud/lead2",
+      "value": "Dürfen wir Sie benachrichtigen, sobald es losgeht?"
     },
     {
       "key": "marketing/page/sections/description/briefings",
@@ -3097,6 +3109,10 @@
       "value": "Teilen"
     },
     {
+      "key": "article/actionbar/flyer/share",
+      "value": "Journal teilen"
+    },
+    {
       "key": "article/actionbar/facebook/title",
       "value": "Auf Facebook teilen"
     },
@@ -3770,7 +3786,7 @@
     },
     {
       "key": "notifications/email-confirmed/newsletter/title",
-      "value": "E-Mail-Adresse bestätigt"
+      "value": "Anmeldung bestätigt"
     },
     {
       "key": "notifications/email-confirmed/text",
@@ -3839,6 +3855,14 @@
     {
       "key": "notifications/newsletter/title",
       "value": "Newsletter-Anmeldung"
+    },
+    {
+      "key": "notifications/newsletter/name:READALOUD/title",
+      "value": "Die Republik zum Hören"
+    },
+    {
+      "key": "macNewsletterSubscription/name:READALOUD/text",
+      "value": "Dürfen wir Sie benachrichtigen, sobald alle unsere Texte von Sprecherinnen vorgelesen werden?"
     },
     {
       "key": "macNewsletterSubscription/button",

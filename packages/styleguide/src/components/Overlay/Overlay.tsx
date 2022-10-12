@@ -128,6 +128,7 @@ type MUpStyle = {
   maxWidth?: number | string
   marginTop?: number | string
   marginBottom?: number | string
+  minHeight?: number | string
 }
 
 // This is the actual Overlay component that is rendered. We export this so we

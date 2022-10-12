@@ -2,15 +2,17 @@ import { css } from 'glamor'
 import { fontStyles } from '@project-r/styleguide'
 import {
   columnDateFormat,
+  suggestTemplateTitle,
   getPlaceholders,
   reformatPlaceholder,
   reformatUrlDate,
 } from '../../lib/utils/calendar'
-import { containsRepoFromTemplate } from '../../lib/utils/repo'
+import { existsAlready } from '../../lib/utils/repo'
 import Repo, { Placeholder } from './Repo'
 import { ascending } from 'd3-array'
 import { parseJSONObject } from '../../lib/safeJSON'
 import { WEEK_TEMPLATE_REPOS } from '../../lib/settings'
+
 const templateRepos = parseJSONObject(WEEK_TEMPLATE_REPOS)
 
 const styles = {
@@ -39,10 +41,28 @@ const Repos = ({ repos, isNewsletter, ...props }) => {
   return (
     <div {...styles.templateContainer}>
       {sortedRepos.map((repo) =>
-        repo.isPlaceholder ? (
+        repo.isPlaceholder && repo.template ? (
+          <Repo
+            key={repo.template}
+            repo={{
+              latestCommit: {
+                document: {
+                  meta: {
+                    template: repo.template,
+                    ...suggestTemplateTitle(repo.meta?.publishDate),
+                  },
+                },
+              },
+            }}
+            placeholderDate={repo.meta.publishDate}
+            isNewsletter={isNewsletter}
+            {...props}
+          />
+        ) : repo.isPlaceholder ? (
           <Placeholder
             key={repo.repoId}
             repoId={repo.repoId}
+            template={repo.template}
             placeholderDate={repo.meta.publishDate}
             isNewsletter={isNewsletter}
             {...props}
@@ -67,17 +87,19 @@ export const ReposByTemplate = ({
   isPast,
   isNewsletter,
 }) => {
+  const weeklyRepos = template
+    .map((t) => templateRepos[t])
+    .flat(1)
+    .filter(Boolean)
+
   const reposAndPlaceholders = isPast
     ? repos
-    : getPlaceholders(templateRepos[template], date).reduce(
-        (acc, placeholder) => {
-          const isInList = containsRepoFromTemplate(repos, placeholder.repoId)
-          return isInList
-            ? acc
-            : acc.concat(reformatPlaceholder(placeholder, date))
-        },
-        repos,
-      )
+    : getPlaceholders(weeklyRepos, date).reduce((acc, placeholder) => {
+        const isInList = existsAlready(repos, placeholder)
+        return isInList
+          ? acc
+          : acc.concat(reformatPlaceholder(placeholder, date))
+      }, repos)
 
   return (
     <Repos

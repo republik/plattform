@@ -1,0 +1,5 @@
+{
+  "extends": "@orbiting/backend-modules-types/tsconfig-backend.json",
+  "include": ["."],
+  "exclude": ["node_modules"]
+}

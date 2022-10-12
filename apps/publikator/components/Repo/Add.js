@@ -28,10 +28,8 @@ import {
 } from '../../lib/settings'
 
 import { withRouter } from 'next/router'
-import {
-  MdSearch as SearchIcon,
-  MdOutlineInfo as InfoIcon,
-} from 'react-icons/md'
+import SearchIcon from 'react-icons/lib/md/search'
+import InfoIcon from 'react-icons/lib/md/info-outline'
 
 const getTemplateRepos = gql`
   query templateListSearch {
@@ -221,7 +219,7 @@ class RepoAdd extends Component {
     const { title, schema, templateRepoId } = this.state
     const { isTemplate } = this.props
     this.props.router
-      .replace({
+      .push({
         pathname: `/repo/${GITHUB_ORG}/${slug}/edit`,
         query: {
           commitId: 'new',

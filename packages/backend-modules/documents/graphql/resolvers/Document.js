@@ -1,7 +1,8 @@
-const crypto = require('crypto')
 const Promise = require('bluebird')
-const { contentUrlResolver, metaUrlResolver } = require('../../lib/resolve')
+
+const { getMeta } = require('../../lib/meta')
 const {
+  processContentHashing,
   processMembersOnlyZonesInContent,
   processRepoImageUrlsInContent,
   processRepoImageUrlsInMeta,
@@ -9,7 +10,12 @@ const {
   processNodeModifiersInContent,
   processIfHasAccess,
 } = require('../../lib/process')
-const { getMeta } = require('../../lib/meta')
+const {
+  contentUrlResolver,
+  contentUserResolver,
+  metaUrlResolver,
+  extractIdsFromNode,
+} = require('../../lib/resolve')
 
 const getDocuments = require('./_queries/documents')
 
@@ -20,28 +26,12 @@ const {
 } = require('@orbiting/backend-modules-assets')
 
 const {
-  extractIdsFromNode,
-  loadLinkedMetaData,
+  resolveEntities,
 } = require('@orbiting/backend-modules-search/lib/Documents')
 
 const {
   processMeta: processSyntheticReadAloudInMeta,
 } = require('@orbiting/backend-modules-publikator/lib/Derivative/SyntheticReadAloud')
-
-const addTeaserContentHash = (nodes) => {
-  nodes.forEach((node) => {
-    if (
-      (node.identifier === 'TEASERGROUP' || node.identifier === 'TEASER') &&
-      node.data &&
-      !node.data.contentHash // already hashed
-    ) {
-      node.data.contentHash = crypto
-        .createHash('sha256')
-        .update(JSON.stringify(node))
-        .digest('hex')
-    }
-  })
-}
 
 module.exports = {
   repoId(doc, args, context) {
@@ -57,19 +47,21 @@ module.exports = {
   issuedForUserId(doc, args, context) {
     return context.user?.id || null
   },
+  type(doc) {
+    return doc.type || 'mdast'
+  },
   async content(doc, { urlPrefix, searchString }, context, info) {
     // we only do auto slugging when in a published documents context
     // - this is easiest detectable by _all being present from documents resolver
     // - alt check info.path for documents / document being the root
     //   https://gist.github.com/tpreusse/f79833a023706520da53647f9c61c7f6
-    if (doc._all || doc._usernames) {
-      // add content hash before mutating children by resolving
-      addTeaserContentHash(doc.content.children || [])
+    if (doc._all || doc._users) {
+      processContentHashing(doc.type, doc.content)
 
-      contentUrlResolver(
+      await contentUrlResolver(
         doc,
         doc._all,
-        doc._usernames,
+        doc._users,
         undefined,
         urlPrefix, // https://www.republik.ch bei Newslettern?
         searchString,
@@ -77,23 +69,30 @@ module.exports = {
       )
 
       await Promise.all([
-        processRepoImageUrlsInContent(doc.content, addFormatAuto),
-        processEmbedImageUrlsInContent(doc.content, addFormatAuto),
+        contentUserResolver(doc.type, doc.content, doc._users),
+        processRepoImageUrlsInContent(doc.type, doc.content, addFormatAuto),
+        processEmbedImageUrlsInContent(doc.type, doc.content, addFormatAuto),
       ])
 
-      processMembersOnlyZonesInContent(doc.content, context.user, doc._apiKey)
-      processNodeModifiersInContent(doc.content, context.user)
-      processIfHasAccess(doc.content, context.user, doc._apiKey)
+      processMembersOnlyZonesInContent(
+        doc.type,
+        doc.content,
+        context.user,
+        doc._apiKey,
+      )
+      processNodeModifiersInContent(doc.type, doc.content, context.user)
+      processIfHasAccess(doc.type, doc.content, context.user, doc._apiKey)
     }
     return doc.content
   },
   async meta(doc, { urlPrefix, searchString }, context, info) {
     const meta = getMeta(doc)
-    if (doc._all || doc._usernames) {
+    if (doc._all || doc._users) {
       metaUrlResolver(
+        doc.type,
         meta,
         doc._all,
-        doc._usernames,
+        doc._users,
         undefined,
         urlPrefix,
         searchString,
@@ -156,21 +155,27 @@ module.exports = {
 
     if (doc._all) {
       // add content hash before mutating children by resolving
-      addTeaserContentHash(nodes)
+      processContentHashing(doc.type, { children: nodes })
 
       const idsFromNodes = await Promise.map(nodes, async (node) => {
         await Promise.all([
-          processRepoImageUrlsInContent(node, addFormatAuto),
-          processEmbedImageUrlsInContent(node, addFormatAuto),
+          contentUserResolver(doc.type, node, doc._users),
+          processRepoImageUrlsInContent(doc.type, node, addFormatAuto),
+          processEmbedImageUrlsInContent(doc.type, node, addFormatAuto),
         ])
 
-        processMembersOnlyZonesInContent(node, context.user, doc._apiKey)
-        processNodeModifiersInContent(node, context.user)
-        processIfHasAccess(node, context.user, doc._apiKey)
+        processMembersOnlyZonesInContent(
+          doc.type,
+          node,
+          context.user,
+          doc._apiKey,
+        )
+        processNodeModifiersInContent(doc.type, node, context.user)
+        processIfHasAccess(doc.type, node, context.user, doc._apiKey)
 
-        return extractIdsFromNode(node, doc.meta.repoId)
+        return extractIdsFromNode(doc.type, node, doc.meta.repoId)
       })
-      const { docs, usernames } = await loadLinkedMetaData({
+      const { docs, users } = await resolveEntities({
         context,
         userIds: idsFromNodes.reduce(
           (userIds, idsFromNode) => userIds.concat(idsFromNode.users),
@@ -182,12 +187,12 @@ module.exports = {
         ),
       })
       doc._all = doc._all.concat(docs)
-      doc._usernames = doc._usernames.concat(usernames)
+      doc._users = doc._users.concat(users)
 
-      contentUrlResolver(
+      await contentUrlResolver(
         doc,
         doc._all,
-        doc._usernames,
+        doc._users,
         undefined,
         urlPrefix,
         searchString,

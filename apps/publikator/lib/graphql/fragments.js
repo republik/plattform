@@ -28,12 +28,19 @@ export const CommitWithDocument = gql`
     document {
       id
       repoId
+      type
       content
       meta {
         title
         template
         kind
         color
+        audioCoverCrop {
+          x
+          y
+          width
+          height
+        }
         format {
           id
           repoId

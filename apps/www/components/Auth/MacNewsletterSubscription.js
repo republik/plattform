@@ -3,7 +3,7 @@ import compose from 'lodash/flowRight'
 import { graphql } from '@apollo/client/react/hoc'
 import { gql } from '@apollo/client'
 
-import { Button, InlineSpinner } from '@project-r/styleguide'
+import { Button, InlineSpinner, Interaction } from '@project-r/styleguide'
 
 import withT from '../../lib/withT'
 
@@ -17,15 +17,24 @@ class NewsletterSubscription extends Component {
     this.state = {}
   }
   render() {
-    const { t, updateNewsletterSubscription, email, router } = this.props
+    const { name, t, updateNewsletterSubscription, email, router } = this.props
     const { consents } = this.state
 
     const requiredConsents = ['PRIVACY']
     const consentsError = getConsentsError(t, requiredConsents, consents)
     const error = this.state.error || (this.state.dirty && consentsError)
+    const text = t.first(
+      [
+        `macNewsletterSubscription/name:${name}/text`,
+        `macNewsletterSubscription/text`,
+      ],
+      undefined,
+      '',
+    )
 
     return (
       <Fragment>
+        {text && <Interaction.P>{text}</Interaction.P>}
         <div style={{ margin: '20px 0', textAlign: 'left' }}>
           <Consents
             accepted={consents}

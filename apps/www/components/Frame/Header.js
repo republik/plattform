@@ -7,12 +7,13 @@ import {
   mediaQueries,
   HeaderHeightProvider,
   useColorContext,
+  shouldIgnoreClick,
 } from '@project-r/styleguide'
 import { BackIcon } from '@project-r/styleguide'
 import { withMembership } from '../Auth/checkRoles'
 import withT from '../../lib/withT'
 import withInNativeApp, { postMessage } from '../../lib/withInNativeApp'
-import { shouldIgnoreClick, cleanAsPath, scrollTop } from '../../lib/utils/link'
+import { cleanAsPath, scrollTop } from '../../lib/utils/link'
 import NotificationIcon from '../Notifications/NotificationIcon'
 import HLine from '../Frame/HLine'
 
@@ -311,7 +312,7 @@ const Header = ({
                   </a>
                 </Link>
               ) : (
-                <Link href='/angebote' passHref>
+                <Link href='/angebote' passHref prefetch={false}>
                   <a
                     data-hide-if-me='true'
                     {...styles.button}

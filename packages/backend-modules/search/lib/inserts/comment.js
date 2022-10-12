@@ -1,9 +1,11 @@
 const Promise = require('bluebird')
 
+const {
+  stringifyNode,
+} = require('@orbiting/backend-modules-documents/lib/resolve')
 const { remark } = require('@orbiting/backend-modules-utils')
 
 const bulk = require('../../lib/indexPgTable')
-const { mdastContentToString } = require('../utils')
 
 async function transform(row) {
   const { userId, discussionId } = row
@@ -49,7 +51,7 @@ async function transform(row) {
     date: row.createdAt,
   }
 
-  row.contentString = mdastContentToString(remark.parse(row.content))
+  row.contentString = await stringifyNode('mdast', remark.parse(row.content))
 
   return row
 }

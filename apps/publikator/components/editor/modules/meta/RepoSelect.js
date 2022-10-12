@@ -1,10 +1,10 @@
 import { css } from 'glamor'
 
-import { MdClose as CloseIcon } from 'react-icons/md'
+import CloseIcon from 'react-icons/lib/md/close'
 
 import { A, Label, colors } from '@project-r/styleguide'
+import { RepoSearch } from '@project-r/styleguide/editor'
 
-import RepoSearch from '../../utils/RepoSearch'
 import { RepoLink } from '../../utils/github'
 
 const styles = {

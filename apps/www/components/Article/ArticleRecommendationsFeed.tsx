@@ -29,12 +29,12 @@ const ArticleRecommendationsFeed = ({ path }: ArticleSuggestionsFeedProps) => {
   })
 
   return (
-    <Center>
-      <Loader
-        loading={loading}
-        render={() => (
-          <>
-            {data?.article?.meta?.recommendations?.nodes.length > 0 && (
+    <Loader
+      loading={loading}
+      render={() => (
+        <>
+          {data?.article?.meta?.recommendations?.nodes.length > 0 && (
+            <Center>
               <section {...styles.wrapper}>
                 <Interaction.P {...styles.heading}>
                   {t('articleRecommendations/heading')}
@@ -46,11 +46,11 @@ const ArticleRecommendationsFeed = ({ path }: ArticleSuggestionsFeedProps) => {
                   }}
                 />
               </section>
-            )}
-          </>
-        )}
-      />
-    </Center>
+            </Center>
+          )}
+        </>
+      )}
+    />
   )
 }
 

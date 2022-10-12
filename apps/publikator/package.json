@@ -3,7 +3,7 @@
     "private": true,
     "version": "1.0.0",
     "engines": {
-        "node": "^14.4.0"
+        "node": "^16.0.0"
     },
     "description": "",
     "main": "server/index.js",
@@ -40,15 +40,15 @@
         "cross-env": "^5.2.1",
         "diff": "^3.5.0",
         "enzyme": "^3.11.0",
-        "jest": "^27.5.1",
         "gsheets": "^3.0.0",
+        "jest": "^27.5.1",
         "nodemon": "^2.0.4",
         "raf": "^3.4.0"
     },
     "dependencies": {
         "@apollo/client": "~3.5.10",
-        "@orbiting/remark-preset": "^1.2.4",
         "@next/bundle-analyzer": "^12.2.4",
+        "@orbiting/remark-preset": "^1.2.4",
         "@project-r/styleguide": "*",
         "@project-r/template-newsletter": "^1.5.0",
         "@republik/nextjs-apollo-client": "*",
@@ -90,8 +90,9 @@
         "react-color": "^2.18.1",
         "react-diff-viewer": "^3.1.1",
         "react-dom": "^17.0.2",
+        "react-easy-crop": "^4.5.0",
         "react-frame-component": "^4.1.2",
-        "react-icons": "^4.3.1",
+        "react-icons": "^2.2.5",
         "react-maskedinput": "^4.0.1",
         "react-portal": "^4.2.1",
         "react-textarea-autosize": "^7.1.2",

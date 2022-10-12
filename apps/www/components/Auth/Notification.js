@@ -84,11 +84,20 @@ const AuthNotification = ({ query, goTo, onClose, t, me }) => {
       'newsletter',
     ].includes(type)
   ) {
+    const { name, subscribed, mac } = query
+    title = t.first(
+      [
+        `notifications/newsletter/name:${name}/title`,
+        `notifications/newsletter/title`,
+      ],
+      undefined,
+      '',
+    )
     content = (
       <MacNewsletterSubscription
-        name={query.name}
-        subscribed={!!query.subscribed}
-        mac={query.mac}
+        name={name}
+        subscribed={!!subscribed}
+        mac={mac}
         email={email}
         context={context}
       />

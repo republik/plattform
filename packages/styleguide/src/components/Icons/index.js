@@ -40,6 +40,7 @@ export {
   MdRssFeed as RssFeedIcon,
   MdArrowDownward as ArrowDownwardIcon,
   MdArrowForward as ArrowForwardIcon,
+  MdArrowBack as ArrowBackIcon,
   MdExpandMore as ExpandMoreIcon,
   MdExpandLess as ExpandLessIcon,
   MdDone as DoneIcon,
@@ -51,6 +52,8 @@ export {
   MdRotateLeft as RotateLeftIcon,
   MdRotateLeft as RevertIcon,
   MdList as ListIcon,
+  MdFormatListBulleted as UlIcon,
+  MdFormatListNumbered as OlIcon,
   MdFilterList as FilterListIcon,
   MdAdd as AddIcon,
   MdRemove as RemoveIcon,
@@ -71,12 +74,35 @@ export {
   MdOutlineSmsFailed as EtiquetteIcon,
   MdUnfoldLess as UnfoldLessIcon,
   MdUnfoldMore as UnfoldMoreIcon,
+  MdFormatBold as BoldIcon,
+  MdFormatItalic as ItalicIcon,
+  MdKeyboardReturn as BreakIcon,
+  MdWallpaper as ImageIcon,
+  MdFormatQuote as QuoteIcon,
+  MdStrikethroughS as StrikeThrough,
+  MdTitle as TitleIcon,
+  MdCode as CodeIcon,
+  MdDragHandle as PunchlineIcon,
+  MdOutlineCallToAction as ArticlePreviewIcon,
+  MdViewQuilt as FlyerTileIcon,
+  MdViewHeadline as FlyerTileMetaIcon,
+  MdOutlineQuiz as QuizIcon,
+  MdOutlineDelete as DeleteIcon,
 } from 'react-icons/md'
 
-export { AiFillInstagram as InstagramIcon } from 'react-icons/ai'
-export { FaTelegramPlane as TelegramIcon } from 'react-icons/fa'
+export {
+  FaTelegramPlane as TelegramIcon,
+  FaSubscript as SubIcon,
+  FaSuperscript as SupIcon,
+} from 'react-icons/fa'
+
+export {
+  AiFillInstagram as InstagramIcon,
+  AiOutlineCode as BlockCodeIcon,
+} from 'react-icons/ai'
 export { SiThreema as ThreemaIcon } from 'react-icons/si'
 export { DiOpensource as OpenSourceIcon } from 'react-icons/di'
+export { BiParagraph as ParagraphIcon } from 'react-icons/bi'
 
 // Separately export io icons to prevent a re-export conflict
 // caused by react-icons export both io4 and io5 on the /all path.
@@ -90,6 +116,8 @@ export {
   IoLogoApple as AppleIcon,
   IoLogoFacebook as FacebookIcon,
 } from 'react-icons/io5'
+
+export { BsBlockquoteLeft as BlockQuoteIcon } from 'react-icons/bs'
 
 export { ShareIcon } from './CustomIcons/ShareIcon'
 export { MarkdownIcon } from './CustomIcons/MarkdownIcon'

@@ -39,6 +39,5 @@ yarn-error.log*
 # docker
 docker-data
 
-# editor
+# editor config
 .idea
-

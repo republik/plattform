@@ -122,7 +122,9 @@ const Calendar = ({
         height={300}
         render={() => {
           const reposByTemplate = group(reposSearch?.nodes || [], (repo) =>
-            repo.latestCommit.document.meta.template === 'editorialNewsletter'
+            ['editorialNewsletter', 'flyer'].indexOf(
+              repo.latestCommit.document.meta.template,
+            ) !== -1
               ? 'newsletter'
               : 'other',
           )
@@ -139,14 +141,14 @@ const Calendar = ({
           return (
             <div {...styles.calendar}>
               <CalendarByTemplate
-                template='newsletters'
+                template={['newsletters', 'flyer']}
                 calendar={newslettersCalendar}
                 isNewsletter
                 withHeading
                 currentWeek={currentWeek}
               />
               <CalendarByTemplate
-                template='articles'
+                template={['articles']}
                 calendar={articlesCalendar}
                 currentWeek={currentWeek}
               />

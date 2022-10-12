@@ -19,9 +19,6 @@ const styles = {
     color: 'inherit',
     textDecoration: 'none',
   }),
-  bar: css({
-    marginTop: 10,
-  }),
 }
 
 const br = {
@@ -77,6 +74,7 @@ export const TeaserFeed = ({
   series,
   dense = false,
   nonInteractive = false,
+  skipFormat = false,
 }) => {
   const formatMeta = (format && format.meta) || {}
   const href = getTeaserHref(
@@ -92,6 +90,8 @@ export const TeaserFeed = ({
       ? Headlines.Interaction
       : formatMeta.kind === 'scribble' || metaKind === 'scribble'
       ? Headlines.Scribble
+      : formatMeta.kind === 'flyer'
+      ? Headlines.Flyer
       : Headlines.Editorial
   const borderColor = formatMeta.title
     ? formatMeta.color || colors[formatMeta.kind]
@@ -110,9 +110,9 @@ export const TeaserFeed = ({
   return (
     <Container
       highlighted={highlighted}
-      format={format}
+      format={skipFormat ? undefined : format}
       series={series}
-      formatColor={borderColor}
+      formatColor={skipFormat ? undefined : borderColor}
       Link={Link}
       menu={menu}
       repoId={repoId}
@@ -132,7 +132,7 @@ export const TeaserFeed = ({
           title
         )}
       </Headline>
-      {!!description && (
+      {!!description && formatMeta.kind !== 'flyer' && (
         <Lead>
           {!nonInteractive ? (
             <Link href={href} passHref>
@@ -162,7 +162,7 @@ export const TeaserFeed = ({
           </Link>
         </Highlight>
       )}
-      {bar && <div {...styles.bar}>{bar}</div>}
+      {bar && bar}
       {prepublication && <InternalOnlyTag t={t} />}
     </Container>
   )

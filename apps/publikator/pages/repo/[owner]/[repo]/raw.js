@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import Frame from '../../../../components/Frame'
-import RepoNav from '../../../../components/Repo/Nav'
 import initLocalStore from '../../../../lib/utils/localStorage'
 import { withRouter } from 'next/router'
 import withT from '../../../../lib/withT'
@@ -16,7 +15,8 @@ import {
   fontFamilies,
   Checkbox,
 } from '@project-r/styleguide'
-import { MdLens as CircleIcon, MdInfoOutline as InfoIcon } from 'react-icons/md'
+import CircleIcon from 'react-icons/lib/md/lens'
+import InfoIcon from 'react-icons/lib/md/info-outline'
 import { Controlled as CodeMirror } from 'react-codemirror2'
 import {
   UncommittedChanges,
@@ -25,6 +25,7 @@ import {
 import BranchingNotice from '../../../../components/VersionControl/BranchingNotice'
 import { getRepoIdFromQuery } from '../../../../lib/repoIdHelper'
 import { withDefaultSSR } from '../../../../lib/apollo/helpers'
+import Nav from '../../../../components/Edit/Nav'
 
 const styles = css({
   background: colors.secondaryBg,
@@ -156,12 +157,7 @@ export default withDefaultSSR(
       <Frame raw>
         <Frame.Header isTemplate={isTemplate === 'true'}>
           <Frame.Header.Section align='left'>
-            <Frame.Nav>
-              <RepoNav
-                route={`/repo/${repoId}/edit`}
-                prefix={isTemplate === 'true' ? 'template' : 'document'}
-              />
-            </Frame.Nav>
+            <Nav isTemplate={isTemplate === 'true'} />
           </Frame.Header.Section>
           <Frame.Header.Section align='right'>
             <div style={{ padding: '35px 25px' }}>
@@ -205,7 +201,9 @@ export default withDefaultSSR(
             <BranchingNotice
               asIcon
               repoId={repoId}
-              currentCommitId={commitId}
+              commit={{
+                id: commitId,
+              }}
             />
           </Frame.Header.Section>
           <Frame.Header.Section align='right'>

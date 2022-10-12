@@ -51,6 +51,7 @@ const DiscussionLinkButton = ({
         query: discussionQuery,
       }}
       passHref
+      prefetch={false}
     >
       <IconButton
         Icon={DiscussionIcon}

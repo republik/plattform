@@ -23,6 +23,7 @@ import UIForm from '../../UIForm'
 import ShareImageForm from './ShareImageForm'
 import GooglePreview from './GooglePreview'
 import ArticleRecommendations from './ArticleRecommendations/ArticleRecommendations'
+import PublishPathNotice from './PublishPathNotice'
 
 const styles = {
   container: css({
@@ -184,25 +185,7 @@ const MetaData = ({
       />
       <br />
       {!isTemplate && mdastSchema && mdastSchema.getPath && (
-        <Label>
-          {t('metaData/field/slug/note', {
-            base: FRONTEND_BASE_URL
-              ? FRONTEND_BASE_URL.replace(/https?:\/\/(www\.)?/, '')
-              : '',
-            path: previewPath,
-          })}
-          <br />
-          {!!dataAsJs.path && (
-            <>
-              {t('metaData/field/slug/pathNote', {
-                base: FRONTEND_BASE_URL.replace(/https?:\/\/(www\.)?/, ''),
-                path: dataAsJs.path,
-              })}
-              <br />
-            </>
-          )}
-          <br />
-        </Label>
+        <PublishPathNotice previewPath={previewPath} meta={dataAsJs} />
       )}
     </>
   )
@@ -336,7 +319,12 @@ const MetaData = ({
         <br />
         <br />
         <br />
-        <AudioForm editor={editor} node={node} onInputChange={onInputChange} />
+        <AudioForm
+          editor={editor}
+          node={node}
+          onInputChange={onInputChange}
+          format={titleData?.format?.meta}
+        />
         <br />
         <br />
         <br />

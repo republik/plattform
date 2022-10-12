@@ -37,6 +37,7 @@ export const toMdast = ({ TYPE, subModules }) => {
     type: 'zone',
     identifier: 'TEASERGROUP',
     children: node.nodes.map((v) => teaserSerializer.toMdast(v)),
+    data: {},
   })
 }
 

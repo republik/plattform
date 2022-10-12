@@ -78,7 +78,6 @@ export default class Sidebar extends Component {
   }
 
   tabClickHandler(id) {
-    this.props.onTabChange(id)
     this.setState({
       selectedTabId: id,
     })

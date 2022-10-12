@@ -2,7 +2,7 @@
   "name": "@orbiting/assets-app",
   "version": "0.0.1",
   "engines": {
-    "node": "14.x"
+    "node": "^16.0.0"
   },
   "private": true,
   "license": "AGPL-3.0",
@@ -12,6 +12,7 @@
     "@orbiting/backend-modules-auth": "*",
     "@orbiting/backend-modules-base": "*",
     "@orbiting/backend-modules-base64u": "*",
+    "@orbiting/backend-modules-calendar": "*",
     "@orbiting/backend-modules-cards": "*",
     "@orbiting/backend-modules-collections": "*",
     "@orbiting/backend-modules-databroom": "*",
