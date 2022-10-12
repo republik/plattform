@@ -89,10 +89,7 @@ const AudioPlayer = ({
   hasError,
 }: AudioPlayerProps) => {
   const { inNativeApp, inIOS } = useInNativeApp()
-  const {
-    audioPlayerExpanded: isExpanded,
-    setAudioPlayerExpanded: setIsExpanded,
-  } = useAudioContext()
+  const { isExpanded, setIsExpanded } = useAudioContext()
   const { isAndroid, isFirefox } = useUserAgent()
   const isDesktop = useMediaQuery(mediaQueries.mUp)
   const [forceScrollLock, setForceScrollLock] = useState(false)

@@ -26,10 +26,10 @@ const Toggle = ({ expanded, closeOverlay, ...props }) => {
   const [colorScheme] = useColorContext()
   const { audioQueue } = useAudioQueue()
   const {
-    isVisible: audioPlayerVisible,
-    setIsVisible: setAudioPlayerVisible,
-    audioPlayerExpanded,
-    setAudioPlayerExpanded,
+    audioPlayerVisible,
+    setAudioPlayerVisible,
+    isExpanded: audioPlayerExpanded,
+    setIsExpanded: setAudioPlayerExpanded,
   } = useAudioContext()
   const audioItemsCount = audioQueue?.length
 

@@ -55,10 +55,10 @@ export function useAudioContextEvent<E = Event>(
 
 type AudioContextValue = {
   activePlayerItem: AudioPlayerItem | null
-  isVisible: boolean
-  setIsVisible: Dispatch<SetStateAction<boolean>>
-  audioPlayerExpanded: boolean
-  setAudioPlayerExpanded: Dispatch<SetStateAction<boolean>>
+  audioPlayerVisible: boolean
+  setAudioPlayerVisible: Dispatch<SetStateAction<boolean>>
+  isExpanded: boolean
+  setIsExpanded: Dispatch<SetStateAction<boolean>>
   isPlaying: boolean
   setIsPlaying: Dispatch<SetStateAction<boolean>>
   autoPlayActive: boolean
@@ -67,13 +67,13 @@ type AudioContextValue = {
 }
 
 export const AudioContext = createContext<AudioContextValue>({
-  isVisible: false,
-  audioPlayerExpanded: false,
+  audioPlayerVisible: false,
+  isExpanded: false,
   isPlaying: false,
-  setIsVisible: () => {
+  setAudioPlayerVisible: () => {
     throw new Error('not implemented')
   },
-  setAudioPlayerExpanded: () => {
+  setIsExpanded: () => {
     throw new Error('not implemented')
   },
   setIsPlaying: () => {
@@ -102,8 +102,8 @@ const AudioProvider = ({ children }) => {
   >(undefined)
   const [autoPlayAudioPlayerItem, setAutoPlayAudioPlayerItem] =
     useState<AudioPlayerItem | null>(null)
-  const [isVisible, setIsVisible] = useState(false)
-  const [audioPlayerExpanded, setAudioPlayerExpanded] = useState(false)
+  const [audioPlayerVisible, setAudioPlayerVisible] = useState(false)
+  const [isExpanded, setIsExpanded] = useState(false)
   const [isPlaying, setIsPlaying] = useState(false)
   const clearTimeoutId = useRef<NodeJS.Timeout | null>()
 
@@ -163,24 +163,24 @@ const AudioProvider = ({ children }) => {
   }
 
   const onCloseAudioPlayer = () => {
-    setIsVisible(false)
+    setAudioPlayerVisible(false)
     clearTimeoutId.current = setTimeout(() => {
       setActivePlayerItem(undefined)
     }, 300)
   }
 
   useEffect(() => {
-    setIsVisible(!!activePlayerItem)
+    setAudioPlayerVisible(!!activePlayerItem)
   }, [activePlayerItem])
 
   return (
     <AudioContext.Provider
       value={{
         activePlayerItem,
-        isVisible,
-        setIsVisible,
-        audioPlayerExpanded,
-        setAudioPlayerExpanded,
+        audioPlayerVisible,
+        setAudioPlayerVisible,
+        isExpanded,
+        setIsExpanded,
         isPlaying,
         setIsPlaying,
         autoPlayActive: autoPlayAudioPlayerItem === activePlayerItem,
