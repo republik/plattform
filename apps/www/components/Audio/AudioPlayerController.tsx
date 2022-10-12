@@ -119,11 +119,12 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
     // Optimistic UI update
     if (audioSource) {
       const duration = audioSource.durationMs / 1000
+      console.log('setOptimisticTimeUI', duration, audioSource)
       setDuration(duration || 0)
-      if (audioSource?.userProgress.secs) {
+      if (audioSource.userProgress?.secs) {
         setCurrentTime(
-          audioSource?.userProgress.secs + 2 < duration
-            ? audioSource?.userProgress.secs
+          audioSource.userProgress.secs + 2 < duration
+            ? audioSource.userProgress.secs
             : 0,
         )
       }
@@ -187,6 +188,7 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
         ![
           NativeAudioPlayerState.None,
           NativeAudioPlayerState.Connecting,
+          NativeAudioPlayerState.Ready,
         ].includes(state.playerState)
       ) {
         setDuration(state.duration)
@@ -281,11 +283,15 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
       if (!activePlayerItem) return
 
       const updatedCurrentTime = progress * duration
-
+      console.log('seek to', {
+        updatedCurrentTime,
+        progress,
+        duration,
+      })
+      setCurrentTime(updatedCurrentTime)
       if (inNativeApp) {
         notifyApp(AudioEvent.SEEK, progress * duration)
       } else if (audioEventHandlers.current) {
-        // TODO: call seek
         await audioEventHandlers.current.handleSeekTo(progress * duration)
       }
 
@@ -448,6 +454,7 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
     if (audioQueue.length > 0) {
       const nextUp = audioQueue[0]
       setActivePlayerItem(nextUp)
+      setOptimisticTimeUI(nextUp)
       setShouldAutoPlay(false)
       setIsVisible(true)
     }
