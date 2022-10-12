@@ -227,7 +227,8 @@ const ActionBar = ({
 
   const isArticleBottom = mode === 'articleBottom'
 
-  const itemPlaying = isPlaying && checkIfActiveItem(document.id)
+  const itemActive = checkIfActiveItem(document.id)
+  const itemPlaying = isPlaying && itemActive
   const itemInAudioQueue = checkIfInQueue(document.id)
   const showAudioButtons =
     !!meta.audioSource && meta.audioSource.kind !== 'syntheticReadAloud'
@@ -460,7 +461,7 @@ const ActionBar = ({
       group: 'audio',
     },
     {
-      disabled: itemPlaying,
+      disabled: itemActive,
       title: t(`AudioPlayer/Queue/${itemInAudioQueue ? 'Remove' : 'Add'}`),
       label: !forceShortLabel
         ? t(

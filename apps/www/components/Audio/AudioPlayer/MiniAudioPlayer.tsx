@@ -89,7 +89,10 @@ const MiniAudioPlayer = ({
   handleOpenArticle,
   hasError,
 }: MiniAudioPlayerProps) => {
-  if (!activeItem) return null
+  if (!activeItem) {
+    handleClose()
+    return null
+  }
 
   const {
     document: {
