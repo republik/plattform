@@ -18,6 +18,7 @@ import {
 import { useColorContext, fontStyles } from '@project-r/styleguide'
 import { renderTime } from '../shared'
 import { clamp } from '../../helpers/clamp'
+import { useInNativeApp } from '../../../../lib/withInNativeApp'
 
 function times(x) {
   return Array.from({ length: x }, (_, i) => i)
@@ -107,6 +108,7 @@ const Scrubber = ({
   disabled = false,
 }: ScrubberProps) => {
   const [colorScheme] = useColorContext()
+  const { isAndroid } = useInNativeApp()
   const scrubber = useRef<HTMLDivElement>(null)
   const [isSeeking, setIsSeeking] = useState(false)
   const [internalProgress, setInternalProgress] = useState(0)
@@ -122,7 +124,11 @@ const Scrubber = ({
   }, [audioProgress, setInternalProgress])
 
   const debouncedSeek = useMemo(
-    () => debounce((progress) => onSeek(progress), 1000 / 30),
+    () =>
+      debounce((progress) => {
+        console.log('seek', progress)
+        return onSeek(progress)
+      }, 300),
     [onSeek],
   )
 
@@ -134,10 +140,17 @@ const Scrubber = ({
     const progress = scrubberLeft / scrubberWidth
     setInternalProgress(progress)
     // Debounce syncing to the audio-container
+    console.log('scrub', progress, { force, isAndroid })
     if (force) {
-      onSeek(progress)
+      // Cancel the debounced seek to prevent a duplicate update
+      debouncedSeek.cancel()
+      return onSeek(progress)
     } else {
-      debouncedSeek(progress)
+      // Don't seek before end on android
+      if (isAndroid) {
+        return
+      }
+      return debouncedSeek(progress)
     }
   }
 

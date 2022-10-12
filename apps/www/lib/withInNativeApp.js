@@ -128,7 +128,7 @@ export const NativeAppHelpers = {
 }
 
 export const useInNativeApp = () => {
-  const { userAgent, isIOS } = useUserAgent()
+  const { userAgent, isIOS, isAndroid } = useUserAgent()
 
   const inNativeAppVersion = getNativeAppVersion(userAgent)
   const inNativeApp = !!inNativeAppVersion
@@ -140,6 +140,7 @@ export const useInNativeApp = () => {
     isMinimalNativeAppVersion: (minVersion) =>
       isNewerVersion(minVersion, inNativeAppVersion),
     inIOS: isIOS,
+    isAndroid: isAndroid,
     inIOSVersion: isIOS ? getIOSVersion(userAgent) : undefined,
     inNativeIOSApp: inNativeApp && isIOS,
   }
