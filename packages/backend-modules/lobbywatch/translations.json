@@ -1126,6 +1126,18 @@
       "fr": "Dernière modification le {date}"
     },
     {
+      "key": "pages/account/title",
+      "de": "Konto"
+    },
+    {
+      "key": "account/signedOut/title",
+      "de": "Zu Ihrem Konto"
+    },
+    {
+      "key": "account/signedOut/signIn",
+      "de": "Bitte anmelden:"
+    },
+    {
       "key": "Account/AddressForm/city/error/empty",
       "de": "Ort fehlt"
     },
@@ -1655,6 +1667,10 @@
       "de": "Gönner-Mitgliedschaft"
     },
     {
+      "key": "memberships/title/payment",
+      "de": "Zahlungsart"
+    },
+    {
       "key": "memberships/latestPeriod/ended",
       "de": "Endete am {formattedEndDate}"
     },
@@ -1672,7 +1688,7 @@
     },
     {
       "key": "memberships/latestPeriod/renew/true/autoPay/false",
-      "de": "Erneuerung am {formattedEndDate} fällig"
+      "de": "Gültig bis am {formattedEndDate}"
     },
     {
       "key": "memberships/latestPeriod/renew/true/autoPay/true",
@@ -1684,7 +1700,7 @@
     },
     {
       "key": "memberships/manage/autoPay/enable",
-      "de": "Automatische Abbuchung aktivieren"
+      "de": "Automatische Kreditkartenabbuchung aktivieren"
     },
     {
       "key": "memberships/manage/cancel/link",
@@ -1735,15 +1751,11 @@
       "de": "Hallo {nameOrEmail}"
     },
     {
-      "key": "merci/lead",
+      "key": "merci/lead/welcome",
       "de": "Vielen Dank für Ihre Unterstützung. Es ist uns eine Ehre, Sie bei uns als Mitglied zu begrüssen.\n\nAuf dieser Seite finden Sie alles, was wir von Ihnen wissen: Ihre Unterstützungsbeiträge, Ihre persönlichen Angaben und Ihre Newsletter-Einstellungen."
     },
     {
-      "key": "merci/lead/package/DONATE",
-      "de": "Vielen Dank für Ihre Grosszügigkeit!\n\nAuf dieser Seite finden Sie alles, was wir von Ihnen wissen: Ihre Unterstützungsbeiträge, Ihre persönlichen Angaben und Ihre Newsletter-Einstellungen."
-    },
-    {
-      "key": "merci/lead/package/WORKSHOP",
+      "key": "merci/lead/thanks",
       "de": "Vielen Dank für Ihre Grosszügigkeit!\n\nAuf dieser Seite finden Sie alles, was wir von Ihnen wissen: Ihre Unterstützungsbeiträge, Ihre persönlichen Angaben und Ihre Newsletter-Einstellungen."
     },
     {
@@ -1775,27 +1787,19 @@
       "de": "E-Mail-Verifizierung fehlgeschlagen"
     },
     {
-      "key": "merci/title",
+      "key": "merci/title/welcome",
       "de": "Willkommen an Bord, {name}"
     },
     {
-      "key": "merci/title/noName",
+      "key": "merci/title/welcome/noName",
       "de": "Willkommen an Bord"
     },
     {
-      "key": "merci/title/package/DONATE",
+      "key": "merci/title",
       "de": "Guten Tag, {name}"
     },
     {
-      "key": "merci/title/package/DONATE/noName",
-      "de": "Guten Tag"
-    },
-    {
-      "key": "merci/title/package/WORKSHOP",
-      "de": "Guten Tag, {name}"
-    },
-    {
-      "key": "merci/title/package/WORKSHOP/noName",
+      "key": "merci/title/noName",
       "de": "Guten Tag"
     },
     {
@@ -2264,7 +2268,7 @@
     },
     {
       "key": "pledge/submit/autoPay/note",
-      "de": "Wir erinnern Sie, bevor wir abbuchen. Und Sie können jederzeit in Ihrem Konto kündigen."
+      "de": "Wir erinnern Sie, bevor wir abbuchen. Und Sie können dies jederzeit in Ihrem Konto deaktivieren."
     },
     {
       "key": "pledge/submit/button/pay",
@@ -2415,10 +2419,6 @@
       "de": "Teilen Sie, dass Sie die Lobbywatch unterstützen:"
     },
     {
-      "key": "statement/share/PROLONG/title",
-      "de": "{name} hat bereits das Abo verlängert"
-    },
-    {
       "key": "statement/share/title",
       "de": "{name} unterstützt die Lobbywatch."
     },
@@ -2492,7 +2492,7 @@
     },
     {
       "key": "tokenAuthorization/after",
-      "de": "Falls Sie diese Anfrage nicht ausgelöst haben, wählen Sie «Nein». Haben Sie den Verdacht, dass jemand Unbekanntes sich mit Ihrem Abonnement Zugang verschaffen will? Dann wenden Sie sich bitte an info@lobbywatch.ch."
+      "de": "Falls Sie diese Anfrage nicht ausgelöst haben, wählen Sie «Nein»."
     },
     {
       "key": "tokenAuthorization/deny",
