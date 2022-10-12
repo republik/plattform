@@ -24,7 +24,7 @@ const Info = () => {
           marginBottom: '-0.2em',
         }}
       />{' '}
-      Keine sensiblen oder geheimen Dateien hochladen
+      Keine sensiblen Dateien hochladen
     </div>
   )
 }
