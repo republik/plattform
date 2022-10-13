@@ -74,6 +74,8 @@ const styles = {
 
 const AudioPlayer = ({
   isVisible,
+  isExpanded,
+  setIsExpanded,
   setWebHandlers,
   setHasAutoPlayed,
   activeItem,
@@ -91,7 +93,6 @@ const AudioPlayer = ({
   const { inNativeApp, inIOS } = useInNativeApp()
   const { isAndroid, isFirefox } = useUserAgent()
   const isDesktop = useMediaQuery(mediaQueries.mUp)
-  const [isExpanded, setIsExpanded] = useState(false)
   const [forceScrollLock, setForceScrollLock] = useState(false)
   const [ref] = useBodyScrollLock((isExpanded && !isDesktop) || forceScrollLock)
   const { t } = useTranslation()

@@ -40,6 +40,8 @@ enum NativeAudioPlayerState {
 
 export type AudioPlayerProps = {
   isVisible: boolean
+  isExpanded: boolean
+  setIsExpanded: (isExpanded: boolean) => void
   setWebHandlers: (handlers: AudioEventHandlers) => void
   setHasAutoPlayed: () => void
   activeItem: AudioQueueItem | null
@@ -84,7 +86,12 @@ type AudioPlayerContainerProps = {
 const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
   const { pathname } = useRouter()
   const { inNativeApp } = useInNativeApp()
-  const { setAudioPlayerVisible } = useAudioContext()
+  const {
+    audioPlayerVisible: isVisible,
+    setAudioPlayerVisible: setIsVisible,
+    audioPlayerIsExpanded: isExpanded,
+    setAudioPlayerIsExpanded: setIsExpanded,
+  } = useAudioContext()
   const {
     audioQueue,
     audioQueueIsLoading,
@@ -109,7 +116,6 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
 
   const [isPlaying, setIsPlaying] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
-  const [isVisible, setIsVisible] = useState(false)
   const [hasError, setHasError] = useState(false)
 
   const [currentTime, setCurrentTime] = useState(0)
@@ -465,11 +471,6 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
     setInitialized(true)
   }, [audioQueue, initialized, audioQueueIsLoading, pathname])
 
-  // Sync audio-player visible with audio-context
-  useEffect(() => {
-    setAudioPlayerVisible(isVisible)
-  }, [isVisible])
-
   // refetch the queue to check for possible changes once the tab is opened again
   useEffect(() => {
     const handler = async () => {
@@ -492,6 +493,8 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
     <>
       {children({
         isVisible,
+        isExpanded,
+        setIsExpanded,
         setWebHandlers,
         setHasAutoPlayed: () => setShouldAutoPlay(false),
         activeItem: activePlayerItem,
