@@ -369,6 +369,18 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
     }
   }
 
+  const onSkipToNext = async () => {
+    try {
+      if (inNativeApp) {
+        notifyApp(AudioEvent.SKIP_TO_NEXT)
+      } else if (audioEventHandlers.current) {
+        await onQueueAdvance()
+      }
+    } catch (error) {
+      handleError(error)
+    }
+  }
+
   // Handle track ending on media element
   const onQueueAdvance = async () => {
     if (!activePlayerItem) {
@@ -377,6 +389,7 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
     try {
       // Save the progress of the current track at 100%
       await saveActiveItemProgress({ currentTime: duration, isPlaying: false })
+      console.time('onQueueAdvance')
       const { data } = await removeAudioQueueItem(activePlayerItem.id)
       if (data.audioQueueItems.length > 0) {
         const nextUp = data.audioQueueItems[0]
@@ -387,6 +400,7 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
         trackEvent([AUDIO_PLAYER_TRACK_CATEGORY, 'queue', 'ended'])
         setShouldAutoPlay(false)
       }
+      console.timeEnd('onQueueAdvance')
     } catch (error) {
       handleError(error)
     }
@@ -519,8 +533,9 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
           onBackward,
           onClose: onStop,
           onPlaybackRateChange,
+          // onEnded is web only
           onEnded: onQueueAdvance,
-          onSkipToNext: onQueueAdvance,
+          onSkipToNext,
           handleError,
           syncWithMediaElement,
         },
