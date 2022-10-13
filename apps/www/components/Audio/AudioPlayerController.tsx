@@ -85,8 +85,7 @@ type AudioPlayerContainerProps = {
 
 const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
   const { pathname } = useRouter()
-  //const { inNativeApp } = useInNativeApp()
-  const inNativeApp = false
+  const { inNativeApp } = useInNativeApp()
   const {
     audioPlayerVisible: isVisible,
     setAudioPlayerVisible: setIsVisible,

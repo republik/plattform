@@ -90,8 +90,7 @@ const AudioPlayer = ({
   buffered,
   hasError,
 }: AudioPlayerProps) => {
-  const { inIOS } = useInNativeApp()
-  const inNativeApp = false
+  const { inNativeApp, inIOS } = useInNativeApp()
   const { isAndroid, isFirefox } = useUserAgent()
   const isDesktop = useMediaQuery(mediaQueries.mUp)
   const [forceScrollLock, setForceScrollLock] = useState(false)
