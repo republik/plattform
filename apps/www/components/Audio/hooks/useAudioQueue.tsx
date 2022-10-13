@@ -73,6 +73,7 @@ const useAudioQueue = (): {
     refetch: refetchAudioQueue,
   } = useAudioQueueQuery({
     skip: meLoading || !hasAccess,
+    fetchPolicy: 'network-only',
   })
 
   const [localAudioItem, setLocalAudioItem] =
