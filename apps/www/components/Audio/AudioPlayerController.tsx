@@ -241,6 +241,7 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
       // In case the queue has ended, readd the last played item to the queue and play it
       if (activePlayerItem && audioQueue.length === 0) {
         // Re-add item to queue-head
+        alert('re-add item to queue-head')
         await addAudioQueueItem(activePlayerItem.document, 1)
       }
 
@@ -373,7 +374,8 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
   const onSkipToNext = async () => {
     try {
       if (inNativeApp) {
-        notifyApp(AudioEvent.SKIP_TO_NEXT)
+        await onQueueAdvance()
+        //notifyApp(AudioEvent.SKIP_TO_NEXT)
       } else if (audioEventHandlers.current) {
         await onQueueAdvance()
       }
@@ -396,6 +398,12 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
         const nextUp = data.audioQueueItems[0]
         setShouldAutoPlay(true)
         setActivePlayerItem(nextUp)
+        if (inNativeApp) {
+          notifyApp('audio:setup', {
+            item: nextUp,
+            autoPlay: true,
+          })
+        }
         setOptimisticTimeUI(nextUp)
       } else {
         trackEvent([AUDIO_PLAYER_TRACK_CATEGORY, 'queue', 'ended'])
@@ -418,6 +426,12 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
 
       const nextUp = audioQueue[0]
       setActivePlayerItem(nextUp)
+      if (inNativeApp) {
+        notifyApp('audio:setup', {
+          item: nextUp,
+          autoPlay: true,
+        })
+      }
       setOptimisticTimeUI(nextUp)
       setIsVisible(true)
       await onPlay()
@@ -465,6 +479,12 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
       // IF the head of the queue changed, update the active player item
       if (audioQueue[0].id !== activePlayerItem?.id) {
         setActivePlayerItem(audioQueue[0])
+        if (inNativeApp) {
+          notifyApp('audio:setup', {
+            item: audioQueue[0],
+            autoPlay: true,
+          })
+        }
         setOptimisticTimeUI(audioQueue[0])
         setShouldAutoPlay(true)
       }
@@ -487,6 +507,10 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
     if (audioQueue.length > 0) {
       const nextUp = audioQueue[0]
       setActivePlayerItem(nextUp)
+      notifyApp('audio:setup', {
+        item: nextUp,
+        autoPlay: false,
+      })
       setOptimisticTimeUI(nextUp)
       setShouldAutoPlay(false)
       setIsVisible(true)
