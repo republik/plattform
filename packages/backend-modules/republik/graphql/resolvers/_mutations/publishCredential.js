@@ -18,6 +18,7 @@ module.exports = async (_, args, { pgdb, req, user: me, t }) => {
   }
 
   ensureStringLength(description, {
+    min: 0,
     max: MAX_CREDENTIAL_LENGTH,
     error: t('profile/generic/tooLong', {
       key: t('profile/credential/label'),

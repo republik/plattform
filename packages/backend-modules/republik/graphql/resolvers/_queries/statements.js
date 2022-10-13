@@ -24,17 +24,7 @@ module.exports = async (_, args, { pgdb, t }) => {
     throw new Error(t('api/statements/maxNodes'))
   }
 
-  let firstId
-  if (focus && isUUID.v4(focus)) {
-    firstId = await pgdb.public.users.findOneFieldOnly(
-      {
-        testimonialId: focus,
-        isListed: true,
-        'roles @>': '["member"]',
-      },
-      'id',
-    )
-  }
+  const firstId = focus && isUUID.v4(focus) ? focus : undefined
 
   const results = async (userRows) => {
     let ids = userRows.map((user) => user.id)

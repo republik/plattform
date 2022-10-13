@@ -2399,14 +2399,6 @@
       "de": "Das gewünschte Statement ist zurzeit nicht verfügbar."
     },
     {
-      "key": "statement/adminUnpublished",
-      "de": "Wir können Ihr Statement leider nicht publizieren. Schreiben Sie an info@lobbywatch.ch für weitere Informationen."
-    },
-    {
-      "key": "statement/description",
-      "de": "Sie können ein Statement abgeben und es zusammen mit einem Porträtbild auf unserer Community-Seite veröffentlichen."
-    },
-    {
       "key": "statement/description/update",
       "de": "Ihr Statement erscheint auf unserer Community-Seite."
     },
@@ -2415,40 +2407,88 @@
       "de": "Statement von {name}"
     },
     {
-      "key": "statement/share/please",
-      "de": "Teilen Sie, dass Sie die Lobbywatch unterstützen:"
-    },
-    {
       "key": "statement/share/title",
       "de": "{name} unterstützt die Lobbywatch."
     },
     {
-      "key": "statement/submit",
+      "key": "testimonial/submit",
       "de": "veröffentlichen"
     },
     {
-      "key": "statement/submit/update",
+      "key": "testimonial/submit/update",
       "de": "aktualisieren"
     },
     {
-      "key": "statement/title",
-      "de": "Jetzt ein Statement abgeben."
+      "key": "testimonial/title",
+      "de": "Teilen Sie, dass Sie die Lobbywatch unterstützen:"
     },
     {
-      "key": "statement/title/update",
-      "de": "Jetzt Ihr Statement aktualisieren."
+      "key": "testimonial/title/update",
+      "de": "Ihr Statement aktualisieren."
     },
     {
-      "key": "statement/unpublish",
+      "key": "testimonial/description",
+      "de": "Sie können ein Statement abgeben und es zusammen mit einem Porträtbild auf unserer Community-Seite veröffentlichen."
+    },
+    {
+      "key": "testimonial/unpublish",
       "de": "Statement zurücknehmen"
     },
     {
-      "key": "statement/unpublished",
+      "key": "testimonial/unpublished",
       "de": "Ihr Statement ist zurzeit nicht publik."
     },
     {
-      "key": "statement/viewLive",
+      "key": "testimonial/adminUnpublished",
+      "de": "Wir können Ihr Statement leider nicht publizieren. Schreiben Sie an info@lobbywatch.ch für weitere Informationen."
+    },
+    {
+      "key": "testimonial/viewLive",
       "de": "ansehen"
+    },
+    {
+      "key": "testimonial/role/label",
+      "de": "Funktion/Tätigkeit"
+    },
+    {
+      "key": "testimonial/quote/label",
+      "de": "Statement"
+    },
+    {
+      "key": "testimonial/quote/error",
+      "de": "Statement fehlt"
+    },
+    {
+      "key": "testimonial/pickImage",
+      "de": "Porträtfoto auswählen"
+    },
+    {
+      "key": "testimonial/pickImage/invalidType",
+      "de": "Nur Fotos erlaubt (jpg, png, gif)"
+    },
+    {
+      "key": "testimonial/pickImage/readError",
+      "de": "Foto konnte nicht geladen werden"
+    },
+    {
+      "key": "testimonial/pickImage/tooBig",
+      "de": "Maximal 10 MB"
+    },
+    {
+      "key": "testimonial/pickImage/empty",
+      "de": "Sie müssen ein Foto hochladen"
+    },
+    {
+      "key": "testimonial/pickImage/update",
+      "de": "Porträtfoto ändern"
+    },
+    {
+      "key": "testimonial/quote/tooLong",
+      "de": "Statement, maximal 140 Zeichen"
+    },
+    {
+      "key": "testimonial/role/tooLong",
+      "de": "Funktion, maximal 60 Zeichen"
     },
     {
       "key": "testimonial/infinite/end",

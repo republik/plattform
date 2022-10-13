@@ -25,13 +25,15 @@ export const get = (user: UserRow | User, args?: PortraitArgs) => {
     '384x384'
 
   // greyscale image
-  const bw = properties?.bw ?? true
+  const bw = properties?.bw
 
   try {
     const url = new URL(portraitUrl)
 
     url.searchParams.set('resize', resize)
-    url.searchParams.set('bw', bw ? '1' : '')
+    if (bw) {
+      url.searchParams.set('bw', '1')
+    }
     url.searchParams.set('format', 'auto')
 
     return url.toString()
