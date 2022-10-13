@@ -1,5 +1,7 @@
 const { transformUser } = require('@orbiting/backend-modules-auth')
 
+const { STATEMENTS_ONLY_MEMBERS } = process.env
+
 const getUser = (sequenceNumber, isAsc, pgdb) =>
   pgdb
     .query(
@@ -8,7 +10,7 @@ const getUser = (sequenceNumber, isAsc, pgdb) =>
       u.*,
       m."sequenceNumber" as "sequenceNumber"
     FROM users u
-    JOIN memberships m
+    ${STATEMENTS_ONLY_MEMBERS ? '' : 'LEFT '}JOIN memberships m
       ON m.id = (
         SELECT id
         FROM memberships
@@ -21,7 +23,7 @@ const getUser = (sequenceNumber, isAsc, pgdb) =>
       AND u."isListed" = true
       AND u."isAdminUnlisted" = false
       AND u."portraitUrl" is not null
-      AND u.roles @> '["member"]'
+      ${STATEMENTS_ONLY_MEMBERS ? `AND u.roles @> '["member"]'` : ''}
     ORDER BY m."sequenceNumber" ${isAsc ? 'ASC' : 'DESC'}
     LIMIT 1
   `,

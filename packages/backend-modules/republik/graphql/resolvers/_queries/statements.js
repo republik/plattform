@@ -16,6 +16,8 @@ const fragmentJoinMinMaxDates = `
     ON mmd."userId" = u.id AND "maxEndDate" >= :membershipAfter
 `
 
+const { STATEMENTS_ONLY_MEMBERS } = process.env
+
 module.exports = async (_, args, { pgdb, t }) => {
   const { first, after, search, focus, membershipAfter } = args
   const seed = args.seed || Math.random() * 2 - 1
@@ -47,7 +49,7 @@ module.exports = async (_, args, { pgdb, t }) => {
         u.*,
         m."sequenceNumber" as "sequenceNumber"
       FROM users u
-      JOIN memberships m
+      ${STATEMENTS_ONLY_MEMBERS ? '' : 'LEFT '}JOIN memberships m
         ON m.id = (SELECT id FROM memberships WHERE "userId" = u.id ORDER BY "sequenceNumber" ASC LIMIT 1)
       WHERE
         ARRAY[u.id] && :ids;
@@ -94,7 +96,11 @@ module.exports = async (_, args, { pgdb, t }) => {
         u."isListed" = true
         AND u."isAdminUnlisted" = false
         AND u."portraitUrl" is not null
-        ${!membershipAfter ? 'AND u.roles @> \'["member"]\'' : ''}
+        ${
+          !membershipAfter && STATEMENTS_ONLY_MEMBERS
+            ? 'AND u.roles @> \'["member"]\''
+            : ''
+        }
         AND (
           u."firstName" % :search OR
           u."lastName" % :search OR
@@ -130,7 +136,11 @@ module.exports = async (_, args, { pgdb, t }) => {
           u."isListed" = true
           AND u."isAdminUnlisted" = false
           AND u."portraitUrl" is not null
-          ${!membershipAfter ? 'AND u.roles @> \'["member"]\'' : ''}
+          ${
+            !membershipAfter && STATEMENTS_ONLY_MEMBERS
+              ? 'AND u.roles @> \'["member"]\''
+              : ''
+          }
         OFFSET 1
       ) s
       ORDER BY random()
