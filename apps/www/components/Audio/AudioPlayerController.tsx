@@ -15,6 +15,7 @@ import { useRouter } from 'next/router'
 import { trackEvent } from '../../lib/matomo'
 import { AUDIO_PLAYER_TRACK_CATEGORY } from './constants'
 import { AudioElementState } from './AudioPlayer/AudioPlaybackElement'
+import useTimeout from '../../lib/hooks/useTimeout'
 
 const DEFAULT_PLAYBACK_RATE = 1
 const SKIP_FORWARD_TIME = 30
@@ -428,6 +429,14 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
   useInterval(
     saveActiveItemProgress,
     isPlaying ? SAVE_MEDIA_PROGRESS_INTERVAL : null,
+  )
+
+  // Clear the loading state after 5 seconds
+  useTimeout(
+    () => {
+      setIsLoading(false)
+    },
+    isLoading ? 5000 : null,
   )
 
   useEffect(() => {
