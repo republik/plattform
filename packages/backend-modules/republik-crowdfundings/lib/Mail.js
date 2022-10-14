@@ -177,8 +177,8 @@ mail.sendPledgeConfirmations = async ({ userId, pgdb, t }) => {
       const package_ = await pgdb.public.packages.findOne({
         id: pledge.packageId,
       })
-
-      const templateName = `pledge_${package_.name.toLowerCase()}`
+      // ToDo: multi language
+      const templateName = 'pledge'
 
       const pledgeMergeVars = await mail.getPledgeMergeVars(
         { pledge, user, package_ },
@@ -216,7 +216,8 @@ mail.sendPaymentSuccessful = async ({ pledgeId, pgdb, t }) => {
   const user = await pgdb.public.users.findOne({ id: pledge.userId })
   const package_ = await pgdb.public.packages.findOne({ id: pledge.packageId })
 
-  const templateName = `payment_successful_${package_.name.toLowerCase()}`
+  // ToDo: multi language
+  const templateName = 'payment_successful'
 
   const pledgeMergeVars = await mail.getPledgeMergeVars(
     { pledge, user, package_ },
