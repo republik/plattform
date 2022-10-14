@@ -132,13 +132,12 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
       const duration = audioSource.durationMs / 1000
       console.log('setOptimisticTimeUI', duration, audioSource)
       setDuration(duration || 0)
-      if (audioSource.userProgress?.secs) {
-        setCurrentTime(
+      setCurrentTime(
+        audioSource?.userProgress?.secs &&
           audioSource.userProgress.secs + 2 < duration
-            ? audioSource.userProgress.secs
-            : 0,
-        )
-      }
+          ? audioSource.userProgress.secs
+          : 0,
+      )
     }
   }, [])
 
