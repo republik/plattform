@@ -533,7 +533,18 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
 
   useAudioContextEvent<void>('togglePlayer', playQueue)
   useNativeAppEvent(AudioEvent.SYNC, syncWithNativeApp, [initialized])
-  useNativeAppEvent(AudioEvent.QUEUE_ADVANCE, onQueueAdvance, [initialized])
+  useNativeAppEvent<string>(
+    AudioEvent.QUEUE_ADVANCE,
+    async (itemId) => {
+      const isHeadOfQueue =
+        audioQueue && audioQueue.length > 0 && audioQueue[0].id === itemId
+      const isActiveItem = activePlayerItem && activePlayerItem.id === itemId
+      if (isHeadOfQueue || isActiveItem) {
+        await onQueueAdvance()
+      }
+    },
+    [initialized],
+  )
   useNativeAppEvent(AudioEvent.ERROR, handleError, [initialized])
 
   return (
