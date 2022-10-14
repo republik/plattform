@@ -197,11 +197,19 @@ const Scrubber = ({
   })
 
   const visibleProgress = isSeeking ? internalProgress : progress
-  const currentPosition = renderTime(currentTime || 0)
-  const remainingTime =
-    duration - currentTime > 0
-      ? renderTime(Math.ceil(duration) - Math.floor(currentTime) || 0)
-      : '0:00'
+  const currentPositionToRender = isSeeking
+    ? Math.floor(internalProgress * duration)
+    : currentTime
+  const currentPositionString = renderTime(
+    clamp(currentPositionToRender, 0, duration),
+  )
+  const remainingTime = clamp(
+    Math.ceil(duration) - Math.floor(currentPositionToRender),
+    0,
+    duration,
+  )
+  const remainingTimeString =
+    duration - currentTime > 0 ? renderTime(remainingTime) : '0:00'
 
   return (
     <div>
@@ -260,8 +268,8 @@ const Scrubber = ({
       </div>
       {showTime && (
         <div {...styles.timeWrapper} {...colorScheme.set('color', 'textSoft')}>
-          <span {...styles.time}>{currentPosition}</span>
-          <span {...styles.time}>-{remainingTime}</span>
+          <span {...styles.time}>{currentPositionString}</span>
+          <span {...styles.time}>-{remainingTimeString}</span>
         </div>
       )}
     </div>

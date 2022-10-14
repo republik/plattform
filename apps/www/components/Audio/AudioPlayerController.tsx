@@ -16,6 +16,7 @@ import { trackEvent } from '../../lib/matomo'
 import { AUDIO_PLAYER_TRACK_CATEGORY } from './constants'
 import { AudioElementState } from './AudioPlayer/AudioPlaybackElement'
 import useTimeout from '../../lib/hooks/useTimeout'
+import { clamp } from './helpers/clamp'
 
 const DEFAULT_PLAYBACK_RATE = 1
 const SKIP_FORWARD_TIME = 30
@@ -293,7 +294,7 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
     try {
       if (!activePlayerItem) return
 
-      const updatedCurrentTime = progress * duration
+      const updatedCurrentTime = clamp(progress * duration, 0, duration)
       console.log('seek to', {
         updatedCurrentTime,
         progress,
