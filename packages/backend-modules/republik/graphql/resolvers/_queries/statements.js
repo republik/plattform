@@ -39,7 +39,7 @@ module.exports = async (_, args, { pgdb, t }) => {
   const results = async (userRows) => {
     let ids = userRows.map((user) => user.id)
     if (firstId) {
-      ids = [firstId].concat(ids)
+      ids = [firstId].concat(ids.filter((id) => id !== firstId))
     }
 
     let startIndex = 0
