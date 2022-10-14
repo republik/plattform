@@ -1,64 +1,9 @@
-Guten Tag
+{{name}}, willkommen an Bord!
 
-{{#if waiting_for_payment}}
+Es ist schön, dass Sie dabei sind! Wir freuen uns, Sie begrüssen zu dürfen. Hier
+die wichtigsten Informationen über Ihre Teilnahme.
 
-Wir sind Ihnen sehr dankbar für Ihren grosszügigen Beitrag. Da er CHF 1000.–
-übersteigt, können Ihre Mitgliedschaft und Ihr Zugang erst nach Zahlungseingang
-aktiviert werden. Sie erhalten eine Bestätigung, wenn die Transaktion
-erfolgreich bei uns angekommen ist.
-
-{{elseif pledger_memberships_active_monthly}}
-
-Dass Sie uns mit einer Jahresmitgliedschaft längerfristig unterstützen, freut
-und ehrt uns. Herzlichen Dank für Ihr Vertrauen.
-
-Wir werden Ihre Mitgliedschaft automatisch aktivieren, sobald die aktuelle
-Periode Ihres Monats-Abos ausgelaufen ist. So können Sie dann nahtlos
-weiterlesen.
-
-Mit der Jahresmitgliedschaft erhalten Sie weiterhin von Montag bis Samstag ein
-hochwertiges digitales Magazin. Sie unterstützen damit eine wirklich unabhängige
-vierte Gewalt. Und sind neu auch Teil der Project R Genossenschaft.
-
-{{else}}
-
-Sie können ab sofort das Magazin lesen {{link_signin}} , an sämtlichen Debatten
-teilnehmen {{link_dialog}} und die Lobbywatch mit Ihren Freunden oder Feinden
-teilen {{link_account_share}} .
-
-Falls Sie Fragen zur Inbetriebnahme des Magazins haben:
-Hier finden Sie die Gebrauchsanleitung {{link_manual}} , die die wichtigsten
-davon klärt.
-
-{{/if}}
-
-Details zum Kauf:
-
-   {{#options}}
- * {{#if `this.oamount > 1`}} {{this.oamount}} {{this.olabel}} à
-   {{this.oprice_formatted}}: {{this.ototal_formatted}} {{else}}
-   {{this.oamount}} {{this.olabel}}: {{this.ototal_formatted}} {{/if}}
-   {{/options}} {{#if discount}}
- * Gewünschte Preisreduktion: –{{discount_formatted}}
-   {{/if}} {{#if donation}}
- * Spende: {{donation_formatted}}
-   {{/if}}
- * Total: {{total_formatted}}
-
-{{#if goodies_count}}
-
-{{#unless waiting_for_payment}} {{#if `goodies_count == 1`}} Sie haben sich noch
-ein Lobbywatch-Objekt gegönnt. {{elseif `goodies_count > 1`}} Sie haben sich noch
-mehrere Lobbywatch-Objekte gegönnt. {{/if}}{{#if goodies_has_notebook}}Notizbücher
-liefern wir Ihnen innerhalb von 7 Werktagen. {{/if}}{{#if
-goodies_has_tablebook}}«Lobbywatch bei Stromausfall» liefern wir Ihnen innerhalb
-von 7 Werktagen. {{/if}}{{#if goodies_has_totebag}}Taschen liefern wir Ihnen
-innerhalb von 7 Werktagen. {{/if}}{{#if goodies_has_mask}}Lobbywatch-Masken
-liefern wir Ihnen innerhalb von 7 Werktagen. {{/if}}{{/unless}}{{#if
-goodies_has_fondue}}Lobbywatch-Fondues werden am 26. Januar 2022
-verschickt.{{/if}}
-
-{{/if}} {{#if paymentslip}}
+{{#if paymentslip}}
 
 Zahlungsinformationen:
 
@@ -69,14 +14,24 @@ Zahlungsinformationen:
 
 Anbei finden Sie eine QR-Rechnung.
 
-Die QR-Rechnung ersetzt den Einzahlungsschein. Sie können damit die Zahlung via
-Mobile Banking, E-Banking oder am Schalter bei Bank und Post auslösen.
+Anbei finden Sie eine QR-Rechnung. Sie können damit die Zahlung via Mobile
+Banking, E-Banking oder am Schalter bei Bank und Post auslösen.
+
+{{else}}
+
+Ihre Zahlung ist erfolgreich bei uns eingegangen, herzlichen Dank!
+
+{{/if}} {{#if ask_testimonial}}
+
+Und wenn Sie noch eine oder zwei Minuten frei haben: Posten Sie doch ein
+Statement und Ihr Portraitfoto auf unserer Unterstützungs-Seite.
+
+Um dabei zu sein, geht es hier lang: lobbywatch.ch/de/merci
+{{frontend_base_url}}/de/merci
 
 {{/if}}
 
-Wir wünschen Ihnen viel Vergnügen mit der Lobbywatch.
-
-Mit freundlichen Grüssen
+Vielen Dank!
 
 
 Lobbywatch.ch

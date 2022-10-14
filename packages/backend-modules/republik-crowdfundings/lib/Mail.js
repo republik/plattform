@@ -1047,6 +1047,10 @@ mail.getPledgeMergeVars = async (
       name: 'pledger_memberships_active_monthly',
       content: hasActiveMonthly,
     },
+    {
+      name: 'ask_testimonial',
+      content: !user.statement,
+    },
   ]
 }
 
