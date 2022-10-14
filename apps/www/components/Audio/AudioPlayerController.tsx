@@ -418,7 +418,7 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
       const nextUp = audioQueue[0]
       setActivePlayerItem(nextUp)
       if (inNativeApp) {
-        notifyApp('audio:setup', {
+        notifyApp(AudioEvent.SETUP_TRACK, {
           item: nextUp,
           autoPlay: true,
         })
@@ -476,7 +476,7 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
         setShouldAutoPlay(true)
 
         if (inNativeApp) {
-          notifyApp('audio:setup', {
+          notifyApp(AudioEvent.SETUP_TRACK, {
             item: nextUp,
             autoPlay: true,
           })
@@ -503,7 +503,7 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
       setActivePlayerItem(nextUp)
 
       if (inNativeApp) {
-        notifyApp('audio:setup', {
+        notifyApp(AudioEvent.SETUP_TRACK, {
           item: nextUp,
           autoPlay: false,
         })
@@ -530,6 +530,7 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
   }, [])
 
   useAudioContextEvent<void>('togglePlayer', playQueue)
+
   useNativeAppEvent(AudioEvent.SYNC, syncWithNativeApp, [initialized])
   useNativeAppEvent<string>(
     AudioEvent.QUEUE_ADVANCE,

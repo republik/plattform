@@ -1,14 +1,15 @@
 export enum AudioEvent {
+  // Sent to app
   PLAY = 'audio:play',
   PAUSE = 'audio:pause',
   STOP = 'audio:stop',
   SEEK = 'audio:seek',
   FORWARD = 'audio:forward',
   BACKWARD = 'audio:backward',
-  SYNC = 'audio:sync',
   PLAYBACK_RATE = 'audio:playbackRate',
-  SKIP_TO_NEXT = 'audio:skipToNext',
-  QUEUE_UPDATE = 'audio:queueUpdate',
+  SETUP_TRACK = 'audio:setupTrack',
+  // Received from app
+  SYNC = 'audio:sync',
   QUEUE_ADVANCE = 'audio:queueAdvance',
   ERROR = 'audio:error',
 }
