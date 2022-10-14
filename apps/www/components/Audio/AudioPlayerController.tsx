@@ -421,6 +421,7 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
         notifyApp(AudioEvent.SETUP_TRACK, {
           item: nextUp,
           autoPlay: true,
+          playbackRate,
         })
       }
       setOptimisticTimeUI(nextUp)
@@ -429,7 +430,7 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
     } catch (error) {
       handleError(error)
     }
-  }, [audioQueue, onPlay, setOptimisticTimeUI])
+  }, [audioQueue, playbackRate, onPlay, setOptimisticTimeUI])
 
   useInterval(
     saveActiveItemProgress,
@@ -479,12 +480,13 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
           notifyApp(AudioEvent.SETUP_TRACK, {
             item: nextUp,
             autoPlay: true,
+            playbackRate,
           })
         }
       }
     }
     trackedQueue.current = audioQueue
-  }, [initialized, inNativeApp, audioQueue])
+  }, [initialized, inNativeApp, audioQueue, playbackRate])
 
   // Initialize the player once the queue has loaded.
   // Open up the audio-player once the app has started if the queue is not empty
@@ -506,6 +508,7 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
         notifyApp(AudioEvent.SETUP_TRACK, {
           item: nextUp,
           autoPlay: false,
+          playbackRate,
         })
       }
 
@@ -514,7 +517,7 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
       setIsVisible(true)
     }
     setInitialized(true)
-  }, [audioQueue, initialized, audioQueueIsLoading, pathname])
+  }, [audioQueue, initialized, audioQueueIsLoading, pathname, playbackRate])
 
   // refetch the queue to check for possible changes once the tab is opened again
   useEffect(() => {
