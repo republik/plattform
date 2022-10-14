@@ -1126,6 +1126,42 @@
       "fr": "Dernière modification le {date}"
     },
     {
+      "key": "cf/cta/now",
+      "de": "Jetzt mitmachen!"
+    },
+    {
+      "key": "cf/cta/share",
+      "de": "Teilen Sie diese Seite mit Ihren Freunden:"
+    },
+    {
+      "key": "cf/cta/shareNow",
+      "de": "Jetzt andere auf Lobbywatch aufmerksam machen:"
+    },
+    {
+      "key": "cf/cta/shareEmailSubject",
+      "de": "Lobbywatch unterstützen"
+    },
+    {
+      "key": "cf/package/YEAR",
+      "de": "Für mindestens ein Jahr"
+    },
+    {
+      "key": "cf/package/LEGISLATION",
+      "de": "Für die ganze Legislatur"
+    },
+    {
+      "key": "cf/package/BENEFACTOR",
+      "de": "Als Gönner"
+    },
+    {
+      "key": "cf/package/DONATE",
+      "de": "Spenden, sonst nichts"
+    },
+    {
+      "key": "cf/package/WORKSHOP",
+      "de": "Etwas für Ihre ganze Crew? Lobbywatch-Workshop buchen."
+    },
+    {
       "key": "pages/account/title",
       "de": "Konto"
     },
