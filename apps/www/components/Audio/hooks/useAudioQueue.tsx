@@ -74,6 +74,7 @@ const useAudioQueue = (): {
   } = useAudioQueueQuery({
     skip: meLoading || !hasAccess,
   })
+  const isLoading = meLoading || audioQueueIsLoading
 
   const [localAudioItem, setLocalAudioItem] =
     usePersistedAudioState<AudioQueueItem>(null)
@@ -278,7 +279,7 @@ const useAudioQueue = (): {
 
   return {
     audioQueue: resolvedQueue,
-    audioQueueIsLoading: !hasAccess ? false : audioQueueIsLoading,
+    audioQueueIsLoading: isLoading,
     audioQueueHasError: !hasAccess ? null : audioQueueHasError,
     refetchAudioQueue: !hasAccess ? () => null : refetchAudioQueue,
     addAudioQueueItem: handleAddQueueItem,
