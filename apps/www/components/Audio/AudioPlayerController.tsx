@@ -79,6 +79,7 @@ type AppAudioPlayerState = {
   currentTime: number
   duration: number
   playbackRate: number
+  forceUpdate?: boolean
 }
 
 type AudioPlayerContainerProps = {
@@ -101,7 +102,7 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
     removeAudioQueueItem,
     refetchAudioQueue,
   } = useAudioQueue()
-  const { saveMediaProgress } = useMediaProgress()
+  const { getMediaProgress, saveMediaProgress } = useMediaProgress()
 
   // State that holds callbacks provided by the AudioPlaybackElement
   // When using the web-player.
@@ -115,6 +116,8 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
   const [activePlayerItem, setActivePlayerItem] =
     useState<AudioQueueItem | null>(null)
   const [shouldAutoPlay, setShouldAutoPlay] = useState(false)
+  // There is edge-cases where we want to prevent autoplaying
+  const autoPlayBlocker = useRef(false)
 
   const [isPlaying, setIsPlaying] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
@@ -125,21 +128,16 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
   const [buffered, setBuffered] = useState<TimeRanges>(null)
   const [playbackRate, setPlaybackRate] = usePlaybackRate(DEFAULT_PLAYBACK_RATE)
 
-  const setOptimisticTimeUI = useCallback((playerItem: AudioQueueItem) => {
+  const setOptimisticTimeUI = (playerItem: AudioQueueItem, initialTime = 0) => {
     const audioSource = playerItem?.document?.meta?.audioSource
     // Optimistic UI update
     if (audioSource) {
       const duration = audioSource.durationMs / 1000
       console.log('setOptimisticTimeUI', duration, audioSource)
       setDuration(duration || 0)
-      setCurrentTime(
-        audioSource?.userProgress?.secs &&
-          audioSource.userProgress.secs + 2 < duration
-          ? audioSource.userProgress.secs
-          : 0,
-      )
+      setCurrentTime(initialTime)
     }
-  }, [])
+  }
 
   const handleError = (error: Error | string) => {
     setHasError(true)
@@ -209,6 +207,8 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
             NativeAudioPlayerState.Buffering,
           ].includes(state.playerState),
         )
+      } else if (state.forceUpdate) {
+        setCurrentTime(state.currentTime)
       }
       setIsLoading(
         [
@@ -222,7 +222,7 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
     [inNativeApp, activePlayerItem],
   )
 
-  // Sync the Web-UI with the HTML5 audio element
+  // Sync the Web-UI with the HTML audio-element
   const syncWithMediaElement = (state: AudioElementState) => {
     try {
       setCurrentTime(state.currentTime)
@@ -235,6 +235,43 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
       handleError(error)
     }
   }
+
+  const fetchInitialTime = async (item: AudioQueueItem): Promise<number> => {
+    const mediaId = item.document?.meta?.audioSource.mediaId
+    const durationMs = item.document?.meta?.audioSource.durationMs / 1000
+    console.log('Setup ' + item.document.meta.title, {
+      mediaId,
+      durationMs,
+    })
+    if (mediaId && durationMs) {
+      const progress = await getMediaProgress({
+        mediaId,
+        durationMs,
+      }).catch((error) =>
+        console.error('Error fetching media-progress for ' + mediaId, error),
+      )
+      return progress || 0
+    }
+  }
+
+  /**
+   * Set up the app audio-player and return the fetched initial-time
+   */
+  const setUpAppPlayer = useCallback(
+    async (
+      item: AudioQueueItem,
+      autoPlay = false,
+      initialTime = 0,
+    ): Promise<void> => {
+      notifyApp(AudioEvent.SETUP_TRACK, {
+        item,
+        autoPlay,
+        initialTime,
+        playbackRate,
+      })
+    },
+    [playbackRate],
+  )
 
   const onPlay = async () => {
     try {
@@ -321,6 +358,7 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
 
       const updatedCurrentTime = currentTime + SKIP_FORWARD_TIME
 
+      setCurrentTime(updatedCurrentTime)
       if (inNativeApp) {
         notifyApp(AudioEvent.FORWARD, SKIP_FORWARD_TIME)
       } else if (audioEventHandlers.current) {
@@ -341,6 +379,7 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
 
       const updatedCurrentTime = currentTime - SKIP_BACKWARD_TIME
 
+      setCurrentTime(updatedCurrentTime)
       if (inNativeApp) {
         notifyApp(AudioEvent.BACKWARD, SKIP_BACKWARD_TIME)
       } else if (audioEventHandlers.current) {
@@ -417,20 +456,19 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
 
       const nextUp = audioQueue[0]
       setActivePlayerItem(nextUp)
-      if (inNativeApp) {
-        notifyApp(AudioEvent.SETUP_TRACK, {
-          item: nextUp,
-          autoPlay: true,
-          playbackRate,
-        })
-      }
       setOptimisticTimeUI(nextUp)
+      const initialTime = await fetchInitialTime(nextUp)
+      setOptimisticTimeUI(nextUp, initialTime)
       setIsVisible(true)
+
+      if (inNativeApp) {
+        await setUpAppPlayer(nextUp, true, initialTime)
+      }
       await onPlay()
     } catch (error) {
       handleError(error)
     }
-  }, [audioQueue, playbackRate, onPlay, setOptimisticTimeUI])
+  }, [audioQueue, setUpAppPlayer, onPlay, setOptimisticTimeUI])
 
   useInterval(
     saveActiveItemProgress,
@@ -466,19 +504,25 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
         console.log('xxx head update', nextUp?.document?.meta.title)
         setActivePlayerItem(nextUp)
         setOptimisticTimeUI(nextUp)
-        setShouldAutoPlay(true)
+        // Fetch initial time for the new item and then set up the player
+        fetchInitialTime(nextUp).then((initialTime) => {
+          // The code here can be called by the browser-refocusing
+          // in that case auto-play is to be ignored
+          const nextAutoPlayState = autoPlayBlocker?.current ? false : true
+          autoPlayBlocker.current = false
 
-        if (inNativeApp) {
-          notifyApp(AudioEvent.SETUP_TRACK, {
-            item: nextUp,
-            autoPlay: true,
-            playbackRate,
-          })
-        }
+          setShouldAutoPlay(nextAutoPlayState)
+          setOptimisticTimeUI(nextUp, initialTime)
+          if (inNativeApp) {
+            setUpAppPlayer(nextUp, nextAutoPlayState, initialTime).catch(
+              handleError,
+            )
+          }
+        })
       }
     }
     trackedQueue.current = audioQueue
-  }, [initialized, inNativeApp, audioQueue, playbackRate])
+  }, [initialized, inNativeApp, audioQueue, setUpAppPlayer])
 
   // Initialize the player once the queue has loaded.
   // Open up the audio-player once the app has started if the queue is not empty
@@ -495,28 +539,25 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
     if (audioQueue.length > 0) {
       const nextUp = audioQueue[0]
       setActivePlayerItem(nextUp)
-
-      if (inNativeApp) {
-        notifyApp(AudioEvent.SETUP_TRACK, {
-          item: nextUp,
-          autoPlay: false,
-          playbackRate,
-        })
-      }
-
       setOptimisticTimeUI(nextUp)
-      setShouldAutoPlay(false)
-      setIsVisible(true)
+      fetchInitialTime(nextUp).then((initialTime) => {
+        setOptimisticTimeUI(nextUp, initialTime)
+        setIsVisible(true)
+        setShouldAutoPlay(false)
+        if (inNativeApp) {
+          setUpAppPlayer(nextUp, false, initialTime).catch(handleError)
+        }
+      })
     }
     setInitialized(true)
-  }, [audioQueue, initialized, audioQueueIsLoading, pathname, playbackRate])
+  }, [audioQueue, initialized, audioQueueIsLoading, pathname, setUpAppPlayer])
 
   // refetch the queue to check for possible changes once the tab is opened again
   useEffect(() => {
     const handler = async () => {
       const documentIsVisible = document.visibilityState === 'visible'
       if (documentIsVisible && !isPlaying) {
-        setShouldAutoPlay(false)
+        autoPlayBlocker.current = true
         await refetchAudioQueue()
       }
     }
