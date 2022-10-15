@@ -483,6 +483,15 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
     isLoading ? 10000 : null,
   )
 
+  // In case playback managed to start even though an error occurred
+  // reset error after 100ms
+  useTimeout(
+    () => {
+      setHasError(false)
+    },
+    hasError && isPlaying ? 100 : null,
+  )
+
   useEffect(() => {
     if (!initialized) {
       return
