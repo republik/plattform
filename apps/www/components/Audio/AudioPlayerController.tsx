@@ -449,14 +449,6 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
     if (!initialized) {
       return
     }
-    // Notify the app of any changes to the queue
-    if (
-      inNativeApp &&
-      audioQueue &&
-      hasQueueChanged(trackedQueue?.current, audioQueue)
-    ) {
-      // notifyApp(AudioEvent.QUEUE_UPDATE, audioQueue)
-    }
 
     // React to queue updates
     if (
