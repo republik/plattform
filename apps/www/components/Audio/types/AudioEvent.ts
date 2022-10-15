@@ -16,7 +16,7 @@ export enum AudioEvent {
 
 // Object with callbacks to control the web audio player
 export type AudioEventHandlers = {
-  handlePlay: () => Promise<void>
+  handlePlay: (initialPosition?: number) => Promise<void>
   handlePause: () => Promise<void>
   handleStop: () => Promise<void>
   handleSeekTo: (newPosition: number) => Promise<void>
