@@ -1,3 +1,4 @@
+lib/File/**/*.js
 lib/cache/**/*.js
 lib/Derivative/**/*.js
 lib/phases.js
