@@ -250,6 +250,7 @@ const AudioPlayer = ({
               activeItem={activeItem}
               playbackRate={playbackRate}
               autoPlay={autoPlay}
+              currentTime={currentTime}
               actions={actions}
             />
           )}

@@ -20,6 +20,7 @@ type AudioPlaybackElementProps = Pick<
   AudioPlayerProps,
   | 'activeItem'
   | 'autoPlay'
+  | 'currentTime'
   | 'playbackRate'
   | 'setWebHandlers'
   | 'setHasAutoPlayed'
@@ -33,6 +34,7 @@ type AudioPlaybackElementProps = Pick<
 const AudioPlaybackElement = ({
   activeItem,
   autoPlay,
+  currentTime,
   playbackRate,
   setWebHandlers,
   setHasAutoPlayed,
@@ -40,6 +42,7 @@ const AudioPlaybackElement = ({
 }: AudioPlaybackElementProps) => {
   const mediaRef = useRef<HTMLMediaElement>(null)
   const trackedPlayerItem = useRef<AudioQueueItem>(null)
+  const [isInitialized, setIsInitialized] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [isPlaying, setIsPlaying] = useState(false)
   const [preventOnCanPlay, setPreventOnCanPlay] = useState(false)
@@ -77,27 +80,18 @@ const AudioPlaybackElement = ({
         trackedPlayerItem.current = activeItem
         activeItemHasChanged = true
 
-        const { userProgress, durationMs } =
-          activeItem.document?.meta.audioSource ?? {}
-        const duration = durationMs / 1000
-
         if (mediaRef.current) {
           mediaRef.current.playbackRate = playbackRate
         }
         // Web
         // Only load the userProgress if given and smaller within 2 seconds of the duration
-        if (
-          mediaRef.current &&
-          userProgress &&
-          (!duration || userProgress.secs + 2 < duration)
-        ) {
-          mediaRef.current.currentTime = userProgress.secs
-        }
+        mediaRef.current.currentTime = currentTime
       }
 
       // Don't call on play if already playing, unless the activeItem has changed
       if ((activeItemHasChanged || !isPlaying) && autoPlay) {
         setHasAutoPlayed()
+        setIsInitialized(true)
         await onPlay()
       }
     } catch (error) {
@@ -130,6 +124,11 @@ const AudioPlaybackElement = ({
     const mediaElement = mediaRef.current
     if (!mediaElement) {
       return
+    }
+
+    if (!isInitialized) {
+      mediaElement.currentTime = currentTime
+      setIsInitialized(true)
     }
 
     mediaElement.playbackRate = playbackRate
