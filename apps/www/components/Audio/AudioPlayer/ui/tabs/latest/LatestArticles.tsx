@@ -1,12 +1,5 @@
 import { useMemo, useState } from 'react'
 import { css } from 'glamor'
-import {
-  IconButton,
-  PlaylistAddIcon,
-  DownloadIcon,
-  LinkIcon,
-} from '@project-r/styleguide'
-import AudioListItem from '../shared/AudioListItem'
 import NoAccess from '../shared/NoAccess'
 import useAudioQueue from '../../../../hooks/useAudioQueue'
 import { useLatestArticlesQuery } from '../../../../graphql/LatestArticlesHook'
@@ -15,7 +8,7 @@ import { AudioQueueItem } from '../../../../graphql/AudioQueueHooks'
 import LoadingPlaceholder from '../shared/LoadingPlaceholder'
 import FilterButton from './FilterButton'
 import { useMe } from '../../../../../../lib/context/MeContext'
-import { AudioPlayerItem } from '../../../../types/AudioPlayerItem'
+import LatestArticleItem from './LatestArticleItem'
 
 const styles = {
   root: css({
@@ -53,8 +46,6 @@ const LatestArticlesTab = ({
       count: 20,
     },
   })
-  const { addAudioQueueItem, checkIfInQueue, checkIfActiveItem } =
-    useAudioQueue()
 
   const hasReadAloudDocuments =
     data?.latestArticles?.nodes.some(
@@ -62,16 +53,6 @@ const LatestArticlesTab = ({
     ) || false
   if (hasReadAloudDocuments && filter !== 'all') {
     setFilter('all')
-  }
-
-  const handlePlay = async (article: AudioPlayerItem) => {
-    await addAudioQueueItem(article, 1)
-    // TODO: handle error
-  }
-
-  const handleAddToQueue = async (article: AudioPlayerItem) => {
-    await addAudioQueueItem(article)
-    // TODO: handle error
   }
 
   const filteredArticles = useMemo(() => {
@@ -125,31 +106,10 @@ const LatestArticlesTab = ({
       <ul {...styles.list}>
         {filteredArticles.map((article) => (
           <li key={article.id}>
-            <AudioListItem
-              item={article}
-              isActive={!!checkIfActiveItem(article.id)}
-              beforeActionItem={
-                <IconButton
-                  Icon={PlaylistAddIcon}
-                  title={t('AudioPlayer/Queue/Add')}
-                  onClick={() => handleAddToQueue(article)}
-                  disabled={checkIfInQueue(article.id)}
-                  style={{ marginRight: 0 }}
-                />
-              }
-              actions={[
-                {
-                  Icon: DownloadIcon,
-                  label: t('AudioPlayer/Queue/Download'),
-                  onClick: () => handleDownload(article),
-                },
-                {
-                  Icon: LinkIcon,
-                  label: t('AudioPlayer/Queue/GoToItem'),
-                  onClick: () => handleOpenArticle(article.meta.path),
-                },
-              ]}
-              onClick={() => handlePlay(article)}
+            <LatestArticleItem
+              article={article}
+              handleOpenArticle={handleOpenArticle}
+              handleDownload={handleDownload}
             />
           </li>
         ))}

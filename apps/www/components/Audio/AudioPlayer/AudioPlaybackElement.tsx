@@ -20,6 +20,7 @@ type AudioPlaybackElementProps = Pick<
   AudioPlayerProps,
   | 'activeItem'
   | 'autoPlay'
+  | 'currentTime'
   | 'playbackRate'
   | 'setWebHandlers'
   | 'setHasAutoPlayed'
@@ -33,6 +34,7 @@ type AudioPlaybackElementProps = Pick<
 const AudioPlaybackElement = ({
   activeItem,
   autoPlay,
+  currentTime,
   playbackRate,
   setWebHandlers,
   setHasAutoPlayed,
@@ -42,7 +44,6 @@ const AudioPlaybackElement = ({
   const trackedPlayerItem = useRef<AudioQueueItem>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [isPlaying, setIsPlaying] = useState(false)
-  const [preventOnCanPlay, setPreventOnCanPlay] = useState(false)
 
   // Pass on the state of the media-element to the UI
   const syncStateWithUI = useCallback(() => {
@@ -77,22 +78,12 @@ const AudioPlaybackElement = ({
         trackedPlayerItem.current = activeItem
         activeItemHasChanged = true
 
-        const { userProgress, durationMs } =
-          activeItem.document?.meta.audioSource ?? {}
-        const duration = durationMs / 1000
-
         if (mediaRef.current) {
           mediaRef.current.playbackRate = playbackRate
         }
         // Web
         // Only load the userProgress if given and smaller within 2 seconds of the duration
-        if (
-          mediaRef.current &&
-          userProgress &&
-          (!duration || userProgress.secs + 2 < duration)
-        ) {
-          mediaRef.current.currentTime = userProgress.secs
-        }
+        mediaRef.current.currentTime = currentTime
       }
 
       // Don't call on play if already playing, unless the activeItem has changed
@@ -126,19 +117,26 @@ const AudioPlaybackElement = ({
     }
   }, [handleError])
 
-  const onPlay = useCallback(async () => {
-    const mediaElement = mediaRef.current
-    if (!mediaElement) {
-      return
-    }
+  // Either resume playing the track or if a position is given start playing from there
+  const onPlay = useCallback(
+    async (startAtPosition?: number) => {
+      const mediaElement = mediaRef.current
+      if (!mediaElement) {
+        return
+      }
+      if (startAtPosition) {
+        mediaElement.currentTime = startAtPosition
+      }
 
-    mediaElement.playbackRate = playbackRate
-    await mediaElement
-      .play()
-      .catch((error) => console.error('playback error', error))
-    setIsPlaying(true)
-    syncStateWithUI()
-  }, [syncStateWithUI, playbackRate])
+      mediaElement.playbackRate = playbackRate
+      await mediaElement
+        .play()
+        .catch((error) => console.error('playback error', error))
+      setIsPlaying(true)
+      syncStateWithUI()
+    },
+    [syncStateWithUI, playbackRate],
+  )
 
   const onPause = useCallback(async () => {
     mediaRef.current?.pause()
@@ -183,6 +181,14 @@ const AudioPlaybackElement = ({
     [syncStateWithUI],
   )
 
+  const onSetPosition = useCallback(
+    async (newPosition: number) => {
+      mediaRef.current.currentTime = newPosition
+      syncStateWithUI()
+    },
+    [syncStateWithUI],
+  )
+
   // Reset media-element if new source is provided
   useEffect(() => {
     if (activeItem?.id === trackedPlayerItem?.current?.id) {
@@ -207,6 +213,7 @@ const AudioPlaybackElement = ({
       handleForward: onForward,
       handleBackward: onBackward,
       handlePlaybackRateChange: onPlaybackRateChange,
+      handleSetPosition: onSetPosition,
     })
   }, [
     onPlay,
@@ -216,6 +223,7 @@ const AudioPlaybackElement = ({
     onForward,
     onBackward,
     onPlaybackRateChange,
+    onSetPosition,
   ])
 
   const {
@@ -226,7 +234,7 @@ const AudioPlaybackElement = ({
     <audio
       ref={mediaRef}
       preload={autoPlay ? 'auto' : 'metadata'}
-      onPlay={onPlay}
+      onPlay={() => onPlay}
       onPause={onPause}
       onCanPlay={onCanPlay}
       onEnded={onEnded}

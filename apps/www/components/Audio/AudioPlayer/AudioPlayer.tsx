@@ -75,6 +75,8 @@ const styles = {
 
 const AudioPlayer = ({
   isVisible,
+  isExpanded,
+  setIsExpanded,
   setWebHandlers,
   setHasAutoPlayed,
   activeItem,
@@ -250,6 +252,7 @@ const AudioPlayer = ({
               activeItem={activeItem}
               playbackRate={playbackRate}
               autoPlay={autoPlay}
+              currentTime={currentTime}
               actions={actions}
             />
           )}

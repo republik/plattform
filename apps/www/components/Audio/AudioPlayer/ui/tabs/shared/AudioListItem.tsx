@@ -5,19 +5,14 @@ import {
   MoreIcon,
   IconButton,
 } from '@project-r/styleguide'
-import { Reorder, useDragControls, useMotionValue } from 'framer-motion'
 import { css } from 'glamor'
-import {
-  dateFormatter,
-  FALLBACK_IMG_SRC,
-  formatMinutes,
-  renderTime,
-} from '../../../shared'
+import { dateFormatter, FALLBACK_IMG_SRC, formatMinutes } from '../../../shared'
 import AudioPlayerTitle from '../../AudioPlayerTitle'
 import AudioCover from '../../AudioCover'
 import { AudioQueueItem } from '../../../../graphql/AudioQueueHooks'
 import { imageResizeUrl } from 'mdast-react-render/lib/utils'
-import { ComponentType, ReactNode, Ref } from 'react'
+import { ComponentType, ReactNode, useState } from 'react'
+import useMediaProgressQuery from '../../../../hooks/useMediaProgressQuery'
 
 const styles = {
   root: css({
@@ -109,6 +104,12 @@ const AudioListItem = ({
   const { audioSource } = meta
   const cover = imageResizeUrl(meta.image, '150x') || FALLBACK_IMG_SRC
   const publishDate = new Date(Date.parse(meta.publishDate))
+  const { data: progress, loading: progressIsLoading } = useMediaProgressQuery({
+    variables: {
+      mediaId: item?.meta.audioSource.mediaId,
+    },
+    skip: !item?.meta.audioSource.mediaId,
+  })
 
   return (
     <div {...styles.root} {...colorScheme.set('backgroundColor', 'overlay')}>
@@ -150,7 +151,7 @@ const AudioListItem = ({
                 </span>
               </span>
             </div>
-            {audioSource.userProgress && audioSource.userProgress.secs >= 10 && (
+            {progress?.mediaProgress && progress.mediaProgress?.secs >= 10 && (
               <div
                 {...colorScheme.set('backgroundColor', 'hover')}
                 style={{ width: '100%', height: 2 }}
@@ -160,7 +161,7 @@ const AudioListItem = ({
                   style={{
                     position: 'relative',
                     width: `${
-                      (audioSource.userProgress.secs /
+                      (progress.mediaProgress.secs /
                         (audioSource.durationMs / 1000)) *
                       100
                     }%`,
