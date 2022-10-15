@@ -490,8 +490,12 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
     setOptimisticTimeUI(nextUp, initialTime)
     if (inNativeApp) {
       return setUpAppPlayer(nextUp, autoPlay, initialTime)
-    } else if (audioEventHandlers.current && autoPlay) {
-      return audioEventHandlers.current.handlePlay(initialTime)
+    } else if (audioEventHandlers.current) {
+      if (autoPlay) {
+        return audioEventHandlers.current.handlePlay(initialTime)
+      } else {
+        return audioEventHandlers.current.handleSetPosition(initialTime)
+      }
     }
   }
 

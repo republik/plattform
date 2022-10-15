@@ -181,6 +181,14 @@ const AudioPlaybackElement = ({
     [syncStateWithUI],
   )
 
+  const onSetPosition = useCallback(
+    async (newPosition: number) => {
+      mediaRef.current.currentTime = newPosition
+      syncStateWithUI()
+    },
+    [syncStateWithUI],
+  )
+
   // Reset media-element if new source is provided
   useEffect(() => {
     if (activeItem?.id === trackedPlayerItem?.current?.id) {
@@ -205,6 +213,7 @@ const AudioPlaybackElement = ({
       handleForward: onForward,
       handleBackward: onBackward,
       handlePlaybackRateChange: onPlaybackRateChange,
+      handleSetPosition: onSetPosition,
     })
   }, [
     onPlay,
@@ -214,6 +223,7 @@ const AudioPlaybackElement = ({
     onForward,
     onBackward,
     onPlaybackRateChange,
+    onSetPosition,
   ])
 
   const {
