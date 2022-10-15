@@ -5,7 +5,7 @@ import throttle from 'lodash/throttle'
 
 import { useMe } from '../../lib/context/MeContext'
 import useUpsertMediaProgress from './hooks/useUpsertMediaProgress'
-import useMediaProgressLazyQuery from './hooks/useMediaProgressLazyQuery'
+import { useMediaProgressLazyQuery } from './hooks/useMediaProgressQuery'
 
 type GetMediaProgress = ({
   mediaId,

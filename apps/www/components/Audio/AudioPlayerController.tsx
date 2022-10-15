@@ -278,13 +278,12 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
       // In case the queue has ended, readd the last played item to the queue and play it
       if (activePlayerItem && audioQueue.length === 0) {
         // Re-add item to queue-head
-        alert('re-add item to queue-head')
         await addAudioQueueItem(activePlayerItem.document, 1)
+        setOptimisticTimeUI(activePlayerItem, 0)
       }
 
       if (inNativeApp) {
-        notifyApp(AudioEvent.PLAY)
-        setIsPlaying(true)
+        setUpAppPlayer(activePlayerItem, true, 0)
       } else if (audioEventHandlers.current) {
         await audioEventHandlers.current.handlePlay()
       }
