@@ -1127,455 +1127,563 @@
     },
     {
       "key": "cf/cta/now",
-      "de": "Jetzt mitmachen!"
+      "de": "Jetzt mitmachen!",
+      "fr": "Adhérer maintenant!"
     },
     {
       "key": "cf/cta/share",
-      "de": "Teilen Sie diese Seite mit Ihren Freunden:"
+      "de": "Teilen Sie diese Seite mit Ihren Freunden:",
+      "fr": "Partagez cette page avec vos amis:"
     },
     {
       "key": "cf/cta/shareNow",
-      "de": "Jetzt andere auf Lobbywatch aufmerksam machen:"
+      "de": "Jetzt andere auf Lobbywatch aufmerksam machen:",
+      "fr": "Attirez maintenant l'attention des autres sur Lobbywatch :"
     },
     {
       "key": "cf/cta/shareEmailSubject",
-      "de": "Lobbywatch unterstützen"
+      "de": "Lobbywatch unterstützen",
+      "fr": "Soutenir Lobbywatch"
     },
     {
       "key": "cf/package/YEAR",
-      "de": "Für mindestens ein Jahr"
+      "de": "Für mindestens ein Jahr",
+      "fr": "Depuis au moins un an"
     },
     {
       "key": "cf/package/LEGISLATION",
-      "de": "Für die ganze Legislatur"
+      "de": "Für die ganze Legislatur",
+      "fr": "Pour toute la législature"
     },
     {
       "key": "cf/package/BENEFACTOR",
-      "de": "Als Gönner"
+      "de": "Als Gönner:in",
+      "fr": "En tant que mécène"
     },
     {
       "key": "cf/package/DONATE",
-      "de": "Spenden, sonst nichts"
+      "de": "Spenden, sonst nichts",
+      "fr": "Faites un don, rien d'autre"
     },
     {
       "key": "cf/package/WORKSHOP",
-      "de": "Etwas für Ihre ganze Crew? Lobbywatch-Workshop buchen."
+      "de": "Etwas für Ihre ganze Crew? Lobbywatch-Workshop buchen.",
+      "fr": "Quelque chose pour tout votre équipage ? Réservez un atelier Lobbywatch."
     },
     {
       "key": "pages/account/title",
-      "de": "Konto"
+      "de": "Konto",
+      "fr": "Compte"
     },
     {
       "key": "account/signedOut/title",
-      "de": "Zu Ihrem Konto"
+      "de": "Zu Ihrem Konto",
+      "fr": "à votre compte"
     },
     {
       "key": "account/signedOut/signIn",
-      "de": "Bitte anmelden:"
+      "de": "Bitte anmelden:",
+      "fr": "Veuillez vous connecter :"
     },
     {
       "key": "Account/AddressForm/city/error/empty",
-      "de": "Ort fehlt"
+      "de": "Ort fehlt",
+      "fr": "l'emplacement est manquant"
     },
     {
       "key": "Account/AddressForm/city/error/tooLong",
-      "de": "Ort, maximal {maxLength} Zeichen"
+      "de": "Ort, maximal {maxLength} Zeichen",
+      "fr": "Lieu, max {maxLength} caractères"
     },
     {
       "key": "Account/AddressForm/city/label",
-      "de": "Ort"
+      "de": "Ort",
+      "fr": "emplacement"
     },
     {
       "key": "Account/AddressForm/country/error/empty",
-      "de": "Land fehlt"
+      "de": "Land fehlt",
+      "fr": "il manque le pays"
     },
     {
       "key": "Account/AddressForm/country/label",
-      "de": "Land"
+      "de": "Land",
+      "fr": "pays"
     },
     {
       "key": "Account/AddressForm/edit",
-      "de": "ändern"
+      "de": "ändern",
+      "fr": "monnaie"
     },
     {
       "key": "Account/AddressForm/editName",
-      "de": "bearbeiten"
+      "de": "bearbeiten",
+      "fr": "éditer"
     },
     {
       "key": "Account/AddressForm/line1/error/empty",
-      "de": "Strasse und Hausnummer fehlen"
+      "de": "Strasse und Hausnummer fehlen",
+      "fr": "Il manque la rue et le numéro de maison"
     },
     {
       "key": "Account/AddressForm/line1/error/tooLong",
-      "de": "Strasse und Hausnummer, maximal {maxLength} Zeichen"
+      "de": "Strasse und Hausnummer, maximal {maxLength} Zeichen",
+      "fr": "Rue et numéro de maison, maximum {maxLength} caractères"
     },
     {
       "key": "Account/AddressForm/line1/label",
-      "de": "Strasse und Hausnummer"
+      "de": "Strasse und Hausnummer",
+      "fr": "Rue et numéro de maison"
     },
     {
       "key": "Account/AddressForm/line2/label",
-      "de": "Zusatz (Optional)"
+      "de": "Zusatz (Optional)",
+      "fr": "Supplément (facultatif)"
     },
     {
       "key": "Account/AddressForm/name/error/empty",
-      "de": "Eindeutige Anschrift fehlt"
+      "de": "Eindeutige Anschrift fehlt",
+      "fr": "Adresse unique manquante"
     },
     {
       "key": "Account/AddressForm/name/error/tooLong",
-      "de": "Ihr Name, maximal {maxLength} Zeichen"
+      "de": "Ihr Name, maximal {maxLength} Zeichen",
+      "fr": "Votre nom, max {maxLength} caractères"
     },
     {
       "key": "Account/AddressForm/name/explanation",
-      "de": "Ihr Name für Postsendungen, falls nötig mit c/o."
+      "de": "Ihr Name für Postsendungen, falls nötig mit c/o.",
+      "fr": "Votre nom pour les envois, si nécessaire avec c/o."
     },
     {
       "key": "Account/AddressForm/name/label",
-      "de": "Eindeutige Anschrift"
+      "de": "Eindeutige Anschrift",
+      "fr": "adresse unique"
     },
     {
       "key": "Account/AddressForm/postalCode/error/empty",
-      "de": "Postleitzahl fehlt"
+      "de": "Postleitzahl fehlt",
+      "fr": "Le code postal est manquant"
     },
     {
       "key": "Account/AddressForm/postalCode/label",
-      "de": "Postleitzahl"
+      "de": "Postleitzahl",
+      "fr": "code postal"
     },
     {
       "key": "Account/AddressForm/reset",
-      "de": "zurücksetzen"
+      "de": "zurücksetzen",
+      "fr": "réinitialiser par défaut"
     },
     {
       "key": "Account/AddressForm/title",
-      "de": "Ihre Adresse"
+      "de": "Ihre Adresse",
+      "fr": "Votre adresse"
     },
     {
       "key": "account/item/label",
-      "de": "Erstellt am {formattedDate} um {formattedTime}"
+      "de": "Erstellt am {formattedDate} um {formattedTime}",
+      "fr": "Créé le {formattedDate} à {formattedTime}"
     },
     {
       "key": "account/newsletterSubscriptions/button/subscribe",
-      "de": "Abonnieren"
+      "de": "Abonnieren",
+      "fr": "S'abonner à"
     },
     {
       "key": "account/newsletterSubscriptions/onlyName/subscribe",
-      "de": "abonnieren"
+      "de": "abonnieren",
+      "fr": "s'abonner à"
     },
     {
       "key": "account/newsletterSubscriptions/onlyName/subscribed",
-      "de": "abonniert"
+      "de": "abonniert",
+      "fr": "abonné"
     },
     {
       "key": "account/newsletterSubscriptions/resendResubscribeEmail",
-      "de": "E-Mail erneut senden"
+      "de": "E-Mail erneut senden",
+      "fr": "Ré-envoyer l'email"
     },
     {
       "key": "account/newsletterSubscriptions/resubscribe",
-      "de": "Newsletter reaktivieren"
+      "de": "Newsletter reaktivieren",
+      "fr": "Réactiver la newsletter"
     },
     {
       "key": "account/newsletterSubscriptions/resubscribed",
-      "de": "Sie haben alle Newsletter pausiert. Wir haben Ihnen eine E-Mail geschickt um die Reaktivierung zu bestätigen. Vielen Dank."
+      "de": "Sie haben alle Newsletter pausiert. Wir haben Ihnen eine E-Mail geschickt um die Reaktivierung zu bestätigen. Vielen Dank.",
+      "fr": "Vous avez suspendu toutes les newsletters. Nous vous avons envoyé un e-mail pour confirmer la réactivation. Merci beaucoup."
     },
     {
       "key": "account/newsletterSubscriptions/resubscribeEmailPending",
-      "de": "Sie haben alle Newsletter pausiert. Wir haben Ihnen bereits eine E-Mail geschickt um die Newsletter zu reaktivieren."
+      "de": "Sie haben alle Newsletter pausiert. Wir haben Ihnen bereits eine E-Mail geschickt um die Newsletter zu reaktivieren.",
+      "fr": "Vous avez suspendu toutes les newsletters. Nous vous avons déjà envoyé un e-mail pour réactiver la newsletter."
     },
     {
       "key": "account/newsletterSubscriptions/unauthorized",
-      "de": "Sie müssen angemeldet sein, um Ihre Newsletter-Einstellungen zu ändern."
+      "de": "Sie müssen angemeldet sein, um Ihre Newsletter-Einstellungen zu ändern.",
+      "fr": "Vous devez être connecté pour modifier vos préférences de newsletter."
     },
     {
       "key": "account/newsletterSubscriptions/unsubscribed",
-      "de": "Sie haben alle Newsletter pausiert. Möchten Sie die Newsletter wieder erhalten?"
+      "de": "Sie haben alle Newsletter pausiert. Möchten Sie die Newsletter wieder erhalten?",
+      "fr": "Vous avez suspendu toutes les newsletters. Souhaitez-vous recevoir à nouveau la newsletter ?"
     },
     {
       "key": "account/paymentSource/error",
-      "de": "Fehler"
+      "de": "Fehler",
+      "fr": "erreur"
     },
     {
       "key": "account/paymentSource/save",
-      "de": "speichern"
+      "de": "speichern",
+      "fr": "sauver"
     },
     {
       "key": "account/paymentSource/saving",
-      "de": "verifizieren"
+      "de": "verifizieren",
+      "fr": "vérifier"
     },
     {
       "key": "account/pledges/free-delivery",
-      "de": "Kostenlose Lieferung"
+      "de": "Kostenlose Lieferung",
+      "fr": "Livraison gratuite"
     },
     {
       "key": "account/pledges/payment/canceled",
-      "de": "Die Zahlung wurde abgebrochen."
+      "de": "Die Zahlung wurde abgebrochen.",
+      "fr": "Le paiement a été annulé."
     },
     {
       "key": "account/pledges/payment/method/PAYMENTSLIP",
-      "de": "Rechnung"
+      "de": "Rechnung",
+      "fr": "facture d'achat"
     },
     {
       "key": "account/pledges/payment/method/PAYPAL",
-      "de": "PayPal"
+      "de": "PayPal",
+      "fr": "Pay Pal"
     },
     {
       "key": "account/pledges/payment/method/POSTFINANCECARD",
-      "de": "Postcard"
+      "de": "Postcard",
+      "fr": "Carte postale"
     },
     {
       "key": "account/pledges/payment/method/STRIPE",
-      "de": "Kreditkarte"
+      "de": "Kreditkarte",
+      "fr": "Carte de crédit"
     },
     {
       "key": "account/pledges/payment/method/STRIPE-WALLET-APPLE-PAY",
-      "de": "Apple Pay"
+      "de": "Apple Pay",
+      "fr": "Payer Apple"
     },
     {
       "key": "account/pledges/payment/method/STRIPE-WALLET-GOOGLE-PAY",
-      "de": "Google Pay"
+      "de": "Google Pay",
+      "fr": "Google Pay"
     },
     {
       "key": "account/pledges/payment/methods/loading",
-      "de": "Zahlungsmittel werden geladen"
+      "de": "Zahlungsmittel werden geladen",
+      "fr": "Les moyens de paiement sont chargés"
     },
     {
       "key": "account/pledges/payment/methods/wallet/exception",
-      "de": "{wallet} konnte nicht geladen werden. Mögliche Ursachen: eine wackelige Internetverbindung, ein temporärer Ausfall, ein VPN oder Ihre Browsererweiterungen. Wählen Sie bitte eine andere Zahlungsart oder versuchen Sie es in einigen Sekunden erneut."
+      "de": "{wallet} konnte nicht geladen werden. Mögliche Ursachen: eine wackelige Internetverbindung, ein temporärer Ausfall, ein VPN oder Ihre Browsererweiterungen. Wählen Sie bitte eine andere Zahlungsart oder versuchen Sie es in einigen Sekunden erneut.",
+      "fr": "{wallet} n'a pas pu être chargé. Causes possibles : une connexion Internet instable, une panne temporaire, un VPN ou les extensions de votre navigateur. Veuillez choisir un autre mode de paiement ou réessayer dans quelques secondes."
     },
     {
       "key": "account/pledges/payment/methods/wallet/loading",
-      "de": "{wallet} lädt noch."
+      "de": "{wallet} lädt noch.",
+      "fr": "{wallet} est toujours en cours de chargement."
     },
     {
       "key": "account/pledges/payment/methods/wallet/unavailable",
-      "de": "{wallet} ist nicht verfügbar. Bitte überprüfen Sie Ihre Einstellungen, geben Sie Ihre Kreditkarte von Hand ein oder wählen Sie eine andere Zahlungsart."
+      "de": "{wallet} ist nicht verfügbar. Bitte überprüfen Sie Ihre Einstellungen, geben Sie Ihre Kreditkarte von Hand ein oder wählen Sie eine andere Zahlungsart.",
+      "fr": "{wallet} n'est pas disponible. Veuillez vérifier vos paramètres, entrer votre carte de crédit manuellement ou choisir un autre mode de paiement."
     },
     {
       "key": "account/pledges/payment/paymentslipHint",
-      "de": "Die QR-Rechnung ersetzt den Einzahlungsschein. Sie können damit die Zahlung via Mobile Banking, E-Banking oder am Schalter bei Bank und Post auslösen."
+      "de": "Die QR-Rechnung ersetzt den Einzahlungsschein. Sie können damit die Zahlung via Mobile Banking, E-Banking oder am Schalter bei Bank und Post auslösen.",
+      "fr": "La QR-facture remplace le bulletin de versement. Vous pouvez l'utiliser pour initier le paiement via mobile banking, e-banking ou au guichet de la banque et de la poste."
     },
     {
       "key": "account/pledges/payment/paymentslipLink",
-      "de": "QR-Rechnung anzeigen"
+      "de": "QR-Rechnung anzeigen",
+      "fr": "Voir la QR-facture"
     },
     {
       "key": "account/pledges/payment/status/generic/CANCELLED",
-      "de": "{formattedTotal} storniert"
+      "de": "{formattedTotal} storniert",
+      "fr": "{formattedTotal} annulé"
     },
     {
       "key": "account/pledges/payment/status/generic/PAID",
-      "de": "{formattedTotal} bezahlt mit {method}{dateSuffix}"
+      "de": "{formattedTotal} bezahlt mit {method}{dateSuffix}",
+      "fr": "{formattedTotal} payé avec {method}{dateSuffix}"
     },
     {
       "key": "account/pledges/payment/status/generic/PAID/dateSuffix",
-      "de": " am {createdAt}"
+      "de": " am {createdAt}",
+      "fr": " sur {createdAt}"
     },
     {
       "key": "account/pledges/payment/status/generic/REFUNDED",
-      "de": "{formattedTotal} zurückerstattet"
+      "de": "{formattedTotal} zurückerstattet",
+      "fr": "{formattedTotal} remboursé"
     },
     {
       "key": "account/pledges/payment/status/generic/WAITING",
-      "de": "{formattedTotal} ausstehend"
+      "de": "{formattedTotal} ausstehend",
+      "fr": "{formattedTotal} en attente"
     },
     {
       "key": "account/pledges/payment/status/generic/WAITING_FOR_REFUND",
-      "de": "{formattedTotal} wird zurückerstattet"
+      "de": "{formattedTotal} wird zurückerstattet",
+      "fr": "{formattedTotal} sera remboursé"
     },
     {
       "key": "account/pledges/payment/status/PAYMENTSLIP/PAID",
-      "de": "{formattedTotal} bezahlt"
+      "de": "{formattedTotal} bezahlt",
+      "fr": "{formattedTotal} payé"
     },
     {
       "key": "account/pledges/payment/status/PAYMENTSLIP/WAITING",
-      "de": "Bitte überweisen Sie {formattedTotal} mit der Mitteilung «{hrid}» im Betreff-Feld an:<br /><br />\nPC 89-584470-6<br />\nIBAN: CH92 0900 0000 8958 4470 6<br />\nlautend auf:<br />\nLobbywatch.ch<br />\n3000 Bern\n"
+      "de": "Bitte überweisen Sie {formattedTotal} mit der Mitteilung «{hrid}» im Betreff-Feld an:<br /><br />\nPC 89-584470-6<br />\nIBAN: CH92 0900 0000 8958 4470 6<br />\nlautend auf:<br />\nLobbywatch.ch<br />\n3000 Bern\n",
+      "fr": "Veuillez transférer {formattedTotal} avec le message \"{hrid}\" dans le champ objet à :<br /><br /> PC 89-584470-6<br /> IBAN : CH92 0900 0000 8958 4470 6<br /> à l'ordre de :<br /> Lobbywatch.ch <br /> 3000 Berne"
     },
     {
       "key": "account/pledges/payment/your-payment-data",
-      "de": "Ihre Kreditkartendaten"
+      "de": "Ihre Kreditkartendaten",
+      "fr": "les détails de votre carte de crédit"
     },
     {
       "key": "account/pledges/title",
-      "de": "Unterstützungsbeiträge"
+      "de": "Unterstützungsbeiträge",
+      "fr": "avenants"
     },
     {
       "key": "Account/title",
-      "de": "Willkommen"
+      "de": "Willkommen",
+      "fr": "Accueillir"
     },
     {
       "key": "Account/title/name",
-      "de": "Willkommen, {name}"
+      "de": "Willkommen, {name}",
+      "fr": "Bienvenue {name}"
     },
     {
       "key": "Account/Update/address/label",
-      "de": "Adresse"
+      "de": "Adresse",
+      "fr": "adresse"
     },
     {
       "key": "Account/Update/birthday/error/empty",
-      "de": "Geburtsdatum fehlt"
+      "de": "Geburtsdatum fehlt",
+      "fr": "La date de naissance est manquante"
     },
     {
       "key": "Account/Update/birthday/error/invalid",
-      "de": "Geburtsdatum ungültig"
+      "de": "Geburtsdatum ungültig",
+      "fr": "Date de naissance invalide"
     },
     {
       "key": "Account/Update/birthday/hint/plain",
-      "de": "TT.MM.JJJJ"
-    },
-    {
-      "key": "Account/Update/birthday/hint/statute",
-      "de": "TT.MM.JJJJ, notwendig für Ihre Mitgliedschaft bei Project R"
+      "de": "TT.MM.JJJJ",
+      "fr": "JJ.MM.AAAA"
     },
     {
       "key": "Account/Update/birthday/label",
-      "de": "Geburtsdatum"
+      "de": "Geburtsdatum",
+      "fr": "Date de naissance"
     },
     {
       "key": "Account/Update/birthday/label/optional",
-      "de": "Geburtsdatum (Optional)"
+      "de": "Geburtsdatum (Optional)",
+      "fr": "Date de naissance (facultatif)"
     },
     {
       "key": "Account/Update/cancel",
-      "de": "abbrechen"
+      "de": "abbrechen",
+      "fr": "avorter"
     },
     {
       "key": "Account/Update/details/title",
-      "de": "Bitte überprüfen Sie Ihre Angaben und korrigieren beziehungsweise ergänzen Sie sie."
+      "de": "Bitte überprüfen Sie Ihre Angaben und korrigieren beziehungsweise ergänzen Sie sie.",
+      "fr": "Veuillez vérifier vos informations et les corriger ou les compléter."
     },
     {
       "key": "Account/Update/edit",
-      "de": "ändern"
+      "de": "ändern",
+      "fr": "monnaie"
     },
     {
       "key": "Account/Update/email/confirm",
-      "de": "Sind Sie sicher, dass die neue E-Mail-Adresse für Ihr Lobbywatch-Konto {email} lauten soll?"
+      "de": "Sind Sie sicher, dass die neue E-Mail-Adresse für Ihr Lobbywatch-Konto {email} lauten soll?",
+      "fr": "Voulez-vous vraiment que la nouvelle adresse e-mail de votre compte Lobbywatch soit {email} ?"
     },
     {
       "key": "Account/Update/email/edit",
-      "de": "ändern"
+      "de": "ändern",
+      "fr": "monnaie"
     },
     {
       "key": "Account/Update/email/empty",
-      "de": "Geben Sie eine gültige E-Mail-Adresse ein."
+      "de": "Geben Sie eine gültige E-Mail-Adresse ein.",
+      "fr": "Entrez une adresse mail valide."
     },
     {
       "key": "Account/Update/email/error/invalid",
-      "de": "Das ist keine gültige E-Mail-Adresse"
+      "de": "Das ist keine gültige E-Mail-Adresse",
+      "fr": "Cette adresse email n'est pas valide"
     },
     {
       "key": "Account/Update/email/form/label",
-      "de": "Ihre neue E-Mail-Adresse"
+      "de": "Ihre neue E-Mail-Adresse",
+      "fr": "Votre nouvelle adresse e-mail"
     },
     {
       "key": "Account/Update/email/hint",
-      "de": "Achtung: Wenn Sie Ihre E-Mail-Adresse ändern, werden Sie auf allen Geräten abgemeldet und Sie können sich danach ausschliesslich mit der neuen E-Mail-Adresse anmelden!"
+      "de": "Achtung: Wenn Sie Ihre E-Mail-Adresse ändern, werden Sie auf allen Geräten abgemeldet und Sie können sich danach ausschliesslich mit der neuen E-Mail-Adresse anmelden!",
+      "fr": "Attention : Si vous modifiez votre adresse e-mail, vous serez déconnecté sur tous les appareils et vous ne pourrez ensuite vous connecter qu'avec la nouvelle adresse e-mail !"
     },
     {
       "key": "Account/Update/email/label",
-      "de": "E-Mail-Adresse"
+      "de": "E-Mail-Adresse",
+      "fr": "Adresse e-mail"
     },
     {
       "key": "Account/Update/email/submit",
-      "de": "speichern"
+      "de": "speichern",
+      "fr": "sauver"
     },
     {
       "key": "Account/Update/email/updating",
-      "de": "Neue E-Mail-Adresse wird gespeichert"
+      "de": "Neue E-Mail-Adresse wird gespeichert",
+      "fr": "La nouvelle adresse e-mail est enregistrée"
     },
     {
       "key": "Account/Update/name/label",
-      "de": "Name"
+      "de": "Name",
+      "fr": "Nom de famille"
     },
     {
       "key": "Account/Update/phone/label",
-      "de": "Telefonnummer (Optional)"
+      "de": "Telefonnummer (Optional)",
+      "fr": "Numéro de téléphone (facultatif)"
     },
     {
       "key": "Account/Update/phone/label/alt",
-      "de": "Telefonnummer"
+      "de": "Telefonnummer",
+      "fr": "numéro de téléphone"
     },
     {
       "key": "Account/Update/submit",
-      "de": "speichern"
+      "de": "speichern",
+      "fr": "sauver"
     },
     {
       "key": "Account/Update/title",
-      "de": "Persönliche Angaben"
+      "de": "Persönliche Angaben",
+      "fr": "Renseignements personnels"
     },
     {
       "key": "Account/Update/updating",
-      "de": "speichert"
+      "de": "speichert",
+      "fr": "sauve"
     },
     {
       "key": "actionbar/download",
-      "de": "Herunterladen"
+      "de": "Herunterladen",
+      "fr": "Télécharger"
     },
     {
       "key": "actionbar/email/label",
-      "de": "E-Mail"
+      "de": "E-Mail",
+      "fr": "e-mail"
     },
     {
       "key": "actionbar/email/title",
-      "de": "Per E-Mail verschicken"
+      "de": "Per E-Mail verschicken",
+      "fr": "Envoyé par email"
     },
     {
       "key": "actionbar/facebook/label",
-      "de": "Facebook"
+      "de": "Facebook",
+      "fr": "Facebook"
     },
     {
       "key": "actionbar/facebook/title",
-      "de": "Auf Facebook teilen"
+      "de": "Auf Facebook teilen",
+      "fr": "Partager sur Facebook"
     },
     {
       "key": "actionbar/link/label",
-      "de": "Link kopieren"
+      "de": "Link kopieren",
+      "fr": "Copier le lien"
     },
     {
       "key": "actionbar/link/label/error",
-      "de": "Nicht unterstützt :("
+      "de": "Nicht unterstützt :(",
+      "fr": "Non pris en charge :("
     },
     {
       "key": "actionbar/link/label/success",
-      "de": "Link kopiert!"
+      "de": "Link kopiert!",
+      "fr": "Lien copié !"
     },
     {
       "key": "actionbar/link/title",
-      "de": "Link kopieren"
+      "de": "Link kopieren",
+      "fr": "Copier le lien"
     },
     {
       "key": "actionbar/share",
-      "de": "Teilen"
+      "de": "Teilen",
+      "fr": "Diviser"
     },
     {
       "key": "actionbar/telegram/label",
-      "de": "Telegram"
+      "de": "Telegram",
+      "fr": "Télégramme"
     },
     {
       "key": "actionbar/telegram/title",
-      "de": "Auf Telegram teilen"
+      "de": "Auf Telegram teilen",
+      "fr": "Partager sur Telegram"
     },
     {
       "key": "actionbar/threema/label",
-      "de": "Threema"
+      "de": "Threema",
+      "fr": "troisma"
     },
     {
       "key": "actionbar/threema/title",
-      "de": "Auf Threema teilen"
+      "de": "Auf Threema teilen",
+      "fr": "Partager sur Threema"
     },
     {
       "key": "actionbar/twitter/label",
-      "de": "Twitter"
+      "de": "Twitter",
+      "fr": "Twitter"
     },
     {
       "key": "actionbar/twitter/title",
-      "de": "Auf Twitter teilen"
+      "de": "Auf Twitter teilen",
+      "fr": "Partager sur Twitter"
     },
     {
       "key": "actionbar/whatsapp/label",
-      "de": "WhatsApp"
+      "de": "WhatsApp",
+      "fr": "WhatsApp"
     },
     {
       "key": "actionbar/whatsapp/title",
-      "de": "Auf WhatsApp teilen"
+      "de": "Auf WhatsApp teilen",
+      "fr": "Partager sur Whatsapp"
     },
     {
       "key": "banner/link/href"
@@ -1588,1087 +1696,1368 @@
     },
     {
       "key": "crowdfunding/status/goal/memberships",
-      "de": "von {count} Mitgliedschaften"
+      "de": "von {count} Mitgliedschaften",
+      "fr": "de {count} adhésions"
     },
     {
       "key": "crowdfunding/status/goal/money",
-      "de": "von {count}"
+      "de": "von {count}",
+      "fr": "de {count}"
     },
     {
       "key": "crowdfunding/status/goal/people",
-      "de": "von {count} Mitgliedern"
+      "de": "von {count} Mitgliedern",
+      "fr": "par {count} membres"
     },
     {
       "key": "crowdfunding/status/time/days/1",
-      "de": "1 Tag"
+      "de": "1 Tag",
+      "fr": "Un jour"
     },
     {
       "key": "crowdfunding/status/time/days/other",
-      "de": "{count} Tage"
+      "de": "{count} Tage",
+      "fr": "{compte} jours"
     },
     {
       "key": "crowdfunding/status/time/ended",
-      "de": "Das Crowdfunding ist vorbei."
+      "de": "Das Crowdfunding ist vorbei.",
+      "fr": "Fini le financement participatif."
     },
     {
       "key": "crowdfunding/status/time/hours/1",
-      "de": "1 Stunde"
+      "de": "1 Stunde",
+      "fr": "1 heure"
     },
     {
       "key": "crowdfunding/status/time/hours/other",
-      "de": "{count} Stunden"
+      "de": "{count} Stunden",
+      "fr": "{count} heures"
     },
     {
       "key": "crowdfunding/status/time/label",
-      "de": "bis Deadline"
+      "de": "bis Deadline",
+      "fr": "jusqu'à la date limite"
     },
     {
       "key": "crowdfunding/status/time/minutes/1",
-      "de": "1 Minute"
+      "de": "1 Minute",
+      "fr": "1 minute"
     },
     {
       "key": "crowdfunding/status/time/minutes/other",
-      "de": "{count} Minuten"
+      "de": "{count} Minuten",
+      "fr": "{count} minutes"
     },
     {
       "key": "crowdfunding/status/time/seconds/1",
-      "de": "1 Sekunde"
+      "de": "1 Sekunde",
+      "fr": "1 seconde"
     },
     {
       "key": "crowdfunding/status/time/seconds/other",
-      "de": "{count} Sekunden"
+      "de": "{count} Sekunden",
+      "fr": "{count} secondes"
     },
     {
       "key": "faq/before/support/text",
-      "de": "Bei allen technischen Problemen helfen wir Ihnen gerne so schnell wie möglich per Mail: <a href=\"mailto:info@lobbywatch.ch\">info@lobbywatch.ch</a>"
+      "de": "Bei allen technischen Problemen helfen wir Ihnen gerne so schnell wie möglich per Mail: <a href=\"mailto:info@lobbywatch.ch\">info@lobbywatch.ch</a>",
+      "fr": "Si vous rencontrez des problèmes techniques, nous nous ferons un plaisir de vous aider dans les plus brefs délais par email : <a href=\"mailto:info@lobbywatch.ch\"> info@lobbywatch.ch </a>"
     },
     {
       "key": "faq/before/support/title",
-      "de": "Erste-Hilfe-Team"
+      "de": "Erste-Hilfe-Team",
+      "fr": "Équipe de premiers secours"
     },
     {
       "key": "faq/before/title",
-      "de": "FAQ – Ihre häufigsten Fragen"
+      "de": "FAQ – Ihre häufigsten Fragen",
+      "fr": "FAQ - Vos questions les plus fréquemment posées"
     },
     {
       "key": "faq/metaDescription",
-      "de": "Jetzt Mitglied werden."
+      "de": "Jetzt Mitglied werden.",
+      "fr": "Adhérer maintenant."
     },
     {
       "key": "faq/pageTitle",
-      "de": "Fragen – Lobbywatch"
+      "de": "Fragen – Lobbywatch",
+      "fr": "Questions – Lobbywatch"
     },
     {
       "key": "faq/title",
-      "de": "Antworten auf die häufigsten Fragen"
+      "de": "Antworten auf die häufigsten Fragen",
+      "fr": "Réponses aux questions les plus courantes"
     },
     {
       "key": "Goodie/dropdown/label",
-      "de": "Anzahl"
+      "de": "Anzahl",
+      "fr": "Numéro"
     },
     {
       "key": "Goodies/title",
-      "de": "Noch etwas Handfestes?"
+      "de": "Noch etwas Handfestes?",
+      "fr": "Rien d'autre de solide ?"
     },
     {
       "key": "macNewsletterSubscription/button",
-      "de": "bestätigen"
+      "de": "bestätigen",
+      "fr": "confirmer"
     },
     {
       "key": "me/signedinAs",
-      "de": "Sie sind angemeldet als: {nameOrEmail}"
+      "de": "Sie sind angemeldet als: {nameOrEmail}",
+      "fr": "Vous êtes connecté en tant que : {nameOrEmail}"
     },
     {
       "key": "me/signedOut",
-      "de": "Sie sind nicht angemeldet"
+      "de": "Sie sind nicht angemeldet",
+      "fr": "Vous n'êtes pas connecté"
     },
     {
       "key": "memberships/title/1",
-      "de": "Mitgliedschaft"
+      "de": "Mitgliedschaft",
+      "fr": "adhésion"
     },
     {
       "key": "memberships/title/other",
-      "de": "Mitgliedschaften"
+      "de": "Mitgliedschaften",
+      "fr": "adhésions"
     },
     {
       "key": "memberships/title/YEAR",
-      "de": "Jahresmitgliedschaft"
+      "de": "Jahresmitgliedschaft",
+      "fr": "adhésion annuelle"
     },
     {
       "key": "memberships/title/LEGISLATION",
-      "de": "Legislatur-Mitgliedschaft"
+      "de": "Legislatur-Mitgliedschaft",
+      "fr": "Adhésion législative"
     },
     {
       "key": "memberships/title/BENEFACTOR",
-      "de": "Gönner-Mitgliedschaft"
+      "de": "Gönner-Mitgliedschaft",
+      "fr": "Adhésion mécène"
     },
     {
       "key": "memberships/title/payment",
-      "de": "Zahlungsart"
+      "de": "Zahlungsart",
+      "fr": "mode de paiement"
     },
     {
       "key": "memberships/latestPeriod/ended",
-      "de": "Endete am {formattedEndDate}"
+      "de": "Endete am {formattedEndDate}",
+      "fr": "Terminé le {formattedEndDate}"
     },
     {
       "key": "memberships/latestPeriod/overdue",
-      "de": "Überfällig seit dem {formattedEndDate}"
+      "de": "Überfällig seit dem {formattedEndDate}",
+      "fr": "En retard depuis {formattedEndDate}"
     },
     {
       "key": "memberships/latestPeriod/renew/false/autoPay/false",
-      "de": "Gültig bis am {formattedEndDate}"
+      "de": "Gültig bis am {formattedEndDate}",
+      "fr": "Valable jusqu'au {formattedEndDate}"
     },
     {
       "key": "memberships/latestPeriod/renew/false/autoPay/true",
-      "de": "Gültig bis am {formattedEndDate}"
+      "de": "Gültig bis am {formattedEndDate}",
+      "fr": "Valable jusqu'au {formattedEndDate}"
     },
     {
       "key": "memberships/latestPeriod/renew/true/autoPay/false",
-      "de": "Gültig bis am {formattedEndDate}"
+      "de": "Gültig bis am {formattedEndDate}",
+      "fr": "Valable jusqu'au {formattedEndDate}"
     },
     {
       "key": "memberships/latestPeriod/renew/true/autoPay/true",
-      "de": "Automatische Erneuerung am {formattedEndDate}"
+      "de": "Automatische Erneuerung am {formattedEndDate}",
+      "fr": "Renouvellement automatique le {formattedEndDate}"
     },
     {
       "key": "memberships/manage/autoPay/disable",
-      "de": "Automatische Abbuchung deaktivieren"
+      "de": "Automatische Abbuchung deaktivieren",
+      "fr": "Désactiver le prélèvement automatique"
     },
     {
       "key": "memberships/manage/autoPay/enable",
-      "de": "Automatische Kreditkartenabbuchung aktivieren"
+      "de": "Automatische Kreditkartenabbuchung aktivieren",
+      "fr": "Activer le prélèvement automatique par carte de crédit"
     },
     {
       "key": "memberships/manage/cancel/link",
-      "de": "Mitgliedschaft kündigen"
+      "de": "Mitgliedschaft kündigen",
+      "fr": "annuler l'adhésion"
     },
     {
       "key": "memberships/manage/prolong/awaiting",
-      "de": "Sie haben bereits eine weitere Mitgliedschaft, diese wird automatisch zur Verlängerung genutzt."
+      "de": "Sie haben bereits eine weitere Mitgliedschaft, diese wird automatisch zur Verlängerung genutzt.",
+      "fr": "Vous avez déjà un autre abonnement, celui-ci sera automatiquement utilisé pour le renouvellement."
     },
     {
       "key": "memberships/manage/prolong/link",
-      "de": "Jetzt verlängern"
+      "de": "Jetzt verlängern",
+      "fr": "Prolongez maintenant"
     },
     {
       "key": "memberships/manage/reactivate",
-      "de": "Kündigung zurücknehmen"
+      "de": "Kündigung zurücknehmen",
+      "fr": "retirer l'avis"
     },
     {
       "key": "memberships/MONTHLY_ABO/latestPeriod/renew/true/autoPay/false",
-      "de": "Automatische Erneuerung am {formattedEndDate}"
+      "de": "Automatische Erneuerung am {formattedEndDate}",
+      "fr": "Renouvellement automatique le {formattedEndDate}"
     },
     {
       "key": "memberships/noActive",
-      "de": "Sie haben keine aktive Mitgliedschaft."
+      "de": "Sie haben keine aktive Mitgliedschaft.",
+      "fr": "Vous n'avez pas d'abonnement actif."
     },
     {
       "key": "merci/claim/loading",
-      "de": "überprüfen"
+      "de": "überprüfen",
+      "fr": "valider"
     },
     {
       "key": "merci/claim/signIn/before",
-      "de": "Geben Sie Ihre richtige E-Mail-Adresse ein:"
+      "de": "Geben Sie Ihre richtige E-Mail-Adresse ein:",
+      "fr": "Saisissez votre adresse e-mail correcte :"
     },
     {
       "key": "merci/claim/signIn/button",
-      "de": "Ändern"
+      "de": "Ändern",
+      "fr": "Changer"
     },
     {
       "key": "merci/empty/button",
-      "de": "Jetzt mitmachen"
+      "de": "Jetzt mitmachen",
+      "fr": "Adhérer maintenant"
     },
     {
       "key": "merci/empty/text",
-      "de": "Möchten auch Sie uns unterstützen?"
+      "de": "Möchten auch Sie uns unterstützen?",
+      "fr": "Vous aussi vous souhaitez nous soutenir ?"
     },
     {
       "key": "merci/empty/title",
-      "de": "Hallo {nameOrEmail}"
+      "de": "Hallo {nameOrEmail}",
+      "fr": "Bonjour {nameOrEmail}"
     },
     {
       "key": "merci/lead/welcome",
-      "de": "Vielen Dank für Ihre Unterstützung. Es ist uns eine Ehre, Sie bei uns als Mitglied zu begrüssen.\n\nAuf dieser Seite finden Sie alles, was wir von Ihnen wissen: Ihre Unterstützungsbeiträge, Ihre persönlichen Angaben und Ihre Newsletter-Einstellungen."
+      "de": "Vielen Dank für Ihre Unterstützung. Es ist uns eine Ehre, Sie bei uns als Mitglied zu begrüssen.\n\nAuf dieser Seite finden Sie alles, was wir von Ihnen wissen: Ihre Unterstützungsbeiträge, Ihre persönlichen Angaben und Ihre Newsletter-Einstellungen.",
+      "fr": "Merci pour votre aide. C'est un honneur pour nous de vous avoir comme membre.\n\nSur cette page, vous trouverez tout ce que nous savons sur vous : vos contributions, vos données personnelles et vos préférences de newsletter."
     },
     {
       "key": "merci/lead/thanks",
-      "de": "Vielen Dank für Ihre Grosszügigkeit!\n\nAuf dieser Seite finden Sie alles, was wir von Ihnen wissen: Ihre Unterstützungsbeiträge, Ihre persönlichen Angaben und Ihre Newsletter-Einstellungen."
+      "de": "Vielen Dank für Ihre Grosszügigkeit!\n\nAuf dieser Seite finden Sie alles, was wir von Ihnen wissen: Ihre Unterstützungsbeiträge, Ihre persönlichen Angaben und Ihre Newsletter-Einstellungen.",
+      "fr": "Merci de ta générosité!\n\nSur cette page, vous trouverez tout ce que nous savons sur vous : vos contributions, vos données personnelles et vos préférences de newsletter."
     },
     {
       "key": "merci/postpay/lead",
-      "de": "Danke, Sie sind mit dem Wichtigsten durch. Jetzt müssen Sie noch Ihre E-Mail-Adresse bestätigen."
+      "de": "Danke, Sie sind mit dem Wichtigsten durch. Jetzt müssen Sie noch Ihre E-Mail-Adresse bestätigen.",
+      "fr": "Merci, vous avez fait les bases. Vous devez maintenant confirmer votre adresse e-mail."
     },
     {
       "key": "merci/postpay/reclaim",
-      "de": "Falsche E-Mail-Adresse?"
+      "de": "Falsche E-Mail-Adresse?",
+      "fr": "Mauvaise adresse email?"
     },
     {
       "key": "merci/postpay/signInError/email/body",
-      "de": "E-Mail-Adresse:\n{email}\n\nBuchungsreferenz:\n{pledgeId}\n\nFehler:\n{error}"
+      "de": "E-Mail-Adresse:\n{email}\n\nBuchungsreferenz:\n{pledgeId}\n\nFehler:\n{error}",
+      "fr": "Adresse e-mail :\n{email}\n\nRéférence de réservation :\n{pledgeId}\n\nErreur :\n{error}"
     },
     {
       "key": "merci/postpay/signInError/email/subject",
-      "de": "E-Mail-Verifizierung fehlgeschlagen nach dem Bezahlen"
+      "de": "E-Mail-Verifizierung fehlgeschlagen nach dem Bezahlen",
+      "fr": "La vérification de l'e-mail a échoué après le paiement"
     },
     {
       "key": "merci/postpay/signInError/retry",
-      "de": "erneut versuchen"
+      "de": "erneut versuchen",
+      "fr": "réessayer"
     },
     {
       "key": "merci/postpay/signInError/text",
-      "de": "Ihre Zahlungsinformationen wurden gespeichert. Leider konnte das System aber Ihre E-Mail-Adresse «{email}» zurzeit nicht verifizieren. Versuchen Sie es in 10 Minuten erneut. Klappt das ein zweites Mal nicht, stehen wir Ihnen gerne mit Rat zur Verfügung. Schreiben Sie uns Ihr Problem an {contactEmailLink}."
+      "de": "Ihre Zahlungsinformationen wurden gespeichert. Leider konnte das System aber Ihre E-Mail-Adresse «{email}» zurzeit nicht verifizieren. Versuchen Sie es in 10 Minuten erneut. Klappt das ein zweites Mal nicht, stehen wir Ihnen gerne mit Rat zur Verfügung. Schreiben Sie uns Ihr Problem an {contactEmailLink}.",
+      "fr": "Vos informations de paiement ont été enregistrées. Malheureusement, le système n'a pas pu vérifier votre adresse e-mail «{email}» pour le moment. Réessayez dans 10 minutes. Si cela ne fonctionne pas une deuxième fois, nous serons heureux de vous conseiller. Écrivez-nous votre problème à {contactEmailLink}."
     },
     {
       "key": "merci/postpay/signInError/title",
-      "de": "E-Mail-Verifizierung fehlgeschlagen"
+      "de": "E-Mail-Verifizierung fehlgeschlagen",
+      "fr": "La vérification de l'adresse e-mail a échoué"
     },
     {
       "key": "merci/title/welcome",
-      "de": "Willkommen an Bord, {name}"
+      "de": "Willkommen an Bord, {name}",
+      "fr": "Bienvenue à bord, {name}"
     },
     {
       "key": "merci/title/welcome/noName",
-      "de": "Willkommen an Bord"
+      "de": "Willkommen an Bord",
+      "fr": "Bienvenue à bord"
     },
     {
       "key": "merci/title",
-      "de": "Guten Tag, {name}"
+      "de": "Guten Tag, {name}",
+      "fr": "Bonjour, {name}"
     },
     {
       "key": "merci/title/noName",
-      "de": "Guten Tag"
+      "de": "Guten Tag",
+      "fr": "bonne journée"
     },
     {
       "key": "notifications/closeButton",
-      "de": "Zur Startseite"
+      "de": "Zur Startseite",
+      "fr": "Vers la page d'accueil"
     },
     {
       "key": "notifications/closeNote",
-      "de": "Sie können dieses Fenster schliessen. "
+      "de": "Sie können dieses Fenster schliessen. ",
+      "fr": "Tu peux fermer cette fenêtre."
     },
     {
       "key": "notifications/email-confirmed/claim/text",
-      "de": "Bitte kehren Sie zum vorherigen Fenster zurück, um den Vorgang abzuschliessen. "
+      "de": "Bitte kehren Sie zum vorherigen Fenster zurück, um den Vorgang abzuschliessen. ",
+      "fr": "Veuillez revenir à la fenêtre précédente pour terminer le processus."
     },
     {
       "key": "notifications/email-confirmed/newsletter/title",
-      "de": "Anmeldung bestätigt"
+      "de": "Anmeldung bestätigt",
+      "fr": "Inscription confirmée"
     },
     {
       "key": "notifications/email-confirmed/preview/text",
-      "de": "Bitte kehren Sie zum vorherigen Fenster zurück, um den Vorgang abzuschliessen. "
+      "de": "Bitte kehren Sie zum vorherigen Fenster zurück, um den Vorgang abzuschliessen. ",
+      "fr": "Veuillez revenir à la fenêtre précédente pour terminer le processus."
     },
     {
       "key": "notifications/email-confirmed/projectr/title",
-      "de": "E-Mail-Adresse bestätigt"
+      "de": "E-Mail-Adresse bestätigt",
+      "fr": "Adresse e-mail confirmée"
     },
     {
       "key": "notifications/email-confirmed/text",
-      "de": "Vielen Dank."
+      "de": "Vielen Dank.",
+      "fr": "Merci beaucoup."
     },
     {
       "key": "notifications/email-confirmed/title",
-      "de": "Zugriff bestätigt"
+      "de": "Zugriff bestätigt",
+      "fr": "Accès confirmé"
     },
     {
       "key": "notifications/invalid-email/text",
-      "de": "Der von Ihnen aufgerufene Link enthält eine ungültige E-Mail-Adresse: «{email}».<br /><br />Es könnte sein, dass die Zeichenkodierung beim Übertragen korrumpiert wurde. Bitte versuchen Sie es mit einem anderen E-Mail-Programm.<br /><br />Und melden Sie uns, unter welchen Umständen dies passiert ist: <a href=\"mailto:info@lobbywatch.ch?subject=Korrumpierte%20E-Mail-Adresse\">info@lobbywatch.ch</a>."
+      "de": "Der von Ihnen aufgerufene Link enthält eine ungültige E-Mail-Adresse: «{email}».<br /><br />Es könnte sein, dass die Zeichenkodierung beim Übertragen korrumpiert wurde. Bitte versuchen Sie es mit einem anderen E-Mail-Programm.<br /><br />Und melden Sie uns, unter welchen Umständen dies passiert ist: <a href=\"mailto:info@lobbywatch.ch?subject=Korrumpierte%20E-Mail-Adresse\">info@lobbywatch.ch</a>.",
+      "fr": "Le lien sur lequel vous avez cliqué contient une adresse e-mail invalide : «{email}».<br /><br />L'encodage des caractères a peut-être été corrompu lors de la transmission. Veuillez essayer un autre programme de messagerie.<br /><br />Et dites-nous dans quelles circonstances cela s'est produit : <a href=\"mailto:info@lobbywatch.ch?subject=Corrupted%20email%20address\">info@lobbywatch.ch</a>."
     },
     {
       "key": "notifications/invalid-email/title",
-      "de": "Ungültige E-Mail-Adresse"
+      "de": "Ungültige E-Mail-Adresse",
+      "fr": "Adresse e-mail invalide"
     },
     {
       "key": "notifications/invalid-token/text",
-      "de": "Der von Ihnen aufgerufene Link ist nicht gültig. Links zur Anmeldung sind nur einmal gültig."
+      "de": "Der von Ihnen aufgerufene Link ist nicht gültig. Links zur Anmeldung sind nur einmal gültig.",
+      "fr": "Le lien que vous avez demandé n'est pas valide. Les liens d'inscription ne sont valables qu'une seule fois."
     },
     {
       "key": "notifications/invalid-token/title",
-      "de": "Ungültiger Link"
+      "de": "Ungültiger Link",
+      "fr": "Lien invalide"
     },
     {
       "key": "notifications/links/merci",
-      "de": "Ihre persönliche Übersicht"
+      "de": "Ihre persönliche Übersicht",
+      "fr": "Votre aperçu personnel"
     },
     {
       "key": "notifications/newsletter-subscript-disabledion/title",
-      "de": "Newsletter-Anmeldung"
+      "de": "Newsletter-Anmeldung",
+      "fr": "Inscription à la newsletter"
     },
     {
       "key": "notifications/newsletter-subscription/title",
-      "de": "Newsletter-Anmeldung"
+      "de": "Newsletter-Anmeldung",
+      "fr": "Inscription à la newsletter"
     },
     {
       "key": "notifications/newsletter/title",
-      "de": "Newsletter-Anmeldung"
+      "de": "Newsletter-Anmeldung",
+      "fr": "Inscription à la newsletter"
     },
     {
       "key": "notifications/pageTitle",
-      "de": "Mitteilung – Lobbywatch"
+      "de": "Mitteilung – Lobbywatch",
+      "fr": "Avis – Lobbywatch"
     },
     {
       "key": "notifications/session-denied/text",
-      "de": "Sie haben den Schwarzleser vor einem leeren Bildschirm sitzen lassen."
+      "de": "Sie haben den Schwarzleser vor einem leeren Bildschirm sitzen lassen.",
+      "fr": "Vous avez laissé le lecteur noir assis devant un écran vide."
     },
     {
       "key": "notifications/session-denied/title",
-      "de": "Zugriff abgelehnt"
+      "de": "Zugriff abgelehnt",
+      "fr": "accès refusé"
     },
     {
       "key": "notifications/unavailable/text",
-      "de": "Leider kann unser System Ihre Anfrage zurzeit nicht bearbeiten. Versuchen Sie es in 10 Minuten erneut. Klappt es ein zweites Mal nicht, stehen wir Ihnen gerne mit Rat zur Verfügung. Schreiben Sie uns an <a href=\"mailto:info@lobbywatch.ch?subject=Anmeldung%20nicht%20verf%C3%BCgbar\">info@lobbywatch.ch</a>."
+      "de": "Leider kann unser System Ihre Anfrage zurzeit nicht bearbeiten. Versuchen Sie es in 10 Minuten erneut. Klappt es ein zweites Mal nicht, stehen wir Ihnen gerne mit Rat zur Verfügung. Schreiben Sie uns an <a href=\"mailto:info@lobbywatch.ch?subject=Anmeldung%20nicht%20verf%C3%BCgbar\">info@lobbywatch.ch</a>.",
+      "fr": "Malheureusement, notre système n'est actuellement pas en mesure de traiter votre demande. Réessayez dans 10 minutes. Si cela ne fonctionne pas une deuxième fois, nous serons heureux de vous conseiller. Écrivez-nous à <a href=\"mailto:info@lobbywatch.ch?subject=Enregistrement%20non%20disponible\"> info@lobbywatch.ch </a>."
     },
     {
       "key": "notifications/unavailable/title",
-      "de": "System nicht verfügbar"
+      "de": "System nicht verfügbar",
+      "fr": "Système non disponible"
     },
     {
       "key": "notifications/unkown/text",
-      "de": "Das System konnte Ihre Anfrage nicht erkennen. Es könnte sein, dass ein Übertragungsfehler vorliegt: Melden Sie sich bei <a href=\"mailto:info@lobbywatch.ch?subject=Kaputter%20Link\">info@lobbywatch.ch</a> mit einem Screenshot."
+      "de": "Das System konnte Ihre Anfrage nicht erkennen. Es könnte sein, dass ein Übertragungsfehler vorliegt: Melden Sie sich bei <a href=\"mailto:info@lobbywatch.ch?subject=Kaputter%20Link\">info@lobbywatch.ch</a> mit einem Screenshot.",
+      "fr": "Le système n'a pas pu reconnaître votre demande. Il peut y avoir une erreur de transmission : signalez-le à <a href=\"mailto:info@lobbywatch.ch?subject=Broken%20Link\"> info@lobbywatch.ch </a> avec une capture d'écran."
     },
     {
       "key": "notifications/unkown/title",
-      "de": "Unbekannte Mitteilung"
+      "de": "Unbekannte Mitteilung",
+      "fr": "Message inconnu"
     },
     {
       "key": "option/suffix/endDate",
-      "de": " bis {formattedEndDate}"
+      "de": " bis {formattedEndDate}",
+      "fr": "jusqu'au {formattedEndDate}"
     },
     {
       "key": "package/BENEFACTOR/description",
-      "de": "Mit Ihrer Gönner-Mitgliedschaft werden Sie Mitglied des Vereins Lobbywatch.ch und wir laden Sie bei Gelegenheit auf einen Lobbyspaziergang mit Apéro ein."
+      "de": "Mit Ihrer Gönner-Mitgliedschaft werden Sie Mitglied des Vereins Lobbywatch.ch und wir laden Sie bei Gelegenheit auf einen Lobbyspaziergang mit Apéro ein.",
+      "fr": "Avec votre adhésion mécène vous devenez membre de l'association Lobbywatch.ch et nous vous invitons à vous promener dans le hall avec un apéritif lorsque l'occasion se présente."
     },
     {
       "key": "package/BENEFACTOR/title",
-      "de": "Gönner-Mitgliedschaft"
+      "de": "Gönner-Mitgliedschaft",
+      "fr": "Adhésion mécène"
     },
     {
       "key": "package/choose",
-      "de": "Auswählen"
+      "de": "Auswählen",
+      "fr": "Choisir"
     },
     {
       "key": "package/customize/changePackage",
-      "de": "Zum gesamten Angebot"
+      "de": "Zum gesamten Angebot",
+      "fr": "Vers toute l'offre"
     },
     {
       "key": "package/customize/option/error/max",
-      "de": "{label}, höchstens {maxAmount}"
+      "de": "{label}, höchstens {maxAmount}",
+      "fr": "{label}, au plus {maxAmount}"
     },
     {
       "key": "package/customize/option/error/min",
-      "de": "{label}, mindestens {minAmount}"
+      "de": "{label}, mindestens {minAmount}",
+      "fr": "{label}, au moins {minAmount}"
     },
     {
       "key": "package/customize/option/error/step",
-      "de": "{label}, nicht zugelassen, vielleicht {suggestedValue}?"
+      "de": "{label}, nicht zugelassen, vielleicht {suggestedValue}?",
+      "fr": "{label}, non autorisé, peut-être {suggestedValue} ?"
     },
     {
       "key": "package/customize/price/error",
-      "de": "Betrag, mindestens {formattedCHF}"
+      "de": "Betrag, mindestens {formattedCHF}",
+      "fr": "Montant, au moins {formattedCHF}"
     },
     {
       "key": "package/customize/price/label",
-      "de": "Betrag in CHF"
+      "de": "Betrag in CHF",
+      "fr": "Montant en CHF"
     },
     {
       "key": "package/customize/price/label/total",
-      "de": "Gesamtbetrag in CHF"
+      "de": "Gesamtbetrag in CHF",
+      "fr": "Montant total en CHF"
     },
     {
       "key": "package/customize/price/payMore",
-      "de": "Können Sie Ihr Investment erhöhen?"
+      "de": "Können Sie Ihr Investment erhöhen?",
+      "fr": "Pouvez-vous augmenter votre investissement ?"
     },
     {
       "key": "package/customize/price/payMore/1.5",
-      "de": "Ich bin für Grosszügigkeit: {formattedCHF}"
+      "de": "Ich bin für Grosszügigkeit: {formattedCHF}",
+      "fr": "Je suis pour la générosité : {formattedCHF}"
     },
     {
       "key": "package/customize/price/payMore/2",
-      "de": "Tollkühne {formattedCHF}"
+      "de": "Tollkühne {formattedCHF}",
+      "fr": "Audacieux {formattedCHF}"
     },
     {
       "key": "package/customize/price/payMore/thx",
-      "de": "Danke!"
+      "de": "Danke!",
+      "fr": "Merci!"
     },
     {
       "key": "package/customize/price/payMore/thx/2",
-      "de": "Herzlichen Dank!"
+      "de": "Herzlichen Dank!",
+      "fr": "Merci beaucoup!"
     },
     {
       "key": "package/customize/price/payRegular",
-      "de": "Auf den regulären Betrag zurücksetzen"
+      "de": "Auf den regulären Betrag zurücksetzen",
+      "fr": "Réinitialiser au montant normal"
     },
     {
       "key": "package/DONATE/description",
-      "de": "Sie wollen hervorragenden Journalismus unterstützen. Denn Sie wissen: Guter Journalismus kostet."
+      "de": "Sie wollen hervorragenden Journalismus unterstützen. Denn Sie wissen: Guter Journalismus kostet.",
+      "fr": "Ils veulent soutenir l'excellence du journalisme. Parce que vous savez : le bon journalisme coûte de l'argent."
     },
     {
       "key": "package/DONATE/title",
-      "de": "Spenden"
+      "de": "Spenden",
+      "fr": "Faire un don"
     },
     {
       "key": "package/LEGISLATION/description",
-      "de": "Sie werden Mitglied für die vier Jahre der Legislaturperiode 2023-2027."
+      "de": "Sie werden Mitglied für die vier Jahre der Legislaturperiode 2023-2027.",
+      "fr": "Vous deviendrez député pour les quatre années de la législature 2023-2027."
     },
     {
       "key": "package/LEGISLATION/title",
-      "de": "Legislatur-Mitgliedschaft"
+      "de": "Legislatur-Mitgliedschaft",
+      "fr": "Adhésion législative"
     },
     {
       "key": "package/price",
-      "de": "{formattedCHF}"
+      "de": "{formattedCHF}",
+      "fr": "{formattedCHF}"
     },
     {
       "key": "package/price",
-      "de": "{formattedCHF}"
+      "de": "{formattedCHF}",
+      "fr": "{formattedCHF}"
     },
     {
       "key": "package/price/free",
-      "de": "kostenlos"
+      "de": "kostenlos",
+      "fr": "gratuitement"
     },
     {
       "key": "package/price/free",
-      "de": "kostenlos"
+      "de": "kostenlos",
+      "fr": "gratuitement"
     },
     {
       "key": "package/WORKSHOP/description",
-      "de": "Gedacht für Medien, Verbände und Unternehmen. Wir kommen exklusive bei Ihnen vorbei und geben Ihnen und Ihren Kolleg:innen einen Workshop zum Thema Lobbying & Recherche."
+      "de": "Gedacht für Medien, Verbände und Unternehmen. Wir kommen exklusive bei Ihnen vorbei und geben Ihnen und Ihren Kolleg:innen einen Workshop zum Thema Lobbying & Recherche.",
+      "fr": "Destiné aux médias, associations et entreprises. Nous vous rendrons visite en exclusivité et vous offrirons, à vous et à vos collègues, un atelier sur le lobbying et la recherche."
     },
     {
       "key": "package/WORKSHOP/title",
-      "de": "Lobbywatch-Workshop"
+      "de": "Lobbywatch-Workshop",
+      "fr": "Atelier Lobbywatch"
     },
     {
       "key": "package/YEAR/description",
-      "de": "Mit Ihrem jährlichen Beitrag sind Sie Mitglied des Vereins Lobbywatch.ch."
+      "de": "Mit Ihrem jährlichen Beitrag sind Sie Mitglied des Vereins Lobbywatch.ch.",
+      "fr": "Votre cotisation annuelle fait de vous un membre de l'association Lobbywatch.ch ."
     },
     {
       "key": "package/YEAR/price",
-      "de": "{formattedCHF} pro Jahr"
+      "de": "{formattedCHF} pro Jahr",
+      "fr": "{formattedCHF} par an"
     },
     {
       "key": "package/YEAR/title",
-      "de": "Jahresmitgliedschaft"
+      "de": "Jahresmitgliedschaft",
+      "fr": "adhésion annuelle"
     },
     {
       "key": "payment/insecure",
-      "de": "Unsichere Verbindung"
+      "de": "Unsichere Verbindung",
+      "fr": "Connexion non sécurisée"
     },
     {
       "key": "payment/method/choose",
-      "de": "Wählen Sie eine Zahlungsart"
+      "de": "Wählen Sie eine Zahlungsart",
+      "fr": "Choisissez une méthode de paiement"
     },
     {
       "key": "payment/method/existing",
-      "de": "Gespeicherte Kreditkarte"
+      "de": "Gespeicherte Kreditkarte",
+      "fr": "Carte de crédit enregistrée"
     },
     {
       "key": "payment/method/new",
-      "de": "Neue Kreditkarte oder Zahlungsart"
+      "de": "Neue Kreditkarte oder Zahlungsart",
+      "fr": "Nouvelle carte de crédit ou mode de paiement"
     },
     {
       "key": "payment/method/new/stripe",
-      "de": "Neue Kreditkarte erfassen"
+      "de": "Neue Kreditkarte erfassen",
+      "fr": "Saisir une nouvelle carte de crédit"
     },
     {
       "key": "payment/method/PAYMENTSLIP",
-      "de": "Rechnung"
+      "de": "Rechnung",
+      "fr": "facture d'achat"
     },
     {
       "key": "payment/method/PAYPAL",
-      "de": "PayPal"
+      "de": "PayPal",
+      "fr": "Pay Pal"
     },
     {
       "key": "payment/method/POSTFINANCECARD",
-      "de": "PostFinance Card"
+      "de": "PostFinance Card",
+      "fr": "Carte PostFinance"
     },
     {
       "key": "payment/method/selected",
-      "de": "(ausgewählte Zahlungsart)"
+      "de": "(ausgewählte Zahlungsart)",
+      "fr": "(mode de paiement sélectionné)"
     },
     {
       "key": "payment/method/STRIPE",
-      "de": "Visa/Mastercard/Amex"
+      "de": "Visa/Mastercard/Amex",
+      "fr": "Visa/Mastercard/Amex"
     },
     {
       "key": "payment/paymentslip/explanation",
-      "de": "Nach der Bestellung senden wir Ihnen per E-Mail eine QR-Rechnung."
+      "de": "Nach der Bestellung senden wir Ihnen per E-Mail eine QR-Rechnung.",
+      "fr": "Après avoir passé votre commande, nous vous enverrons une facture QR par e-mail."
     },
     {
       "key": "payment/secure",
-      "de": "Sichere Verbindung"
+      "de": "Sichere Verbindung",
+      "fr": "Connexion sécurisée"
     },
     {
       "key": "payment/stripe/cardNumber/error/empty",
-      "de": "Kreditkartennummer fehlt"
+      "de": "Kreditkartennummer fehlt",
+      "fr": "Le numéro de carte de crédit est manquant"
     },
     {
       "key": "payment/stripe/cardNumber/error/generic",
-      "de": "Kreditkartennummer ungültig"
+      "de": "Kreditkartennummer ungültig",
+      "fr": "Numéro de carte de crédit invalide"
     },
     {
       "key": "payment/stripe/cardNumber/error/incomplete_number",
-      "de": "Kreditkartennummer unvollständig"
+      "de": "Kreditkartennummer unvollständig",
+      "fr": "Numéro de carte de crédit incomplet"
     },
     {
       "key": "payment/stripe/cardNumber/label",
-      "de": "Kreditkartennummer"
+      "de": "Kreditkartennummer",
+      "fr": "Numéro de Carte de Crédit"
     },
     {
       "key": "payment/stripe/cvc/error/empty",
-      "de": "Prüfziffer (CVC) fehlt"
+      "de": "Prüfziffer (CVC) fehlt",
+      "fr": "Chiffre de contrôle (CVC) manquant"
     },
     {
       "key": "payment/stripe/cvc/error/generic",
-      "de": "Prüfziffer (CVC) ungültig"
+      "de": "Prüfziffer (CVC) ungültig",
+      "fr": "Chiffre de contrôle (CVC) invalide"
     },
     {
       "key": "payment/stripe/cvc/error/incomplete_cvc",
-      "de": "Prüfziffer (CVC) unvollständig"
+      "de": "Prüfziffer (CVC) unvollständig",
+      "fr": "Chiffre de contrôle (CVC) incomplet"
     },
     {
       "key": "payment/stripe/cvc/label",
-      "de": "Prüfziffer (CVC)"
+      "de": "Prüfziffer (CVC)",
+      "fr": "Chiffre de contrôle (CVC)"
     },
     {
       "key": "payment/stripe/expiry/error/empty",
-      "de": "Ablaufdatum Ihrer Karte fehlt"
+      "de": "Ablaufdatum Ihrer Karte fehlt",
+      "fr": "La date d'expiration de votre carte est manquante"
     },
     {
       "key": "payment/stripe/expiry/error/generic",
-      "de": "Ablaufdatum Ihrer Karte ungültig"
+      "de": "Ablaufdatum Ihrer Karte ungültig",
+      "fr": "La date d'expiration de votre carte n'est pas valide"
     },
     {
       "key": "payment/stripe/expiry/error/incomplete_expiry",
-      "de": "Ablaufdatum Ihrer Karte unvollständig"
+      "de": "Ablaufdatum Ihrer Karte unvollständig",
+      "fr": "Date d'expiration de votre carte incomplète"
     },
     {
       "key": "payment/stripe/expiry/label",
-      "de": "Ablaufdatum Ihrer Karte"
+      "de": "Ablaufdatum Ihrer Karte",
+      "fr": "Date d'expiration de votre carte"
     },
     {
       "key": "payment/stripe/js/failed",
-      "de": "Kreditkartenzahlungen sind zurzeit nicht möglich. Die Verbindung zu stripe.com, unserem Dienstleister für Kreditkartenzahlungen, ist fehlgeschlagen. Mögliche Ursachen: eine wackelige Internetverbindung, ein temporärer Ausfall oder Ihre Browsererweiterungen. Wählen Sie bitte eine andere Zahlungsart oder versuchen Sie es in einigen Sekunden erneut."
+      "de": "Kreditkartenzahlungen sind zurzeit nicht möglich. Die Verbindung zu stripe.com, unserem Dienstleister für Kreditkartenzahlungen, ist fehlgeschlagen. Mögliche Ursachen: eine wackelige Internetverbindung, ein temporärer Ausfall oder Ihre Browsererweiterungen. Wählen Sie bitte eine andere Zahlungsart oder versuchen Sie es in einigen Sekunden erneut.",
+      "fr": "Les paiements par carte de crédit ne sont actuellement pas possibles. La connexion à stripe.com notre fournisseur de services de paiement par carte de crédit, a échoué. Causes possibles : une connexion Internet instable, une panne temporaire ou les extensions de votre navigateur. Veuillez choisir un autre mode de paiement ou réessayer dans quelques secondes."
     },
     {
       "key": "payment/stripe/prefered",
-      "de": "Falls es für Sie keinen Unterschied macht: Die Kreditkarte (Visa, Mastercard, Amex) ist für uns das bevorzugte Zahlungsmittel."
+      "de": "Falls es für Sie keinen Unterschied macht: Die Kreditkarte (Visa, Mastercard, Amex) ist für uns das bevorzugte Zahlungsmittel.",
+      "fr": "Si cela ne vous dérange pas : la carte de crédit (Visa, Mastercard, Amex) est notre moyen de paiement préféré."
     },
     {
       "key": "payment/title",
-      "de": "Zahlungsart auswählen"
+      "de": "Zahlungsart auswählen",
+      "fr": "Choisissez le mode de paiement"
     },
     {
       "key": "payment/title/single",
-      "de": "Bezahlung"
+      "de": "Bezahlung",
+      "fr": "Payer"
     },
     {
       "key": "payment/title/single/DEFAULT_SOURCE",
-      "de": "Ihre Kreditkarte"
+      "de": "Ihre Kreditkarte",
+      "fr": "votre carte de crédit"
     },
     {
       "key": "pledge/address/payment/likeShipping",
-      "de": "Gleich wie Lieferadresse"
+      "de": "Gleich wie Lieferadresse",
+      "fr": "Même que l'adresse d'expédition"
     },
     {
       "key": "pledge/address/payment/other",
-      "de": "Andere Adresse"
+      "de": "Andere Adresse",
+      "fr": "Autre adresse"
     },
     {
       "key": "pledge/address/payment/title",
-      "de": "Rechnungsadresse"
+      "de": "Rechnungsadresse",
+      "fr": "Adresse de facturation"
     },
     {
       "key": "pledge/address/shipping/setAccount",
-      "de": "Als Ihre Standardadresse speichern"
+      "de": "Als Ihre Standardadresse speichern",
+      "fr": "Enregistrer comme adresse par défaut"
     },
     {
       "key": "pledge/address/shipping/title",
-      "de": "Lieferadresse"
+      "de": "Lieferadresse",
+      "fr": "Adresse de livraison"
     },
     {
       "key": "pledge/address/shipping/updateAccount",
-      "de": "Ihre Standardadresse aktualisieren"
+      "de": "Ihre Standardadresse aktualisieren",
+      "fr": "Mettez à jour votre adresse par défaut"
     },
     {
       "key": "pledge/claim/loading",
-      "de": "überprüfen"
+      "de": "überprüfen",
+      "fr": "valider"
     },
     {
       "key": "pledge/claim/signIn/before",
-      "de": "Geben Sie Ihre richtige E-Mail-Adresse ein:"
+      "de": "Geben Sie Ihre richtige E-Mail-Adresse ein:",
+      "fr": "Saisissez votre adresse e-mail correcte :"
     },
     {
       "key": "pledge/claim/signIn/button",
-      "de": "Ändern"
+      "de": "Ändern",
+      "fr": "Changer"
+    },
+    {
+      "key": "pledge/consents/error/PRIVACY_STATUTE",
+      "de": "Sie müssen sich mit den Vereinsstatuten und den Datenschutzbestimmungen einverstanden erklären.",
+      "fr": "Vous devez accepter les statuts de l'association et le règlement sur la protection des données."
+    },
+    {
+      "key": "pledge/consents/label/PRIVACY_STATUTE",
+      "de": "Ich bin mit den <a href=\"https://cms.lobbywatch.ch/sites/lobbywatch.ch/files/page_files/statuten-statuts-2020.pdf\" target=\"_blank\">Vereinsstatuten</a> und den <a href=\"/de/seite/datenschutzerklaerung\" target=\"_blank\">Datenschutz&shy;bestimmungen</a> einverstanden.",
+      "fr": "J'accepte les <a href=\"https://cms.lobbywatch.ch/sites/lobbywatch.ch/files/page_files/statuten-statuts-2020.pdf\" target=\"_blank\">statuts de l'association</a> et la <a href=\"/de/seite/datenschutzerklaerung\" target=\"_blank\">réglementation sur la protection des données</a>."
     },
     {
       "key": "pledge/consents/error/PRIVACY",
-      "de": "Sie müssen sich mit den Datenschutzbestimmungen einverstanden erklären."
+      "de": "Sie müssen sich mit den Datenschutzbestimmungen einverstanden erklären.",
+      "fr": "Vous devez accepter les règles de protection des données."
     },
     {
       "key": "pledge/consents/label/PRIVACY",
-      "de": "Ich bin mit den <a href=\"/datenschutz\" target=\"_blank\">Datenschutz&shy;bestimmungen</a> einverstanden."
+      "de": "Ich bin mit den <a href=\"/datenschutz\" target=\"_blank\">Datenschutz&shy;bestimmungen</a> einverstanden.",
+      "fr": "J'accepte la <a href=\"/datenschutz\" target=\"_blank\">Politique de confidentialité</a>."
     },
     {
       "key": "pledge/contact/email/error/empty",
-      "de": "E-Mail-Adresse fehlt"
+      "de": "E-Mail-Adresse fehlt",
+      "fr": "L'adresse e-mail est manquante"
     },
     {
       "key": "pledge/contact/email/error/invalid",
-      "de": "E-Mail-Adresse ungültig"
+      "de": "E-Mail-Adresse ungültig",
+      "fr": "Adresse e-mail non valide"
     },
     {
       "key": "pledge/contact/email/label",
-      "de": "Ihre E-Mail-Adresse"
+      "de": "Ihre E-Mail-Adresse",
+      "fr": "Votre adresse e-mail"
     },
     {
       "key": "pledge/contact/firstName/error/empty",
-      "de": "Vorname fehlt"
+      "de": "Vorname fehlt",
+      "fr": "Prénom manquant"
     },
     {
       "key": "pledge/contact/firstName/label",
-      "de": "Ihr Vorname"
+      "de": "Ihr Vorname",
+      "fr": "Ton prénom"
     },
     {
       "key": "pledge/contact/lastName/error/empty",
-      "de": "Nachname fehlt"
+      "de": "Nachname fehlt",
+      "fr": "Nom de famille manquant"
     },
     {
       "key": "pledge/contact/lastName/label",
-      "de": "Ihr Nachname"
+      "de": "Ihr Nachname",
+      "fr": "Votre nom de famille"
     },
     {
       "key": "pledge/contact/signIn/customMe",
-      "de": "anmelden"
+      "de": "anmelden",
+      "fr": "S'identifier"
     },
     {
       "key": "pledge/contact/signIn/hide",
-      "de": "Das erste Mal hier?"
+      "de": "Das erste Mal hier?",
+      "fr": "Première fois ici?"
     },
     {
       "key": "pledge/contact/signIn/show",
-      "de": "Haben Sie bereits ein Konto? Melden Sie sich an.\n"
+      "de": "Haben Sie bereits ein Konto? Melden Sie sich an.\n",
+      "fr": "Vous avez déjà un compte? Connexion."
     },
     {
       "key": "pledge/contact/signIn/wrongToken",
-      "de": "Ist das nicht Ihre E-Mail-Adresse?"
+      "de": "Ist das nicht Ihre E-Mail-Adresse?",
+      "fr": "N'est-ce pas votre adresse e-mail ?"
     },
     {
       "key": "pledge/contact/signOut",
-      "de": "abmelden"
+      "de": "abmelden",
+      "fr": "se déconnecter"
     },
     {
       "key": "pledge/contact/title",
-      "de": "Ihre Kontaktinformationen"
+      "de": "Ihre Kontaktinformationen",
+      "fr": "Vos coordonnées"
     },
     {
       "key": "pledge/meta/description",
-      "de": "Wir sind ein digitales Magazin für Politik, Wirtschaft, Gesellschaft und Kultur. Unabhängig. Werbefrei."
+      "de": "Wir sind ein digitales Magazin für Politik, Wirtschaft, Gesellschaft und Kultur. Unabhängig. Werbefrei.",
+      "fr": "Nous sommes un magazine numérique pour la politique, les affaires, la société et la culture. Indépendamment. Sans publicité."
     },
     {
       "key": "pledge/meta/title",
-      "de": "Lobbywatch-Mitglied werden"
+      "de": "Lobbywatch-Mitglied werden",
+      "fr": "Devenez membre Lobbywatch"
     },
     {
       "key": "pledge/recievePayment/error",
-      "de": "Zahlung fehlgeschlagen.<br />\n<br />\nBitte versuchen Sie es erneut oder kontaktieren Sie uns unter {mailto}."
+      "de": "Zahlung fehlgeschlagen.<br />\n<br />\nBitte versuchen Sie es erneut oder kontaktieren Sie uns unter {mailto}.",
+      "fr": "Échec du paiement.<br /> <br /> Veuillez réessayer ou contactez-nous à {mailto}."
     },
     {
       "key": "pledge/recievePayment/noPledge",
-      "de": "Die Bestellung wurde nicht gefunden. Kontaktieren Sie uns unter finance@lobbywatch.ch mit folgender Bestellungsreferenz: {pledgeId}."
+      "de": "Die Bestellung wurde nicht gefunden. Kontaktieren Sie uns unter finance@lobbywatch.ch mit folgender Bestellungsreferenz: {pledgeId}.",
+      "fr": "La commande est introuvable. contactez-nous sous finance@lobbywatch.ch avec la référence de commande suivante : {pledgeId}."
     },
     {
       "key": "pledge/recievePayment/paypal/cancel",
-      "de": "Zahlung abgebrochen. Wählen Sie bitte ein anderes Zahlungsmittel, um Ihre Bestellung abzuschliessen."
+      "de": "Zahlung abgebrochen. Wählen Sie bitte ein anderes Zahlungsmittel, um Ihre Bestellung abzuschliessen.",
+      "fr": "paiement annulé. Veuillez choisir un autre moyen de paiement pour finaliser votre commande."
     },
     {
       "key": "pledge/recievePayment/paypal/contactUs",
-      "de": "Während des Zahlungsverfahrens mit PayPal ist ein Problem aufgetreten, das zu einem nicht vorhersehbaren Resultat geführt hat.<br />\n<br />\nBitte nehmen Sie Kontakt mit uns auf unter {mailto}. Sie sollten es nicht erneut versuchen da die Buchung möglicherweise bereits akzeptiert wurde."
+      "de": "Während des Zahlungsverfahrens mit PayPal ist ein Problem aufgetreten, das zu einem nicht vorhersehbaren Resultat geführt hat.<br />\n<br />\nBitte nehmen Sie Kontakt mit uns auf unter {mailto}. Sie sollten es nicht erneut versuchen da die Buchung möglicherweise bereits akzeptiert wurde.",
+      "fr": "Un problème est survenu lors du processus de paiement avec PayPal, ce qui a entraîné un résultat imprévisible.<br /> <br /> Veuillez nous contacter à {mailto}. Vous ne devez pas réessayer car la réservation a peut-être déjà été acceptée."
     },
     {
       "key": "pledge/recievePayment/paypal/deny",
-      "de": "Zahlung fehlgeschlagen.<br />\n<br />\nWählen Sie bitte ein anderes Zahlungsmittel, um Ihre Bestellung abzuschliessen."
+      "de": "Zahlung fehlgeschlagen.<br />\n<br />\nWählen Sie bitte ein anderes Zahlungsmittel, um Ihre Bestellung abzuschliessen.",
+      "fr": "Échec du paiement.<br /> <br /> Veuillez choisir un autre mode de paiement pour finaliser votre commande."
     },
     {
       "key": "pledge/recievePayment/paypal/mailto/body",
-      "de": "Liebe Lobbywatch\n\nMeine PayPal-Transaktion funktioniert nicht.\n\nBuchungsreferenz:\n{pledgeId}\n\nPayPal:\n{payload}"
+      "de": "Liebe Lobbywatch\n\nMeine PayPal-Transaktion funktioniert nicht.\n\nBuchungsreferenz:\n{pledgeId}\n\nPayPal:\n{payload}",
+      "fr": "Cher Lobbywatch Ma transaction PayPal ne fonctionne pas. Référence de réservation : {pledgeId} PayPal : {payload}"
     },
     {
       "key": "pledge/recievePayment/paypal/mailto/subject",
-      "de": "PayPal {status}"
+      "de": "PayPal {status}",
+      "fr": "PayPal {status}"
     },
     {
       "key": "pledge/submit/autoPay",
-      "de": "Ohne Bürokratie: Verlängerungen automatisch von meiner Kreditkarte abbuchen."
+      "de": "Ohne Bürokratie: Verlängerungen automatisch von meiner Kreditkarte abbuchen.",
+      "fr": "Pas de bureaucratie : débitez automatiquement les renouvellements de ma carte de crédit."
     },
     {
       "key": "pledge/submit/autoPay/note",
-      "de": "Wir erinnern Sie, bevor wir abbuchen. Und Sie können jederzeit austreten."
+      "de": "Wir erinnern Sie, bevor wir abbuchen. Und Sie können jederzeit austreten.",
+      "fr": "Nous vous rappellerons avant de facturer. Et vous pouvez vous désabonner à tout moment."
     },
     {
       "key": "pledge/submit/button/pay",
-      "de": "{formattedChf} bezahlen"
+      "de": "{formattedChf} bezahlen",
+      "fr": "Payer {formattedChf}"
     },
     {
       "key": "pledge/submit/emailVerify/done",
-      "de": "Vielen Dank für das Verifizieren Ihrer E-Mail-Adresse."
+      "de": "Vielen Dank für das Verifizieren Ihrer E-Mail-Adresse.",
+      "fr": "Merci d'avoir vérifié votre adresse e-mail."
     },
     {
       "key": "pledge/submit/emailVerify/note",
-      "de": "Diese E-Mail-Adresse wurde schon einmal verwendet. Falls das Ihre E-Mail-Adresse ist, klicken Sie bitte auf «anmelden»."
+      "de": "Diese E-Mail-Adresse wurde schon einmal verwendet. Falls das Ihre E-Mail-Adresse ist, klicken Sie bitte auf «anmelden».",
+      "fr": "Cette adresse e-mail a déjà été utilisée. S'il s'agit de votre adresse e-mail, veuillez cliquer sur « s'abonner »."
     },
     {
       "key": "pledge/submit/error/title",
-      "de": "Fehler"
+      "de": "Fehler",
+      "fr": "erreur"
     },
     {
       "key": "pledge/submit/loading/pay",
-      "de": "verarbeiten"
+      "de": "verarbeiten",
+      "fr": "procéder"
     },
     {
       "key": "pledge/submit/loading/paypal",
-      "de": "weiterleiten"
+      "de": "weiterleiten",
+      "fr": "en avant sur"
     },
     {
       "key": "pledge/submit/loading/postfinance",
-      "de": "weiterleiten"
+      "de": "weiterleiten",
+      "fr": "en avant sur"
     },
     {
       "key": "pledge/submit/loading/stripe",
-      "de": "bezahlen"
+      "de": "bezahlen",
+      "fr": "Payer"
     },
     {
       "key": "pledge/submit/loading/submit",
-      "de": "einreichen"
+      "de": "einreichen",
+      "fr": "Soumettre"
     },
     {
       "key": "pledge/submit/package/error",
-      "de": "Wählen Sie zuoberst ein Angebot aus"
+      "de": "Wählen Sie zuoberst ein Angebot aus",
+      "fr": "Sélectionnez une offre en haut"
     },
     {
       "key": "pledge/submit/payMethod/error",
-      "de": "Zahlungsart auswählen"
+      "de": "Zahlungsart auswählen",
+      "fr": "Choisissez le mode de paiement"
     },
     {
       "key": "pledge/submit/payMethod/label",
-      "de": "Wählen Sie eine Zahlungsart:"
+      "de": "Wählen Sie eine Zahlungsart:",
+      "fr": "Choisissez une méthode de paiement:"
     },
     {
       "key": "pledge/title",
-      "de": "Willkommen an Bord!"
+      "de": "Willkommen an Bord!",
+      "fr": "Bienvenue à bord!"
     },
     {
       "key": "pledge/title/member",
-      "de": "Das Angebot"
+      "de": "Das Angebot",
+      "fr": "L'offre"
     },
     {
       "key": "signIn/button",
-      "de": "Anmelden"
+      "de": "Anmelden",
+      "fr": "S'inscrire"
     },
     {
       "key": "signIn/email/error/empty",
-      "de": "E-Mail-Adresse fehlt"
+      "de": "E-Mail-Adresse fehlt",
+      "fr": "L'adresse e-mail est manquante"
     },
     {
       "key": "signIn/email/error/invalid",
-      "de": "E-Mail-Adresse ungültig"
+      "de": "E-Mail-Adresse ungültig",
+      "fr": "Adresse e-mail non valide"
     },
     {
       "key": "signIn/email/label",
-      "de": "E-Mail-Adresse"
+      "de": "E-Mail-Adresse",
+      "fr": "Adresse e-mail"
     },
     {
       "key": "signIn/faq",
-      "de": "FAQ"
+      "de": "FAQ",
+      "fr": "FAQ"
     },
     {
       "key": "signIn/polling/cancel",
-      "de": "Vertippt? E-Mail-Adresse erneut eingeben."
+      "de": "Vertippt? E-Mail-Adresse erneut eingeben.",
+      "fr": "mal tapé ? Saisissez à nouveau votre adresse e-mail."
     },
     {
       "key": "signIn/polling/email",
-      "de": "E-Mail-Adresse"
+      "de": "E-Mail-Adresse",
+      "fr": "Adresse e-mail"
     },
     {
       "key": "signIn/polling/EMAIL_TOKEN/text",
-      "de": "Wir haben Ihnen <b>eine E-Mail</b> geschickt, mit der Sie diesen Zugriff freischalten können. Schliessen Sie diese Seite nicht."
+      "de": "Wir haben Ihnen <b>eine E-Mail</b> geschickt, mit der Sie diesen Zugriff freischalten können. Schliessen Sie diese Seite nicht.",
+      "fr": "Nous vous avons envoyé <b>un e-mail</b> pour déverrouiller cet accès. Ne fermez pas cette page."
     },
     {
       "key": "signIn/polling/EMAIL_TOKEN/title",
-      "de": "Zugriff via E-Mail bestätigen"
+      "de": "Zugriff via E-Mail bestätigen",
+      "fr": "Confirmer l'accès par e-mail"
     },
     {
       "key": "signIn/polling/phrase",
-      "de": "Seltsame Wörter (eine Sicherheitsmassnahme)"
+      "de": "Seltsame Wörter (eine Sicherheitsmassnahme)",
+      "fr": "Mots étranges (une mesure de sécurité)"
     },
     {
       "key": "signIn/polling/phrase/EMAIL_TOKEN/hint",
-      "de": "Wie funktioniert diese Sicherheitsmassnahme? Vergleichen Sie diese Wörter. Stehen sie ebenfalls auf der Bestätigungsseite, können Sie sicher sein, dass Sie dieser Anfrage den Zugriff freischalten."
+      "de": "Wie funktioniert diese Sicherheitsmassnahme? Vergleichen Sie diese Wörter. Stehen sie ebenfalls auf der Bestätigungsseite, können Sie sicher sein, dass Sie dieser Anfrage den Zugriff freischalten.",
+      "fr": "Comment fonctionne cette mesure de sécurité ? Comparez ces mots. S'ils figurent également sur la page de confirmation, vous pouvez être sûr que vous accordez l'accès à cette demande."
     },
     {
       "key": "signIn/polling/phrase/hint/show",
-      "de": "Wie funktioniert diese Sicherheitsmassnahme?"
+      "de": "Wie funktioniert diese Sicherheitsmassnahme?",
+      "fr": "Comment fonctionne cette mesure de sécurité ?"
     },
     {
       "key": "signIn/polling/switch/EMAIL_TOKEN",
-      "de": "Zugriff via E-Mail bestätigen?"
+      "de": "Zugriff via E-Mail bestätigen?",
+      "fr": "Confirmer l'accès par e-mail ?"
     },
     {
       "key": "signIn/privacy",
-      "de": "Datenschutz"
+      "de": "Datenschutz",
+      "fr": "intimité"
     },
     {
       "key": "signIn/success",
-      "de": "Erfolgreich als {nameOrEmail} angemeldet."
+      "de": "Erfolgreich als {nameOrEmail} angemeldet.",
+      "fr": "Inscription réussie en tant que {nameOrEmail}."
     },
     {
       "key": "signOut/error",
-      "de": "Unbekannter Fehler"
+      "de": "Unbekannter Fehler",
+      "fr": "Erreur inconnue"
     },
     {
       "key": "signOut/label",
-      "de": "Abmelden"
+      "de": "Abmelden",
+      "fr": "Déconnexion"
     },
     {
       "key": "statement/404",
-      "de": "Das gewünschte Statement ist zurzeit nicht verfügbar."
+      "de": "Das gewünschte Statement ist zurzeit nicht verfügbar.",
+      "fr": "La déclaration demandée n'est pas disponible actuellement."
     },
     {
       "key": "statement/description/update",
-      "de": "Ihr Statement erscheint auf unserer Community-Seite."
+      "de": "Ihr Statement erscheint auf unserer Community-Seite.",
+      "fr": "Votre déclaration apparaîtra sur notre page communautaire."
     },
     {
       "key": "statement/share/overlayTitle",
-      "de": "Statement von {name}"
+      "de": "Statement von {name}",
+      "fr": "Déclaration de {name}"
     },
     {
       "key": "statement/share/title",
-      "de": "{name} unterstützt die Lobbywatch."
+      "de": "{name} unterstützt die Lobbywatch.",
+      "fr": "{name} prend en charge Lobbywatch."
     },
     {
       "key": "testimonial/submit",
-      "de": "veröffentlichen"
+      "de": "veröffentlichen",
+      "fr": "publier"
     },
     {
       "key": "testimonial/submit/update",
-      "de": "aktualisieren"
+      "de": "aktualisieren",
+      "fr": "Mettre à jour"
     },
     {
       "key": "testimonial/title",
-      "de": "Teilen Sie, dass Sie die Lobbywatch unterstützen:"
+      "de": "Teilen Sie, dass Sie die Lobbywatch unterstützen:",
+      "fr": "Partagez votre soutien au Lobbywatch :"
     },
     {
       "key": "testimonial/title/update",
-      "de": "Ihr Statement aktualisieren."
+      "de": "Ihr Statement aktualisieren.",
+      "fr": "Mettez à jour votre déclaration."
     },
     {
       "key": "testimonial/description",
-      "de": "Sie können ein Statement abgeben und es zusammen mit einem Porträtbild auf unserer Community-Seite veröffentlichen."
+      "de": "Sie können ein Statement abgeben und es zusammen mit einem Porträtbild auf unserer Community-Seite veröffentlichen.",
+      "fr": "Vous pouvez faire une déclaration et la publier sur notre page communautaire avec une photo de portrait."
     },
     {
       "key": "testimonial/unpublish",
-      "de": "Statement zurücknehmen"
+      "de": "Statement zurücknehmen",
+      "fr": "retirer la déclaration"
     },
     {
       "key": "testimonial/unpublished",
-      "de": "Ihr Statement ist zurzeit nicht publik."
+      "de": "Ihr Statement ist zurzeit nicht publik.",
+      "fr": "Sa déclaration n'est pas publique pour le moment."
     },
     {
       "key": "testimonial/adminUnpublished",
-      "de": "Wir können Ihr Statement leider nicht publizieren. Schreiben Sie an info@lobbywatch.ch für weitere Informationen."
+      "de": "Wir können Ihr Statement leider nicht publizieren. Schreiben Sie an info@lobbywatch.ch für weitere Informationen.",
+      "fr": "Malheureusement, nous ne pouvons pas publier votre déclaration. écrire à info@lobbywatch.ch pour plus d'informations."
     },
     {
       "key": "testimonial/viewLive",
-      "de": "ansehen"
+      "de": "ansehen",
+      "fr": "Regarder"
     },
     {
       "key": "testimonial/role/label",
-      "de": "Funktion/Tätigkeit"
+      "de": "Funktion/Tätigkeit",
+      "fr": "fonction/activité"
     },
     {
       "key": "testimonial/quote/label",
-      "de": "Statement"
+      "de": "Statement",
+      "fr": "déclarations"
     },
     {
       "key": "testimonial/quote/error",
-      "de": "Statement fehlt"
+      "de": "Statement fehlt",
+      "fr": "déclaration est manquante"
     },
     {
       "key": "testimonial/pickImage",
-      "de": "Porträtfoto auswählen"
+      "de": "Porträtfoto auswählen",
+      "fr": "Sélectionnez une photo portrait"
     },
     {
       "key": "testimonial/pickImage/invalidType",
-      "de": "Nur Fotos erlaubt (jpg, png, gif)"
+      "de": "Nur Fotos erlaubt (jpg, png, gif)",
+      "fr": "Seules les photos sont autorisées (jpg, png, gif)"
     },
     {
       "key": "testimonial/pickImage/readError",
-      "de": "Foto konnte nicht geladen werden"
+      "de": "Foto konnte nicht geladen werden",
+      "fr": "Impossible de charger la photo"
     },
     {
       "key": "testimonial/pickImage/tooBig",
-      "de": "Maximal 10 MB"
+      "de": "Maximal 10 MB",
+      "fr": "Maximum 10 Mo"
     },
     {
       "key": "testimonial/pickImage/empty",
-      "de": "Sie müssen ein Foto hochladen"
+      "de": "Sie müssen ein Foto hochladen",
+      "fr": "Vous devez télécharger une photo"
     },
     {
       "key": "testimonial/pickImage/update",
-      "de": "Porträtfoto ändern"
+      "de": "Porträtfoto ändern",
+      "fr": "Changer de portrait"
     },
     {
       "key": "testimonial/quote/tooLong",
-      "de": "Statement, maximal 140 Zeichen"
+      "de": "Statement, maximal 140 Zeichen",
+      "fr": "Déclaration, maximum 140 caractères"
     },
     {
       "key": "testimonial/role/tooLong",
-      "de": "Funktion, maximal 60 Zeichen"
+      "de": "Funktion, maximal 60 Zeichen",
+      "fr": "Fonction, maximum 60 caractères"
     },
     {
       "key": "testimonial/infinite/end",
-      "de": "Sie haben gerade {count} Statements angeschaut."
+      "de": "Sie haben gerade {count} Statements angeschaut.",
+      "fr": "Vous venez de consulter {count} déclarations."
     },
     {
       "key": "testimonial/infinite/endless",
-      "de": "Das waren {count} Mitglieder. Weitere {remaining} anschauen?"
+      "de": "Das waren {count} Mitglieder. Weitere {remaining} anschauen?",
+      "fr": "C'était {count} membres. En regarder plus {remaining} ?"
     },
     {
       "key": "testimonial/meta/description",
-      "de": "Jetzt Mitglied werden."
+      "de": "Jetzt Mitglied werden.",
+      "fr": "Adhérer maintenant."
     },
     {
       "key": "testimonial/meta/pageTitle",
-      "de": "Community – Lobbywatch"
+      "de": "Community – Lobbywatch",
+      "fr": "Communauté – Lobby Watch"
     },
     {
       "key": "testimonial/meta/single/description",
-      "de": "Jetzt Mitglied werden."
+      "de": "Jetzt Mitglied werden.",
+      "fr": "Adhérer maintenant."
     },
     {
       "key": "testimonial/meta/single/pageTitle",
-      "de": "{name} – Community – Lobbywatch"
+      "de": "{name} – Community – Lobbywatch",
+      "fr": "{name} – Community – Lobbywatch"
     },
     {
       "key": "testimonial/meta/single/title",
-      "de": "{name} unterstützt Lobbywatch"
+      "de": "{name} unterstützt Lobbywatch",
+      "fr": "{name} prend en charge Lobbywatch"
     },
     {
       "key": "testimonial/meta/title",
-      "de": "Die ganze Community auf einen Blick"
+      "de": "Die ganze Community auf einen Blick",
+      "fr": "Toute la communauté en un coup d'œil"
     },
     {
       "key": "testimonial/search/label",
-      "de": "Suchen"
+      "de": "Suchen",
+      "fr": "Chercher"
     },
     {
       "key": "testimonial/search/seed",
-      "de": "Neu Mischen"
+      "de": "Neu Mischen",
+      "fr": "Remaniement"
     },
     {
       "key": "tokenAuthorization/after",
-      "de": "Falls Sie diese Anfrage nicht ausgelöst haben, wählen Sie «Nein»."
+      "de": "Falls Sie diese Anfrage nicht ausgelöst haben, wählen Sie «Nein».",
+      "fr": "Si vous n'avez pas déclenché cette demande, sélectionnez « Non »."
     },
     {
       "key": "tokenAuthorization/deny",
-      "de": "Nein"
+      "de": "Nein",
+      "fr": "non"
     },
     {
       "key": "tokenAuthorization/email",
-      "de": "Ihre E-Mail-Adresse"
+      "de": "Ihre E-Mail-Adresse",
+      "fr": "Votre adresse e-mail"
     },
     {
       "key": "tokenAuthorization/error",
-      "de": "Ungültiger Link"
+      "de": "Ungültiger Link",
+      "fr": "Lien invalide"
     },
     {
       "key": "tokenAuthorization/fields/error/firstName/missing",
-      "de": "Vorname fehlt"
+      "de": "Vorname fehlt",
+      "fr": "Prénom manquant"
     },
     {
       "key": "tokenAuthorization/fields/error/lastName/missing",
-      "de": "Nachname fehlt"
+      "de": "Nachname fehlt",
+      "fr": "Nom de famille manquant"
     },
     {
       "key": "tokenAuthorization/fields/explanation",
-      "de": "Um Ihr Konto zu aktivieren, benötigen wir noch folgende Informationen:"
+      "de": "Um Ihr Konto zu aktivieren, benötigen wir noch folgende Informationen:",
+      "fr": "Afin d'activer votre compte, nous avons besoin des informations suivantes :"
     },
     {
       "key": "tokenAuthorization/fields/label/firstName",
-      "de": "Ihr Vorname"
+      "de": "Ihr Vorname",
+      "fr": "Ton prénom"
     },
     {
       "key": "tokenAuthorization/fields/label/lastName",
-      "de": "Ihr Nachname"
+      "de": "Ihr Nachname",
+      "fr": "Votre nom de famille"
     },
     {
       "key": "tokenAuthorization/grant",
-      "de": "Ja"
+      "de": "Ja",
+      "fr": "Oui"
     },
     {
       "key": "tokenAuthorization/ip",
-      "de": "IP-Adresse"
+      "de": "IP-Adresse",
+      "fr": "adresse IP"
     },
     {
       "key": "tokenAuthorization/location",
-      "de": "Standort"
+      "de": "Standort",
+      "fr": "Emplacement"
     },
     {
       "key": "tokenAuthorization/location/unknown",
-      "de": "Unbekannt"
+      "de": "Unbekannt",
+      "fr": "inconnue"
     },
     {
       "key": "tokenAuthorization/phrase",
-      "de": "Seltsame Wörter"
+      "de": "Seltsame Wörter",
+      "fr": "mots étranges"
     },
     {
       "key": "tokenAuthorization/title/existing",
-      "de": "Zugriff geben?"
+      "de": "Zugriff geben?",
+      "fr": "donner accès ?"
     },
     {
       "key": "tokenAuthorization/title/new",
-      "de": "Nutzung Ihrer E-Mail-Adresse erlauben?"
+      "de": "Nutzung Ihrer E-Mail-Adresse erlauben?",
+      "fr": "Autoriser l'utilisation de votre adresse e-mail ?"
     },
     {
       "key": "tokenAuthorization/title/sessionInfo",
-      "de": "Möchten Sie folgendem Gerät Zugriff geben?"
+      "de": "Möchten Sie folgendem Gerät Zugriff geben?",
+      "fr": "Souhaitez-vous accorder l'accès à l'appareil suivant ?"
     },
     {
       "key": "withAuthorization/authorizedRoles",
-      "de": "Zugelassene Rollen: {roles}"
+      "de": "Zugelassene Rollen: {roles}",
+      "fr": "Rôles autorisés : {roles}"
     },
     {
       "key": "withAuthorization/title",
-      "de": "Geschützter Bereich"
+      "de": "Geschützter Bereich",
+      "fr": "zone protégée"
     },
     {
       "key": "withMembership/signIn/note",
-      "de": "Noch nicht Mitglied? {buyLink} {moreLink}"
+      "de": "Noch nicht Mitglied? {buyLink} {moreLink}",
+      "fr": "Pas encore membre? {buyLink} {moreLink}"
     },
     {
       "key": "withMembership/signIn/note/buyText",
-      "de": "Jetzt beitreten!"
+      "de": "Jetzt beitreten!",
+      "fr": "Adhérer maintenant!"
     },
     {
       "key": "withMembership/signIn/note/moreText",
-      "de": "Mehr erfahren."
+      "de": "Mehr erfahren.",
+      "fr": "Apprendre encore plus."
     },
     {
       "key": "withMembership/title",
-      "de": "Mitgliederbereich"
+      "de": "Mitgliederbereich",
+      "fr": "Zone des membres"
     },
     {
       "key": "withMembership/unauthorized",
-      "de": "Sie haben keine aktive Mitgliedschaft. {buyLink} oder {accountLink}?"
+      "de": "Sie haben keine aktive Mitgliedschaft. {buyLink} oder {accountLink}?",
+      "fr": "Vous n'avez pas d'abonnement actif. {buyLink} ou {accountLink} ?"
     },
     {
       "key": "withMembership/unauthorized/accountText",
-      "de": "Konto ansehen"
+      "de": "Konto ansehen",
+      "fr": "voir le compte"
     },
     {
       "key": "withMembership/unauthorized/buyText",
-      "de": "Jetzt Mitglied werden"
+      "de": "Jetzt Mitglied werden",
+      "fr": "Adhérer maintenant"
     }
   ]
 }
