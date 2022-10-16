@@ -1770,11 +1770,6 @@
       "fr": "Si vous rencontrez des problèmes techniques, nous nous ferons un plaisir de vous aider dans les plus brefs délais par email : <a href=\"mailto:info@lobbywatch.ch\"> info@lobbywatch.ch </a>"
     },
     {
-      "key": "faq/before/support/title",
-      "de": "Erste-Hilfe-Team",
-      "fr": "Équipe de premiers secours"
-    },
-    {
       "key": "faq/before/title",
       "de": "FAQ – Ihre häufigsten Fragen",
       "fr": "FAQ - Vos questions les plus fréquemment posées"
@@ -2216,8 +2211,8 @@
     },
     {
       "key": "package/DONATE/description",
-      "de": "Sie wollen hervorragenden Journalismus unterstützen. Denn Sie wissen: Guter Journalismus kostet.",
-      "fr": "Ils veulent soutenir l'excellence du journalisme. Parce que vous savez : le bon journalisme coûte de l'argent."
+      "de": "Sie wollen uns einfach unterstützen. Denn Sie wissen: Transparenz ist nicht gratis.",
+      "fr": "Ils veulent juste nous soutenir. Parce que vous le savez : la transparence n'est pas gratuite."
     },
     {
       "key": "package/DONATE/title",
