@@ -44,7 +44,7 @@ PgDb.connect()
           lastName: name.split(' ').slice(-1).join(' '),
           statement: d[statementKey].trim(),
           portrait: d['Porträtfoto'] || d['Photo-portrait'],
-          credential: d['Funktion/Tätigkeit'],
+          credential: d['Funktion/Tätigkeit'] || d['Fonction/Activité'],
         }
       })
 
