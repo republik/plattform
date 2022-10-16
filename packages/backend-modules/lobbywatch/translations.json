@@ -1146,6 +1146,11 @@
       "fr": "Soutenir Lobbywatch"
     },
     {
+      "key": "cf/cta/packages",
+      "de": "Werden Sie Mitglied:",
+      "fr": "Devenir membre :"
+    },
+    {
       "key": "cf/package/YEAR",
       "de": "Für mindestens ein Jahr",
       "fr": "Depuis au moins un an"
@@ -1717,7 +1722,7 @@
     {
       "key": "crowdfunding/status/time/days/other",
       "de": "{count} Tage",
-      "fr": "{compte} jours"
+      "fr": "{count} jours"
     },
     {
       "key": "crowdfunding/status/time/ended",
