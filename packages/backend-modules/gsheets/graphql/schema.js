@@ -5,7 +5,7 @@ schema {
 }
 
 type queries {
-  faqs: [Faq!]!
+  faqs(locale: Locale!): [Faq!]!
   events: [Event!]!
   updates: [Update!]!
   employees(

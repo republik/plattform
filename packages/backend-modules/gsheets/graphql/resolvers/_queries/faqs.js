@@ -1,4 +1,4 @@
-module.exports = async (_, args, { pgdb }) => {
+module.exports = async (_, { locale }, { pgdb }) => {
   const data = await pgdb.public.gsheets.findOneFieldOnly(
     { name: 'faqs' },
     'data',
@@ -6,5 +6,11 @@ module.exports = async (_, args, { pgdb }) => {
   if (!data) {
     return []
   }
-  return data.filter((d) => d.published)
+  return data
+    .filter((d) => d.published)
+    .map((d) => ({
+      category: d[`category_${locale}`],
+      question: d[`question_${locale}`],
+      answer: d[`answer_${locale}`],
+    }))
 }
