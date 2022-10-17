@@ -8,7 +8,7 @@ const styles = {
   pill: css({
     display: 'inline-flex',
     alignItems: 'end',
-    marginRight: 20,
+    margin: '10px 10px 0 0',
     backgroundColor: '#fff',
     padding: '5px 10px',
   }),
