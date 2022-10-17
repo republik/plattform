@@ -3,7 +3,7 @@
     {
       "key": "blog/meta/description",
       "de": "Lesenswertes aus der Lobbywelt. Beobachtungen aus der Wandelhalle, Interessenkonflikte der Politiker und Meinungen zu Transparenz.",
-      "fr": "Ce qu'il vaut la peine de lire sur le monde des lobbies. Remarques venant de la Salle des Pas Perdus, conflits d'intérêts des politiciens et avis sur la transparence."
+      "fr": "Ce qu'il vaut la peine de lire sur le monde des lobbys. Remarques venant de la salle des pas perdus, conflits d'intérêts des politicien-nes et avis sur la transparence."
     },
     {
       "key": "blog/title",
@@ -43,7 +43,7 @@
     {
       "key": "connection/art/mitglied",
       "de": "Mitglied",
-      "fr": "Membre"
+      "fr": "membre"
     },
     {
       "key": "connection/art/taetig",
@@ -88,12 +88,12 @@
     {
       "key": "connection/function/AG-vorstand-mitglied-F",
       "de": "Verwaltungsrätin",
-      "fr": "Membre du Conseil d'administration"
+      "fr": "membre du Conseil d'administration"
     },
     {
       "key": "connection/function/AG-vorstand-mitglied-M",
       "de": "Verwaltungsrat",
-      "fr": "Membre du Conseil d'administration"
+      "fr": "membre du Conseil d'administration"
     },
     {
       "key": "connection/function/AG-vorstand-praesident-F",
@@ -153,12 +153,12 @@
     {
       "key": "connection/function/Genossenschaft-vorstand-mitglied-F",
       "de": "Verwaltungsrätin",
-      "fr": "Membre du Conseil d'administration"
+      "fr": "membre du Conseil d'administration"
     },
     {
       "key": "connection/function/Genossenschaft-vorstand-mitglied-M",
       "de": "Verwaltungsrat",
-      "fr": "Membre du Conseil d'administration"
+      "fr": "membre du Conseil d'administration"
     },
     {
       "key": "connection/function/Genossenschaft-vorstand-praesident-F",
@@ -303,7 +303,7 @@
     {
       "key": "connection/funktion_im_gremium/mitglied",
       "de": "Mitglied",
-      "fr": "Membre"
+      "fr": "membre"
     },
     {
       "key": "connection/funktion_im_gremium/praesident-F",
@@ -328,12 +328,12 @@
     {
       "key": "connections/art/arbeitet fuer",
       "de": "Auftraggeber(in)",
-      "fr": "Mandant"
+      "fr": "mandant"
     },
     {
       "key": "connections/art/tochtergesellschaft von",
       "de": "Unterorganisationen",
-      "fr": "Filiales"
+      "fr": "filiales"
     },
     {
       "key": "connections/art/tochtergesellschaften",
@@ -358,7 +358,7 @@
     {
       "key": "connections/context/compensation/money/0",
       "de": "Ehrenamtlich",
-      "fr": "Bénévole"
+      "fr": "bénévole"
     },
     {
       "key": "connections/context/compensation/money/1",
@@ -793,7 +793,7 @@
     {
       "key": "newsletter/placeholder",
       "de": "E-Mail-Adresse",
-      "fr": "Email"
+      "fr": "E-mail"
     },
     {
       "key": "newsletter/processing",
@@ -938,7 +938,7 @@
     {
       "key": "parliamentarian/civilStatus/F-verwitwet",
       "de": "verwitwet",
-      "fr": "Veuve"
+      "fr": "veuve"
     },
     {
       "key": "parliamentarian/civilStatus/M-eingetragene partnerschaft",
@@ -978,7 +978,7 @@
     {
       "key": "parliamentarian/council/title/NR-F-Ex",
       "de": "Alt-Nationalrätin",
-      "fr": "Ancienne Conseillère nationale"
+      "fr": "ancienne Conseillère nationale"
     },
     {
       "key": "parliamentarian/council/title/NR-M",
@@ -988,27 +988,27 @@
     {
       "key": "parliamentarian/council/title/NR-M-Ex",
       "de": "Alt-Nationalrat",
-      "fr": "Ancien Conseiller national"
+      "fr": "ancien Conseiller national"
     },
     {
       "key": "parliamentarian/council/title/SR-F",
       "de": "Ständerätin",
-      "fr": "Conseillère aux Etats"
+      "fr": "Conseillère aux États"
     },
     {
       "key": "parliamentarian/council/title/SR-F-Ex",
       "de": "Alt-Ständerätin",
-      "fr": "Ancienne Conseillère aux Etats"
+      "fr": "ancienne Conseillère aux États"
     },
     {
       "key": "parliamentarian/council/title/SR-M",
       "de": "Ständerat",
-      "fr": "Conseiller aux Etats"
+      "fr": "Conseiller aux États"
     },
     {
       "key": "parliamentarian/council/title/SR-M-Ex",
       "de": "Alt-Ständerat",
-      "fr": "Ancien Conseiller aux Etats"
+      "fr": "ancien Conseiller aux États"
     },
     {
       "key": "parliamentarian/meta/description/F/0",
@@ -1138,7 +1138,7 @@
     {
       "key": "cf/cta/shareNow",
       "de": "Jetzt andere auf Lobbywatch aufmerksam machen:",
-      "fr": "Attirez maintenant l'attention des autres sur Lobbywatch :"
+      "fr": "Attirez maintenant l'attention des autres sur Lobbywatch:"
     },
     {
       "key": "cf/cta/shareEmailSubject",
@@ -1148,7 +1148,7 @@
     {
       "key": "cf/cta/packages",
       "de": "Werden Sie Mitglied:",
-      "fr": "Devenir membre :"
+      "fr": "Devenir membre:"
     },
     {
       "key": "cf/package/YEAR",
@@ -1188,7 +1188,7 @@
     {
       "key": "account/signedOut/signIn",
       "de": "Bitte anmelden:",
-      "fr": "Veuillez vous connecter :"
+      "fr": "Veuillez vous connecter:"
     },
     {
       "key": "Account/AddressForm/city/error/empty",
@@ -1208,7 +1208,7 @@
     {
       "key": "Account/AddressForm/country/error/empty",
       "de": "Land fehlt",
-      "fr": "il manque le pays"
+      "fr": "Il manque le pays"
     },
     {
       "key": "Account/AddressForm/country/label",
@@ -1308,7 +1308,7 @@
     {
       "key": "account/newsletterSubscriptions/resendResubscribeEmail",
       "de": "E-Mail erneut senden",
-      "fr": "Ré-envoyer l'email"
+      "fr": "Renvoyer l'e-mail"
     },
     {
       "key": "account/newsletterSubscriptions/resubscribe",
@@ -1398,7 +1398,7 @@
     {
       "key": "account/pledges/payment/methods/wallet/exception",
       "de": "{wallet} konnte nicht geladen werden. Mögliche Ursachen: eine wackelige Internetverbindung, ein temporärer Ausfall, ein VPN oder Ihre Browsererweiterungen. Wählen Sie bitte eine andere Zahlungsart oder versuchen Sie es in einigen Sekunden erneut.",
-      "fr": "{wallet} n'a pas pu être chargé. Causes possibles : une connexion Internet instable, une panne temporaire, un VPN ou les extensions de votre navigateur. Veuillez choisir un autre mode de paiement ou réessayer dans quelques secondes."
+      "fr": "{wallet} n'a pas pu être chargé. Causes possibles: une connexion Internet instable, une panne temporaire, un VPN ou les extensions de votre navigateur. Veuillez choisir un autre mode de paiement ou réessayer dans quelques secondes."
     },
     {
       "key": "account/pledges/payment/methods/wallet/loading",
@@ -1513,7 +1513,7 @@
     {
       "key": "Account/Update/cancel",
       "de": "abbrechen",
-      "fr": "avorter"
+      "fr": "annuler"
     },
     {
       "key": "Account/Update/details/title",
@@ -1543,7 +1543,7 @@
     {
       "key": "Account/Update/email/error/invalid",
       "de": "Das ist keine gültige E-Mail-Adresse",
-      "fr": "Cette adresse email n'est pas valide"
+      "fr": "Cette adresse e-mail n'est pas valide"
     },
     {
       "key": "Account/Update/email/form/label",
@@ -1553,7 +1553,7 @@
     {
       "key": "Account/Update/email/hint",
       "de": "Achtung: Wenn Sie Ihre E-Mail-Adresse ändern, werden Sie auf allen Geräten abgemeldet und Sie können sich danach ausschliesslich mit der neuen E-Mail-Adresse anmelden!",
-      "fr": "Attention : Si vous modifiez votre adresse e-mail, vous serez déconnecté sur tous les appareils et vous ne pourrez ensuite vous connecter qu'avec la nouvelle adresse e-mail !"
+      "fr": "Attention: si vous modifiez votre adresse e-mail, vous serez déconnecté sur tous les appareils et vous ne pourrez ensuite vous connecter qu'avec la nouvelle adresse e-mail !"
     },
     {
       "key": "Account/Update/email/label",
@@ -1613,7 +1613,7 @@
     {
       "key": "actionbar/email/title",
       "de": "Per E-Mail verschicken",
-      "fr": "Envoyé par email"
+      "fr": "Envoyé par e-mail"
     },
     {
       "key": "actionbar/facebook/label",
@@ -1638,7 +1638,7 @@
     {
       "key": "actionbar/link/label/success",
       "de": "Link kopiert!",
-      "fr": "Lien copié !"
+      "fr": "Lien copié!"
     },
     {
       "key": "actionbar/link/title",
@@ -1727,7 +1727,7 @@
     {
       "key": "crowdfunding/status/time/ended",
       "de": "Das Crowdfunding ist vorbei.",
-      "fr": "Fini le financement participatif."
+      "fr": "Le financement participatif est terminé."
     },
     {
       "key": "crowdfunding/status/time/hours/1",
@@ -1767,7 +1767,7 @@
     {
       "key": "faq/before/support/text",
       "de": "Bei allen technischen Problemen helfen wir Ihnen gerne so schnell wie möglich per Mail: <a href=\"mailto:info@lobbywatch.ch\">info@lobbywatch.ch</a>",
-      "fr": "Si vous rencontrez des problèmes techniques, nous nous ferons un plaisir de vous aider dans les plus brefs délais par email : <a href=\"mailto:info@lobbywatch.ch\"> info@lobbywatch.ch </a>"
+      "fr": "Si vous rencontrez des problèmes techniques, nous nous ferons un plaisir de vous aider dans les plus brefs délais par e-mail : <a href=\"mailto:info@lobbywatch.ch\"> info@lobbywatch.ch </a>"
     },
     {
       "key": "faq/before/title",
@@ -1797,7 +1797,7 @@
     {
       "key": "Goodies/title",
       "de": "Noch etwas Handfestes?",
-      "fr": "Rien d'autre de solide ?"
+      "fr": "Rien d'autre de solide?"
     },
     {
       "key": "macNewsletterSubscription/button",
@@ -1807,12 +1807,12 @@
     {
       "key": "me/signedinAs",
       "de": "Sie sind angemeldet als: {nameOrEmail}",
-      "fr": "Vous êtes connecté en tant que : {nameOrEmail}"
+      "fr": "Vous êtes connecté-e en tant que: {nameOrEmail}"
     },
     {
       "key": "me/signedOut",
       "de": "Sie sind nicht angemeldet",
-      "fr": "Vous n'êtes pas connecté"
+      "fr": "Vous n'êtes pas connecté-e"
     },
     {
       "key": "memberships/title/1",
@@ -1922,7 +1922,7 @@
     {
       "key": "merci/claim/signIn/before",
       "de": "Geben Sie Ihre richtige E-Mail-Adresse ein:",
-      "fr": "Saisissez votre adresse e-mail correcte :"
+      "fr": "Saisissez votre adresse e-mail correcte:"
     },
     {
       "key": "merci/claim/signIn/button",
@@ -1937,7 +1937,7 @@
     {
       "key": "merci/empty/text",
       "de": "Möchten auch Sie uns unterstützen?",
-      "fr": "Vous aussi vous souhaitez nous soutenir ?"
+      "fr": "Vous aussi vous souhaitez nous soutenir?"
     },
     {
       "key": "merci/empty/title",
@@ -1947,27 +1947,27 @@
     {
       "key": "merci/lead/welcome",
       "de": "Vielen Dank für Ihre Unterstützung. Es ist uns eine Ehre, Sie bei uns als Mitglied zu begrüssen.\n\nAuf dieser Seite finden Sie alles, was wir von Ihnen wissen: Ihre Unterstützungsbeiträge, Ihre persönlichen Angaben und Ihre Newsletter-Einstellungen.",
-      "fr": "Merci pour votre aide. C'est un honneur pour nous de vous avoir comme membre.\n\nSur cette page, vous trouverez tout ce que nous savons sur vous : vos contributions, vos données personnelles et vos préférences de newsletter."
+      "fr": "Merci pour votre aide. C'est un honneur pour nous de vous compter comme membre.\n\nSur cette page, vous trouverez tout ce que nous savons sur vous: vos contributions, vos données personnelles et vos préférences de newsletter."
     },
     {
       "key": "merci/lead/thanks",
       "de": "Vielen Dank für Ihre Grosszügigkeit!\n\nAuf dieser Seite finden Sie alles, was wir von Ihnen wissen: Ihre Unterstützungsbeiträge, Ihre persönlichen Angaben und Ihre Newsletter-Einstellungen.",
-      "fr": "Merci de ta générosité!\n\nSur cette page, vous trouverez tout ce que nous savons sur vous : vos contributions, vos données personnelles et vos préférences de newsletter."
+      "fr": "Merci de votre générosité!\n\nSur cette page, vous trouverez tout ce que nous savons sur vous: vos contributions, vos données personnelles et vos préférences de newsletter."
     },
     {
       "key": "merci/postpay/lead",
       "de": "Danke, Sie sind mit dem Wichtigsten durch. Jetzt müssen Sie noch Ihre E-Mail-Adresse bestätigen.",
-      "fr": "Merci, vous avez fait les bases. Vous devez maintenant confirmer votre adresse e-mail."
+      "fr": "Merci, vous avez fait l'essentiel. Il vous reste à présent à confirmer votre adresse e-mail."
     },
     {
       "key": "merci/postpay/reclaim",
       "de": "Falsche E-Mail-Adresse?",
-      "fr": "Mauvaise adresse email?"
+      "fr": "Mauvaise adresse e-mail?"
     },
     {
       "key": "merci/postpay/signInError/email/body",
       "de": "E-Mail-Adresse:\n{email}\n\nBuchungsreferenz:\n{pledgeId}\n\nFehler:\n{error}",
-      "fr": "Adresse e-mail :\n{email}\n\nRéférence de réservation :\n{pledgeId}\n\nErreur :\n{error}"
+      "fr": "Adresse e-mail:\n{email}\n\nRéférence de réservation:\n{pledgeId}\n\nErreur:\n{error}"
     },
     {
       "key": "merci/postpay/signInError/email/subject",
@@ -2017,7 +2017,7 @@
     {
       "key": "notifications/closeNote",
       "de": "Sie können dieses Fenster schliessen. ",
-      "fr": "Tu peux fermer cette fenêtre."
+      "fr": "Vous pouvez fermer cette fenêtre."
     },
     {
       "key": "notifications/email-confirmed/claim/text",
@@ -2052,7 +2052,7 @@
     {
       "key": "notifications/invalid-email/text",
       "de": "Der von Ihnen aufgerufene Link enthält eine ungültige E-Mail-Adresse: «{email}».<br /><br />Es könnte sein, dass die Zeichenkodierung beim Übertragen korrumpiert wurde. Bitte versuchen Sie es mit einem anderen E-Mail-Programm.<br /><br />Und melden Sie uns, unter welchen Umständen dies passiert ist: <a href=\"mailto:info@lobbywatch.ch?subject=Korrumpierte%20E-Mail-Adresse\">info@lobbywatch.ch</a>.",
-      "fr": "Le lien sur lequel vous avez cliqué contient une adresse e-mail invalide : «{email}».<br /><br />L'encodage des caractères a peut-être été corrompu lors de la transmission. Veuillez essayer un autre programme de messagerie.<br /><br />Et dites-nous dans quelles circonstances cela s'est produit : <a href=\"mailto:info@lobbywatch.ch?subject=Corrupted%20email%20address\">info@lobbywatch.ch</a>."
+      "fr": "Le lien sur lequel vous avez cliqué contient une adresse e-mail invalide : «{email}».<br /><br />L'encodage des caractères a peut-être été corrompu lors de la transmission. Veuillez essayer un autre programme de messagerie.<br /><br />Et dites-nous dans quelles circonstances cela s'est produit: <a href=\"mailto:info@lobbywatch.ch?subject=Corrupted%20email%20address\">info@lobbywatch.ch</a>."
     },
     {
       "key": "notifications/invalid-email/title",
@@ -2187,7 +2187,7 @@
     {
       "key": "package/customize/price/payMore/1.5",
       "de": "Ich bin für Grosszügigkeit: {formattedCHF}",
-      "fr": "Je suis pour la générosité : {formattedCHF}"
+      "fr": "Je suis pour la générosité: {formattedCHF}"
     },
     {
       "key": "package/customize/price/payMore/2",
@@ -2307,7 +2307,7 @@
     {
       "key": "payment/method/PAYPAL",
       "de": "PayPal",
-      "fr": "Pay Pal"
+      "fr": "PayPal"
     },
     {
       "key": "payment/method/POSTFINANCECARD",
@@ -2397,12 +2397,12 @@
     {
       "key": "payment/stripe/js/failed",
       "de": "Kreditkartenzahlungen sind zurzeit nicht möglich. Die Verbindung zu stripe.com, unserem Dienstleister für Kreditkartenzahlungen, ist fehlgeschlagen. Mögliche Ursachen: eine wackelige Internetverbindung, ein temporärer Ausfall oder Ihre Browsererweiterungen. Wählen Sie bitte eine andere Zahlungsart oder versuchen Sie es in einigen Sekunden erneut.",
-      "fr": "Les paiements par carte de crédit ne sont actuellement pas possibles. La connexion à stripe.com notre fournisseur de services de paiement par carte de crédit, a échoué. Causes possibles : une connexion Internet instable, une panne temporaire ou les extensions de votre navigateur. Veuillez choisir un autre mode de paiement ou réessayer dans quelques secondes."
+      "fr": "Les paiements par carte de crédit ne sont actuellement pas possibles. La connexion à stripe.com, notre fournisseur de services de paiement par carte de crédit, a échoué. Causes possibles: une connexion Internet instable, une panne temporaire ou les extensions de votre navigateur. Veuillez choisir un autre mode de paiement ou réessayer dans quelques secondes."
     },
     {
       "key": "payment/stripe/prefered",
       "de": "Falls es für Sie keinen Unterschied macht: Die Kreditkarte (Visa, Mastercard, Amex) ist für uns das bevorzugte Zahlungsmittel.",
-      "fr": "Si cela ne vous dérange pas : la carte de crédit (Visa, Mastercard, Amex) est notre moyen de paiement préféré."
+      "fr": "Si cela ne vous dérange pas: la carte de crédit (Visa, Mastercard, Amex) est notre moyen de paiement préféré."
     },
     {
       "key": "payment/title",
@@ -2507,7 +2507,7 @@
     {
       "key": "pledge/contact/firstName/label",
       "de": "Ihr Vorname",
-      "fr": "Ton prénom"
+      "fr": "Votre prénom"
     },
     {
       "key": "pledge/contact/lastName/error/empty",
@@ -2537,7 +2537,7 @@
     {
       "key": "pledge/contact/signIn/wrongToken",
       "de": "Ist das nicht Ihre E-Mail-Adresse?",
-      "fr": "N'est-ce pas votre adresse e-mail ?"
+      "fr": "N'est-ce pas votre adresse e-mail?"
     },
     {
       "key": "pledge/contact/signOut",
@@ -2702,7 +2702,7 @@
     {
       "key": "signIn/polling/cancel",
       "de": "Vertippt? E-Mail-Adresse erneut eingeben.",
-      "fr": "mal tapé ? Saisissez à nouveau votre adresse e-mail."
+      "fr": "mal tapé? Saisissez à nouveau votre adresse e-mail."
     },
     {
       "key": "signIn/polling/email",
@@ -2727,22 +2727,22 @@
     {
       "key": "signIn/polling/phrase/EMAIL_TOKEN/hint",
       "de": "Wie funktioniert diese Sicherheitsmassnahme? Vergleichen Sie diese Wörter. Stehen sie ebenfalls auf der Bestätigungsseite, können Sie sicher sein, dass Sie dieser Anfrage den Zugriff freischalten.",
-      "fr": "Comment fonctionne cette mesure de sécurité ? Comparez ces mots. S'ils figurent également sur la page de confirmation, vous pouvez être sûr que vous accordez l'accès à cette demande."
+      "fr": "Comment fonctionne cette mesure de sécurité? Comparez ces mots. S'ils figurent également sur la page de confirmation, vous pouvez être sûr que vous accordez l'accès à cette demande."
     },
     {
       "key": "signIn/polling/phrase/hint/show",
       "de": "Wie funktioniert diese Sicherheitsmassnahme?",
-      "fr": "Comment fonctionne cette mesure de sécurité ?"
+      "fr": "Comment fonctionne cette mesure de sécurité?"
     },
     {
       "key": "signIn/polling/switch/EMAIL_TOKEN",
       "de": "Zugriff via E-Mail bestätigen?",
-      "fr": "Confirmer l'accès par e-mail ?"
+      "fr": "Confirmer l'accès par e-mail?"
     },
     {
       "key": "signIn/privacy",
       "de": "Datenschutz",
-      "fr": "intimité"
+      "fr": "Vie privée"
     },
     {
       "key": "signIn/success",
@@ -2777,7 +2777,7 @@
     {
       "key": "statement/share/title",
       "de": "{name} unterstützt die Lobbywatch.",
-      "fr": "{name} prend en charge Lobbywatch."
+      "fr": "{name} soutient Lobbywatch."
     },
     {
       "key": "testimonial/submit",
@@ -2792,7 +2792,7 @@
     {
       "key": "testimonial/title",
       "de": "Teilen Sie, dass Sie die Lobbywatch unterstützen:",
-      "fr": "Partagez votre soutien au Lobbywatch :"
+      "fr": "Partagez votre soutien au Lobbywatch:"
     },
     {
       "key": "testimonial/title/update",
@@ -2812,12 +2812,12 @@
     {
       "key": "testimonial/unpublished",
       "de": "Ihr Statement ist zurzeit nicht publik.",
-      "fr": "Sa déclaration n'est pas publique pour le moment."
+      "fr": "Votre déclaration n'est pour le moment pas publique."
     },
     {
       "key": "testimonial/adminUnpublished",
       "de": "Wir können Ihr Statement leider nicht publizieren. Schreiben Sie an info@lobbywatch.ch für weitere Informationen.",
-      "fr": "Malheureusement, nous ne pouvons pas publier votre déclaration. écrire à info@lobbywatch.ch pour plus d'informations."
+      "fr": "Malheureusement, nous ne pouvons pas publier votre déclaration. Écrivez à info@lobbywatch.ch pour plus d'informations."
     },
     {
       "key": "testimonial/viewLive",
@@ -2962,12 +2962,12 @@
     {
       "key": "tokenAuthorization/fields/explanation",
       "de": "Um Ihr Konto zu aktivieren, benötigen wir noch folgende Informationen:",
-      "fr": "Afin d'activer votre compte, nous avons besoin des informations suivantes :"
+      "fr": "Afin d'activer votre compte, nous avons besoin des informations suivantes:"
     },
     {
       "key": "tokenAuthorization/fields/label/firstName",
       "de": "Ihr Vorname",
-      "fr": "Ton prénom"
+      "fr": "Votre prénom"
     },
     {
       "key": "tokenAuthorization/fields/label/lastName",
@@ -2992,7 +2992,7 @@
     {
       "key": "tokenAuthorization/location/unknown",
       "de": "Unbekannt",
-      "fr": "inconnue"
+      "fr": "inconnu"
     },
     {
       "key": "tokenAuthorization/phrase",
@@ -3002,22 +3002,22 @@
     {
       "key": "tokenAuthorization/title/existing",
       "de": "Zugriff geben?",
-      "fr": "donner accès ?"
+      "fr": "donner accès?"
     },
     {
       "key": "tokenAuthorization/title/new",
       "de": "Nutzung Ihrer E-Mail-Adresse erlauben?",
-      "fr": "Autoriser l'utilisation de votre adresse e-mail ?"
+      "fr": "Autoriser l'utilisation de votre adresse e-mail?"
     },
     {
       "key": "tokenAuthorization/title/sessionInfo",
       "de": "Möchten Sie folgendem Gerät Zugriff geben?",
-      "fr": "Souhaitez-vous accorder l'accès à l'appareil suivant ?"
+      "fr": "Souhaitez-vous donner l'accès à l'appareil suivant?"
     },
     {
       "key": "withAuthorization/authorizedRoles",
       "de": "Zugelassene Rollen: {roles}",
-      "fr": "Rôles autorisés : {roles}"
+      "fr": "Rôles autorisés: {roles}"
     },
     {
       "key": "withAuthorization/title",
