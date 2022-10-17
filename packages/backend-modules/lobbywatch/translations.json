@@ -636,6 +636,21 @@
       "fr": "Le contenu de Lobbywatch.ch est disponible sous licence <a href=\"https://creativecommons.org/licenses/by-sa/4.0/deed.fr\">Licence Creative Commons Attribution - Partage dans les mêmes conditions 4.0 International</a>."
     },
     {
+      "key": "footer/member",
+      "de": "Mitglied werden",
+      "fr": "Devenir membre"
+    },
+    {
+      "key": "footer/donate",
+      "de": "Spenden",
+      "fr": "Faire un don"
+    },
+    {
+      "key": "footer/home",
+      "de": "Startseite",
+      "fr": "Page d'accueil"
+    },
+    {
       "key": "guest/F/invited",
       "de": "eingeladen von",
       "fr": "Invitée par"
