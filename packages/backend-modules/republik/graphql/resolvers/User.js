@@ -111,7 +111,9 @@ module.exports = {
       'admin',
       'supporter',
     ])
-    const canAccessListed = Roles.userIsMeOrProfileVisible(user, me)
+    const canAccessListed =
+      Roles.userIsMeOrProfileVisible(user, me) ||
+      isFieldExposed(user, 'credentials')
 
     // credentials are filtered according to access rights
     // i.e. filtering has to follow the order below because depending on
