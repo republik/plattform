@@ -20,11 +20,11 @@ export default ({ contributors, onChange }) => {
       <AuthorSearch
         label='Sprecherin suchen'
         onChange={(author) => {
-          if (contributors?.find((c) => c.id === author.value.id)) return
+          if (contributors?.find((c) => c.userId === author.value.id)) return
           onChange([
             ...(contributors || []),
             {
-              id: author.value.id,
+              userId: author.value.id,
               name: author.value.name,
               kind: 'voice',
             },
@@ -35,7 +35,7 @@ export default ({ contributors, onChange }) => {
         <div>
           {contributors.map((contributor) => {
             return (
-              <span key={contributor.id} {...styles.pill}>
+              <span key={contributor.userId} {...styles.pill}>
                 {contributor.name}
                 <IconButton
                   Icon={CloseIcon}
@@ -43,7 +43,7 @@ export default ({ contributors, onChange }) => {
                   size={16}
                   onClick={() => {
                     let updatedContributors = contributors.filter(
-                      (c) => c.id !== contributor.id,
+                      (c) => c.userId !== contributor.userId,
                     )
                     updatedContributors = updatedContributors?.length
                       ? updatedContributors
