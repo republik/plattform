@@ -3265,8 +3265,12 @@
       "value": "Entfernen"
     },
     {
+      "key": "article/actionbar/audio/info/speaker/default",
+      "value": "unseren Sprecherinnenteam"
+    },
+    {
       "key": "article/actionbar/audio/info/speaker",
-      "value": "Vorgelesen von unseren Sprecherinnenteam"
+      "value": "Vorgelesen von {speaker}"
     },
     {
       "key": "article/actionbar/audio/info/play-synth",
@@ -3274,7 +3278,7 @@
     },
     {
       "key": "article/actionbar/audio/info/read-soon",
-      "value": "Bei 13 Uhr wird dieser Beitrag professionell vorgelesen."
+      "value": "Dieser Beitrag wird professionell im Laufen des Tages vorgelesen."
     },
     {
       "key": "article/syntheticReadAloud/title",

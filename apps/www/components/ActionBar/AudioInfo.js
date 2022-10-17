@@ -8,11 +8,13 @@ import {
   fontStyles,
   mediaQueries,
   plainLinkRule,
+  RawHtml,
 } from '@project-r/styleguide'
 import { useColorContext } from '@project-r/styleguide/src/components/Colors/ColorContext'
 
 const styles = {
   audioInfo: css({
+    textAlign: 'left',
     ...convertStyleToRem(fontStyles.sansSerifRegular14),
     [mediaQueries.mUp]: {
       ...convertStyleToRem(fontStyles.sansSerifRegular15),
@@ -20,15 +22,28 @@ const styles = {
   }),
 }
 
-const AudioInfo = ({ t, showAudioButtons, play, noRead }) => {
+const AudioInfo = ({ t, showAudioButtons, play, speakers = [] }) => {
   const [colorScheme] = useColorContext()
+  const speaker = speakers.length
+    ? speakers
+        .map((s) =>
+          s.user.id
+            ? `<a href="/~${s.user.username || s.user.id}">${s.name}</a>`
+            : s.name,
+        )
+        .join(', ')
+    : t('article/actionbar/audio/info/speaker/default')
   return (
     <span
       {...styles.audioInfo}
       {...colorScheme.set('color', showAudioButtons ? 'text' : 'textSoft')}
     >
       {showAudioButtons ? (
-        t('article/actionbar/audio/info/speaker')
+        <RawHtml
+          dangerouslySetInnerHTML={{
+            __html: t('article/actionbar/audio/info/speaker', { speaker }),
+          }}
+        />
       ) : (
         <>
           <a
@@ -39,9 +54,7 @@ const AudioInfo = ({ t, showAudioButtons, play, noRead }) => {
           >
             {t('article/actionbar/audio/info/play-synth')}
           </a>{' '}
-          {!noRead && (
-            <span>{t('article/actionbar/audio/info/read-soon')}</span>
-          )}
+          <span>{t('article/actionbar/audio/info/read-soon')}</span>
         </>
       )}
     </span>

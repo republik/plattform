@@ -248,6 +248,8 @@ const ActionBar = ({
     })
   }
 
+  const speakers = meta.contributors?.filter((c) => c.kind === 'voice')
+
   const ActionItems = [
     {
       title: readingTimeTitle,
@@ -503,8 +505,13 @@ const ActionBar = ({
       group: mode === 'articleTop' ? 'audio' : undefined,
     },
     {
-      // TODO: flag which docs never get read by ppl
-      element: <AudioInfo play={play} showAudioButtons={showAudioButtons} />,
+      element: (
+        <AudioInfo
+          play={play}
+          showAudioButtons={showAudioButtons}
+          speakers={speakers}
+        />
+      ),
       modes: ['articleTop'],
       show: !podcast && !!meta.audioSource,
       group: 'audio',
@@ -555,7 +562,9 @@ const ActionBar = ({
           <div
             {...(mode === 'feed' ? styles.inline : styles.secondary)}
             {...(!!centered && { ...styles.centered })}
-            style={{ marginTop: mode === 'feed' ? 'inherit' : 48 }}
+            style={
+              mode !== 'feed' ? { marginTop: 48, alignItems: 'flex-start' } : {}
+            }
           >
             <RenderItems items={audioItems} />
           </div>
