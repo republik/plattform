@@ -69,7 +69,12 @@ module.exports = async (_, args, { pgdb, t }) => {
 
     return {
       totalCount: ids.length,
-      nodes: users.map(transformUser),
+      nodes: users.map((user) => ({
+        ...transformUser(user),
+        _scopeConfig: {
+          exposeFields: ['credentials'], // listed credential will be exposed even if non public profile
+        },
+      })),
       pageInfo: {
         endCursor: endId,
         hasNextPage: endIndex < ids.length - 1,
