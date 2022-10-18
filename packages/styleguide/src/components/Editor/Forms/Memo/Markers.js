@@ -1,3 +1,4 @@
+import React from 'react'
 import { css } from 'glamor'
 import { color as d3Color } from 'd3-color'
 
