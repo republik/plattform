@@ -1,9 +1,8 @@
-import withMe from '../../lib/withMe'
 import withT from '../../lib/withT'
 import Me from './Me'
 import { css } from 'glamor'
 
-import { Interaction, BrandMark } from '@project-r/styleguide'
+import { Interaction, BrandMark, withMe } from '@project-r/styleguide'
 
 const styles = {
   center: css({

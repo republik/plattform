@@ -8,10 +8,10 @@ import {
   CommentNode,
   CommentComposer,
   CommentComposerPlaceholder,
+  withMe,
 } from '@project-r/styleguide'
 
 import withT from '../../../../lib/withT'
-import withMe from '../../../../lib/withMe'
 
 import { withMemos, getDisplayAuthor } from './graphql'
 

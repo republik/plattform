@@ -31,7 +31,6 @@ import Warning from '../Sidebar/Warning'
 import Loader from '../Loader'
 import CharCount from '../CharCount'
 import withT from '../../lib/withT'
-import withMe from '../../lib/withMe'
 
 import { errorToString } from '../../lib/utils/errors'
 import initLocalStore from '../../lib/utils/localStorage'
@@ -44,6 +43,7 @@ import {
   ColorContextProvider,
   colors,
   plainButtonRule,
+  withMe,
 } from '@project-r/styleguide'
 import SettingsIcon from 'react-icons/lib/fa/cogs'
 

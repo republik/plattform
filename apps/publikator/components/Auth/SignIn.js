@@ -8,7 +8,6 @@ import { css } from 'glamor'
 import isEmail from 'validator/lib/isEmail'
 
 import withT from '../../lib/withT'
-import { meQuery } from '../../lib/withMe'
 
 import ErrorMessage from '../ErrorMessage'
 
@@ -20,6 +19,7 @@ import {
   Label,
   RawHtml,
   colors,
+  meQuery,
 } from '@project-r/styleguide'
 
 import Poller from './Poller'

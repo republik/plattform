@@ -1,7 +1,7 @@
 import compose from 'lodash/flowRight'
 import { graphql } from '@apollo/client/react/hoc'
 import { gql } from '@apollo/client'
-import withMe from '../../../../lib/withMe'
+import { withMe } from '@project-r/styleguide'
 
 export const getDisplayAuthor = (author) => {
   const user = author.user || author

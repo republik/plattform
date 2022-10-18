@@ -4,10 +4,9 @@ import {
   withCommitMutation,
   withLatestCommit,
 } from './enhancers'
-import { Loader, useDebounce, usePrevious } from '@project-r/styleguide'
+import { Loader, useDebounce, usePrevious, withMe } from '@project-r/styleguide'
 import { cleanupTree } from '@project-r/styleguide/editor'
 import withT from '../../lib/withT'
-import withMe from '../../lib/withMe'
 import isEqual from 'lodash/isEqual'
 import createDebug from 'debug'
 import initLocalStore from '../../lib/utils/localStorage'

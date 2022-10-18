@@ -3,7 +3,7 @@ import Router from 'next/router'
 
 import { parse, format } from 'url'
 
-import withMe from '../lib/withMe'
+import { withMe } from '@project-r/styleguide'
 import track from '../lib/piwik'
 
 import { PUBLIC_BASE_URL } from '../lib/settings'
