@@ -510,6 +510,7 @@ const ActionBar = ({
           play={play}
           showAudioButtons={showAudioButtons}
           speakers={speakers}
+          noReadAloud={meta.noReadAloud}
         />
       ),
       modes: ['articleTop'],

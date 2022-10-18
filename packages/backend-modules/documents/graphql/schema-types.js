@@ -112,6 +112,7 @@ type Meta {
   contributors: [Contributor!]!
   audioSource: AudioSource
   podcast: Podcast
+  noReadAloud: Boolean
 
   newsletter: Newsletter
 

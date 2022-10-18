@@ -1,6 +1,6 @@
 import { Set, Map } from 'immutable'
 
-import { Field, Dropdown } from '@project-r/styleguide'
+import { Field, Dropdown, Checkbox } from '@project-r/styleguide'
 
 import {
   MetaSection,
@@ -90,13 +90,24 @@ export default withT(({ t, editor, node, onInputChange, format }) => {
                 }
               } else {
                 change.setNodeByKey(node.key, {
-                  data: node.data.set('audioSourceKind', value),
+                  data: node.data
+                    .set('audioSourceKind', value)
+                    .remove('noReadAloud'),
                 })
               }
             })
           }}
         />
       </MetaOption>
+      {audioSourceKind !== 'readAloud' && (
+        <Checkbox
+          checked={node.data.get('noReadAloud')}
+          onChange={onInputChange('noReadAloud')}
+          black
+        >
+          {t('metaData/audio/noReadAloud')}
+        </Checkbox>
+      )}
       {audioSourceKind === 'readAloud' && (
         <AudioContributors
           contributors={contributors}

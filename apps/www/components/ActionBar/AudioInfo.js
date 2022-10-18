@@ -22,7 +22,13 @@ const styles = {
   }),
 }
 
-const AudioInfo = ({ t, showAudioButtons, play, speakers = [] }) => {
+const AudioInfo = ({
+  t,
+  showAudioButtons,
+  play,
+  speakers = [],
+  noReadAloud,
+}) => {
   const [colorScheme] = useColorContext()
   const speaker = speakers.length
     ? speakers
@@ -53,8 +59,13 @@ const AudioInfo = ({ t, showAudioButtons, play, speakers = [] }) => {
             onClick={play('synthAudio')}
           >
             {t('article/actionbar/audio/info/play-synth')}
-          </a>{' '}
-          <span>{t('article/actionbar/audio/info/read-soon')}</span>
+          </a>
+          {!noReadAloud && (
+            <>
+              {' '}
+              <span>{t('article/actionbar/audio/info/read-soon')}</span>
+            </>
+          )}
         </>
       )}
     </span>
