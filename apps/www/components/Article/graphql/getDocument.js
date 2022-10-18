@@ -205,7 +205,7 @@ export const getDocument = gql`
           googleUrl
           appleUrl
         }
-        noReadAloud
+        isReadAloud
         newsletter {
           name
           free

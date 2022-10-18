@@ -27,7 +27,7 @@ const AudioInfo = ({
   showAudioButtons,
   play,
   speakers = [],
-  noReadAloud,
+  isReadAloud,
 }) => {
   const [colorScheme] = useColorContext()
   const speaker = speakers.length
@@ -60,7 +60,7 @@ const AudioInfo = ({
           >
             {t('article/actionbar/audio/info/play-synth')}
           </a>
-          {!noReadAloud && (
+          {!!isReadAloud && (
             <>
               {' '}
               <span>{t('article/actionbar/audio/info/read-soon')}</span>

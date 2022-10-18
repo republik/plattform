@@ -90,9 +90,7 @@ export default withT(({ t, editor, node, onInputChange, format }) => {
                 }
               } else {
                 change.setNodeByKey(node.key, {
-                  data: node.data
-                    .set('audioSourceKind', value)
-                    .remove('noReadAloud'),
+                  data: node.data.set('audioSourceKind', value),
                 })
               }
             })
@@ -101,11 +99,11 @@ export default withT(({ t, editor, node, onInputChange, format }) => {
       </MetaOption>
       {audioSourceKind !== 'readAloud' && (
         <Checkbox
-          checked={node.data.get('noReadAloud')}
-          onChange={onInputChange('noReadAloud')}
+          checked={node.data.get('isReadAloud')}
+          onChange={onInputChange('isReadAloud')}
           black
         >
-          {t('metaData/audio/noReadAloud')}
+          {t('metaData/audio/isReadAloud')}
         </Checkbox>
       )}
       {audioSourceKind === 'readAloud' && (
