@@ -218,11 +218,11 @@
     },
     {
       "key": "api/pay/pspPayload/parseFailed",
-      "value": "Die Zahlungsdaten konnten nicht überprüft werden. Bitte kontaktieren Sie uns unter kontakt@repulik.ch und geben Sie folgende Nummer an: ID: {id}"
+      "value": "Die Zahlungsdaten konnten nicht überprüft werden. Bitte kontaktieren Sie uns unter info@lobbywatch.ch und geben Sie folgende Nummer an: ID: {id}"
     },
     {
       "key": "api/pay/paymentIdUsedAlready",
-      "value": "Ihr Einkauf scheint bereits bezahlt zu sein. Bitte kontaktieren Sie uns unter kontakt@repulik.ch und geben Sie folgende Nummer an: ID: {id}"
+      "value": "Ihr Einkauf scheint bereits bezahlt zu sein. Bitte kontaktieren Sie uns unter info@lobbywatch.ch und geben Sie folgende Nummer an: ID: {id}"
     },
     {
       "key": "api/pledge/mail/subject",
