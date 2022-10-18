@@ -13,10 +13,13 @@ import { withSignIn } from '../Auth/SignIn'
 import withMembership from '../Auth/withMembership'
 import SwitchBoard from '../Auth/SwitchBoard'
 import Consents, { getConsentsError } from '../Pledge/Consents'
-import withMe from '../../lib/apollo/withMe'
 import withT from '../../lib/withT'
 
-import { ArrowForwardIcon, plainButtonRule } from '@project-r/styleguide'
+import {
+  ArrowForwardIcon,
+  plainButtonRule,
+  withMe,
+} from '@project-r/styleguide'
 import {
   Button,
   Field,

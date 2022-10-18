@@ -6,7 +6,6 @@ import { enforceMembership } from '../Auth/withMembership'
 import { withTester } from '../Auth/checkRoles'
 import DocumentListContainer from '../Feed/DocumentListContainer'
 import withT from '../../lib/withT'
-import withMe from '../../lib/apollo/withMe'
 
 import {
   mediaQueries,
@@ -15,6 +14,7 @@ import {
   Interaction,
   A,
   plainButtonRule,
+  withMe,
 } from '@project-r/styleguide'
 import { BookmarkBorderIcon } from '@project-r/styleguide'
 import { getCollectionItems, registerQueryVariables } from './queries'

@@ -1,8 +1,7 @@
 import compose from 'lodash/flowRight'
 import { graphql } from '@apollo/client/react/hoc'
 import { gql } from '@apollo/client'
-
-import { userProgressConsentFragment } from '../../../lib/apollo/withMe'
+import { userProgressConsentFragment } from '@project-r/styleguide'
 
 export const userProgressFragment = `
   fragment UserProgressOnDocument on Document {

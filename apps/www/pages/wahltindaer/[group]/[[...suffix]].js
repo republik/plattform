@@ -5,10 +5,9 @@ import { graphql } from '@apollo/client/react/hoc'
 import { gql } from '@apollo/client'
 
 import withT from '../../../lib/withT'
-import withMe from '../../../lib/apollo/withMe'
 import { PUBLIC_BASE_URL, CDN_FRONTEND_BASE_URL } from '../../../lib/constants'
 
-import { useDebounce } from '@project-r/styleguide'
+import { useDebounce, withMe } from '@project-r/styleguide'
 
 import Frame from '../../../components/Frame'
 import Meta from '../../../components/Frame/Meta'

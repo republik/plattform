@@ -4,7 +4,6 @@ import { graphql } from '@apollo/client/react/hoc'
 import { gql } from '@apollo/client'
 
 import withT from '../../lib/withT'
-import withMe from '../../lib/apollo/withMe'
 
 import { errorToString } from '../../lib/utils/errors'
 
@@ -12,7 +11,7 @@ import FieldSet from '../FieldSet'
 import PaymentForm, { query } from '../Payment/Form'
 import { P } from './Elements'
 
-import { Button, InlineSpinner, colors } from '@project-r/styleguide'
+import { Button, InlineSpinner, colors, withMe } from '@project-r/styleguide'
 
 import { withRouter } from 'next/router'
 

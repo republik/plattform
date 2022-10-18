@@ -4,12 +4,11 @@ import Head from 'next/head'
 import compose from 'lodash/flowRight'
 import { withRouter } from 'next/router'
 
-import withMe from '../lib/apollo/withMe'
 import withT from '../lib/withT'
 import withInNativeApp from '../lib/withInNativeApp'
 import { intersperse } from '../lib/utils/helpers'
 
-import { CloseIcon } from '@project-r/styleguide'
+import { CloseIcon, withMe } from '@project-r/styleguide'
 
 import {
   HEADER_HEIGHT,

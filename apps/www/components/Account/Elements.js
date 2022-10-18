@@ -3,7 +3,6 @@ import { css } from 'glamor'
 import { useRouter } from 'next/router'
 import compose from 'lodash/flowRight'
 
-import withMe from '../../lib/apollo/withMe'
 import withT from '../../lib/withT'
 import { timeFormat } from '../../lib/utils/format'
 import { Content } from '../../components/Frame'
@@ -15,6 +14,7 @@ import {
   fontStyles,
   useColorContext,
   plainButtonRule,
+  withMe,
 } from '@project-r/styleguide'
 
 const styles = {

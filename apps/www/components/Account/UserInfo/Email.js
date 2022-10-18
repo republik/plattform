@@ -12,11 +12,11 @@ import {
   Interaction,
   Label,
   mediaQueries,
+  withMe,
 } from '@project-r/styleguide'
 
 import { errorToString } from '../../../lib/utils/errors'
 import withT from '../../../lib/withT'
-import withMe from '../../../lib/apollo/withMe'
 import { query } from '../enhancers'
 import { EditButton, HintArea } from '../Elements'
 

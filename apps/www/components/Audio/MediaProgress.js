@@ -6,7 +6,7 @@ import { gql } from '@apollo/client'
 import debounce from 'lodash/debounce'
 import throttle from 'lodash/throttle'
 
-import withMe from '../../lib/apollo/withMe'
+import { withMe } from '@project-r/styleguide'
 
 const MediaProgressContext = createContext()
 

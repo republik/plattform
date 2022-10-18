@@ -2,11 +2,15 @@ import { useState, useEffect, useMemo } from 'react'
 import compose from 'lodash/flowRight'
 import { graphql } from '@apollo/client/react/hoc'
 import { withRouter } from 'next/router'
-import { CalloutMenu, IconButton } from '@project-r/styleguide'
-import { NotificationIcon, NotificationsNoneIcon } from '@project-r/styleguide'
+import {
+  CalloutMenu,
+  IconButton,
+  NotificationIcon,
+  NotificationsNoneIcon,
+  withMe,
+} from '@project-r/styleguide'
 import SubscribeCallout from './SubscribeCallout'
 import { getSelectedDiscussionPreference } from './SubscribeDebate'
-import withMe from '../../lib/apollo/withMe'
 import { DISCUSSION_PREFERENCES_QUERY } from '../Discussion/graphql/queries/DiscussionPreferencesQuery.graphql'
 
 const checkIfSubscribedToAny = ({ data, subscriptions, showAuthorFilter }) =>

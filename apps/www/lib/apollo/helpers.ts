@@ -5,7 +5,7 @@ import {
 } from '@republik/nextjs-apollo-client'
 import { initializeApollo } from '.'
 import { MeObjectType } from '../context/MeContext'
-import { meQuery } from './withMe'
+import { meQuery } from '@project-r/styleguide'
 
 // Prepare Next.js data-fetching helpers with the generated initializeApollo function
 export const { createGetStaticProps } =

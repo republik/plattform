@@ -1,9 +1,8 @@
 import isEmail from 'validator/lib/isEmail'
 
-import { Interaction, Button } from '@project-r/styleguide'
+import { Interaction, Button, withMe } from '@project-r/styleguide'
 
 import { CURTAIN_MESSAGE } from '../../lib/constants'
-import withMe from '../../lib/apollo/withMe'
 import withT from '../../lib/withT'
 import * as base64u from '../../lib/utils/base64u'
 import { useInNativeApp } from '../../lib/withInNativeApp'

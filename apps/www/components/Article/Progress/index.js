@@ -4,11 +4,10 @@ import compose from 'lodash/flowRight'
 import { withApollo } from '@apollo/client/react/hoc'
 import debounce from 'lodash/debounce'
 
-import { mediaQueries, A } from '@project-r/styleguide'
+import { mediaQueries, A, withMe } from '@project-r/styleguide'
 
 import { HEADER_HEIGHT, HEADER_HEIGHT_MOBILE } from '../../constants'
 import { scrollIt } from '../../../lib/utils/scroll'
-import withMe from '../../../lib/apollo/withMe'
 import { PROGRESS_EXPLAINER_PATH } from '../../../lib/constants'
 
 import { withProgressApi } from './api'
@@ -37,7 +36,7 @@ class ProgressContextProvider extends Component {
     }
   }
   render() {
-    return <Fragment>{this.props.children}</Fragment>;
+    return <Fragment>{this.props.children}</Fragment>
   }
 }
 

@@ -1,13 +1,12 @@
 import { Fragment } from 'react'
 import compose from 'lodash/flowRight'
 
-import withMe from '../../lib/apollo/withMe'
 import withT from '../../lib/withT'
 
 import SignIn from './SignIn'
 import SignOut from './SignOut'
 
-import { Interaction } from '@project-r/styleguide'
+import { Interaction, withMe } from '@project-r/styleguide'
 
 const Me = ({ me, t, email, beforeSignInForm, beforeSignedInAs }) =>
   me ? (

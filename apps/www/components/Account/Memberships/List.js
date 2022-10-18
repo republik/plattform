@@ -2,10 +2,9 @@ import { Component } from 'react'
 import compose from 'lodash/flowRight'
 import { graphql } from '@apollo/client/react/hoc'
 
-import { Interaction, Loader } from '@project-r/styleguide'
+import { Interaction, Loader, withMe } from '@project-r/styleguide'
 
 import withT from '../../../lib/withT'
-import withMe from '../../../lib/apollo/withMe'
 
 import query from '../belongingsQuery'
 import Manage from './Manage'

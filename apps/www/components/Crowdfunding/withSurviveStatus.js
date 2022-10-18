@@ -4,7 +4,7 @@ import { graphql } from '@apollo/client/react/hoc'
 import { withRouter } from 'next/router'
 import { timeDay } from 'd3-time'
 
-import withMe from '../../lib/apollo/withMe'
+import { withMe } from '@project-r/styleguide'
 import withInNativeApp from '../../lib/withInNativeApp'
 
 import { STATUS_POLL_INTERVAL_MS } from '../../lib/constants'

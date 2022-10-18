@@ -9,7 +9,6 @@ import { gql } from '@apollo/client'
 import { countFormat } from '../lib/utils/format'
 
 import withInNativeApp from '../lib/withInNativeApp'
-import withMe from '../lib/apollo/withMe'
 import withT from '../lib/withT'
 
 import Box from '../components/Frame/Box'
@@ -48,6 +47,7 @@ import {
   LazyLoad,
   fontStyles,
   Editorial,
+  withMe,
 } from '@project-r/styleguide'
 import ReasonsVideo from '../components/About/ReasonsVideo'
 import Link from 'next/link'

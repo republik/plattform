@@ -13,12 +13,12 @@ import {
   fontFamilies,
   colors,
   FieldSet,
+  meQuery,
 } from '@project-r/styleguide'
 
 import Consents, { getConsentsError } from '../Pledge/Consents'
 
 import withT from '../../lib/withT'
-import { meQuery } from '../../lib/apollo/withMe'
 import { reportError } from '../../lib/errors'
 
 import ErrorMessage from '../ErrorMessage'

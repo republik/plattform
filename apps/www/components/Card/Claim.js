@@ -14,9 +14,9 @@ import {
   Button,
   Field,
   RawHtml,
+  withMe,
 } from '@project-r/styleguide'
 
-import withMe from '../../lib/apollo/withMe'
 import withT from '../../lib/withT'
 
 import Loader from '../Loader'

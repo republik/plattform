@@ -3,9 +3,8 @@ import SubscribeDebate from './SubscribeDebate'
 import SubscribeDocument from './SubscribeDocument'
 import SubscribeAuthors from './SubscribeAuthors'
 import { css } from 'glamor'
-import { A, Label } from '@project-r/styleguide'
+import { A, Label, withMe } from '@project-r/styleguide'
 import withT from '../../lib/withT'
-import withMe from '../../lib/apollo/withMe'
 import Link from 'next/link'
 
 const styles = {

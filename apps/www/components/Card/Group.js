@@ -17,6 +17,7 @@ import {
   RawHtml,
   Label,
   plainButtonRule,
+  withMe,
 } from '@project-r/styleguide'
 
 import IgnoreIcon from './IgnoreIcon'
@@ -31,7 +32,6 @@ import {
 import withT from '../../lib/withT'
 import { useWindowSize } from '../../lib/hooks/useWindowSize'
 import createPersistedState from '../../lib/hooks/use-persisted-state'
-import withMe from '../../lib/apollo/withMe'
 import { ZINDEX_HEADER } from '../constants'
 
 import Details from './Details'

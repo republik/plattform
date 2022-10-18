@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client'
 import { graphql } from '@apollo/client/react/hoc'
 
-import { meQuery } from '../../lib/apollo/withMe'
+import { meQuery } from '@project-r/styleguide'
 
 const mutation = gql`
   mutation authorizeSession(

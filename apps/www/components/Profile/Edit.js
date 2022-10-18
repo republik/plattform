@@ -8,12 +8,12 @@ import {
   Button,
   useColorContext,
   A,
+  withMe,
 } from '@project-r/styleguide'
 
 import { DEFAULT_VALUES } from './Page'
 
 import withT from '../../lib/withT'
-import withMe from '../../lib/apollo/withMe'
 import { errorToString } from '../../lib/utils/errors'
 
 const styles = {

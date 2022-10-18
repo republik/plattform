@@ -7,9 +7,9 @@ import {
   Interaction,
   Radio,
   RawHtml,
+  withMe,
 } from '@project-r/styleguide'
 import { timeFormat } from '../../lib/utils/format'
-import withMe from '../../lib/apollo/withMe'
 import voteT from './voteT'
 import { gql } from '@apollo/client'
 import compose from 'lodash/flowRight'

@@ -1,15 +1,7 @@
-import {
-  createContext,
-  ReactNode,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react'
+import { createContext, ReactNode, useContext, useEffect } from 'react'
 import NextHead from 'next/head'
 import { ApolloError, useQuery } from '@apollo/client'
-import { checkRoles, meQuery } from '../apollo/withMe'
+import { meQuery, checkRoles } from '@project-r/styleguide'
 import { css } from 'glamor'
 import { getInitials } from '../../components/Frame/User'
 
@@ -103,10 +95,8 @@ type Props = {
   assumeAccess?: boolean
 }
 
-
 const MeContextProvider = ({ children, assumeAccess = false }: Props) => {
   const { data, loading, error, refetch } = useQuery<MeResponse>(meQuery, {})
-
 
   const me = data?.me
   const isMember = checkRoles(me, ['member'])

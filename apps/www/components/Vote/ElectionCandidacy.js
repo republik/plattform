@@ -12,6 +12,7 @@ import {
   Button,
   Label,
   mediaQueries,
+  withMe,
 } from '@project-r/styleguide'
 import withT from '../../lib/withT'
 import FieldSet from '../FieldSet'
@@ -27,7 +28,6 @@ import Portrait from '../Profile/Portrait'
 import { COUNTRIES } from '../Account/AddressForm'
 import UsernameField from '../Profile/UsernameField'
 import GenderField from '../Profile/GenderField'
-import withMe from '../../lib/apollo/withMe'
 import Loader from '../Loader'
 import SignIn from '../Auth/SignIn'
 

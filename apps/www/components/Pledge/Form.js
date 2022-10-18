@@ -6,7 +6,6 @@ import { gql } from '@apollo/client'
 import { withRouter } from 'next/router'
 
 import withT from '../../lib/withT'
-import withMe from '../../lib/apollo/withMe'
 import {
   CDN_FRONTEND_BASE_URL,
   ASSETS_SERVER_BASE_URL,
@@ -19,7 +18,7 @@ import FieldSet from '../FieldSet'
 import SignIn from '../Auth/SignIn'
 import withMembership from '../Auth/withMembership'
 
-import { Interaction, A, RawHtml } from '@project-r/styleguide'
+import { Interaction, A, RawHtml, withMe } from '@project-r/styleguide'
 
 import Accordion from './Accordion'
 import Submit from './Submit'
