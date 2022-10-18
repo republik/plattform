@@ -537,13 +537,15 @@ const ActionBar = ({
 
   return (
     <>
-      <div {...(mode === 'feed' && styles.feedContainer)}>
+      <div
+        {...((mode === 'seriesEpisode' || mode === 'feed') &&
+          styles.feedContainer)}
+      >
         <div
           {...styles.topRow}
           {...(mode === 'articleOverlay' && styles.overlay)}
-          {...(mode === 'feed' && styles.inline)}
-          {...((mode === 'seriesEpisode' || mode === 'articleBottom') &&
-            styles.flexWrap)}
+          {...((mode === 'seriesEpisode' || mode === 'feed') && styles.inline)}
+          {...(mode === 'articleBottom' && styles.flexWrap)}
           {...(!!centered && { ...styles.centered })}
         >
           <RenderItems items={primaryItems} />
@@ -560,10 +562,14 @@ const ActionBar = ({
 
         {!!audioItems.length && (
           <div
-            {...(mode === 'feed' ? styles.inline : styles.secondary)}
+            {...(mode !== 'articleTop' ? styles.inline : styles.secondary)}
             {...(!!centered && { ...styles.centered })}
             style={
-              mode !== 'feed' ? { marginTop: 48, alignItems: 'flex-start' } : {}
+              mode === 'articleTop'
+                ? { marginTop: 48, alignItems: 'flex-start' }
+                : mode === 'seriesEpisode'
+                ? { marginRight: 24 }
+                : {}
             }
           >
             <RenderItems items={audioItems} />
