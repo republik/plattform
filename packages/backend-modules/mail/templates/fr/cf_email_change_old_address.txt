@@ -1,0 +1,13 @@
+Bonjour
+
+Votre adresse e-mail a été modifiée et est désormais: {{EMAIL}}.
+
+Si cela ne vous convient pas, veuillez nous contacter immédiatement:
+info@lobbywatch.ch
+
+Avec nos meilleures salutations
+
+
+Lobbywatch.ch
+3000 Berne
+info@lobbywatch.ch

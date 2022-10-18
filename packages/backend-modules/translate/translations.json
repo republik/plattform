@@ -329,8 +329,12 @@
       "value": "Ihre Lobbywatch-Mitgliedschaft wurde verlängert"
     },
     {
-      "key": "api/email/pledge/subject",
+      "key": "api/email/de/pledge/subject",
       "value": "Vielen Dank!"
+    },
+    {
+      "key": "api/email/fr/pledge/subject",
+      "value": "Merci beaucoup!"
     },
     {
       "key": "api/email/pledge_abo/subject",
@@ -365,8 +369,12 @@
       "value": "Ihre Bestellung: Buch «Lobbywatch bei Stromausfall»"
     },
     {
-      "key": "api/email/payment_successful/subject",
+      "key": "api/email/de/payment_successful/subject",
       "value": "Vielen Dank! Wir haben Ihre Zahlung erhalten."
+    },
+    {
+      "key": "api/email/fr/payment_successful/subject",
+      "value": "Merci beaucoup! Nous avons bien reçu votre paiement."
     },
     {
       "key": "api/email/payment_successful_abo/subject",
@@ -1685,8 +1693,12 @@
       "value": "Access Token kann nicht verwendet werden"
     },
     {
-      "key": "api/signin/mail/subject",
+      "key": "api/signin/mail/de/subject",
       "value": "Zugriff bestätigen: {phrase}"
+    },
+    {
+      "key": "api/signin/mail/fr/subject",
+      "value": "Confirmer l'accès: {phrase}"
     },
     {
       "key": "api/signin/mail/appNotice/subject",
@@ -1733,8 +1745,12 @@
       "value": "Der User konnte leider nicht gefunden werden."
     },
     {
-      "key": "api/email/change/confirmation/subject",
+      "key": "api/email/change/confirmation/de/subject",
       "value": "Ihre E-Mail-Adresse wurde geändert"
+    },
+    {
+      "key": "api/email/change/confirmation/fr/subject",
+      "value": "Votre adresse e-mail a été modifiée"
     },
     {
       "key": "api/auth/tokenType/404",

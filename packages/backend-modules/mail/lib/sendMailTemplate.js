@@ -55,32 +55,8 @@ const envMergeVars = [
     content: FRONTEND_BASE_URL,
   },
   {
-    name: 'link_faq',
-    content: `${FRONTEND_BASE_URL}/faq`,
-  },
-  {
-    name: 'link_manifest',
-    content: `${FRONTEND_BASE_URL}/manifest`,
-  },
-  {
-    name: 'link_imprint',
-    content: `${FRONTEND_BASE_URL}/impressum`,
-  },
-  {
     name: 'assets_server_base_url',
     content: ASSETS_SERVER_BASE_URL,
-  },
-  {
-    name: 'link_signin', // ToDo: multi language
-    content: `${FRONTEND_BASE_URL}/de/merci`,
-  },
-  {
-    name: 'link_account', // ToDo: multi language
-    content: `${FRONTEND_BASE_URL}/de/merci`,
-  },
-  {
-    name: 'link_account_share',
-    content: `${FRONTEND_BASE_URL}/teilen`,
   },
 ]
 

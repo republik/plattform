@@ -39,6 +39,7 @@ PgDb.connect()
       .map((d) => {
         const name = (d.Name || d.Nom).trim()
         return {
+          locale: d['E-Mail-Adresse'] ? 'de' : 'fr',
           email: d['E-Mail-Adresse'] || d['Adresse e-mail'],
           firstName: name.split(' ').slice(0, -1).join(' '),
           lastName: name.split(' ').slice(-1).join(' '),
@@ -53,7 +54,7 @@ PgDb.connect()
     await Promise.map(
       testimonials,
       async (testimonial) => {
-        const { firstName, lastName, email } = testimonial
+        const { firstName, lastName, email, locale } = testimonial
         const portrait = await fetch(testimonial.portrait)
           .catch((error) => {
             console.error('image fetch failed', { testimonial, error })
@@ -70,7 +71,8 @@ PgDb.connect()
             user = await transaction.public.users.insertAndGet({
               firstName,
               lastName,
-              email: email,
+              email,
+              locale,
             })
           }
 

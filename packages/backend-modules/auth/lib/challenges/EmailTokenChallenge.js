@@ -40,11 +40,19 @@ module.exports = {
 
     return { payload: uuid(), expiresAt: new Date(new Date().getTime() + TTL) }
   },
-  startChallenge: async ({ email, context, token, country, phrase, pgdb }) => {
+  startChallenge: async ({
+    email,
+    context,
+    token,
+    country,
+    phrase,
+    pgdb,
+    locale = 'de',
+  }) => {
     const geoString = country === 'Schweiz' ? 'der Schweiz' : country
 
     const verificationUrl =
-      `${FRONTEND_BASE_URL}/de/message?` +
+      `${FRONTEND_BASE_URL}/${locale}/message?` +
       querystring.stringify({
         context,
         type: 'token-authorization',
@@ -57,8 +65,8 @@ module.exports = {
       {
         to: email,
         fromEmail: DEFAULT_MAIL_FROM_ADDRESS,
-        subject: t('api/signin/mail/subject', { phrase }),
-        templateName: 'signin',
+        subject: t(`api/signin/mail/${locale}/subject`, { phrase }),
+        templateName: `${locale}/signin`,
         globalMergeVars: [
           {
             name: 'LOCATION',

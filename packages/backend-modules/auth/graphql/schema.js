@@ -46,6 +46,7 @@ type mutations {
     tokenType: SignInTokenType,
     # accessToken w/ scope AUTHORIZE_SESSION
     accessToken: ID
+    locale: Locale
   ): SignInResponse!
   signOut: Boolean!
 
@@ -62,6 +63,7 @@ type mutations {
     tokens: [SignInToken!]!
     consents: [String!]
     requiredFields: RequiredUserFields
+    locale: Locale
   ): Boolean!
 
   # deny a session via token challenge

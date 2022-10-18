@@ -54,41 +54,15 @@
               <tbody>
                 <tr>
                   <td style="padding: 20px">
-                    <p>{{name}}, willkommen an Bord!</p>
+                    <p>Guten Tag</p>
                     <p>
-                      Es ist schön, dass Sie dabei sind! Wir freuen uns, Sie begrüssen zu dürfen. Hier die wichtigsten Informationen über Ihre Teilnahme.
+                      <strong>
+                        Ihre Zahlung ist erfolgreich bei uns eingegangen.<br />
+                        Herzlichen Dank!
+                      </strong>
                     </p>
-                    {{#if paymentslip}}
-                    <p>Zahlungsinformationen:</p>
-                    <ul
-                      style="color:#000;font-size:17px;line-height:24px;font-family:Roboto, sans-serif;"
-                    >
-                      <li>IBAN: {{iban}}</li>
-                      <li>Referenz: {{reference}}</li>
-                      <li>Betrag: {{total_formatted}}</li>
-                      <li>Zahlbar bis: {{due_date}}</li>
-                    </ul>
-                    <p>Anbei finden Sie eine QR-Rechnung.</p>
-                    <p>
-                      Anbei finden Sie eine QR-Rechnung. Sie können damit die Zahlung via 
-                      Mobile Banking, E-Banking oder am Schalter bei Bank und Post auslösen.
-                    </p>
-                    {{else}}
-                    <p>Ihre Zahlung ist erfolgreich bei uns eingegangen, herzlichen Dank!</p>
-                    {{/if}}
 
-                    {{#if ask_testimonial}}
-                    <p>
-                      Und wenn Sie noch eine oder zwei Minuten frei haben: 
-                      Posten Sie doch ein Statement und Ihr Portraitfoto auf unserer Unterstützungs-Seite. 
-                    </p>
-                    <p>
-                      Um dabei zu sein, geht es hier lang: 
-                      <a href="{{frontend_base_url}}/de/merci">lobbywatch.ch/de/merci</a>
-                    </p>
-                    {{/if}}
-
-                    <p>Vielen Dank!</p>
+                    <p>Mit freundlichen Grüssen</p>
                   </td>
                 </tr>
                 <tr>

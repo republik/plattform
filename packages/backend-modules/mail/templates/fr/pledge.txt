@@ -1,0 +1,41 @@
+{{name}}, bienvenue à bord!
+
+Nous sommes ravis de vous compter parmi nous! Nous nous réjouissons de vous
+accueillir. Voici les principales informations concernant votre participation.
+
+{{#if paymentslip}}
+
+Informations sur le paiement :
+
+ * IBAN : {{iban}}
+ * Référence : {{reference}}
+ * Montant : {{total_formatted}}
+ * Payable jusqu'au : {{due_date}}
+
+Vous trouverez ci-joint une QR-facture. Vous pouvez l'utiliser pour effectuer le
+paiement via Mobile Banking, E-Banking ou au guichet de la banque ou de la
+poste.
+
+{{else}}
+
+Votre paiement nous est parvenu avec succès, merci beaucoup!
+
+{{/if}} {{#if ask_testimonial}}
+
+Et si vous avez encore une ou deux minutes de libre: postez donc une déclaration
+et votre photo portrait sur notre page de soutien.
+
+Pour y participer, c'est par ici: lobbywatch.ch/fr/merci
+{{frontend_base_url}}/fr/merci
+
+Si vous le souhaitez, vous pouvez également inscrire votre adresse sur cette
+page. Nous vous remercierons ensuite en vous envoyant une carte postale.
+
+{{/if}}
+
+Merci beaucoup!
+
+
+Lobbywatch.ch
+3000 Berne
+info@lobbywatch.ch

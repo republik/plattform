@@ -20,6 +20,11 @@ type UnauthorizedSession {
   newUser: Boolean
 }
 
+enum Locale {
+  de
+  fr
+}
+
 type User {
   id: ID!
   initials: String
@@ -28,6 +33,7 @@ type User {
   firstName: String
   lastName: String
   email: String
+  locale: Locale
   hasPublicProfile: Boolean
   roles: [String!]!
   createdAt: DateTime!

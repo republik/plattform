@@ -28,9 +28,9 @@ const MAX_VALID_TOKENS = 5
 const TTL = 1000 * 60 * 10 // 10 minutes
 const Type = 'APP'
 
-const getNotification = ({ email, token, context }) => {
+const getNotification = ({ email, token, context, locale }) => {
   const verificationUrl =
-    `${FRONTEND_BASE_URL}/de/message?` +
+    `${FRONTEND_BASE_URL}/${locale}/message?` +
     querystring.stringify({
       context: context || token.context,
       type: 'token-authorization',
@@ -72,7 +72,7 @@ module.exports = {
 
     return { payload: uuid(), expiresAt: new Date(new Date().getTime() + TTL) }
   },
-  startChallenge: async ({ email, context, token, user, pgdb }) => {
+  startChallenge: async ({ email, context, token, user, pgdb, locale }) => {
     if (!user) {
       throw new UserMissingError({ email })
     }
@@ -89,15 +89,19 @@ module.exports = {
           to: email,
           fromEmail: DEFAULT_MAIL_FROM_ADDRESS,
           subject: t('api/signin/mail/appNotice/subject'),
-          templateName: 'signin_app_notice',
+          templateName: `${locale}/signin_app_notice`,
         },
         { pgdb },
       )
     }
 
-    return app.publish([user.id], getNotification({ context, email, token }), {
-      pgdb,
-    })
+    return app.publish(
+      [user.id],
+      getNotification({ context, email, token, locale }),
+      {
+        pgdb,
+      },
+    )
   },
   validateChallenge: async ({ pgdb, user, me }, { payload }) => {
     // app tokens must only be validated if the request is

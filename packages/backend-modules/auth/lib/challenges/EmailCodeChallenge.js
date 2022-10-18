@@ -60,7 +60,7 @@ module.exports = {
     const expiresAt = new Date(new Date().getTime() + TTL)
     return { payload, expiresAt }
   },
-  startChallenge: async ({ email, token, pgdb }) => {
+  startChallenge: async ({ email, token, pgdb, locale }) => {
     // Split payload into chunks glued w/ a space
     // e.g. 12345678 -> "123 456 78"
     const chunkedCode = token.payload.match(/\d{1,3}/g).join(' ')
@@ -70,7 +70,7 @@ module.exports = {
         to: email,
         fromEmail: DEFAULT_MAIL_FROM_ADDRESS,
         subject: t('api/signin/EMAIL_CODE/mail/subject', { code: chunkedCode }),
-        templateName: 'signin_code',
+        templateName: `${locale}/signin_code`,
         mergeLanguage: 'handlebars',
         globalMergeVars: [{ name: 'code', content: chunkedCode }],
       },

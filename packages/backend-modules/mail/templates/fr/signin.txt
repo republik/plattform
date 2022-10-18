@@ -1,0 +1,19 @@
+Bonjour
+
+Avez-vous demandé un accès à lobbywatch.ch?
+Dans ce cas, veuillez cliquer sur le lien suivant:
+
+Confirmer l'accès {{LOGIN_LINK}}
+
+Si vous n'êtes pas à l’origine de cette demande, vous pouvez ignorer ou refuser
+la demande d'accès {{LOGIN_LINK}}&noAutoAuthorize=true .
+
+Si vous recevez souvent ce courriel non sollicité, veuillez contacter
+info@lobbywatch.ch .
+
+Avec nos meilleures salutations
+
+
+Lobbywatch.ch
+3000 Berne
+info@lobbywatch.ch

@@ -25,7 +25,7 @@ module.exports = async (_, args, context) => {
   const { pgdb, req, t } = context
   const transaction = await pgdb.transactionBegin()
   try {
-    const { pledge, consents } = args
+    const { pledge, consents, locale } = args
     debug('submitPledge %O', pledge)
 
     const pledgeOptions = pledge.options.filter(
@@ -307,6 +307,7 @@ module.exports = async (_, args, context) => {
           // create user
           user = await transaction.public.users.insertAndGet({
             email: pledge.user.email,
+            locale,
           })
         }
       }

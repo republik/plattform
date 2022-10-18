@@ -168,6 +168,7 @@ const signIn = async (
   consents,
   _tokenType,
   accessToken,
+  locale,
 ) => {
   if (req.user) {
     // req is authenticated
@@ -283,6 +284,7 @@ const signIn = async (
         country,
         phrase,
         user,
+        locale,
       })
     }
 
@@ -484,6 +486,7 @@ const authorizeSession = async ({
   requiredFields = [],
   req,
   me,
+  locale,
 }) => {
   await auditAuthorizeAttempts({ pgdb, email: emailFromQuery })
 
@@ -562,6 +565,7 @@ const authorizeSession = async ({
       consents,
       requiredFields,
       req,
+      locale,
     }))
   } catch (error) {
     await transaction.transactionRollback()
@@ -651,6 +655,7 @@ const upsertUserAndConsents = async ({
   consents,
   requiredFields,
   req,
+  locale,
 }) => {
   const existingUser = await pgdb.public.users.findOne({ email })
   let user = existingUser
@@ -690,6 +695,7 @@ const upsertUserAndConsents = async ({
     user = await pgdb.public.users.insertAndGet({
       ...updatedData,
       email,
+      locale,
     })
   }
 
@@ -778,8 +784,8 @@ const updateUserEmail = async ({ pgdb, user, email }) => {
     {
       to: user.email,
       fromEmail: process.env.DEFAULT_MAIL_FROM_ADDRESS,
-      subject: t('api/email/change/confirmation/subject'),
-      templateName: 'cf_email_change_old_address',
+      subject: t(`api/email/change/confirmation/${user.locale}/subject`),
+      templateName: `${user.locale}/cf_email_change_old_address`,
       globalMergeVars: [
         {
           name: 'EMAIL',
@@ -794,12 +800,14 @@ const updateUserEmail = async ({ pgdb, user, email }) => {
     {
       to: email,
       fromEmail: process.env.DEFAULT_MAIL_FROM_ADDRESS,
-      subject: t('api/email/change/confirmation/subject'),
-      templateName: 'cf_email_change_new_address',
+      subject: t(`api/email/change/confirmation/${user.locale}/subject`),
+      templateName: `${user.locale}/cf_email_change_new_address`,
       globalMergeVars: [
         {
-          name: 'LOGIN_LINK', // ToDo: multi language
-          content: `${FRONTEND_BASE_URL}/de/merci?${querystring.stringify({
+          name: 'LOGIN_LINK',
+          content: `${FRONTEND_BASE_URL}/${
+            user.locale
+          }/merci?${querystring.stringify({
             email,
           })}`,
         },

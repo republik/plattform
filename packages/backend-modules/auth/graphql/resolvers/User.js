@@ -16,6 +16,7 @@ const expose =
   }
 module.exports = {
   email: expose(BASICS_USER_ACCESS_ROLES, 'email'),
+  locale: expose(BASICS_USER_ACCESS_ROLES, 'locale'),
   name: expose(BASICS_USER_ACCESS_ROLES, 'name'),
   firstName: expose(BASICS_USER_ACCESS_ROLES, 'firstName'),
   lastName: expose(BASICS_USER_ACCESS_ROLES, 'lastName'),

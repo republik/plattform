@@ -57,6 +57,7 @@ type mutations {
     publicUrl: String
     disclosures: String
     gender: String
+    locale: Locale
   ): User!
 
   # required role: supporter
@@ -99,6 +100,7 @@ type mutations {
     email: String,
     mac: String,
     consents: [String!]
+    locale: Locale
   ): NewsletterSubscription!
 
   resubscribeEmail(

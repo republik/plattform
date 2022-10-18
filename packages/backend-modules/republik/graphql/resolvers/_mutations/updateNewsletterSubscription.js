@@ -16,6 +16,7 @@ module.exports = async (_, args, context) => {
     email,
     mac,
     consents: _consents = [],
+    locale,
   } = args
 
   // only allow PRIVACY consent via this endpint
@@ -39,6 +40,7 @@ module.exports = async (_, args, context) => {
         email,
         consents,
         req,
+        locale,
       }))
     } else {
       throw new Error(t('api/newsletters/update/token/invalid'))

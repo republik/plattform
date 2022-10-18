@@ -1,0 +1,129 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="x-ua-compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <!--[if gte mso 15]>
+      <xml>
+        <o:officedocumentsettings>
+          <o:allowpng />
+          <o:pixelsperinch>96</o:pixelsperinch>
+        </o:officedocumentsettings>
+      </xml>
+    <![endif]-->
+    <style type="text/css">
+      @font-face{
+        font-family:Roboto;
+        font-style:normal;
+        font-weight:400;
+        src:url({{frontend_base_url}}/static/fonts/roboto-v30-latin-regular.woff2) format('woff2'),url({{frontend_base_url}}/static/fonts/roboto-v30-latin-regular.woff) format('woff');
+        font-display:swap
+      }
+      @font-face{
+        font-family:Roboto;
+        font-style:normal;
+        font-weight:500;
+        src:url({{frontend_base_url}}/static/fonts/roboto-v30-latin-500.woff2) format('woff2'),url({{frontend_base_url}}/static/fonts/roboto-v30-latin-500.woff) format('woff');
+        font-display:swap
+      }
+    </style>
+    <style type="text/css">
+      p {
+        color:#000;font-size:17px;line-height:24px;
+        font-family:Roboto, sans-serif;
+      }
+      p strong {
+        font-family:Roboto,sans-serif;font-weight:500;
+      }
+    </style>
+  </head>
+  <body style="margin: 0; padding: 0; background-color: #fff">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tbody>
+        <tr>
+          <td align="center" valign="top">
+            <table
+              align="center"
+              border="0"
+              cellpadding="0"
+              cellspacing="0"
+              width="100%"
+              style="max-width:640px;color:#000;font-size:17px;line-height:24px;font-family:Roboto, sans-serif;"
+            >
+              <tbody>
+                <tr>
+                  <td style="padding: 20px">
+                    <p>{{name}}, willkommen an Bord!</p>
+                    <p>
+                      Es ist schön, dass Sie dabei sind! Wir freuen uns, Sie begrüssen zu dürfen. Hier die wichtigsten Informationen über Ihre Teilnahme.
+                    </p>
+                    {{#if paymentslip}}
+                    <p>Zahlungsinformationen:</p>
+                    <ul
+                      style="color:#000;font-size:17px;line-height:24px;font-family:Roboto, sans-serif;"
+                    >
+                      <li>IBAN: {{iban}}</li>
+                      <li>Referenz: {{reference}}</li>
+                      <li>Betrag: {{total_formatted}}</li>
+                      <li>Zahlbar bis: {{due_date}}</li>
+                    </ul>
+                    <p>
+                      Anbei finden Sie eine QR-Rechnung. Sie können damit die Zahlung via 
+                      Mobile Banking, E-Banking oder am Schalter bei Bank und Post auslösen.
+                    </p>
+                    {{else}}
+                    <p>Ihre Zahlung ist erfolgreich bei uns eingegangen, herzlichen Dank!</p>
+                    {{/if}}
+
+                    {{#if ask_testimonial}}
+                    <p>
+                      Und wenn Sie noch eine oder zwei Minuten frei haben: 
+                      Posten Sie doch ein Statement und Ihr Portraitfoto auf unserer Unterstützungs-Seite. 
+                    </p>
+                    <p>
+                      Um dabei zu sein, geht es hier lang: 
+                      <a href="{{frontend_base_url}}/de/merci">lobbywatch.ch/de/merci</a>
+                    </p>
+                    <p>
+                      Falls Sie möchten, können Sie auf dieser Seite auch gleich Ihre Adresse eintragen. Dann bedanken wir uns mit einer Postkarte.
+                    </p>
+                    {{/if}}
+
+                    <p>Vielen Dank!</p>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding: 20px">
+                    <p
+                      style="color:#000;font-size:14px;line-height:20px;font-family:Roboto, sans-serif;"
+                    >
+                      <img
+                        height="32"
+                        src="{{frontend_base_url}}/static/logo_email_footer.png"
+                        style="
+                          border: 0px;
+                          width: 176px !important;
+                          height: 32px !important;
+                          margin: 0px;
+                        "
+                        width="176"
+                        alt=""
+                      />
+                      <br />
+                      Lobbywatch.ch<br />
+                      3000 Bern<br />
+                      <a href="mailto:info@lobbywatch.ch"
+                        >info@lobbywatch.ch</a
+                      >
+                    </p>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </body>
+</html>

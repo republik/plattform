@@ -132,14 +132,20 @@ const useHrefOnly = (text, href) => {
 }
 
 const run = async () => {
-  const files = await recursive(
-    path.resolve(`${__dirname}/../templates`),
+  const deFiles = await recursive(
+    path.resolve(`${__dirname}/../templates/de`),
+    [filterNonHtml, argv.templates && filterUnspecifiedTemplates].filter(
+      Boolean,
+    ),
+  )
+  const frFiles = await recursive(
+    path.resolve(`${__dirname}/../templates/fr`),
     [filterNonHtml, argv.templates && filterUnspecifiedTemplates].filter(
       Boolean,
     ),
   )
 
-  await Promise.map(files, async (file) => {
+  await Promise.map(deFiles.concat(frFiles), async (file) => {
     console.log(file)
     const html = await fs.readFile(file, 'utf8')
     await fs.writeFile(

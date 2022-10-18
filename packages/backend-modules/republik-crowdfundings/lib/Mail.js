@@ -87,8 +87,8 @@ const getInterestsForUser = async ({
 
   if (subscribeToEditorialNewsletters && (hasMembership || hasGrantedAccess)) {
     // Autosubscribe newsletter when new user just paid the membersh.
-    interests[MAILCHIMP_INTEREST_NEWSLETTER_GERMAN] = true // ToDo: multi language
-    interests[MAILCHIMP_INTEREST_NEWSLETTER_FRENCH] = false
+    interests[MAILCHIMP_INTEREST_NEWSLETTER_GERMAN] = user?.locale !== 'fr'
+    interests[MAILCHIMP_INTEREST_NEWSLETTER_FRENCH] = user?.locale === 'fr'
   }
 
   return interests
@@ -177,8 +177,7 @@ mail.sendPledgeConfirmations = async ({ userId, pgdb, t }) => {
       const package_ = await pgdb.public.packages.findOne({
         id: pledge.packageId,
       })
-      // ToDo: multi language
-      const templateName = 'pledge'
+      const templateName = `${user.locale}/pledge`
 
       const pledgeMergeVars = await mail.getPledgeMergeVars(
         { pledge, user, package_ },
@@ -216,8 +215,7 @@ mail.sendPaymentSuccessful = async ({ pledgeId, pgdb, t }) => {
   const user = await pgdb.public.users.findOne({ id: pledge.userId })
   const package_ = await pgdb.public.packages.findOne({ id: pledge.packageId })
 
-  // ToDo: multi language
-  const templateName = 'payment_successful'
+  const templateName = `${user.locale}/payment_successful`
 
   const pledgeMergeVars = await mail.getPledgeMergeVars(
     { pledge, user, package_ },
