@@ -99,11 +99,11 @@ export default withT(({ t, editor, node, onInputChange, format }) => {
       </MetaOption>
       {audioSourceKind !== 'readAloud' && (
         <Checkbox
-          checked={node.data.get('isReadAloud')}
-          onChange={onInputChange('isReadAloud')}
+          checked={node.data.get('willBeReadAloud')}
+          onChange={onInputChange('willBeReadAloud')}
           black
         >
-          {t('metaData/audio/isReadAloud')}
+          {t('metaData/audio/willBeReadAloud')}
         </Checkbox>
       )}
       {audioSourceKind === 'readAloud' && (

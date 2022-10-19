@@ -112,7 +112,7 @@ type Meta {
   contributors: [Contributor!]!
   audioSource: AudioSource
   podcast: Podcast
-  isReadAloud: Boolean
+  willBeReadAloud: Boolean
 
   newsletter: Newsletter
 

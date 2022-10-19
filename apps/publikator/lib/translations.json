@@ -653,7 +653,7 @@
       "value": "automatisch vorgelesen"
     },
     {
-      "key": "metaData/audio/isReadAloud",
+      "key": "metaData/audio/willBeReadAloud",
       "value": "dieser Beitrag wird vorgelesen"
     },
     {
