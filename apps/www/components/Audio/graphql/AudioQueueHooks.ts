@@ -35,10 +35,6 @@ const AudioQueueItemFragment = gql`
           aac
           ogg
           durationMs
-          userProgress {
-            id
-            secs
-          }
         }
         format {
           id
