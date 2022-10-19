@@ -62,56 +62,59 @@ export default withT(({ t, editor, node, onInputChange, format }) => {
           black
         />
       </MetaOption>
-      <MetaOption>
-        <Dropdown
-          black
-          label={t('metaData/audio/source/kind')}
-          items={audioSourceKinds}
-          value={audioSourceKind || null}
-          onChange={({ value }) => {
-            editor.change((change) => {
-              if (!value) {
-                // we delete voice contributors if audio kind isn't read-aloud
-                const updatedContributors = contributors?.filter(
-                  (c) => c.kind !== 'voice',
-                )
-                if (!updatedContributors?.length) {
-                  change.setNodeByKey(node.key, {
-                    data: node.data
-                      .remove('audioSourceKind')
-                      .remove('contributors'),
-                  })
+      <MetaOptionGroupTitle>Audiotyp</MetaOptionGroupTitle>
+      <MetaOptionGroup>
+        <MetaOption>
+          <Dropdown
+            black
+            label={t('metaData/audio/source/kind')}
+            items={audioSourceKinds}
+            value={audioSourceKind || null}
+            onChange={({ value }) => {
+              editor.change((change) => {
+                if (!value) {
+                  // we delete voice contributors if audio kind isn't read-aloud
+                  const updatedContributors = contributors?.filter(
+                    (c) => c.kind !== 'voice',
+                  )
+                  if (!updatedContributors?.length) {
+                    change.setNodeByKey(node.key, {
+                      data: node.data
+                        .remove('audioSourceKind')
+                        .remove('contributors'),
+                    })
+                  } else {
+                    change.setNodeByKey(node.key, {
+                      data: node.data
+                        .remove('audioSourceKind')
+                        .set('contributors', updatedContributors),
+                    })
+                  }
                 } else {
                   change.setNodeByKey(node.key, {
-                    data: node.data
-                      .remove('audioSourceKind')
-                      .set('contributors', updatedContributors),
+                    data: node.data.set('audioSourceKind', value),
                   })
                 }
-              } else {
-                change.setNodeByKey(node.key, {
-                  data: node.data.set('audioSourceKind', value),
-                })
-              }
-            })
-          }}
-        />
-      </MetaOption>
-      {audioSourceKind !== 'readAloud' && (
-        <Checkbox
-          checked={node.data.get('willBeReadAloud')}
-          onChange={onInputChange('willBeReadAloud')}
-          black
-        >
-          {t('metaData/audio/willBeReadAloud')}
-        </Checkbox>
-      )}
-      {audioSourceKind === 'readAloud' && (
-        <AudioContributors
-          contributors={contributors}
-          onChange={onChange('contributors')}
-        />
-      )}
+              })
+            }}
+          />
+        </MetaOption>
+        {audioSourceKind !== 'readAloud' && (
+          <Checkbox
+            checked={node.data.get('willBeReadAloud')}
+            onChange={onInputChange('willBeReadAloud')}
+            black
+          >
+            {t('metaData/audio/willBeReadAloud')}
+          </Checkbox>
+        )}
+        {audioSourceKind === 'readAloud' && (
+          <AudioContributors
+            contributors={contributors}
+            onChange={onChange('contributors')}
+          />
+        )}
+      </MetaOptionGroup>
       <MetaOptionGroupTitle>Play-Button auf Artikel-Bild</MetaOptionGroupTitle>
       <MetaOptionGroup>
         <MetaOption>
