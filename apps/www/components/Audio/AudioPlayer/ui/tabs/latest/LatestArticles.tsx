@@ -1,7 +1,6 @@
 import { useMemo, useState } from 'react'
 import { css } from 'glamor'
 import NoAccess from '../shared/NoAccess'
-import useAudioQueue from '../../../../hooks/useAudioQueue'
 import { useLatestArticlesQuery } from '../../../../graphql/LatestArticlesHook'
 import { useTranslation } from '../../../../../../lib/withT'
 import { AudioQueueItem } from '../../../../graphql/AudioQueueHooks'
@@ -9,6 +8,7 @@ import LoadingPlaceholder from '../shared/LoadingPlaceholder'
 import FilterButton from './FilterButton'
 import { useMe } from '../../../../../../lib/context/MeContext'
 import LatestArticleItem from './LatestArticleItem'
+import { NEXT_PUBLIC_FEAT_HOERT_HOERT } from '../../../../constants'
 
 const styles = {
   root: css({
@@ -38,7 +38,9 @@ const LatestArticlesTab = ({
   handleOpenArticle,
   handleDownload,
 }: LatestArticlesProps) => {
-  const [filter, setFilter] = useState<'all' | 'read-aloud'>('all')
+  const [filter, setFilter] = useState<'all' | 'read-aloud'>(
+    NEXT_PUBLIC_FEAT_HOERT_HOERT ? 'read-aloud' : 'all',
+  )
   const { t } = useTranslation()
   const { hasAccess } = useMe()
   const { data, loading, error } = useLatestArticlesQuery({
@@ -47,11 +49,16 @@ const LatestArticlesTab = ({
     },
   })
 
+  // Define if the real-aloud filter should be shown
   const hasReadAloudDocuments =
+    NEXT_PUBLIC_FEAT_HOERT_HOERT ||
     data?.latestArticles?.nodes.some(
       (node) => node?.meta?.audioSource?.kind === 'readAloud',
-    ) || false
-  if (hasReadAloudDocuments && filter !== 'all') {
+    ) ||
+    false
+
+  // Unset 'read-aloud' filter to if no documents are available
+  if (!loading && !hasReadAloudDocuments && filter === 'read-aloud') {
     setFilter('all')
   }
 
@@ -61,10 +68,9 @@ const LatestArticlesTab = ({
     )
 
     return articleWithAudio?.filter((article) => {
-      if (filter === 'all') {
-        return true
-      }
-      return article?.meta?.audioSource?.kind === 'readAloud'
+      return (
+        filter === 'all' || article?.meta?.audioSource?.kind === 'readAloud'
+      )
     })
   }, [data, filter])
 
@@ -87,33 +93,38 @@ const LatestArticlesTab = ({
 
   return (
     <div {...styles.root}>
-      {hasReadAloudDocuments && (
-        <div {...styles.filters}>
+      <div {...styles.filters}>
+        {(NEXT_PUBLIC_FEAT_HOERT_HOERT || hasReadAloudDocuments) && (
           <FilterButton
             isActive={filter === 'read-aloud'}
             onClick={() => setFilter('read-aloud')}
           >
             {t('AudioPlayer/Latest/ReadAloud')}
           </FilterButton>
-          <FilterButton
-            isActive={filter === 'all'}
-            onClick={() => setFilter('all')}
-          >
-            {t('AudioPlayer/Latest/All')}
-          </FilterButton>
-        </div>
+        )}
+
+        <FilterButton
+          isActive={filter === 'all'}
+          onClick={() => setFilter('all')}
+        >
+          {t('AudioPlayer/Latest/All')}
+        </FilterButton>
+      </div>
+      {filteredArticles?.length > 0 ? (
+        <ul {...styles.list}>
+          {filteredArticles.map((article) => (
+            <li key={article.id}>
+              <LatestArticleItem
+                article={article}
+                handleOpenArticle={handleOpenArticle}
+                handleDownload={handleDownload}
+              />
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p style={{ marginTop: 32 }}>{t('AudioPlayer/Latest/NoItems')}</p>
       )}
-      <ul {...styles.list}>
-        {filteredArticles.map((article) => (
-          <li key={article.id}>
-            <LatestArticleItem
-              article={article}
-              handleOpenArticle={handleOpenArticle}
-              handleDownload={handleDownload}
-            />
-          </li>
-        ))}
-      </ul>
     </div>
   )
 }
