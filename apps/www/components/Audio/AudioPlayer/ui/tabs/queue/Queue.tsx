@@ -96,9 +96,6 @@ const Queue = ({
       await removeAudioQueueItem(item.id)
     } catch (e) {
       console.error(e)
-      console.log(
-        'Could not remove item from playlist\n' + JSON.stringify(item, null, 2),
-      )
     }
   }
 
@@ -108,7 +105,6 @@ const Queue = ({
       await reorderAudioQueue(reorderedQueue)
     } catch (e) {
       console.error(e)
-      console.log('Could not reorder queue')
     }
   }, 1000)
 
@@ -119,17 +115,12 @@ const Queue = ({
 
     // If the drag event is cancelled, the draggedOverIndex will be undefined.
     if (draggedOverIndex === undefined) {
-      console.log(
-        `Drag event cancelled: from ${draggedItemIndex} to ${draggedOverIndex}`,
-      )
       return
     }
 
-    console.log('Moving item', draggedItemIndex, 'to', draggedOverIndex)
     const nextItems = [...items]
     nextItems.splice(draggedItemIndex, 1)
     nextItems.splice(draggedOverIndex, 0, draggedItem)
-    console.log('Updated index', nextItems)
 
     setItems(nextItems)
     handleReorder(nextItems)
@@ -156,12 +147,10 @@ const Queue = ({
     <DndContext
       onDragStart={() => {
         if (inNativeApp) {
-          console.log('force lock')
           setForceScrollLock(true)
         }
       }}
       onDragEnd={(e) => {
-        console.log('release lock')
         setForceScrollLock(false)
         handleDragEnd(e)
       }}
