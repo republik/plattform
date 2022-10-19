@@ -1002,7 +1002,7 @@
     },
     {
       "key": "account/progress/title",
-      "value": "Leseposition"
+      "value": "Lese- und Hörposition"
     },
     {
       "key": "account/progress/consent/label",
@@ -3350,7 +3350,7 @@
     },
     {
       "key": "article/progressprompt/headline",
-      "value": "Leseposition merken?"
+      "value": "Lese- und Hörposition merken?"
     },
     {
       "key": "article/progressprompt/description/feature",
@@ -3366,7 +3366,7 @@
     },
     {
       "key": "article/progressprompt/button/confirm",
-      "value": "Leseposition aktivieren"
+      "value": "Aktivieren"
     },
     {
       "key": "article/progressprompt/button/reject",
@@ -5438,7 +5438,7 @@
     },
     {
       "key": "Onboarding/Sections/Usability/paragraph1",
-      "value": "Auf Wunsch merken wir uns Ihre Leseposition in Beiträgen."
+      "value": "Auf Wunsch merken wir uns Ihre Lese- und Hörposition in Beiträgen."
     },
     {
       "key": "Onboarding/Sections/Usability/paragraph2",
