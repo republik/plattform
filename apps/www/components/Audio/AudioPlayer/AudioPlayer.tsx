@@ -16,7 +16,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { css } from 'glamor'
 import AudioPlaybackElement from './AudioPlaybackElement'
 import { useUserAgent } from '../../../lib/context/UserAgentContext'
-
+import { ZINDEX_POPOVER } from '../../constants'
 const MARGIN = 15
 const AUDIO_PLAYER_WRAPPER_ID = 'audio-player-wrapper'
 
@@ -27,7 +27,7 @@ const AUDIO_PLAYER_WRAPPER_ID = 'audio-player-wrapper'
 const styles = {
   wrapper: css({
     position: 'fixed',
-    zIndex: 100,
+    zIndex: ZINDEX_POPOVER + 1,
     bottom: 0,
     right: 0,
     display: 'flex',
@@ -197,7 +197,7 @@ const AudioPlayer = ({
               exit={{ opacity: 0, y: 50 }}
               {...styles.wrapper}
               {...(isExpanded ? styles.wrapperExpanded : styles.wrapperMini)}
-              {...colorScheme.set('backgroundColor', 'overlay')}
+              {...colorScheme.set('backgroundColor', 'default')}
               {...colorScheme.set('boxShadow', 'overlayShadow')}
             >
               {isExpanded ? (
