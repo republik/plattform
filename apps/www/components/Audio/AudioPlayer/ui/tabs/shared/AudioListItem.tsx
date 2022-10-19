@@ -112,7 +112,7 @@ const AudioListItem = ({
   })
 
   return (
-    <div {...styles.root} {...colorScheme.set('backgroundColor', 'overlay')}>
+    <div {...styles.root} {...colorScheme.set('backgroundColor', 'default')}>
       {beforeActionItem}
       <button
         {...styles.buttonFix}
