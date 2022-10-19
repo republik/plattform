@@ -12,6 +12,12 @@ const LATEST_ARTICLE_QUERIES = gql`
           path
           publishDate
           image
+          audioCoverCrop {
+            x
+            y
+            width
+            height
+          }
           audioSource {
             mediaId
             kind
@@ -22,6 +28,16 @@ const LATEST_ARTICLE_QUERIES = gql`
             userProgress {
               id
               secs
+            }
+          }
+          format {
+            id
+            meta {
+              title
+              color
+              shareLogo
+              shareBackgroundImage
+              shareBackgroundImageInverted
             }
           }
         }
