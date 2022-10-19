@@ -8,10 +8,12 @@ export enum AudioEvent {
   BACKWARD = 'audio:backward',
   PLAYBACK_RATE = 'audio:playbackRate',
   SETUP_TRACK = 'audio:setupTrack',
+  UPDATE_UI_STATE = 'audio:updateUIState',
   // Received from app
   SYNC = 'audio:sync',
   QUEUE_ADVANCE = 'audio:queueAdvance',
   ERROR = 'audio:error',
+  MINIMIZE_PLAYER = 'audio:minimizePlayer',
 }
 
 // Object with callbacks to control the web audio player

@@ -559,6 +559,24 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
   )
   useNativeAppEvent(AudioEvent.ERROR, handleError, [initialized])
 
+  // The following two hooks allow for minimizing the player on backpress in android
+  useEffect(() => {
+    notifyApp(AudioEvent.UPDATE_UI_STATE, {
+      isExpanded,
+      isVisible,
+    })
+  }, [isExpanded, isVisible])
+
+  useNativeAppEvent(
+    AudioEvent.MINIMIZE_PLAYER,
+    () => {
+      if (isExpanded) {
+        setIsExpanded(false)
+      }
+    },
+    [initialized],
+  )
+
   return (
     <>
       {children({

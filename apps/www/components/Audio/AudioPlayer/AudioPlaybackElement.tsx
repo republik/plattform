@@ -81,8 +81,7 @@ const AudioPlaybackElement = ({
         if (mediaRef.current) {
           mediaRef.current.playbackRate = playbackRate
         }
-        // Web
-        // Only load the userProgress if given and smaller within 2 seconds of the duration
+
         mediaRef.current.currentTime = currentTime
       }
 
