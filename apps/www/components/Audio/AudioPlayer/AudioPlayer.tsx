@@ -16,7 +16,6 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { css } from 'glamor'
 import AudioPlaybackElement from './AudioPlaybackElement'
 import { useUserAgent } from '../../../lib/context/UserAgentContext'
-import { useAudioContext } from '../AudioProvider'
 
 const MARGIN = 15
 const AUDIO_PLAYER_WRAPPER_ID = 'audio-player-wrapper'
