@@ -6,14 +6,13 @@ import { css } from 'glamor'
 const styles = {
   filterButton: css({
     border: 'none',
-    padding: 0,
+    padding: '8px 0',
     font: 'inherit',
     outline: 'inherit',
     textAlign: 'start',
     backgroundColor: 'transparent',
     cursor: 'pointer',
-    ...fontStyles.sansSerifBold,
-    fontWeight: 'bold',
+    ...fontStyles.sansSerifMedium,
   }),
 }
 
