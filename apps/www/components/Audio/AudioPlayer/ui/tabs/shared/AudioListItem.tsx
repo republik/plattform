@@ -111,6 +111,10 @@ const AudioListItem = ({
     skip: !item?.meta.audioSource.mediaId,
   })
 
+  const durationString = formatMinutes(
+    Math.max(audioSource.durationMs / 1000, 60),
+  )
+
   return (
     <div {...styles.root} {...colorScheme.set('backgroundColor', 'default')}>
       {beforeActionItem}
@@ -135,7 +139,7 @@ const AudioListItem = ({
               >
                 <span>{dateFormatter(publishDate)}</span>
                 <span style={{ whiteSpace: 'nowrap' }}>
-                  {formatMinutes(audioSource.durationMs / 1000)} min
+                  {durationString} min
                 </span>
                 <span
                   style={{
