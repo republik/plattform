@@ -1187,7 +1187,7 @@
     },
     {
       "key": "cf/package/WORKSHOP",
-      "de": "Etwas für Ihre ganze Crew? Lobbywatch-Workshop buchen.",
+      "de": "Etwas für Ihr ganzes Team? Lobbywatch-Workshop buchen.",
       "fr": "Quelque chose pour tout votre équipage ? Réservez un atelier Lobbywatch."
     },
     {
@@ -2006,13 +2006,13 @@
     },
     {
       "key": "merci/title/welcome",
-      "de": "Willkommen an Bord, {name}",
-      "fr": "Bienvenue à bord, {name}"
+      "de": "Willkommen {name}",
+      "fr": "Bienvenue {name}"
     },
     {
       "key": "merci/title/welcome/noName",
-      "de": "Willkommen an Bord",
-      "fr": "Bienvenue à bord"
+      "de": "Willkommen",
+      "fr": "Bienvenue"
     },
     {
       "key": "merci/title",
@@ -2196,18 +2196,18 @@
     },
     {
       "key": "package/customize/price/payMore",
-      "de": "Können Sie Ihr Investment erhöhen?",
-      "fr": "Pouvez-vous augmenter votre investissement ?"
+      "de": "Können und wollen Sie mehr geben?",
+      "fr": "Êtes-vous capable et désireux de donner plus ?"
     },
     {
       "key": "package/customize/price/payMore/1.5",
-      "de": "Ich bin für Grosszügigkeit: {formattedCHF}",
-      "fr": "Je suis pour la générosité: {formattedCHF}"
+      "de": "Klar: {formattedCHF}",
+      "fr": "Volontier: {formattedCHF}"
     },
     {
       "key": "package/customize/price/payMore/2",
-      "de": "Tollkühne {formattedCHF}",
-      "fr": "Audacieux {formattedCHF}"
+      "de": "Verdoppeln: {formattedCHF}",
+      "fr": "Doubler: {formattedCHF}"
     },
     {
       "key": "package/customize/price/payMore/thx",
@@ -2611,8 +2611,8 @@
     },
     {
       "key": "pledge/submit/autoPay",
-      "de": "Ohne Bürokratie: Verlängerungen automatisch von meiner Kreditkarte abbuchen.",
-      "fr": "Pas de bureaucratie : débitez automatiquement les renouvellements de ma carte de crédit."
+      "de": "Treu bleiben: Verlängerungen automatisch von meiner Kreditkarte abbuchen.",
+      "fr": "Restez fidèle : débitez automatiquement les renouvellements de ma carte de crédit."
     },
     {
       "key": "pledge/submit/autoPay/note",
@@ -2681,8 +2681,8 @@
     },
     {
       "key": "pledge/title",
-      "de": "Willkommen an Bord!",
-      "fr": "Bienvenue à bord!"
+      "de": "Willkommen bei Lobbywatch!",
+      "fr": "Bienvenue sur Lobbywatch !"
     },
     {
       "key": "pledge/title/member",
