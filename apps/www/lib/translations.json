@@ -5169,6 +5169,10 @@
       "value": "Die neusten Beiträge sind für Mitglieder und Abonnentinnen der Republik zugänglich."
     },
     {
+      "key": "AudioPlayer/Latest/NoItems",
+      "value": "Keine Beiträge verfügbar."
+    },
+    {
       "key": "AudioPlayer/Queue",
       "value": "Wiedergabeliste {count}"
     },

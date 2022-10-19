@@ -102,7 +102,6 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
     audioQueueIsLoading,
     addAudioQueueItem,
     removeAudioQueueItem,
-    refetchAudioQueue,
   } = useAudioQueue()
   const { getMediaProgress, saveMediaProgress } = useMediaProgress()
 
@@ -542,18 +541,6 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
     }
     setInitialized(true)
   }, [audioQueue, initialized, audioQueueIsLoading, pathname, setUpAppPlayer])
-
-  // refetch the queue to check for possible changes once the tab is opened again
-  useEffect(() => {
-    const handler = async () => {
-      const documentIsVisible = document.visibilityState === 'visible'
-      if (documentIsVisible && !isPlaying) {
-        await refetchAudioQueue()
-      }
-    }
-    document.addEventListener('visibilitychange', handler)
-    return () => document.removeEventListener('visibilitychange', handler)
-  }, [])
 
   useAudioContextEvent<void>('togglePlayer', playQueue)
 
