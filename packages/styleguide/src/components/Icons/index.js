@@ -88,6 +88,7 @@ export {
   MdViewHeadline as FlyerTileMetaIcon,
   MdOutlineQuiz as QuizIcon,
   MdOutlineDelete as DeleteIcon,
+  MdRateReview as MemoIcon,
 } from 'react-icons/md'
 
 export {

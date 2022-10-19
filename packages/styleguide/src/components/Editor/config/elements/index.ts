@@ -1,4 +1,4 @@
-import { EditorAttr, ElementsConfig } from '../../custom-types'
+import { EditorAttr, ElementsConfig, TemplateType } from '../../custom-types'
 import { config as link } from './link'
 import { config as paragraph } from './paragraph'
 import { config as headline } from './headline'

@@ -100,12 +100,12 @@ export const config: ElementConfigI = {
   Form,
   attrs: {
     isInline: true,
-    isTextInline: true,
+    // TODO: inlines inherit formatText from parent block
     formatText: true,
     stopFormIteration: true,
   },
   button: { icon: LinkIcon },
   normalizations: [unlinkWhenEmpty, checkAutolink],
-  structure: [{ type: ['text'], repeat: true }],
+  structure: [{ type: ['text', 'memo'], repeat: true }],
   props: ['href', 'title'],
 }

@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
 import compose from 'lodash/flowRight'
 import MarkdownSerializer from 'slate-mdast-serializer'
-import MemoIcon from 'react-icons/lib/md/rate-review'
 import {
+  MemoIcon,
   Editorial,
   Overlay,
   OverlayToolbar,

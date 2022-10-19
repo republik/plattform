@@ -53,6 +53,12 @@ export type LinkElement = SharedElement & {
   title?: string
 }
 
+export type MemoElement = SharedElement & {
+  type: 'memo'
+  parentId?: string
+  marker?: string
+}
+
 export type FigureElement = SharedElement & {
   type: 'figure'
   size?: string
@@ -240,6 +246,7 @@ export type CustomElement =
   | ParagraphElement
   | BreakElement
   | LinkElement
+  | MemoElement
   | FigureElement
   | FigureImageElement
   | FigureCaptionElement
@@ -286,6 +293,7 @@ export type CustomElementsType =
   | 'paragraph'
   | 'break'
   | 'link'
+  | 'memo'
   | 'figure'
   | 'figureImage'
   | 'figureCaption'
@@ -340,7 +348,7 @@ export interface BlockUiAttrsI {
 interface ElementAttrsI extends EditorAttrsI {
   formatText?: boolean
   blockUi?: BlockUiAttrsI
-  isTextInline?: boolean
+  isInlineBlock?: boolean
   stopFormIteration?: boolean
   neverDelete?: boolean
 }
