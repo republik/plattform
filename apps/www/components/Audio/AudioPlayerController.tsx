@@ -182,12 +182,7 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
   const syncWithNativeApp = useCallback(
     (state: AppAudioPlayerState) => {
       if (!inNativeApp) return
-      console.log(
-        'update from app',
-        JSON.stringify({
-          playerState: state.playerState,
-        }),
-      )
+
       // only update the optimistic UI if the track-player has started to play
       if (
         ![
@@ -259,8 +254,12 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
       autoPlay = false,
       initialTime = 0,
     ): Promise<void> => {
+      // TODO: replace with meta.audioCoverImage
+      const imageUrl = item.document.meta?.image
+
       notifyApp(AudioEvent.SETUP_TRACK, {
         item,
+        imageUrl,
         autoPlay,
         initialTime,
         playbackRate,

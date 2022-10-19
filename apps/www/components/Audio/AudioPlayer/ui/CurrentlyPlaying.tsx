@@ -27,20 +27,17 @@ const styles = {
   metaWrapper: css({
     display: 'flex',
     flexDirection: 'row',
-    gap: 16,
-  }),
-  dateText: css({
+    gap: 12,
     ...fontStyles.sansSerifRegular12,
   }),
 }
 
 type CurrentlyPlayingProps = {
-  t: any
   item: AudioQueueItem
   handleOpen: (path: string) => void
 }
 
-const CurrentlyPlaying = ({ t, item, handleOpen }: CurrentlyPlayingProps) => {
+const CurrentlyPlaying = ({ item, handleOpen }: CurrentlyPlayingProps) => {
   const [colorScheme] = useColorContext()
 
   const {
@@ -78,9 +75,21 @@ const CurrentlyPlaying = ({ t, item, handleOpen }: CurrentlyPlayingProps) => {
             />
           )}
           <div {...styles.metaWrapper} {...colorScheme.set('color', 'text')}>
-            <span {...styles.dateText}>
-              {publishDate && dateFormatter(new Date(Date.parse(publishDate)))}{' '}
-              - {formatMinutes(durationMs / 1000)}min
+            <span>
+              {publishDate && dateFormatter(new Date(Date.parse(publishDate)))}
+            </span>
+            <span>{formatMinutes(durationMs / 1000)}min</span>
+            <span
+              style={{
+                display: '-webkit-box',
+                WebkitBoxOrient: 'vertical',
+                overflow: 'hidden',
+                WebkitLineClamp: 1,
+                wordBreak: 'break-all',
+              }}
+            >
+              {item.document?.meta?.audioSource.kind === 'syntheticReadAloud' &&
+                'synthetisch'}
             </span>
           </div>
         </div>

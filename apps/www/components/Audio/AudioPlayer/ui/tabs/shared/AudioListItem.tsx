@@ -102,7 +102,6 @@ const AudioListItem = ({
 
   const { meta } = item
   const { audioSource } = meta
-  const cover = imageResizeUrl(meta.image, '150x') || FALLBACK_IMG_SRC
   const publishDate = new Date(Date.parse(meta.publishDate))
   const { data: progress, loading: progressIsLoading } = useMediaProgressQuery({
     variables: {
@@ -111,8 +110,12 @@ const AudioListItem = ({
     skip: !item?.meta.audioSource.mediaId,
   })
 
+  const durationString = formatMinutes(
+    Math.max(audioSource.durationMs / 1000, 60),
+  )
+
   return (
-    <div {...styles.root} {...colorScheme.set('backgroundColor', 'overlay')}>
+    <div {...styles.root} {...colorScheme.set('backgroundColor', 'default')}>
       {beforeActionItem}
       <button
         {...styles.buttonFix}
@@ -135,7 +138,7 @@ const AudioListItem = ({
               >
                 <span>{dateFormatter(publishDate)}</span>
                 <span style={{ whiteSpace: 'nowrap' }}>
-                  {formatMinutes(audioSource.durationMs / 1000)} min
+                  {durationString} min
                 </span>
                 <span
                   style={{

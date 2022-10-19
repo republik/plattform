@@ -40,14 +40,11 @@ export function useAudioContextEvent<E = Event>(
 
   useEffect(() => {
     const handler = (eventData: E) => {
-      console.log('useAudioContextEvent: received', eventName, eventData)
       return savedCallback?.current(eventData)
     }
 
-    console.log('useAudioContextEvent setup listener', eventName)
     AudioEventEmitter.addListener(eventName, handler)
     return () => {
-      console.log('useAudioContextEvent remove listener', eventName)
       AudioEventEmitter.removeListener(eventName, handler)
     }
   }, [eventName])
