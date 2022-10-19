@@ -96,7 +96,8 @@ const statusQuery = gql`
   ${userSurviveActionsFragment}
 `
 
-const numMembersNeeded = 27000
+const numMembersNeededGrowth = 32000
+const numMembersNeededPermanent = 27000
 
 const formatDateTime = swissTime.format('%d.%m.%Y %H:%M')
 
@@ -454,7 +455,7 @@ const Page = ({
           ).values
 
           const activeCount = currentBucket.active + currentBucket.overdue
-          const missingCount = numMembersNeeded - activeCount
+          const missingCount = numMembersNeededGrowth - activeCount
           if (missingCount > 0) {
             values.push({
               month: currentBucket.key,
@@ -462,7 +463,7 @@ const Page = ({
               value: missingCount,
             })
           }
-          minMaxValues.push(numMembersNeeded)
+          minMaxValues.push(numMembersNeededGrowth)
           const [minValue, maxValue] = extent(minMaxValues).map((d, i) =>
             Math[i ? 'ceil' : 'floor'](Math.round(d / 1000) * 1000),
           )
@@ -504,13 +505,13 @@ const Page = ({
                   barColor='#333'
                   memberships
                   hasEnd={false}
-                  crowdfundingName='PERMANENT'
+                  crowdfundingName='GROWTH'
                   crowdfunding={
                     currentBucket && {
-                      name: 'PERMANENT',
+                      name: 'GROWTH',
                       goals: [
                         {
-                          memberships: numMembersNeeded,
+                          memberships: numMembersNeededGrowth,
                         },
                       ],
                       status: {
@@ -566,13 +567,16 @@ const Page = ({
                     ],
                     height: 300,
                     domain: [minValue, maxValue + 2000],
-                    yTicks: [-5000, 0, 5000, 10000, 15000, 20000, 25000, 30000],
+                    yTicks: [
+                      -5000, 0, 5000, 10000, 15000, 20000, 25000, 30000, 35000,
+                    ],
                     xAnnotations: [
                       {
                         x1: currentBucket.key,
                         x2: currentBucket.key,
                         value: activeCount,
                         label: 'Stand jetzt',
+                        position: 'bottom',
                       },
                     ],
                     xBandPadding: 0,
@@ -603,14 +607,16 @@ const Page = ({
                     xInterval: 'month',
                     height: 300,
                     domain: [minValue, maxValue + 2000],
-                    yTicks: [-5000, 0, 5000, 10000, 15000, 20000, 25000, 30000],
-                    yAnnotations: [
+                    yTicks: [
+                      -5000, 0, 5000, 10000, 15000, 20000, 25000, 30000, 35000,
+                    ],
+                    /* yAnnotations: [
                       {
                         value: numMembersNeeded,
                         label: 'selbsttragend ab',
                         dy: '1.1em',
                       },
-                    ],
+                    ], */
                     xAnnotations: [
                       {
                         x1: currentBucket.key,
@@ -632,7 +638,7 @@ const Page = ({
                 </ChartLegend>
               </div>
               <P>
-                Mit {countFormat(numMembersNeeded)} Abonnentinnen und
+                Mit {countFormat(numMembersNeededPermanent)} Abonnentinnen und
                 Mitgliedern haben wir genügend Einnahmen, um den gesamten
                 Betrieb zu finanzieren. Und wir haben die Mittel, um Neues
                 auszuprobieren und Experimente zu machen.

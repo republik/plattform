@@ -7105,6 +7105,10 @@
       "value": "Mitgliedschaften und Abos. Selbsttragend ab: {count}."
     },
     {
+      "key": "crowdfunding/status/goal/GROWTH/memberships",
+      "value": "Mitgliedschaften und Abos. Wachstumsziel: mehr als {count}."
+    },
+    {
       "key": "Trial/Form/button",
       "value": "Anmelden"
     },
