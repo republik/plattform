@@ -78,7 +78,7 @@ const getTemplateType = (
   const nodeType = Array.isArray(template.type)
     ? template.type[0]
     : template.type
-  return nodeType !== 'text' ? nodeType : undefined
+  return nodeType !== 'text' && nodeType !== 'inherit' ? nodeType : undefined
 }
 
 const buildTextNode = (isEnd: boolean): CustomText => {
@@ -375,11 +375,25 @@ const removeNode = (
   Transforms.removeNodes(editor, { at: currentPath })
 }
 
+const getStructure = (
+  editor: CustomEditor,
+  node: NodeEntry<CustomAncestor>,
+  inputStructure: NodeTemplate[],
+): NodeTemplate[] => {
+  if (!SlateElement.isElement(node[0]) || inputStructure[0].type !== 'inherit')
+    return inputStructure
+  const parent = Editor.parent(editor, node[1])
+  if (!SlateElement.isElement(parent[0])) return inputStructure
+  const parentStructure = elConfig[parent[0].type].structure
+  return getStructure(editor, parent, parentStructure)
+}
+
 export const fixStructure: (
-  structure?: NodeTemplate[],
+  inputStructure?: NodeTemplate[],
 ) => NormalizeFn<CustomAncestor> =
-  (structure = DEFAULT_STRUCTURE) =>
+  (inputStructure = DEFAULT_STRUCTURE) =>
   ([node, path], editor) => {
+    const structure = getStructure(editor, [node, path], inputStructure)
     // console.log({ value: editor.children })
     let i = 0
     let repeatOffset = 0

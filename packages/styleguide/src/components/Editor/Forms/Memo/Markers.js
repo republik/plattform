@@ -27,8 +27,10 @@ const ColorPicker = ({ isSelected, onClick, color }) => {
   )
 }
 
-const Highlighter = ({ isSelected, onDoubleClick, children, color }) => (
+const Highlighter = ({ isSelected, children, color, attributes, ...props }) => (
   <span
+    {...props}
+    {...attributes}
     style={{
       backgroundColor: isSelected
         ? color
@@ -36,7 +38,6 @@ const Highlighter = ({ isSelected, onDoubleClick, children, color }) => (
       paddingTop: '.2em',
       paddingBottom: '.2em',
     }}
-    onDoubleClick={onDoubleClick}
   >
     {children}
   </span>
@@ -50,12 +51,8 @@ export const yellow = {
       color='rgb(255,255,0)'
     />
   ),
-  Marker: ({ isSelected, onDoubleClick, children }) => (
-    <Highlighter
-      isSelected={isSelected}
-      onDoubleClick={onDoubleClick}
-      color='rgb(255,255,0)'
-    >
+  Marker: ({ isSelected, children, ...props }) => (
+    <Highlighter isSelected={isSelected} color='rgb(255,255,0)' {...props}>
       {children}
     </Highlighter>
   ),

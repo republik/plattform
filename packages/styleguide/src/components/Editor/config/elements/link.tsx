@@ -100,8 +100,6 @@ export const config: ElementConfigI = {
   Form,
   attrs: {
     isInline: true,
-    // TODO: inlines inherit formatText from parent block
-    formatText: true,
     stopFormIteration: true,
   },
   button: { icon: LinkIcon },

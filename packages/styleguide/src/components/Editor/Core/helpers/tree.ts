@@ -370,7 +370,7 @@ export const getAncestry = (
   }
 }
 
-const isTextInline = (element: CustomElement): boolean =>
+export const isTextInline = (element: CustomElement): boolean =>
   elConfig[element.type].attrs?.isInline &&
   !elConfig[element.type].attrs?.isInlineBlock
 

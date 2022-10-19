@@ -178,6 +178,79 @@ describe('Slate Editor: Normalisation', () => {
       ])
     })
 
+    it('should use parent node structure for structure type:inherit (links, memos)', async () => {
+      value = [
+        {
+          type: 'headline',
+          children: [
+            {
+              text: '',
+            },
+            {
+              type: 'memo',
+              children: [
+                {
+                  text: 'Guten Morgen,',
+                },
+                {
+                  type: 'break',
+                  children: [
+                    {
+                      text: '',
+                    },
+                  ],
+                },
+                {
+                  text: 'schoen sind Sie da!',
+                },
+              ],
+            },
+            {
+              text: '',
+            },
+          ],
+        },
+      ]
+      const structure = [
+        {
+          type: 'headline',
+        },
+      ]
+      await setup(structure)
+      expect(cleanupTree(value)).toEqual([
+        {
+          type: 'headline',
+          children: [
+            {
+              text: '',
+            },
+            {
+              type: 'memo',
+              children: [
+                {
+                  text: 'Guten Morgen,',
+                },
+                {
+                  type: 'break',
+                  children: [
+                    {
+                      text: '',
+                    },
+                  ],
+                },
+                {
+                  text: 'schoen sind Sie da!',
+                },
+              ],
+            },
+            {
+              text: '',
+            },
+          ],
+        },
+      ])
+    })
+
     it('should unwrap incorrect inline node types', async () => {
       value = [
         {

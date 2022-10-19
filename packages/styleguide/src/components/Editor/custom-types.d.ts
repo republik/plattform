@@ -385,7 +385,7 @@ export type ElementFormProps<E> = {
   onClose: () => void
 }
 
-export type TemplateType = CustomElementsType | 'text'
+export type TemplateType = CustomElementsType | 'text' | 'inherit'
 
 export type NodeTemplate = {
   type: TemplateType | TemplateType[]

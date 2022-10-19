@@ -17,11 +17,9 @@ export const config: ElementConfigI = {
   Form,
   attrs: {
     isInline: true,
-    // inheritable?
-    formatText: true,
     stopFormIteration: true,
   },
-  button: { icon: MemoIcon },
-  structure: [{ type: ['text'], repeat: true }],
+  button: { icon: MemoIcon, small: true },
+  structure: [{ type: 'inherit' }],
   props: ['parentId', 'marker'],
 }

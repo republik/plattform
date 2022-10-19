@@ -31,6 +31,7 @@ import { useColorContext } from '../../Colors/ColorContext'
 import IconButton from '../../IconButton'
 import { getAncestry } from './helpers/tree'
 import {
+  canFormatText,
   countFormat,
   getCharCount,
   isEmpty,
@@ -109,12 +110,11 @@ const getAllowedMarks = (
   editor: CustomEditor,
   selectedElement?: NodeEntry<CustomElement>,
 ): ButtonConfig[] => {
-  const allowedMarks =
-    selectedElement && elConfig[selectedElement[0].type].attrs?.formatText
-      ? mKeys
-      : selectedElement
-      ? MARKS_ALLOW_LIST
-      : []
+  const allowedMarks = canFormatText(editor, selectedElement)
+    ? mKeys
+    : selectedElement
+    ? MARKS_ALLOW_LIST
+    : []
   return mKeys.map((t) => ({
     type: t as CustomMarksType,
     disabled: allowedMarks.indexOf(t) === -1, // only useful in fixed mode
