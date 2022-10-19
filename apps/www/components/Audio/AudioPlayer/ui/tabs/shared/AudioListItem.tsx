@@ -102,7 +102,6 @@ const AudioListItem = ({
 
   const { meta } = item
   const { audioSource } = meta
-  const cover = imageResizeUrl(meta.image, '150x') || FALLBACK_IMG_SRC
   const publishDate = new Date(Date.parse(meta.publishDate))
   const { data: progress, loading: progressIsLoading } = useMediaProgressQuery({
     variables: {
