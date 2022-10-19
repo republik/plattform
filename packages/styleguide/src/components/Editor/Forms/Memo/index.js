@@ -74,7 +74,7 @@ const MemoForm = ({
           />
         )}
       </div>
-      {commitId !== 'new' ? (
+      {!!commitId && commitId !== 'new' ? (
         <MemoTree
           t={t}
           repoId={repoId}

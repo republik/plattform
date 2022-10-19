@@ -7,7 +7,7 @@ import { List } from '../../List/Slate'
 import { PullQuote, PullQuoteSource, PullQuoteText } from '../../PullQuote'
 import { Editorial, Sub, Sup } from '../../Typography'
 import { Break } from '../../Typography/Break'
-import yellow from '../Forms/Memo/Markers'
+import { Memo } from '../Forms/Memo/Markers'
 
 const schema: SchemaConfig = {
   blockQuote: BlockQuote,
@@ -25,7 +25,7 @@ const schema: SchemaConfig = {
   break: Break,
   headline: Editorial.Subhead,
   link: Editorial.A,
-  memo: yellow.Marker,
+  memo: Memo,
   paragraph: Editorial.P,
   bold: Editorial.Emphasis,
   italic: Editorial.Cursive,
