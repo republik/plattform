@@ -14,7 +14,7 @@ export type AudioPlayerItem = {
       width: number
       height: number
     }
-    coverLg?: string
+    coverForNativeApp?: string
     coverMd?: string
     coverSm?: string
     audioSource?: {

@@ -123,10 +123,12 @@ const AudioListItem = ({
       >
         <div {...styles.itemWrapper}>
           <AudioCover
+            cover={meta.coverSm}
             size={62}
             image={meta.image}
             format={meta.format?.meta}
             audioCoverCrop={meta.audioCoverCrop}
+            alt={meta?.title}
           />
           <div {...styles.dataWrapper}>
             <div {...styles.dataText}>

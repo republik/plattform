@@ -18,6 +18,7 @@ const LATEST_ARTICLE_QUERIES = gql`
             width
             height
           }
+          coverSm: audioCover(properties: { width: 128, height: 128 })
           audioSource {
             mediaId
             kind
@@ -52,7 +53,7 @@ type LatestArticleQueryVariables = {
 
 type LatestArticleQueryData = {
   latestArticles: {
-    nodes: AudioQueueItem['document'][]
+    nodes: Omit<AudioQueueItem['document'], 'coverMd' | 'coverForNativeApp'>[]
   }
 }
 

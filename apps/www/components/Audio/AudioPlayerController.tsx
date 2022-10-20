@@ -258,7 +258,7 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
         autoPlay,
         initialTime,
         playbackRate,
-        coverImage: item.document.meta.coverLg,
+        coverImage: item.document.meta.coverForNativeApp,
       })
     },
     [playbackRate],
