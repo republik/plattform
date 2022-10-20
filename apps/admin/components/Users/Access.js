@@ -93,8 +93,18 @@ const GET_ACCESS_GRANTS = gql`
 `
 
 const CHANGE_ACCESS = gql`
-  mutation changeAccess($id: ID!, $revoke: Boolean!, $terminate: Boolean!) {
-    changeAccess(id: $id, revoke: $revoke, terminate: $terminate)
+  mutation changeAccess(
+    $id: ID!
+    $revoke: Boolean!
+    $invalidate: Boolean!
+    $noFollowup: Boolean!
+  ) {
+    changeAccess(
+      id: $id
+      revoke: $revoke
+      invalidate: $invalidate
+      noFollowup: $noFollowup
+    )
   }
 `
 
@@ -167,7 +177,8 @@ class Grant extends Component {
       isExpanded: false,
       isOpen: false,
       shouldRevoke: false,
-      shouldTerminate: false,
+      shouldInvalidate: false,
+      shouldNotFollowup: false,
     }
 
     this.toggle = (e) => {
@@ -183,9 +194,15 @@ class Grant extends Component {
       }))
     }
 
-    this.terminateAccessHandler = (_, value) => {
+    this.invalidateAccessHandler = (_, value) => {
       this.setState(() => ({
-        shouldTerminate: value,
+        shouldInvalidate: value,
+      }))
+    }
+
+    this.noFollowupAccessHandler = (_, value) => {
+      this.setState(() => ({
+        shouldNotFollowup: value,
       }))
     }
 
@@ -198,13 +215,15 @@ class Grant extends Component {
         variables: {
           id: grant.id,
           revoke: this.state.shouldRevoke,
-          terminate: this.state.shouldTerminate,
+          invalidate: this.state.shouldInvalidate,
+          noFollowup: this.state.shouldNotFollowup,
         },
       }).then(() =>
         this.setState(() => ({
           isOpen: false,
           shouldRevoke: false,
-          shouldTerminate: false,
+          shouldInvalidate: false,
+          shouldNotFollowup: false,
         })),
       )
     }
@@ -352,8 +371,8 @@ class Grant extends Component {
         <Events events={grant.events} t={t} />
 
         {((!grant.revokedAt && !grant.invalidatedAt) ||
-          !grant.invalidatedAt ||
-          !grant.followupAt) && (
+          (grant.beginAt && !grant.invalidatedAt) ||
+          (grant.beginAt && !grant.followupAt)) && (
           <Fragment>
             <HR />
             <Button
@@ -394,32 +413,38 @@ class Grant extends Component {
                                       {t('account/access/Grant/change/revoke')}
                                     </Checkbox>
                                   </p>
-                                  {!grant.invalidatedAt && (
-                                    <p>
-                                      <Checkbox
-                                        checked={this.state.shouldTerminate}
-                                        onChange={this.terminateAccessHandler}
-                                        disabled={!!grant.invalidatedAt}
-                                      >
-                                        {t(
-                                          'account/access/Grant/change/invalidate',
-                                        )}
-                                      </Checkbox>
-                                    </p>
+                                  {!!grant.beginAt && (
+                                    <div>
+                                      <p>
+                                        <Checkbox
+                                          checked={this.state.shouldInvalidate}
+                                          onChange={
+                                            this.invalidateAccessHandler
+                                          }
+                                          disabled={!!grant.invalidatedAt}
+                                        >
+                                          {t(
+                                            'account/access/Grant/change/invalidate',
+                                          )}
+                                        </Checkbox>
+                                      </p>
+
+                                      <p>
+                                        <Checkbox
+                                          checked={this.state.shouldNotFollowup}
+                                          onChange={
+                                            this.noFollowupAccessHandler
+                                          }
+                                          disabled={!!grant.followupAt}
+                                        >
+                                          {t(
+                                            'account/access/Grant/change/noFollowup',
+                                          )}
+                                        </Checkbox>
+                                      </p>
+                                    </div>
                                   )}
-                                  {grant.invalidatedAt && !grant.followupAt && (
-                                    <p>
-                                      <Checkbox
-                                        checked={this.state.shouldTerminate}
-                                        onChange={this.terminateAccessHandler}
-                                        disabled={!!grant.followupAt}
-                                      >
-                                        {t(
-                                          'account/access/Grant/change/suppressFollowup',
-                                        )}
-                                      </Checkbox>
-                                    </p>
-                                  )}
+
                                   <Button
                                     primary
                                     onClick={this.submitHandler(changeAccess)}

@@ -1,18 +1,23 @@
 const debug = require('debug')('access:mutation:terminateAccess')
 
-const { ensureSignedIn } = require('@orbiting/backend-modules-auth')
+const { ensureSignedIn, Roles } = require('@orbiting/backend-modules-auth')
 
 const {
   revoke: revokeAccess,
-  terminate: terminateAccess,
+  invalidate: invalidateAccess,
+  noFollowup: noFollowupAccess,
 } = require('../../../lib/grants')
 
 module.exports = async (
   _,
-  { id, revoke, terminate },
+  { id, revoke, invalidate, noFollowup },
   { req, user, pgdb, t, mail },
 ) => {
   ensureSignedIn(req)
+
+  if (!Roles.userIsInRoles(user, ['admin', 'supporter'])) {
+    throw new Error(t('api/access/terminate/role/error'))
+  }
 
   debug('begin', { id, user: user.id })
 
@@ -22,8 +27,14 @@ module.exports = async (
     if (revoke) {
       await revokeAccess(id, user, t, transaction)
     }
-    if (terminate) {
-      await terminateAccess(id, user, t, transaction, mail)
+
+    if (invalidate) {
+      const grant = await pgdb.public.accessGrants.findOne({ id })
+      await invalidateAccess(grant, 'admin', t, pgdb, mail)
+    }
+
+    if (noFollowup) {
+      await noFollowupAccess(id, pgdb)
     }
 
     await transaction.transactionCommit()
