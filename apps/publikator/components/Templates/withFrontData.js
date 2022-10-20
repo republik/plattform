@@ -1,6 +1,10 @@
-import { graphql } from 'react-apollo'
-import gql from 'graphql-tag'
-import { TeaserActiveDebates, TeaserMyMagazine } from '@project-r/styleguide'
+import { graphql } from '@apollo/client/react/hoc'
+import { gql } from '@apollo/client'
+import {
+  TeaserActiveDebates,
+  TeaserMyMagazine,
+  TeaserFlyer,
+} from '@project-r/styleguide'
 
 const feedQuery = gql`
   query getFrontFeed(
@@ -107,4 +111,11 @@ export const withMyMagazineData = graphql(
     ${TeaserMyMagazine.data.query}
   `,
   TeaserMyMagazine.data.config,
+)
+
+export const withFlyerData = graphql(
+  gql`
+    ${TeaserFlyer.data.query}
+  `,
+  TeaserFlyer.data.config,
 )

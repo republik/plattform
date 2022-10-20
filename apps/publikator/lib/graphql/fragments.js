@@ -1,4 +1,4 @@
-import gql from 'graphql-tag'
+import { gql } from '@apollo/client'
 
 export const SimpleCommit = gql`
   fragment SimpleCommit on Commit {
@@ -28,12 +28,19 @@ export const CommitWithDocument = gql`
     document {
       id
       repoId
+      type
       content
       meta {
         title
         template
         kind
         color
+        audioCoverCrop {
+          x
+          y
+          width
+          height
+        }
         format {
           id
           repoId
@@ -134,5 +141,19 @@ export const EditPageRepo = gql`
     meta {
       publishDate
     }
+  }
+`
+
+export const RepoFile = gql`
+  fragment RepoFile on RepoFile {
+    id
+    name
+    status
+    url
+    error
+    author {
+      name
+    }
+    createdAt
   }
 `

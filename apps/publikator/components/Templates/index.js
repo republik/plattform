@@ -1,6 +1,5 @@
 import { cloneElement, Children } from 'react'
 import newsletterSchema from '@project-r/template-newsletter'
-import neutrumSchema from './Neutrum'
 
 import {
   createNewsletterWebSchema,
@@ -13,6 +12,7 @@ import {
   createDossierSchema,
 } from '@project-r/styleguide'
 
+import { getDatePath } from '@project-r/styleguide/editor'
 import { t } from '../../lib/withT'
 
 import dynamicComponentRequire from '../editor/modules/dynamiccomponent/require'
@@ -40,7 +40,10 @@ const schemas = {
   // - for Project R this should be the newsletter
   newsletter: newsletterSchema,
   editorialNewsletter: createNewsletterWebSchema(),
-  neutrum: neutrumSchema,
+  flyer: {
+    getPath: getDatePath,
+    repoPrefix: 'flyer-',
+  },
   article: createArticleSchema(articleSchemaParams),
   front: createFrontSchema({
     Link: NoOpLink,

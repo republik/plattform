@@ -109,9 +109,12 @@ const get = ({ region = AWS_REGION, bucket, path }) => {
   })
 }
 
+const getInstance = () => s3
+
 module.exports = {
   upload,
   hasHead,
   get,
   del,
+  getInstance,
 }

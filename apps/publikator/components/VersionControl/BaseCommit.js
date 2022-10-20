@@ -2,8 +2,8 @@ import { Component } from 'react'
 import { css } from 'glamor'
 import { Label, A } from '@project-r/styleguide'
 import { descending } from 'd3-array'
-import { compose } from 'react-apollo'
-import { Link } from '../../lib/routes'
+import compose from 'lodash/flowRight'
+import Link from 'next/link'
 import { swissTime } from '../../lib/utils/format'
 import withT from '../../lib/withT'
 
@@ -35,11 +35,7 @@ class BaseCommit extends Component {
         {commit && (
           <div>
             <Label {...styles.commitsBehind}>
-              <Link
-                route='repo/tree'
-                params={{ repoId: repoId.split('/') }}
-                passHref
-              >
+              <Link href={`/repo/${repoId}/tree`} passHref>
                 <A>
                   {commitsBehind !== null && (
                     <span>

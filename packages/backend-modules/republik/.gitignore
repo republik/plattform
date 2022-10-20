@@ -1,1 +1,3 @@
+lib/portrait.js
 script/fixMissingPortraitUrls.js
+script/generateNewsletterHmac.js

@@ -60,12 +60,20 @@ type Contributor {
   user: User
 }
 
+type Crop {
+  x: Int
+  y: Int
+  width: Int
+  height: Int 
+}
+
 type Meta {
   title: String
   shortTitle: String
   slug: String
   path: String
   image: String
+  audioCoverCrop: Crop
   emailSubject: String
   description: String
   subject: String @deprecated(reason: "parse \`Document.content\` instead")
@@ -99,7 +107,7 @@ type Meta {
   shareBackgroundImageInverted: String
 
   credits: JSON
-  
+
   authors: [User!]! @deprecated(reason: "use \`Meta.contributors\` instead")
   contributors: [Contributor!]!
   audioSource: AudioSource
@@ -123,8 +131,13 @@ type Meta {
   paynoteMode: PaynoteMode
 }
 
+enum DocumentType {
+  mdast
+  slate
+}
+
 input DocumentInput {
-  # AST of /article.md
+  type: DocumentType
   content: JSON!
 }
 
@@ -133,8 +146,9 @@ type Document {
   repoId: ID!
   issuedForUserId: ID
 
-  # AST of /article.md
+  type: DocumentType!
   content: JSON!
+
   meta: Meta!
   children(
     first: Int
@@ -176,6 +190,7 @@ type DocumentZone {
   identifier: String!
   data: JSON!
   text: String
+  type: DocumentType!
   node: JSON!
   document: Document
 }

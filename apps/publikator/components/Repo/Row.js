@@ -3,7 +3,7 @@ import PublicIcon from 'react-icons/lib/md/public'
 
 import { A, Label, colors } from '@project-r/styleguide'
 
-import { Link } from '../../lib/routes'
+import Link from 'next/link'
 import { intersperse } from '../../lib/utils/helpers'
 import { FRONTEND_BASE_URL } from '../../lib/settings'
 
@@ -58,7 +58,7 @@ const RepoRow = ({ repo, showPhases }) => {
             <br />
           </>
         )}
-        <Link route='repo/tree' params={{ repoId: id.split('/') }} passHref>
+        <Link href={`repo/${id}/tree`} passHref>
           <A title={id}>{getTitle(repo)}</A>
         </Link>
       </Td>

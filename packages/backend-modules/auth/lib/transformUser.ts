@@ -1,22 +1,6 @@
-import { UserRow } from '../loaders/User'
-const naming = require('@orbiting/backend-modules-utils/naming')
+import { User, UserRow } from '@orbiting/backend-modules-types'
 
-interface User {
-  id: string
-  username: string
-  firstName: string
-  lastName: string
-  name: string
-  initials: string
-  hasPublicProfile: boolean
-  // api read access protected by a resolver functions
-  roles: string[]
-  email: string
-  // use resolver functions to access _raw
-  // and expose more fields according to custom logic
-  _raw: UserRow
-  [key: string]: any
-}
+const { naming } = require('@orbiting/backend-modules-utils')
 
 export = (user: UserRow | User, additionalFields = {}): User | null => {
   if (!user) {
@@ -33,6 +17,7 @@ export = (user: UserRow | User, additionalFields = {}): User | null => {
     // default public fields
     id: user.id,
     username: user.username,
+    slug: user.username || user.id,
     firstName: user.firstName,
     lastName: user.lastName,
     name,

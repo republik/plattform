@@ -18,6 +18,7 @@ import { withMembership } from '../../Auth/checkRoles'
 import Footer from '../../Footer'
 import SearchForm from '../../Search/Form'
 import NavLink from './NavLink'
+import FlyerNavLink from './FlyerNavLink'
 import Sections from './Sections'
 import Link from 'next/link'
 
@@ -40,6 +41,7 @@ const Nav = ({
   if (expanded) {
     hasExpandedRef.current = true
   }
+
   return (
     <>
       <Center {...styles.container} id='nav'>
@@ -97,6 +99,13 @@ const Nav = ({
                     >
                       {t('navbar/feed')}
                     </NavLink>
+                    <FlyerNavLink
+                      large
+                      active={active}
+                      closeHandler={closeHandler}
+                    >
+                      {t('navbar/flyer')}
+                    </FlyerNavLink>
                   </>
                 )}
                 <NavLink
@@ -127,7 +136,7 @@ const Nav = ({
                     active={active}
                     closeHandler={closeHandler}
                   >
-                    {t('navbar/sections')}
+                    {t('nav/sections')}
                   </NavLink>
                 </div>
                 <hr

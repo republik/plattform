@@ -1,8 +1,8 @@
 import { useEffect } from 'react'
 import { css } from 'glamor'
-import { compose, graphql } from 'react-apollo'
-import { withRouter } from 'next/router'
-import { Router } from '../../lib/routes'
+import compose from 'lodash/flowRight'
+import { graphql } from '@apollo/client/react/hoc'
+import { useRouter, withRouter } from 'next/router'
 import {
   getPublicationCalendar,
   getUrlWeekEnd,
@@ -81,12 +81,17 @@ const Calendar = ({
   },
   data = {},
 }) => {
+  const router = useRouter()
+
   useEffect(() => {
     !(from && until) && resetDates()
   }, [])
 
   const changeDates = (dates) =>
-    Router.replaceRoute('index', { ...query, ...dates })
+    router.replace({
+      pathname: '/',
+      query: { ...query, ...dates },
+    })
 
   const offsetDates = (offset) => () =>
     changeDates({
@@ -117,7 +122,9 @@ const Calendar = ({
         height={300}
         render={() => {
           const reposByTemplate = group(reposSearch?.nodes || [], (repo) =>
-            repo.latestCommit.document.meta.template === 'editorialNewsletter'
+            ['editorialNewsletter', 'flyer'].indexOf(
+              repo.latestCommit.document.meta.template,
+            ) !== -1
               ? 'newsletter'
               : 'other',
           )
@@ -134,14 +141,14 @@ const Calendar = ({
           return (
             <div {...styles.calendar}>
               <CalendarByTemplate
-                template='newsletters'
+                template={['newsletters', 'flyer']}
                 calendar={newslettersCalendar}
                 isNewsletter
                 withHeading
                 currentWeek={currentWeek}
               />
               <CalendarByTemplate
-                template='articles'
+                template={['articles']}
                 calendar={articlesCalendar}
                 currentWeek={currentWeek}
               />

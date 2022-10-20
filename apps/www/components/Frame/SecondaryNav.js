@@ -9,6 +9,7 @@ import {
 
 import withT from '../../lib/withT'
 import NavLink from './Popover/NavLink'
+import FlyerNavLink from './Popover/FlyerNavLink'
 
 import {
   SUBHEADER_HEIGHT,
@@ -16,45 +17,6 @@ import {
   HEADER_HORIZONTAL_PADDING,
 } from '../constants'
 import { useRouter } from 'next/router'
-
-const sections = [
-  {
-    title: 'Meta',
-    href: '/meta',
-    color: '#000',
-    kind: null,
-  },
-  {
-    title: 'Briefings',
-    href: '/briefings',
-    color: '#07809a',
-    kind: 'editorial',
-  },
-  {
-    title: 'Kolumnen',
-    href: '/kolumnen',
-    color: '#D2933C',
-    kind: null,
-  },
-  {
-    title: 'Formate',
-    href: '/formate',
-    color: '#d44438',
-    kind: 'scribble',
-  },
-  {
-    title: 'Audio',
-    href: '/audio',
-    color: null,
-    kind: null,
-  },
-  {
-    title: 'Serien',
-    href: '/serien',
-    color: null,
-    kind: null,
-  },
-]
 
 export const SecondaryNav = ({
   secondaryNav,
@@ -80,6 +42,7 @@ export const SecondaryNav = ({
           style={{
             borderTopWidth: isSecondarySticky ? 0 : 1,
             borderTopStyle: 'solid',
+            textAlign: 'center',
           }}
         >
           <NavLink
@@ -99,6 +62,14 @@ export const SecondaryNav = ({
           >
             {t('navbar/feed')}
           </NavLink>
+          <FlyerNavLink
+            active={active}
+            formatColor='accentColorFlyer'
+            minifeed
+            title={t('navbar/flyer')}
+          >
+            {t('navbar/flyer')}
+          </FlyerNavLink>
           <NavLink
             href='/dialog'
             active={active}
@@ -108,21 +79,6 @@ export const SecondaryNav = ({
           >
             {t('navbar/discussion')}
           </NavLink>
-          {sections.map((section) => {
-            const color = section.color || colors[section.kind]
-            return (
-              <NavLink
-                key={section.title}
-                href={section.href}
-                active={active}
-                formatColor={color}
-                minifeed
-                title={section.title}
-              >
-                {section.title}
-              </NavLink>
-            )
-          })}
         </div>
       ) : (
         secondaryNav && (

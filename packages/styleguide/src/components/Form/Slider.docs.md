@@ -18,7 +18,6 @@ state: {example1: 3}
      min='1'
      max='10'
      inactive
-     onChange={(e) => e.preventDefault()}
      title='I am inactive' />
 </div>
 ```

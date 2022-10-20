@@ -54,6 +54,7 @@ const Button = React.forwardRef<
   HTMLAnchorElement & HTMLButtonElement,
   {
     onClick?: MouseEventHandler<HTMLAnchorElement & HTMLButtonElement>
+    onMouseDown?: MouseEventHandler<HTMLAnchorElement & HTMLButtonElement>
     type?: 'button' | 'submit' | 'reset'
     primary?: boolean
     big?: boolean
@@ -67,11 +68,13 @@ const Button = React.forwardRef<
     attributes?: Attributes
     naked?: boolean
     small?: boolean
+    children?: any
   }
 >(
   (
     {
       onClick,
+      onMouseDown,
       type,
       children,
       primary,
@@ -163,6 +166,7 @@ const Button = React.forwardRef<
       <Element
         ref={ref}
         onClick={onClick}
+        onMouseDown={onMouseDown}
         href={href}
         title={title}
         type={type}

@@ -170,7 +170,7 @@ module.exports = {
               context,
             })
 
-            const elasticDoc = getElasticDoc({
+            const elasticDoc = await getElasticDoc({
               indexName,
               indexType,
               doc,

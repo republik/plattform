@@ -17,10 +17,12 @@ import {
   Center,
   Breakout,
   colors,
+  plainLinkRule,
   Interaction,
   mediaQueries,
   TitleBlock,
   Editorial,
+  Flyer,
   TeaserEmbedComment,
   IconButton,
   SeriesNav,
@@ -32,6 +34,10 @@ import {
   createNewsletterWebSchema,
   createSectionSchema,
   createPageSchema,
+  flyerSchema,
+  SlateRender,
+  RenderContextProvider,
+  FlyerTile,
 } from '@project-r/styleguide'
 import { EditIcon } from '@project-r/styleguide'
 import { createRequire } from '@project-r/styleguide'
@@ -40,7 +46,7 @@ import ActionBarOverlay from './ActionBarOverlay'
 import SeriesNavBar from './SeriesNavBar'
 import TrialPayNoteMini from './TrialPayNoteMini'
 import Extract from './Extract'
-import { PayNote } from './PayNote'
+import { FlyerWrapper, PayNote } from './PayNote'
 import Progress from './Progress'
 import PodcastButtons from './PodcastButtons'
 import { getDocument } from './graphql/getDocument'
@@ -77,6 +83,7 @@ import DiscussionContextProvider from '../Discussion/context/DiscussionContextPr
 import Discussion from '../Discussion/Discussion'
 import ArticleRecommendationsFeed from './ArticleRecommendationsFeed'
 import { getMetaData, runMetaFromQuery } from './metadata'
+import FlyerFooter, { FlyerNav } from './Flyer'
 
 const LoadingComponent = () => <SmallLoader loading />
 
@@ -102,6 +109,13 @@ const TestimonialList = dynamic(
 const ReasonsVideo = dynamic(() => import('../About/ReasonsVideo'), {
   ssr: true,
 })
+const NewsletterSignUpDynamic = dynamic(
+  () => import('../Auth/NewsletterSignUp'),
+  {
+    loading: LoadingComponent,
+    ssr: false,
+  },
+)
 const Votebox = dynamic(() => import('../Vote/Voting'), {
   loading: LoadingComponent,
   ssr: false,
@@ -161,6 +175,9 @@ const schemaCreators = {
   editorialNewsletter: createNewsletterWebSchema,
   section: createSectionSchema,
   page: createPageSchema,
+  flyer: () => {
+    return flyerSchema
+  },
 }
 
 export const withCommentData = graphql(
@@ -245,6 +262,7 @@ const ArticlePage = ({
   const article = articleData?.article
   const documentId = article?.id
   const repoId = article?.repoId
+  const treeType = article?.type
 
   const articleMeta = article?.meta
   const articleContent = article?.content
@@ -362,6 +380,7 @@ const ArticlePage = ({
           ELECTION_RESULT_DIVERSITY: ElectionResultDiversity,
           QUESTIONNAIRE: Questionnaire,
           QUESTIONNAIRE_SUBMISSIONS: QuestionnaireSubmissions,
+          NEWSLETTER_SIGNUP: NewsletterSignUpDynamic,
         },
         titleMargin: false,
         titleBreakout,
@@ -404,6 +423,12 @@ const ArticlePage = ({
   const actionBarOverlay = actionBar
     ? cloneElement(actionBar, {
         mode: 'articleOverlay',
+      })
+    : undefined
+
+  const actionBarFlyer = actionBar
+    ? cloneElement(actionBar, {
+        mode: 'flyer',
       })
     : undefined
 
@@ -481,7 +506,9 @@ const ArticlePage = ({
       { MissingNode },
     )
 
-  const hasOverviewNav = meta ? meta.template === 'section' : true // show/keep around while loading meta
+  const hasOverviewNav = meta
+    ? meta.template === 'section' || meta.template === 'flyer'
+    : true // show/keep around while loading meta
   const colorSchemeKey = darkMode ? 'dark' : 'auto'
 
   const delegateMetaDown =
@@ -517,6 +544,7 @@ const ArticlePage = ({
           const isFormat = meta.template === 'format'
           const isSection = meta.template === 'section'
           const isPage = meta.template === 'page'
+          const isFlyer = treeType === 'slate'
 
           const hasNewsletterUtms =
             router.query.utm_source && router.query.utm_source === 'newsletter'
@@ -541,14 +569,13 @@ const ArticlePage = ({
               customMode={meta.paynoteMode}
               customOnly={isPage || isFormat}
               position='before'
+              Wrapper={isFlyer ? FlyerWrapper : undefined}
             />
           )
           const payNoteAfter =
             payNote && cloneElement(payNote, { position: 'after' })
 
           const ownDiscussion = meta.ownDiscussion
-          const linkedDiscussion =
-            meta.linkedDiscussion && !meta.linkedDiscussion.closed
 
           const ProgressComponent =
             hasAccess &&
@@ -595,117 +622,144 @@ const ArticlePage = ({
                   </Center>
                 </div>
               )}
-              <ArticleGallery
-                article={article}
-                show={!!router.query.gallery}
-                ref={galleryRef}
-              >
-                <ProgressComponent article={article}>
-                  <article style={{ display: 'block' }}>
-                    {splitContent.title && (
-                      <div {...styles.titleBlock}>
-                        {renderSchema(splitContent.title)}
-                        {isEditorialNewsletter && (
-                          <TitleBlock margin={false}>
-                            {format && format.meta && (
-                              <Editorial.Format
-                                color={
-                                  format.meta.color || colors[format.meta.kind]
-                                }
-                              >
-                                <Link href={format.meta.path} passHref>
-                                  <a {...styles.link} href={format.meta.path}>
-                                    {format.meta.title}
-                                  </a>
-                                </Link>
-                              </Editorial.Format>
-                            )}
-                            <Interaction.Headline>
-                              {meta.title}
-                            </Interaction.Headline>
-                            <Editorial.Credit>
-                              {formatDate(new Date(meta.publishDate))}
-                            </Editorial.Credit>
-                          </TitleBlock>
-                        )}
-                        {isEditor && repoId && disableActionBar ? (
-                          <Center
-                            breakout={breakout}
-                            style={{ paddingBottom: 0, paddingTop: 30 }}
-                          >
-                            <div
-                              {...(titleAlign === 'center'
-                                ? styles.flexCenter
-                                : {})}
-                            >
-                              <IconButton
-                                Icon={EditIcon}
-                                href={`${PUBLIKATOR_BASE_URL}/repo/${repoId}/tree`}
-                                target='_blank'
-                                title={t('feed/actionbar/edit')}
-                                label={t('feed/actionbar/edit')}
-                                labelShort={t('feed/actionbar/edit')}
-                                fill={'#E9A733'}
-                              />
-                            </div>
-                          </Center>
-                        ) : null}
-                        {actionBar ||
-                        isSection ||
-                        showNewsletterSignupTop ||
-                        isSyntheticReadAloud ||
-                        isReadAloud ? (
-                          <Center breakout={breakout}>
-                            {actionBar && (
-                              <div
-                                ref={actionBarRef}
-                                {...styles.actionBarContainer}
-                                style={{
-                                  textAlign: titleAlign,
-                                  marginBottom: isEditorialNewsletter
-                                    ? 0
-                                    : undefined,
-                                }}
-                              >
-                                {actionBar}
-                              </div>
-                            )}
-                            {(isSyntheticReadAloud || isReadAloud) && (
-                              <ReadAloudInline meta={meta} t={t} />
-                            )}
-                            {isSection && !hideSectionNav && (
-                              <Breakout size='breakout'>
-                                <SectionNav
-                                  color={sectionColor}
-                                  linkedDocuments={article.linkedDocuments}
-                                />
-                              </Breakout>
-                            )}
-                            {showNewsletterSignupTop && (
-                              <div style={{ marginTop: 10 }}>
-                                <NewsletterSignUp {...newsletterMeta} />
-                              </div>
-                            )}
-                          </Center>
-                        ) : (
-                          <div {...styles.actionBarContainer}>
-                            {/* space before paynote */}
-                          </div>
-                        )}
-
-                        {!suppressFirstPayNote && payNote}
-                      </div>
-                    )}
-                    {renderSchema(splitContent.main)}
-                  </article>
-                  <ActionBarOverlay
-                    audioPlayerVisible={audioPlayerVisible}
-                    inNativeApp={inNativeApp}
+              {isFlyer ? (
+                <Flyer.Layout schema={schema}>
+                  <RenderContextProvider
+                    t={t}
+                    Link={HrefLink}
+                    nav={
+                      <FlyerNav
+                        repoId={repoId}
+                        publishDate={meta.publishDate}
+                      />
+                    }
                   >
-                    {actionBarOverlay}
-                  </ActionBarOverlay>
-                </ProgressComponent>
-              </ArticleGallery>
+                    <SlateRender
+                      value={article.content.children}
+                      schema={schema}
+                      raw
+                      skip={['flyerOpeningP']}
+                    />
+                  </RenderContextProvider>
+                  <FlyerFooter>{actionBarFlyer}</FlyerFooter>
+                </Flyer.Layout>
+              ) : (
+                <ArticleGallery
+                  article={article}
+                  show={!!router.query.gallery}
+                  ref={galleryRef}
+                >
+                  <ProgressComponent article={article}>
+                    <article style={{ display: 'block' }}>
+                      {splitContent.title && (
+                        <div {...styles.titleBlock}>
+                          {renderSchema(splitContent.title)}
+                          {isEditorialNewsletter && (
+                            <TitleBlock margin={false}>
+                              {format && format.meta && (
+                                <Editorial.Format
+                                  color={
+                                    format.meta.color ||
+                                    colors[format.meta.kind]
+                                  }
+                                >
+                                  <Link href={format.meta.path} passHref>
+                                    <a
+                                      {...plainLinkRule}
+                                      href={format.meta.path}
+                                    >
+                                      {format.meta.title}
+                                    </a>
+                                  </Link>
+                                </Editorial.Format>
+                              )}
+                              <Interaction.Headline>
+                                {meta.title}
+                              </Interaction.Headline>
+                              <Editorial.Credit>
+                                {formatDate(new Date(meta.publishDate))}
+                              </Editorial.Credit>
+                            </TitleBlock>
+                          )}
+                          {isEditor && repoId && disableActionBar ? (
+                            <Center
+                              breakout={breakout}
+                              style={{ paddingBottom: 0, paddingTop: 30 }}
+                            >
+                              <div
+                                {...(titleAlign === 'center'
+                                  ? styles.flexCenter
+                                  : {})}
+                              >
+                                <IconButton
+                                  Icon={EditIcon}
+                                  href={`${PUBLIKATOR_BASE_URL}/repo/${repoId}/tree`}
+                                  target='_blank'
+                                  title={t('feed/actionbar/edit')}
+                                  label={t('feed/actionbar/edit')}
+                                  labelShort={t('feed/actionbar/edit')}
+                                  fill={'#E9A733'}
+                                />
+                              </div>
+                            </Center>
+                          ) : null}
+                          {actionBar ||
+                          isSection ||
+                          showNewsletterSignupTop ||
+                          isSyntheticReadAloud ||
+                          isReadAloud ? (
+                            <Center breakout={breakout}>
+                              {actionBar && (
+                                <div
+                                  ref={actionBarRef}
+                                  {...styles.actionBarContainer}
+                                  style={{
+                                    textAlign: titleAlign,
+                                    marginBottom: isEditorialNewsletter
+                                      ? 0
+                                      : undefined,
+                                  }}
+                                >
+                                  {actionBar}
+                                </div>
+                              )}
+                              {(isSyntheticReadAloud || isReadAloud) && (
+                                <ReadAloudInline meta={meta} t={t} />
+                              )}
+                              {isSection && !hideSectionNav && (
+                                <Breakout size='breakout'>
+                                  <SectionNav
+                                    color={sectionColor}
+                                    linkedDocuments={article.linkedDocuments}
+                                  />
+                                </Breakout>
+                              )}
+                              {showNewsletterSignupTop && (
+                                <div style={{ marginTop: 10 }}>
+                                  <NewsletterSignUp {...newsletterMeta} />
+                                </div>
+                              )}
+                            </Center>
+                          ) : (
+                            <div {...styles.actionBarContainer}>
+                              {/* space before paynote */}
+                            </div>
+                          )}
+
+                          {!suppressFirstPayNote && payNote}
+                        </div>
+                      )}
+                      {renderSchema(splitContent.main)}
+                    </article>
+                    <ActionBarOverlay
+                      audioPlayerVisible={audioPlayerVisible}
+                      inNativeApp={inNativeApp}
+                    >
+                      {actionBarOverlay}
+                    </ActionBarOverlay>
+                  </ProgressComponent>
+                </ArticleGallery>
+              )}
               {meta.template === 'discussion' && ownDiscussion && (
                 <Center breakout={breakout}>
                   <DiscussionContextProvider
@@ -736,10 +790,8 @@ const ArticlePage = ({
               )}
               {!!podcast && meta.template !== 'article' && (
                 <Center breakout={breakout}>
-                  <>
-                    <Interaction.H3>{t(`PodcastButtons/title`)}</Interaction.H3>
-                    <PodcastButtons {...podcast} />
-                  </>
+                  <Interaction.H3>{t(`PodcastButtons/title`)}</Interaction.H3>
+                  <PodcastButtons {...podcast} />
                 </Center>
               )}
               {episodes && !isSeriesOverview && (
@@ -772,6 +824,10 @@ const ArticlePage = ({
               {me && hasActiveMembership && (
                 <ArticleRecommendationsFeed path={cleanedPath} />
               )}
+              {hasActiveMembership &&
+                (isEditorialNewsletter ||
+                  meta.template === 'article' ||
+                  meta.template === 'page') && <div style={{ height: 60 }} />}
               {!suppressPayNotes && payNoteAfter}
             </>
           )
@@ -782,10 +838,6 @@ const ArticlePage = ({
 }
 
 const styles = {
-  link: css({
-    color: 'inherit',
-    textDecoration: 'none',
-  }),
   prepublicationNotice: css({
     backgroundColor: colors.social,
   }),

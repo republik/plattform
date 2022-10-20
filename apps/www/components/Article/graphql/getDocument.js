@@ -7,6 +7,7 @@ export const getDocument = gql`
   query getDocument($path: String!) {
     article: document(path: $path) {
       id
+      type
       repoId
       content
       issuedForUserId

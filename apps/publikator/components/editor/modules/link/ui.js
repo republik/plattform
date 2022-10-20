@@ -1,156 +1,27 @@
 import { Text } from 'slate'
-import { Component } from 'react'
-import { graphql } from 'react-apollo'
-import {
-  Label,
-  Field,
-  Autocomplete,
-  InlineSpinner,
-} from '@project-r/styleguide'
+import { Label, Field, RawHtml } from '@project-r/styleguide'
+import { AuthorSearch, RepoSearch } from '@project-r/styleguide/editor'
 import LinkIcon from 'react-icons/lib/fa/chain'
 import UIForm from '../../UIForm'
 import createOnFieldChange from '../../utils/createOnFieldChange'
-import RepoSearch from '../../utils/RepoSearch'
 import { AutoSlugLinkInfo } from '../../utils/github'
 import withT from '../../../../lib/withT'
-import gql from 'graphql-tag'
-import debounce from 'lodash/debounce'
 
 import { createInlineButton, matchInline, buttonStyles } from '../../utils'
+import AutosizeInput from 'react-textarea-autosize'
+import { css } from 'glamor'
+import MdInfoOutline from 'react-icons/lib/md/info-outline'
 
-const getUsers = gql`
-  query getUsers($search: String!) {
-    users(search: $search, hasPublicProfile: true) {
-      firstName
-      lastName
-      email
-      id
-      portrait
-    }
-  }
-`
-
-const UserItem = ({ user }) => (
-  <div style={{ display: 'flex', alignItems: 'center' }}>
-    <div
-      style={{
-        width: 54,
-        height: 54,
-        backgroundColor: '#E2E8E6',
-        backgroundImage: user.portrait ? `url(${user.portrait})` : undefined,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        marginRight: 10,
-        flexShrink: 0,
-      }}
-    />
-    <div>
-      {user.lastName && (
-        <span>
-          {user.firstName} {user.lastName}
-          <br />
-        </span>
-      )}
-      <small>{user.email}</small>
-    </div>
-  </div>
-)
-
-const ConnectedAutoComplete = graphql(getUsers, {
-  skip: (props) => !props.filter,
-  options: ({ search }) => ({ variables: { search } }),
-  props: ({ data }) => ({
-    data: data,
-    items:
-      data.loading ||
-      data.users.slice(0, 5).map((user) => ({
-        value: user,
-        element: <UserItem user={user} />,
-      })),
+const styles = {
+  autoSize: css({
+    minHeight: 40,
+    paddingTop: '7px !important',
+    paddingBottom: '6px !important',
   }),
-})((props) => (
-  <span style={{ position: 'relative', display: 'block' }}>
-    <Autocomplete key='autocomplete' {...props} />
-    {props.data?.loading && (
-      <span
-        style={{
-          position: 'absolute',
-          top: '21px',
-          right: '0px',
-          zIndex: 500,
-        }}
-      >
-        <InlineSpinner size={35} />
-      </span>
-    )}
-  </span>
-))
-
-const SearchUserForm = withT(
-  class extends Component {
-    constructor(...args) {
-      super(...args)
-      this.state = {
-        items: [],
-        filter: '',
-        search: '',
-        value: null,
-      }
-      this.filterChangeHandler = this.filterChangeHandler.bind(this)
-      this.changeHandler = this.changeHandler.bind(this)
-      this.setSearchValue = debounce(this.setSearchValue.bind(this), 500)
-    }
-
-    componentWillUnmount() {
-      this.setSearchValue.cancel()
-    }
-
-    setSearchValue() {
-      this.setState({
-        search: this.state.filter,
-      })
-    }
-
-    filterChangeHandler(value) {
-      this.setState(
-        (state) => ({
-          ...this.state,
-          filter: value,
-        }),
-        this.setSearchValue,
-      )
-    }
-
-    changeHandler(value) {
-      this.setState(
-        (state) => ({
-          filter: null,
-          value: null,
-        }),
-        () => this.props.onChange(value),
-      )
-    }
-
-    render() {
-      const { filter, value, search } = this.state
-      return (
-        <ConnectedAutoComplete
-          label={this.props.t(
-            'metaData/field/authors',
-            undefined,
-            'Autor suchen',
-          )}
-          filter={filter}
-          value={value}
-          items={[]}
-          search={search}
-          onChange={this.changeHandler}
-          onFilterChange={this.filterChangeHandler}
-        />
-      )
-    }
-  },
-)
+  descriptionHelp: css({
+    margin: '-10px 0 10px',
+  }),
+}
 
 const createForm =
   (options) =>
@@ -182,12 +53,10 @@ export const LinkForm = withT(
           type: TYPE,
           kind,
           data: node.data.merge({
-            title: `${author.value.firstName} ${author.value.lastName}`,
+            title: author.value.name,
             href: `/~${author.value.id}`,
           }),
-          nodes: [
-            Text.create(`${author.value.firstName} ${author.value.lastName}`),
-          ],
+          nodes: [Text.create(author.value.name)],
         }),
       )
     }
@@ -222,7 +91,29 @@ export const LinkForm = withT(
                 value={node.data.get('title')}
                 onChange={onInputChange('title')}
               />
-              <SearchUserForm onChange={authorChange(onChange, value, node)} />
+              <Field
+                label={t(`link/description`, undefined, 'description')}
+                value={node.data.get('description')}
+                onChange={onInputChange('description')}
+                renderInput={({ ref, ...inputProps }) => (
+                  <AutosizeInput
+                    {...inputProps}
+                    inputRef={ref}
+                    {...styles.autoSize}
+                  />
+                )}
+              />
+              <p {...styles.descriptionHelp}>
+                <small>
+                  <MdInfoOutline style={{ verticalAlign: 'sub' }} />{' '}
+                  <RawHtml
+                    dangerouslySetInnerHTML={{
+                      __html: t('link/description/help'),
+                    }}
+                  />
+                </small>
+              </p>
+              <AuthorSearch onChange={authorChange(onChange, value, node)} />
               <RepoSearch
                 label={t('link/repo/search')}
                 onChange={repoChange(onChange, value, node)}

@@ -1,5 +1,4 @@
 import MarkdownSerializer from 'slate-mdast-serializer'
-import { withApollo } from 'react-apollo'
 
 import { matchBlock } from '../../utils'
 import { findOrCreate } from '../../utils/serialization'
@@ -8,11 +7,11 @@ import createUi from './ui'
 import embedFromUrlPlugin from './embedFromUrlPlugin'
 import EmbedLoader from './EmbedLoader'
 
-import gql from 'graphql-tag'
+import { gql } from '@apollo/client'
 import { FRONTEND_BASE_URL } from '../../../../lib/settings'
 import { stringify, parse } from '@orbiting/remark-preset'
-import { matchAncestor, matchSubmodules } from '../../utils/matchers'
 import InlineUI from '../../utils/InlineUI'
+import { withApollo } from '@apollo/client/react/hoc'
 
 const getVideoEmbed = gql`
   query getVideoEmbed($id: ID!, $embedType: EmbedType!) {

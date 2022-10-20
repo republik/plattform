@@ -16,6 +16,7 @@ const slideUp = keyframes({
 
 const styles = {
   calloutContainer: css({
+    display: 'block',
     position: 'fixed',
     top: 0,
     right: 0,
@@ -40,6 +41,7 @@ const styles = {
     },
   }),
   callout: css({
+    display: 'block',
     zIndex: 1,
     position: 'absolute',
     left: 0,
@@ -103,22 +105,22 @@ const Callout = ({
     [colorScheme],
   )
   return (
-    <div {...styles.calloutContainer} onClick={onClose}>
-      <div
+    <span {...styles.calloutContainer} onClick={onClose}>
+      <span
         {...css({ padding: contentPaddingMobile, [mUp]: { padding: 10 } })}
         {...styles.callout}
         {...styles[align].callout}
         {...calloutRule}
         onClick={(e) => e.stopPropagation()}
       >
-        <div
+        <span
           {...styles.arrow}
           {...colorScheme.set('backgroundColor', 'overlay')}
           {...styles[align].arrow}
         />
         {children}
-      </div>
-    </div>
+      </span>
+    </span>
   )
 }
 

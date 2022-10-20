@@ -57,12 +57,20 @@ const CommentLink = ({ displayAuthor, comment, discussion, ...props }) => {
      * If the slug is not available, it means the profile is not accessible.
      */
     if (displayAuthor.slug) {
-      return <Link {...props} href={`/~${displayAuthor.slug}`} />
+      return (
+        <Link {...props} href={`/~${displayAuthor.slug}`} prefetch={false} />
+      )
     }
   } else if (discussion) {
     const focusRoute = getFocusHref(discussion, comment)
     if (focusRoute) {
-      return <Link {...props} href={getFocusHref(discussion, comment)} />
+      return (
+        <Link
+          {...props}
+          href={getFocusHref(discussion, comment)}
+          prefetch={false}
+        />
+      )
     }
   }
 

@@ -273,6 +273,113 @@ const text = {
       .
     </>
   ),
+  Juni: (p) => (
+    <>
+      <Highlight {...p} ids={['glv0TLUza']}>
+        Warum die Antwort auf Putins Invasion eine feministische sein muss
+      </Highlight>
+      .{' '}
+      <Highlight {...p} ids={['SApR1eWlF']}>
+        Warum Grossbritannien so entschieden hinter der Ukraine steht
+      </Highlight>{' '}
+      und vor allem:{' '}
+      <Highlight {...p} ids={['A4-ug8Ux6']}>
+        Wann endet dieser Krieg
+      </Highlight>
+      ? Grüne, Amnesty, Jugendverbände:{' '}
+      <Highlight {...p} ids={['SoQnJ9oA9']}>
+        Der Schweizer Geheimdienst fichiert Unverdächtige
+      </Highlight>
+      . Zudem:{' '}
+      <Highlight
+        {...p}
+        series='republik/article-die-infokrieger-serienuebersicht'
+      >
+        eine Reise ans Ende der Schweizer Demokratie
+      </Highlight>
+      .{' '}
+      <Highlight {...p} ids={['ddlvqKBZU']}>
+        Haarsträubende Zustände in einer Grossbäckerei, die Aldi, Migros und
+        Coop beliefert
+      </Highlight>
+      . Und:{' '}
+      <Highlight {...p} ids={['N1SZWLst5']}>
+        Wie steht es um das Geschlechter­verhältnis in der Republik
+      </Highlight>
+      ?
+    </>
+  ),
+  Juli: (p) => (
+    <>
+      <Highlight {...p} ids={['SkrH_Fd3_']}>
+        Wie der Supreme Court die US-Demokratie aushöhlt
+      </Highlight>
+      . Wie aus Yandex – dem Google Russlands –{' '}
+      <Highlight {...p} ids={['10QhU0BAM']}>
+        ein Propagandainstrument des Kreml
+      </Highlight>{' '}
+      wurde.{' '}
+      <Highlight {...p} ids={['hHg-M5yyn']}>
+        Und hat ein Chatbot vor kurzem wirklich ein Bewusstsein erlangt
+      </Highlight>
+      ?{' '}
+      <Highlight {...p} ids={['Ss8CvrWc5']}>
+        Gelten demnach Computerprogramme bald als Personen
+      </Highlight>
+      ? Weltweit leiden Millionen von Menschen an Hunger –{' '}
+      <Highlight {...p} ids={['jO1tuGfOQ']}>
+        obwohl genug Nahrung da wäre
+      </Highlight>
+      . Dazu eine Utopie:{' '}
+      <Highlight {...p} ids={['MtoKEob8A']}>
+        Wie lassen sich 10 Milliarden Menschen nachhaltig ernähren
+      </Highlight>
+      ? Und überhaupt:{' '}
+      <Highlight {...p} series='republik/article-serie-schoene-bessere-welt'>
+        Wie lässt sich eine schönere, bessere Welt gestalten
+      </Highlight>
+      ?
+    </>
+  ),
+  August: (p) => (
+    <>
+      Warum die Schweiz der{' '}
+      <Highlight {...p} ids={['c8Dzktqcb']}>
+        Affenpocken
+      </Highlight>{' '}
+      nicht Herr wird. Worum es geht im Konflikt{' '}
+      <Highlight {...p} ids={['u2aItn2Sg']}>
+        China gegen Taiwan
+      </Highlight>
+      .{' '}
+      <Highlight {...p} ids={['vJ9uxk_q-']}>
+        Wie Werbemillionen die Demokratie zersetzen
+      </Highlight>
+      . Und:{' '}
+      <Highlight {...p} ids={['BvcLjeTvR']}>
+        Ist es juristisch okay, Oligarchenjachten zu beschlagnahmen
+      </Highlight>
+      ? Wie kommt es zu{' '}
+      <Highlight {...p} ids={['bv30j129E']}>
+        Polizeigewalt
+      </Highlight>
+      ? Was muss ich zum Thema{' '}
+      <Highlight {...p} ids={['GyndF2o9a']}>
+        cultural appropriation
+      </Highlight>{' '}
+      wirklich wissen? Davon abgesehen droht ein Strommangel. Bemerkenswert
+      daran: Er begünstigt{' '}
+      <Highlight {...p} ids={['DZhTy8GHO']}>
+        höchst ungewöhnliche politische Allianzen
+      </Highlight>
+      . Doch es bleibt die Frage:{' '}
+      <Highlight {...p} ids={['NaM38tsF_']}>
+        Ist die Schweiz bereit, wenn Putin im Winter die Pipelines nach Europa
+        dichtmacht
+      </Highlight>
+      ?
+    </>
+  ),
 }
 
 const Overview2022 = (props) => <Page {...props} year={2022} text={text} />

@@ -45,6 +45,7 @@ const createFormatSchema = ({
           { value: 'meta', text: 'Meta' },
           { value: 'scribble', text: 'Ameise' },
           { value: 'opinion', text: 'Kolumne' },
+          { value: 'flyer', text: 'Journal' },
         ],
       },
       {

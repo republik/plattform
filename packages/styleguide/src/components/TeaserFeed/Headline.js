@@ -8,6 +8,8 @@ import {
   sansSerifMedium22,
   cursiveTitle20,
   cursiveTitle22,
+  flyerTitle16,
+  flyerTitle18,
 } from '../Typography/styles'
 import { convertStyleToRem, pxToRem } from '../Typography/utils'
 import { useColorContext } from '../Colors/useColorContext'
@@ -37,6 +39,12 @@ const styles = {
     ...convertStyleToRem(cursiveTitle20),
     [mUp]: {
       ...convertStyleToRem(cursiveTitle22),
+    },
+  }),
+  flyer: css({
+    ...convertStyleToRem(flyerTitle16),
+    [mUp]: {
+      ...convertStyleToRem(flyerTitle18),
     },
   }),
 }
@@ -73,6 +81,19 @@ export const Scribble = ({ children, formatColor }) => {
     <h1
       {...styles.base}
       {...styles.scribble}
+      {...colorScheme.set('color', formatColor || 'text', 'format')}
+    >
+      {children}
+    </h1>
+  )
+}
+
+export const Flyer = ({ children, formatColor }) => {
+  const [colorScheme] = useColorContext()
+  return (
+    <h1
+      {...styles.base}
+      {...styles.flyer}
       {...colorScheme.set('color', formatColor || 'text', 'format')}
     >
       {children}

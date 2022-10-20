@@ -25,7 +25,7 @@ export class Analyzer {
   }
 
   private isGlueIndicator(string: string) {
-    return !!string.match(/^(und|mit|and|with|et)$/i)
+    return !!string.match(/^(und|mit|and|with|et|sowie)$/i)
   }
 
   public getAnalysis(string: string) {

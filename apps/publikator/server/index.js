@@ -3,7 +3,6 @@ const basicAuth = require('express-basic-auth')
 const dotenv = require('dotenv')
 const next = require('next')
 const helmet = require('helmet')
-const routes = require('../lib/routes')
 
 const DEV = process.env.NODE_ENV ? process.env.NODE_ENV !== 'production' : true
 if (DEV || process.env.DOTENV) {
@@ -14,7 +13,7 @@ const PORT = process.env.PORT || 3003
 const app = next({
   dev: DEV,
 })
-const handler = routes.getRequestHandler(app)
+const handler = app.getRequestHandler()
 
 app.prepare().then(() => {
   const server = express()
@@ -54,7 +53,9 @@ app.prepare().then(() => {
     )
   }
 
-  server.use(handler)
+  server.all('*', (req, res) => {
+    return handler(req, res)
+  })
 
   server.listen(PORT, (err) => {
     if (err) throw err
