@@ -539,6 +539,7 @@ const ActionBar = ({
   return (
     <>
       <div
+        {...(mode === 'feed' && styles.flexWrap)}
         {...((mode === 'seriesEpisode' || mode === 'feed') &&
           styles.feedContainer)}
       >
@@ -638,7 +639,6 @@ const styles = {
   }),
   flexWrap: css({
     flexWrap: 'wrap',
-    rowGap: 16,
   }),
   secondary: css({
     display: 'flex',
