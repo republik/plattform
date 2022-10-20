@@ -60,6 +60,7 @@ const AudioInfo = ({
           >
             {t('article/actionbar/audio/info/play-synth')}
           </a>
+          .
           {!!willBeReadAloud && (
             <>
               {' '}
