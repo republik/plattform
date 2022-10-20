@@ -2,6 +2,7 @@ const Promise = require('bluebird')
 const {
   getContributorUserIds,
   getContributorUserLinks,
+  getAudioCover,
 } = require('../../lib/meta')
 const { stringifyNode } = require('../../lib/resolve')
 const {
@@ -61,4 +62,6 @@ module.exports = {
       return contributor
     })
   },
+
+  audioCover: getAudioCover,
 }

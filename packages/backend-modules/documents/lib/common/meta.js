@@ -49,6 +49,56 @@ const getAudioSource = (doc) => {
   return audioSource
 }
 
+const getAudioCover = (meta, args) => {
+  const [metaImage, metaAudioCoverCrop] =
+    // check doc itself
+    (meta?.image && [meta.image, meta.audioCoverCrop]) ||
+    // check linked format
+    (meta?.format?.meta?.image && [
+      meta.format.meta.image,
+      meta.format.meta.audioCoverCrop,
+    ]) ||
+    []
+
+  if (!metaImage) {
+    return null
+  }
+
+  const { properties } = args ?? {}
+
+  // resize image
+  const resize =
+    ((properties?.width || properties?.height) &&
+      [properties.width ?? '', properties.height ?? ''].join('x')) ||
+    '1000x1000'
+
+  // greyscale image
+  const bw = properties?.bw ?? false
+
+  try {
+    const url = new URL(metaImage)
+
+    if (metaAudioCoverCrop && url.searchParams.has('size')) {
+      const { x, y, width, height } = metaAudioCoverCrop
+
+      url.searchParams.set('crop', `${x}x${y}y${width}w${height}h`)
+    }
+
+    url.searchParams.set('resize', resize)
+    url.searchParams.set('bw', bw ? '1' : '')
+    url.searchParams.set('format', 'auto')
+
+    return url.toString()
+  } catch (e) {
+    console.warn(
+      `documents/lib/common/meta %s unparsable: %s`,
+      metaImage,
+      e.message,
+    )
+    return null
+  }
+}
+
 /**
  * Getter of WORDS_PER_MINUTE
  *
@@ -120,6 +170,7 @@ const getTemplate = (doc) => doc.meta?.template || doc._meta?.template
 
 module.exports = {
   getAudioSource,
+  getAudioCover,
   getEstimatedReadingMinutes,
   isReadingMinutesSuppressed,
   getEstimatedConsumptionMinutes,
