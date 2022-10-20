@@ -40,10 +40,13 @@ const LatestArticleItem = ({
     }
   }
 
-  const handleAddToQueue = async (article: AudioPlayerItem) => {
+  const handleAddToQueue = async (
+    article: AudioPlayerItem,
+    position?: string,
+  ) => {
     try {
       setIsLoading(true)
-      await addAudioQueueItem(article)
+      await addAudioQueueItem(article, position)
       setIsLoading(false)
     } catch (error) {
       // TODO: handle error
@@ -70,6 +73,11 @@ const LatestArticleItem = ({
         )
       }
       actions={[
+        {
+          Icon: PlaylistAddIcon,
+          label: 'Play next',
+          onClick: () => handleAddToQueue(article, 2),
+        },
         {
           Icon: DownloadIcon,
           label: t('AudioPlayer/Queue/Download'),

@@ -37,7 +37,6 @@ import UserProgress from './UserProgress'
 import ShareButtons from './ShareButtons'
 import { useMe } from '../../lib/context/MeContext'
 import useAudioQueue from '../Audio/hooks/useAudioQueue'
-import { NEXT_PUBLIC_FEAT_HOERT_HOERT } from '../Audio/constants'
 import AudioInfo from './AudioInfo'
 
 const RenderItems = ({ items }) => (
@@ -485,10 +484,7 @@ const ActionBar = ({
         // TODO: handle error
       },
       modes: ['feed', 'seriesEpisode', 'articleTop'],
-      show:
-        NEXT_PUBLIC_FEAT_HOERT_HOERT &&
-        isAudioQueueAvailable &&
-        showAudioButtons,
+      show: isAudioQueueAvailable && showAudioButtons,
       group: 'audio',
     },
     {

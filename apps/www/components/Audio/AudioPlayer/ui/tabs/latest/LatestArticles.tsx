@@ -8,7 +8,6 @@ import LoadingPlaceholder from '../shared/LoadingPlaceholder'
 import FilterButton from './FilterButton'
 import { useMe } from '../../../../../../lib/context/MeContext'
 import LatestArticleItem from './LatestArticleItem'
-import { NEXT_PUBLIC_FEAT_HOERT_HOERT } from '../../../../constants'
 
 const styles = {
   root: css({
@@ -38,9 +37,7 @@ const LatestArticlesTab = ({
   handleOpenArticle,
   handleDownload,
 }: LatestArticlesProps) => {
-  const [filter, setFilter] = useState<'all' | 'read-aloud'>(
-    NEXT_PUBLIC_FEAT_HOERT_HOERT ? 'read-aloud' : 'all',
-  )
+  const [filter, setFilter] = useState<'all' | 'read-aloud'>('read-aloud')
   const { t } = useTranslation()
   const { hasAccess } = useMe()
   const { data, loading, error } = useLatestArticlesQuery({
@@ -51,11 +48,9 @@ const LatestArticlesTab = ({
 
   // Define if the real-aloud filter should be shown
   const hasReadAloudDocuments =
-    NEXT_PUBLIC_FEAT_HOERT_HOERT ||
     data?.latestArticles?.nodes.some(
       (node) => node?.meta?.audioSource?.kind === 'readAloud',
-    ) ||
-    false
+    ) || false
 
   // Unset 'read-aloud' filter to if no documents are available
   if (!loading && !hasReadAloudDocuments && filter === 'read-aloud') {
@@ -94,7 +89,7 @@ const LatestArticlesTab = ({
   return (
     <div {...styles.root}>
       <div {...styles.filters}>
-        {(NEXT_PUBLIC_FEAT_HOERT_HOERT || hasReadAloudDocuments) && (
+        {hasReadAloudDocuments && (
           <FilterButton
             isActive={filter === 'read-aloud'}
             onClick={() => setFilter('read-aloud')}
