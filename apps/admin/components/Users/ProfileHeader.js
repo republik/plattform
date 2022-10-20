@@ -13,7 +13,7 @@ import Link from 'next/link'
 
 import { REPUBLIK_FRONTEND_URL } from '../../server/constants'
 
-import { Section } from '../Display/utils'
+import { Section, displayDate } from '../Display/utils'
 
 const styles = {
   header: css({
@@ -51,6 +51,12 @@ export const GET_PROFILE = gql`
       phoneNumber
       username
       portrait(size: SMALL)
+      activeMembership {
+        type {
+          name
+        }
+        endDate
+      }
     }
   }
 `
@@ -124,6 +130,7 @@ const ProfileHeader = ({ userId, section }) => {
             error={isInitialLoading && error}
             render={() => {
               const { user } = data
+              const { activeMembership } = user
               const name = [user.firstName, user.lastName]
                 .filter(Boolean)
                 .join(' ')
@@ -146,13 +153,27 @@ const ProfileHeader = ({ userId, section }) => {
                     }`}
                     target='_blank'
                   >
-                    {user.username || 'Profil-Seite'}
+                    {user.username || 'Profil'}
                   </A>
                 </span>,
               ]
                 .filter(Boolean)
                 .reduce((acc, v) => [...acc, ' | ', v], [])
                 .slice(1)
+              const endDate = displayDate(activeMembership.endDate)
+              const aboType =
+                activeMembership.type.name === 'ABO'
+                  ? 'Jahresabo '
+                  : 'Monatsabo '
+              const hasAboString = ` | aktives ${aboType} bis `
+              const membership = (
+                <span>
+                  {hasAboString}
+                  {displayDate(activeMembership.endDate)}
+                </span>
+              )
+
+              console.log(endDate)
               return (
                 <Section {...styles.header}>
                   <Head>
@@ -169,7 +190,10 @@ const ProfileHeader = ({ userId, section }) => {
                       <img src={user.portrait} {...styles.portrait} />
                     )}
                     <Interaction.H3>{name || user.email}</Interaction.H3>
-                    <div {...styles.byline}>{byline}</div>
+                    <div {...styles.byline}>
+                      {byline}
+                      {membership}
+                    </div>
                   </div>
                   <div style={{ clear: 'both', margin: '10px 0' }}>
                     <Subnav userId={userId} section={section} />
