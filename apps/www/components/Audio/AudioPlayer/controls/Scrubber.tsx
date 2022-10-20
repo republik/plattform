@@ -113,8 +113,7 @@ const Scrubber = ({
   const [isSeeking, setIsSeeking] = useState(false)
   const [internalProgress, setInternalProgress] = useState(0)
 
-  const audioProgress = currentTime / duration
-
+  const audioProgress = clamp((currentTime || 0) / (duration || 0), 0, 1)
   const progress = isSeeking ? internalProgress : audioProgress
 
   useEffect(() => {

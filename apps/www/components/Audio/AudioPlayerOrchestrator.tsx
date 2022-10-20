@@ -2,6 +2,7 @@ import AudioPlayerController from './AudioPlayerController'
 import dynamic from 'next/dynamic'
 import useAudioQueue from './hooks/useAudioQueue'
 import { useAudioContext } from './AudioProvider'
+import { useInNativeApp } from '../../lib/withInNativeApp'
 
 const AudioPlayer = dynamic(() => import('./AudioPlayer/AudioPlayer'), {
   ssr: false,
@@ -15,21 +16,23 @@ const LegacyAudioPlayer = dynamic(
 )
 
 const AudioPlayerOrchestrator = () => {
+  const { inNativeApp } = useInNativeApp()
   const { isAudioQueueAvailable } = useAudioQueue()
   const { audioPlayerVisible } = useAudioContext()
 
-  // Render the old audio player if we're in a native app and using the old audio-player
-  if (!isAudioQueueAvailable) {
-    if (audioPlayerVisible) {
-      return <LegacyAudioPlayer />
-    }
+  // If the audio queue is available, we want to use the new audio player
+  if (isAudioQueueAvailable) {
+    return (
+      <AudioPlayerController>
+        {(props) => <AudioPlayer {...props} />}
+      </AudioPlayerController>
+    )
+  } else if (!inNativeApp && audioPlayerVisible) {
+    return <LegacyAudioPlayer />
   }
-  // Render new audio player if in web or in a native app using the new audio-player
-  return (
-    <AudioPlayerController>
-      {(props) => <AudioPlayer {...props} />}
-    </AudioPlayerController>
-  )
+
+  // If inNativeApp and Version < 2.2.0 (isAudioQueueAvailable === false) then don't render anything
+  return null
 }
 
 export default AudioPlayerOrchestrator

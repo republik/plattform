@@ -29,8 +29,8 @@ export const formatMinutes = (time: number) => Math.floor(time / 60)
 export const formatSeconds = (time: number) => Math.floor(time % 60)
 
 export const renderTime = (time) => {
-  const minutes = formatMinutes(time)
-  const seconds = formatSeconds(time)
+  const minutes = formatMinutes(time || 0)
+  const seconds = formatSeconds(time || 0)
   return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`
 }
 

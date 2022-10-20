@@ -25,14 +25,13 @@ function useNativeAppEvent<E = Event>(
     if (!inNativeApp) {
       return
     }
+
     const handler = (evenData: E) => {
-      console.log('useNativeAppEvent received', eventName, evenData)
       return savedCallback?.current(evenData)
     }
-    console.log('useNativeAppEvent setup', eventName)
     AppMessageEventEmitter.addListener(eventName, handler)
+
     return () => {
-      console.log('useNativeAppEvent teardown', eventName)
       AppMessageEventEmitter.removeListener(eventName, handler)
     }
   }, [eventName, ...callbackDependencies])
