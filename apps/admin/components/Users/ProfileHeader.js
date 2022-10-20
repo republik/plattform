@@ -160,17 +160,20 @@ const ProfileHeader = ({ userId, section }) => {
                 .filter(Boolean)
                 .reduce((acc, v) => [...acc, ' | ', v], [])
                 .slice(1)
-              const endDate = displayDate(activeMembership.endDate)
+              const endDate =
+                activeMembership && displayDate(activeMembership.endDate)
               const aboType =
-                activeMembership.type.name === 'ABO'
+                activeMembership && activeMembership.type.name === 'ABO'
                   ? 'Jahresabo '
                   : 'Monatsabo '
               const hasAboString = ` | aktives ${aboType} bis `
-              const membership = (
+              const membership = activeMembership ? (
                 <span>
                   {hasAboString}
                   {displayDate(activeMembership.endDate)}
                 </span>
+              ) : (
+                ' | kein aktives Abo'
               )
 
               console.log(endDate)
