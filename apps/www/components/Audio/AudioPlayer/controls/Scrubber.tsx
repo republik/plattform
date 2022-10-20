@@ -198,7 +198,7 @@ const Scrubber = ({
   const visibleProgress = isSeeking ? internalProgress : progress
   const currentPositionToRender = isSeeking
     ? Math.floor(internalProgress * duration)
-    : currentTime
+    : currentTime || 0
   const currentPositionString = renderTime(
     clamp(currentPositionToRender, 0, duration),
   )

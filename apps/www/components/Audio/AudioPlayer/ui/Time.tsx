@@ -20,8 +20,8 @@ type TimeProps = {
 const Time = ({ currentTime, duration }: TimeProps) => {
   const [colorScheme] = useColorContext()
 
-  const currentTimeString = renderTime(clamp(currentTime, 0, duration))
-  const durationString = renderTime(duration)
+  const currentTimeString = renderTime(clamp(currentTime || 0, 0, duration))
+  const durationString = renderTime(duration || 0)
 
   return (
     <span {...styles.time} {...colorScheme.set('color', 'textSoft')}>
