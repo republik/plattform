@@ -1146,6 +1146,11 @@
       "fr": "Adhérer maintenant!"
     },
     {
+      "key": "cf/cta/short",
+      "de": "Mitmachen",
+      "fr": "Participer"
+    },
+    {
       "key": "cf/cta/share",
       "de": "Teilen Sie diese Seite mit Ihren Freunden:",
       "fr": "Partagez cette page avec vos amis:"
