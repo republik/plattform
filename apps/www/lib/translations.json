@@ -5197,6 +5197,10 @@
       "value": "Audiodatei herunterladen"
     },
     {
+      "key": "AudioPlayer/Queue/AddToQueueAsNext",
+      "value": "Als Nächstes abspielen"
+    },
+    {
       "key": "AudioPlayer/Queue/GoToItem",
       "value": "Zum Beitrag"
     },

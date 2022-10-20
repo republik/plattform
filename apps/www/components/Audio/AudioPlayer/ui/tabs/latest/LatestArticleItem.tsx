@@ -28,7 +28,6 @@ const LatestArticleItem = ({
   const { addAudioQueueItem, checkIfInQueue, checkIfActiveItem } =
     useAudioQueue()
   const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
 
   const handlePlay = async (article: AudioPlayerItem) => {
     try {
@@ -42,7 +41,7 @@ const LatestArticleItem = ({
 
   const handleAddToQueue = async (
     article: AudioPlayerItem,
-    position?: string,
+    position?: number,
   ) => {
     try {
       setIsLoading(true)
@@ -75,7 +74,7 @@ const LatestArticleItem = ({
       actions={[
         {
           Icon: PlaylistAddIcon,
-          label: 'Play next',
+          label: t('AudioPlayer/Queue/AddToQueueAsNext'),
           onClick: () => handleAddToQueue(article, 2),
         },
         {
