@@ -64,10 +64,11 @@ const styles = {
     width: '100%',
     [mediaQueries.mUp]: {
       height: 'auto',
-      paddingTop: ['15px', 'max(15px, env(safe-area-inset-top))'],
+      //paddingTop: ['15px', 'max(15px, env(safe-area-inset-top))'],
       marginRight: ['15px', 'max(15px, env(safe-area-inset-right))'],
       marginLeft: ['15px', 'max(15px, env(safe-area-inset-left))'],
       marginBottom: ['24px', 'max(24px, env(safe-area-inset-bottom))'],
+      padding: 9,
     },
   }),
 }
