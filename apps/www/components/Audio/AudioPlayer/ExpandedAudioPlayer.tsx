@@ -182,7 +182,9 @@ const ExpandedAudioPlayer = ({
   return (
     <div {...styles.root}>
       <div {...styles.header}>
-        <p {...styles.heading}>{t('AudioPlayer/Queue/ActiveHeading')}</p>
+        <p {...styles.heading} {...colorScheme.set('color', 'text')}>
+          {t('AudioPlayer/Queue/ActiveHeading')}
+        </p>
         <IconButton
           Icon={ExpandMoreIcon}
           size={32}

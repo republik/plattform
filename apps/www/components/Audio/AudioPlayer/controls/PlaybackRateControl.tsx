@@ -5,6 +5,7 @@ import {
   RemoveIcon,
   fontStyles,
   mediaQueries,
+  useColorContext,
 } from '@project-r/styleguide'
 
 const styles = {
@@ -36,7 +37,7 @@ const PlaybackRateControl = ({
   availablePlaybackRates = [0.75, 1, 1.25, 1.5, 1.75, 2, 2.25, 2.5],
 }: PlaybackRateControl) => {
   const currentIndex = availablePlaybackRates.indexOf(playbackRate)
-
+  const [colorScheme] = useColorContext()
   return (
     <div {...styles.root}>
       <IconButton
@@ -47,7 +48,10 @@ const PlaybackRateControl = ({
         disabled={currentIndex === 0}
         style={{ marginRight: 0 }}
       />
-      <span style={{ minWidth: '4ch', textAlign: 'center' }}>
+      <span
+        style={{ minWidth: '4ch', textAlign: 'center' }}
+        {...colorScheme.set('color', 'text')}
+      >
         {playbackRate}
         {'×'}
       </span>

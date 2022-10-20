@@ -1,5 +1,5 @@
 import React from 'react'
-import { fontStyles } from '@project-r/styleguide'
+import { fontStyles, useColorContext } from '@project-r/styleguide'
 import { css } from 'glamor'
 
 const styles = {
@@ -44,9 +44,11 @@ const AudioPlayerTitle = ({
   lineClamp = 2,
   fontSize = 16,
 }: AudioPlayerTitleProps) => {
+  const [colorScheme] = useColorContext()
   const titleElement = (
     <span
       {...styles.title}
+      {...colorScheme.set('color', 'text')}
       {...css({
         WebkitLineClamp: lineClamp,
         fontSize: fontSize,
