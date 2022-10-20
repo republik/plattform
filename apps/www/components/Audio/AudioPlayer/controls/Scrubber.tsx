@@ -150,7 +150,6 @@ const Scrubber = ({
   }
 
   const touchStart: TouchEventHandler<HTMLDivElement> = (e) => {
-    e.preventDefault()
     setIsSeeking(true)
     scrub(e.changedTouches[0].clientX)
   }
@@ -162,7 +161,6 @@ const Scrubber = ({
   }
 
   const touchMove: TouchEventHandler<HTMLDivElement> = (e) => {
-    e.preventDefault()
     if (isSeeking) {
       scrub(e.changedTouches[0].clientX)
     }
@@ -182,6 +180,7 @@ const Scrubber = ({
 
   const mouseMove = (e: MouseEvent<HTMLDivElement>) => {
     e.preventDefault()
+    console.log('mouseMove')
     if (isSeeking) {
       scrub(e.nativeEvent.clientX)
     }
