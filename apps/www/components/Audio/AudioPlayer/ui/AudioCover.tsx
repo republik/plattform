@@ -1,9 +1,9 @@
 import React from 'react'
 import { css } from 'glamor'
 import { AudioCoverGenerator } from '@project-r/styleguide'
-import { parse } from 'url'
 
 type AudioCoverProps = {
+  cover?: string
   size: number
   format?: any
   image?: string
@@ -13,6 +13,7 @@ type AudioCoverProps = {
     width: number
     height: number
   }
+  alt?: string
 }
 
 const styles = {
@@ -36,12 +37,18 @@ const getResizefromURL = (url, size) => {
 }
 
 const AudioCover = ({
+  cover,
   size,
   format,
   image: imageUrl,
   audioCoverCrop,
+  alt = '',
 }: AudioCoverProps) => {
-  if (imageUrl) {
+  if (cover) {
+    return (
+      <img {...styles.cover} src={cover} style={{ width: size }} alt={alt} />
+    )
+  } else if (imageUrl) {
     let resizeUrl
     if (audioCoverCrop) {
       const { x, y, width: w, height: h } = audioCoverCrop
@@ -54,7 +61,7 @@ const AudioCover = ({
         src={resizeUrl || imageUrl}
         {...styles.cover}
         style={{ width: size }}
-        alt=''
+        alt={alt}
       />
     )
   }

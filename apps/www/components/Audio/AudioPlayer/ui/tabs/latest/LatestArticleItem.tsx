@@ -65,7 +65,7 @@ const LatestArticleItem = ({
             title={t('AudioPlayer/Queue/Add')}
             onClick={() => handleAddToQueue(article)}
             disabled={checkIfInQueue(article.id)}
-            style={{ marginRight: 0 }}
+            style={{ marginRight: 0, alignSelf: 'stretch' }}
           />
         )
       }

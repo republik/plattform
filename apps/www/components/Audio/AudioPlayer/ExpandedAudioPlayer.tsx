@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useEffect } from 'react'
+import React, { Dispatch, SetStateAction, useEffect, useMemo } from 'react'
 import { css } from 'glamor'
 import { useRouter } from 'next/router'
 import {
@@ -58,10 +58,8 @@ const styles = {
     overflowY: 'auto',
     scrollbarWidth: 'thin',
     // Hack to ensure scrollbar is within the padding of the overlay
-    marginLeft: ['-15px', 'calc(-1 * max(15px, env(safe-area-inset-left)))'],
-    marginRight: ['-15px', 'calc(-1 * max(15px, env(safe-area-inset-right)))'],
-    paddingLeft: ['15px', 'max(15px, env(safe-area-inset-left))'],
-    paddingRight: ['15px', 'max(15px, env(safe-area-inset-right))'],
+    marginRight: ['-10x', 'calc(-1 * max(10px, env(safe-area-inset-right)))'],
+    paddingRight: ['10px', 'max(10px, env(safe-area-inset-right))'],
     [mediaQueries.mUp]: {
       minHeight: 282,
       maxHeight: 282,
@@ -179,10 +177,29 @@ const ExpandedAudioPlayer = ({
     }
   }
 
+  const queueScrollbarStyle = useMemo(
+    () =>
+      css({
+        '&::-webkit-scrollbar': {
+          height: 6,
+          width: 6,
+          backgroundColor: colorScheme.getCSSColor('hover'),
+          borderRadius: 10,
+        },
+        '&::-webkit-scrollbar-thumb': {
+          backgroundColor: colorScheme.getCSSColor('divider'),
+          borderRadius: 10,
+        },
+      }),
+    [colorScheme],
+  )
+
   return (
     <div {...styles.root}>
       <div {...styles.header}>
-        <p {...styles.heading}>{t('AudioPlayer/Queue/ActiveHeading')}</p>
+        <p {...styles.heading} {...colorScheme.set('color', 'text')}>
+          {t('AudioPlayer/Queue/ActiveHeading')}
+        </p>
         <IconButton
           Icon={ExpandMoreIcon}
           size={32}
@@ -236,7 +253,12 @@ const ExpandedAudioPlayer = ({
               {...colorScheme.set('borderColor', 'divider')}
             />
           </Scroller>
-          <motion.div {...styles.queue} ref={bodyLockTargetRef} layoutScroll>
+          <motion.div
+            ref={bodyLockTargetRef}
+            layoutScroll
+            {...styles.queue}
+            {...queueScrollbarStyle}
+          >
             {activeTab === 'QUEUE' && (
               <Queue
                 t={t}

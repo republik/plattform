@@ -2,6 +2,7 @@ import { renderTime } from '../shared'
 import React from 'react'
 import { css } from 'glamor'
 import { fontStyles, useColorContext } from '@project-r/styleguide'
+import { clamp } from '../../helpers/clamp'
 
 const styles = {
   time: css({
@@ -18,9 +19,13 @@ type TimeProps = {
 
 const Time = ({ currentTime, duration }: TimeProps) => {
   const [colorScheme] = useColorContext()
+
+  const currentTimeString = renderTime(clamp(currentTime || 0, 0, duration))
+  const durationString = renderTime(duration || 0)
+
   return (
     <span {...styles.time} {...colorScheme.set('color', 'textSoft')}>
-      {renderTime(currentTime || 0)} / {renderTime(duration || 0)}
+      {currentTimeString} / {durationString}
     </span>
   )
 }

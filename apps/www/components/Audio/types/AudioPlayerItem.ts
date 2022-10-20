@@ -14,6 +14,9 @@ export type AudioPlayerItem = {
       width: number
       height: number
     }
+    coverForNativeApp?: string
+    coverMd?: string
+    coverSm?: string
     audioSource?: {
       mediaId: string
       kind: 'syntheticReadAloud' | 'readAloud'

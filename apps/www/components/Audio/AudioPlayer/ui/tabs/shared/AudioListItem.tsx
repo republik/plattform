@@ -6,12 +6,11 @@ import {
   IconButton,
 } from '@project-r/styleguide'
 import { css } from 'glamor'
-import { dateFormatter, FALLBACK_IMG_SRC, formatMinutes } from '../../../shared'
+import { dateFormatter, formatMinutes } from '../../../shared'
 import AudioPlayerTitle from '../../AudioPlayerTitle'
 import AudioCover from '../../AudioCover'
 import { AudioQueueItem } from '../../../../graphql/AudioQueueHooks'
-import { imageResizeUrl } from 'mdast-react-render/lib/utils'
-import { ComponentType, ReactNode, useState } from 'react'
+import { ComponentType, ReactNode } from 'react'
 import useMediaProgressQuery from '../../../../hooks/useMediaProgressQuery'
 
 const styles = {
@@ -103,7 +102,7 @@ const AudioListItem = ({
   const { meta } = item
   const { audioSource } = meta
   const publishDate = new Date(Date.parse(meta.publishDate))
-  const { data: progress, loading: progressIsLoading } = useMediaProgressQuery({
+  const { data: progress } = useMediaProgressQuery({
     variables: {
       mediaId: item?.meta.audioSource.mediaId,
     },
@@ -124,10 +123,12 @@ const AudioListItem = ({
       >
         <div {...styles.itemWrapper}>
           <AudioCover
+            cover={meta.coverSm}
             size={62}
             image={meta.image}
             format={meta.format?.meta}
             audioCoverCrop={meta.audioCoverCrop}
+            alt={meta?.title}
           />
           <div {...styles.dataWrapper}>
             <div {...styles.dataText}>

@@ -50,6 +50,7 @@ const CurrentlyPlaying = ({ item, handleOpen }: CurrentlyPlayingProps) => {
         path,
         format,
         audioCoverCrop,
+        coverMd,
       },
     },
   } = item
@@ -59,10 +60,12 @@ const CurrentlyPlaying = ({ item, handleOpen }: CurrentlyPlayingProps) => {
       <div {...styles.root}>
         <div {...styles.coverWrapper}>
           <AudioCover
+            cover={coverMd}
             size={90}
             image={image}
             format={format?.meta}
             audioCoverCrop={audioCoverCrop}
+            alt={title}
           />
         </div>
         <div {...styles.detailWrapper}>

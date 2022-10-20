@@ -150,7 +150,6 @@ const Scrubber = ({
   }
 
   const touchStart: TouchEventHandler<HTMLDivElement> = (e) => {
-    e.preventDefault()
     setIsSeeking(true)
     scrub(e.changedTouches[0].clientX)
   }
@@ -162,7 +161,6 @@ const Scrubber = ({
   }
 
   const touchMove: TouchEventHandler<HTMLDivElement> = (e) => {
-    e.preventDefault()
     if (isSeeking) {
       scrub(e.changedTouches[0].clientX)
     }
@@ -182,6 +180,7 @@ const Scrubber = ({
 
   const mouseMove = (e: MouseEvent<HTMLDivElement>) => {
     e.preventDefault()
+    console.log('mouseMove')
     if (isSeeking) {
       scrub(e.nativeEvent.clientX)
     }
@@ -199,7 +198,7 @@ const Scrubber = ({
   const visibleProgress = isSeeking ? internalProgress : progress
   const currentPositionToRender = isSeeking
     ? Math.floor(internalProgress * duration)
-    : currentTime
+    : currentTime || 0
   const currentPositionString = renderTime(
     clamp(currentPositionToRender, 0, duration),
   )
