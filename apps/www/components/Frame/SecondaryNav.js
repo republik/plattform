@@ -133,6 +133,7 @@ const styles = {
     left: 0,
     right: 0,
     display: 'flex',
+    justifyContent: 'center',
     alignItems: 'baseline',
     WebkitOverflowScrolling: 'touch',
     scrollbarWidth: 'none' /* Firefox */,
@@ -140,8 +141,8 @@ const styles = {
     '::-webkit-scrollbar': {
       display: 'none',
     },
-    [mediaQueries.mUp]: {
-      justifyContent: 'center',
+    [mediaQueries.sDown]: {
+      justifyContent: 'flex-start',
     },
     '& a': {
       display: 'inline-block',
