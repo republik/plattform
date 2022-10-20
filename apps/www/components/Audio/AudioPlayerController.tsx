@@ -515,11 +515,11 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
       // IF the head of the queue changed, update the active player item
       if (audioQueue[0].id !== activePlayerItem?.id) {
         const nextUp = audioQueue[0]
-        setupNextAudioItem(nextUp, true).catch(handleError)
+        setupNextAudioItem(nextUp, isPlaying).catch(handleError)
       }
     }
     trackedQueue.current = audioQueue
-  }, [initialized, inNativeApp, audioQueue, setUpAppPlayer])
+  }, [initialized, inNativeApp, audioQueue, setUpAppPlayer, isPlaying])
 
   // Initialize the player once the queue has loaded.
   // Open up the audio-player once the app has started if the queue is not empty
