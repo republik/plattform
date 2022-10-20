@@ -57,6 +57,8 @@ export const GET_PROFILE = gql`
         }
         endDate
       }
+      isListed
+      hasPublicProfile
     }
   }
 `
@@ -131,6 +133,9 @@ const ProfileHeader = ({ userId, section }) => {
             render={() => {
               const { user } = data
               const { activeMembership } = user
+              const publicProfile = user.hasPublicProfile
+                ? 'öffentlich'
+                : 'nicht öffentlich'
               const name = [user.firstName, user.lastName]
                 .filter(Boolean)
                 .join(' ')
@@ -154,6 +159,9 @@ const ProfileHeader = ({ userId, section }) => {
                     target='_blank'
                   >
                     {user.username || 'Profil'}
+                    {' ('}
+                    {publicProfile}
+                    {user.isListed && ', auf Community-Seite'})
                   </A>
                 </span>,
               ]
@@ -162,11 +170,9 @@ const ProfileHeader = ({ userId, section }) => {
                 .slice(1)
               const endDate =
                 activeMembership && displayDate(activeMembership.endDate)
-              const aboType =
-                activeMembership && activeMembership.type.name === 'ABO'
-                  ? 'Jahresabo '
-                  : 'Monatsabo '
-              const hasAboString = ` | aktives ${aboType} bis `
+              const hasAboString =
+                activeMembership &&
+                ` | aktives ${activeMembership.type.name} bis `
               const membership = activeMembership ? (
                 <span>
                   {hasAboString}
