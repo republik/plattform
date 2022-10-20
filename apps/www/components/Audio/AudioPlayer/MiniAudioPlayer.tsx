@@ -1,7 +1,7 @@
 import React from 'react'
 import { css } from 'glamor'
 import Scrubber from './controls/Scrubber'
-import { AudioPlayerProps, FALLBACK_IMG_SRC } from './shared'
+import { AudioPlayerProps } from './shared'
 import Time from './ui/Time'
 import {
   IconButton,
