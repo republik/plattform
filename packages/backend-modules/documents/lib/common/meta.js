@@ -58,6 +58,16 @@ const getAudioCover = (meta, args) => {
       meta.format.meta.image,
       meta.format.meta.audioCoverCrop,
     ]) ||
+    // check share background (inverted)
+    (meta?.format?.meta?.shareBackgroundImageInverted && [
+      meta.format.meta.shareBackgroundImageInverted,
+      { x: 0, y: 0, width: 50, height: 100 },
+    ]) ||
+    // check share background
+    (meta?.format?.meta?.shareBackgroundImage && [
+      meta.format.meta.shareBackgroundImage,
+      { x: 0, y: 0, width: 50, height: 100 },
+    ]) ||
     []
 
   if (!metaImage) {
