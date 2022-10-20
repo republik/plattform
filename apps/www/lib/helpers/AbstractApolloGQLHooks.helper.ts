@@ -2,12 +2,15 @@ import {
   ApolloCache,
   DefaultContext,
   DocumentNode,
+  LazyQueryHookOptions,
   MutationHookOptions,
   MutationTuple,
   OperationVariables,
   QueryHookOptions,
   QueryResult,
+  QueryTuple,
   TypedDocumentNode,
+  useLazyQuery,
   useMutation,
   useQuery,
 } from '@apollo/client'
@@ -23,6 +26,18 @@ export function makeQueryHook<TData = any, TVariables = OperationVariables>(
     options?: QueryHookOptions<TData, TVariables>,
   ): QueryResult<TData, TVariables> =>
     useQuery<TData, TVariables>(query, options)
+}
+
+/**
+ * Createa a new useLazyQuery-like hook that abstracts the graphql query.
+ * @param query that should be abstracted in the new hook
+ */
+export function makeLazyQueryHook<TData = any, TVariables = OperationVariables>(
+  query: DocumentNode | TypedDocumentNode<TData, TVariables>,
+) {
+  return (
+    options?: LazyQueryHookOptions<TData, TVariables>,
+  ): QueryTuple<TData, TVariables> => useLazyQuery(query, options)
 }
 
 /**

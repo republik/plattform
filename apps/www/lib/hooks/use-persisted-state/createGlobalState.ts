@@ -1,6 +1,15 @@
 const globalState = {}
 
-const createGlobalState = (key, thisCallback, initialValue) => {
+export type GlobalState<T> = {
+  deregister: () => void
+  emit: (value: T) => void
+}
+
+const createGlobalState = <T>(
+  key: string,
+  thisCallback: (val: T) => void,
+  initialValue?: T,
+): GlobalState<T> => {
   if (!globalState[key]) {
     globalState[key] = { callbacks: [], value: initialValue }
   }
@@ -13,7 +22,7 @@ const createGlobalState = (key, thisCallback, initialValue) => {
         arr.splice(index, 1)
       }
     },
-    emit(value) {
+    emit(value: T) {
       if (globalState[key].value !== value) {
         globalState[key].value = value
         globalState[key].callbacks.forEach((callback) => {

@@ -1,45 +1,19 @@
-import { useContext } from 'react'
 import { css } from 'glamor'
 import {
   IconButton,
   useColorContext,
   AudioIcon,
   fontStyles,
-  mediaQueries,
   PodcastIcon,
   Editorial,
+  PlaylistAddIcon,
 } from '@project-r/styleguide'
 
-import { AudioContext } from '../Audio/AudioProvider'
+import { useAudioContext } from '../Audio/AudioProvider'
 import { trackEvent } from '../../lib/matomo'
-
-type AudioSource = {
-  kind: 'syntheticReadAloud' | 'readAloud'
-  mp3?: string
-  aac?: string
-  ogg?: string
-  mediaId: string
-  durationMs: number
-}
-
-type Meta = {
-  title: string
-  path: string
-  url: string
-  audioSource: AudioSource
-}
-
-type AudioContextType = {
-  toggleAudioPlayer: ({
-    audioSource,
-    title,
-    path,
-  }: {
-    audioSource: AudioSource
-    title: string
-    path: string
-  }) => void
-}
+import { AudioPlayerItem } from '../Audio/types/AudioPlayerItem'
+import useAudioQueue from '../Audio/hooks/useAudioQueue'
+import { NEXT_PUBLIC_FEAT_HOERT_HOERT } from '../Audio/constants'
 
 const styles = {
   hr: css({
@@ -50,7 +24,7 @@ const styles = {
   }),
   container: css({
     display: 'flex',
-    alignItems: 'flex-start',
+    alignItems: 'center',
     justifyContent: 'flex-start',
     padding: '16px 0',
     gap: 16,
@@ -69,9 +43,24 @@ const styles = {
   }),
 }
 
-const ReadAloudInline = ({ meta, t }: { meta: Meta; t: (sting) => string }) => {
-  const { toggleAudioPlayer } = useContext<AudioContextType>(AudioContext)
+type ReadAloudInlineProps = {
+  documentId: string
+  meta: AudioPlayerItem['meta'] & { url: string }
+  t: (sting) => string
+}
+
+const ReadAloudInline = ({ documentId, meta, t }: ReadAloudInlineProps) => {
+  const { toggleAudioPlayer } = useAudioContext()
   const [colorScheme] = useColorContext()
+
+  const { checkIfInQueue, addAudioQueueItem } = useAudioQueue()
+
+  const handleAddToPlaylist = async () => {
+    await addAudioQueueItem({
+      id: documentId,
+      meta,
+    })
+  }
 
   const { kind } = meta.audioSource
   const isSynthetic = kind === 'syntheticReadAloud'
@@ -93,12 +82,23 @@ const ReadAloudInline = ({ meta, t }: { meta: Meta; t: (sting) => string }) => {
             e.preventDefault()
             trackEvent([eventCategory, 'audio', meta.url])
             toggleAudioPlayer({
-              audioSource: meta.audioSource,
-              title: meta.title,
-              path: meta.path,
+              id: documentId,
+              meta,
             })
           }}
         />
+        {NEXT_PUBLIC_FEAT_HOERT_HOERT && (
+          <IconButton
+            Icon={PlaylistAddIcon}
+            onClick={handleAddToPlaylist}
+            disabled={checkIfInQueue(documentId)}
+            title={
+              checkIfInQueue(documentId)
+                ? t('AudioPlayer/Queue/alreadyInQueue')
+                : t('AudioPlayer/Queue/Add')
+            }
+          />
+        )}
         <p {...styles.text}>
           <a
             href='#'
@@ -106,9 +106,8 @@ const ReadAloudInline = ({ meta, t }: { meta: Meta; t: (sting) => string }) => {
               e.preventDefault()
               trackEvent([eventCategory, 'audio', meta.url])
               toggleAudioPlayer({
-                audioSource: meta.audioSource,
-                title: meta.title,
-                path: meta.path,
+                id: documentId,
+                meta,
               })
             }}
             {...colorScheme.set('color', 'text')}

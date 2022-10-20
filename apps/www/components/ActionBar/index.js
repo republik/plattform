@@ -5,6 +5,7 @@ import {
   PdfIcon,
   ReadingTimeIcon,
   PlayCircleIcon,
+  PlaylistAddIcon,
   DownloadIcon,
   PodcastIcon,
   FontSizeIcon,
@@ -35,6 +36,8 @@ import DiscussionLinkButton from './DiscussionLinkButton'
 import UserProgress from './UserProgress'
 import ShareButtons from './ShareButtons'
 import { useMe } from '../../lib/context/MeContext'
+import useAudioQueue from '../Audio/hooks/useAudioQueue'
+import { NEXT_PUBLIC_FEAT_HOERT_HOERT } from '../Audio/constants'
 
 const ActionBar = ({
   mode,
@@ -53,8 +56,11 @@ const ActionBar = ({
   const [fontSizeOverlayVisible, setFontSizeOverlayVisible] = useState(false)
   const [shareOverlayVisible, setShareOverlayVisible] = useState(false)
   const [podcastOverlayVisible, setPodcastOverlayVisible] = useState(false)
-
   const { toggleAudioPlayer } = useContext(AudioContext)
+
+  const { addAudioQueueItem, isAudioQueueAvailable, checkIfInQueue } =
+    useAudioQueue()
+
   if (!document) {
     return (
       <div {...styles.topRow} {...(isCentered && { ...styles.centered })}>
@@ -334,9 +340,14 @@ const ActionBar = ({
         e.preventDefault()
         trackEvent(['ActionBar', 'audio', meta.url])
         toggleAudioPlayer({
-          audioSource: meta.audioSource,
-          title: meta.title,
-          path: meta.path,
+          id: document.id,
+          meta: {
+            title: meta.title,
+            path: meta.path,
+            publishDate: meta.publishDate,
+            image: meta.image,
+            audioSource: meta.audioSource,
+          },
         })
       },
       label:
@@ -347,6 +358,23 @@ const ActionBar = ({
       modes: ['feed', 'seriesEpisode'],
       show:
         !!meta.audioSource && meta.audioSource.kind !== 'syntheticReadAloud',
+    },
+    {
+      title: t('AudioPlayer/Queue/Add'),
+      Icon: PlaylistAddIcon,
+      onClick: async (e) => {
+        e.preventDefault()
+        await addAudioQueueItem(document)
+        // TODO: handle error
+      },
+      disabled: checkIfInQueue(document.id),
+      modes: ['feed', 'seriesEpisode'],
+      // TODO: show only if not in playlist already
+      show:
+        NEXT_PUBLIC_FEAT_HOERT_HOERT &&
+        isAudioQueueAvailable &&
+        !!meta?.audioSource &&
+        ['syntheticReadAloud', 'readAloud'].includes(meta.audioSource.kind),
     },
     {
       title: t('article/actionbar/share'),
@@ -460,9 +488,13 @@ const ActionBar = ({
         e.preventDefault()
         trackEvent(['ActionBar', 'audio', meta.url])
         toggleAudioPlayer({
-          audioSource: meta.audioSource,
-          title: meta.title,
-          path: meta.path,
+          id: document.id,
+          meta: {
+            title: meta.title,
+            path: meta.path,
+            publishDate: meta.publishDate,
+            audioSource: meta.audioSource,
+          },
         })
       },
       label: t('PodcastButtons/play'),

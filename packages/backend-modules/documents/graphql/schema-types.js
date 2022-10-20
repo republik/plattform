@@ -111,6 +111,7 @@ type Meta {
   authors: [User!]! @deprecated(reason: "use \`Meta.contributors\` instead")
   contributors: [Contributor!]!
   audioSource: AudioSource
+  audioCover(properties: ImageProperties): String
   podcast: Podcast
 
   newsletter: Newsletter

@@ -294,7 +294,7 @@ const ArticlePage = ({
     throw new Error('redirect')
   }
 
-  const { toggleAudioPlayer, audioPlayerVisible } = useContext(AudioContext)
+  const { toggleAudioPlayer } = useContext(AudioContext)
 
   const markNotificationsAsRead = () => {
     const unreadNotifications = articleUnreadNotifications?.nodes?.filter(
@@ -384,7 +384,17 @@ const ArticlePage = ({
         },
         titleMargin: false,
         titleBreakout,
-        onAudioCoverClick: toggleAudioPlayer,
+        onAudioCoverClick: () =>
+          toggleAudioPlayer({
+            id: documentId,
+            meta: {
+              title: meta.title,
+              path: meta.path,
+              publishDate: meta.publishDate,
+              image: meta.image,
+              audioSource: meta.audioSource,
+            },
+          }),
         getVideoPlayerProps:
           inNativeApp && !inNativeIOSApp
             ? (props) => ({
@@ -724,7 +734,11 @@ const ArticlePage = ({
                                 </div>
                               )}
                               {(isSyntheticReadAloud || isReadAloud) && (
-                                <ReadAloudInline meta={meta} t={t} />
+                                <ReadAloudInline
+                                  documentId={documentId}
+                                  meta={meta}
+                                  t={t}
+                                />
                               )}
                               {isSection && !hideSectionNav && (
                                 <Breakout size='breakout'>
@@ -751,12 +765,7 @@ const ArticlePage = ({
                       )}
                       {renderSchema(splitContent.main)}
                     </article>
-                    <ActionBarOverlay
-                      audioPlayerVisible={audioPlayerVisible}
-                      inNativeApp={inNativeApp}
-                    >
-                      {actionBarOverlay}
-                    </ActionBarOverlay>
+                    <ActionBarOverlay>{actionBarOverlay}</ActionBarOverlay>
                   </ProgressComponent>
                 </ArticleGallery>
               )}

@@ -57,6 +57,7 @@ export {
   MdFilterList as FilterListIcon,
   MdAdd as AddIcon,
   MdRemove as RemoveIcon,
+  MdRemoveCircleOutline as RemoveCircleIcon,
   MdAccountBox as AccountBoxIcon,
   MdNoteAdd as NoteAddIcon,
   MdVpnKey as VpnKeyIcon,
@@ -88,6 +89,9 @@ export {
   MdViewHeadline as FlyerTileMetaIcon,
   MdOutlineQuiz as QuizIcon,
   MdOutlineDelete as DeleteIcon,
+  MdPlaylistAdd as PlaylistAddIcon,
+  MdDragHandle as DragHandleIcon,
+  MdSkipNext as SkipNextIcon,
 } from 'react-icons/md'
 
 export {

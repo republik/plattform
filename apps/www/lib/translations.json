@@ -5125,6 +5125,82 @@
       "value": "Interne Publikation (Editoren-Vorschau)"
     },
     {
+      "key": "AudioPlayer/Latest",
+      "value": "Neueste Beiträge"
+    },
+    {
+      "key": "AudioPlayer/Latest/ReadAloud",
+      "value": "Vorgelesen"
+    },
+    {
+      "key": "AudioPlayer/Latest/All",
+      "value": "Alle"
+    },
+    {
+      "key": "AudioPlayer/Latest/NoAcces",
+      "value": "Die neusten Beiträge sind für Mitglieder und Abonnentinnen der Republik zugänglich."
+    },
+    {
+      "key": "AudioPlayer/Latest/NoItems",
+      "value": "Keine Beiträge verfügbar."
+    },
+    {
+      "key": "AudioPlayer/Queue",
+      "value": "Wiedergabeliste {count}"
+    },
+    {
+      "key": "AudioPlayer/Queue/Add",
+      "value": "Zur Wiedergabeliste hinzufügen"
+    },
+    {
+      "key": "AudioPlayer/Queue/alreadyInQueue",
+      "value": "Bereits in der Wiedergabeliste vorhanden"
+    },
+    {
+      "key": "AudioPlayer/Queue/ActiveHeading",
+      "value": "Aktueller Beitrag"
+    },
+    {
+      "key": "AudioPlayer/Queue/Remove",
+      "value": "Aus Wiedergabeliste entfernen"
+    },
+    {
+      "key": "AudioPlayer/Queue/Download",
+      "value": "Audiodatei herunterladen"
+    },
+    {
+      "key": "AudioPlayer/Queue/GoToItem",
+      "value": "Zum Beitrag"
+    },
+    {
+      "key": "AudioPlayer/Queue/EmptyQueue/p1",
+      "value": "Sie haben noch keine Beiträge in ihrer Wiedergabeliste."
+    },
+    {
+      "key": "AudioPlayer/Queue/EmptyQueue/p2",
+      "value": "Mit einem Klick auf das Widergabelisten-Symbol, können Sie Beiträge in ihre Widergabeliste hinzufügen."
+    },
+    {
+      "key": "AudioPlayer/Queue/EmptyQueue/p3",
+      "value": "Sie finden das Symbol auf Beitragsseiten, im Feed oder hier im Audio-Player bei «Neuste Beiträge»"
+    },
+    {
+      "key": "AudioPlayer/Queue/NoAcces",
+      "value": "Die Wiedergabeliste ist nur für Mitglieder und Abonnentinnen der Republik zugänglich."
+    },
+    {
+      "key": "AudioPlayer/shared/NoAccess/heading",
+      "value": "Einloggen und Weiterhören"
+    },
+    {
+      "key": "AudioPlayer/error",
+      "value": "Beim Abspielen ist ein Fehler aufgetreten."
+    },
+    {
+      "key": "AudioPlayer/error/reload",
+      "value": "Bitte laden Sie die Seite neu."
+    },
+    {
       "key": "Auth/CodeAuthorization/title",
       "value": "E-Mail-Adresse bestätigen"
     },

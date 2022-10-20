@@ -1,13 +1,20 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, Dispatch, SetStateAction } from 'react'
 import useEventListener from '@use-it/event-listener'
 
 import createGlobalState from './createGlobalState'
+import { Storage } from './createStorage'
 
-const usePersistedState = (initialState, key, { get, set }) => {
+type UsePersistedStateHook<T> = [T, Dispatch<SetStateAction<T>>, boolean]
+
+const usePersistedState = <T>(
+  initialState: T,
+  key: string,
+  { get, set }: Storage<T>,
+): UsePersistedStateHook<T> => {
   const globalState = useRef(null)
   const storageEventValue = useRef(null)
   const [persisted, setPersisted] = useState(true)
-  const [state, setState] = useState(() => {
+  const [state, setState] = useState<T>(() => {
     let state
     try {
       state = get(key, initialState)
@@ -19,7 +26,7 @@ const usePersistedState = (initialState, key, { get, set }) => {
   })
 
   // subscribe to `storage` change events
-  useEventListener('storage', ({ key: k, newValue }) => {
+  useEventListener('storage', ({ key: k, newValue }: StorageEvent) => {
     if (k === key) {
       const newState = newValue === null ? initialState : JSON.parse(newValue)
       if (state !== newState) {
@@ -42,7 +49,7 @@ const usePersistedState = (initialState, key, { get, set }) => {
   // Only persist to storage if state changes.
   useEffect(() => {
     // do not write data recieved from storage event
-    if (storageEventValue.current === state) {
+    if (state !== null && storageEventValue.current === state) {
       return
     }
     // persist to localStorage

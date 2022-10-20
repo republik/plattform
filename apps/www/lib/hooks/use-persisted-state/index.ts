@@ -1,9 +1,13 @@
 import { useState } from 'react'
+import { StorageProvider } from './StorageProvider'
 
 import usePersistedState from './usePersistedState'
 import createStorage from './createStorage'
 
-const createPersistedState = (key, customProvider) => {
+const createPersistedState = <T>(
+  key: string,
+  customProvider?: StorageProvider,
+) => {
   let provider = customProvider
   if (customProvider === undefined) {
     try {
@@ -11,8 +15,8 @@ const createPersistedState = (key, customProvider) => {
     } catch (e) {}
   }
   if (provider) {
-    const storage = createStorage(provider)
-    return (initialState) => usePersistedState(initialState, key, storage)
+    const storage = createStorage<T>(provider)
+    return (initialState) => usePersistedState<T>(initialState, key, storage)
   }
   return useState
 }

@@ -1,17 +1,17 @@
-import { AudioContext } from './AudioProvider'
-import { AudioPlayer } from '@project-r/styleguide'
-import ProgressComponent from '../../components/Article/Progress'
-import withT from '../../lib/withT'
-import compose from 'lodash/flowRight'
-import { AUDIO_PLAYER_HEIGHT } from '../constants'
-import Link from '../Link/Href'
+import { AudioContext } from '../AudioProvider'
+import { AudioPlayer as LegacyAudioPlayerUI } from '@project-r/styleguide'
+import ProgressComponent from '../../Article/Progress'
+import { useTranslation } from '../../../lib/withT'
+import { AUDIO_PLAYER_HEIGHT } from '../../constants'
+import Link from '../../Link/Href'
 
-import BottomPanel from '../Frame/BottomPanel'
-import { useMe } from '../../lib/context/MeContext'
-import { usePlaybackRate } from '../../lib/playbackRate'
-import { trackEvent } from '../../lib/matomo'
+import BottomPanel from '../../Frame/BottomPanel'
+import { useMe } from '../../../lib/context/MeContext'
+import { usePlaybackRate } from '../../../lib/playbackRate'
+import { trackEvent } from '../../../lib/matomo'
 
-const AudioPlayerFrontend = ({ t }) => {
+const LegacyAudioPlayer = () => {
+  const { t } = useTranslation()
   const { meLoading } = useMe()
   const [playbackRate, setPlaybackRate] = usePlaybackRate(1)
 
@@ -20,24 +20,26 @@ const AudioPlayerFrontend = ({ t }) => {
       {({
         audioPlayerVisible,
         onCloseAudioPlayer,
-        audioState,
+        activePlayerItem,
         autoPlayActive,
       }) => {
         return (
           <>
-            {!meLoading && audioState && (
+            {!meLoading && activePlayerItem && (
               <BottomPanel wide foreground={true} visible={audioPlayerVisible}>
                 <ProgressComponent isArticle={false}>
-                  <AudioPlayer
+                  <LegacyAudioPlayerUI
                     // when the audio src changes we need to remount the component
-                    key={audioState.mediaId || audioState.url}
+                    key={
+                      activePlayerItem.meta.audioSource.mediaId || ' ' //activePlayerItem.url
+                    }
                     // mediaId and durationMs is neccessary for media progress to work
-                    mediaId={audioState.mediaId}
-                    durationMs={audioState.audioSource.durationMs}
+                    mediaId={activePlayerItem?.meta?.audioSource.mediaId}
+                    durationMs={activePlayerItem?.meta?.audioSource.durationMs}
                     mode='overlay'
-                    src={audioState.audioSource}
-                    title={audioState.title}
-                    sourcePath={audioState.sourcePath}
+                    src={activePlayerItem?.meta?.audioSource}
+                    title={activePlayerItem?.meta?.title}
+                    sourcePath={activePlayerItem?.meta?.path}
                     closeHandler={onCloseAudioPlayer}
                     setPlaybackRate={(rate) => {
                       trackEvent(['AudioPlayer', 'playbackRate', rate])
@@ -60,6 +62,4 @@ const AudioPlayerFrontend = ({ t }) => {
   )
 }
 
-const ComposedAudioPlayer = compose(withT)(AudioPlayerFrontend)
-
-export default ComposedAudioPlayer
+export default LegacyAudioPlayer
