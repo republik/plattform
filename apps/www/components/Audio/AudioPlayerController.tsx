@@ -253,15 +253,12 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
       autoPlay = false,
       initialTime = 0,
     ): Promise<void> => {
-      // TODO: replace with meta.audioCoverImage
-      const imageUrl = item.document.meta?.image
-
       notifyApp(AudioEvent.SETUP_TRACK, {
         item,
-        imageUrl,
         autoPlay,
         initialTime,
         playbackRate,
+        coverImage: item.document.meta.coverLg,
       })
     },
     [playbackRate],

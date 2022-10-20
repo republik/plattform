@@ -28,6 +28,9 @@ const AudioQueueItemFragment = gql`
           width
           height
         }
+        coverLg: cover(properties: { width: 384, height: 384 })
+        coverMd: cover(properties: { width: 256, height: 256 })
+        coverSm: cover(properties: { width: 128, height: 128 })
         audioSource {
           mediaId
           kind
