@@ -5036,7 +5036,7 @@
       "value": "Access Grant vorzeitig beenden"
     },
     {
-      "key": "account/access/Grant/change/suppressFollowup",
+      "key": "account/access/Grant/change/noFollowup",
       "value": "Followup Mail unterdrücken"
     },
     {

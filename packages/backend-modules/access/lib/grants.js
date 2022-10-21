@@ -433,8 +433,10 @@ const invalidate = async (grant, reason, t, pgdb, mail) => {
 
   await eventsLib.log(grant, `invalidated.${reason}`, pgdb)
 
+  const sendMail = reason !== 'admin'
+
   if (grant.recipientUserId) {
-    removePrivileges(grant, pgdb, true, t, mail)
+    removePrivileges(grant, pgdb, sendMail, t, mail)
   }
 
   debug('invalidate', {
@@ -448,35 +450,25 @@ const invalidate = async (grant, reason, t, pgdb, mail) => {
   return result > 0
 }
 
-const terminate = async (id, user, t, pgdb, mail) => {
+const noFollowup = async (id, pgdb) => {
   const grant = await pgdb.public.accessGrants.findOne({ id })
 
-  if (!Roles.userIsInRoles(user, ['admin', 'supporter'])) {
-    throw new Error(t('api/access/terminate/role/error'))
-  }
-
   const now = moment()
-  let eventsLogMessage = 'suppressedFollowup.admin'
+
+  const eventsLogMessage = 'noFollowup.admin'
   const updateFields = {
     followupAt: now,
     updatedAt: now,
   }
 
-  if (!grant.invalidatedAt) {
-    updateFields.invalidatedAt = now
-    eventsLogMessage = 'terminated.admin'
-    if (grant.recipientUserId) {
-      removePrivileges(grant, pgdb, false, t, mail)
-    }
-  }
   const result = await pgdb.public.accessGrants.update(
-    { id: grant.id },
+    { id: grant.id, followupAt: null },
     updateFields,
   )
 
   await eventsLib.log(grant, eventsLogMessage, pgdb)
 
-  debug('terminate', {
+  debug('noFollowup', {
     id: grant.id,
     ...updateFields,
   })
@@ -750,8 +742,8 @@ module.exports = {
   revoke,
   recommendations,
   invalidate,
+  noFollowup,
   followUp,
-  terminate,
 
   findByGranter,
   findByRecipient,

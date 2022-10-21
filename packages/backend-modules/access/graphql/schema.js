@@ -56,7 +56,8 @@ type mutations {
   changeAccess(
     id: ID! 
     revoke: Boolean!
-    terminate: Boolean! 
+    invalidate: Boolean! 
+    noFollowup: Boolean!
   ): Boolean!
 }
 
