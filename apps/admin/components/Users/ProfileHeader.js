@@ -56,12 +56,28 @@ export const GET_PROFILE = gql`
           name
         }
         endDate
+        overdue
+        renew
       }
       isListed
       hasPublicProfile
+      memberships {
+        id
+        periods {
+          beginDate
+          endDate
+        }
+      }
     }
   }
 `
+
+const getLastPeriod = (periods) =>
+  periods?.reduce((accumulator, currentValue) => {
+    return !accumulator || currentValue.endDate > accumulator.endDate
+      ? currentValue
+      : accumulator
+  }, false)
 
 const Subnav = ({ userId, section }) => (
   <div>
@@ -133,6 +149,12 @@ const ProfileHeader = ({ userId, section }) => {
             render={() => {
               const { user } = data
               const { activeMembership } = user
+              const { memberships } = user
+              const periods = memberships?.map((m) => m.periods).flat()
+              const lastPeriod = getLastPeriod(periods)
+
+              console.log(lastPeriod.endDate)
+
               const publicProfile = user.hasPublicProfile
                 ? 'öffentlich'
                 : 'nicht öffentlich'
@@ -168,21 +190,28 @@ const ProfileHeader = ({ userId, section }) => {
                 .filter(Boolean)
                 .reduce((acc, v) => [...acc, ' | ', v], [])
                 .slice(1)
-              const endDate =
-                activeMembership && displayDate(activeMembership.endDate)
-              const hasAboString =
-                activeMembership &&
-                ` | aktives ${activeMembership.type.name} bis `
+
               const membership = activeMembership ? (
                 <span>
-                  {hasAboString}
-                  {displayDate(activeMembership.endDate)}
+                  {' | '}
+                  {activeMembership.type?.name}
+                  {!activeMembership.renew && <>{' · '}gekündigt</>}
+                  {!!activeMembership.overdue && !!activeMembership.renew && (
+                    <>{' · '}überfällig</>
+                  )}
+                  {lastPeriod && (
+                    <>
+                      {' · '}bis {displayDate(lastPeriod.endDate)}
+                    </>
+                  )}
                 </span>
               ) : (
-                ' | kein aktives Abo'
+                lastPeriod && (
+                  <span>
+                    {' | '}ehemalig{' · '}bis {displayDate(lastPeriod.endDate)}
+                  </span>
+                )
               )
-
-              console.log(endDate)
               return (
                 <Section {...styles.header}>
                   <Head>
