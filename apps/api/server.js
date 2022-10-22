@@ -59,13 +59,13 @@ const loaderBuilders = {
 }
 
 const {
-  AccessScheduler,
+  // AccessScheduler,
   graphql: access,
 } = require('@orbiting/backend-modules-access')
 // const PublicationScheduler = require('@orbiting/backend-modules-publikator/lib/PublicationScheduler')
-const MembershipScheduler = require('@orbiting/backend-modules-republik-crowdfundings/lib/scheduler')
-const DatabroomScheduler = require('@orbiting/backend-modules-databroom/lib/scheduler')
-const MailScheduler = require('@orbiting/backend-modules-mail/lib/scheduler')
+// const MembershipScheduler = require('@orbiting/backend-modules-republik-crowdfundings/lib/scheduler')
+// const DatabroomScheduler = require('@orbiting/backend-modules-databroom/lib/scheduler')
+// const MailScheduler = require('@orbiting/backend-modules-mail/lib/scheduler')
 
 const mail = require('@orbiting/backend-modules-republik-crowdfundings/lib/Mail')
 
@@ -76,17 +76,17 @@ const {
   MAIL_EXPRESS_RENDER,
   MAIL_EXPRESS_MAILCHIMP,
   // SEARCH_PG_LISTENER,
-  NODE_ENV,
-  ACCESS_SCHEDULER,
-  MEMBERSHIP_SCHEDULER,
+  // NODE_ENV,
+  // ACCESS_SCHEDULER,
+  // MEMBERSHIP_SCHEDULER,
   // PUBLICATION_SCHEDULER,
-  DATABROOM_SCHEDULER,
-  MAIL_SCHEDULER,
+  // DATABROOM_SCHEDULER,
+  // MAIL_SCHEDULER,
   SERVER = 'graphql',
   DYNO,
 } = process.env
 
-const DEV = NODE_ENV ? NODE_ENV !== 'production' : true
+// const DEV = NODE_ENV ? NODE_ENV !== 'production' : true
 
 // only used by tests, needs to run server and schedulers
 const start = async () => {
@@ -247,28 +247,28 @@ const runOnce = async () => {
   //   searchNotifyListener = await SearchNotifyListener.start(context)
   // }
 
-  let accessScheduler
-  if (ACCESS_SCHEDULER === 'false' || (DEV && ACCESS_SCHEDULER !== 'true')) {
-    console.log('ACCESS_SCHEDULER prevented scheduler from being started', {
-      ACCESS_SCHEDULER,
-      DEV,
-    })
-  } else {
-    accessScheduler = await AccessScheduler.init(context)
-  }
+  // let accessScheduler
+  // if (ACCESS_SCHEDULER === 'false' || (DEV && ACCESS_SCHEDULER !== 'true')) {
+  //   console.log('ACCESS_SCHEDULER prevented scheduler from being started', {
+  //     ACCESS_SCHEDULER,
+  //     DEV,
+  //   })
+  // } else {
+  //   accessScheduler = await AccessScheduler.init(context)
+  // }
 
-  let membershipScheduler
-  if (
-    MEMBERSHIP_SCHEDULER === 'false' ||
-    (DEV && MEMBERSHIP_SCHEDULER !== 'true')
-  ) {
-    console.log('MEMBERSHIP_SCHEDULER prevented scheduler from being started', {
-      MEMBERSHIP_SCHEDULER,
-      DEV,
-    })
-  } else {
-    membershipScheduler = await MembershipScheduler.init(context)
-  }
+  // let membershipScheduler
+  // if (
+  //   MEMBERSHIP_SCHEDULER === 'false' ||
+  //   (DEV && MEMBERSHIP_SCHEDULER !== 'true')
+  // ) {
+  //   console.log('MEMBERSHIP_SCHEDULER prevented scheduler from being started', {
+  //     MEMBERSHIP_SCHEDULER,
+  //     DEV,
+  //   })
+  // } else {
+  //   membershipScheduler = await MembershipScheduler.init(context)
+  // }
 
   // let publicationScheduler
   // if (
@@ -288,47 +288,47 @@ const runOnce = async () => {
   //   )
   // }
 
-  let databroomScheduler
-  if (
-    DATABROOM_SCHEDULER === 'false' ||
-    (DEV && DATABROOM_SCHEDULER !== 'true')
-  ) {
-    console.log('DATABROOM_SCHEDULER prevented scheduler from being started', {
-      DATABROOM_SCHEDULER,
-      DEV,
-    })
-  } else {
-    databroomScheduler = await DatabroomScheduler.init(context).catch(
-      (error) => {
-        console.log(error)
-        throw new Error(error)
-      },
-    )
-  }
+  // let databroomScheduler
+  // if (
+  //   DATABROOM_SCHEDULER === 'false' ||
+  //   (DEV && DATABROOM_SCHEDULER !== 'true')
+  // ) {
+  //   console.log('DATABROOM_SCHEDULER prevented scheduler from being started', {
+  //     DATABROOM_SCHEDULER,
+  //     DEV,
+  //   })
+  // } else {
+  //   databroomScheduler = await DatabroomScheduler.init(context).catch(
+  //     (error) => {
+  //       console.log(error)
+  //       throw new Error(error)
+  //     },
+  //   )
+  // }
 
-  let mailScheduler
-  if (MAIL_SCHEDULER === 'false' || (DEV && MAIL_SCHEDULER !== 'true')) {
-    console.log('MAIL_SCHEDULER prevented scheduler from being started', {
-      MAIL_SCHEDULER,
-      DEV,
-    })
-  } else {
-    mailScheduler = await MailScheduler.init(context).catch((error) => {
-      console.log(error)
-      throw new Error(error)
-    })
-  }
+  // let mailScheduler
+  // if (MAIL_SCHEDULER === 'false' || (DEV && MAIL_SCHEDULER !== 'true')) {
+  //   console.log('MAIL_SCHEDULER prevented scheduler from being started', {
+  //     MAIL_SCHEDULER,
+  //     DEV,
+  //   })
+  // } else {
+  //   mailScheduler = await MailScheduler.init(context).catch((error) => {
+  //     console.log(error)
+  //     throw new Error(error)
+  //   })
+  // }
 
   const close = async () => {
     await Promise.all(
       [
         // slackGreeter && slackGreeter.close(),
         // searchNotifyListener && searchNotifyListener.close(),
-        accessScheduler && accessScheduler.close(),
-        membershipScheduler && membershipScheduler.close(),
+        // accessScheduler && accessScheduler.close(),
+        // membershipScheduler && membershipScheduler.close(),
         // publicationScheduler && (await publicationScheduler.close()),
-        databroomScheduler && databroomScheduler.close(),
-        mailScheduler && mailScheduler.close(),
+        // databroomScheduler && databroomScheduler.close(),
+        // mailScheduler && mailScheduler.close(),
       ].filter(Boolean),
     )
     await ConnectionContext.close(context)
