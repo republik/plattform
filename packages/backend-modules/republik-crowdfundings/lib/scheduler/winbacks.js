@@ -9,10 +9,11 @@ const DAYS_AFTER_CANCELLATION = 3
 const MAX_DAYS_AFTER_CANCELLATION = 30
 
 const CANCELLATION_CATEGORIES = [
-  'NO_TIME',
+  // Temporarily disabled
+  // 'NO_TIME',
+  // 'PAPER',
   'TOO_EXPENSIVE',
   'NO_MONEY',
-  'PAPER',
 ]
 const MEMBERSHIP_TYPES = ['ABO', 'BENEFACTOR_ABO']
 
