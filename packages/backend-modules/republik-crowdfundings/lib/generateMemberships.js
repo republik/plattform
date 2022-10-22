@@ -10,7 +10,13 @@ const omit = require('lodash/omit')
 
 const MONTHLY_ABO_UPGRADE_PKGS = ['ABO', 'BENEFACTOR']
 
-module.exports = async (pledgeId, pgdb, t, redis) => {
+module.exports = async (
+  pledgeId,
+  pgdb,
+  t,
+  redis,
+  { startAt, skipMailchimp } = {},
+) => {
   const pledge = await pgdb.public.pledges.findOne({ id: pledgeId })
   const user = await pgdb.public.users.findOne({ id: pledge.userId })
 
@@ -67,6 +73,7 @@ module.exports = async (pledgeId, pgdb, t, redis) => {
 
   const memberships = []
   const now = moment()
+  const beginDate = moment(startAt)
 
   let cancelableMemberships = []
   let membershipPeriod
@@ -173,8 +180,8 @@ module.exports = async (pledgeId, pgdb, t, redis) => {
           ) {
             membershipPeriod = {
               pledgeOptionId: plo.id,
-              beginDate: now,
-              endDate: now
+              beginDate: beginDate,
+              endDate: beginDate
                 .clone()
                 .add(membership.initialPeriods, membership.initialInterval),
               membership,
@@ -240,18 +247,20 @@ module.exports = async (pledgeId, pgdb, t, redis) => {
     subscribeToEditorialNewsletters = true
   }
 
-  try {
-    await mail.enforceSubscriptions({
-      pgdb,
-      userId: user.id,
-      isNew: !user.verified,
-      subscribeToEditorialNewsletters,
-    })
-  } catch (e) {
-    console.warn(
-      'enforceSubscriptions failed in generateMemberships. This error is ignored, continuing...',
-      e,
-    )
+  if (!skipMailchimp) {
+    try {
+      await mail.enforceSubscriptions({
+        pgdb,
+        userId: user.id,
+        isNew: !user.verified,
+        subscribeToEditorialNewsletters,
+      })
+    } catch (e) {
+      console.warn(
+        'enforceSubscriptions failed in generateMemberships. This error is ignored, continuing...',
+        e,
+      )
+    }
   }
 
   const cache = createCache({ prefix: `User:${user.id}` }, { redis })
