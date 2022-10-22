@@ -1387,8 +1387,8 @@
     },
     {
       "key": "account/pledges/payment/method/PAYMENTSLIP",
-      "de": "Rechnung",
-      "fr": "facture d'achat"
+      "de": "QR-Rechnung",
+      "fr": "QR-facture"
     },
     {
       "key": "account/pledges/payment/method/PAYPAL",
@@ -2297,7 +2297,7 @@
     {
       "key": "package/YEAR/title",
       "de": "Jahresmitgliedschaft",
-      "fr": "adhésion annuelle"
+      "fr": "Adhésion annuelle"
     },
     {
       "key": "payment/insecure",
@@ -2326,8 +2326,8 @@
     },
     {
       "key": "payment/method/PAYMENTSLIP",
-      "de": "Rechnung",
-      "fr": "facture d'achat"
+      "de": "QR-Rechnung",
+      "fr": "QR-facture"
     },
     {
       "key": "payment/method/PAYPAL",
