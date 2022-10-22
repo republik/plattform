@@ -1163,7 +1163,7 @@
     {
       "key": "cf/cta/shareNow",
       "de": "Jetzt andere auf Lobbywatch aufmerksam machen:",
-      "fr": "Attirez maintenant l'attention des autres sur Lobbywatch:"
+      "fr": "Faire connaître Lobbywatch à d'autres personnes:"
     },
     {
       "key": "cf/cta/shareEmailSubject",
@@ -1178,7 +1178,7 @@
     {
       "key": "cf/package/YEAR",
       "de": "Für mindestens ein Jahr",
-      "fr": "Depuis au moins un an"
+      "fr": "Pour au moins un an"
     },
     {
       "key": "cf/package/LEGISLATION",
@@ -1193,12 +1193,12 @@
     {
       "key": "cf/package/DONATE",
       "de": "Spenden, sonst nichts",
-      "fr": "Faites un don, rien d'autre"
+      "fr": "Faire un don, rien d'autre"
     },
     {
       "key": "cf/package/WORKSHOP",
       "de": "Etwas für Ihr ganzes Team? Lobbywatch-Workshop buchen.",
-      "fr": "Quelque chose pour tout votre équipage ? Réservez un atelier Lobbywatch."
+      "fr": "Quelque chose pour toute votre équipe? Réservez un atelier Lobbywatch."
     },
     {
       "key": "pages/account/title",
@@ -1218,7 +1218,7 @@
     {
       "key": "Account/AddressForm/city/error/empty",
       "de": "Ort fehlt",
-      "fr": "l'emplacement est manquant"
+      "fr": "Le lieu est manquant"
     },
     {
       "key": "Account/AddressForm/city/error/tooLong",
@@ -1248,7 +1248,7 @@
     {
       "key": "Account/AddressForm/editName",
       "de": "bearbeiten",
-      "fr": "éditer"
+      "fr": "modifier"
     },
     {
       "key": "Account/AddressForm/line1/error/empty",
@@ -1368,7 +1368,7 @@
     {
       "key": "account/paymentSource/save",
       "de": "speichern",
-      "fr": "sauver"
+      "fr": "enregistrer"
     },
     {
       "key": "account/paymentSource/saving",
@@ -1488,12 +1488,12 @@
     {
       "key": "account/pledges/payment/your-payment-data",
       "de": "Ihre Kreditkartendaten",
-      "fr": "les détails de votre carte de crédit"
+      "fr": "Les détails de votre carte de crédit"
     },
     {
       "key": "account/pledges/title",
       "de": "Unterstützungsbeiträge",
-      "fr": "avenants"
+      "fr": "Contributions de soutien"
     },
     {
       "key": "Account/title",
@@ -1563,7 +1563,7 @@
     {
       "key": "Account/Update/email/empty",
       "de": "Geben Sie eine gültige E-Mail-Adresse ein.",
-      "fr": "Entrez une adresse mail valide."
+      "fr": "Entrez une adresse e-mail valide."
     },
     {
       "key": "Account/Update/email/error/invalid",
@@ -1588,7 +1588,7 @@
     {
       "key": "Account/Update/email/submit",
       "de": "speichern",
-      "fr": "sauver"
+      "fr": "enregistrer"
     },
     {
       "key": "Account/Update/email/updating",
@@ -1613,7 +1613,7 @@
     {
       "key": "Account/Update/submit",
       "de": "speichern",
-      "fr": "sauver"
+      "fr": "enregistrer"
     },
     {
       "key": "Account/Update/title",
@@ -1623,7 +1623,7 @@
     {
       "key": "Account/Update/updating",
       "de": "speichert",
-      "fr": "sauve"
+      "fr": "enregistre"
     },
     {
       "key": "actionbar/download",
@@ -1842,22 +1842,22 @@
     {
       "key": "memberships/title/1",
       "de": "Mitgliedschaft",
-      "fr": "adhésion"
+      "fr": "Adhésion"
     },
     {
       "key": "memberships/title/other",
       "de": "Mitgliedschaften",
-      "fr": "adhésions"
+      "fr": "Adhésions"
     },
     {
       "key": "memberships/title/YEAR",
       "de": "Jahresmitgliedschaft",
-      "fr": "adhésion annuelle"
+      "fr": "Adhésion annuelle"
     },
     {
       "key": "memberships/title/LEGISLATION",
       "de": "Legislatur-Mitgliedschaft",
-      "fr": "Adhésion législative"
+      "fr": "Pour au moins un an"
     },
     {
       "key": "memberships/title/BENEFACTOR",
@@ -1912,7 +1912,7 @@
     {
       "key": "memberships/manage/cancel/link",
       "de": "Mitgliedschaft kündigen",
-      "fr": "annuler l'adhésion"
+      "fr": "Annuler l'adhésion"
     },
     {
       "key": "memberships/manage/prolong/awaiting",
@@ -2122,7 +2122,7 @@
     {
       "key": "notifications/session-denied/text",
       "de": "Sie haben den Schwarzleser vor einem leeren Bildschirm sitzen lassen.",
-      "fr": "Vous avez laissé le lecteur noir assis devant un écran vide."
+      "fr": "Vous avez laissé le lecteur noir devant un écran vide."
     },
     {
       "key": "notifications/session-denied/title",
@@ -2156,8 +2156,8 @@
     },
     {
       "key": "package/BENEFACTOR/description",
-      "de": "Mit Ihrer Gönner-Mitgliedschaft werden Sie Mitglied des Vereins Lobbywatch.ch und wir laden Sie bei Gelegenheit auf einen Lobbyspaziergang mit Apéro ein.",
-      "fr": "Avec votre adhésion mécène vous devenez membre de l'association Lobbywatch.ch et nous vous invitons à vous promener dans le hall avec un apéritif lorsque l'occasion se présente."
+      "de": "Mit Ihrer Gönner-Mitgliedschaft werden Sie Mitglied des Vereins Lobbywatch.ch und wir laden Sie auf einen Lobbyspaziergang mit Apéro ein.",
+      "fr": "Avec votre adhésion mécène, vous devenez membre de l'association Lobbywatch.ch et nous vous invitons à une Lobbypromenade avec un apéritif à la clé lorsque l'occasion se présentera."
     },
     {
       "key": "package/BENEFACTOR/title",
@@ -2207,7 +2207,7 @@
     {
       "key": "package/customize/price/payMore",
       "de": "Können und wollen Sie mehr geben?",
-      "fr": "Êtes-vous capable et désireux de donner plus ?"
+      "fr": "Pouvez-vous et voulez-vous donner plus ?"
     },
     {
       "key": "package/customize/price/payMore/1.5",
@@ -2237,7 +2237,7 @@
     {
       "key": "package/DONATE/description",
       "de": "Sie wollen uns einfach unterstützen. Denn Sie wissen: Transparenz ist nicht gratis.",
-      "fr": "Ils veulent juste nous soutenir. Parce que vous le savez : la transparence n'est pas gratuite."
+      "fr": "Vous voulez simplement nous soutenir. Parce que vous le savez : la transparence n'est pas gratuite."
     },
     {
       "key": "package/DONATE/title",
@@ -2247,12 +2247,12 @@
     {
       "key": "package/LEGISLATION/description",
       "de": "Sie werden Mitglied für die vier Jahre der Legislaturperiode 2023-2027.",
-      "fr": "Vous deviendrez député pour les quatre années de la législature 2023-2027."
+      "fr": "Vous deviendrez membre pour les quatre années de la législature 2023-2027."
     },
     {
       "key": "package/LEGISLATION/title",
       "de": "Legislatur-Mitgliedschaft",
-      "fr": "Adhésion législative"
+      "fr": "Adhésion de législature"
     },
     {
       "key": "package/price",
@@ -2277,7 +2277,7 @@
     {
       "key": "package/WORKSHOP/description",
       "de": "Gedacht für Medien, Verbände und Unternehmen. Wir kommen exklusive bei Ihnen vorbei und geben Ihnen und Ihren Kolleg:innen einen Workshop zum Thema Lobbying & Recherche.",
-      "fr": "Destiné aux médias, associations et entreprises. Nous vous rendrons visite en exclusivité et vous offrirons, à vous et à vos collègues, un atelier sur le lobbying et la recherche."
+      "fr": "Destiné aux médias, associations et entreprises. Nous vous rendons visite en exclusivité et vous offrons, à vous et à vos collègues, un atelier sur les thèmes du lobbying et de l'investigation."
     },
     {
       "key": "package/WORKSHOP/title",
@@ -2287,7 +2287,7 @@
     {
       "key": "package/YEAR/description",
       "de": "Mit Ihrem jährlichen Beitrag sind Sie Mitglied des Vereins Lobbywatch.ch.",
-      "fr": "Votre cotisation annuelle fait de vous un membre de l'association Lobbywatch.ch ."
+      "fr": "Avec votre cotisation annuelle, vous devenez membre de l'association Lobbywatch.ch."
     },
     {
       "key": "package/YEAR/price",
@@ -2427,7 +2427,7 @@
     {
       "key": "payment/stripe/prefered",
       "de": "Falls es für Sie keinen Unterschied macht: Die Kreditkarte (Visa, Mastercard, Amex) ist für uns das bevorzugte Zahlungsmittel.",
-      "fr": "Si cela ne vous dérange pas: la carte de crédit (Visa, Mastercard, Amex) est notre moyen de paiement préféré."
+      "fr": "Si cela ne vous dérange pas, nous préférons les paiements par carte de crédit (Visa, Mastercard, Amex)."
     },
     {
       "key": "payment/title",
@@ -2527,7 +2527,7 @@
     {
       "key": "pledge/contact/firstName/error/empty",
       "de": "Vorname fehlt",
-      "fr": "Prénom manquant"
+      "fr": "Le prénom est manquant"
     },
     {
       "key": "pledge/contact/firstName/label",
@@ -2537,7 +2537,7 @@
     {
       "key": "pledge/contact/lastName/error/empty",
       "de": "Nachname fehlt",
-      "fr": "Nom de famille manquant"
+      "fr": "Le nom de famille est manquant "
     },
     {
       "key": "pledge/contact/lastName/label",
@@ -2597,7 +2597,7 @@
     {
       "key": "pledge/recievePayment/paypal/cancel",
       "de": "Zahlung abgebrochen. Wählen Sie bitte ein anderes Zahlungsmittel, um Ihre Bestellung abzuschliessen.",
-      "fr": "paiement annulé. Veuillez choisir un autre moyen de paiement pour finaliser votre commande."
+      "fr": "Paiement annulé. Veuillez choisir un autre moyen de paiement pour finaliser votre commande."
     },
     {
       "key": "pledge/recievePayment/paypal/contactUs",
@@ -2627,7 +2627,7 @@
     {
       "key": "pledge/submit/autoPay/note",
       "de": "Wir erinnern Sie, bevor wir abbuchen. Und Sie können jederzeit austreten.",
-      "fr": "Nous vous rappellerons avant de facturer. Et vous pouvez vous désabonner à tout moment."
+      "fr": "Nous vous enverrons un rappel avant de facturer. Et vous pouvez vous désabonner à tout moment."
     },
     {
       "key": "pledge/submit/button/pay",
@@ -2652,7 +2652,7 @@
     {
       "key": "pledge/submit/loading/pay",
       "de": "verarbeiten",
-      "fr": "procéder"
+      "fr": "procéder "
     },
     {
       "key": "pledge/submit/loading/paypal",
@@ -2767,7 +2767,7 @@
     {
       "key": "signIn/privacy",
       "de": "Datenschutz",
-      "fr": "Vie privée"
+      "fr": "Protection des données"
     },
     {
       "key": "signIn/success",
@@ -2807,7 +2807,7 @@
     {
       "key": "testimonial/submit",
       "de": "veröffentlichen",
-      "fr": "publier"
+      "fr": "Publier"
     },
     {
       "key": "testimonial/submit/update",
@@ -2832,7 +2832,7 @@
     {
       "key": "testimonial/unpublish",
       "de": "Statement zurücknehmen",
-      "fr": "retirer la déclaration"
+      "fr": "Retirer la déclaration"
     },
     {
       "key": "testimonial/unpublished",
@@ -2962,7 +2962,7 @@
     {
       "key": "tokenAuthorization/deny",
       "de": "Nein",
-      "fr": "non"
+      "fr": "Non"
     },
     {
       "key": "tokenAuthorization/email",
@@ -3062,12 +3062,12 @@
     {
       "key": "withMembership/signIn/note/moreText",
       "de": "Mehr erfahren.",
-      "fr": "Apprendre encore plus."
+      "fr": "En apprendre plus."
     },
     {
       "key": "withMembership/title",
       "de": "Mitgliederbereich",
-      "fr": "Zone des membres"
+      "fr": "Zone pour les membres"
     },
     {
       "key": "withMembership/unauthorized",
@@ -3077,7 +3077,7 @@
     {
       "key": "withMembership/unauthorized/accountText",
       "de": "Konto ansehen",
-      "fr": "voir le compte"
+      "fr": "Voir le compte"
     },
     {
       "key": "withMembership/unauthorized/buyText",
