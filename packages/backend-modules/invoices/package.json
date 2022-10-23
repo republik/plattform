@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "node-iso11649": "^2.1.2",
-    "swissqrbill": "^2.3.0"
+    "swissqrbill": "^3.2.1"
   },
   "devDependencies": {
     "@orbiting/backend-modules-types": "*"
