@@ -367,7 +367,7 @@ export function getSwissQrBillData(payment: PaymentResolved): types.Data {
         address: debtorAddress.line1,
         zip: debtorAddress.postalCode,
         city: debtorAddress.city,
-        country: getCountryCode(creditorAddress.country),
+        country: getCountryCode(debtorAddress.country),
       },
     }),
   }
