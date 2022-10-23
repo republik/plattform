@@ -1,4 +1,3 @@
-const isUUID = require('is-uuid')
 const { ascending } = require('d3-array')
 const { transformUser } = require('@orbiting/backend-modules-auth')
 
@@ -17,21 +16,26 @@ const fragmentJoinMinMaxDates = `
 `
 
 const { STATEMENTS_ONLY_MEMBERS } = process.env
+const deduplicate = (d, i, all) => all.indexOf(d) === i
 
 module.exports = async (_, args, { pgdb, t }) => {
-  const { first, after, search, focus, membershipAfter } = args
+  const { first, after, search, focus, featuredIds, membershipAfter } = args
   const seed = args.seed || Math.random() * 2 - 1
 
   if (first > 100) {
     throw new Error(t('api/statements/maxNodes'))
   }
 
-  const firstId = focus && isUUID.v4(focus) ? focus : undefined
+  const firstIds = []
+    .concat(focus)
+    .concat(featuredIds)
+    .filter(Boolean)
+    .filter(deduplicate)
 
   const results = async (userRows) => {
     let ids = userRows.map((user) => user.id)
-    if (firstId) {
-      ids = [firstId].concat(ids.filter((id) => id !== firstId))
+    if (firstIds.length) {
+      ids = firstIds.concat(ids.filter((id) => !firstIds.includes(id)))
     }
 
     let startIndex = 0
