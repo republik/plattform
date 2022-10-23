@@ -3024,16 +3024,6 @@
   dependencies:
     "@types/node" ">=8.0.0"
 
-"@schoero/qrcode@^1.4.5":
-  version "1.4.5"
-  resolved "https://registry.yarnpkg.com/@schoero/qrcode/-/qrcode-1.4.5.tgz#a36227ccaaffdb4e34be71dac0e19e47d9bf389e"
-  integrity sha512-Z1Fi7yRcg1ZJ+wGVMyqwgBpuUWci9gAHy6jCzU5yfwy3RCVUHMWIxXX2eWIGnxKOGIxsgsYbx2BcRgEesYDpHQ==
-  dependencies:
-    dijkstrajs "^1.0.1"
-    encode-utf8 "^1.0.3"
-    pngjs "^5.0.0"
-    yargs "^15.3.1"
-
 "@selderee/plugin-htmlparser2@^0.6.0":
   version "0.6.0"
   resolved "https://registry.yarnpkg.com/@selderee/plugin-htmlparser2/-/plugin-htmlparser2-0.6.0.tgz#27e994afd1c2cb647ceb5406a185a5574188069d"
@@ -3794,6 +3784,13 @@
   version "5.0.3"
   resolved "https://registry.yarnpkg.com/@types/parse5/-/parse5-5.0.3.tgz#e7b5aebbac150f8b5fdd4a46e7f0bd8e65e19109"
   integrity sha512-kUNnecmtkunAoQ3CnjmMkzNU/gtxG8guhi+Fk2U/kOpIKjIMKnXGp4IJCgQJrXSgMsWYimYG4TGjz/UzbGEBTw==
+
+"@types/pdfkit@^0.12.6":
+  version "0.12.7"
+  resolved "https://registry.yarnpkg.com/@types/pdfkit/-/pdfkit-0.12.7.tgz#b514d137926853aa240dcfbf286ab7d2c416b304"
+  integrity sha512-SlUg2HLb9Cv06w/4GNmoqQoBgeP9BZO/GwDuwwzo9EnnCn5IrRXmokFULRUHeEkC/WQo5HtCYx+SRXHvYLdQMw==
+  dependencies:
+    "@types/node" "*"
 
 "@types/pg@^7.14.4":
   version "7.14.11"
@@ -8489,11 +8486,6 @@ diffie-hellman@^5.0.0:
     miller-rabin "^4.0.0"
     randombytes "^2.0.0"
 
-dijkstrajs@^1.0.1:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/dijkstrajs/-/dijkstrajs-1.0.2.tgz#2e48c0d3b825462afe75ab4ad5e829c8ece36257"
-  integrity sha512-QV6PMaHTCNmKSeP6QoXhVTw9snc9VD8MulTT0Bd99Pacp4SS1cjcrYPgBPmibqKVtMJJfqC6XvOXgPMEEPH/fg==
-
 dir-glob@2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/dir-glob/-/dir-glob-2.0.0.tgz#0b205d2b6aef98238ca286598a8204d29d0a0034"
@@ -8865,11 +8857,6 @@ emotion@^10.0.14:
   dependencies:
     babel-plugin-emotion "^10.0.27"
     create-emotion "^10.0.27"
-
-encode-utf8@^1.0.3:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/encode-utf8/-/encode-utf8-1.0.3.tgz#f30fdd31da07fb596f281beb2f6b027851994cda"
-  integrity sha512-ucAnuBEhUK4boH2HjVYG5Q2mQyPorvv0u/ocS+zhdw0S8AlHYY+GOFhP1Gio5z4icpP2ivFSvhtFjQi8+T9ppw==
 
 encodeurl@~1.0.2:
   version "1.0.2"
@@ -17298,10 +17285,10 @@ pbkdf2@^3.0.3:
     safe-buffer "^5.0.1"
     sha.js "^2.4.8"
 
-pdfkit@^0.12.3:
-  version "0.12.3"
-  resolved "https://registry.yarnpkg.com/pdfkit/-/pdfkit-0.12.3.tgz#527da4a4bad9a6b456a6939037d63d5ff9306302"
-  integrity sha512-+qDLgm2yq6WOKcxTb43lDeo3EtMIDQs0CK1RNqhHC9iT6u0KOmgwAClkYh9xFw2ATbmUZzt4f7KMwDCOfPDluA==
+pdfkit@^0.13.0:
+  version "0.13.0"
+  resolved "https://registry.yarnpkg.com/pdfkit/-/pdfkit-0.13.0.tgz#da4c2becd63a129e3aae448fdaed4ee7be790f8f"
+  integrity sha512-AW79eHU5eLd2vgRDS9z3bSoi0FA+gYm+100LLosrQQMLUzOBGVOhG7ABcMFpJu7Bpg+MT74XYHi4k9EuU/9EZw==
   dependencies:
     crypto-js "^4.0.0"
     fontkit "^1.8.1"
@@ -17513,11 +17500,6 @@ png-js@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/png-js/-/png-js-1.0.0.tgz#e5484f1e8156996e383aceebb3789fd75df1874d"
   integrity sha512-k+YsbhpA9e+EFfKjTCH3VW6aoKlyNYI6NYdTfDL4CIvFnvsuO84ttonmZE7rc+v23SLTH8XX+5w/Ak9v0xGY4g==
-
-pngjs@^5.0.0:
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/pngjs/-/pngjs-5.0.0.tgz#e79dd2b215767fd9c04561c01236df960bce7fbb"
-  integrity sha512-40QW5YalBNfQo5yRYmiw7Yz6TKKVr3h6970B2YE+3fQpsWcrbj1PzJgxeJ19DRQjhMbKPIuMY8rFaXc8moolVw==
 
 pnp-webpack-plugin@1.6.4:
   version "1.6.4"
@@ -21614,7 +21596,12 @@ supports-preserve-symlinks-flag@^1.0.0:
   resolved "https://registry.yarnpkg.com/supports-preserve-symlinks-flag/-/supports-preserve-symlinks-flag-1.0.0.tgz#6eda4bd344a3c94aea376d4cc31bc77311039e09"
   integrity sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==
 
-svg-parser@^2.0.0, svg-parser@^2.0.4:
+svg-engine@^0.2.3:
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/svg-engine/-/svg-engine-0.2.3.tgz#79696ade686c70804b2cf2078a4fca44a1421e0d"
+  integrity sha512-L7TFYQ9CyMclUmq9PNeHxcs2ajuq2tV7zCblj5bwPDqUBMryR9TsyrYMrV+nEFFMJgezxjb6mXfhKGNbZ/U14Q==
+
+svg-parser@^2.0.0:
   version "2.0.4"
   resolved "https://registry.yarnpkg.com/svg-parser/-/svg-parser-2.0.4.tgz#fdc2e29e13951736140b76cb122c8ee6630eb6b5"
   integrity sha512-e4hG1hRwoOdRb37cIMSgzNsxyzKfayW6VOflrwvR+/bzrkyxY/31WkbgnQpgtrNp1SdpJvpUAGTa/ZoiPNDuRQ==
@@ -21638,21 +21625,21 @@ svgo@^1.0.0, svgo@^1.2.2:
     unquote "~1.1.1"
     util.promisify "~1.0.0"
 
-svgpath@^2.3.1:
+svgpath@^2.5.0:
   version "2.5.0"
   resolved "https://registry.yarnpkg.com/svgpath/-/svgpath-2.5.0.tgz#d57434641d9aa9abae02a4038ebf281fa3005b10"
   integrity sha512-o/vohwqjUO9nDAh4rcjE3KaW/v//At8UJu2LJMybXidf5QLQLVA4bxH0//4YCsr+1H4Gw1Wi/Jc62ynzSBYidw==
 
-swissqrbill@^2.3.0:
-  version "2.4.2"
-  resolved "https://registry.yarnpkg.com/swissqrbill/-/swissqrbill-2.4.2.tgz#5f68f3043cccee0c8da5077b28e44fbcd0f46cf1"
-  integrity sha512-HYNLBf8wykw98AAkkLWMRBGAJhwD+IARon5S2YY2K9VJdJHbftO3CpW+QqAbr8wInH5Ag6zhAqKaS2XKf5sjwg==
+swissqrbill@^3.2.1:
+  version "3.2.1"
+  resolved "https://registry.yarnpkg.com/swissqrbill/-/swissqrbill-3.2.1.tgz#ab052d98498858b5941656f01091acc3ee48c01b"
+  integrity sha512-YBKvu2ILON0/fkvEFHrDxufCUmDyibK1JVBOXfiGMWR8LSTqOp/5trg98OU2TVFPKVwBtWrMOzkkVQ7jCG6wyw==
   dependencies:
-    "@schoero/qrcode" "^1.4.5"
+    "@types/pdfkit" "^0.12.6"
     blob-stream "^0.1.3"
-    pdfkit "^0.12.3"
-    svg-parser "^2.0.4"
-    svgpath "^2.3.1"
+    pdfkit "^0.13.0"
+    svg-engine "^0.2.3"
+    svgpath "^2.5.0"
 
 symbol-observable@^1.0.4:
   version "1.2.0"
