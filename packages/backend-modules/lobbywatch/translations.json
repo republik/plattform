@@ -1201,6 +1201,11 @@
       "fr": "Quelque chose pour toute votre équipe? Réservez un atelier Lobbywatch."
     },
     {
+      "key": "cf/blog/title",
+      "de": "Aktuelles",
+      "fr": "Les nouvelles"
+    },
+    {
       "key": "pages/account/title",
       "de": "Konto",
       "fr": "Compte"
