@@ -741,11 +741,6 @@
       "fr": "La plateforme Lobbywatch réunit les liens des parlementaires de l'Assemblée fédérale avec des entreprises, des associations et des institutions. Lobbywatch veut montrer l'influence de ces organismes dans la politique."
     },
     {
-      "key": "index/newsletter/text",
-      "de": "Der Herbst 2022 wird bei Lobbywatch im Zeichen des Ausbaus stehen – bleiben Sie in Kontakt:",
-      "fr": "Cet automne 2022, Lobbywatch se développe et grandit - restez en contact : "
-    },
-    {
       "key": "lobbygroup/meta/description/0",
       "de": "Die Lobbygruppe {name} ({sector}) hat keine Verbindungen ins Parlament.",
       "fr": "Le lobby {name} ({sector}) n'a pas de relations au parlement"
@@ -1213,7 +1208,7 @@
     {
       "key": "account/signedOut/title",
       "de": "Zu Ihrem Konto",
-      "fr": "à votre compte"
+      "fr": "À votre compte"
     },
     {
       "key": "account/signedOut/signIn",
@@ -2041,8 +2036,8 @@
     },
     {
       "key": "notifications/closeButton",
-      "de": "Zur Startseite",
-      "fr": "Vers la page d'accueil"
+      "de": "Zu Ihrem Konto",
+      "fr": "À votre compte"
     },
     {
       "key": "notifications/closeNote",
@@ -2098,11 +2093,6 @@
       "key": "notifications/invalid-token/title",
       "de": "Ungültiger Link",
       "fr": "Lien invalide"
-    },
-    {
-      "key": "notifications/links/merci",
-      "de": "Ihre persönliche Übersicht",
-      "fr": "Votre aperçu personnel"
     },
     {
       "key": "notifications/newsletter-subscript-disabledion/title",
