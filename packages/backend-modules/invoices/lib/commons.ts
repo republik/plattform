@@ -347,10 +347,6 @@ export function getSwissQrBillData(payment: PaymentResolved): types.Data {
     throw new Error('Creditor address missing')
   }
 
-  if (!Number(creditorAddress.postalCode)) {
-    throw new Error('Creditor address postal code is not a number')
-  }
-
   const debtorAddress = payment?.pledge?.user?.address
 
   return {
@@ -361,19 +357,18 @@ export function getSwissQrBillData(payment: PaymentResolved): types.Data {
       account,
       name: creditorAddress.name,
       address: creditorAddress.line1,
-      zip: Number(creditorAddress.postalCode),
+      zip: creditorAddress.postalCode,
       city: creditorAddress.city,
       country: getCountryCode(creditorAddress.country),
     },
-    ...(debtorAddress &&
-      Number(debtorAddress.postalCode) && {
-        debtor: {
-          name: debtorAddress.name,
-          address: debtorAddress.line1,
-          zip: Number(debtorAddress.postalCode),
-          city: debtorAddress.city,
-          country: getCountryCode(creditorAddress.country),
-        },
-      }),
+    ...(debtorAddress && {
+      debtor: {
+        name: debtorAddress.name,
+        address: debtorAddress.line1,
+        zip: debtorAddress.postalCode,
+        city: debtorAddress.city,
+        country: getCountryCode(creditorAddress.country),
+      },
+    }),
   }
 }
