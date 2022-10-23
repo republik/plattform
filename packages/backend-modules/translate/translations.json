@@ -886,7 +886,7 @@
     },
     {
       "key": "profile/notEligible",
-      "value": "Nur Verlegerinnen und Abonnenten können ein Profil veröffentlichen."
+      "value": "Nur Mitglieder können ein Statement veröffentlichen."
     },
     {
       "key": "profile/generic/tooLong",
