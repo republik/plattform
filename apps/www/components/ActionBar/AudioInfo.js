@@ -30,15 +30,14 @@ const AudioInfo = ({
   willBeReadAloud,
 }) => {
   const [colorScheme] = useColorContext()
-  const speaker = speakers.length
-    ? speakers
-        .map((s) =>
-          s.user?.slug
-            ? `<a href="/~${s.user.slug}">${s.user.name || s.name}</a>`
-            : s.name,
-        )
-        .join(', ')
-    : t('article/actionbar/audio/info/speaker/default')
+
+  const speaker =
+    speakers
+      .map((s) =>
+        s.user?.slug ? `<a href="/~${s.user.slug}">${s.name}</a>` : s.name,
+      )
+      .join(', ') || t('article/actionbar/audio/info/speaker/default')
+
   return (
     <span
       {...styles.audioInfo}
