@@ -2851,13 +2851,17 @@
     },
     {
       "key": "testimonial/viewLive",
-      "de": "ansehen",
+      "de": "Ansehen",
       "fr": "Regarder"
     },
     {
       "key": "testimonial/role/label",
       "de": "Funktion/Tätigkeit",
       "fr": "fonction/activité"
+    },
+    {
+      "key": "testimonial/role/note",
+      "de": "Geben Sie optional etwas Kontext was Sie beruflich machen oder wer Sie sind. "
     },
     {
       "key": "testimonial/quote/label",
