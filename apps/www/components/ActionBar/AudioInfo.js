@@ -33,8 +33,8 @@ const AudioInfo = ({
   const speaker = speakers.length
     ? speakers
         .map((s) =>
-          s.user.id
-            ? `<a href="/~${s.user.username || s.user.id}">${s.name}</a>`
+          s.user?.slug
+            ? `<a href="/~${s.user.slug}">${s.user.name || s.name}</a>`
             : s.name,
         )
         .join(', ')

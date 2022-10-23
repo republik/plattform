@@ -81,6 +81,7 @@ export const getDocument = gql`
           user {
             id
             username
+            slug
             publicUrl
             twitterHandle
             facebookId
