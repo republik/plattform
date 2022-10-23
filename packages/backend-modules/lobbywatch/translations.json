@@ -1316,6 +1316,21 @@
       "fr": "Créé le {formattedDate} à {formattedTime}"
     },
     {
+      "key": "account/newsletter/title",
+      "de": "Newsletter von Lobbywatch",
+      "fr": "Newsletter de Lobbywatch"
+    },
+    {
+      "key": "account/newsletterSubscriptions/GERMAN/label",
+      "de": "Auf Deutsch",
+      "fr": "Auf Deutsch"
+    },
+    {
+      "key": "account/newsletterSubscriptions/FRENCH/label",
+      "de": "En français",
+      "fr": "En français"
+    },
+    {
       "key": "account/newsletterSubscriptions/button/subscribe",
       "de": "Abonnieren",
       "fr": "S'abonner à"

@@ -132,12 +132,8 @@ enum Badge {
 }
 
 enum NewsletterName {
-  DAILY
-  WEEKLY
-  PROJECTR
-  ACCOMPLICE
-  CLIMATE
-  READALOUD
+  GERMAN
+  FRENCH
 }
 
 type Video {
