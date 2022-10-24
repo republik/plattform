@@ -166,6 +166,8 @@ const stringifyNode = async (node) => {
   }
 
   return toString(node)
+    .replace(/\u00AD/g, '') // 0x00AD = Soft Hyphen (SHY)
+    .trim()
 }
 
 module.exports = {
