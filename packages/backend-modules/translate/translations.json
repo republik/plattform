@@ -954,7 +954,7 @@
     },
     {
       "key": "api/search/aggs/audioSource",
-      "value": "vorgelesene Artikel"
+      "value": "hörbare Artikel"
     },
     {
       "key": "api/search/aggs/discussion",
@@ -1014,7 +1014,7 @@
     },
     {
       "key": "api/search/aggs/template/format",
-      "value": "Rubriken & Kolumnen"
+      "value": "Rubriken und Kolumnen"
     },
     {
       "key": "api/search/aggs/template/front",
@@ -1046,7 +1046,7 @@
     },
     {
       "key": "api/search/aggs/type",
-      "value": "Informationsarten"
+      "value": "Objekt"
     },
     {
       "key": "api/search/aggs/type/Comment",
@@ -1074,7 +1074,7 @@
     },
     {
       "key": "api/search/aggs/kind/meta",
-      "value": "wir über uns"
+      "value": "Wir über uns"
     },
     {
       "key": "api/search/aggs/kind/scribble",
@@ -1086,11 +1086,11 @@
     },
     {
       "key": "api/search/aggs/audioSourceKind/readAloud",
-      "value": "vorgelesen"
+      "value": "Vorgelesen"
     },
     {
       "key": "api/search/aggs/audioSourceKind/syntheticReadAloud",
-      "value": "automatisch vorgelesen"
+      "value": "synthetisch Vorgelesen"
     },
     {
       "key": "api/noname",
