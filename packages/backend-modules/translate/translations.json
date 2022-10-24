@@ -2169,60 +2169,36 @@
       "value": "Taschen"
     },
     {
-      "key": "api/invoices/option/Goodie/TABLEBOOK/1",
-      "value": "Buch «Lobbywatch bei Stromausfall»"
+      "key": "api/invoices/option/Goodie/WORKSHOP/1",
+      "value": "Lobbywatch-Workshop"
     },
     {
-      "key": "api/invoices/option/Goodie/TABLEBOOK/other",
-      "value": "Bücher «Lobbywatch bei Stromausfall»"
+      "key": "api/invoices/option/Goodie/WORKSHOP/other",
+      "value": "Lobbywatch-Workshops"
     },
     {
-      "key": "api/invoices/option/Goodie/MASK/1",
-      "value": "Lobbywatch-Maske"
-    },
-    {
-      "key": "api/invoices/option/Goodie/MASK/other",
-      "value": "Lobbywatch-Masken"
-    },
-    {
-      "key": "api/invoices/option/Goodie/FONDUE/1",
-      "value": "Lobbywatch-Fondue"
-    },
-    {
-      "key": "api/invoices/option/Goodie/FONDUE/other",
-      "value": "Lobbywatch-Fondues"
-    },
-    {
-      "key": "api/invoices/option/MembershipType/ABO/1",
+      "key": "api/invoices/option/MembershipType/YEAR/1",
       "value": "Jahresmitgliedschaft"
     },
     {
-      "key": "api/invoices/option/MembershipType/ABO/other",
+      "key": "api/invoices/option/MembershipType/YEAR/other",
       "value": "Jahresmitgliedschaften"
     },
     {
-      "key": "api/invoices/option/MembershipType/BENEFACTOR_ABO/1",
+      "key": "api/invoices/option/MembershipType/BENEFACTOR/1",
       "value": "Gönner-Mitgliedschaft"
     },
     {
-      "key": "api/invoices/option/MembershipType/BENEFACTOR_ABO/other",
+      "key": "api/invoices/option/MembershipType/BENEFACTOR/other",
       "value": "Gönner-Mitgliedschaften"
     },
     {
-      "key": "api/invoices/option/MembershipType/MONTHLY_ABO/1",
-      "value": "Monats-Abo"
+      "key": "api/invoices/option/MembershipType/LEGISLATION/1",
+      "value": "Legislatur-Mitgliedschaft"
     },
     {
-      "key": "api/invoices/option/MembershipType/MONTHLY_ABO/other",
-      "value": "Monats-Abos"
-    },
-    {
-      "key": "api/invoices/option/MembershipType/ABO_GIVE_MONTHS/1",
-      "value": "Monats-Abo als Geschenk für {interval}"
-    },
-    {
-      "key": "api/invoices/option/MembershipType/ABO_GIVE_MONTHS/other",
-      "value": "Monats-Abos als Geschenk für {interval}"
+      "key": "api/invoices/option/MembershipType/LEGISLATION/other",
+      "value": "Legislatur-Mitgliedschaften"
     },
     {
       "key": "api/invoices/option/interval/year/periods/1",
