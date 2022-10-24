@@ -55,7 +55,6 @@ export const GET_PROFILE = gql`
         type {
           name
         }
-        endDate
         overdue
         renew
       }
@@ -64,7 +63,6 @@ export const GET_PROFILE = gql`
       memberships {
         id
         periods {
-          beginDate
           endDate
         }
       }
@@ -152,8 +150,6 @@ const ProfileHeader = ({ userId, section }) => {
               const { memberships } = user
               const periods = memberships?.map((m) => m.periods).flat()
               const lastPeriod = getLastPeriod(periods)
-
-              console.log(lastPeriod.endDate)
 
               const publicProfile = user.hasPublicProfile
                 ? 'öffentlich'
