@@ -1,4 +1,4 @@
-{{name}}, bienvenue à bord!
+{{name}}, bienvenue!
 
 Nous sommes ravis de vous compter parmi nous! Nous nous réjouissons de vous
 accueillir. Voici les principales informations concernant votre participation.
