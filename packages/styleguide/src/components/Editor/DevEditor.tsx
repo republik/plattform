@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react'
-import { CustomDescendant, EditorConfig, NodeTemplate } from './custom-types'
+import { CustomDescendant, EditorConfig } from './custom-types'
 import { cleanupTree } from './Core/helpers/tree'
 import { CodeSpecimen } from '@catalog/core'
 import copyToClipboard from 'clipboard-copy'
@@ -10,9 +10,8 @@ import Editor from './index'
 const DevEditor: React.FC<{
   value: CustomDescendant[]
   setValue: (t: CustomDescendant[]) => void
-  structure?: NodeTemplate[]
   config: EditorConfig
-}> = ({ value, setValue, structure, config }) => {
+}> = ({ value, setValue, config }) => {
   const [copyLabel, setCopyLabel] = useState('Copy Tree')
   const displayValue = useMemo(
     () =>
@@ -30,12 +29,7 @@ const DevEditor: React.FC<{
 
   return (
     <div>
-      <Editor
-        value={value}
-        setValue={setValue}
-        structure={structure}
-        config={config}
-      />
+      <Editor value={value} setValue={setValue} config={config} />
       {config.debug && (
         <>
           <CodeSpecimen lang='javascript'>{displayValue}</CodeSpecimen>

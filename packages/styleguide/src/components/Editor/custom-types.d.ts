@@ -420,16 +420,24 @@ interface ToolbarConfig {
   showChartCount?: boolean
 }
 
+export type EditorContext = {
+  t?: Formatter
+  Link?: React.FC
+  nav?: JSX.Element
+  repoId?: string
+  commitId?: string
+  schema?: SchemaConfig
+}
+
 export type EditorConfig = {
   schema: SchemaConfig
   editorSchema?: SchemaConfig
+  structure?: NodeTemplate[]
   maxSigns?: number
   debug?: boolean
   toolbar?: ToolbarConfig
   readOnly?: boolean
-  t?: Formatter
-  Link?: React.FC
-  nav?: JSX.Element
+  context: EditorContext
 }
 
 export type KeyCombo = {

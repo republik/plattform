@@ -17,4 +17,5 @@ export { default as renderAsText } from './components/Editor/Render/text'
 
 export { getDatePath } from './templates/Article/utils'
 
-export { default as MemoForm, markers } from './components/Editor/Forms/Memo'
+export { default as MemoForm } from './components/Editor/Forms/Memo'
+export { Marker } from './components/Editor/Forms/Memo/Markers'

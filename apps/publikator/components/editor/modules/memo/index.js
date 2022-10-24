@@ -9,7 +9,7 @@ import {
   OverlayBody,
 } from '@project-r/styleguide'
 
-import { MemoForm, markers } from '@project-r/styleguide/editor'
+import { MemoForm, Marker } from '@project-r/styleguide/editor'
 
 import withT from '../../../../lib/withT'
 import { matchInline, createInlineButton, buttonStyles } from '../../utils'
@@ -52,7 +52,6 @@ const Memo = compose(
 
   const { commitId } = router.query
   const repoId = getRepoIdFromQuery(router.query)
-  const { Marker } = markers[marker] || markers.default
 
   return (
     <>
@@ -75,16 +74,16 @@ const Memo = compose(
               }
               MarkedSection={
                 <Editorial.P attributes={{ style: { marginBottom: 20 } }}>
-                  <Marker>{children}</Marker>
+                  <Memo markerKey={marker}>{children}</Memo>
                 </Editorial.P>
               }
             />
           </OverlayBody>
         </Overlay>
       )}
-      <Marker isSelected={isSelected} onDoubleClick={open}>
+      <Memo markerKey={marker} isSelected={isSelected} onDoubleClick={open}>
         {children}
-      </Marker>
+      </Memo>
     </>
   )
 })

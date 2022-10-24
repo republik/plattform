@@ -1,13 +1,11 @@
 import React from 'react'
 import { css } from 'glamor'
 
-import standard, * as _markers from './Markers'
+import { markerKeys, Picker } from './Markers'
 import MemoTree from './MemoTree'
 import IconButton from '../../../IconButton'
 import { RemoveIcon } from '../../../Icons'
 import { Interaction } from '../../../Typography'
-
-export const markers = _markers
 
 const styles = {
   tooling: css({
@@ -15,10 +13,6 @@ const styles = {
     alignItems: 'center',
     paddingBottom: 40,
   }),
-}
-
-const getMarker = (name) => {
-  return markers[name] || standard
 }
 
 const MemoForm = ({
@@ -32,14 +26,8 @@ const MemoForm = ({
   deleteMemo,
   MarkedSection,
 }) => {
-  const pickMarker = (name) => (e) => {
-    e?.preventDefault()
+  const pickMarker = (name) => () => {
     setMarker(name)
-  }
-
-  const remove = (e) => {
-    e?.preventDefault()
-    deleteMemo()
   }
 
   const onPublished = (memo) => {
@@ -53,24 +41,22 @@ const MemoForm = ({
     <>
       <div style={{ marginBottom: 20 }}>{MarkedSection}</div>
       <div {...styles.tooling}>
-        {Object.keys(markers)
-          .filter((name) => name !== 'default')
-          .map((name) => {
-            const { Picker } = getMarker(name)
-            return (
-              <Picker
-                key={`marker-${name}`}
-                isSelected={marker === name}
-                onClick={pickMarker(name)}
-              />
-            )
-          })}
+        {markerKeys.map((color) => {
+          return (
+            <Picker
+              key={`marker-${color}`}
+              marker={color}
+              isSelected={marker === color}
+              onClick={pickMarker(color)}
+            />
+          )
+        })}
         <div style={{ flexGrow: 1 }} />
         {!!deleteMemo && (
           <IconButton
             label={t('memo/modal/remove')}
             Icon={RemoveIcon}
-            onClick={remove}
+            onClick={deleteMemo}
           />
         )}
       </div>

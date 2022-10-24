@@ -9,12 +9,7 @@ import Footer from './Footer'
 import { FormContextProvider, FormOverlay } from './Forms'
 import Toolbar from './Toolbar'
 import { LeafComponent } from './Mark'
-import {
-  CustomDescendant,
-  CustomEditor,
-  EditorConfig,
-  NodeTemplate,
-} from '../custom-types'
+import { CustomDescendant, CustomEditor, EditorConfig } from '../custom-types'
 import { NAV_KEYS, navigateOnTab } from './helpers/tree'
 import { handleInsert, insertOnKey } from './helpers/structure'
 import { withInsert } from './decorators/insert'
@@ -33,7 +28,6 @@ import { ElementComponent } from './Element'
 export type SlateEditorProps = {
   value: CustomDescendant[]
   setValue: (t: CustomDescendant[]) => void
-  structure?: NodeTemplate[]
   editor?: CustomEditor
   config: EditorConfig
 }
@@ -41,7 +35,6 @@ export type SlateEditorProps = {
 const SlateEditor: React.FC<SlateEditorProps> = ({
   value,
   setValue,
-  structure,
   editor: mockEditor,
   config,
 }) => {
@@ -49,7 +42,7 @@ const SlateEditor: React.FC<SlateEditorProps> = ({
     () =>
       withInsert(config)(
         withDelete(
-          withNormalizations(structure)(
+          withNormalizations(config)(
             withElAttrsConfig(
               withCustomConfig(config)(
                 withReact(withHistory(mockEditor ?? createEditor())),
@@ -94,7 +87,7 @@ const SlateEditor: React.FC<SlateEditorProps> = ({
   )
 
   return (
-    <RenderContextProvider t={config.t} Link={config.Link} nav={config.nav}>
+    <RenderContextProvider {...config.context} schema={config.schema}>
       <FormContextProvider>
         <Slate
           editor={editor}

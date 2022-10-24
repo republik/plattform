@@ -104,6 +104,17 @@ export const cleanupElement: NormalizeFn<CustomElement> = (
   return cleanupNode(allowedProps)([node, path], editor)
 }
 
+export const unwrapWhenEmpty: NormalizeFn<CustomElement> = (
+  [node, path],
+  editor,
+) => {
+  if (Editor.string(editor, path) === '') {
+    Transforms.unwrapNodes(editor, { at: path })
+    return true
+  }
+  return false
+}
+
 export const deleteExcessChildren: (
   from: number,
 ) => NormalizeFn<CustomAncestor> =

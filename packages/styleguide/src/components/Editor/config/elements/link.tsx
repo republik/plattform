@@ -14,6 +14,7 @@ import AuthorSearch from '../../Forms/AuthorSearch'
 import { formStyles } from '../../Forms/layout'
 import { useRenderContext } from '../../Render/Context'
 import { AutoSlugLinkInfo } from '../../Forms/github'
+import { unwrapWhenEmpty } from '../../Core/helpers/tree'
 
 const Form: React.FC<ElementFormProps<LinkElement>> = ({
   element,
@@ -78,14 +79,6 @@ const Form: React.FC<ElementFormProps<LinkElement>> = ({
   )
 }
 
-const unlinkWhenEmpty: NormalizeFn<LinkElement> = ([node, path], editor) => {
-  if (Editor.string(editor, path) === '') {
-    Transforms.unwrapNodes(editor, { at: path })
-    return true
-  }
-  return false
-}
-
 const checkAutolink: NormalizeFn<LinkElement> = ([node, path], editor) => {
   const linkInText = getLinkInText(Editor.string(editor, path))
   // if there is no link in text, this is not an autolink
@@ -103,7 +96,7 @@ export const config: ElementConfigI = {
     stopFormIteration: true,
   },
   button: { icon: LinkIcon },
-  normalizations: [unlinkWhenEmpty, checkAutolink],
+  normalizations: [unwrapWhenEmpty, checkAutolink],
   structure: [{ type: ['text', 'memo'], repeat: true }],
   props: ['href', 'title'],
 }

@@ -49,7 +49,9 @@ const MarkerConfig = {
   },
 }
 
-export const Memo = ({
+export const markerKeys = Object.keys(MarkerConfig)
+
+export const Marker = ({
   marker = 'yellow',
   isSelected,
   children,
@@ -101,96 +103,3 @@ export const Picker = ({ marker = 'yellow', isSelected, onClick }) => {
     </div>
   )
 }
-
-const ColorPicker = ({ isSelected, onClick, color }) => {
-  return (
-    <div
-      {...styles.marker}
-      style={{
-        backgroundColor: color,
-        boxShadow: isSelected && `${color} 0px 0px 4px`,
-      }}
-      onClick={onClick}
-    />
-  )
-}
-
-export const yellow = {
-  Picker: ({ isSelected, onClick }) => (
-    <ColorPicker
-      isSelected={isSelected}
-      onClick={onClick}
-      color='rgb(255,255,0)'
-    />
-  ),
-}
-
-export const pink = {
-  Picker: ({ isSelected, onClick }) => (
-    <ColorPicker
-      isSelected={isSelected}
-      onClick={onClick}
-      color='rgb(255,100,255)'
-    />
-  ),
-}
-
-export const green = {
-  Picker: ({ isSelected, onClick }) => (
-    <ColorPicker
-      isSelected={isSelected}
-      onClick={onClick}
-      color='rgb(0,255,0)'
-    />
-  ),
-}
-
-export const blue = {
-  Picker: ({ isSelected, onClick }) => (
-    <ColorPicker
-      isSelected={isSelected}
-      onClick={onClick}
-      color='rgb(0,230,230)'
-    />
-  ),
-}
-
-export const rotstift = {
-  Picker: ({ isSelected, onClick }) => {
-    return (
-      <div
-        {...styles.marker}
-        style={{
-          position: 'relative',
-          borderRadius: 0,
-        }}
-        onClick={onClick}
-      >
-        <div
-          style={{
-            borderRadius: 4,
-            position: 'absolute',
-            backgroundColor: 'red',
-            bottom: 0,
-            left: 0,
-            right: 0,
-            height: 3,
-            boxShadow: isSelected && 'red 0px 0px 2px',
-          }}
-        />
-      </div>
-    )
-  },
-}
-
-export const drop = {
-  Picker: ({ isSelected, onClick }) => (
-    <ColorPicker
-      isSelected={isSelected}
-      onClick={onClick}
-      color='rgba(0,0,0,0.1)'
-    />
-  ),
-}
-
-export default yellow
