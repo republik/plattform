@@ -8,9 +8,11 @@ import {
   fontStyles,
   mediaQueries,
   plainLinkRule,
-  RawHtml,
+  Editorial,
 } from '@project-r/styleguide'
 import { useColorContext } from '@project-r/styleguide/src/components/Colors/ColorContext'
+import Link from 'next/link'
+import { intersperse } from '../../lib/utils/helpers'
 
 const styles = {
   audioInfo: css({
@@ -31,24 +33,29 @@ const AudioInfo = ({
 }) => {
   const [colorScheme] = useColorContext()
 
-  const speaker =
-    speakers
-      .map((s) =>
-        s.user?.slug ? `<a href="/~${s.user.slug}">${s.name}</a>` : s.name,
-      )
-      .join(', ') || t('article/actionbar/audio/info/speaker/default')
-
   return (
     <span
       {...styles.audioInfo}
       {...colorScheme.set('color', showAudioButtons ? 'text' : 'textSoft')}
     >
       {showAudioButtons ? (
-        <RawHtml
-          dangerouslySetInnerHTML={{
-            __html: t('article/actionbar/audio/info/speaker', { speaker }),
-          }}
-        />
+        <>
+          {t('article/actionbar/audio/info/speaker') + ' '}
+          {speakers?.length
+            ? intersperse(
+                speakers.map((s) =>
+                  s.user?.slug ? (
+                    <Link href={`/~${s.user.slug}`} passHref>
+                      <Editorial.A>{s?.user?.name || s.name}</Editorial.A>
+                    </Link>
+                  ) : (
+                    s.name
+                  ),
+                ),
+                (_, i) => <span key={i}>, </span>,
+              )
+            : t('article/actionbar/audio/info/speaker/default')}
+        </>
       ) : (
         <>
           <a

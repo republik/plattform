@@ -3270,7 +3270,7 @@
     },
     {
       "key": "article/actionbar/audio/info/speaker",
-      "value": "Vorgelesen von {speaker}"
+      "value": "Vorgelesen von"
     },
     {
       "key": "article/actionbar/audio/info/play-synth",
