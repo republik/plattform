@@ -533,7 +533,7 @@ const ActionBar = ({
   const audioItems = currentActionItems.filter(getGroup('audio'))
 
   return (
-    <>
+    <div {...(!hasAccess && styles.wrapper)}>
       <div
         {...(mode === 'feed' && styles.flexWrap)}
         {...((mode === 'seriesEpisode' || mode === 'feed') &&
@@ -564,7 +564,7 @@ const ActionBar = ({
             {...(!!centered && { ...styles.centered })}
             style={
               mode === 'articleTop'
-                ? { marginTop: 48, alignItems: 'flex-start' }
+                ? { alignItems: 'flex-start' }
                 : mode === 'seriesEpisode'
                 ? { marginRight: 24 }
                 : {}
@@ -621,11 +621,14 @@ const ActionBar = ({
           podcast={podcast}
         />
       )}
-    </>
+    </div>
   )
 }
 
 const styles = {
+  wrapper: css({
+    marginBottom: '16px',
+  }),
   feedContainer: css({
     display: 'flex',
     justifyContent: 'space-between',
