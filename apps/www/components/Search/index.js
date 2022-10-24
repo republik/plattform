@@ -23,17 +23,6 @@ import {
   findAggregation,
 } from './constants'
 
-const styles = {
-  container: css({
-    paddingRight: 15,
-    paddingLeft: 15,
-    [mediaQueries.mUp]: {
-      paddingRight: 0,
-      paddingLeft: 0,
-    },
-  }),
-}
-
 const hasResults = (aggregations, filter) =>
   !!findAggregation(aggregations, filter).count
 
@@ -91,7 +80,7 @@ export default compose(
     }, [dataAggregations, urlFilter])
 
     return (
-      <Center {...styles.container} style={{ padding: 15, marginTop: 0 }}>
+      <Center style={{ padding: 0 }}>
         <Form />
         {startState ? (
           <>

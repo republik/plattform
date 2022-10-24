@@ -263,6 +263,7 @@ const FeaturedSections = withT(({ t }) => {
 
 const styles = {
   container: css({
+    padding: 0,
     [mediaQueries.mUp]: {
       marginTop: '40px',
       marginBottom: '40px',
