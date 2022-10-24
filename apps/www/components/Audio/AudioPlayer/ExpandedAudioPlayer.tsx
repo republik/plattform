@@ -208,8 +208,10 @@ const ExpandedAudioPlayer = ({
         <div {...styles.topWrapper}>
           <div {...styles.topSection}>
             <CurrentlyPlaying
+              t={t}
               item={activeItem}
               handleOpen={handleOpenArticle}
+              handleDownload={handleDownload}
             />
           </div>
           <AudioControl
