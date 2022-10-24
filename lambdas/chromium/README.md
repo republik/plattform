@@ -4,15 +4,16 @@ API to puppeteer - chromium.
 
 [screenshot.js](screenshots.js) is a NodeJS [request](https://nodejs.org/api/http.html#http_event_request)-[response](https://nodejs.org/api/http.html#http_class_http_serverresponse)-handler to generate screenshots.
 
-[puppeteer]('https://github.com/GoogleChrome/puppeteer') tries to use locally available chromium (by [chrome-aws-lambda](https://github.com/alixaxel/chrome-aws-lambda)) otherwise tries to fall back to connect to `PUPPETEER_WS_ENDPOINT`
+[puppeteer]('https://github.com/GoogleChrome/puppeteer') tries to use locally available chromium (by [chrome-aws-lambda](https://github.com/alixaxel/chrome-aws-lambda))
 
 ## ENVs
 
 see [.env.example]
 
 ```
-now -e URL_ALLOWLIST=https://republik.ch,https://www.republik.ch,https://republik.love,https://www.republik.love,https://github.com
-
+vercel
+vercel env add URL_ALLOWLIST
+# https://republik.ch,https://www.republik.ch,https://republik.love,https://www.republik.love,https://github.com
 ```
 
 ## Endpoints
@@ -39,4 +40,4 @@ now -e URL_ALLOWLIST=https://republik.ch,https://www.republik.ch,https://republi
 
 ## Credits
 
-Inspired by: [now-examples puppeteer-screenshot](https://github.com/zeit/now-examples/tree/master/puppeteer-screenshot)
+Inspired by: [vercel/virtual-event-starter-kit](https://github.com/vercel/virtual-event-starter-kit/blob/main/lib/screenshot.ts)
