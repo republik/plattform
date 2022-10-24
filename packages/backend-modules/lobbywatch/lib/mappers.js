@@ -100,10 +100,10 @@ const mapParliamentariansFromConnections = (raw, t, origin) => {
       (org) => org.id === connection.connector_organisation_id,
     )
     if (!rawConnectorOrganisation) {
-      console.warn(
-        '[mappers]',
-        `Connection: missing connector organisation ${connection.connector_organisation_id} (${raw.id} ${raw.name} -> ${connection.parlamentarier_id} ${connection.parlamentarier_name})`,
-      )
+      // console.warn(
+      //   '[mappers]',
+      //   `Connection: missing connector organisation ${connection.connector_organisation_id} (${raw.id} ${raw.name} -> ${connection.parlamentarier_id} ${connection.parlamentarier_name})`,
+      // )
       return null
     }
     // filter out simple memberships of parlamentarian groups
@@ -124,10 +124,10 @@ const mapParliamentariansFromConnections = (raw, t, origin) => {
         (org) => org.id === connection.zwischen_organisation_id,
       )
     if (!rawIntermediateOrganisation && connection.zwischen_organisation_id) {
-      console.warn(
-        '[mappers]',
-        `Connection: missing intermediate organisation ${connection.zwischen_organisation_id} (${raw.id} ${raw.name} -> ${connection.parlamentarier_id} ${connection.parlamentarier_name})`,
-      )
+      // console.warn(
+      //   '[mappers]',
+      //   `Connection: missing intermediate organisation ${connection.zwischen_organisation_id} (${raw.id} ${raw.name} -> ${connection.parlamentarier_id} ${connection.parlamentarier_name})`,
+      // )
       return null
     }
     const intermediateOrganisation =

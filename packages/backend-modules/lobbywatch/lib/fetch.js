@@ -20,12 +20,12 @@ const checkStatus = (response) => {
 }
 
 module.exports = (url, options) => {
-  const start = Date.now()
+  // const start = Date.now()
   return fetch(url, options)
     .then((response) => {
-      const end = Date.now()
-      console.info('[fetch]', url)
-      console.info(`${response.status} ${end - start}ms`)
+      // const end = Date.now()
+      // console.info('[fetch]', url)
+      // console.info(`${response.status} ${end - start}ms`)
 
       return response
     })

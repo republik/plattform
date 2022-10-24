@@ -25,17 +25,17 @@ const loadTranslations = !process.env.LIVE_TRANSLATIONS
       return Promise.resolve(mapTranslations(locales, translationJson.data))
     }
   : (locales) => {
-      const start = Date.now()
+      // const start = Date.now()
       return gsheets
         .getWorksheetById('1FhjogYL2SBxaJG3RfR01A7lWtb3XTE2dH8EtYdmdWXg', 'od6')
         .then((res) => {
-          const end = Date.now()
-          console.info(
-            '[gsheets]',
-            '1FhjogYL2SBxaJG3RfR01A7lWtb3XTE2dH8EtYdmdWXg',
-            'od6',
-          )
-          console.info(`${end - start}ms`)
+          // const end = Date.now()
+          // console.info(
+          //   '[gsheets]',
+          //   '1FhjogYL2SBxaJG3RfR01A7lWtb3XTE2dH8EtYdmdWXg',
+          //   'od6',
+          // )
+          // console.info(`${end - start}ms`)
           return mapTranslations(locales, res.data)
         })
     }
