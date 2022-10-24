@@ -1,3 +1,5 @@
+const nodePath = require('path')
+
 const { returnImage, s3 } = require('../lib')
 const { AWS_BUCKET_ALLOWLIST } = process.env
 
@@ -38,6 +40,14 @@ module.exports = (server) => {
       const { status, statusText, url } = result
       console.error('s3 fetch failed', { status, statusText, url })
       return res.status(result.status).end()
+    }
+
+    if (req.query?.download) {
+      const filename = nodePath.basename(req.path)
+
+      if (filename) {
+        res.set('Content-Disposition', `attachment; filename="${filename}"`)
+      }
     }
 
     return returnImage({
