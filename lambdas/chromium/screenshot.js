@@ -1,9 +1,9 @@
 const puppeteer = require('puppeteer-core')
-const chromium = require('chrome-aws-lambda')
+const chrome = require('chrome-aws-lambda')
 const { parse } = require('url')
 const debug = require('debug')('screenshot')
 
-const { URL_ALLOWLIST, PUPPETEER_WS_ENDPOINT } = process.env
+const { URL_ALLOWLIST } = process.env
 
 const DEFAULT_WIDTH = 1200
 const DEFAULT_HEIGHT = 1
@@ -14,26 +14,6 @@ if (!URL_ALLOWLIST) {
   console.warn('missing env URL_ALLOWLIST, the /render endpoint will not work')
 }
 const allowlistedUrls = URL_ALLOWLIST && URL_ALLOWLIST.split(',')
-
-const getBrowser = async () => {
-  if (chromium.headless) {
-    debug('rendering with local headless chrome')
-    return puppeteer.launch({
-      args: chromium.args,
-      executablePath: await chromium.executablePath,
-      headless: chromium.headless,
-    })
-  } else {
-    if (!PUPPETEER_WS_ENDPOINT) {
-      console.warn('missing env PUPPETEER_WS_ENDPOINT, cannot render')
-      return
-    }
-    debug(`rendering with chromium @ PUPPETEER_WS_ENDPOINT`)
-    return puppeteer.connect({
-      browserWSEndpoint: PUPPETEER_WS_ENDPOINT,
-    })
-  }
-}
 
 const getPosInt = (number) => Math.ceil(Math.abs(number))
 
@@ -86,7 +66,22 @@ module.exports = async (req, res) => {
 
   let browser
   try {
-    browser = await getBrowser()
+    const options = process.env.AWS_REGION
+      ? {
+          args: chrome.args,
+          executablePath: await chrome.executablePath,
+          headless: chrome.headless,
+        }
+      : {
+          args: [],
+          executablePath:
+            process.platform === 'win32'
+              ? 'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe'
+              : process.platform === 'linux'
+              ? '/usr/bin/google-chrome'
+              : '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+        }
+    const browser = await puppeteer.launch(options)
 
     const page = await browser.newPage()
 
@@ -125,9 +120,12 @@ module.exports = async (req, res) => {
     res.setHeader('Content-Type', `image/${format}`)
     res.end(screenshot)
   } catch (error) {
+    console.error(error)
     res.statusCode = 500
     res.end(error.message || error)
   } finally {
-    await browser.close().catch((error) => console.warn(error))
+    if (browser) {
+      await browser.close().catch((error) => console.warn(error))
+    }
   }
 }
