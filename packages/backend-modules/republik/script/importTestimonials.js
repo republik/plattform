@@ -80,7 +80,7 @@ PgDb.connect()
           if (!user.isListed) {
             updateUser.isListed = true
           }
-          if (user.statement !== testimonial.statement) {
+          if (!user.statement) {
             updateUser.statement = testimonial.statement
           }
           if (!user.portraitUrl) {
@@ -108,36 +108,38 @@ PgDb.connect()
           }
           const description = testimonial.credential?.trim()
           if (description) {
-            await transaction.public.credentials.update(
-              {
-                userId: user.id,
-              },
-              {
-                isListed: false,
-                updatedAt: new Date(),
-              },
-            )
             const existingCredential =
               await transaction.public.credentials.findOne({
                 userId: user.id,
                 description,
               })
-            if (existingCredential) {
-              await transaction.public.credentials.updateAndGetOne(
+            if (!existingCredential?.isListed) {
+              await transaction.public.credentials.update(
                 {
-                  id: existingCredential.id,
+                  userId: user.id,
                 },
                 {
-                  isListed: true,
+                  isListed: false,
                   updatedAt: new Date(),
                 },
               )
-            } else {
-              await transaction.public.credentials.insertAndGet({
-                userId: user.id,
-                description,
-                isListed: true,
-              })
+              if (existingCredential) {
+                await transaction.public.credentials.updateAndGetOne(
+                  {
+                    id: existingCredential.id,
+                  },
+                  {
+                    isListed: true,
+                    updatedAt: new Date(),
+                  },
+                )
+              } else {
+                await transaction.public.credentials.insertAndGet({
+                  userId: user.id,
+                  description,
+                  isListed: true,
+                })
+              }
             }
           }
           await transaction.transactionCommit()
