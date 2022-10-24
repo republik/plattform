@@ -6,12 +6,8 @@ export const SUPPORTED_FILTERS = [
     value: 'Document',
   },
   {
-    key: 'hasAudio',
-    value: 'true',
-  },
-  {
-    key: 'hasVideo',
-    value: 'true',
+    key: 'audioSourceKind',
+    value: 'readAloud',
   },
   {
     key: 'type',
@@ -38,7 +34,7 @@ export const LATEST_SORT = {
   direction: 'DESC',
 }
 
-export const DEFAULT_AGGREGATION_KEYS = ['type', 'hasAudio', 'hasVideo']
+export const DEFAULT_AGGREGATION_KEYS = ['type', 'audioSourceKind']
 export const DEFAULT_FILTER = SUPPORTED_FILTERS[0]
 export const DEFAULT_SORT = {
   key: 'relevance',
