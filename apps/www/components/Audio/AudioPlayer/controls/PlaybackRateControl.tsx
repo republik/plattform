@@ -34,7 +34,7 @@ type PlaybackRateControl = {
 const PlaybackRateControl = ({
   playbackRate,
   setPlaybackRate,
-  availablePlaybackRates = [0.75, 1, 1.25, 1.5, 1.75, 2, 2.25, 2.5],
+  availablePlaybackRates = [0.75, 1, 1.1, 1.25, 1.5, 1.75, 2, 2.25, 2.5],
 }: PlaybackRateControl) => {
   const currentIndex = availablePlaybackRates.indexOf(playbackRate)
   const [colorScheme] = useColorContext()
