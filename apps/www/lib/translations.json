@@ -3354,7 +3354,7 @@
     },
     {
       "key": "article/progressprompt/description/feature",
-      "value": "Springen Sie an die Stelle zurück, an der Sie einen Text oder ein Hörstück unterbrochen haben. Wenn Sie die Funktion aktivieren, wird ihr Leseverhalten in der Republik aufgezeichnet. {link}"
+      "value": "Springen Sie an die Stelle zurück, an der Sie einen Text oder ein Hörstück unterbrochen haben. Wenn Sie die Funktion aktivieren, wird Ihr Leseverhalten bei der Republik aufgezeichnet. {link}"
     },
     {
       "key": "article/progressprompt/description/feature/link",
@@ -5210,11 +5210,15 @@
     },
     {
       "key": "AudioPlayer/Queue/EmptyQueue/p2",
-      "value": "Mit einem Klick auf das Widergabelisten-Symbol, können Sie Beiträge in ihre Widergabeliste hinzufügen."
+      "value": "Über das Widergabelisten-Symbol {icon}, können Sie Beiträge in ihre Widergabeliste hinzufügen."
     },
     {
-      "key": "AudioPlayer/Queue/EmptyQueue/p3",
-      "value": "Sie finden das Symbol auf Beitragsseiten, im Feed oder hier im Audio-Player bei «Neuste Beiträge»"
+      "key": "AudioPlayer/Queue/EmptyQueue/progressInfo",
+      "value": "Damit die Abspielposition von gehörten Beiträgen gespeichert wird, müssen Sie das"
+    },
+    {
+      "key": "AudioPlayer/Queue/EmptyQueue/progressLink",
+      "value": "Aufzeichnen der Hörposition aktivieren"
     },
     {
       "key": "AudioPlayer/Queue/NoAcces",
