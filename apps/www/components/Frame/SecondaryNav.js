@@ -6,6 +6,7 @@ import {
   fontStyles,
   useColorContext,
   SearchMenuIcon,
+  BoldSearchIcon,
 } from '@project-r/styleguide'
 
 import withT from '../../lib/withT'
@@ -87,7 +88,11 @@ export const SecondaryNav = ({
             noPlaceholder
             minifeed
           >
-            <SearchMenuIcon {...colorScheme.set('fill', 'text')} size={18} />
+            {'/suche' === active ? (
+              <BoldSearchIcon {...colorScheme.set('fill', 'text')} size={18} />
+            ) : (
+              <SearchMenuIcon {...colorScheme.set('fill', 'text')} size={18} />
+            )}
           </NavLink>
         </div>
       ) : (

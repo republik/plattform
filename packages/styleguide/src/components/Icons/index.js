@@ -135,6 +135,7 @@ export { ReadIcon } from './CustomIcons/MdCheckCircleOutlined'
 export { ChartIcon } from './CustomIcons/MdInsertChartOutlined'
 export { SearchMenuIcon } from './CustomIcons/SearchMenuIcon'
 export { SpotifyIcon } from './CustomIcons/SpotifyIcon'
+export { BoldSearchIcon } from './CustomIcons/BoldSearchIcon'
 
 // Publikator
 // export { SuperscriptIcon } from './CustomIcons/SuperscriptIcon'
