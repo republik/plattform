@@ -1141,6 +1141,16 @@
       "fr": "Dernière modification le {date}"
     },
     {
+      "key": "cf/social/title",
+      "de": "Lobbywatch braucht Sie!",
+      "fr": "Lobbywatch a besoin de vous!"
+    },
+    {
+      "key": "cf/social/description",
+      "de": "In einem Jahr sind Wahlen – werden Sie jetzt Mitglied.",
+      "fr": "Les élections auront lieu dans un an – devenez membre maintenant."
+    },
+    {
       "key": "cf/cta/now",
       "de": "Jetzt mitmachen!",
       "fr": "Adhérer maintenant!"
