@@ -102,6 +102,7 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
     audioQueueIsLoading,
     addAudioQueueItem,
     removeAudioQueueItem,
+    checkIfActiveItem,
   } = useAudioQueue()
   const { getMediaProgress, saveMediaProgress } = useMediaProgress()
 
@@ -314,10 +315,16 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
       setShouldAutoPlay(false)
       if (inNativeApp) {
         notifyApp(AudioEvent.STOP)
+        setTimeout(() => {
+          setIsPlaying(false)
+          setCurrentTime(0)
+          setDuration(0)
+        }, 100)
       } else if (audioEventHandlers.current) {
         await audioEventHandlers.current.handleStop()
       }
       setIsVisible(false)
+      setInitialized(false)
     } catch (error) {
       handleError(error)
     }
@@ -434,7 +441,7 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
     }
   }
 
-  const playQueue = useCallback(async () => {
+  const togglePlayer = useCallback(async () => {
     try {
       if (!audioQueue || audioQueue.length === 0) {
         // In case the audioQueue is not yet available (slow audio-queue sync)
@@ -444,7 +451,13 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
       }
 
       const nextUp = audioQueue[0]
+      if (checkIfActiveItem(nextUp.document.id)) {
+        setIsVisible(true)
+      }
       await setupNextAudioItem(nextUp, true)
+      if (inNativeApp) {
+        notifyApp(AudioEvent.PLAY)
+      }
     } catch (error) {
       handleError(error)
     }
@@ -538,7 +551,7 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
     setInitialized(true)
   }, [audioQueue, initialized, audioQueueIsLoading, pathname, setUpAppPlayer])
 
-  useAudioContextEvent<void>('togglePlayer', playQueue)
+  useAudioContextEvent<void>('togglePlayer', togglePlayer)
 
   useNativeAppEvent(AudioEvent.SYNC, syncWithNativeApp, [initialized])
   useNativeAppEvent<string>(
