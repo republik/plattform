@@ -1751,8 +1751,8 @@
     },
     {
       "key": "crowdfunding/status/goal/people",
-      "de": "von {count} Mitgliedern",
-      "fr": "par {count} membres"
+      "de": "von {count} Unterstützer:innen",
+      "fr": "par {count} partisans"
     },
     {
       "key": "crowdfunding/status/time/days/1",
