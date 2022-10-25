@@ -10,6 +10,7 @@ import { AudioQueueItem } from '../../../../graphql/AudioQueueHooks'
 import AudioListItem from '../shared/AudioListItem'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
+import { useInNativeApp } from '../../../../../../lib/withInNativeApp'
 
 const styles = {
   root: css({
@@ -66,6 +67,7 @@ const QueueItem = ({
     transition,
     isDragging,
   } = useSortable({ id: item.id })
+  const { inNativeApp } = useInNativeApp()
 
   return (
     <li
@@ -106,6 +108,7 @@ const QueueItem = ({
             Icon: DownloadIcon,
             label: t('AudioPlayer/Queue/Download'),
             onClick: () => onDownload(item.document),
+            hidden: inNativeApp,
           },
           {
             Icon: LinkIcon,

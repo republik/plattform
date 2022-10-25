@@ -10,6 +10,7 @@ import AudioPlayerTitle from './AudioPlayerTitle'
 import { AudioQueueItem } from '../../graphql/AudioQueueHooks'
 import AudioCover from './AudioCover'
 import AudioCalloutMenu from './tabs/shared/AudioCalloutMenu'
+import { useInNativeApp } from '../../../../lib/withInNativeApp'
 
 const styles = {
   root: css({
@@ -51,6 +52,7 @@ const CurrentlyPlaying = ({
   handleDownload,
 }: CurrentlyPlayingProps) => {
   const [colorScheme] = useColorContext()
+  const { inNativeApp } = useInNativeApp()
 
   const {
     document: {
@@ -115,6 +117,7 @@ const CurrentlyPlaying = ({
               Icon: DownloadIcon,
               label: t('AudioPlayer/Queue/Download'),
               onClick: () => handleDownload(item.document),
+              hidden: inNativeApp,
             },
           ]}
         />

@@ -22,10 +22,14 @@ export type AudioListItemAction = {
   Icon: ComponentType
   label: string
   onClick: () => void | Promise<void>
+  hidden?: boolean
 }
 
 const AudioCalloutMenu = ({ actions }: { actions: AudioListItemAction[] }) => {
   const [colorScheme] = useColorContext()
+  const activeActions = actions.filter(({ hidden }) => !hidden)
+
+  if (!activeActions?.length) return null
 
   return (
     <CalloutMenu
@@ -38,7 +42,7 @@ const AudioCalloutMenu = ({ actions }: { actions: AudioListItemAction[] }) => {
       }}
     >
       <div {...styles.menuWrapper}>
-        {actions.map(({ Icon, label, onClick }) => (
+        {activeActions.map(({ Icon, label, onClick }) => (
           <IconButton
             key={label}
             label={label}
