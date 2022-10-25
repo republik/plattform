@@ -1,4 +1,4 @@
-import { useState, Fragment, useContext } from 'react'
+import { useState, Fragment } from 'react'
 import { css } from 'glamor'
 import compose from 'lodash/flowRight'
 import {
@@ -564,7 +564,7 @@ const ActionBar = ({
             {...(!!centered && { ...styles.centered })}
             style={
               mode === 'articleTop'
-                ? { alignItems: 'flex-start' }
+                ? { alignItems: 'center' }
                 : mode === 'seriesEpisode'
                 ? { marginRight: 24 }
                 : {}
