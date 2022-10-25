@@ -638,6 +638,7 @@ const styles = {
   }),
   flexWrap: css({
     flexWrap: 'wrap',
+    rowGap: 16,
   }),
   secondary: css({
     display: 'flex',
