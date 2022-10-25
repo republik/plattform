@@ -1,14 +1,12 @@
 import { useEffect } from 'react'
-import { css } from 'glamor'
 import compose from 'lodash/flowRight'
 
 import Form from './Form'
 import Filters from './Filters'
 import Sort from './Sort'
 import Results from './Results'
-import CheatSheet from './CheatSheet'
 
-import { Center, mediaQueries } from '@project-r/styleguide'
+import { Center } from '@project-r/styleguide'
 
 import withSearchRouter from './withSearchRouter'
 import { withResults, withAggregations } from './enhancers'
@@ -80,13 +78,10 @@ export default compose(
     }, [dataAggregations, urlFilter])
 
     return (
-      <Center style={{ padding: 0 }}>
+      <Center>
         <Form />
         {startState ? (
-          <>
-            <Filters startState />
-            <CheatSheet />
-          </>
+          <Filters startState />
         ) : (
           <>
             <Filters />

@@ -154,7 +154,7 @@ const Sections = compose(graphql(getSectionNav))(
                   if (!formats.nodes.length) {
                     // Serien
                     return (
-                      <div {...styles.container} key={id}>
+                      <div {...styles.sectionContainer} key={id}>
                         <div {...styles.sectionLink}>
                           <NavLink
                             dark={dark}
@@ -227,48 +227,39 @@ const Sections = compose(graphql(getSectionNav))(
 const FeaturedSections = withT(({ t }) => {
   const [colorScheme] = useColorContext()
   return (
-    <>
-      <Center {...styles.container} id='nav'>
-        <div {...styles.navSection}>
-          <Sections vertical />
-          <NavLink href='/rubriken'>{t('nav/sections')}</NavLink>
+    <Center>
+      <div {...styles.navSection}>
+        <Sections vertical />
+        <NavLink href='/rubriken'>{t('nav/sections')}</NavLink>
+      </div>
+      <hr
+        {...styles.hr}
+        {...colorScheme.set('color', 'divider')}
+        {...colorScheme.set('backgroundColor', 'divider')}
+      />
+      <div {...styles.navSection}>
+        <div
+          {...styles.navLinks}
+          style={{
+            marginBottom: 24,
+          }}
+        >
+          <NavLink inline large href='/cockpit'>
+            {t('nav/cockpit')}
+          </NavLink>
+          <NavLink large href='/veranstaltungen'>
+            {t('nav/events')}
+          </NavLink>
+          <NavLink large href='/impressum'>
+            {t('nav/team')}
+          </NavLink>
         </div>
-        <hr
-          {...styles.hr}
-          {...colorScheme.set('color', 'divider')}
-          {...colorScheme.set('backgroundColor', 'divider')}
-        />
-        <div {...styles.navSection}>
-          <div
-            {...styles.navLinks}
-            style={{
-              marginBottom: 24,
-            }}
-          >
-            <NavLink inline large href='/cockpit'>
-              {t('nav/cockpit')}
-            </NavLink>
-            <NavLink large href='/veranstaltungen'>
-              {t('nav/events')}
-            </NavLink>
-            <NavLink large href='/impressum'>
-              {t('nav/team')}
-            </NavLink>
-          </div>
-        </div>
-      </Center>
-    </>
+      </div>
+    </Center>
   )
 })
 
 const styles = {
-  container: css({
-    padding: 0,
-    [mediaQueries.mUp]: {
-      marginTop: '40px',
-      marginBottom: '40px',
-    },
-  }),
   hr: css({
     margin: 0,
     display: 'block',
