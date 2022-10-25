@@ -14,7 +14,6 @@ import { useTranslation } from '../../../../lib/withT'
 import { AudioPlayerProps } from '../shared'
 import PlaybackRateControl from './PlaybackRateControl'
 import Scrubber from './Scrubber'
-import { NEXT_PUBLIC_FEAT_HOERT_HOERT } from '../../constants'
 
 const styles = {
   root: css({
@@ -132,16 +131,14 @@ const AudioControl = ({
             Icon={ForwardIcon}
             style={{ marginRight: 0 }}
           />
-          {NEXT_PUBLIC_FEAT_HOERT_HOERT && (
-            <IconButton
-              size={32}
-              fillColorName={'text'}
-              onClick={handleSkipToNext}
-              Icon={SkipNextIcon}
-              style={{ marginRight: 0 }}
-              disabled={isLastItem}
-            />
-          )}
+          <IconButton
+            size={32}
+            fillColorName={'text'}
+            onClick={handleSkipToNext}
+            Icon={SkipNextIcon}
+            style={{ marginRight: 0 }}
+            disabled={isLastItem}
+          />
         </div>
         <PlaybackRateControl
           playbackRate={playbackRate}

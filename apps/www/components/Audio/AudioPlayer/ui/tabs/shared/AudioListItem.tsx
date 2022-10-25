@@ -1,17 +1,12 @@
-import {
-  fontStyles,
-  useColorContext,
-  CalloutMenu,
-  MoreIcon,
-  IconButton,
-} from '@project-r/styleguide'
+import { fontStyles, useColorContext } from '@project-r/styleguide'
 import { css } from 'glamor'
 import { dateFormatter, formatMinutes } from '../../../shared'
 import AudioPlayerTitle from '../../AudioPlayerTitle'
 import AudioCover from '../../AudioCover'
 import { AudioQueueItem } from '../../../../graphql/AudioQueueHooks'
-import { ComponentType, ReactNode } from 'react'
+import { ReactNode } from 'react'
 import useMediaProgressQuery from '../../../../hooks/useMediaProgressQuery'
+import AudioCalloutMenu, { AudioListItemAction } from './AudioCalloutMenu'
 
 const styles = {
   root: css({
@@ -74,12 +69,6 @@ const styles = {
       marginBottom: '15px',
     },
   }),
-}
-
-export type AudioListItemAction = {
-  Icon: ComponentType
-  label: string
-  onClick: () => void | Promise<void>
 }
 
 type AudioListItemProps = {
@@ -172,34 +161,14 @@ const AudioListItem = ({
                     maxWidth: '100%',
                     height: 2,
                   }}
-                ></div>
+                />
               </div>
             )}
           </div>
         </div>
       </button>
       <div {...styles.actions}>
-        <CalloutMenu
-          contentPaddingMobile={'30px'}
-          Element={MoreIcon}
-          align='right'
-          elementProps={{
-            ...colorScheme.set('fill', 'textSoft'),
-            size: 20,
-          }}
-        >
-          <div {...styles.menuWrapper}>
-            {actions.map(({ Icon, label, onClick }) => (
-              <IconButton
-                key={label}
-                label={label}
-                labelShort={label}
-                Icon={Icon}
-                onClick={onClick}
-              />
-            ))}
-          </div>
-        </CalloutMenu>
+        <AudioCalloutMenu actions={actions} />
       </div>
     </div>
   )

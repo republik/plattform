@@ -27,31 +27,38 @@ module.exports = {
       : meta.credits?.children
   },
   contributors: async (meta, _, context) => {
+    const metaContributors = await Promise.map(
+      meta.contributors || [],
+      (contributor) => ({
+        ...contributor,
+        user: () => context.loaders.User.byId.load(contributor.userId),
+      }),
+    )
     const creditString = await stringifyNode(meta.credits?.type, meta.credits)
     if (!creditString) {
-      return []
+      return metaContributors
     }
 
-    let contributors
+    let creditContributors
     try {
-      contributors = new Analyzer().getAnalysis(creditString).contributors
+      creditContributors = new Analyzer().getAnalysis(creditString).contributors
     } catch (e) {
-      console.error('[Meta] contributors lexing failed', creditString, e)
-      return []
+      console.error('[Meta] creditContributors lexing failed', creditString, e)
+      return metaContributors
     }
 
-    let contributorsUserLinks = await getContributorUserLinks(
+    let creditContributorsUserLinks = await getContributorUserLinks(
       meta.credits?.type,
       meta,
       context,
     )
-    return contributors.map((contributor) => {
-      const userLink = contributorsUserLinks.find(
+    creditContributors = creditContributors.map((contributor) => {
+      const userLink = creditContributorsUserLinks.find(
         (c) => c.name === contributor.name,
       )
       if (userLink) {
         // only use once
-        contributorsUserLinks = contributorsUserLinks.filter(
+        creditContributorsUserLinks = creditContributorsUserLinks.filter(
           (c) => c !== userLink,
         )
         return {
@@ -61,6 +68,7 @@ module.exports = {
       }
       return contributor
     })
+    return [...creditContributors, ...metaContributors]
   },
 
   audioCover: getAudioCover,

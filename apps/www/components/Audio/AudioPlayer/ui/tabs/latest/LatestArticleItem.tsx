@@ -28,7 +28,6 @@ const LatestArticleItem = ({
   const { addAudioQueueItem, checkIfInQueue, checkIfActiveItem } =
     useAudioQueue()
   const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
 
   const handlePlay = async (article: AudioPlayerItem) => {
     try {
@@ -40,10 +39,13 @@ const LatestArticleItem = ({
     }
   }
 
-  const handleAddToQueue = async (article: AudioPlayerItem) => {
+  const handleAddToQueue = async (
+    article: AudioPlayerItem,
+    position?: number,
+  ) => {
     try {
       setIsLoading(true)
-      await addAudioQueueItem(article)
+      await addAudioQueueItem(article, position)
       setIsLoading(false)
     } catch (error) {
       // TODO: handle error
@@ -53,7 +55,7 @@ const LatestArticleItem = ({
   return (
     <AudioListItem
       item={article}
-      isActive={checkIfActiveItem(article.id)}
+      isActive={!!checkIfActiveItem(article.id)}
       beforeActionItem={
         isLoading ? (
           <div style={{ position: 'relative', width: 24, height: 24 }}>
@@ -70,6 +72,11 @@ const LatestArticleItem = ({
         )
       }
       actions={[
+        {
+          Icon: PlaylistAddIcon,
+          label: t('AudioPlayer/Queue/AddToQueueAsNext'),
+          onClick: () => handleAddToQueue(article, 2),
+        },
         {
           Icon: DownloadIcon,
           label: t('AudioPlayer/Queue/Download'),

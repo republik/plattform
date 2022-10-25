@@ -32,6 +32,9 @@ import Link from 'next/link'
 import { useGetFrontQuery } from './graphql/getFrontQuery.graphql'
 import { useRouter } from 'next/router'
 import { useMe } from '../../lib/context/MeContext'
+import { useAudioContext } from '../Audio/AudioProvider'
+import useAudioQueue from '../Audio/hooks/useAudioQueue'
+import { trackEvent } from '../../lib/matomo'
 
 const styles = {
   prepublicationNotice: css({
@@ -46,13 +49,27 @@ const styles = {
   }),
 }
 
-export const RenderFront = ({ isEditor, front, nodes }) => {
+export const RenderFront = ({ front, nodes }) => {
   const { t } = useTranslation()
+  const { isEditor, hasAccess } = useMe()
+  const { addAudioQueueItem, isAudioQueueAvailable } = useAudioQueue()
+  const { toggleAudioPlayer } = useAudioContext()
+
+  const showPlayButton = hasAccess && isAudioQueueAvailable
+
   const schema = useMemo(
     () =>
       createFrontSchema({
-        // TODO: fix this link
         Link: HrefLink,
+        playAudio:
+          showPlayButton &&
+          ((id) => {
+            addAudioQueueItem({ id }).then(({ data: { audioQueueItems } }) => {
+              const item = audioQueueItems.find((i) => i.document.id === id)
+              toggleAudioPlayer(item.document)
+              trackEvent(['Front', 'playAudio', id])
+            })
+          }),
         CommentLink,
         DiscussionLink,
         ...withData,
@@ -92,7 +109,6 @@ const Front = ({
 }) => {
   const { t } = useTranslation()
   const router = useRouter()
-  const { isEditor } = useMe()
 
   const now = new Date()
   const dailyUpdateTime = new Date(
@@ -189,12 +205,7 @@ const Front = ({
               <Head>
                 <meta name='robots' content='noindex' />
               </Head>
-              <RenderFront
-                t={t}
-                isEditor={isEditor}
-                front={front}
-                nodes={front.children.nodes}
-              />
+              <RenderFront front={front} nodes={front.children.nodes} />
             </Fragment>
           )
         }}
@@ -287,18 +298,11 @@ const Front = ({
                   </Interaction.P>
                 </div>
               )}
-              <RenderFront
-                t={t}
-                isEditor={isEditor}
-                front={front}
-                nodes={nodes.slice(0, sliceIndex)}
-              />
+              <RenderFront front={front} nodes={nodes.slice(0, sliceIndex)} />
               {end}
               {sliceIndex && (
                 <>
                   <RenderFront
-                    t={t}
-                    isEditor={isEditor}
                     front={front}
                     nodes={nodes.slice(endIndex + 1)}
                   />

@@ -27,10 +27,15 @@ const NoAccessQueue = ({
       <TrialForm
         minimal
         showTitleBlock={false}
+        // series nav styling
         isInSeriesNav={true}
         payload={{
           variation: 'trynoteAudioPlayer/210613',
           position: 'AudioPlayer',
+        }}
+        // prevent navigation after success
+        onSuccess={() => {
+          return false
         }}
       />
     </>

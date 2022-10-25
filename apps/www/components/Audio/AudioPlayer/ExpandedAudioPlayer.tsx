@@ -19,7 +19,6 @@ import AudioControl, { AudioControlProps } from './controls/AudioControl'
 import LatestArticles from './ui/tabs/latest/LatestArticles'
 import { AudioQueueItem } from '../graphql/AudioQueueHooks'
 import AudioError from './ui/AudioError'
-import { NEXT_PUBLIC_FEAT_HOERT_HOERT } from '../constants'
 import { useUserAgent } from '../../../lib/context/UserAgentContext'
 import downloadAudioSourceFile from '../helpers/DownloadAudioSource'
 
@@ -28,9 +27,7 @@ const styles = {
     position: 'relative',
     display: 'flex',
     flexDirection: 'column',
-    justifyContent: NEXT_PUBLIC_FEAT_HOERT_HOERT
-      ? 'space-between'
-      : 'flex-start',
+    justifyContent: 'space-between',
     gap: 16,
     width: '100%',
     height: '100vh',
@@ -202,8 +199,10 @@ const ExpandedAudioPlayer = ({
         <div {...styles.topWrapper}>
           <div {...styles.topSection}>
             <CurrentlyPlaying
+              t={t}
               item={activeItem}
               handleOpen={handleOpenArticle}
+              handleDownload={handleDownload}
             />
           </div>
           <AudioControl
@@ -224,51 +223,49 @@ const ExpandedAudioPlayer = ({
           {hasError && <AudioError />}
         </div>
       )}
-      {NEXT_PUBLIC_FEAT_HOERT_HOERT && (
-        <div {...styles.queueWrapper}>
-          <Scroller>
-            <TabButton
-              text={t('AudioPlayer/Queue', {
-                count: queuedItems.length ? `(${queuedItems.length})` : '',
-              })}
-              isActive={activeTab === 'QUEUE'}
-              onClick={() => setActiveTab('QUEUE')}
+      <div {...styles.queueWrapper}>
+        <Scroller>
+          <TabButton
+            text={t('AudioPlayer/Queue', {
+              count: queuedItems.length ? `(${queuedItems.length})` : '',
+            })}
+            isActive={activeTab === 'QUEUE'}
+            onClick={() => setActiveTab('QUEUE')}
+          />
+          <TabButton
+            text={t('AudioPlayer/Latest')}
+            isActive={activeTab === 'LATEST'}
+            onClick={() => setActiveTab('LATEST')}
+          />
+          <span
+            {...styles.tabBorder}
+            {...colorScheme.set('borderColor', 'divider')}
+          />
+        </Scroller>
+        <motion.div
+          ref={bodyLockTargetRef}
+          layoutScroll
+          {...styles.queue}
+          {...queueScrollbarStyle}
+        >
+          {activeTab === 'QUEUE' && (
+            <Queue
+              t={t}
+              activeItem={activeItem}
+              items={queuedItems}
+              handleOpenArticle={handleOpenArticle}
+              handleDownload={handleDownload}
+              setForceScrollLock={setForceScrollLock}
             />
-            <TabButton
-              text={t('AudioPlayer/Latest')}
-              isActive={activeTab === 'LATEST'}
-              onClick={() => setActiveTab('LATEST')}
+          )}
+          {activeTab === 'LATEST' && (
+            <LatestArticles
+              handleOpenArticle={handleOpenArticle}
+              handleDownload={handleDownload}
             />
-            <span
-              {...styles.tabBorder}
-              {...colorScheme.set('borderColor', 'divider')}
-            />
-          </Scroller>
-          <motion.div
-            ref={bodyLockTargetRef}
-            layoutScroll
-            {...styles.queue}
-            {...queueScrollbarStyle}
-          >
-            {activeTab === 'QUEUE' && (
-              <Queue
-                t={t}
-                activeItem={activeItem}
-                items={queuedItems}
-                handleOpenArticle={handleOpenArticle}
-                handleDownload={handleDownload}
-                setForceScrollLock={setForceScrollLock}
-              />
-            )}
-            {activeTab === 'LATEST' && (
-              <LatestArticles
-                handleOpenArticle={handleOpenArticle}
-                handleDownload={handleDownload}
-              />
-            )}
-          </motion.div>
-        </div>
-      )}
+          )}
+        </motion.div>
+      </div>
     </div>
   )
 }

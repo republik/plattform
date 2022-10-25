@@ -61,8 +61,8 @@ const useAudioQueue = (): {
     reorderedQueueItems: AudioQueueItem[],
   ) => Promise<FetchResult<ReorderAudioQueueMutationData>>
   isAudioQueueAvailable: boolean
-  checkIfActiveItem: (documentId: string) => boolean
-  checkIfInQueue: (audioItemId: string) => boolean
+  checkIfActiveItem: (documentId: string) => AudioQueueItem
+  checkIfInQueue: (audioItemId: string) => AudioQueueItem
 } => {
   const { inNativeApp, inNativeAppVersion } = useInNativeApp()
   const { meLoading, hasAccess } = useMe()
@@ -252,21 +252,20 @@ const useAudioQueue = (): {
     })
   }
 
-  function checkIfActiveItem(documentId: string): boolean {
-    if (!hasAccess) {
-      return localAudioItem?.document?.id === documentId
+  function checkIfActiveItem(documentId: string): AudioQueueItem {
+    if (!hasAccess && localAudioItem?.document?.id === documentId) {
+      return localAudioItem
     }
-    return (
-      meWithAudioQueue?.me?.audioQueue?.[0]?.document?.id === documentId ||
-      false
-    )
+    if (meWithAudioQueue?.me?.audioQueue?.[0]?.document?.id === documentId) {
+      return meWithAudioQueue?.me?.audioQueue?.[0]
+    }
   }
 
-  function checkIfInQueue(documentId: string): boolean {
-    if (!hasAccess) {
-      return localAudioItem?.document?.id === documentId
+  function checkIfInQueue(documentId: string): AudioQueueItem {
+    if (!hasAccess && localAudioItem?.document?.id === documentId) {
+      return localAudioItem
     }
-    return meWithAudioQueue?.me?.audioQueue.some(
+    return meWithAudioQueue?.me?.audioQueue.find(
       (audioQueueItem) => audioQueueItem.document.id === documentId,
     )
   }

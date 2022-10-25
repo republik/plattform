@@ -19,7 +19,6 @@ import {
   colors,
   plainLinkRule,
   Interaction,
-  mediaQueries,
   TitleBlock,
   Editorial,
   Flyer,
@@ -61,15 +60,14 @@ import FontSizeSync from '../FontSize/Sync'
 import PageLoader from '../Loader'
 import Frame from '../Frame'
 import ActionBar from '../ActionBar'
-import ReadAloudInline from './ReadAloudInline'
 import { BrowserOnlyActionBar } from './BrowserOnly'
 import { AudioContext } from '../Audio/AudioProvider'
 import FormatFeed from '../Feed/Format'
 import StatusError from '../StatusError'
 import NewsletterSignUp from '../Auth/NewsletterSignUp'
 import ArticleGallery from '../Gallery/ArticleGallery'
-import SectionNav from '../Sections/SectionNav'
-import SectionFeed from '../Sections/SectionFeed'
+import SectionNav from '../Sections/SinglePageNav'
+import SectionFeed from '../Sections/SinglePageFeed'
 import HrefLink from '../Link/Href'
 import { withMarkAsReadMutation } from '../Notifications/enhancers'
 import { cleanAsPath } from '../../lib/utils/link'
@@ -733,13 +731,6 @@ const ArticlePage = ({
                                   {actionBar}
                                 </div>
                               )}
-                              {(isSyntheticReadAloud || isReadAloud) && (
-                                <ReadAloudInline
-                                  documentId={documentId}
-                                  meta={meta}
-                                  t={t}
-                                />
-                              )}
                               {isSection && !hideSectionNav && (
                                 <Breakout size='breakout'>
                                   <SectionNav
@@ -855,10 +846,6 @@ const styles = {
   }),
   actionBarContainer: css({
     marginTop: 16,
-    marginBottom: 24,
-    [mediaQueries.mUp]: {
-      marginBottom: 36,
-    },
   }),
   flexCenter: css({
     display: 'flex',

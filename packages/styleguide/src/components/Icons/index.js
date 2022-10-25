@@ -28,7 +28,7 @@ export {
   MdChevronRight as ChevronRightIcon,
   MdFullscreen as FullscreenIcon,
   MdFullscreenExit as FullscreenExitIcon,
-  MdMic as PodcastIcon,
+  MdPodcasts as PodcastIcon,
   MdPlayCircleOutline as PlayCircleIcon,
   MdQueryBuilder as ReadingTimeIcon,
   MdMail as MailIcon,
@@ -89,7 +89,9 @@ export {
   MdViewHeadline as FlyerTileMetaIcon,
   MdOutlineQuiz as QuizIcon,
   MdOutlineDelete as DeleteIcon,
+  MdMic as MicIcon,
   MdPlaylistAdd as PlaylistAddIcon,
+  MdPlaylistAddCheck as PlaylistRemoveIcon,
   MdDragHandle as DragHandleIcon,
   MdSkipNext as SkipNextIcon,
 } from 'react-icons/md'
@@ -133,6 +135,7 @@ export { ReadIcon } from './CustomIcons/MdCheckCircleOutlined'
 export { ChartIcon } from './CustomIcons/MdInsertChartOutlined'
 export { SearchMenuIcon } from './CustomIcons/SearchMenuIcon'
 export { SpotifyIcon } from './CustomIcons/SpotifyIcon'
+export { BoldSearchIcon } from './CustomIcons/BoldSearchIcon'
 
 // Publikator
 // export { SuperscriptIcon } from './CustomIcons/SuperscriptIcon'

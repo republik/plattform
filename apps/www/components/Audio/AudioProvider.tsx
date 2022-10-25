@@ -15,7 +15,6 @@ import { useMediaProgress } from './MediaProgress'
 import { AudioPlayerItem } from './types/AudioPlayerItem'
 import useAudioQueue from './hooks/useAudioQueue'
 import EventEmitter from 'events'
-import { NEXT_PUBLIC_FEAT_HOERT_HOERT } from './constants'
 
 type ToggleAudioPlayerFunc = (playerItem: AudioPlayerItem) => void
 
@@ -54,8 +53,10 @@ type AudioContextValue = {
   activePlayerItem: AudioPlayerItem | null
   audioPlayerVisible: boolean
   setAudioPlayerVisible: Dispatch<SetStateAction<boolean>>
-  audioPlayerIsExpanded: boolean
-  setAudioPlayerIsExpanded: Dispatch<SetStateAction<boolean>>
+  isExpanded: boolean
+  setIsExpanded: Dispatch<SetStateAction<boolean>>
+  isPlaying: boolean
+  setIsPlaying: Dispatch<SetStateAction<boolean>>
   autoPlayActive: boolean
   toggleAudioPlayer: ToggleAudioPlayerFunc
   onCloseAudioPlayer: () => void
@@ -63,11 +64,15 @@ type AudioContextValue = {
 
 export const AudioContext = createContext<AudioContextValue>({
   audioPlayerVisible: false,
+  isExpanded: false,
+  isPlaying: false,
   setAudioPlayerVisible: () => {
     throw new Error('not implemented')
   },
-  audioPlayerIsExpanded: false,
-  setAudioPlayerIsExpanded: () => {
+  setIsExpanded: () => {
+    throw new Error('not implemented')
+  },
+  setIsPlaying: () => {
     throw new Error('not implemented')
   },
   toggleAudioPlayer: () => {
@@ -94,7 +99,8 @@ const AudioProvider = ({ children }) => {
   const [autoPlayAudioPlayerItem, setAutoPlayAudioPlayerItem] =
     useState<AudioPlayerItem | null>(null)
   const [audioPlayerVisible, setAudioPlayerVisible] = useState(false)
-  const [audioPlayerIsExpanded, setAudioPlayerIsExpanded] = useState(false)
+  const [isExpanded, setIsExpanded] = useState(false)
+  const [isPlaying, setIsPlaying] = useState(false)
   const clearTimeoutId = useRef<NodeJS.Timeout | null>()
 
   const { addAudioQueueItem, clearAudioQueue, isAudioQueueAvailable } =
@@ -116,11 +122,6 @@ const AudioProvider = ({ children }) => {
     const mediaId = audioSource.mediaId
 
     if (isAudioQueueAvailable) {
-      // Clearing the queue when ever a new item is added.
-      // Workaround until hoert hoert is implemented
-      if (!NEXT_PUBLIC_FEAT_HOERT_HOERT) {
-        await clearAudioQueue()
-      }
       await addAudioQueueItem(playerItem, 1)
       AudioEventEmitter.emit('togglePlayer')
     } else {
@@ -169,8 +170,10 @@ const AudioProvider = ({ children }) => {
         activePlayerItem,
         audioPlayerVisible,
         setAudioPlayerVisible,
-        audioPlayerIsExpanded,
-        setAudioPlayerIsExpanded,
+        isExpanded,
+        setIsExpanded,
+        isPlaying,
+        setIsPlaying,
         autoPlayActive: autoPlayAudioPlayerItem === activePlayerItem,
         toggleAudioPlayer,
         onCloseAudioPlayer,

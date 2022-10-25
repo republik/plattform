@@ -1,10 +1,16 @@
 import React from 'react'
 import { css } from 'glamor'
-import { fontStyles, useColorContext } from '@project-r/styleguide'
+import {
+  fontStyles,
+  useColorContext,
+  DownloadIcon,
+} from '@project-r/styleguide'
 import { dateFormatter, formatMinutes } from '../shared'
 import AudioPlayerTitle from './AudioPlayerTitle'
 import { AudioQueueItem } from '../../graphql/AudioQueueHooks'
 import AudioCover from './AudioCover'
+import AudioCalloutMenu from './tabs/shared/AudioCalloutMenu'
+import { useInNativeApp } from '../../../../lib/withInNativeApp'
 
 const styles = {
   root: css({
@@ -34,11 +40,19 @@ const styles = {
 
 type CurrentlyPlayingProps = {
   item: AudioQueueItem
+  t: any
   handleOpen: (path: string) => void
+  handleDownload: (item: AudioQueueItem['document']) => Promise<void>
 }
 
-const CurrentlyPlaying = ({ item, handleOpen }: CurrentlyPlayingProps) => {
+const CurrentlyPlaying = ({
+  item,
+  t,
+  handleOpen,
+  handleDownload,
+}: CurrentlyPlayingProps) => {
   const [colorScheme] = useColorContext()
+  const { inNativeApp } = useInNativeApp()
 
   const {
     document: {
@@ -77,6 +91,7 @@ const CurrentlyPlaying = ({ item, handleOpen }: CurrentlyPlayingProps) => {
               fontSize={19}
             />
           )}
+
           <div {...styles.metaWrapper} {...colorScheme.set('color', 'text')}>
             <span>
               {publishDate && dateFormatter(new Date(Date.parse(publishDate)))}
@@ -96,6 +111,16 @@ const CurrentlyPlaying = ({ item, handleOpen }: CurrentlyPlayingProps) => {
             </span>
           </div>
         </div>
+        <AudioCalloutMenu
+          actions={[
+            {
+              Icon: DownloadIcon,
+              label: t('AudioPlayer/Queue/Download'),
+              onClick: () => handleDownload(item.document),
+              hidden: inNativeApp,
+            },
+          ]}
+        />
       </div>
     </div>
   )

@@ -183,7 +183,7 @@ const AudioPlayer = ({
 
   return (
     <AnimatePresence>
-      {isVisible && activeItem && (
+      {isVisible && (
         <>
           <Backdrop
             isExpanded={isExpanded}
