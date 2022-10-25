@@ -394,11 +394,11 @@
     },
     {
       "key": "marketing/page/lead/subtitle",
-      "value": "Das digitale Magazin für Politik, Wirtschaft, Gesellschaft und Kultur. Finanziert von seinen Leserinnen."
+      "value": "Das digitale Magazin für Politik, Wirtschaft, Gesellschaft und Kultur."
     },
     {
-      "key": "marketing/page/minifront/description",
-      "value": "Lesen Sie kostenlos zwei ausgewählte Beiträge der letzten Wochen:"
+      "key": "marketing/page/lead/info",
+      "value": "Zum Lesen und Hören."
     },
     {
       "key": "marketing/page/reasons/1/title",

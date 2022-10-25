@@ -1,57 +1,53 @@
 import { css } from 'glamor'
-import {
-  Container,
-  Logo,
-  mediaQueries,
-  Editorial,
-  fontStyles,
-} from '@project-r/styleguide'
+import { Logo, mediaQueries, fontStyles, colors } from '@project-r/styleguide'
+import { useTranslation } from '../../lib/withT'
 
-export default function LeadSection({ t }) {
+export default function LeadSection() {
+  const { t } = useTranslation()
   return (
-    <>
-      <Container {...styles.container}>
-        <div {...styles.logo}>
-          <Logo />
-        </div>
-        <p {...styles.lead}>{t('marketing/page/lead/subtitle')}</p>
-      </Container>
-      <Container {...styles.description}>
-        <Editorial.P>{t('marketing/page/minifront/description')}</Editorial.P>
-      </Container>
-    </>
+    <div {...styles.container}>
+      <div {...styles.logo}>
+        <Logo fill={colors.dark.text} />
+      </div>
+      <p {...styles.lead}>{t('marketing/page/lead/subtitle')}</p>
+      <p {...styles.info}>{t('marketing/page/lead/info')}</p>
+    </div>
   )
 }
 
 const styles = {
   container: css({
-    minHeight: '70vh',
+    maxWidth: 440,
+    color: colors.dark.text,
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'center',
     justifyContent: 'center',
+    alignItems: 'center',
+    [mediaQueries.mUp]: {
+      alignItems: 'left',
+    },
   }),
   lead: css({
     ...fontStyles.serifRegular,
-    fontSize: 24,
-    lineHeight: '36px',
-    textAlign: 'center',
-    width: '100%',
-    maxWidth: 960,
+    fontSize: 32,
+    lineHeight: '40px',
     marginBottom: 0,
+    textAlign: 'center',
     [mediaQueries.mUp]: {
-      fontSize: 36,
-      lineHeight: '48px',
+      fontSize: 40,
+      lineHeight: '50px',
+      textAlign: 'left',
     },
   }),
+  info: css({
+    ...fontStyles.sansSerifMedium,
+    fontSize: 24,
+    marginTop: 40,
+  }),
   logo: css({
-    width: 200,
+    width: '80%',
     [mediaQueries.mUp]: {
       width: 400,
     },
-  }),
-  description: css({
-    textAlign: 'center',
-    margin: '16px auto',
   }),
 }

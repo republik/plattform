@@ -1,6 +1,4 @@
 import { useState, useEffect } from 'react'
-import compose from 'lodash/flowRight'
-import { graphql } from '@apollo/client/react/hoc'
 import { css } from 'glamor'
 import {
   Loader,
@@ -37,7 +35,7 @@ const Carpet = ({ loading, front }) => {
         <div
           style={{
             position: 'absolute',
-            top: 50,
+            top: 0,
             zIndex: 2,
             width: '100%',
             height: 150,
@@ -82,8 +80,6 @@ const styles = {
     alignItems: 'center',
     textAlign: 'center',
     padding: '0 15px',
-    marginTop: '4em',
-    [mediaQueries.mUp]: { marginTop: '4em' },
   }),
 }
 

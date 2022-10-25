@@ -11,6 +11,7 @@ import SectionTitle from './Common/SectionTitle'
 import SectionContainer from './Common/SectionContainer'
 import { CDN_FRONTEND_BASE_URL } from '../../lib/constants'
 import Link from 'next/link'
+import { useTranslation } from '../../lib/withT'
 // import NewsletterSignUp from '../Auth/NewsletterSignUp'
 
 const sectionContent = [
@@ -50,8 +51,9 @@ const sectionContent = [
   },
 ]
 
-const Sections = ({ t }) => {
+const Sections = () => {
   const [colorScheme] = useColorContext()
+  const { t } = useTranslation()
   return (
     <SectionContainer maxWidth={720}>
       <SectionTitle
