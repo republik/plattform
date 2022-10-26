@@ -32,20 +32,20 @@ type PlaybackRateControl = {
   availablePlaybackRates?: number[]
 }
 
+// Prevent inaccuracy of floating point numbers to be displayed
+const roundPlaybackRate = (playbackRate: number) => {
+  return Math.round(playbackRate * 100) / 100
+}
+
 const PlaybackRateControl = ({
   playbackRate,
   setPlaybackRate,
   availablePlaybackRates = [0.75, 1, 1.1, 1.25, 1.5, 1.75, 2, 2.25, 2.5],
 }: PlaybackRateControl) => {
   const [currentIndex, setCurrentIndex] = useState(
-    availablePlaybackRates.indexOf(playbackRate),
+    availablePlaybackRates.indexOf(roundPlaybackRate(playbackRate)),
   )
   const [colorScheme] = useColorContext()
-
-  // Prevent inaccuracy of floating point numbers to be displayed
-  const roundPlaybackRate = (playbackRate: number) => {
-    return Math.round(playbackRate * 100) / 100
-  }
 
   const handleIncrease = () => {
     if (currentIndex < availablePlaybackRates.length - 1) {
