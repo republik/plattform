@@ -132,6 +132,8 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
   const [buffered, setBuffered] = useState<TimeRanges>(null)
   const [playbackRate, setPlaybackRate] = usePlaybackRate(DEFAULT_PLAYBACK_RATE)
 
+  const [hasDelayedAutoPlay, setHasDelayedAutoPlay] = useState(false)
+
   const setOptimisticTimeUI = (playerItem: AudioQueueItem, initialTime = 0) => {
     const audioSource = playerItem?.document?.meta?.audioSource
     // Optimistic UI update
@@ -506,8 +508,18 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
       } else {
         return audioEventHandlers.current.handleSetPosition(initialTime)
       }
+    } else if (autoPlay) {
+      // Handle auto-play being called before the audio-element could be loaded
+      setHasDelayedAutoPlay(true)
     }
   }
+
+  // In case of delayed auto-play, play the audio once the audio-element is ready
+  useEffect(() => {
+    if (hasDelayedAutoPlay && audioEventHandlers.current) {
+      onPlay().then(() => setHasDelayedAutoPlay(false))
+    }
+  })
 
   // Initialize the player once the queue has loaded.
   // Open up the audio-player once the app has started if the queue is not empty
@@ -556,6 +568,8 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
       }
       activeItemRef.current = null
       setActivePlayerItem(null)
+      setCurrentTime(0)
+      setDuration(0)
     },
   )
 
