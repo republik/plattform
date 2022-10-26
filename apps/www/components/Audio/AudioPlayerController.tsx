@@ -14,7 +14,6 @@ import useNativeAppEvent from '../../lib/react-native/useNativeAppEvent'
 import { useMediaProgress } from './MediaProgress'
 import useInterval from '../../lib/hooks/useInterval'
 import { reportError } from '../../lib/errors'
-import hasQueueChanged from './helpers/hasQueueChanged'
 import { useRouter } from 'next/router'
 import { trackEvent } from '../../lib/matomo'
 import { AUDIO_PLAYER_TRACK_CATEGORY } from './constants'
@@ -116,7 +115,6 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
     audioEventHandlers.current = updatedHandlers
   }
 
-  const trackedQueue = useRef<AudioQueueItem[]>(null)
   const [initialized, setInitialized] = useState(false)
   const [activePlayerItem, setActivePlayerItem] =
     useState<AudioQueueItem | null>(null)
@@ -310,7 +308,7 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
     }
   }
 
-  const onStop = async () => {
+  const onStop = async (shouldHide = true) => {
     try {
       if (!activePlayerItem) {
         return
@@ -326,7 +324,9 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
       } else if (audioEventHandlers.current) {
         await audioEventHandlers.current.handleStop()
       }
-      setIsVisible(false)
+      if (shouldHide) {
+        setIsVisible(false)
+      }
       setInitialized(false)
     } catch (error) {
       handleError(error)
@@ -438,6 +438,9 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
       if (data.audioQueueItems.length === 0) {
         trackEvent([AUDIO_PLAYER_TRACK_CATEGORY, 'queue', 'ended'])
         setShouldAutoPlay(false)
+      } else {
+        trackEvent([AUDIO_PLAYER_TRACK_CATEGORY, 'queue', 'advance'])
+        setupNextAudioItem(data.audioQueueItems[0], true).catch(handleError)
       }
     } catch (error) {
       handleError(error)
@@ -454,10 +457,8 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
       }
 
       const nextUp = audioQueue[0]
-      if (checkIfActiveItem(nextUp.document.id)) {
-        setIsVisible(true)
-      }
       await setupNextAudioItem(nextUp, true)
+      setIsVisible(true)
       if (inNativeApp) {
         notifyApp(AudioEvent.PLAY)
       }
@@ -511,30 +512,6 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
     }
   }
 
-  useEffect(() => {
-    if (!initialized) {
-      return
-    }
-
-    // React to queue updates
-    if (
-      audioQueue &&
-      audioQueue.length > 0 &&
-      hasQueueChanged(trackedQueue?.current, audioQueue)
-    ) {
-      // In case the queue changed while not visible,
-      // toggle the visibility back on
-      setIsVisible(true)
-
-      // IF the head of the queue changed, update the active player item
-      if (audioQueue[0].id !== activePlayerItem?.id) {
-        const nextUp = audioQueue[0]
-        setupNextAudioItem(nextUp, isPlaying).catch(handleError)
-      }
-    }
-    trackedQueue.current = audioQueue
-  }, [initialized, inNativeApp, audioQueue, setUpAppPlayer, isPlaying])
-
   // Initialize the player once the queue has loaded.
   // Open up the audio-player once the app has started if the queue is not empty
   useEffect(() => {
@@ -554,12 +531,19 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
     setInitialized(true)
   }, [audioQueue, initialized, audioQueueIsLoading, pathname, setUpAppPlayer])
 
+  // In case of the initialized player being empty setup the item that is added as the queue head
+  useEffect(() => {
+    if (initialized && activePlayerItem === null && audioQueue.length > 0) {
+      setupNextAudioItem(audioQueue[0], false).catch(handleError)
+    }
+  }, [initialized, audioQueue, activePlayerItem])
+
   useAudioContextEvent<void>(AudioContextEvent.TOGGLE_PLAYER, togglePlayer)
   useAudioContextEvent<void>(
     AudioContextEvent.RESET_ACTIVE_PLAYER_ITEM,
     async () => {
       if (isPlaying) {
-        await onStop()
+        await onStop(false)
       }
       setActivePlayerItem(null)
     },
