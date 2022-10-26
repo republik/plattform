@@ -2886,7 +2886,7 @@
     {
       "key": "testimonial/quote/error",
       "de": "Statement fehlt",
-      "fr": "déclaration est manquante"
+      "fr": "La déclaration est manquante"
     },
     {
       "key": "testimonial/pickImage",
@@ -2961,7 +2961,7 @@
     {
       "key": "testimonial/meta/single/title",
       "de": "{name} unterstützt Lobbywatch",
-      "fr": "{name} prend en charge Lobbywatch"
+      "fr": "{name} soutient Lobbywatch"
     },
     {
       "key": "testimonial/meta/title",
@@ -2981,7 +2981,7 @@
     {
       "key": "tokenAuthorization/after",
       "de": "Falls Sie diese Anfrage nicht ausgelöst haben, wählen Sie «Nein».",
-      "fr": "Si vous n'avez pas déclenché cette demande, sélectionnez « Non »."
+      "fr": "Si vous n'avez pas initié cette demande, sélectionnez « Non »."
     },
     {
       "key": "tokenAuthorization/deny",
