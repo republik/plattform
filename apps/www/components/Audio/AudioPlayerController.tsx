@@ -1,6 +1,10 @@
 import { ReactNode, useCallback, useEffect, useRef, useState } from 'react'
 import { usePlaybackRate } from '../../lib/playbackRate'
-import { useAudioContext, useAudioContextEvent } from './AudioProvider'
+import {
+  AudioContextEvent,
+  useAudioContext,
+  useAudioContextEvent,
+} from './AudioProvider'
 import { useInNativeApp } from '../../lib/withInNativeApp'
 import { AudioEvent, AudioEventHandlers } from './types/AudioEvent'
 import notifyApp from '../../lib/react-native/NotifyApp'
@@ -101,7 +105,6 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
     audioQueueIsLoading,
     addAudioQueueItem,
     removeAudioQueueItem,
-    checkIfActiveItem,
   } = useAudioQueue()
   const { getMediaProgress, saveMediaProgress } = useMediaProgress()
 
@@ -522,7 +525,16 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
     setInitialized(true)
   }, [audioQueue, initialized, audioQueueIsLoading, pathname, setUpAppPlayer])
 
-  useAudioContextEvent<void>('togglePlayer', togglePlayer)
+  useAudioContextEvent<void>(AudioContextEvent.TOGGLE_PLAYER, togglePlayer)
+  useAudioContextEvent<void>(
+    AudioContextEvent.RESET_ACTIVE_PLAYER_ITEM,
+    async () => {
+      if (isPlaying) {
+        await onStop()
+      }
+      setActivePlayerItem(null)
+    },
+  )
 
   useNativeAppEvent(AudioEvent.SYNC, syncWithNativeApp, [initialized])
   useNativeAppEvent<string>(
