@@ -462,7 +462,7 @@ const ActionBar = ({
       group: 'audio',
     },
     {
-      disabled: itemActive,
+      // disabled: itemActive,
       title: t(`AudioPlayer/Queue/${itemInAudioQueue ? 'Remove' : 'Add'}`),
       label: !forceShortLabel
         ? t(
