@@ -8,9 +8,9 @@ import {
 import { css } from 'glamor'
 import { useMe } from '../../lib/context/MeContext'
 import MarketingHeader from './MarketingHeader'
-import Carousel from './Carousel'
+import Carousel, { CarouselProps } from './Carousel'
 
-const Bam: React.FC = () => {
+const Bam: React.FC<CarouselProps> = (props) => {
   const { me } = useMe()
   return (
     <div {...styles.container}>
@@ -24,7 +24,7 @@ const Bam: React.FC = () => {
           <Lead />
         </div>
         <div {...styles.panel}>
-          <Carousel />
+          <Carousel {...props} />
         </div>
       </div>
     </div>

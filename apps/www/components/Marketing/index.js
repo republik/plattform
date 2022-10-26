@@ -40,7 +40,7 @@ const Marketing = ({
       {meError && (
         <ErrorMessage error={meError} style={{ textAlign: 'center' }} />
       )}
-      <Bam />
+      <Bam carouselData={data.carousel} />
       <Carpet loading={loading} front={data.carpet} />
       <Reasons inNativeApp={inNativeApp} />
       {inNativeApp && <MarketingTrialForm />}

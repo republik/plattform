@@ -24,7 +24,7 @@ const styles = {
     justifyContent: 'center',
     alignItems: 'center',
     [mediaQueries.mUp]: {
-      alignItems: 'left',
+      alignItems: 'flex-start',
     },
   }),
   lead: css({
