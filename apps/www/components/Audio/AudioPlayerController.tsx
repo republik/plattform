@@ -20,6 +20,7 @@ import { AUDIO_PLAYER_TRACK_CATEGORY } from './constants'
 import { AudioElementState } from './AudioPlayer/AudioPlaybackElement'
 import useTimeout from '../../lib/hooks/useTimeout'
 import { clamp } from './helpers/clamp'
+import hasQueueChanged from './helpers/hasQueueChanged'
 
 const DEFAULT_PLAYBACK_RATE = 1
 const SKIP_FORWARD_TIME = 30
@@ -114,6 +115,9 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
   const setWebHandlers = (updatedHandlers: AudioEventHandlers) => {
     audioEventHandlers.current = updatedHandlers
   }
+
+  const activeItemRef = useRef<AudioQueueItem | null>(null)
+  const audioQueueRef = useRef<AudioQueueItem[] | null>(null)
 
   const [initialized, setInitialized] = useState(false)
   const [activePlayerItem, setActivePlayerItem] =
@@ -412,21 +416,8 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
     }
   }
 
-  const onSkipToNext = async () => {
-    try {
-      if (inNativeApp) {
-        await onQueueAdvance()
-        //notifyApp(AudioEvent.SKIP_TO_NEXT)
-      } else if (audioEventHandlers.current) {
-        await onQueueAdvance()
-      }
-    } catch (error) {
-      handleError(error)
-    }
-  }
-
   // Handle track ending on media element
-  const onQueueAdvance = async () => {
+  const onQueueAdvance = async (shouldAutoPlay = true) => {
     if (!activePlayerItem) {
       return
     }
@@ -435,12 +426,16 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
       await saveActiveItemProgress({ currentTime: duration, isPlaying: false })
       const { data } = await removeAudioQueueItem(activePlayerItem.id)
 
+      audioQueueRef.current = data.audioQueueItems
+
       if (data.audioQueueItems.length === 0) {
         trackEvent([AUDIO_PLAYER_TRACK_CATEGORY, 'queue', 'ended'])
         setShouldAutoPlay(false)
       } else {
         trackEvent([AUDIO_PLAYER_TRACK_CATEGORY, 'queue', 'advance'])
-        setupNextAudioItem(data.audioQueueItems[0], true).catch(handleError)
+        setupNextAudioItem(data.audioQueueItems[0], shouldAutoPlay).catch(
+          handleError,
+        )
       }
     } catch (error) {
       handleError(error)
@@ -457,6 +452,7 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
       }
 
       const nextUp = audioQueue[0]
+      activeItemRef.current = nextUp
       await setupNextAudioItem(nextUp, true)
       setIsVisible(true)
       if (inNativeApp) {
@@ -493,6 +489,7 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
     nextUp: AudioQueueItem,
     autoPlay: boolean,
   ) => {
+    activeItemRef.current = nextUp
     setActivePlayerItem(nextUp)
     setOptimisticTimeUI(nextUp)
     // Fetch initial time for the new item and then set up the player
@@ -533,8 +530,20 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
 
   // In case of the initialized player being empty setup the item that is added as the queue head
   useEffect(() => {
-    if (initialized && activePlayerItem === null && audioQueue.length > 0) {
-      setupNextAudioItem(audioQueue[0], false).catch(handleError)
+    if (
+      initialized &&
+      audioQueue.length > 0 &&
+      (audioQueueRef?.current === null ||
+        hasQueueChanged(audioQueueRef.current, audioQueue))
+      // double check against the ref to ensure setup is not interrupted by this hook
+    ) {
+      const nextUp = audioQueue[0]
+      if (
+        activeItemRef.current === null ||
+        activeItemRef?.current.id !== nextUp.id
+      ) {
+        setupNextAudioItem(nextUp, false).catch(handleError)
+      }
     }
   }, [initialized, audioQueue, activePlayerItem])
 
@@ -545,6 +554,7 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
       if (isPlaying) {
         await onStop(false)
       }
+      activeItemRef.current = null
       setActivePlayerItem(null)
     },
   )
@@ -613,8 +623,8 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
           onClose: onStop,
           onPlaybackRateChange,
           // onEnded is web only
-          onEnded: onQueueAdvance,
-          onSkipToNext,
+          onEnded: () => onQueueAdvance(true),
+          onSkipToNext: () => onQueueAdvance(isPlaying),
           handleError,
           syncWithMediaElement,
         },
