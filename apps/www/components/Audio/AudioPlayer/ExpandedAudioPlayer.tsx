@@ -226,9 +226,7 @@ const ExpandedAudioPlayer = ({
       <div {...styles.queueWrapper}>
         <Scroller>
           <TabButton
-            text={t('AudioPlayer/Queue', {
-              count: queuedItems.length ? `(${queuedItems.length})` : '',
-            })}
+            text={t('AudioPlayer/Queue')}
             isActive={activeTab === 'QUEUE'}
             onClick={() => setActiveTab('QUEUE')}
           />

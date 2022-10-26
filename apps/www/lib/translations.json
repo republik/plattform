@@ -5174,7 +5174,7 @@
     },
     {
       "key": "AudioPlayer/Queue",
-      "value": "Wiedergabeliste {count}"
+      "value": "Wiedergabeliste"
     },
     {
       "key": "AudioPlayer/Queue/Add",
