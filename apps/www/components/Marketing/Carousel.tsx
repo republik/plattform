@@ -7,30 +7,56 @@ import {
 } from '@project-r/styleguide'
 import { css } from 'glamor'
 import { getImgSrc } from '../Overview/utils'
+import { useQuery } from '@apollo/client'
+import { GET_DOCUMENT_AUDIO } from './graphql/DocumentAudio.graphql'
+import { trackEvent } from '../../lib/matomo'
+import { useAudioContext } from '../Audio/AudioProvider'
 
 export type CarouselProps = { carouselData: any }
 
-const Carousel: React.FC<CarouselProps> = ({ carouselData }) => {
-  const images = carouselData?.content?.children?.map(({ data }) =>
-    getImgSrc(data, '/', 1200),
+type CarouselItem = {
+  src: string
+  path: string
+}
+
+const PlayAudio: React.FC<{ path: string }> = ({ path }) => {
+  const { data } = useQuery(GET_DOCUMENT_AUDIO, { variables: { path } })
+  const { toggleAudioPlayer, isPlaying } = useAudioContext()
+  if (!data?.document) return null
+  return (
+    <IconButton
+      onClick={(e) => {
+        e.preventDefault()
+        trackEvent(['Marketing', 'play', data.document.id])
+        toggleAudioPlayer(data.document)
+      }}
+      Icon={PlayCircleIcon}
+      labelStyle={{ fontSize: 24 }}
+      fillColorName='default'
+      labelShort='Hören'
+      label='Hören'
+      size={30}
+      disabled={isPlaying}
+    />
   )
+}
+
+const Carousel: React.FC<CarouselProps> = ({ carouselData }) => {
+  const items: CarouselItem[] = carouselData?.content?.children?.map(
+    ({ data }) => ({
+      src: getImgSrc(data, '/', 1200),
+      path: data.url,
+    }),
+  )
+  const currentItem = items[0]
   return (
     <div {...styles.carousel}>
       <div {...styles.image}>
-        <img src={images[0]} width='100%' />
+        <img src={currentItem.src} width='100%' />
       </div>
       <div {...styles.actions}>
         <IconButton
-          onClick={() => undefined}
-          Icon={PlayCircleIcon}
-          labelStyle={{ fontSize: 24 }}
-          fillColorName='default'
-          labelShort='Hören'
-          label='Hören'
-          size={30}
-        />
-        <IconButton
-          onClick={() => undefined}
+          href={currentItem.path}
           Icon={ArticleIcon}
           labelStyle={{ fontSize: 24 }}
           fillColorName='default'
@@ -38,6 +64,7 @@ const Carousel: React.FC<CarouselProps> = ({ carouselData }) => {
           label='Lesen'
           size={30}
         />
+        <PlayAudio path={currentItem.path} />
       </div>
     </div>
   )
