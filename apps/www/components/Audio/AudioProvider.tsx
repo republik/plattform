@@ -16,6 +16,11 @@ import { AudioPlayerItem } from './types/AudioPlayerItem'
 import useAudioQueue from './hooks/useAudioQueue'
 import EventEmitter from 'events'
 
+export enum AudioContextEvent {
+  TOGGLE_PLAYER = 'togglePlayer',
+  RESET_ACTIVE_PLAYER_ITEM = 'resetActivePlayerItem',
+}
+
 type ToggleAudioPlayerFunc = (playerItem: AudioPlayerItem) => void
 
 export const AudioEventEmitter = new EventEmitter()
@@ -60,6 +65,7 @@ type AudioContextValue = {
   autoPlayActive: boolean
   toggleAudioPlayer: ToggleAudioPlayerFunc
   onCloseAudioPlayer: () => void
+  resetActivePlayerItem: () => void
 }
 
 export const AudioContext = createContext<AudioContextValue>({
@@ -79,6 +85,9 @@ export const AudioContext = createContext<AudioContextValue>({
     throw new Error('not implemented')
   },
   onCloseAudioPlayer: () => {
+    throw new Error('not implemented')
+  },
+  resetActivePlayerItem: () => {
     throw new Error('not implemented')
   },
   activePlayerItem: null,
@@ -103,8 +112,7 @@ const AudioProvider = ({ children }) => {
   const [isPlaying, setIsPlaying] = useState(false)
   const clearTimeoutId = useRef<NodeJS.Timeout | null>()
 
-  const { addAudioQueueItem, clearAudioQueue, isAudioQueueAvailable } =
-    useAudioQueue()
+  const { addAudioQueueItem, isAudioQueueAvailable } = useAudioQueue()
   const { getMediaProgress } = useMediaProgress()
 
   const toggleAudioPlayer = async (playerItem: AudioPlayerItem) => {
@@ -123,7 +131,7 @@ const AudioProvider = ({ children }) => {
 
     if (isAudioQueueAvailable) {
       await addAudioQueueItem(playerItem, 1)
-      AudioEventEmitter.emit('togglePlayer')
+      AudioEventEmitter.emit(AudioContextEvent.TOGGLE_PLAYER)
     } else {
       if (inNativeApp) {
         let currentTime
@@ -160,6 +168,10 @@ const AudioProvider = ({ children }) => {
     }, 300)
   }
 
+  const resetActivePlayerItem = () => {
+    AudioEventEmitter.emit(AudioContextEvent.RESET_ACTIVE_PLAYER_ITEM)
+  }
+
   useEffect(() => {
     setAudioPlayerVisible(!!activePlayerItem)
   }, [activePlayerItem])
@@ -177,6 +189,7 @@ const AudioProvider = ({ children }) => {
         autoPlayActive: autoPlayAudioPlayerItem === activePlayerItem,
         toggleAudioPlayer,
         onCloseAudioPlayer,
+        resetActivePlayerItem,
       }}
     >
       {children}
