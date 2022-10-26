@@ -227,8 +227,8 @@ const ActionBar = ({
 
   const isArticleBottom = mode === 'articleBottom'
 
-  const itemActive = checkIfActiveItem(document.id)
-  const itemPlaying = isPlaying && itemActive
+  const isActiveAudioItem = checkIfActiveItem(document.id)
+  const itemPlaying = isPlaying && isActiveAudioItem
   const itemInAudioQueue = checkIfInQueue(document.id)
   const showAudioButtons =
     !!meta.audioSource && meta.audioSource.kind !== 'syntheticReadAloud'
@@ -463,7 +463,6 @@ const ActionBar = ({
       group: 'audio',
     },
     {
-      // disabled: itemActive,
       title: t(`AudioPlayer/Queue/${itemInAudioQueue ? 'Remove' : 'Add'}`),
       label: !forceShortLabel
         ? t(
@@ -476,7 +475,7 @@ const ActionBar = ({
       onClick: async (e) => {
         e.preventDefault()
         if (itemInAudioQueue) {
-          if (itemActive) {
+          if (isActiveAudioItem) {
             resetActivePlayerItem()
           }
           await removeAudioQueueItem(itemInAudioQueue.id)
@@ -485,7 +484,6 @@ const ActionBar = ({
           await addAudioQueueItem(document)
           trackEvent(['ActionBar', 'addToAudioQueue', document.id])
         }
-        // TODO: handle error
       },
       modes: ['feed', 'seriesEpisode', 'articleTop'],
       show: isAudioQueueAvailable && showAudioButtons,
