@@ -14,6 +14,7 @@ import useNativeAppEvent from '../../lib/react-native/useNativeAppEvent'
 import { useMediaProgress } from './MediaProgress'
 import useInterval from '../../lib/hooks/useInterval'
 import { reportError } from '../../lib/errors'
+import hasQueueChanged from './helpers/hasQueueChanged'
 import { useRouter } from 'next/router'
 import { trackEvent } from '../../lib/matomo'
 import { AUDIO_PLAYER_TRACK_CATEGORY } from './constants'
@@ -115,6 +116,7 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
     audioEventHandlers.current = updatedHandlers
   }
 
+  const trackedQueue = useRef<AudioQueueItem[]>(null)
   const [initialized, setInitialized] = useState(false)
   const [activePlayerItem, setActivePlayerItem] =
     useState<AudioQueueItem | null>(null)
@@ -414,6 +416,7 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
     try {
       if (inNativeApp) {
         await onQueueAdvance()
+        //notifyApp(AudioEvent.SKIP_TO_NEXT)
       } else if (audioEventHandlers.current) {
         await onQueueAdvance()
       }
@@ -451,8 +454,10 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
       }
 
       const nextUp = audioQueue[0]
+      if (checkIfActiveItem(nextUp.document.id)) {
+        setIsVisible(true)
+      }
       await setupNextAudioItem(nextUp, true)
-      setIsVisible(true)
       if (inNativeApp) {
         notifyApp(AudioEvent.PLAY)
       }
@@ -505,6 +510,30 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
       }
     }
   }
+
+  useEffect(() => {
+    if (!initialized) {
+      return
+    }
+
+    // React to queue updates
+    if (
+      audioQueue &&
+      audioQueue.length > 0 &&
+      hasQueueChanged(trackedQueue?.current, audioQueue)
+    ) {
+      // In case the queue changed while not visible,
+      // toggle the visibility back on
+      setIsVisible(true)
+
+      // IF the head of the queue changed, update the active player item
+      if (audioQueue[0].id !== activePlayerItem?.id) {
+        const nextUp = audioQueue[0]
+        setupNextAudioItem(nextUp, isPlaying).catch(handleError)
+      }
+    }
+    trackedQueue.current = audioQueue
+  }, [initialized, inNativeApp, audioQueue, setUpAppPlayer, isPlaying])
 
   // Initialize the player once the queue has loaded.
   // Open up the audio-player once the app has started if the queue is not empty
