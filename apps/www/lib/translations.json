@@ -5210,7 +5210,7 @@
     },
     {
       "key": "AudioPlayer/Queue/EmptyQueue/p2",
-      "value": "Über das Widergabelisten-Symbol {icon}, können Sie Beiträge in Ihre Widergabeliste hinzufügen."
+      "value": "Über das Wiedergabelisten-Symbol {icon}, können Sie Beiträge in Ihre Wiedergabeliste hinzufügen."
     },
     {
       "key": "AudioPlayer/Queue/EmptyQueue/progressInfo",
