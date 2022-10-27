@@ -122,7 +122,7 @@ const AudioProvider = ({ children }) => {
   const [isPlaying, setIsPlaying] = useState(false)
   const clearTimeoutId = useRef<NodeJS.Timeout | null>()
 
-  const { addAudioQueueItem: x, isAudioQueueAvailable } = useAudioQueue()
+  const { isAudioQueueAvailable } = useAudioQueue()
   const { getMediaProgress } = useMediaProgress()
 
   const toggleAudioPlayer = async (playerItem: AudioPlayerItem) => {
