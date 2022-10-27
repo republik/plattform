@@ -549,9 +549,10 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
     isPlaying ? SAVE_MEDIA_PROGRESS_INTERVAL : null,
   )
 
-  // Clear the loading state after 5 seconds
+  // If the player is stuck in loading state reset after 10 seconds
   useTimeout(
     () => {
+      setIsPlaying(false)
       setIsLoading(false)
     },
     isLoading ? 10000 : null,
