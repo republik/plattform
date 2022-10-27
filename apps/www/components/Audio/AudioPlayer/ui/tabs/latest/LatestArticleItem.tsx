@@ -80,7 +80,7 @@ const LatestArticleItem = ({
           onClick: () => handleAddToQueue(article, 2),
           hidden:
             checkIfInQueue(article.id) &&
-            getAudioQueueItemIndex(article.id) == 1,
+            getAudioQueueItemIndex(article.id) <= 1,
         },
         {
           Icon: DownloadIcon,
