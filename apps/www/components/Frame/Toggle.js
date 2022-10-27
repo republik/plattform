@@ -73,6 +73,7 @@ const Toggle = ({ expanded, closeOverlay, ...props }) => {
         <span
           style={buttonStyle}
           {...colorScheme.set('background', 'default')}
+          {...colorScheme.set('color', 'text')}
           {...styles.audioCount}
         >
           {audioItemsCount}

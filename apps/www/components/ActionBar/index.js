@@ -66,15 +66,14 @@ const ActionBar = ({
   const [fontSizeOverlayVisible, setFontSizeOverlayVisible] = useState(false)
   const [shareOverlayVisible, setShareOverlayVisible] = useState(false)
   const [podcastOverlayVisible, setPodcastOverlayVisible] = useState(false)
-  const { toggleAudioPlayer, resetActivePlayerItem, isPlaying } =
-    useAudioContext()
   const {
+    toggleAudioPlayer,
     addAudioQueueItem,
     removeAudioQueueItem,
-    isAudioQueueAvailable,
-    checkIfInQueue,
-    checkIfActiveItem,
-  } = useAudioQueue()
+    isPlaying,
+  } = useAudioContext()
+  const { isAudioQueueAvailable, checkIfInQueue, checkIfActiveItem } =
+    useAudioQueue()
 
   if (!document) {
     return (
@@ -475,9 +474,6 @@ const ActionBar = ({
       onClick: async (e) => {
         e.preventDefault()
         if (itemInAudioQueue) {
-          if (isActiveAudioItem) {
-            resetActivePlayerItem()
-          }
           await removeAudioQueueItem(itemInAudioQueue.id)
           trackEvent(['ActionBar', 'rmAudioQueue', document.id])
         } else {
