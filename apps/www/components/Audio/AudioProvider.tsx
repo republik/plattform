@@ -18,7 +18,6 @@ import EventEmitter from 'events'
 
 export enum AudioContextEvent {
   TOGGLE_PLAYER = 'togglePlayer',
-  RESET_ACTIVE_PLAYER_ITEM = 'resetActivePlayerItem',
   ADD_AUDIO_QUEUE_ITEM = 'addAudioQueueItem',
   REMOVE_AUDIO_QUEUE_ITEM = 'removeAudioQueueItem',
 }
@@ -69,7 +68,6 @@ type AudioContextValue = {
   addAudioQueueItem: (item: AudioPlayerItem, position?: number) => void
   removeAudioQueueItem: (audioQueueItemId: string) => void
   onCloseAudioPlayer: () => void
-  resetActivePlayerItem: () => void
 }
 
 export const AudioContext = createContext<AudioContextValue>({
@@ -95,9 +93,6 @@ export const AudioContext = createContext<AudioContextValue>({
     throw new Error('not implemented')
   },
   onCloseAudioPlayer: () => {
-    throw new Error('not implemented')
-  },
-  resetActivePlayerItem: () => {
     throw new Error('not implemented')
   },
   activePlayerItem: null,
@@ -191,10 +186,6 @@ const AudioProvider = ({ children }) => {
     )
   }
 
-  const resetActivePlayerItem = () => {
-    AudioEventEmitter.emit(AudioContextEvent.RESET_ACTIVE_PLAYER_ITEM)
-  }
-
   useEffect(() => {
     setAudioPlayerVisible(!!activePlayerItem)
   }, [activePlayerItem])
@@ -214,7 +205,6 @@ const AudioProvider = ({ children }) => {
         addAudioQueueItem,
         removeAudioQueueItem,
         onCloseAudioPlayer,
-        resetActivePlayerItem,
       }}
     >
       {children}
