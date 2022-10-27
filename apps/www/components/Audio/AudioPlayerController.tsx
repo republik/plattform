@@ -582,24 +582,15 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
     }
   })
 
-  // In case of the initialized player being empty setup the item that is added as the queue head
+  /**
+   * If the player is visible and the queue is not empty, setup the first item
+   */
   useEffect(() => {
-    if (
-      audioQueue &&
-      audioQueue.length > 0 &&
-      (audioQueueRef?.current === null ||
-        hasQueueChanged(audioQueueRef.current, audioQueue))
-      // double check against the ref to ensure setup is not interrupted by this hook
-    ) {
+    if (audioQueue && audioQueue.length > 0 && !activePlayerItem && isVisible) {
       const nextUp = audioQueue[0]
-      if (
-        activeItemRef.current === null ||
-        activeItemRef?.current.id !== nextUp.id
-      ) {
-        setupNextAudioItem(nextUp, false).catch(handleError)
-      }
+      setupNextAudioItem(nextUp, false).catch(handleError)
     }
-  }, [audioQueue, activePlayerItem])
+  }, [audioQueue, activePlayerItem, isVisible])
 
   useAudioContextEvent<AudioPlayerItem>(
     AudioContextEvent.TOGGLE_PLAYER,
