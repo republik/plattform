@@ -212,7 +212,14 @@ const AudioPlayer = ({
                   isPlaying={isPlaying}
                   isLoading={isLoading}
                   buffered={buffered}
-                  handleMinimize={() => setIsExpanded(false)}
+                  handleMinimize={() => {
+                    setIsExpanded(false)
+                    // Since there is no view for the mini-player if there is no active-item
+                    // we must reset the player on minimize.
+                    if (!activeItem) {
+                      actions.onStop()
+                    }
+                  }}
                   handleToggle={toggleAudioPlayer}
                   handleSeek={actions.onSeek}
                   handleClose={actions.onClose}
