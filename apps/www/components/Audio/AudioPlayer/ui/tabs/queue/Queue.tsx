@@ -23,6 +23,7 @@ import {
 } from '@dnd-kit/modifiers'
 import { useMe } from '../../../../../../lib/context/MeContext'
 import { useInNativeApp } from '../../../../../../lib/withInNativeApp'
+import { useAudioContext } from '../../../../AudioProvider'
 
 const styles = {
   list: css({
@@ -64,13 +65,9 @@ const Queue = ({
    * handleReorder function to be throttled while still having a smooth reordering in the ui.
    */
   const [items, setItems] = useState<AudioQueueItem[]>(inputItems)
-  const {
-    audioQueueIsLoading,
-    moveAudioQueueItem,
-    removeAudioQueueItem,
-    reorderAudioQueue,
-    checkIfActiveItem,
-  } = useAudioQueue()
+  const { toggleAudioPlayer, removeAudioQueueItem } = useAudioContext()
+  const { audioQueueIsLoading, reorderAudioQueue, checkIfActiveItem } =
+    useAudioQueue()
 
   /**
    * Synchronize the items passed via props with the internal items state.
@@ -84,7 +81,7 @@ const Queue = ({
    * @param item
    */
   const handleClick = async (item: AudioQueueItem) => {
-    await moveAudioQueueItem(item.id, 1)
+    toggleAudioPlayer(item.document)
   }
 
   /**

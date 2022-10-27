@@ -104,7 +104,7 @@ export const AudioContext = createContext<AudioContextValue>({
   autoPlayActive: false,
 })
 
-export const useAudioContext = () => useContext(AudioContext)
+export const useAudioContext = () => useContext<AudioContextValue>(AudioContext)
 
 const usePersistedPlayerItem = createPersistedState<AudioPlayerItem>(
   'republik-audioplayer-audiostate',
