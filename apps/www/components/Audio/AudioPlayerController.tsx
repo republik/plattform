@@ -351,7 +351,6 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
       }
 
       if (shouldHide) {
-        console.log('Hiding audio player')
         setIsVisible(false)
       }
       // Cleanup the internal state with a slight delay
@@ -360,7 +359,6 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
         setIsPlaying(false)
         setCurrentTime(0)
         setDuration(0)
-        console.log('Resetting audio player')
         setActivePlayerItem(null)
         setBuffered(null)
         setHasDelayedAutoPlay(false)
@@ -520,7 +518,6 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
         } else {
           const { data } = await addAudioQueueItem(item, 1)
           const queue = data.audioQueueItems
-          console.log('Toggling audio player', queue)
           if (!queue || queue.length === 0) {
             // In case the audioQueue is not yet available (slow audio-queue sync)
             // Set should auto-play to allow onCanPlay to trigger play once ready
