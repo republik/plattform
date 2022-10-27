@@ -511,17 +511,25 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
   const togglePlayer = useCallback(
     async (item: AudioPlayerItem) => {
       try {
-        const { data } = await addAudioQueueItem(item, 1)
-        const queue = data.audioQueueItems
-        console.log('Toggling audio player', queue)
-        if (!queue || queue.length === 0) {
-          // In case the audioQueue is not yet available (slow audio-queue sync)
-          // Set should auto-play to allow onCanPlay to trigger play once ready
-          setShouldAutoPlay(true)
-          return
-        }
+        const isHeadOfQueue = checkIfActiveItem(item.id)
+        let nextUp
+        // If the item to be played is already the first item in the queue
+        // already just set the active item directly
+        if (isHeadOfQueue && audioQueue?.length > 0) {
+          nextUp = audioQueue?.[0]
+        } else {
+          const { data } = await addAudioQueueItem(item, 1)
+          const queue = data.audioQueueItems
+          console.log('Toggling audio player', queue)
+          if (!queue || queue.length === 0) {
+            // In case the audioQueue is not yet available (slow audio-queue sync)
+            // Set should auto-play to allow onCanPlay to trigger play once ready
+            setShouldAutoPlay(true)
+            return
+          }
 
-        const nextUp = queue[0]
+          nextUp = queue[0]
+        }
         activeItemRef.current = nextUp
         await setupNextAudioItem(nextUp, true)
         setIsVisible(true)
@@ -533,7 +541,7 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
         handleError(error)
       }
     },
-    [inNativeApp, setupNextAudioItem, setOptimisticTimeUI],
+    [inNativeApp, setupNextAudioItem, setOptimisticTimeUI, audioQueue],
   )
 
   useInterval(
