@@ -268,7 +268,7 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
   const onPlay = async () => {
     try {
       // In case the queue has ended, readd the last played item to the queue and play it
-      if (activePlayerItem && audioQueue.length === 0) {
+      if (activePlayerItem && audioQueue?.length === 0) {
         // Re-add item to queue-head
         await addAudioQueueItem(activePlayerItem.document, 1)
         setOptimisticTimeUI(activePlayerItem, 0)
@@ -513,6 +513,14 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
     }
   }
 
+  // Set visibility to false if the miniplayer is supposed to be
+  // rendered when the queue is empty
+  useEffect(() => {
+    if (!isExpanded && audioQueue?.length === 0 && isVisible) {
+      setIsVisible(false)
+    }
+  }, [audioQueue, isExpanded])
+
   // In case of delayed auto-play, play the audio once the audio-element is ready
   useEffect(() => {
     if (hasDelayedAutoPlay && audioEventHandlers.current) {
@@ -523,6 +531,7 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
   // In case of the initialized player being empty setup the item that is added as the queue head
   useEffect(() => {
     if (
+      audioQueue &&
       audioQueue.length > 0 &&
       (audioQueueRef?.current === null ||
         hasQueueChanged(audioQueueRef.current, audioQueue))
