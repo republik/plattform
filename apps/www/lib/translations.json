@@ -3274,11 +3274,11 @@
     },
     {
       "key": "article/actionbar/audio/info/play-synth",
-      "value": "Synthetisch vorlesen lassen"
+      "value": "Anhören (synthetisch)"
     },
     {
       "key": "article/actionbar/audio/info/read-soon",
-      "value": "Dieser Beitrag wird im Laufe des Tages vorgelesen."
+      "value": "Diesen Beitrag lesen wir im Laufe des Tages ein."
     },
     {
       "key": "article/syntheticReadAloud/title",
