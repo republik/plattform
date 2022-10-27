@@ -6,8 +6,8 @@ const diacritics = [
   { base: 'a', letters: ['ä', 'â', 'à'] },
   { base: 'c', letters: ['ç'] },
   { base: 'e', letters: ['é', 'ê', 'è', 'ë'] },
-  { base: 'i', letters: ['î', 'ï'] },
-  { base: 'o', letters: ['ö', 'ô'] },
+  { base: 'i', letters: ['î', 'ï', 'ì'] },
+  { base: 'o', letters: ['ö', 'ô', 'ò'] },
   { base: 'u', letters: ['ü', 'ù', 'û'] },
   { base: 'ss', letters: ['ß'] },
 ]
