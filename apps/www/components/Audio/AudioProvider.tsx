@@ -186,9 +186,19 @@ const AudioProvider = ({ children }) => {
     )
   }
 
+  // Legacy in-app audio player this will open up the player for the last played element
+  // This may be deleted sometime in the future once every app version below v2.2.0 is discontinued
   useEffect(() => {
     setAudioPlayerVisible(!!activePlayerItem)
   }, [activePlayerItem])
+
+  // This clears the persisted active-player state in the browser or the native app.
+  // If a value was persisted the above effect kept on opening the player.
+  useEffect(() => {
+    if (isAudioQueueAvailable) {
+      setActivePlayerItem(null)
+    }
+  }, [isAudioQueueAvailable])
 
   return (
     <AudioContext.Provider
