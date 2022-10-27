@@ -211,7 +211,7 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
       )
       setPlaybackRate(state.playbackRate)
     },
-    [inNativeApp, activePlayerItem],
+    [inNativeApp],
   )
 
   // Sync the Web-UI with the HTML audio-element
@@ -561,7 +561,10 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
     },
   )
 
-  useNativeAppEvent(AudioEvent.SYNC, syncWithNativeApp, [initialized])
+  useNativeAppEvent(AudioEvent.SYNC, syncWithNativeApp, [
+    initialized,
+    activePlayerItem,
+  ])
   useNativeAppEvent<string>(
     AudioEvent.QUEUE_ADVANCE,
     async (itemId) => {
@@ -572,9 +575,12 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
         await onQueueAdvance()
       }
     },
-    [initialized],
+    [initialized, activePlayerItem],
   )
-  useNativeAppEvent(AudioEvent.ERROR, handleError, [initialized])
+  useNativeAppEvent(AudioEvent.ERROR, handleError, [
+    initialized,
+    activePlayerItem,
+  ])
 
   // The following two hooks allow for minimizing the player on backpress in android
   useEffect(() => {
