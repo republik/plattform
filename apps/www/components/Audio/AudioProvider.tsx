@@ -19,6 +19,8 @@ import EventEmitter from 'events'
 export enum AudioContextEvent {
   TOGGLE_PLAYER = 'togglePlayer',
   RESET_ACTIVE_PLAYER_ITEM = 'resetActivePlayerItem',
+  ADD_AUDIO_QUEUE_ITEM = 'addAudioQueueItem',
+  REMOVE_AUDIO_QUEUE_ITEM = 'removeAudioQueueItem',
 }
 
 type ToggleAudioPlayerFunc = (playerItem: AudioPlayerItem) => void
@@ -64,6 +66,8 @@ type AudioContextValue = {
   setIsPlaying: Dispatch<SetStateAction<boolean>>
   autoPlayActive: boolean
   toggleAudioPlayer: ToggleAudioPlayerFunc
+  addAudioQueueItem: (item: AudioPlayerItem, position?: number) => void
+  removeAudioQueueItem: (audioQueueItemId: string) => void
   onCloseAudioPlayer: () => void
   resetActivePlayerItem: () => void
 }
@@ -82,6 +86,12 @@ export const AudioContext = createContext<AudioContextValue>({
     throw new Error('not implemented')
   },
   toggleAudioPlayer: () => {
+    throw new Error('not implemented')
+  },
+  addAudioQueueItem: () => {
+    throw new Error('not implemented')
+  },
+  removeAudioQueueItem: () => {
     throw new Error('not implemented')
   },
   onCloseAudioPlayer: () => {
@@ -112,7 +122,7 @@ const AudioProvider = ({ children }) => {
   const [isPlaying, setIsPlaying] = useState(false)
   const clearTimeoutId = useRef<NodeJS.Timeout | null>()
 
-  const { addAudioQueueItem, isAudioQueueAvailable } = useAudioQueue()
+  const { addAudioQueueItem: x, isAudioQueueAvailable } = useAudioQueue()
   const { getMediaProgress } = useMediaProgress()
 
   const toggleAudioPlayer = async (playerItem: AudioPlayerItem) => {
@@ -130,8 +140,7 @@ const AudioProvider = ({ children }) => {
     const mediaId = audioSource.mediaId
 
     if (isAudioQueueAvailable) {
-      await addAudioQueueItem(playerItem, 1)
-      AudioEventEmitter.emit(AudioContextEvent.TOGGLE_PLAYER)
+      AudioEventEmitter.emit(AudioContextEvent.TOGGLE_PLAYER, playerItem)
     } else {
       if (inNativeApp) {
         let currentTime
@@ -168,6 +177,20 @@ const AudioProvider = ({ children }) => {
     }, 300)
   }
 
+  const addAudioQueueItem = (item: AudioPlayerItem, position?: number) => {
+    AudioEventEmitter.emit(AudioContextEvent.ADD_AUDIO_QUEUE_ITEM, {
+      item,
+      position,
+    })
+  }
+
+  const removeAudioQueueItem = (audioQueueItemId: string) => {
+    AudioEventEmitter.emit(
+      AudioContextEvent.REMOVE_AUDIO_QUEUE_ITEM,
+      audioQueueItemId,
+    )
+  }
+
   const resetActivePlayerItem = () => {
     AudioEventEmitter.emit(AudioContextEvent.RESET_ACTIVE_PLAYER_ITEM)
   }
@@ -188,6 +211,8 @@ const AudioProvider = ({ children }) => {
         setIsPlaying,
         autoPlayActive: autoPlayAudioPlayerItem === activePlayerItem,
         toggleAudioPlayer,
+        addAudioQueueItem,
+        removeAudioQueueItem,
         onCloseAudioPlayer,
         resetActivePlayerItem,
       }}
