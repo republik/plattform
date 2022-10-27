@@ -14,7 +14,6 @@ import useNativeAppEvent from '../../lib/react-native/useNativeAppEvent'
 import { useMediaProgress } from './MediaProgress'
 import useInterval from '../../lib/hooks/useInterval'
 import { reportError } from '../../lib/errors'
-import { useRouter } from 'next/router'
 import { trackEvent } from '../../lib/matomo'
 import { AUDIO_PLAYER_TRACK_CATEGORY } from './constants'
 import { AudioElementState } from './AudioPlayer/AudioPlaybackElement'
@@ -26,8 +25,6 @@ const DEFAULT_PLAYBACK_RATE = 1
 const SKIP_FORWARD_TIME = 30
 const SKIP_BACKWARD_TIME = 10
 const SAVE_MEDIA_PROGRESS_INTERVAL = 5000 // in ms
-
-const PATHS_WITH_DELAYED_INITIALIZATION: string[] = ['/mitteilung']
 
 /**
  * Enum to represent the state of the react-native-track-player lib.
@@ -91,7 +88,6 @@ type AudioPlayerContainerProps = {
 }
 
 const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
-  const { pathname } = useRouter()
   const { inNativeApp } = useInNativeApp()
   const {
     audioPlayerVisible: isVisible,
@@ -101,12 +97,8 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
     isExpanded,
     setIsExpanded,
   } = useAudioContext()
-  const {
-    audioQueue,
-    audioQueueIsLoading,
-    addAudioQueueItem,
-    removeAudioQueueItem,
-  } = useAudioQueue()
+  const { audioQueue, addAudioQueueItem, removeAudioQueueItem } =
+    useAudioQueue()
   const { getMediaProgress, saveMediaProgress } = useMediaProgress()
 
   // State that holds callbacks provided by the AudioPlaybackElement
@@ -322,17 +314,24 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
       setShouldAutoPlay(false)
       if (inNativeApp) {
         notifyApp(AudioEvent.STOP)
-        setTimeout(() => {
-          setIsPlaying(false)
-          setCurrentTime(0)
-          setDuration(0)
-        }, 100)
       } else if (audioEventHandlers.current) {
         await audioEventHandlers.current.handleStop()
       }
+
       if (shouldHide) {
         setIsVisible(false)
       }
+      // Cleanup the internal state with a slight delay
+      // to await the last syncs with the native app
+      setTimeout(() => {
+        setIsPlaying(false)
+        setCurrentTime(0)
+        setDuration(0)
+        setActivePlayerItem(null)
+        setBuffered(null)
+        setHasDelayedAutoPlay(false)
+        activeItemRef.current = null
+      }, 100)
       setInitialized(false)
     } catch (error) {
       handleError(error)
@@ -429,7 +428,7 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
       const { data } = await removeAudioQueueItem(activePlayerItem.id)
 
       audioQueueRef.current = data.audioQueueItems
-
+      setInitialized(true)
       if (data.audioQueueItems.length === 0) {
         trackEvent([AUDIO_PLAYER_TRACK_CATEGORY, 'queue', 'ended'])
         setShouldAutoPlay(false)
@@ -521,29 +520,9 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
     }
   })
 
-  // Initialize the player once the queue has loaded.
-  // Open up the audio-player once the app has started if the queue is not empty
-  useEffect(() => {
-    if (
-      initialized ||
-      PATHS_WITH_DELAYED_INITIALIZATION.includes(pathname) ||
-      audioQueueIsLoading ||
-      !audioQueue ||
-      audioQueue.length == 0
-    ) {
-      return
-    }
-    if (audioQueue.length > 0) {
-      const nextUp = audioQueue[0]
-      setupNextAudioItem(nextUp, false).catch(handleError)
-    }
-    setInitialized(true)
-  }, [audioQueue, initialized, audioQueueIsLoading, pathname, setUpAppPlayer])
-
   // In case of the initialized player being empty setup the item that is added as the queue head
   useEffect(() => {
     if (
-      initialized &&
       audioQueue.length > 0 &&
       (audioQueueRef?.current === null ||
         hasQueueChanged(audioQueueRef.current, audioQueue))
@@ -557,7 +536,7 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
         setupNextAudioItem(nextUp, false).catch(handleError)
       }
     }
-  }, [initialized, audioQueue, activePlayerItem])
+  }, [audioQueue, activePlayerItem])
 
   useAudioContextEvent<void>(AudioContextEvent.TOGGLE_PLAYER, togglePlayer)
   useAudioContextEvent<void>(
