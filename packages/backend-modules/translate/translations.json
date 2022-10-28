@@ -821,10 +821,6 @@
       "value": "Bestätigen Sie Ihre Anmeldung zum Klimalabor-Newsletter."
     },
     {
-      "key": "api/newsletters/request/READALOUD/subject",
-      "value": "Die Republik zum Hören: Anmeldung bestätigen"
-    },
-    {
       "key": "api/newsletters/request/notSupported",
       "value": "Diese Art der Anmeldung zum gewählten Newsletter wird noch nicht unterstützt."
     },
