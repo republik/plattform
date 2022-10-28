@@ -120,7 +120,8 @@ const Carousel: React.FC<CarouselProps> = ({ carouselData }) => {
 }
 
 const SLIDER_HEIGHT = '35vmin'
-const SLIDER_WIDTH = '40vmin'
+const SLIDER_WIDTH = '43vmin'
+const SLIDE_MARGIN = '2vmin'
 
 const styles = {
   clickArea: css({
@@ -142,13 +143,17 @@ const styles = {
     display: 'flex',
     position: 'absolute',
     transition: 'transform 500ms cubic-bezier(0.25, 1, 0.35, 1)',
-    margin: '0 auto',
+    top: 0,
+    left: 0,
     listStyleType: 'none',
+    margin: '0 auto',
+    padding: 0,
+    marginLeft: SLIDE_MARGIN,
   }),
   slide: css({
     display: 'flex',
     height: SLIDER_HEIGHT,
-    width: SLIDER_WIDTH,
+    width: '35vmin',
     flex: 1,
     flexDirection: 'column',
     position: 'relative',
@@ -156,6 +161,7 @@ const styles = {
     alignItems: 'center',
     alignContent: 'space-around',
     zIndex: 1,
+    marginLeft: SLIDE_MARGIN,
   }),
   imageWrapper: css({
     overflow: 'hidden',
