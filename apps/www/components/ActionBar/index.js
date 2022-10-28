@@ -508,7 +508,9 @@ const ActionBar = ({
         />
       ),
       modes: ['articleTop'],
-      show: !podcast && !!meta.audioSource,
+      show: ['readAloud', 'syntheticReadAloud'].includes(
+        meta.audioSource?.kind,
+      ),
       group: 'audio',
     },
   ]
