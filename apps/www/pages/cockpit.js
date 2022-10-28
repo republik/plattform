@@ -96,7 +96,7 @@ const statusQuery = gql`
   ${userSurviveActionsFragment}
 `
 
-const numMembersNeededGrowth = 32000
+const numMembersNeededGrowth = 33000
 const numMembersNeededPermanent = 27000
 
 const formatDateTime = swissTime.format('%d.%m.%Y %H:%M')
@@ -455,14 +455,19 @@ const Page = ({
           ).values
 
           const activeCount = currentBucket.active + currentBucket.overdue
-          const missingCount = numMembersNeededGrowth - activeCount
+
+          /* NOV 22: WACHSTUMSZIEL vorübergehend deaktiviert
+             kommt mit Wachstumskampagne zurück (JAN 23) */
+
+          /* const missingCount = numMembersNeededGrowth - activeCount
           if (missingCount > 0) {
             values.push({
               month: currentBucket.key,
               label: labelMap.missing,
               value: missingCount,
             })
-          }
+          } */
+
           minMaxValues.push(numMembersNeededGrowth)
           const [minValue, maxValue] = extent(minMaxValues).map((d, i) =>
             Math[i ? 'ceil' : 'floor'](Math.round(d / 1000) * 1000),
@@ -545,8 +550,6 @@ const Page = ({
                 </ChartTitle>
                 <ChartLead>
                   Entwicklung vom Crowdfunding im April 2017 bis heute
-                  {missingCount > 0 &&
-                    `. Es fehlen ${countFormat(missingCount)} Mitglieder.`}
                 </ChartLead>
                 <Chart
                   config={{
@@ -576,7 +579,7 @@ const Page = ({
                         x2: currentBucket.key,
                         value: activeCount,
                         label: 'Stand jetzt',
-                        position: 'bottom',
+                        position: 'top',
                       },
                     ],
                     xBandPadding: 0,
@@ -610,13 +613,6 @@ const Page = ({
                     yTicks: [
                       -5000, 0, 5000, 10000, 15000, 20000, 25000, 30000, 35000,
                     ],
-                    /* yAnnotations: [
-                      {
-                        value: numMembersNeeded,
-                        label: 'selbsttragend ab',
-                        dy: '1.1em',
-                      },
-                    ], */
                     xAnnotations: [
                       {
                         x1: currentBucket.key,

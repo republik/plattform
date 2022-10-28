@@ -7106,7 +7106,7 @@
     },
     {
       "key": "crowdfunding/status/goal/GROWTH/memberships",
-      "value": "Mitgliedschaften und Abos. Wachstumsziel: mehr als {count}."
+      "value": "Mitgliedschaften und Abos. Wachstumsziel: {count}."
     },
     {
       "key": "Trial/Form/button",
