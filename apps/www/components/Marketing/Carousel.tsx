@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import {
   mediaQueries,
   IconButton,
@@ -12,7 +12,6 @@ import { useQuery } from '@apollo/client'
 import { GET_DOCUMENT_AUDIO } from './graphql/DocumentAudio.graphql'
 import { trackEvent } from '../../lib/matomo'
 import { useAudioContext } from '../Audio/AudioProvider'
-import { calcLength } from 'framer-motion'
 
 export type CarouselProps = { carouselData: any }
 
@@ -49,52 +48,48 @@ const Carousel: React.FC<CarouselProps> = ({ carouselData }) => {
     ({ data }) => ({
       src: getImgSrc(data, '/', 1200),
       path: data.url,
-      ref: React.createRef(),
     }),
   )
 
-  const moreItems = items.concat(items)
-
   const [currentPosition, setCurrentPosition] = React.useState(0)
 
-  const translationStep = 100 / moreItems.length
-  const maxTranslation = (moreItems.length - 1) * translationStep
+  const translationStep = 100 / items.length
+  const maxTranslation = (items.length - 1) * translationStep
 
   const handleClick = (type) => {
-    if (type === 'forward') {
-      setCurrentPosition(
-        currentPosition >= maxTranslation
-          ? maxTranslation
-          : currentPosition + translationStep,
-      )
-    }
-    if (type === 'backward') {
-      setCurrentPosition(
-        currentPosition <= 0 ? 0 : currentPosition - translationStep,
-      )
-    }
+    const direction = type === 'forward' ? 1 : -1
+    setCurrentPosition(currentPosition + translationStep * direction)
   }
 
-  console.log(currentPosition)
+  const forwardDisabled = currentPosition >= maxTranslation
+  const backwardDisabled = currentPosition <= 0
 
   return (
     <div>
       <div {...styles.slider}>
         <div
           {...styles.clickArea}
-          style={{ left: '0' }}
+          style={{
+            left: '0',
+            backgroundColor: backwardDisabled && 'red',
+            pointerEvents: backwardDisabled && 'none',
+          }}
           onClick={() => handleClick('backward')}
         ></div>
         <div
           {...styles.clickArea}
-          style={{ left: 'calc(100% - 50px)' }}
+          style={{
+            left: `calc(100% - ${SLIDE_MARGIN})`,
+            backgroundColor: forwardDisabled && 'red',
+            pointerEvents: forwardDisabled && 'none',
+          }}
           onClick={() => handleClick('forward')}
         ></div>
         <ul
           {...styles.sliderWrapper}
           style={{ transform: `translateX(-${currentPosition}%)` }}
         >
-          {moreItems.map((d, i) => (
+          {items.map((d, i) => (
             <li {...styles.slide} key={i}>
               <div {...styles.imageWrapper}>
                 <img {...styles.image} src={d.src} />
@@ -120,13 +115,14 @@ const Carousel: React.FC<CarouselProps> = ({ carouselData }) => {
 }
 
 const SLIDER_HEIGHT = '35vmin'
-const SLIDER_WIDTH = '43vmin'
-const SLIDE_MARGIN = '2vmin'
+const SLIDER_WIDTH = '50vmin'
+const SLIDE_WIDTH = '40vmin'
+const SLIDE_MARGIN = '4vmin'
 
 const styles = {
   clickArea: css({
     position: 'absolute',
-    width: '50px',
+    width: SLIDE_MARGIN,
     backgroundColor: 'yellow', //colors.dark.default,
     height: '100%',
     zIndex: 2,
@@ -148,12 +144,12 @@ const styles = {
     listStyleType: 'none',
     margin: '0 auto',
     padding: 0,
-    marginLeft: SLIDE_MARGIN,
+    marginLeft: '1vmin',
   }),
   slide: css({
     display: 'flex',
     height: SLIDER_HEIGHT,
-    width: '35vmin',
+    width: SLIDE_WIDTH,
     flex: 1,
     flexDirection: 'column',
     position: 'relative',
@@ -173,12 +169,14 @@ const styles = {
   }),
   image: css({
     width: '100%',
+    userSelect: 'none',
   }),
   actions: css({
     marginTop: '20px',
     position: 'relative',
     display: 'flex',
     justifyContent: 'center',
+    userSelect: 'none',
   }),
 }
 
