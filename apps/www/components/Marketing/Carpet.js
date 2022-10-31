@@ -50,7 +50,6 @@ const Carpet = ({ loading, front }) => {
                 opacity: 0.6,
                 maxWidth: 1600,
                 margin: '0 auto',
-                padding: `0 ${GAP}px`,
               }}
             >
               <TeaserBlock
