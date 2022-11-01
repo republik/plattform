@@ -5,6 +5,7 @@ import {
   verifyJWT,
 } from './lib/auth/JWTHelper'
 import fetchMyRoles from './lib/helpers/middleware/FetchMeObject'
+import { getLatestJournalPath } from './lib/middleware/journalRedirect'
 
 /**
  * Middleware used to conditionally redirect between the marketing and front page
@@ -20,6 +21,15 @@ export async function middleware(req: NextRequest) {
   ) {
     resUrl.pathname = '/404'
     return NextResponse.rewrite(resUrl)
+  }
+
+  // Redirect to latest Journal entry
+  if (req.nextUrl.pathname === '/journal') {
+    const latestJournalPath = await getLatestJournalPath()
+
+    if (latestJournalPath) {
+      return NextResponse.redirect(new URL(latestJournalPath, req.nextUrl))
+    }
   }
 
   // Don't run the middleware unless on home-page
