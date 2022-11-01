@@ -2510,6 +2510,16 @@
       "fr": "Changer"
     },
     {
+      "key": "pledge/consents/error/PRIVACY_STATUTE_TOS",
+      "de": "Sie müssen sich mit den AGB, den Vereinsstatuten und den Datenschutzbestimmungen einverstanden erklären.",
+      "fr": "Vous devez accepter les conditions générales, les statuts de l'association et le règlement sur la protection des données."
+    },
+    {
+      "key": "pledge/consents/label/PRIVACY_STATUTE_TOS",
+      "de": "Ich bin mit den <a href=\"/de/seite/agb\" target=\"_blank\">AGB</a>, den <a href=\"https://cms.lobbywatch.ch/sites/lobbywatch.ch/files/page_files/statuten-statuts-2020.pdf\" target=\"_blank\">Vereinsstatuten</a> und den <a href=\"/de/seite/datenschutzerklaerung\" target=\"_blank\">Datenschutz&shy;bestimmungen</a> einverstanden.",
+      "fr": "J'accepte les <a href=\"/de/seite/agb\" target=\"_blank\">conditions générales</a>, les <a href=\"https://cms.lobbywatch.ch/sites/lobbywatch.ch/files/page_files/statuten-statuts-2020.pdf\" target=\"_blank\">statuts de l'association</a> et la <a href=\"/de/seite/datenschutzerklaerung\" target=\"_blank\">réglementation sur la protection des données</a>."
+    },
+    {
       "key": "pledge/consents/error/PRIVACY_STATUTE",
       "de": "Sie müssen sich mit den Vereinsstatuten und den Datenschutzbestimmungen einverstanden erklären.",
       "fr": "Vous devez accepter les statuts de l'association et le règlement sur la protection des données."
