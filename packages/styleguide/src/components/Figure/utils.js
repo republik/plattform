@@ -19,7 +19,7 @@ export const getResizedSrcs = (
     }
   }
   const sizeInfo = imageSizeInfo(src)
-  if (!sizeInfo) {
+  if (!sizeInfo || (srcDark && !imageSizeInfo(srcDark))) {
     return {
       src,
       dark: {
@@ -68,7 +68,7 @@ export const getResizedSrcs = (
         src: imageResizeUrl(srcDark, `${defaultWidth}x`),
         srcSet: getSrcSet(srcDark, highResWidths),
       }
-    : {}
+    : null
 
   return {
     src: imageResizeUrl(src, `${defaultWidth}x`),

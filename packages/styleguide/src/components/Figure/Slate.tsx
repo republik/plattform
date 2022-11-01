@@ -5,6 +5,8 @@ import {
   FigureImage as InnerFigureImage,
   FigureByline as InnerByline,
 } from './index'
+import { getResizedSrcs } from './utils'
+import { FLYER_CONTAINER_MAXWIDTH } from '../Flyer'
 
 export const PLACEHOLDER = '/static/placeholder.png'
 
@@ -20,6 +22,7 @@ export const FigureByline: React.FC<{
   )
 }
 
+// TODO: get max width from context
 export const FigureImage: React.FC<{
   images?: FigureImages
   alt?: string
@@ -30,8 +33,11 @@ export const FigureImage: React.FC<{
     <div {...attributes} {...props}>
       <div contentEditable={false}>
         <InnerFigureImage
-          src={images?.default?.url || PLACEHOLDER}
-          dark={images?.dark?.url ? { src: images.dark.url } : undefined}
+          {...getResizedSrcs(
+            images?.default?.url || PLACEHOLDER,
+            images?.dark?.url,
+            FLYER_CONTAINER_MAXWIDTH,
+          )}
           alt={alt}
         />
       </div>

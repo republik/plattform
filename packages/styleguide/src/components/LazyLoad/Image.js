@@ -31,34 +31,37 @@ const LazyImage = ({
   visible,
   offset,
   onClick,
-}) => (
-  <LazyLoad
-    attributes={{ ...styles.container, ...attributes }}
-    offset={offset}
-    visible={visible}
-    consistentPlaceholder
-    type='span'
-    style={{
-      // We always subtract 1px to prevent against rounding issues that can lead
-      // to the background color shining through at the bottom of the image.
-      paddingBottom: `calc(${100 / aspectRatio}% - 1px)`,
-      backgroundColor:
-        src.match(transparentExtension) || dark?.src.match(transparentExtension)
-          ? 'transparent'
-          : undefined,
-    }}
-  >
-    <SwitchImage
-      src={src}
-      srcSet={srcSet}
-      dark={dark}
-      sizes={sizes}
-      alt={alt}
-      {...styles.img}
-      onClick={onClick}
-    />
-  </LazyLoad>
-)
+}) => {
+  return (
+    <LazyLoad
+      attributes={{ ...styles.container, ...attributes }}
+      offset={offset}
+      visible={visible}
+      consistentPlaceholder
+      type='span'
+      style={{
+        // We always subtract 1px to prevent against rounding issues that can lead
+        // to the background color shining through at the bottom of the image.
+        paddingBottom: `calc(${100 / aspectRatio}% - 1px)`,
+        backgroundColor:
+          src.match(transparentExtension) ||
+          dark?.src.match(transparentExtension)
+            ? 'transparent'
+            : undefined,
+      }}
+    >
+      <SwitchImage
+        src={src}
+        srcSet={srcSet}
+        dark={dark}
+        sizes={sizes}
+        alt={alt}
+        {...styles.img}
+        onClick={onClick}
+      />
+    </LazyLoad>
+  )
+}
 
 LazyImage.propTypes = {
   src: PropTypes.string.isRequired,
