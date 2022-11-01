@@ -81,13 +81,12 @@ const SuspendActions = ({ userId, isSuspended }) => {
     setReason('')
     setShowSuspensionFields(false)
   }
-
   const [suspendUser, suspendUserState] = useMutation(SUSPEND_USER, {
     variables: {
       id: userId,
       until:
         until !== ''
-          ? `${Date.now() + parseInt(until, 10) * 1000 * 3600 * 24}` // FIXME: What if parseInt fails?
+          ? new Date(Date.now() + parseInt(until, 10) * 1000 * 3600 * 24) // FIXME: What if parseInt fails?
           : undefined,
       reason: reason !== '' ? reason : undefined,
     },
