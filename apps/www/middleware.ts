@@ -29,6 +29,8 @@ export async function middleware(req: NextRequest) {
 
     if (latestJournalPath) {
       return NextResponse.redirect(new URL(latestJournalPath, req.nextUrl))
+    } else {
+      return NextResponse.redirect(new URL('/format/journal', req.nextUrl))
     }
   }
 
