@@ -11,7 +11,6 @@ import {
 
 import withT from '../../lib/withT'
 import NavLink from './Popover/NavLink'
-import FlyerNavLink from './Popover/FlyerNavLink'
 
 import {
   SUBHEADER_HEIGHT,
@@ -64,14 +63,15 @@ export const SecondaryNav = ({
           >
             {t('navbar/feed')}
           </NavLink>
-          <FlyerNavLink
+          <NavLink
+            href='/journal'
             active={active}
             formatColor='accentColorFlyer'
             minifeed
             title={t('navbar/flyer')}
           >
             {t('navbar/flyer')}
-          </FlyerNavLink>
+          </NavLink>
           <NavLink
             href='/dialog'
             active={active}
