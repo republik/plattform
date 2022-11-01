@@ -15,7 +15,7 @@ import { Quiz, QuizAnswer } from '../../Flyer/Quiz'
 import { DefaultContainer } from '../Render/Containers'
 import { Break } from '../../Typography/Break'
 import { Sub, Sup, Flyer } from '../../Typography'
-import { Marker } from '../Forms/Memo/Markers'
+import { Marker } from '../../Marker'
 
 const schema: SchemaConfig = {
   container: Flyer.Layout,
