@@ -74,15 +74,9 @@ const Sections = ({ t }) => {
                   <FigureImage
                     {...FigureImage.utils.getResizedSrcs(
                       `${CDN_FRONTEND_BASE_URL}${section.image}`,
+                      `${CDN_FRONTEND_BASE_URL}${section.imageDark}`,
                       80,
                     )}
-                    dark={
-                      section.imageDark &&
-                      FigureImage.utils.getResizedSrcs(
-                        `${CDN_FRONTEND_BASE_URL}${section.imageDark}`,
-                        80,
-                      )
-                    }
                   />
                 </a>
               </Link>

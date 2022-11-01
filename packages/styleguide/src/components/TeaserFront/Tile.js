@@ -91,10 +91,8 @@ const Tile = ({
   const justifyContent =
     align === 'top' ? 'flex-start' : align === 'bottom' ? 'flex-end' : ''
   const imageProps =
-    image && FigureImage.utils.getResizedSrcs(image, IMAGE_SIZE.large, false)
-  const imageDarkProps =
-    imageDark &&
-    FigureImage.utils.getResizedSrcs(imageDark, IMAGE_SIZE.large, false)
+    image &&
+    FigureImage.utils.getResizedSrcs(image, imageDark, IMAGE_SIZE.large, false)
   let containerStyle = {
     backgroundColor: bgColor,
     cursor: onClick ? 'pointer' : 'default',
@@ -133,9 +131,7 @@ const Tile = ({
             }}
           >
             <SwitchImage
-              src={imageProps.src}
-              srcSet={imageProps.srcSet}
-              dark={imageDarkProps}
+              {...imageProps}
               alt={alt}
               {...(onlyImage ? styles.onlyImage : styles.image)}
             />
