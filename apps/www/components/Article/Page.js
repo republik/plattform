@@ -36,10 +36,9 @@ import {
   flyerSchema,
   SlateRender,
   RenderContextProvider,
-  FlyerTile,
+  EditIcon,
+  createRequire,
 } from '@project-r/styleguide'
-import { EditIcon } from '@project-r/styleguide'
-import { createRequire } from '@project-r/styleguide'
 
 import ActionBarOverlay from './ActionBarOverlay'
 import SeriesNavBar from './SeriesNavBar'
@@ -71,8 +70,10 @@ import SectionFeed from '../Sections/SinglePageFeed'
 import HrefLink from '../Link/Href'
 import { withMarkAsReadMutation } from '../Notifications/enhancers'
 import { cleanAsPath } from '../../lib/utils/link'
+import { getMetaData, runMetaFromQuery } from './metadata'
+import FlyerFooter, { FlyerNav } from './Flyer'
+import ShareJournalBlock from './ShareJournalBlock'
 
-// Identifier-based dynamic components mapping
 import dynamic from 'next/dynamic'
 import CommentLink from '../Discussion/shared/CommentLink'
 import { Mutation, Query, Subscription } from '@apollo/client/react/components'
@@ -80,11 +81,10 @@ import { useMe } from '../../lib/context/MeContext'
 import DiscussionContextProvider from '../Discussion/context/DiscussionContextProvider'
 import Discussion from '../Discussion/Discussion'
 import ArticleRecommendationsFeed from './ArticleRecommendationsFeed'
-import { getMetaData, runMetaFromQuery } from './metadata'
-import FlyerFooter, { FlyerNav } from './Flyer'
 
 const LoadingComponent = () => <SmallLoader loading />
 
+// Identifier-based dynamic components mapping
 const MatomoOptOut = dynamic(() => import('../Matomo/OptOut'), {
   loading: LoadingComponent,
   ssr: false,
@@ -463,6 +463,8 @@ const ArticlePage = ({
   const MissingNode = isEditor ? undefined : ({ children }) => children
 
   const extract = router.query.extract
+  console.log({ extract })
+  const isFlyer = treeType === 'slate'
   if (extract) {
     return (
       <PageLoader
@@ -480,6 +482,12 @@ const ArticlePage = ({
           }
           return extract === 'share' ? (
             <ShareImage meta={meta} />
+          ) : isFlyer ? (
+            <ShareJournalBlock
+              blockId={extract}
+              value={article.content.children}
+              schema={schema}
+            />
           ) : (
             <Extract
               ranges={extract}
@@ -552,7 +560,6 @@ const ArticlePage = ({
           const isFormat = meta.template === 'format'
           const isSection = meta.template === 'section'
           const isPage = meta.template === 'page'
-          const isFlyer = treeType === 'slate'
 
           const hasNewsletterUtms =
             router.query.utm_source && router.query.utm_source === 'newsletter'
@@ -631,7 +638,7 @@ const ArticlePage = ({
                 </div>
               )}
               {isFlyer ? (
-                <Flyer.Layout schema={schema}>
+                <Flyer.Layout>
                   <RenderContextProvider
                     t={t}
                     Link={HrefLink}
