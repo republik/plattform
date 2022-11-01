@@ -17,8 +17,8 @@ const buildId =
 module.exports = withTM(
   withBundleAnalyzer({
     generateBuildId: () => buildId,
-    publicRuntimeConfig: {
-      buildId,
+    env: {
+      BUILD_ID: buildId,
     },
     webpack: (config) => {
       config.externals = config.externals || {}
