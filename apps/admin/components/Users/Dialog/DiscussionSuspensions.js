@@ -94,7 +94,7 @@ const Suspensions = ({ userId }) => {
                       <SectionSubhead>Alle Sperrungen</SectionSubhead>
                     )}
                     <List>
-                      {suspensions
+                      {[...suspensions]
                         .sort((a, b) => {
                           return new Date(b.beginAt) - new Date(a.beginAt)
                         })
