@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client'
+import { gql, useMutation } from '@apollo/client'
 import { Query } from '@apollo/client/react/components'
 import {
   Section,
@@ -27,7 +27,33 @@ const GET_SUSPENSIONS = gql`
   }
 `
 
+const SUSPEND_USER = gql`
+  mutation SuspendUser($id: ID!, $until: DateTime, $reason: String) {
+    suspendUser(id: $id, until: $until, reason: $reason) {
+      id
+    }
+  }
+`
+
+const UNSUSPEND_USER = gql`
+  mutation UnsuspendUser($id: ID!) {
+    unsuspendUser(id: $id) {
+      id
+    }
+  }
+`
+
 const Suspensions = ({ userId }) => {
+  const [suspendUser, suspendUserState] = useMutation(SUSPEND_USER, {
+    variables: { id: userId },
+    refetchQueries: [{ query: GET_SUSPENSIONS, variables: { id: userId } }],
+  })
+
+  const [unsuspendUser, unsuspendUserState] = useMutation(UNSUSPEND_USER, {
+    variables: { id: userId },
+    refetchQueries: [{ query: GET_SUSPENSIONS, variables: { id: userId } }],
+  })
+
   return (
     <Section>
       <SectionTitle>Sperrungen</SectionTitle>
@@ -47,6 +73,23 @@ const Suspensions = ({ userId }) => {
                 return (
                   <div>
                     <SectionSubhead>Aktuell {suspendedHeader}</SectionSubhead>
+                    {isSuspended ? (
+                      <button
+                        onClick={() => {
+                          unsuspendUser()
+                        }}
+                      >
+                        Entsperren
+                      </button>
+                    ) : (
+                      <button
+                        onClick={() => {
+                          suspendUser()
+                        }}
+                      >
+                        Sperren
+                      </button>
+                    )}
                     {!!suspensions.length && (
                       <SectionSubhead>Alle Sperrungen</SectionSubhead>
                     )}
