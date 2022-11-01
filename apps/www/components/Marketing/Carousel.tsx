@@ -71,20 +71,39 @@ const Carousel: React.FC<CarouselProps> = ({ carouselData }) => {
           {...styles.clickArea}
           style={{
             left: '0',
-            backgroundColor: backwardDisabled && 'red',
             pointerEvents: backwardDisabled && 'none',
           }}
           onClick={() => handleClick('backward')}
-        ></div>
+        >
+          <svg
+            style={{ display: backwardDisabled && 'none' }}
+            width='21'
+            height='80'
+            viewBox='0 0 21 80'
+            fill='none'
+          >
+            <path d='M18.5 1L3 41L18.5 79' stroke='white' strokeWidth='4' />
+          </svg>
+        </div>
         <div
           {...styles.clickArea}
           style={{
-            left: `calc(100% - ${SLIDE_MARGIN})`,
-            backgroundColor: forwardDisabled && 'red',
+            left: `calc(100% - 3vw)`,
+            transform: 'rotate(-180deg)',
             pointerEvents: forwardDisabled && 'none',
           }}
           onClick={() => handleClick('forward')}
-        ></div>
+        >
+          <svg
+            style={{ display: forwardDisabled && 'none' }}
+            width='21'
+            height='80'
+            viewBox='0 0 21 80'
+            fill='none'
+          >
+            <path d='M18.5 1L3 41L18.5 79' stroke='white' strokeWidth='4' />
+          </svg>
+        </div>
         <ul
           {...styles.sliderWrapper}
           style={{ transform: `translateX(-${currentPosition}%)` }}
@@ -114,19 +133,23 @@ const Carousel: React.FC<CarouselProps> = ({ carouselData }) => {
   )
 }
 
-const SLIDER_HEIGHT = '35vmin'
-const SLIDER_WIDTH = '50vmin'
-const SLIDE_WIDTH = '40vmin'
-const SLIDE_MARGIN = '4vmin'
+const SLIDER_HEIGHT = '40vh'
+const SLIDER_WIDTH = '35vw'
+const SLIDE_WIDTH = '25vw'
+const SLIDE_MARGIN = '2vw'
 
 const styles = {
   clickArea: css({
     position: 'absolute',
-    width: SLIDE_MARGIN,
-    backgroundColor: 'yellow', //colors.dark.default,
+    width: '3vw',
+    background:
+      'linear-gradient(90deg, #191919 13.16%, rgba(25, 25, 25, 0) 61.84%)',
     height: '100%',
     zIndex: 2,
     opacity: 0.7,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
   }),
   slider: css({
     position: 'relative',
@@ -144,7 +167,7 @@ const styles = {
     listStyleType: 'none',
     margin: '0 auto',
     padding: 0,
-    marginLeft: '1vmin',
+    marginLeft: '3vw',
   }),
   slide: css({
     display: 'flex',
