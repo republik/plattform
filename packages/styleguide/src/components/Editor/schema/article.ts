@@ -7,7 +7,7 @@ import { List } from '../../List/Slate'
 import { PullQuote, PullQuoteSource, PullQuoteText } from '../../PullQuote'
 import { Editorial, Sub, Sup } from '../../Typography'
 import { Break } from '../../Typography/Break'
-import { Marker } from '../Forms/Memo/Markers'
+import { Marker } from '../../Marker'
 
 const schema: SchemaConfig = {
   blockQuote: BlockQuote,

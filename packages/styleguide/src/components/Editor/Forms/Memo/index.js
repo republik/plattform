@@ -1,11 +1,12 @@
 import React from 'react'
 import { css } from 'glamor'
 
-import { markerKeys, Picker } from './Markers'
+import { Picker } from './Picker'
 import MemoTree from './MemoTree'
 import IconButton from '../../../IconButton'
 import { RemoveIcon } from '../../../Icons'
 import { Interaction } from '../../../Typography'
+import { markerKeys } from '../../../Marker'
 
 const styles = {
   tooling: css({

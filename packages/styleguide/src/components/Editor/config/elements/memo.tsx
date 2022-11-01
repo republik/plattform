@@ -15,6 +15,7 @@ const Form: React.FC<ElementFormProps<MemoElement>> = ({
   onChange,
 }) => {
   const { t, repoId, commitId, schema } = useRenderContext()
+  console.log({ element })
 
   return (
     <MemoForm
