@@ -12,6 +12,7 @@ import { useQuery } from '@apollo/client'
 import { GET_DOCUMENT_AUDIO } from './graphql/DocumentAudio.graphql'
 import { trackEvent } from '../../lib/matomo'
 import { useAudioContext } from '../Audio/AudioProvider'
+import useAudioQueue from '../Audio/hooks/useAudioQueue'
 
 export type CarouselProps = { carouselData: any }
 
@@ -23,14 +24,20 @@ type CarouselItem = {
 const PlayAudio: React.FC<{ path: string }> = ({ path }) => {
   const { data } = useQuery(GET_DOCUMENT_AUDIO, { variables: { path } })
   const { toggleAudioPlayer, isPlaying } = useAudioContext()
+  const { checkIfActiveItem } = useAudioQueue()
 
-  if (!data?.document) return null
+  if (!data?.document) {
+    return null
+  }
+
+  const { document } = data
+
   return (
     <IconButton
       onClick={(e) => {
         e.preventDefault()
-        trackEvent(['Marketing', 'play', data.document.id])
-        toggleAudioPlayer(data.document)
+        trackEvent(['Marketing', 'play', document.id])
+        toggleAudioPlayer(document)
       }}
       Icon={PlayCircleIcon}
       labelStyle={{ fontSize: 24 }}
@@ -38,7 +45,7 @@ const PlayAudio: React.FC<{ path: string }> = ({ path }) => {
       labelShort='Hören'
       label='Hören'
       size={30}
-      disabled={isPlaying}
+      disabled={checkIfActiveItem(document.id) && isPlaying}
     />
   )
 }
