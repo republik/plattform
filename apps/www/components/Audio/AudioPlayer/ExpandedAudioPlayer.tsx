@@ -18,9 +18,9 @@ import Queue from './ui/tabs/queue/Queue'
 import AudioControl, { AudioControlProps } from './controls/AudioControl'
 import LatestArticles from './ui/tabs/latest/LatestArticles'
 import { AudioQueueItem } from '../graphql/AudioQueueHooks'
-import { downloadFileFromUrl } from '../../../lib/helpers/FileDownloadHelper'
 import AudioError from './ui/AudioError'
 import { useUserAgent } from '../../../lib/context/UserAgentContext'
+import downloadAudioSourceFile from '../helpers/DownloadAudioSource'
 
 const styles = {
   root: css({
@@ -158,16 +158,7 @@ const ExpandedAudioPlayer = ({
 
   const handleDownload = async (item: AudioQueueItem['document']) => {
     try {
-      const {
-        meta: { audioSource, title },
-      } = item
-      const downloadSource =
-        audioSource.mp3 || audioSource.aac || audioSource.ogg
-      const extension = downloadSource.split('.').pop()
-      const serializedTitle = title.replace(/[^a-z0-9]/gi, '_').toLowerCase()
-      const filename = `${serializedTitle}-republik.${extension}`
-
-      await downloadFileFromUrl(downloadSource, filename)
+      downloadAudioSourceFile(item)
     } catch (err) {
       // TODO: handle download error
       console.error(err)
@@ -235,9 +226,7 @@ const ExpandedAudioPlayer = ({
       <div {...styles.queueWrapper}>
         <Scroller>
           <TabButton
-            text={t('AudioPlayer/Queue', {
-              count: queuedItems.length ? `(${queuedItems.length})` : '',
-            })}
+            text={t('AudioPlayer/Queue')}
             isActive={activeTab === 'QUEUE'}
             onClick={() => setActiveTab('QUEUE')}
           />

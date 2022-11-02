@@ -12,6 +12,7 @@ import { AudioPlayerItem } from '../../../../types/AudioPlayerItem'
 import useAudioQueue from '../../../../hooks/useAudioQueue'
 import { useTranslation } from '../../../../../../lib/withT'
 import { useState } from 'react'
+import { useAudioContext } from '../../../../AudioProvider'
 
 type ArticleItemProps = {
   article: AudioQueueItem['document']
@@ -25,14 +26,15 @@ const LatestArticleItem = ({
   handleDownload,
 }: ArticleItemProps) => {
   const { t } = useTranslation()
-  const { addAudioQueueItem, checkIfInQueue, checkIfActiveItem } =
+  const { toggleAudioPlayer, addAudioQueueItem } = useAudioContext()
+  const { checkIfInQueue, checkIfActiveItem, getAudioQueueItemIndex } =
     useAudioQueue()
   const [isLoading, setIsLoading] = useState(false)
 
   const handlePlay = async (article: AudioPlayerItem) => {
     try {
       setIsLoading(true)
-      await addAudioQueueItem(article, 1)
+      toggleAudioPlayer(article)
       setIsLoading(false)
     } catch (error) {
       // TODO: handle error
@@ -76,6 +78,9 @@ const LatestArticleItem = ({
           Icon: PlaylistAddIcon,
           label: t('AudioPlayer/Queue/AddToQueueAsNext'),
           onClick: () => handleAddToQueue(article, 2),
+          hidden:
+            checkIfInQueue(article.id) &&
+            getAudioQueueItemIndex(article.id) <= 1,
         },
         {
           Icon: DownloadIcon,

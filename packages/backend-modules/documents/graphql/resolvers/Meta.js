@@ -30,8 +30,15 @@ module.exports = {
     const metaContributors = await Promise.map(
       meta.contributors || [],
       (contributor) => ({
+        name: '',
         ...contributor,
-        user: () => context.loaders.User.byId.load(contributor.userId),
+        user: () => {
+          if (contributor?.userId) {
+            return context.loaders.User.byId.load(contributor.userId)
+          }
+
+          return null
+        },
       }),
     )
     const creditString = await stringifyNode(meta.credits?.type, meta.credits)

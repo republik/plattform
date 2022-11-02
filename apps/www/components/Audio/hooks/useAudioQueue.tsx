@@ -63,6 +63,7 @@ const useAudioQueue = (): {
   isAudioQueueAvailable: boolean
   checkIfActiveItem: (documentId: string) => AudioQueueItem
   checkIfInQueue: (audioItemId: string) => AudioQueueItem
+  getAudioQueueItemIndex: (documentId: string) => number
 } => {
   const { inNativeApp, inNativeAppVersion } = useInNativeApp()
   const { meLoading, hasAccess } = useMe()
@@ -270,6 +271,15 @@ const useAudioQueue = (): {
     )
   }
 
+  function getAudioQueueItemIndex(documentId: string): number {
+    if (!hasAccess && localAudioItem?.document.id === documentId) {
+      return 0
+    }
+    return meWithAudioQueue?.me?.audioQueue.findIndex(
+      (item) => item.document.id === documentId,
+    )
+  }
+
   const resolvedQueue = !hasAccess
     ? [localAudioItem].filter(Boolean)
     : meWithAudioQueue
@@ -292,6 +302,7 @@ const useAudioQueue = (): {
         compareVersion(inNativeAppVersion, NEW_AUDIO_API_VERSION) >= 0),
     checkIfActiveItem,
     checkIfInQueue,
+    getAudioQueueItemIndex,
   }
 }
 

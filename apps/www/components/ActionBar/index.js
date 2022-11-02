@@ -66,14 +66,14 @@ const ActionBar = ({
   const [fontSizeOverlayVisible, setFontSizeOverlayVisible] = useState(false)
   const [shareOverlayVisible, setShareOverlayVisible] = useState(false)
   const [podcastOverlayVisible, setPodcastOverlayVisible] = useState(false)
-  const { toggleAudioPlayer, isPlaying } = useAudioContext()
   const {
+    toggleAudioPlayer,
     addAudioQueueItem,
     removeAudioQueueItem,
-    isAudioQueueAvailable,
-    checkIfInQueue,
-    checkIfActiveItem,
-  } = useAudioQueue()
+    isPlaying,
+  } = useAudioContext()
+  const { isAudioQueueAvailable, checkIfInQueue, checkIfActiveItem } =
+    useAudioQueue()
 
   if (!document) {
     return (
@@ -226,8 +226,8 @@ const ActionBar = ({
 
   const isArticleBottom = mode === 'articleBottom'
 
-  const itemActive = checkIfActiveItem(document.id)
-  const itemPlaying = isPlaying && itemActive
+  const isActiveAudioItem = checkIfActiveItem(document.id)
+  const itemPlaying = isPlaying && isActiveAudioItem
   const itemInAudioQueue = checkIfInQueue(document.id)
   const showAudioButtons =
     !!meta.audioSource && meta.audioSource.kind !== 'syntheticReadAloud'
@@ -462,7 +462,6 @@ const ActionBar = ({
       group: 'audio',
     },
     {
-      disabled: itemActive,
       title: t(`AudioPlayer/Queue/${itemInAudioQueue ? 'Remove' : 'Add'}`),
       label: !forceShortLabel
         ? t(
@@ -481,7 +480,6 @@ const ActionBar = ({
           await addAudioQueueItem(document)
           trackEvent(['ActionBar', 'addToAudioQueue', document.id])
         }
-        // TODO: handle error
       },
       modes: ['feed', 'seriesEpisode', 'articleTop'],
       show: isAudioQueueAvailable && showAudioButtons,
@@ -510,7 +508,9 @@ const ActionBar = ({
         />
       ),
       modes: ['articleTop'],
-      show: !podcast && !!meta.audioSource,
+      show: ['readAloud', 'syntheticReadAloud'].includes(
+        meta.audioSource?.kind,
+      ),
       group: 'audio',
     },
   ]
@@ -564,7 +564,7 @@ const ActionBar = ({
             {...(!!centered && { ...styles.centered })}
             style={
               mode === 'articleTop'
-                ? { alignItems: 'flex-start' }
+                ? { alignItems: 'center' }
                 : mode === 'seriesEpisode'
                 ? { marginRight: 24 }
                 : {}
@@ -638,6 +638,7 @@ const styles = {
   }),
   flexWrap: css({
     flexWrap: 'wrap',
+    rowGap: 16,
   }),
   secondary: css({
     display: 'flex',

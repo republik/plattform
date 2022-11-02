@@ -12,7 +12,7 @@ type EventHandler<E> = (eventData: E) => Promise<void> | void
 function useNativeAppEvent<E = Event>(
   eventName: string,
   callback: EventHandler<E>,
-  callbackDependencies: ReadonlyArray<any> = [],
+  callbackDependencies: ReadonlyArray<unknown> = [],
 ) {
   const { inNativeApp } = useInNativeApp()
   const savedCallback = useRef<EventHandler<E>>(callback)

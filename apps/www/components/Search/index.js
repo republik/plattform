@@ -78,7 +78,7 @@ export default compose(
     }, [dataAggregations, urlFilter])
 
     return (
-      <Center>
+      <Center style={{ padding: 0 }}>
         <Form />
         {startState ? (
           <Filters startState />

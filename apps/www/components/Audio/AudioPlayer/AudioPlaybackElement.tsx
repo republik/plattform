@@ -225,6 +225,11 @@ const AudioPlaybackElement = ({
     onSetPosition,
   ])
 
+  // Once the component is unmounted, ensure the handlers are set to null.
+  useEffect(() => {
+    return () => setWebHandlers(null)
+  }, [])
+
   const {
     document: { meta: { audioSource } = {} },
   } = activeItem

@@ -3274,11 +3274,11 @@
     },
     {
       "key": "article/actionbar/audio/info/play-synth",
-      "value": "Synthetisch vorlesen lassen"
+      "value": "Anhören (synthetisch)"
     },
     {
       "key": "article/actionbar/audio/info/read-soon",
-      "value": "Dieser Beitrag wird im Laufe des Tages vorgelesen."
+      "value": "Diesen Beitrag lesen wir im Laufe des Tages ein."
     },
     {
       "key": "article/syntheticReadAloud/title",
@@ -5174,7 +5174,7 @@
     },
     {
       "key": "AudioPlayer/Queue",
-      "value": "Wiedergabeliste {count}"
+      "value": "Wiedergabeliste"
     },
     {
       "key": "AudioPlayer/Queue/Add",
@@ -5206,15 +5206,15 @@
     },
     {
       "key": "AudioPlayer/Queue/EmptyQueue/p1",
-      "value": "Sie haben noch keine Beiträge in ihrer Wiedergabeliste."
+      "value": "Sie haben noch keine Beiträge in Ihrer Wiedergabeliste."
     },
     {
       "key": "AudioPlayer/Queue/EmptyQueue/p2",
-      "value": "Über das Widergabelisten-Symbol {icon}, können Sie Beiträge in ihre Widergabeliste hinzufügen."
+      "value": "Über das Wiedergabelisten-Symbol {icon}, können Sie Beiträge in Ihre Wiedergabeliste hinzufügen."
     },
     {
       "key": "AudioPlayer/Queue/EmptyQueue/progressInfo",
-      "value": "Damit die Abspielposition von gehörten Beiträgen gespeichert wird, müssen Sie das"
+      "value": "Damit die Abspielposition von angehörten Beiträgen gespeichert wird, müssen Sie das"
     },
     {
       "key": "AudioPlayer/Queue/EmptyQueue/progressLink",

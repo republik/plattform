@@ -64,11 +64,13 @@ export const RenderFront = ({ front, nodes }) => {
         playAudio:
           showPlayButton &&
           ((id) => {
-            addAudioQueueItem({ id }).then(({ data: { audioQueueItems } }) => {
-              const item = audioQueueItems.find((i) => i.document.id === id)
-              toggleAudioPlayer(item.document)
-              trackEvent(['Front', 'playAudio', id])
-            })
+            addAudioQueueItem({ id }, 1).then(
+              ({ data: { audioQueueItems } }) => {
+                const item = audioQueueItems.find((i) => i.document.id === id)
+                toggleAudioPlayer(item.document)
+                trackEvent(['Front', 'playAudio', id])
+              },
+            )
           }),
         CommentLink,
         DiscussionLink,

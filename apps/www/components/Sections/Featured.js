@@ -227,7 +227,7 @@ const Sections = compose(graphql(getSectionNav))(
 const FeaturedSections = withT(({ t }) => {
   const [colorScheme] = useColorContext()
   return (
-    <Center>
+    <Center style={{ padding: 0 }}>
       <div {...styles.navSection}>
         <Sections vertical />
         <NavLink href='/rubriken'>{t('nav/sections')}</NavLink>
