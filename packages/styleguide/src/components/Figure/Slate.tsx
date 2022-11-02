@@ -7,6 +7,7 @@ import {
 } from './index'
 import { getResizedSrcs } from './utils'
 import { FLYER_CONTAINER_MAXWIDTH } from '../Flyer'
+import { useRenderContext } from '../Editor/Render/Context'
 
 export const PLACEHOLDER = '/static/placeholder.png'
 
@@ -29,10 +30,12 @@ export const FigureImage: React.FC<{
   attributes: any
   [x: string]: unknown
 }> = ({ children, images, alt, attributes, ...props }) => {
+  const { noLazy } = useRenderContext()
   return (
     <div {...attributes} {...props}>
       <div contentEditable={false}>
         <InnerFigureImage
+          noLazy={noLazy}
           {...getResizedSrcs(
             images?.default?.url || PLACEHOLDER,
             images?.dark?.url,

@@ -1,7 +1,13 @@
 import { Fragment } from 'react'
 import Head from 'next/head'
-import { SlateRender, ColorContextProvider } from '@project-r/styleguide'
+import {
+  SlateRender,
+  ColorContextProvider,
+  RenderContextProvider,
+} from '@project-r/styleguide'
 import { ASSETS_SERVER_BASE_URL, PUBLIC_BASE_URL } from '../../lib/constants'
+import HrefLink from '../Link/Href'
+import { FlyerNav } from './Flyer'
 
 export const ShareJournalButton = ({ blockId }) => {
   /*const shareImage = `${ASSETS_SERVER_BASE_URL}/render?viewport=450x1&zoomFactor=2&updatedAt=${encodeURIComponent(
@@ -20,11 +26,13 @@ const ShareJournalBlock = ({ blockId, value, schema }) => {
         <meta name='robots' content='noindex' />
       </Head>
       <ColorContextProvider colorSchemeKey='light'>
-        <SlateRender
-          value={value.filter((block) => block.id === blockId)}
-          schema={schema}
-          skip={['flyerMetaP']}
-        />
+        <RenderContextProvider noLazy={true}>
+          <SlateRender
+            value={value.filter((block) => block.id === blockId)}
+            schema={schema}
+            skip={['flyerMetaP']}
+          />
+        </RenderContextProvider>
       </ColorContextProvider>
     </Fragment>
   )

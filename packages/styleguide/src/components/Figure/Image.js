@@ -60,6 +60,7 @@ const Image = (props, context) => {
     aboveTheFold,
     enableGallery = false,
     gallerySize,
+    noLazy,
   } = props
 
   const onClick =
@@ -73,28 +74,29 @@ const Image = (props, context) => {
     aspectRatio = Math.min(aspectRatio, dark.size.width / dark.size.height)
   }
 
-  const image = isFinite(aspectRatio) ? (
-    <LazyImage
-      attributes={attributes}
-      visible={aboveTheFold}
-      aspectRatio={aspectRatio}
-      src={src}
-      dark={dark}
-      srcSet={srcSet}
-      alt={alt}
-      onClick={onClick}
-    />
-  ) : (
-    <SwitchImage
-      {...attributes}
-      {...styles.image}
-      src={src}
-      srcSet={srcSet}
-      dark={dark}
-      alt={alt}
-      onClick={onClick}
-    />
-  )
+  const image =
+    !noLazy && isFinite(aspectRatio) ? (
+      <LazyImage
+        attributes={attributes}
+        visible={aboveTheFold}
+        aspectRatio={aspectRatio}
+        src={src}
+        dark={dark}
+        srcSet={srcSet}
+        alt={alt}
+        onClick={onClick}
+      />
+    ) : (
+      <SwitchImage
+        {...attributes}
+        {...styles.image}
+        src={src}
+        srcSet={srcSet}
+        dark={dark}
+        alt={alt}
+        onClick={onClick}
+      />
+    )
 
   let wrappedImage = image
 
@@ -145,6 +147,7 @@ Image.propTypes = {
   aboveTheFold: PropTypes.bool,
   enableGallery: PropTypes.bool,
   gallerySize: PropTypes.number,
+  noLazy: PropTypes.bool,
 }
 
 Image.contextTypes = {
