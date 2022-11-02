@@ -6,6 +6,7 @@ import { Message } from '../Editor/Render/Message'
 import renderAsText from '../Editor/Render/text'
 import { CustomDescendant } from '../Editor/custom-types'
 import { isSlateElement } from '../Editor/Render/helpers'
+import { useRenderContext } from '../Editor/Render/Context'
 
 const MAX_CHAR = 600
 export const FLYER_CONTAINER_MAXWIDTH = 700
@@ -37,18 +38,26 @@ const styles = {
 export const FlyerTile: React.FC<{
   attributes: any
   innerStyle?: object
+  id?: string
   [x: string]: unknown
-}> = ({ children, attributes, innerStyle = {}, ...props }) => {
+}> = ({ children, attributes, innerStyle = {}, id, ...props }) => {
   const [colorScheme] = useColorContext()
+  const { ShareTile } = useRenderContext()
   return (
     <div
       {...props}
+      id={id}
       {...attributes}
       {...styles.container}
       {...colorScheme.set('borderBottomColor', 'flyerText')}
       {...colorScheme.set('background', 'flyerBg')}
     >
       <div {...styles.content} style={innerStyle}>
+        {!!ShareTile && (
+          <div>
+            <ShareTile blockId={id} />
+          </div>
+        )}
         {children}
       </div>
     </div>

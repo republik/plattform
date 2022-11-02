@@ -22,7 +22,7 @@ export const FigureByline: React.FC<{
   )
 }
 
-// TODO: get max width from context
+// TODO: get max width from render context
 export const FigureImage: React.FC<{
   images?: FigureImages
   alt?: string
