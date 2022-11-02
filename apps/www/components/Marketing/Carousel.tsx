@@ -71,7 +71,7 @@ const Carousel: React.FC<CarouselProps> = ({ carouselData }) => {
           {...styles.clickArea}
           style={{
             left: '0',
-            pointerEvents: backwardDisabled && 'none',
+            pointerEvents: backwardDisabled ? 'none' : undefined,
           }}
           onClick={() => handleClick('backward')}
         >
@@ -90,7 +90,7 @@ const Carousel: React.FC<CarouselProps> = ({ carouselData }) => {
           style={{
             left: `calc(100% - 3vw)`,
             transform: 'rotate(-180deg)',
-            pointerEvents: forwardDisabled && 'none',
+            pointerEvents: forwardDisabled ? 'none' : undefined,
           }}
           onClick={() => handleClick('forward')}
         >
