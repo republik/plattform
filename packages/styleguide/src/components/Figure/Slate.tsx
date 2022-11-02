@@ -35,7 +35,7 @@ export const FigureImage: React.FC<{
     <div {...attributes} {...props}>
       <div contentEditable={false}>
         <InnerFigureImage
-          noLazy={noLazy}
+          aboveTheFold={noLazy}
           {...getResizedSrcs(
             images?.default?.url || PLACEHOLDER,
             images?.dark?.url,
