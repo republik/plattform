@@ -1,7 +1,7 @@
 import React from 'react'
 import Lead from './Lead'
 import { mediaQueries, colors, useColorContext } from '@project-r/styleguide'
-import { css } from 'glamor'
+import { css, media } from 'glamor'
 import { useMe } from '../../lib/context/MeContext'
 import MarketingHeader from './MarketingHeader'
 import Carousel, { CarouselProps } from './Carousel'
@@ -17,7 +17,7 @@ const Bam: React.FC<CarouselProps> = (props) => {
     >
       {!me && <MarketingHeader />}
       <div {...styles.panelContainer}>
-        <div {...styles.panel} style={{ maxWidth: 440 }}>
+        <div {...styles.panel} {...styles.leadPanel}>
           <Lead />
         </div>
         <div
@@ -71,6 +71,11 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'center',
     padding: '0 15px',
+  }),
+  leadPanel: css({
+    [mediaQueries.mUp]: {
+      maxWidth: 440,
+    },
   }),
 }
 
