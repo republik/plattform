@@ -67,7 +67,7 @@ const Carousel: React.FC<CarouselProps> = ({ carouselData }) => {
     }
     const onScroll = () => {
       setDisableScrollIntoView(true)
-      const slideWidth = carouselRef.current.clientWidth / items.length
+      const slideWidth = carouselRef.current.scrollWidth / items.length
 
       const newIndex = Math.floor(
         (slideWidth / 2 + carouselRef.current.scrollLeft) / slideWidth,
@@ -119,7 +119,6 @@ const Carousel: React.FC<CarouselProps> = ({ carouselData }) => {
       }),
     [colorScheme],
   )
-  console.log(currentSlideIndex, 'state')
   return (
     <div {...styles.container}>
       <div
@@ -202,13 +201,13 @@ const styles = {
   }),
   controls: css({}),
   slide: css({
-    scrollSnapAlign: 'start',
+    scrollSnapAlign: 'center',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
     alignContent: 'space-around',
-    minWidth: '85%',
+    minWidth: '88%',
     position: 'relative',
     zIndex: 1,
     paddingLeft: 15,
