@@ -92,9 +92,6 @@ const Carousel: React.FC<CarouselProps> = ({ carouselData }) => {
       target,
       {
         time: 300,
-        align: {
-          left: 0,
-        },
       },
       function () {
         carouselRef.current.style.scrollSnapType = 'x mandatory'
