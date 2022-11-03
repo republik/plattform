@@ -1,6 +1,7 @@
 import compose from 'lodash/flowRight'
 import { graphql } from '@apollo/client/react/hoc'
 import { gql } from '@apollo/client'
+import { ColorContextProvider } from '@project-r/styleguide'
 
 import { useInNativeApp } from '../../lib/withInNativeApp'
 import UserGuidance from '../Account/UserGuidance'
@@ -40,7 +41,9 @@ const Marketing = ({
       {meError && (
         <ErrorMessage error={meError} style={{ textAlign: 'center' }} />
       )}
-      <Bam carouselData={data.carousel} />
+      <ColorContextProvider colorSchemeKey='dark'>
+        <Bam carouselData={data.carousel} />
+      </ColorContextProvider>
       <Carpet loading={loading} front={data.carpet} />
       <Reasons inNativeApp={inNativeApp} />
       {inNativeApp && <MarketingTrialForm />}

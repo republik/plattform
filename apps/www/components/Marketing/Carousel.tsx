@@ -1,10 +1,10 @@
-import React from 'react'
+import React, { useEffect, useRef, useState, useMemo } from 'react'
 import {
   mediaQueries,
   IconButton,
   PlayCircleIcon,
   ArticleIcon,
-  colors,
+  useColorContext,
 } from '@project-r/styleguide'
 import { css } from 'glamor'
 import { getImgSrc } from '../Overview/utils'
@@ -13,7 +13,7 @@ import { GET_DOCUMENT_AUDIO } from './graphql/DocumentAudio.graphql'
 import { trackEvent } from '../../lib/matomo'
 import { useAudioContext } from '../Audio/AudioProvider'
 import useAudioQueue from '../Audio/hooks/useAudioQueue'
-
+import scrollIntoView from 'scroll-into-view'
 export type CarouselProps = { carouselData: any }
 
 type CarouselItem = {
@@ -40,11 +40,8 @@ const PlayAudio: React.FC<{ path: string }> = ({ path }) => {
         toggleAudioPlayer(document)
       }}
       Icon={PlayCircleIcon}
-      labelStyle={{ fontSize: 24 }}
-      fillColorName='default'
       labelShort='Hören'
       label='Hören'
-      size={30}
       disabled={checkIfActiveItem(document.id) && isPlaying}
     />
   )
@@ -57,156 +54,159 @@ const Carousel: React.FC<CarouselProps> = ({ carouselData }) => {
       path: data.url,
     }),
   )
+  const carouselRef = useRef<HTMLDivElement>()
+  const [colorScheme] = useColorContext()
 
-  const [currentPosition, setCurrentPosition] = React.useState(0)
+  const [currentSlideIndex, setCurrentSlideIndex] = useState(0)
 
-  const translationStep = 100 / items.length
-  const maxTranslation = (items.length - 1) * translationStep
+  useEffect(() => {
+    const target = Array.from(carouselRef.current.children)[currentSlideIndex]
+    carouselRef.current.style.scrollSnapType = 'none'
+    scrollIntoView(
+      target,
+      {
+        time: 300,
+        align: {
+          left: 0,
+        },
+      },
+      function () {
+        carouselRef.current.style.scrollSnapType = 'x mandatory'
+      },
+    )
+  }, [currentSlideIndex])
 
-  const handleClick = (type) => {
-    const direction = type === 'forward' ? 1 : -1
-    setCurrentPosition(currentPosition + translationStep * direction)
-  }
+  const forwardDisabled = currentSlideIndex + 1 === items.length
+  const backwardDisabled = currentSlideIndex === 0
 
-  const forwardDisabled = currentPosition >= maxTranslation
-  const backwardDisabled = currentPosition <= 0
+  const clickAreaGradient = useMemo(
+    () =>
+      css({
+        background: colorScheme.getCSSColor('fadeOutGradientDefault90'),
+      }),
+    [colorScheme],
+  )
 
   return (
-    <div>
-      <div {...styles.slider}>
-        <div
-          {...styles.clickArea}
+    <div {...styles.container}>
+      <div
+        {...styles.clickArea}
+        {...clickAreaGradient}
+        style={{
+          left: '-1px',
+          pointerEvents: backwardDisabled ? 'none' : undefined,
+        }}
+        onClick={() => setCurrentSlideIndex(currentSlideIndex - 1)}
+      >
+        <svg
+          style={{ display: backwardDisabled && 'none' }}
+          width='16'
+          height='40'
+          viewBox='0 0 21 80'
+          fill='none'
+        >
+          <path d='M18.5 1L3 41L18.5 79' stroke='white' strokeWidth='4' />
+        </svg>
+      </div>
+      <div
+        {...styles.clickArea}
+        {...clickAreaGradient}
+        style={{
+          right: 0,
+          pointerEvents: forwardDisabled ? 'none' : undefined,
+          transform: 'rotate(-180deg)',
+        }}
+        onClick={() => setCurrentSlideIndex(currentSlideIndex + 1)}
+      >
+        <svg
           style={{
-            left: '0',
-            pointerEvents: backwardDisabled ? 'none' : undefined,
+            display: forwardDisabled && 'none',
           }}
-          onClick={() => handleClick('backward')}
+          width='16'
+          height='40'
+          viewBox='0 0 21 80'
+          fill='none'
         >
-          <svg
-            style={{ display: backwardDisabled && 'none' }}
-            width='21'
-            height='80'
-            viewBox='0 0 21 80'
-            fill='none'
+          <path d='M18.5 1L3 41L18.5 79' stroke='white' strokeWidth='4' />
+        </svg>
+      </div>
+      <div {...styles.carousel} ref={carouselRef}>
+        {items.map((d, i) => (
+          <div
+            {...styles.slide}
+            onClick={() => setCurrentSlideIndex(i)}
+            key={i}
           >
-            <path d='M18.5 1L3 41L18.5 79' stroke='white' strokeWidth='4' />
-          </svg>
-        </div>
-        <div
-          {...styles.clickArea}
-          style={{
-            left: `calc(100% - 3vw)`,
-            transform: 'rotate(-180deg)',
-            pointerEvents: forwardDisabled ? 'none' : undefined,
-          }}
-          onClick={() => handleClick('forward')}
-        >
-          <svg
-            style={{ display: forwardDisabled && 'none' }}
-            width='21'
-            height='80'
-            viewBox='0 0 21 80'
-            fill='none'
-          >
-            <path d='M18.5 1L3 41L18.5 79' stroke='white' strokeWidth='4' />
-          </svg>
-        </div>
-        <ul
-          {...styles.sliderWrapper}
-          style={{ transform: `translateX(-${currentPosition}%)` }}
-        >
-          {items.map((d, i) => (
-            <li {...styles.slide} key={i}>
-              <div {...styles.imageWrapper}>
-                <img {...styles.image} src={d.src} />
-                <div {...styles.actions}>
-                  <IconButton
-                    href={d.path}
-                    Icon={ArticleIcon}
-                    labelStyle={{ fontSize: 24 }}
-                    fillColorName='default'
-                    labelShort='Lesen'
-                    label='Lesen'
-                    size={30}
-                  />
-                  <PlayAudio path={d.path} />
-                </div>
-              </div>
-            </li>
-          ))}
-        </ul>
+            <img {...styles.image} src={d.src} />
+            <div {...styles.actions}>
+              <IconButton
+                href={d.path}
+                Icon={ArticleIcon}
+                labelShort='Lesen'
+                label='Lesen'
+              />
+              <PlayAudio path={d.path} />
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   )
 }
 
-const SLIDER_HEIGHT = '40vh'
-const SLIDER_WIDTH = '35vw'
-const SLIDE_WIDTH = '25vw'
-const SLIDE_MARGIN = '2vw'
-
 const styles = {
-  clickArea: css({
-    position: 'absolute',
-    width: '3vw',
-    background:
-      'linear-gradient(90deg, #191919 13.16%, rgba(25, 25, 25, 0) 61.84%)',
-    height: '100%',
-    zIndex: 2,
-    opacity: 0.7,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  }),
-  slider: css({
+  container: css({
+    width: '100%',
     position: 'relative',
-    overflow: 'hidden',
-    margin: '0 auto',
-    height: SLIDER_HEIGHT,
-    width: SLIDER_WIDTH,
   }),
-  sliderWrapper: css({
+  carousel: css({
+    overflowX: 'auto',
+    whiteSpace: 'nowrap',
     display: 'flex',
-    position: 'absolute',
-    transition: 'transform 500ms cubic-bezier(0.25, 1, 0.35, 1)',
-    top: 0,
-    left: 0,
-    listStyleType: 'none',
-    margin: '0 auto',
-    padding: 0,
-    marginLeft: '3vw',
+    scrollSnapType: 'x mandatory',
+    WebkitOverflowScrolling: 'touch',
+    scrollbarWidth: 'none' /* Firefox */,
+    msOverflowStyle: 'none' /* IE 10+ */,
+    '::-webkit-scrollbar': {
+      display: 'none',
+    },
   }),
+  controls: css({}),
   slide: css({
+    scrollSnapAlign: 'start',
     display: 'flex',
-    height: SLIDER_HEIGHT,
-    width: SLIDE_WIDTH,
-    flex: 1,
     flexDirection: 'column',
-    position: 'relative',
     justifyContent: 'center',
     alignItems: 'center',
     alignContent: 'space-around',
+    minWidth: '85%',
+    position: 'relative',
     zIndex: 1,
-    marginLeft: SLIDE_MARGIN,
-  }),
-  imageWrapper: css({
-    overflow: 'hidden',
-    width: '100%',
-    display: 'flex',
-    justifyContent: 'center',
-    flexDirection: 'column',
-    alignItems: 'center',
+    paddingLeft: 15,
+    '&:last-child': {
+      paddingRight: 15,
+    },
   }),
   image: css({
     width: '100%',
     userSelect: 'none',
   }),
   actions: css({
-    marginTop: '20px',
+    marginTop: '16px',
     position: 'relative',
     display: 'flex',
     justifyContent: 'center',
     userSelect: 'none',
+  }),
+  clickArea: css({
+    position: 'absolute',
+    width: 30,
+    background: 'yellow',
+    height: '100%',
+    zIndex: 2,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
   }),
 }
 
