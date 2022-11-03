@@ -144,7 +144,7 @@ const Carousel: React.FC<CarouselProps> = ({ carouselData }) => {
         {...styles.clickArea}
         {...clickAreaGradient}
         style={{
-          right: 0,
+          right: '-1px',
           pointerEvents: forwardDisabled ? 'none' : undefined,
           transform: 'rotate(-180deg)',
         }}
@@ -228,6 +228,7 @@ const styles = {
   }),
   clickArea: css({
     position: 'absolute',
+    cursor: 'pointer',
     width: 30,
     background: 'yellow',
     height: '100%',
