@@ -58,8 +58,34 @@ const Carousel: React.FC<CarouselProps> = ({ carouselData }) => {
   const [colorScheme] = useColorContext()
 
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0)
+  const [disableScrollIntoView, setDisableScrollIntoView] = useState(false)
+  const [disableScrollListener, setDisableScrollListener] = useState(false)
 
   useEffect(() => {
+    if (!carouselRef.current || disableScrollListener) {
+      return
+    }
+    const onScroll = () => {
+      setDisableScrollIntoView(true)
+      const slideWidth = carouselRef.current.clientWidth / items.length
+
+      const newIndex = Math.floor(
+        (slideWidth / 2 + carouselRef.current.scrollLeft) / slideWidth,
+      )
+      if (newIndex !== currentSlideIndex) {
+        setCurrentSlideIndex(newIndex)
+      }
+    }
+    carouselRef.current.addEventListener('scroll', onScroll)
+    return () => {
+      carouselRef.current.removeEventListener('scroll', onScroll)
+    }
+  }, [currentSlideIndex, disableScrollListener])
+
+  useEffect(() => {
+    if (disableScrollIntoView) {
+      return
+    }
     const target = Array.from(carouselRef.current.children)[currentSlideIndex]
     carouselRef.current.style.scrollSnapType = 'none'
     scrollIntoView(
@@ -72,9 +98,16 @@ const Carousel: React.FC<CarouselProps> = ({ carouselData }) => {
       },
       function () {
         carouselRef.current.style.scrollSnapType = 'x mandatory'
+        setDisableScrollListener(false)
       },
     )
-  }, [currentSlideIndex])
+  }, [currentSlideIndex, disableScrollIntoView])
+
+  const handleClick = (index) => {
+    setDisableScrollIntoView(false)
+    setDisableScrollListener(true)
+    setCurrentSlideIndex(index)
+  }
 
   const forwardDisabled = currentSlideIndex + 1 === items.length
   const backwardDisabled = currentSlideIndex === 0
@@ -86,7 +119,7 @@ const Carousel: React.FC<CarouselProps> = ({ carouselData }) => {
       }),
     [colorScheme],
   )
-
+  console.log(currentSlideIndex, 'state')
   return (
     <div {...styles.container}>
       <div
@@ -96,7 +129,7 @@ const Carousel: React.FC<CarouselProps> = ({ carouselData }) => {
           left: '-1px',
           pointerEvents: backwardDisabled ? 'none' : undefined,
         }}
-        onClick={() => setCurrentSlideIndex(currentSlideIndex - 1)}
+        onClick={() => handleClick(currentSlideIndex - 1)}
       >
         <svg
           style={{ display: backwardDisabled && 'none' }}
@@ -116,7 +149,7 @@ const Carousel: React.FC<CarouselProps> = ({ carouselData }) => {
           pointerEvents: forwardDisabled ? 'none' : undefined,
           transform: 'rotate(-180deg)',
         }}
-        onClick={() => setCurrentSlideIndex(currentSlideIndex + 1)}
+        onClick={() => handleClick(currentSlideIndex + 1)}
       >
         <svg
           style={{
@@ -132,11 +165,7 @@ const Carousel: React.FC<CarouselProps> = ({ carouselData }) => {
       </div>
       <div {...styles.carousel} ref={carouselRef}>
         {items.map((d, i) => (
-          <div
-            {...styles.slide}
-            onClick={() => setCurrentSlideIndex(i)}
-            key={i}
-          >
+          <div {...styles.slide} onClick={() => handleClick(i)} key={i}>
             <img {...styles.image} src={d.src} />
             <div {...styles.actions}>
               <IconButton
