@@ -38,7 +38,7 @@ const MarketingPage = () => {
   }
 
   return (
-    <Frame raw meta={meta} isOnMarketingPage={true} pageColorSchemeKey='light'>
+    <Frame raw meta={meta} isOnMarketingPage={true}>
       <Marketing />
     </Frame>
   )

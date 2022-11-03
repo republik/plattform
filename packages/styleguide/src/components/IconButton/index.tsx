@@ -22,7 +22,6 @@ const IconButton = React.forwardRef<
     onClick?: MouseEventHandler<HTMLAnchorElement & HTMLButtonElement>
     onMouseDown?: MouseEventHandler<HTMLAnchorElement & HTMLButtonElement>
     style?: React.CSSProperties
-    labelStyle?: React.CSSProperties
     size?: number
     disabled?: boolean
     attributes?: Attributes
@@ -43,7 +42,6 @@ const IconButton = React.forwardRef<
       onMouseDown,
       children,
       style: customStyles,
-      labelStyle: labelCustomStyle,
       size,
       disabled,
       attributes,
@@ -85,7 +83,6 @@ const IconButton = React.forwardRef<
             {...styles.label}
             {...styles.long}
             {...colorScheme.set('color', fillValue)}
-            style={labelCustomStyle}
           >
             {label}
           </span>
@@ -95,7 +92,6 @@ const IconButton = React.forwardRef<
             {...styles.label}
             {...styles.short}
             {...colorScheme.set('color', fillValue)}
-            style={labelCustomStyle}
           >
             {labelShort}
           </span>
