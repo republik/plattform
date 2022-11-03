@@ -57,7 +57,7 @@ const styles = {
     [mediaQueries.mUp]: {
       flexDirection: 'row',
       gap: 32,
-      margin: `120px auto ${HEADER_HEIGHT + 120}px auto`,
+      margin: `120px auto ${HEADER_HEIGHT + 96}px auto`,
       padding: `${HEADER_HEIGHT}px 60px 0 60px`,
     },
     [mediaQueries.sDown]: {
