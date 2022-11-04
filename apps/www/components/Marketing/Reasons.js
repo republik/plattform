@@ -9,8 +9,10 @@ import {
   mediaQueries,
 } from '@project-r/styleguide'
 import Link from 'next/link'
+import { useTranslation } from '../../lib/withT'
 
-const Reasons = ({ t, inNativeApp }) => {
+const Reasons = ({ inNativeApp }) => {
+  const { t } = useTranslation()
   return (
     <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 15px' }}>
       <TeaserFrontTileRow columns={3}>

@@ -394,11 +394,11 @@
     },
     {
       "key": "marketing/page/lead/subtitle",
-      "value": "Das digitale Magazin für Politik, Wirtschaft, Gesellschaft und Kultur. Finanziert von seinen Leserinnen."
+      "value": "Das digitale Magazin für Politik, Wirtschaft, Gesellschaft und Kultur."
     },
     {
-      "key": "marketing/page/minifront/description",
-      "value": "Lesen Sie kostenlos zwei ausgewählte Beiträge der letzten Wochen:"
+      "key": "marketing/page/lead/info",
+      "value": "Zum Lesen und Hören."
     },
     {
       "key": "marketing/page/reasons/1/title",
@@ -510,11 +510,11 @@
     },
     {
       "key": "marketing/page/sections/description/audio",
-      "value": "Wenn Sie gerade keine Hand frei haben – hier finden Sie Journalismus fürs Ohr: Diskussionen, Podcasts, Audio-Serien. Und vorgelesene Geschichten."
+      "value": "Wenn Sie gerade keine Hand frei haben – die Republik ist Journalismus fürs Ohr. Alle Beiträge erscheinen am Tag der Publikation als Audioversion, vorgelesen von grossartigen Stimmen."
     },
     {
       "key": "marketing/page/sections/title/audio",
-      "value": "Audio"
+      "value": "Alle Beiträge, auch zum Hören"
     },
     {
       "key": "marketing/page/vision/more",
