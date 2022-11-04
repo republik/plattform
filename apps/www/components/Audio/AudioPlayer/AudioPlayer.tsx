@@ -198,7 +198,9 @@ const AudioPlayer = ({
               exit={{ opacity: 0, y: 50 }}
               {...styles.wrapper}
               {...(isExpanded ? styles.wrapperExpanded : styles.wrapperMini)}
-              {...colorScheme.set('backgroundColor', 'default')}
+              {...(inNativeApp && isExpanded
+                ? colorScheme.set('backgroundColor', 'default')
+                : colorScheme.set('backgroundColor', 'overlay'))}
               {...colorScheme.set('boxShadow', 'overlayShadow')}
             >
               {isExpanded ? (
