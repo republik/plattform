@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState, useMemo } from 'react'
 import {
-  mediaQueries,
   IconButton,
   PlayCircleIcon,
   ArticleIcon,
@@ -24,9 +23,8 @@ type CarouselItem = {
 
 const PlayAudio: React.FC<{ path: string }> = ({ path }) => {
   const { data } = useQuery(GET_DOCUMENT_AUDIO, { variables: { path } })
-  const { toggleAudioPlayer, isPlaying } = useAudioContext()
+  const { toggleAudioPlayer, isPlaying, setIsExpanded } = useAudioContext()
   const { checkIfActiveItem } = useAudioQueue()
-
   if (!data?.document) {
     return null
   }
@@ -39,6 +37,7 @@ const PlayAudio: React.FC<{ path: string }> = ({ path }) => {
         e.preventDefault()
         trackEvent(['Marketing', 'play', document.id])
         toggleAudioPlayer(document)
+        setIsExpanded(true)
       }}
       Icon={PlayCircleIcon}
       labelShort='Hören'
