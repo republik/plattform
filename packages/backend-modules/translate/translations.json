@@ -958,7 +958,7 @@
     },
     {
       "key": "api/search/aggs/audioSource",
-      "value": "vorgelesene Artikel"
+      "value": "hörbare Artikel"
     },
     {
       "key": "api/search/aggs/discussion",
@@ -1018,7 +1018,7 @@
     },
     {
       "key": "api/search/aggs/template/format",
-      "value": "Rubriken & Kolumnen"
+      "value": "Rubriken und Kolumnen"
     },
     {
       "key": "api/search/aggs/template/front",
@@ -1050,7 +1050,7 @@
     },
     {
       "key": "api/search/aggs/type",
-      "value": "Informationsarten"
+      "value": "Objekt"
     },
     {
       "key": "api/search/aggs/type/Comment",
@@ -1078,7 +1078,7 @@
     },
     {
       "key": "api/search/aggs/kind/meta",
-      "value": "wir über uns"
+      "value": "Wir über uns"
     },
     {
       "key": "api/search/aggs/kind/scribble",
@@ -1090,11 +1090,11 @@
     },
     {
       "key": "api/search/aggs/audioSourceKind/readAloud",
-      "value": "vorgelesen"
+      "value": "Vorgelesen"
     },
     {
       "key": "api/search/aggs/audioSourceKind/syntheticReadAloud",
-      "value": "automatisch vorgelesen"
+      "value": "synthetisch Vorgelesen"
     },
     {
       "key": "api/noname",
@@ -2351,6 +2351,34 @@
     {
       "key": "api/calendar/slot/error/404",
       "value": "Kalendereintrag nicht gefunden"
+    },
+    {
+      "key": "api/publikator/repo/404",
+      "value": "Repo nicht gefunden"
+    },
+    {
+      "key": "api/publikator/file/404",
+      "value": "Datei nicht gefunden"
+    },
+    {
+      "key": "api/publikator/file/error/notFailure",
+      "value": "Datei nicht als «fehlgeschlagen» markiert"
+    },
+    {
+      "key": "api/publikator/file/error/publicAlready",
+      "value": "Datei bereits veröffentlicht"
+    },
+    {
+      "key": "api/publikator/file/error/notPrivate",
+      "value": "Datei nicht als «privat» markiert"
+    },
+    {
+      "key": "api/publikator/file/error/notPending",
+      "value": "Datei nicht in Bearbeitung"
+    },
+    {
+      "key": "api/publikator/file/error/notYours",
+      "value": "Datei gehört nicht Ihnen"
     }
   ]
 }

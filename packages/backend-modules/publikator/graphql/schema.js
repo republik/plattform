@@ -110,6 +110,23 @@ type mutations {
   unpublishMemo(
     id: ID
   ): Memo!
+
+  "Begin an upload, returns an upload URL to PUT file to"
+  repoFileUploadBegin(
+    repoId: ID!
+    name: String!
+  ): RepoFile!
+  "Commit an upload to file"
+  repoFileUploadCommit(id: ID!): RepoFile!
+  "Abort an upload, flags file as failed"
+  repoFileUploadAbort(
+    id: ID!
+    error: String!
+  ): RepoFile!
+  "Make repo file public"
+  repoFileMakePublic(id: ID!): RepoFile!
+  "Destroy repo file"
+  repoFileDestroy(id: ID!): RepoFile!
 }
 
 type subscriptions {

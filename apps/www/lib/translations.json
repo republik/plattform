@@ -1002,7 +1002,7 @@
     },
     {
       "key": "account/progress/title",
-      "value": "Leseposition"
+      "value": "Lese- und Hörposition"
     },
     {
       "key": "account/progress/consent/label",
@@ -3253,6 +3253,34 @@
       "value": "Leseposition"
     },
     {
+      "key": "article/actionbar/audio/play",
+      "value": "Hören"
+    },
+    {
+      "key": "article/actionbar/audio/queue/add",
+      "value": "Hinzufügen"
+    },
+    {
+      "key": "article/actionbar/audio/queue/remove",
+      "value": "Entfernen"
+    },
+    {
+      "key": "article/actionbar/audio/info/speaker/default",
+      "value": "unserem Sprecherinnen-Team"
+    },
+    {
+      "key": "article/actionbar/audio/info/speaker",
+      "value": "Vorgelesen von"
+    },
+    {
+      "key": "article/actionbar/audio/info/play-synth",
+      "value": "Anhören (synthetisch)"
+    },
+    {
+      "key": "article/actionbar/audio/info/read-soon",
+      "value": "Diesen Beitrag lesen wir im Laufe des Tages ein."
+    },
+    {
       "key": "article/syntheticReadAloud/title",
       "value": "Beitrag von synthetischer Stimme vorlesen lassen."
     },
@@ -3322,11 +3350,11 @@
     },
     {
       "key": "article/progressprompt/headline",
-      "value": "Leseposition merken?"
+      "value": "Lese- und Hörposition merken?"
     },
     {
       "key": "article/progressprompt/description/feature",
-      "value": "Springen Sie an die Stelle zurück, an der Sie einen Text oder ein Hörstück unterbrochen haben. Wenn Sie die Funktion aktivieren, wird ihr Leseverhalten in der Republik aufgezeichnet. {link}"
+      "value": "Springen Sie an die Stelle zurück, an der Sie einen Text oder ein Hörstück unterbrochen haben. Wenn Sie die Funktion aktivieren, wird Ihr Leseverhalten bei der Republik aufgezeichnet. {link}"
     },
     {
       "key": "article/progressprompt/description/feature/link",
@@ -3338,7 +3366,7 @@
     },
     {
       "key": "article/progressprompt/button/confirm",
-      "value": "Leseposition aktivieren"
+      "value": "Aktivieren"
     },
     {
       "key": "article/progressprompt/button/reject",
@@ -5125,6 +5153,90 @@
       "value": "Interne Publikation (Editoren-Vorschau)"
     },
     {
+      "key": "AudioPlayer/Latest",
+      "value": "Neueste Beiträge"
+    },
+    {
+      "key": "AudioPlayer/Latest/ReadAloud",
+      "value": "Vorgelesen"
+    },
+    {
+      "key": "AudioPlayer/Latest/All",
+      "value": "Alle"
+    },
+    {
+      "key": "AudioPlayer/Latest/NoAcces",
+      "value": "Die neusten Beiträge sind für Mitglieder und Abonnentinnen der Republik zugänglich."
+    },
+    {
+      "key": "AudioPlayer/Latest/NoItems",
+      "value": "Keine Beiträge verfügbar."
+    },
+    {
+      "key": "AudioPlayer/Queue",
+      "value": "Wiedergabeliste"
+    },
+    {
+      "key": "AudioPlayer/Queue/Add",
+      "value": "Zur Wiedergabeliste hinzufügen"
+    },
+    {
+      "key": "AudioPlayer/Queue/alreadyInQueue",
+      "value": "Bereits in der Wiedergabeliste vorhanden"
+    },
+    {
+      "key": "AudioPlayer/Queue/ActiveHeading",
+      "value": "Aktueller Beitrag"
+    },
+    {
+      "key": "AudioPlayer/Queue/Remove",
+      "value": "Aus Wiedergabeliste entfernen"
+    },
+    {
+      "key": "AudioPlayer/Queue/Download",
+      "value": "Audiodatei herunterladen"
+    },
+    {
+      "key": "AudioPlayer/Queue/AddToQueueAsNext",
+      "value": "Als Nächstes abspielen"
+    },
+    {
+      "key": "AudioPlayer/Queue/GoToItem",
+      "value": "Zum Beitrag"
+    },
+    {
+      "key": "AudioPlayer/Queue/EmptyQueue/p1",
+      "value": "Sie haben noch keine Beiträge in Ihrer Wiedergabeliste."
+    },
+    {
+      "key": "AudioPlayer/Queue/EmptyQueue/p2",
+      "value": "Über das Wiedergabelisten-Symbol {icon}, können Sie Beiträge in Ihre Wiedergabeliste hinzufügen."
+    },
+    {
+      "key": "AudioPlayer/Queue/EmptyQueue/progressInfo",
+      "value": "Damit die Abspielposition von angehörten Beiträgen gespeichert wird, müssen Sie das"
+    },
+    {
+      "key": "AudioPlayer/Queue/EmptyQueue/progressLink",
+      "value": "Aufzeichnen der Hörposition aktivieren"
+    },
+    {
+      "key": "AudioPlayer/Queue/NoAcces",
+      "value": "Die Wiedergabeliste ist nur für Mitglieder und Abonnentinnen der Republik zugänglich."
+    },
+    {
+      "key": "AudioPlayer/shared/NoAccess/heading",
+      "value": "Einloggen und Weiterhören"
+    },
+    {
+      "key": "AudioPlayer/error",
+      "value": "Beim Abspielen ist ein Fehler aufgetreten."
+    },
+    {
+      "key": "AudioPlayer/error/reload",
+      "value": "Bitte laden Sie die Seite neu."
+    },
+    {
       "key": "Auth/CodeAuthorization/title",
       "value": "E-Mail-Adresse bestätigen"
     },
@@ -5334,7 +5446,7 @@
     },
     {
       "key": "Onboarding/Sections/Usability/paragraph1",
-      "value": "Auf Wunsch merken wir uns Ihre Leseposition in Beiträgen."
+      "value": "Auf Wunsch merken wir uns Ihre Lese- und Hörposition in Beiträgen."
     },
     {
       "key": "Onboarding/Sections/Usability/paragraph2",

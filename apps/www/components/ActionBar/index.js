@@ -1,15 +1,16 @@
-import { useState, Fragment, useContext } from 'react'
+import { useState, Fragment } from 'react'
 import { css } from 'glamor'
 import compose from 'lodash/flowRight'
 import {
   PdfIcon,
   ReadingTimeIcon,
   PlayCircleIcon,
+  PlaylistAddIcon,
+  PlaylistRemoveIcon,
   DownloadIcon,
   PodcastIcon,
   FontSizeIcon,
   ShareIcon,
-  ChartIcon,
   EditIcon,
   EtiquetteIcon,
   IconButton,
@@ -27,7 +28,7 @@ import PdfOverlay, { getPdfUrl } from '../Article/PdfOverlay'
 import FontSizeOverlay from '../FontSize/Overlay'
 import ShareOverlay from './ShareOverlay'
 import PodcastOverlay from './PodcastOverlay'
-import { AudioContext } from '../Audio/AudioProvider'
+import { useAudioContext } from '../Audio/AudioProvider'
 
 import SubscribeMenu from '../Notifications/SubscribeMenu'
 import BookmarkButton from './BookmarkButton'
@@ -35,6 +36,18 @@ import DiscussionLinkButton from './DiscussionLinkButton'
 import UserProgress from './UserProgress'
 import ShareButtons from './ShareButtons'
 import { useMe } from '../../lib/context/MeContext'
+import useAudioQueue from '../Audio/hooks/useAudioQueue'
+import AudioInfo from './AudioInfo'
+
+const RenderItems = ({ items }) => (
+  <>
+    {items.map((props) => (
+      <Fragment key={props.title}>
+        {props.element || <IconButton {...props} />}
+      </Fragment>
+    ))}
+  </>
+)
 
 const ActionBar = ({
   mode,
@@ -53,8 +66,15 @@ const ActionBar = ({
   const [fontSizeOverlayVisible, setFontSizeOverlayVisible] = useState(false)
   const [shareOverlayVisible, setShareOverlayVisible] = useState(false)
   const [podcastOverlayVisible, setPodcastOverlayVisible] = useState(false)
+  const {
+    toggleAudioPlayer,
+    addAudioQueueItem,
+    removeAudioQueueItem,
+    isPlaying,
+  } = useAudioContext()
+  const { isAudioQueueAvailable, checkIfInQueue, checkIfActiveItem } =
+    useAudioQueue()
 
-  const { toggleAudioPlayer } = useContext(AudioContext)
   if (!document) {
     return (
       <div {...styles.topRow} {...(isCentered && { ...styles.centered })}>
@@ -206,18 +226,28 @@ const ActionBar = ({
 
   const isArticleBottom = mode === 'articleBottom'
 
-  const PodcastButtonActionItem = {
-    title: t('PodcastButtons/title'),
-    Icon: PodcastIcon,
-    onClick: (e) => {
-      e.preventDefault()
-      trackEvent(['ActionBar', 'podcasts', meta.url])
-      setPodcastOverlayVisible(!podcastOverlayVisible)
-    },
-    label: t('PodcastButtons/title'),
-    show: !!podcast && meta.template !== 'format',
-    modes: ['articleTop'],
+  const isActiveAudioItem = checkIfActiveItem(document.id)
+  const itemPlaying = isPlaying && isActiveAudioItem
+  const itemInAudioQueue = checkIfInQueue(document.id)
+  const showAudioButtons =
+    !!meta.audioSource && meta.audioSource.kind !== 'syntheticReadAloud'
+
+  const play = (trackKey) => (e) => {
+    e.preventDefault()
+    trackEvent(['ActionBar', trackKey, document.id])
+    toggleAudioPlayer({
+      id: document.id,
+      meta: {
+        title: meta.title,
+        path: meta.path,
+        publishDate: meta.publishDate,
+        image: meta.image,
+        audioSource: meta.audioSource,
+      },
+    })
   }
+
+  const speakers = meta.contributors?.filter((c) => c.kind === 'voice')
 
   const ActionItems = [
     {
@@ -246,12 +276,6 @@ const ActionBar = ({
       ),
       modes: ['articleOverlay', 'feed', 'bookmark', 'seriesEpisode'],
       show: !!document && document.userProgress,
-    },
-    {
-      title: t('feed/actionbar/chart'),
-      Icon: ChartIcon,
-      modes: ['feed'],
-      show: meta && meta.indicateChart,
     },
     {
       title: t('article/actionbar/pdf/options'),
@@ -328,27 +352,6 @@ const ActionBar = ({
       show: !notBookmarkable && (meLoading || hasAccess),
     },
     {
-      title: t('PodcastButtons/play'),
-      Icon: PlayCircleIcon,
-      onClick: (e) => {
-        e.preventDefault()
-        trackEvent(['ActionBar', 'audio', meta.url])
-        toggleAudioPlayer({
-          audioSource: meta.audioSource,
-          title: meta.title,
-          path: meta.path,
-        })
-      },
-      label:
-        // remove label if it is in series Nav and there is userprogress
-        mode === 'seriesEpisode' && !!document.userProgress
-          ? null
-          : t('PodcastButtons/play'),
-      modes: ['feed', 'seriesEpisode'],
-      show:
-        !!meta.audioSource && meta.audioSource.kind !== 'syntheticReadAloud',
-    },
-    {
       title: t('article/actionbar/share'),
       Icon: ShareIcon,
       href: meta.url,
@@ -389,8 +392,26 @@ const ActionBar = ({
       show: true,
     },
     {
-      ...PodcastButtonActionItem,
-      modes: ['articleBottom'],
+      title: readingTimeTitle,
+      Icon: ReadingTimeIcon,
+      label: readingTimeLabel,
+      labelShort: readingTimeLabelShort,
+      show: showReadingTime,
+      modes: ['articleTop'],
+      group: 'secondary',
+    },
+    {
+      title: t('article/actionbar/userprogress'),
+      element: (
+        <UserProgress
+          documentId={document.id}
+          userProgress={document.userProgress}
+          displayMinutes={displayMinutes}
+        />
+      ),
+      show: !!document,
+      modes: ['articleTop'],
+      group: 'secondary',
     },
     {
       title: t('article/actionbar/discussion'),
@@ -430,109 +451,147 @@ const ActionBar = ({
       modes: ['articleTop', 'flyer'],
       show: document?.repoId && isEditor,
     },
-  ]
-
-  const ActionItemsSecondary = [
     {
-      title: readingTimeTitle,
-      Icon: ReadingTimeIcon,
-      label: readingTimeLabel,
-      labelShort: readingTimeLabelShort,
-      show: showReadingTime,
-      modes: ['articleTop'],
-    },
-    {
-      title: t('article/actionbar/userprogress'),
-      element: (
-        <UserProgress
-          documentId={document.id}
-          userProgress={document.userProgress}
-          displayMinutes={displayMinutes}
-        />
-      ),
-      show: !!document,
-      modes: ['articleTop'],
-    },
-    {
-      title: t('PodcastButtons/play'),
+      disabled: itemPlaying,
+      title: t('article/actionbar/audio/play'),
+      label: !forceShortLabel ? t('article/actionbar/audio/play') : '',
       Icon: PlayCircleIcon,
+      onClick: play('audio'),
+      modes: ['feed', 'seriesEpisode', 'articleTop'],
+      show: showAudioButtons,
+      group: 'audio',
+    },
+    {
+      title: t(`AudioPlayer/Queue/${itemInAudioQueue ? 'Remove' : 'Add'}`),
+      label: !forceShortLabel
+        ? t(
+            `article/actionbar/audio/queue/${
+              itemInAudioQueue ? 'remove' : 'add'
+            }`,
+          )
+        : '',
+      Icon: itemInAudioQueue ? PlaylistRemoveIcon : PlaylistAddIcon,
+      onClick: async (e) => {
+        e.preventDefault()
+        if (itemInAudioQueue) {
+          await removeAudioQueueItem(itemInAudioQueue.id)
+          trackEvent(['ActionBar', 'rmAudioQueue', document.id])
+        } else {
+          await addAudioQueueItem(document)
+          trackEvent(['ActionBar', 'addToAudioQueue', document.id])
+        }
+      },
+      modes: ['feed', 'seriesEpisode', 'articleTop'],
+      show: isAudioQueueAvailable && showAudioButtons,
+      group: 'audio',
+    },
+    {
+      title: t('PodcastButtons/title'),
+      Icon: PodcastIcon,
       onClick: (e) => {
         e.preventDefault()
-        trackEvent(['ActionBar', 'audio', meta.url])
-        toggleAudioPlayer({
-          audioSource: meta.audioSource,
-          title: meta.title,
-          path: meta.path,
-        })
+        trackEvent(['ActionBar', 'podcasts', meta.url])
+        setPodcastOverlayVisible(!podcastOverlayVisible)
       },
-      label: t('PodcastButtons/play'),
-      show:
-        !!meta?.audioSource &&
-        !['syntheticReadAloud', 'readAloud'].includes(meta.audioSource.kind),
-      modes: ['articleTop'],
+      label: t('PodcastButtons/title'),
+      show: !!podcast && meta.template !== 'format',
+      modes: ['articleTop', 'articleBottom'],
+      group: mode === 'articleTop' ? 'audio' : undefined,
     },
     {
-      ...PodcastButtonActionItem,
+      element: (
+        <AudioInfo
+          play={play}
+          showAudioButtons={showAudioButtons}
+          speakers={speakers}
+          willBeReadAloud={meta.willBeReadAloud}
+        />
+      ),
       modes: ['articleTop'],
+      show: ['readAloud', 'syntheticReadAloud'].includes(
+        meta.audioSource?.kind,
+      ),
+      group: 'audio',
     },
   ]
 
   const shouldRenderActionItem = (actionItem) =>
     actionItem.show && actionItem.modes.includes(mode)
 
-  const hasSecondaryActionItems = !!ActionItemsSecondary.filter(
-    shouldRenderActionItem,
-  ).length
+  const getGroup = (name) => (actionItem) =>
+    !name ? !actionItem.group : actionItem.group === name
 
-  const hasActionItems = !!ActionItems.filter(shouldRenderActionItem).length
+  const currentActionItems = ActionItems.filter(shouldRenderActionItem)
 
   // don't render actionbar if it has no items
-  if (!hasActionItems && !hasSecondaryActionItems) {
+  if (!currentActionItems.length) {
     return null
   }
 
+  const primaryItems = currentActionItems.filter(getGroup())
+  const secondaryItems = currentActionItems.filter(getGroup('secondary'))
+  const audioItems = currentActionItems.filter(getGroup('audio'))
+
   return (
-    <>
+    <div {...(!hasAccess && styles.wrapper)}>
       <div
-        {...styles.topRow}
-        {...(mode === 'articleOverlay' && styles.overlay)}
-        {...(mode === 'feed' && styles.feed)}
-        {...((mode === 'seriesEpisode' || mode === 'articleBottom') &&
-          styles.flexWrap)}
-        {...(!!centered && { ...styles.centered })}
+        {...(mode === 'feed' && styles.flexWrap)}
+        {...((mode === 'seriesEpisode' || mode === 'feed') &&
+          styles.feedContainer)}
       >
-        {ActionItems.filter(shouldRenderActionItem).map((props) => (
-          <Fragment key={props.title}>
-            {props.element || <IconButton {...props} />}
-          </Fragment>
-        ))}
-      </div>
-      {hasSecondaryActionItems && (
-        <div {...styles.bottomRow} {...(!!centered && { ...styles.centered })}>
-          {ActionItemsSecondary.filter(shouldRenderActionItem).map((props) => (
-            <Fragment key={props.title}>
-              {props.element || <IconButton {...props} />}
-            </Fragment>
-          ))}
+        <div
+          {...styles.topRow}
+          {...(mode === 'articleOverlay' && styles.overlay)}
+          {...((mode === 'seriesEpisode' || mode === 'feed') && styles.inline)}
+          {...(mode === 'articleBottom' && styles.flexWrap)}
+          {...(!!centered && { ...styles.centered })}
+        >
+          <RenderItems items={primaryItems} />
         </div>
-      )}
-      {mode === 'seriesOverviewBottom' && (
-        <>
-          {!inNativeApp ? (
-            <Interaction.P style={{ marginTop: 24 }}>
-              <strong>{t('article/actionbar/share')}</strong>
-            </Interaction.P>
-          ) : null}
-          <ShareButtons
-            url={meta.url}
-            title={document.title}
-            tweet=''
-            emailSubject={emailSubject}
-            emailBody=''
-            emailAttachUrl
-          />
-        </>
-      )}
+
+        {!!secondaryItems.length && (
+          <div
+            {...styles.secondary}
+            {...(!!centered && { ...styles.centered })}
+          >
+            <RenderItems items={secondaryItems} />
+          </div>
+        )}
+
+        {!!audioItems.length && (
+          <div
+            {...(mode !== 'articleTop' ? styles.inline : styles.secondary)}
+            {...(!!centered && { ...styles.centered })}
+            style={
+              mode === 'articleTop'
+                ? { alignItems: 'center' }
+                : mode === 'seriesEpisode'
+                ? { marginRight: 24 }
+                : {}
+            }
+          >
+            <RenderItems items={audioItems} />
+          </div>
+        )}
+
+        {mode === 'seriesOverviewBottom' && (
+          <>
+            {!inNativeApp ? (
+              <Interaction.P style={{ marginTop: 24 }}>
+                <strong>{t('article/actionbar/share')}</strong>
+              </Interaction.P>
+            ) : null}
+            <ShareButtons
+              url={meta.url}
+              title={document.title}
+              tweet=''
+              emailSubject={emailSubject}
+              emailBody=''
+              emailAttachUrl
+            />
+          </>
+        )}
+      </div>
 
       {/* OVERLAYS */}
       {pdfOverlayVisible && (
@@ -562,11 +621,18 @@ const ActionBar = ({
           podcast={podcast}
         />
       )}
-    </>
+    </div>
   )
 }
 
 const styles = {
+  wrapper: css({
+    marginBottom: '16px',
+  }),
+  feedContainer: css({
+    display: 'flex',
+    justifyContent: 'space-between',
+  }),
   topRow: css({
     display: 'flex',
   }),
@@ -574,7 +640,7 @@ const styles = {
     flexWrap: 'wrap',
     rowGap: 16,
   }),
-  bottomRow: css({
+  secondary: css({
     display: 'flex',
     marginTop: 24,
   }),
@@ -585,8 +651,9 @@ const styles = {
     display: 'flex',
     justifyContent: 'space-between',
   }),
-  feed: css({
+  inline: css({
     marginTop: 10,
+    display: 'inline-flex',
   }),
   centered: css({
     justifyContent: 'center',

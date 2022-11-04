@@ -128,7 +128,7 @@ class SearchUserForm extends Component {
     const { filter, value, search } = this.state
     return (
       <ConnectedAutoComplete
-        label='Autor suchen'
+        label={this.props.label || 'Autor suchen'}
         filter={filter}
         value={value}
         items={[]}

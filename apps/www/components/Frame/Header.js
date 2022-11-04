@@ -8,8 +8,8 @@ import {
   HeaderHeightProvider,
   useColorContext,
   shouldIgnoreClick,
+  BackIcon,
 } from '@project-r/styleguide'
-import { BackIcon } from '@project-r/styleguide'
 import { withMembership } from '../Auth/checkRoles'
 import withT from '../../lib/withT'
 import withInNativeApp, { postMessage } from '../../lib/withInNativeApp'
@@ -19,7 +19,6 @@ import HLine from '../Frame/HLine'
 
 import User from './User'
 import Popover from './Popover'
-import NavPopover from './Popover/Nav'
 import UserNavPopover from './Popover/UserNav'
 import LoadingBar from './LoadingBar'
 import Pullable from './Pullable'
@@ -294,9 +293,7 @@ const Header = ({
                     }/aria`,
                   )}
                   id='main'
-                  onClick={() =>
-                    isAnyNavExpanded ? closeHandler() : toggleExpanded('main')
-                  }
+                  closeOverlay={closeHandler}
                 />
               ) : showTrialButton ? (
                 <Link href='#probelesen' passHref>
@@ -350,15 +347,6 @@ const Header = ({
         />
         {!isOnMarketingPage ? <HLine formatColor={formatColor} /> : null}
       </div>
-      <Popover formatColor={formatColor} expanded={expandedNav === 'main'}>
-        <NavPopover
-          me={me}
-          router={router}
-          expanded={expandedNav === 'main'}
-          closeHandler={closeHandler}
-          onSearchSubmit={closeHandler}
-        />
-      </Popover>
       <Popover
         formatColor={formatColor}
         expanded={userNavExpanded || expandedNav === 'user'}

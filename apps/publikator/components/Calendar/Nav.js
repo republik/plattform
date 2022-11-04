@@ -12,6 +12,9 @@ import withT from '../../lib/withT'
 const styles = {
   navigation: css({
     padding: '15px 0',
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
   }),
   currentDates: css({
     margin: '0 20px',
@@ -38,7 +41,7 @@ export const NavButton = ({ goBack, goForth }) => (
     Icon={goBack ? BackIcon : ForthIcon}
     onClick={goBack || goForth}
     style={styles.navButton}
-    size={36}
+    size={24}
   />
 )
 
