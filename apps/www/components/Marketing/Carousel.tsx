@@ -164,11 +164,7 @@ const Carousel: React.FC<CarouselProps> = ({ carouselData }) => {
       <div {...styles.carousel} ref={carouselRef}>
         {items.map((d, i) => (
           <div {...styles.slide} onClick={() => handleClick(i)} key={i}>
-            <img
-              {...styles.image}
-              {...colorScheme.set('background', 'overlay')}
-              src={d.src}
-            />
+            <img {...styles.image} src={d.src} />
             <div {...styles.actions}>
               <IconButton
                 href={d.path}
@@ -221,8 +217,6 @@ const styles = {
   image: css({
     width: '100%',
     userSelect: 'none',
-    objectFit: 'contain',
-    maxHeight: 360,
   }),
   actions: css({
     marginTop: '16px',
