@@ -16,20 +16,22 @@ const Top: React.FC<CarouselProps> = (props) => {
       {...colorScheme.set('backgroundColor', 'default')}
     >
       {!me && <MarketingHeader />}
-      <div {...styles.panelContainer}>
-        <div {...styles.panel} {...styles.leadPanel}>
-          <Lead />
-        </div>
-        <div
-          {...styles.panel}
-          style={{
-            padding: 0,
-            [mediaQueries.mUp]: {
-              padding: '0 15px',
-            },
-          }}
-        >
-          <Carousel {...props} />
+      <div {...styles.center}>
+        <div {...styles.panelContainer}>
+          <div {...styles.panel} {...styles.leadPanel}>
+            <Lead />
+          </div>
+          <div
+            {...styles.panel}
+            style={{
+              padding: 0,
+              [mediaQueries.mUp]: {
+                padding: '0 15px',
+              },
+            }}
+          >
+            <Carousel {...props} />
+          </div>
         </div>
       </div>
     </div>
@@ -45,9 +47,18 @@ const styles = {
       minHeight: 500,
     },
   }),
+  center: css({
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    width: '100%',
+    [mediaQueries.mUp]: {
+      padding: '0 60px',
+    },
+  }),
   panelContainer: css({
     display: 'flex',
-    flex: 1,
+    width: '100%',
     maxWidth: 1280,
     flexDirection: 'column-reverse',
     justifyContent: 'flex-end',
@@ -57,20 +68,19 @@ const styles = {
     [mediaQueries.mUp]: {
       flexDirection: 'row',
       gap: 32,
-      margin: `120px auto ${HEADER_HEIGHT + 80}px auto`,
-      padding: `${HEADER_HEIGHT}px 60px 0 60px`,
+      margin: `120px 0 ${HEADER_HEIGHT + 80}px 0`,
     },
     [mediaQueries.sDown]: {
-      gap: 42,
+      gap: 36,
       margin: '48px 0 64px 0',
     },
   }),
   panel: css({
     flex: 1,
+    minWidth: 0,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: '0 15px',
   }),
   leadPanel: css({
     [mediaQueries.mUp]: {

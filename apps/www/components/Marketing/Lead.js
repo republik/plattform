@@ -38,23 +38,11 @@ const styles = {
     marginBottom: 0,
     textAlign: 'center',
     [mediaQueries.mUp]: {
-      fontSize: 24,
+      fontSize: 22,
       textAlign: 'left',
     },
     [mediaQueries.sDown]: {
       fontSize: 18,
-    },
-  }),
-  info: css({
-    ...fontStyles.sansSerifMedium,
-    fontSize: 20,
-    lineHeight: 1.3,
-    marginTop: 24,
-    [mediaQueries.sDown]: {
-      fontSize: 18,
-    },
-    [mediaQueries.mUp]: {
-      marginTop: 24,
     },
   }),
   logo: css({
