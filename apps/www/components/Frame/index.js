@@ -1,4 +1,4 @@
-import { useMemo, Propty } from 'react'
+import { useMemo } from 'react'
 import PropTypes from 'prop-types'
 import { css } from 'glamor'
 import 'glamor/reset'
@@ -127,38 +127,38 @@ const Frame = ({
     })
   }, [hasSecondaryNav])
   return (
-    <div {...(footer || inNativeApp ? styles.bodyGrowerContainer : undefined)}>
-      {/* body growing only needed when rendering a footer */}
+    <ColorContextProvider colorSchemeKey={pageColorSchemeKey}>
+      <ColorHtmlBodyColors colorSchemeKey={pageColorSchemeKey || 'auto'} />
+      <noscript>
+        <Box style={{ padding: 30 }}>
+          <RawHtml
+            dangerouslySetInnerHTML={{
+              __html: t('noscript'),
+            }}
+          />
+        </Box>
+      </noscript>
       <div
-        {...(footer || inNativeApp ? styles.bodyGrower : undefined)}
-        {...padHeaderRule}
+        {...(footer || inNativeApp ? styles.bodyGrowerContainer : undefined)}
       >
-        {!!meta && <Meta data={meta} />}
-        <Header
-          me={me}
-          cover={cover}
-          onNavExpanded={onNavExpanded}
-          secondaryNav={secondaryNav}
-          formatColor={formatColor}
-          pullable={pullable}
-          hasOverviewNav={hasOverviewNav}
-          stickySecondaryNav={stickySecondaryNav}
-          isOnMarketingPage={isOnMarketingPage}
-          pageColorSchemeKey={pageColorSchemeKey}
+        {/* body growing only needed when rendering a footer */}
+        <div
+          {...(footer || inNativeApp ? styles.bodyGrower : undefined)}
+          {...(!isOnMarketingPage && padHeaderRule)}
         >
-          <ColorContextProvider colorSchemeKey={pageColorSchemeKey}>
-            <ColorHtmlBodyColors
-              colorSchemeKey={pageColorSchemeKey || 'auto'}
-            />
-            <noscript>
-              <Box style={{ padding: 30 }}>
-                <RawHtml
-                  dangerouslySetInnerHTML={{
-                    __html: t('noscript'),
-                  }}
-                />
-              </Box>
-            </noscript>
+          {!!meta && <Meta data={meta} />}
+          <Header
+            me={me}
+            cover={cover}
+            onNavExpanded={onNavExpanded}
+            secondaryNav={secondaryNav}
+            formatColor={formatColor}
+            pullable={pullable}
+            hasOverviewNav={hasOverviewNav}
+            stickySecondaryNav={stickySecondaryNav}
+            isOnMarketingPage={isOnMarketingPage}
+            pageColorSchemeKey={pageColorSchemeKey}
+          >
             {inNativeAppLegacy && <LegacyAppNoticeBox t={t} />}
             {me &&
               me.prolongBeforeDate !== null &&
@@ -176,13 +176,13 @@ const Frame = ({
                 <Content>{children}</Content>
               </MainContainer>
             )}
-          </ColorContextProvider>
-        </Header>
+          </Header>
+        </div>
+        {!inNativeApp && footer && (
+          <Footer isOnMarketingPage={isOnMarketingPage} />
+        )}
       </div>
-      {!inNativeApp && footer && (
-        <Footer isOnMarketingPage={isOnMarketingPage} />
-      )}
-    </div>
+    </ColorContextProvider>
   )
 }
 
