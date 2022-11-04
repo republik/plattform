@@ -84,7 +84,7 @@ const styles = {
   }),
   leadPanel: css({
     [mediaQueries.mUp]: {
-      maxWidth: 440,
+      maxWidth: 400,
     },
   }),
 }
