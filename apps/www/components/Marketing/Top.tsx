@@ -7,7 +7,7 @@ import MarketingHeader from './MarketingHeader'
 import Carousel, { CarouselProps } from './Carousel'
 import { HEADER_HEIGHT, HEADER_HEIGHT_MOBILE } from '../constants'
 
-const Bam: React.FC<CarouselProps> = (props) => {
+const Top: React.FC<CarouselProps> = (props) => {
   const { me } = useMe()
   const [colorScheme] = useColorContext()
   return (
@@ -79,4 +79,4 @@ const styles = {
   }),
 }
 
-export default Bam
+export default Top

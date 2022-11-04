@@ -10,7 +10,7 @@ import MarketingTrialForm from './MarketingTrialForm'
 import { MainContainer } from '../Frame'
 import Box from '../Frame/Box'
 
-import Bam from './Bam'
+import Top from './Top'
 import Carpet from './Carpet'
 import Team from './Team'
 import Reasons from './Reasons'
@@ -42,7 +42,7 @@ const Marketing = ({
         <ErrorMessage error={meError} style={{ textAlign: 'center' }} />
       )}
       <ColorContextProvider colorSchemeKey='dark'>
-        <Bam carouselData={data.carousel} />
+        <Top carouselData={data.carousel} />
       </ColorContextProvider>
       <Carpet loading={loading} front={data.carpet} />
       <Reasons inNativeApp={inNativeApp} />
