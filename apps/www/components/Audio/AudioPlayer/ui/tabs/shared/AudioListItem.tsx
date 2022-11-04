@@ -4,6 +4,7 @@ import { dateFormatter, formatMinutes } from '../../../shared'
 import AudioPlayerTitle from '../../AudioPlayerTitle'
 import AudioCover from '../../AudioCover'
 import { AudioQueueItem } from '../../../../graphql/AudioQueueHooks'
+import { useInNativeApp } from '../../../../../../lib/withInNativeApp'
 import { ReactNode } from 'react'
 import useMediaProgressQuery from '../../../../hooks/useMediaProgressQuery'
 import AudioCalloutMenu, { AudioListItemAction } from './AudioCalloutMenu'
@@ -87,6 +88,7 @@ const AudioListItem = ({
   actions,
 }: AudioListItemProps) => {
   const [colorScheme] = useColorContext()
+  const { inNativeApp, inIOS } = useInNativeApp()
 
   const { meta } = item
   const { audioSource } = meta
@@ -103,7 +105,12 @@ const AudioListItem = ({
   )
 
   return (
-    <div {...styles.root} {...colorScheme.set('backgroundColor', 'default')}>
+    <div
+      {...styles.root}
+      {...(inNativeApp
+        ? colorScheme.set('backgroundColor', 'default')
+        : colorScheme.set('backgroundColor', 'overlay'))}
+    >
       {beforeActionItem}
       <button
         {...styles.buttonFix}
