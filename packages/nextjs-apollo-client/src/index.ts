@@ -55,11 +55,11 @@ export { hasSubscriptionOperation } from './apollo/apolloLink'
 export { APOLLO_STATE_PROP_NAME } from './apollo/apolloClient'
 export type { PagePropsWithApollo } from './helpers/withApollo'
 
-export { makeSSGDataFetchingHelpers } from './helpers/makeSSGDataFetchignHelpers'
+export { makeSSGDataFetchingHelpers } from './helpers/makeSSGDataFetchingHelpers'
 export type {
   GetStaticPropsWithApollo,
   GetStaticPathsWithApollo,
-} from './helpers/makeSSGDataFetchignHelpers'
+} from './helpers/makeSSGDataFetchingHelpers'
 
 export { makeSSRDataFetchingHelpers } from './helpers/makeSSRDataFetchingHelpers'
 export type { GetServerSidePropsWithApollo } from './helpers/makeSSRDataFetchingHelpers'
