@@ -826,7 +826,7 @@
     },
     {
       "key": "api/newsletters/request/WINTER/subject",
-      "value": "Bestätigen Sie Ihre Anmeldung zum Newsletter"
+      "value": "Bestätigen Sie Ihre Anmeldung zum Winter-Newsletter."
     },
     {
       "key": "api/newsletters/request/notSupported",

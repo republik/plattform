@@ -54,7 +54,6 @@ const mail = createMail([
   {
     name: 'CLIMATE',
     interestId: MAILCHIMP_INTEREST_NEWSLETTER_CLIMATE,
-    invisible: true,
   },
   {
     name: 'READALOUD',
@@ -64,7 +63,6 @@ const mail = createMail([
   {
     name: 'WINTER',
     interestId: MAILCHIMP_INTEREST_NEWSLETTER_WINTER,
-    invisible: true,
   },
 ])
 
