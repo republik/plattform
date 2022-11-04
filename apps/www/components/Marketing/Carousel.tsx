@@ -14,6 +14,7 @@ import { trackEvent } from '../../lib/matomo'
 import { useAudioContext } from '../Audio/AudioProvider'
 import useAudioQueue from '../Audio/hooks/useAudioQueue'
 import scrollIntoView from 'scroll-into-view'
+
 export type CarouselProps = { carouselData: any }
 
 type CarouselItem = {
@@ -62,23 +63,24 @@ const Carousel: React.FC<CarouselProps> = ({ carouselData }) => {
   const [disableScrollListener, setDisableScrollListener] = useState(false)
 
   useEffect(() => {
-    if (!carouselRef.current || disableScrollListener) {
+    const carousel = carouselRef.current
+    if (!carousel || disableScrollListener) {
       return
     }
     const onScroll = () => {
       setDisableScrollIntoView(true)
-      const slideWidth = carouselRef.current.scrollWidth / items.length
+      const slideWidth = carousel.scrollWidth / items.length
 
       const newIndex = Math.floor(
-        (slideWidth / 2 + carouselRef.current.scrollLeft) / slideWidth,
+        (slideWidth / 2 + carousel.scrollLeft) / slideWidth,
       )
       if (newIndex !== currentSlideIndex) {
         setCurrentSlideIndex(newIndex)
       }
     }
-    carouselRef.current.addEventListener('scroll', onScroll)
+    carousel.addEventListener('scroll', onScroll)
     return () => {
-      carouselRef.current.removeEventListener('scroll', onScroll)
+      carousel.removeEventListener('scroll', onScroll)
     }
   }, [currentSlideIndex, disableScrollListener])
 

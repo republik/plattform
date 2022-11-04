@@ -144,7 +144,7 @@ const Frame = ({
         {/* body growing only needed when rendering a footer */}
         <div
           {...(footer || inNativeApp ? styles.bodyGrower : undefined)}
-          {...(!isOnMarketingPage && !me && padHeaderRule)}
+          {...(!isOnMarketingPage && padHeaderRule)}
         >
           {!!meta && <Meta data={meta} />}
           <Header
