@@ -12,9 +12,16 @@ import SectionContainer from './Common/SectionContainer'
 import { CDN_FRONTEND_BASE_URL } from '../../lib/constants'
 import Link from 'next/link'
 import { useTranslation } from '../../lib/withT'
-// import NewsletterSignUp from '../Auth/NewsletterSignUp'
+import NewsletterSignUp from '../Auth/NewsletterSignUp'
 
 const sectionContent = [
+  {
+    name: 'winter',
+    image: '' /* Add illu here */,
+    after: <NewsletterSignUp skipTitle free name='WINTER' />,
+    href: '/format/winter-is-coming',
+    color: '#000000',
+  },
   {
     name: 'audio',
     image: '/static/marketing/audio.png?size=1426x1426',

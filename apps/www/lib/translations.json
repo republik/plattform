@@ -517,6 +517,14 @@
       "value": "Alle Beiträge, auch zum Hören"
     },
     {
+      "key": "marketing/page/sections/description/winter",
+      "value": "Es ist eine kalte, aufreibende und verwirrende Zeit. Soll man sich all den Krisen stellen oder sich davon ablenken? Wir meinen: Beides. Und bieten Hand dazu – immer Montags bei Sonnenuntergang"
+    },
+    {
+      "key": "marketing/page/sections/title/winter",
+      "value": "Winter-is-Coming-Newsletter"
+    },
+    {
       "key": "marketing/page/vision/more",
       "value": "Unsere Vision"
     },
