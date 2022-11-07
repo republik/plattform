@@ -107,7 +107,7 @@ const Carousel: React.FC<CarouselProps> = ({ carouselData }) => {
     setCurrentSlideIndex(index)
   }
 
-  const forwardDisabled = currentSlideIndex + 1 === items.length
+  const forwardDisabled = currentSlideIndex + 1 === items?.length
   const backwardDisabled = currentSlideIndex === 0
 
   const clickAreaGradient = useMemo(
@@ -161,20 +161,20 @@ const Carousel: React.FC<CarouselProps> = ({ carouselData }) => {
         </svg>
       </div>
       <div {...styles.carousel} ref={carouselRef}>
-        {items.map((d, i) => (
-          <div {...styles.slide} onClick={() => handleClick(i)} key={i}>
-            <img {...styles.image} src={d.src} />
-            <div {...styles.actions}>
-              <IconButton
-                href={d.path}
-                Icon={ArticleIcon}
-                labelShort='Lesen'
-                label='Lesen'
-              />
-              <PlayAudio path={d.path} />
+        {items?.map((d, i) => (
+            <div {...styles.slide} onClick={() => handleClick(i)} key={i}>
+              <img {...styles.image} src={d.src} />
+              <div {...styles.actions}>
+                <IconButton
+                  href={d.path}
+                  Icon={ArticleIcon}
+                  labelShort='Lesen'
+                  label='Lesen'
+                />
+                <PlayAudio path={d.path} />
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
       </div>
     </div>
   )

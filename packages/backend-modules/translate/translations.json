@@ -825,6 +825,10 @@
       "value": "Die Republik zum Hören: Anmeldung bestätigen"
     },
     {
+      "key": "api/newsletters/request/WINTER/subject",
+      "value": "Anmeldung zum Winter-is-coming-Newsletter bestätigen"
+    },
+    {
       "key": "api/newsletters/request/notSupported",
       "value": "Diese Art der Anmeldung zum gewählten Newsletter wird noch nicht unterstützt."
     },
