@@ -17,7 +17,7 @@ import NewsletterSignUp from '../Auth/NewsletterSignUp'
 const sectionContent = [
   {
     name: 'winter',
-    image: '' /* Add illu here */,
+    image: '/static/marketing/winter_wave-1.png?size=799x736',
     after: <NewsletterSignUp skipTitle free name='WINTER' />,
     href: '/format/winter-is-coming',
     color: '#000000',
