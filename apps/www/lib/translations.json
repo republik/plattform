@@ -522,7 +522,7 @@
     },
     {
       "key": "marketing/page/sections/title/winter",
-      "value": "Winter-is-Coming-Newsletter"
+      "value": "Winter-is-coming-Newsletter"
     },
     {
       "key": "marketing/page/vision/more",
@@ -962,7 +962,7 @@
     },
     {
       "key": "account/newsletterSubscriptions/WINTER/label",
-      "value": "Winter-is-Coming-Newsletter"
+      "value": "Winter-is-coming-Newsletter"
     },
     {
       "key": "account/newsletterSubscriptions/WINTER/frequency",
@@ -970,7 +970,7 @@
     },
     {
       "key": "account/newsletterSubscriptions/WINTER/description",
-      "value": "Es ist eine kalte, aufreibende und verwirrende Zeit. Soll man sich all den Krisen stellen oder sich davon ablenken? Wir meinen: Beides. "
+      "value": "Es ist eine kalte, aufreibende und verwirrende Zeit. Soll man sich all den Krisen stellen oder sich davon ablenken? Wir meinen: beides. "
     },
     {
       "key": "account/newsletterSubscriptions/CLIMATE/label",
@@ -978,7 +978,7 @@
     },
     {
       "key": "account/newsletterSubscriptions/CLIMATE/frequency",
-      "value": "Ab Januar alle 1-2 Wochen"
+      "value": "Ab Januar alle 1–2 Wochen"
     },
     {
       "key": "account/newsletterSubscriptions/CLIMATE/description",
