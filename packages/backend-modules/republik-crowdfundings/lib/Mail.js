@@ -43,13 +43,8 @@ const mail = createMail([
     interestId: MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY,
   },
   {
-    name: 'PROJECTR',
-    interestId: MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR,
-  },
-  {
-    name: 'ACCOMPLICE',
-    interestId: MAILCHIMP_INTEREST_NEWSLETTER_ACCOMPLICE,
-    visibleToRoles: ['accomplice'],
+    name: 'WINTER',
+    interestId: MAILCHIMP_INTEREST_NEWSLETTER_WINTER,
   },
   {
     name: 'CLIMATE',
@@ -61,8 +56,13 @@ const mail = createMail([
     invisible: true,
   },
   {
-    name: 'WINTER',
-    interestId: MAILCHIMP_INTEREST_NEWSLETTER_WINTER,
+    name: 'ACCOMPLICE',
+    interestId: MAILCHIMP_INTEREST_NEWSLETTER_ACCOMPLICE,
+    visibleToRoles: ['accomplice'],
+  },
+  {
+    name: 'PROJECTR',
+    interestId: MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR,
   },
 ])
 
