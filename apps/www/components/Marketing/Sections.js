@@ -19,7 +19,7 @@ const sectionContent = [
     name: 'winter',
     image: '/static/marketing/winter_wave-1.png?size=799x736',
     after: <NewsletterSignUp skipTitle free name='WINTER' />,
-    href: '/format/winter-is-coming',
+    href: '/format/winter-is-coming-newsletter',
     color: '#000000',
   },
   {
