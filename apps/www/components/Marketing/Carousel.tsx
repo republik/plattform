@@ -161,8 +161,7 @@ const Carousel: React.FC<CarouselProps> = ({ carouselData }) => {
         </svg>
       </div>
       <div {...styles.carousel} ref={carouselRef}>
-        {items &&
-          items.map((d, i) => (
+        {items?.map((d, i) => (
             <div {...styles.slide} onClick={() => handleClick(i)} key={i}>
               <img {...styles.image} src={d.src} />
               <div {...styles.actions}>
