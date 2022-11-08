@@ -422,11 +422,10 @@ interface ToolbarConfig {
 
 export type EditorContext = {
   t?: Formatter
-  Link?: React.FC
+  Link?: React.FC<any>
   nav?: JSX.Element
   repoId?: string
   commitId?: string
-  schema?: SchemaConfig
 }
 
 export type EditorConfig = {

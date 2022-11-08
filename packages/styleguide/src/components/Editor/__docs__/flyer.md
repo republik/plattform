@@ -7,61 +7,42 @@
 ```react
 state: {
     value: [
-      {
-        type: 'flyerTileOpening',
-        children: [
-          {
-            type: 'headline',
-            children: [
-              { text: 'Guten Morgen,' },
-              { type: 'break', children: [{ text: '' }] },
-              { text: 'schoen sind Sie da!' },
-            ],
-          },
-          {
-            type: 'flyerMetaP',
-            children: [
-              {
-                text: 'And ',
-              },
-              {
-                type: 'link',
-                href: 'www.one.com',
-                children: [{ text: 'one' }],
-              },
-              {
-                text: ' and ',
-              },
-              {
-                type: 'link',
-                href: 'www.two.com',
-                children: [{ text: 'two' }],
-              },
-              {
-                text: ' little links.',
-              },
-            ],
-          },
-        ],
-      },
-      {
-        type: 'flyerTileClosing',
-        children: [
-          {
-            type: 'headline',
-            children: [{ text: 'Bis nachher!' }],
-          },
-          {
-            type: 'flyerSignature',
-            children: [
-              {
-                text: 'Ihre Crew der Republik',
-              },
-            ],
-          },
-        ],
-      },
-    ],
+    {
+      type: 'flyerTileOpening',
+      children: [
+        {
+          type: 'flyerDate',
+          children: [{ text: '' }],
+          ...date,
+        },
+        {
+          type: 'headline',
+          children: [
+            { text: 'Guten Morgen.' },
+            { type: 'break', children: [{ text: '' }] },
+            { text: 'Schön, sind Sie da!' },
+          ],
+        },
+      ],
+    },
+    {
+      type: 'flyerTileClosing',
+      children: [
+        {
+          type: 'headline',
+          children: [{ text: 'Danke fürs Interesse.' }],
+        },
+        {
+          type: 'flyerSignature',
+          children: [
+            {
+              text: 'Ihre Crew der Republik',
+            },
+          ],
+        },
+      ],
+    },
+  ],
     structure: [
         {
             type: 'flyerTileOpening',

@@ -193,7 +193,11 @@ export * from './components/Icons'
 export * from './templates'
 
 export { default as SlateRender } from './components/Editor/Render'
-export { default as flyerSchema } from './components/Editor/schema/flyer'
+export {
+  default as flyerSchema,
+  flyerStructure,
+  flyerTemplate,
+} from './components/Editor/schema/flyer'
 export { RenderContextProvider } from './components/Editor/Render/Context'
 
 export { FlyerTile } from './components/Flyer'

@@ -38,13 +38,12 @@ export const MarkerConfig = {
 
 export const markerKeys = Object.keys(MarkerConfig)
 
-export const Marker = ({
-  marker = 'yellow',
-  isSelected,
-  children,
-  attributes,
-  ...props
-}) => {
+export const Marker: React.FC<{
+  marker: string
+  isSelected?: boolean
+  attributes?: any
+  [x: string]: unknown
+}> = ({ marker = 'yellow', isSelected, children, attributes, ...props }) => {
   const { color, style } = MarkerConfig[marker]
   return (
     <span

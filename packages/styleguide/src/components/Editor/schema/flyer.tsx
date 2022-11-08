@@ -1,4 +1,4 @@
-import { SchemaConfig } from '../custom-types'
+import { CustomDescendant, NodeTemplate, SchemaConfig } from '../custom-types'
 import { Figure, FigureImage, FigureByline } from '../../Figure/Slate'
 import {
   ArticleLead,
@@ -16,6 +16,56 @@ import { DefaultContainer } from '../Render/Containers'
 import { Break } from '../../Typography/Break'
 import { Sub, Sup, Flyer } from '../../Typography'
 import { Marker } from '../../Marker'
+
+export const flyerTemplate: Partial<CustomDescendant>[] = [
+  {
+    type: 'flyerTileOpening',
+    children: [
+      {
+        type: 'flyerDate',
+        children: [{ text: '' }],
+      },
+      {
+        type: 'headline',
+        children: [
+          { text: 'Guten Morgen.' },
+          { type: 'break', children: [{ text: '' }] },
+          { text: 'Schön, sind Sie da!' },
+        ],
+      },
+    ],
+  },
+  {
+    type: 'flyerTileClosing',
+    children: [
+      {
+        type: 'headline',
+        children: [{ text: 'Danke fürs Interesse.' }],
+      },
+      {
+        type: 'flyerSignature',
+        children: [
+          {
+            text: 'Ihre Crew der Republik',
+          },
+        ],
+      },
+    ],
+  },
+]
+
+export const flyerStructure: NodeTemplate[] = [
+  {
+    type: 'flyerTileOpening',
+  },
+  {
+    type: ['flyerTile', 'flyerTileMeta'],
+    repeat: true,
+  },
+  {
+    type: 'flyerTileClosing',
+  },
+]
 
 const schema: SchemaConfig = {
   container: Flyer.Layout,

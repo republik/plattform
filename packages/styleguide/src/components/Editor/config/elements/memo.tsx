@@ -7,15 +7,16 @@ import { MemoIcon } from '../../../Icons'
 import React from 'react'
 import MemoForm from '../../Forms/Memo'
 import { useRenderContext } from '../../Render/Context'
-import { RenderedElement } from '../../Render'
 import { unwrapWhenEmpty } from '../../Core/helpers/tree'
+import { Marker } from '../../../Marker'
+import renderAsText from '../../Render/text'
+import { Interaction } from '../../../Typography'
 
 const Form: React.FC<ElementFormProps<MemoElement>> = ({
   element,
   onChange,
 }) => {
-  const { t, repoId, commitId, schema } = useRenderContext()
-  console.log({ element })
+  const { t, repoId, commitId } = useRenderContext()
 
   return (
     <MemoForm
@@ -27,7 +28,13 @@ const Form: React.FC<ElementFormProps<MemoElement>> = ({
       marker={element.marker}
       setMarker={(marker) => onChange({ marker })}
       deleteMemo={false}
-      MarkedSection={<RenderedElement element={element} schema={schema} />}
+      MarkedSection={
+        <Interaction.P>
+          <Marker marker={element.marker}>
+            {renderAsText(element.children)}
+          </Marker>
+        </Interaction.P>
+      }
     />
   )
 }

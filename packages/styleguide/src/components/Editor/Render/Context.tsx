@@ -1,21 +1,12 @@
 import React, { createContext, useContext, useMemo } from 'react'
-import { createFormatter, Formatter } from '../../../lib/translate'
+import { createFormatter } from '../../../lib/translate'
 import { FlyerDate } from '../../Flyer/Date'
-import { SchemaConfig } from '../custom-types'
-
-type RenderProps = {
-  Link?: React.FC<any>
-  t?: Formatter
-  nav?: JSX.Element
-  repoId?: string
-  commitId?: string
-  schema?: SchemaConfig
-}
+import { EditorContext } from '../custom-types'
 
 export const PlaceholderLink = ({ children }) => React.Children.only(children)
 const emptyFormatter = createFormatter([])
 
-const RenderContext = createContext<RenderProps>({
+const RenderContext = createContext<EditorContext>({
   Link: PlaceholderLink,
   t: emptyFormatter,
   nav: <FlyerDate />,
@@ -24,18 +15,17 @@ const RenderContext = createContext<RenderProps>({
 
 export const useRenderContext = () => useContext(RenderContext)
 
-export const RenderContextProvider: React.FC<RenderProps> = ({
+export const RenderContextProvider: React.FC<EditorContext> = ({
   children,
   Link = PlaceholderLink,
   t = emptyFormatter,
   nav = <FlyerDate />,
   repoId,
   commitId = 'new',
-  schema,
 }) => {
   const value = useMemo(
-    () => ({ Link, t, nav, repoId, commitId, schema }),
-    [Link, t, nav, repoId, commitId, schema],
+    () => ({ Link, t, nav, repoId, commitId }),
+    [Link, t, nav, repoId, commitId],
   )
   return (
     <RenderContext.Provider value={value}>{children}</RenderContext.Provider>

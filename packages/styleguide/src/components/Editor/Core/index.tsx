@@ -87,7 +87,7 @@ const SlateEditor: React.FC<SlateEditorProps> = ({
   )
 
   return (
-    <RenderContextProvider {...config.context} schema={config.schema}>
+    <RenderContextProvider {...config.context}>
       <FormContextProvider>
         <Slate
           editor={editor}
