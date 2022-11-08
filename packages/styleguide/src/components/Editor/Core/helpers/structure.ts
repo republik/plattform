@@ -185,9 +185,7 @@ const toggleInline = (
   } else {
     Transforms.wrapNodes(editor, element, { split: true })
   }
-  return isEntireNodeSelected(target, selection)
-    ? target[1]
-    : calculateSiblingPath(target[1])
+  return calculateSiblingPath(target[1])
 }
 
 const convertBlock = (

@@ -7,10 +7,10 @@ import { MemoIcon } from '../../../Icons'
 import React from 'react'
 import MemoForm from '../../Forms/Memo'
 import { useRenderContext } from '../../Render/Context'
-import { unwrapWhenEmpty } from '../../Core/helpers/tree'
 import { Marker } from '../../../Marker'
 import renderAsText from '../../Render/text'
 import { Interaction } from '../../../Typography'
+import { unwrapWhenEmpty } from './_shared/utils'
 
 const Form: React.FC<ElementFormProps<MemoElement>> = ({
   element,

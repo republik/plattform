@@ -11,9 +11,8 @@ describe('Slate Editor: Normalisation', () => {
 
   const defaultConfig = { schema }
 
-  async function setup(structure, config = defaultConfig) {
+  async function setup(config) {
     return await mockEditor(createEditor(), {
-      structure,
       config,
       value,
       setValue: (val) => (value = val),
@@ -37,7 +36,7 @@ describe('Slate Editor: Normalisation', () => {
           repeat: true,
         },
       ]
-      await setup(structure)
+      await setup({ ...defaultConfig, structure })
       expect(cleanupTree(value)).toEqual([
         {
           type: 'headline',
@@ -69,7 +68,7 @@ describe('Slate Editor: Normalisation', () => {
           repeat: true,
         },
       ]
-      await setup(structure)
+      await setup({ ...defaultConfig, structure })
       expect(cleanupTree(value)).toEqual([
         {
           type: 'headline',
@@ -135,7 +134,7 @@ describe('Slate Editor: Normalisation', () => {
           repeat: true,
         },
       ]
-      await setup(structure)
+      await setup({ ...defaultConfig, structure })
       expect(cleanupTree(value)).toEqual([
         {
           type: 'headline',
@@ -216,7 +215,7 @@ describe('Slate Editor: Normalisation', () => {
           type: 'headline',
         },
       ]
-      await setup(structure)
+      await setup({ ...defaultConfig, structure })
       expect(cleanupTree(value)).toEqual([
         {
           type: 'headline',
@@ -275,7 +274,7 @@ describe('Slate Editor: Normalisation', () => {
           repeat: true,
         },
       ]
-      await setup(structure)
+      await setup({ ...defaultConfig, structure })
       expect(cleanupTree(value)).toEqual([
         {
           type: 'headline',
@@ -325,7 +324,7 @@ describe('Slate Editor: Normalisation', () => {
           repeat: true,
         },
       ]
-      await setup(structure)
+      await setup({ ...defaultConfig, structure })
       expect(cleanupTree(value)).toEqual([
         {
           type: 'headline',
@@ -358,7 +357,7 @@ describe('Slate Editor: Normalisation', () => {
           type: 'paragraph',
         },
       ]
-      await setup(structure)
+      await setup({ ...defaultConfig, structure })
       expect(cleanupTree(value)).toEqual([
         {
           type: 'paragraph',
@@ -403,7 +402,7 @@ describe('Slate Editor: Normalisation', () => {
           type: 'blockQuote',
         },
       ]
-      await setup(structure)
+      await setup({ ...defaultConfig, structure })
       expect(cleanupTree(value)).toEqual([
         {
           type: 'headline',
@@ -445,7 +444,7 @@ describe('Slate Editor: Normalisation', () => {
           type: 'pullQuoteText',
         },
       ]
-      await setup(structure)
+      await setup({ ...defaultConfig, structure })
       expect(cleanupTree(value)).toEqual([
         {
           type: 'pullQuoteText',
@@ -503,7 +502,7 @@ describe('Slate Editor: Normalisation', () => {
           type: 'blockQuote',
         },
       ]
-      await setup(structure)
+      await setup({ ...defaultConfig, structure })
       expect(cleanupTree(value)).toEqual(initialValue)
     })
 
@@ -537,7 +536,7 @@ describe('Slate Editor: Normalisation', () => {
           repeat: true,
         },
       ]
-      const editor = await setup(structure)
+      const editor = await setup({ ...defaultConfig, structure })
       await editor.apply({
         type: 'remove_node',
         path: [0, 0],
@@ -575,7 +574,7 @@ describe('Slate Editor: Normalisation', () => {
           type: 'blockQuote',
         },
       ]
-      await setup(structure)
+      await setup({ ...defaultConfig, structure })
       expect(cleanupTree(value)).toEqual([
         {
           type: 'blockQuote',
@@ -617,7 +616,7 @@ describe('Slate Editor: Normalisation', () => {
           repeat: true,
         },
       ]
-      await setup(structure)
+      await setup({ ...defaultConfig, structure })
       expect(value.length).toBe(2)
       expect(value[0].template).toEqual({
         type: 'headline',
@@ -653,7 +652,7 @@ describe('Slate Editor: Normalisation', () => {
           type: 'figure',
         },
       ]
-      await setup(structure)
+      await setup({ ...defaultConfig, structure })
       expect(value[0].children[1].children[0].end).toBe(undefined)
       expect(value[0].children[1].children[1].children[0].end).toBe(undefined)
       expect(value[0].children[1].children[2].end).toBe(true)
@@ -686,7 +685,7 @@ describe('Slate Editor: Normalisation', () => {
           type: 'figure',
         },
       ]
-      await setup(structure)
+      await setup({ ...defaultConfig, structure })
       expect(cleanupTree(value)).toEqual([
         {
           type: 'figure',
@@ -736,7 +735,7 @@ describe('Slate Editor: Normalisation', () => {
           type: 'paragraph',
         },
       ]
-      await setup(structure)
+      await setup({ ...defaultConfig, structure })
       expect(cleanupTree(value)).toEqual([
         {
           type: 'paragraph',
@@ -767,7 +766,7 @@ describe('Slate Editor: Normalisation', () => {
 
       let err = null
       try {
-        await setup(structure)
+        await setup({ ...defaultConfig, structure })
       } catch (error) {
         err = error
       }
@@ -822,7 +821,7 @@ describe('Slate Editor: Normalisation', () => {
           type: 'flyerTile',
         },
       ]
-      await setup(structure, { schema: flyerSchema })
+      await setup({ schema: flyerSchema, structure })
       expect(cleanupTree(value)).toEqual([
         {
           type: 'flyerTile',
@@ -935,7 +934,7 @@ describe('Slate Editor: Normalisation', () => {
           type: 'paragraph',
         },
       ]
-      const editor = await setup(structure)
+      const editor = await setup({ ...defaultConfig, structure })
       expect(cleanupTree(value)).toEqual([
         {
           type: 'headline',
@@ -976,7 +975,7 @@ describe('Slate Editor: Normalisation', () => {
           type: 'paragraph',
         },
       ]
-      await setup(structure)
+      await setup({ ...defaultConfig, structure })
       expect(cleanupTree(value)).toEqual([
         {
           type: 'paragraph',
@@ -1016,7 +1015,7 @@ describe('Slate Editor: Normalisation', () => {
           type: 'blockQuote',
         },
       ]
-      await setup(structure)
+      await setup({ ...defaultConfig, structure })
       expect(cleanupTree(value)).toEqual([
         {
           type: 'blockQuote',
@@ -1057,7 +1056,7 @@ describe('Slate Editor: Normalisation', () => {
           type: 'paragraph',
         },
       ]
-      await setup(structure)
+      await setup({ ...defaultConfig, structure })
       expect(cleanupTree(value)).toEqual([
         {
           type: 'paragraph',
@@ -1085,7 +1084,7 @@ describe('Slate Editor: Normalisation', () => {
           type: 'paragraph',
         },
       ]
-      await setup(structure)
+      await setup({ ...defaultConfig, structure })
       expect(cleanupTree(value)).toEqual([
         {
           type: 'paragraph',
@@ -1122,7 +1121,7 @@ describe('Slate Editor: Normalisation', () => {
           type: 'paragraph',
         },
       ]
-      await setup(structure)
+      await setup({ ...defaultConfig, structure })
       expect(cleanupTree(value)).toEqual([
         {
           type: 'paragraph',
@@ -1159,7 +1158,7 @@ describe('Slate Editor: Normalisation', () => {
           type: 'paragraph',
         },
       ]
-      await setup(structure)
+      await setup({ ...defaultConfig, structure })
       expect(cleanupTree(value)).toEqual([
         {
           type: 'paragraph',
@@ -1197,7 +1196,7 @@ describe('Slate Editor: Normalisation', () => {
           type: 'pullQuote',
         },
       ]
-      await setup(structure)
+      await setup({ ...defaultConfig, structure })
       expect(cleanupTree(value)).toEqual([
         {
           type: 'pullQuote',
@@ -1229,7 +1228,7 @@ describe('Slate Editor: Normalisation', () => {
           type: 'paragraph',
         },
       ]
-      await setup(structure)
+      await setup({ ...defaultConfig, structure })
       expect(value[0].children[0].placeholder).toEqual('paragraph')
     })
     it('should not add placeholder on empty text node followed or preceded by another of equal status (same place in structure)', async () => {
@@ -1252,7 +1251,7 @@ describe('Slate Editor: Normalisation', () => {
           type: 'paragraph',
         },
       ]
-      await setup(structure)
+      await setup({ ...defaultConfig, structure })
       expect(value[0].children[0].placeholder).toBe(undefined)
       expect(value[0].children[2].placeholder).toBe(undefined)
     })
@@ -1281,7 +1280,7 @@ describe('Slate Editor: Normalisation', () => {
           type: 'figure',
         },
       ]
-      await setup(structure)
+      await setup({ ...defaultConfig, structure })
       expect(value[0].children[1].children[0].placeholder).toEqual(
         'figureCaption',
       )
@@ -1311,7 +1310,7 @@ describe('Slate Editor: Normalisation', () => {
           type: 'figure',
         },
       ]
-      await setup(structure)
+      await setup({ ...defaultConfig, structure })
       expect(value[0].children[1].children[2].placeholder).toBe(undefined)
     })
     it('should not add placeholder on void node', async () => {
@@ -1339,7 +1338,7 @@ describe('Slate Editor: Normalisation', () => {
           type: 'figure',
         },
       ]
-      await setup(structure)
+      await setup({ ...defaultConfig, structure })
       expect(value[0].children[0].placeholder).toBe(undefined)
     })
 
@@ -1383,7 +1382,7 @@ describe('Slate Editor: Normalisation', () => {
           repeat: true,
         },
       ]
-      await setup(structure)
+      await setup({ ...defaultConfig, structure })
       expect(cleanupTree(value)).toEqual([
         {
           type: 'paragraph',
@@ -1435,7 +1434,7 @@ describe('Slate Editor: Normalisation', () => {
           type: 'paragraph',
         },
       ]
-      await setup(structure)
+      await setup({ ...defaultConfig, structure })
       expect(cleanupTree(value)).toEqual([
         {
           type: 'paragraph',

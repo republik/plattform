@@ -14,7 +14,7 @@ import AuthorSearch from '../../Forms/AuthorSearch'
 import { formStyles } from '../../Forms/layout'
 import { useRenderContext } from '../../Render/Context'
 import { AutoSlugLinkInfo } from '../../Forms/github'
-import { unwrapWhenEmpty } from '../../Core/helpers/tree'
+import { unwrapWhenEmpty } from './_shared/utils'
 
 const Form: React.FC<ElementFormProps<LinkElement>> = ({
   element,

@@ -21,9 +21,8 @@ describe('Slate Editor: Inline Insertion', () => {
     },
   ]
 
-  async function setup(structure = defaultStructure, config = defaultConfig) {
+  async function setup(config) {
     return await mockEditor(createEditor(), {
-      structure,
       config,
       value,
       setValue: (val) => (value = val),
@@ -43,7 +42,7 @@ describe('Slate Editor: Inline Insertion', () => {
           type: 'paragraph',
         },
       ]
-      const editor = await setup(structure)
+      const editor = await setup({ ...defaultConfig, structure })
 
       await Transforms.select(editor, {
         anchor: { path: [0, 0], offset: 6 },
@@ -89,7 +88,7 @@ describe('Slate Editor: Inline Insertion', () => {
           type: 'paragraph',
         },
       ]
-      const editor = await setup(structure)
+      const editor = await setup({ ...defaultConfig, structure })
 
       await Transforms.select(editor, { path: [0, 0], offset: 9 })
       toggleElement(editor, 'link')
@@ -136,7 +135,7 @@ describe('Slate Editor: Inline Insertion', () => {
           type: 'paragraph',
         },
       ]
-      const editor = await setup(structure)
+      const editor = await setup({ ...defaultConfig, structure })
 
       await Transforms.select(editor, {
         anchor: { path: [0, 1], offset: 0 },
@@ -180,7 +179,7 @@ describe('Slate Editor: Inline Insertion', () => {
           type: 'paragraph',
         },
       ]
-      const editor = await setup(structure)
+      const editor = await setup({ ...defaultConfig, structure })
 
       await Transforms.select(editor, {
         anchor: { path: [0, 0], offset: 4 },
@@ -224,7 +223,7 @@ describe('Slate Editor: Inline Insertion', () => {
           type: 'paragraph',
         },
       ]
-      const editor = await setup(structure)
+      const editor = await setup({ ...defaultConfig, structure })
 
       await Transforms.select(editor, { path: [0, 1], offset: 2 })
       toggleElement(editor, 'link')
@@ -262,7 +261,7 @@ describe('Slate Editor: Inline Insertion', () => {
           type: 'paragraph',
         },
       ]
-      const editor = await setup(structure)
+      const editor = await setup({ ...defaultConfig, structure })
 
       await Transforms.select(editor, {
         anchor: { path: [0, 0], offset: 6 },
@@ -298,7 +297,7 @@ describe('Slate Editor: Inline Insertion', () => {
           type: 'paragraph',
         },
       ]
-      const editor = await setup(structure)
+      const editor = await setup({ ...defaultConfig, structure })
 
       await Transforms.select(editor, { path: [0, 0], offset: 6 })
       toggleElement(editor, 'break')
@@ -332,7 +331,7 @@ describe('Slate Editor: Inline Insertion', () => {
           repeat: true,
         },
       ]
-      const editor = await setup(structure)
+      const editor = await setup({ ...defaultConfig, structure })
       await Transforms.select(editor, { path: [0, 0], offset: 5 })
 
       toggleElement(editor, 'break')
@@ -369,7 +368,7 @@ describe('Slate Editor: Inline Insertion', () => {
           type: 'paragraph',
         },
       ]
-      const editor = await setup(structure)
+      const editor = await setup({ ...defaultConfig, structure })
 
       await Transforms.select(editor, { path: [0, 1, 0], offset: 0 })
       toggleElement(editor, 'break')
@@ -395,7 +394,7 @@ describe('Slate Editor: Inline Insertion', () => {
           type: 'pullQuoteText',
         },
       ]
-      const editor = await setup(structure)
+      const editor = await setup({ ...defaultConfig, structure })
 
       await Transforms.select(editor, {
         anchor: { path: [0, 0], offset: 6 },

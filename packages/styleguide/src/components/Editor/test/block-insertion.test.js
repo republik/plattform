@@ -13,9 +13,8 @@ describe('Slate Editor: Block Insertion (On Enter)', () => {
 
   const defaultConfig = { schema }
 
-  async function setup(structure, config = defaultConfig) {
+  async function setup(config) {
     return await mockEditor(createEditor(), {
-      structure,
       config,
       value,
       setValue: (val) => (value = val),
@@ -35,7 +34,7 @@ describe('Slate Editor: Block Insertion (On Enter)', () => {
         repeat: true,
       },
     ]
-    const editor = await setup(structure)
+    const editor = await setup({ ...defaultConfig, structure })
     await Transforms.select(editor, { path: [0, 0], offset: 5 })
     insertRepeat(editor)
     await new Promise(process.nextTick)
@@ -75,7 +74,7 @@ describe('Slate Editor: Block Insertion (On Enter)', () => {
         repeat: true,
       },
     ]
-    const editor = await setup(structure)
+    const editor = await setup({ ...defaultConfig, structure })
     await Transforms.select(editor, { path: [0, 2], offset: 22 })
     insertRepeat(editor)
     await new Promise(process.nextTick)
@@ -125,7 +124,7 @@ describe('Slate Editor: Block Insertion (On Enter)', () => {
         repeat: true,
       },
     ]
-    const editor = await setup(structure)
+    const editor = await setup({ ...defaultConfig, structure })
     await Transforms.select(editor, { path: [0, 1, 0], offset: 4 })
     insertRepeat(editor)
     await new Promise(process.nextTick)
@@ -172,7 +171,7 @@ describe('Slate Editor: Block Insertion (On Enter)', () => {
         type: 'paragraph',
       },
     ]
-    const editor = await setup(structure)
+    const editor = await setup({ ...defaultConfig, structure })
     await Transforms.select(editor, { path: [0, 0], offset: 5 })
     insertRepeat(editor)
     await new Promise(process.nextTick)
@@ -205,7 +204,7 @@ describe('Slate Editor: Block Insertion (On Enter)', () => {
         repeat: true,
       },
     ]
-    const editor = await setup(structure)
+    const editor = await setup({ ...defaultConfig, structure })
     await Transforms.select(editor, { path: [0, 0], offset: 5 })
     insertRepeat(editor)
     await new Promise(process.nextTick)
@@ -246,7 +245,7 @@ describe('Slate Editor: Block Insertion (On Enter)', () => {
         repeat: true,
       },
     ]
-    const editor = await setup(structure)
+    const editor = await setup({ ...defaultConfig, structure })
     await Transforms.select(editor, { path: [0, 0], offset: 10 })
     insertRepeat(editor)
     await new Promise(process.nextTick)
@@ -287,7 +286,7 @@ describe('Slate Editor: Block Insertion (On Enter)', () => {
         repeat: true,
       },
     ]
-    const editor = await setup(structure)
+    const editor = await setup({ ...defaultConfig, structure })
     await Transforms.select(editor, {
       anchor: { path: [0, 0], offset: 6 },
       focus: { path: [0, 0], offset: 10 },
@@ -336,7 +335,7 @@ describe('Slate Editor: Block Insertion (On Enter)', () => {
         repeat: true,
       },
     ]
-    const editor = await setup(structure)
+    const editor = await setup({ ...defaultConfig, structure })
     await Transforms.select(editor, {
       focus: { path: [0, 0], offset: 5 },
       anchor: { path: [1, 0], offset: 6 },
@@ -389,7 +388,7 @@ describe('Slate Editor: Block Insertion (On Enter)', () => {
         repeat: true,
       },
     ]
-    const editor = await setup(structure)
+    const editor = await setup({ ...defaultConfig, structure })
     await Transforms.select(editor, { path: [0, 1, 1, 0], offset: 6 })
     insertRepeat(editor)
     await new Promise(process.nextTick)
@@ -440,7 +439,7 @@ describe('Slate Editor: Block Insertion (On Enter)', () => {
         repeat: true,
       },
     ]
-    const editor = await setup(structure)
+    const editor = await setup({ ...defaultConfig, structure })
     await Transforms.select(editor, { path: [0, 0, 0], offset: 3 })
     insertRepeat(editor)
     await new Promise(process.nextTick)
@@ -492,7 +491,7 @@ describe('Slate Editor: Block Insertion (On Enter)', () => {
         repeat: true,
       },
     ]
-    const editor = await setup(structure)
+    const editor = await setup({ ...defaultConfig, structure })
     await Transforms.select(editor, { path: [0, 1, 0], offset: 0 })
     insertRepeat(editor)
     await new Promise(process.nextTick)
@@ -540,7 +539,7 @@ describe('Slate Editor: Block Insertion (On Enter)', () => {
         repeat: true,
       },
     ]
-    const editor = await setup(structure)
+    const editor = await setup({ ...defaultConfig, structure })
     await Transforms.select(editor, { path: [0, 1, 0], offset: 0 })
     insertRepeat(editor)
     await new Promise(process.nextTick)
@@ -596,7 +595,7 @@ describe('Slate Editor: Block Insertion (On Enter)', () => {
         type: 'flyerTile',
       },
     ]
-    const editor = await setup(structure)
+    const editor = await setup({ ...defaultConfig, structure })
     await Transforms.select(editor, [0, 1, 0])
     insertRepeat(editor)
     await new Promise(process.nextTick)
@@ -639,7 +638,7 @@ describe('Slate Editor: Block Insertion (On Enter)', () => {
         repeat: true,
       },
     ]
-    const editor = await setup(structure, { schema: flyerSchema })
+    const editor = await setup({ schema: flyerSchema, structure })
     await Transforms.select(editor, [0, 1, 0])
     insertRepeat(editor)
     await new Promise(process.nextTick)
@@ -677,7 +676,7 @@ describe('Slate Editor: Block Insertion (On Enter)', () => {
         repeat: true,
       },
     ]
-    const editor = await setup(structure)
+    const editor = await setup({ ...defaultConfig, structure })
     await Transforms.select(editor, { path: [0, 1, 0], offset: 0 })
     insertRepeat(editor)
     await new Promise(process.nextTick)
@@ -715,7 +714,7 @@ describe('Slate Editor: Block Insertion (On Enter)', () => {
         repeat: true,
       },
     ]
-    const editor = await setup(structure)
+    const editor = await setup({ ...defaultConfig, structure })
     // select figure caption
     await Transforms.select(editor, { path: [0, 1, 0], offset: 0 })
     insertRepeat(editor)
@@ -733,7 +732,7 @@ describe('Slate Editor: Block Insertion (On Enter)', () => {
         repeat: true,
       },
     ]
-    const editor = await setup(structure)
+    const editor = await setup({ ...defaultConfig, structure })
     await Transforms.select(editor, { path: [0, 1, 2], offset: 0 })
     insertRepeat(editor)
     await new Promise(process.nextTick)
@@ -749,7 +748,7 @@ describe('Slate Editor: Block Insertion (On Enter)', () => {
         repeat: true,
       },
     ]
-    const editor = await setup(structure, { schema: flyerSchema })
+    const editor = await setup({ schema: flyerSchema, structure })
     await Transforms.select(editor, { path: [0, 5, 0], offset: 0 })
     insertRepeat(editor)
     await new Promise(process.nextTick)

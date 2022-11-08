@@ -48,7 +48,6 @@ const getForm = (
 
 export const getForms = (editor: CustomEditor, path: number[]): FormData[] => {
   if (!path || path === []) return []
-
   let topLevelNode = Editor.node(editor, path) as NodeEntry<CustomElement>
   let parent = Editor.parent(editor, topLevelNode[1])
   while (
