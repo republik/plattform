@@ -349,6 +349,7 @@ const createFrontSchema = ({
             ? TeaserFrontSplitHeadline.Editorial
             : TeaserFrontSplitHeadline.Interaction
         const sizes = {
+          small: titleSize === 'small',
           medium: titleSize === 'medium',
           large: titleSize === 'large',
         }
