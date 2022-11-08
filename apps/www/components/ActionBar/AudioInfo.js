@@ -9,8 +9,8 @@ import {
   mediaQueries,
   plainLinkRule,
   Editorial,
+  useColorContext,
 } from '@project-r/styleguide'
-import { useColorContext } from '@project-r/styleguide/src/components/Colors/ColorContext'
 import Link from 'next/link'
 import { intersperse } from '../../lib/utils/helpers'
 
