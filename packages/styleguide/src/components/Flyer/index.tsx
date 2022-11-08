@@ -17,6 +17,7 @@ const styles = {
     borderBottomStyle: 'solid',
   }),
   content: css({
+    position: 'relative',
     maxWidth: FLYER_CONTAINER_MAXWIDTH,
     margin: '0 auto',
     padding: '50px 15px',
@@ -25,6 +26,19 @@ const styles = {
     },
     '& > :last-child': {
       marginBottom: '0 !important',
+    },
+  }),
+  contentWithShare: css({
+    paddingBottom: 100,
+    [mUp]: {
+      paddingBottom: 140,
+    },
+  }),
+  share: css({
+    position: 'absolute',
+    bottom: 50,
+    [mUp]: {
+      bottom: 90,
     },
   }),
   contentOpening: css({
@@ -52,9 +66,13 @@ export const FlyerTile: React.FC<{
       {...colorScheme.set('borderBottomColor', 'flyerText')}
       {...colorScheme.set('background', 'flyerBg')}
     >
-      <div {...styles.content} style={innerStyle}>
+      <div
+        {...styles.content}
+        {...(!!ShareTile && styles.contentWithShare)}
+        style={innerStyle}
+      >
         {!!ShareTile && (
-          <div>
+          <div {...styles.share} contentEditable={false}>
             <ShareTile blockId={id} />
           </div>
         )}
