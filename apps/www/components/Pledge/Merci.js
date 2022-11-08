@@ -151,7 +151,7 @@ class Merci extends Component {
       )
     }
 
-    if (signInError && email && query.id) {
+    if (!me && signInError && email && query.id) {
       return (
         <>
           <H1>{t('merci/postpay/signInError/title')}</H1>

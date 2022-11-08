@@ -583,6 +583,7 @@ const Page = ({
                     onHighlight={onHighlight}
                     maxHeight={500}
                     maxColumns={8}
+                    style={{ marginTop: -50, bottom: -50 }}
                     lazy
                   />
                 )}

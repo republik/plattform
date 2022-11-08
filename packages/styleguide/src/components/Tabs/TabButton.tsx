@@ -93,6 +93,7 @@ const TabButton = React.forwardRef<
       )}
       {...plainButtonRule}
       {...(!isActive && hoverRule)}
+      {...colorScheme.set('color', 'text')}
       {...colorScheme.set(
         'borderColor',
         !border ? 'transparent' : isActive ? 'text' : 'divider',

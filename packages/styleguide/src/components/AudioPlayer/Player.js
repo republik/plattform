@@ -178,7 +178,11 @@ class AudioPlayer extends Component {
       const progress = audio.currentTime / audio.duration
       this.props.onProgress && this.props.onProgress(progress, audio)
       this.context.saveMediaProgress &&
-        this.context.saveMediaProgress(this.props, audio)
+        this.context.saveMediaProgress(
+          this.props?.mediaId,
+          audio.currentTime,
+          !audio.paused,
+        )
       this.setState({
         progress,
         buffered: audio.buffered,

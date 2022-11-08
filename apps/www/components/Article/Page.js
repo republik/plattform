@@ -19,7 +19,6 @@ import {
   colors,
   plainLinkRule,
   Interaction,
-  mediaQueries,
   TitleBlock,
   Editorial,
   Flyer,
@@ -61,15 +60,14 @@ import FontSizeSync from '../FontSize/Sync'
 import PageLoader from '../Loader'
 import Frame from '../Frame'
 import ActionBar from '../ActionBar'
-import ReadAloudInline from './ReadAloudInline'
 import { BrowserOnlyActionBar } from './BrowserOnly'
 import { AudioContext } from '../Audio/AudioProvider'
 import FormatFeed from '../Feed/Format'
 import StatusError from '../StatusError'
 import NewsletterSignUp from '../Auth/NewsletterSignUp'
 import ArticleGallery from '../Gallery/ArticleGallery'
-import SectionNav from '../Sections/SectionNav'
-import SectionFeed from '../Sections/SectionFeed'
+import SectionNav from '../Sections/SinglePageNav'
+import SectionFeed from '../Sections/SinglePageFeed'
 import HrefLink from '../Link/Href'
 import { withMarkAsReadMutation } from '../Notifications/enhancers'
 import { cleanAsPath } from '../../lib/utils/link'
@@ -294,7 +292,7 @@ const ArticlePage = ({
     throw new Error('redirect')
   }
 
-  const { toggleAudioPlayer, audioPlayerVisible } = useContext(AudioContext)
+  const { toggleAudioPlayer } = useContext(AudioContext)
 
   const markNotificationsAsRead = () => {
     const unreadNotifications = articleUnreadNotifications?.nodes?.filter(
@@ -384,7 +382,17 @@ const ArticlePage = ({
         },
         titleMargin: false,
         titleBreakout,
-        onAudioCoverClick: toggleAudioPlayer,
+        onAudioCoverClick: () =>
+          toggleAudioPlayer({
+            id: documentId,
+            meta: {
+              title: meta.title,
+              path: meta.path,
+              publishDate: meta.publishDate,
+              image: meta.image,
+              audioSource: meta.audioSource,
+            },
+          }),
         getVideoPlayerProps:
           inNativeApp && !inNativeIOSApp
             ? (props) => ({
@@ -723,9 +731,6 @@ const ArticlePage = ({
                                   {actionBar}
                                 </div>
                               )}
-                              {(isSyntheticReadAloud || isReadAloud) && (
-                                <ReadAloudInline meta={meta} t={t} />
-                              )}
                               {isSection && !hideSectionNav && (
                                 <Breakout size='breakout'>
                                   <SectionNav
@@ -751,12 +756,7 @@ const ArticlePage = ({
                       )}
                       {renderSchema(splitContent.main)}
                     </article>
-                    <ActionBarOverlay
-                      audioPlayerVisible={audioPlayerVisible}
-                      inNativeApp={inNativeApp}
-                    >
-                      {actionBarOverlay}
-                    </ActionBarOverlay>
+                    <ActionBarOverlay>{actionBarOverlay}</ActionBarOverlay>
                   </ProgressComponent>
                 </ArticleGallery>
               )}
@@ -846,10 +846,6 @@ const styles = {
   }),
   actionBarContainer: css({
     marginTop: 16,
-    marginBottom: 24,
-    [mediaQueries.mUp]: {
-      marginBottom: 36,
-    },
   }),
   flexCenter: css({
     display: 'flex',

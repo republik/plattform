@@ -119,7 +119,12 @@ const styles = {
 
 const Footer = ({ t, me, signOut, isOnMarketingPage, hasActiveMembership }) => {
   const [colorScheme] = useColorContext()
-  const { inNativeApp, inNativeAppVersion, inNativeIOSApp } = useInNativeApp()
+  const {
+    inNativeApp,
+    inNativeAppVersion,
+    inNativeAppBuildId,
+    inNativeIOSApp,
+  } = useInNativeApp()
 
   const navLinkStyle = useMemo(
     () =>
@@ -353,6 +358,7 @@ const Footer = ({ t, me, signOut, isOnMarketingPage, hasActiveMembership }) => {
               style={{ ...fontStyles.sansSerifRegular14 }}
             >
               v{inNativeAppVersion}
+              {inNativeAppBuildId && ` / ${inNativeAppBuildId}`}
             </span>
           )}
         </div>

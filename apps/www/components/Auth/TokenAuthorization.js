@@ -129,7 +129,11 @@ class TokenAuthorization extends Component {
     )
   }
   autoAuthorize() {
-    if (!this.state.authorizing && shouldAutoAuthorize(this.props)) {
+    if (
+      !this.state.authorizing &&
+      !this.state.authorizeError &&
+      shouldAutoAuthorize(this.props)
+    ) {
       this.authorize()
     }
   }

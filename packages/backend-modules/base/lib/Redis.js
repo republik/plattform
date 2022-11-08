@@ -9,12 +9,13 @@ const getConnectionOptions = () => {
   const { REDIS_URL = 'redis://127.0.0.1:6379' } = process.env
 
   const url = new URL(REDIS_URL)
-  const isHerokuRedis = url.hostname.indexOf('amazonaws.com') > -1
 
-  const incrementPort = url.password && isHerokuRedis
+  const isOldInsecureHerokuRedis =
+    url.hostname.indexOf('amazonaws.com') > -1 && url.protocol === 'redis:'
+  const incrementPort = url.password && isOldInsecureHerokuRedis
   if (incrementPort) {
     console.info(
-      "REDIS_URL looks like it's from heroku, automatically incrementing the port by 1",
+      "REDIS_URL looks like it's an old insecure one from heroku, automatically incrementing the port by 1",
     )
   }
 
@@ -38,7 +39,7 @@ const getConnectionOptions = () => {
   }
   debug('redis connectionOptions', connectionOptions, {
     REDIS_URL,
-    isHerokuRedis,
+    isOldInsecureHerokuRedis,
   })
   return connectionOptions
 }

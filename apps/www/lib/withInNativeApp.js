@@ -7,6 +7,11 @@ export const getNativeAppVersion = (value) => {
   return matches ? matches[1] : undefined
 }
 
+export const getNativeAppBuildId = (value) => {
+  const matches = value?.match(/RepublikApp\/([.0-9]+)\/([0-9]+)/)
+  return matches ? matches[2] : undefined
+}
+
 export const inNativeAppBrowserAppVersion = process.browser
   ? getNativeAppVersion(navigator.userAgent)
   : undefined
@@ -109,7 +114,7 @@ export const postMessage = !inNativeAppBrowser
         typeof msg === 'string' ? msg : JSON.stringify(msg),
         '*',
       )
-  : window.ReactNativeWebView
+  : window.ReactNativeWebView && window.ReactNativeWebView.postMessage
   ? (msg) =>
       window.ReactNativeWebView.postMessage(
         typeof msg === 'string' ? msg : JSON.stringify(msg),
@@ -128,18 +133,21 @@ export const NativeAppHelpers = {
 }
 
 export const useInNativeApp = () => {
-  const { userAgent, isIOS } = useUserAgent()
+  const { userAgent, isIOS, isAndroid } = useUserAgent()
 
   const inNativeAppVersion = getNativeAppVersion(userAgent)
+  const inNativeAppBuildId = getNativeAppBuildId(userAgent)
   const inNativeApp = !!inNativeAppVersion
 
   return {
     inNativeApp,
     inNativeAppLegacy: isLegacyApp(inNativeAppVersion),
     inNativeAppVersion,
+    inNativeAppBuildId,
     isMinimalNativeAppVersion: (minVersion) =>
       isNewerVersion(minVersion, inNativeAppVersion),
     inIOS: isIOS,
+    isAndroid: isAndroid,
     inIOSVersion: isIOS ? getIOSVersion(userAgent) : undefined,
     inNativeIOSApp: inNativeApp && isIOS,
   }
