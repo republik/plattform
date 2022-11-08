@@ -5,6 +5,7 @@ import {
   FigureImage as InnerFigureImage,
   FigureByline as InnerByline,
 } from './index'
+import { css } from 'glamor'
 
 export const PLACEHOLDER = '/static/placeholder.png'
 
@@ -27,7 +28,13 @@ export const FigureImage: React.FC<{
   [x: string]: unknown
 }> = ({ children, images, alt, attributes, ...props }) => {
   return (
-    <div {...attributes} {...props}>
+    <div
+      {...attributes}
+      {...props}
+      {...css({
+        '&:not(:last-child)': { marginBottom: 5 },
+      })}
+    >
       <div contentEditable={false}>
         <InnerFigureImage
           src={images?.default?.url || PLACEHOLDER}
