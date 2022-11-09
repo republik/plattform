@@ -12,10 +12,10 @@ import {
   Button,
   A,
   Spinner,
-  withMe,
 } from '@project-r/styleguide'
 import { getInitials } from '../../lib/utils/name'
 import withT from '../../lib/withT'
+import withMe from '../../lib/withMe'
 import { GHOST_PRODUCER } from '../../lib/settings'
 import { errorToString } from '../../lib/utils/errors'
 import {

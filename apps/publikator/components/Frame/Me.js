@@ -1,6 +1,7 @@
 import { css } from 'glamor'
+import withMe from '../../lib/withMe'
 import SignOut from '../Auth/SignOut'
-import { mediaQueries, withMe } from '@project-r/styleguide'
+import { mediaQueries } from '@project-r/styleguide'
 
 const styles = {
   container: css({

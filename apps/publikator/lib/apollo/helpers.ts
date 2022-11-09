@@ -1,6 +1,6 @@
 import { makeWithDefaultSSR } from '@republik/nextjs-apollo-client'
 import { initializeApollo } from '.'
-import { meQuery } from '@project-r/styleguide'
+import { meQuery } from '../withMe'
 
 export const withDefaultSSR = makeWithDefaultSSR(
   initializeApollo,

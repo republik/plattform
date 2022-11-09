@@ -2,6 +2,7 @@ import { Component, Fragment } from 'react'
 import PropTypes from 'prop-types'
 import compose from 'lodash/flowRight'
 import { graphql } from '@apollo/client/react/hoc'
+import { meQuery } from '../../lib/withMe'
 import { css } from 'glamor'
 
 import withT from '../../lib/withT'
@@ -13,7 +14,7 @@ import { SUPPORTED_TOKEN_TYPES } from '../constants'
 import EmailTokenIcon from 'react-icons/lib/md/mail-outline'
 import AppTokenIcon from 'react-icons/lib/md/phonelink'
 
-import { Interaction, Label, A, RawHtml, meQuery } from '@project-r/styleguide'
+import { Interaction, Label, A, RawHtml } from '@project-r/styleguide'
 
 const { H3, P } = Interaction
 
