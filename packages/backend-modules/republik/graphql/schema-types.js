@@ -133,6 +133,7 @@ enum NewsletterName {
   ACCOMPLICE
   CLIMATE
   READALOUD
+  WINTER
 }
 
 type Video {

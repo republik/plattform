@@ -138,7 +138,7 @@ const useAudioQueue = (): {
       })
     } else {
       const mockAudioQueueItem = {
-        id: 'local',
+        id: item.id,
         document: item,
         sequence: 0,
       }

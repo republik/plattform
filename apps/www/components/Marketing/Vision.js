@@ -2,6 +2,7 @@ import { Editorial, mediaQueries } from '@project-r/styleguide'
 import SectionContainer from './Common/SectionContainer'
 import { css } from 'glamor'
 import Link from 'next/link'
+import { useTranslation } from '../../lib/withT'
 
 const styles = {
   title: css({
@@ -17,7 +18,8 @@ const styles = {
   }),
 }
 
-const Vision = ({ t }) => {
+const Vision = () => {
+  const { t } = useTranslation()
   return (
     <SectionContainer maxWidth={720}>
       <Editorial.Subhead>

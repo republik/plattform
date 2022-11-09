@@ -1,6 +1,6 @@
 import React from 'react'
 import { css } from 'glamor'
-import { fontStyles } from '@project-r/styleguide'
+import { fontStyles, useColorContext } from '@project-r/styleguide'
 import TrialForm from '../../../../../Trial/Form'
 
 const styles = {
@@ -20,8 +20,9 @@ const NoAccessQueue = ({
   text: string
   heading: string
 }) => {
+  const [colorScheme] = useColorContext()
   return (
-    <>
+    <div {...colorScheme.set('color', 'text')}>
       <p {...styles.text}>{text}</p>
       <h3 {...styles.heading}>{heading}</h3>
       <TrialForm
@@ -38,7 +39,7 @@ const NoAccessQueue = ({
           return false
         }}
       />
-    </>
+    </div>
   )
 }
 

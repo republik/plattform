@@ -533,7 +533,7 @@ const ActionBar = ({
   const audioItems = currentActionItems.filter(getGroup('audio'))
 
   return (
-    <div {...(!hasAccess && styles.wrapper)}>
+    <div {...(!hasAccess && mode !== 'articleOverlay' && styles.bottomMargin)}>
       <div
         {...(mode === 'feed' && styles.flexWrap)}
         {...((mode === 'seriesEpisode' || mode === 'feed') &&
@@ -626,7 +626,7 @@ const ActionBar = ({
 }
 
 const styles = {
-  wrapper: css({
+  bottomMargin: css({
     marginBottom: '16px',
   }),
   feedContainer: css({

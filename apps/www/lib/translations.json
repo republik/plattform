@@ -394,11 +394,11 @@
     },
     {
       "key": "marketing/page/lead/subtitle",
-      "value": "Das digitale Magazin für Politik, Wirtschaft, Gesellschaft und Kultur. Finanziert von seinen Leserinnen."
+      "value": "Das digitale Magazin für Politik, Wirtschaft, Gesellschaft und Kultur."
     },
     {
-      "key": "marketing/page/minifront/description",
-      "value": "Lesen Sie kostenlos zwei ausgewählte Beiträge der letzten Wochen:"
+      "key": "marketing/page/lead/info",
+      "value": "Zum Lesen und Hören."
     },
     {
       "key": "marketing/page/reasons/1/title",
@@ -510,11 +510,19 @@
     },
     {
       "key": "marketing/page/sections/description/audio",
-      "value": "Wenn Sie gerade keine Hand frei haben – hier finden Sie Journalismus fürs Ohr: Diskussionen, Podcasts, Audio-Serien. Und vorgelesene Geschichten."
+      "value": "Wenn Sie gerade keine Hand frei haben – die Republik ist Journalismus fürs Ohr. Alle Beiträge erscheinen am Tag der Publikation als Audioversion, vorgelesen von grossartigen Stimmen."
     },
     {
       "key": "marketing/page/sections/title/audio",
-      "value": "Audio"
+      "value": "Alle Beiträge, auch zum Hören"
+    },
+    {
+      "key": "marketing/page/sections/description/winter",
+      "value": "Es ist eine kalte, aufreibende und verwirrende Zeit. Soll man sich all den Krisen stellen oder sich davon ablenken? Wir meinen: Beides. Und bieten Hand dazu – immer Montags bei Sonnenuntergang"
+    },
+    {
+      "key": "marketing/page/sections/title/winter",
+      "value": "Winter-is-coming-Newsletter"
     },
     {
       "key": "marketing/page/vision/more",
@@ -951,6 +959,30 @@
     {
       "key": "account/newsletterSubscriptions/ACCOMPLICE/frequency",
       "value": "4 bis 6 Mal pro Jahr"
+    },
+    {
+      "key": "account/newsletterSubscriptions/WINTER/label",
+      "value": "Winter-is-coming-Newsletter"
+    },
+    {
+      "key": "account/newsletterSubscriptions/WINTER/frequency",
+      "value": "Montags um 17 Uhr"
+    },
+    {
+      "key": "account/newsletterSubscriptions/WINTER/description",
+      "value": "Es ist eine kalte, aufreibende und verwirrende Zeit. Soll man sich all den Krisen stellen oder sich davon ablenken? Wir meinen: beides. "
+    },
+    {
+      "key": "account/newsletterSubscriptions/CLIMATE/label",
+      "value": "Klimalabor-Newsletter"
+    },
+    {
+      "key": "account/newsletterSubscriptions/CLIMATE/frequency",
+      "value": "Ab Januar alle 1–2 Wochen"
+    },
+    {
+      "key": "account/newsletterSubscriptions/CLIMATE/description",
+      "value": "Wir experimentieren und wollen zusammen mit Expertinnen und Ihnen herausfinden, was das ist: Journalismus, der uns in der Klimakrise wirklich weiterbringt. Im Newsletter informieren wir über den Stand des Projekts und Möglichkeiten zur Mitwirkung."
     },
     {
       "key": "account/newsletterSubscriptions/onlyName/subscribe",

@@ -11,13 +11,31 @@ import {
   HEADER_HORIZONTAL_PADDING,
 } from '../constants'
 import { AccountBoxIcon } from '@project-r/styleguide'
-import withT from '../../lib/withT'
+import withT, { useTranslation } from '../../lib/withT'
 import { ME_PORTRAIT_STORAGE_KEY } from '../../lib/context/MeContext'
 
 const BUTTON_SIZE = 32
 const BUTTON_SIZE_MOBILE = 26
 const BUTTON_PADDING = (HEADER_HEIGHT - BUTTON_SIZE) / 2
 const BUTTON_PADDING_MOBILE = (HEADER_HEIGHT_MOBILE - BUTTON_SIZE_MOBILE) / 2
+
+export const SignInLink = ({ isOnMarketingPage }) => {
+  const [colorScheme] = useColorContext()
+  const { t } = useTranslation()
+  return (
+    <div data-hide-if-me='true'>
+      <span {...styles.anonymous}>
+        <AccountBoxIcon {...colorScheme.set('fill', 'text')} />
+      </span>
+      <span
+        {...(isOnMarketingPage ? styles.labelMarketing : styles.labelDefault)}
+        {...colorScheme.set('color', 'text')}
+      >
+        {t('header/signin')}
+      </span>
+    </div>
+  )
+}
 
 export const getInitials = (me) =>
   (me.name && me.name.trim()
@@ -32,7 +50,7 @@ export const getInitials = (me) =>
     .map((s) => s[0])
     .join('')
 
-const User = ({ t, me, title, backButton, onClick, isOnMarketingPage }) => {
+const User = ({ me, title, backButton, onClick }) => {
   const [colorScheme] = useColorContext()
   return (
     <button {...styles.user} onClick={onClick} title={title}>
@@ -91,20 +109,7 @@ const User = ({ t, me, title, backButton, onClick, isOnMarketingPage }) => {
               {getInitials(me)}
             </span>
           ))}
-        {!me && (
-          <div data-hide-if-me='true'>
-            <span {...styles.anonymous}>
-              <AccountBoxIcon {...colorScheme.set('fill', 'text')} />
-            </span>
-            <span
-              {...(isOnMarketingPage
-                ? styles.labelMarketing
-                : styles.labelDefault)}
-            >
-              {t('header/signin')}
-            </span>
-          </div>
-        )}
+        {!me && <SignInLink />}
       </span>
     </button>
   )

@@ -119,6 +119,8 @@ const colors = {
     overlayShadow: '0 0 15px rgba(0,0,0,0.1)',
     fadeOutGradientDefault:
       'linear-gradient(0deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%)',
+    fadeOutGradientDefault90:
+      'linear-gradient(90deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%)',
     fadeOutGradientOverlay:
       'linear-gradient(0deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%)',
     displayLight: 'block',
@@ -173,6 +175,8 @@ const colors = {
     overlayShadow: '0 0 15px rgba(0,0,0,0.3)',
     fadeOutGradientDefault:
       'linear-gradient(0deg, rgba(25,25,25,1) 0%, rgba(25,25,25,0) 100%)',
+    fadeOutGradientDefault90:
+      'linear-gradient(90deg, rgba(25,25,25,1) 0%, rgba(25,25,25,0) 100%)',
     fadeOutGradientOverlay:
       'linear-gradient(0deg, rgba(31,31,31,1) 0%, rgba(31,31,31,0) 100%)',
     displayLight: 'none',

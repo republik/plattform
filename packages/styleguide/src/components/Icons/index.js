@@ -94,6 +94,7 @@ export {
   MdPlaylistAddCheck as PlaylistRemoveIcon,
   MdDragHandle as DragHandleIcon,
   MdSkipNext as SkipNextIcon,
+  MdSubject as ArticleIcon,
 } from 'react-icons/md'
 
 export {
