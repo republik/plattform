@@ -32,7 +32,9 @@ export async function middleware(req: NextRequest) {
     } else {
       resUrl.pathname = '/format/journal'
     }
-
+    // Clear 'path' from query-params, which is necessary since
+    // /journal matches in the router with [...path].tsx
+    resUrl.searchParams.delete('path')
     return NextResponse.redirect(resUrl, 307)
   }
 
