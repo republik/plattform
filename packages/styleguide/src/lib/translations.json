@@ -634,6 +634,10 @@
       "value": "Element entfernen"
     },
     {
+      "key": "memo/modal/warning/newDoc",
+      "value": "Sie können eine Notiz hinterlassen, nachdem Sie den Beitrag committed haben."
+    },
+    {
       "key": "metaData/field/href/document",
       "value": "Verlinktes Dokument: "
     }
