@@ -23,15 +23,17 @@ export async function middleware(req: NextRequest) {
     return NextResponse.rewrite(resUrl)
   }
 
-  // Redirect to latest Journal entry
+  // Redirect to the latest Journal entry
   if (req.nextUrl.pathname === '/journal') {
     const latestJournalPath = await getLatestJournalPath()
 
     if (latestJournalPath) {
-      return NextResponse.redirect(new URL(latestJournalPath, req.nextUrl))
+      resUrl.pathname = latestJournalPath
     } else {
-      return NextResponse.redirect(new URL('/format/journal', req.nextUrl))
+      resUrl.pathname = '/format/journal'
     }
+
+    return NextResponse.redirect(resUrl, 307)
   }
 
   // Don't run the middleware unless on home-page
