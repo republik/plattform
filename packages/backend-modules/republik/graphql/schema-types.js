@@ -316,7 +316,15 @@ type RevenueStats {
   surplus(
     min: DateTime!
     max: DateTime
-  ): RevenueStatsSurplus!
+  ): RevenueStatsTotalValue!
+
+  """
+  Returns sum of all payments during a specified period.
+  """
+  sum(
+    min: DateTime!
+    max: DateTime
+  ): RevenueStatsTotalValue!
 
   """
   Returns revenue segments
@@ -324,7 +332,7 @@ type RevenueStats {
   segments: RevenueStatsSegments!
 }
 
-type RevenueStatsSurplus {
+type RevenueStatsTotalValue {
   total: Int!
   updatedAt: DateTime!
 }
