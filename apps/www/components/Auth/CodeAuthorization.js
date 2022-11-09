@@ -9,10 +9,10 @@ import {
   A,
   InlineSpinner,
   useColorContext,
-  withMe,
 } from '@project-r/styleguide'
 
 import withT from '../../lib/withT'
+import withMe from '../../lib/apollo/withMe'
 import { scrollIt } from '../../lib/utils/scroll'
 import { DoneIcon } from '@project-r/styleguide'
 

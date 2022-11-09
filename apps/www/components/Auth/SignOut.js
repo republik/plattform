@@ -5,8 +5,9 @@ import { graphql } from '@apollo/client/react/hoc'
 import { gql } from '@apollo/client'
 import withT from '../../lib/withT'
 import { errorToString } from '../../lib/utils/errors'
+import { meQuery } from '../../lib/apollo/withMe'
 
-import { A, InlineSpinner, meQuery } from '@project-r/styleguide'
+import { A, InlineSpinner } from '@project-r/styleguide'
 
 class SignOut extends Component {
   constructor(props) {

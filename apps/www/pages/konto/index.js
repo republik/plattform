@@ -3,7 +3,7 @@ import { css } from 'glamor'
 import compose from 'lodash/flowRight'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
-import { mediaQueries, A, Interaction, withMe } from '@project-r/styleguide'
+import { mediaQueries, A, Interaction } from '@project-r/styleguide'
 
 import Frame from '../../components/Frame'
 import Merci from '../../components/Pledge/Merci'
@@ -15,6 +15,7 @@ import Memberships from '../../components/Account/Memberships'
 import { HintArea, AccountEnforceMe } from '../../components/Account/Elements'
 import NameAddress from '../../components/Account/UserInfo/NameAddress'
 import UpdateEmail, { UserEmail } from '../../components/Account/UserInfo/Email'
+import withMe from '../../lib/apollo/withMe'
 
 const { Emphasis } = Interaction
 

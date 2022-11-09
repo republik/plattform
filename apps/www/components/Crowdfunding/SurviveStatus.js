@@ -2,10 +2,11 @@ import compose from 'lodash/flowRight'
 
 import withSurviveStatus from './withSurviveStatus'
 import withT from '../../lib/withT'
+import withMe from '../../lib/apollo/withMe'
 
 import { RawStatus } from './Status'
 
-import { Interaction, A, withMe } from '@project-r/styleguide'
+import { Interaction, A } from '@project-r/styleguide'
 import Link from 'next/link'
 
 const SurviveStatus = ({ t, crowdfunding, hasActiveMembership }) => {

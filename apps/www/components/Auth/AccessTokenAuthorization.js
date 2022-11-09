@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react'
 import compose from 'lodash/flowRight'
 
-import { Loader, withMe } from '@project-r/styleguide'
+import { Loader } from '@project-r/styleguide'
 
 import withAuthorizeSession from './withAuthorizeSession'
+import withMe from '../../lib/apollo/withMe'
 
 const AccessTokenAuthorization = ({
   email,

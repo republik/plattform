@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react'
-import { VariableContext, withMe } from '@project-r/styleguide'
+import { VariableContext } from '@project-r/styleguide'
+
+import withMe from '../../lib/apollo/withMe'
 
 const AppVariableContext = withMe(({ me, hasAccess, children }) => {
   // we don't set variables during SSR because we want to cache user natural versions

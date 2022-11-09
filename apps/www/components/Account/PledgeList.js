@@ -1,9 +1,10 @@
 import { Component, Fragment } from 'react'
 import compose from 'lodash/flowRight'
 import { graphql } from '@apollo/client/react/hoc'
-import { A, withMe } from '@project-r/styleguide'
+import { A } from '@project-r/styleguide'
 
 import withT from '../../lib/withT'
+import withMe from '../../lib/apollo/withMe'
 import { timeFormat, chfFormat } from '../../lib/utils/format'
 import track from '../../lib/matomo'
 import List, { Item } from '../List'

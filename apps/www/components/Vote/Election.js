@@ -5,7 +5,6 @@ import {
   Interaction,
   RawHtml,
   useColorContext,
-  withMe,
 } from '@project-r/styleguide'
 import compose from 'lodash/flowRight'
 import { graphql } from '@apollo/client/react/hoc'
@@ -13,6 +12,7 @@ import { gql } from '@apollo/client'
 import { css } from 'glamor'
 import ElectionBallot from './ElectionBallot'
 import voteT from './voteT'
+import withMe from '../../lib/apollo/withMe'
 import { timeFormat } from '../../lib/utils/format'
 import Loader from '../Loader'
 import SignIn from '../Auth/SignIn'

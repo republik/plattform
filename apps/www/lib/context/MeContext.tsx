@@ -1,7 +1,15 @@
-import { createContext, ReactNode, useContext, useEffect } from 'react'
+import {
+  createContext,
+  ReactNode,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react'
 import NextHead from 'next/head'
 import { ApolloError, useQuery } from '@apollo/client'
-import { meQuery, checkRoles } from '@project-r/styleguide'
+import { checkRoles, meQuery } from '../apollo/withMe'
 import { css } from 'glamor'
 import { getInitials } from '../../components/Frame/User'
 

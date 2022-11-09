@@ -19,12 +19,12 @@ import {
   Label,
   Button,
   colors,
-  withMe,
 } from '@project-r/styleguide'
 
 import FieldSet from '../../FieldSet'
 import { withMyDetails, withMyDetailsMutation } from '../enhancers'
 import { Hint, EditButton } from '../Elements'
+import withMe from '../../../lib/apollo/withMe'
 
 const { P, Emphasis } = Interaction
 

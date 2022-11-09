@@ -5,6 +5,7 @@ import { graphql, withApollo } from '@apollo/client/react/hoc'
 import { gql } from '@apollo/client'
 
 import withT from '../../lib/withT'
+import { meQuery } from '../../lib/apollo/withMe'
 import withInNativeApp from '../../lib/withInNativeApp'
 
 import ErrorMessage from '../ErrorMessage'
@@ -14,7 +15,6 @@ import {
   Interaction,
   RawHtml,
   Editorial,
-  meQuery,
 } from '@project-r/styleguide'
 
 import Poller from './Poller'

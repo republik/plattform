@@ -3,6 +3,7 @@ import compose from 'lodash/flowRight'
 import { format } from 'url'
 
 import withT from '../../lib/withT'
+import withMe from '../../lib/apollo/withMe'
 
 import Poller from '../Auth/Poller'
 import { withSignIn } from '../Auth/SignIn'
@@ -10,8 +11,6 @@ import { WithAccess } from '../Auth/withMembership'
 import ErrorMessage from '../ErrorMessage'
 
 import ClaimPledge from './Claim'
-
-import { withMe } from '@project-r/styleguide'
 
 import { EMAIL_CONTACT, ONBOARDING_PACKAGES } from '../../lib/constants'
 

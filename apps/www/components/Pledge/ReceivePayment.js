@@ -4,6 +4,7 @@ import { graphql } from '@apollo/client/react/hoc'
 import { gql } from '@apollo/client'
 
 import withT from '../../lib/withT'
+import withMe from '../../lib/apollo/withMe'
 import Loader from '../Loader'
 import { errorToString } from '../../lib/utils/errors'
 
@@ -15,7 +16,7 @@ import { EMAIL_PAYMENT } from '../../lib/constants'
 
 import RawHtmlTranslation from '../RawHtmlTranslation'
 
-import { A, withMe } from '@project-r/styleguide'
+import { A } from '@project-r/styleguide'
 
 // ToDo: query autoPay
 const pledgeQuery = gql`

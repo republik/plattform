@@ -11,6 +11,7 @@ import { withSignOut } from '../Auth/SignOut'
 
 import { errorToString } from '../../lib/utils/errors'
 import withT from '../../lib/withT'
+import withMe from '../../lib/apollo/withMe'
 import { chfFormat } from '../../lib/utils/format'
 import track from '../../lib/matomo'
 import { getConversionPayload } from '../../lib/utils/track'
@@ -29,7 +30,6 @@ import {
   InlineSpinner,
   Label,
   A,
-  withMe,
 } from '@project-r/styleguide'
 
 import PaymentForm from '../Payment/Form'

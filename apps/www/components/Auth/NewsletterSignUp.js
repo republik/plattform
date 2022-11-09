@@ -3,12 +3,13 @@ import compose from 'lodash/flowRight'
 import { graphql } from '@apollo/client/react/hoc'
 import { gql } from '@apollo/client'
 
+import withMe from '../../lib/apollo/withMe'
 import withT from '../../lib/withT'
 
 import NewsletterSubscriptions from '../Account/NewsletterSubscriptions'
 import EmailForm, { checkEmail } from './EmailForm'
 
-import { Interaction, withMe } from '@project-r/styleguide'
+import { Interaction } from '@project-r/styleguide'
 
 const SignUp = ({
   me,

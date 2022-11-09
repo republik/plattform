@@ -6,6 +6,7 @@ import { css } from 'glamor'
 import { withRouter } from 'next/router'
 
 import withT, { t } from '../../lib/withT'
+import withMe from '../../lib/apollo/withMe'
 
 import Loader from '../Loader'
 import Frame, { MainContainer } from '../Frame'
@@ -37,7 +38,6 @@ import {
   usePrevious,
   useHeaderHeight,
   useColorContext,
-  withMe,
 } from '@project-r/styleguide'
 import ElectionBallotRow from '../Vote/ElectionBallotRow'
 import { documentListQueryFragment } from '../Feed/DocumentListContainer'

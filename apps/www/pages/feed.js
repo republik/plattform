@@ -1,7 +1,7 @@
 import compose from 'lodash/flowRight'
 import Feed from '../components/Feed'
 import { enforceMembership } from '../components/Auth/withMembership'
-import { withMe } from '@project-r/styleguide'
+import withMe from '../lib/apollo/withMe'
 import withT from '../lib/withT'
 
 import { CDN_FRONTEND_BASE_URL } from '../lib/constants'

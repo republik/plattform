@@ -1,4 +1,4 @@
-import { withMe, checkRoles } from '@project-r/styleguide'
+import withMe, { checkRoles } from '../../lib/apollo/withMe'
 
 export const withAuthorization =
   (roles, key = 'isAuthorized') =>

@@ -9,11 +9,11 @@ import {
   fontStyles,
   ColorContextProvider,
   useColorContext,
-  withMe,
 } from '@project-r/styleguide'
 import { OpenSourceIcon } from '@project-r/styleguide'
 
 import withT from '../../lib/withT'
+import withMe from '../../lib/apollo/withMe'
 import { withSignOut } from '../Auth/SignOut'
 import { useInNativeApp } from '../../lib/withInNativeApp'
 import { ZINDEX_FOOTER } from '../constants'

@@ -20,7 +20,6 @@ import {
   ChartLead,
   ChartLegend,
   Chart,
-  withMe,
 } from '@project-r/styleguide'
 
 import Frame from '../components/Frame'
@@ -40,6 +39,7 @@ import {
 } from '../components/Testimonial/List'
 
 import { CROWDFUNDING, CDN_FRONTEND_BASE_URL } from '../lib/constants'
+import withMe from '../lib/apollo/withMe'
 import { swissTime } from '../lib/utils/format'
 import withInNativeApp from '../lib/withInNativeApp'
 import Link from 'next/link'

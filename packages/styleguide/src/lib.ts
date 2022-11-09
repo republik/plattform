@@ -202,10 +202,3 @@ export { RenderContextProvider } from './components/Editor/Render/Context'
 
 export { FlyerTile } from './components/Flyer'
 export { FlyerDate } from './components/Flyer/Date'
-
-export {
-  default as withMe,
-  meQuery,
-  checkRoles,
-  userProgressConsentFragment,
-} from './lib/apollo/withMe'

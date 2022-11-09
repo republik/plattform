@@ -9,6 +9,7 @@ import ErrorMessage from '../../ErrorMessage'
 import Consents, { getConsentsError } from '../../Pledge/Consents'
 
 import withT from '../../../lib/withT'
+import withMe, { meQuery } from '../../../lib/apollo/withMe'
 import isEmail from 'validator/lib/isEmail'
 import { trackEvent } from '../../../lib/matomo'
 import { intersperse } from '../../../lib/utils/helpers'
@@ -28,8 +29,6 @@ import {
   colors,
   fontStyles,
   mediaQueries,
-  withMe,
-  meQuery,
 } from '@project-r/styleguide'
 
 const { H2, P } = Interaction

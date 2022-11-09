@@ -3,11 +3,12 @@ import compose from 'lodash/flowRight'
 import { css } from 'glamor'
 import { withMembership } from '../Auth/checkRoles'
 import withT from '../../lib/withT'
+import withMe from '../../lib/apollo/withMe'
 
 import Box from '../Frame/Box'
 import ErrorMessage from '../ErrorMessage'
 import { P } from './Elements'
-import { Loader, InlineSpinner, Checkbox, withMe } from '@project-r/styleguide'
+import { Loader, InlineSpinner, Checkbox } from '@project-r/styleguide'
 
 import { getFeatureDescription } from '../Article/Progress'
 import { withProgressApi } from '../Article/Progress/api'
