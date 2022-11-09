@@ -11,16 +11,6 @@ describe('Slate Editor: Inline Insertion', () => {
 
   const defaultConfig = { schema }
 
-  const defaultStructure = [
-    {
-      type: 'headline',
-    },
-    {
-      type: ['paragraph', 'blockQuote', 'ul', 'ol'],
-      repeat: true,
-    },
-  ]
-
   async function setup(config) {
     return await mockEditor(createEditor(), {
       config,
@@ -154,6 +144,43 @@ describe('Slate Editor: Inline Insertion', () => {
               children: [{ text: 'ipsum', bold: true }],
             },
             { text: ' dolor' },
+          ],
+        },
+      ])
+      expect(editor.selection.anchor.path).toEqual([0, 1, 0])
+    })
+
+    it('should work across an entire node', async () => {
+      value = [
+        {
+          type: 'paragraph',
+          children: [{ text: 'Lorem ipsum dolor.' }],
+        },
+      ]
+      const structure = [
+        {
+          type: 'paragraph',
+        },
+      ]
+      const editor = await setup({ ...defaultConfig, structure })
+
+      await Transforms.select(editor, {
+        anchor: { path: [0, 0], offset: 0 },
+        focus: { path: [0, 0], offset: 18 },
+      })
+      toggleElement(editor, 'memo')
+      await new Promise(process.nextTick)
+
+      expect(cleanupTree(value)).toEqual([
+        {
+          type: 'paragraph',
+          children: [
+            { text: '' },
+            {
+              type: 'memo',
+              children: [{ text: 'Lorem ipsum dolor.' }],
+            },
+            { text: '' },
           ],
         },
       ])

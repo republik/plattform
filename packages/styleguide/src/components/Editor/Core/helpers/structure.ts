@@ -36,6 +36,7 @@ import {
   isEntireNodeSelected,
   selectAdjacent,
   spansManyElements,
+  isFirstSibling,
 } from './tree'
 import { config as elConfig } from '../../config/elements'
 import { getCharCount, selectNearestWord } from './text'
@@ -185,7 +186,12 @@ const toggleInline = (
   } else {
     Transforms.wrapNodes(editor, element, { split: true })
   }
-  return calculateSiblingPath(target[1])
+  // if the node is the first inline sibling,
+  // after wrapping the inline element around it,
+  // slate will automatically insert an empty text node before
+  return isEntireNodeSelected(target, selection) && !isFirstSibling(target)
+    ? target[1]
+    : calculateSiblingPath(target[1])
 }
 
 const convertBlock = (

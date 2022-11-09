@@ -388,6 +388,9 @@ export const getSelectedElement = (
   return selectedNode as NodeEntry<CustomElement>
 }
 
+export const isFirstSibling = (node: NodeEntry<CustomNode>): boolean =>
+  node[1].slice(-1)[0] === 0
+
 export const hasNextSibling = (
   editor: CustomEditor,
   isInline = false,
