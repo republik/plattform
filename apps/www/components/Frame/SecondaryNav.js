@@ -27,7 +27,7 @@ export const SecondaryNav = ({
 }) => {
   const [colorScheme] = useColorContext()
   const router = useRouter()
-  const active = router.asPath
+  const currentPath = router.asPath
 
   return (
     <>
@@ -48,7 +48,7 @@ export const SecondaryNav = ({
         >
           <NavLink
             href='/'
-            active={active === '/front' ? '/' : active}
+            currentPath={currentPath === '/front' ? '/' : currentPath}
             minifeed
             title={t('navbar/front')}
           >
@@ -57,7 +57,7 @@ export const SecondaryNav = ({
           <NavLink
             prefetch
             href='/feed'
-            active={active}
+            currentPath={currentPath}
             minifeed
             title={t('navbar/feed')}
           >
@@ -65,7 +65,8 @@ export const SecondaryNav = ({
           </NavLink>
           <NavLink
             href='/journal'
-            active={active}
+            currentPath={currentPath}
+            isActive={currentPath.endsWith('/journal')}
             formatColor='accentColorFlyer'
             minifeed
             title={t('navbar/flyer')}
@@ -74,7 +75,7 @@ export const SecondaryNav = ({
           </NavLink>
           <NavLink
             href='/dialog'
-            active={active}
+            currentPath={currentPath}
             formatColor={colors.primary}
             minifeed
             title={t('navbar/discussion')}
@@ -83,12 +84,12 @@ export const SecondaryNav = ({
           </NavLink>
           <NavLink
             href='/suche'
-            active={active}
+            currentPath={currentPath}
             title={t('pages/search/title')}
             noPlaceholder
             minifeed
           >
-            {'/suche' === active ? (
+            {'/suche' === currentPath ? (
               <BoldSearchIcon {...colorScheme.set('fill', 'text')} size={18} />
             ) : (
               <SearchMenuIcon {...colorScheme.set('fill', 'text')} size={18} />

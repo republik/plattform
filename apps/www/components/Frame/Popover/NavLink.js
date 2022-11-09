@@ -101,7 +101,7 @@ export const NavA = forwardRef(
 const NavLink = ({
   href,
   children,
-  active,
+  currentPath,
   closeHandler,
   inline,
   color,
@@ -111,14 +111,15 @@ const NavLink = ({
   title,
   large,
   noPlaceholder,
+  isActive,
 }) => {
-  const isActive = href === active
+  const isCurrentPath = href === currentPath
   const linkRef = useRef()
   useEffect(() => {
-    if (linkRef && linkRef.current && isActive) {
+    if (linkRef && linkRef.current && isCurrentPath) {
       linkRef.current.scrollIntoView()
     }
-  }, [isActive])
+  }, [isCurrentPath])
 
   return (
     <Link href={href} prefetch={prefetch ? undefined : prefetch} passHref>
@@ -139,7 +140,7 @@ const NavLink = ({
         formatColor={formatColor}
         activeFormatColor={minifeed}
         large={large}
-        isActive={isActive}
+        isActive={isActive || isCurrentPath}
       >
         {children}
       </NavA>

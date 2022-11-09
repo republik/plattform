@@ -14,8 +14,8 @@ const styles = {
   }),
 }
 
-const NavLink = ({ children, active, href, replace }) => {
-  if (active) return <span {...styles.navLink}>{children}</span>
+const NavLink = ({ children, currentPath, href, replace }) => {
+  if (currentPath) return <span {...styles.navLink}>{children}</span>
   return (
     <span {...styles.navLink}>
       <Link href={href} passHref replace={replace}>
@@ -45,7 +45,7 @@ const Nav = ({ router: { query, asPath }, t, isTemplate, isNew }) => {
       </Head>
       <NavLink
         href={{ pathname: editPath, query: editQuery }}
-        active={currentPath === editPath && !query.preview}
+        currentPath={currentPath === editPath && !query.preview}
       >
         {t(`repo/nav/${isTemplate ? 'template' : 'document'}/edit`)}
       </NavLink>
@@ -55,18 +55,18 @@ const Nav = ({ router: { query, asPath }, t, isTemplate, isNew }) => {
             pathname: editPath,
             query: { ...editQuery, preview: true },
           }}
-          active={currentPath === editPath && query.preview}
+          currentPath={currentPath === editPath && query.preview}
         >
           Vorschau
         </NavLink>
       )}
       {!isNew && (
-        <NavLink href={treePath} active={currentPath === treePath}>
+        <NavLink href={treePath} currentPath={currentPath === treePath}>
           Versionen
         </NavLink>
       )}
       {!isNew && (
-        <NavLink href={filesPath} active={currentPath === filesPath}>
+        <NavLink href={filesPath} currentPath={currentPath === filesPath}>
           Dateien
         </NavLink>
       )}
