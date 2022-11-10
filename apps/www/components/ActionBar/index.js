@@ -39,9 +39,9 @@ import { useMe } from '../../lib/context/MeContext'
 import useAudioQueue from '../Audio/hooks/useAudioQueue'
 import AudioInfo from './AudioInfo'
 import {
-  AudioPlaybackLocation,
+  AudioPlayerLocations,
   AudioPlayerActions,
-} from '../Audio/types/AudioTracking'
+} from '../Audio/types/AudioActionTracking'
 
 const RenderItems = ({ items }) => (
   <>
@@ -248,7 +248,7 @@ const ActionBar = ({
           audioSource: meta.audioSource,
         },
       },
-      AudioPlaybackLocation.ACTION_BAR,
+      AudioPlayerLocations.ACTION_BAR,
     )
   }
 
@@ -481,14 +481,14 @@ const ActionBar = ({
         if (itemInAudioQueue) {
           await removeAudioQueueItem(itemInAudioQueue.id)
           trackEvent([
-            AudioPlaybackLocation.ACTION_BAR,
+            AudioPlayerLocations.ACTION_BAR,
             AudioPlayerActions.REMOVE_QUEUE_ITEM,
             meta?.path,
           ])
         } else {
           await addAudioQueueItem(document)
           trackEvent([
-            AudioPlaybackLocation.ACTION_BAR,
+            AudioPlayerLocations.ACTION_BAR,
             AudioPlayerActions.ADD_QUEUE_ITEM,
             meta?.path,
           ])

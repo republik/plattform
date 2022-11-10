@@ -82,7 +82,7 @@ import Discussion from '../Discussion/Discussion'
 import ArticleRecommendationsFeed from './ArticleRecommendationsFeed'
 import { getMetaData, runMetaFromQuery } from './metadata'
 import FlyerFooter, { FlyerNav } from './Flyer'
-import { AudioPlaybackLocation } from '../Audio/types/AudioTracking'
+import { AudioPlayerLocations } from '../Audio/types/AudioActionTracking'
 
 const LoadingComponent = () => <SmallLoader loading />
 
@@ -395,7 +395,7 @@ const ArticlePage = ({
                 audioSource: meta.audioSource,
               },
             },
-            AudioPlaybackLocation.ARTICLE,
+            AudioPlayerLocations.ARTICLE,
           ),
         getVideoPlayerProps:
           inNativeApp && !inNativeIOSApp

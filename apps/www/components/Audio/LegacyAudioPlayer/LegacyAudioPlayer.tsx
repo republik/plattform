@@ -10,9 +10,9 @@ import { useMe } from '../../../lib/context/MeContext'
 import { usePlaybackRate } from '../../../lib/playbackRate'
 import { trackEvent } from '../../../lib/matomo'
 import {
-  AudioPlaybackLocation,
+  AudioPlayerLocations,
   AudioPlayerActions,
-} from '../types/AudioTracking'
+} from '../types/AudioActionTracking'
 
 const LegacyAudioPlayer = () => {
   const { t } = useTranslation()
@@ -48,7 +48,7 @@ const LegacyAudioPlayer = () => {
                     setPlaybackRate={(playbackRate) => {
                       setPlaybackRate(playbackRate)
                       trackEvent([
-                        AudioPlaybackLocation.PLAYER,
+                        AudioPlayerLocations.AUDIO_PLAYER,
                         AudioPlayerActions.PLAYBACK_RATE_CHANGED,
                         playbackRate,
                       ])

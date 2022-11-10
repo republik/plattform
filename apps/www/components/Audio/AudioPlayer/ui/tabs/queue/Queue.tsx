@@ -25,9 +25,9 @@ import { useMe } from '../../../../../../lib/context/MeContext'
 import { useInNativeApp } from '../../../../../../lib/withInNativeApp'
 import { useAudioContext } from '../../../../AudioProvider'
 import {
-  AudioPlaybackLocation,
+  AudioPlayerLocations,
   AudioPlayerActions,
-} from '../../../../types/AudioTracking'
+} from '../../../../types/AudioActionTracking'
 import { trackEvent } from '../../../../../../lib/matomo'
 
 const styles = {
@@ -86,7 +86,7 @@ const Queue = ({
    * @param item
    */
   const handleClick = async (item: AudioQueueItem) => {
-    toggleAudioPlayer(item.document, AudioPlaybackLocation.PLAYER)
+    toggleAudioPlayer(item.document, AudioPlayerLocations.AUDIO_PLAYER)
   }
 
   /**
@@ -97,7 +97,7 @@ const Queue = ({
     try {
       await removeAudioQueueItem(item.id)
       trackEvent([
-        AudioPlaybackLocation.PLAYER,
+        AudioPlayerLocations.AUDIO_PLAYER,
         AudioPlayerActions.REMOVE_QUEUE_ITEM,
         item?.document?.meta?.path,
       ])

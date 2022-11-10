@@ -13,7 +13,7 @@ import { trackEvent } from '../../lib/matomo'
 import { useAudioContext } from '../Audio/AudioProvider'
 import useAudioQueue from '../Audio/hooks/useAudioQueue'
 import scrollIntoView from 'scroll-into-view'
-import { AudioPlaybackLocation } from '../Audio/types/AudioTracking'
+import { AudioPlayerLocations } from '../Audio/types/AudioActionTracking'
 
 export type CarouselProps = { carouselData: any }
 
@@ -37,7 +37,7 @@ const PlayAudio: React.FC<{ path: string }> = ({ path }) => {
       onClick={(e) => {
         e.preventDefault()
         trackEvent(['Marketing', 'play', document.id])
-        toggleAudioPlayer(document, AudioPlaybackLocation.MARKETING_FRONT)
+        toggleAudioPlayer(document, AudioPlayerLocations.MARKETING_FRONT)
         setIsExpanded(true)
       }}
       Icon={PlayCircleIcon}

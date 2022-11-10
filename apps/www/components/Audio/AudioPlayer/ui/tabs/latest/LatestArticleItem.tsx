@@ -14,9 +14,9 @@ import { useTranslation } from '../../../../../../lib/withT'
 import { useState } from 'react'
 import { useAudioContext } from '../../../../AudioProvider'
 import {
-  AudioPlaybackLocation,
+  AudioPlayerLocations,
   AudioPlayerActions,
-} from '../../../../types/AudioTracking'
+} from '../../../../types/AudioActionTracking'
 import { trackEvent } from '../../../../../../lib/matomo'
 
 type ArticleItemProps = {
@@ -39,7 +39,7 @@ const LatestArticleItem = ({
   const handlePlay = async (article: AudioPlayerItem) => {
     try {
       setIsLoading(true)
-      toggleAudioPlayer(article, AudioPlaybackLocation.PLAYER)
+      toggleAudioPlayer(article, AudioPlayerLocations.AUDIO_PLAYER)
       setIsLoading(false)
     } catch (error) {
       // TODO: handle error
@@ -56,7 +56,7 @@ const LatestArticleItem = ({
       setIsLoading(false)
 
       trackEvent([
-        AudioPlaybackLocation.PLAYER,
+        AudioPlayerLocations.AUDIO_PLAYER,
         position === 2
           ? AudioPlayerActions.ADD_NEXT_QUEUE_ITEM
           : AudioPlayerActions.ADD_QUEUE_ITEM,

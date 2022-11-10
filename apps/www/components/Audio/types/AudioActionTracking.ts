@@ -1,8 +1,8 @@
 /**
  * All player action locations to track
  */
-export enum AudioPlaybackLocation {
-  PLAYER = 'AudioPlayer',
+export enum AudioPlayerLocations {
+  AUDIO_PLAYER = 'AudioPlayer',
   FRONT = 'Front',
   MARKETING_FRONT = 'MarketingFront',
   ACTION_BAR = 'ActionBar',

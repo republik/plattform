@@ -15,7 +15,7 @@ import { useMediaProgress } from './MediaProgress'
 import { AudioPlayerItem } from './types/AudioPlayerItem'
 import useAudioQueue from './hooks/useAudioQueue'
 import EventEmitter from 'events'
-import { AudioPlaybackLocation } from './types/AudioTracking'
+import { AudioPlayerLocations } from './types/AudioActionTracking'
 
 export enum AudioContextEvent {
   TOGGLE_PLAYER = 'togglePlayer',
@@ -25,7 +25,7 @@ export enum AudioContextEvent {
 
 type ToggleAudioPlayerFunc = (
   playerItem: AudioPlayerItem,
-  location?: AudioPlaybackLocation,
+  location?: AudioPlayerLocations,
 ) => void
 
 export const AudioEventEmitter = new EventEmitter()
@@ -126,7 +126,7 @@ const AudioProvider = ({ children }) => {
 
   const toggleAudioPlayer = async (
     playerItem: AudioPlayerItem,
-    location?: AudioPlaybackLocation,
+    location?: AudioPlayerLocations,
   ) => {
     const {
       meta: { audioSource, path, title },
@@ -144,7 +144,7 @@ const AudioProvider = ({ children }) => {
     if (isAudioQueueAvailable) {
       AudioEventEmitter.emit(AudioContextEvent.TOGGLE_PLAYER, {
         item: playerItem,
-        location,
+        location: location || AudioPlayerLocations.AUDIO_PLAYER,
       })
     } else {
       if (inNativeApp) {
