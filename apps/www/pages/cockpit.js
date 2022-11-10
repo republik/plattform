@@ -96,8 +96,7 @@ const statusQuery = gql`
   ${userSurviveActionsFragment}
 `
 
-const numMembersNeededGrowth = 33000
-const numMembersNeededPermanent = 27000
+const numMembersNeeded = 33000
 
 const formatDateTime = swissTime.format('%d.%m.%Y %H:%M')
 
@@ -459,7 +458,7 @@ const Page = ({
           /* NOV 22: WACHSTUMSZIEL vorübergehend deaktiviert
              kommt mit Wachstumskampagne zurück (JAN 23) */
 
-          /* const missingCount = numMembersNeededGrowth - activeCount
+          /* const missingCount = numMembersNeeded - activeCount
           if (missingCount > 0) {
             values.push({
               month: currentBucket.key,
@@ -468,7 +467,7 @@ const Page = ({
             })
           } */
 
-          minMaxValues.push(numMembersNeededGrowth)
+          minMaxValues.push(numMembersNeeded)
           const [minValue, maxValue] = extent(minMaxValues).map((d, i) =>
             Math[i ? 'ceil' : 'floor'](Math.round(d / 1000) * 1000),
           )
@@ -510,13 +509,13 @@ const Page = ({
                   barColor='#333'
                   memberships
                   hasEnd={false}
-                  crowdfundingName='GROWTH'
+                  crowdfundingName='PERMANENT'
                   crowdfunding={
                     currentBucket && {
-                      name: 'GROWTH',
+                      name: 'PERMANENT',
                       goals: [
                         {
-                          memberships: numMembersNeededGrowth,
+                          memberships: numMembersNeeded,
                         },
                       ],
                       status: {
@@ -540,7 +539,10 @@ const Page = ({
                 Die Grundlage dafür ist ein Geschäftsmodell für werbefreien,
                 unabhängigen, leserfinanzierten Journalismus. Damit die Republik
                 einen entscheidenden Unterschied im Mediensystem machen kann,
-                muss sie selbsttragend sein.
+                muss sie mittelfristig selbsttragend sein. Um am Markt zu
+                bestehen und durch Einfluss auf die gesellschaftliche Debatte
+                nachhaltige Relevanz zu erreichen, muss sie jedoch auch weiter
+                wachsen.
               </P>
 
               <div style={{ marginTop: 20 }}>
@@ -634,20 +636,15 @@ const Page = ({
                 </ChartLegend>
               </div>
               <P>
-                Mit {countFormat(numMembersNeededPermanent)} Abonnentinnen und
-                Mitgliedern haben wir genügend Einnahmen, um den gesamten
-                Betrieb zu finanzieren. Und wir haben die Mittel, um Neues
-                auszuprobieren und Experimente zu machen.
-              </P>
-              <P>
-                Diese Zahl leitet sich aus dem aktuellen Budget 2021/22 ab.{' '}
+                Wir investieren in Journalismus und in konkrete Projekte. Und
+                fassen ein neues Wachstumsziel ins Auge:{' '}
+                {countFormat(numMembersNeeded)} Abonnentinnen und Mitglieder.{' '}
                 <Link
                   href='/2021/10/08/werfen-sie-einen-blick-in-unsere-geschaeftsbuecher'
                   passHref
                 >
                   <Editorial.A>
-                    Erfahren Sie, wofür wir das Geld ausgeben und wie sich das
-                    Budget über die Zeit entwickelt hat.
+                    Diese Zahl leitet sich aus dem aktuellen Budget 2022/23 ab.
                   </Editorial.A>
                 </Link>
               </P>
