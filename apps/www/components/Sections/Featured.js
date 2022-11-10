@@ -91,7 +91,7 @@ const Panel = ({
           <NavLink
             dark={dark}
             href={href}
-            active={active}
+            currentPath={active}
             closeHandler={closeHandler}
             formatColor={color}
             inline
@@ -159,7 +159,7 @@ const Sections = compose(graphql(getSectionNav))(
                           <NavLink
                             dark={dark}
                             href={path}
-                            active={active}
+                            currentPath={active}
                             closeHandler={closeHandler}
                             formatColor={color}
                             inline
@@ -183,7 +183,7 @@ const Sections = compose(graphql(getSectionNav))(
                           <NavLink
                             dark={dark}
                             href={path}
-                            active={active}
+                            currentPath={active}
                             closeHandler={closeHandler}
                             formatColor={color}
                             inline

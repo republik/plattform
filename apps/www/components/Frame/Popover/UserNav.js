@@ -58,7 +58,7 @@ const UserNav = ({
   }, [])
 
   const [colorScheme] = useColorContext()
-  const active = router.asPath
+  const currentPath = router.asPath
   const hasExpandedRef = useRef(expanded)
   const hasProgress = !!me?.progressConsent
   const variables = useMemo(() => {
@@ -150,7 +150,7 @@ const UserNav = ({
                     <div {...styles.navLinks}>
                       <NavLink
                         href='/konto'
-                        active={active}
+                        currentPath={currentPath}
                         large
                         closeHandler={closeHandler}
                       >
@@ -158,7 +158,7 @@ const UserNav = ({
                       </NavLink>
                       <NavLink
                         href={`/~${me.username || me.id}`}
-                        active={active}
+                        currentPath={currentPath}
                         large
                         closeHandler={closeHandler}
                       >
@@ -176,7 +176,7 @@ const UserNav = ({
                       {me.accessCampaigns.length > 0 && (
                         <NavLink
                           href='/teilen'
-                          active={active}
+                          currentPath={currentPath}
                           closeHandler={closeHandler}
                           large
                         >
@@ -190,7 +190,7 @@ const UserNav = ({
                               pathname: '/angebote',
                               query: { group: 'GIVE' },
                             }}
-                            active={active}
+                            currentPath={currentPath}
                             closeHandler={closeHandler}
                             large
                           >
@@ -202,7 +202,7 @@ const UserNav = ({
                               pathname: '/angebote',
                               query: { package: 'DONATE' },
                             }}
-                            active={active}
+                            currentPath={currentPath}
                             closeHandler={closeHandler}
                             large
                           >
