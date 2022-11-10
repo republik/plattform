@@ -380,6 +380,36 @@ const text = {
       ?
     </>
   ),
+  September: (p) => (
+    <>
+      Die Ukraine startet den{' '}
+      <Highlight {...p} ids={['bRHdBr1Aa']}>
+        Gegenangriff
+      </Highlight>{' '}
+      und Putin bleiben{' '}
+      <Highlight {...p} ids={['WRRFeLaAv']}>
+        leere Drohungen
+      </Highlight>
+      . Brasilien wählt und Bolsonaro kokettiert mit einem Putsch. Wie real ist{' '}
+      <Highlight {...p} ids={['cwegYDM9Q']}>
+        die Gefahr
+      </Highlight>
+      ? Und die Schweiz mag Poulet. Wie aber wird aus kleinen Küken{' '}
+      <Highlight {...p} ids={['eh8FA-k4T']}>
+        so viel Fleisch
+      </Highlight>
+      ? Zudem: Das Zwangsmassnahmengericht sollte ein Gegengewicht zu Polizei
+      und Staatsanwalt sein.{' '}
+      <Highlight {...p} ids={['qr-jy6Pnk']}>
+        Doch es ist keines
+      </Highlight>
+      . Und: Was bedeutet{' '}
+      <Highlight {...p} ids={['TqEbxVePt']}>
+        die Erhöhung des Rentenalters
+      </Highlight>{' '}
+      für die Frauen?
+    </>
+  ),
   Oktober: (p) => (
     <>
       Sitzen wir bald im Dunkeln? Die{' '}
@@ -397,8 +427,8 @@ const text = {
       dazu.{' '}
       <Highlight {...p} ids={['UIzsN0rgx']}>
         Hohe Hürden
-      </Highlight>{' '}
-      Schweizer werden ist schwer. Und: abgeschoben aus der Schweiz –{' '}
+      </Highlight>
+      : Schweizer werden ist schwer. Und: abgeschoben aus der Schweiz –{' '}
       <Highlight {...p} ids={['b0CsMBTtX']}>
         verfolgt in Sri Lanka
       </Highlight>
