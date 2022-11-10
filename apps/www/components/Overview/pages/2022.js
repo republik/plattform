@@ -380,6 +380,43 @@ const text = {
       ?
     </>
   ),
+  Oktober: (p) => (
+    <>
+      Sitzen wir bald im Dunkeln? Die{' '}
+      <Highlight {...p} ids={['atI8xvL7h']}>
+        Antworten
+      </Highlight>{' '}
+      auf die 25 drängendsten Fragen zum Winter.{' '}
+      <Highlight {...p} ids={['BhlxKM7Pj']}>
+        Das blinde rechte Auge
+      </Highlight>{' '}
+      der Schweizer Justiz. Und der{' '}
+      <Highlight {...p} ids={['8mCZ1rDLM']}>
+        Podcast
+      </Highlight>{' '}
+      dazu.{' '}
+      <Highlight {...p} ids={['UIzsN0rgx']}>
+        Hohe Hürden
+      </Highlight>{' '}
+      Schweizer werden ist schwer. Und: abgeschoben aus der Schweiz –{' '}
+      <Highlight {...p} ids={['b0CsMBTtX']}>
+        verfolgt in Sri Lanka
+      </Highlight>
+      . Ausserdem:{' '}
+      <Highlight {...p} ids={['wnpT_kqcT']}>
+        Irrsinn
+      </Highlight>{' '}
+      in England.{' '}
+      <Highlight {...p} ids={['HX_y3VOQT']}>
+        Auflehnung
+      </Highlight>
+      im Iran. Und schliesslich: die ganze (!) Republik zum{' '}
+      <Highlight {...p} ids={['DWq5HyuSY']}>
+        Hören
+      </Highlight>
+      .
+    </>
+  ),
 }
 
 const Overview2022 = (props) => <Page {...props} year={2022} text={text} />
