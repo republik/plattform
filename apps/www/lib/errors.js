@@ -1,10 +1,9 @@
 import fetch from 'isomorphic-unfetch'
 import { Component } from 'react'
-import { BUILD_ID } from './constants'
 
 let lastError
 
-export const reportError = (context, error) => {
+export const reportError = async (context, error) => {
   // do not track server side
   if (typeof window === 'undefined') {
     return
@@ -13,13 +12,16 @@ export const reportError = (context, error) => {
   if (lastError && lastError.trim() === error.trim()) {
     return
   }
-  fetch('/api/reportError', {
+
+  lastError = error
+  const buildId = process.env.NEXT_PUBLIC_BUILD_ID
+
+  await fetch('/api/reportError', {
     method: 'POST',
     body: `${context}\n${window.location.href}\n${
-      BUILD_ID ? `(buildId: ${BUILD_ID})\n` : ''
+      buildId ? `(buildId: ${buildId})\n` : ''
     }${error}`,
   })
-  lastError = error
 }
 
 export class ErrorBoundary extends Component {

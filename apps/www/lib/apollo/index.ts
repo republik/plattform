@@ -1,5 +1,5 @@
 import { createApolloClientUtilities } from '@republik/nextjs-apollo-client'
-import { API_URL, API_WS_URL, BUILD_ID } from '../constants'
+import { API_URL, API_WS_URL } from '../constants'
 import {
   inNativeAppBrowser,
   inNativeAppBrowserLegacy,
@@ -8,7 +8,7 @@ import { createAppWorkerLink } from './appWorkerLink'
 
 export const { initializeApollo, withApollo } = createApolloClientUtilities({
   name: '@orbiting/www-app',
-  version: BUILD_ID,
+  version: process.env.NEXT_PUBLIC_BUILD_ID,
   apiUrl: API_URL,
   wsUrl: API_WS_URL,
   mobileConfigOptions: {
