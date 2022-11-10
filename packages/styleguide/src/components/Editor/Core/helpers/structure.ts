@@ -134,6 +134,13 @@ const getMainElement = (
   return getTemplateType(main)
 }
 
+const getMaxChildren = (config: ElementConfigI): number => {
+  const structure = config.structure
+  if (!structure) return
+  if (structure.some((nt) => nt.repeat)) return
+  return structure.length
+}
+
 const setChildren = (
   editor: CustomEditor,
   node: NodeEntry<CustomElement>,
@@ -227,7 +234,8 @@ const convertBlock = (
         mainElPartial,
         getMainEls,
       )
-      insertPath = target[1].concat(updatedChildren - 1)
+      const childrenCount = getMaxChildren(insertConfig) || updatedChildren
+      insertPath = target[1].concat(childrenCount - 1)
     } else if (targetMainElKey) {
       const updatedChildren = setChildren(
         editor,
@@ -480,13 +488,15 @@ export const removeElement = (
   return true
 }
 
-export const insertAfter = (
+export const insertElement = (
   editor: CustomEditor,
   elKey: CustomElementsType | TemplateType,
   elPath: number[],
+  direction: 'before' | 'after' = 'after',
 ): number[] => {
   const element = buildElement(elKey as CustomElementsType)
-  const insertPath = calculateSiblingPath(elPath)
+  const insertPath =
+    direction === 'after' ? calculateSiblingPath(elPath) : elPath
   Transforms.insertNodes(editor, element, { at: insertPath })
   Transforms.select(editor, insertPath)
   Transforms.collapse(editor, { edge: 'start' })

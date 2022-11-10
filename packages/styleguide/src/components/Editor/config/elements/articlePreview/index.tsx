@@ -1,19 +1,38 @@
-import React, { useState } from 'react'
+import React from 'react'
 import {
+  ArticleKind,
   ArticlePreviewElement,
+  ArticlePreviewFormatElement,
+  ArticlePreviewTextContainerElement,
   ElementConfigI,
   ElementFormProps,
 } from '../../../custom-types'
 import { ArticlePreviewIcon } from '../../../../Icons'
 import { css } from 'glamor'
 import ColorPicker from '../../../Forms/ColorPicker'
-import RepoSearch from '../../../Forms/RepoSearch'
-import Checkbox from '../../../../Form/Checkbox'
 import { useSlate } from 'slate-react'
 import { Transforms } from 'slate'
-import { AutoSlugLinkInfo } from '../../../Forms/github'
-import { useRenderContext } from '../../../Render/Context'
-import { lab } from 'd3-color'
+import Dropdown from '../../../../Form/Dropdown'
+import RepoField from '../../../Forms/RepoField'
+
+const ARTICLE_KINDS: { value: ArticleKind; text: string }[] = [
+  {
+    value: 'editorial',
+    text: 'Editorial',
+  },
+  {
+    value: 'meta',
+    text: 'Meta',
+  },
+  {
+    value: 'flyer',
+    text: 'Journal',
+  },
+  {
+    value: 'scribble',
+    text: 'Ameise',
+  },
+]
 
 const styles = {
   container: css({
@@ -25,76 +44,102 @@ const styles = {
   }),
 }
 
-const getBackgroundColor = (color: string): string => {
-  const labColor = lab(color)
-  return labColor.l > 50 ? '#000' : '#fff'
-}
-
 const Form: React.FC<ElementFormProps<ArticlePreviewElement>> = ({
   element,
   path,
   onChange,
 }) => {
-  const { t } = useRenderContext()
   const editor = useSlate()
-  const [syncData, setSyncData] = useState<boolean>(true)
+
+  const setFormatData = (format) => {
+    const at = path.concat([1, 0])
+    Transforms.setNodes(
+      editor,
+      {
+        href: `https://github.com/${format.repoId}?autoSlug`,
+      },
+      { at },
+    )
+    Transforms.insertText(editor, format.meta.title, { at })
+  }
+
+  const unsetFormatData = () => {
+    const at = path.concat([1, 0])
+    Transforms.unsetNodes(editor, 'href', { at })
+    Transforms.insertText(editor, '', { at })
+  }
+
+  const onFormatChange = (format) =>
+    format ? setFormatData(format) : unsetFormatData()
+
   return (
     <>
-      <AutoSlugLinkInfo
-        value={element.href || ''}
-        label={t('metaData/field/href/document')}
-      />
-      <RepoSearch
+      <RepoField
+        label='Dokument'
+        href={element.href}
         onChange={({ value }) => {
           const href = `https://github.com/${value.id}?autoSlug`
           const meta = value.latestCommit.document.meta
-          const formatColor = meta.format?.meta.color
+          const formatMeta = meta.format?.meta
+          const formatColor = formatMeta?.color
+          const kind = formatMeta?.kind
           const colors = formatColor
             ? {
-                color: formatColor,
-                backgroundColor: getBackgroundColor(formatColor),
+                color: '#fff',
+                backgroundColor: formatColor,
               }
             : {}
           onChange({
             href,
+            kind,
             ...colors,
           })
-          if (meta.format) {
+          onFormatChange(meta.format)
+          if (meta.title) {
+            Transforms.insertText(editor, meta.title, {
+              at: path.concat([1, 1]),
+            })
+          }
+          if (meta.description) {
+            Transforms.insertText(editor, meta.description, {
+              at: path.concat([1, 2]),
+            })
+          }
+          if (meta.image) {
             Transforms.setNodes(
               editor,
-              { format: meta.format },
-              { at: path.concat([1, 0]) },
+              { images: { default: { url: meta.image } } },
+              {
+                at: path.concat([0]),
+              },
             )
           }
-          if (syncData) {
-            if (meta.title) {
-              Transforms.insertText(editor, meta.title, {
-                at: path.concat([1, 0]),
-              })
-            }
-            if (meta.description) {
-              Transforms.insertText(editor, meta.description, {
-                at: path.concat([1, 1]),
-              })
-            }
-            if (meta.image) {
-              Transforms.setNodes(
-                editor,
-                { images: { default: { url: meta.image } } },
-                {
-                  at: path.concat([0]),
-                },
-              )
-            }
-          }
+        }}
+        onDelete={() => {
+          Transforms.unsetNodes(editor, 'href', { at: path })
+          unsetFormatData()
         }}
       />
-      <Checkbox
-        checked={syncData}
-        onChange={(_, checked) => setSyncData(checked)}
-      >
-        Titel, Lead und Bild synchen
-      </Checkbox>
+      <RepoField
+        label='Format'
+        href={
+          (
+            (element.children[1] as ArticlePreviewTextContainerElement)
+              .children[0] as ArticlePreviewFormatElement
+          ).href
+        }
+        onChange={({ value }) => setFormatData(value.latestCommit.document)}
+        onDelete={unsetFormatData}
+        template='format'
+      />
+      <Dropdown
+        label='Inhaltsbezeichnung'
+        items={ARTICLE_KINDS}
+        value={element.kind || 'editorial'}
+        onChange={(item: { value: ArticleKind; text: string }) => {
+          onChange({ kind: item.value })
+        }}
+      />
       <div {...styles.container}>
         <div>
           <ColorPicker
@@ -127,6 +172,6 @@ export const config: ElementConfigI = {
     { type: 'figureImage' },
     { type: 'articlePreviewTextContainer', main: true },
   ],
-  props: ['backgroundColor', 'color', 'href'],
+  props: ['backgroundColor', 'color', 'href', 'kind'],
   button: { icon: ArticlePreviewIcon },
 }

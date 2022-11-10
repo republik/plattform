@@ -173,6 +173,11 @@ export {
 } from './components/ShareImage/ShareImagePreview'
 export { default as SharePreviewFacebook } from './components/ShareImage/SharePreviewFacebook'
 export { default as SharePreviewTwitter } from './components/ShareImage/SharePreviewTwitter'
+export {
+  default as AudioCoverGenerator,
+  COVER_IMAGE_WIDTH,
+  COVER_IMAGE_HEIGHT,
+} from './components/AudioCoverGenerator'
 
 export { default as TeaserEmbedComment } from './components/TeaserEmbedComment'
 export { SeriesNav } from './components/SeriesNav'
@@ -192,3 +197,4 @@ export { default as flyerSchema } from './components/Editor/schema/flyer'
 export { RenderContextProvider } from './components/Editor/Render/Context'
 
 export { FlyerTile } from './components/Flyer'
+export { FlyerDate } from './components/Flyer/Date'

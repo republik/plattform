@@ -47,7 +47,7 @@ const TagLink = ({ tag, commentCount }) => {
   })
   return (
     <div {...styles.tagLinkContainer}>
-      <Link href={targetHref} scroll={false} passHref>
+      <Link href={targetHref} scroll={false} prefetch={false} passHref>
         <a>
           <FormatTag
             color={isSelected ? 'text' : 'textSoft'}

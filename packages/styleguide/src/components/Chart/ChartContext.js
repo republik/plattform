@@ -174,6 +174,7 @@ const defaultPropsMap = {
   sizeRangeMax: 10,
   getProjection: () => geoEqualEarth().rotate([-10, 0]),
   opacity: 0.6,
+  highlightedColor: '#c40046',
 }
 
 export const defaultProps = {

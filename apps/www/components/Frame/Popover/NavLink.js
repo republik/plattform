@@ -110,6 +110,7 @@ const NavLink = ({
   minifeed,
   title,
   large,
+  noPlaceholder,
 }) => {
   const isActive = href === active
   const linkRef = useRef()
@@ -124,9 +125,10 @@ const NavLink = ({
       <NavA
         ref={linkRef}
         title={title}
+        data-placeholder={minifeed && !noPlaceholder && title}
         inline={inline}
         onClick={
-          !minifeed
+          !minifeed && closeHandler
             ? (e) => {
                 e.stopPropagation()
                 closeHandler()

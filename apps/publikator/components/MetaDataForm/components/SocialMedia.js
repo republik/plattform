@@ -4,16 +4,31 @@ import {
   SharePreviewFacebook,
   SharePreviewTwitter,
   Field,
+  Checkbox,
 } from '@project-r/styleguide'
-import withT from '../../../lib/withT'
 import { MetaOption, MetaOptionLabel, AutosizeInput } from './Layout'
 import { FLYER_FORMAT } from '../index'
 
 export const SOCIAL_MEDIA = ['facebook', 'twitter']
 
-const ShareImageForm = withT(({ t, data, onChange }) => {
+const ShareImageForm = ({ data, onChange, syncKeys, sync, unsync }) => {
   return (
     <>
+      <MetaOption>
+        <MetaOptionLabel>Share Text von Begrüssung übernehmen</MetaOptionLabel>
+        <Checkbox
+          checked={syncKeys.includes('shareText')}
+          onChange={(_, checked) => {
+            if (checked) {
+              sync('shareText')
+            } else {
+              unsync('shareText')
+            }
+          }}
+        >
+          übernehmen
+        </Checkbox>
+      </MetaOption>
       <MetaOption>
         <MetaOptionLabel>ShareTafel</MetaOptionLabel>
         <ShareImageGenerator
@@ -32,7 +47,10 @@ const ShareImageForm = withT(({ t, data, onChange }) => {
             onChange('shareInverted', !data.shareInverted)
           }
           text={data.shareText}
-          onTextChange={(e) => onChange('shareText', e.target.value)}
+          onTextChange={(e) => {
+            onChange('shareText', e.target.value)
+            unsync('shareText')
+          }}
           format={FLYER_FORMAT.meta}
         />
         <ShareImagePreview
@@ -115,6 +133,6 @@ const ShareImageForm = withT(({ t, data, onChange }) => {
       </MetaOption>
     </>
   )
-})
+}
 
-export default withT(ShareImageForm)
+export default ShareImageForm

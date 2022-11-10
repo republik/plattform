@@ -213,6 +213,11 @@ function parseXml(s: string) {
 
   const statement = getStatement(Document)
   const iban = getIban(statement)
+
+  if (!statement.Ntry) {
+    return { iban, creditEntries: [] }
+  }
+
   const entries = ensureArray(statement.Ntry)
   const creditEntries = []
 

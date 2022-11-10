@@ -344,6 +344,8 @@ export class GenericMap extends Component {
       missingDataColor,
       opacity,
       colorScheme,
+      highlighted,
+      highlightedColor,
     } = props
     const { loading, error, geoJson, hoverPoint } = state
 
@@ -480,6 +482,24 @@ export class GenericMap extends Component {
                           />
                         )
                       })}
+                    {highlighted &&
+                      choropleth &&
+                      hasGeoJson &&
+                      groupData.map(({ datum, feature }) => {
+                        if (!feature || !datum?.[highlighted]) {
+                          return null
+                        }
+                        return (
+                          <path
+                            key={`highlighted-${feature.id}`}
+                            fill='none'
+                            pointerEvents='none'
+                            stroke={highlightedColor}
+                            strokeWidth={1.5}
+                            d={feature.path}
+                          />
+                        )
+                      })}
                     {hasTooltips &&
                       featuresWithPaths
                         .filter((feature) => feature.id === hoverFeature.id)
@@ -489,7 +509,7 @@ export class GenericMap extends Component {
                             fill='none'
                             pointerEvents='none'
                             stroke='black'
-                            strokeWidth={1}
+                            strokeWidth={1.5}
                             d={feature.path}
                           />
                         ))}
@@ -595,6 +615,8 @@ export const propTypes = {
   shape: PropTypes.oneOf(shapes).isRequired,
   sizeRangeMax: PropTypes.number,
   features: featuresShape,
+  highlighted: PropTypes.string,
+  highlightedColor: PropTypes.string,
   geotiff: geotiffShape,
   geotiffLegendTitle: PropTypes.string,
   geotiffLegend: PropTypes.arrayOf(

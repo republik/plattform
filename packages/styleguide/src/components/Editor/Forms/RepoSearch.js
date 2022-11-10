@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { graphql } from '@apollo/client/react/hoc'
 import { gql } from '@apollo/client'
-
 import debounce from 'lodash/debounce'
 
 import { Label, Interaction } from '../../Typography'
@@ -10,12 +9,21 @@ import { InlineSpinner } from '../../Spinner'
 import { timeFormat } from '../../../lib/timeFormat'
 
 export const filterRepos = gql`
-  query searchRepo($after: String, $search: String) {
+  query searchRepo(
+    $after: String
+    $search: String
+    $template: String
+    $isSeriesMaster: Boolean
+    $isSeriesEpisode: Boolean
+  ) {
     repos: reposSearch(
       first: 10
       after: $after
       search: $search
+      template: $template
       isTemplate: false
+      isSeriesMaster: $isSeriesMaster
+      isSeriesEpisode: $isSeriesEpisode
     ) {
       totalCount
       pageInfo {
@@ -39,12 +47,19 @@ export const filterRepos = gql`
           id
           document {
             id
+            repoId
             meta {
               title
-              description
+              shortTitle
               image
-              path
+              description
+              credits
+              kind
               externalBaseUrl
+              color
+              shareLogo
+              shareBackgroundImage
+              shareBackgroundImageInverted
               format {
                 id
                 repoId
@@ -52,6 +67,42 @@ export const filterRepos = gql`
                   title
                   color
                   kind
+                }
+              }
+              section {
+                id
+                repoId
+                meta {
+                  title
+                  color
+                  kind
+                }
+              }
+              series {
+                title
+                description
+                logo
+                logoDark
+                overview {
+                  id
+                  repoId
+                  meta {
+                    path
+                  }
+                }
+                episodes {
+                  title
+                  publishDate
+                  label
+                  lead
+                  image
+                  document {
+                    id
+                    repoId
+                    meta {
+                      path
+                    }
+                  }
                 }
               }
             }
@@ -184,10 +235,13 @@ export default class RepoSearch extends Component {
 
     return (
       <ConnectedAutoComplete
-        label='Dokument suchen'
+        label={this.props.label || 'Dokument suchen'}
         filter={filter}
         value={value}
         search={search}
+        template={this.props.template}
+        isSeriesMaster={this.props.isSeriesMaster}
+        isSeriesEpisode={this.props.isSeriesEpisode}
         items={[]}
         onChange={this.changeHandler}
         onFilterChange={this.filterChangeHandler}

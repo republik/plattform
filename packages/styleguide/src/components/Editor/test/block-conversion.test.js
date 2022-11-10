@@ -149,7 +149,6 @@ describe('Slate Editor: Block Conversion', () => {
         },
         {
           type: 'ol',
-          ordered: true,
           children: [
             {
               type: 'listItem',
@@ -165,7 +164,6 @@ describe('Slate Editor: Block Conversion', () => {
       value = [
         {
           type: 'ul',
-          ordered: false,
           children: [
             {
               type: 'listItem',
@@ -220,7 +218,6 @@ describe('Slate Editor: Block Conversion', () => {
       expect(cleanupTree(value)).toEqual([
         {
           type: 'ol',
-          ordered: true,
           children: [
             {
               type: 'listItem',
@@ -316,7 +313,6 @@ describe('Slate Editor: Block Conversion', () => {
       await new Promise(process.nextTick)
       expect(cleanupTree(value)[0].children[4]).toEqual({
         type: 'ul',
-        ordered: false,
         children: [
           {
             type: 'listItem',
@@ -356,6 +352,129 @@ describe('Slate Editor: Block Conversion', () => {
               ],
             },
           ],
+        },
+      ])
+    })
+
+    it('should convert quiz into preview with success', async () => {
+      value = [
+        {
+          type: 'quiz',
+          children: [
+            {
+              type: 'quizItem',
+              isCorrect: true,
+              children: [
+                {
+                  type: 'quizAnswer',
+                  children: [
+                    {
+                      text: 'Answer 1',
+                    },
+                  ],
+                },
+                {
+                  type: 'quizAnswerInfo',
+                  children: [
+                    {
+                      type: 'quizAnswerInfoP',
+                      children: [
+                        {
+                          text: 'Info to first answer',
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
+            {
+              type: 'quizItem',
+              children: [
+                {
+                  type: 'quizAnswer',
+                  children: [
+                    {
+                      text: 'Answer 2',
+                    },
+                  ],
+                },
+                {
+                  type: 'quizAnswerInfo',
+                  children: [
+                    {
+                      type: 'quizAnswerInfoP',
+                      children: [
+                        {
+                          text: 'Wrong!',
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
+            {
+              type: 'quizItem',
+              children: [
+                {
+                  type: 'quizAnswer',
+                  children: [
+                    {
+                      text: 'Answer 3',
+                    },
+                  ],
+                },
+                {
+                  type: 'quizAnswerInfo',
+                  children: [
+                    {
+                      type: 'quizAnswerInfoP',
+                      children: [
+                        {
+                          text: 'Also wrong…',
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+      ]
+      const structure = [
+        {
+          type: ['quiz', 'articlePreview'],
+          repeat: true,
+        },
+      ]
+      const editor = await setup(structure, { schema: flyerSchema })
+
+      // toggle inner tile elements
+      await Transforms.select(editor, [0, 1, 1, 0])
+      toggleElement(editor, 'articlePreview')
+      await new Promise(process.nextTick)
+      expect(cleanupTree(value)).toEqual([
+        {
+          children: [
+            { children: [{ text: '' }], type: 'figureImage' },
+            {
+              children: [
+                {
+                  children: [{ text: 'Answer 1' }],
+                  type: 'articlePreviewFormat',
+                },
+                {
+                  children: [{ text: 'Info to first answer' }],
+                  type: 'articlePreviewTitle',
+                },
+                { children: [{ text: '' }], type: 'articlePreviewLead' },
+              ],
+              type: 'articlePreviewTextContainer',
+            },
+          ],
+          type: 'articlePreview',
         },
       ])
     })

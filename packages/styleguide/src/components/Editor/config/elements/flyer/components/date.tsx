@@ -1,31 +1,12 @@
-import {
-  ElementConfigI,
-  ElementFormProps,
-  FlyerDateElement,
-} from '../../../../custom-types'
-import React from 'react'
-import Field from '../../../../../Form/Field'
-
-const Form: React.FC<ElementFormProps<FlyerDateElement>> = ({
-  element,
-  onChange,
-}) => {
-  return (
-    <Field
-      label='Datum'
-      type='date'
-      value={element.date || ' '}
-      onChange={(_, date: string) => {
-        onChange({ date })
-      }}
-    />
-  )
-}
+import { ElementConfigI } from '../../../../custom-types'
 
 export const config: ElementConfigI = {
   attrs: {
     isVoid: true,
+    // TODO: once the 'date' prop is deleted, we can remove this flag
+    neverDelete: true,
   },
-  Form,
+  // TODO: this prop isn't needed anymore
+  //  should be deleted in the BE too
   props: ['date'],
 }

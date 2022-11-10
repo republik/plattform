@@ -51,6 +51,8 @@ module.exports = {
           .then((users) => users.map(transformUser))
       : []
   },
+  files: async (repo, args, context) =>
+    context.loaders.File.byRepoId.load(repo.id),
   memos: async (repo, args, context) =>
     context.loaders.Memo.byRepoId.load(repo.id),
   milestones: (repo, args, context) =>

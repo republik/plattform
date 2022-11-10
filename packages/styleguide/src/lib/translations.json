@@ -486,6 +486,10 @@
       "value": "Vorschau"
     },
     {
+      "key": "editor/element/articlePreviewFormat",
+      "value": "Format"
+    },
+    {
       "key": "editor/element/articlePreviewTitle",
       "value": "Titel"
     },
@@ -546,6 +550,10 @@
       "value": "Info"
     },
     {
+      "key": "editor/element/quizAnswerInfoP",
+      "value": "Info-Paragraph"
+    },
+    {
       "key": "editor/placeholder/paragraph",
       "value": "Text"
     },
@@ -556,6 +564,10 @@
     {
       "key": "editor/placeholder/flyerSignature",
       "value": "Text"
+    },
+    {
+      "key": "editor/placeholder/quizAnswerInfoP",
+      "value": "Infos zu Antwort (oder Enter für weitere Option)"
     },
     {
       "key": "editor/mark/bold",
@@ -606,8 +618,12 @@
       "value": "Element bearbeiten"
     },
     {
-      "key": "editor/blockUi/new",
-      "value": "neues Element"
+      "key": "editor/blockUi/new/before",
+      "value": "oben einfügen"
+    },
+    {
+      "key": "editor/blockUi/new/after",
+      "value": "unten einfügen"
     },
     {
       "key": "editor/blockUi/remove",

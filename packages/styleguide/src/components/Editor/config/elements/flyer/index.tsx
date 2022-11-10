@@ -1,7 +1,6 @@
 import { ElementConfigI } from '../../../custom-types'
 import { FlyerTileIcon } from '../../../../Icons'
-
-const getId = (): string => Math.floor(Math.random() * 1000).toString()
+import { getId } from '../../../Core/helpers/utils'
 
 export const baseConfig: Partial<ElementConfigI> = {
   attrs: {
@@ -26,7 +25,7 @@ export const config: ElementConfigI = {
     { type: 'flyerTopic' },
     { type: 'flyerTitle' },
     { type: 'flyerAuthor' },
-    { type: ['paragraph', 'ul', 'ol'], repeat: true },
+    { type: ['paragraph', 'ul', 'ol', 'quiz'], repeat: true },
     {
       type: ['flyerPunchline', 'pullQuote', 'articlePreview', 'figure'],
     },

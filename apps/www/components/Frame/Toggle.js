@@ -1,11 +1,13 @@
-import { CloseIcon, SearchMenuIcon } from '@project-r/styleguide'
+import { useMemo } from 'react'
 import {
+  CloseIcon,
+  MicIcon,
   mediaQueries,
   plainButtonRule,
   useColorContext,
+  fontStyles,
 } from '@project-r/styleguide'
 import { css } from 'glamor'
-
 import {
   HEADER_HEIGHT,
   HEADER_HEIGHT_MOBILE,
@@ -13,23 +15,70 @@ import {
   ZINDEX_FRAME_TOGGLE,
   TRANSITION_MS,
 } from '../constants'
+import useAudioQueue from '../Audio/hooks/useAudioQueue'
+import { useAudioContext } from '../Audio/AudioProvider'
+import { trackEvent } from '../../lib/matomo'
 
 const SIZE = 28
 const PADDING_MOBILE = Math.floor((HEADER_HEIGHT_MOBILE - SIZE) / 2)
 const PADDING_DESKTOP = Math.floor((HEADER_HEIGHT - SIZE) / 2)
 
-const Toggle = ({ expanded, onClick, ...props }) => {
+const Toggle = ({ expanded, closeOverlay, ...props }) => {
   const [colorScheme] = useColorContext()
-  return (
-    <button {...styles.menuToggle} onClick={onClick} {...props}>
-      <SearchMenuIcon
-        style={{
-          opacity: expanded ? 0.000001 : 1, // hacky fix for browser rendering issue in FF
-          transition: `opacity ${TRANSITION_MS}ms ease-out`,
-        }}
+  const { audioQueue, isAudioQueueAvailable } = useAudioQueue()
+  const {
+    audioPlayerVisible,
+    setAudioPlayerVisible,
+    isExpanded: audioPlayerExpanded,
+    setIsExpanded: setAudioPlayerExpanded,
+  } = useAudioContext()
+  const audioItemsCount = audioQueue?.length
+
+  const disableAudioBtn = !expanded && audioPlayerVisible && audioPlayerExpanded
+
+  const buttonStyle = useMemo(
+    () => ({
+      opacity: expanded ? 0.000001 : disableAudioBtn ? 0.33 : 1, // hacky fix for browser rendering issue in FF
+      transition: `opacity ${TRANSITION_MS}ms ease-out`,
+    }),
+    [expanded, disableAudioBtn],
+  )
+
+  const onClick = () => {
+    if (expanded) {
+      return closeOverlay && closeOverlay()
+    }
+    if (!audioPlayerExpanded) {
+      setAudioPlayerExpanded(true)
+    }
+    if (!audioPlayerVisible) {
+      trackEvent(['Navigation', 'toggleAudioPlayer', audioItemsCount])
+      setAudioPlayerVisible(true)
+    }
+  }
+
+  return expanded || isAudioQueueAvailable ? (
+    <button
+      {...styles.menuToggle}
+      disabled={disableAudioBtn}
+      onClick={onClick}
+      {...props}
+    >
+      <MicIcon
+        style={buttonStyle}
         {...colorScheme.set('fill', 'text')}
         size={SIZE}
       />
+      {!!audioItemsCount && (
+        <span
+          style={buttonStyle}
+          {...colorScheme.set('background', 'default')}
+          {...colorScheme.set('color', 'text')}
+          {...styles.audioCount}
+        >
+          {audioItemsCount}
+        </span>
+      )}
       <CloseIcon
         style={{ opacity: expanded ? 1 : 0 }}
         {...styles.closeButton}
@@ -37,7 +86,7 @@ const Toggle = ({ expanded, onClick, ...props }) => {
         size={SIZE}
       />
     </button>
-  )
+  ) : null
 }
 
 const styles = {
@@ -49,11 +98,23 @@ const styles = {
     boxShadow: 'none',
     outline: 'none',
     padding: PADDING_MOBILE,
+    position: 'relative',
     // Additional 4 px to account for scrollbar
     paddingRight: HEADER_HORIZONTAL_PADDING + 4,
     lineHeight: 0,
     [mediaQueries.mUp]: {
       padding: PADDING_DESKTOP,
+    },
+  }),
+  audioCount: css({
+    ...fontStyles.sansSerifMedium,
+    position: 'absolute',
+    fontSize: 10,
+    top: 15,
+    left: 30,
+    [mediaQueries.mUp]: {
+      top: 22,
+      left: 36,
     },
   }),
   closeButton: css({

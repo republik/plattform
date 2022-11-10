@@ -1,6 +1,6 @@
 import DataLoader from 'dataloader'
 
-interface StringObject {
+export interface StringObject {
   [key: string]: string
 }
 
@@ -39,7 +39,13 @@ function defaultFind<Value extends ValueConstraint>(
   if (typeof key === 'object') {
     const keyFields = Object.keys(key)
     const matchRow = (row: Value) =>
-      keyFields.every((keyField) => row[keyField] === key[keyField])
+      keyFields.every((keyField) => {
+        if (Array.isArray(key[keyField])) {
+          return key[keyField].includes(row[keyField])
+        }
+
+        return row[keyField] === key[keyField]
+      })
     if (many) {
       return rows.filter(matchRow)
     }
@@ -53,7 +59,10 @@ type FindFunction<Key, Value> = (
   options?: { many?: boolean },
 ) => Value | Value[] | undefined
 
-export = function createDataLoader<Key extends KeyConstraint, Value>(
+export default module.exports = function createDataLoader<
+  Key extends KeyConstraint,
+  Value,
+>(
   loader: (keys: readonly Key[]) => Promise<Value[]>,
   options?: CreateDataLoaderOptions<Key, Value> | null,
   find: FindFunction<Key, Value> = defaultFind,

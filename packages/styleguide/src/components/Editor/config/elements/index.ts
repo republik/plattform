@@ -30,12 +30,14 @@ import { config as flyerTitle } from './flyer/components/title'
 import { config as flyerTopic } from './flyer/components/topic'
 import { config as articlePreview } from './articlePreview'
 import { config as articlePreviewTextContainer } from './articlePreview/textContainer'
+import { config as articlePreviewFormat } from './articlePreview/format'
 import { config as articlePreviewTitle } from './articlePreview/title'
 import { config as articlePreviewLead } from './articlePreview/lead'
 import { config as quiz } from './flyer/components/quiz/container'
 import { config as quizItem } from './flyer/components/quiz/item'
 import { config as quizAnswer } from './flyer/components/quiz/answer'
 import { config as quizAnswerInfo } from './flyer/components/quiz/answerInfo'
+import { config as quizAnswerInfoP } from './flyer/components/quiz/answerInfoP'
 
 export const config: ElementsConfig = {
   paragraph,
@@ -70,12 +72,14 @@ export const config: ElementsConfig = {
   flyerTopic,
   articlePreview,
   articlePreviewTextContainer,
+  articlePreviewFormat,
   articlePreviewTitle,
   articlePreviewLead,
   quiz,
   quizItem,
   quizAnswer,
   quizAnswerInfo,
+  quizAnswerInfoP,
 }
 
 // typesafe helper

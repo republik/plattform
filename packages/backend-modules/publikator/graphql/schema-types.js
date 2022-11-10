@@ -10,6 +10,7 @@ type Repo {
   latestCommit: Commit!
   commit(id: ID!): Commit
   uncommittedChanges: [User!]!
+  files: [RepoFile!]!
   memos: [Memo!]!
   milestones: [Milestone!]!
   # nothing or latest prepublication and/or latest publication
@@ -216,6 +217,29 @@ enum DerivativeStatus {
   Ready
   Failure
   Destroyed
+}
+
+enum RepoFileStatus {
+  Pending
+  Failure
+  Private
+  Public
+  Destroyed
+}
+
+type RepoFile {
+  id: ID!
+  name: String!
+  status: RepoFileStatus!
+  "If file is not ready, returns an upload URL"
+  url: String
+  error: String
+  author: Author!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  readyAt: DateTime
+  failedAt: DateTime
+  destroyedAt: DateTime
 }
 
 `

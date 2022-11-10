@@ -29,6 +29,7 @@ const Nav = ({ router: { query, asPath }, t, isTemplate, isNew }) => {
   const repoId = getRepoIdFromQuery(query)
   const editPath = `/repo/${repoId}/edit`
   const treePath = `/repo/${repoId}/tree`
+  const filesPath = `/repo/${repoId}/files`
   const currentPath = asPath.split('?')[0]
   const editQuery =
     currentPath === editPath && query.commitId
@@ -62,6 +63,11 @@ const Nav = ({ router: { query, asPath }, t, isTemplate, isNew }) => {
       {!isNew && (
         <NavLink href={treePath} active={currentPath === treePath}>
           Versionen
+        </NavLink>
+      )}
+      {!isNew && (
+        <NavLink href={filesPath} active={currentPath === filesPath}>
+          Dateien
         </NavLink>
       )}
     </Frame.Nav>

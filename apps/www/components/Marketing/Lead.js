@@ -1,57 +1,58 @@
 import { css } from 'glamor'
 import {
-  Container,
   Logo,
   mediaQueries,
-  Editorial,
   fontStyles,
+  useColorContext,
 } from '@project-r/styleguide'
+import { useTranslation } from '../../lib/withT'
 
-export default function LeadSection({ t }) {
+export default function LeadSection() {
+  const { t } = useTranslation()
+  const [colorScheme] = useColorContext()
   return (
-    <>
-      <Container {...styles.container}>
-        <div {...styles.logo}>
-          <Logo />
-        </div>
-        <p {...styles.lead}>{t('marketing/page/lead/subtitle')}</p>
-      </Container>
-      <Container {...styles.description}>
-        <Editorial.P>{t('marketing/page/minifront/description')}</Editorial.P>
-      </Container>
-    </>
+    <div {...styles.container} {...colorScheme.set('color', 'text')}>
+      <div {...styles.logo}>
+        <Logo />
+      </div>
+      <p {...styles.lead}>{t('marketing/page/lead/subtitle')}</p>
+      <p {...styles.lead}>{t('marketing/page/lead/info')}</p>
+    </div>
   )
 }
 
 const styles = {
   container: css({
-    minHeight: '70vh',
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'center',
     justifyContent: 'center',
+    alignItems: 'center',
+    [mediaQueries.mUp]: {
+      alignItems: 'flex-start',
+    },
   }),
   lead: css({
     ...fontStyles.serifRegular,
-    fontSize: 24,
-    lineHeight: '36px',
-    textAlign: 'center',
-    width: '100%',
-    maxWidth: 960,
+    fontSize: 20,
+    lineHeight: 1.3,
     marginBottom: 0,
+    textAlign: 'center',
     [mediaQueries.mUp]: {
-      fontSize: 36,
-      lineHeight: '48px',
+      fontSize: 22,
+      textAlign: 'left',
+    },
+    [mediaQueries.sDown]: {
+      fontSize: 18,
     },
   }),
   logo: css({
-    width: 200,
-    [mediaQueries.mUp]: {
-      width: 400,
+    maxWidth: '80%',
+    width: '200',
+    [mediaQueries.sDown]: {
+      width: 180,
     },
-  }),
-  description: css({
-    textAlign: 'center',
-    margin: '16px auto',
+    [mediaQueries.mUp]: {
+      width: 240,
+    },
   }),
 }

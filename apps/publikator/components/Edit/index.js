@@ -36,7 +36,7 @@ const debug = createDebug('publikator:slate:edit')
 
 const getCommittedContent = (data) => data?.repo?.commit?.document?.content
 
-export const getCurrentContent = (store, data, t, options = {}) => {
+export const getCurrentContent = (store, data, options = {}) => {
   const storedContent = store?.get('editorState')
   const committedContent = getCommittedContent(data)
   return (
@@ -49,7 +49,6 @@ export const getCurrentContent = (store, data, t, options = {}) => {
         template: 'flyer',
         feed: false,
         format: 'https://github.com/republik/format-journal',
-        shareText: t('editor/meta/flyer/defaultShareText'),
       },
     }
   )
@@ -114,7 +113,7 @@ const EditLoader = ({
         const newStore = initLocalStore(storeKey)
         setStore(newStore)
         checkLocalStorageSupport()
-        forceSetContent(getCurrentContent(newStore, data, t, query))
+        forceSetContent(getCurrentContent(newStore, data, query))
       }
     }
   }, [store, commitId, repoId, data])
@@ -201,15 +200,14 @@ const EditLoader = ({
     }
     setDidUnlock(true)
     setAcknowledgedUsers(activeUsers)
-    setReadOnly(false)
     notifyBackend('create')
     unlock()
   }
 
   const beginChangesHandler = () => {
     setBeginChanges(new Date())
-    setReadOnly(false)
     notifyBackend('create')
+    unlock()
   }
 
   const concludeChanges = (notify = true) => {
@@ -320,7 +318,7 @@ const EditLoader = ({
     }
     setDidUnlock(false)
     setAcknowledgedUsers([])
-    forceSetContent(getCurrentContent(null, data, t, query))
+    forceSetContent(getCurrentContent(null, data, query))
     router.replace({
       pathname,
       query: queryWithoutPreview,
@@ -442,7 +440,7 @@ const EditLoader = ({
               <Preview repoId={repoId} commitId={commitId} isFlyer />
             ) : (
               <EditView
-                editorKey={editorKey}
+                key={editorKey}
                 interruptingUsers={interruptingUsers}
                 uncommittedChanges={uncommittedChanges}
                 revertHandler={revertHandler}
@@ -455,6 +453,7 @@ const EditLoader = ({
                 content={content}
                 setContent={setContent}
                 publishDate={repo?.meta?.publishDate || publishDate}
+                readOnly={readOnly}
               />
             )
           }}

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { ChromePicker } from 'react-color'
-import { Label } from '@project-r/styleguide'
+import { Label } from '../../Typography'
 
 const styles = {
   popover: {

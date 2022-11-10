@@ -1,18 +1,15 @@
 import { SchemaConfig } from '../custom-types'
-
-import { FigureCaption } from '../../Figure'
 import { Figure, FigureImage, FigureByline } from '../../Figure/Slate'
-import { List } from '../../List/Slate'
-import { PullQuoteSource } from '../../PullQuote'
 import {
   ArticleLead,
   ArticlePreview,
   ArticleTextContainer,
   ArticleTitle,
+  ArticleFormat,
 } from '../../ArticlePreview'
-import { FlyerTile } from '../../Flyer'
+import { FlyerTile, FlyerTileOpening } from '../../Flyer'
 import { FlyerAuthor } from '../../Flyer/Author'
-import { FlyerDate } from '../../Flyer/Date'
+import { FlyerNav } from '../../Flyer/Date'
 import { PullQuote, PullQuoteText } from '../../Flyer/PullQuote'
 import { Quiz, QuizAnswer } from '../../Flyer/Quiz'
 import { DefaultContainer } from '../Render/Containers'
@@ -23,26 +20,28 @@ const schema: SchemaConfig = {
   container: Flyer.Layout,
   flyerTile: FlyerTile,
   flyerTileMeta: FlyerTile,
-  flyerTileOpening: FlyerTile,
+  flyerTileOpening: FlyerTileOpening,
   flyerTileClosing: FlyerTile,
   flyerAuthor: FlyerAuthor,
   flyerMetaP: Flyer.MetaP,
   flyerOpeningP: Flyer.OpeningP,
   flyerPunchline: Flyer.Small,
   flyerSignature: Flyer.OpeningP,
-  flyerDate: FlyerDate,
+  // TODO: rename to flyerNav
+  flyerDate: FlyerNav,
   flyerTitle: Flyer.H3,
   flyerTopic: Flyer.H2,
   articlePreview: ArticlePreview,
   articlePreviewTextContainer: ArticleTextContainer,
+  articlePreviewFormat: ArticleFormat,
   articlePreviewTitle: ArticleTitle,
   articlePreviewLead: ArticleLead,
   figureByline: FigureByline,
   figureCaption: Flyer.Small,
   figure: Figure,
   figureImage: FigureImage,
-  ul: List,
-  ol: List,
+  ul: Flyer.UL,
+  ol: Flyer.OL,
   listItem: Flyer.ListItem,
   pullQuote: PullQuote,
   pullQuoteSource: Flyer.Small,
@@ -59,6 +58,7 @@ const schema: SchemaConfig = {
   quiz: Quiz,
   quizAnswer: QuizAnswer,
   quizAnswerInfo: DefaultContainer,
+  quizAnswerInfoP: Flyer.P,
 }
 
 export default schema

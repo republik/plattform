@@ -12,7 +12,6 @@ import { ErrorBoundary, reportError } from '../lib/errors'
 import Track from '../components/Track'
 import MessageSync from '../components/NativeApp/MessageSync'
 import AudioProvider from '../components/Audio/AudioProvider'
-import AudioPlayer from '../components/Audio/AudioPlayer'
 import MediaProgressContext from '../components/Audio/MediaProgress'
 import AppVariableContext from '../components/Article/AppVariableContext'
 import ColorSchemeSync from '../components/ColorScheme/Sync'
@@ -20,6 +19,7 @@ import { AppProps } from 'next/app'
 import MeContextProvider from '../lib/context/MeContext'
 import UserAgentProvider from '../lib/context/UserAgentContext'
 import { withApollo } from '../lib/apollo'
+import AudioPlayerOrchestrator from '../components/Audio/AudioPlayerOrchestrator'
 
 if (typeof window !== 'undefined') {
   window.addEventListener('error', (event: ErrorEvent) => {
@@ -72,7 +72,7 @@ const WebApp = ({ Component, pageProps }: AppProps<PagePropsWithApollo>) => {
                       {...otherPageProps}
                     />
                     <Track />
-                    <AudioPlayer />
+                    <AudioPlayerOrchestrator />
                   </ColorContextProvider>
                 </AppVariableContext>
               </AudioProvider>

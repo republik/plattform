@@ -44,6 +44,7 @@ export type HeadlineElement = SharedElement & {
 
 export type BreakElement = SharedElement & {
   type: 'break'
+  voidId?: string
 }
 
 export type LinkElement = SharedElement & {
@@ -70,6 +71,7 @@ export type FigureImageElement = SharedElement & {
   type: 'figureImage'
   images?: FigureImages
   alt?: string
+  voidId?: string
 }
 
 export type FigureCaptionElement = SharedElement & {
@@ -168,6 +170,7 @@ export type FlyerAuthorElement = SharedElement & {
   type: 'flyerAuthor'
   authorId?: string
   resolvedAuthor?: ResolvedAuthor
+  voidId?: string
 }
 
 export type FlyerPunchlineElement = SharedElement & {
@@ -181,32 +184,30 @@ export type FlyerSignatureElement = SharedElement & {
 export type FlyerDateElement = SharedElement & {
   type: 'flyerDate'
   date?: string
+  voidId?: string
 }
+
+export type ArticleKind = 'editorial' | 'meta' | 'flyer' | 'scribble'
 
 export type ArticlePreviewElement = SharedElement & {
   type: 'articlePreview'
   href?: string
   backgroundColor?: string
   color?: string
+  kind?: ArticleKind
 }
 
 export type ArticlePreviewTextContainerElement = SharedElement & {
   type: 'articlePreviewTextContainer'
 }
 
-export type FormatData = {
-  id: string
-  repoId: string
-  meta: {
-    title?: string
-    color?: string
-    type?: string
-  }
+export type ArticlePreviewFormatElement = SharedElement & {
+  type: 'articlePreviewFormat'
+  href?: string
 }
 
 export type ArticlePreviewTitleElement = SharedElement & {
   type: 'articlePreviewTitle'
-  format?: FormatData
 }
 
 export type ArticlePreviewLeadElement = SharedElement & {
@@ -228,6 +229,10 @@ export type QuizAnswerElement = SharedElement & {
 
 export type QuizAnswerInfoElement = SharedElement & {
   type: 'quizAnswerInfo'
+}
+
+export type QuizAnswerInfoPElement = SharedElement & {
+  type: 'quizAnswerInfoP'
 }
 
 export type CustomElement =
@@ -262,12 +267,14 @@ export type CustomElement =
   | FlyerDateElement
   | ArticlePreviewElement
   | ArticlePreviewTextContainerElement
+  | ArticlePreviewFormatElement
   | ArticlePreviewTitleElement
   | ArticlePreviewLeadElement
   | QuizElement
   | QuizItemElement
   | QuizAnswerElement
   | QuizAnswerInfoElement
+  | QuizAnswerInfoPElement
 
 export type CustomDescendant = CustomElement | CustomText
 export type CustomAncestor = CustomElement | CustomEditor
@@ -307,12 +314,14 @@ export type CustomElementsType =
   | 'flyerDate'
   | 'articlePreview'
   | 'articlePreviewTextContainer'
+  | 'articlePreviewFormat'
   | 'articlePreviewTitle'
   | 'articlePreviewLead'
   | 'quiz'
   | 'quizItem'
   | 'quizAnswer'
   | 'quizAnswerInfo'
+  | 'quizAnswerInfoP'
 
 interface ButtonI {
   icon: IconType
@@ -333,6 +342,7 @@ interface ElementAttrsI extends EditorAttrsI {
   blockUi?: BlockUiAttrsI
   isTextInline?: boolean
   stopFormIteration?: boolean
+  neverDelete?: boolean
 }
 
 export type EditorAttr = keyof EditorAttrsI
@@ -411,6 +421,7 @@ export type EditorConfig = {
   readOnly?: boolean
   t?: Formatter
   Link?: React.FC
+  nav?: JSX.Element
 }
 
 export type KeyCombo = {

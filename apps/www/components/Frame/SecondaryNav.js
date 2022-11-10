@@ -5,10 +5,13 @@ import {
   mediaQueries,
   fontStyles,
   useColorContext,
+  SearchMenuIcon,
+  BoldSearchIcon,
 } from '@project-r/styleguide'
 
 import withT from '../../lib/withT'
 import NavLink from './Popover/NavLink'
+import FlyerNavLink from './Popover/FlyerNavLink'
 
 import {
   SUBHEADER_HEIGHT,
@@ -16,7 +19,6 @@ import {
   HEADER_HORIZONTAL_PADDING,
 } from '../constants'
 import { useRouter } from 'next/router'
-import { useFlyerMeta } from '../../lib/apollo/miniNavi'
 
 export const SecondaryNav = ({
   secondaryNav,
@@ -27,8 +29,6 @@ export const SecondaryNav = ({
   const [colorScheme] = useColorContext()
   const router = useRouter()
   const active = router.asPath
-
-  const flyerMeta = useFlyerMeta()
 
   return (
     <>
@@ -64,15 +64,14 @@ export const SecondaryNav = ({
           >
             {t('navbar/feed')}
           </NavLink>
-          <NavLink
-            href={flyerMeta?.path || '/format/journal'}
+          <FlyerNavLink
             active={active}
             formatColor='accentColorFlyer'
             minifeed
             title={t('navbar/flyer')}
           >
             {t('navbar/flyer')}
-          </NavLink>
+          </FlyerNavLink>
           <NavLink
             href='/dialog'
             active={active}
@@ -81,6 +80,19 @@ export const SecondaryNav = ({
             title={t('navbar/discussion')}
           >
             {t('navbar/discussion')}
+          </NavLink>
+          <NavLink
+            href='/suche'
+            active={active}
+            title={t('pages/search/title')}
+            noPlaceholder
+            minifeed
+          >
+            {'/suche' === active ? (
+              <BoldSearchIcon {...colorScheme.set('fill', 'text')} size={18} />
+            ) : (
+              <SearchMenuIcon {...colorScheme.set('fill', 'text')} size={18} />
+            )}
           </NavLink>
         </div>
       ) : (
@@ -125,14 +137,17 @@ const styles = {
     height: SUBHEADER_HEIGHT,
     left: 0,
     right: 0,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'baseline',
     WebkitOverflowScrolling: 'touch',
     scrollbarWidth: 'none' /* Firefox */,
     msOverflowStyle: 'none' /* IE 10+ */,
     '::-webkit-scrollbar': {
       display: 'none',
     },
-    [mediaQueries.mUp]: {
-      textAlign: 'center',
+    [mediaQueries.sDown]: {
+      justifyContent: 'flex-start',
     },
     '& a': {
       display: 'inline-block',
@@ -143,7 +158,7 @@ const styles = {
       '::after': {
         ...fontStyles.sansSerifMedium,
         display: 'block',
-        content: 'attr(title)',
+        content: 'attr(data-placeholder)',
         height: 0,
         overflow: 'hidden',
         visibility: 'hidden',
