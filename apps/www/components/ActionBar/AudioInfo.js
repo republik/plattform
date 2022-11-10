@@ -7,7 +7,7 @@ import {
   convertStyleToRem,
   fontStyles,
   mediaQueries,
-  plainLinkRule,
+  plainButtonRule,
   Editorial,
   useColorContext,
 } from '@project-r/styleguide'
@@ -58,14 +58,13 @@ const AudioInfo = ({
         </>
       ) : (
         <>
-          <a
-            {...plainLinkRule}
+          <button
+            {...plainButtonRule}
             style={{ textDecoration: 'underline' }}
-            href='#'
-            onClick={play('synthAudio')}
+            onClick={() => play()}
           >
             {t('article/actionbar/audio/info/play-synth')}
-          </a>
+          </button>
           .
           {!!willBeReadAloud && (
             <>
