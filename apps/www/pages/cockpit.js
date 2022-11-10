@@ -576,7 +576,7 @@ const Page = ({
                     timeParse: '%Y-%m',
                     timeFormat: '%Y',
                     xInterval: 'month',
-                    padding: isMobile ? 10 : 50,
+                    padding: isMobile ? 30 : 50,
                     xTicks: [
                       '2018-01',
                       '2019-01',
