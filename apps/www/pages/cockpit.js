@@ -347,7 +347,7 @@ const Page = ({
     image: `${CDN_FRONTEND_BASE_URL}/static/social-media/cockpit.jpg`,
   }
 
-  const [isMobile, setIsMobile] = useState(true)
+  const [isMobile, setIsMobile] = useState()
   useEffect(() => {
     if (query.token) {
       Router.replace(
@@ -362,14 +362,10 @@ const Page = ({
 
   useEffect(() => {
     const handleResize = () => {
-      const mobile = window.innerWidth < mediaQueries.mBreakPoint
-      if (mobile !== isMobile) {
-        setIsMobile(mobile)
-      }
+      setIsMobile(window.innerWidth < mediaQueries.mBreakPoint)
     }
-    handleResize()
     window.addEventListener('resize', handleResize)
-
+    handleResize()
     return () => {
       window.removeEventListener('resize', handleResize)
     }
