@@ -1791,8 +1791,8 @@
     },
     {
       "key": "crowdfunding/status/time/label",
-      "de": "bis Deadline",
-      "fr": "jusqu'à la date limite"
+      "de": "bis zur verlängerten Deadline",
+      "fr": "jusqu'à la date limite prolongée"
     },
     {
       "key": "crowdfunding/status/time/minutes/1",
