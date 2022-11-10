@@ -3,20 +3,9 @@ import { makeQueryHook } from '../../../lib/helpers/AbstractApolloGQLHooks.helpe
 
 export const MARKETING_PAGE_QUERY = gql`
   query MarketingPage {
-    # Used in MiniFront.js
-    miniFront: document(path: "/marketing") {
+    carousel: document(path: "/marketing") {
       id
-      children {
-        totalCount
-        nodes {
-          id
-          body
-        }
-      }
-      meta {
-        prepublication
-        lastPublishedAt
-      }
+      content
     }
     carpet: document(path: "/") {
       id

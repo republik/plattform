@@ -8,9 +8,11 @@ import {
 } from '@project-r/styleguide'
 import { HEADER_HEIGHT, HEADER_HEIGHT_MOBILE } from '../constants'
 import TrialForm from '../Trial/Form'
+import { useTranslation } from '../../lib/withT'
 
-const MarketingTrialForm = ({ t }) => {
+const MarketingTrialForm = () => {
   const [colorScheme] = useColorContext()
+  const { t } = useTranslation()
   return (
     <div id='probelesen' {...styles.trialformsection}>
       <div

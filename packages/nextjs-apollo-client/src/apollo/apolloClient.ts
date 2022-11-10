@@ -41,6 +41,15 @@ function createApolloClient(
         Meta: {
           merge: true,
         },
+        User: {
+          fields: {
+            audioQueue: {
+              merge: (existing, incoming, options) => {
+                return incoming
+              },
+            },
+          },
+        },
         Discussion: {
           fields: {
             userPreference: {

@@ -8,8 +8,8 @@ import {
   HeaderHeightProvider,
   useColorContext,
   shouldIgnoreClick,
+  BackIcon,
 } from '@project-r/styleguide'
-import { BackIcon } from '@project-r/styleguide'
 import { withMembership } from '../Auth/checkRoles'
 import withT from '../../lib/withT'
 import withInNativeApp, { postMessage } from '../../lib/withInNativeApp'
@@ -19,12 +19,12 @@ import HLine from '../Frame/HLine'
 
 import User from './User'
 import Popover from './Popover'
-import NavPopover from './Popover/Nav'
 import UserNavPopover from './Popover/UserNav'
 import LoadingBar from './LoadingBar'
 import Pullable from './Pullable'
 import Toggle from './Toggle'
 import SecondaryNav from './SecondaryNav'
+import CallToAction from './CallToAction'
 
 import {
   HEADER_HEIGHT,
@@ -37,7 +37,6 @@ import {
   LOGO_PADDING_MOBILE,
   TRANSITION_MS,
 } from '../constants'
-import Link from 'next/link'
 
 const BACK_BUTTON_SIZE = 24
 
@@ -59,7 +58,6 @@ const Header = ({
   pullable = true,
   hasOverviewNav,
   stickySecondaryNav,
-  isOnMarketingPage,
   pageColorSchemeKey,
 }) => {
   const [colorScheme] = useColorContext()
@@ -131,7 +129,7 @@ const Header = ({
         )
       }
 
-      if (!isOnMarketingPage && diff.current !== lastDiff.current) {
+      if (diff.current !== lastDiff.current) {
         fixedRef.current.style.top = `${diff.current}px`
         setHeaderOffset(diff.current)
       }
@@ -167,37 +165,7 @@ const Header = ({
     )
   }, [isMobile, hasSecondaryNav, hasStickySecondary, formatColor])
 
-  const buttonColorRule = useMemo(() => {
-    if (!isOnMarketingPage) {
-      return css({
-        color: colorScheme.getCSSColor('default'),
-        backgroundColor: colorScheme.getCSSColor('text'),
-        '@media (hover)': {
-          ':hover': {
-            color: colorScheme.getCSSColor('#FFF'),
-            backgroundColor: colorScheme.getCSSColor(
-              formatColor || 'primary',
-              'format',
-            ),
-          },
-        },
-      })
-    }
-    return css({
-      color: colorScheme.getCSSColor('#FFF'),
-      backgroundColor: colorScheme.getCSSColor('primary'),
-      '@media (hover)': {
-        ':hover': {
-          color: colorScheme.getCSSColor('#FFF'),
-          backgroundColor: colorScheme.getCSSColor('primaryHover'),
-        },
-      },
-    })
-  }, [isOnMarketingPage, colorScheme, formatColor])
-
-  const showTrialButton = inNativeApp && isOnMarketingPage
-  const showToggle =
-    me || (inNativeApp && !showTrialButton) || router.pathname === '/angebote'
+  const showToggle = me || inNativeApp || router.pathname === '/angebote'
 
   return (
     <>
@@ -246,7 +214,6 @@ const Header = ({
                     expandedNav === 'user' ? 'close' : 'open'
                   }/aria`,
                 )}
-                isOnMarketingPage={isOnMarketingPage}
                 inNativeIOSApp={inNativeIOSApp}
                 onClick={() =>
                   !isAnyNavExpanded
@@ -259,18 +226,16 @@ const Header = ({
               {me && <NotificationIcon />}
             </div>
           </div>
-          {!isOnMarketingPage || (!isOnMarketingPage && inNativeIOSApp) ? (
-            <div {...styles.navBarItem}>
-              <a
-                {...styles.logo}
-                aria-label={t('header/logo/magazine/aria')}
-                href={'/'}
-                onClick={goTo('/', 'index')}
-              >
-                <Logo />
-              </a>
-            </div>
-          ) : null}
+          <div {...styles.navBarItem}>
+            <a
+              {...styles.logo}
+              aria-label={t('header/logo/magazine/aria')}
+              href={'/'}
+              onClick={goTo('/', 'index')}
+            >
+              <Logo />
+            </a>
+          </div>
           <div {...styles.navBarItem}>
             <div {...styles.rightBarItem}>
               {!showToggle && (
@@ -294,49 +259,10 @@ const Header = ({
                     }/aria`,
                   )}
                   id='main'
-                  onClick={() =>
-                    isAnyNavExpanded ? closeHandler() : toggleExpanded('main')
-                  }
+                  closeOverlay={closeHandler}
                 />
-              ) : showTrialButton ? (
-                <Link href='#probelesen' passHref>
-                  <a
-                    data-hide-if-me='true'
-                    {...styles.button}
-                    {...(formatColor
-                      ? styles.buttonFormatColor
-                      : styles.buttonGeneric)}
-                    {...buttonColorRule}
-                  >
-                    <span>{t('marketing/preview/button/label')}</span>
-                  </a>
-                </Link>
               ) : (
-                <Link href='/angebote' passHref prefetch={false}>
-                  <a
-                    data-hide-if-me='true'
-                    {...styles.button}
-                    {...(isOnMarketingPage
-                      ? styles.buttonMarketing
-                      : formatColor
-                      ? styles.buttonFormatColor
-                      : styles.buttonGeneric)}
-                    {...buttonColorRule}
-                  >
-                    {isOnMarketingPage ? (
-                      <span>{t('marketing/page/carpet/button')}</span>
-                    ) : (
-                      <>
-                        <span {...styles.buttonTextMobile}>
-                          {t('marketing/page/carpet/buttonsmall')}
-                        </span>
-                        <span {...styles.buttonText}>
-                          {t('marketing/page/carpet/button')}
-                        </span>
-                      </>
-                    )}
-                  </a>
-                </Link>
+                <CallToAction formatColor={formatColor} />
               )}
             </div>
           </div>
@@ -348,17 +274,8 @@ const Header = ({
           hasOverviewNav={hasOverviewNav}
           isSecondarySticky={headerOffset === -scrollableHeaderHeight}
         />
-        {!isOnMarketingPage ? <HLine formatColor={formatColor} /> : null}
+        <HLine formatColor={formatColor} />
       </div>
-      <Popover formatColor={formatColor} expanded={expandedNav === 'main'}>
-        <NavPopover
-          me={me}
-          router={router}
-          expanded={expandedNav === 'main'}
-          closeHandler={closeHandler}
-          onSearchSubmit={closeHandler}
-        />
-      </Popover>
       <Popover
         formatColor={formatColor}
         expanded={userNavExpanded || expandedNav === 'user'}
@@ -397,7 +314,14 @@ const HeaderWithContext = (props) => {
   const [isAnyNavExpanded, setIsAnyNavExpanded] = useState(false)
   const [headerOffset, setHeaderOffset] = useState(0)
 
-  const { cover, children, hasOverviewNav, secondaryNav } = props
+  const {
+    cover,
+    children,
+    hasOverviewNav,
+    secondaryNav,
+    isOnMarketingPage,
+    me,
+  } = props
 
   const hasSecondaryNav = hasOverviewNav || secondaryNav
   const headerConfig = useMemo(() => {
@@ -421,14 +345,16 @@ const HeaderWithContext = (props) => {
 
   return (
     <HeaderHeightProvider config={headerConfig}>
-      <Header
-        {...props}
-        hasSecondaryNav={hasSecondaryNav}
-        isAnyNavExpanded={isAnyNavExpanded}
-        setIsAnyNavExpanded={setIsAnyNavExpanded}
-        headerOffset={headerOffset}
-        setHeaderOffset={setHeaderOffset}
-      />
+      {!(isOnMarketingPage && !me) && (
+        <Header
+          {...props}
+          hasSecondaryNav={hasSecondaryNav}
+          isAnyNavExpanded={isAnyNavExpanded}
+          setIsAnyNavExpanded={setIsAnyNavExpanded}
+          headerOffset={headerOffset}
+          setHeaderOffset={setHeaderOffset}
+        />
+      )}
       {cover}
       {children}
     </HeaderHeightProvider>
