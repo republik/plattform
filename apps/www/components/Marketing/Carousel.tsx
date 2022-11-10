@@ -9,7 +9,6 @@ import { css } from 'glamor'
 import { getImgSrc } from '../Overview/utils'
 import { useQuery } from '@apollo/client'
 import { GET_DOCUMENT_AUDIO } from './graphql/DocumentAudio.graphql'
-import { trackEvent } from '../../lib/matomo'
 import { useAudioContext } from '../Audio/AudioProvider'
 import useAudioQueue from '../Audio/hooks/useAudioQueue'
 import scrollIntoView from 'scroll-into-view'
@@ -36,7 +35,6 @@ const PlayAudio: React.FC<{ path: string }> = ({ path }) => {
     <IconButton
       onClick={(e) => {
         e.preventDefault()
-        trackEvent(['Marketing', 'play', document.id])
         toggleAudioPlayer(document, AudioPlayerLocations.MARKETING_FRONT)
         setIsExpanded(true)
       }}
