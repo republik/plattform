@@ -17,6 +17,7 @@ import {
   ChartLead,
   ChartLegend,
   Chart,
+  mediaQueries,
 } from '@project-r/styleguide'
 
 import Frame from '../components/Frame'
@@ -346,6 +347,7 @@ const Page = ({
     image: `${CDN_FRONTEND_BASE_URL}/static/social-media/cockpit.jpg`,
   }
 
+  const [isMobile, setIsMobile] = useState(true)
   useEffect(() => {
     if (query.token) {
       Router.replace(
@@ -357,6 +359,21 @@ const Page = ({
       )
     }
   }, [query.token])
+
+  useEffect(() => {
+    const handleResize = () => {
+      const mobile = window.innerWidth < mediaQueries.mBreakPoint
+      if (mobile !== isMobile) {
+        setIsMobile(mobile)
+      }
+    }
+    handleResize()
+    window.addEventListener('resize', handleResize)
+
+    return () => {
+      window.removeEventListener('resize', handleResize)
+    }
+  }, [])
 
   return (
     <Frame meta={meta} pageColorSchemeKey='dark'>
@@ -563,6 +580,7 @@ const Page = ({
                     timeParse: '%Y-%m',
                     timeFormat: '%Y',
                     xInterval: 'month',
+                    padding: isMobile ? 10 : 50,
                     xTicks: [
                       '2018-01',
                       '2019-01',
@@ -671,14 +689,9 @@ const Page = ({
                     x: 'date',
                     timeParse: '%Y-%m',
                     timeFormat: '%Y',
-                    xTicks: [
-                      '2018-01',
-                      '2019-01',
-                      '2020-01',
-                      '2021-01',
-                      '2022-01',
-                      // lastSeenBucket.key
-                    ],
+                    xTicks: isMobile
+                      ? ['2018-01', '2020-01', '2022-01']
+                      : ['2018-01', '2019-01', '2020-01', '2021-01', '2022-01'], // lastSeenBucket.key
                     yNice: 0,
                     yTicks: [0, 3000, 6000, 9000, 12000, 15000],
                     colorMap: {
