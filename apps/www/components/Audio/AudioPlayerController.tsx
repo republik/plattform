@@ -488,11 +488,6 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
   const addQueueItem = useCallback(
     async (item: AudioPlayerItem, position?: number) => {
       await addAudioQueueItem(item, position).catch(handleError)
-      trackEvent([
-        AudioPlaybackLocation.PLAYER,
-        AudioPlayerActions.ADD_QUEUE_ITEM,
-        item?.meta?.path,
-      ])
     },
     [addAudioQueueItem],
   )
@@ -514,12 +509,6 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
           }
           // If the head of the queue was removed, setup the new head
         }
-
-        trackEvent([
-          AudioPlaybackLocation.PLAYER,
-          AudioPlayerActions.REMOVE_QUEUE_ITEM,
-          queueItem?.document.meta.path,
-        ])
       } catch (error) {
         handleError(error)
       }

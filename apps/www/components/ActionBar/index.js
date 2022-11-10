@@ -47,7 +47,7 @@ const RenderItems = ({ items }) => (
   <>
     {items.map((props) => (
       <Fragment key={props.title}>
-        {props.element || <IconButton {...props} />}
+        {props.element || <IconButton key={props.title} {...props} />}
       </Fragment>
     ))}
   </>
@@ -236,8 +236,7 @@ const ActionBar = ({
   const showAudioButtons =
     !!meta.audioSource && meta.audioSource.kind !== 'syntheticReadAloud'
 
-  const play = (e) => {
-    e.preventDefault()
+  const play = () => {
     toggleAudioPlayer(
       {
         id: document.id,
@@ -251,11 +250,6 @@ const ActionBar = ({
       },
       AudioPlaybackLocation.ACTION_BAR,
     )
-    trackEvent([
-      AudioPlaybackLocation.ACTION_BAR,
-      AudioPlayerActions.PLAY_TRACK,
-      meta?.path,
-    ])
   }
 
   const speakers = meta.contributors?.filter((c) => c.kind === 'voice')

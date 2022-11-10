@@ -15,7 +15,6 @@ export enum AudioPlaybackLocation {
 export enum AudioPlayerActions {
   PLAY_TRACK = 'playTrack',
   PLAY_SYNTHETIC = 'playSynthetic',
-  REORDER_QUEUE = 'reorderQueue',
   ADD_QUEUE_ITEM = 'addQueueItem',
   REMOVE_QUEUE_ITEM = 'removeQueueItem',
   ADD_QUEUE_HEAD_ITEM = 'addQueueHeadItem',

@@ -110,11 +110,6 @@ const Queue = ({
     try {
       const reorderedQueue = [activeItem, ...items].filter(Boolean)
       await reorderAudioQueue(reorderedQueue)
-      trackEvent([
-        AudioPlaybackLocation.PLAYER,
-        AudioPlayerActions.REORDER_QUEUE,
-        null,
-      ])
     } catch (e) {
       console.error(e)
     }
