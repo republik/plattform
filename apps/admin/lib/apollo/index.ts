@@ -6,7 +6,7 @@ import { API_URL } from '../../server/constants'
 
 export const { withApollo, initializeApollo } = createApolloClientUtilities({
   name: '@orbiting/admin-app',
-  version: process.env.buildId,
+  version: process.env.BUILD_ID,
   apiUrl: API_URL,
 })
 

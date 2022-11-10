@@ -18,7 +18,7 @@ const buildId =
 module.exports = withTM(
   withBundleAnalyzer({
     generateBuildId: () => buildId,
-    env: { buildId },
+    env: { BUILD_ID: buildId },
     webpack: (config) => {
       config.externals = config.externals || {}
       config.externals['lru-cache'] = 'lru-cache'

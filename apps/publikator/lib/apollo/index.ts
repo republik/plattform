@@ -4,7 +4,7 @@ import { API_URL, API_WS_URL } from '../settings'
 
 export const { initializeApollo, withApollo } = createApolloClientUtilities({
   name: '@orbiting/publikator-app',
-  version: process.env.buildId,
+  version: process.env.BUILD_ID,
   apiUrl: API_URL,
   wsUrl: API_WS_URL,
 })

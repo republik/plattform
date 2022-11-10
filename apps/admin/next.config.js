@@ -18,7 +18,7 @@ module.exports = withTM(
       ignoreDuringBuilds: true,
     },
     generateBuildId: () => buildId,
-    env: { buildId },
+    env: { BUILD_ID: buildId },
     async redirects() {
       return [
         {
