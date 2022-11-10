@@ -1,8 +1,8 @@
-import React, { useEffect, useRef, useState, useMemo } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import {
+  ArticleIcon,
   IconButton,
   PlayCircleIcon,
-  ArticleIcon,
   useColorContext,
 } from '@project-r/styleguide'
 import { css } from 'glamor'
@@ -13,6 +13,7 @@ import { trackEvent } from '../../lib/matomo'
 import { useAudioContext } from '../Audio/AudioProvider'
 import useAudioQueue from '../Audio/hooks/useAudioQueue'
 import scrollIntoView from 'scroll-into-view'
+import { AudioPlaybackLocation } from '../Audio/types/AudioTracking'
 
 export type CarouselProps = { carouselData: any }
 
@@ -36,7 +37,7 @@ const PlayAudio: React.FC<{ path: string }> = ({ path }) => {
       onClick={(e) => {
         e.preventDefault()
         trackEvent(['Marketing', 'play', document.id])
-        toggleAudioPlayer(document)
+        toggleAudioPlayer(document, AudioPlaybackLocation.MARKETING_FRONT)
         setIsExpanded(true)
       }}
       Icon={PlayCircleIcon}
@@ -162,19 +163,19 @@ const Carousel: React.FC<CarouselProps> = ({ carouselData }) => {
       </div>
       <div {...styles.carousel} ref={carouselRef}>
         {items?.map((d, i) => (
-            <div {...styles.slide} onClick={() => handleClick(i)} key={i}>
-              <img {...styles.image} src={d.src} />
-              <div {...styles.actions}>
-                <IconButton
-                  href={d.path}
-                  Icon={ArticleIcon}
-                  labelShort='Lesen'
-                  label='Lesen'
-                />
-                <PlayAudio path={d.path} />
-              </div>
+          <div {...styles.slide} onClick={() => handleClick(i)} key={i}>
+            <img {...styles.image} src={d.src} />
+            <div {...styles.actions}>
+              <IconButton
+                href={d.path}
+                Icon={ArticleIcon}
+                labelShort='Lesen'
+                label='Lesen'
+              />
+              <PlayAudio path={d.path} />
             </div>
-          ))}
+          </div>
+        ))}
       </div>
     </div>
   )

@@ -9,6 +9,10 @@ import BottomPanel from '../../Frame/BottomPanel'
 import { useMe } from '../../../lib/context/MeContext'
 import { usePlaybackRate } from '../../../lib/playbackRate'
 import { trackEvent } from '../../../lib/matomo'
+import {
+  AudioPlaybackLocation,
+  AudioPlayerActions,
+} from '../types/AudioTracking'
 
 const LegacyAudioPlayer = () => {
   const { t } = useTranslation()
@@ -41,9 +45,13 @@ const LegacyAudioPlayer = () => {
                     title={activePlayerItem?.meta?.title}
                     sourcePath={activePlayerItem?.meta?.path}
                     closeHandler={onCloseAudioPlayer}
-                    setPlaybackRate={(rate) => {
-                      trackEvent(['AudioPlayer', 'playbackRate', rate])
-                      setPlaybackRate(rate)
+                    setPlaybackRate={(playbackRate) => {
+                      setPlaybackRate(playbackRate)
+                      trackEvent([
+                        AudioPlaybackLocation.PLAYER,
+                        AudioPlayerActions.PLAYBACK_RATE_CHANGED,
+                        playbackRate,
+                      ])
                     }}
                     playbackRate={playbackRate}
                     autoPlay={autoPlayActive}

@@ -1,9 +1,6 @@
 import { useInNativeApp } from '../../../lib/withInNativeApp'
 import compareVersion from '../../../lib/react-native/CompareVersion'
-import {
-  AUDIO_PLAYER_TRACK_CATEGORY,
-  NEW_AUDIO_API_VERSION,
-} from '../constants'
+import { NEW_AUDIO_API_VERSION } from '../constants'
 import {
   AddAudioQueueItemMutationData,
   AUDIO_QUEUE_QUERY,
@@ -23,10 +20,7 @@ import { useMe } from '../../../lib/context/MeContext'
 import createPersistedState from '../../../lib/hooks/use-persisted-state'
 import { AudioPlayerItem } from '../types/AudioPlayerItem'
 import { ApolloError, FetchResult } from '@apollo/client'
-import { trackEvent } from '../../../lib/matomo'
 import OptimisticQueueResponseHelper from '../helpers/OptimisticQueueResponseHelper'
-
-const TRACK_NAME = 'AudioQueue'
 
 const usePersistedAudioState = createPersistedState<AudioQueueItem>(
   'audio-player-local-state',
@@ -123,9 +117,6 @@ const useAudioQueue = (): {
     item: AudioPlayerItem,
     position?: number,
   ): Promise<FetchResult<AddAudioQueueItemMutationData>> => {
-    if (position && position == 1) {
-      trackEvent([AUDIO_PLAYER_TRACK_CATEGORY, TRACK_NAME, 'addItemToFront'])
-    }
     if (hasAccess) {
       return addAudioQueueItem({
         variables: {
@@ -158,7 +149,6 @@ const useAudioQueue = (): {
   const handleRemoveQueueItem = async (
     audioItemId: string,
   ): Promise<FetchResult<RemoveAudioQueueItemMutationData>> => {
-    trackEvent([AUDIO_PLAYER_TRACK_CATEGORY, TRACK_NAME, 'removeItem'])
     if (hasAccess) {
       const audioQueueItems = meWithAudioQueue?.me?.audioQueue || []
       return removeAudioQueueItem({
@@ -185,7 +175,6 @@ const useAudioQueue = (): {
     audioItemId: string,
     position: number,
   ): Promise<FetchResult<MoveAudioQueueItemMutationData>> => {
-    trackEvent([AUDIO_PLAYER_TRACK_CATEGORY, TRACK_NAME, 'moveItem'])
     if (hasAccess) {
       const audioQueueItems = meWithAudioQueue?.me?.audioQueue || []
       return moveAudioQueueItem({
@@ -231,7 +220,6 @@ const useAudioQueue = (): {
   const handleQueueReorder = async (
     reorderedQueue: AudioQueueItem[],
   ): Promise<FetchResult<ReorderAudioQueueMutationData>> => {
-    trackEvent([AUDIO_PLAYER_TRACK_CATEGORY, TRACK_NAME, 'reorder'])
     if (hasAccess) {
       return reorderAudioQueue({
         variables: {

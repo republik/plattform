@@ -38,6 +38,10 @@ import ShareButtons from './ShareButtons'
 import { useMe } from '../../lib/context/MeContext'
 import useAudioQueue from '../Audio/hooks/useAudioQueue'
 import AudioInfo from './AudioInfo'
+import {
+  AudioPlaybackLocation,
+  AudioPlayerActions,
+} from '../Audio/types/AudioTracking'
 
 const RenderItems = ({ items }) => (
   <>
@@ -232,19 +236,26 @@ const ActionBar = ({
   const showAudioButtons =
     !!meta.audioSource && meta.audioSource.kind !== 'syntheticReadAloud'
 
-  const play = (trackKey) => (e) => {
+  const play = (e) => {
     e.preventDefault()
-    trackEvent(['ActionBar', trackKey, document.id])
-    toggleAudioPlayer({
-      id: document.id,
-      meta: {
-        title: meta.title,
-        path: meta.path,
-        publishDate: meta.publishDate,
-        image: meta.image,
-        audioSource: meta.audioSource,
+    toggleAudioPlayer(
+      {
+        id: document.id,
+        meta: {
+          title: meta.title,
+          path: meta.path,
+          publishDate: meta.publishDate,
+          image: meta.image,
+          audioSource: meta.audioSource,
+        },
       },
-    })
+      AudioPlaybackLocation.ACTION_BAR,
+    )
+    trackEvent([
+      AudioPlaybackLocation.ACTION_BAR,
+      AudioPlayerActions.PLAY_TRACK,
+      meta?.path,
+    ])
   }
 
   const speakers = meta.contributors?.filter((c) => c.kind === 'voice')
@@ -456,7 +467,7 @@ const ActionBar = ({
       title: t('article/actionbar/audio/play'),
       label: !forceShortLabel ? t('article/actionbar/audio/play') : '',
       Icon: PlayCircleIcon,
-      onClick: play('audio'),
+      onClick: play,
       modes: ['feed', 'seriesEpisode', 'articleTop'],
       show: showAudioButtons,
       group: 'audio',
@@ -475,10 +486,18 @@ const ActionBar = ({
         e.preventDefault()
         if (itemInAudioQueue) {
           await removeAudioQueueItem(itemInAudioQueue.id)
-          trackEvent(['ActionBar', 'rmAudioQueue', document.id])
+          trackEvent([
+            AudioPlaybackLocation.ACTION_BAR,
+            AudioPlayerActions.REMOVE_QUEUE_ITEM,
+            meta?.path,
+          ])
         } else {
           await addAudioQueueItem(document)
-          trackEvent(['ActionBar', 'addToAudioQueue', document.id])
+          trackEvent([
+            AudioPlaybackLocation.ACTION_BAR,
+            AudioPlayerActions.ADD_QUEUE_ITEM,
+            meta?.path,
+          ])
         }
       },
       modes: ['feed', 'seriesEpisode', 'articleTop'],

@@ -24,6 +24,11 @@ import {
 import { useMe } from '../../../../../../lib/context/MeContext'
 import { useInNativeApp } from '../../../../../../lib/withInNativeApp'
 import { useAudioContext } from '../../../../AudioProvider'
+import {
+  AudioPlaybackLocation,
+  AudioPlayerActions,
+} from '../../../../types/AudioTracking'
+import { trackEvent } from '../../../../../../lib/matomo'
 
 const styles = {
   list: css({
@@ -81,7 +86,7 @@ const Queue = ({
    * @param item
    */
   const handleClick = async (item: AudioQueueItem) => {
-    toggleAudioPlayer(item.document)
+    toggleAudioPlayer(item.document, AudioPlaybackLocation.PLAYER)
   }
 
   /**
@@ -91,6 +96,11 @@ const Queue = ({
   const handleRemove = async (item: AudioQueueItem) => {
     try {
       await removeAudioQueueItem(item.id)
+      trackEvent([
+        AudioPlaybackLocation.PLAYER,
+        AudioPlayerActions.REMOVE_QUEUE_ITEM,
+        item?.document?.meta?.path,
+      ])
     } catch (e) {
       console.error(e)
     }
@@ -100,6 +110,11 @@ const Queue = ({
     try {
       const reorderedQueue = [activeItem, ...items].filter(Boolean)
       await reorderAudioQueue(reorderedQueue)
+      trackEvent([
+        AudioPlaybackLocation.PLAYER,
+        AudioPlayerActions.REORDER_QUEUE,
+        null,
+      ])
     } catch (e) {
       console.error(e)
     }

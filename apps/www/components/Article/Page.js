@@ -82,6 +82,7 @@ import Discussion from '../Discussion/Discussion'
 import ArticleRecommendationsFeed from './ArticleRecommendationsFeed'
 import { getMetaData, runMetaFromQuery } from './metadata'
 import FlyerFooter, { FlyerNav } from './Flyer'
+import { AudioPlaybackLocation } from '../Audio/types/AudioTracking'
 
 const LoadingComponent = () => <SmallLoader loading />
 
@@ -383,16 +384,19 @@ const ArticlePage = ({
         titleMargin: false,
         titleBreakout,
         onAudioCoverClick: () =>
-          toggleAudioPlayer({
-            id: documentId,
-            meta: {
-              title: meta.title,
-              path: meta.path,
-              publishDate: meta.publishDate,
-              image: meta.image,
-              audioSource: meta.audioSource,
+          toggleAudioPlayer(
+            {
+              id: documentId,
+              meta: {
+                title: meta.title,
+                path: meta.path,
+                publishDate: meta.publishDate,
+                image: meta.image,
+                audioSource: meta.audioSource,
+              },
             },
-          }),
+            AudioPlaybackLocation.ARTICLE,
+          ),
         getVideoPlayerProps:
           inNativeApp && !inNativeIOSApp
             ? (props) => ({
