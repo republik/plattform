@@ -20,9 +20,7 @@ module.exports = withBundleAnalyzer(
       ignoreDuringBuilds: true,
     },
     generateBuildId: () => buildId,
-    publicRuntimeConfig: {
-      buildId,
-    },
+    env: { buildId },
     webpack: (config) => {
       const alias = Object.assign({}, config.resolve.alias)
       delete alias.url

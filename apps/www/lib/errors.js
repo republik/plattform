@@ -14,7 +14,7 @@ export const reportError = async (context, error) => {
   }
 
   lastError = error
-  const buildId = process.env.NEXT_PUBLIC_BUILD_ID
+  const buildId = process.env.buildId
 
   await fetch('/api/reportError', {
     method: 'POST',
