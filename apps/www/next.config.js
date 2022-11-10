@@ -15,7 +15,7 @@ const buildId = process.env.SOURCE_VERSION
  */
 module.exports = withTM(
   withBundleAnalyzer({
-    generateBuildId: () => buildId | new Date(Date.now()).toISOString(),
+    generateBuildId: () => buildId || new Date(Date.now()).toISOString(),
     env: {
       NEXT_PUBLIC_BUILD_ID: buildId,
     },

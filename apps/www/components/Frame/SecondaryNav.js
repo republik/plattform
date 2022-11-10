@@ -19,6 +19,8 @@ import {
 } from '../constants'
 import { useRouter } from 'next/router'
 
+const JournalPathRegex = new RegExp('^/[0-9]{4}/[0-9]{2}/[0-9]{2}/journal$')
+
 export const SecondaryNav = ({
   secondaryNav,
   hasOverviewNav,
@@ -66,7 +68,7 @@ export const SecondaryNav = ({
           <NavLink
             href='/journal'
             currentPath={currentPath}
-            isActive={currentPath.endsWith('/journal')}
+            isActive={JournalPathRegex.test(currentPath)}
             formatColor='accentColorFlyer'
             minifeed
             title={t('navbar/flyer')}
