@@ -574,6 +574,14 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
     [inNativeApp, setupNextAudioItem, setOptimisticTimeUI, audioQueue],
   )
 
+  const togglePlayback = useCallback(async () => {
+    if (isPlaying) {
+      await onPause()
+    } else {
+      await onPlay()
+    }
+  }, [isPlaying, onPlay, onPause])
+
   useInterval(
     saveActiveItemProgress,
     isPlaying ? SAVE_MEDIA_PROGRESS_INTERVAL : null,
@@ -629,6 +637,7 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
   }>(AudioContextEvent.TOGGLE_PLAYER, ({ item, location }) =>
     togglePlayer(item, location),
   )
+  useAudioContextEvent<void>(AudioContextEvent.TOGGLE_PLAYBACK, togglePlayback)
   useAudioContextEvent<{
     item: AudioPlayerItem
     position?: number
