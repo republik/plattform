@@ -5,6 +5,7 @@ import {
   PdfIcon,
   ReadingTimeIcon,
   PlayCircleIcon,
+  PauseCircleIcon,
   PlaylistAddIcon,
   PlaylistRemoveIcon,
   DownloadIcon,
@@ -72,6 +73,7 @@ const ActionBar = ({
   const [podcastOverlayVisible, setPodcastOverlayVisible] = useState(false)
   const {
     toggleAudioPlayer,
+    toggleAudioPlayback,
     addAudioQueueItem,
     removeAudioQueueItem,
     isPlaying,
@@ -457,11 +459,10 @@ const ActionBar = ({
       show: document?.repoId && isEditor,
     },
     {
-      disabled: itemPlaying,
       title: t('article/actionbar/audio/play'),
       label: !forceShortLabel ? t('article/actionbar/audio/play') : '',
-      Icon: PlayCircleIcon,
-      onClick: play,
+      Icon: itemPlaying ? PauseCircleIcon : PlayCircleIcon,
+      onClick: !itemPlaying ? play : toggleAudioPlayback,
       modes: ['feed', 'seriesEpisode', 'articleTop'],
       show: showAudioButtons,
       group: 'audio',
