@@ -8,6 +8,7 @@ import {
   SetStateAction,
 } from 'react'
 
+import createPersistedState from '../../lib/hooks/use-persisted-state'
 import { useInNativeApp, postMessage } from '../../lib/withInNativeApp'
 
 import { useMediaProgress } from './MediaProgress'
@@ -63,6 +64,7 @@ export function useAudioContextEvent<E = Event>(
 type AudioContextValue = {
   activePlayerItem: AudioQueueItem | null
   setActivePlayerItem: Dispatch<SetStateAction<AudioQueueItem | null>>
+  legacyPlayerItem: AudioPlayerItem | undefined
   audioPlayerVisible: boolean
   setAudioPlayerVisible: Dispatch<SetStateAction<boolean>>
   isExpanded: boolean
@@ -97,15 +99,23 @@ export const AudioContext = createContext<AudioContextValue>({
   onCloseAudioPlayer: notImplemented,
   activePlayerItem: null,
   setActivePlayerItem: notImplemented,
+  legacyPlayerItem: undefined,
   autoPlayActive: false,
 })
 
 export const useAudioContext = () => useContext<AudioContextValue>(AudioContext)
 
+const usePersistedLegacyPlayerItem = createPersistedState<AudioPlayerItem>(
+  'republik-audioplayer-audiostate',
+)
+
 const AudioProvider = ({ children }) => {
   const { inNativeApp, inNativeIOSApp } = useInNativeApp()
   const [activePlayerItem, setActivePlayerItem] =
     useState<AudioQueueItem | null>(null)
+  const [legacyPlayerItem, setLegacyPlayerItem] = usePersistedLegacyPlayerItem<
+    AudioPlayerItem | undefined
+  >(undefined)
   const [autoPlayAudioPlayerItem, setAutoPlayAudioPlayerItem] =
     useState<AudioPlayerItem | null>(null)
   const [audioPlayerVisible, setAudioPlayerVisible] = useState(false)
@@ -161,6 +171,7 @@ const AudioProvider = ({ children }) => {
           },
         })
       }
+      setLegacyPlayerItem(playerItem)
       setAutoPlayAudioPlayerItem(playerItem)
     }
     clearTimeout(clearTimeoutId.current)
@@ -214,6 +225,7 @@ const AudioProvider = ({ children }) => {
       value={{
         activePlayerItem,
         setActivePlayerItem,
+        legacyPlayerItem,
         audioPlayerVisible,
         setAudioPlayerVisible,
         isExpanded,
