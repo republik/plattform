@@ -24,9 +24,13 @@ type CarouselItem = {
 
 const PlayAudio: React.FC<{ path: string }> = ({ path }) => {
   const { data } = useQuery(GET_DOCUMENT_AUDIO, { variables: { path } })
-  const { toggleAudioPlayer, toggleAudioPlayback, isPlaying, setIsExpanded } =
-    useAudioContext()
-  const { checkIfHeadOfQueue } = useAudioQueue()
+  const {
+    toggleAudioPlayer,
+    toggleAudioPlayback,
+    checkIfActivePlayerItem,
+    isPlaying,
+    setIsExpanded,
+  } = useAudioContext()
   if (!data?.document) {
     return null
   }
@@ -37,14 +41,16 @@ const PlayAudio: React.FC<{ path: string }> = ({ path }) => {
     <IconButton
       onClick={(e) => {
         e.preventDefault()
-        if (checkIfHeadOfQueue(document.id)) {
+        if (checkIfActivePlayerItem(document.id)) {
           toggleAudioPlayback()
         } else {
           toggleAudioPlayer(document, AudioPlayerLocations.MARKETING_FRONT)
         }
         setIsExpanded(true)
       }}
-      Icon={checkIfHeadOfQueue && isPlaying ? PauseCircleIcon : PlayCircleIcon}
+      Icon={
+        checkIfActivePlayerItem && isPlaying ? PauseCircleIcon : PlayCircleIcon
+      }
       labelShort='Hören'
       label='Hören'
     />
