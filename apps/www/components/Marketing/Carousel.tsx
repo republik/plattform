@@ -26,7 +26,7 @@ const PlayAudio: React.FC<{ path: string }> = ({ path }) => {
   const { data } = useQuery(GET_DOCUMENT_AUDIO, { variables: { path } })
   const { toggleAudioPlayer, toggleAudioPlayback, isPlaying, setIsExpanded } =
     useAudioContext()
-  const { checkIfActiveItem } = useAudioQueue()
+  const { checkIfHeadOfQueue } = useAudioQueue()
   if (!data?.document) {
     return null
   }
@@ -37,14 +37,14 @@ const PlayAudio: React.FC<{ path: string }> = ({ path }) => {
     <IconButton
       onClick={(e) => {
         e.preventDefault()
-        if (checkIfActiveItem(document.id)) {
+        if (checkIfHeadOfQueue(document.id)) {
           toggleAudioPlayback()
         } else {
           toggleAudioPlayer(document, AudioPlayerLocations.MARKETING_FRONT)
         }
         setIsExpanded(true)
       }}
-      Icon={checkIfActiveItem && isPlaying ? PauseCircleIcon : PlayCircleIcon}
+      Icon={checkIfHeadOfQueue && isPlaying ? PauseCircleIcon : PlayCircleIcon}
       labelShort='Hören'
       label='Hören'
     />

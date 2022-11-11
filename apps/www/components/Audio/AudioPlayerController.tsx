@@ -106,7 +106,7 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
     audioQueue,
     addAudioQueueItem,
     removeAudioQueueItem,
-    checkIfActiveItem,
+    checkIfHeadOfQueue,
   } = useAudioQueue()
   const { getMediaProgress, saveMediaProgress } = useMediaProgress()
 
@@ -502,7 +502,7 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
         const queueItem = audioQueue?.find(({ id }) => id === audioQueueItemId)
 
         if (queueItem) {
-          const isHeadOfQueue = checkIfActiveItem(queueItem.document.id)
+          const isHeadOfQueue = checkIfHeadOfQueue(queueItem.document.id)
           if (isHeadOfQueue && audioQueue?.length > 1) {
             setupNextAudioItem(audioQueue[1], false).catch(handleError)
           }
@@ -523,7 +523,7 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
   const togglePlayer = useCallback(
     async (item: AudioPlayerItem, location?: AudioPlayerLocations) => {
       try {
-        const isHeadOfQueue = checkIfActiveItem(item.id)
+        const isHeadOfQueue = checkIfHeadOfQueue(item.id)
         let nextUp: AudioQueueItem
         // If the item to be played is already the first item in the queue
         // already just set the active item directly
