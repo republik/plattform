@@ -76,10 +76,10 @@ const ActionBar = ({
     toggleAudioPlayback,
     addAudioQueueItem,
     removeAudioQueueItem,
+    checkIfActivePlayerItem,
     isPlaying,
   } = useAudioContext()
-  const { isAudioQueueAvailable, checkIfInQueue, checkIfActiveItem } =
-    useAudioQueue()
+  const { isAudioQueueAvailable, checkIfInQueue } = useAudioQueue()
 
   if (!document) {
     return (
@@ -232,7 +232,7 @@ const ActionBar = ({
 
   const isArticleBottom = mode === 'articleBottom'
 
-  const isActiveAudioItem = checkIfActiveItem(document.id)
+  const isActiveAudioItem = checkIfActivePlayerItem(document.id)
   const itemPlaying = isPlaying && isActiveAudioItem
   const itemInAudioQueue = checkIfInQueue(document.id)
   const showAudioButtons =
