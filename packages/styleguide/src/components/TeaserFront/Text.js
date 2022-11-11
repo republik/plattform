@@ -106,6 +106,7 @@ const Text = ({
   margin,
   feuilleton,
   onPlay,
+  isActivePlayingItem,
 }) => {
   const [colorScheme] = useColorContext()
   const textAlignStyle =
@@ -142,7 +143,11 @@ const Text = ({
         style={{ maxWidth, margin }}
       >
         {children}
-        <PlayAudio onPlay={onPlay} style={{ marginTop: 20 }} />
+        <PlayAudio
+          onPlay={onPlay}
+          isActivePlayingItem={isActivePlayingItem}
+          style={{ marginTop: 20 }}
+        />
       </div>
     </div>
   )

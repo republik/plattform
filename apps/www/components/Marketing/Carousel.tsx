@@ -11,7 +11,6 @@ import { getImgSrc } from '../Overview/utils'
 import { useQuery } from '@apollo/client'
 import { GET_DOCUMENT_AUDIO } from './graphql/DocumentAudio.graphql'
 import { useAudioContext } from '../Audio/AudioProvider'
-import useAudioQueue from '../Audio/hooks/useAudioQueue'
 import scrollIntoView from 'scroll-into-view'
 import { AudioPlayerLocations } from '../Audio/types/AudioActionTracking'
 

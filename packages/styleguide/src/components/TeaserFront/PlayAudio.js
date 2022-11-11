@@ -1,8 +1,8 @@
 import React from 'react'
-import { PlayCircleIcon } from '../Icons'
+import { PauseCircleIcon, PlayCircleIcon } from '../Icons'
 import { plainButtonRule } from '../Button'
 
-const PlayButton = ({ onPlay, style }) =>
+const PlayButton = ({ onPlay, isActivePlayingItem, style }) =>
   onPlay ? (
     <button
       {...plainButtonRule}
@@ -13,7 +13,11 @@ const PlayButton = ({ onPlay, style }) =>
         onPlay()
       }}
     >
-      <PlayCircleIcon size={36} />
+      {!isActivePlayingItem ? (
+        <PlayCircleIcon size={36} />
+      ) : (
+        <PauseCircleIcon size={36} />
+      )}
     </button>
   ) : null
 

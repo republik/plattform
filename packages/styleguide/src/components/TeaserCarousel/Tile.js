@@ -129,6 +129,7 @@ const Tile = ({
   outline: tileOutlineColor,
   bigger: tileBigger,
   onPlay,
+  isActivePlayingItem,
 }) => {
   const [colorScheme] = useColorContext()
   const context = React.useContext(CarouselContext)
@@ -235,7 +236,11 @@ const Tile = ({
                     color={bgColor}
                   />
                 )}
-                <PlayAudio onPlay={onPlay} style={{ margin: '0 10px' }} />
+                <PlayAudio
+                  onPlay={onPlay}
+                  isActivePlayingItem={isActivePlayingItem}
+                  style={{ margin: '0 10px' }}
+                />
               </div>
             )}
           </Text>
