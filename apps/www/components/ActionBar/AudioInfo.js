@@ -65,10 +65,9 @@ const AudioInfo = ({
           >
             {t('article/actionbar/audio/info/play-synth')}
           </button>
-          .
           {!!willBeReadAloud && (
             <>
-              {' '}
+              {'. '}
               <span>{t('article/actionbar/audio/info/read-soon')}</span>
             </>
           )}
