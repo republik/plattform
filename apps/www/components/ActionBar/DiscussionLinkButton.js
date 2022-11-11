@@ -27,20 +27,17 @@ const DiscussionLinkButton = ({
 
   const getLabel = () => {
     if (useCallToActionLabel) {
-      if (discussionCount > 0) {
-        return t('article/actionbar/discussion/call-to-action', {
-          count: discussionCount,
-        })
-      }
-      return t('article/actionbar/discussion/call-to-action/empty')
+      return t.pluralize('article/actionbar/discussion/call-to-action', {
+        count: discussionCount || 0,
+      })
     }
 
     if (forceShortLabel) {
       return discussionCount
     }
 
-    return t('profile/documents/title/other', {
-      count: discussionCount || '',
+    return t.pluralize('article/actionbar/discussion/label', {
+      count: discussionCount || 0,
     })
   }
 

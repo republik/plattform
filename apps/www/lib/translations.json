@@ -3273,11 +3273,27 @@
       "value": "Zum Dialog"
     },
     {
-      "key": "article/actionbar/discussion/call-to-action/empty",
+      "key": "article/actionbar/discussion/label/0",
+      "value": "0 Beiträge"
+    },
+    {
+      "key": "article/actionbar/discussion/label/1",
+      "value": "1 Beitrag"
+    },
+    {
+      "key": "article/actionbar/discussion/label/other",
+      "value": "{count} Beiträge"
+    },
+    {
+      "key": "article/actionbar/discussion/call-to-action/0",
       "value": "Reden Sie mit"
     },
     {
-      "key": "article/actionbar/discussion/call-to-action",
+      "key": "article/actionbar/discussion/call-to-action/1",
+      "value": "Reden Sie mit: 1 Dialog-Beitrag"
+    },
+    {
+      "key": "article/actionbar/discussion/call-to-action/other",
       "value": "Reden Sie mit: {count} Dialog-Beiträge"
     },
     {
