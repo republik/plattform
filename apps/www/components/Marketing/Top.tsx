@@ -23,12 +23,12 @@ const Top: React.FC<CarouselProps> = (props) => {
           </div>
           <div
             {...styles.panel}
-            style={{
+            {...css({
               padding: 0,
               [mediaQueries.mUp]: {
                 padding: '0 15px',
               },
-            }}
+            })}
           >
             <Carousel {...props} />
           </div>
