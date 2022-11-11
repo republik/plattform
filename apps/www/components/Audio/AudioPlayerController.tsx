@@ -93,6 +93,8 @@ type AudioPlayerContainerProps = {
 const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
   const { inNativeApp } = useInNativeApp()
   const {
+    activePlayerItem,
+    setActivePlayerItem,
     audioPlayerVisible: isVisible,
     setAudioPlayerVisible: setIsVisible,
     isPlaying,
@@ -119,8 +121,6 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
   const audioQueueRef = useRef<AudioQueueItem[] | null>(null)
 
   const [initialized, setInitialized] = useState(false)
-  const [activePlayerItem, setActivePlayerItem] =
-    useState<AudioQueueItem | null>(null)
   const [shouldAutoPlay, setShouldAutoPlay] = useState(false)
   const firstTrackIsPrepared = useRef<boolean>(false)
 

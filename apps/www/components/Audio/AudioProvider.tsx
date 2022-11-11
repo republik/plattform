@@ -8,7 +8,6 @@ import {
   SetStateAction,
 } from 'react'
 
-import createPersistedState from '../../lib/hooks/use-persisted-state'
 import { useInNativeApp, postMessage } from '../../lib/withInNativeApp'
 
 import { useMediaProgress } from './MediaProgress'
@@ -16,6 +15,7 @@ import { AudioPlayerItem } from './types/AudioPlayerItem'
 import useAudioQueue from './hooks/useAudioQueue'
 import EventEmitter from 'events'
 import { AudioPlayerLocations } from './types/AudioActionTracking'
+import { AudioQueueItem } from './graphql/AudioQueueHooks'
 
 export enum AudioContextEvent {
   TOGGLE_PLAYER = 'togglePlayer',
@@ -61,7 +61,8 @@ export function useAudioContextEvent<E = Event>(
 }
 
 type AudioContextValue = {
-  activePlayerItem: AudioPlayerItem | null
+  activePlayerItem: AudioQueueItem | null
+  setActivePlayerItem: Dispatch<SetStateAction<AudioQueueItem | null>>
   audioPlayerVisible: boolean
   setAudioPlayerVisible: Dispatch<SetStateAction<boolean>>
   isExpanded: boolean
@@ -71,6 +72,7 @@ type AudioContextValue = {
   autoPlayActive: boolean
   toggleAudioPlayer: ToggleAudioPlayerFunc
   toggleAudioPlayback: () => void
+  checkIfActivePlayerItem: (documentId: string) => boolean
   addAudioQueueItem: (item: AudioPlayerItem, position?: number) => void
   removeAudioQueueItem: (audioQueueItemId: string) => void
   onCloseAudioPlayer: () => void
@@ -89,24 +91,21 @@ export const AudioContext = createContext<AudioContextValue>({
   setIsPlaying: notImplemented,
   toggleAudioPlayer: notImplemented,
   toggleAudioPlayback: notImplemented,
+  checkIfActivePlayerItem: notImplemented,
   addAudioQueueItem: notImplemented,
   removeAudioQueueItem: notImplemented,
   onCloseAudioPlayer: notImplemented,
   activePlayerItem: null,
+  setActivePlayerItem: notImplemented,
   autoPlayActive: false,
 })
 
 export const useAudioContext = () => useContext<AudioContextValue>(AudioContext)
 
-const usePersistedPlayerItem = createPersistedState<AudioPlayerItem>(
-  'republik-audioplayer-audiostate',
-)
-
 const AudioProvider = ({ children }) => {
   const { inNativeApp, inNativeIOSApp } = useInNativeApp()
-  const [activePlayerItem, setActivePlayerItem] = usePersistedPlayerItem<
-    AudioPlayerItem | undefined
-  >(undefined)
+  const [activePlayerItem, setActivePlayerItem] =
+    useState<AudioQueueItem | null>(null)
   const [autoPlayAudioPlayerItem, setAutoPlayAudioPlayerItem] =
     useState<AudioPlayerItem | null>(null)
   const [audioPlayerVisible, setAudioPlayerVisible] = useState(false)
@@ -162,7 +161,6 @@ const AudioProvider = ({ children }) => {
           },
         })
       }
-      setActivePlayerItem(playerItem)
       setAutoPlayAudioPlayerItem(playerItem)
     }
     clearTimeout(clearTimeoutId.current)
@@ -193,6 +191,10 @@ const AudioProvider = ({ children }) => {
     AudioEventEmitter.emit(AudioContextEvent.TOGGLE_PLAYBACK)
   }
 
+  const checkIfActivePlayerItem = (documentId: string) => {
+    return activePlayerItem?.document?.id === documentId
+  }
+
   // Legacy in-app audio player this will open up the player for the last played element
   // This may be deleted sometime in the future once every app version below v2.2.0 is discontinued
   useEffect(() => {
@@ -211,6 +213,7 @@ const AudioProvider = ({ children }) => {
     <AudioContext.Provider
       value={{
         activePlayerItem,
+        setActivePlayerItem,
         audioPlayerVisible,
         setAudioPlayerVisible,
         isExpanded,
@@ -220,6 +223,7 @@ const AudioProvider = ({ children }) => {
         autoPlayActive: autoPlayAudioPlayerItem === activePlayerItem,
         toggleAudioPlayer,
         toggleAudioPlayback,
+        checkIfActivePlayerItem,
         addAudioQueueItem,
         removeAudioQueueItem,
         onCloseAudioPlayer,
