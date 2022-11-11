@@ -66,6 +66,7 @@ const ImageBlock = ({
   onlyImage,
   feuilleton,
   onPlay,
+  isActivePlayingItem,
 }) => {
   const background = bgColor || ''
   const isTextOnTop = textPosition !== 'underneath'
@@ -121,6 +122,7 @@ const ImageBlock = ({
               center={center}
               feuilleton={feuilleton}
               onPlay={onPlay}
+              isActivePlayingItem={isActivePlayingItem}
             >
               {children}
             </Text>

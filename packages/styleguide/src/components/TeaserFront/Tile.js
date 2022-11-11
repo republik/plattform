@@ -86,6 +86,7 @@ const Tile = ({
   onlyImage,
   singleColumn,
   onPlay,
+  isActivePlayingItem,
 }) => {
   const [colorScheme] = useColorContext()
   const justifyContent =
@@ -154,6 +155,7 @@ const Tile = ({
             maxWidth={singleColumn ? undefined : '600px'}
             margin={'0 auto'}
             onPlay={onPlay}
+            isActivePlayingItem={isActivePlayingItem}
           >
             {children}
           </Text>

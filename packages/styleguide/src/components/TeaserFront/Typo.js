@@ -30,6 +30,7 @@ const TypoBlock = ({
   color,
   bgColor,
   onPlay,
+  isActivePlayingItem,
 }) => {
   const background = bgColor || ''
   return (
@@ -43,7 +44,12 @@ const TypoBlock = ({
       }}
     >
       <div {...styles.textContainer}>
-        <Text center color={color} onPlay={onPlay}>
+        <Text
+          center
+          color={color}
+          onPlay={onPlay}
+          isActivePlayingItem={isActivePlayingItem}
+        >
           {children}
         </Text>
       </div>

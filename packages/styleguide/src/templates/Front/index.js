@@ -92,6 +92,7 @@ const createFrontSchema = ({
   Link = DefaultLink,
   t = () => '',
   playAudio,
+  checkIfActivePlayingItem,
   noEmpty = true,
   ...rest
 } = {}) => {
@@ -252,6 +253,9 @@ const createFrontSchema = ({
       <Link href={props.url}>
         <TeaserFrontImage
           onPlay={playFn(playAudio, props)}
+          isActivePlayingItem={checkIfActivePlayingItem(
+            props?.urlMeta?.documentId,
+          )}
           attributes={attributes}
           {...props}
         >
@@ -311,6 +315,9 @@ const createFrontSchema = ({
       <Link href={props.url}>
         <TeaserFrontSplit
           onPlay={playFn(playAudio, props)}
+          isActivePlayingItem={checkIfActivePlayingItem(
+            props?.urlMeta?.documentId,
+          )}
           attributes={attributes}
           {...props}
         >
@@ -374,6 +381,9 @@ const createFrontSchema = ({
       <Link href={props.url}>
         <TeaserFrontTypo
           onPlay={playFn(playAudio, props)}
+          isActivePlayingItem={checkIfActivePlayingItem(
+            props?.urlMeta?.documentId,
+          )}
           attributes={attributes}
           {...props}
         >
@@ -431,6 +441,9 @@ const createFrontSchema = ({
         <Link href={props.url}>
           <TeaserFrontTile
             onPlay={playFn(playAudio, props)}
+            isActivePlayingItem={checkIfActivePlayingItem(
+              props?.urlMeta?.documentId,
+            )}
             attributes={attributes}
             {...props}
           >
@@ -569,6 +582,9 @@ const createFrontSchema = ({
         <Link href={props.url}>
           <TeaserCarouselTile
             onPlay={playFn(playAudio, props)}
+            isActivePlayingItem={checkIfActivePlayingItem(
+              props?.urlMeta?.documentId,
+            )}
             attributes={attributes}
             {...props}
           >

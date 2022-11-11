@@ -101,6 +101,7 @@ const Split = ({
   aboveTheFold,
   feuilleton,
   onPlay,
+  isActivePlayingItem,
 }) => {
   const background = bgColor || ''
   const flexDirection = reverse ? 'row-reverse' : ''
@@ -157,6 +158,7 @@ const Split = ({
           center={center}
           feuilleton={feuilleton}
           onPlay={onPlay}
+          isActivePlayingItem={isActivePlayingItem}
         >
           {children}
         </Text>

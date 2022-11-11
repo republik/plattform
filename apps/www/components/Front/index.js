@@ -53,7 +53,13 @@ export const RenderFront = ({ front, nodes, isFrontExtract = false }) => {
   const { t } = useTranslation()
   const { isEditor, hasAccess } = useMe()
   const { addAudioQueueItem, isAudioQueueAvailable } = useAudioQueue()
-  const { toggleAudioPlayer } = useAudioContext()
+  const {
+    toggleAudioPlayer,
+    toggleAudioPlayback,
+    checkIfActivePlayerItem,
+    isPlaying,
+    activePlayerItem,
+  } = useAudioContext()
 
   const showPlayButton = !isFrontExtract && hasAccess && isAudioQueueAvailable
 
@@ -63,14 +69,30 @@ export const RenderFront = ({ front, nodes, isFrontExtract = false }) => {
         Link: HrefLink,
         playAudio:
           showPlayButton &&
-          ((id) => {
-            addAudioQueueItem({ id }, 1).then(
-              ({ data: { audioQueueItems } }) => {
-                const item = audioQueueItems.find((i) => i.document.id === id)
-                toggleAudioPlayer(item.document, AudioPlayerLocations.FRONT)
-              },
-            )
+          ((documentId) => {
+            if (checkIfActivePlayerItem(documentId)) {
+              toggleAudioPlayback()
+            } else {
+              addAudioQueueItem({ id: documentId }, 1).then(
+                ({ data: { audioQueueItems } }) => {
+                  const item = audioQueueItems.find(
+                    (i) => i.document.id === documentId,
+                  )
+                  toggleAudioPlayer(item.document, AudioPlayerLocations.FRONT)
+                },
+              )
+            }
           }),
+        checkIfActivePlayingItem: (documentId) => {
+          console.log('checkIfActivePlayingItem', {
+            documentId: documentId,
+            activePlayerItem: activePlayerItem?.document.id,
+            isPlaying,
+            checkIfActivePlayerItem:
+              documentId && checkIfActivePlayerItem(documentId),
+          })
+          return documentId && checkIfActivePlayerItem(documentId) && isPlaying
+        },
         CommentLink,
         DiscussionLink,
         ...withData,
