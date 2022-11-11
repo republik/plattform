@@ -19,6 +19,7 @@ import { AudioPlayerLocations } from './types/AudioActionTracking'
 
 export enum AudioContextEvent {
   TOGGLE_PLAYER = 'togglePlayer',
+  TOGGLE_PLAYBACK = 'togglePlayback',
   ADD_AUDIO_QUEUE_ITEM = 'addAudioQueueItem',
   REMOVE_AUDIO_QUEUE_ITEM = 'removeAudioQueueItem',
 }
@@ -69,36 +70,28 @@ type AudioContextValue = {
   setIsPlaying: Dispatch<SetStateAction<boolean>>
   autoPlayActive: boolean
   toggleAudioPlayer: ToggleAudioPlayerFunc
+  toggleAudioPlayback: () => void
   addAudioQueueItem: (item: AudioPlayerItem, position?: number) => void
   removeAudioQueueItem: (audioQueueItemId: string) => void
   onCloseAudioPlayer: () => void
+}
+
+const notImplemented = () => {
+  throw new Error('Not implemented')
 }
 
 export const AudioContext = createContext<AudioContextValue>({
   audioPlayerVisible: false,
   isExpanded: false,
   isPlaying: false,
-  setAudioPlayerVisible: () => {
-    throw new Error('not implemented')
-  },
-  setIsExpanded: () => {
-    throw new Error('not implemented')
-  },
-  setIsPlaying: () => {
-    throw new Error('not implemented')
-  },
-  toggleAudioPlayer: () => {
-    throw new Error('not implemented')
-  },
-  addAudioQueueItem: () => {
-    throw new Error('not implemented')
-  },
-  removeAudioQueueItem: () => {
-    throw new Error('not implemented')
-  },
-  onCloseAudioPlayer: () => {
-    throw new Error('not implemented')
-  },
+  setAudioPlayerVisible: notImplemented,
+  setIsExpanded: notImplemented,
+  setIsPlaying: notImplemented,
+  toggleAudioPlayer: notImplemented,
+  toggleAudioPlayback: notImplemented,
+  addAudioQueueItem: notImplemented,
+  removeAudioQueueItem: notImplemented,
+  onCloseAudioPlayer: notImplemented,
   activePlayerItem: null,
   autoPlayActive: false,
 })
@@ -196,6 +189,10 @@ const AudioProvider = ({ children }) => {
     )
   }
 
+  const toggleAudioPlayback = () => {
+    AudioEventEmitter.emit(AudioContextEvent.TOGGLE_PLAYBACK)
+  }
+
   // Legacy in-app audio player this will open up the player for the last played element
   // This may be deleted sometime in the future once every app version below v2.2.0 is discontinued
   useEffect(() => {
@@ -222,6 +219,7 @@ const AudioProvider = ({ children }) => {
         setIsPlaying,
         autoPlayActive: autoPlayAudioPlayerItem === activePlayerItem,
         toggleAudioPlayer,
+        toggleAudioPlayback,
         addAudioQueueItem,
         removeAudioQueueItem,
         onCloseAudioPlayer,
