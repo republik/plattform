@@ -3,6 +3,7 @@ import {
   ArticleIcon,
   IconButton,
   PlayCircleIcon,
+  PauseCircleIcon,
   useColorContext,
 } from '@project-r/styleguide'
 import { css } from 'glamor'
@@ -23,7 +24,8 @@ type CarouselItem = {
 
 const PlayAudio: React.FC<{ path: string }> = ({ path }) => {
   const { data } = useQuery(GET_DOCUMENT_AUDIO, { variables: { path } })
-  const { toggleAudioPlayer, isPlaying, setIsExpanded } = useAudioContext()
+  const { toggleAudioPlayer, toggleAudioPlayback, isPlaying, setIsExpanded } =
+    useAudioContext()
   const { checkIfActiveItem } = useAudioQueue()
   if (!data?.document) {
     return null
@@ -35,13 +37,16 @@ const PlayAudio: React.FC<{ path: string }> = ({ path }) => {
     <IconButton
       onClick={(e) => {
         e.preventDefault()
-        toggleAudioPlayer(document, AudioPlayerLocations.MARKETING_FRONT)
+        if (checkIfActiveItem(document.id)) {
+          toggleAudioPlayback()
+        } else {
+          toggleAudioPlayer(document, AudioPlayerLocations.MARKETING_FRONT)
+        }
         setIsExpanded(true)
       }}
-      Icon={PlayCircleIcon}
+      Icon={checkIfActiveItem && isPlaying ? PauseCircleIcon : PlayCircleIcon}
       labelShort='Hören'
       label='Hören'
-      disabled={checkIfActiveItem(document.id) && isPlaying}
     />
   )
 }
