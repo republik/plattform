@@ -225,6 +225,18 @@
       "value": "Ihr Einkauf scheint bereits bezahlt zu sein. Bitte kontaktieren Sie uns unter info@lobbywatch.ch und geben Sie folgende Nummer an: ID: {id}"
     },
     {
+      "key": "api/pay/paymentVerificationFail",
+      "value": "Die Zahlungsdaten konnten nicht überprüft werden. Bitte kontaktieren Sie uns unter info@lobbywatch.ch und geben Sie folgende Nummern an: Pledge {pledgeId} Payment {paymentId}"
+    },
+    {
+      "key": "api/twint/deny",
+      "value": "Die Zahlung ist leider fehlgeschlagen. Bitte wählen Sie ein anderes Zahlungsmittel, um Ihre Bestellung abzuschliessen."
+    },
+    {
+      "key": "api/twint/contactUs",
+      "value": "Während des Zahlungsverfahrens mit Twint ist ein Problem aufgetreten, das zu einem nicht vorhersehbaren Resultat geführt hat. Bitte nehmen Sie Kontakt mit uns auf unter info@lobbywatch.ch. Sie sollten es nicht erneut versuchen, da die Buchung möglicherweise bereits akzeptiert wurde."
+    },
+    {
       "key": "api/pledge/mail/subject",
       "value": "Vielen Dank!"
     },

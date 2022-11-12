@@ -56,7 +56,16 @@ const contentUrlResolver = (
         // this is used for the overview page
         // - assigns a publishDate to an teaser
         // - highlights all teasers of a format or series
+        const {
+          audioSourceKind,
+          audioSourceMp3,
+          audioSourceAac,
+          audioSourceOgg,
+        } = linkedDoc.meta
+        const hasAudio = audioSourceMp3 || audioSourceAac || audioSourceOgg
         node.data.urlMeta = {
+          documentId: linkedDoc.id,
+          audioSourceKind: hasAudio && audioSourceKind,
           repoId: linkedDoc.meta.repoId,
           publishDate: linkedDoc.meta.publishDate,
           section:

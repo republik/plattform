@@ -394,11 +394,11 @@
     },
     {
       "key": "marketing/page/lead/subtitle",
-      "value": "Das digitale Magazin für Politik, Wirtschaft, Gesellschaft und Kultur. Finanziert von seinen Leserinnen."
+      "value": "Das digitale Magazin für Politik, Wirtschaft, Gesellschaft und Kultur."
     },
     {
-      "key": "marketing/page/minifront/description",
-      "value": "Lesen Sie kostenlos zwei ausgewählte Beiträge der letzten Wochen:"
+      "key": "marketing/page/lead/info",
+      "value": "Zum Lesen und Hören."
     },
     {
       "key": "marketing/page/reasons/1/title",
@@ -510,11 +510,19 @@
     },
     {
       "key": "marketing/page/sections/description/audio",
-      "value": "Wenn Sie gerade keine Hand frei haben – hier finden Sie Journalismus fürs Ohr: Diskussionen, Podcasts, Audio-Serien. Und vorgelesene Geschichten."
+      "value": "Wenn Sie gerade keine Hand frei haben – die Republik ist Journalismus fürs Ohr. Alle Beiträge erscheinen am Tag der Publikation als Audioversion, vorgelesen von grossartigen Stimmen."
     },
     {
       "key": "marketing/page/sections/title/audio",
-      "value": "Audio"
+      "value": "Alle Beiträge, auch zum Hören"
+    },
+    {
+      "key": "marketing/page/sections/description/winter",
+      "value": "Es ist eine kalte, aufreibende und verwirrende Zeit. Soll man sich all den Krisen stellen oder sich davon ablenken? Wir meinen: Beides. Und bieten Hand dazu – immer Montags bei Sonnenuntergang"
+    },
+    {
+      "key": "marketing/page/sections/title/winter",
+      "value": "Winter-is-coming-Newsletter"
     },
     {
       "key": "marketing/page/vision/more",
@@ -953,6 +961,30 @@
       "value": "4 bis 6 Mal pro Jahr"
     },
     {
+      "key": "account/newsletterSubscriptions/WINTER/label",
+      "value": "Winter-is-coming-Newsletter"
+    },
+    {
+      "key": "account/newsletterSubscriptions/WINTER/frequency",
+      "value": "Montags um 17 Uhr"
+    },
+    {
+      "key": "account/newsletterSubscriptions/WINTER/description",
+      "value": "Es ist eine kalte, aufreibende und verwirrende Zeit. Soll man sich all den Krisen stellen oder sich davon ablenken? Wir meinen: beides. "
+    },
+    {
+      "key": "account/newsletterSubscriptions/CLIMATE/label",
+      "value": "Klimalabor-Newsletter"
+    },
+    {
+      "key": "account/newsletterSubscriptions/CLIMATE/frequency",
+      "value": "Ab Januar alle 1–2 Wochen"
+    },
+    {
+      "key": "account/newsletterSubscriptions/CLIMATE/description",
+      "value": "Wir experimentieren und wollen zusammen mit Expertinnen und Ihnen herausfinden, was das ist: Journalismus, der uns in der Klimakrise wirklich weiterbringt. Im Newsletter informieren wir über den Stand des Projekts und Möglichkeiten zur Mitwirkung."
+    },
+    {
       "key": "account/newsletterSubscriptions/onlyName/subscribe",
       "value": "abonnieren"
     },
@@ -1002,7 +1034,7 @@
     },
     {
       "key": "account/progress/title",
-      "value": "Leseposition"
+      "value": "Lese- und Hörposition"
     },
     {
       "key": "account/progress/consent/label",
@@ -3241,16 +3273,60 @@
       "value": "Zum Dialog"
     },
     {
-      "key": "article/actionbar/discussion/call-to-action/empty",
+      "key": "article/actionbar/discussion/label/0",
+      "value": "0 Beiträge"
+    },
+    {
+      "key": "article/actionbar/discussion/label/1",
+      "value": "1 Beitrag"
+    },
+    {
+      "key": "article/actionbar/discussion/label/other",
+      "value": "{count} Beiträge"
+    },
+    {
+      "key": "article/actionbar/discussion/call-to-action/0",
       "value": "Reden Sie mit"
     },
     {
-      "key": "article/actionbar/discussion/call-to-action",
+      "key": "article/actionbar/discussion/call-to-action/1",
+      "value": "Reden Sie mit: 1 Dialog-Beitrag"
+    },
+    {
+      "key": "article/actionbar/discussion/call-to-action/other",
       "value": "Reden Sie mit: {count} Dialog-Beiträge"
     },
     {
       "key": "article/actionbar/userprogress",
       "value": "Leseposition"
+    },
+    {
+      "key": "article/actionbar/audio/play",
+      "value": "Hören"
+    },
+    {
+      "key": "article/actionbar/audio/queue/add",
+      "value": "Hinzufügen"
+    },
+    {
+      "key": "article/actionbar/audio/queue/remove",
+      "value": "Entfernen"
+    },
+    {
+      "key": "article/actionbar/audio/info/speaker/default",
+      "value": "unserem Sprecherinnen-Team"
+    },
+    {
+      "key": "article/actionbar/audio/info/speaker",
+      "value": "Vorgelesen von"
+    },
+    {
+      "key": "article/actionbar/audio/info/play-synth",
+      "value": "Anhören (synthetisch)"
+    },
+    {
+      "key": "article/actionbar/audio/info/read-soon",
+      "value": "Diesen Beitrag lesen wir im Laufe des Tages ein."
     },
     {
       "key": "article/syntheticReadAloud/title",
@@ -3322,11 +3398,11 @@
     },
     {
       "key": "article/progressprompt/headline",
-      "value": "Leseposition merken?"
+      "value": "Lese- und Hörposition merken?"
     },
     {
       "key": "article/progressprompt/description/feature",
-      "value": "Springen Sie an die Stelle zurück, an der Sie einen Text oder ein Hörstück unterbrochen haben. Wenn Sie die Funktion aktivieren, wird ihr Leseverhalten in der Republik aufgezeichnet. {link}"
+      "value": "Springen Sie an die Stelle zurück, an der Sie einen Text oder ein Hörstück unterbrochen haben. Wenn Sie die Funktion aktivieren, wird Ihr Leseverhalten bei der Republik aufgezeichnet. {link}"
     },
     {
       "key": "article/progressprompt/description/feature/link",
@@ -3338,7 +3414,7 @@
     },
     {
       "key": "article/progressprompt/button/confirm",
-      "value": "Leseposition aktivieren"
+      "value": "Aktivieren"
     },
     {
       "key": "article/progressprompt/button/reject",
@@ -5125,6 +5201,90 @@
       "value": "Interne Publikation (Editoren-Vorschau)"
     },
     {
+      "key": "AudioPlayer/Latest",
+      "value": "Neueste Beiträge"
+    },
+    {
+      "key": "AudioPlayer/Latest/ReadAloud",
+      "value": "Vorgelesen"
+    },
+    {
+      "key": "AudioPlayer/Latest/All",
+      "value": "Alle"
+    },
+    {
+      "key": "AudioPlayer/Latest/NoAcces",
+      "value": "Die neusten Beiträge sind für Mitglieder und Abonnentinnen der Republik zugänglich."
+    },
+    {
+      "key": "AudioPlayer/Latest/NoItems",
+      "value": "Keine Beiträge verfügbar."
+    },
+    {
+      "key": "AudioPlayer/Queue",
+      "value": "Wiedergabeliste"
+    },
+    {
+      "key": "AudioPlayer/Queue/Add",
+      "value": "Zur Wiedergabeliste hinzufügen"
+    },
+    {
+      "key": "AudioPlayer/Queue/alreadyInQueue",
+      "value": "Bereits in der Wiedergabeliste vorhanden"
+    },
+    {
+      "key": "AudioPlayer/Queue/ActiveHeading",
+      "value": "Aktueller Beitrag"
+    },
+    {
+      "key": "AudioPlayer/Queue/Remove",
+      "value": "Aus Wiedergabeliste entfernen"
+    },
+    {
+      "key": "AudioPlayer/Queue/Download",
+      "value": "Audiodatei herunterladen"
+    },
+    {
+      "key": "AudioPlayer/Queue/AddToQueueAsNext",
+      "value": "Als Nächstes abspielen"
+    },
+    {
+      "key": "AudioPlayer/Queue/GoToItem",
+      "value": "Zum Beitrag"
+    },
+    {
+      "key": "AudioPlayer/Queue/EmptyQueue/p1",
+      "value": "Sie haben noch keine Beiträge in Ihrer Wiedergabeliste."
+    },
+    {
+      "key": "AudioPlayer/Queue/EmptyQueue/p2",
+      "value": "Über das Wiedergabelisten-Symbol {icon}, können Sie Beiträge in Ihre Wiedergabeliste hinzufügen."
+    },
+    {
+      "key": "AudioPlayer/Queue/EmptyQueue/progressInfo",
+      "value": "Damit die Abspielposition von angehörten Beiträgen gespeichert wird, müssen Sie das"
+    },
+    {
+      "key": "AudioPlayer/Queue/EmptyQueue/progressLink",
+      "value": "Aufzeichnen der Hörposition aktivieren"
+    },
+    {
+      "key": "AudioPlayer/Queue/NoAcces",
+      "value": "Die Wiedergabeliste ist nur für Mitglieder und Abonnentinnen der Republik zugänglich."
+    },
+    {
+      "key": "AudioPlayer/shared/NoAccess/heading",
+      "value": "Einloggen und Weiterhören"
+    },
+    {
+      "key": "AudioPlayer/error",
+      "value": "Beim Abspielen ist ein Fehler aufgetreten."
+    },
+    {
+      "key": "AudioPlayer/error/reload",
+      "value": "Bitte laden Sie die Seite neu."
+    },
+    {
       "key": "Auth/CodeAuthorization/title",
       "value": "E-Mail-Adresse bestätigen"
     },
@@ -5334,7 +5494,7 @@
     },
     {
       "key": "Onboarding/Sections/Usability/paragraph1",
-      "value": "Auf Wunsch merken wir uns Ihre Leseposition in Beiträgen."
+      "value": "Auf Wunsch merken wir uns Ihre Lese- und Hörposition in Beiträgen."
     },
     {
       "key": "Onboarding/Sections/Usability/paragraph2",
@@ -7102,7 +7262,7 @@
     },
     {
       "key": "crowdfunding/status/goal/PERMANENT/memberships",
-      "value": "Mitgliedschaften und Abos. Selbsttragend ab: {count}."
+      "value": "Mitgliedschaften und Abos. Wachstumsziel: {count}."
     },
     {
       "key": "Trial/Form/button",

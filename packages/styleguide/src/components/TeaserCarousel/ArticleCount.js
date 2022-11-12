@@ -27,8 +27,8 @@ const Icon = ({ size, fill, ...props }) => (
 
 const styles = {
   container: css({
+    margin: '0 10px',
     position: 'relative',
-    margin: '10px auto',
     width: ICON_SIZE,
     height: ICON_SIZE,
   }),

@@ -28,7 +28,7 @@ export {
   MdChevronRight as ChevronRightIcon,
   MdFullscreen as FullscreenIcon,
   MdFullscreenExit as FullscreenExitIcon,
-  MdMic as PodcastIcon,
+  MdPodcasts as PodcastIcon,
   MdPlayCircleOutline as PlayCircleIcon,
   MdQueryBuilder as ReadingTimeIcon,
   MdMail as MailIcon,
@@ -57,6 +57,7 @@ export {
   MdFilterList as FilterListIcon,
   MdAdd as AddIcon,
   MdRemove as RemoveIcon,
+  MdRemoveCircleOutline as RemoveCircleIcon,
   MdAccountBox as AccountBoxIcon,
   MdNoteAdd as NoteAddIcon,
   MdVpnKey as VpnKeyIcon,
@@ -88,6 +89,12 @@ export {
   MdViewHeadline as FlyerTileMetaIcon,
   MdOutlineQuiz as QuizIcon,
   MdOutlineDelete as DeleteIcon,
+  MdMic as MicIcon,
+  MdPlaylistAdd as PlaylistAddIcon,
+  MdPlaylistAddCheck as PlaylistRemoveIcon,
+  MdDragHandle as DragHandleIcon,
+  MdSkipNext as SkipNextIcon,
+  MdSubject as ArticleIcon,
 } from 'react-icons/md'
 
 export {
@@ -129,6 +136,7 @@ export { ReadIcon } from './CustomIcons/MdCheckCircleOutlined'
 export { ChartIcon } from './CustomIcons/MdInsertChartOutlined'
 export { SearchMenuIcon } from './CustomIcons/SearchMenuIcon'
 export { SpotifyIcon } from './CustomIcons/SpotifyIcon'
+export { BoldSearchIcon } from './CustomIcons/BoldSearchIcon'
 
 // Publikator
 // export { SuperscriptIcon } from './CustomIcons/SuperscriptIcon'
