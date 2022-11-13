@@ -1,11 +1,10 @@
 const express = require('express')
 const cors = require('cors')
-const { express: middlewares } = require('@orbiting/backend-modules-assets')
-const basicAuthMiddleware = require('@orbiting/backend-modules-auth/express/basicAuth')
+const next = require('next')
 
 const DEV = process.env.NODE_ENV ? process.env.NODE_ENV !== 'production' : true
 
-const { PORT, CORS_ALLOWLIST_URL } = process.env
+const { PORT = 5020, CORS_ALLOWLIST_URL } = process.env
 
 const additionalMiddlewares = []
 let httpServer
@@ -15,6 +14,12 @@ const addMiddleware = (middleware) => {
 }
 
 const start = (workerId) => {
+  const app = next({
+    dev: DEV,
+    port: PORT,
+  })
+  const handler = app.getRequestHandler()
+
   const server = express()
 
   server.disable('x-powered-by')
@@ -43,17 +48,17 @@ const start = (workerId) => {
     server.use('*', cors(corsOptions))
   }
 
-  basicAuthMiddleware(server)
-
   // special middlewares
   for (const middleware of additionalMiddlewares) {
     middleware(server)
   }
 
-  // middlewares
-  for (const key of Object.keys(middlewares)) {
-    middlewares[key](server)
-  }
+  server.use(express.static('public'))
+  app.prepare().then(() => {
+    server.all('*', (req, res) => {
+      return handler(req, res)
+    })
+  })
 
   const callback = () => {
     if (workerId) {
@@ -64,9 +69,7 @@ const start = (workerId) => {
       console.info(`server is running on http://localhost:${PORT}`)
     }
   }
-  server.use(express.static('public'))
   httpServer = server.listen(PORT, callback)
-
   return httpServer
 }
 

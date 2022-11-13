@@ -99,7 +99,7 @@ module.exports = async ({
     for (const key of pipeHeaders) {
       const value = headers.get(key)
       if (value) {
-        res.set(key, value)
+        res.setHeader(key, value)
       }
     }
   }
@@ -152,9 +152,9 @@ module.exports = async ({
       (mime !== 'application/octet-stream' ||
         headers?.get('Content-Type')?.startsWith('text/plain'))
     ) {
-      res.set('Content-Type', mime)
+      res.setHeader('Content-Type', mime)
     }
-    res.set(
+    res.setHeader(
       'Cache-Tag',
       cacheTags
         .concat(mime && mime.split('/'))
@@ -164,8 +164,8 @@ module.exports = async ({
     )
 
     if (format === 'auto') {
-      res.set('Vary', 'Accept')
-      if (req.get('Accept')?.includes('image/webp')) {
+      res.setHeader('Vary', 'Accept')
+      if (req.headers.accept?.includes('image/webp')) {
         format = 'webp'
       } else {
         format = null
@@ -202,9 +202,9 @@ module.exports = async ({
       }
 
       if (format) {
-        res.set('Content-Type', `image/${format}`)
+        res.setHeader('Content-Type', `image/${format}`)
         if (path) {
-          res.set(
+          res.setHeader(
             'Content-Disposition',
             `inline; filename="${parsePath(path).name}.${format}"`,
           )
@@ -231,7 +231,7 @@ module.exports = async ({
       !headers.get('Content-Encoding') // gzipped content can't be piped
     ) {
       // shortcut
-      res.set('Content-Length', headers.get('Content-Length'))
+      res.setHeader('Content-Length', headers.get('Content-Length'))
       passThrough.pipe(res)
     } else {
       // convert stream to buffer, because our cdn doesn't cache if content-length is missing
