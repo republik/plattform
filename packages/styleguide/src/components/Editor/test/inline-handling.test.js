@@ -273,6 +273,8 @@ describe('Slate Editor: Inline Insertion', () => {
         },
       })
     })
+
+    it('should handle nested inlines', async () => {})
   })
 
   describe('void element (e.g. break)', () => {

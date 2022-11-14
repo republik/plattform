@@ -177,7 +177,7 @@ describe('Slate Editor: Normalisation', () => {
       ])
     })
 
-    it('should use parent node structure for structure type:inherit (links, memos)', async () => {
+    it('should use parent node structure (except own type) for structure type:inherit (links, memos)', async () => {
       value = [
         {
           type: 'headline',
