@@ -8,13 +8,13 @@ import {
   ShareIcon,
   SHARE_IMAGE_WIDTH,
   SHARE_IMAGE_HEIGHT,
+  colors,
 } from '@project-r/styleguide'
 import { ASSETS_SERVER_BASE_URL, PUBLIC_BASE_URL } from '../../lib/constants'
 import { trackEvent } from '../../lib/matomo'
 import ShareOverlay from '../ActionBar/ShareOverlay'
 import { useTranslation } from '../../lib/withT'
 import { css } from 'glamor'
-import { useRouter } from 'next/router'
 
 export const getShareJournalButton =
   (documentId, meta) =>
@@ -23,11 +23,7 @@ export const getShareJournalButton =
     const { t } = useTranslation()
     if (!blockId) return null
     const url = `${PUBLIC_BASE_URL}${meta.path}#${blockId}`
-    const image = `${ASSETS_SERVER_BASE_URL}/render?viewport=450x1&zoomFactor=2&updatedAt=${encodeURIComponent(
-      `${documentId}${meta.format ? `-${meta.format.id}` : ''}`,
-    )}&url=${encodeURIComponent(
-      `${PUBLIC_BASE_URL}${meta.path}?extract=${blockId}`,
-    )}`
+
     return (
       <>
         {blockId}
@@ -56,10 +52,8 @@ export const getShareJournalButton =
           <ShareOverlay
             onClose={() => showOverlay(false)}
             url={url}
-            image={image}
             title={t('article/actionbar/share')}
             emailSubject={'Republik Journal'}
-            emailBody={`<img src=${image} width='450' />`}
             emailAttachUrl
           />
         )}
@@ -67,28 +61,36 @@ export const getShareJournalButton =
     )
   }
 
-const shareStyle = css({
-  position: 'relative',
-  width: SHARE_IMAGE_WIDTH,
-  height: SHARE_IMAGE_HEIGHT,
-  overflow: 'hidden',
-  '&:before': {
-    content: ' ',
-    display: 'block',
-    position: 'absolute',
-    zIndex: 1,
-    left: 0,
-    right: 0,
-    top: SHARE_IMAGE_HEIGHT / 2,
-    height: SHARE_IMAGE_HEIGHT / 2,
-    background:
-      'linear-gradient(0deg, rgba(174, 195, 254,1) 0%, rgba(174, 195, 254,0)100%)',
-  },
-})
+const styles = {
+  outer: css({
+    position: 'relative',
+    width: SHARE_IMAGE_WIDTH,
+    height: SHARE_IMAGE_HEIGHT,
+    background: colors.light.flyerBg,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    /*'&:before': {
+      content: ' ',
+      display: 'block',
+      position: 'absolute',
+      zIndex: 1,
+      left: 0,
+      right: 0,
+      top: SHARE_IMAGE_HEIGHT / 2,
+      height: SHARE_IMAGE_HEIGHT / 2,
+      background:
+        'linear-gradient(0deg, rgba(174, 195, 254,1) 0%, rgba(174, 195, 254,0)100%)',
+    },*/
+  }),
+  inner: css({
+    maxWidth: SHARE_IMAGE_WIDTH,
+    maxHeight: SHARE_IMAGE_HEIGHT,
+    overflow: 'hidden',
+  }),
+}
 
-const ShareJournalBlock = ({ blockId, value, schema }) => {
-  const { query } = useRouter()
-  const crop = query?.show !== 'all'
+const ShareJournalBlock = ({ blockId, value, schema, showAll }) => {
   return (
     <Fragment>
       <Head>
@@ -96,12 +98,14 @@ const ShareJournalBlock = ({ blockId, value, schema }) => {
       </Head>
       <ColorContextProvider colorSchemeKey='light'>
         <RenderContextProvider noLazy={true}>
-          <div {...(crop && shareStyle)}>
-            <SlateRender
-              value={value.filter((block) => block.id === blockId)}
-              schema={schema}
-              skip={['flyerMetaP']}
-            />
+          <div {...(!showAll && styles.outer)}>
+            <div {...(!showAll && styles.inner)}>
+              <SlateRender
+                value={value.filter((block) => block.id === blockId)}
+                schema={schema}
+                skip={['flyerMetaP']}
+              />
+            </div>
           </div>
         </RenderContextProvider>
       </ColorContextProvider>

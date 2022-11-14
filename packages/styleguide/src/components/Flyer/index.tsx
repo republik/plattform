@@ -15,6 +15,9 @@ const styles = {
   container: css({
     borderBottomWidth: '1px',
     borderBottomStyle: 'solid',
+    '&:last-child': {
+      borderBottomWidth: 0,
+    },
   }),
   content: css({
     position: 'relative',

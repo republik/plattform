@@ -88,13 +88,15 @@ function getCitationMetaData(meta) {
   }
 }
 
-export const getMetaData = (documentId, meta) => {
+export const getMetaData = (documentId, meta, blockId) => {
   const shareImage =
-    meta.shareText &&
+    (!!meta.shareText || !!blockId) &&
     `${ASSETS_SERVER_BASE_URL}/render?width=${SHARE_IMAGE_WIDTH}&height=${SHARE_IMAGE_HEIGHT}&updatedAt=${encodeURIComponent(
       `${documentId}${meta.format ? `-${meta.format.id}` : ''}`,
     )}&url=${encodeURIComponent(
-      `${PUBLIC_BASE_URL}${meta.path}?extract=share`,
+      `${PUBLIC_BASE_URL}${meta.path}?extract=share${
+        blockId ? `&blockId=${blockId}` : ''
+      }`,
     )}`
 
   const metaWithUrls = {

@@ -243,6 +243,7 @@ const ArticlePage = ({
 
   const { me, meLoading, hasAccess, hasActiveMembership, isEditor } = useMe()
 
+  const pathAnchor = router.asPath.split('#')[1]
   const cleanedPath = cleanAsPath(router.asPath)
 
   const {
@@ -319,7 +320,7 @@ const ArticlePage = ({
     () =>
       articleMeta &&
       articleContent && {
-        ...getMetaData(documentId, articleMeta),
+        ...getMetaData(documentId, articleMeta, pathAnchor),
         ...(metaJSONStringFromQuery
           ? JSON.parse(metaJSONStringFromQuery)
           : undefined),
@@ -462,8 +463,7 @@ const ArticlePage = ({
   const sectionColor = meta && meta.template === 'section' && meta.color
   const MissingNode = isEditor ? undefined : ({ children }) => children
 
-  const extract = router.query.extract
-  console.log({ extract })
+  const { extract, blockId, showAll } = router.query
   const isFlyer = treeType === 'slate'
   if (extract) {
     return (
@@ -480,14 +480,15 @@ const ArticlePage = ({
               />
             )
           }
-          return extract === 'share' ? (
-            <ShareImage meta={meta} />
-          ) : isFlyer ? (
+          return extract === 'share' && !!blockId ? (
             <ShareJournalBlock
-              blockId={extract}
+              blockId={blockId}
               value={article.content.children}
               schema={schema}
+              showAll={showAll}
             />
+          ) : extract === 'share' ? (
+            <ShareImage meta={meta} />
           ) : (
             <Extract
               ranges={extract}
