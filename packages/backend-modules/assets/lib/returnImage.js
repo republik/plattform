@@ -104,6 +104,12 @@ module.exports = async ({
     }
   }
 
+  if (!res.getHeader('cache-control')) {
+    // if max age is not specified: allow CDNs to cache for a day
+    const maxAge = 60 * 60 * 24 * 1
+    res.setHeader('Cache-Control', `public, max-age=${maxAge}`)
+  }
+
   // detect mime
   const passThrough = new PassThrough()
   try {
