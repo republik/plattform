@@ -11,7 +11,6 @@ import {
 
 import withT from '../../lib/withT'
 import NavLink from './Popover/NavLink'
-import FlyerNavLink from './Popover/FlyerNavLink'
 
 import {
   SUBHEADER_HEIGHT,
@@ -19,6 +18,8 @@ import {
   HEADER_HORIZONTAL_PADDING,
 } from '../constants'
 import { useRouter } from 'next/router'
+
+const JournalPathRegex = new RegExp('^/[0-9]{4}/[0-9]{2}/[0-9]{2}/journal$')
 
 export const SecondaryNav = ({
   secondaryNav,
@@ -28,7 +29,7 @@ export const SecondaryNav = ({
 }) => {
   const [colorScheme] = useColorContext()
   const router = useRouter()
-  const active = router.asPath
+  const currentPath = router.asPath
 
   return (
     <>
@@ -49,7 +50,7 @@ export const SecondaryNav = ({
         >
           <NavLink
             href='/'
-            active={active === '/front' ? '/' : active}
+            currentPath={currentPath === '/front' ? '/' : currentPath}
             minifeed
             title={t('navbar/front')}
           >
@@ -58,23 +59,25 @@ export const SecondaryNav = ({
           <NavLink
             prefetch
             href='/feed'
-            active={active}
+            currentPath={currentPath}
             minifeed
             title={t('navbar/feed')}
           >
             {t('navbar/feed')}
           </NavLink>
-          <FlyerNavLink
-            active={active}
+          <NavLink
+            href='/journal'
+            currentPath={currentPath}
+            isActive={JournalPathRegex.test(currentPath)}
             formatColor='accentColorFlyer'
             minifeed
             title={t('navbar/flyer')}
           >
             {t('navbar/flyer')}
-          </FlyerNavLink>
+          </NavLink>
           <NavLink
             href='/dialog'
-            active={active}
+            currentPath={currentPath}
             formatColor={colors.primary}
             minifeed
             title={t('navbar/discussion')}
@@ -83,12 +86,12 @@ export const SecondaryNav = ({
           </NavLink>
           <NavLink
             href='/suche'
-            active={active}
+            currentPath={currentPath}
             title={t('pages/search/title')}
             noPlaceholder
             minifeed
           >
-            {'/suche' === active ? (
+            {'/suche' === currentPath ? (
               <BoldSearchIcon {...colorScheme.set('fill', 'text')} size={18} />
             ) : (
               <SearchMenuIcon {...colorScheme.set('fill', 'text')} size={18} />

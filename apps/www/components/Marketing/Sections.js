@@ -11,47 +11,44 @@ import SectionTitle from './Common/SectionTitle'
 import SectionContainer from './Common/SectionContainer'
 import { CDN_FRONTEND_BASE_URL } from '../../lib/constants'
 import Link from 'next/link'
-// import NewsletterSignUp from '../Auth/NewsletterSignUp'
+import { useTranslation } from '../../lib/withT'
+import NewsletterSignUp from '../Auth/NewsletterSignUp'
 
 const sectionContent = [
-  // {
-  //   name: 'weekly',
-  //   after: <NewsletterSignUp skipTitle free name='WEEKLY' />,
-  //   href: '/format/wochenend-newsletter',
-  //   color: '#000000',
-  //   borderTop: 'none',
-  // },
+  {
+    name: 'winter',
+    image: '/static/marketing/winter_wave-1.png?size=799x736',
+    after: <NewsletterSignUp skipTitle free name='WINTER' />,
+    href: '/format/winter-is-coming-newsletter',
+    color: '#000000',
+  },
+  {
+    name: 'audio',
+    image: '/static/marketing/audio.png?size=1426x1426',
+    color: '#000000',
+  },
   {
     name: 'briefings',
-    href: '/briefings',
     image: '/static/marketing/briefings.png?size=933x933',
     color: '#0A99B8',
-    borderTop: 'none',
   },
   {
     name: 'kolumnen',
-    href: '/kolumnen',
     image: '/static/marketing/kolumnen.png?size=2000x2000',
     imageDark: '/static/marketing/kolumnen-dark.png?size=2000x2000',
     color: '#D2933C',
   },
   {
     name: 'serien',
-    href: '/serien',
     image: '/static/marketing/serien.png?size=500x500',
     imageDark: '/static/marketing/serien-dark.png?size=500x500',
     color: '#000000',
   },
-  {
-    name: 'audio',
-    href: '/audio',
-    image: '/static/marketing/audio.png?size=1426x1426',
-    color: '#000000',
-  },
 ]
 
-const Sections = ({ t }) => {
+const Sections = () => {
   const [colorScheme] = useColorContext()
+  const { t } = useTranslation()
   return (
     <SectionContainer maxWidth={720}>
       <SectionTitle
@@ -63,23 +60,22 @@ const Sections = ({ t }) => {
           key={section.name}
           {...styles.section}
           {...colorScheme.set('borderColor', 'divider')}
-          style={{
-            borderTop: section.borderTop,
-          }}
         >
           {section.image && (
             <div {...styles.picture}>
-              <Link href={section.href} passHref>
-                <a {...styles.link}>
-                  <FigureImage
-                    {...FigureImage.utils.getResizedSrcs(
-                      `${CDN_FRONTEND_BASE_URL}${section.image}`,
-                      `${CDN_FRONTEND_BASE_URL}${section.imageDark}`,
-                      80,
-                    )}
-                  />
-                </a>
-              </Link>
+              <FigureImage
+                {...FigureImage.utils.getResizedSrcs(
+                  `${CDN_FRONTEND_BASE_URL}${section.image}`,
+                  80,
+                )}
+                dark={
+                  section.imageDark &&
+                  FigureImage.utils.getResizedSrcs(
+                    `${CDN_FRONTEND_BASE_URL}${section.imageDark}`,
+                    80,
+                  )
+                }
+              />
             </div>
           )}
           <div {...styles.description}>
@@ -87,11 +83,15 @@ const Sections = ({ t }) => {
               style={{ marginTop: 0 }}
               {...colorScheme.set('color', section.color, 'format')}
             >
-              <Link href={section.href} passHref>
-                <a {...styles.link}>
-                  {t(`marketing/page/sections/title/${section.name}`)}
-                </a>
-              </Link>
+              {section.href ? (
+                <Link href={section.href} passHref>
+                  <a {...styles.link}>
+                    {t(`marketing/page/sections/title/${section.name}`)}
+                  </a>
+                </Link>
+              ) : (
+                <>{t(`marketing/page/sections/title/${section.name}`)}</>
+              )}
             </Meta.Subhead>
             <Meta.P>
               {t(`marketing/page/sections/description/${section.name}`)}
@@ -113,6 +113,9 @@ const styles = {
     borderTopStyle: 'solid',
     paddingTop: 28,
     marginBottom: 32,
+    '&:nth-child(2)': {
+      borderTop: 'none',
+    },
   }),
   description: css({
     flex: 1,

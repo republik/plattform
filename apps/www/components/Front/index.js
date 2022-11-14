@@ -35,6 +35,7 @@ import { useMe } from '../../lib/context/MeContext'
 import { useAudioContext } from '../Audio/AudioProvider'
 import useAudioQueue from '../Audio/hooks/useAudioQueue'
 import { trackEvent } from '../../lib/matomo'
+import { AudioPlayerLocations } from '../Audio/types/AudioActionTracking'
 
 const styles = {
   prepublicationNotice: css({
@@ -67,8 +68,7 @@ export const RenderFront = ({ front, nodes }) => {
             addAudioQueueItem({ id }, 1).then(
               ({ data: { audioQueueItems } }) => {
                 const item = audioQueueItems.find((i) => i.document.id === id)
-                toggleAudioPlayer(item.document)
-                trackEvent(['Front', 'playAudio', id])
+                toggleAudioPlayer(item.document, AudioPlayerLocations.FRONT)
               },
             )
           }),

@@ -5,6 +5,7 @@ import {
   FigureImage as InnerFigureImage,
   FigureByline as InnerByline,
 } from './index'
+import { css } from 'glamor'
 import { getResizedSrcs } from './utils'
 import { FLYER_CONTAINER_MAXWIDTH } from '../Flyer'
 import { useRenderContext } from '../Editor/Render/Context'
@@ -32,7 +33,13 @@ export const FigureImage: React.FC<{
 }> = ({ children, images, alt, attributes, ...props }) => {
   const { noLazy } = useRenderContext()
   return (
-    <div {...attributes} {...props}>
+    <div
+      {...attributes}
+      {...props}
+      {...css({
+        '&:not(:last-child)': { marginBottom: 5 },
+      })}
+    >
       <div contentEditable={false}>
         <InnerFigureImage
           aboveTheFold={noLazy}

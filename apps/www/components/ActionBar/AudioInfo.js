@@ -7,10 +7,10 @@ import {
   convertStyleToRem,
   fontStyles,
   mediaQueries,
-  plainLinkRule,
+  plainButtonRule,
   Editorial,
+  useColorContext,
 } from '@project-r/styleguide'
-import { useColorContext } from '@project-r/styleguide/src/components/Colors/ColorContext'
 import Link from 'next/link'
 import { intersperse } from '../../lib/utils/helpers'
 
@@ -58,18 +58,16 @@ const AudioInfo = ({
         </>
       ) : (
         <>
-          <a
-            {...plainLinkRule}
+          <button
+            {...plainButtonRule}
             style={{ textDecoration: 'underline' }}
-            href='#'
-            onClick={play('synthAudio')}
+            onClick={() => play()}
           >
             {t('article/actionbar/audio/info/play-synth')}
-          </a>
-          .
+          </button>
           {!!willBeReadAloud && (
             <>
-              {' '}
+              {'. '}
               <span>{t('article/actionbar/audio/info/read-soon')}</span>
             </>
           )}
