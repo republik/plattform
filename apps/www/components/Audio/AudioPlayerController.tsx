@@ -310,18 +310,6 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
           activePlayerItem?.document?.meta?.path,
         ])
       }
-      // In case the queue has ended, readd the last played item to the queue and play it
-      if (activePlayerItem && audioQueue?.length === 0) {
-        // Re-add item to queue-head
-        await addAudioQueueItem(activePlayerItem.document, 1)
-        setOptimisticTimeUI(activePlayerItem, 0)
-        if (inNativeApp) {
-          await setUpAppPlayer(activePlayerItem, true, 0)
-        } else if (audioEventHandlers.current) {
-          await audioEventHandlers.current.handlePlay
-        }
-        return
-      }
 
       if (inNativeApp) {
         notifyApp(AudioEvent.PLAY)
@@ -480,6 +468,7 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
       audioQueueRef.current = data.audioQueueItems
       setInitialized(true)
       if (data.audioQueueItems.length === 0) {
+        setActivePlayerItem(null)
         setShouldAutoPlay(false)
         trackEvent([
           AudioPlayerLocations.AUDIO_PLAYER,

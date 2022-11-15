@@ -65,6 +65,7 @@ const contentUrlResolver = (
         const hasAudio = audioSourceMp3 || audioSourceAac || audioSourceOgg
         node.data.urlMeta = {
           documentId: linkedDoc.id,
+          hasAudio,
           audioSourceKind: hasAudio && audioSourceKind,
           repoId: linkedDoc.meta.repoId,
           publishDate: linkedDoc.meta.publishDate,
