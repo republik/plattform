@@ -34,7 +34,6 @@ import { useRouter } from 'next/router'
 import { useMe } from '../../lib/context/MeContext'
 import { useAudioContext } from '../Audio/AudioProvider'
 import useAudioQueue from '../Audio/hooks/useAudioQueue'
-import { trackEvent } from '../../lib/matomo'
 import { AudioPlayerLocations } from '../Audio/types/AudioActionTracking'
 
 const styles = {
