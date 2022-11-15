@@ -6,7 +6,7 @@ type RenderProps = {
   Link?: React.FC<any>
   t?: Formatter
   nav?: JSX.Element
-  ShareTile?: React.FC<{ blockId: string }>
+  ShareTile?: React.FC<{ tileId: string }>
   noLazy?: boolean
 }
 

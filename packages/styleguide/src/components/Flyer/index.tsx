@@ -76,7 +76,7 @@ export const FlyerTile: React.FC<{
       >
         {!!ShareTile && (
           <div {...styles.share} contentEditable={false}>
-            <ShareTile blockId={id} />
+            <ShareTile tileId={id} />
           </div>
         )}
         {children}

@@ -56,11 +56,10 @@ export const getFlyerTileActionBar =
             label='Herunterladen'
             labelShort='Herunterladen'
             Icon={SparkleIcon}
-            href={screenshotImage}
             onClick={(e) => {
-              console.log('hm')
               e.preventDefault()
               trackEvent(['ActionBar', 'downloadJournalBlock', url])
+              window.open(screenshotImage)
             }}
             target='_blank'
           />
