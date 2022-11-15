@@ -12,11 +12,13 @@ module.exports = async (_, args, context) => {
   const tx = await pgdb.transactionBegin()
   try {
     const now = new Date()
+    const endAt = args.numberDays
+      ? new Date().setDate(now.getDate() + args.numberDays)
+      : new Date().setDate(now.getDate() + DEFAULT_INTERVAL_DAYS)
     await pgdb.public.discussionSuspensions.insert({
       userId: args.id,
       beginAt: now,
-      endAt:
-        args.until || new Date().setDate(now.getDate() + DEFAULT_INTERVAL_DAYS),
+      endAt,
       issuerUserId: me.id,
       ...(args.reason && { reason: args.reason }),
     })

@@ -38,8 +38,8 @@ const GET_SUSPENSIONS = gql`
 `
 
 const SUSPEND_USER = gql`
-  mutation SuspendUser($id: ID!, $until: DateTime, $reason: String) {
-    suspendUser(id: $id, until: $until, reason: $reason) {
+  mutation SuspendUser($id: ID!, $numberDays: Int, $reason: String) {
+    suspendUser(id: $id, numberDays: $numberDays, reason: $reason) {
       id
     }
   }
@@ -56,38 +56,37 @@ const UNSUSPEND_USER = gql`
 const SUSPENSION_INTERVALS = [
   {
     value: '1',
-    text: '1 Tag',
+    text: 'Tag',
   },
   {
     value: '7',
-    text: '1 Woche',
+    text: 'Woche',
   },
   {
     value: '30',
-    text: '1 Monat',
+    text: 'Monat',
   },
   {
     value: '365',
-    text: '1 Jahr',
+    text: 'Jahr',
   },
 ]
 
 const SuspendActions = ({ userId, isSuspended }) => {
   const [showSuspensionFields, setShowSuspensionFields] = useState(false)
-  const [until, setUntil] = useState('7')
+  const [numberDays, setNumberDays] = useState('1')
+  const [interval, setInterval] = useState('7')
   const [reason, setReason] = useState('')
   const resetDialogForm = () => {
-    setUntil('7')
+    setNumberDays('1')
+    setInterval('7')
     setReason('')
     setShowSuspensionFields(false)
   }
   const [suspendUser, suspendUserState] = useMutation(SUSPEND_USER, {
     variables: {
       id: userId,
-      until:
-        until !== ''
-          ? new Date(Date.now() + parseInt(until, 10) * 1000 * 3600 * 24) // FIXME: What if parseInt fails?
-          : undefined,
+      numberDays: numberDays !== '' ? numberDays * interval : undefined,
       reason: reason !== '' ? reason : undefined,
     },
     refetchQueries: [{ query: GET_SUSPENSIONS, variables: { id: userId } }],
@@ -125,12 +124,19 @@ const SuspendActions = ({ userId, isSuspended }) => {
           ></OverlayToolbar>
 
           <OverlayBody>
+            <Field
+              label='Sperrung für'
+              value={numberDays}
+              onChange={(e) => {
+                setNumberDays(e.currentTarget.value)
+              }}
+            />
             <Dropdown
-              label='Sperrung endet in'
-              value={until}
+              label=''
+              value={interval}
               items={SUSPENSION_INTERVALS}
               onChange={(item) => {
-                setUntil(item.value)
+                setInterval(item.value)
               }}
             ></Dropdown>
             <Field
@@ -210,7 +216,9 @@ const Suspensions = ({ userId }) => {
                             <DT>
                               {displayDate(suspension.beginAt)} -{' '}
                               {displayDate(suspension.endAt)} (
-                              {dateDiff(suspension.beginAt, suspension.endAt)})
+                              {dateDiff(suspension.beginAt, suspension.endAt) ||
+                                'weniger als 1 Tag'}
+                              )
                             </DT>
                             <DD>
                               <Label>
