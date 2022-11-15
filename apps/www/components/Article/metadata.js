@@ -88,23 +88,26 @@ function getCitationMetaData(meta) {
   }
 }
 
-export const getShareImageUrl = (meta, blockId) => {
-  if (!meta.shareText && !blockId) return
-  const blockQuery = blockId ? `&blockId=${blockId}` : ''
-  return `${PUBLIC_BASE_URL}${meta.path}?extract=share${blockQuery}`
+export const getShareImageUrl = (meta, tileId) => {
+  if (!meta.shareText && !tileId) return
+  const tileQuery = tileId ? `&tileId=${tileId}` : ''
+  return `${PUBLIC_BASE_URL}${meta.path}?extract=share${tileQuery}`
 }
 
-const getShareImage = (documentId, meta, blockId) => {
-  const imageUrl = getShareImageUrl(meta, blockId)
+export const getCacheKey = (documentId, meta) =>
+  `${documentId}${meta.format ? `-${meta.format.id}` : ''}`
+
+const getShareImage = (documentId, meta, tileId) => {
+  const imageUrl = getShareImageUrl(meta, tileId)
   if (!imageUrl) return
-  const cacheKey = `${documentId}${meta.format ? `-${meta.format.id}` : ''}`
+  const cacheKey = getCacheKey(documentId, meta)
   return `${ASSETS_SERVER_BASE_URL}/render?width=${SHARE_IMAGE_WIDTH}&height=${SHARE_IMAGE_HEIGHT}&updatedAt=${encodeURIComponent(
     cacheKey,
   )}&url=${encodeURIComponent(imageUrl)}`
 }
 
-export const getMetaData = (documentId, meta, blockId) => {
-  const shareImage = getShareImage(documentId, meta, blockId)
+export const getMetaData = (documentId, meta, tileId) => {
+  const shareImage = getShareImage(documentId, meta, tileId)
 
   const metaWithUrls = {
     ...meta,

@@ -1,21 +1,25 @@
 import { useState } from 'react'
 import { IconButton, ShareIcon, SparkleIcon } from '@project-r/styleguide'
-import { PUBLIC_BASE_URL } from '../../lib/constants'
+import { ASSETS_SERVER_BASE_URL, PUBLIC_BASE_URL } from '../../lib/constants'
 import { trackEvent } from '../../lib/matomo'
 import ShareOverlay from './ShareOverlay'
 import { useTranslation } from '../../lib/withT'
 import { css } from 'glamor'
 import { postMessage } from '../../lib/withInNativeApp'
-import { getShareImageUrl } from '../Article/metadata'
+import { getCacheKey, getShareImageUrl } from '../Article/metadata'
 
-export const getFlyerBlockActionBar =
+export const getFlyerTileActionBar =
   (documentId, meta, inNativeApp) =>
-  ({ blockId }) => {
+  ({ tileId }) => {
     const [overlay, showOverlay] = useState(false)
     const { t } = useTranslation()
-    if (!blockId) return null
-    const url = `${PUBLIC_BASE_URL}${meta.path}#${blockId}`
-    const screenshot = `${getShareImageUrl(meta, blockId)}&showAll=true`
+    if (!tileId) return null
+    const url = `${PUBLIC_BASE_URL}${meta.path}#${tileId}`
+    const screenshotUrl = `${getShareImageUrl(meta, tileId)}&showAll=true`
+    const cacheKey = getCacheKey(documentId, meta)
+    const screenshotImage = `${ASSETS_SERVER_BASE_URL}/render?viewport=375x1&zoomFactor=2&updatedAt=${encodeURIComponent(
+      cacheKey,
+    )}&url=${encodeURIComponent(screenshotUrl)}`
 
     return (
       <>
@@ -52,7 +56,7 @@ export const getFlyerBlockActionBar =
             label='Herunterladen'
             labelShort='Herunterladen'
             Icon={SparkleIcon}
-            href={screenshot}
+            href={screenshotImage}
             onClick={(e) => {
               console.log('hm')
               e.preventDefault()

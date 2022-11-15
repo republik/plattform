@@ -72,7 +72,7 @@ const Branding = () => {
   )
 }
 
-const ShareImageFlyer = ({ blockId, value, schema, showAll }) => {
+const ShareImageFlyer = ({ tileId, value, schema, showAll }) => {
   return (
     <Fragment>
       <Head>
@@ -83,7 +83,7 @@ const ShareImageFlyer = ({ blockId, value, schema, showAll }) => {
           <div {...(!showAll && styles.outer)}>
             <div {...(!showAll && styles.inner)}>
               <SlateRender
-                value={value.filter((block) => block.id === blockId)}
+                value={value.filter((block) => block.id === tileId)}
                 schema={schema}
                 skip={['flyerMetaP']}
               />

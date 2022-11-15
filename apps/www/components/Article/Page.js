@@ -73,7 +73,7 @@ import { cleanAsPath } from '../../lib/utils/link'
 import { getMetaData, runMetaFromQuery } from './metadata'
 import FlyerFooter, { FlyerNav } from './Flyer'
 import ShareImageFlyer from './ShareImageFlyer'
-import { getFlyerBlockActionBar } from '../ActionBar/FlyerBlockActionBar'
+import { getFlyerTileActionBar } from '../ActionBar/FlyerTileActionBar'
 
 import dynamic from 'next/dynamic'
 import CommentLink from '../Discussion/shared/CommentLink'
@@ -468,7 +468,7 @@ const ArticlePage = ({
   const sectionColor = meta && meta.template === 'section' && meta.color
   const MissingNode = isEditor ? undefined : ({ children }) => children
 
-  const { extract, blockId, showAll } = router.query
+  const { extract, tileId, showAll } = router.query
   const isFlyer = treeType === 'slate'
   if (extract) {
     return (
@@ -485,9 +485,9 @@ const ArticlePage = ({
               />
             )
           }
-          return extract === 'share' && !!blockId ? (
+          return extract === 'share' && !!tileId ? (
             <ShareImageFlyer
-              blockId={blockId}
+              tileId={tileId}
               value={article.content.children}
               schema={schema}
               showAll={showAll}
@@ -654,7 +654,11 @@ const ArticlePage = ({
                         publishDate={meta.publishDate}
                       />
                     }
-                    ShareTile={getFlyerBlockActionBar(documentId, meta)}
+                    ShareTile={getFlyerTileActionBar(
+                      documentId,
+                      meta,
+                      inNativeApp,
+                    )}
                   >
                     <SlateRender
                       value={article.content.children}
