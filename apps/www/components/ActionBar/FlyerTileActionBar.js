@@ -17,7 +17,7 @@ export const getFlyerTileActionBar =
     const url = `${PUBLIC_BASE_URL}${meta.path}#${tileId}`
     const screenshotUrl = `${getShareImageUrl(meta, tileId)}&showAll=true`
     const cacheKey = getCacheKey(documentId, meta)
-    const screenshotImage = `${ASSETS_SERVER_BASE_URL}/render?viewport=375x1&zoomFactor=2&updatedAt=${encodeURIComponent(
+    const screenshotImage = `${ASSETS_SERVER_BASE_URL}/render?viewport=450x1&zoomFactor=2&updatedAt=${encodeURIComponent(
       cacheKey,
     )}&url=${encodeURIComponent(screenshotUrl)}`
 
