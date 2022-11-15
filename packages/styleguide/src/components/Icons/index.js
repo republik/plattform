@@ -95,6 +95,7 @@ export {
   MdDragHandle as DragHandleIcon,
   MdSkipNext as SkipNextIcon,
   MdSubject as ArticleIcon,
+  MdPhotoFilter as SparkleIcon,
 } from 'react-icons/md'
 
 export {

@@ -88,16 +88,23 @@ function getCitationMetaData(meta) {
   }
 }
 
+export const getShareImageUrl = (meta, blockId) => {
+  if (!meta.shareText && !blockId) return
+  const blockQuery = blockId ? `&blockId=${blockId}` : ''
+  return `${PUBLIC_BASE_URL}${meta.path}?extract=share${blockQuery}`
+}
+
+const getShareImage = (documentId, meta, blockId) => {
+  const imageUrl = getShareImageUrl(meta, blockId)
+  if (!imageUrl) return
+  const cacheKey = `${documentId}${meta.format ? `-${meta.format.id}` : ''}`
+  return `${ASSETS_SERVER_BASE_URL}/render?width=${SHARE_IMAGE_WIDTH}&height=${SHARE_IMAGE_HEIGHT}&updatedAt=${encodeURIComponent(
+    cacheKey,
+  )}&url=${encodeURIComponent(imageUrl)}`
+}
+
 export const getMetaData = (documentId, meta, blockId) => {
-  const shareImage =
-    (!!meta.shareText || !!blockId) &&
-    `${ASSETS_SERVER_BASE_URL}/render?width=${SHARE_IMAGE_WIDTH}&height=${SHARE_IMAGE_HEIGHT}&updatedAt=${encodeURIComponent(
-      `${documentId}${meta.format ? `-${meta.format.id}` : ''}`,
-    )}&url=${encodeURIComponent(
-      `${PUBLIC_BASE_URL}${meta.path}?extract=share${
-        blockId ? `&blockId=${blockId}` : ''
-      }`,
-    )}`
+  const shareImage = getShareImage(documentId, meta, blockId)
 
   const metaWithUrls = {
     ...meta,

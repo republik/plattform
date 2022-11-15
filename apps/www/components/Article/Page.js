@@ -72,7 +72,8 @@ import { withMarkAsReadMutation } from '../Notifications/enhancers'
 import { cleanAsPath } from '../../lib/utils/link'
 import { getMetaData, runMetaFromQuery } from './metadata'
 import FlyerFooter, { FlyerNav } from './Flyer'
-import ShareJournalBlock, { getShareJournalButton } from './ShareJournalBlock'
+import ShareImageFlyer from './ShareImageFlyer'
+import { getFlyerBlockActionBar } from '../ActionBar/FlyerBlockActionBar'
 
 import dynamic from 'next/dynamic'
 import CommentLink from '../Discussion/shared/CommentLink'
@@ -485,7 +486,7 @@ const ArticlePage = ({
             )
           }
           return extract === 'share' && !!blockId ? (
-            <ShareJournalBlock
+            <ShareImageFlyer
               blockId={blockId}
               value={article.content.children}
               schema={schema}
@@ -653,7 +654,7 @@ const ArticlePage = ({
                         publishDate={meta.publishDate}
                       />
                     }
-                    ShareTile={getShareJournalButton(documentId, meta)}
+                    ShareTile={getFlyerBlockActionBar(documentId, meta)}
                   >
                     <SlateRender
                       value={article.content.children}
