@@ -462,7 +462,11 @@ const ActionBar = ({
       title: t('article/actionbar/audio/play'),
       label: !forceShortLabel ? t('article/actionbar/audio/play') : '',
       Icon: itemPlaying ? PauseCircleIcon : PlayCircleIcon,
-      onClick: !itemPlaying ? play : toggleAudioPlayback,
+      onClick: !itemPlaying
+        ? isActiveAudioItem
+          ? toggleAudioPlayback
+          : play
+        : toggleAudioPlayback,
       modes: ['feed', 'seriesEpisode', 'articleTop'],
       show: showAudioButtons,
       group: 'audio',
