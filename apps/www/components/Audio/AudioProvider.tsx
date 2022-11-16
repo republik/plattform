@@ -6,6 +6,7 @@ import {
   useContext,
   Dispatch,
   SetStateAction,
+  useMemo,
 } from 'react'
 
 import createPersistedState from '../../lib/hooks/use-persisted-state'
@@ -202,9 +203,12 @@ const AudioProvider = ({ children }) => {
     AudioEventEmitter.emit(AudioContextEvent.TOGGLE_PLAYBACK)
   }
 
-  const checkIfActivePlayerItem = (documentId: string) => {
-    return activePlayerItem?.document?.id === documentId
-  }
+  const checkIfActivePlayerItem = useMemo(
+    () => (documentId: string) => {
+      return activePlayerItem?.document?.id === documentId
+    },
+    [activePlayerItem],
+  )
 
   // Legacy in-app audio player this will open up the player for the last played element
   // This may be deleted sometime in the future once every app version below v2.2.0 is discontinued
