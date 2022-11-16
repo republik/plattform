@@ -36,6 +36,8 @@ import { ONBOARDING_SECTIONS_REPO_IDS } from '../../lib/constants'
 import withInNativeApp from '../../lib/withInNativeApp'
 import Link from 'next/link'
 
+import Postcard from './Sections/Postcard'
+
 const { P } = Interaction
 
 const QUERY = gql`
@@ -75,7 +77,14 @@ const QUERY = gql`
 
 const CONTEXTS = {
   card: ['newsletter', 'notifications', 'app-login', 'usability'],
-  clima: ['profile', 'newsletter'],
+  clima: [
+    'postcard',
+    'mission',
+    'invitation',
+    'profile',
+    'newsletter',
+    'call-to-action',
+  ],
   default: ['newsletter', 'notifications', 'app-login', 'usability', 'profile'],
 }
 
@@ -147,6 +156,12 @@ class Page extends Component {
       context !== 'card' && {
         component: Profile,
         name: 'profile',
+        ref: createRef(),
+        visited: false,
+      },
+      {
+        component: Postcard,
+        name: 'postcard',
         ref: createRef(),
         visited: false,
       },

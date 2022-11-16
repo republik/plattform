@@ -5585,6 +5585,14 @@
       "value": "Zusammen werden wir in den kommenden Monaten über die Klimakrise sprechen, darüber, was wir alle und wir von der Republik tun können, und viele neue Dinge ausprobieren (mehr dazu gleich).<br /><br />Schön, sind Sie dabei!<br /><br />"
     },
     {
+      "key": "Onboarding/Sections/Postcard/heading",
+      "value": "Postkarte aus der Zukunft"
+    },
+    {
+      "key": "Onboarding/Sections/Postcard/paragraph1",
+      "value": "Im Klimalabor werden wir Ihnen immer wieder die Gelegenheit bieten, Ihre Ideen, Ihre Bedürfnisse, Ihre Expertise einzubringen. Als Erstes wollen wir aber Ihre Fantasie:"
+    },
+    {
       "key": "Trial/Form/withAccess/button/label",
       "value": "Zum Magazin"
     },
