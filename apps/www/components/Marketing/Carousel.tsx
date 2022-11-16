@@ -44,11 +44,13 @@ const PlayAudio: React.FC<{ path: string }> = ({ path }) => {
           toggleAudioPlayback()
         } else {
           toggleAudioPlayer(document, AudioPlayerLocations.MARKETING_FRONT)
+          setIsExpanded(true)
         }
-        setIsExpanded(true)
       }}
       Icon={
-        checkIfActivePlayerItem && isPlaying ? PauseCircleIcon : PlayCircleIcon
+        checkIfActivePlayerItem(document.id) && isPlaying
+          ? PauseCircleIcon
+          : PlayCircleIcon
       }
       labelShort='Hören'
       label='Hören'
