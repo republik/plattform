@@ -5,7 +5,7 @@ module.exports = async (_, args, context) => {
   const { email, name, context: newsletterContext } = args
   const { t } = context
 
-  if (!['PROJECTR', 'CLIMATE', 'READALOUD', 'WINTER'].includes(name)) {
+  if (!['PROJECTR', 'CLIMATE', 'WINTER'].includes(name)) {
     throw new Error(t('api/newsletters/request/notSupported'))
   }
 
