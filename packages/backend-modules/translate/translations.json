@@ -721,6 +721,10 @@
       "value": "Anonym"
     },
     {
+      "key": "api/comment/id/invalid",
+      "value": "Das hat nicht geklappt. Die Kommentar-ID scheint ungültig. Bitte laden Sie die Seite neu und versuchen Sie den Komentar erneut abzusenden."
+    },
+    {
       "key": "api/comment/id/duplicate",
       "value": "ID-Kollision! Ups, da ist etwas schiefgelaufen. Bitte laden Sie die Seite neu und versuchen Sie den Komentar erneut abzusenden."
     },
@@ -819,6 +823,10 @@
     {
       "key": "api/newsletters/request/CLIMATE/subject",
       "value": "Bestätigen Sie Ihre Anmeldung zum Klimalabor-Newsletter."
+    },
+    {
+      "key": "api/newsletters/request/WINTER/subject",
+      "value": "Bestätigen Sie Ihre Anmeldung zum Winter-Newsletter."
     },
     {
       "key": "api/newsletters/request/notSupported",
@@ -1214,6 +1222,10 @@
     },
     {
       "key": "api/access/revoke/role/error",
+      "value": "Sie besitzen nicht die erforderliche Berechtigung."
+    },
+    {
+      "key": "api/access/terminate/role/error",
       "value": "Sie besitzen nicht die erforderliche Berechtigung."
     },
     {
@@ -2287,6 +2299,130 @@
     {
       "key": "api/email/card/visa",
       "value": "Visa-Kreditkarte"
+    },
+    {
+      "key": "api/offer/status/label",
+      "value": "{type} {since}"
+    },
+    {
+      "key": "api/offer/status/label/type",
+      "value": "Zugang"
+    },
+    {
+      "key": "api/offer/status/label/type/ABO",
+      "value": "Mitglied"
+    },
+    {
+      "key": "api/offer/status/label/type/BENEFACTOR_ABO",
+      "value": "Mitglied"
+    },
+    {
+      "key": "api/offer/status/label/type/MONTHLY_ABO",
+      "value": "Abo"
+    },
+    {
+      "key": "api/offer/status/label/type/ABO_GIVE_MONTHS",
+      "value": "Abo"
+    },
+    {
+      "key": "api/offer/status/label/since",
+      "value": "seit {firstDay}"
+    },
+    {
+      "key": "api/offer/status/description",
+      "value": "{due}"
+    },
+    {
+      "key": "api/offer/status/description/type",
+      "value": "Ihr Zugriff"
+    },
+    {
+      "key": "api/offer/status/description/type/ABO",
+      "value": "Ihre Jahresmitgliedschaft"
+    },
+    {
+      "key": "api/offer/status/description/type/BENEFACTOR_ABO",
+      "value": "Ihre Gönner-Mitgliedschaft"
+    },
+    {
+      "key": "api/offer/status/description/type/MONTHLY_ABO",
+      "value": "Ihr Monats-Abo"
+    },
+    {
+      "key": "api/offer/status/description/type/ABO_GIVE_MONTHS",
+      "value": "Ihr Monats-Abo"
+    },
+    {
+      "key": "api/offer/status/description/due/active:false/renew:false",
+      "value": "{type} endete am {endDate}."
+    },
+    {
+      "key": "api/offer/status/description/due/active:true/renew:false",
+      "value": "{type} läuft noch bis zum {endDate}."
+    },
+    {
+      "key": "api/offer/status/description/due/active:false/renew:true",
+      "value": "{type} lief am {endDate} aus."
+    },
+    {
+      "key": "api/offer/status/description/due/active:true/renew:true",
+      "value": "Ihr nächster Beitrag ist am {endDate} fällig."
+    },
+    {
+      "key": "api/offer/status/description/due/active:true/renew:true/ABO",
+      "value": "Ihr nächster Mitgliederbeitrag ist am {endDate} fällig."
+    },
+    {
+      "key": "api/offer/status/description/due/active:true/renew:true/BENEFACTOR_ABO",
+      "value": "Ihr nächster Mitgliederbeitrag ist am {endDate} fällig."
+    },
+    {
+      "key": "api/offer/status/description/due/active:true/renew:true/MONTHLY_ABO",
+      "value": "Ihr Monats-Abo wird am {endDate} verlängert."
+    },
+    {
+      "key": "api/offer/status/description/due/active:true/renew:true/ABO_GIVE_MONTHS",
+      "value": "Ihr Monats-Abo als Geschenk wird am {endDate} verlängert."
+    },
+    {
+      "key": "api/package/option/reward:MembershipType:ABO",
+      "value": "Regulär"
+    },
+    {
+      "key": "api/package/option/reward:MembershipType:BENEFACTOR_ABO",
+      "value": "Gönner"
+    },
+    {
+      "key": "api/package/option/reward:MembershipType:MONTHLY_ABO",
+      "value": "Regulär"
+    },
+    {
+      "key": "api/package/option/reward:MembershipType:ABO_GIVE_MONTHS",
+      "value": "Regulär"
+    },
+    {
+      "key": "api/package/option/reward:Goodie:NOTEBOOK",
+      "value": "Notizbuch"
+    },
+    {
+      "key": "api/package/option/reward:Goodie:TOTEBAG",
+      "value": "Tasche"
+    },
+    {
+      "key": "api/package/option/reward:Goodie:TABLEBOOK",
+      "value": "Buch «Republik bei Stromausfall»"
+    },
+    {
+      "key": "api/package/option/reward:Goodie:MASK",
+      "value": "Republik-Maske"
+    },
+    {
+      "key": "api/package/option/reward:Goodie:FONDUE",
+      "value": "Republik-Fondue"
+    },
+    {
+      "key": "api/package:DONATE/option/order:100",
+      "value": "Spende"
     },
     {
       "key": "api/publikator/editMemo/error/404",

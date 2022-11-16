@@ -54,7 +54,9 @@ import createLiveTeasers from './liveTeasers'
 import { ColorContextProvider } from '../../components/Colors/ColorContext'
 
 const playFn = (onPlay, { urlMeta }) =>
-  onPlay && urlMeta?.audioSourceKind === 'readAloud'
+  onPlay &&
+  urlMeta?.hasAudio &&
+  urlMeta?.audioSourceKind !== 'syntheticReadAloud'
     ? () => onPlay(urlMeta.documentId)
     : undefined
 
@@ -349,6 +351,7 @@ const createFrontSchema = ({
             ? TeaserFrontSplitHeadline.Editorial
             : TeaserFrontSplitHeadline.Interaction
         const sizes = {
+          small: titleSize === 'small',
           medium: titleSize === 'medium',
           large: titleSize === 'large',
         }

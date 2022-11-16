@@ -34,7 +34,7 @@ import { useRouter } from 'next/router'
 import { useMe } from '../../lib/context/MeContext'
 import { useAudioContext } from '../Audio/AudioProvider'
 import useAudioQueue from '../Audio/hooks/useAudioQueue'
-import { trackEvent } from '../../lib/matomo'
+import { AudioPlayerLocations } from '../Audio/types/AudioActionTracking'
 
 const styles = {
   prepublicationNotice: css({
@@ -49,13 +49,13 @@ const styles = {
   }),
 }
 
-export const RenderFront = ({ front, nodes }) => {
+export const RenderFront = ({ front, nodes, isFrontExtract = false }) => {
   const { t } = useTranslation()
   const { isEditor, hasAccess } = useMe()
   const { addAudioQueueItem, isAudioQueueAvailable } = useAudioQueue()
   const { toggleAudioPlayer } = useAudioContext()
 
-  const showPlayButton = hasAccess && isAudioQueueAvailable
+  const showPlayButton = !isFrontExtract && hasAccess && isAudioQueueAvailable
 
   const schema = useMemo(
     () =>
@@ -67,8 +67,7 @@ export const RenderFront = ({ front, nodes }) => {
             addAudioQueueItem({ id }, 1).then(
               ({ data: { audioQueueItems } }) => {
                 const item = audioQueueItems.find((i) => i.document.id === id)
-                toggleAudioPlayer(item.document)
-                trackEvent(['Front', 'playAudio', id])
+                toggleAudioPlayer(item.document, AudioPlayerLocations.FRONT)
               },
             )
           }),
@@ -207,7 +206,11 @@ const Front = ({
               <Head>
                 <meta name='robots' content='noindex' />
               </Head>
-              <RenderFront front={front} nodes={front.children.nodes} />
+              <RenderFront
+                front={front}
+                nodes={front.children.nodes}
+                isFrontExtract
+              />
             </Fragment>
           )
         }}

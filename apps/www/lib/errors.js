@@ -1,12 +1,9 @@
 import fetch from 'isomorphic-unfetch'
 import { Component } from 'react'
-import getConfig from 'next/config'
-
-const { publicRuntimeConfig } = getConfig()
 
 let lastError
 
-export const reportError = (context, error) => {
+export const reportError = async (context, error) => {
   // do not track server side
   if (typeof window === 'undefined') {
     return
@@ -15,15 +12,16 @@ export const reportError = (context, error) => {
   if (lastError && lastError.trim() === error.trim()) {
     return
   }
-  fetch('/api/reportError', {
+
+  lastError = error
+  const buildId = process.env.BUILD_ID
+
+  await fetch('/api/reportError', {
     method: 'POST',
     body: `${context}\n${window.location.href}\n${
-      publicRuntimeConfig.buildId
-        ? `(buildId: ${publicRuntimeConfig.buildId})\n`
-        : ''
+      buildId ? `(buildId: ${buildId})\n` : ''
     }${error}`,
   })
-  lastError = error
 }
 
 export class ErrorBoundary extends Component {

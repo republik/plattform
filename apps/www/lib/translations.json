@@ -342,7 +342,7 @@
     },
     {
       "key": "marketing/magazine/button/label",
-      "value": "Magazin lesen"
+      "value": "Zum Magazin"
     },
     {
       "key": "marketing/signin",
@@ -394,11 +394,11 @@
     },
     {
       "key": "marketing/page/lead/subtitle",
-      "value": "Das digitale Magazin für Politik, Wirtschaft, Gesellschaft und Kultur. Finanziert von seinen Leserinnen."
+      "value": "Das digitale Magazin für Politik, Wirtschaft, Gesellschaft und Kultur."
     },
     {
-      "key": "marketing/page/minifront/description",
-      "value": "Lesen Sie kostenlos zwei ausgewählte Beiträge der letzten Wochen:"
+      "key": "marketing/page/lead/info",
+      "value": "Zum Lesen und Hören."
     },
     {
       "key": "marketing/page/reasons/1/title",
@@ -510,11 +510,19 @@
     },
     {
       "key": "marketing/page/sections/description/audio",
-      "value": "Wenn Sie gerade keine Hand frei haben – hier finden Sie Journalismus fürs Ohr: Diskussionen, Podcasts, Audio-Serien. Und vorgelesene Geschichten."
+      "value": "Wenn Sie gerade keine Hand frei haben – die Republik ist Journalismus fürs Ohr. Alle Beiträge erscheinen am Tag der Publikation als Audioversion, vorgelesen von grossartigen Stimmen."
     },
     {
       "key": "marketing/page/sections/title/audio",
-      "value": "Audio"
+      "value": "Alle Beiträge, auch zum Hören"
+    },
+    {
+      "key": "marketing/page/sections/description/winter",
+      "value": "Es ist eine kalte, aufreibende und verwirrende Zeit. Soll man sich all den Krisen stellen oder sich davon ablenken? Wir meinen: Beides. Und bieten Hand dazu – immer Montags bei Sonnenuntergang"
+    },
+    {
+      "key": "marketing/page/sections/title/winter",
+      "value": "Winter-is-coming-Newsletter"
     },
     {
       "key": "marketing/page/vision/more",
@@ -951,6 +959,30 @@
     {
       "key": "account/newsletterSubscriptions/ACCOMPLICE/frequency",
       "value": "4 bis 6 Mal pro Jahr"
+    },
+    {
+      "key": "account/newsletterSubscriptions/WINTER/label",
+      "value": "Winter-is-coming-Newsletter"
+    },
+    {
+      "key": "account/newsletterSubscriptions/WINTER/frequency",
+      "value": "Montags um 17 Uhr"
+    },
+    {
+      "key": "account/newsletterSubscriptions/WINTER/description",
+      "value": "Es ist eine kalte, aufreibende und verwirrende Zeit. Soll man sich all den Krisen stellen oder sich davon ablenken? Wir meinen: beides. "
+    },
+    {
+      "key": "account/newsletterSubscriptions/CLIMATE/label",
+      "value": "Klimalabor-Newsletter"
+    },
+    {
+      "key": "account/newsletterSubscriptions/CLIMATE/frequency",
+      "value": "Ab Januar alle 1–2 Wochen"
+    },
+    {
+      "key": "account/newsletterSubscriptions/CLIMATE/description",
+      "value": "Wir experimentieren und wollen zusammen mit Expertinnen und Ihnen herausfinden, was das ist: Journalismus, der uns in der Klimakrise wirklich weiterbringt. Im Newsletter informieren wir über den Stand des Projekts und Möglichkeiten zur Mitwirkung."
     },
     {
       "key": "account/newsletterSubscriptions/onlyName/subscribe",
@@ -3241,11 +3273,27 @@
       "value": "Zum Dialog"
     },
     {
-      "key": "article/actionbar/discussion/call-to-action/empty",
+      "key": "article/actionbar/discussion/label/0",
+      "value": "0 Beiträge"
+    },
+    {
+      "key": "article/actionbar/discussion/label/1",
+      "value": "1 Beitrag"
+    },
+    {
+      "key": "article/actionbar/discussion/label/other",
+      "value": "{count} Beiträge"
+    },
+    {
+      "key": "article/actionbar/discussion/call-to-action/0",
       "value": "Reden Sie mit"
     },
     {
-      "key": "article/actionbar/discussion/call-to-action",
+      "key": "article/actionbar/discussion/call-to-action/1",
+      "value": "Reden Sie mit: 1 Dialog-Beitrag"
+    },
+    {
+      "key": "article/actionbar/discussion/call-to-action/other",
       "value": "Reden Sie mit: {count} Dialog-Beiträge"
     },
     {
@@ -3582,7 +3630,7 @@
     },
     {
       "key": "merci/action/read",
-      "value": "Magazin lesen"
+      "value": "Zum Magazin"
     },
     {
       "key": "merci/action/dialog",
@@ -5346,7 +5394,7 @@
     },
     {
       "key": "Onboarding/Page/button",
-      "value": "Magazin lesen"
+      "value": "Zum Magazin"
     },
     {
       "key": "Onboarding/Page/more/account",
@@ -5490,7 +5538,7 @@
     },
     {
       "key": "Trial/Form/withAccess/button/label",
-      "value": "Magazin lesen"
+      "value": "Zum Magazin"
     },
     {
       "key": "Trial/Form/withAccess/setup/label",
@@ -5670,7 +5718,7 @@
     },
     {
       "key": "components/Card/Update/read",
-      "value": "Magazin lesen"
+      "value": "Zum Magazin"
     },
     {
       "key": "components/Card/Update/onboarding",
@@ -7214,7 +7262,7 @@
     },
     {
       "key": "crowdfunding/status/goal/PERMANENT/memberships",
-      "value": "Mitgliedschaften und Abos. Selbsttragend ab: {count}."
+      "value": "Mitgliedschaften und Abos. Wachstumsziel: {count}."
     },
     {
       "key": "Trial/Form/button",
