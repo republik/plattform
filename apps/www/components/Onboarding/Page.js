@@ -257,10 +257,13 @@ class Page extends Component {
                   ])}
                 </div>
                 <P {...styles.p}>
-                  {t.first([
-                    `Onboarding/Page/${context}/preface`,
-                    'Onboarding/Page/preface',
-                  ])}
+                  {t.first(
+                    [
+                      `Onboarding/Page/${context}/preface`,
+                      'Onboarding/Page/preface',
+                    ],
+                    { climate_lab_count: 5 }, // TODO: get real count of subscribers
+                  )}
                 </P>
                 {context && <Greeting employee={employees[0]} />}
 
