@@ -49,7 +49,7 @@ const styles = {
   }),
 }
 
-export const RenderFront = ({ front, nodes }) => {
+export const RenderFront = ({ front, nodes, isFrontExtract = false }) => {
   const { t } = useTranslation()
   const { isEditor, hasAccess } = useMe()
   const { addAudioQueueItem, isAudioQueueAvailable } = useAudioQueue()
@@ -61,7 +61,7 @@ export const RenderFront = ({ front, nodes }) => {
     activePlayerItem,
   } = useAudioContext()
 
-  const showPlayButton = hasAccess && isAudioQueueAvailable
+  const showPlayButton = !isFrontExtract && hasAccess && isAudioQueueAvailable
 
   const schema = useMemo(
     () =>
@@ -228,7 +228,11 @@ const Front = ({
               <Head>
                 <meta name='robots' content='noindex' />
               </Head>
-              <RenderFront front={front} nodes={front.children.nodes} />
+              <RenderFront
+                front={front}
+                nodes={front.children.nodes}
+                isFrontExtract
+              />
             </Fragment>
           )
         }}
