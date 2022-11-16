@@ -19,10 +19,9 @@ const ActionBarOverlay = ({ children }) => {
 
   const audioPlayerOffset = audioPlayerVisible
     ? isAudioQueueAvailable
-      ? MINI_AUDIO_PLAYER_HEIGHT + 10
+      ? MINI_AUDIO_PLAYER_HEIGHT + 16
       : AUDIO_PLAYER_HEIGHT + 20
     : 0
-
   const lastY = useRef()
   const diff = useRef(0)
 

@@ -53,6 +53,13 @@ import {
 import createLiveTeasers from './liveTeasers'
 import { ColorContextProvider } from '../../components/Colors/ColorContext'
 
+const playFn = (onPlay, { urlMeta }) =>
+  onPlay &&
+  urlMeta?.hasAudio &&
+  urlMeta?.audioSourceKind !== 'syntheticReadAloud'
+    ? () => onPlay(urlMeta.documentId)
+    : undefined
+
 export const subject = {
   matchMdast: matchHeading(2),
   component: ({ children, attributes, ...props }) => (
@@ -84,6 +91,7 @@ const DefaultLink = ({ children }) => children
 const createFrontSchema = ({
   Link = DefaultLink,
   t = () => '',
+  playAudio,
   noEmpty = true,
   ...rest
 } = {}) => {
@@ -242,7 +250,11 @@ const createFrontSchema = ({
     }),
     component: ({ children, attributes, ...props }) => (
       <Link href={props.url}>
-        <TeaserFrontImage attributes={attributes} {...props}>
+        <TeaserFrontImage
+          onPlay={playFn(playAudio, props)}
+          attributes={attributes}
+          {...props}
+        >
           {children}
         </TeaserFrontImage>
       </Link>
@@ -297,7 +309,11 @@ const createFrontSchema = ({
     matchMdast: matchTeaserType('frontSplit'),
     component: ({ children, attributes, ...props }) => (
       <Link href={props.url}>
-        <TeaserFrontSplit attributes={attributes} {...props}>
+        <TeaserFrontSplit
+          onPlay={playFn(playAudio, props)}
+          attributes={attributes}
+          {...props}
+        >
           {children}
         </TeaserFrontSplit>
       </Link>
@@ -335,6 +351,7 @@ const createFrontSchema = ({
             ? TeaserFrontSplitHeadline.Editorial
             : TeaserFrontSplitHeadline.Interaction
         const sizes = {
+          small: titleSize === 'small',
           medium: titleSize === 'medium',
           large: titleSize === 'large',
         }
@@ -355,7 +372,11 @@ const createFrontSchema = ({
     matchMdast: matchTeaserType('frontTypo'),
     component: ({ children, attributes, ...props }) => (
       <Link href={props.url}>
-        <TeaserFrontTypo attributes={attributes} {...props}>
+        <TeaserFrontTypo
+          onPlay={playFn(playAudio, props)}
+          attributes={attributes}
+          {...props}
+        >
           {children}
         </TeaserFrontTypo>
       </Link>
@@ -408,7 +429,11 @@ const createFrontSchema = ({
     component: ({ children, attributes, ...props }) => (
       <ColorContextProvider colorSchemeKey='light'>
         <Link href={props.url}>
-          <TeaserFrontTile attributes={attributes} {...props}>
+          <TeaserFrontTile
+            onPlay={playFn(playAudio, props)}
+            attributes={attributes}
+            {...props}
+          >
             {children}
           </TeaserFrontTile>
         </Link>
@@ -542,7 +567,11 @@ const createFrontSchema = ({
     component: ({ children, attributes, ...props }) => {
       return (
         <Link href={props.url}>
-          <TeaserCarouselTile attributes={attributes} {...props}>
+          <TeaserCarouselTile
+            onPlay={playFn(playAudio, props)}
+            attributes={attributes}
+            {...props}
+          >
             {children}
           </TeaserCarouselTile>
         </Link>

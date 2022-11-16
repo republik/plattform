@@ -1,7 +1,5 @@
 import { AudioPlayerProps } from '../AudioPlayerController'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { trackEvent } from '../../../lib/matomo'
-import { AUDIO_PLAYER_TRACK_CATEGORY } from '../constants'
 import useInterval from '../../../lib/hooks/useInterval'
 import { AudioQueueItem } from '../graphql/AudioQueueHooks'
 
@@ -106,12 +104,6 @@ const AudioPlaybackElement = ({
         MEDIA_ERR_NETWORK: error.MEDIA_ERR_NETWORK,
         MEDIA_ERR_DECODE: error.MEDIA_ERR_DECODE,
       }
-      trackEvent([
-        AUDIO_PLAYER_TRACK_CATEGORY,
-        'webPlayer',
-        'error',
-        JSON.stringify(errorObject),
-      ])
       handleError(new Error(JSON.stringify(errorObject, null, 2)))
     }
   }, [handleError])
@@ -224,6 +216,11 @@ const AudioPlaybackElement = ({
     onPlaybackRateChange,
     onSetPosition,
   ])
+
+  // Once the component is unmounted, ensure the handlers are set to null.
+  useEffect(() => {
+    return () => setWebHandlers(null)
+  }, [])
 
   const {
     document: { meta: { audioSource } = {} },

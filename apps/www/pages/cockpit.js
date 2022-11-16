@@ -17,6 +17,7 @@ import {
   ChartLead,
   ChartLegend,
   Chart,
+  mediaQueries,
 } from '@project-r/styleguide'
 
 import Frame from '../components/Frame'
@@ -96,7 +97,7 @@ const statusQuery = gql`
   ${userSurviveActionsFragment}
 `
 
-const numMembersNeeded = 27000
+const numMembersNeeded = 33000
 
 const formatDateTime = swissTime.format('%d.%m.%Y %H:%M')
 
@@ -346,6 +347,7 @@ const Page = ({
     image: `${CDN_FRONTEND_BASE_URL}/static/social-media/cockpit.jpg`,
   }
 
+  const [isMobile, setIsMobile] = useState()
   useEffect(() => {
     if (query.token) {
       Router.replace(
@@ -357,6 +359,17 @@ const Page = ({
       )
     }
   }, [query.token])
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < mediaQueries.mBreakPoint)
+    }
+    window.addEventListener('resize', handleResize)
+    handleResize()
+    return () => {
+      window.removeEventListener('resize', handleResize)
+    }
+  }, [])
 
   return (
     <Frame meta={meta} pageColorSchemeKey='dark'>
@@ -454,14 +467,19 @@ const Page = ({
           ).values
 
           const activeCount = currentBucket.active + currentBucket.overdue
-          const missingCount = numMembersNeeded - activeCount
+
+          /* NOV 22: WACHSTUMSZIEL vorübergehend deaktiviert
+             kommt mit Wachstumskampagne zurück (JAN 23) */
+
+          /* const missingCount = numMembersNeeded - activeCount
           if (missingCount > 0) {
             values.push({
               month: currentBucket.key,
               label: labelMap.missing,
               value: missingCount,
             })
-          }
+          } */
+
           minMaxValues.push(numMembersNeeded)
           const [minValue, maxValue] = extent(minMaxValues).map((d, i) =>
             Math[i ? 'ceil' : 'floor'](Math.round(d / 1000) * 1000),
@@ -534,7 +552,10 @@ const Page = ({
                 Die Grundlage dafür ist ein Geschäftsmodell für werbefreien,
                 unabhängigen, leserfinanzierten Journalismus. Damit die Republik
                 einen entscheidenden Unterschied im Mediensystem machen kann,
-                muss sie selbsttragend sein.
+                muss sie mittelfristig selbsttragend sein. Um am Markt zu
+                bestehen und durch Einfluss auf die gesellschaftliche Debatte
+                nachhaltige Relevanz zu erreichen, muss sie jedoch auch weiter
+                wachsen.
               </P>
 
               <div style={{ marginTop: 20 }}>
@@ -544,8 +565,6 @@ const Page = ({
                 </ChartTitle>
                 <ChartLead>
                   Entwicklung vom Crowdfunding im April 2017 bis heute
-                  {missingCount > 0 &&
-                    `. Es fehlen ${countFormat(missingCount)} Mitglieder.`}
                 </ChartLead>
                 <Chart
                   config={{
@@ -557,6 +576,7 @@ const Page = ({
                     timeParse: '%Y-%m',
                     timeFormat: '%Y',
                     xInterval: 'month',
+                    padding: isMobile ? 30 : 50,
                     xTicks: [
                       '2018-01',
                       '2019-01',
@@ -566,13 +586,16 @@ const Page = ({
                     ],
                     height: 300,
                     domain: [minValue, maxValue + 2000],
-                    yTicks: [-5000, 0, 5000, 10000, 15000, 20000, 25000, 30000],
+                    yTicks: [
+                      -5000, 0, 5000, 10000, 15000, 20000, 25000, 30000, 35000,
+                    ],
                     xAnnotations: [
                       {
                         x1: currentBucket.key,
                         x2: currentBucket.key,
                         value: activeCount,
                         label: 'Stand jetzt',
+                        position: 'top',
                       },
                     ],
                     xBandPadding: 0,
@@ -603,13 +626,8 @@ const Page = ({
                     xInterval: 'month',
                     height: 300,
                     domain: [minValue, maxValue + 2000],
-                    yTicks: [-5000, 0, 5000, 10000, 15000, 20000, 25000, 30000],
-                    yAnnotations: [
-                      {
-                        value: numMembersNeeded,
-                        label: 'selbsttragend ab',
-                        dy: '1.1em',
-                      },
+                    yTicks: [
+                      -5000, 0, 5000, 10000, 15000, 20000, 25000, 30000, 35000,
                     ],
                     xAnnotations: [
                       {
@@ -632,20 +650,12 @@ const Page = ({
                 </ChartLegend>
               </div>
               <P>
-                Mit {countFormat(numMembersNeeded)} Abonnentinnen und
-                Mitgliedern haben wir genügend Einnahmen, um den gesamten
-                Betrieb zu finanzieren. Und wir haben die Mittel, um Neues
-                auszuprobieren und Experimente zu machen.
-              </P>
-              <P>
-                Diese Zahl leitet sich aus dem aktuellen Budget 2021/22 ab.{' '}
-                <Link
-                  href='/2021/10/08/werfen-sie-einen-blick-in-unsere-geschaeftsbuecher'
-                  passHref
-                >
+                Wir investieren in Journalismus und in konkrete Projekte. Und
+                fassen ein neues Wachstumsziel ins Auge:{' '}
+                {countFormat(numMembersNeeded)} Abonnentinnen und Mitglieder.{' '}
+                <Link href='/2022/11/11/hier-sehen-sie-unser-budget' passHref>
                   <Editorial.A>
-                    Erfahren Sie, wofür wir das Geld ausgeben und wie sich das
-                    Budget über die Zeit entwickelt hat.
+                    Diese Zahl leitet sich aus dem aktuellen Budget 2022/23 ab.
                   </Editorial.A>
                 </Link>
               </P>
@@ -675,14 +685,9 @@ const Page = ({
                     x: 'date',
                     timeParse: '%Y-%m',
                     timeFormat: '%Y',
-                    xTicks: [
-                      '2018-01',
-                      '2019-01',
-                      '2020-01',
-                      '2021-01',
-                      '2022-01',
-                      // lastSeenBucket.key
-                    ],
+                    xTicks: isMobile
+                      ? ['2018-01', '2020-01', '2022-01']
+                      : ['2018-01', '2019-01', '2020-01', '2021-01', '2022-01'], // lastSeenBucket.key
                     yNice: 0,
                     yTicks: [0, 3000, 6000, 9000, 12000, 15000],
                     colorMap: {

@@ -1,9 +1,6 @@
 import { useInNativeApp } from '../../../lib/withInNativeApp'
 import compareVersion from '../../../lib/react-native/CompareVersion'
-import {
-  AUDIO_PLAYER_TRACK_CATEGORY,
-  NEW_AUDIO_API_VERSION,
-} from '../constants'
+import { NEW_AUDIO_API_VERSION } from '../constants'
 import {
   AddAudioQueueItemMutationData,
   AUDIO_QUEUE_QUERY,
@@ -23,10 +20,7 @@ import { useMe } from '../../../lib/context/MeContext'
 import createPersistedState from '../../../lib/hooks/use-persisted-state'
 import { AudioPlayerItem } from '../types/AudioPlayerItem'
 import { ApolloError, FetchResult } from '@apollo/client'
-import { trackEvent } from '../../../lib/matomo'
 import OptimisticQueueResponseHelper from '../helpers/OptimisticQueueResponseHelper'
-
-const TRACK_NAME = 'AudioQueue'
 
 const usePersistedAudioState = createPersistedState<AudioQueueItem>(
   'audio-player-local-state',
@@ -61,8 +55,9 @@ const useAudioQueue = (): {
     reorderedQueueItems: AudioQueueItem[],
   ) => Promise<FetchResult<ReorderAudioQueueMutationData>>
   isAudioQueueAvailable: boolean
-  checkIfActiveItem: (documentId: string) => boolean
-  checkIfInQueue: (audioItemId: string) => boolean
+  checkIfActiveItem: (documentId: string) => AudioQueueItem
+  checkIfInQueue: (audioItemId: string) => AudioQueueItem
+  getAudioQueueItemIndex: (documentId: string) => number
 } => {
   const { inNativeApp, inNativeAppVersion } = useInNativeApp()
   const { meLoading, hasAccess } = useMe()
@@ -122,9 +117,6 @@ const useAudioQueue = (): {
     item: AudioPlayerItem,
     position?: number,
   ): Promise<FetchResult<AddAudioQueueItemMutationData>> => {
-    if (position && position == 1) {
-      trackEvent([AUDIO_PLAYER_TRACK_CATEGORY, TRACK_NAME, 'addItemToFront'])
-    }
     if (hasAccess) {
       return addAudioQueueItem({
         variables: {
@@ -137,7 +129,7 @@ const useAudioQueue = (): {
       })
     } else {
       const mockAudioQueueItem = {
-        id: 'local',
+        id: item.id,
         document: item,
         sequence: 0,
       }
@@ -157,7 +149,6 @@ const useAudioQueue = (): {
   const handleRemoveQueueItem = async (
     audioItemId: string,
   ): Promise<FetchResult<RemoveAudioQueueItemMutationData>> => {
-    trackEvent([AUDIO_PLAYER_TRACK_CATEGORY, TRACK_NAME, 'removeItem'])
     if (hasAccess) {
       const audioQueueItems = meWithAudioQueue?.me?.audioQueue || []
       return removeAudioQueueItem({
@@ -184,7 +175,6 @@ const useAudioQueue = (): {
     audioItemId: string,
     position: number,
   ): Promise<FetchResult<MoveAudioQueueItemMutationData>> => {
-    trackEvent([AUDIO_PLAYER_TRACK_CATEGORY, TRACK_NAME, 'moveItem'])
     if (hasAccess) {
       const audioQueueItems = meWithAudioQueue?.me?.audioQueue || []
       return moveAudioQueueItem({
@@ -230,7 +220,6 @@ const useAudioQueue = (): {
   const handleQueueReorder = async (
     reorderedQueue: AudioQueueItem[],
   ): Promise<FetchResult<ReorderAudioQueueMutationData>> => {
-    trackEvent([AUDIO_PLAYER_TRACK_CATEGORY, TRACK_NAME, 'reorder'])
     if (hasAccess) {
       return reorderAudioQueue({
         variables: {
@@ -252,22 +241,30 @@ const useAudioQueue = (): {
     })
   }
 
-  function checkIfActiveItem(documentId: string): boolean {
-    if (!hasAccess) {
-      return localAudioItem?.document?.id === documentId
+  function checkIfActiveItem(documentId: string): AudioQueueItem {
+    if (!hasAccess && localAudioItem?.document?.id === documentId) {
+      return localAudioItem
     }
-    return (
-      meWithAudioQueue?.me?.audioQueue?.[0]?.document?.id === documentId ||
-      false
+    if (meWithAudioQueue?.me?.audioQueue?.[0]?.document?.id === documentId) {
+      return meWithAudioQueue?.me?.audioQueue?.[0]
+    }
+  }
+
+  function checkIfInQueue(documentId: string): AudioQueueItem {
+    if (!hasAccess && localAudioItem?.document?.id === documentId) {
+      return localAudioItem
+    }
+    return meWithAudioQueue?.me?.audioQueue.find(
+      (audioQueueItem) => audioQueueItem.document.id === documentId,
     )
   }
 
-  function checkIfInQueue(documentId: string): boolean {
-    if (!hasAccess) {
-      return localAudioItem?.document?.id === documentId
+  function getAudioQueueItemIndex(documentId: string): number {
+    if (!hasAccess && localAudioItem?.document.id === documentId) {
+      return 0
     }
-    return meWithAudioQueue?.me?.audioQueue.some(
-      (audioQueueItem) => audioQueueItem.document.id === documentId,
+    return meWithAudioQueue?.me?.audioQueue.findIndex(
+      (item) => item.document.id === documentId,
     )
   }
 
@@ -293,6 +290,7 @@ const useAudioQueue = (): {
         compareVersion(inNativeAppVersion, NEW_AUDIO_API_VERSION) >= 0),
     checkIfActiveItem,
     checkIfInQueue,
+    getAudioQueueItemIndex,
   }
 }
 

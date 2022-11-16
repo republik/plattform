@@ -1,6 +1,4 @@
 import { useState, useEffect } from 'react'
-import compose from 'lodash/flowRight'
-import { graphql } from '@apollo/client/react/hoc'
 import { css } from 'glamor'
 import {
   Loader,
@@ -33,15 +31,20 @@ const Carpet = ({ loading, front }) => {
   const onHighlight = (highlighFunction) => setHighlight(() => highlighFunction)
   return (
     <LazyLoad offset={1}>
-      <div style={{ position: 'relative' }}>
+      <div
+        style={{
+          position: 'relative',
+        }}
+      >
         <div
           style={{
             position: 'absolute',
-            top: 50,
+            top: 0,
             zIndex: 2,
             width: '100%',
-            height: 150,
-            backgroundImage: 'linear-gradient(rgba(0,0,0,0.5),rgba(0,0,0,0))',
+            height: 100,
+            backgroundImage:
+              'linear-gradient(rgba(19,19,19,0.6), rgba(19,19,19,0)',
           }}
         />
         <Loader
@@ -49,10 +52,9 @@ const Carpet = ({ loading, front }) => {
           render={() => (
             <div
               style={{
-                opacity: 0.6,
-                maxWidth: 1600,
+                opacity: 1,
+                maxWidth: 1280,
                 margin: '0 auto',
-                padding: `0 ${GAP}px`,
               }}
             >
               <TeaserBlock
@@ -62,7 +64,7 @@ const Carpet = ({ loading, front }) => {
                 maxHeight={isMobile ? 300 : 450}
                 maxColumns={8}
                 noHover
-                style={{ marginTop: 0, marginBottom: 0 }}
+                style={{ marginTop: 0, marginBottom: 24 }}
               />
             </div>
           )}
@@ -82,8 +84,6 @@ const styles = {
     alignItems: 'center',
     textAlign: 'center',
     padding: '0 15px',
-    marginTop: '4em',
-    [mediaQueries.mUp]: { marginTop: '4em' },
   }),
 }
 

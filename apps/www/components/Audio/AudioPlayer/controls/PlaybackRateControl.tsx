@@ -7,6 +7,7 @@ import {
   mediaQueries,
   useColorContext,
 } from '@project-r/styleguide'
+import { useMemo, useState } from 'react'
 
 const styles = {
   root: css({
@@ -31,20 +32,42 @@ type PlaybackRateControl = {
   availablePlaybackRates?: number[]
 }
 
+// Prevent inaccuracy of floating point numbers to be displayed
+const roundPlaybackRate = (playbackRate: number) => {
+  return Math.round(playbackRate * 100) / 100
+}
+
 const PlaybackRateControl = ({
   playbackRate,
   setPlaybackRate,
-  availablePlaybackRates = [0.75, 1, 1.25, 1.5, 1.75, 2, 2.25, 2.5],
+  availablePlaybackRates = [0.75, 1, 1.1, 1.25, 1.5, 1.75, 2, 2.25, 2.5],
 }: PlaybackRateControl) => {
-  const currentIndex = availablePlaybackRates.indexOf(playbackRate)
+  const [currentIndex, setCurrentIndex] = useState(
+    availablePlaybackRates.indexOf(roundPlaybackRate(playbackRate)),
+  )
   const [colorScheme] = useColorContext()
+
+  const handleIncrease = () => {
+    if (currentIndex < availablePlaybackRates.length - 1) {
+      const nextIndex = currentIndex + 1
+      setCurrentIndex(nextIndex)
+      setPlaybackRate(roundPlaybackRate(availablePlaybackRates[nextIndex]))
+    }
+  }
+
+  const handleDecrease = () => {
+    if (currentIndex > 0) {
+      const nextIndex = currentIndex - 1
+      setCurrentIndex(nextIndex)
+      setPlaybackRate(roundPlaybackRate(availablePlaybackRates[nextIndex]))
+    }
+  }
+
   return (
     <div {...styles.root}>
       <IconButton
         Icon={RemoveIcon}
-        onClick={() =>
-          setPlaybackRate(availablePlaybackRates[currentIndex - 1])
-        }
+        onClick={handleDecrease}
         disabled={currentIndex === 0}
         style={{ marginRight: 0 }}
       />
@@ -52,14 +75,12 @@ const PlaybackRateControl = ({
         style={{ minWidth: '4ch', textAlign: 'center' }}
         {...colorScheme.set('color', 'text')}
       >
-        {playbackRate}
+        {roundPlaybackRate(playbackRate)}
         {'×'}
       </span>
       <IconButton
         Icon={AddIcon}
-        onClick={() =>
-          setPlaybackRate(availablePlaybackRates[currentIndex + 1])
-        }
+        onClick={handleIncrease}
         disabled={currentIndex >= availablePlaybackRates.length - 1}
         style={{ marginRight: 0 }}
       />

@@ -1,6 +1,6 @@
 import compose from 'lodash/flowRight'
 import Frame from '../components/Frame'
-import Index from '../components/Sections/Index'
+import AllSections from '../components/Sections/All'
 import withT from '../lib/withT'
 
 import { CDN_FRONTEND_BASE_URL } from '../lib/constants'
@@ -18,7 +18,7 @@ const FormatsPage = ({ t }) => {
   return (
     <Frame hasOverviewNav stickySecondaryNav raw meta={meta}>
       <Center style={{ marginTop: 20, marginBottom: 60 }}>
-        <Index />
+        <AllSections />
       </Center>
     </Frame>
   )
