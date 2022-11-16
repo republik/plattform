@@ -13,6 +13,7 @@ import {
   A,
   Button,
   Loader,
+  RawHtml,
 } from '@project-r/styleguide'
 import Greeting, { fragments as fragmentsGreeting } from './Greeting'
 import Newsletter, {
@@ -262,16 +263,20 @@ class Page extends Component {
                   ])}
                 </P>
                 {context && <Greeting employee={employees[0]} />}
-                <P {...styles.p}>
-                  {t.first(
-                    [
-                      `Onboarding/Page/${context}/introduction`,
-                      'Onboarding/Page/introduction',
-                    ],
-                    null,
-                    '',
-                  )}
-                </P>
+
+                <RawHtml
+                  type={Interaction.P}
+                  dangerouslySetInnerHTML={{
+                    __html: t.first(
+                      [
+                        `Onboarding/Page/${context}/introduction`,
+                        'Onboarding/Page/introduction',
+                      ],
+                      null,
+                      '',
+                    ),
+                  }}
+                />
 
                 {!expandedSection && (
                   <Button

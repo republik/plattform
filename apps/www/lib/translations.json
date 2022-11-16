@@ -33,6 +33,10 @@
       "value": "Mitglied werden"
     },
     {
+      "key": "nav/active-page",
+      "value": "(aktive Seite)"
+    },
+    {
       "key": "nav/sections",
       "value": "Alle Rubriken"
     },
@@ -342,7 +346,7 @@
     },
     {
       "key": "marketing/magazine/button/label",
-      "value": "Magazin lesen"
+      "value": "Zum Magazin"
     },
     {
       "key": "marketing/signin",
@@ -1845,6 +1849,26 @@
       "value": "Anmelden"
     },
     {
+      "key": "footer/icon/instagram",
+      "value": "Instagram"
+    },
+    {
+      "key": "footer/icon/facebook",
+      "value": "Facebook"
+    },
+    {
+      "key": "footer/icon/twitter",
+      "value": "Twitter"
+    },
+    {
+      "key": "footer/icon/github",
+      "value": "Github"
+    },
+    {
+      "key": "components/Discussion/OrderBy/selected",
+      "value": "(aktive Sortierung)"
+    },
+    {
       "key": "components/Discussion/OrderBy/DATE",
       "value": "Neueste"
     },
@@ -1859,6 +1883,10 @@
     {
       "key": "components/Discussion/OrderBy/REPLIES",
       "value": "Meiste Antworten"
+    },
+    {
+      "key": "components/Discussion/TagFilter/selected",
+      "value": "(aktiver Filter)"
     },
     {
       "key": "components/Discussion/reload",
@@ -2199,6 +2227,10 @@
     {
       "key": "styleguide/SeriesNav/current",
       "value": "Sie lesen:"
+    },
+    {
+      "key": "styleguide/Tag/count",
+      "value": "Beiträge"
     },
     {
       "key": "timeago/justNow/other",
@@ -2639,6 +2671,10 @@
     {
       "key": "payment/stripe/only/MONTHLY_ABO",
       "value": "Das Monatsabo ist nur mit Kreditkarte (Visa, Mastercard, Amex) verfügbar."
+    },
+    {
+      "key": "payment/method/selected",
+      "value": "(ausgewählte Zahlungsart)"
     },
     {
       "key": "payment/stripe/js/failed",
@@ -3630,7 +3666,7 @@
     },
     {
       "key": "merci/action/read",
-      "value": "Magazin lesen"
+      "value": "Zum Magazin"
     },
     {
       "key": "merci/action/dialog",
@@ -5394,7 +5430,7 @@
     },
     {
       "key": "Onboarding/Page/button",
-      "value": "Magazin lesen"
+      "value": "Zum Magazin"
     },
     {
       "key": "Onboarding/Page/more/account",
@@ -5537,8 +5573,20 @@
       "value": "Später"
     },
     {
+      "key": "Onboarding/Page/clima/title",
+      "value": "Willkommen 🐢"
+    },
+    {
+      "key": "Onboarding/Page/clima/preface",
+      "value": "Sie sind eine von inzwischen {climate_lab_count} Personen, die Lust haben, am Klimalabor mitzuwirken."
+    },
+    {
+      "key": "Onboarding/Page/clima/introduction",
+      "value": "Zusammen werden wir in den kommenden Monaten über die Klimakrise sprechen, darüber, was wir alle und wir von der Republik tun können, und viele neue Dinge ausprobieren (mehr dazu gleich).<br /><br />Schön, sind Sie dabei!<br /><br />"
+    },
+    {
       "key": "Trial/Form/withAccess/button/label",
-      "value": "Magazin lesen"
+      "value": "Zum Magazin"
     },
     {
       "key": "Trial/Form/withAccess/setup/label",
@@ -5559,6 +5607,10 @@
     {
       "key": "Trial/Form/email/label",
       "value": "Ihre E-Mail-Adresse"
+    },
+    {
+      "key": "Trial/Form/email/submit",
+      "value": "E-Mail-Adresse abschicken"
     },
     {
       "key": "Trial/Form/error/title",
@@ -5718,7 +5770,7 @@
     },
     {
       "key": "components/Card/Update/read",
-      "value": "Magazin lesen"
+      "value": "Zum Magazin"
     },
     {
       "key": "components/Card/Update/onboarding",
