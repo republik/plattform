@@ -72,6 +72,12 @@ const QUERY = gql`
   ${fragmentsSubscriptions.formats}
 `
 
+const CONTEXTS = {
+  card: ['newsletter', 'notifications', 'app-login', 'usability'],
+  clima: ['profile', 'newsletter'],
+  default: ['newsletter', 'notifications', 'app-login', 'usability', 'profile'],
+}
+
 const styles = {
   title: css({
     ...fontStyles.sansSerifMedium58,
@@ -107,6 +113,11 @@ class Page extends Component {
       inNativeApp,
     } = props
 
+    const selectedContext =
+      context === 'card' || context === 'clima'
+        ? CONTEXTS[context]
+        : CONTEXTS['default']
+
     this.sections = [
       {
         component: Newsletter,
@@ -138,7 +149,15 @@ class Page extends Component {
         ref: createRef(),
         visited: false,
       },
-    ].filter(Boolean)
+    ]
+      // filter by context
+      .filter((section) => selectedContext.includes(section.name))
+      // sort by context array
+      .sort(
+        (a, b) =>
+          selectedContext.indexOf(a.name) - selectedContext.indexOf(b.name),
+      )
+      .filter(Boolean)
 
     this.state = {
       expandedSection: this.sections.find((s) => s.name === query.section)
