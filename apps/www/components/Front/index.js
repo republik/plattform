@@ -7,6 +7,7 @@ import {
   Interaction,
   PlayCircleIcon,
   PauseCircleIcon,
+  plainButtonRule,
 } from '@project-r/styleguide'
 import StatusError from '../StatusError'
 import Head from 'next/head'
@@ -37,7 +38,6 @@ import { useMe } from '../../lib/context/MeContext'
 import { useAudioContext } from '../Audio/AudioProvider'
 import useAudioQueue from '../Audio/hooks/useAudioQueue'
 import { AudioPlayerLocations } from '../Audio/types/AudioActionTracking'
-import { plainButtonRule } from '@project-r/styleguide/src/components/Button'
 
 const styles = {
   prepublicationNotice: css({
@@ -66,6 +66,7 @@ export const RenderFront = ({ front, nodes, isFrontExtract = false }) => {
   const renderAudioPlayButton = useMemo(
     () => (documentId) => {
       const isActivePlayerItem = checkIfActivePlayerItem(documentId)
+      console.log('renderAudioPlayButton')
       return (
         <button
           {...plainButtonRule}
@@ -90,9 +91,9 @@ export const RenderFront = ({ front, nodes, isFrontExtract = false }) => {
           {isActivePlayerItem ? (
             <>
               {isPlaying ? (
-                <PauseCircleIcon size={30} />
+                <PauseCircleIcon size={36} />
               ) : (
-                <PlayCircleIcon size={30} />
+                <PlayCircleIcon size={36} />
               )}
             </>
           ) : (
