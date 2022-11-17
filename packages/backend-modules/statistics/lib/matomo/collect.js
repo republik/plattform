@@ -1,7 +1,8 @@
 const debug = require('debug')('statistics:lib:matomo:collect')
 const Promise = require('bluebird')
 
-const { find, toPath } = require('../elastic/documents')
+const { find: documentsFind, toPath } = require('../elastic/documents')
+const { find: redirectionsFind } = require('../pgdb/redirections')
 
 const getPageUrlDetails = async (
   { url },
@@ -158,32 +159,7 @@ const getData = async ({ idSite, period, date, segment }, { matomo, docs }) => {
           ...transformedDetails,
         }
 
-        const index = data.findIndex((row) => row.url === pageUrl)
-
-        if (index > -1) {
-          const mergedData = {
-            ...data[index],
-            mergeCount: data[index].mergeCount + 1,
-          }
-
-          Object.keys(result)
-            .filter((key) => !['idSite', 'mergeCount'].includes(key))
-            .forEach((key) => {
-              if (mergedData[key] && typeof mergedData[key] === 'number') {
-                mergedData[key] += result[key]
-              } else {
-                mergedData[key] = result[key]
-              }
-            })
-
-          data[index] = mergedData
-
-          debug(`merged page URL ${node.url} data into ${pageUrl}`)
-        } else {
-          // New, no merge required.
-          data.push(result)
-          debug(`added data for page URL ${pageUrl}`)
-        }
+        data.push(result)
       },
     },
   )
@@ -191,33 +167,61 @@ const getData = async ({ idSite, period, date, segment }, { matomo, docs }) => {
   return data
 }
 
-const enrichData = ({ data }, { docs }) => {
-  const limit = 100
-  let offset = 0
-  let paths = []
+const enrichData =
+  ({ docs }) =>
+  (data) =>
+    data.map((row) => {
+      const path = toPath(row.url)
+      const doc = docs.find(
+        (doc) => doc.meta.path === path || doc.redirections.includes(path),
+      )
 
-  do {
-    debug('enrichData', { limit, offset })
+      if (!doc)
+        return { ...row, repoId: null, template: null, publishDate: null }
 
-    paths = data.slice(offset, offset + limit)
-
-    docs.forEach(({ meta }) => {
-      const index = data.findIndex(({ url }) => toPath(url) === meta.path)
-      const { repoId, template, publishDate } = meta
-      data[index] = { ...data[index], repoId, template, publishDate }
+      const { repoId, template, publishDate } = doc.meta
+      return { ...row, repoId, template, publishDate }
     })
 
-    offset += limit
-  } while (paths.length === limit)
+const mergeData = (data) =>
+  data.reduce((data, curr) => {
+    const index = data.findIndex(
+      (row) =>
+        (!!row.repoId && row.repoId === curr.repoId) || // merge due to same repoId
+        row.url === curr.url, // merge due to same url
+    )
 
-  return data
-}
+    // merge curr into data[index]
+    if (index > -1) {
+      const mergedData = {
+        ...data[index],
+        mergeCount: data[index].mergeCount + 1,
+      }
+
+      Object.keys(curr)
+        .filter((key) => !['idSite', 'mergeCount'].includes(key))
+        .forEach((key) => {
+          if (mergedData[key] && typeof mergedData[key] === 'number') {
+            mergedData[key] += curr[key]
+          } else {
+            mergedData[key] = curr[key]
+          }
+        })
+
+      data[index] = mergedData
+      return data
+    }
+
+    // no merging, append data
+    return [...data, curr]
+  }, [])
 
 const insertRows = async ({ rows = [], pgdb }) =>
   Promise.map(
     rows,
     async (row) => {
       const condition = {
+        idSite: row.idSite,
         url: row.url,
         period: row.period,
         date: row.date,
@@ -241,21 +245,34 @@ const collect = async (
   { pgdb, matomo, elastic },
 ) => {
   debug('published docs (meta)')
-  const docs = await find(
+  const docs = await documentsFind(
     {
       props: ['meta.path', 'meta.repoId', 'meta.template', 'meta.publishDate'],
     },
     { elastic },
   )
 
+  debug('redirections')
+  const redirections = await redirectionsFind(
+    { date, targets: docs.map((doc) => doc.meta.path) },
+    { pgdb },
+  )
+
+  debug('merge redirections into published docs')
+  docs.forEach((doc, index) => {
+    docs[index] = {
+      ...doc,
+      redirections: redirections[doc.meta.path] || [],
+    }
+  })
+
   debug('collect %o', { idSite, period, date, segment })
-  const data = await getData(
+  const rows = await getData(
     { idSite, period, date, segment },
     { matomo, docs },
   )
-
-  debug('enrich %o', { idSite, period, date, segment })
-  const rows = enrichData({ data }, { docs })
+    .then(enrichData({ docs }))
+    .then(mergeData)
 
   debug('insert rows %o', { idSite, period, date, segment, rows: rows.length })
   await insertRows({ rows, pgdb })
