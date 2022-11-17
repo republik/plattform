@@ -179,8 +179,10 @@ const enrichData =
       if (!doc)
         return { ...row, repoId: null, template: null, publishDate: null }
 
-      const { repoId, template, publishDate } = doc.meta
-      return { ...row, repoId, template, publishDate }
+      const { path: currentPath, repoId, template, publishDate } = doc.meta
+      const url = new URL(currentPath, row.url).toString()
+
+      return { ...row, url, repoId, template, publishDate }
     })
 
 const mergeData = (data) =>
