@@ -12,6 +12,7 @@ import {
   CloseIcon,
   ExpandLessIcon,
   mediaQueries,
+  useMediaQuery,
 } from '@project-r/styleguide'
 import AudioPlayerTitle from './ui/AudioPlayerTitle'
 import AudioCover from '../AudioPlayer/ui/AudioCover'
@@ -89,6 +90,8 @@ const MiniAudioPlayer = ({
   handleOpenArticle,
   hasError,
 }: MiniAudioPlayerProps) => {
+  const isDesktop = useMediaQuery(mediaQueries.mUp)
+
   if (!activeItem) {
     handleClose()
     return null
@@ -163,7 +166,7 @@ const MiniAudioPlayer = ({
           duration={duration}
           buffered={buffered}
           onSeek={handleSeek}
-          disabled={isLoading || hasError}
+          disabled={!isDesktop || isLoading || hasError}
           showScrubber={false}
         />
       </div>

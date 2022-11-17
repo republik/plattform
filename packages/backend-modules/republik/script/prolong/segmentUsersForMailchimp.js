@@ -20,6 +20,8 @@ const {
   getPeriodEndingLast,
 } = require('@orbiting/backend-modules-republik-crowdfundings/lib/utils')
 
+const { getConsentLink } = require('../../lib/Newsletter')
+
 const applicationName =
   'backends republik script prolong segmentUsersForMailchimp'
 
@@ -79,21 +81,22 @@ const handleRow = async (row) => {
     LNAME: `"${row.lastName ?? ''}"`,
     PRLG_SEG: '',
     CP_ATOKEN: '',
+    NL_LINK: getConsentLink(row.email, 'WINTER'),
   }
 
   if (
     activeMembership &&
     !hasDormantMembership &&
     membershipTypeName !== 'MONTHLY_ABO' &&
-    lastEndDate?.isBefore('2022-10-01')
+    lastEndDate?.isBefore('2023-03-01')
   ) {
-    record.PRLG_SEG = 'prolong-before-2022-10'
+    record.PRLG_SEG = 'prolong-before-2023-03'
     record.CP_ATOKEN = row.accessToken
   } else if (!activeMembership) {
     // inactive
     record.PRLG_SEG = ''
   } else {
-    // active + lastEndDate > 2022-10-01
+    // active + lastEndDate > 2023-03-01
     // active + dormant
     // active + MONTHLY
     record.PRLG_SEG = 'is-active'
@@ -139,7 +142,15 @@ ConnectionContext.create(applicationName)
     const { pgdb } = context
 
     console.log(
-      ['id', 'EMAIL', 'FNAME', 'LNAME', 'PRLG_SEG', 'CP_ATOKEN'].join(','),
+      [
+        'id',
+        'EMAIL',
+        'FNAME',
+        'LNAME',
+        'PRLG_SEG',
+        'CP_ATOKEN',
+        'NL_LINK',
+      ].join(','),
     )
 
     await pgdb
@@ -156,17 +167,24 @@ ConnectionContext.create(applicationName)
           
           -- Test Monatsabos:
           -- JOIN "membershipTypes" mt ON mt.id = m."membershipTypeId" AND mt.name IN ('MONTHLY_ABO') AND m.active = TRUE
+
+          -- Link to temp MailChimp Audience table
+          -- LEFT JOIN "paeMailchimpAudience" pmc ON pmc.email = u.email
+
           WHERE
-            email != 'jefferson@project-r.construction'
+            u.email != 'jefferson@project-r.construction'
             AND "deletedAt" IS NULL
-            AND email NOT LIKE '%_deleted@republik.ch'
+            AND u.email NOT LIKE '%_deleted@republik.ch'
             -- Benachrichten notwendig
-            -- AND roles @> '"gen202111"' AND m.active = TRUE
+            -- AND u.roles @> '"gen202211"'
+            -- AND m.active = TRUE
             -- Test specific user:
             -- AND u.id = 'd94a7540-afbd-4134-b35d-19f9f5a28598'
+            -- AND pmc."Republik NL" NOT LIKE '%Project R%'
           GROUP BY u.id
           ORDER BY RANDOM()
           -- LIMIT 100
+          ;
         `,
       )
       .catch((e) => console.error(e))

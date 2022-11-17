@@ -380,6 +380,73 @@ const text = {
       ?
     </>
   ),
+  September: (p) => (
+    <>
+      Die Ukraine startet den{' '}
+      <Highlight {...p} ids={['bRHdBr1Aa']}>
+        Gegenangriff
+      </Highlight>{' '}
+      und Putin bleiben{' '}
+      <Highlight {...p} ids={['WRRFeLaAv']}>
+        leere Drohungen
+      </Highlight>
+      . Brasilien wählt und Bolsonaro kokettiert mit einem Putsch. Wie real ist{' '}
+      <Highlight {...p} ids={['cwegYDM9Q']}>
+        die Gefahr
+      </Highlight>
+      ? Und die Schweiz mag Poulet. Wie aber wird aus kleinen Küken{' '}
+      <Highlight {...p} ids={['eh8FA-k4T']}>
+        so viel Fleisch
+      </Highlight>
+      ? Zudem: Das Zwangsmassnahmengericht sollte ein Gegengewicht zu Polizei
+      und Staatsanwalt sein.{' '}
+      <Highlight {...p} ids={['qr-jy6Pnk']}>
+        Doch es ist keines
+      </Highlight>
+      . Und: Was bedeutet{' '}
+      <Highlight {...p} ids={['TqEbxVePt']}>
+        die Erhöhung des Rentenalters
+      </Highlight>{' '}
+      für die Frauen?
+    </>
+  ),
+  Oktober: (p) => (
+    <>
+      Sitzen wir bald im Dunkeln? Die{' '}
+      <Highlight {...p} ids={['atI8xvL7h']}>
+        Antworten
+      </Highlight>{' '}
+      auf die 25 drängendsten Fragen zum Winter.{' '}
+      <Highlight {...p} ids={['BhlxKM7Pj']}>
+        Das blinde rechte Auge
+      </Highlight>{' '}
+      der Schweizer Justiz. Und der{' '}
+      <Highlight {...p} ids={['8mCZ1rDLM']}>
+        Podcast
+      </Highlight>{' '}
+      dazu.{' '}
+      <Highlight {...p} ids={['UIzsN0rgx']}>
+        Hohe Hürden
+      </Highlight>
+      : Schweizer werden ist schwer. Und: abgeschoben aus der Schweiz –{' '}
+      <Highlight {...p} ids={['b0CsMBTtX']}>
+        verfolgt in Sri Lanka
+      </Highlight>
+      . Ausserdem:{' '}
+      <Highlight {...p} ids={['wnpT_kqcT']}>
+        Irrsinn
+      </Highlight>{' '}
+      in England.{' '}
+      <Highlight {...p} ids={['HX_y3VOQT']}>
+        Auflehnung
+      </Highlight>
+      im Iran. Und schliesslich: die ganze (!) Republik zum{' '}
+      <Highlight {...p} ids={['DWq5HyuSY']}>
+        Hören
+      </Highlight>
+      .
+    </>
+  ),
 }
 
 const Overview2022 = (props) => <Page {...props} year={2022} text={text} />

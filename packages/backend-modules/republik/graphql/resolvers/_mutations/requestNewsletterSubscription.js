@@ -1,22 +1,13 @@
-const { authenticate } = require('../../../lib/Newsletter')
-const base64u = require('@orbiting/backend-modules-base64u')
+const { getConsentLink } = require('../../../lib/Newsletter')
 const { sendMailTemplate } = require('@orbiting/backend-modules-mail')
-
-const { FRONTEND_BASE_URL } = process.env
 
 module.exports = async (_, args, context) => {
   const { email, name, context: newsletterContext } = args
   const { t } = context
 
-  if (!['PROJECTR', 'CLIMATE', 'READALOUD'].includes(name)) {
+  if (!['PROJECTR', 'CLIMATE', 'WINTER'].includes(name)) {
     throw new Error(t('api/newsletters/request/notSupported'))
   }
-
-  const mac = authenticate(email, name, true, t)
-
-  const confirmLink = `${FRONTEND_BASE_URL}/mitteilung?type=newsletter&name=${name}&subscribed=1&email=${base64u.encode(
-    email,
-  )}&mac=${mac}&context=${newsletterContext}`
 
   const { status } = await sendMailTemplate(
     {
@@ -26,7 +17,7 @@ module.exports = async (_, args, context) => {
       globalMergeVars: [
         {
           name: 'CONFIRM_LINK',
-          content: confirmLink,
+          content: getConsentLink(email, name, newsletterContext),
         },
       ],
     },

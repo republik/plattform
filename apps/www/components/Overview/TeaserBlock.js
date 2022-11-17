@@ -87,6 +87,7 @@ class TeaserBlock extends Component {
       noHover,
       backgroundColor,
       teasers,
+      style = {},
     } = this.props
 
     const hoverOff = () => {
@@ -104,8 +105,7 @@ class TeaserBlock extends Component {
         ref={this.blockRef}
         style={{
           position: 'relative',
-          marginTop: maxHeight ? -50 : 0,
-          bottom: maxHeight ? -50 : 0,
+          ...style,
         }}
       >
         <LazyLoad

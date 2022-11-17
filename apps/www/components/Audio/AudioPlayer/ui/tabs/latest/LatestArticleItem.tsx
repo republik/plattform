@@ -1,10 +1,10 @@
 import AudioListItem from '../shared/AudioListItem'
 
 import {
-  IconButton,
-  PlaylistAddIcon,
   DownloadIcon,
+  IconButton,
   LinkIcon,
+  PlaylistAddIcon,
   Spinner,
 } from '@project-r/styleguide'
 import { AudioQueueItem } from '../../../../graphql/AudioQueueHooks'
@@ -13,6 +13,11 @@ import useAudioQueue from '../../../../hooks/useAudioQueue'
 import { useTranslation } from '../../../../../../lib/withT'
 import { useState } from 'react'
 import { useAudioContext } from '../../../../AudioProvider'
+import {
+  AudioPlayerLocations,
+  AudioPlayerActions,
+} from '../../../../types/AudioActionTracking'
+import { trackEvent } from '../../../../../../lib/matomo'
 
 type ArticleItemProps = {
   article: AudioQueueItem['document']
@@ -34,7 +39,7 @@ const LatestArticleItem = ({
   const handlePlay = async (article: AudioPlayerItem) => {
     try {
       setIsLoading(true)
-      toggleAudioPlayer(article)
+      toggleAudioPlayer(article, AudioPlayerLocations.AUDIO_PLAYER)
       setIsLoading(false)
     } catch (error) {
       // TODO: handle error
@@ -49,6 +54,14 @@ const LatestArticleItem = ({
       setIsLoading(true)
       await addAudioQueueItem(article, position)
       setIsLoading(false)
+
+      trackEvent([
+        AudioPlayerLocations.AUDIO_PLAYER,
+        position === 2
+          ? AudioPlayerActions.ADD_NEXT_QUEUE_ITEM
+          : AudioPlayerActions.ADD_QUEUE_ITEM,
+        article?.meta?.path,
+      ])
     } catch (error) {
       // TODO: handle error
     }

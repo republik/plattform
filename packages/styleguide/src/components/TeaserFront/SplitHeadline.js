@@ -9,6 +9,10 @@ const size = {
     fontSize: pxToRem('38px'),
     lineHeight: pxToRem('43px'),
   },
+  sUp: {
+    fontSize: pxToRem('58px'),
+    lineHeight: pxToRem('60px'),
+  },
   m: {
     fontSize: pxToRem('60px'),
     lineHeight: pxToRem('70px'),
@@ -28,6 +32,12 @@ const size = {
 }
 
 const sizes = {
+  small: css({
+    ...size.s,
+    [mUp]: {
+      ...size.sUp,
+    },
+  }),
   large: css({
     ...size.s,
     [mUp]: {
@@ -78,10 +88,13 @@ const styles = {
   }),
 }
 
-export const Editorial = ({ children, large, medium }) => {
+export const Editorial = ({ children, large, medium, small }) => {
   const sizedStyle = css(
     styles.editorial,
-    (large && sizes.large) || (medium && sizes.medium) || sizes.default,
+    (large && sizes.large) ||
+      (medium && sizes.medium) ||
+      (small && sizes.small) ||
+      sizes.default,
   )
   return (
     <h1 {...styles.base} {...sizedStyle}>
@@ -90,10 +103,13 @@ export const Editorial = ({ children, large, medium }) => {
   )
 }
 
-export const Interaction = ({ children, large, medium }) => {
+export const Interaction = ({ children, large, medium, small }) => {
   const sizedStyle = css(
     styles.interaction,
-    (large && sizes.large) || (medium && sizes.medium) || sizes.default,
+    (large && sizes.large) ||
+      (medium && sizes.medium) ||
+      (small && sizes.small) ||
+      sizes.default,
   )
   return (
     <h1 {...styles.base} {...sizedStyle}>

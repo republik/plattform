@@ -25,6 +25,8 @@ export type AudioListItemAction = {
   hidden?: boolean
 }
 
+const MoreIconButton = (props) => <IconButton Icon={MoreIcon} {...props} />
+
 const AudioCalloutMenu = ({ actions }: { actions: AudioListItemAction[] }) => {
   const [colorScheme] = useColorContext()
   const activeActions = actions.filter(({ hidden }) => !hidden)
@@ -34,7 +36,7 @@ const AudioCalloutMenu = ({ actions }: { actions: AudioListItemAction[] }) => {
   return (
     <CalloutMenu
       contentPaddingMobile={'30px'}
-      Element={MoreIcon}
+      Element={MoreIconButton}
       align='right'
       elementProps={{
         ...colorScheme.set('fill', 'textSoft'),
