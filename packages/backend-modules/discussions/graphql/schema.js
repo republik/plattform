@@ -98,7 +98,7 @@ type mutations {
     id: ID!
     #deprecated use numberDays instead
     until: DateTime
-    @deprecated(reason: "Instead of inefficient date handling, we use numberDays instead")
+    @deprecated(reason: "Instead of inefficient date handling, we use numberDays")
     numberDays: Int
     reason: String
   ): User!
