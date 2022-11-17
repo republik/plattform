@@ -521,6 +521,7 @@ const ArticlePage = ({
   const hasStickySecondaryNav = meta
     ? meta.template === 'section' || meta.template === 'flyer'
     : true // show/keep around while loading meta
+  const hasOverviewNav = !meta?.series // no overview on series, so that seriesNav is rendered
   const colorSchemeKey = darkMode ? 'dark' : 'auto'
 
   const delegateMetaDown =
@@ -535,7 +536,7 @@ const ArticlePage = ({
       meta={!delegateMetaDown && meta}
       secondaryNav={seriesSecondaryNav}
       formatColor={formatColor}
-      hasOverviewNav
+      hasOverviewNav={hasOverviewNav}
       stickySecondaryNav={hasStickySecondaryNav}
       pageColorSchemeKey={colorSchemeKey}
     >
