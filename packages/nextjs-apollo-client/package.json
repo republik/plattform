@@ -1,41 +1,41 @@
 {
-    "name": "@republik/nextjs-apollo-client",
-    "version": "1.0.0",
-    "files": [
-        "dist"
-    ],
-    "main": "dist/index.js",
-    "module": "src/index.ts",
-    "types": "dist/types/index.d.ts",
-    "license": "MIT",
-    "private": true,
-    "scripts": {
-        "prebuild": "rimraf dist",
-        "build": "tsc",
-        "dev": "tsc -w",
-        "generate::possibleTypes": "node scripts/generatePossibleTypes.js"
-    },
-    "devDependencies": {
-        "@apollo/client": "~3.5.10",
-        "@republik/eslint-config-frontend": "*",
-        "@types/node": "^17.0.41",
-        "@types/react": "^17.0.39",
-        "@types/react-dom": "^17.0.17",
-        "cross-fetch": "^3.1.5",
-        "graphql": "^15.3.0",
-        "next": "^12.3.1",
-        "react": "^17.0.2",
-        "react-dom": "^17.0.2",
-        "rimraf": "^3.0.2",
-        "typescript": "^4.7.2",
-        "uuid": "^3.4.0"
-    },
-    "peerDependencies": {
-        "@apollo/client": "~3.5.10",
-        "graphql": "^15.3.0",
-        "next": "^12.3.1",
-        "react": "^17.0.2",
-        "react-dom": "^17.0.2",
-        "uuid": "^3.4.0"
-    }
+  "name": "@republik/nextjs-apollo-client",
+  "version": "1.0.0",
+  "files": [
+    "dist"
+  ],
+  "main": "dist/index.js",
+  "module": "src/index.ts",
+  "types": "dist/types/index.d.ts",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "prebuild": "rimraf dist",
+    "build": "tsc",
+    "dev": "tsc -w",
+    "generate::possibleTypes": "node scripts/generatePossibleTypes.js"
+  },
+  "devDependencies": {
+    "@apollo/client": "~3.5.10",
+    "@republik/eslint-config-frontend": "*",
+    "@types/node": "^17.0.41",
+    "@types/react": "^17.0.39",
+    "@types/react-dom": "^17.0.17",
+    "cross-fetch": "^3.1.5",
+    "graphql": "^15.3.0",
+    "next": "^12.3.1",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "rimraf": "^3.0.2",
+    "typescript": "^4.7.2",
+    "uuid": "^3.4.0"
+  },
+  "peerDependencies": {
+    "@apollo/client": "~3.5.10",
+    "graphql": "^15.3.0",
+    "next": "^12.3.1",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "uuid": "^3.4.0"
+  }
 }
