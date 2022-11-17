@@ -470,6 +470,9 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
       if (data.audioQueueItems.length === 0) {
         setActivePlayerItem(null)
         setShouldAutoPlay(false)
+        if (inNativeApp && isPlaying) {
+          onStop(false)
+        }
         trackEvent([
           AudioPlayerLocations.AUDIO_PLAYER,
           AudioPlayerActions.QUEUE_ENDED,
