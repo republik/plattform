@@ -518,7 +518,7 @@ const ArticlePage = ({
       { MissingNode },
     )
 
-  const hasOverviewNav = meta
+  const hasStickySecondaryNav = meta
     ? meta.template === 'section' || meta.template === 'flyer'
     : true // show/keep around while loading meta
   const colorSchemeKey = darkMode ? 'dark' : 'auto'
@@ -535,8 +535,8 @@ const ArticlePage = ({
       meta={!delegateMetaDown && meta}
       secondaryNav={seriesSecondaryNav}
       formatColor={formatColor}
-      hasOverviewNav={hasOverviewNav}
-      stickySecondaryNav={hasOverviewNav}
+      hasOverviewNav
+      stickySecondaryNav={hasStickySecondaryNav}
       pageColorSchemeKey={colorSchemeKey}
     >
       <PageLoader
