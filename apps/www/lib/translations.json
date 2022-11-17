@@ -342,7 +342,7 @@
     },
     {
       "key": "marketing/magazine/button/label",
-      "value": "Magazin lesen"
+      "value": "Zum Magazin"
     },
     {
       "key": "marketing/signin",
@@ -3630,7 +3630,7 @@
     },
     {
       "key": "merci/action/read",
-      "value": "Magazin lesen"
+      "value": "Zum Magazin"
     },
     {
       "key": "merci/action/dialog",
@@ -5394,7 +5394,7 @@
     },
     {
       "key": "Onboarding/Page/button",
-      "value": "Magazin lesen"
+      "value": "Zum Magazin"
     },
     {
       "key": "Onboarding/Page/more/account",
@@ -5538,7 +5538,7 @@
     },
     {
       "key": "Trial/Form/withAccess/button/label",
-      "value": "Magazin lesen"
+      "value": "Zum Magazin"
     },
     {
       "key": "Trial/Form/withAccess/setup/label",
@@ -5718,7 +5718,7 @@
     },
     {
       "key": "components/Card/Update/read",
-      "value": "Magazin lesen"
+      "value": "Zum Magazin"
     },
     {
       "key": "components/Card/Update/onboarding",
