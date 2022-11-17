@@ -763,6 +763,14 @@
       "value": "unregelmässig"
     },
     {
+      "key": "account/newsletterSubscriptions/WINTER/label",
+      "value": "Winter-is-coming-Newsletter"
+    },
+    {
+      "key": "account/newsletterSubscriptions/CLIMATE/label",
+      "value": "Klimalabor-Newsletter"
+    },
+    {
       "key": "account/authSettings/title",
       "value": "Anmeldung"
     },

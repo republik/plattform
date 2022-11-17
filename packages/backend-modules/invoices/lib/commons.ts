@@ -1,4 +1,4 @@
-import { data as BillData } from 'swissqrbill'
+import { types } from 'swissqrbill'
 import {
   generate as generateReference,
   validate as validateReference,
@@ -330,7 +330,7 @@ export function getHrId(string: string): string | null {
   return hrid.toUpperCase()
 }
 
-export function getSwissQrBillData(payment: PaymentResolved): BillData {
+export function getSwissQrBillData(payment: PaymentResolved): types.Data {
   if (!payment.hrid) {
     throw new Error('Payment HR-ID missing')
   }
@@ -347,10 +347,6 @@ export function getSwissQrBillData(payment: PaymentResolved): BillData {
     throw new Error('Creditor address missing')
   }
 
-  if (!Number(creditorAddress.postalCode)) {
-    throw new Error('Creditor address postal code is not a number')
-  }
-
   const debtorAddress = payment?.pledge?.user?.address
 
   return {
@@ -361,19 +357,18 @@ export function getSwissQrBillData(payment: PaymentResolved): BillData {
       account,
       name: creditorAddress.name,
       address: creditorAddress.line1,
-      zip: Number(creditorAddress.postalCode),
+      zip: creditorAddress.postalCode,
       city: creditorAddress.city,
       country: getCountryCode(creditorAddress.country),
     },
-    ...(debtorAddress &&
-      Number(debtorAddress.postalCode) && {
-        debtor: {
-          name: debtorAddress.name,
-          address: debtorAddress.line1,
-          zip: Number(debtorAddress.postalCode),
-          city: debtorAddress.city,
-          country: getCountryCode(creditorAddress.country),
-        },
-      }),
+    ...(debtorAddress && {
+      debtor: {
+        name: debtorAddress.name,
+        address: debtorAddress.line1,
+        zip: debtorAddress.postalCode,
+        city: debtorAddress.city,
+        country: getCountryCode(debtorAddress.country),
+      },
+    }),
   }
 }

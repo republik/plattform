@@ -7,15 +7,20 @@ import withT from '../lib/withT'
 
 import { CDN_FRONTEND_BASE_URL } from '../lib/constants'
 import { withDefaultSSR } from '../lib/apollo/helpers'
+import FeaturedSections from '../components/Sections/Featured'
 
 const SearchPage = ({ router, t }) => {
   const meta = {
     title: t('pages/search/title'),
     image: `${CDN_FRONTEND_BASE_URL}/static/social-media/logo.png`,
   }
+
   return (
-    <Frame raw meta={meta}>
+    <Frame hasOverviewNav stickySecondaryNav meta={meta}>
       <Search query={router.query} />
+      {router.query && Object.keys(router.query).length === 0 && (
+        <FeaturedSections />
+      )}
     </Frame>
   )
 }

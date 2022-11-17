@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
 import compose from 'lodash/flowRight'
 import { css } from 'glamor'
-import { IconButton } from '@project-r/styleguide'
 import {
+  IconButton,
   TwitterIcon,
   FacebookIcon,
   WhatsappIcon,

@@ -132,7 +132,7 @@ enum NewsletterName {
   PROJECTR
   ACCOMPLICE
   CLIMATE
-  READALOUD
+  WINTER
 }
 
 type Video {

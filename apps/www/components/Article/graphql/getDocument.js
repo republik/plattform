@@ -81,6 +81,7 @@ export const getDocument = gql`
           user {
             id
             username
+            slug
             publicUrl
             twitterHandle
             facebookId
@@ -205,6 +206,7 @@ export const getDocument = gql`
           googleUrl
           appleUrl
         }
+        willBeReadAloud
         newsletter {
           name
           free
