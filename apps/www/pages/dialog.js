@@ -239,7 +239,13 @@ const DialogPage = ({ serverContext }) => {
     tab === 'general' ? GENERAL_FEEDBACK_DISCUSSION_ID : tab === 'article' && id
 
   return (
-    <Frame hasOverviewNav raw formatColor='primary'>
+    <Frame
+      hasOverviewNav
+      raw
+      formatColor='primary'
+      // Only sticky if on /dialog without any query-params
+      stickySecondaryNav={!tab && !id}
+    >
       {!!tab && <FontSizeSync />}
       <MaybeDiscussionContextProvider discussionId={activeDiscussionId}>
         <DialogContent
