@@ -179,7 +179,6 @@ const Scrubber = ({
 
   const mouseMove = (e: MouseEvent<HTMLDivElement>) => {
     e.preventDefault()
-    console.log('mouseMove')
     if (isSeeking) {
       scrub(e.nativeEvent.clientX)
     }
