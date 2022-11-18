@@ -21,6 +21,11 @@ import { AudioQueueItem } from '../graphql/AudioQueueHooks'
 import AudioError from './ui/AudioError'
 import { useUserAgent } from '../../../lib/context/UserAgentContext'
 import downloadAudioSourceFile from '../helpers/DownloadAudioSource'
+import { trackEvent } from '../../../lib/matomo'
+import {
+  AudioPlayerLocations,
+  AudioPlayerActions,
+} from '../types/AudioActionTracking'
 
 const styles = {
   root: css({
@@ -159,6 +164,11 @@ const ExpandedAudioPlayer = ({
   const handleDownload = async (item: AudioQueueItem['document']) => {
     try {
       downloadAudioSourceFile(item)
+      trackEvent([
+        AudioPlayerLocations.AUDIO_PLAYER,
+        AudioPlayerActions.DOWNLOAD_TRACK,
+        activeItem.document.meta?.path,
+      ])
     } catch (err) {
       // TODO: handle download error
       console.error(err)
