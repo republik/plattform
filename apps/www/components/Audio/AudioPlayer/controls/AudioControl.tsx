@@ -83,7 +83,6 @@ const AudioControl = ({
   currentTime,
   duration,
   buffered,
-  isLastItem,
 }) => {
   const { t } = useTranslation()
 
@@ -137,7 +136,6 @@ const AudioControl = ({
             onClick={handleSkipToNext}
             Icon={SkipNextIcon}
             style={{ marginRight: 0 }}
-            disabled={isLastItem}
           />
         </div>
         <PlaybackRateControl
