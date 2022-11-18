@@ -152,7 +152,7 @@ ImageBlock.propTypes = {
   ]),
   onlyImage: PropTypes.bool,
   feuilleton: PropTypes.bool,
-  shouldRenderPlayButton: PropTypes.func,
+  shouldRenderPlayButton: PropTypes.node,
 }
 
 ImageBlock.defaultProps = {
