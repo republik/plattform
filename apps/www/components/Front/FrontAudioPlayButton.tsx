@@ -12,6 +12,11 @@ type FrontAudioPlayButtonProps = {
   documentId?: string
 }
 
+/**
+ * Play button that is passed to the front-schema which then renders
+ * the individual play buttons for each article
+ * @param documentId
+ */
 const FrontAudioPlayButton = ({ documentId }: FrontAudioPlayButtonProps) => {
   const {
     isPlaying,
