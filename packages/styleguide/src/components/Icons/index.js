@@ -30,6 +30,7 @@ export {
   MdFullscreenExit as FullscreenExitIcon,
   MdPodcasts as PodcastIcon,
   MdPlayCircleOutline as PlayCircleIcon,
+  MdPauseCircleOutline as PauseCircleIcon,
   MdQueryBuilder as ReadingTimeIcon,
   MdMail as MailIcon,
   MdMailOutline as MailOutlineIcon,
