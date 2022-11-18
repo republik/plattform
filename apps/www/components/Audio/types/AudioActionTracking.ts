@@ -25,4 +25,5 @@ export enum AudioPlayerActions {
   PLAYBACK_RATE_CHANGED = 'playbackRateChanged',
   ERROR = 'error',
   ILLEGAL_PROGRESS_UPDATE = 'illegalProgressUpdate',
+  DOWNLOAD_TRACK = 'downloadTrack',
 }
