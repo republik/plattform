@@ -23,9 +23,9 @@ export type PagePropsWithApollo<P = unknown> = {
  * @param useApollo hook to retrieve the apollo client
  * @returns App wrapped with ApolloProvider with the cache from the server being injected.
  */
-function makeWithApollo<P>(
+function makeWithApollo(
   useApollo: (
-    pageProps: P,
+    pageProps: PagePropsWithApollo,
     providedApolloClient: ApolloClient<NormalizedCacheObject>,
   ) => ApolloClient<NormalizedCacheObject>,
 ) {
@@ -43,6 +43,7 @@ function makeWithApollo<P>(
     }: AppProps<PagePropsWithApollo<P>>) => {
       const {
         apolloClient: providedApolloClient,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         [APOLLO_STATE_PROP_NAME]: apolloState,
         ...filteredPageProps // Filtered PageProps
       } = pageProps
@@ -52,7 +53,7 @@ function makeWithApollo<P>(
         <ApolloProvider client={apolloClient}>
           <AppComponent
             Component={Component}
-            pageProps={filteredPageProps}
+            pageProps={filteredPageProps as P}
             {...appProps}
           />
         </ApolloProvider>
