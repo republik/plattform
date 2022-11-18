@@ -5137,6 +5137,10 @@
       "value": "Lesezeichen"
     },
     {
+      "key": "nav/vote",
+      "value": "Urabstimmung"
+    },
+    {
       "key": "bookmark/title/bookmarked",
       "value": "Lesezeichen entfernen"
     },
