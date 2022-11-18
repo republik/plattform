@@ -85,7 +85,7 @@ const Tile = ({
   aboveTheFold,
   onlyImage,
   singleColumn,
-  onPlay,
+  audioPlayButton,
 }) => {
   const [colorScheme] = useColorContext()
   const justifyContent =
@@ -153,7 +153,7 @@ const Tile = ({
             color={color}
             maxWidth={singleColumn ? undefined : '600px'}
             margin={'0 auto'}
-            onPlay={onPlay}
+            audioPlayButton={audioPlayButton}
           >
             {children}
           </Text>
@@ -175,7 +175,7 @@ Tile.propTypes = {
   align: PropTypes.oneOf(['top', 'middle', 'bottom']),
   aboveTheFold: PropTypes.bool,
   onlyImage: PropTypes.bool,
-  onPlay: PropTypes.func,
+  audioPlayButton: PropTypes.node,
 }
 
 Tile.defaultProps = {

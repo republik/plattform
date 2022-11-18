@@ -100,7 +100,7 @@ const Split = ({
   portrait,
   aboveTheFold,
   feuilleton,
-  onPlay,
+  audioPlayButton,
 }) => {
   const background = bgColor || ''
   const flexDirection = reverse ? 'row-reverse' : ''
@@ -156,7 +156,7 @@ const Split = ({
           color={color}
           center={center}
           feuilleton={feuilleton}
-          onPlay={onPlay}
+          audioPlayButton={audioPlayButton}
         >
           {children}
         </Text>
@@ -175,7 +175,7 @@ Split.propTypes = {
   bgColor: PropTypes.string,
   center: PropTypes.bool,
   reverse: PropTypes.bool,
-  onPlay: PropTypes.func,
+  audioPlayButton: PropTypes.node,
 }
 
 Split.defaultProps = {
