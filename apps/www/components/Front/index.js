@@ -5,6 +5,9 @@ import {
   Editorial,
   InlineSpinner,
   Interaction,
+  PlayCircleIcon,
+  PauseCircleIcon,
+  plainButtonRule,
 } from '@project-r/styleguide'
 import StatusError from '../StatusError'
 import Head from 'next/head'
@@ -35,6 +38,7 @@ import { useMe } from '../../lib/context/MeContext'
 import { useAudioContext } from '../Audio/AudioProvider'
 import useAudioQueue from '../Audio/hooks/useAudioQueue'
 import { AudioPlayerLocations } from '../Audio/types/AudioActionTracking'
+import FrontAudioPlayButton from './FrontAudioPlayButton'
 
 const styles = {
   prepublicationNotice: css({
@@ -52,8 +56,7 @@ const styles = {
 export const RenderFront = ({ front, nodes, isFrontExtract = false }) => {
   const { t } = useTranslation()
   const { isEditor, hasAccess } = useMe()
-  const { addAudioQueueItem, isAudioQueueAvailable } = useAudioQueue()
-  const { toggleAudioPlayer } = useAudioContext()
+  const { isAudioQueueAvailable } = useAudioQueue()
 
   const showPlayButton = !isFrontExtract && hasAccess && isAudioQueueAvailable
 
@@ -61,16 +64,7 @@ export const RenderFront = ({ front, nodes, isFrontExtract = false }) => {
     () =>
       createFrontSchema({
         Link: HrefLink,
-        playAudio:
-          showPlayButton &&
-          ((id) => {
-            addAudioQueueItem({ id }, 1).then(
-              ({ data: { audioQueueItems } }) => {
-                const item = audioQueueItems.find((i) => i.document.id === id)
-                toggleAudioPlayer(item.document, AudioPlayerLocations.FRONT)
-              },
-            )
-          }),
+        AudioPlayButton: showPlayButton ? FrontAudioPlayButton : undefined,
         CommentLink,
         DiscussionLink,
         ...withData,
