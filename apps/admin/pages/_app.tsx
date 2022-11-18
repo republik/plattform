@@ -4,7 +4,14 @@ import Head from 'next/head'
 import { PagePropsWithApollo } from '@republik/nextjs-apollo-client'
 import { withApollo } from '../lib/apollo'
 
-const WebApp = ({ Component, pageProps }: AppProps<PagePropsWithApollo>) => {
+type WebAppProps = {
+  serverContext?: any
+}
+
+const WebApp = ({
+  Component,
+  pageProps,
+}: AppProps<PagePropsWithApollo<WebAppProps>>) => {
   const {
     // SSR only props
     serverContext = undefined,

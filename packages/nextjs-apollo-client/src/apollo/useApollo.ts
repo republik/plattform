@@ -1,5 +1,6 @@
 import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
 import { useMemo } from 'react'
+import { PagePropsWithApollo } from '../helpers/withApollo'
 import {
   APOLLO_STATE_PROP_NAME,
   ApolloClientOptions,
@@ -18,7 +19,7 @@ import {
  * @returns {ApolloClient<unknown>|ApolloClient<any>}
  */
 function useApollo<P>(
-  pageProps: P,
+  pageProps: PagePropsWithApollo<P>,
   options: ApolloClientOptions & {
     providedApolloClient?: ApolloClient<NormalizedCacheObject>
   },
