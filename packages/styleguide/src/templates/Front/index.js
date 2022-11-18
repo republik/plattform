@@ -89,9 +89,7 @@ const DefaultLink = ({ children }) => children
 const createFrontSchema = ({
   Link = DefaultLink,
   t = () => '',
-  renderAudioPlayButton,
-  playAudio,
-  checkIfActivePlayingItem,
+  AudioPlayButton,
   noEmpty = true,
   ...rest
 } = {}) => {
@@ -252,9 +250,9 @@ const createFrontSchema = ({
       <Link href={props.url}>
         <TeaserFrontImage
           audioPlayButton={
-            shouldRenderPlayButton(props)
-              ? renderAudioPlayButton(props?.urlMeta?.documentId)
-              : undefined
+            !!AudioPlayButton && shouldRenderPlayButton(props) ? (
+              <AudioPlayButton documentId={props?.urlMeta.documentId} />
+            ) : undefined
           }
           attributes={attributes}
           {...props}
@@ -315,9 +313,9 @@ const createFrontSchema = ({
       <Link href={props.url}>
         <TeaserFrontSplit
           audioPlayButton={
-            shouldRenderPlayButton(props)
-              ? renderAudioPlayButton(props?.urlMeta?.documentId)
-              : undefined
+            !!AudioPlayButton && shouldRenderPlayButton(props) ? (
+              <AudioPlayButton documentId={props?.urlMeta.documentId} />
+            ) : undefined
           }
           attributes={attributes}
           {...props}
@@ -382,9 +380,9 @@ const createFrontSchema = ({
       <Link href={props.url}>
         <TeaserFrontTypo
           audioPlayButton={
-            shouldRenderPlayButton(props)
-              ? renderAudioPlayButton(props?.urlMeta?.documentId)
-              : undefined
+            !!AudioPlayButton && shouldRenderPlayButton(props) ? (
+              <AudioPlayButton documentId={props?.urlMeta.documentId} />
+            ) : undefined
           }
           attributes={attributes}
           {...props}
@@ -443,9 +441,9 @@ const createFrontSchema = ({
         <Link href={props.url}>
           <TeaserFrontTile
             audioPlayButton={
-              shouldRenderPlayButton(props)
-                ? renderAudioPlayButton(props?.urlMeta?.documentId)
-                : undefined
+              !!AudioPlayButton && shouldRenderPlayButton(props) ? (
+                <AudioPlayButton documentId={props?.urlMeta.documentId} />
+              ) : undefined
             }
             attributes={attributes}
             {...props}
@@ -585,9 +583,9 @@ const createFrontSchema = ({
         <Link href={props.url}>
           <TeaserCarouselTile
             audioPlayButton={
-              shouldRenderPlayButton(props)
-                ? renderAudioPlayButton(props?.urlMeta?.documentId)
-                : undefined
+              !!AudioPlayButton && shouldRenderPlayButton(props) ? (
+                <AudioPlayButton documentId={props?.urlMeta.documentId} />
+              ) : undefined
             }
             attributes={attributes}
             {...props}

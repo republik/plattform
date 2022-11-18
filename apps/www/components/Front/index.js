@@ -38,6 +38,7 @@ import { useMe } from '../../lib/context/MeContext'
 import { useAudioContext } from '../Audio/AudioProvider'
 import useAudioQueue from '../Audio/hooks/useAudioQueue'
 import { AudioPlayerLocations } from '../Audio/types/AudioActionTracking'
+import FrontAudioPlayButton from './FrontAudioPlayButton'
 
 const styles = {
   prepublicationNotice: css({
@@ -55,55 +56,7 @@ const styles = {
 export const RenderFront = ({ front, nodes, isFrontExtract = false }) => {
   const { t } = useTranslation()
   const { isEditor, hasAccess } = useMe()
-  const { addAudioQueueItem, isAudioQueueAvailable } = useAudioQueue()
-  const {
-    toggleAudioPlayer,
-    toggleAudioPlayback,
-    checkIfActivePlayerItem,
-    isPlaying,
-  } = useAudioContext()
-
-  const renderAudioPlayButton = useMemo(
-    () => (documentId) => {
-      const isActivePlayerItem = checkIfActivePlayerItem(documentId)
-      console.log('renderAudioPlayButton')
-      return (
-        <button
-          {...plainButtonRule}
-          title='Beitrag hören'
-          onClick={(e) => {
-            e.stopPropagation()
-
-            if (isActivePlayerItem) {
-              toggleAudioPlayback()
-            } else {
-              addAudioQueueItem({ id: documentId }, 1).then(
-                ({ data: { audioQueueItems } }) => {
-                  const item = audioQueueItems.find(
-                    (i) => i.document.id === documentId,
-                  )
-                  toggleAudioPlayer(item.document, AudioPlayerLocations.FRONT)
-                },
-              )
-            }
-          }}
-        >
-          {isActivePlayerItem ? (
-            <>
-              {isPlaying ? (
-                <PauseCircleIcon size={36} />
-              ) : (
-                <PlayCircleIcon size={36} />
-              )}
-            </>
-          ) : (
-            <PlayCircleIcon size={36} />
-          )}
-        </button>
-      )
-    },
-    [checkIfActivePlayerItem, isPlaying],
-  )
+  const { isAudioQueueAvailable } = useAudioQueue()
 
   const showPlayButton = !isFrontExtract && hasAccess && isAudioQueueAvailable
 
@@ -111,32 +64,14 @@ export const RenderFront = ({ front, nodes, isFrontExtract = false }) => {
     () =>
       createFrontSchema({
         Link: HrefLink,
-        renderAudioPlayButton: showPlayButton
-          ? renderAudioPlayButton
-          : undefined,
-        playAudio:
-          showPlayButton &&
-          ((documentId) => {
-            if (checkIfActivePlayerItem(documentId)) {
-              toggleAudioPlayback()
-            } else {
-              addAudioQueueItem({ id: documentId }, 1).then(
-                ({ data: { audioQueueItems } }) => {
-                  const item = audioQueueItems.find(
-                    (i) => i.document.id === documentId,
-                  )
-                  toggleAudioPlayer(item.document, AudioPlayerLocations.FRONT)
-                },
-              )
-            }
-          }),
+        AudioPlayButton: showPlayButton ? FrontAudioPlayButton : undefined,
         CommentLink,
         DiscussionLink,
         ...withData,
         ActionBar,
         t,
       }),
-    [renderAudioPlayButton],
+    [],
   )
   const MissingNode = isEditor ? undefined : ({ children }) => children
   return (
