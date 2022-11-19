@@ -418,7 +418,7 @@ const recommendations = async (campaign, grant, t, pgdb) => {
   return result > 0
 }
 
-const invalidate = async (grant, reason, t, pgdb, mail) => {
+const invalidate = async (grant, reason, t, pgdb, mail, requestUserId) => {
   const now = moment()
   const updateFields = {
     voucherCode: null,
@@ -433,7 +433,7 @@ const invalidate = async (grant, reason, t, pgdb, mail) => {
 
   await eventsLib.log(grant, `invalidated.${reason}`, pgdb)
 
-  const sendMail = reason !== 'admin'
+  const sendMail = !requestUserId || grant.recipientUserId === requestUserId
 
   if (grant.recipientUserId) {
     removePrivileges(grant, pgdb, sendMail, t, mail)

@@ -93,12 +93,9 @@ type mutations {
     targets: [CommentFeaturedTarget!]
   ): Comment!
 
-  #
   suspendUser(
     id: ID!
-    #deprecated use numberDays instead
-    until: DateTime
-    @deprecated(reason: "Instead of inefficient date handling, we use numberDays")
+    until: DateTime @deprecated(reason: "Use numberDays instead")
     numberDays: Int
     reason: String
   ): User!

@@ -29,6 +29,11 @@ type mutations {
   revokeAccess(id: ID!): Boolean!
 
   """
+  Invalidate access grant
+  """
+  invalidateAccess(id: ID!): Boolean!
+
+  """
   Claim a granted membership with a voucher code
   """
   claimAccess(
@@ -44,21 +49,6 @@ type mutations {
     campaignId: ID!
     payload: JSON
   ): AccessGrant!
-
-  """
-  Terminate access before access grant ends
-  """
-  terminateAccess(id: ID!): Boolean!
-
-  """
-  Change access grant
-  """
-  changeAccess(
-    id: ID! 
-    revoke: Boolean!
-    invalidate: Boolean! 
-    noFollowup: Boolean!
-  ): Boolean!
 }
 
 `

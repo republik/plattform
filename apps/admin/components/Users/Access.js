@@ -15,10 +15,10 @@ import {
   HR,
   A,
   Loader,
-  OverlayToolbar,
   Overlay,
+  OverlayToolbar,
   OverlayBody,
-  Checkbox,
+  fontStyles,
 } from '@project-r/styleguide'
 
 import ErrorMessage from '../ErrorMessage'
@@ -92,19 +92,15 @@ const GET_ACCESS_GRANTS = gql`
   }
 `
 
-const CHANGE_ACCESS = gql`
-  mutation changeAccess(
-    $id: ID!
-    $revoke: Boolean!
-    $invalidate: Boolean!
-    $noFollowup: Boolean!
-  ) {
-    changeAccess(
-      id: $id
-      revoke: $revoke
-      invalidate: $invalidate
-      noFollowup: $noFollowup
-    )
+const REVOKE_ACCESS = gql`
+  mutation revokeAccess($id: ID!) {
+    revokeAccess(id: $id)
+  }
+`
+
+const INVALIDATE_ACCESS = gql`
+  mutation invalidateAccess($id: ID!) {
+    invalidateAccess(id: $id)
   }
 `
 
@@ -122,6 +118,17 @@ const styles = {
     padding: 10,
     backgroundColor: colors.secondaryBg,
     marginBottom: GUTTER,
+  }),
+  button: css({
+    marginRight: 10,
+    display: 'inline-block',
+  }),
+  confirmButton: css({
+    marginTop: 20,
+  }),
+  info: css({
+    color: '#757575',
+    ...fontStyles.sansSerifRegular14,
   }),
 }
 
@@ -175,10 +182,8 @@ class Grant extends Component {
     const { grant } = props
     this.state = {
       isExpanded: false,
-      isOpen: false,
-      shouldRevoke: false,
-      shouldInvalidate: false,
-      shouldNotFollowup: false,
+      isOpenRevoke: false,
+      isOpenInvalidate: false,
     }
 
     this.toggle = (e) => {
@@ -188,50 +193,46 @@ class Grant extends Component {
       })
     }
 
-    this.revokeAccessHandler = (_, value) => {
-      this.setState(() => ({
-        shouldRevoke: value,
-      }))
+    this.openHandlerRevoke = () => {
+      this.setState(() => ({ isOpenRevoke: true }))
     }
 
-    this.invalidateAccessHandler = (_, value) => {
-      this.setState(() => ({
-        shouldInvalidate: value,
-      }))
+    this.openHandlerInvalidate = () => {
+      this.setState(() => ({ isOpenInvalidate: true }))
     }
 
-    this.noFollowupAccessHandler = (_, value) => {
-      this.setState(() => ({
-        shouldNotFollowup: value,
-      }))
+    this.closeHandlerRevoke = () => {
+      this.setState(() => ({ isOpenRevoke: false }))
     }
 
-    this.closeHandler = () => {
-      this.setState(() => ({ isOpen: false }))
+    this.closeHandlerInvalidate = () => {
+      this.setState(() => ({ isOpenInvalidate: false }))
     }
 
-    this.submitHandler = (mutation) => () => {
+    this.revokeHandler = (mutation) => () => {
       return mutation({
-        variables: {
-          id: grant.id,
-          revoke: this.state.shouldRevoke,
-          invalidate: this.state.shouldInvalidate,
-          noFollowup: this.state.shouldNotFollowup,
-        },
+        variables: { id: grant.id },
       }).then(() =>
         this.setState(() => ({
-          isOpen: false,
-          shouldRevoke: false,
-          shouldInvalidate: false,
-          shouldNotFollowup: false,
+          isOpenRevoke: false,
+        })),
+      )
+    }
+
+    this.invalidateHandler = (mutation) => () => {
+      return mutation({
+        variables: { id: grant.id },
+      }).then(() =>
+        this.setState(() => ({
+          isOpenInvalidate: false,
         })),
       )
     }
   }
 
   render() {
-    const { grant, refetchQueries, t } = this.props
-    const { isExpanded, isOpen } = this.state
+    const { userId, grant, t } = this.props
+    const { isExpanded, isOpenRevoke, isOpenInvalidate } = this.state
 
     return (
       <div {...styles.grant}>
@@ -370,100 +371,139 @@ class Grant extends Component {
 
         <Events events={grant.events} t={t} />
 
-        {((!grant.revokedAt && !grant.invalidatedAt) ||
-          (grant.beginAt && !grant.invalidatedAt) ||
-          (grant.beginAt && !grant.followupAt)) && (
-          <Fragment>
-            <HR />
-            <Button
-              onClick={() => {
-                this.setState({ isOpen: true })
-              }}
-            >
-              {t('account/access/Grant/button/change')}
-            </Button>
-            {isOpen && (
-              <Mutation
-                mutation={CHANGE_ACCESS}
-                refetchQueries={refetchQueries}
-              >
-                {(changeAccess, { loading, error }) => {
-                  return (
-                    <Overlay onClose={this.closeHandler}>
-                      <OverlayToolbar onClose={this.closeHandler} />
-                      <OverlayBody>
-                        <Loader
-                          loading={loading}
-                          error={error}
-                          render={() => (
-                            <Fragment>
-                              {error && <ErrorMessage error={error} />}
-                              {loading && <InlineSpinner />}
-                              {!loading && (
+        <Fragment>
+          <HR />
+          {!grant.revokedAt && !grant.invalidatedAt && (
+            <>
+              <div {...styles.button}>
+                <Button primary onClick={this.openHandlerRevoke}>
+                  {t('account/access/Grant/button/revoke')}
+                </Button>
+              </div>
+              {isOpenRevoke && (
+                <Mutation
+                  mutation={REVOKE_ACCESS}
+                  refetchQueries={() => [
+                    {
+                      query: GET_ACCESS_GRANTS,
+                      variables: { id: userId },
+                    },
+                  ]}
+                >
+                  {(revokeAccess, { loading, error }) => {
+                    return (
+                      <Overlay onClose={this.closeHandlerRevoke}>
+                        <OverlayToolbar onClose={this.closeHandlerRevoke} />
+                        <OverlayBody>
+                          <Loader
+                            loading={loading}
+                            error={error}
+                            render={() => (
+                              <Fragment>
                                 <div>
-                                  <p>
-                                    <Checkbox
-                                      checked={this.state.shouldRevoke}
-                                      onChange={this.revokeAccessHandler}
-                                      disabled={
-                                        !!grant.revokedAt ||
-                                        !!grant.invalidatedAt
-                                      }
-                                    >
-                                      {t('account/access/Grant/change/revoke')}
-                                    </Checkbox>
-                                  </p>
-                                  {!!grant.beginAt && (
-                                    <div>
-                                      <p>
-                                        <Checkbox
-                                          checked={this.state.shouldInvalidate}
-                                          onChange={
-                                            this.invalidateAccessHandler
-                                          }
-                                          disabled={!!grant.invalidatedAt}
-                                        >
-                                          {t(
-                                            'account/access/Grant/change/invalidate',
-                                          )}
-                                        </Checkbox>
-                                      </p>
-
-                                      <p>
-                                        <Checkbox
-                                          checked={this.state.shouldNotFollowup}
-                                          onChange={
-                                            this.noFollowupAccessHandler
-                                          }
-                                          disabled={!!grant.followupAt}
-                                        >
-                                          {t(
-                                            'account/access/Grant/change/noFollowup',
-                                          )}
-                                        </Checkbox>
-                                      </p>
-                                    </div>
+                                  {t(
+                                    'account/access/Grant/button/revoke/confirm/description',
                                   )}
-
-                                  <Button
-                                    primary
-                                    onClick={this.submitHandler(changeAccess)}
-                                  >
-                                    {t('account/access/Grant/change/save')}
-                                  </Button>
                                 </div>
-                              )}
-                            </Fragment>
-                          )}
-                        />
-                      </OverlayBody>
-                    </Overlay>
-                  )
-                }}
-              </Mutation>
-            )}
-          </Fragment>
-        )}
+                                {error && <ErrorMessage error={error} />}
+                                {loading && <InlineSpinner />}
+                                {!loading && (
+                                  <div
+                                    {...styles.button}
+                                    {...styles.confirmButton}
+                                  >
+                                    <Button
+                                      primary
+                                      onClick={this.revokeHandler(revokeAccess)}
+                                    >
+                                      {t('account/access/Grant/button/confirm')}
+                                    </Button>
+                                  </div>
+                                )}
+                              </Fragment>
+                            )}
+                          />
+                        </OverlayBody>
+                      </Overlay>
+                    )
+                  }}
+                </Mutation>
+              )}
+            </>
+          )}
+          {(!grant.invalidatedAt || !grant.followupAt) && (
+            <>
+              <div {...styles.button}>
+                <Button primary onClick={this.openHandlerInvalidate}>
+                  {!grant.invalidatedAt
+                    ? t('account/access/Grant/button/invalidate')
+                    : t('account/access/Grant/button/noFollowup')}
+                </Button>
+              </div>
+              {isOpenInvalidate && (
+                <Mutation
+                  mutation={INVALIDATE_ACCESS}
+                  refetchQueries={() => [
+                    {
+                      query: GET_ACCESS_GRANTS,
+                      variables: { id: userId },
+                    },
+                  ]}
+                >
+                  {(invalidateAccess, { loading, error }) => {
+                    return (
+                      <Overlay onClose={this.closeHandlerInvalidate}>
+                        <OverlayToolbar onClose={this.closeHandlerInvalidate} />
+                        <OverlayBody>
+                          <Loader
+                            loading={loading}
+                            error={error}
+                            render={() => (
+                              <Fragment>
+                                <div>
+                                  {!grant.invalidatedAt
+                                    ? t(
+                                        'account/access/Grant/button/invalidate/confirm/description',
+                                      )
+                                    : t(
+                                        'account/access/Grant/button/noFollowup/confirm/description',
+                                      )}
+                                  <p {...styles.info}>
+                                    {!grant.invalidatedAt &&
+                                      t(
+                                        'account/access/Grant/button/invalidate/confirm/description/detail',
+                                      )}
+                                  </p>
+                                </div>
+                                {error && <ErrorMessage error={error} />}
+                                {loading && <InlineSpinner />}
+                                {!loading && (
+                                  <div
+                                    {...styles.button}
+                                    {...styles.confirmButton}
+                                  >
+                                    <Button
+                                      primary
+                                      onClick={this.invalidateHandler(
+                                        invalidateAccess,
+                                      )}
+                                    >
+                                      {t('account/access/Grant/button/confirm')}
+                                    </Button>
+                                  </div>
+                                )}
+                              </Fragment>
+                            )}
+                          />
+                        </OverlayBody>
+                      </Overlay>
+                    )
+                  }}
+                </Mutation>
+              )}
+            </>
+          )}
+        </Fragment>
       </div>
     )
   }
@@ -479,7 +519,7 @@ const Slots = ({ slots, t }) => {
   )
 }
 
-const Grants = ({ grants, refetchQueries, t }) => (
+const Grants = ({ grants, userId, t }) => (
   <Fragment>
     <SectionTitle>{t('account/access/Grants/title')}</SectionTitle>
     <div {...styles.grants}>
@@ -488,7 +528,7 @@ const Grants = ({ grants, refetchQueries, t }) => (
           <Grant
             key={`grants-${grant.id}`}
             grant={grant}
-            refetchQueries={refetchQueries}
+            userId={userId}
             t={t}
           />
         ))
@@ -499,7 +539,7 @@ const Grants = ({ grants, refetchQueries, t }) => (
   </Fragment>
 )
 
-const Campaigns = ({ campaigns, refetchQueries, t }) => (
+const Campaigns = ({ campaigns, userId, t }) => (
   <Fragment>
     <SectionTitle>{t('account/access/Campaigns/title')}</SectionTitle>
     {campaigns &&
@@ -525,7 +565,7 @@ const Campaigns = ({ campaigns, refetchQueries, t }) => (
               <Grant
                 key={`camp-grants-${grant.id}`}
                 grant={grant}
-                refetchQueries={refetchQueries}
+                userId={userId}
                 t={t}
               />
             ))}
@@ -538,11 +578,11 @@ const Campaigns = ({ campaigns, refetchQueries, t }) => (
   </Fragment>
 )
 
-const Access = withT(({ grants, campaigns, refetchQueries, t }) => {
+const Access = withT(({ grants, campaigns, userId, t }) => {
   return (
     <Section>
-      <Grants grants={grants} refetchQueries={refetchQueries} t={t} />
-      <Campaigns campaigns={campaigns} refetchQueries={refetchQueries} t={t} />
+      <Grants grants={grants} userId={userId} t={t} />
+      <Campaigns campaigns={campaigns} userId={userId} t={t} />
     </Section>
   )
 })
@@ -559,12 +599,7 @@ const AccessComponent = ({ userId }) => {
               <Access
                 grants={data.user.accessGrants}
                 campaigns={data.user.accessCampaigns}
-                refetchQueries={() => [
-                  {
-                    query: GET_ACCESS_GRANTS,
-                    variables: { id: userId },
-                  },
-                ]}
+                userId={userId}
               />
             )}
           />

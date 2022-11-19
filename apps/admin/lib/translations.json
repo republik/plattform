@@ -5032,23 +5032,35 @@
       "value": "Grant ID"
     },
     {
-      "key": "account/access/Grant/button/change",
-      "value": "Status ändern"
+      "key": "account/access/Grant/button/revoke",
+      "value": "Zurückziehen"
     },
     {
-      "key": "account/access/Grant/change/revoke",
-      "value": "Access Grant zurückziehen"
+      "key": "account/access/Grant/button/revoke/confirm/description",
+      "value": "Der Access Grant wird zurückgezogen."
     },
     {
-      "key": "account/access/Grant/change/invalidate",
-      "value": "Access Grant vorzeitig beenden"
+      "key": "account/access/Grant/button/invalidate",
+      "value": "Vorzeitig beenden"
     },
     {
-      "key": "account/access/Grant/change/noFollowup",
-      "value": "Followup Mail unterdrücken"
+      "key": "account/access/Grant/button/invalidate/confirm/description",
+      "value": "Der Access Grant wird vor Ablauf der Gültigkeit beendet."
     },
     {
-      "key": "account/access/Grant/change/save",
+      "key": "account/access/Grant/button/invalidate/confirm/description/detail",
+      "value": "Es werden keine Mails an die Nutzerin mehr verschickt (keine Bestätigung über die Beendigung des Access Grants, kein Follow-Up Mail)."
+    },
+    {
+      "key": "account/access/Grant/button/noFollowup",
+      "value": "Follow-Up Mail unterdrücken"
+    },
+    {
+      "key": "account/access/Grant/button/noFollowup/confirm/description",
+      "value": "Das Follow-Up Mail (7 Tage nach Ende des Access Grants) wird unterdrückt."
+    },
+    {
+      "key": "account/access/Grant/button/confirm",
       "value": "Speichern"
     },
     {
