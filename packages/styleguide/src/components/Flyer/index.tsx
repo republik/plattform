@@ -85,6 +85,27 @@ export const FlyerTile: React.FC<{
   )
 }
 
+export const FlyerTileMeta: React.FC<{
+  attributes: any
+  innerStyle?: object
+  [x: string]: unknown
+}> = ({ children, attributes, innerStyle = {}, ...props }) => {
+  const [colorScheme] = useColorContext()
+  return (
+    <div
+      {...props}
+      {...attributes}
+      {...styles.container}
+      {...colorScheme.set('borderBottomColor', 'flyerText')}
+      {...colorScheme.set('background', 'flyerBg')}
+    >
+      <div {...styles.content} style={innerStyle}>
+        {children}
+      </div>
+    </div>
+  )
+}
+
 export const FlyerTileOpening: React.FC<{
   attributes: any
   [x: string]: unknown

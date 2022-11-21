@@ -124,7 +124,7 @@ export const getMetaData = (documentId, meta, tileId) => {
         twitterTitle: 'Kurz gelesen im Republik-Journal',
         twitterDescription:
           'Eine spontane, wendige, verspieltere Republik, mit Einträge zur Weltlage, zum Leben, zur Sprache – wozu auch uns etwas Schlaues einfällt.',
-        facebookTitle: 'Lesen Sie das Republik-Journal',
+        facebookTitle: 'Kurz gelesen im Republik-Journal',
         facebookDescription:
           'Eine spontane, wendige, verspieltere Republik, mit Einträge zur Weltlage, zum Leben, zur Sprache – wozu auch uns etwas Schlaues einfällt.',
       }
