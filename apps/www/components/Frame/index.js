@@ -112,8 +112,6 @@ const Frame = ({
   const { t } = useTranslation()
   const { me, hasAccess } = useMe()
 
-  console.log({ meta })
-
   const hasOverviewNav = hasAccess && wantOverviewNav
   const hasSecondaryNav = !!(secondaryNav || hasOverviewNav)
   const padHeaderRule = useMemo(() => {

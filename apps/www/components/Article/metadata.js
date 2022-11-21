@@ -88,10 +88,15 @@ function getCitationMetaData(meta) {
   }
 }
 
+export const getReferenceUrl = (meta, tileId) => {
+  const tileQuery = tileId ? `/${tileId}` : ''
+  return `${PUBLIC_BASE_URL}${meta.path}${tileQuery}`
+}
+
 export const getShareImageUrl = (meta, tileId) => {
   if (!meta.shareText && !tileId) return
-  const tileQuery = tileId ? `&id=${tileId}` : ''
-  return `${PUBLIC_BASE_URL}${meta.path}?extract=share${tileQuery}`
+  const url = getReferenceUrl(meta, tileId)
+  return `${url}?extract=share`
 }
 
 export const getCacheKey = (documentId, meta) =>
@@ -104,11 +109,6 @@ const getShareImage = (documentId, meta, tileId) => {
   return `${ASSETS_SERVER_BASE_URL}/render?width=${SHARE_IMAGE_WIDTH}&height=${SHARE_IMAGE_HEIGHT}&updatedAt=${encodeURIComponent(
     cacheKey,
   )}&url=${encodeURIComponent(imageUrl)}`
-}
-
-export const getReferenceUrl = (meta, tileId) => {
-  const tileQuery = tileId ? `?id=${tileId}` : ''
-  return `${PUBLIC_BASE_URL}${meta.path}${tileQuery}`
 }
 
 export const getMetaData = (documentId, meta, tileId) => {

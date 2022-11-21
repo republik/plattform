@@ -165,6 +165,22 @@ const QuestionnaireSubmissions = dynamic(
   },
 )
 
+// regular path:
+// /2022/10/14/journal
+// share journal path:
+// /2022/10/14/journal/232
+const isJournalSharePath = (path) => path.slice(-2, -1)?.[0] === 'journal'
+
+const stringifyPath = (path) => '/' + path.join('/')
+
+export const getPathProps = (path) => {
+  if (!isJournalSharePath(path)) return { path: stringifyPath(path) }
+  return {
+    path: stringifyPath(path.slice(0, -1)),
+    journalShareId: path.slice(-1)?.[0],
+  }
+}
+
 const schemaCreators = {
   editorial: createArticleSchema,
   meta: createArticleSchema,
@@ -242,11 +258,12 @@ const ArticlePage = ({
   const galleryRef = useRef()
 
   const router = useRouter()
-  const { extract, id, showAll } = router.query
+  const { extract, showAll } = router.query
 
   const { me, meLoading, hasAccess, hasActiveMembership, isEditor } = useMe()
 
-  const cleanedPath = cleanAsPath(router.asPath)
+  const pathArray = cleanAsPath(router.asPath).split('/').filter(Boolean)
+  const { path, journalShareId } = getPathProps(pathArray)
 
   const {
     data: articleData,
@@ -255,7 +272,7 @@ const ArticlePage = ({
     refetch: articleRefetch,
   } = useQuery(getDocument, {
     variables: {
-      path: cleanedPath,
+      path,
     },
     skip: clientRedirection,
   })
@@ -323,12 +340,12 @@ const ArticlePage = ({
     () =>
       articleMeta &&
       articleContent && {
-        ...getMetaData(documentId, articleMeta, id),
+        ...getMetaData(documentId, articleMeta, journalShareId),
         ...(metaJSONStringFromQuery
           ? JSON.parse(metaJSONStringFromQuery)
           : undefined),
       },
-    [articleMeta, articleContent, metaJSONStringFromQuery, id],
+    [articleMeta, articleContent, metaJSONStringFromQuery, journalShareId],
   )
 
   const hasMeta = !!meta
@@ -485,9 +502,9 @@ const ArticlePage = ({
               />
             )
           }
-          return extract === 'share' && !!id ? (
+          return extract === 'share' && !!journalShareId ? (
             <ShareImageFlyer
-              tileId={id}
+              tileId={journalShareId}
               value={article.content.children}
               schema={schema}
               showAll={showAll}
@@ -841,7 +858,7 @@ const ArticlePage = ({
                 />
               )}
               {me && hasActiveMembership && (
-                <ArticleRecommendationsFeed path={cleanedPath} />
+                <ArticleRecommendationsFeed path={path} />
               )}
               {hasActiveMembership &&
                 (isEditorialNewsletter ||
