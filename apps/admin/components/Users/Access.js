@@ -109,6 +109,12 @@ const getDays = (begin, end) => moment(end).diff(begin, 'days')
 const GUTTER = 30
 
 const styles = {
+  container: css({
+    marginTop: 20,
+    '&:first-child': {
+      marginTop: '0',
+    },
+  }),
   heading: css({
     marginTop: 20,
     marginBottom: 20,
@@ -520,7 +526,7 @@ const Slots = ({ slots, t }) => {
 }
 
 const Grants = ({ grants, userId, t }) => (
-  <Fragment>
+  <div {...styles.container}>
     <SectionTitle>{t('account/access/Grants/title')}</SectionTitle>
     <div {...styles.grants}>
       {grants && grants.length > 0 ? (
@@ -536,11 +542,11 @@ const Grants = ({ grants, userId, t }) => (
         <Interaction.P>{t('account/access/Grants/noGrants')}</Interaction.P>
       )}
     </div>
-  </Fragment>
+  </div>
 )
 
 const Campaigns = ({ campaigns, userId, t }) => (
-  <Fragment>
+  <div {...styles.container}>
     <SectionTitle>{t('account/access/Campaigns/title')}</SectionTitle>
     {campaigns &&
       campaigns.length > 0 &&
@@ -575,7 +581,7 @@ const Campaigns = ({ campaigns, userId, t }) => (
     {campaigns && campaigns.length === 0 && (
       <Interaction.P>{t('account/access/Campaigns/noCampaigns')}</Interaction.P>
     )}
-  </Fragment>
+  </div>
 )
 
 const Access = withT(({ grants, campaigns, userId, t }) => {

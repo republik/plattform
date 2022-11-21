@@ -214,7 +214,9 @@ const Suspensions = ({ userId }) => {
                   : 'nicht gesperrt'
                 return (
                   <div>
-                    <SectionSubhead>Aktuell {suspendedHeader}</SectionSubhead>
+                    <span style={{ display: 'block', marginBottom: '20px' }}>
+                      Aktuell {suspendedHeader}
+                    </span>
                     <SuspendActions userId={userId} isSuspended={isSuspended} />
                     {!!suspensions.length && (
                       <SectionSubhead>Alle Sperrungen</SectionSubhead>

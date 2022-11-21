@@ -4941,7 +4941,7 @@
     },
     {
       "key": "account/access/Campaigns/noCampaigns",
-      "value": "keine Kampagnen verfügbar"
+      "value": "Keine Kampagnen verfügbar"
     },
     {
       "key": "account/access/Campaigns/campaign/title",
@@ -4961,7 +4961,7 @@
     },
     {
       "key": "account/access/Grants/noGrants",
-      "value": "keine Zugriff erhalten"
+      "value": "Keine Zugriffe erhalten"
     },
     {
       "key": "account/access/Grant/granter/label",
