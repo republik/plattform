@@ -287,6 +287,16 @@ const ArticlePage = ({
   const articleUnreadNotifications = article?.unreadNotifications
   const routerQuery = router.query
 
+  useEffect(() => {
+    if (journalShareId) {
+      const node = document.getElementById(journalShareId)
+
+      if (node) {
+        node.scrollIntoView()
+      }
+    }
+  }, [journalShareId])
+
   // Refetch when cached article is not issued for current user
   // - SSG always provides issuedForUserId: null
   // Things that can change
