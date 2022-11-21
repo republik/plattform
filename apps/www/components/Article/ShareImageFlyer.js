@@ -4,6 +4,7 @@ import {
   SlateRender,
   ColorContextProvider,
   RenderContextProvider,
+  SHARE_IMAGE_HEIGHT,
   colors,
   Logo,
   mediaQueries,
@@ -11,9 +12,34 @@ import {
   useMediaQuery,
 } from '@project-r/styleguide'
 import { css } from 'glamor'
-import { mUp } from '@project-r/styleguide/src/theme/mediaQueries'
 
 const styles = {
+  outer: css({
+    position: 'relative',
+    height: SHARE_IMAGE_HEIGHT / 2,
+    background: colors.light.flyerBg,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'initial',
+    overflow: 'hidden',
+    '&:before': {
+      content: ' ',
+      display: 'block',
+      position: 'absolute',
+      zIndex: 1,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      height: 80,
+      background:
+        'linear-gradient(0deg, rgba(174, 195, 254,1) 0%, rgba(174, 195, 254,0.8) 30%, rgba(174, 195, 254,0)100%)',
+    },
+  }),
+  inner: css({
+    position: 'relative',
+    top: -25,
+    margin: '0 10px',
+  }),
   branding: css({
     background: colors.dark.default,
     color: colors.dark.text,
@@ -41,7 +67,7 @@ const styles = {
 }
 
 const Branding = () => {
-  const isDesktop = useMediaQuery(mUp)
+  const isDesktop = useMediaQuery(mediaQueries.mUp)
   return (
     <div {...styles.branding}>
       <div {...styles.brandingInner}>
@@ -64,11 +90,15 @@ const ShareImageFlyer = ({ tileId, value, schema, showAll }) => {
       </Head>
       <ColorContextProvider colorSchemeKey='light'>
         <RenderContextProvider noLazy={true}>
-          <SlateRender
-            value={value.filter((block) => block.id === tileId)}
-            schema={schema}
-            skip={['flyerMetaP']}
-          />
+          <div {...(!showAll && styles.outer)}>
+            <div {...(!showAll && styles.inner)}>
+              <SlateRender
+                value={value.filter((block) => block.id === tileId)}
+                schema={schema}
+                skip={['flyerMetaP']}
+              />
+            </div>
+          </div>
         </RenderContextProvider>
       </ColorContextProvider>
       {showAll && <Branding />}

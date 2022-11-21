@@ -14,6 +14,7 @@ const IconButton = React.forwardRef<
     Icon: IconType
     href?: string
     target?: string
+    download?: boolean
     label?: string
     labelShort?: string
     title?: string
@@ -33,6 +34,7 @@ const IconButton = React.forwardRef<
       Icon,
       href,
       target,
+      download,
       label,
       labelShort,
       title,
@@ -69,6 +71,7 @@ const IconButton = React.forwardRef<
         onMouseDown={onMouseDown}
         href={href}
         target={target}
+        download={download}
         rel={target === '_blank' ? 'noopener' : ''}
         ref={ref}
         title={title}
