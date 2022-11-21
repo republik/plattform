@@ -90,7 +90,7 @@ function getCitationMetaData(meta) {
 
 export const getShareImageUrl = (meta, tileId) => {
   if (!meta.shareText && !tileId) return
-  const tileQuery = tileId ? `&tileId=${tileId}` : ''
+  const tileQuery = tileId ? `&id=${tileId}` : ''
   return `${PUBLIC_BASE_URL}${meta.path}?extract=share${tileQuery}`
 }
 
@@ -106,6 +106,11 @@ const getShareImage = (documentId, meta, tileId) => {
   )}&url=${encodeURIComponent(imageUrl)}`
 }
 
+export const getReferenceUrl = (meta, tileId) => {
+  const tileQuery = tileId ? `?id=${tileId}` : ''
+  return `${PUBLIC_BASE_URL}${meta.path}${tileQuery}`
+}
+
 export const getMetaData = (documentId, meta, tileId) => {
   const shareImage = getShareImage(documentId, meta, tileId)
 
@@ -113,7 +118,7 @@ export const getMetaData = (documentId, meta, tileId) => {
     ...meta,
     facebookImage: shareImage || meta.facebookImage,
     twitterImage: shareImage || meta.twitterImage,
-    url: `${PUBLIC_BASE_URL}${meta.path}`,
+    url: getReferenceUrl(meta, tileId),
   }
 
   return {

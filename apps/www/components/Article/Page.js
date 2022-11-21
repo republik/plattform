@@ -242,10 +242,10 @@ const ArticlePage = ({
   const galleryRef = useRef()
 
   const router = useRouter()
+  const { extract, id, showAll } = router.query
 
   const { me, meLoading, hasAccess, hasActiveMembership, isEditor } = useMe()
 
-  const pathAnchor = router.asPath.split('#')[1]
   const cleanedPath = cleanAsPath(router.asPath)
 
   const {
@@ -318,16 +318,17 @@ const ArticlePage = ({
       )
     )
   }, [routerQuery, articleContent])
+
   const meta = useMemo(
     () =>
       articleMeta &&
       articleContent && {
-        ...getMetaData(documentId, articleMeta, pathAnchor),
+        ...getMetaData(documentId, articleMeta, id),
         ...(metaJSONStringFromQuery
           ? JSON.parse(metaJSONStringFromQuery)
           : undefined),
       },
-    [articleMeta, articleContent, metaJSONStringFromQuery],
+    [articleMeta, articleContent, metaJSONStringFromQuery, id],
   )
 
   const hasMeta = !!meta
@@ -468,7 +469,6 @@ const ArticlePage = ({
   const sectionColor = meta && meta.template === 'section' && meta.color
   const MissingNode = isEditor ? undefined : ({ children }) => children
 
-  const { extract, tileId, showAll } = router.query
   const isFlyer = treeType === 'slate'
   if (extract) {
     return (
@@ -485,9 +485,9 @@ const ArticlePage = ({
               />
             )
           }
-          return extract === 'share' && !!tileId ? (
+          return extract === 'share' && !!id ? (
             <ShareImageFlyer
-              tileId={tileId}
+              tileId={id}
               value={article.content.children}
               schema={schema}
               showAll={showAll}
