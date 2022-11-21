@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { IconButton, ShareIcon, SparkleIcon } from '@project-r/styleguide'
+import { IconButton, ShareIcon, ImageIcon } from '@project-r/styleguide'
 import { ASSETS_SERVER_BASE_URL } from '../../lib/constants'
 import { trackEvent } from '../../lib/matomo'
 import ShareOverlay from './ShareOverlay'
@@ -57,11 +57,23 @@ export const getFlyerTileActionBar =
             }}
           />
           <IconButton
-            label='Herunterladen'
-            labelShort='Herunterladen'
-            Icon={SparkleIcon}
-            href={screenshotImage}
-            download={true}
+            label='Bild herunterladen'
+            labelShort='Bild herunterladen'
+            Icon={ImageIcon}
+            onClick={async (e) => {
+              e.preventDefault()
+              trackEvent(['ActionBar', 'downloadJournalBlock', url])
+              const image = await fetch(screenshotImage)
+              const imageBlog = await image.blob()
+              const imageURL = URL.createObjectURL(imageBlog)
+
+              const link = document.createElement('a')
+              link.href = imageURL
+              link.download = 'journal-entry'
+              document.body.appendChild(link)
+              link.click()
+              document.body.removeChild(link)
+            }}
           />
         </div>
         {!!overlay && (

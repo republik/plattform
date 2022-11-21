@@ -22,7 +22,7 @@ const styles = {
     justifyContent: 'center',
     alignItems: 'initial',
     overflow: 'hidden',
-    '&:before': {
+    /*'&:before': {
       content: ' ',
       display: 'block',
       position: 'absolute',
@@ -33,7 +33,7 @@ const styles = {
       height: 80,
       background:
         'linear-gradient(0deg, rgba(174, 195, 254,1) 0%, rgba(174, 195, 254,0.8) 30%, rgba(174, 195, 254,0)100%)',
-    },
+    },*/
   }),
   inner: css({
     position: 'relative',

@@ -79,7 +79,7 @@ export {
   MdFormatBold as BoldIcon,
   MdFormatItalic as ItalicIcon,
   MdKeyboardReturn as BreakIcon,
-  MdWallpaper as ImageIcon,
+  MdOutlineImage as ImageIcon,
   MdFormatQuote as QuoteIcon,
   MdStrikethroughS as StrikeThrough,
   MdTitle as TitleIcon,
@@ -96,7 +96,6 @@ export {
   MdDragHandle as DragHandleIcon,
   MdSkipNext as SkipNextIcon,
   MdSubject as ArticleIcon,
-  MdPhotoFilter as SparkleIcon,
 } from 'react-icons/md'
 
 export {
