@@ -3,6 +3,7 @@ import {
   ArticleIcon,
   IconButton,
   PlayCircleIcon,
+  PauseCircleIcon,
   useColorContext,
 } from '@project-r/styleguide'
 import { css } from 'glamor'
@@ -10,7 +11,6 @@ import { getImgSrc } from '../Overview/utils'
 import { useQuery } from '@apollo/client'
 import { GET_DOCUMENT_AUDIO } from './graphql/DocumentAudio.graphql'
 import { useAudioContext } from '../Audio/AudioProvider'
-import useAudioQueue from '../Audio/hooks/useAudioQueue'
 import scrollIntoView from 'scroll-into-view'
 import { AudioPlayerLocations } from '../Audio/types/AudioActionTracking'
 
@@ -23,8 +23,13 @@ type CarouselItem = {
 
 const PlayAudio: React.FC<{ path: string }> = ({ path }) => {
   const { data } = useQuery(GET_DOCUMENT_AUDIO, { variables: { path } })
-  const { toggleAudioPlayer, isPlaying, setIsExpanded } = useAudioContext()
-  const { checkIfActiveItem } = useAudioQueue()
+  const {
+    toggleAudioPlayer,
+    toggleAudioPlayback,
+    checkIfActivePlayerItem,
+    isPlaying,
+    setIsExpanded,
+  } = useAudioContext()
   if (!data?.document) {
     return null
   }
@@ -35,13 +40,20 @@ const PlayAudio: React.FC<{ path: string }> = ({ path }) => {
     <IconButton
       onClick={(e) => {
         e.preventDefault()
-        toggleAudioPlayer(document, AudioPlayerLocations.MARKETING_FRONT)
-        setIsExpanded(true)
+        if (checkIfActivePlayerItem(document.id)) {
+          toggleAudioPlayback()
+        } else {
+          toggleAudioPlayer(document, AudioPlayerLocations.MARKETING_FRONT)
+          setIsExpanded(true)
+        }
       }}
-      Icon={PlayCircleIcon}
+      Icon={
+        checkIfActivePlayerItem(document.id) && isPlaying
+          ? PauseCircleIcon
+          : PlayCircleIcon
+      }
       labelShort='Hören'
       label='Hören'
-      disabled={checkIfActiveItem(document.id) && isPlaying}
     />
   )
 }

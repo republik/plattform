@@ -65,7 +65,7 @@ const ImageBlock = ({
   aboveTheFold,
   onlyImage,
   feuilleton,
-  onPlay,
+  audioPlayButton,
 }) => {
   const background = bgColor || ''
   const isTextOnTop = textPosition !== 'underneath'
@@ -121,7 +121,7 @@ const ImageBlock = ({
               collapsedColor={feuilleton && colors.text}
               center={center}
               feuilleton={feuilleton}
-              onPlay={onPlay}
+              audioPlayButton={audioPlayButton}
             >
               {children}
             </Text>
@@ -153,7 +153,7 @@ ImageBlock.propTypes = {
   ]),
   onlyImage: PropTypes.bool,
   feuilleton: PropTypes.bool,
-  onPlay: PropTypes.func,
+  shouldRenderPlayButton: PropTypes.node,
 }
 
 ImageBlock.defaultProps = {

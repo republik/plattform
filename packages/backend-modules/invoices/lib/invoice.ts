@@ -47,7 +47,7 @@ export const isApplicable: IsApplicableFn = function (payment) {
 }
 
 function addTopLeftPadding(doc: PDF) {
-  doc.x = doc.y = utils.mmToPoints(PADDING_MM)
+  doc.x = doc.y = utils.mm2pt(PADDING_MM)
 }
 
 function addCreditor(doc: PDF, payment: PaymentResolved, context: Context) {
@@ -67,13 +67,13 @@ function addCreditor(doc: PDF, payment: PaymentResolved, context: Context) {
 
   const { x } = doc
 
-  doc.x = utils.mmToPoints(CREDITOR_INDENT_MM)
+  doc.x = utils.mm2pt(CREDITOR_INDENT_MM)
 
   if (image) {
     // Use data URI instead of Buffer
     const dataUri = `data:image/*;base64,${image.toString('base64')}`
 
-    doc.image(dataUri, { fit: [utils.mmToPoints(45), 100] }).moveDown()
+    doc.image(dataUri, { fit: [utils.mm2pt(45), 100] }).moveDown()
   }
 
   const address = [
@@ -167,12 +167,12 @@ function getTableRow(
       },
       {
         text: units || '',
-        width: utils.mmToPoints(20),
+        width: utils.mm2pt(20),
         font,
       },
       {
         text: typeof rowTotal === 'number' ? formatPrice(rowTotal) : rowTotal,
-        width: utils.mmToPoints(30),
+        width: utils.mm2pt(30),
         font,
       },
     ],
@@ -297,14 +297,9 @@ function addTable(doc: PDF, payment: PaymentResolved, context: Context) {
 
   rows.push(total)
 
-  const padding: [number, number, number, number] = [
-    0,
-    0,
-    utils.mmToPoints(5),
-    0,
-  ]
+  const padding: [number, number, number, number] = [0, 0, utils.mm2pt(5), 0]
 
-  doc.moveDown().addTable({ padding, width: utils.mmToPoints(170), rows })
+  doc.moveDown().addTable({ padding, width: utils.mm2pt(170), rows })
 }
 
 export const generate: GenerateFn = function (payment, context) {

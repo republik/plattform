@@ -32,7 +32,7 @@ const LatestArticleItem = ({
 }: ArticleItemProps) => {
   const { t } = useTranslation()
   const { toggleAudioPlayer, addAudioQueueItem } = useAudioContext()
-  const { checkIfInQueue, checkIfActiveItem, getAudioQueueItemIndex } =
+  const { checkIfInQueue, checkIfHeadOfQueue, getAudioQueueItemIndex } =
     useAudioQueue()
   const [isLoading, setIsLoading] = useState(false)
 
@@ -70,7 +70,7 @@ const LatestArticleItem = ({
   return (
     <AudioListItem
       item={article}
-      isActive={!!checkIfActiveItem(article.id)}
+      isActive={!!checkIfHeadOfQueue(article.id)}
       beforeActionItem={
         isLoading ? (
           <div style={{ position: 'relative', width: 24, height: 24 }}>

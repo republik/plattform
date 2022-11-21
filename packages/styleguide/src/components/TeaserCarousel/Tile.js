@@ -16,7 +16,6 @@ import {
   TILE_MAX_WIDTH,
   TILE_GRID_PADDING,
 } from './constants'
-import PlayAudio from '../TeaserFront/PlayAudio'
 
 const IMAGE_SIZE = {
   maxWidth: 160,
@@ -128,7 +127,7 @@ const Tile = ({
   color: tileColor,
   outline: tileOutlineColor,
   bigger: tileBigger,
-  onPlay,
+  audioPlayButton,
 }) => {
   const [colorScheme] = useColorContext()
   const context = React.useContext(CarouselContext)
@@ -217,7 +216,7 @@ const Tile = ({
         >
           <Text color={color} margin='0 auto'>
             {children}
-            {(!!count || !!onPlay) && (
+            {(!!count || !!audioPlayButton) && (
               <div {...styles.footer}>
                 {!!count && (
                   <TeaserCarouselArticleCount
@@ -227,7 +226,9 @@ const Tile = ({
                     color={bgColor}
                   />
                 )}
-                <PlayAudio onPlay={onPlay} style={{ margin: '0 10px' }} />
+                {audioPlayButton && (
+                  <div style={{ margin: '0 10px' }}>{audioPlayButton}</div>
+                )}
               </div>
             )}
           </Text>
@@ -250,5 +251,5 @@ Tile.propTypes = {
   aboveTheFold: PropTypes.bool,
   byline: PropTypes.string,
   children: PropTypes.node,
-  onPlay: PropTypes.func,
+  audioPlayButton: PropTypes.node,
 }

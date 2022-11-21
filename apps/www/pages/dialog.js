@@ -235,16 +235,16 @@ const DialogPage = ({ serverContext }) => {
   const {
     query: { t: tab, id },
   } = useRouter()
-
   const activeDiscussionId =
     tab === 'general' ? GENERAL_FEEDBACK_DISCUSSION_ID : tab === 'article' && id
 
   return (
     <Frame
-      hasOverviewNav={!tab}
+      hasOverviewNav
       raw
       formatColor='primary'
-      stickySecondaryNav={!tab}
+      // Only sticky if on /dialog without any query-params
+      stickySecondaryNav={!tab && !id}
     >
       {!!tab && <FontSizeSync />}
       <MaybeDiscussionContextProvider discussionId={activeDiscussionId}>

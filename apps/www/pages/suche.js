@@ -16,7 +16,7 @@ const SearchPage = ({ router, t }) => {
   }
 
   return (
-    <Frame hasOverviewNav meta={meta}>
+    <Frame hasOverviewNav stickySecondaryNav meta={meta}>
       <Search query={router.query} />
       {router.query && Object.keys(router.query).length === 0 && (
         <FeaturedSections />
