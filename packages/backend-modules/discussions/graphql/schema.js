@@ -95,8 +95,9 @@ type mutations {
 
   suspendUser(
     id: ID!
-    until: DateTime @deprecated(reason: "Use numberDays instead")
-    numberDays: Int
+    until: DateTime @deprecated(reason: "Use interval and intervalAmount instead")
+    interval: String
+    intervalAmount: Int
     reason: String
   ): User!
   unsuspendUser(id: ID!): User!

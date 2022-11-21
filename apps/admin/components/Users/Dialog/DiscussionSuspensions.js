@@ -38,8 +38,18 @@ const GET_SUSPENSIONS = gql`
 `
 
 const SUSPEND_USER = gql`
-  mutation SuspendUser($id: ID!, $numberDays: Int, $reason: String) {
-    suspendUser(id: $id, numberDays: $numberDays, reason: $reason) {
+  mutation SuspendUser(
+    $id: ID!
+    $interval: String
+    $intervalAmount: Int
+    $reason: String
+  ) {
+    suspendUser(
+      id: $id
+      interval: $interval
+      intervalAmount: $intervalAmount
+      reason: $reason
+    ) {
       id
     }
   }
@@ -55,38 +65,39 @@ const UNSUSPEND_USER = gql`
 
 const SUSPENSION_INTERVALS = [
   {
-    value: '1',
-    text: 'Tag',
+    value: 'day',
+    text: 'Tag(e)',
   },
   {
-    value: '7',
-    text: 'Woche',
+    value: 'week',
+    text: 'Woche(n)',
   },
   {
-    value: '30',
-    text: 'Monat',
+    value: 'month',
+    text: 'Monat(e)',
   },
   {
-    value: '365',
-    text: 'Jahr',
+    value: 'year',
+    text: 'Jahr(e)',
   },
 ]
 
 const SuspendActions = ({ userId, isSuspended }) => {
   const [showSuspensionFields, setShowSuspensionFields] = useState(false)
-  const [numberDays, setNumberDays] = useState('1')
+  const [intervalAmount, setIntervalAmount] = useState('1')
   const [interval, setInterval] = useState('7')
   const [reason, setReason] = useState('')
   const resetDialogForm = () => {
-    setNumberDays('1')
-    setInterval('7')
+    setIntervalAmount(1)
+    setInterval('week')
     setReason('')
     setShowSuspensionFields(false)
   }
   const [suspendUser, suspendUserState] = useMutation(SUSPEND_USER, {
     variables: {
       id: userId,
-      numberDays: numberDays !== '' ? numberDays * interval : undefined,
+      interval,
+      intervalAmount: parseInt(intervalAmount),
       reason: reason !== '' ? reason : undefined,
     },
     refetchQueries: [{ query: GET_SUSPENSIONS, variables: { id: userId } }],
@@ -126,10 +137,12 @@ const SuspendActions = ({ userId, isSuspended }) => {
           <OverlayBody>
             <Field
               label='Sperrung für'
-              value={numberDays}
+              value={intervalAmount}
               onChange={(e) => {
-                setNumberDays(e.currentTarget.value)
+                setIntervalAmount(e.currentTarget.value)
               }}
+              onInc={() => setIntervalAmount(intervalAmount + 1)}
+              onDec={() => setIntervalAmount(intervalAmount - 1)}
             />
             <Dropdown
               label=''
