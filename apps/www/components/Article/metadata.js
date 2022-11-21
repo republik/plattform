@@ -119,20 +119,8 @@ const getShareImage = (documentId, meta, tileId) => {
 export const getMetaData = (documentId, meta, tileId) => {
   const shareImage = getShareImage(documentId, meta, tileId)
 
-  let tileMeta = tileId
-    ? {
-        twitterTitle: 'Kurz gelesen im Republik-Journal',
-        twitterDescription:
-          'Eine spontane, wendige, verspieltere Republik, mit Einträge zur Weltlage, zum Leben, zur Sprache – wozu auch uns etwas Schlaues einfällt.',
-        facebookTitle: 'Kurz gelesen im Republik-Journal',
-        facebookDescription:
-          'Eine spontane, wendige, verspieltere Republik, mit Einträge zur Weltlage, zum Leben, zur Sprache – wozu auch uns etwas Schlaues einfällt.',
-      }
-    : {}
-
   const metaWithUrls = {
     ...meta,
-    ...tileMeta,
     facebookImage: shareImage || meta.facebookImage,
     twitterImage: shareImage || meta.twitterImage,
     url: getReferenceUrl(meta, tileId),
