@@ -106,7 +106,12 @@ const getShareImage = (documentId, meta, tileId) => {
   const imageUrl = getShareImageUrl(meta, tileId)
   if (!imageUrl) return
   const cacheKey = getCacheKey(documentId, meta)
-  return `${ASSETS_SERVER_BASE_URL}/render?width=${SHARE_IMAGE_WIDTH}&height=${SHARE_IMAGE_HEIGHT}&updatedAt=${encodeURIComponent(
+  const dimensions = tileId
+    ? `viewport=${Math.ceil(SHARE_IMAGE_WIDTH / 2)}x${Math.ceil(
+        SHARE_IMAGE_HEIGHT / 2,
+      )}&zoomFactor=2`
+    : `width=${SHARE_IMAGE_WIDTH}&height=${SHARE_IMAGE_HEIGHT}`
+  return `${ASSETS_SERVER_BASE_URL}/render?${dimensions}&updatedAt=${encodeURIComponent(
     cacheKey,
   )}&url=${encodeURIComponent(imageUrl)}`
 }
