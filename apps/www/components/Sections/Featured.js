@@ -247,7 +247,7 @@ const FeaturedSections = withT(({ t }) => {
           <NavLink inline large href='/vote/2022'>
             {t('nav/vote')}
           </NavLink>
-          <NavLink inline large href='/cockpit'>
+          <NavLink large href='/cockpit'>
             {t('nav/cockpit')}
           </NavLink>
           <NavLink large href='/veranstaltungen'>
