@@ -72,8 +72,9 @@ const Header = ({
   const lastY = useRef()
   const lastDiff = useRef()
 
-  const topLevelPaths = ['/', '/feed', '/dialog', '/format/journal', '/suche']
-  const isOnTopLevelPage = topLevelPaths.includes(router.asPath)
+  const topLevelPaths = ['/', '/feed', '/dialog', '/suche']
+  const isOnTopLevelPage =
+    topLevelPaths.includes(router.asPath) || router.asPath.endsWith('/journal')
   const backButton = inNativeIOSApp && me && !isOnTopLevelPage
 
   const toggleExpanded = (target) => {
