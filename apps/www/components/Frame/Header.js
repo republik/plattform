@@ -1,7 +1,7 @@
 import { useMemo, useState, useRef, useEffect } from 'react'
 import { css } from 'glamor'
 import compose from 'lodash/flowRight'
-import { useRouter, withRouter } from 'next/router'
+import { withRouter } from 'next/router'
 import {
   Logo,
   mediaQueries,
@@ -60,7 +60,6 @@ const Header = ({
   stickySecondaryNav,
   pageColorSchemeKey,
 }) => {
-  const { asPath } = useRouter()
   const [colorScheme] = useColorContext()
   const [isMobile, setIsMobile] = useState()
   const [scrollableHeaderHeight, setScrollableHeaderHeight] =
@@ -73,8 +72,9 @@ const Header = ({
   const lastY = useRef()
   const lastDiff = useRef()
 
-  const isOnHomePage = asPath === '/'
-  const backButton = inNativeIOSApp && me && !isOnHomePage
+  const topLevelPaths = ['/', '/feed', '/dialog', '/format/journal', '/suche']
+  const isOnTopLevelPage = topLevelPaths.includes(router.asPath)
+  const backButton = inNativeIOSApp && me && !isOnTopLevelPage
 
   const toggleExpanded = (target) => {
     if (target === expandedNav) {
