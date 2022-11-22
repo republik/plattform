@@ -136,6 +136,7 @@ const getAllowedInlines = (
   shown: ButtonConfig[],
   selectedText?: NodeEntry<CustomText>,
   selectedElement?: NodeEntry<CustomElement>,
+  moreSelectedElements?: NodeEntry<CustomElement>[],
 ): ButtonConfig[] => {
   if (!shown.length && noWordSelected(editor)) return []
   // make it link icon grey in sticky mode
@@ -143,8 +144,11 @@ const getAllowedInlines = (
     ? []
     : getAllowedTypes(selectedText)
   const buttons = shown.length ? shown.map((b) => b.type) : allowedTypes
+  const currentlySelected = [selectedElement, ...moreSelectedElements].filter(
+    Boolean,
+  )
   return buttons.map((t) => {
-    const isSelected = selectedElement && t === selectedElement[0].type
+    const isSelected = currentlySelected.some((e) => e[0].type === t)
     return {
       type: t,
       disabled: !isSelected && allowedTypes.indexOf(t) === -1,
@@ -310,10 +314,18 @@ const Toolbar: React.FC = () => {
     }
   }, [focused])
 
-  const setButtons = (text, element, convertContainer) => {
+  const setButtons = (text, element, moreElements, convertContainer) => {
     setChars(getAllowedChars(element))
     setMarks(getAllowedMarks(editor, element))
-    setInlines(getAllowedInlines(editor, initialInlineButtons, text, element))
+    setInlines(
+      getAllowedInlines(
+        editor,
+        initialInlineButtons,
+        text,
+        element,
+        moreElements,
+      ),
+    )
     const allowedBlocks = getAllowedBlocks(
       editor,
       initialBlockButtons,
@@ -327,9 +339,10 @@ const Toolbar: React.FC = () => {
     if (!hasSelection(editor)) {
       return reset()
     }
-    const { text, element, convertContainer } = getAncestry(editor)
+    const { text, element, moreElements, convertContainer } =
+      getAncestry(editor)
     if (element) {
-      setButtons(text, element, convertContainer)
+      setButtons(text, element, moreElements, convertContainer)
     } else {
       reset()
     }

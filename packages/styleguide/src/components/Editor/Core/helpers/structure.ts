@@ -164,9 +164,17 @@ const toggleInline = (
 ): number[] | undefined => {
   const { selection } = editor
   if (!selection) return
-  const { text: target, element: parent } = getAncestry(editor)
-  if (parent[0].type === element.type) {
-    Transforms.unwrapNodes(editor, { at: parent[1], voids: true })
+  const {
+    text: target,
+    element: parent,
+    moreElements: otherAncestors,
+  } = getAncestry(editor)
+  const potentialAncestors = [parent, ...otherAncestors]
+  const matchingAncestor = potentialAncestors.find(
+    (node) => node[0].type === element.type,
+  )
+  if (matchingAncestor) {
+    Transforms.unwrapNodes(editor, { at: matchingAncestor[1], voids: true })
     return
   }
   const allowedTemplates = target[0].template

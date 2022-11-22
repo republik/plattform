@@ -319,6 +319,7 @@ export const getAncestry = (
 ): {
   text?: NodeEntry<CustomText>
   element?: NodeEntry<CustomElement>
+  moreElements?: NodeEntry<CustomElement>[]
   container?: NodeEntry<CustomElement>
   convertContainer?: NodeEntry<CustomElement>
 } => {
@@ -328,6 +329,7 @@ export const getAncestry = (
   const lastParent = getParent(editor, last)
   let text: NodeEntry<CustomText>
   let element: NodeEntry<CustomElement>
+  const moreElements: NodeEntry<CustomElement>[] = []
   let container: NodeEntry<CustomElement>
   let convertContainer: NodeEntry<CustomElement>
   if (
@@ -355,9 +357,15 @@ export const getAncestry = (
 
   // for the convert options in the toolbar
   if (!hasConvertChoices(element[0])) {
-    for (const [n, p] of Node.ancestors(editor, element[1])) {
-      if (SlateElement.isElement(n) && hasConvertChoices(n)) {
-        convertContainer = [n as CustomElement, p]
+    for (const [n, p] of Node.ancestors(editor, element[1], {
+      reverse: true,
+    })) {
+      if (SlateElement.isElement(n)) {
+        if (hasConvertChoices(n)) {
+          convertContainer = [n as CustomElement, p]
+          break
+        }
+        moreElements.push([n, p])
       }
     }
   }
@@ -365,6 +373,7 @@ export const getAncestry = (
   return {
     text,
     element,
+    moreElements,
     container,
     convertContainer,
   }

@@ -274,7 +274,128 @@ describe('Slate Editor: Inline Insertion', () => {
       })
     })
 
-    it('should handle nested inlines', async () => {})
+    it('should handle nested inlines on insert', async () => {
+      value = [
+        {
+          type: 'paragraph',
+          children: [{ text: 'Lorem ipsum dolor sit amet.' }],
+        },
+      ]
+      const structure = [
+        {
+          type: 'paragraph',
+        },
+      ]
+      const editor = await setup({ ...defaultConfig, structure })
+
+      await Transforms.select(editor, { path: [0, 0], offset: 9 })
+      toggleElement(editor, 'link')
+      await new Promise(process.nextTick)
+
+      await Transforms.select(editor, { path: [0, 1, 0], offset: 3 })
+      toggleElement(editor, 'memo')
+      await new Promise(process.nextTick)
+
+      expect(cleanupTree(value)).toEqual([
+        {
+          type: 'paragraph',
+          children: [
+            { text: 'Lorem ' },
+            {
+              type: 'link',
+              children: [
+                { text: '' },
+                { type: 'memo', children: [{ text: 'ipsum' }] },
+                { text: '' },
+              ],
+            },
+            { text: ' dolor sit amet.' },
+          ],
+        },
+      ])
+    })
+
+    it('should delete outermost nested inline', async () => {
+      value = [
+        {
+          type: 'paragraph',
+          children: [
+            { text: 'Lorem ' },
+            {
+              type: 'link',
+              children: [
+                { text: '' },
+                { type: 'memo', children: [{ text: 'ipsum' }] },
+                { text: '' },
+              ],
+            },
+            { text: ' dolor sit amet.' },
+          ],
+        },
+      ]
+      const structure = [
+        {
+          type: 'paragraph',
+        },
+      ]
+      const editor = await setup({ ...defaultConfig, structure })
+
+      await Transforms.select(editor, { path: [0, 1, 1, 0], offset: 3 })
+      toggleElement(editor, 'link')
+      await new Promise(process.nextTick)
+
+      expect(cleanupTree(value)).toEqual([
+        {
+          type: 'paragraph',
+          children: [
+            { text: 'Lorem ' },
+            { type: 'memo', children: [{ text: 'ipsum' }] },
+            { text: ' dolor sit amet.' },
+          ],
+        },
+      ])
+    })
+
+    it('should delete innermost nested inline', async () => {
+      value = [
+        {
+          type: 'paragraph',
+          children: [
+            { text: 'Lorem ' },
+            {
+              type: 'link',
+              children: [
+                { text: '' },
+                { type: 'memo', children: [{ text: 'ipsum' }] },
+                { text: '' },
+              ],
+            },
+            { text: ' dolor sit amet.' },
+          ],
+        },
+      ]
+      const structure = [
+        {
+          type: 'paragraph',
+        },
+      ]
+      const editor = await setup({ ...defaultConfig, structure })
+
+      await Transforms.select(editor, { path: [0, 1, 1, 0], offset: 3 })
+      toggleElement(editor, 'memo')
+      await new Promise(process.nextTick)
+
+      expect(cleanupTree(value)).toEqual([
+        {
+          type: 'paragraph',
+          children: [
+            { text: 'Lorem ' },
+            { type: 'link', children: [{ text: 'ipsum' }] },
+            { text: ' dolor sit amet.' },
+          ],
+        },
+      ])
+    })
   })
 
   describe('void element (e.g. break)', () => {
