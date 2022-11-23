@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { IconButton, ShareIcon, ImageIcon } from '@project-r/styleguide'
+import { IconButton, ShareIcon, ImageIcon, slug } from '@project-r/styleguide'
 import { ASSETS_SERVER_BASE_URL } from '../../lib/constants'
 import { trackEvent } from '../../lib/matomo'
 import ShareOverlay from './ShareOverlay'
@@ -15,11 +15,13 @@ import {
 const ShareButton = ({ meta, tileId, inNativeApp }) => {
   const [overlay, showOverlay] = useState(false)
   const url = getReferenceUrl(meta, tileId)
+  const { t } = useTranslation()
+
   return (
     <>
       <IconButton
-        label='Link teilen'
-        labelShort='Link teilen'
+        label={t('article/actionbar/share')}
+        labelShort={t('article/actionbar/share')}
         Icon={ShareIcon}
         onClick={(e) => {
           e.preventDefault()
@@ -44,9 +46,11 @@ const ShareButton = ({ meta, tileId, inNativeApp }) => {
         <ShareOverlay
           onClose={() => showOverlay(false)}
           url={url}
-          title='Link teilen'
+          title={t('article/actionbar/share')}
           tweet=''
-          emailSubject='Republik: Journal'
+          emailSubject={t('article/share/emailSubject', {
+            title: meta.title,
+          })}
           emailBody=''
           emailAttachUrl
         />
@@ -56,7 +60,8 @@ const ShareButton = ({ meta, tileId, inNativeApp }) => {
 }
 
 const DownloadButton = ({ documentId, meta, tileId }) => {
-  const DEFAULT_LABEL = 'Inhalt herunterladen'
+  const { t } = useTranslation()
+  const DEFAULT_LABEL = t('article/actionbar/download')
   const [downloadLabel, setDownloadLabel] = useState(DEFAULT_LABEL)
 
   const url = getReferenceUrl(meta, tileId)
@@ -68,7 +73,7 @@ const DownloadButton = ({ documentId, meta, tileId }) => {
 
   const downloadScreenshot = async (e) => {
     e.preventDefault()
-    setDownloadLabel('wird heruntergeladen…')
+    setDownloadLabel(t('article/actionbar/download/processing'))
     trackEvent(['ActionBar', 'downloadJournalBlock', url])
     const image = await fetch(screenshotImage)
     const imageBlog = await image.blob()
@@ -76,7 +81,7 @@ const DownloadButton = ({ documentId, meta, tileId }) => {
 
     const link = document.createElement('a')
     link.href = imageURL
-    link.download = 'Republik-Journal'
+    link.download = slug(meta.title)
     document.body.appendChild(link)
     link.click()
     document.body.removeChild(link)
