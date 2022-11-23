@@ -3245,6 +3245,10 @@
       "value": "Herunterladen"
     },
     {
+      "key": "article/actionbar/download/processing",
+      "value": "wird heruntergeladen..."
+    },
+    {
       "key": "article/actionbar/audio",
       "value": "Beitrag anhören"
     },
@@ -5173,6 +5177,10 @@
       "value": "Lesezeichen"
     },
     {
+      "key": "nav/vote",
+      "value": "Urabstimmung"
+    },
+    {
       "key": "bookmark/title/bookmarked",
       "value": "Lesezeichen entfernen"
     },
@@ -5433,6 +5441,10 @@
       "value": "Zum Magazin"
     },
     {
+      "key": "Onboarding/Page/clima/button",
+      "value": "Weiter ins Klimalabor"
+    },
+    {
       "key": "Onboarding/Page/more/account",
       "value": "Weitere Einstellungen finden Sie im {link}."
     },
@@ -5591,6 +5603,30 @@
     {
       "key": "Onboarding/Sections/Postcard/paragraph1",
       "value": "Im Klimalabor werden wir Ihnen immer wieder die Gelegenheit bieten, Ihre Ideen, Ihre Bedürfnisse, Ihre Expertise einzubringen. Als Erstes wollen wir aber Ihre Fantasie:"
+    },
+    {
+      "key": "Onboarding/Sections/Mission/heading",
+      "value": "Unsere Mission"
+    },
+    {
+      "key": "Onboarding/Sections/Mission/paragraph1",
+      "value": "Jede Forschungsreise muss geplant werden. Sonst besteht die Gefahr, dass man irgendwo im Nirgendwo landet oder sich im Dickicht verliert. Deshalb hier in aller Kürze unsere Ziele:"
+    },
+    {
+      "key": "Onboarding/Sections/Invitation/heading",
+      "value": "Freundinnen und Feinde einladen"
+    },
+    {
+      "key": "Onboarding/Sections/Invitation/paragraph1",
+      "value": "Das Klimalabor lebt davon, dass viele unterschiedliche Perspektiven zusammen kommen. Laden Sie 3 Freunde und Bekannte ein, mit denen Sie nicht unbedingt immer gleicher Meinung sind."
+    },
+    {
+      "key": "Onboarding/Sections/CallToAction/heading",
+      "value": "Abo machen"
+    },
+    {
+      "key": "Onboarding/Sections/CallToAction/paragraph1",
+      "value": "Investieren Sie in Klimajournalismus: Werden Sie Verlegerin oder Verleger der Republik"
     },
     {
       "key": "Trial/Form/withAccess/button/label",

@@ -37,6 +37,9 @@ import withInNativeApp from '../../lib/withInNativeApp'
 import Link from 'next/link'
 
 import Postcard from './Sections/Postcard'
+import Mission from './Sections/Mission'
+import Invitation from './Sections/Invitation'
+import CallToAction from './Sections/CallToAction'
 
 const { P } = Interaction
 
@@ -162,6 +165,24 @@ class Page extends Component {
       {
         component: Postcard,
         name: 'postcard',
+        ref: createRef(),
+        visited: false,
+      },
+      {
+        component: Mission,
+        name: 'mission',
+        ref: createRef(),
+        visited: false,
+      },
+      {
+        component: Invitation,
+        name: 'invitation',
+        ref: createRef(),
+        visited: false,
+      },
+      {
+        component: CallToAction,
+        name: 'call-to-action',
         ref: createRef(),
         visited: false,
       },
