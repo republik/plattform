@@ -20,7 +20,7 @@ module.exports = async (_, { id }, { req, user, pgdb, t, mail }) => {
     if (!grant.invalidatedAt) {
       await invalidate(grant, 'admin', t, transaction, mail, user.id)
     }
-    await noFollowup(id, transaction)
+    await noFollowup(grant, transaction)
 
     await transaction.transactionCommit()
 

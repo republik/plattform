@@ -84,20 +84,32 @@ const SUSPENSION_INTERVALS = [
 
 const SuspendActions = ({ userId, isSuspended }) => {
   const [showSuspensionFields, setShowSuspensionFields] = useState(false)
-  const [intervalAmount, setIntervalAmount] = useState('1')
-  const [interval, setInterval] = useState('7')
+  const [intervalAmount, setIntervalAmount] = useState({ value: '1' })
+  const [interval, setInterval] = useState('day')
   const [reason, setReason] = useState('')
   const resetDialogForm = () => {
-    setIntervalAmount(1)
-    setInterval('week')
+    setIntervalAmount({ value: '1' })
+    setInterval('day')
     setReason('')
     setShowSuspensionFields(false)
+  }
+
+  const handleIntervalAmount = (value, shouldValidate) => {
+    const valueInt = parseInt(value, 10)
+    setIntervalAmount({
+      ...intervalAmount,
+      value,
+      error:
+        (!value || isNaN(valueInt) || valueInt < 1) &&
+        'Bitte eine Zahl grösser 0 eingeben',
+      dirty: shouldValidate,
+    })
   }
   const [suspendUser, suspendUserState] = useMutation(SUSPEND_USER, {
     variables: {
       id: userId,
       interval,
-      intervalAmount: parseInt(intervalAmount),
+      intervalAmount: parseInt(intervalAmount.value, 10),
       reason: reason !== '' ? reason : undefined,
     },
     refetchQueries: [{ query: GET_SUSPENSIONS, variables: { id: userId } }],
@@ -126,7 +138,11 @@ const SuspendActions = ({ userId, isSuspended }) => {
   if (showSuspensionFields) {
     return (
       <>
-        <Overlay isVisible>
+        <Overlay
+          onClose={() => {
+            resetDialogForm()
+          }}
+        >
           <OverlayToolbar
             title='Sperren'
             onClose={() => {
@@ -137,12 +153,12 @@ const SuspendActions = ({ userId, isSuspended }) => {
           <OverlayBody>
             <Field
               label='Sperrung für'
-              value={intervalAmount}
-              onChange={(e) => {
-                setIntervalAmount(e.currentTarget.value)
+              value={intervalAmount.value}
+              error={intervalAmount.dirty && intervalAmount.error}
+              dirty={intervalAmount.dirty}
+              onChange={(_, value, shouldValidate) => {
+                handleIntervalAmount(value, shouldValidate)
               }}
-              onInc={() => setIntervalAmount(intervalAmount + 1)}
-              onDec={() => setIntervalAmount(intervalAmount - 1)}
             />
             <Dropdown
               label=''
@@ -161,6 +177,7 @@ const SuspendActions = ({ userId, isSuspended }) => {
             ></Field>
             <Button
               primary
+              disabled={intervalAmount.error}
               onClick={() => {
                 suspendUser()
               }}

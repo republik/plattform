@@ -379,7 +379,7 @@ class Grant extends Component {
 
         <Fragment>
           <HR />
-          {!grant.revokedAt && !grant.invalidatedAt && (
+          {!grant.revokedAt && !grant.beginAt && !grant.invalidatedAt && (
             <>
               <div {...styles.button}>
                 <Button primary onClick={this.openHandlerRevoke}>
