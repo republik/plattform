@@ -124,6 +124,7 @@ export const getMetaData = (documentId, meta, tileId) => {
     facebookImage: shareImage || meta.facebookImage,
     twitterImage: shareImage || meta.twitterImage,
     url: getReferenceUrl(meta, tileId),
+    canonical: `${PUBLIC_BASE_URL}${meta.path}`,
   }
 
   return {
