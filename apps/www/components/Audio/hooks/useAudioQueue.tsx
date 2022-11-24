@@ -55,7 +55,7 @@ const useAudioQueue = (): {
     reorderedQueueItems: AudioQueueItem[],
   ) => Promise<FetchResult<ReorderAudioQueueMutationData>>
   isAudioQueueAvailable: boolean
-  checkIfActiveItem: (documentId: string) => AudioQueueItem
+  checkIfHeadOfQueue: (documentId: string) => AudioQueueItem
   checkIfInQueue: (audioItemId: string) => AudioQueueItem
   getAudioQueueItemIndex: (documentId: string) => number
 } => {
@@ -241,7 +241,7 @@ const useAudioQueue = (): {
     })
   }
 
-  function checkIfActiveItem(documentId: string): AudioQueueItem {
+  function checkIfHeadOfQueue(documentId: string): AudioQueueItem {
     if (!hasAccess && localAudioItem?.document?.id === documentId) {
       return localAudioItem
     }
@@ -288,7 +288,7 @@ const useAudioQueue = (): {
       !inNativeApp || // in browser
       (inNativeApp && // in app with non legacy version
         compareVersion(inNativeAppVersion, NEW_AUDIO_API_VERSION) >= 0),
-    checkIfActiveItem,
+    checkIfHeadOfQueue,
     checkIfInQueue,
     getAudioQueueItemIndex,
   }

@@ -71,7 +71,7 @@ const Queue = ({
    */
   const [items, setItems] = useState<AudioQueueItem[]>(inputItems)
   const { toggleAudioPlayer, removeAudioQueueItem } = useAudioContext()
-  const { audioQueueIsLoading, reorderAudioQueue, checkIfActiveItem } =
+  const { audioQueueIsLoading, reorderAudioQueue, checkIfHeadOfQueue } =
     useAudioQueue()
 
   /**
@@ -178,7 +178,7 @@ const Queue = ({
               key={item.id}
               t={t}
               item={item}
-              isActive={!!checkIfActiveItem(item.document.id)}
+              isActive={!!checkIfHeadOfQueue(item.document.id)}
               onClick={handleClick}
               onRemove={handleRemove}
               onDownload={handleDownload}

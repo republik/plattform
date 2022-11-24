@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 import { css } from 'glamor'
 import { mUp, tUp } from './mediaQueries'
 import { useColorContext } from '../Colors/useColorContext'
-import PlayAudio from './PlayAudio'
 
 const TEXT_PADDING = 50
 
@@ -105,7 +104,7 @@ const Text = ({
   maxWidth,
   margin,
   feuilleton,
-  onPlay,
+  audioPlayButton,
 }) => {
   const [colorScheme] = useColorContext()
   const textAlignStyle =
@@ -142,7 +141,9 @@ const Text = ({
         style={{ maxWidth, margin }}
       >
         {children}
-        <PlayAudio onPlay={onPlay} style={{ marginTop: 20 }} />
+        {audioPlayButton && (
+          <div style={{ marginTop: 20 }}>{audioPlayButton}</div>
+        )}
       </div>
     </div>
   )
@@ -166,7 +167,7 @@ Text.propTypes = {
   maxWidth: PropTypes.string,
   margin: PropTypes.string,
   feuilleton: PropTypes.bool,
-  onPlay: PropTypes.func,
+  audioPlayButton: PropTypes.node,
 }
 
 Text.defaultProps = {
