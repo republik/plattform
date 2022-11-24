@@ -15,7 +15,7 @@ if (DEV || process.env.DOTENV) {
 
 const PORT = process.env.PORT || 3005
 
-const { CURTAIN_MESSAGE, PUBLIC_BASE_URL } = process.env
+const { CURTAIN_MESSAGE, PUBLIC_BASE_URL, MASTODON_BASE_URL } = process.env
 
 if (!PUBLIC_BASE_URL) {
   throw new Error(
@@ -28,6 +28,7 @@ const app = next({
   port: PORT,
   hostname: new URL(PUBLIC_BASE_URL).hostname,
 })
+
 const handler = app.getRequestHandler()
 
 app.prepare().then(() => {
@@ -45,11 +46,47 @@ app.prepare().then(() => {
       },
     }),
   )
+
+  // Disable FLoC
+  // @see https://twitter.com/natfriedman/status/1387159870667849731
   server.use((req, res, next) => {
     res.setHeader('Permissions-Policy', 'interest-cohort=()')
     next()
   })
+
   server.use(compression())
+
+  /**
+   * WebFinger
+   * @see https://www.rfc-editor.org/rfc/rfc7033
+   *
+   * in use for Mastodon WebFinger redirect
+   * "Translate `user@domain` mentions to actor profile URIs."
+   * @see https://docs.joinmastodon.org/spec/webfinger/
+   *
+   */
+  if (MASTODON_BASE_URL) {
+    server.use('/.well-known/webfinger', (req, res) => {
+      res.redirect(process.env.MASTODON_BASE_URL + req.originalUrl)
+    })
+  }
+
+  // iOS app universal links setup
+  // - manual mapping needed to set content type json
+  server.use('/.well-known/apple-app-site-association', (req, res) => {
+    res.set('Content-Type', 'application/json')
+    res.sendFile(
+      path.join(
+        __dirname,
+        '../public',
+        '.well-known',
+        'apple-app-site-association',
+      ),
+    )
+  })
+
+  // Other .well-known assets as static files
+  server.use('/.well-known', express.static('public/.well-known'))
 
   if (!DEV) {
     server.enable('trust proxy')
@@ -72,9 +109,6 @@ app.prepare().then(() => {
       '/static/',
       '/manifest',
       '/mitteilung',
-      '/.well-known/apple-app-site-association',
-      '/.well-known/apple-developer-merchantid-domain-association',
-      '/.well-known/assetlinks.json',
     ]
     const ALLOWED_UAS = (process.env.CURTAIN_UA_ALLOW_LIST || '')
       .split(',')
@@ -139,20 +173,7 @@ app.prepare().then(() => {
     return app.render(req, res, '/en', req.query)
   })
 
-  // iOS app universal links setup
-  // - manual mapping needed to set content type json
-  server.use('/.well-known/apple-app-site-association', (req, res) => {
-    res.set('Content-Type', 'application/json')
-    res.sendFile(
-      path.join(
-        __dirname,
-        '../public',
-        '.well-known',
-        'apple-app-site-association',
-      ),
-    )
-  })
-
+  // Catch OPTIONS * requests
   server.options('*', (req, res, next) => {
     if (req.url === '*') {
       return res.sendStatus(400)
@@ -185,7 +206,11 @@ app.prepare().then(() => {
     console.log('ROUTES_WITH_RATE_LIMIT', ROUTES_WITH_RATE_LIMIT)
     server.use(ROUTES_WITH_RATE_LIMIT, rateLimiter)
   }
+
+  // Public static files
+  // Check .well-known assets as static files before PUBLIC_BASE_URL redirect
   server.use(express.static('public'))
+
   server.all('*', (req, res) => {
     return handler(req, res)
   })
