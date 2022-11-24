@@ -2034,19 +2034,19 @@
     },
     {
       "key": "styleguide/CommentActions/report",
-      "value": "Anstössigen Inhalt melden"
+      "value": "Moderation herbeirufen"
     },
     {
       "key": "styleguide/CommentActions/reportWithAmount",
-      "value": "Inhalt ({amount}) gemeldet"
+      "value": "Moderation herbeigerufen ({amount})"
     },
     {
       "key": "styleguide/CommentActions/reported",
-      "value": "Inhalt gemeldet"
+      "value": "Moderation herbeigerufen"
     },
     {
       "key": "styleguide/CommentActions/reportMessage",
-      "value": "Sind Sie sicher, dass dieser Beitrag gegen die Etikette verstösst und Sie dies melden möchten?"
+      "value": "Sind Sie sicher, dass dieser Beitrag gegen die Etikette verstösst und Sie die Moderation herbeirufen möchten?"
     },
     {
       "key": "styleguide/CommentActions/upvote/count/0",
