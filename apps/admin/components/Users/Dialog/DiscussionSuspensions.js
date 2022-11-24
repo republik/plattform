@@ -169,7 +169,7 @@ const SuspendActions = ({ userId, isSuspended }) => {
               }}
             ></Dropdown>
             <Field
-              label='Grund für die Sperrung'
+              label='Grund für die Sperrung (kann für Nutzerin sichtbar sein)'
               value={reason}
               onChange={(e) => {
                 setReason(e.currentTarget.value)
