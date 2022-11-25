@@ -13,7 +13,7 @@ import Link from 'next/link'
 
 import { REPUBLIK_FRONTEND_URL } from '../../server/constants'
 
-import { Section } from '../Display/utils'
+import { Section, displayDate } from '../Display/utils'
 
 const styles = {
   header: css({
@@ -51,9 +51,31 @@ export const GET_PROFILE = gql`
       phoneNumber
       username
       portrait(size: SMALL)
+      activeMembership {
+        type {
+          name
+        }
+        overdue
+        renew
+      }
+      isListed
+      hasPublicProfile
+      memberships {
+        id
+        periods {
+          endDate
+        }
+      }
     }
   }
 `
+
+const getLastPeriod = (periods) =>
+  periods?.reduce((accumulator, currentValue) => {
+    return !accumulator || currentValue.endDate > accumulator.endDate
+      ? currentValue
+      : accumulator
+  }, false)
 
 const Subnav = ({ userId, section }) => (
   <div>
@@ -124,6 +146,14 @@ const ProfileHeader = ({ userId, section }) => {
             error={isInitialLoading && error}
             render={() => {
               const { user } = data
+              const { activeMembership } = user
+              const { memberships } = user
+              const periods = memberships?.map((m) => m.periods).flat()
+              const lastPeriod = getLastPeriod(periods)
+
+              const publicProfile = user.hasPublicProfile
+                ? 'öffentlich'
+                : 'nicht öffentlich'
               const name = [user.firstName, user.lastName]
                 .filter(Boolean)
                 .join(' ')
@@ -146,13 +176,38 @@ const ProfileHeader = ({ userId, section }) => {
                     }`}
                     target='_blank'
                   >
-                    {user.username || 'Profil-Seite'}
+                    {user.username || 'Profil'}
+                    {' ('}
+                    {publicProfile}
+                    {user.isListed && ', auf Community-Seite'})
                   </A>
                 </span>,
               ]
                 .filter(Boolean)
                 .reduce((acc, v) => [...acc, ' | ', v], [])
                 .slice(1)
+
+              const membership = activeMembership ? (
+                <span>
+                  {' | '}
+                  {activeMembership.type?.name}
+                  {!activeMembership.renew && <>{' · '}gekündigt</>}
+                  {!!activeMembership.overdue && !!activeMembership.renew && (
+                    <>{' · '}überfällig</>
+                  )}
+                  {lastPeriod && (
+                    <>
+                      {' · '}bis {displayDate(lastPeriod.endDate)}
+                    </>
+                  )}
+                </span>
+              ) : (
+                lastPeriod && (
+                  <span>
+                    {' | '}ehemalig{' · '}bis {displayDate(lastPeriod.endDate)}
+                  </span>
+                )
+              )
               return (
                 <Section {...styles.header}>
                   <Head>
@@ -169,7 +224,10 @@ const ProfileHeader = ({ userId, section }) => {
                       <img src={user.portrait} {...styles.portrait} />
                     )}
                     <Interaction.H3>{name || user.email}</Interaction.H3>
-                    <div {...styles.byline}>{byline}</div>
+                    <div {...styles.byline}>
+                      {byline}
+                      {membership}
+                    </div>
                   </div>
                   <div style={{ clear: 'both', margin: '10px 0' }}>
                     <Subnav userId={userId} section={section} />

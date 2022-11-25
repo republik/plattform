@@ -2,7 +2,12 @@ import { useState } from 'react'
 import { Query, Mutation } from '@apollo/client/react/components'
 import { gql } from '@apollo/client'
 import { MdDone as SaveIcon } from 'react-icons/md'
-import { Checkbox, Loader, InlineSpinner } from '@project-r/styleguide'
+import {
+  Checkbox,
+  Loader,
+  InlineSpinner,
+  Interaction,
+} from '@project-r/styleguide'
 
 import {
   InteractiveSection,
@@ -127,8 +132,8 @@ const Credentials = ({ userId }) => {
               } else {
                 return (
                   <Section>
-                    <SectionTitle>Rollen verifizieren</SectionTitle>Keine
-                    (nicht-anonymen) Rollen vorhanden
+                    <SectionTitle>Rollen verifizieren</SectionTitle>
+                    Keine (nicht-anonymen) Rollen vorhanden
                   </Section>
                 )
               }

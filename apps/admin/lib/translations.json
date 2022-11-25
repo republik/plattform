@@ -2940,7 +2940,7 @@
     },
     {
       "key": "memberships/MONTHLY_ABO/manage/cancel/link",
-      "value": "Abonnement künden"
+      "value": "Abonnement kündigen"
     },
     {
       "key": "memberships/MONTHLY_ABO/manage/upgrade/link",
@@ -4941,7 +4941,7 @@
     },
     {
       "key": "account/access/Campaigns/noCampaigns",
-      "value": "keine Kampagnen verfügbar"
+      "value": "Keine Kampagnen verfügbar"
     },
     {
       "key": "account/access/Campaigns/campaign/title",
@@ -4961,7 +4961,7 @@
     },
     {
       "key": "account/access/Grants/noGrants",
-      "value": "keine Zugriff erhalten"
+      "value": "Keine Zugriffe erhalten"
     },
     {
       "key": "account/access/Grant/granter/label",
@@ -5034,6 +5034,34 @@
     {
       "key": "account/access/Grant/button/revoke",
       "value": "Zurückziehen"
+    },
+    {
+      "key": "account/access/Grant/button/revoke/confirm/description",
+      "value": "Der Access Grant wird zurückgezogen."
+    },
+    {
+      "key": "account/access/Grant/button/invalidate",
+      "value": "Vorzeitig beenden"
+    },
+    {
+      "key": "account/access/Grant/button/invalidate/confirm/description",
+      "value": "Der Access Grant wird vor Ablauf der Gültigkeit beendet."
+    },
+    {
+      "key": "account/access/Grant/button/invalidate/confirm/description/detail",
+      "value": "Es werden keine Mails an die Nutzerin mehr verschickt (keine Bestätigung über die Beendigung des Access Grants, kein Follow-Up Mail)."
+    },
+    {
+      "key": "account/access/Grant/button/noFollowup",
+      "value": "Follow-Up Mail unterdrücken"
+    },
+    {
+      "key": "account/access/Grant/button/noFollowup/confirm/description",
+      "value": "Das Follow-Up Mail (7 Tage nach Ende des Access Grants) wird unterdrückt."
+    },
+    {
+      "key": "account/access/Grant/button/confirm",
+      "value": "Speichern"
     },
     {
       "key": "account/access/Events/details/hide",
