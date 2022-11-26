@@ -3,14 +3,19 @@ import dayjs from 'dayjs'
 import { encode, decode } from '@orbiting/backend-modules-base64u'
 
 interface CalendarIdentifier {
+  userId?: string
   calendarSlug: string
   key?: string
 }
 
 export function stringify(object: CalendarIdentifier): string {
-  const { calendarSlug, key } = object
+  const { userId, calendarSlug, key } = object
 
-  const id = [`calendarSlug:${calendarSlug}`, key && `key:${key}`]
+  const id = [
+    userId && `userId:${userId}`,
+    `calendarSlug:${calendarSlug}`,
+    key && `key:${key}`,
+  ]
     .filter(Boolean)
     .join('/')
 

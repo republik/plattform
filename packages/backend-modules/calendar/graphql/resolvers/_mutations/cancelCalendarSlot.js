@@ -72,7 +72,7 @@ module.exports = async (_, args, context) => {
   const userCanCancel = false
 
   return {
-    id: stringify({ calendarSlug: calendar.slug, key }),
+    id: stringify({ userId: user.id, calendarSlug: calendar.slug, key }),
     key,
     userCanBook,
     userHasBooked: false,

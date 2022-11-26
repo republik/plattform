@@ -6,7 +6,8 @@ const MAX_SLOTS = 31 * 2 // 2 months-ish
 
 module.exports = {
   id: (calendar, args, context) => {
-    return stringify({ calendarSlug: calendar.slug })
+    const { __user: user } = calendar
+    return stringify({ userId: user.id, calendarSlug: calendar.slug })
   },
   slots: async (calendar, args, context) => {
     const { __user: user, limitSlotsPerKey } = calendar
@@ -47,7 +48,7 @@ module.exports = {
       const userCanCancel = isInFuture && userHasBooked
 
       return {
-        id: stringify({ calendarSlug: calendar.slug, key }),
+        id: stringify({ userId: user.id, calendarSlug: calendar.slug, key }),
         key,
         userCanBook,
         userHasBooked,

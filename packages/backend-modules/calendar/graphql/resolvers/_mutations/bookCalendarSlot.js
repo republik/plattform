@@ -60,7 +60,7 @@ module.exports = async (_, args, context) => {
   })
 
   return {
-    id: stringify({ calendarSlug: calendar.slug, key }),
+    id: stringify({ userId: user.id, calendarSlug: calendar.slug, key }),
     key,
     userCanBook: false,
     userHasBooked: true,
