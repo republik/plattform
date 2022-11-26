@@ -1815,6 +1815,14 @@
       "fr": "{count} secondes"
     },
     {
+      "key": "crowdfunding/status/goal/money/5000000/description",
+      "de": "Lobbywatch kann im Wahljahr 2023 weiter betreiben werden."
+    },
+    {
+      "key": "crowdfunding/status/goal/money/6000000/description",
+      "de": "Ein kleines Polster, um den Betrieb auch nach dem Wahljahr 2023 sicherzustellen."
+    },
+    {
       "key": "faq/before/support/text",
       "de": "Bei allen technischen Problemen helfen wir Ihnen gerne so schnell wie möglich per Mail: <a href=\"mailto:info@lobbywatch.ch\">info@lobbywatch.ch</a>",
       "fr": "Si vous rencontrez des problèmes techniques, nous nous ferons un plaisir de vous aider dans les plus brefs délais par e-mail : <a href=\"mailto:info@lobbywatch.ch\"> info@lobbywatch.ch </a>"
