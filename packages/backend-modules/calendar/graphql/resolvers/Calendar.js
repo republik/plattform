@@ -43,7 +43,7 @@ module.exports = {
         (slot) => slot.key === key && slot.userId !== user.id,
       )
       const userCanBook = isInFuture && !userHasBooked && !someoneHasBooked
-      const userCanCancel = isInFuture && userHasBooked && !someoneHasBooked
+      const userCanCancel = isInFuture && userHasBooked
 
       return {
         id: stringify({ calendarSlug: calendar.slug, key }),
