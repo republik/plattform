@@ -1,3 +1,5 @@
+const dayjs = require('dayjs')
+
 const { Roles } = require('@orbiting/backend-modules-auth')
 
 const { parse, stringify, isKeyValid } = require('../../../lib/utils')
@@ -56,11 +58,23 @@ module.exports = async (_, args, context) => {
     { revokedAt: new Date() },
   )
 
+  const today = dayjs()
+  const date = dayjs(key)
+
+  const isInFuture = !today.isAfter(date)
+
+  const someoneHasBooked = !!userSlots.find(
+    (slot) => slot.key === key && slot.userId !== user.id,
+  )
+  const userCanBook = isInFuture && !someoneHasBooked
+  // const userHasBooked = false
+  const userCanCancel = false
+
   return {
     id: stringify({ calendarSlug: calendar.slug, key }),
     key,
-    userCanBook: true,
+    userCanBook,
     userHasBooked: false,
-    userCanCancel: false,
+    userCanCancel,
   }
 }
