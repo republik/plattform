@@ -58,7 +58,7 @@ module.exports = async (_, args, context) => {
     { revokedAt: new Date() },
   )
 
-  const today = dayjs()
+  const today = dayjs().startOf('day')
   const date = dayjs(key)
 
   const isInFuture = !today.isAfter(date)
