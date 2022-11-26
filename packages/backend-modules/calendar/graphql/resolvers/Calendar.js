@@ -9,7 +9,7 @@ module.exports = {
     return stringify({ calendarSlug: calendar.slug })
   },
   slots: async (calendar, args, context) => {
-    const { __user: user } = calendar
+    const { __user: user, limitSlotsPerKey } = calendar
     const { from, to } = args
     const { loaders } = context
 
@@ -36,13 +36,14 @@ module.exports = {
     return days.map(({ date, key }) => {
       const isInFuture = !today.isAfter(date)
 
+      const isSlotAvailable =
+        userSlots.filter((slot) => slot.key === key && slot.userId !== user.id)
+          .length < limitSlotsPerKey
       const userHasBooked = !!userSlots.find(
         (slot) => slot.key === key && slot.userId === user.id,
       )
-      const someoneHasBooked = !!userSlots.find(
-        (slot) => slot.key === key && slot.userId !== user.id,
-      )
-      const userCanBook = isInFuture && !userHasBooked && !someoneHasBooked
+
+      const userCanBook = isInFuture && isSlotAvailable && !userHasBooked
       const userCanCancel = isInFuture && userHasBooked
 
       return {

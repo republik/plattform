@@ -46,11 +46,11 @@ module.exports = async (_, args, context) => {
     throw new Error(t('api/calendar/slot/error/userBookedAlready'))
   }
 
-  const someoneHasBooked = !!userSlots.find(
-    (slot) => slot.key === key && slot.userId !== user.id,
-  )
-  if (someoneHasBooked) {
-    throw new Error(t('api/calendar/slot/error/someoneBookAlready'))
+  const isSlotAvailable =
+    userSlots.filter((slot) => slot.key === key && slot.userId !== user.id)
+      .length < calendar.limitSlotsPerKey
+  if (!isSlotAvailable) {
+    throw new Error(t('api/calendar/slot/error/slotIsNotAvailable'))
   }
 
   await pgdb.public.calendarSlots.insertAndGet({

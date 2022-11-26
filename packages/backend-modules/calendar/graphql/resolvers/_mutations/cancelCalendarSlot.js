@@ -63,10 +63,11 @@ module.exports = async (_, args, context) => {
 
   const isInFuture = !today.isAfter(date)
 
-  const someoneHasBooked = !!userSlots.find(
-    (slot) => slot.key === key && slot.userId !== user.id,
-  )
-  const userCanBook = isInFuture && !someoneHasBooked
+  const isSlotAvailable =
+    userSlots.filter((slot) => slot.key === key && slot.userId !== user.id)
+      .length < calendar.limitSlotsPerKey
+
+  const userCanBook = isInFuture && isSlotAvailable
   // const userHasBooked = false
   const userCanCancel = false
 
