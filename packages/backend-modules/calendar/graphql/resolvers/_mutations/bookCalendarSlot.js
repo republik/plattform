@@ -1,4 +1,4 @@
-const { Roles } = require('@orbiting/backend-modules-auth')
+const { Roles, transformUser } = require('@orbiting/backend-modules-auth')
 
 const { parse, stringify, isKeyValid } = require('../../../lib/utils')
 
@@ -53,11 +53,23 @@ module.exports = async (_, args, context) => {
     throw new Error(t('api/calendar/slot/error/slotIsNotAvailable'))
   }
 
-  await pgdb.public.calendarSlots.insertAndGet({
+  await pgdb.public.calendarSlots.insert({
     calendarSlug,
     userId: user.id,
     key,
   })
+
+  const slots = await pgdb.public.calendarSlots.find({
+    calendarSlug,
+    key,
+    revokedAt: null,
+  })
+
+  const users = slots.length
+    ? await pgdb.public.users
+        .find({ id: slots.map((slot) => slot.userId) })
+        .then((users) => users.map(transformUser))
+    : []
 
   return {
     id: stringify({ userId: user.id, calendarSlug: calendar.slug, key }),
@@ -65,5 +77,6 @@ module.exports = async (_, args, context) => {
     userCanBook: false,
     userHasBooked: true,
     userCanCancel: true,
+    users,
   }
 }

@@ -1,6 +1,6 @@
 const dayjs = require('dayjs')
 
-const { Roles } = require('@orbiting/backend-modules-auth')
+const { Roles, transformUser } = require('@orbiting/backend-modules-auth')
 
 const { parse, stringify, isKeyValid } = require('../../../lib/utils')
 
@@ -71,11 +71,26 @@ module.exports = async (_, args, context) => {
   // const userHasBooked = false
   const userCanCancel = false
 
+  const slots = await pgdb.public.calendarSlots.find({
+    calendarSlug,
+    key,
+    revokedAt: null,
+  })
+
+  const users = slots.length
+    ? await pgdb.public.users
+        .find({ id: slots.map((slot) => slot.userId) })
+        .then((users) => users.map(transformUser))
+    : []
+
+  // @TODO: Cancel and restore
+
   return {
     id: stringify({ userId: user.id, calendarSlug: calendar.slug, key }),
     key,
     userCanBook,
     userHasBooked: false,
     userCanCancel,
+    users,
   }
 }

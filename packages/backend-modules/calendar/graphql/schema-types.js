@@ -15,6 +15,7 @@ type CalendarSlot {
   userCanBook: Boolean!
   userHasBooked: Boolean!
   userCanCancel: Boolean!
+  users: [User!]!
 }
 
 extend type User {
