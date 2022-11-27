@@ -2341,7 +2341,7 @@
       "value": "Kalendereintrag bereits vorhanden"
     },
     {
-      "key": "api/calendar/slot/error/someoneBookAlready",
+      "key": "api/calendar/slot/error/slotIsNotAvailable",
       "value": "Kalendereintrag nicht mehr verfügbar"
     },
     {
