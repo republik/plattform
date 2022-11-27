@@ -155,11 +155,8 @@ export const FlyerMeta = (props) => {
   urlToRender.searchParams.set('extract', extract)
 
   const shareImageUrl = new URL('/render', ASSETS_SERVER_BASE_URL)
-  shareImageUrl.searchParams.set('viewport', [1200, 628].join('x'))
+  shareImageUrl.searchParams.set('viewport', [600, 314].join('x'))
   shareImageUrl.searchParams.set('zoomFactor', 2)
-
-  shareImageUrl.searchParams.set('width', 600)
-  shareImageUrl.searchParams.set('height', 314)
   shareImageUrl.searchParams.set(
     'updatedAt',
     [documentId, meta?.format?.id, extract].filter(Boolean).join('-'),
