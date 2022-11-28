@@ -12,6 +12,7 @@ import {
   useMediaQuery,
 } from '@project-r/styleguide'
 import { css } from 'glamor'
+import { useTranslation } from '../../lib/withT'
 
 const styles = {
   outer: css({
@@ -22,18 +23,6 @@ const styles = {
     justifyContent: 'center',
     alignItems: 'initial',
     overflow: 'hidden',
-    /*'&:before': {
-      content: ' ',
-      display: 'block',
-      position: 'absolute',
-      zIndex: 1,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      height: 80,
-      background:
-        'linear-gradient(0deg, rgba(174, 195, 254,1) 0%, rgba(174, 195, 254,0.8) 30%, rgba(174, 195, 254,0)100%)',
-    },*/
   }),
   inner: css({
     position: 'relative',
@@ -68,13 +57,14 @@ const styles = {
 
 const Branding = () => {
   const isDesktop = useMediaQuery(mediaQueries.mUp)
+  const { t } = useTranslation()
   return (
     <div {...styles.branding}>
       <div {...styles.brandingInner}>
         <p {...styles.brandingText}>
-          Mehr Kurzes:
+          {t('article/flyer/tile/branding')}
           <br />
-          www.republik.ch/journal
+          republik.ch/journal
         </p>
         <Logo fill={colors.dark.text} height={isDesktop ? 36 : 30} />
       </div>

@@ -22,6 +22,7 @@ const ShareButton = ({ meta, tileId, inNativeApp }) => {
         label={t('article/actionbar/share')}
         labelShort={t('article/actionbar/share')}
         Icon={ShareIcon}
+        href={url}
         onClick={(e) => {
           e.preventDefault()
           trackEvent(['ActionBar', 'shareJournalLink', url])

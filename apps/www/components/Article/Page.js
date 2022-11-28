@@ -272,11 +272,7 @@ const ArticlePage = ({
 
   useEffect(() => {
     if (share) {
-      const node = document.getElementById(share)
-
-      if (node) {
-        node.scrollIntoView()
-      }
+      document.getElementById(share)?.scrollIntoView()
     }
   }, [share])
 
@@ -552,7 +548,7 @@ const ArticlePage = ({
   const colorSchemeKey = darkMode ? 'dark' : 'auto'
 
   const delegateMetaDown =
-    !!isFlyer || // -> delegate Meta downwards
+    !!isFlyer ||
     !!meta?.delegateDown ||
     !!(meta?.ownDiscussion?.id && router.query.focus) ||
     !!(meta?.ownDiscussion?.isBoard && router.query.parent)
