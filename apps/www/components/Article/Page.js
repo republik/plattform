@@ -71,7 +71,7 @@ import HrefLink from '../Link/Href'
 import { withMarkAsReadMutation } from '../Notifications/enhancers'
 import { cleanAsPath } from '../../lib/utils/link'
 import { getMetaData, runMetaFromQuery } from './metadata'
-import FlyerFooter, { FlyerNav } from './Flyer'
+import FlyerFooter, { FlyerMeta, FlyerNav } from './Flyer'
 import ShareImageFlyer from './ShareImageFlyer'
 import { getFlyerTileActionBar } from '../ActionBar/FlyerTileActionBar'
 
@@ -258,12 +258,12 @@ const ArticlePage = ({
   const galleryRef = useRef()
 
   const router = useRouter()
-  const { extract, showAll } = router.query
+  const { share, extract, journalShareId, showAll } = router.query
 
   const { me, meLoading, hasAccess, hasActiveMembership, isEditor } = useMe()
 
   const pathArray = cleanAsPath(router.asPath).split('/').filter(Boolean)
-  const { path, journalShareId } = getPathProps(pathArray)
+  const { path } = getPathProps(pathArray)
 
   const {
     data: articleData,
@@ -288,14 +288,14 @@ const ArticlePage = ({
   const routerQuery = router.query
 
   useEffect(() => {
-    if (journalShareId) {
-      const node = document.getElementById(journalShareId)
+    if (share && share !== 'share') {
+      const node = document.getElementById(share)
 
       if (node) {
         node.scrollIntoView()
       }
     }
-  }, [journalShareId])
+  }, [share])
 
   // Refetch when cached article is not issued for current user
   // - SSG always provides issuedForUserId: null
@@ -512,16 +512,23 @@ const ArticlePage = ({
               />
             )
           }
-          return extract === 'share' && !!journalShareId ? (
-            <ShareImageFlyer
-              tileId={journalShareId}
-              value={article.content.children}
-              schema={schema}
-              showAll={showAll}
-            />
-          ) : extract === 'share' ? (
-            <ShareImage meta={meta} />
-          ) : (
+
+          if (extract === 'share') {
+            return <ShareImage meta={meta} />
+          }
+
+          if (isFlyer) {
+            return (
+              <ShareImageFlyer
+                tileId={extract}
+                value={article.content.children}
+                schema={schema}
+                showAll={showAll}
+              />
+            )
+          }
+
+          return (
             <Extract
               ranges={extract}
               schema={schema}
@@ -562,6 +569,7 @@ const ArticlePage = ({
   const colorSchemeKey = darkMode ? 'dark' : 'auto'
 
   const delegateMetaDown =
+    !!isFlyer || // -> delegate Meta downwards
     !!meta?.delegateDown ||
     !!(meta?.ownDiscussion?.id && router.query.focus) ||
     !!(meta?.ownDiscussion?.isBoard && router.query.parent)
@@ -696,6 +704,11 @@ const ArticlePage = ({
                     />
                   </RenderContextProvider>
                   <FlyerFooter>{actionBarFlyer}</FlyerFooter>
+                  <FlyerMeta
+                    documentId={documentId}
+                    meta={meta}
+                    extract={router.query.share}
+                  />
                 </Flyer.Layout>
               ) : (
                 <ArticleGallery

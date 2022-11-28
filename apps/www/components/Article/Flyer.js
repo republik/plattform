@@ -9,7 +9,10 @@ import {
   FlyerTile,
 } from '@project-r/styleguide'
 import Link from 'next/link'
+
 import { useMe } from '../../lib/context/MeContext'
+
+import Meta from '../Frame/Meta'
 
 const FORMAT_REPO_ID = 'republik/format-journal'
 
@@ -134,6 +137,41 @@ const FlyerFooter = ({ children }) => {
     <FlyerTile {...styles.footer} innerStyle={{ paddingTop: 0 }}>
       {children}
     </FlyerTile>
+  )
+}
+
+import { PUBLIC_BASE_URL, ASSETS_SERVER_BASE_URL } from '../../lib/constants'
+
+export const FlyerMeta = (props) => {
+  const { extract, meta, documentId } = props
+
+  // Render as usual
+  if (!extract && meta) {
+    return <Meta data={meta} />
+  }
+
+  // Render Anna's Best
+  const urlToRender = new URL(meta.path, PUBLIC_BASE_URL)
+  urlToRender.searchParams.set('extract', extract)
+
+  const shareImageUrl = new URL('/render', ASSETS_SERVER_BASE_URL)
+  shareImageUrl.searchParams.set('viewport', [600, 314].join('x'))
+  shareImageUrl.searchParams.set('zoomFactor', 2)
+  shareImageUrl.searchParams.set(
+    'updatedAt',
+    [documentId, meta?.format?.id, extract].filter(Boolean).join('-'),
+  )
+  shareImageUrl.searchParams.set('url', urlToRender)
+
+  return (
+    <Meta
+      data={{
+        ...meta,
+        image: shareImageUrl.toString(),
+        twitterImage: shareImageUrl.toString(),
+        facebookImage: shareImageUrl.toString(),
+      }}
+    />
   )
 }
 

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { IconButton, ShareIcon, ImageIcon, slug } from '@project-r/styleguide'
-import { ASSETS_SERVER_BASE_URL } from '../../lib/constants'
+import { PUBLIC_BASE_URL, ASSETS_SERVER_BASE_URL } from '../../lib/constants'
 import { trackEvent } from '../../lib/matomo'
 import ShareOverlay from './ShareOverlay'
 import { useTranslation } from '../../lib/withT'
@@ -14,8 +14,11 @@ import {
 
 const ShareButton = ({ meta, tileId, inNativeApp }) => {
   const [overlay, showOverlay] = useState(false)
-  const url = getReferenceUrl(meta, tileId)
   const { t } = useTranslation()
+
+  const urlToShare = new URL(meta.path, PUBLIC_BASE_URL)
+  urlToShare.searchParams.set('share', tileId)
+  const url = urlToShare.toString()
 
   return (
     <>
