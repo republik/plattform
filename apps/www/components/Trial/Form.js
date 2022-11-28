@@ -76,6 +76,7 @@ const Form = (props) => {
     initialEmail,
     campaign,
     isInSeriesNav,
+    black,
   } = props
   const { query } = router
 
@@ -256,13 +257,19 @@ const Form = (props) => {
                 </Link>
               </Interaction.P>
 
-              <Button primary onClick={close} style={{ marginRight: 20 }}>
+              <Button
+                primary
+                black={black}
+                onClick={close}
+                style={{ marginRight: 20 }}
+              >
                 {t('Trial/Form/withAccess/close/label')}
               </Button>
             </>
           ) : (
             <>
               <Button
+                black={black}
                 onClick={() =>
                   router.push({
                     pathname: '/einrichten',
@@ -273,6 +280,7 @@ const Form = (props) => {
                 {t('Trial/Form/withAccess/setup/label')}
               </Button>
               <Button
+                black={black}
                 primary
                 style={{ marginRight: 20 }}
                 onClick={() => router.push('/')}
@@ -309,6 +317,7 @@ const Form = (props) => {
                 error={email.dirty && email.error}
                 dirty={email.dirty}
                 disabled={isSigningIn}
+                black={black}
                 icon={
                   minimal &&
                   (loading ? (
@@ -319,7 +328,10 @@ const Form = (props) => {
                         styles.circleButton,
                         !!email.value &&
                           !email.error &&
-                          colorScheme.set('backgroundColor', 'primary'),
+                          colorScheme.set(
+                            'backgroundColor',
+                            black ? 'text' : 'primary',
+                          ),
                       )}
                     >
                       <ArrowForwardIcon
@@ -339,6 +351,7 @@ const Form = (props) => {
                 style={{ marginTop: (narrow && 10) || (minimal && '0') || 20 }}
               >
                 <Consents
+                  black={black}
                   error={showErrors && consentErrors}
                   required={REQUIRED_CONSENTS}
                   accepted={consents}

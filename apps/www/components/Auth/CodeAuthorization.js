@@ -52,6 +52,7 @@ const CodeAuthorization = ({
   authorizeSession,
   me,
   onSuccess,
+  black,
 }) => {
   const [code, setCode] = useState('')
   const [payload, setPayload] = useState('')
