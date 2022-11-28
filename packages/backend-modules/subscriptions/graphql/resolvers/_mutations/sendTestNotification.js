@@ -1,4 +1,4 @@
-const { ensureUser } = require('@orbiting/backend-modules-auth')
+const { Roles } = require('@orbiting/backend-modules-auth')
 
 module.exports = async (_, args, context) => {
   const {
@@ -11,7 +11,9 @@ module.exports = async (_, args, context) => {
   const { commentId, repoId, simulateAllPossibleSubscriptions } = args
   const { user: me, loaders, t } = context
 
-  ensureUser(me)
+  if (!Roles.userIsInRoles(me, ['admin', 'supporter'])) {
+    return false
+  }
 
   if (!commentId && !repoId) {
     throw new Error('commentId and/or repoId must be specified')

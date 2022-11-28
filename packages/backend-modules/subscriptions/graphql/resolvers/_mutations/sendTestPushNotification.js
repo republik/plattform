@@ -1,4 +1,4 @@
-const { ensureUser } = require('@orbiting/backend-modules-auth')
+const { Roles } = require('@orbiting/backend-modules-auth')
 const pushNotifications = require('@orbiting/backend-modules-push-notifications/lib/app')
 
 const { FRONTEND_BASE_URL } = process.env
@@ -6,7 +6,9 @@ const { FRONTEND_BASE_URL } = process.env
 module.exports = async (_, args, context) => {
   const { user: me } = context
 
-  ensureUser(me)
+  if (!Roles.userIsInRoles(me, ['admin', 'supporter'])) {
+    return false
+  }
 
   await pushNotifications.publish(
     [me.id],
