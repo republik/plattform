@@ -3209,10 +3209,6 @@
       "value": "Herunterladen"
     },
     {
-      "key": "article/actionbar/download/processing",
-      "value": "wird heruntergeladen..."
-    },
-    {
       "key": "article/actionbar/audio",
       "value": "Beitrag anhören"
     },

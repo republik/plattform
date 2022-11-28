@@ -61,9 +61,6 @@ const ShareButton = ({ meta, tileId, inNativeApp }) => {
 
 const DownloadButton = ({ documentId, meta, tileId }) => {
   const { t } = useTranslation()
-  const DEFAULT_LABEL = t('article/actionbar/download')
-  const [downloadLabel, setDownloadLabel] = useState(DEFAULT_LABEL)
-
   const { screenshotUrl, shareImageUrl } = getShareImageUrls(
     documentId,
     meta,
@@ -73,7 +70,6 @@ const DownloadButton = ({ documentId, meta, tileId }) => {
 
   const downloadScreenshot = async (e) => {
     e.preventDefault()
-    setDownloadLabel(t('article/actionbar/download/processing'))
     trackEvent(['ActionBar', 'downloadJournalBlock', screenshotUrl])
 
     const anchorElement = document.createElement('a')
@@ -91,8 +87,8 @@ const DownloadButton = ({ documentId, meta, tileId }) => {
   return (
     <IconButton
       href={shareImageUrl}
-      label={downloadLabel}
-      labelShort={downloadLabel}
+      label={t('article/actionbar/download')}
+      labelShort={t('article/actionbar/download')}
       Icon={ImageIcon}
       onClick={downloadScreenshot}
     />
