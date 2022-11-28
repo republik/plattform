@@ -17,7 +17,7 @@ export const Layout = ({ children, attributes = {} }) => {
   )
 }
 
-export const H1 = ({ children, attributes, ...props }) => {
+export const H1 = ({ children, attributes = {}, ...props }) => {
   const [colorScheme] = useColorContext()
 
   return (
@@ -43,7 +43,7 @@ export const H1 = ({ children, attributes, ...props }) => {
   )
 }
 
-export const H2 = ({ children, attributes, ...props }) => {
+export const H2 = ({ children, attributes = {}, ...props }) => {
   const [colorScheme] = useColorContext()
   return (
     <h2
@@ -70,7 +70,7 @@ export const H2 = ({ children, attributes, ...props }) => {
   )
 }
 
-export const H3 = ({ children, attributes, ...props }) => {
+export const H3 = ({ children, attributes = {}, ...props }) => {
   const [colorScheme] = useColorContext()
   return (
     <h3
@@ -128,7 +128,7 @@ export const P: React.FC<{ attributes?: any; [x: string]: unknown }> = ({
   )
 }
 
-export const MetaP = ({ children, attributes, ...props }) => {
+export const MetaP = ({ children, attributes = {}, ...props }) => {
   const [colorScheme] = useColorContext()
   return (
     <p
@@ -152,7 +152,7 @@ export const MetaP = ({ children, attributes, ...props }) => {
   )
 }
 
-export const OpeningP = ({ children, attributes, ...props }) => {
+export const OpeningP = ({ children, attributes = {}, ...props }) => {
   const [colorScheme] = useColorContext()
   return (
     <p
@@ -204,19 +204,19 @@ export const Small: React.FC<{ attributes?: any; [x: string]: unknown }> = ({
   )
 }
 
-export const Emphasis = ({ children, attributes, ...props }) => (
+export const Emphasis = ({ children, attributes = {}, ...props }) => (
   <strong {...props} {...attributes}>
     {children}
   </strong>
 )
 
-export const Cursive = ({ children, attributes, ...props }) => (
+export const Cursive = ({ children, attributes = {}, ...props }) => (
   <em {...props} {...attributes}>
     {children}
   </em>
 )
 
-export const StrikeThrough = ({ children, attributes, ...props }) => (
+export const StrikeThrough = ({ children, attributes = {}, ...props }) => (
   <span
     {...attributes}
     {...props}
@@ -320,7 +320,7 @@ export const NoRefA = ({ children, attributes, ...props }) => (
 
 // Outside the editor we use a A with forwardRef for Next.js Link compat
 const A = forwardRef<HTMLAnchorElement, any>(
-  ({ children, attributes, ...props }, ref) => (
+  ({ children, attributes = {}, ...props }, ref) => (
     <a {...attributes} {...props} {...linkStyle} ref={ref}>
       {children}
     </a>
