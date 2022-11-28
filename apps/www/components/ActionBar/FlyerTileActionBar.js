@@ -75,23 +75,22 @@ const DownloadButton = ({ documentId, meta, tileId }) => {
     e.preventDefault()
     setDownloadLabel(t('article/actionbar/download/processing'))
     trackEvent(['ActionBar', 'downloadJournalBlock', screenshotUrl])
-    const image = await fetch(shareImageUrl)
-    const imageBlog = await image.blob()
-    const imageURL = URL.createObjectURL(imageBlog)
 
-    const link = document.createElement('a')
-    link.href = imageURL
-    link.download = slug(meta.title)
-    document.body.appendChild(link)
-    link.click()
-    document.body.removeChild(link)
-    setTimeout(() => {
-      setDownloadLabel(DEFAULT_LABEL)
-    }, 2000)
+    const anchorElement = document.createElement('a')
+    anchorElement.style.display = 'none'
+    anchorElement.href = shareImageUrl + '&download=1'
+    anchorElement.download = ''
+    anchorElement.target = '_blank'
+    anchorElement.textContent = 'Download'
+    document.body.appendChild(anchorElement)
+    anchorElement.click()
+    // Cleanup
+    document.body.removeChild(anchorElement)
   }
 
   return (
     <IconButton
+      href={shareImageUrl}
       label={downloadLabel}
       labelShort={downloadLabel}
       Icon={ImageIcon}
