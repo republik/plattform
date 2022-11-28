@@ -1,16 +1,12 @@
 import { useState } from 'react'
 import { IconButton, ShareIcon, ImageIcon, slug } from '@project-r/styleguide'
-import { PUBLIC_BASE_URL, ASSETS_SERVER_BASE_URL } from '../../lib/constants'
+import { PUBLIC_BASE_URL } from '../../lib/constants'
 import { trackEvent } from '../../lib/matomo'
 import ShareOverlay from './ShareOverlay'
 import { useTranslation } from '../../lib/withT'
 import { css } from 'glamor'
 import { postMessage } from '../../lib/withInNativeApp'
-import {
-  getCacheKey,
-  getReferenceUrl,
-  getShareImageUrl,
-} from '../Article/metadata'
+import { getShareImageUrls } from '../Article/Flyer'
 
 const ShareButton = ({ meta, tileId, inNativeApp }) => {
   const [overlay, showOverlay] = useState(false)
@@ -67,18 +63,18 @@ const DownloadButton = ({ documentId, meta, tileId }) => {
   const DEFAULT_LABEL = t('article/actionbar/download')
   const [downloadLabel, setDownloadLabel] = useState(DEFAULT_LABEL)
 
-  const url = getReferenceUrl(meta, tileId)
-  const screenshotUrl = `${getShareImageUrl(meta, tileId)}&showAll=true`
-  const cacheKey = getCacheKey(documentId, meta)
-  const screenshotImage = `${ASSETS_SERVER_BASE_URL}/render?viewport=450x1&zoomFactor=2&updatedAt=${encodeURIComponent(
-    cacheKey,
-  )}&url=${encodeURIComponent(screenshotUrl)}`
+  const { screenshotUrl, shareImageUrl } = getShareImageUrls(
+    documentId,
+    meta,
+    tileId,
+    true,
+  )
 
   const downloadScreenshot = async (e) => {
     e.preventDefault()
     setDownloadLabel(t('article/actionbar/download/processing'))
-    trackEvent(['ActionBar', 'downloadJournalBlock', url])
-    const image = await fetch(screenshotImage)
+    trackEvent(['ActionBar', 'downloadJournalBlock', screenshotUrl])
+    const image = await fetch(shareImageUrl)
     const imageBlog = await image.blob()
     const imageURL = URL.createObjectURL(imageBlog)
 

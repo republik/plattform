@@ -74,7 +74,7 @@ const Branding = () => {
         <p {...styles.brandingText}>
           Mehr Kurzes:
           <br />
-          www.republik/journal
+          www.republik.ch/journal
         </p>
         <Logo fill={colors.dark.text} height={isDesktop ? 36 : 30} />
       </div>

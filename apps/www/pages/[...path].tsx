@@ -1,4 +1,4 @@
-import Article, { getPathProps } from '../components/Article/Page'
+import Article from '../components/Article/Page'
 import { GetStaticPaths } from 'next'
 import { ParsedUrlQuery } from 'querystring'
 import { gql } from '@apollo/client'
@@ -27,7 +27,7 @@ const REVALIDATE_SECONDS = 10
 
 export const getStaticProps = createGetStaticProps<Props, Params>(
   async (client, { params }) => {
-    const { path } = getPathProps(params.path)
+    const path = '/' + params.path.join('/')
 
     const {
       data: { article },

@@ -13,7 +13,6 @@ const Meta = ({ data, t }) => {
     title,
     description,
     image,
-    canonical,
 
     // SEO props
     seoTitle,
@@ -66,7 +65,7 @@ const Meta = ({ data, t }) => {
 
       <meta property='og:type' content='website' />
       {url && <meta property='og:url' content={url} />}
-      {(canonical || url) && <link rel='canonical' href={canonical || url} />}
+      {url && <link rel='canonical' href={url} />}
       <meta property='og:title' content={facebookTitle || title} />
       <meta
         property='og:description'

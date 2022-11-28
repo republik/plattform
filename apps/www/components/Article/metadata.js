@@ -88,43 +88,24 @@ function getCitationMetaData(meta) {
   }
 }
 
-export const getReferenceUrl = (meta, tileId) => {
-  const tileQuery = tileId ? `/${tileId}` : ''
-  return `${PUBLIC_BASE_URL}${meta.path}${tileQuery}`
-}
-
-export const getShareImageUrl = (meta, tileId) => {
-  if (!meta.shareText && !tileId) return
-  const url = getReferenceUrl(meta, tileId)
-  return `${url}?extract=share`
-}
-
 export const getCacheKey = (documentId, meta) =>
   `${documentId}${meta.format ? `-${meta.format.id}` : ''}`
 
-const getShareImage = (documentId, meta, tileId) => {
-  const imageUrl = getShareImageUrl(meta, tileId)
-  if (!imageUrl) return
+export const getMetaData = (documentId, meta) => {
   const cacheKey = getCacheKey(documentId, meta)
-  const dimensions = tileId
-    ? `viewport=${Math.ceil(SHARE_IMAGE_WIDTH / 2)}x${Math.ceil(
-        SHARE_IMAGE_HEIGHT / 2,
-      )}&zoomFactor=2`
-    : `width=${SHARE_IMAGE_WIDTH}&height=${SHARE_IMAGE_HEIGHT}`
-  return `${ASSETS_SERVER_BASE_URL}/render?${dimensions}&updatedAt=${encodeURIComponent(
-    cacheKey,
-  )}&url=${encodeURIComponent(imageUrl)}`
-}
-
-export const getMetaData = (documentId, meta, tileId) => {
-  const shareImage = getShareImage(documentId, meta, tileId)
+  const shareImage =
+    meta.shareText &&
+    `${ASSETS_SERVER_BASE_URL}/render?width=${SHARE_IMAGE_WIDTH}&height=${SHARE_IMAGE_HEIGHT}&updatedAt=${encodeURIComponent(
+      cacheKey,
+    )}&url=${encodeURIComponent(
+      `${PUBLIC_BASE_URL}${meta.path}?extract=share`,
+    )}`
 
   const metaWithUrls = {
     ...meta,
     facebookImage: shareImage || meta.facebookImage,
     twitterImage: shareImage || meta.twitterImage,
-    url: getReferenceUrl(meta, tileId),
-    canonical: `${PUBLIC_BASE_URL}${meta.path}`,
+    url: `${PUBLIC_BASE_URL}${meta.path}`,
   }
 
   return {

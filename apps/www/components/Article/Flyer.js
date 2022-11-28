@@ -12,7 +12,10 @@ import Link from 'next/link'
 
 import { useMe } from '../../lib/context/MeContext'
 
+import { getCacheKey } from './metadata'
 import Meta from '../Frame/Meta'
+
+import { PUBLIC_BASE_URL, ASSETS_SERVER_BASE_URL } from '../../lib/constants'
 
 const FORMAT_REPO_ID = 'republik/format-journal'
 
@@ -140,7 +143,27 @@ const FlyerFooter = ({ children }) => {
   )
 }
 
-import { PUBLIC_BASE_URL, ASSETS_SERVER_BASE_URL } from '../../lib/constants'
+export const getShareImageUrls = (documentId, meta, tileId, showAll) => {
+  const screenshotUrl = new URL(meta.path, PUBLIC_BASE_URL)
+  screenshotUrl.searchParams.set('extract', tileId)
+
+  if (showAll) {
+    screenshotUrl.searchParams.set('showAll', 'true')
+  }
+
+  const dimensions = showAll ? [450, 1] : [600, 314]
+
+  const shareImageUrl = new URL('/render', ASSETS_SERVER_BASE_URL)
+  shareImageUrl.searchParams.set('viewport', dimensions.join('x'))
+  shareImageUrl.searchParams.set('zoomFactor', '2')
+  shareImageUrl.searchParams.set('updatedAt', getCacheKey(documentId, meta))
+  shareImageUrl.searchParams.set('url', screenshotUrl.toString())
+
+  return {
+    screenshotUrl: screenshotUrl.toString(),
+    shareImageUrl: shareImageUrl.toString(),
+  }
+}
 
 export const FlyerMeta = (props) => {
   const { extract, meta, documentId } = props
@@ -150,18 +173,7 @@ export const FlyerMeta = (props) => {
     return <Meta data={meta} />
   }
 
-  // Render Anna's Best
-  const urlToRender = new URL(meta.path, PUBLIC_BASE_URL)
-  urlToRender.searchParams.set('extract', extract)
-
-  const shareImageUrl = new URL('/render', ASSETS_SERVER_BASE_URL)
-  shareImageUrl.searchParams.set('viewport', [600, 314].join('x'))
-  shareImageUrl.searchParams.set('zoomFactor', 2)
-  shareImageUrl.searchParams.set(
-    'updatedAt',
-    [documentId, meta?.format?.id, extract].filter(Boolean).join('-'),
-  )
-  shareImageUrl.searchParams.set('url', urlToRender)
+  const { shareImageUrl } = getShareImageUrls(documentId, meta, extract)
 
   return (
     <Meta

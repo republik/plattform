@@ -165,22 +165,6 @@ const QuestionnaireSubmissions = dynamic(
   },
 )
 
-// regular path:
-// /2022/10/14/journal
-// share journal path:
-// /2022/10/14/journal/232
-const isJournalSharePath = (path) => path.slice(-2, -1)?.[0] === 'journal'
-
-const stringifyPath = (path) => '/' + path.join('/')
-
-export const getPathProps = (path) => {
-  if (!isJournalSharePath(path)) return { path: stringifyPath(path) }
-  return {
-    path: stringifyPath(path.slice(0, -1)),
-    journalShareId: path.slice(-1)?.[0],
-  }
-}
-
 const schemaCreators = {
   editorial: createArticleSchema,
   meta: createArticleSchema,
@@ -258,12 +242,11 @@ const ArticlePage = ({
   const galleryRef = useRef()
 
   const router = useRouter()
-  const { share, extract, journalShareId, showAll } = router.query
+  const { share, extract, showAll } = router.query
 
   const { me, meLoading, hasAccess, hasActiveMembership, isEditor } = useMe()
 
-  const pathArray = cleanAsPath(router.asPath).split('/').filter(Boolean)
-  const { path } = getPathProps(pathArray)
+  const cleanedPath = cleanAsPath(router.asPath)
 
   const {
     data: articleData,
@@ -272,7 +255,7 @@ const ArticlePage = ({
     refetch: articleRefetch,
   } = useQuery(getDocument, {
     variables: {
-      path,
+      path: cleanedPath,
     },
     skip: clientRedirection,
   })
@@ -288,7 +271,7 @@ const ArticlePage = ({
   const routerQuery = router.query
 
   useEffect(() => {
-    if (share && share !== 'share') {
+    if (share) {
       const node = document.getElementById(share)
 
       if (node) {
@@ -350,12 +333,12 @@ const ArticlePage = ({
     () =>
       articleMeta &&
       articleContent && {
-        ...getMetaData(documentId, articleMeta, journalShareId),
+        ...getMetaData(documentId, articleMeta),
         ...(metaJSONStringFromQuery
           ? JSON.parse(metaJSONStringFromQuery)
           : undefined),
       },
-    [articleMeta, articleContent, metaJSONStringFromQuery, journalShareId],
+    [articleMeta, articleContent, metaJSONStringFromQuery],
   )
 
   const hasMeta = !!meta
@@ -707,7 +690,7 @@ const ArticlePage = ({
                   <FlyerMeta
                     documentId={documentId}
                     meta={meta}
-                    extract={router.query.share}
+                    extract={share}
                   />
                 </Flyer.Layout>
               ) : (
@@ -881,7 +864,7 @@ const ArticlePage = ({
                 />
               )}
               {me && hasActiveMembership && (
-                <ArticleRecommendationsFeed path={path} />
+                <ArticleRecommendationsFeed path={cleanedPath} />
               )}
               {hasActiveMembership &&
                 (isEditorialNewsletter ||
