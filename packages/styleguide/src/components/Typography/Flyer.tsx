@@ -8,7 +8,10 @@ import { useRenderContext } from '../Editor/Render/Context'
 import { pxToRem } from './utils'
 import colors from '../../theme/colors'
 
-export const Layout = ({ children, attributes = {} }) => {
+type BaseProps = { attributes?: any; [x: string]: unknown }
+type Typography = React.FC<BaseProps>
+
+export const Layout: Typography = ({ children, attributes }) => {
   const [colorScheme] = useColorContext()
   return (
     <div {...colorScheme.set('background', 'flyerBg')} {...attributes}>
@@ -17,7 +20,7 @@ export const Layout = ({ children, attributes = {} }) => {
   )
 }
 
-export const H1 = ({ children, attributes = {}, ...props }) => {
+export const H1: Typography = ({ children, attributes, ...props }) => {
   const [colorScheme] = useColorContext()
 
   return (
@@ -43,7 +46,7 @@ export const H1 = ({ children, attributes = {}, ...props }) => {
   )
 }
 
-export const H2 = ({ children, attributes = {}, ...props }) => {
+export const H2: Typography = ({ children, attributes, ...props }) => {
   const [colorScheme] = useColorContext()
   return (
     <h2
@@ -70,7 +73,7 @@ export const H2 = ({ children, attributes = {}, ...props }) => {
   )
 }
 
-export const H3 = ({ children, attributes = {}, ...props }) => {
+export const H3: Typography = ({ children, attributes, ...props }) => {
   const [colorScheme] = useColorContext()
   return (
     <h3
@@ -95,11 +98,7 @@ export const H3 = ({ children, attributes = {}, ...props }) => {
   )
 }
 
-export const P: React.FC<{ attributes?: any; [x: string]: unknown }> = ({
-  children,
-  attributes,
-  ...props
-}) => {
+export const P: Typography = ({ children, attributes, ...props }) => {
   const [colorScheme] = useColorContext()
   return (
     <p
@@ -128,7 +127,7 @@ export const P: React.FC<{ attributes?: any; [x: string]: unknown }> = ({
   )
 }
 
-export const MetaP = ({ children, attributes = {}, ...props }) => {
+export const MetaP: Typography = ({ children, attributes, ...props }) => {
   const [colorScheme] = useColorContext()
   return (
     <p
@@ -152,7 +151,7 @@ export const MetaP = ({ children, attributes = {}, ...props }) => {
   )
 }
 
-export const OpeningP = ({ children, attributes = {}, ...props }) => {
+export const OpeningP: Typography = ({ children, attributes, ...props }) => {
   const [colorScheme] = useColorContext()
   return (
     <p
@@ -176,11 +175,7 @@ export const OpeningP = ({ children, attributes = {}, ...props }) => {
   )
 }
 
-export const Small: React.FC<{ attributes?: any; [x: string]: unknown }> = ({
-  children,
-  attributes,
-  ...props
-}) => {
+export const Small: Typography = ({ children, attributes, ...props }) => {
   const [colorScheme] = useColorContext()
 
   return (
@@ -204,19 +199,23 @@ export const Small: React.FC<{ attributes?: any; [x: string]: unknown }> = ({
   )
 }
 
-export const Emphasis = ({ children, attributes = {}, ...props }) => (
+export const Emphasis: Typography = ({ children, attributes, ...props }) => (
   <strong {...props} {...attributes}>
     {children}
   </strong>
 )
 
-export const Cursive = ({ children, attributes = {}, ...props }) => (
+export const Cursive: Typography = ({ children, attributes, ...props }) => (
   <em {...props} {...attributes}>
     {children}
   </em>
 )
 
-export const StrikeThrough = ({ children, attributes = {}, ...props }) => (
+export const StrikeThrough: Typography = ({
+  children,
+  attributes,
+  ...props
+}) => (
   <span
     {...attributes}
     {...props}
@@ -240,7 +239,7 @@ const ulRule = css({
   },
 })
 
-export const UL = ({ children, attributes = {}, ...props }) => {
+export const UL: Typography = ({ children, attributes, ...props }) => {
   return (
     <ul {...attributes} {...props} {...ulRule}>
       {children}
@@ -256,7 +255,7 @@ const olRule = css({
   },
 })
 
-export const OL = ({ children, attributes = {}, ...props }) => {
+export const OL: Typography = ({ children, attributes, ...props }) => {
   return (
     <ol {...attributes} {...props} {...olRule}>
       {children}
@@ -283,10 +282,10 @@ const listItemRule = css({
   },
 })
 export const ListItem: React.FC<{
-  attributes: any
+  attributes?: any
   children: React.ReactNode
-  style: any
-}> = ({ children, attributes = {}, style = {} }) => {
+  style?: any
+}> = ({ children, attributes, style = {} }) => {
   const [colorScheme] = useColorContext()
   return (
     <li
@@ -312,15 +311,15 @@ const linkStyle = css({
 // TODO: forwardRef is problematic inside Slate:
 //  for now we use the noref compoment inside the editor
 //  we should check what causes this and if it can be fixed
-export const NoRefA = ({ children, attributes, ...props }) => (
+export const NoRefA: Typography = ({ children, attributes, ...props }) => (
   <a {...attributes} {...props} {...linkStyle}>
     {children}
   </a>
 )
 
 // Outside the editor we use a A with forwardRef for Next.js Link compat
-const A = forwardRef<HTMLAnchorElement, any>(
-  ({ children, attributes = {}, ...props }, ref) => (
+const A = forwardRef<HTMLAnchorElement, BaseProps>(
+  ({ children, attributes, ...props }, ref) => (
     <a {...attributes} {...props} {...linkStyle} ref={ref}>
       {children}
     </a>
