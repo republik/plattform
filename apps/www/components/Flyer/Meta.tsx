@@ -51,7 +51,7 @@ const getTitleProps = (
 
   if (!titleNode) return {}
 
-  const title = renderSlateAsText([titleNode])
+  const title = `Republik-Journal: ${renderSlateAsText([titleNode])}`
 
   return {
     title,
