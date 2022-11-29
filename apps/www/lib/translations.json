@@ -6653,6 +6653,14 @@
       "value": "Mit Logo auf der Vorderseite und Manifest auf der Rückseite. Lieferung innerhalb von 7 Werktagen."
     },
     {
+      "key": "Goodie/label/MUG",
+      "value": "Republik Tasse"
+    },
+    {
+      "key": "Goodie/description/MUG",
+      "value": "Eine Tasse mit Republik-Logo und Claim. Lieferung innerhalb von 7 Werktagen."
+    },
+    {
       "key": "option/TABLEBOOK/label/other",
       "value": "Republik bei Stromausfall"
     },
@@ -6671,6 +6679,14 @@
     {
       "key": "option/FONDUE/label/1",
       "value": "Republik-Fondue"
+    },
+    {
+      "key": "option/MUG/label/other",
+      "value": "Republik Tassen"
+    },
+    {
+      "key": "option/MUG/label/1",
+      "value": "Republik Tasse"
     },
     {
       "key": "package/customize/price/payMore/userPrice",
