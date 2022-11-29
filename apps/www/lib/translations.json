@@ -6642,7 +6642,7 @@
     },
     {
       "key": "Goodie/description/NOTEBOOK",
-      "value": "Ein Moleskin Notizbuch mit Republik-Gravierung. Lieferung innerhalb von 7 Werktagen."
+      "value": "Ein Moleskine Notizbuch mit Republik-Gravierung. Lieferung innerhalb von 7 Werktagen."
     },
     {
       "key": "Goodie/label/TOTEBAG",
@@ -6658,7 +6658,7 @@
     },
     {
       "key": "Goodie/description/MUG",
-      "value": "Eine Tasse mit Republik-Logo und Claim. Lieferung innerhalb von 7 Werktagen."
+      "value": "Tasse aus Keramik, bedruckt mit Republik-Logo und Claim «Ohne Journalismus keine Demokratie». Lieferung innerhalb von 7 Werktagen."
     },
     {
       "key": "option/TABLEBOOK/label/other",
@@ -6682,11 +6682,11 @@
     },
     {
       "key": "option/MUG/label/other",
-      "value": "Republik Tassen"
+      "value": "Republik-Tassen"
     },
     {
       "key": "option/MUG/label/1",
-      "value": "Republik Tasse"
+      "value": "Republik-Tasse"
     },
     {
       "key": "package/customize/price/payMore/userPrice",
