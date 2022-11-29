@@ -686,7 +686,7 @@ const ArticlePage = ({
                   <FlyerMeta
                     documentId={documentId}
                     meta={meta}
-                    extract={share}
+                    tileId={share}
                   />
                 </Flyer.Layout>
               ) : (

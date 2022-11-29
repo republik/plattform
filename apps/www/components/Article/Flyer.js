@@ -166,14 +166,14 @@ export const getShareImageUrls = (documentId, meta, tileId, showAll) => {
 }
 
 export const FlyerMeta = (props) => {
-  const { extract, meta, documentId } = props
+  const { tileId, meta, documentId } = props
 
   // Render as usual
-  if (!extract && meta) {
+  if (!tileId && meta) {
     return <Meta data={meta} />
   }
 
-  const { shareImageUrl } = getShareImageUrls(documentId, meta, extract)
+  const { shareImageUrl } = getShareImageUrls(documentId, meta, tileId)
 
   return (
     <Meta
@@ -182,6 +182,7 @@ export const FlyerMeta = (props) => {
         image: shareImageUrl.toString(),
         twitterImage: shareImageUrl.toString(),
         facebookImage: shareImageUrl.toString(),
+        url: `${PUBLIC_BASE_URL}${meta.path}?share=${tileId}`,
       }}
     />
   )
