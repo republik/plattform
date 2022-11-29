@@ -284,7 +284,7 @@ const listItemRule = css({
 export const ListItem: React.FC<{
   attributes?: any
   children: React.ReactNode
-  style?: any
+  style?: React.CSSProperties
 }> = ({ children, attributes, style = {} }) => {
   const [colorScheme] = useColorContext()
   return (

@@ -66,7 +66,7 @@ import SectionFeed from '../Sections/SinglePageFeed'
 import HrefLink from '../Link/Href'
 import { withMarkAsReadMutation } from '../Notifications/enhancers'
 import ShareImageFlyer from '../Flyer/ShareImage'
-import FlyerPage from '../Flyer'
+import Flyer from '../Flyer'
 
 import { getMetaData, runMetaFromQuery } from './metadata'
 import ActionBarOverlay from './ActionBarOverlay'
@@ -656,7 +656,7 @@ const ArticlePage = ({
                 </div>
               )}
               {isFlyer ? (
-                <FlyerPage
+                <Flyer
                   meta={meta}
                   documentId={documentId}
                   inNativeApp={inNativeApp}
