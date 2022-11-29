@@ -273,21 +273,9 @@ class Merci extends Component {
                   submittedMessage={() => <P>{t('questionnaire/thankyou')}</P>}
                 />
               )}
-              <div
-                {...css({
-                  display: 'flex',
-                  gap: 16,
-                  flexWrap: 'wrap',
-                  marginTop: 24,
-                })}
-              >
-                <Link href='/' passHref>
-                  <Button primary>{t('merci/action/read')}</Button>
-                </Link>
-                <Link href='/dialog' passHref>
-                  <Button primary>{t('merci/action/dialog')}</Button>
-                </Link>
-              </div>
+              <Link href='/' passHref>
+                <Button primary>{t('merci/action/read')}</Button>
+              </Link>
             </>
           )}
         />
