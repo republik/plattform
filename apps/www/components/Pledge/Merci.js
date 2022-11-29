@@ -1,6 +1,9 @@
 import { Component } from 'react'
+import { css } from 'glamor'
 import compose from 'lodash/flowRight'
 import { format } from 'url'
+import Link from 'next/link'
+import { withRouter } from 'next/router'
 
 import withT from '../../lib/withT'
 import withMe from '../../lib/apollo/withMe'
@@ -24,8 +27,7 @@ import {
 } from '@project-r/styleguide'
 
 import RawHtmlTranslation from '../RawHtmlTranslation'
-import { withRouter } from 'next/router'
-import Link from 'next/link'
+import { QuestionnaireWithData } from '../Questionnaire/Questionnaire'
 
 const { P, H1 } = Interaction
 
@@ -235,7 +237,6 @@ class Merci extends Component {
       return <Loader loading />
     }
 
-    const buttonStyle = { marginBottom: 10, marginRight: 10 }
     const noNameSuffix = me?.name ? '' : '/noName'
 
     const leads = t
@@ -264,16 +265,29 @@ class Merci extends Component {
         <WithAccess
           render={() => (
             <>
-              <Link href='/' passHref>
-                <Button primary style={{ ...buttonStyle, marginTop: 10 }}>
-                  {t('merci/action/read')}
-                </Button>
-              </Link>
-              <Link href='/dialog' passHref>
-                <Button primary style={{ ...buttonStyle, marginTop: 10 }}>
-                  {t('merci/action/dialog')}
-                </Button>
-              </Link>
+              {query.package === 'PROLONG' && (
+                <QuestionnaireWithData
+                  slug={'erneuerungs-grund'}
+                  publicSubmission={false}
+                  hideCount
+                  submittedMessage={() => <P>{t('questionnaire/thankyou')}</P>}
+                />
+              )}
+              <div
+                {...css({
+                  display: 'flex',
+                  gap: 16,
+                  flexWrap: 'wrap',
+                  marginTop: 24,
+                })}
+              >
+                <Link href='/' passHref>
+                  <Button primary>{t('merci/action/read')}</Button>
+                </Link>
+                <Link href='/dialog' passHref>
+                  <Button primary>{t('merci/action/dialog')}</Button>
+                </Link>
+              </div>
             </>
           )}
         />

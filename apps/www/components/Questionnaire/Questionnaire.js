@@ -64,6 +64,7 @@ const Questionnaire = (props) => {
     revokeQuestionnaire,
     onQuestionnaireChange,
     detailsData,
+    publicSubmission = true,
   } = props
   const [state, setState] = useState({})
   const [isResubmitAnswers, setIsResubmitAnswers] = useState(false)
@@ -145,7 +146,6 @@ const Questionnaire = (props) => {
         }
 
         // ToDo: expose & query questionnaire.submissionsAccessRole
-        const publicSubmission = true
 
         const onReset = async () => {
           setState({ updating: true })
