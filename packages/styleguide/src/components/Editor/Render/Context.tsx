@@ -6,6 +6,8 @@ type RenderProps = {
   Link?: React.FC<any>
   t?: Formatter
   nav?: JSX.Element
+  ShareTile?: React.FC<{ tileId: string }>
+  noLazy?: boolean
 }
 
 export const PlaceholderLink = ({ children }) => React.Children.only(children)
@@ -24,8 +26,13 @@ export const RenderContextProvider: React.FC<RenderProps> = ({
   Link = PlaceholderLink,
   t = emptyFormatter,
   nav = <FlyerDate />,
+  ShareTile,
+  noLazy,
 }) => {
-  const value = useMemo(() => ({ Link, t, nav }), [Link, t, nav])
+  const value = useMemo(
+    () => ({ Link, t, nav, ShareTile, noLazy }),
+    [Link, t, nav, ShareTile, noLazy],
+  )
   return (
     <RenderContext.Provider value={value}>{children}</RenderContext.Provider>
   )

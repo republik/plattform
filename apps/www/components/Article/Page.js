@@ -36,10 +36,9 @@ import {
   flyerSchema,
   SlateRender,
   RenderContextProvider,
-  FlyerTile,
+  EditIcon,
+  createRequire,
 } from '@project-r/styleguide'
-import { EditIcon } from '@project-r/styleguide'
-import { createRequire } from '@project-r/styleguide'
 
 import ActionBarOverlay from './ActionBarOverlay'
 import SeriesNavBar from './SeriesNavBar'
@@ -71,8 +70,11 @@ import SectionFeed from '../Sections/SinglePageFeed'
 import HrefLink from '../Link/Href'
 import { withMarkAsReadMutation } from '../Notifications/enhancers'
 import { cleanAsPath } from '../../lib/utils/link'
+import { getMetaData, runMetaFromQuery } from './metadata'
+import FlyerFooter, { FlyerMeta, FlyerNav } from './Flyer'
+import ShareImageFlyer from './ShareImageFlyer'
+import { getFlyerTileActionBar } from '../ActionBar/FlyerTileActionBar'
 
-// Identifier-based dynamic components mapping
 import dynamic from 'next/dynamic'
 import CommentLink from '../Discussion/shared/CommentLink'
 import { Mutation, Query, Subscription } from '@apollo/client/react/components'
@@ -80,12 +82,11 @@ import { useMe } from '../../lib/context/MeContext'
 import DiscussionContextProvider from '../Discussion/context/DiscussionContextProvider'
 import Discussion from '../Discussion/Discussion'
 import ArticleRecommendationsFeed from './ArticleRecommendationsFeed'
-import { getMetaData, runMetaFromQuery } from './metadata'
-import FlyerFooter, { FlyerNav } from './Flyer'
 import { AudioPlayerLocations } from '../Audio/types/AudioActionTracking'
 
 const LoadingComponent = () => <SmallLoader loading />
 
+// Identifier-based dynamic components mapping
 const MatomoOptOut = dynamic(() => import('../Matomo/OptOut'), {
   loading: LoadingComponent,
   ssr: false,
@@ -241,6 +242,7 @@ const ArticlePage = ({
   const galleryRef = useRef()
 
   const router = useRouter()
+  const { share, extract, showAll } = router.query
 
   const { me, meLoading, hasAccess, hasActiveMembership, isEditor } = useMe()
 
@@ -267,6 +269,12 @@ const ArticlePage = ({
   const articleContent = article?.content
   const articleUnreadNotifications = article?.unreadNotifications
   const routerQuery = router.query
+
+  useEffect(() => {
+    if (share) {
+      document.getElementById(share)?.scrollIntoView()
+    }
+  }, [share])
 
   // Refetch when cached article is not issued for current user
   // - SSG always provides issuedForUserId: null
@@ -316,6 +324,7 @@ const ArticlePage = ({
       )
     )
   }, [routerQuery, articleContent])
+
   const meta = useMemo(
     () =>
       articleMeta &&
@@ -466,7 +475,7 @@ const ArticlePage = ({
   const sectionColor = meta && meta.template === 'section' && meta.color
   const MissingNode = isEditor ? undefined : ({ children }) => children
 
-  const extract = router.query.extract
+  const isFlyer = treeType === 'slate'
   if (extract) {
     return (
       <PageLoader
@@ -482,9 +491,23 @@ const ArticlePage = ({
               />
             )
           }
-          return extract === 'share' ? (
-            <ShareImage meta={meta} />
-          ) : (
+
+          if (extract === 'share') {
+            return <ShareImage meta={meta} />
+          }
+
+          if (isFlyer) {
+            return (
+              <ShareImageFlyer
+                tileId={extract}
+                value={article.content.children}
+                schema={schema}
+                showAll={showAll}
+              />
+            )
+          }
+
+          return (
             <Extract
               ranges={extract}
               schema={schema}
@@ -525,6 +548,7 @@ const ArticlePage = ({
   const colorSchemeKey = darkMode ? 'dark' : 'auto'
 
   const delegateMetaDown =
+    !!isFlyer ||
     !!meta?.delegateDown ||
     !!(meta?.ownDiscussion?.id && router.query.focus) ||
     !!(meta?.ownDiscussion?.isBoard && router.query.parent)
@@ -557,7 +581,6 @@ const ArticlePage = ({
           const isFormat = meta.template === 'format'
           const isSection = meta.template === 'section'
           const isPage = meta.template === 'page'
-          const isFlyer = treeType === 'slate'
 
           const hasNewsletterUtms =
             router.query.utm_source && router.query.utm_source === 'newsletter'
@@ -636,7 +659,7 @@ const ArticlePage = ({
                 </div>
               )}
               {isFlyer ? (
-                <Flyer.Layout schema={schema}>
+                <Flyer.Layout>
                   <RenderContextProvider
                     t={t}
                     Link={HrefLink}
@@ -646,6 +669,11 @@ const ArticlePage = ({
                         publishDate={meta.publishDate}
                       />
                     }
+                    ShareTile={getFlyerTileActionBar(
+                      documentId,
+                      meta,
+                      inNativeApp,
+                    )}
                   >
                     <SlateRender
                       value={article.content.children}
@@ -655,6 +683,11 @@ const ArticlePage = ({
                     />
                   </RenderContextProvider>
                   <FlyerFooter>{actionBarFlyer}</FlyerFooter>
+                  <FlyerMeta
+                    documentId={documentId}
+                    meta={meta}
+                    extract={share}
+                  />
                 </Flyer.Layout>
               ) : (
                 <ArticleGallery

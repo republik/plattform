@@ -202,10 +202,7 @@ const createNewsletterSchema = ({
           const { plain } = parent.data
 
           return {
-            ...FigureImage.utils.getResizedSrcs(src, displayWidth),
-            dark:
-              srcDark &&
-              FigureImage.utils.getResizedSrcs(srcDark, displayWidth),
+            ...FigureImage.utils.getResizedSrcs(src, srcDark, displayWidth),
             alt: node.children[0].alt,
             plain,
           }
@@ -238,10 +235,12 @@ const createNewsletterSchema = ({
           const setMaxWidth = parent.data.size !== undefined
 
           return {
-            ...FigureImage.utils.getResizedSrcs(src, displayWidth, setMaxWidth),
-            dark:
-              srcDark &&
-              FigureImage.utils.getResizedSrcs(srcDark, displayWidth),
+            ...FigureImage.utils.getResizedSrcs(
+              src,
+              srcDark,
+              displayWidth,
+              setMaxWidth,
+            ),
             alt: node.children[0].alt,
           }
         },

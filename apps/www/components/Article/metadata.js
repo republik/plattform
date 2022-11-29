@@ -88,11 +88,15 @@ function getCitationMetaData(meta) {
   }
 }
 
+export const getCacheKey = (documentId, meta) =>
+  `${documentId}${meta.format ? `-${meta.format.id}` : ''}`
+
 export const getMetaData = (documentId, meta) => {
+  const cacheKey = getCacheKey(documentId, meta)
   const shareImage =
     meta.shareText &&
     `${ASSETS_SERVER_BASE_URL}/render?width=${SHARE_IMAGE_WIDTH}&height=${SHARE_IMAGE_HEIGHT}&updatedAt=${encodeURIComponent(
-      `${documentId}${meta.format ? `-${meta.format.id}` : ''}`,
+      cacheKey,
     )}&url=${encodeURIComponent(
       `${PUBLIC_BASE_URL}${meta.path}?extract=share`,
     )}`

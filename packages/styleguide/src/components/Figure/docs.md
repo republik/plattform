@@ -82,8 +82,10 @@ You may provide an `maxWidth`, e.g. the resolution of the file.
 
 #### Utils
 
-`FigureImage.utils.getResizedSrcs(src, displayWidth)`
-Tries to get size information from the url and if successful returns a resized `src`, a `srcSet` with retina resolution, `size` and `maxWidth`.
+`FigureImage.utils.getResizedSrcs(src, srcDark, displayWidth)`
+Tries to get size information from the url and if successful returns a resized `src`, a `srcSet` with retina resolution, `size` and `maxWidth`. 
+
+If `srcDark` if defined, it will also return a nested object `dark` with the resized `src` and the `srcSet` for the dark mode image. 
 
 You can directly pass the result as props to `FigureImage`:
 
@@ -99,6 +101,7 @@ You can directly pass the result as props to `FigureImage`:
 <pre style={{backgroundColor: '#fff', padding: 20, margin: -20, overflow: 'auto'}}>
   {JSON.stringify(FigureImage.utils.getResizedSrcs(
     '/static/desert.jpg?size=4323x2962',
+    undefined,
     1500
   ), null, 2)}
 </pre>
@@ -112,12 +115,10 @@ You can directly pass the result as props to `FigureImage`:
   <FigureImage
     {...FigureImage.utils.getResizedSrcs(
       '/static/dada.jpg?size=512x687',
-      1500
-    )}
-    dark={FigureImage.utils.getResizedSrcs(
       '/static/dada_dark.png?size=512x687',
       1500
-    )} />
+    )}
+  />
 </ColorContextProvider>
 ```
 
@@ -127,9 +128,6 @@ You can directly pass the result as props to `FigureImage`:
   <FigureImage
     {...FigureImage.utils.getResizedSrcs(
       '/static/dada.jpg?size=512x687',
-      1500
-    )}
-    dark={FigureImage.utils.getResizedSrcs(
       '/static/dada_dark.png?size=512x687',
       1500
     )} />
@@ -142,9 +140,6 @@ You can directly pass the result as props to `FigureImage`:
   <FigureImage
     {...FigureImage.utils.getResizedSrcs(
       '/static/dada.jpg?size=512x687',
-      1500
-    )}
-    dark={FigureImage.utils.getResizedSrcs(
       '/static/dada_dark.png?size=512x687',
       1500
     )} />

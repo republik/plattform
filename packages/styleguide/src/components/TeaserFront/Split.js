@@ -133,7 +133,7 @@ const Split = ({
       >
         <FigureImage
           aboveTheFold={aboveTheFold}
-          {...FigureImage.utils.getResizedSrcs(image, 750)}
+          {...FigureImage.utils.getResizedSrcs(image, undefined, 750)}
           alt={alt}
         />
         {byline && (

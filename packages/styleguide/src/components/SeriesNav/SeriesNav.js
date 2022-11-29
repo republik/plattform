@@ -80,12 +80,6 @@ function SeriesNav({
     series.logo &&
     FigureImage.utils.getResizedSrcs(
       series.logo,
-      INFOBOX_IMAGE_SIZES.XXS,
-      false,
-    )
-  const logoDarkProps =
-    series.logoDark &&
-    FigureImage.utils.getResizedSrcs(
       series.logoDark,
       INFOBOX_IMAGE_SIZES.XXS,
       false,
@@ -102,7 +96,6 @@ function SeriesNav({
                   maxWidth={INFOBOX_IMAGE_SIZES.XXS}
                   aboveTheFold={aboveTheFold}
                   {...logoProps}
-                  dark={logoDarkProps}
                   alt=''
                 />
               </Figure>

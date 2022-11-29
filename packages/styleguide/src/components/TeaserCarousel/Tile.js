@@ -155,9 +155,8 @@ const Tile = ({
     margin: bigger ? '0' : '0 auto',
   })
 
-  const imageProps = image && FigureImage.utils.getResizedSrcs(image, 450, true)
-  const imageDarkProps =
-    imageDark && FigureImage.utils.getResizedSrcs(imageDark, 450, true)
+  const imageProps =
+    image && FigureImage.utils.getResizedSrcs(image, imageDark, 450, true)
   const imageContainerStyles = bigger
     ? styles.imageContainerBigger
     : styles.imageContainer
@@ -188,7 +187,6 @@ const Tile = ({
             <FigureImage
               aboveTheFold={aboveTheFold}
               {...imageProps}
-              dark={imageDarkProps}
               alt={alt}
             />
             {byline && (
@@ -201,13 +199,7 @@ const Tile = ({
         {imageProps && isPortrait && (
           <div {...imageContainerStyles}>
             <div {...styles.imageWrapper}>
-              <SwitchImage
-                {...imageStyles}
-                src={imageProps.src}
-                srcSet={imageProps.srcSet}
-                dark={imageDarkProps}
-                alt={alt}
-              />
+              <SwitchImage {...imageStyles} {...imageProps} alt={alt} />
               {byline && (
                 <FigureByline position={bigger ? 'aboveRight' : 'rightCompact'}>
                   {byline}

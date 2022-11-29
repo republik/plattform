@@ -3449,6 +3449,10 @@
       "value": "Interne Publikation (Editoren-Vorschau)"
     },
     {
+      "key": "article/flyer/tile/branding",
+      "value": "Mehr Kurzes:"
+    },
+    {
       "key": "progress/restore/time",
       "value": "{day} um {time} Uhr"
     },

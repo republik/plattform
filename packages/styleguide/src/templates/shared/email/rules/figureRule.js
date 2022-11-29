@@ -41,7 +41,7 @@ export const getImageRules = ({ forceWidth, isCover } = {}) => [
         width = getImageSize({ fill: true })
 
       return {
-        ...FigureImage.utils.getResizedSrcs(src, displayWidth),
+        ...FigureImage.utils.getResizedSrcs(src, undefined, displayWidth),
         alt: altText,
         plain,
         width: width,

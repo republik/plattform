@@ -92,6 +92,7 @@ const ImageBlock = ({
             aboveTheFold={aboveTheFold}
             {...FigureImage.utils.getResizedSrcs(
               image,
+              undefined,
               maxWidth || 1500,
               false,
             )}

@@ -340,14 +340,12 @@ const createBlocks = ({ base, COVER_TYPE, t, onAudioCoverClick }) => {
             (parent.data ? !parent.data.excludeFromGallery : true)
 
           return {
-            ...FigureImage.utils.getResizedSrcs(src, displayWidth, setMaxWidth),
-            dark:
-              srcDark &&
-              FigureImage.utils.getResizedSrcs(
-                srcDark,
-                displayWidth,
-                setMaxWidth,
-              ),
+            ...FigureImage.utils.getResizedSrcs(
+              src,
+              srcDark,
+              displayWidth,
+              setMaxWidth,
+            ),
             enableGallery,
             aboveTheFold: true,
             alt: node.children[0].alt,

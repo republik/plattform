@@ -9,7 +9,13 @@ import {
   FlyerTile,
 } from '@project-r/styleguide'
 import Link from 'next/link'
+
 import { useMe } from '../../lib/context/MeContext'
+
+import { getCacheKey } from './metadata'
+import Meta from '../Frame/Meta'
+
+import { PUBLIC_BASE_URL, ASSETS_SERVER_BASE_URL } from '../../lib/constants'
 
 const FORMAT_REPO_ID = 'republik/format-journal'
 
@@ -134,6 +140,50 @@ const FlyerFooter = ({ children }) => {
     <FlyerTile {...styles.footer} innerStyle={{ paddingTop: 0 }}>
       {children}
     </FlyerTile>
+  )
+}
+
+export const getShareImageUrls = (documentId, meta, tileId, showAll) => {
+  const screenshotUrl = new URL(meta.path, PUBLIC_BASE_URL)
+  screenshotUrl.searchParams.set('extract', tileId)
+
+  if (showAll) {
+    screenshotUrl.searchParams.set('showAll', 'true')
+  }
+
+  const dimensions = showAll ? [450, 1] : [600, 314]
+
+  const shareImageUrl = new URL('/render', ASSETS_SERVER_BASE_URL)
+  shareImageUrl.searchParams.set('viewport', dimensions.join('x'))
+  shareImageUrl.searchParams.set('zoomFactor', '2')
+  shareImageUrl.searchParams.set('updatedAt', getCacheKey(documentId, meta))
+  shareImageUrl.searchParams.set('url', screenshotUrl.toString())
+
+  return {
+    screenshotUrl: screenshotUrl.toString(),
+    shareImageUrl: shareImageUrl.toString(),
+  }
+}
+
+export const FlyerMeta = (props) => {
+  const { extract, meta, documentId } = props
+
+  // Render as usual
+  if (!extract && meta) {
+    return <Meta data={meta} />
+  }
+
+  const { shareImageUrl } = getShareImageUrls(documentId, meta, extract)
+
+  return (
+    <Meta
+      data={{
+        ...meta,
+        image: shareImageUrl.toString(),
+        twitterImage: shareImageUrl.toString(),
+        facebookImage: shareImageUrl.toString(),
+      }}
+    />
   )
 }
 
