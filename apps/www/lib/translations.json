@@ -3453,6 +3453,10 @@
       "value": "Mehr Kurzes:"
     },
     {
+      "key": "article/flyer/tile/description",
+      "value": "Mehr Kurzes auf republik.ch/journal"
+    },
+    {
       "key": "progress/restore/time",
       "value": "{day} um {time} Uhr"
     },

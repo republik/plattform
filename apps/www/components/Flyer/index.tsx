@@ -20,6 +20,12 @@ import Nav from './Nav'
 export type MetaProps = {
   path: string
   publishDate: string
+  title: string
+  description: string
+  facebookTitle: string
+  facebookDescription: string
+  twitterTitle: string
+  twitterDescription: string
   [x: string]: unknown
 }
 
@@ -49,7 +55,7 @@ const Page: React.FC<{
         />
       </RenderContextProvider>
       <Footer>{actionBar}</Footer>
-      <Meta documentId={documentId} meta={meta} tileId={tileId} />
+      <Meta documentId={documentId} meta={meta} tileId={tileId} value={value} />
     </Flyer.Layout>
   )
 }
