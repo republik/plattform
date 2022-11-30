@@ -1,6 +1,9 @@
 import React from 'react'
 
+import { CustomDescendant, renderSlateAsText } from '@project-r/styleguide'
+
 import { PUBLIC_BASE_URL, ASSETS_SERVER_BASE_URL } from '../../lib/constants'
+import { useTranslation } from '../../lib/withT'
 
 import { getCacheKey } from '../Article/metadata'
 import Meta from '../Frame/Meta'
@@ -37,11 +40,37 @@ export const getShareImageUrls = (
   }
 }
 
+const getTitleProps = (
+  value: CustomDescendant[],
+  tileId: string,
+  customDescription: string,
+): Partial<MetaProps> => {
+  const titleNode = value
+    .find((node) => node.id === tileId)
+    ?.children.find((node) => node.type === 'flyerTitle')
+
+  if (!titleNode) return {}
+
+  const title = `Republik-Journal: ${renderSlateAsText([titleNode])}`
+
+  return {
+    title,
+    facebookTitle: title,
+    twitterTitle: title,
+    description: customDescription,
+    facebookDescription: customDescription,
+    twitterDescription: customDescription,
+  }
+}
+
 const FlyerMeta: React.FC<{
   documentId: string
   tileId?: string
   meta: MetaProps
-}> = ({ tileId, meta, documentId }) => {
+  value: CustomDescendant[]
+}> = ({ tileId, meta, documentId, value }) => {
+  const { t } = useTranslation()
+
   // Render as usual
   if (!tileId && meta) {
     return <Meta data={meta} />
@@ -53,6 +82,7 @@ const FlyerMeta: React.FC<{
     <Meta
       data={{
         ...meta,
+        ...getTitleProps(value, tileId, t('article/flyer/tile/description')),
         image: shareImageUrl.toString(),
         twitterImage: shareImageUrl.toString(),
         facebookImage: shareImageUrl.toString(),
