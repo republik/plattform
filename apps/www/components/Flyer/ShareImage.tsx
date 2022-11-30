@@ -1,5 +1,7 @@
-import { Fragment } from 'react'
+import React from 'react'
+import { css } from 'glamor'
 import Head from 'next/head'
+
 import {
   SlateRender,
   ColorContextProvider,
@@ -10,8 +12,10 @@ import {
   mediaQueries,
   fontFamilies,
   useMediaQuery,
+  CustomDescendant,
+  flyerSchema,
 } from '@project-r/styleguide'
-import { css } from 'glamor'
+
 import { useTranslation } from '../../lib/withT'
 
 const styles = {
@@ -55,7 +59,7 @@ const styles = {
   }),
 }
 
-const Branding = () => {
+const Branding: React.FC = () => {
   const isDesktop = useMediaQuery(mediaQueries.mUp)
   const { t } = useTranslation()
   return (
@@ -72,9 +76,13 @@ const Branding = () => {
   )
 }
 
-const ShareImageFlyer = ({ tileId, value, schema, showAll }) => {
+const ShareImage: React.FC<{
+  tileId: string
+  value: CustomDescendant[]
+  showAll?: boolean
+}> = ({ tileId, value, showAll }) => {
   return (
-    <Fragment>
+    <>
       <Head>
         <meta name='robots' content='noindex' />
       </Head>
@@ -84,7 +92,7 @@ const ShareImageFlyer = ({ tileId, value, schema, showAll }) => {
             <div {...(!showAll && styles.inner)}>
               <SlateRender
                 value={value.filter((block) => block.id === tileId)}
-                schema={schema}
+                schema={flyerSchema}
                 skip={['flyerMetaP']}
               />
             </div>
@@ -92,7 +100,7 @@ const ShareImageFlyer = ({ tileId, value, schema, showAll }) => {
         </RenderContextProvider>
       </ColorContextProvider>
       {showAll && <Branding />}
-    </Fragment>
+    </>
   )
 }
-export default ShareImageFlyer
+export default ShareImage

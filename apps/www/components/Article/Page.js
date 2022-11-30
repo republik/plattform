@@ -2,6 +2,7 @@ import { cloneElement, useRef, useEffect, useMemo, useContext } from 'react'
 import { css } from 'glamor'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
+import dynamic from 'next/dynamic'
 import { renderMdast } from 'mdast-react-render'
 import compose from 'lodash/flowRight'
 import {
@@ -12,6 +13,7 @@ import {
   withSubscription,
 } from '@apollo/client/react/hoc'
 import { ApolloConsumer, ApolloProvider, gql, useQuery } from '@apollo/client'
+import { Mutation, Query, Subscription } from '@apollo/client/react/components'
 
 import {
   Center,
@@ -21,7 +23,6 @@ import {
   Interaction,
   TitleBlock,
   Editorial,
-  Flyer,
   TeaserEmbedComment,
   IconButton,
   SeriesNav,
@@ -34,32 +35,27 @@ import {
   createSectionSchema,
   createPageSchema,
   flyerSchema,
-  SlateRender,
-  RenderContextProvider,
   EditIcon,
   createRequire,
 } from '@project-r/styleguide'
 
-import ActionBarOverlay from './ActionBarOverlay'
-import SeriesNavBar from './SeriesNavBar'
-import TrialPayNoteMini from './TrialPayNoteMini'
-import Extract from './Extract'
-import { FlyerWrapper, PayNote } from './PayNote'
-import Progress from './Progress'
-import PodcastButtons from './PodcastButtons'
-import { getDocument } from './graphql/getDocument'
 import withT from '../../lib/withT'
 import { parseJSONObject } from '../../lib/safeJSON'
 import { formatDate } from '../../lib/utils/format'
 import withInNativeApp, { postMessage } from '../../lib/withInNativeApp'
 import { splitByTitle } from '../../lib/utils/mdast'
 import { PUBLIKATOR_BASE_URL } from '../../lib/constants'
-import ShareImage from './ShareImage'
+import { useMe } from '../../lib/context/MeContext'
+import { cleanAsPath } from '../../lib/utils/link'
+
+import CommentLink from '../Discussion/shared/CommentLink'
+import DiscussionContextProvider from '../Discussion/context/DiscussionContextProvider'
+import Discussion from '../Discussion/Discussion'
+import { AudioPlayerLocations } from '../Audio/types/AudioActionTracking'
 import FontSizeSync from '../FontSize/Sync'
 import PageLoader from '../Loader'
 import Frame from '../Frame'
 import ActionBar from '../ActionBar'
-import { BrowserOnlyActionBar } from './BrowserOnly'
 import { AudioContext } from '../Audio/AudioProvider'
 import FormatFeed from '../Feed/Format'
 import StatusError from '../StatusError'
@@ -69,20 +65,21 @@ import SectionNav from '../Sections/SinglePageNav'
 import SectionFeed from '../Sections/SinglePageFeed'
 import HrefLink from '../Link/Href'
 import { withMarkAsReadMutation } from '../Notifications/enhancers'
-import { cleanAsPath } from '../../lib/utils/link'
-import { getMetaData, runMetaFromQuery } from './metadata'
-import FlyerFooter, { FlyerMeta, FlyerNav } from './Flyer'
-import ShareImageFlyer from './ShareImageFlyer'
-import { getFlyerTileActionBar } from '../ActionBar/FlyerTileActionBar'
+import ShareImageFlyer from '../Flyer/ShareImage'
+import Flyer from '../Flyer'
 
-import dynamic from 'next/dynamic'
-import CommentLink from '../Discussion/shared/CommentLink'
-import { Mutation, Query, Subscription } from '@apollo/client/react/components'
-import { useMe } from '../../lib/context/MeContext'
-import DiscussionContextProvider from '../Discussion/context/DiscussionContextProvider'
-import Discussion from '../Discussion/Discussion'
+import { getMetaData, runMetaFromQuery } from './metadata'
+import ActionBarOverlay from './ActionBarOverlay'
+import SeriesNavBar from './SeriesNavBar'
+import TrialPayNoteMini from './TrialPayNoteMini'
+import Extract from './Extract'
+import { FlyerWrapper, PayNote } from './PayNote'
+import Progress from './Progress'
+import PodcastButtons from './PodcastButtons'
+import { getDocument } from './graphql/getDocument'
+import ShareImage from './ShareImage'
+import { BrowserOnlyActionBar } from './BrowserOnly'
 import ArticleRecommendationsFeed from './ArticleRecommendationsFeed'
-import { AudioPlayerLocations } from '../Audio/types/AudioActionTracking'
 
 const LoadingComponent = () => <SmallLoader loading />
 
@@ -659,36 +656,15 @@ const ArticlePage = ({
                 </div>
               )}
               {isFlyer ? (
-                <Flyer.Layout>
-                  <RenderContextProvider
-                    t={t}
-                    Link={HrefLink}
-                    nav={
-                      <FlyerNav
-                        repoId={repoId}
-                        publishDate={meta.publishDate}
-                      />
-                    }
-                    ShareTile={getFlyerTileActionBar(
-                      documentId,
-                      meta,
-                      inNativeApp,
-                    )}
-                  >
-                    <SlateRender
-                      value={article.content.children}
-                      schema={schema}
-                      raw
-                      skip={['flyerOpeningP']}
-                    />
-                  </RenderContextProvider>
-                  <FlyerFooter>{actionBarFlyer}</FlyerFooter>
-                  <FlyerMeta
-                    documentId={documentId}
-                    meta={meta}
-                    tileId={share}
-                  />
-                </Flyer.Layout>
+                <Flyer
+                  meta={meta}
+                  documentId={documentId}
+                  inNativeApp={inNativeApp}
+                  repoId={repoId}
+                  actionBar={actionBarFlyer}
+                  value={article.content.children}
+                  tileId={share}
+                />
               ) : (
                 <ArticleGallery
                   article={article}
