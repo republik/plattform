@@ -271,6 +271,7 @@ class Merci extends Component {
                   publicSubmission={false}
                   hideCount
                   submittedMessage={() => <P>{t('questionnaire/thankyou')}</P>}
+                  hideInvalid={true}
                 />
               )}
               <Link href='/' passHref>
