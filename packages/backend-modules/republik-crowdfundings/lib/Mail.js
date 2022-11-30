@@ -857,7 +857,11 @@ mail.getPledgeMergeVars = async (
 
   const hasGoodies = rewardGoodies.map((goodie) => {
     return {
-      name: `goodies_has_${goodie.name.toLowerCase()}`,
+      // MUG_CERAMIC is a special mug we use as a goodie until we have the final mug.
+      // In transactionals this prop can fallback to 'mug' in both cases.
+      name: `goodies_has_${
+        goodie.name === 'MUG_CERAMIC' ? 'mug' : goodie.name.toLowerCase()
+      }`,
       content: !!pledgeOptions.filter(
         (pledgeOption) =>
           pledgeOption.packageOption.reward &&

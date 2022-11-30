@@ -437,6 +437,14 @@
       "value": "Tassen"
     },
     {
+      "key": "api/email/option/goodie/mug_ceramic/1",
+      "value": "Tasse"
+    },
+    {
+      "key": "api/email/option/goodie/mug_ceramic/other",
+      "value": "Tassen"
+    },
+    {
       "key": "api/email/option/membershiptype/abo/1",
       "value": "Jahresmitgliedschaft"
     },
@@ -2186,6 +2194,14 @@
     },
     {
       "key": "api/invoices/option/Goodie/MUG/other",
+      "value": "Tassen"
+    },
+    {
+      "key": "api/invoices/option/Goodie/MUG_CERAMIC/1",
+      "value": "Tasse"
+    },
+    {
+      "key": "api/invoices/option/Goodie/MUG_CERAMIC/other",
       "value": "Tassen"
     },
     {
