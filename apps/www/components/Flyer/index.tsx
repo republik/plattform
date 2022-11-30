@@ -77,11 +77,11 @@ const Page: React.FC<{
   actionBar: JSX.Element
 }> = ({ meta, repoId, documentId, inNativeApp, tileId, value, actionBar }) => {
   const { t } = useTranslation()
-  const { hasActiveMembership, meLoading } = useMe()
+  const { hasAccess, hasActiveMembership, meLoading } = useMe()
 
   const contextProps = {
     t,
-    Link: HrefLink,
+    Link: hasAccess ? HrefLink : PaynoteLink,
     nav: <Nav repoId={repoId} publishDate={meta.publishDate} />,
     ShareTile: getTileActionBar(documentId, meta, inNativeApp),
   }
