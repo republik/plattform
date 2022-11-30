@@ -44,15 +44,14 @@ const getVisibleSections = (sections, prevShown = []) =>
       SECTIONS_ALWAYS_SHOWN.find((repoId) => repoId === section.repoId),
   )
 
-const SubscribedDocuments = ({ t, data: { sections }, isMember }) => {
+const SubscribedDocuments = ({ t, data: { sections, journal }, isMember }) => {
   const [showAll, setShowAll] = useState(false)
   const [colorScheme] = useColorContext()
-  const sectionNodes = sections && sections.nodes
-  const sectionsWithFormat = useMemo(() => {
-    return sectionNodes
-      ? sectionNodes.filter((s) => s.formats.nodes.length > 0)
-      : []
-  }, [sectionNodes])
+
+  const sectionsWithFormat = useMemo(
+    () => sections?.nodes.filter((s) => s.formats.nodes.length > 0) || [],
+    [sections],
+  )
 
   const [visibleSections, setVisibleSections] = useState(
     getVisibleSections(sectionsWithFormat || []),
@@ -69,7 +68,7 @@ const SubscribedDocuments = ({ t, data: { sections }, isMember }) => {
     sectionsWithFormat.reduce(
       (reducer, section) => reducer + getSubscriptionCount(section),
       0,
-    )
+    ) + journal?.nodes.filter((f) => f.subscribedByMe.active).length
 
   if (!sectionsWithFormat || !sectionsWithFormat.length) return null
 
@@ -80,6 +79,7 @@ const SubscribedDocuments = ({ t, data: { sections }, isMember }) => {
           count: totalSubs,
         })}
       </Interaction.P>
+      <FormatCheckboxes formats={journal?.nodes || []} />
       {(showAll ? sectionsWithFormat : visibleSections).map((section) => (
         <div
           {...colorScheme.set(

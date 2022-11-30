@@ -170,6 +170,20 @@ export const possibleSubscriptions = gql`
         }
       }
     }
+    journal: documents(repoIds: ["republik/format-journal"]) {
+      nodes {
+        id
+        repoId
+        meta {
+          section {
+            id
+          }
+        }
+        subscribedByMe {
+          ...subInfo
+        }
+      }
+    }
   }
   ${subInfo}
 `
