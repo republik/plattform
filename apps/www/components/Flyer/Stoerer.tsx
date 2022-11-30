@@ -3,10 +3,15 @@ import React from 'react'
 import { FlyerTile, Flyer, ColorContextProvider } from '@project-r/styleguide'
 
 import TrialForm from '../Trial/Form'
+import { useResolvedColorSchemeKey } from '../ColorScheme/lib'
 
 const Stoerer: React.FC = () => {
+  const colorSchemeKey = useResolvedColorSchemeKey()
+
   return (
-    <ColorContextProvider colorSchemeKey='dark'>
+    <ColorContextProvider
+      colorSchemeKey={colorSchemeKey === 'light' ? 'dark' : 'light'}
+    >
       <FlyerTile>
         <Flyer.H3>Did you know?</Flyer.H3>
         <Flyer.P>
