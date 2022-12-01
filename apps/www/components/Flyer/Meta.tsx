@@ -26,7 +26,7 @@ export const getShareImageUrls = (
     screenshotUrl.searchParams.set('showAll', 'true')
   }
 
-  const dimensions = showAll ? [450, 1] : [600, 314]
+  const dimensions = showAll ? [760, 1] : [600, 314]
 
   const shareImageUrl = new URL('/render', ASSETS_SERVER_BASE_URL)
   shareImageUrl.searchParams.set('viewport', dimensions.join('x'))
