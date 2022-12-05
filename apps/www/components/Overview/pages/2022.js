@@ -447,6 +447,61 @@ const text = {
       .
     </>
   ),
+  November: (p) => (
+    <>
+      <Highlight {...p} ids={['px4ceDJBA']}>
+        Sie deckt Sicherheitslücken auf
+      </Highlight>
+      . Und{' '}
+      <Highlight {...p} ids={['uLo9365aD']}>
+        er will Bundesrat werden
+      </Highlight>
+      . Wieso{' '}
+      <Highlight {...p} ids={['jd5Y6jsin']}>
+        die Grünen sehr nett sind mit der SP
+      </Highlight>
+      , aber{' '}
+      <Highlight {...p} ids={['3HKt2J8Ko']}>
+        nicht mit ihr fusionieren sollten
+      </Highlight>
+      .{' '}
+      <Highlight {...p} ids={['pbS-_nntN']}>
+        Widerstand gegen
+      </Highlight>{' '}
+      <Highlight {...p} ids={['FZYf56ygT']}>
+        ein Abtreibungsverbot in den USA
+      </Highlight>{' '}
+      – und{' '}
+      <Highlight {...p} ids={['jJUAmb65m']}>
+        die Stimmung nach den Midterm-Wahlen
+      </Highlight>
+      .{' '}
+      <Highlight {...p} ids={['yGuCrPuC-']}>
+        Die Reportage aus Katar
+      </Highlight>
+      .{' '}
+      <Highlight {...p} ids={['dD5ohLVsQ']}>
+        Wie ein Reiskorn die Welt verbessern sollte
+      </Highlight>{' '}
+      und{' '}
+      <Highlight {...p} ids={['sce-VsLk_']}>
+        warum Twitter nicht sterben darf
+      </Highlight>
+      . Begegnen Sie{' '}
+      <Highlight {...p} ids={['9eDHJ2T8E']}>
+        Elfriede Jelinek
+      </Highlight>
+      . Und neu:{' '}
+      <Highlight
+        {...p}
+        ids={['uu4CciN3sg']}
+        format='republik/format-winter-is-coming'
+      >
+        Wir begleiten Sie durch den Winter
+      </Highlight>
+      .
+    </>
+  ),
 }
 
 const Overview2022 = (props) => <Page {...props} year={2022} text={text} />
