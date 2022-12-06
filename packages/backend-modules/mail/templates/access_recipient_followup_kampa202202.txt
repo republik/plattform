@@ -1,8 +1,8 @@
 Guten Tag
 
-{{#if `RECIPIENT_EMAIL != GRANTER_EMAIL`}}Am {{GRANT_BEGIN}} hatte Ihnen
-{{GRANTER_NAME}} einen kostenlosen Zugang zur Republik geschenkt. {{else}}Bis
-zum {{GRANT_END}} waren Sie als Gast an Bord der Republik.{{/if}}
+{{#if recipientIsNotGranter}}Am {{GRANT_BEGIN}} hatte Ihnen {{GRANTER_NAME}}
+einen kostenlosen Zugang zur Republik geschenkt. {{else}}Bis zum {{GRANT_END}}
+waren Sie als Gast an Bord der Republik.{{/if}}
 
 Sie haben einen Einblick erhalten in unser unabhängiges digitales Magazin für
 Politik, Wirtschaft, Gesellschaft und Kultur.

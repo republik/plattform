@@ -55,8 +55,8 @@ Details zum Kauf:
 
 {{#if goodies_count}}
 
-{{#unless waiting_for_payment}} {{#if hasOneGoodie}} Sie haben sich noch
-ein Republik-Objekt gegönnt. {{elseif hasMultipleGoodies}} Sie haben sich noch
+{{#unless waiting_for_payment}} {{#if hasOneGoodie}} Sie haben sich noch ein
+Republik-Objekt gegönnt. {{elseif hasMultipleGoodies}} Sie haben sich noch
 mehrere Republik-Objekte gegönnt. {{/if}}{{#if goodies_has_notebook}}Notizbücher
 liefern wir Ihnen innerhalb von 7 Werktagen. {{/if}}{{#if
 goodies_has_tablebook}}«Republik bei Stromausfall» liefern wir Ihnen innerhalb

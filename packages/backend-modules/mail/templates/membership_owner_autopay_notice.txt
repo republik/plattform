@@ -11,7 +11,7 @@ tatsächlich und unverfroren tun werden: Ihre {{autopay_card_brand}} mit den
 Endziffern {{autopay_card_last4}} belasten wir am {{end_date}} mit
 {{autopay_total}}.
 
-{{#if `autopay_membership_type == "BENEFACTOR_ABO"`}}
+{{#if autopay_membership_type_benefactor}}
 
 Dieser Beitrag kommt zustande, weil Sie die Republik im letzten Jahr
 grosszügigerweise mit einer Gönner-Mitgliedschaft {{#if autopay_with_donation}}
