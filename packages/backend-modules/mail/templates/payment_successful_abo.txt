@@ -46,7 +46,7 @@ sich mit Ihren Kolleginnen und Kollegen in der Verlagsetage austauschen.
 {{#if goodies_count}}
 
 {{#if hasOneGoodie}} Sie haben sich zu Ihrer Mitgliedschaft noch ein
-Republik-Objekt gegönnt. {{elseif hasMultipleGoodies}} Sie haben sich zu Ihrer
+Republik-Objekt gegönnt. {{else if hasMultipleGoodies}} Sie haben sich zu Ihrer
 Mitgliedschaft noch mehrere Republik-Objekte gegönnt. {{/if}}{{#if
 goodies_has_notebook}}Notizbücher liefern wir Ihnen innerhalb von 7 Werktagen.
 {{/if}}{{#if goodies_has_tablebook}}«Republik bei Stromausfall» liefern wir

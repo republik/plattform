@@ -2,14 +2,14 @@ Guten Tag
 
 Herzlichen Dank für Ihre Grosszügigkeit und Ihr Vertrauen.
 
-Sie haben {{#if hasOneGiftedMembership}}eine Mitgliedschaft{{elseif
+Sie haben {{#if hasOneGiftedMembership}}eine Mitgliedschaft{{else if
 hasMultipleGiftedMemberships}} mehrere Mitgliedschaften{{/if}} verschenkt.
 
 {{#if hasOneGiftedMembership}}
 
 Diese Mitgliedschaft endet bald.
 
-{{elseif hasMultipleGiftedMemberships}}
+{{else if hasMultipleGiftedMemberships}}
 
 Diese Mitgliedschaften enden bald.
 
@@ -18,7 +18,7 @@ Diese Mitgliedschaften enden bald.
 Schenken Sie noch ein weiteres Jahr unabhängige und werbefreie Einordnung und
 Vertiefung anstelle einer Flut von Nachrichten?
 
-Folgende{{#if hasOneGiftedMembership}} Mitgliedschaft steht{{elseif
+Folgende{{#if hasOneGiftedMembership}} Mitgliedschaft steht{{else if
 hasMultipleGiftedMemberships}} Mitgliedschaften stehen{{/if}} zur Verlängerung
 an:
 
@@ -27,16 +27,16 @@ an:
    {{/options}}
 
 Klicken Sie hier, um {{#if hasOneGiftedMembership}}die
-Geschenkmitgliedschaft{{elseif hasMultipleGiftedMemberships}}die
+Geschenkmitgliedschaft{{else if hasMultipleGiftedMemberships}}die
 Geschenkmitgliedschaften{{/if}} zu verlängern:
 
 Jetzt weiter die Republik verschenken {{prolong_url}}
 
 Falls Sie innerhalb der nächsten {{inform_claimers_days}} Tage nichts
 unternehmen, erlauben wir uns, {{#if hasOneGiftedMembership}} die beschenkte
-Person{{elseif hasMultipleGiftedMemberships}}die beschenkten Personen{{/if}}
+Person{{else if hasMultipleGiftedMemberships}}die beschenkten Personen{{/if}}
 direkt anzufragen, ob sie ein weiteres Jahr an Bord sein {{#if
-hasOneGiftedMembership}}möchte{{elseif hasMultipleGiftedMemberships}}
+hasOneGiftedMembership}}möchte{{else if hasMultipleGiftedMemberships}}
 möchten{{/if}}. Dies dann natürlich auf eigene Rechnung.
 
 Wir danken Ihnen herzlich für die Unterstützung!

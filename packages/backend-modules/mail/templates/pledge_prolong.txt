@@ -43,7 +43,7 @@ Vielen Dank, dass Sie die Republik anderen zukommen lassen: Sie verlängern die
 Geschenkmitgliedschaft. Wir haben die beschenkte Person darüber per E-Mail
 informiert.
 
-{{elseif hasMultipleGiftedMemberships}}
+{{else if hasMultipleGiftedMemberships}}
 
 Vielen Dank, dass Sie die Republik anderen zukommen lassen: Sie verlängern
 Geschenkmitgliedschaften. Wir haben die Beschenkten darüber per E-Mail
@@ -52,7 +52,7 @@ informiert.
 {{/if}} {{#if goodies_count}}
 
 {{#unless waiting_for_payment}} {{#if hasOneGoodie}} Sie haben sich noch ein
-Republik-Objekt gegönnt. {{elseif hasMultipleGoodies}} Sie haben sich noch
+Republik-Objekt gegönnt. {{else if hasMultipleGoodies}} Sie haben sich noch
 mehrere Republik-Objekte gegönnt. {{/if}}{{#if goodies_has_notebook}}Notizbücher
 liefern wir Ihnen innerhalb von 7 Werktagen. {{/if}}{{#if
 goodies_has_tablebook}}«Republik bei Stromausfall» liefern wir Ihnen innerhalb
