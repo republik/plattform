@@ -52,7 +52,7 @@ goodies_has_mask}}Republik-Masken liefern wir Ihnen innerhalb von 7 Werktagen.
 verschickt. {{/if}}{{#if goodies_has_mug}}Republik-Tassen liefern wir Ihnen
 innerhalb von 7 Werktagen. {{/if}}
 
-   {{#options}} {{#if isOTypeGoodie}}
+   {{#options}} {{#if this.isOTypeGoodie}}
  * {{this.oamount}} {{this.olabel}}
    {{/if}} {{/options}}
 

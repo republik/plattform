@@ -5,7 +5,7 @@ export const new_vars = {
   hasMultipleGiftedMemberships: `gifted_memberships_count > 1.`,
   hasOneGoodie: `goodies_count == 1.`,
   hasMultipleGoodies: `goodies_count > 1.`,
-  isOTypeGoodie: `this.otype == "Goodie".`,
+  'this.isOTypeGoodie': `this.otype == "Goodie".`,
   hasAnyGrantedMemberships: `num_access_granted_memberships > 0.`,
   hasOneGrantedMemberships: `num_access_granted_memberships == 1.`,
   hasMultipleGrantedMemberships: `num_access_granted_memberships > 1.`,
