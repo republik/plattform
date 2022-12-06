@@ -17,7 +17,7 @@ import { getTileActionBar } from './ActionBar'
 import Footer from './Footer'
 import Meta from './Meta'
 import Nav from './Nav'
-import Stoerer from './Stoerer'
+import Paynote from './Paynote'
 
 export type MetaProps = {
   path: string
@@ -44,12 +44,17 @@ const RenderValue: React.FC<{
 
 const RenderWithStoerer: React.FC<{
   value: CustomDescendant[]
-}> = ({ value }) => {
+  tileId?: string
+}> = ({ value, tileId }) => {
+  let idx = 2
+  if (tileId) {
+    idx = value.findIndex((node) => node.id === tileId) + 1
+  }
   return (
     <>
-      <RenderValue value={value.slice(0, 2)} />
-      <Stoerer />
-      <RenderValue value={value.slice(2)} />
+      <RenderValue value={value.slice(0, idx)} />
+      <Paynote />
+      <RenderValue value={value.slice(idx)} />
     </>
   )
 }
@@ -79,7 +84,7 @@ const Page: React.FC<{
         {me ? (
           <RenderValue value={value} />
         ) : (
-          <RenderWithStoerer value={value} />
+          <RenderWithStoerer value={value} tileId={tileId} />
         )}
       </RenderContextProvider>
       <Footer>{actionBar}</Footer>

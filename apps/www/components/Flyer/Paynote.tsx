@@ -5,7 +5,7 @@ import { FlyerTile, Flyer, ColorContextProvider } from '@project-r/styleguide'
 import TrialForm from '../Trial/Form'
 import { useResolvedColorSchemeKey } from '../ColorScheme/lib'
 
-const Stoerer: React.FC = () => {
+const Paynote: React.FC = () => {
   const colorSchemeKey = useResolvedColorSchemeKey()
 
   return (
@@ -26,4 +26,4 @@ const Stoerer: React.FC = () => {
   )
 }
 
-export default Stoerer
+export default Paynote
