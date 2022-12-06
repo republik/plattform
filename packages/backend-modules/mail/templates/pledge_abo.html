@@ -113,8 +113,8 @@
 
                     {{#if goodies_count}}
                     <p>
-                      {{#unless waiting_for_payment}} {{#if `goodies_count ==
-                      1`}} Sie haben sich noch ein Republik-Objekt gegönnt.
+                      {{#unless waiting_for_payment}} {{#if hasOneGoodie}} Sie haben sich 
+                      noch ein Republik-Objekt gegönnt.
                       {{elseif hasMultipleGoodies}} Sie haben sich noch mehrere
                       Republik-Objekte gegönnt. {{/if}}{{#if
                       goodies_has_notebook}}Notizbücher liefern wir Ihnen
