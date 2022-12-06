@@ -41,6 +41,12 @@ module.exports = () => {
             subject: message.subject,
             text: handlebars.compile(message.text || '')(values),
             html: handlebars.compile(message.html || '')(values),
+            attachments: message?.attachments?.map((attachment) => ({
+              filename: attachment.name,
+              content: attachment.content,
+              contentType: attachment.type,
+              encoding: 'base64',
+            })),
           },
           (error, info) => {
             if (error) {
