@@ -3,6 +3,7 @@ const debug = require('debug')('mail:lib:sendMailTemplate')
 const fs = require('fs').promises
 const path = require('path')
 const Promise = require('bluebird')
+const handlebars = require('handlebars')
 
 const shouldScheduleMessage = require('../utils/shouldScheduleMessage')
 const shouldSendMessage = require('../utils/shouldSendMessage')
@@ -37,8 +38,8 @@ const getTemplate = async (filehandler) => {
   return template
 }
 
-const getTemplates = async (name) =>
-  Promise.props({
+const getTemplates = async (name) => {
+  const { html, text } = await Promise.props({
     html: fs
       .open(path.resolve(`${__dirname}/../templates/${name}.html`))
       .then(getTemplate)
@@ -48,6 +49,13 @@ const getTemplates = async (name) =>
       .then(getTemplate)
       .catch(() => null),
   })
+
+  return {
+    getText: handlebars.compile(text || ''),
+    getHtml: handlebars.compile(html || ''),
+    getCompiler: handlebars.compile,
+  }
+}
 
 const envMergeVars = [
   {
@@ -257,7 +265,21 @@ module.exports = async (mail, context, log) => {
     Boolean,
   )
 
-  const { html, text } = await getTemplates(mail.templateName)
+  const values = mergeVars.reduce((prev, curr) => {
+    const { name, content } = curr
+
+    prev[name] = content
+    prev[name.toLowerCase()] = content
+    prev[name.toUpperCase()] = content
+    return prev
+  }, {})
+
+  const { getHtml, getText, getCompiler } = await getTemplates(
+    mail.templateName,
+  )
+
+  const html = getHtml(values)
+  const text = getText(values) || getCompiler(mail.text)(values)
 
   const message = {
     to: [{ email: mail.to }],
@@ -268,7 +290,7 @@ module.exports = async (mail, context, log) => {
     from_email: mail.fromEmail || DEFAULT_MAIL_FROM_ADDRESS,
     from_name: mail.fromName || DEFAULT_MAIL_FROM_NAME,
     html,
-    text: text || mail.text,
+    text,
     merge_language: mail.mergeLanguage || 'handlebars',
     global_merge_vars: mergeVars,
     auto_text: !text,
