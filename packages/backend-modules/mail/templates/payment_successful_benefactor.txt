@@ -40,8 +40,8 @@ schreibt https://keinundaber.ch/de/literary-work/deadline/ » zu.
 
 {{#if goodies_count}}
 
-{{#if `goodies_count == 1`}} Sie haben sich zu Ihrer Gönner-Mitgliedschaft noch
-ein Republik-Objekt gegönnt. {{elseif `goodies_count > 1`}} Sie haben sich zu
+{{#if hasOneGoodie}} Sie haben sich zu Ihrer Gönner-Mitgliedschaft noch
+ein Republik-Objekt gegönnt. {{elseif hasMultipleGoodies}} Sie haben sich zu
 Ihrer Gönner-Mitgliedschaft noch mehrere Republik-Objekte gegönnt. {{/if}}{{#if
 goodies_has_notebook}}Notizbücher liefern wir Ihnen innerhalb von 7 Werktagen.
 {{/if}}{{#if goodies_has_tablebook}}«Republik bei Stromausfall» liefern wir

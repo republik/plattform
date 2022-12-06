@@ -78,9 +78,9 @@
                     </p>
                     {{/if}} {{#if goodies_count}}
                     <p>
-                      {{#if `goodies_count == 1`}} Auch Ihr bestelltes
+                      {{#if hasOneGoodie}} Auch Ihr bestelltes
                       Republik-Objekt eignet sich perfekt für die Code-Übergabe.
-                      {{elseif `goodies_count > 1`}} Auch Ihre bestellten
+                      {{elseif hasMultipleGoodies}} Auch Ihre bestellten
                       Republik-Objekte eignen sich perfekt für die
                       Code-Übergabe. {{/if}}{{#if
                       goodies_has_notebook}}Notizbücher liefern wir Ihnen

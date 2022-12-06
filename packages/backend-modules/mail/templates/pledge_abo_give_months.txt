@@ -18,8 +18,8 @@ nur auf die Seite {{link_claim}} gehen. Und den Code dort eingeben.
 
 {{#if goodies_count}}
 
-{{#if `goodies_count == 1`}} Auch Ihr bestelltes Republik-Objekt eignet sich
-perfekt für die Code-Übergabe. {{elseif `goodies_count > 1`}} Auch Ihre
+{{#if hasOneGoodie}} Auch Ihr bestelltes Republik-Objekt eignet sich
+perfekt für die Code-Übergabe. {{elseif hasMultipleGoodies}} Auch Ihre
 bestellten Republik-Objekte eignen sich perfekt für die Code-Übergabe.
 {{/if}}{{#if goodies_has_notebook}}Notizbücher liefern wir Ihnen innerhalb von 7
 Werktagen. {{/if}}{{#if goodies_has_tablebook}}«Republik bei Stromausfall»

@@ -33,7 +33,7 @@ sich mit Ihren Kolleginnen und Kollegen in der Verlagsetage austauschen.
 
 {{/if}} {{/if}}
    {{#options}}
- * {{#if `this.oamount > 1`}} {{this.oamount}} {{this.olabel}} à
+ * {{#if hasMultipleOAmounts}} {{this.oamount}} {{this.olabel}} à
    {{this.oprice_formatted}}: {{this.ototal_formatted}} {{else}}
    {{this.oamount}} {{this.olabel}}: {{this.ototal_formatted}} {{/if}}
    {{/options}} {{#if discount}}
@@ -45,8 +45,8 @@ sich mit Ihren Kolleginnen und Kollegen in der Verlagsetage austauschen.
 
 {{#if goodies_count}}
 
-{{#if `goodies_count == 1`}} Sie haben sich zu Ihrer Mitgliedschaft noch ein
-Republik-Objekt gegönnt. {{elseif `goodies_count > 1`}} Sie haben sich zu Ihrer
+{{#if hasOneGoodie}} Sie haben sich zu Ihrer Mitgliedschaft noch ein
+Republik-Objekt gegönnt. {{elseif hasMultipleGoodies}} Sie haben sich zu Ihrer
 Mitgliedschaft noch mehrere Republik-Objekte gegönnt. {{/if}}{{#if
 goodies_has_notebook}}Notizbücher liefern wir Ihnen innerhalb von 7 Werktagen.
 {{/if}}{{#if goodies_has_tablebook}}«Republik bei Stromausfall» liefern wir

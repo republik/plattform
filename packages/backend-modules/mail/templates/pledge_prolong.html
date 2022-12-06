@@ -43,7 +43,7 @@
                   <td style="padding: 20px">
                     <p>Guten Tag</p>
 
-                    {{#if `pledger_memberships_count > 0`}}
+                    {{#if hasPledgeMembership}}
                     <p>
                       Ihr Vertrauen ehrt uns: Herzlichen Dank für Ihre
                       Unterstützung!
@@ -68,7 +68,7 @@
                     >
                       {{#options}}
                       <li>
-                        {{#if `this.oamount > 1`}} {{this.oamount}}
+                        {{#if hasMultipleOAmounts}} {{this.oamount}}
                         {{this.olabel}} à {{this.oprice_formatted}}:
                         {{this.ototal_formatted}} {{else}} {{this.oamount}}
                         {{this.olabel}}: {{this.ototal_formatted}} {{/if}}
@@ -97,13 +97,13 @@
                       um genau zu sein. <br />
                       Herzlichen Dank für Ihre grosszügige Spende!
                     </p>
-                    {{/if}} {{#if `gifted_memberships_count == 1`}}
+                    {{/if}} {{#if hasOneGiftedMembership}}
                     <p>
                       Vielen Dank, dass Sie die Republik anderen zukommen
                       lassen: Sie verlängern die Geschenkmitgliedschaft. Wir
                       haben die beschenkte Person darüber per E-Mail informiert.
                     </p>
-                    {{elseif `gifted_memberships_count > 1`}}
+                    {{elseif hasMultipleGiftedMemberships}}
                     <p>
                       Vielen Dank, dass Sie die Republik anderen zukommen
                       lassen: Sie verlängern Geschenkmitgliedschaften. Wir haben
@@ -111,9 +111,9 @@
                     </p>
                     {{/if}} {{#if goodies_count}}
                     <p>
-                      {{#unless waiting_for_payment}} {{#if `goodies_count ==
-                      1`}} Sie haben sich noch ein Republik-Objekt gegönnt.
-                      {{elseif `goodies_count > 1`}} Sie haben sich noch mehrere
+                      {{#unless waiting_for_payment}} {{#if hasOneGoodie}} Sie haben 
+                      sich noch ein Republik-Objekt gegönnt.
+                      {{elseif hasMultipleGoodies}} Sie haben sich noch mehrere
                       Republik-Objekte gegönnt. {{/if}}{{#if
                       goodies_has_notebook}}Notizbücher liefern wir Ihnen
                       innerhalb von 7 Werktagen. {{/if}}{{#if
@@ -187,3 +187,10 @@
     </table>
   </body>
 </html>
+
+hasMultipleOAmounts = `this.oamount > 1.`
+hasAnyPledgeMemberships = `pledger_memberships_count > 0.`
+hasOneGiftedMembership = `gifted_memberships_count == 1.`
+hasMultipleGiftedMemberships = `gifted_memberships_count > 1.`
+hasOneGoodie = `goodies_count == 1.`
+hasMultipleGoodies = `goodies_count > 1.`

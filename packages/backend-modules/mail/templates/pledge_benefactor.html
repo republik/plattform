@@ -109,7 +109,7 @@
                     >
                       {{#options}}
                       <li>
-                        {{#if `this.oamount > 1`}} {{this.oamount}}
+                        {{#if hasMultipleOAmounts}} {{this.oamount}}
                         {{this.olabel}} à {{this.oprice_formatted}}:
                         {{this.ototal_formatted}} {{else}} {{this.oamount}}
                         {{this.olabel}}: {{this.ototal_formatted}} {{/if}}
@@ -130,7 +130,7 @@
                     <p>
                       {{#unless waiting_for_payment}} {{#if `goodies_count ==
                       1`}} Sie haben sich noch ein Republik-Objekt gegönnt.
-                      {{elseif `goodies_count > 1`}} Sie haben sich noch mehrere
+                      {{elseif hasMultipleGoodies}} Sie haben sich noch mehrere
                       Republik-Objekte gegönnt. {{/if}}{{#if
                       goodies_has_notebook}}Notizbücher liefern wir Ihnen
                       innerhalb von 7 Werktagen. {{/if}}{{#if

@@ -46,13 +46,13 @@
                       Herzlichen Dank für Ihre Grosszügigkeit und Ihr Vertrauen.
                     </p>
                     <p>
-                      Sie haben {{#if `gifted_memberships_count == 1`}}eine
+                      Sie haben {{#if hasOneGiftedMembership}}eine
                       Mitgliedschaft{{elseif `gifted_memberships_count >
                       1`}}mehrere Mitgliedschaften{{/if}} verschenkt.
                     </p>
-                    {{#if `gifted_memberships_count == 1`}}
+                    {{#if hasOneGiftedMembership}}
                     <p>Diese Mitgliedschaft endet bald.</p>
-                    {{elseif `gifted_memberships_count > 1`}}
+                    {{elseif hasMultipleGiftedMemberships}}
                     <p>Diese Mitgliedschaften enden bald.</p>
                     {{/if}}
                     <p>
@@ -61,7 +61,7 @@
                       von Nachrichten?
                     </p>
                     <p>
-                      Folgende{{#if `gifted_memberships_count == 1`}}
+                      Folgende{{#if hasOneGiftedMembership}}
                       Mitgliedschaft steht{{elseif `gifted_memberships_count >
                       1`}} Mitgliedschaften stehen{{/if}} zur Verlängerung an:
                     </p>
@@ -76,7 +76,7 @@
                     <p>
                       Klicken Sie hier, um {{#if `gifted_memberships_count ==
                       1`}}die Geschenkmitgliedschaft{{elseif
-                      `gifted_memberships_count > 1`}}die
+                      hasMultipleGiftedMemberships}}die
                       Geschenkmitgliedschaften{{/if}} zu verlängern:
                     </p>
                     <table
@@ -104,8 +104,8 @@
                     <p>
                       Falls Sie innerhalb der nächsten {{inform_claimers_days}}
                       Tage nichts unternehmen, erlauben wir uns, {{#if
-                      `gifted_memberships_count == 1`}} die beschenkte
-                      Person{{elseif `gifted_memberships_count > 1`}}die
+                      hasOneGiftedMembership}} die beschenkte
+                      Person{{elseif hasMultipleGiftedMemberships}}die
                       beschenkten Personen{{/if}} direkt anzufragen, ob sie ein
                       weiteres Jahr an Bord sein {{#if `gifted_memberships_count
                       == 1`}}möchte{{elseif `gifted_memberships_count >

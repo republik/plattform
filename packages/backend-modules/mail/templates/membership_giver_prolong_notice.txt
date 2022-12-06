@@ -2,14 +2,14 @@ Guten Tag
 
 Herzlichen Dank für Ihre Grosszügigkeit und Ihr Vertrauen.
 
-Sie haben {{#if `gifted_memberships_count == 1`}}eine Mitgliedschaft{{elseif
-`gifted_memberships_count > 1`}}mehrere Mitgliedschaften{{/if}} verschenkt.
+Sie haben {{#if hasOneGiftedMembership}}eine Mitgliedschaft{{elseif
+hasMultipleGiftedMemberships}}mehrere Mitgliedschaften{{/if}} verschenkt.
 
-{{#if `gifted_memberships_count == 1`}}
+{{#if hasOneGiftedMembership}}
 
 Diese Mitgliedschaft endet bald.
 
-{{elseif `gifted_memberships_count > 1`}}
+{{elseif hasMultipleGiftedMemberships}}
 
 Diese Mitgliedschaften enden bald.
 
@@ -18,25 +18,25 @@ Diese Mitgliedschaften enden bald.
 Schenken Sie noch ein weiteres Jahr unabhängige und werbefreie Einordnung und
 Vertiefung anstelle einer Flut von Nachrichten?
 
-Folgende{{#if `gifted_memberships_count == 1`}} Mitgliedschaft steht{{elseif
-`gifted_memberships_count > 1`}} Mitgliedschaften stehen{{/if}} zur Verlängerung
+Folgende{{#if hasOneGiftedMembership}} Mitgliedschaft steht{{elseif
+hasMultipleGiftedMemberships}} Mitgliedschaften stehen{{/if}} zur Verlängerung
 an:
 
    {{#options}}
  * {{this.olabel}}
    {{/options}}
 
-Klicken Sie hier, um {{#if `gifted_memberships_count == 1`}}die
-Geschenkmitgliedschaft{{elseif `gifted_memberships_count > 1`}}die
+Klicken Sie hier, um {{#if hasOneGiftedMembership}}die
+Geschenkmitgliedschaft{{elseif hasMultipleGiftedMemberships}}die
 Geschenkmitgliedschaften{{/if}} zu verlängern:
 
 Jetzt weiter die Republik verschenken {{prolong_url}}
 
 Falls Sie innerhalb der nächsten {{inform_claimers_days}} Tage nichts
-unternehmen, erlauben wir uns, {{#if `gifted_memberships_count == 1`}} die
-beschenkte Person{{elseif `gifted_memberships_count > 1`}}die beschenkten
+unternehmen, erlauben wir uns, {{#if hasOneGiftedMembership}} die
+beschenkte Person{{elseif hasMultipleGiftedMemberships}}die beschenkten
 Personen{{/if}} direkt anzufragen, ob sie ein weiteres Jahr an Bord sein {{#if
-`gifted_memberships_count == 1`}}möchte{{elseif `gifted_memberships_count >
+hasOneGiftedMembership}}möchte{{elseif `gifted_memberships_count >
 1`}}möchten{{/if}}. Dies dann natürlich auf eigene Rechnung.
 
 Wir danken Ihnen herzlich für die Unterstützung!
