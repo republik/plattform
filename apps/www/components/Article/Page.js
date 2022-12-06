@@ -234,6 +234,8 @@ const ArticlePage = ({
   serverContext,
   clientRedirection,
 }) => {
+  console.log({ payNoteSeed })
+
   const actionBarRef = useRef()
   const bottomActionBarRef = useRef()
   const galleryRef = useRef()
@@ -664,6 +666,7 @@ const ArticlePage = ({
                   actionBar={actionBarFlyer}
                   value={article.content.children}
                   tileId={share}
+                  payNoteSeed={payNoteSeed}
                 />
               ) : (
                 <ArticleGallery

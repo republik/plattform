@@ -42,10 +42,11 @@ const RenderValue: React.FC<{
   />
 )
 
-const RenderWithStoerer: React.FC<{
+const RenderWithPaynote: React.FC<{
   value: CustomDescendant[]
   tileId?: string
-}> = ({ value, tileId }) => {
+  seed: number
+}> = ({ value, tileId, seed }) => {
   let idx = 2
   if (tileId) {
     idx = value.findIndex((node) => node.id === tileId) + 1
@@ -53,7 +54,7 @@ const RenderWithStoerer: React.FC<{
   return (
     <>
       <RenderValue value={value.slice(0, idx)} />
-      <Paynote />
+      <Paynote seed={seed} />
       <RenderValue value={value.slice(idx)} />
     </>
   )
@@ -67,9 +68,19 @@ const Page: React.FC<{
   tileId?: string
   value: CustomDescendant[]
   actionBar: JSX.Element
-}> = ({ meta, repoId, documentId, inNativeApp, tileId, value, actionBar }) => {
+  payNoteSeed?: number
+}> = ({
+  meta,
+  repoId,
+  documentId,
+  inNativeApp,
+  tileId,
+  value,
+  actionBar,
+  payNoteSeed,
+}) => {
   const { t } = useTranslation()
-  const { me } = useMe()
+  const { hasAccess, meLoading } = useMe()
 
   const contextProps = {
     t,
@@ -81,10 +92,10 @@ const Page: React.FC<{
   return (
     <Flyer.Layout>
       <RenderContextProvider {...contextProps}>
-        {me ? (
+        {meLoading || hasAccess ? (
           <RenderValue value={value} />
         ) : (
-          <RenderWithStoerer value={value} tileId={tileId} />
+          <RenderWithPaynote value={value} tileId={tileId} seed={payNoteSeed} />
         )}
       </RenderContextProvider>
       <Footer>{actionBar}</Footer>
