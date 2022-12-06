@@ -42,7 +42,7 @@
                 <tr>
                   <td style="padding: 20px">
                     <p>Guten Tag</p>
-                    {{#if `attempt_number == 3`}}
+                    {{#if thirdAttempt}}
                     <p>
                       Ihre Mitgliedschaft erneuerte sich am {{end_date}} um ein
                       weiteres Jahr. Bedauerlicherweise konnten wir erneut den
@@ -67,7 +67,7 @@
                         >Höhe Ihres Mitgliederbeitrags selbst zu bestimmen</a
                       >.
                     </p>
-                    {{elseif `attempt_number == 4`}}
+                    {{elseif fourthAttempt}}
                     <p>
                       Ihre Mitgliedschaft erneuerte sich am {{end_date}} um ein
                       weiteres Jahr. Trotz mehrfachen Versuchen konnten wir den
@@ -173,3 +173,6 @@
     </table>
   </body>
 </html>
+
+thirdAttempt = attempt_number == 3
+fourthAttempt = attempt_number == 4
