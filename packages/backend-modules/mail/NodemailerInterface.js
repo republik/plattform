@@ -1,5 +1,4 @@
 const nodemailer = require('nodemailer')
-const handlebars = require('handlebars')
 
 const { SendMailError } = require('./errors')
 
@@ -24,23 +23,14 @@ module.exports = () => {
       )
     },
     async send(message) {
-      const values = message.global_merge_vars.reduce((prev, curr) => {
-        const { name, content } = curr
-
-        prev[name] = content
-        prev[name.toLowerCase()] = content
-        prev[name.toUpperCase()] = content
-        return prev
-      }, {})
-
       const result = await new Promise(function (resolve, reject) {
         transporter.sendMail(
           {
             from: `"${message.from_name}" <${message.from_email}>`,
             to: message.to.map(({ email }) => email).join(', '),
             subject: message.subject,
-            text: handlebars.compile(message.text || '')(values),
-            html: handlebars.compile(message.html || '')(values),
+            text: message.text,
+            html: message.html,
             attachments: message?.attachments?.map((attachment) => ({
               filename: attachment.name,
               content: attachment.content,
