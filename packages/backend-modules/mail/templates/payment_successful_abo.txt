@@ -62,7 +62,7 @@ innerhalb von 7 Werktagen. {{/if}}
 Vielen Dank!
 Und viel Vergnügen beim Start mit der Republik.
 
-{{/if}} {{#if `total < 1000`}}
+{{/if}} {{#if totalPledgeBelow1000}}
 
 Falls Sie Fragen zur Inbetriebnahme des Magazins haben:
 Hier finden Sie die Gebrauchsanleitung {{link_manual}} , die die wichtigsten
