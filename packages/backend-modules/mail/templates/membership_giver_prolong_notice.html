@@ -47,12 +47,12 @@
                     </p>
                     <p>
                       Sie haben {{#if hasOneGiftedMembership}}eine
-                      Mitgliedschaft{{elseif hasMultipleGiftedMemberships}}
+                      Mitgliedschaft{{else if hasMultipleGiftedMemberships}}
                       mehrere Mitgliedschaften{{/if}} verschenkt.
                     </p>
                     {{#if hasOneGiftedMembership}}
                     <p>Diese Mitgliedschaft endet bald.</p>
-                    {{elseif hasMultipleGiftedMemberships}}
+                    {{else if hasMultipleGiftedMemberships}}
                     <p>Diese Mitgliedschaften enden bald.</p>
                     {{/if}}
                     <p>
@@ -62,7 +62,7 @@
                     </p>
                     <p>
                       Folgende{{#if hasOneGiftedMembership}}
-                      Mitgliedschaft steht{{elseif hasMultipleGiftedMemberships}}
+                      Mitgliedschaft steht{{else if hasMultipleGiftedMemberships}}
                       Mitgliedschaften stehen{{/if}} zur Verlängerung an:
                     </p>
 
@@ -75,7 +75,7 @@
                     </ul>
                     <p>
                       Klicken Sie hier, um {{#if hasOneGiftedMembership}}die
-                      Geschenkmitgliedschaft{{elseif
+                      Geschenkmitgliedschaft{{else if
                       hasMultipleGiftedMemberships}}die
                       Geschenkmitgliedschaften{{/if}} zu verlängern:
                     </p>
@@ -105,9 +105,9 @@
                       Falls Sie innerhalb der nächsten {{inform_claimers_days}}
                       Tage nichts unternehmen, erlauben wir uns, {{#if
                       hasOneGiftedMembership}} die beschenkte
-                      Person{{elseif hasMultipleGiftedMemberships}}die
+                      Person{{else if hasMultipleGiftedMemberships}}die
                       beschenkten Personen{{/if}} direkt anzufragen, ob sie ein
-                      weiteres Jahr an Bord sein {{#if hasOneGiftedMembership}}möchte{{elseif hasMultipleGiftedMemberships}}
+                      weiteres Jahr an Bord sein {{#if hasOneGiftedMembership}}möchte{{else if hasMultipleGiftedMemberships}}
                       möchten{{/if}}. Dies dann natürlich auf eigene
                       Rechnung.
                     </p>

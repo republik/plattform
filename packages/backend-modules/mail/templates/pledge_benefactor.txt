@@ -10,7 +10,7 @@ Wir sind Ihnen sehr dankbar für Ihren grosszügigen Beitrag. Da er CHF 1000.–
 aktiviert werden. Sie erhalten eine Bestätigung, wenn die Transaktion
 erfolgreich bei uns angekommen ist.
 
-{{elseif pledger_memberships_active_monthly}}
+{{else  if pledger_memberships_active_monthly}}
 
 Dass Sie uns mit einer Jahresmitgliedschaft längerfristig unterstützen, freut
 und ehrt uns. Herzlichen Dank für Ihr Vertrauen.

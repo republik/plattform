@@ -103,7 +103,7 @@
                       lassen: Sie verlängern die Geschenkmitgliedschaft. Wir
                       haben die beschenkte Person darüber per E-Mail informiert.
                     </p>
-                    {{elseif hasMultipleGiftedMemberships}}
+                    {{else if hasMultipleGiftedMemberships}}
                     <p>
                       Vielen Dank, dass Sie die Republik anderen zukommen
                       lassen: Sie verlängern Geschenkmitgliedschaften. Wir haben
@@ -113,7 +113,7 @@
                     <p>
                       {{#unless waiting_for_payment}} {{#if hasOneGoodie}} Sie haben 
                       sich noch ein Republik-Objekt gegönnt.
-                      {{elseif hasMultipleGoodies}} Sie haben sich noch mehrere
+                      {{else if hasMultipleGoodies}} Sie haben sich noch mehrere
                       Republik-Objekte gegönnt. {{/if}}{{#if
                       goodies_has_notebook}}Notizbücher liefern wir Ihnen
                       innerhalb von 7 Werktagen. {{/if}}{{#if

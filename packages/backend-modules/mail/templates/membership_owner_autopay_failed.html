@@ -67,7 +67,7 @@
                         >Höhe Ihres Mitgliederbeitrags selbst zu bestimmen</a
                       >.
                     </p>
-                    {{elseif fourthAttempt}}
+                    {{else if fourthAttempt}}
                     <p>
                       Ihre Mitgliedschaft erneuerte sich am {{end_date}} um ein
                       weiteres Jahr. Trotz mehrfachen Versuchen konnten wir den
@@ -103,12 +103,12 @@
                         >Ihre Mitgliedschaft hier manuell zu erneuern</a
                       >.
                     </p>
-                    {{elseif attempt_is_last}}
+                    {{else if attempt_is_last}}
                     <p>
                       Wir sehen uns daher zu unserem grossen Bedauern gezwungen,
                       Ihre Mitgliedschaft am {{grace_end_date}} zu deaktivieren.
                     </p>
-                    {{elseif attempt_next_is_last}}
+                    {{else if attempt_next_is_last}}
                     <p>
                       Wir unternehmen am {{attempt_next_at}} einen letzten
                       Versuch und bitten Sie, bis dahin

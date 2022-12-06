@@ -55,7 +55,7 @@
                       aktiviert werden. Sie erhalten eine Bestätigung, wenn die
                       Transaktion erfolgreich bei uns angekommen ist.
                     </p>
-                    {{elseif pledger_memberships_active_monthly}}
+                    {{else if pledger_memberships_active_monthly}}
                     <p>
                       Dass Sie uns mit einer Jahresmitgliedschaft längerfristig
                       unterstützen, freut und ehrt uns. Herzlichen Dank für Ihr
@@ -130,7 +130,7 @@
                     <p>
                       {{#unless waiting_for_payment}} {{#if hasOneGoodie}} Sie haben sich 
                       noch ein Republik-Objekt gegönnt.
-                      {{elseif hasMultipleGoodies}} Sie haben sich noch mehrere
+                      {{else if hasMultipleGoodies}} Sie haben sich noch mehrere
                       Republik-Objekte gegönnt. {{/if}}{{#if
                       goodies_has_notebook}}Notizbücher liefern wir Ihnen
                       innerhalb von 7 Werktagen. {{/if}}{{#if
