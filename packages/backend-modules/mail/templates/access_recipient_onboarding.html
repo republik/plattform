@@ -47,7 +47,7 @@
                       Republik begrüssen zu dürfen.
                     </p>
 
-                    {{#if `RECIPIENT_EMAIL != GRANTER_EMAIL`}}
+                    {{#if recipientIsNotGranter}}
                     <p>
                       Für {{CAMPAIGN_PERIOD}} sind Sie unser Gast: Sie können ab
                       sofort
@@ -155,3 +155,5 @@
     </table>
   </body>
 </html>
+
+recipientIsNotGranter = RECIPIENT_EMAIL != GRANTER_EMAIL

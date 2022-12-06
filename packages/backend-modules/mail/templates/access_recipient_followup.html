@@ -43,7 +43,7 @@
                   <td style="padding: 20px">
                     <p>Guten Tag</p>
                     <p>
-                      {{#if `RECIPIENT_EMAIL != GRANTER_EMAIL`}}Am
+                      {{#if recipientIsNotGranter}}Am
                       {{GRANT_BEGIN}} hat {{GRANTER_NAME}} mit Ihnen das
                       Republik-Abonnement geteilt.{{else}}Bis zum {{GRANT_END}}
                       waren Sie als Gast an Bord der Republik.{{/if}}
@@ -148,3 +148,5 @@
     </table>
   </body>
 </html>
+
+recipientIsNotGranter = RECIPIENT_EMAIL != GRANTER_EMAIL

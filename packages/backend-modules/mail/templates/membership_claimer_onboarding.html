@@ -44,7 +44,7 @@
                     <p>Guten Tag</p>
                     {{#if active_membership_type_company_name}}
                     <p>Sie haben soeben ein Geschenk eingelöst.</p>
-                    {{#if `active_membership_type_company_name == "REPUBLIK"`}}
+                    {{#if isRepublikMember}}
                     <p>
                       Wir aktivieren dieses automatisch, sobald die aktuelle
                       Periode Ihres Abonnements ausgelaufen ist. So können Sie
@@ -128,3 +128,5 @@
     </table>
   </body>
 </html>
+
+isRepublikMember = active_membership_type_company_name == "REPUBLIK"
