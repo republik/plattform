@@ -3,7 +3,7 @@ Guten Tag
 Ihre Zahlung ist erfolgreich bei uns eingegangen.
 Herzlichen Dank!
 
-{{#if `total > 1000`}} {{#if pledger_memberships_active_monthly}}
+{{#if totalPledgeAbove1000}} {{#if pledger_memberships_active_monthly}}
 
 Dass Sie uns mit einer Jahresmitgliedschaft längerfristig unterstützen, freut
 und ehrt uns. Herzlichen Dank für Ihr Vertrauen.
@@ -56,7 +56,7 @@ innerhalb von 7 Werktagen. {{/if}}
  * {{this.oamount}} {{this.olabel}}
    {{/if}} {{/options}}
 
-{{/if}} {{#if `total > 1000`}}
+{{/if}} {{#if totalPledgeAbove1000}}
 
 Vielen Dank!
 Und viel Vergnügen beim Start mit der Republik.

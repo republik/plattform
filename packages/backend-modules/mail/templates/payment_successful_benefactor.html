@@ -49,7 +49,7 @@
                       >
                     </p>
 
-                    {{#if `total > 1000`}} {{#if
+                    {{#if totalPledgeAbove1000}} {{#if
                     pledger_memberships_active_monthly}}
                     <p>
                       Dass Sie uns mit einer Jahresmitgliedschaft längerfristig
@@ -133,7 +133,7 @@
                       <li>{{this.oamount}} {{this.olabel}}</li>
                       {{/if}} {{/options}}
                     </ul>
-                    {{/if}} {{#if `total > 1000`}}
+                    {{/if}} {{#if totalPledgeAbove1000}}
                     <p>
                       Vielen Dank!<br />
                       Und viel Vergnügen beim Start mit der Republik.

@@ -9,4 +9,5 @@ export const new_vars = {
   hasAnyGrantedMemberships: `num_access_granted_memberships > 0.`,
   hasOneGrantedMemberships: `num_access_granted_memberships == 1.`,
   hasMultipleGrantedMemberships: `num_access_granted_memberships > 1.`,
+  totalPledgeAbove1000: `total > 1000`,
 }
