@@ -96,12 +96,12 @@
                     <ul
                       style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}"
                     >
-                      {{#options}} {{#if `this.otype == "Goodie"`}}
+                      {{#options}} {{#if isOTypeGoodie}}
                       <li>{{this.oamount}} {{this.olabel}}</li>
                       {{/if}} {{/options}}
                     </ul>
-                    {{/if}} {{/if}} {{#if `num_access_granted_memberships > 0`}}
-                    {{#if `num_access_granted_memberships == 1`}}
+                    {{/if}} {{/if}} {{#if hasAnyGrantedMemberships}}
+                    {{#if hasOneGrantedMemberships}}
                     <p>
                       <strong
                         >Vielen Dank, dass Sie die Verbreitung der Republik
@@ -114,7 +114,7 @@
                       passende Empfängerin für Ihr Geschenk suchen und Sie
                       informieren, sobald die Mitgliedschaft eingelöst wird.
                     </p>
-                    {{/if}} {{#if `num_access_granted_memberships > 1`}}
+                    {{/if}} {{#if hasMultipleGrantedMemberships}}
                     <p>
                       <strong
                         >Vielen Dank, dass Sie die Verbreitung der Republik

@@ -37,12 +37,12 @@ Werktagen. {{/if}}{{#if goodies_has_fondue}}Republik-Fondues werden am 26.
 Januar 2022 verschickt. {{/if}}{{#if goodies_has_mug}}Republik-Tassen liefern
 wir Ihnen innerhalb von 7 Werktagen. {{/if}}
 
-   {{#options}} {{#if `this.otype == "Goodie"`}}
+   {{#options}} {{#if isOTypeGoodie}}
  * {{this.oamount}} {{this.olabel}}
    {{/if}} {{/options}}
 
-{{/if}} {{/if}} {{#if `num_access_granted_memberships > 0`}} {{#if
-`num_access_granted_memberships == 1`}}
+{{/if}} {{/if}} {{#if hasAnyGrantedMemberships}} {{#if
+hasOneGrantedMemberships}}
 
 Vielen Dank, dass Sie die Verbreitung der Republik {{#if
 voucher_codes}}zusätzlich {{/if}}mit einer Wachstums-Mitgliedschaft
@@ -52,7 +52,7 @@ Wir werden nun, zusammen mit unseren Komplizen, eine passende Empfängerin für
 Ihr Geschenk suchen und Sie informieren, sobald die Mitgliedschaft eingelöst
 wird.
 
-{{/if}} {{#if `num_access_granted_memberships > 1`}}
+{{/if}} {{#if hasMultipleGrantedMemberships}}
 
 Vielen Dank, dass Sie die Verbreitung der Republik {{#if
 voucher_codes}}zusätzlich {{/if}}mit gleich mehreren Wachstums-Mitgliedschaften

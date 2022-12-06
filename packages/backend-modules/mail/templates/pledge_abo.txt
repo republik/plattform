@@ -35,7 +35,7 @@ davon klärt.
 Details zum Kauf:
 
    {{#options}}
- * {{#if hasMultipleOAmounts}} {{this.oamount}} {{this.olabel}} à
+ * {{#if this.hasMultipleOAmounts}} {{this.oamount}} {{this.olabel}} à
    {{this.oprice_formatted}}: {{this.ototal_formatted}} {{else}}
    {{this.oamount}} {{this.olabel}}: {{this.ototal_formatted}} {{/if}}
    {{/options}} {{#if discount}}
