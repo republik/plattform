@@ -296,6 +296,7 @@ const Form = (props) => {
 
   const consentErrors = getConsentsError(t, REQUIRED_CONSENTS, consents)
   const errorMessages = [email.error].concat(consentErrors).filter(Boolean)
+  const showCircle = !!email.value && !email.error
 
   return (
     <>
@@ -326,8 +327,7 @@ const Form = (props) => {
                     <button
                       {...css(
                         styles.circleButton,
-                        !!email.value &&
-                          !email.error &&
+                        showCircle &&
                           colorScheme.set(
                             'backgroundColor',
                             black ? 'text' : 'primary',
@@ -338,7 +338,10 @@ const Form = (props) => {
                         style={{ cursor: 'pointer' }}
                         size={22}
                         onClick={requestAccess}
-                        {...colorScheme.set('fill', 'text')}
+                        {...colorScheme.set(
+                          'fill',
+                          black && showCircle ? 'default' : 'text',
+                        )}
                       />
                     </button>
                   ))
@@ -417,6 +420,7 @@ const Form = (props) => {
             onTokenTypeChange={reset}
             onSuccess={onSuccessSwitchBoard}
             minimal={minimal}
+            black={black}
           />
         </div>
       )}

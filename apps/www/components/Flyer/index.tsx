@@ -46,7 +46,9 @@ const RenderWithPaynote: React.FC<{
   value: CustomDescendant[]
   tileId?: string
   seed: number
-}> = ({ value, tileId, seed }) => {
+  repoId: string
+  documentId: string
+}> = ({ value, tileId, seed, repoId, documentId }) => {
   let idx = 2
   if (tileId) {
     idx = value.findIndex((node) => node.id === tileId) + 1
@@ -54,7 +56,7 @@ const RenderWithPaynote: React.FC<{
   return (
     <>
       <RenderValue value={value.slice(0, idx)} />
-      <Paynote seed={seed} />
+      <Paynote seed={seed} repoId={repoId} documentId={documentId} />
       <RenderValue value={value.slice(idx)} />
     </>
   )
@@ -80,7 +82,7 @@ const Page: React.FC<{
   payNoteSeed,
 }) => {
   const { t } = useTranslation()
-  const { hasAccess, meLoading } = useMe()
+  const { hasActiveMembership, meLoading } = useMe()
 
   const contextProps = {
     t,
@@ -92,10 +94,16 @@ const Page: React.FC<{
   return (
     <Flyer.Layout>
       <RenderContextProvider {...contextProps}>
-        {meLoading || hasAccess ? (
+        {meLoading || hasActiveMembership ? (
           <RenderValue value={value} />
         ) : (
-          <RenderWithPaynote value={value} tileId={tileId} seed={payNoteSeed} />
+          <RenderWithPaynote
+            value={value}
+            tileId={tileId}
+            seed={payNoteSeed}
+            repoId={repoId}
+            documentId={documentId}
+          />
         )}
       </RenderContextProvider>
       <Footer>{actionBar}</Footer>

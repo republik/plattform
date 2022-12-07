@@ -6,7 +6,8 @@ import {
   Button,
   Interaction,
   Field,
-  A,
+  linkRule,
+  plainLinkRule,
   InlineSpinner,
   useColorContext,
 } from '@project-r/styleguide'
@@ -117,9 +118,13 @@ const CodeAuthorization = ({
   }, [payload])
 
   return (
-    <form onSubmit={onSubmit} ref={formRef}>
+    <form
+      onSubmit={onSubmit}
+      ref={formRef}
+      {...colorScheme.set('color', 'text')}
+    >
       {minimal ? (
-        <P>
+        <p>
           {t.elements('Auth/CodeAuthorization/description', {
             emphasis: (
               <Emphasis key='emphasis'>
@@ -129,7 +134,7 @@ const CodeAuthorization = ({
               </Emphasis>
             ),
           })}
-        </P>
+        </p>
       ) : (
         <>
           <H3>{t('Auth/CodeAuthorization/title')}</H3>
@@ -150,6 +155,7 @@ const CodeAuthorization = ({
         value={code}
         autoComplete='false'
         error={dirty && error}
+        black={black}
         icon={
           minimal &&
           (mutating ? (
@@ -185,9 +191,14 @@ const CodeAuthorization = ({
       )}
       <ul {...listStyle}>
         <li>
-          <A href='#' onClick={onCancel}>
+          <a
+            {...(black ? plainLinkRule : linkRule)}
+            style={black ? { textDecoration: 'underline' } : {}}
+            href='#'
+            onClick={onCancel}
+          >
             {t('Auth/CodeAuthorization/help/cancelLink')}
-          </A>
+          </a>
         </li>
         <li {...colorScheme.set('color', 'textSoft')}>
           {t('Auth/CodeAuthorization/help/lastResort')}

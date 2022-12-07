@@ -297,7 +297,7 @@ const SecondaryCta = ({ payNote, payload }) => {
   )
 }
 
-const BuyNoteCta = ({ payNote, payload }) => (
+export const BuyNoteCta = ({ payNote, payload }) => (
   <div {...styles.actions}>
     <BuyButton payNote={payNote} payload={payload} />
     <SecondaryCta payNote={payNote} payload={payload} />

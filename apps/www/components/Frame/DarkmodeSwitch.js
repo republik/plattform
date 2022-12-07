@@ -11,7 +11,7 @@ import { useInNativeApp } from '../../lib/withInNativeApp'
 
 import { useColorSchemeKeyPreference } from '../ColorScheme/lib'
 
-const DarkmodeSwitch = ({ t }) => {
+const DarkmodeSwitch = ({ t, isClimate }) => {
   const { inNativeApp, inNativeAppLegacy } = useInNativeApp()
   const [colorSchemeKey, setColorSchemeKey] = useColorSchemeKeyPreference()
   const [colorScheme] = useColorContext()
@@ -50,7 +50,9 @@ const DarkmodeSwitch = ({ t }) => {
           <>
             <Radio
               value='dark'
-              checked={colorSchemeKey === 'dark'}
+              checked={
+                colorSchemeKey === 'dark' || colorSchemeKey === 'climateDark'
+              }
               onChange={() => {
                 setColorSchemeKey('dark')
               }}
