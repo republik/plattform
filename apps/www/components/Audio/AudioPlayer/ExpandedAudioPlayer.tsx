@@ -48,13 +48,13 @@ const styles = {
     },
     overflow: 'hidden',
   }),
-  queueWrapper: css({
+  containerWrapper: css({
     flex: 1,
     minHeight: 0,
     display: 'inline-flex',
     flexDirection: 'column',
   }),
-  queue: css({
+  scrollableContainer: css({
     flex: 1,
     minHeight: 0,
     overflowY: 'auto',
@@ -233,7 +233,7 @@ const ExpandedAudioPlayer = ({
           {hasError && <AudioError />}
         </div>
       )}
-      <div {...styles.queueWrapper}>
+      <div {...styles.containerWrapper}>
         <Scroller>
           <TabButton
             text={t('AudioPlayer/Queue')}
@@ -253,7 +253,7 @@ const ExpandedAudioPlayer = ({
         <motion.div
           ref={bodyLockTargetRef}
           layoutScroll
-          {...styles.queue}
+          {...styles.scrollableContainer}
           {...queueScrollbarStyle}
         >
           {activeTab === 'QUEUE' && (
