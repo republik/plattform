@@ -46,17 +46,14 @@ function getCommentActions({
       : false
     items.push({
       icon: ReportIcon,
-      label: hasLocalReport
-        ? t('styleguide/CommentActions/reportWithAmount', {
-            amount: 1,
-          })
-        : comment.numReports && comment.numReports > 0
-        ? t('styleguide/CommentActions/reportWithAmount', {
-            amount: comment.numReports,
-          })
-        : comment.userReportedAt
-        ? t('styleguide/CommentActions/reported')
-        : t('styleguide/CommentActions/report'),
+      label:
+        comment.numReports && comment.numReports > 0
+          ? t('styleguide/CommentActions/reportWithAmount', {
+              amount: comment.numReports,
+            })
+          : comment.userReportedAt || hasLocalReport
+          ? t('styleguide/CommentActions/reported')
+          : t('styleguide/CommentActions/report'),
       // TODO: check against local storage if user is guest
       disabled: !!comment.userReportedAt || hasLocalReport,
       onClick: async () => {
