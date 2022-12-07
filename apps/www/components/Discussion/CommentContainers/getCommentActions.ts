@@ -23,6 +23,7 @@ type Options = {
   roles: string[]
   t: any
   setEditMode?: Dispatch<SetStateAction<boolean>>
+  checkIfAlreadyReported?: (commentId: string) => boolean
 }
 
 function getCommentActions({
@@ -31,6 +32,7 @@ function getCommentActions({
   setEditMode,
   roles,
   actions,
+  checkIfAlreadyReported,
 }: Options) {
   const items = []
 
@@ -39,17 +41,24 @@ function getCommentActions({
     comment.published &&
     comment.userCanReport
   ) {
+    const hasLocalReport = checkIfAlreadyReported
+      ? checkIfAlreadyReported(comment.id)
+      : false
     items.push({
       icon: ReportIcon,
-      label:
-        comment.numReports && comment.numReports > 0
-          ? t('styleguide/CommentActions/reportWithAmount', {
-              amount: comment.numReports,
-            })
-          : comment.userReportedAt
-          ? t('styleguide/CommentActions/reported')
-          : t('styleguide/CommentActions/report'),
-      disabled: !!comment.userReportedAt,
+      label: hasLocalReport
+        ? t('styleguide/CommentActions/reportWithAmount', {
+            amount: 1,
+          })
+        : comment.numReports && comment.numReports > 0
+        ? t('styleguide/CommentActions/reportWithAmount', {
+            amount: comment.numReports,
+          })
+        : comment.userReportedAt
+        ? t('styleguide/CommentActions/reported')
+        : t('styleguide/CommentActions/report'),
+      // TODO: check against local storage if user is guest
+      disabled: !!comment.userReportedAt || hasLocalReport,
       onClick: async () => {
         if (window.confirm(t('styleguide/CommentActions/reportMessage'))) {
           await actions.reportCommentHandler(comment.id)
