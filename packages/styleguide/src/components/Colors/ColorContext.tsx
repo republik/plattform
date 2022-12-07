@@ -166,7 +166,12 @@ export const ColorContextLocalExtension: React.FC<{
   )
 }
 
-export const ColorHtmlBodyColors = ({ colorSchemeKey = 'auto' }) => {
+export const ColorHtmlBodyColors = ({
+  colorSchemeKey = 'auto',
+  prefix = '',
+}) => {
+  const lightKey = `${prefix}light`
+  const darkKey = `${prefix}dark`
   return (
     <style
       key={colorSchemeKey}
@@ -175,16 +180,16 @@ export const ColorHtmlBodyColors = ({ colorSchemeKey = 'auto' }) => {
           colorSchemeKey === 'auto'
             ? [
                 // default light
-                `html, body { background-color: ${colors.light.default}; color: ${colors.light.text}; }`,
+                `html, body { background-color: ${colors[lightKey].default}; color: ${colors[lightKey].text}; }`,
                 // dark via user preference
-                `html[data-user-color-scheme="dark"], html[data-user-color-scheme="dark"] body { background-color: ${colors.dark.default}; color: ${colors.dark.text}; }`,
+                `html[data-user-color-scheme="dark"], html[data-user-color-scheme="dark"] body { background-color: ${colors[darkKey].default}; color: ${colors[darkKey].text}; }`,
                 // os dark preference
                 `@media (prefers-color-scheme: dark) {`,
                 [
                   // auto dark via media query
-                  `html, body { background-color: ${colors.dark.default}; color: ${colors.dark.text}; }`,
+                  `html, body { background-color: ${colors[darkKey].default}; color: ${colors[darkKey].text}; }`,
                   // light via user preference when os is dark
-                  `html[data-user-color-scheme="light"], html[data-user-color-scheme="light"] body { background-color: ${colors.light.default}; color: ${colors.light.text}; }`,
+                  `html[data-user-color-scheme="light"], html[data-user-color-scheme="light"] body { background-color: ${colors[lightKey].default}; color: ${colors[lightKey].text}; }`,
                 ].join('\n'),
                 `}`,
               ].join('\n')
