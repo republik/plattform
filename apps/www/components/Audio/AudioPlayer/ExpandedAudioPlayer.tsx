@@ -59,6 +59,7 @@ const styles = {
     minHeight: 0,
     overflowY: 'auto',
     scrollbarWidth: 'thin',
+    scrollbarGutter: 'stable',
     // Hack to ensure scrollbar is within the padding of the overlay
     marginRight: ['-10x', 'calc(-1 * max(10px, env(safe-area-inset-right)))'],
     paddingRight: ['10px', 'max(10px, env(safe-area-inset-right))'],
