@@ -1,12 +1,10 @@
-const { Roles } = require('@orbiting/backend-modules-auth')
 const slack = require('../../../lib/slack')
-
 const { REPORTS_NOTIFY_THRESHOLD = 2 } = process.env
 
 module.exports = async (_, args, context) => {
   const { id } = args
   const { pgdb, user: me, t, loaders } = context
-  Roles.ensureUserHasRole(me, 'member')
+  // Roles.ensureUserHasRole(me, 'member')
 
   const comment = await loaders.Comment.byId.load(id)
   if (!comment) {
@@ -16,7 +14,7 @@ module.exports = async (_, args, context) => {
 
   const { id: commentId, userId: authorId } = comment
 
-  if (authorId && authorId === me.id) {
+  if (authorId && authorId === me?.id) {
     throw new Error(t('api/comment/report/notYours'))
   }
 
@@ -36,9 +34,9 @@ module.exports = async (_, args, context) => {
     }
 
     const reports = existingComment.reports || []
-    if (reports.findIndex(({ userId }) => userId === me.id) < 0) {
+    if (reports.findIndex(({ userId }) => userId === me?.id) < 0) {
       reports.unshift({
-        userId: me.id,
+        userId: me?.id,
         reportedAt: new Date(),
       })
       newComment = await pgdb.public.comments.updateAndGetOne(
@@ -56,7 +54,12 @@ module.exports = async (_, args, context) => {
   if (newComment) {
     await loaders.Comment.byId.clear(commentId)
     if (newComment.reports.length >= REPORTS_NOTIFY_THRESHOLD) {
-      slack.publishCommentReport(me, newComment, discussion, context)
+      slack.publishCommentReport(
+        me?.name || 'Gast',
+        newComment,
+        discussion,
+        context,
+      )
     }
   }
 

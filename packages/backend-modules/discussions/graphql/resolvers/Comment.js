@@ -332,7 +332,8 @@ module.exports = {
     }
   },
 
-  userCanReport: ({ userId }, args, { user: me }) => !!(me && me.id !== userId),
+  userCanReport: ({ userId }, args, { user: me }) =>
+    !!(!me || me?.id !== userId),
 
   userReportedAt: ({ reports }, args, { user: me }) =>
     me &&
