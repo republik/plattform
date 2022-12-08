@@ -281,7 +281,7 @@ class Merci extends Component {
                   slug={'erneuerungs-grund'}
                   publicSubmission={false}
                   hideCount
-                  submittedMessage={() => <P>{t('questionnaire/thankyou')}</P>}
+                  submittedMessage={<P>{t('questionnaire/thankyou')}</P>}
                   hideInvalid={true}
                   noReset={true}
                 />
