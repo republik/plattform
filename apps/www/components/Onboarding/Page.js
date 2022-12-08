@@ -80,7 +80,7 @@ const QUERY = gql`
 
 const CONTEXTS = {
   card: ['newsletter', 'notifications', 'app-login', 'usability'],
-  clima: [
+  climate: [
     'postcard',
     'mission',
     'invitation',
@@ -126,10 +126,9 @@ class Page extends Component {
       inNativeApp,
     } = props
 
-    const selectedContext =
-      context === 'card' || context === 'clima'
-        ? CONTEXTS[context]
-        : CONTEXTS['default']
+    const selectedContext = Object.keys(CONTEXTS).includes(context)
+      ? CONTEXTS[context]
+      : CONTEXTS['default']
 
     this.sections = [
       {

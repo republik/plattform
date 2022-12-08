@@ -5441,7 +5441,7 @@
       "value": "Zum Magazin"
     },
     {
-      "key": "Onboarding/Page/clima/button",
+      "key": "Onboarding/Page/climate/button",
       "value": "Weiter ins Klimalabor"
     },
     {
@@ -5585,15 +5585,15 @@
       "value": "Später"
     },
     {
-      "key": "Onboarding/Page/clima/title",
+      "key": "Onboarding/Page/climate/title",
       "value": "Willkommen 🐢"
     },
     {
-      "key": "Onboarding/Page/clima/preface",
+      "key": "Onboarding/Page/climate/preface",
       "value": "Sie sind eine von inzwischen {climate_lab_count} Personen, die Lust haben, am Klimalabor mitzuwirken."
     },
     {
-      "key": "Onboarding/Page/clima/introduction",
+      "key": "Onboarding/Page/climate/introduction",
       "value": "Zusammen werden wir in den kommenden Monaten über die Klimakrise sprechen, darüber, was wir alle und wir von der Republik tun können, und viele neue Dinge ausprobieren (mehr dazu gleich).<br /><br />Schön, sind Sie dabei!<br /><br />"
     },
     {

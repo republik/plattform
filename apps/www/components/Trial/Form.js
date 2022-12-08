@@ -76,6 +76,7 @@ const Form = (props) => {
     initialEmail,
     campaign,
     isInSeriesNav,
+    context = 'trial',
   } = props
   const { query } = router
 
@@ -170,7 +171,7 @@ const Form = (props) => {
           if (shouldRedirect) {
             window.location = format({
               pathname: `/einrichten`,
-              query: { context: 'trial' },
+              query: { context },
             })
           } else {
             minimal && setShowButtons(true)
@@ -266,7 +267,7 @@ const Form = (props) => {
                 onClick={() =>
                   router.push({
                     pathname: '/einrichten',
-                    query: { context: 'trial' },
+                    query: { context },
                   })
                 }
               >
