@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import createPersistedState from '../../../lib/hooks/use-persisted-state'
 import Nullable from '../../../lib/types/Nullable'
 
@@ -15,13 +15,7 @@ function parseCommentReports(data: Nullable<string>): Record<string, Date> {
     if (data != null && JSON.parse(data) instanceof Object) {
       const parsedData = JSON.parse(data)
       return Object.keys(parsedData).reduce((acc, key) => {
-        const parsedDate = new Date(parsedData[key])
-        if (
-          new Date().getTime() - parsedDate.getTime() <
-          LOCAL_COMMENT_REPORTS_TTL
-        ) {
-          acc[key] = new Date(parsedData[key])
-        }
+        acc[key] = new Date(parsedData[key])
         return acc
       }, {})
     }
@@ -61,14 +55,19 @@ function hasOutdatedReports(reports: Record<string, Date>): boolean {
   })
 }
 
+type useLocalCommentReportsValues = {
+  addLocalCommentReport: (commentId: string) => boolean
+  checkIfAlreadyReported: (commentId: string) => boolean
+}
+
 /**
  * A hook that provides functions for adding and checking comment reports stored in the local-storage
  * @returns An object containing the following properties:
  * - addLocalCommentReport: A function that adds a comment report to local storage
  * - checkIfAlreadyReported: A function that checks if a comment has already been reported
  */
-export function useLocalCommentReports() {
-  const [rawReports, setRawData] =
+export function useLocalCommentReports(): useLocalCommentReportsValues {
+  const [rawReports, setRawReports] =
     usePersistedSerializedLocalCommentReports<Nullable<string>>(null)
   const [reports, setReports] = useState<Record<string, Date>>({})
 
@@ -76,13 +75,23 @@ export function useLocalCommentReports() {
   useEffect(() => {
     if (rawReports) {
       const parsedReports = parseCommentReports(rawReports)
+      setReports(parsedReports)
 
       // Delte reports that are older than the TTL
       if (hasOutdatedReports(parsedReports)) {
-        setRawData(serializeCommentReports(parsedReports))
-      }
+        const updatedReports = Object.keys(parsedReports).reduce((acc, key) => {
+          const parsedDate = new Date(parsedReports[key])
+          if (
+            new Date().getTime() - parsedDate.getTime() <
+            LOCAL_COMMENT_REPORTS_TTL
+          ) {
+            acc[key] = parsedDate
+          }
+          return acc
+        }, {})
 
-      setReports(parsedReports)
+        setRawReports(serializeCommentReports(updatedReports))
+      }
     }
   }, [rawReports])
 
@@ -92,13 +101,17 @@ export function useLocalCommentReports() {
       [commentId]: new Date(),
     }
     setReports(newData)
-    setRawData(serializeCommentReports(newData))
+    setRawReports(serializeCommentReports(newData))
     return true
   }
 
+  const checkIfAlreadyReported = useMemo(
+    () => (commentId: string) => Object.keys(reports).includes(commentId),
+    [reports],
+  )
+
   return {
     addLocalCommentReport,
-    checkIfAlreadyReported: (commentId: string) =>
-      Object.keys(reports).includes(commentId),
+    checkIfAlreadyReported,
   }
 }
