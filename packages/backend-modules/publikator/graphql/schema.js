@@ -67,6 +67,7 @@ type mutations {
     ignoreUnresolvedRepoIds: Boolean
 
     notifySubscribers: Boolean
+    notifyReadAloudSubscribers: Boolean
   ): PublishResponse!
 
   unpublish(

@@ -64,6 +64,7 @@ module.exports = async (
     scheduledAt: _scheduledAt,
     updateMailchimp = false,
     notifySubscribers = false,
+    notifyReadAloudSubscribers = false,
     ignoreUnresolvedRepoIds = false,
   },
   context,
