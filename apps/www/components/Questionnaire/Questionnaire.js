@@ -66,6 +66,7 @@ const Questionnaire = (props) => {
     detailsData,
     publicSubmission = true,
     hideInvalid,
+    noReset,
   } = props
   const [state, setState] = useState({})
   const [isResubmitAnswers, setIsResubmitAnswers] = useState(false)
@@ -107,7 +108,6 @@ const Questionnaire = (props) => {
     slug,
     updateDetails,
   } = props
-
   return (
     <Loader
       loading={questionnaireData.loading}
@@ -349,7 +349,7 @@ const Questionnaire = (props) => {
               <QuestionnaireActions
                 isResubmitAnswers={isResubmitAnswers}
                 onSubmit={onSubmit}
-                onReset={onReset}
+                onReset={!noReset && onReset}
                 updating={updating}
                 invalid={userAnswerCount < 1}
                 publicSubmission={publicSubmission}

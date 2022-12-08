@@ -24,12 +24,23 @@ import {
   Button,
   Loader,
   Meta,
+  mediaQueries,
 } from '@project-r/styleguide'
 
 import RawHtmlTranslation from '../RawHtmlTranslation'
 import { QuestionnaireWithData } from '../Questionnaire/Questionnaire'
 
 const { P, H1 } = Interaction
+
+const styles = {
+  questionnaireStyleOverride: css({
+    [mediaQueries.mUp]: {
+      '& div': {
+        minHeight: 0,
+      },
+    },
+  }),
+}
 
 export const gotoMerci = (query) => {
   // workaround for apollo cache issues
@@ -264,7 +275,7 @@ class Merci extends Component {
         ))}
         <WithAccess
           render={() => (
-            <>
+            <div {...styles.questionnaireStyleOverride}>
               {query.package === 'PROLONG' && (
                 <QuestionnaireWithData
                   slug={'erneuerungs-grund'}
@@ -272,12 +283,10 @@ class Merci extends Component {
                   hideCount
                   submittedMessage={() => <P>{t('questionnaire/thankyou')}</P>}
                   hideInvalid={true}
+                  noReset={true}
                 />
               )}
-              <Link href='/' passHref>
-                <Button primary>{t('merci/action/read')}</Button>
-              </Link>
-            </>
+            </div>
           )}
         />
         <div style={{ marginTop: 50 }}>{children}</div>
