@@ -3,6 +3,7 @@ module.exports = `
 enum EventObjectType {
   Comment
   Document
+  ReadAloud
 }
 union EventObject = Comment | Document
 
