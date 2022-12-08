@@ -1,6 +1,6 @@
 Guten Tag
 
-{{#if hasPledgeMembership}}
+{{#if hasAnyPledgeMemberships}}
 
 Ihr Vertrauen ehrt uns: Herzlichen Dank für Ihre Unterstützung!
 
