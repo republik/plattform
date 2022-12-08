@@ -203,10 +203,6 @@ const colors = {
     flyerMetaText: '#A3BBFF',
     flyerFormatText: '#D90034',
   },
-  climalight: {
-    logo: 'pink',
-  },
-  climadark: {},
   mappings: {
     format: {
       '#000': 'accentColorMeta',

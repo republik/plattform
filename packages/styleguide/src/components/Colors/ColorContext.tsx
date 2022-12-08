@@ -166,12 +166,7 @@ export const ColorContextLocalExtension: React.FC<{
   )
 }
 
-export const ColorHtmlBodyColors = ({
-  colorSchemeKey = 'auto',
-  prefix = '',
-}) => {
-  const lightKey = `${prefix}light`
-  const darkKey = `${prefix}dark`
+export const ColorHtmlBodyColors = ({ colorSchemeKey = 'auto' }) => {
   return (
     <style
       key={colorSchemeKey}
@@ -180,16 +175,16 @@ export const ColorHtmlBodyColors = ({
           colorSchemeKey === 'auto'
             ? [
                 // default light
-                `html, body { background-color: ${colors[lightKey].default}; color: ${colors[lightKey].text}; }`,
+                `html, body { background-color: ${colors.light.default}; color: ${colors.light.text}; }`,
                 // dark via user preference
-                `html[data-user-color-scheme="dark"], html[data-user-color-scheme="dark"] body { background-color: ${colors[darkKey].default}; color: ${colors[darkKey].text}; }`,
+                `html[data-user-color-scheme="dark"], html[data-user-color-scheme="dark"] body { background-color: ${colors.dark.default}; color: ${colors.dark.text}; }`,
                 // os dark preference
                 `@media (prefers-color-scheme: dark) {`,
                 [
                   // auto dark via media query
-                  `html, body { background-color: ${colors[darkKey].default}; color: ${colors[darkKey].text}; }`,
+                  `html, body { background-color: ${colors.dark.default}; color: ${colors.dark.text}; }`,
                   // light via user preference when os is dark
-                  `html[data-user-color-scheme="light"], html[data-user-color-scheme="light"] body { background-color: ${colors[lightKey].default}; color: ${colors[lightKey].text}; }`,
+                  `html[data-user-color-scheme="light"], html[data-user-color-scheme="light"] body { background-color: ${colors.light.default}; color: ${colors.light.text}; }`,
                 ].join('\n'),
                 `}`,
               ].join('\n')
