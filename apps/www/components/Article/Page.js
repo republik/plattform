@@ -266,6 +266,7 @@ const ArticlePage = ({
   const articleContent = article?.content
   const articleUnreadNotifications = article?.unreadNotifications
   const routerQuery = router.query
+  const klimalabor = article?.content?.meta?.klimalabor
 
   useEffect(() => {
     if (share) {
@@ -560,6 +561,7 @@ const ArticlePage = ({
       hasOverviewNav={hasOverviewNav}
       stickySecondaryNav={hasStickySecondaryNav}
       pageColorSchemeKey={colorSchemeKey}
+      climate={klimalabor}
     >
       <PageLoader
         loading={articleLoading && !articleData}

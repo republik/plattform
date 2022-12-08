@@ -9,7 +9,9 @@ import {
   mediaQueries,
   ColorHtmlBodyColors,
   ColorContextProvider,
+  colors,
 } from '@project-r/styleguide'
+import OptionalLocalColorContext from './OptionalLocalColorContext'
 import Meta from './Meta'
 import Header from './Header'
 import Footer from '../Footer'
@@ -107,6 +109,8 @@ const Frame = ({
   isOnMarketingPage,
   pageColorSchemeKey,
   containerMaxWidth,
+  climate,
+  localColorVariables,
 }) => {
   const { inNativeApp, inNativeAppLegacy } = useInNativeApp()
   const { t } = useTranslation()
@@ -129,59 +133,65 @@ const Frame = ({
   return (
     <ColorContextProvider colorSchemeKey={pageColorSchemeKey}>
       <ColorHtmlBodyColors colorSchemeKey={pageColorSchemeKey || 'auto'} />
-      <noscript>
-        <Box style={{ padding: 30 }}>
-          <RawHtml
-            dangerouslySetInnerHTML={{
-              __html: t('noscript'),
-            }}
-          />
-        </Box>
-      </noscript>
-      <div
-        {...(footer || inNativeApp ? styles.bodyGrowerContainer : undefined)}
+      <OptionalLocalColorContext
+        localColorVariables={
+          climate ? colors.climateColors : localColorVariables
+        }
       >
-        {/* body growing only needed when rendering a footer */}
+        <noscript>
+          <Box style={{ padding: 30 }}>
+            <RawHtml
+              dangerouslySetInnerHTML={{
+                __html: t('noscript'),
+              }}
+            />
+          </Box>
+        </noscript>
         <div
-          {...(footer || inNativeApp ? styles.bodyGrower : undefined)}
-          {...(!isOnMarketingPage && padHeaderRule)}
+          {...(footer || inNativeApp ? styles.bodyGrowerContainer : undefined)}
         >
-          {!!meta && <Meta data={meta} />}
-          <Header
-            me={me}
-            cover={cover}
-            onNavExpanded={onNavExpanded}
-            secondaryNav={secondaryNav}
-            formatColor={formatColor}
-            pullable={pullable}
-            hasOverviewNav={hasOverviewNav}
-            stickySecondaryNav={stickySecondaryNav}
-            isOnMarketingPage={isOnMarketingPage}
-            pageColorSchemeKey={pageColorSchemeKey}
+          {/* body growing only needed when rendering a footer */}
+          <div
+            {...(footer || inNativeApp ? styles.bodyGrower : undefined)}
+            {...(!isOnMarketingPage && padHeaderRule)}
           >
-            {inNativeAppLegacy && <LegacyAppNoticeBox t={t} />}
-            {me &&
-              me.prolongBeforeDate !== null &&
-              me.activeMembership !== null && (
-                <ProlongBox
-                  t={t}
-                  prolongBeforeDate={me.prolongBeforeDate}
-                  membership={me.activeMembership}
-                />
+            {!!meta && <Meta data={meta} />}
+            <Header
+              me={me}
+              cover={cover}
+              onNavExpanded={onNavExpanded}
+              secondaryNav={secondaryNav}
+              formatColor={formatColor}
+              pullable={pullable}
+              hasOverviewNav={hasOverviewNav}
+              stickySecondaryNav={stickySecondaryNav}
+              isOnMarketingPage={isOnMarketingPage}
+              pageColorSchemeKey={pageColorSchemeKey}
+            >
+              {inNativeAppLegacy && <LegacyAppNoticeBox t={t} />}
+              {me &&
+                me.prolongBeforeDate !== null &&
+                me.activeMembership !== null && (
+                  <ProlongBox
+                    t={t}
+                    prolongBeforeDate={me.prolongBeforeDate}
+                    membership={me.activeMembership}
+                  />
+                )}
+              {raw ? (
+                children
+              ) : (
+                <MainContainer maxWidth={containerMaxWidth}>
+                  <Content>{children}</Content>
+                </MainContainer>
               )}
-            {raw ? (
-              children
-            ) : (
-              <MainContainer maxWidth={containerMaxWidth}>
-                <Content>{children}</Content>
-              </MainContainer>
-            )}
-          </Header>
+            </Header>
+          </div>
+          {!inNativeApp && footer && (
+            <Footer isOnMarketingPage={isOnMarketingPage} />
+          )}
         </div>
-        {!inNativeApp && footer && (
-          <Footer isOnMarketingPage={isOnMarketingPage} />
-        )}
-      </div>
+      </OptionalLocalColorContext>
     </ColorContextProvider>
   )
 }
