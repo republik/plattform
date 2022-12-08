@@ -3,7 +3,7 @@ const { REPORTS_NOTIFY_THRESHOLD = 2 } = process.env
 
 module.exports = async (_, args, context) => {
   const { id } = args
-  const { pgdb, user: me, t, loaders } = context
+  const { pgdb, user: me, t, loaders, req } = context
   // Roles.ensureUserHasRole(me, 'member')
 
   const comment = await loaders.Comment.byId.load(id)
@@ -34,9 +34,13 @@ module.exports = async (_, args, context) => {
     }
 
     const reports = existingComment.reports || []
-    if (reports.findIndex(({ userId }) => userId === me?.id) < 0) {
+    const userId =
+      me?.id ?? `guest-${req?.sessionID ?? new Date().toISOString()}`
+
+    if (reports.findIndex((report) => report.userId === userId) < 0) {
+      const userId = me?.id ?? `guest-${new Date().toISOString()}`
       reports.unshift({
-        userId: me?.id,
+        userId: userId,
         reportedAt: new Date(),
       })
       newComment = await pgdb.public.comments.updateAndGetOne(
