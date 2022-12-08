@@ -55,7 +55,7 @@ module.exports = async (_, args, context) => {
     await loaders.Comment.byId.clear(commentId)
     if (newComment.reports.length >= REPORTS_NOTIFY_THRESHOLD) {
       slack.publishCommentReport(
-        me?.name || 'Gast',
+        me?.name ?? 'Gast',
         newComment,
         discussion,
         context,
