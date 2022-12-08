@@ -13,7 +13,7 @@ import {
 } from '@project-r/styleguide'
 import withT from '../../lib/withT'
 import withInNativeApp from '../../lib/withInNativeApp'
-import { withSupporter } from '../Auth/checkRoles'
+import { withSupporter, withAuthorization } from '../Auth/checkRoles'
 import { ADMIN_BASE_URL } from '../../lib/constants'
 import FieldSet, { styles as fieldSetStyles } from '../FieldSet'
 
@@ -62,6 +62,7 @@ const Contact = ({
   t,
   showSupportLink,
   isSupporter,
+  isEditor,
   inNativeIOSApp,
   electionBallot,
 }) => {
@@ -118,6 +119,21 @@ const Contact = ({
             },
           ]}
         />
+        {isEditor && (
+          <FieldSet
+            values={values}
+            errors={errors}
+            dirty={dirty}
+            onChange={onChange}
+            fields={[
+              {
+                label: t('profile/contact/prolitterisId/label'),
+                name: 'prolitterisId',
+              },
+            ]}
+          />
+        )}
+
         {!!user.phoneNumber && (
           <Fragment>
             <FieldSet
@@ -264,4 +280,9 @@ const styles = {
   }),
 }
 
-export default compose(withT, withInNativeApp, withSupporter)(Contact)
+export default compose(
+  withT,
+  withInNativeApp,
+  withSupporter,
+  withAuthorization,
+)(Contact)
