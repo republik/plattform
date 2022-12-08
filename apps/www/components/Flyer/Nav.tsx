@@ -1,31 +1,21 @@
-import { gql, useQuery } from '@apollo/client'
+import React from 'react'
 import { css } from 'glamor'
+import { gql, useQuery } from '@apollo/client'
+import Link from 'next/link'
+
 import {
   ArrowForwardIcon,
   ArrowBackIcon,
   IconButton,
   FlyerDate,
   mediaQueries,
-  FlyerTile,
 } from '@project-r/styleguide'
-import Link from 'next/link'
 
 import { useMe } from '../../lib/context/MeContext'
-
-import { getCacheKey } from './metadata'
-import Meta from '../Frame/Meta'
-
-import { PUBLIC_BASE_URL, ASSETS_SERVER_BASE_URL } from '../../lib/constants'
 
 const FORMAT_REPO_ID = 'republik/format-journal'
 
 const styles = {
-  footer: css({
-    marginTop: -35,
-    [mediaQueries.mUp]: {
-      marginTop: -60,
-    },
-  }),
   navi: css({
     display: 'flex',
     flexWrap: 'nowrap',
@@ -104,14 +94,17 @@ const QUERY = gql`
   }
 `
 
-export const FlyerNav = ({ repoId, publishDate }) => {
+const Nav: React.FC<{ repoId: string; publishDate: string }> = ({
+  repoId,
+  publishDate,
+}) => {
   const { hasAccess } = useMe()
   const { data, loading } = useQuery(QUERY, {
     variables: {
       publishedAt: publishDate,
       repoId,
     },
-    skip: !hasAccess,
+    skip: !hasAccess || !repoId || !publishDate,
   })
   const prev = data?.prev.nodes[0]?.entity?.meta
   const next = data?.next.nodes[0]?.entity?.meta
@@ -135,57 +128,4 @@ export const FlyerNav = ({ repoId, publishDate }) => {
   )
 }
 
-const FlyerFooter = ({ children }) => {
-  return (
-    <FlyerTile {...styles.footer} innerStyle={{ paddingTop: 0 }}>
-      {children}
-    </FlyerTile>
-  )
-}
-
-export const getShareImageUrls = (documentId, meta, tileId, showAll) => {
-  const screenshotUrl = new URL(meta.path, PUBLIC_BASE_URL)
-  screenshotUrl.searchParams.set('extract', tileId)
-
-  if (showAll) {
-    screenshotUrl.searchParams.set('showAll', 'true')
-  }
-
-  const dimensions = showAll ? [450, 1] : [600, 314]
-
-  const shareImageUrl = new URL('/render', ASSETS_SERVER_BASE_URL)
-  shareImageUrl.searchParams.set('viewport', dimensions.join('x'))
-  shareImageUrl.searchParams.set('zoomFactor', '2')
-  shareImageUrl.searchParams.set('updatedAt', getCacheKey(documentId, meta))
-  shareImageUrl.searchParams.set('url', screenshotUrl.toString())
-
-  return {
-    screenshotUrl: screenshotUrl.toString(),
-    shareImageUrl: shareImageUrl.toString(),
-  }
-}
-
-export const FlyerMeta = (props) => {
-  const { tileId, meta, documentId } = props
-
-  // Render as usual
-  if (!tileId && meta) {
-    return <Meta data={meta} />
-  }
-
-  const { shareImageUrl } = getShareImageUrls(documentId, meta, tileId)
-
-  return (
-    <Meta
-      data={{
-        ...meta,
-        image: shareImageUrl.toString(),
-        twitterImage: shareImageUrl.toString(),
-        facebookImage: shareImageUrl.toString(),
-        url: `${PUBLIC_BASE_URL}${meta.path}?share=${tileId}`,
-      }}
-    />
-  )
-}
-
-export default FlyerFooter
+export default Nav

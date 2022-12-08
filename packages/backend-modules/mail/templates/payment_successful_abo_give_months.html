@@ -72,9 +72,9 @@
 
                     {{#if goodies_count}}
                     <p>
-                      {{#if `goodies_count == 1`}} Auch Ihr bestelltes
+                      {{#if hasOneGoodie}} Auch Ihr bestelltes
                       Republik-Objekt eignet sich perfekt für die Code-Übergabe.
-                      {{elseif `goodies_count > 1`}} Auch Ihre bestellten
+                      {{else if hasMultipleGoodies}} Auch Ihre bestellten
                       Republik-Objekte eignen sich perfekt für die
                       Code-Übergabe. {{/if}}{{#if
                       goodies_has_notebook}}Notizbücher liefern wir Ihnen
@@ -86,13 +86,15 @@
                       goodies_has_mask}}Republik-Masken liefern wir Ihnen
                       innerhalb von 7 Werktagen. {{/if}}{{#if
                       goodies_has_fondue}}Republik-Fondues werden am 26. Januar
-                      2022 verschickt.{{/if}}
+                      2022 verschickt. {{/if}}{{#if
+                      goodies_has_mug}}Republik-Tassen liefern wir Ihnen
+                      innerhalb von 7 Werktagen. {{/if}}
                     </p>
 
                     <ul
                       style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}"
                     >
-                      {{#options}} {{#if `this.otype == "Goodie"`}}
+                      {{#options}} {{#if this.isOTypeGoodie}}
                       <li>{{this.oamount}} {{this.olabel}}</li>
                       {{/if}} {{/options}}
                     </ul>

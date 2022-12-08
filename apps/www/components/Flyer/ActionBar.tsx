@@ -1,14 +1,23 @@
-import { useState } from 'react'
-import { IconButton, ShareIcon, ImageIcon, slug } from '@project-r/styleguide'
+import React, { useState } from 'react'
+import { css } from 'glamor'
+
+import { IconButton, ShareIcon, ImageIcon } from '@project-r/styleguide'
+
 import { PUBLIC_BASE_URL } from '../../lib/constants'
 import { trackEvent } from '../../lib/matomo'
-import ShareOverlay from './ShareOverlay'
 import { useTranslation } from '../../lib/withT'
-import { css } from 'glamor'
 import { postMessage } from '../../lib/withInNativeApp'
-import { getShareImageUrls } from '../Article/Flyer'
 
-const ShareButton = ({ meta, tileId, inNativeApp }) => {
+import ShareOverlay from '../ActionBar/ShareOverlay'
+
+import { getShareImageUrls } from './Meta'
+import { MetaProps } from './index'
+
+const ShareButton: React.FC<{
+  meta: MetaProps
+  tileId: string
+  inNativeApp: boolean
+}> = ({ meta, tileId, inNativeApp }) => {
   const [overlay, showOverlay] = useState(false)
   const { t } = useTranslation()
 
@@ -59,7 +68,11 @@ const ShareButton = ({ meta, tileId, inNativeApp }) => {
   )
 }
 
-const DownloadButton = ({ documentId, meta, tileId }) => {
+const DownloadButton: React.FC<{
+  documentId: string
+  meta: MetaProps
+  tileId: string
+}> = ({ documentId, meta, tileId }) => {
   const { t } = useTranslation()
   const { screenshotUrl, shareImageUrl } = getShareImageUrls(
     documentId,
@@ -95,7 +108,11 @@ const DownloadButton = ({ documentId, meta, tileId }) => {
   )
 }
 
-export const getFlyerTileActionBar =
+export const getTileActionBar: (
+  documentId: string,
+  meta: MetaProps,
+  inNativeApp: boolean,
+) => React.FC<{ tileId?: string }> =
   (documentId, meta, inNativeApp) =>
   ({ tileId }) => {
     if (!tileId) return null

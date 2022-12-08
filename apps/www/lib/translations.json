@@ -3453,6 +3453,10 @@
       "value": "Mehr Kurzes:"
     },
     {
+      "key": "article/flyer/tile/description",
+      "value": "Mehr Kurzes auf republik.ch/journal"
+    },
+    {
       "key": "progress/restore/time",
       "value": "{day} um {time} Uhr"
     },
@@ -6642,19 +6646,35 @@
     },
     {
       "key": "Goodie/label/NOTEBOOK",
-      "value": "Republik Notizbuch"
+      "value": "Republik-Notizbuch"
     },
     {
       "key": "Goodie/description/NOTEBOOK",
-      "value": "Ein Moleskin Notizbuch mit Republik-Gravierung. Lieferung innerhalb von 7 Werktagen."
+      "value": "Ein Moleskine-Notizbuch mit Republik-Gravierung. Lieferung innerhalb von 7 Werktagen."
     },
     {
       "key": "Goodie/label/TOTEBAG",
-      "value": "Republik Tasche"
+      "value": "Republik-Tasche"
     },
     {
       "key": "Goodie/description/TOTEBAG",
       "value": "Mit Logo auf der Vorderseite und Manifest auf der Rückseite. Lieferung innerhalb von 7 Werktagen."
+    },
+    {
+      "key": "Goodie/label/MUG",
+      "value": "Republik-Tasse"
+    },
+    {
+      "key": "Goodie/description/MUG",
+      "value": "Mit Logo und Claim «Ohne Journalismus keine Demokratie». Lieferung innerhalb von 7 Werktagen."
+    },
+    {
+      "key": "Goodie/label/MUG_CERAMIC",
+      "value": "Republik-Tasse"
+    },
+    {
+      "key": "Goodie/description/MUG_CERAMIC",
+      "value": "Mit Logo und Claim «Ohne Journalismus keine Demokratie». Lieferung innerhalb von 7 Werktagen."
     },
     {
       "key": "option/TABLEBOOK/label/other",
@@ -6675,6 +6695,22 @@
     {
       "key": "option/FONDUE/label/1",
       "value": "Republik-Fondue"
+    },
+    {
+      "key": "option/MUG/label/other",
+      "value": "Tassen"
+    },
+    {
+      "key": "option/MUG/label/1",
+      "value": "Tasse"
+    },
+    {
+      "key": "option/MUG_CERAMIC/label/other",
+      "value": "Tassen"
+    },
+    {
+      "key": "option/MUG_CERAMIC/label/1",
+      "value": "Tasse"
     },
     {
       "key": "package/customize/price/payMore/userPrice",
