@@ -154,6 +154,7 @@ module.exports = async (_, args, context) => {
     'phoneNumberAccessRole',
     'facebookId',
     'twitterHandle',
+    'prolitterisId',
     'publicUrl',
     'emailAccessRole',
     'pgpPublicKey',

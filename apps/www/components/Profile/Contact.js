@@ -13,7 +13,8 @@ import {
 } from '@project-r/styleguide'
 import withT from '../../lib/withT'
 import withInNativeApp from '../../lib/withInNativeApp'
-import { withSupporter, withAuthorization } from '../Auth/checkRoles'
+import { checkRoles } from '../../lib/apollo/withMe'
+import { useMe } from '../../lib/context/MeContext'
 import { ADMIN_BASE_URL } from '../../lib/constants'
 import FieldSet, { styles as fieldSetStyles } from '../FieldSet'
 
@@ -61,11 +62,12 @@ const Contact = ({
   dirty,
   t,
   showSupportLink,
-  isSupporter,
-  isEditor,
   inNativeIOSApp,
   electionBallot,
 }) => {
+  const { me, isEditor } = useMe()
+  const isSupporter = checkRoles(me, ['supporter'])
+
   if (isEditing) {
     return (
       <Fragment>
@@ -280,9 +282,4 @@ const styles = {
   }),
 }
 
-export default compose(
-  withT,
-  withInNativeApp,
-  withSupporter,
-  withAuthorization,
-)(Contact)
+export default compose(withT, withInNativeApp)(Contact)
