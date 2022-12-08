@@ -214,16 +214,10 @@ const MetaData = ({
         {(customFieldsByRef['bool'] || [])
           .concat(
             darkMode
-              ? [
-                  {
-                    key: 'darkMode',
-                    label: t('metaData/darkMode'),
-                  },
-                  {
-                    key: 'klimalabor',
-                    label: 'KlimaLabor',
-                  },
-                ]
+              ? {
+                  key: 'darkMode',
+                  label: t('metaData/darkMode'),
+                }
               : [],
           )
           .map((customField) => {

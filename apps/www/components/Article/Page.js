@@ -453,7 +453,6 @@ const ArticlePage = ({
   const series = meta?.series
   const episodes = series?.episodes
   const darkMode = article?.content?.meta?.darkMode
-  const klimalabor = article?.content?.meta?.klimalabor
 
   const seriesSecondaryNav = showSeriesNav && (
     <SeriesNavBar
@@ -561,7 +560,6 @@ const ArticlePage = ({
       hasOverviewNav={hasOverviewNav}
       stickySecondaryNav={hasStickySecondaryNav}
       pageColorSchemeKey={colorSchemeKey}
-      colorPrefix={klimalabor ? 'klima' : ''}
     >
       <PageLoader
         loading={articleLoading && !articleData}
