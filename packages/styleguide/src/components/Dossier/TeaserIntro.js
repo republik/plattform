@@ -74,7 +74,7 @@ const TeaserIntro = ({
       {image && (
         <div {...styles.imageContainer}>
           <FigureImage
-            {...FigureImage.utils.getResizedSrcs(image, 750)}
+            {...FigureImage.utils.getResizedSrcs(image, undefined, 750)}
             alt={alt}
           />
           {byline && (

@@ -5,6 +5,7 @@ import {
   PdfIcon,
   ReadingTimeIcon,
   PlayCircleIcon,
+  PauseCircleIcon,
   PlaylistAddIcon,
   PlaylistRemoveIcon,
   DownloadIcon,
@@ -72,12 +73,13 @@ const ActionBar = ({
   const [podcastOverlayVisible, setPodcastOverlayVisible] = useState(false)
   const {
     toggleAudioPlayer,
+    toggleAudioPlayback,
     addAudioQueueItem,
     removeAudioQueueItem,
+    checkIfActivePlayerItem,
     isPlaying,
   } = useAudioContext()
-  const { isAudioQueueAvailable, checkIfInQueue, checkIfActiveItem } =
-    useAudioQueue()
+  const { isAudioQueueAvailable, checkIfInQueue } = useAudioQueue()
 
   if (!document) {
     return (
@@ -230,7 +232,7 @@ const ActionBar = ({
 
   const isArticleBottom = mode === 'articleBottom'
 
-  const isActiveAudioItem = checkIfActiveItem(document.id)
+  const isActiveAudioItem = checkIfActivePlayerItem(document.id)
   const itemPlaying = isPlaying && isActiveAudioItem
   const itemInAudioQueue = checkIfInQueue(document.id)
   const showAudioButtons =
@@ -321,7 +323,7 @@ const ActionBar = ({
           attributes={{ ['data-show-if-me']: true }}
         />
       ),
-      modes: ['articleTop', 'articleBottom'],
+      modes: ['articleTop', 'articleBottom', 'flyer'],
       show:
         // only show if there is something to subscribe to
         (isDiscussion ||
@@ -457,11 +459,14 @@ const ActionBar = ({
       show: document?.repoId && isEditor,
     },
     {
-      disabled: itemPlaying,
       title: t('article/actionbar/audio/play'),
       label: !forceShortLabel ? t('article/actionbar/audio/play') : '',
-      Icon: PlayCircleIcon,
-      onClick: play,
+      Icon: itemPlaying ? PauseCircleIcon : PlayCircleIcon,
+      onClick: !itemPlaying
+        ? isActiveAudioItem
+          ? toggleAudioPlayback
+          : play
+        : toggleAudioPlayback,
       modes: ['feed', 'seriesEpisode', 'articleTop'],
       show: showAudioButtons,
       group: 'audio',

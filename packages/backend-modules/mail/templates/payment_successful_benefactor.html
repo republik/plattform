@@ -49,7 +49,7 @@
                       >
                     </p>
 
-                    {{#if `total > 1000`}} {{#if
+                    {{#if totalPledgeAbove1000}} {{#if
                     pledger_memberships_active_monthly}}
                     <p>
                       Dass Sie uns mit einer Jahresmitgliedschaft längerfristig
@@ -108,9 +108,9 @@
 
                     {{#if goodies_count}}
                     <p>
-                      {{#if `goodies_count == 1`}} Sie haben sich zu Ihrer
+                      {{#if hasOneGoodie}} Sie haben sich zu Ihrer
                       Gönner-Mitgliedschaft noch ein Republik-Objekt gegönnt.
-                      {{elseif `goodies_count > 1`}} Sie haben sich zu Ihrer
+                      {{else if hasMultipleGoodies}} Sie haben sich zu Ihrer
                       Gönner-Mitgliedschaft noch mehrere Republik-Objekte
                       gegönnt. {{/if}}{{#if goodies_has_notebook}}Notizbücher
                       liefern wir Ihnen innerhalb von 7 Werktagen. {{/if}}{{#if
@@ -121,22 +121,24 @@
                       goodies_has_mask}}Republik-Masken liefern wir Ihnen
                       innerhalb von 7 Werktagen. {{/if}}{{#if
                       goodies_has_fondue}}Republik-Fondues werden am 26. Januar
-                      2022 verschickt.{{/if}}
+                      2022 verschickt. {{/if}}{{#if
+                      goodies_has_mug}}Republik-Tassen liefern wir Ihnen
+                      innerhalb von 7 Werktagen. {{/if}}
                     </p>
 
                     <ul
                       style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}"
                     >
-                      {{#options}} {{#if `this.otype == "Goodie"`}}
+                      {{#options}} {{#if this.isOTypeGoodie}}
                       <li>{{this.oamount}} {{this.olabel}}</li>
                       {{/if}} {{/options}}
                     </ul>
-                    {{/if}} {{#if `total > 1000`}}
+                    {{/if}} {{#if totalPledgeAbove1000}}
                     <p>
                       Vielen Dank!<br />
                       Und viel Vergnügen beim Start mit der Republik.
                     </p>
-                    {{/if}} {{#if `total < 1000`}}
+                    {{/if}} {{#if totalPledgeBelow1000}}
                     <p>
                       Falls Sie Fragen zur Inbetriebnahme des Magazins haben:<br /><a
                         href="{{link_manual}}"

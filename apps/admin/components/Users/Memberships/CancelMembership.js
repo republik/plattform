@@ -126,7 +126,7 @@ export default class CancelPledge extends Component {
             this.setState({ isOpen: true })
           }}
         >
-          {isEditing ? 'editieren' : 'künden'}
+          {isEditing ? 'editieren' : 'kündigen'}
         </TextButton>
 
         {isOpen && (

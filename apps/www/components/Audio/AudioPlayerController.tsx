@@ -93,6 +93,8 @@ type AudioPlayerContainerProps = {
 const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
   const { inNativeApp } = useInNativeApp()
   const {
+    activePlayerItem,
+    setActivePlayerItem,
     audioPlayerVisible: isVisible,
     setAudioPlayerVisible: setIsVisible,
     isPlaying,
@@ -104,7 +106,7 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
     audioQueue,
     addAudioQueueItem,
     removeAudioQueueItem,
-    checkIfActiveItem,
+    checkIfHeadOfQueue,
   } = useAudioQueue()
   const { getMediaProgress, saveMediaProgress } = useMediaProgress()
 
@@ -119,8 +121,6 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
   const audioQueueRef = useRef<AudioQueueItem[] | null>(null)
 
   const [initialized, setInitialized] = useState(false)
-  const [activePlayerItem, setActivePlayerItem] =
-    useState<AudioQueueItem | null>(null)
   const [shouldAutoPlay, setShouldAutoPlay] = useState(false)
   const firstTrackIsPrepared = useRef<boolean>(false)
 
@@ -470,6 +470,9 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
       if (data.audioQueueItems.length === 0) {
         setActivePlayerItem(null)
         setShouldAutoPlay(false)
+        if (inNativeApp && isPlaying) {
+          onStop(false)
+        }
         trackEvent([
           AudioPlayerLocations.AUDIO_PLAYER,
           AudioPlayerActions.QUEUE_ENDED,
@@ -502,7 +505,7 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
         const queueItem = audioQueue?.find(({ id }) => id === audioQueueItemId)
 
         if (queueItem) {
-          const isHeadOfQueue = checkIfActiveItem(queueItem.document.id)
+          const isHeadOfQueue = checkIfHeadOfQueue(queueItem.document.id)
           if (isHeadOfQueue && audioQueue?.length > 1) {
             setupNextAudioItem(audioQueue[1], false).catch(handleError)
           }
@@ -523,7 +526,7 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
   const togglePlayer = useCallback(
     async (item: AudioPlayerItem, location?: AudioPlayerLocations) => {
       try {
-        const isHeadOfQueue = checkIfActiveItem(item.id)
+        const isHeadOfQueue = checkIfHeadOfQueue(item.id)
         let nextUp: AudioQueueItem
         // If the item to be played is already the first item in the queue
         // already just set the active item directly
@@ -562,6 +565,14 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
     },
     [inNativeApp, setupNextAudioItem, setOptimisticTimeUI, audioQueue],
   )
+
+  const togglePlayback = useCallback(async () => {
+    if (isPlaying) {
+      await onPause()
+    } else {
+      await onPlay()
+    }
+  }, [isPlaying, onPlay, onPause])
 
   useInterval(
     saveActiveItemProgress,
@@ -618,6 +629,7 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
   }>(AudioContextEvent.TOGGLE_PLAYER, ({ item, location }) =>
     togglePlayer(item, location),
   )
+  useAudioContextEvent<void>(AudioContextEvent.TOGGLE_PLAYBACK, togglePlayback)
   useAudioContextEvent<{
     item: AudioPlayerItem
     position?: number

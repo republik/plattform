@@ -42,8 +42,7 @@
                 <tr>
                   <td style="padding: 20px">
                     <p>Guten Tag</p>
-                    {{#unless RECIPIENT_HAS_MEMBERSHIPS}} {{#if `RECIPIENT_EMAIL
-                    != GRANTER_EMAIL`}}
+                    {{#unless RECIPIENT_HAS_MEMBERSHIPS}} {{#if recipientIsNotGranter}}
                     <p>
                       <strong
                         >{{GRANTER_NAME}} (<a href="mailto:{{GRANTER_EMAIL}}"
@@ -58,7 +57,7 @@
                     >
                       {{{GRANTER_MESSAGE}}}
                     </blockquote>
-                    {{/if}} {{/if}} {{#if `RECIPIENT_EMAIL != GRANTER_EMAIL`}}
+                    {{/if}} {{/if}} {{#if recipientIsNotGranter}}
                     <p>
                       Wir sind ein digitales Magazin für Politik, Wirtschaft,
                       Gesellschaft und Kultur – unabhängig und werbefrei. Wir
@@ -121,7 +120,7 @@
                       «{{CAMPAIGN_TITLE}}».
                     </p>
 
-                    {{#if `RECIPIENT_EMAIL != GRANTER_EMAIL`}}
+                    {{#if recipientIsNotGranter}}
                     <p>
                       {{GRANTER_NAME}} geht davon aus, dass Sie noch kein
                       Republik-Abo besitzen. Dabei befinden Sie sich bereits an

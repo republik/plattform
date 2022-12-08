@@ -93,7 +93,13 @@ type mutations {
     targets: [CommentFeaturedTarget!]
   ): Comment!
 
-  suspendUser(id: ID!, until: DateTime, reason: String): User!
+  suspendUser(
+    id: ID!
+    until: DateTime @deprecated(reason: "Use interval and intervalAmount instead")
+    interval: String
+    intervalAmount: Int
+    reason: String
+  ): User!
   unsuspendUser(id: ID!): User!
 }
 

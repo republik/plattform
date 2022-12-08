@@ -244,7 +244,10 @@ const FeaturedSections = withT(({ t }) => {
             marginBottom: 24,
           }}
         >
-          <NavLink inline large href='/cockpit'>
+          <NavLink inline large href='/vote/2022'>
+            {t('nav/vote')}
+          </NavLink>
+          <NavLink large href='/cockpit'>
             {t('nav/cockpit')}
           </NavLink>
           <NavLink large href='/veranstaltungen'>

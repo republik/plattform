@@ -41,7 +41,16 @@ if (typeof window !== 'undefined') {
   )
 }
 
-const WebApp = ({ Component, pageProps }: AppProps<PagePropsWithApollo>) => {
+type WebAppProps = {
+  providedUserAgent?: string
+  serverContext?: any
+  assumeAccess?: boolean
+}
+
+const WebApp = ({
+  Component,
+  pageProps,
+}: AppProps<PagePropsWithApollo<WebAppProps>>) => {
   const {
     // SSR only props
     providedUserAgent = undefined,

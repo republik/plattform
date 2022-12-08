@@ -724,6 +724,7 @@ const Page = ({
                 <FigureImage
                   {...FigureImage.utils.getResizedSrcs(
                     `${CDN_FRONTEND_BASE_URL}/static/video/cockpit/swag.jpg`,
+                    undefined,
                     405,
                   )}
                   alt='Flyer, Visitenkarten, Kleber und Poster'
