@@ -51,7 +51,7 @@ const getTemplates = async (name) => {
   })
 
   return {
-    getText: handlebars.compile(text || ''),
+    getText: handlebars.compile(text || '', { noEscape: true }),
     getHtml: handlebars.compile(html || ''),
     getCompiler: handlebars.compile,
   }
