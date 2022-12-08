@@ -283,7 +283,7 @@ class Merci extends Component {
                   hideCount
                   submittedMessage={<P>{t('questionnaire/thankyou')}</P>}
                   hideInvalid={true}
-                  noReset={true}
+                  hideReset={true}
                 />
               )}
             </div>
