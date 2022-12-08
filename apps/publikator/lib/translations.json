@@ -1181,6 +1181,10 @@
       "value": "Benachrichtigungen senden: aktuell {count} Empfangende"
     },
     {
+      "key": "publish/label/notifyReadAloudSubscribers/other",
+      "value": "Vorgelesen-Benachrichtigung senden: aktuell {count} Empfangende"
+    },
+    {
       "key": "publish/validation/links/1",
       "value": "Im Text ist ein Link enthalten."
     },

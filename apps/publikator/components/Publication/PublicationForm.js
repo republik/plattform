@@ -42,6 +42,7 @@ const publishMutation = gql`
     $updateMailchimp: Boolean!
     $ignoreUnresolvedRepoIds: Boolean
     $notifySubscribers: Boolean
+    $notifyReadAloudSubscribers: Boolean
   ) {
     publish(
       repoId: $repoId
@@ -51,6 +52,7 @@ const publishMutation = gql`
       updateMailchimp: $updateMailchimp
       ignoreUnresolvedRepoIds: $ignoreUnresolvedRepoIds
       notifySubscribers: $notifySubscribers
+      notifyReadAloudSubscribers: $notifyReadAloudSubscribers
     ) {
       unresolvedRepoIds
       publication {
@@ -91,15 +93,21 @@ const Form = ({
   },
   publish,
 }) => {
+  console.log('repo', repo, repo.commit.document?.meta)
   const router = useRouter()
   const hasBeenPublished = !!repo.latestPublications.find(
     (pub) => !pub.prepublication && pub.live,
   )
+  const audioSource = repo.commit.document?.meta?.audioSource
+  const hasReadAloudAudio =
+    !!audioSource?.mp3 && audioSource?.kind === 'ReadAloud'
+
   const [state, setCompleteState] = useState({
     prepublication: true,
     scheduled: false,
     updateMailchimp: false,
     notifySubscribers: !hasBeenPublished,
+    notifyReadAloudSubscribers: false,
   })
   const setState = (newState) =>
     setCompleteState((state) => ({ ...state, ...newState }))
@@ -108,6 +116,7 @@ const Form = ({
     prepublication,
     updateMailchimp,
     notifySubscribers,
+    notifyReadAloudSubscribers,
     scheduled,
     scheduledAt,
     publishing,
@@ -296,6 +305,21 @@ const Form = ({
       </Checkbox>
       <br />
       <br />
+      <Checkbox
+        disabled={prepublication || !hasReadAloudAudio}
+        checked={!prepublication && notifyReadAloudSubscribers}
+        onChange={(_, value) => {
+          setState({
+            notifyReadAloudSubscribers: value,
+          })
+        }}
+      >
+        {t.pluralize('publish/label/notifyReadAloudSubscribers', {
+          count: commit.document.subscribedBy.totalCount,
+        })}
+      </Checkbox>
+      <br />
+      <br />
       {schema.emailTemplate && (
         <div>
           <Checkbox
@@ -423,6 +447,8 @@ const Form = ({
                 prepublication,
                 updateMailchimp,
                 notifySubscribers: notifySubscribers && !prepublication,
+                notifyReadAloudSubscribers:
+                  notifyReadAloudSubscribers && !prepublication,
                 scheduledAt: scheduled ? scheduledAtDate : undefined,
                 ignoreUnresolvedRepoIds: state.ignoreUnresolvedRepoIds,
               })
