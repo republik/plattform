@@ -169,17 +169,13 @@ yarn dev
 
 Please be patient on boot. It might take a minute for everything to compile and a few nodemon restarts before everything runs smoothly.
 
-### Developing with a specified scope
+### Only run certain apps while developing
 
-If you don't want all apps to run when using the `dev` script, you can use the scope flag on the to run only that package in dev mode.
-For example when developing www and api `yarn dev --scope="@orbiting/www-app" --scope="@orbiting/api-app"`
+If you don't want all apps to run when using the `dev` script, you can use the `filter` flag.
+(see the [Turborepo documentation](https://turbo.build/repo/docs/reference/command-line-reference#--filter))
+For example if you only want to run the republik frontend run `yarn dev --filter=@orbiting/www-app`.
 
-#### Include dependencies
-
-If you are developing on a package in a scoped mode, you might want to also pass the `--include-dependencies` flag to ensure that your dependencies are also running.
-
-For example, if you are developing on `@orbiting/api-app` and you need all backend-modules to run `tsc` in watch mode run the following command:
-`yarn dev --scope="@orbiting/api-app" --include-dependencies`
+In most cases you have certain dependencies that should be run as well, for example the styleguide if you're developing in the frontend. In that case simply append `...` directly after the filter, to ensure that the additionally to the filtered app, all dependencies are executed as well. (For example in www run: `yarn dev --filter=@orbiting/www-app...`)
 
 ### Commit Message Format
 
@@ -255,7 +251,7 @@ CORS_ALLOWLIST_URL=http://localhost:3003,http://localhost:3005,http://localhost:
 Start your frontend and api using:
 
 ```bash
-yarn dev --scope="@orbiting/www-app" --scope="@orbiting/api-app"
+yarn dev --filter=@orbiting/www-app... --filter=@orbiting/api-app...
 ```
 
 
