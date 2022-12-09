@@ -523,6 +523,8 @@ const ActionBar = ({
           showAudioButtons={showAudioButtons}
           speakers={speakers}
           willBeReadAloud={meta.willBeReadAloud}
+          documentId={document.id}
+          documentPath={meta.path}
         />
       ),
       modes: ['articleTop'],

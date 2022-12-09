@@ -3329,6 +3329,10 @@
       "value": "Diesen Beitrag lesen wir im Laufe des Tages ein."
     },
     {
+      "key": "article/actionbar/audio/info/read-aloud-notification",
+      "value": "Ich möchte eine Benachrichtung erhalten so bald der Beitrag eingelesen ist"
+    },
+    {
       "key": "article/syntheticReadAloud/title",
       "value": "Beitrag von synthetischer Stimme vorlesen lassen."
     },

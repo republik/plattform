@@ -10,9 +10,14 @@ import {
   plainButtonRule,
   Editorial,
   useColorContext,
+  Checkbox,
 } from '@project-r/styleguide'
 import Link from 'next/link'
 import { intersperse } from '../../lib/utils/helpers'
+import useDocumentSubscriptionQuery from './graphql/useDocumentSubscriptionQuery'
+import useSubscribeDocumentMutation from './graphql/useSubscribeDocumentMutation'
+import useUnsubscribeDocumentMutation from './graphql/useUnsubscribeDocumentMutation'
+import EventObjectType from './graphql/EventObjectType'
 
 const styles = {
   audioInfo: css({
@@ -30,8 +35,26 @@ const AudioInfo = ({
   play,
   speakers = [],
   willBeReadAloud,
+  documentId,
+  documentPath,
 }) => {
   const [colorScheme] = useColorContext()
+  const { data, loading, refetch } = useDocumentSubscriptionQuery({
+    variables: {
+      path: documentPath,
+      onlyMe: true,
+    },
+  })
+  const [subscribe] = useSubscribeDocumentMutation()
+  const [unsubscribe] = useUnsubscribeDocumentMutation()
+
+  const subscriptions = data?.document?.subscriptions
+  const readAloudSubscription = subscriptions?.nodes.find(
+    (s) =>
+      s?.object.id === documentId &&
+      s.active &&
+      s.filters.some((f) => f === EventObjectType.READ_ALOUD),
+  )
 
   return (
     <span
@@ -69,6 +92,28 @@ const AudioInfo = ({
             <>
               {'. '}
               <span>{t('article/actionbar/audio/info/read-soon')}</span>
+              {(!!data || !loading) && (
+                <Checkbox
+                  checked={!!readAloudSubscription}
+                  onChange={(_, checked) => {
+                    if (checked) {
+                      subscribe({
+                        variables: {
+                          documentId,
+                          filters: [EventObjectType.READ_ALOUD],
+                        },
+                      })
+                    } else {
+                      unsubscribe({
+                        variables: {
+                          subscriptionId: readAloudSubscription?.id,
+                          filters: [EventObjectType.READ_ALOUD],
+                        },
+                      }).then(() => refetch())
+                    }
+                  }}
+                />
+              )}
             </>
           )}
         </>
