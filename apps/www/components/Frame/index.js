@@ -110,7 +110,6 @@ const Frame = ({
   pageColorSchemeKey,
   containerMaxWidth,
   isClimate,
-  localColorVariables,
 }) => {
   const { inNativeApp, inNativeAppLegacy } = useInNativeApp()
   const { t } = useTranslation()
@@ -137,9 +136,7 @@ const Frame = ({
         colorSchemeKey={pageColorSchemeKey || 'auto'}
       />
       <OptionalLocalColorContext
-        localColorVariables={
-          isClimate ? colors.climateColors : localColorVariables
-        }
+        localColorVariables={isClimate ? colors.climateColors : undefined}
       >
         <noscript>
           <Box style={{ padding: 30 }}>
@@ -215,7 +212,6 @@ Frame.propTypes = {
   pageColorSchemeKey: PropTypes.string,
   containerMaxWidth: PropTypes.number,
   isClimate: PropTypes.bool,
-  localColorVariables: PropTypes.object,
 }
 
 export default Frame
