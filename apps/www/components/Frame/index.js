@@ -132,7 +132,7 @@ const Frame = ({
   return (
     <ColorContextProvider colorSchemeKey={pageColorSchemeKey}>
       <ColorHtmlBodyColors
-        colorsObject={isClimate ? colors.climateColors : colors}
+        colorsObject={isClimate ? colors.climateColors : undefined}
         colorSchemeKey={pageColorSchemeKey || 'auto'}
       />
       <OptionalLocalColorContext

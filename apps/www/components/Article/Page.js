@@ -266,7 +266,7 @@ const ArticlePage = ({
   const articleContent = article?.content
   const articleUnreadNotifications = article?.unreadNotifications
   const routerQuery = router.query
-  const isClimate = article?.content?.meta?.climate
+  const isClimate = !!article?.content?.meta?.climate
 
   useEffect(() => {
     if (share) {

@@ -221,7 +221,7 @@ const MetaData = ({
                   },
                   {
                     key: 'climate',
-                    label: 'Klimalabor',
+                    label: t('metaData/climateLab'),
                   },
                 ]
               : [],
