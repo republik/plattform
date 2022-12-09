@@ -1,4 +1,4 @@
-const { Roles } = require('@orbiting/backend-modules-auth')
+const { Roles, transformUser } = require('@orbiting/backend-modules-auth')
 
 const { parse, stringify, isKeyValid } = require('../../../lib/utils')
 
@@ -46,24 +46,37 @@ module.exports = async (_, args, context) => {
     throw new Error(t('api/calendar/slot/error/userBookedAlready'))
   }
 
-  const someoneHasBooked = !!userSlots.find(
-    (slot) => slot.key === key && slot.userId !== user.id,
-  )
-  if (someoneHasBooked) {
-    throw new Error(t('api/calendar/slot/error/someoneBookAlready'))
+  const isSlotAvailable =
+    userSlots.filter((slot) => slot.key === key && slot.userId !== user.id)
+      .length < calendar.limitSlotsPerKey
+  if (!isSlotAvailable) {
+    throw new Error(t('api/calendar/slot/error/slotIsNotAvailable'))
   }
 
-  await pgdb.public.calendarSlots.insertAndGet({
+  await pgdb.public.calendarSlots.insert({
     calendarSlug,
     userId: user.id,
     key,
   })
 
+  const slots = await pgdb.public.calendarSlots.find({
+    calendarSlug,
+    key,
+    revokedAt: null,
+  })
+
+  const users = slots.length
+    ? await pgdb.public.users
+        .find({ id: slots.map((slot) => slot.userId) })
+        .then((users) => users.map(transformUser))
+    : []
+
   return {
-    id: stringify({ calendarSlug: calendar.slug, key }),
+    id: stringify({ userId: user.id, calendarSlug: calendar.slug, key }),
     key,
     userCanBook: false,
     userHasBooked: true,
     userCanCancel: true,
+    users,
   }
 }

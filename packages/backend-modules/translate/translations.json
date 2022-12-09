@@ -429,6 +429,22 @@
       "value": "Republik-Fondues"
     },
     {
+      "key": "api/email/option/goodie/mug/1",
+      "value": "Tasse"
+    },
+    {
+      "key": "api/email/option/goodie/mug/other",
+      "value": "Tassen"
+    },
+    {
+      "key": "api/email/option/goodie/mug_ceramic/1",
+      "value": "Tasse"
+    },
+    {
+      "key": "api/email/option/goodie/mug_ceramic/other",
+      "value": "Tassen"
+    },
+    {
       "key": "api/email/option/membershiptype/abo/1",
       "value": "Jahresmitgliedschaft"
     },
@@ -2173,6 +2189,22 @@
       "value": "Republik-Fondues"
     },
     {
+      "key": "api/invoices/option/Goodie/MUG/1",
+      "value": "Tasse"
+    },
+    {
+      "key": "api/invoices/option/Goodie/MUG/other",
+      "value": "Tassen"
+    },
+    {
+      "key": "api/invoices/option/Goodie/MUG_CERAMIC/1",
+      "value": "Tasse"
+    },
+    {
+      "key": "api/invoices/option/Goodie/MUG_CERAMIC/other",
+      "value": "Tassen"
+    },
+    {
       "key": "api/invoices/option/MembershipType/ABO/1",
       "value": "Jahresmitgliedschaft"
     },
@@ -2254,7 +2286,7 @@
     },
     {
       "key": "api/republik/revenueStats/segment/goodie",
-      "value": "Waren wie Bücher, Taschen, Masken und Fondues"
+      "value": "Waren wie Bücher, Taschen, Masken, Fondues und Tassen"
     },
     {
       "key": "api/republik/revenueStats/segment/donation",
@@ -2341,7 +2373,7 @@
       "value": "Kalendereintrag bereits vorhanden"
     },
     {
-      "key": "api/calendar/slot/error/someoneBookAlready",
+      "key": "api/calendar/slot/error/slotIsNotAvailable",
       "value": "Kalendereintrag nicht mehr verfügbar"
     },
     {

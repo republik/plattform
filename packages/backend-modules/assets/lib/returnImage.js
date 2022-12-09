@@ -187,10 +187,10 @@ module.exports = async ({
 
       if (crop && size) {
         pipeline.extract({
-          left: Math.ceil((cropX / 100) * fileWidth),
-          top: Math.ceil((cropY / 100) * fileHeight),
-          width: Math.ceil((cropWidth / 100) * fileWidth),
-          height: Math.ceil((cropHeight / 100) * fileHeight),
+          left: Math.floor((cropX / 100) * fileWidth),
+          top: Math.floor((cropY / 100) * fileHeight),
+          width: Math.floor((cropWidth / 100) * fileWidth),
+          height: Math.floor((cropHeight / 100) * fileHeight),
         })
       }
 

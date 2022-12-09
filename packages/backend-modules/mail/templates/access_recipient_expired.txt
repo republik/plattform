@@ -1,9 +1,8 @@
 Guten Tag
 
-{{#if `RECIPIENT_EMAIL != GRANTER_EMAIL`}}Seit dem {{GRANT_BEGIN}} waren Sie
-dank einer Empfehlung von {{GRANTER_NAME}} zu Gast an Bord der
-Republik.{{else}}Seit dem {{GRANT_BEGIN}} waren Sie zu Gast an Bord der
-Republik.{{/if}}
+{{#if recipientIsNotGranter }}Seit dem {{GRANT_BEGIN}} waren Sie dank einer
+Empfehlung von {{GRANTER_NAME}} zu Gast an Bord der Republik.{{else}}Seit dem
+{{GRANT_BEGIN}} waren Sie zu Gast an Bord der Republik.{{/if}}
 
 Hat Ihnen unser Magazin gefallen?
 

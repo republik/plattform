@@ -10,7 +10,7 @@ import {
   useColorContext,
 } from '@project-r/styleguide'
 
-const previewWidth = 290
+const previewWidth = 300
 
 export const styles = {
   editButton: css({
@@ -27,14 +27,17 @@ export const styles = {
     [mediaQueries.mUp]: {
       float: 'left',
       width: previewWidth,
+      maxWidth: previewWidth,
+      paddingLeft: 15,
       marginRight: 20,
+      overflow: 'hidden',
     },
   }),
   edit: css({
     [mediaQueries.mUp]: {
       float: 'left',
-      width: `calc(100% - ${previewWidth + 20}px)`,
-      paddingRight: 40,
+      width: `calc(100% - ${previewWidth + 35}px)`,
+      paddingRight: 30,
     },
   }),
   noPreview: css({

@@ -323,7 +323,7 @@ const ActionBar = ({
           attributes={{ ['data-show-if-me']: true }}
         />
       ),
-      modes: ['articleTop', 'articleBottom'],
+      modes: ['articleTop', 'articleBottom', 'flyer'],
       show:
         // only show if there is something to subscribe to
         (isDiscussion ||

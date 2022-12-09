@@ -45,22 +45,14 @@ const styles = {
 
 const TeaserLogo = ({ logo, logoDark, logoAlt }) => {
   const logoProps =
-    logo && FigureImage.utils.getResizedSrcs(logo, LOGO_SIZES.large, false)
-  const logoDarkProps =
-    logoDark &&
-    FigureImage.utils.getResizedSrcs(logoDark, LOGO_SIZES.large, false)
+    logo &&
+    FigureImage.utils.getResizedSrcs(logo, logoDark, LOGO_SIZES.large, false)
   if (!logoProps) {
     return null
   }
   return (
     <div style={{ display: 'inline-block' }}>
-      <SwitchImage
-        {...styles.logo}
-        src={logoProps.src}
-        srcSet={logoProps.srcSet}
-        dark={logoDarkProps}
-        alt={logoAlt}
-      />
+      <SwitchImage {...styles.logo} {...logoProps} alt={logoAlt} />
     </div>
   )
 }

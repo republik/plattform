@@ -16,7 +16,6 @@ import {
   TILE_MAX_WIDTH,
   TILE_GRID_PADDING,
 } from './constants'
-import PlayAudio from '../TeaserFront/PlayAudio'
 
 const IMAGE_SIZE = {
   maxWidth: 160,
@@ -128,7 +127,7 @@ const Tile = ({
   color: tileColor,
   outline: tileOutlineColor,
   bigger: tileBigger,
-  onPlay,
+  audioPlayButton,
 }) => {
   const [colorScheme] = useColorContext()
   const context = React.useContext(CarouselContext)
@@ -156,9 +155,8 @@ const Tile = ({
     margin: bigger ? '0' : '0 auto',
   })
 
-  const imageProps = image && FigureImage.utils.getResizedSrcs(image, 450, true)
-  const imageDarkProps =
-    imageDark && FigureImage.utils.getResizedSrcs(imageDark, 450, true)
+  const imageProps =
+    image && FigureImage.utils.getResizedSrcs(image, imageDark, 450, true)
   const imageContainerStyles = bigger
     ? styles.imageContainerBigger
     : styles.imageContainer
@@ -189,7 +187,6 @@ const Tile = ({
             <FigureImage
               aboveTheFold={aboveTheFold}
               {...imageProps}
-              dark={imageDarkProps}
               alt={alt}
             />
             {byline && (
@@ -202,13 +199,7 @@ const Tile = ({
         {imageProps && isPortrait && (
           <div {...imageContainerStyles}>
             <div {...styles.imageWrapper}>
-              <SwitchImage
-                {...imageStyles}
-                src={imageProps.src}
-                srcSet={imageProps.srcSet}
-                dark={imageDarkProps}
-                alt={alt}
-              />
+              <SwitchImage {...imageStyles} {...imageProps} alt={alt} />
               {byline && (
                 <FigureByline position={bigger ? 'aboveRight' : 'rightCompact'}>
                   {byline}
@@ -225,7 +216,7 @@ const Tile = ({
         >
           <Text color={color} margin='0 auto'>
             {children}
-            {(!!count || !!onPlay) && (
+            {(!!count || !!audioPlayButton) && (
               <div {...styles.footer}>
                 {!!count && (
                   <TeaserCarouselArticleCount
@@ -235,7 +226,9 @@ const Tile = ({
                     color={bgColor}
                   />
                 )}
-                <PlayAudio onPlay={onPlay} style={{ margin: '0 10px' }} />
+                {audioPlayButton && (
+                  <div style={{ margin: '0 10px' }}>{audioPlayButton}</div>
+                )}
               </div>
             )}
           </Text>
@@ -258,5 +251,5 @@ Tile.propTypes = {
   aboveTheFold: PropTypes.bool,
   byline: PropTypes.string,
   children: PropTypes.node,
-  onPlay: PropTypes.func,
+  audioPlayButton: PropTypes.node,
 }

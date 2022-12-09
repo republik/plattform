@@ -1,25 +1,21 @@
-import { gql, useQuery } from '@apollo/client'
+import React from 'react'
 import { css } from 'glamor'
+import { gql, useQuery } from '@apollo/client'
+import Link from 'next/link'
+
 import {
   ArrowForwardIcon,
   ArrowBackIcon,
   IconButton,
   FlyerDate,
   mediaQueries,
-  FlyerTile,
 } from '@project-r/styleguide'
-import Link from 'next/link'
+
 import { useMe } from '../../lib/context/MeContext'
 
 const FORMAT_REPO_ID = 'republik/format-journal'
 
 const styles = {
-  footer: css({
-    marginTop: -35,
-    [mediaQueries.mUp]: {
-      marginTop: -60,
-    },
-  }),
   navi: css({
     display: 'flex',
     flexWrap: 'nowrap',
@@ -98,14 +94,17 @@ const QUERY = gql`
   }
 `
 
-export const FlyerNav = ({ repoId, publishDate }) => {
+const Nav: React.FC<{ repoId: string; publishDate: string }> = ({
+  repoId,
+  publishDate,
+}) => {
   const { hasAccess } = useMe()
   const { data, loading } = useQuery(QUERY, {
     variables: {
       publishedAt: publishDate,
       repoId,
     },
-    skip: !hasAccess,
+    skip: !hasAccess || !repoId || !publishDate,
   })
   const prev = data?.prev.nodes[0]?.entity?.meta
   const next = data?.next.nodes[0]?.entity?.meta
@@ -129,12 +128,4 @@ export const FlyerNav = ({ repoId, publishDate }) => {
   )
 }
 
-const FlyerFooter = ({ children }) => {
-  return (
-    <FlyerTile {...styles.footer} innerStyle={{ paddingTop: 0 }}>
-      {children}
-    </FlyerTile>
-  )
-}
-
-export default FlyerFooter
+export default Nav

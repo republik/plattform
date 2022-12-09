@@ -59,7 +59,6 @@ export type AudioControlProps = {
   handleBackward: () => void
   handleSkipToNext: () => void
   handlePlaybackRateChange: (value: number) => void
-  isLastItem?: boolean
 } & Pick<
   AudioPlayerProps,
   | 'isPlaying'
@@ -83,7 +82,7 @@ const AudioControl = ({
   currentTime,
   duration,
   buffered,
-}) => {
+}: AudioControlProps) => {
   const { t } = useTranslation()
 
   return (

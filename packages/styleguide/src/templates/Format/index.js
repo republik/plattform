@@ -53,6 +53,10 @@ const createFormatSchema = ({
         key: 'color',
       },
       {
+        label: 'Benachrichtigungs-Titel',
+        key: 'notificationTitle',
+      },
+      {
         label: 'Externe Basis-URL',
         key: 'externalBaseUrl',
       },

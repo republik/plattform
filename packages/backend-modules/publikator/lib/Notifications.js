@@ -4,7 +4,6 @@ const {
   sendNotification,
 } = require('@orbiting/backend-modules-subscriptions')
 
-const { getRepoId } = require('@orbiting/backend-modules-documents/lib/resolve')
 const { inQuotes } = require('@orbiting/backend-modules-styleguide')
 const Promise = require('bluebird')
 
@@ -54,7 +53,7 @@ const notifyPublish = async (
   const authorsSubscriptions = []
   await getSubscriptionsForDoc(
     doc,
-    testUser?.id, //otherwise null => for all users
+    testUser?.id, // otherwise null => for all users
     {
       ...(testUser && simulateAllPossibleSubscriptions
         ? {
@@ -95,6 +94,11 @@ const notifyPublish = async (
   await Promise.each(Object.keys(docSubscribersByDocId), async (docId) => {
     const subscribedDoc = await loaders.Document.byRepoId.load(docId)
     const subscribers = docSubscribersByDocId[docId]
+    const title =
+      subscribedDoc.meta.notificationTitle ||
+      t('api/notifications/doc/title', {
+        title: inQuotes(subscribedDoc.meta.title),
+      })
 
     event = await sendNotification(
       {
@@ -103,9 +107,7 @@ const notifyPublish = async (
         content: {
           app: {
             ...appContent,
-            title: t('api/notifications/doc/title', {
-              title: inQuotes(subscribedDoc.meta.title),
-            }),
+            title,
           },
         },
       },

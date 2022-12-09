@@ -79,7 +79,7 @@ export {
   MdFormatBold as BoldIcon,
   MdFormatItalic as ItalicIcon,
   MdKeyboardReturn as BreakIcon,
-  MdWallpaper as ImageIcon,
+  MdOutlineImage as ImageIcon,
   MdFormatQuote as QuoteIcon,
   MdStrikethroughS as StrikeThrough,
   MdTitle as TitleIcon,
