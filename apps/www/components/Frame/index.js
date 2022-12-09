@@ -211,6 +211,7 @@ Frame.propTypes = {
   isOnMarketingPage: PropTypes.bool,
   pageColorSchemeKey: PropTypes.string,
   containerMaxWidth: PropTypes.number,
+  climate: PropTypes.bool,
 }
 
 export default Frame
