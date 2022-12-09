@@ -215,6 +215,7 @@ Frame.propTypes = {
   pageColorSchemeKey: PropTypes.string,
   containerMaxWidth: PropTypes.number,
   isClimate: PropTypes.bool,
+  localColorVariables: PropTypes.object,
 }
 
 export default Frame
