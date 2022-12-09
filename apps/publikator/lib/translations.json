@@ -1185,10 +1185,6 @@
       "value": "Benachrichtigungen senden: aktuell {count} Empfangende"
     },
     {
-      "key": "publish/label/notifyReadAloudSubscribers/other",
-      "value": "Vorgelesen-Benachrichtigung senden: aktuell {count} Empfangende"
-    },
-    {
       "key": "publish/validation/links/1",
       "value": "Im Text ist ein Link enthalten."
     },
@@ -1763,10 +1759,6 @@
     {
       "key": "editor/element/link",
       "value": "Link"
-    },
-    {
-      "key": "editor/element/memo",
-      "value": "Memo"
     },
     {
       "key": "editor/element/ul",
