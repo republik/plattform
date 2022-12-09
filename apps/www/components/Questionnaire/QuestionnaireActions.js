@@ -28,6 +28,7 @@ export default compose(withT)(
     isResubmitAnswers,
     updating,
     invalid,
+    hideInvalid = false,
     publicSubmission,
   }) => {
     const { me } = useMe()
@@ -59,7 +60,7 @@ export default compose(withT)(
             )
           )}
         </Button>
-        {invalid ? (
+        {invalid && !hideInvalid ? (
           <Interaction.P>{t('questionnaire/invalid')}</Interaction.P>
         ) : (
           !!onReset && (

@@ -1,6 +1,9 @@
 import { Component } from 'react'
+import { css } from 'glamor'
 import compose from 'lodash/flowRight'
 import { format } from 'url'
+import Link from 'next/link'
+import { withRouter } from 'next/router'
 
 import withT from '../../lib/withT'
 import withMe from '../../lib/apollo/withMe'
@@ -21,13 +24,23 @@ import {
   Button,
   Loader,
   Meta,
+  mediaQueries,
 } from '@project-r/styleguide'
 
 import RawHtmlTranslation from '../RawHtmlTranslation'
-import { withRouter } from 'next/router'
-import Link from 'next/link'
+import { QuestionnaireWithData } from '../Questionnaire/Questionnaire'
 
 const { P, H1 } = Interaction
+
+const styles = {
+  questionnaireStyleOverride: css({
+    [mediaQueries.mUp]: {
+      '& div': {
+        minHeight: 0,
+      },
+    },
+  }),
+}
 
 export const gotoMerci = (query) => {
   // workaround for apollo cache issues
@@ -235,7 +248,6 @@ class Merci extends Component {
       return <Loader loading />
     }
 
-    const buttonStyle = { marginBottom: 10, marginRight: 10 }
     const noNameSuffix = me?.name ? '' : '/noName'
 
     const leads = t
@@ -263,18 +275,18 @@ class Merci extends Component {
         ))}
         <WithAccess
           render={() => (
-            <>
-              <Link href='/' passHref>
-                <Button primary style={{ ...buttonStyle, marginTop: 10 }}>
-                  {t('merci/action/read')}
-                </Button>
-              </Link>
-              <Link href='/dialog' passHref>
-                <Button primary style={{ ...buttonStyle, marginTop: 10 }}>
-                  {t('merci/action/dialog')}
-                </Button>
-              </Link>
-            </>
+            <div {...styles.questionnaireStyleOverride}>
+              {query.package === 'PROLONG' && (
+                <QuestionnaireWithData
+                  slug={'erneuerungs-grund'}
+                  publicSubmission={false}
+                  hideCount
+                  submittedMessage={<P>{t('questionnaire/thankyou')}</P>}
+                  hideInvalid={true}
+                  hideReset={true}
+                />
+              )}
+            </div>
           )}
         />
         <div style={{ marginTop: 50 }}>{children}</div>
