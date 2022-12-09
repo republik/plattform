@@ -7,7 +7,7 @@ const Klimalabor = () => {
     description: 'Langing Page',
   }
   return (
-    <Frame meta={meta} localColorVariables={colors.climateColors}>
+    <Frame meta={meta} isClimate={true}>
       <p>
         Und hier kommt <span>Und hier dann ein gelber Balken dahiner</span>
         viel Inhalt

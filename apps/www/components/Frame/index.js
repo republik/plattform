@@ -109,7 +109,7 @@ const Frame = ({
   isOnMarketingPage,
   pageColorSchemeKey,
   containerMaxWidth,
-  climate,
+  isClimate,
   localColorVariables,
 }) => {
   const { inNativeApp, inNativeAppLegacy } = useInNativeApp()
@@ -132,10 +132,13 @@ const Frame = ({
   }, [hasSecondaryNav])
   return (
     <ColorContextProvider colorSchemeKey={pageColorSchemeKey}>
-      <ColorHtmlBodyColors colorSchemeKey={pageColorSchemeKey || 'auto'} />
+      <ColorHtmlBodyColors
+        colorsObject={isClimate ? colors.climateColors : colors}
+        colorSchemeKey={pageColorSchemeKey || 'auto'}
+      />
       <OptionalLocalColorContext
         localColorVariables={
-          climate ? colors.climateColors : localColorVariables
+          isClimate ? colors.climateColors : localColorVariables
         }
       >
         <noscript>
@@ -211,7 +214,7 @@ Frame.propTypes = {
   isOnMarketingPage: PropTypes.bool,
   pageColorSchemeKey: PropTypes.string,
   containerMaxWidth: PropTypes.number,
-  climate: PropTypes.bool,
+  isClimate: PropTypes.bool,
 }
 
 export default Frame
