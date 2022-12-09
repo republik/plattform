@@ -2,6 +2,7 @@ import { Fragment } from 'react'
 import { css } from 'glamor'
 
 import { Interaction, mediaQueries } from '@project-r/styleguide'
+import { QuestionnaireWithData } from '../../Questionnaire/Questionnaire'
 
 import Section from '../Section'
 
@@ -51,6 +52,14 @@ const Postcard = (props) => {
         <P {...styles.p}>
           {t('Onboarding/Sections/Postcard/paragraph1', null, '')}
         </P>
+        <QuestionnaireWithData
+          slug={'erneuerungs-grund'}
+          publicSubmission={false}
+          hideCount
+          submittedMessage={<P>{t('questionnaire/thankyou')}</P>}
+          hideInvalid={true}
+          hideReset={true}
+        />
       </Fragment>
     </Section>
   )
