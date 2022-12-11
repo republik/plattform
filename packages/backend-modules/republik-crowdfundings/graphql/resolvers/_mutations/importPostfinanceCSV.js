@@ -4,18 +4,21 @@ const matchPayments = require('../../../lib/payments/matchPayments')
 const { dsvFormat } = require('d3-dsv')
 const csvParse = dsvFormat(';').parse
 const { refreshAllPots } = require('../../../lib/membershipPot')
+const moment = require('moment')
+
+const DATE_FORMAT = 'DD.MM.YYYY'
 
 const parsePostfinanceExport = async (inputFile, pgdb) => {
   const fields = [
     {
       name: 'buchungsdatum', // field in database
       pattern: /^Buchungsdatum/, // pattern to match row keys
-      transform: (v) => new Date(v),
+      transform: (v) => moment(v, DATE_FORMAT),
     },
     {
       name: 'valuta',
       pattern: /^Valuta/,
-      transform: (v) => new Date(v),
+      transform: (v) => moment(v, DATE_FORMAT),
     },
     {
       name: 'avisierungstext',
@@ -29,8 +32,12 @@ const parsePostfinanceExport = async (inputFile, pgdb) => {
           throw new Error('"Avisierungstext" not available')
         }
 
+        if (v.match(/HRID/)) {
+          const hrid = v.split('HRID')[1].replace(/\s+/g, '').slice(0, 6)
+          return hrid
+        }
         const match = v.match(/.*?MITTEILUNGEN:.*?\s([A-Za-z0-9]{6})(\s.*?|$)/)
-        return match ? match[1] : null
+        return match && match[1] !== 'SPENDE' ? match[1] : null
       },
     },
     {
@@ -49,7 +56,7 @@ const parsePostfinanceExport = async (inputFile, pgdb) => {
   const delimitedFile = inputFile.split(/\r\n/)
 
   const iban = delimitedFile.slice(0, 5).reduce((acc, row) => {
-    const parsedRow = row.match(/^Konto:;([A-Z0-9]{5,34})/)
+    const parsedRow = row.match(/^Konto:;=?"?([A-Z0-9]{5,34})/)
 
     if (!parsedRow) {
       return acc
@@ -57,8 +64,6 @@ const parsePostfinanceExport = async (inputFile, pgdb) => {
 
     return parsedRow[1]
   }, false)
-
-  console.log(iban)
 
   if (!iban) {
     throw new Error('Unable to find IBAN in provided file.')
@@ -71,19 +76,28 @@ const parsePostfinanceExport = async (inputFile, pgdb) => {
     )
   }
 
-  return csvParse(delimitedFile.slice(3).join('\n'))
+  const startRowIndex = delimitedFile.findIndex((row) =>
+    row.startsWith('Buchungsdatum'),
+  )
+
+  const rows = csvParse(delimitedFile.slice(startRowIndex).join('\n'))
+
+  const filteredRows = rows
     .filter(
       (row) =>
         !/^GUTSCHRIFT E-PAYMENT TRANSAKTION POSTFINANCE CARD/g.exec(
           row.Avisierungstext,
         ),
     ) // trash PF CARD
+    .filter((row) => !/^SAMMELGUTSCHRIFT/g.exec(row.Avisierungstext)) // trash virtual accounts
     .filter(
       (row) =>
-        !/^GUTSCHRIFT VON FREMDBANK AUFTRAGGEBER: (STRIPE|PAYPAL)/gi.exec(
+        !/^GUTSCHRIFT (VON FREMDBANK )?AUFTRAGGEBER: (STRIPE|PAYPAL)/gi.exec(
           row.Avisierungstext,
         ),
     ) // trash stripe payments
+
+  return filteredRows
     .map((row) => {
       const parsed = {}
 
