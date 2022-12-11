@@ -210,32 +210,39 @@ mail.sendPledgeConfirmations = async ({ userId, pgdb, t }) => {
   )
 }
 
-mail.sendPaymentSuccessful = async ({ pledgeId, pgdb, t }) => {
-  const pledge = await pgdb.public.pledges.findOne({ id: pledgeId })
-  const user = await pgdb.public.users.findOne({ id: pledge.userId })
-  const package_ = await pgdb.public.packages.findOne({ id: pledge.packageId })
-
-  const templateName = `${user.locale}/payment_successful`
-
-  const pledgeMergeVars = await mail.getPledgeMergeVars(
-    { pledge, user, package_ },
-    { pgdb, t },
-  )
-
-  const globalMergeVars = pledgeMergeVars.filter((v) => !v.type)
-
-  return sendMailTemplate(
-    {
-      to: user.email,
-      fromEmail: process.env.DEFAULT_MAIL_FROM_ADDRESS,
-      subject: t(`api/email/${templateName}/subject`),
-      templateName,
-      mergeLanguage: 'handlebars',
-      globalMergeVars,
-    },
-    { pgdb },
-  )
+mail.sendPaymentSuccessful = () => {
+  // Lobbywatch
+  // - no payment successful email for now
+  // - maybe re-enable after auto pf import
+  //   - maybe only if reminder was sent
 }
+
+// mail.sendPaymentSuccessful = async ({ pledgeId, pgdb, t }) => {
+//   const pledge = await pgdb.public.pledges.findOne({ id: pledgeId })
+//   const user = await pgdb.public.users.findOne({ id: pledge.userId })
+//   const package_ = await pgdb.public.packages.findOne({ id: pledge.packageId })
+
+//   const templateName = `${user.locale}/payment_successful`
+
+//   const pledgeMergeVars = await mail.getPledgeMergeVars(
+//     { pledge, user, package_ },
+//     { pgdb, t },
+//   )
+
+//   const globalMergeVars = pledgeMergeVars.filter((v) => !v.type)
+
+//   return sendMailTemplate(
+//     {
+//       to: user.email,
+//       fromEmail: process.env.DEFAULT_MAIL_FROM_ADDRESS,
+//       subject: t(`api/email/${templateName}/subject`),
+//       templateName,
+//       mergeLanguage: 'handlebars',
+//       globalMergeVars,
+//     },
+//     { pgdb },
+//   )
+// }
 
 mail.sendMembershipCancellation = async ({
   email,

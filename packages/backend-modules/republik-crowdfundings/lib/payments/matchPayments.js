@@ -75,6 +75,9 @@ module.exports = async (transaction, t, redis) => {
 
       let newStatus
       if (payment.total >= pledge.total) {
+        // if (payment.total > pledge.total) {
+        //   // adapt pledge or add note to user?
+        // }
         newStatus = 'SUCCESSFUL'
       } else {
         newStatus = 'PAID_INVESTIGATE'
