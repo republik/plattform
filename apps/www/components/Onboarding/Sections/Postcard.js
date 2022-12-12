@@ -53,7 +53,7 @@ const Postcard = (props) => {
           {t('Onboarding/Sections/Postcard/paragraph1', null, '')}
         </P>
         <QuestionnaireWithData
-          slug={'erneuerungs-grund'}
+          slug={'klima-postkarte'}
           publicSubmission={false}
           hideCount
           submittedMessage={<P>{t('questionnaire/thankyou')}</P>}
