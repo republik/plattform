@@ -8,6 +8,7 @@ import {
 
 import { useMe } from '../../lib/context/MeContext'
 import { getElementFromSeed } from '../../lib/utils/helpers'
+import { useInNativeApp } from '../../lib/withInNativeApp'
 import { useTranslation } from '../../lib/withT'
 
 import { useResolvedColorSchemeKey } from '../ColorScheme/lib'
@@ -16,13 +17,15 @@ import { BuyNoteCta, generatePositionedNote } from '../Article/PayNote'
 
 const TRY = ['221206-v1', '221206-v2']
 const BUY = ['221206-v1', '221206-v2']
+const IOS = ['221212-v1']
 
 const NOTES: { [K in PaynoteType]: string[] } = {
   trial: TRY,
   buy: BUY,
+  ios: IOS,
 }
 
-type PaynoteType = 'trial' | 'buy'
+type PaynoteType = 'trial' | 'buy' | 'ios'
 
 type TrackingProps = {
   repoId: string
@@ -51,17 +54,27 @@ const Paynote: React.FC<{
 }> = ({ seed, repoId, documentId }) => {
   const colorSchemeKey = useResolvedColorSchemeKey()
   const { hasAccess } = useMe()
+  const { inNativeIOSApp } = useInNativeApp()
   const { t } = useTranslation()
 
-  // TODO: disable buyNote for iOS
-
-  const noteType: PaynoteType = hasAccess ? 'buy' : 'trial'
+  const noteType: PaynoteType = hasAccess
+    ? inNativeIOSApp
+      ? 'ios'
+      : 'buy'
+    : 'trial'
   const noteKey = getElementFromSeed(NOTES[noteType], seed)
 
   const trackingPayload: TrackingProps = {
     documentId,
     repoId,
     variation: `${noteType}/${noteKey}`,
+  }
+
+  let cta = null
+  if (noteType === 'trial') {
+    cta = <TrialForm payload={trackingPayload} minimal />
+  } else if (noteType === 'buy') {
+    cta = <BuyForm {...trackingPayload} />
   }
 
   return (
@@ -71,11 +84,7 @@ const Paynote: React.FC<{
       <FlyerTileMeta>
         <Flyer.H3>{t(`flyer/paynote/${noteType}/${noteKey}/title`)}</Flyer.H3>
         <Flyer.P>{t(`flyer/paynote/${noteType}/${noteKey}/body`)}</Flyer.P>
-        {noteType === 'trial' ? (
-          <TrialForm payload={trackingPayload} minimal />
-        ) : (
-          <BuyForm {...trackingPayload} />
-        )}
+        {cta}
       </FlyerTileMeta>
     </ColorContextProvider>
   )

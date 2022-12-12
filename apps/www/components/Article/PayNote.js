@@ -304,18 +304,15 @@ export const BuyNoteCta = ({ payNote, payload }) => (
   </div>
 )
 
-const TryNoteCta = ({ payload }) => {
-  const router = useRouter()
-  return (
-    <TrialForm
-      onSuccess={() => {
-        return false
-      }}
-      payload={payload}
-      minimal
-    />
-  )
-}
+const TryNoteCta = ({ payload }) => (
+  <TrialForm
+    onSuccess={() => {
+      return false
+    }}
+    payload={payload}
+    minimal
+  />
+)
 
 const PayNoteCta = ({ payNote, payload, hasAccess }) => {
   const router = useRouter()
