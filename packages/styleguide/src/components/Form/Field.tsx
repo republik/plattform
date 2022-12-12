@@ -145,7 +145,6 @@ const Field = React.forwardRef<
     label?: string
     disabled?: boolean
     required?: boolean
-    black?: boolean
     error?: string | boolean
     onInc?: () => void
     onDec?: () => void
@@ -170,7 +169,6 @@ const Field = React.forwardRef<
       icon,
       disabled,
       required,
-      black,
       value,
       renderInput,
     },
@@ -204,24 +202,12 @@ const Field = React.forwardRef<
       return {
         labelText: css({
           color: colorScheme.getCSSColor(
-            error
-              ? 'error'
-              : isFocused
-              ? black
-                ? 'text'
-                : 'primary'
-              : 'disabled',
+            error ? 'error' : isFocused ? 'primary' : 'disabled',
           ),
         }),
         field: css({
           borderColor: colorScheme.getCSSColor(
-            error
-              ? 'error'
-              : isFocused
-              ? black
-                ? 'text'
-                : 'primary'
-              : 'divider',
+            error ? 'error' : isFocused ? 'primary' : 'divider',
           ),
           color: colorScheme.getCSSColor(
             error ? 'error' : disabled ? 'disabled' : 'text',
@@ -280,7 +266,7 @@ const Field = React.forwardRef<
         {!disabled && hasDecrease && (
           <ArrowDown
             {...(isFocused
-              ? colorScheme.set('fill', black ? 'text' : 'primary')
+              ? colorScheme.set('fill', 'primary')
               : colorScheme.set('fill', 'disabled'))}
             size={FIELD_HEIGHT / 2}
             onClick={(e) => {
@@ -296,7 +282,7 @@ const Field = React.forwardRef<
         {!disabled && hasIncrease && (
           <ArrowUp
             {...(isFocused
-              ? colorScheme.set('fill', black ? 'text' : 'primary')
+              ? colorScheme.set('fill', 'primary')
               : colorScheme.set('fill', 'disabled'))}
             size={FIELD_HEIGHT / 2}
             onClick={(e) => {

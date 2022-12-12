@@ -6,8 +6,7 @@ import {
   Button,
   Interaction,
   Field,
-  linkRule,
-  plainLinkRule,
+  A,
   InlineSpinner,
   useColorContext,
 } from '@project-r/styleguide'
@@ -53,7 +52,6 @@ const CodeAuthorization = ({
   authorizeSession,
   me,
   onSuccess,
-  black,
 }) => {
   const [code, setCode] = useState('')
   const [payload, setPayload] = useState('')
@@ -155,7 +153,6 @@ const CodeAuthorization = ({
         value={code}
         autoComplete='false'
         error={dirty && error}
-        black={black}
         icon={
           minimal &&
           (mutating ? (
@@ -191,14 +188,9 @@ const CodeAuthorization = ({
       )}
       <ul {...listStyle}>
         <li>
-          <a
-            {...(black ? plainLinkRule : linkRule)}
-            style={black ? { textDecoration: 'underline' } : {}}
-            href='#'
-            onClick={onCancel}
-          >
+          <A href='#' onClick={onCancel}>
             {t('Auth/CodeAuthorization/help/cancelLink')}
-          </a>
+          </A>
         </li>
         <li {...colorScheme.set('color', 'textSoft')}>
           {t('Auth/CodeAuthorization/help/lastResort')}

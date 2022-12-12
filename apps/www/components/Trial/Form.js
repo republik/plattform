@@ -76,7 +76,6 @@ const Form = (props) => {
     initialEmail,
     campaign,
     isInSeriesNav,
-    black,
   } = props
   const { query } = router
 
@@ -257,19 +256,13 @@ const Form = (props) => {
                 </Link>
               </Interaction.P>
 
-              <Button
-                primary
-                black={black}
-                onClick={close}
-                style={{ marginRight: 20 }}
-              >
+              <Button primary onClick={close} style={{ marginRight: 20 }}>
                 {t('Trial/Form/withAccess/close/label')}
               </Button>
             </>
           ) : (
             <>
               <Button
-                black={black}
                 onClick={() =>
                   router.push({
                     pathname: '/einrichten',
@@ -280,7 +273,6 @@ const Form = (props) => {
                 {t('Trial/Form/withAccess/setup/label')}
               </Button>
               <Button
-                black={black}
                 primary
                 style={{ marginRight: 20 }}
                 onClick={() => router.push('/')}
@@ -296,7 +288,6 @@ const Form = (props) => {
 
   const consentErrors = getConsentsError(t, REQUIRED_CONSENTS, consents)
   const errorMessages = [email.error].concat(consentErrors).filter(Boolean)
-  const showCircle = !!email.value && !email.error
 
   return (
     <>
@@ -318,7 +309,6 @@ const Form = (props) => {
                 error={email.dirty && email.error}
                 dirty={email.dirty}
                 disabled={isSigningIn}
-                black={black}
                 icon={
                   minimal &&
                   (loading ? (
@@ -327,21 +317,16 @@ const Form = (props) => {
                     <button
                       {...css(
                         styles.circleButton,
-                        showCircle &&
-                          colorScheme.set(
-                            'backgroundColor',
-                            black ? 'text' : 'primary',
-                          ),
+                        !!email.value &&
+                          !email.error &&
+                          colorScheme.set('backgroundColor', 'primary'),
                       )}
                     >
                       <ArrowForwardIcon
                         style={{ cursor: 'pointer' }}
                         size={22}
                         onClick={requestAccess}
-                        {...colorScheme.set(
-                          'fill',
-                          black && showCircle ? 'default' : 'text',
-                        )}
+                        {...colorScheme.set('fill', 'text')}
                       />
                     </button>
                   ))
@@ -354,7 +339,6 @@ const Form = (props) => {
                 style={{ marginTop: (narrow && 10) || (minimal && '0') || 20 }}
               >
                 <Consents
-                  black={black}
                   error={showErrors && consentErrors}
                   required={REQUIRED_CONSENTS}
                   accepted={consents}
@@ -420,7 +404,6 @@ const Form = (props) => {
             onTokenTypeChange={reset}
             onSuccess={onSuccessSwitchBoard}
             minimal={minimal}
-            black={black}
           />
         </div>
       )}
