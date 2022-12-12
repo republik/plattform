@@ -42,6 +42,7 @@ const Payments = (props) => {
         onSearch={changeHandler('search')}
         dateRange={params.dateRange}
         onDateRange={changeHandler('dateRange', DateRange.serialize)}
+        stringArray={StringArray.parse(params.stringArray)}
         onStringArray={(change) => {
           changeHandler('stringArray')(change && StringArray.serialize(change))
         }}
@@ -144,15 +145,13 @@ export default graphql(paymentsQuery, {
           }
           return {
             ...previousResult,
-            ...{
-              payments: {
-                ...previousResult.payments,
-                ...fetchMoreResult.payments,
-                items: [
-                  ...previousResult.payments.items,
-                  ...fetchMoreResult.payments.items,
-                ],
-              },
+            payments: {
+              ...previousResult.payments,
+              ...fetchMoreResult.payments,
+              items: []
+                .concat(previousResult.payments?.items)
+                .concat(fetchMoreResult.payments?.items)
+                .filter(Boolean),
             },
           }
         },

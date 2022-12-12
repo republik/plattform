@@ -92,7 +92,7 @@ export class Form extends Component {
     }
   }
 
-  willReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     this.setState(() => getInitialState(nextProps))
   }
 

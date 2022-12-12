@@ -26,7 +26,7 @@ export default class EmailForm extends Component {
     onSubmit(this.state.message)
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     this.setState(() => getInitialState(nextProps))
   }
 
