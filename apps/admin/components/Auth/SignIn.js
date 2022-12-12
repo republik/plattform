@@ -5,7 +5,6 @@ import { gql } from '@apollo/client'
 import { css } from 'glamor'
 import isEmail from 'validator/lib/isEmail'
 
-import Link from 'next/link'
 import withT from '../../lib/withT'
 
 import ErrorMessage from '../ErrorMessage'
@@ -15,7 +14,6 @@ import {
   InlineSpinner,
   Interaction,
   Field,
-  Label,
   RawHtml,
   colors,
 } from '@project-r/styleguide'
@@ -40,20 +38,6 @@ const styles = {
     width: 160,
     textAlign: 'center',
     marginBottom: 15,
-  }),
-  hint: css({
-    marginTop: -5,
-    color: colors.lightText,
-    display: 'block',
-    lineHeight: '20px',
-  }),
-  hintA: css({
-    textDecoration: 'underline',
-    textDecorationSkip: 'ink',
-    color: colors.lightText,
-    ':hover': {
-      color: colors.text,
-    },
   }),
 }
 
@@ -217,17 +201,6 @@ class SignIn extends Component {
             </div>
           </div>
         </form>
-        <Label {...styles.hint}>
-          <Link href='/legal/privacy'>
-            <a {...styles.hintA}>{t('signIn/privacy')}</a>
-          </Link>
-          {' – '}
-          <Link href='/faq'>
-            <a {...styles.hintA}>{t('signIn/faq')}</a>
-          </Link>
-          {' – '}
-          {t('signIn/hint')}
-        </Label>
         {!!serverError && <ErrorMessage error={serverError} />}
       </div>
     )

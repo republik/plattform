@@ -4,10 +4,7 @@ import { css } from 'glamor'
 import ErrorMessage from '../../ErrorMessage'
 import { colors } from '@project-r/styleguide'
 
-const companies = [
-  { label: 'Project R', name: 'PROJECT_R' },
-  { label: 'Republik AG', name: 'REPUBLIK' },
-]
+const companies = []
 
 const link = css({
   textDecoration: 'none',
@@ -33,7 +30,7 @@ class CSVDownloader extends Component {
       csv: null,
       loading: false,
       error: null,
-      companyName: companies[0].name,
+      companyName: companies[0]?.name,
     }
   }
 

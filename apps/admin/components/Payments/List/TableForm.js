@@ -4,9 +4,6 @@ import DateRange from '../../Form/DateRange'
 import StringArray from '../../Form/StringArray'
 import withDebouncedSearch from '../../Form/withDebouncedSearch'
 
-import CSVDownloader from './CsvDownloader'
-import { useApolloClient } from '@apollo/client'
-
 const searchHandler = (handler) => (event) => {
   handler(event.target.value)
 }
@@ -24,8 +21,6 @@ export default withDebouncedSearch(
     stringArray,
     onStringArray,
   }) => {
-    const apolloClient = useApolloClient()
-
     return (
       <div
         style={{
@@ -68,9 +63,6 @@ export default withDebouncedSearch(
             stringArray={stringArray}
             onChange={onStringArray}
           />
-        </div>
-        <div style={formSectionStyles}>
-          <CSVDownloader client={apolloClient} />
         </div>
       </div>
     )
