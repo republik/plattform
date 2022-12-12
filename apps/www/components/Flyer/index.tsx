@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 
 import {
   Flyer,
@@ -45,10 +45,10 @@ const RenderValue: React.FC<{
 const RenderWithPaynote: React.FC<{
   value: CustomDescendant[]
   tileId?: string
-  seed: number
   repoId: string
   documentId: string
-}> = ({ value, tileId, seed, repoId, documentId }) => {
+}> = ({ value, tileId, repoId, documentId }) => {
+  const seed = useMemo(() => Math.random(), [])
   let idx = 2
   if (tileId) {
     idx = value.findIndex((node) => node.id === tileId) + 1
@@ -70,17 +70,7 @@ const Page: React.FC<{
   tileId?: string
   value: CustomDescendant[]
   actionBar: JSX.Element
-  payNoteSeed?: number
-}> = ({
-  meta,
-  repoId,
-  documentId,
-  inNativeApp,
-  tileId,
-  value,
-  actionBar,
-  payNoteSeed,
-}) => {
+}> = ({ meta, repoId, documentId, inNativeApp, tileId, value, actionBar }) => {
   const { t } = useTranslation()
   const { hasActiveMembership, meLoading } = useMe()
 
@@ -100,7 +90,6 @@ const Page: React.FC<{
           <RenderWithPaynote
             value={value}
             tileId={tileId}
-            seed={payNoteSeed}
             repoId={repoId}
             documentId={documentId}
           />
