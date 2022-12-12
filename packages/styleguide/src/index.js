@@ -364,7 +364,6 @@ const Styleguide = () => {
                           Button: require('./components/Button'),
                           Checkbox: require('./components/Form/Checkbox.tsx'),
                           Radio: require('./components/Form/Radio.tsx'),
-                          ImageRadio: require('./components/Form/ImageRadio.tsx'),
                           Field: require('./components/Form/Field'),
                           ...require('./components/Form/Field.docs.js'),
                           FieldSet: require('./components/Form/FieldSet.js'),
@@ -384,17 +383,6 @@ const Styleguide = () => {
                           GetColorScheme,
                         },
                         src: require('./components/Form/Radio.docs.md'),
-                      },
-                      {
-                        path: '/forms/imageradio',
-                        title: 'ImageRadio',
-                        imports: {
-                          css,
-                          ...require('./components/Typography'),
-                          ImageRadio: require('./components/Form/ImageRadio.tsx'),
-                          GetColorScheme,
-                        },
-                        src: require('./components/Form/ImageRadio.docs.md'),
                       },
                       {
                         path: '/forms/checkbox',

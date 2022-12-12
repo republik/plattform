@@ -1,8 +1,8 @@
 import React from 'react'
 import { css, style } from 'glamor'
-import { fontStyles } from '../../theme/fonts'
-import { pxToRem } from '../Typography/utils'
-import { useColorContext } from '../Colors/useColorContext'
+// import { fontStyles } from '../../theme/fonts'
+// import { pxToRem } from '../Typography/utils'
+import { useColorContext } from '@project-r/styleguide'
 
 const styles = {
   image: css({
@@ -38,7 +38,7 @@ const BackgroundImage = ({ checked, disabled, imageUrl }) => {
   return (
     <img
       {...styles.image}
-      {...colorScheme.set('border-color', checked ? 'primary' : 'default')}
+      {...colorScheme.set('borderColor', checked ? 'primary' : 'default')}
       {...(disabled ? styles.disabledImage : undefined)}
       src={imageUrl}
       width='200px'
@@ -47,7 +47,7 @@ const BackgroundImage = ({ checked, disabled, imageUrl }) => {
   )
 }
 
-const ImageRadio: React.FC<{
+const ImageChoice: React.FC<{
   style?: React.CSSProperties
   name?: string
   imageUrl?: string
@@ -66,6 +66,7 @@ const ImageRadio: React.FC<{
   onChange,
 }) => {
   const [colorScheme] = useColorContext()
+  console.log(imageUrl)
   return (
     <label style={style}>
       <span>
@@ -88,4 +89,4 @@ const ImageRadio: React.FC<{
   )
 }
 
-export default ImageRadio
+export default ImageChoice
