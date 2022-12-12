@@ -9,6 +9,11 @@ const styles = {
     cursor: 'pointer',
     borderWidth: '3px',
     borderStyle: 'solid',
+    transition: 'transform .2s',
+    maxWidth: '100%',
+    ':hover': {
+      transform: 'scale(1.1)',
+    },
   }),
   input: css({
     cursor: 'pointer',
@@ -41,8 +46,6 @@ const BackgroundImage = ({ checked, disabled, imageUrl }) => {
       {...colorScheme.set('borderColor', checked ? 'primary' : 'default')}
       {...(disabled ? styles.disabledImage : undefined)}
       src={imageUrl}
-      width='200px'
-      height='100px'
     />
   )
 }

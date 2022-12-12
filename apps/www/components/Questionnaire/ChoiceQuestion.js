@@ -38,6 +38,12 @@ const styles = {
       columnCount: 3,
     },
   }),
+  optionImage: css({
+    columnCount: 2,
+    [mediaQueries.mUp]: {
+      columnCount: 4,
+    },
+  }),
   option: css({
     marginTop: 0,
     marginBottom: 5,
@@ -124,11 +130,17 @@ class ChoiceQuestion extends Component {
           {optionGroups.map(({ key, values }) => (
             <div key={key} {...styles.optionGroup}>
               {key !== 'null' && <H3 {...styles.optionGroupHeader}>{key}</H3>}
-              <div {...(multipleAllowed && styles.optionList)}>
+              <div
+                {...(multipleAllowed && styles.optionList)}
+                {...(componentIdentifier && styles.optionImage)}
+              >
                 {values.map((o, i) => (
                   <div key={i} {...styles.option}>
                     <OptionComponent
-                      onChange={() => this.handleChange(o.value)}
+                      onChange={(e) => {
+                        e.preventDefault()
+                        this.handleChange(o.value)
+                      }}
                       checked={userAnswerValues.some((v) => v === o.value)}
                       imageUrl={o.imageUrl}
                     >
