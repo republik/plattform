@@ -1,8 +1,8 @@
 import React, { useEffect, useMemo, useState, useContext } from 'react'
-import PropTypes from 'prop-types'
 import { css } from 'glamor'
-import colors from '../../theme/colors'
 import memoize from 'lodash/memoize'
+
+import colors, { localInvertedColors } from '../../theme/colors'
 
 const getVariableColorKeys = (colors) =>
   Object.keys(colors.light).filter(
@@ -91,7 +91,7 @@ const getObjectForKeys = (colorKeys, mapper = (key) => key) =>
 export const ColorContextLocalExtension: React.FC<{
   localColors: any
   localMappings: any
-}> = ({ children, localColors = {}, localMappings = {} }) => {
+}> = ({ children, localColors = localInvertedColors, localMappings = {} }) => {
   const [{ schemeKey, CSSVarSupport, colorDefinitions }] = useColorContext()
 
   const [colorValue, cssVarRule] = useMemo(() => {

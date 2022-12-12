@@ -3,7 +3,7 @@ import React from 'react'
 import {
   FlyerTileMeta,
   Flyer,
-  ColorContextProvider,
+  ColorContextLocalExtension,
 } from '@project-r/styleguide'
 
 import { useMe } from '../../lib/context/MeContext'
@@ -11,7 +11,6 @@ import { getElementFromSeed } from '../../lib/utils/helpers'
 import { useInNativeApp } from '../../lib/withInNativeApp'
 import { useTranslation } from '../../lib/withT'
 
-import { useResolvedColorSchemeKey } from '../ColorScheme/lib'
 import TrialForm from '../Trial/Form'
 import { BuyNoteCta, generatePositionedNote } from '../Article/PayNote'
 
@@ -52,7 +51,6 @@ const Paynote: React.FC<{
   repoId: string
   documentId: string
 }> = ({ seed, repoId, documentId }) => {
-  const colorSchemeKey = useResolvedColorSchemeKey()
   const { hasAccess } = useMe()
   const { inNativeIOSApp } = useInNativeApp()
   const { t } = useTranslation()
@@ -78,15 +76,13 @@ const Paynote: React.FC<{
   }
 
   return (
-    <ColorContextProvider
-      colorSchemeKey={colorSchemeKey === 'light' ? 'dark' : 'light'}
-    >
+    <ColorContextLocalExtension>
       <FlyerTileMeta>
         <Flyer.H3>{t(`flyer/paynote/${noteType}/${noteKey}/title`)}</Flyer.H3>
         <Flyer.P>{t(`flyer/paynote/${noteType}/${noteKey}/body`)}</Flyer.P>
         {cta}
       </FlyerTileMeta>
-    </ColorContextProvider>
+    </ColorContextLocalExtension>
   )
 }
 
