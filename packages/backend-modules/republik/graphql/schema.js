@@ -57,6 +57,7 @@ type mutations {
     publicUrl: String
     disclosures: String
     gender: String
+    prolitterisId: String
   ): User!
 
   # required role: supporter

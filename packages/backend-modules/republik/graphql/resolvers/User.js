@@ -71,6 +71,12 @@ module.exports = {
     }
     return null
   },
+  prolitterisId(user, args, { user: me }) {
+    if (Roles.userIsMeOrInRoles(user, me, ['admin', 'editor', 'supporter'])) {
+      return user._raw.prolitterisId || user.prolitterisId
+    }
+    return null
+  },
   isListed: (user) => user._raw.isListed,
   slug(user, args, { user: me }) {
     if (canAccessBasics(user, me)) {
