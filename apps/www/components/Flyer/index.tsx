@@ -19,7 +19,7 @@ import Meta from './Meta'
 import Nav from './Nav'
 import Paynote from './Paynote'
 
-// If no particular tile is in focus (...?share=TILE_ID),
+// If no particular tile is in focus (i.e. no share query param),
 // we place the paynote right after the first editorial tile.
 // Otherwise, we place it after the tile in focus.
 const DEFAULT_PAYNOTE_POSITION = 2
