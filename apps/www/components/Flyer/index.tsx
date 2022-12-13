@@ -18,6 +18,7 @@ import Footer from './Footer'
 import Meta from './Meta'
 import Nav from './Nav'
 import Paynote from './Paynote'
+import PaynoteLink from './PaynoteLink'
 
 // If no particular tile is in focus (i.e. no share query param),
 // we place the paynote right after the first editorial tile.
