@@ -19,6 +19,11 @@ import Meta from './Meta'
 import Nav from './Nav'
 import Paynote from './Paynote'
 
+// If no particular tile is in focus (...?share=TILE_ID),
+// we place the paynote right after the first editorial tile.
+// Otherwise, we place it after the tile in focus.
+const DEFAULT_PAYNOTE_POSITION = 2
+
 export type MetaProps = {
   path: string
   publishDate: string
@@ -49,7 +54,7 @@ const RenderWithPaynote: React.FC<{
   documentId: string
 }> = ({ value, tileId, repoId, documentId }) => {
   const seed = useMemo(() => Math.random(), [])
-  let idx = 2
+  let idx = DEFAULT_PAYNOTE_POSITION
   if (tileId) {
     idx = value.findIndex((node) => node.id === tileId) + 1
   }
