@@ -113,7 +113,11 @@ class UpdateSubscription extends Component {
                     })
                   }
                 >
-                  {t(`account/newsletterSubscriptions/${name}/label`)}
+                  {t(
+                    `account/newsletterSubscriptions/${name}/label`,
+                    undefined,
+                    name,
+                  )}
                 </Checkbox>
                 <span style={{ float: 'right' }}>
                   {loading ? (
