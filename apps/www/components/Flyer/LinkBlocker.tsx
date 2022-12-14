@@ -38,7 +38,7 @@ export const TrialOverlay: React.FC<{
     variation: 'trial/link-blocker',
   }
   return (
-    <Overlay>
+    <Overlay mini onClose={onClose}>
       <OverlayToolbar onClose={onClose} title={<PseudoTabs />} />
       <OverlayBody>
         <TrialForm
@@ -46,7 +46,6 @@ export const TrialOverlay: React.FC<{
           onSuccess={() => false}
           minimal
           showTitleBlock
-          isInSeriesNav
         />
       </OverlayBody>
     </Overlay>

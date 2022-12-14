@@ -110,3 +110,21 @@ responsive: Desktop small
   </OverlayBody>
 </OverlayRenderer>
 ```
+
+## Overlay `mini`
+
+```react
+noSource: true
+plain: true
+responsive: Mobile
+span: 2
+---
+  <OverlayRenderer mini isVisible onClose={() => {}} mini>
+    <OverlayToolbar title='Mini Overlay' onClose={() => undefined} />
+    <OverlayBody>
+      <Interaction.P>
+        The overlay body be here.
+      </Interaction.P>
+    </OverlayBody>
+  </OverlayRenderer>
+```
