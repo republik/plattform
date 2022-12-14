@@ -481,4 +481,10 @@ type MembershipPotStats {
   generatedAmountOfMemberships: Int!
   surplusAmountOfDonatedMemberships: Int!
 }
+
+type Report {
+  id: ID
+  createdAt: DateTime!
+  data: JSON!
+}
 `

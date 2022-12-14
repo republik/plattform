@@ -43,6 +43,7 @@ type queries {
   # This exports a CSV containing all payments IN paymentIds
   # required role: accountant
   paymentsCSV(companyName: String!, paymentIds: [ID!]): String!
+  report(params: JSON): Report
 
   cancellationCategories(showMore: Boolean): [CancellationCategory!]!
 
