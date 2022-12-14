@@ -26,7 +26,7 @@ const NOTES: { [K in PaynoteType]: string[] } = {
 
 type PaynoteType = 'trial' | 'buy' | 'ios'
 
-type TrackingProps = {
+export type TrackingProps = {
   repoId: string
   documentId: string
   variation: string
@@ -70,7 +70,9 @@ const Paynote: React.FC<{
 
   let cta = null
   if (noteType === 'trial') {
-    cta = <TrialForm payload={trackingPayload} minimal />
+    cta = (
+      <TrialForm payload={trackingPayload} onSuccess={() => false} minimal />
+    )
   } else if (noteType === 'buy') {
     cta = <BuyForm {...trackingPayload} />
   }

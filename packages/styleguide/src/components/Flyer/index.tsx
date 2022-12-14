@@ -13,6 +13,7 @@ export const FLYER_CONTAINER_MAXWIDTH = 700
 
 const styles = {
   container: css({
+    position: 'relative',
     borderBottomWidth: '1px',
     borderBottomStyle: 'solid',
     '&:last-child': {
@@ -20,7 +21,6 @@ const styles = {
     },
   }),
   content: css({
-    position: 'relative',
     maxWidth: FLYER_CONTAINER_MAXWIDTH,
     margin: '0 auto',
     padding: '50px 15px',

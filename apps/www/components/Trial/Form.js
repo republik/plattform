@@ -323,10 +323,9 @@ const Form = (props) => {
                       )}
                     >
                       <ArrowForwardIcon
-                        style={{ cursor: 'pointer' }}
+                        style={{ cursor: 'pointer', color: '#fff' }}
                         size={22}
                         onClick={requestAccess}
-                        {...colorScheme.set('fill', 'text')}
                       />
                     </button>
                   ))
