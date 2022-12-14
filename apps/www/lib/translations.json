@@ -6909,6 +6909,46 @@
       "value": "Sie sind sich immer noch nicht sicher, ob die Republik etwas für Sie ist? Dann testen Sie uns! Für 21 Tage, kostenlos und unverbindlich:"
     },
     {
+      "key": "flyer/paynote/buy/221206-v1/title",
+      "value": "Ihnen gefällt, was Sie lesen?"
+    },
+    {
+      "key": "flyer/paynote/buy/221206-v1/body",
+      "value": "Dann bleiben Sie dabei. Unterstützen Sie den unabhängigen Journalismus der Republik mit einem Monatsabonnement oder einer Jahresmitgliedschaft."
+    },
+    {
+      "key": "flyer/paynote/buy/221206-v2/title",
+      "value": "Ihnen ist Journalismus wichtig?"
+    },
+    {
+      "key": "flyer/paynote/buy/221206-v2/body",
+      "value": "Die Republik wird finanziert von ihren Leserinnen, ist komplett werbefrei und unabhängig. Wenn Ihnen das gefällt: Kommen Sie an Bord mit einem Monatsabonnement oder einer Jahresmitgliedschaft."
+    },
+    {
+      "key": "flyer/paynote/trial/221206-v1/title",
+      "value": "Ihnen gefällt, was Sie lesen?"
+    },
+    {
+      "key": "flyer/paynote/trial/221206-v1/body",
+      "value": "Dann möchten Sie die Republik vielleicht besser kennenlernen. Das Angebot: Testen Sie uns. Für 21 Tage, kostenlos und unverbindlich."
+    },
+    {
+      "key": "flyer/paynote/trial/221206-v2/title",
+      "value": "Ihnen ist unabhängiger Journalismus wichtig?"
+    },
+    {
+      "key": "flyer/paynote/trial/221206-v2/body",
+      "value": "Ohne Journalismus keine Demokratie. Wenn Sie das auch so sehen: Die Republik ist werbefrei und wird finanziert von ihren Leserinnen. Testen Sie uns. Für 21 Tage, kostenlos und unverbindlich."
+    },
+    {
+      "key": "flyer/paynote/ios/221212-v1/title",
+      "value": "Danke für Ihre Neugier!"
+    },
+    {
+      "key": "flyer/paynote/ios/221212-v1/body",
+      "value": "Dieser Beitrag wurde grosszügigerweise für Sie von einer unserer Verlegerinnen und Verleger freigeschaltet."
+    },
+    {
       "key": "profile/tryNote/content",
       "value": "Um die Beiträge von {name} zu lesen, benötigen Sie eine Mitgliedschaft oder ein Monatsabonnement. Sie wollen uns erst kennenlernen? Dann lesen Sie die Republik jetzt unverbindlich und kostenlos 21 Tage Probe."
     },

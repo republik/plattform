@@ -156,7 +156,7 @@ Notable exceptions: setting fill on icons. We'll ensure that our icon components
 
 ## Local Extensions
 
-E.g. for charts.
+E.g. for charts. Default local colors: inverted colors.
 
 ```react
 <ColorContextLocalExtension localColors={{

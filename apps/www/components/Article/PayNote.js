@@ -297,25 +297,22 @@ const SecondaryCta = ({ payNote, payload }) => {
   )
 }
 
-const BuyNoteCta = ({ payNote, payload }) => (
+export const BuyNoteCta = ({ payNote, payload }) => (
   <div {...styles.actions}>
     <BuyButton payNote={payNote} payload={payload} />
     <SecondaryCta payNote={payNote} payload={payload} />
   </div>
 )
 
-const TryNoteCta = ({ payload }) => {
-  const router = useRouter()
-  return (
-    <TrialForm
-      onSuccess={() => {
-        return false
-      }}
-      payload={payload}
-      minimal
-    />
-  )
-}
+const TryNoteCta = ({ payload }) => (
+  <TrialForm
+    onSuccess={() => {
+      return false
+    }}
+    payload={payload}
+    minimal
+  />
+)
 
 const PayNoteCta = ({ payNote, payload, hasAccess }) => {
   const router = useRouter()
