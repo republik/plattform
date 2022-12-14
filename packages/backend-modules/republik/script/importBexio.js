@@ -395,7 +395,7 @@ Promise.props({
                 pspId: pledge.pspId,
                 pspPayload: pledge.pspPayload,
                 createdAt: moment(pledge.date, BEXIO_DATE_FORMAT),
-                updatedAt: new Date(),
+                updatedAt: moment(pledge.date, BEXIO_DATE_FORMAT),
               })
 
               // insert pledgePayment
