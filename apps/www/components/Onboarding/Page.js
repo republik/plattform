@@ -78,6 +78,8 @@ const QUERY = gql`
   ${fragmentsSubscriptions.formats}
 `
 
+// QUERY CLIMATE ONBOARDING FOR COUNTER
+
 const CONTEXTS = {
   card: ['newsletter', 'notifications', 'app-login', 'usability'],
   climate: [

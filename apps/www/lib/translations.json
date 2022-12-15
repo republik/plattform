@@ -5610,7 +5610,15 @@
     },
     {
       "key": "Onboarding/Sections/Postcard/paragraph1",
-      "value": "Im Klimalabor werden wir Ihnen immer wieder die Gelegenheit bieten, Ihre Ideen, Ihre Bedürfnisse, Ihre Expertise einzubringen. Als Erstes wollen wir aber Ihre Fantasie:"
+      "value": "Im Klimalabor werden wir Ihnen immer wieder die Gelegenheit bieten, Ihre Ideen, Ihre Bedürfnisse, Ihre Expertise einzubringen. Als Erstes wollen wir aber Ihre Fantasie: <br /><br />\nStellen Sie sich vor, Sie reisen mit einer Zeitmaschine 60 Jahre in die Zukunft. Sie schauen sich um und haben einen kurzen Moment, sich selbst eine Postkarte zurück ins Jahr 2023 zu schicken. Was sehen Sie, was löst das in Ihnen aus?"
+    },
+    {
+      "key": "Onboarding/Sections/Postcard/merci1",
+      "value": "Danke für Ihre Postkarte. Sie wird uns helfen, zu verstehen, wie Sie in die Zukunft blicken. Darum wird es im Klimalabor immer wieder gehen: Wir wollen über die Zukunft nachdenken, den Blick für positive Entwicklungen schärfen und herausfinden, was es braucht, damit wir zuversichtlich und handlungsfähig bleiben."
+    },
+    {
+      "key": "Onboarding/Sections/Postcard/merci2",
+      "value": "Wir werden Ihnen bald die Gelegenheit geben, die Postkarten anderer Teilnehmerinnen und Teilnehmer zu lesen."
     },
     {
       "key": "Onboarding/Sections/Mission/heading",
