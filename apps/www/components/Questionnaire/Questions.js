@@ -22,16 +22,18 @@ const QuestionList = compose(withAnswerMutation)(
       processSubmit(submitAnswer, questionId, payload, answerId)
     }
 
-    return <>
-      {questions.map((q) =>
-        createElement(QUESTION_TYPES[q.__typename], {
-          onChange: createHandleChange(q.id),
-          question: q,
-          key: q.id,
-          disabled,
-        }),
-      )}
-    </>;
+    return (
+      <>
+        {questions.map((q) =>
+          createElement(QUESTION_TYPES[q.__typename], {
+            onChange: createHandleChange(q.id),
+            question: q,
+            key: q.id,
+            disabled,
+          }),
+        )}
+      </>
+    )
   },
 )
 

@@ -69,6 +69,7 @@ class ChoiceQuestion extends Component {
         (props.question.userAnswer && props.question.userAnswer.id) || uuid(),
     }
   }
+
   handleChange = (value) => {
     const {
       onChange,
@@ -137,10 +138,7 @@ class ChoiceQuestion extends Component {
                 {values.map((o, i) => (
                   <div key={i} {...styles.option}>
                     <OptionComponent
-                      onChange={(e) => {
-                        e.preventDefault()
-                        this.handleChange(o.value)
-                      }}
+                      onChange={() => this.handleChange(o.value)}
                       checked={userAnswerValues.some((v) => v === o.value)}
                       imageUrl={o.imageUrl}
                     >

@@ -1,8 +1,9 @@
 import { Fragment } from 'react'
 import { css } from 'glamor'
 
-import { Interaction, mediaQueries } from '@project-r/styleguide'
+import { Interaction, mediaQueries, RawHtml } from '@project-r/styleguide'
 import { QuestionnaireWithData } from '../../Questionnaire/Questionnaire'
+import { PostcardPreview } from '../../Climatelab/PostcardPreview'
 
 import Section from '../Section'
 
@@ -49,17 +50,24 @@ const Postcard = (props) => {
       {...props}
     >
       <Fragment>
-        <P {...styles.p}>
-          {t('Onboarding/Sections/Postcard/paragraph1', null, '')}
-        </P>
+        <RawHtml
+          {...styles.p}
+          type={Interaction.P}
+          dangerouslySetInnerHTML={{
+            __html: t(['Onboarding/Sections/Postcard/paragraph1'], null, ''),
+          }}
+        />
+        <br />
+
         <QuestionnaireWithData
           slug={'klima-postkarte'}
           publicSubmission={false}
           hideCount
-          submittedMessage={<P>{t('questionnaire/thankyou')}</P>}
+          submittedMessage={<P>{t('Onboarding/Sections/Postcard/merci1')}</P>}
           hideInvalid={true}
           hideReset={true}
         />
+        <PostcardPreview t={t} />
       </Fragment>
     </Section>
   )
