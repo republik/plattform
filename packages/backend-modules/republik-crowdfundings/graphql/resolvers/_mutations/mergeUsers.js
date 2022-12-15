@@ -87,6 +87,7 @@ module.exports = async (_, args, context) => {
         publicUrl: users.map((u) => u.publicUrl).filter(Boolean)[0],
         biography: users.map((u) => u.biography).filter(Boolean)[0],
         pgpPublicKey: users.map((u) => u.pgpPublicKey).filter(Boolean)[0],
+        prolitterisId: users.map((u) => u.prolitterisId).filter(Boolean)[0],
         phoneNumberNote: users.map((u) => u.phoneNumberNote).filter(Boolean)[0],
         phoneNumberAccessRole: users
           .map((u) => u.phoneNumberAccessRole)

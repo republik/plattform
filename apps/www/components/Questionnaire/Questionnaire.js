@@ -64,6 +64,9 @@ const Questionnaire = (props) => {
     revokeQuestionnaire,
     onQuestionnaireChange,
     detailsData,
+    publicSubmission = true,
+    hideInvalid,
+    hideReset,
   } = props
   const [state, setState] = useState({})
   const [isResubmitAnswers, setIsResubmitAnswers] = useState(false)
@@ -105,7 +108,6 @@ const Questionnaire = (props) => {
     slug,
     updateDetails,
   } = props
-
   return (
     <Loader
       loading={questionnaireData.loading}
@@ -145,7 +147,6 @@ const Questionnaire = (props) => {
         }
 
         // ToDo: expose & query questionnaire.submissionsAccessRole
-        const publicSubmission = true
 
         const onReset = async () => {
           setState({ updating: true })
@@ -348,10 +349,11 @@ const Questionnaire = (props) => {
               <QuestionnaireActions
                 isResubmitAnswers={isResubmitAnswers}
                 onSubmit={onSubmit}
-                onReset={onReset}
+                onReset={!hideReset && onReset}
                 updating={updating}
                 invalid={userAnswerCount < 1}
                 publicSubmission={publicSubmission}
+                hideInvalid={hideInvalid}
               />
             )}
           </div>

@@ -147,6 +147,7 @@ Promise.props({ pgdb: PgDb.connect(), elastic: Elasticsearch.connect() })
             'publicUrl',
             'biography',
             'pgpPublicKey',
+            'prolitterisId',
             'phonenumberNote',
             'previewsSentAt',
             'defaultDiscussionNotificationOption',
