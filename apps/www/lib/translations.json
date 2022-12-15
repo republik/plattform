@@ -5626,11 +5626,23 @@
     },
     {
       "key": "Onboarding/Sections/Mission/heading",
-      "value": "Unsere Mission"
+      "value": "Was wir vorhaben"
     },
     {
       "key": "Onboarding/Sections/Mission/paragraph1",
-      "value": "Jede Forschungsreise muss geplant werden. Sonst besteht die Gefahr, dass man irgendwo im Nirgendwo landet oder sich im Dickicht verliert. Deshalb hier in aller Kürze unsere Ziele:"
+      "value": "Eine gemeinsame Expedition funktioniert nur dann, wenn alle den Plan kennen. Deshalb hier unsere Ziele und wie wir vorgehen werden:"
+    },
+    {
+      "key": "Onboarding/Sections/Mission/bullet1",
+      "value": "Wir wollen gemeinsam einen neuen Klimajournalismus für die Republik entwickeln, der mehr Menschen erreicht als bisher, und auch andere Medien und Journalistinnen inspiriert. Ein Klimajournalismus, der anregt, der trotz düsterer Aussichten nach vorn blickt, der verlässlich und nützlich ist."
+    },
+    {
+      "key": "Onboarding/Sections/Mission/bullet2",
+      "value": "Bis im Sommer 2023 nehmen wir uns dafür Zeit. Was dabei herauskommen wird? Das kann ein eigenständiges journalistisches Produkt sein, eine Reihe neuer Formate, ein Ausbau der Redaktion, oder ganz etwas anderes. Das Klimalabor ist bewusst ergebnisoffen. Klar ist: Wir wollen gross denken und ein Angebot entwickeln, das in seiner Dringlichkeit und Ambition der Klimakrise gerecht wird."
+    },
+    {
+      "key": "Onboarding/Sections/Mission/bullet3",
+      "value": "Wir nähern uns dem Ziel schrittweise an und werden zunehmend konkreter. Wenn Sie mögen, können Sie sich auf vielfältige Arten und immer wieder aufs Neue einbringen. Sie können uns aber auch einfach interessiert begleiten. Per Newsletter halten wir Sie auf dem Laufenden."
     },
     {
       "key": "Onboarding/Sections/Invitation/heading",
