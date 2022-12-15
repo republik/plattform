@@ -116,9 +116,13 @@ const CodeAuthorization = ({
   }, [payload])
 
   return (
-    <form onSubmit={onSubmit} ref={formRef}>
+    <form
+      onSubmit={onSubmit}
+      ref={formRef}
+      {...colorScheme.set('color', 'text')}
+    >
       {minimal ? (
-        <P>
+        <p>
           {t.elements('Auth/CodeAuthorization/description', {
             emphasis: (
               <Emphasis key='emphasis'>
@@ -128,7 +132,7 @@ const CodeAuthorization = ({
               </Emphasis>
             ),
           })}
-        </P>
+        </p>
       ) : (
         <>
           <H3>{t('Auth/CodeAuthorization/title')}</H3>

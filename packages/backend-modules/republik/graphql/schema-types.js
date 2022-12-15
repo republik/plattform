@@ -70,6 +70,7 @@ extend type User {
   sequenceNumber: Int
 
   newsletterSettings: NewsletterSettings!
+  prolitterisId: String
 }
 
 type NewsletterSettings {

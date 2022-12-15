@@ -42,6 +42,7 @@ const MAX_PHONE_NUMBER_NOTE_LENGTH = 140
 const MAX_PHONE_NUMBER_LENGTH = 20 // 20 (15 digits but let's give 5 spaces for formatting, e.g. 0049 XXX XX XX XX XX)
 const MAX_FIRSTNAME_LENGTH = 32
 const MAX_LASTNAME_LENGTH = 32
+const MAX_PROLITTERISID_LENGTH = 20
 
 const createEnsureStringLengthForProfile =
   (values, t) =>
@@ -139,6 +140,11 @@ module.exports = async (_, args, context) => {
     1,
   )
   ensureStringLengthForProfile(
+    'prolitterisId',
+    'profile/contact/prolitterisId/label',
+    MAX_PROLITTERISID_LENGTH,
+  )
+  ensureStringLengthForProfile(
     'disclosures',
     'profile/disclosures/label',
     MAX_DISCLOSURES_LENGTH,
@@ -154,6 +160,7 @@ module.exports = async (_, args, context) => {
     'phoneNumberAccessRole',
     'facebookId',
     'twitterHandle',
+    'prolitterisId',
     'publicUrl',
     'emailAccessRole',
     'pgpPublicKey',
