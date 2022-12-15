@@ -7,7 +7,7 @@ import { css } from 'glamor'
 
 import { Interaction } from '@project-r/styleguide'
 
-const checkRoles = (me, roles) => {
+export const checkRoles = (me, roles) => {
   return !!(
     me &&
     (!roles ||
@@ -69,7 +69,7 @@ export const enforceAuthorization = (roles) => (WrappedComponent) =>
     if (isAuthorized) {
       return <WrappedComponent {...props} />
     }
-    return <UnauthorizedPage me={me} url={props.url} />
+    return <UnauthorizedPage me={me} roles={roles} url={props.url} />
   })
 
 export default withAuthorization

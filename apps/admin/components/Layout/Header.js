@@ -2,8 +2,10 @@ import { css } from 'glamor'
 import compose from 'lodash/flowRight'
 import { createContainer, createTile } from './Grid'
 import Me from '../Auth/Me'
-import { BrandMark, Interaction, colors } from '@project-r/styleguide'
+import { BrandMark, Interaction, colors, P } from '@project-r/styleguide'
 import Link from 'next/link'
+import withMe from '../../lib/withMe'
+import { checkRoles } from '../Auth/withAuthorization'
 
 const link = css({
   textDecoration: 'none',
@@ -13,6 +15,12 @@ const link = css({
   },
   ':hover': {
     color: colors.secondary,
+  },
+})
+
+const hideOnPrint = css({
+  '@media print': {
+    display: 'none',
   },
 })
 
@@ -53,7 +61,7 @@ const navLinkStyles = {
   cursor: 'pointer',
 }
 
-const HeaderComponent = ({ ...props }) => {
+const HeaderComponent = ({ me, ...props }) => {
   const searchParams = props.search ? { search: props.search } : {}
 
   return (
@@ -65,7 +73,7 @@ const HeaderComponent = ({ ...props }) => {
       </HeaderSection>
       <HeaderSection flex='1 1 auto'>
         <Interaction.H2>Admin</Interaction.H2>
-        <nav>
+        <nav {...hideOnPrint}>
           <Link
             href={{
               pathname: '/users',
@@ -103,9 +111,21 @@ const HeaderComponent = ({ ...props }) => {
             }}
           >
             <a className={`${link}`} style={navLinkStyles}>
-              Postfinance Payments
+              Postfinance
             </a>
           </Link>
+          {checkRoles(me, ['accountant']) && (
+            <Link
+              href={{
+                pathname: '/reports',
+                query: searchParams,
+              }}
+            >
+              <a className={`${link}`} style={navLinkStyles}>
+                Reports
+              </a>
+            </Link>
+          )}
           <Link href='/merge-users'>
             <a className={`${link}`} style={navLinkStyles}>
               Users zusammenführen
@@ -114,10 +134,12 @@ const HeaderComponent = ({ ...props }) => {
         </nav>
       </HeaderSection>
       <HeaderSection flex='0 0 200px'>
-        <Me />
+        <div {...hideOnPrint}>
+          <Me />
+        </div>
       </HeaderSection>
     </Header>
   )
 }
 
-export default HeaderComponent
+export default withMe(HeaderComponent)

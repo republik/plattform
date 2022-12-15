@@ -26,7 +26,11 @@ export const Header = HeaderComponent
 
 export const Content = compose(
   createTile(
-    {},
+    {
+      '@media print': {
+        overflowY: 'visible !important',
+      },
+    },
     {
       style: { overflowY: 'scroll', padding: 20 },
     },

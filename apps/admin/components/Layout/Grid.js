@@ -15,9 +15,10 @@ const containerStyles = ({
     justifyContent,
   })
 
-const tileStyles = ({ flex = '1 1 auto' }) =>
+const tileStyles = ({ flex = '1 1 auto', ...more }) =>
   css({
     flex,
+    ...more,
   })
 
 const getRef = (Component, domRef) => {

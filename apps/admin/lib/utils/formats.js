@@ -1,7 +1,7 @@
 import { formatLocale } from 'd3-format'
 import { timeFormatLocale } from 'd3-time-format'
 
-export const thousandSeparator = '\u2009'
+export const thousandSeparator = '\u2019'
 export const swissNumbers = formatLocale({
   decimal: ',',
   thousands: thousandSeparator,
