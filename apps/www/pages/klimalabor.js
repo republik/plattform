@@ -1,17 +1,16 @@
-import compose from 'lodash/flowRight'
 /* import { useRouter } from 'next/router'
 import isEmail from 'validator/lib/isEmail' */
 
 //import { maybeDecode } from '../lib/utils/base64u'
-import withT from '../lib/withT'
 import { withDefaultSSR } from '../lib/apollo/helpers'
 
 import Frame from '../components/Frame'
 import TrialForm from '../components/Trial/Form'
+import { useMe } from '../lib/context/MeContext'
 
 const ALLOWED_CONTEXT = ['claim', 'access']
 
-const LandingPage = ({ t }) => {
+const LandingPage = () => {
   /* const { query } = useRouter()
   let { context, email, code, token, id } = query
 
@@ -28,6 +27,7 @@ const LandingPage = ({ t }) => {
     title: 'KLIMA!',
     description: 'MACH MIT!',
   }
+  const { me } = useMe()
 
   return (
     <Frame meta={meta}>
@@ -44,6 +44,8 @@ const LandingPage = ({ t }) => {
       <TrialForm
         accessCampaignId='3684f324-b694-4930-ad1a-d00a2e00934b'
         context='climate'
+        skipForMembers={false}
+        shouldSkipTrialForm={me?.roles.some((role) => role === 'climate')}
         /* payload={{
           
         }} */
@@ -52,4 +54,4 @@ const LandingPage = ({ t }) => {
   )
 }
 
-export default withDefaultSSR(compose(withT)(LandingPage))
+export default withDefaultSSR(LandingPage)
