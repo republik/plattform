@@ -192,19 +192,6 @@ const Form = (props) => {
         })
         .catch(catchError)
     }
-
-    /* new case: if config of campaign says that members can subscribe too
-    campaign config looks atm like this:
-      {
-        ...
-        "properties": [
-          { "type": "memberRole", "enabled": false },
-          { "type": "trial", "enabled": false },
-          { "type": "memberClaimable", "enabled": true }
-        ]
-      }
-    if memberClaimable is enabled this case should be handled (can be similiar to logged in user)
-     */
   }
 
   const catchError = (error) => {

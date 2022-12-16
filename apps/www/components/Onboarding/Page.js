@@ -67,6 +67,10 @@ const QUERY = gql`
         }
       }
     }
+
+    roleStats(role: "climate") {
+      count
+    }
   }
 
   ${fragmentsNewsletter.user}
@@ -283,7 +287,7 @@ class Page extends Component {
               return <Loader loading={loading} error={error} />
             }
 
-            const { me: user, employees, documents } = data
+            const { me: user, employees, documents, roleStats } = data
 
             return (
               <Center>
@@ -299,7 +303,7 @@ class Page extends Component {
                       `Onboarding/Page/${context}/preface`,
                       'Onboarding/Page/preface',
                     ],
-                    { climate_lab_count: 5 }, // TODO: get real count of subscribers
+                    { climate_lab_count: roleStats.count },
                   )}
                 </P>
                 {context && <Greeting employee={employees[0]} />}
