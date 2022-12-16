@@ -83,10 +83,15 @@ exports.publishCommentUnpublish = async (
   )
 }
 
-exports.publishCommentReport = async (user, comment, discussion, context) => {
+exports.publishCommentReport = async (
+  userName,
+  comment,
+  discussion,
+  context,
+) => {
   const author = await getDisplayAuthor(comment, {}, context)
 
-  const action = `:bomb: *${user.name}* reported comment by *${getProfileLink(
+  const action = `:bomb: *${userName}* reported comment by *${getProfileLink(
     author,
   )}*`
   const content = `${action} in <${await getCommentLink(
