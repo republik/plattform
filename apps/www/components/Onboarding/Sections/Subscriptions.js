@@ -35,10 +35,10 @@ export const fragments = {
 const Subscriptions = (props) => {
   const { sections, t } = props
 
-  const formats = sections.reduce(
-    (reducer, section) => reducer.concat(section.linkedDocuments.nodes),
-    [],
-  )
+  const formats = sections
+    .filter((section) => section.meta.suggestSubscription)
+    .reduce((reducer, section) => reducer.concat(section.formats.nodes), [])
+
   const isTicked = formats.some(
     (format) => format.subscribedByMe && format.subscribedByMe.active,
   )
