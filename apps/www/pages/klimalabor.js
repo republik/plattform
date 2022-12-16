@@ -31,6 +31,16 @@ const LandingPage = ({ t }) => {
 
   return (
     <Frame meta={meta}>
+      {/* This just handles the case when user is not logged in
+
+      TODO: handle logged in users
+
+      - either extend Trial Form so that logged in users just have a checkbox 
+      to subscribe and will be forwared to onboarding page 
+      - or handle the two cases here: check if user is logged in and offer a 
+      different handling if logged in 
+      
+      */}
       <TrialForm
         accessCampaignId='3684f324-b694-4930-ad1a-d00a2e00934b'
         context='climate'
