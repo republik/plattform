@@ -965,6 +965,10 @@
       "value": "Ihr Nachname"
     },
     {
+      "key": "profile/contact/prolitterisId/label",
+      "value": "Prolitteris ID"
+    },
+    {
       "key": "profile/credential/label",
       "value": "Bezeichnung"
     },
