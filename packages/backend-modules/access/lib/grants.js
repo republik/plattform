@@ -128,6 +128,7 @@ const insert = async (granter, campaignId, grants = [], pgdb) => {
 }
 
 const grant = async (granter, campaignId, email, message, t, pgdb, mail) => {
+  console.log('B')
   const campaign = await campaignsLib.findOne(campaignId, pgdb)
 
   if (!campaign) {
@@ -175,6 +176,7 @@ const grant = async (granter, campaignId, email, message, t, pgdb, mail) => {
 }
 
 const claim = async (voucherCode, payload, user, t, pgdb, redis, mail) => {
+  console.log('A')
   const sanatizedVoucherCode = voucherCode.trim().toUpperCase()
 
   const grantByVoucherCode = await findByVoucherCode(sanatizedVoucherCode, {
@@ -210,11 +212,9 @@ const claim = async (voucherCode, payload, user, t, pgdb, redis, mail) => {
     })
   }
 
-  const hasAddedMemberRole = await membershipsLib.addMemberRole(
-    grant,
-    recipient,
-    pgdb,
-  )
+  const hasAddedMemberRole =
+    shouldAddMemberRole(campaign) &&
+    (await membershipsLib.addMemberRole(grant, recipient, pgdb))
 
   const subscribeToEditorialNewsletters =
     campaign.config?.subscribeToEditorialNewsletters ||
@@ -288,6 +288,7 @@ const revoke = async (id, user, t, pgdb) => {
 }
 
 const request = async (granter, campaignId, payload, t, pgdb, redis, mail) => {
+  console.log('C')
   const campaign = await campaignsLib.findOne(campaignId, pgdb)
 
   if (!campaign) {
@@ -339,11 +340,10 @@ const request = async (granter, campaignId, payload, t, pgdb, redis, mail) => {
       eventsLib.log(grant, event, pgdb)
     })
   }
-  const hasAddedMemberRole = await membershipsLib.addMemberRole(
-    grant,
-    granter,
-    pgdb,
-  )
+
+  const hasAddedMemberRole =
+    shouldAddMemberRole(campaign) &&
+    (await membershipsLib.addMemberRole(grant, granter, pgdb))
 
   const subscribeToEditorialNewsletters =
     campaign.config?.subscribeToEditorialNewsletters ||
@@ -380,6 +380,17 @@ const request = async (granter, campaignId, payload, t, pgdb, redis, mail) => {
   )
 
   return grant
+}
+
+const shouldAddMemberRole = (campaign) => {
+  if (!campaign.config?.properties) {
+    return true
+  }
+
+  const memberRoleConfig = campaign.config.properties.find(
+    (prop) => prop.type === 'memberRole',
+  )
+  return memberRoleConfig ? memberRoleConfig.enabled : true
 }
 
 const recommendations = async (campaign, grant, t, pgdb) => {
