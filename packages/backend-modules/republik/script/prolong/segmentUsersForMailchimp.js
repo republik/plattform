@@ -20,7 +20,7 @@ const {
   getPeriodEndingLast,
 } = require('@orbiting/backend-modules-republik-crowdfundings/lib/utils')
 
-const { getConsentLink } = require('../../lib/Newsletter')
+// const { getConsentLink } = require('../../lib/Newsletter')
 
 const applicationName =
   'backends republik script prolong segmentUsersForMailchimp'
@@ -28,13 +28,18 @@ const applicationName =
 const stats = {}
 
 const handleRow = async (row) => {
-  const { memberships, ...user } = row
+  const { memberships, accessGrants, ...user } = row
 
   // whether or not a user had any periods
-  /* const hadSomePeriods =
+  const hadSomePeriods =
     memberships
       .reduce((acc, cur) => acc.concat(cur.periods), [])
-      .filter(Boolean).length > 0 */
+      .filter(Boolean).length > 0
+
+  // had a non-monthly-abo membership once
+  const hadAbo = !!memberships
+    .filter((m) => m.periods?.length)
+    .find((m) => m.membershipType.name !== 'MONTHLY_ABO')
 
   // find any currently active memberships
   const activeMembership = memberships.find((m) => m.active)
@@ -74,41 +79,129 @@ const handleRow = async (row) => {
     mostRecentPackageOption?.membershipType?.name ||
     pledgePackageOption?.membershipType?.name
 
+  // if active, last price paid
+  const price = mostRecentPackageOption?.price || pledgePackageOption?.price
+
+  // reducedPrice?!
+
+  // suggested membership type (name)
+  const suggestedMembershipTypeName = ['ABO', 'BENEFACTOR_ABO'].includes(
+    membershipTypeName,
+  )
+    ? membershipTypeName
+    : 'ABO'
+
+  // suggested price
+  const suggestedPrice = price >= 24000 ? price : 24000
+
+  // had an access grant
+  const hadGrant = !!accessGrants?.length
+
+  const vars = {
+    activeMembership: !!activeMembership,
+    hasDormantMembership,
+    membershipTypeName,
+    lastEndDate: lastEndDate?.format?.('YYYY-MM-DD'),
+    hadSomePeriods,
+    hadAbo,
+    hadGrant,
+  }
+
   const record = {
     id: row.id,
     EMAIL: row.email,
     FNAME: `"${row.firstName ?? ''}"`,
     LNAME: `"${row.lastName ?? ''}"`,
+    PRLG_MT: membershipTypeName || '',
+    PRLG_PRC: '',
+    PRLG_PRC2: '',
     PRLG_SEG: '',
     CP_ATOKEN: '',
-    NL_LINK: getConsentLink(row.email, 'WINTER'),
+    // NL_LINK: getConsentLink(row.email, 'WINTER'),
+
+    __vars: Object.keys(vars)
+      .map((key) => `${key}:${vars[key]}`)
+      .join(' / '),
   }
 
   if (
     activeMembership &&
     !hasDormantMembership &&
     membershipTypeName !== 'MONTHLY_ABO' &&
-    lastEndDate?.isBefore('2023-03-01')
+    lastEndDate?.isBefore('2023-04-01')
   ) {
-    record.PRLG_SEG = 'prolong-before-2023-03'
+    record.PRLG_SEG = 'prolong-before-2023-04'
     record.CP_ATOKEN = row.accessToken
-  } else if (!activeMembership) {
-    // inactive
-    record.PRLG_SEG = ''
+    record.PRLG_MT = suggestedMembershipTypeName
+    record.PRLG_PRC = suggestedPrice
+    record.PRLG_PRC2 = suggestedPrice * 2
+  } else if (
+    activeMembership &&
+    (membershipTypeName !== 'MONTHLY_ABO' ||
+      (membershipTypeName === 'MONTHLY_ABO' && hasDormantMembership)) // those upgrading from MONTHLY_ABO
+  ) {
+    // - prolong after
+    // - (maybe) hasDormantMembership
+    // - monthly abo but going to changeover
+    record.PRLG_SEG = 'is-active-abo'
+    record.CP_ATOKEN = row.accessToken
+    record.PRLG_MT = suggestedMembershipTypeName
+    record.PRLG_PRC = suggestedPrice
+    record.PRLG_PRC2 = suggestedPrice * 2
+  } else if (
+    activeMembership &&
+    membershipTypeName === 'MONTHLY_ABO' &&
+    !hasDormantMembership
+  ) {
+    // - monthly abo
+    // - but not those in changeover to ABO
+    record.PRLG_SEG = 'is-active-monthly'
+    record.CP_ATOKEN = hadAbo ? row.accessToken : ''
+    record.PRLG_MT = hadAbo ? suggestedMembershipTypeName : ''
+    record.PRLG_PRC = hadAbo ? suggestedPrice : ''
+    record.PRLG_PRC2 = hadAbo ? suggestedPrice * 2 : ''
+  } else if (!activeMembership && hadSomePeriods && hadAbo) {
+    // find memberships which were not MONTHLY_ABO
+    record.PRLG_SEG = 'is-alumni-abo'
+    record.CP_ATOKEN = row.accessToken
+    record.PRLG_MT = hadAbo ? suggestedMembershipTypeName : ''
+    record.PRLG_PRC = hadAbo ? suggestedPrice : ''
+    record.PRLG_PRC2 = hadAbo ? suggestedPrice * 2 : ''
+  } else if (!activeMembership && hadSomePeriods && !hadAbo) {
+    // find memberships which were MONTHLY_ABO
+    record.PRLG_SEG = 'is-alumni-monthly'
+    record.CP_ATOKEN = ''
+  } else if (!activeMembership && !hadSomePeriods && hadGrant) {
+    // had access grant
+    record.PRLG_SEG = 'had-grant'
+    record.CP_ATOKEN = ''
+  } else if (
+    !activeMembership &&
+    !hasDormantMembership &&
+    !membershipTypeName &&
+    !lastEndDate &&
+    !hadSomePeriods &&
+    !hadAbo &&
+    !hadGrant
+  ) {
+    // neither props is true
+    record.PRLG_SEG = 'is-prospect'
+    record.CP_ATOKEN = ''
   } else {
-    // active + lastEndDate > 2023-03-01
-    // active + dormant
-    // active + MONTHLY
-    record.PRLG_SEG = 'is-active'
+    record.PRLG_SEG = 'n/a'
+    console.error(record)
+    throw new Error(`fall through: userId:${row.id}`)
   }
 
-  if (!stats[record.PRLG_SEG]) {
-    stats[record.PRLG_SEG] = 1
+  const key = record.PRLG_SEG // [record.PRLG_SEG, record.PRLG_MT].filter(Boolean).join(' - ')
+
+  if (!stats[key]) {
+    stats[key] = 1
   } else {
-    stats[record.PRLG_SEG]++
+    stats[key]++
   }
 
-  // if (stats[record.PRLG_SEG] <= 50) {
+  // if (stats[key] <= 5) {
   console.log(
     Object.keys(record)
       .map((key) => record[key])
@@ -125,8 +218,16 @@ const handleBatch = async (rows, count, pgdb) => {
     pgdb,
   })
 
+  const accessGrants = await pgdb.public.accessGrants.find({
+    recipientUserId: rows.map((row) => row.id),
+    'beginAt !=': null,
+  })
+
   await Promise.map(rows, async (row, index) => {
     rows[index].memberships = memberships.filter((m) => m.userId === row.id)
+    rows[index].accessGrants = accessGrants.filter(
+      (ag) => ag.recipientUserId === row.id,
+    )
     rows[index].accessToken = await AccessToken.generateForUser(
       row,
       'CUSTOM_PLEDGE_EXTENDED',
@@ -147,9 +248,14 @@ ConnectionContext.create(applicationName)
         'EMAIL',
         'FNAME',
         'LNAME',
+        'PRLG_MT',
+        'PRLG_PRC',
+        'PRLG_PRC2',
         'PRLG_SEG',
         'CP_ATOKEN',
-        'NL_LINK',
+        // 'NL_LINK',
+
+        '__vars',
       ].join(','),
     )
 
@@ -160,7 +266,7 @@ ConnectionContext.create(applicationName)
           SELECT u.*
           FROM users u
           -- Include if only users with memberships matter
-          JOIN memberships m ON m."userId" = u.id
+          -- JOIN memberships m ON m."userId" = u.id
 
           -- Test Geschenk-Monatsabos:
           -- JOIN "membershipTypes" mt ON mt.id = m."membershipTypeId" AND mt.name IN ('ABO_GIVE_MONTHS') AND m.active = TRUE
@@ -169,7 +275,7 @@ ConnectionContext.create(applicationName)
           -- JOIN "membershipTypes" mt ON mt.id = m."membershipTypeId" AND mt.name IN ('MONTHLY_ABO') AND m.active = TRUE
 
           -- Link to temp MailChimp Audience table
-          -- LEFT JOIN "paeMailchimpAudience" pmc ON pmc.email = u.email
+          LEFT JOIN "paeMailchimpAudience" pmc ON pmc.email = u.email
 
           WHERE
             u.email != 'jefferson@project-r.construction'
@@ -180,7 +286,13 @@ ConnectionContext.create(applicationName)
             -- AND m.active = TRUE
             -- Test specific user:
             -- AND u.id = 'd94a7540-afbd-4134-b35d-19f9f5a28598'
-            -- AND pmc."Republik NL" NOT LIKE '%Project R%'
+            AND pmc."Republik NL" LIKE '%Project R%'
+            -- AND u.id = 
+            /* AND u.id IN (
+              '8320ccba-529b-4682-907d-1d8c1fe5aca3',
+              '3b0dad5c-813a-4003-b4e1-64e3dfd137d7',
+              '7f7f5474-8d85-4ab4-86a0-ad48c300019e'
+            ) */
           GROUP BY u.id
           ORDER BY RANDOM()
           -- LIMIT 100
@@ -189,6 +301,7 @@ ConnectionContext.create(applicationName)
       )
       .catch((e) => console.error(e))
 
+    debug(stats)
     debug('Done!')
 
     return context
