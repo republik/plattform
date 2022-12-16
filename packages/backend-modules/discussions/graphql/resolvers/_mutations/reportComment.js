@@ -1,10 +1,10 @@
 const slack = require('../../../lib/slack')
+const { v4 } = require('uuid')
 const { REPORTS_NOTIFY_THRESHOLD = 2 } = process.env
 
 module.exports = async (_, args, context) => {
   const { id } = args
   const { pgdb, user: me, t, loaders } = context
-  // Roles.ensureUserHasRole(me, 'member')
 
   const comment = await loaders.Comment.byId.load(id)
   if (!comment) {
@@ -34,14 +34,17 @@ module.exports = async (_, args, context) => {
     }
 
     const reports = existingComment.reports || []
-    const userId = me?.id ?? `guest-${new Date().toISOString()}`
+    const userId = me?.id ?? v4()
 
-    if (reports.findIndex((report) => report.userId === userId) < 0) {
-      const userId = me?.id ?? `guest-${new Date().toISOString()}`
-      reports.unshift({
-        userId: userId,
-        reportedAt: new Date(),
-      })
+    if (!me?.id || !reports.some((report) => report.userId === userId)) {
+      const report = { userId, reportedAt: new Date() }
+
+      if (!me?.id) {
+        report.pseudonym = true
+      }
+
+      reports.unshift(report)
+
       newComment = await pgdb.public.comments.updateAndGetOne(
         { id: commentId },
         { reports },
