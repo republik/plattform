@@ -93,7 +93,7 @@ export const PostcardPreview = graphql(
           const imageOptions = questions && questions[0].options
           const imageSelction = questions[0].userAnswer.payload.value[0]
 
-          const postcardText = questions[1].userAnswer.payload.value[0]
+          const postcardText = questions[1].userAnswer.payload.value
 
           const imageUrl = imageOptions.filter(
             (d) => d.value === imageSelction,

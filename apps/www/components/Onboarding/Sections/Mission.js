@@ -50,6 +50,13 @@ const Mission = (props) => {
       <Fragment>
         <P {...styles.p}>
           {t('Onboarding/Sections/Mission/paragraph1', null, '')}
+          <br /> <br />
+          {t('Onboarding/Sections/Mission/bullet1', null, '')}
+          <br /> <br />
+          {t('Onboarding/Sections/Mission/bullet2', null, '')}
+          <br /> <br />
+          {t('Onboarding/Sections/Mission/bullet3', null, '')}
+          <br />
         </P>
       </Fragment>
     </Section>
