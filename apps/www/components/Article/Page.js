@@ -270,6 +270,7 @@ const ArticlePage = ({
   const articleContent = article?.content
   const articleUnreadNotifications = article?.unreadNotifications
   const routerQuery = router.query
+  const isClimate = !!article?.content?.meta?.climate
 
   useEffect(() => {
     if (share) {
@@ -565,6 +566,7 @@ const ArticlePage = ({
       hasOverviewNav={hasOverviewNav}
       stickySecondaryNav={hasStickySecondaryNav}
       pageColorSchemeKey={colorSchemeKey}
+      isClimate={isClimate}
     >
       <PageLoader
         loading={articleLoading && !articleData}

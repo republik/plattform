@@ -26,7 +26,7 @@ export function getUploadUrl(file: RepoFileRow): string {
     Bucket: AWS_S3_BUCKET,
     Key: getKey(file),
     ACL: 'private',
-    Expires: 60,
+    Expires: 60 * 15, // expires in 15 minutes
   })
 }
 
