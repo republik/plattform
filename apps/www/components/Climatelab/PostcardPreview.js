@@ -89,7 +89,8 @@ export const PostcardPreview = graphql(
         loading={data.loading}
         error={data.error}
         render={() => {
-          const { questions, userHasSubmitted } = data && data.questionnaire
+          if (!data?.questionnaire) return null
+          const { questions, userHasSubmitted } = data.questionnaire
           const imageOptions = questions && questions[0].options
           const imageSelction =
             questions[0].userAnswer && questions[0].userAnswer.payload.value[0]

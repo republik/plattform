@@ -3,6 +3,7 @@ import { css, style } from 'glamor'
 // import { fontStyles } from '../../theme/fonts'
 // import { pxToRem } from '../Typography/utils'
 import { useColorContext } from '@project-r/styleguide'
+import { CDN_FRONTEND_BASE_URL } from '../../lib/constants'
 
 const styles = {
   image: css({
@@ -27,13 +28,6 @@ const styles = {
     width: 24,
     height: 24,
     opacity: 0,
-    '&:focus + img': {
-      outline: 'solid',
-      outlineOffset: 3,
-    },
-    '&:focus:not(:focus-visible) + img': {
-      outline: 'none',
-    },
   }),
   disabledImage: css({
     filter: 'grayscale(100%)',
@@ -87,22 +81,20 @@ const ImageChoice: React.FC<{
   console.log(imageUrl)
   return (
     <label style={style}>
-      <span>
-        <input
-          {...styles.input}
-          name={name}
-          type='radio'
-          value={value}
-          checked={checked}
-          disabled={disabled}
-          onChange={onChange}
-        />
-        <BackgroundImage
-          imageUrl={imageUrl}
-          checked={checked}
-          disabled={disabled}
-        />
-      </span>
+      <input
+        {...styles.input}
+        name={name}
+        type='radio'
+        value={value}
+        checked={checked}
+        disabled={disabled}
+        onChange={onChange}
+      />
+      <BackgroundImage
+        imageUrl={imageUrl}
+        checked={checked}
+        disabled={disabled}
+      />
     </label>
   )
 }
