@@ -1,3 +1,5 @@
+// @TODO: Abandoned, but might use implementation in apps/www/components/Notifications/enhancers.js
+
 import { gql } from '@apollo/client'
 import EventObjectType from './EventObjectType'
 import { makeMutationHook } from '../../../lib/helpers/AbstractApolloGQLHooks.helper'

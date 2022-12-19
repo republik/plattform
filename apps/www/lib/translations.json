@@ -7273,6 +7273,10 @@
       "value": "Im Magazin"
     },
     {
+      "key": "SubscribeCallout/ReadAloud",
+      "value": "Benachrichtigung, sobald vorgelesen"
+    },
+    {
       "key": "SubscribeCallout/settingsLink",
       "value": "Allgemeine Einstellungen"
     },
