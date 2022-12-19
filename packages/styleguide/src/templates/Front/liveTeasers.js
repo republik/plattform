@@ -61,6 +61,7 @@ const createLiveTeasers = ({
   withFlyerData = withData,
   ActionBar,
   showMyMagazine = true,
+  ClimatelabTeaser,
 }) => {
   const MyMagazineWithData = withMyMagazineData(
     ({
@@ -364,6 +365,25 @@ const createLiveTeasers = ({
         type: 'LIVETEASEREND',
         insertButtonText: 'The End',
         insertId: 'end',
+      },
+    },
+    {
+      matchMdast: (node) =>
+        matchZone('LIVETEASER')(node) && node.data.id === 'climatelab',
+      props: (node) => node.data,
+      component: (props) => {
+        return ClimatelabTeaser ? (
+          <ClimatelabTeaser {...props} />
+        ) : (
+          <Placeholder attributes={props.attributes}>Klimalabor</Placeholder>
+        )
+      },
+      isVoid: true,
+      editorModule: 'liveteaser',
+      editorOptions: {
+        type: 'LIVETEASERCLIMATELAB',
+        insertButtonText: 'Klimalabor Teaser',
+        insertId: 'climatelab',
       },
     },
   ]

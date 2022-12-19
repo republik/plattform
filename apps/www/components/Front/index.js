@@ -1,44 +1,40 @@
 import { Fragment, useMemo, useEffect, useState } from 'react'
 import { css } from 'glamor'
+import { renderMdast } from 'mdast-react-render'
+import Head from 'next/head'
+import Link from 'next/link'
+import { useRouter } from 'next/router'
+
 import {
   colors,
   Editorial,
   InlineSpinner,
   Interaction,
-  PlayCircleIcon,
-  PauseCircleIcon,
-  plainButtonRule,
+  createFrontSchema,
+  CheckCircleIcon,
 } from '@project-r/styleguide'
-import StatusError from '../StatusError'
-import Head from 'next/head'
-import { createFrontSchema } from '@project-r/styleguide'
-import { CheckCircleIcon } from '@project-r/styleguide'
-
-import { useTranslation } from '../../lib/withT'
-import Loader from '../Loader'
-import Frame from '../Frame'
-import HrefLink from '../Link/Href'
-import ErrorMessage from '../ErrorMessage'
-import CommentLink from '../Discussion/shared/CommentLink'
-import DiscussionLink from '../Discussion/shared/DiscussionLink'
-import ActionBar from '../ActionBar'
-
-import { renderMdast } from 'mdast-react-render'
 
 import { PUBLIC_BASE_URL } from '../../lib/constants'
-
+import { useMe } from '../../lib/context/MeContext'
 import { useInfiniteScroll } from '../../lib/hooks/useInfiniteScroll'
 import { intersperse } from '../../lib/utils/helpers'
-import * as withData from './withData'
 import { cleanAsPath } from '../../lib/utils/link'
-import Link from 'next/link'
-import { useGetFrontQuery } from './graphql/getFrontQuery.graphql'
-import { useRouter } from 'next/router'
-import { useMe } from '../../lib/context/MeContext'
-import { useAudioContext } from '../Audio/AudioProvider'
+import { useTranslation } from '../../lib/withT'
+
+import ActionBar from '../ActionBar'
 import useAudioQueue from '../Audio/hooks/useAudioQueue'
-import { AudioPlayerLocations } from '../Audio/types/AudioActionTracking'
+import ClimatelabTeaser from '../Climatelab/Teaser'
+import CommentLink from '../Discussion/shared/CommentLink'
+import DiscussionLink from '../Discussion/shared/DiscussionLink'
+import ErrorMessage from '../ErrorMessage'
+import Frame from '../Frame'
+import HrefLink from '../Link/Href'
+import Loader from '../Loader'
+import StatusError from '../StatusError'
+
 import FrontAudioPlayButton from './FrontAudioPlayButton'
+import { useGetFrontQuery } from './graphql/getFrontQuery.graphql'
+import * as withData from './withData'
 
 const styles = {
   prepublicationNotice: css({
@@ -69,6 +65,7 @@ export const RenderFront = ({ front, nodes, isFrontExtract = false }) => {
         DiscussionLink,
         ...withData,
         ActionBar,
+        ClimatelabTeaser,
         t,
       }),
     [],
