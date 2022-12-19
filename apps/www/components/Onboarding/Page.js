@@ -89,14 +89,7 @@ const QUERY = gql`
 
 const CONTEXTS = {
   card: ['newsletter', 'notifications', 'app-login', 'usability'],
-  climate: [
-    'postcard',
-    'mission',
-    'invitation',
-    'profile',
-    'newsletter',
-    'call-to-action',
-  ],
+  climate: ['postcard', 'mission', 'invitation', 'profile'],
   default: ['newsletter', 'notifications', 'app-login', 'usability', 'profile'],
 }
 
@@ -175,6 +168,7 @@ class Page extends Component {
         name: 'postcard',
         ref: createRef(),
         visited: false,
+        expanded: true,
       },
       {
         component: Mission,
@@ -185,12 +179,6 @@ class Page extends Component {
       {
         component: Invitation,
         name: 'invitation',
-        ref: createRef(),
-        visited: false,
-      },
-      {
-        component: CallToAction,
-        name: 'call-to-action',
         ref: createRef(),
         visited: false,
       },
@@ -309,7 +297,9 @@ class Page extends Component {
                     { climate_lab_count: roleStats.count },
                   )}
                 </P>
-                {context && <Greeting employee={employees[0]} />}
+                {context !== 'climate' && context && (
+                  <Greeting employee={employees[0]} />
+                )}
 
                 <RawHtml
                   type={Interaction.P}
@@ -325,7 +315,7 @@ class Page extends Component {
                   }}
                 />
 
-                {!expandedSection && (
+                {!expandedSection && context !== 'climate' && (
                   <Button
                     primary={!this.state.hasOnceVisitedAll}
                     onClick={() => {
@@ -338,7 +328,13 @@ class Page extends Component {
 
                 <div {...styles.sections}>
                   {this.sections.map(
-                    ({ component: Component, name, ref, visited }) => {
+                    ({
+                      component: Component,
+                      name,
+                      ref,
+                      visited,
+                      expanded,
+                    }) => {
                       return (
                         <Component
                           key={name}
@@ -346,7 +342,7 @@ class Page extends Component {
                           user={user}
                           sections={documents.nodes}
                           onExpand={this.onExpand.bind(this)}
-                          isExpanded={expandedSection === name}
+                          isExpanded={expanded || expandedSection === name}
                           onContinue={this.onContinue.bind(this)}
                           forwardedRef={ref}
                           isVisited={visited}
