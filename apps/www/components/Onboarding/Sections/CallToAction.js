@@ -31,12 +31,19 @@ const styles = {
   }),
 }
 
-// export const fragments = {
-//   user: gql``,
-// }
-
 const CallToAction = (props) => {
-  const { t } = props
+  const { t, user } = props
+  const hasActiveMembership = user.activeMembership?.active
+
+  /* 
+  vor Link allg. text : Investieren Sie in Klimajournalismus
+  - active member (hasActiveMembership): 
+      link: /angebote?package=ABO_GIVE
+      link text: Verschenken Sie eine Jahresmitgliedschaft. 
+  - not active member (!hasActiveMembership): 
+      link: /angebote?package=ABO
+      link text: Werden Sie Verlegerin oder Verleger der Republik
+  */
 
   // Is ticked when either???
 

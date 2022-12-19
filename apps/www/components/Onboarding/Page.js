@@ -50,6 +50,9 @@ const QUERY = gql`
       ...AppLoginUser
       ...UsabilityUser
       ...ProfileUser
+      activeMembership {
+        active
+      }
     }
 
     employees(shuffle: 1, withGreeting: true) {
