@@ -63,7 +63,7 @@ const Form = (props) => {
   const {
     payload,
     router,
-    showTitleBlock,
+    titleBlockKey,
     onBeforeSignIn,
     onSuccess,
     onReset,
@@ -214,13 +214,13 @@ const Form = (props) => {
 
   const isComplete = showButtons || isMember
 
-  const titleBlock = showTitleBlock && (
+  const titleBlock = titleBlockKey && (
     <>
       <Interaction.H2 style={{ marginBottom: 10 }}>
         <RawHtml
           dangerouslySetInnerHTML={{
             __html: t(
-              `Trial/Form/${
+              `Trial/Form/${titleBlockKey}/${
                 isComplete ? 'completed' : isSigningIn ? 'waiting' : 'initial'
               }/title`,
             ),
@@ -230,7 +230,9 @@ const Form = (props) => {
       {!isSigningIn && (
         <Interaction.P>
           {t(
-            `Trial/Form/initial/${isComplete ? 'afterSignIn' : 'beforeSignIn'}`,
+            `Trial/Form/${titleBlockKey}/initial/${
+              isComplete ? 'afterSignIn' : 'beforeSignIn'
+            }`,
           )}
         </Interaction.P>
       )}

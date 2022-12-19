@@ -5577,27 +5577,51 @@
       "value": "Ihre E-Mail-Adresse"
     },
     {
+      "key": "Trial/Form/email/submit",
+      "value": "E-Mail-Adresse abschicken"
+    },
+    {
       "key": "Trial/Form/error/title",
       "value": "Fehler"
     },
     {
-      "key": "Trial/Form/waiting/title",
+      "key": "Trial/Form/series/waiting/title",
       "value": "Sie haben Post!"
     },
     {
-      "key": "Trial/Form/completed/title",
+      "key": "Trial/Form/series/completed/title",
       "value": "Herzlich willkommen!"
     },
     {
-      "key": "Trial/Form/initial/title",
+      "key": "Trial/Form/series/initial/title",
       "value": "Kostenlos Probe&shy;lesen für 21&nbsp;Tage."
     },
     {
-      "key": "Trial/Form/initial/beforeSignIn",
+      "key": "Trial/Form/series/initial/beforeSignIn",
       "value": "Melden Sie sich an und lesen Sie die ganze Serie. "
     },
     {
-      "key": "Trial/Form/initial/afterSignIn",
+      "key": "Trial/Form/series/initial/afterSignIn",
+      "value": "Sie können sich in den kommenden Tagen ohne Einschränkung bei uns umsehen."
+    },
+    {
+      "key": "Trial/Form/journal/waiting/title",
+      "value": "Sie haben Post!"
+    },
+    {
+      "key": "Trial/Form/journal/completed/title",
+      "value": "Herzlich willkommen!"
+    },
+    {
+      "key": "Trial/Form/journal/initial/title",
+      "value": "Danke für Ihr Interesse."
+    },
+    {
+      "key": "Trial/Form/journal/initial/beforeSignIn",
+      "value": "Melden Sie sich an und lesen Sie weiter."
+    },
+    {
+      "key": "Trial/Form/journal/initial/afterSignIn",
       "value": "Sie können sich in den kommenden Tagen ohne Einschränkung bei uns umsehen."
     },
     {
