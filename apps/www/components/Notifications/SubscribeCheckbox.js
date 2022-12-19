@@ -63,12 +63,21 @@ const SubscribeCheckbox = ({
     setIsMutating(true)
     if (isDocument) {
       // Subscribe to Documents
-      if (subscription.active) {
-        unsubFromDoc({ subscriptionId: subscription.id })
+      if (isCurrentActive) {
+        unsubFromDoc({
+          subscriptionId: subscription.id,
+          filters: [filterName],
+        })
           .then(toggleCallback)
           .catch((err) => setServerError(err))
       } else {
-        subToDoc({ documentId: subscription.object.id })
+        subToDoc({
+          documentId: subscription.object.id,
+          filters:
+            activeFilters.indexOf(filterName) === -1
+              ? activeFilters.concat(filterName)
+              : activeFilters,
+        })
           .then(toggleCallback)
           .catch((err) => setServerError(err))
       }

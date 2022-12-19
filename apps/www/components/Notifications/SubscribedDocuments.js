@@ -28,7 +28,11 @@ const SECTIONS_ALWAYS_SHOWN = ONBOARDING_SECTIONS_REPO_IDS
 const FormatCheckboxes = ({ formats }) => (
   <div {...styles.checkboxes}>
     {formats.map((format, i) => (
-      <SubscribeCheckbox subscription={format.subscribedByMe} key={i} />
+      <SubscribeCheckbox
+        key={i}
+        subscription={format.subscribedByMe}
+        filterName='Document'
+      />
     ))}
   </div>
 )
