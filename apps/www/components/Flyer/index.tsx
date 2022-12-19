@@ -39,20 +39,14 @@ export type MetaProps = {
 
 const RenderValue: React.FC<{
   value: CustomDescendant[]
-}> = ({ value }) => {
-  useEffect(() => {
-    console.log('RenderValue reloaded')
-  }, [])
-
-  return (
-    <SlateRender
-      value={value}
-      schema={flyerSchema}
-      raw
-      skip={['flyerOpeningP']}
-    />
-  )
-}
+}> = ({ value }) => (
+  <SlateRender
+    value={value}
+    schema={flyerSchema}
+    raw
+    skip={['flyerOpeningP']}
+  />
+)
 
 const RenderWithPaynote: React.FC<{
   value: CustomDescendant[]

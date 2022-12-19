@@ -8,6 +8,8 @@ import {
   plainButtonRule,
 } from '@project-r/styleguide'
 
+import { useTranslation } from '../../lib/withT'
+
 import TrialForm from '../Trial/Form'
 import SignIn from '../Auth/SignIn'
 
@@ -32,6 +34,7 @@ export const TrialOverlay: React.FC<{
   onClose: () => void
 }> = ({ documentId, repoId, onClose }) => {
   const [tab, setTab] = React.useState<'login' | 'register'>('register')
+  const { t } = useTranslation()
   const trackingPayload: TrackingProps = {
     documentId,
     repoId,
@@ -42,12 +45,12 @@ export const TrialOverlay: React.FC<{
     <div>
       <Tab
         onClick={() => setTab('register')}
-        label='Registrieren'
+        label={t('marketing/trial/button/label')}
         isActive={tab === 'register'}
       />
       <Tab
         onClick={() => setTab('login')}
-        label='Anmelden'
+        label={t('signIn/button')}
         isActive={tab === 'login'}
       />
     </div>
