@@ -14,14 +14,15 @@ import TrialForm from '../Trial/Form'
 import SignIn from '../Auth/SignIn'
 
 import { TrackingProps } from './Paynote'
+import { useMe } from '../../lib/context/MeContext'
 
 const Tab = ({ isActive, onClick, label }) =>
   isActive ? (
-    <span style={{ marginRight: 10 }}>{label}</span>
+    <span style={{ marginRight: 30 }}>{label}</span>
   ) : (
     <button
       {...plainButtonRule}
-      style={{ fontFamily: fontFamilies.sansSerifRegular, marginRight: 10 }}
+      style={{ fontFamily: fontFamilies.sansSerifRegular, marginRight: 30 }}
       onClick={onClick}
     >
       {label}
@@ -33,7 +34,10 @@ export const TrialOverlay: React.FC<{
   repoId: string
   onClose: () => void
 }> = ({ documentId, repoId, onClose }) => {
-  const [tab, setTab] = React.useState<'login' | 'register'>('register')
+  const { me } = useMe()
+  const [tab, setTab] = React.useState<'login' | 'register'>(
+    me ? 'login' : 'register',
+  )
   const { t } = useTranslation()
   const trackingPayload: TrackingProps = {
     documentId,
@@ -58,7 +62,10 @@ export const TrialOverlay: React.FC<{
 
   return (
     <Overlay mini onClose={onClose}>
-      <OverlayToolbar onClose={onClose} title={tabs} />
+      <OverlayToolbar
+        onClose={onClose}
+        title={!me ? tabs : t('signIn/button')}
+      />
       <OverlayBody>
         {tab === 'register' && (
           <TrialForm
