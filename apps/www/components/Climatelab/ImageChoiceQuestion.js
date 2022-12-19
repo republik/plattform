@@ -175,72 +175,75 @@ const ImageChoiceQuestion = (props) => {
   )
 
   return (
-    <div {...styles.container}>
-      <div
-        {...styles.clickArea}
-        {...clickAreaGradient}
-        style={{
-          left: '-1px',
-          pointerEvents: backwardDisabled ? 'none' : undefined,
-        }}
-        onClick={() => handleClick(currentSlideIndex - 1)}
-      >
-        <svg
-          style={{ display: backwardDisabled && 'none' }}
-          width='16'
-          height='40'
-          viewBox='0 0 21 80'
-          fill='none'
-        >
-          <path
-            d='M18.5 1L3 41L18.5 79'
-            {...colorScheme.set('stroke', 'text')}
-            strokeWidth='4'
-          />
-        </svg>
-      </div>
-      <div
-        {...styles.clickArea}
-        {...clickAreaGradient}
-        style={{
-          right: '-1px',
-          pointerEvents: forwardDisabled ? 'none' : undefined,
-          transform: 'rotate(-180deg)',
-        }}
-        onClick={() => handleClick(currentSlideIndex + 1)}
-      >
-        <svg
+    <>
+      <div {...questionStyles.label}>{text && <H2>{text}</H2>}</div>
+      <div {...styles.container}>
+        <div
+          {...styles.clickArea}
+          {...clickAreaGradient}
           style={{
-            display: forwardDisabled && 'none',
+            left: '-1px',
+            pointerEvents: backwardDisabled ? 'none' : undefined,
           }}
-          width='16'
-          height='40'
-          viewBox='0 0 21 80'
-          fill='none'
+          onClick={() => handleClick(currentSlideIndex - 1)}
         >
-          <path
-            d='M18.5 1L3 41L18.5 79'
-            {...colorScheme.set('stroke', 'text')}
-            strokeWidth='4'
-          />
-        </svg>
+          <svg
+            style={{ display: backwardDisabled && 'none' }}
+            width='16'
+            height='40'
+            viewBox='0 0 21 80'
+            fill='none'
+          >
+            <path
+              d='M18.5 1L3 41L18.5 79'
+              {...colorScheme.set('stroke', 'text')}
+              strokeWidth='4'
+            />
+          </svg>
+        </div>
+        <div
+          {...styles.clickArea}
+          {...clickAreaGradient}
+          style={{
+            right: '-1px',
+            pointerEvents: forwardDisabled ? 'none' : undefined,
+            transform: 'rotate(-180deg)',
+          }}
+          onClick={() => handleClick(currentSlideIndex + 1)}
+        >
+          <svg
+            style={{
+              display: forwardDisabled && 'none',
+            }}
+            width='16'
+            height='40'
+            viewBox='0 0 21 80'
+            fill='none'
+          >
+            <path
+              d='M18.5 1L3 41L18.5 79'
+              {...colorScheme.set('stroke', 'text')}
+              strokeWidth='4'
+            />
+          </svg>
+        </div>
+        <div {...styles.carousel} ref={carouselRef}>
+          {optionGroups.map(({ key, values }) =>
+            values.map((o, i) => (
+              <div key={i} {...styles.slide}>
+                <ImageChoice
+                  onChange={() => handleChange(o.value)}
+                  checked={userAnswerValues.some((v) => v === o.value)}
+                  imageUrl={o.imageUrl}
+                >
+                  {o.label}
+                </ImageChoice>
+              </div>
+            )),
+          )}
+        </div>
       </div>
-      <div {...styles.carousel} ref={carouselRef}>
-        {optionGroups.map(({ key, values }) =>
-          values.map((o, i) => (
-            <div key={i} {...styles.slide}>
-              <ImageChoice
-                onChange={() => handleChange(o.value)}
-                checked={userAnswerValues.some((v) => v === o.value)}
-                imageUrl={o.imageUrl}
-              >
-                {o.label}
-              </ImageChoice>
-            </div>
-          )),
-        )}
-      </div>
-    </div>
+    </>
   )
 }
 
