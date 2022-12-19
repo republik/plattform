@@ -203,18 +203,6 @@ const colors = {
     flyerMetaText: '#A3BBFF',
     flyerFormatText: '#D90034',
   },
-  climateColors: {
-    light: {
-      default: 'pink',
-      primary: 'blue',
-      primaryHover: 'yellow',
-    },
-    dark: {
-      default: 'purple',
-      primary: 'yellow',
-      primaryHover: 'darkblue',
-    },
-  },
   mappings: {
     format: {
       '#000': 'accentColorMeta',

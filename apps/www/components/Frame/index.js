@@ -9,7 +9,6 @@ import {
   mediaQueries,
   ColorHtmlBodyColors,
   ColorContextProvider,
-  colors,
 } from '@project-r/styleguide'
 import OptionalLocalColorContext from './OptionalLocalColorContext'
 import Meta from './Meta'
@@ -28,6 +27,7 @@ import { useTranslation } from '../../lib/withT'
 import { useInNativeApp } from '../../lib/withInNativeApp'
 import LegacyAppNoticeBox from './LegacyAppNoticeBox'
 import { useMe } from '../../lib/context/MeContext'
+import { climateColors } from '../Climatelab/config'
 
 css.global('html', { boxSizing: 'border-box' })
 css.global('*, *:before, *:after', { boxSizing: 'inherit' })
@@ -132,11 +132,11 @@ const Frame = ({
   return (
     <ColorContextProvider colorSchemeKey={pageColorSchemeKey}>
       <ColorHtmlBodyColors
-        colorsObject={isClimate ? colors.climateColors : undefined}
+        colorsObject={isClimate ? climateColors : undefined}
         colorSchemeKey={pageColorSchemeKey || 'auto'}
       />
       <OptionalLocalColorContext
-        localColorVariables={isClimate ? colors.climateColors : undefined}
+        localColorVariables={isClimate ? climateColors : undefined}
       >
         <noscript>
           <Box style={{ padding: 30 }}>
