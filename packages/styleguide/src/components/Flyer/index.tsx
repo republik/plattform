@@ -45,6 +45,7 @@ const styles = {
     },
   }),
   contentOpening: css({
+    zIndex: 1,
     marginBottom: -72,
     [mUp]: {
       marginBottom: -144,
