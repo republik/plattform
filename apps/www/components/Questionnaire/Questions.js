@@ -6,6 +6,7 @@ import TextQuestion from './TextQuestion'
 import ArticleQuestion from './ArticleQuestion'
 import RangeQuestion from './RangeQuestion'
 import ChoiceQuestion from './ChoiceQuestion'
+import ImageChoiceQuestion from '../Climatelab/ImageChoiceQuestion'
 import { withAnswerMutation } from './enhancers'
 
 const QUESTION_TYPES = {
@@ -13,6 +14,7 @@ const QUESTION_TYPES = {
   QuestionTypeText: TextQuestion,
   QuestionTypeChoice: ChoiceQuestion,
   QuestionTypeRange: RangeQuestion,
+  QuestionTypeImageChoice: ImageChoiceQuestion,
 }
 
 const QuestionList = compose(withAnswerMutation)(

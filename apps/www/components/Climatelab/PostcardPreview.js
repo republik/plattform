@@ -66,7 +66,7 @@ export const PostcardPreview = graphql(
           ... on QuestionTypeText {
             maxLength
           }
-          ... on QuestionTypeChoice {
+          ... on QuestionTypeImageChoice {
             cardinality
             componentIdentifier
             options {
@@ -92,7 +92,7 @@ export const PostcardPreview = graphql(
           if (!data?.questionnaire) return null
           const { questions, userHasSubmitted } = data.questionnaire
           const imageOptions = questions && questions[0].options
-          const imageSelction =
+          const imageSelection =
             questions[0].userAnswer && questions[0].userAnswer.payload.value[0]
 
           const postcardText =
@@ -100,7 +100,9 @@ export const PostcardPreview = graphql(
 
           const imageUrl =
             imageOptions &&
-            imageOptions.filter((d) => d.value === imageSelction)[0]?.imageUrl
+            imageOptions.filter((d) => d.value === imageSelection)[0]?.imageUrl
+
+          console.log(questions[0])
 
           return (
             userHasSubmitted && (
