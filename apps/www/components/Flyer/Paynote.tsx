@@ -70,9 +70,7 @@ const Paynote: React.FC<{
 
   let cta = null
   if (noteType === 'trial') {
-    cta = (
-      <TrialForm payload={trackingPayload} onSuccess={() => false} minimal />
-    )
+    cta = <TrialForm payload={trackingPayload} minimal />
   } else if (noteType === 'buy') {
     cta = <BuyForm {...trackingPayload} />
   }
