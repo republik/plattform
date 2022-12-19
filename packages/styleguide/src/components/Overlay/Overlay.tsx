@@ -43,12 +43,15 @@ const styles = {
     minHeight: '100vh',
     [mUp]: {
       maxWidth: '600px',
-      minHeight: 'inherit',
+      minHeight: '60vh',
       height: 'auto',
       margin: '20vh auto 20vh',
     },
   }),
   miniContainer: css({
+    [mUp]: {
+      minHeight: 'inherit',
+    },
     [onlyS]: {
       minHeight: 'inherit',
       position: 'fixed',
