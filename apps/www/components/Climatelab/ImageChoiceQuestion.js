@@ -228,9 +228,8 @@ const ImageChoiceQuestion = (props) => {
       <div {...styles.carousel} ref={carouselRef}>
         {optionGroups.map(({ key, values }) =>
           values.map((o, i) => (
-            <div key={key} {...styles.slide}>
+            <div key={i} {...styles.slide}>
               <ImageChoice
-                key={i}
                 onChange={() => handleChange(o.value)}
                 checked={userAnswerValues.some((v) => v === o.value)}
                 imageUrl={o.imageUrl}
