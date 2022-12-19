@@ -26,8 +26,7 @@ const contentUrlResolver = (
   user,
 ) => {
   const docResolver = createResolver(_all, _users, errors)
-  const resolvedFormat = docResolver(doc.meta?.format)
-  const externalBaseUrl = resolvedFormat?.meta?.externalBaseUrl
+  const externalBaseUrl = docResolver(doc.meta?.format)?.meta?.externalBaseUrl
 
   const urlReplacer = createUrlReplacer(
     _all,
@@ -38,7 +37,7 @@ const contentUrlResolver = (
     externalBaseUrl,
   )
 
-  const stripDocLinks = shouldStripDocLinks(user, doc, resolvedFormat)
+  const stripDocLinks = shouldStripDocLinks(user, doc)
 
   visit(doc.content, 'link', (node) => {
     node.url = urlReplacer(node.url, stripDocLinks)

@@ -233,11 +233,15 @@ const metaFieldResolver = (meta, _all = [], _users = [], errors) => {
   }
 }
 
-const isRestricted = (doc, format) =>
-  doc.meta?.isRestricted || format?.meta?.isRestricted
+const isRestricted = (doc) => {
+  const resolver = createResolver(doc._all)
+  const formatDoc = resolver(doc.meta?.format)
 
-const shouldStripDocLinks = (user, doc, format) =>
-  isRestricted(doc, format) &&
+  return doc.meta?.isRestricted || formatDoc?.meta?.isRestricted
+}
+
+const shouldStripDocLinks = (user, doc) =>
+  isRestricted(doc) &&
   // user is undefined during publish -> no stripping
   // null during document delivery -> strip unless authorized
   user !== undefined &&
