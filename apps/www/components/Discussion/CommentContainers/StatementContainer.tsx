@@ -12,6 +12,7 @@ import useReportCommentHandler from '../hooks/actions/useReportCommentHandler'
 import { CommentFragmentType } from '../graphql/fragments/CommentFragment.graphql'
 import DiscussionComposer from '../DiscussionComposer/DiscussionComposer'
 import getCommentActions from './getCommentActions'
+import { useLocalCommentReports } from '../helpers/useLocalCommentReports'
 
 type Props = {
   comment: CommentFragmentType
@@ -34,6 +35,8 @@ const StatementContainer = ({ comment, tagMappings }: Props): ReactElement => {
   const unpublishCommentHandler = useUnpublishCommentHandler()
   const reportCommentHandler = useReportCommentHandler()
 
+  const { checkIfAlreadyReported } = useLocalCommentReports()
+
   const menuItems = useMemo(() => {
     return getCommentActions({
       comment,
@@ -44,8 +47,16 @@ const StatementContainer = ({ comment, tagMappings }: Props): ReactElement => {
       roles: me?.roles ?? [],
       t,
       setEditMode,
+      checkIfAlreadyReported,
     })
-  }, [comment, me?.roles, t, unpublishCommentHandler, reportCommentHandler])
+  }, [
+    comment,
+    me?.roles,
+    t,
+    unpublishCommentHandler,
+    reportCommentHandler,
+    checkIfAlreadyReported,
+  ])
 
   const isFocused = useMemo(() => {
     const focusedComment = discussion?.comments?.focus ?? null

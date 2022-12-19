@@ -585,7 +585,7 @@ const ArticlePage = ({
             router.query.utm_source && router.query.utm_source === 'newsletter'
 
           const suppressPayNotes =
-            isSection || (!!episodes && showInlinePaynote)
+            isSection || (!!episodes && showInlinePaynote) || isFlyer
           const suppressFirstPayNote =
             suppressPayNotes ||
             podcast ||

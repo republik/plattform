@@ -268,11 +268,12 @@ class Merci extends Component {
             },
           )}
         </H1>
-        {leads.map((lead, i) => (
-          <div key={`lead${i}`} style={{ margin: '22px 0' }}>
-            <Meta.Lead>{lead}</Meta.Lead>
-          </div>
-        ))}
+        {query.package !== 'PROLONG' &&
+          leads.map((lead, i) => (
+            <div key={`lead${i}`} style={{ margin: '22px 0' }}>
+              <Meta.Lead>{lead}</Meta.Lead>
+            </div>
+          ))}
         <WithAccess
           render={() => (
             <div {...styles.questionnaireStyleOverride}>
