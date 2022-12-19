@@ -91,14 +91,16 @@ export const PostcardPreview = graphql(
         render={() => {
           const { questions, userHasSubmitted } = data && data.questionnaire
           const imageOptions = questions && questions[0].options
-          const imageSelction = questions[0].userAnswer.payload.value[0]
+          const imageSelction =
+            questions[0].userAnswer && questions[0].userAnswer.payload.value[0]
 
-          const postcardText = questions[1].userAnswer.payload.value
+          const postcardText =
+            questions[1].userAnswer && questions[1].userAnswer.payload.value
 
-          const imageUrl = imageOptions.filter(
-            (d) => d.value === imageSelction,
-          )[0].imageUrl
-          console.log(imageUrl)
+          const imageUrl =
+            imageOptions &&
+            imageOptions.filter((d) => d.value === imageSelction)[0]?.imageUrl
+
           return (
             userHasSubmitted && (
               <>
@@ -124,6 +126,5 @@ export const PostcardPreview = graphql(
 })
 
 const PoststampComponent = ({ imageUrl }) => {
-  console.log(imageUrl)
   return <img {...styles.image} src={imageUrl} />
 }

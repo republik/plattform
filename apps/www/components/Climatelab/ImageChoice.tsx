@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { css, style } from 'glamor'
 // import { fontStyles } from '../../theme/fonts'
 // import { pxToRem } from '../Typography/utils'
@@ -9,10 +9,12 @@ const styles = {
     cursor: 'pointer',
     borderWidth: '3px',
     borderStyle: 'solid',
-    transition: 'transform .2s',
     maxWidth: '100%',
+    borderRadius: '2px',
+    transition: 'box-shadow 0.3s ease-out',
     ':hover': {
-      transform: 'scale(1.1)',
+      cursor: 'pointer',
+      outline: 'none',
     },
   }),
   input: css({
@@ -40,12 +42,25 @@ const styles = {
 
 const BackgroundImage = ({ checked, disabled, imageUrl }) => {
   const [colorScheme] = useColorContext()
+  const hoverRule = useMemo(
+    () =>
+      css({
+        '@media (hover)': {
+          ':hover': {
+            boxShadow: colorScheme.getCSSColor('imageChoiceShadowHover'),
+          },
+        },
+      }),
+    [colorScheme],
+  )
   return (
     <img
       {...styles.image}
-      {...colorScheme.set('borderColor', checked ? 'primary' : 'default')}
+      {...hoverRule}
+      {...colorScheme.set('borderColor', checked ? '#6f38b1' : '#FFF')}
       {...(disabled ? styles.disabledImage : undefined)}
       src={imageUrl}
+      {...colorScheme.set('boxShadow', 'imageChoiceShadow')}
     />
   )
 }

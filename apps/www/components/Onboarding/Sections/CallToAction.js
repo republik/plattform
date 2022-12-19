@@ -1,7 +1,7 @@
 import { Fragment } from 'react'
 import { css } from 'glamor'
 
-import { Interaction, mediaQueries } from '@project-r/styleguide'
+import { Interaction, mediaQueries, A } from '@project-r/styleguide'
 
 import Section from '../Section'
 
@@ -34,6 +34,13 @@ const styles = {
 const CallToAction = (props) => {
   const { t, user } = props
   const hasActiveMembership = user.activeMembership?.active
+  const linkText = hasActiveMembership
+    ? 'Verschenken Sie eine Jahresmitgliedschaft.'
+    : 'Werden Sie Verlegerin oder Verleger der Republik'
+
+  const linkUrl = hasActiveMembership
+    ? '/angebote?package=ABO_GIVE'
+    : '/angebote?package=ABO'
 
   /* 
   vor Link allg. text : Investieren Sie in Klimajournalismus
@@ -56,7 +63,8 @@ const CallToAction = (props) => {
     >
       <Fragment>
         <P {...styles.p}>
-          {t('Onboarding/Sections/CallToAction/paragraph1', null, '')}
+          {t('Onboarding/Sections/CallToAction/paragraph1', null, '')}{' '}
+          <A href={linkUrl}>{linkText}</A>
         </P>
       </Fragment>
     </Section>
