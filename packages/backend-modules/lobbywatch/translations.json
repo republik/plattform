@@ -1082,8 +1082,8 @@
     },
     {
       "key": "purpose/nonprofit/text",
-      "de": "Rund 250 Mitglieder engagieren sich bei uns für eine lebendige und transparente Demokratie. Bald auch Sie?",
-      "fr": "Environ 250 membres s'engagent chez nous pour une démocratie vivante et transparente. Bientôt vous aussi ?"
+      "de": "Unsere Mitglieder engagieren sich bei uns finanziell für eine lebendige und transparente Demokratie. Bald auch Sie?",
+      "fr": "Nos membres s'engagent chez nous pour une démocratie vivante et transparente. Bientôt vous aussi ?"
     },
     {
       "key": "purpose/nonprofit/title",
@@ -1141,74 +1141,49 @@
       "fr": "Dernière modification le {date}"
     },
     {
-      "key": "cf/social/title",
-      "de": "Lobbywatch braucht Sie!",
-      "fr": "Lobbywatch a besoin de vous!"
+      "key": "index/cta/join",
+      "de": "Mitglied werden",
+      "fr": "Devenir membre"
     },
     {
-      "key": "cf/social/description",
-      "de": "In einem Jahr sind Wahlen – werden Sie jetzt Mitglied.",
-      "fr": "Les élections auront lieu dans un an – devenez membre maintenant."
-    },
-    {
-      "key": "cf/cta/now",
-      "de": "Jetzt mitmachen!",
-      "fr": "Adhérer maintenant!"
-    },
-    {
-      "key": "cf/cta/short",
-      "de": "Mitmachen",
-      "fr": "Participer"
-    },
-    {
-      "key": "cf/cta/share",
-      "de": "Teilen Sie diese Seite mit Ihren Freunden:",
-      "fr": "Partagez cette page avec vos amis:"
-    },
-    {
-      "key": "cf/cta/shareNow",
-      "de": "Jetzt andere auf Lobbywatch aufmerksam machen:",
+      "key": "index/cta/share",
+      "de": "Auf Lobbywatch aufmerksam machen:",
       "fr": "Faire connaître Lobbywatch à d'autres personnes:"
     },
     {
-      "key": "cf/cta/shareEmailSubject",
+      "key": "index/cta/support",
       "de": "Lobbywatch unterstützen",
       "fr": "Soutenir Lobbywatch"
     },
     {
-      "key": "cf/cta/packages",
+      "key": "index/cta/packages",
       "de": "Werden Sie Mitglied:",
       "fr": "Devenir membre:"
     },
     {
-      "key": "cf/package/YEAR",
+      "key": "index/package/YEAR",
       "de": "Für mindestens ein Jahr",
       "fr": "Pour au moins un an"
     },
     {
-      "key": "cf/package/LEGISLATION",
+      "key": "index/package/LEGISLATION",
       "de": "Für die ganze Legislatur",
       "fr": "Pour toute la législature"
     },
     {
-      "key": "cf/package/BENEFACTOR",
+      "key": "index/package/BENEFACTOR",
       "de": "Als Gönner:in",
       "fr": "En tant que mécène"
     },
     {
-      "key": "cf/package/DONATE",
+      "key": "index/package/DONATE",
       "de": "Spenden, sonst nichts",
       "fr": "Faire un don, rien d'autre"
     },
     {
-      "key": "cf/package/WORKSHOP",
+      "key": "index/package/WORKSHOP",
       "de": "Etwas für Ihr ganzes Team? Lobbywatch-Workshop buchen.",
       "fr": "Quelque chose pour toute votre équipe? Réservez un atelier Lobbywatch."
-    },
-    {
-      "key": "cf/blog/title",
-      "de": "Aktuelles",
-      "fr": "Les nouvelles"
     },
     {
       "key": "pages/account/title",
@@ -1761,8 +1736,8 @@
     },
     {
       "key": "crowdfunding/status/goal/people",
-      "de": "von {count} Unterstützer:innen",
-      "fr": "par {count} partisans"
+      "de": "aktive Mitglieder. Ziel: {count}",
+      "fr": "membres actifs. But: {count}"
     },
     {
       "key": "crowdfunding/status/time/days/1",
