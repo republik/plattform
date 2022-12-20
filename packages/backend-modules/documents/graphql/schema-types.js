@@ -118,6 +118,7 @@ type Meta {
   newsletter: Newsletter
 
   disableActionBar: Boolean
+  suggestSubscription: Boolean
 
   estimatedReadingMinutes: Int
   estimatedConsumptionMinutes: Int

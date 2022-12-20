@@ -342,6 +342,9 @@ module.exports = {
                 },
               },
             },
+            suggestSubscription: {
+              type: 'boolean',
+            },
           },
         },
       },
