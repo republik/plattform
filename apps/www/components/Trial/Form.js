@@ -322,10 +322,15 @@ const Form = (props) => {
                         !!email.value &&
                           !email.error &&
                           colorScheme.set('backgroundColor', 'primary'),
+                        colorScheme.set('color', 'textSoft'),
                       )}
                     >
                       <ArrowForwardIcon
-                        style={{ cursor: 'pointer', color: '#fff' }}
+                        style={{
+                          cursor: 'pointer',
+                          color:
+                            !!email.value && !email.error ? '#fff' : 'inherit',
+                        }}
                         size={22}
                         onClick={requestAccess}
                       />
