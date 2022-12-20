@@ -14,6 +14,8 @@ import { climateColorsReverse } from './config'
 // - paynote: the teaser is only shown if the user is not a member with role "climate"
 type TeaserMode = 'banner' | 'paynote'
 
+// this is a separate component so we can use the color context hook
+// (not possible in the main component, because the provider is defined there)
 const InnerTeaser: React.FC<{ mode: TeaserMode }> = ({ mode }) => {
   const [colorScheme] = useColorContext()
   return (
