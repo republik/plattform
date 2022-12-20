@@ -65,7 +65,7 @@ export const TrialOverlay: React.FC<{
             payload={trackingPayload}
             onSuccess={() => false}
             minimal
-            titleBlockKey='journal'
+            titleBlockKey='flyer'
           />
         )}
         {tab === 'login' && <SignIn />}

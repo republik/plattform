@@ -5605,23 +5605,23 @@
       "value": "Sie können sich in den kommenden Tagen ohne Einschränkung bei uns umsehen."
     },
     {
-      "key": "Trial/Form/journal/waiting/title",
+      "key": "Trial/Form/flyer/waiting/title",
       "value": "Sie haben Post!"
     },
     {
-      "key": "Trial/Form/journal/completed/title",
+      "key": "Trial/Form/flyer/completed/title",
       "value": "Herzlich willkommen!"
     },
     {
-      "key": "Trial/Form/journal/initial/title",
+      "key": "Trial/Form/flyer/initial/title",
       "value": "Danke für Ihr Interesse."
     },
     {
-      "key": "Trial/Form/journal/initial/beforeSignIn",
+      "key": "Trial/Form/flyer/initial/beforeSignIn",
       "value": "Melden Sie sich an und lesen Sie weiter."
     },
     {
-      "key": "Trial/Form/journal/initial/afterSignIn",
+      "key": "Trial/Form/flyer/initial/afterSignIn",
       "value": "Sie können sich in den kommenden Tagen ohne Einschränkung bei uns umsehen."
     },
     {
