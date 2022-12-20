@@ -217,6 +217,10 @@ const MetaData = ({
             key: 'darkMode',
             label: t('metaData/darkMode'),
           },
+          darkMode && {
+            key: 'climate',
+            label: t('metaData/climateLab'),
+          },
           { key: 'isRestricted', label: t('metaData/isRestricted') },
         ]
           .filter(Boolean)

@@ -905,6 +905,10 @@
       "value": "Eingeschränkter Zugang auf Links"
     },
     {
+      "key": "metaData/climateLab",
+      "value": "Klimalabor"
+    },
+    {
       "key": "metaData/recommendations/heading",
       "value": "Vorgeschlagene Beiträge"
     },
