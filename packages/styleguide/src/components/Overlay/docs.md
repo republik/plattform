@@ -113,18 +113,20 @@ responsive: Desktop small
 
 ## Overlay `mini`
 
+An overlay that is rendered almost like a callout. It is useful for signin/signup forms.
+
 ```react
 noSource: true
 plain: true
 responsive: Mobile
 span: 2
 ---
-  <OverlayRenderer mini isVisible onClose={() => {}} mini>
-    <OverlayToolbar title='Mini Overlay' onClose={() => undefined} />
-    <OverlayBody>
-      <Interaction.P>
-        The overlay body be here.
-      </Interaction.P>
-    </OverlayBody>
-  </OverlayRenderer>
+<OverlayRenderer mini isVisible onClose={() => {}} mini>
+  <OverlayToolbar title='Mini Overlay' />
+  <OverlayBody>
+    <Interaction.P>
+      The overlay body be here.
+    </Interaction.P>
+  </OverlayBody>
+</OverlayRenderer>
 ```
