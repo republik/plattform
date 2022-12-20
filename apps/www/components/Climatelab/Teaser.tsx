@@ -5,9 +5,12 @@ import {
   useColorContext,
 } from '@project-r/styleguide'
 
+import { useMe } from '../../lib/context/MeContext'
+
 import TrialForm from '../Trial/Form'
 
 import { climateColorsReverse } from './config'
+import { useRouter } from 'next/router'
 
 // we use two different modes for the teaser:
 // - banner: the teaser is always shown, regardless of the user's membership status
@@ -40,6 +43,27 @@ const InnerTeaser: React.FC<{ mode: TeaserMode }> = ({ mode }) => {
 const ClimatelabTeaser: React.FC<{ mode: TeaserMode }> = ({
   mode = 'banner',
 }) => {
+  const { me } = useMe()
+  const { query } = useRouter()
+
+  const showTeaser =
+    mode === 'banner' ||
+    !me?.roles?.includes('climate') ||
+    !!query.climateSignup
+  // +++Why we use somthing like "!!query.climateSignup"+++
+  //
+  // In paynote mode, we only show the paynote if a reader doesn't have the role
+  // 'climate' assigned to herself. She can then sign up through this paynote.
+  // However, once the process is complete, without the query.climateSignup clause,
+  // the paynote would vanish like poof! (because now our dear reader has got
+  // the climate role in the profile).
+  // It's much nicer to show a thank you note, or a link to the HQ or whatever.
+  //
+  // Check: apps/www/components/Trial/Form.js L.155-182 for an example on how
+  // to push a query param to the route for this use case.
+
+  if (!showTeaser) return null
+
   return (
     <ColorContextLocalExtension localColors={climateColorsReverse}>
       <InnerTeaser mode={mode} />
