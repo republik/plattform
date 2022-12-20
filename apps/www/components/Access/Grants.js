@@ -17,11 +17,15 @@ const dayFormat = timeFormat('%e. %B %Y')
 const AccessGrants = ({ accessGrants, inNativeIOSApp, t }) => {
   const maxEndAt =
     accessGrants.length > 0 &&
-    accessGrants.reduce(
-      (acc, grant) =>
-        new Date(grant.endAt) > acc ? new Date(grant.endAt) : acc,
-      new Date(),
-    )
+    accessGrants
+      .filter((grant) => {
+        return grant.campaign.type === 'REGULAR'
+      })
+      .reduce(
+        (acc, grant) =>
+          new Date(grant.endAt) > acc ? new Date(grant.endAt) : acc,
+        null,
+      )
 
   return maxEndAt ? (
     <P>

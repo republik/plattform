@@ -52,6 +52,7 @@ export default gql`
         campaign {
           title
           description
+          type
         }
       }
       pledges {
