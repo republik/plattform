@@ -1,3 +1,4 @@
+import { css } from 'glamor'
 import { useRouter } from 'next/router'
 import {
   Interaction,
@@ -12,6 +13,15 @@ import TrialForm from '../Trial/Form'
 
 import { climateColors, climateColorsReverse } from './config'
 
+const styles = {
+  paynote: css({
+    marginTop: 80,
+  }),
+  banner: css({
+    // no custom styles
+  }),
+}
+
 // we use two different modes for the teaser:
 // - banner: the teaser is always shown, regardless of the user's membership status
 // - paynote: the teaser is only shown if the user is not a member with role "climate"
@@ -24,6 +34,7 @@ const InnerTeaser: React.FC<{ mode: TeaserMode }> = ({ mode }) => {
   return (
     <div
       style={{ padding: '50px 0' }}
+      {...styles[mode]}
       {...colorScheme.set('background', 'default')}
     >
       <Center>
