@@ -27,7 +27,6 @@ const NoAccessQueue = ({
       <h3 {...styles.heading}>{heading}</h3>
       <TrialForm
         minimal
-        showTitleBlock={false}
         // series nav styling
         isInSeriesNav={true}
         payload={{

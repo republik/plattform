@@ -11,11 +11,10 @@ const {
   createUrlReplacer,
   getRepoId,
   extractUserUrl,
+  shouldStripDocLinks,
 } = require('../common/resolve')
 
 checkEnv(['FRONTEND_BASE_URL'])
-
-const { DOCUMENTS_LINKS_RESTRICTED } = process.env
 
 const contentUrlResolver = (
   doc,
@@ -38,13 +37,7 @@ const contentUrlResolver = (
     externalBaseUrl,
   )
 
-  const stripDocLinks =
-    DOCUMENTS_LINKS_RESTRICTED &&
-    DOCUMENTS_LINKS_RESTRICTED.split(',').includes(doc.meta?.path) &&
-    // user is undefined during publish -> no stripping
-    // null during document delivery -> strip unless authorized
-    user !== undefined &&
-    !hasFullDocumentAccess(user, doc._apiKey)
+  const stripDocLinks = shouldStripDocLinks(user, doc)
 
   visit(doc.content, 'link', (node) => {
     node.url = urlReplacer(node.url, stripDocLinks)
