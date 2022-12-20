@@ -330,7 +330,7 @@ export const Link: React.FC<any> = ({ children, href, ...props }) => {
   const { Link } = useRenderContext()
   return (
     <Link href={href} passHref>
-      <A href={href || '#restricted'} {...props}>
+      <A href={href} {...props}>
         {children}
       </A>
     </Link>
