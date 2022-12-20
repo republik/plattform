@@ -436,6 +436,38 @@ type QuestionTypeChoiceResult {
   count: Int!
 }
 
+type QuestionTypeImageChoice implements QuestionInterface {
+  id: ID!
+  questionnaire: Questionnaire!
+  order: Int!
+  private: Boolean!
+  text: String!
+  explanation: String
+  metadata: JSON
+  userAnswer: Answer
+  turnout: QuestionTurnout!
+
+  # 1: single-select
+  # >1: multi-select (max: n)
+  # 0: multi-select (infinite)
+  cardinality: Int!
+  componentIdentifier: String
+  options: [QuestionTypeImageChoiceOption!]!
+
+  result(top: Int, min: Int): [QuestionTypeImageChoiceResult!]
+}
+type QuestionTypeImageChoiceOption {
+  label: String!
+  value: ID!
+  category: String
+  requireAddress: Boolean
+  imageUrl: String
+}
+type QuestionTypeImageChoiceResult {
+  option: QuestionTypeImageChoiceOption!
+  count: Int!
+}
+
 input AnswerInput {
   # client generated
   id: ID!

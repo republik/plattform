@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useMemo } from 'react'
 import { graphql } from '@apollo/client/react/hoc'
 import { gql } from '@apollo/client'
 import { css } from 'glamor'
@@ -18,30 +18,58 @@ const styles = {
     aspectRatio: '16 / 9',
     display: 'flex',
     padding: '20px',
-    borderWidth: '3px',
-    borderStyle: 'solid',
+    border: 'solid 2px white',
+    borderRadius: '2px',
     fontFamily: fontFamilies.sansSerifRegular,
     fontSize: '12px',
-    lineHeight: '1.1',
+    lineHeight: '1.2',
     [mediaQueries.mUp]: {
       fontSize: '16px',
       lineHeight: '1.5',
     },
   }),
   textArea: css({
-    width: '70%',
-    marginRight: '50px',
+    width: '60%',
+    paddingRight: '20px',
     overflow: 'hidden',
+    borderRight: 'solid 1px #DADDDC',
+    wordBreak: 'normal',
+    overflowWrap: 'break-word',
+
     [mediaQueries.mUp]: {
-      marginRight: '100px',
+      paddingRight: '40px',
+    },
+  }),
+  rightSide: css({
+    display: 'flex',
+    flexDirection: 'column',
+    width: '40%',
+    paddingLeft: '20px',
+    [mediaQueries.mUp]: {
+      paddingLeft: '40px',
     },
   }),
   image: css({
     cursor: 'pointer',
-    borderWidth: '3px',
-    borderStyle: 'solid',
-    maxWidth: '30%',
-    alignSelf: 'start',
+    maxWidth: '80%',
+    alignSelf: 'flex-end',
+    boxShadow: '2px 2px 3px 3px rgba(0,0,0,0)',
+  }),
+  adressBlock: css({
+    borderBottom: 'solid 1px #DADDDC',
+    height: '25px',
+    [mediaQueries.mUp]: {
+      height: '50px',
+    },
+  }),
+  adressBlockContainer: css({
+    width: '100%',
+    justifyContent: 'flex-end',
+    paddingBottom: '3px',
+    marginTop: '20px',
+    display: 'flex',
+    flexDirection: 'column',
+    flexGrow: 1,
   }),
 }
 
@@ -66,7 +94,7 @@ export const PostcardPreview = graphql(
           ... on QuestionTypeText {
             maxLength
           }
-          ... on QuestionTypeChoice {
+          ... on QuestionTypeImageChoice {
             cardinality
             componentIdentifier
             options {
@@ -89,9 +117,10 @@ export const PostcardPreview = graphql(
         loading={data.loading}
         error={data.error}
         render={() => {
-          const { questions, userHasSubmitted } = data && data.questionnaire
+          if (!data?.questionnaire) return null
+          const { questions, userHasSubmitted } = data.questionnaire
           const imageOptions = questions && questions[0].options
-          const imageSelction =
+          const imageSelection =
             questions[0].userAnswer && questions[0].userAnswer.payload.value[0]
 
           const postcardText =
@@ -99,19 +128,54 @@ export const PostcardPreview = graphql(
 
           const imageUrl =
             imageOptions &&
-            imageOptions.filter((d) => d.value === imageSelction)[0]?.imageUrl
+            imageOptions.filter((d) => d.value === imageSelection)[0]?.imageUrl
+
+          const fontSizeByTextLength = (textLength) => {
+            if (textLength < 50) {
+              return '250%'
+            }
+            if (textLength < 100) {
+              return '150%'
+            }
+            if (textLength < 200) {
+              return '125%'
+            }
+            if (textLength < 300) {
+              return '105%'
+            }
+            if (textLength < 400) {
+              return '95%'
+            }
+            if (textLength < 500) {
+              return '85%'
+            }
+          }
+
+          console.log(postcardText && fontSizeByTextLength(postcardText.length))
 
           return (
             userHasSubmitted && (
               <>
                 <div
                   {...styles.postcard}
-                  {...colorScheme.set('borderColor', 'text')}
+                  {...colorScheme.set('boxShadow', 'imageChoiceShadow')}
                 >
-                  <div {...styles.textArea}>
+                  <div
+                    {...styles.textArea}
+                    style={{
+                      fontSize: fontSizeByTextLength(postcardText.length),
+                    }}
+                  >
                     <span>{postcardText}</span>
                   </div>
-                  <PoststampComponent imageUrl={imageUrl} />
+                  <div {...styles.rightSide}>
+                    <PoststampComponent imageUrl={imageUrl} />
+                    <div {...styles.adressBlockContainer}>
+                      <div {...styles.adressBlock} />
+                      <div {...styles.adressBlock} />
+                      <div {...styles.adressBlock} />
+                    </div>
+                  </div>
                 </div>
                 <Interaction.P>
                   {t('Onboarding/Sections/Postcard/merci2')}

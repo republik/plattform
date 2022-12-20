@@ -80,6 +80,17 @@ const getQuestionnaire = gql`
             imageUrl
           }
         }
+        ... on QuestionTypeImageChoice {
+          cardinality
+          componentIdentifier
+          options {
+            label
+            value
+            category
+            requireAddress
+            imageUrl
+          }
+        }
         ... on QuestionTypeRange {
           kind
           ticks {

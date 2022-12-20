@@ -3,7 +3,6 @@ import { css } from 'glamor'
 import questionStyles from './questionStyles'
 import { nest } from 'd3-collection'
 import uuid from 'uuid/v4'
-import { Loader } from '@project-r/styleguide'
 
 import {
   Interaction,
@@ -12,7 +11,6 @@ import {
   Radio,
 } from '@project-r/styleguide'
 import withT from '../../lib/withT'
-import dynamic from 'next/dynamic'
 const { H2, H3, P } = Interaction
 
 const styles = {
@@ -38,12 +36,6 @@ const styles = {
       columnCount: 3,
     },
   }),
-  optionImage: css({
-    columnCount: 2,
-    [mediaQueries.mUp]: {
-      columnCount: 4,
-    },
-  }),
   option: css({
     marginTop: 0,
     marginBottom: 5,
@@ -51,15 +43,6 @@ const styles = {
     breakInside: 'avoid-column',
   }),
 }
-
-const LoadingComponent = () => <Loader loading />
-
-const ImageChoice = dynamic(() => import('../Climatelab/ImageChoice'), {
-  loading: LoadingComponent,
-  ssr: false,
-})
-
-const CUSTOM_COMPONENTS = { ImageChoice }
 
 class ChoiceQuestion extends Component {
   constructor(props) {
@@ -107,11 +90,7 @@ class ChoiceQuestion extends Component {
     } = this.props
     console.log(componentIdentifier)
     const multipleAllowed = cardinality === 0 || cardinality > 1
-    const OptionComponent = componentIdentifier
-      ? CUSTOM_COMPONENTS[componentIdentifier]
-      : multipleAllowed
-      ? Checkbox
-      : Radio
+    const OptionComponent = multipleAllowed ? Checkbox : Radio
     const optionGroups = nest()
       .key((o) => o.category)
       .entries(options)
@@ -131,16 +110,12 @@ class ChoiceQuestion extends Component {
           {optionGroups.map(({ key, values }) => (
             <div key={key} {...styles.optionGroup}>
               {key !== 'null' && <H3 {...styles.optionGroupHeader}>{key}</H3>}
-              <div
-                {...(multipleAllowed && styles.optionList)}
-                {...(componentIdentifier && styles.optionImage)}
-              >
+              <div {...(multipleAllowed && styles.optionList)}>
                 {values.map((o, i) => (
                   <div key={i} {...styles.option}>
                     <OptionComponent
                       onChange={() => this.handleChange(o.value)}
                       checked={userAnswerValues.some((v) => v === o.value)}
-                      imageUrl={o.imageUrl}
                     >
                       {o.label}
                     </OptionComponent>

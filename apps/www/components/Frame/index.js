@@ -10,6 +10,7 @@ import {
   ColorHtmlBodyColors,
   ColorContextProvider,
 } from '@project-r/styleguide'
+import OptionalLocalColorContext from './OptionalLocalColorContext'
 import Meta from './Meta'
 import Header from './Header'
 import Footer from '../Footer'
@@ -26,6 +27,7 @@ import { useTranslation } from '../../lib/withT'
 import { useInNativeApp } from '../../lib/withInNativeApp'
 import LegacyAppNoticeBox from './LegacyAppNoticeBox'
 import { useMe } from '../../lib/context/MeContext'
+import { climateColors } from '../Climatelab/config'
 
 css.global('html', { boxSizing: 'border-box' })
 css.global('*, *:before, *:after', { boxSizing: 'inherit' })
@@ -107,6 +109,7 @@ const Frame = ({
   isOnMarketingPage,
   pageColorSchemeKey,
   containerMaxWidth,
+  isClimate,
 }) => {
   const { inNativeApp, inNativeAppLegacy } = useInNativeApp()
   const { t } = useTranslation()
@@ -128,60 +131,67 @@ const Frame = ({
   }, [hasSecondaryNav])
   return (
     <ColorContextProvider colorSchemeKey={pageColorSchemeKey}>
-      <ColorHtmlBodyColors colorSchemeKey={pageColorSchemeKey || 'auto'} />
-      <noscript>
-        <Box style={{ padding: 30 }}>
-          <RawHtml
-            dangerouslySetInnerHTML={{
-              __html: t('noscript'),
-            }}
-          />
-        </Box>
-      </noscript>
-      <div
-        {...(footer || inNativeApp ? styles.bodyGrowerContainer : undefined)}
+      <ColorHtmlBodyColors
+        colorsObject={isClimate ? climateColors : undefined}
+        colorSchemeKey={pageColorSchemeKey || 'auto'}
+      />
+      <OptionalLocalColorContext
+        localColorVariables={isClimate ? climateColors : undefined}
       >
-        {/* body growing only needed when rendering a footer */}
+        <noscript>
+          <Box style={{ padding: 30 }}>
+            <RawHtml
+              dangerouslySetInnerHTML={{
+                __html: t('noscript'),
+              }}
+            />
+          </Box>
+        </noscript>
         <div
-          {...(footer || inNativeApp ? styles.bodyGrower : undefined)}
-          {...(!isOnMarketingPage && padHeaderRule)}
+          {...(footer || inNativeApp ? styles.bodyGrowerContainer : undefined)}
         >
-          {!!meta && <Meta data={meta} />}
-          <Header
-            me={me}
-            cover={cover}
-            onNavExpanded={onNavExpanded}
-            secondaryNav={secondaryNav}
-            formatColor={formatColor}
-            pullable={pullable}
-            hasOverviewNav={hasOverviewNav}
-            stickySecondaryNav={stickySecondaryNav}
-            isOnMarketingPage={isOnMarketingPage}
-            pageColorSchemeKey={pageColorSchemeKey}
+          {/* body growing only needed when rendering a footer */}
+          <div
+            {...(footer || inNativeApp ? styles.bodyGrower : undefined)}
+            {...(!isOnMarketingPage && padHeaderRule)}
           >
-            {inNativeAppLegacy && <LegacyAppNoticeBox t={t} />}
-            {me &&
-              me.prolongBeforeDate !== null &&
-              me.activeMembership !== null && (
-                <ProlongBox
-                  t={t}
-                  prolongBeforeDate={me.prolongBeforeDate}
-                  membership={me.activeMembership}
-                />
+            {!!meta && <Meta data={meta} />}
+            <Header
+              me={me}
+              cover={cover}
+              onNavExpanded={onNavExpanded}
+              secondaryNav={secondaryNav}
+              formatColor={formatColor}
+              pullable={pullable}
+              hasOverviewNav={hasOverviewNav}
+              stickySecondaryNav={stickySecondaryNav}
+              isOnMarketingPage={isOnMarketingPage}
+              pageColorSchemeKey={pageColorSchemeKey}
+            >
+              {inNativeAppLegacy && <LegacyAppNoticeBox t={t} />}
+              {me &&
+                me.prolongBeforeDate !== null &&
+                me.activeMembership !== null && (
+                  <ProlongBox
+                    t={t}
+                    prolongBeforeDate={me.prolongBeforeDate}
+                    membership={me.activeMembership}
+                  />
+                )}
+              {raw ? (
+                children
+              ) : (
+                <MainContainer maxWidth={containerMaxWidth}>
+                  <Content>{children}</Content>
+                </MainContainer>
               )}
-            {raw ? (
-              children
-            ) : (
-              <MainContainer maxWidth={containerMaxWidth}>
-                <Content>{children}</Content>
-              </MainContainer>
-            )}
-          </Header>
+            </Header>
+          </div>
+          {!inNativeApp && footer && (
+            <Footer isOnMarketingPage={isOnMarketingPage} />
+          )}
         </div>
-        {!inNativeApp && footer && (
-          <Footer isOnMarketingPage={isOnMarketingPage} />
-        )}
-      </div>
+      </OptionalLocalColorContext>
     </ColorContextProvider>
   )
 }
@@ -201,6 +211,7 @@ Frame.propTypes = {
   isOnMarketingPage: PropTypes.bool,
   pageColorSchemeKey: PropTypes.string,
   containerMaxWidth: PropTypes.number,
+  isClimate: PropTypes.bool,
 }
 
 export default Frame
