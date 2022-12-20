@@ -45,7 +45,6 @@ const styles = {
     flexDirection: 'column',
     width: '40%',
     paddingLeft: '20px',
-    textAlign: 'right',
     [mediaQueries.mUp]: {
       paddingLeft: '40px',
     },
