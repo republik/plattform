@@ -7,6 +7,7 @@ const { timeFormat } = require('@orbiting/backend-modules-formats')
 const { transformUser, AccessToken } = require('@orbiting/backend-modules-auth')
 const base64u = require('@orbiting/backend-modules-base64u')
 const { hasUserActiveMembership } = require('@orbiting/backend-modules-utils')
+// const { count } = require('@orbiting/backend-modules-republik/lib/roleStats')
 
 const campaignsLib = require('./campaigns')
 const eventsLib = require('./events')
@@ -198,6 +199,8 @@ const getGlobalMergeVars = async (
     !!recipient &&
     (await AccessToken.generateForUser(recipient, 'AUTHORIZE_SESSION'))
 
+  // const countClimateLabUsers = await count('climate', { pdgb })
+
   const pledgerName =
     grant.perks &&
     grant.perks.giftMembership &&
@@ -312,6 +315,12 @@ const getGlobalMergeVars = async (
       name: 'message_to_claimer',
       content: escape(pledgeMessageToClaimers).replace(/\n/g, '<br />'),
     },
+    // campaign «Klimalabor»
+    // count
+    /*  {
+      name: 'countClimateLabUsers',
+      content: countClimateLabUsers,
+    }, */
   ].filter(Boolean)
 }
 

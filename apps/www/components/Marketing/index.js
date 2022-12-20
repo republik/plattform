@@ -25,19 +25,27 @@ const Marketing = ({
   data: { loading: meLoading, error: meError, meGuidance },
 }) => {
   const hasActiveMembership = meGuidance && !!meGuidance.activeMembership
+  const hasSpecialAccessGrants = meGuidance?.accessGrants?.filter(
+    (grant) => grant.campaign.type === 'REDUCED',
+  ).length
   const { inNativeApp, inNativeIOSApp } = useInNativeApp()
 
   const { data, loading, error } = useMarketingPageQuery()
 
   return (
     <>
-      {!meLoading && meGuidance && !hasActiveMembership && !inNativeIOSApp && (
-        <Box>
-          <MainContainer>
-            <UserGuidance />
-          </MainContainer>
-        </Box>
-      )}
+      {/* TODO: should we display another box for climate users or should we just not display it like it's done here */}
+      {!meLoading &&
+        meGuidance &&
+        !hasActiveMembership &&
+        !hasSpecialAccessGrants &&
+        !inNativeIOSApp && (
+          <Box>
+            <MainContainer>
+              <UserGuidance />
+            </MainContainer>
+          </Box>
+        )}
       {meError && (
         <ErrorMessage error={meError} style={{ textAlign: 'center' }} />
       )}
@@ -70,6 +78,9 @@ const query = gql`
       }
       accessGrants {
         id
+        campaign {
+          type
+        }
       }
     }
   }
