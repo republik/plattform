@@ -1,3 +1,4 @@
+import { useRouter } from 'next/router'
 import {
   Interaction,
   Center,
@@ -9,8 +10,7 @@ import { useMe } from '../../lib/context/MeContext'
 
 import TrialForm from '../Trial/Form'
 
-import { climateColorsReverse } from './config'
-import { useRouter } from 'next/router'
+import { climateColors, climateColorsReverse } from './config'
 
 // we use two different modes for the teaser:
 // - banner: the teaser is always shown, regardless of the user's membership status
@@ -65,7 +65,11 @@ const ClimatelabTeaser: React.FC<{ mode: TeaserMode }> = ({
   if (!showTeaser) return null
 
   return (
-    <ColorContextLocalExtension localColors={climateColorsReverse}>
+    <ColorContextLocalExtension
+      localColors={mode === 'paynote' ? climateColorsReverse : climateColors}
+    >
+      {/* since the page is white and the teaser is white too, inverting the colors */}
+      {/* is a cheap trick we use regularly to create visual contrast. */}
       <InnerTeaser mode={mode} />
     </ColorContextLocalExtension>
   )
