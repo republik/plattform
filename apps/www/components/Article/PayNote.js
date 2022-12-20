@@ -390,10 +390,6 @@ const withDarkContextWhenBefore = (WrappedComponent) => (props) => {
   return <WrappedComponent {...props} />
 }
 
-export const FlyerWrapper = ({ children }) => (
-  <div {...styles.flyerWrapper}>{children}</div>
-)
-
 export const InnerPaynote = ({
   payNote,
   trackingPayload,
@@ -422,7 +418,6 @@ export const PayNote = compose(withDarkContextWhenBefore)(
     customPayNotes,
     customMode,
     customOnly,
-    Wrapper = Center,
   }) => {
     const { meLoading, hasActiveMembership, hasAccess } = useMe()
     const { inNativeIOSApp } = useInNativeApp()
@@ -467,7 +462,7 @@ export const PayNote = compose(withDarkContextWhenBefore)(
           position === 'before' ? 'hover' : 'alert',
         )}
       >
-        <Wrapper>
+        <Center>
           <InnerPaynote
             payNote={positionedNote}
             overwriteContent={
@@ -479,7 +474,7 @@ export const PayNote = compose(withDarkContextWhenBefore)(
             hasAccess={hasAccess}
             position={position}
           />
-        </Wrapper>
+        </Center>
       </div>
     )
   },
