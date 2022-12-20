@@ -553,7 +553,7 @@ const ActionBar = ({
   return (
     <div {...(!hasAccess && mode !== 'articleOverlay' && styles.bottomMargin)}>
       <div
-        {...(mode === 'feed' && styles.flexWrap)}
+        {...((mode === 'feed' || mode === 'seriesEpisode') && styles.flexWrap)}
         {...((mode === 'seriesEpisode' || mode === 'feed') &&
           styles.feedContainer)}
       >
