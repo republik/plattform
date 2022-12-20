@@ -27,9 +27,6 @@ Statement und Ihr Portraitfoto auf unserer Unterstützungs-Seite.
 Um dabei zu sein, geht es hier lang: lobbywatch.ch/de/merci
 {{frontend_base_url}}/de/merci
 
-Falls Sie möchten, können Sie auf dieser Seite auch gleich Ihre Adresse
-eintragen. Dann bedanken wir uns mit einer Postkarte.
-
 {{/if}}
 
 Vielen Dank!
