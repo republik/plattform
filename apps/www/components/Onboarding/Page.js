@@ -31,7 +31,6 @@ import withT from '../../lib/withT'
 import Subscriptions, {
   fragments as fragmentsSubscriptions,
 } from './Sections/Subscriptions'
-import { ONBOARDING_SECTIONS_REPO_IDS } from '../../lib/constants'
 import withInNativeApp from '../../lib/withInNativeApp'
 import Link from 'next/link'
 
