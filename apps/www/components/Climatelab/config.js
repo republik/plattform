@@ -1,12 +1,9 @@
 export const climateColors = {
   light: {
-    default: 'pink',
+    default: '#5947D9',
+    text: '#fff',
     primary: 'blue',
     primaryHover: 'yellow',
   },
-  dark: {
-    default: 'purple',
-    primary: 'yellow',
-    primaryHover: 'darkblue',
-  },
+  dark: {},
 }
