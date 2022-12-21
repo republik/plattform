@@ -4,9 +4,9 @@ import {
   plainButtonRule,
 } from '@project-r/styleguide'
 
-import useAudioQueue from '../Audio/hooks/useAudioQueue'
-import { useAudioContext } from '../Audio/AudioProvider'
-import { AudioPlayerLocations } from '../Audio/types/AudioActionTracking'
+import useAudioQueue from '../hooks/useAudioQueue'
+import { useAudioContext } from '../AudioProvider'
+import { AudioPlayerLocations } from '../types/AudioActionTracking'
 
 type FrontAudioPlayButtonProps = {
   documentId?: string
@@ -17,7 +17,7 @@ type FrontAudioPlayButtonProps = {
  * the individual play buttons for each article
  * @param documentId
  */
-const FrontAudioPlayButton = ({ documentId }: FrontAudioPlayButtonProps) => {
+const TeaserAudioPlayButton = ({ documentId }: FrontAudioPlayButtonProps) => {
   const {
     isPlaying,
     toggleAudioPlayback,
@@ -68,4 +68,4 @@ const FrontAudioPlayButton = ({ documentId }: FrontAudioPlayButtonProps) => {
   )
 }
 
-export default FrontAudioPlayButton
+export default TeaserAudioPlayButton

@@ -5,14 +5,11 @@ import {
   Editorial,
   InlineSpinner,
   Interaction,
-  PlayCircleIcon,
-  PauseCircleIcon,
-  plainButtonRule,
+  createFrontSchema,
+  CheckCircleIcon,
 } from '@project-r/styleguide'
 import StatusError from '../StatusError'
 import Head from 'next/head'
-import { createFrontSchema } from '@project-r/styleguide'
-import { CheckCircleIcon } from '@project-r/styleguide'
 
 import { useTranslation } from '../../lib/withT'
 import Loader from '../Loader'
@@ -35,10 +32,8 @@ import Link from 'next/link'
 import { useGetFrontQuery } from './graphql/getFrontQuery.graphql'
 import { useRouter } from 'next/router'
 import { useMe } from '../../lib/context/MeContext'
-import { useAudioContext } from '../Audio/AudioProvider'
 import useAudioQueue from '../Audio/hooks/useAudioQueue'
-import { AudioPlayerLocations } from '../Audio/types/AudioActionTracking'
-import FrontAudioPlayButton from './FrontAudioPlayButton'
+import TeaserAudioPlayButton from '../Audio/shared/TeaserAudioPlayButton'
 
 const styles = {
   prepublicationNotice: css({
@@ -64,7 +59,7 @@ export const RenderFront = ({ front, nodes, isFrontExtract = false }) => {
     () =>
       createFrontSchema({
         Link: HrefLink,
-        AudioPlayButton: showPlayButton ? FrontAudioPlayButton : undefined,
+        AudioPlayButton: showPlayButton ? TeaserAudioPlayButton : undefined,
         CommentLink,
         DiscussionLink,
         ...withData,
