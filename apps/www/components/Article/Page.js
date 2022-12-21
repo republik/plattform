@@ -364,7 +364,7 @@ const ArticlePage = ({
     }
   }, [trialSignup])
 
-  const showPlayButton = !extract && isAudioQueueAvailable
+  const showPlayButton = !extract && hasAccess && isAudioQueueAvailable
 
   const template = meta?.template
   const schema = useMemo(
