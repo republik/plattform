@@ -39,7 +39,6 @@ import Link from 'next/link'
 import Postcard from './Sections/Postcard'
 import Mission from './Sections/Mission'
 import Invitation from './Sections/Invitation'
-import CallToAction from './Sections/CallToAction'
 
 const { P } = Interaction
 
@@ -84,8 +83,6 @@ const QUERY = gql`
   ${fragmentsGreeting.employee}
   ${fragmentsSubscriptions.formats}
 `
-
-// QUERY CLIMATE ONBOARDING FOR COUNTER
 
 const CONTEXTS = {
   card: ['newsletter', 'notifications', 'app-login', 'usability'],

@@ -13,8 +13,6 @@ import {
 import { gql } from '@apollo/client'
 import { countFormat } from '../../lib/utils/format'
 
-const HEIGHT = 8
-
 const styles = {
   container: css({}),
   primaryNumber: css({
