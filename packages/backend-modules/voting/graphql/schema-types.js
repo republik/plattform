@@ -419,7 +419,6 @@ type QuestionTypeChoice implements QuestionInterface {
   # >1: multi-select (max: n)
   # 0: multi-select (infinite)
   cardinality: Int!
-  componentIdentifier: String
   options: [QuestionTypeChoiceOption!]!
 
   result(top: Int, min: Int): [QuestionTypeChoiceResult!]
@@ -429,7 +428,6 @@ type QuestionTypeChoiceOption {
   value: ID!
   category: String
   requireAddress: Boolean
-  imageUrl: String
 }
 type QuestionTypeChoiceResult {
   option: QuestionTypeChoiceOption!
@@ -451,7 +449,6 @@ type QuestionTypeImageChoice implements QuestionInterface {
   # >1: multi-select (max: n)
   # 0: multi-select (infinite)
   cardinality: Int!
-  componentIdentifier: String
   options: [QuestionTypeImageChoiceOption!]!
 
   result(top: Int, min: Int): [QuestionTypeImageChoiceResult!]

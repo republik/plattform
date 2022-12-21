@@ -103,31 +103,16 @@ export const PostcardPreview = graphql(
   gql`
     query {
       questionnaire(slug: "klima-postkarte") {
-        id
         userHasSubmitted
         questions {
           ... on QuestionInterface {
-            id
-            order
-            text
-            explanation
-            private
             userAnswer {
-              id
               payload
             }
           }
-          ... on QuestionTypeText {
-            maxLength
-          }
           ... on QuestionTypeImageChoice {
-            cardinality
-            componentIdentifier
             options {
-              label
               value
-              category
-              requireAddress
               imageUrl
             }
           }
