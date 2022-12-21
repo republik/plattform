@@ -144,7 +144,7 @@ const ElectionResultDiversity = dynamic(
     ssr: false,
   },
 )
-const Counter = dynamic(() => import('../Climatelab/Counter'), {
+const ClimateLabCounter = dynamic(() => import('../Climatelab/Counter'), {
   loading: LoadingComponent,
   ssr: false,
 })
@@ -396,7 +396,7 @@ const ArticlePage = ({
           QUESTIONNAIRE: Questionnaire,
           QUESTIONNAIRE_SUBMISSIONS: QuestionnaireSubmissions,
           NEWSLETTER_SIGNUP: NewsletterSignUpDynamic,
-          COUNTER: Counter,
+          CLIMATE_LAB_COUNTER: ClimateLabCounter,
           POSTCARD: Postcard,
         },
         titleMargin: false,

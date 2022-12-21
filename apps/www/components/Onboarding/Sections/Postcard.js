@@ -6,7 +6,7 @@ import { Interaction, mediaQueries, RawHtml } from '@project-r/styleguide'
 import Section from '../Section'
 
 import withT from '../../../lib/withT'
-import { PostcardGenerator } from '../../Climatelab/PostcardGenerator'
+import PostcardGenerator from '../../Climatelab/PostcardGenerator'
 
 const { P } = Interaction
 

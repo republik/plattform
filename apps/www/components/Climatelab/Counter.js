@@ -13,8 +13,6 @@ import {
 import { gql } from '@apollo/client'
 import { countFormat } from '../../lib/utils/format'
 
-const HEIGHT = 8
-
 const styles = {
   container: css({}),
   primaryNumber: css({
@@ -29,20 +27,22 @@ const styles = {
   }),
 }
 
-/* const query = gql`
-  TODO: NEW QUERY HERE
-` */
+const query = gql`
+  query getRoleCount {
+    roleStats(role: "climate") {
+      count
+    }
+  }
+`
 
 const Counter = ({ data }) => {
   const [colorScheme] = useColorContext()
-
-  data = {} // TODO: remove that, only for testing purposes
   return (
     <Loader
       loading={data.loading}
       error={data.error}
       render={() => {
-        const numberClimateUsers = 350 // TODO: get number out of data
+        const numberClimateUsers = data.roleStats.count || 0
 
         return (
           <div {...styles.container}>
@@ -58,11 +58,10 @@ const Counter = ({ data }) => {
   )
 }
 
-export default compose()(Counter)
-/* TODO: as soon as we have query, put that into compose
+export default compose(
   graphql(query, {
     options: ({ pollInterval }) => ({
       pollInterval: pollInterval || 0,
     }),
-  }), 
-*/
+  }),
+)(Counter)
