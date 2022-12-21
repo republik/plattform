@@ -78,6 +78,27 @@ const styles = {
   }),
 }
 
+const fontSizeByTextLength = (textLength) => {
+  if (textLength < 50) {
+    return '250%'
+  }
+  if (textLength < 100) {
+    return '150%'
+  }
+  if (textLength < 200) {
+    return '125%'
+  }
+  if (textLength < 300) {
+    return '105%'
+  }
+  if (textLength < 400) {
+    return '95%'
+  }
+  if (textLength < 500) {
+    return '85%'
+  }
+}
+
 export const PostcardPreview = graphql(
   gql`
     query {
@@ -134,29 +155,6 @@ export const PostcardPreview = graphql(
           const imageUrl =
             imageOptions &&
             imageOptions.filter((d) => d.value === imageSelection)[0]?.imageUrl
-
-          const fontSizeByTextLength = (textLength) => {
-            if (textLength < 50) {
-              return '250%'
-            }
-            if (textLength < 100) {
-              return '150%'
-            }
-            if (textLength < 200) {
-              return '125%'
-            }
-            if (textLength < 300) {
-              return '105%'
-            }
-            if (textLength < 400) {
-              return '95%'
-            }
-            if (textLength < 500) {
-              return '85%'
-            }
-          }
-
-          console.log(postcardText && fontSizeByTextLength(postcardText.length))
 
           return (
             userHasSubmitted && (
