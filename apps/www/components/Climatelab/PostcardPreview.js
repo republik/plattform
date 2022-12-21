@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React from 'react'
 import { graphql } from '@apollo/client/react/hoc'
 import { gql } from '@apollo/client'
 import { css } from 'glamor'
@@ -13,12 +13,13 @@ import {
 
 const styles = {
   postcard: css({
+    backgroundColor: '#F9FBFF',
     margin: '20px 0',
     width: '100%',
     aspectRatio: '16 / 9',
     display: 'flex',
     padding: '20px',
-    border: 'solid 2px white',
+    border: 'solid 2px f9f5ec',
     borderRadius: '2px',
     fontFamily: fontFamilies.sansSerifRegular,
     fontSize: '12px',
@@ -49,11 +50,16 @@ const styles = {
       paddingLeft: '40px',
     },
   }),
-  image: css({
-    cursor: 'pointer',
+  postcardContainer: css({
     maxWidth: '80%',
     alignSelf: 'flex-end',
-    boxShadow: '2px 2px 3px 3px rgba(0,0,0,0)',
+  }),
+  image: css({
+    display: 'block',
+    width: '100%',
+    borderImage: 'url(/static/climatelab/border-image.png) 32 round',
+    borderWidth: '8px',
+    borderStyle: 'solid',
   }),
   adressBlock: css({
     borderBottom: 'solid 1px #DADDDC',
@@ -64,7 +70,6 @@ const styles = {
   }),
   adressBlockContainer: css({
     width: '100%',
-    justifyContent: 'flex-end',
     paddingBottom: '3px',
     marginTop: '20px',
     display: 'flex',
@@ -73,35 +78,41 @@ const styles = {
   }),
 }
 
+const fontSizeByTextLength = (textLength) => {
+  if (textLength < 50) {
+    return '250%'
+  }
+  if (textLength < 100) {
+    return '150%'
+  }
+  if (textLength < 200) {
+    return '125%'
+  }
+  if (textLength < 300) {
+    return '105%'
+  }
+  if (textLength < 400) {
+    return '95%'
+  }
+  if (textLength < 500) {
+    return '85%'
+  }
+}
+
 export const PostcardPreview = graphql(
   gql`
     query {
       questionnaire(slug: "klima-postkarte") {
-        id
         userHasSubmitted
         questions {
           ... on QuestionInterface {
-            id
-            order
-            text
-            explanation
-            private
             userAnswer {
-              id
               payload
             }
           }
-          ... on QuestionTypeText {
-            maxLength
-          }
           ... on QuestionTypeImageChoice {
-            cardinality
-            componentIdentifier
             options {
-              label
               value
-              category
-              requireAddress
               imageUrl
             }
           }
@@ -130,29 +141,6 @@ export const PostcardPreview = graphql(
             imageOptions &&
             imageOptions.filter((d) => d.value === imageSelection)[0]?.imageUrl
 
-          const fontSizeByTextLength = (textLength) => {
-            if (textLength < 50) {
-              return '250%'
-            }
-            if (textLength < 100) {
-              return '150%'
-            }
-            if (textLength < 200) {
-              return '125%'
-            }
-            if (textLength < 300) {
-              return '105%'
-            }
-            if (textLength < 400) {
-              return '95%'
-            }
-            if (textLength < 500) {
-              return '85%'
-            }
-          }
-
-          console.log(postcardText && fontSizeByTextLength(postcardText.length))
-
           return (
             userHasSubmitted && (
               <>
@@ -163,13 +151,17 @@ export const PostcardPreview = graphql(
                   <div
                     {...styles.textArea}
                     style={{
-                      fontSize: fontSizeByTextLength(postcardText.length),
+                      fontSize: fontSizeByTextLength(
+                        postcardText && postcardText.length,
+                      ),
                     }}
                   >
                     <span>{postcardText}</span>
                   </div>
                   <div {...styles.rightSide}>
-                    <PoststampComponent imageUrl={imageUrl} />
+                    <div {...styles.postcardContainer}>
+                      <PoststampComponent imageUrl={imageUrl} />
+                    </div>
                     <div {...styles.adressBlockContainer}>
                       <div {...styles.adressBlock} />
                       <div {...styles.adressBlock} />

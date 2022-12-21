@@ -2,12 +2,11 @@ import { Fragment } from 'react'
 import { css } from 'glamor'
 
 import { Interaction, mediaQueries, RawHtml } from '@project-r/styleguide'
-import { QuestionnaireWithData } from '../../Questionnaire/Questionnaire'
-import { PostcardPreview } from '../../Climatelab/PostcardPreview'
 
 import Section from '../Section'
 
 import withT from '../../../lib/withT'
+import PostcardGenerator from '../../Climatelab/PostcardGenerator'
 
 const { P } = Interaction
 
@@ -59,15 +58,7 @@ const Postcard = (props) => {
         />
         <br />
 
-        <QuestionnaireWithData
-          slug={'klima-postkarte'}
-          publicSubmission={false}
-          hideCount
-          submittedMessage={<P>{t('Onboarding/Sections/Postcard/merci1')}</P>}
-          hideInvalid={true}
-          hideReset={true}
-        />
-        <PostcardPreview t={t} />
+        <PostcardGenerator t={t} />
       </Fragment>
     </Section>
   )

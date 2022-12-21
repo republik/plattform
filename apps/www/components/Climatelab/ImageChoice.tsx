@@ -1,7 +1,5 @@
 import React, { useMemo } from 'react'
-import { css, style } from 'glamor'
-// import { fontStyles } from '../../theme/fonts'
-// import { pxToRem } from '../Typography/utils'
+import { css } from 'glamor'
 import { useColorContext } from '@project-r/styleguide'
 import { CDN_FRONTEND_BASE_URL } from '../../lib/constants'
 
@@ -67,18 +65,7 @@ const ImageChoice: React.FC<{
   checked: boolean
   disabled?: boolean
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void
-}> = ({
-  children,
-  style,
-  name,
-  value,
-  checked,
-  disabled,
-  imageUrl,
-  onChange,
-}) => {
-  const [colorScheme] = useColorContext()
-  console.log(imageUrl)
+}> = ({ style, name, value, checked, disabled, imageUrl, onChange }) => {
   return (
     <label style={style}>
       <input

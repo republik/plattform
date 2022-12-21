@@ -71,18 +71,14 @@ const getQuestionnaire = gql`
         }
         ... on QuestionTypeChoice {
           cardinality
-          componentIdentifier
           options {
             label
             value
             category
             requireAddress
-            imageUrl
           }
         }
         ... on QuestionTypeImageChoice {
-          cardinality
-          componentIdentifier
           options {
             label
             value

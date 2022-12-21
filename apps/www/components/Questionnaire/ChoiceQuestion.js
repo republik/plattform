@@ -78,17 +78,9 @@ class ChoiceQuestion extends Component {
 
   render() {
     const {
-      question: {
-        text,
-        explanation,
-        userAnswer,
-        cardinality,
-        options,
-        componentIdentifier,
-      },
+      question: { text, explanation, userAnswer, cardinality, options },
       t,
     } = this.props
-    console.log(componentIdentifier)
     const multipleAllowed = cardinality === 0 || cardinality > 1
     const OptionComponent = multipleAllowed ? Checkbox : Radio
     const optionGroups = nest()
