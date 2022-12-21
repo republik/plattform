@@ -267,10 +267,9 @@ const getGlobalMergeVars = async (
       content:
         !!recipient && !!recipientCampaigns && recipientCampaigns.length > 0,
     },
-
     {
       name: 'recipientIsNotGranter',
-      content: (grant.email || safeRecipient.email) === safeGranter.email,
+      content: email !== safeGranter.email,
     },
 
     // Campaign
