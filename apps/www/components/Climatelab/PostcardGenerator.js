@@ -1,8 +1,30 @@
 import { QuestionnaireWithData } from '../Questionnaire/Questionnaire'
 import { PostcardPreview } from './PostcardPreview'
 
-import { Interaction, Loader } from '@project-r/styleguide'
+import { css } from 'glamor'
+
 import withT from '../../lib/withT'
+
+import {
+  Interaction,
+  Loader,
+  mediaQueries,
+  fontStyles,
+  convertStyleToRem,
+} from '@project-r/styleguide'
+
+const styles = {
+  questionnaireStyleOverride: css({
+    '& h2': {
+      ...convertStyleToRem(fontStyles.sansSerifRegular19),
+    },
+    [mediaQueries.mUp]: {
+      '& h2': {
+        ...convertStyleToRem(fontStyles.sansSerifRegular22),
+      },
+    },
+  }),
+}
 
 const PostcardGenerator = ({ t, data }) => {
   return (
@@ -12,18 +34,20 @@ const PostcardGenerator = ({ t, data }) => {
       render={() => {
         return (
           <>
-            <QuestionnaireWithData
-              slug={'klima-postkarte'}
-              publicSubmission={false}
-              hideCount
-              submittedMessage={
-                <Interaction.P>
-                  {t('Onboarding/Sections/Postcard/merci1')}
-                </Interaction.P>
-              }
-              hideInvalid={true}
-              hideReset={true}
-            />
+            <div {...styles.questionnaireStyleOverride}>
+              <QuestionnaireWithData
+                slug={'klima-postkarte'}
+                publicSubmission={false}
+                hideCount
+                submittedMessage={
+                  <Interaction.P>
+                    {t('Onboarding/Sections/Postcard/merci1')}
+                  </Interaction.P>
+                }
+                hideInvalid={true}
+                hideReset={true}
+              />
+            </div>
             <PostcardPreview t={t} />
           </>
         )

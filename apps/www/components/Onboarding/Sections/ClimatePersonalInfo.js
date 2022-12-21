@@ -133,82 +133,29 @@ class Profile extends Component {
 
     return (
       <Section
-        heading={t('Onboarding/Sections/Profile/heading')}
+        heading={t('Onboarding/Sections/ClimatePersonalInfo/heading')}
         showContinue={false}
         isTicked={user && user.hasPublicProfile}
         {...this.props}
       >
         <P {...styles.p}>
-          {t('Onboarding/Sections/Profile/paragraph1', null, '')}
+          {t('Onboarding/Sections/ClimatePersonalInfo/paragraph1', null, '')}
         </P>
-        <P {...styles.p}>
-          {t('Onboarding/Sections/Profile/paragraph2', null, '')}
-        </P>
-        <div {...merge(styles.portrait)}>
-          <Portrait
-            user={user}
-            isEditing
-            isMe
-            values={mergedValues}
-            errors={errors}
-            dirty={dirty}
-            onChange={this.onChange}
+
+        <div {...styles.questionnaireStyleOverride}>
+          <QuestionnaireWithData
+            slug={'klima-personalinfo'}
+            publicSubmission={false}
+            hideCount
+            submittedMessage={
+              <Interaction.P>
+                {t('Onboarding/Sections/ClimatePersonalInfo/merci1')}
+              </Interaction.P>
+            }
+            hideInvalid={true}
+            hideReset={true}
           />
         </div>
-        <div {...styles.field}>
-          <UsernameField
-            user={user}
-            isEditing
-            isMe
-            onChange={this.onChange}
-            values={mergedValues}
-            errors={errors}
-            dirty={dirty}
-          />
-        </div>
-        <div {...styles.checkbox}>
-          <ListedCheckbox
-            user={user}
-            isEditing
-            isMe
-            onChange={this.onChange}
-            values={mergedValues}
-            errors={errors}
-            dirty={dirty}
-          />
-        </div>
-        <Mutation
-          mutation={mutation}
-          variables={values}
-          onCompleted={this.onCompleted}
-        >
-          {(mutate, { loading, error }) => (
-            <Fragment>
-              <div {...styles.actions}>
-                <div {...styles.save}>
-                  {loading ? (
-                    <InlineSpinner />
-                  ) : (
-                    <Button
-                      primary
-                      block
-                      disabled={hasErrors || loading}
-                      onClick={mutate}
-                    >
-                      {t('Onboarding/Sections/Profile/button/save', null, '')}
-                    </Button>
-                  )}
-                </div>
-                <div>
-                  <Button block disabled={loading} onClick={onContinue}>
-                    {t('Onboarding/Sections/Profile/button/continue', null, '')}
-                  </Button>
-                </div>
-              </div>
-              {!!error && <ErrorMessage error={error} />}
-            </Fragment>
-          )}
-        </Mutation>
       </Section>
     )
   }

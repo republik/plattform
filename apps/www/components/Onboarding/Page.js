@@ -40,6 +40,7 @@ import Postcard from './Sections/Postcard'
 import Mission from './Sections/Mission'
 import Invitation from './Sections/Invitation'
 import ClimateProfile from './Sections/ClimateProfile'
+import ClimatePersonalInfo from './Sections/ClimatePersonalInfo'
 
 const { P } = Interaction
 
@@ -87,7 +88,13 @@ const QUERY = gql`
 
 const CONTEXTS = {
   card: ['newsletter', 'notifications', 'app-login', 'usability'],
-  climate: ['postcard', 'mission', 'invitation', 'climateprofile'],
+  climate: [
+    'postcard',
+    'mission',
+    'invitation',
+    'climateprofile',
+    'climatepersonalinfo',
+  ],
   default: ['newsletter', 'notifications', 'app-login', 'usability', 'profile'],
 }
 
@@ -183,6 +190,12 @@ class Page extends Component {
       {
         component: ClimateProfile,
         name: 'climateprofile',
+        ref: createRef(),
+        visited: false,
+      },
+      {
+        component: ClimatePersonalInfo,
+        name: 'climatepersonalinfo',
         ref: createRef(),
         visited: false,
       },
@@ -364,7 +377,10 @@ class Page extends Component {
                       </div>
                     ) */}
                     <div {...styles.buttonContainer}>
-                      <Link href='/' passHref>
+                      <Link
+                        href={context === 'climate' ? '/klimalaborhq' : ''}
+                        passHref
+                      >
                         <Button primary={this.state.hasOnceVisitedAll}>
                           {t.first([
                             `Onboarding/Page/${context}/button`,

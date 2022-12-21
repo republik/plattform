@@ -5661,11 +5661,15 @@
       "value": "Investieren Sie in Klimajournalismus:"
     },
     {
-      "key": "Onboarding/Sections/ClimateProfile/paragraph1",
+      "key": "Onboarding/Sections/ClimatePersonalInfo/heading",
+      "value": "Persönliche Angaben"
+    },
+    {
+      "key": "Onboarding/Sections/ClimatePersonalInfo/paragraph1",
       "value": "Uns ist wichtig, dass Menschen aus unterschiedlichen Lebenswelten zusammenfinden, sich gegenseitig inspirieren und herausfordern. Damit wir die Diversität des Klimalabors tatsächlich im Blick haben, wären wir froh um ein paar Angaben zu Ihrer Person."
     },
     {
-      "key": "Onboarding/Sections/ClimateProfile/merci1",
+      "key": "Onboarding/Sections/ClimatePersonalInfo/merci1",
       "value": "Vielen Dank für Ihre Angaben."
     },
     {
