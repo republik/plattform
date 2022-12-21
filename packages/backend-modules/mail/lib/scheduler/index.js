@@ -14,7 +14,7 @@ const init = async (context) => {
     runFunc: async (_args, context) => {
       const { now, dryRun } = _args
       const to = dayjs(now).format('YYYY-MM-DD')
-      const from = dayjs(now).add(-7, 'day').format('YYYY-MM-DD')
+      const from = dayjs(now).add(-30, 'day').format('YYYY-MM-DD')
       debug(
         `starting job to send mail to users who were cleaned from mailing list between ${from} and ${to}`,
       )
