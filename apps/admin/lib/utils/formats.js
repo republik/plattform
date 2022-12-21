@@ -1,24 +1,33 @@
 import { formatLocale } from 'd3-format'
 import { timeFormatLocale } from 'd3-time-format'
 
-export const thousandSeparator = '\u2019'
-export const swissNumbers = formatLocale({
+const thousandSeparator = '\u2019'
+const chfNumbers = formatLocale({
+  decimal: '.',
+  thousands: thousandSeparator,
+  grouping: [3],
+  currency: ['CHF\u00a0', ''],
+})
+const chf4Format = chfNumbers.format('$.0f')
+const chf5Format = chfNumbers.format('$,.0f')
+const chf4FractionalFormat = chfNumbers.format('$.2f')
+const chf5FractionalFormat = chfNumbers.format('$,.2f')
+export const chfFormat = (value) => {
+  const isFraction = value % 1 !== 0
+  if (String(Math.round(value)).length > 4) {
+    return isFraction ? chf5FractionalFormat(value) : chf5Format(value)
+  }
+  return isFraction ? chf4FractionalFormat(value) : chf4Format(value)
+}
+
+const countNumbers = formatLocale({
   decimal: ',',
   thousands: thousandSeparator,
   grouping: [3],
   currency: ['CHF\u00a0', ''],
 })
-const chf4Format = swissNumbers.format('$.0f')
-const chf5Format = swissNumbers.format('$,.0f')
-export const chfFormat = (value) => {
-  if (String(Math.round(value)).length > 4) {
-    return chf5Format(value)
-  }
-  return chf4Format(value)
-}
-
-const count4Format = swissNumbers.format('.0f')
-const count5Format = swissNumbers.format(',.0f')
+const count4Format = countNumbers.format('.0f')
+const count5Format = countNumbers.format(',.0f')
 export const countFormat = (value) => {
   if (String(Math.round(value)).length > 4) {
     return count5Format(value)
