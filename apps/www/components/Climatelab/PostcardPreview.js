@@ -151,7 +151,9 @@ export const PostcardPreview = graphql(
                   <div
                     {...styles.textArea}
                     style={{
-                      fontSize: fontSizeByTextLength(postcardText.length),
+                      fontSize: fontSizeByTextLength(
+                        postcardText && postcardText.length,
+                      ),
                     }}
                   >
                     <span>{postcardText}</span>
