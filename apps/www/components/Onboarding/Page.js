@@ -39,6 +39,7 @@ import Link from 'next/link'
 import Postcard from './Sections/Postcard'
 import Mission from './Sections/Mission'
 import Invitation from './Sections/Invitation'
+import ClimateProfile from './Sections/ClimateProfile'
 
 const { P } = Interaction
 
@@ -88,7 +89,7 @@ const QUERY = gql`
 
 const CONTEXTS = {
   card: ['newsletter', 'notifications', 'app-login', 'usability'],
-  climate: ['postcard', 'mission', 'invitation', 'profile'],
+  climate: ['postcard', 'mission', 'invitation', 'climateprofile'],
   default: ['newsletter', 'notifications', 'app-login', 'usability', 'profile'],
 }
 
@@ -178,6 +179,12 @@ class Page extends Component {
       {
         component: Invitation,
         name: 'invitation',
+        ref: createRef(),
+        visited: false,
+      },
+      {
+        component: ClimateProfile,
+        name: 'climateprofile',
         ref: createRef(),
         visited: false,
       },
