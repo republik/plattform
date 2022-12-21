@@ -1,4 +1,4 @@
-import { fontStyles } from '@project-r/styleguide'
+import { fontStyles, mediaQueries } from '@project-r/styleguide'
 import { css } from 'glamor'
 
 import { useMe } from '../../../lib/context/MeContext'
@@ -10,8 +10,7 @@ import Heading from '../shared/Heading'
 import ClimateLabTrialForm from '../shared/ClimateLabTrialForm'
 import Counter from '../Counter'
 import TrialForm from '../../Trial/Form'
-
-const ALLOWED_CONTEXT = ['claim', 'access']
+import Image from 'next/image'
 
 const LandingPage = () => {
   /* const { query } = useRouter()
@@ -36,58 +35,62 @@ const LandingPage = () => {
     <Frame
       meta={meta}
       pageBackgroundColor={ClimatelabColors.background}
-      containerMaxWidth='1280px'
+      containerMaxWidth={1074}
     >
       <div {...styles.page}>
         <div {...styles.imageWrapper}>
-          <img
-            {...styles.image}
-            src='https://media.tenor.com/CX4EQlnLfT0AAAAd/rick-astley.gif'
-          />
+          <div {...styles.image}>
+            <Image
+              src='/static/climatelab/klimalabor-illustration.jpeg'
+              width={500}
+              height={500}
+            />
+          </div>
         </div>
         <div {...styles.contentWrapper}>
-          <section>
-            <Heading as='h1'>
+          <section {...css({ [mediaQueries.mUp]: { marginTop: 200 } })}>
+            <h1 {...styles.pageTitle}>
               Die Klimakrise ist hier.
               <br />
               Die Lage ist ernst.
-            </Heading>
+            </h1>
             <CallToAction>Was tun?</CallToAction>
-            <Text>
-              Es beginnt damit, dass wir an Veränderung glauben. Und verstehen,
-              wie sie möglich wird.
-            </Text>
-            <Text>
-              Einen Ort für Austausch und Experimente. Um gemeinsam
-              herauszufinden, was das ist: Journalismus, der uns in der
-              Klimakrise wirklich weiterbringt.
-            </Text>
+            <div {...css({ [mediaQueries.mUp]: { marginTop: 105 } })}>
+              <p {...styles.text}>
+                Es beginnt damit, dass wir an Veränderung glauben. Und
+                verstehen, wie sie möglich wird.
+              </p>
+              <p {...styles.text}>
+                Einen Ort für Austausch und Experimente. Um gemeinsam
+                herauszufinden, was das ist: Journalismus, der uns in der
+                Klimakrise wirklich weiterbringt.
+              </p>
+            </div>
           </section>
-          <section>
+          <section {...css({ [mediaQueries.mUp]: { marginTop: 162 } })}>
             <ClimateLabTrialForm />
           </section>
           <section>
             <Counter />
-            <Text>
+            <p {...styles.text}>
               Menschen machen schon mit im Klimalabor - jung, alt, Stadt, Land
               und alle dazwischen machens chon mit im Klimalabor
-            </Text>
+            </p>
             <p>
               Lorem ipsum, dolor sit amet consectetur adipisicing elit. Fuga
               excepturi vitae illo deleniti libero aliquam porro modi id, error
               asperiores, voluptas quisquam delectus repellat ex!
             </p>
           </section>
+          <TrialForm
+            accessCampaignId='3684f324-b694-4930-ad1a-d00a2e00934b'
+            context='climate'
+            skipForMembers={false}
+            shouldSkipTrialForm={me?.roles.some((role) => role === 'climate')}
+            payload={{}}
+          />
         </div>
       </div>
-
-      <TrialForm
-        accessCampaignId='3684f324-b694-4930-ad1a-d00a2e00934b'
-        context='climate'
-        skipForMembers={false}
-        shouldSkipTrialForm={me?.roles.some((role) => role === 'climate')}
-        payload={{}}
-      />
     </Frame>
   )
 }
@@ -96,10 +99,12 @@ export default LandingPage
 
 const styles = {
   page: css({
-    display: 'flex',
-    flexDirection: 'row',
-    gap: '5rem',
     color: ClimatelabColors.text,
+    [mediaQueries.mUp]: {
+      display: 'flex',
+      flexDirection: 'row',
+      gap: '6rem',
+    },
   }),
   imageWrapper: css({
     flex: '1 1 0',
@@ -109,16 +114,34 @@ const styles = {
     alignItems: 'center',
   }),
   image: css({
-    width: '35vw',
     height: 'auto',
     objectFit: 'contain',
-    position: 'sticky',
-    top: '15vh',
+    width: '80%',
+    margin: '0 auto',
+    [mediaQueries.mUp]: {
+      width: '35vw',
+      position: 'sticky',
+      top: '15vh',
+    },
   }),
   contentWrapper: css({
     flex: '1 1 0',
   }),
-  heading: css({
-    ...fontStyles.serifBold32,
+  pageTitle: css({
+    ...fontStyles.serifTitle,
+    fontSize: 30,
+    letterSpacing: '1px',
+    lineHeight: '1.6em',
+    [mediaQueries.mUp]: {
+      fontSize: 40,
+    },
+  }),
+  text: css({
+    ...fontStyles.sansSerifMedium,
+    lineHeight: '1.6em',
+    fontSize: 24,
+    [mediaQueries.mUp]: {
+      fontSize: 30,
+    },
   }),
 }

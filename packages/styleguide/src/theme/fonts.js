@@ -11,6 +11,7 @@ export const fontFamilies = {
   sansSerifRegular: 'Helvetica Neue, Helvetica, sans-serif',
   sansSerifItalic: 'Helvetica Neue, Helvetica, sans-serif',
   sansSerifMedium: 'Helvetica Neue, Helvetica, sans-serif',
+  sansSerifBold: 'Helvetica Neue, Helvetica, sans-serif',
   monospaceRegular: 'Menlo, Courier, monospace',
   cursiveTitle: 'sans-serif',
   ...getJson('FONT_FAMILIES'),
@@ -52,6 +53,10 @@ export const fontStyles = {
   sansSerifMedium: {
     fontFamily: fontFamilies.sansSerifMedium,
     fontWeight: 500,
+  },
+  sansSerifBold: {
+    fontFamily: fontFamilies.sansSerifBold,
+    fontWeight: 700,
   },
   monospaceRegular: {
     fontFamily: fontFamilies.monospaceRegular,

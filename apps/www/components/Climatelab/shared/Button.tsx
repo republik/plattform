@@ -17,13 +17,9 @@ export default Button
 
 const styles = {
   clearFix: css({
-    color: 'inherit',
     border: 'none',
-    padding: 0,
     font: 'inherit',
     outline: 'inherit',
-    textAlign: 'start',
-    backgroundColor: 'transparent',
     cursor: 'pointer',
     '&:hover > *': {
       textDecoration: 'underline',
@@ -32,7 +28,7 @@ const styles = {
   }),
   button: css({
     ...fontStyles.sansSerifBold,
-    fontsize: 30,
+    fontSize: 30,
     backgroundColor: ClimatelabColors.primary,
     color: ClimatelabColors.primaryText,
     boxSizing: 'border-box',
@@ -40,5 +36,9 @@ const styles = {
     borderWidth: 1,
     borderStyle: 'solid',
     borderRadius: 8,
+    borderColor: ClimatelabColors.border,
+    '&:hover': {
+      backgroundColor: ClimatelabColors.primaryHover,
+    },
   }),
 }

@@ -18,9 +18,10 @@ const styles = {
   text: css({
     ...fontStyles.serifBold32,
     margin: 0,
-    backgroundColor: ClimatelabColors.accent,
-    color: ClimatelabColors.accentText,
-    padding: '0.5rem 1rem',
+    backgroundColor: ClimatelabColors.primary,
+    color: ClimatelabColors.primaryText,
+    boxSizing: 'border-box',
+    padding: '0.25rem 0.5rem',
     width: 'fit-content',
   }),
 }
