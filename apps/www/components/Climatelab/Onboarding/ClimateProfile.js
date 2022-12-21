@@ -9,9 +9,8 @@ import Portrait from '../../Profile/Portrait'
 import { ListedCheckbox } from '../../Profile/Settings'
 import { mutation } from '../../Profile/Edit'
 import UsernameField from '../../Profile/UsernameField'
-import Section from '../Section'
+import Section from '../../Onboarding/Section'
 import withT from '../../../lib/withT'
-import { QuestionnaireWithData } from '../../Questionnaire/Questionnaire'
 
 import {
   Interaction,
@@ -19,8 +18,6 @@ import {
   FieldSet,
   InlineSpinner,
   mediaQueries,
-  convertStyleToRem,
-  fontStyles,
 } from '@project-r/styleguide'
 
 const { P } = Interaction
@@ -29,17 +26,6 @@ const PORTRAIT_SIZE_M = TESTIMONIAL_IMAGE_SIZE
 const PORTRAIT_SIZE_S = TESTIMONIAL_IMAGE_SIZE * 0.75
 
 const styles = {
-  questionnaireStyleOverride: css({
-    '& h2': {
-      ...convertStyleToRem(fontStyles.sansSerifRegular19),
-      marginTop: '30px',
-    },
-    [mediaQueries.mUp]: {
-      '& h2': {
-        ...convertStyleToRem(fontStyles.sansSerifRegular22),
-      },
-    },
-  }),
   p: css({
     marginBottom: 20,
   }),
@@ -98,7 +84,7 @@ export const fragments = {
   `,
 }
 
-class Profile extends Component {
+class ClimateProfile extends Component {
   constructor(props) {
     super(props)
 
@@ -214,4 +200,4 @@ class Profile extends Component {
   }
 }
 
-export default withT(Profile)
+export default withT(ClimateProfile)

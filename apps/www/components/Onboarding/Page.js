@@ -36,11 +36,11 @@ import { ONBOARDING_SECTIONS_REPO_IDS } from '../../lib/constants'
 import withInNativeApp from '../../lib/withInNativeApp'
 import Link from 'next/link'
 
-import Postcard from './Sections/Postcard'
-import Mission from './Sections/Mission'
-import Invitation from './Sections/Invitation'
-import ClimateProfile from './Sections/ClimateProfile'
-import ClimatePersonalInfo from './Sections/ClimatePersonalInfo'
+import Postcard from '../Climatelab/Onboarding/Postcard'
+import Mission from '../Climatelab/Onboarding/Mission'
+import Invitation from '../Climatelab/Onboarding/Invitation'
+import ClimateProfile from '../Climatelab/Onboarding/ClimateProfile'
+import ClimatePersonalInfo from '../Climatelab/Onboarding/ClimatePersonalInfo'
 
 const { P } = Interaction
 

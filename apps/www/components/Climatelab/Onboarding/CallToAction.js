@@ -3,7 +3,7 @@ import { css } from 'glamor'
 
 import { Interaction, mediaQueries, A } from '@project-r/styleguide'
 
-import Section from '../Section'
+import Section from '../../Onboarding/Section'
 
 import withT from '../../../lib/withT'
 

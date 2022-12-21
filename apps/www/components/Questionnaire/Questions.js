@@ -6,7 +6,7 @@ import TextQuestion from './TextQuestion'
 import ArticleQuestion from './ArticleQuestion'
 import RangeQuestion from './RangeQuestion'
 import ChoiceQuestion from './ChoiceQuestion'
-import ImageChoiceQuestion from '../Climatelab/ImageChoiceQuestion'
+import ImageChoiceQuestion from '../Climatelab/Postcard/ImageChoiceQuestion'
 import { withAnswerMutation } from './enhancers'
 
 const QUESTION_TYPES = {

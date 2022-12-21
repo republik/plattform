@@ -1,9 +1,9 @@
-import { QuestionnaireWithData } from '../Questionnaire/Questionnaire'
+import { QuestionnaireWithData } from '../../Questionnaire/Questionnaire'
 import { PostcardPreview } from './PostcardPreview'
 
 import { css } from 'glamor'
 
-import withT from '../../lib/withT'
+import withT from '../../../lib/withT'
 
 import {
   Interaction,
