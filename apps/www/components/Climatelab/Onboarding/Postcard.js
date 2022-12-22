@@ -9,8 +9,6 @@ import Section from '../../Onboarding/Section'
 import withT from '../../../lib/withT'
 import PostcardGenerator from '../Postcard/PostcardGenerator'
 
-const { P } = Interaction
-
 const styles = {
   p: css({
     marginBottom: 20,

@@ -306,8 +306,6 @@ class Page extends Component {
 
             const { employees, documents, roleStats } = data
 
-            console.log(data)
-
             return (
               <Center>
                 <div {...styles.title}>
