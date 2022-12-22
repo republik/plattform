@@ -36,6 +36,7 @@ const mapContributor = ({ user, name }) => ({
         user.publicUrl,
         user.twitterHandle && `https://twitter.com/${user.twitterHandle}`,
         user.facebookId && `https://www.facebook.com/${user.facebookId}`,
+        user.mastodonUrl,
       ].filter(Boolean)
     : undefined,
 })

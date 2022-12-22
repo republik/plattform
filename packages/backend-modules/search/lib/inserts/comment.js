@@ -43,6 +43,7 @@ async function transform(row) {
       name: [user.firstName, user.lastName].join(' ').trim(),
       credential: credential?.description || undefined,
       twitterHandle: user.twitterHandle,
+      mastodonUrl: user.mastodonUrl,
       username: user.username,
     }
   }
@@ -71,6 +72,7 @@ const getDefaultResource = async ({ pgdb }) => {
               'username',
               'twitterHandle',
               'facebookId',
+              'mastodonUrl',
             ],
           },
         )

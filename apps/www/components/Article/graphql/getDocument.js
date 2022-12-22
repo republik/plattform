@@ -85,6 +85,7 @@ export const getDocument = gql`
             publicUrl
             twitterHandle
             facebookId
+            mastodonUrl
           }
         }
         format {
