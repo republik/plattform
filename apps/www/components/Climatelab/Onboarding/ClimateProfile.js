@@ -8,7 +8,6 @@ import ErrorMessage from '../../ErrorMessage'
 import Portrait from '../../Profile/Portrait'
 import { ListedCheckbox } from '../../Profile/Settings'
 import { mutation } from '../../Profile/Edit'
-import UsernameField from '../../Profile/UsernameField'
 import Section from '../../Onboarding/Section'
 import withT from '../../../lib/withT'
 
@@ -139,17 +138,6 @@ class ClimateProfile extends Component {
             errors={errors}
             dirty={dirty}
             onChange={this.onChange}
-          />
-        </div>
-        <div {...styles.field}>
-          <UsernameField
-            user={user}
-            isEditing
-            isMe
-            onChange={this.onChange}
-            values={mergedValues}
-            errors={errors}
-            dirty={dirty}
           />
         </div>
         <div {...styles.checkbox}>
