@@ -2,6 +2,7 @@ import React from 'react'
 import { graphql } from '@apollo/client/react/hoc'
 import { gql } from '@apollo/client'
 import { css } from 'glamor'
+import { Textfit } from 'react-textfit'
 
 import {
   fontFamilies,
@@ -11,8 +12,11 @@ import {
   Interaction,
 } from '@project-r/styleguide'
 
+import { postcardCredits } from '../config'
+
 const styles = {
   postcard: css({
+    position: 'relative',
     backgroundColor: '#F9FBFF',
     margin: '20px 0',
     width: '100%',
@@ -30,15 +34,24 @@ const styles = {
     },
   }),
   textArea: css({
-    width: '60%',
-    paddingRight: '20px',
     overflow: 'hidden',
-    borderRight: 'solid 1px #DADDDC',
     wordBreak: 'normal',
     overflowWrap: 'break-word',
-
+    width: '60%',
+    borderRight: 'solid 1px #DADDDC',
+    flexDirection: 'column',
+    paddingRight: '20px',
     [mediaQueries.mUp]: {
       paddingRight: '40px',
+    },
+  }),
+  credit: css({
+    position: 'absolute',
+    bottom: 0,
+    paddingBottom: '5px',
+    fontSize: '12px',
+    [mediaQueries.mUp]: {
+      fontSize: '14px',
     },
   }),
   rightSide: css({
@@ -71,32 +84,10 @@ const styles = {
   adressBlockContainer: css({
     width: '100%',
     paddingBottom: '3px',
-    marginTop: '20px',
     display: 'flex',
     flexDirection: 'column',
     flexGrow: 1,
   }),
-}
-
-const fontSizeByTextLength = (textLength) => {
-  if (textLength < 50) {
-    return '250%'
-  }
-  if (textLength < 100) {
-    return '150%'
-  }
-  if (textLength < 200) {
-    return '125%'
-  }
-  if (textLength < 300) {
-    return '105%'
-  }
-  if (textLength < 400) {
-    return '95%'
-  }
-  if (textLength < 500) {
-    return '85%'
-  }
 }
 
 export const PostcardPreview = (props) => {
@@ -116,6 +107,8 @@ export const PostcardPreview = (props) => {
     imageOptions &&
     imageOptions.filter((d) => d.value === imageSelection)[0]?.imageUrl
 
+  console.log(imageSelection)
+
   return (
     userHasSubmitted && (
       <>
@@ -123,16 +116,17 @@ export const PostcardPreview = (props) => {
           {...styles.postcard}
           {...colorScheme.set('boxShadow', 'imageChoiceShadow')}
         >
-          <div
-            {...styles.textArea}
-            style={{
-              fontSize: fontSizeByTextLength(
-                postcardText && postcardText.length,
-              ),
-            }}
-          >
-            <span>{postcardText}</span>
+          <div {...styles.credit}>
+            {' '}
+            {t('Climatelab/Postcard/PostcardPreview/credit', {
+              credit: postcardCredits[imageSelection],
+            })}
           </div>
+
+          <div {...styles.textArea}>
+            <Textfit mode='single'>{postcardText}</Textfit>
+          </div>
+
           <div {...styles.rightSide}>
             <div {...styles.postcardContainer}>
               <PoststampComponent imageUrl={imageUrl} />

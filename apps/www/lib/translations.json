@@ -5641,6 +5641,10 @@
       "value": "Wir werden Ihnen bald die Gelegenheit geben, die Postkarten anderer Teilnehmerinnen und Teilnehmer zu lesen."
     },
     {
+      "key": "Climatelab/Postcard/PostcardPreview/credit",
+      "value": "Illustration von {credit}"
+    },
+    {
       "key": "Climatelab/Onboarding/Mission/heading",
       "value": "Was wir vorhaben"
     },

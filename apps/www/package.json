@@ -116,6 +116,7 @@
     "react-maskedinput": "^4.0.1",
     "react-spring": "^8.0.27",
     "react-textarea-autosize": "^7.1.2",
+    "react-textfit": "1.1.1",
     "react-use-gesture": "^5.2.4",
     "scroll-into-view": "1.15.0",
     "subscriptions-transport-ws": "^0.9.19",
