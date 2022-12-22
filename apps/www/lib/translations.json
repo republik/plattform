@@ -5618,11 +5618,11 @@
     },
     {
       "key": "Onboarding/Page/climate/preface",
-      "value": "Sie sind eine von inzwischen {climate_lab_count} Personen, die Lust haben, am Klimalabor mitzuwirken."
+      "value": "Sie sind eine von inzwischen {climate_lab_count} Personen, die am Klimalabor mitwirken."
     },
     {
       "key": "Onboarding/Page/climate/introduction",
-      "value": "Zusammen werden wir in den kommenden Monaten über die Klimakrise sprechen, darüber, was wir alle und wir von der Republik tun können, und viele neue Dinge ausprobieren (mehr dazu gleich).<br /><br />Schön, sind Sie dabei!<br /><br />"
+      "value": "In den kommenden Monaten wollen wir mit Ihnen über die Klimakrise und unsere Zukunft sprechen. Wir wollen Neues ausprobieren und verstehen, was Ihnen wirklich weiterhilft..<br /><br />Schön, sind Sie dabei!<br /><br />"
     },
     {
       "key": "Climatelab/Onboarding/Postcard/heading",
@@ -5630,7 +5630,7 @@
     },
     {
       "key": "Climatelab/Onboarding/Postcard/paragraph1",
-      "value": "Im Klimalabor werden wir Ihnen immer wieder die Gelegenheit bieten, Ihre Ideen, Ihre Bedürfnisse, Ihre Expertise einzubringen. Als Erstes wollen wir aber Ihre Fantasie: <br /><br />\nStellen Sie sich vor, Sie reisen mit einer Zeitmaschine 60 Jahre in die Zukunft. Sie schauen sich um und haben einen kurzen Moment, sich selbst eine Postkarte zurück ins Jahr 2023 zu schicken. Was sehen Sie, was löst das in Ihnen aus?"
+      "value": "Im Klimalabor bieten wir Ihnen die Gelegenheit, Ihre Ideen, Ihre Bedürfnisse, Ihre Expertise einzubringen. Als Erstes wollen wir aber Ihre Fantasie:<br /><br />\nStellen Sie sich vor, Sie reisen mit einer Zeitmaschine 60 Jahre in die Zukunft. Was sehen Sie, was löst das in Ihnen aus? Sie haben einen kurzen Moment, sich selbst eine Postkarte zurück ins Jahr 2023 zu schicken."
     },
     {
       "key": "Climatelab/Postcard/PostcardGenerator/merci1",
@@ -5654,11 +5654,11 @@
     },
     {
       "key": "Climatelab/Onboarding/Mission/bullet1",
-      "value": "Wir wollen gemeinsam einen neuen Klimajournalismus für die Republik entwickeln, der mehr Menschen erreicht als bisher, und auch andere Medien und Journalistinnen inspiriert. Ein Klimajournalismus, der anregt, der trotz düsterer Aussichten nach vorn blickt, der verlässlich und nützlich ist."
+      "value": "Wir wollen gemeinsam einen neuen Klimajournalismus für die Republik entwickeln, der mehr Menschen erreicht als bisher und auch andere Medien und Journalistinnen inspiriert. Einen Klimajournalismus, der anregt, der trotz düsterer Aussichten nach vorn blickt, der verlässlich und nützlich ist."
     },
     {
       "key": "Climatelab/Onboarding/Mission/bullet2",
-      "value": "Bis im Sommer 2023 nehmen wir uns dafür Zeit. Was dabei herauskommen wird? Das kann ein eigenständiges journalistisches Produkt sein, eine Reihe neuer Formate, ein Ausbau der Redaktion, oder ganz etwas anderes. Das Klimalabor ist bewusst ergebnisoffen. Klar ist: Wir wollen gross denken und ein Angebot entwickeln, das in seiner Dringlichkeit und Ambition der Klimakrise gerecht wird."
+      "value": "Bis in den Sommer 2023 nehmen wir uns dafür Zeit. Was dabei herauskommen wird? Das kann ein eigenständiges journalistisches Produkt sein, eine Reihe neuer Formate, ein Ausbau der Redaktion oder ganz etwas anderes. Das Klimalabor ist bewusst ergebnisoffen. Klar ist: Wir wollen gross denken und ein Angebot entwickeln, das in seiner Dringlichkeit und Ambition der Klimakrise gerecht wird."
     },
     {
       "key": "Climatelab/Onboarding/Mission/bullet3",
@@ -5670,7 +5670,7 @@
     },
     {
       "key": "Climatelab/Onboarding/Invitation/paragraph1",
-      "value": "Das Klimalabor lebt davon, dass viele unterschiedliche Perspektiven zusammen kommen. Laden Sie 3 Freunde und Bekannte ein, mit denen Sie nicht unbedingt immer gleicher Meinung sind."
+      "value": "Das Klimalabor lebt davon, dass viele unterschiedliche Perspektiven zusammenkommen. Laden Sie drei Freunde und Bekannte ein, mit denen Sie nicht unbedingt immer gleicher Meinung sind."
     },
     {
       "key": "Climatelab/Onboarding/CallToAction/heading",
@@ -5686,7 +5686,7 @@
     },
     {
       "key": "Climatelab/Onboarding/ClimatePersonalInfo/paragraph1",
-      "value": "Uns ist wichtig, dass Menschen aus unterschiedlichen Lebenswelten zusammenfinden, sich gegenseitig inspirieren und herausfordern. Damit wir die Diversität des Klimalabors tatsächlich im Blick haben, wären wir froh um ein paar Angaben zu Ihrer Person."
+      "value": "Uns ist wichtig, dass Menschen aus unterschiedlichen Lebenswelten zusammenfinden, sich gegenseitig inspirieren und herausfordern. Damit wir die Diversität des Klimalabors tatsächlich im Blick haben, wären wir froh um ein paar Angaben zu Ihrer Person. Diese Angaben werden nicht auf Ihrem Profil angezeigt."
     },
     {
       "key": "Climatelab/Onboarding/ClimatePersonalInfo/merci1",
