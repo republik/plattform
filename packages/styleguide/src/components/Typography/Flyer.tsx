@@ -328,9 +328,6 @@ const A = forwardRef<HTMLAnchorElement, BaseProps>(
 
 export const Link: React.FC<any> = ({ children, href, ...props }) => {
   const { Link } = useRenderContext()
-  if (!href) {
-    return React.Children.only(children)
-  }
   return (
     <Link href={href} passHref>
       <A href={href} {...props}>

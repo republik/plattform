@@ -26,7 +26,7 @@ const NOTES: { [K in PaynoteType]: string[] } = {
 
 type PaynoteType = 'trial' | 'buy' | 'ios'
 
-type TrackingProps = {
+export type TrackingProps = {
   repoId: string
   documentId: string
   variation: string

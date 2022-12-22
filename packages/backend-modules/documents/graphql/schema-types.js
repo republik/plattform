@@ -118,6 +118,7 @@ type Meta {
   newsletter: Newsletter
 
   disableActionBar: Boolean
+  suggestSubscription: Boolean
 
   estimatedReadingMinutes: Int
   estimatedConsumptionMinutes: Int
@@ -131,6 +132,8 @@ type Meta {
   
   paynotes: [JSON]
   paynoteMode: PaynoteMode
+  
+  isRestricted: Boolean
 }
 
 enum DocumentType {

@@ -1,12 +1,11 @@
 import { Fragment } from 'react'
 import { css } from 'glamor'
 
-import { Interaction, mediaQueries, RawHtml } from '@project-r/styleguide'
+import { Interaction, mediaQueries } from '@project-r/styleguide'
 
-import Section from '../Section'
+import Section from '../../Onboarding/Section'
 
-import withT from '../../../lib/withT'
-import PostcardGenerator from '../../Climatelab/PostcardGenerator'
+import { useTranslation } from '../../../lib/withT'
 
 const { P } = Interaction
 
@@ -36,32 +35,25 @@ const styles = {
 //   user: gql``,
 // }
 
-const Postcard = (props) => {
-  const { t } = props
+const Invitation = (props) => {
+  const { t } = useTranslation()
 
   // Is ticked when either???
 
   return (
     <Section
-      heading={t('Onboarding/Sections/Postcard/heading')}
+      heading={t('Climatelab/Onboarding/Invitation/heading')}
       // isTicked={hasConsented}
       // showContinue={hasConsented}
       {...props}
     >
       <Fragment>
-        <RawHtml
-          {...styles.p}
-          type={Interaction.P}
-          dangerouslySetInnerHTML={{
-            __html: t(['Onboarding/Sections/Postcard/paragraph1'], null, ''),
-          }}
-        />
-        <br />
-
-        <PostcardGenerator t={t} />
+        <P {...styles.p}>
+          {t('Climatelab/Onboarding/Invitation/paragraph1', null, '')}
+        </P>
       </Fragment>
     </Section>
   )
 }
 
-export default withT(Postcard)
+export default Invitation

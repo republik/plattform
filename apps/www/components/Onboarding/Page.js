@@ -32,20 +32,24 @@ import withT from '../../lib/withT'
 import Subscriptions, {
   fragments as fragmentsSubscriptions,
 } from './Sections/Subscriptions'
-import { ONBOARDING_SECTIONS_REPO_IDS } from '../../lib/constants'
 import withInNativeApp from '../../lib/withInNativeApp'
 import Link from 'next/link'
 
-import Postcard from './Sections/Postcard'
-import Mission from './Sections/Mission'
-import Invitation from './Sections/Invitation'
-import ClimateProfile from './Sections/ClimateProfile'
+import Postcard, {
+  fragments as fragmentsPostcard,
+} from '../Climatelab/Onboarding/Postcard'
+import Mission from '../Climatelab/Onboarding/Mission'
+import Invitation from '../Climatelab/Onboarding/Invitation'
+import ClimateProfile from '../Climatelab/Onboarding/ClimateProfile'
+import ClimatePersonalInfo, {
+  fragments as fragmentsClimatePersonalInfo,
+} from '../Climatelab/Onboarding/ClimatePersonalInfo'
 
 const { P } = Interaction
 
 const QUERY = gql`
   query getOnboarding($repoIds: [ID!]) {
-    me {
+    user: me {
       ...NewsletterUser
       ...AppLoginUser
       ...UsabilityUser
@@ -59,10 +63,13 @@ const QUERY = gql`
       ...GreetingEmployee
     }
 
-    documents(template: "section", repoIds: $repoIds) {
+    sections: documents(template: "section") {
       nodes {
         id
-        linkedDocuments {
+        meta {
+          suggestSubscription
+        }
+        formats: linkedDocuments {
           totalCount
           nodes {
             ...FormatInfo
@@ -74,20 +81,30 @@ const QUERY = gql`
     roleStats(role: "climate") {
       count
     }
+
+    ...Postcard
+    ...ClimatePersonalInfo
   }
 
   ${fragmentsNewsletter.user}
   ${fragmentsAppLogin.user}
   ${fragmentsUsability.user}
   ${fragmentsProfile.user}
-
   ${fragmentsGreeting.employee}
   ${fragmentsSubscriptions.formats}
+  ${fragmentsPostcard.postcard}
+  ${fragmentsClimatePersonalInfo.climatepersonalinfo}
 `
 
 const CONTEXTS = {
   card: ['newsletter', 'notifications', 'app-login', 'usability'],
-  climate: ['postcard', 'mission', 'invitation', 'climateprofile'],
+  climate: [
+    'postcard',
+    'mission',
+    'invitation',
+    'climateprofile',
+    'climatepersonalinfo',
+  ],
   default: ['newsletter', 'notifications', 'app-login', 'usability', 'profile'],
 }
 
@@ -166,7 +183,6 @@ class Page extends Component {
         name: 'postcard',
         ref: createRef(),
         visited: false,
-        expanded: true,
       },
       {
         component: Mission,
@@ -186,6 +202,12 @@ class Page extends Component {
         ref: createRef(),
         visited: false,
       },
+      {
+        component: ClimatePersonalInfo,
+        name: 'climatepersonalinfo',
+        ref: createRef(),
+        visited: false,
+      },
     ]
       // filter by context
       .filter((section) => selectedContext.includes(section.name))
@@ -197,9 +219,11 @@ class Page extends Component {
       .filter(Boolean)
 
     this.state = {
-      expandedSection: this.sections.find((s) => s.name === query.section)
-        ? query.section
-        : null,
+      expandedSection:
+        (this.sections.find((s) => s.name === query.section) &&
+          query.section) ||
+        (query.context === 'climate' && this.sections[0].name) ||
+        null,
       hasOnceVisitedAll: false,
     }
 
@@ -269,20 +293,13 @@ class Page extends Component {
 
     return (
       <Frame meta={meta} raw>
-        <Query
-          query={QUERY}
-          variables={{
-            repoIds:
-              ONBOARDING_SECTIONS_REPO_IDS &&
-              ONBOARDING_SECTIONS_REPO_IDS.split(','),
-          }}
-        >
+        <Query query={QUERY}>
           {({ loading, error, data }) => {
             if (loading || error) {
               return <Loader loading={loading} error={error} />
             }
 
-            const { me: user, employees, documents, roleStats } = data
+            const { employees, sections, roleStats } = data
 
             return (
               <Center>
@@ -319,7 +336,7 @@ class Page extends Component {
                   }}
                 />
 
-                {!expandedSection && context !== 'climate' && (
+                {!expandedSection && (
                   <Button
                     primary={!this.state.hasOnceVisitedAll}
                     onClick={() => {
@@ -332,21 +349,15 @@ class Page extends Component {
 
                 <div {...styles.sections}>
                   {this.sections.map(
-                    ({
-                      component: Component,
-                      name,
-                      ref,
-                      visited,
-                      expanded,
-                    }) => {
+                    ({ component: Component, name, ref, visited }) => {
                       return (
                         <Component
                           key={name}
+                          {...data}
                           name={name}
-                          user={user}
-                          sections={documents.nodes}
+                          sections={sections.nodes}
                           onExpand={this.onExpand.bind(this)}
-                          isExpanded={expanded || expandedSection === name}
+                          isExpanded={expandedSection === name}
                           onContinue={this.onContinue.bind(this)}
                           forwardedRef={ref}
                           isVisited={visited}
@@ -364,7 +375,10 @@ class Page extends Component {
                       </div>
                     ) */}
                     <div {...styles.buttonContainer}>
-                      <Link href='/' passHref>
+                      <Link
+                        href={context === 'climate' ? '/klimalaborhq' : '/'}
+                        passHref
+                      >
                         <Button primary={this.state.hasOnceVisitedAll}>
                           {t.first([
                             `Onboarding/Page/${context}/button`,
@@ -397,36 +411,38 @@ class Page extends Component {
                   )}
                 </P>
 
-                <P {...styles.p}>
-                  {t.first.elements(
-                    [
-                      `Onboarding/Page/${context}/more/questions`,
-                      'Onboarding/Page/more/questions',
-                    ],
-                    {
-                      linkManual: (
-                        <Link key='anleitung' href='/anleitung' passHref>
-                          <A>
-                            {t.first([
-                              `Onboarding/Page/${context}/more/questions/linkManual`,
-                              'Onboarding/Page/more/questions/linkManual',
-                            ])}
-                          </A>
-                        </Link>
-                      ),
-                      linkFaq: !inNativeIOSApp && (
-                        <Link key='route' href='/faq' passHref>
-                          <A>
-                            {t.first([
-                              `Onboarding/Page/${context}/more/questions/linkFaq`,
-                              'Onboarding/Page/more/questions/linkFaq',
-                            ])}
-                          </A>
-                        </Link>
-                      ),
-                    },
-                  )}
-                </P>
+                {context !== 'climate' && (
+                  <P {...styles.p}>
+                    {t.first.elements(
+                      [
+                        `Onboarding/Page/${context}/more/questions`,
+                        'Onboarding/Page/more/questions',
+                      ],
+                      {
+                        linkManual: (
+                          <Link key='anleitung' href='/anleitung' passHref>
+                            <A>
+                              {t.first([
+                                `Onboarding/Page/${context}/more/questions/linkManual`,
+                                'Onboarding/Page/more/questions/linkManual',
+                              ])}
+                            </A>
+                          </Link>
+                        ),
+                        linkFaq: !inNativeIOSApp && (
+                          <Link key='route' href='/faq' passHref>
+                            <A>
+                              {t.first([
+                                `Onboarding/Page/${context}/more/questions/linkFaq`,
+                                'Onboarding/Page/more/questions/linkFaq',
+                              ])}
+                            </A>
+                          </Link>
+                        ),
+                      },
+                    )}
+                  </P>
+                )}
                 <P {...styles.p}>
                   {t.first.elements(
                     [
@@ -437,11 +453,15 @@ class Page extends Component {
                       email: (
                         <A
                           key='email'
-                          href={`mailto:${t(
+                          href={`mailto:${t.first.elements([
+                            'Onboarding/Page/${context}/more/help/email',
                             'Onboarding/Page/more/help/email',
-                          )}`}
+                          ])}`}
                         >
-                          {t('Onboarding/Page/more/help/email')}
+                          {t.first.elements([
+                            'Onboarding/Page/${context}/more/help/email',
+                            'Onboarding/Page/more/help/email',
+                          ])}
                         </A>
                       ),
                     },

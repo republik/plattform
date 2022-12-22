@@ -3,9 +3,9 @@ import { css } from 'glamor'
 
 import { Interaction, mediaQueries, A } from '@project-r/styleguide'
 
-import Section from '../Section'
+import Section from '../../Onboarding/Section'
 
-import withT from '../../../lib/withT'
+import { useTranslation } from '../../../lib/withT'
 
 const { P } = Interaction
 
@@ -32,7 +32,8 @@ const styles = {
 }
 
 const CallToAction = (props) => {
-  const { t, user } = props
+  const { user } = props
+  const { t } = useTranslation()
   const hasActiveMembership = user.activeMembership?.active
   const linkText = hasActiveMembership
     ? 'Verschenken Sie eine Jahresmitgliedschaft.'
@@ -56,14 +57,14 @@ const CallToAction = (props) => {
 
   return (
     <Section
-      heading={t('Onboarding/Sections/CallToAction/heading')}
+      heading={t('Climatelab/Onboarding/CallToAction/heading')}
       // isTicked={hasConsented}
       // showContinue={hasConsented}
       {...props}
     >
       <Fragment>
         <P {...styles.p}>
-          {t('Onboarding/Sections/CallToAction/paragraph1', null, '')}{' '}
+          {t('Climatelab/Onboarding/CallToAction/paragraph1', null, '')}{' '}
           <A href={linkUrl}>{linkText}</A>
         </P>
       </Fragment>
@@ -71,4 +72,4 @@ const CallToAction = (props) => {
   )
 }
 
-export default withT(CallToAction)
+export default CallToAction

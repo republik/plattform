@@ -166,10 +166,13 @@ const QuestionnaireSubmissions = dynamic(
   },
 )
 
-const Postcard = dynamic(() => import('../Climatelab/PostcardGenerator'), {
-  loading: LoadingComponent,
-  ssr: false,
-})
+const Postcard = dynamic(
+  () => import('../Climatelab/Postcard/PostcardGenerator'),
+  {
+    loading: LoadingComponent,
+    ssr: false,
+  },
+)
 
 const schemaCreators = {
   editorial: createArticleSchema,

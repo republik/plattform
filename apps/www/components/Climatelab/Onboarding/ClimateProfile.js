@@ -8,10 +8,8 @@ import ErrorMessage from '../../ErrorMessage'
 import Portrait from '../../Profile/Portrait'
 import { ListedCheckbox } from '../../Profile/Settings'
 import { mutation } from '../../Profile/Edit'
-import UsernameField from '../../Profile/UsernameField'
-import Section from '../Section'
-import withT from '../../../lib/withT'
-import { QuestionnaireWithData } from '../../Questionnaire/Questionnaire'
+import Section from '../../Onboarding/Section'
+import { useTranslation } from '../../../lib/withT'
 
 import {
   Interaction,
@@ -85,7 +83,7 @@ export const fragments = {
   `,
 }
 
-class Profile extends Component {
+class ClimateProfile extends Component {
   constructor(props) {
     super(props)
 
@@ -105,8 +103,9 @@ class Profile extends Component {
   }
 
   render() {
-    const { user, onContinue, t } = this.props
+    const { user, onContinue } = this.props
     const { values, errors, dirty } = this.state
+    const { t } = useTranslation()
 
     const hasErrors = !!Object.keys(errors).filter((key) => !!errors[key])
       .length
@@ -142,17 +141,6 @@ class Profile extends Component {
             onChange={this.onChange}
           />
         </div>
-        <div {...styles.field}>
-          <UsernameField
-            user={user}
-            isEditing
-            isMe
-            onChange={this.onChange}
-            values={mergedValues}
-            errors={errors}
-            dirty={dirty}
-          />
-        </div>
         <div {...styles.checkbox}>
           <ListedCheckbox
             user={user}
@@ -186,30 +174,19 @@ class Profile extends Component {
                     </Button>
                   )}
                 </div>
+                <div>
+                  <Button block disabled={loading} onClick={onContinue}>
+                    {t('Onboarding/Sections/Profile/button/continue', null, '')}
+                  </Button>
+                </div>
               </div>
               {!!error && <ErrorMessage error={error} />}
             </Fragment>
           )}
         </Mutation>
-        <P {...styles.p}>
-          {t('Onboarding/Sections/ClimateProfile/paragraph1', null, '')}
-        </P>
-
-        <QuestionnaireWithData
-          slug={'klima-personalinfo'}
-          publicSubmission={false}
-          hideCount
-          submittedMessage={
-            <Interaction.P>
-              {t('Onboarding/Sections/Postcard/merci1')}
-            </Interaction.P>
-          }
-          hideInvalid={true}
-          hideReset={true}
-        />
       </Section>
     )
   }
 }
 
-export default withT(Profile)
+export default ClimateProfile

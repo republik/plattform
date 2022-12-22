@@ -1,19 +1,14 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react'
 import { css } from 'glamor'
-import questionStyles from './../Questionnaire/questionStyles'
+import questionStyles from './../../Questionnaire/questionStyles'
 import { nest } from 'd3-collection'
 import uuid from 'uuid/v4'
 import { Loader } from '@project-r/styleguide'
 import scrollIntoView from 'scroll-into-view'
 
-import {
-  Interaction,
-  mediaQueries,
-  useColorContext,
-} from '@project-r/styleguide'
-import withT from '../../lib/withT'
+import { Interaction, useColorContext } from '@project-r/styleguide'
 import dynamic from 'next/dynamic'
-const { H2, H3, P } = Interaction
+const { H2 } = Interaction
 
 const styles = {
   container: css({
@@ -78,7 +73,7 @@ const styles = {
 
 const LoadingComponent = () => <Loader loading />
 
-const ImageChoice = dynamic(() => import('../Climatelab/ImageChoice'), {
+const ImageChoice = dynamic(() => import('./ImageChoice'), {
   loading: LoadingComponent,
   ssr: false,
 })
@@ -247,4 +242,4 @@ const ImageChoiceQuestion = (props) => {
   )
 }
 
-export default withT(ImageChoiceQuestion)
+export default ImageChoiceQuestion

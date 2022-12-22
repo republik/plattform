@@ -41,7 +41,12 @@ module.exports = async (from, to, { pgdb }, dryRun = false, onceFor = true) => {
 `,
     { from, to },
   )
-  debug(`${cleanedUsers.length} email addresses found`)
+  debug(
+    `%i email addresses found (from: %s, to: %s)`,
+    cleanedUsers.length,
+    from,
+    to,
+  )
 
   const emailAddressCleanedDateMap = new Map(
     cleanedUsers.map((entry) => {

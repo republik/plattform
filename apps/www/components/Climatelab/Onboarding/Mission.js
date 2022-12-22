@@ -3,9 +3,9 @@ import { css } from 'glamor'
 
 import { Interaction, mediaQueries } from '@project-r/styleguide'
 
-import Section from '../Section'
+import Section from '../../Onboarding/Section'
 
-import withT from '../../../lib/withT'
+import { useTranslation } from '../../../lib/withT'
 
 const { P } = Interaction
 
@@ -36,26 +36,26 @@ const styles = {
 // }
 
 const Mission = (props) => {
-  const { t } = props
+  const { t } = useTranslation()
 
   // Is ticked when either???
 
   return (
     <Section
-      heading={t('Onboarding/Sections/Mission/heading')}
+      heading={t('Climatelab/Onboarding/Mission/heading')}
       // isTicked={hasConsented}
       // showContinue={hasConsented}
       {...props}
     >
       <Fragment>
         <P {...styles.p}>
-          {t('Onboarding/Sections/Mission/paragraph1', null, '')}
+          {t('Climatelab/Onboarding/Mission/paragraph1', null, '')}
           <br /> <br />
-          {t('Onboarding/Sections/Mission/bullet1', null, '')}
+          {t('Climatelab/Onboarding/Mission/bullet1', null, '')}
           <br /> <br />
-          {t('Onboarding/Sections/Mission/bullet2', null, '')}
+          {t('Climatelab/Onboarding/Mission/bullet2', null, '')}
           <br /> <br />
-          {t('Onboarding/Sections/Mission/bullet3', null, '')}
+          {t('Climatelab/Onboarding/Mission/bullet3', null, '')}
           <br />
         </P>
       </Fragment>
@@ -63,4 +63,4 @@ const Mission = (props) => {
   )
 }
 
-export default withT(Mission)
+export default Mission

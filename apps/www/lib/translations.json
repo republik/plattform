@@ -426,7 +426,7 @@
     },
     {
       "key": "marketing/page/reasons/3/text",
-      "value": "Die Republik wird finanziert durch ihre über 28'000 Abonnentinnen. Wir gehören niemandem – aber jedem unserer Mitglieder ein bisschen."
+      "value": "Die Republik wird finanziert durch ihre rund 28’000 Abonnentinnen. Wir gehören niemandem – aber jedem unserer Mitglieder ein bisschen."
     },
     {
       "key": "marketing/page/vision/headline",
@@ -490,7 +490,7 @@
     },
     {
       "key": "marketing/page/sections/description/briefings",
-      "value": "Durch die Woche mit der Republik: Das Datenbriefing «Auf lange Sicht» am Montag, das Justiz-Briefing «Am Gericht» am Mittwoch, das «Briefing aus Bern» am Donnerstag und «Was diese Woche wichtig war» am Freitag."
+      "value": "Durch die Woche mit der Republik: das Justizbriefing «Am Gericht» am Mittwoch, das «Briefing aus Bern» am Donnerstag und «Was diese Woche wichtig war» am Freitag."
     },
     {
       "key": "marketing/page/sections/title/briefings",
@@ -522,7 +522,7 @@
     },
     {
       "key": "marketing/page/sections/description/winter",
-      "value": "Es ist eine kalte, aufreibende und verwirrende Zeit. Soll man sich all den Krisen stellen oder sich davon ablenken? Wir meinen: Beides. Und bieten Hand dazu – immer Montags bei Sonnenuntergang"
+      "value": "Es ist eine kalte, aufreibende und verwirrende Zeit. Soll man sich all den Krisen stellen oder sich davon ablenken? Wir meinen: Beides. Und bieten Hand dazu – immer montags bei Sonnenuntergang"
     },
     {
       "key": "marketing/page/sections/title/winter",
@@ -5485,6 +5485,22 @@
       "value": "kontakt@republik.ch"
     },
     {
+      "key": "Onboarding/Page/climate/more/account",
+      "value": "Mit Ihrer Anmeldung werden Sie auch für den Newsletter zum Klimalabor eingetragen. Diese und weitere Einstellungen finden Sie in Ihrem {link}."
+    },
+    {
+      "key": "Onboarding/Page/climate/more/account/link",
+      "value": "Konto"
+    },
+    {
+      "key": "Onboarding/Page/climate/more/help",
+      "value": "Haben Sie Fragen oder benötigen Sie Hilfe? Wir sind gerne für Sie da. {email}"
+    },
+    {
+      "key": "Onboarding/Page/climate/more/help/email",
+      "value": "klimalabor@republik.ch"
+    },
+    {
       "key": "Onboarding/Section/button/continue",
       "value": "Weiter"
     },
@@ -5609,63 +5625,71 @@
       "value": "Zusammen werden wir in den kommenden Monaten über die Klimakrise sprechen, darüber, was wir alle und wir von der Republik tun können, und viele neue Dinge ausprobieren (mehr dazu gleich).<br /><br />Schön, sind Sie dabei!<br /><br />"
     },
     {
-      "key": "Onboarding/Sections/Postcard/heading",
+      "key": "Climatelab/Onboarding/Postcard/heading",
       "value": "Postkarte aus der Zukunft"
     },
     {
-      "key": "Onboarding/Sections/Postcard/paragraph1",
+      "key": "Climatelab/Onboarding/Postcard/paragraph1",
       "value": "Im Klimalabor werden wir Ihnen immer wieder die Gelegenheit bieten, Ihre Ideen, Ihre Bedürfnisse, Ihre Expertise einzubringen. Als Erstes wollen wir aber Ihre Fantasie: <br /><br />\nStellen Sie sich vor, Sie reisen mit einer Zeitmaschine 60 Jahre in die Zukunft. Sie schauen sich um und haben einen kurzen Moment, sich selbst eine Postkarte zurück ins Jahr 2023 zu schicken. Was sehen Sie, was löst das in Ihnen aus?"
     },
     {
-      "key": "Onboarding/Sections/Postcard/merci1",
+      "key": "Climatelab/Postcard/PostcardGenerator/merci1",
       "value": "Danke für Ihre Postkarte. Sie wird uns helfen, zu verstehen, wie Sie in die Zukunft blicken. Darum wird es im Klimalabor immer wieder gehen: Wir wollen über die Zukunft nachdenken, den Blick für positive Entwicklungen schärfen und herausfinden, was es braucht, damit wir zuversichtlich und handlungsfähig bleiben."
     },
     {
-      "key": "Onboarding/Sections/Postcard/merci2",
+      "key": "Climatelab/Postcard/PostcardPreview/merci2",
       "value": "Wir werden Ihnen bald die Gelegenheit geben, die Postkarten anderer Teilnehmerinnen und Teilnehmer zu lesen."
     },
     {
-      "key": "Onboarding/Sections/Mission/heading",
+      "key": "Climatelab/Postcard/PostcardPreview/credit",
+      "value": "Illustration von {credit}"
+    },
+    {
+      "key": "Climatelab/Onboarding/Mission/heading",
       "value": "Was wir vorhaben"
     },
     {
-      "key": "Onboarding/Sections/Mission/paragraph1",
+      "key": "Climatelab/Onboarding/Mission/paragraph1",
       "value": "Eine gemeinsame Expedition funktioniert nur dann, wenn alle den Plan kennen. Deshalb hier unsere Ziele und wie wir vorgehen werden:"
     },
     {
-      "key": "Onboarding/Sections/Mission/bullet1",
+      "key": "Climatelab/Onboarding/Mission/bullet1",
       "value": "Wir wollen gemeinsam einen neuen Klimajournalismus für die Republik entwickeln, der mehr Menschen erreicht als bisher, und auch andere Medien und Journalistinnen inspiriert. Ein Klimajournalismus, der anregt, der trotz düsterer Aussichten nach vorn blickt, der verlässlich und nützlich ist."
     },
     {
-      "key": "Onboarding/Sections/Mission/bullet2",
+      "key": "Climatelab/Onboarding/Mission/bullet2",
       "value": "Bis im Sommer 2023 nehmen wir uns dafür Zeit. Was dabei herauskommen wird? Das kann ein eigenständiges journalistisches Produkt sein, eine Reihe neuer Formate, ein Ausbau der Redaktion, oder ganz etwas anderes. Das Klimalabor ist bewusst ergebnisoffen. Klar ist: Wir wollen gross denken und ein Angebot entwickeln, das in seiner Dringlichkeit und Ambition der Klimakrise gerecht wird."
     },
     {
-      "key": "Onboarding/Sections/Mission/bullet3",
+      "key": "Climatelab/Onboarding/Mission/bullet3",
       "value": "Wir nähern uns dem Ziel schrittweise an und werden zunehmend konkreter. Wenn Sie mögen, können Sie sich auf vielfältige Arten und immer wieder aufs Neue einbringen. Sie können uns aber auch einfach interessiert begleiten. Per Newsletter halten wir Sie auf dem Laufenden."
     },
     {
-      "key": "Onboarding/Sections/Invitation/heading",
+      "key": "Climatelab/Onboarding/Invitation/heading",
       "value": "Freundinnen und Feinde einladen"
     },
     {
-      "key": "Onboarding/Sections/Invitation/paragraph1",
+      "key": "Climatelab/Onboarding/Invitation/paragraph1",
       "value": "Das Klimalabor lebt davon, dass viele unterschiedliche Perspektiven zusammen kommen. Laden Sie 3 Freunde und Bekannte ein, mit denen Sie nicht unbedingt immer gleicher Meinung sind."
     },
     {
-      "key": "Onboarding/Sections/CallToAction/heading",
+      "key": "Climatelab/Onboarding/CallToAction/heading",
       "value": "In Klimajournalismus investieren"
     },
     {
-      "key": "Onboarding/Sections/CallToAction/paragraph1",
+      "key": "Climatelab/Onboarding/CallToAction/paragraph1",
       "value": "Investieren Sie in Klimajournalismus:"
     },
     {
-      "key": "Onboarding/Sections/ClimateProfile/paragraph1",
+      "key": "Climatelab/Onboarding/ClimatePersonalInfo/heading",
+      "value": "Persönliche Angaben"
+    },
+    {
+      "key": "Climatelab/Onboarding/ClimatePersonalInfo/paragraph1",
       "value": "Uns ist wichtig, dass Menschen aus unterschiedlichen Lebenswelten zusammenfinden, sich gegenseitig inspirieren und herausfordern. Damit wir die Diversität des Klimalabors tatsächlich im Blick haben, wären wir froh um ein paar Angaben zu Ihrer Person."
     },
     {
-      "key": "Onboarding/Sections/ClimateProfile/merci1",
+      "key": "Climatelab/Onboarding/ClimatePersonalInfo/merci1",
       "value": "Vielen Dank für Ihre Angaben."
     },
     {
@@ -5701,23 +5725,43 @@
       "value": "Fehler"
     },
     {
-      "key": "Trial/Form/waiting/title",
+      "key": "Trial/Form/series/waiting/title",
       "value": "Sie haben Post!"
     },
     {
-      "key": "Trial/Form/completed/title",
+      "key": "Trial/Form/series/completed/title",
       "value": "Herzlich willkommen!"
     },
     {
-      "key": "Trial/Form/initial/title",
+      "key": "Trial/Form/series/initial/title",
       "value": "Kostenlos Probe&shy;lesen für 21&nbsp;Tage."
     },
     {
-      "key": "Trial/Form/initial/beforeSignIn",
+      "key": "Trial/Form/series/initial/beforeSignIn",
       "value": "Melden Sie sich an und lesen Sie die ganze Serie. "
     },
     {
-      "key": "Trial/Form/initial/afterSignIn",
+      "key": "Trial/Form/series/initial/afterSignIn",
+      "value": "Sie können sich in den kommenden Tagen ohne Einschränkung bei uns umsehen."
+    },
+    {
+      "key": "Trial/Form/flyer/waiting/title",
+      "value": "Sie haben Post!"
+    },
+    {
+      "key": "Trial/Form/flyer/completed/title",
+      "value": "Herzlich willkommen!"
+    },
+    {
+      "key": "Trial/Form/flyer/initial/title",
+      "value": "Danke für Ihr Interesse."
+    },
+    {
+      "key": "Trial/Form/flyer/initial/beforeSignIn",
+      "value": "Melden Sie sich an und lesen Sie weiter."
+    },
+    {
+      "key": "Trial/Form/flyer/initial/afterSignIn",
       "value": "Sie können sich in den kommenden Tagen ohne Einschränkung bei uns umsehen."
     },
     {
@@ -6790,7 +6834,7 @@
     },
     {
       "key": "Goodie/description/MUG",
-      "value": "Mit Logo und Claim «Ohne Journalismus keine Demokratie». Lieferung innerhalb von 10 Werktagen."
+      "value": "Mit Logo und Claim «Ohne Journalismus keine Demokratie». Lieferung innerhalb von 10 Werktagen. Nur innerhalb der Schweiz möglich."
     },
     {
       "key": "Goodie/label/MUG_CERAMIC",
@@ -6798,7 +6842,7 @@
     },
     {
       "key": "Goodie/description/MUG_CERAMIC",
-      "value": "Mit Logo und Claim «Ohne Journalismus keine Demokratie». Lieferung innerhalb von 10 Werktagen."
+      "value": "Mit Logo und Claim «Ohne Journalismus keine Demokratie». Lieferung innerhalb von 10 Werktagen. Nur innerhalb der Schweiz möglich."
     },
     {
       "key": "option/TABLEBOOK/label/other",

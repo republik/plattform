@@ -1,4 +1,5 @@
 const checkEnv = require('check-env')
+const { hasFullDocumentAccess } = require('../restrictions')
 
 checkEnv(['FRONTEND_BASE_URL'])
 
@@ -232,10 +233,25 @@ const metaFieldResolver = (meta, _all = [], _users = [], errors) => {
   }
 }
 
+const isRestricted = (doc) => {
+  const resolver = createResolver(doc._all)
+  const formatDoc = resolver(doc.meta?.format)
+
+  return doc.meta?.isRestricted || formatDoc?.meta?.isRestricted
+}
+
+const shouldStripDocLinks = (user, doc) =>
+  isRestricted(doc) &&
+  // user is undefined during publish -> no stripping
+  // null during document delivery -> strip unless authorized
+  user !== undefined &&
+  !hasFullDocumentAccess(user, doc._apiKey)
+
 module.exports = {
   getRepoId,
   createResolver,
   createUrlReplacer,
   extractUserUrl,
   metaFieldResolver,
+  shouldStripDocLinks,
 }
