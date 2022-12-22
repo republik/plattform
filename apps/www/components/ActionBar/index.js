@@ -520,6 +520,7 @@ const ActionBar = ({
       group: mode === 'articleTop' ? 'audio' : undefined,
     },
     {
+      title: t('article/actionbar/audio/info/title'),
       element: (
         <AudioInfo
           play={play}

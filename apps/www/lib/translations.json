@@ -3317,6 +3317,10 @@
       "value": "Entfernen"
     },
     {
+      "key": "article/actionbar/audio/info/title",
+      "value": "Vorgelesener Beitrag"
+    },
+    {
       "key": "article/actionbar/audio/info/speaker/default",
       "value": "unserem Sprecherinnen-Team"
     },
