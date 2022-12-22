@@ -85,7 +85,7 @@ const AudioInfo = ({
             <>
               {'. '}
               <span>{t('article/actionbar/audio/info/read-soon')}</span>
-              {(!!data || !loading) && (
+              {(!!data || !loading) && readAloudSubscription && (
                 <SubscribeCheckbox
                   subscription={readAloudSubscription}
                   filterName='ReadAloud'
