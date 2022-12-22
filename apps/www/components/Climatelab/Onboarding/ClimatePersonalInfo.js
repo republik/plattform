@@ -75,13 +75,13 @@ const ClimatePersonalInfo = (props) => {
   const { t } = props
   return (
     <Section
-      heading={t('Onboarding/Sections/ClimatePersonalInfo/heading')}
+      heading={t('Climatelab/Onboarding/ClimatePersonalInfo/heading')}
       // isTicked={hasConsented}
       // showContinue={hasConsented}
       {...props}
     >
       <P {...styles.p}>
-        {t('Onboarding/Sections/ClimatePersonalInfo/paragraph1', null, '')}
+        {t('Climatelab/Onboarding/ClimatePersonalInfo/paragraph1', null, '')}
       </P>
 
       <div {...styles.questionnaireStyleOverride}>
@@ -91,7 +91,7 @@ const ClimatePersonalInfo = (props) => {
           hideCount
           submittedMessage={
             <Interaction.P>
-              {t('Onboarding/Sections/ClimatePersonalInfo/merci1')}
+              {t('Climatelab/Onboarding/ClimatePersonalInfo/merci1')}
             </Interaction.P>
           }
           hideInvalid={true}

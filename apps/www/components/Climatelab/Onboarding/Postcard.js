@@ -43,7 +43,7 @@ const Postcard = (props) => {
 
   return (
     <Section
-      heading={t('Onboarding/Sections/Postcard/heading')}
+      heading={t('Climatelab/Onboarding/Postcard/heading')}
       // isTicked={hasConsented}
       // showContinue={hasConsented}
       {...props}
@@ -53,7 +53,7 @@ const Postcard = (props) => {
           {...styles.p}
           type={Interaction.P}
           dangerouslySetInnerHTML={{
-            __html: t(['Onboarding/Sections/Postcard/paragraph1'], null, ''),
+            __html: t(['Climatelab/Onboarding/Postcard/paragraph1'], null, ''),
           }}
         />
         <br />

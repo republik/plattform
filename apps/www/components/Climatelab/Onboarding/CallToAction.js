@@ -56,14 +56,14 @@ const CallToAction = (props) => {
 
   return (
     <Section
-      heading={t('Onboarding/Sections/CallToAction/heading')}
+      heading={t('Climatelab/Onboarding/CallToAction/heading')}
       // isTicked={hasConsented}
       // showContinue={hasConsented}
       {...props}
     >
       <Fragment>
         <P {...styles.p}>
-          {t('Onboarding/Sections/CallToAction/paragraph1', null, '')}{' '}
+          {t('Climatelab/Onboarding/CallToAction/paragraph1', null, '')}{' '}
           <A href={linkUrl}>{linkText}</A>
         </P>
       </Fragment>

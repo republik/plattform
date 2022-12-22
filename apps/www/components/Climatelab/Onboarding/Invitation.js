@@ -42,14 +42,14 @@ const Invitation = (props) => {
 
   return (
     <Section
-      heading={t('Onboarding/Sections/Invitation/heading')}
+      heading={t('Climatelab/Onboarding/Invitation/heading')}
       // isTicked={hasConsented}
       // showContinue={hasConsented}
       {...props}
     >
       <Fragment>
         <P {...styles.p}>
-          {t('Onboarding/Sections/Invitation/paragraph1', null, '')}
+          {t('Climatelab/Onboarding/Invitation/paragraph1', null, '')}
         </P>
       </Fragment>
     </Section>

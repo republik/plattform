@@ -170,7 +170,7 @@ export const PostcardPreview = graphql(
                   </div>
                 </div>
                 <Interaction.P>
-                  {t('Onboarding/Sections/Postcard/merci2')}
+                  {t('Climatelab/Postcard/PostcardPreview/merci2')}
                 </Interaction.P>
               </>
             )

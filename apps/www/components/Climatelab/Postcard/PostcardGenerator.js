@@ -41,7 +41,7 @@ const PostcardGenerator = ({ t, data }) => {
                 hideCount
                 submittedMessage={
                   <Interaction.P>
-                    {t('Onboarding/Sections/Postcard/merci1')}
+                    {t('Climatelab/Postcard/PostcardGenerator/merci1')}
                   </Interaction.P>
                 }
                 hideInvalid={true}

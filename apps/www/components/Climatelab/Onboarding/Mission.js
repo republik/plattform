@@ -42,20 +42,20 @@ const Mission = (props) => {
 
   return (
     <Section
-      heading={t('Onboarding/Sections/Mission/heading')}
+      heading={t('Climatelab/Onboarding/Mission/heading')}
       // isTicked={hasConsented}
       // showContinue={hasConsented}
       {...props}
     >
       <Fragment>
         <P {...styles.p}>
-          {t('Onboarding/Sections/Mission/paragraph1', null, '')}
+          {t('Climatelab/Onboarding/Mission/paragraph1', null, '')}
           <br /> <br />
-          {t('Onboarding/Sections/Mission/bullet1', null, '')}
+          {t('Climatelab/Onboarding/Mission/bullet1', null, '')}
           <br /> <br />
-          {t('Onboarding/Sections/Mission/bullet2', null, '')}
+          {t('Climatelab/Onboarding/Mission/bullet2', null, '')}
           <br /> <br />
-          {t('Onboarding/Sections/Mission/bullet3', null, '')}
+          {t('Climatelab/Onboarding/Mission/bullet3', null, '')}
           <br />
         </P>
       </Fragment>
