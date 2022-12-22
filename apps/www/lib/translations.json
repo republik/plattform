@@ -426,7 +426,7 @@
     },
     {
       "key": "marketing/page/reasons/3/text",
-      "value": "Die Republik wird finanziert durch ihre über 28'000 Abonnentinnen. Wir gehören niemandem – aber jedem unserer Mitglieder ein bisschen."
+      "value": "Die Republik wird finanziert durch ihre rund 28’000 Abonnentinnen. Wir gehören niemandem – aber jedem unserer Mitglieder ein bisschen."
     },
     {
       "key": "marketing/page/vision/headline",
@@ -490,7 +490,7 @@
     },
     {
       "key": "marketing/page/sections/description/briefings",
-      "value": "Durch die Woche mit der Republik: Das Datenbriefing «Auf lange Sicht» am Montag, das Justiz-Briefing «Am Gericht» am Mittwoch, das «Briefing aus Bern» am Donnerstag und «Was diese Woche wichtig war» am Freitag."
+      "value": "Durch die Woche mit der Republik: das Justizbriefing «Am Gericht» am Mittwoch, das «Briefing aus Bern» am Donnerstag und «Was diese Woche wichtig war» am Freitag."
     },
     {
       "key": "marketing/page/sections/title/briefings",
@@ -522,7 +522,7 @@
     },
     {
       "key": "marketing/page/sections/description/winter",
-      "value": "Es ist eine kalte, aufreibende und verwirrende Zeit. Soll man sich all den Krisen stellen oder sich davon ablenken? Wir meinen: Beides. Und bieten Hand dazu – immer Montags bei Sonnenuntergang"
+      "value": "Es ist eine kalte, aufreibende und verwirrende Zeit. Soll man sich all den Krisen stellen oder sich davon ablenken? Wir meinen: Beides. Und bieten Hand dazu – immer montags bei Sonnenuntergang"
     },
     {
       "key": "marketing/page/sections/title/winter",
@@ -5725,23 +5725,43 @@
       "value": "Fehler"
     },
     {
-      "key": "Trial/Form/waiting/title",
+      "key": "Trial/Form/series/waiting/title",
       "value": "Sie haben Post!"
     },
     {
-      "key": "Trial/Form/completed/title",
+      "key": "Trial/Form/series/completed/title",
       "value": "Herzlich willkommen!"
     },
     {
-      "key": "Trial/Form/initial/title",
+      "key": "Trial/Form/series/initial/title",
       "value": "Kostenlos Probe&shy;lesen für 21&nbsp;Tage."
     },
     {
-      "key": "Trial/Form/initial/beforeSignIn",
+      "key": "Trial/Form/series/initial/beforeSignIn",
       "value": "Melden Sie sich an und lesen Sie die ganze Serie. "
     },
     {
-      "key": "Trial/Form/initial/afterSignIn",
+      "key": "Trial/Form/series/initial/afterSignIn",
+      "value": "Sie können sich in den kommenden Tagen ohne Einschränkung bei uns umsehen."
+    },
+    {
+      "key": "Trial/Form/flyer/waiting/title",
+      "value": "Sie haben Post!"
+    },
+    {
+      "key": "Trial/Form/flyer/completed/title",
+      "value": "Herzlich willkommen!"
+    },
+    {
+      "key": "Trial/Form/flyer/initial/title",
+      "value": "Danke für Ihr Interesse."
+    },
+    {
+      "key": "Trial/Form/flyer/initial/beforeSignIn",
+      "value": "Melden Sie sich an und lesen Sie weiter."
+    },
+    {
+      "key": "Trial/Form/flyer/initial/afterSignIn",
       "value": "Sie können sich in den kommenden Tagen ohne Einschränkung bei uns umsehen."
     },
     {
@@ -6814,7 +6834,7 @@
     },
     {
       "key": "Goodie/description/MUG",
-      "value": "Mit Logo und Claim «Ohne Journalismus keine Demokratie». Lieferung innerhalb von 10 Werktagen."
+      "value": "Mit Logo und Claim «Ohne Journalismus keine Demokratie». Lieferung innerhalb von 10 Werktagen. Nur innerhalb der Schweiz möglich."
     },
     {
       "key": "Goodie/label/MUG_CERAMIC",
@@ -6822,7 +6842,7 @@
     },
     {
       "key": "Goodie/description/MUG_CERAMIC",
-      "value": "Mit Logo und Claim «Ohne Journalismus keine Demokratie». Lieferung innerhalb von 10 Werktagen."
+      "value": "Mit Logo und Claim «Ohne Journalismus keine Demokratie». Lieferung innerhalb von 10 Werktagen. Nur innerhalb der Schweiz möglich."
     },
     {
       "key": "option/TABLEBOOK/label/other",

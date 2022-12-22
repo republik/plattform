@@ -7,7 +7,6 @@ export const baseConfig: Partial<ElementConfigI> = {
     blockUi: {
       style: {
         top: 10,
-        left: 10,
       },
     },
     stopFormIteration: true,

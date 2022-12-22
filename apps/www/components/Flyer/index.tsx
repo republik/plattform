@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 
 import {
   Flyer,
@@ -15,6 +15,7 @@ import HrefLink from '../Link/Href'
 
 import { getTileActionBar } from './ActionBar'
 import Footer from './Footer'
+import getLinkBlocker, { TrialOverlay } from './LinkBlocker'
 import Meta from './Meta'
 import Nav from './Nav'
 import Paynote from './Paynote'
@@ -77,32 +78,47 @@ const Page: React.FC<{
   actionBar: JSX.Element
 }> = ({ meta, repoId, documentId, inNativeApp, tileId, value, actionBar }) => {
   const { t } = useTranslation()
-  const { hasActiveMembership, meLoading } = useMe()
+  const { hasAccess, hasActiveMembership, meLoading } = useMe()
+  const [overlay, showOverlay] = useState<boolean>()
 
   const contextProps = {
     t,
-    Link: HrefLink,
+    Link: hasAccess ? HrefLink : getLinkBlocker(() => showOverlay(true)),
     nav: <Nav repoId={repoId} publishDate={meta.publishDate} />,
     ShareTile: getTileActionBar(documentId, meta, inNativeApp),
   }
 
   return (
-    <Flyer.Layout>
-      <RenderContextProvider {...contextProps}>
-        {meLoading || hasActiveMembership ? (
-          <RenderValue value={value} />
-        ) : (
-          <RenderWithPaynote
-            value={value}
-            tileId={tileId}
-            repoId={repoId}
-            documentId={documentId}
-          />
-        )}
-      </RenderContextProvider>
-      <Footer>{actionBar}</Footer>
-      <Meta documentId={documentId} meta={meta} tileId={tileId} value={value} />
-    </Flyer.Layout>
+    <>
+      <Flyer.Layout>
+        <RenderContextProvider {...contextProps}>
+          {meLoading || hasActiveMembership ? (
+            <RenderValue value={value} />
+          ) : (
+            <RenderWithPaynote
+              value={value}
+              tileId={tileId}
+              repoId={repoId}
+              documentId={documentId}
+            />
+          )}
+        </RenderContextProvider>
+        <Footer>{actionBar}</Footer>
+        <Meta
+          documentId={documentId}
+          meta={meta}
+          tileId={tileId}
+          value={value}
+        />
+      </Flyer.Layout>
+      {overlay && (
+        <TrialOverlay
+          documentId={documentId}
+          repoId={repoId}
+          onClose={() => showOverlay(false)}
+        />
+      )}
+    </>
   )
 }
 

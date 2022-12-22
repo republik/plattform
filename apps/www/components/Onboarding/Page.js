@@ -32,7 +32,6 @@ import withT from '../../lib/withT'
 import Subscriptions, {
   fragments as fragmentsSubscriptions,
 } from './Sections/Subscriptions'
-import { ONBOARDING_SECTIONS_REPO_IDS } from '../../lib/constants'
 import withInNativeApp from '../../lib/withInNativeApp'
 import Link from 'next/link'
 
@@ -64,10 +63,13 @@ const QUERY = gql`
       ...GreetingEmployee
     }
 
-    documents(template: "section", repoIds: $repoIds) {
+    sections: documents(template: "section") {
       nodes {
         id
-        linkedDocuments {
+        meta {
+          suggestSubscription
+        }
+        formats: linkedDocuments {
           totalCount
           nodes {
             ...FormatInfo
@@ -291,20 +293,13 @@ class Page extends Component {
 
     return (
       <Frame meta={meta} raw>
-        <Query
-          query={QUERY}
-          variables={{
-            repoIds:
-              ONBOARDING_SECTIONS_REPO_IDS &&
-              ONBOARDING_SECTIONS_REPO_IDS.split(','),
-          }}
-        >
+        <Query query={QUERY}>
           {({ loading, error, data }) => {
             if (loading || error) {
               return <Loader loading={loading} error={error} />
             }
 
-            const { employees, documents, roleStats } = data
+            const { employees, sections, roleStats } = data
 
             return (
               <Center>
@@ -360,7 +355,7 @@ class Page extends Component {
                           key={name}
                           {...data}
                           name={name}
-                          sections={documents.nodes}
+                          sections={sections.nodes}
                           onExpand={this.onExpand.bind(this)}
                           isExpanded={expandedSection === name}
                           onContinue={this.onContinue.bind(this)}
