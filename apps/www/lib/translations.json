@@ -1390,7 +1390,7 @@
     },
     {
       "key": "profile/contact/facebook/label",
-      "value": "Facebook"
+      "value": "Facebook ID"
     },
     {
       "key": "profile/contact/prolitterisId/label",
@@ -1398,7 +1398,15 @@
     },
     {
       "key": "profile/contact/twitter/label",
-      "value": "Twitter"
+      "value": "Twitter Handle"
+    },
+    {
+      "key": "profile/contact/mastodonUrl/label",
+      "value": "Mastodon URL "
+    },
+    {
+      "key": "profile/contact/mastodonUrl/error",
+      "value": "Muss gültige URL sein "
     },
     {
       "key": "profile/contact/publicUrl/label",

@@ -96,6 +96,11 @@ module.exports = async (_, args, context) => {
     'profile/contact/publicUrl/label',
     MAX_PUBLIC_URL_LENGTH,
   )
+  ensureStringLengthForProfile(
+    'mastodonUrl',
+    'profile/contact/mastodonUrl/label',
+    MAX_PUBLIC_URL_LENGTH,
+  )
 
   if (
     publicUrl &&
@@ -160,6 +165,7 @@ module.exports = async (_, args, context) => {
     'phoneNumberAccessRole',
     'facebookId',
     'twitterHandle',
+    'mastodonUrl',
     'prolitterisId',
     'publicUrl',
     'emailAccessRole',

@@ -60,6 +60,7 @@ module.exports = {
   ),
   facebookId: exposeProfileField('facebookId'),
   twitterHandle: exposeProfileField('twitterHandle'),
+  mastodonUrl: exposeProfileField('mastodonUrl'),
   publicUrl: exposeProfileField('publicUrl'),
   disclosures: exposeProfileField('disclosures'),
   statement: exposeProfileField('statement'),

@@ -170,6 +170,7 @@ const getPublicUser = gql`
       }
       facebookId
       twitterHandle
+      mastodonUrl
       publicUrl
       badges
       prolitterisId

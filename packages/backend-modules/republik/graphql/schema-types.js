@@ -60,6 +60,7 @@ extend type User {
   biographyContent: JSON
   facebookId: String
   twitterHandle: String
+  mastodonUrl: String
   publicUrl: String
   disclosures: String
   gender: String

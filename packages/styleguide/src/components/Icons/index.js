@@ -123,6 +123,7 @@ export {
   IoLogoGoogle as GoogleIcon,
   IoLogoApple as AppleIcon,
   IoLogoFacebook as FacebookIcon,
+  IoLogoMastodon as MastdodonIcon,
 } from 'react-icons/io5'
 
 export { BsBlockquoteLeft as BlockQuoteIcon } from 'react-icons/bs'

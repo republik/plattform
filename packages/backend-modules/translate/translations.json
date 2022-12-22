@@ -969,6 +969,10 @@
       "value": "Prolitteris ID"
     },
     {
+      "key": "profile/contact/mastodonUrl/label",
+      "value": "Mastodon"
+    },
+    {
       "key": "profile/credential/label",
       "value": "Bezeichnung"
     },

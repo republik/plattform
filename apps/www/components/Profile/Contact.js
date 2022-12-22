@@ -6,6 +6,7 @@ import { Dropdown, Label, Interaction, IconButton } from '@project-r/styleguide'
 import {
   FacebookIcon,
   TwitterIcon,
+  MastdodonIcon,
   LanguageIcon,
   MailOutlineIcon,
   NoteAddIcon,
@@ -31,6 +32,15 @@ const fields = (t) => [
   {
     label: t('profile/contact/twitter/label'),
     name: 'twitterHandle',
+  },
+  {
+    label: t('profile/contact/mastodonUrl/label'),
+    name: 'mastodonUrl',
+    validator: (value) =>
+      !!value &&
+      !isHTTPUrl(value) &&
+      value !== DEFAULT_VALUES.publicUrl &&
+      t('profile/contact/mastodonUrl/error'),
   },
   {
     label: t('profile/contact/publicUrl/label'),
@@ -191,6 +201,13 @@ const Contact = ({
             Icon={TwitterIcon}
             style={customStyle}
             href={`https://twitter.com/${user.twitterHandle}`}
+          />
+        )}
+        {user.mastodonUrl && (
+          <IconButton
+            Icon={MastdodonIcon}
+            style={customStyle}
+            href={user.mastodonUrl}
           />
         )}
         {user.email && (

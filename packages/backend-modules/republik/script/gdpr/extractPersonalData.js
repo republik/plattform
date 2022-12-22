@@ -144,6 +144,7 @@ Promise.props({ pgdb: PgDb.connect(), elastic: Elasticsearch.connect() })
             'isListed',
             'facebookId',
             'twitterHandle',
+            'mastodonUrl',
             'publicUrl',
             'biography',
             'pgpPublicKey',

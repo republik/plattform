@@ -54,6 +54,7 @@ type mutations {
     biography: String
     facebookId: String
     twitterHandle: String
+    mastodonUrl: String
     publicUrl: String
     disclosures: String
     gender: String

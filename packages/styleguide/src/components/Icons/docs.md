@@ -101,6 +101,7 @@ The default Icon style is Material. For brands we rely on Ionic icons. There are
 <br />
 <Interaction.H3>Social & Share</Interaction.H3>
 <IconButton Icon={TwitterIcon} label="TwitterIcon" />
+<IconButton Icon={MastodonIcon} label="MastodonIcon" />
 <IconButton Icon={WhatsappIcon} label="WhatsappIcon" />
 <IconButton Icon={VimeoIcon} label="VimeoIcon" />
 <IconButton Icon={YoutubeIcon} label="YoutubeIcon" />

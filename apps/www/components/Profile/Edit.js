@@ -170,6 +170,7 @@ export const mutation = gql`
     $hasPublicProfile: Boolean
     $facebookId: String
     $twitterHandle: String
+    $mastodonUrl: String
     $emailAccessRole: AccessRole
     $publicUrl: String
     $biography: String
@@ -187,6 +188,7 @@ export const mutation = gql`
       hasPublicProfile: $hasPublicProfile
       facebookId: $facebookId
       twitterHandle: $twitterHandle
+      mastodonUrl: $mastodonUrl
       emailAccessRole: $emailAccessRole
       publicUrl: $publicUrl
       biography: $biography
@@ -204,6 +206,7 @@ export const mutation = gql`
       hasPublicProfile
       facebookId
       twitterHandle
+      mastodonUrl
       emailAccessRole
       publicUrl
       biography
