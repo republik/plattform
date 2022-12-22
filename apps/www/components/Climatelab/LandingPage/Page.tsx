@@ -5,10 +5,16 @@ import { useMe } from '../../../lib/context/MeContext'
 import Frame from '../../Frame'
 import { ClimatelabColors } from '../ClimatelabColors'
 import CallToAction from '../shared/CallToAction'
-import ClimateLabTrialForm from '../shared/ClimateLabTrialForm'
 import Counter from '../Counter'
 import TrialForm from '../../Trial/Form'
 import Image from 'next/image'
+import Button from '../shared/Button'
+import { useState } from 'react'
+import {
+  CLIMATE_LAB_ACCESS_CAMPAIGN_ID,
+  CLIMATE_LAB_CONTEXT,
+  CLIMATE_LAB_ROLE,
+} from '../constants'
 
 const LandingPage = () => {
   /* const { query } = useRouter()
@@ -65,23 +71,29 @@ const LandingPage = () => {
               </p>
             </div>
           </section>
-          <section {...css({ [mediaQueries.mUp]: { marginTop: 162 } })}>
-            <ClimateLabTrialForm />
+          <section {...css({ [mediaQueries.mUp]: { marginTop: 80 } })}>
+            <div {...styles.trialFormWrapper}>
+              <h3 style={{ color: 'black' }}>Jetzt teilnehmen</h3>
+              <TrialForm
+                accessCampaignId={CLIMATE_LAB_ACCESS_CAMPAIGN_ID}
+                context={CLIMATE_LAB_CONTEXT}
+                skipForMembers={false}
+                shouldSkipTrialForm={me?.roles.some(
+                  (role) => role === CLIMATE_LAB_ROLE,
+                )}
+                payload={{}}
+              />
+            </div>
           </section>
-          <section>
+          <section
+            {...css({ marginTop: 40, [mediaQueries.mUp]: { marginTop: 80 } })}
+          >
             <Counter />
             <p {...styles.text}>
               Menschen machen schon mit im Klimalabor - jung, alt, Stadt, Land
               und alle dazwischen machens chon mit im Klimalabor
             </p>
           </section>
-          <TrialForm
-            accessCampaignId='3684f324-b694-4930-ad1a-d00a2e00934b'
-            context='climate'
-            skipForMembers={false}
-            shouldSkipTrialForm={me?.roles.some((role) => role === 'climate')}
-            payload={{}}
-          />
         </div>
       </div>
     </Frame>
@@ -127,6 +139,14 @@ const styles = {
     [mediaQueries.mUp]: {
       fontSize: 40,
     },
+  }),
+  trialFormWrapper: css({
+    backgroundColor: 'white',
+    borderRadius: 10,
+    borderStyle: 'solid',
+    borderWidth: 1,
+    borderColor: ClimatelabColors.border,
+    padding: 20,
   }),
   text: css({
     ...fontStyles.sansSerifMedium,
