@@ -5,7 +5,7 @@ import { Interaction, mediaQueries } from '@project-r/styleguide'
 
 import Section from '../../Onboarding/Section'
 
-import withT from '../../../lib/withT'
+import { useTranslation } from '../../../lib/withT'
 
 const { P } = Interaction
 
@@ -36,7 +36,7 @@ const styles = {
 // }
 
 const Mission = (props) => {
-  const { t } = props
+  const { t } = useTranslation()
 
   // Is ticked when either???
 
@@ -63,4 +63,4 @@ const Mission = (props) => {
   )
 }
 
-export default withT(Mission)
+export default Mission

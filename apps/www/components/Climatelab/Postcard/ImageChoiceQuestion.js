@@ -7,7 +7,6 @@ import { Loader } from '@project-r/styleguide'
 import scrollIntoView from 'scroll-into-view'
 
 import { Interaction, useColorContext } from '@project-r/styleguide'
-import withT from '../../../lib/withT'
 import dynamic from 'next/dynamic'
 const { H2 } = Interaction
 
@@ -243,4 +242,4 @@ const ImageChoiceQuestion = (props) => {
   )
 }
 
-export default withT(ImageChoiceQuestion)
+export default ImageChoiceQuestion

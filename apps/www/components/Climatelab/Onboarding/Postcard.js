@@ -6,7 +6,7 @@ import { Interaction, mediaQueries, RawHtml } from '@project-r/styleguide'
 
 import Section from '../../Onboarding/Section'
 
-import withT from '../../../lib/withT'
+import { useTranslation } from '../../../lib/withT'
 import PostcardGenerator from '../Postcard/PostcardGenerator'
 
 const styles = {
@@ -55,7 +55,8 @@ export const fragments = {
 }
 
 const Postcard = (props) => {
-  const { t, postcard } = props
+  const { postcard } = props
+  const { t } = useTranslation()
 
   return (
     <Section
@@ -79,4 +80,4 @@ const Postcard = (props) => {
   )
 }
 
-export default withT(Postcard)
+export default Postcard

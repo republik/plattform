@@ -3,7 +3,7 @@ import { PostcardPreview } from './PostcardPreview'
 
 import { css } from 'glamor'
 
-import withT from '../../../lib/withT'
+import { useTranslation } from '../../../lib/withT'
 
 import {
   Interaction,
@@ -25,7 +25,8 @@ const styles = {
   }),
 }
 
-const PostcardGenerator = ({ t, postcard }) => {
+const PostcardGenerator = ({ postcard }) => {
+  const { t } = useTranslation()
   return (
     <>
       <div {...styles.questionnaireStyleOverride}>
@@ -47,4 +48,4 @@ const PostcardGenerator = ({ t, postcard }) => {
   )
 }
 
-export default withT(PostcardGenerator)
+export default PostcardGenerator

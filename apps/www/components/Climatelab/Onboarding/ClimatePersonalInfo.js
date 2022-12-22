@@ -2,7 +2,7 @@ import React from 'react'
 import { css } from 'glamor'
 
 import Section from '../../Onboarding/Section'
-import withT from '../../../lib/withT'
+import { useTranslation } from '../../../lib/withT'
 import { QuestionnaireWithData } from '../../Questionnaire/Questionnaire'
 import { gql } from '@apollo/client'
 
@@ -43,7 +43,7 @@ export const fragments = {
 }
 
 const ClimatePersonalInfo = (props) => {
-  const { t } = props
+  const { t } = useTranslation()
   return (
     <Section
       heading={t('Climatelab/Onboarding/ClimatePersonalInfo/heading')}
@@ -73,4 +73,4 @@ const ClimatePersonalInfo = (props) => {
   )
 }
 
-export default withT(ClimatePersonalInfo)
+export default ClimatePersonalInfo
