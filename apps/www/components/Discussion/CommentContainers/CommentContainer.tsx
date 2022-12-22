@@ -16,6 +16,7 @@ import useReportCommentHandler from '../hooks/actions/useReportCommentHandler'
 import useUnpublishCommentHandler from '../hooks/actions/useUnpublishCommentHandler'
 import DiscussionComposer from '../DiscussionComposer/DiscussionComposer'
 import { useRouter } from 'next/router'
+import { useLocalCommentReports } from '../helpers/useLocalCommentReports'
 
 type Props = {
   CommentComponent?: React.ElementType<CommentProps>
@@ -56,6 +57,7 @@ const CommentContainer = ({
   const voteHandlers = useVoteCommentHandlers()
   const reportCommentHandler = useReportCommentHandler()
   const unpublishCommentHandler = useUnpublishCommentHandler()
+  const { checkIfAlreadyReported } = useLocalCommentReports()
 
   const menuItems = useMemo(
     () =>
@@ -69,6 +71,7 @@ const CommentContainer = ({
           unpublishCommentHandler,
           featureCommentHandler: featureOverlay.handleOpen,
         },
+        checkIfAlreadyReported,
       }),
     [
       t,
@@ -78,6 +81,7 @@ const CommentContainer = ({
       reportCommentHandler,
       unpublishCommentHandler,
       featureOverlay.handleOpen,
+      checkIfAlreadyReported,
     ],
   )
 

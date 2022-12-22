@@ -12,7 +12,6 @@ import {
 import { css } from 'glamor'
 import SubscribeCheckbox from './SubscribeCheckbox'
 import withT from '../../lib/withT'
-import { ONBOARDING_SECTIONS_REPO_IDS } from '../../lib/constants'
 import { withMembership } from '../Auth/checkRoles'
 
 const styles = {
@@ -20,10 +19,6 @@ const styles = {
     margin: '8px 0 16px',
   }),
 }
-
-const SECTIONS_ALWAYS_SHOWN = ONBOARDING_SECTIONS_REPO_IDS
-  ? ONBOARDING_SECTIONS_REPO_IDS.split(',')
-  : []
 
 const FormatCheckboxes = ({ formats }) => (
   <div {...styles.checkboxes}>
@@ -37,6 +32,8 @@ const FormatCheckboxes = ({ formats }) => (
   </div>
 )
 
+const getSuggestSubscription = (section) => section.meta.suggestSubscription
+
 const getSubscriptionCount = (section) =>
   section.formats.nodes.filter((f) => f.subscribedByMe.active).length
 
@@ -45,10 +42,10 @@ const getVisibleSections = (sections, prevShown = []) =>
     (section) =>
       prevShown.find((s) => s.id === section.id) ||
       getSubscriptionCount(section) ||
-      SECTIONS_ALWAYS_SHOWN.find((repoId) => repoId === section.repoId),
+      getSuggestSubscription(section),
   )
 
-const SubscribedDocuments = ({ t, data: { sections }, isMember }) => {
+const SubscribedDocuments = ({ t, data: { sections } }) => {
   const [showAll, setShowAll] = useState(false)
   const [colorScheme] = useColorContext()
   const sectionNodes = sections && sections.nodes

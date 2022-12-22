@@ -159,8 +159,9 @@ export const possibleSubscriptions = gql`
         meta {
           title
           color
+          suggestSubscription
         }
-        formats: linkedDocuments(feed: true) {
+        formats: linkedDocuments {
           nodes {
             id
             subscribedByMe {
