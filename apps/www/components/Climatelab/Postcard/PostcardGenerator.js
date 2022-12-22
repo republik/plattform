@@ -7,7 +7,6 @@ import withT from '../../../lib/withT'
 
 import {
   Interaction,
-  Loader,
   mediaQueries,
   fontStyles,
   convertStyleToRem,
@@ -26,33 +25,25 @@ const styles = {
   }),
 }
 
-const PostcardGenerator = ({ t, data }) => {
+const PostcardGenerator = ({ t, postcard }) => {
   return (
-    <Loader
-      loading={data?.loading}
-      error={data?.error}
-      render={() => {
-        return (
-          <>
-            <div {...styles.questionnaireStyleOverride}>
-              <QuestionnaireWithData
-                slug={'klima-postkarte'}
-                publicSubmission={false}
-                hideCount
-                submittedMessage={
-                  <Interaction.P>
-                    {t('Climatelab/Postcard/PostcardGenerator/merci1')}
-                  </Interaction.P>
-                }
-                hideInvalid={true}
-                hideReset={true}
-              />
-            </div>
-            <PostcardPreview t={t} />
-          </>
-        )
-      }}
-    />
+    <>
+      <div {...styles.questionnaireStyleOverride}>
+        <QuestionnaireWithData
+          slug={'klima-postkarte'}
+          publicSubmission={false}
+          hideCount
+          submittedMessage={
+            <Interaction.P>
+              {t('Climatelab/Postcard/PostcardGenerator/merci1')}
+            </Interaction.P>
+          }
+          hideInvalid={true}
+          hideReset={true}
+        />
+      </div>
+      <PostcardPreview postcard={postcard} t={t} />
+    </>
   )
 }
 

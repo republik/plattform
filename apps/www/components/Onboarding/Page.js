@@ -36,17 +36,21 @@ import { ONBOARDING_SECTIONS_REPO_IDS } from '../../lib/constants'
 import withInNativeApp from '../../lib/withInNativeApp'
 import Link from 'next/link'
 
-import Postcard from '../Climatelab/Onboarding/Postcard'
+import Postcard, {
+  fragments as fragmentsPostcard,
+} from '../Climatelab/Onboarding/Postcard'
 import Mission from '../Climatelab/Onboarding/Mission'
 import Invitation from '../Climatelab/Onboarding/Invitation'
 import ClimateProfile from '../Climatelab/Onboarding/ClimateProfile'
-import ClimatePersonalInfo from '../Climatelab/Onboarding/ClimatePersonalInfo'
+import ClimatePersonalInfo, {
+  fragments as fragmentsClimatePersonalInfo,
+} from '../Climatelab/Onboarding/ClimatePersonalInfo'
 
 const { P } = Interaction
 
 const QUERY = gql`
   query getOnboarding($repoIds: [ID!]) {
-    me {
+    user: me {
       ...NewsletterUser
       ...AppLoginUser
       ...UsabilityUser
@@ -75,15 +79,19 @@ const QUERY = gql`
     roleStats(role: "climate") {
       count
     }
+
+    ...Postcard
+    ...ClimatePersonalInfo
   }
 
   ${fragmentsNewsletter.user}
   ${fragmentsAppLogin.user}
   ${fragmentsUsability.user}
   ${fragmentsProfile.user}
-
   ${fragmentsGreeting.employee}
   ${fragmentsSubscriptions.formats}
+  ${fragmentsPostcard.postcard}
+  ${fragmentsClimatePersonalInfo.climatepersonalinfo}
 `
 
 const CONTEXTS = {
@@ -173,7 +181,6 @@ class Page extends Component {
         name: 'postcard',
         ref: createRef(),
         visited: false,
-        expanded: true,
       },
       {
         component: Mission,
@@ -210,9 +217,11 @@ class Page extends Component {
       .filter(Boolean)
 
     this.state = {
-      expandedSection: this.sections.find((s) => s.name === query.section)
-        ? query.section
-        : null,
+      expandedSection:
+        (this.sections.find((s) => s.name === query.section) &&
+          query.section) ||
+        (query.context === 'climate' && this.sections[0].name) ||
+        null,
       hasOnceVisitedAll: false,
     }
 
@@ -295,7 +304,9 @@ class Page extends Component {
               return <Loader loading={loading} error={error} />
             }
 
-            const { me: user, employees, documents, roleStats } = data
+            const { employees, documents, roleStats } = data
+
+            console.log(data)
 
             return (
               <Center>
@@ -332,7 +343,7 @@ class Page extends Component {
                   }}
                 />
 
-                {!expandedSection && context !== 'climate' && (
+                {!expandedSection && (
                   <Button
                     primary={!this.state.hasOnceVisitedAll}
                     onClick={() => {
@@ -345,21 +356,15 @@ class Page extends Component {
 
                 <div {...styles.sections}>
                   {this.sections.map(
-                    ({
-                      component: Component,
-                      name,
-                      ref,
-                      visited,
-                      expanded,
-                    }) => {
+                    ({ component: Component, name, ref, visited }) => {
                       return (
                         <Component
                           key={name}
+                          {...data}
                           name={name}
-                          user={user}
                           sections={documents.nodes}
                           onExpand={this.onExpand.bind(this)}
-                          isExpanded={expanded || expandedSection === name}
+                          isExpanded={expandedSection === name}
                           onContinue={this.onContinue.bind(this)}
                           forwardedRef={ref}
                           isVisited={visited}

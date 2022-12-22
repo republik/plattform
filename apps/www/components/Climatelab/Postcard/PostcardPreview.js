@@ -99,87 +99,58 @@ const fontSizeByTextLength = (textLength) => {
   }
 }
 
-export const PostcardPreview = graphql(
-  gql`
-    query {
-      questionnaire(slug: "klima-postkarte") {
-        userHasSubmitted
-        questions {
-          ... on QuestionInterface {
-            userAnswer {
-              payload
-            }
-          }
-          ... on QuestionTypeImageChoice {
-            options {
-              value
-              imageUrl
-            }
-          }
-        }
-      }
-    }
-  `,
-)(({ t, data }) => {
+export const PostcardPreview = (props) => {
+  const { t, postcard } = props
   const [colorScheme] = useColorContext()
+
+  if (!postcard) return null
+  const { questions, userHasSubmitted } = postcard
+  const imageOptions = questions && questions[0].options
+  const imageSelection =
+    questions[0].userAnswer && questions[0].userAnswer.payload.value[0]
+
+  const postcardText =
+    questions[1].userAnswer && questions[1].userAnswer.payload.value
+
+  const imageUrl =
+    imageOptions &&
+    imageOptions.filter((d) => d.value === imageSelection)[0]?.imageUrl
+
   return (
-    <>
-      <Loader
-        loading={data.loading}
-        error={data.error}
-        render={() => {
-          if (!data?.questionnaire) return null
-          const { questions, userHasSubmitted } = data.questionnaire
-          const imageOptions = questions && questions[0].options
-          const imageSelection =
-            questions[0].userAnswer && questions[0].userAnswer.payload.value[0]
-
-          const postcardText =
-            questions[1].userAnswer && questions[1].userAnswer.payload.value
-
-          const imageUrl =
-            imageOptions &&
-            imageOptions.filter((d) => d.value === imageSelection)[0]?.imageUrl
-
-          return (
-            userHasSubmitted && (
-              <>
-                <div
-                  {...styles.postcard}
-                  {...colorScheme.set('boxShadow', 'imageChoiceShadow')}
-                >
-                  <div
-                    {...styles.textArea}
-                    style={{
-                      fontSize: fontSizeByTextLength(
-                        postcardText && postcardText.length,
-                      ),
-                    }}
-                  >
-                    <span>{postcardText}</span>
-                  </div>
-                  <div {...styles.rightSide}>
-                    <div {...styles.postcardContainer}>
-                      <PoststampComponent imageUrl={imageUrl} />
-                    </div>
-                    <div {...styles.adressBlockContainer}>
-                      <div {...styles.adressBlock} />
-                      <div {...styles.adressBlock} />
-                      <div {...styles.adressBlock} />
-                    </div>
-                  </div>
-                </div>
-                <Interaction.P>
-                  {t('Climatelab/Postcard/PostcardPreview/merci2')}
-                </Interaction.P>
-              </>
-            )
-          )
-        }}
-      />
-    </>
+    userHasSubmitted && (
+      <>
+        <div
+          {...styles.postcard}
+          {...colorScheme.set('boxShadow', 'imageChoiceShadow')}
+        >
+          <div
+            {...styles.textArea}
+            style={{
+              fontSize: fontSizeByTextLength(
+                postcardText && postcardText.length,
+              ),
+            }}
+          >
+            <span>{postcardText}</span>
+          </div>
+          <div {...styles.rightSide}>
+            <div {...styles.postcardContainer}>
+              <PoststampComponent imageUrl={imageUrl} />
+            </div>
+            <div {...styles.adressBlockContainer}>
+              <div {...styles.adressBlock} />
+              <div {...styles.adressBlock} />
+              <div {...styles.adressBlock} />
+            </div>
+          </div>
+        </div>
+        <Interaction.P>
+          {t('Climatelab/Postcard/PostcardPreview/merci2')}
+        </Interaction.P>
+      </>
+    )
   )
-})
+}
 
 const PoststampComponent = ({ imageUrl }) => {
   return <img {...styles.image} src={imageUrl} />

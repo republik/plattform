@@ -1,5 +1,6 @@
 import { Fragment } from 'react'
 import { css } from 'glamor'
+import { gql } from '@apollo/client'
 
 import { Interaction, mediaQueries, RawHtml } from '@project-r/styleguide'
 
@@ -32,19 +33,36 @@ const styles = {
   }),
 }
 
-// export const fragments = {
-//   user: gql``,
-// }
+export const fragments = {
+  postcard: gql`
+    fragment Postcard on queries {
+      postcard: questionnaire(slug: "klima-postkarte") {
+        userHasSubmitted
+        questions {
+          ... on QuestionInterface {
+            userAnswer {
+              payload
+            }
+          }
+          ... on QuestionTypeImageChoice {
+            options {
+              value
+              imageUrl
+            }
+          }
+        }
+      }
+    }
+  `,
+}
 
 const Postcard = (props) => {
-  const { t } = props
-
-  // Is ticked when either???
+  const { t, postcard } = props
 
   return (
     <Section
       heading={t('Climatelab/Onboarding/Postcard/heading')}
-      // isTicked={hasConsented}
+      isTicked={postcard.userHasSubmitted}
       // showContinue={hasConsented}
       {...props}
     >
@@ -57,8 +75,7 @@ const Postcard = (props) => {
           }}
         />
         <br />
-
-        <PostcardGenerator t={t} />
+        <PostcardGenerator t={t} postcard={postcard} />
       </Fragment>
     </Section>
   )
