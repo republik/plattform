@@ -1,14 +1,10 @@
 import React from 'react'
-import { graphql } from '@apollo/client/react/hoc'
-import { gql } from '@apollo/client'
 import { css } from 'glamor'
-import { Textfit } from 'react-textfit'
 
 import {
   fontFamilies,
   mediaQueries,
   useColorContext,
-  Loader,
   Interaction,
 } from '@project-r/styleguide'
 
@@ -90,6 +86,27 @@ const styles = {
   }),
 }
 
+const fontSizeByTextLength = (textLength) => {
+  if (textLength < 50) {
+    return '250%'
+  }
+  if (textLength < 100) {
+    return '150%'
+  }
+  if (textLength < 200) {
+    return '125%'
+  }
+  if (textLength < 300) {
+    return '105%'
+  }
+  if (textLength < 400) {
+    return '95%'
+  }
+  if (textLength < 500) {
+    return '85%'
+  }
+}
+
 export const PostcardPreview = (props) => {
   const { t, postcard } = props
   const [colorScheme] = useColorContext()
@@ -107,8 +124,6 @@ export const PostcardPreview = (props) => {
     imageOptions &&
     imageOptions.filter((d) => d.value === imageSelection)[0]?.imageUrl
 
-  console.log(imageSelection)
-
   return (
     userHasSubmitted && (
       <>
@@ -123,8 +138,15 @@ export const PostcardPreview = (props) => {
             })}
           </div>
 
-          <div {...styles.textArea}>
-            <Textfit mode='single'>{postcardText}</Textfit>
+          <div
+            {...styles.textArea}
+            style={{
+              fontSize: fontSizeByTextLength(
+                postcardText && postcardText.length,
+              ),
+            }}
+          >
+            {postcardText}
           </div>
 
           <div {...styles.rightSide}>
