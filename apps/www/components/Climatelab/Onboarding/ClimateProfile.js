@@ -9,7 +9,7 @@ import Portrait from '../../Profile/Portrait'
 import { ListedCheckbox } from '../../Profile/Settings'
 import { mutation } from '../../Profile/Edit'
 import Section from '../../Onboarding/Section'
-import withT from '../../../lib/withT'
+import { useTranslation } from '../../../lib/withT'
 
 import {
   Interaction,
@@ -103,8 +103,9 @@ class ClimateProfile extends Component {
   }
 
   render() {
-    const { user, onContinue, t } = this.props
+    const { user, onContinue } = this.props
     const { values, errors, dirty } = this.state
+    const { t } = useTranslation()
 
     const hasErrors = !!Object.keys(errors).filter((key) => !!errors[key])
       .length
@@ -188,4 +189,4 @@ class ClimateProfile extends Component {
   }
 }
 
-export default withT(ClimateProfile)
+export default ClimateProfile
