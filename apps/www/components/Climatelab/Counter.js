@@ -12,18 +12,21 @@ import {
 
 import { gql } from '@apollo/client'
 import { countFormat } from '../../lib/utils/format'
+import { ClimatelabColors } from './ClimatelabColors'
 
 const styles = {
   container: css({}),
   primaryNumber: css({
+    color: ClimatelabColors.text,
     display: 'block',
     marginBottom: -6,
+    fontSize: 80,
+    ...fontStyles.serifTitle,
+    lineHeight: 1,
     [mediaQueries.mUp]: {
+      fontSize: 164,
       marginBottom: -8,
     },
-    fontSize: 80,
-    ...fontStyles.sansSerifRegular,
-    lineHeight: 1,
   }),
 }
 

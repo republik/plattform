@@ -4,9 +4,7 @@ import { css } from 'glamor'
 import { useMe } from '../../../lib/context/MeContext'
 import Frame from '../../Frame'
 import { ClimatelabColors } from '../ClimatelabColors'
-import Text from '../shared/Text'
 import CallToAction from '../shared/CallToAction'
-import Heading from '../shared/Heading'
 import ClimateLabTrialForm from '../shared/ClimateLabTrialForm'
 import Counter from '../Counter'
 import TrialForm from '../../Trial/Form'
@@ -35,7 +33,7 @@ const LandingPage = () => {
     <Frame
       meta={meta}
       pageBackgroundColor={ClimatelabColors.background}
-      containerMaxWidth={1074}
+      containerMaxWidth={1100}
     >
       <div {...styles.page}>
         <div {...styles.imageWrapper}>
@@ -75,11 +73,6 @@ const LandingPage = () => {
             <p {...styles.text}>
               Menschen machen schon mit im Klimalabor - jung, alt, Stadt, Land
               und alle dazwischen machens chon mit im Klimalabor
-            </p>
-            <p>
-              Lorem ipsum, dolor sit amet consectetur adipisicing elit. Fuga
-              excepturi vitae illo deleniti libero aliquam porro modi id, error
-              asperiores, voluptas quisquam delectus repellat ex!
             </p>
           </section>
           <TrialForm
@@ -130,7 +123,6 @@ const styles = {
   pageTitle: css({
     ...fontStyles.serifTitle,
     fontSize: 30,
-    letterSpacing: '1px',
     lineHeight: '1.6em',
     [mediaQueries.mUp]: {
       fontSize: 40,

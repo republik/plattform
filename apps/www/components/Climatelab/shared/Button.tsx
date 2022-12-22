@@ -3,11 +3,28 @@ import { css } from 'glamor'
 import { fontStyles } from '@project-r/styleguide'
 import { ClimatelabColors } from '../ClimatelabColors'
 
-type ButtonProps = unknown
+type ButtonProps = {
+  onClick?: () => void
+  type?: 'submit' | 'button'
+  disabled?: boolean
+} & unknown
 
-const Button: FC<ButtonProps> = ({ children, ...props }) => {
+const Button: FC<ButtonProps> = ({
+  children,
+  onClick,
+  type = 'button',
+  disabled = false,
+  ...props
+}) => {
   return (
-    <button {...styles.clearFix} {...styles.button}>
+    <button
+      {...styles.clearFix}
+      {...styles.button}
+      onClick={onClick}
+      type={type}
+      disabled={disabled}
+      {...props}
+    >
       {children}
     </button>
   )
@@ -40,5 +57,8 @@ const styles = {
     '&:hover': {
       backgroundColor: ClimatelabColors.primaryHover,
     },
+    '&:disabled': {
+      opacity: 0.8,
+    }
   }),
 }

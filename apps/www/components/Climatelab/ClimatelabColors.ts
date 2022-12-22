@@ -5,4 +5,5 @@ export const ClimatelabColors = {
   primaryHover: '#F8F702',
   primaryText: '#000000',
   border: '#000000',
+  errorText: '#E17747'
 }
