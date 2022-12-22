@@ -89,10 +89,18 @@ const LandingPage = () => {
             {...css({ marginTop: 40, [mediaQueries.mUp]: { marginTop: 80 } })}
           >
             <Counter />
+            <p {...styles.text}>Menschen machen schon mit im Klimalabor.</p>
+          </section>
+          <section
+            {...css({ marginTop: 40, [mediaQueries.mUp]: { marginTop: 80 } })}
+          >
             <p {...styles.text}>
-              Menschen machen schon mit im Klimalabor - jung, alt, Stadt, Land
-              und alle dazwischen machens chon mit im Klimalabor
+              Das Klimalabor ist ein Projekt der Republik. Die Republik ist ein
+              digitales Magazin für Politik, Wirtschaft, Gesellschaft und
+              Kultur. Finanziert von seinen Leserinnen und Lesern.
             </p>
+            <br />
+            <p {...styles.text}>Fragen, Anregungen? klimalabor@republik.ch</p>
           </section>
         </div>
       </div>
