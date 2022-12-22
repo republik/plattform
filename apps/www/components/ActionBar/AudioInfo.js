@@ -90,6 +90,7 @@ const AudioInfo = ({
                   subscription={readAloudSubscription}
                   filterName='ReadAloud'
                   filterLabel
+                  disabled={!readAloudSubscription?.isEligibleForNotifications}
                 />
               )}
             </>

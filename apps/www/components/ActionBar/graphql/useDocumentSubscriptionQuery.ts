@@ -9,6 +9,7 @@ const MY_DOCUMENT_SUBSCRIPTION_QUERY = gql`
       subscriptions: subscribedBy(onlyMe: $onlyMe) {
         nodes {
           id
+          isEligibleForNotifications
           filters
           active
           object {

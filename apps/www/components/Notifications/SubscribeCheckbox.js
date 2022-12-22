@@ -43,6 +43,7 @@ const SubscribeCheckbox = ({
   callout,
   filterName,
   filterLabel,
+  disabled,
 }) => {
   const [isMutating, setIsMutating] = useState(false)
   const [serverError, setServerError] = useState()
@@ -106,7 +107,7 @@ const SubscribeCheckbox = ({
   return (
     <div {...(callout ? styles.checkboxCallout : styles.checkbox)}>
       <Checkbox
-        disabled={isMutating}
+        disabled={isMutating || disabled}
         error={serverError}
         checked={isCurrentActive}
         onChange={toggleSubscribe}
