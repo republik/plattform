@@ -1406,7 +1406,7 @@
     },
     {
       "key": "profile/contact/mastodonUrl/error",
-      "value": "Muss gültige URL sein "
+      "value": "Muss gültige URL sein"
     },
     {
       "key": "profile/contact/publicUrl/label",
