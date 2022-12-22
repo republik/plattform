@@ -1402,7 +1402,7 @@
     },
     {
       "key": "profile/contact/mastodonUrl/label",
-      "value": "Mastodon URL "
+      "value": "Mastodon URL"
     },
     {
       "key": "profile/contact/mastodonUrl/error",
