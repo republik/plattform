@@ -381,7 +381,7 @@ class Page extends Component {
                     ) */}
                     <div {...styles.buttonContainer}>
                       <Link
-                        href={context === 'climate' ? '/klimalaborhq' : ''}
+                        href={context === 'climate' ? '/klimalaborhq' : '/'}
                         passHref
                       >
                         <Button primary={this.state.hasOnceVisitedAll}>
