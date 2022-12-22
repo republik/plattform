@@ -418,36 +418,38 @@ class Page extends Component {
                   )}
                 </P>
 
-                <P {...styles.p}>
-                  {t.first.elements(
-                    [
-                      `Onboarding/Page/${context}/more/questions`,
-                      'Onboarding/Page/more/questions',
-                    ],
-                    {
-                      linkManual: (
-                        <Link key='anleitung' href='/anleitung' passHref>
-                          <A>
-                            {t.first([
-                              `Onboarding/Page/${context}/more/questions/linkManual`,
-                              'Onboarding/Page/more/questions/linkManual',
-                            ])}
-                          </A>
-                        </Link>
-                      ),
-                      linkFaq: !inNativeIOSApp && (
-                        <Link key='route' href='/faq' passHref>
-                          <A>
-                            {t.first([
-                              `Onboarding/Page/${context}/more/questions/linkFaq`,
-                              'Onboarding/Page/more/questions/linkFaq',
-                            ])}
-                          </A>
-                        </Link>
-                      ),
-                    },
-                  )}
-                </P>
+                {context !== 'climate' && (
+                  <P {...styles.p}>
+                    {t.first.elements(
+                      [
+                        `Onboarding/Page/${context}/more/questions`,
+                        'Onboarding/Page/more/questions',
+                      ],
+                      {
+                        linkManual: (
+                          <Link key='anleitung' href='/anleitung' passHref>
+                            <A>
+                              {t.first([
+                                `Onboarding/Page/${context}/more/questions/linkManual`,
+                                'Onboarding/Page/more/questions/linkManual',
+                              ])}
+                            </A>
+                          </Link>
+                        ),
+                        linkFaq: !inNativeIOSApp && (
+                          <Link key='route' href='/faq' passHref>
+                            <A>
+                              {t.first([
+                                `Onboarding/Page/${context}/more/questions/linkFaq`,
+                                'Onboarding/Page/more/questions/linkFaq',
+                              ])}
+                            </A>
+                          </Link>
+                        ),
+                      },
+                    )}
+                  </P>
+                )}
                 <P {...styles.p}>
                   {t.first.elements(
                     [
@@ -458,11 +460,15 @@ class Page extends Component {
                       email: (
                         <A
                           key='email'
-                          href={`mailto:${t(
+                          href={`mailto:${t.first.elements([
+                            'Onboarding/Page/${context}/more/help/email',
                             'Onboarding/Page/more/help/email',
-                          )}`}
+                          ])}`}
                         >
-                          {t('Onboarding/Page/more/help/email')}
+                          {t.first.elements([
+                            'Onboarding/Page/${context}/more/help/email',
+                            'Onboarding/Page/more/help/email',
+                          ])}
                         </A>
                       ),
                     },
