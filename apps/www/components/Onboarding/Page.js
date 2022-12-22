@@ -48,7 +48,7 @@ import ClimatePersonalInfo, {
 const { P } = Interaction
 
 const QUERY = gql`
-  query getOnboarding($repoIds: [ID!]) {
+  query getOnboarding {
     user: me {
       ...NewsletterUser
       ...AppLoginUser
