@@ -1,39 +1,20 @@
-import { fontStyles, mediaQueries } from '@project-r/styleguide'
+import { colors, fontStyles, mediaQueries } from '@project-r/styleguide'
+
 import { css } from 'glamor'
 
-import { useMe } from '../../../lib/context/MeContext'
 import Frame from '../../Frame'
 import { ClimatelabColors } from '../ClimatelabColors'
 import CallToAction from '../shared/CallToAction'
 import Counter from '../Counter'
-import TrialForm from '../../Trial/Form'
 import Image from 'next/image'
-import Button from '../shared/Button'
-import { useState } from 'react'
-import {
-  CLIMATE_LAB_ACCESS_CAMPAIGN_ID,
-  CLIMATE_LAB_CONTEXT,
-  CLIMATE_LAB_ROLE,
-} from '../constants'
+import ClimateLabTrialform from './ClimateLabTrialForm'
+import OptionalLocalColorContext from '../../Frame/OptionalLocalColorContext'
 
 const LandingPage = () => {
-  /* const { query } = useRouter()
-  let { context, email, code, token, id } = query
-
-  context =
-    ALLOWED_CONTEXT.includes(context) &&
-    (code && code.length === 7 && context === 'access' // ignore access context with 7 digit codes for memberships
-      ? undefined
-      : context)
-  email = email && maybeDecode(email)
-  email = email && isEmail(email) ? email : ''
-  code = code && sanitizeVoucherCode(code)
-*/
   const meta = {
     title: 'Klimalabor',
     description: 'MACH MIT!',
   }
-  const { me } = useMe()
 
   return (
     <Frame
@@ -72,18 +53,9 @@ const LandingPage = () => {
             </div>
           </section>
           <section {...css({ [mediaQueries.mUp]: { marginTop: 80 } })}>
-            <div {...styles.trialFormWrapper}>
-              <h3 style={{ color: 'black' }}>Jetzt teilnehmen</h3>
-              <TrialForm
-                accessCampaignId={CLIMATE_LAB_ACCESS_CAMPAIGN_ID}
-                context={CLIMATE_LAB_CONTEXT}
-                skipForMembers={false}
-                shouldSkipTrialForm={me?.roles.some(
-                  (role) => role === CLIMATE_LAB_ROLE,
-                )}
-                payload={{}}
-              />
-            </div>
+            <OptionalLocalColorContext localColorVariables={colors}>
+              <ClimateLabTrialform />
+            </OptionalLocalColorContext>
           </section>
           <section
             {...css({ marginTop: 40, [mediaQueries.mUp]: { marginTop: 80 } })}
@@ -147,14 +119,6 @@ const styles = {
     [mediaQueries.mUp]: {
       fontSize: 40,
     },
-  }),
-  trialFormWrapper: css({
-    backgroundColor: 'white',
-    borderRadius: 10,
-    borderStyle: 'solid',
-    borderWidth: 1,
-    borderColor: ClimatelabColors.border,
-    padding: 20,
   }),
   text: css({
     ...fontStyles.sansSerifMedium,
