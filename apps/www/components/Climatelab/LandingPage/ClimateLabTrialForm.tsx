@@ -5,6 +5,7 @@ import {
   CLIMATE_LAB_ACCESS_CAMPAIGN_ID,
   CLIMATE_LAB_CONTEXT,
   CLIMATE_LAB_ROLE,
+  CLIMATE_LAB_URL,
 } from '../constants'
 import TrialForm from '../../Trial/Form'
 import { useMe } from '../../../lib/context/MeContext'
@@ -17,7 +18,7 @@ const ClimateLabTrialform = () => {
     return (
       <div {...styles.wrapper}>
         <Interaction.H3>Sie sind bereits Teil des Klimalabors.</Interaction.H3>
-        <Button primary style={{ marginTop: 20 }}>
+        <Button primary href={CLIMATE_LAB_URL} style={{ marginTop: 20 }}>
           Zum Klimalabor HQ
         </Button>
       </div>

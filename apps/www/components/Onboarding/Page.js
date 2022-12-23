@@ -44,6 +44,7 @@ import ClimateProfile from '../Climatelab/Onboarding/ClimateProfile'
 import ClimatePersonalInfo, {
   fragments as fragmentsClimatePersonalInfo,
 } from '../Climatelab/Onboarding/ClimatePersonalInfo'
+import { CLIMATE_LAB_URL } from '../Climatelab/constants'
 
 const { P } = Interaction
 
@@ -376,7 +377,7 @@ class Page extends Component {
                     ) */}
                     <div {...styles.buttonContainer}>
                       <Link
-                        href={context === 'climate' ? '/klimalaborhq' : '/'}
+                        href={context === 'climate' ? CLIMATE_LAB_URL : '/'}
                         passHref
                       >
                         <Button primary={this.state.hasOnceVisitedAll}>
