@@ -7,7 +7,6 @@ import { TESTIMONIAL_IMAGE_SIZE } from '../../constants'
 import ErrorMessage from '../../ErrorMessage'
 import Portrait from '../../Profile/Portrait'
 import { ListedCheckbox } from '../../Profile/Settings'
-import { mutation } from '../../Profile/Edit'
 import Section from '../../Onboarding/Section'
 import { useTranslation } from '../../../lib/withT'
 
@@ -83,6 +82,27 @@ export const fragments = {
   `,
 }
 
+const climateProfileMutation = gql`
+  mutation updateMe(
+    $firstName: String
+    $lastName: String
+    $portrait: String
+    $isListed: Boolean
+  ) {
+    updateMe(
+      firstName: $firstName
+      lastName: $lastName
+      portrait: $portrait
+      isListed: $isListed
+    ) {
+      id
+      firstName
+      lastName
+      isListed
+    }
+  }
+`
+
 class ClimateProfile extends Component {
   constructor(props) {
     super(props)
@@ -117,6 +137,23 @@ class ClimateProfile extends Component {
       values,
     )
 
+    const meFields = [
+      {
+        label: t('pledge/contact/firstName/label'),
+        name: 'firstName',
+        required: true,
+        validator: (value) =>
+          value.trim().length <= 0 && t('pledge/contact/firstName/error/empty'),
+      },
+      {
+        label: t('pledge/contact/lastName/label'),
+        name: 'lastName',
+        required: true,
+        validator: (value) =>
+          value.trim().length <= 0 && t('pledge/contact/lastName/error/empty'),
+      },
+    ]
+
     return (
       <Section
         heading={t('Onboarding/Sections/Profile/heading')}
@@ -141,6 +178,15 @@ class ClimateProfile extends Component {
             onChange={this.onChange}
           />
         </div>
+        <div {...styles.field}>
+          <FieldSet
+            values={values}
+            errors={errors}
+            dirty={dirty}
+            onChange={this.onChange}
+            fields={meFields}
+          />
+        </div>
         <div {...styles.checkbox}>
           <ListedCheckbox
             user={user}
@@ -154,7 +200,7 @@ class ClimateProfile extends Component {
           />
         </div>
         <Mutation
-          mutation={mutation}
+          mutation={climateProfileMutation}
           variables={values}
           onCompleted={this.onCompleted}
         >
