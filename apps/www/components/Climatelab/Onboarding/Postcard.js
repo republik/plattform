@@ -67,25 +67,33 @@ const Postcard = (props) => {
   return (
     <Section
       heading={t('Climatelab/Onboarding/Postcard/heading')}
-      showContinue={false}
+      showContinue={postcard.userHasSubmitted}
       isTicked={postcard.userHasSubmitted}
       {...props}
     >
       <Fragment>
-        <RawHtml
-          {...styles.p}
-          type={Interaction.P}
-          dangerouslySetInnerHTML={{
-            __html: t(['Climatelab/Onboarding/Postcard/paragraph1'], null, ''),
-          }}
-        />
+        {!postcard.userHasSubmitted && (
+          <RawHtml
+            {...styles.p}
+            type={Interaction.P}
+            dangerouslySetInnerHTML={{
+              __html: t(
+                ['Climatelab/Onboarding/Postcard/paragraph1'],
+                null,
+                '',
+              ),
+            }}
+          />
+        )}
         <br />
         <PostcardGenerator t={t} postcard={postcard} />
-        <div {...styles.actions}>
-          <Button block onClick={onContinue}>
-            {t('Onboarding/Sections/Profile/button/continue', null, '')}
-          </Button>
-        </div>
+        {!postcard.userHasSubmitted && (
+          <div {...styles.actions}>
+            <Button block onClick={onContinue}>
+              {t('Onboarding/Sections/Profile/button/continue', null, '')}
+            </Button>
+          </div>
+        )}
       </Fragment>
     </Section>
   )

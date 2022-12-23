@@ -20,7 +20,7 @@ const styles = {
   questionnaireStyleOverride: css({
     '& h2': {
       ...convertStyleToRem(fontStyles.sansSerifRegular19),
-      marginTop: '30px',
+      marginTop: '20px',
     },
     [mediaQueries.mUp]: {
       '& h2': {
@@ -61,13 +61,13 @@ export const fragments = {
 }
 
 const ClimatePersonalInfo = (props) => {
-  const { onContinue } = props
+  const { climatepersonalinfo, onContinue } = props
   const { t } = useTranslation()
   return (
     <Section
       heading={t('Climatelab/Onboarding/ClimatePersonalInfo/heading')}
-      isTicked={props.climatepersonalinfo.userHasSubmitted}
-      showContinue={false}
+      isTicked={climatepersonalinfo.userHasSubmitted}
+      showContinue={climatepersonalinfo.userHasSubmitted}
       {...props}
     >
       <P {...styles.p}>
@@ -87,11 +87,13 @@ const ClimatePersonalInfo = (props) => {
           hideInvalid={true}
           hideReset={true}
         />
-        <div {...styles.actions}>
-          <Button block onClick={onContinue}>
-            {t('Onboarding/Sections/Profile/button/continue', null, '')}
-          </Button>
-        </div>
+        {!climatepersonalinfo.userHasSubmitted && (
+          <div {...styles.actions}>
+            <Button block onClick={onContinue}>
+              {t('Onboarding/Sections/Profile/button/continue', null, '')}
+            </Button>
+          </div>
+        )}
       </div>
     </Section>
   )
