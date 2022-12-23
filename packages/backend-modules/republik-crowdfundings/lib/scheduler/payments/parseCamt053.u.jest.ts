@@ -85,6 +85,7 @@ describe('parseCamt053():', () => {
     const paymentEntries = parseCamt053(xmlString)
     expect(paymentEntries[0].isPayPal).toBe(true)
     expect(paymentEntries[1].isPayPal).toBe(true)
+    expect(paymentEntries[2].isPayPal).toBe(true)
   })
 
   it('recognizes Stripe payments', async () => {
@@ -92,6 +93,13 @@ describe('parseCamt053():', () => {
     const paymentEntries = parseCamt053(xmlString)
     expect(paymentEntries[0].isStripe).toBe(true)
     expect(paymentEntries[1].isStripe).toBe(true)
+    expect(paymentEntries[2].isStripe).toBe(true)
+  })
+
+  it('recognizes collectiveCredit payments', async () => {
+    const xmlString = await loadFixture('collectiveCredit')
+    const paymentEntries = parseCamt053(xmlString)
+    expect(paymentEntries[0].isCollectiveCredit).toBe(true)
   })
 })
 

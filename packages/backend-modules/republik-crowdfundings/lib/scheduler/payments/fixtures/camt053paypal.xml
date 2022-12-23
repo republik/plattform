@@ -57,6 +57,33 @@
           </Domn>
         </BkTxCd>
         <NtryDtls>
+          <Btch>
+            <NbOfTxs>1</NbOfTxs>
+          </Btch>
+        </NtryDtls>
+        <AddtlNtryInf>
+          GUTSCHRIFT AUFTRAGGEBER: PAYPAL PTE LTD  TEMASEK BLVD 09-01 SUNTEC TOWER  5  SINGAPORE  38985 SG        3898 MITTEILUNGEN: XXXXXXXXXXXXXXXX REFERENZEN: XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+        </AddtlNtryInf>
+      </Ntry>
+      <Ntry>
+        <Amt Ccy="CHF">240.00</Amt>
+        <CdtDbtInd>CRDT</CdtDbtInd>
+        <BookgDt>
+          <Dt>2022-12-23</Dt>
+        </BookgDt>
+        <ValDt>
+          <Dt>2022-12-23</Dt>
+        </ValDt>
+        <BkTxCd>
+          <Domn>
+            <Cd>PMNT</Cd>
+            <Fmly>
+              <Cd>RCDT</Cd>
+              <SubFmlyCd>ATXN</SubFmlyCd>
+            </Fmly>
+          </Domn>
+        </BkTxCd>
+        <NtryDtls>
           <TxDtls>
             <RltdPties>
               <Dbtr>

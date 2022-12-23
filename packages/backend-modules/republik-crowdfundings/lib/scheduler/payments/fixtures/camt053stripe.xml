@@ -51,6 +51,28 @@
             </Fmly>
           </Domn>
         </BkTxCd>
+        <AddtlNtryInf>
+          GUTSCHRIFT AUFTRAGGEBER: Stripe Payments UK Limited Old Street 211     EC1V 9NR London  United Kingdom MITTEILUNGEN: STRIPE ABCABC REFERENZEN: NOTPROVIDED XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+        </AddtlNtryInf>
+      </Ntry>
+      <Ntry>
+        <Amt Ccy="CHF">240.00</Amt>
+        <CdtDbtInd>CRDT</CdtDbtInd>
+        <BookgDt>
+          <Dt>2022-12-23</Dt>
+        </BookgDt>
+        <ValDt>
+          <Dt>2022-12-23</Dt>
+        </ValDt>
+        <BkTxCd>
+          <Domn>
+            <Cd>PMNT</Cd>
+            <Fmly>
+              <Cd>RCDT</Cd>
+              <SubFmlyCd>ATXN</SubFmlyCd>
+            </Fmly>
+          </Domn>
+        </BkTxCd>
         <NtryDtls>
           <TxDtls>
             <RltdPties>

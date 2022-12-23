@@ -14,6 +14,7 @@ The Postfinance import goes through the follwoing steps:
 - All `DEBIT` entries.
 - All `CREDIT` entries from `STRIPE`.
 - All `CREDIT` entries from `PAYPAL`.
+- All `CREDIT` entries starting with `SAMMELGUTSCHRIFT`.
 - All debit card `CREDIT` entries (Online Postfinance Zahlung).
 
 9. Write payment entries to the follwing db table: `postfinancePayments`.
