@@ -331,22 +331,24 @@ const Questionnaire = (props) => {
               showSlice2={showSlice2}
               slug={slug}
             />
-            {needsMeUpdate && (
-              <DetailsForm
-                style={{ marginTop: 50 }}
-                data={detailsData}
-                values={detailsState.values}
-                errors={detailsState.errors}
-                dirty={detailsState.dirty}
-                onChange={(fields) => {
-                  setDetailsState(FieldSet.utils.mergeFields(fields))
-                }}
-                errorMessages={detailsErrorMessages}
-                showErrors={!updating && !!detailsState.showErrors}
-                askForName={askForName}
-                askForAddress={askForAddress}
-              />
-            )}
+            {context !== 'postcard' &&
+              context !== 'climatepersonalinfo' &&
+              needsMeUpdate && (
+                <DetailsForm
+                  style={{ marginTop: 50 }}
+                  data={detailsData}
+                  values={detailsState.values}
+                  errors={detailsState.errors}
+                  dirty={detailsState.dirty}
+                  onChange={(fields) => {
+                    setDetailsState(FieldSet.utils.mergeFields(fields))
+                  }}
+                  errorMessages={detailsErrorMessages}
+                  showErrors={!updating && !!detailsState.showErrors}
+                  askForName={askForName}
+                  askForAddress={askForAddress}
+                />
+              )}
             {!externalSubmit && (
               <QuestionnaireActions
                 isResubmitAnswers={isResubmitAnswers}
