@@ -144,6 +144,9 @@ const ImageChoiceQuestion = (props) => {
       target,
       {
         time: 300,
+        align: {
+          lockY: true,
+        },
       },
       function () {
         carouselRef.current.style.scrollSnapType = 'x mandatory'
