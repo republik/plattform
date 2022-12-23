@@ -11,6 +11,7 @@ import {
   mediaQueries,
   convertStyleToRem,
   fontStyles,
+  Button,
 } from '@project-r/styleguide'
 
 const { P } = Interaction
@@ -19,7 +20,7 @@ const styles = {
   questionnaireStyleOverride: css({
     '& h2': {
       ...convertStyleToRem(fontStyles.sansSerifRegular19),
-      marginTop: '30px',
+      marginTop: '20px',
     },
     [mediaQueries.mUp]: {
       '& h2': {
@@ -29,6 +30,23 @@ const styles = {
   }),
   p: css({
     marginBottom: 20,
+  }),
+  actions: css({
+    marginBottom: 20,
+    display: 'flex',
+    flexWrap: 'wrap',
+    position: 'relative',
+    width: 160,
+    '& > button': {
+      flexGrow: 1,
+      margin: '5px 15px 0 0',
+      minWidth: '120px',
+      [mediaQueries.mUp]: {
+        flexGrow: 0,
+        margin: '5px 15px 0 0',
+        minWidth: '160px',
+      },
+    },
   }),
 }
 
@@ -43,12 +61,13 @@ export const fragments = {
 }
 
 const ClimatePersonalInfo = (props) => {
+  const { climatepersonalinfo, onContinue } = props
   const { t } = useTranslation()
   return (
     <Section
       heading={t('Climatelab/Onboarding/ClimatePersonalInfo/heading')}
-      isTicked={props.climatepersonalinfo.userHasSubmitted}
-      // showContinue={hasConsented}
+      isTicked={climatepersonalinfo.userHasSubmitted}
+      showContinue={climatepersonalinfo.userHasSubmitted}
       {...props}
     >
       <P {...styles.p}>
@@ -68,6 +87,13 @@ const ClimatePersonalInfo = (props) => {
           hideInvalid={true}
           hideReset={true}
         />
+        {!climatepersonalinfo.userHasSubmitted && (
+          <div {...styles.actions}>
+            <Button block onClick={onContinue}>
+              {t('Onboarding/Sections/Profile/button/continue', null, '')}
+            </Button>
+          </div>
+        )}
       </div>
     </Section>
   )

@@ -43,6 +43,12 @@ const PostcardGenerator = ({ postcard }) => {
           hideReset={true}
         />
       </div>
+
+      {postcard.userHasSubmitted && (
+        <Interaction.P>
+          {t('Climatelab/Postcard/PostcardGenerator/merci1')}
+        </Interaction.P>
+      )}
       <PostcardPreview postcard={postcard} t={t} />
     </>
   )

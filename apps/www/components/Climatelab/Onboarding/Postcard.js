@@ -2,7 +2,12 @@ import { Fragment } from 'react'
 import { css } from 'glamor'
 import { gql } from '@apollo/client'
 
-import { Interaction, mediaQueries, RawHtml } from '@project-r/styleguide'
+import {
+  Interaction,
+  mediaQueries,
+  RawHtml,
+  Button,
+} from '@project-r/styleguide'
 
 import Section from '../../Onboarding/Section'
 
@@ -18,6 +23,7 @@ const styles = {
     display: 'flex',
     flexWrap: 'wrap',
     position: 'relative',
+    width: 160,
     '& > button': {
       flexGrow: 1,
       margin: '5px 15px 0 0',
@@ -55,26 +61,39 @@ export const fragments = {
 }
 
 const Postcard = (props) => {
-  const { postcard } = props
+  const { postcard, onContinue } = props
   const { t } = useTranslation()
 
   return (
     <Section
       heading={t('Climatelab/Onboarding/Postcard/heading')}
+      showContinue={postcard.userHasSubmitted}
       isTicked={postcard.userHasSubmitted}
-      // showContinue={hasConsented}
       {...props}
     >
       <Fragment>
-        <RawHtml
-          {...styles.p}
-          type={Interaction.P}
-          dangerouslySetInnerHTML={{
-            __html: t(['Climatelab/Onboarding/Postcard/paragraph1'], null, ''),
-          }}
-        />
+        {!postcard.userHasSubmitted && (
+          <RawHtml
+            {...styles.p}
+            type={Interaction.P}
+            dangerouslySetInnerHTML={{
+              __html: t(
+                ['Climatelab/Onboarding/Postcard/paragraph1'],
+                null,
+                '',
+              ),
+            }}
+          />
+        )}
         <br />
         <PostcardGenerator t={t} postcard={postcard} />
+        {!postcard.userHasSubmitted && (
+          <div {...styles.actions}>
+            <Button block onClick={onContinue}>
+              {t('Onboarding/Sections/Profile/button/continue', null, '')}
+            </Button>
+          </div>
+        )}
       </Fragment>
     </Section>
   )
