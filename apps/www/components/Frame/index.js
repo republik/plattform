@@ -110,6 +110,7 @@ const Frame = ({
   pageColorSchemeKey,
   containerMaxWidth,
   isClimate,
+  pageBackgroundColor,
 }) => {
   const { inNativeApp, inNativeAppLegacy } = useInNativeApp()
   const { t } = useTranslation()
@@ -152,6 +153,11 @@ const Frame = ({
         >
           {/* body growing only needed when rendering a footer */}
           <div
+            style={
+              pageBackgroundColor
+                ? { backgroundColor: pageBackgroundColor }
+                : undefined
+            }
             {...(footer || inNativeApp ? styles.bodyGrower : undefined)}
             {...(!isOnMarketingPage && padHeaderRule)}
           >
@@ -210,8 +216,9 @@ Frame.propTypes = {
   stickySecondaryNav: PropTypes.any,
   isOnMarketingPage: PropTypes.bool,
   pageColorSchemeKey: PropTypes.string,
-  containerMaxWidth: PropTypes.number,
+  containerMaxWidth: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   isClimate: PropTypes.bool,
+  pageBackgroundColor: PropTypes.string,
 }
 
 export default Frame
