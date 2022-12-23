@@ -32,6 +32,7 @@ const PostcardGenerator = ({ postcard }) => {
       <div {...styles.questionnaireStyleOverride}>
         <QuestionnaireWithData
           slug={'klima-postkarte'}
+          context='postcard'
           publicSubmission={false}
           hideCount
           // submittedMessage={

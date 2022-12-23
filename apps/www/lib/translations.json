@@ -1481,6 +1481,10 @@
       "value": "Ihr Name, Ihr Profilbild und Ihr Statement erscheinen auf {communityLink} und sind für alle sichtbar."
     },
     {
+      "key": "climate/profile/settings/isListed/true/note",
+      "value": "Ihr Name und Ihr Profilbild erscheinen auf {communityLink} und sind für alle sichtbar."
+    },
+    {
       "key": "profile/settings/isListed/false/note",
       "value": "Ihr Name, Ihr Profilbild und Ihr Statement erscheinen nicht auf {communityLink}."
     },
@@ -4573,6 +4577,18 @@
       "value": "Das 1-Minuten-Formular"
     },
     {
+      "key": "questionnaire/postcard/submit",
+      "value": "Karte speichern"
+    },
+    {
+      "key": "questionnaire/postcard/thankyou/resubmit",
+      "value": "Karte bearbeiten"
+    },
+    {
+      "key": "questionnaire/climatepersonalinfo/submit",
+      "value": "Speichern"
+    },
+    {
       "key": "package/PROLONG/title",
       "value": "Verlängern"
     },
@@ -5486,7 +5502,7 @@
     },
     {
       "key": "Onboarding/Page/climate/more/account",
-      "value": "Mit Ihrer Anmeldung werden Sie auch für den Newsletter zum Klimalabor eingetragen. Diese und weitere Einstellungen finden Sie in Ihrem {link}."
+      "value": "Mit Ihrer Anmeldung sind Sie auch für den Newsletter zum Klimalabor eingetragen. Diese und weitere Einstellungen finden Sie in Ihrem {link}."
     },
     {
       "key": "Onboarding/Page/climate/more/account/link",
@@ -5626,7 +5642,7 @@
     },
     {
       "key": "Climatelab/Onboarding/Postcard/heading",
-      "value": "Postkarte aus der Zukunft"
+      "value": "Ein Blick in die Zukunft"
     },
     {
       "key": "Climatelab/Onboarding/Postcard/paragraph1",
@@ -5642,7 +5658,7 @@
     },
     {
       "key": "Climatelab/Postcard/PostcardPreview/credit",
-      "value": "Illustration von {credit}"
+      "value": "Illustration: «2083» von {credit}"
     },
     {
       "key": "Climatelab/Onboarding/Mission/heading",
@@ -5666,7 +5682,7 @@
     },
     {
       "key": "Climatelab/Onboarding/Invitation/heading",
-      "value": "Freundinnen und Feinde einladen"
+      "value": "Freunde und Bekannte einladen"
     },
     {
       "key": "Climatelab/Onboarding/Invitation/paragraph1",
@@ -5691,6 +5707,14 @@
     {
       "key": "Climatelab/Onboarding/ClimatePersonalInfo/merci1",
       "value": "Vielen Dank für Ihre Angaben."
+    },
+    {
+      "key": "Onboarding/Sections/ClimateProfile/paragraph1",
+      "value": "Das Profil ist Ihre Visitenkarte im Klimalabor."
+    },
+    {
+      "key": "Onboarding/Sections/ClimateProfile/paragraph2",
+      "value": "Wir verlinken Ihr Profil zum Beispiel bei Ihren Dialogbeiträgen."
     },
     {
       "key": "Trial/Form/withAccess/button/label",

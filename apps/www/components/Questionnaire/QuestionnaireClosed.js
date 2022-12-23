@@ -25,6 +25,7 @@ const QuestionnaireClosed = ({
   onResubmit,
   onRevoke,
   publicSubmission,
+  context,
 }) => {
   const { t } = useTranslation()
   const [colorScheme] = useColorContext()
@@ -47,7 +48,10 @@ const QuestionnaireClosed = ({
                     onResubmit()
                   }}
                 >
-                  {t('questionnaire/thankyou/resubmit')}
+                  {t.first.elements([
+                    `questionnaire/${context}/thankyou/resubmit`,
+                    `questionnaire/thankyou/resubmit`,
+                  ])}
                 </PlainButton>
               )}
               {onResubmit && onRevoke && ' · '}

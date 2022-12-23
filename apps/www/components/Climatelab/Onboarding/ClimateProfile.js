@@ -125,10 +125,10 @@ class ClimateProfile extends Component {
         {...this.props}
       >
         <P {...styles.p}>
-          {t('Onboarding/Sections/Profile/paragraph1', null, '')}
+          {t('Onboarding/Sections/ClimateProfile/paragraph1', null, '')}
         </P>
         <P {...styles.p}>
-          {t('Onboarding/Sections/Profile/paragraph2', null, '')}
+          {t('Onboarding/Sections/ClimateProfile/paragraph2', null, '')}
         </P>
         <div {...merge(styles.portrait)}>
           <Portrait
@@ -150,6 +150,7 @@ class ClimateProfile extends Component {
             values={mergedValues}
             errors={errors}
             dirty={dirty}
+            context='climate'
           />
         </div>
         <Mutation

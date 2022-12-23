@@ -86,6 +86,7 @@ const ClimatePersonalInfo = (props) => {
           }
           hideInvalid={true}
           hideReset={true}
+          context='climatepersonalinfo'
         />
         {!climatepersonalinfo.userHasSubmitted && (
           <div {...styles.actions}>

@@ -30,6 +30,7 @@ export default compose(withT)(
     invalid,
     hideInvalid = false,
     publicSubmission,
+    context,
   }) => {
     const { me } = useMe()
     return (
@@ -49,7 +50,14 @@ export default compose(withT)(
           {updating ? (
             <InlineSpinner size={40} />
           ) : (
-            t(
+            t.first.elements([
+              `questionnaire/${context}/${
+                isResubmitAnswers
+                  ? 'update'
+                  : publicSubmission
+                  ? 'publish'
+                  : 'submit'
+              }`,
               `questionnaire/${
                 isResubmitAnswers
                   ? 'update'
@@ -57,7 +65,7 @@ export default compose(withT)(
                   ? 'publish'
                   : 'submit'
               }`,
-            )
+            ])
           )}
         </Button>
         {invalid && !hideInvalid ? (

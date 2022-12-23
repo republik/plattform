@@ -42,40 +42,50 @@ const Settings = ({ user, isEditing, onChange, values, errors, dirty, t }) => {
   )
 }
 
-export const ListedCheckbox = withT(({ user, values, onChange, t }) => (
-  <div style={{ opacity: user.isAdminUnlisted ? 0.5 : 1 }}>
-    <Checkbox
-      checked={values.isListed}
-      disabled={
-        !(
-          user.isListed ||
-          ((user.statement || values.statement) &&
-            (user.portrait || values.portrait))
-        ) ||
-        (!user.isListed && !user.isEligibleForProfile)
-      }
-      onChange={(_, checked) => {
-        onChange({
-          values: {
-            isListed: checked,
+export const ListedCheckbox = withT(
+  ({ user, values, onChange, t, context }) => (
+    <div style={{ opacity: user.isAdminUnlisted ? 0.5 : 1 }}>
+      <Checkbox
+        checked={values.isListed}
+        disabled={
+          !(
+            user.isListed ||
+            ((user.statement || values.statement) &&
+              (user.portrait || values.portrait))
+          ) ||
+          (!user.isListed && !user.isEligibleForProfile)
+        }
+        onChange={(_, checked) => {
+          onChange({
+            values: {
+              isListed: checked,
+            },
+          })
+        }}
+      >
+        {t('profile/settings/isListed/label')}
+      </Checkbox>
+      <br style={{ clear: 'left' }} />
+      <Label>
+        {t.first.elements(
+          [
+            `${context}/profile/settings/hasPublicProfile/${!!values.isListed}/note`,
+            `profile/settings/isListed/${!!values.isListed}/note`,
+          ],
+          {
+            communityLink: (
+              <Link key='communityLink' href='/community' passHref>
+                <A target='_blank'>
+                  {t('profile/settings/privacy/communityLink')}
+                </A>
+              </Link>
+            ),
           },
-        })
-      }}
-    >
-      {t('profile/settings/isListed/label')}
-    </Checkbox>
-    <br style={{ clear: 'left' }} />
-    <Label>
-      {t.elements(`profile/settings/isListed/${!!values.isListed}/note`, {
-        communityLink: (
-          <Link key='communityLink' href='/community' passHref>
-            <A target='_blank'>{t('profile/settings/privacy/communityLink')}</A>
-          </Link>
-        ),
-      })}
-    </Label>
-  </div>
-))
+        )}
+      </Label>
+    </div>
+  ),
+)
 
 export const PublicCheckbox = withT(({ user, values, onChange, t }) => (
   <Fragment>
