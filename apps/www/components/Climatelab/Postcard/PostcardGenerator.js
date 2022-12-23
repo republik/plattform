@@ -34,11 +34,11 @@ const PostcardGenerator = ({ postcard }) => {
           slug={'klima-postkarte'}
           publicSubmission={false}
           hideCount
-          submittedMessage={
-            <Interaction.P>
-              {t('Climatelab/Postcard/PostcardGenerator/merci1')}
-            </Interaction.P>
-          }
+          // submittedMessage={
+          //   <Interaction.P>
+          //     {t('Climatelab/Postcard/PostcardGenerator/merci1')}
+          //   </Interaction.P>
+          // }
           hideInvalid={true}
           hideReset={true}
         />
