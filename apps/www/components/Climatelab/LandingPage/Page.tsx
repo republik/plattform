@@ -46,9 +46,9 @@ const LandingPage = () => {
                 verstehen, wie sie möglich wird.
               </p>
               <p {...styles.text}>
-                Einen Ort für Austausch und Experimente. Um gemeinsam
-                herauszufinden, was das ist: Journalismus, der uns in der
-                Klimakrise wirklich weiterbringt.
+                Darum starten wir das Klimalabor. Einen Ort für Austausch und
+                Experimente. Um gemeinsam herauszufinden, was das ist:
+                Journalismus, der uns in der Klimakrise wirklich weiterbringt.
               </p>
             </div>
           </section>
