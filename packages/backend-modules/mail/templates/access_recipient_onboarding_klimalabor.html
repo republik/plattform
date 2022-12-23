@@ -42,16 +42,17 @@
                 <tr>
                   <td style="padding: 20px">
                     <p>
-                      Willkommen. Sie sind eine von inzwischen {ANZAHL}
-                      Personen, die am Klimalabor mitwirken. Schön, sind Sie
-                      dabei!
+                      Willkommen. Sie sind eine von inzwischen
+                      {{count_climate_lab_users}} Personen, die am Klimalabor
+                      mitwirken. Schön, sind Sie dabei!
                     </p>
 
                     <p>
                       <strong>
-                        In dieser Email fassen wir Ihnen das Wichtigste
-                        zusammen</strong
-                      >, damit Sie gut informiert mit uns starten und jederzeit
+                        In dieser E-Mail fassen wir das Wichtigste
+                        zusammen,</strong
+                      >
+                      damit Sie gut informiert mit uns starten und jederzeit
                       wissen, wo Sie uns finden.
                     </p>
                     <p>
@@ -75,7 +76,7 @@
                             >www.republik.ch/klimalabor</a
                           >
                           finden Sie den aktuellen Stand des Projekts und
-                          Verweise auf alles, was sich im Klimalabor tut
+                          Verweise auf alles, was sich im Klimalabor tut.
                         </p>
                       </li>
                       <li>
@@ -85,20 +86,29 @@
                           an
                           <a href="mailto:klimalabor@republik.ch"
                             >klimalabor@republik.ch</a
-                          >
+                          >.
                         </p>
                       </li>
                       <li>
                         <p>
-                          Etwa alle 1-2 Wochen melden wir uns per Newsletter bei
-                          Ihnen und informieren Sie, wo wir stehen und wie Sie
-                          sich einbringen können
+                          Etwa alle ein bis zwei Wochen melden wir uns per
+                          Newsletter bei Ihnen und informieren Sie, wo wir
+                          stehen und wie Sie sich einbringen können.
                         </p>
                       </li>
+                      {{#unless RECIPIENT_HAS_MEMBERSHIPS}}
+                      <li>
+                        <p>
+                          Damit Sie die Republik auch über das Klimalabor hinaus
+                          kennenlernen können, erhalten Sie als kleines
+                          Dankeschön für Ihre Mitwirkung für einen Monat Zugriff
+                          auf sämtliche Inhalte der Republik.
+                        </p>
+                      </li>
+                      {{/unless}}
                     </ul>
 
-                    <!-- Platzhalter, hier müssen wir über die einzelnen Punkte noch mal drüber, weil Teil vom Onboarding oder HQ und nicht als eigenständige Komponente / Seite -->
-                    <!-- <p>
+                    <p>
                       <strong
                         >Wie Sie sich gleich zu Beginn einbringen
                         können:</strong
@@ -108,9 +118,74 @@
                       style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}"
                     >
                       <li>
-                        <p></p>
+                        <p>
+                          Machen Sie mit uns eine Zeitreise und
+                          <a
+                            href="{{frontend_base_url}}/wie-sieht-die-welt-in-60-jahren-aus-machen-sie-mit-uns-eine-zeitreise"
+                            >zeigen Sie uns, wie Sie in die Zukunft blicken</a
+                          >.
+                        </p>
                       </li>
-                    </ul> -->
+                      <li>
+                        <p>
+                          <a
+                            href="{{frontend_base_url}}/allgemeiner-dialog-klimalabor"
+                            >Sagen Sie uns</a
+                          >, was Sie von uns erwarten.
+                        </p>
+                      </li>
+                      <li>
+                        <p>
+                          Das Klimalabor lebt davon, dass viele unterschiedliche
+                          Perspektiven zusammenkommen. Wir freuen uns, wenn Sie
+                          Freundinnen und Bekannte ins Klimalabor einladen.
+                          Teilen Sie
+                          <a
+                            href="{{frontend_base_url}}/willkommen-zum-klimalabor"
+                            >diesen Link</a
+                          >
+                          mit Ihnen oder
+                          <a href="{{link_climate_lab_email_invitation}}"
+                            >klicken Sie hier</a
+                          >, um eine vorformulierte E-Mail zu öffnen.
+                        </p>
+                      </li>
+                      <li>
+                        <p>
+                          Merken Sie sich das Datum gerne vor: Am 27. Februar
+                          laden wir Sie herzlich ein zu einer Abendveranstaltung
+                          in Zürich. Details folgen.
+                        </p>
+                      </li>
+                      <li>
+                        <p>
+                          <a
+                            href="{{link_climate_lab_onboarding_personal_infos}}"
+                            >Geben Sie uns ein paar Angaben zu Ihrer Person</a
+                          >
+                          und helfen Sie uns damit, Diversität im Klimalabor
+                          sicherzustellen
+                        </p>
+                      </li>
+                      <li>
+                        {{#if RECIPIENT_HAS_MEMBERSHIPS}}
+                        <p>
+                          Investieren Sie in Klimajournalismus:
+                          <a href="{{link_climate_lab_offer_abo_give}}"
+                            >Verschenken Sie eine Jahresmitgliedschaft</a
+                          >.
+                        </p>
+                        {{else}}
+                        <p>
+                          Investieren Sie in Klimajournalismus:
+                          <a href="{{link_climate_lab_offer_abo}}"
+                            >Werden Sie Verlegerin oder Verleger der Republik</a
+                          >.
+                        </p>
+                        {{/if}}
+                      </li>
+                    </ul>
+
                     <p>
                       <strong>Über das Klimalabor — was wir vorhaben</strong>
                     </p>
@@ -127,37 +202,45 @@
                     >
                       <li>
                         <p>
-                          Wir wollen gemeinsam einen neuen Klimajournalismus für
-                          die Republik entwickeln, der mehr Menschen erreicht
-                          als bisher, und auch andere Medien und Journalistinnen
-                          inspiriert. Ein Klimajournalismus, der anregt, der
-                          trotz düsterer Aussichten nach vorn blickt, der
-                          verlässlich und nützlich ist
+                          Wir wollen mit Ihnen gemeinsam einen neuen
+                          Klimajournalismus für die Republik entwickeln, der
+                          mehr Menschen erreicht als bisher und auch andere
+                          Medien und Journalistinnen inspiriert. Einen
+                          Klimajournalismus, der anregt, der trotz düsterer
+                          Aussichten nach vorn blickt, der verlässlich und
+                          nützlich ist.
                         </p>
                       </li>
                       <li>
                         <p>
-                          Bis im Sommer 2023 nehmen wir uns dafür Zeit. Was
+                          Bis in den Sommer 2023 nehmen wir uns dafür Zeit. Was
                           dabei herauskommen wird? Das kann ein eigenständiges
                           journalistisches Produkt sein, eine Reihe neuer
-                          Formate, ein Ausbau der Redaktion, oder etwas ganz
+                          Formate, ein Ausbau der Redaktion oder etwas ganz
                           anderes. Das Klimalabor ist bewusst ergebnisoffen.
                           Klar ist: Wir wollen gross denken und ein Angebot
                           entwickeln, das in seiner Dringlichkeit und Ambition
-                          der Klimakrise gerecht wird
+                          der Klimakrise gerecht wird.
                         </p>
                       </li>
                       <li>
                         <p>
                           Wir nähern uns dem Ziel schrittweise an und werden
                           zunehmend konkreter. Wenn Sie mögen, können Sie sich
-                          auf vielfältige Arten und immer wieder aufs Neue
+                          auf ganz verschiedene Arten und immer wieder aufs Neue
                           einbringen. Sie können uns aber auch einfach
-                          interessiert begleiten
+                          interessiert begleiten.
                         </p>
                       </li>
                       <li>
-                        <p>Wollen Sie es noch genauer wissen?</p>
+                        <p>
+                          <!-- TODO: Link einfügen -->
+                          Wollen Sie es noch genauer wissen?
+                          <a href="{{frontend_base_url}}/"
+                            >Lesen Sie den Text von Elia Blülle zum Start des
+                            Klimalabors</a
+                          >.
+                        </p>
                       </li>
                     </ul>
                     <p>
@@ -165,7 +248,7 @@
                       kommen.
                     </p>
                     <p>Ihr Klimalabor-Team:</p>
-                    <p>Theresa Leisgang, Elia Blülle, David Bauer</p>
+                    <p>David Bauer, Elia Blülle, Theresa Leisgang</p>
                     <p>
                       <a href="{{frontend_base_url}}/klimalabor"
                         >Zum Klimalabor</a
@@ -173,7 +256,7 @@
                     </p>
                     <p>
                       Haben Sie Fragen oder benötigen Sie Hilfe? Wir sind gerne
-                      für Sie da. Antworten Sie einfach auf diese Email.
+                      für Sie da. Antworten Sie einfach auf diese E-Mail.
                     </p>
                   </td>
                 </tr>
