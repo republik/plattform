@@ -454,13 +454,13 @@ class Page extends Component {
                         <A
                           key='email'
                           href={`mailto:${t.first.elements([
-                            'Onboarding/Page/${context}/more/help/email',
-                            'Onboarding/Page/more/help/email',
+                            `Onboarding/Page/${context}/more/help/email`,
+                            `Onboarding/Page/more/help/email`,
                           ])}`}
                         >
                           {t.first.elements([
-                            'Onboarding/Page/${context}/more/help/email',
-                            'Onboarding/Page/more/help/email',
+                            `Onboarding/Page/${context}/more/help/email`,
+                            `Onboarding/Page/more/help/email`,
                           ])}
                         </A>
                       ),
