@@ -2,7 +2,12 @@ import { Fragment } from 'react'
 import { css } from 'glamor'
 import { gql } from '@apollo/client'
 
-import { Interaction, mediaQueries, RawHtml } from '@project-r/styleguide'
+import {
+  Interaction,
+  mediaQueries,
+  RawHtml,
+  Button,
+} from '@project-r/styleguide'
 
 import Section from '../../Onboarding/Section'
 
@@ -18,6 +23,7 @@ const styles = {
     display: 'flex',
     flexWrap: 'wrap',
     position: 'relative',
+    width: 160,
     '& > button': {
       flexGrow: 1,
       margin: '5px 15px 0 0',
@@ -55,14 +61,14 @@ export const fragments = {
 }
 
 const Postcard = (props) => {
-  const { postcard } = props
+  const { postcard, onContinue } = props
   const { t } = useTranslation()
 
   return (
     <Section
       heading={t('Climatelab/Onboarding/Postcard/heading')}
+      showContinue={false}
       isTicked={postcard.userHasSubmitted}
-      // showContinue={hasConsented}
       {...props}
     >
       <Fragment>
@@ -75,6 +81,11 @@ const Postcard = (props) => {
         />
         <br />
         <PostcardGenerator t={t} postcard={postcard} />
+        <div {...styles.actions}>
+          <Button block onClick={onContinue}>
+            {t('Onboarding/Sections/Profile/button/continue', null, '')}
+          </Button>
+        </div>
       </Fragment>
     </Section>
   )
