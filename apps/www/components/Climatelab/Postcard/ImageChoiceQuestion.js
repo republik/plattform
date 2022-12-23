@@ -6,7 +6,11 @@ import uuid from 'uuid/v4'
 import { Loader } from '@project-r/styleguide'
 import scrollIntoView from 'scroll-into-view'
 
-import { Interaction, useColorContext } from '@project-r/styleguide'
+import {
+  Interaction,
+  useColorContext,
+  mediaQueries,
+} from '@project-r/styleguide'
 import dynamic from 'next/dynamic'
 const { H2 } = Interaction
 
@@ -34,7 +38,7 @@ const styles = {
     justifyContent: 'center',
     alignItems: 'center',
     alignContent: 'space-around',
-    minWidth: '80%',
+    minWidth: '85%',
     maxHeight: '400px',
     overflowY: 'hidden',
     position: 'relative',
@@ -62,12 +66,14 @@ const styles = {
     position: 'absolute',
     cursor: 'pointer',
     width: 30,
-    background: 'yellow',
     height: '100%',
     zIndex: 2,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+    [mediaQueries.mUp]: {
+      width: 100,
+    },
   }),
 }
 
@@ -182,6 +188,7 @@ const ImageChoiceQuestion = (props) => {
           style={{
             left: '-1px',
             pointerEvents: backwardDisabled ? 'none' : undefined,
+            display: backwardDisabled && 'none',
           }}
           onClick={() => handleClick(currentSlideIndex - 1)}
         >
@@ -205,6 +212,7 @@ const ImageChoiceQuestion = (props) => {
           style={{
             right: '-1px',
             pointerEvents: forwardDisabled ? 'none' : undefined,
+            display: forwardDisabled && 'none',
             transform: 'rotate(-180deg)',
           }}
           onClick={() => handleClick(currentSlideIndex + 1)}
