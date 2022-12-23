@@ -1197,6 +1197,10 @@
       "value": "Ihr Republik-Probezugang: Willkommen!"
     },
     {
+      "key": "api/access/email/recipient/onboarding_klimalabor/subject",
+      "value": "Willkommen im Klimalabor"
+    },
+    {
       "key": "api/access/email/recipient/onboarding_gifted_membership/subject",
       "value": "Willkommen an Bord"
     },

@@ -130,7 +130,6 @@ const insert = async (granter, campaignId, grants = [], pgdb) => {
 }
 
 const grant = async (granter, campaignId, email, message, t, pgdb, mail) => {
-  console.log('B')
   const campaign = await campaignsLib.findOne(campaignId, pgdb)
 
   if (!campaign) {
@@ -178,7 +177,6 @@ const grant = async (granter, campaignId, email, message, t, pgdb, mail) => {
 }
 
 const claim = async (voucherCode, payload, user, t, pgdb, redis, mail) => {
-  console.log('A')
   const sanatizedVoucherCode = voucherCode.trim().toUpperCase()
 
   const grantByVoucherCode = await findByVoucherCode(sanatizedVoucherCode, {
@@ -290,7 +288,6 @@ const revoke = async (id, user, t, pgdb) => {
 }
 
 const request = async (granter, campaignId, payload, t, pgdb, redis, mail) => {
-  console.log('C')
   const campaign = await campaignsLib.findOne(campaignId, pgdb)
 
   if (!campaign) {
