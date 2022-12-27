@@ -76,7 +76,7 @@ extend type Discussion {
   ): SubscriptionConnection!
 }
 
-extend input PublishInput {
+extend input PublishSettings {
   notifyFilters: [EventObjectType!]
 }
 
