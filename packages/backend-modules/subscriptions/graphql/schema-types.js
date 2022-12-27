@@ -47,6 +47,7 @@ extend type Document {
     last: Int
     before: String
     after: String
+    filters: [EventObjectType!]
     includeParents: Boolean
     onlyEligibles: Boolean
     uniqueUsers: Boolean
@@ -73,6 +74,10 @@ extend type Discussion {
     before: String
     after: String
   ): SubscriptionConnection!
+}
+
+extend input PublishInput {
+  notifyFilters: [EventObjectType!]
 }
 
 type Subscription {
