@@ -11,6 +11,7 @@ const getSubscriptionsForDoc = async (
   doc,
   userId,
   {
+    filters = false,
     onlyEligibles = false,
     includeParents = false,
     includeNotActive = false,
@@ -28,6 +29,7 @@ const getSubscriptionsForDoc = async (
     {
       type: 'Document',
       ids: repoIds,
+      filters,
     },
     context,
     {
@@ -51,6 +53,7 @@ const getSubscriptionsForDoc = async (
           {
             type: 'Document',
             id: repoId,
+            filters,
           },
           context,
         ),
@@ -70,6 +73,7 @@ const getSubscriptionsForDoc = async (
       {
         type: 'User',
         ids: contributorUserIds,
+        filters,
       },
       context,
       {
