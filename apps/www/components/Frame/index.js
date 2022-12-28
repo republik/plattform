@@ -28,6 +28,7 @@ import { useInNativeApp } from '../../lib/withInNativeApp'
 import LegacyAppNoticeBox from './LegacyAppNoticeBox'
 import { useMe } from '../../lib/context/MeContext'
 import { climateColors } from '../Climatelab/config'
+import { checkRoles } from '../../lib/apollo/withMe'
 
 css.global('html', { boxSizing: 'border-box' })
 css.global('*, *:before, *:after', { boxSizing: 'inherit' })
@@ -115,8 +116,9 @@ const Frame = ({
   const { inNativeApp, inNativeAppLegacy } = useInNativeApp()
   const { t } = useTranslation()
   const { me, hasAccess } = useMe()
+  const isClimateLabOnlyUser = checkRoles(me, ['climate'])
 
-  const hasOverviewNav = hasAccess && wantOverviewNav
+  const hasOverviewNav = (hasAccess || isClimateLabOnlyUser) && wantOverviewNav
   const hasSecondaryNav = !!(secondaryNav || hasOverviewNav)
   const padHeaderRule = useMemo(() => {
     return css({
