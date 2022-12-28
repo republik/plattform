@@ -7615,6 +7615,14 @@
     {
       "key": "Climate/Trial/Heading/NonCampaignMember",
       "value": "Das Klimalabor steht ab sofort allen offen."
+    },
+    {
+      "key": "ClimateLandingPage/seo/title",
+      "value": "Klimalabor der Republik — machen Sie mit!"
+    },
+    {
+      "key": "ClimateLandingPage/seo/description",
+      "value": "Die Klimakrise ist hier. Die Lage ist ernst. Was tun? Das Klimalabor der Republik ist ein Ort für Austausch und Experimente. Melden Sie sich jetzt an."
     }
   ]
 }

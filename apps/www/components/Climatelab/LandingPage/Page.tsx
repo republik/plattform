@@ -9,11 +9,17 @@ import Counter from '../Counter'
 import Image from 'next/image'
 import ClimateLabTrialform from './ClimateLabTrialForm'
 import OptionalLocalColorContext from '../../Frame/OptionalLocalColorContext'
+import { useTranslation } from '../../../lib/withT'
+import { CDN_FRONTEND_BASE_URL, PUBLIC_BASE_URL } from '../../../lib/constants'
 
 const LandingPage = () => {
+  const { t } = useTranslation()
   const meta = {
-    title: 'Klimalabor',
-    description: 'MACH MIT!',
+    pageTitle: t('ClimateLandingPage/seo/title'),
+    title: t('ClimateLandingPage/seo/title'),
+    description: t('ClimateLandingPage/seo/description'),
+    image: `${CDN_FRONTEND_BASE_URL}/static/climatelab/wilkommen-zum-klimalabor-social.png`,
+    url: `${PUBLIC_BASE_URL}/wilkommen-zum-klimalabor`,
   }
 
   return (
