@@ -41,20 +41,19 @@ const LandingPage = () => {
         <div {...styles.contentWrapper}>
           <section {...css({ [mediaQueries.mUp]: { marginTop: 200 } })}>
             <h1 {...styles.pageTitle}>
-              Die Klimakrise ist hier.
-              <br />
-              Die Lage ist ernst.
+              {t.elements('ClimateLandingPage/content/heading1', {
+                br: <br />,
+              })}
             </h1>
-            <CallToAction>Was tun?</CallToAction>
+            <CallToAction>
+              {t('ClimateLandingPage/content/callToAction')}
+            </CallToAction>
             <div {...css({ [mediaQueries.mUp]: { marginTop: 105 } })}>
               <p {...styles.text}>
-                Es beginnt damit, dass wir an Veränderung glauben. Und
-                verstehen, wie sie möglich wird.
+                {t('ClimateLandingPage/content/paragraph1')}
               </p>
               <p {...styles.text}>
-                Darum starten wir das Klimalabor. Einen Ort für Austausch und
-                Experimente. Um gemeinsam herauszufinden, was das ist:
-                Journalismus, der uns in der Klimakrise wirklich weiterbringt.
+                {t('ClimateLandingPage/content/paragraph2')}
               </p>
             </div>
           </section>
@@ -67,18 +66,20 @@ const LandingPage = () => {
             {...css({ marginTop: 40, [mediaQueries.mUp]: { marginTop: 80 } })}
           >
             <Counter />
-            <p {...styles.text}>Menschen machen schon mit im Klimalabor.</p>
+            <p {...styles.text}>
+              {t('ClimateLandingPage/content/counterText')}
+            </p>
           </section>
           <section
             {...css({ marginTop: 40, [mediaQueries.mUp]: { marginTop: 80 } })}
           >
             <p {...styles.text}>
-              Das Klimalabor ist ein Projekt der Republik. Die Republik ist ein
-              digitales Magazin für Politik, Wirtschaft, Gesellschaft und
-              Kultur. Finanziert von seinen Leserinnen und Lesern.
+              {t('ClimateLandingPage/content/byRepublikText')}
             </p>
             <br />
-            <p {...styles.text}>Fragen, Anregungen? klimalabor@republik.ch</p>
+            <p {...styles.text}>
+              {t('ClimateLandingPage/content/questionsText')}
+            </p>
           </section>
         </div>
       </div>

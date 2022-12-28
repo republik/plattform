@@ -7623,6 +7623,34 @@
     {
       "key": "ClimateLandingPage/seo/description",
       "value": "Die Klimakrise ist hier. Die Lage ist ernst. Was tun? Das Klimalabor der Republik ist ein Ort für Austausch und Experimente. Melden Sie sich jetzt an."
+    },
+    {
+      "key": "ClimateLandingPage/content/heading1",
+      "value": "Die Klimakrise ist hier. {br}Die Lage ist ernst."
+    },
+    {
+      "key": "ClimateLandingPage/content/callToAction",
+      "value": "Was tun?"
+    },
+    {
+      "key": "ClimateLandingPage/content/paragraph1",
+      "value": "Es beginnt damit, dass wir an Veränderung glauben. Und verstehen, wie sie möglich wird."
+    },
+    {
+      "key": "ClimateLandingPage/content/paragraph2",
+      "value": "Darum starten wir das Klimalabor. Einen Ort für Austausch und Experimente. Um gemeinsam herauszufinden, was das ist: Journalismus, der uns in der Klimakrise wirklich weiterbringt."
+    },
+    {
+      "key": "ClimateLandingPage/content/counterText",
+      "value": "Menschen machen schon mit im Klimalabor."
+    },
+    {
+      "key": "ClimateLandingPage/content/byRepublikText",
+      "value": "Das Klimalabor ist ein Projekt der Republik. Die Republik ist ein digitales Magazin für Politik, Wirtschaft, Gesellschaft und Kultur. Finanziert von seinen Leserinnen und Lesern."
+    },
+    {
+      "key": "ClimateLandingPage/content/questionsText",
+      "value": "Fragen, Anregungen? klimalabor@republik.ch"
     }
   ]
 }
