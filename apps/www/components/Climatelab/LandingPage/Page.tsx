@@ -57,7 +57,9 @@ const LandingPage = () => {
               </p>
             </div>
           </section>
-          <section {...css({ [mediaQueries.mUp]: { marginTop: 80 } })}>
+          <section
+            {...css({ marginTop: 40, [mediaQueries.mUp]: { marginTop: 80 } })}
+          >
             <OptionalLocalColorContext localColorVariables={colors}>
               <ClimateLabTrialform />
             </OptionalLocalColorContext>
