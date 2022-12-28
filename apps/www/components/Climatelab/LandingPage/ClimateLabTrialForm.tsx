@@ -9,6 +9,7 @@ import {
 } from '../constants'
 import TrialForm from '../../Trial/Form'
 import { useMe } from '../../../lib/context/MeContext'
+import { t } from '../../../lib/withT'
 
 const ClimateLabTrialform = () => {
   const { me } = useMe()
@@ -17,9 +18,11 @@ const ClimateLabTrialform = () => {
   if (isInClimateLab) {
     return (
       <div {...styles.wrapper}>
-        <Interaction.H3>Sie sind bereits Teil des Klimalabors.</Interaction.H3>
+        <Interaction.H3>
+          {t('Climate/Trial/Heading/CampaignMember')}
+        </Interaction.H3>
         <Button primary href={CLIMATE_LAB_URL} style={{ marginTop: 20 }}>
-          Zum Klimalabor HQ
+          {t('Climate/Trial/Action/CampaignMember')}
         </Button>
       </div>
     )
@@ -27,16 +30,19 @@ const ClimateLabTrialform = () => {
 
   return (
     <div {...styles.wrapper}>
-      <Interaction.H3 style={{ color: 'black' }}>
-        Begleiten Sie und auf unserer Reise und nehmen Sie am Klimalabor teil.
-      </Interaction.H3>
-      <TrialForm
-        accessCampaignId={CLIMATE_LAB_ACCESS_CAMPAIGN_ID}
-        context={CLIMATE_LAB_CONTEXT}
-        skipForMembers={false}
-        shouldSkipTrialForm={isInClimateLab}
-        payload={{}}
-      />
+      <div>
+        <Interaction.H3 style={{ marginBottom: -10 }}>
+          {t('Climate/Trial/Heading/NonCampaignMember')}
+        </Interaction.H3>
+        <TrialForm
+          accessCampaignId={CLIMATE_LAB_ACCESS_CAMPAIGN_ID}
+          campaign='climate'
+          context={CLIMATE_LAB_CONTEXT}
+          skipForMembers={false}
+          shouldSkipTrialForm={isInClimateLab}
+          payload={{}}
+        />
+      </div>
     </div>
   )
 }

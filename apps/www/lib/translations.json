@@ -7595,6 +7595,26 @@
     {
       "key": "AppSignInOverlay/title",
       "value": "Zugriff bestätigen"
+    },
+    {
+      "key": "Trial/Form/climate/button/signedIn",
+      "value": "Ich bin dabei!"
+    },
+    {
+      "key": "Trial/Form/climate/button",
+      "value": "Ich bin dabei!"
+    },
+    {
+      "key": "Climate/Trial/Heading/CampaignMember",
+      "value": "Willkommen zurück"
+    },
+    {
+      "key": "Climate/Trial/Action/CampaignMember",
+      "value": "Zum Klimalabor"
+    },
+    {
+      "key": "Climate/Trial/Heading/NonCampaignMember",
+      "value": "Das Klimalabor steht ab sofort allen offen."
     }
   ]
 }
