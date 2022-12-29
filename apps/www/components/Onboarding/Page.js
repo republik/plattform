@@ -4,6 +4,7 @@ import { Query } from '@apollo/client/react/components'
 import { gql } from '@apollo/client'
 import { withRouter } from 'next/router'
 import { css } from 'glamor'
+import Image from 'next/image'
 
 import {
   mediaQueries,
@@ -119,6 +120,28 @@ const styles = {
       ...fontStyles.sansSerifMedium40,
       marginBottom: 50,
     },
+  }),
+  climateTitle: css({
+    ...fontStyles.sansSerifMedium58,
+    marginTop: 40,
+    marginBottom: 80,
+    [mediaQueries.onlyS]: {
+      ...fontStyles.sansSerifMedium40,
+      marginBottom: 50,
+    },
+  }),
+  imageWrapper: css({
+    textAlign: 'center',
+    [mediaQueries.mUp]: {
+      alignItems: 'center',
+      display: 'flex',
+      gap: '2rem',
+      flexDirection: 'row',
+    },
+  }),
+  image: css({
+    height: 'auto',
+    objectFit: 'contain',
   }),
   p: css({
     marginBottom: 20,
@@ -304,12 +327,13 @@ class Page extends Component {
 
             return (
               <Center>
-                <div {...styles.title}>
+                <OnboardingHeader context={context}>
                   {t.first([
                     `Onboarding/Page/${context}/title`,
                     'Onboarding/Page/title',
                   ])}
-                </div>
+                </OnboardingHeader>
+
                 <P {...styles.p}>
                   {t.first(
                     [
@@ -475,6 +499,24 @@ class Page extends Component {
       </Frame>
     )
   }
+}
+
+const OnboardingHeader = ({ children, ...props }) => {
+  if (props.context === 'climate') {
+    return (
+      <div {...styles.imageWrapper}>
+        <div {...styles.image}>
+          <Image
+            src='/static/climatelab/klimalabor-illustration.jpeg'
+            width={150}
+            height={150}
+          />
+        </div>
+        <div {...styles.climateTitle}>{children}</div>
+      </div>
+    )
+  }
+  return <div {...styles.title}>{children}</div>
 }
 
 export default compose(withT, withRouter, withInNativeApp)(Page)
