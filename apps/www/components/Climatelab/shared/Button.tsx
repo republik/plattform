@@ -1,7 +1,6 @@
 import { FC } from 'react'
 import { css } from 'glamor'
-import { fontStyles } from '@project-r/styleguide'
-import { ClimatelabColors } from '../ClimatelabColors'
+import { fontStyles, useColorContext } from '@project-r/styleguide'
 
 type ButtonProps = {
   onClick?: () => void
@@ -16,8 +15,18 @@ const Button: FC<ButtonProps> = ({
   disabled = false,
   ...props
 }) => {
+  const [colorScheme] = useColorContext()
+
   return (
     <button
+      {...colorScheme.set('backgroundColor', 'primary')}
+      {...colorScheme.set('color', 'climateButtonText')}
+      {...colorScheme.set('borderColor', 'climateBorder')}
+      {...css({
+        ':hover': {
+          backgroundColor: colorScheme.get('primaryHover'),
+        },
+      })}
       {...styles.clearFix}
       {...styles.button}
       onClick={onClick}
@@ -46,19 +55,13 @@ const styles = {
   button: css({
     ...fontStyles.sansSerifBold,
     fontSize: 30,
-    backgroundColor: ClimatelabColors.primary,
-    color: ClimatelabColors.primaryText,
     boxSizing: 'border-box',
     padding: '12px 16px',
     borderWidth: 1,
     borderStyle: 'solid',
     borderRadius: 8,
-    borderColor: ClimatelabColors.border,
-    '&:hover': {
-      backgroundColor: ClimatelabColors.primaryHover,
-    },
     '&:disabled': {
       opacity: 0.8,
-    }
+    },
   }),
 }

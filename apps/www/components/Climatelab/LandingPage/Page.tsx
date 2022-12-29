@@ -1,19 +1,26 @@
-import { colors, fontStyles, mediaQueries } from '@project-r/styleguide'
+import {
+  colors,
+  fontStyles,
+  mediaQueries,
+  useColorContext,
+  ColorContextProvider,
+} from '@project-r/styleguide'
 
 import { css } from 'glamor'
 
 import Frame from '../../Frame'
-import { ClimatelabColors } from '../ClimatelabColors'
 import CallToAction from '../shared/CallToAction'
 import Counter from '../Counter'
 import Image from 'next/image'
 import ClimateLabTrialform from './ClimateLabTrialForm'
-import OptionalLocalColorContext from '../../Frame/OptionalLocalColorContext'
 import { useTranslation } from '../../../lib/withT'
 import { CDN_FRONTEND_BASE_URL, PUBLIC_BASE_URL } from '../../../lib/constants'
+import { climateColors } from '../config'
 
 const LandingPage = () => {
   const { t } = useTranslation()
+  const [colorScheme] = useColorContext()
+
   const meta = {
     pageTitle: t('ClimateLandingPage/seo/title'),
     title: t('ClimateLandingPage/seo/title'),
@@ -25,10 +32,10 @@ const LandingPage = () => {
   return (
     <Frame
       meta={meta}
-      pageBackgroundColor={ClimatelabColors.background}
       containerMaxWidth={1100}
+      customContentColorContext={climateColors}
     >
-      <div {...styles.page}>
+      <div {...styles.page} {...colorScheme.set('color', 'text')}>
         <div {...styles.imageWrapper}>
           <div {...styles.image}>
             <Image
@@ -60,9 +67,12 @@ const LandingPage = () => {
           <section
             {...css({ marginTop: 40, [mediaQueries.mUp]: { marginTop: 80 } })}
           >
-            <OptionalLocalColorContext localColorVariables={colors}>
+            <ColorContextProvider
+              localColorVariables={colors}
+              colorSchemeKey='light'
+            >
               <ClimateLabTrialform />
-            </OptionalLocalColorContext>
+            </ColorContextProvider>
           </section>
           <section
             {...css({ marginTop: 40, [mediaQueries.mUp]: { marginTop: 80 } })}
@@ -93,7 +103,6 @@ export default LandingPage
 
 const styles = {
   page: css({
-    color: ClimatelabColors.text,
     [mediaQueries.mUp]: {
       display: 'flex',
       flexDirection: 'row',
