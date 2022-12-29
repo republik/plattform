@@ -337,7 +337,7 @@ class Page extends Component {
                   }}
                 />
 
-                {!expandedSection && (
+                {!expandedSection && context !== 'climate' && (
                   <Button
                     primary={!this.state.hasOnceVisitedAll}
                     onClick={() => {
