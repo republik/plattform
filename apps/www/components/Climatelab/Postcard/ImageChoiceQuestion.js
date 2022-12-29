@@ -119,7 +119,7 @@ const ImageChoiceQuestion = (props) => {
   const [disableScrollListener, setDisableScrollListener] = useState(false)
 
   useEffect(() => {
-    const carousel = carouselRef.current
+    const carousel = carouselRef?.current
     if (!carousel || disableScrollListener) {
       return
     }
@@ -141,7 +141,7 @@ const ImageChoiceQuestion = (props) => {
   }, [currentSlideIndex, disableScrollListener])
 
   useEffect(() => {
-    if (disableScrollIntoView) {
+    if (!carouselRef || disableScrollIntoView) {
       return
     }
     const target = Array.from(carouselRef.current.children)[currentSlideIndex]

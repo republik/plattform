@@ -5333,6 +5333,11 @@ attr-accept@^1.1.3:
   dependencies:
     core-js "^2.5.0"
 
+auto-text-size@0.2.1:
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/auto-text-size/-/auto-text-size-0.2.1.tgz#8b768f33a4dcb71f64bd05d86b6241262d04923b"
+  integrity sha512-iPlqbE5g2lrRNqfhGFlrsx+dFiWG7NqH6BnOUx/H5Xofpws8aQB15cwXEzkcENUHIWfLwTqfFa83d29k3FLPtw==
+
 autolinker@^3.14.1:
   version "3.15.0"
   resolved "https://registry.yarnpkg.com/autolinker/-/autolinker-3.15.0.tgz#03956088648f236642a5783612f9ca16adbbed38"

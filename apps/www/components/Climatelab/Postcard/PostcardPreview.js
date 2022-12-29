@@ -10,6 +10,8 @@ import {
 
 import { postcardCredits } from '../config'
 
+import { AutoTextSize } from 'auto-text-size'
+
 const styles = {
   postcard: css({
     position: 'relative',
@@ -30,12 +32,12 @@ const styles = {
     },
   }),
   textArea: css({
-    overflow: 'hidden',
     wordBreak: 'normal',
     overflowWrap: 'break-word',
     width: '60%',
+    height: '400px',
     borderRight: 'solid 1px #DADDDC',
-    flexDirection: 'column',
+    marginBottom: '10px',
     paddingRight: '20px',
     [mediaQueries.mUp]: {
       paddingRight: '40px',
@@ -59,7 +61,7 @@ const styles = {
       paddingLeft: '40px',
     },
   }),
-  postcardContainer: css({
+  poststampContainer: css({
     maxWidth: '80%',
     alignSelf: 'flex-end',
   }),
@@ -84,27 +86,6 @@ const styles = {
     flexDirection: 'column',
     flexGrow: 1,
   }),
-}
-
-const fontSizeByTextLength = (textLength) => {
-  if (textLength < 50) {
-    return '250%'
-  }
-  if (textLength < 100) {
-    return '150%'
-  }
-  if (textLength < 200) {
-    return '125%'
-  }
-  if (textLength < 300) {
-    return '105%'
-  }
-  if (textLength < 400) {
-    return '95%'
-  }
-  if (textLength < 500) {
-    return '85%'
-  }
 }
 
 export const PostcardPreview = (props) => {
@@ -138,19 +119,12 @@ export const PostcardPreview = (props) => {
             })}
           </div>
 
-          <div
-            {...styles.textArea}
-            style={{
-              fontSize: fontSizeByTextLength(
-                postcardText && postcardText.length,
-              ),
-            }}
-          >
-            {postcardText}
+          <div {...styles.textArea}>
+            <AutoTextSize mode='box'>{postcardText}</AutoTextSize>
           </div>
 
           <div {...styles.rightSide}>
-            <div {...styles.postcardContainer}>
+            <div {...styles.poststampContainer}>
               <PoststampComponent imageUrl={imageUrl} />
             </div>
             <div {...styles.adressBlockContainer}>
