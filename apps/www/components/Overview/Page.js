@@ -24,7 +24,12 @@ import { P } from './Elements'
 import { getTeasersFromDocument } from './utils'
 import Link from 'next/link'
 
-const knownYears = {
+// Year-overview that is currently being tracked
+// once completed add it to the knownYears map
+export const currentYear = 2023
+// Map of all years that have a completed yearly overview
+// and the path to the data-source for that year
+export const knownYears = {
   2018: { path: '/2018' },
   2019: { path: '/2019' },
   2020: { path: '/2020' },
