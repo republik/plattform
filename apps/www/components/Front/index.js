@@ -35,15 +35,10 @@ import Link from 'next/link'
 import { useGetFrontQuery } from './graphql/getFrontQuery.graphql'
 import { useRouter } from 'next/router'
 import { useMe } from '../../lib/context/MeContext'
+import { useAudioContext } from '../Audio/AudioProvider'
 import useAudioQueue from '../Audio/hooks/useAudioQueue'
+import { AudioPlayerLocations } from '../Audio/types/AudioActionTracking'
 import FrontAudioPlayButton from './FrontAudioPlayButton'
-import { knownYears, currentYear } from '../Overview/Page'
-
-// Get all years that have a yearly overview in descending order
-const archivedYears = Object.keys(knownYears)
-  .filter((key) => /^[0-9]{4}$/.test(key))
-  .sort((a, b) => b - a) // descending
-const yearsWithOverview = Array.from(new Set([currentYear, ...archivedYears])) // remove possible duplicates
 
 const styles = {
   prepublicationNotice: css({
@@ -274,7 +269,7 @@ const Front = ({
                 <div style={{ marginBottom: 10 }}>
                   {t.elements('front/chronology', {
                     years: intersperse(
-                      yearsWithOverview.map((year) => (
+                      [2022, 2021, 2020, 2019, 2018].map((year) => (
                         <Link key={year} href={`/${year}`} passHref>
                           <Editorial.A style={{ color: colors.negative.text }}>
                             {year}
