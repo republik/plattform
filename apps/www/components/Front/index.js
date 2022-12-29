@@ -53,6 +53,9 @@ const styles = {
   }),
 }
 
+// Years to link to that have a yearly overview page
+const archivedYears = [2023, 2022, 2021, 2020, 2019, 2018]
+
 export const RenderFront = ({ front, nodes, isFrontExtract = false }) => {
   const { t } = useTranslation()
   const { isEditor, hasAccess } = useMe()
@@ -269,7 +272,7 @@ const Front = ({
                 <div style={{ marginBottom: 10 }}>
                   {t.elements('front/chronology', {
                     years: intersperse(
-                      [2022, 2021, 2020, 2019, 2018].map((year) => (
+                      archivedYears.map((year) => (
                         <Link key={year} href={`/${year}`} passHref>
                           <Editorial.A style={{ color: colors.negative.text }}>
                             {year}
