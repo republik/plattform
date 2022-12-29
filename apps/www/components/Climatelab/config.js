@@ -6,6 +6,8 @@ export const climateColors = {
     primaryHover: '#F8F702',
     primaryText: '#000000',
     logo: '#FFFFFF',
+    climateBorder: '#000000',
+    climateButtonText: '#000000',
   },
   dark: {},
 }

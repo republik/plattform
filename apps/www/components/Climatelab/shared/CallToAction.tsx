@@ -1,11 +1,16 @@
 import { css } from 'glamor'
 import { FC } from 'react'
-import { fontStyles } from '@project-r/styleguide'
-import { ClimatelabColors } from '../ClimatelabColors'
+import { fontStyles, useColorContext } from '@project-r/styleguide'
 
 const CallToAction: FC = ({ children }) => {
+  const [colorScheme] = useColorContext()
+
   return (
-    <div {...styles.wrapper}>
+    <div
+      {...styles.wrapper}
+      {...colorScheme.set('color', 'climateButtonText')}
+      {...colorScheme.set('backgroundColor', 'primary')}
+    >
       <p {...styles.text}>{children}</p>
     </div>
   )
@@ -14,12 +19,12 @@ const CallToAction: FC = ({ children }) => {
 export default CallToAction
 
 const styles = {
-  wrapper: css({}),
+  wrapper: css({
+    display: 'inline-block',
+  }),
   text: css({
     ...fontStyles.serifBold32,
     margin: 0,
-    backgroundColor: ClimatelabColors.primary,
-    color: ClimatelabColors.primaryText,
     boxSizing: 'border-box',
     padding: '0.25rem 0.5rem',
     width: 'fit-content',
