@@ -1,12 +1,16 @@
-// @TODO: Abandoned, but might use implementation in apps/www/components/Notifications/enhancers.js
-
 import { gql } from '@apollo/client'
 import { makeMutationHook } from '../../../lib/helpers/AbstractApolloGQLHooks.helper'
+import EventObjectType from './EventObjectType'
 
 const UNSUBSCRIBE_DOCUMENT_MUTATION = gql`
-  mutation unsubscribeDocumentMutation($subscriptionId: ID!) {
-    unsubscribe(subscriptionId: $subscriptionId) {
+  mutation unsubscribeDocumentMutation(
+    $subscriptionId: ID!
+    $filters: [EventObjectType!]
+  ) {
+    unsubscribe(subscriptionId: $subscriptionId, filters: $filters) {
       id
+      filters
+      active
     }
   }
 `
@@ -14,11 +18,14 @@ const UNSUBSCRIBE_DOCUMENT_MUTATION = gql`
 type UnsubscribeDocumentData = {
   unsubscribe?: {
     id: string
+    filters?: EventObjectType[]
+    active: boolean
   }
 }
 
 type UnsubscribeDocumentVariables = {
   subscriptionId: string
+  filters?: EventObjectType[]
 }
 
 const useUnsubscribeDocumentMutation = makeMutationHook<

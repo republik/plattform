@@ -10,12 +10,17 @@ import {
   plainButtonRule,
   Editorial,
   useColorContext,
+  NotificationIcon,
+  NotificationsNoneIcon,
 } from '@project-r/styleguide'
 import Link from 'next/link'
 
 import { intersperse } from '../../lib/utils/helpers'
-import SubscribeCheckbox from '../Notifications/SubscribeCheckbox'
+import { useMemo } from 'react'
 import useDocumentSubscriptionQuery from './graphql/useDocumentSubscriptionQuery'
+import useSubscribeDocumentMutation from './graphql/useSubscribeDocumentMutation'
+import useUnsubscribeDocumentMutation from './graphql/useUnsubscribeDocumentMutation'
+import EventObjectType from './graphql/EventObjectType'
 
 const styles = {
   audioInfo: css({
@@ -25,6 +30,7 @@ const styles = {
       ...convertStyleToRem(fontStyles.sansSerifRegular15),
     },
   }),
+  buttonWrapper: css({}),
 }
 
 const AudioInfo = ({
@@ -44,9 +50,44 @@ const AudioInfo = ({
     },
     skip: !willBeReadAloud,
   })
+  const [subscribe] = useSubscribeDocumentMutation()
+  const [unsubscribe] = useUnsubscribeDocumentMutation()
 
   const readAloudSubscription = data?.document?.subscriptions?.nodes.find(
     ({ object: { id } }) => id === documentId,
+  )
+  const isSubscribedToReadAloud = readAloudSubscription?.filters.includes(
+    EventObjectType.READ_ALOUD,
+  )
+
+  const handleClick = useMemo(
+    () => async () => {
+      try {
+        if (isSubscribedToReadAloud) {
+          await unsubscribe({
+            variables: {
+              subscriptionId: readAloudSubscription.id,
+              filters: [EventObjectType.READ_ALOUD],
+            },
+          })
+        } else {
+          await subscribe({
+            variables: {
+              documentId,
+            },
+          })
+        }
+      } catch (e) {
+        console.error(e)
+      }
+    },
+    [
+      subscribe,
+      unsubscribe,
+      isSubscribedToReadAloud,
+      readAloudSubscription,
+      documentId,
+    ],
   )
 
   return (
@@ -73,10 +114,10 @@ const AudioInfo = ({
             : t('article/actionbar/audio/info/speaker/default')}
         </>
       ) : (
-        <>
+        <span {...styles.buttonWrapper}>
           <button
             {...plainButtonRule}
-            style={{ textDecoration: 'underline' }}
+            style={{ textDecoration: 'underline', display: 'inline' }}
             onClick={() => play()}
           >
             {t('article/actionbar/audio/info/play-synth')}
@@ -84,18 +125,33 @@ const AudioInfo = ({
           {!!willBeReadAloud && (
             <>
               {'. '}
-              <span>{t('article/actionbar/audio/info/read-soon')}</span>
+              <span style={{ marginRight: '0.25rem' }}>
+                {t('article/actionbar/audio/info/read-soon')}
+              </span>
+
               {(!!data || !loading) && readAloudSubscription && (
-                <SubscribeCheckbox
-                  subscription={readAloudSubscription}
-                  filterName='ReadAloud'
-                  filterLabel
-                  disabled={!readAloudSubscription?.isEligibleForNotifications}
-                />
+                <button
+                  onClick={handleClick}
+                  {...plainButtonRule}
+                  style={{ display: 'inline-block' }}
+                >
+                  {isSubscribedToReadAloud ? (
+                    <NotificationIcon size={24} />
+                  ) : (
+                    <NotificationsNoneIcon size={24} />
+                  )}
+                  {!isSubscribedToReadAloud && (
+                    <span style={{ textDecoration: 'underline' }}>
+                      {t(
+                        'article/actionbar/audio/info/read-aloud-notification',
+                      )}
+                    </span>
+                  )}
+                </button>
               )}
             </>
           )}
-        </>
+        </span>
       )}
     </span>
   )
