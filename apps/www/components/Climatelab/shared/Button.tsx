@@ -24,7 +24,7 @@ const Button: FC<ButtonProps> = ({
       {...colorScheme.set('borderColor', 'climateBorder')}
       {...css({
         ':hover': {
-          backgroundColor: colorScheme.get('primaryHover'),
+          backgroundColor: colorScheme.getCSSColor('primaryHover'),
         },
       })}
       {...styles.clearFix}
