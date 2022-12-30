@@ -7621,6 +7621,10 @@
       "value": "Das Klimalabor steht ab sofort allen offen."
     },
     {
+      "key": "Climate/Logo/altText",
+      "value": "Das Klimalabor der Republik"
+    },
+    {
       "key": "ClimateLandingPage/seo/title",
       "value": "Klimalabor der Republik — machen Sie mit!"
     },
@@ -7655,6 +7659,14 @@
     {
       "key": "ClimateLandingPage/content/questionsText",
       "value": "Fragen, Anregungen? klimalabor@republik.ch"
+    },
+    {
+      "key": "ClimateTeaser/content/text1",
+      "value": "Die Klimakrise ist hier. {br1}Die Lage ist ernst. {br2}Was tun?"
+    },
+    {
+      "key": "ClimateTeaser/content/buttonAction",
+      "value": "Zum Klimalabor"
     }
   ]
 }
