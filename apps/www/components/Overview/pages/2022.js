@@ -534,7 +534,6 @@ const text = {
         ids={['mBRrvK31g']}
         format='republik/format-ich-hab-mich-getaeuscht'
       >
-        {/* TODO: double check if id is required */}
         getäuscht
       </Highlight>{' '}
       – Sie{' '}
