@@ -16,7 +16,7 @@ import matchPayments, { MatchPaymentReport } from '../payments/matchPayments'
 import { SftpFile } from './payments/sftp'
 import { syncPaymentFiles } from './payments/syncPaymentFiles'
 import { getAmountOfUnmatchedPayments } from '../payments/paymentslip/helpers'
-import { sendPaymentReminders } from '../payments/paymentslip/sendPaymentReminders'
+// import { sendPaymentReminders } from '../payments/paymentslip/sendPaymentReminders'
 import { Context } from '@orbiting/backend-modules-types'
 
 import {
@@ -35,7 +35,8 @@ export async function importPayments(
       context.pgdb,
     )
     await notifyAccountants(report)
-    await sendPaymentReminders(context)
+    // tmp disable until email ready
+    // await sendPaymentReminders(context)
   } catch (e) {
     await informFailed(
       `importPayments(): postfinance sync failed with the following error: ${

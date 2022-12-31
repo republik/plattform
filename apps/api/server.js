@@ -63,7 +63,7 @@ const {
   graphql: access,
 } = require('@orbiting/backend-modules-access')
 // const PublicationScheduler = require('@orbiting/backend-modules-publikator/lib/PublicationScheduler')
-// const MembershipScheduler = require('@orbiting/backend-modules-republik-crowdfundings/lib/scheduler')
+const MembershipScheduler = require('@orbiting/backend-modules-republik-crowdfundings/lib/scheduler')
 // const DatabroomScheduler = require('@orbiting/backend-modules-databroom/lib/scheduler')
 // const MailScheduler = require('@orbiting/backend-modules-mail/lib/scheduler')
 
@@ -76,9 +76,9 @@ const {
   MAIL_EXPRESS_RENDER,
   MAIL_EXPRESS_MAILCHIMP,
   // SEARCH_PG_LISTENER,
-  // NODE_ENV,
+  NODE_ENV,
   // ACCESS_SCHEDULER,
-  // MEMBERSHIP_SCHEDULER,
+  MEMBERSHIP_SCHEDULER,
   // PUBLICATION_SCHEDULER,
   // DATABROOM_SCHEDULER,
   // MAIL_SCHEDULER,
@@ -86,7 +86,7 @@ const {
   DYNO,
 } = process.env
 
-// const DEV = NODE_ENV ? NODE_ENV !== 'production' : true
+const DEV = NODE_ENV ? NODE_ENV !== 'production' : true
 
 // only used by tests, needs to run server and schedulers
 const start = async () => {
@@ -257,18 +257,18 @@ const runOnce = async () => {
   //   accessScheduler = await AccessScheduler.init(context)
   // }
 
-  // let membershipScheduler
-  // if (
-  //   MEMBERSHIP_SCHEDULER === 'false' ||
-  //   (DEV && MEMBERSHIP_SCHEDULER !== 'true')
-  // ) {
-  //   console.log('MEMBERSHIP_SCHEDULER prevented scheduler from being started', {
-  //     MEMBERSHIP_SCHEDULER,
-  //     DEV,
-  //   })
-  // } else {
-  //   membershipScheduler = await MembershipScheduler.init(context)
-  // }
+  let membershipScheduler
+  if (
+    MEMBERSHIP_SCHEDULER === 'false' ||
+    (DEV && MEMBERSHIP_SCHEDULER !== 'true')
+  ) {
+    console.log('MEMBERSHIP_SCHEDULER prevented scheduler from being started', {
+      MEMBERSHIP_SCHEDULER,
+      DEV,
+    })
+  } else {
+    membershipScheduler = await MembershipScheduler.init(context)
+  }
 
   // let publicationScheduler
   // if (
@@ -325,7 +325,7 @@ const runOnce = async () => {
         // slackGreeter && slackGreeter.close(),
         // searchNotifyListener && searchNotifyListener.close(),
         // accessScheduler && accessScheduler.close(),
-        // membershipScheduler && membershipScheduler.close(),
+        membershipScheduler && membershipScheduler.close(),
         // publicationScheduler && (await publicationScheduler.close()),
         // databroomScheduler && databroomScheduler.close(),
         // mailScheduler && mailScheduler.close(),
