@@ -39,7 +39,7 @@ const changeover = async (
     WHERE
       -- Potential ending memberships to change over to dormant membership
       "endDate" < :endDate
-      AND "userId" != :PARKING_USER_ID
+      ${PARKING_USER_ID ? 'AND "userId" != :PARKING_USER_ID' : ''}
   `,
     { endDate, PARKING_USER_ID },
   )
