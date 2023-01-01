@@ -1,0 +1,32 @@
+Bonjour
+
+Nous sommes heureux que vous souhaitiez soutenir Lobbywatch.
+
+Sauf erreur de notre comptabilité, votre contribution de soutien d'un montant de
+CHF {{total}} est cependant toujours en suspens.
+
+Pouvons-nous vous demander de bien vouloir nous verser ce montant dans les
+prochains jours ? Notre projet dépend de votre contribution.
+
+Informations sur le paiement :
+
+ * IBAN : {{iban}}
+ * Référence : {{reference}}
+ * Montant : CHF {{total}}
+
+Vous trouverez ci-joint une facture QR.
+
+Vous pouvez l'utiliser pour effectuer le paiement via le mobile banking,
+l'e-banking ou au guichet de la banque et à la poste.
+
+Si votre virement se croise avec ce rappel de paiement, vous considérez que
+votre e-mail est sans valeur. notre e-mail comme étant sans objet. Si vous avez
+d'autres questions, n'hésitez pas à nous contacter. à tout moment à l'adresse
+info@lobbywatch.ch .
+
+Avec nos meilleures salutations
+
+
+Lobbywatch.ch
+3000 Bern
+info@lobbywatch.ch

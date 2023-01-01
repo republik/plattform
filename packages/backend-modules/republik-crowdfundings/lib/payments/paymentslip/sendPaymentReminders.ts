@@ -27,6 +27,7 @@ const MAX_SECONDS_RECENT_IMPORT = 60 * 60 * 12 // 12 hours
 interface OutstandingPayment {
   paymentId: Nominal<string, 'paymentId'>
   userId: Nominal<string, 'userId'>
+  locale: string
   pledgeId: Nominal<string, 'pledgeId'>
   createdAt: Date
   hrid: string
@@ -222,11 +223,14 @@ async function send({
   isLast,
   context,
 }: SendParameters): Promise<void> {
+  const { locale } = payment
   const emailSubject = context.t.first([
-    `api/email/payment/reminder${isLast ? '/last' : ''}/${
+    `api/email/payment/reminder/${locale}/${isLast ? 'last/' : ''}${
       payment.packageName
     }/subject`,
-    `api/email/payment/reminder${isLast ? '/last' : ''}/default/subject`,
+    `api/email/payment/reminder/${locale}/${
+      isLast ? 'last/' : ''
+    }default/subject`,
   ])
 
   const resolvedPayment = await invoices.commons.resolvePayment(
@@ -241,7 +245,7 @@ async function send({
       to: payment.email,
       fromEmail: process.env.DEFAULT_MAIL_FROM_ADDRESS,
       subject: emailSubject,
-      templateName: isLast ? 'cf_payment_reminder_last' : 'cf_payment_reminder',
+      templateName: `${locale}/cf_payment_reminder${isLast ? '_last' : ''}`,
       globalMergeVars: [
         {
           name: 'total',
@@ -302,6 +306,7 @@ SELECT
   payments.hrid,
   payments.total,
   pledges.id AS "pledgeId",
+  users.locale,
   users.email,
   users.id AS "userId",
   companies.name AS "companyName",

@@ -265,10 +265,6 @@
       "value": "Bitte zuerst eine Adresse für den betreffenden User erfassen."
     },
     {
-      "key": "api/email/payment/reminder/subject",
-      "value": "Erinnerung: Lobbywatch-Mitgliedschaft"
-    },
-    {
       "key": "api/pledge/404",
       "value": "Der Pledge konnte nicht gefunden werden."
     },
@@ -2013,44 +2009,100 @@
       "value": "GitHub scheint zur Zeit nicht verfügbar zu sein. Bitte versuchen Sie es später nochmals."
     },
     {
-      "key": "api/email/payment/reminder/default/subject",
+      "key": "api/email/payment/reminder/de/default/subject",
       "value": "Zahlungserinnerung Lobbywatch"
     },
     {
-      "key": "api/email/payment/reminder/ABO/subject",
+      "key": "api/email/payment/reminder/de/YEAR/subject",
       "value": "Zahlungserinnerung Lobbywatch-Mitgliedschaft"
     },
     {
-      "key": "api/email/payment/reminder/PROLONG/subject",
+      "key": "api/email/payment/reminder/de/LEGISLATION/subject",
       "value": "Zahlungserinnerung Lobbywatch-Mitgliedschaft"
     },
     {
-      "key": "api/email/payment/reminder/DONATE/subject",
+      "key": "api/email/payment/reminder/de/PROLONG/subject",
+      "value": "Zahlungserinnerung Lobbywatch-Mitgliedschaft"
+    },
+    {
+      "key": "api/email/payment/reminder/de/DONATE/subject",
       "value": "Zahlungserinnerung Lobbywatch-Spende"
     },
     {
-      "key": "api/email/payment/reminder/BENEFACTOR/subject",
+      "key": "api/email/payment/reminder/de/BENEFACTOR/subject",
       "value": "Zahlungserinnerung Lobbywatch-Mitgliedschaft"
     },
     {
-      "key": "api/email/payment/reminder/last/default/subject",
-      "value": "LETZTE MAHNUNG Lobbywatch"
+      "key": "api/email/payment/reminder/de/last/default/subject",
+      "value": "Letzte Zahlungserinnerung Lobbywatch"
     },
     {
-      "key": "api/email/payment/reminder/last/ABO/subject",
-      "value": "LETZTE MAHNUNG Lobbywatch-Mitgliedschaft"
+      "key": "api/email/payment/reminder/de/last/YEAR/subject",
+      "value": "Letzte Zahlungserinnerung Lobbywatch-Mitgliedschaft"
     },
     {
-      "key": "api/email/payment/reminder/last/PROLONG/subject",
-      "value": "LETZTE MAHNUNG Lobbywatch-Mitgliedschaft"
+      "key": "api/email/payment/reminder/de/last/LEGISLATION/subject",
+      "value": "Letzte Zahlungserinnerung Lobbywatch-Mitgliedschaft"
     },
     {
-      "key": "api/email/payment/reminder/last/DONATE/subject",
-      "value": "LETZTE MAHNUNG Lobbywatch-Spende"
+      "key": "api/email/payment/reminder/de/last/PROLONG/subject",
+      "value": "Letzte Zahlungserinnerung Lobbywatch-Mitgliedschaft"
     },
     {
-      "key": "api/email/payment/reminder/last/BENEFACTOR/subject",
-      "value": "LETZTE MAHNUNG Lobbywatch-Mitgliedschaft"
+      "key": "api/email/payment/reminder/de/last/DONATE/subject",
+      "value": "Letzte Zahlungserinnerung Lobbywatch-Spende"
+    },
+    {
+      "key": "api/email/payment/reminder/de/last/BENEFACTOR/subject",
+      "value": "Letzte Zahlungserinnerung Lobbywatch-Mitgliedschaft"
+    },
+    {
+      "key": "api/email/payment/reminder/fr/default/subject",
+      "value": "Rappel de paiement Lobbywatch"
+    },
+    {
+      "key": "api/email/payment/reminder/fr/YEAR/subject",
+      "value": "Rappel de paiement pour votre adhésion à Lobbywatch"
+    },
+    {
+      "key": "api/email/payment/reminder/fr/LEGISLATION/subject",
+      "value": "Rappel de paiement pour votre adhésion à Lobbywatch"
+    },
+    {
+      "key": "api/email/payment/reminder/fr/PROLONG/subject",
+      "value": "Rappel de paiement pour votre adhésion à Lobbywatch"
+    },
+    {
+      "key": "api/email/payment/reminder/de/DONATE/subject",
+      "value": "Rappel de paiement pour votre don à Lobbywatch"
+    },
+    {
+      "key": "api/email/payment/reminder/fr/BENEFACTOR/subject",
+      "value": "Rappel de paiement pour votre adhésion à Lobbywatch"
+    },
+    {
+      "key": "api/email/payment/reminder/fr/last/default/subject",
+      "value": "Dernier rappel de paiement Lobbywatch"
+    },
+    {
+      "key": "api/email/payment/reminder/fr/last/YEAR/subject",
+      "value": "Dernier rappel de paiement pour votre adhésion à Lobbywatch"
+    },
+    {
+      "key": "api/email/payment/reminder/fr/last/LEGISLATION/subject",
+      "value": "Dernier rappel de paiement pour votre adhésion à Lobbywatch"
+    },
+    {
+      "key": "api/email/payment/reminder/fr/last/PROLONG/subject",
+      "value": "Dernier rappel de paiement pour votre adhésion à Lobbywatch"
+    },
+    {
+      "key": "api/email/payment/reminder/fr/last/DONATE/subject",
+      "value": "Dernier rappel de paiement pour votre don à Lobbywatch"
+    },
+    {
+      "key": "api/email/payment/reminder/fr/last/BENEFACTOR/subject",
+      "value": "Dernier rappel de paiement pour votre adhésion à Lobbywatch"
     },
     {
       "key": "api/repo/phase/draft",
