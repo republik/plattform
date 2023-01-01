@@ -16,12 +16,6 @@ const cancelMembership = require('../../../lib/cancelMembership')
 
 const { PARKING_PLEDGE_ID, PARKING_USER_ID } = process.env
 
-if (!PARKING_PLEDGE_ID || !PARKING_USER_ID) {
-  console.warn(
-    'missing env PARKING_PLEDGE_ID and/or PARKING_USER_ID, cancelPledge will not work.',
-  )
-}
-
 module.exports = async (_, args, context) => {
   const {
     pgdb,
@@ -29,13 +23,6 @@ module.exports = async (_, args, context) => {
     t,
     mail: { enforceSubscriptions },
   } = context
-  if (!PARKING_PLEDGE_ID || !PARKING_USER_ID) {
-    console.error(
-      'cancelPledge: missing PARKING_PLEDGE_ID and/or PARKING_USER_ID',
-    )
-    throw new Error(t('api/unexpected'))
-  }
-
   Roles.ensureUserHasRole(req.user, 'supporter')
   const {
     pledgeId,
