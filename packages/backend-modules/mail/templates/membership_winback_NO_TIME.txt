@@ -19,9 +19,6 @@ entlastet, aber selbstverständlich haben Sie über unsere Website
 {{frontend_base_url}} oder die Republik-App {{link_app}} nach wie vor Zugriff
 auf das vollständige Magazin.
 
-Oder: Vielleicht wollen oder können Sie die Idee hinter diesem Projekt einfach
-mit einer Spende unterstützen {{link_offer_donate}} ?
-
 Wir würden uns sehr freuen, Sie weiter bei uns an Bord zu wissen oder wenn Sie
 zu einem späteren Zeitpunkt wieder bei uns vorbeischauten.
 
