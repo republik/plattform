@@ -63,7 +63,6 @@ describe('Slate Editor: Navigation (On Tab)', () => {
       },
       {
         type: 'ul',
-        ordered: false,
         children: [
           {
             type: 'listItem',

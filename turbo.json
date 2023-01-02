@@ -16,6 +16,9 @@
     "@orbiting/backend-modules-base#build": {
       "cache": false
     },
+    "@orbiting/backend-modules-calendar#build": {
+      "cache": false
+    },
     "@orbiting/backend-modules-databroom#build": {
       "cache": false
     },
@@ -39,12 +42,14 @@
     },
     "@project-r/styleguide#build": {
       "dependsOn": [
-        "^build",
-        "$SERVER"
+        "^build"
       ],
       "outputs": [
         "dist/**",
         "build/**"
+      ],
+      "env": [
+        "SERVER"
       ]
     },
     "lint": {

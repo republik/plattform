@@ -22,7 +22,7 @@ const styles = {
     right: 0,
     bottom: 0,
     left: 0,
-    zIndex: zIndex.callout,
+    zIndex: zIndex.overlay,
     background: 'rgba(0,0,0,0.5)',
     [mUp]: {
       position: 'relative',

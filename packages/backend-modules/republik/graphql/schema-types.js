@@ -70,6 +70,7 @@ extend type User {
   sequenceNumber: Int
 
   newsletterSettings: NewsletterSettings!
+  prolitterisId: String
 }
 
 type NewsletterSettings {
@@ -132,7 +133,7 @@ enum NewsletterName {
   PROJECTR
   ACCOMPLICE
   CLIMATE
-  READALOUD
+  WINTER
 }
 
 type Video {

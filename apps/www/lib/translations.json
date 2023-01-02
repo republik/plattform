@@ -342,7 +342,7 @@
     },
     {
       "key": "marketing/magazine/button/label",
-      "value": "Magazin lesen"
+      "value": "Zum Magazin"
     },
     {
       "key": "marketing/signin",
@@ -394,11 +394,11 @@
     },
     {
       "key": "marketing/page/lead/subtitle",
-      "value": "Das digitale Magazin für Politik, Wirtschaft, Gesellschaft und Kultur. Finanziert von seinen Leserinnen."
+      "value": "Das digitale Magazin für Politik, Wirtschaft, Gesellschaft und Kultur."
     },
     {
-      "key": "marketing/page/minifront/description",
-      "value": "Lesen Sie kostenlos zwei ausgewählte Beiträge der letzten Wochen:"
+      "key": "marketing/page/lead/info",
+      "value": "Zum Lesen und Hören."
     },
     {
       "key": "marketing/page/reasons/1/title",
@@ -422,7 +422,7 @@
     },
     {
       "key": "marketing/page/reasons/3/text",
-      "value": "Die Republik wird finanziert durch ihre über 28'000 Abonnentinnen. Wir gehören niemandem – aber jedem unserer Mitglieder ein bisschen."
+      "value": "Die Republik wird finanziert durch ihre rund 28’000 Abonnentinnen. Wir gehören niemandem – aber jedem unserer Mitglieder ein bisschen."
     },
     {
       "key": "marketing/page/vision/headline",
@@ -486,7 +486,7 @@
     },
     {
       "key": "marketing/page/sections/description/briefings",
-      "value": "Durch die Woche mit der Republik: Das Datenbriefing «Auf lange Sicht» am Montag, das Justiz-Briefing «Am Gericht» am Mittwoch, das «Briefing aus Bern» am Donnerstag und «Was diese Woche wichtig war» am Freitag."
+      "value": "Durch die Woche mit der Republik: das Justizbriefing «Am Gericht» am Mittwoch, das «Briefing aus Bern» am Donnerstag und «Was diese Woche wichtig war» am Freitag."
     },
     {
       "key": "marketing/page/sections/title/briefings",
@@ -510,11 +510,19 @@
     },
     {
       "key": "marketing/page/sections/description/audio",
-      "value": "Wenn Sie gerade keine Hand frei haben – hier finden Sie Journalismus fürs Ohr: Diskussionen, Podcasts, Audio-Serien. Und vorgelesene Geschichten."
+      "value": "Wenn Sie gerade keine Hand frei haben – die Republik ist Journalismus fürs Ohr. Alle Beiträge erscheinen am Tag der Publikation als Audioversion, vorgelesen von grossartigen Stimmen."
     },
     {
       "key": "marketing/page/sections/title/audio",
-      "value": "Audio"
+      "value": "Alle Beiträge, auch zum Hören"
+    },
+    {
+      "key": "marketing/page/sections/description/winter",
+      "value": "Es ist eine kalte, aufreibende und verwirrende Zeit. Soll man sich all den Krisen stellen oder sich davon ablenken? Wir meinen: Beides. Und bieten Hand dazu – immer montags bei Sonnenuntergang"
+    },
+    {
+      "key": "marketing/page/sections/title/winter",
+      "value": "Winter-is-coming-Newsletter"
     },
     {
       "key": "marketing/page/vision/more",
@@ -953,6 +961,30 @@
       "value": "4 bis 6 Mal pro Jahr"
     },
     {
+      "key": "account/newsletterSubscriptions/WINTER/label",
+      "value": "Winter-is-coming-Newsletter"
+    },
+    {
+      "key": "account/newsletterSubscriptions/WINTER/frequency",
+      "value": "Montags um 17 Uhr"
+    },
+    {
+      "key": "account/newsletterSubscriptions/WINTER/description",
+      "value": "Es ist eine kalte, aufreibende und verwirrende Zeit. Soll man sich all den Krisen stellen oder sich davon ablenken? Wir meinen: beides. "
+    },
+    {
+      "key": "account/newsletterSubscriptions/CLIMATE/label",
+      "value": "Klimalabor-Newsletter"
+    },
+    {
+      "key": "account/newsletterSubscriptions/CLIMATE/frequency",
+      "value": "Ab Januar alle 1–2 Wochen"
+    },
+    {
+      "key": "account/newsletterSubscriptions/CLIMATE/description",
+      "value": "Wir experimentieren und wollen zusammen mit Expertinnen und Ihnen herausfinden, was das ist: Journalismus, der uns in der Klimakrise wirklich weiterbringt. Im Newsletter informieren wir über den Stand des Projekts und Möglichkeiten zur Mitwirkung."
+    },
+    {
       "key": "account/newsletterSubscriptions/onlyName/subscribe",
       "value": "abonnieren"
     },
@@ -1002,7 +1034,7 @@
     },
     {
       "key": "account/progress/title",
-      "value": "Leseposition"
+      "value": "Lese- und Hörposition"
     },
     {
       "key": "account/progress/consent/label",
@@ -1359,6 +1391,10 @@
     {
       "key": "profile/contact/facebook/label",
       "value": "Facebook"
+    },
+    {
+      "key": "profile/contact/prolitterisId/label",
+      "value": "Prolitteris ID"
     },
     {
       "key": "profile/contact/twitter/label",
@@ -2002,19 +2038,19 @@
     },
     {
       "key": "styleguide/CommentActions/report",
-      "value": "Anstössigen Inhalt melden"
+      "value": "Moderation herbeirufen"
     },
     {
       "key": "styleguide/CommentActions/reportWithAmount",
-      "value": "Inhalt ({amount}) gemeldet"
+      "value": "Moderation herbeigerufen ({amount})"
     },
     {
       "key": "styleguide/CommentActions/reported",
-      "value": "Inhalt gemeldet"
+      "value": "Moderation herbeigerufen"
     },
     {
       "key": "styleguide/CommentActions/reportMessage",
-      "value": "Sind Sie sicher, dass dieser Beitrag gegen die Etikette verstösst und Sie dies melden möchten?"
+      "value": "Sind Sie sicher, dass dieser Beitrag gegen die Etikette verstösst und Sie die Moderation herbeirufen möchten?"
     },
     {
       "key": "styleguide/CommentActions/upvote/count/0",
@@ -3109,6 +3145,10 @@
       "value": "Teilen"
     },
     {
+      "key": "article/actionbar/flyer/share",
+      "value": "Journal teilen"
+    },
+    {
       "key": "article/actionbar/facebook/title",
       "value": "Auf Facebook teilen"
     },
@@ -3237,16 +3277,60 @@
       "value": "Zum Dialog"
     },
     {
-      "key": "article/actionbar/discussion/call-to-action/empty",
+      "key": "article/actionbar/discussion/label/0",
+      "value": "0 Beiträge"
+    },
+    {
+      "key": "article/actionbar/discussion/label/1",
+      "value": "1 Beitrag"
+    },
+    {
+      "key": "article/actionbar/discussion/label/other",
+      "value": "{count} Beiträge"
+    },
+    {
+      "key": "article/actionbar/discussion/call-to-action/0",
       "value": "Reden Sie mit"
     },
     {
-      "key": "article/actionbar/discussion/call-to-action",
+      "key": "article/actionbar/discussion/call-to-action/1",
+      "value": "Reden Sie mit: 1 Dialog-Beitrag"
+    },
+    {
+      "key": "article/actionbar/discussion/call-to-action/other",
       "value": "Reden Sie mit: {count} Dialog-Beiträge"
     },
     {
       "key": "article/actionbar/userprogress",
       "value": "Leseposition"
+    },
+    {
+      "key": "article/actionbar/audio/play",
+      "value": "Hören"
+    },
+    {
+      "key": "article/actionbar/audio/queue/add",
+      "value": "Hinzufügen"
+    },
+    {
+      "key": "article/actionbar/audio/queue/remove",
+      "value": "Entfernen"
+    },
+    {
+      "key": "article/actionbar/audio/info/speaker/default",
+      "value": "unserem Sprecherinnen-Team"
+    },
+    {
+      "key": "article/actionbar/audio/info/speaker",
+      "value": "Vorgelesen von"
+    },
+    {
+      "key": "article/actionbar/audio/info/play-synth",
+      "value": "Anhören (synthetisch)"
+    },
+    {
+      "key": "article/actionbar/audio/info/read-soon",
+      "value": "Diesen Beitrag lesen wir im Laufe des Tages ein."
     },
     {
       "key": "article/syntheticReadAloud/title",
@@ -3318,11 +3402,11 @@
     },
     {
       "key": "article/progressprompt/headline",
-      "value": "Leseposition merken?"
+      "value": "Lese- und Hörposition merken?"
     },
     {
       "key": "article/progressprompt/description/feature",
-      "value": "Springen Sie an die Stelle zurück, an der Sie einen Text oder ein Hörstück unterbrochen haben. Wenn Sie die Funktion aktivieren, wird ihr Leseverhalten in der Republik aufgezeichnet. {link}"
+      "value": "Springen Sie an die Stelle zurück, an der Sie einen Text oder ein Hörstück unterbrochen haben. Wenn Sie die Funktion aktivieren, wird Ihr Leseverhalten bei der Republik aufgezeichnet. {link}"
     },
     {
       "key": "article/progressprompt/description/feature/link",
@@ -3334,7 +3418,7 @@
     },
     {
       "key": "article/progressprompt/button/confirm",
-      "value": "Leseposition aktivieren"
+      "value": "Aktivieren"
     },
     {
       "key": "article/progressprompt/button/reject",
@@ -3367,6 +3451,14 @@
     {
       "key": "article/prepublication/notice",
       "value": "Interne Publikation (Editoren-Vorschau)"
+    },
+    {
+      "key": "article/flyer/tile/branding",
+      "value": "Mehr Kurzes:"
+    },
+    {
+      "key": "article/flyer/tile/description",
+      "value": "Mehr Kurzes auf republik.ch/journal"
     },
     {
       "key": "progress/restore/time",
@@ -3550,7 +3642,7 @@
     },
     {
       "key": "merci/action/read",
-      "value": "Magazin lesen"
+      "value": "Zum Magazin"
     },
     {
       "key": "merci/action/dialog",
@@ -5057,6 +5149,10 @@
       "value": "Lesezeichen"
     },
     {
+      "key": "nav/vote",
+      "value": "Urabstimmung"
+    },
+    {
       "key": "bookmark/title/bookmarked",
       "value": "Lesezeichen entfernen"
     },
@@ -5119,6 +5215,90 @@
     {
       "key": "styleguide/TeaserFeed/InternalOnlyTag",
       "value": "Interne Publikation (Editoren-Vorschau)"
+    },
+    {
+      "key": "AudioPlayer/Latest",
+      "value": "Neueste Beiträge"
+    },
+    {
+      "key": "AudioPlayer/Latest/ReadAloud",
+      "value": "Vorgelesen"
+    },
+    {
+      "key": "AudioPlayer/Latest/All",
+      "value": "Alle"
+    },
+    {
+      "key": "AudioPlayer/Latest/NoAcces",
+      "value": "Die neusten Beiträge sind für Mitglieder und Abonnentinnen der Republik zugänglich."
+    },
+    {
+      "key": "AudioPlayer/Latest/NoItems",
+      "value": "Keine Beiträge verfügbar."
+    },
+    {
+      "key": "AudioPlayer/Queue",
+      "value": "Wiedergabeliste"
+    },
+    {
+      "key": "AudioPlayer/Queue/Add",
+      "value": "Zur Wiedergabeliste hinzufügen"
+    },
+    {
+      "key": "AudioPlayer/Queue/alreadyInQueue",
+      "value": "Bereits in der Wiedergabeliste vorhanden"
+    },
+    {
+      "key": "AudioPlayer/Queue/ActiveHeading",
+      "value": "Aktueller Beitrag"
+    },
+    {
+      "key": "AudioPlayer/Queue/Remove",
+      "value": "Aus Wiedergabeliste entfernen"
+    },
+    {
+      "key": "AudioPlayer/Queue/Download",
+      "value": "Audiodatei herunterladen"
+    },
+    {
+      "key": "AudioPlayer/Queue/AddToQueueAsNext",
+      "value": "Als Nächstes abspielen"
+    },
+    {
+      "key": "AudioPlayer/Queue/GoToItem",
+      "value": "Zum Beitrag"
+    },
+    {
+      "key": "AudioPlayer/Queue/EmptyQueue/p1",
+      "value": "Sie haben noch keine Beiträge in Ihrer Wiedergabeliste."
+    },
+    {
+      "key": "AudioPlayer/Queue/EmptyQueue/p2",
+      "value": "Über das Wiedergabelisten-Symbol {icon}, können Sie Beiträge in Ihre Wiedergabeliste hinzufügen."
+    },
+    {
+      "key": "AudioPlayer/Queue/EmptyQueue/progressInfo",
+      "value": "Damit die Abspielposition von angehörten Beiträgen gespeichert wird, müssen Sie das"
+    },
+    {
+      "key": "AudioPlayer/Queue/EmptyQueue/progressLink",
+      "value": "Aufzeichnen der Hörposition aktivieren"
+    },
+    {
+      "key": "AudioPlayer/Queue/NoAcces",
+      "value": "Die Wiedergabeliste ist nur für Mitglieder und Abonnentinnen der Republik zugänglich."
+    },
+    {
+      "key": "AudioPlayer/shared/NoAccess/heading",
+      "value": "Einloggen und Weiterhören"
+    },
+    {
+      "key": "AudioPlayer/error",
+      "value": "Beim Abspielen ist ein Fehler aufgetreten."
+    },
+    {
+      "key": "AudioPlayer/error/reload",
+      "value": "Bitte laden Sie die Seite neu."
     },
     {
       "key": "Auth/CodeAuthorization/title",
@@ -5230,7 +5410,7 @@
     },
     {
       "key": "Onboarding/Page/button",
-      "value": "Magazin lesen"
+      "value": "Zum Magazin"
     },
     {
       "key": "Onboarding/Page/more/account",
@@ -5330,7 +5510,7 @@
     },
     {
       "key": "Onboarding/Sections/Usability/paragraph1",
-      "value": "Auf Wunsch merken wir uns Ihre Leseposition in Beiträgen."
+      "value": "Auf Wunsch merken wir uns Ihre Lese- und Hörposition in Beiträgen."
     },
     {
       "key": "Onboarding/Sections/Usability/paragraph2",
@@ -5374,7 +5554,7 @@
     },
     {
       "key": "Trial/Form/withAccess/button/label",
-      "value": "Magazin lesen"
+      "value": "Zum Magazin"
     },
     {
       "key": "Trial/Form/withAccess/setup/label",
@@ -5397,27 +5577,51 @@
       "value": "Ihre E-Mail-Adresse"
     },
     {
+      "key": "Trial/Form/email/submit",
+      "value": "E-Mail-Adresse abschicken"
+    },
+    {
       "key": "Trial/Form/error/title",
       "value": "Fehler"
     },
     {
-      "key": "Trial/Form/waiting/title",
+      "key": "Trial/Form/series/waiting/title",
       "value": "Sie haben Post!"
     },
     {
-      "key": "Trial/Form/completed/title",
+      "key": "Trial/Form/series/completed/title",
       "value": "Herzlich willkommen!"
     },
     {
-      "key": "Trial/Form/initial/title",
+      "key": "Trial/Form/series/initial/title",
       "value": "Kostenlos Probe&shy;lesen für 21&nbsp;Tage."
     },
     {
-      "key": "Trial/Form/initial/beforeSignIn",
+      "key": "Trial/Form/series/initial/beforeSignIn",
       "value": "Melden Sie sich an und lesen Sie die ganze Serie. "
     },
     {
-      "key": "Trial/Form/initial/afterSignIn",
+      "key": "Trial/Form/series/initial/afterSignIn",
+      "value": "Sie können sich in den kommenden Tagen ohne Einschränkung bei uns umsehen."
+    },
+    {
+      "key": "Trial/Form/flyer/waiting/title",
+      "value": "Sie haben Post!"
+    },
+    {
+      "key": "Trial/Form/flyer/completed/title",
+      "value": "Herzlich willkommen!"
+    },
+    {
+      "key": "Trial/Form/flyer/initial/title",
+      "value": "Danke für Ihr Interesse."
+    },
+    {
+      "key": "Trial/Form/flyer/initial/beforeSignIn",
+      "value": "Melden Sie sich an und lesen Sie weiter."
+    },
+    {
+      "key": "Trial/Form/flyer/initial/afterSignIn",
       "value": "Sie können sich in den kommenden Tagen ohne Einschränkung bei uns umsehen."
     },
     {
@@ -5554,7 +5758,7 @@
     },
     {
       "key": "components/Card/Update/read",
-      "value": "Magazin lesen"
+      "value": "Zum Magazin"
     },
     {
       "key": "components/Card/Update/onboarding",
@@ -6470,19 +6674,35 @@
     },
     {
       "key": "Goodie/label/NOTEBOOK",
-      "value": "Republik Notizbuch"
+      "value": "Republik-Notizbuch"
     },
     {
       "key": "Goodie/description/NOTEBOOK",
-      "value": "Ein Moleskin Notizbuch mit Republik-Gravierung. Lieferung innerhalb von 7 Werktagen."
+      "value": "Ein Moleskine-Notizbuch mit Republik-Gravierung. Lieferung innerhalb von 7 Werktagen."
     },
     {
       "key": "Goodie/label/TOTEBAG",
-      "value": "Republik Tasche"
+      "value": "Republik-Tasche"
     },
     {
       "key": "Goodie/description/TOTEBAG",
       "value": "Mit Logo auf der Vorderseite und Manifest auf der Rückseite. Lieferung innerhalb von 7 Werktagen."
+    },
+    {
+      "key": "Goodie/label/MUG",
+      "value": "Republik-Tasse"
+    },
+    {
+      "key": "Goodie/description/MUG",
+      "value": "Mit Logo und Claim «Ohne Journalismus keine Demokratie». Lieferung innerhalb von 10 Werktagen. Nur innerhalb der Schweiz möglich."
+    },
+    {
+      "key": "Goodie/label/MUG_CERAMIC",
+      "value": "Republik-Tasse"
+    },
+    {
+      "key": "Goodie/description/MUG_CERAMIC",
+      "value": "Mit Logo und Claim «Ohne Journalismus keine Demokratie». Lieferung innerhalb von 10 Werktagen. Nur innerhalb der Schweiz möglich."
     },
     {
       "key": "option/TABLEBOOK/label/other",
@@ -6503,6 +6723,22 @@
     {
       "key": "option/FONDUE/label/1",
       "value": "Republik-Fondue"
+    },
+    {
+      "key": "option/MUG/label/other",
+      "value": "Tassen"
+    },
+    {
+      "key": "option/MUG/label/1",
+      "value": "Tasse"
+    },
+    {
+      "key": "option/MUG_CERAMIC/label/other",
+      "value": "Tassen"
+    },
+    {
+      "key": "option/MUG_CERAMIC/label/1",
+      "value": "Tasse"
     },
     {
       "key": "package/customize/price/payMore/userPrice",
@@ -6695,6 +6931,46 @@
     {
       "key": "article/tryNote/220404-v2/after",
       "value": "Sie sind sich immer noch nicht sicher, ob die Republik etwas für Sie ist? Dann testen Sie uns! Für 21 Tage, kostenlos und unverbindlich:"
+    },
+    {
+      "key": "flyer/paynote/buy/221206-v1/title",
+      "value": "Ihnen gefällt, was Sie lesen?"
+    },
+    {
+      "key": "flyer/paynote/buy/221206-v1/body",
+      "value": "Dann bleiben Sie dabei. Unterstützen Sie den unabhängigen Journalismus der Republik mit einem Monatsabonnement oder einer Jahresmitgliedschaft."
+    },
+    {
+      "key": "flyer/paynote/buy/221206-v2/title",
+      "value": "Ihnen ist Journalismus wichtig?"
+    },
+    {
+      "key": "flyer/paynote/buy/221206-v2/body",
+      "value": "Die Republik wird finanziert von ihren Leserinnen, ist komplett werbefrei und unabhängig. Wenn Ihnen das gefällt: Kommen Sie an Bord mit einem Monatsabonnement oder einer Jahresmitgliedschaft."
+    },
+    {
+      "key": "flyer/paynote/trial/221206-v1/title",
+      "value": "Ihnen gefällt, was Sie lesen?"
+    },
+    {
+      "key": "flyer/paynote/trial/221206-v1/body",
+      "value": "Dann möchten Sie die Republik vielleicht besser kennenlernen. Das Angebot: Testen Sie uns. Für 21 Tage, kostenlos und unverbindlich."
+    },
+    {
+      "key": "flyer/paynote/trial/221206-v2/title",
+      "value": "Ihnen ist unabhängiger Journalismus wichtig?"
+    },
+    {
+      "key": "flyer/paynote/trial/221206-v2/body",
+      "value": "Ohne Journalismus keine Demokratie. Wenn Sie das auch so sehen: Die Republik ist werbefrei und wird finanziert von ihren Leserinnen. Testen Sie uns. Für 21 Tage, kostenlos und unverbindlich."
+    },
+    {
+      "key": "flyer/paynote/ios/221212-v1/title",
+      "value": "Danke für Ihre Neugier!"
+    },
+    {
+      "key": "flyer/paynote/ios/221212-v1/body",
+      "value": "Dieser Beitrag wurde grosszügigerweise für Sie von einer unserer Verlegerinnen und Verleger freigeschaltet."
     },
     {
       "key": "profile/tryNote/content",
@@ -7098,7 +7374,7 @@
     },
     {
       "key": "crowdfunding/status/goal/PERMANENT/memberships",
-      "value": "Mitgliedschaften und Abos. Selbsttragend ab: {count}."
+      "value": "Mitgliedschaften und Abos. Wachstumsziel: {count}."
     },
     {
       "key": "Trial/Form/button",

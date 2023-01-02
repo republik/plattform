@@ -15,11 +15,10 @@ const {
   createUrlReplacer,
   getRepoId,
   extractUserUrl,
+  shouldStripDocLinks,
 } = require('../common/resolve')
 
 checkEnv(['FRONTEND_BASE_URL'])
-
-const { DOCUMENTS_LINKS_RESTRICTED } = process.env
 
 const contentUrlResolver = async (
   doc,
@@ -42,13 +41,7 @@ const contentUrlResolver = async (
     externalBaseUrl,
   )
 
-  const stripDocLinks =
-    DOCUMENTS_LINKS_RESTRICTED &&
-    DOCUMENTS_LINKS_RESTRICTED.split(',').includes(doc.meta?.path) &&
-    // user is undefined during publish -> no stripping
-    // null during document delivery -> strip unless authorized
-    user !== undefined &&
-    !hasFullDocumentAccess(user, doc._apiKey)
+  const stripDocLinks = shouldStripDocLinks(user, doc)
 
   await visit(
     doc.content,
@@ -166,6 +159,8 @@ const stringifyNode = async (node) => {
   }
 
   return toString(node)
+    .replace(/\u00AD/g, '') // 0x00AD = Soft Hyphen (SHY)
+    .trim()
 }
 
 module.exports = {

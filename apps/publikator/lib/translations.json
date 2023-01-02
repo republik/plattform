@@ -653,6 +653,10 @@
       "value": "automatisch vorgelesen"
     },
     {
+      "key": "metaData/audio/willBeReadAloud",
+      "value": "dieser Beitrag wird vorgelesen"
+    },
+    {
       "key": "metaData/series/label",
       "value": "Serie"
     },
@@ -895,6 +899,14 @@
     {
       "key": "metaData/darkMode",
       "value": "Dunkles Farbschema forcieren"
+    },
+    {
+      "key": "metaData/isRestricted",
+      "value": "Eingeschränkter Zugang auf Links"
+    },
+    {
+      "key": "metaData/climateLab",
+      "value": "Klimalabor"
     },
     {
       "key": "metaData/recommendations/heading",
@@ -1845,6 +1857,10 @@
       "value": "Info"
     },
     {
+      "key": "editor/element/quizAnswerInfoP",
+      "value": "Info-Paragraph"
+    },
+    {
       "key": "editor/placeholder/paragraph",
       "value": "Text"
     },
@@ -1855,6 +1871,10 @@
     {
       "key": "editor/placeholder/flyerSignature",
       "value": "Text"
+    },
+    {
+      "key": "editor/placeholder/quizAnswerInfoP",
+      "value": "Infos zu Antwort (oder Enter für weitere Option)"
     },
     {
       "key": "editor/mark/bold",

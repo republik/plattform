@@ -100,6 +100,7 @@ const Split = ({
   portrait,
   aboveTheFold,
   feuilleton,
+  audioPlayButton,
 }) => {
   const background = bgColor || ''
   const flexDirection = reverse ? 'row-reverse' : ''
@@ -132,7 +133,7 @@ const Split = ({
       >
         <FigureImage
           aboveTheFold={aboveTheFold}
-          {...FigureImage.utils.getResizedSrcs(image, 750)}
+          {...FigureImage.utils.getResizedSrcs(image, undefined, 750)}
           alt={alt}
         />
         {byline && (
@@ -151,7 +152,12 @@ const Split = ({
             : {},
         )}
       >
-        <Text color={color} center={center} feuilleton={feuilleton}>
+        <Text
+          color={color}
+          center={center}
+          feuilleton={feuilleton}
+          audioPlayButton={audioPlayButton}
+        >
           {children}
         </Text>
       </div>
@@ -169,6 +175,7 @@ Split.propTypes = {
   bgColor: PropTypes.string,
   center: PropTypes.bool,
   reverse: PropTypes.bool,
+  audioPlayButton: PropTypes.node,
 }
 
 Split.defaultProps = {

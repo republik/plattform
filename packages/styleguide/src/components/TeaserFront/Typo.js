@@ -23,7 +23,14 @@ const styles = {
   }),
 }
 
-const TypoBlock = ({ children, attributes, onClick, color, bgColor }) => {
+const TypoBlock = ({
+  children,
+  attributes,
+  onClick,
+  color,
+  bgColor,
+  audioPlayButton,
+}) => {
   const background = bgColor || ''
   return (
     <div
@@ -36,7 +43,7 @@ const TypoBlock = ({ children, attributes, onClick, color, bgColor }) => {
       }}
     >
       <div {...styles.textContainer}>
-        <Text center color={color}>
+        <Text center color={color} audioPlayButton={audioPlayButton}>
           {children}
         </Text>
       </div>
@@ -49,6 +56,7 @@ TypoBlock.propTypes = {
   attributes: PropTypes.object,
   color: PropTypes.string,
   bgColor: PropTypes.string,
+  audioPlayButton: PropTypes.node,
 }
 
 export default TypoBlock

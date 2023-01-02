@@ -341,6 +341,219 @@ const text = {
       ?
     </>
   ),
+  August: (p) => (
+    <>
+      Warum die Schweiz der{' '}
+      <Highlight {...p} ids={['c8Dzktqcb']}>
+        Affenpocken
+      </Highlight>{' '}
+      nicht Herr wird. Worum es geht im Konflikt{' '}
+      <Highlight {...p} ids={['u2aItn2Sg']}>
+        China gegen Taiwan
+      </Highlight>
+      .{' '}
+      <Highlight {...p} ids={['vJ9uxk_q-']}>
+        Wie Werbemillionen die Demokratie zersetzen
+      </Highlight>
+      . Und:{' '}
+      <Highlight {...p} ids={['BvcLjeTvR']}>
+        Ist es juristisch okay, Oligarchenjachten zu beschlagnahmen
+      </Highlight>
+      ? Wie kommt es zu{' '}
+      <Highlight {...p} ids={['bv30j129E']}>
+        Polizeigewalt
+      </Highlight>
+      ? Was muss ich zum Thema{' '}
+      <Highlight {...p} ids={['GyndF2o9a']}>
+        cultural appropriation
+      </Highlight>{' '}
+      wirklich wissen? Davon abgesehen droht ein Strommangel. Bemerkenswert
+      daran: Er begünstigt{' '}
+      <Highlight {...p} ids={['DZhTy8GHO']}>
+        höchst ungewöhnliche politische Allianzen
+      </Highlight>
+      . Doch es bleibt die Frage:{' '}
+      <Highlight {...p} ids={['NaM38tsF_']}>
+        Ist die Schweiz bereit, wenn Putin im Winter die Pipelines nach Europa
+        dichtmacht
+      </Highlight>
+      ?
+    </>
+  ),
+  September: (p) => (
+    <>
+      Die Ukraine startet den{' '}
+      <Highlight {...p} ids={['bRHdBr1Aa']}>
+        Gegenangriff
+      </Highlight>{' '}
+      und Putin bleiben{' '}
+      <Highlight {...p} ids={['WRRFeLaAv']}>
+        leere Drohungen
+      </Highlight>
+      . Brasilien wählt und Bolsonaro kokettiert mit einem Putsch. Wie real ist{' '}
+      <Highlight {...p} ids={['cwegYDM9Q']}>
+        die Gefahr
+      </Highlight>
+      ? Und die Schweiz mag Poulet. Wie aber wird aus kleinen Küken{' '}
+      <Highlight {...p} ids={['eh8FA-k4T']}>
+        so viel Fleisch
+      </Highlight>
+      ? Zudem: Das Zwangsmassnahmengericht sollte ein Gegengewicht zu Polizei
+      und Staatsanwalt sein.{' '}
+      <Highlight {...p} ids={['qr-jy6Pnk']}>
+        Doch es ist keines
+      </Highlight>
+      . Und: Was bedeutet{' '}
+      <Highlight {...p} ids={['TqEbxVePt']}>
+        die Erhöhung des Rentenalters
+      </Highlight>{' '}
+      für die Frauen?
+    </>
+  ),
+  Oktober: (p) => (
+    <>
+      Sitzen wir bald im Dunkeln? Die{' '}
+      <Highlight {...p} ids={['atI8xvL7h']}>
+        Antworten
+      </Highlight>{' '}
+      auf die 25 drängendsten Fragen zum Winter.{' '}
+      <Highlight {...p} ids={['BhlxKM7Pj']}>
+        Das blinde rechte Auge
+      </Highlight>{' '}
+      der Schweizer Justiz. Und der{' '}
+      <Highlight {...p} ids={['8mCZ1rDLM']}>
+        Podcast
+      </Highlight>{' '}
+      dazu.{' '}
+      <Highlight {...p} ids={['UIzsN0rgx']}>
+        Hohe Hürden
+      </Highlight>
+      : Schweizer werden ist schwer. Und: abgeschoben aus der Schweiz –{' '}
+      <Highlight {...p} ids={['b0CsMBTtX']}>
+        verfolgt in Sri Lanka
+      </Highlight>
+      . Ausserdem:{' '}
+      <Highlight {...p} ids={['wnpT_kqcT']}>
+        Irrsinn
+      </Highlight>{' '}
+      in England.{' '}
+      <Highlight {...p} ids={['HX_y3VOQT']}>
+        Auflehnung
+      </Highlight>
+      im Iran. Und schliesslich: die ganze (!) Republik zum{' '}
+      <Highlight {...p} ids={['DWq5HyuSY']}>
+        Hören
+      </Highlight>
+      .
+    </>
+  ),
+  November: (p) => (
+    <>
+      <Highlight {...p} ids={['px4ceDJBA']}>
+        Sie deckt Sicherheitslücken auf
+      </Highlight>
+      . Und{' '}
+      <Highlight {...p} ids={['uLo9365aD']}>
+        er will Bundesrat werden
+      </Highlight>
+      . Wieso{' '}
+      <Highlight {...p} ids={['jd5Y6jsin']}>
+        die Grünen sehr nett sind mit der SP
+      </Highlight>
+      , aber{' '}
+      <Highlight {...p} ids={['3HKt2J8Ko']}>
+        nicht mit ihr fusionieren sollten
+      </Highlight>
+      .{' '}
+      <Highlight {...p} ids={['pbS-_nntN']}>
+        Widerstand gegen
+      </Highlight>{' '}
+      <Highlight {...p} ids={['FZYf56ygT']}>
+        ein Abtreibungsverbot in den USA
+      </Highlight>{' '}
+      – und{' '}
+      <Highlight {...p} ids={['jJUAmb65m']}>
+        die Stimmung nach den Midterm-Wahlen
+      </Highlight>
+      .{' '}
+      <Highlight {...p} ids={['yGuCrPuC-']}>
+        Die Reportage aus Katar
+      </Highlight>
+      .{' '}
+      <Highlight {...p} ids={['dD5ohLVsQ']}>
+        Wie ein Reiskorn die Welt verbessern sollte
+      </Highlight>{' '}
+      und{' '}
+      <Highlight {...p} ids={['sce-VsLk_']}>
+        warum Twitter nicht sterben darf
+      </Highlight>
+      . Begegnen Sie{' '}
+      <Highlight {...p} ids={['9eDHJ2T8E']}>
+        Elfriede Jelinek
+      </Highlight>
+      . Und neu:{' '}
+      <Highlight
+        {...p}
+        ids={['uu4CciN3sg']}
+        format='republik/format-winter-is-coming'
+      >
+        Wir begleiten Sie durch den Winter
+      </Highlight>
+      .
+    </>
+  ),
+  Dezember: (p) => (
+    <>
+      Was passiert,{' '}
+      <Highlight {...p} ids={['dFQVRve7W']}>
+        wenn man Bundesrat wird
+      </Highlight>
+      ? Verliert Russland{' '}
+      <Highlight {...p} ids={['-0zVxxYwu']}>
+        den Krieg
+      </Highlight>
+      ? Und wie steht es eigentlich um{' '}
+      <Highlight {...p} ids={['V3quYn6KE']}>
+        Chinas Neue Seidenstrasse
+      </Highlight>
+      ? Dann: ein{' '}
+      <Highlight {...p} ids={['Lh_bdJU2F']}>
+        Interview mit Brian
+      </Highlight>
+      , alles über{' '}
+      <Highlight {...p} ids={['XofnVB-AW']}>
+        Gummischrot
+      </Highlight>{' '}
+      und eine{' '}
+      <Highlight {...p} ids={['-s7pU1JJ_']}>
+        Verteidigung der Freundlichkeit
+      </Highlight>
+      . Wir haben uns{' '}
+      <Highlight
+        {...p}
+        ids={['mBRrvK31g']}
+        format='republik/format-ich-hab-mich-getaeuscht'
+      >
+        getäuscht
+      </Highlight>{' '}
+      – Sie{' '}
+      <Highlight {...p} ids={['qSJmrqniV']}>
+        auch
+      </Highlight>
+      ? Arielle{' '}
+      <Highlight {...p} ids={['UCatm8Y3e']}>
+        ist ein Badass
+      </Highlight>
+      , Putins Milliarden{' '}
+      <Highlight {...p} ids={['maleNsDoq']}>
+        fliessen durch Zug
+      </Highlight>{' '}
+      und Julie hat{' '}
+      <Highlight {...p} ids={['01v2uvFI4']}>
+        ihre Eizellen eingefroren.
+      </Highlight>
+    </>
+  ),
 }
 
 const Overview2022 = (props) => <Page {...props} year={2022} text={text} />

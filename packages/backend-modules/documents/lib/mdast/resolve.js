@@ -11,11 +11,10 @@ const {
   createUrlReplacer,
   getRepoId,
   extractUserUrl,
+  shouldStripDocLinks,
 } = require('../common/resolve')
 
 checkEnv(['FRONTEND_BASE_URL'])
-
-const { DOCUMENTS_LINKS_RESTRICTED } = process.env
 
 const contentUrlResolver = (
   doc,
@@ -38,13 +37,7 @@ const contentUrlResolver = (
     externalBaseUrl,
   )
 
-  const stripDocLinks =
-    DOCUMENTS_LINKS_RESTRICTED &&
-    DOCUMENTS_LINKS_RESTRICTED.split(',').includes(doc.meta?.path) &&
-    // user is undefined during publish -> no stripping
-    // null during document delivery -> strip unless authorized
-    user !== undefined &&
-    !hasFullDocumentAccess(user, doc._apiKey)
+  const stripDocLinks = shouldStripDocLinks(user, doc)
 
   visit(doc.content, 'link', (node) => {
     node.url = urlReplacer(node.url, stripDocLinks)
@@ -56,7 +49,17 @@ const contentUrlResolver = (
         // this is used for the overview page
         // - assigns a publishDate to an teaser
         // - highlights all teasers of a format or series
+        const {
+          audioSourceKind,
+          audioSourceMp3,
+          audioSourceAac,
+          audioSourceOgg,
+        } = linkedDoc.meta
+        const hasAudio = audioSourceMp3 || audioSourceAac || audioSourceOgg
         node.data.urlMeta = {
+          documentId: linkedDoc.id,
+          hasAudio,
+          audioSourceKind: hasAudio && audioSourceKind,
           repoId: linkedDoc.meta.repoId,
           publishDate: linkedDoc.meta.publishDate,
           section:

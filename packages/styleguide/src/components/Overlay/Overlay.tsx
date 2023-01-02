@@ -8,11 +8,12 @@ import React, {
 } from 'react'
 import ReactDOM from 'react-dom'
 import { css, merge } from 'glamor'
-import zIndex from '../../theme/zIndex'
-import { mUp } from '../../theme/mediaQueries'
-import { useColorContext } from '../Colors/ColorContext'
 
+import zIndex from '../../theme/zIndex'
+import { mUp, onlyS } from '../../theme/mediaQueries'
 import { useBodyScrollLock } from '../../lib/useBodyScrollLock'
+
+import { useColorContext } from '../Colors/ColorContext'
 
 const styles = {
   root: css({
@@ -47,6 +48,17 @@ const styles = {
       margin: '20vh auto 20vh',
     },
   }),
+  miniContainer: css({
+    [mUp]: {
+      minHeight: 'inherit',
+    },
+    [onlyS]: {
+      minHeight: 'inherit',
+      position: 'fixed',
+      bottom: 0,
+      width: '100%',
+    },
+  }),
 }
 
 const ssrAttribute = 'data-overlay-ssr'
@@ -55,9 +67,15 @@ type OverlayProps = {
   onClose: MouseEventHandler<HTMLButtonElement>
   children: ReactNode
   mUpStyle?: MUpStyle
+  mini?: boolean
 }
 
-const Overlay: React.FC<OverlayProps> = ({ onClose, children, mUpStyle }) => {
+const Overlay: React.FC<OverlayProps> = ({
+  onClose,
+  children,
+  mUpStyle,
+  mini,
+}) => {
   const rootDom = useRef<HTMLDivElement>()
   const isDomAvailable = typeof document !== 'undefined'
   if (isDomAvailable && !rootDom.current) {
@@ -111,6 +129,7 @@ const Overlay: React.FC<OverlayProps> = ({ onClose, children, mUpStyle }) => {
       scrollRef={scrollRef}
       isVisible={isVisible}
       ssrMode={ssrMode}
+      mini={mini}
     >
       {children}
     </OverlayRenderer>
@@ -139,7 +158,7 @@ export const OverlayRenderer: React.FC<
     ssrMode?: boolean
     scrollRef?: RefObject<HTMLDivElement>
   }
-> = ({ isVisible, mUpStyle, children, onClose, ssrMode, scrollRef }) => {
+> = ({ isVisible, mUpStyle, children, onClose, mini, ssrMode, scrollRef }) => {
   const close = (e) => {
     e.preventDefault()
     onClose(e)
@@ -155,7 +174,11 @@ export const OverlayRenderer: React.FC<
     >
       <div {...styles.backdrop} onClick={close} />
       <div
-        {...merge(styles.inner, mUpStyle && { [mUp]: mUpStyle })}
+        {...merge(
+          styles.inner,
+          mini && styles.miniContainer,
+          mUpStyle && { [mUp]: mUpStyle },
+        )}
         {...colorScheme.set('backgroundColor', 'overlay')}
         {...colorScheme.set('boxShadow', 'overlay')}
         {...colorScheme.set('color', 'text')}

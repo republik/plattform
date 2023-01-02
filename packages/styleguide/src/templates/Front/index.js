@@ -53,6 +53,11 @@ import {
 import createLiveTeasers from './liveTeasers'
 import { ColorContextProvider } from '../../components/Colors/ColorContext'
 
+const shouldRenderPlayButton = ({ urlMeta }) =>
+  urlMeta?.hasAudio && urlMeta?.audioSourceKind !== 'syntheticReadAloud'
+    ? true
+    : undefined
+
 export const subject = {
   matchMdast: matchHeading(2),
   component: ({ children, attributes, ...props }) => (
@@ -84,6 +89,7 @@ const DefaultLink = ({ children }) => children
 const createFrontSchema = ({
   Link = DefaultLink,
   t = () => '',
+  AudioPlayButton,
   noEmpty = true,
   ...rest
 } = {}) => {
@@ -242,7 +248,15 @@ const createFrontSchema = ({
     }),
     component: ({ children, attributes, ...props }) => (
       <Link href={props.url}>
-        <TeaserFrontImage attributes={attributes} {...props}>
+        <TeaserFrontImage
+          audioPlayButton={
+            !!AudioPlayButton && shouldRenderPlayButton(props) ? (
+              <AudioPlayButton documentId={props?.urlMeta.documentId} />
+            ) : undefined
+          }
+          attributes={attributes}
+          {...props}
+        >
           {children}
         </TeaserFrontImage>
       </Link>
@@ -297,7 +311,15 @@ const createFrontSchema = ({
     matchMdast: matchTeaserType('frontSplit'),
     component: ({ children, attributes, ...props }) => (
       <Link href={props.url}>
-        <TeaserFrontSplit attributes={attributes} {...props}>
+        <TeaserFrontSplit
+          audioPlayButton={
+            !!AudioPlayButton && shouldRenderPlayButton(props) ? (
+              <AudioPlayButton documentId={props?.urlMeta.documentId} />
+            ) : undefined
+          }
+          attributes={attributes}
+          {...props}
+        >
           {children}
         </TeaserFrontSplit>
       </Link>
@@ -335,6 +357,7 @@ const createFrontSchema = ({
             ? TeaserFrontSplitHeadline.Editorial
             : TeaserFrontSplitHeadline.Interaction
         const sizes = {
+          small: titleSize === 'small',
           medium: titleSize === 'medium',
           large: titleSize === 'large',
         }
@@ -355,7 +378,15 @@ const createFrontSchema = ({
     matchMdast: matchTeaserType('frontTypo'),
     component: ({ children, attributes, ...props }) => (
       <Link href={props.url}>
-        <TeaserFrontTypo attributes={attributes} {...props}>
+        <TeaserFrontTypo
+          audioPlayButton={
+            !!AudioPlayButton && shouldRenderPlayButton(props) ? (
+              <AudioPlayButton documentId={props?.urlMeta.documentId} />
+            ) : undefined
+          }
+          attributes={attributes}
+          {...props}
+        >
           {children}
         </TeaserFrontTypo>
       </Link>
@@ -408,7 +439,15 @@ const createFrontSchema = ({
     component: ({ children, attributes, ...props }) => (
       <ColorContextProvider colorSchemeKey='light'>
         <Link href={props.url}>
-          <TeaserFrontTile attributes={attributes} {...props}>
+          <TeaserFrontTile
+            audioPlayButton={
+              !!AudioPlayButton && shouldRenderPlayButton(props) ? (
+                <AudioPlayButton documentId={props?.urlMeta.documentId} />
+              ) : undefined
+            }
+            attributes={attributes}
+            {...props}
+          >
             {children}
           </TeaserFrontTile>
         </Link>
@@ -542,7 +581,15 @@ const createFrontSchema = ({
     component: ({ children, attributes, ...props }) => {
       return (
         <Link href={props.url}>
-          <TeaserCarouselTile attributes={attributes} {...props}>
+          <TeaserCarouselTile
+            audioPlayButton={
+              !!AudioPlayButton && shouldRenderPlayButton(props) ? (
+                <AudioPlayButton documentId={props?.urlMeta.documentId} />
+              ) : undefined
+            }
+            attributes={attributes}
+            {...props}
+          >
             {children}
           </TeaserCarouselTile>
         </Link>

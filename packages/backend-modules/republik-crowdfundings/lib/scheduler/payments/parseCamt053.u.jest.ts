@@ -34,6 +34,12 @@ describe('parseCamt053():', () => {
     expect(paymentEntries.length).toEqual(3)
   })
 
+  it('works with no entries', async () => {
+    const xmlString = await loadFixture('noEntries')
+    const paymentEntries = parseCamt053(xmlString)
+    expect(paymentEntries.length).toEqual(0)
+  })
+
   it('retruns the amount in cents', async () => {
     const xmlString = await loadFixture('singleEntry')
     const [{ gutschrift }] = parseCamt053(xmlString)

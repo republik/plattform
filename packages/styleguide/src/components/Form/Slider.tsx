@@ -4,7 +4,7 @@ import { fontStyles } from '../../theme/fonts'
 import { Label } from '../Typography'
 import { useColorContext } from '../Colors/useColorContext'
 
-const thumbSize = 24
+const thumbSize = 18
 const trackHeight = 4
 
 const thumbStyle = {
@@ -113,7 +113,6 @@ const Slider = ({
   onMouseUp,
   onMouseDown,
   onTouchEnd,
-  ...props
 }: SliderProps) => {
   const [colorScheme] = useColorContext()
   const sliderStyleRules = useMemo(() => {
@@ -178,12 +177,18 @@ const Slider = ({
           fullWidth && styles.fullWidth,
         )}
         type='range'
-        {...props}
+        value={value}
         min={min}
         max={max}
         onMouseUp={onMouseUp}
         onMouseDown={onMouseDown}
-        onChange={(e) => onChange(e, +e.target.value)}
+        onChange={(e) => {
+          if (inactive) {
+            e.preventDefault()
+          } else {
+            onChange(e, +e.target.value)
+          }
+        }}
       />
     </label>
   )

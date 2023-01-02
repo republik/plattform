@@ -1,5 +1,4 @@
-require('@orbiting/backend-modules-env').config()
-const debug = require('debug')('mail:script:sendMailsToSegment')
+const debug = require('debug')('mail:lib:sendMailsToSegment')
 const Promise = require('bluebird')
 
 const { getTemplates, envMergeVars } = require('./sendMailTemplate')
@@ -22,7 +21,26 @@ module.exports = async (segment, mail, pgdb, data) => {
     .concat(SEND_MAILS_TAGS && SEND_MAILS_TAGS.split(','))
     .concat(mail.templateName && mail.templateName)
     .filter(Boolean)
-  const { html, text } = await getTemplates(mail.templateName)
+
+  const mergeVars = [...(mail.globalMergeVars || []), ...envMergeVars].filter(
+    Boolean,
+  )
+
+  const values = mergeVars.reduce((prev, curr) => {
+    const { name, content } = curr
+
+    prev[name] = content
+    prev[name.toLowerCase()] = content
+    prev[name.toUpperCase()] = content
+    return prev
+  }, {})
+
+  const { getHtml, getText, getCompiler } = await getTemplates(
+    mail.templateName,
+  )
+
+  const html = getHtml(values)
+  const text = getText(values) || getCompiler(mail.text)(values)
 
   const message = {
     subject:
@@ -32,7 +50,7 @@ module.exports = async (segment, mail, pgdb, data) => {
     from_email: mail.fromEmail || DEFAULT_MAIL_FROM_ADDRESS,
     from_name: mail.fromName || DEFAULT_MAIL_FROM_NAME,
     html,
-    text: text || mail.text,
+    text,
     merge_language: 'handlebars',
     global_merge_vars: envMergeVars,
     auto_text: !text,

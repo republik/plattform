@@ -11,11 +11,17 @@ module.exports = (context: any) => {
   const users: PgTable<UserRow> = context.pgdb.public.users
   const credentials: PgTable<any> = context.pgdb.public.credentials
   return {
-    byId: createDataLoader((ids: readonly string[]) =>
-      users
-        .find({ id: ids })
-        .then((users) => users.map((u) => transformUser(u))),
-    ),
+    byId: createDataLoader((ids: readonly string[]) => {
+      const userIds = ids.filter(isUuid)
+
+      if (!userIds.length) {
+        return Promise.resolve([])
+      }
+
+      return users
+        .find({ id: userIds })
+        .then((users) => users.map((u) => transformUser(u)))
+    }),
     byEmail: createDataLoader(
       (emails: readonly string[]) =>
         users.find({ email: emails }).then((users) => users.map(transformUser)),
@@ -27,7 +33,7 @@ module.exports = (context: any) => {
         }),
     ),
     byIdOrEmail: createDataLoader(
-      async (values: readonly string[]) => {
+      (values: readonly string[]) => {
         const ids = values.filter(isUuid)
         const emails = values.filter((v) => !ids.includes(v))
 
@@ -37,7 +43,7 @@ module.exports = (context: any) => {
         ].filter(Boolean)
 
         if (or.length === 0) {
-          return []
+          return Promise.resolve([])
         }
 
         return users.find({ or }).then((users) => users.map(transformUser))

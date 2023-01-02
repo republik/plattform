@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
 import compose from 'lodash/flowRight'
 import { css } from 'glamor'
-import { IconButton } from '@project-r/styleguide'
 import {
+  IconButton,
   TwitterIcon,
   FacebookIcon,
   WhatsappIcon,
@@ -77,36 +77,6 @@ const ShareButtons = ({
 
   const shareOptions = [
     {
-      name: 'mail',
-      href: `mailto:?subject=${encodeURIComponent(
-        emailSubject,
-      )}&body=${encodeURIComponent(emailBody + emailAttache)}`,
-      icon: MailIcon,
-      title: t('article/actionbar/email/title'),
-      label: t('article/actionbar/email/label'),
-    },
-    {
-      name: 'copyLink',
-      href: url,
-      icon: LinkIcon,
-      title: t('article/actionbar/link/title'),
-      label: (
-        <span style={{ display: 'inline-block', minWidth: 88 }}>
-          {t(
-            `article/actionbar/link/label${
-              copyLinkSuffix ? `/${copyLinkSuffix}` : ''
-            }`,
-          )}
-        </span>
-      ),
-      onClick: (e) => {
-        e.preventDefault()
-        copyToClipboard(url)
-          .then(() => setLinkCopySuffix('success'))
-          .catch(() => setLinkCopySuffix('error'))
-      },
-    },
-    {
       name: 'facebook',
       target: '_blank',
       href: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
@@ -149,6 +119,36 @@ const ShareButtons = ({
       icon: TelegramIcon,
       title: t('article/actionbar/telegram/title'),
       label: t('article/actionbar/telegram/label'),
+    },
+    {
+      name: 'mail',
+      href: `mailto:?subject=${encodeURIComponent(
+        emailSubject,
+      )}&body=${encodeURIComponent(emailBody + emailAttache)}`,
+      icon: MailIcon,
+      title: t('article/actionbar/email/title'),
+      label: t('article/actionbar/email/label'),
+    },
+    {
+      name: 'copyLink',
+      href: url,
+      icon: LinkIcon,
+      title: t('article/actionbar/link/title'),
+      label: (
+        <span style={{ display: 'inline-block', minWidth: 88 }}>
+          {t(
+            `article/actionbar/link/label${
+              copyLinkSuffix ? `/${copyLinkSuffix}` : ''
+            }`,
+          )}
+        </span>
+      ),
+      onClick: (e) => {
+        e.preventDefault()
+        copyToClipboard(url)
+          .then(() => setLinkCopySuffix('success'))
+          .catch(() => setLinkCopySuffix('error'))
+      },
     },
   ].filter(Boolean)
 

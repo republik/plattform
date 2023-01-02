@@ -78,6 +78,13 @@ const styles = {
     width: '100%', // IE11
   }),
 
+  footer: css({
+    margin: '10px auto',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  }),
+
   imageContainer: css({
     margin: '0 auto 14px auto',
     maxWidth: IMAGE_SIZE.maxWidth,
@@ -120,6 +127,7 @@ const Tile = ({
   color: tileColor,
   outline: tileOutlineColor,
   bigger: tileBigger,
+  audioPlayButton,
 }) => {
   const [colorScheme] = useColorContext()
   const context = React.useContext(CarouselContext)
@@ -147,9 +155,8 @@ const Tile = ({
     margin: bigger ? '0' : '0 auto',
   })
 
-  const imageProps = image && FigureImage.utils.getResizedSrcs(image, 450, true)
-  const imageDarkProps =
-    imageDark && FigureImage.utils.getResizedSrcs(imageDark, 450, true)
+  const imageProps =
+    image && FigureImage.utils.getResizedSrcs(image, imageDark, 450, true)
   const imageContainerStyles = bigger
     ? styles.imageContainerBigger
     : styles.imageContainer
@@ -180,7 +187,6 @@ const Tile = ({
             <FigureImage
               aboveTheFold={aboveTheFold}
               {...imageProps}
-              dark={imageDarkProps}
               alt={alt}
             />
             {byline && (
@@ -193,13 +199,7 @@ const Tile = ({
         {imageProps && isPortrait && (
           <div {...imageContainerStyles}>
             <div {...styles.imageWrapper}>
-              <SwitchImage
-                {...imageStyles}
-                src={imageProps.src}
-                srcSet={imageProps.srcSet}
-                dark={imageDarkProps}
-                alt={alt}
-              />
+              <SwitchImage {...imageStyles} {...imageProps} alt={alt} />
               {byline && (
                 <FigureByline position={bigger ? 'aboveRight' : 'rightCompact'}>
                   {byline}
@@ -216,13 +216,20 @@ const Tile = ({
         >
           <Text color={color} margin='0 auto'>
             {children}
-            {!!count && (
-              <TeaserCarouselArticleCount
-                count={count}
-                // inverted
-                bgColor={color}
-                color={bgColor}
-              />
+            {(!!count || !!audioPlayButton) && (
+              <div {...styles.footer}>
+                {!!count && (
+                  <TeaserCarouselArticleCount
+                    count={count}
+                    // inverted
+                    bgColor={color}
+                    color={bgColor}
+                  />
+                )}
+                {audioPlayButton && (
+                  <div style={{ margin: '0 10px' }}>{audioPlayButton}</div>
+                )}
+              </div>
             )}
           </Text>
         </div>
@@ -244,4 +251,5 @@ Tile.propTypes = {
   aboveTheFold: PropTypes.bool,
   byline: PropTypes.string,
   children: PropTypes.node,
+  audioPlayButton: PropTypes.node,
 }

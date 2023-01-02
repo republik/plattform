@@ -429,6 +429,22 @@
       "value": "Republik-Fondues"
     },
     {
+      "key": "api/email/option/goodie/mug/1",
+      "value": "Tasse"
+    },
+    {
+      "key": "api/email/option/goodie/mug/other",
+      "value": "Tassen"
+    },
+    {
+      "key": "api/email/option/goodie/mug_ceramic/1",
+      "value": "Tasse"
+    },
+    {
+      "key": "api/email/option/goodie/mug_ceramic/other",
+      "value": "Tassen"
+    },
+    {
       "key": "api/email/option/membershiptype/abo/1",
       "value": "Jahresmitgliedschaft"
     },
@@ -821,8 +837,8 @@
       "value": "Bestätigen Sie Ihre Anmeldung zum Klimalabor-Newsletter."
     },
     {
-      "key": "api/newsletters/request/READALOUD/subject",
-      "value": "Die Republik zum Hören: Anmeldung bestätigen"
+      "key": "api/newsletters/request/WINTER/subject",
+      "value": "Anmeldung zum Winter-is-coming-Newsletter bestätigen"
     },
     {
       "key": "api/newsletters/request/notSupported",
@@ -949,12 +965,16 @@
       "value": "Ihr Nachname"
     },
     {
+      "key": "profile/contact/prolitterisId/label",
+      "value": "Prolitteris ID"
+    },
+    {
       "key": "profile/credential/label",
       "value": "Bezeichnung"
     },
     {
       "key": "api/search/aggs/audioSource",
-      "value": "vorgelesene Artikel"
+      "value": "hörbare Artikel"
     },
     {
       "key": "api/search/aggs/discussion",
@@ -1014,7 +1034,7 @@
     },
     {
       "key": "api/search/aggs/template/format",
-      "value": "Rubriken & Kolumnen"
+      "value": "Rubriken und Kolumnen"
     },
     {
       "key": "api/search/aggs/template/front",
@@ -1046,7 +1066,7 @@
     },
     {
       "key": "api/search/aggs/type",
-      "value": "Informationsarten"
+      "value": "Objekt"
     },
     {
       "key": "api/search/aggs/type/Comment",
@@ -1074,7 +1094,7 @@
     },
     {
       "key": "api/search/aggs/kind/meta",
-      "value": "wir über uns"
+      "value": "Wir über uns"
     },
     {
       "key": "api/search/aggs/kind/scribble",
@@ -1086,11 +1106,11 @@
     },
     {
       "key": "api/search/aggs/audioSourceKind/readAloud",
-      "value": "vorgelesen"
+      "value": "Vorgelesen"
     },
     {
       "key": "api/search/aggs/audioSourceKind/syntheticReadAloud",
-      "value": "automatisch vorgelesen"
+      "value": "synthetisch Vorgelesen"
     },
     {
       "key": "api/noname",
@@ -2173,6 +2193,22 @@
       "value": "Republik-Fondues"
     },
     {
+      "key": "api/invoices/option/Goodie/MUG/1",
+      "value": "Tasse"
+    },
+    {
+      "key": "api/invoices/option/Goodie/MUG/other",
+      "value": "Tassen"
+    },
+    {
+      "key": "api/invoices/option/Goodie/MUG_CERAMIC/1",
+      "value": "Tasse"
+    },
+    {
+      "key": "api/invoices/option/Goodie/MUG_CERAMIC/other",
+      "value": "Tassen"
+    },
+    {
       "key": "api/invoices/option/MembershipType/ABO/1",
       "value": "Jahresmitgliedschaft"
     },
@@ -2254,7 +2290,7 @@
     },
     {
       "key": "api/republik/revenueStats/segment/goodie",
-      "value": "Waren wie Bücher, Taschen, Masken und Fondues"
+      "value": "Waren wie Bücher, Taschen, Masken, Fondues und Tassen"
     },
     {
       "key": "api/republik/revenueStats/segment/donation",
@@ -2327,6 +2363,54 @@
     {
       "key": "api/publikator/generateDerivative/unable",
       "value": "Ein Fehler verhinderte das Erzeugen für diesen Commit"
+    },
+    {
+      "key": "api/calendar/404",
+      "value": "Kalender existiert nicht"
+    },
+    {
+      "key": "api/calendar/slot/error/keyInvalid",
+      "value": "Gesuchter Kalendereintrag ist ungültig"
+    },
+    {
+      "key": "api/calendar/slot/error/userBookedAlready",
+      "value": "Kalendereintrag bereits vorhanden"
+    },
+    {
+      "key": "api/calendar/slot/error/slotIsNotAvailable",
+      "value": "Kalendereintrag nicht mehr verfügbar"
+    },
+    {
+      "key": "api/calendar/slot/error/404",
+      "value": "Kalendereintrag nicht gefunden"
+    },
+    {
+      "key": "api/publikator/repo/404",
+      "value": "Repo nicht gefunden"
+    },
+    {
+      "key": "api/publikator/file/404",
+      "value": "Datei nicht gefunden"
+    },
+    {
+      "key": "api/publikator/file/error/notFailure",
+      "value": "Datei nicht als «fehlgeschlagen» markiert"
+    },
+    {
+      "key": "api/publikator/file/error/publicAlready",
+      "value": "Datei bereits veröffentlicht"
+    },
+    {
+      "key": "api/publikator/file/error/notPrivate",
+      "value": "Datei nicht als «privat» markiert"
+    },
+    {
+      "key": "api/publikator/file/error/notPending",
+      "value": "Datei nicht in Bearbeitung"
+    },
+    {
+      "key": "api/publikator/file/error/notYours",
+      "value": "Datei gehört nicht Ihnen"
     }
   ]
 }

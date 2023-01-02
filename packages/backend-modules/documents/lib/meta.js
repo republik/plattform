@@ -4,7 +4,8 @@ const meta = {
   slate: require('./slate/meta'),
 }
 
-const { getWordsPerMinute, getRepoIdsForDoc, getTemplate } = meta.common
+const { getAudioCover, getWordsPerMinute, getRepoIdsForDoc, getTemplate } =
+  meta.common
 
 const getMeta = (doc) => {
   const getMeta = meta[doc.type || 'mdast']?.getMeta || meta.common?.getMeta
@@ -48,10 +49,12 @@ const getContributorUserIds = (type, docMeta, context) => {
 }
 
 module.exports = {
-  getMeta,
+  getAudioCover,
   getWordsPerMinute,
   getRepoIdsForDoc,
   getTemplate,
+
+  getMeta,
   getContributorUserLinks,
   getContributorUserIds,
 }

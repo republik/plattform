@@ -104,6 +104,7 @@ const Text = ({
   maxWidth,
   margin,
   feuilleton,
+  audioPlayButton,
 }) => {
   const [colorScheme] = useColorContext()
   const textAlignStyle =
@@ -140,6 +141,9 @@ const Text = ({
         style={{ maxWidth, margin }}
       >
         {children}
+        {audioPlayButton && (
+          <div style={{ marginTop: 20 }}>{audioPlayButton}</div>
+        )}
       </div>
     </div>
   )
@@ -163,6 +167,7 @@ Text.propTypes = {
   maxWidth: PropTypes.string,
   margin: PropTypes.string,
   feuilleton: PropTypes.bool,
+  audioPlayButton: PropTypes.node,
 }
 
 Text.defaultProps = {

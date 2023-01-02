@@ -10,6 +10,7 @@ import AppSignInOverlay from './AppSignInOverlay'
 import { useMediaProgress } from '../Audio/MediaProgress'
 import { usePersistedOSColorSchemeKey } from '../ColorScheme/lib'
 import { useMe } from '../../lib/context/MeContext'
+import AppMessageEventEmitter from '../../lib/react-native/AppMessageEventEmitter'
 
 let routeChangeStarted
 
@@ -96,7 +97,7 @@ const NewAppMessageSync = () => {
       } else if (content.type === 'onAppMediaProgressUpdate') {
         // Audio Player sent media progress update
         const { currentTime, mediaId } = content
-        saveMediaProgress({ mediaId }, { currentTime })
+        saveMediaProgress(mediaId, currentTime)
       } else if (content.type === 'appState') {
         // Check Whenever App becomes active (foreground)
         // opens signin page if theres a pending request
@@ -124,6 +125,8 @@ const NewAppMessageSync = () => {
             router.replace('/')
           }
         }, 200)
+      } else {
+        AppMessageEventEmitter.emit(content.type, content.payload)
       }
       postMessage({
         type: 'ackMessage',

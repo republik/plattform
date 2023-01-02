@@ -1,16 +1,30 @@
 import { imageSizeInfo, imageResizeUrl } from 'mdast-react-render/lib/utils'
 import { MAX_WIDTH_MOBILE } from '../Center'
 
-export const getResizedSrcs = (src, displayWidth, setMaxWidth = true) => {
+const getSrcSet = (src, widths) =>
+  widths
+    .filter(Boolean)
+    .map((size) => [imageResizeUrl(src, `${size}x`), `${size}w`].join(' '))
+    .join(',')
+
+export const getResizedSrcs = (
+  src,
+  srcDark,
+  displayWidth,
+  setMaxWidth = true,
+) => {
   if (!src) {
     return {
       size: null,
     }
   }
   const sizeInfo = imageSizeInfo(src)
-  if (!sizeInfo) {
+  if (!sizeInfo || (srcDark && !imageSizeInfo(srcDark))) {
     return {
       src,
+      dark: {
+        src: srcDark,
+      },
       size: null,
     }
   }
@@ -26,6 +40,9 @@ export const getResizedSrcs = (src, displayWidth, setMaxWidth = true) => {
     // no maxWidth because svgs can always be blown up
     return {
       src,
+      dark: {
+        src: srcDark,
+      },
       size,
     }
   }
@@ -39,22 +56,24 @@ export const getResizedSrcs = (src, displayWidth, setMaxWidth = true) => {
     maxWidth,
   )
 
-  const resizedSrc = imageResizeUrl(src, `${defaultWidth}x`)
-
   const isHighRes = defaultWidth * 2 <= maxWidth
-  // add high res image
-  const srcSet = [
+  const highResWidths = [
     Math.round(defaultWidth * 0.5),
     defaultWidth,
     defaultWidth < maxWidth && (isHighRes ? defaultWidth * 2 : maxWidth),
   ]
-    .filter(Boolean)
-    .map((size) => [imageResizeUrl(src, `${size}x`), `${size}w`].join(' '))
-    .join(',')
+
+  const dark = srcDark
+    ? {
+        src: imageResizeUrl(srcDark, `${defaultWidth}x`),
+        srcSet: getSrcSet(srcDark, highResWidths),
+      }
+    : null
 
   return {
-    src: resizedSrc,
-    srcSet,
+    src: imageResizeUrl(src, `${defaultWidth}x`),
+    srcSet: getSrcSet(src, highResWidths),
+    dark,
     maxWidth: setMaxWidth ? maxWidth : undefined,
     size,
   }

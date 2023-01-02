@@ -1,5 +1,6 @@
 const sharp = require('sharp')
 const getWidthHeight = require('./getWidthHeight')
+const getCropDimensions = require('./getCropDimensions')
 const { fileTypeStream } = require('file-type-stream2')
 const { PassThrough } = require('stream')
 const toArray = require('stream-to-array')
@@ -47,8 +48,15 @@ module.exports = async ({
   returnResult,
   req,
 }) => {
-  const { resize, bw, webp, format: _format, cacheTags = [] } = options
-
+  const {
+    resize,
+    bw,
+    webp,
+    format: _format,
+    cacheTags = [],
+    crop,
+    size,
+  } = options
   let format =
     _format && supportedFormats.indexOf(_format) !== -1
       ? _format
@@ -59,7 +67,28 @@ module.exports = async ({
   let width, height
   if (resize) {
     try {
-      ;({ width, height } = getWidthHeight(resize))
+      ;({ width, height } = getWidthHeight(resize, false))
+    } catch (e) {
+      return res.status(400).send(e.message)
+    }
+  }
+
+  let fileWidth, fileHeight
+  if (size) {
+    try {
+      ;({ width: fileWidth, height: fileHeight } = getWidthHeight(size, true))
+    } catch (e) {
+      return res.status(400).send(e.message)
+    }
+  }
+
+  let cropX, cropY, cropWidth, cropHeight
+  if (crop) {
+    try {
+      if (!size) {
+        throw new Error('crop requires size parameter')
+      }
+      ;({ cropX, cropY, cropWidth, cropHeight } = getCropDimensions(crop))
     } catch (e) {
       return res.status(400).send(e.message)
     }
@@ -145,7 +174,7 @@ module.exports = async ({
 
     let pipeline
     if (
-      (width || height || bw || format || isJPEG) &&
+      (width || height || bw || format || crop || isJPEG) &&
       // only touch images
       mime &&
       mime.indexOf('image') === 0 &&
@@ -156,12 +185,22 @@ module.exports = async ({
     ) {
       pipeline = sharp()
 
+      if (crop && size) {
+        pipeline.extract({
+          left: Math.floor((cropX / 100) * fileWidth),
+          top: Math.floor((cropY / 100) * fileHeight),
+          width: Math.floor((cropWidth / 100) * fileWidth),
+          height: Math.floor((cropHeight / 100) * fileHeight),
+        })
+      }
+
       if (width || height) {
         pipeline.resize(width, height)
       }
       if (bw) {
         pipeline.greyscale()
       }
+
       if (format) {
         res.set('Content-Type', `image/${format}`)
         if (path) {

@@ -5,6 +5,10 @@ import {
   FigureImage as InnerFigureImage,
   FigureByline as InnerByline,
 } from './index'
+import { css } from 'glamor'
+import { getResizedSrcs } from './utils'
+import { FLYER_CONTAINER_MAXWIDTH } from '../Flyer'
+import { useRenderContext } from '../Editor/Render/Context'
 
 export const PLACEHOLDER = '/static/placeholder.png'
 
@@ -20,18 +24,30 @@ export const FigureByline: React.FC<{
   )
 }
 
+// TODO: get max width from render context
 export const FigureImage: React.FC<{
   images?: FigureImages
   alt?: string
   attributes: any
   [x: string]: unknown
 }> = ({ children, images, alt, attributes, ...props }) => {
+  const { noLazy } = useRenderContext()
   return (
-    <div {...attributes} {...props}>
+    <div
+      {...attributes}
+      {...props}
+      {...css({
+        '&:not(:last-child)': { marginBottom: 5 },
+      })}
+    >
       <div contentEditable={false}>
         <InnerFigureImage
-          src={images?.default?.url || PLACEHOLDER}
-          dark={images?.dark?.url ? { src: images.dark.url } : undefined}
+          aboveTheFold={noLazy}
+          {...getResizedSrcs(
+            images?.default?.url || PLACEHOLDER,
+            images?.dark?.url,
+            FLYER_CONTAINER_MAXWIDTH,
+          )}
           alt={alt}
         />
       </div>

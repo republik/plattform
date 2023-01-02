@@ -54,7 +54,7 @@ const MoveUp: React.FC<{
   return (
     <IconButton
       Icon={ArrowUpIcon}
-      onMouseDown={(e) => {
+      onClick={(e) => {
         e.preventDefault()
         moveElement(editor, path, 'up')
       }}
@@ -79,7 +79,7 @@ const MoveDown: React.FC<{
   return (
     <IconButton
       Icon={ArrowDownIcon}
-      onMouseDown={(e) => {
+      onClick={(e) => {
         e.preventDefault()
         moveElement(editor, path, 'down')
       }}
@@ -102,7 +102,7 @@ const Remove: React.FC<{
     <IconButton
       Icon={DeleteIcon}
       fill={colors.error}
-      onMouseDown={(e) => {
+      onClick={(e) => {
         e.preventDefault()
         removeElement(editor, path)
       }}
@@ -136,7 +136,7 @@ const Insert: React.FC<{
   return (
     <IconButton
       Icon={AddIcon}
-      onMouseDown={(e) => {
+      onClick={(e) => {
         e.preventDefault()
         const insertPath = insertElement(editor, template, path, direction)
         setPendingPath(insertPath)
@@ -159,7 +159,7 @@ const Edit: React.FC<{
   return (
     <IconButton
       Icon={EditIcon}
-      onMouseDown={(e) => {
+      onClick={(e) => {
         e.preventDefault()
         setFormPath(path)
       }}
@@ -199,7 +199,9 @@ const BlockUi: React.FC<{
           )}
           elementProps={{ style: { display: 'flex' } }}
         >
-          {showEdit && editButton}
+          {showEdit && (
+            <span style={{ display: 'block', ...iconStyle }}>{editButton}</span>
+          )}
           {showMoveUi && [
             <MoveUp key='up' path={path} />,
             <MoveDown key='down' path={path} />,

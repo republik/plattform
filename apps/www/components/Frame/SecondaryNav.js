@@ -5,6 +5,8 @@ import {
   mediaQueries,
   fontStyles,
   useColorContext,
+  SearchMenuIcon,
+  BoldSearchIcon,
 } from '@project-r/styleguide'
 
 import withT from '../../lib/withT'
@@ -16,7 +18,8 @@ import {
   HEADER_HORIZONTAL_PADDING,
 } from '../constants'
 import { useRouter } from 'next/router'
-import { useFlyerMeta } from '../../lib/apollo/miniNavi'
+
+const JournalPathRegex = new RegExp('^/[0-9]{4}/[0-9]{2}/[0-9]{2}/journal$')
 
 export const SecondaryNav = ({
   secondaryNav,
@@ -26,9 +29,7 @@ export const SecondaryNav = ({
 }) => {
   const [colorScheme] = useColorContext()
   const router = useRouter()
-  const active = router.asPath
-
-  const flyerMeta = useFlyerMeta()
+  const currentPath = router.asPath
 
   return (
     <>
@@ -49,7 +50,7 @@ export const SecondaryNav = ({
         >
           <NavLink
             href='/'
-            active={active === '/front' ? '/' : active}
+            currentPath={currentPath === '/front' ? '/' : currentPath}
             minifeed
             title={t('navbar/front')}
           >
@@ -58,15 +59,16 @@ export const SecondaryNav = ({
           <NavLink
             prefetch
             href='/feed'
-            active={active}
+            currentPath={currentPath}
             minifeed
             title={t('navbar/feed')}
           >
             {t('navbar/feed')}
           </NavLink>
           <NavLink
-            href={flyerMeta?.path || '/format/journal'}
-            active={active}
+            href='/journal'
+            currentPath={currentPath}
+            isActive={JournalPathRegex.test(currentPath)}
             formatColor='accentColorFlyer'
             minifeed
             title={t('navbar/flyer')}
@@ -75,12 +77,25 @@ export const SecondaryNav = ({
           </NavLink>
           <NavLink
             href='/dialog'
-            active={active}
+            currentPath={currentPath}
             formatColor={colors.primary}
             minifeed
             title={t('navbar/discussion')}
           >
             {t('navbar/discussion')}
+          </NavLink>
+          <NavLink
+            href='/suche'
+            currentPath={currentPath}
+            title={t('pages/search/title')}
+            noPlaceholder
+            minifeed
+          >
+            {'/suche' === currentPath ? (
+              <BoldSearchIcon {...colorScheme.set('fill', 'text')} size={18} />
+            ) : (
+              <SearchMenuIcon {...colorScheme.set('fill', 'text')} size={18} />
+            )}
           </NavLink>
         </div>
       ) : (
@@ -125,14 +140,17 @@ const styles = {
     height: SUBHEADER_HEIGHT,
     left: 0,
     right: 0,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'baseline',
     WebkitOverflowScrolling: 'touch',
     scrollbarWidth: 'none' /* Firefox */,
     msOverflowStyle: 'none' /* IE 10+ */,
     '::-webkit-scrollbar': {
       display: 'none',
     },
-    [mediaQueries.mUp]: {
-      textAlign: 'center',
+    [mediaQueries.sDown]: {
+      justifyContent: 'flex-start',
     },
     '& a': {
       display: 'inline-block',
@@ -143,7 +161,7 @@ const styles = {
       '::after': {
         ...fontStyles.sansSerifMedium,
         display: 'block',
-        content: 'attr(title)',
+        content: 'attr(data-placeholder)',
         height: 0,
         overflow: 'hidden',
         visibility: 'hidden',

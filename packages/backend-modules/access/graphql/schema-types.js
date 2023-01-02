@@ -126,6 +126,7 @@ type AccessGrant {
   Date when grant was rendered invalid
   """
   invalidatedAt: DateTime
+  followupAt: DateTime
   "Status (Admin only)"
   status: String
   "Events (Admin only)"

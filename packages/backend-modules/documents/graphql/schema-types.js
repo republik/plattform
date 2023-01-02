@@ -60,12 +60,20 @@ type Contributor {
   user: User
 }
 
+type Crop {
+  x: Int
+  y: Int
+  width: Int
+  height: Int 
+}
+
 type Meta {
   title: String
   shortTitle: String
   slug: String
   path: String
   image: String
+  audioCoverCrop: Crop
   emailSubject: String
   description: String
   subject: String @deprecated(reason: "parse \`Document.content\` instead")
@@ -103,11 +111,14 @@ type Meta {
   authors: [User!]! @deprecated(reason: "use \`Meta.contributors\` instead")
   contributors: [Contributor!]!
   audioSource: AudioSource
+  audioCover(properties: ImageProperties): String
   podcast: Podcast
+  willBeReadAloud: Boolean
 
   newsletter: Newsletter
 
   disableActionBar: Boolean
+  suggestSubscription: Boolean
 
   estimatedReadingMinutes: Int
   estimatedConsumptionMinutes: Int
@@ -121,6 +132,8 @@ type Meta {
   
   paynotes: [JSON]
   paynoteMode: PaynoteMode
+  
+  isRestricted: Boolean
 }
 
 enum DocumentType {

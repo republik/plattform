@@ -31,14 +31,13 @@ import withT from '../../lib/withT'
 import Subscriptions, {
   fragments as fragmentsSubscriptions,
 } from './Sections/Subscriptions'
-import { ONBOARDING_SECTIONS_REPO_IDS } from '../../lib/constants'
 import withInNativeApp from '../../lib/withInNativeApp'
 import Link from 'next/link'
 
 const { P } = Interaction
 
 const QUERY = gql`
-  query getOnboarding($repoIds: [ID!]) {
+  query getOnboarding {
     me {
       ...NewsletterUser
       ...AppLoginUser
@@ -50,10 +49,13 @@ const QUERY = gql`
       ...GreetingEmployee
     }
 
-    documents(template: "section", repoIds: $repoIds) {
+    sections: documents(template: "section") {
       nodes {
         id
-        linkedDocuments {
+        meta {
+          suggestSubscription
+        }
+        formats: linkedDocuments {
           totalCount
           nodes {
             ...FormatInfo
@@ -213,20 +215,13 @@ class Page extends Component {
 
     return (
       <Frame meta={meta} raw>
-        <Query
-          query={QUERY}
-          variables={{
-            repoIds:
-              ONBOARDING_SECTIONS_REPO_IDS &&
-              ONBOARDING_SECTIONS_REPO_IDS.split(','),
-          }}
-        >
+        <Query query={QUERY}>
           {({ loading, error, data }) => {
             if (loading || error) {
               return <Loader loading={loading} error={error} />
             }
 
-            const { me: user, employees, documents } = data
+            const { me: user, employees, sections } = data
 
             return (
               <Center>
@@ -273,7 +268,7 @@ class Page extends Component {
                           key={name}
                           name={name}
                           user={user}
-                          sections={documents.nodes}
+                          sections={sections.nodes}
                           onExpand={this.onExpand.bind(this)}
                           isExpanded={expandedSection === name}
                           onContinue={this.onContinue.bind(this)}

@@ -85,15 +85,14 @@ const Tile = ({
   aboveTheFold,
   onlyImage,
   singleColumn,
+  audioPlayButton,
 }) => {
   const [colorScheme] = useColorContext()
   const justifyContent =
     align === 'top' ? 'flex-start' : align === 'bottom' ? 'flex-end' : ''
   const imageProps =
-    image && FigureImage.utils.getResizedSrcs(image, IMAGE_SIZE.large, false)
-  const imageDarkProps =
-    imageDark &&
-    FigureImage.utils.getResizedSrcs(imageDark, IMAGE_SIZE.large, false)
+    image &&
+    FigureImage.utils.getResizedSrcs(image, imageDark, IMAGE_SIZE.large, false)
   let containerStyle = {
     backgroundColor: bgColor,
     cursor: onClick ? 'pointer' : 'default',
@@ -132,9 +131,7 @@ const Tile = ({
             }}
           >
             <SwitchImage
-              src={imageProps.src}
-              srcSet={imageProps.srcSet}
-              dark={imageDarkProps}
+              {...imageProps}
               alt={alt}
               {...(onlyImage ? styles.onlyImage : styles.image)}
             />
@@ -152,6 +149,7 @@ const Tile = ({
             color={color}
             maxWidth={singleColumn ? undefined : '600px'}
             margin={'0 auto'}
+            audioPlayButton={audioPlayButton}
           >
             {children}
           </Text>
@@ -173,6 +171,7 @@ Tile.propTypes = {
   align: PropTypes.oneOf(['top', 'middle', 'bottom']),
   aboveTheFold: PropTypes.bool,
   onlyImage: PropTypes.bool,
+  audioPlayButton: PropTypes.node,
 }
 
 Tile.defaultProps = {

@@ -1,9 +1,15 @@
-[{
-  "relation": ["delegate_permission/common.handle_all_urls"],
-  "target": {
-    "namespace": "android_app",
-    "package_name": "app.republik",
-    "sha256_cert_fingerprints":
-    ["B2:E6:7C:01:7D:7C:5A:B0:26:47:5A:E7:0B:DF:B1:00:E6:67:13:CC:C4:38:1B:FA:34:21:D8:3C:85:D7:24:76"]
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "app.republik",
+      "sha256_cert_fingerprints": [
+        "B2:E6:7C:01:7D:7C:5A:B0:26:47:5A:E7:0B:DF:B1:00:E6:67:13:CC:C4:38:1B:FA:34:21:D8:3C:85:D7:24:76",
+        "55:7D:16:7A:40:15:2F:A4:AA:FB:5D:44:B8:6C:3C:5C:10:75:B3:F7:0D:E3:D8:62:EC:7A:78:1D:3E:43:D1:24"
+      ]
+    }
   }
-}]
+]

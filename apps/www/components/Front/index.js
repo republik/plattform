@@ -5,6 +5,9 @@ import {
   Editorial,
   InlineSpinner,
   Interaction,
+  PlayCircleIcon,
+  PauseCircleIcon,
+  plainButtonRule,
 } from '@project-r/styleguide'
 import StatusError from '../StatusError'
 import Head from 'next/head'
@@ -32,6 +35,10 @@ import Link from 'next/link'
 import { useGetFrontQuery } from './graphql/getFrontQuery.graphql'
 import { useRouter } from 'next/router'
 import { useMe } from '../../lib/context/MeContext'
+import { useAudioContext } from '../Audio/AudioProvider'
+import useAudioQueue from '../Audio/hooks/useAudioQueue'
+import { AudioPlayerLocations } from '../Audio/types/AudioActionTracking'
+import FrontAudioPlayButton from './FrontAudioPlayButton'
 
 const styles = {
   prepublicationNotice: css({
@@ -46,13 +53,21 @@ const styles = {
   }),
 }
 
-export const RenderFront = ({ isEditor, front, nodes }) => {
+// Years to link to that have a yearly overview page
+const archivedYears = [2023, 2022, 2021, 2020, 2019, 2018]
+
+export const RenderFront = ({ front, nodes, isFrontExtract = false }) => {
   const { t } = useTranslation()
+  const { isEditor, hasAccess } = useMe()
+  const { isAudioQueueAvailable } = useAudioQueue()
+
+  const showPlayButton = !isFrontExtract && hasAccess && isAudioQueueAvailable
+
   const schema = useMemo(
     () =>
       createFrontSchema({
-        // TODO: fix this link
         Link: HrefLink,
+        AudioPlayButton: showPlayButton ? FrontAudioPlayButton : undefined,
         CommentLink,
         DiscussionLink,
         ...withData,
@@ -92,7 +107,6 @@ const Front = ({
 }) => {
   const { t } = useTranslation()
   const router = useRouter()
-  const { isEditor } = useMe()
 
   const now = new Date()
   const dailyUpdateTime = new Date(
@@ -190,10 +204,9 @@ const Front = ({
                 <meta name='robots' content='noindex' />
               </Head>
               <RenderFront
-                t={t}
-                isEditor={isEditor}
                 front={front}
                 nodes={front.children.nodes}
+                isFrontExtract
               />
             </Fragment>
           )
@@ -259,7 +272,7 @@ const Front = ({
                 <div style={{ marginBottom: 10 }}>
                   {t.elements('front/chronology', {
                     years: intersperse(
-                      [2022, 2021, 2020, 2019, 2018].map((year) => (
+                      archivedYears.map((year) => (
                         <Link key={year} href={`/${year}`} passHref>
                           <Editorial.A style={{ color: colors.negative.text }}>
                             {year}
@@ -287,18 +300,11 @@ const Front = ({
                   </Interaction.P>
                 </div>
               )}
-              <RenderFront
-                t={t}
-                isEditor={isEditor}
-                front={front}
-                nodes={nodes.slice(0, sliceIndex)}
-              />
+              <RenderFront front={front} nodes={nodes.slice(0, sliceIndex)} />
               {end}
               {sliceIndex && (
                 <>
                   <RenderFront
-                    t={t}
-                    isEditor={isEditor}
                     front={front}
                     nodes={nodes.slice(endIndex + 1)}
                   />

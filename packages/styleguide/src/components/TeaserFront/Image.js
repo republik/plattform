@@ -65,6 +65,7 @@ const ImageBlock = ({
   aboveTheFold,
   onlyImage,
   feuilleton,
+  audioPlayButton,
 }) => {
   const background = bgColor || ''
   const isTextOnTop = textPosition !== 'underneath'
@@ -91,6 +92,7 @@ const ImageBlock = ({
             aboveTheFold={aboveTheFold}
             {...FigureImage.utils.getResizedSrcs(
               image,
+              undefined,
               maxWidth || 1500,
               false,
             )}
@@ -119,6 +121,7 @@ const ImageBlock = ({
               collapsedColor={feuilleton && colors.text}
               center={center}
               feuilleton={feuilleton}
+              audioPlayButton={audioPlayButton}
             >
               {children}
             </Text>
@@ -150,6 +153,7 @@ ImageBlock.propTypes = {
   ]),
   onlyImage: PropTypes.bool,
   feuilleton: PropTypes.bool,
+  shouldRenderPlayButton: PropTypes.node,
 }
 
 ImageBlock.defaultProps = {

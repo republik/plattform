@@ -7,7 +7,6 @@ export const baseConfig: Partial<ElementConfigI> = {
     blockUi: {
       style: {
         top: 10,
-        left: 10,
       },
     },
     stopFormIteration: true,
@@ -25,7 +24,7 @@ export const config: ElementConfigI = {
     { type: 'flyerTopic' },
     { type: 'flyerTitle' },
     { type: 'flyerAuthor' },
-    { type: ['paragraph', 'ul', 'ol'], repeat: true },
+    { type: ['paragraph', 'ul', 'ol', 'quiz'], repeat: true },
     {
       type: ['flyerPunchline', 'pullQuote', 'articlePreview', 'figure'],
     },

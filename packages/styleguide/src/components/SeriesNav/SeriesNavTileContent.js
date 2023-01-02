@@ -70,11 +70,15 @@ const SeriesNavTileContent = ({
   aboveTheFold,
 }) => {
   const [colorScheme] = useColorContext()
-  const imageProps = inline
-    ? episode.image &&
-      FigureImage.utils.getResizedSrcs(episode.image, 300, true)
-    : episode.image &&
-      FigureImage.utils.getResizedSrcs(episode.image, 600, true)
+  const maxImageWidth = inline ? 300 : 600
+  const imageProps =
+    episode.image &&
+    FigureImage.utils.getResizedSrcs(
+      episode.image,
+      undefined,
+      maxImageWidth,
+      true,
+    )
 
   const isLink = episode.document && episode.document?.meta?.path && !current
 

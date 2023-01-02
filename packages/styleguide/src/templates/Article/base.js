@@ -218,9 +218,7 @@ const createBase = ({ metaBody, metaHeadlines }) => {
       }
 
       return {
-        ...FigureImage.utils.getResizedSrcs(src, displayWidth),
-        dark:
-          srcDark && FigureImage.utils.getResizedSrcs(srcDark, displayWidth),
+        ...FigureImage.utils.getResizedSrcs(src, srcDark, displayWidth),
         alt: node.children[0].alt,
         enableGallery,
         gallerySize,

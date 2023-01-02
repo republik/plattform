@@ -33,7 +33,7 @@ const TrialPayNoteMini = ({ repoId, inline, context, index }) => {
           Component={TrialForm}
           componentProps={{
             minimal: true,
-            showTitleBlock: true,
+            titleBlockKey: 'series',
             payload: {
               repoId,
               variation: 'tryNoteMini/210613',
