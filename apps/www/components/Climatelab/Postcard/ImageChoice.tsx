@@ -3,6 +3,8 @@ import { css } from 'glamor'
 import { useColorContext } from '@project-r/styleguide'
 import { CDN_FRONTEND_BASE_URL } from '../../../lib/constants'
 
+import { climateColors } from '../config'
+
 const styles = {
   image: css({
     cursor: 'pointer',
@@ -51,7 +53,10 @@ const BackgroundImage = ({ checked, disabled, imageUrl }) => {
     <img
       {...styles.image}
       {...hoverRule}
-      {...colorScheme.set('borderColor', checked ? '#6f38b1' : '#FFF')}
+      {...colorScheme.set(
+        'borderColor',
+        checked ? climateColors.light.default : '#FFF',
+      )}
       {...(disabled ? styles.disabledImage : undefined)}
       src={imageUrl}
       {...colorScheme.set('boxShadow', 'imageChoiceShadow')}

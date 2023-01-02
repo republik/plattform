@@ -15,7 +15,7 @@ import {
 const styles = {
   questionnaireStyleOverride: css({
     '& div': {
-      marginTop: '10px',
+      marginTop: '20px',
     },
     '& h2': {
       ...convertStyleToRem(fontStyles.sansSerifRegular17),

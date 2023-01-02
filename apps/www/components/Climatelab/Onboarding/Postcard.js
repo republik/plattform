@@ -85,7 +85,6 @@ const Postcard = (props) => {
             }}
           />
         )}
-        <br />
         <PostcardGenerator t={t} postcard={postcard} />
         {!postcard.userHasSubmitted && (
           <div {...styles.actions}>

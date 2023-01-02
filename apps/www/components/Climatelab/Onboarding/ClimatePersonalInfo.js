@@ -19,12 +19,12 @@ const { P } = Interaction
 const styles = {
   questionnaireStyleOverride: css({
     '& h2': {
-      ...convertStyleToRem(fontStyles.sansSerifRegular19),
+      ...convertStyleToRem(fontStyles.sansSerifRegular17),
       marginTop: '20px',
     },
     [mediaQueries.mUp]: {
       '& h2': {
-        ...convertStyleToRem(fontStyles.sansSerifRegular22),
+        ...convertStyleToRem(fontStyles.sansSerifRegular21),
       },
     },
   }),
