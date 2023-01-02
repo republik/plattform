@@ -14,12 +14,21 @@ import {
 
 const styles = {
   questionnaireStyleOverride: css({
+    '& div': {
+      marginTop: '10px',
+    },
     '& h2': {
-      ...convertStyleToRem(fontStyles.sansSerifRegular19),
+      ...convertStyleToRem(fontStyles.sansSerifRegular17),
+    },
+    '& textarea': {
+      ...convertStyleToRem(fontStyles.sansSerifRegular17),
     },
     [mediaQueries.mUp]: {
       '& h2': {
-        ...convertStyleToRem(fontStyles.sansSerifRegular22),
+        ...convertStyleToRem(fontStyles.sansSerifRegular21),
+      },
+      '& textarea': {
+        ...convertStyleToRem(fontStyles.sansSerifRegular21),
       },
     },
   }),
