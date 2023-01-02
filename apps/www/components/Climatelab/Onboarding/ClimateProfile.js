@@ -187,18 +187,6 @@ class ClimateProfile extends Component {
             fields={meFields}
           />
         </div>
-        <div {...styles.checkbox}>
-          <ListedCheckbox
-            user={user}
-            isEditing
-            isMe
-            onChange={this.onChange}
-            values={mergedValues}
-            errors={errors}
-            dirty={dirty}
-            context='climate'
-          />
-        </div>
         <Mutation
           mutation={climateProfileMutation}
           variables={values}

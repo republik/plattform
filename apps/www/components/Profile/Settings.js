@@ -67,21 +67,15 @@ export const ListedCheckbox = withT(
       </Checkbox>
       <br style={{ clear: 'left' }} />
       <Label>
-        {t.first.elements(
-          [
-            `${context}/profile/settings/hasPublicProfile/${!!values.isListed}/note`,
-            `profile/settings/isListed/${!!values.isListed}/note`,
-          ],
-          {
-            communityLink: (
-              <Link key='communityLink' href='/community' passHref>
-                <A target='_blank'>
-                  {t('profile/settings/privacy/communityLink')}
-                </A>
-              </Link>
-            ),
-          },
-        )}
+        {t(`profile/settings/isListed/${!!values.isListed}/note`, {
+          communityLink: (
+            <Link key='communityLink' href='/community' passHref>
+              <A target='_blank'>
+                {t('profile/settings/privacy/communityLink')}
+              </A>
+            </Link>
+          ),
+        })}
       </Label>
     </div>
   ),
