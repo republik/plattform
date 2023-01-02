@@ -167,7 +167,7 @@ const QuestionnaireSubmissions = dynamic(
 )
 
 const Postcard = dynamic(
-  () => import('../Climatelab/Postcard/PostcardGenerator'),
+  () => import('../Climatelab/Postcard/PostcardDynamicComponent'),
   {
     loading: LoadingComponent,
     ssr: false,
