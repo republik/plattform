@@ -344,6 +344,12 @@ const getGlobalMergeVars = async (
       content:
         'mailto:?subject=Klimalabor%20%E2%80%94%20machst%20du%20mit%3F&body=Hallo%0D%0A%0D%0ADie%20Republik%20hat%20ein%20Klimalabor%20gestartet%2C%20einen%20Ort%20f%C3%BCr%20Austausch%20und%20Experimente%20f%C3%BCr%20alle%2C%20die%20der%20Klimakrise%20etwas%20entgegensetzen%20wollen%2C%20aber%20nicht%20so%20genau%20wissen%20wie.%20Letzlich%20geht%20es%20darum%2C%20herauszufinden%2C%20was%20Journalismus%20leisten%20kann%2C%20um%20in%20der%20Klimakrise%20seiner%20Rolle%20gerecht%20zu%20werden.%0D%0A%0D%0AIch%20bin%20dabei%20und%20w%C3%BCrde%20mich%20freuen%2C%20wenn%20du%20es%20dir%20auch%20mal%20anschaust%3A%20https%3A%2F%2Fwww.republik.ch/willkommen-zum-klimalabor',
     },
+    {
+      name: 'inviter_climate',
+      content: safeGranter.name
+        ? `${safeGranter.name} (${safeGranter.email})`
+        : safeGranter.email,
+    },
   ].filter(Boolean)
 }
 

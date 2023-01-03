@@ -7309,6 +7309,14 @@
       "value": "Sie dürfen noch {count} verschenken."
     },
     {
+      "key": "Account/Access/Campaigns/Grants/reducedCampaign/title/1",
+      "value": "Verschickte Einladung"
+    },
+    {
+      "key": "Account/Access/Campaigns/Grants/reducedCampaign/title/other",
+      "value": "Verschickte Einladungen"
+    },
+    {
       "key": "Auth/NewsletterSignUp/submit",
       "value": "Abonnieren"
     },

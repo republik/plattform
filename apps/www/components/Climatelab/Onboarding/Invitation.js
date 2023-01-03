@@ -1,9 +1,15 @@
 import { Fragment } from 'react'
 import { css } from 'glamor'
+import { gql } from '@apollo/client'
+import { graphql } from '@apollo/client/react/hoc'
+
+import compose from 'lodash/flowRight'
 
 import { Interaction, mediaQueries } from '@project-r/styleguide'
 
 import Section from '../../Onboarding/Section'
+import Form from '../../Access/Campaigns/Form'
+import Grants from '../../Access/Campaigns/Grants'
 
 import { useTranslation } from '../../../lib/withT'
 
@@ -31,14 +37,55 @@ const styles = {
   }),
 }
 
-// export const fragments = {
-//   user: gql``,
-// }
+const grantMutation = gql`
+  mutation grantAccess($campaignId: ID!, $email: String!, $message: String) {
+    grantAccess(campaignId: $campaignId, email: $email, message: $message) {
+      email
+    }
+  }
+`
+
+const query = gql`
+  query accessCampaigns {
+    me {
+      id
+      accessCampaigns {
+        id
+        title
+        type
+        description
+        defaultMessage
+        grants {
+          id
+          email
+          voucherCode
+          beginBefore
+          beginAt
+          endAt
+        }
+        slots {
+          total
+          used
+          free
+        }
+        perks {
+          giftableMemberships
+        }
+      }
+    }
+  }
+`
 
 const Invitation = (props) => {
+  const { grantAccess } = props
   const { t } = useTranslation()
 
+  const campaign = props.user.accessCampaigns.filter(
+    (campaign) => campaign.id === '672cc127-f3a0-40ee-b000-9aa560aae697', // climate lab invitation campaign
+  )[0]
+
   // Is ticked when either???
+  /* TODO: when should this be ticked? Ideal, but not sure if possible: when 3 invitations sent */
 
   return (
     <Section
@@ -51,9 +98,25 @@ const Invitation = (props) => {
         <P {...styles.p}>
           {t('Climatelab/Onboarding/Invitation/paragraph1', null, '')}
         </P>
+        <Grants campaign={campaign} />
+        <Form campaign={campaign} grantAccess={grantAccess} />
       </Fragment>
     </Section>
   )
 }
 
-export default Invitation
+export default compose(
+  graphql(grantMutation, {
+    props: ({ mutate }) => ({
+      grantAccess: (variables) =>
+        mutate({
+          variables,
+          refetchQueries: [
+            {
+              query,
+            },
+          ],
+        }),
+    }),
+  }),
+)(Invitation)
