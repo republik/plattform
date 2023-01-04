@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useMemo } from 'react'
+import { useState, useRef, useEffect, useMemo } from 'react'
 import { css } from 'glamor'
 import questionStyles from './../../Questionnaire/questionStyles'
 import { nest } from 'd3-collection'
@@ -39,16 +39,13 @@ const styles = {
     alignItems: 'center',
     alignContent: 'space-around',
     minWidth: '85%',
-    maxHeight: '400px',
     overflowY: 'hidden',
     position: 'relative',
     zIndex: 1,
-    paddingLeft: 15,
-    '&:last-child': {
-      paddingRight: 15,
-    },
+    paddingLeft: '15',
+    paddingRight: '15',
     '&:first-child': {
-      paddingLeft: 0,
+      marginLeft: -15,
     },
   }),
   image: css({
@@ -72,7 +69,7 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'center',
     [mediaQueries.mUp]: {
-      width: 100,
+      width: 75,
     },
   }),
 }
@@ -85,7 +82,7 @@ const ImageChoice = dynamic(() => import('./ImageChoice'), {
 })
 
 const ImageChoiceQuestion = (props) => {
-  const [answerId, setAnswerId] = useState(
+  const [answerId] = useState(
     (props.question.userAnswer && props.question.userAnswer.id) || uuid(),
   )
   const {
@@ -108,13 +105,18 @@ const ImageChoiceQuestion = (props) => {
   const optionGroups = nest()
     .key((o) => o.category)
     .entries(options)
+
   const userAnswerValues = userAnswer ? userAnswer.payload.value : []
 
   // image carousel stuff
   const carouselRef = useRef()
   const [colorScheme] = useColorContext()
 
-  const [currentSlideIndex, setCurrentSlideIndex] = useState(0)
+  const slideIndex = userAnswer
+    ? userAnswerValues[0].replace(/[^0-9]/g, '') - 1
+    : 0
+  const [currentSlideIndex, setCurrentSlideIndex] = useState(slideIndex)
+
   const [disableScrollIntoView, setDisableScrollIntoView] = useState(false)
   const [disableScrollListener, setDisableScrollListener] = useState(false)
 
@@ -238,16 +240,15 @@ const ImageChoiceQuestion = (props) => {
           </svg>
         </div>
         <div {...styles.carousel} ref={carouselRef}>
-          {optionGroups.map(({ key, values }) =>
+          {optionGroups.map(({ values }) =>
             values.map((o, i) => (
               <div key={i} {...styles.slide}>
                 <ImageChoice
                   onChange={() => handleChange(o.value)}
                   checked={userAnswerValues.some((v) => v === o.value)}
                   imageUrl={o.imageUrl}
-                >
-                  {o.label}
-                </ImageChoice>
+                />
+                <div stlye={{ fontSize: '0.75rem' }}>{o.label}</div>
               </div>
             )),
           )}

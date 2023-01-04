@@ -6,17 +6,16 @@ import { css } from 'glamor'
 import { useTranslation } from '../../../lib/withT'
 
 import {
-  Interaction,
   mediaQueries,
   fontStyles,
   convertStyleToRem,
+  Button,
+  Interaction,
 } from '@project-r/styleguide'
 
 const styles = {
   questionnaireStyleOverride: css({
-    '& div': {
-      marginTop: '20px',
-    },
+    marginTop: '-30px',
     '& h2': {
       ...convertStyleToRem(fontStyles.sansSerifRegular17),
     },
@@ -34,34 +33,47 @@ const styles = {
   }),
 }
 
-const PostcardGenerator = ({ postcard }) => {
+// @TODO
+const SubmittedPostcard = (props) => {
+  const { questionnaire, onResubmit } = props
   const { t } = useTranslation()
-  return (
-    <>
-      <div {...styles.questionnaireStyleOverride}>
-        <QuestionnaireWithData
-          slug={'klima-postkarte'}
-          context='postcard'
-          publicSubmission={false}
-          hideCount
-          // submittedMessage={
-          //   <Interaction.P>
-          //     {t('Climatelab/Postcard/PostcardGenerator/merci1')}
-          //   </Interaction.P>
-          // }
-          hideInvalid={true}
-          hideReset={true}
-        />
-      </div>
 
-      {postcard.userHasSubmitted && (
-        <Interaction.P>
-          {t('Climatelab/Postcard/PostcardGenerator/merci1')}
-        </Interaction.P>
+  return (
+    <div style={{ marginTop: '50px' }}>
+      <PostcardPreview postcard={questionnaire} t={t} />
+      {onResubmit && (
+        <Button onClick={() => onResubmit()}>
+          {' '}
+          {t('questionnaire/postcard/thankyou/resubmit')}
+        </Button>
       )}
-      <PostcardPreview postcard={postcard} t={t} />
-    </>
+      <div style={{ marginTop: '20px' }}>
+        <Interaction.P>
+          {t('Climatelab/Postcard/PostcardPreview/merci1')}
+        </Interaction.P>
+        <br />
+        <br />
+        <Interaction.P>
+          {t('Climatelab/Postcard/PostcardPreview/merci2')}
+        </Interaction.P>
+      </div>
+    </div>
   )
 }
+
+const PostcardGenerator = () => (
+  <div {...styles.questionnaireStyleOverride}>
+    <QuestionnaireWithData
+      slug={'klima-postkarte'}
+      context='postcard'
+      hideCount
+      hideInvalid
+      hideReset
+      requireName={false}
+      publicSubmission={false}
+      SubmittedComponent={SubmittedPostcard}
+    />
+  </div>
+)
 
 export default PostcardGenerator

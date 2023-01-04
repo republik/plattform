@@ -45,7 +45,8 @@ import ClimateProfile from '../Climatelab/Onboarding/ClimateProfile'
 import ClimatePersonalInfo, {
   fragments as fragmentsClimatePersonalInfo,
 } from '../Climatelab/Onboarding/ClimatePersonalInfo'
-import { CLIMATE_LAB_URL } from '../Climatelab/constants'
+import { CLIMATE_LAB_IMG_URL, CLIMATE_LAB_URL } from '../Climatelab/constants'
+import ClimateLabLogo from '../Climatelab/shared/ClimateLabLogo'
 
 const { P } = Interaction
 
@@ -138,7 +139,6 @@ const styles = {
   }),
   climateTitle: css({
     ...fontStyles.sansSerifMedium58,
-    marginTop: 40,
     marginBottom: 80,
     [mediaQueries.onlyS]: {
       ...fontStyles.sansSerifMedium40,
@@ -150,8 +150,8 @@ const styles = {
     [mediaQueries.mUp]: {
       alignItems: 'center',
       display: 'flex',
-      gap: '2rem',
-      flexDirection: 'row',
+      gap: '1rem',
+      flexDirection: 'column',
     },
   }),
   image: css({
@@ -521,11 +521,7 @@ const OnboardingHeader = ({ children, ...props }) => {
     return (
       <div {...styles.imageWrapper}>
         <div {...styles.image}>
-          <Image
-            src='/static/climatelab/klimalabor-illustration.jpeg'
-            width={150}
-            height={150}
-          />
+          <ClimateLabLogo width={150} height={150} hideFigcaption />
         </div>
         <div {...styles.climateTitle}>{children}</div>
       </div>

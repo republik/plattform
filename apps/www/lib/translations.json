@@ -4426,15 +4426,15 @@
     },
     {
       "key": "questionnaire/submit",
-      "value": "abschicken"
+      "value": "Abschicken"
     },
     {
       "key": "questionnaire/publish",
-      "value": "publizieren"
+      "value": "Publizieren"
     },
     {
       "key": "questionnaire/update",
-      "value": "aktualisieren"
+      "value": "Aktualisieren"
     },
     {
       "key": "questionnaire/reset",
@@ -5653,7 +5653,7 @@
       "value": "Im Klimalabor bieten wir Ihnen die Gelegenheit, Ihre Ideen, Ihre Bedürfnisse, Ihre Expertise einzubringen. Zum Start laden wir Sie ein, etwas Einzigartiges zum Gelingen des Klimalabors beizutragen: Ihre Vorstellungskraft.<br /><br />Stellen Sie sich vor, Sie reisen mit einer Zeitmaschine 60 Jahre in die Zukunft. Was sehen Sie, was löst das in Ihnen aus? Nehmen Sie sich einen Moment. Sammeln Sie Ihre Gedanken. Und dann schicken Sie eine Postkarte zurück ins Jahr 2023."
     },
     {
-      "key": "Climatelab/Postcard/PostcardGenerator/merci1",
+      "key": "Climatelab/Postcard/PostcardPreview/merci1",
       "value": "Danke für Ihre Postkarte. Sie wird uns helfen, zu verstehen, wie Sie in die Zukunft blicken. Darum wird es im Klimalabor immer wieder gehen: Wir wollen über die Zukunft nachdenken, den Blick für positive Entwicklungen schärfen und herausfinden, was es braucht, damit wir zuversichtlich und handlungsfähig bleiben."
     },
     {
@@ -5719,6 +5719,18 @@
     {
       "key": "Onboarding/Sections/ClimateProfile/paragraph2",
       "value": "Wir verlinken Ihr Profil zum Beispiel bei Ihren Dialogbeiträgen."
+    },
+    {
+      "key": "Climatelab/Postcard/PostcardDynamicComponent/noaccess/text",
+      "value": "Die Zeitreise ist für alle, die beim Klimalabor der Republik mitmachen. Noch nicht dabei? {link}"
+    },
+    {
+      "key": "Climatelab/Postcard/PostcardDynamicComponent/noaccess/linkText",
+      "value": "Hier anmelden"
+    },
+    {
+      "key": "Climatelab/Postcard/PostcardDynamicComponent/noaccess/linkHref",
+      "value": "/willkommen-zum-klimalabor"
     },
     {
       "key": "Trial/Form/withAccess/button/label",
@@ -7675,6 +7687,26 @@
     {
       "key": "ClimateTeaser/content/buttonAction",
       "value": "Zum Klimalabor"
+    },
+    {
+      "key": "ClimateInlineTeaser/content/title",
+      "value": "Klimalabor"
+    },
+    {
+      "key": "ClimateInlineTeaser/NonMember/content/text",
+      "value": "Die Klimakrise ist hier. Die Lage ist ernst. Was tun? Im Klimalabor der Republik machen wir uns gemeinsam mit Ihnen auf die Suche nach Antworten."
+    },
+    {
+      "key": "ClimateInlineTeaser/NonMember/content/link",
+      "value": "Mehr erfahren und mitmachen"
+    },
+    {
+      "key": "ClimateInlineTeaser/Member/content/text",
+      "value": "Die Klimakrise ist hier. Die Lage ist ernst. Was tun? Das Klimalabor ist unser Ort für Austausch und Experimente. Wo wir gerade stehen und was es gerade zu tun gibt:"
+    },
+    {
+      "key": "ClimateInlineTeaser/Member/content/link",
+      "value": "zum Klimalabor"
     }
   ]
 }
