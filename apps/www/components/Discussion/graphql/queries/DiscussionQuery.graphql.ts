@@ -99,7 +99,7 @@ export const DISCUSSION_QUERY = gql`
         parentId: $parentId
         after: $after
         orderBy: $orderBy
-        first: 100
+        first: 0
         flatDepth: $depth
         focusId: $focusId
         includeParent: $includeParent
