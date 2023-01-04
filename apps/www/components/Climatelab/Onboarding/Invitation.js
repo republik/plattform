@@ -5,7 +5,7 @@ import { graphql } from '@apollo/client/react/hoc'
 
 import compose from 'lodash/flowRight'
 
-import { Interaction, mediaQueries } from '@project-r/styleguide'
+import { Interaction, mediaQueries, Button } from '@project-r/styleguide'
 
 import Section from '../../Onboarding/Section'
 import Form from '../../Access/Campaigns/Form'
@@ -24,6 +24,7 @@ const styles = {
     display: 'flex',
     flexWrap: 'wrap',
     position: 'relative',
+    width: 160,
     '& > button': {
       flexGrow: 1,
       margin: '5px 15px 0 0',
@@ -77,21 +78,20 @@ const query = gql`
 `
 
 const Invitation = (props) => {
-  const { grantAccess } = props
+  const { grantAccess, onContinue } = props
   const { t } = useTranslation()
 
   const campaign = props.user.accessCampaigns.filter(
     (campaign) => campaign.id === '672cc127-f3a0-40ee-b000-9aa560aae697', // climate lab invitation campaign
   )[0]
 
-  // Is ticked when either???
-  /* TODO: when should this be ticked? Ideal, but not sure if possible: when 3 invitations sent */
+  const slotsUsed = campaign.slots.used
 
   return (
     <Section
       heading={t('Climatelab/Onboarding/Invitation/heading')}
-      // isTicked={hasConsented}
-      // showContinue={hasConsented}
+      isTicked={slotsUsed >= 3}
+      showContinue={slotsUsed >= 3}
       {...props}
     >
       <Fragment>
@@ -99,7 +99,17 @@ const Invitation = (props) => {
           {t('Climatelab/Onboarding/Invitation/paragraph1', null, '')}
         </P>
         <Grants campaign={campaign} />
-        <Form campaign={campaign} grantAccess={grantAccess} />
+
+        {slotsUsed < 3 && (
+          <>
+            <Form campaign={campaign} grantAccess={grantAccess} />
+            <div {...styles.actions}>
+              <Button block onClick={onContinue}>
+                {t('Onboarding/Sections/Profile/button/continue', null, '')}
+              </Button>
+            </div>
+          </>
+        )}
       </Fragment>
     </Section>
   )
