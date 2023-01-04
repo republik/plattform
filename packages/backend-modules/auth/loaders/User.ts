@@ -20,7 +20,7 @@ module.exports = (context: any) => {
 
       return users
         .find({ id: userIds })
-        .then((users) => users.map((u) => transformUser(u)))
+        .then((users) => users.map(transformUser))
     }),
     byEmail: createDataLoader(
       (emails: readonly string[]) =>
