@@ -200,7 +200,6 @@ const Questionnaire = (props) => {
               onResubmit={onResubmit}
               onRevoke={onRevoke}
               publicSubmission={publicSubmission}
-              context={context}
             />
           )
         }
