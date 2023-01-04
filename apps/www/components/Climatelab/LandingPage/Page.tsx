@@ -9,13 +9,13 @@ import {
 import { css } from 'glamor'
 
 import Frame from '../../Frame'
-import CallToAction from '../shared/CallToAction'
 import Counter from '../Counter'
 import Image from 'next/image'
 import ClimateLabTrialform from './ClimateLabTrialForm'
 import { useTranslation } from '../../../lib/withT'
 import { CDN_FRONTEND_BASE_URL, PUBLIC_BASE_URL } from '../../../lib/constants'
 import { climateColors } from '../config'
+import { CLIMATE_LAB_IMG_URL } from '../constants'
 
 const LandingPage = () => {
   const { t } = useTranslation()
@@ -39,24 +39,25 @@ const LandingPage = () => {
         <div {...styles.imageWrapper}>
           <div {...styles.image}>
             <Image
-              src='/static/climatelab/klimalabor-illustration.jpeg'
+              src={CLIMATE_LAB_IMG_URL}
               width={800}
               height={800}
-              alt={t('ClimateTeaser/content/altText')}
+              alt={t('Climate/Logo/altText')}
             />
           </div>
         </div>
         <div {...styles.contentWrapper}>
-          <section {...css({ [mediaQueries.mUp]: { marginTop: 200 } })}>
+          <section
+            {...css({ marginTop: 68, [mediaQueries.mUp]: { marginTop: 200 } })}
+          >
             <h1 {...styles.pageTitle}>
               {t.elements('ClimateLandingPage/content/heading1', {
                 br: <br />,
               })}
-            </h1>
-            <CallToAction>
+              <br />
               {t('ClimateLandingPage/content/callToAction')}
-            </CallToAction>
-            <div {...css({ [mediaQueries.mUp]: { marginTop: 105 } })}>
+            </h1>
+            <div {...css({ [mediaQueries.mUp]: { marginTop: 104 } })}>
               <p {...styles.text}>
                 {t('ClimateLandingPage/content/paragraph1')}
               </p>
@@ -66,7 +67,7 @@ const LandingPage = () => {
             </div>
           </section>
           <section
-            {...css({ marginTop: 40, [mediaQueries.mUp]: { marginTop: 80 } })}
+            {...css({ marginTop: 111, [mediaQueries.mUp]: { marginTop: 162 } })}
           >
             <ColorContextProvider
               localColorVariables={colors}
@@ -76,7 +77,7 @@ const LandingPage = () => {
             </ColorContextProvider>
           </section>
           <section
-            {...css({ marginTop: 40, [mediaQueries.mUp]: { marginTop: 80 } })}
+            {...css({ marginTop: 111, [mediaQueries.mUp]: { marginTop: 162 } })}
           >
             <Counter />
             <p {...styles.text}>
@@ -84,7 +85,7 @@ const LandingPage = () => {
             </p>
           </section>
           <section
-            {...css({ marginTop: 40, [mediaQueries.mUp]: { marginTop: 80 } })}
+            {...css({ marginTop: 111, [mediaQueries.mUp]: { marginTop: 162 } })}
           >
             <p {...styles.text}>
               {t('ClimateLandingPage/content/byRepublikText')}
@@ -133,7 +134,7 @@ const styles = {
   }),
   pageTitle: css({
     ...fontStyles.serifTitle,
-    fontSize: 30,
+    fontSize: 32,
     lineHeight: '1.6em',
     [mediaQueries.mUp]: {
       fontSize: 40,
@@ -141,10 +142,10 @@ const styles = {
   }),
   text: css({
     ...fontStyles.sansSerifMedium,
-    lineHeight: '1.6em',
-    fontSize: 24,
+    lineHeight: '1.54em',
+    fontSize: 23,
     [mediaQueries.mUp]: {
-      fontSize: 30,
+      fontSize: 24,
     },
   }),
 }

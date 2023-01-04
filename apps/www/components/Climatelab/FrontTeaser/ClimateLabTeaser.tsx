@@ -11,6 +11,7 @@ import { climateColors } from '../config'
 import OptionalLocalColorContext from '../../Frame/OptionalLocalColorContext'
 import { useMe } from '../../../lib/context/MeContext'
 import {
+  CLIMATE_LAB_IMG_URL,
   CLIMATE_LAB_LANDINGPAGE_URL,
   CLIMATE_LAB_ROLE,
   CLIMATE_LAB_URL,
@@ -40,11 +41,11 @@ const ClimateTeaserContent = () => {
       <div {...styles.imgWrapper}>
         <div {...styles.img}>
           <Image
-            src='/static/climatelab/klimalabor-illustration.jpeg'
+            src={CLIMATE_LAB_IMG_URL}
             width={480}
             height={480}
             style={{ objectFit: 'contain' }}
-            alt={t('ClimateTeaser/content/altText')}
+            alt={t('Climate/Logo/altText')}
           />
         </div>
       </div>

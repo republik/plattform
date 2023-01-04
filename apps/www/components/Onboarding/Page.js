@@ -45,7 +45,7 @@ import ClimateProfile from '../Climatelab/Onboarding/ClimateProfile'
 import ClimatePersonalInfo, {
   fragments as fragmentsClimatePersonalInfo,
 } from '../Climatelab/Onboarding/ClimatePersonalInfo'
-import { CLIMATE_LAB_URL } from '../Climatelab/constants'
+import { CLIMATE_LAB_IMG_URL, CLIMATE_LAB_URL } from '../Climatelab/constants'
 
 const { P } = Interaction
 
@@ -521,11 +521,7 @@ const OnboardingHeader = ({ children, ...props }) => {
     return (
       <div {...styles.imageWrapper}>
         <div {...styles.image}>
-          <Image
-            src='/static/climatelab/klimalabor-illustration.jpeg'
-            width={150}
-            height={150}
-          />
+          <Image src={CLIMATE_LAB_IMG_URL} width={150} height={150} />
         </div>
         <div {...styles.climateTitle}>{children}</div>
       </div>

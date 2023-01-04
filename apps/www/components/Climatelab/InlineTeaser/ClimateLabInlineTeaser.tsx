@@ -23,7 +23,7 @@ const ClimateLabInlineTeaser = () => {
       <div {...styles.image}>
         <Image
           src={CLIMATE_LAB_IMG_URL}
-          alt={t('ClimateTeaser/content/altText')}
+          alt={t('Climate/Logo/altText')}
           layout='fill'
           width={80}
           height={80}
