@@ -64,11 +64,22 @@ const Questionnaire = (props) => {
     revokeQuestionnaire,
     onQuestionnaireChange,
     detailsData,
-    publicSubmission = true,
-    hideInvalid,
-    hideReset,
+    submittedMessage,
+    SubmittedComponent,
+    questionnaireName,
     context,
+    sliceAt,
+    showSlice2,
+    slug,
+    updateDetails,
+    externalSubmit = false,
+    publicSubmission = true,
+    hideCount = false,
+    hideInvalid = false,
+    hideReset = false,
+    requireName = true,
   } = props
+
   const [state, setState] = useState({})
   const [isResubmitAnswers, setIsResubmitAnswers] = useState(false)
   const [headerHeight] = useHeaderHeight()
@@ -99,16 +110,6 @@ const Questionnaire = (props) => {
       })
   }
 
-  const {
-    submittedMessage,
-    questionnaireName,
-    externalSubmit,
-    hideCount,
-    sliceAt,
-    showSlice2,
-    slug,
-    updateDetails,
-  } = props
   return (
     <Loader
       loading={questionnaireData.loading}
@@ -172,22 +173,31 @@ const Questionnaire = (props) => {
             updating: false,
           }))
         }
-        const onRevoke =
-          revokeSubmissions &&
-          (() => {
-            processSubmit(revokeQuestionnaire, id)
-          })
 
+        const onResubmit = resubmitAnswers && (() => setIsResubmitAnswers(true))
+
+        const onRevoke =
+          revokeSubmissions && (() => processSubmit(revokeQuestionnaire, id))
+
+        if (
+          !updating &&
+          !isResubmitAnswers &&
+          userHasSubmitted &&
+          SubmittedComponent
+        ) {
+          return (
+            <SubmittedComponent
+              questionnaire={questionnaireData.questionnaire}
+              onResubmit={onResubmit}
+              onRevoke={onRevoke}
+            />
+          )
+        }
         if (!updating && !isResubmitAnswers && (hasEnded || userHasSubmitted)) {
           return (
             <QuestionnaireClosed
               submitted={userHasSubmitted}
-              onResubmit={
-                resubmitAnswers &&
-                (() => {
-                  setIsResubmitAnswers(true)
-                })
-              }
+              onResubmit={onResubmit}
               onRevoke={onRevoke}
               publicSubmission={publicSubmission}
               context={context}
@@ -212,7 +222,8 @@ const Questionnaire = (props) => {
           )
         })
         const askForName =
-          !detailsData.me?.firstName || !detailsData.me?.lastName
+          requireName &&
+          (!detailsData.me?.firstName || !detailsData.me?.lastName)
         const needsMeUpdate = askForName || askForAddress
 
         const detailsErrorMessages = Object.keys(detailsState.errors)
@@ -331,24 +342,22 @@ const Questionnaire = (props) => {
               showSlice2={showSlice2}
               slug={slug}
             />
-            {context !== 'postcard' &&
-              context !== 'climatepersonalinfo' &&
-              needsMeUpdate && (
-                <DetailsForm
-                  style={{ marginTop: 50 }}
-                  data={detailsData}
-                  values={detailsState.values}
-                  errors={detailsState.errors}
-                  dirty={detailsState.dirty}
-                  onChange={(fields) => {
-                    setDetailsState(FieldSet.utils.mergeFields(fields))
-                  }}
-                  errorMessages={detailsErrorMessages}
-                  showErrors={!updating && !!detailsState.showErrors}
-                  askForName={askForName}
-                  askForAddress={askForAddress}
-                />
-              )}
+            {needsMeUpdate && (
+              <DetailsForm
+                style={{ marginTop: 50 }}
+                data={detailsData}
+                values={detailsState.values}
+                errors={detailsState.errors}
+                dirty={detailsState.dirty}
+                onChange={(fields) => {
+                  setDetailsState(FieldSet.utils.mergeFields(fields))
+                }}
+                errorMessages={detailsErrorMessages}
+                showErrors={!updating && !!detailsState.showErrors}
+                askForName={askForName}
+                askForAddress={askForAddress}
+              />
+            )}
             {!externalSubmit && (
               <QuestionnaireActions
                 isResubmitAnswers={isResubmitAnswers}
