@@ -59,6 +59,21 @@ const QUERY = gql`
       activeMembership {
         active
       }
+      accessCampaigns {
+        id
+        title
+        type
+        description
+        grants {
+          id
+          email
+        }
+        slots {
+          total
+          used
+          free
+        }
+      }
     }
 
     employees(shuffle: 1, withGreeting: true) {

@@ -1181,6 +1181,10 @@
       "value": "Einladung von {granterName}"
     },
     {
+      "key": "api/access/email/recipient/invitation_klimalabor/subject",
+      "value": "Einladung zum Klimalabor der Republik"
+    },
+    {
       "key": "api/access/email/recipient/invitation_kampa202202/subject",
       "value": "Einladung von {granterName} für acht Wochen Republik"
     },

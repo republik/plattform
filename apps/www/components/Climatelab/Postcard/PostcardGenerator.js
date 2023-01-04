@@ -6,10 +6,10 @@ import { css } from 'glamor'
 import { useTranslation } from '../../../lib/withT'
 
 import {
-  Interaction,
   mediaQueries,
   fontStyles,
   convertStyleToRem,
+  Button,
 } from '@project-r/styleguide'
 
 const styles = {
@@ -34,34 +34,31 @@ const styles = {
   }),
 }
 
-const PostcardGenerator = ({ postcard }) => {
+// @TODO
+const TestComponent = (props) => {
+  const { questionnaire, onResubmit } = props
   const { t } = useTranslation()
+
   return (
     <>
-      <div {...styles.questionnaireStyleOverride}>
-        <QuestionnaireWithData
-          slug={'klima-postkarte'}
-          context='postcard'
-          publicSubmission={false}
-          hideCount
-          // submittedMessage={
-          //   <Interaction.P>
-          //     {t('Climatelab/Postcard/PostcardGenerator/merci1')}
-          //   </Interaction.P>
-          // }
-          hideInvalid={true}
-          hideReset={true}
-        />
-      </div>
-
-      {postcard.userHasSubmitted && (
-        <Interaction.P>
-          {t('Climatelab/Postcard/PostcardGenerator/merci1')}
-        </Interaction.P>
-      )}
-      <PostcardPreview postcard={postcard} t={t} />
+      <PostcardPreview postcard={questionnaire} t={t} />
+      {onResubmit && <Button onClick={() => onResubmit()}>bearbeiten</Button>}
     </>
   )
 }
+
+const PostcardGenerator = () => (
+  <div {...styles.questionnaireStyleOverride}>
+    <QuestionnaireWithData
+      slug={'klima-postkarte'}
+      context='postcard'
+      hideCount
+      hideInvalid
+      hideReset
+      requireName={false}
+      SubmittedComponent={TestComponent}
+    />
+  </div>
+)
 
 export default PostcardGenerator

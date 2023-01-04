@@ -41,20 +41,8 @@ export const fragments = {
   postcard: gql`
     fragment Postcard on queries {
       postcard: questionnaire(slug: "klima-postkarte") {
+        id
         userHasSubmitted
-        questions {
-          ... on QuestionInterface {
-            userAnswer {
-              payload
-            }
-          }
-          ... on QuestionTypeImageChoice {
-            options {
-              value
-              imageUrl
-            }
-          }
-        }
       }
     }
   `,
@@ -71,7 +59,7 @@ const Postcard = (props) => {
       isTicked={postcard.userHasSubmitted}
       {...props}
     >
-      <Fragment>
+      <>
         {!postcard.userHasSubmitted && (
           <RawHtml
             {...styles.p}
@@ -85,7 +73,7 @@ const Postcard = (props) => {
             }}
           />
         )}
-        <PostcardGenerator t={t} postcard={postcard} />
+        <PostcardGenerator />
         {!postcard.userHasSubmitted && (
           <div {...styles.actions}>
             <Button block onClick={onContinue}>
@@ -93,7 +81,7 @@ const Postcard = (props) => {
             </Button>
           </div>
         )}
-      </Fragment>
+      </>
     </Section>
   )
 }

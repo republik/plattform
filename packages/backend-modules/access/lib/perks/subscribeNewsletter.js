@@ -1,17 +1,3 @@
-/**
-
-{
-  "perks": [
-    {
-      "subscribeNewsletter": {
-        "name": "CLIMATE"
-      }
-    }
-  ]
-}
-
-*/
-
 const debug = require('debug')('access:lib:perks:subscribeNewsletter')
 
 const {
@@ -33,7 +19,7 @@ const give = async (
   await saveConsents({
     userId: recipient.id,
     consents: [name],
-    req: { ip: '123.123.123.123' }, // @TODO
+    req: { ip: null }, // TODO - not needed, could be empty object instead: req: {} or ip = null: req: { ip: null }
     pgdb,
   })
 
@@ -45,21 +31,18 @@ const give = async (
 
   debug('give', {
     recipient: recipient.id,
-    subscribedNewsletter: name, // @TODO
-    // addedRole: settings.role,
+    subscribedNewsletter: name, // TODO
   })
 
   return {
     recipient: recipient.id,
-    // addedRole: settings.role,
     subscribedNewsltter: name, // TODO
     eventLogExtend: `.${name}`,
   }
 }
 
-const revoke = async (grant, recipient, settings, pgdb) => {
+const revoke = async () => {
   // nothing to revoke
-
   return {}
 }
 
