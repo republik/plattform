@@ -2,7 +2,22 @@ const graphqlFields = require('graphql-fields')
 const _ = require('lodash')
 const { ascending, descending } = require('d3-array')
 
-const getSortKey = require('../../../lib/sortKey')
+const sorter = {
+  // [KEY] => [bubble flag, pick sort value fn]
+  DATE: [false, (node) => node.topValue || node.createdAt],
+  VOTES: [true, (node) => node.topValue || node.score],
+  HOT: [false, (node) => node.topValue || node.hotness],
+  REPLIES: [true, (node) => node.topValue || node.comments.totalCount],
+  FEATURED_AT: [true, (node) => node.topValue || node.featuredAt],
+}
+
+const getSorter = (key) => {
+  if (sorter[key]) {
+    return sorter[key]
+  }
+
+  return sorter.DATE
+}
 
 const THRESHOLD_OLD_DISCUSSION_IN_MS = 1000 * 60 * 60 * 72 // 72 hours
 
@@ -71,7 +86,6 @@ const buildConnections = (comment) => {
     ...comments,
     id: comment.id,
     totalCount,
-    totalRepliesCount: totalCount,
     directTotalCount: comments?.nodes?.length || 0,
     pageInfo: {
       hasNextPage: false,
@@ -89,36 +103,44 @@ const buildConnections = (comment) => {
 // this behaviour can be disabled with the last param set to false
 const deepSortTree = (
   comment,
-  ascDesc,
-  sortKey,
-  topValue,
+  sorting,
+  pickSortValue,
+  maxTopValue,
   topIds,
-  bubbleSort = true,
+  mustBubble = true,
 ) => {
   const { comments } = comment
   if (comments.nodes.length) {
-    comments.nodes.forEach((c) =>
-      deepSortTree(c, ascDesc, sortKey, topValue, topIds, bubbleSort),
+    comments.nodes.forEach((comment) =>
+      deepSortTree(
+        comment,
+        sorting,
+        pickSortValue,
+        maxTopValue,
+        topIds,
+        mustBubble,
+      ),
     )
+
     comment.comments = {
       ...comments,
       nodes: comments.nodes.sort((a, b) =>
-        ascDesc(a.topValue || a[sortKey], b.topValue || b[sortKey]),
+        sorting(pickSortValue(a), pickSortValue(b)),
       ),
     }
+
     if (
-      comment[sortKey] && // root is a fake comment, doesn't have [sortKey]
-      (comment.topValue === undefined || comment.topValue === null)
+      pickSortValue(comment) && // root is a fake comment, doesn't have [sortKey]
+      [undefined, null].includes(comment.topValue)
     ) {
       const firstChild = comment.comments.nodes[0]
       comment.topValue =
-        topIds && topIds.includes(comment.id)
-          ? topValue
-          : bubbleSort
-          ? [comment[sortKey], firstChild.topValue || firstChild[sortKey]].sort(
-              (a, b) => ascDesc(a, b),
-            )[0]
-          : null
+        (topIds?.includes(comment.id) && maxTopValue) ||
+        (mustBubble &&
+          [pickSortValue(comment), pickSortValue(firstChild)].sort(
+            sorting,
+          )[0]) ||
+        null
     }
   }
   return comment
@@ -183,7 +205,7 @@ const flattenTreeHorizontally = (_comment) => {
       // exclude root
       comments.push(comment)
     }
-    if (comment.comments.nodes.length > 0) {
+    if (comment.comments.nodes.length) {
       comment.comments.nodes.forEach((c) => _flattenTree(c))
       comment.comments.nodes = []
     }
@@ -206,9 +228,9 @@ const flattenTreeVertically = (_comment) => {
   return comments
 }
 
-const meassureDepth = (fields, depth = 0) => {
-  if (fields.nodes?.comments?.length) {
-    return meassureDepth(fields.nodes.comments, depth + 1)
+const measureDepth = (fields, depth = 0) => {
+  if (fields.nodes?.comments) {
+    return measureDepth(fields.nodes.comments, depth + 1)
   } else {
     if (fields.nodes) {
       return depth + 1
@@ -219,7 +241,7 @@ const meassureDepth = (fields, depth = 0) => {
 
 const getResolveOrderBy = (defaultOrder, orderBy, comments) => {
   if (orderBy !== 'AUTO') {
-    return null
+    return orderBy
   }
 
   if (defaultOrder && defaultOrder !== 'AUTO') {
@@ -244,12 +266,11 @@ const getResolveOrderBy = (defaultOrder, orderBy, comments) => {
 module.exports = async (discussion, args, context, info) => {
   const { pgdb, loaders } = context
   const requestedGraphqlFields = graphqlFields(info)
-  const maxDepth = args.flatDepth || meassureDepth(requestedGraphqlFields)
+  const maxDepth = args.flatDepth || measureDepth(requestedGraphqlFields)
 
-  const totalCountOnly =
-    Object.keys(requestedGraphqlFields).filter(
-      (key) => !['id', 'totalCount'].includes(key),
-    ).length === 0
+  const onlyTotalCount = !Object.keys(requestedGraphqlFields).filter(
+    (key) => !['id', 'totalCount', '__typename'].includes(key),
+  ).length
 
   const { after } = args
   const options = after
@@ -272,7 +293,7 @@ module.exports = async (discussion, args, context, info) => {
 
   const tag = discussion.tags?.includes(_tag) && _tag
 
-  if (totalCountOnly) {
+  if (onlyTotalCount) {
     if (tag) {
       const countsPerTag = await loaders.Discussion.byIdCommentTagsCount.load(
         discussion.id,
@@ -335,26 +356,20 @@ module.exports = async (discussion, args, context, info) => {
   )
 
   // prepare sort
-  const ascDesc = orderDirection === 'ASC' ? ascending : descending
-  const topValue =
-    orderDirection === 'ASC' ? Number.MIN_SAFE_INTEGER : Number.MAX_SAFE_INTEGER
-  const bottomValue =
-    orderDirection === 'ASC' ? Number.MAX_SAFE_INTEGER : Number.MIN_SAFE_INTEGER
-  const sortKey = getSortKey(resolvedOrderBy || orderBy)
-  const bubbleSort = sortKey !== 'createdAt' && sortKey !== 'hotness' // bubbling values for sort is disabled for createdAt and hotness
+  const [sorting, maxTopValue, maxBottomValue] =
+    orderDirection === 'ASC'
+      ? [ascending, Number.MIN_SAFE_INTEGER, Number.MAX_SAFE_INTEGER]
+      : [descending, Number.MAX_SAFE_INTEGER, Number.MIN_SAFE_INTEGER]
+  const [mustBubble, pickSortValue] = getSorter(resolvedOrderBy)
 
-  const compare = (
-    a,
-    b, // topValue set by deepSortTree // index for stable sort
-  ) =>
-    ascDesc(a.topValue || a[sortKey], b.topValue || b[sortKey]) ||
-    ascending(a.index, b.index)
+  // topValue set by deepSortTree // index for stable sort
+  const compare = (a, b) => sorting(pickSortValue(a), pickSortValue(b))
 
   // put unpublished to bottom
   if (discussion.isBoard) {
     comments.forEach((c) => {
       if (c.depth === 0 && !c.isPublished) {
-        c.topValue = bottomValue
+        c.topValue = maxBottomValue
       }
     })
   }
@@ -368,14 +383,14 @@ module.exports = async (discussion, args, context, info) => {
       // topValue used for sorting
       // we assign it here, because focusComment might be a node without
       // children, which deepSortTree doesn't calculate a topValue for
-      focusComment.topValue = topValue
+      focusComment.topValue = maxTopValue
 
       // Assign a topValue to all parents of the focusComment
       // to prevent them from being sliced out due to them not
       // bubbling to the top
       comments.forEach((c) => {
         if (focusComment.parentIds?.includes(c.id)) {
-          c.topValue = topValue
+          c.topValue = maxTopValue
         }
       })
 
@@ -390,7 +405,7 @@ module.exports = async (discussion, args, context, info) => {
 
   const tree = assembleTree(comments, { parentId, includeParent })
   buildConnections(tree)
-  deepSortTree(tree, ascDesc, sortKey, topValue, topIds, bubbleSort)
+  deepSortTree(tree, sorting, pickSortValue, maxTopValue, topIds, mustBubble)
 
   if (exceptIds) {
     // exceptIds are always on first level
@@ -447,7 +462,8 @@ module.exports = async (discussion, args, context, info) => {
   }
 
   if (resolvedOrderBy) {
-    tree.comments.resolvedOrderBy = resolvedOrderBy
+    tree.comments.resolvedOrderBy =
+      (resolvedOrderBy !== orderBy && resolvedOrderBy) || null
   }
 
   return tree.comments
