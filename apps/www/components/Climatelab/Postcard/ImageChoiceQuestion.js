@@ -108,9 +108,8 @@ const ImageChoiceQuestion = (props) => {
   const optionGroups = nest()
     .key((o) => o.category)
     .entries(options)
-  const userAnswerValues = userAnswer ? userAnswer.payload.value : []
 
-  console.log(userAnswerValues)
+  const userAnswerValues = userAnswer ? userAnswer.payload.value : []
 
   // image carousel stuff
   const carouselRef = useRef()
