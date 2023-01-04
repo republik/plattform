@@ -3,13 +3,20 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { fontStyles, mediaQueries, plainLinkRule } from '@project-r/styleguide'
 import { useTranslation } from '../../../lib/withT'
-import { CLIMATE_LAB_IMG_URL, CLIMATE_LAB_LANDINGPAGE_URL } from '../constants'
+import {
+  CLIMATE_LAB_IMG_URL,
+  CLIMATE_LAB_LANDINGPAGE_URL,
+  CLIMATE_LAB_ROLE,
+} from '../constants'
 import { climateColors } from '../config'
 import { useColorContext } from '@project-r/styleguide/src/components/Colors/ColorContext'
+import { useMe } from '../../../lib/context/MeContext'
 
 const ClimateLabInlineTeaser = () => {
   const { t } = useTranslation()
   const [colorScheme] = useColorContext()
+  const { me } = useMe()
+  const isClimateLabMember = me?.roles?.includes(CLIMATE_LAB_ROLE)
 
   return (
     <section {...styles.root}>
@@ -27,12 +34,25 @@ const ClimateLabInlineTeaser = () => {
         <hr {...styles.hr} />
         <p {...styles.heading}>{t('ClimateInlineTeaser/content/title')}</p>
         <p style={{ marginTop: '1rem' }} {...colorScheme.set('color', 'text')}>
-          {t('ClimateInlineTeaser/content/text')}{' '}
-          <Link href={CLIMATE_LAB_LANDINGPAGE_URL}>
-            <a {...plainLinkRule} {...styles.link}>
-              {t('ClimateInlineTeaser/content/link')}
-            </a>
-          </Link>
+          {isClimateLabMember ? (
+            <>
+              {t('ClimateInlineTeaser/Member/content/text')}{' '}
+              <Link href={CLIMATE_LAB_LANDINGPAGE_URL}>
+                <a {...plainLinkRule} {...styles.link}>
+                  {t('ClimateInlineTeaser/Member/content/link')}
+                </a>
+              </Link>
+            </>
+          ) : (
+            <>
+              {t('ClimateInlineTeaser/NonMember/content/text')}{' '}
+              <Link href={CLIMATE_LAB_LANDINGPAGE_URL}>
+                <a {...plainLinkRule} {...styles.link}>
+                  {t('ClimateInlineTeaser/NonMember/content/link')}
+                </a>
+              </Link>
+            </>
+          )}
         </p>
       </div>
     </section>
