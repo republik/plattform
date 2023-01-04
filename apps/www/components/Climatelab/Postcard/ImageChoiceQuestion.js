@@ -85,7 +85,7 @@ const ImageChoice = dynamic(() => import('./ImageChoice'), {
 })
 
 const ImageChoiceQuestion = (props) => {
-  const [answerId, setAnswerId] = useState(
+  const [answerId] = useState(
     (props.question.userAnswer && props.question.userAnswer.id) || uuid(),
   )
   const {
@@ -238,7 +238,7 @@ const ImageChoiceQuestion = (props) => {
           </svg>
         </div>
         <div {...styles.carousel} ref={carouselRef}>
-          {optionGroups.map(({ key, values }) =>
+          {optionGroups.map(({ values }) =>
             values.map((o, i) => (
               <div key={i} {...styles.slide}>
                 <ImageChoice
