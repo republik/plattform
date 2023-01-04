@@ -51,7 +51,6 @@ const MODE_KEYS = {
   TRY: 'trialForm',
   CUSTOM: 'custom',
   NONE: 'noPaynote',
-  ClIMATE: 'climate',
 }
 const MODES = [
   MODE_KEYS.AUTO,
@@ -59,7 +58,6 @@ const MODES = [
   MODE_KEYS.TRY,
   MODE_KEYS.CUSTOM,
   MODE_KEYS.NONE,
-  MODE_KEYS.ClIMATE,
 ]
 
 const DEFAULT_TARGET = {

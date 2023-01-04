@@ -606,13 +606,10 @@ const ArticlePage = ({
           const hasNewsletterUtms =
             router.query.utm_source && router.query.utm_source === 'newsletter'
 
-          const climatePaynote = meta.paynoteMode === 'climate'
-
           const suppressPayNotes =
             isSection || (!!episodes && showInlinePaynote) || isFlyer
           const suppressFirstPayNote =
             suppressPayNotes ||
-            climatePaynote ||
             podcast ||
             isEditorialNewsletter ||
             meta.path === '/top-storys' ||
@@ -642,8 +639,7 @@ const ArticlePage = ({
 
           const payNoteAfter =
             // !suppressSecondPayNote &&
-            payNote &&
-            cloneElement(payNote, climatePaynote ? {} : { position: 'after' })
+            payNote && cloneElement(payNote, { position: 'after' })
 
           const ownDiscussion = meta.ownDiscussion
 
