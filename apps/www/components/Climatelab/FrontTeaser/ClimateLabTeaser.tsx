@@ -63,13 +63,13 @@ const ClimateTeaserContent = () => {
   )
 }
 
-const ClimateTeaser = () => (
+const ClimateLabTeaser = () => (
   <OptionalLocalColorContext localColorVariables={climateColors}>
     <ClimateTeaserContent />
   </OptionalLocalColorContext>
 )
 
-export default ClimateTeaser
+export default ClimateLabTeaser
 
 const styles = {
   wrapper: css({
