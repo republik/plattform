@@ -16,7 +16,6 @@ import ClimateLabTrialform from './ClimateLabTrialForm'
 import { useTranslation } from '../../../lib/withT'
 import { CDN_FRONTEND_BASE_URL, PUBLIC_BASE_URL } from '../../../lib/constants'
 import { climateColors } from '../config'
-import ClimateTeaser from '../FrontTeaser/ClimateTeaser'
 
 const LandingPage = () => {
   const { t } = useTranslation()

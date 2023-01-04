@@ -23,7 +23,6 @@ import { useTranslation } from '../../lib/withT'
 
 import ActionBar from '../ActionBar'
 import useAudioQueue from '../Audio/hooks/useAudioQueue'
-import ClimatelabTeaser from '../Climatelab/Teaser'
 import CommentLink from '../Discussion/shared/CommentLink'
 import DiscussionLink from '../Discussion/shared/DiscussionLink'
 import ErrorMessage from '../ErrorMessage'
@@ -35,6 +34,7 @@ import StatusError from '../StatusError'
 import FrontAudioPlayButton from './FrontAudioPlayButton'
 import { useGetFrontQuery } from './graphql/getFrontQuery.graphql'
 import * as withData from './withData'
+import ClimateLabTeaser from '../Climatelab/FrontTeaser/ClimateLabTeaser'
 
 const styles = {
   prepublicationNotice: css({
@@ -68,7 +68,7 @@ export const RenderFront = ({ front, nodes, isFrontExtract = false }) => {
         DiscussionLink,
         ...withData,
         ActionBar,
-        ClimatelabTeaser,
+        ClimateLabTeaser,
         t,
       }),
     [],

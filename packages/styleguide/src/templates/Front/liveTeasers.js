@@ -61,7 +61,7 @@ const createLiveTeasers = ({
   withFlyerData = withData,
   ActionBar,
   showMyMagazine = true,
-  ClimatelabTeaser,
+  ClimateLabTeaser,
 }) => {
   const MyMagazineWithData = withMyMagazineData(
     ({
@@ -379,8 +379,8 @@ const createLiveTeasers = ({
         matchZone('LIVETEASER')(node) && node.data.id === 'climatelab',
       props: (node) => node.data,
       component: (props) => {
-        return ClimatelabTeaser ? (
-          <ClimatelabTeaser {...props} />
+        return ClimateLabTeaser ? (
+          <ClimateLabTeaser {...props} />
         ) : (
           <Placeholder attributes={props.attributes}>Klimalabor</Placeholder>
         )
