@@ -5721,6 +5721,18 @@
       "value": "Wir verlinken Ihr Profil zum Beispiel bei Ihren Dialogbeiträgen."
     },
     {
+      "key": "Climatelab/Postcard/PostcardDynamicComponent/noaccess/text",
+      "value": "Die Zeitreise ist für alle, die beim Klimalabor der Republik mitmachen. Noch nicht dabei? {link}"
+    },
+    {
+      "key": "Climatelab/Postcard/PostcardDynamicComponent/noaccess/linkText",
+      "value": "Hier anmelden"
+    },
+    {
+      "key": "Climatelab/Postcard/PostcardDynamicComponent/noaccess/linkHref",
+      "value": "/willkommen-zum-klimalabor"
+    },
+    {
       "key": "Trial/Form/withAccess/button/label",
       "value": "Zum Magazin"
     },
