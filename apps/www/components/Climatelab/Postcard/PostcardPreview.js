@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { css } from 'glamor'
 
 import {
@@ -26,6 +26,7 @@ const styles = {
     fontFamily: fontFamilies.sansSerifRegular,
     fontSize: '12px',
     lineHeight: '1.2',
+    color: '#282828',
     [mediaQueries.mUp]: {
       fontSize: '16px',
       lineHeight: '1.5',

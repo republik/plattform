@@ -72,33 +72,16 @@ export const fragments = {
       firstName
       lastName
       portrait
-      statement
-      username
-      isAdminUnlisted
-      isListed
-      isEligibleForProfile
-      hasPublicProfile
     }
   `,
 }
 
 const climateProfileMutation = gql`
-  mutation updateMe(
-    $firstName: String
-    $lastName: String
-    $portrait: String
-    $isListed: Boolean
-  ) {
-    updateMe(
-      firstName: $firstName
-      lastName: $lastName
-      portrait: $portrait
-      isListed: $isListed
-    ) {
+  mutation updateMe($firstName: String, $lastName: String, $portrait: String) {
+    updateMe(firstName: $firstName, lastName: $lastName, portrait: $portrait) {
       id
       firstName
       lastName
-      isListed
     }
   }
 `
@@ -180,7 +163,7 @@ class ClimateProfile extends Component {
         </div>
         <div {...styles.field}>
           <FieldSet
-            values={values}
+            values={mergedValues}
             errors={errors}
             dirty={dirty}
             onChange={this.onChange}

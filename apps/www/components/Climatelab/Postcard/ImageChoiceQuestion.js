@@ -155,6 +155,10 @@ const ImageChoiceQuestion = (props) => {
         },
       },
       function () {
+        if (!carouselRef.current) {
+          return
+        }
+
         carouselRef.current.style.scrollSnapType = 'x mandatory'
         setDisableScrollListener(false)
       },
