@@ -25,11 +25,7 @@ import {
   ColorHtmlBodyColors,
 } from '@project-r/styleguide'
 
-import {
-  PUBLIC_BASE_URL,
-  CDN_FRONTEND_BASE_URL,
-  PAYPAL_DONATE_LINK,
-} from '../lib/constants'
+import { PUBLIC_BASE_URL, CDN_FRONTEND_BASE_URL } from '../lib/constants'
 import { withDefaultSSR } from '../lib/apollo/helpers'
 
 const { Headline: EH1, P: EP } = Editorial
@@ -253,66 +249,7 @@ const EnPage = ({
           the cooperative behind Republik and read our magazine for a whole
           year: <A href='/angebote'>Jetzt Mitglied werden</A>.
         </IP>
-
-        <H2>Donate</H2>
-        <IP style={{ marginBottom: 10 }}>
-          Donate to support the independent journalism of the future.
-        </IP>
-        {!!PAYPAL_DONATE_LINK && (
-          <IP style={{ margin: '10px 0' }}>
-            <A href={PAYPAL_DONATE_LINK}>Donate with PayPal</A>
-          </IP>
-        )}
-        <IP style={{ marginBottom: 10 }}>
-          <Label>
-            If you&apos;d like to donate in excess of CHF 5000, please{' '}
-            <A href='mailto:kontakt@republik.ch'>get in touch with us</A> first.
-          </Label>
-        </IP>
-        <Label>Banking Account</Label>
-        <br />
-        <table style={{ borderSpacing: '10px 5px', marginLeft: -10 }}>
-          <tbody>
-            <tr>
-              <td>
-                <Label>Name</Label>
-              </td>
-              <td>Project R Genossenschaft</td>
-            </tr>
-            <tr>
-              <td>
-                <Label>Street</Label>
-              </td>
-              <td>Sihlhallenstrasse 1</td>
-            </tr>
-            <tr>
-              <td>
-                <Label>City</Label>
-              </td>
-              <td>8004 Zürich</td>
-            </tr>
-            <tr>
-              <td>
-                <Label>Country</Label>
-              </td>
-              <td>Switzerland</td>
-            </tr>
-            <tr>
-              <td>
-                <Label>Bank</Label>
-              </td>
-              <td>Raiffeisenbank Winterthur</td>
-            </tr>
-            <tr>
-              <td>
-                <Label>IBAN</Label>
-              </td>
-              <td>CH06 8080 8006 3318 5396 1</td>
-            </tr>
-          </tbody>
-        </table>
       </div>
-
       <div style={{ textAlign: 'center', marginBottom: SPACE }}>
         <PureFooter en />
       </div>
