@@ -110,11 +110,17 @@ const ImageChoiceQuestion = (props) => {
     .entries(options)
   const userAnswerValues = userAnswer ? userAnswer.payload.value : []
 
+  console.log(userAnswerValues)
+
   // image carousel stuff
   const carouselRef = useRef()
   const [colorScheme] = useColorContext()
 
-  const [currentSlideIndex, setCurrentSlideIndex] = useState(0)
+  const slideIndex = userAnswer
+    ? userAnswerValues[0].replace(/[^0-9]/g, '') - 1
+    : 0
+  const [currentSlideIndex, setCurrentSlideIndex] = useState(slideIndex)
+
   const [disableScrollIntoView, setDisableScrollIntoView] = useState(false)
   const [disableScrollListener, setDisableScrollListener] = useState(false)
 
