@@ -42,6 +42,7 @@ const ClimateLabInlineTeaser = () => {
                   {t('ClimateInlineTeaser/Member/content/link')}
                 </a>
               </Link>
+              {'.'}
             </>
           ) : (
             <>
@@ -51,6 +52,7 @@ const ClimateLabInlineTeaser = () => {
                   {t('ClimateInlineTeaser/NonMember/content/link')}
                 </a>
               </Link>
+              {'.'}
             </>
           )}
         </p>
