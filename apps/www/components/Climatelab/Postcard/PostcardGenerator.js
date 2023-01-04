@@ -10,13 +10,12 @@ import {
   fontStyles,
   convertStyleToRem,
   Button,
+  Interaction,
 } from '@project-r/styleguide'
 
 const styles = {
   questionnaireStyleOverride: css({
-    '& div': {
-      marginTop: '20px',
-    },
+    marginTop: '-30px',
     '& h2': {
       ...convertStyleToRem(fontStyles.sansSerifRegular17),
     },
@@ -35,15 +34,25 @@ const styles = {
 }
 
 // @TODO
-const TestComponent = (props) => {
+const SubmittedPostcard = (props) => {
   const { questionnaire, onResubmit } = props
   const { t } = useTranslation()
 
   return (
-    <>
+    <div style={{ marginTop: '50px' }}>
       <PostcardPreview postcard={questionnaire} t={t} />
-      {onResubmit && <Button onClick={() => onResubmit()}>bearbeiten</Button>}
-    </>
+      {onResubmit && (
+        <Button onClick={() => onResubmit()}>
+          {' '}
+          {t('questionnaire/postcard/thankyou/resubmit')}
+        </Button>
+      )}
+      <div style={{ marginTop: '20px' }}>
+        <Interaction.P>
+          {t('Climatelab/Postcard/PostcardPreview/merci2')}
+        </Interaction.P>
+      </div>
+    </div>
   )
 }
 
@@ -56,7 +65,8 @@ const PostcardGenerator = () => (
       hideInvalid
       hideReset
       requireName={false}
-      SubmittedComponent={TestComponent}
+      publicSubmission={false}
+      SubmittedComponent={SubmittedPostcard}
     />
   </div>
 )

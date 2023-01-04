@@ -135,9 +135,6 @@ export const PostcardPreview = (props) => {
             </div>
           </div>
         </div>
-        <Interaction.P>
-          {t('Climatelab/Postcard/PostcardPreview/merci2')}
-        </Interaction.P>
       </>
     )
   )
