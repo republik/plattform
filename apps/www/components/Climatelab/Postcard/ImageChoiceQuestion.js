@@ -69,7 +69,7 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'center',
     [mediaQueries.mUp]: {
-      width: 100,
+      width: 75,
     },
   }),
 }
