@@ -11,7 +11,7 @@ const styles = {
     borderWidth: '3px',
     borderStyle: 'solid',
     maxWidth: '100%',
-    objectFit: 'contain',
+    objectFit: 'fill',
     borderRadius: '2px',
     transition: 'box-shadow 0.3s ease-out',
     ':hover': {
