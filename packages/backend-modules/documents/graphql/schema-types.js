@@ -52,6 +52,7 @@ enum PaynoteMode {
   button
   trialForm
   noPaynote
+  climate
 } 
 
 type Contributor {
