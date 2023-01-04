@@ -2,10 +2,11 @@ import React from 'react'
 
 import { graphql } from '@apollo/client/react/hoc'
 
-import { Loader } from '@project-r/styleguide'
+import { Loader, Interaction } from '@project-r/styleguide'
 
 import { gql } from '@apollo/client'
 import PostcardGenerator from './PostcardGenerator'
+import { useMe } from '../../../lib/context/MeContext'
 
 const PostcardDynamicComponent = graphql(
   gql`
@@ -32,14 +33,21 @@ const PostcardDynamicComponent = graphql(
     }
   `,
 )(({ data }) => {
+  const { me, meLoading } = useMe()
+  const isClimate = !meLoading && me?.roles.includes('climate')
   return (
     <Loader
       loading={data.loading}
       error={data.error}
       render={() => {
-        console.log({ data })
         if (!data?.questionnaire) return null
-        return <PostcardGenerator postcard={data.questionnaire} />
+        return isClimate ? (
+          <PostcardGenerator postcard={data.questionnaire} />
+        ) : (
+          <Interaction.P>
+            {' Melden Sie sich zuerst fürs Klimalabor an.'}
+          </Interaction.P>
+        )
       }}
     />
   )
