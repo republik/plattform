@@ -42,10 +42,9 @@ const styles = {
     overflowY: 'hidden',
     position: 'relative',
     zIndex: 1,
-    paddingLeft: '15',
-    paddingRight: '15',
+    padding: '15',
     '&:first-child': {
-      marginLeft: -15,
+      marginLeft: -12,
     },
   }),
   image: css({

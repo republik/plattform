@@ -149,7 +149,7 @@ const colors = {
     imageChoiceShadow:
       '0 1px 2px 0 rgba(0, 0, 0, 0.24), 0 0 2px 0 rgba(0, 0, 0, 0.12)',
     imageChoiceShadowHover:
-      '0 6px 12px 0 rgba(0, 0, 0, 0.24), 0 0 12px 0 rgba(0, 0, 0, 0.12)',
+      '0 4px 8px 0 rgba(0, 0, 0, 0.24), 0 0 8px 0 rgba(0, 0, 0, 0.12)',
   },
   dark: {
     logo: '#FFFFFF',
@@ -209,7 +209,7 @@ const colors = {
     imageChoiceShadow:
       '0 1px 2px 0 rgba(255, 255, 255, 0.24), 0 0 2px 0 rgba(255, 255, 255, 0.12)',
     imageChoiceShadowHover:
-      '0 6px 12px 0 rgba(255, 255, 255, 0.24), 0 0 12px 0 rgba(255, 255, 255, 0.12)',
+      '0 4px 8px 0 rgba(255, 255, 255, 0.24), 0 0 8px 0 rgba(255, 255, 255, 0.12)',
   },
   mappings: {
     format: {
