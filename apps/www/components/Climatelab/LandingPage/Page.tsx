@@ -16,6 +16,7 @@ import { useTranslation } from '../../../lib/withT'
 import { CDN_FRONTEND_BASE_URL, PUBLIC_BASE_URL } from '../../../lib/constants'
 import { climateColors } from '../config'
 import { CLIMATE_LAB_IMG_URL } from '../constants'
+import ClimateLabLogo from '../shared/ClimateLabLogo'
 
 const LandingPage = () => {
   const { t } = useTranslation()
@@ -38,12 +39,7 @@ const LandingPage = () => {
       <div {...styles.page} {...colorScheme.set('color', 'text')}>
         <div {...styles.imageWrapper}>
           <div {...styles.image}>
-            <Image
-              src={CLIMATE_LAB_IMG_URL}
-              width={800}
-              height={800}
-              alt={t('Climate/Logo/altText')}
-            />
+            <ClimateLabLogo width={800} height={800} />
           </div>
         </div>
         <div {...styles.contentWrapper}>

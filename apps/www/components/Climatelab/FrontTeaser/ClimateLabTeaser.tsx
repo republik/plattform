@@ -17,6 +17,7 @@ import {
   CLIMATE_LAB_URL,
 } from '../constants'
 import { useRouter } from 'next/router'
+import ClimateLabLogo from '../shared/ClimateLabLogo'
 
 const ClimateTeaserContent = () => {
   const { t } = useTranslation()
@@ -37,17 +38,13 @@ const ClimateTeaserContent = () => {
   console.log('colorScheme', colorScheme)
 
   return (
-    <div {...styles.wrapper} {...colorScheme.set('backgroundColor', 'default')}>
+    <div
+      {...styles.wrapper}
+      {...colorScheme.set('backgroundColor', 'default')}
+      {...colorScheme.set('color', 'text')}
+    >
       <div {...styles.imgWrapper}>
-        <div {...styles.img}>
-          <Image
-            src={CLIMATE_LAB_IMG_URL}
-            width={480}
-            height={480}
-            style={{ objectFit: 'contain' }}
-            alt={t('Climate/Logo/altText')}
-          />
-        </div>
+        <ClimateLabLogo width={480} height={480} />
       </div>
       <div {...styles.content} {...colorScheme.set('color', 'text')}>
         <h3 {...styles.text}>
