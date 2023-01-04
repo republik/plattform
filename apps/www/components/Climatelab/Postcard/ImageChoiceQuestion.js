@@ -39,7 +39,6 @@ const styles = {
     alignItems: 'center',
     alignContent: 'space-around',
     minWidth: '85%',
-    maxHeight: '400px',
     overflowY: 'hidden',
     position: 'relative',
     zIndex: 1,
@@ -253,6 +252,7 @@ const ImageChoiceQuestion = (props) => {
                 >
                   {o.label}
                 </ImageChoice>
+                <div>Credit</div>
               </div>
             )),
           )}
