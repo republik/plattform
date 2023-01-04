@@ -23,10 +23,10 @@ const ClimateTeaserContent = () => {
   const router = useRouter()
 
   const { me } = useMe()
-  const isClimateMember = me?.roles?.includes(CLIMATE_LAB_ROLE)
+  const isClimateLabMember = me?.roles?.includes(CLIMATE_LAB_ROLE)
 
   const handleClick = () => {
-    if (isClimateMember) {
+    if (isClimateLabMember) {
       return router.push(CLIMATE_LAB_URL)
     } else {
       return router.push(CLIMATE_LAB_LANDINGPAGE_URL)
@@ -74,13 +74,20 @@ export default ClimateLabTeaser
 const styles = {
   wrapper: css({
     display: 'flex',
-    flexDirection: 'row',
+    flexDirection: 'column',
     alignItems: 'center',
-    gap: '4rem',
-    padding: '4rem',
+    gap: '1rem',
+    padding: '4rem 2rem',
+    [mediaQueries.mUp]: {
+      flexDirection: 'row',
+      gap: '4rem',
+      padding: '4rem',
+    },
   }),
   img: css({
     width: '80%',
+    display: 'inline-flex',
+    justifyContent: 'center',
   }),
   imgWrapper: css({
     flex: '1 1 0',
