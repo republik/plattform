@@ -4426,15 +4426,15 @@
     },
     {
       "key": "questionnaire/submit",
-      "value": "abschicken"
+      "value": "Abschicken"
     },
     {
       "key": "questionnaire/publish",
-      "value": "publizieren"
+      "value": "Publizieren"
     },
     {
       "key": "questionnaire/update",
-      "value": "aktualisieren"
+      "value": "Aktualisieren"
     },
     {
       "key": "questionnaire/reset",
