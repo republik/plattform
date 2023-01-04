@@ -737,6 +737,10 @@
       "value": "Anonym"
     },
     {
+      "key": "api/comment/anonymous/displayName/withDifferentiator",
+      "value": "Anonym {differentiator}"
+    },
+    {
       "key": "api/comment/id/duplicate",
       "value": "ID-Kollision! Ups, da ist etwas schiefgelaufen. Bitte laden Sie die Seite neu und versuchen Sie den Komentar erneut abzusenden."
     },
