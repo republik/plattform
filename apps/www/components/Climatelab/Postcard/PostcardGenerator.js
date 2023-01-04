@@ -49,6 +49,11 @@ const SubmittedPostcard = (props) => {
       )}
       <div style={{ marginTop: '20px' }}>
         <Interaction.P>
+          {t('Climatelab/Postcard/PostcardPreview/merci1')}
+        </Interaction.P>
+        <br />
+        <br />
+        <Interaction.P>
           {t('Climatelab/Postcard/PostcardPreview/merci2')}
         </Interaction.P>
       </div>

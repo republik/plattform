@@ -42,12 +42,10 @@ const styles = {
     overflowY: 'hidden',
     position: 'relative',
     zIndex: 1,
-    paddingLeft: 15,
-    '&:last-child': {
-      paddingRight: 15,
-    },
+    paddingLeft: '15',
+    paddingRight: '15',
     '&:first-child': {
-      paddingLeft: 0,
+      marginLeft: -15,
     },
   }),
   image: css({
@@ -71,7 +69,7 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'center',
     [mediaQueries.mUp]: {
-      width: 100,
+      width: 75,
     },
   }),
 }
@@ -249,10 +247,8 @@ const ImageChoiceQuestion = (props) => {
                   onChange={() => handleChange(o.value)}
                   checked={userAnswerValues.some((v) => v === o.value)}
                   imageUrl={o.imageUrl}
-                >
-                  {o.label}
-                </ImageChoice>
-                <div>Credit</div>
+                />
+                <div stlye={{ fontSize: '0.75rem' }}>{o.label}</div>
               </div>
             )),
           )}
