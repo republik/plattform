@@ -16,7 +16,7 @@ const styles = {
   postcard: css({
     position: 'relative',
     backgroundColor: '#F9FBFF',
-    margin: '20px 0',
+    margin: '0 0 20px 0',
     width: '100%',
     aspectRatio: '16 / 9',
     display: 'flex',
@@ -36,7 +36,6 @@ const styles = {
     wordBreak: 'normal',
     overflowWrap: 'break-word',
     width: '60%',
-    height: '400px',
     borderRight: 'solid 1px #DADDDC',
     marginBottom: '10px',
     paddingRight: '20px',
@@ -48,9 +47,9 @@ const styles = {
     position: 'absolute',
     bottom: 0,
     paddingBottom: '5px',
-    fontSize: '12px',
+    fontSize: '0.5rem',
     [mediaQueries.mUp]: {
-      fontSize: '14px',
+      fontSize: '0.75rem',
     },
   }),
   rightSide: css({

@@ -18,6 +18,7 @@ const styles = {
   container: css({
     width: '100%',
     position: 'relative',
+    marginTop: '-10px',
   }),
   carousel: css({
     overflowX: 'auto',
