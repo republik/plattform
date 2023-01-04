@@ -7667,6 +7667,18 @@
     {
       "key": "ClimateTeaser/content/buttonAction",
       "value": "Zum Klimalabor"
+    },
+    {
+      "key": "ClimateInlineTeaser/content/title",
+      "value": "Klimalabor"
+    },
+    {
+      "key": "ClimateInlineTeaser/content/text",
+      "value": "Die Klimakrise ist hier. Die Lage ist ernst. Was tun? Im Klimalabor der Republik machen wir uns gemeinsam mit Ihnen auf die Suche nach Antworten."
+    },
+    {
+      "key": "ClimateInlineTeaser/content/link",
+      "value": "Mehr erfahren und mitmachen"
     }
   ]
 }

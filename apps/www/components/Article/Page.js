@@ -80,7 +80,6 @@ import { getDocument } from './graphql/getDocument'
 import ShareImage from './ShareImage'
 import { BrowserOnlyActionBar } from './BrowserOnly'
 import ArticleRecommendationsFeed from './ArticleRecommendationsFeed'
-import ClimatelabTeaser from '../Climatelab/Teaser'
 
 const LoadingComponent = () => <SmallLoader loading />
 
@@ -154,6 +153,13 @@ const Questionnaire = dynamic(
     import('../Questionnaire/Questionnaire').then(
       (m) => m.QuestionnaireWithData,
     ),
+  {
+    loading: LoadingComponent,
+    ssr: false,
+  },
+)
+const ClimateLabInlineTeaser = dynamic(
+  () => import('../Climatelab/InlineTeaser/ClimateLabInlineTeaser'),
   {
     loading: LoadingComponent,
     ssr: false,
@@ -401,6 +407,7 @@ const ArticlePage = ({
           QUESTIONNAIRE_SUBMISSIONS: QuestionnaireSubmissions,
           NEWSLETTER_SIGNUP: NewsletterSignUpDynamic,
           CLIMATE_LAB_COUNTER: ClimateLabCounter,
+          CLIMATE_LAB_INLINE_TEASER: ClimateLabInlineTeaser,
           POSTCARD: Postcard,
         },
         titleMargin: false,
@@ -619,9 +626,7 @@ const ArticlePage = ({
           // and the text would be the same twice.
           // const suppressSecondPayNote = climatePaynote
 
-          const payNote = climatePaynote ? (
-            <ClimatelabTeaser mode='paynote' />
-          ) : (
+          const payNote = (
             <PayNote
               seed={payNoteSeed}
               tryOrBuy={payNoteTryOrBuy}
@@ -634,6 +639,7 @@ const ArticlePage = ({
               Wrapper={isFlyer ? FlyerWrapper : undefined}
             />
           )
+
           const payNoteAfter =
             // !suppressSecondPayNote &&
             payNote &&
