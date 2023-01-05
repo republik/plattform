@@ -6,7 +6,12 @@ function assetServerImageLoader({
   width,
   quality = 75, // Quality is not yet supported by the assets-server
 }: ImageLoaderProps): string {
-  return `${CDN_FRONTEND_BASE_URL}${src}?resize=${width}x`
+  // Add asset-server prefix to relative URLs
+  const url = new URL(src.startsWith('/') ? CDN_FRONTEND_BASE_URL + src : src)
+  url.searchParams.set('resize', `${width}x`)
+  url.searchParams.set('format', 'auto')
+
+  return url.toString()
 }
 
 export default assetServerImageLoader
