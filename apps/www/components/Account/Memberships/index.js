@@ -26,6 +26,8 @@ const AccountBox = ({ children }) => {
   return <Box style={{ padding: 14, marginBottom: 20 }}>{children}</Box>
 }
 
+/* const grantTranslationContext = [{}]
+ */
 const Memberships = ({
   loading,
   error,
@@ -61,6 +63,11 @@ const Memberships = ({
                 <AccessGrants />
               </AccountBox>
             )}
+            {/* {hasAccessGrants && !hasRegularAccessGrants && (
+              <AccountBox>
+                
+              </AccountBox>
+            )} */}
             {!hasAccessGrants && !hasMemberships && (
               <AccountBox>
                 <UserGuidance />
