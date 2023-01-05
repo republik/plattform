@@ -20,7 +20,7 @@ const styles = {
     width: '100%',
     aspectRatio: '16 / 9',
     display: 'flex',
-    padding: '20px',
+    padding: '10px',
     border: 'solid 2px f9f5ec',
     borderRadius: '2px',
     fontFamily: fontFamilies.sansSerifRegular,
@@ -28,6 +28,7 @@ const styles = {
     lineHeight: '1.2',
     color: '#282828',
     [mediaQueries.mUp]: {
+      padding: '20px',
       fontSize: '16px',
       lineHeight: '1.5',
     },
@@ -35,12 +36,12 @@ const styles = {
   textArea: css({
     wordBreak: 'normal',
     overflowWrap: 'break-word',
-    width: '60%',
+    width: '67%',
     borderRight: 'solid 1px #DADDDC',
     marginBottom: '10px',
-    paddingRight: '20px',
+    paddingRight: '10px',
     [mediaQueries.mUp]: {
-      paddingRight: '40px',
+      paddingRight: '20px',
     },
   }),
   credit: css({
@@ -55,14 +56,13 @@ const styles = {
   rightSide: css({
     display: 'flex',
     flexDirection: 'column',
-    width: '40%',
-    paddingLeft: '20px',
+    width: '33%',
+    paddingLeft: '10px',
     [mediaQueries.mUp]: {
-      paddingLeft: '40px',
+      paddingLeft: '20px',
     },
   }),
   poststampContainer: css({
-    maxWidth: '80%',
     alignSelf: 'flex-end',
   }),
   image: css({
