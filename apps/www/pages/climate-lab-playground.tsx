@@ -7,9 +7,9 @@ import { css } from 'glamor'
 import { useMemo } from 'react'
 
 /**
- * TODO: Filter out submissions which are not public
  * TODO: Resolve user profiles for linked
  * TODO: How does pagination work here?
+ * TODO: Replace getResizedSrcs with new AssetImage
  *
  */
 
