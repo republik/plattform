@@ -13,9 +13,9 @@ import Counter from '../Counter'
 import Image from 'next/image'
 import ClimateLabTrialform from './ClimateLabTrialForm'
 import { useTranslation } from '../../../lib/withT'
-import { CDN_FRONTEND_BASE_URL, PUBLIC_BASE_URL } from '../../../lib/constants'
+import { PUBLIC_BASE_URL } from '../../../lib/constants'
 import { climateColors } from '../config'
-import { CLIMATE_LAB_IMG_URL } from '../constants'
+import { CLIMATE_LAB_SHARE_IMAGE_URL } from '../constants'
 import ClimateLabLogo from '../shared/ClimateLabLogo'
 
 const LandingPage = () => {
@@ -26,7 +26,7 @@ const LandingPage = () => {
     pageTitle: t('ClimateLandingPage/seo/title'),
     title: t('ClimateLandingPage/seo/title'),
     description: t('ClimateLandingPage/seo/description'),
-    image: `${CDN_FRONTEND_BASE_URL}/static/climatelab/wilkommen-zum-klimalabor-social.png`,
+    image: CLIMATE_LAB_SHARE_IMAGE_URL,
     url: `${PUBLIC_BASE_URL}/wilkommen-zum-klimalabor`,
   }
 
