@@ -85,9 +85,14 @@ const ImageChoiceQuestion = (props) => {
   const [answerId] = useState(
     (props.question.userAnswer && props.question.userAnswer.id) || uuid(),
   )
+
   const {
     question: { text, userAnswer, options },
   } = props
+
+  const [shuffeledOptions] = useState(
+    [...options].sort(() => 0.5 - Math.random()),
+  )
 
   const handleChange = (value) => {
     const {
@@ -102,20 +107,17 @@ const ImageChoiceQuestion = (props) => {
     onChange(answerId, Array.from(nextValue))
   }
 
-  const optionGroups = nest()
-    .key((o) => o.category)
-    .entries(options)
-
   const userAnswerValues = userAnswer ? userAnswer.payload.value : []
+
+  const slideIndex = userAnswer
+    ? shuffeledOptions.map((d) => d.value).indexOf(userAnswerValues[0])
+    : 0
+
+  const [currentSlideIndex, setCurrentSlideIndex] = useState(slideIndex)
 
   // image carousel stuff
   const carouselRef = useRef()
   const [colorScheme] = useColorContext()
-
-  const slideIndex = userAnswer
-    ? userAnswerValues[0].replace(/[^0-9]/g, '') - 1
-    : 0
-  const [currentSlideIndex, setCurrentSlideIndex] = useState(slideIndex)
 
   const [disableScrollIntoView, setDisableScrollIntoView] = useState(false)
   const [disableScrollListener, setDisableScrollListener] = useState(false)
@@ -240,20 +242,18 @@ const ImageChoiceQuestion = (props) => {
           </svg>
         </div>
         <div {...styles.carousel} ref={carouselRef}>
-          {optionGroups.map(({ values }) =>
-            values.map((o, i) => (
-              <div key={i} {...styles.slide}>
-                <ImageChoice
-                  onChange={() => handleChange(o.value)}
-                  checked={userAnswerValues.some((v) => v === o.value)}
-                  imageUrl={o.imageUrl}
-                />
-                <label style={{ marginTop: '5px', fontSize: '0.9rem' }}>
-                  {o.label}
-                </label>
-              </div>
-            )),
-          )}
+          {shuffeledOptions.map((o, i) => (
+            <div key={i} {...styles.slide}>
+              <ImageChoice
+                onChange={() => handleChange(o.value)}
+                checked={userAnswerValues.some((v) => v === o.value)}
+                imageUrl={o.imageUrl}
+              />
+              <label style={{ marginTop: '5px', fontSize: '0.9rem' }}>
+                {o.label}
+              </label>
+            </div>
+          ))}
         </div>
       </div>
     </>
