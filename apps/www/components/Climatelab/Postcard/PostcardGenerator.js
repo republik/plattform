@@ -35,26 +35,22 @@ const styles = {
 
 // @TODO
 const SubmittedPostcard = (props) => {
-  const { questionnaire, onResubmit } = props
+  const { questionnaire, onRevoke } = props
   const { t } = useTranslation()
 
   return (
     <div style={{ marginTop: '50px' }}>
       <PostcardPreview postcard={questionnaire} t={t} />
-      {onResubmit && (
-        <Button onClick={() => onResubmit()}>
-          {' '}
-          {t('questionnaire/postcard/thankyou/resubmit')}
+
+      {onRevoke && (
+        <Button onClick={() => onRevoke()}>
+          {t('questionnaire/postcard/revoke')}
         </Button>
       )}
-      <div style={{ marginTop: '20px' }}>
+
+      <div style={{ margin: '20px 0' }}>
         <Interaction.P>
           {t('Climatelab/Postcard/PostcardPreview/merci1')}
-        </Interaction.P>
-        <br />
-        <br />
-        <Interaction.P>
-          {t('Climatelab/Postcard/PostcardPreview/merci2')}
         </Interaction.P>
       </div>
     </div>
@@ -70,8 +66,8 @@ const PostcardGenerator = () => (
       hideInvalid
       hideReset
       requireName={false}
-      publicSubmission={false}
       SubmittedComponent={SubmittedPostcard}
+      showAnonymize
     />
   </div>
 )

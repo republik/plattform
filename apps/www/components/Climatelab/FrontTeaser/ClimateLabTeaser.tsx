@@ -35,8 +35,6 @@ const ClimateTeaserContent = () => {
     }
   }
 
-  console.log('colorScheme', colorScheme)
-
   return (
     <div
       {...styles.wrapper}
@@ -49,8 +47,8 @@ const ClimateTeaserContent = () => {
       <div {...styles.content} {...colorScheme.set('color', 'text')}>
         <h3 {...styles.text}>
           {t.elements('ClimateTeaser/content/text1', {
-            br1: <br />,
-            br2: <br />,
+            br1: <br key='1' />,
+            br2: <br key='2' />,
           })}
         </h3>
         <Button onClick={handleClick}>

@@ -21,6 +21,7 @@ import {
   withQuestionnaireMutation,
   withQuestionnaireReset,
   withQuestionnaireRevoke,
+  withQuestionnaireAnonymize,
 } from './enhancers'
 import Questions from './Questions'
 import QuestionnaireClosed from './QuestionnaireClosed'
@@ -62,6 +63,7 @@ const Questionnaire = (props) => {
     submitQuestionnaire,
     resetQuestionnaire,
     revokeQuestionnaire,
+    anonymizeQuestionnaire,
     onQuestionnaireChange,
     detailsData,
     submittedMessage,
@@ -78,6 +80,7 @@ const Questionnaire = (props) => {
     hideInvalid = false,
     hideReset = false,
     requireName = true,
+    showAnonymize = false,
   } = props
 
   const [state, setState] = useState({})
@@ -140,6 +143,7 @@ const Questionnaire = (props) => {
         } = questionnaireData
         const error = state.error || props.error
         const updating = state.updating || props.updating || props.submitting
+        const hasUserAnswers = questions.some(({ userAnswer }) => !!userAnswer)
 
         if (!userIsEligible) {
           return null
@@ -177,7 +181,9 @@ const Questionnaire = (props) => {
         const onResubmit = resubmitAnswers && (() => setIsResubmitAnswers(true))
 
         const onRevoke =
-          revokeSubmissions && (() => processSubmit(revokeQuestionnaire, id))
+          revokeSubmissions &&
+          hasUserAnswers &&
+          (() => processSubmit(revokeQuestionnaire, id))
 
         if (
           !updating &&
@@ -280,6 +286,9 @@ const Questionnaire = (props) => {
           processSubmit(submitQuestionnaire, id)
         }
 
+        const onSubmitAnonymized = () =>
+          processSubmit(anonymizeQuestionnaire, id)
+
         return (
           <div>
             {questionnaireName && (
@@ -361,6 +370,8 @@ const Questionnaire = (props) => {
               <QuestionnaireActions
                 isResubmitAnswers={isResubmitAnswers}
                 onSubmit={onSubmit}
+                onSubmitAnonymized={onSubmitAnonymized}
+                showAnonymize={showAnonymize}
                 onReset={!hideReset && onReset}
                 updating={updating}
                 invalid={userAnswerCount < 1}
@@ -380,6 +391,7 @@ const QuestionnaireWithMutations = compose(
   withQuestionnaireMutation,
   withQuestionnaireReset,
   withQuestionnaireRevoke,
+  withQuestionnaireAnonymize,
   withMyDetails,
   withMyDetailsMutation,
 )(Questionnaire)

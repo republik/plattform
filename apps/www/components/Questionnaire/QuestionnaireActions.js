@@ -24,6 +24,7 @@ export default compose(withT)(
   ({
     t,
     onSubmit,
+    onSubmitAnonymized,
     onReset,
     isResubmitAnswers,
     updating,
@@ -31,6 +32,7 @@ export default compose(withT)(
     hideInvalid = false,
     publicSubmission,
     context,
+    showAnonymize,
   }) => {
     const { me } = useMe()
     return (
@@ -38,17 +40,20 @@ export default compose(withT)(
         {publicSubmission && (
           <div style={{ marginBottom: 10 }}>
             <Label>
-              {t(
+              {t.first.elements([
+                `questionnaire/${context}/privacy/${
+                  me?.hasPublicProfile ? 'public' : 'private'
+                }`,
                 `questionnaire/privacy/${
                   me?.hasPublicProfile ? 'public' : 'private'
                 }`,
-              )}
+              ])}
             </Label>
           </div>
         )}
         <Button primary onClick={onSubmit} disabled={updating || invalid}>
           {updating ? (
-            <InlineSpinner size={40} />
+            <InlineSpinner size={15} />
           ) : (
             t.first.elements([
               `questionnaire/${context}/${
@@ -68,6 +73,11 @@ export default compose(withT)(
             ])
           )}
         </Button>
+        {showAnonymize && onSubmitAnonymized && (
+          <Button onClick={onSubmitAnonymized} disabled={updating || invalid}>
+            {t('questionnaire/submitanonym')}
+          </Button>
+        )}
         {invalid && !hideInvalid ? (
           <Interaction.P>{t('questionnaire/invalid')}</Interaction.P>
         ) : (
