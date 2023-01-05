@@ -38,7 +38,7 @@ const LandingPage = () => {
       <div {...styles.page} {...colorScheme.set('color', 'text')}>
         <div {...styles.imageWrapper}>
           <div {...styles.image}>
-            <ClimateLabLogo width={600} height={600} />
+            <ClimateLabLogo width={480} height={480} />
           </div>
         </div>
         <div {...styles.contentWrapper}>
