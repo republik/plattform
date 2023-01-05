@@ -1,16 +1,12 @@
 import { css } from 'glamor'
-import Image from 'next/image'
 import Link from 'next/link'
 import { fontStyles, mediaQueries, plainLinkRule } from '@project-r/styleguide'
 import { useTranslation } from '../../../lib/withT'
-import {
-  CLIMATE_LAB_IMG_URL,
-  CLIMATE_LAB_LANDINGPAGE_URL,
-  CLIMATE_LAB_ROLE,
-} from '../constants'
+import { CLIMATE_LAB_LANDINGPAGE_URL, CLIMATE_LAB_ROLE } from '../constants'
 import { climateColors } from '../config'
 import { useColorContext } from '@project-r/styleguide/src/components/Colors/ColorContext'
 import { useMe } from '../../../lib/context/MeContext'
+import ClimateLabLogo from '../shared/ClimateLabLogo'
 
 const ClimateLabInlineTeaser = () => {
   const { t } = useTranslation()
@@ -21,14 +17,7 @@ const ClimateLabInlineTeaser = () => {
   return (
     <section {...styles.root}>
       <div {...styles.image}>
-        <Image
-          src={CLIMATE_LAB_IMG_URL}
-          alt={t('Climate/Logo/altText')}
-          layout='fill'
-          width={80}
-          height={80}
-          style={{ objectFit: 'cover' }}
-        />
+        <ClimateLabLogo width={80} height={80} hideFigcaption />
       </div>
       <div {...styles.textWrapper}>
         <hr {...styles.hr} />

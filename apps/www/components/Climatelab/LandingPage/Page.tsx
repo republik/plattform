@@ -10,7 +10,6 @@ import { css } from 'glamor'
 
 import Frame from '../../Frame'
 import Counter from '../Counter'
-import Image from 'next/image'
 import ClimateLabTrialform from './ClimateLabTrialForm'
 import { useTranslation } from '../../../lib/withT'
 import { PUBLIC_BASE_URL } from '../../../lib/constants'
@@ -39,7 +38,7 @@ const LandingPage = () => {
       <div {...styles.page} {...colorScheme.set('color', 'text')}>
         <div {...styles.imageWrapper}>
           <div {...styles.image}>
-            <ClimateLabLogo width={600} height={600} />
+            <ClimateLabLogo width={480} height={480} />
           </div>
         </div>
         <div {...styles.contentWrapper}>
