@@ -4585,12 +4585,28 @@
       "value": "Karte speichern"
     },
     {
-      "key": "questionnaire/postcard/thankyou/resubmit",
-      "value": "Karte bearbeiten"
+      "key": "questionnaire/postcard/publish",
+      "value": "Abschicken"
+    },
+    {
+      "key": "questionnaire/submitanonym",
+      "value": "Anonym abschicken"
+    },
+    {
+      "key": "questionnaire/postcard/revoke",
+      "value": "Nochmals bearbeiten"
     },
     {
       "key": "questionnaire/climatepersonalinfo/submit",
       "value": "Speichern"
+    },
+    {
+      "key": "questionnaire/postcard/privacy/public",
+      "value": "Sie haben ein öffentliches Profil bei der Republik. Wenn Sie nicht möchten, dass Sie als Absenderin erkennbar sind, wählen Sie «Anonym abschicken»."
+    },
+    {
+      "key": "questionnaire/postcard/privacy/private",
+      "value": "Wenn Sie nicht möchten, dass Sie als Absenderin erkennbar sind, wählen Sie «Anonym abschicken»."
     },
     {
       "key": "package/PROLONG/title",
@@ -5658,7 +5674,7 @@
     },
     {
       "key": "Climatelab/Postcard/PostcardPreview/merci2",
-      "value": "Wir werden Ihnen bald die Gelegenheit geben, zu sehen, welche Postkarten andere Zeitreisende gewählt und was sie geschrieben haben."
+      "value": "Wir sammeln alle Postkarten und machen sie demnächst in einer Online-Galerie öffentlich, damit Sie sehen können, wie andere Zeitreisende die Zukunft erleben."
     },
     {
       "key": "Climatelab/Postcard/PostcardPreview/credit",
