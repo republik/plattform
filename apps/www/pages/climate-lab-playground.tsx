@@ -102,7 +102,7 @@ const usePostcardsData = (): PostcardsData => {
     const text = submission.answers.nodes?.[1]?.payload?.value
 
     const image = FigureImage.utils.getResizedSrcs(
-      `${CDN_FRONTEND_BASE_URL}${imageUrl}?size=1330x943`, // FIXME: use correct/consistent size for all images
+      `${CDN_FRONTEND_BASE_URL}${imageUrl}?size=1500x1057`, // FIXME: use correct/consistent size for all images
       undefined,
       300,
     )
