@@ -2,22 +2,25 @@ import React, { useMemo } from 'react'
 import { css } from 'glamor'
 import { useColorContext } from '@project-r/styleguide'
 import { CDN_FRONTEND_BASE_URL } from '../../../lib/constants'
+import AssetImage from '../../../lib/images/AssetImage'
+import assetServerImageLoader from '../../../lib/images/assetServerImageLoader'
 
 import { climateColors } from '../config'
 
 const styles = {
+  '& img': css({ display: 'block' }),
   image: css({
     cursor: 'pointer',
     borderWidth: '3px',
     borderStyle: 'solid',
     maxWidth: '100%',
-    objectFit: 'fill',
     borderRadius: '2px',
-    transition: 'box-shadow 0.3s ease-out',
+    transition: 'box-shadow 0.3s ease-out, border-color 0.2s ease-out',
     ':hover': {
       cursor: 'pointer',
       outline: 'none',
     },
+    '> span': { display: 'block !important' },
   }),
   input: css({
     cursor: 'pointer',
@@ -49,7 +52,7 @@ const BackgroundImage = ({ checked, disabled, imageUrl }) => {
     [colorScheme],
   )
   return (
-    <img
+    <div
       {...styles.image}
       {...hoverRule}
       {...colorScheme.set(
@@ -57,9 +60,10 @@ const BackgroundImage = ({ checked, disabled, imageUrl }) => {
         checked ? climateColors.light.default : '#FFF',
       )}
       {...(disabled ? styles.disabledImage : undefined)}
-      src={imageUrl}
       {...colorScheme.set('boxShadow', 'imageChoiceShadow')}
-    />
+    >
+      <AssetImage width='1200' height='840' src={imageUrl} />
+    </div>
   )
 }
 

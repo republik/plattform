@@ -1,16 +1,16 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { css } from 'glamor'
 
 import {
   fontFamilies,
   mediaQueries,
   useColorContext,
-  Interaction,
 } from '@project-r/styleguide'
 
 import { postcardCredits } from '../config'
 
 import { AutoTextSize } from 'auto-text-size'
+import AssetImage from '../../../lib/images/AssetImage'
 
 const styles = {
   postcard: css({
@@ -66,11 +66,10 @@ const styles = {
     alignSelf: 'flex-end',
   }),
   image: css({
-    display: 'block',
-    width: '100%',
     borderImage: 'url(/static/climatelab/border-image.png) 32 round',
     borderWidth: '8px',
     borderStyle: 'solid',
+    '> span': { display: 'block !important' },
   }),
   adressBlock: css({
     borderBottom: 'solid 1px #DADDDC',
@@ -145,7 +144,9 @@ export const PostcardPreview = (props) => {
 
 const PoststampComponent = ({ imageUrl }) => {
   return imageUrl ? (
-    <img {...styles.image} src={imageUrl} />
+    <div {...styles.image}>
+      <AssetImage width={'300'} height={'200'} src={imageUrl} />
+    </div>
   ) : (
     <div
       {...styles.image}
