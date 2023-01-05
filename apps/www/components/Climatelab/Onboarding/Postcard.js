@@ -68,6 +68,10 @@ const Postcard = (props) => {
           }}
         />
         <PostcardGenerator />
+        <Interaction.P>
+          {t('Climatelab/Postcard/PostcardPreview/merci2')}
+        </Interaction.P>
+        <br />
         {!postcard.userHasSubmitted && (
           <div {...styles.actions}>
             <Button block onClick={onContinue}>
