@@ -6,8 +6,6 @@ function assetServerImageLoader({
   width,
   quality = 75, // Quality is not yet supported by the assets-server
 }: ImageLoaderProps): string {
-  console.info('customImageLoader', src, width, quality)
-
   return `${CDN_FRONTEND_BASE_URL}${src}?resize=${width}x`
 }
 

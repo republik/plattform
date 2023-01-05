@@ -35,8 +35,6 @@ const ClimateTeaserContent = () => {
     }
   }
 
-  console.log('colorScheme', colorScheme)
-
   return (
     <div
       {...styles.wrapper}
