@@ -110,9 +110,6 @@ module.exports = withTM(
         },
       ]
     },
-    images: {
-      loader: 'custom',
-    },
     experimental: {
       largePageDataBytes: 512 * 1000, // 512KB
     },

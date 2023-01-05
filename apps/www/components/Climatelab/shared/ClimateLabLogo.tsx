@@ -24,7 +24,6 @@ const ClimateLabLogo = ({
         width={width}
         height={height}
         alt={t('Climate/Logo/altText')}
-        loader={assetServerImageLoader}
       />
       {!hideFigcaption && (
         <figcaption
