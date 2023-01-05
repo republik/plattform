@@ -2,6 +2,9 @@ import { withDefaultSSR } from '../lib/apollo/helpers'
 import { gql, useQuery } from '@apollo/client'
 import { FigureImage } from '@project-r/styleguide'
 import { CDN_FRONTEND_BASE_URL } from '../lib/constants'
+
+import { css } from 'glamor'
+
 /**
  * TODO: Filter out submissions which are not public
  * TODO: Resolve user profiles for linked
@@ -101,7 +104,7 @@ const usePostcardsData = (): PostcardsData => {
     const image = FigureImage.utils.getResizedSrcs(
       `${CDN_FRONTEND_BASE_URL}${imageUrl}?size=1330x943`, // FIXME: use correct/consistent size for all images
       undefined,
-      1500,
+      300,
     )
 
     return {
@@ -114,16 +117,26 @@ const usePostcardsData = (): PostcardsData => {
   return { _state: 'LOADED', postcards }
 }
 
-const PostcardsGrid = ({ postcards }: { postcards: Postcard[] }) => {
-  console.log(postcards)
+const gridStyles = {
+  container: css({
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fill,minmax(200px, 1fr))',
+    gridTemplateRows: 'auto',
+    gap: '1rem',
+  }),
+  card: css({
+    width: '100%',
+  }),
+}
 
+const PostcardsGrid = ({ postcards }: { postcards: Postcard[] }) => {
   return (
-    <div>
+    <div {...gridStyles.container}>
       {postcards.map((p) => {
         return (
-          <div key={p.id}>
-            {p.text}
-            <img {...p.image} />
+          <div key={p.id} {...gridStyles.card}>
+            {/* {p.text} */}
+            <img style={{ width: '100%' }} {...p.image} />
           </div>
         )
       })}
