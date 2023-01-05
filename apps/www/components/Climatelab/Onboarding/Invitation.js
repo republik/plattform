@@ -90,8 +90,8 @@ const Invitation = (props) => {
   return (
     <Section
       heading={t('Climatelab/Onboarding/Invitation/heading')}
-      isTicked={slotsUsed >= 3}
-      showContinue={slotsUsed >= 3}
+      isTicked={slotsUsed >= 1}
+      showContinue={slotsUsed >= 1}
       {...props}
     >
       <Fragment>
@@ -100,9 +100,10 @@ const Invitation = (props) => {
         </P>
         <Grants campaign={campaign} />
 
-        {slotsUsed < 3 && (
+        <Form campaign={campaign} grantAccess={grantAccess} />
+
+        {slotsUsed < 1 && (
           <>
-            <Form campaign={campaign} grantAccess={grantAccess} />
             <div {...styles.actions}>
               <Button block onClick={onContinue}>
                 {t('Onboarding/Sections/Profile/button/continue', null, '')}
