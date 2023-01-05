@@ -16,12 +16,13 @@ const ClimateLabLogo = ({
   const { t } = useTranslation()
 
   return (
-    <figure style={{ position: 'relative' }}>
+    <figure style={{ position: 'relative', margin: 0 }}>
       <Image
         src={CLIMATE_LAB_IMG_URL}
         width={width}
         height={height}
         alt={t('Climate/Logo/altText')}
+        unoptimized
       />
       {!hideFigcaption && (
         <figcaption
@@ -29,7 +30,6 @@ const ClimateLabLogo = ({
             position: 'absolute',
             bottom: '-0.75rem',
             right: '15%',
-            //transform: `translateX(${width * 0.2}px`,
             fontSize: '0.75rem',
           }}
         >

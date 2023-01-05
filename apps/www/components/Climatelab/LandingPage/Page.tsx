@@ -117,10 +117,10 @@ const styles = {
   image: css({
     height: 'auto',
     objectFit: 'contain',
-    width: '80%',
+    maxWidth: '480px',
+    width: '100%',
     margin: '0 auto',
     [mediaQueries.mUp]: {
-      width: '35vw',
       position: 'sticky',
       top: '15vh',
     },
