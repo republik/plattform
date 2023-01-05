@@ -37,7 +37,6 @@ const styles = {
   }),
 }
 
-// @TODO
 const SubmittedPostcard = (props) => {
   const { questionnaire, onRevoke } = props
   const { t } = useTranslation()
