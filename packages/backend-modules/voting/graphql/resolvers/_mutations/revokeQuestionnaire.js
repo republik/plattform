@@ -17,6 +17,8 @@ module.exports = async (_, { id: questionnaireId }, context) => {
     }
 
     const queryParams = { questionnaireId, userId: me.id }
+
+    // @TODO see if submission was anonymized
     const submission =
       await transaction.public.questionnaireSubmissions.findOne(queryParams)
 
