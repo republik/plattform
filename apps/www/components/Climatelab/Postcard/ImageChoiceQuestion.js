@@ -249,7 +249,7 @@ const ImageChoiceQuestion = (props) => {
                 checked={userAnswerValues.some((v) => v === o.value)}
                 imageUrl={o.imageUrl}
               />
-              <label style={{ marginTop: '5px', fontSize: '0.9rem' }}>
+              <label style={{ marginTop: '10px', fontSize: '0.9rem' }}>
                 {o.label}
               </label>
             </div>
