@@ -1,9 +1,13 @@
+import { useRef, useEffect } from 'react'
+
 import { QuestionnaireWithData } from '../../Questionnaire/Questionnaire'
 import { PostcardPreview } from './PostcardPreview'
 
 import { css } from 'glamor'
 
 import { useTranslation } from '../../../lib/withT'
+
+import scrollIntoView from 'scroll-into-view'
 
 import {
   mediaQueries,
@@ -37,9 +41,14 @@ const styles = {
 const SubmittedPostcard = (props) => {
   const { questionnaire, onRevoke } = props
   const { t } = useTranslation()
+  const postcardRef = useRef()
+
+  useEffect(() => {
+    scrollIntoView(postcardRef.current)
+  }, [])
 
   return (
-    <div style={{ marginTop: '50px' }}>
+    <div style={{ marginTop: '50px' }} ref={postcardRef}>
       <PostcardPreview postcard={questionnaire} t={t} />
 
       {onRevoke && (
