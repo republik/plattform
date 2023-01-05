@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import AssetImage from '../../../lib/images/AssetImage'
 import assetServerImageLoader from '../../../lib/images/assetServerImageLoader'
 import { useTranslation } from '../../../lib/withT'
 import { CLIMATE_LAB_IMG_URL } from '../constants'
@@ -18,7 +19,7 @@ const ClimateLabLogo = ({
 
   return (
     <figure style={{ position: 'relative', margin: 0 }}>
-      <Image
+      <AssetImage
         src={CLIMATE_LAB_IMG_URL}
         width={width}
         height={height}
