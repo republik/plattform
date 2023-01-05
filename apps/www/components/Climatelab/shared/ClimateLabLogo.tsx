@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import assetServerImageLoader from '../../../lib/images/assetServerImageLoader'
 import { useTranslation } from '../../../lib/withT'
 import { CLIMATE_LAB_IMG_URL } from '../constants'
 
@@ -22,7 +23,7 @@ const ClimateLabLogo = ({
         width={width}
         height={height}
         alt={t('Climate/Logo/altText')}
-        unoptimized
+        loader={assetServerImageLoader}
       />
       {!hideFigcaption && (
         <figcaption
