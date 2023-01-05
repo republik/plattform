@@ -4,6 +4,7 @@ import { FigureImage } from '@project-r/styleguide'
 import { CDN_FRONTEND_BASE_URL } from '../lib/constants'
 
 import { css } from 'glamor'
+import { useMemo } from 'react'
 
 /**
  * TODO: Filter out submissions which are not public
@@ -60,6 +61,7 @@ type ImageSrcData = {
 type Postcard = {
   id: string
   text: string
+  isHighlighted: boolean
   image: ImageSrcData
   // profileInfo: TODO
 }
@@ -104,7 +106,7 @@ const usePostcardsData = (): PostcardsData => {
     const image = FigureImage.utils.getResizedSrcs(
       `${CDN_FRONTEND_BASE_URL}${imageUrl}?size=1500x1057`, // FIXME: use correct/consistent size for all images
       undefined,
-      300,
+      1500,
     )
 
     return {
@@ -117,15 +119,52 @@ const usePostcardsData = (): PostcardsData => {
   return { _state: 'LOADED', postcards }
 }
 
+const useMockPostcardsData = (): PostcardsData => {
+  const images = [
+    '/static/climatelab/freier.jpg',
+    '/static/climatelab/farner.jpg',
+    '/static/climatelab/richardson.jpg',
+    '/static/climatelab/zalko.jpg',
+  ]
+
+  const postcards = useMemo(() => {
+    return Array.from({ length: 50 }, (_, i) => {
+      const imageUrl = images[Math.floor(Math.random() * 4)]
+      const isHighlighted = Math.random() < 0.2
+      return {
+        id: `img-${i}`,
+        text: 'Lorem ipsum dolor sit amet consectetur adipisicing elit.',
+        isHighlighted,
+        image: FigureImage.utils.getResizedSrcs(
+          `${CDN_FRONTEND_BASE_URL}${imageUrl}?size=1500x1057`, // FIXME: use correct/consistent size for all images
+          undefined,
+          1500,
+        ),
+      }
+    })
+  }, [])
+
+  return { _state: 'LOADED', postcards }
+}
+
 const gridStyles = {
   container: css({
     display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fill,minmax(200px, 1fr))',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(100px, 1fr))',
     gridTemplateRows: 'auto',
+    gridAutoFlow: 'row dense',
     gap: '1rem',
   }),
   card: css({
+    background: 'black',
     width: '100%',
+  }),
+  highlightedCard: css({
+    background: 'black',
+    width: '100%',
+    // border: '2px solid pink',
+    gridRowEnd: 'span 2',
+    gridColumnEnd: 'span 2',
   }),
 }
 
@@ -133,10 +172,16 @@ const PostcardsGrid = ({ postcards }: { postcards: Postcard[] }) => {
   return (
     <div {...gridStyles.container}>
       {postcards.map((p) => {
+        const cardStyle = p.isHighlighted
+          ? gridStyles.highlightedCard
+          : gridStyles.card
         return (
-          <div key={p.id} {...gridStyles.card}>
+          <div key={p.id} {...cardStyle}>
             {/* {p.text} */}
-            <img style={{ width: '100%' }} {...p.image} />
+            <img
+              style={{ width: '100%', objectFit: 'cover', height: '100%' }}
+              {...p.image}
+            />
           </div>
         )
       })}
@@ -145,7 +190,8 @@ const PostcardsGrid = ({ postcards }: { postcards: Postcard[] }) => {
 }
 
 function PlaygroundPage() {
-  const postcardsData = usePostcardsData()
+  // const postcardsData = usePostcardsData()
+  const postcardsData = useMockPostcardsData()
 
   return postcardsData._state === 'LOADED' ? (
     <PostcardsGrid postcards={postcardsData.postcards} />
