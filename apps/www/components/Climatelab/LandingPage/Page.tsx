@@ -39,7 +39,7 @@ const LandingPage = () => {
       <div {...styles.page} {...colorScheme.set('color', 'text')}>
         <div {...styles.imageWrapper}>
           <div {...styles.image}>
-            <ClimateLabLogo width={800} height={800} />
+            <ClimateLabLogo width={600} height={600} />
           </div>
         </div>
         <div {...styles.contentWrapper}>
@@ -118,11 +118,12 @@ const styles = {
     height: 'auto',
     objectFit: 'contain',
     maxWidth: '480px',
-    width: '100%',
+    width: '90%',
     margin: '0 auto',
     [mediaQueries.mUp]: {
       position: 'sticky',
       top: '15vh',
+      width: '100%',
     },
   }),
   contentWrapper: css({
