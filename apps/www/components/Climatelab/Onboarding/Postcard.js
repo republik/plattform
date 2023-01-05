@@ -1,4 +1,3 @@
-import { Fragment } from 'react'
 import { css } from 'glamor'
 import { gql } from '@apollo/client'
 

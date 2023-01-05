@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect, useMemo } from 'react'
 import { css } from 'glamor'
 import questionStyles from './../../Questionnaire/questionStyles'
-import { nest } from 'd3-collection'
 import uuid from 'uuid/v4'
 import { Loader } from '@project-r/styleguide'
 import scrollIntoView from 'scroll-into-view'

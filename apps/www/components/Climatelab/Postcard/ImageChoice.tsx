@@ -1,9 +1,7 @@
 import React, { useMemo } from 'react'
 import { css } from 'glamor'
 import { useColorContext } from '@project-r/styleguide'
-import { CDN_FRONTEND_BASE_URL } from '../../../lib/constants'
 import AssetImage from '../../../lib/images/AssetImage'
-import assetServerImageLoader from '../../../lib/images/assetServerImageLoader'
 
 import { climateColors } from '../config'
 

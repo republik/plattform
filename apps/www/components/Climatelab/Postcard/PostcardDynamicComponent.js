@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { Interaction, A } from '@project-r/styleguide'
 
 import PostcardGenerator from './PostcardGenerator'

@@ -1,16 +1,14 @@
-import React from 'react'
 import { css } from 'glamor'
+import { AutoTextSize } from 'auto-text-size'
 
 import {
   fontFamilies,
   mediaQueries,
   useColorContext,
 } from '@project-r/styleguide'
+import AssetImage from '../../../lib/images/AssetImage'
 
 import { postcardCredits } from '../config'
-
-import { AutoTextSize } from 'auto-text-size'
-import AssetImage from '../../../lib/images/AssetImage'
 
 const styles = {
   postcard: css({
