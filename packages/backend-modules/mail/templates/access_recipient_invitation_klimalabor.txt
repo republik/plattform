@@ -18,9 +18,11 @@ Und uns eine Nachricht für Sie mitgegeben:
 Schauen Sie gerne vorbei auf www.republik.ch/willkommen-zum-klimalabor
 {{frontend_base_url}}/willkommen-zum-klimalabor . Wir freuen uns auf Sie.
 
-Ihr Klimalabor-Team:
+Ihr Klimalabor-Team
 
 David Bauer, Elia Blülle, Theresa Leisgang
+
+klimalabor@republik.ch
 
 
 Republik AG
