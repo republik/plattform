@@ -110,7 +110,7 @@ export const PostcardPreview = (props) => {
     imageOptions.filter((d) => d.value === imageSelection)[0]?.imageUrl
 
   if (userHasSubmitted && !imageSelection && !postcardText) {
-    return <div>XXX Postkarte verschickt, anonymisiert.</div>
+    return null
   }
 
   return (
@@ -121,7 +121,7 @@ export const PostcardPreview = (props) => {
       <div {...styles.credit}>
         {' '}
         {t('Climatelab/Postcard/PostcardPreview/credit', {
-          credit: postcardCredits[imageSelection],
+          credit: postcardCredits[imageSelection] || ' ...',
         })}
       </div>
 
@@ -144,5 +144,12 @@ export const PostcardPreview = (props) => {
 }
 
 const PoststampComponent = ({ imageUrl }) => {
-  return <img {...styles.image} src={imageUrl} />
+  return imageUrl ? (
+    <img {...styles.image} src={imageUrl} />
+  ) : (
+    <div
+      {...styles.image}
+      style={{ height: '4rem', aspectRatio: '4 / 3' }}
+    ></div>
+  )
 }

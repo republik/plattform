@@ -43,17 +43,14 @@ const SubmittedPostcard = (props) => {
       <PostcardPreview postcard={questionnaire} t={t} />
 
       {onRevoke && (
-        <Button onClick={() => onRevoke()}>Nope, zurückziehen! Nochmal.</Button>
+        <Button onClick={() => onRevoke()}>
+          {t('questionnaire/postcard/revoke')}
+        </Button>
       )}
 
-      <div style={{ marginTop: '20px' }}>
+      <div style={{ margin: '20px 0' }}>
         <Interaction.P>
           {t('Climatelab/Postcard/PostcardPreview/merci1')}
-        </Interaction.P>
-        <br />
-        <br />
-        <Interaction.P>
-          {t('Climatelab/Postcard/PostcardPreview/merci2')}
         </Interaction.P>
       </div>
     </div>
@@ -70,6 +67,7 @@ const PostcardGenerator = () => (
       hideReset
       requireName={false}
       SubmittedComponent={SubmittedPostcard}
+      showAnonymize
     />
   </div>
 )
