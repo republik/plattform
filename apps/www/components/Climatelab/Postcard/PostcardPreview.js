@@ -93,7 +93,11 @@ export const PostcardPreview = (props) => {
   const [colorScheme] = useColorContext()
 
   if (!postcard) return null
+
   const { questions, userHasSubmitted } = postcard
+
+  if (!userHasSubmitted) return null
+
   const imageOptions = questions && questions[0].options
   const imageSelection =
     questions[0].userAnswer && questions[0].userAnswer.payload.value[0]
@@ -105,37 +109,37 @@ export const PostcardPreview = (props) => {
     imageOptions &&
     imageOptions.filter((d) => d.value === imageSelection)[0]?.imageUrl
 
+  if (userHasSubmitted && !imageSelection && !postcardText) {
+    return <div>XXX Postkarte verschickt, anonymisiert.</div>
+  }
+
   return (
-    userHasSubmitted && (
-      <>
-        <div
-          {...styles.postcard}
-          {...colorScheme.set('boxShadow', 'imageChoiceShadow')}
-        >
-          <div {...styles.credit}>
-            {' '}
-            {t('Climatelab/Postcard/PostcardPreview/credit', {
-              credit: postcardCredits[imageSelection],
-            })}
-          </div>
+    <div
+      {...styles.postcard}
+      {...colorScheme.set('boxShadow', 'imageChoiceShadow')}
+    >
+      <div {...styles.credit}>
+        {' '}
+        {t('Climatelab/Postcard/PostcardPreview/credit', {
+          credit: postcardCredits[imageSelection],
+        })}
+      </div>
 
-          <div {...styles.textArea}>
-            <AutoTextSize mode='box'>{postcardText}</AutoTextSize>
-          </div>
+      <div {...styles.textArea}>
+        <AutoTextSize mode='box'>{postcardText}</AutoTextSize>
+      </div>
 
-          <div {...styles.rightSide}>
-            <div {...styles.poststampContainer}>
-              <PoststampComponent imageUrl={imageUrl} />
-            </div>
-            <div {...styles.adressBlockContainer}>
-              <div {...styles.adressBlock} />
-              <div {...styles.adressBlock} />
-              <div {...styles.adressBlock} />
-            </div>
-          </div>
+      <div {...styles.rightSide}>
+        <div {...styles.poststampContainer}>
+          <PoststampComponent imageUrl={imageUrl} />
         </div>
-      </>
-    )
+        <div {...styles.adressBlockContainer}>
+          <div {...styles.adressBlock} />
+          <div {...styles.adressBlock} />
+          <div {...styles.adressBlock} />
+        </div>
+      </div>
+    </div>
   )
 }
 

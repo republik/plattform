@@ -1246,7 +1246,7 @@
     },
     {
       "key": "Account/Access/Campaigns/Form/input/message/label",
-      "value": "Persönliche Nachricht"
+      "value": "Persönliche Nachricht (optional)"
     },
     {
       "key": "Account/Access/Campaigns/Form/input/message/tooLong",

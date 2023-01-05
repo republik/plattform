@@ -60,19 +60,13 @@ const Postcard = (props) => {
       {...props}
     >
       <>
-        {!postcard.userHasSubmitted && (
-          <RawHtml
-            {...styles.p}
-            type={Interaction.P}
-            dangerouslySetInnerHTML={{
-              __html: t(
-                ['Climatelab/Onboarding/Postcard/paragraph1'],
-                null,
-                '',
-              ),
-            }}
-          />
-        )}
+        <RawHtml
+          {...styles.p}
+          type={Interaction.P}
+          dangerouslySetInnerHTML={{
+            __html: t(['Climatelab/Onboarding/Postcard/paragraph1'], null, ''),
+          }}
+        />
         <PostcardGenerator />
         {!postcard.userHasSubmitted && (
           <div {...styles.actions}>

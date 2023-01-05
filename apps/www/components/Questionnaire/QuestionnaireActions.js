@@ -24,6 +24,7 @@ export default compose(withT)(
   ({
     t,
     onSubmit,
+    onSubmitAnonymized,
     onReset,
     isResubmitAnswers,
     updating,
@@ -39,7 +40,7 @@ export default compose(withT)(
           <div style={{ marginBottom: 10 }}>
             <Label>
               {t(
-                `questionnaire/privacy/${
+                `questionnaire/${context}/privacy/${
                   me?.hasPublicProfile ? 'public' : 'private'
                 }`,
               )}
@@ -68,6 +69,11 @@ export default compose(withT)(
             ])
           )}
         </Button>
+        {onSubmitAnonymized && (
+          <Button onClick={onSubmitAnonymized} disabled={updating || invalid}>
+            Anonymisiert abschicken
+          </Button>
+        )}
         {invalid && !hideInvalid ? (
           <Interaction.P>{t('questionnaire/invalid')}</Interaction.P>
         ) : (
