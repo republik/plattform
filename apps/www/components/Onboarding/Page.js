@@ -287,12 +287,23 @@ class Page extends Component {
         if (nextIndex < this.sections.length) {
           sectionIndex = nextIndex
         } else {
-          this.setState({
-            expandedSection: null,
-            hasOnceVisitedAll: this.sections.every(
-              (section) => !!section.visited,
-            ),
-          })
+          this.setState(
+            {
+              expandedSection: null,
+              hasOnceVisitedAll: this.sections.every(
+                (section) => !!section.visited,
+              ),
+            },
+            () => {
+              const { top } =
+                this.sections[sectionIndex].ref.current.getBoundingClientRect()
+              const { pageYOffset } = window
+
+              const target = pageYOffset + top - HEADER_HEIGHT * 1.2
+
+              scrollIt(target, 400)
+            },
+          )
 
           return
         }
@@ -306,6 +317,7 @@ class Page extends Component {
           const { pageYOffset } = window
 
           const target = pageYOffset + top - HEADER_HEIGHT * 1.2
+
           scrollIt(target, 400)
         },
       )
