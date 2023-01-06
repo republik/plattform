@@ -514,7 +514,7 @@ class Page extends Component {
 }
 
 const OnboardingHeader = ({ children, ...props }) => {
-  if (props.context === 'climate') {
+  if (props?.context === 'climate') {
     return (
       <div {...styles.imageWrapper}>
         <div {...styles.image}>
