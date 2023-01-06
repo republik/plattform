@@ -1,11 +1,12 @@
 import { css } from 'glamor'
 import {
   useColorContext,
+  plainLinkRule,
   fontStyles,
   mediaQueries,
 } from '@project-r/styleguide'
+import NextLink from 'next/link'
 import { useTranslation } from '../../../lib/withT'
-import Button from '../shared/Button'
 import { climateColors } from '../config'
 import OptionalLocalColorContext from '../../Frame/OptionalLocalColorContext'
 import { useMe } from '../../../lib/context/MeContext'
@@ -40,13 +41,27 @@ const ClimateTeaserContent = () => {
           })}
         </h3>
         <div style={{ maxWidth: 'max-content' }}>
-          <Button
+          <NextLink
             href={
               isClimateLabMember ? CLIMATE_LAB_URL : CLIMATE_LAB_LANDINGPAGE_URL
             }
+            passHref
           >
-            {t('ClimateTeaser/content/buttonAction')}
-          </Button>
+            <a
+              {...colorScheme.set('backgroundColor', 'primary')}
+              {...colorScheme.set('color', 'climateButtonText')}
+              {...colorScheme.set('borderColor', 'climateBorder')}
+              {...css({
+                ':hover': {
+                  backgroundColor: colorScheme.getCSSColor('primaryHover'),
+                },
+              })}
+              {...plainLinkRule}
+              {...styles.button}
+            >
+              {t('ClimateTeaser/content/buttonAction')}
+            </a>
+          </NextLink>
         </div>
       </div>
     </div>
@@ -100,6 +115,21 @@ const styles = {
     },
     [frontTabletBreakpoint]: {
       fontSize: 80,
+    },
+  }),
+  button: css({
+    ...fontStyles.sansSerifBold,
+    fontSize: 20,
+    boxSizing: 'border-box',
+    padding: '12px 16px',
+    borderWidth: 1,
+    borderStyle: 'solid',
+    borderRadius: 8,
+    [mediaQueries.mUp]: {
+      fontSize: 25,
+    },
+    [frontTabletBreakpoint]: {
+      fontSize: 30,
     },
   }),
 }
