@@ -5,7 +5,7 @@ import withT from '../../lib/withT'
 import UsernameField from './UsernameField'
 import Link from 'next/link'
 
-const Settings = ({ user, isEditing, onChange, values, errors, dirty, t }) => {
+const Settings = ({ user, isEditing, onChange, values, errors, t }) => {
   if (!isEditing) {
     return null
   }
@@ -66,7 +66,7 @@ export const ListedCheckbox = withT(({ user, values, onChange, t }) => (
     </Checkbox>
     <br style={{ clear: 'left' }} />
     <Label>
-      {t.elements(`profile/settings/isListed/${!!values.isListed}/note`, {
+      {t(`profile/settings/isListed/${!!values.isListed}/note`, {
         communityLink: (
           <Link key='communityLink' href='/community' passHref>
             <A target='_blank'>{t('profile/settings/privacy/communityLink')}</A>

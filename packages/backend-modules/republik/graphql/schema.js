@@ -26,6 +26,7 @@ type queries {
   membershipStats: MembershipStats!
   memberStats: MemberStats!
   revenueStats: RevenueStats!
+  roleStats(role: String!): RoleStats!
 }
 
 type mutations {

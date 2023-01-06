@@ -203,6 +203,10 @@ type MemberStats {
   count: Int!
 }
 
+type RoleStats {
+  count: Int
+}
+
 type MonthlyMembershipStat {
   day: Date!
   newCount: Int!

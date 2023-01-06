@@ -36,6 +36,12 @@ function createApolloClient(
     ssrMode: !isClient,
     cache: new InMemoryCache({
       typePolicies: {
+        queries: {
+          queryType: true,
+        },
+        mutations: {
+          mutationType: true,
+        },
         // Since Meta doesn't have a key-field, update cached data
         // Source: https://www.apollographql.com/docs/react/caching/cache-field-behavior/#merging-non-normalized-objects
         Meta: {

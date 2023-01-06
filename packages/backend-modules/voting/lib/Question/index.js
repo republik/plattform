@@ -21,6 +21,8 @@ const validateAnswer = async (value, question, context, payload) => {
       return validateDocument(value, question, context, payload) // async
     case 'Choice':
       return validateChoice(value, question, context)
+    case 'ImageChoice':
+      return validateChoice(value, question, context)
     default:
       throw new Error(
         t('api/questionnaire/question/type/404', { type: question.type }),
@@ -66,6 +68,9 @@ const resultForArchive = async (question, args, context) => {
       payload = await resultDocument(question, args, context)
       break
     case 'Choice':
+      payload = await resultChoice(question, args, context)
+      break
+    case 'ImageChoice':
       payload = await resultChoice(question, args, context)
       break
   }

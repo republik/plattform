@@ -144,6 +144,10 @@ const ElectionResultDiversity = dynamic(
     ssr: false,
   },
 )
+const ClimateLabCounter = dynamic(() => import('../Climatelab/Counter'), {
+  loading: LoadingComponent,
+  ssr: false,
+})
 const Questionnaire = dynamic(
   () =>
     import('../Questionnaire/Questionnaire').then(
@@ -154,11 +158,26 @@ const Questionnaire = dynamic(
     ssr: false,
   },
 )
+const ClimateLabInlineTeaser = dynamic(
+  () => import('../Climatelab/InlineTeaser/ClimateLabInlineTeaser'),
+  {
+    loading: LoadingComponent,
+    ssr: false,
+  },
+)
 
 const QuestionnaireSubmissions = dynamic(
   () => import('../Questionnaire/Submissions'),
   {
     loading: LoadingComponent,
+  },
+)
+
+const Postcard = dynamic(
+  () => import('../Climatelab/Postcard/PostcardDynamicComponent'),
+  {
+    loading: LoadingComponent,
+    ssr: false,
   },
 )
 
@@ -387,6 +406,9 @@ const ArticlePage = ({
           QUESTIONNAIRE: Questionnaire,
           QUESTIONNAIRE_SUBMISSIONS: QuestionnaireSubmissions,
           NEWSLETTER_SIGNUP: NewsletterSignUpDynamic,
+          CLIMATE_LAB_COUNTER: ClimateLabCounter,
+          CLIMATE_LAB_INLINE_TEASER: ClimateLabInlineTeaser,
+          POSTCARD: Postcard,
         },
         titleMargin: false,
         titleBreakout,
@@ -594,6 +616,13 @@ const ArticlePage = ({
             hasNewsletterUtms ||
             (router.query.utm_source && router.query.utm_source === 'flyer-v1')
 
+          // For this proof of concept I chose to show the climate paynote
+          // only at the bottom. This could/should be evaluated.
+          // We could also suppress the second paynote. (Code commented below.)
+          // I wouldn't show both, since it's a very big paynote,
+          // and the text would be the same twice.
+          // const suppressSecondPayNote = climatePaynote
+
           const payNote = (
             <PayNote
               seed={payNoteSeed}
@@ -607,7 +636,9 @@ const ArticlePage = ({
               Wrapper={isFlyer ? FlyerWrapper : undefined}
             />
           )
+
           const payNoteAfter =
+            // !suppressSecondPayNote &&
             payNote && cloneElement(payNote, { position: 'after' })
 
           const ownDiscussion = meta.ownDiscussion

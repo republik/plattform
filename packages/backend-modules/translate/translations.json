@@ -1181,6 +1181,10 @@
       "value": "Einladung von {granterName}"
     },
     {
+      "key": "api/access/email/recipient/invitation_klimalabor/subject",
+      "value": "Einladung zum Klimalabor der Republik"
+    },
+    {
       "key": "api/access/email/recipient/invitation_kampa202202/subject",
       "value": "Einladung von {granterName} für acht Wochen Republik"
     },
@@ -1195,6 +1199,10 @@
     {
       "key": "api/access/email/recipient/onboarding_kampa202202/subject",
       "value": "Ihr Republik-Probezugang: Willkommen!"
+    },
+    {
+      "key": "api/access/email/recipient/onboarding_klimalabor/subject",
+      "value": "Willkommen im Klimalabor"
     },
     {
       "key": "api/access/email/recipient/onboarding_gifted_membership/subject",
