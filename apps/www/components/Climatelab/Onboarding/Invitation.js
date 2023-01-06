@@ -80,9 +80,13 @@ const Invitation = (props) => {
   const { grantAccess, onContinue } = props
   const { t } = useTranslation()
 
-  const campaign = props.user.accessCampaigns.filter(
+  const campaign = props.user.accessCampaigns?.filter(
     (campaign) => campaign.id === '672cc127-f3a0-40ee-b000-9aa560aae697', // climate lab invitation campaign
   )[0]
+
+  if (!campaign) {
+    return null
+  }
 
   const slotsUsed = campaign.slots.used
 
