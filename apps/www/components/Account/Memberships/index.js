@@ -26,8 +26,6 @@ const AccountBox = ({ children }) => {
   return <Box style={{ padding: 14, marginBottom: 20 }}>{children}</Box>
 }
 
-/* const grantTranslationContext = [{}]
- */
 const Memberships = ({
   loading,
   error,
@@ -35,7 +33,6 @@ const Memberships = ({
   hasMemberships,
   hasActiveMemberships,
   hasAccessGrants,
-  hasRegularAccessGrants,
   paymentMethodCompany,
 }) => {
   const { query } = useRouter()
@@ -58,16 +55,11 @@ const Memberships = ({
       render={() => {
         return (
           <>
-            {hasRegularAccessGrants && !hasActiveMemberships && (
+            {hasAccessGrants && !hasActiveMemberships && (
               <AccountBox>
                 <AccessGrants />
               </AccountBox>
             )}
-            {/* {hasAccessGrants && !hasRegularAccessGrants && (
-              <AccountBox>
-                
-              </AccountBox>
-            )} */}
             {!hasAccessGrants && !hasMemberships && (
               <AccountBox>
                 <UserGuidance />
@@ -112,12 +104,6 @@ export default compose(
         data.me.memberships.find((m) => m.type.name === 'MONTHLY_ABO')
       const hasAccessGrants =
         isReady && data.me.accessGrants && !!data.me.accessGrants.length
-      const hasRegularAccessGrants =
-        isReady &&
-        data.me.accessGrants &&
-        !!data.me.accessGrants.filter(
-          (grant) => grant.campaign.type === 'REGULAR',
-        ).length
       const autoPayMembership =
         (hasMemberships &&
           data.me.memberships.find(
@@ -136,7 +122,6 @@ export default compose(
         hasMemberships,
         hasActiveMemberships,
         hasAccessGrants,
-        hasRegularAccessGrants,
         paymentMethodCompany,
       }
     },

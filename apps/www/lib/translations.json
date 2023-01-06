@@ -1185,6 +1185,10 @@
       "value": "Ein eigenes Abonnement kaufen"
     },
     {
+      "key": "Account/Access/Grants/REDUCED/message/claimed",
+      "value": "Als Dankeschön fürs Mitmachen im «{campaignTitle}» haben Sie bis am {maxEndAt} vollen Zugriff auf alle Inhalte der Republik."
+    },
+    {
       "key": "Account/Access/Campaigns/title",
       "value": "Republik teilen"
     },

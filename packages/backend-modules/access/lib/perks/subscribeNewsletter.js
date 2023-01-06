@@ -19,7 +19,7 @@ const give = async (
   await saveConsents({
     userId: recipient.id,
     consents: [name],
-    req: {}, // ip is not needed to save consent, but req has not to be undefined
+    req: {}, // ip is not needed to save consent, but req must not be undefined
     pgdb,
   })
 
