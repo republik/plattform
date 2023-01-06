@@ -34,7 +34,7 @@ const ClimateTeaserContent = () => {
         <ClimateLabLogo width={480} height={480} />
       </div>
       <div {...styles.content} {...colorScheme.set('color', 'text')}>
-        <h3 {...styles.text}>
+        <h3 {...styles.title}>
           {t.elements('ClimateTeaser/content/text1', {
             br1: <br key='1' />,
             br2: <br key='2' />,
@@ -76,7 +76,8 @@ const ClimateLabTeaser = () => (
 
 export default ClimateLabTeaser
 
-const frontTabletBreakpoint = '@media only screen and (min-width: 1850px)'
+export const climateLabTeaserXlBreakpoint =
+  '@media only screen and (min-width: 1850px)'
 
 const styles = {
   wrapper: css({
@@ -103,7 +104,7 @@ const styles = {
     flexDirection: 'column',
     alignItems: 'center',
   }),
-  text: css({
+  title: css({
     ...fontStyles.serifTitle,
     fontSize: 38,
     lineHeight: '1.3em',
@@ -113,7 +114,7 @@ const styles = {
     [mediaQueries.mUp]: {
       fontSize: 58,
     },
-    [frontTabletBreakpoint]: {
+    [climateLabTeaserXlBreakpoint]: {
       fontSize: 80,
     },
   }),
@@ -128,7 +129,7 @@ const styles = {
     [mediaQueries.mUp]: {
       fontSize: 25,
     },
-    [frontTabletBreakpoint]: {
+    [climateLabTeaserXlBreakpoint]: {
       fontSize: 30,
     },
   }),
