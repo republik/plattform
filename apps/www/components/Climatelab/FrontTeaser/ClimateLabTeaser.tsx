@@ -30,7 +30,7 @@ const ClimateTeaserContent = () => {
       {...colorScheme.set('color', 'text')}
     >
       <div {...styles.imgWrapper}>
-        <ClimateLabLogo width={600} height={600} />
+        <ClimateLabLogo width={480} height={480} />
       </div>
       <div {...styles.content} {...colorScheme.set('color', 'text')}>
         <h3 {...styles.text}>
