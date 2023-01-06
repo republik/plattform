@@ -53,10 +53,7 @@ const Marketing = ({
       <ColorContextProvider colorSchemeKey='dark'>
         <Top carouselData={data.carousel} />
       </ColorContextProvider>
-      {/*
-        TODO: add on 09.01.2023
-        <ClimateLabTeaser />
-      */}
+      <ClimateLabTeaser />
       <Carpet loading={loading} front={data.carpet} />
       <Reasons inNativeApp={inNativeApp} />
       {inNativeApp && <MarketingTrialForm />}
