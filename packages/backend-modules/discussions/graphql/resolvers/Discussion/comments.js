@@ -263,6 +263,29 @@ const getResolveOrderBy = (defaultOrder, orderBy, comments) => {
     : 'DATE'
 }
 
+const visit = (comment, visitor) => {
+  visitor?.(comment)
+
+  if (comment?.nodes) {
+    comment?.nodes?.forEach((comment) => visit(comment, visitor))
+  }
+}
+
+const complementTree = async (comments, context) => {
+  const stack = []
+
+  visit(comments, (comment) => {
+    stack.push(async () => {
+      Object.assign(
+        comment,
+        await context.loaders.Comment.byId.load(comment.id),
+      )
+    })
+  })
+
+  await Promise.all(stack.map((fn) => fn()))
+}
+
 module.exports = async (discussion, args, context, info) => {
   const { pgdb, loaders } = context
   const requestedGraphqlFields = graphqlFields(info)
@@ -310,31 +333,34 @@ module.exports = async (discussion, args, context, info) => {
     }
   }
 
-  const commentsQuery = [
-    `SELECT c.*`,
-    `FROM comments c`,
-    tag && `LEFT JOIN comments cr ON cr.id = (c."parentIds"->>0)::uuid`,
-    `WHERE c."discussionId" = :discussionId`,
-    tag && `AND (c.tags @> '"${tag}"' OR cr.tags @> '"${tag}"')`,
+  // query to load comments partially, including only fields necessary
+  // to sort and build tree
+  const fields = [
+    'c.id',
+    'c."parentIds"',
+    'c.hotness',
+    'c.depth',
+    'c."createdAt"',
+    'c."featuredAt"',
+    'c."upVotes" - c."downVotes" score',
+    'c."published" = TRUE AND c."adminUnpublished" = FALSE "isPublished"',
   ]
-    .filter(Boolean)
-    .join(' ')
 
-  // get comments
-  const comments = await pgdb
-    .query(commentsQuery, { discussionId: discussion.id })
-    .then((comments) =>
-      comments.map((c) => ({
-        // precompute
-        ...c,
-        score: c.upVotes - c.downVotes,
-        isPublished: c.published && !c.adminUnpublished,
-      })),
-    )
+  // fetch comment stubs
+  const partials = await pgdb.query(
+    [
+      `SELECT ${fields.join(', ')}`,
+      'FROM comments c',
+      tag && 'LEFT JOIN comments cr ON cr.id = (c."parentIds"->>0)::uuid',
+      'WHERE c."discussionId" = :discussionId',
+      tag && `AND (c.tags @> '"${tag}"' OR cr.tags @> '"${tag}"')`,
+    ]
+      .filter(Boolean)
+      .join(' '),
+    { discussionId: discussion.id },
+  )
 
-  const discussionTotalCount = comments.length
-
-  if (!comments.length) {
+  if (!partials.length) {
     return {
       id: discussion.id,
       totalCount: 0,
@@ -352,7 +378,7 @@ module.exports = async (discussion, args, context, info) => {
   const resolvedOrderBy = getResolveOrderBy(
     discussion.defaultOrder,
     orderBy,
-    comments,
+    partials,
   )
 
   // prepare sort
@@ -367,43 +393,38 @@ module.exports = async (discussion, args, context, info) => {
 
   // put unpublished to bottom
   if (discussion.isBoard) {
-    comments.forEach((c) => {
+    partials.forEach((c) => {
       if (c.depth === 0 && !c.isPublished) {
         c.topValue = maxBottomValue
       }
     })
   }
 
-  let focusComment
-  let topIds
-  if (focusId) {
-    focusComment = comments.find((c) => c.id === focusId)
+  const focusComment = focusId && partials.find((c) => c.id === focusId)
 
-    if (focusComment) {
-      // topValue used for sorting
-      // we assign it here, because focusComment might be a node without
-      // children, which deepSortTree doesn't calculate a topValue for
-      focusComment.topValue = maxTopValue
+  if (focusComment) {
+    // topValue used for sorting
+    // we assign it here, because focusComment might be a node without
+    // children, which deepSortTree doesn't calculate a topValue for
+    focusComment.topValue = maxTopValue
 
-      // Assign a topValue to all parents of the focusComment
-      // to prevent them from being sliced out due to them not
-      // bubbling to the top
-      comments.forEach((c) => {
-        if (focusComment.parentIds?.includes(c.id)) {
-          c.topValue = maxTopValue
-        }
-      })
-
-      // Set comment (and its parents as topIds), used later for sorting tree and
-      // ensuring comment-tree bubbles to the very top.
-      topIds = _([focusComment.id])
-        .concat(focusComment.parentIds)
-        .compact()
-        .value()
-    }
+    // Assign a topValue to all parents of the focusComment
+    // to prevent them from being sliced out due to them not
+    // bubbling to the top
+    partials.forEach((c) => {
+      if (focusComment.parentIds?.includes(c.id)) {
+        c.topValue = maxTopValue
+      }
+    })
   }
 
-  const tree = assembleTree(comments, { parentId, includeParent })
+  // Set comment (and its parents as topIds), used later for sorting tree and
+  // ensuring comment-tree bubbles to the very top.
+  const topIds =
+    focusComment &&
+    _([focusComment.id]).concat(focusComment.parentIds).compact().value()
+
+  const tree = assembleTree(partials, { parentId, includeParent })
   buildConnections(tree)
   deepSortTree(tree, sorting, pickSortValue, maxTopValue, topIds, mustBubble)
 
@@ -448,7 +469,7 @@ module.exports = async (discussion, args, context, info) => {
   // otherwise it's the totalCount of the whole discussion
   if (!parentId) {
     tree.comments.id = discussion.id
-    tree.comments.totalCount = discussionTotalCount
+    tree.comments.totalCount = partials.length
   }
 
   if (focusComment) {
@@ -465,6 +486,8 @@ module.exports = async (discussion, args, context, info) => {
     tree.comments.resolvedOrderBy =
       (resolvedOrderBy !== orderBy && resolvedOrderBy) || null
   }
+
+  await complementTree(tree.comments, context)
 
   return tree.comments
 }
