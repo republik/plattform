@@ -1,23 +1,24 @@
 import React, { useMemo } from 'react'
 import { css } from 'glamor'
 import { useColorContext } from '@project-r/styleguide'
-import { CDN_FRONTEND_BASE_URL } from '../../../lib/constants'
+import AssetImage from '../../../lib/images/AssetImage'
 
 import { climateColors } from '../config'
 
 const styles = {
+  '& img': css({ display: 'block' }),
   image: css({
     cursor: 'pointer',
     borderWidth: '3px',
     borderStyle: 'solid',
     maxWidth: '100%',
-    objectFit: 'fill',
     borderRadius: '2px',
-    transition: 'box-shadow 0.3s ease-out',
+    transition: 'box-shadow 0.3s ease-out, border-color 0.2s ease-out',
     ':hover': {
       cursor: 'pointer',
       outline: 'none',
     },
+    '> span': { display: 'block !important' },
   }),
   input: css({
     cursor: 'pointer',
@@ -35,7 +36,11 @@ const styles = {
   }),
 }
 
-const BackgroundImage = ({ checked, disabled, imageUrl }) => {
+const BackgroundImage = ({
+  checked,
+  disabled,
+  imageUrl,
+}: Pick<ImageChoiceProps, 'checked' | 'disabled' | 'imageUrl'>) => {
   const [colorScheme] = useColorContext()
   const hoverRule = useMemo(
     () =>
@@ -49,7 +54,7 @@ const BackgroundImage = ({ checked, disabled, imageUrl }) => {
     [colorScheme],
   )
   return (
-    <img
+    <div
       {...styles.image}
       {...hoverRule}
       {...colorScheme.set(
@@ -57,13 +62,14 @@ const BackgroundImage = ({ checked, disabled, imageUrl }) => {
         checked ? climateColors.light.default : '#FFF',
       )}
       {...(disabled ? styles.disabledImage : undefined)}
-      src={imageUrl}
       {...colorScheme.set('boxShadow', 'imageChoiceShadow')}
-    />
+    >
+      <AssetImage width={600} height={420} src={imageUrl} />
+    </div>
   )
 }
 
-const ImageChoice: React.FC<{
+type ImageChoiceProps = {
   style?: React.CSSProperties
   name?: string
   imageUrl?: string
@@ -71,7 +77,17 @@ const ImageChoice: React.FC<{
   checked: boolean
   disabled?: boolean
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void
-}> = ({ style, name, value, checked, disabled, imageUrl, onChange }) => {
+}
+
+const ImageChoice: React.FC<ImageChoiceProps> = ({
+  style,
+  name,
+  value,
+  checked,
+  disabled,
+  imageUrl,
+  onChange,
+}) => {
   return (
     <label style={style}>
       <input

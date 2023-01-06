@@ -95,7 +95,6 @@
     "express": "^4.17.2",
     "express-basic-auth": "^1.2.1",
     "express-rate-limit": "^5.5.1",
-    "formik": "^2.2.9",
     "framer-motion": "^6.5.1",
     "glamor": "^2.20.40",
     "graphql": "^15.3.0",
@@ -124,7 +123,6 @@
     "topojson": "^3.0.2",
     "useragent": "^2.3.0",
     "uuid": "^3.4.0",
-    "validator": "^13.7.0",
-    "yup": "^0.32.11"
+    "validator": "^13.7.0"
   }
 }

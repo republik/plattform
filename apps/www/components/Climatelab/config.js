@@ -16,5 +16,5 @@ export const postcardCredits = {
   postcard_1: 'Karlotta Freier',
   postcard_2: 'Chrigel Farner',
   postcard_3: 'Jack Richardson',
-  postcard_4: 'Alina Zalko',
+  postcard_4: 'Aline Zalko',
 }

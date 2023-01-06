@@ -1,4 +1,3 @@
-import { Fragment } from 'react'
 import { css } from 'glamor'
 import { gql } from '@apollo/client'
 import { graphql } from '@apollo/client/react/hoc'
@@ -94,7 +93,7 @@ const Invitation = (props) => {
       showContinue={slotsUsed >= 1}
       {...props}
     >
-      <Fragment>
+      <>
         <P {...styles.p}>
           {t('Climatelab/Onboarding/Invitation/paragraph1', null, '')}
         </P>
@@ -111,7 +110,7 @@ const Invitation = (props) => {
             </div>
           </>
         )}
-      </Fragment>
+      </>
     </Section>
   )
 }
