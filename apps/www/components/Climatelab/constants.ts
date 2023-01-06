@@ -13,3 +13,5 @@ export const CLIMATE_LAB_IMG_URL =
 
 export const CLIMATE_LAB_URL = '/klimalabor'
 export const CLIMATE_LAB_LANDINGPAGE_URL = '/willkommen-zum-klimalabor'
+
+export const CLIMATE_POSTCARD_QUESTIONNAIRE_ID = 'klima-postkarte'

@@ -4,7 +4,6 @@ import { Query } from '@apollo/client/react/components'
 import { gql } from '@apollo/client'
 import { withRouter } from 'next/router'
 import { css } from 'glamor'
-import Image from 'next/image'
 
 import {
   mediaQueries,
@@ -45,7 +44,7 @@ import ClimateProfile from '../Climatelab/Onboarding/ClimateProfile'
 import ClimatePersonalInfo, {
   fragments as fragmentsClimatePersonalInfo,
 } from '../Climatelab/Onboarding/ClimatePersonalInfo'
-import { CLIMATE_LAB_IMG_URL, CLIMATE_LAB_URL } from '../Climatelab/constants'
+import { CLIMATE_LAB_URL } from '../Climatelab/constants'
 import ClimateLabLogo from '../Climatelab/shared/ClimateLabLogo'
 
 const { P } = Interaction
@@ -358,9 +357,7 @@ class Page extends Component {
                     { climate_lab_count: roleStats.count },
                   )}
                 </P>
-                {context !== 'climate' && context && (
-                  <Greeting employee={employees[0]} />
-                )}
+                {context !== 'climate' && <Greeting employee={employees[0]} />}
 
                 <RawHtml
                   type={Interaction.P}

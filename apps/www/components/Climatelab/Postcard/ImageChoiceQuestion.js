@@ -82,7 +82,7 @@ const ImageChoice = dynamic(() => import('./ImageChoice'), {
 
 const ImageChoiceQuestion = (props) => {
   const [answerId] = useState(
-    (props.question.userAnswer && props.question.userAnswer.id) || uuid(),
+    (props?.question?.userAnswer && props.question.userAnswer.id) || uuid(),
   )
 
   const {

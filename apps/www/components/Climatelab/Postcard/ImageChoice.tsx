@@ -36,7 +36,11 @@ const styles = {
   }),
 }
 
-const BackgroundImage = ({ checked, disabled, imageUrl }) => {
+const BackgroundImage = ({
+  checked,
+  disabled,
+  imageUrl,
+}: Pick<ImageChoiceProps, 'checked' | 'disabled' | 'imageUrl'>) => {
   const [colorScheme] = useColorContext()
   const hoverRule = useMemo(
     () =>
@@ -65,7 +69,7 @@ const BackgroundImage = ({ checked, disabled, imageUrl }) => {
   )
 }
 
-const ImageChoice: React.FC<{
+type ImageChoiceProps = {
   style?: React.CSSProperties
   name?: string
   imageUrl?: string
@@ -73,7 +77,17 @@ const ImageChoice: React.FC<{
   checked: boolean
   disabled?: boolean
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void
-}> = ({ style, name, value, checked, disabled, imageUrl, onChange }) => {
+}
+
+const ImageChoice: React.FC<ImageChoiceProps> = ({
+  style,
+  name,
+  value,
+  checked,
+  disabled,
+  imageUrl,
+  onChange,
+}) => {
   return (
     <label style={style}>
       <input

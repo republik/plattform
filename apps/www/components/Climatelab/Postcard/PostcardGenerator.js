@@ -16,6 +16,7 @@ import {
   Button,
   Interaction,
 } from '@project-r/styleguide'
+import { CLIMATE_POSTCARD_QUESTIONNAIRE_ID } from '../constants'
 
 const styles = {
   questionnaireStyleOverride: css({
@@ -68,7 +69,7 @@ const SubmittedPostcard = (props) => {
 const PostcardGenerator = () => (
   <div {...styles.questionnaireStyleOverride}>
     <QuestionnaireWithData
-      slug={'klima-postkarte'}
+      slug={CLIMATE_POSTCARD_QUESTIONNAIRE_ID}
       context='postcard'
       hideCount
       hideInvalid
