@@ -29,7 +29,7 @@ const AccessGrants = ({ accessGrants, inNativeIOSApp, t }) => {
     regularAccessGrants.reduce(
       (acc, grant) =>
         new Date(grant.endAt) > acc ? new Date(grant.endAt) : acc,
-      null,
+      new Date(),
     )
 
   /* TODO: Special solution for CLIMATE lab, we know here that atm there is only 
