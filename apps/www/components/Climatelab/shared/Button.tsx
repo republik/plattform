@@ -1,21 +1,50 @@
 import { FC } from 'react'
 import { css } from 'glamor'
-import { fontStyles, useColorContext } from '@project-r/styleguide'
+import NextLink from 'next/link'
+import {
+  fontStyles,
+  useColorContext,
+  plainButtonRule,
+  plainLinkRule,
+} from '@project-r/styleguide'
 
 type ButtonProps = {
   onClick?: () => void
+  href?: string
   type?: 'submit' | 'button'
   disabled?: boolean
 } & unknown
 
 const Button: FC<ButtonProps> = ({
   children,
+  href,
   onClick,
   type = 'button',
   disabled = false,
   ...props
 }) => {
   const [colorScheme] = useColorContext()
+
+  if (href) {
+    return (
+      <NextLink href={href} passHref>
+        <a
+          {...colorScheme.set('backgroundColor', 'primary')}
+          {...colorScheme.set('color', 'climateButtonText')}
+          {...colorScheme.set('borderColor', 'climateBorder')}
+          {...css({
+            ':hover': {
+              backgroundColor: colorScheme.getCSSColor('primaryHover'),
+            },
+          })}
+          {...plainLinkRule}
+          {...styles.button}
+        >
+          {children}
+        </a>
+      </NextLink>
+    )
+  }
 
   return (
     <button
@@ -27,7 +56,7 @@ const Button: FC<ButtonProps> = ({
           backgroundColor: colorScheme.getCSSColor('primaryHover'),
         },
       })}
-      {...styles.clearFix}
+      {...plainButtonRule}
       {...styles.button}
       onClick={onClick}
       type={type}
@@ -42,16 +71,6 @@ const Button: FC<ButtonProps> = ({
 export default Button
 
 const styles = {
-  clearFix: css({
-    border: 'none',
-    font: 'inherit',
-    outline: 'inherit',
-    cursor: 'pointer',
-    '&:hover > *': {
-      textDecoration: 'underline',
-      textDecorationSkip: 'ink',
-    },
-  }),
   button: css({
     ...fontStyles.sansSerifBold,
     fontSize: 30,

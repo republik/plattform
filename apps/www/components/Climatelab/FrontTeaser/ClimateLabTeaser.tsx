@@ -1,5 +1,4 @@
 import { css } from 'glamor'
-import Image from 'next/image'
 import {
   useColorContext,
   fontStyles,
@@ -11,29 +10,18 @@ import { climateColors } from '../config'
 import OptionalLocalColorContext from '../../Frame/OptionalLocalColorContext'
 import { useMe } from '../../../lib/context/MeContext'
 import {
-  CLIMATE_LAB_IMG_URL,
   CLIMATE_LAB_LANDINGPAGE_URL,
   CLIMATE_LAB_ROLE,
   CLIMATE_LAB_URL,
 } from '../constants'
-import { useRouter } from 'next/router'
 import ClimateLabLogo from '../shared/ClimateLabLogo'
 
 const ClimateTeaserContent = () => {
   const { t } = useTranslation()
   const [colorScheme] = useColorContext()
-  const router = useRouter()
 
   const { me } = useMe()
   const isClimateLabMember = me?.roles?.includes(CLIMATE_LAB_ROLE)
-
-  const handleClick = () => {
-    if (isClimateLabMember) {
-      return router.push(CLIMATE_LAB_URL)
-    } else {
-      return router.push(CLIMATE_LAB_LANDINGPAGE_URL)
-    }
-  }
 
   return (
     <div
@@ -51,7 +39,11 @@ const ClimateTeaserContent = () => {
             br2: <br key='2' />,
           })}
         </h3>
-        <Button onClick={handleClick}>
+        <Button
+          href={
+            isClimateLabMember ? CLIMATE_LAB_URL : CLIMATE_LAB_LANDINGPAGE_URL
+          }
+        >
           {t('ClimateTeaser/content/buttonAction')}
         </Button>
       </div>
