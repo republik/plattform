@@ -39,13 +39,15 @@ const ClimateTeaserContent = () => {
             br2: <br key='2' />,
           })}
         </h3>
-        <Button
-          href={
-            isClimateLabMember ? CLIMATE_LAB_URL : CLIMATE_LAB_LANDINGPAGE_URL
-          }
-        >
-          {t('ClimateTeaser/content/buttonAction')}
-        </Button>
+        <div style={{ maxWidth: 'max-content' }}>
+          <Button
+            href={
+              isClimateLabMember ? CLIMATE_LAB_URL : CLIMATE_LAB_LANDINGPAGE_URL
+            }
+          >
+            {t('ClimateTeaser/content/buttonAction')}
+          </Button>
+        </div>
       </div>
     </div>
   )
@@ -59,18 +61,15 @@ const ClimateLabTeaser = () => (
 
 export default ClimateLabTeaser
 
+const frontTabletBreakpoint = '@media only screen and (min-width: 1850px)'
+
 const styles = {
   wrapper: css({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
     gap: '1rem',
-    padding: '4rem 2rem',
-    [mediaQueries.mUp]: {
-      flexDirection: 'row',
-      gap: '4rem',
-      padding: '4rem',
-    },
+    padding: '1rem 2rem 5rem 2rem',
   }),
   img: css({
     width: '80%',
@@ -78,20 +77,29 @@ const styles = {
     justifyContent: 'center',
   }),
   imgWrapper: css({
-    flex: '1 1 0',
+    flex: '0 1 auto',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
   }),
   content: css({
-    flex: '1 1 0',
+    flex: '1 1 auto',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
   }),
   text: css({
     ...fontStyles.serifTitle,
-    fontSize: 30,
+    fontSize: 38,
     lineHeight: '1.3em',
+    textAlign: 'center',
+    marginTop: '3rem',
+    marginBottom: '3rem',
     [mediaQueries.mUp]: {
-      fontSize: 36,
+      fontSize: 58,
+    },
+    [frontTabletBreakpoint]: {
+      fontSize: 80,
     },
   }),
 }
