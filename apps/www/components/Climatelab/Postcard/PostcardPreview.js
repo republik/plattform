@@ -143,7 +143,7 @@ export const PostcardPreview = (props) => {
 const PoststampComponent = ({ imageUrl }) => {
   return imageUrl ? (
     <div {...styles.image}>
-      <AssetImage width={'300'} height={'200'} src={imageUrl} />
+      <AssetImage width={'200'} height={'133'} src={imageUrl} />
     </div>
   ) : (
     <div
