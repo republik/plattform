@@ -250,6 +250,57 @@ describe('Slate Editor: Normalisation', () => {
       ])
     })
 
+    it('should use not complex parent node structure (e.g. figure caption) for structure type:inherit (links, memos)', async () => {
+      value = [
+        {
+          type: 'figure',
+          children: [
+            {
+              type: 'figureImage',
+              children: [{ text: '' }],
+            },
+            {
+              type: 'figureCaption',
+              children: [
+                { text: 'One' },
+                { type: 'memo', children: [{ text: 'two' }] },
+                { text: 'three' },
+                { type: 'figureByline', children: [{ text: '' }] },
+                { text: '' },
+              ],
+            },
+          ],
+        },
+      ]
+      const structure = [
+        {
+          type: 'figure',
+        },
+      ]
+      await setup({ ...defaultConfig, structure })
+      expect(cleanupTree(value)).toEqual([
+        {
+          type: 'figure',
+          children: [
+            {
+              type: 'figureImage',
+              children: [{ text: '' }],
+            },
+            {
+              type: 'figureCaption',
+              children: [
+                { text: 'One' },
+                { type: 'memo', children: [{ text: 'two' }] },
+                { text: 'three' },
+                { type: 'figureByline', children: [{ text: '' }] },
+                { text: '' },
+              ],
+            },
+          ],
+        },
+      ])
+    })
+
     it('should unwrap incorrect inline node types', async () => {
       value = [
         {

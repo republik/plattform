@@ -387,6 +387,7 @@ const removeNode = (
   Transforms.removeNodes(editor, { at: currentPath })
 }
 
+// Handles the 'inherit' structure type
 const getStructure = (
   editor: CustomEditor,
   node: NodeEntry<CustomAncestor>,
@@ -397,6 +398,8 @@ const getStructure = (
   const parent = Editor.parent(editor, node[1])
   if (!SlateElement.isElement(parent[0])) return inputStructure
   const parentStructure = elConfig[parent[0].type].structure
+  // This is a fallback when the parent is a complex structure (e.g. figure caption)
+  if (parentStructure.length > 1) return DEFAULT_STRUCTURE
   return getStructure(editor, parent, parentStructure)
 }
 

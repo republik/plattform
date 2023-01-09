@@ -46,8 +46,24 @@ const getForm = (
   }
 }
 
+// this function has to be able to handle various cases:
+// 1) forms for structured elements. E.g. for pictures, the image form should also come up
+//    when clicking on the caption, when if the form is located on a sibling branch. We
+//    also want that the various forms always show up in the same order (e.g. #1 picture size,
+//    #2 image upload) regardless where the writer clicked (top-level picture, image, or caption)
+// 2) nested inlines. E.g. a link overlapping fully with a memo. We want to bring up both forms
+//
+// To handle 1) we start by going as far as specified in the config (until we bump into
+// an element with stopIteration flag set to true). Then we go down the tree from the top level
+// node recontruct our array of forms, always in the same order.
+//
+// To handle 2) we check whether the top level form element is:
+//  - inline
+//  - has inline ancestor
+//  - has inline ancestor which only contains last element
 export const getForms = (editor: CustomEditor, path: number[]): FormData[] => {
   if (!path || path === []) return []
+
   let topLevelNode = Editor.node(editor, path) as NodeEntry<CustomElement>
   let parent = Editor.parent(editor, topLevelNode[1])
   while (
@@ -72,8 +88,30 @@ export const getForms = (editor: CustomEditor, path: number[]): FormData[] => {
       if (stop) break
     }
   }
+  const topMostForm = forms[0]
+  if (topMostForm && elConfig[topMostForm.node[0].type]?.attrs?.isInline) {
+    const [n, p] = Editor.parent(editor, topMostForm.node[1])
+    console.log({ n })
+    if (
+      SlateElement.isElement(n) &&
+      n.children.length === 3 &&
+      // check that nodes 1 and 3 are text & empty
+      Editor.isInline(editor, n)
+    ) {
+      const currentForm = getForm(editor, [n, p])
+      forms = forms.concat(currentForm)
+    }
+  }
+  console.log(forms)
 
-  return forms.filter(Boolean)
+  return forms.filter(Boolean).sort((f1, f2) => {
+    const name1 = f1.node[0].type
+    const name2 = f2.node[0].type
+    console.log({ name1, name2 })
+    if (name1 < name2) return -1
+    if (name1 > name2) return 1
+    return 0
+  })
 }
 
 const ElementForm: React.FC<FormData & { onClose: () => void }> = ({
