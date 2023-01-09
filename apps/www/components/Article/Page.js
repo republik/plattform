@@ -181,6 +181,14 @@ const Postcard = dynamic(
   },
 )
 
+const PostcardGallery = dynamic(
+  () => import('../Climatelab/Postcard/PostcardGallery'),
+  {
+    loading: LoadingComponent,
+    ssr: false,
+  },
+)
+
 const schemaCreators = {
   editorial: createArticleSchema,
   meta: createArticleSchema,
@@ -409,6 +417,7 @@ const ArticlePage = ({
           CLIMATE_LAB_COUNTER: ClimateLabCounter,
           CLIMATE_LAB_INLINE_TEASER: ClimateLabInlineTeaser,
           POSTCARD: Postcard,
+          POSTCARD_GALLERY: PostcardGallery,
         },
         titleMargin: false,
         titleBreakout,
