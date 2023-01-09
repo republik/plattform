@@ -35,8 +35,9 @@ Wie Sie sich gleich zu Beginn einbringen können:
    {{frontend_base_url}}/2023/01/10/wie-sieht-die-welt-in-60-jahren-aus-machen-sie-mit-uns-eine-zeitreise
    .
 
- * Sagen Sie uns {{frontend_base_url}}/allgemeiner-dialog-klimalabor , was Sie
-   von uns erwarten.
+ * Sagen Sie uns
+   {{frontend_base_url}}/2023/01/09/allgemeiner-dialog-klimalabor/diskussion ,
+   was Sie von uns erwarten.
 
  * Das Klimalabor lebt davon, dass viele unterschiedliche Perspektiven
    zusammenkommen. Wir freuen uns, wenn Sie Freundinnen und Bekannte ins
