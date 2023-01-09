@@ -1,39 +1,28 @@
 import { css } from 'glamor'
-import Image from 'next/image'
 import {
   useColorContext,
+  plainLinkRule,
   fontStyles,
   mediaQueries,
 } from '@project-r/styleguide'
+import NextLink from 'next/link'
 import { useTranslation } from '../../../lib/withT'
-import Button from '../shared/Button'
 import { climateColors } from '../config'
 import OptionalLocalColorContext from '../../Frame/OptionalLocalColorContext'
 import { useMe } from '../../../lib/context/MeContext'
 import {
-  CLIMATE_LAB_IMG_URL,
   CLIMATE_LAB_LANDINGPAGE_URL,
   CLIMATE_LAB_ROLE,
   CLIMATE_LAB_URL,
 } from '../constants'
-import { useRouter } from 'next/router'
 import ClimateLabLogo from '../shared/ClimateLabLogo'
 
 const ClimateTeaserContent = () => {
   const { t } = useTranslation()
   const [colorScheme] = useColorContext()
-  const router = useRouter()
 
   const { me } = useMe()
   const isClimateLabMember = me?.roles?.includes(CLIMATE_LAB_ROLE)
-
-  const handleClick = () => {
-    if (isClimateLabMember) {
-      return router.push(CLIMATE_LAB_URL)
-    } else {
-      return router.push(CLIMATE_LAB_LANDINGPAGE_URL)
-    }
-  }
 
   return (
     <div
@@ -45,15 +34,35 @@ const ClimateTeaserContent = () => {
         <ClimateLabLogo width={480} height={480} />
       </div>
       <div {...styles.content} {...colorScheme.set('color', 'text')}>
-        <h3 {...styles.text}>
+        <h3 {...styles.title}>
           {t.elements('ClimateTeaser/content/text1', {
             br1: <br key='1' />,
             br2: <br key='2' />,
           })}
         </h3>
-        <Button onClick={handleClick}>
-          {t('ClimateTeaser/content/buttonAction')}
-        </Button>
+        <div style={{ maxWidth: 'max-content' }}>
+          <NextLink
+            href={
+              isClimateLabMember ? CLIMATE_LAB_URL : CLIMATE_LAB_LANDINGPAGE_URL
+            }
+            passHref
+          >
+            <a
+              {...colorScheme.set('backgroundColor', 'primary')}
+              {...colorScheme.set('color', 'climateButtonText')}
+              {...colorScheme.set('borderColor', 'climateBorder')}
+              {...css({
+                ':hover': {
+                  backgroundColor: colorScheme.getCSSColor('primaryHover'),
+                },
+              })}
+              {...plainLinkRule}
+              {...styles.button}
+            >
+              {t('ClimateTeaser/content/buttonAction')}
+            </a>
+          </NextLink>
+        </div>
       </div>
     </div>
   )
@@ -67,18 +76,16 @@ const ClimateLabTeaser = () => (
 
 export default ClimateLabTeaser
 
+export const climateLabTeaserXlBreakpoint =
+  '@media only screen and (min-width: 1850px)'
+
 const styles = {
   wrapper: css({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
     gap: '1rem',
-    padding: '4rem 2rem',
-    [mediaQueries.mUp]: {
-      flexDirection: 'row',
-      gap: '4rem',
-      padding: '4rem',
-    },
+    padding: '1rem 2rem 5rem 2rem',
   }),
   img: css({
     width: '80%',
@@ -86,20 +93,44 @@ const styles = {
     justifyContent: 'center',
   }),
   imgWrapper: css({
-    flex: '1 1 0',
+    flex: '0 1 auto',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
   }),
   content: css({
-    flex: '1 1 0',
+    flex: '1 1 auto',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
   }),
-  text: css({
+  title: css({
     ...fontStyles.serifTitle,
-    fontSize: 30,
+    fontSize: 38,
     lineHeight: '1.3em',
+    textAlign: 'center',
+    marginTop: '3rem',
+    marginBottom: '3rem',
     [mediaQueries.mUp]: {
-      fontSize: 36,
+      fontSize: 58,
+    },
+    [climateLabTeaserXlBreakpoint]: {
+      fontSize: 80,
+    },
+  }),
+  button: css({
+    ...fontStyles.sansSerifBold,
+    fontSize: 20,
+    boxSizing: 'border-box',
+    padding: '12px 16px',
+    borderWidth: 1,
+    borderStyle: 'solid',
+    borderRadius: 8,
+    [mediaQueries.mUp]: {
+      fontSize: 25,
+    },
+    [climateLabTeaserXlBreakpoint]: {
+      fontSize: 30,
     },
   }),
 }

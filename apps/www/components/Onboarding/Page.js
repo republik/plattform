@@ -4,7 +4,6 @@ import { Query } from '@apollo/client/react/components'
 import { gql } from '@apollo/client'
 import { withRouter } from 'next/router'
 import { css } from 'glamor'
-import Image from 'next/image'
 
 import {
   mediaQueries,
@@ -45,7 +44,7 @@ import ClimateProfile from '../Climatelab/Onboarding/ClimateProfile'
 import ClimatePersonalInfo, {
   fragments as fragmentsClimatePersonalInfo,
 } from '../Climatelab/Onboarding/ClimatePersonalInfo'
-import { CLIMATE_LAB_IMG_URL, CLIMATE_LAB_URL } from '../Climatelab/constants'
+import { CLIMATE_LAB_URL } from '../Climatelab/constants'
 import ClimateLabLogo from '../Climatelab/shared/ClimateLabLogo'
 
 const { P } = Interaction
@@ -288,12 +287,23 @@ class Page extends Component {
         if (nextIndex < this.sections.length) {
           sectionIndex = nextIndex
         } else {
-          this.setState({
-            expandedSection: null,
-            hasOnceVisitedAll: this.sections.every(
-              (section) => !!section.visited,
-            ),
-          })
+          this.setState(
+            {
+              expandedSection: null,
+              hasOnceVisitedAll: this.sections.every(
+                (section) => !!section.visited,
+              ),
+            },
+            () => {
+              const { top } =
+                this.sections[sectionIndex].ref.current.getBoundingClientRect()
+              const { pageYOffset } = window
+
+              const target = pageYOffset + top - HEADER_HEIGHT * 1.2
+
+              scrollIt(target, 400)
+            },
+          )
 
           return
         }
@@ -307,6 +317,7 @@ class Page extends Component {
           const { pageYOffset } = window
 
           const target = pageYOffset + top - HEADER_HEIGHT * 1.2
+
           scrollIt(target, 400)
         },
       )
@@ -358,9 +369,7 @@ class Page extends Component {
                     { climate_lab_count: roleStats.count },
                   )}
                 </P>
-                {context !== 'climate' && context && (
-                  <Greeting employee={employees[0]} />
-                )}
+                {context !== 'climate' && <Greeting employee={employees[0]} />}
 
                 <RawHtml
                   type={Interaction.P}
@@ -517,7 +526,7 @@ class Page extends Component {
 }
 
 const OnboardingHeader = ({ children, ...props }) => {
-  if (props.context === 'climate') {
+  if (props?.context === 'climate') {
     return (
       <div {...styles.imageWrapper}>
         <div {...styles.image}>

@@ -1,16 +1,14 @@
-import React, { useState } from 'react'
 import { css } from 'glamor'
+import { AutoTextSize } from 'auto-text-size'
 
 import {
   fontFamilies,
   mediaQueries,
   useColorContext,
-  Interaction,
 } from '@project-r/styleguide'
+import AssetImage from '../../../lib/images/AssetImage'
 
 import { postcardCredits } from '../config'
-
-import { AutoTextSize } from 'auto-text-size'
 
 const styles = {
   postcard: css({
@@ -20,7 +18,7 @@ const styles = {
     width: '100%',
     aspectRatio: '16 / 9',
     display: 'flex',
-    padding: '20px',
+    padding: '10px',
     border: 'solid 2px f9f5ec',
     borderRadius: '2px',
     fontFamily: fontFamilies.sansSerifRegular,
@@ -28,6 +26,7 @@ const styles = {
     lineHeight: '1.2',
     color: '#282828',
     [mediaQueries.mUp]: {
+      padding: '20px',
       fontSize: '16px',
       lineHeight: '1.5',
     },
@@ -35,12 +34,12 @@ const styles = {
   textArea: css({
     wordBreak: 'normal',
     overflowWrap: 'break-word',
-    width: '60%',
+    width: '67%',
     borderRight: 'solid 1px #DADDDC',
     marginBottom: '10px',
-    paddingRight: '20px',
+    paddingRight: '10px',
     [mediaQueries.mUp]: {
-      paddingRight: '40px',
+      paddingRight: '20px',
     },
   }),
   credit: css({
@@ -55,22 +54,20 @@ const styles = {
   rightSide: css({
     display: 'flex',
     flexDirection: 'column',
-    width: '40%',
-    paddingLeft: '20px',
+    width: '33%',
+    paddingLeft: '10px',
     [mediaQueries.mUp]: {
-      paddingLeft: '40px',
+      paddingLeft: '20px',
     },
   }),
   poststampContainer: css({
-    maxWidth: '80%',
     alignSelf: 'flex-end',
   }),
   image: css({
-    display: 'block',
-    width: '100%',
     borderImage: 'url(/static/climatelab/border-image.png) 32 round',
     borderWidth: '8px',
     borderStyle: 'solid',
+    '> span': { display: 'block !important' },
   }),
   adressBlock: css({
     borderBottom: 'solid 1px #DADDDC',
@@ -110,7 +107,7 @@ export const PostcardPreview = (props) => {
     imageOptions.filter((d) => d.value === imageSelection)[0]?.imageUrl
 
   if (userHasSubmitted && !imageSelection && !postcardText) {
-    return <div>XXX Postkarte verschickt, anonymisiert.</div>
+    return null
   }
 
   return (
@@ -121,7 +118,7 @@ export const PostcardPreview = (props) => {
       <div {...styles.credit}>
         {' '}
         {t('Climatelab/Postcard/PostcardPreview/credit', {
-          credit: postcardCredits[imageSelection],
+          credit: postcardCredits[imageSelection] || ' ...',
         })}
       </div>
 
@@ -144,5 +141,14 @@ export const PostcardPreview = (props) => {
 }
 
 const PoststampComponent = ({ imageUrl }) => {
-  return <img {...styles.image} src={imageUrl} />
+  return imageUrl ? (
+    <div {...styles.image}>
+      <AssetImage width={'200'} height={'133'} src={imageUrl} />
+    </div>
+  ) : (
+    <div
+      {...styles.image}
+      style={{ height: '4rem', aspectRatio: '4 / 3' }}
+    ></div>
+  )
 }

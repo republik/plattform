@@ -1,4 +1,3 @@
-import { Fragment } from 'react'
 import { css } from 'glamor'
 
 import { Interaction, mediaQueries } from '@project-r/styleguide'
@@ -31,34 +30,21 @@ const styles = {
   }),
 }
 
-// export const fragments = {
-//   user: gql``,
-// }
-
 const Mission = (props) => {
   const { t } = useTranslation()
 
-  // Is ticked when either???
-
   return (
-    <Section
-      heading={t('Climatelab/Onboarding/Mission/heading')}
-      // isTicked={hasConsented}
-      // showContinue={hasConsented}
-      {...props}
-    >
-      <Fragment>
-        <P {...styles.p}>
-          {t('Climatelab/Onboarding/Mission/paragraph1', null, '')}
-          <br /> <br />
-          {t('Climatelab/Onboarding/Mission/bullet1', null, '')}
-          <br /> <br />
-          {t('Climatelab/Onboarding/Mission/bullet2', null, '')}
-          <br /> <br />
-          {t('Climatelab/Onboarding/Mission/bullet3', null, '')}
-          <br />
-        </P>
-      </Fragment>
+    <Section heading={t('Climatelab/Onboarding/Mission/heading')} {...props}>
+      <P {...styles.p}>
+        {t('Climatelab/Onboarding/Mission/paragraph1', null, '')}
+        <br /> <br />
+        {t('Climatelab/Onboarding/Mission/bullet1', null, '')}
+        <br /> <br />
+        {t('Climatelab/Onboarding/Mission/bullet2', null, '')}
+        <br /> <br />
+        {t('Climatelab/Onboarding/Mission/bullet3', null, '')}
+        <br />
+      </P>
     </Section>
   )
 }

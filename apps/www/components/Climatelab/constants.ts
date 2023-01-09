@@ -9,7 +9,9 @@ export const CLIMATE_LAB_SHARE_IMAGE_URL =
   CDN_FRONTEND_BASE_URL +
   '/static/climatelab/Klimaillu_Landingpage_5A47E1__Share.png'
 export const CLIMATE_LAB_IMG_URL =
-  '/static/climatelab/Klimaillu_Landingpage_5A47E1_square_800px.png'
+  '/static/climatelab/Klimaillu_Landingpage_5A47E1__Square_3000px.png'
 
 export const CLIMATE_LAB_URL = '/klimalabor'
 export const CLIMATE_LAB_LANDINGPAGE_URL = '/willkommen-zum-klimalabor'
+
+export const CLIMATE_POSTCARD_QUESTIONNAIRE_ID = 'klima-postkarte'

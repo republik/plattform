@@ -2,7 +2,11 @@ import { css } from 'glamor'
 import Link from 'next/link'
 import { fontStyles, mediaQueries, plainLinkRule } from '@project-r/styleguide'
 import { useTranslation } from '../../../lib/withT'
-import { CLIMATE_LAB_LANDINGPAGE_URL, CLIMATE_LAB_ROLE } from '../constants'
+import {
+  CLIMATE_LAB_LANDINGPAGE_URL,
+  CLIMATE_LAB_ROLE,
+  CLIMATE_LAB_URL,
+} from '../constants'
 import { climateColors } from '../config'
 import { useColorContext } from '@project-r/styleguide/src/components/Colors/ColorContext'
 import { useMe } from '../../../lib/context/MeContext'
@@ -26,7 +30,7 @@ const ClimateLabInlineTeaser = () => {
           {isClimateLabMember ? (
             <>
               {t('ClimateInlineTeaser/Member/content/text')}{' '}
-              <Link href={CLIMATE_LAB_LANDINGPAGE_URL}>
+              <Link href={CLIMATE_LAB_URL}>
                 <a {...plainLinkRule} {...styles.link}>
                   {t('ClimateInlineTeaser/Member/content/link')}
                 </a>

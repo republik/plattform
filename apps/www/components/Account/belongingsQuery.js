@@ -49,6 +49,7 @@ export default gql`
       }
       accessGrants {
         endAt
+        beginAt
         campaign {
           title
           description

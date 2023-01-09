@@ -6,7 +6,6 @@ import { css, merge } from 'glamor'
 import { TESTIMONIAL_IMAGE_SIZE } from '../../constants'
 import ErrorMessage from '../../ErrorMessage'
 import Portrait from '../../Profile/Portrait'
-import { ListedCheckbox } from '../../Profile/Settings'
 import Section from '../../Onboarding/Section'
 import { useTranslation } from '../../../lib/withT'
 

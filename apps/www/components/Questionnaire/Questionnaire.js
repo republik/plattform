@@ -80,6 +80,7 @@ const Questionnaire = (props) => {
     hideInvalid = false,
     hideReset = false,
     requireName = true,
+    showAnonymize = false,
   } = props
 
   const [state, setState] = useState({})
@@ -370,6 +371,7 @@ const Questionnaire = (props) => {
                 isResubmitAnswers={isResubmitAnswers}
                 onSubmit={onSubmit}
                 onSubmitAnonymized={onSubmitAnonymized}
+                showAnonymize={showAnonymize}
                 onReset={!hideReset && onReset}
                 updating={updating}
                 invalid={userAnswerCount < 1}
