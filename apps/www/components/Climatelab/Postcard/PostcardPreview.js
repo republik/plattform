@@ -7,6 +7,7 @@ import {
   useColorContext,
 } from '@project-r/styleguide'
 import AssetImage from '../../../lib/images/AssetImage'
+import { useTranslation } from '../../../lib/withT'
 
 import { postcardCredits } from '../config'
 
@@ -86,29 +87,13 @@ const styles = {
 }
 
 export const PostcardPreview = (props) => {
-  const { t, postcard } = props
+  const { t } = useTranslation()
+  const { postcard } = props
   const [colorScheme] = useColorContext()
 
   if (!postcard) return null
 
-  const { questions, userHasSubmitted } = postcard
-
-  if (!userHasSubmitted) return null
-
-  const imageOptions = questions && questions[0].options
-  const imageSelection =
-    questions[0].userAnswer && questions[0].userAnswer.payload.value[0]
-
-  const postcardText =
-    questions[1].userAnswer && questions[1].userAnswer.payload.value
-
-  const imageUrl =
-    imageOptions &&
-    imageOptions.filter((d) => d.value === imageSelection)[0]?.imageUrl
-
-  if (userHasSubmitted && !imageSelection && !postcardText) {
-    return null
-  }
+  const { text, imageUrl, imageSelection } = postcard
 
   return (
     <div
@@ -123,7 +108,7 @@ export const PostcardPreview = (props) => {
       </div>
 
       <div {...styles.textArea}>
-        <AutoTextSize mode='box'>{postcardText}</AutoTextSize>
+        <AutoTextSize mode='box'>{text}</AutoTextSize>
       </div>
 
       <div {...styles.rightSide}>

@@ -47,9 +47,32 @@ const SubmittedPostcard = (props) => {
     scrollIntoView(postcardRef.current)
   }, [])
 
+  console.log(questionnaire)
+
+  const { questions, userHasSubmitted } = questionnaire
+
+  const imageOptions = questions && questions[0].options
+  const imageSelection =
+    questions[0].userAnswer && questions[0].userAnswer.payload.value[0]
+
+  const postcardText =
+    questions[1].userAnswer && questions[1].userAnswer.payload.value
+
+  const imageUrl =
+    imageOptions &&
+    imageOptions.filter((d) => d.value === imageSelection)[0]?.imageUrl
+
+  const postcard = {
+    text: postcardText,
+    imageUrl: imageUrl,
+    imageSelection: imageSelection,
+  }
+
   return (
     <div style={{ marginTop: '50px' }} ref={postcardRef}>
-      <PostcardPreview postcard={questionnaire} t={t} />
+      {!(userHasSubmitted && !imageSelection && !postcardText) && (
+        <PostcardPreview postcard={postcard} t={t} />
+      )}
 
       {onRevoke && (
         <Button onClick={() => onRevoke()}>

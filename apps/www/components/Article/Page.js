@@ -182,7 +182,7 @@ const Postcard = dynamic(
 )
 
 const PostcardGallery = dynamic(
-  () => import('../Climatelab/Postcard/PostcardGallery'),
+  () => import('../Climatelab/Postcard/Gallery/PostcardGallery'),
   {
     loading: LoadingComponent,
     ssr: false,
