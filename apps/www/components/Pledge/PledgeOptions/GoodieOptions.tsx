@@ -6,7 +6,7 @@ import FieldSet from '../../FieldSet'
 type GoodieRewardType = {
   __typename: 'Goodie'
   id: string
-  name: 'FONDUE' | 'NOTEBOOK' | 'TOTEBAG'
+  name: 'FONDUE' | 'NOTEBOOK' | 'TOTEBAG' | 'MUG_CERAMIC' | 'MUG'
 }
 
 export type PledgeOptionType = {

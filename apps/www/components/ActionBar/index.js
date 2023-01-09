@@ -5,6 +5,7 @@ import {
   PdfIcon,
   ReadingTimeIcon,
   PlayCircleIcon,
+  PauseCircleIcon,
   PlaylistAddIcon,
   PlaylistRemoveIcon,
   DownloadIcon,
@@ -38,12 +39,16 @@ import ShareButtons from './ShareButtons'
 import { useMe } from '../../lib/context/MeContext'
 import useAudioQueue from '../Audio/hooks/useAudioQueue'
 import AudioInfo from './AudioInfo'
+import {
+  AudioPlayerLocations,
+  AudioPlayerActions,
+} from '../Audio/types/AudioActionTracking'
 
 const RenderItems = ({ items }) => (
   <>
     {items.map((props) => (
       <Fragment key={props.title}>
-        {props.element || <IconButton {...props} />}
+        {props.element || <IconButton key={props.title} {...props} />}
       </Fragment>
     ))}
   </>
@@ -68,12 +73,13 @@ const ActionBar = ({
   const [podcastOverlayVisible, setPodcastOverlayVisible] = useState(false)
   const {
     toggleAudioPlayer,
+    toggleAudioPlayback,
     addAudioQueueItem,
     removeAudioQueueItem,
+    checkIfActivePlayerItem,
     isPlaying,
   } = useAudioContext()
-  const { isAudioQueueAvailable, checkIfInQueue, checkIfActiveItem } =
-    useAudioQueue()
+  const { isAudioQueueAvailable, checkIfInQueue } = useAudioQueue()
 
   if (!document) {
     return (
@@ -226,25 +232,26 @@ const ActionBar = ({
 
   const isArticleBottom = mode === 'articleBottom'
 
-  const isActiveAudioItem = checkIfActiveItem(document.id)
+  const isActiveAudioItem = checkIfActivePlayerItem(document.id)
   const itemPlaying = isPlaying && isActiveAudioItem
   const itemInAudioQueue = checkIfInQueue(document.id)
   const showAudioButtons =
     !!meta.audioSource && meta.audioSource.kind !== 'syntheticReadAloud'
 
-  const play = (trackKey) => (e) => {
-    e.preventDefault()
-    trackEvent(['ActionBar', trackKey, document.id])
-    toggleAudioPlayer({
-      id: document.id,
-      meta: {
-        title: meta.title,
-        path: meta.path,
-        publishDate: meta.publishDate,
-        image: meta.image,
-        audioSource: meta.audioSource,
+  const play = () => {
+    toggleAudioPlayer(
+      {
+        id: document.id,
+        meta: {
+          title: meta.title,
+          path: meta.path,
+          publishDate: meta.publishDate,
+          image: meta.image,
+          audioSource: meta.audioSource,
+        },
       },
-    })
+      AudioPlayerLocations.ACTION_BAR,
+    )
   }
 
   const speakers = meta.contributors?.filter((c) => c.kind === 'voice')
@@ -316,7 +323,7 @@ const ActionBar = ({
           attributes={{ ['data-show-if-me']: true }}
         />
       ),
-      modes: ['articleTop', 'articleBottom'],
+      modes: ['articleTop', 'articleBottom', 'flyer'],
       show:
         // only show if there is something to subscribe to
         (isDiscussion ||
@@ -452,11 +459,14 @@ const ActionBar = ({
       show: document?.repoId && isEditor,
     },
     {
-      disabled: itemPlaying,
       title: t('article/actionbar/audio/play'),
       label: !forceShortLabel ? t('article/actionbar/audio/play') : '',
-      Icon: PlayCircleIcon,
-      onClick: play('audio'),
+      Icon: itemPlaying ? PauseCircleIcon : PlayCircleIcon,
+      onClick: !itemPlaying
+        ? isActiveAudioItem
+          ? toggleAudioPlayback
+          : play
+        : toggleAudioPlayback,
       modes: ['feed', 'seriesEpisode', 'articleTop'],
       show: showAudioButtons,
       group: 'audio',
@@ -475,10 +485,18 @@ const ActionBar = ({
         e.preventDefault()
         if (itemInAudioQueue) {
           await removeAudioQueueItem(itemInAudioQueue.id)
-          trackEvent(['ActionBar', 'rmAudioQueue', document.id])
+          trackEvent([
+            AudioPlayerLocations.ACTION_BAR,
+            AudioPlayerActions.REMOVE_QUEUE_ITEM,
+            meta?.path,
+          ])
         } else {
           await addAudioQueueItem(document)
-          trackEvent(['ActionBar', 'addToAudioQueue', document.id])
+          trackEvent([
+            AudioPlayerLocations.ACTION_BAR,
+            AudioPlayerActions.ADD_QUEUE_ITEM,
+            meta?.path,
+          ])
         }
       },
       modes: ['feed', 'seriesEpisode', 'articleTop'],
@@ -535,7 +553,7 @@ const ActionBar = ({
   return (
     <div {...(!hasAccess && mode !== 'articleOverlay' && styles.bottomMargin)}>
       <div
-        {...(mode === 'feed' && styles.flexWrap)}
+        {...((mode === 'feed' || mode === 'seriesEpisode') && styles.flexWrap)}
         {...((mode === 'seriesEpisode' || mode === 'feed') &&
           styles.feedContainer)}
       >

@@ -93,6 +93,18 @@ const query = gql`
             label
           }
         }
+        ... on QuestionTypeImageChoice {
+          results: result {
+            count
+            option {
+              label
+              category
+            }
+          }
+          options {
+            label
+          }
+        }
         ... on QuestionTypeDocument {
           results: result(min: 3, top: 20) {
             count

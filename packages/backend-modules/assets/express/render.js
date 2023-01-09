@@ -1,3 +1,4 @@
+const nodePath = require('path')
 const { returnImage, getWidthHeight, s3 } = require('../lib')
 const screenshot = require('../lib/screenshot/chromium')
 const debug = require('debug')('assets:render')
@@ -86,6 +87,14 @@ module.exports = (server) => {
         params,
       })
       return res.status(500).end((error && error.message) || 'server error')
+    }
+
+    if (req.query?.download) {
+      const filename = nodePath.basename(req.path)
+
+      if (filename) {
+        res.set('Content-Disposition', `attachment; filename="${filename}"`)
+      }
     }
 
     const imageResult = await returnImage({

@@ -17,6 +17,8 @@ const membershipsLib = require('./memberships')
 
 const VOUCHER_CODE_LENGTH = 5
 
+const campaignTypesWithMemberRole = ['REGULAR']
+
 const evaluateConstraints = async (granter, campaign, email, t, pgdb) => {
   const errors = []
 
@@ -210,11 +212,9 @@ const claim = async (voucherCode, payload, user, t, pgdb, redis, mail) => {
     })
   }
 
-  const hasAddedMemberRole = await membershipsLib.addMemberRole(
-    grant,
-    recipient,
-    pgdb,
-  )
+  const hasAddedMemberRole =
+    campaignTypesWithMemberRole.includes(campaign.type) &&
+    (await membershipsLib.addMemberRole(grant, recipient, pgdb))
 
   const subscribeToEditorialNewsletters =
     campaign.config?.subscribeToEditorialNewsletters ||
@@ -339,11 +339,10 @@ const request = async (granter, campaignId, payload, t, pgdb, redis, mail) => {
       eventsLib.log(grant, event, pgdb)
     })
   }
-  const hasAddedMemberRole = await membershipsLib.addMemberRole(
-    grant,
-    granter,
-    pgdb,
-  )
+
+  const hasAddedMemberRole =
+    campaignTypesWithMemberRole.includes(campaign.type) &&
+    (await membershipsLib.addMemberRole(grant, granter, pgdb))
 
   const subscribeToEditorialNewsletters =
     campaign.config?.subscribeToEditorialNewsletters ||
@@ -418,7 +417,7 @@ const recommendations = async (campaign, grant, t, pgdb) => {
   return result > 0
 }
 
-const invalidate = async (grant, reason, t, pgdb, mail) => {
+const invalidate = async (grant, reason, t, pgdb, mail, requestUserId) => {
   const now = moment()
   const updateFields = {
     voucherCode: null,
@@ -432,6 +431,8 @@ const invalidate = async (grant, reason, t, pgdb, mail) => {
   )
 
   await eventsLib.log(grant, `invalidated.${reason}`, pgdb)
+
+  const sendMail = !requestUserId || grant.recipientUserId === requestUserId
 
   if (grant.recipientUserId) {
     const recipient = await pgdb.public.users.findOne({
@@ -466,7 +467,7 @@ const invalidate = async (grant, reason, t, pgdb, mail) => {
         })
       }
 
-      if (!(await hasUserActiveMembership(recipient, pgdb))) {
+      if (!(await hasUserActiveMembership(recipient, pgdb)) && sendMail) {
         const granter = await pgdb.public.users.findOne({
           id: grant.granterUserId,
         })
@@ -489,6 +490,30 @@ const invalidate = async (grant, reason, t, pgdb, mail) => {
     hasRecipient: !!grant.recipientUserId,
     ...updateFields,
     result,
+  })
+
+  return result > 0
+}
+
+const noFollowup = async (grant, pgdb) => {
+  const now = moment()
+
+  const eventsLogMessage = 'noFollowup.admin'
+  const updateFields = {
+    followupAt: now,
+    updatedAt: now,
+  }
+
+  const result = await pgdb.public.accessGrants.update(
+    { id: grant.id, followupAt: null },
+    updateFields,
+  )
+
+  await eventsLib.log(grant, eventsLogMessage, pgdb)
+
+  debug('noFollowup', {
+    id: grant.id,
+    ...updateFields,
   })
 
   return result > 0
@@ -710,6 +735,7 @@ module.exports = {
   revoke,
   recommendations,
   invalidate,
+  noFollowup,
   followUp,
 
   findByGranter,

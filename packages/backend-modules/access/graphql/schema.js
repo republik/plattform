@@ -29,6 +29,11 @@ type mutations {
   revokeAccess(id: ID!): Boolean!
 
   """
+  Invalidate access grant
+  """
+  invalidateAccess(id: ID!): Boolean!
+
+  """
   Claim a granted membership with a voucher code
   """
   claimAccess(

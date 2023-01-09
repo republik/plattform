@@ -1,40 +1,40 @@
 import { Fragment, useMemo, useEffect, useState } from 'react'
 import { css } from 'glamor'
+import { renderMdast } from 'mdast-react-render'
+import Head from 'next/head'
+import Link from 'next/link'
+import { useRouter } from 'next/router'
+
 import {
   colors,
   Editorial,
   InlineSpinner,
   Interaction,
+  createFrontSchema,
+  CheckCircleIcon,
 } from '@project-r/styleguide'
-import StatusError from '../StatusError'
-import Head from 'next/head'
-import { createFrontSchema } from '@project-r/styleguide'
-import { CheckCircleIcon } from '@project-r/styleguide'
-
-import { useTranslation } from '../../lib/withT'
-import Loader from '../Loader'
-import Frame from '../Frame'
-import HrefLink from '../Link/Href'
-import ErrorMessage from '../ErrorMessage'
-import CommentLink from '../Discussion/shared/CommentLink'
-import DiscussionLink from '../Discussion/shared/DiscussionLink'
-import ActionBar from '../ActionBar'
-
-import { renderMdast } from 'mdast-react-render'
 
 import { PUBLIC_BASE_URL } from '../../lib/constants'
-
+import { useMe } from '../../lib/context/MeContext'
 import { useInfiniteScroll } from '../../lib/hooks/useInfiniteScroll'
 import { intersperse } from '../../lib/utils/helpers'
-import * as withData from './withData'
 import { cleanAsPath } from '../../lib/utils/link'
-import Link from 'next/link'
-import { useGetFrontQuery } from './graphql/getFrontQuery.graphql'
-import { useRouter } from 'next/router'
-import { useMe } from '../../lib/context/MeContext'
-import { useAudioContext } from '../Audio/AudioProvider'
+import { useTranslation } from '../../lib/withT'
+
+import ActionBar from '../ActionBar'
 import useAudioQueue from '../Audio/hooks/useAudioQueue'
-import { trackEvent } from '../../lib/matomo'
+import CommentLink from '../Discussion/shared/CommentLink'
+import DiscussionLink from '../Discussion/shared/DiscussionLink'
+import ErrorMessage from '../ErrorMessage'
+import Frame from '../Frame'
+import HrefLink from '../Link/Href'
+import Loader from '../Loader'
+import StatusError from '../StatusError'
+
+import FrontAudioPlayButton from './FrontAudioPlayButton'
+import { useGetFrontQuery } from './graphql/getFrontQuery.graphql'
+import * as withData from './withData'
+import ClimateLabTeaser from '../Climatelab/FrontTeaser/ClimateLabTeaser'
 
 const styles = {
   prepublicationNotice: css({
@@ -49,33 +49,26 @@ const styles = {
   }),
 }
 
-export const RenderFront = ({ front, nodes }) => {
+// Years to link to that have a yearly overview page
+const archivedYears = [2023, 2022, 2021, 2020, 2019, 2018]
+
+export const RenderFront = ({ front, nodes, isFrontExtract = false }) => {
   const { t } = useTranslation()
   const { isEditor, hasAccess } = useMe()
-  const { addAudioQueueItem, isAudioQueueAvailable } = useAudioQueue()
-  const { toggleAudioPlayer } = useAudioContext()
+  const { isAudioQueueAvailable } = useAudioQueue()
 
-  const showPlayButton = hasAccess && isAudioQueueAvailable
+  const showPlayButton = !isFrontExtract && hasAccess && isAudioQueueAvailable
 
   const schema = useMemo(
     () =>
       createFrontSchema({
         Link: HrefLink,
-        playAudio:
-          showPlayButton &&
-          ((id) => {
-            addAudioQueueItem({ id }, 1).then(
-              ({ data: { audioQueueItems } }) => {
-                const item = audioQueueItems.find((i) => i.document.id === id)
-                toggleAudioPlayer(item.document)
-                trackEvent(['Front', 'playAudio', id])
-              },
-            )
-          }),
+        AudioPlayButton: showPlayButton ? FrontAudioPlayButton : undefined,
         CommentLink,
         DiscussionLink,
         ...withData,
         ActionBar,
+        ClimateLabTeaser,
         t,
       }),
     [],
@@ -207,7 +200,11 @@ const Front = ({
               <Head>
                 <meta name='robots' content='noindex' />
               </Head>
-              <RenderFront front={front} nodes={front.children.nodes} />
+              <RenderFront
+                front={front}
+                nodes={front.children.nodes}
+                isFrontExtract
+              />
             </Fragment>
           )
         }}
@@ -272,7 +269,7 @@ const Front = ({
                 <div style={{ marginBottom: 10 }}>
                   {t.elements('front/chronology', {
                     years: intersperse(
-                      [2022, 2021, 2020, 2019, 2018].map((year) => (
+                      archivedYears.map((year) => (
                         <Link key={year} href={`/${year}`} passHref>
                           <Editorial.A style={{ color: colors.negative.text }}>
                             {year}

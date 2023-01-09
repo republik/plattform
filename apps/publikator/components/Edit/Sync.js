@@ -1,4 +1,4 @@
-import { renderAsText } from '@project-r/styleguide/editor'
+import { renderSlateAsText } from '@project-r/styleguide'
 
 export const SYNC_LIST = ['shareText']
 
@@ -14,5 +14,5 @@ export const getSyncText = (value, path) => {
     if (!node?.children) return ''
     node = node?.children[i]
   })
-  return node?.children ? renderAsText(node.children) : ''
+  return node?.children ? renderSlateAsText(node.children) : ''
 }

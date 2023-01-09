@@ -6,16 +6,21 @@ import { Message } from '../Editor/Render/Message'
 import renderAsText from '../Editor/Render/text'
 import { CustomDescendant } from '../Editor/custom-types'
 import { isSlateElement } from '../Editor/Render/helpers'
+import { useRenderContext } from '../Editor/Render/Context'
 
-const MAX_CHAR = 600
+const MAX_CHAR = 800
 export const FLYER_CONTAINER_MAXWIDTH = 700
 
 const styles = {
   container: css({
     borderBottomWidth: '1px',
     borderBottomStyle: 'solid',
+    '&:last-child': {
+      borderBottomWidth: 0,
+    },
   }),
   content: css({
+    position: 'relative',
     maxWidth: FLYER_CONTAINER_MAXWIDTH,
     margin: '0 auto',
     padding: '50px 15px',
@@ -24,6 +29,19 @@ const styles = {
     },
     '& > :last-child': {
       marginBottom: '0 !important',
+    },
+  }),
+  contentWithShare: css({
+    paddingBottom: 100,
+    [mUp]: {
+      paddingBottom: 140,
+    },
+  }),
+  share: css({
+    position: 'absolute',
+    bottom: 50,
+    [mUp]: {
+      bottom: 90,
     },
   }),
   contentOpening: css({
@@ -35,6 +53,39 @@ const styles = {
 }
 
 export const FlyerTile: React.FC<{
+  attributes: any
+  innerStyle?: object
+  id?: string
+  [x: string]: unknown
+}> = ({ children, attributes, innerStyle = {}, id, ...props }) => {
+  const [colorScheme] = useColorContext()
+  const { ShareTile } = useRenderContext()
+  return (
+    <div
+      {...props}
+      id={id}
+      {...attributes}
+      {...styles.container}
+      {...colorScheme.set('borderBottomColor', 'flyerText')}
+      {...colorScheme.set('background', 'flyerBg')}
+    >
+      <div
+        {...styles.content}
+        {...(!!ShareTile && styles.contentWithShare)}
+        style={innerStyle}
+      >
+        {!!ShareTile && (
+          <div {...styles.share} contentEditable={false}>
+            <ShareTile tileId={id} />
+          </div>
+        )}
+        {children}
+      </div>
+    </div>
+  )
+}
+
+export const FlyerTileMeta: React.FC<{
   attributes: any
   innerStyle?: object
   [x: string]: unknown

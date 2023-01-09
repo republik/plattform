@@ -19,6 +19,7 @@ type AccessCampaign {
   id: ID!
   title: String!
   description: String
+  type: String!
   defaultMessage: String
   grants(
     "Include grants with were revoked (admin only)"
@@ -126,6 +127,7 @@ type AccessGrant {
   Date when grant was rendered invalid
   """
   invalidatedAt: DateTime
+  followupAt: DateTime
   "Status (Admin only)"
   status: String
   "Events (Admin only)"

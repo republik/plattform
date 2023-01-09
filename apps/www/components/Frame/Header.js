@@ -72,7 +72,10 @@ const Header = ({
   const lastY = useRef()
   const lastDiff = useRef()
 
-  const backButton = !hasOverviewNav && inNativeIOSApp && me
+  const topLevelPaths = ['/', '/feed', '/dialog', '/suche']
+  const isOnTopLevelPage =
+    topLevelPaths.includes(router.asPath) || router.asPath.endsWith('/journal')
+  const backButton = inNativeIOSApp && me && !isOnTopLevelPage
 
   const toggleExpanded = (target) => {
     if (target === expandedNav) {

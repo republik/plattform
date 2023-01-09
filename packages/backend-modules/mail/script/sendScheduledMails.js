@@ -9,7 +9,7 @@ const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
 const sendResultNormalizer = require('../utils/sendResultNormalizer')
 const shouldScheduleMessage = require('../utils/shouldScheduleMessage')
 const shouldSendMessage = require('../utils/shouldSendMessage')
-const { getTemplate } = require('../lib/sendMailTemplate')
+const { getTemplates } = require('../lib/sendMailTemplate')
 const NodemailerInterface = require('../NodemailerInterface')
 const MandrillInterface = require('../MandrillInterface')
 
@@ -57,9 +57,28 @@ PgDb.connect().then(async (pgdb) => {
       return
     }
 
+    const values = record.info?.message?.global_merge_vars?.reduce(
+      (prev, curr) => {
+        const { name, content } = curr
+
+        prev[name] = content
+        prev[name.toLowerCase()] = content
+        prev[name.toUpperCase()] = content
+        return prev
+      },
+      {},
+    )
+
+    const { getHtml, getText } = await getTemplates(templateName)
+    const html = getHtml(values)
+    const text = getText(values)
+
     const mail = { templateName }
-    const html = getTemplate(templateName)
-    const message = { ...record.info.message, html }
+    const message = {
+      ...record.info.message,
+      html,
+      text,
+    }
 
     const sendFunc = sendResultNormalizer(
       shouldScheduleMessage(mail, message),

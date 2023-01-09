@@ -115,7 +115,7 @@ const colors = {
     accentColorFormats: '#d44438',
     accentColorMeta: '#000000',
     accentColorAudio: '#000000',
-    accentColorFlyer: '#405080',
+    accentColorFlyer: '#002BA3',
     overlayShadow: '0 0 15px rgba(0,0,0,0.1)',
     fadeOutGradientDefault:
       'linear-gradient(0deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%)',
@@ -142,10 +142,14 @@ const colors = {
     neutral: '#bbb',
     discrete,
     chartsInverted: '#000000',
-    flyerBg: '#AEC3FE',
+    flyerBg: '#E6ECFF',
     flyerText: '#141414',
-    flyerMetaText: '#405080',
-    flyerFormatText: '#D50033',
+    flyerMetaText: '#002BA3',
+    flyerFormatText: '#990025',
+    imageChoiceShadow:
+      '0 1px 2px 0 rgba(0, 0, 0, 0.24), 0 0 2px 0 rgba(0, 0, 0, 0.12)',
+    imageChoiceShadowHover:
+      '0 4px 8px 0 rgba(0, 0, 0, 0.24), 0 0 8px 0 rgba(0, 0, 0, 0.12)',
   },
   dark: {
     logo: '#FFFFFF',
@@ -171,7 +175,7 @@ const colors = {
     accentColorFormats: '#d44438',
     accentColorMeta: '#FFFFFF',
     accentColorAudio: '#FFFFFF',
-    accentColorFlyer: '#A3B5E6',
+    accentColorFlyer: '#A3BBFF',
     overlayShadow: '0 0 15px rgba(0,0,0,0.3)',
     fadeOutGradientDefault:
       'linear-gradient(0deg, rgba(25,25,25,1) 0%, rgba(25,25,25,0) 100%)',
@@ -198,10 +202,14 @@ const colors = {
     neutral: '#bbb',
     discrete,
     chartsInverted: '#FFFFFF',
-    flyerBg: '#011651',
+    flyerBg: '#001140',
     flyerText: '#F0F0F0',
-    flyerMetaText: '#A3B5E6',
-    flyerFormatText: '#FF2A5C',
+    flyerMetaText: '#A3BBFF',
+    flyerFormatText: '#D90034',
+    imageChoiceShadow:
+      '0 1px 2px 0 rgba(255, 255, 255, 0.24), 0 0 2px 0 rgba(255, 255, 255, 0.12)',
+    imageChoiceShadowHover:
+      '0 4px 8px 0 rgba(255, 255, 255, 0.24), 0 0 8px 0 rgba(255, 255, 255, 0.12)',
   },
   mappings: {
     format: {

@@ -53,9 +53,9 @@ import {
 import createLiveTeasers from './liveTeasers'
 import { ColorContextProvider } from '../../components/Colors/ColorContext'
 
-const playFn = (onPlay, { urlMeta }) =>
-  onPlay && urlMeta?.audioSourceKind === 'readAloud'
-    ? () => onPlay(urlMeta.documentId)
+const shouldRenderPlayButton = ({ urlMeta }) =>
+  urlMeta?.hasAudio && urlMeta?.audioSourceKind !== 'syntheticReadAloud'
+    ? true
     : undefined
 
 export const subject = {
@@ -89,7 +89,7 @@ const DefaultLink = ({ children }) => children
 const createFrontSchema = ({
   Link = DefaultLink,
   t = () => '',
-  playAudio,
+  AudioPlayButton,
   noEmpty = true,
   ...rest
 } = {}) => {
@@ -249,7 +249,11 @@ const createFrontSchema = ({
     component: ({ children, attributes, ...props }) => (
       <Link href={props.url}>
         <TeaserFrontImage
-          onPlay={playFn(playAudio, props)}
+          audioPlayButton={
+            !!AudioPlayButton && shouldRenderPlayButton(props) ? (
+              <AudioPlayButton documentId={props?.urlMeta.documentId} />
+            ) : undefined
+          }
           attributes={attributes}
           {...props}
         >
@@ -308,7 +312,11 @@ const createFrontSchema = ({
     component: ({ children, attributes, ...props }) => (
       <Link href={props.url}>
         <TeaserFrontSplit
-          onPlay={playFn(playAudio, props)}
+          audioPlayButton={
+            !!AudioPlayButton && shouldRenderPlayButton(props) ? (
+              <AudioPlayButton documentId={props?.urlMeta.documentId} />
+            ) : undefined
+          }
           attributes={attributes}
           {...props}
         >
@@ -371,7 +379,11 @@ const createFrontSchema = ({
     component: ({ children, attributes, ...props }) => (
       <Link href={props.url}>
         <TeaserFrontTypo
-          onPlay={playFn(playAudio, props)}
+          audioPlayButton={
+            !!AudioPlayButton && shouldRenderPlayButton(props) ? (
+              <AudioPlayButton documentId={props?.urlMeta.documentId} />
+            ) : undefined
+          }
           attributes={attributes}
           {...props}
         >
@@ -428,7 +440,11 @@ const createFrontSchema = ({
       <ColorContextProvider colorSchemeKey='light'>
         <Link href={props.url}>
           <TeaserFrontTile
-            onPlay={playFn(playAudio, props)}
+            audioPlayButton={
+              !!AudioPlayButton && shouldRenderPlayButton(props) ? (
+                <AudioPlayButton documentId={props?.urlMeta.documentId} />
+              ) : undefined
+            }
             attributes={attributes}
             {...props}
           >
@@ -566,7 +582,11 @@ const createFrontSchema = ({
       return (
         <Link href={props.url}>
           <TeaserCarouselTile
-            onPlay={playFn(playAudio, props)}
+            audioPlayButton={
+              !!AudioPlayButton && shouldRenderPlayButton(props) ? (
+                <AudioPlayButton documentId={props?.urlMeta.documentId} />
+              ) : undefined
+            }
             attributes={attributes}
             {...props}
           >

@@ -1,6 +1,8 @@
 const crypto = require('crypto')
 
-const { NEWSLETTER_HMAC_KEY } = process.env
+const base64u = require('@orbiting/backend-modules-base64u')
+
+const { NEWSLETTER_HMAC_KEY, FRONTEND_BASE_URL } = process.env
 
 if (!NEWSLETTER_HMAC_KEY) {
   console.warn(
@@ -19,6 +21,20 @@ const authenticate = (email, name, subscribed, t) => {
     .digest('hex')
 }
 
+const getConsentLink = (email, name, context) => {
+  const link = new URL('/mitteilung', FRONTEND_BASE_URL)
+
+  link.searchParams.set('type', 'newsletter')
+  link.searchParams.set('name', name)
+  link.searchParams.set('subscribed', '1')
+  link.searchParams.set('email', base64u.encode(email))
+  link.searchParams.set('mac', authenticate(email, name, true))
+  link.searchParams.set('context', context || 'newsletter')
+
+  return link.toString()
+}
+
 module.exports = {
   authenticate,
+  getConsentLink,
 }

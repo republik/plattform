@@ -137,8 +137,19 @@ cp ../backends/servers/assets/.env apps/assets/.env
 
 </p>
 </details>
-
 For more about the available env variables see the individual readme of the apps.
+
+### Setup authentication environment
+
+#### Authentication cookie
+
+The `COOKIE_NAME` env-variable can be defined in `apps/api` and `apps/www`. It's crucial that the value defined in the apps/www file matches the one of the API that you're developing against.
+If these two env-variables don't match, www will be stuck in a redirection loop when trying to open the URL `/`.
+
+In addition to the cookie name, there the following env-variables must be set to allow for token based authentication.
+The env-variables `JWT_COOKIE_NAME` and `JWT_ISSUER` are present in both the api and www env-files and must be identical.
+Additionally a private-key must be provided to the api with the`JWT_PRIVATE_KEY` env-variable and a public-key must be provided to www with the `JWT_PUBLIC_KEY` env-variable.
+There is a script under `scripts/generate-keypair.sh` that can generate keys in the right format to be directly passed into the corresponding env-files.
 
 ### Database Setup
 
@@ -158,17 +169,13 @@ yarn dev
 
 Please be patient on boot. It might take a minute for everything to compile and a few nodemon restarts before everything runs smoothly.
 
-### Developing with a specified scope
+### Only run certain apps while developing
 
-If you don't want all apps to run when using the `dev` script, you can use the scope flag on the to run only that package in dev mode.
-For example when developing www and api `yarn dev --scope="@orbiting/www-app" --scope="@orbiting/api-app"`
+If you don't want all apps to run when using the `dev` script, you can use the `filter` flag.
+(see the [Turborepo documentation](https://turbo.build/repo/docs/reference/command-line-reference#--filter))
+For example if you only want to run the republik frontend run `yarn dev --filter=@orbiting/www-app`.
 
-#### Include dependencies
-
-If you are developing on a package in a scoped mode, you might want to also pass the `--include-dependencies` flag to ensure that your dependencies are also running.
-
-For example, if you are developing on `@orbiting/api-app` and you need all backend-modules to run `tsc` in watch mode run the following command:
-`yarn dev --scope="@orbiting/api-app" --include-dependencies`
+In most cases you have certain dependencies that should be run as well, for example the styleguide if you're developing in the frontend. In that case simply append `...` directly after the filter, to ensure that the additionally to the filtered app, all dependencies are executed as well. (For example in www run: `yarn dev --filter=@orbiting/www-app...`)
 
 ### Commit Message Format
 
@@ -244,7 +251,7 @@ CORS_ALLOWLIST_URL=http://localhost:3003,http://localhost:3005,http://localhost:
 Start your frontend and api using:
 
 ```bash
-yarn dev --scope="@orbiting/www-app" --scope="@orbiting/api-app"
+yarn dev --filter=@orbiting/www-app... --filter=@orbiting/api-app...
 ```
 
 

@@ -9,18 +9,18 @@ import 'codemirror/addon/lint/lint.css'
 import 'codemirror/addon/fold/foldgutter.css'
 import 'codemirror/theme/neo.css'
 
-type Props = {
+type WebAppProps = {
   serverContext: any
 }
 
-const WebApp = ({ Component, pageProps }: AppProps<Props>) => {
-  const { serverContext, ...remainingProps } = pageProps
+const WebApp = ({ Component, pageProps }: AppProps<WebAppProps>) => {
+  const { serverContext, ...otherPageProps } = pageProps
   return (
     <>
       <Head>
         <meta name='viewport' content='width=device-width,initial-scale=1' />
       </Head>
-      <Component serverContext={serverContext} {...remainingProps} />
+      <Component serverContext={serverContext} {...otherPageProps} />
       <Track />
     </>
   )

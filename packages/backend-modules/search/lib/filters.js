@@ -16,13 +16,13 @@ const hasCriteriaBuilder =
   (value, { filter, not = false }) => ({
     clause: not || !value ? 'must_not' : 'must',
     filter: [
-      filter || { match_all: {} },
+      filter,
       {
         exists: {
           field: fieldName,
         },
       },
-    ],
+    ].filter(Boolean),
   })
 
 const dateRangeCriteriaBuilder =
@@ -30,7 +30,7 @@ const dateRangeCriteriaBuilder =
   (range, { filter, not = false }) => ({
     clause: not ? 'must_not' : 'must',
     filter: [
-      filter || { match_all: {} },
+      filter,
       {
         range: {
           [fieldName]: {
@@ -39,7 +39,7 @@ const dateRangeCriteriaBuilder =
           },
         },
       },
-    ],
+    ].filter(Boolean),
   })
 
 const rangeCriteriaBuilder =
@@ -54,7 +54,7 @@ const rangeCriteriaBuilder =
     return {
       clause: 'must',
       filter: [
-        filter || { match_all: {} },
+        filter,
         {
           range: {
             [fieldName]: {
@@ -63,7 +63,7 @@ const rangeCriteriaBuilder =
             },
           },
         },
-      ],
+      ].filter(Boolean),
     }
   }
 

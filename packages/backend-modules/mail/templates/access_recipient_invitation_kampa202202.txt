@@ -1,6 +1,6 @@
 Guten Tag
 
-{{#unless RECIPIENT_HAS_MEMBERSHIPS}} {{#if `RECIPIENT_EMAIL != GRANTER_EMAIL`}}
+{{#unless RECIPIENT_HAS_MEMBERSHIPS}} {{#if recipientIsNotGranter}}
 
 {{GRANTER_NAME}} ({{GRANTER_EMAIL}} ) hat Ihnen acht Wochen Republik geschenkt.
 
@@ -10,7 +10,7 @@ Und uns eine Nachricht für Sie mitgegeben:
 
 > {{{GRANTER_MESSAGE}}}
 
-{{/if}} {{/if}} {{#if `RECIPIENT_EMAIL != GRANTER_EMAIL`}}
+{{/if}} {{/if}} {{#if recipientIsNotGranter}}
 
 Wir sind ein digitales Magazin für Politik, Wirtschaft, Gesellschaft und Kultur
 – unabhängig und werbefrei. Wir heissen Sie als Gast herzlich willkommen an
@@ -40,7 +40,7 @@ wir den Zugang anders als sonst auch für Gäste freigeschaltet.
 
 Sie erhalten diese E-Mail im Rahmen unserer Aktion «{{CAMPAIGN_TITLE}}».
 
-{{#if `RECIPIENT_EMAIL != GRANTER_EMAIL`}}
+{{#if recipientIsNotGranter}}
 
 {{GRANTER_NAME}} geht davon aus, dass Sie noch kein Republik-Abo besitzen. Dabei
 befinden Sie sich bereits an Bord – vielen Dank dafür!

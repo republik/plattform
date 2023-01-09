@@ -769,6 +769,10 @@
       "value": "keine"
     },
     {
+      "key": "metaData/paynotes/mode/climate",
+      "value": "Klimalab"
+    },
+    {
       "key": "metaData/paynotes/add",
       "value": "Spezialangefertigte Störer hinzufügen"
     },
@@ -899,6 +903,14 @@
     {
       "key": "metaData/darkMode",
       "value": "Dunkles Farbschema forcieren"
+    },
+    {
+      "key": "metaData/isRestricted",
+      "value": "Eingeschränkter Zugang auf Links"
+    },
+    {
+      "key": "metaData/climateLab",
+      "value": "Klimalabor"
     },
     {
       "key": "metaData/recommendations/heading",

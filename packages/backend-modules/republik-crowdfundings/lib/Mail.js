@@ -28,7 +28,6 @@ const {
   MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR,
   MAILCHIMP_INTEREST_NEWSLETTER_ACCOMPLICE,
   MAILCHIMP_INTEREST_NEWSLETTER_CLIMATE,
-  MAILCHIMP_INTEREST_NEWSLETTER_READALOUD,
   MAILCHIMP_INTEREST_NEWSLETTER_WINTER,
   FRONTEND_BASE_URL,
 } = process.env
@@ -49,11 +48,6 @@ const mail = createMail([
   {
     name: 'CLIMATE',
     interestId: MAILCHIMP_INTEREST_NEWSLETTER_CLIMATE,
-  },
-  {
-    name: 'READALOUD',
-    interestId: MAILCHIMP_INTEREST_NEWSLETTER_READALOUD,
-    invisible: true,
   },
   {
     name: 'ACCOMPLICE',
@@ -395,6 +389,14 @@ mail.prepareMembershipGiversProlongNotice = async (
         content: memberships.length,
       },
       {
+        name: 'hasMultipleGiftedMemberships',
+        content: memberships.length > 1,
+      },
+      {
+        name: 'hasOneGiftedMembership',
+        content: memberships.length === 1,
+      },
+      {
         name: 'inform_claimers_days',
         content: informClaimersDays,
       },
@@ -524,6 +526,11 @@ mail.prepareMembershipOwnerNotice = async (
           content: autoPay.membershipType,
         },
       autoPay &&
+        autoPay.membershipType && {
+          name: 'autopay_membership_type_benefactor',
+          content: autoPay.membershipType === 'BENEFACTOR',
+        },
+      autoPay &&
         autoPay.withDiscount && {
           name: 'autopay_with_discount',
           content: autoPay.withDiscount,
@@ -629,6 +636,14 @@ mail.sendMembershipOwnerAutoPay = async ({ autoPay, payload, pgdb, t }) => {
           content: payload.attemptNumber,
         },
         {
+          name: 'thirdAttempt',
+          content: payload.attemptNumber === 3,
+        },
+        {
+          name: 'fourthAttempt',
+          content: payload.attemptNumber === 4,
+        },
+        {
           name: 'authentication_required',
           content: payload.authenticationRequired,
         },
@@ -683,6 +698,10 @@ mail.sendMembershipClaimNotice = async ({ membership }, { pgdb, t }) => {
           name: 'membership_type_interval',
           content: membershipType.interval,
         },
+        {
+          name: 'hasMonthlyAbo',
+          content: membershipType.interval === 'month',
+        },
       ],
     },
     { pgdb },
@@ -721,6 +740,10 @@ mail.sendMembershipClaimerOnboarding = async (
         {
           name: 'active_membership_type_company_name',
           content: activeMembershipCompany,
+        },
+        {
+          name: 'isRepublikMember',
+          content: activeMembershipCompany === 'REPUBLIK',
         },
       ],
     },
@@ -863,7 +886,11 @@ mail.getPledgeMergeVars = async (
 
   const hasGoodies = rewardGoodies.map((goodie) => {
     return {
-      name: `goodies_has_${goodie.name.toLowerCase()}`,
+      // MUG_CERAMIC is a special mug we use as a goodie until we have the final mug.
+      // In transactionals this prop can fallback to 'mug' in both cases.
+      name: `goodies_has_${
+        goodie.name === 'MUG_CERAMIC' ? 'mug' : goodie.name.toLowerCase()
+      }`,
       content: !!pledgeOptions.filter(
         (pledgeOption) =>
           pledgeOption.packageOption.reward &&
@@ -896,6 +923,15 @@ mail.getPledgeMergeVars = async (
   `)
 
   const hasActiveMonthly = monthlyActiveMemberships.length > 0
+
+  const goodiesCount = pledgeOptions
+    // Filter "pseudo" pledge options without a reward
+    .filter(
+      (pledgeOption) =>
+        pledgeOption.packageOption.reward &&
+        pledgeOption.packageOption.reward.rewardType === 'Goodie',
+    )
+    .reduce((agg, pledgeOption) => agg + pledgeOption.amount, 0)
 
   return [
     // Purchase itself
@@ -939,7 +975,9 @@ mail.getPledgeMergeVars = async (
 
           return {
             oamount: pledgeOption.amount,
+            hasMultipleOAmounts: pledgeOption.amount > 1,
             otype: rewardType,
+            isOTypeGoodie: rewardType === 'Goodie',
             oname: name,
             olabel: !isGiftedMembership ? labelDefault : labelGiftedMembership,
             oprice,
@@ -968,6 +1006,14 @@ mail.getPledgeMergeVars = async (
     {
       name: 'total',
       content: total,
+    },
+    {
+      name: 'totalPledgeAbove1000',
+      content: total > 1000,
+    },
+    {
+      name: 'totalPledgeBelow1000',
+      content: total < 1000,
     },
     {
       name: 'total_formatted',
@@ -1041,15 +1087,28 @@ mail.getPledgeMergeVars = async (
       content: numAccessGrantedMemberships,
     },
     {
+      name: 'hasAnyGrantedMemberships',
+      content: numAccessGrantedMemberships > 0,
+    },
+    {
+      name: 'hasOneGrantedMemberships',
+      content: numAccessGrantedMemberships === 1,
+    },
+    {
+      name: 'hasMultipleGrantedMemberships',
+      content: numAccessGrantedMemberships > 1,
+    },
+    {
       name: 'goodies_count',
-      content: pledgeOptions
-        // Filter "pseudo" pledge options without a reward
-        .filter(
-          (pledgeOption) =>
-            pledgeOption.packageOption.reward &&
-            pledgeOption.packageOption.reward.rewardType === 'Goodie',
-        )
-        .reduce((agg, pledgeOption) => agg + pledgeOption.amount, 0),
+      content: goodiesCount,
+    },
+    {
+      name: 'hasOneGoodie',
+      content: goodiesCount === 1,
+    },
+    {
+      name: 'hasMultipleGoodies',
+      content: goodiesCount > 1,
     },
     ...hasGoodies, // goodies_has_[goodies.name]
     {
@@ -1067,8 +1126,20 @@ mail.getPledgeMergeVars = async (
       content: pledgerMemberships.length,
     },
     {
+      name: 'hasAnyPledgeMemberships',
+      content: pledgerMemberships.length > 0,
+    },
+    {
       name: 'gifted_memberships_count',
       content: giftedMemberships.length,
+    },
+    {
+      name: 'hasMultipleGiftedMemberships',
+      content: giftedMemberships.length > 1,
+    },
+    {
+      name: 'hasOneGiftedMembership',
+      content: giftedMemberships.length === 1,
     },
     {
       name: 'link_claim',

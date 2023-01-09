@@ -429,6 +429,22 @@
       "value": "Republik-Fondues"
     },
     {
+      "key": "api/email/option/goodie/mug/1",
+      "value": "Tasse"
+    },
+    {
+      "key": "api/email/option/goodie/mug/other",
+      "value": "Tassen"
+    },
+    {
+      "key": "api/email/option/goodie/mug_ceramic/1",
+      "value": "Tasse"
+    },
+    {
+      "key": "api/email/option/goodie/mug_ceramic/other",
+      "value": "Tassen"
+    },
+    {
       "key": "api/email/option/membershiptype/abo/1",
       "value": "Jahresmitgliedschaft"
     },
@@ -821,10 +837,6 @@
       "value": "Bestätigen Sie Ihre Anmeldung zum Klimalabor-Newsletter."
     },
     {
-      "key": "api/newsletters/request/READALOUD/subject",
-      "value": "Die Republik zum Hören: Anmeldung bestätigen"
-    },
-    {
       "key": "api/newsletters/request/WINTER/subject",
       "value": "Anmeldung zum Winter-is-coming-Newsletter bestätigen"
     },
@@ -951,6 +963,10 @@
     {
       "key": "pledge/contact/lastName/label",
       "value": "Ihr Nachname"
+    },
+    {
+      "key": "profile/contact/prolitterisId/label",
+      "value": "Prolitteris ID"
     },
     {
       "key": "profile/credential/label",
@@ -1165,6 +1181,10 @@
       "value": "Einladung von {granterName}"
     },
     {
+      "key": "api/access/email/recipient/invitation_klimalabor/subject",
+      "value": "Einladung zum Klimalabor der Republik"
+    },
+    {
       "key": "api/access/email/recipient/invitation_kampa202202/subject",
       "value": "Einladung von {granterName} für acht Wochen Republik"
     },
@@ -1179,6 +1199,10 @@
     {
       "key": "api/access/email/recipient/onboarding_kampa202202/subject",
       "value": "Ihr Republik-Probezugang: Willkommen!"
+    },
+    {
+      "key": "api/access/email/recipient/onboarding_klimalabor/subject",
+      "value": "Willkommen im Klimalabor"
     },
     {
       "key": "api/access/email/recipient/onboarding_gifted_membership/subject",
@@ -2177,6 +2201,22 @@
       "value": "Republik-Fondues"
     },
     {
+      "key": "api/invoices/option/Goodie/MUG/1",
+      "value": "Tasse"
+    },
+    {
+      "key": "api/invoices/option/Goodie/MUG/other",
+      "value": "Tassen"
+    },
+    {
+      "key": "api/invoices/option/Goodie/MUG_CERAMIC/1",
+      "value": "Tasse"
+    },
+    {
+      "key": "api/invoices/option/Goodie/MUG_CERAMIC/other",
+      "value": "Tassen"
+    },
+    {
       "key": "api/invoices/option/MembershipType/ABO/1",
       "value": "Jahresmitgliedschaft"
     },
@@ -2258,7 +2298,7 @@
     },
     {
       "key": "api/republik/revenueStats/segment/goodie",
-      "value": "Waren wie Bücher, Taschen, Masken und Fondues"
+      "value": "Waren wie Bücher, Taschen, Masken, Fondues und Tassen"
     },
     {
       "key": "api/republik/revenueStats/segment/donation",
@@ -2345,7 +2385,7 @@
       "value": "Kalendereintrag bereits vorhanden"
     },
     {
-      "key": "api/calendar/slot/error/someoneBookAlready",
+      "key": "api/calendar/slot/error/slotIsNotAvailable",
       "value": "Kalendereintrag nicht mehr verfügbar"
     },
     {

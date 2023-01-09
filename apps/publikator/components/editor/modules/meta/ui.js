@@ -211,15 +211,19 @@ const MetaData = ({
         />
         <br />
         {slugFieldElement}
-        {(customFieldsByRef['bool'] || [])
-          .concat(
-            darkMode
-              ? {
-                  key: 'darkMode',
-                  label: t('metaData/darkMode'),
-                }
-              : [],
-          )
+        {[
+          ...(customFieldsByRef['bool'] || []),
+          darkMode && {
+            key: 'darkMode',
+            label: t('metaData/darkMode'),
+          },
+          darkMode && {
+            key: 'climate',
+            label: t('metaData/climateLab'),
+          },
+          { key: 'isRestricted', label: t('metaData/isRestricted') },
+        ]
+          .filter(Boolean)
           .map((customField) => {
             return (
               <div key={customField.key} {...styles.bool}>

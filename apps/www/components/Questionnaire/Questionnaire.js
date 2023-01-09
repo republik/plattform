@@ -21,6 +21,7 @@ import {
   withQuestionnaireMutation,
   withQuestionnaireReset,
   withQuestionnaireRevoke,
+  withQuestionnaireAnonymize,
 } from './enhancers'
 import Questions from './Questions'
 import QuestionnaireClosed from './QuestionnaireClosed'
@@ -62,9 +63,26 @@ const Questionnaire = (props) => {
     submitQuestionnaire,
     resetQuestionnaire,
     revokeQuestionnaire,
+    anonymizeQuestionnaire,
     onQuestionnaireChange,
     detailsData,
+    submittedMessage,
+    SubmittedComponent,
+    questionnaireName,
+    context,
+    sliceAt,
+    showSlice2,
+    slug,
+    updateDetails,
+    externalSubmit = false,
+    publicSubmission = true,
+    hideCount = false,
+    hideInvalid = false,
+    hideReset = false,
+    requireName = true,
+    showAnonymize = false,
   } = props
+
   const [state, setState] = useState({})
   const [isResubmitAnswers, setIsResubmitAnswers] = useState(false)
   const [headerHeight] = useHeaderHeight()
@@ -94,17 +112,6 @@ const Questionnaire = (props) => {
         })
       })
   }
-
-  const {
-    submittedMessage,
-    questionnaireName,
-    externalSubmit,
-    hideCount,
-    sliceAt,
-    showSlice2,
-    slug,
-    updateDetails,
-  } = props
 
   return (
     <Loader
@@ -136,6 +143,7 @@ const Questionnaire = (props) => {
         } = questionnaireData
         const error = state.error || props.error
         const updating = state.updating || props.updating || props.submitting
+        const hasUserAnswers = questions.some(({ userAnswer }) => !!userAnswer)
 
         if (!userIsEligible) {
           return null
@@ -145,7 +153,6 @@ const Questionnaire = (props) => {
         }
 
         // ToDo: expose & query questionnaire.submissionsAccessRole
-        const publicSubmission = true
 
         const onReset = async () => {
           setState({ updating: true })
@@ -170,22 +177,33 @@ const Questionnaire = (props) => {
             updating: false,
           }))
         }
+
+        const onResubmit = resubmitAnswers && (() => setIsResubmitAnswers(true))
+
         const onRevoke =
           revokeSubmissions &&
-          (() => {
-            processSubmit(revokeQuestionnaire, id)
-          })
+          hasUserAnswers &&
+          (() => processSubmit(revokeQuestionnaire, id))
 
+        if (
+          !updating &&
+          !isResubmitAnswers &&
+          userHasSubmitted &&
+          SubmittedComponent
+        ) {
+          return (
+            <SubmittedComponent
+              questionnaire={questionnaireData.questionnaire}
+              onResubmit={onResubmit}
+              onRevoke={onRevoke}
+            />
+          )
+        }
         if (!updating && !isResubmitAnswers && (hasEnded || userHasSubmitted)) {
           return (
             <QuestionnaireClosed
               submitted={userHasSubmitted}
-              onResubmit={
-                resubmitAnswers &&
-                (() => {
-                  setIsResubmitAnswers(true)
-                })
-              }
+              onResubmit={onResubmit}
               onRevoke={onRevoke}
               publicSubmission={publicSubmission}
             />
@@ -209,7 +227,8 @@ const Questionnaire = (props) => {
           )
         })
         const askForName =
-          !detailsData.me?.firstName || !detailsData.me?.lastName
+          requireName &&
+          (!detailsData.me?.firstName || !detailsData.me?.lastName)
         const needsMeUpdate = askForName || askForAddress
 
         const detailsErrorMessages = Object.keys(detailsState.errors)
@@ -266,6 +285,9 @@ const Questionnaire = (props) => {
           }
           processSubmit(submitQuestionnaire, id)
         }
+
+        const onSubmitAnonymized = () =>
+          processSubmit(anonymizeQuestionnaire, id)
 
         return (
           <div>
@@ -348,10 +370,14 @@ const Questionnaire = (props) => {
               <QuestionnaireActions
                 isResubmitAnswers={isResubmitAnswers}
                 onSubmit={onSubmit}
-                onReset={onReset}
+                onSubmitAnonymized={onSubmitAnonymized}
+                showAnonymize={showAnonymize}
+                onReset={!hideReset && onReset}
                 updating={updating}
                 invalid={userAnswerCount < 1}
                 publicSubmission={publicSubmission}
+                hideInvalid={hideInvalid}
+                context={context}
               />
             )}
           </div>
@@ -365,6 +391,7 @@ const QuestionnaireWithMutations = compose(
   withQuestionnaireMutation,
   withQuestionnaireReset,
   withQuestionnaireRevoke,
+  withQuestionnaireAnonymize,
   withMyDetails,
   withMyDetailsMutation,
 )(Questionnaire)

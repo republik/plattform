@@ -59,7 +59,7 @@
                       {{autopay_card_last4}} belasten wir am {{end_date}} mit
                       {{autopay_total}}.
                     </p>
-                    {{#if `autopay_membership_type == "BENEFACTOR_ABO"`}}
+                    {{#if autopay_membership_type_benefactor}}
                     <p>
                       Dieser Beitrag kommt zustande, weil Sie die Republik im
                       letzten Jahr grosszügigerweise mit einer
@@ -76,7 +76,7 @@
                         vor der Abbuchung noch anpassen</a
                       >.
                     </p>
-                    {{elseif autopay_with_discount}}
+                    {{else if autopay_with_discount}}
                     <p>
                       Sie haben im letzten Jahr die vergünstigte Mitgliedschaft
                       gewählt. Da unsere Unabhängigkeit, ja unsere Existenz von
@@ -87,7 +87,7 @@
                         >Ihren Mitgliedschaftsbeitrag erhöhen könnten</a
                       >. Jede zusätzliche Summe macht einen Unterschied.
                     </p>
-                    {{elseif autopay_with_donation}}
+                    {{else if autopay_with_donation}}
                     <p>
                       Dieser Beitrag kommt zustande, weil Sie die Republik im
                       letzten Jahr grosszügigerweise mit einer zusätzlichen

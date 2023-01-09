@@ -24,6 +24,11 @@ import {
 import { useMe } from '../../../../../../lib/context/MeContext'
 import { useInNativeApp } from '../../../../../../lib/withInNativeApp'
 import { useAudioContext } from '../../../../AudioProvider'
+import {
+  AudioPlayerLocations,
+  AudioPlayerActions,
+} from '../../../../types/AudioActionTracking'
+import { trackEvent } from '../../../../../../lib/matomo'
 
 const styles = {
   list: css({
@@ -66,7 +71,7 @@ const Queue = ({
    */
   const [items, setItems] = useState<AudioQueueItem[]>(inputItems)
   const { toggleAudioPlayer, removeAudioQueueItem } = useAudioContext()
-  const { audioQueueIsLoading, reorderAudioQueue, checkIfActiveItem } =
+  const { audioQueueIsLoading, reorderAudioQueue, checkIfHeadOfQueue } =
     useAudioQueue()
 
   /**
@@ -81,7 +86,7 @@ const Queue = ({
    * @param item
    */
   const handleClick = async (item: AudioQueueItem) => {
-    toggleAudioPlayer(item.document)
+    toggleAudioPlayer(item.document, AudioPlayerLocations.AUDIO_PLAYER)
   }
 
   /**
@@ -91,6 +96,11 @@ const Queue = ({
   const handleRemove = async (item: AudioQueueItem) => {
     try {
       await removeAudioQueueItem(item.id)
+      trackEvent([
+        AudioPlayerLocations.AUDIO_PLAYER,
+        AudioPlayerActions.REMOVE_QUEUE_ITEM,
+        item?.document?.meta?.path,
+      ])
     } catch (e) {
       console.error(e)
     }
@@ -168,7 +178,7 @@ const Queue = ({
               key={item.id}
               t={t}
               item={item}
-              isActive={!!checkIfActiveItem(item.document.id)}
+              isActive={!!checkIfHeadOfQueue(item.document.id)}
               onClick={handleClick}
               onRemove={handleRemove}
               onDownload={handleDownload}

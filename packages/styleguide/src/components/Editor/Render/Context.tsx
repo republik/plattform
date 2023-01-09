@@ -1,12 +1,21 @@
 import React, { createContext, useContext, useMemo } from 'react'
-import { createFormatter } from '../../../lib/translate'
+import { createFormatter, Formatter } from '../../../lib/translate'
 import { FlyerDate } from '../../Flyer/Date'
-import { EditorContext } from '../custom-types'
+
+type RenderProps = {
+  Link?: React.FC<any>
+  t?: Formatter
+  nav?: JSX.Element
+  ShareTile?: React.FC<{ tileId: string }>
+  noLazy?: boolean
+  commitId?: string
+  repoId?: string
+}
 
 export const PlaceholderLink = ({ children }) => React.Children.only(children)
 const emptyFormatter = createFormatter([])
 
-const RenderContext = createContext<EditorContext>({
+const RenderContext = createContext<RenderProps>({
   Link: PlaceholderLink,
   t: emptyFormatter,
   nav: <FlyerDate />,
@@ -15,17 +24,19 @@ const RenderContext = createContext<EditorContext>({
 
 export const useRenderContext = () => useContext(RenderContext)
 
-export const RenderContextProvider: React.FC<EditorContext> = ({
+export const RenderContextProvider: React.FC<RenderProps> = ({
   children,
   Link = PlaceholderLink,
   t = emptyFormatter,
   nav = <FlyerDate />,
+  ShareTile,
+  noLazy,
   repoId,
   commitId = 'new',
 }) => {
   const value = useMemo(
-    () => ({ Link, t, nav, repoId, commitId }),
-    [Link, t, nav, repoId, commitId],
+    () => ({ Link, t, nav, ShareTile, noLazy, repoId, commitId }),
+    [Link, t, nav, ShareTile, noLazy, repoId, commitId],
   )
   return (
     <RenderContext.Provider value={value}>{children}</RenderContext.Provider>

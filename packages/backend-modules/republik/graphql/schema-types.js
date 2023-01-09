@@ -70,6 +70,7 @@ extend type User {
   sequenceNumber: Int
 
   newsletterSettings: NewsletterSettings!
+  prolitterisId: String
 }
 
 type NewsletterSettings {
@@ -132,7 +133,6 @@ enum NewsletterName {
   PROJECTR
   ACCOMPLICE
   CLIMATE
-  READALOUD
   WINTER
 }
 
@@ -201,6 +201,10 @@ type MembershipStats {
 
 type MemberStats {
   count: Int!
+}
+
+type RoleStats {
+  count: Int
 }
 
 type MonthlyMembershipStat {

@@ -2,6 +2,7 @@ import { cloneElement, useRef, useEffect, useMemo, useContext } from 'react'
 import { css } from 'glamor'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
+import dynamic from 'next/dynamic'
 import { renderMdast } from 'mdast-react-render'
 import compose from 'lodash/flowRight'
 import {
@@ -12,6 +13,7 @@ import {
   withSubscription,
 } from '@apollo/client/react/hoc'
 import { ApolloConsumer, ApolloProvider, gql, useQuery } from '@apollo/client'
+import { Mutation, Query, Subscription } from '@apollo/client/react/components'
 
 import {
   Center,
@@ -21,7 +23,6 @@ import {
   Interaction,
   TitleBlock,
   Editorial,
-  Flyer,
   TeaserEmbedComment,
   IconButton,
   SeriesNav,
@@ -34,33 +35,27 @@ import {
   createSectionSchema,
   createPageSchema,
   flyerSchema,
-  SlateRender,
-  RenderContextProvider,
-  FlyerTile,
+  EditIcon,
+  createRequire,
 } from '@project-r/styleguide'
-import { EditIcon } from '@project-r/styleguide'
-import { createRequire } from '@project-r/styleguide'
 
-import ActionBarOverlay from './ActionBarOverlay'
-import SeriesNavBar from './SeriesNavBar'
-import TrialPayNoteMini from './TrialPayNoteMini'
-import Extract from './Extract'
-import { FlyerWrapper, PayNote } from './PayNote'
-import Progress from './Progress'
-import PodcastButtons from './PodcastButtons'
-import { getDocument } from './graphql/getDocument'
 import withT from '../../lib/withT'
 import { parseJSONObject } from '../../lib/safeJSON'
 import { formatDate } from '../../lib/utils/format'
 import withInNativeApp, { postMessage } from '../../lib/withInNativeApp'
 import { splitByTitle } from '../../lib/utils/mdast'
 import { PUBLIKATOR_BASE_URL } from '../../lib/constants'
-import ShareImage from './ShareImage'
+import { useMe } from '../../lib/context/MeContext'
+import { cleanAsPath } from '../../lib/utils/link'
+
+import CommentLink from '../Discussion/shared/CommentLink'
+import DiscussionContextProvider from '../Discussion/context/DiscussionContextProvider'
+import Discussion from '../Discussion/Discussion'
+import { AudioPlayerLocations } from '../Audio/types/AudioActionTracking'
 import FontSizeSync from '../FontSize/Sync'
 import PageLoader from '../Loader'
 import Frame from '../Frame'
 import ActionBar from '../ActionBar'
-import { BrowserOnlyActionBar } from './BrowserOnly'
 import { AudioContext } from '../Audio/AudioProvider'
 import FormatFeed from '../Feed/Format'
 import StatusError from '../StatusError'
@@ -70,21 +65,25 @@ import SectionNav from '../Sections/SinglePageNav'
 import SectionFeed from '../Sections/SinglePageFeed'
 import HrefLink from '../Link/Href'
 import { withMarkAsReadMutation } from '../Notifications/enhancers'
-import { cleanAsPath } from '../../lib/utils/link'
+import ShareImageFlyer from '../Flyer/ShareImage'
+import Flyer from '../Flyer'
 
-// Identifier-based dynamic components mapping
-import dynamic from 'next/dynamic'
-import CommentLink from '../Discussion/shared/CommentLink'
-import { Mutation, Query, Subscription } from '@apollo/client/react/components'
-import { useMe } from '../../lib/context/MeContext'
-import DiscussionContextProvider from '../Discussion/context/DiscussionContextProvider'
-import Discussion from '../Discussion/Discussion'
-import ArticleRecommendationsFeed from './ArticleRecommendationsFeed'
 import { getMetaData, runMetaFromQuery } from './metadata'
-import FlyerFooter, { FlyerNav } from './Flyer'
+import ActionBarOverlay from './ActionBarOverlay'
+import SeriesNavBar from './SeriesNavBar'
+import TrialPayNoteMini from './TrialPayNoteMini'
+import Extract from './Extract'
+import { FlyerWrapper, PayNote } from './PayNote'
+import Progress from './Progress'
+import PodcastButtons from './PodcastButtons'
+import { getDocument } from './graphql/getDocument'
+import ShareImage from './ShareImage'
+import { BrowserOnlyActionBar } from './BrowserOnly'
+import ArticleRecommendationsFeed from './ArticleRecommendationsFeed'
 
 const LoadingComponent = () => <SmallLoader loading />
 
+// Identifier-based dynamic components mapping
 const MatomoOptOut = dynamic(() => import('../Matomo/OptOut'), {
   loading: LoadingComponent,
   ssr: false,
@@ -145,6 +144,10 @@ const ElectionResultDiversity = dynamic(
     ssr: false,
   },
 )
+const ClimateLabCounter = dynamic(() => import('../Climatelab/Counter'), {
+  loading: LoadingComponent,
+  ssr: false,
+})
 const Questionnaire = dynamic(
   () =>
     import('../Questionnaire/Questionnaire').then(
@@ -155,11 +158,26 @@ const Questionnaire = dynamic(
     ssr: false,
   },
 )
+const ClimateLabInlineTeaser = dynamic(
+  () => import('../Climatelab/InlineTeaser/ClimateLabInlineTeaser'),
+  {
+    loading: LoadingComponent,
+    ssr: false,
+  },
+)
 
 const QuestionnaireSubmissions = dynamic(
   () => import('../Questionnaire/Submissions'),
   {
     loading: LoadingComponent,
+  },
+)
+
+const Postcard = dynamic(
+  () => import('../Climatelab/Postcard/PostcardDynamicComponent'),
+  {
+    loading: LoadingComponent,
+    ssr: false,
   },
 )
 
@@ -240,6 +258,7 @@ const ArticlePage = ({
   const galleryRef = useRef()
 
   const router = useRouter()
+  const { share, extract, showAll } = router.query
 
   const { me, meLoading, hasAccess, hasActiveMembership, isEditor } = useMe()
 
@@ -266,6 +285,13 @@ const ArticlePage = ({
   const articleContent = article?.content
   const articleUnreadNotifications = article?.unreadNotifications
   const routerQuery = router.query
+  const isClimate = !!article?.content?.meta?.climate
+
+  useEffect(() => {
+    if (share) {
+      document.getElementById(share)?.scrollIntoView()
+    }
+  }, [share])
 
   // Refetch when cached article is not issued for current user
   // - SSG always provides issuedForUserId: null
@@ -315,6 +341,7 @@ const ArticlePage = ({
       )
     )
   }, [routerQuery, articleContent])
+
   const meta = useMemo(
     () =>
       articleMeta &&
@@ -379,20 +406,26 @@ const ArticlePage = ({
           QUESTIONNAIRE: Questionnaire,
           QUESTIONNAIRE_SUBMISSIONS: QuestionnaireSubmissions,
           NEWSLETTER_SIGNUP: NewsletterSignUpDynamic,
+          CLIMATE_LAB_COUNTER: ClimateLabCounter,
+          CLIMATE_LAB_INLINE_TEASER: ClimateLabInlineTeaser,
+          POSTCARD: Postcard,
         },
         titleMargin: false,
         titleBreakout,
         onAudioCoverClick: () =>
-          toggleAudioPlayer({
-            id: documentId,
-            meta: {
-              title: meta.title,
-              path: meta.path,
-              publishDate: meta.publishDate,
-              image: meta.image,
-              audioSource: meta.audioSource,
+          toggleAudioPlayer(
+            {
+              id: documentId,
+              meta: {
+                title: meta.title,
+                path: meta.path,
+                publishDate: meta.publishDate,
+                image: meta.image,
+                audioSource: meta.audioSource,
+              },
             },
-          }),
+            AudioPlayerLocations.ARTICLE,
+          ),
         getVideoPlayerProps:
           inNativeApp && !inNativeIOSApp
             ? (props) => ({
@@ -462,7 +495,7 @@ const ArticlePage = ({
   const sectionColor = meta && meta.template === 'section' && meta.color
   const MissingNode = isEditor ? undefined : ({ children }) => children
 
-  const extract = router.query.extract
+  const isFlyer = treeType === 'slate'
   if (extract) {
     return (
       <PageLoader
@@ -478,9 +511,23 @@ const ArticlePage = ({
               />
             )
           }
-          return extract === 'share' ? (
-            <ShareImage meta={meta} />
-          ) : (
+
+          if (extract === 'share') {
+            return <ShareImage meta={meta} />
+          }
+
+          if (isFlyer) {
+            return (
+              <ShareImageFlyer
+                tileId={extract}
+                value={article.content.children}
+                schema={schema}
+                showAll={showAll}
+              />
+            )
+          }
+
+          return (
             <Extract
               ranges={extract}
               schema={schema}
@@ -514,12 +561,14 @@ const ArticlePage = ({
       { MissingNode },
     )
 
-  const hasOverviewNav = meta
+  const hasStickySecondaryNav = meta
     ? meta.template === 'section' || meta.template === 'flyer'
     : true // show/keep around while loading meta
+  const hasOverviewNav = !meta?.series // no overview on series, so that seriesNav is rendered
   const colorSchemeKey = darkMode ? 'dark' : 'auto'
 
   const delegateMetaDown =
+    !!isFlyer ||
     !!meta?.delegateDown ||
     !!(meta?.ownDiscussion?.id && router.query.focus) ||
     !!(meta?.ownDiscussion?.isBoard && router.query.parent)
@@ -532,8 +581,9 @@ const ArticlePage = ({
       secondaryNav={seriesSecondaryNav}
       formatColor={formatColor}
       hasOverviewNav={hasOverviewNav}
-      stickySecondaryNav={hasOverviewNav}
+      stickySecondaryNav={hasStickySecondaryNav}
       pageColorSchemeKey={colorSchemeKey}
+      isClimate={isClimate}
     >
       <PageLoader
         loading={articleLoading && !articleData}
@@ -552,13 +602,12 @@ const ArticlePage = ({
           const isFormat = meta.template === 'format'
           const isSection = meta.template === 'section'
           const isPage = meta.template === 'page'
-          const isFlyer = treeType === 'slate'
 
           const hasNewsletterUtms =
             router.query.utm_source && router.query.utm_source === 'newsletter'
 
           const suppressPayNotes =
-            isSection || (!!episodes && showInlinePaynote)
+            isSection || (!!episodes && showInlinePaynote) || isFlyer
           const suppressFirstPayNote =
             suppressPayNotes ||
             podcast ||
@@ -566,6 +615,13 @@ const ArticlePage = ({
             meta.path === '/top-storys' ||
             hasNewsletterUtms ||
             (router.query.utm_source && router.query.utm_source === 'flyer-v1')
+
+          // For this proof of concept I chose to show the climate paynote
+          // only at the bottom. This could/should be evaluated.
+          // We could also suppress the second paynote. (Code commented below.)
+          // I wouldn't show both, since it's a very big paynote,
+          // and the text would be the same twice.
+          // const suppressSecondPayNote = climatePaynote
 
           const payNote = (
             <PayNote
@@ -580,7 +636,9 @@ const ArticlePage = ({
               Wrapper={isFlyer ? FlyerWrapper : undefined}
             />
           )
+
           const payNoteAfter =
+            // !suppressSecondPayNote &&
             payNote && cloneElement(payNote, { position: 'after' })
 
           const ownDiscussion = meta.ownDiscussion
@@ -631,26 +689,15 @@ const ArticlePage = ({
                 </div>
               )}
               {isFlyer ? (
-                <Flyer.Layout schema={schema}>
-                  <RenderContextProvider
-                    t={t}
-                    Link={HrefLink}
-                    nav={
-                      <FlyerNav
-                        repoId={repoId}
-                        publishDate={meta.publishDate}
-                      />
-                    }
-                  >
-                    <SlateRender
-                      value={article.content.children}
-                      schema={schema}
-                      raw
-                      skip={['flyerOpeningP']}
-                    />
-                  </RenderContextProvider>
-                  <FlyerFooter>{actionBarFlyer}</FlyerFooter>
-                </Flyer.Layout>
+                <Flyer
+                  meta={meta}
+                  documentId={documentId}
+                  inNativeApp={inNativeApp}
+                  repoId={repoId}
+                  actionBar={actionBarFlyer}
+                  value={article.content.children}
+                  tileId={share}
+                />
               ) : (
                 <ArticleGallery
                   article={article}

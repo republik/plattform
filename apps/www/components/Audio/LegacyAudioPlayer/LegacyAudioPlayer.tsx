@@ -9,6 +9,10 @@ import BottomPanel from '../../Frame/BottomPanel'
 import { useMe } from '../../../lib/context/MeContext'
 import { usePlaybackRate } from '../../../lib/playbackRate'
 import { trackEvent } from '../../../lib/matomo'
+import {
+  AudioPlayerLocations,
+  AudioPlayerActions,
+} from '../types/AudioActionTracking'
 
 const LegacyAudioPlayer = () => {
   const { t } = useTranslation()
@@ -20,30 +24,34 @@ const LegacyAudioPlayer = () => {
       {({
         audioPlayerVisible,
         onCloseAudioPlayer,
-        activePlayerItem,
+        legacyPlayerItem,
         autoPlayActive,
       }) => {
         return (
           <>
-            {!meLoading && activePlayerItem && (
+            {!meLoading && legacyPlayerItem && (
               <BottomPanel wide foreground={true} visible={audioPlayerVisible}>
                 <ProgressComponent isArticle={false}>
                   <LegacyAudioPlayerUI
                     // when the audio src changes we need to remount the component
                     key={
-                      activePlayerItem.meta.audioSource.mediaId || ' ' //activePlayerItem.url
+                      legacyPlayerItem.meta.audioSource.mediaId || ' ' //activePlayerItem.url
                     }
                     // mediaId and durationMs is neccessary for media progress to work
-                    mediaId={activePlayerItem?.meta?.audioSource.mediaId}
-                    durationMs={activePlayerItem?.meta?.audioSource.durationMs}
+                    mediaId={legacyPlayerItem?.meta?.audioSource.mediaId}
+                    durationMs={legacyPlayerItem?.meta?.audioSource.durationMs}
                     mode='overlay'
-                    src={activePlayerItem?.meta?.audioSource}
-                    title={activePlayerItem?.meta?.title}
-                    sourcePath={activePlayerItem?.meta?.path}
+                    src={legacyPlayerItem?.meta?.audioSource}
+                    title={legacyPlayerItem?.meta?.title}
+                    sourcePath={legacyPlayerItem?.meta?.path}
                     closeHandler={onCloseAudioPlayer}
-                    setPlaybackRate={(rate) => {
-                      trackEvent(['AudioPlayer', 'playbackRate', rate])
-                      setPlaybackRate(rate)
+                    setPlaybackRate={(playbackRate) => {
+                      setPlaybackRate(playbackRate)
+                      trackEvent([
+                        AudioPlayerLocations.AUDIO_PLAYER,
+                        AudioPlayerActions.PLAYBACK_RATE_CHANGED,
+                        playbackRate,
+                      ])
                     }}
                     playbackRate={playbackRate}
                     autoPlay={autoPlayActive}
