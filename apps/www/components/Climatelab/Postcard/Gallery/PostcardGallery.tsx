@@ -1,4 +1,5 @@
 import AssetImage from '../../../../lib/images/AssetImage'
+import { useTranslation } from '../../../../lib/withT'
 
 import { css } from 'glamor'
 import { useState } from 'react'
@@ -72,11 +73,21 @@ function PostcardGallery() {
   // const postcardsData = useMockPostcardsData()
 
   const [toggleOverlay, setToggleOverlay] = useState({ isOpen: false })
-  const [overlayBody, setOverlayBody] = useState()
+  const [overlayBody, setOverlayBody] = useState({})
 
   const onOverlayToggeled = (content) => {
     setToggleOverlay({ isOpen: toggleOverlay.isOpen ? false : true })
     setOverlayBody(content)
+  }
+
+  // rough function to try out the pattern with a button loading a random new card
+  const loadAnotherCard = (id) => {
+    const randomNumber = Math.floor(Math.random() * (49 - 1 + 1) + 1)
+    console.log(randomNumber)
+    const newCard = postcardsData.postcards.filter((d) => d.id !== id)[
+      randomNumber
+    ]
+    setOverlayBody(newCard)
   }
 
   return postcardsData._state === 'LOADED' ? (
@@ -97,7 +108,10 @@ function PostcardGallery() {
             }}
           />
           <OverlayBody>
-            <PostcardPreview postcard={overlayBody} />
+            <PostcardPreview postcard={overlayBody} t={t} />
+            <Button onClick={() => loadAnotherCard(overlayBody.id)}>
+              Andere Karte lesen
+            </Button>
           </OverlayBody>
         </Overlay>
       )}
