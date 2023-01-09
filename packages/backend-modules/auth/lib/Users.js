@@ -321,6 +321,7 @@ const unauthorizedSession = async ({
   pgdb,
   token,
   email: emailFromQuery,
+  req,
   me,
 }) => {
   const existingUser = await pgdb.public.users.findOne({
@@ -332,7 +333,7 @@ const unauthorizedSession = async ({
   }
   const validatable = await validateChallenge(
     token.type,
-    { pgdb, session, email: emailFromQuery, user: existingUser, me },
+    { pgdb, session, email: emailFromQuery, user: existingUser, req, me },
     token,
   )
   if (!validatable) {

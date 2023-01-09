@@ -2,9 +2,9 @@ const { unauthorizedSession } = require('../../../lib/Users')
 const { missingConsents } = require('../../../lib/Consents')
 const { getMissingFields } = require('../../../lib/Fields')
 
-module.exports = async (_, args, { pgdb, req, user: me }) => {
+module.exports = async (_, args, { pgdb, user: me, req }) => {
   const { email, token } = args
-  const session = await unauthorizedSession({ pgdb, token, email, me })
+  const session = await unauthorizedSession({ pgdb, token, email, req, me })
 
   const user = await pgdb.public.users.findOne({ email })
 
