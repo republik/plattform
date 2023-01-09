@@ -1,12 +1,15 @@
-import { withDefaultSSR } from '../../../lib/apollo/helpers'
+import { withDefaultSSR } from '../../../../lib/apollo/helpers'
 import { gql, useQuery } from '@apollo/client'
 import { FigureImage } from '@project-r/styleguide'
-import { CDN_FRONTEND_BASE_URL } from '../../../lib/constants'
+import { CDN_FRONTEND_BASE_URL } from '../../../../lib/constants'
 
-import AssetImage from '../../../lib/images/AssetImage'
+import AssetImage from '../../../../lib/images/AssetImage'
 
 import { css } from 'glamor'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
+
+import { Overlay, OverlayToolbar, OverlayBody } from '@project-r/styleguide'
+import { PostcardPreview } from '../PostcardPreview'
 
 /**
  * TODO: Resolve user profiles for linked
@@ -66,6 +69,7 @@ type Postcard = {
   text: string
   isHighlighted: boolean
   imageUrl: string
+  imageSelection: string
   // profileInfo: TODO
 }
 
@@ -137,6 +141,7 @@ const useMockPostcardsData = (): PostcardsData => {
       return {
         id: `img-${i}`,
         text: 'Lorem ipsum dolor sit amet consectetur adipisicing elit.',
+        imageSelection: 'postcard_1',
         isHighlighted,
         imageUrl,
       }
@@ -167,7 +172,13 @@ const gridStyles = {
   }),
 }
 
-const PostcardsGrid = ({ postcards }: { postcards: Postcard[] }) => {
+const PostcardsGrid = ({
+  postcards,
+  onToggleOverlay,
+}: {
+  postcards: Postcard[]
+  onToggleOverlay: (a?: object) => void
+}) => {
   return (
     <div {...gridStyles.container}>
       {postcards.map((p) => {
@@ -175,7 +186,7 @@ const PostcardsGrid = ({ postcards }: { postcards: Postcard[] }) => {
           ? gridStyles.highlightedCard
           : gridStyles.card
         return (
-          <div key={p.id} {...cardStyle}>
+          <div key={p.id} {...cardStyle} onClick={() => onToggleOverlay(p)}>
             {/* {p.text} */}
             <AssetImage width='600' height='420' src={p.imageUrl} />
           </div>
@@ -189,8 +200,37 @@ function PostcardGallery() {
   // const postcardsData = usePostcardsData()
   const postcardsData = useMockPostcardsData()
 
+  const [toggleOverlay, setToggleOverlay] = useState({ isOpen: false })
+  const [overlayBody, setOverlayBody] = useState()
+
+  const onOverlayToggeled = (content) => {
+    setToggleOverlay({ isOpen: toggleOverlay.isOpen ? false : true })
+    setOverlayBody(content)
+  }
+
   return postcardsData._state === 'LOADED' ? (
-    <PostcardsGrid postcards={postcardsData.postcards} />
+    <>
+      <PostcardsGrid
+        postcards={postcardsData.postcards}
+        onToggleOverlay={onOverlayToggeled}
+      />
+      {toggleOverlay.isOpen && (
+        <Overlay
+          onClose={() => {
+            setToggleOverlay({ isOpen: false })
+          }}
+        >
+          <OverlayToolbar
+            onClose={() => {
+              setToggleOverlay({ isOpen: false })
+            }}
+          />
+          <OverlayBody>
+            <PostcardPreview postcard={overlayBody} />
+          </OverlayBody>
+        </Overlay>
+      )}
+    </>
   ) : (
     <div>whoops</div>
   )
