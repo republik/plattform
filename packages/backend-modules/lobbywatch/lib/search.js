@@ -159,7 +159,7 @@ module.exports.loadSearch = (locales) => {
                   guest.nachname,
                   guest.vorname,
                   guest.zweiter_vorname,
-                  guest.funktion,
+                  ...guest.funktion?.split(','),
                 ]),
               })),
             )
