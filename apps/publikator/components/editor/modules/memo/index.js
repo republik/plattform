@@ -74,16 +74,16 @@ const Memo = compose(
               }
               MarkedSection={
                 <Editorial.P attributes={{ style: { marginBottom: 20 } }}>
-                  <Memo markerKey={marker}>{children}</Memo>
+                  <Marker marker={marker}>{children}</Marker>
                 </Editorial.P>
               }
             />
           </OverlayBody>
         </Overlay>
       )}
-      <Memo markerKey={marker} isSelected={isSelected} onDoubleClick={open}>
+      <Marker marker={marker} isSelected={isSelected} onDoubleClick={open}>
         {children}
-      </Memo>
+      </Marker>
     </>
   )
 })
@@ -146,10 +146,14 @@ const MemoModule = ({ rule, TYPE, context }) => {
     },
     plugins: [
       {
-        renderNode(props) {
+        renderNode({ attributes, ...props }) {
           const { node } = props
           if (!memo.match(node)) return
-          return <Memo {...props} />
+          return (
+            <span {...attributes}>
+              <Memo {...props} />
+            </span>
+          )
         },
       },
     ],
