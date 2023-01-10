@@ -55,10 +55,7 @@ const Marketing = ({
       <ColorContextProvider colorSchemeKey='dark'>
         <Top carouselData={data.carousel} />
       </ColorContextProvider>
-      {/* 
-      TODO: add after newsletter shipped (either 9 Jan evening or 10 Jan morning)
-      <ClimateLabTeaser /> 
-      */}
+      <ClimateLabTeaser />
       <Carpet loading={loading} front={data.carpet} />
       <Reasons inNativeApp={inNativeApp} />
       {inNativeApp && <MarketingTrialForm />}
