@@ -33,9 +33,11 @@ const styles = {
     },
   }),
   textArea: css({
+    maxHeight: '100%',
     wordBreak: 'normal',
     overflowWrap: 'break-word',
     width: '67%',
+
     borderRight: 'solid 1px #DADDDC',
     marginBottom: '10px',
     paddingRight: '10px',

@@ -89,19 +89,25 @@ const SubmittedPostcard = (props) => {
   )
 }
 
-const PostcardGenerator = () => (
-  <div {...styles.questionnaireStyleOverride}>
-    <QuestionnaireWithData
-      slug={CLIMATE_POSTCARD_QUESTIONNAIRE_ID}
-      context='postcard'
-      hideCount
-      hideInvalid
-      hideReset
-      requireName={false}
-      SubmittedComponent={SubmittedPostcard}
-      showAnonymize
-    />
-  </div>
-)
+const PostcardGenerator = () => {
+  const { t } = useTranslation()
+  return (
+    <div {...styles.questionnaireStyleOverride}>
+      <QuestionnaireWithData
+        slug={CLIMATE_POSTCARD_QUESTIONNAIRE_ID}
+        context='postcard'
+        hideCount
+        hideInvalid
+        hideReset
+        requireName={false}
+        SubmittedComponent={SubmittedPostcard}
+        showAnonymize
+      />
+      <Interaction.P>
+        {t('Climatelab/Postcard/PostcardPreview/merci2')}
+      </Interaction.P>
+    </div>
+  )
+}
 
 export default PostcardGenerator
