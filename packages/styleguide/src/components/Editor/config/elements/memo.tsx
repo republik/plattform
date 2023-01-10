@@ -44,7 +44,6 @@ export const config: ElementConfigI = {
   attrs: {
     isInline: true,
     stopFormIteration: true,
-    allowInAllText: true,
   },
   button: { icon: MemoIcon, small: true },
   normalizations: [unwrapWhenEmpty],

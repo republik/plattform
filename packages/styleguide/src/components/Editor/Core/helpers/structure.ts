@@ -399,7 +399,10 @@ const getStructure = (
   if (!SlateElement.isElement(parent[0])) return inputStructure
   const parentStructure = elConfig[parent[0].type].structure
   // This is a fallback when the parent is a complex structure (e.g. figure caption)
-  if (parentStructure.length > 1) return DEFAULT_STRUCTURE
+  if (parentStructure.length > 1)
+    return [
+      parentStructure.find((t) => isAllowedType('text', t.type) && !t.end),
+    ]
   return getStructure(editor, parent, parentStructure)
 }
 

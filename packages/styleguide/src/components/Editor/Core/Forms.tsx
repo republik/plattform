@@ -6,13 +6,20 @@ import React, {
   useState,
 } from 'react'
 import { CustomEditor, CustomElement, ElementFormProps } from '../custom-types'
-import { Editor, Transforms, Element as SlateElement, NodeEntry } from 'slate'
+import {
+  Editor,
+  Transforms,
+  Element as SlateElement,
+  Text,
+  NodeEntry,
+} from 'slate'
 import { config as elConfig } from '../config/elements'
 import { Overlay, OverlayBody, OverlayToolbar } from '../../Overlay'
 import { ReactEditor, useSlate } from 'slate-react'
 import { isDescendant, selectNode } from './helpers/tree'
 import { formStyles } from '../Forms/layout'
 import { useRenderContext } from '../Render/Context'
+import { ascending } from 'd3-array'
 
 const FormContext = createContext([])
 
@@ -46,6 +53,64 @@ const getForm = (
   }
 }
 
+const getRootFormNode = (
+  editor: CustomEditor,
+  selectedPath: number[],
+): NodeEntry<CustomElement> => {
+  let rootNode = Editor.node(editor, selectedPath) as NodeEntry<CustomElement>
+  let parent = Editor.parent(editor, rootNode[1])
+  while (
+    !elConfig[rootNode[0].type].attrs?.stopFormIteration &&
+    SlateElement.isElement(parent[0]) &&
+    !elConfig[parent[0].type].attrs?.stopFormIteration
+  ) {
+    rootNode = parent as NodeEntry<CustomElement>
+    parent = Editor.parent(editor, rootNode[1])
+  }
+  return rootNode
+}
+
+const getDescendantForms = (
+  editor: CustomEditor,
+  rootNode: NodeEntry<CustomElement>,
+): FormData[] => {
+  let forms: FormData[] = []
+  for (const [n, p] of Editor.nodes(editor, {
+    at: rootNode[1],
+  })) {
+    if (SlateElement.isElement(n) && isDescendant(rootNode, [n, p])) {
+      const stop = elConfig[n.type].attrs?.stopFormIteration
+      const isTopLevel = p.length === rootNode[1].length
+      if (stop && !isTopLevel) break
+      const currentForm = getForm(editor, [n, p])
+      forms = forms.concat(currentForm)
+      if (stop) break
+    }
+  }
+  return forms
+}
+
+const getOverlappingForm = (
+  editor: CustomEditor,
+  rootForm?: FormData,
+): FormData => {
+  if (!rootForm) return
+  const topLevelNode = rootForm.node
+  if (!elConfig[topLevelNode[0].type]?.attrs?.isInline) return
+  const [n, p] = Editor.parent(editor, topLevelNode[1])
+  if (
+    SlateElement.isElement(n) &&
+    n.children.length === 3 &&
+    Text.isText(n.children[0]) &&
+    n.children[0].text === '' &&
+    Text.isText(n.children[2]) &&
+    n.children[2].text === '' &&
+    Editor.isInline(editor, n)
+  ) {
+    return getForm(editor, [n, p])
+  }
+}
+
 // this function has to be able to handle various cases:
 // 1) forms for structured elements. E.g. for pictures, the image form should also come up
 //    when clicking on the caption, when if the form is located on a sibling branch. We
@@ -54,7 +119,7 @@ const getForm = (
 // 2) nested inlines. E.g. a link overlapping fully with a memo. We want to bring up both forms
 //
 // To handle 1) we start by going as far as specified in the config (until we bump into
-// an element with stopIteration flag set to true). Then we go down the tree from the top level
+// an element with stopIteration flag set to true). Then we go down the tree from the root
 // node recontruct our array of forms, always in the same order.
 //
 // To handle 2) we check whether the top level form element is:
@@ -64,54 +129,13 @@ const getForm = (
 export const getForms = (editor: CustomEditor, path: number[]): FormData[] => {
   if (!path || path === []) return []
 
-  let topLevelNode = Editor.node(editor, path) as NodeEntry<CustomElement>
-  let parent = Editor.parent(editor, topLevelNode[1])
-  while (
-    !elConfig[topLevelNode[0].type].attrs?.stopFormIteration &&
-    SlateElement.isElement(parent[0]) &&
-    !elConfig[parent[0].type].attrs?.stopFormIteration
-  ) {
-    topLevelNode = parent as NodeEntry<CustomElement>
-    parent = Editor.parent(editor, topLevelNode[1])
-  }
+  const rootNode = getRootFormNode(editor, path)
+  let forms = getDescendantForms(editor, rootNode)
+  forms = forms.concat(getOverlappingForm(editor, forms[0]))
 
-  let forms: FormData[] = []
-  for (const [n, p] of Editor.nodes(editor, {
-    at: topLevelNode[1],
-  })) {
-    if (SlateElement.isElement(n) && isDescendant(topLevelNode, [n, p])) {
-      const stop = elConfig[n.type].attrs?.stopFormIteration
-      const isTopLevel = p.length === topLevelNode[1].length
-      if (stop && !isTopLevel) break
-      const currentForm = getForm(editor, [n, p])
-      forms = forms.concat(currentForm)
-      if (stop) break
-    }
-  }
-  const topMostForm = forms[0]
-  if (topMostForm && elConfig[topMostForm.node[0].type]?.attrs?.isInline) {
-    const [n, p] = Editor.parent(editor, topMostForm.node[1])
-    console.log({ n })
-    if (
-      SlateElement.isElement(n) &&
-      n.children.length === 3 &&
-      // check that nodes 1 and 3 are text & empty
-      Editor.isInline(editor, n)
-    ) {
-      const currentForm = getForm(editor, [n, p])
-      forms = forms.concat(currentForm)
-    }
-  }
-  console.log(forms)
-
-  return forms.filter(Boolean).sort((f1, f2) => {
-    const name1 = f1.node[0].type
-    const name2 = f2.node[0].type
-    console.log({ name1, name2 })
-    if (name1 < name2) return -1
-    if (name1 > name2) return 1
-    return 0
-  })
+  return forms
+    .filter(Boolean)
+    .sort((a, b) => ascending(a.node[0].type, b.node[0].type))
 }
 
 const ElementForm: React.FC<FormData & { onClose: () => void }> = ({
