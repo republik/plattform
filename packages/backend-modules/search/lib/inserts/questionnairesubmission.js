@@ -27,7 +27,7 @@ async function transform(row) {
         }
 
         const typeValue =
-          (type === 'Choice' &&
+          (['Choice', 'ImageChoice'].includes(type) &&
             answer.payload?.value.map(
               (value) =>
                 typePayload.options.find((option) => option.value == value) // eslint-disable-line eqeqeq
