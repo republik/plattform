@@ -11,6 +11,10 @@ import { useMemo } from 'react'
 const POSTCARDS_QUERY = gql`
   fragment PostcardConnection on SubmissionConnection {
     totalCount
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
     nodes {
       id
       answers {
@@ -33,6 +37,8 @@ const POSTCARDS_QUERY = gql`
   query publicPostcardsQuery(
     $highlightedPostcardIds: [ID!]
     $subjectFilter: String
+    $cursorHighlighted: String
+    $cursorNotHighlighted: String
   ) {
     questionnaire(slug: "klima-postkarte") {
       id
@@ -47,7 +53,8 @@ const POSTCARDS_QUERY = gql`
       }
 
       highlighted: submissions(
-        first: 100
+        first: 10
+        after: $cursorHighlighted
         filters: { submissionIds: $highlightedPostcardIds, hasAnswers: true }
         search: $subjectFilter
       ) {
@@ -55,7 +62,8 @@ const POSTCARDS_QUERY = gql`
       }
 
       notHighlighted: submissions(
-        first: 100
+        first: 10
+        after: $cursorNotHighlighted
         filters: { notSubmissionIds: $highlightedPostcardIds, hasAnswers: true }
         search: $subjectFilter
       ) {
@@ -89,6 +97,8 @@ type PostcardsData =
   | {
       _state: 'LOADED'
       postcards: Postcard[]
+      fetchMoreHighlighted: () => void
+      fetchMoreNotHighlighted: () => void
     }
 
 type HighlightedPostcard = {
@@ -131,7 +141,8 @@ export const usePostcardsData = ({
   highlightedPostcards?: HighlightedPostcard[]
   subjectFilter?: SubjectFilter
 }): PostcardsData => {
-  highlightedPostcards?.map(({ id }) => id) ?? null
+  const highlightedPostcardIds =
+    highlightedPostcards?.map(({ id }) => id) ?? null
 
   // Query needs labels to search by subject, that's why we translate from the value to the label
   const subjectFilterLabel =
@@ -139,7 +150,7 @@ export const usePostcardsData = ({
       ? SUBJECT_FILTERS[subjectFilter]
       : undefined
 
-  const { data, loading, error } = useQuery(POSTCARDS_QUERY, {
+  const { data, loading, error, fetchMore } = useQuery(POSTCARDS_QUERY, {
     variables: {
       highlightedPostcardIds,
       subjectFilter: subjectFilterLabel,
@@ -156,41 +167,91 @@ export const usePostcardsData = ({
     }
   }
 
-  const highlightedPostcardsData = data.questionnaire?.highlighted?.nodes.map(
+  if (data.questionnaire == null) {
+    return {
+      _state: 'ERROR',
+    }
+  }
+
+  const highlightedPostcardsData = data.questionnaire.highlighted?.nodes.map(
     parsePostcardData({ data, isHighlighted: true }),
   )
   const notHighlightedPostcardsData =
-    data.questionnaire?.notHighlighted?.nodes.map(
+    data.questionnaire.notHighlighted?.nodes.map(
       parsePostcardData({ data, isHighlighted: false }),
     )
+
+  // Pagination stuff
+
+  const cursorHighlighted: string | null =
+    data.questionnaire.highlighted?.pageInfo.endCursor
+  const hasMoreHighlighted =
+    data.questionnaire.highlighted?.pageInfo.hasNextPage
+
+  const fetchMoreHighlighted = () => {
+    console.log('should I fetch more hili?', hasMoreHighlighted)
+    if (hasMoreHighlighted) {
+      fetchMore({
+        variables: {
+          highlightedPostcardIds,
+          subjectFilter: subjectFilterLabel,
+          cursorHighlighted,
+        },
+        updateQuery(previousResult, { fetchMoreResult }) {
+          return {
+            ...fetchMoreResult,
+            questionnaire: {
+              ...fetchMoreResult.questionnaire,
+              highlighted: {
+                ...fetchMoreResult.questionnaire.highlighted,
+                nodes: [
+                  ...previousResult.questionnaire.highlighted.nodes,
+                  ...fetchMoreResult.questionnaire.highlighted.nodes,
+                ],
+              },
+            },
+          }
+        },
+      })
+    }
+  }
+
+  const cursorNotHighlighted: string | null =
+    data.questionnaire.notHighlighted?.pageInfo.endCursor
+  const hasMoreNotHighlighted =
+    data.questionnaire.notHighlighted?.pageInfo.hasNextPage
+
+  const fetchMoreNotHighlighted = () => {
+    if (hasMoreNotHighlighted) {
+      fetchMore({
+        variables: {
+          highlightedPostcardIds,
+          subjectFilter: subjectFilterLabel,
+          cursorNotHighlighted,
+        },
+        updateQuery(previousResult, { fetchMoreResult }) {
+          return {
+            ...fetchMoreResult,
+            questionnaire: {
+              ...fetchMoreResult.questionnaire,
+              notHighlighted: {
+                ...fetchMoreResult.questionnaire.notHighlighted,
+                nodes: [
+                  ...previousResult.questionnaire.notHighlighted.nodes,
+                  ...fetchMoreResult.questionnaire.notHighlighted.nodes,
+                ],
+              },
+            },
+          }
+        },
+      })
+    }
+  }
 
   return {
     _state: 'LOADED',
     postcards: [...highlightedPostcardsData, ...notHighlightedPostcardsData],
+    fetchMoreHighlighted,
+    fetchMoreNotHighlighted,
   }
-}
-
-export const useMockPostcardsData = (): PostcardsData => {
-  const images = [
-    '/static/climatelab/freier.jpg',
-    '/static/climatelab/farner.jpg',
-    '/static/climatelab/richardson.jpg',
-    '/static/climatelab/zalko.jpg',
-  ]
-
-  const postcards = useMemo(() => {
-    return Array.from({ length: 42 }, (_, i) => {
-      const imageUrl = images[Math.floor(Math.random() * 4)]
-      const isHighlighted = i % 10 === 0
-      return {
-        id: `img-${i}`,
-        text: 'Lorem ipsum dolor sit amet consectetur adipisicing elit.',
-        imageSelection: 'postcard_1',
-        isHighlighted,
-        imageUrl,
-      }
-    })
-  }, [])
-
-  return { _state: 'LOADED', postcards }
 }

@@ -49,6 +49,21 @@ const DebugGallery = () => {
           </div>
         )
       })}
+
+      <button
+        onClick={() => {
+          postcardsData.fetchMoreHighlighted()
+        }}
+      >
+        Load more highlighted
+      </button>
+      <button
+        onClick={() => {
+          postcardsData.fetchMoreNotHighlighted()
+        }}
+      >
+        Load more normalo
+      </button>
     </>
   ) : (
     <div>Loading or whatever</div>
