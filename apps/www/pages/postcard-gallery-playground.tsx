@@ -1,5 +1,6 @@
 // import PostcardGallery from '../components/Climatelab/Postcard/Gallery/PostcardGallery'
 
+import { useState } from 'react'
 import { usePostcardsData } from '../components/Climatelab/Postcard/use-postcard-data'
 
 const DUMMY_HIGHLIGHTED = [
@@ -10,15 +11,36 @@ const DUMMY_HIGHLIGHTED = [
 ]
 
 const DebugGallery = () => {
+  const [subjectFilter, setSubjectFilter] = useState()
+
   const postcardsData = usePostcardsData({
     highlightedPostcards: DUMMY_HIGHLIGHTED,
+    subjectFilter: subjectFilter,
   })
-
-  console.log(postcardsData.postcards)
 
   return postcardsData._state === 'LOADED' ? (
     <>
       <h1>Postcards ({postcardsData.postcards.length})</h1>
+
+      <label>
+        Filter{' '}
+        <select
+          value={subjectFilter ?? 'NONE'}
+          onChange={(e) =>
+            setSubjectFilter(
+              e.currentTarget.value === 'NONE'
+                ? undefined
+                : e.currentTarget.value,
+            )
+          }
+        >
+          <option value='NONE'>NONE</option>
+          <option value='postcard_1'>Card 1</option>
+          <option value='postcard_2'>Card 2</option>
+          <option value='postcard_3'>Card 3</option>
+          <option value='postcard_4'>Card 4</option>
+        </select>
+      </label>
 
       {postcardsData.postcards.map((p) => {
         return (

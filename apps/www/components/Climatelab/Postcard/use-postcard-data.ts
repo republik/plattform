@@ -30,8 +30,12 @@ const POSTCARDS_QUERY = gql`
     }
   }
 
-  query publicPostcardsQuery($highlightedPostcardIds: ID) {
+  query publicPostcardsQuery(
+    $highlightedPostcardIds: ID
+    $subjectFilter: String
+  ) {
     questionnaire(slug: "klima-postkarte") {
+      id
       questions {
         id
         ... on QuestionTypeImageChoice {
@@ -45,6 +49,7 @@ const POSTCARDS_QUERY = gql`
       highlighted: submissions(
         first: 100
         filters: { id: $highlightedPostcardIds }
+        search: $subjectFilter
       ) {
         ...PostcardConnection
       }
@@ -52,12 +57,20 @@ const POSTCARDS_QUERY = gql`
       notHighlighted: submissions(
         first: 100
         filters: { not: $highlightedPostcardIds }
+        search: $subjectFilter
       ) {
         ...PostcardConnection
       }
     }
   }
 `
+
+const SUBJECT_FILTERS = {
+  postcard_1: 'Karlotta Freier',
+  postcard_2: 'Chrigel Farner',
+  postcard_3: 'Jack Richardson',
+  postcard_4: 'Aline Zalko',
+}
 
 export type Postcard = {
   id: string
@@ -83,6 +96,29 @@ type HighlightedPostcard = {
   text: string
 }
 
+type SubjectFilter = keyof typeof SUBJECT_FILTERS
+
+// Fugly parsing!
+// FIXME: add stricter types
+const parsePostcardData =
+  ({ data, isHighlighted }) =>
+  (submission) => {
+    const imageAnswer = submission.answers.nodes?.[0]?.payload?.value?.[0]
+    const imageUrl = data.questionnaire?.questions?.[0]?.options?.find(
+      ({ value }) => value === imageAnswer,
+    )?.imageUrl
+    const text = submission.answers.nodes?.[1]?.payload?.value
+
+    // const image = `${CDN_FRONTEND_BASE_URL}${imageUrl}?size=1500x1057` // FIXME: use correct/consistent size for all images
+
+    return {
+      id: submission.id,
+      text,
+      imageUrl,
+      isHighlighted,
+    }
+  }
+
 /**
  *
  * TODO: Proper loading/error state
@@ -90,14 +126,23 @@ type HighlightedPostcard = {
  */
 export const usePostcardsData = ({
   highlightedPostcards,
+  subjectFilter,
 }: {
   highlightedPostcards?: HighlightedPostcard[]
+  subjectFilter?: SubjectFilter
 }): PostcardsData => {
   const highlightedPostcardIds = highlightedPostcards?.[0]?.id ?? '' // FIXME: This should be an array at some point
+
+  // Query needs labels to search by subject, that's why we translate from the value to the label
+  const subjectFilterLabel =
+    subjectFilter && subjectFilter in SUBJECT_FILTERS
+      ? SUBJECT_FILTERS[subjectFilter]
+      : undefined
 
   const { data, loading, error } = useQuery(POSTCARDS_QUERY, {
     variables: {
       highlightedPostcardIds,
+      subjectFilter: subjectFilterLabel,
     },
   })
 
@@ -111,28 +156,13 @@ export const usePostcardsData = ({
     }
   }
 
-  // Fugly parsing!
-  // FIXME: add stricter types
-  const getPostcardData = (submission) => {
-    const imageAnswer = submission.answers.nodes?.[0]?.payload?.value?.[0]
-    const imageUrl = data.questionnaire?.questions?.[0]?.options?.find(
-      ({ value }) => value === imageAnswer,
-    )?.imageUrl
-    const text = submission.answers.nodes?.[1]?.payload?.value
-
-    // const image = `${CDN_FRONTEND_BASE_URL}${imageUrl}?size=1500x1057` // FIXME: use correct/consistent size for all images
-
-    return {
-      id: submission.id,
-      text,
-      imageUrl,
-    }
-  }
-
-  const highlightedPostcardsData =
-    data.questionnaire?.highlighted?.nodes.map(getPostcardData)
+  const highlightedPostcardsData = data.questionnaire?.highlighted?.nodes.map(
+    parsePostcardData({ data, isHighlighted: true }),
+  )
   const notHighlightedPostcardsData =
-    data.questionnaire?.notHighlighted?.nodes.map(getPostcardData)
+    data.questionnaire?.notHighlighted?.nodes.map(
+      parsePostcardData({ data, isHighlighted: false }),
+    )
 
   return {
     _state: 'LOADED',
