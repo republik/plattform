@@ -20,7 +20,10 @@ const DebugGallery = () => {
 
   return postcardsData._state === 'LOADED' ? (
     <>
-      <h1>Postcards ({postcardsData.postcards.length})</h1>
+      <h1>
+        Postcards (showing {postcardsData.postcards.length} of{' '}
+        {postcardsData.totalCount})
+      </h1>
 
       <label>
         Filter{' '}

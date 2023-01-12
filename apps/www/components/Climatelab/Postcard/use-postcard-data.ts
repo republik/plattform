@@ -99,6 +99,7 @@ type PostcardsData =
       postcards: Postcard[]
       fetchMoreHighlighted: () => void
       fetchMoreNotHighlighted: () => void
+      totalCount: number
     }
 
 type HighlightedPostcard = {
@@ -181,6 +182,10 @@ export const usePostcardsData = ({
       parsePostcardData({ data, isHighlighted: false }),
     )
 
+  const totalCount =
+    data.questionnaire.highlighted?.totalCount +
+    data.questionnaire.notHighlighted?.totalCount
+
   // Pagination stuff
 
   const cursorHighlighted: string | null =
@@ -251,6 +256,7 @@ export const usePostcardsData = ({
   return {
     _state: 'LOADED',
     postcards: [...highlightedPostcardsData, ...notHighlightedPostcardsData],
+    totalCount,
     fetchMoreHighlighted,
     fetchMoreNotHighlighted,
   }
