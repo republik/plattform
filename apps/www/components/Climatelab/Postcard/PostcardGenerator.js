@@ -52,7 +52,7 @@ const SubmittedPostcard = (props) => {
   const { questions, userHasSubmitted } = questionnaire
 
   const imageOptions = questions && questions[0].options
-  const imageSelection =
+  const imageAnswer =
     questions[0].userAnswer && questions[0].userAnswer.payload.value[0]
 
   const postcardText =
@@ -60,17 +60,17 @@ const SubmittedPostcard = (props) => {
 
   const imageUrl =
     imageOptions &&
-    imageOptions.filter((d) => d.value === imageSelection)[0]?.imageUrl
+    imageOptions.filter((d) => d.value === imageAnswer)[0]?.imageUrl
 
   const postcard = {
     text: postcardText,
     imageUrl: imageUrl,
-    imageSelection: imageSelection,
+    imageAnswer: imageAnswer,
   }
 
   return (
     <div style={{ marginTop: '50px' }} ref={postcardRef}>
-      {!(userHasSubmitted && !imageSelection && !postcardText) && (
+      {!(userHasSubmitted && !imageAnswer && !postcardText) && (
         <PostcardPreview postcard={postcard} t={t} />
       )}
 

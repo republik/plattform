@@ -52,7 +52,7 @@ const styles = {
     paddingBottom: '5px',
     fontSize: '0.5rem',
     [mediaQueries.mUp]: {
-      fontSize: '0.75rem',
+      fontSize: '0.7rem',
     },
   }),
   rightSide: css({
@@ -95,7 +95,7 @@ export const PostcardPreview = (props) => {
 
   if (!postcard) return null
 
-  const { text, imageUrl, imageSelection } = postcard
+  const { text, imageUrl, imageAnswer } = postcard
 
   return (
     <div
@@ -105,7 +105,7 @@ export const PostcardPreview = (props) => {
       <div {...styles.credit}>
         {' '}
         {t('Climatelab/Postcard/PostcardPreview/credit', {
-          credit: postcardCredits[imageSelection] || ' ...',
+          credit: postcardCredits[imageAnswer] || ' ...',
         })}
       </div>
 
