@@ -40,15 +40,17 @@ const styles = {
 const cardsAmount = scaleLinear().domain([600, 1300]).range([4, 10])
 
 type PostcardFilterProps = {
+  subject: string
   imageUrl: string
   count: number
-  nextCard: (a: object) => void
+  onFilterClicked: (a: string) => void
 }
 
 const PostcardFilter: React.FC<PostcardFilterProps> = ({
-  count,
+  subject,
   imageUrl,
-  nextCard,
+  count,
+  onFilterClicked,
 }) => {
   const [colorScheme] = useColorContext()
   const maxCards = Math.round(cardsAmount(count))
@@ -79,7 +81,11 @@ const PostcardFilter: React.FC<PostcardFilterProps> = ({
           style={{ transform: 'rotate(0)' }}
           {...colorScheme.set('borderColor', 'divider')}
         >
-          <button {...plainButtonRule} {...styles.image}>
+          <button
+            onClick={() => onFilterClicked(subject)}
+            {...plainButtonRule}
+            {...styles.image}
+          >
             <AssetImage width={'200'} height={'133'} src={imageUrl} />
           </button>
         </div>

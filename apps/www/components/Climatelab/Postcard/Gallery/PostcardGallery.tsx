@@ -4,9 +4,15 @@ import { useTranslation } from '../../../../lib/withT'
 import { css } from 'glamor'
 import { useState } from 'react'
 
-import { Overlay, OverlayBody, OverlayToolbar } from '@project-r/styleguide'
+import {
+  Overlay,
+  OverlayBody,
+  OverlayToolbar,
+  Button,
+} from '@project-r/styleguide'
 import { PostcardPreview } from '../PostcardPreview'
 import { Postcard, usePostcardsData } from '../use-postcard-data'
+import PostcardFilter from './PostcardFilter'
 
 // deprecated?
 // type ImageSrcData = {
@@ -69,11 +75,19 @@ const PostcardsGrid = ({
 }
 
 function PostcardGallery() {
-  const postcardsData = usePostcardsData()
+  const [subjectFilter, setSubjectFilter] = useState()
+  const postcardsData = usePostcardsData({
+    highlightedPostcards: [],
+    subjectFilter: subjectFilter,
+  })
   // const postcardsData = useMockPostcardsData()
 
   const [toggleOverlay, setToggleOverlay] = useState({ isOpen: false })
   const [overlayBody, setOverlayBody] = useState({})
+
+  const onFilterClicked = (subject) => {
+    setSubjectFilter(subject)
+  }
 
   const onOverlayToggeled = (content) => {
     setToggleOverlay({ isOpen: toggleOverlay.isOpen ? false : true })
@@ -81,17 +95,52 @@ function PostcardGallery() {
   }
 
   // rough function to try out the pattern with a button loading a random new card
-  const loadAnotherCard = (id) => {
-    const randomNumber = Math.floor(Math.random() * (49 - 1 + 1) + 1)
-    console.log(randomNumber)
-    const newCard = postcardsData.postcards.filter((d) => d.id !== id)[
-      randomNumber
-    ]
-    setOverlayBody(newCard)
-  }
+  // const loadAnotherCard = (id) => {
+  //   const randomNumber = Math.floor(Math.random() * (49 - 1 + 1) + 1)
+  //   console.log(randomNumber)
+  //   const newCard = postcardsData.postcards.filter((d) => d.id !== id)[
+  //     randomNumber
+  //   ]
+  //   setOverlayBody(newCard)
+  // }
 
   return postcardsData._state === 'LOADED' ? (
     <>
+      <div
+        style={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          margin: '0 auto',
+          justifyContent: 'space-around',
+          marginBottom: '20px',
+        }}
+      >
+        <PostcardFilter
+          subject='postcard_1'
+          count={1000}
+          imageUrl={'/static/climatelab/freier.jpg'}
+          onFilterClicked={onFilterClicked}
+        />
+        <PostcardFilter
+          subject='postcard_2'
+          count={504}
+          imageUrl={'/static/climatelab/farner.jpg'}
+          onFilterClicked={onFilterClicked}
+        />
+        <PostcardFilter
+          subject='postcard_3'
+          count={201}
+          imageUrl={'/static/climatelab/richardson.jpg'}
+          onFilterClicked={onFilterClicked}
+        />
+        <PostcardFilter
+          subject='postcard_4'
+          count={300}
+          imageUrl={'/static/climatelab/zalko.jpg'}
+          onFilterClicked={onFilterClicked}
+        />
+      </div>
+
       <PostcardsGrid
         postcards={postcardsData.postcards}
         onToggleOverlay={onOverlayToggeled}
@@ -108,10 +157,10 @@ function PostcardGallery() {
             }}
           />
           <OverlayBody>
-            <PostcardPreview postcard={overlayBody} t={t} />
-            <Button onClick={() => loadAnotherCard(overlayBody.id)}>
+            <PostcardPreview postcard={overlayBody} />
+            {/* <Button onClick={() => loadAnotherCard(overlayBody.id)}>
               Andere Karte lesen
-            </Button>
+            </Button> */}
           </OverlayBody>
         </Overlay>
       )}
