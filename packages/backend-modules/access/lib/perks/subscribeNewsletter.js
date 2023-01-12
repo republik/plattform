@@ -18,7 +18,7 @@ const give = async (
 
   await saveConsents({
     userId: recipient.id,
-    consents: [name],
+    consents: [`NEWSLETTER_${name}`],
     req: {}, // ip is not needed to save consent, but req must not be undefined
     pgdb,
   })
@@ -36,7 +36,7 @@ const give = async (
 
   return {
     recipient: recipient.id,
-    subscribedNewsltter: name,
+    subscribedNewsletter: name,
     eventLogExtend: `.${name}`,
   }
 }
