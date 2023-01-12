@@ -9,6 +9,7 @@ import {
   OverlayBody,
   OverlayToolbar,
   Button,
+  Loader,
 } from '@project-r/styleguide'
 import { PostcardPreview } from '../PostcardPreview'
 import { Postcard, usePostcardsData } from '../use-postcard-data'
@@ -104,7 +105,7 @@ function PostcardGallery() {
   //   setOverlayBody(newCard)
   // }
 
-  return postcardsData._state === 'LOADED' ? (
+  return (
     <>
       <div
         style={{
@@ -141,9 +142,15 @@ function PostcardGallery() {
         />
       </div>
 
-      <PostcardsGrid
-        postcards={postcardsData.postcards}
-        onToggleOverlay={onOverlayToggeled}
+      <Loader
+        loading={postcardsData._state === 'LOADING'}
+        error={postcardsData._state === 'ERROR'}
+        render={() => (
+          <PostcardsGrid
+            postcards={postcardsData.postcards}
+            onToggleOverlay={onOverlayToggeled}
+          />
+        )}
       />
       {toggleOverlay.isOpen && (
         <Overlay
@@ -151,22 +158,13 @@ function PostcardGallery() {
             setToggleOverlay({ isOpen: false })
           }}
         >
-          <OverlayToolbar
-            onClose={() => {
-              setToggleOverlay({ isOpen: false })
-            }}
-          />
-          <OverlayBody>
-            <PostcardPreview postcard={overlayBody} />
-            {/* <Button onClick={() => loadAnotherCard(overlayBody.id)}>
+          <PostcardPreview postcard={overlayBody} />
+          {/* <Button onClick={() => loadAnotherCard(overlayBody.id)}>
               Andere Karte lesen
             </Button> */}
-          </OverlayBody>
         </Overlay>
       )}
     </>
-  ) : (
-    <div>whoops</div>
   )
 }
 
