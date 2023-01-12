@@ -190,8 +190,8 @@ const updateResultIncrementally = async (
 
   if (['Choice', 'ImageChoice'].includes(question.type)) {
     const optionPayload = (question.result.payload || []).find(
-      (p) => p.option.value == answer.payload.value,
-    ) // eslint-disable-line eqeqeq
+      (p) => p.option.value == answer.payload.value, // eslint-disable-line eqeqeq
+    )
 
     if (!optionPayload) {
       console.error('optionPayload not found', optionPayload)
