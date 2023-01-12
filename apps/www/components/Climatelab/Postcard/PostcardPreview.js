@@ -60,12 +60,10 @@ const styles = {
     flexDirection: 'column',
     width: '33%',
     paddingLeft: '10px',
+    justifyContent: 'sprace-between',
     [mediaQueries.mUp]: {
       paddingLeft: '20px',
     },
-  }),
-  poststampContainer: css({
-    alignSelf: 'flex-end',
   }),
   image: css({
     borderImage: 'url(/static/climatelab/border-image.png) 32 round',
@@ -77,7 +75,7 @@ const styles = {
     borderBottom: 'solid 1px #DADDDC',
     height: '25px',
     [mediaQueries.mUp]: {
-      height: '50px',
+      height: '35px',
     },
   }),
   adressBlockContainer: css({
@@ -86,6 +84,7 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     flexGrow: 1,
+    justifyContent: 'center',
   }),
 }
 
@@ -115,9 +114,8 @@ export const PostcardPreview = (props) => {
       </div>
 
       <div {...styles.rightSide}>
-        <div {...styles.poststampContainer}>
-          <PoststampComponent imageUrl={imageUrl} />
-        </div>
+        <PoststampComponent imageUrl={imageUrl} />
+
         <div {...styles.adressBlockContainer}>
           <div {...styles.adressBlock} />
           <div {...styles.adressBlock} />
