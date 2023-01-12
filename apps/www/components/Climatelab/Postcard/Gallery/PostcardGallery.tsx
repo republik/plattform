@@ -135,9 +135,9 @@ const useMockPostcardsData = (): PostcardsData => {
   ]
 
   const postcards = useMemo(() => {
-    return Array.from({ length: 50 }, (_, i) => {
+    return Array.from({ length: 42 }, (_, i) => {
       const imageUrl = images[Math.floor(Math.random() * 4)]
-      const isHighlighted = Math.random() < 0.2
+      const isHighlighted = i % 10 === 0
       return {
         id: `img-${i}`,
         text: 'Lorem ipsum dolor sit amet consectetur adipisicing elit.',
@@ -160,15 +160,17 @@ const gridStyles = {
     gap: '1rem',
   }),
   card: css({
-    background: 'black',
+    background: 'hotpink',
     width: '100%',
+    gridRowEnd: 'span 1',
+    gridColumnEnd: 'span 1',
   }),
   highlightedCard: css({
-    background: 'black',
+    background: 'hotpink',
     width: '100%',
     // border: '2px solid pink',
-    gridRowEnd: 'span 2',
-    gridColumnEnd: 'span 2',
+    gridRowEnd: 'span 3',
+    gridColumnEnd: 'span 3',
   }),
 }
 
@@ -185,10 +187,14 @@ const PostcardsGrid = ({
         const cardStyle = p.isHighlighted
           ? gridStyles.highlightedCard
           : gridStyles.card
+
         return (
           <div key={p.id} {...cardStyle} onClick={() => onToggleOverlay(p)}>
-            {/* {p.text} */}
-            <AssetImage width='600' height='420' src={p.imageUrl} />
+            {p.isHighlighted ? (
+              <PostcardPreview postcard={p} />
+            ) : (
+              <AssetImage width='600' height='420' src={p.imageUrl} />
+            )}
           </div>
         )
       })}
@@ -236,4 +242,4 @@ function PostcardGallery() {
   )
 }
 
-export default withDefaultSSR(PostcardGallery)
+export default PostcardGallery
