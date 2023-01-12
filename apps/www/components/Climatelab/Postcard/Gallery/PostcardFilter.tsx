@@ -1,6 +1,7 @@
 import { css } from 'glamor'
 import { useColorContext, plainButtonRule } from '@project-r/styleguide'
 import AssetImage from '../../../../lib/images/AssetImage'
+import { scaleLinear } from 'd3-scale'
 
 const styles = {
   container: css({
@@ -24,8 +25,6 @@ const styles = {
     borderWidth: '1px',
     borderStyle: 'solid',
     background: '#FFFFFF',
-    /* Rotate it. Change the number of degrees for the following cards */
-    transform: 'rotate(-8deg)',
   }),
   image: css({
     '> span': { display: 'block !important' },
@@ -37,6 +36,8 @@ const styles = {
     fontSize: '1rem',
   }),
 }
+
+const cardsAmount = scaleLinear().domain([600, 1300]).range([4, 10])
 
 type PostcardFilterProps = {
   imageUrl: string
@@ -50,28 +51,29 @@ const PostcardFilter: React.FC<PostcardFilterProps> = ({
   nextCard,
 }) => {
   const [colorScheme] = useColorContext()
+  const maxCards = Math.round(cardsAmount(count))
+  const amountOfCards = Array(maxCards)
+    .fill(null)
+    .map((_, i) => i)
+  const rotations = Array(maxCards + 2)
+    .fill(null)
+    .map((_, i) => i + 2)
+    .filter((n) => n % 2 === 0)
+    .reverse()
   return (
     <div {...styles.container}>
       <div {...styles.pileContainer}>
-        <div
-          {...styles.pileCard}
-          {...colorScheme.set('borderColor', 'divider')}
-        />
-        <div
-          {...styles.pileCard}
-          style={{ transform: 'rotate(-6deg)' }}
-          {...colorScheme.set('borderColor', 'divider')}
-        />
-        <div
-          {...styles.pileCard}
-          style={{ transform: 'rotate(-4deg)' }}
-          {...colorScheme.set('borderColor', 'divider')}
-        />
-        <div
-          {...styles.pileCard}
-          style={{ transform: 'rotate(-2deg)' }}
-          {...colorScheme.set('borderColor', 'divider')}
-        />
+        {amountOfCards.map((d, i) => {
+          return (
+            <div
+              key={d}
+              {...styles.pileCard}
+              style={{ transform: `rotate(-${rotations[d]}deg)` }}
+              {...colorScheme.set('borderColor', 'divider')}
+            />
+          )
+        })}
+
         <div
           {...styles.pileCard}
           style={{ transform: 'rotate(0)' }}
