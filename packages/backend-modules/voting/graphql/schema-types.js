@@ -261,6 +261,11 @@ type Questionnaire {
 input SubmissionsFilterInput {
   id: ID
   not: ID
+
+  submissionIds: [ID!]
+  notSubmissionIds: [ID!]
+
+  hasAnswers: Boolean
 }
 
 input SubmissionsSortInput {

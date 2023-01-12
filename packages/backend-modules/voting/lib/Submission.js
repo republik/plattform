@@ -113,6 +113,18 @@ const createSubmissionsQuery = ({
   }
   const mustSubmissionId = filters?.id && { term: { id: filters.id } }
   const mustNotSubmissionId = filters?.not && { term: { id: filters.not } }
+  const mustSubmissionIds = filters?.submissionIds?.length && {
+    terms: { id: filters.submissionIds },
+  }
+  const mustNotSubmissionIds = filters?.notSubmissionIds?.length && {
+    terms: { id: filters.notSubmissionIds },
+  }
+  const mustHaveAnswers = filters?.hasAnswers === true && {
+    exists: { field: 'resolved.answers' },
+  }
+  const mustNotHaveAnswers = filters?.hasAnswers === false && {
+    exists: { field: 'resolved.answers' },
+  }
 
   const query = {
     bool: {
@@ -122,8 +134,14 @@ const createSubmissionsQuery = ({
         mustQuestionnaireId,
         mustSearch,
         mustSubmissionId,
+        mustSubmissionIds,
+        mustHaveAnswers,
       ].filter(Boolean),
-      must_not: [mustNotSubmissionId].filter(Boolean),
+      must_not: [
+        mustNotSubmissionId,
+        mustNotSubmissionIds,
+        mustNotHaveAnswers,
+      ].filter(Boolean),
     },
   }
 
