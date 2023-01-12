@@ -17,6 +17,7 @@ const styles = {
     backgroundColor: '#F9FBFF',
     margin: '0 0 20px 0',
     width: '100%',
+    height: '100%',
     aspectRatio: '16 / 9',
     display: 'flex',
     padding: '10px',

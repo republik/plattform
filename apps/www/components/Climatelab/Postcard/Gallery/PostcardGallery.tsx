@@ -45,6 +45,9 @@ const gridStyles = {
     gridRowEnd: 'span 3',
     gridColumnEnd: 'span 3',
   }),
+  imageFix: css({
+    '> span': { display: 'block !important' },
+  }),
 }
 
 const PostcardsGrid = ({
@@ -66,7 +69,9 @@ const PostcardsGrid = ({
             {p.isHighlighted ? (
               <PostcardPreview postcard={p} />
             ) : (
-              <AssetImage width='600' height='420' src={p.imageUrl} />
+              <div {...gridStyles.imageFix}>
+                <AssetImage width='600' height='420' src={p.imageUrl} />
+              </div>
             )}
           </div>
         )
