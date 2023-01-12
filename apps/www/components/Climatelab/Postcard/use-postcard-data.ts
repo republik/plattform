@@ -31,7 +31,7 @@ const POSTCARDS_QUERY = gql`
   }
 
   query publicPostcardsQuery(
-    $highlightedPostcardIds: ID
+    $highlightedPostcardIds: [ID!]
     $subjectFilter: String
   ) {
     questionnaire(slug: "klima-postkarte") {
@@ -48,7 +48,7 @@ const POSTCARDS_QUERY = gql`
 
       highlighted: submissions(
         first: 100
-        filters: { id: $highlightedPostcardIds }
+        filters: { submissionIds: $highlightedPostcardIds, hasAnswers: true }
         search: $subjectFilter
       ) {
         ...PostcardConnection
@@ -56,7 +56,7 @@ const POSTCARDS_QUERY = gql`
 
       notHighlighted: submissions(
         first: 100
-        filters: { not: $highlightedPostcardIds }
+        filters: { notSubmissionIds: $highlightedPostcardIds, hasAnswers: true }
         search: $subjectFilter
       ) {
         ...PostcardConnection
@@ -131,7 +131,7 @@ export const usePostcardsData = ({
   highlightedPostcards?: HighlightedPostcard[]
   subjectFilter?: SubjectFilter
 }): PostcardsData => {
-  const highlightedPostcardIds = highlightedPostcards?.[0]?.id ?? '' // FIXME: This should be an array at some point
+  highlightedPostcards?.map(({ id }) => id) ?? null
 
   // Query needs labels to search by subject, that's why we translate from the value to the label
   const subjectFilterLabel =
