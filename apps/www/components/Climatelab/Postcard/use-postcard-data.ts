@@ -1,6 +1,5 @@
 import { gql, useQuery } from '@apollo/client'
 import { useMemo } from 'react'
-import { CDN_FRONTEND_BASE_URL } from '../../../lib/constants'
 
 /**
  * TODO: Resolve user profiles for linked
@@ -10,7 +9,28 @@ import { CDN_FRONTEND_BASE_URL } from '../../../lib/constants'
  */
 
 const POSTCARDS_QUERY = gql`
-  query publicPostcardsQuery {
+  fragment PostcardConnection on SubmissionConnection {
+    totalCount
+    nodes {
+      id
+      answers {
+        nodes {
+          id
+          payload
+          question {
+            id
+            ... on QuestionInterface {
+              id
+              __typename
+              text
+            }
+          }
+        }
+      }
+    }
+  }
+
+  query publicPostcardsQuery($highlightedPostcardIds: ID) {
     questionnaire(slug: "klima-postkarte") {
       questions {
         id
@@ -22,25 +42,18 @@ const POSTCARDS_QUERY = gql`
         }
       }
 
-      submissions {
-        totalCount
-        nodes {
-          id
-          answers {
-            nodes {
-              id
-              payload
-              question {
-                id
-                ... on QuestionInterface {
-                  id
-                  __typename
-                  text
-                }
-              }
-            }
-          }
-        }
+      highlighted: submissions(
+        first: 100
+        filters: { id: $highlightedPostcardIds }
+      ) {
+        ...PostcardConnection
+      }
+
+      notHighlighted: submissions(
+        first: 100
+        filters: { not: $highlightedPostcardIds }
+      ) {
+        ...PostcardConnection
       }
     }
   }
@@ -65,13 +78,28 @@ type PostcardsData =
       postcards: Postcard[]
     }
 
+type HighlightedPostcard = {
+  id: string
+  text: string
+}
+
 /**
  *
  * TODO: Proper loading/error state
  *
  */
-export const usePostcardsData = (): PostcardsData => {
-  const { data, loading, error } = useQuery(POSTCARDS_QUERY)
+export const usePostcardsData = ({
+  highlightedPostcards,
+}: {
+  highlightedPostcards?: HighlightedPostcard[]
+}): PostcardsData => {
+  const highlightedPostcardIds = highlightedPostcards?.[0]?.id ?? '' // FIXME: This should be an array at some point
+
+  const { data, loading, error } = useQuery(POSTCARDS_QUERY, {
+    variables: {
+      highlightedPostcardIds,
+    },
+  })
 
   if (error) {
     return { _state: 'ERROR' }
@@ -85,7 +113,7 @@ export const usePostcardsData = (): PostcardsData => {
 
   // Fugly parsing!
   // FIXME: add stricter types
-  const postcards = data.questionnaire?.submissions?.nodes.map((submission) => {
+  const getPostcardData = (submission) => {
     const imageAnswer = submission.answers.nodes?.[0]?.payload?.value?.[0]
     const imageUrl = data.questionnaire?.questions?.[0]?.options?.find(
       ({ value }) => value === imageAnswer,
@@ -99,9 +127,17 @@ export const usePostcardsData = (): PostcardsData => {
       text,
       imageUrl,
     }
-  })
+  }
 
-  return { _state: 'LOADED', postcards }
+  const highlightedPostcardsData =
+    data.questionnaire?.highlighted?.nodes.map(getPostcardData)
+  const notHighlightedPostcardsData =
+    data.questionnaire?.notHighlighted?.nodes.map(getPostcardData)
+
+  return {
+    _state: 'LOADED',
+    postcards: [...highlightedPostcardsData, ...notHighlightedPostcardsData],
+  }
 }
 
 export const useMockPostcardsData = (): PostcardsData => {
