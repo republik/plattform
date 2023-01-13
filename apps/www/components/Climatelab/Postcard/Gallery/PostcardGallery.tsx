@@ -121,7 +121,7 @@ function PostcardGallery(props) {
   const [toggleOverlay, setToggleOverlay] = useState({
     isOpen: false,
   })
-  const [overlayBody, setOverlayBody] = useState<Postcard[]>()
+  const [overlayBody, setOverlayBody] = useState(null)
 
   const onFilterClicked = (subject) => {
     setSubjectFilter(subject)
