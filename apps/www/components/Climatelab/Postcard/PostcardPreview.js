@@ -95,7 +95,7 @@ export const PostcardPreview = (props) => {
 
   if (!postcard) return null
 
-  const { text, imageUrl, imageAnswer } = postcard
+  const { text, imageUrl, imageSelection } = postcard
 
   return (
     <div
@@ -105,7 +105,7 @@ export const PostcardPreview = (props) => {
       <div {...styles.credit}>
         {' '}
         {t('Climatelab/Postcard/PostcardPreview/credit', {
-          credit: postcardCredits[imageAnswer] || ' ...',
+          credit: postcardCredits[imageSelection] || ' ...',
         })}
       </div>
 

@@ -65,7 +65,7 @@ const SubmittedPostcard = (props) => {
   const postcard = {
     text: postcardText,
     imageUrl: imageUrl,
-    imageAnswer: imageAnswer,
+    imageSelection: imageAnswer,
   }
 
   return (
