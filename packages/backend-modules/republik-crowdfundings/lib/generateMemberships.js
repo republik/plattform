@@ -48,7 +48,8 @@ module.exports = async (pledgeId, pgdb, t, redis) => {
   // voucherCodes get generated inside the db, but not for reducedPrice
   const reducedPrice = pledge.donation < 0
 
-  const activeMemberships = await pgdb.public.query(`
+  const activeMemberships = await pgdb.public.query(
+    `
     SELECT
       "memberships".*,
       "membershipTypes"."name"
@@ -59,9 +60,11 @@ module.exports = async (pledgeId, pgdb, t, redis) => {
       ON "memberships"."membershipTypeId" = "membershipTypes"."id"
 
     WHERE
-      "memberships"."userId" = '${user.id}'
+      "memberships"."userId" = :userId
       AND "memberships"."active" = true
-  `)
+  `,
+    { userId: user.id },
+  )
 
   const userHasActiveMembership = activeMemberships.length > 0
 
