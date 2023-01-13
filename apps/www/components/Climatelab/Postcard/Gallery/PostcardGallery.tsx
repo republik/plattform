@@ -20,6 +20,25 @@ import { Postcard, usePostcardsData } from '../use-postcard-data'
 import PostcardFilter from './PostcardFilter'
 import PostcardSingleCardView from './PostcardSingleCardView'
 
+const HIGHLIGHTS_DUMMY = [
+  {
+    id: '8178e062-0569-47f6-a136-625f07e63678',
+    text: 'Haltet durch! Die Welt ist träge, der Wachstumsdruck tiefst verwurzelt. Haltet durch! Forscht, versucht, verbreitet Beispiele, überzeugt. Ihr seid viele, überall in alle Positionen. Macht weiter! Die einfach Lösungen funktionieren bald nicht mehr.  Dass ihr diese Karte lest, beweist, dass ein Wandel dieser Welt möglich war. ',
+  },
+  {
+    id: 'c10b328a-4dc0-4775-a455-529ebbed4577',
+    text: 'Grüsse aus dem mediterranen Zürich',
+  },
+  {
+    id: 'a3dd4d32-e93e-4d03-8eaa-7ddba42abc7b',
+    text: 'Gerade noch konnten wir den einen oder anderen Hebel in Bewegung setzen, um die Welt zu einem, für unsere Enkel, inspirierenden und wunderbaren, lebenswerten Ort beizubehalten. Hach und zu Hause ist es einfach am schönsten! Denn das gute liegt so nah.. toll, können wir Arbeiten, was wir lieben und wo wir es am liebsten tun. \nHebed eus Sorg!',
+  },
+  {
+    id: '67177a2c-04df-4e70-8fd7-f1e5dc4116f9',
+    text: 'Wir schreiben das Jahr 2083 und blicken positiv in die Zukunft. Nach den heftigen Ressourcenkriegsjahren der 40er und den verheerenden Durren der 50er sah die Menschheit endlich ein, dass Änderungen nötig waren. Zumindest in unseren Breitengraden. Abgesehen von den Hotlands, wo Menschen nicht mehr leben können, ist die Welt lokaler und sozialer geworden. Mit viel weniger Menschen lebt man hierzulande ohne Krieg und Ausbeutung im Einklang mit der Natur, zirkular, fossilfrei und regenerativ.',
+  },
+]
+
 // deprecated?
 // type ImageSrcData = {
 //   src: string
@@ -88,10 +107,11 @@ const PostcardsGrid = ({
   )
 }
 
-function PostcardGallery() {
+function PostcardGallery(props) {
+  console.log(props)
   const [subjectFilter, setSubjectFilter] = useState()
   const postcardsData = usePostcardsData({
-    highlightedPostcards: [],
+    highlightedPostcards: HIGHLIGHTS_DUMMY,
     subjectFilter: subjectFilter,
   })
   // const postcardsData = useMockPostcardsData()
