@@ -10,6 +10,8 @@ import {
 import AssetImage from '../../../../lib/images/AssetImage'
 import { Postcard, useSinglePostcardData } from './../use-postcard-data'
 import PostcardFilter from './PostcardFilter'
+import { postcardCredits } from '../../config'
+import { useTranslation } from '../../../../lib/withT'
 
 const styles = {
   container: css({
@@ -19,7 +21,8 @@ const styles = {
   }),
 
   image: css({
-    marginBottom: '20px',
+    position: 'relative',
+    margin: '0 0 30px',
     '> span': { display: 'block !important' },
   }),
   count: css({
@@ -72,6 +75,8 @@ const PostcardSingleCardView: React.FC<PostcardSingleCardView> = ({
   >(postcard ? null : 'postcard_1')
 
   const currentPostcardData = data[currentPostcard]
+
+  const { t } = useTranslation()
 
   return (
     <div {...styles.container}>
@@ -170,13 +175,27 @@ const PostcardSingleCardView: React.FC<PostcardSingleCardView> = ({
             const { postcard } = currentPostcardData
             return (
               <>
-                <div {...styles.image}>
+                <figure {...styles.image}>
                   <AssetImage
                     width={'600'}
                     height={'400'}
                     src={postcard.imageUrl}
                   />
-                </div>
+
+                  <figcaption
+                    style={{
+                      paddingTop: '0.25rem',
+                      position: 'absolute',
+                      fontSize: '0.75rem',
+                    }}
+                  >
+                    {t('Climatelab/Postcard/PostcardPreview/credit', {
+                      credit:
+                        postcardCredits[postcard.imageSelection] || ' ...',
+                    })}
+                  </figcaption>
+                </figure>
+                <div></div>
                 <Interaction.P>{postcard.text}</Interaction.P>
               </>
             )
