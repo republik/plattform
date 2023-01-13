@@ -47,6 +47,12 @@ const POSTCARDS_QUERY = gql`
             value
             imageUrl
           }
+          result {
+            option {
+              value
+            }
+            count
+          }
         }
       }
 
@@ -330,9 +336,19 @@ export const useSinglePostcardData = ({
       parsePostcardData({ data, isHighlighted: false }),
     )
 
-  const totalCount =
-    data.questionnaire.highlighted?.totalCount +
-    data.questionnaire.notHighlighted?.totalCount
+  // const totalCount =
+  //   data.questionnaire.highlighted?.totalCount +
+  //   data.questionnaire.notHighlighted?.totalCount
+
+  const questionResults = Object.fromEntries(
+    data.questionnaire.questions?.[0]?.result?.map((result) => {
+      return [result.option.value, result.count]
+    }),
+  )
+
+  const totalCount = subjectFilter
+    ? questionResults[subjectFilter]
+    : Object.values(questionResults).reduce((sum, d) => sum + d)
 
   // Pagination stuff
 
