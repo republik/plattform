@@ -1,12 +1,4 @@
 import { gql, useQuery } from '@apollo/client'
-import { useMemo } from 'react'
-
-/**
- * TODO: Resolve user profiles for linked
- * TODO: How does pagination work here?
- * TODO: Replace getResizedSrcs with new AssetImage
- *
- */
 
 const POSTCARDS_QUERY = gql`
   fragment PostcardConnection on SubmissionConnection {
