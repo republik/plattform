@@ -2,7 +2,7 @@ const debug = require('debug')('access:lib:perks:accessWithRole')
 
 const { findByRecipient } = require('../grants')
 const { addRole, removeRole, removeMemberRole } = require('../memberships')
-const memberRole = 'member'
+const MEMBER_ROLE = 'member'
 
 const give = async (campaign, grant, recipient, settings, t, pgdb) => {
   const isRoleAdded = await addRole(grant, recipient, pgdb, settings.role)
