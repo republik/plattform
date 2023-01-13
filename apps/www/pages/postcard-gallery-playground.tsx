@@ -1,12 +1,19 @@
 // import PostcardGallery from '../components/Climatelab/Postcard/Gallery/PostcardGallery'
 
 import { useState } from 'react'
-import { usePostcardsData } from '../components/Climatelab/Postcard/use-postcard-data'
+import {
+  usePostcardsData,
+  useSinglePostcardData,
+} from '../components/Climatelab/Postcard/use-postcard-data'
 
 const DUMMY_HIGHLIGHTED = [
   {
     id: '8178e062-0569-47f6-a136-625f07e63678',
     text: 'This is the new text!',
+  },
+  {
+    id: '67177a2c-04df-4e70-8fd7-f1e5dc4116f9',
+    text: 'This is the new text again!',
   },
 ]
 
@@ -14,6 +21,11 @@ const DebugGallery = () => {
   const [subjectFilter, setSubjectFilter] = useState()
 
   const postcardsData = usePostcardsData({
+    highlightedPostcards: DUMMY_HIGHLIGHTED,
+    subjectFilter: subjectFilter,
+  })
+
+  const singlePostcardData = useSinglePostcardData({
     highlightedPostcards: DUMMY_HIGHLIGHTED,
     subjectFilter: subjectFilter,
   })
@@ -44,6 +56,24 @@ const DebugGallery = () => {
           <option value='postcard_4'>Card 4</option>
         </select>
       </label>
+
+      <h2>Current Postcard</h2>
+
+      {singlePostcardData._state === 'LOADED' && singlePostcardData.postcard ? (
+        <div>
+          <pre>{JSON.stringify(singlePostcardData.postcard, null, 2)}</pre>
+
+          <button
+            onClick={() => {
+              singlePostcardData.fetchNext()
+            }}
+          >
+            Next Postcard
+          </button>
+        </div>
+      ) : null}
+
+      <h2>Ordered Postcards</h2>
 
       {postcardsData.postcards.map((p) => {
         return (

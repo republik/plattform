@@ -1,4 +1,5 @@
 import { gql, useQuery } from '@apollo/client'
+import { useState } from 'react'
 
 const POSTCARDS_QUERY = gql`
   fragment PostcardConnection on SubmissionConnection {
@@ -31,9 +32,11 @@ const POSTCARDS_QUERY = gql`
 
   query publicPostcardsQuery(
     $highlightedPostcardIds: [ID!]
-    $subjectFilter: String
     $cursorHighlighted: String
     $cursorNotHighlighted: String
+    $limit: Int
+    $searchHighlighted: String
+    $searchNotHighlighted: String
   ) {
     questionnaire(slug: "klima-postkarte") {
       id
@@ -48,19 +51,19 @@ const POSTCARDS_QUERY = gql`
       }
 
       highlighted: submissions(
-        first: 10
+        first: $limit
         after: $cursorHighlighted
         filters: { submissionIds: $highlightedPostcardIds, hasAnswers: true }
-        search: $subjectFilter
+        search: $searchHighlighted
       ) {
         ...PostcardConnection
       }
 
       notHighlighted: submissions(
-        first: 10
+        first: $limit
         after: $cursorNotHighlighted
         filters: { notSubmissionIds: $highlightedPostcardIds, hasAnswers: true }
-        search: $subjectFilter
+        search: $searchNotHighlighted
       ) {
         ...PostcardConnection
       }
@@ -84,7 +87,7 @@ export type Postcard = {
   author: { name: string }
 }
 
-type PostcardsData =
+export type PostcardsData =
   | {
       _state: 'LOADING'
     }
@@ -95,6 +98,19 @@ type PostcardsData =
       fetchMoreHighlighted: () => void
       fetchMoreNotHighlighted: () => void
       totalCount: number
+    }
+
+export type SinglePostcardData =
+  | {
+      _state: 'LOADING'
+    }
+  | { _state: 'ERROR' }
+  | {
+      _state: 'LOADED'
+      totalCount: number
+      postcard: Postcard | null
+      fetchNext: () => void
+      hasMore: boolean
     }
 
 type HighlightedPostcard = {
@@ -153,7 +169,8 @@ export const usePostcardsData = ({
   const { data, loading, error, fetchMore } = useQuery(POSTCARDS_QUERY, {
     variables: {
       highlightedPostcardIds,
-      subjectFilter: subjectFilterLabel,
+      searchHighlighted: subjectFilterLabel,
+      searchNotHighlighted: subjectFilterLabel,
     },
   })
 
@@ -258,5 +275,106 @@ export const usePostcardsData = ({
     totalCount,
     fetchMoreHighlighted,
     fetchMoreNotHighlighted,
+  }
+}
+
+export const useSinglePostcardData = ({
+  highlightedPostcards,
+  subjectFilter,
+}: {
+  highlightedPostcards?: HighlightedPostcard[]
+  subjectFilter?: SubjectFilter
+}): SinglePostcardData => {
+  const highlightedPostcardIds =
+    highlightedPostcards?.map(({ id }) => id) ?? null
+
+  // Query needs labels to search by subject, that's why we translate from the value to the label
+  const subjectFilterLabel =
+    subjectFilter && subjectFilter in SUBJECT_FILTERS
+      ? SUBJECT_FILTERS[subjectFilter]
+      : undefined
+
+  const [lastHighlightedPostcardReached, setLastHighlightedPostcardReached] =
+    useState(false)
+
+  const { data, loading, error, refetch } = useQuery(POSTCARDS_QUERY, {
+    variables: {
+      limit: 1,
+      highlightedPostcardIds,
+      searchHighlighted: subjectFilterLabel,
+      searchNotHighlighted: subjectFilterLabel,
+    },
+  })
+
+  if (error) {
+    return { _state: 'ERROR' }
+  }
+
+  if (loading) {
+    return {
+      _state: 'LOADING',
+    }
+  }
+
+  if (data.questionnaire == null) {
+    return {
+      _state: 'ERROR',
+    }
+  }
+
+  const highlightedPostcardsData = data.questionnaire.highlighted?.nodes.map(
+    parsePostcardData({ data, isHighlighted: true }),
+  )
+  const notHighlightedPostcardsData =
+    data.questionnaire.notHighlighted?.nodes.map(
+      parsePostcardData({ data, isHighlighted: false }),
+    )
+
+  const totalCount =
+    data.questionnaire.highlighted?.totalCount +
+    data.questionnaire.notHighlighted?.totalCount
+
+  // Pagination stuff
+
+  const cursorHighlighted: string | null =
+    data.questionnaire.highlighted?.pageInfo.endCursor
+  const hasMoreHighlighted =
+    data.questionnaire.highlighted?.pageInfo.hasNextPage
+
+  const cursorNotHighlighted: string | null =
+    data.questionnaire.notHighlighted?.pageInfo.endCursor
+  const hasMoreNotHighlighted =
+    data.questionnaire.notHighlighted?.pageInfo.hasNextPage
+
+  const postcard =
+    (lastHighlightedPostcardReached
+      ? notHighlightedPostcardsData[0]
+      : highlightedPostcardsData[0] ?? notHighlightedPostcardsData[0]) ?? null
+
+  const fetchNext = () => {
+    // 1. cycle through all highlighted cards
+    // 2. if no more highlighted cards, check if there are more, and fetch more
+    // 3. otherwise, repeat the same for all not highlighted cards
+
+    if (hasMoreHighlighted) {
+      refetch({
+        cursorHighlighted,
+      })
+    } else if (!lastHighlightedPostcardReached) {
+      setLastHighlightedPostcardReached(true)
+    } else if (hasMoreNotHighlighted) {
+      console.log('no more highlighted')
+      refetch({
+        cursorNotHighlighted,
+      })
+    }
+  }
+
+  return {
+    _state: 'LOADED',
+    totalCount,
+    postcard,
+    fetchNext,
+    hasMore: hasMoreHighlighted || hasMoreNotHighlighted,
   }
 }
