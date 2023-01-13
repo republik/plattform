@@ -7,11 +7,13 @@ const styles = {
   container: css({
     position: 'relative',
     marginBottom: '10px',
+    flexGrow: '1',
   }),
   pileContainer: css({
     position: 'relative',
-    width: '150px',
-    height: '99.75px',
+    width: '100%',
+    aspectRatio: '3 / 2',
+    // height: '99.75px',
   }),
   pileCard: css({
     /* Absolute position */

@@ -75,37 +75,15 @@ const PostcardSingleCardView: React.FC<PostcardSingleCardView> = () => {
 
   return (
     <div {...styles.container}>
-      <Loader
-        loading={currentPostcardData._state === 'LOADING'}
-        error={currentPostcardData._state === 'ERROR'}
-        render={() => {
-          if (currentPostcardData._state !== 'LOADED') {
-            return
-          }
-          const { postcard } = currentPostcardData
-          return (
-            <>
-              <div {...styles.image}>
-                <AssetImage
-                  width={'600'}
-                  height={'400'}
-                  src={postcard.imageUrl}
-                />
-              </div>
-              <Interaction.P>{postcard.text}</Interaction.P>
-            </>
-          )
-        }}
-      />
-      <br />
-      <br />
       <Interaction.P>Nächste Karte lesen</Interaction.P>
       <div
         style={{
           display: 'flex',
           flexWrap: 'wrap',
           margin: '30px auto',
-          justifyContent: 'space-around',
+          width: '100%',
+          gap: '1rem',
+          // justifyContent: 'space-between',
         }}
       >
         <PostcardFilter
@@ -181,6 +159,28 @@ const PostcardSingleCardView: React.FC<PostcardSingleCardView> = () => {
           }}
         />
       </div>
+      <Loader
+        loading={currentPostcardData._state === 'LOADING'}
+        error={currentPostcardData._state === 'ERROR'}
+        render={() => {
+          if (currentPostcardData._state !== 'LOADED') {
+            return
+          }
+          const { postcard } = currentPostcardData
+          return (
+            <>
+              <div {...styles.image}>
+                <AssetImage
+                  width={'600'}
+                  height={'400'}
+                  src={postcard.imageUrl}
+                />
+              </div>
+              <Interaction.P>{postcard.text}</Interaction.P>
+            </>
+          )
+        }}
+      />
     </div>
   )
 }
