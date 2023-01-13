@@ -11,10 +11,14 @@ import {
   Button,
   Loader,
   Center,
+  useMediaQuery,
+  mediaQueries,
 } from '@project-r/styleguide'
+
 import { PostcardPreview } from '../PostcardPreview'
 import { Postcard, usePostcardsData } from '../use-postcard-data'
 import PostcardFilter from './PostcardFilter'
+import PostcardSingleCardView from './PostcardSingleCardView'
 
 // deprecated?
 // type ImageSrcData = {
@@ -89,6 +93,8 @@ function PostcardGallery() {
   })
   // const postcardsData = useMockPostcardsData()
 
+  const isDesktop = useMediaQuery(mediaQueries.mUp)
+
   const [toggleOverlay, setToggleOverlay] = useState({ isOpen: false })
   const [overlayBody, setOverlayBody] = useState({})
 
@@ -111,7 +117,7 @@ function PostcardGallery() {
   //   setOverlayBody(newCard)
   // }
 
-  return (
+  return isDesktop ? (
     <>
       <Center>
         <div
@@ -173,6 +179,8 @@ function PostcardGallery() {
         </Overlay>
       )}
     </>
+  ) : (
+    <PostcardSingleCardView />
   )
 }
 

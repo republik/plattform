@@ -6,6 +6,7 @@ import { scaleLinear } from 'd3-scale'
 const styles = {
   container: css({
     position: 'relative',
+    marginBottom: '10px',
   }),
   pileContainer: css({
     position: 'relative',
