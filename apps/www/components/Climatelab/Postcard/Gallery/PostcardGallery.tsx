@@ -118,8 +118,10 @@ function PostcardGallery(props) {
 
   const isDesktop = useMediaQuery(mediaQueries.mUp)
 
-  const [toggleOverlay, setToggleOverlay] = useState({ isOpen: false })
-  const [overlayBody, setOverlayBody] = useState({})
+  const [toggleOverlay, setToggleOverlay] = useState({
+    isOpen: false,
+  })
+  const [overlayBody, setOverlayBody] = useState<Postcard[]>()
 
   const onFilterClicked = (subject) => {
     setSubjectFilter(subject)
@@ -145,12 +147,16 @@ function PostcardGallery(props) {
       <Loader
         loading={postcardsData._state === 'LOADING'}
         error={postcardsData._state === 'ERROR'}
-        render={() => (
-          <PostcardsGrid
-            postcards={postcardsData.postcards}
-            onToggleOverlay={onOverlayToggeled}
-          />
-        )}
+        render={() =>
+          postcardsData._state === 'LOADED' ? (
+            <PostcardsGrid
+              postcards={postcardsData.postcards}
+              onToggleOverlay={onOverlayToggeled}
+            />
+          ) : (
+            <div>whoosp</div>
+          )
+        }
       />
       {toggleOverlay.isOpen && (
         <Overlay
