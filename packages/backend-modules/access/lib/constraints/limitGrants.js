@@ -12,15 +12,18 @@ const isGrantable = async (args, context) => {
   const { settings, granter, campaign } = args
   const { pgdb } = context
 
-  const grants = await pgdb.query(`
+  const grants = await pgdb.query(
+    `
     SELECT "accessGrants".id
 
     FROM "accessGrants"
 
     WHERE
-      "accessGrants"."accessCampaignId" = '${campaign.id}'
-      AND "accessGrants"."granterUserId" = '${granter.id}'
-  `)
+      "accessGrants"."accessCampaignId" = :campaignId
+      AND "accessGrants"."granterUserId" = :granterId
+  `,
+    { campaignId: campaign.id, granterId: granter.id },
+  )
 
   const isLimitReached = grants.length >= settings.grants
 
