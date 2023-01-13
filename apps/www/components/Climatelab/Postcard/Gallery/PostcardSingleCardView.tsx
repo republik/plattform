@@ -195,7 +195,6 @@ const PostcardSingleCardView: React.FC<PostcardSingleCardView> = ({
                     })}
                   </figcaption>
                 </figure>
-                <div></div>
                 <Interaction.P>{postcard.text}</Interaction.P>
               </>
             )
@@ -203,9 +202,21 @@ const PostcardSingleCardView: React.FC<PostcardSingleCardView> = ({
         />
       ) : (
         <>
-          <div {...styles.image}>
+          <figure {...styles.image}>
             <AssetImage width={'600'} height={'400'} src={postcard.imageUrl} />
-          </div>
+
+            <figcaption
+              style={{
+                paddingTop: '0.25rem',
+                position: 'absolute',
+                fontSize: '0.75rem',
+              }}
+            >
+              {t('Climatelab/Postcard/PostcardPreview/credit', {
+                credit: postcardCredits[postcard.imageSelection] || ' ...',
+              })}
+            </figcaption>
+          </figure>
           <Interaction.P>{postcard.text}</Interaction.P>
         </>
       )}
