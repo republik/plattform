@@ -23,17 +23,10 @@ const give = async (campaign, grant, recipient, settings, t, pgdb) => {
 }
 
 const revoke = async (grant, recipient, settings, pgdb) => {
-  let isRoleRevoked = false
-  if (settings.role === MEMBER_ROLE) {
-    isRoleRevoked = await removeMemberRole(
-      grant,
-      recipient,
-      findByRecipient,
-      pgdb,
-    )
-  } else {
-    isRoleRevoked = await removeRole(grant, recipient, pgdb, settings.role)
-  }
+  const isRoleRevoked =
+    settings.role === MEMBER_ROLE
+      ? await removeMemberRole(grant, recipient, findByRecipient, pgdb)
+      : await removeRole(grant, recipient, pgdb, settings.role)
   if (isRoleRevoked) {
     debug('revoke', {
       recipient: recipient.id,
