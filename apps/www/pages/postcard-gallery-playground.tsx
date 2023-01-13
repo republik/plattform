@@ -85,17 +85,10 @@ const DebugGallery = () => {
 
       <button
         onClick={() => {
-          postcardsData.fetchMoreHighlighted()
+          postcardsData.fetchMore()
         }}
       >
-        Load more highlighted
-      </button>
-      <button
-        onClick={() => {
-          postcardsData.fetchMoreNotHighlighted()
-        }}
-      >
-        Load more normalo
+        Load more
       </button>
     </>
   ) : (

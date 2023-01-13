@@ -101,9 +101,9 @@ export type PostcardsData =
   | {
       _state: 'LOADED'
       postcards: Postcard[]
-      fetchMoreHighlighted: () => void
-      fetchMoreNotHighlighted: () => void
+      fetchMore: () => void
       totalCount: number
+      hasMore: boolean
     }
 
 export type SinglePostcardData =
@@ -207,6 +207,15 @@ export const usePostcardsData = ({
       parsePostcardData({ data, isHighlighted: false }),
     )
 
+  // TODO: improve this
+  const hlStack = [...highlightedPostcardsData]
+  const shuffledPostcards = notHighlightedPostcardsData.flatMap((p, i) => {
+    if (hlStack.length > 0 && (i % 3 === 0 || i % 7 === 0)) {
+      return [hlStack.shift(), p]
+    }
+    return [p]
+  })
+
   const totalCount =
     data.questionnaire.highlighted?.totalCount +
     data.questionnaire.notHighlighted?.totalCount
@@ -218,72 +227,48 @@ export const usePostcardsData = ({
   const hasMoreHighlighted =
     data.questionnaire.highlighted?.pageInfo.hasNextPage
 
-  const fetchMoreHighlighted = () => {
-    console.log('should I fetch more hili?', hasMoreHighlighted)
-    if (hasMoreHighlighted) {
-      fetchMore({
-        variables: {
-          highlightedPostcardIds,
-          subjectFilter: subjectFilterLabel,
-          cursorHighlighted,
-        },
-        updateQuery(previousResult, { fetchMoreResult }) {
-          return {
-            ...fetchMoreResult,
-            questionnaire: {
-              ...fetchMoreResult.questionnaire,
-              highlighted: {
-                ...fetchMoreResult.questionnaire.highlighted,
-                nodes: [
-                  ...previousResult.questionnaire.highlighted.nodes,
-                  ...fetchMoreResult.questionnaire.highlighted.nodes,
-                ],
-              },
-            },
-          }
-        },
-      })
-    }
-  }
-
   const cursorNotHighlighted: string | null =
     data.questionnaire.notHighlighted?.pageInfo.endCursor
   const hasMoreNotHighlighted =
     data.questionnaire.notHighlighted?.pageInfo.hasNextPage
 
-  const fetchMoreNotHighlighted = () => {
-    if (hasMoreNotHighlighted) {
-      fetchMore({
-        variables: {
-          highlightedPostcardIds,
-          subjectFilter: subjectFilterLabel,
-          cursorNotHighlighted,
-        },
-        updateQuery(previousResult, { fetchMoreResult }) {
-          return {
-            ...fetchMoreResult,
-            questionnaire: {
-              ...fetchMoreResult.questionnaire,
-              notHighlighted: {
-                ...fetchMoreResult.questionnaire.notHighlighted,
-                nodes: [
-                  ...previousResult.questionnaire.notHighlighted.nodes,
-                  ...fetchMoreResult.questionnaire.notHighlighted.nodes,
-                ],
-              },
+  const fetchMoreAll = () => {
+    fetchMore({
+      variables: {
+        cursorHighlighted,
+        cursorNotHighlighted,
+      },
+      updateQuery(previousResult, { fetchMoreResult }) {
+        return {
+          ...fetchMoreResult,
+          questionnaire: {
+            ...fetchMoreResult.questionnaire,
+            highlighted: {
+              ...fetchMoreResult.questionnaire.highlighted,
+              nodes: [
+                ...previousResult.questionnaire.highlighted.nodes,
+                ...fetchMoreResult.questionnaire.highlighted.nodes,
+              ],
             },
-          }
-        },
-      })
-    }
+            notHighlighted: {
+              ...fetchMoreResult.questionnaire.notHighlighted,
+              nodes: [
+                ...previousResult.questionnaire.notHighlighted.nodes,
+                ...fetchMoreResult.questionnaire.notHighlighted.nodes,
+              ],
+            },
+          },
+        }
+      },
+    })
   }
 
   return {
     _state: 'LOADED',
-    postcards: [...highlightedPostcardsData, ...notHighlightedPostcardsData],
+    postcards: shuffledPostcards,
     totalCount,
-    fetchMoreHighlighted,
-    fetchMoreNotHighlighted,
+    fetchMore: fetchMoreAll,
+    hasMore: hasMoreHighlighted || hasMoreNotHighlighted,
   }
 }
 
