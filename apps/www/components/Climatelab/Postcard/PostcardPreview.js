@@ -73,10 +73,8 @@ const styles = {
   }),
   adressBlock: css({
     borderBottom: 'solid 1px #DADDDC',
-    height: '25px',
-    [mediaQueries.mUp]: {
-      height: '35px',
-    },
+    paddingBottom: '5px',
+    lineHeight: '1.1',
   }),
   adressBlockContainer: css({
     width: '100%',
@@ -84,7 +82,7 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     flexGrow: 1,
-    justifyContent: 'center',
+    justifyContent: 'space-around',
   }),
 }
 
@@ -95,7 +93,7 @@ export const PostcardPreview = (props) => {
 
   if (!postcard) return null
 
-  const { text, imageUrl, imageSelection } = postcard
+  const { text, imageUrl, imageSelection, author } = postcard
 
   return (
     <div
@@ -117,7 +115,11 @@ export const PostcardPreview = (props) => {
         <PoststampComponent imageUrl={imageUrl} />
 
         <div {...styles.adressBlockContainer}>
-          <div {...styles.adressBlock} />
+          <div {...styles.adressBlock}>
+            <AutoTextSize mode='oneline' maxFontSizePx={18}>
+              {author && author.name}
+            </AutoTextSize>
+          </div>
           <div {...styles.adressBlock} />
           <div {...styles.adressBlock} />
         </div>

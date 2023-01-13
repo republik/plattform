@@ -181,7 +181,6 @@ const PostcardSingleCardView: React.FC<PostcardSingleCardView> = ({
                     height={'400'}
                     src={postcard.imageUrl}
                   />
-
                   <figcaption
                     style={{
                       paddingTop: '0.25rem',
@@ -195,6 +194,7 @@ const PostcardSingleCardView: React.FC<PostcardSingleCardView> = ({
                     })}
                   </figcaption>
                 </figure>
+                <Interaction.P>An: {postcard.author.name}</Interaction.P>
                 <Interaction.P>{postcard.text}</Interaction.P>
               </>
             )
@@ -204,7 +204,6 @@ const PostcardSingleCardView: React.FC<PostcardSingleCardView> = ({
         <>
           <figure {...styles.image}>
             <AssetImage width={'600'} height={'400'} src={postcard.imageUrl} />
-
             <figcaption
               style={{
                 paddingTop: '0.25rem',
