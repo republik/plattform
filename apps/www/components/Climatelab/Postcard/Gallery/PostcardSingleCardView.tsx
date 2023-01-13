@@ -8,7 +8,7 @@ import {
   Interaction,
 } from '@project-r/styleguide'
 import AssetImage from '../../../../lib/images/AssetImage'
-import { useSinglePostcardData } from './../use-postcard-data'
+import { Postcard, useSinglePostcardData } from './../use-postcard-data'
 import PostcardFilter from './PostcardFilter'
 
 const styles = {
@@ -31,10 +31,7 @@ const styles = {
 }
 
 type PostcardSingleCardView = {
-  // text: string
-  // imageUrl: string
-  // imageSelection: string
-  // author: string
+  postcard?: Postcard
 }
 
 const DUMMY_HIGHLIGHTED = [
@@ -48,7 +45,9 @@ const DUMMY_HIGHLIGHTED = [
   },
 ]
 
-const PostcardSingleCardView: React.FC<PostcardSingleCardView> = () => {
+const PostcardSingleCardView: React.FC<PostcardSingleCardView> = ({
+  postcard,
+}) => {
   const data = {
     postcard_1: useSinglePostcardData({
       highlightedPostcards: DUMMY_HIGHLIGHTED,
@@ -68,8 +67,9 @@ const PostcardSingleCardView: React.FC<PostcardSingleCardView> = () => {
     }),
   }
 
-  const [currentPostcard, setCurrentPostcard] =
-    useState<keyof typeof data>('postcard_1')
+  const [currentPostcard, setCurrentPostcard] = useState<
+    keyof typeof data | null
+  >(postcard ? null : 'postcard_1')
 
   const currentPostcardData = data[currentPostcard]
 
@@ -159,28 +159,37 @@ const PostcardSingleCardView: React.FC<PostcardSingleCardView> = () => {
           }}
         />
       </div>
-      <Loader
-        loading={currentPostcardData._state === 'LOADING'}
-        error={currentPostcardData._state === 'ERROR'}
-        render={() => {
-          if (currentPostcardData._state !== 'LOADED') {
-            return
-          }
-          const { postcard } = currentPostcardData
-          return (
-            <>
-              <div {...styles.image}>
-                <AssetImage
-                  width={'600'}
-                  height={'400'}
-                  src={postcard.imageUrl}
-                />
-              </div>
-              <Interaction.P>{postcard.text}</Interaction.P>
-            </>
-          )
-        }}
-      />
+      {currentPostcardData ? (
+        <Loader
+          loading={currentPostcardData._state === 'LOADING'}
+          error={currentPostcardData._state === 'ERROR'}
+          render={() => {
+            if (currentPostcardData._state !== 'LOADED') {
+              return
+            }
+            const { postcard } = currentPostcardData
+            return (
+              <>
+                <div {...styles.image}>
+                  <AssetImage
+                    width={'600'}
+                    height={'400'}
+                    src={postcard.imageUrl}
+                  />
+                </div>
+                <Interaction.P>{postcard.text}</Interaction.P>
+              </>
+            )
+          }}
+        />
+      ) : (
+        <>
+          <div {...styles.image}>
+            <AssetImage width={'600'} height={'400'} src={postcard.imageUrl} />
+          </div>
+          <Interaction.P>{postcard.text}</Interaction.P>
+        </>
+      )}
     </div>
   )
 }

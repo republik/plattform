@@ -119,43 +119,6 @@ function PostcardGallery() {
 
   return isDesktop ? (
     <>
-      <Center>
-        <div
-          style={{
-            display: 'flex',
-            flexWrap: 'wrap',
-            margin: '0 auto',
-            justifyContent: 'space-around',
-            marginBottom: '20px',
-          }}
-        >
-          <PostcardFilter
-            subject='postcard_1'
-            count={1000}
-            imageUrl={'/static/climatelab/freier.jpg'}
-            onFilterClicked={onFilterClicked}
-          />
-          <PostcardFilter
-            subject='postcard_2'
-            count={504}
-            imageUrl={'/static/climatelab/farner.jpg'}
-            onFilterClicked={onFilterClicked}
-          />
-          <PostcardFilter
-            subject='postcard_3'
-            count={201}
-            imageUrl={'/static/climatelab/richardson.jpg'}
-            onFilterClicked={onFilterClicked}
-          />
-          <PostcardFilter
-            subject='postcard_4'
-            count={300}
-            imageUrl={'/static/climatelab/zalko.jpg'}
-            onFilterClicked={onFilterClicked}
-          />
-        </div>
-      </Center>
-
       <Loader
         loading={postcardsData._state === 'LOADING'}
         error={postcardsData._state === 'ERROR'}
@@ -172,7 +135,7 @@ function PostcardGallery() {
             setToggleOverlay({ isOpen: false })
           }}
         >
-          <PostcardPreview postcard={overlayBody} />
+          <PostcardSingleCardView postcard={overlayBody} />
           {/* <Button onClick={() => loadAnotherCard(overlayBody.id)}>
               Andere Karte lesen
             </Button> */}
