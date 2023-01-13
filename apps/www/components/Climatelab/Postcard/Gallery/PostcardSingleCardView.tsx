@@ -49,22 +49,40 @@ const DUMMY_HIGHLIGHTED = [
 ]
 
 const PostcardSingleCardView: React.FC<PostcardSingleCardView> = () => {
-  const [subjectFilter, setSubjectFilter] = useState()
-  const singlePostcardData = useSinglePostcardData({
-    highlightedPostcards: DUMMY_HIGHLIGHTED,
-    subjectFilter: subjectFilter,
-  })
-  const onFilterClicked = (subject) => {
-    setSubjectFilter(subject)
-    singlePostcardData.fetchNext()
+  const data = {
+    postcard_1: useSinglePostcardData({
+      highlightedPostcards: DUMMY_HIGHLIGHTED,
+      subjectFilter: 'postcard_1',
+    }),
+    postcard_2: useSinglePostcardData({
+      highlightedPostcards: DUMMY_HIGHLIGHTED,
+      subjectFilter: 'postcard_2',
+    }),
+    postcard_3: useSinglePostcardData({
+      highlightedPostcards: DUMMY_HIGHLIGHTED,
+      subjectFilter: 'postcard_3',
+    }),
+    postcard_4: useSinglePostcardData({
+      highlightedPostcards: DUMMY_HIGHLIGHTED,
+      subjectFilter: 'postcard_4',
+    }),
   }
+
+  const [currentPostcard, setCurrentPostcard] =
+    useState<keyof typeof data>('postcard_1')
+
+  const currentPostcardData = data[currentPostcard]
+
   return (
     <div {...styles.container}>
       <Loader
-        loading={singlePostcardData._state === 'LOADING'}
-        error={singlePostcardData._state === 'ERROR'}
+        loading={currentPostcardData._state === 'LOADING'}
+        error={currentPostcardData._state === 'ERROR'}
         render={() => {
-          const { postcard } = singlePostcardData
+          if (currentPostcardData._state !== 'LOADED') {
+            return
+          }
+          const { postcard } = currentPostcardData
           return (
             <>
               <div {...styles.image}>
@@ -92,27 +110,75 @@ const PostcardSingleCardView: React.FC<PostcardSingleCardView> = () => {
       >
         <PostcardFilter
           subject='postcard_1'
-          count={1000}
+          count={
+            data['postcard_1']._state === 'LOADED'
+              ? data['postcard_1'].totalCount
+              : 0
+          }
           imageUrl={'/static/climatelab/freier.jpg'}
-          onFilterClicked={onFilterClicked}
+          onFilterClicked={() => {
+            if (
+              currentPostcard === 'postcard_1' &&
+              currentPostcardData._state === 'LOADED'
+            ) {
+              currentPostcardData.fetchNext()
+            }
+            setCurrentPostcard('postcard_1')
+          }}
         />
         <PostcardFilter
           subject='postcard_2'
-          count={504}
+          count={
+            data['postcard_2']._state === 'LOADED'
+              ? data['postcard_2'].totalCount
+              : 0
+          }
           imageUrl={'/static/climatelab/farner.jpg'}
-          onFilterClicked={onFilterClicked}
+          onFilterClicked={() => {
+            if (
+              currentPostcard === 'postcard_2' &&
+              currentPostcardData._state === 'LOADED'
+            ) {
+              currentPostcardData.fetchNext()
+            }
+            setCurrentPostcard('postcard_2')
+          }}
         />
         <PostcardFilter
           subject='postcard_3'
-          count={201}
+          count={
+            data['postcard_3']._state === 'LOADED'
+              ? data['postcard_3'].totalCount
+              : 0
+          }
           imageUrl={'/static/climatelab/richardson.jpg'}
-          onFilterClicked={onFilterClicked}
+          onFilterClicked={() => {
+            if (
+              currentPostcard === 'postcard_3' &&
+              currentPostcardData._state === 'LOADED'
+            ) {
+              currentPostcardData.fetchNext()
+            }
+            setCurrentPostcard('postcard_3')
+          }}
         />
         <PostcardFilter
           subject='postcard_4'
-          count={300}
+          count={
+            data['postcard_4']._state === 'LOADED'
+              ? data['postcard_4'].totalCount
+              : 0
+          }
           imageUrl={'/static/climatelab/zalko.jpg'}
-          onFilterClicked={onFilterClicked}
+          onFilterClicked={() => {
+            if (
+              currentPostcard === 'postcard_4' &&
+              currentPostcardData._state === 'LOADED'
+            ) {
+              currentPostcardData.fetchNext()
+            }
+            setCurrentPostcard('postcard_4')
+          }}
         />
       </div>
     </div>
