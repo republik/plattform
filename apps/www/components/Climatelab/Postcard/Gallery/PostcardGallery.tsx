@@ -31,6 +31,9 @@ import PostcardSingleCardView from './PostcardSingleCardView'
 
 const gridStyles = {
   container: css({
+    maxWidth: '1600px',
+    margin: '0 auto',
+    padding: '0 60px',
     display: 'grid',
     gridTemplateColumns: 'repeat(auto-fit, minmax(100px, 1fr))',
     gridTemplateRows: 'auto',
@@ -135,10 +138,14 @@ function PostcardGallery() {
             setToggleOverlay({ isOpen: false })
           }}
         >
-          <PostcardSingleCardView postcard={overlayBody} />
-          {/* <Button onClick={() => loadAnotherCard(overlayBody.id)}>
-              Andere Karte lesen
-            </Button> */}
+          <OverlayToolbar
+            onClose={() => {
+              setToggleOverlay({ isOpen: false })
+            }}
+          />
+          <OverlayBody>
+            <PostcardSingleCardView postcard={overlayBody} />
+          </OverlayBody>
         </Overlay>
       )}
     </>
