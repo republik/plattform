@@ -24,7 +24,7 @@ const give = async (campaign, grant, recipient, settings, t, pgdb) => {
 
 const revoke = async (grant, recipient, settings, pgdb) => {
   let isRoleRevoked = false
-  if (settings.role === memberRole) {
+  if (settings.role === MEMBER_ROLE) {
     isRoleRevoked = await removeMemberRole(
       grant,
       recipient,
