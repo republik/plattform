@@ -55,7 +55,7 @@ const PostcardFilter: React.FC<PostcardFilterProps> = ({
 }) => {
   const [colorScheme] = useColorContext()
   const maxCards = Math.round(cardsAmount(count))
-  const amountOfCards = Array(maxCards)
+  const amountOfCards = Array(Math.max(maxCards, 1))
     .fill(null)
     .map((_, i) => i)
   const rotations = Array(maxCards + 2)
