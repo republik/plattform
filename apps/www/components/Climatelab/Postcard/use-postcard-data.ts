@@ -77,6 +77,25 @@ const POSTCARDS_QUERY = gql`
   }
 `
 
+// Keep these in sync with the query!
+type QueryVars = {
+  highlightedPostcardIds?: string[]
+  cursorHighlighted?: string
+  cursorNotHighlighted?: string
+  limit?: number
+  searchHighlighted?: string
+  searchNotHighlighted?: string
+}
+
+type QueryData = {
+  questionnaire?: {
+    id: string
+    questions: any
+    highlighted: any
+    notHighlighted: any
+  }
+}
+
 const SUBJECT_FILTERS = {
   postcard_1: 'Karlotta Freier',
   postcard_2: 'Chrigel Farner',
@@ -174,14 +193,17 @@ export const usePostcardsData = ({
       ? SUBJECT_FILTERS[subjectFilter]
       : undefined
 
-  const { data, loading, error, fetchMore } = useQuery(POSTCARDS_QUERY, {
-    variables: {
-      limit: 50,
-      highlightedPostcardIds,
-      searchHighlighted: subjectFilterLabel,
-      searchNotHighlighted: subjectFilterLabel,
+  const { data, loading, error, fetchMore } = useQuery<QueryData, QueryVars>(
+    POSTCARDS_QUERY,
+    {
+      variables: {
+        limit: 50,
+        highlightedPostcardIds,
+        searchHighlighted: subjectFilterLabel,
+        searchNotHighlighted: subjectFilterLabel,
+      },
     },
-  })
+  )
 
   if (error) {
     return { _state: 'ERROR' }
@@ -233,7 +255,7 @@ export const usePostcardsData = ({
     data.questionnaire.notHighlighted?.pageInfo.hasNextPage
 
   const fetchMoreAll = () => {
-    fetchMore({
+    fetchMore<Record<string, any>, Record<string, any>>({
       variables: {
         cursorHighlighted,
         cursorNotHighlighted,
@@ -293,14 +315,17 @@ export const useSinglePostcardData = ({
   const [lastHighlightedPostcardReached, setLastHighlightedPostcardReached] =
     useState(false)
 
-  const { data, loading, error, refetch } = useQuery(POSTCARDS_QUERY, {
-    variables: {
-      limit: 1,
-      highlightedPostcardIds,
-      searchHighlighted: subjectFilterLabel,
-      searchNotHighlighted: subjectFilterLabel,
+  const { data, loading, error, refetch } = useQuery<QueryData, QueryVars>(
+    POSTCARDS_QUERY,
+    {
+      variables: {
+        limit: 1,
+        highlightedPostcardIds,
+        searchHighlighted: subjectFilterLabel,
+        searchNotHighlighted: subjectFilterLabel,
+      },
     },
-  })
+  )
 
   if (error) {
     return { _state: 'ERROR' }

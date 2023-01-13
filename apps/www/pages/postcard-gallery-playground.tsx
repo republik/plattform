@@ -18,16 +18,16 @@ const DUMMY_HIGHLIGHTED = [
 ]
 
 const DebugGallery = () => {
-  const [subjectFilter, setSubjectFilter] = useState()
+  const [subjectFilter, setSubjectFilter] = useState<undefined | string>()
 
   const postcardsData = usePostcardsData({
     highlightedPostcards: DUMMY_HIGHLIGHTED,
-    subjectFilter: subjectFilter,
+    subjectFilter: subjectFilter as any,
   })
 
   const singlePostcardData = useSinglePostcardData({
     highlightedPostcards: DUMMY_HIGHLIGHTED,
-    subjectFilter: subjectFilter,
+    subjectFilter: subjectFilter as any,
   })
 
   return postcardsData._state === 'LOADED' ? (
