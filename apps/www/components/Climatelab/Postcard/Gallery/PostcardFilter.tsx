@@ -40,7 +40,7 @@ const styles = {
   }),
 }
 
-const cardsAmount = scaleLinear().domain([600, 1300]).range([4, 10])
+const cardsAmount = scaleLinear().domain([30, 300]).range([4, 10])
 
 type PostcardFilterProps = {
   subject: string
