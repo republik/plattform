@@ -17,6 +17,9 @@ const POSTCARDS_QUERY = gql`
     }
     nodes {
       id
+      displayAuthor {
+        name
+      }
       answers {
         nodes {
           id
@@ -86,7 +89,7 @@ export type Postcard = {
   isHighlighted: boolean
   imageUrl: string
   imageSelection: string
-  // profileInfo: TODO
+  author: { name: string }
 }
 
 type PostcardsData =
@@ -126,7 +129,11 @@ const parsePostcardData =
       id: submission.id,
       text,
       imageUrl,
+      imageSelection: imageAnswer,
       isHighlighted,
+      author: {
+        name: submission.displayAuthor.name,
+      },
     }
   }
 
