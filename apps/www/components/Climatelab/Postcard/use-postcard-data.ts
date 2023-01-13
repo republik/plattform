@@ -362,10 +362,22 @@ export const useSinglePostcardData = ({
   const hasMoreNotHighlighted =
     data.questionnaire.notHighlighted?.pageInfo.hasNextPage
 
+  // If we have reached the last available highlighted postcard, we pick the top not highlighted one
   const postcard =
     (lastHighlightedPostcardReached
       ? notHighlightedPostcardsData[0]
       : highlightedPostcardsData[0] ?? notHighlightedPostcardsData[0]) ?? null
+
+  // Overwrite text of highlighted postcards with what's provided via props
+  if (postcard) {
+    const highlightedPostcard = highlightedPostcards.find(
+      ({ id }) => id === postcard.id,
+    )
+
+    if (highlightedPostcard) {
+      postcard.text = highlightedPostcard.text
+    }
+  }
 
   const fetchNext = () => {
     // 1. cycle through all highlighted cards
