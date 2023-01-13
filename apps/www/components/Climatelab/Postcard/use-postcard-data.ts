@@ -164,7 +164,9 @@ export const usePostcardsData = ({
   subjectFilter?: SubjectFilter
 }): PostcardsData => {
   const highlightedPostcardIds =
-    highlightedPostcards?.map(({ id }) => id) ?? null
+    highlightedPostcards?.length > 0
+      ? highlightedPostcards.map(({ id }) => id)
+      : ['x-y-zzz'] // provide a nonsensical ID here to get 0 highlighted results from the query
 
   // Query needs labels to search by subject, that's why we translate from the value to the label
   const subjectFilterLabel =
@@ -174,6 +176,7 @@ export const usePostcardsData = ({
 
   const { data, loading, error, fetchMore } = useQuery(POSTCARDS_QUERY, {
     variables: {
+      limit: 50,
       highlightedPostcardIds,
       searchHighlighted: subjectFilterLabel,
       searchNotHighlighted: subjectFilterLabel,
@@ -292,7 +295,9 @@ export const useSinglePostcardData = ({
   subjectFilter?: SubjectFilter
 }): SinglePostcardData => {
   const highlightedPostcardIds =
-    highlightedPostcards?.map(({ id }) => id) ?? null
+    highlightedPostcards?.length > 0
+      ? highlightedPostcards.map(({ id }) => id)
+      : ['x-y-zzz'] // provide a nonsensical ID here to get 0 highlighted results from the query
 
   // Query needs labels to search by subject, that's why we translate from the value to the label
   const subjectFilterLabel =
