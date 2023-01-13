@@ -173,54 +173,35 @@ const PostcardSingleCardView: React.FC<PostcardSingleCardView> = ({
               return
             }
             const { postcard } = currentPostcardData
-            return (
-              <>
-                <figure {...styles.image}>
-                  <AssetImage
-                    width={'600'}
-                    height={'400'}
-                    src={postcard.imageUrl}
-                  />
-                  <figcaption
-                    style={{
-                      paddingTop: '0.25rem',
-                      position: 'absolute',
-                      fontSize: '0.75rem',
-                    }}
-                  >
-                    {t('Climatelab/Postcard/PostcardPreview/credit', {
-                      credit:
-                        postcardCredits[postcard.imageSelection] || ' ...',
-                    })}
-                  </figcaption>
-                </figure>
-                <Interaction.P>An: {postcard.author.name}</Interaction.P>
-                <Interaction.P>{postcard.text}</Interaction.P>
-              </>
-            )
+            return <PostcardContent postcard={postcard} t={t} />
           }}
         />
       ) : (
-        <>
-          <figure {...styles.image}>
-            <AssetImage width={'600'} height={'400'} src={postcard.imageUrl} />
-            <figcaption
-              style={{
-                paddingTop: '0.25rem',
-                position: 'absolute',
-                fontSize: '0.75rem',
-              }}
-            >
-              {t('Climatelab/Postcard/PostcardPreview/credit', {
-                credit: postcardCredits[postcard.imageSelection] || ' ...',
-              })}
-            </figcaption>
-          </figure>
-          <Interaction.P>{postcard.text}</Interaction.P>
-        </>
+        <PostcardContent postcard={postcard} t={t} />
       )}
     </div>
   )
 }
 
 export default PostcardSingleCardView
+
+const PostcardContent = ({ postcard, t }) => (
+  <>
+    <figure {...styles.image}>
+      <AssetImage width={'600'} height={'400'} src={postcard.imageUrl} />
+      <figcaption
+        style={{
+          paddingTop: '0.25rem',
+          position: 'absolute',
+          fontSize: '0.75rem',
+        }}
+      >
+        {t('Climatelab/Postcard/PostcardPreview/credit', {
+          credit: postcardCredits[postcard.imageSelection] || ' ...',
+        })}
+      </figcaption>
+    </figure>
+    <Interaction.P>An: {postcard.author.name}</Interaction.P>
+    <Interaction.P>{postcard.text}</Interaction.P>
+  </>
+)
