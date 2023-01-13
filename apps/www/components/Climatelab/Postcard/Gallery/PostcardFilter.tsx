@@ -6,8 +6,8 @@ import { scaleLinear } from 'd3-scale'
 const styles = {
   container: css({
     position: 'relative',
-    marginBottom: '10px',
     flexGrow: '1',
+    boxSizing: 'border-box',
   }),
   pileContainer: css({
     position: 'relative',
@@ -33,10 +33,22 @@ const styles = {
     '> span': { display: 'block !important' },
   }),
   count: css({
-    marginTop: '5px',
-    width: '100%',
-    textAlign: 'right',
-    fontSize: '1rem',
+    position: 'absolute',
+    textAlign: 'center',
+    display: 'flex',
+    justifyContent: 'center',
+    alignContent: 'center',
+    flexDirection: 'column',
+    zIndex: '10',
+    top: '0.3rem',
+    right: '0.3rem',
+    color: '#FFFFFF',
+    fontSize: '0.75rem',
+    lineHeight: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    borderRadius: '0.25rem',
+    padding: '2px',
+    minWidth: '20px',
   }),
 }
 
