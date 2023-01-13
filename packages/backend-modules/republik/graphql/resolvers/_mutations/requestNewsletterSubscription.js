@@ -1,9 +1,16 @@
-const { getConsentLink } = require('../../../lib/Newsletter')
+const validator = require('validator')
+
 const { sendMailTemplate } = require('@orbiting/backend-modules-mail')
+
+const { getConsentLink } = require('../../../lib/Newsletter')
 
 module.exports = async (_, args, context) => {
   const { email, name, context: newsletterContext } = args
   const { t } = context
+
+  if (!validator.isEmail(email)) {
+    throw new Error(t('api/email/invalid'))
+  }
 
   if (!['PROJECTR', 'CLIMATE', 'WINTER'].includes(name)) {
     throw new Error(t('api/newsletters/request/notSupported'))
