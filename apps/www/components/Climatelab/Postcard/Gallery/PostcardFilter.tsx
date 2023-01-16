@@ -27,7 +27,6 @@ const styles = {
     zIndex: '1',
     borderWidth: '1px',
     borderStyle: 'solid',
-    background: '#FFFFFF',
   }),
   image: css({
     '> span': { display: 'block !important' },
@@ -87,6 +86,7 @@ const PostcardFilter: React.FC<PostcardFilterProps> = ({
               {...styles.pileCard}
               style={{ transform: `rotate(-${rotations[d]}deg)` }}
               {...colorScheme.set('borderColor', 'divider')}
+              {...colorScheme.set('backgroundColor', 'default')}
             />
           )
         })}
@@ -95,6 +95,7 @@ const PostcardFilter: React.FC<PostcardFilterProps> = ({
           {...styles.pileCard}
           style={{ transform: 'rotate(0)' }}
           {...colorScheme.set('borderColor', 'divider')}
+          {...colorScheme.set('backgroundColor', 'default')}
         >
           <button
             onClick={() => onFilterClicked(subject)}

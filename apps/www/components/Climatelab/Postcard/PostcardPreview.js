@@ -37,7 +37,11 @@ const styles = {
     maxHeight: '100%',
     lineHeight: '1.3',
     width: '67%',
+    color: '#282828',
     paddingRight: '15px',
+    '& span': {
+      color: '#282828',
+    },
   }),
   credit: css({
     position: 'absolute',

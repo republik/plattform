@@ -1,9 +1,8 @@
 import { useEffect, useState } from 'react'
 
-import { css, style } from 'glamor'
+import { css } from 'glamor'
 import {
   useColorContext,
-  plainButtonRule,
   Loader,
   Interaction,
   convertStyleToRem,
@@ -28,7 +27,6 @@ const styles = {
   }),
   buttonWrapper: css({
     position: 'sticky',
-    backgroundColor: 'white',
     zIndex: 30,
     bottom: 0,
     padding: '15px',
@@ -70,6 +68,7 @@ const PostcardSingleCardView: React.FC<PostcardSingleCardView> = ({
   isDesktop,
   highlightedPostcards,
 }) => {
+  const [colorScheme] = useColorContext()
   const data = {
     postcard_1: useSinglePostcardData({
       highlightedPostcards: highlightedPostcards,
@@ -130,11 +129,16 @@ const PostcardSingleCardView: React.FC<PostcardSingleCardView> = ({
       )}
       <div
         {...styles.buttonWrapper}
-        style={{
-          boxShadow: isDesktop
-            ? undefined
-            : 'rgba(0, 0, 0, 0.1) 0 -5px 10px -3px',
-        }}
+        // style={{
+        //   boxShadow: isDesktop
+        //     ? undefined
+        //     : 'rgba(0, 0, 0, 0.1) 0 -5px 10px -3px',
+        // }}
+        {...colorScheme.set(
+          'boxShadow',
+          !isDesktop ? 'boxShadowBottomNavBar' : undefined,
+        )}
+        {...colorScheme.set('backgroundColor', 'overlay')}
       >
         <div {...styles.label}>Nächste Karte lesen</div>
         <div {...styles.buttonContainer}>
