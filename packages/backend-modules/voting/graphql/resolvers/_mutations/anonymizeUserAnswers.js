@@ -16,6 +16,16 @@ module.exports = async (_, { questionnaireId }, context) => {
       pgdb: transaction,
     })
 
+    await transaction.public.questionnaireSubmissions.insert({
+      questionnaireId,
+      userId: me.id,
+    })
+
+    await loaders.QuestionnaireSubmissions.byKeyObj.clear({
+      userId: me.id,
+      questionnaireId,
+    })
+
     const queryParams = { questionnaireId, userId: me.id, pseudonym: uuid() }
 
     // move (unsubmitted) draft to payload
@@ -41,16 +51,6 @@ module.exports = async (_, { questionnaireId }, context) => {
     `,
       queryParams,
     )
-
-    await transaction.public.questionnaireSubmissions.insert({
-      questionnaireId,
-      userId: me.id,
-    })
-
-    await loaders.QuestionnaireSubmissions.byKeyObj.clear({
-      userId: me.id,
-      questionnaireId,
-    })
 
     await transaction.transactionCommit()
 
