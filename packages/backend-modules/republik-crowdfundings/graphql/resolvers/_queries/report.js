@@ -132,6 +132,10 @@ module.exports = async (_, { params = {} }, { pgdb, user }) => {
           "membershipPeriods" mp 
           JOIN memberships m ON m.id = mp."membershipId" 
           JOIN "membershipTypes" mt ON mt.id = m."membershipTypeId"
+          JOIN pledges p ON p.id = mp."pledgeId"
+          JOIN "pledgePayments" pp ON pp."pledgeId" = p.id
+          JOIN payments pay ON pay.id = pp."paymentId" AND pay.status = 'PAID'
+        GROUP BY mp.id, mt.name
       ) p 
     ${
       timeFilter

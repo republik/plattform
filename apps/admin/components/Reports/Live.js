@@ -116,7 +116,7 @@ const Live = () => {
               </Interaction.H3>
               <Table groups={methods} />
               <Interaction.H3 style={{ marginTop: 20, marginBottom: 10 }}>
-                Insgesamt versprochene Mitgliedschaftstage pro Jahr
+                Insgesamt bezahlte Mitgliedschaftstage pro Jahr
               </Interaction.H3>
               <Table groups={membershipDays} columnLabels={['Tage', 'Wert']} />
             </div>
