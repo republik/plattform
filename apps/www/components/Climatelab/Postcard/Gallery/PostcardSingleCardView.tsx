@@ -229,7 +229,7 @@ const PostcardContent = ({ postcard, t, isDesktop }) => {
   ) : (
     <div style={{ minHeight: '100vh', position: 'relative' }}>
       <figure {...styles.image}>
-        <AssetImage width={'300'} height={'200'} src={postcard.imageUrl} />
+        <AssetImage width={'600'} height={'400'} src={postcard.imageUrl} />
         <figcaption
           style={{
             paddingTop: '0.25rem',
