@@ -6,6 +6,7 @@ import {
   mediaQueries,
   useColorContext,
   RawHtml,
+  convertStyleToRem,
 } from '@project-r/styleguide'
 import AssetImage from '../../../lib/images/AssetImage'
 import { useTranslation } from '../../../lib/withT'
@@ -43,23 +44,13 @@ const styles = {
       color: '#282828',
     },
   }),
-  credit: css({
-    position: 'absolute',
-    bottom: 0,
-    right: 0,
-    paddingBottom: '3px',
-    paddingRight: '15px',
-    fontSize: '0.5rem',
-    [mediaQueries.mUp]: {
-      fontSize: '0.65rem',
-    },
-  }),
   rightSide: css({
+    position: 'relative',
+    height: '100%',
     display: 'flex',
     flexDirection: 'column',
     width: '33%',
     paddingLeft: '15px',
-    marginBottom: '20px',
     borderLeft: 'solid 1px #DADDDC',
     justifyContent: 'sprace-between',
   }),
@@ -98,12 +89,6 @@ export const PostcardPreview = (props) => {
       {...styles.postcard}
       {...colorScheme.set('boxShadow', 'imageChoiceShadow')}
     >
-      <div {...styles.credit}>
-        {t('Climatelab/Postcard/PostcardPreview/credit', {
-          credit: postcardCredits[imageSelection] || ' ...',
-        })}
-      </div>
-
       <div {...styles.textArea}>
         <AutoTextSize mode='box' maxFontSizePx={42}>
           {author ? (
@@ -123,9 +108,16 @@ export const PostcardPreview = (props) => {
       <div {...styles.rightSide}>
         <PoststampComponent imageUrl={imageUrl} />
         <div {...styles.adressBlockContainer}>
-          <div {...styles.adressBlock}></div>
           <div {...styles.adressBlock} />
           <div {...styles.adressBlock} />
+          <div {...styles.adressBlock} />
+        </div>
+        <div style={{ width: '100%' }}>
+          <AutoTextSize mode='multiline'>
+            {t('Climatelab/Postcard/PostcardPreview/credit', {
+              credit: postcardCredits[imageSelection] || ' ...',
+            })}
+          </AutoTextSize>
         </div>
       </div>
     </div>

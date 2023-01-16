@@ -35,7 +35,7 @@ const gridStyles = {
     cursor: 'pointer',
     transition: 'transform .3s ease-in-out',
     ':hover': {
-      transform: 'rotate(4deg) !important',
+      transform: 'rotate(4deg)',
     },
   }),
   highlightedCard: css({
@@ -47,7 +47,7 @@ const gridStyles = {
     cursor: 'pointer',
     transition: 'transform .3s ease-in-out',
     ':hover': {
-      transform: 'rotate(3deg) !important',
+      transform: 'rotate(2deg)',
     },
   }),
   imageFix: css({
