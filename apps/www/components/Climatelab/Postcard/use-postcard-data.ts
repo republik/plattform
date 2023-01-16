@@ -148,13 +148,32 @@ type SubjectFilter = keyof typeof SUBJECT_FILTERS
 // Fugly parsing!
 // FIXME: add stricter types
 const parsePostcardData =
-  ({ data, isHighlighted }) =>
+  ({
+    data,
+    isHighlighted,
+    highlightedPostcards,
+  }: {
+    data: QueryData
+    isHighlighted: boolean
+    highlightedPostcards?: HighlightedPostcard[]
+  }) =>
   (submission) => {
     const imageAnswer = submission.answers.nodes?.[0]?.payload?.value?.[0]
     const imageUrl = data.questionnaire?.questions?.[0]?.options?.find(
       ({ value }) => value === imageAnswer,
     )?.imageUrl
-    const text = submission.answers.nodes?.[1]?.payload?.value
+    let text = submission.answers.nodes?.[1]?.payload?.value
+
+    // Overwrite text of highlighted postcards with what's provided via props
+    if (highlightedPostcards) {
+      const highlightedPostcard = highlightedPostcards.find(
+        ({ id }) => id === submission.id,
+      )
+
+      if (highlightedPostcard) {
+        text = highlightedPostcard.text
+      }
+    }
 
     // const image = `${CDN_FRONTEND_BASE_URL}${imageUrl}?size=1500x1057` // FIXME: use correct/consistent size for all images
 
@@ -222,7 +241,7 @@ export const usePostcardsData = ({
   }
 
   const highlightedPostcardsData = data.questionnaire.highlighted?.nodes.map(
-    parsePostcardData({ data, isHighlighted: true }),
+    parsePostcardData({ data, isHighlighted: true, highlightedPostcards }),
   )
   const notHighlightedPostcardsData =
     data.questionnaire.notHighlighted?.nodes.map(
@@ -344,7 +363,7 @@ export const useSinglePostcardData = ({
   }
 
   const highlightedPostcardsData = data.questionnaire.highlighted?.nodes.map(
-    parsePostcardData({ data, isHighlighted: true }),
+    parsePostcardData({ data, isHighlighted: true, highlightedPostcards }),
   )
   const notHighlightedPostcardsData =
     data.questionnaire.notHighlighted?.nodes.map(
@@ -382,17 +401,6 @@ export const useSinglePostcardData = ({
     (lastHighlightedPostcardReached
       ? notHighlightedPostcardsData[0]
       : highlightedPostcardsData[0] ?? notHighlightedPostcardsData[0]) ?? null
-
-  // Overwrite text of highlighted postcards with what's provided via props
-  if (postcard) {
-    const highlightedPostcard = highlightedPostcards.find(
-      ({ id }) => id === postcard.id,
-    )
-
-    if (highlightedPostcard) {
-      postcard.text = highlightedPostcard.text
-    }
-  }
 
   const fetchNext = () => {
     // 1. cycle through all highlighted cards
