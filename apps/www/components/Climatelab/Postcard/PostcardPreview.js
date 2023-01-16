@@ -99,7 +99,6 @@ export const PostcardPreview = (props) => {
       {...colorScheme.set('boxShadow', 'imageChoiceShadow')}
     >
       <div {...styles.credit}>
-        {' '}
         {t('Climatelab/Postcard/PostcardPreview/credit', {
           credit: postcardCredits[imageSelection] || ' ...',
         })}
@@ -119,11 +118,6 @@ export const PostcardPreview = (props) => {
             text
           )}
         </AutoTextSize>
-        {/* <div style={{ width: '100%' }}>
-          <AutoTextSize mode='oneline' maxFontSizePx={16}>
-            {author && author.name}
-          </AutoTextSize>
-        </div> */}
       </div>
 
       <div {...styles.rightSide}>

@@ -129,11 +129,6 @@ const PostcardSingleCardView: React.FC<PostcardSingleCardView> = ({
       )}
       <div
         {...styles.buttonWrapper}
-        // style={{
-        //   boxShadow: isDesktop
-        //     ? undefined
-        //     : 'rgba(0, 0, 0, 0.1) 0 -5px 10px -3px',
-        // }}
         {...colorScheme.set(
           'boxShadow',
           !isDesktop ? 'boxShadowBottomNavBar' : undefined,
