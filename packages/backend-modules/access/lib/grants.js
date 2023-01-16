@@ -97,6 +97,7 @@ const revokePerks = (grant, recipient, campaign, pgdb) =>
       recipient,
       settings,
       pgdb,
+      findByRecipient,
     )
 
     debug('revokePerks', {
