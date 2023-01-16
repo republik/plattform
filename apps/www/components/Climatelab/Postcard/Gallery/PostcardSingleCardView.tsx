@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { css, style } from 'glamor'
 import {
@@ -97,6 +97,18 @@ const PostcardSingleCardView: React.FC<PostcardSingleCardView> = ({
 
   const { t } = useTranslation()
 
+  let loadedPostcard = null
+  if (currentPostcardData?._state === 'LOADED') {
+    loadedPostcard = currentPostcardData.postcard
+  }
+
+  useEffect(() => {
+    if (currentPostcardData?._state === 'LOADED' && !loadedPostcard) {
+      console.log('empty postcard, fetching next')
+      currentPostcardData.fetchNext()
+    }
+  }, [loadedPostcard, currentPostcardData])
+
   return (
     <div {...styles.container}>
       {currentPostcardData ? (
@@ -104,13 +116,9 @@ const PostcardSingleCardView: React.FC<PostcardSingleCardView> = ({
           loading={currentPostcardData._state === 'LOADING'}
           error={currentPostcardData._state === 'ERROR'}
           render={() => {
-            if (currentPostcardData._state !== 'LOADED') {
-              return
-            }
-            const { postcard } = currentPostcardData
             return (
               <PostcardContent
-                postcard={postcard}
+                postcard={loadedPostcard}
                 t={t}
                 isDesktop={isDesktop}
               />
@@ -211,6 +219,10 @@ const PostcardSingleCardView: React.FC<PostcardSingleCardView> = ({
 export default PostcardSingleCardView
 
 const PostcardContent = ({ postcard, t, isDesktop }) => {
+  if (!postcard) {
+    return <div></div>
+  }
+
   return isDesktop ? (
     <PostcardPreview postcard={postcard} />
   ) : (
