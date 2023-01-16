@@ -52,7 +52,7 @@ const styles = {
     fontSize: '1rem',
   }),
   label: css({
-    ...convertStyleToRem(fontStyles.sansSerifRegular14),
+    ...convertStyleToRem(fontStyles.sansSerifRegular16),
     marginBottom: '20px',
   }),
 }
@@ -61,12 +61,14 @@ type PostcardSingleCardView = {
   postcard?: Postcard
   isDesktop?: boolean
   highlightedPostcards?: HighlightedPostcard[]
+  label?: string
 }
 
 const PostcardSingleCardView: React.FC<PostcardSingleCardView> = ({
   postcard,
   isDesktop,
   highlightedPostcards,
+  label,
 }) => {
   const [colorScheme] = useColorContext()
   const data = {
@@ -135,7 +137,7 @@ const PostcardSingleCardView: React.FC<PostcardSingleCardView> = ({
         )}
         {...colorScheme.set('backgroundColor', 'overlay')}
       >
-        <div {...styles.label}>Nächste Karte lesen</div>
+        <div {...styles.label}>{label}</div>
         <div {...styles.buttonContainer}>
           <PostcardFilter
             subject='postcard_1'
@@ -227,7 +229,7 @@ const PostcardContent = ({ postcard, t, isDesktop }) => {
   ) : (
     <div style={{ minHeight: '100vh', position: 'relative' }}>
       <figure {...styles.image}>
-        <AssetImage width={'600'} height={'400'} src={postcard.imageUrl} />
+        <AssetImage width={'300'} height={'200'} src={postcard.imageUrl} />
         <figcaption
           style={{
             paddingTop: '0.25rem',

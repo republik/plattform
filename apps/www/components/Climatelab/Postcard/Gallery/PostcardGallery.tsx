@@ -85,7 +85,7 @@ const PostcardsGrid = ({
   )
 }
 
-function PostcardGallery({ highlightedPostcards }) {
+function PostcardGallery({ highlightedPostcards, label }) {
   const [subjectFilter] = useState()
   const postcardsData = usePostcardsData({
     highlightedPostcards: highlightedPostcards,
@@ -137,13 +137,17 @@ function PostcardGallery({ highlightedPostcards }) {
               postcard={overlayBody}
               isDesktop={isDesktop}
               highlightedPostcards={highlightedPostcards}
+              label={label}
             />
           </OverlayBody>
         </Overlay>
       )}
     </>
   ) : (
-    <PostcardSingleCardView highlightedPostcards={highlightedPostcards} />
+    <PostcardSingleCardView
+      highlightedPostcards={highlightedPostcards}
+      label={label}
+    />
   )
 }
 
