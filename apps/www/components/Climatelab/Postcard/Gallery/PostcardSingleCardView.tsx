@@ -6,6 +6,8 @@ import {
   plainButtonRule,
   Loader,
   Interaction,
+  convertStyleToRem,
+  fontStyles,
 } from '@project-r/styleguide'
 import AssetImage from '../../../../lib/images/AssetImage'
 import {
@@ -24,15 +26,18 @@ const styles = {
     margin: '0 auto',
     padding: '15px',
   }),
-  buttonContainer: css({
+  buttonWrapper: css({
     position: 'sticky',
     backgroundColor: 'white',
     zIndex: 30,
     bottom: 0,
+    padding: '15px',
+    margin: '0 -15px',
+  }),
+  buttonContainer: css({
+    position: 'relative',
     display: 'flex',
     flexWrap: 'wrap',
-    padding: '20px 0',
-    margin: '10px auto',
     width: '100%',
     height: '100%',
     gap: '1rem',
@@ -47,6 +52,10 @@ const styles = {
     width: '100%',
     textAlign: 'right',
     fontSize: '1rem',
+  }),
+  label: css({
+    ...convertStyleToRem(fontStyles.sansSerifRegular14),
+    marginBottom: '20px',
   }),
 }
 
@@ -90,7 +99,6 @@ const PostcardSingleCardView: React.FC<PostcardSingleCardView> = ({
 
   return (
     <div {...styles.container}>
-      <Interaction.P>Nächste Karte lesen</Interaction.P>
       {currentPostcardData ? (
         <Loader
           loading={currentPostcardData._state === 'LOADING'}
@@ -112,80 +120,89 @@ const PostcardSingleCardView: React.FC<PostcardSingleCardView> = ({
       ) : (
         <PostcardContent postcard={postcard} t={t} isDesktop={isDesktop} />
       )}
-
-      <div {...styles.buttonContainer}>
-        <PostcardFilter
-          subject='postcard_1'
-          count={
-            data['postcard_1']._state === 'LOADED'
-              ? data['postcard_1'].totalCount
-              : 0
-          }
-          imageUrl={'/static/climatelab/freier.jpg'}
-          onFilterClicked={() => {
-            if (
-              currentPostcard === 'postcard_1' &&
-              currentPostcardData._state === 'LOADED'
-            ) {
-              currentPostcardData.fetchNext()
+      <div
+        {...styles.buttonWrapper}
+        style={{
+          boxShadow: isDesktop
+            ? undefined
+            : 'rgba(0, 0, 0, 0.1) 0 -5px 10px -3px',
+        }}
+      >
+        <div {...styles.label}>Nächste Karte lesen</div>
+        <div {...styles.buttonContainer}>
+          <PostcardFilter
+            subject='postcard_1'
+            count={
+              data['postcard_1']._state === 'LOADED'
+                ? data['postcard_1'].totalCount
+                : 0
             }
-            setCurrentPostcard('postcard_1')
-          }}
-        />
-        <PostcardFilter
-          subject='postcard_2'
-          count={
-            data['postcard_2']._state === 'LOADED'
-              ? data['postcard_2'].totalCount
-              : 0
-          }
-          imageUrl={'/static/climatelab/farner.jpg'}
-          onFilterClicked={() => {
-            if (
-              currentPostcard === 'postcard_2' &&
-              currentPostcardData._state === 'LOADED'
-            ) {
-              currentPostcardData.fetchNext()
+            imageUrl={'/static/climatelab/freier.jpg'}
+            onFilterClicked={() => {
+              if (
+                currentPostcard === 'postcard_1' &&
+                currentPostcardData._state === 'LOADED'
+              ) {
+                currentPostcardData.fetchNext()
+              }
+              setCurrentPostcard('postcard_1')
+            }}
+          />
+          <PostcardFilter
+            subject='postcard_2'
+            count={
+              data['postcard_2']._state === 'LOADED'
+                ? data['postcard_2'].totalCount
+                : 0
             }
-            setCurrentPostcard('postcard_2')
-          }}
-        />
-        <PostcardFilter
-          subject='postcard_3'
-          count={
-            data['postcard_3']._state === 'LOADED'
-              ? data['postcard_3'].totalCount
-              : 0
-          }
-          imageUrl={'/static/climatelab/richardson.jpg'}
-          onFilterClicked={() => {
-            if (
-              currentPostcard === 'postcard_3' &&
-              currentPostcardData._state === 'LOADED'
-            ) {
-              currentPostcardData.fetchNext()
+            imageUrl={'/static/climatelab/farner.jpg'}
+            onFilterClicked={() => {
+              if (
+                currentPostcard === 'postcard_2' &&
+                currentPostcardData._state === 'LOADED'
+              ) {
+                currentPostcardData.fetchNext()
+              }
+              setCurrentPostcard('postcard_2')
+            }}
+          />
+          <PostcardFilter
+            subject='postcard_3'
+            count={
+              data['postcard_3']._state === 'LOADED'
+                ? data['postcard_3'].totalCount
+                : 0
             }
-            setCurrentPostcard('postcard_3')
-          }}
-        />
-        <PostcardFilter
-          subject='postcard_4'
-          count={
-            data['postcard_4']._state === 'LOADED'
-              ? data['postcard_4'].totalCount
-              : 0
-          }
-          imageUrl={'/static/climatelab/zalko.jpg'}
-          onFilterClicked={() => {
-            if (
-              currentPostcard === 'postcard_4' &&
-              currentPostcardData._state === 'LOADED'
-            ) {
-              currentPostcardData.fetchNext()
+            imageUrl={'/static/climatelab/richardson.jpg'}
+            onFilterClicked={() => {
+              if (
+                currentPostcard === 'postcard_3' &&
+                currentPostcardData._state === 'LOADED'
+              ) {
+                currentPostcardData.fetchNext()
+              }
+              setCurrentPostcard('postcard_3')
+            }}
+          />
+          <PostcardFilter
+            subject='postcard_4'
+            count={
+              data['postcard_4']._state === 'LOADED'
+                ? data['postcard_4'].totalCount
+                : 0
             }
-            setCurrentPostcard('postcard_4')
-          }}
-        />
+            imageUrl={'/static/climatelab/zalko.jpg'}
+            onFilterClicked={() => {
+              if (
+                currentPostcard === 'postcard_4' &&
+                currentPostcardData._state === 'LOADED'
+              ) {
+                currentPostcardData.fetchNext()
+              }
+              setCurrentPostcard('postcard_4')
+            }}
+          />
+        </div>
       </div>
     </div>
   )
