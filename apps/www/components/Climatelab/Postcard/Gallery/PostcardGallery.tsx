@@ -35,7 +35,7 @@ const gridStyles = {
     cursor: 'pointer',
     transition: 'transform .3s ease-in-out',
     ':hover': {
-      transform: 'rotate(0deg) !important',
+      transform: 'rotate(4deg) !important',
     },
   }),
   highlightedCard: css({
@@ -47,7 +47,7 @@ const gridStyles = {
     cursor: 'pointer',
     transition: 'transform .3s ease-in-out',
     ':hover': {
-      transform: 'rotate(0deg) !important',
+      transform: 'rotate(3deg) !important',
     },
   }),
   imageFix: css({
@@ -117,7 +117,7 @@ function PostcardGallery({ highlightedPostcards }) {
               onToggleOverlay={onOverlayToggeled}
             />
           ) : (
-            <div>whoosp</div>
+            <div>whoops</div>
           )
         }
       />
@@ -133,7 +133,10 @@ function PostcardGallery({ highlightedPostcards }) {
             }}
           />
           <OverlayBody>
-            <PostcardSingleCardView postcard={overlayBody} />
+            <PostcardSingleCardView
+              postcard={overlayBody}
+              isDesktop={isDesktop}
+            />
           </OverlayBody>
         </Overlay>
       )}

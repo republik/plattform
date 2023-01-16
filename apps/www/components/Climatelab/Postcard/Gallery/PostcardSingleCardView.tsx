@@ -12,6 +12,7 @@ import { Postcard, useSinglePostcardData } from './../use-postcard-data'
 import PostcardFilter from './PostcardFilter'
 import { postcardCredits } from '../../config'
 import { useTranslation } from '../../../../lib/withT'
+import { PostcardPreview } from '../PostcardPreview'
 
 const styles = {
   container: css({
@@ -20,10 +21,16 @@ const styles = {
     padding: '15px',
   }),
   buttonContainer: css({
+    position: 'sticky',
+    backgroundColor: 'white',
+    zIndex: 30,
+    bottom: 0,
     display: 'flex',
     flexWrap: 'wrap',
-    margin: '30px auto',
+    padding: '20px 0',
+    margin: '10px auto',
     width: '100%',
+    height: '100%',
     gap: '1rem',
   }),
   image: css({
@@ -41,6 +48,7 @@ const styles = {
 
 type PostcardSingleCardView = {
   postcard?: Postcard
+  isDesktop?: boolean
 }
 
 const DUMMY_HIGHLIGHTED = [
@@ -56,6 +64,7 @@ const DUMMY_HIGHLIGHTED = [
 
 const PostcardSingleCardView: React.FC<PostcardSingleCardView> = ({
   postcard,
+  isDesktop,
 }) => {
   const data = {
     postcard_1: useSinglePostcardData({
@@ -87,6 +96,28 @@ const PostcardSingleCardView: React.FC<PostcardSingleCardView> = ({
   return (
     <div {...styles.container}>
       <Interaction.P>Nächste Karte lesen</Interaction.P>
+      {currentPostcardData ? (
+        <Loader
+          loading={currentPostcardData._state === 'LOADING'}
+          error={currentPostcardData._state === 'ERROR'}
+          render={() => {
+            if (currentPostcardData._state !== 'LOADED') {
+              return
+            }
+            const { postcard } = currentPostcardData
+            return (
+              <PostcardContent
+                postcard={postcard}
+                t={t}
+                isDesktop={isDesktop}
+              />
+            )
+          }}
+        />
+      ) : (
+        <PostcardContent postcard={postcard} t={t} isDesktop={isDesktop} />
+      )}
+
       <div {...styles.buttonContainer}>
         <PostcardFilter
           subject='postcard_1'
@@ -161,44 +192,33 @@ const PostcardSingleCardView: React.FC<PostcardSingleCardView> = ({
           }}
         />
       </div>
-      {currentPostcardData ? (
-        <Loader
-          loading={currentPostcardData._state === 'LOADING'}
-          error={currentPostcardData._state === 'ERROR'}
-          render={() => {
-            if (currentPostcardData._state !== 'LOADED') {
-              return
-            }
-            const { postcard } = currentPostcardData
-            return <PostcardContent postcard={postcard} t={t} />
-          }}
-        />
-      ) : (
-        <PostcardContent postcard={postcard} t={t} />
-      )}
     </div>
   )
 }
 
 export default PostcardSingleCardView
 
-const PostcardContent = ({ postcard, t }) => (
-  <div style={{ minHeight: '65vh' }}>
-    <figure {...styles.image}>
-      <AssetImage width={'600'} height={'400'} src={postcard.imageUrl} />
-      <figcaption
-        style={{
-          paddingTop: '0.25rem',
-          position: 'absolute',
-          fontSize: '0.75rem',
-        }}
-      >
-        {t('Climatelab/Postcard/PostcardPreview/credit', {
-          credit: postcardCredits[postcard.imageSelection] || ' ...',
-        })}
-      </figcaption>
-    </figure>
-    <Interaction.P>An: {postcard.author.name}</Interaction.P>
-    <Interaction.P>{postcard.text}</Interaction.P>
-  </div>
-)
+const PostcardContent = ({ postcard, t, isDesktop }) => {
+  return isDesktop ? (
+    <PostcardPreview postcard={postcard} />
+  ) : (
+    <div style={{ minHeight: '100vh', position: 'relative' }}>
+      <figure {...styles.image}>
+        <AssetImage width={'600'} height={'400'} src={postcard.imageUrl} />
+        <figcaption
+          style={{
+            paddingTop: '0.25rem',
+            position: 'absolute',
+            fontSize: '0.75rem',
+          }}
+        >
+          {t('Climatelab/Postcard/PostcardPreview/credit', {
+            credit: postcardCredits[postcard.imageSelection] || ' ...',
+          })}
+        </figcaption>
+      </figure>
+      <Interaction.P>{postcard.text}</Interaction.P>
+      <Interaction.P>{postcard.author.name}</Interaction.P>
+    </div>
+  )
+}

@@ -34,25 +34,32 @@ const styles = {
     },
   }),
   textArea: css({
+    display: 'flex',
+    flexWrap: 'wrap',
+    flexFlow: 'column',
     maxHeight: '100%',
     wordBreak: 'normal',
     overflowWrap: 'break-word',
     width: '67%',
-
     borderRight: 'solid 1px #DADDDC',
     marginBottom: '10px',
     paddingRight: '10px',
     [mediaQueries.mUp]: {
       paddingRight: '20px',
     },
+    ':first-child': {
+      flexBasis: '80%',
+    },
   }),
   credit: css({
     position: 'absolute',
     bottom: 0,
+    right: 0,
     paddingBottom: '5px',
+    paddingRight: '10px',
     fontSize: '0.5rem',
     [mediaQueries.mUp]: {
-      fontSize: '0.7rem',
+      fontSize: '0.6rem',
     },
   }),
   rightSide: css({
@@ -109,17 +116,16 @@ export const PostcardPreview = (props) => {
 
       <div {...styles.textArea}>
         <AutoTextSize mode='box'>{text}</AutoTextSize>
+
+        <AutoTextSize mode='oneline' maxFontSizePx={16}>
+          {author && author.name}
+        </AutoTextSize>
       </div>
 
       <div {...styles.rightSide}>
         <PoststampComponent imageUrl={imageUrl} />
-
         <div {...styles.adressBlockContainer}>
-          <div {...styles.adressBlock}>
-            <AutoTextSize mode='oneline' maxFontSizePx={18}>
-              {author && author.name}
-            </AutoTextSize>
-          </div>
+          <div {...styles.adressBlock}></div>
           <div {...styles.adressBlock} />
           <div {...styles.adressBlock} />
         </div>
