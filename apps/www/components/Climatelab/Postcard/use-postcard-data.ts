@@ -164,6 +164,10 @@ const parsePostcardData =
     )?.imageUrl
     let text = submission.answers.nodes?.[1]?.payload?.value
 
+    if (!imageUrl || !text) {
+      return []
+    }
+
     // Overwrite text of highlighted postcards with what's provided via props
     if (highlightedPostcards) {
       const highlightedPostcard = highlightedPostcards.find(
@@ -177,16 +181,18 @@ const parsePostcardData =
 
     // const image = `${CDN_FRONTEND_BASE_URL}${imageUrl}?size=1500x1057` // FIXME: use correct/consistent size for all images
 
-    return {
-      id: submission.id,
-      text,
-      imageUrl,
-      imageSelection: imageAnswer,
-      isHighlighted,
-      author: {
-        name: submission.displayAuthor.name,
+    return [
+      {
+        id: submission.id,
+        text,
+        imageUrl,
+        imageSelection: imageAnswer,
+        isHighlighted,
+        author: {
+          name: submission.displayAuthor.name,
+        },
       },
-    }
+    ]
   }
 
 /**
@@ -240,11 +246,12 @@ export const usePostcardsData = ({
     }
   }
 
-  const highlightedPostcardsData = data.questionnaire.highlighted?.nodes.map(
-    parsePostcardData({ data, isHighlighted: true, highlightedPostcards }),
-  )
+  const highlightedPostcardsData =
+    data.questionnaire.highlighted?.nodes.flatMap(
+      parsePostcardData({ data, isHighlighted: true, highlightedPostcards }),
+    )
   const notHighlightedPostcardsData =
-    data.questionnaire.notHighlighted?.nodes.map(
+    data.questionnaire.notHighlighted?.nodes.flatMap(
       parsePostcardData({ data, isHighlighted: false }),
     )
 
@@ -362,11 +369,12 @@ export const useSinglePostcardData = ({
     }
   }
 
-  const highlightedPostcardsData = data.questionnaire.highlighted?.nodes.map(
-    parsePostcardData({ data, isHighlighted: true, highlightedPostcards }),
-  )
+  const highlightedPostcardsData =
+    data.questionnaire.highlighted?.nodes.flatMap(
+      parsePostcardData({ data, isHighlighted: true, highlightedPostcards }),
+    )
   const notHighlightedPostcardsData =
-    data.questionnaire.notHighlighted?.nodes.map(
+    data.questionnaire.notHighlighted?.nodes.flatMap(
       parsePostcardData({ data, isHighlighted: false }),
     )
 
