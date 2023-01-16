@@ -15,6 +15,7 @@ import {
 import { PostcardPreview } from '../PostcardPreview'
 import { Postcard, usePostcardsData } from '../use-postcard-data'
 import PostcardSingleCardView from './PostcardSingleCardView'
+import { useColorContext } from '@project-r/styleguide'
 
 const gridStyles = {
   container: css({
@@ -22,33 +23,37 @@ const gridStyles = {
     margin: '0 auto',
     padding: '0 60px',
     display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(100px, 1fr))',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(170px, 1fr))',
     gridTemplateRows: 'auto',
     gridAutoFlow: 'row dense',
     gap: '1rem',
   }),
   card: css({
-    background: 'hotpink',
+    background: 'transparent',
     width: '100%',
     gridRowEnd: 'span 1',
     gridColumnEnd: 'span 1',
     cursor: 'pointer',
     transition: 'transform .3s ease-in-out',
     ':hover': {
-      transform: 'rotate(4deg)',
+      transform: 'scale(1.03) !important',
     },
   }),
   highlightedCard: css({
-    background: 'hotpink',
+    background: 'transparent',
     width: '100%',
     // border: '2px solid pink',
-    gridRowEnd: 'span 3',
-    gridColumnEnd: 'span 3',
+    gridRowEnd: 'span 2',
+    gridColumnEnd: 'span 2',
     cursor: 'pointer',
     transition: 'transform .3s ease-in-out',
     ':hover': {
-      transform: 'rotate(2deg)',
+      transform: 'scale(1.03) !important',
     },
+  }),
+  image: css({
+    borderRadius: '2px',
+    overflow: 'hidden',
   }),
   imageFix: css({
     '> span': { display: 'block !important' },
@@ -62,19 +67,34 @@ const PostcardsGrid = ({
   postcards: Postcard[]
   onToggleOverlay: (a?: object) => void
 }) => {
+  const [colorScheme] = useColorContext()
+
   return (
     <div {...gridStyles.container}>
-      {postcards.map((p) => {
+      {postcards.map((p, i) => {
         const cardStyle = p.isHighlighted
           ? gridStyles.highlightedCard
           : gridStyles.card
 
         return (
-          <div key={p.id} {...cardStyle} onClick={() => onToggleOverlay(p)}>
+          <div
+            key={p.id}
+            {...cardStyle}
+            style={
+              {
+                // transform: `rotate(${Math.sin(i)}deg)`,
+              }
+            }
+            onClick={() => onToggleOverlay(p)}
+          >
             {p.isHighlighted ? (
               <PostcardPreview postcard={p} />
             ) : (
-              <div {...gridStyles.imageFix}>
+              <div
+                {...gridStyles.image}
+                {...gridStyles.imageFix}
+                {...colorScheme.set('boxShadow', 'imageChoiceShadow')}
+              >
                 <AssetImage width='600' height='420' src={p.imageUrl} />
               </div>
             )}

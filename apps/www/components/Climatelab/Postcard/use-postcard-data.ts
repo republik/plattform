@@ -222,7 +222,7 @@ export const usePostcardsData = ({
     POSTCARDS_QUERY,
     {
       variables: {
-        limit: 50,
+        limit: 100,
         highlightedPostcardIds,
         searchHighlighted: subjectFilterLabel,
         searchNotHighlighted: subjectFilterLabel,
