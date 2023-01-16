@@ -19,7 +19,13 @@ const styles = {
     margin: '0 auto',
     padding: '15px',
   }),
-
+  buttonContainer: css({
+    display: 'flex',
+    flexWrap: 'wrap',
+    margin: '30px auto',
+    width: '100%',
+    gap: '1rem',
+  }),
   image: css({
     position: 'relative',
     margin: '0 0 30px',
@@ -81,16 +87,7 @@ const PostcardSingleCardView: React.FC<PostcardSingleCardView> = ({
   return (
     <div {...styles.container}>
       <Interaction.P>Nächste Karte lesen</Interaction.P>
-      <div
-        style={{
-          display: 'flex',
-          flexWrap: 'wrap',
-          margin: '30px auto',
-          width: '100%',
-          gap: '1rem',
-          // justifyContent: 'space-between',
-        }}
-      >
+      <div {...styles.buttonContainer}>
         <PostcardFilter
           subject='postcard_1'
           count={
@@ -186,7 +183,7 @@ const PostcardSingleCardView: React.FC<PostcardSingleCardView> = ({
 export default PostcardSingleCardView
 
 const PostcardContent = ({ postcard, t }) => (
-  <>
+  <div style={{ minHeight: '65vh' }}>
     <figure {...styles.image}>
       <AssetImage width={'600'} height={'400'} src={postcard.imageUrl} />
       <figcaption
@@ -203,5 +200,5 @@ const PostcardContent = ({ postcard, t }) => (
     </figure>
     <Interaction.P>An: {postcard.author.name}</Interaction.P>
     <Interaction.P>{postcard.text}</Interaction.P>
-  </>
+  </div>
 )
