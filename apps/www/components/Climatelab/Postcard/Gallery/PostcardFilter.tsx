@@ -27,6 +27,7 @@ const styles = {
     zIndex: '1',
     borderWidth: '1px',
     borderStyle: 'solid',
+    borderRadius: '2px',
   }),
   image: css({
     '> span': { display: 'block !important' },
