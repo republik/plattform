@@ -103,14 +103,17 @@ export const PostcardPreview = (props) => {
 
       <div {...styles.textArea}>
         <AutoTextSize mode='box' maxFontSizePx={42}>
-          <RawHtml
-            dangerouslySetInnerHTML={{
-              __html: `${text} <br />${
-                author && author.name === 'Unbenannt' ? '' : author.name
-              }`,
-            }}
-          />
-          {/* {text} */}
+          {author ? (
+            <RawHtml
+              dangerouslySetInnerHTML={{
+                __html: `${text} <br />${
+                  author.name === 'Unbenannt' ? '' : author.name
+                }`,
+              }}
+            />
+          ) : (
+            text
+          )}
         </AutoTextSize>
         {/* <div style={{ width: '100%' }}>
           <AutoTextSize mode='oneline' maxFontSizePx={16}>
