@@ -324,6 +324,10 @@ const unauthorizedSession = async ({
   req,
   me,
 }) => {
+  if (!validator.isEmail(emailFromQuery)) {
+    throw new EmailInvalidError({ email: emailFromQuery })
+  }
+
   const existingUser = await pgdb.public.users.findOne({
     email: emailFromQuery,
   })
@@ -343,6 +347,10 @@ const unauthorizedSession = async ({
 }
 
 const denySession = async ({ pgdb, token, email: emailFromQuery, me }) => {
+  if (!validator.isEmail(emailFromQuery)) {
+    throw new EmailInvalidError({ email: emailFromQuery })
+  }
+
   // check if authorized to deny the challenge
   const session = await unauthorizedSession({
     pgdb,
@@ -488,6 +496,10 @@ const authorizeSession = async ({
   req,
   me,
 }) => {
+  if (!validator.isEmail(emailFromQuery)) {
+    throw new EmailInvalidError({ email: emailFromQuery })
+  }
+
   await auditAuthorizeAttempts({ pgdb, email: emailFromQuery })
 
   // validate the challenges

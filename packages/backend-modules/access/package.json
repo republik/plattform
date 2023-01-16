@@ -24,6 +24,7 @@
     "escape-html": "^1.0.3",
     "moment": "^2.26.0",
     "redlock": "^4.1.0",
+    "validator": "^13.7.0",
     "yargs": "^17.0.1"
   }
 }
