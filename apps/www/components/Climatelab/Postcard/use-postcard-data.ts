@@ -138,7 +138,7 @@ export type SinglePostcardData =
       hasMore: boolean
     }
 
-type HighlightedPostcard = {
+export type HighlightedPostcard = {
   id: string
   text: string
 }

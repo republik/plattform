@@ -136,13 +136,14 @@ function PostcardGallery({ highlightedPostcards }) {
             <PostcardSingleCardView
               postcard={overlayBody}
               isDesktop={isDesktop}
+              highlightedPostcards={highlightedPostcards}
             />
           </OverlayBody>
         </Overlay>
       )}
     </>
   ) : (
-    <PostcardSingleCardView />
+    <PostcardSingleCardView highlightedPostcards={highlightedPostcards} />
   )
 }
 

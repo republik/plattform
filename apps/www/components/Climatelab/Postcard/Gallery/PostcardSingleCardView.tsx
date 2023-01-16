@@ -8,7 +8,11 @@ import {
   Interaction,
 } from '@project-r/styleguide'
 import AssetImage from '../../../../lib/images/AssetImage'
-import { Postcard, useSinglePostcardData } from './../use-postcard-data'
+import {
+  HighlightedPostcard,
+  Postcard,
+  useSinglePostcardData,
+} from './../use-postcard-data'
 import PostcardFilter from './PostcardFilter'
 import { postcardCredits } from '../../config'
 import { useTranslation } from '../../../../lib/withT'
@@ -49,38 +53,29 @@ const styles = {
 type PostcardSingleCardView = {
   postcard?: Postcard
   isDesktop?: boolean
+  highlightedPostcards?: HighlightedPostcard[]
 }
-
-const DUMMY_HIGHLIGHTED = [
-  {
-    id: '8178e062-0569-47f6-a136-625f07e63678',
-    text: 'This is the new text!',
-  },
-  {
-    id: '67177a2c-04df-4e70-8fd7-f1e5dc4116f9',
-    text: 'This is the new text again!',
-  },
-]
 
 const PostcardSingleCardView: React.FC<PostcardSingleCardView> = ({
   postcard,
   isDesktop,
+  highlightedPostcards,
 }) => {
   const data = {
     postcard_1: useSinglePostcardData({
-      highlightedPostcards: DUMMY_HIGHLIGHTED,
+      highlightedPostcards: highlightedPostcards,
       subjectFilter: 'postcard_1',
     }),
     postcard_2: useSinglePostcardData({
-      highlightedPostcards: DUMMY_HIGHLIGHTED,
+      highlightedPostcards: highlightedPostcards,
       subjectFilter: 'postcard_2',
     }),
     postcard_3: useSinglePostcardData({
-      highlightedPostcards: DUMMY_HIGHLIGHTED,
+      highlightedPostcards: highlightedPostcards,
       subjectFilter: 'postcard_3',
     }),
     postcard_4: useSinglePostcardData({
-      highlightedPostcards: DUMMY_HIGHLIGHTED,
+      highlightedPostcards: highlightedPostcards,
       subjectFilter: 'postcard_4',
     }),
   }
