@@ -256,14 +256,25 @@ export const usePostcardsData = ({
       parsePostcardData({ data, isHighlighted: false }),
     )
 
-  // TODO: improve this
-  const hlStack = [...highlightedPostcardsData]
-  const shuffledPostcards = notHighlightedPostcardsData.flatMap((p, i) => {
-    if (hlStack.length > 0 && (i % 3 === 0 || i % 7 === 0)) {
-      return [hlStack.shift(), p]
+  // Insert highlighted postcards at each step (repeatedly)
+  const steps = [2, 3, 5, 8, 13]
+  let stepIndex = 0
+  let shuffledIndex = 0
+  const shuffledPostcards = [...notHighlightedPostcardsData]
+  for (const p of highlightedPostcardsData) {
+    const step = steps[stepIndex]
+    shuffledIndex = shuffledIndex + step
+
+    if (shuffledIndex > shuffledPostcards.length - 1) {
+      break
     }
-    return [p]
-  })
+
+    // console.log('insert at', shuffledIndex)
+    shuffledPostcards.splice(shuffledIndex, 0, p)
+
+    // loop through steps
+    stepIndex = stepIndex < steps.length - 1 ? stepIndex + 1 : 0
+  }
 
   const totalCount =
     data.questionnaire.highlighted?.totalCount +
