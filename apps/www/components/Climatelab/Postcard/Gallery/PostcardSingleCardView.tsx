@@ -127,7 +127,11 @@ const PostcardSingleCardView: React.FC<PostcardSingleCardView> = ({
       {currentPostcardData ? (
         <Loader
           loading={currentPostcardData._state === 'LOADING'}
-          error={currentPostcardData._state === 'ERROR'}
+          error={
+            currentPostcardData._state === 'ERROR'
+              ? currentPostcardData.error
+              : undefined
+          }
           render={() => {
             return (
               <PostcardContent

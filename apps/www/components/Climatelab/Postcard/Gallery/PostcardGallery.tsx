@@ -85,7 +85,7 @@ const PostcardsGrid = ({
   return (
     <div style={{ position: 'relative', paddingBottom: 10 }}>
       <div {...gridStyles.container}>
-        {postcards.map((p, i) => {
+        {postcards.map((p) => {
           const cardStyle = p.isHighlighted
             ? gridStyles.highlightedCard
             : gridStyles.card
@@ -145,7 +145,9 @@ function PostcardGallery({ highlightedPostcards, label }) {
     <>
       <Loader
         loading={postcardsData._state === 'LOADING'}
-        error={postcardsData._state === 'ERROR'}
+        error={
+          postcardsData._state === 'ERROR' ? postcardsData.error : undefined
+        }
         render={() =>
           postcardsData._state === 'LOADED' ? (
             <PostcardsGrid

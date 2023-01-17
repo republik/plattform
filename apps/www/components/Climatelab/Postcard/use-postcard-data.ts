@@ -116,7 +116,7 @@ export type PostcardsData =
   | {
       _state: 'LOADING'
     }
-  | { _state: 'ERROR' }
+  | { _state: 'ERROR'; error: Error }
   | {
       _state: 'LOADED'
       postcards: Postcard[]
@@ -129,7 +129,7 @@ export type SinglePostcardData =
   | {
       _state: 'LOADING'
     }
-  | { _state: 'ERROR' }
+  | { _state: 'ERROR'; error: Error }
   | {
       _state: 'LOADED'
       totalCount: number
@@ -231,7 +231,7 @@ export const usePostcardsData = ({
   )
 
   if (error) {
-    return { _state: 'ERROR' }
+    return { _state: 'ERROR', error }
   }
 
   if (loading) {
@@ -243,6 +243,7 @@ export const usePostcardsData = ({
   if (data.questionnaire == null) {
     return {
       _state: 'ERROR',
+      error: new Error('No Data'),
     }
   }
 
@@ -354,7 +355,7 @@ export const useSinglePostcardData = ({
   )
 
   if (error) {
-    return { _state: 'ERROR' }
+    return { _state: 'ERROR', error }
   }
 
   if (loading) {
@@ -366,6 +367,7 @@ export const useSinglePostcardData = ({
   if (data.questionnaire == null) {
     return {
       _state: 'ERROR',
+      error: new Error('No Data'),
     }
   }
 
