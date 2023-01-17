@@ -21,7 +21,6 @@ const styles = {
     aspectRatio: '16 / 9',
     display: 'flex',
     padding: '10px',
-    border: 'solid 2px f9f5ec',
     borderRadius: '2px',
     fontFamily: fontFamilies.sansSerifRegular,
     color: '#282828',

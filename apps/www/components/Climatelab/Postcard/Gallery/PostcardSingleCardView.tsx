@@ -20,6 +20,15 @@ import { useTranslation } from '../../../../lib/withT'
 import { PostcardPreview } from '../PostcardPreview'
 
 const styles = {
+  mobileContainer: css({
+    minHeight: '100vh',
+    position: 'relative',
+    backgroundColor: '#F9FBFF',
+    color: '#282828',
+    padding: '15px',
+    margin: '0 -15px',
+    borderRadius: '2px',
+  }),
   container: css({
     position: 'relative',
     margin: '0 auto',
@@ -42,7 +51,7 @@ const styles = {
   }),
   image: css({
     position: 'relative',
-    margin: '0 0 30px',
+    margin: '0 0 40px',
     '> span': { display: 'block !important' },
   }),
   count: css({
@@ -227,7 +236,7 @@ const PostcardContent = ({ postcard, t, isDesktop }) => {
   return isDesktop ? (
     <PostcardPreview postcard={postcard} />
   ) : (
-    <div style={{ minHeight: '100vh', position: 'relative' }}>
+    <div {...styles.mobileContainer}>
       <figure {...styles.image}>
         <AssetImage width={'600'} height={'400'} src={postcard.imageUrl} />
         <figcaption
