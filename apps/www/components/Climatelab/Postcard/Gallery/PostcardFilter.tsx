@@ -13,7 +13,6 @@ const styles = {
     position: 'relative',
     width: '100%',
     aspectRatio: '3 / 2',
-    // height: '99.75px',
   }),
   pileCard: css({
     /* Absolute position */
