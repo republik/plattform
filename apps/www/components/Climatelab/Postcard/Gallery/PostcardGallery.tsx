@@ -4,6 +4,7 @@ import { css } from 'glamor'
 import { useMemo, useState } from 'react'
 
 import {
+  useColorContext,
   Overlay,
   OverlayBody,
   OverlayToolbar,
@@ -15,7 +16,6 @@ import {
 import { PostcardPreview } from '../PostcardPreview'
 import { Postcard, usePostcardsData } from '../use-postcard-data'
 import PostcardSingleCardView from './PostcardSingleCardView'
-import { useColorContext } from '@project-r/styleguide'
 
 const gridStyles = {
   container: css({
@@ -131,13 +131,13 @@ function PostcardGallery({ highlightedPostcards, label }) {
 
   const isDesktop = useMediaQuery(mediaQueries.mUp)
 
-  const [toggleOverlay, setToggleOverlay] = useState({
+  const [postcardOverlay, setPostcardOverlay] = useState({
     isOpen: false,
   })
   const [overlayBody, setOverlayBody] = useState(null)
 
   const onOverlayToggeled = (content) => {
-    setToggleOverlay({ isOpen: toggleOverlay.isOpen ? false : true })
+    setPostcardOverlay({ isOpen: postcardOverlay.isOpen ? false : true })
     setOverlayBody(content)
   }
 
@@ -157,15 +157,15 @@ function PostcardGallery({ highlightedPostcards, label }) {
           )
         }
       />
-      {toggleOverlay.isOpen && (
+      {postcardOverlay.isOpen && (
         <Overlay
           onClose={() => {
-            setToggleOverlay({ isOpen: false })
+            setPostcardOverlay({ isOpen: false })
           }}
         >
           <OverlayToolbar
             onClose={() => {
-              setToggleOverlay({ isOpen: false })
+              setPostcardOverlay({ isOpen: false })
             }}
           />
           <OverlayBody>
