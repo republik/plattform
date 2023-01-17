@@ -6,10 +6,8 @@ import {
   mediaQueries,
   useColorContext,
   RawHtml,
-  convertStyleToRem,
 } from '@project-r/styleguide'
 import AssetImage from '../../../lib/images/AssetImage'
-import { useTranslation } from '../../../lib/withT'
 
 import { postcardCredits } from '../config'
 
@@ -76,13 +74,16 @@ const styles = {
 }
 
 export const PostcardPreview = (props) => {
-  const { t } = useTranslation()
   const { postcard } = props
   const [colorScheme] = useColorContext()
 
   if (!postcard) return null
 
   const { text, imageUrl, imageSelection, author } = postcard
+
+  const postcardText = author
+    ? `${text} <br />${author.name === 'Unbenannt' ? '' : author.name}`
+    : text
 
   return (
     <div
@@ -91,17 +92,11 @@ export const PostcardPreview = (props) => {
     >
       <div {...styles.textArea}>
         <AutoTextSize mode='box' maxFontSizePx={42}>
-          {author ? (
-            <RawHtml
-              dangerouslySetInnerHTML={{
-                __html: `${text} <br />${
-                  author.name === 'Unbenannt' ? '' : author.name
-                }`,
-              }}
-            />
-          ) : (
-            text
-          )}
+          <RawHtml
+            dangerouslySetInnerHTML={{
+              __html: postcardText,
+            }}
+          />
         </AutoTextSize>
       </div>
 
@@ -114,9 +109,7 @@ export const PostcardPreview = (props) => {
         </div>
         <div style={{ width: '100%' }}>
           <AutoTextSize mode='multiline'>
-            {t('Climatelab/Postcard/PostcardPreview/credit', {
-              credit: postcardCredits[imageSelection] || ' ...',
-            })}
+            {'Illustration: ' + postcardCredits[imageSelection] || ' ...'}
           </AutoTextSize>
         </div>
       </div>
