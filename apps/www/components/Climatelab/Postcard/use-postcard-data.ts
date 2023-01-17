@@ -351,6 +351,7 @@ export const useSinglePostcardData = ({
         searchHighlighted: subjectFilterLabel,
         searchNotHighlighted: subjectFilterLabel,
       },
+      notifyOnNetworkStatusChange: true,
     },
   )
 

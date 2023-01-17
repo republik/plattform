@@ -124,27 +124,34 @@ const PostcardSingleCardView: React.FC<PostcardSingleCardView> = ({
 
   return (
     <div {...styles.container}>
-      {currentPostcardData ? (
-        <Loader
-          loading={currentPostcardData._state === 'LOADING'}
-          error={
-            currentPostcardData._state === 'ERROR'
-              ? currentPostcardData.error
-              : undefined
-          }
-          render={() => {
-            return (
-              <PostcardContent
-                postcard={loadedPostcard}
-                t={t}
-                isDesktop={isDesktop}
-              />
-            )
-          }}
-        />
-      ) : (
-        <PostcardContent postcard={postcard} t={t} isDesktop={isDesktop} />
-      )}
+      <div style={{ minHeight: isDesktop ? '40vh' : '100vh' }}>
+        {currentPostcardData ? (
+          <Loader
+            style={{
+              position: 'sticky',
+              top: 0,
+              height: '40vh',
+            }}
+            loading={currentPostcardData._state === 'LOADING'}
+            error={
+              currentPostcardData._state === 'ERROR'
+                ? currentPostcardData.error
+                : undefined
+            }
+            render={() => {
+              return (
+                <PostcardContent
+                  postcard={loadedPostcard}
+                  t={t}
+                  isDesktop={isDesktop}
+                />
+              )
+            }}
+          />
+        ) : (
+          <PostcardContent postcard={postcard} t={t} isDesktop={isDesktop} />
+        )}
+      </div>
       <div
         {...styles.buttonWrapper}
         {...colorScheme.set(

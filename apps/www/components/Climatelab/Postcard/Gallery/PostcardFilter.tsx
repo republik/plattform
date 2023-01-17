@@ -2,6 +2,7 @@ import { css } from 'glamor'
 import { useColorContext, plainButtonRule } from '@project-r/styleguide'
 import AssetImage from '../../../../lib/images/AssetImage'
 import { scaleLinear } from 'd3-scale'
+import { useEffect, useState } from 'react'
 
 const styles = {
   container: css({
@@ -63,9 +64,18 @@ type PostcardFilterProps = {
 const PostcardFilter: React.FC<PostcardFilterProps> = ({
   subject,
   imageUrl,
-  count,
+  count: propsCount,
   onFilterClicked,
 }) => {
+  // Keep current count in state because a) it resets to 0 during refetch and b) this way we can decrement by 1 on each click
+  const [count, setCount] = useState(propsCount)
+
+  useEffect(() => {
+    if (count === 0 && propsCount !== 0) {
+      setCount(propsCount)
+    }
+  }, [propsCount, count])
+
   const [colorScheme] = useColorContext()
   const maxCards = Math.round(cardsAmount(count))
   const amountOfCards = Array(Math.max(maxCards, 1))
@@ -79,7 +89,7 @@ const PostcardFilter: React.FC<PostcardFilterProps> = ({
   return (
     <div {...styles.container}>
       <div {...styles.pileContainer}>
-        {amountOfCards.map((d, i) => {
+        {amountOfCards.map((d) => {
           return (
             <div
               key={d}
@@ -98,7 +108,10 @@ const PostcardFilter: React.FC<PostcardFilterProps> = ({
           {...colorScheme.set('backgroundColor', 'default')}
         >
           <button
-            onClick={() => onFilterClicked(subject)}
+            onClick={() => {
+              onFilterClicked(subject)
+              setCount((count) => Math.max(0, count - 1))
+            }}
             {...plainButtonRule}
             {...styles.image}
           >
