@@ -1,7 +1,7 @@
 import AssetImage from '../../../../lib/images/AssetImage'
 
 import { css } from 'glamor'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 
 import {
   Overlay,
@@ -69,38 +69,54 @@ const PostcardsGrid = ({
 }) => {
   const [colorScheme] = useColorContext()
 
-  return (
-    <div {...gridStyles.container}>
-      {postcards.map((p, i) => {
-        const cardStyle = p.isHighlighted
-          ? gridStyles.highlightedCard
-          : gridStyles.card
+  const fadeOutGradient = useMemo(
+    () =>
+      css({
+        height: 500,
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        background: colorScheme.getCSSColor('fadeOutGradientDefault'),
+      }),
+    [colorScheme],
+  )
 
-        return (
-          <div
-            key={p.id}
-            {...cardStyle}
-            style={
-              {
-                // transform: `rotate(${Math.sin(i)}deg)`,
+  return (
+    <div style={{ position: 'relative', paddingBottom: 10 }}>
+      <div {...gridStyles.container}>
+        {postcards.map((p, i) => {
+          const cardStyle = p.isHighlighted
+            ? gridStyles.highlightedCard
+            : gridStyles.card
+
+          return (
+            <div
+              key={p.id}
+              {...cardStyle}
+              style={
+                {
+                  // transform: `rotate(${Math.sin(i)}deg)`,
+                }
               }
-            }
-            onClick={() => onToggleOverlay(p)}
-          >
-            {p.isHighlighted ? (
-              <PostcardPreview postcard={p} />
-            ) : (
-              <div
-                {...gridStyles.image}
-                {...gridStyles.imageFix}
-                {...colorScheme.set('boxShadow', 'imageChoiceShadow')}
-              >
-                <AssetImage width='600' height='420' src={p.imageUrl} />
-              </div>
-            )}
-          </div>
-        )
-      })}
+              onClick={() => onToggleOverlay(p)}
+            >
+              {p.isHighlighted ? (
+                <PostcardPreview postcard={p} />
+              ) : (
+                <div
+                  {...gridStyles.image}
+                  {...gridStyles.imageFix}
+                  {...colorScheme.set('boxShadow', 'imageChoiceShadow')}
+                >
+                  <AssetImage width='600' height='420' src={p.imageUrl} />
+                </div>
+              )}
+            </div>
+          )
+        })}
+      </div>
+      <div {...fadeOutGradient}></div>
     </div>
   )
 }
