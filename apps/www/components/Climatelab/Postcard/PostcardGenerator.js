@@ -71,6 +71,7 @@ const SubmittedPostcard = (props) => {
       {!(userHasSubmitted && !imageAnswer && !postcardText) && (
         <PostcardPreview postcard={postcard} t={t} />
       )}
+      <br />
 
       {onRevoke && (
         <Button onClick={() => onRevoke()}>

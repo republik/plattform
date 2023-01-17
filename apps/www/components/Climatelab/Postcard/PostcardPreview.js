@@ -15,7 +15,6 @@ const styles = {
   postcard: css({
     position: 'relative',
     backgroundColor: '#F9FBFF',
-    margin: '0 0 20px 0',
     width: '100%',
     height: '100%',
     aspectRatio: '16 / 9',

@@ -20,7 +20,7 @@ import PostcardSingleCardView from './PostcardSingleCardView'
 const gridStyles = {
   container: css({
     maxWidth: '1600px',
-    margin: '0 auto',
+    margin: '20px auto 0',
     padding: '0 60px',
     display: 'grid',
     gridTemplateColumns: 'repeat(auto-fit, minmax(170px, 1fr))',
@@ -78,6 +78,7 @@ const PostcardsGrid = ({
         left: 0,
         right: 0,
         background: colorScheme.getCSSColor('fadeOutGradientDefault'),
+        pointerEvents: 'none',
       }),
     [colorScheme],
   )
