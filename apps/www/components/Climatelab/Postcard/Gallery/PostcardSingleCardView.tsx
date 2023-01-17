@@ -28,6 +28,9 @@ const styles = {
     padding: '15px',
     margin: '0 -15px',
     borderRadius: '2px',
+    '& p': {
+      color: '#282828',
+    },
   }),
   container: css({
     position: 'relative',
