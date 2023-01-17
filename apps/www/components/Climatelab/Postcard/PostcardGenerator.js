@@ -47,8 +47,6 @@ const SubmittedPostcard = (props) => {
     scrollIntoView(postcardRef.current)
   }, [])
 
-  console.log(questionnaire)
-
   const { questions, userHasSubmitted } = questionnaire
 
   const imageOptions = questions && questions[0].options

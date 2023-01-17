@@ -236,12 +236,16 @@ const PostcardSingleCardView: React.FC<PostcardSingleCardView> = ({
 export default PostcardSingleCardView
 
 const PostcardContent = ({ postcard, t, isDesktop }) => {
+  const [colorScheme] = useColorContext()
   if (!postcard) {
     return <div></div>
   }
 
   return isDesktop ? (
-    <PostcardPreview postcard={postcard} />
+    <PostcardPreview
+      postcard={postcard}
+      {...colorScheme.set('boxShadow', 'imageChoiceShadow')}
+    />
   ) : (
     <div {...styles.mobileContainer}>
       <figure {...styles.image}>
