@@ -242,7 +242,10 @@ const PostcardContent = ({ postcard, t, isDesktop }) => {
           })}
         </figcaption>
       </figure>
-      <Interaction.P>{postcard.text}</Interaction.P>
+      {postcard.text.split('\n').map(
+           line => 
+           <Interaction.P>{line}</Interaction.P>
+       )}
       <Interaction.P>{postcard.author.name}</Interaction.P>
     </div>
   )
