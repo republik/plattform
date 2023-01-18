@@ -79,9 +79,10 @@ export const PostcardPreview = (props) => {
 
   const { text, imageUrl, imageSelection, author } = postcard
 
-  const postcardText = author
-    ? `${text} <br />${author.name === 'Unbenannt' ? '' : author.name}`
-    : text
+  const postcardText =
+    author && author.name === 'Unbenannt'
+      ? text
+      : `${text} <br /> ${'<em>– ' + author.name + '</em>'}`
 
   return (
     <div
