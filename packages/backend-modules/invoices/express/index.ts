@@ -13,11 +13,8 @@ const middleware = async (
   context: any,
 ) => {
   function getPdfReqHandler(
-    isApplicableFn: (payment: invoices.commons.PaymentResolved) => boolean,
-    generateFn: (
-      payment: invoices.commons.PaymentResolved,
-      context: Context,
-    ) => Promise<Buffer>,
+    transformData: (req: Request, user: any) => any,
+    generateFn: (data: any, context: Context) => Promise<Buffer>,
   ) {
     return async function reqHandler(
       req: Request,
@@ -37,18 +34,12 @@ const middleware = async (
           return next()
         }
 
-        const { hrid } = req.params
-        const payment = await invoices.commons.resolvePayment({ hrid }, context)
-
-        if (!isApplicableFn(payment)) {
+        const data = await transformData(req, user)
+        if (!data) {
           return next()
         }
 
-        if (payment?.pledge?.userId !== user.id) {
-          return next()
-        }
-
-        const pdf = await generateFn(payment, context)
+        const pdf = await generateFn(data, context)
         res
           .writeHead(200, {
             'Content-Length': Buffer.byteLength(pdf),
@@ -56,24 +47,59 @@ const middleware = async (
           })
           .end(pdf)
       } catch (error) {
-        console.error('error while generating invoice or payment slip', {
+        console.error('error while generating pdf via invoice module', {
           error,
         })
         res.status(500).end()
       }
     }
   }
+  function getPaymentPdfReqHandler(
+    isApplicableFn: (payment: invoices.commons.PaymentResolved) => boolean,
+    generateFn: (
+      payment: invoices.commons.PaymentResolved,
+      context: Context,
+    ) => Promise<Buffer>,
+  ) {
+    return getPdfReqHandler(async (req, user) => {
+      const { hrid } = req.params
+      const payment = await invoices.commons.resolvePayment({ hrid }, context)
+
+      if (!isApplicableFn(payment)) {
+        return false
+      }
+
+      if (payment?.pledge?.userId !== user.id) {
+        return false
+      }
+      return payment
+    }, generateFn)
+  }
 
   server.get(
     '/invoices/:hrid.pdf',
-    getPdfReqHandler(invoices.invoice.isApplicable, invoices.invoice.generate),
+    getPaymentPdfReqHandler(
+      invoices.invoice.isApplicable,
+      invoices.invoice.generate,
+    ),
   )
 
   server.get(
     '/invoices/paymentslip/:hrid.pdf',
-    getPdfReqHandler(
+    getPaymentPdfReqHandler(
       invoices.paymentslip.isApplicable,
       invoices.paymentslip.generate,
+    ),
+  )
+
+  server.get(
+    '/invoices/donationreceipt/:year.pdf',
+    getPdfReqHandler(
+      (req, user) => ({
+        year: req.params.year,
+        user,
+      }),
+      invoices.donationReceipt.generate,
     ),
   )
 }

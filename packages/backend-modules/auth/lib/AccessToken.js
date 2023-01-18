@@ -60,6 +60,7 @@ const scopeConfigs = {
     allowedReqPaths: [
       /^\/invoices\/(.{6})\.pdf?$/,
       /^\/invoices\/paymentslip\/(.{6})\.pdf?$/,
+      /^\/invoices\/donationreceipt\/(.{4})\.pdf?$/,
     ],
     ttlDays: 5,
   },

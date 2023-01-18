@@ -278,7 +278,7 @@ export async function resolvePayment(
   }
 }
 
-function getCountryCode(string: string): string {
+export function getCountryCode(string: string): string {
   switch (string.trim().toLowerCase()) {
     case 'deutschland':
       return 'DE'
