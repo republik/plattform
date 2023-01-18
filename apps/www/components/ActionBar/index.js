@@ -317,7 +317,7 @@ const ActionBar = ({
           discussionId={isDiscussion && meta.ownDiscussion?.id}
           subscriptions={document?.subscribedBy?.nodes?.filter(
             (subscription) =>
-              !(subscription.object.id === document.id && !!meta.format),
+              !(subscription?.object?.id === document.id && !!meta.format),
           )}
           label={t('SubscribeMenu/title')}
           labelShort={isArticleBottom ? t('SubscribeMenu/title') : undefined}

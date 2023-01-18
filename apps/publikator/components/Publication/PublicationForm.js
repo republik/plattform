@@ -34,8 +34,8 @@ import useValidation from './useValidation'
 import { useRouter } from 'next/router'
 
 const publishMutation = gql`
-  mutation publish($repoId: ID!, $commitId: ID!, $input: PublishInput!) {
-    publish(repoId: $repoId, commitId: $commitId, input: $input) {
+  mutation publish($repoId: ID!, $commitId: ID!, $settings: PublishSettings!) {
+    publish(repoId: $repoId, commitId: $commitId, settings: $settings) {
       unresolvedRepoIds
       publication {
         name
@@ -429,7 +429,7 @@ const Form = ({
               publish({
                 repoId: repo.id,
                 commitId: commit.id,
-                input: {
+                settings: {
                   prepublication,
                   updateMailchimp,
                   notifyFilters,
