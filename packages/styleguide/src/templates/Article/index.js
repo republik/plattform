@@ -188,6 +188,7 @@ const createSchema = ({
   ActionBar = DefaultActionBar,
   PayNote,
   noEmpty = true,
+  AudioPlayButton,
 } = {}) => {
   const base = createBase({ metaBody, metaHeadlines })
   const blocks = createBlocks({
@@ -202,6 +203,7 @@ const createSchema = ({
     ActionBar,
     PayNote,
     plattformUnauthorizedZoneText,
+    AudioPlayButton,
   })
 
   const dynamicComponent = createDynamicComponent({

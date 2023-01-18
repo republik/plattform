@@ -13,28 +13,27 @@ import {
   createFrontSchema,
   CheckCircleIcon,
 } from '@project-r/styleguide'
+import StatusError from '../StatusError'
+
+import { useTranslation } from '../../lib/withT'
+import Loader from '../Loader'
+import Frame from '../Frame'
+import HrefLink from '../Link/Href'
+import ErrorMessage from '../ErrorMessage'
+import CommentLink from '../Discussion/shared/CommentLink'
+import DiscussionLink from '../Discussion/shared/DiscussionLink'
+import ActionBar from '../ActionBar'
 
 import { PUBLIC_BASE_URL } from '../../lib/constants'
 import { useMe } from '../../lib/context/MeContext'
 import { useInfiniteScroll } from '../../lib/hooks/useInfiniteScroll'
 import { intersperse } from '../../lib/utils/helpers'
 import { cleanAsPath } from '../../lib/utils/link'
-import { useTranslation } from '../../lib/withT'
-
-import ActionBar from '../ActionBar'
-import useAudioQueue from '../Audio/hooks/useAudioQueue'
-import CommentLink from '../Discussion/shared/CommentLink'
-import DiscussionLink from '../Discussion/shared/DiscussionLink'
-import ErrorMessage from '../ErrorMessage'
-import Frame from '../Frame'
-import HrefLink from '../Link/Href'
-import Loader from '../Loader'
-import StatusError from '../StatusError'
-
-import FrontAudioPlayButton from './FrontAudioPlayButton'
 import { useGetFrontQuery } from './graphql/getFrontQuery.graphql'
-import * as withData from './withData'
+import useAudioQueue from '../Audio/hooks/useAudioQueue'
+import TeaserAudioPlayButton from '../Audio/shared/TeaserAudioPlayButton'
 import ClimateLabTeaser from '../Climatelab/FrontTeaser/ClimateLabTeaser'
+import * as withData from './withData'
 
 const styles = {
   prepublicationNotice: css({
@@ -63,7 +62,7 @@ export const RenderFront = ({ front, nodes, isFrontExtract = false }) => {
     () =>
       createFrontSchema({
         Link: HrefLink,
-        AudioPlayButton: showPlayButton ? FrontAudioPlayButton : undefined,
+        AudioPlayButton: showPlayButton ? TeaserAudioPlayButton : undefined,
         CommentLink,
         DiscussionLink,
         ...withData,
