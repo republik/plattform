@@ -91,6 +91,10 @@ async function notifyAccountants({
   filesImported,
   matchingReport,
 }: Report) {
+  if (!filesImported) {
+    return
+  }
+
   const report: string[] = [
     `🏦 Postfinance import done.`,
     `📄 ${filesImported} file${filesImported === 1 ? '' : 's'} imported.`,
