@@ -1,5 +1,14 @@
-import { FC, ReactNode, useMemo, useState } from 'react'
+import {
+  FC,
+  ReactNode,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
+import scrollIntoView from 'scroll-into-view'
 import { isDev } from '../../lib/constants'
+import { HEADER_HEIGHT } from '../constants'
 import Steps from './Steps'
 
 export type StepRenderFunc = (props: {
@@ -32,6 +41,7 @@ const Stepper = ({
     <div>{children}</div>
   ),
 }: StepperProps) => {
+  const containerRef = useRef<HTMLDivElement>(null)
   const [activeStep, setActiveStep] = useState<number>(0)
 
   const handleNext = () => {
@@ -45,12 +55,20 @@ const Stepper = ({
 
   const handleBack = () => {
     if (activeStep > 0) {
-      const nextUp = activeStep - 1
-      setActiveStep(nextUp)
+      const previous = activeStep - 1
+      setActiveStep(previous)
     } else if (isDev) {
       console.warn('Attempting to go back on step 0')
     }
   }
+
+  useLayoutEffect(() => {
+    scrollIntoView(containerRef.current, {
+      align: {
+        topOffset: HEADER_HEIGHT * 1,
+      },
+    })
+  }, [activeStep])
 
   const currentStep = useMemo(() => steps[activeStep], [steps, activeStep])
 
@@ -65,7 +83,7 @@ const Stepper = ({
   )
 
   return (
-    <div>
+    <div ref={containerRef}>
       <ContentWrapper>
         {currentStep?.content && (
           <>

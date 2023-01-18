@@ -87,7 +87,10 @@ const styles = {
     display: 'grid',
     gridTemplateColumns: '1fr 4fr 1fr',
     gridAutoRows: 'auto',
-    padding: '1rem 0.5rem',
+    padding: '0.5rem 0.25rem',
+    [mediaQueries.mUp]: {
+      padding: '1rem 0.5rem',
+    },
   }),
   steps: css({
     display: 'inline-flex',
@@ -102,7 +105,7 @@ const styles = {
   }),
   step: css({
     display: 'inline-block',
-    height: '0.45rem',
+    height: '0.35rem',
     width: '1.5rem',
     [mediaQueries.mUp]: {
       height: '0.5rem',
