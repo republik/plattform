@@ -1,0 +1,31 @@
+Guten Tag
+
+Die Republik hat ein Klimalabor gestartet — einen Ort für Austausch und
+Experimente. Für alle, die der Klimakrise etwas entgegensetzen wollen, aber
+nicht so genau wissen wie. Letzlich geht es darum, gemeinsam herauszufinden, was
+Journalismus leisten kann, um in der Klimakrise seiner Rolle gerecht zu werden.
+
+{{INVITER_CLIMATE}} hat Sie eingeladen beim Klimalabor mitzumachen.
+
+{{#if recipientIsNotGranter}} {{#if GRANTER_MESSAGE}}
+
+Und uns eine Nachricht für Sie mitgegeben:
+
+> {{{GRANTER_MESSAGE}}}
+
+{{/if}} {{/if}}
+
+Schauen Sie gerne vorbei auf www.republik.ch/willkommen-zum-klimalabor
+{{frontend_base_url}}/willkommen-zum-klimalabor . Wir freuen uns auf Sie.
+
+Ihr Klimalabor-Team
+
+David Bauer, Elia Blülle, Theresa Leisgang
+
+klimalabor@republik.ch
+
+
+Republik AG
+Sihlhallenstrasse 1, CH-8004 Zürich
+{{frontend_base_url}}
+kontakt@republik.ch

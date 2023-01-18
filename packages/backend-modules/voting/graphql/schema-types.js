@@ -261,6 +261,11 @@ type Questionnaire {
 input SubmissionsFilterInput {
   id: ID
   not: ID
+
+  submissionIds: [ID!]
+  notSubmissionIds: [ID!]
+
+  hasAnswers: Boolean
 }
 
 input SubmissionsSortInput {
@@ -431,6 +436,37 @@ type QuestionTypeChoiceOption {
 }
 type QuestionTypeChoiceResult {
   option: QuestionTypeChoiceOption!
+  count: Int!
+}
+
+type QuestionTypeImageChoice implements QuestionInterface {
+  id: ID!
+  questionnaire: Questionnaire!
+  order: Int!
+  private: Boolean!
+  text: String!
+  explanation: String
+  metadata: JSON
+  userAnswer: Answer
+  turnout: QuestionTurnout!
+
+  # 1: single-select
+  # >1: multi-select (max: n)
+  # 0: multi-select (infinite)
+  cardinality: Int!
+  options: [QuestionTypeImageChoiceOption!]!
+
+  result(top: Int, min: Int): [QuestionTypeImageChoiceResult!]
+}
+type QuestionTypeImageChoiceOption {
+  label: String!
+  value: ID!
+  category: String
+  requireAddress: Boolean
+  imageUrl: String
+}
+type QuestionTypeImageChoiceResult {
+  option: QuestionTypeImageChoiceOption!
   count: Int!
 }
 

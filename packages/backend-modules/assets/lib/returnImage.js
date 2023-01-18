@@ -56,7 +56,12 @@ module.exports = async ({
     cacheTags = [],
     crop,
     size,
+    quality,
   } = options
+  const qualityInt = parseInt(quality, 10)
+  const resolvedQuality =
+    !isNaN(qualityInt) && qualityInt <= 100 && qualityInt > 0 ? qualityInt : 80
+
   let format =
     _format && supportedFormats.indexOf(_format) !== -1
       ? _format
@@ -213,12 +218,12 @@ module.exports = async ({
           // avoid interlaced pngs
           // - not supported in pdfkit
           progressive: format === 'jpeg',
-          quality: 80,
+          quality: resolvedQuality,
         })
       } else if (isJPEG) {
         pipeline.jpeg({
           progressive: true,
-          quality: 80,
+          quality: resolvedQuality,
         })
       }
     }

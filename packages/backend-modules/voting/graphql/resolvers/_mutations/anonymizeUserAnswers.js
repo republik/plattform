@@ -26,15 +26,30 @@ module.exports = async (_, { questionnaireId }, context) => {
       questionnaireId,
     })
 
-    await transaction.public.answers.update(
-      {
-        userId: me.id,
-        questionnaireId: questionnaire.id,
-      },
-      {
-        userId: null,
-        pseudonym: uuid(),
-      },
+    const queryParams = { questionnaireId, userId: me.id, pseudonym: uuid() }
+
+    // move (unsubmitted) draft to payload
+    await transaction.public.answers.query(
+      `
+      UPDATE answers
+      SET payload = draft, draft = NULL
+      WHERE "questionnaireId" = :questionnaireId
+        AND "userId" = :userId
+        AND draft IS NOT NULL
+        AND submitted IS FALSE
+    `,
+      queryParams,
+    )
+
+    // flag answers as submitted, remove user and put pseudonym in place
+    await transaction.public.answers.query(
+      `
+      UPDATE answers
+      SET submitted = TRUE, "userId" = NULL, pseudonym = :pseudonym
+      WHERE "questionnaireId" = :questionnaireId
+        AND "userId" = :userId
+    `,
+      queryParams,
     )
 
     await transaction.transactionCommit()

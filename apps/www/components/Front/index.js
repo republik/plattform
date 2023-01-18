@@ -1,5 +1,10 @@
 import { Fragment, useMemo, useEffect, useState } from 'react'
 import { css } from 'glamor'
+import { renderMdast } from 'mdast-react-render'
+import Head from 'next/head'
+import Link from 'next/link'
+import { useRouter } from 'next/router'
+
 import {
   colors,
   Editorial,
@@ -9,7 +14,6 @@ import {
   CheckCircleIcon,
 } from '@project-r/styleguide'
 import StatusError from '../StatusError'
-import Head from 'next/head'
 
 import { useTranslation } from '../../lib/withT'
 import Loader from '../Loader'
@@ -20,20 +24,16 @@ import CommentLink from '../Discussion/shared/CommentLink'
 import DiscussionLink from '../Discussion/shared/DiscussionLink'
 import ActionBar from '../ActionBar'
 
-import { renderMdast } from 'mdast-react-render'
-
 import { PUBLIC_BASE_URL } from '../../lib/constants'
-
+import { useMe } from '../../lib/context/MeContext'
 import { useInfiniteScroll } from '../../lib/hooks/useInfiniteScroll'
 import { intersperse } from '../../lib/utils/helpers'
-import * as withData from './withData'
 import { cleanAsPath } from '../../lib/utils/link'
-import Link from 'next/link'
 import { useGetFrontQuery } from './graphql/getFrontQuery.graphql'
-import { useRouter } from 'next/router'
-import { useMe } from '../../lib/context/MeContext'
 import useAudioQueue from '../Audio/hooks/useAudioQueue'
 import TeaserAudioPlayButton from '../Audio/shared/TeaserAudioPlayButton'
+import ClimateLabTeaser from '../Climatelab/FrontTeaser/ClimateLabTeaser'
+import * as withData from './withData'
 
 const styles = {
   prepublicationNotice: css({
@@ -47,6 +47,9 @@ const styles = {
     padding: '20px 0',
   }),
 }
+
+// Years to link to that have a yearly overview page
+const archivedYears = [2023, 2022, 2021, 2020, 2019, 2018]
 
 export const RenderFront = ({ front, nodes, isFrontExtract = false }) => {
   const { t } = useTranslation()
@@ -64,6 +67,7 @@ export const RenderFront = ({ front, nodes, isFrontExtract = false }) => {
         DiscussionLink,
         ...withData,
         ActionBar,
+        ClimateLabTeaser,
         t,
       }),
     [],
@@ -264,7 +268,7 @@ const Front = ({
                 <div style={{ marginBottom: 10 }}>
                   {t.elements('front/chronology', {
                     years: intersperse(
-                      [2022, 2021, 2020, 2019, 2018].map((year) => (
+                      archivedYears.map((year) => (
                         <Link key={year} href={`/${year}`} passHref>
                           <Editorial.A style={{ color: colors.negative.text }}>
                             {year}

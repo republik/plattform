@@ -1,0 +1,105 @@
+Willkommen. Sie sind eine von inzwischen {{count_climate_lab_users}} Personen,
+die am Klimalabor mitwirken. Schön, sind Sie dabei!
+
+In dieser E-Mail fassen wir das Wichtigste zusammen, damit Sie gut informiert
+mit uns starten und jederzeit wissen, wo Sie uns finden.
+
+Damit sicher keines unserer künftigen Updates in Ihrem Spam-Ordner landet,
+empfehlen wir Ihnen, unsere Mailadresse klimalabor@republik.ch Ihren Kontakten
+hinzuzufügen. Danke.
+
+Gut zu wissen:
+
+ * Unter www.republik.ch/klimalabor {{frontend_base_url}}/klimalabor finden Sie
+   den aktuellen Stand des Projekts und Verweise auf alles, was sich im
+   Klimalabor tut.
+
+ * Haben Sie Fragen, Anregungen oder eine geniale Idee, von der wir sofort
+   wissen sollten? Schreiben Sie uns an klimalabor@republik.ch .
+
+ * Etwa alle ein bis zwei Wochen melden wir uns per Newsletter bei Ihnen und
+   informieren Sie, wo wir stehen und wie Sie sich einbringen können.
+
+   {{#unless RECIPIENT_HAS_MEMBERSHIPS}}
+
+ * Damit Sie die Republik auch über das Klimalabor hinaus kennenlernen können,
+   erhalten Sie als kleines Dankeschön für Ihre Mitwirkung für einen Monat
+   Zugriff auf sämtliche Inhalte der Republik {{frontend_base_url}} .
+
+   {{/unless}}
+
+Wie Sie sich gleich zu Beginn einbringen können:
+
+ * Machen Sie mit uns eine Zeitreise und zeigen Sie uns, wie Sie in die Zukunft
+   blicken
+   {{frontend_base_url}}/2023/01/10/wie-sieht-die-welt-in-60-jahren-aus-machen-sie-mit-uns-eine-zeitreise
+   .
+
+ * Sagen Sie uns
+   {{frontend_base_url}}/2023/01/09/allgemeiner-dialog-klimalabor/diskussion ,
+   was Sie von uns erwarten.
+
+ * Das Klimalabor lebt davon, dass viele unterschiedliche Perspektiven
+   zusammenkommen. Wir freuen uns, wenn Sie Freundinnen und Bekannte ins
+   Klimalabor einladen. Teilen Sie diesen Link
+   {{frontend_base_url}}/willkommen-zum-klimalabor mit Ihnen oder klicken Sie
+   hier {{link_climate_lab_email_invitation}} , um eine vorformulierte E-Mail zu
+   öffnen.
+
+ * Merken Sie sich das Datum gerne vor: Am 27. Februar laden wir Sie herzlich
+   ein zu einer Abendveranstaltung in Zürich. Details folgen.
+
+ * Geben Sie uns ein paar Angaben zu Ihrer Person
+   {{link_climate_lab_onboarding_personal_infos}} und helfen Sie uns damit,
+   Diversität im Klimalabor sicherzustellen
+
+ * {{#if RECIPIENT_HAS_MEMBERSHIPS}}
+   
+   Investieren Sie in Klimajournalismus: Verschenken Sie eine
+   Jahresmitgliedschaft {{link_climate_lab_offer_abo_give}} .
+   
+   {{else}}
+   
+   Investieren Sie in Klimajournalismus: Werden Sie Verlegerin oder Verleger der
+   Republik {{link_climate_lab_offer_abo}} .
+   
+   {{/if}}
+
+Über das Klimalabor — was wir vorhaben
+
+In den kommenden Monaten wollen wir mit Ihnen über die Klimakrise und unsere
+Zukunft sprechen. Eine gemeinsame Expedition funktioniert nur dann, wenn alle
+den Plan kennen. Deshalb hier unsere Ziele und wie wir vorgehen werden:
+
+ * Wir wollen mit Ihnen gemeinsam einen neuen Klimajournalismus für die Republik
+   entwickeln, der mehr Menschen erreicht als bisher und auch andere Medien und
+   Journalistinnen inspiriert. Einen Klimajournalismus, der anregt, der trotz
+   düsterer Aussichten nach vorn blickt, der verlässlich und nützlich ist.
+
+ * Bis in den Sommer 2023 nehmen wir uns dafür Zeit. Was dabei herauskommen
+   wird? Das kann ein eigenständiges journalistisches Produkt sein, eine Reihe
+   neuer Formate, ein Ausbau der Redaktion oder etwas ganz anderes. Das
+   Klimalabor ist bewusst ergebnisoffen. Klar ist: Wir wollen gross denken und
+   ein Angebot entwickeln, das in seiner Dringlichkeit und Ambition der
+   Klimakrise gerecht wird.
+
+ * Wir nähern uns dem Ziel schrittweise an und werden zunehmend konkreter. Wenn
+   Sie mögen, können Sie sich auf ganz verschiedene Arten und immer wieder aufs
+   Neue einbringen. Sie können uns aber auch einfach interessiert begleiten.
+
+Wir freuen uns sehr, dass Sie mit uns auf diese Expedition kommen.
+
+Ihr Klimalabor-Team:
+
+David Bauer, Elia Blülle, Theresa Leisgang
+
+Zum Klimalabor {{frontend_base_url}}/klimalabor
+
+Haben Sie Fragen oder benötigen Sie Hilfe? Wir sind gerne für Sie da. Antworten
+Sie einfach auf diese E-Mail.
+
+
+Republik AG
+Sihlhallenstrasse 1, CH-8004 Zürich
+{{frontend_base_url}}
+kontakt@republik.ch

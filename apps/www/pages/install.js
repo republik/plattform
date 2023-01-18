@@ -22,7 +22,7 @@ const getQueryString = (req) => {
 }
 
 export const getServerSideProps = createGetServerSideProps(
-  async (_, { req }) => {
+  async ({ ctx: { req } }) => {
     const userAgentValue = req.headers['user-agent']
 
     const inNativeApp = !!getNativeAppVersion(userAgentValue)

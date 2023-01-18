@@ -13,6 +13,7 @@ import {
   A,
   Button,
   Loader,
+  RawHtml,
 } from '@project-r/styleguide'
 import Greeting, { fragments as fragmentsGreeting } from './Greeting'
 import Newsletter, {
@@ -34,15 +35,45 @@ import Subscriptions, {
 import withInNativeApp from '../../lib/withInNativeApp'
 import Link from 'next/link'
 
+import Postcard, {
+  fragments as fragmentsPostcard,
+} from '../Climatelab/Onboarding/Postcard'
+import Mission from '../Climatelab/Onboarding/Mission'
+import Invitation from '../Climatelab/Onboarding/Invitation'
+import ClimateProfile from '../Climatelab/Onboarding/ClimateProfile'
+import ClimatePersonalInfo, {
+  fragments as fragmentsClimatePersonalInfo,
+} from '../Climatelab/Onboarding/ClimatePersonalInfo'
+import { CLIMATE_LAB_URL } from '../Climatelab/constants'
+import ClimateLabLogo from '../Climatelab/shared/ClimateLabLogo'
+
 const { P } = Interaction
 
 const QUERY = gql`
   query getOnboarding {
-    me {
+    user: me {
       ...NewsletterUser
       ...AppLoginUser
       ...UsabilityUser
       ...ProfileUser
+      activeMembership {
+        active
+      }
+      accessCampaigns {
+        id
+        title
+        type
+        description
+        grants {
+          id
+          email
+        }
+        slots {
+          total
+          used
+          free
+        }
+      }
     }
 
     employees(shuffle: 1, withGreeting: true) {
@@ -63,16 +94,36 @@ const QUERY = gql`
         }
       }
     }
+
+    roleStats(role: "climate") {
+      count
+    }
+
+    ...Postcard
+    ...ClimatePersonalInfo
   }
 
   ${fragmentsNewsletter.user}
   ${fragmentsAppLogin.user}
   ${fragmentsUsability.user}
   ${fragmentsProfile.user}
-
   ${fragmentsGreeting.employee}
   ${fragmentsSubscriptions.formats}
+  ${fragmentsPostcard.postcard}
+  ${fragmentsClimatePersonalInfo.climatepersonalinfo}
 `
+
+const CONTEXTS = {
+  card: ['newsletter', 'notifications', 'app-login', 'usability'],
+  climate: [
+    'postcard',
+    'mission',
+    'invitation',
+    'climateprofile',
+    'climatepersonalinfo',
+  ],
+  default: ['newsletter', 'notifications', 'app-login', 'usability', 'profile'],
+}
 
 const styles = {
   title: css({
@@ -84,6 +135,27 @@ const styles = {
       ...fontStyles.sansSerifMedium40,
       marginBottom: 50,
     },
+  }),
+  climateTitle: css({
+    ...fontStyles.sansSerifMedium58,
+    marginBottom: 80,
+    [mediaQueries.onlyS]: {
+      ...fontStyles.sansSerifMedium40,
+      marginBottom: 50,
+    },
+  }),
+  imageWrapper: css({
+    textAlign: 'center',
+    [mediaQueries.mUp]: {
+      alignItems: 'center',
+      display: 'flex',
+      gap: '1rem',
+      flexDirection: 'column',
+    },
+  }),
+  image: css({
+    height: 'auto',
+    objectFit: 'contain',
   }),
   p: css({
     marginBottom: 20,
@@ -108,6 +180,10 @@ class Page extends Component {
       },
       inNativeApp,
     } = props
+
+    const selectedContext = Object.keys(CONTEXTS).includes(context)
+      ? CONTEXTS[context]
+      : CONTEXTS['default']
 
     this.sections = [
       {
@@ -140,12 +216,52 @@ class Page extends Component {
         ref: createRef(),
         visited: false,
       },
-    ].filter(Boolean)
+      {
+        component: Postcard,
+        name: 'postcard',
+        ref: createRef(),
+        visited: false,
+      },
+      {
+        component: Mission,
+        name: 'mission',
+        ref: createRef(),
+        visited: false,
+      },
+      {
+        component: Invitation,
+        name: 'invitation',
+        ref: createRef(),
+        visited: false,
+      },
+      {
+        component: ClimateProfile,
+        name: 'climateprofile',
+        ref: createRef(),
+        visited: false,
+      },
+      {
+        component: ClimatePersonalInfo,
+        name: 'climatepersonalinfo',
+        ref: createRef(),
+        visited: false,
+      },
+    ]
+      // filter by context
+      .filter((section) => selectedContext.includes(section.name))
+      // sort by context array
+      .sort(
+        (a, b) =>
+          selectedContext.indexOf(a.name) - selectedContext.indexOf(b.name),
+      )
+      .filter(Boolean)
 
     this.state = {
-      expandedSection: this.sections.find((s) => s.name === query.section)
-        ? query.section
-        : null,
+      expandedSection:
+        (this.sections.find((s) => s.name === query.section) &&
+          query.section) ||
+        (query.context === 'climate' && this.sections[0].name) ||
+        null,
       hasOnceVisitedAll: false,
     }
 
@@ -171,12 +287,23 @@ class Page extends Component {
         if (nextIndex < this.sections.length) {
           sectionIndex = nextIndex
         } else {
-          this.setState({
-            expandedSection: null,
-            hasOnceVisitedAll: this.sections.every(
-              (section) => !!section.visited,
-            ),
-          })
+          this.setState(
+            {
+              expandedSection: null,
+              hasOnceVisitedAll: this.sections.every(
+                (section) => !!section.visited,
+              ),
+            },
+            () => {
+              const { top } =
+                this.sections[sectionIndex].ref.current.getBoundingClientRect()
+              const { pageYOffset } = window
+
+              const target = pageYOffset + top - HEADER_HEIGHT * 1.2
+
+              scrollIt(target, 400)
+            },
+          )
 
           return
         }
@@ -190,6 +317,7 @@ class Page extends Component {
           const { pageYOffset } = window
 
           const target = pageYOffset + top - HEADER_HEIGHT * 1.2
+
           scrollIt(target, 400)
         },
       )
@@ -221,35 +349,43 @@ class Page extends Component {
               return <Loader loading={loading} error={error} />
             }
 
-            const { me: user, employees, sections } = data
+            const { employees, sections, roleStats } = data
 
             return (
               <Center>
-                <div {...styles.title}>
+                <OnboardingHeader context={context}>
                   {t.first([
                     `Onboarding/Page/${context}/title`,
                     'Onboarding/Page/title',
                   ])}
-                </div>
-                <P {...styles.p}>
-                  {t.first([
-                    `Onboarding/Page/${context}/preface`,
-                    'Onboarding/Page/preface',
-                  ])}
-                </P>
-                {context && <Greeting employee={employees[0]} />}
+                </OnboardingHeader>
+
                 <P {...styles.p}>
                   {t.first(
                     [
-                      `Onboarding/Page/${context}/introduction`,
-                      'Onboarding/Page/introduction',
+                      `Onboarding/Page/${context}/preface`,
+                      'Onboarding/Page/preface',
                     ],
-                    null,
-                    '',
+                    { climate_lab_count: roleStats.count },
                   )}
                 </P>
+                {context !== 'climate' && <Greeting employee={employees[0]} />}
 
-                {!expandedSection && (
+                <RawHtml
+                  type={Interaction.P}
+                  dangerouslySetInnerHTML={{
+                    __html: t.first(
+                      [
+                        `Onboarding/Page/${context}/introduction`,
+                        'Onboarding/Page/introduction',
+                      ],
+                      null,
+                      '',
+                    ),
+                  }}
+                />
+
+                {!expandedSection && context !== 'climate' && (
                   <Button
                     primary={!this.state.hasOnceVisitedAll}
                     onClick={() => {
@@ -266,8 +402,8 @@ class Page extends Component {
                       return (
                         <Component
                           key={name}
+                          {...data}
                           name={name}
-                          user={user}
                           sections={sections.nodes}
                           onExpand={this.onExpand.bind(this)}
                           isExpanded={expandedSection === name}
@@ -288,7 +424,10 @@ class Page extends Component {
                       </div>
                     ) */}
                     <div {...styles.buttonContainer}>
-                      <Link href='/' passHref>
+                      <Link
+                        href={context === 'climate' ? CLIMATE_LAB_URL : '/'}
+                        passHref
+                      >
                         <Button primary={this.state.hasOnceVisitedAll}>
                           {t.first([
                             `Onboarding/Page/${context}/button`,
@@ -321,36 +460,38 @@ class Page extends Component {
                   )}
                 </P>
 
-                <P {...styles.p}>
-                  {t.first.elements(
-                    [
-                      `Onboarding/Page/${context}/more/questions`,
-                      'Onboarding/Page/more/questions',
-                    ],
-                    {
-                      linkManual: (
-                        <Link key='anleitung' href='/anleitung' passHref>
-                          <A>
-                            {t.first([
-                              `Onboarding/Page/${context}/more/questions/linkManual`,
-                              'Onboarding/Page/more/questions/linkManual',
-                            ])}
-                          </A>
-                        </Link>
-                      ),
-                      linkFaq: !inNativeIOSApp && (
-                        <Link key='route' href='/faq' passHref>
-                          <A>
-                            {t.first([
-                              `Onboarding/Page/${context}/more/questions/linkFaq`,
-                              'Onboarding/Page/more/questions/linkFaq',
-                            ])}
-                          </A>
-                        </Link>
-                      ),
-                    },
-                  )}
-                </P>
+                {context !== 'climate' && (
+                  <P {...styles.p}>
+                    {t.first.elements(
+                      [
+                        `Onboarding/Page/${context}/more/questions`,
+                        'Onboarding/Page/more/questions',
+                      ],
+                      {
+                        linkManual: (
+                          <Link key='anleitung' href='/anleitung' passHref>
+                            <A>
+                              {t.first([
+                                `Onboarding/Page/${context}/more/questions/linkManual`,
+                                'Onboarding/Page/more/questions/linkManual',
+                              ])}
+                            </A>
+                          </Link>
+                        ),
+                        linkFaq: !inNativeIOSApp && (
+                          <Link key='route' href='/faq' passHref>
+                            <A>
+                              {t.first([
+                                `Onboarding/Page/${context}/more/questions/linkFaq`,
+                                'Onboarding/Page/more/questions/linkFaq',
+                              ])}
+                            </A>
+                          </Link>
+                        ),
+                      },
+                    )}
+                  </P>
+                )}
                 <P {...styles.p}>
                   {t.first.elements(
                     [
@@ -361,11 +502,15 @@ class Page extends Component {
                       email: (
                         <A
                           key='email'
-                          href={`mailto:${t(
-                            'Onboarding/Page/more/help/email',
-                          )}`}
+                          href={`mailto:${t.first.elements([
+                            `Onboarding/Page/${context}/more/help/email`,
+                            `Onboarding/Page/more/help/email`,
+                          ])}`}
                         >
-                          {t('Onboarding/Page/more/help/email')}
+                          {t.first.elements([
+                            `Onboarding/Page/${context}/more/help/email`,
+                            `Onboarding/Page/more/help/email`,
+                          ])}
                         </A>
                       ),
                     },
@@ -378,6 +523,20 @@ class Page extends Component {
       </Frame>
     )
   }
+}
+
+const OnboardingHeader = ({ children, ...props }) => {
+  if (props?.context === 'climate') {
+    return (
+      <div {...styles.imageWrapper}>
+        <div {...styles.image}>
+          <ClimateLabLogo width={150} height={150} hideFigcaption />
+        </div>
+        <div {...styles.climateTitle}>{children}</div>
+      </div>
+    )
+  }
+  return <div {...styles.title}>{children}</div>
 }
 
 export default compose(withT, withRouter, withInNativeApp)(Page)

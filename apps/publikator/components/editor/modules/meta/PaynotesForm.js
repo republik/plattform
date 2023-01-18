@@ -44,6 +44,7 @@ const styles = {
 const PAYNOTE_KEY = 'paynotes'
 const PAYNOTE_MODE_KEY = 'paynoteMode'
 const TARGETS = ['hasActiveMembership', 'isEligibleForTrial']
+
 const MODE_KEYS = {
   AUTO: 'auto',
   BUY: 'button',
