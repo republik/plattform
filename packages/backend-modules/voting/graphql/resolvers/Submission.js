@@ -52,11 +52,23 @@ module.exports = {
     }
   },
   answers: async (submission, args, { loaders }) => {
-    const { questionnaireId, userId, _matchedAnswerIds } = submission
+    const { questionnaireId, userId, pseudonym, _matchedAnswerIds } = submission
+
+    if (!userId && !pseudonym) {
+      return {
+        nodes: [],
+        pageInfo: {
+          hasNextPage: false,
+          hasPreviousPage: false,
+        },
+        totalCount: 0,
+      }
+    }
 
     const answers = await loaders.Answer.byKeyObj.load({
       questionnaireId,
-      userId,
+      ...(userId && { userId }),
+      ...(pseudonym && { pseudonym }),
     })
 
     const nodes = answers
