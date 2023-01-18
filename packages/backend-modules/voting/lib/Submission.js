@@ -65,6 +65,8 @@ const createSubmissionsQuery = ({
 }) => {
   const { by, date } = sort
 
+  const isAnonymized = { term: { anonymized: true } }
+
   const mustBeforeDate = date && {
     range: {
       createdAt: {
@@ -119,6 +121,14 @@ const createSubmissionsQuery = ({
   const mustNotSubmissionIds = filters?.notSubmissionIds?.length && {
     terms: { id: filters.notSubmissionIds },
   }
+  const mustAnsweredQuestionIds = filters?.answeredQuestionIds && {
+    bool: {
+      must: filters?.answeredQuestionIds.map((id) => ({
+        term: { 'resolved.answers.questionId': id },
+      })),
+    },
+  }
+
   const mustHaveAnswers = filters?.hasAnswers === true && {
     exists: { field: 'resolved.answers' },
   }
@@ -135,9 +145,11 @@ const createSubmissionsQuery = ({
         mustSearch,
         mustSubmissionId,
         mustSubmissionIds,
+        mustAnsweredQuestionIds,
         mustHaveAnswers,
       ].filter(Boolean),
       must_not: [
+        isAnonymized,
         mustNotSubmissionId,
         mustNotSubmissionIds,
         mustNotHaveAnswers,

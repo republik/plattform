@@ -24,6 +24,16 @@ module.exports = {
       .update(`${questionnaireId}${userId}`)
       .digest('hex')
 
+    if (!userId) {
+      return {
+        id: 'hidden',
+        name: t('api/comment/hidden/displayName'),
+        profilePicture: null,
+        anonymity: true,
+        username: null,
+      }
+    }
+
     const submitter = await loaders.User.byId.load(userId)
 
     const name = getName(submitter, null, context)

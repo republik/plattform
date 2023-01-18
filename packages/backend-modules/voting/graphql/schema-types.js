@@ -265,7 +265,9 @@ input SubmissionsFilterInput {
   submissionIds: [ID!]
   notSubmissionIds: [ID!]
 
-  hasAnswers: Boolean
+  answeredQuestionIds: [ID!]
+
+  hasAnswers: Boolean @deprecated(reason: "use \`mustQuestionIds\` instead")
 }
 
 input SubmissionsSortInput {
