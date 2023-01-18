@@ -6,6 +6,7 @@ import {
   mediaQueries,
   useColorContext,
   RawHtml,
+  Interaction,
 } from '@project-r/styleguide'
 import AssetImage from '../../../lib/images/AssetImage'
 
@@ -79,11 +80,6 @@ export const PostcardPreview = (props) => {
 
   const { text, imageUrl, imageSelection, author } = postcard
 
-  const postcardText =
-    author && author.name === 'Unbenannt'
-      ? text
-      : `${text} <br /> ${'<em>– ' + author.name + '</em>'}`
-
   return (
     <div
       {...styles.postcard}
@@ -91,11 +87,13 @@ export const PostcardPreview = (props) => {
     >
       <div {...styles.textArea}>
         <AutoTextSize mode='box' maxFontSizePx={42}>
-          <RawHtml
-            dangerouslySetInnerHTML={{
-              __html: postcardText,
-            }}
-          />
+          {text}
+          {author && author.name !== 'Unbenannt' && (
+            <>
+              <br />
+              <em>– {author.name}</em>
+            </>
+          )}
         </AutoTextSize>
       </div>
 
