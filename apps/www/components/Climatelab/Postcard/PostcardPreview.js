@@ -5,8 +5,6 @@ import {
   fontFamilies,
   mediaQueries,
   useColorContext,
-  RawHtml,
-  Interaction,
 } from '@project-r/styleguide'
 import AssetImage from '../../../lib/images/AssetImage'
 
@@ -70,6 +68,9 @@ const styles = {
     flexGrow: 1,
     justifyContent: 'space-around',
   }),
+  italic: css({
+    fontFamily: fontFamilies.sansSerifItalic,
+  }),
 }
 
 export const PostcardPreview = (props) => {
@@ -91,7 +92,7 @@ export const PostcardPreview = (props) => {
           {author && author.name !== 'Unbenannt' && (
             <>
               <br />
-              <em>– {author.name}</em>
+              <em {...styles.italic}>– {author.name}</em>
             </>
           )}
         </AutoTextSize>
