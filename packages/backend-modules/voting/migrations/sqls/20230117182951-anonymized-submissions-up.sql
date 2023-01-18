@@ -6,6 +6,9 @@ ALTER TABLE "public"."questionnaireSubmissions"
 CREATE UNIQUE INDEX "questionnaireSubmissions_questionnaireId_pseudonym_idx"
   ON "public"."questionnaireSubmissions" ("questionnaireId","pseudonym");
 
+-- Set user questionnaireSubmissions to be anonymized which link to 0 answers
+-- This is not entirly accurate, since some may just be empty submissions. It
+-- is however suffently good enough for our purposes.
 WITH submissions AS (
   SELECT qs.id, qs.anonymized, COUNT(a.id)
   
@@ -28,6 +31,7 @@ WHERE qs.id = s.id
   AND s.anonymized = FALSE
 ;
 
+-- Unsert submissions for all answers linked to a pseudonym.
 INSERT INTO "questionnaireSubmissions" ("questionnaireId", pseudonym, "createdAt", "updatedAt")
 (
   SELECT "questionnaireId", pseudonym, MAX("createdAt") "createdAt", MAX("updatedAt") "updatedAt"
@@ -36,6 +40,8 @@ INSERT INTO "questionnaireSubmissions" ("questionnaireId", pseudonym, "createdAt
   GROUP BY 1, 2
 );
 
+-- Drop change notifications to ElasticSearch
+-- (Re-indexing once is lighter and faster than via notifyTableChangeQueue)
 DELETE FROM "notifyTableChangeQueue"
 WHERE "table" = 'questionnaireSubmissions'
   AND op = 'INSERT'
