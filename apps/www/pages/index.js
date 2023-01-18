@@ -38,7 +38,7 @@ const MarketingPage = () => {
   }
 
   return (
-    <Frame raw meta={meta} isOnMarketingPage={true}>
+    <Frame raw meta={meta} isOnMarketingPage={true} hasOverviewNav>
       <Marketing />
     </Frame>
   )

@@ -80,6 +80,8 @@ import { getDocument } from './graphql/getDocument'
 import ShareImage from './ShareImage'
 import { BrowserOnlyActionBar } from './BrowserOnly'
 import ArticleRecommendationsFeed from './ArticleRecommendationsFeed'
+import TeaserAudioPlayButton from '../Audio/shared/TeaserAudioPlayButton'
+import useAudioQueue from '../Audio/hooks/useAudioQueue'
 
 const LoadingComponent = () => <SmallLoader loading />
 
@@ -144,6 +146,10 @@ const ElectionResultDiversity = dynamic(
     ssr: false,
   },
 )
+const ClimateLabCounter = dynamic(() => import('../Climatelab/Counter'), {
+  loading: LoadingComponent,
+  ssr: false,
+})
 const Questionnaire = dynamic(
   () =>
     import('../Questionnaire/Questionnaire').then(
@@ -154,11 +160,34 @@ const Questionnaire = dynamic(
     ssr: false,
   },
 )
+const ClimateLabInlineTeaser = dynamic(
+  () => import('../Climatelab/InlineTeaser/ClimateLabInlineTeaser'),
+  {
+    loading: LoadingComponent,
+    ssr: false,
+  },
+)
 
 const QuestionnaireSubmissions = dynamic(
   () => import('../Questionnaire/Submissions'),
   {
     loading: LoadingComponent,
+  },
+)
+
+const Postcard = dynamic(
+  () => import('../Climatelab/Postcard/PostcardDynamicComponent'),
+  {
+    loading: LoadingComponent,
+    ssr: false,
+  },
+)
+
+const PostcardGallery = dynamic(
+  () => import('../Climatelab/Postcard/Gallery/PostcardGallery'),
+  {
+    loading: LoadingComponent,
+    ssr: false,
   },
 )
 
@@ -242,6 +271,8 @@ const ArticlePage = ({
   const { share, extract, showAll } = router.query
 
   const { me, meLoading, hasAccess, hasActiveMembership, isEditor } = useMe()
+
+  const { isAudioQueueAvailable } = useAudioQueue()
 
   const cleanedPath = cleanAsPath(router.asPath)
 
@@ -360,6 +391,8 @@ const ArticlePage = ({
     }
   }, [trialSignup])
 
+  const showPlayButton = !extract && hasAccess && isAudioQueueAvailable
+
   const template = meta?.template
   const schema = useMemo(
     () =>
@@ -387,6 +420,10 @@ const ArticlePage = ({
           QUESTIONNAIRE: Questionnaire,
           QUESTIONNAIRE_SUBMISSIONS: QuestionnaireSubmissions,
           NEWSLETTER_SIGNUP: NewsletterSignUpDynamic,
+          CLIMATE_LAB_COUNTER: ClimateLabCounter,
+          CLIMATE_LAB_INLINE_TEASER: ClimateLabInlineTeaser,
+          POSTCARD: Postcard,
+          POSTCARD_GALLERY: PostcardGallery,
         },
         titleMargin: false,
         titleBreakout,
@@ -420,6 +457,7 @@ const ArticlePage = ({
         CommentLink,
         ActionBar: BrowserOnlyActionBar,
         PayNote: showInlinePaynote ? TrialPayNoteMini : undefined,
+        AudioPlayButton: showPlayButton ? TeaserAudioPlayButton : undefined,
       }),
     [template, inNativeIOSApp, inNativeApp, showInlinePaynote, titleBreakout],
   )
@@ -594,6 +632,13 @@ const ArticlePage = ({
             hasNewsletterUtms ||
             (router.query.utm_source && router.query.utm_source === 'flyer-v1')
 
+          // For this proof of concept I chose to show the climate paynote
+          // only at the bottom. This could/should be evaluated.
+          // We could also suppress the second paynote. (Code commented below.)
+          // I wouldn't show both, since it's a very big paynote,
+          // and the text would be the same twice.
+          // const suppressSecondPayNote = climatePaynote
+
           const payNote = (
             <PayNote
               seed={payNoteSeed}
@@ -607,7 +652,9 @@ const ArticlePage = ({
               Wrapper={isFlyer ? FlyerWrapper : undefined}
             />
           )
+
           const payNoteAfter =
+            // !suppressSecondPayNote &&
             payNote && cloneElement(payNote, { position: 'after' })
 
           const ownDiscussion = meta.ownDiscussion

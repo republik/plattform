@@ -769,6 +769,10 @@
       "value": "keine"
     },
     {
+      "key": "metaData/paynotes/mode/climate",
+      "value": "Klimalab"
+    },
+    {
       "key": "metaData/paynotes/add",
       "value": "Spezialangefertigte Störer hinzufügen"
     },

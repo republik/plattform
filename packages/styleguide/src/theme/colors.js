@@ -146,6 +146,11 @@ const colors = {
     flyerText: '#141414',
     flyerMetaText: '#002BA3',
     flyerFormatText: '#990025',
+    imageChoiceShadow:
+      '0 1px 2px 0 rgba(0, 0, 0, 0.24), 0 0 2px 0 rgba(0, 0, 0, 0.12)',
+    imageChoiceShadowHover:
+      '0 4px 8px 0 rgba(0, 0, 0, 0.24), 0 0 8px 0 rgba(0, 0, 0, 0.12)',
+    boxShadowBottomNavBar: '0 -5px 10px -3px rgba(0, 0, 0, 0.1)',
   },
   dark: {
     logo: '#FFFFFF',
@@ -202,6 +207,11 @@ const colors = {
     flyerText: '#F0F0F0',
     flyerMetaText: '#A3BBFF',
     flyerFormatText: '#D90034',
+    imageChoiceShadow:
+      '0 1px 2px 0 rgba(255, 255, 255, 0.24), 0 0 2px 0 rgba(255, 255, 255, 0.12)',
+    imageChoiceShadowHover:
+      '0 4px 8px 0 rgba(255, 255, 255, 0.24), 0 0 8px 0 rgba(255, 255, 255, 0.12)',
+    boxShadowBottomNavBar: '0 -5px 10px -3px rgba(0, 0, 0, 0.1)',
   },
   mappings: {
     format: {

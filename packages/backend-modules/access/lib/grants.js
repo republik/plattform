@@ -1,6 +1,7 @@
 const debug = require('debug')('access:lib:grants')
 const moment = require('moment')
 const Promise = require('bluebird')
+const validator = require('validator')
 
 const { Roles } = require('@orbiting/backend-modules-auth')
 const {
@@ -16,6 +17,8 @@ const mailLib = require('./mail')
 const membershipsLib = require('./memberships')
 
 const VOUCHER_CODE_LENGTH = 5
+
+const campaignTypesWithMemberRole = ['REGULAR']
 
 const evaluateConstraints = async (granter, campaign, email, t, pgdb) => {
   const errors = []
@@ -128,6 +131,10 @@ const insert = async (granter, campaignId, grants = [], pgdb) => {
 }
 
 const grant = async (granter, campaignId, email, message, t, pgdb, mail) => {
+  if (email && !validator.isEmail(email)) {
+    throw new Error(t('api/email/invalid'))
+  }
+
   const campaign = await campaignsLib.findOne(campaignId, pgdb)
 
   if (!campaign) {
@@ -210,11 +217,9 @@ const claim = async (voucherCode, payload, user, t, pgdb, redis, mail) => {
     })
   }
 
-  const hasAddedMemberRole = await membershipsLib.addMemberRole(
-    grant,
-    recipient,
-    pgdb,
-  )
+  const hasAddedMemberRole =
+    campaignTypesWithMemberRole.includes(campaign.type) &&
+    (await membershipsLib.addMemberRole(grant, recipient, pgdb))
 
   const subscribeToEditorialNewsletters =
     campaign.config?.subscribeToEditorialNewsletters ||
@@ -339,11 +344,10 @@ const request = async (granter, campaignId, payload, t, pgdb, redis, mail) => {
       eventsLib.log(grant, event, pgdb)
     })
   }
-  const hasAddedMemberRole = await membershipsLib.addMemberRole(
-    grant,
-    granter,
-    pgdb,
-  )
+
+  const hasAddedMemberRole =
+    campaignTypesWithMemberRole.includes(campaign.type) &&
+    (await membershipsLib.addMemberRole(grant, granter, pgdb))
 
   const subscribeToEditorialNewsletters =
     campaign.config?.subscribeToEditorialNewsletters ||
