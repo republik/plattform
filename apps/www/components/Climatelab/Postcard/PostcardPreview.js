@@ -15,7 +15,7 @@ const styles = {
     position: 'relative',
     backgroundColor: '#F9FBFF',
     width: '100%',
-    height: '100%',
+    height: 'calc(100% - 1px)', // weirdo fix for Safari 14
     aspectRatio: '16 / 9',
     display: 'flex',
     padding: '10px',
