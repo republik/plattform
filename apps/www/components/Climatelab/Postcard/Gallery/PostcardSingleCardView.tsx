@@ -12,6 +12,7 @@ import AssetImage from '../../../../lib/images/AssetImage'
 import {
   HighlightedPostcard,
   Postcard,
+  usePostcardCounts,
   useSinglePostcardData,
 } from './../use-postcard-data'
 import PostcardFilter from './PostcardFilter'
@@ -77,12 +78,19 @@ type PostcardSingleCardView = {
 }
 
 const PostcardSingleCardView: React.FC<PostcardSingleCardView> = ({
-  postcard,
+  postcard: postcardOverride,
   isDesktop,
   highlightedPostcards,
   label,
 }) => {
   const [colorScheme] = useColorContext()
+
+  const { counts } = usePostcardCounts()
+
+  const [currentPostcard, setCurrentPostcard] = useState<
+    keyof typeof data | null
+  >(postcardOverride ? null : 'postcard_1')
+
   const data = {
     postcard_1: useSinglePostcardData({
       highlightedPostcards: highlightedPostcards,
@@ -101,10 +109,6 @@ const PostcardSingleCardView: React.FC<PostcardSingleCardView> = ({
       subjectFilter: 'postcard_4',
     }),
   }
-
-  const [currentPostcard, setCurrentPostcard] = useState<
-    keyof typeof data | null
-  >(postcard ? null : 'postcard_1')
 
   const currentPostcardData = data[currentPostcard]
 
@@ -149,7 +153,11 @@ const PostcardSingleCardView: React.FC<PostcardSingleCardView> = ({
             }}
           />
         ) : (
-          <PostcardContent postcard={postcard} t={t} isDesktop={isDesktop} />
+          <PostcardContent
+            postcard={postcardOverride}
+            t={t}
+            isDesktop={isDesktop}
+          />
         )}
       </div>
       <div
@@ -164,11 +172,7 @@ const PostcardSingleCardView: React.FC<PostcardSingleCardView> = ({
         <div {...styles.buttonContainer}>
           <PostcardFilter
             subject='postcard_1'
-            count={
-              data['postcard_1']._state === 'LOADED'
-                ? data['postcard_1'].totalCount
-                : 0
-            }
+            count={counts?.postcard_1}
             imageUrl={'/static/climatelab/freier.jpg'}
             onFilterClicked={() => {
               if (
@@ -183,11 +187,7 @@ const PostcardSingleCardView: React.FC<PostcardSingleCardView> = ({
           />
           <PostcardFilter
             subject='postcard_2'
-            count={
-              data['postcard_2']._state === 'LOADED'
-                ? data['postcard_2'].totalCount
-                : 0
-            }
+            count={counts?.postcard_2}
             imageUrl={'/static/climatelab/farner.jpg'}
             onFilterClicked={() => {
               if (
@@ -202,11 +202,7 @@ const PostcardSingleCardView: React.FC<PostcardSingleCardView> = ({
           />
           <PostcardFilter
             subject='postcard_3'
-            count={
-              data['postcard_3']._state === 'LOADED'
-                ? data['postcard_3'].totalCount
-                : 0
-            }
+            count={counts?.postcard_3}
             imageUrl={'/static/climatelab/richardson.jpg'}
             onFilterClicked={() => {
               if (
@@ -221,11 +217,7 @@ const PostcardSingleCardView: React.FC<PostcardSingleCardView> = ({
           />
           <PostcardFilter
             subject='postcard_4'
-            count={
-              data['postcard_4']._state === 'LOADED'
-                ? data['postcard_4'].totalCount
-                : 0
-            }
+            count={counts?.postcard_4}
             imageUrl={'/static/climatelab/zalko.jpg'}
             onFilterClicked={() => {
               if (

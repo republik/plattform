@@ -4,6 +4,7 @@ import { useState } from 'react'
 const POSTCARDS_QUESTIONNAIRE_QUERY = gql`
   query postcardsQuestionnaire {
     questionnaire(slug: "klima-postkarte") {
+      id
       questions {
         id
       }
@@ -11,9 +12,40 @@ const POSTCARDS_QUESTIONNAIRE_QUERY = gql`
   }
 `
 
+const POSTCARDS_STATS_QUERY = gql`
+  query postcardsStats($questionIds: [ID!]) {
+    questionnaire(slug: "klima-postkarte") {
+      id
+      postcard_1: submissions(
+        filters: { answeredQuestionIds: $questionIds }
+        value: "postcard_1"
+      ) {
+        totalCount
+      }
+      postcard_2: submissions(
+        filters: { answeredQuestionIds: $questionIds }
+        value: "postcard_2"
+      ) {
+        totalCount
+      }
+      postcard_3: submissions(
+        filters: { answeredQuestionIds: $questionIds }
+        value: "postcard_3"
+      ) {
+        totalCount
+      }
+      postcard_4: submissions(
+        filters: { answeredQuestionIds: $questionIds }
+        value: "postcard_4"
+      ) {
+        totalCount
+      }
+    }
+  }
+`
+
 const POSTCARDS_QUERY = gql`
   fragment PostcardConnection on SubmissionConnection {
-    totalCount
     pageInfo {
       hasNextPage
       endCursor
@@ -28,14 +60,6 @@ const POSTCARDS_QUERY = gql`
         nodes {
           id
           payload
-          question {
-            id
-            ... on QuestionInterface {
-              id
-              __typename
-              text
-            }
-          }
         }
       }
     }
@@ -58,12 +82,6 @@ const POSTCARDS_QUERY = gql`
           options {
             value
             imageUrl
-          }
-          result {
-            option {
-              value
-            }
-            count
           }
         }
       }
@@ -144,7 +162,6 @@ export type SinglePostcardData =
   | { _state: 'ERROR'; error: Error }
   | {
       _state: 'LOADED'
-      totalCount: number
       postcard: Postcard | null
       fetchNext: () => void
       hasMore: boolean
@@ -217,6 +234,37 @@ const useQuestionnaireQuestions = () => {
       loading,
       error,
       questionIds: data.questionnaire?.questions.map((q) => q.id),
+    }
+  }
+}
+
+/**
+ * Fetch postcard stats
+ */
+export const usePostcardCounts = () => {
+  const { questionIds } = useQuestionnaireQuestions()
+
+  const { data, loading, error } = useQuery(POSTCARDS_STATS_QUERY, {
+    variables: {
+      questionIds,
+    },
+    skip: questionIds === undefined,
+  })
+
+  if (!data) {
+    return { loading, error }
+  }
+
+  if (data) {
+    return {
+      loading,
+      error,
+      counts: {
+        postcard_1: data.questionnaire?.postcard_1?.totalCount,
+        postcard_2: data.questionnaire?.postcard_2?.totalCount,
+        postcard_3: data.questionnaire?.postcard_3?.totalCount,
+        postcard_4: data.questionnaire?.postcard_4?.totalCount,
+      },
     }
   }
 }
@@ -412,10 +460,6 @@ export const useSinglePostcardData = ({
       parsePostcardData({ data, isHighlighted: false }),
     )
 
-  const totalCount =
-    data.questionnaire.highlighted?.totalCount +
-    data.questionnaire.notHighlighted?.totalCount
-
   // Pagination stuff
 
   const cursorHighlighted: string | null =
@@ -446,7 +490,6 @@ export const useSinglePostcardData = ({
     } else if (!lastHighlightedPostcardReached) {
       setLastHighlightedPostcardReached(true)
     } else if (hasMoreNotHighlighted) {
-      console.log('no more highlighted')
       refetch({
         cursorNotHighlighted,
       })
@@ -455,7 +498,6 @@ export const useSinglePostcardData = ({
 
   return {
     _state: 'LOADED',
-    totalCount,
     postcard,
     fetchNext,
     hasMore: hasMoreHighlighted || hasMoreNotHighlighted,
