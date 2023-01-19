@@ -7727,6 +7727,18 @@
     {
       "key": "ClimateInlineTeaser/Member/content/link",
       "value": "zum Klimalabor"
+    },
+    {
+      "key": "FutureCampaign/sender/headerText",
+      "value": "An der Republik vorbeizukommen, wird einiges schwerer. Dank Ihnen und den Menschen, die Ihnen wichtig sind."
+    },
+    {
+      "key": "FutureCampaign/sender/merci",
+      "value": "Danke fürs mitmachen!"
+    },
+    {
+      "key": "FutureCampaign/slogan/text",
+      "value": "Unabhängiger Journalismus hat eine Zukunft, wenn {person} das auch will."
     }
   ]
 }
