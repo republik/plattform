@@ -1,6 +1,7 @@
 import { css } from 'glamor'
 import { useState } from 'react'
 import AssetImage from '../../../../lib/images/AssetImage'
+import { StepProps } from '../../../Stepper/Stepper'
 import BottomPanel from './BottomPanel'
 
 const SelectYourPriceStep = ({
@@ -16,12 +17,18 @@ const SelectYourPriceStep = ({
 
   // TODO: render different content based on the selected price
   // Variants:
-  // 5 <= Selected < 240 CHF : Unter Normalpreis
-  // Selected = 240 CHF: Normalpreis
-  // Selected = Average: Durchschnittspreis
-  // 240 < Selected < 500 CHF: Die vertrauensvolle Investition
-  // 500 <= Selected < 1000 CHF: Die kühne Investition
-  // 1000 = SELECTED CHF: Das Maximum
+  // 'Dabei sein ist alles'
+  //    - 5 <= Selected < average CHF
+  // 'Mit dem Schwarm schwimmen'
+  //    - average <= selected < 240 CHF
+  // 'Der Standard'
+  //    - selected = 240 CHF
+  // 'Die vertrauensvolle Investition'
+  //    - 240 < selected < 500 CHF
+  // 'Die kühne Investition'
+  //    - 500 <= selected < 1000 CHF
+  // 'Das Maximum'
+  //    - selected = 1000 CHF
 
   // TODO: implement price-slider that snaps to the clicked
   // price from above or to the nearest value from
