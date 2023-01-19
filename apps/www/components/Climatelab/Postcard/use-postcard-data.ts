@@ -47,8 +47,8 @@ const POSTCARDS_QUERY = gql`
     $cursorHighlighted: String
     $cursorNotHighlighted: String
     $limit: Int
-    $searchHighlighted: String
-    $searchNotHighlighted: String
+    $valueHighlighted: String
+    $valueNotHighlighted: String
   ) {
     questionnaire(slug: "klima-postkarte") {
       id
@@ -75,7 +75,7 @@ const POSTCARDS_QUERY = gql`
           submissionIds: $highlightedPostcardIds
           answeredQuestionIds: $questionIds
         }
-        search: $searchHighlighted
+        value: $valueHighlighted
       ) {
         ...PostcardConnection
       }
@@ -87,7 +87,7 @@ const POSTCARDS_QUERY = gql`
           notSubmissionIds: $highlightedPostcardIds
           answeredQuestionIds: $questionIds
         }
-        search: $searchNotHighlighted
+        value: $valueNotHighlighted
       ) {
         ...PostcardConnection
       }
@@ -102,8 +102,8 @@ type QueryVars = {
   cursorHighlighted?: string
   cursorNotHighlighted?: string
   limit?: number
-  searchHighlighted?: string
-  searchNotHighlighted?: string
+  valueHighlighted?: string
+  valueNotHighlighted?: string
 }
 
 type QueryData = {
@@ -113,13 +113,6 @@ type QueryData = {
     highlighted: any
     notHighlighted: any
   }
-}
-
-const SUBJECT_FILTERS = {
-  postcard_1: 'Karlotta Freier',
-  postcard_2: 'Chrigel Farner',
-  postcard_3: 'Jack Richardson',
-  postcard_4: 'Aline Zalko',
 }
 
 export type Postcard = {
@@ -162,7 +155,7 @@ export type HighlightedPostcard = {
   text: string
 }
 
-type SubjectFilter = keyof typeof SUBJECT_FILTERS
+type SubjectFilter = 'postcard_1' | 'postcard_2' | 'postcard_3' | 'postcard_4'
 
 // Fugly parsing!
 // FIXME: add stricter types
@@ -245,12 +238,6 @@ export const usePostcardsData = ({
       ? highlightedPostcards.map(({ id }) => id)
       : ['x-y-zzz'] // provide a nonsensical ID here to get 0 highlighted results from the query
 
-  // Query needs labels to search by subject, that's why we translate from the value to the label
-  const subjectFilterLabel =
-    subjectFilter && subjectFilter in SUBJECT_FILTERS
-      ? SUBJECT_FILTERS[subjectFilter]
-      : undefined
-
   const { questionIds } = useQuestionnaireQuestions()
 
   const { data, loading, error, fetchMore } = useQuery<QueryData, QueryVars>(
@@ -259,8 +246,8 @@ export const usePostcardsData = ({
       variables: {
         limit: 100,
         highlightedPostcardIds,
-        searchHighlighted: subjectFilterLabel,
-        searchNotHighlighted: subjectFilterLabel,
+        valueHighlighted: subjectFilter,
+        valueNotHighlighted: subjectFilter,
         questionIds,
       },
       skip: questionIds === undefined,
@@ -380,12 +367,6 @@ export const useSinglePostcardData = ({
       ? highlightedPostcards.map(({ id }) => id)
       : ['x-y-zzz'] // provide a nonsensical ID here to get 0 highlighted results from the query
 
-  // Query needs labels to search by subject, that's why we translate from the value to the label
-  const subjectFilterLabel =
-    subjectFilter && subjectFilter in SUBJECT_FILTERS
-      ? SUBJECT_FILTERS[subjectFilter]
-      : undefined
-
   const [lastHighlightedPostcardReached, setLastHighlightedPostcardReached] =
     useState(false)
 
@@ -397,8 +378,8 @@ export const useSinglePostcardData = ({
       variables: {
         limit: 1,
         highlightedPostcardIds,
-        searchHighlighted: subjectFilterLabel,
-        searchNotHighlighted: subjectFilterLabel,
+        valueHighlighted: subjectFilter,
+        valueNotHighlighted: subjectFilter,
         questionIds,
       },
       notifyOnNetworkStatusChange: true,
@@ -431,19 +412,9 @@ export const useSinglePostcardData = ({
       parsePostcardData({ data, isHighlighted: false }),
     )
 
-  // const totalCount =
-  //   data.questionnaire.highlighted?.totalCount +
-  //   data.questionnaire.notHighlighted?.totalCount
-
-  const questionResults = Object.fromEntries(
-    data.questionnaire.questions?.[0]?.result?.map((result) => {
-      return [result.option.value, result.count]
-    }),
-  )
-
-  const totalCount = subjectFilter
-    ? questionResults[subjectFilter]
-    : Object.values(questionResults).reduce((sum, d) => sum + d)
+  const totalCount =
+    data.questionnaire.highlighted?.totalCount +
+    data.questionnaire.notHighlighted?.totalCount
 
   // Pagination stuff
 
