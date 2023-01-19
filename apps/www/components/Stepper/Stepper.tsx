@@ -1,11 +1,4 @@
-import {
-  FC,
-  ReactNode,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react'
+import { FC, ReactNode, useEffect, useMemo, useRef, useState } from 'react'
 import scrollIntoView from 'scroll-into-view'
 import { isDev } from '../../lib/constants'
 import { HEADER_HEIGHT } from '../constants'
@@ -73,7 +66,7 @@ const Stepper = ({
     }
   }
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     scrollIntoView(containerRef.current, {
       align: {
         topOffset: HEADER_HEIGHT * 1,
