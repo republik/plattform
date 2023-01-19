@@ -173,6 +173,14 @@ const UserNav = ({
                   />
                   <div {...styles.navSection}>
                     <div {...styles.navLinks}>
+                      <NavLink
+                        href='/verstaerkung-holen'
+                        currentPath={currentPath}
+                        closeHandler={closeHandler}
+                        large
+                      >
+                        Verstärkung holen
+                      </NavLink>
                       {me.accessCampaigns.length > 0 && (
                         <NavLink
                           href='/teilen'
