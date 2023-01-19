@@ -7737,8 +7737,36 @@
       "value": "Danke fürs mitmachen!"
     },
     {
+      "key": "FutureCampaign/sender/invite/heading",
+      "value": "Laden Sie ein…"
+    },
+    {
+      "key": "FutureCampaign/sender/invite/text",
+      "value": "Als Verleger*in können Sie bis zu fünf Mitstreiter*innen einladen. Diese können die Republik für ein Jahr abonnieren — für den Preis, der für sie stimmt."
+    },
+    {
+      "key": "FutureCampaign/sender/invite/shareText",
+      "value": "Angebots-Link teilen"
+    },
+    {
+      "key": "FutureCampaign/sender/reward/heading",
+      "value": "…und werden Sie eingeladen."
+    },
+    {
+      "key": "FutureCampaign/sender/reward/text",
+      "value": "Für jede neue Mitstreiter*in, die Sie zur Republik Community holen, verlängern wir ihre Mitgliedschaft um einen Monat.*"
+    },
+    {
+      "key": "FutureCampaign/sender/reward/hint",
+      "value": "*Sie möchten keine Verlängerung? Kein Problem, Sie können am Ende der Aktion ihre gesammelten Monate Spenden und erhalten dafür nicht nur Ruhm und Ehre, sodndern auch unseren unendlichen Dank."
+    },
+    {
+      "key": "FutureCampaign/sender/thankYou/text",
+      "value": "Danke fürs mitmachen"
+    },
+    {
       "key": "FutureCampaign/slogan/text",
-      "value": "Unabhängiger Journalismus hat eine Zukunft, wenn {person} das auch will."
+      "value": "Unabhängiger Journalismus hat eine Zukunft, wenn {persona} das auch will."
     }
   ]
 }

@@ -15,7 +15,6 @@ const InviteSenderPage = () => {
   const isDesktop = useMediaQuery(mediaQueries.mUp)
 
   // TODO: either read from t9n or add list of words as static arrays
-  const people = ['Ihre Schwiegermutter', 'Ihr Vater', 'Ihr Postbote']
 
   return (
     <Frame pageColorSchemeKey='dark'>
@@ -34,9 +33,9 @@ const InviteSenderPage = () => {
           </div>
           <h1 {...styles.heading}>
             {t.elements('FutureCampaign/slogan/text', {
-              person: (
+              persona: (
                 <Typewriter
-                  words={people}
+                  words={personasForTypeWriter}
                   loop={true}
                   typeSpeed={80}
                   delaySpeed={5000}
@@ -48,11 +47,32 @@ const InviteSenderPage = () => {
           <p {...styles.text}>{t('FutureCampaign/sender/headerText')}</p>
         </div>
 
-        <div {...styles.box}>TODO</div>
+        <div {...styles.box}>
+          <h2>{t('FutureCampaign/sender/invite/heading')}</h2>
+          <p>{t('FutureCampaign/sender/invite/text')}</p>
+          <p>{t('FutureCampaign/sender/invite/shareText')}</p>
+          <div>
+            <i>Link copy field</i>
+          </div>
+          <div>
+            {/*
+              TODO: what about just a share button?
+              If no: do we really only want these three?
+            */}
+            <i>Share Buttons (Twitter, Telegram, Mail?)</i>
+          </div>
+        </div>
 
-        <div {...styles.box}>TODO</div>
+        <div {...styles.box}>
+          <h2>{t('FutureCampaign/sender/reward/heading')}</h2>
+          <p>{t('FutureCampaign/sender/reward/text')}</p>
+          <div>
+            <i>Invite progress UI</i>
+            <p>{t('FutureCampaign/sender/reward/hint')}</p>
+          </div>
+        </div>
 
-        <p {...styles.text}>Danke fürs mitmachen!</p>
+        <p {...styles.text}>{t('FutureCampaign/sender/thankYou/text')}</p>
       </main>
     </Frame>
   )
@@ -107,3 +127,24 @@ const styles = {
     padding: '1rem',
   }),
 }
+
+// TODO: either read from t9n or add list of words as static arrays
+// (from t9n seems a bit insane though…)
+const personasForTypeWriter = [
+  'Ihre Schwiegermutter',
+  'Ihr Göttikind',
+  'Ihre Mitbewohnerin',
+  'der Lehrer Ihrer Kinder',
+  'Ihr Yogalehrer',
+  'Ihre Hebamme',
+  'Ihr Lieblingsbarista',
+  'Ihre Zugbegleiterin',
+  'Ihre Kollegin',
+  'Ihr Trauzeuge',
+  'Ihre Steuerberaterin',
+  'Ihr Betriebsleiter',
+  'Ihre Chefin',
+  'Ihr Ex',
+  'Ihre Nachbarin',
+  'Ihr Coiffeur',
+]
