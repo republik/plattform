@@ -272,7 +272,11 @@ const PostcardContent = ({ postcard, t, isDesktop }) => {
       {postcard.text.split('\n').map((line) => (
         <Interaction.P key={line}>{line}</Interaction.P>
       ))}
-      <Interaction.P>{postcard.author.name}</Interaction.P>
+      <Interaction.P>
+        {postcard.author && postcard.author.name !== 'Unbenannt' && (
+          <em>– {postcard.author.name}</em>
+        )}
+      </Interaction.P>
     </div>
   )
 }

@@ -49,6 +49,7 @@ import RawHtml from '../../components/RawHtml'
 import { SeriesNav } from '../../components/SeriesNav'
 
 import * as Editorial from '../../components/Typography/Editorial'
+import { shouldRenderPlayButton } from '../shared/audio'
 
 const articleTileSubject = {
   ...subject,
@@ -67,6 +68,7 @@ const createTeasers = ({
   ActionBar,
   PayNote,
   plattformUnauthorizedZoneText,
+  AudioPlayButton,
 }) => {
   const teaserTitle = (type, Headline) => ({
     matchMdast: matchHeading(1),
@@ -207,6 +209,11 @@ const createTeasers = ({
           // darkmode support in article "read more" teaser
           color={undefined}
           bgColor={undefined}
+          audioPlayButton={
+            !!AudioPlayButton && shouldRenderPlayButton(props) ? (
+              <AudioPlayButton documentId={props?.urlMeta.documentId} />
+            ) : undefined
+          }
         >
           {children}
         </TeaserFrontTile>
@@ -413,7 +420,15 @@ const createTeasers = ({
     component: ({ children, attributes, ...props }) => {
       return (
         <Link href={props.url}>
-          <TeaserCarouselTile attributes={attributes} {...props}>
+          <TeaserCarouselTile
+            attributes={attributes}
+            audioPlayButton={
+              !!AudioPlayButton && shouldRenderPlayButton(props) ? (
+                <AudioPlayButton documentId={props?.urlMeta.documentId} />
+              ) : undefined
+            }
+            {...props}
+          >
             {children}
           </TeaserCarouselTile>
         </Link>

@@ -5,7 +5,6 @@ import {
   fontFamilies,
   mediaQueries,
   useColorContext,
-  RawHtml,
 } from '@project-r/styleguide'
 import AssetImage from '../../../lib/images/AssetImage'
 
@@ -16,7 +15,7 @@ const styles = {
     position: 'relative',
     backgroundColor: '#F9FBFF',
     width: '100%',
-    height: '100%',
+    height: 'calc(100% - 1px)', // weirdo fix for Safari 14
     aspectRatio: '16 / 9',
     display: 'flex',
     padding: '10px',
@@ -57,6 +56,7 @@ const styles = {
     '> span': { display: 'block !important' },
   }),
   adressBlock: css({
+    height: '15px',
     borderBottom: 'solid 1px #DADDDC',
     paddingBottom: '5px',
     lineHeight: '1.1',
@@ -69,6 +69,9 @@ const styles = {
     flexGrow: 1,
     justifyContent: 'space-around',
   }),
+  italic: css({
+    fontFamily: fontFamilies.sansSerifItalic,
+  }),
 }
 
 export const PostcardPreview = (props) => {
@@ -79,10 +82,6 @@ export const PostcardPreview = (props) => {
 
   const { text, imageUrl, imageSelection, author } = postcard
 
-  const postcardText = author
-    ? `${text} <br />${author.name === 'Unbenannt' ? '' : author.name}`
-    : text
-
   return (
     <div
       {...styles.postcard}
@@ -90,11 +89,13 @@ export const PostcardPreview = (props) => {
     >
       <div {...styles.textArea}>
         <AutoTextSize mode='box' maxFontSizePx={42}>
-          <RawHtml
-            dangerouslySetInnerHTML={{
-              __html: postcardText,
-            }}
-          />
+          {text}
+          {author && author.name !== 'Unbenannt' && (
+            <>
+              <br />
+              <em {...styles.italic}>– {author.name}</em>
+            </>
+          )}
         </AutoTextSize>
       </div>
 
