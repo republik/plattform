@@ -1,6 +1,16 @@
 import { gql, useQuery } from '@apollo/client'
 import { useState } from 'react'
 
+const POSTCARDS_QUESTIONNAIRE_QUERY = gql`
+  query postcardsQuestionnaire {
+    questionnaire(slug: "klima-postkarte") {
+      questions {
+        id
+      }
+    }
+  }
+`
+
 const POSTCARDS_QUERY = gql`
   fragment PostcardConnection on SubmissionConnection {
     totalCount
@@ -32,6 +42,7 @@ const POSTCARDS_QUERY = gql`
 
   query publicPostcardsQuery(
     $highlightedPostcardIds: [ID!]
+    $questionIds: [ID!]
     $cursorHighlighted: String
     $cursorNotHighlighted: String
     $limit: Int
@@ -59,7 +70,10 @@ const POSTCARDS_QUERY = gql`
       highlighted: submissions(
         first: $limit
         after: $cursorHighlighted
-        filters: { submissionIds: $highlightedPostcardIds, hasAnswers: true }
+        filters: {
+          submissionIds: $highlightedPostcardIds
+          answeredQuestionIds: $questionIds
+        }
         search: $searchHighlighted
       ) {
         ...PostcardConnection
@@ -68,7 +82,10 @@ const POSTCARDS_QUERY = gql`
       notHighlighted: submissions(
         first: $limit
         after: $cursorNotHighlighted
-        filters: { notSubmissionIds: $highlightedPostcardIds, hasAnswers: true }
+        filters: {
+          notSubmissionIds: $highlightedPostcardIds
+          answeredQuestionIds: $questionIds
+        }
         search: $searchNotHighlighted
       ) {
         ...PostcardConnection
@@ -80,6 +97,7 @@ const POSTCARDS_QUERY = gql`
 // Keep these in sync with the query!
 type QueryVars = {
   highlightedPostcardIds?: string[]
+  questionIds?: string[]
   cursorHighlighted?: string
   cursorNotHighlighted?: string
   limit?: number
@@ -164,10 +182,6 @@ const parsePostcardData =
     )?.imageUrl
     let text = submission.answers.nodes?.[1]?.payload?.value
 
-    if (!imageUrl || !text) {
-      return []
-    }
-
     // Overwrite text of highlighted postcards with what's provided via props
     if (highlightedPostcards) {
       const highlightedPostcard = highlightedPostcards.find(
@@ -181,19 +195,36 @@ const parsePostcardData =
 
     // const image = `${CDN_FRONTEND_BASE_URL}${imageUrl}?size=1500x1057` // FIXME: use correct/consistent size for all images
 
-    return [
-      {
-        id: submission.id,
-        text,
-        imageUrl,
-        imageSelection: imageAnswer,
-        isHighlighted,
-        author: {
-          name: submission.displayAuthor.name,
-        },
+    return {
+      id: submission.id,
+      text,
+      imageUrl,
+      imageSelection: imageAnswer,
+      isHighlighted,
+      author: {
+        name: submission.displayAuthor.name,
       },
-    ]
+    }
   }
+
+/**
+ * Fetch questionnaire question IDs to filter submissions
+ */
+const useQuestionnaireQuestions = () => {
+  const { data, loading, error } = useQuery(POSTCARDS_QUESTIONNAIRE_QUERY)
+
+  if (!data) {
+    return { loading, error }
+  }
+
+  if (data) {
+    return {
+      loading,
+      error,
+      questionIds: data.questionnaire?.questions.map((q) => q.id),
+    }
+  }
+}
 
 /**
  *
@@ -218,6 +249,8 @@ export const usePostcardsData = ({
       ? SUBJECT_FILTERS[subjectFilter]
       : undefined
 
+  const { questionIds } = useQuestionnaireQuestions()
+
   const { data, loading, error, fetchMore } = useQuery<QueryData, QueryVars>(
     POSTCARDS_QUERY,
     {
@@ -226,7 +259,9 @@ export const usePostcardsData = ({
         highlightedPostcardIds,
         searchHighlighted: subjectFilterLabel,
         searchNotHighlighted: subjectFilterLabel,
+        questionIds,
       },
+      skip: questionIds === undefined,
     },
   )
 
@@ -234,7 +269,7 @@ export const usePostcardsData = ({
     return { _state: 'ERROR', error }
   }
 
-  if (loading) {
+  if (loading || !data) {
     return {
       _state: 'LOADING',
     }
@@ -247,12 +282,11 @@ export const usePostcardsData = ({
     }
   }
 
-  const highlightedPostcardsData =
-    data.questionnaire.highlighted?.nodes.flatMap(
-      parsePostcardData({ data, isHighlighted: true, highlightedPostcards }),
-    )
+  const highlightedPostcardsData = data.questionnaire.highlighted?.nodes.map(
+    parsePostcardData({ data, isHighlighted: true, highlightedPostcards }),
+  )
   const notHighlightedPostcardsData =
-    data.questionnaire.notHighlighted?.nodes.flatMap(
+    data.questionnaire.notHighlighted?.nodes.map(
       parsePostcardData({ data, isHighlighted: false }),
     )
 
@@ -353,6 +387,8 @@ export const useSinglePostcardData = ({
   const [lastHighlightedPostcardReached, setLastHighlightedPostcardReached] =
     useState(false)
 
+  const { questionIds } = useQuestionnaireQuestions()
+
   const { data, loading, error, refetch } = useQuery<QueryData, QueryVars>(
     POSTCARDS_QUERY,
     {
@@ -361,8 +397,10 @@ export const useSinglePostcardData = ({
         highlightedPostcardIds,
         searchHighlighted: subjectFilterLabel,
         searchNotHighlighted: subjectFilterLabel,
+        questionIds,
       },
       notifyOnNetworkStatusChange: true,
+      skip: questionIds === undefined,
     },
   )
 
@@ -370,7 +408,7 @@ export const useSinglePostcardData = ({
     return { _state: 'ERROR', error }
   }
 
-  if (loading) {
+  if (loading || !data) {
     return {
       _state: 'LOADING',
     }
@@ -383,12 +421,11 @@ export const useSinglePostcardData = ({
     }
   }
 
-  const highlightedPostcardsData =
-    data.questionnaire.highlighted?.nodes.flatMap(
-      parsePostcardData({ data, isHighlighted: true, highlightedPostcards }),
-    )
+  const highlightedPostcardsData = data.questionnaire.highlighted?.nodes.map(
+    parsePostcardData({ data, isHighlighted: true, highlightedPostcards }),
+  )
   const notHighlightedPostcardsData =
-    data.questionnaire.notHighlighted?.nodes.flatMap(
+    data.questionnaire.notHighlighted?.nodes.map(
       parsePostcardData({ data, isHighlighted: false }),
     )
 
