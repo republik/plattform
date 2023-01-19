@@ -56,6 +56,7 @@ const styles = {
     '> span': { display: 'block !important' },
   }),
   adressBlock: css({
+    height: '15px',
     borderBottom: 'solid 1px #DADDDC',
     paddingBottom: '5px',
     lineHeight: '1.1',
