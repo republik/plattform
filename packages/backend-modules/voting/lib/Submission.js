@@ -246,7 +246,9 @@ const getConnection = (anchors, args, context) => {
     const { after, before } = args
 
     const size = Math.min(
-      after?.first || before?.first || args.first || 10,
+      Math.abs(
+        [after?.first, before?.first, args.first, 10].find(Number.isFinite),
+      ),
       100,
     )
 
@@ -268,7 +270,9 @@ const getConnection = (anchors, args, context) => {
     const { nodes } = payload
 
     const first = Math.min(
-      after?.first || before?.first || args.first || 10,
+      Math.abs(
+        [after?.first, before?.first, args.first, 10].find(Number.isFinite),
+      ),
       100,
     )
 
