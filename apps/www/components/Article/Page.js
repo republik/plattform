@@ -80,6 +80,8 @@ import { getDocument } from './graphql/getDocument'
 import ShareImage from './ShareImage'
 import { BrowserOnlyActionBar } from './BrowserOnly'
 import ArticleRecommendationsFeed from './ArticleRecommendationsFeed'
+import TeaserAudioPlayButton from '../Audio/shared/TeaserAudioPlayButton'
+import useAudioQueue from '../Audio/hooks/useAudioQueue'
 
 const LoadingComponent = () => <SmallLoader loading />
 
@@ -270,6 +272,8 @@ const ArticlePage = ({
 
   const { me, meLoading, hasAccess, hasActiveMembership, isEditor } = useMe()
 
+  const { isAudioQueueAvailable } = useAudioQueue()
+
   const cleanedPath = cleanAsPath(router.asPath)
 
   const {
@@ -387,6 +391,8 @@ const ArticlePage = ({
     }
   }, [trialSignup])
 
+  const showPlayButton = !extract && hasAccess && isAudioQueueAvailable
+
   const template = meta?.template
   const schema = useMemo(
     () =>
@@ -451,6 +457,7 @@ const ArticlePage = ({
         CommentLink,
         ActionBar: BrowserOnlyActionBar,
         PayNote: showInlinePaynote ? TrialPayNoteMini : undefined,
+        AudioPlayButton: showPlayButton ? TeaserAudioPlayButton : undefined,
       }),
     [template, inNativeIOSApp, inNativeApp, showInlinePaynote, titleBreakout],
   )

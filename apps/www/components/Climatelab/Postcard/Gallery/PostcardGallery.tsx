@@ -31,6 +31,7 @@ const gridStyles = {
   card: css({
     background: 'transparent',
     width: '100%',
+    height: '100%',
     gridRowEnd: 'span 1',
     gridColumnEnd: 'span 1',
     cursor: 'pointer',
@@ -42,7 +43,7 @@ const gridStyles = {
   highlightedCard: css({
     background: 'transparent',
     width: '100%',
-    // border: '2px solid pink',
+    height: '100%',
     gridRowEnd: 'span 2',
     gridColumnEnd: 'span 2',
     cursor: 'pointer',

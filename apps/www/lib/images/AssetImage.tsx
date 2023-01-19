@@ -1,23 +1,32 @@
+import { useMemo } from 'react'
 import Image, { ImageProps } from 'next/image'
-import { isDev } from '../constants'
 import assetServerImageLoader from './assetServerImageLoader'
-
-type AsssetImageProps = Omit<ImageProps, 'loader'> & {
-  // Omit loading the image via the asset-server.
-  // Only works in dev-mode.
-  // This is necessary when developing locally with images not yet on staging or production.
-  loadLocally?: boolean
-}
+import { isDev } from '../constants'
 
 /**
  * AssetImage is a wrapper around the Next.js Image component
  * that uses the asssets-server image-loader.
  */
-const AssetImage = ({ loadLocally, ...props }: AsssetImageProps) => (
-  <Image
-    {...props}
-    loader={isDev && loadLocally ? undefined : assetServerImageLoader}
-  />
-)
+const AssetImage = (props: Omit<ImageProps, 'loader'>) => {
+  // Local static images that are not yet on the asset-server
+  // can be loaded directly from the local file system while in development.
+  const loadStaticFromLocal = useMemo(() => {
+    if (
+      isDev &&
+      typeof props?.src === 'string' &&
+      props.src.startsWith('/static')
+    ) {
+      return true
+    }
+    return false
+  }, [isDev, props?.src])
+
+  return (
+    <Image
+      {...props}
+      loader={loadStaticFromLocal ? undefined : assetServerImageLoader}
+    />
+  )
+}
 
 export default AssetImage
