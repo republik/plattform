@@ -77,6 +77,7 @@ const getDefaultResource = async ({ pgdb }) => {
             questionnaireId,
             ...(userId && { userId }),
             ...(pseudonym && { pseudonym }),
+            submitted: true,
           },
           { fields: ['id', 'questionId', 'payload'] },
         )
