@@ -1,9 +1,13 @@
 import { css } from 'glamor'
 import { useRouter } from 'next/router'
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
+import { PUBLIC_BASE_URL } from '../../../lib/constants'
 import AssetImage from '../../../lib/images/AssetImage'
+import { t } from '../../../lib/withT'
+import { CLIMATE_LAB_SHARE_IMAGE_URL } from '../../Climatelab/constants'
 import Frame from '../../Frame'
 import Stepper, { Step, StepProps } from '../../Stepper/Stepper'
+import { FUTURE_CAMPAIGN_SHARE_IMAGE_URL } from '../constants'
 import IntroductoryStep from './steps/IntroductionaryStep'
 import SelectYourPriceStep from './steps/SelectYourPriceStep'
 
@@ -14,28 +18,39 @@ enum STEPS {
 
 const InviteReceiverPage = () => {
   const router = useRouter()
+
+  // TODO: perhaps prevent indexing?
+  // TODO: add correct meta tags
+  const meta = {
+    pageTitle: 'Werden Sie Teil der Republik',
+    title: 'Werden Sie Teil der Republik',
+    //description: 'baz',
+    image: FUTURE_CAMPAIGN_SHARE_IMAGE_URL,
+    url: `${PUBLIC_BASE_URL}${router.asPath}`,
+  }
   // TODO: if user is logged in and has abo, show info text that the user already has an abo
   // TODO: if user has monthly abo, also show info text that not available if already subscirbed
 
   // TODO: if not logged in or probelesen show stepper
+  const [price, setPrice] = useState<number>(240)
 
-  const handleComplete = () => {
+  const handleComplete = useCallback(() => {
     // TODO
     // based on the selected price either choose the
     // package that is associated with non coop membership.
     // else choose the package that is associated with coop membership
     // additionally attach ?utm_campaign received from the server based on the invite-code
-    const res = confirm('Zum checkout')
+    const res = confirm(`Weiter zum Checkout für ${price.toFixed()} CHF`)
     if (res) {
       router.push({
         pathname: '/angebote',
         query: {
-          package: 'ABO',
+          package: price >= 240 ? 'ABO' : 'MONTHLY_ABO',
           utm_campaign: 'TODO_5-jahre-republik',
         },
       })
     }
-  }
+  }, [price])
 
   const steps: Step[] = [
     {
@@ -47,15 +62,15 @@ const InviteReceiverPage = () => {
       content: (stepProps) => (
         <SelectYourPriceStep
           {...stepProps}
-          initialPrice={240}
-          onSubmit={() => alert('YOUR PRICE')}
+          initialPrice={price}
+          onSubmit={setPrice}
         />
       ),
     },
   ]
 
   return (
-    <Frame pageColorSchemeKey='dark'>
+    <Frame containerMaxWidth={640} pageColorSchemeKey='dark' meta={meta}>
       <Stepper
         steps={steps}
         onComplete={handleComplete}
