@@ -176,6 +176,7 @@ const PostcardSingleCardView: React.FC<PostcardSingleCardView> = ({
                 currentPostcardData._state === 'LOADED'
               ) {
                 currentPostcardData.fetchNext()
+                return true // tell PostcardFilter that data has been fetched and the counter should be decreased
               }
               setCurrentPostcard('postcard_1')
             }}
@@ -194,6 +195,7 @@ const PostcardSingleCardView: React.FC<PostcardSingleCardView> = ({
                 currentPostcardData._state === 'LOADED'
               ) {
                 currentPostcardData.fetchNext()
+                return true // tell PostcardFilter that data has been fetched and the counter should be decreased
               }
               setCurrentPostcard('postcard_2')
             }}
@@ -212,6 +214,7 @@ const PostcardSingleCardView: React.FC<PostcardSingleCardView> = ({
                 currentPostcardData._state === 'LOADED'
               ) {
                 currentPostcardData.fetchNext()
+                return true // tell PostcardFilter that data has been fetched and the counter should be decreased
               }
               setCurrentPostcard('postcard_3')
             }}
@@ -230,6 +233,7 @@ const PostcardSingleCardView: React.FC<PostcardSingleCardView> = ({
                 currentPostcardData._state === 'LOADED'
               ) {
                 currentPostcardData.fetchNext()
+                return true // tell PostcardFilter that data has been fetched and the counter should be decreased
               }
               setCurrentPostcard('postcard_4')
             }}
