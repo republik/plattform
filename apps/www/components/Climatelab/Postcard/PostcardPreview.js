@@ -90,7 +90,7 @@ export const PostcardPreview = (props) => {
       <div {...styles.textArea}>
         <AutoTextSize mode='box' maxFontSizePx={42}>
           {text}
-          {author && author.name !== 'Unbenannt' && (
+          {author && author.name !== 'Unbenannt' && author.anonymity === false && (
             <>
               <br />
               <em {...styles.italic}>– {author.name}</em>

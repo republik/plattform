@@ -273,9 +273,11 @@ const PostcardContent = ({ postcard, t, isDesktop }) => {
         <Interaction.P key={line}>{line}</Interaction.P>
       ))}
       <Interaction.P>
-        {postcard.author && postcard.author.name !== 'Unbenannt' && (
-          <em>– {postcard.author.name}</em>
-        )}
+        {postcard.author &&
+          postcard.author.name !== 'Unbenannt' &&
+          postcard.author.anonymity === false && (
+            <em>– {postcard.author.name}</em>
+          )}
       </Interaction.P>
     </div>
   )
