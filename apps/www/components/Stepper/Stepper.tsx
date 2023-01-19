@@ -11,11 +11,22 @@ import { isDev } from '../../lib/constants'
 import { HEADER_HEIGHT } from '../constants'
 import Steps from './Steps'
 
-export type StepRenderFunc = (props: {
-  steps: ReactNode
+export type StepProps = {
+  /**
+   * UI to render the steps & back-button
+   */
+  stepperControls: ReactNode
+  /**
+   * Callback to advance to the next step or fire the complete callback
+   */
   onAdvance: () => void
+  /**
+   * Go back to the previous step if available
+   */
   onBack: () => void
-}) => ReactNode
+}
+
+export type StepRenderFunc = (props: StepProps) => ReactNode
 
 export type Step = {
   name: string
@@ -89,7 +100,7 @@ const Stepper = ({
           <>
             {isContentRenderFunc(currentStep.content)
               ? currentStep.content({
-                  steps: stepsUI,
+                  stepperControls: stepsUI,
                   onAdvance: handleNext,
                   onBack: handleBack,
                 })
