@@ -20,9 +20,11 @@ const styles = {
 }
 
 const BottomPanel = ({
+  children,
   steps,
   onAdvance,
 }: {
+  children: React.ReactNode
   onAdvance: () => void
   steps: React.ReactNode
 }) => {
@@ -34,7 +36,7 @@ const BottomPanel = ({
       {...colorScheme.set('backgroundColor', 'default')}
     >
       {steps}
-      <Button onClick={() => onAdvance()}>Complete 2</Button>
+      <Button onClick={() => onAdvance()}>{children}</Button>
     </div>
   )
 }
@@ -56,112 +58,6 @@ const bottomPanelStyles = {
     },
   }),
 }
-
-const steps: Step[] = [
-  {
-    name: 'foo',
-    content: ({ onAdvance, steps }) => (
-      <>
-        <h2>Foo</h2>
-        <div {...styles.main}>
-          <p>
-            Aliqua veniam aliqua commodo laborum. Do non sit quis do
-            exercitation pariatur eiusmod eu aliquip esse aliqua magna eu. Ut
-            deserunt irure ex sint proident adipisicing ut anim ea sint.
-            Cupidatat officia duis proident laborum. Non veniam velit occaecat
-            culpa ut adipisicing amet esse adipisicing ipsum voluptate nulla ad
-            duis quis. Duis incididunt ullamco elit cillum laborum eiusmod
-            eiusmod. Elit nulla do sunt pariatur commodo Lorem et aliqua qui. Ad
-            veniam pariatur non.
-          </p>
-          <AssetImage
-            src='/static/climatelab/Klimaillu_Landingpage_5A47E1__Share.png'
-            width={800}
-            height={400}
-          />
-          <p>
-            Aliqua veniam aliqua commodo laborum. Do non sit quis do
-            exercitation pariatur eiusmod eu aliquip esse aliqua magna eu. Ut
-            deserunt irure ex sint proident adipisicing ut anim ea sint.
-            Cupidatat officia duis proident laborum. Non veniam velit occaecat
-            culpa ut adipisicing amet esse adipisicing ipsum voluptate nulla ad
-            duis quis. Duis incididunt ullamco elit cillum laborum eiusmod
-            eiusmod. Elit nulla do sunt pariatur commodo Lorem et aliqua qui. Ad
-            veniam pariatur non.
-          </p>
-        </div>
-        <BottomPanel steps={steps} onAdvance={onAdvance} />
-      </>
-    ),
-  },
-  {
-    name: 'bar',
-    content: ({ onAdvance, steps }) => (
-      <>
-        <h2>Bar</h2>
-        <div {...styles.main}>
-          <p>
-            Aliqua veniam aliqua commodo laborum. Do non sit quis do
-            exercitation pariatur eiusmod eu aliquip esse aliqua magna eu. Ut
-            deserunt irure ex sint proident adipisicing ut anim ea sint.
-            Cupidatat officia duis proident laborum. Non veniam velit occaecat
-            culpa ut adipisicing amet esse adipisicing ipsum voluptate nulla ad
-            duis quis. Duis incididunt ullamco elit cillum laborum eiusmod
-            eiusmod. Elit nulla do sunt pariatur commodo Lorem et aliqua qui. Ad
-            veniam pariatur non.
-          </p>
-          <AssetImage
-            src='/static/climatelab/richardson.jpg'
-            width={800}
-            height={400}
-          />
-          <p>
-            Aliqua veniam aliqua commodo laborum. Do non sit quis do
-            exercitation pariatur eiusmod eu aliquip esse aliqua magna eu. Ut
-            deserunt irure ex sint proident adipisicing ut anim ea sint.
-            Cupidatat officia duis proident laborum. Non veniam velit occaecat
-            culpa ut adipisicing amet esse adipisicing ipsum voluptate nulla ad
-            duis quis. Duis incididunt ullamco elit cillum laborum eiusmod
-            eiusmod. Elit nulla do sunt pariatur commodo Lorem et aliqua qui. Ad
-            veniam pariatur non.
-          </p>
-        </div>
-        <BottomPanel steps={steps} onAdvance={onAdvance} />
-      </>
-    ),
-  },
-  {
-    name: 'baz',
-    content: ({ onAdvance, steps }) => (
-      <>
-        <h2>Baz</h2>
-        <div {...styles.main}>
-          <p>
-            Aliqua veniam aliqua commodo laborum. Do non sit quis do
-            exercitation pariatur eiusmod eu aliquip esse aliqua magna eu. Ut
-            deserunt irure ex sint proident adipisicing ut anim ea sint.
-            Cupidatat officia duis proident laborum. Non veniam velit occaecat
-            culpa ut adipisicing amet esse adipisicing ipsum voluptate nulla ad
-            duis quis. Duis incididunt ullamco elit cillum laborum eiusmod
-            eiusmod. Elit nulla do sunt pariatur commodo Lorem et aliqua qui. Ad
-            veniam pariatur non.
-          </p>
-          <p>
-            Aliqua veniam aliqua commodo laborum. Do non sit quis do
-            exercitation pariatur eiusmod eu aliquip esse aliqua magna eu. Ut
-            deserunt irure ex sint proident adipisicing ut anim ea sint.
-            Cupidatat officia duis proident laborum. Non veniam velit occaecat
-            culpa ut adipisicing amet esse adipisicing ipsum voluptate nulla ad
-            duis quis. Duis incididunt ullamco elit cillum laborum eiusmod
-            eiusmod. Elit nulla do sunt pariatur commodo Lorem et aliqua qui. Ad
-            veniam pariatur non.
-          </p>
-        </div>
-        <BottomPanel steps={steps} onAdvance={onAdvance} />
-      </>
-    ),
-  },
-]
 
 const InviteReceiverPage = () => {
   const router = useRouter()
@@ -187,6 +83,85 @@ const InviteReceiverPage = () => {
       })
     }
   }
+
+  const steps: Step[] = [
+    {
+      name: 'foo',
+      content: ({ onAdvance, steps }) => (
+        <>
+          <h2>Foo</h2>
+          <div {...styles.main}>
+            <p>
+              Aliqua veniam aliqua commodo laborum. Do non sit quis do
+              exercitation pariatur eiusmod eu aliquip esse aliqua magna eu. Ut
+              deserunt irure ex sint proident adipisicing ut anim ea sint.
+              Cupidatat officia duis proident laborum. Non veniam velit occaecat
+              culpa ut adipisicing amet esse adipisicing ipsum voluptate nulla
+              ad duis quis. Duis incididunt ullamco elit cillum laborum eiusmod
+              eiusmod. Elit nulla do sunt pariatur commodo Lorem et aliqua qui.
+              Ad veniam pariatur non.
+            </p>
+            <AssetImage
+              src='/static/climatelab/Klimaillu_Landingpage_5A47E1__Share.png'
+              width={800}
+              height={400}
+            />
+            <p>
+              Aliqua veniam aliqua commodo laborum. Do non sit quis do
+              exercitation pariatur eiusmod eu aliquip esse aliqua magna eu. Ut
+              deserunt irure ex sint proident adipisicing ut anim ea sint.
+              Cupidatat officia duis proident laborum. Non veniam velit occaecat
+              culpa ut adipisicing amet esse adipisicing ipsum voluptate nulla
+              ad duis quis. Duis incididunt ullamco elit cillum laborum eiusmod
+              eiusmod. Elit nulla do sunt pariatur commodo Lorem et aliqua qui.
+              Ad veniam pariatur non.
+            </p>
+          </div>
+          <BottomPanel steps={steps} onAdvance={onAdvance}>
+            Wählen Sie Ihren Preis
+          </BottomPanel>
+        </>
+      ),
+    },
+    {
+      name: 'bar',
+      content: ({ onAdvance, steps }) => (
+        <>
+          <h2>Bar</h2>
+          <div {...styles.main}>
+            <p>
+              Aliqua veniam aliqua commodo laborum. Do non sit quis do
+              exercitation pariatur eiusmod eu aliquip esse aliqua magna eu. Ut
+              deserunt irure ex sint proident adipisicing ut anim ea sint.
+              Cupidatat officia duis proident laborum. Non veniam velit occaecat
+              culpa ut adipisicing amet esse adipisicing ipsum voluptate nulla
+              ad duis quis. Duis incididunt ullamco elit cillum laborum eiusmod
+              eiusmod. Elit nulla do sunt pariatur commodo Lorem et aliqua qui.
+              Ad veniam pariatur non.
+            </p>
+            <AssetImage
+              src='/static/climatelab/richardson.jpg'
+              width={800}
+              height={400}
+            />
+            <p>
+              Aliqua veniam aliqua commodo laborum. Do non sit quis do
+              exercitation pariatur eiusmod eu aliquip esse aliqua magna eu. Ut
+              deserunt irure ex sint proident adipisicing ut anim ea sint.
+              Cupidatat officia duis proident laborum. Non veniam velit occaecat
+              culpa ut adipisicing amet esse adipisicing ipsum voluptate nulla
+              ad duis quis. Duis incididunt ullamco elit cillum laborum eiusmod
+              eiusmod. Elit nulla do sunt pariatur commodo Lorem et aliqua qui.
+              Ad veniam pariatur non.
+            </p>
+          </div>
+          <BottomPanel steps={steps} onAdvance={onAdvance}>
+            Für CHF XYZ abonnieren
+          </BottomPanel>
+        </>
+      ),
+    },
+  ]
 
   return (
     <Frame pageColorSchemeKey='dark'>

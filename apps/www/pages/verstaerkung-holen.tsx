@@ -26,7 +26,6 @@ const InviteSenderPage = () => {
               src={isDesktop ? LOGO_SRC_LG : LOGO_SRC_SM}
               width={isDesktop ? 100 : 65}
               height={isDesktop ? 85 : 55}
-              loadDirect={true}
             />
             <span {...styles.logoText}>
               Fünf Jahre
@@ -41,6 +40,7 @@ const InviteSenderPage = () => {
                   loop={true}
                   typeSpeed={80}
                   delaySpeed={5000}
+                  cursor
                 />
               ),
             })}
