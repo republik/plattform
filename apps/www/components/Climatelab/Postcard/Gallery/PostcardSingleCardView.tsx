@@ -12,6 +12,7 @@ import AssetImage from '../../../../lib/images/AssetImage'
 import {
   HighlightedPostcard,
   Postcard,
+  usePostcardCounts,
   useSinglePostcardData,
 } from './../use-postcard-data'
 import PostcardFilter from './PostcardFilter'
@@ -77,46 +78,59 @@ type PostcardSingleCardView = {
 }
 
 const PostcardSingleCardView: React.FC<PostcardSingleCardView> = ({
-  postcard,
+  postcard: postcardOverride,
   isDesktop,
   highlightedPostcards,
   label,
 }) => {
   const [colorScheme] = useColorContext()
+
+  const { counts } = usePostcardCounts()
+
+  const [currentPostcard, setCurrentPostcard] = useState<
+    keyof typeof data | null
+  >(postcardOverride ? null : 'postcard_1')
+
+  const ignorePostcardId = postcardOverride?.id
+
   const data = {
     postcard_1: useSinglePostcardData({
       highlightedPostcards: highlightedPostcards,
+      ignorePostcardId,
       subjectFilter: 'postcard_1',
     }),
     postcard_2: useSinglePostcardData({
       highlightedPostcards: highlightedPostcards,
+      ignorePostcardId,
       subjectFilter: 'postcard_2',
     }),
     postcard_3: useSinglePostcardData({
       highlightedPostcards: highlightedPostcards,
+      ignorePostcardId,
       subjectFilter: 'postcard_3',
     }),
     postcard_4: useSinglePostcardData({
       highlightedPostcards: highlightedPostcards,
+      ignorePostcardId,
       subjectFilter: 'postcard_4',
     }),
   }
-
-  const [currentPostcard, setCurrentPostcard] = useState<
-    keyof typeof data | null
-  >(postcard ? null : 'postcard_1')
 
   const currentPostcardData = data[currentPostcard]
 
   const { t } = useTranslation()
 
   let loadedPostcard = null
-  if (currentPostcardData?._state === 'LOADED') {
+  if (currentPostcardData?.postcard) {
     loadedPostcard = currentPostcardData.postcard
   }
 
   useEffect(() => {
-    if (currentPostcardData?._state === 'LOADED' && !loadedPostcard) {
+    if (
+      currentPostcardData &&
+      !currentPostcardData.loading &&
+      !loadedPostcard
+    ) {
       console.log('empty postcard, fetching next')
       currentPostcardData.fetchNext()
     }
@@ -132,12 +146,8 @@ const PostcardSingleCardView: React.FC<PostcardSingleCardView> = ({
               top: 0,
               height: '40vh',
             }}
-            loading={currentPostcardData._state === 'LOADING'}
-            error={
-              currentPostcardData._state === 'ERROR'
-                ? currentPostcardData.error
-                : undefined
-            }
+            loading={currentPostcardData.loading}
+            error={currentPostcardData.error}
             render={() => {
               return (
                 <PostcardContent
@@ -149,7 +159,11 @@ const PostcardSingleCardView: React.FC<PostcardSingleCardView> = ({
             }}
           />
         ) : (
-          <PostcardContent postcard={postcard} t={t} isDesktop={isDesktop} />
+          <PostcardContent
+            postcard={postcardOverride}
+            t={t}
+            isDesktop={isDesktop}
+          />
         )}
       </div>
       <div
@@ -164,74 +178,42 @@ const PostcardSingleCardView: React.FC<PostcardSingleCardView> = ({
         <div {...styles.buttonContainer}>
           <PostcardFilter
             subject='postcard_1'
-            count={
-              data['postcard_1']._state === 'LOADED'
-                ? data['postcard_1'].totalCount
-                : 0
-            }
+            count={counts?.postcard_1}
             imageUrl={'/static/climatelab/freier.jpg'}
             onFilterClicked={() => {
-              if (
-                currentPostcard === 'postcard_1' &&
-                currentPostcardData._state === 'LOADED'
-              ) {
-                currentPostcardData.fetchNext()
-              }
               setCurrentPostcard('postcard_1')
+              data['postcard_1'].fetchNext()
+              return true // tell PostcardFilter that data has been fetched and the counter should be decreased
             }}
           />
           <PostcardFilter
             subject='postcard_2'
-            count={
-              data['postcard_2']._state === 'LOADED'
-                ? data['postcard_2'].totalCount
-                : 0
-            }
+            count={counts?.postcard_2}
             imageUrl={'/static/climatelab/farner.jpg'}
             onFilterClicked={() => {
-              if (
-                currentPostcard === 'postcard_2' &&
-                currentPostcardData._state === 'LOADED'
-              ) {
-                currentPostcardData.fetchNext()
-              }
               setCurrentPostcard('postcard_2')
+              data['postcard_2'].fetchNext()
+              return true // tell PostcardFilter that data has been fetched and the counter should be decreased
             }}
           />
           <PostcardFilter
             subject='postcard_3'
-            count={
-              data['postcard_3']._state === 'LOADED'
-                ? data['postcard_3'].totalCount
-                : 0
-            }
+            count={counts?.postcard_3}
             imageUrl={'/static/climatelab/richardson.jpg'}
             onFilterClicked={() => {
-              if (
-                currentPostcard === 'postcard_3' &&
-                currentPostcardData._state === 'LOADED'
-              ) {
-                currentPostcardData.fetchNext()
-              }
+              data['postcard_3'].fetchNext()
               setCurrentPostcard('postcard_3')
+              return true
             }}
           />
           <PostcardFilter
             subject='postcard_4'
-            count={
-              data['postcard_4']._state === 'LOADED'
-                ? data['postcard_4'].totalCount
-                : 0
-            }
+            count={counts?.postcard_4}
             imageUrl={'/static/climatelab/zalko.jpg'}
             onFilterClicked={() => {
-              if (
-                currentPostcard === 'postcard_4' &&
-                currentPostcardData._state === 'LOADED'
-              ) {
-                currentPostcardData.fetchNext()
-              }
               setCurrentPostcard('postcard_4')
+              data['postcard_4'].fetchNext()
+              return true
             }}
           />
         </div>
@@ -273,9 +255,11 @@ const PostcardContent = ({ postcard, t, isDesktop }) => {
         <Interaction.P key={line}>{line}</Interaction.P>
       ))}
       <Interaction.P>
-        {postcard.author && postcard.author.name !== 'Unbenannt' && (
-          <em>– {postcard.author.name}</em>
-        )}
+        {postcard.author &&
+          postcard.author.name !== 'Unbenannt' &&
+          postcard.author.anonymity === false && (
+            <em>– {postcard.author.name}</em>
+          )}
       </Interaction.P>
     </div>
   )

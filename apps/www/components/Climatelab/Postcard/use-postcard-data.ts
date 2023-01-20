@@ -1,9 +1,51 @@
-import { gql, useQuery } from '@apollo/client'
+import { gql, useLazyQuery, useQuery } from '@apollo/client'
 import { useState } from 'react'
+
+const POSTCARDS_QUESTIONNAIRE_QUERY = gql`
+  query postcardsQuestionnaire {
+    questionnaire(slug: "klima-postkarte") {
+      id
+      questions {
+        id
+      }
+    }
+  }
+`
+
+const POSTCARDS_STATS_QUERY = gql`
+  query postcardsStats($questionIds: [ID!]) {
+    questionnaire(slug: "klima-postkarte") {
+      id
+      postcard_1: submissions(
+        filters: { answeredQuestionIds: $questionIds }
+        value: "postcard_1"
+      ) {
+        totalCount
+      }
+      postcard_2: submissions(
+        filters: { answeredQuestionIds: $questionIds }
+        value: "postcard_2"
+      ) {
+        totalCount
+      }
+      postcard_3: submissions(
+        filters: { answeredQuestionIds: $questionIds }
+        value: "postcard_3"
+      ) {
+        totalCount
+      }
+      postcard_4: submissions(
+        filters: { answeredQuestionIds: $questionIds }
+        value: "postcard_4"
+      ) {
+        totalCount
+      }
+    }
+  }
+`
 
 const POSTCARDS_QUERY = gql`
   fragment PostcardConnection on SubmissionConnection {
-    totalCount
     pageInfo {
       hasNextPage
       endCursor
@@ -12,31 +54,26 @@ const POSTCARDS_QUERY = gql`
       id
       displayAuthor {
         name
+        anonymity
       }
       answers {
         nodes {
           id
           payload
-          question {
-            id
-            ... on QuestionInterface {
-              id
-              __typename
-              text
-            }
-          }
         }
       }
     }
   }
 
   query publicPostcardsQuery(
-    $highlightedPostcardIds: [ID!]
+    $includeHighlightedPostcardIds: [ID!]
+    $ignoreNotHighlightedPostcardIds: [ID!]
+    $questionIds: [ID!]
     $cursorHighlighted: String
     $cursorNotHighlighted: String
     $limit: Int
-    $searchHighlighted: String
-    $searchNotHighlighted: String
+    $valueHighlighted: String
+    $valueNotHighlighted: String
   ) {
     questionnaire(slug: "klima-postkarte") {
       id
@@ -47,20 +84,17 @@ const POSTCARDS_QUERY = gql`
             value
             imageUrl
           }
-          result {
-            option {
-              value
-            }
-            count
-          }
         }
       }
 
       highlighted: submissions(
         first: $limit
         after: $cursorHighlighted
-        filters: { submissionIds: $highlightedPostcardIds, hasAnswers: true }
-        search: $searchHighlighted
+        filters: {
+          submissionIds: $includeHighlightedPostcardIds
+          answeredQuestionIds: $questionIds
+        }
+        value: $valueHighlighted
       ) {
         ...PostcardConnection
       }
@@ -68,8 +102,11 @@ const POSTCARDS_QUERY = gql`
       notHighlighted: submissions(
         first: $limit
         after: $cursorNotHighlighted
-        filters: { notSubmissionIds: $highlightedPostcardIds, hasAnswers: true }
-        search: $searchNotHighlighted
+        filters: {
+          notSubmissionIds: $ignoreNotHighlightedPostcardIds
+          answeredQuestionIds: $questionIds
+        }
+        value: $valueNotHighlighted
       ) {
         ...PostcardConnection
       }
@@ -79,12 +116,14 @@ const POSTCARDS_QUERY = gql`
 
 // Keep these in sync with the query!
 type QueryVars = {
-  highlightedPostcardIds?: string[]
+  includeHighlightedPostcardIds?: string[]
+  ignoreNotHighlightedPostcardIds?: string[]
+  questionIds?: string[]
   cursorHighlighted?: string
   cursorNotHighlighted?: string
   limit?: number
-  searchHighlighted?: string
-  searchNotHighlighted?: string
+  valueHighlighted?: string
+  valueNotHighlighted?: string
 }
 
 type QueryData = {
@@ -96,20 +135,13 @@ type QueryData = {
   }
 }
 
-const SUBJECT_FILTERS = {
-  postcard_1: 'Karlotta Freier',
-  postcard_2: 'Chrigel Farner',
-  postcard_3: 'Jack Richardson',
-  postcard_4: 'Aline Zalko',
-}
-
 export type Postcard = {
   id: string
   text: string
   isHighlighted: boolean
   imageUrl: string
   imageSelection: string
-  author: { name: string }
+  author: { name: string; anonymity: boolean }
 }
 
 export type PostcardsData =
@@ -125,25 +157,20 @@ export type PostcardsData =
       hasMore: boolean
     }
 
-export type SinglePostcardData =
-  | {
-      _state: 'LOADING'
-    }
-  | { _state: 'ERROR'; error: Error }
-  | {
-      _state: 'LOADED'
-      totalCount: number
-      postcard: Postcard | null
-      fetchNext: () => void
-      hasMore: boolean
-    }
+export type SinglePostcardData = {
+  loading: boolean
+  fetchNext: () => void
+  error?: Error
+  postcard?: Postcard | null
+  hasMore?: boolean
+}
 
 export type HighlightedPostcard = {
   id: string
   text: string
 }
 
-type SubjectFilter = keyof typeof SUBJECT_FILTERS
+type SubjectFilter = 'postcard_1' | 'postcard_2' | 'postcard_3' | 'postcard_4'
 
 // Fugly parsing!
 // FIXME: add stricter types
@@ -164,10 +191,6 @@ const parsePostcardData =
     )?.imageUrl
     let text = submission.answers.nodes?.[1]?.payload?.value
 
-    if (!imageUrl || !text) {
-      return []
-    }
-
     // Overwrite text of highlighted postcards with what's provided via props
     if (highlightedPostcards) {
       const highlightedPostcard = highlightedPostcards.find(
@@ -181,19 +204,68 @@ const parsePostcardData =
 
     // const image = `${CDN_FRONTEND_BASE_URL}${imageUrl}?size=1500x1057` // FIXME: use correct/consistent size for all images
 
-    return [
-      {
-        id: submission.id,
-        text,
-        imageUrl,
-        imageSelection: imageAnswer,
-        isHighlighted,
-        author: {
-          name: submission.displayAuthor.name,
-        },
+    return {
+      id: submission.id,
+      text,
+      imageUrl,
+      imageSelection: imageAnswer,
+      isHighlighted,
+      author: {
+        name: submission.displayAuthor.name,
+        anonymity: submission.displayAuthor.anonymity,
       },
-    ]
+    }
   }
+
+/**
+ * Fetch questionnaire question IDs to filter submissions
+ */
+const useQuestionnaireQuestions = () => {
+  const { data, loading, error } = useQuery(POSTCARDS_QUESTIONNAIRE_QUERY)
+
+  if (!data) {
+    return { loading, error }
+  }
+
+  if (data) {
+    return {
+      loading,
+      error,
+      questionIds: data.questionnaire?.questions.map((q) => q.id),
+    }
+  }
+}
+
+/**
+ * Fetch postcard stats
+ */
+export const usePostcardCounts = () => {
+  const { questionIds } = useQuestionnaireQuestions()
+
+  const { data, loading, error } = useQuery(POSTCARDS_STATS_QUERY, {
+    variables: {
+      questionIds,
+    },
+    skip: questionIds === undefined,
+  })
+
+  if (!data) {
+    return { loading, error }
+  }
+
+  if (data) {
+    return {
+      loading,
+      error,
+      counts: {
+        postcard_1: data.questionnaire?.postcard_1?.totalCount,
+        postcard_2: data.questionnaire?.postcard_2?.totalCount,
+        postcard_3: data.questionnaire?.postcard_3?.totalCount,
+        postcard_4: data.questionnaire?.postcard_4?.totalCount,
+      },
+    }
+  }
+}
 
 /**
  *
@@ -212,21 +284,20 @@ export const usePostcardsData = ({
       ? highlightedPostcards.map(({ id }) => id)
       : ['x-y-zzz'] // provide a nonsensical ID here to get 0 highlighted results from the query
 
-  // Query needs labels to search by subject, that's why we translate from the value to the label
-  const subjectFilterLabel =
-    subjectFilter && subjectFilter in SUBJECT_FILTERS
-      ? SUBJECT_FILTERS[subjectFilter]
-      : undefined
+  const { questionIds } = useQuestionnaireQuestions()
 
   const { data, loading, error, fetchMore } = useQuery<QueryData, QueryVars>(
     POSTCARDS_QUERY,
     {
       variables: {
         limit: 100,
-        highlightedPostcardIds,
-        searchHighlighted: subjectFilterLabel,
-        searchNotHighlighted: subjectFilterLabel,
+        includeHighlightedPostcardIds: highlightedPostcardIds,
+        ignoreNotHighlightedPostcardIds: highlightedPostcardIds,
+        valueHighlighted: subjectFilter,
+        valueNotHighlighted: subjectFilter,
+        questionIds,
       },
+      skip: questionIds === undefined,
     },
   )
 
@@ -234,7 +305,7 @@ export const usePostcardsData = ({
     return { _state: 'ERROR', error }
   }
 
-  if (loading) {
+  if (loading || !data) {
     return {
       _state: 'LOADING',
     }
@@ -247,12 +318,11 @@ export const usePostcardsData = ({
     }
   }
 
-  const highlightedPostcardsData =
-    data.questionnaire.highlighted?.nodes.flatMap(
-      parsePostcardData({ data, isHighlighted: true, highlightedPostcards }),
-    )
+  const highlightedPostcardsData = data.questionnaire.highlighted?.nodes.map(
+    parsePostcardData({ data, isHighlighted: true, highlightedPostcards }),
+  )
   const notHighlightedPostcardsData =
-    data.questionnaire.notHighlighted?.nodes.flatMap(
+    data.questionnaire.notHighlighted?.nodes.map(
       parsePostcardData({ data, isHighlighted: false }),
     )
 
@@ -334,120 +404,112 @@ export const usePostcardsData = ({
 
 export const useSinglePostcardData = ({
   highlightedPostcards,
+  ignorePostcardId,
   subjectFilter,
 }: {
   highlightedPostcards?: HighlightedPostcard[]
+  ignorePostcardId?: string
   subjectFilter?: SubjectFilter
 }): SinglePostcardData => {
-  const highlightedPostcardIds =
+  const includeHighlightedPostcardIds =
     highlightedPostcards?.length > 0
-      ? highlightedPostcards.map(({ id }) => id)
+      ? highlightedPostcards.flatMap(({ id }) =>
+          id !== ignorePostcardId ? [id] : [],
+        )
       : ['x-y-zzz'] // provide a nonsensical ID here to get 0 highlighted results from the query
-
-  // Query needs labels to search by subject, that's why we translate from the value to the label
-  const subjectFilterLabel =
-    subjectFilter && subjectFilter in SUBJECT_FILTERS
-      ? SUBJECT_FILTERS[subjectFilter]
-      : undefined
 
   const [lastHighlightedPostcardReached, setLastHighlightedPostcardReached] =
     useState(false)
 
-  const { data, loading, error, refetch } = useQuery<QueryData, QueryVars>(
-    POSTCARDS_QUERY,
-    {
-      variables: {
-        limit: 1,
-        highlightedPostcardIds,
-        searchHighlighted: subjectFilterLabel,
-        searchNotHighlighted: subjectFilterLabel,
-      },
-      notifyOnNetworkStatusChange: true,
+  const { questionIds } = useQuestionnaireQuestions()
+
+  const [fetchQuery, { data, loading, error, refetch, called }] = useLazyQuery<
+    QueryData,
+    QueryVars
+  >(POSTCARDS_QUERY, {
+    variables: {
+      limit: 1,
+      includeHighlightedPostcardIds,
+      ignoreNotHighlightedPostcardIds: ignorePostcardId
+        ? includeHighlightedPostcardIds.concat(ignorePostcardId)
+        : includeHighlightedPostcardIds,
+      valueHighlighted: subjectFilter,
+      valueNotHighlighted: subjectFilter,
+      questionIds,
     },
-  )
+    notifyOnNetworkStatusChange: true,
+  })
 
-  if (error) {
-    return { _state: 'ERROR', error }
-  }
-
-  if (loading) {
-    return {
-      _state: 'LOADING',
+  if (called && data && !loading) {
+    if (data.questionnaire == null) {
+      return {
+        loading,
+        error: new Error('No Questionnaire found'),
+        fetchNext: () => {
+          /*noop*/
+        },
+      }
     }
-  }
 
-  if (data.questionnaire == null) {
-    return {
-      _state: 'ERROR',
-      error: new Error('No Data'),
-    }
-  }
-
-  const highlightedPostcardsData =
-    data.questionnaire.highlighted?.nodes.flatMap(
+    const highlightedPostcardsData = data.questionnaire.highlighted?.nodes.map(
       parsePostcardData({ data, isHighlighted: true, highlightedPostcards }),
     )
-  const notHighlightedPostcardsData =
-    data.questionnaire.notHighlighted?.nodes.flatMap(
-      parsePostcardData({ data, isHighlighted: false }),
-    )
+    const notHighlightedPostcardsData =
+      data.questionnaire.notHighlighted?.nodes.map(
+        parsePostcardData({ data, isHighlighted: false }),
+      )
 
-  // const totalCount =
-  //   data.questionnaire.highlighted?.totalCount +
-  //   data.questionnaire.notHighlighted?.totalCount
+    // Pagination stuff
 
-  const questionResults = Object.fromEntries(
-    data.questionnaire.questions?.[0]?.result?.map((result) => {
-      return [result.option.value, result.count]
-    }),
-  )
+    const cursorHighlighted: string | null =
+      data.questionnaire.highlighted?.pageInfo.endCursor
+    const hasMoreHighlighted =
+      data.questionnaire.highlighted?.pageInfo.hasNextPage
 
-  const totalCount = subjectFilter
-    ? questionResults[subjectFilter]
-    : Object.values(questionResults).reduce((sum, d) => sum + d)
+    const cursorNotHighlighted: string | null =
+      data.questionnaire.notHighlighted?.pageInfo.endCursor
+    const hasMoreNotHighlighted =
+      data.questionnaire.notHighlighted?.pageInfo.hasNextPage
 
-  // Pagination stuff
+    // If we have reached the last available highlighted postcard, we pick the top not highlighted one
+    const postcard =
+      (lastHighlightedPostcardReached
+        ? notHighlightedPostcardsData[0]
+        : highlightedPostcardsData[0] ?? notHighlightedPostcardsData[0]) ?? null
 
-  const cursorHighlighted: string | null =
-    data.questionnaire.highlighted?.pageInfo.endCursor
-  const hasMoreHighlighted =
-    data.questionnaire.highlighted?.pageInfo.hasNextPage
+    const fetchNext = () => {
+      // 1. cycle through all highlighted cards
+      // 2. if no more highlighted cards, check if there are more, and fetch more
+      // 3. otherwise, repeat the same for all not highlighted cards
+      if (hasMoreHighlighted) {
+        refetch({
+          // limit: 1,
+          cursorHighlighted,
+        })
+      } else if (!lastHighlightedPostcardReached) {
+        setLastHighlightedPostcardReached(true)
+      } else if (hasMoreNotHighlighted) {
+        refetch({
+          // limit: 1,
+          cursorNotHighlighted,
+        })
+      }
+    }
 
-  const cursorNotHighlighted: string | null =
-    data.questionnaire.notHighlighted?.pageInfo.endCursor
-  const hasMoreNotHighlighted =
-    data.questionnaire.notHighlighted?.pageInfo.hasNextPage
-
-  // If we have reached the last available highlighted postcard, we pick the top not highlighted one
-  const postcard =
-    (lastHighlightedPostcardReached
-      ? notHighlightedPostcardsData[0]
-      : highlightedPostcardsData[0] ?? notHighlightedPostcardsData[0]) ?? null
-
-  const fetchNext = () => {
-    // 1. cycle through all highlighted cards
-    // 2. if no more highlighted cards, check if there are more, and fetch more
-    // 3. otherwise, repeat the same for all not highlighted cards
-
-    if (hasMoreHighlighted) {
-      refetch({
-        cursorHighlighted,
-      })
-    } else if (!lastHighlightedPostcardReached) {
-      setLastHighlightedPostcardReached(true)
-    } else if (hasMoreNotHighlighted) {
-      console.log('no more highlighted')
-      refetch({
-        cursorNotHighlighted,
-      })
+    return {
+      loading,
+      error,
+      postcard,
+      fetchNext,
+      hasMore: hasMoreHighlighted || hasMoreNotHighlighted,
     }
   }
 
   return {
-    _state: 'LOADED',
-    totalCount,
-    postcard,
-    fetchNext,
-    hasMore: hasMoreHighlighted || hasMoreNotHighlighted,
+    loading,
+    error,
+    fetchNext: () => {
+      fetchQuery()
+    },
   }
 }

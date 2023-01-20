@@ -60,10 +60,13 @@ const createSubmissionsQuery = ({
   questionnaireId,
   isMember,
   search,
+  value,
   filters = {},
   sort = {},
 }) => {
   const { by, date } = sort
+
+  const hasAnswers = { exists: { field: 'resolved.answers' } }
 
   const mustBeforeDate = date && {
     range: {
@@ -111,6 +114,9 @@ const createSubmissionsQuery = ({
       ],
     },
   }
+  const mustValue = value && {
+    term: { 'resolved.answers.payload.value': value },
+  }
   const mustSubmissionId = filters?.id && { term: { id: filters.id } }
   const mustNotSubmissionId = filters?.not && { term: { id: filters.not } }
   const mustSubmissionIds = filters?.submissionIds?.length && {
@@ -119,29 +125,28 @@ const createSubmissionsQuery = ({
   const mustNotSubmissionIds = filters?.notSubmissionIds?.length && {
     terms: { id: filters.notSubmissionIds },
   }
-  const mustHaveAnswers = filters?.hasAnswers === true && {
-    exists: { field: 'resolved.answers' },
-  }
-  const mustNotHaveAnswers = filters?.hasAnswers === false && {
-    exists: { field: 'resolved.answers' },
+  const mustAnsweredQuestionIds = filters?.answeredQuestionIds && {
+    bool: {
+      must: filters?.answeredQuestionIds.map((id) => ({
+        term: { 'resolved.answers.questionId': id },
+      })),
+    },
   }
 
   const query = {
     bool: {
       must: [
+        hasAnswers,
         mustBeforeDate,
         mustUserId,
         mustQuestionnaireId,
         mustSearch,
+        mustValue,
         mustSubmissionId,
         mustSubmissionIds,
-        mustHaveAnswers,
+        mustAnsweredQuestionIds,
       ].filter(Boolean),
-      must_not: [
-        mustNotSubmissionId,
-        mustNotSubmissionIds,
-        mustNotHaveAnswers,
-      ].filter(Boolean),
+      must_not: [mustNotSubmissionId, mustNotSubmissionIds].filter(Boolean),
     },
   }
 
@@ -226,12 +231,13 @@ const getConnection = (anchors, args, context) => {
     const { after, before } = args
 
     const search = after?.search || before?.search || args.search || undefined
+    const value = after?.value || before?.value || args.value || undefined
     const filters = after?.filters || before?.filters || args.filters || {}
     const sort = after?.sort ||
       before?.sort || { ...args?.sort, ...sortStarter }
 
     return count(
-      { userId, questionnaireId, isMember, search, filters, sort },
+      { userId, questionnaireId, isMember, search, value, filters, sort },
       elastic,
     )
   }
@@ -240,17 +246,20 @@ const getConnection = (anchors, args, context) => {
     const { after, before } = args
 
     const size = Math.min(
-      after?.first || before?.first || args.first || 10,
+      Math.abs(
+        [after?.first, before?.first, args.first, 10].find(Number.isFinite),
+      ),
       100,
     )
 
     const search = after?.search || before?.search || args.search || undefined
+    const value = after?.value || before?.value || args.value || undefined
     const filters = after?.filters || before?.filters || args.filters || {}
     const sort = after?.sort ||
       before?.sort || { ...args?.sort, ...sortStarter }
 
     return find(
-      { size, userId, questionnaireId, isMember, search, filters, sort },
+      { size, userId, questionnaireId, isMember, search, value, filters, sort },
       { after, before },
       elastic,
     )
@@ -261,11 +270,14 @@ const getConnection = (anchors, args, context) => {
     const { nodes } = payload
 
     const first = Math.min(
-      after?.first || before?.first || args.first || 10,
+      Math.abs(
+        [after?.first, before?.first, args.first, 10].find(Number.isFinite),
+      ),
       100,
     )
 
     const search = after?.search || before?.search || args?.search || undefined
+    const value = after?.value || before?.value || args?.value || undefined
     const filters = after?.filters || before?.filters || args?.filters || {}
     const sort = after?.sort ||
       before?.sort || { ...args?.sort, ...sortStarter }
@@ -285,9 +297,9 @@ const getConnection = (anchors, args, context) => {
 
     return {
       hasNextPage: count < payload.totalCount,
-      end: { first, count, search, filters, sort },
+      end: { first, count, search, value, filters, sort },
       hasPreviousPage: count > first,
-      start: { first, count, search, filters, sort },
+      start: { first, count, search, value, filters, sort },
     }
   }
 
