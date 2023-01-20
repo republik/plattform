@@ -90,6 +90,6 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'flex-start',
-    height: 850,
+    minHeight: 850,
   }),
 }
