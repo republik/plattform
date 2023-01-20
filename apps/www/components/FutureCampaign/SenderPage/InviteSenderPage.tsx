@@ -2,7 +2,6 @@ import {
   mediaQueries,
   fontStyles,
   useMediaQuery,
-  plainButtonRule,
   IconButton,
   CopyToClippboardIcon,
 } from '@project-r/styleguide'
@@ -75,7 +74,7 @@ const InviteSenderPage = () => {
             </p>
             <div>
               <span {...styles.inviteLinkButton}>
-                {link} with icon
+                {link}
                 <IconButton
                   onClick={() => handleCopyLink(link)}
                   Icon={CopyToClippboardIcon}

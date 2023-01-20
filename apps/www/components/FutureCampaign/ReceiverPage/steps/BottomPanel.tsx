@@ -35,8 +35,8 @@ const styles = {
     [mediaQueries.mUp]: {
       position: 'relative',
       margin: 0,
-      padding: 0,
       width: '100%',
+      padding: '15px 15px 15px 15px',
     },
   }),
 }

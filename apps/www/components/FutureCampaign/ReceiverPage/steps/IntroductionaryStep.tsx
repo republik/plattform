@@ -1,21 +1,30 @@
 import { css } from 'glamor'
 import {
-  useColorContext,
   fontStyles,
   mediaQueries,
-  useMediaQuery,
+  plainButtonRule,
+  ChevronRightIcon,
+  Loader,
 } from '@project-r/styleguide'
 import BottomPanel from './BottomPanel'
 import AssetImage from '../../../../lib/images/AssetImage'
 import { StepProps } from '../../../Stepper/Stepper'
+import { useState } from 'react'
+import { useCarouselQuery } from '../../graphql/useCarouselQuery'
+import Carousel from '../../../Marketing/Carousel'
+import { useTranslation } from '../../../../lib/withT'
+
+const CAROUSEL_ELEMENT_ID = 'introductionary-step_carousel'
 
 const IntroductoryStep = ({ stepperControls, onAdvance }: StepProps) => {
-  const [colorScheme] = useColorContext()
-  const isDesktop = useMediaQuery(mediaQueries.mUp)
+  const { t } = useTranslation()
+  const [showCarousel, setShowCarousel] = useState(false)
 
-  const testInvite = {
-    inviterName: 'Grogu (Baby Yoda)',
-    inviterImage:
+  const { data: carouselData, loading: carouselLoading } = useCarouselQuery()
+
+  const testSender = {
+    name: 'Grogu (Baby Yoda)',
+    imageSrc:
       'https://media.gq.com/photos/5ddd59ff5bb28e00087a9df6/1:1/w_250,h_250,c_limit/baby-yoda-explainer-gq-november-2019-112619.jpg',
   }
 
@@ -23,19 +32,43 @@ const IntroductoryStep = ({ stepperControls, onAdvance }: StepProps) => {
     <>
       <div {...styles.main}>
         <h1 {...styles.heading}>
-          Unabhängiger Journalismus hat Zukunft, mit Ihnen.
+          {t('FutureCampaign/receiver/introductoryStep/heading')}
         </h1>
-        <p {...styles.tryIt} {...colorScheme.set('color', 'textSoft')}>
-          Eine Kostprobe unserer Inhalte
-        </p>
-        {/*
-          TODO:
-          Carousel with articles similiar to marketing-page
-          Only allow playing article, don't link to it.
-          When playing don't expand player when starting to play.
-          (Will need adaption of the carousel component)
-        */}
-        <i>TODO: Carousel verstekt</i>
+        <div>
+          <button
+            {...plainButtonRule}
+            {...styles.carourelToggle}
+            onClick={() => setShowCarousel(!showCarousel)}
+            aria-expanded={showCarousel}
+            aria-controls={CAROUSEL_ELEMENT_ID}
+          >
+            <span {...styles.tryIt}>
+              {t('FutureCampaign/receiver/introductoryStep/tryItText')}
+            </span>{' '}
+            <span>
+              <ChevronRightIcon
+                size={24}
+                style={{
+                  transform: `rotate(${showCarousel ? '270deg' : '90deg'})`,
+                }}
+              />
+            </span>
+          </button>
+          {showCarousel && (
+            <div id={CAROUSEL_ELEMENT_ID} {...styles.carouselWrapper}>
+              <Loader
+                loading={carouselLoading}
+                render={() => (
+                  <Carousel
+                    carouselData={carouselData.carousel}
+                    onlyAudio
+                    expandAudioPlayerOnPlayback={false}
+                  />
+                )}
+              />
+            </div>
+          )}
+        </div>
         <div {...styles.inviteSection}>
           <div
             style={{
@@ -44,7 +77,7 @@ const IntroductoryStep = ({ stepperControls, onAdvance }: StepProps) => {
             }}
           >
             <AssetImage
-              src={testInvite.inviterImage}
+              src={testSender.imageSrc}
               width={96}
               height={96}
               unoptimized
@@ -52,20 +85,20 @@ const IntroductoryStep = ({ stepperControls, onAdvance }: StepProps) => {
           </div>
           <div style={{ flex: '0 1 auto' }}>
             <p {...styles.text}>
-              Als Teil der Republik- Community, macht{' '}
-              <i>{testInvite.inviterName}</i> unabhängigen Journalismus in der
-              Schweiz möglich.
+              {t('FutureCampaign/receiver/introductoryStep/inviteText1', {
+                name: testSender.name,
+              })}
             </p>
           </div>
         </div>
         <p {...styles.text}>
-          <i>{testInvite.inviterName}</i> findet, dass Sie bei der Republik noch
-          fehlen. Weshalb Sie eingeladen sind, für ein Republik Jahresabonnement
-          den Beitrag zu zahlen, der für Sie stimmt.
+          {t('FutureCampaign/receiver/introductoryStep/inviteText2', {
+            name: testSender.name,
+          })}
         </p>
       </div>
       <BottomPanel steps={stepperControls} onAdvance={onAdvance}>
-        Wählen Sie Ihren Preis
+        {t('FutureCampaign/receiver/introductoryStep/action')}
       </BottomPanel>
     </>
   )
@@ -100,6 +133,7 @@ const styles = {
     ...fontStyles.sansSerifRegular,
     margin: 0,
     fontSize: 17,
+    lineHeight: '1.4em',
     [mediaQueries.mUp]: {
       fontSize: 21,
     },
@@ -108,5 +142,20 @@ const styles = {
     display: 'flex',
     flexDirection: 'row',
     gap: 16,
+  }),
+  carouselWrapper: css({
+    maxWidth: '100%',
+    paddingTop: 23,
+    [mediaQueries.mUp]: {
+      paddingTop: 32,
+    },
+  }),
+  carourelToggle: css({
+    color: 'rgba(255, 255, 255, 0.8)',
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: '100%',
   }),
 }
