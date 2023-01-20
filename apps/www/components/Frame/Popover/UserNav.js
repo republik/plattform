@@ -179,7 +179,7 @@ const UserNav = ({
                         closeHandler={closeHandler}
                         large
                       >
-                        Verstärkung holen
+                        {t('nav/invite-friends')}
                       </NavLink>
                       {me.accessCampaigns.length > 0 && (
                         <NavLink

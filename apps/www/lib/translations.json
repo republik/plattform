@@ -29,6 +29,10 @@
       "value": "Republik teilen"
     },
     {
+      "key": "nav/invite-friends",
+      "value": "Verstärkung holen"
+    },
+    {
       "key": "nav/becomemember",
       "value": "Mitglied werden"
     },
@@ -7757,12 +7761,16 @@
       "value": "Für jede neue Mitstreiter*in, die Sie zur Republik Community holen, verlängern wir ihre Mitgliedschaft um einen Monat.*"
     },
     {
+      "key": "FutureCampaign/sender/reward/progressText",
+      "value": "{reached} von {max} Mitstreiter*innen"
+    },
+    {
       "key": "FutureCampaign/sender/reward/hint",
       "value": "*Sie möchten keine Verlängerung? Kein Problem, Sie können am Ende der Aktion ihre gesammelten Monate Spenden und erhalten dafür nicht nur Ruhm und Ehre, sodndern auch unseren unendlichen Dank."
     },
     {
       "key": "FutureCampaign/sender/thankYou/text",
-      "value": "Danke fürs mitmachen"
+      "value": "Danke fürs mitmachen!"
     },
     {
       "key": "FutureCampaign/slogan/text",
