@@ -91,21 +91,27 @@ const PostcardSingleCardView: React.FC<PostcardSingleCardView> = ({
     keyof typeof data | null
   >(postcardOverride ? null : 'postcard_1')
 
+  const ignorePostcardId = postcardOverride?.id
+
   const data = {
     postcard_1: useSinglePostcardData({
       highlightedPostcards: highlightedPostcards,
+      ignorePostcardId,
       subjectFilter: 'postcard_1',
     }),
     postcard_2: useSinglePostcardData({
       highlightedPostcards: highlightedPostcards,
+      ignorePostcardId,
       subjectFilter: 'postcard_2',
     }),
     postcard_3: useSinglePostcardData({
       highlightedPostcards: highlightedPostcards,
+      ignorePostcardId,
       subjectFilter: 'postcard_3',
     }),
     postcard_4: useSinglePostcardData({
       highlightedPostcards: highlightedPostcards,
+      ignorePostcardId,
       subjectFilter: 'postcard_4',
     }),
   }
@@ -115,12 +121,16 @@ const PostcardSingleCardView: React.FC<PostcardSingleCardView> = ({
   const { t } = useTranslation()
 
   let loadedPostcard = null
-  if (currentPostcardData?._state === 'LOADED') {
+  if (currentPostcardData?.postcard) {
     loadedPostcard = currentPostcardData.postcard
   }
 
   useEffect(() => {
-    if (currentPostcardData?._state === 'LOADED' && !loadedPostcard) {
+    if (
+      currentPostcardData &&
+      !currentPostcardData.loading &&
+      !loadedPostcard
+    ) {
       console.log('empty postcard, fetching next')
       currentPostcardData.fetchNext()
     }
@@ -136,12 +146,8 @@ const PostcardSingleCardView: React.FC<PostcardSingleCardView> = ({
               top: 0,
               height: '40vh',
             }}
-            loading={currentPostcardData._state === 'LOADING'}
-            error={
-              currentPostcardData._state === 'ERROR'
-                ? currentPostcardData.error
-                : undefined
-            }
+            loading={currentPostcardData.loading}
+            error={currentPostcardData.error}
             render={() => {
               return (
                 <PostcardContent
@@ -175,14 +181,9 @@ const PostcardSingleCardView: React.FC<PostcardSingleCardView> = ({
             count={counts?.postcard_1}
             imageUrl={'/static/climatelab/freier.jpg'}
             onFilterClicked={() => {
-              if (
-                currentPostcard === 'postcard_1' &&
-                currentPostcardData._state === 'LOADED'
-              ) {
-                currentPostcardData.fetchNext()
-                return true // tell PostcardFilter that data has been fetched and the counter should be decreased
-              }
               setCurrentPostcard('postcard_1')
+              data['postcard_1'].fetchNext()
+              return true // tell PostcardFilter that data has been fetched and the counter should be decreased
             }}
           />
           <PostcardFilter
@@ -190,14 +191,9 @@ const PostcardSingleCardView: React.FC<PostcardSingleCardView> = ({
             count={counts?.postcard_2}
             imageUrl={'/static/climatelab/farner.jpg'}
             onFilterClicked={() => {
-              if (
-                currentPostcard === 'postcard_2' &&
-                currentPostcardData._state === 'LOADED'
-              ) {
-                currentPostcardData.fetchNext()
-                return true // tell PostcardFilter that data has been fetched and the counter should be decreased
-              }
               setCurrentPostcard('postcard_2')
+              data['postcard_2'].fetchNext()
+              return true // tell PostcardFilter that data has been fetched and the counter should be decreased
             }}
           />
           <PostcardFilter
@@ -205,14 +201,9 @@ const PostcardSingleCardView: React.FC<PostcardSingleCardView> = ({
             count={counts?.postcard_3}
             imageUrl={'/static/climatelab/richardson.jpg'}
             onFilterClicked={() => {
-              if (
-                currentPostcard === 'postcard_3' &&
-                currentPostcardData._state === 'LOADED'
-              ) {
-                currentPostcardData.fetchNext()
-                return true // tell PostcardFilter that data has been fetched and the counter should be decreased
-              }
+              data['postcard_3'].fetchNext()
               setCurrentPostcard('postcard_3')
+              return true
             }}
           />
           <PostcardFilter
@@ -220,14 +211,9 @@ const PostcardSingleCardView: React.FC<PostcardSingleCardView> = ({
             count={counts?.postcard_4}
             imageUrl={'/static/climatelab/zalko.jpg'}
             onFilterClicked={() => {
-              if (
-                currentPostcard === 'postcard_4' &&
-                currentPostcardData._state === 'LOADED'
-              ) {
-                currentPostcardData.fetchNext()
-                return true // tell PostcardFilter that data has been fetched and the counter should be decreased
-              }
               setCurrentPostcard('postcard_4')
+              data['postcard_4'].fetchNext()
+              return true
             }}
           />
         </div>

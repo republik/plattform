@@ -1,4 +1,4 @@
-import { gql, useQuery } from '@apollo/client'
+import { gql, useLazyQuery, useQuery } from '@apollo/client'
 import { useState } from 'react'
 
 const POSTCARDS_QUESTIONNAIRE_QUERY = gql`
@@ -66,7 +66,8 @@ const POSTCARDS_QUERY = gql`
   }
 
   query publicPostcardsQuery(
-    $highlightedPostcardIds: [ID!]
+    $includeHighlightedPostcardIds: [ID!]
+    $ignoreNotHighlightedPostcardIds: [ID!]
     $questionIds: [ID!]
     $cursorHighlighted: String
     $cursorNotHighlighted: String
@@ -90,7 +91,7 @@ const POSTCARDS_QUERY = gql`
         first: $limit
         after: $cursorHighlighted
         filters: {
-          submissionIds: $highlightedPostcardIds
+          submissionIds: $includeHighlightedPostcardIds
           answeredQuestionIds: $questionIds
         }
         value: $valueHighlighted
@@ -102,7 +103,7 @@ const POSTCARDS_QUERY = gql`
         first: $limit
         after: $cursorNotHighlighted
         filters: {
-          notSubmissionIds: $highlightedPostcardIds
+          notSubmissionIds: $ignoreNotHighlightedPostcardIds
           answeredQuestionIds: $questionIds
         }
         value: $valueNotHighlighted
@@ -115,7 +116,8 @@ const POSTCARDS_QUERY = gql`
 
 // Keep these in sync with the query!
 type QueryVars = {
-  highlightedPostcardIds?: string[]
+  includeHighlightedPostcardIds?: string[]
+  ignoreNotHighlightedPostcardIds?: string[]
   questionIds?: string[]
   cursorHighlighted?: string
   cursorNotHighlighted?: string
@@ -155,17 +157,13 @@ export type PostcardsData =
       hasMore: boolean
     }
 
-export type SinglePostcardData =
-  | {
-      _state: 'LOADING'
-    }
-  | { _state: 'ERROR'; error: Error }
-  | {
-      _state: 'LOADED'
-      postcard: Postcard | null
-      fetchNext: () => void
-      hasMore: boolean
-    }
+export type SinglePostcardData = {
+  loading: boolean
+  fetchNext: () => void
+  error?: Error
+  postcard?: Postcard | null
+  hasMore?: boolean
+}
 
 export type HighlightedPostcard = {
   id: string
@@ -293,7 +291,8 @@ export const usePostcardsData = ({
     {
       variables: {
         limit: 100,
-        highlightedPostcardIds,
+        includeHighlightedPostcardIds: highlightedPostcardIds,
+        ignoreNotHighlightedPostcardIds: highlightedPostcardIds,
         valueHighlighted: subjectFilter,
         valueNotHighlighted: subjectFilter,
         questionIds,
@@ -405,14 +404,18 @@ export const usePostcardsData = ({
 
 export const useSinglePostcardData = ({
   highlightedPostcards,
+  ignorePostcardId,
   subjectFilter,
 }: {
   highlightedPostcards?: HighlightedPostcard[]
+  ignorePostcardId?: string
   subjectFilter?: SubjectFilter
 }): SinglePostcardData => {
-  const highlightedPostcardIds =
+  const includeHighlightedPostcardIds =
     highlightedPostcards?.length > 0
-      ? highlightedPostcards.map(({ id }) => id)
+      ? highlightedPostcards.flatMap(({ id }) =>
+          id !== ignorePostcardId ? [id] : [],
+        )
       : ['x-y-zzz'] // provide a nonsensical ID here to get 0 highlighted results from the query
 
   const [lastHighlightedPostcardReached, setLastHighlightedPostcardReached] =
@@ -420,86 +423,93 @@ export const useSinglePostcardData = ({
 
   const { questionIds } = useQuestionnaireQuestions()
 
-  const { data, loading, error, refetch } = useQuery<QueryData, QueryVars>(
-    POSTCARDS_QUERY,
-    {
-      variables: {
-        limit: 1,
-        highlightedPostcardIds,
-        valueHighlighted: subjectFilter,
-        valueNotHighlighted: subjectFilter,
-        questionIds,
-      },
-      notifyOnNetworkStatusChange: true,
-      skip: questionIds === undefined,
+  const [fetchQuery, { data, loading, error, refetch, called }] = useLazyQuery<
+    QueryData,
+    QueryVars
+  >(POSTCARDS_QUERY, {
+    variables: {
+      limit: 1,
+      includeHighlightedPostcardIds,
+      ignoreNotHighlightedPostcardIds: ignorePostcardId
+        ? includeHighlightedPostcardIds.concat(ignorePostcardId)
+        : includeHighlightedPostcardIds,
+      valueHighlighted: subjectFilter,
+      valueNotHighlighted: subjectFilter,
+      questionIds,
     },
-  )
+    notifyOnNetworkStatusChange: true,
+  })
 
-  if (error) {
-    return { _state: 'ERROR', error }
-  }
-
-  if (loading || !data) {
-    return {
-      _state: 'LOADING',
+  if (called && data && !loading) {
+    if (data.questionnaire == null) {
+      return {
+        loading,
+        error: new Error('No Questionnaire found'),
+        fetchNext: () => {
+          /*noop*/
+        },
+      }
     }
-  }
 
-  if (data.questionnaire == null) {
-    return {
-      _state: 'ERROR',
-      error: new Error('No Data'),
-    }
-  }
-
-  const highlightedPostcardsData = data.questionnaire.highlighted?.nodes.map(
-    parsePostcardData({ data, isHighlighted: true, highlightedPostcards }),
-  )
-  const notHighlightedPostcardsData =
-    data.questionnaire.notHighlighted?.nodes.map(
-      parsePostcardData({ data, isHighlighted: false }),
+    const highlightedPostcardsData = data.questionnaire.highlighted?.nodes.map(
+      parsePostcardData({ data, isHighlighted: true, highlightedPostcards }),
     )
+    const notHighlightedPostcardsData =
+      data.questionnaire.notHighlighted?.nodes.map(
+        parsePostcardData({ data, isHighlighted: false }),
+      )
 
-  // Pagination stuff
+    // Pagination stuff
 
-  const cursorHighlighted: string | null =
-    data.questionnaire.highlighted?.pageInfo.endCursor
-  const hasMoreHighlighted =
-    data.questionnaire.highlighted?.pageInfo.hasNextPage
+    const cursorHighlighted: string | null =
+      data.questionnaire.highlighted?.pageInfo.endCursor
+    const hasMoreHighlighted =
+      data.questionnaire.highlighted?.pageInfo.hasNextPage
 
-  const cursorNotHighlighted: string | null =
-    data.questionnaire.notHighlighted?.pageInfo.endCursor
-  const hasMoreNotHighlighted =
-    data.questionnaire.notHighlighted?.pageInfo.hasNextPage
+    const cursorNotHighlighted: string | null =
+      data.questionnaire.notHighlighted?.pageInfo.endCursor
+    const hasMoreNotHighlighted =
+      data.questionnaire.notHighlighted?.pageInfo.hasNextPage
 
-  // If we have reached the last available highlighted postcard, we pick the top not highlighted one
-  const postcard =
-    (lastHighlightedPostcardReached
-      ? notHighlightedPostcardsData[0]
-      : highlightedPostcardsData[0] ?? notHighlightedPostcardsData[0]) ?? null
+    // If we have reached the last available highlighted postcard, we pick the top not highlighted one
+    const postcard =
+      (lastHighlightedPostcardReached
+        ? notHighlightedPostcardsData[0]
+        : highlightedPostcardsData[0] ?? notHighlightedPostcardsData[0]) ?? null
 
-  const fetchNext = () => {
-    // 1. cycle through all highlighted cards
-    // 2. if no more highlighted cards, check if there are more, and fetch more
-    // 3. otherwise, repeat the same for all not highlighted cards
+    const fetchNext = () => {
+      // 1. cycle through all highlighted cards
+      // 2. if no more highlighted cards, check if there are more, and fetch more
+      // 3. otherwise, repeat the same for all not highlighted cards
+      if (hasMoreHighlighted) {
+        refetch({
+          // limit: 1,
+          cursorHighlighted,
+        })
+      } else if (!lastHighlightedPostcardReached) {
+        setLastHighlightedPostcardReached(true)
+      } else if (hasMoreNotHighlighted) {
+        refetch({
+          // limit: 1,
+          cursorNotHighlighted,
+        })
+      }
+    }
 
-    if (hasMoreHighlighted) {
-      refetch({
-        cursorHighlighted,
-      })
-    } else if (!lastHighlightedPostcardReached) {
-      setLastHighlightedPostcardReached(true)
-    } else if (hasMoreNotHighlighted) {
-      refetch({
-        cursorNotHighlighted,
-      })
+    return {
+      loading,
+      error,
+      postcard,
+      fetchNext,
+      hasMore: hasMoreHighlighted || hasMoreNotHighlighted,
     }
   }
 
   return {
-    _state: 'LOADED',
-    postcard,
-    fetchNext,
-    hasMore: hasMoreHighlighted || hasMoreNotHighlighted,
+    loading,
+    error,
+    fetchNext: () => {
+      fetchQuery()
+    },
   }
 }

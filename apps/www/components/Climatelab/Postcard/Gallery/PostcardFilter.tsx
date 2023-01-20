@@ -73,7 +73,7 @@ const PostcardFilter: React.FC<PostcardFilterProps> = ({
   // Set and keep count once
   useEffect(() => {
     if (count === undefined && initialCount !== undefined) {
-      setCount(initialCount - 1) // One card is already loaded, so the remaining count is 1 less
+      setCount(initialCount)
     }
   }, [initialCount, count])
 
