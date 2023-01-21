@@ -101,12 +101,12 @@ interface Package {
   bankAccount?: BankAccount
 }
 
-interface Company {
+export interface Company {
   id: string
   name: string
 }
 
-interface BankAccount {
+export interface BankAccount {
   iban: string
   addressId?: string
   address?: Address

@@ -13,6 +13,8 @@ import {
   getReference,
   getSwissQrBillData,
   GenerateFn,
+  Company,
+  BankAccount,
 } from './commons'
 import * as paymentslip from './paymentslip'
 
@@ -23,7 +25,7 @@ interface RowConfig {
 const formatDate = timeFormat('%x')
 
 const PADDING_MM = 20 // 2cm
-const CREDITOR_INDENT_MM = 140 // 14cm
+const DEBTOR_INDENT_MM = 140 // 14cm
 const REGULAR_FONT_SIZE = 11
 const DEBTOR_FONT_SIZE = 11
 const TITLE_FONT_SIZE = 16
@@ -46,16 +48,21 @@ export const isApplicable: IsApplicableFn = function (payment) {
   return true
 }
 
-function addTopLeftPadding(doc: PDF) {
+export function addTopLeftPadding(doc: PDF) {
   doc.x = doc.y = utils.mm2pt(PADDING_MM)
 }
 
-function addCreditor(doc: PDF, payment: PaymentResolved, context: Context) {
+export function addCreditor(
+  doc: PDF,
+  company: Company,
+  bankAccount: BankAccount,
+  context: Context,
+) {
   const { t } = context
 
-  const companyName = payment?.pledge.package.company.name
-  const creditorAddress = payment?.pledge.package.bankAccount?.address
-  const image = payment?.pledge.package.bankAccount?.image
+  const companyName = company?.name
+  const creditorAddress = bankAccount?.address
+  const image = bankAccount?.image
 
   if (!creditorAddress) {
     throw new Error('Creditor address missing')
@@ -64,10 +71,6 @@ function addCreditor(doc: PDF, payment: PaymentResolved, context: Context) {
   if (!Number(creditorAddress.postalCode)) {
     throw new Error('Creditor address postal code is not a number')
   }
-
-  const { x } = doc
-
-  doc.x = utils.mm2pt(CREDITOR_INDENT_MM)
 
   if (image) {
     // Use data URI instead of Buffer
@@ -94,8 +97,6 @@ function addCreditor(doc: PDF, payment: PaymentResolved, context: Context) {
       ),
     )
     .moveDown()
-
-  doc.x = x
 }
 
 function getDebtorAddress(address: Address | undefined): string {
@@ -118,14 +119,17 @@ function getDebtorEmail(user: User): string {
   return [`${firstName} ${lastName}`.trim(), email].filter(Boolean).join('\n')
 }
 
-function addDebtor(doc: PDF, payment: PaymentResolved) {
+export function addDebtor(doc: PDF, user: User) {
+  const { x } = doc
+
+  doc.x = utils.mm2pt(DEBTOR_INDENT_MM)
+
   doc
     .fontSize(DEBTOR_FONT_SIZE)
-    .text(
-      getDebtorAddress(payment?.pledge.user.address) ||
-        getDebtorEmail(payment?.pledge.user),
-    )
+    .text(getDebtorAddress(user.address) || getDebtorEmail(user))
     .moveDown()
+
+  doc.x = x
 }
 
 function addMeta(doc: PDF, payment: PaymentResolved, context: Context) {
@@ -317,8 +321,13 @@ export const generate: GenerateFn = function (payment, context) {
       })
 
       addTopLeftPadding(doc)
-      addCreditor(doc, payment, context)
-      addDebtor(doc, payment)
+      addCreditor(
+        doc,
+        payment?.pledge.package.company,
+        payment?.pledge.package.bankAccount,
+        context,
+      )
+      addDebtor(doc, payment?.pledge.user)
       addMeta(doc, payment, context)
       addTable(doc, payment, context)
 
