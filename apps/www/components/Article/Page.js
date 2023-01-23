@@ -649,7 +649,6 @@ const ArticlePage = ({
               customMode={meta.paynoteMode}
               customOnly={isPage || isFormat}
               position='before'
-              Wrapper={isFlyer ? FlyerWrapper : undefined}
             />
           )
 
