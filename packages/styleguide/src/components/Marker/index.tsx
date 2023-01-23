@@ -1,7 +1,23 @@
-import React from 'react'
+import React, { CSSProperties } from 'react'
 import { color as d3Color } from 'd3-color'
 
-export const MarkerConfig = {
+export type MarkerType =
+  | 'yellow'
+  | 'pink'
+  | 'green'
+  | 'blue'
+  | 'rotstift'
+  | 'drop'
+
+type StyleFn = (isSelected?: boolean) => CSSProperties
+
+type MarkerConfig = {
+  color?: string
+  pickerColor?: string
+  style?: StyleFn
+  pickerInnerStyle?: StyleFn
+}
+export const markersConfig: { [K in MarkerType]: MarkerConfig } = {
   yellow: {
     color: 'rgb(255,255,0)',
   },
@@ -36,15 +52,15 @@ export const MarkerConfig = {
   },
 }
 
-export const markerKeys = Object.keys(MarkerConfig)
+export const markerKeys = Object.keys(markersConfig) as MarkerType[]
 
 export const Marker: React.FC<{
-  marker: string
+  marker: MarkerType
   isSelected?: boolean
   attributes?: any
   [x: string]: unknown
 }> = ({ marker = 'yellow', isSelected, children, attributes, ...props }) => {
-  const { color, style } = MarkerConfig[marker]
+  const { color, style } = markersConfig[marker]
   return (
     <span
       {...props}

@@ -1,6 +1,6 @@
 import React from 'react'
 import { css } from 'glamor'
-import { MarkerConfig } from '../../../Marker'
+import { markersConfig, MarkerType } from '../../../Marker'
 
 const styles = {
   picker: css({
@@ -14,12 +14,16 @@ const styles = {
   }),
 }
 
-export const Picker = ({ marker = 'yellow', isSelected, onClick }) => {
+export const Picker: React.FC<{
+  marker: MarkerType
+  isSelected?: boolean
+  onClick: React.MouseEventHandler
+}> = ({ marker = 'yellow', isSelected, onClick }) => {
   const {
     color: markerColor,
     pickerColor,
     pickerInnerStyle,
-  } = MarkerConfig[marker]
+  } = markersConfig[marker]
   const color = pickerColor || markerColor
   const colorStyle = color
     ? {
