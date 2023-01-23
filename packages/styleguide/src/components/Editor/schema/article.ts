@@ -7,6 +7,7 @@ import { List } from '../../List/Slate'
 import { PullQuote, PullQuoteSource, PullQuoteText } from '../../PullQuote'
 import { Editorial, Sub, Sup } from '../../Typography'
 import { Break } from '../../Typography/Break'
+import { Marker } from '../../Marker'
 
 const schema: SchemaConfig = {
   blockQuote: BlockQuote,
@@ -24,6 +25,7 @@ const schema: SchemaConfig = {
   break: Break,
   headline: Editorial.Subhead,
   link: Editorial.A,
+  memo: Marker,
   paragraph: Editorial.P,
   bold: Editorial.Emphasis,
   italic: Editorial.Cursive,

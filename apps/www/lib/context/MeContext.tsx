@@ -103,10 +103,8 @@ type Props = {
   assumeAccess?: boolean
 }
 
-
 const MeContextProvider = ({ children, assumeAccess = false }: Props) => {
   const { data, loading, error, refetch } = useQuery<MeResponse>(meQuery, {})
-
 
   const me = data?.me
   const isMember = checkRoles(me, ['member'])

@@ -51,6 +51,23 @@ const contentUrlResolver = async (
       node.href = urlReplacer(node.href, stripDocLinks)
     },
   )
+
+  // strip memos
+  await visit(
+    doc.content,
+    (node) => node?.children?.some((child) => child?.type === 'memo'),
+    (node) => {
+      node.children = node.children.reduce(
+        (children, currentChild) =>
+          children.concat(
+            currentChild?.type === 'memo'
+              ? currentChild?.children
+              : currentChild,
+          ),
+        [],
+      )
+    },
+  )
 }
 
 const contentUserResolver = async (content, _users = []) => {

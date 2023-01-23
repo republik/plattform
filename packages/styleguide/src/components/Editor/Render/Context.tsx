@@ -8,6 +8,8 @@ type RenderProps = {
   nav?: JSX.Element
   ShareTile?: React.FC<{ tileId: string }>
   noLazy?: boolean
+  commitId?: string
+  repoId?: string
 }
 
 export const PlaceholderLink = ({ children }) => React.Children.only(children)
@@ -17,6 +19,7 @@ const RenderContext = createContext<RenderProps>({
   Link: PlaceholderLink,
   t: emptyFormatter,
   nav: <FlyerDate />,
+  commitId: 'new',
 })
 
 export const useRenderContext = () => useContext(RenderContext)
@@ -28,10 +31,12 @@ export const RenderContextProvider: React.FC<RenderProps> = ({
   nav = <FlyerDate />,
   ShareTile,
   noLazy,
+  repoId,
+  commitId = 'new',
 }) => {
   const value = useMemo(
-    () => ({ Link, t, nav, ShareTile, noLazy }),
-    [Link, t, nav, ShareTile, noLazy],
+    () => ({ Link, t, nav, ShareTile, noLazy, repoId, commitId }),
+    [Link, t, nav, ShareTile, noLazy, repoId, commitId],
   )
   return (
     <RenderContext.Provider value={value}>{children}</RenderContext.Provider>
