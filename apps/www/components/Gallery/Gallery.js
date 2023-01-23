@@ -1,4 +1,4 @@
-import { useRef, useEffect } from 'react'
+import { useRef, useEffect, useMemo } from 'react'
 import compose from 'lodash/flowRight'
 import PhotoSwipe from 'photoswipe'
 import PhotoSwipeUIDefault from 'photoswipe/dist/photoswipe-ui-default'
@@ -14,6 +14,11 @@ const MAX_SPREAD_ZOOM = 2
 
 const Gallery = ({ items, onClose, startItemSrc, children, t }) => {
   const galleryRef = useRef(null)
+
+  // 'items' changes on every rerender of the article-page
+  // to prevent a gallery reinit on every rerender, we memoize the items
+  // as a string to allow for a correct equality check in the useEffect
+  const itemsString = useMemo(() => JSON.stringify(items), [items])
 
   useEffect(() => {
     if (galleryRef) {
@@ -81,7 +86,7 @@ const Gallery = ({ items, onClose, startItemSrc, children, t }) => {
       })
       gallery.init()
     }
-  }, [items])
+  }, [itemsString])
 
   return (
     <>

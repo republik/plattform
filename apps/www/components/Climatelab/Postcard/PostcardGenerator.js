@@ -47,9 +47,31 @@ const SubmittedPostcard = (props) => {
     scrollIntoView(postcardRef.current)
   }, [])
 
+  const { questions, userHasSubmitted } = questionnaire
+
+  const imageOptions = questions && questions[0].options
+  const imageAnswer =
+    questions[0].userAnswer && questions[0].userAnswer.payload.value[0]
+
+  const postcardText =
+    questions[1].userAnswer && questions[1].userAnswer.payload.value
+
+  const imageUrl =
+    imageOptions &&
+    imageOptions.filter((d) => d.value === imageAnswer)[0]?.imageUrl
+
+  const postcard = {
+    text: postcardText,
+    imageUrl: imageUrl,
+    imageSelection: imageAnswer,
+  }
+
   return (
     <div style={{ marginTop: '50px' }} ref={postcardRef}>
-      <PostcardPreview postcard={questionnaire} t={t} />
+      {!(userHasSubmitted && !imageAnswer && !postcardText) && (
+        <PostcardPreview postcard={postcard} t={t} />
+      )}
+      <br />
 
       {onRevoke && (
         <Button onClick={() => onRevoke()}>
@@ -80,9 +102,6 @@ const PostcardGenerator = () => {
         SubmittedComponent={SubmittedPostcard}
         showAnonymize
       />
-      <Interaction.P>
-        {t('Climatelab/Postcard/PostcardPreview/merci2')}
-      </Interaction.P>
     </div>
   )
 }

@@ -29,6 +29,7 @@ const findMatchingAnswerIds = async ({ search, hits }, elastic) => {
                   'resolved.question.text',
                   'resolved.value.Text',
                   'resolved.value.Choice',
+                  'resolved.value.ImageChoice',
                 ],
                 default_operator: 'AND',
               },
@@ -59,10 +60,13 @@ const createSubmissionsQuery = ({
   questionnaireId,
   isMember,
   search,
+  value,
   filters = {},
   sort = {},
 }) => {
   const { by, date } = sort
+
+  const hasAnswers = { exists: { field: 'resolved.answers' } }
 
   const mustBeforeDate = date && {
     range: {
@@ -84,6 +88,7 @@ const createSubmissionsQuery = ({
               'resolved.answers.resolved.question.text',
               'resolved.answers.resolved.value.Text',
               'resolved.answers.resolved.value.Choice',
+              'resolved.answers.resolved.value.ImageChoice',
             ],
             default_operator: 'AND',
           },
@@ -109,19 +114,39 @@ const createSubmissionsQuery = ({
       ],
     },
   }
+  const mustValue = value && {
+    term: { 'resolved.answers.payload.value': value },
+  }
   const mustSubmissionId = filters?.id && { term: { id: filters.id } }
   const mustNotSubmissionId = filters?.not && { term: { id: filters.not } }
+  const mustSubmissionIds = filters?.submissionIds?.length && {
+    terms: { id: filters.submissionIds },
+  }
+  const mustNotSubmissionIds = filters?.notSubmissionIds?.length && {
+    terms: { id: filters.notSubmissionIds },
+  }
+  const mustAnsweredQuestionIds = filters?.answeredQuestionIds && {
+    bool: {
+      must: filters?.answeredQuestionIds.map((id) => ({
+        term: { 'resolved.answers.questionId': id },
+      })),
+    },
+  }
 
   const query = {
     bool: {
       must: [
+        hasAnswers,
         mustBeforeDate,
         mustUserId,
         mustQuestionnaireId,
         mustSearch,
+        mustValue,
         mustSubmissionId,
+        mustSubmissionIds,
+        mustAnsweredQuestionIds,
       ].filter(Boolean),
-      must_not: [mustNotSubmissionId].filter(Boolean),
+      must_not: [mustNotSubmissionId, mustNotSubmissionIds].filter(Boolean),
     },
   }
 
@@ -206,12 +231,13 @@ const getConnection = (anchors, args, context) => {
     const { after, before } = args
 
     const search = after?.search || before?.search || args.search || undefined
+    const value = after?.value || before?.value || args.value || undefined
     const filters = after?.filters || before?.filters || args.filters || {}
     const sort = after?.sort ||
       before?.sort || { ...args?.sort, ...sortStarter }
 
     return count(
-      { userId, questionnaireId, isMember, search, filters, sort },
+      { userId, questionnaireId, isMember, search, value, filters, sort },
       elastic,
     )
   }
@@ -220,17 +246,20 @@ const getConnection = (anchors, args, context) => {
     const { after, before } = args
 
     const size = Math.min(
-      after?.first || before?.first || args.first || 10,
+      Math.abs(
+        [after?.first, before?.first, args.first, 10].find(Number.isFinite),
+      ),
       100,
     )
 
     const search = after?.search || before?.search || args.search || undefined
+    const value = after?.value || before?.value || args.value || undefined
     const filters = after?.filters || before?.filters || args.filters || {}
     const sort = after?.sort ||
       before?.sort || { ...args?.sort, ...sortStarter }
 
     return find(
-      { size, userId, questionnaireId, isMember, search, filters, sort },
+      { size, userId, questionnaireId, isMember, search, value, filters, sort },
       { after, before },
       elastic,
     )
@@ -241,11 +270,14 @@ const getConnection = (anchors, args, context) => {
     const { nodes } = payload
 
     const first = Math.min(
-      after?.first || before?.first || args.first || 10,
+      Math.abs(
+        [after?.first, before?.first, args.first, 10].find(Number.isFinite),
+      ),
       100,
     )
 
     const search = after?.search || before?.search || args?.search || undefined
+    const value = after?.value || before?.value || args?.value || undefined
     const filters = after?.filters || before?.filters || args?.filters || {}
     const sort = after?.sort ||
       before?.sort || { ...args?.sort, ...sortStarter }
@@ -265,9 +297,9 @@ const getConnection = (anchors, args, context) => {
 
     return {
       hasNextPage: count < payload.totalCount,
-      end: { first, count, search, filters, sort },
+      end: { first, count, search, value, filters, sort },
       hasPreviousPage: count > first,
-      start: { first, count, search, filters, sort },
+      start: { first, count, search, value, filters, sort },
     }
   }
 

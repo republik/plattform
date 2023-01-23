@@ -18,6 +18,9 @@ module.exports = {
         userId: {
           type: 'keyword',
         },
+        anonymized: {
+          type: 'boolean',
+        },
         createdAt: {
           type: 'date',
         },
@@ -26,11 +29,17 @@ module.exports = {
           properties: {
             answers: {
               properties: {
+                questionId: {
+                  type: 'keyword',
+                },
                 payload: {
                   properties: {
                     text: {
                       type: 'text',
                       analyzer: 'german',
+                    },
+                    value: {
+                      type: 'keyword',
                     },
                   },
                 },
@@ -38,6 +47,10 @@ module.exports = {
                   properties: {
                     value: {
                       properties: {
+                        ImageChoice: {
+                          type: 'text',
+                          analyzer: 'german',
+                        },
                         Choice: {
                           type: 'text',
                           analyzer: 'german',

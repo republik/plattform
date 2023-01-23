@@ -14,56 +14,40 @@ const styles = {
   postcard: css({
     position: 'relative',
     backgroundColor: '#F9FBFF',
-    margin: '0 0 20px 0',
     width: '100%',
+    height: 'calc(100% - 1px)', // weirdo fix for Safari 14
     aspectRatio: '16 / 9',
     display: 'flex',
     padding: '10px',
-    border: 'solid 2px f9f5ec',
     borderRadius: '2px',
     fontFamily: fontFamilies.sansSerifRegular,
-    fontSize: '12px',
-    lineHeight: '1.2',
     color: '#282828',
     [mediaQueries.mUp]: {
-      padding: '20px',
-      fontSize: '16px',
-      lineHeight: '1.5',
+      padding: '15px',
     },
   }),
   textArea: css({
+    display: 'flex',
+    flexWrap: 'wrap',
+    flexFlow: 'column',
     maxHeight: '100%',
-    wordBreak: 'normal',
-    overflowWrap: 'break-word',
+    lineHeight: '1.3',
     width: '67%',
-
-    borderRight: 'solid 1px #DADDDC',
-    marginBottom: '10px',
-    paddingRight: '10px',
-    [mediaQueries.mUp]: {
-      paddingRight: '20px',
-    },
-  }),
-  credit: css({
-    position: 'absolute',
-    bottom: 0,
-    paddingBottom: '5px',
-    fontSize: '0.5rem',
-    [mediaQueries.mUp]: {
-      fontSize: '0.75rem',
+    color: '#282828',
+    paddingRight: '15px',
+    '& span': {
+      color: '#282828',
     },
   }),
   rightSide: css({
+    position: 'relative',
+    height: '100%',
     display: 'flex',
     flexDirection: 'column',
     width: '33%',
-    paddingLeft: '10px',
-    [mediaQueries.mUp]: {
-      paddingLeft: '20px',
-    },
-  }),
-  poststampContainer: css({
-    alignSelf: 'flex-end',
+    paddingLeft: '15px',
+    borderLeft: 'solid 1px #DADDDC',
+    justifyContent: 'sprace-between',
   }),
   image: css({
     borderImage: 'url(/static/climatelab/border-image.png) 32 round',
@@ -72,11 +56,10 @@ const styles = {
     '> span': { display: 'block !important' },
   }),
   adressBlock: css({
+    height: '15px',
     borderBottom: 'solid 1px #DADDDC',
-    height: '25px',
-    [mediaQueries.mUp]: {
-      height: '50px',
-    },
+    paddingBottom: '5px',
+    lineHeight: '1.1',
   }),
   adressBlockContainer: css({
     width: '100%',
@@ -84,58 +67,49 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     flexGrow: 1,
+    justifyContent: 'space-around',
+  }),
+  italic: css({
+    fontFamily: fontFamilies.sansSerifItalic,
   }),
 }
 
 export const PostcardPreview = (props) => {
-  const { t, postcard } = props
+  const { postcard } = props
   const [colorScheme] = useColorContext()
 
   if (!postcard) return null
 
-  const { questions, userHasSubmitted } = postcard
-
-  if (!userHasSubmitted) return null
-
-  const imageOptions = questions && questions[0].options
-  const imageSelection =
-    questions[0].userAnswer && questions[0].userAnswer.payload.value[0]
-
-  const postcardText =
-    questions[1].userAnswer && questions[1].userAnswer.payload.value
-
-  const imageUrl =
-    imageOptions &&
-    imageOptions.filter((d) => d.value === imageSelection)[0]?.imageUrl
-
-  if (userHasSubmitted && !imageSelection && !postcardText) {
-    return null
-  }
+  const { text, imageUrl, imageSelection, author } = postcard
 
   return (
     <div
       {...styles.postcard}
       {...colorScheme.set('boxShadow', 'imageChoiceShadow')}
     >
-      <div {...styles.credit}>
-        {' '}
-        {t('Climatelab/Postcard/PostcardPreview/credit', {
-          credit: postcardCredits[imageSelection] || ' ...',
-        })}
-      </div>
-
       <div {...styles.textArea}>
-        <AutoTextSize mode='box'>{postcardText}</AutoTextSize>
+        <AutoTextSize mode='box' maxFontSizePx={42}>
+          {text}
+          {author && author.name !== 'Unbenannt' && author.anonymity === false && (
+            <>
+              <br />
+              <em {...styles.italic}>– {author.name}</em>
+            </>
+          )}
+        </AutoTextSize>
       </div>
 
       <div {...styles.rightSide}>
-        <div {...styles.poststampContainer}>
-          <PoststampComponent imageUrl={imageUrl} />
-        </div>
+        <PoststampComponent imageUrl={imageUrl} />
         <div {...styles.adressBlockContainer}>
           <div {...styles.adressBlock} />
           <div {...styles.adressBlock} />
           <div {...styles.adressBlock} />
+        </div>
+        <div style={{ width: '100%' }}>
+          <AutoTextSize mode='multiline'>
+            {'Illustration: ' + postcardCredits[imageSelection] || ' ...'}
+          </AutoTextSize>
         </div>
       </div>
     </div>

@@ -4,7 +4,7 @@ import { CDN_FRONTEND_BASE_URL, isDev } from '../constants'
 function assetServerImageLoader({
   src,
   width,
-  quality = 75, // Quality is not yet supported by the assets-server
+  quality,
 }: ImageLoaderProps): string {
   if (!CDN_FRONTEND_BASE_URL) {
     if (isDev) {
@@ -20,6 +20,9 @@ function assetServerImageLoader({
   )
   url.searchParams.set('resize', `${width}x`)
   url.searchParams.set('format', 'auto')
+  if (quality) {
+    url.searchParams.set('quality', quality.toString())
+  }
 
   return url.toString()
 }
