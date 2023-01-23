@@ -88,7 +88,7 @@ const Questionnaire = (props) => {
   const [headerHeight] = useHeaderHeight()
   const { t } = useTranslation()
   const [colorScheme] = useColorContext()
-  const id = questionnaireData.questionnaire?.id
+  const id = questionnaireData?.questionnaire?.id
   const [detailsState, setDetailsState] = useState({
     showErrors: false,
     values: {},
@@ -121,7 +121,7 @@ const Questionnaire = (props) => {
         const now = new Date()
         // handle not found or not started
         if (
-          !questionnaireData.questionnaire ||
+          !questionnaireData?.questionnaire ||
           new Date(questionnaireData.questionnaire.beginDate) > now
         ) {
           return (
