@@ -96,7 +96,7 @@ const MemoContainer = ({ memo }) => {
 
   return (
     <CommentNode
-      CommentLink={({ children }) => children}
+      CommentLink={({ children }) => <>{children}</>}
       t={t}
       comment={memo}
       actions={{
