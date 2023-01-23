@@ -16,6 +16,7 @@ import { DefaultContainer } from '../Render/Containers'
 import { Break } from '../../Typography/Break'
 import { Sub, Sup, Flyer } from '../../Typography'
 import { Marker } from '../../Marker'
+import { SkipElement } from '../Render'
 
 export const flyerTemplate: Partial<CustomDescendant>[] = [
   {
@@ -100,7 +101,7 @@ const schema: SchemaConfig = {
   break: Break,
   headline: Flyer.H1,
   link: Flyer.Link,
-  memo: Marker,
+  memo: SkipElement,
   paragraph: Flyer.P,
   bold: Flyer.Emphasis,
   italic: Flyer.Cursive,
