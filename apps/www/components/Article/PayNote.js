@@ -58,14 +58,6 @@ const styles = {
       marginTop: 0,
     },
   }),
-  flyerWrapper: css({
-    maxWidth: 700,
-    margin: '0 auto',
-    padding: 15,
-    [mediaQueries.mUp]: {
-      padding: '15px 0',
-    },
-  }),
 }
 
 const TRY_TO_BUY_RATIO = 0.5
