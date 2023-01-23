@@ -4,6 +4,7 @@ import { BaseEditor, BaseRange, Path } from 'slate'
 import { ReactEditor } from 'slate-react'
 import { HistoryEditor } from 'slate-history'
 import { Formatter } from '../../lib/translate'
+import { MarkerType } from '../Marker'
 
 type MarkType =
   | 'italic'
@@ -56,7 +57,7 @@ export type LinkElement = SharedElement & {
 export type MemoElement = SharedElement & {
   type: 'memo'
   parentId?: string
-  marker?: string
+  marker?: MarkerType
 }
 
 export type FigureElement = SharedElement & {
