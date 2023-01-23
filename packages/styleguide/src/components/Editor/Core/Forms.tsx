@@ -5,21 +5,19 @@ import React, {
   useMemo,
   useState,
 } from 'react'
-import { CustomEditor, CustomElement, ElementFormProps } from '../custom-types'
-import {
-  Editor,
-  Transforms,
-  Element as SlateElement,
-  Text,
-  NodeEntry,
-} from 'slate'
-import { config as elConfig } from '../config/elements'
-import { Overlay, OverlayBody, OverlayToolbar } from '../../Overlay'
+import { Editor, Transforms, Element as SlateElement, NodeEntry } from 'slate'
 import { ReactEditor, useSlate } from 'slate-react'
-import { isDescendant, selectNode } from './helpers/tree'
+import { ascending } from 'd3-array'
+
+import { Overlay, OverlayBody, OverlayToolbar } from '../../Overlay'
+
 import { formStyles } from '../Forms/layout'
 import { useRenderContext } from '../Render/Context'
-import { ascending } from 'd3-array'
+import { config as elConfig } from '../config/elements'
+import { CustomEditor, CustomElement, ElementFormProps } from '../custom-types'
+
+import { isEmptyTextNode } from './helpers/text'
+import { isDescendant, selectNode } from './helpers/tree'
 
 const FormContext = createContext([])
 
@@ -100,12 +98,10 @@ const getOverlappingForm = (
   const [n, p] = Editor.parent(editor, topLevelNode[1])
   if (
     SlateElement.isElement(n) &&
+    Editor.isInline(editor, n) &&
     n.children.length === 3 &&
-    Text.isText(n.children[0]) &&
-    n.children[0].text === '' &&
-    Text.isText(n.children[2]) &&
-    n.children[2].text === '' &&
-    Editor.isInline(editor, n)
+    isEmptyTextNode(n.children[0]) &&
+    isEmptyTextNode(n.children[2])
   ) {
     return getForm(editor, [n, p])
   }
@@ -125,7 +121,7 @@ const getOverlappingForm = (
 // To handle 2) we check whether the top level form element is:
 //  - inline
 //  - has inline ancestor
-//  - has inline ancestor which only contains last element
+//  - has inline ancestor which only contains one non-empty element
 export const getForms = (editor: CustomEditor, path: number[]): FormData[] => {
   if (!path || path === []) return []
 

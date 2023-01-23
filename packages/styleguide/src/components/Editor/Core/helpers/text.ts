@@ -3,6 +3,7 @@ import {
   CustomEditor,
   CustomElement,
   CustomMarksType,
+  CustomNode,
   CustomText,
   DecorateFn,
   NormalizeFn,
@@ -41,11 +42,15 @@ export const canFormatText = (
   node: NodeEntry<CustomAncestor>,
 ): boolean => {
   if (!node || !SlateElement.isElement(node[0])) return false
+
   const formatText = elConfig[node[0].type].attrs?.formatText
   if (!isTextInline(node[0])) return formatText
+
   if (typeof formatText === 'boolean') return formatText
+
   const parent = Editor.parent(editor, node[1])
   if (!SlateElement.isElement(parent[0])) return false
+
   return elConfig[parent[0].type].attrs?.formatText
 }
 
@@ -149,7 +154,10 @@ export const selectEmptyTextNode = (
   selectEmptyParentPath(editor, parent[1], edge)
 }
 
-export const isEmpty = (text?: string) => !text || text === ''
+export const isEmpty = (text?: string): boolean => !text || text === ''
+
+export const isEmptyTextNode = (node: CustomNode): boolean =>
+  Text.isText(node) && isEmpty(node.text)
 
 export const getLinkInText = (text: string) => {
   // regex should only return one link!
