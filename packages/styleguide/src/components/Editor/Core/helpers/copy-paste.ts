@@ -12,11 +12,12 @@ import {
   Element as SlateElement,
   Text,
   Node,
-  NodeEntry,
   Transforms,
+  NodeEntry,
 } from 'slate'
-import { isDescendant } from './tree'
+import { getAncestry, isDescendant } from './tree'
 import { config as elConfig } from '../../config/elements'
+import { intersperse } from '../../../../lib/helpers'
 
 const ELEMENT_TAGS = {
   A: (el): Partial<LinkElement> => ({
@@ -111,27 +112,37 @@ export const parseSlate = (
   return slateData && JSON.parse(decodeURIComponent(window.atob(slateData)))
 }
 
+const extractInlineNodes = (nodes: CustomDescendant[]): CustomDescendant[] => {
+  let inlineEntries: NodeEntry<CustomDescendant>[] = []
+  for (const [n, p] of Node.descendants({
+    type: 'paragraph',
+    children: nodes,
+  })) {
+    if (
+      (SlateElement.isElement(n) && elConfig[n.type]?.attrs?.isInline) ||
+      (Text.isText(n) &&
+        !!n.text &&
+        !inlineEntries.find((entry) => isDescendant(entry, [n, p])))
+    ) {
+      inlineEntries = inlineEntries.concat([[n, p]])
+    }
+  }
+  let inlineNodes: CustomDescendant[] = inlineEntries.map((entry) => entry[0])
+  inlineNodes = intersperse(inlineNodes, () => ({ text: ' ' }))
+  return inlineNodes
+}
+
+// here we consider the type of the type of the first inline-containing block we
+// want to copy (C) vs the type of the first inline-containing block selected (S)
+// 3 types of inserts:
+//  1. S-C block types match
+//  2. no match but S allows repeat -> we extract all the blocks and converts their type to S
+//  3. no match, no repeats allowed -> we extract all inline blocks and insert those
 export const insertSlateFragment = (
   editor: CustomEditor,
   fragment: CustomDescendant[],
 ): void => {
-  let inlineNodes: NodeEntry<CustomDescendant>[] = []
-  for (const [n, p] of Node.descendants({
-    type: 'paragraph',
-    children: fragment,
-  })) {
-    if (SlateElement.isElement(n) && elConfig[n.type]?.attrs?.isInline) {
-      inlineNodes = inlineNodes.concat([[n, p]])
-    } else if (
-      Text.isText(n) &&
-      !!n.text &&
-      !inlineNodes.find((entry) => isDescendant(entry, [n, p]))
-    ) {
-      inlineNodes = inlineNodes.concat([[n, p]])
-    }
-  }
-  Editor.insertFragment(
-    editor,
-    inlineNodes.map((entry) => entry[0]),
-  )
+  const { element: selectedElement } = getAncestry(editor)
+  console.log({ selection: editor.selection, selectedElement, fragment })
+  Editor.insertFragment(editor, extractInlineNodes(fragment))
 }
