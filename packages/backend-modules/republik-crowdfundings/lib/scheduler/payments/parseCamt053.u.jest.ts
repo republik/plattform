@@ -95,12 +95,6 @@ describe('parseCamt053():', () => {
     expect(paymentEntries[1].isStripe).toBe(true)
     expect(paymentEntries[2].isStripe).toBe(true)
   })
-
-  it('recognizes collectiveCredit payments', async () => {
-    const xmlString = await loadFixture('collectiveCredit')
-    const paymentEntries = parseCamt053(xmlString)
-    expect(paymentEntries[0].isCollectiveCredit).toBe(true)
-  })
 })
 
 function assertEntryValues(e: PaymentEntry) {

@@ -162,7 +162,6 @@ export interface PaymentEntry {
   isDebitCardPayment: boolean
   isStripe: boolean
   isPayPal: boolean
-  isCollectiveCredit: boolean
 }
 
 export function parseCamt053(s: string): PaymentEntry[] {
@@ -187,7 +186,6 @@ export function parseCamt053(s: string): PaymentEntry[] {
       isDebitCardPayment: isDebitCardPayment(creditEntry),
       isPayPal: matchDebitor('PAYPAL', debitorName, avisierungstext),
       isStripe: matchDebitor('STRIPE', debitorName, avisierungstext),
-      isCollectiveCredit: avisierungstext.startsWith('SAMMELGUTSCHRIFT'),
       imageReference: getImageReference(creditEntry),
       buchungsdatum: getBuchungsdatum(creditEntry),
       valuta: getValuta(creditEntry),

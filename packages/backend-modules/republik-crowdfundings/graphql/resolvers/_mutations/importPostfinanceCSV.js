@@ -89,7 +89,6 @@ const parsePostfinanceExport = async (inputFile, pgdb) => {
           row.Avisierungstext,
         ),
     ) // trash PF CARD
-    .filter((row) => !/^SAMMELGUTSCHRIFT/g.exec(row.Avisierungstext)) // trash virtual accounts
     .filter(
       (row) =>
         !/^GUTSCHRIFT (VON FREMDBANK )?AUFTRAGGEBER: (STRIPE|PAYPAL)/gi.exec(
