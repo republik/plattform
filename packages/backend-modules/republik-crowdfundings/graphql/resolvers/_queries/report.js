@@ -33,11 +33,21 @@ module.exports = async (_, { params = {} }, { pgdb, user }) => {
       pay.method,
       pay.total,
       pay."pspPayload"->>'balance_transaction' AS "stripeBalanceTransactionId",
+      json_agg(pfpay.buchungsdatum) AS "accountDates",
+      ${
+        timeFilter
+          ? `json_agg(${createSQLTimeCondition(
+              'pfpay.buchungsdatum',
+              timeFilter,
+            )}) AS "accountDatesInFilter",`
+          : ''
+      }
       c.name AS "companyName",
       pkgs.name AS "packageName"
 
     FROM "payments" pay
 
+    LEFT JOIN "postfinancePayments" pfpay ON pfpay.mitteilung = pay.hrid
     INNER JOIN "pledgePayments" ppay ON ppay."paymentId" = pay.id
     INNER JOIN "pledges" p ON p.id = ppay."pledgeId"
     INNER JOIN "packages" pkgs ON pkgs.id = p."packageId"
@@ -47,9 +57,11 @@ module.exports = async (_, { params = {} }, { pgdb, user }) => {
     ${
       timeFilter
         ? `WHERE (
-      ${createSQLTimeCondition(`pay."createdAt"`, timeFilter)}
+      ${createSQLTimeCondition('pay."createdAt"', timeFilter)}
       OR
-      ${createSQLTimeCondition(`pay."updatedAt"`, timeFilter)}
+      ${createSQLTimeCondition('pay."updatedAt"', timeFilter)}
+      OR
+      ${createSQLTimeCondition('pfpay.buchungsdatum', timeFilter)}
     )`
         : ''
     }
@@ -57,6 +69,28 @@ module.exports = async (_, { params = {} }, { pgdb, user }) => {
     GROUP BY pay.id, c.id, p.id, pkgs.id
     ORDER BY pay."createdAt"
   `)
+
+  if (timeFilter) {
+    transactionItems.forEach((transactionItem) => {
+      if (
+        transactionItem.method === 'PAYMENTSLIP' &&
+        transactionItem.status === 'PAID'
+      ) {
+        const accountDatesInFilter =
+          transactionItem.accountDatesInFilter.filter(Boolean)
+        const singleAccountPayment = accountDatesInFilter.length === 1
+        const hasAccountPaymentInFilter =
+          singleAccountPayment && accountDatesInFilter[0]
+        if (!hasAccountPaymentInFilter) {
+          if (transactionItem.createdAtInFilter && singleAccountPayment) {
+            transactionItem.status = 'WAITING'
+          } else {
+            transactionItem.status = 'PAID_UNKOWN_ACCOUNT_DATE'
+          }
+        }
+      }
+    })
+  }
 
   const packages = nest()
     .key((d) => d.packageName)
