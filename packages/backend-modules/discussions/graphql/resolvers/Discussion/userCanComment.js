@@ -9,8 +9,16 @@ module.exports = async (discussion, _, context) => {
     return false
   }
 
+  /* TODO: das geht aber noch besser, jetzt ist's so hin und her */
+  const additionalAllowedRoles = discussion.allowedRoles.filter(
+    (role) => !['member', 'debater'].includes(role),
+  )
+  const isInAllowedRoles =
+    additionalAllowedRoles.length > 0 &&
+    Roles.userIsInRoles(user, discussion.allowedRoles)
+
   const isMember = Roles.userIsInRoles(user, ['member'])
-  if (!isMember) {
+  if (!isMember && !isInAllowedRoles) {
     return false
   }
 
@@ -18,5 +26,5 @@ module.exports = async (discussion, _, context) => {
   const hasActiveMembership =
     !!user && (await hasUserActiveMembership(user, pgdb))
 
-  return hasActiveMembership || isDebater
+  return hasActiveMembership || isDebater || isInAllowedRoles
 }
