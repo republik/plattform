@@ -89,7 +89,7 @@ module.exports = async (_, { params = {} }, { pgdb, user }) => {
         transactionItem.status === 'PAID'
       ) {
         const accountDatesInFilter =
-          transactionItem.accountDatesInFilter.filter(Boolean)
+          transactionItem.accountDatesInFilter.filter((d) => d !== null)
         const singleAccountPayment = accountDatesInFilter.length === 1
         const hasAccountPaymentInFilter =
           singleAccountPayment && accountDatesInFilter[0]
