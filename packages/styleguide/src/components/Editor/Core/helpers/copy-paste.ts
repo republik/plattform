@@ -7,10 +7,6 @@ import {
   ParagraphElement,
   BreakElement,
   CustomElement,
-  CustomElementsType,
-  CustomNode,
-  CustomAncestor,
-  TemplateType,
   NodeTemplate,
 } from '../../custom-types'
 import {
@@ -21,7 +17,7 @@ import {
   Transforms,
   NodeEntry,
 } from 'slate'
-import { getAncestry, getParent, isDescendant, selectNode } from './tree'
+import { getAncestry, isDescendant } from './tree'
 import { config as elConfig } from '../../config/elements'
 import { intersperse } from '../../../../lib/helpers'
 import { getTemplateType, isCorrect } from './structure'
@@ -153,7 +149,8 @@ const convertNodes = (
 
 // low level blocks are block which don't contain other blocks
 // just text or inlines
-const isLowLevelBlock = (node: CustomElement): boolean => {
+const isLowLevelBlock = (node: CustomDescendant): boolean => {
+  if (Text.isText(node)) return true
   if (!elConfig[node.type]?.attrs?.isInline) {
     const testChild = node.children[0]
     if (
@@ -165,19 +162,10 @@ const isLowLevelBlock = (node: CustomElement): boolean => {
   }
 }
 
-const firstLowLevelBlockSelected = (
-  editor: CustomEditor,
-): NodeEntry<CustomElement> => {
-  let { element: candidateNode } = getAncestry(editor)
-  while (Editor.isInline(editor, candidateNode[0])) {
-    candidateNode = getParent(editor, candidateNode)
-  }
-  return candidateNode
-}
-
 const getStrippedFragment = (
   fragment: CustomDescendant[],
 ): CustomDescendant[] => {
+  console.log('getStrippedFragment', fragment)
   if (
     fragment.length === 1 &&
     SlateElement.isElement(fragment[0]) &&
@@ -200,8 +188,9 @@ export const insertSlateFragment = (
 ): void => {
   const strippedFragment = getStrippedFragment(fragment)
   const copiedRefNode = strippedFragment[0]
-  const selectedRefEntry = firstLowLevelBlockSelected(editor)
-  // case 1
+  const { element: selectedRefEntry } = getAncestry(editor)
+  console.log({ copiedRefNode, template: selectedRefEntry[0].template })
+  // case 1: perfect match
   if (
     SlateElement.isElement(copiedRefNode) &&
     copiedRefNode.type === selectedRefEntry[0].type

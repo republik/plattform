@@ -113,6 +113,96 @@ describe('Slate Editor: insert Slate fragment', () => {
         },
       ])
     })
+
+    // TODO: maybe in a next iteration
+    xit('should insert the fragment as is if the type is compatible as per template', async () => {
+      value = [flyerTile]
+      const structure = [
+        {
+          type: 'flyerTile',
+          repeat: true,
+        },
+      ]
+      const editor = await setup({ schema: flyerSchema, structure })
+      await Transforms.select(editor, { path: [0, 5, 0], offset: 0 })
+      insertSlateFragment(editor, [
+        {
+          type: 'flyerTile',
+          children: [
+            {
+              children: [
+                {
+                  children: [
+                    {
+                      text: 'Che tristezza, Nicoletta.',
+                    },
+                  ],
+                  type: 'pullQuoteText',
+                },
+                {
+                  children: [
+                    {
+                      text: 'Zum Beitrag: ',
+                    },
+                    {
+                      children: [
+                        {
+                          text: 'Abschiednehmen',
+                        },
+                      ],
+                      type: 'link',
+                    },
+                    {
+                      text: '.',
+                    },
+                  ],
+                  type: 'pullQuoteSource',
+                },
+              ],
+              type: 'pullQuote',
+            },
+          ],
+        },
+      ])
+      await new Promise(process.nextTick)
+      expect(cleanupTree(value)[0].children[5]).toEqual({
+        type: 'flyerTile',
+        children: [
+          {
+            children: [
+              {
+                children: [
+                  {
+                    text: 'Che tristezza, Nicoletta.',
+                  },
+                ],
+                type: 'pullQuoteText',
+              },
+              {
+                children: [
+                  {
+                    text: 'Zum Beitrag: ',
+                  },
+                  {
+                    children: [
+                      {
+                        text: 'Abschiednehmen',
+                      },
+                    ],
+                    type: 'link',
+                  },
+                  {
+                    text: '.',
+                  },
+                ],
+                type: 'pullQuoteSource',
+              },
+            ],
+            type: 'pullQuote',
+          },
+        ],
+      })
+    })
   })
 
   describe('convertible block types', () => {
