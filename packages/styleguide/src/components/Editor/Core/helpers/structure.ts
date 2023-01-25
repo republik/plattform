@@ -72,7 +72,7 @@ export const isCorrect = (
   )
 }
 
-const getTemplateType = (
+export const getTemplateType = (
   template?: NodeTemplate,
 ): CustomElementsType | undefined => {
   if (!template) return
