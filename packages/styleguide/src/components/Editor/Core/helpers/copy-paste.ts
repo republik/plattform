@@ -165,7 +165,6 @@ const isLowLevelBlock = (node: CustomDescendant): boolean => {
 const getStrippedFragment = (
   fragment: CustomDescendant[],
 ): CustomDescendant[] => {
-  console.log('getStrippedFragment', fragment)
   if (
     fragment.length === 1 &&
     SlateElement.isElement(fragment[0]) &&
@@ -189,7 +188,6 @@ export const insertSlateFragment = (
   const strippedFragment = getStrippedFragment(fragment)
   const copiedRefNode = strippedFragment[0]
   const { element: selectedRefEntry } = getAncestry(editor)
-  console.log({ copiedRefNode, template: selectedRefEntry[0].template })
   // case 1: perfect match
   if (
     SlateElement.isElement(copiedRefNode) &&
