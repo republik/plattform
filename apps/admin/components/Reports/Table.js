@@ -13,12 +13,12 @@ const td = css({
   paddingBottom: 3,
 })
 
-const num = merge(td, {
+const tdNum = merge(td, {
   textAlign: 'right',
   fontFeatureSettings: '"tnum" 1, "kern" 1',
 })
 
-const groupTd = css({
+const th = css({
   paddingTop: 10,
   borderBottomWidth: 1,
   borderBottomStyle: 'solid',
@@ -31,10 +31,10 @@ const groupTd = css({
   },
 })
 
-const styles = {
+export const tableStyles = {
   table: css({
     ...fontStyles.sansSerifRegular,
-    borderSpacing: '10px 0',
+    borderSpacing: 0,
     paddingLeft: 5,
     paddingRight: 5,
     width: '100%',
@@ -45,17 +45,25 @@ const styles = {
     '& th': {
       ...fontStyles.sansSerifMedium,
     },
+    '& td, & th': {
+      paddingRight: 10,
+    },
+    '& td:last-child, & th:last-child': {
+      paddingRight: 0,
+    },
+  }),
+  alternateRowBg: css({
+    '& tr:nth-child(odd) td': {
+      backgroundColor: '#eee',
+    },
   }),
   td,
-  num,
-  groupTd: merge(td, groupTd),
-  groupTdNum: merge(num, groupTd),
-  highlight: css({
-    ...fontStyles.sansSerifMedium,
-  }),
+  tdNum,
+  th: merge(td, th),
+  thNum: merge(tdNum, th),
 }
 
-const Table = ({ children }) => {
+export const TableRaw = ({ children }) => {
   const [colorScheme] = useColorContext()
   return (
     <div
@@ -67,7 +75,7 @@ const Table = ({ children }) => {
       }}
     >
       <table
-        {...styles.table}
+        {...tableStyles.table}
         {...colorScheme.set('borderBottomColor', 'text')}
       >
         {children}
@@ -77,12 +85,12 @@ const Table = ({ children }) => {
 }
 
 export default ({ groups, columnLabels = ['Anzahl', 'Total'] }) => (
-  <Table>
+  <TableRaw>
     {/* <thead>
       <tr>
-        <th {...styles.td}></th>
-        <th {...styles.num}>Anzahl</th>
-        <th {...styles.num}>Total in CHF</th>
+        <th {...tableStyles.td}></th>
+        <th {...tableStyles.tdNum}>Anzahl</th>
+        <th {...tableStyles.tdNum}>Total in CHF</th>
       </tr>
     </thead> */}
     <tbody>
@@ -90,22 +98,20 @@ export default ({ groups, columnLabels = ['Anzahl', 'Total'] }) => (
         return (
           <Fragment key={key}>
             <tr>
-              <td {...styles.groupTd} style={{ lineHeight: '1.3em' }}>
-                <span {...styles.highlight}>{key}</span>
-              </td>
-              <th {...styles.groupTdNum}>{columnLabels[0]}</th>
-              <th {...styles.groupTdNum}>{columnLabels[1]}</th>
+              <th {...tableStyles.th}>{key}</th>
+              <th {...tableStyles.thNum}>{columnLabels[0]}</th>
+              <th {...tableStyles.thNum}>{columnLabels[1]}</th>
             </tr>
             {values.map(({ key, value }) => (
               <tr key={key}>
-                <td {...styles.td}>{key}</td>
-                <td {...styles.num}>{countFormat(value.count)}</td>
-                <td {...styles.num}>{chfFormat(value.total / 100)}</td>
+                <td {...tableStyles.td}>{key}</td>
+                <td {...tableStyles.tdNum}>{countFormat(value.count)}</td>
+                <td {...tableStyles.tdNum}>{chfFormat(value.total / 100)}</td>
               </tr>
             ))}
           </Fragment>
         )
       })}
     </tbody>
-  </Table>
+  </TableRaw>
 )

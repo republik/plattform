@@ -29,6 +29,14 @@ module.exports = async (_, { params = {} }, { pgdb, user }) => {
           : ''
       }
       pay."updatedAt" AT TIME ZONE 'Europe/Zurich' "updatedAt",
+      ${
+        timeFilter
+          ? `${createSQLTimeCondition(
+              'pay."updatedAt"',
+              timeFilter,
+            )} AS "updatedAtInFilter",`
+          : ''
+      }
       pay.status,
       pay.method,
       pay.total,
@@ -43,13 +51,17 @@ module.exports = async (_, { params = {} }, { pgdb, user }) => {
           : ''
       }
       c.name AS "companyName",
-      pkgs.name AS "packageName"
+      pkgs.name AS "packageName",
+      CONCAT(u."firstName", ' ', u."lastName") AS name,
+      u.email,
+      u.id AS "userId"
 
     FROM "payments" pay
 
     LEFT JOIN "postfinancePayments" pfpay ON pfpay.mitteilung = pay.hrid
     INNER JOIN "pledgePayments" ppay ON ppay."paymentId" = pay.id
     INNER JOIN "pledges" p ON p.id = ppay."pledgeId"
+    INNER JOIN users u ON u.id = p."userId"
     INNER JOIN "packages" pkgs ON pkgs.id = p."packageId"
 
     INNER JOIN "companies" c ON c.id = pkgs."companyId"
@@ -66,7 +78,7 @@ module.exports = async (_, { params = {} }, { pgdb, user }) => {
         : ''
     }
 
-    GROUP BY pay.id, c.id, p.id, pkgs.id
+    GROUP BY pay.id, c.id, p.id, pkgs.id, u.id
     ORDER BY pay."createdAt"
   `)
 
@@ -215,6 +227,7 @@ module.exports = async (_, { params = {} }, { pgdb, user }) => {
       packages,
       methods,
       membershipDays,
+      transactionItems,
     },
   }
 }

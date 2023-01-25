@@ -1,12 +1,13 @@
 import { gql, useQuery } from '@apollo/client'
-import { Interaction, Label, Loader } from '@project-r/styleguide'
+import { Editorial, Interaction, Label, Loader } from '@project-r/styleguide'
 import { css } from 'glamor'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { countFormat } from '../../lib/utils/formats'
 import { displayDate, displayDateTime } from '../Display/utils'
 
 import Input from '../Form/Input'
-import Table from './Table'
+import Table, { TableRaw, tableStyles } from './Table'
 
 const gqlQuery = gql`
   query liveReport($begin: String, $end: String) {
@@ -83,6 +84,7 @@ const Live = () => {
               packages,
               methods,
               membershipDays,
+              transactionItems,
             },
           } = data.report
           return (
@@ -115,6 +117,79 @@ const Live = () => {
                 Zahlungen nach Art
               </Interaction.H3>
               <Table groups={methods} />
+              <Interaction.H3 style={{ marginTop: 20, marginBottom: 10 }}>
+                Liste der Zahlungen
+              </Interaction.H3>
+              <TableRaw>
+                <tbody {...tableStyles.alternateRowBg}>
+                  <tr>
+                    <th {...tableStyles.th}>Name</th>
+                    <th {...tableStyles.th}>Package</th>
+                    <th {...tableStyles.th}>Status</th>
+                    <th {...tableStyles.thNum}>CHF</th>
+                    <th {...tableStyles.thNum}>Created</th>
+                    <th {...tableStyles.thNum}>Updated</th>
+                    <th {...tableStyles.thNum}>Account</th>
+                  </tr>
+                  {transactionItems.map((transactionItem) => (
+                    <tr key={transactionItem.id}>
+                      <td {...tableStyles.td}>
+                        <Link
+                          href={`/users/${transactionItem.userId}`}
+                          passHref
+                        >
+                          <Editorial.A>{transactionItem.name}</Editorial.A>
+                        </Link>
+                      </td>
+                      <td {...tableStyles.td}>{transactionItem.packageName}</td>
+                      <td {...tableStyles.td}>{transactionItem.status}</td>
+                      <td {...tableStyles.tdNum}>
+                        {transactionItem.total / 100}
+                      </td>
+                      <td {...tableStyles.tdNum}>
+                        <span
+                          style={{
+                            backgroundColor: transactionItem.createdAtInFilter
+                              ? '#9AFD98'
+                              : undefined,
+                          }}
+                        >
+                          {displayDate(transactionItem.createdAt)}
+                        </span>
+                      </td>
+                      <td {...tableStyles.tdNum}>
+                        <span
+                          style={{
+                            backgroundColor: transactionItem.updatedAtInFilter
+                              ? '#9AFD98'
+                              : undefined,
+                          }}
+                        >
+                          {displayDate(transactionItem.updatedAt)}
+                        </span>
+                      </td>
+                      <td {...tableStyles.tdNum}>
+                        {transactionItem.accountDates.map(
+                          (accountDate, index) =>
+                            accountDate && (
+                              <span
+                                key={index}
+                                style={{
+                                  backgroundColor: transactionItem
+                                    .accountDatesInFilter?.[index]
+                                    ? '#9AFD98'
+                                    : undefined,
+                                }}
+                              >
+                                {displayDate(accountDate)}
+                              </span>
+                            ),
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </TableRaw>
               <Interaction.H3 style={{ marginTop: 20, marginBottom: 10 }}>
                 Insgesamt bezahlte Mitgliedschaftstage pro Jahr
               </Interaction.H3>
