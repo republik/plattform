@@ -16,17 +16,20 @@ const memberships = require('../memberships')
 const getCounts = async ({ campaign }, { pgdb }) => {
   const giftableMemberships = await memberships.findGiftableMemberships(pgdb)
 
-  const unclaimedAccessGrants = await pgdb.query(`
+  const unclaimedAccessGrants = await pgdb.query(
+    `
     SELECT ag.id
 
     FROM "accessGrants" ag
 
     WHERE
-      ag."accessCampaignId" = '${campaign.id}'
+      ag."accessCampaignId" = :campaignId
       AND ag."beginAt" IS NULL
       AND ag."revokedAt" IS NULL
       AND ag."invalidatedAt" IS NULL
-  `)
+  `,
+    { campaignId: campaign.id },
+  )
 
   return {
     giftableMemberships: giftableMemberships.length,

@@ -1,5 +1,6 @@
 import { EditorAttr, ElementsConfig } from '../../custom-types'
 import { config as link } from './link'
+import { config as memo } from './memo'
 import { config as paragraph } from './paragraph'
 import { config as headline } from './headline'
 import { config as breakConfig } from './break'
@@ -44,6 +45,7 @@ export const config: ElementsConfig = {
   headline,
   inlineCode,
   link,
+  memo,
   figure,
   figureImage,
   figureCaption,

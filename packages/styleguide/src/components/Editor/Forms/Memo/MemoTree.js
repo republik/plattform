@@ -1,19 +1,14 @@
-import { useMemo, useState, useContext } from 'react'
+import React, { useMemo, useState, useContext } from 'react'
 import compose from 'lodash/flowRight'
-
+import { withMemos, getDisplayAuthor } from './graphql'
+import { EditIcon, UnpublishIcon } from '../../../Icons'
 import {
-  UnpublishIcon,
-  EditIcon,
-  DiscussionContext,
-  CommentNode,
   CommentComposer,
   CommentComposerPlaceholder,
-} from '@project-r/styleguide'
-
-import withT from '../../../../lib/withT'
-import withMe from '../../../../lib/withMe'
-
-import { withMemos, getDisplayAuthor } from './graphql'
+} from '../../../Discussion/Composer'
+import { DiscussionContext } from '../../../Discussion/DiscussionContext'
+import { CommentNode } from '../../../Discussion/Tree'
+import withMe from '../../../../lib/apollo/withMe'
 
 const MemoTree = (props) => {
   const {
@@ -68,7 +63,7 @@ const MemoTree = (props) => {
   )
 }
 
-export default compose(withT, withMe, withMemos)(MemoTree)
+export default compose(withMe, withMemos)(MemoTree)
 
 const MemoContainer = ({ memo }) => {
   const [isEditing, setIsEditing] = useState(false)
@@ -101,6 +96,7 @@ const MemoContainer = ({ memo }) => {
 
   return (
     <CommentNode
+      CommentLink={({ children }) => <>{children}</>}
       t={t}
       comment={memo}
       actions={{

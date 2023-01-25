@@ -15,12 +15,19 @@ module.exports = {
               type: 'text',
               analyzer: 'german',
             },
+            value: {
+              type: 'keyword',
+            },
           },
         },
         resolved: {
           properties: {
             value: {
               properties: {
+                ImageChoice: {
+                  type: 'text',
+                  analyzer: 'german',
+                },
                 Choice: {
                   type: 'text',
                   analyzer: 'german',

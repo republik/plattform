@@ -1,4 +1,4 @@
-import { SchemaConfig } from '../custom-types'
+import { CustomDescendant, NodeTemplate, SchemaConfig } from '../custom-types'
 import { Figure, FigureImage, FigureByline } from '../../Figure/Slate'
 import {
   ArticleLead,
@@ -15,6 +15,58 @@ import { Quiz, QuizAnswer } from '../../Flyer/Quiz'
 import { DefaultContainer } from '../Render/Containers'
 import { Break } from '../../Typography/Break'
 import { Sub, Sup, Flyer } from '../../Typography'
+import { Marker } from '../../Marker'
+import { SkipElement } from '../Render'
+
+export const flyerTemplate: Partial<CustomDescendant>[] = [
+  {
+    type: 'flyerTileOpening',
+    children: [
+      {
+        type: 'flyerDate',
+        children: [{ text: '' }],
+      },
+      {
+        type: 'headline',
+        children: [
+          { text: 'Guten Tag,' },
+          { type: 'break', children: [{ text: '' }] },
+          { text: 'schön, sind Sie da!' },
+        ],
+      },
+    ],
+  },
+  {
+    type: 'flyerTileClosing',
+    children: [
+      {
+        type: 'headline',
+        children: [{ text: 'Danke fürs Interesse.' }],
+      },
+      {
+        type: 'flyerSignature',
+        children: [
+          {
+            text: 'Ihre Crew der Republik',
+          },
+        ],
+      },
+    ],
+  },
+]
+
+export const flyerStructure: NodeTemplate[] = [
+  {
+    type: 'flyerTileOpening',
+  },
+  {
+    type: ['flyerTile', 'flyerTileMeta'],
+    repeat: true,
+  },
+  {
+    type: 'flyerTileClosing',
+  },
+]
 
 const schema: SchemaConfig = {
   container: Flyer.Layout,
@@ -49,6 +101,7 @@ const schema: SchemaConfig = {
   break: Break,
   headline: Flyer.H1,
   link: Flyer.Link,
+  memo: SkipElement,
   paragraph: Flyer.P,
   bold: Flyer.Emphasis,
   italic: Flyer.Cursive,

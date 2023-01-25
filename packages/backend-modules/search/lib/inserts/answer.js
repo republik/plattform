@@ -3,17 +3,17 @@ const Promise = require('bluebird')
 const bulk = require('../indexPgTable')
 
 async function transform(row) {
-  const { questionnaireId, questionId, userId, payload } = row
+  const { questionnaireId, questionId, userId, pseudonym, payload } = row
 
   const { question, submission } = await Promise.props({
     question: this.payload.getQuestion(questionId),
-    submission: this.payload.getSubmission(questionnaireId, userId),
+    submission: this.payload.getSubmission(questionnaireId, userId, pseudonym),
   })
 
   const { id, text, type, typePayload } = question
 
   const typeValue =
-    (type === 'Choice' &&
+    (['Choice', 'ImageChoice'].includes(type) &&
       payload?.value.map(
         (value) =>
           typePayload.options.find((option) => option.value == value)?.label || // eslint-disable-line eqeqeq
@@ -45,9 +45,17 @@ const getDefaultResource = async ({ pgdb }) => {
           { fields: ['id', 'text', 'type', 'typePayload'] },
         )
       },
-      getSubmission: async function (questionnaireId, userId) {
+      getSubmission: async function (questionnaireId, userId, pseudonym) {
+        if (!userId && !pseudonym) {
+          return null
+        }
+
         return pgdb.public.questionnaireSubmissions.findOne(
-          { questionnaireId, userId },
+          {
+            questionnaireId,
+            ...(userId && { userId }),
+            ...(pseudonym && { pseudonym }),
+          },
           { fields: ['id', 'createdAt'] },
         )
       },

@@ -80,6 +80,8 @@ import { getDocument } from './graphql/getDocument'
 import ShareImage from './ShareImage'
 import { BrowserOnlyActionBar } from './BrowserOnly'
 import ArticleRecommendationsFeed from './ArticleRecommendationsFeed'
+import TeaserAudioPlayButton from '../Audio/shared/TeaserAudioPlayButton'
+import useAudioQueue from '../Audio/hooks/useAudioQueue'
 
 const LoadingComponent = () => <SmallLoader loading />
 
@@ -181,6 +183,14 @@ const Postcard = dynamic(
   },
 )
 
+const PostcardGallery = dynamic(
+  () => import('../Climatelab/Postcard/Gallery/PostcardGallery'),
+  {
+    loading: LoadingComponent,
+    ssr: false,
+  },
+)
+
 const schemaCreators = {
   editorial: createArticleSchema,
   meta: createArticleSchema,
@@ -261,6 +271,8 @@ const ArticlePage = ({
   const { share, extract, showAll } = router.query
 
   const { me, meLoading, hasAccess, hasActiveMembership, isEditor } = useMe()
+
+  const { isAudioQueueAvailable } = useAudioQueue()
 
   const cleanedPath = cleanAsPath(router.asPath)
 
@@ -379,6 +391,8 @@ const ArticlePage = ({
     }
   }, [trialSignup])
 
+  const showPlayButton = !extract && hasAccess && isAudioQueueAvailable
+
   const template = meta?.template
   const schema = useMemo(
     () =>
@@ -409,6 +423,7 @@ const ArticlePage = ({
           CLIMATE_LAB_COUNTER: ClimateLabCounter,
           CLIMATE_LAB_INLINE_TEASER: ClimateLabInlineTeaser,
           POSTCARD: Postcard,
+          POSTCARD_GALLERY: PostcardGallery,
         },
         titleMargin: false,
         titleBreakout,
@@ -442,6 +457,7 @@ const ArticlePage = ({
         CommentLink,
         ActionBar: BrowserOnlyActionBar,
         PayNote: showInlinePaynote ? TrialPayNoteMini : undefined,
+        AudioPlayButton: showPlayButton ? TeaserAudioPlayButton : undefined,
       }),
     [template, inNativeIOSApp, inNativeApp, showInlinePaynote, titleBreakout],
   )
@@ -633,7 +649,6 @@ const ArticlePage = ({
               customMode={meta.paynoteMode}
               customOnly={isPage || isFormat}
               position='before'
-              Wrapper={isFlyer ? FlyerWrapper : undefined}
             />
           )
 

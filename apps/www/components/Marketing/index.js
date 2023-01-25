@@ -35,7 +35,9 @@ const Marketing = ({
 
   return (
     <>
-      {/* TODO: should we display another box for climate users or should we just not display it like it's done here */}
+      {/* TODO: as soon as we do not have member role for climate users only
+      should we display another box for climate users or should we just not 
+      display it like it's done here */}
       {!meLoading &&
         meGuidance &&
         !hasActiveMembership &&
@@ -53,10 +55,7 @@ const Marketing = ({
       <ColorContextProvider colorSchemeKey='dark'>
         <Top carouselData={data.carousel} />
       </ColorContextProvider>
-      {/*
-        TODO: add on 09.01.2023
-        <ClimateLabTeaser />
-      */}
+      <ClimateLabTeaser />
       <Carpet loading={loading} front={data.carpet} />
       <Reasons inNativeApp={inNativeApp} />
       {inNativeApp && <MarketingTrialForm />}

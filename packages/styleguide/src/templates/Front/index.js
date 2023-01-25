@@ -52,11 +52,7 @@ import {
 
 import createLiveTeasers from './liveTeasers'
 import { ColorContextProvider } from '../../components/Colors/ColorContext'
-
-const shouldRenderPlayButton = ({ urlMeta }) =>
-  urlMeta?.hasAudio && urlMeta?.audioSourceKind !== 'syntheticReadAloud'
-    ? true
-    : undefined
+import { shouldRenderPlayButton } from '../shared/audio'
 
 export const subject = {
   matchMdast: matchHeading(2),

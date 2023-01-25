@@ -1,75 +1,15 @@
 import { withRouter } from 'next/router'
 import {
   flyerSchema,
+  flyerStructure,
   RenderContextProvider,
-  timeFormat,
   FlyerDate,
 } from '@project-r/styleguide'
-import {
-  Editor,
-  flyerEditorSchema,
-  FLYER_DATE_FORMAT,
-} from '@project-r/styleguide/editor'
+import { Editor, flyerEditorSchema } from '@project-r/styleguide/editor'
 import withAuthorization from '../../components/Auth/withAuthorization'
 import { HEADER_HEIGHT } from '../Frame/constants'
 import compose from 'lodash/flowRight'
 import withT from '../../lib/withT'
-
-export const getInitialValue = (options) => {
-  const date = options?.publishDate
-    ? { date: timeFormat(FLYER_DATE_FORMAT)(new Date(options?.publishDate)) }
-    : {}
-  return [
-    {
-      type: 'flyerTileOpening',
-      children: [
-        {
-          type: 'flyerDate',
-          children: [{ text: '' }],
-          ...date,
-        },
-        {
-          type: 'headline',
-          children: [
-            { text: 'Guten Tag,' },
-            { type: 'break', children: [{ text: '' }] },
-            { text: 'schön sind Sie da.' },
-          ],
-        },
-      ],
-    },
-    {
-      type: 'flyerTileClosing',
-      children: [
-        {
-          type: 'headline',
-          children: [{ text: 'Danke fürs Interesse.' }],
-        },
-        {
-          type: 'flyerSignature',
-          children: [
-            {
-              text: 'Ihre Crew der Republik',
-            },
-          ],
-        },
-      ],
-    },
-  ]
-}
-
-const STRUCTURE = [
-  {
-    type: 'flyerTileOpening',
-  },
-  {
-    type: ['flyerTile', 'flyerTileMeta'],
-    repeat: true,
-  },
-  {
-    type: 'flyerTileClosing',
-  },
-]
 
 export const editorToolbarStyle = { top: HEADER_HEIGHT }
 
@@ -78,10 +18,18 @@ const TOOLBAR = {
   showChartCount: true,
 }
 
-const Index = ({ value, publishDate, onChange, readOnly, t }) => {
+const Index = ({
+  value,
+  repoId,
+  commitId,
+  publishDate,
+  onChange,
+  readOnly,
+  t,
+}) => {
   const nav = <FlyerDate date={publishDate} />
   return (
-    <RenderContextProvider t={t} nav={nav}>
+    <RenderContextProvider t={t} nav={nav} repoId={repoId} commitId={commitId}>
       {/* The Editor does its own RenderContextProvider
        * but we also need to do one from the main styleguide entry point
        * cause render components will use that context
@@ -91,14 +39,13 @@ const Index = ({ value, publishDate, onChange, readOnly, t }) => {
         setValue={(newValue) => {
           onChange(newValue)
         }}
-        structure={STRUCTURE}
         config={{
           schema: flyerSchema,
           editorSchema: flyerEditorSchema,
+          structure: flyerStructure,
           toolbar: TOOLBAR,
           readOnly,
-          t,
-          nav,
+          context: { t, nav, repoId, commitId },
         }}
       />
     </RenderContextProvider>

@@ -250,6 +250,7 @@ type Questionnaire {
 
   submissions(
     search: String
+    value: String
     first: Int
     filters: SubmissionsFilterInput
     sort: SubmissionsSortInput
@@ -261,6 +262,12 @@ type Questionnaire {
 input SubmissionsFilterInput {
   id: ID
   not: ID
+
+  submissionIds: [ID!]
+  notSubmissionIds: [ID!]
+
+  answeredQuestionIds: [ID!]
+  hasAnswers: Boolean @deprecated(reason: "use \`answeredQuestionIds\` instead")
 }
 
 input SubmissionsSortInput {
