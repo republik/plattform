@@ -125,6 +125,7 @@ const Live = () => {
                   <tr>
                     <th {...tableStyles.th}>Name</th>
                     <th {...tableStyles.th}>Package</th>
+                    <th {...tableStyles.th}>Method</th>
                     <th {...tableStyles.th}>Status</th>
                     <th {...tableStyles.thNum}>CHF</th>
                     <th {...tableStyles.thNum}>Created</th>
@@ -142,6 +143,7 @@ const Live = () => {
                         </Link>
                       </td>
                       <td {...tableStyles.td}>{transactionItem.packageName}</td>
+                      <td {...tableStyles.td}>{transactionItem.method}</td>
                       <td {...tableStyles.td}>{transactionItem.status}</td>
                       <td {...tableStyles.tdNum}>
                         {transactionItem.total / 100}
