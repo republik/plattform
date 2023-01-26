@@ -7,7 +7,7 @@ const {
 
 module.exports = async (
   _,
-  { userId },
+  { userId, userEmail, packageName, total: inputTotal, createdAt, startAt },
   { pgdb, req, t, user: me, mail: { enforceSubscriptions }, redis },
 ) => {
   Roles.ensureUserHasRole(me, 'supporter')
@@ -15,33 +15,55 @@ module.exports = async (
   const transaction = await pgdb.transactionBegin()
   const now = new Date()
   try {
-    const user = await transaction.public.users.findOne({ id: userId })
+    const user = await transaction.public.users.findOne(
+      {
+        id: userId,
+        email: userEmail,
+      },
+      {
+        skipUndefined: true,
+      },
+    )
     if (!user) {
       throw new Error(t('api/users/404'))
     }
-    if (!user.addressId) {
-      throw new Error(t('api/pledge/generate/missingAddress'))
-    }
+    // if (!user.addressId) {
+    //   throw new Error(t('api/pledge/generate/missingAddress'))
+    // }
 
     const pkg = await transaction.public.packages.findFirst(
-      { name: 'ABO' },
+      { name: packageName },
       { orderBy: { createdAt: 'desc' } },
     )
+    if (!pkg) {
+      throw new Error('Package not found')
+    }
 
     const pkgOption = await transaction.public.packageOptions.findOne({
       packageId: pkg.id,
     })
-    const total = pkgOption.price
+    const membershipType = await transaction.public.membershipTypes.findOne({
+      rewardId: pkgOption.rewardId,
+    })
+    const total = inputTotal || pkgOption.price
+    const payload = {
+      generatedAt: now,
+      generatedBy: me.id,
+    }
+    if (createdAt) {
+      payload.backdatedTo = createdAt
+    }
 
     const pledge = await transaction.public.pledges.insertAndGet({
       packageId: pkg.id,
       userId: user.id,
       status: 'SUCCESSFUL',
-      total,
-      donation: 0,
+      total: total,
+      donation: total - pkgOption.price,
       sendConfirmMail: false,
-      createdAt: now,
+      createdAt: createdAt || now,
       updatedAt: now,
+      payload,
     })
 
     await transaction.public.pledgeOptions.insert({
@@ -50,7 +72,8 @@ module.exports = async (
       amount: 1,
       price: total,
       vat: pkgOption.vat,
-      createdAt: now,
+      periods: membershipType ? membershipType.defaultPeriods : undefined,
+      createdAt: createdAt || now,
       updatedAt: now,
     })
 
@@ -60,12 +83,11 @@ module.exports = async (
       userId,
       transaction,
       t,
+      createdAt,
     })
 
-    await generateMemberships(pledge.id, transaction, t, redis)
-
-    const newMembership = await transaction.public.memberships.findOne({
-      pledgeId: pledge.id,
+    await generateMemberships(pledge.id, transaction, t, redis, {
+      startAt,
     })
 
     await transaction.transactionCommit()
@@ -81,12 +103,12 @@ module.exports = async (
 
     await publishMonitor(
       req.user,
-      `generateMembership for *${user.firstName} ${user.lastName} - ${user.email}* pledgeId: ${pledge.id}`,
+      `generatePledge for *${user.firstName} ${user.lastName} - ${user.email}* pledgeId: ${pledge.id}`,
     )
 
-    return newMembership
+    return pledge
   } catch (e) {
-    console.error('generateMembership', e, { req: req._log() })
+    console.error('generatePledge', e, { req: req._log() })
     await transaction.transactionRollback()
     throw e
   }

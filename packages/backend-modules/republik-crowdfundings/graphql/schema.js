@@ -140,10 +140,17 @@ type mutations {
   # required role: supporter
   updateAdminNotes(userId: ID!, notes: String): User!
 
-  # generates a pledge (payment method: PAYMENTSLIP) with one membership (type: ABO)
+  # generates a pledge (payment method: PAYMENTSLIP)
   # for the specified user.
   # required role: supporter
-  generateMembership(userId: ID!): Membership!
+  generatePledge(
+    userId: ID
+    userEmail: String
+    packageName: String
+    total: Int
+    startAt: Date
+    createdAt: Date
+  ): Pledge!
 
   # if the user never bought something from us, he/she is deleted completely
   # if there was a purchase, everything except what we legally must store is deleted
