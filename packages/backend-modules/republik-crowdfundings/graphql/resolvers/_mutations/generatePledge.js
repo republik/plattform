@@ -4,6 +4,9 @@ const payPledgePaymentslip = require('../../../lib/payments/paymentslip/payPledg
 const {
   publishMonitor,
 } = require('@orbiting/backend-modules-republik/lib/slack')
+const moment = require('moment')
+
+const formatDate = (date) => moment(date).format('YYYY-MM-DD')
 
 module.exports = async (
   _,
@@ -80,7 +83,6 @@ module.exports = async (
     await payPledgePaymentslip({
       pledgeId: pledge.id,
       total,
-      userId,
       transaction,
       t,
       createdAt,
@@ -93,7 +95,7 @@ module.exports = async (
     await transaction.transactionCommit()
 
     try {
-      await enforceSubscriptions({ pgdb, userId })
+      await enforceSubscriptions({ pgdb, userId: user.id })
     } catch (e2) {
       console.error('newsletter subscription changes failed', {
         req: req._log(),
@@ -103,7 +105,11 @@ module.exports = async (
 
     await publishMonitor(
       req.user,
-      `generatePledge for *${user.firstName} ${user.lastName} - ${user.email}* pledgeId: ${pledge.id}`,
+      `generatePledge(${packageName}${
+        startAt ? ` start at ${formatDate(startAt)}` : ''
+      } CHF ${total / 100}${
+        createdAt ? ` back dated to ${formatDate(createdAt)}` : ''
+      }) for *${user.email}* pledgeId: ${pledge.id}`,
     )
 
     return pledge
