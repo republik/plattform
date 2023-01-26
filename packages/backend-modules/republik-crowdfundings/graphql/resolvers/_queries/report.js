@@ -50,6 +50,16 @@ module.exports = async (_, { params = {} }, { pgdb, user }) => {
             )}) AS "accountDatesInFilter",`
           : ''
       }
+      p.payload->>'source' AS "pledgeSource",
+      p.payload->>'backdatedTo' AS "backdatedTo",
+      ${
+        timeFilter
+          ? `${createSQLTimeCondition(
+              `(p.payload->>'backdatedTo')::timestamp`,
+              timeFilter,
+            )} AS "backdatedToInFilter",`
+          : ''
+      }
       c.name AS "companyName",
       pkgs.name AS "packageName",
       CONCAT(u."firstName", ' ', u."lastName") AS name,
@@ -93,7 +103,11 @@ module.exports = async (_, { params = {} }, { pgdb, user }) => {
         const singleAccountPayment = accountDatesInFilter.length === 1
         const hasAccountPaymentInFilter =
           singleAccountPayment && accountDatesInFilter[0]
-        if (!hasAccountPaymentInFilter) {
+        if (
+          !hasAccountPaymentInFilter &&
+          !transactionItem.backdatedToInFilter &&
+          transactionItem.pledgeSource !== 'Bexio Import'
+        ) {
           if (transactionItem.createdAtInFilter && singleAccountPayment) {
             transactionItem.status = 'WAITING'
           } else {
