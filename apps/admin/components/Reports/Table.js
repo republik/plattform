@@ -35,8 +35,8 @@ export const tableStyles = {
   table: css({
     ...fontStyles.sansSerifRegular,
     borderSpacing: 0,
-    paddingLeft: 5,
-    paddingRight: 5,
+    paddingLeft: PADDING,
+    paddingRight: PADDING,
     width: '100%',
     maxWidth: 640,
     '@media (max-width: 600px)': {
