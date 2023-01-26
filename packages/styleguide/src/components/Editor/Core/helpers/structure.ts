@@ -554,6 +554,19 @@ const deleteOnInsert = (
   }
 }
 
+export const setToType = (
+  editor: CustomEditor,
+  node: Partial<CustomElement>,
+  insertType: CustomElementsType,
+  insertAt: number[],
+) => {
+  const insertPartial = {
+    type: insertType,
+    ...node,
+  }
+  Transforms.setNodes(editor, insertPartial, { at: insertAt })
+}
+
 const splitAndInsert = (
   editor: CustomEditor,
   target: NodeEntry<CustomElement>,
@@ -575,6 +588,7 @@ const splitAndInsert = (
       ...insertProps,
     }
     Transforms.setNodes(editor, insertPartial, { at: splitP })
+    setToType(editor, insertProps, insertType, splitP)
     const insertP = inPlace ? targetP : calculateSiblingPath(targetP)
     Transforms.moveNodes(editor, { at: splitP, to: insertP })
     Transforms.select(editor, insertP)

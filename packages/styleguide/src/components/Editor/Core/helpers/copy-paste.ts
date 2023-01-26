@@ -8,6 +8,7 @@ import {
   BreakElement,
   CustomElement,
   NodeTemplate,
+  CustomElementsType,
 } from '../../custom-types'
 import {
   Editor,
@@ -20,7 +21,7 @@ import {
 import { getAncestry, isDescendant } from './tree'
 import { config as elConfig } from '../../config/elements'
 import { intersperse } from '../../../../lib/helpers'
-import { getTemplateType, isCorrect } from './structure'
+import { getTemplateType, isCorrect, setToType } from './structure'
 
 const ELEMENT_TAGS = {
   A: (el): Partial<LinkElement> => ({
@@ -162,6 +163,8 @@ const isLowLevelBlock = (node: CustomDescendant): boolean => {
   }
 }
 
+// better approach (compliant with case 1b: we pass the ref s node and stop iterating if
+// the first child of the fragment matches the allows templates by s
 const getStrippedFragment = (
   fragment: CustomDescendant[],
 ): CustomDescendant[] => {
@@ -195,6 +198,19 @@ export const insertSlateFragment = (
   ) {
     return Editor.insertFragment(editor, strippedFragment)
   }
+  // case 1b: type supported by template, we need to convert the current node first
+  /*else if (isCorrect(copiedRefNode, selectedRefEntry[0].template)) {
+    console.log('here?')
+    return Editor.withoutNormalizing(editor, () => {
+      setToType(
+        editor,
+        {},
+        copiedRefNode.template.type as CustomElementsType,
+        selectedRefEntry[1],
+      )
+      Editor.insertFragment(editor, strippedFragment)
+    })
+  }*/
   // case 2
   else if (
     SlateElement.isElement(copiedRefNode) &&
