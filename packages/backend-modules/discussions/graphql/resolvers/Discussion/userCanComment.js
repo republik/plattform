@@ -1,6 +1,8 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
 const { hasUserActiveMembership } = require('@orbiting/backend-modules-utils')
 
+const DEFAULT_ROLES = ['member']
+
 module.exports = async (discussion, _, context) => {
   const { closed } = discussion
   const { user, pgdb } = context
@@ -9,16 +11,19 @@ module.exports = async (discussion, _, context) => {
     return false
   }
 
-  /* TODO: das geht aber noch besser, jetzt ist's so hin und her */
   const additionalAllowedRoles = discussion.allowedRoles.filter(
-    (role) => !['member', 'debater'].includes(role),
+    (role) => ![DEFAULT_ROLES].includes(role),
   )
   const isInAllowedRoles =
     additionalAllowedRoles.length > 0 &&
     Roles.userIsInRoles(user, discussion.allowedRoles)
 
+  if (isInAllowedRoles) {
+    return true
+  }
+
   const isMember = Roles.userIsInRoles(user, ['member'])
-  if (!isMember && !isInAllowedRoles) {
+  if (!isMember) {
     return false
   }
 
@@ -26,5 +31,5 @@ module.exports = async (discussion, _, context) => {
   const hasActiveMembership =
     !!user && (await hasUserActiveMembership(user, pgdb))
 
-  return hasActiveMembership || isDebater || isInAllowedRoles
+  return hasActiveMembership || isDebater
 }

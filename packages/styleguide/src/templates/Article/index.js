@@ -141,6 +141,10 @@ const createSchema = ({
       ref: 'bool',
     },
     {
+      label: 'Rollen (kommasepariert)',
+      key: 'discussionAllowedRoles',
+    },
+    {
       label: 'Format',
       key: 'format',
       ref: 'repo',
