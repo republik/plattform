@@ -29,17 +29,49 @@ module.exports = async (_, { params = {} }, { pgdb, user }) => {
           : ''
       }
       pay."updatedAt" AT TIME ZONE 'Europe/Zurich' "updatedAt",
+      ${
+        timeFilter
+          ? `${createSQLTimeCondition(
+              'pay."updatedAt"',
+              timeFilter,
+            )} AS "updatedAtInFilter",`
+          : ''
+      }
       pay.status,
       pay.method,
       pay.total,
       pay."pspPayload"->>'balance_transaction' AS "stripeBalanceTransactionId",
+      json_agg(pfpay.buchungsdatum) AS "accountDates",
+      ${
+        timeFilter
+          ? `json_agg(${createSQLTimeCondition(
+              'pfpay.buchungsdatum',
+              timeFilter,
+            )}) AS "accountDatesInFilter",`
+          : ''
+      }
+      p.payload->>'source' AS "pledgeSource",
+      p.payload->>'backdatedTo' AS "backdatedTo",
+      ${
+        timeFilter
+          ? `${createSQLTimeCondition(
+              `(p.payload->>'backdatedTo')::timestamp`,
+              timeFilter,
+            )} AS "backdatedToInFilter",`
+          : ''
+      }
       c.name AS "companyName",
-      pkgs.name AS "packageName"
+      pkgs.name AS "packageName",
+      CONCAT(u."firstName", ' ', u."lastName") AS name,
+      u.email,
+      u.id AS "userId"
 
     FROM "payments" pay
 
+    LEFT JOIN "postfinancePayments" pfpay ON pfpay.mitteilung = pay.hrid
     INNER JOIN "pledgePayments" ppay ON ppay."paymentId" = pay.id
     INNER JOIN "pledges" p ON p.id = ppay."pledgeId"
+    INNER JOIN users u ON u.id = p."userId"
     INNER JOIN "packages" pkgs ON pkgs.id = p."packageId"
 
     INNER JOIN "companies" c ON c.id = pkgs."companyId"
@@ -47,16 +79,44 @@ module.exports = async (_, { params = {} }, { pgdb, user }) => {
     ${
       timeFilter
         ? `WHERE (
-      ${createSQLTimeCondition(`pay."createdAt"`, timeFilter)}
+      ${createSQLTimeCondition('pay."createdAt"', timeFilter)}
       OR
-      ${createSQLTimeCondition(`pay."updatedAt"`, timeFilter)}
+      ${createSQLTimeCondition('pay."updatedAt"', timeFilter)}
+      OR
+      ${createSQLTimeCondition('pfpay.buchungsdatum', timeFilter)}
     )`
         : ''
     }
 
-    GROUP BY pay.id, c.id, p.id, pkgs.id
+    GROUP BY pay.id, c.id, p.id, pkgs.id, u.id
     ORDER BY pay."createdAt"
   `)
+
+  if (timeFilter) {
+    transactionItems.forEach((transactionItem) => {
+      if (
+        transactionItem.method === 'PAYMENTSLIP' &&
+        transactionItem.status === 'PAID'
+      ) {
+        const accountDatesInFilter =
+          transactionItem.accountDatesInFilter.filter((d) => d !== null)
+        const singleAccountPayment = accountDatesInFilter.length === 1
+        const hasAccountPaymentInFilter =
+          singleAccountPayment && accountDatesInFilter[0]
+        if (
+          !hasAccountPaymentInFilter &&
+          !transactionItem.backdatedToInFilter &&
+          transactionItem.pledgeSource !== 'Bexio Import'
+        ) {
+          if (transactionItem.createdAtInFilter && singleAccountPayment) {
+            transactionItem.status = 'WAITING'
+          } else {
+            transactionItem.status = 'PAID_UNKOWN_ACCOUNT_DATE'
+          }
+        }
+      }
+    })
+  }
 
   const packages = nest()
     .key((d) => d.packageName)
@@ -181,6 +241,7 @@ module.exports = async (_, { params = {} }, { pgdb, user }) => {
       packages,
       methods,
       membershipDays,
+      transactionItems,
     },
   }
 }

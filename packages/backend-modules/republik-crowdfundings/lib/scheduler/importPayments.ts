@@ -311,8 +311,8 @@ function getRecordsFromFile(
   try {
     return parseCamt053(file.buffer.toString('utf-8'))
       .filter(
-        ({ isDebitCardPayment, isPayPal, isStripe, isCollectiveCredit }) =>
-          !(isDebitCardPayment || isPayPal || isStripe || isCollectiveCredit),
+        ({ isDebitCardPayment, isPayPal, isStripe }) =>
+          !(isDebitCardPayment || isPayPal || isStripe),
       )
       .map(extendWithImageAndAccountId(images, ibanToBankAccountId))
   } catch (e) {
