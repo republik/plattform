@@ -55,7 +55,7 @@ export function addTopLeftPadding(doc: PDF) {
 export function addCreditor(
   doc: PDF,
   company: Company,
-  bankAccount: BankAccount,
+  bankAccount: BankAccount | undefined,
   context: Context,
 ) {
   const { t } = context
