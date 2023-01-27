@@ -76,7 +76,7 @@ export function addCreditor(
     // Use data URI instead of Buffer
     const dataUri = `data:image/*;base64,${image.toString('base64')}`
 
-    doc.image(dataUri, { fit: [utils.mm2pt(45), 100] }).moveDown()
+    doc.image(dataUri, { fit: [utils.mm2pt(10), 100] }).moveDown()
   }
 
   const address = [
@@ -132,6 +132,18 @@ export function addDebtor(doc: PDF, user: User) {
   doc.x = x
 }
 
+export function addTitle(doc: PDF, text: string) {
+  doc
+    .fontSize(TITLE_FONT_SIZE)
+    .text(text)
+    .fontSize(REGULAR_FONT_SIZE)
+    .moveDown()
+}
+
+export function addBoldText(doc: PDF, text: string) {
+  doc.font(BOLD_FONT_NAME).text(text).font(REGULAR_FONT_NAME)
+}
+
 function addMeta(doc: PDF, payment: PaymentResolved, context: Context) {
   const { t } = context
 
@@ -139,12 +151,10 @@ function addMeta(doc: PDF, payment: PaymentResolved, context: Context) {
 
   const metaFragmentPaymentMethod = t(`api/invoices/paymentMethod/${method}`)
 
+  doc.moveDown(1.5)
+  addTitle(doc, t.first([`api/invoices/${status}/title`, 'api/invoices/title']))
+
   doc
-    .fontSize(TITLE_FONT_SIZE)
-    .moveDown()
-    .text(t.first([`api/invoices/${status}/title`, 'api/invoices/title']))
-    .fontSize(REGULAR_FONT_SIZE)
-    .moveDown()
     .text(
       t.first([`api/invoices/${status}/meta`, 'api/invoices/meta'], {
         date: formatDate(payment.createdAt),

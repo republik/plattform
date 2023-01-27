@@ -1,8 +1,15 @@
 import { GraphqlContext } from '@orbiting/backend-modules-types'
-import { PDF } from 'swissqrbill'
+import { utils, PDF } from 'swissqrbill'
 import moment from 'moment'
+import 'moment/locale/de'
 import { getCountryCode } from './commons'
-import { addCreditor, addDebtor, addTopLeftPadding } from './invoice'
+import {
+  addCreditor,
+  addDebtor,
+  addTitle,
+  addBoldText,
+  addTopLeftPadding,
+} from './invoice'
 
 export const generate = async function (
   { year, user }: any,
@@ -34,7 +41,7 @@ export const generate = async function (
   const cleanYear = moment(year).format('YYYY')
   const total = await context.pgdb.queryOneField(
     `
-    SELECT SUM(pay.total) / 100
+    SELECT SUM(pay.total)
     FROM payments pay
     JOIN "pledgePayments" pp ON pp."paymentId" = pay.id
     JOIN pledges p ON p.id = pp."pledgeId"
@@ -56,7 +63,7 @@ export const generate = async function (
       const doc = new PDF(
         {
           currency: 'CHF',
-          amount: total,
+          amount: total / 100,
           creditor: {
             account: bankAccount.iban,
             name: bankAccountAddress.name,
@@ -85,7 +92,40 @@ export const generate = async function (
       )
       addDebtor(doc, userWithAddress)
 
-      doc.text(total).moveDown()
+      const textOptions = {
+        width: utils.mm2pt(150),
+      }
+
+      doc.moveDown(2)
+      doc
+        .text(
+          `${bankAccountAddress.city}, ${moment()
+            .locale('de')
+            .format('D. MMMM YYYY')}`,
+        )
+        .moveDown()
+      addTitle(doc, `Spendenbescheinigung ${cleanYear}`)
+
+      doc
+        .moveDown()
+        .text(`Guten Tag ${user.name}`)
+        .moveDown(1.5)
+        .text(
+          `Gerne bestätigen wir Ihnen, dass wir als Verein Lobbywatch.ch im Jahr ${cleanYear} Zuwendungen von Ihnen erhalten haben.`,
+          textOptions,
+        )
+        .moveDown(1)
+
+      addBoldText(doc, `Zuwendungen 2022: CHF ${(total / 100).toFixed(2)}`)
+
+      doc
+        .moveDown(1)
+        .text(
+          'Lobbywatch.ch ist wegen Gemeinnützigkeit steuerbefreit. Ihre Spenden können Sie von den Steuern in Abzug bringen.',
+          textOptions,
+        )
+        .moveDown(1.5)
+        .text('Vielen herzlichen Dank für die grosszügige Unterstützung!')
 
       doc.end()
 
