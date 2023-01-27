@@ -113,7 +113,7 @@ enum AccessTokenScope {
   CUSTOM_PLEDGE_EXTENDED
   "A token to use mutation claimCard (TTL: 90 days)"
   CLAIM_CARD
-  "A token authorize a session (TTL: n days)"
+  "A token authorize a session (TTL: 5 days)"
   AUTHORIZE_SESSION
   "A token access a invoices (TTL: 5 days)"
   INVOICE
