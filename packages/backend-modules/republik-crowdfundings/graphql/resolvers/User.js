@@ -1,5 +1,6 @@
 const {
   Roles,
+  AccessToken,
   AccessToken: { isFieldExposed },
 } = require('@orbiting/backend-modules-auth')
 
@@ -25,7 +26,7 @@ const {
 
 const normalizePaymentSource = require('../../lib/payments/stripe/normalizePaymentSource')
 
-const { DISABLE_RESOLVER_USER_CACHE } = process.env
+const { PUBLIC_URL, DISABLE_RESOLVER_USER_CACHE } = process.env
 const QUERY_CACHE_TTL_SECONDS = 60 * 60 * 24 // 1 day
 
 const createMembershipCache = (user, prop, context) =>
@@ -284,5 +285,17 @@ module.exports = {
   async adminNotes(user, args, { pgdb, user: me }) {
     Roles.ensureUserHasRole(me, 'supporter')
     return user.adminNotes || user._raw.adminNotes
+  },
+  donationReceiptUrl(user, args, context) {
+    const { user: me } = context
+
+    if (!Roles.userIsInRoles(me, ['admin', 'supporter'])) {
+      return null
+    }
+
+    const token = AccessToken.generateForUser(user, 'INVOICE')
+    return `${PUBLIC_URL}/invoices/donationreceipt/${
+      new Date().getFullYear() - 1
+    }.pdf?token=${token}`
   },
 }

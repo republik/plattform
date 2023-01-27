@@ -7,6 +7,7 @@ extend type User {
   pledges: [Pledge!]!
   memberships: [Membership!]!
   activeMembership: Membership
+  donationReceiptUrl: String
 
   # stripe Sources and PaymentMethods
   paymentSources: [PaymentSource!]! @deprecated(reason: "use \`defaultPaymentSource\` instead")

@@ -56,6 +56,7 @@ const GET_PLEDGES = gql`
   query pledges($userId: String!) {
     user(slug: $userId) {
       id
+      donationReceiptUrl
       pledges {
         id
         total
@@ -429,11 +430,18 @@ export default class Pledges extends Component {
               error={isInitialLoading && error}
               render={() => {
                 const {
-                  user: { pledges },
+                  user: { pledges, donationReceiptUrl },
                 } = data
                 return (
                   <Section>
                     <SectionTitle>Pledges</SectionTitle>
+                    {donationReceiptUrl && (
+                      <div style={{ marginBottom: 20 }}>
+                        <A href={donationReceiptUrl} target='_blank'>
+                          Spendenbescheinigung
+                        </A>
+                      </div>
+                    )}
                     <table {...tableStyles.table}>
                       <colgroup>
                         <col style={{ width: '50%' }} />
