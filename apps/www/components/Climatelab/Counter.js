@@ -34,7 +34,7 @@ const styles = {
     lineHeight: 1,
     [mediaQueries.mUp]: {
       fontSize: 120,
-      marginBottom: -25,
+      marginBottom: -20,
     },
   }),
   secondaryNumbersWrapper: css({
@@ -43,7 +43,6 @@ const styles = {
     marginTop: '20px',
   }),
   secondaryNumbersContainer: css({
-    paddingRight: '20px',
     marginTop: '20px',
     flexGrow: 1,
     [mediaQueries.mUp]: {
@@ -52,20 +51,16 @@ const styles = {
   }),
   secondaryNumber: css({
     display: 'block',
-    fontSize: 30,
+    fontSize: 40,
     marginBottom: -5,
     ...fontStyles.serifTitle,
     lineHeight: 1,
     [mediaQueries.mUp]: {
       fontSize: 60,
-      marginBottom: -10,
     },
   }),
   description: css({
     ...convertStyleToRem(fontStyles.sansSerifRegular18),
-    [mediaQueries.mUp]: {
-      ...convertStyleToRem(fontStyles.sansSerifRegular23),
-    },
   }),
   footnoteContainer: css({
     marginTop: 20,
