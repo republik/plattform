@@ -114,7 +114,7 @@ const phases: Phase[] = [
     tags: ['startProofReading'],
     predicates: {
       canAccess: (context: GraphqlContext) =>
-        auth.Roles.userIsInRoles(context.user, ['editor']),
+        auth.Roles.userIsInRoles(context.user, ['editor', 'vorlesen']),
     },
   },
   {
@@ -124,7 +124,7 @@ const phases: Phase[] = [
     tags: ['proofReadingOk'],
     predicates: {
       canAccess: (context: GraphqlContext) =>
-        auth.Roles.userIsInRoles(context.user, ['editor']),
+        auth.Roles.userIsInRoles(context.user, ['editor', 'vorlesen']),
     },
   },
   {
@@ -140,7 +140,7 @@ const phases: Phase[] = [
     ],
     predicates: {
       canAccess: (context: GraphqlContext) =>
-        auth.Roles.userIsInRoles(context.user, ['editor']),
+        auth.Roles.userIsInRoles(context.user, ['editor', 'vorlesen']),
     },
   },
   {
