@@ -64,6 +64,7 @@ const styles = {
   }),
   footnoteContainer: css({
     marginTop: 20,
+    textAlign: 'left',
   }),
 }
 
@@ -82,6 +83,7 @@ const Counter = ({
   linkHref,
   linkText,
   showDemographics,
+  textAlignment = 'left',
 }) => {
   const [colorScheme] = useColorContext()
   const t = createFormatter(translations)
@@ -93,7 +95,7 @@ const Counter = ({
         const numberClimateUsers = data.roleStats.count || 0
 
         return (
-          <div {...styles.container}>
+          <div {...styles.container} style={{ textAlign: textAlignment }}>
             <div {...styles.primaryNumberContainer}>
               <span {...styles.primaryNumber}>
                 {countFormat(numberClimateUsers)}
