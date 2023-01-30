@@ -78,7 +78,7 @@ const query = gql`
 const Counter = ({
   data,
   smallNumbers,
-  translations,
+  translations = [],
   linkHref,
   linkText,
   extended,
