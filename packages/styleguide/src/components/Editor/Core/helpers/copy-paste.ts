@@ -167,13 +167,15 @@ const isLowLevelBlock = (node: CustomDescendant): boolean => {
 // the first child of the fragment matches the allows templates by s
 const getStrippedFragment = (
   fragment: CustomDescendant[],
+  template: NodeTemplate,
 ): CustomDescendant[] => {
   if (
     fragment.length === 1 &&
     SlateElement.isElement(fragment[0]) &&
-    !isLowLevelBlock(fragment[0])
+    !isLowLevelBlock(fragment[0]) &&
+    !isCorrect(fragment[0], template)
   ) {
-    return getStrippedFragment(fragment[0].children)
+    return getStrippedFragment(fragment[0].children, template)
   }
   return fragment
 }
@@ -188,9 +190,12 @@ export const insertSlateFragment = (
   editor: CustomEditor,
   fragment: CustomDescendant[],
 ): void => {
-  const strippedFragment = getStrippedFragment(fragment)
-  const copiedRefNode = strippedFragment[0]
   const { element: selectedRefEntry } = getAncestry(editor)
+  const strippedFragment = getStrippedFragment(
+    fragment,
+    selectedRefEntry[0].template,
+  )
+  const copiedRefNode = strippedFragment[0]
   // case 1: perfect match
   if (
     SlateElement.isElement(copiedRefNode) &&
@@ -199,18 +204,19 @@ export const insertSlateFragment = (
     return Editor.insertFragment(editor, strippedFragment)
   }
   // case 1b: type supported by template, we need to convert the current node first
-  /*else if (isCorrect(copiedRefNode, selectedRefEntry[0].template)) {
-    console.log('here?')
+  else if (isCorrect(copiedRefNode, selectedRefEntry[0].template)) {
     return Editor.withoutNormalizing(editor, () => {
-      setToType(
-        editor,
-        {},
-        copiedRefNode.template.type as CustomElementsType,
-        selectedRefEntry[1],
-      )
+      if (SlateElement.isElement(copiedRefNode)) {
+        setToType(
+          editor,
+          {},
+          copiedRefNode.type as CustomElementsType,
+          selectedRefEntry[1],
+        )
+      }
       Editor.insertFragment(editor, strippedFragment)
     })
-  }*/
+  }
   // case 2
   else if (
     SlateElement.isElement(copiedRefNode) &&

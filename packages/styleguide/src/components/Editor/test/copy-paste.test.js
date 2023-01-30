@@ -114,8 +114,7 @@ describe('Slate Editor: insert Slate fragment', () => {
       ])
     })
 
-    // TODO: maybe in a next iteration
-    xit('should insert the fragment as is if the type is compatible as per template', async () => {
+    it('should insert the fragment as is if the type is compatible as per template', async () => {
       value = [flyerTile]
       const structure = [
         {
@@ -166,41 +165,36 @@ describe('Slate Editor: insert Slate fragment', () => {
       ])
       await new Promise(process.nextTick)
       expect(cleanupTree(value)[0].children[5]).toEqual({
-        type: 'flyerTile',
         children: [
           {
             children: [
               {
-                children: [
-                  {
-                    text: 'Che tristezza, Nicoletta.',
-                  },
-                ],
-                type: 'pullQuoteText',
+                text: 'Che tristezza, Nicoletta.',
+              },
+            ],
+            type: 'pullQuoteText',
+          },
+          {
+            children: [
+              {
+                text: 'Zum Beitrag: ',
               },
               {
                 children: [
                   {
-                    text: 'Zum Beitrag: ',
-                  },
-                  {
-                    children: [
-                      {
-                        text: 'Abschiednehmen',
-                      },
-                    ],
-                    type: 'link',
-                  },
-                  {
-                    text: '.',
+                    text: 'Abschiednehmen',
                   },
                 ],
-                type: 'pullQuoteSource',
+                type: 'link',
+              },
+              {
+                text: '.',
               },
             ],
-            type: 'pullQuote',
+            type: 'pullQuoteSource',
           },
         ],
+        type: 'pullQuote',
       })
     })
   })
