@@ -556,13 +556,13 @@ const deleteOnInsert = (
 
 export const setToType = (
   editor: CustomEditor,
-  node: Partial<CustomElement>,
+  nodeProps: Partial<CustomElement>,
   insertType: CustomElementsType,
   insertAt: number[],
 ) => {
   const insertPartial = {
     type: insertType,
-    ...node,
+    ...nodeProps,
   }
   Transforms.setNodes(editor, insertPartial, { at: insertAt })
 }
@@ -583,11 +583,6 @@ const splitAndInsert = (
     const insertType = getTemplateType(targetN.template)
     const insertConfig = elConfig[insertType]
     const insertProps = getDefaultProps(insertConfig)
-    const insertPartial = {
-      type: insertType,
-      ...insertProps,
-    }
-    Transforms.setNodes(editor, insertPartial, { at: splitP })
     setToType(editor, insertProps, insertType, splitP)
     const insertP = inPlace ? targetP : calculateSiblingPath(targetP)
     Transforms.moveNodes(editor, { at: splitP, to: insertP })
