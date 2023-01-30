@@ -64,7 +64,6 @@ const styles = {
   }),
   footnoteContainer: css({
     marginTop: 20,
-    textAlign: 'left',
   }),
 }
 
