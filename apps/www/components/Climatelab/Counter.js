@@ -77,11 +77,11 @@ const query = gql`
 
 const Counter = ({
   data,
-  smallNumbers,
+  demographics,
   translations = [],
   linkHref,
   linkText,
-  extended,
+  showDemographics,
 }) => {
   const [colorScheme] = useColorContext()
   const t = createFormatter(translations)
@@ -102,13 +102,13 @@ const Counter = ({
                 {...colorScheme.set('color', 'textSoft')}
                 {...styles.description}
               >
-                Menschen machen im Klimalabor mit
+                {t('primaryNumber')}
               </span>
             </div>
-            {extended && (
+            {showDemographics && (
               <>
                 <div {...styles.secondaryNumbersWrapper}>
-                  {smallNumbers.map((d, i) => (
+                  {demographics.map((d, i) => (
                     <div key={i} {...styles.secondaryNumbersContainer}>
                       <span {...styles.secondaryNumber}>
                         {swissNumbers.format('.0%')(d.number)}
