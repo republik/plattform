@@ -93,15 +93,15 @@ const InviteSenderPage = ({ futureCampaignLink }: Props) => {
               {t('FutureCampaign/sender/invite/shareText')}
             </p>
             <div>
-              <span {...styles.inviteLinkButton}>
-                {inviteLink}
+              <div {...styles.inviteLinkBox}>
+                <span {...styles.inviteLinkBoxText}>{inviteLink}</span>
                 <IconButton
                   onClick={() => handleCopyLink(inviteLink)}
                   Icon={CopyToClippboardIcon}
                   fill='#000000'
                   size={20}
                 />
-              </span>
+              </div>
             </div>
             {/*
                 TODO: what about just a share button?
@@ -131,7 +131,7 @@ const InviteSenderPage = ({ futureCampaignLink }: Props) => {
 
 export default InviteSenderPage
 
-export const getServersideProps = createGetServerSideProps(
+export const getServerSideProps = createGetServerSideProps(
   async ({ client }) => {
     await client.query<UserInviteQueryData>({
       query: USER_INVITE_QUERY,
@@ -225,15 +225,22 @@ const styles = {
       fontSize: 24,
     },
   }),
-  inviteLinkButton: css({
+  inviteLinkBox: css({
     ...fontStyles.sansSerifRegular,
-    fontsize: 18,
+    fontSize: 18,
+    width: '100%',
     padding: '12px 15px',
     backgroundColor: 'rgba(0, 0, 0, 0.1)',
     display: 'inline-flex',
     flexDirection: 'row',
+    justifyContent: 'space-between',
     gap: 8,
     alignItems: 'center',
+  }),
+  inviteLinkBoxText: css({
+    textOverflow: 'ellipsis',
+    overflow: 'hidden',
+    whiteSpace: 'nowrap',
   }),
   rewardBox: css({
     backgroundColor: 'rgba(255, 255, 255, 0.1)',
