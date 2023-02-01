@@ -159,16 +159,13 @@ const InviteSenderPage = () => {
           <p {...styles.boxText}>{t('FutureCampaign/sender/reward/text')}</p>
           <div>
             <RewardProgress reached={reachedRewards} max={maxRewards} />
-            <p>{t('FutureCampaign/sender/reward/hint')}</p>
+            <p>{t('FutureCampaign/sender/reward/donateHint')}</p>
             <Checkbox
               disabled={donateMonthsConsentLoading}
               checked={Boolean(donateMonthsConsent?.me?.hasConsentedTo)}
               onChange={(_, value) => handleDonateMonthsChange(Boolean(value))}
             >
-              Ich akzeptiere die{' '}
-              <a target='_blank' href='https://www.republik.ch/legal/agb'>
-                Allgemeine Geschäftsbedingungen
-              </a>
+              {t('FutureCampaign/sender/reward/donateText')}
             </Checkbox>
           </div>
         </div>

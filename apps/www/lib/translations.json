@@ -7765,8 +7765,12 @@
       "value": "{reached} von {max} Mitstreiter*innen"
     },
     {
-      "key": "FutureCampaign/sender/reward/hint",
+      "key": "FutureCampaign/sender/reward/donateHint",
       "value": "*Sie möchten keine Verlängerung? Kein Problem, Sie können am Ende der Aktion ihre gesammelten Monate Spenden und erhalten dafür nicht nur Ruhm und Ehre, sodndern auch unseren unendlichen Dank."
+    },
+    {
+      "key": "FutureCampaign/sender/reward/donateText",
+      "value": "Ja, ich will die Monate spenden."
     },
     {
       "key": "FutureCampaign/sender/thankYou/text",
@@ -7774,7 +7778,7 @@
     },
     {
       "key": "FutureCampaign/slogan/text",
-      "value": "Unabhängiger Journalismus hat eine Zukunft, wenn {persona} das auch will."
+      "value": "Unabhängiger Journalismus{br} hat eine Zukunft, wenn {br}{persona} {br}das auch will."
     },
     {
       "key": "FutureCampaign/receiver/introductoryStep/heading",
