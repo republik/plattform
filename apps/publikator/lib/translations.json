@@ -1769,6 +1769,10 @@
       "value": "Link"
     },
     {
+      "key": "editor/element/memo",
+      "value": "Memo"
+    },
+    {
       "key": "editor/element/ul",
       "value": "Liste"
     },

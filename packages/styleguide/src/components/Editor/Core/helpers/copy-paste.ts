@@ -6,17 +6,22 @@ import {
   ListElement,
   ParagraphElement,
   BreakElement,
+  CustomElement,
+  NodeTemplate,
+  CustomElementsType,
 } from '../../custom-types'
 import {
   Editor,
   Element as SlateElement,
   Text,
   Node,
-  NodeEntry,
   Transforms,
+  NodeEntry,
 } from 'slate'
-import { isDescendant } from './tree'
+import { getAncestry, isDescendant } from './tree'
 import { config as elConfig } from '../../config/elements'
+import { intersperse } from '../../../../lib/helpers'
+import { getTemplateType, isCorrect, setToType } from './structure'
 
 const ELEMENT_TAGS = {
   A: (el): Partial<LinkElement> => ({
@@ -78,7 +83,6 @@ const deserialize = (
 
   if (ELEMENT_TAGS[nodeName]) {
     const attrs = ELEMENT_TAGS[nodeName](el)
-    console.log({ attrs })
     return {
       ...attrs,
       children,
@@ -111,27 +115,118 @@ export const parseSlate = (
   return slateData && JSON.parse(decodeURIComponent(window.atob(slateData)))
 }
 
+const extractInlineNodes = (nodes: CustomDescendant[]): CustomDescendant[] => {
+  let inlineEntries: NodeEntry<CustomDescendant>[] = []
+  for (const [n, p] of Node.descendants({
+    type: 'paragraph',
+    children: nodes,
+  })) {
+    if (
+      (SlateElement.isElement(n) && elConfig[n.type]?.attrs?.isInline) ||
+      (Text.isText(n) &&
+        !!n.text &&
+        !inlineEntries.find((entry) => isDescendant(entry, [n, p])))
+    ) {
+      inlineEntries = inlineEntries.concat([[n, p]])
+    }
+  }
+  let inlineNodes: CustomDescendant[] = inlineEntries.map((entry) => entry[0])
+  inlineNodes = intersperse(inlineNodes, () => ({ text: ' ' }))
+  return inlineNodes
+}
+
+const convertNodes = (
+  nodes: CustomDescendant[],
+  template: NodeTemplate,
+): CustomDescendant[] => {
+  return nodes.map((node) => {
+    if (!SlateElement.isElement(node)) return node
+    return {
+      ...node,
+      type: isCorrect(node, template) ? node.type : getTemplateType(template),
+    } as CustomElement
+  })
+}
+
+// low level blocks are block which don't contain other blocks
+// just text or inlines
+const isLowLevelBlock = (node: CustomDescendant): boolean => {
+  if (Text.isText(node)) return true
+  if (!elConfig[node.type]?.attrs?.isInline) {
+    const testChild = node.children[0]
+    if (
+      !SlateElement.isElement(testChild) ||
+      elConfig[testChild.type]?.attrs?.isInline
+    ) {
+      return true
+    }
+  }
+}
+
+// better approach (compliant with case 1b: we pass the ref s node and stop iterating if
+// the first child of the fragment matches the allows templates by s
+const getStrippedFragment = (
+  fragment: CustomDescendant[],
+  template: NodeTemplate,
+): CustomDescendant[] => {
+  if (
+    fragment.length === 1 &&
+    SlateElement.isElement(fragment[0]) &&
+    !isLowLevelBlock(fragment[0]) &&
+    !isCorrect(fragment[0], template)
+  ) {
+    return getStrippedFragment(fragment[0].children, template)
+  }
+  return fragment
+}
+
+// here we consider the type of the type of the first inline-containing block we
+// want to copy (C) vs the type of the first inline-containing block selected (S)
+// 3 types of inserts:
+//  1. S-C block types match
+//  2. no match but S allows repeat -> we extract all the blocks and converts their type to S
+//  3. no match, no repeats allowed -> we extract all inline blocks and insert those
 export const insertSlateFragment = (
   editor: CustomEditor,
   fragment: CustomDescendant[],
 ): void => {
-  let inlineNodes: NodeEntry<CustomDescendant>[] = []
-  for (const [n, p] of Node.descendants({
-    type: 'paragraph',
-    children: fragment,
-  })) {
-    if (SlateElement.isElement(n) && elConfig[n.type]?.attrs?.isInline) {
-      inlineNodes = inlineNodes.concat([[n, p]])
-    } else if (
-      Text.isText(n) &&
-      !!n.text &&
-      !inlineNodes.find((entry) => isDescendant(entry, [n, p]))
-    ) {
-      inlineNodes = inlineNodes.concat([[n, p]])
-    }
-  }
-  Editor.insertFragment(
-    editor,
-    inlineNodes.map((entry) => entry[0]),
+  const { element: selectedRefEntry } = getAncestry(editor)
+  const strippedFragment = getStrippedFragment(
+    fragment,
+    selectedRefEntry[0].template,
   )
+  const copiedRefNode = strippedFragment[0]
+  // case 1: perfect match
+  if (
+    SlateElement.isElement(copiedRefNode) &&
+    copiedRefNode.type === selectedRefEntry[0].type
+  ) {
+    return Editor.insertFragment(editor, strippedFragment)
+  }
+  // case 1b: type supported by template, we need to convert the current node first
+  else if (isCorrect(copiedRefNode, selectedRefEntry[0].template)) {
+    return Editor.withoutNormalizing(editor, () => {
+      if (SlateElement.isElement(copiedRefNode)) {
+        setToType(
+          editor,
+          {},
+          copiedRefNode.type as CustomElementsType,
+          selectedRefEntry[1],
+        )
+      }
+      Editor.insertFragment(editor, strippedFragment)
+    })
+  }
+  // case 2
+  else if (
+    SlateElement.isElement(copiedRefNode) &&
+    selectedRefEntry[0].template.repeat
+  ) {
+    // maybe we'll need to select the parent here
+    return Editor.insertFragment(
+      editor,
+      convertNodes(strippedFragment, selectedRefEntry[0].template),
+    )
+  }
+  return Editor.insertFragment(editor, extractInlineNodes(fragment))
 }

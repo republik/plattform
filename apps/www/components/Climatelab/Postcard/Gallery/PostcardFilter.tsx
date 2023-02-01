@@ -57,27 +57,28 @@ const cardsAmount = scaleLinear().domain([30, 300]).range([4, 10])
 type PostcardFilterProps = {
   subject: string
   imageUrl: string
-  count: number
-  onFilterClicked: (a: string) => void
+  count: number | undefined
+  onFilterClicked: (a: string) => boolean
 }
 
 const PostcardFilter: React.FC<PostcardFilterProps> = ({
   subject,
   imageUrl,
-  count: propsCount,
+  count: initialCount,
   onFilterClicked,
 }) => {
   // Keep current count in state because a) it resets to 0 during refetch and b) this way we can decrement by 1 on each click
-  const [count, setCount] = useState(propsCount)
+  const [count, setCount] = useState<number | undefined>()
 
+  // Set and keep count once
   useEffect(() => {
-    if (count === 0 && propsCount !== 0) {
-      setCount(propsCount)
+    if (count === undefined && initialCount !== undefined) {
+      setCount(initialCount)
     }
-  }, [propsCount, count])
+  }, [initialCount, count])
 
   const [colorScheme] = useColorContext()
-  const maxCards = Math.round(cardsAmount(count))
+  const maxCards = Math.round(cardsAmount(count ?? 0))
   const amountOfCards = Array(Math.max(maxCards, 1))
     .fill(null)
     .map((_, i) => i)
@@ -109,8 +110,10 @@ const PostcardFilter: React.FC<PostcardFilterProps> = ({
         >
           <button
             onClick={() => {
-              onFilterClicked(subject)
-              setCount((count) => Math.max(0, count - 1))
+              const hasFetchedNext = onFilterClicked(subject)
+              if (hasFetchedNext) {
+                setCount((count) => Math.max(0, count - 1))
+              }
             }}
             {...plainButtonRule}
             {...styles.image}

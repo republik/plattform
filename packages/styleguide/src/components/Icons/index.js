@@ -90,6 +90,7 @@ export {
   MdViewHeadline as FlyerTileMetaIcon,
   MdOutlineQuiz as QuizIcon,
   MdOutlineDelete as DeleteIcon,
+  MdRateReview as MemoIcon,
   MdMic as MicIcon,
   MdPlaylistAdd as PlaylistAddIcon,
   MdPlaylistAddCheck as PlaylistRemoveIcon,

@@ -12,9 +12,8 @@ describe('Slate Editor', () => {
 
   const defaultConfig = { schema: articleSchema }
 
-  async function setup(structure, config = defaultConfig) {
+  async function setup(config) {
     return await mockEditor(createEditor(), {
-      structure,
       config,
       value,
       setValue: (val) => (value = val),
@@ -32,7 +31,7 @@ describe('Slate Editor', () => {
         },
         { type: 'figure' },
       ]
-      const editor = await setup(structure)
+      const editor = await setup({ ...defaultConfig, structure })
 
       moveElement(editor, [2], 'up')
       await new Promise(process.nextTick)
@@ -54,7 +53,7 @@ describe('Slate Editor', () => {
         },
         { type: 'figure' },
       ]
-      const editor = await setup(structure)
+      const editor = await setup({ ...defaultConfig, structure })
 
       moveElement(editor, [1], 'down')
       await new Promise(process.nextTick)
@@ -76,7 +75,7 @@ describe('Slate Editor', () => {
         },
         { type: 'figure' },
       ]
-      const editor = await setup(structure)
+      const editor = await setup({ ...defaultConfig, structure })
 
       moveElement(editor, [1], 'up')
       await new Promise(process.nextTick)
@@ -98,7 +97,7 @@ describe('Slate Editor', () => {
         },
         { type: 'figure' },
       ]
-      const editor = await setup(structure)
+      const editor = await setup({ ...defaultConfig, structure })
 
       moveElement(editor, [2], 'down')
       await new Promise(process.nextTick)
@@ -120,7 +119,7 @@ describe('Slate Editor', () => {
         },
         { type: 'figure' },
       ]
-      const editor = await setup(structure)
+      const editor = await setup({ ...defaultConfig, structure })
 
       const canMove = moveElement(editor, [2], 'up', true)
       await new Promise(process.nextTick)
@@ -145,7 +144,7 @@ describe('Slate Editor', () => {
         },
         { type: 'figure' },
       ]
-      const editor = await setup(structure)
+      const editor = await setup({ ...defaultConfig, structure })
 
       removeElement(editor, [2])
       await new Promise(process.nextTick)
@@ -162,7 +161,7 @@ describe('Slate Editor', () => {
         },
         { type: 'figure' },
       ]
-      const editor = await setup(structure)
+      const editor = await setup({ ...defaultConfig, structure })
 
       removeElement(editor, [1])
       await new Promise(process.nextTick)
@@ -179,7 +178,7 @@ describe('Slate Editor', () => {
         },
         { type: 'figure' },
       ]
-      const editor = await setup(structure)
+      const editor = await setup({ ...defaultConfig, structure })
 
       const canRemove = removeElement(editor, [2], true)
       await new Promise(process.nextTick)

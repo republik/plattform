@@ -11,9 +11,8 @@ describe('Slate Editor: Marks Handling', () => {
 
   const defaultConfig = { schema }
 
-  async function setup(structure, config = defaultConfig) {
+  async function setup(config) {
     return await mockEditor(createEditor(), {
-      structure,
       config,
       value,
       setValue: (val) => (value = val),
@@ -32,7 +31,7 @@ describe('Slate Editor: Marks Handling', () => {
         type: 'paragraph',
       },
     ]
-    const editor = await setup(structure)
+    const editor = await setup({ ...defaultConfig, structure })
 
     await Transforms.select(editor, {
       anchor: { path: [0, 0], offset: 6 },
@@ -73,7 +72,7 @@ describe('Slate Editor: Marks Handling', () => {
         type: 'paragraph',
       },
     ]
-    const editor = await setup(structure)
+    const editor = await setup({ ...defaultConfig, structure })
     const selection = {
       anchor: { path: [0, 1], offset: 6 },
       focus: { path: [0, 1], offset: 11 },
@@ -109,7 +108,7 @@ describe('Slate Editor: Marks Handling', () => {
         type: 'paragraph',
       },
     ]
-    const editor = await setup(structure)
+    const editor = await setup({ ...defaultConfig, structure })
     const selection = {
       anchor: { path: [0, 0], offset: 9 },
       focus: { path: [0, 0], offset: 9 },
@@ -151,7 +150,7 @@ describe('Slate Editor: Marks Handling', () => {
         type: 'paragraph',
       },
     ]
-    const editor = await setup(structure)
+    const editor = await setup({ ...defaultConfig, structure })
     const selection = {
       anchor: { path: [0, 1], offset: 0 },
       focus: { path: [0, 1], offset: 5 },
@@ -189,7 +188,7 @@ describe('Slate Editor: Marks Handling', () => {
         type: 'paragraph',
       },
     ]
-    const editor = await setup(structure)
+    const editor = await setup({ ...defaultConfig, structure })
 
     await Transforms.select(editor, {
       anchor: { path: [0, 1], offset: 3 },
@@ -226,7 +225,7 @@ describe('Slate Editor: Marks Handling', () => {
         type: 'paragraph',
       },
     ]
-    const editor = await setup(structure)
+    const editor = await setup({ ...defaultConfig, structure })
 
     await Transforms.select(editor, {
       anchor: { path: [0, 0], offset: 3 },
@@ -267,7 +266,7 @@ describe('Slate Editor: Marks Handling', () => {
         type: 'paragraph',
       },
     ]
-    const editor = await setup(structure)
+    const editor = await setup({ ...defaultConfig, structure })
 
     await Transforms.select(editor, {
       anchor: { path: [0, 1], offset: 0 },
@@ -300,7 +299,7 @@ describe('Slate Editor: Marks Handling', () => {
         type: 'paragraph',
       },
     ]
-    const editor = await setup(structure)
+    const editor = await setup({ ...defaultConfig, structure })
 
     await Transforms.select(editor, {
       anchor: { path: [0, 0], offset: 5 },

@@ -4,7 +4,12 @@ import {
   withCommitMutation,
   withLatestCommit,
 } from './enhancers'
-import { Loader, useDebounce, usePrevious } from '@project-r/styleguide'
+import {
+  Loader,
+  useDebounce,
+  usePrevious,
+  flyerTemplate,
+} from '@project-r/styleguide'
 import { cleanupTree } from '@project-r/styleguide/editor'
 import withT from '../../lib/withT'
 import withMe from '../../lib/withMe'
@@ -23,7 +28,6 @@ import {
 import BranchingNotice from '../VersionControl/BranchingNotice'
 import { useEffect, useState } from 'react'
 import { useWarningContext } from './Warnings'
-import { getInitialValue } from '../ContentEditor'
 import { API_UNCOMMITTED_CHANGES_URL } from '../../lib/settings'
 import EditView from './EditView'
 import compose from 'lodash/flowRight'
@@ -42,7 +46,7 @@ export const getCurrentContent = (store, data, options = {}) => {
   return (
     storedContent ||
     committedContent || {
-      children: getInitialValue(options),
+      children: flyerTemplate,
       meta: {
         title: options.title || 'Journal',
         slug: 'journal',

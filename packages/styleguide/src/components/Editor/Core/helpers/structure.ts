@@ -36,6 +36,7 @@ import {
   isEntireNodeSelected,
   selectAdjacent,
   spansManyElements,
+  isFirstSibling,
 } from './tree'
 import { config as elConfig } from '../../config/elements'
 import { getCharCount, selectNearestWord } from './text'
@@ -71,14 +72,14 @@ export const isCorrect = (
   )
 }
 
-const getTemplateType = (
+export const getTemplateType = (
   template?: NodeTemplate,
 ): CustomElementsType | undefined => {
   if (!template) return
   const nodeType = Array.isArray(template.type)
     ? template.type[0]
     : template.type
-  return nodeType !== 'text' ? nodeType : undefined
+  return nodeType !== 'text' && nodeType !== 'inherit' ? nodeType : undefined
 }
 
 const buildTextNode = (isEnd: boolean): CustomText => {
@@ -163,9 +164,17 @@ const toggleInline = (
 ): number[] | undefined => {
   const { selection } = editor
   if (!selection) return
-  const { text: target, element: parent } = getAncestry(editor)
-  if (parent[0].type === element.type) {
-    Transforms.unwrapNodes(editor, { at: parent[1], voids: true })
+  const {
+    text: target,
+    element: parent,
+    moreElements: otherAncestors,
+  } = getAncestry(editor)
+  const potentialAncestors = [parent, ...otherAncestors]
+  const matchingAncestor = potentialAncestors.find(
+    (node) => node[0].type === element.type,
+  )
+  if (matchingAncestor) {
+    Transforms.unwrapNodes(editor, { at: matchingAncestor[1], voids: true })
     return
   }
   const allowedTemplates = target[0].template
@@ -185,7 +194,10 @@ const toggleInline = (
   } else {
     Transforms.wrapNodes(editor, element, { split: true })
   }
-  return isEntireNodeSelected(target, selection)
+  // if the node is the first inline sibling,
+  // after wrapping the inline element around it,
+  // slate will automatically insert an empty text node before
+  return isEntireNodeSelected(target, selection) && !isFirstSibling(target)
     ? target[1]
     : calculateSiblingPath(target[1])
 }
@@ -375,11 +387,31 @@ const removeNode = (
   Transforms.removeNodes(editor, { at: currentPath })
 }
 
+// Handles the 'inherit' structure type
+const getStructure = (
+  editor: CustomEditor,
+  node: NodeEntry<CustomAncestor>,
+  inputStructure: NodeTemplate[],
+): NodeTemplate[] => {
+  if (!SlateElement.isElement(node[0]) || inputStructure[0].type !== 'inherit')
+    return inputStructure
+  const parent = Editor.parent(editor, node[1])
+  if (!SlateElement.isElement(parent[0])) return inputStructure
+  const parentStructure = elConfig[parent[0].type].structure
+  // This is a fallback when the parent is a complex structure (e.g. figure caption)
+  if (parentStructure.length > 1)
+    return [
+      parentStructure.find((t) => isAllowedType('text', t.type) && !t.end),
+    ]
+  return getStructure(editor, parent, parentStructure)
+}
+
 export const fixStructure: (
-  structure?: NodeTemplate[],
+  inputStructure?: NodeTemplate[],
 ) => NormalizeFn<CustomAncestor> =
-  (structure = DEFAULT_STRUCTURE) =>
+  (inputStructure = DEFAULT_STRUCTURE) =>
   ([node, path], editor) => {
+    const structure = getStructure(editor, [node, path], inputStructure)
     // console.log({ value: editor.children })
     let i = 0
     let repeatOffset = 0
@@ -522,6 +554,19 @@ const deleteOnInsert = (
   }
 }
 
+export const setToType = (
+  editor: CustomEditor,
+  nodeProps: Partial<CustomElement>,
+  insertType: CustomElementsType,
+  insertAt: number[],
+) => {
+  const insertPartial = {
+    type: insertType,
+    ...nodeProps,
+  }
+  Transforms.setNodes(editor, insertPartial, { at: insertAt })
+}
+
 const splitAndInsert = (
   editor: CustomEditor,
   target: NodeEntry<CustomElement>,
@@ -538,11 +583,7 @@ const splitAndInsert = (
     const insertType = getTemplateType(targetN.template)
     const insertConfig = elConfig[insertType]
     const insertProps = getDefaultProps(insertConfig)
-    const insertPartial = {
-      type: insertType,
-      ...insertProps,
-    }
-    Transforms.setNodes(editor, insertPartial, { at: splitP })
+    setToType(editor, insertProps, insertType, splitP)
     const insertP = inPlace ? targetP : calculateSiblingPath(targetP)
     Transforms.moveNodes(editor, { at: splitP, to: insertP })
     Transforms.select(editor, insertP)

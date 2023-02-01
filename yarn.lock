@@ -20732,10 +20732,10 @@ slate-dev-logger@^0.1.36:
   resolved "https://registry.yarnpkg.com/slate-dev-logger/-/slate-dev-logger-0.1.43.tgz#77f6ca7207fcbf453a5516f3aa8b19794d1d26dc"
   integrity sha512-GkcPMGzmPVm85AL+jaKnzhIA0UH9ktQDEIDM+FuQtz+TAPcpPCQiRAaZ6I2p2uD0Hq9bImhKSCtHIa0qRxiVGw==
 
-slate-history@^0.66.0:
-  version "0.66.0"
-  resolved "https://registry.yarnpkg.com/slate-history/-/slate-history-0.66.0.tgz#ac63fddb903098ceb4c944433e3f75fe63acf940"
-  integrity sha512-6MWpxGQZiMvSINlCbMW43E2YBSVMCMCIwQfBzGssjWw4kb0qfvj0pIdblWNRQZD0hR6WHP+dHHgGSeVdMWzfng==
+slate-history@^0.86.0:
+  version "0.86.0"
+  resolved "https://registry.yarnpkg.com/slate-history/-/slate-history-0.86.0.tgz#5554612271d2fc1018a7918be3961bb66e620c58"
+  integrity sha512-OxObL9tbhgwvSlnKSCpGIh7wnuaqvOj5jRExGjEyCU2Ke8ctf22HjT+jw7GEi9ttLzNTUmTEU3YIzqKGeqN+og==
   dependencies:
     is-plain-object "^5.0.0"
 
@@ -20786,10 +20786,10 @@ slate-react@^0.10.23:
     slate-plain-serializer "^0.4.16"
     slate-prop-types "^0.4.16"
 
-slate-react@^0.82.2:
-  version "0.82.2"
-  resolved "https://registry.yarnpkg.com/slate-react/-/slate-react-0.82.2.tgz#4344ef392e3e51e5cd7c3272d3e5d61483c41823"
-  integrity sha512-lNmSqqNOKQJG1i3Wx4MkggWr6dLhQ43n4exPf5NLmKVBHPBuQSRNaWhAAKm6HOEC36Q6xBfkVONIQWi3GSyIEQ==
+slate-react@^0.88.2:
+  version "0.88.2"
+  resolved "https://registry.yarnpkg.com/slate-react/-/slate-react-0.88.2.tgz#e072d54980876ec11ca057703a0e386dd290c03e"
+  integrity sha512-r06i+b7c1deP9PH69D3kJLStB2cbwryCVUGC++3phG7G3Ie+qEeJ5AZqogdxtsXd2vZaVGYKEjSASd3bTnj3tw==
   dependencies:
     "@types/is-hotkey" "^0.1.1"
     "@types/lodash" "^4.14.149"
@@ -20814,10 +20814,10 @@ slate@^0.31.8:
     slate-dev-logger "^0.1.36"
     type-of "^2.0.1"
 
-slate@^0.82.1:
-  version "0.82.1"
-  resolved "https://registry.yarnpkg.com/slate/-/slate-0.82.1.tgz#cf43cb828c980734dab01c9bbb517fd4d20892f7"
-  integrity sha512-3mdRdq7U3jSEoyFrGvbeb28hgrvrr4NdFCtJX+IjaNvSFozY0VZd/CGHF0zf/JDx7aEov864xd5uj0HQxxEWTQ==
+slate@^0.88.1:
+  version "0.88.1"
+  resolved "https://registry.yarnpkg.com/slate/-/slate-0.88.1.tgz#0fc20f33b7baed7ea979fa848232c336e788cc31"
+  integrity sha512-DEj9RpkNwPfdh3zbE9eGpeOVGWdS8BYQt754S0Lk6IvJXOkYaxza7WEZLZl/vnp7vloMdTe24zccyxywA3XK8g==
   dependencies:
     immer "^9.0.6"
     is-plain-object "^5.0.0"
