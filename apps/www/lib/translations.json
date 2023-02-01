@@ -7758,7 +7758,7 @@
     },
     {
       "key": "FutureCampaign/sender/reward/text",
-      "value": "Für jede neue Mitstreiter*in, die Sie zur Republik Community holen, verlängern wir ihre Mitgliedschaft um einen Monat.*"
+      "value": "Für jede neue Mitstreiter*in, die Sie zur Republik Community holen, verlängern wir ihre Mitgliedschaft um einen Monat."
     },
     {
       "key": "FutureCampaign/sender/reward/progressText",
@@ -7766,7 +7766,7 @@
     },
     {
       "key": "FutureCampaign/sender/reward/donateHint",
-      "value": "*Sie möchten keine Verlängerung? Kein Problem, Sie können am Ende der Aktion ihre gesammelten Monate Spenden und erhalten dafür nicht nur Ruhm und Ehre, sodndern auch unseren unendlichen Dank."
+      "value": "Sie möchten keine Verlängerung? Kein Problem, Sie können am Ende der Aktion ihre gesammelten Monate Spenden und erhalten dafür nicht nur Ruhm und Ehre, sodndern auch unseren unendlichen Dank."
     },
     {
       "key": "FutureCampaign/sender/reward/donateText",
@@ -7778,7 +7778,7 @@
     },
     {
       "key": "FutureCampaign/slogan/text",
-      "value": "Unabhängiger Journalismus{br} hat eine Zukunft, wenn {br}{persona} {br}das auch will."
+      "value": "Unabhängiger Journalismus hat eine Zukunft, wenn {persona} das auch will."
     },
     {
       "key": "FutureCampaign/receiver/introductoryStep/heading",
