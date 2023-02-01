@@ -175,6 +175,13 @@ const QuestionnaireSubmissions = dynamic(
   },
 )
 
+const QuestionnaireSubmissionsOverview = dynamic(
+  () => import('../Questionnaire/Submissions/Overview'),
+  {
+    loading: LoadingComponent,
+  },
+)
+
 const Postcard = dynamic(
   () => import('../Climatelab/Postcard/PostcardDynamicComponent'),
   {
@@ -419,6 +426,7 @@ const ArticlePage = ({
           ELECTION_RESULT_DIVERSITY: ElectionResultDiversity,
           QUESTIONNAIRE: Questionnaire,
           QUESTIONNAIRE_SUBMISSIONS: QuestionnaireSubmissions,
+          QUESTIONNAIRE_SUBMISSIONS_OVERVIEW: QuestionnaireSubmissionsOverview,
           NEWSLETTER_SIGNUP: NewsletterSignUpDynamic,
           CLIMATE_LAB_COUNTER: ClimateLabCounter,
           CLIMATE_LAB_INLINE_TEASER: ClimateLabInlineTeaser,
