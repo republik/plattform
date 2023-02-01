@@ -5,21 +5,25 @@ import {
   useMediaQuery,
   IconButton,
   CopyToClippboardIcon,
+  Checkbox,
 } from '@project-r/styleguide'
 import { css } from 'glamor'
 import { useMemo } from 'react'
 import { Typewriter } from 'react-simple-typewriter'
-import { createGetServerSideProps } from '../../../lib/apollo/helpers'
 import { PUBLIC_BASE_URL } from '../../../lib/constants'
 import AssetImage from '../../../lib/images/AssetImage'
 import { useTranslation } from '../../../lib/withT'
+import { submitConsentMutation } from '../../Article/Progress/api'
 import Frame from '../../Frame'
 import {
-  UserInviteQueryData,
-  USER_INVITE_QUERY,
-  useUserInviteQuery,
-} from '../graphql/useUserInviteQuery'
+  useDonateMonthsConsentQuery,
+  useGiveConsentToDonateMonthsMutation,
+  useRevokeConsentToDonateMonthsMutation,
+} from '../graphql/consentOperations'
+import { useUserInviteQuery } from '../graphql/useUserInviteQuery'
 import RewardProgress from './RewardProgress'
+
+const DONATE_MONTHS_CONSENT_KEY = '5YEAR_DONATE_MONTHS'
 
 const LOGO_SRC_LG =
   '/static/5-jahre-republik/republik_jubilaeumslogo-image-lg-white.png'
@@ -30,6 +34,26 @@ const InviteSenderPage = ({ futureCampaignLink }: Props) => {
   const { t } = useTranslation()
   const isDesktop = useMediaQuery(mediaQueries.mUp)
   const { data: userInviteData } = useUserInviteQuery()
+  const {
+    data: donateMonthsConsent,
+    loading: donateMonthsConsentLoading,
+    refetch: refetchConsent,
+  } = useDonateMonthsConsentQuery({
+    variables: {
+      name: DONATE_MONTHS_CONSENT_KEY,
+    },
+  })
+
+  const [giveConsent] = useGiveConsentToDonateMonthsMutation({
+    variables: {
+      name: DONATE_MONTHS_CONSENT_KEY,
+    },
+  })
+  const [revokeConsent] = useRevokeConsentToDonateMonthsMutation({
+    variables: {
+      name: DONATE_MONTHS_CONSENT_KEY,
+    },
+  })
 
   const inviteLink = useMemo(() => {
     if (!userInviteData || !userInviteData.me) {
@@ -42,6 +66,19 @@ const InviteSenderPage = ({ futureCampaignLink }: Props) => {
       return `${PUBLIC_BASE_URL}/5-jahre-republik/${accessToken}`
     }
   }, [userInviteData])
+
+  const handleDonateMonthsChange = async (value: boolean) => {
+    try {
+      if (value) {
+        await giveConsent()
+      } else {
+        await revokeConsent()
+      }
+      await refetchConsent()
+    } catch (e) {
+      console.error(e)
+    }
+  }
 
   // TODO: Retrieve dynamically
   const maxRewards = 5
@@ -70,14 +107,17 @@ const InviteSenderPage = ({ futureCampaignLink }: Props) => {
           </div>
           <h1 {...styles.heading}>
             {t.elements('FutureCampaign/slogan/text', {
+              br: <br />,
               persona: (
-                <Typewriter
-                  words={personasForTypeWriter}
-                  loop={true}
-                  typeSpeed={80}
-                  delaySpeed={5000}
-                  cursor
-                />
+                <>
+                  <Typewriter
+                    words={personasForTypeWriter}
+                    loop={true}
+                    typeSpeed={80}
+                    delaySpeed={5000}
+                    cursor
+                  />
+                </>
               ),
             })}
           </h1>
@@ -98,6 +138,7 @@ const InviteSenderPage = ({ futureCampaignLink }: Props) => {
                 <IconButton
                   onClick={() => handleCopyLink(inviteLink)}
                   Icon={CopyToClippboardIcon}
+                  title='Link kopieren'
                   fill='#000000'
                   size={20}
                 />
@@ -120,6 +161,16 @@ const InviteSenderPage = ({ futureCampaignLink }: Props) => {
           <div>
             <RewardProgress reached={reachedRewards} max={maxRewards} />
             <p>{t('FutureCampaign/sender/reward/hint')}</p>
+            <Checkbox
+              disabled={donateMonthsConsentLoading}
+              checked={Boolean(donateMonthsConsent?.me?.hasConsentedTo)}
+              onChange={(_, value) => handleDonateMonthsChange(Boolean(value))}
+            >
+              Ich akzeptiere die{' '}
+              <a target='_blank' href='https://www.republik.ch/legal/agb'>
+                Allgemeine Geschäftsbedingungen
+              </a>
+            </Checkbox>
           </div>
         </div>
 
