@@ -131,15 +131,6 @@ const InviteSenderPage = ({ futureCampaignLink }: Props) => {
 
 export default InviteSenderPage
 
-export const getServerSideProps = createGetServerSideProps(
-  async ({ client }) => {
-    await client.query<UserInviteQueryData>({
-      query: USER_INVITE_QUERY,
-    })
-    return { props: {} }
-  },
-)
-
 const styles = {
   page: css({
     '> *:not(:first-child)': {

@@ -1,13 +1,17 @@
 import { css } from 'glamor'
 import { useRouter } from 'next/router'
 import { useCallback, useState } from 'react'
+import { createGetServerSideProps } from '../../../lib/apollo/helpers'
 import { PUBLIC_BASE_URL } from '../../../lib/constants'
-import AssetImage from '../../../lib/images/AssetImage'
-import { t } from '../../../lib/withT'
-import { CLIMATE_LAB_SHARE_IMAGE_URL } from '../../Climatelab/constants'
 import Frame from '../../Frame'
-import Stepper, { Step, StepProps } from '../../Stepper/Stepper'
+import Stepper, { Step } from '../../Stepper/Stepper'
 import { FUTURE_CAMPAIGN_SHARE_IMAGE_URL } from '../constants'
+import {
+  InviteSenderProfileQueryData,
+  InviteSenderProfileQueryVariables,
+  INVITE_SENDER_PROFILE_QUERY,
+  useInviteSenderProfileQuery,
+} from '../graphql/useSenderProfileQuery'
 import IntroductoryStep from './steps/IntroductionaryStep'
 import SelectYourPriceStep from './steps/SelectYourPriceStep'
 
@@ -16,8 +20,26 @@ enum STEPS {
   PRICE_SELECTOR = 'PRICE_SELECTOR',
 }
 
-const InviteReceiverPage = () => {
+type Props = {
+  // If the sender could not be loaded, the link is invalid
+  invalidInviteCode?: boolean
+}
+
+const InviteReceiverPage = ({ invalidInviteCode }: Props) => {
   const router = useRouter()
+
+  const inviteCode = Array.isArray(router.query?.code)
+    ? router.query.code[0]
+    : router.query?.code
+
+  const inviteCodeHasUserSlug = inviteCode?.startsWith('~')
+  const { data: senderProfileData } = useInviteSenderProfileQuery({
+    variables: {
+      accessToken: !inviteCodeHasUserSlug ? inviteCode : undefined,
+      slug: inviteCodeHasUserSlug ? inviteCode.substring(1) : undefined,
+    },
+    skip: !inviteCode, // TODO: also skip for monthly abo
+  })
 
   // TODO: perhaps prevent indexing?
   // TODO: add correct meta tags
@@ -55,7 +77,12 @@ const InviteReceiverPage = () => {
   const steps: Step[] = [
     {
       name: STEPS.INTRO,
-      content: (stepProps) => <IntroductoryStep {...stepProps} />,
+      content: (stepProps) => (
+        <IntroductoryStep
+          senderProfile={senderProfileData?.sender}
+          {...stepProps}
+        />
+      ),
     },
     {
       name: STEPS.PRICE_SELECTOR,
@@ -71,14 +98,16 @@ const InviteReceiverPage = () => {
 
   return (
     <Frame containerMaxWidth={640} pageColorSchemeKey='dark' meta={meta}>
-      <Stepper
-        steps={steps}
-        onComplete={handleComplete}
-        customStepperUIPlacement
-        contentWrapperElement={({ children }) => (
-          <div {...styles.wrapper}>{children}</div>
-        )}
-      />
+      {senderProfileData?.sender && (
+        <Stepper
+          steps={steps}
+          onComplete={handleComplete}
+          customStepperUIPlacement
+          contentWrapperElement={({ children }) => (
+            <div {...styles.wrapper}>{children}</div>
+          )}
+        />
+      )}
     </Frame>
   )
 }

@@ -1,38 +1,48 @@
 import { createGetServerSideProps } from '../../lib/apollo/helpers'
 import InviteReceiverPage from '../../components/FutureCampaign/ReceiverPage/InviteReceiverPage'
+import {
+  InviteSenderProfileQueryData,
+  InviteSenderProfileQueryVariables,
+  INVITE_SENDER_PROFILE_QUERY,
+} from '../../components/FutureCampaign/graphql/useSenderProfileQuery'
 
 export default InviteReceiverPage
 
-export const getServerSideProps = createGetServerSideProps(
-  async ({
-    client,
-    user,
-    ctx: {
-      params: { code },
+export const getServerSideProps = createGetServerSideProps<
+  Props,
+  { code: string }
+>(async ({ client, ctx: { params }, user: me }) => {
+  // If a sender has a public-profile, the invite-code starts with '~'
+  const isUserSlug = params.code.startsWith('~')
+
+  const { data } = await client.query<
+    InviteSenderProfileQueryData,
+    InviteSenderProfileQueryVariables
+  >({
+    query: INVITE_SENDER_PROFILE_QUERY,
+    variables: {
+      accessToken: !isUserSlug ? params.code : undefined,
+      slug: isUserSlug ? params.code.substring(1) : undefined,
     },
-  }) => {
-    console.debug('SSR 5-year-republik for code: ' + code)
+  })
 
-    // Step 1:
-    // TODO: Get access-token associated with the code from api
-    // TODO: else error page
-
-    // Step 2:
-    // TODO: If access-token is valid, get inviter-user from api
-
-    // Step 3:
-    // TODO: If inviter-user = request-user, redirect to '/verstaerkung-holen'
-    if (code === 'SELF') {
-      return {
-        redirect: {
-          destination: '/verstaerkung-holen',
-          permanent: false,
-        },
-      }
-    }
-
+  console.log('data', {
+    data,
+    me,
+  })
+  // If a user opens his own invite link, redirect to the sender page
+  if (me && data?.sender?.id === me.id) {
     return {
-      props: {},
+      redirect: {
+        destination: '/verstaerkung-holen',
+        permanent: false,
+      },
     }
-  },
-)
+  }
+
+  return {
+    props: {
+      invalidInviteCode: !data?.sender,
+    },
+  }
+})

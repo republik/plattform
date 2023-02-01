@@ -13,20 +13,25 @@ import { useState } from 'react'
 import { useCarouselQuery } from '../../graphql/useCarouselQuery'
 import Carousel from '../../../Marketing/Carousel'
 import { useTranslation } from '../../../../lib/withT'
+import { InviteSenderProfileQueryData } from '../../graphql/useSenderProfileQuery'
 
 const CAROUSEL_ELEMENT_ID = 'introductionary-step_carousel'
 
-const IntroductoryStep = ({ stepperControls, onAdvance }: StepProps) => {
+type IntroductionaryStepProps = StepProps & {
+  senderProfile: InviteSenderProfileQueryData['sender']
+}
+
+const IntroductoryStep = ({
+  senderProfile,
+  stepperControls,
+  onAdvance,
+}: IntroductionaryStepProps) => {
   const { t } = useTranslation()
   const [showCarousel, setShowCarousel] = useState(false)
 
   const { data: carouselData, loading: carouselLoading } = useCarouselQuery()
 
-  const testSender = {
-    name: 'Grogu (Baby Yoda)',
-    imageSrc:
-      'https://media.gq.com/photos/5ddd59ff5bb28e00087a9df6/1:1/w_250,h_250,c_limit/baby-yoda-explainer-gq-november-2019-112619.jpg',
-  }
+  const name = `${senderProfile?.firstName} ${senderProfile?.lastName}`
 
   return (
     <>
@@ -70,30 +75,32 @@ const IntroductoryStep = ({ stepperControls, onAdvance }: StepProps) => {
           )}
         </div>
         <div {...styles.inviteSection}>
-          <div
-            style={{
-              flexShrink: 0,
-              position: 'relative',
-            }}
-          >
-            <AssetImage
-              src={testSender.imageSrc}
-              width={96}
-              height={96}
-              unoptimized
-            />
-          </div>
+          {senderProfile.portrait && (
+            <div
+              style={{
+                flexShrink: 0,
+                position: 'relative',
+              }}
+            >
+              <AssetImage
+                src={senderProfile.portrait}
+                width={96}
+                height={96}
+                unoptimized
+              />
+            </div>
+          )}
           <div style={{ flex: '0 1 auto' }}>
             <p {...styles.text}>
               {t('FutureCampaign/receiver/introductoryStep/inviteText1', {
-                name: testSender.name,
+                name,
               })}
             </p>
           </div>
         </div>
         <p {...styles.text}>
           {t('FutureCampaign/receiver/introductoryStep/inviteText2', {
-            name: testSender.name,
+            name,
           })}
         </p>
       </div>
