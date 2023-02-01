@@ -1,17 +1,12 @@
 import { css } from 'glamor'
 import { useRouter } from 'next/router'
 import { useCallback, useState } from 'react'
-import { createGetServerSideProps } from '../../../lib/apollo/helpers'
 import { PUBLIC_BASE_URL } from '../../../lib/constants'
+import { useMe } from '../../../lib/context/MeContext'
 import Frame from '../../Frame'
 import Stepper, { Step } from '../../Stepper/Stepper'
 import { FUTURE_CAMPAIGN_SHARE_IMAGE_URL } from '../constants'
-import {
-  InviteSenderProfileQueryData,
-  InviteSenderProfileQueryVariables,
-  INVITE_SENDER_PROFILE_QUERY,
-  useInviteSenderProfileQuery,
-} from '../graphql/useSenderProfileQuery'
+import { useInviteSenderProfileQuery } from '../graphql/useSenderProfileQuery'
 import IntroductoryStep from './steps/IntroductionaryStep'
 import SelectYourPriceStep from './steps/SelectYourPriceStep'
 
@@ -27,18 +22,22 @@ type Props = {
 
 const InviteReceiverPage = ({ invalidInviteCode }: Props) => {
   const router = useRouter()
+  const { me, meLoading } = useMe()
+
+  const hasYearlySubscription = me?.activeMembership?.type?.name === 'ABO'
+  const isEligible = !hasYearlySubscription
 
   const inviteCode = Array.isArray(router.query?.code)
     ? router.query.code[0]
     : router.query?.code
-
   const inviteCodeHasUserSlug = inviteCode?.startsWith('~')
+
   const { data: senderProfileData } = useInviteSenderProfileQuery({
     variables: {
       accessToken: !inviteCodeHasUserSlug ? inviteCode : undefined,
       slug: inviteCodeHasUserSlug ? inviteCode.substring(1) : undefined,
     },
-    skip: !inviteCode, // TODO: also skip for monthly abo
+    skip: !inviteCode || meLoading,
   })
 
   // TODO: perhaps prevent indexing?
@@ -98,7 +97,13 @@ const InviteReceiverPage = ({ invalidInviteCode }: Props) => {
 
   return (
     <Frame containerMaxWidth={640} pageColorSchemeKey='dark' meta={meta}>
-      {senderProfileData?.sender && (
+      {invalidInviteCode && <p>Invalid invite code</p>}
+      {hasYearlySubscription && (
+        <p>
+          Not eligable <i>ABO</i>, instead link to point to sender page
+        </p>
+      )}
+      {isEligible && (
         <Stepper
           steps={steps}
           onComplete={handleComplete}
