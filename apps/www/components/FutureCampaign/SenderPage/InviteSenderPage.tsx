@@ -13,7 +13,6 @@ import { Typewriter } from 'react-simple-typewriter'
 import { PUBLIC_BASE_URL } from '../../../lib/constants'
 import AssetImage from '../../../lib/images/AssetImage'
 import { useTranslation } from '../../../lib/withT'
-import { submitConsentMutation } from '../../Article/Progress/api'
 import Frame from '../../Frame'
 import {
   useDonateMonthsConsentQuery,
@@ -30,7 +29,7 @@ const LOGO_SRC_LG =
 const LOGO_SRC_SM =
   '/static/5-jahre-republik/republik_jubilaeumslogo-image-sm-white.png'
 
-const InviteSenderPage = ({ futureCampaignLink }: Props) => {
+const InviteSenderPage = () => {
   const { t } = useTranslation()
   const isDesktop = useMediaQuery(mediaQueries.mUp)
   const { data: userInviteData } = useUserInviteQuery()

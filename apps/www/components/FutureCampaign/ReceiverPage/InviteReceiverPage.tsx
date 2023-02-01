@@ -15,12 +15,12 @@ enum STEPS {
   PRICE_SELECTOR = 'PRICE_SELECTOR',
 }
 
-type Props = {
+export type InviteReceiverPageProps = {
   // If the sender could not be loaded, the link is invalid
   invalidInviteCode?: boolean
 }
 
-const InviteReceiverPage = ({ invalidInviteCode }: Props) => {
+const InviteReceiverPage = ({ invalidInviteCode }: InviteReceiverPageProps) => {
   const router = useRouter()
   const { me, meLoading } = useMe()
 

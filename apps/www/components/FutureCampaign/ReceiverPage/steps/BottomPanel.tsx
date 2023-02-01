@@ -1,6 +1,7 @@
 import { css } from 'glamor'
 import { mediaQueries, useColorContext } from '@project-r/styleguide'
 import Button from './Button'
+import { ReactNode } from 'react'
 
 const BottomPanel = ({
   children,

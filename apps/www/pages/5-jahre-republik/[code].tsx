@@ -1,5 +1,7 @@
 import { createGetServerSideProps } from '../../lib/apollo/helpers'
-import InviteReceiverPage from '../../components/FutureCampaign/ReceiverPage/InviteReceiverPage'
+import InviteReceiverPage, {
+  InviteReceiverPageProps,
+} from '../../components/FutureCampaign/ReceiverPage/InviteReceiverPage'
 import {
   InviteSenderProfileQueryData,
   InviteSenderProfileQueryVariables,
@@ -9,7 +11,7 @@ import {
 export default InviteReceiverPage
 
 export const getServerSideProps = createGetServerSideProps<
-  Props,
+  InviteReceiverPageProps,
   { code: string }
 >(async ({ client, ctx: { params }, user: me }) => {
   // If a sender has a public-profile, the invite-code starts with '~'
