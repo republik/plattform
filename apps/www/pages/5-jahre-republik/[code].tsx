@@ -28,10 +28,6 @@ export const getServerSideProps = createGetServerSideProps<
     },
   })
 
-  console.log('data', {
-    data,
-    me,
-  })
   // If a user opens his own invite link, redirect to the sender page
   if (me && data?.sender?.id === me.id) {
     return {
