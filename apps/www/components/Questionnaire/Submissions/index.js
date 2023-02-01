@@ -162,6 +162,23 @@ const getSearchParams = ({ sort, search }) => {
   return query
 }
 
+const getSampleAnswers = (questions, results) => {
+  return questions.map((question) => {
+    const answers = results.nodes.map((submission) => {
+      return {
+        answer: submission.answers.nodes.find(
+          (answer) => answer.question.id === question.id,
+        ),
+        displayAuthor: submission.displayAuthor,
+      }
+    })
+    return {
+      question,
+      answers,
+    }
+  })
+}
+
 const Submissions = ({ slug, extract, share = {} }) => {
   const { t } = useTranslation()
   const router = useRouter()
@@ -312,8 +329,10 @@ const Submissions = ({ slug, extract, share = {} }) => {
         error={error || shareQuery.error}
         render={() => {
           const {
-            questionnaire: { results },
+            questionnaire: { questions, results },
           } = data
+
+          const sampleAnswers = getSampleAnswers(questions, results)
 
           return (
             <>
