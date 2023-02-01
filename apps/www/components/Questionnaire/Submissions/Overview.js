@@ -14,6 +14,8 @@ import {
   InlineSpinner,
   plainButtonRule,
   usePrevious,
+  Editorial,
+  inQuotes,
 } from '@project-r/styleguide'
 
 import { useInfiniteScroll } from '../../../lib/hooks/useInfiniteScroll'
@@ -23,6 +25,8 @@ import Submission from './Submission'
 import PlainButton from './PlainButton'
 import { SortToggle } from '../../Search/Sort'
 import ShareSubmission from './Share'
+import { max } from 'd3-array'
+import AnswerText from './AnswerText'
 
 const SUPPORTED_SORT = [
   {
@@ -292,7 +296,7 @@ const Submissions = ({ slug, extract, share = {} }) => {
 
   return (
     <>
-      <Interaction.H2 style={{ marginBottom: 15 }}>
+      {/* <Interaction.H2 style={{ marginBottom: 15 }}>
         {t.pluralize('questionnaire/submissions/count', {
           count: getTotalCount(data) || getTotalCount(previousData) || '',
         })}
@@ -324,6 +328,7 @@ const Submissions = ({ slug, extract, share = {} }) => {
           pathname={pathname}
         />
       ))}
+      */}
       <Loader
         loading={loading || shareQuery.loading}
         error={error || shareQuery.error}
@@ -335,7 +340,38 @@ const Submissions = ({ slug, extract, share = {} }) => {
           const sampleAnswers = getSampleAnswers(questions, results)
 
           return (
-            <>
+            <div style={{ marginTop: 80 }}>
+              {sampleAnswers.map(({ question, answers }) => {
+                const usableAnswers = answers.filter(({ answer }) => !!answer)
+                const randomIdx = Math.floor(
+                  Math.random() * usableAnswers.length,
+                )
+                const { answer, displayAuthor } = usableAnswers[randomIdx]
+                console.log({ answer, displayAuthor })
+                return (
+                  <div
+                    key={question.id}
+                    style={{
+                      marginBottom: 20,
+                      paddingTop: 20,
+                      borderTop: '1px solid black',
+                    }}
+                  >
+                    <Interaction.H3>{question.text}</Interaction.H3>
+                    <Editorial.P key={question.id}>
+                      <AnswerText
+                        text={answer.payload.text}
+                        value={answer.payload.value}
+                        question={question}
+                        isQuote
+                      />
+                      <br />
+                      <em>– {displayAuthor.name}</em>
+                    </Editorial.P>
+                  </div>
+                )
+              })}
+              {/*
               {results.totalCount !== getTotalCount(data) && (
                 <Interaction.P style={{ marginTop: 15 }}>
                   {t.pluralize('search/preloaded/results', {
@@ -405,7 +441,8 @@ const Submissions = ({ slug, extract, share = {} }) => {
                   )}
                 </div>
               </div>
-            </>
+              */}
+            </div>
           )
         }}
       />
