@@ -444,7 +444,9 @@ class Pledge extends Component {
                   ) : (
                     <Accordion
                       crowdfundingName={crowdfundingName}
-                      packages={packages}
+                      packages={packages.filter(
+                        ({ group }) => group !== 'HIDDEN',
+                      )}
                       group={queryGroup}
                       extended
                     />

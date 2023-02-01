@@ -73,6 +73,7 @@ type Package {
 enum PackageGroup {
   ME
   GIVE
+  HIDDEN
 }
 
 type PackageOption {
