@@ -205,7 +205,7 @@ const styles = {
   heading: css({
     ...fontStyles.serifTitle,
     margin: 0,
-    minHeight: '20vw', // Necessary, else typwriter will cause layout-shifts
+    minHeight: '30vw', // Necessary, else typwriter will cause layout-shifts
     fontSize: 24,
     [mediaQueries.mUp]: {
       minHeight: '20vw', // Necessary, else typwriter will cause layout-shifts

@@ -60,7 +60,7 @@ const styles = {
     },
     '&[data-reached="true"]': {
       padding: 5,
-      backgroundColor: '#008800',
+      backgroundColor: '#FFFFFF',
     },
   }),
   text: css({
