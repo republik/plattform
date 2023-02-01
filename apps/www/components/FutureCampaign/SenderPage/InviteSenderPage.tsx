@@ -1,3 +1,4 @@
+import { gql } from '@apollo/client'
 import {
   mediaQueries,
   fontStyles,
@@ -6,11 +7,18 @@ import {
   CopyToClippboardIcon,
 } from '@project-r/styleguide'
 import { css } from 'glamor'
+import { useMemo } from 'react'
 import { Typewriter } from 'react-simple-typewriter'
+import { createGetServerSideProps } from '../../../lib/apollo/helpers'
 import { PUBLIC_BASE_URL } from '../../../lib/constants'
 import AssetImage from '../../../lib/images/AssetImage'
 import { useTranslation } from '../../../lib/withT'
 import Frame from '../../Frame'
+import {
+  UserInviteQueryData,
+  USER_INVITE_QUERY,
+  useUserInviteQuery,
+} from '../graphql/useUserInviteQuery'
 import RewardProgress from './RewardProgress'
 
 const LOGO_SRC_LG =
@@ -18,10 +26,22 @@ const LOGO_SRC_LG =
 const LOGO_SRC_SM =
   '/static/5-jahre-republik/republik_jubilaeumslogo-image-sm-white.png'
 
-const InviteSenderPage = () => {
+const InviteSenderPage = ({ futureCampaignLink }: Props) => {
   const { t } = useTranslation()
   const isDesktop = useMediaQuery(mediaQueries.mUp)
-  const link = PUBLIC_BASE_URL + '/5-jahre-republik/' + 'foo'
+  const { data: userInviteData } = useUserInviteQuery()
+
+  const inviteLink = useMemo(() => {
+    if (!userInviteData || !userInviteData.me) {
+      return null
+    }
+    const { hasPublicProfile, slug, accessToken } = userInviteData.me
+    if (hasPublicProfile) {
+      return `${PUBLIC_BASE_URL}/5-jahre-republik/~${slug}`
+    } else {
+      return `${PUBLIC_BASE_URL}/5-jahre-republik/${accessToken}`
+    }
+  }, [userInviteData])
 
   // TODO: Retrieve dynamically
   const maxRewards = 5
@@ -74,9 +94,9 @@ const InviteSenderPage = () => {
             </p>
             <div>
               <span {...styles.inviteLinkButton}>
-                {link}
+                {inviteLink}
                 <IconButton
-                  onClick={() => handleCopyLink(link)}
+                  onClick={() => handleCopyLink(inviteLink)}
                   Icon={CopyToClippboardIcon}
                   fill='#000000'
                   size={20}
@@ -110,6 +130,15 @@ const InviteSenderPage = () => {
 }
 
 export default InviteSenderPage
+
+export const getServersideProps = createGetServerSideProps(
+  async ({ client }) => {
+    await client.query<UserInviteQueryData>({
+      query: USER_INVITE_QUERY,
+    })
+    return { props: {} }
+  },
+)
 
 const styles = {
   page: css({
