@@ -117,21 +117,7 @@ const InviteReceiverPage = ({ invalidInviteCode }: InviteReceiverPageProps) => {
       pageColorSchemeKey='dark'
       meta={meta}
     >
-      <div {...styles.headerWrapper}>
-        <div
-          {...styles.header}
-          {...colorScheme.set('backgroundColor', 'default')}
-        >
-          <Link href='/'>
-            <AssetImage
-              src={CombiLogo}
-              height={70}
-              width={250}
-              objectFit='contain'
-            />
-          </Link>
-        </div>
-      </div>
+      <Header />
       {invalidInviteCode && <p>Invalid invite code</p>}
       {hasYearlySubscription && (
         <div {...styles.hasYearlySubscription}>
@@ -212,4 +198,25 @@ const styles = {
       textDecoration: 'underline',
     },
   }),
+}
+
+const Header = () => {
+  const [colorScheme] = useColorContext()
+  return (
+    <div
+      {...styles.headerWrapper}
+      {...colorScheme.set('backgroundColor', 'default')}
+    >
+      <div {...styles.header}>
+        <Link href='/'>
+          <AssetImage
+            src={CombiLogo}
+            height={70}
+            width={250}
+            objectFit='contain'
+          />
+        </Link>
+      </div>
+    </div>
+  )
 }
