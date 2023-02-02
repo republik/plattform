@@ -22,12 +22,15 @@ import {
 import { useUserInviteQuery } from '../graphql/useUserInviteQuery'
 import RewardProgress from './RewardProgress'
 
+import SendInviteSVG from '../../../public/static/5-jahre-republik/sender/send-invite.svg'
+import ReceiveMonthsSVG from '../../../public/static/5-jahre-republik/sender/receive-months_white.svg'
+
 const DONATE_MONTHS_CONSENT_KEY = '5YEAR_DONATE_MONTHS'
 
 const LOGO_SRC_LG =
-  '/static/5-jahre-republik/republik_jubilaeumslogo-image-lg-white.png'
+  '/static/5-jahre-republik/logo/republik_jubilaeumslogo-image-lg-white.png'
 const LOGO_SRC_SM =
-  '/static/5-jahre-republik/republik_jubilaeumslogo-image-sm-white.png'
+  '/static/5-jahre-republik/logo/republik_jubilaeumslogo-image-sm-white.png'
 
 const InviteSenderPage = () => {
   const { t } = useTranslation()
@@ -124,7 +127,8 @@ const InviteSenderPage = () => {
         </div>
         <div {...styles.box} {...styles.inviteBox}>
           <h2 {...styles.boxHeading}>
-            <span>💝</span> {t('FutureCampaign/sender/invite/heading')}
+            <AssetImage src={SendInviteSVG} width={58} height={58} />
+            {t('FutureCampaign/sender/invite/heading')}
           </h2>
           <p {...styles.boxText}>{t('FutureCampaign/sender/invite/text')}</p>
           <div {...styles.inviteShareLinkSection}>
@@ -154,7 +158,8 @@ const InviteSenderPage = () => {
 
         <div {...styles.box} {...styles.rewardBox}>
           <h2 {...styles.boxHeading}>
-            <span>🎁</span> {t('FutureCampaign/sender/reward/heading')}
+            <AssetImage src={ReceiveMonthsSVG} width={58} height={58} />
+            {t('FutureCampaign/sender/reward/heading')}
           </h2>
           <p {...styles.boxText}>{t('FutureCampaign/sender/reward/text')}</p>
           <div>
@@ -229,6 +234,10 @@ const styles = {
   }),
   boxHeading: css({
     ...fontStyles.sansSerifMedium,
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 16,
     margin: 0,
     fontSize: 28,
     [mediaQueries.mUp]: {
