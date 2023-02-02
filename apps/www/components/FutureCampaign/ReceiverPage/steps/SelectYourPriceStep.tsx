@@ -1,9 +1,11 @@
 import { css } from 'glamor'
 import { useState } from 'react'
-import AssetImage from '../../../../lib/images/AssetImage'
 import { StepProps } from '../../../Stepper/Stepper'
+import { getSliderStep, SliderStep } from '../price-slider-content-helpers'
 import { PriceSlider } from '../PriceSlider'
 import BottomPanel from './BottomPanel'
+import { Interaction, fontStyles, mediaQueries } from '@project-r/styleguide'
+import * as textStyles from '../styles'
 
 const SelectYourPriceStep = ({
   stepperControls,
@@ -14,54 +16,34 @@ const SelectYourPriceStep = ({
   initialPrice: number
   onSubmit: (price: number) => void
 }) => {
-  const [price, setPrice] = useState(initialPrice)
+  const [step, setStep] = useState<SliderStep>(getSliderStep(3))
 
   return (
     <>
       <div {...styles.container}>
-        <div>
-          <h2>Bar</h2>
+        <div {...styles.content}>
+          <p {...textStyles.text}>
+            Ihr Preis:{' '}
+            <strong {...textStyles.textBold}>CHF {step.value}</strong>
+          </p>
+          <h2 {...styles.heading}>{step.label}</h2>
           <div {...styles.main}>
-            <p>
-              Aliqua veniam aliqua commodo laborum. Do non sit quis do
-              exercitation pariatur eiusmod eu aliquip esse aliqua magna eu. Ut
-              deserunt irure ex sint proident adipisicing ut anim ea sint.
-              Cupidatat officia duis proident laborum. Non veniam velit occaecat
-              culpa ut adipisicing amet esse adipisicing ipsum voluptate nulla
-              ad duis quis. Duis incididunt ullamco elit cillum laborum eiusmod
-              eiusmod. Elit nulla do sunt pariatur commodo Lorem et aliqua qui.
-              Ad veniam pariatur non.
-            </p>
-            <AssetImage
-              src='/static/climatelab/richardson.jpg'
-              width={800}
-              height={400}
-            />
-            <p>
-              Aliqua veniam aliqua commodo laborum. Do non sit quis do
-              exercitation pariatur eiusmod eu aliquip esse aliqua magna eu. Ut
-              deserunt irure ex sint proident adipisicing ut anim ea sint.
-              Cupidatat officia duis proident laborum. Non veniam velit occaecat
-              culpa ut adipisicing amet esse adipisicing ipsum voluptate nulla
-              ad duis quis. Duis incididunt ullamco elit cillum laborum eiusmod
-              eiusmod. Elit nulla do sunt pariatur commodo Lorem et aliqua qui.
-              Ad veniam pariatur non.
-            </p>
+            <p {...textStyles.text}>{step.text}</p>
           </div>
         </div>
 
-        <div>
-          <PriceSlider onChange={(price) => setPrice(price)} />
+        <div {...styles.slider}>
+          <PriceSlider onChange={(step) => setStep(step)} step={step} />
         </div>
       </div>
       <BottomPanel
         steps={stepperControls}
         onAdvance={() => {
-          onSubmit(price)
+          onSubmit(step.value)
           onAdvance()
         }}
       >
-        Für CHF {price.toFixed()} abonnieren
+        Für CHF {step?.value.toFixed()} abonnieren
       </BottomPanel>
     </>
   )
@@ -76,5 +58,21 @@ const styles = {
   }),
   container: css({
     display: 'flex',
+    width: '100%',
+  }),
+  content: css({
+    flexGrow: 1,
+  }),
+  slider: css({
+    flexShrink: 0,
+  }),
+
+  heading: css({
+    fontSize: 27,
+    ...fontStyles.sansSerifBold,
+    [mediaQueries.mUp]: {
+      fontSize: 36,
+    },
+    margin: `8px 0 32px 0`,
   }),
 }

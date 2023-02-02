@@ -1,11 +1,8 @@
-import {
-  SLIDER_STEPS,
-  SLIDER_STEP_VALUES,
-  SLIDER_TRANSITION,
-} from '../constants'
+import { scalePoint } from 'd3-scale'
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { scalePoint } from 'd3'
+import { SLIDER_STEP_VALUES, SLIDER_TRANSITION } from '../constants'
 
+import { sansSerifMedium14, useColorContext } from '@project-r/styleguide'
 import {
   motion,
   useAnimationControls,
@@ -13,7 +10,10 @@ import {
   useTransform,
 } from 'framer-motion'
 import { css } from 'glamor'
-import { useColorContext, sansSerifMedium14 } from '@project-r/styleguide'
+import {
+  getSliderStepAtPosition,
+  SliderStep,
+} from './price-slider-content-helpers'
 
 const styles = {
   container: css({
@@ -51,6 +51,7 @@ const styles = {
     color: 'white',
     ...sansSerifMedium14,
     fontSize: 12,
+    userSelect: 'none',
   }),
   thumb: css({
     cursor: 'pointer',
@@ -88,30 +89,7 @@ const useSliderStuff = (sliderHeight = 400) => {
             SLIDER_STEP_VALUES.length - 1,
             Math.max(0, Math.round(d / sliderScale.step())),
           )
-
-      const val = SLIDER_STEP_VALUES[i]
-
-      const step = SLIDER_STEPS[val.step]
-
-      return {
-        pos: i,
-        value: val.value,
-        label: step.label,
-        text: step.text,
-      }
-    }
-
-    const getStepAtPos = (pos: number) => {
-      const val = SLIDER_STEP_VALUES[pos]
-
-      const step = SLIDER_STEPS[val.step]
-
-      return {
-        pos,
-        value: val.value,
-        label: step.label,
-        text: step.text,
-      }
+      return getSliderStepAtPosition(i)
     }
 
     const ticks = SLIDER_STEP_VALUES.flatMap((d, i) => {
@@ -125,16 +103,20 @@ const useSliderStuff = (sliderHeight = 400) => {
         : []
     })
 
-    return { sliderScale, getStepAtY, getStepAtPos, ticks }
+    return { sliderScale, getStepAtY, ticks }
   }, [sliderHeight])
 }
 
 type PriceSliderProps = {
-  onChange: (price: number) => void
+  step: SliderStep
+  onChange: (step: SliderStep) => void
 }
 
-export const PriceSlider = ({ onChange }: PriceSliderProps) => {
-  const { sliderScale, getStepAtY, getStepAtPos, ticks } = useSliderStuff()
+export const PriceSlider = ({
+  step: currentStep,
+  onChange,
+}: PriceSliderProps) => {
+  const { sliderScale, getStepAtY, ticks } = useSliderStuff()
 
   const [colorScheme] = useColorContext()
 
@@ -155,25 +137,25 @@ export const PriceSlider = ({ onChange }: PriceSliderProps) => {
     )
   }
 
-  const [displayVal, setDisplayVal] = useState(getStepAtPos(26))
+  // const [currentStep, setCurrentStep] = useState(initialStep)
 
   useEffect(() => {
     animationControls.start({
-      y: sliderScale(26),
+      y: sliderScale(26), // FIXME: base on price or step
       transition: { ...SLIDER_TRANSITION, duration: 1 },
     })
   }, [])
 
   const gotoPos = (pos: number) => {
-    if (displayVal !== getStepAtPos(pos)) {
+    if (currentStep !== getSliderStepAtPosition(pos)) {
       animationControls.start({
         y: sliderScale(pos),
         transition: { ...SLIDER_TRANSITION, duration: 0.3 },
       })
 
-      const step = getStepAtPos(pos)
-      setDisplayVal(step)
-      onChange(step.value)
+      const step = getSliderStepAtPosition(pos)
+      // setCurrentStep(step)
+      onChange(step)
     }
   }
 
@@ -233,10 +215,10 @@ export const PriceSlider = ({ onChange }: PriceSliderProps) => {
                 window.scrollY
 
               const step = getStepAtY(y)
-              if (step.pos !== displayVal.pos) {
+              if (step.pos !== currentStep.pos) {
                 // console.log(step);
-                setDisplayVal(step)
-                onChange(step.value)
+                // setCurrentStep(step)
+                onChange(step)
               }
             }
           }}
@@ -250,8 +232,8 @@ export const PriceSlider = ({ onChange }: PriceSliderProps) => {
 
               const step = getStepAtY(y)
 
-              setDisplayVal(step)
-              onChange(step.value)
+              // setCurrentStep(step)
+              onChange(step)
 
               animationControls.start({
                 y: sliderScale(step.pos),
