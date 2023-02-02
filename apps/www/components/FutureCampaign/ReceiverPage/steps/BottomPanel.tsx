@@ -28,7 +28,7 @@ const styles = {
   wrapper: css({
     display: 'flex',
     flexDirection: 'column',
-    position: 'sticky',
+    position: 'fixed',
     bottom: 0,
     margin: '0 -15px',
     padding: '0px 15px 15px 15px',

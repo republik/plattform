@@ -2,7 +2,12 @@ import { css } from 'glamor'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useCallback, useState } from 'react'
-import { fontStyles, mediaQueries, plainLinkRule } from '@project-r/styleguide'
+import {
+  fontStyles,
+  mediaQueries,
+  plainLinkRule,
+  useColorContext,
+} from '@project-r/styleguide'
 import { PUBLIC_BASE_URL } from '../../../lib/constants'
 import { useMe } from '../../../lib/context/MeContext'
 import { t } from '../../../lib/withT'
@@ -12,7 +17,9 @@ import { FUTURE_CAMPAIGN_SHARE_IMAGE_URL } from '../constants'
 import { useInviteSenderProfileQuery } from '../graphql/useSenderProfileQuery'
 import IntroductoryStep from './steps/IntroductionaryStep'
 import SelectYourPriceStep from './steps/SelectYourPriceStep'
+import AssetImage from '../../../lib/images/AssetImage'
 
+import CombiLogo from '../../../public/static/5-jahre-republik/logo/combo-logo_white.svg'
 enum STEPS {
   INTRO = 'INTRO',
   PRICE_SELECTOR = 'PRICE_SELECTOR',
@@ -24,6 +31,7 @@ export type InviteReceiverPageProps = {
 }
 
 const InviteReceiverPage = ({ invalidInviteCode }: InviteReceiverPageProps) => {
+  const [colorScheme] = useColorContext()
   const router = useRouter()
   const { me, meLoading } = useMe()
 
@@ -102,7 +110,26 @@ const InviteReceiverPage = ({ invalidInviteCode }: InviteReceiverPageProps) => {
   ]
 
   return (
-    <Frame containerMaxWidth={640} pageColorSchemeKey='dark' meta={meta}>
+    <Frame
+      isOnMarketingPage
+      footer={false}
+      containerMaxWidth={640}
+      pageColorSchemeKey='dark'
+      meta={meta}
+    >
+      <div
+        {...styles.header}
+        {...colorScheme.set('backgroundColor', 'default')}
+      >
+        <Link href='/'>
+          <AssetImage
+            src={CombiLogo}
+            height={70}
+            width={250}
+            objectFit='contain'
+          />
+        </Link>
+      </div>
       {invalidInviteCode && <p>Invalid invite code</p>}
       {hasYearlySubscription && (
         <div {...styles.hasYearlySubscription}>
@@ -137,11 +164,27 @@ const InviteReceiverPage = ({ invalidInviteCode }: InviteReceiverPageProps) => {
 export default InviteReceiverPage
 
 const styles = {
+  header: css({
+    position: 'fixed',
+    top: 0,
+    width: '100%',
+    maxWidth: 610,
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 16,
+    [mediaQueries.mUp]: {
+      height: 80,
+    },
+  }),
   wrapper: css({
+    marginTop: 70,
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'flex-start',
-    minHeight: 850,
+    [mediaQueries.mUp]: {
+      marginTop: 80,
+    },
   }),
   hasYearlySubscription: css({
     display: 'flex',
