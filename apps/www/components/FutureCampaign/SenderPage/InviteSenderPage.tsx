@@ -147,12 +147,17 @@ const InviteSenderPage = () => {
                 />
               </div>
             </div>
+            <div>TODO: Shareoverlay</div>
             {/*
                 TODO: what about just a share button?
                 If no: do we really only want these three?
                 // Add custom variant of share button that has all personal share options
                 // (meaning not twitter or facebook)
               */}
+            <p>
+              TODO: for private profiles place hint that the receiver will see
+              their profile picture and name on the invite
+            </p>
           </div>
         </div>
 

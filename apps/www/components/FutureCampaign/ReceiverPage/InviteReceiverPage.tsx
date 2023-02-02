@@ -1,8 +1,11 @@
 import { css } from 'glamor'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useCallback, useState } from 'react'
+import { fontStyles, mediaQueries, plainLinkRule } from '@project-r/styleguide'
 import { PUBLIC_BASE_URL } from '../../../lib/constants'
 import { useMe } from '../../../lib/context/MeContext'
+import { t } from '../../../lib/withT'
 import Frame from '../../Frame'
 import Stepper, { Step } from '../../Stepper/Stepper'
 import { FUTURE_CAMPAIGN_SHARE_IMAGE_URL } from '../constants'
@@ -24,6 +27,8 @@ const InviteReceiverPage = ({ invalidInviteCode }: InviteReceiverPageProps) => {
   const router = useRouter()
   const { me, meLoading } = useMe()
 
+  const hasMonthlySubscription =
+    me?.activeMembership?.type?.name === 'MONTHLY_ABO'
   const hasYearlySubscription = me?.activeMembership?.type?.name === 'ABO'
   const isEligible = !hasYearlySubscription
 
@@ -78,6 +83,7 @@ const InviteReceiverPage = ({ invalidInviteCode }: InviteReceiverPageProps) => {
       name: STEPS.INTRO,
       content: (stepProps) => (
         <IntroductoryStep
+          hasMonthlySubscription={hasMonthlySubscription}
           senderProfile={senderProfileData?.sender}
           {...stepProps}
         />
@@ -99,9 +105,20 @@ const InviteReceiverPage = ({ invalidInviteCode }: InviteReceiverPageProps) => {
     <Frame containerMaxWidth={640} pageColorSchemeKey='dark' meta={meta}>
       {invalidInviteCode && <p>Invalid invite code</p>}
       {hasYearlySubscription && (
-        <p>
-          Not eligable <i>ABO</i>, instead link to point to sender page
-        </p>
+        <div {...styles.hasYearlySubscription}>
+          <p>{t('FutureCampaign/receiver/yearlySubscription/1')}</p>
+          <p>
+            {t.elements('FutureCampaign/receiver/yearlySubscription/2', {
+              cta: (
+                <Link href='/verstaerkung-holen' passHref>
+                  <a {...plainLinkRule}>
+                    {t('FutureCampaign/receiver/yearlySubscription/cta')}
+                  </a>
+                </Link>
+              ),
+            })}
+          </p>
+        </div>
       )}
       {isEligible && (
         <Stepper
@@ -125,5 +142,23 @@ const styles = {
     flexDirection: 'column',
     alignItems: 'flex-start',
     minHeight: 850,
+  }),
+  hasYearlySubscription: css({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 16,
+    marginBottom: 16,
+    '& p': css({
+      ...fontStyles.sansSerifRegular,
+      margin: 0,
+      fontSize: 17,
+      lineHeight: '1.4em',
+      [mediaQueries.mUp]: {
+        fontSize: 21,
+      },
+    }),
+    '& a': {
+      textDecoration: 'underline',
+    },
   }),
 }

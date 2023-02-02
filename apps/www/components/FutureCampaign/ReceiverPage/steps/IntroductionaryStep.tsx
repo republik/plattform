@@ -19,10 +19,12 @@ const CAROUSEL_ELEMENT_ID = 'introductionary-step_carousel'
 
 type IntroductionaryStepProps = StepProps & {
   senderProfile: InviteSenderProfileQueryData['sender']
+  hasMonthlySubscription: boolean
 }
 
 const IntroductoryStep = ({
   senderProfile,
+  hasMonthlySubscription,
   stepperControls,
   onAdvance,
 }: IntroductionaryStepProps) => {
@@ -40,6 +42,21 @@ const IntroductoryStep = ({
           {t('FutureCampaign/receiver/introductoryStep/heading')}
         </h1>
         <div>
+          {hasMonthlySubscription && (
+            <div {...styles.monthlySubscription}>
+              <p {...styles.text}>
+                {t('FutureCampaign/receiver/monthlySubscription/1')}
+              </p>
+              <p {...styles.text}>
+                {t.elements('FutureCampaign/receiver/monthlySubscription/2', {
+                  senderName: name,
+                })}
+              </p>
+              <p {...styles.text}>
+                {t('FutureCampaign/receiver/monthlySubscription/3')}
+              </p>
+            </div>
+          )}
           <button
             {...plainButtonRule}
             {...styles.carourelToggle}
@@ -144,6 +161,12 @@ const styles = {
     [mediaQueries.mUp]: {
       fontSize: 21,
     },
+  }),
+  monthlySubscription: css({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 16,
+    marginBottom: 16,
   }),
   inviteSection: css({
     display: 'flex',
