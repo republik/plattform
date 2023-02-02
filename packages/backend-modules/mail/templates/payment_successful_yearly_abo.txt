@@ -1,0 +1,11 @@
+Guten Tag
+
+payment_successful_yearly_abo
+
+Ihre Crew der Republik
+
+
+Republik AG
+Sihlhallenstrasse 1, CH-8004 Zürich
+{{frontend_base_url}}
+kontakt@republik.ch
