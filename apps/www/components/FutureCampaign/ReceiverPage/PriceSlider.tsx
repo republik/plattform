@@ -1,11 +1,8 @@
-import {
-  SLIDER_STEPS,
-  SLIDER_STEP_VALUES,
-  SLIDER_TRANSITION,
-} from '../constants'
-import { useEffect, useMemo, useRef, useState } from 'react'
-import { scalePoint } from 'd3'
+import { scalePoint } from 'd3-scale'
+import { useEffect, useMemo, useRef } from 'react'
+import { SLIDER_STEP_VALUES, SLIDER_TRANSITION } from '../constants'
 
+import { sansSerifMedium14, useColorContext } from '@project-r/styleguide'
 import {
   motion,
   useAnimationControls,
@@ -13,12 +10,15 @@ import {
   useTransform,
 } from 'framer-motion'
 import { css } from 'glamor'
-import { useColorContext } from '@project-r/styleguide'
+import {
+  getSliderStepAtPosition,
+  SliderStep,
+} from './price-slider-content-helpers'
 
 const styles = {
   container: css({
     position: 'relative',
-    width: '3rem',
+    width: 64,
     height: 400,
   }),
   track: css({
@@ -38,36 +38,39 @@ const styles = {
   }),
   tick: css({
     cursor: 'pointer',
-    width: '2rem',
-    height: '2rem',
+    width: 36,
+    height: 36,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     position: 'absolute',
-    marginTop: '-1rem',
-    left: '.5rem',
+    marginTop: -18,
+    left: '50%',
+    marginLeft: -18,
     borderRadius: '100vw',
-    fontSize: '0.6em',
     color: 'white',
+    ...sansSerifMedium14,
+    fontSize: 12,
+    userSelect: 'none',
   }),
   thumb: css({
     cursor: 'pointer',
     position: 'absolute',
     top: 0,
     left: '50%',
-    width: '2rem',
-    height: '2rem',
+    width: 42,
+    height: 42,
     background: 'white',
-    border: `5px solid transparent`,
+    borderWidth: 4,
+    borderStyle: 'solid',
     borderRadius: '100vw',
     // transform: `translate(0, -1.5rem)`,
     // marginLeft: "-1.5rem",
-    marginTop: '-1rem',
-    marginLeft: '-1rem',
+    marginTop: -21,
+    marginLeft: -21,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    fontSize: '2em',
   }),
 }
 
@@ -86,30 +89,7 @@ const useSliderStuff = (sliderHeight = 400) => {
             SLIDER_STEP_VALUES.length - 1,
             Math.max(0, Math.round(d / sliderScale.step())),
           )
-
-      const val = SLIDER_STEP_VALUES[i]
-
-      const step = SLIDER_STEPS[val.step]
-
-      return {
-        pos: i,
-        value: val.value,
-        label: step.label,
-        text: step.text,
-      }
-    }
-
-    const getStepAtPos = (pos: number) => {
-      const val = SLIDER_STEP_VALUES[pos]
-
-      const step = SLIDER_STEPS[val.step]
-
-      return {
-        pos,
-        value: val.value,
-        label: step.label,
-        text: step.text,
-      }
+      return getSliderStepAtPosition(i)
     }
 
     const ticks = SLIDER_STEP_VALUES.flatMap((d, i) => {
@@ -123,16 +103,20 @@ const useSliderStuff = (sliderHeight = 400) => {
         : []
     })
 
-    return { sliderScale, getStepAtY, getStepAtPos, ticks }
+    return { sliderScale, getStepAtY, ticks }
   }, [sliderHeight])
 }
 
 type PriceSliderProps = {
-  onChange: (price: number) => void
+  step: SliderStep
+  onChange: (step: SliderStep) => void
 }
 
-export const PriceSlider = ({ onChange }: PriceSliderProps) => {
-  const { sliderScale, getStepAtY, getStepAtPos, ticks } = useSliderStuff()
+export const PriceSlider = ({
+  step: currentStep,
+  onChange,
+}: PriceSliderProps) => {
+  const { sliderScale, getStepAtY, ticks } = useSliderStuff()
 
   const [colorScheme] = useColorContext()
 
@@ -153,25 +137,25 @@ export const PriceSlider = ({ onChange }: PriceSliderProps) => {
     )
   }
 
-  const [displayVal, setDisplayVal] = useState(getStepAtPos(26))
+  // const [currentStep, setCurrentStep] = useState(initialStep)
 
   useEffect(() => {
     animationControls.start({
-      y: sliderScale(26),
+      y: sliderScale(26), // FIXME: base on price or step
       transition: { ...SLIDER_TRANSITION, duration: 1 },
     })
   }, [])
 
   const gotoPos = (pos: number) => {
-    if (displayVal !== getStepAtPos(pos)) {
+    if (currentStep !== getSliderStepAtPosition(pos)) {
       animationControls.start({
         y: sliderScale(pos),
         transition: { ...SLIDER_TRANSITION, duration: 0.3 },
       })
 
-      const step = getStepAtPos(pos)
-      setDisplayVal(step)
-      onChange(step.value)
+      const step = getSliderStepAtPosition(pos)
+      // setCurrentStep(step)
+      onChange(step)
     }
   }
 
@@ -231,10 +215,10 @@ export const PriceSlider = ({ onChange }: PriceSliderProps) => {
                 window.scrollY
 
               const step = getStepAtY(y)
-              if (step.pos !== displayVal.pos) {
+              if (step.pos !== currentStep.pos) {
                 // console.log(step);
-                setDisplayVal(step)
-                onChange(step.value)
+                // setCurrentStep(step)
+                onChange(step)
               }
             }
           }}
@@ -248,8 +232,8 @@ export const PriceSlider = ({ onChange }: PriceSliderProps) => {
 
               const step = getStepAtY(y)
 
-              setDisplayVal(step)
-              onChange(step.value)
+              // setCurrentStep(step)
+              onChange(step)
 
               animationControls.start({
                 y: sliderScale(step.pos),

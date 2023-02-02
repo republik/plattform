@@ -17,11 +17,15 @@ export const SLIDER_STEPS = [
   }, //  5 <= Selected < average CHF}
   {
     label: 'Mit dem Schwarm schwimmen',
-    text: 'Wie gesagt: Wir wollen nichts Unbedachtes von Ihnen. Wählen Sie den Betrag, der für Sie stimmt. (Im Schnitt zahlen neue Mitstreiter wie Sie CHF 120).',
+    text: 'Wie gesagt: Wir wollen nichts Unbedachtes von Ihnen. Wählen Sie den Betrag, der für Sie stimmt. Im Schnitt zahlen neue Mitstreiter wie Sie.',
+  }, // average <= selected < 240 CHF}
+  {
+    label: 'Über dem Durchschnitt',
+    text: 'Im Schnitt zahlen Sie mehr als andere neue Mitstreiter.',
   }, // average <= selected < 240 CHF}
   {
     label: 'Der Standard',
-    text: 'Sie betreten gerade den regulären Bereich! Normalerweise kostet ein Jahr Republik CHF 240. Es freut uns, wenn das für Sie passt.',
+    text: 'Sie befinden sich im regulären Bereich! Die Republik ist bei diesem Preis selbsttragend. Es freut uns, wenn das für Sie passt.',
   }, // selected = 240 CHF}
   {
     label: 'Die vertrauens\u00ADvolle Investition',
@@ -33,7 +37,7 @@ export const SLIDER_STEPS = [
   }, // >= 500 CHF}
   {
     label: 'Das Maximum',
-    text: 'Respekt – Sie gehen ans Maximum. (Wir werden hart daran arbeiten, Ihnen dorthin zu folgen).',
+    text: 'Respekt – Sie gehen ans Maximum. Wir werden hart daran arbeiten, Ihnen dorthin zu folgen.',
   }, // selected = 1000 CHF}
 ]
 
@@ -55,48 +59,48 @@ export const SLIDER_STEP_VALUES = [
 
   { step: 1, value: 120, tick: true },
 
-  { step: 1, value: 130 },
-  { step: 1, value: 140 },
-  { step: 1, value: 150 },
-  { step: 1, value: 160 },
-  { step: 1, value: 170 },
-  { step: 1, value: 180 },
-  { step: 1, value: 190 },
-  { step: 1, value: 200 },
-  { step: 1, value: 210 },
-  { step: 1, value: 220 },
-  { step: 1, value: 230 },
-  { step: 1, value: 230 },
+  { step: 2, value: 130 },
+  { step: 2, value: 140 },
+  { step: 2, value: 150 },
+  { step: 2, value: 160 },
+  { step: 2, value: 170 },
+  { step: 2, value: 180 },
+  { step: 2, value: 190 },
+  { step: 2, value: 200 },
+  { step: 2, value: 210 },
+  { step: 2, value: 220 },
+  { step: 2, value: 230 },
+  { step: 2, value: 230 },
 
-  { step: 2, value: 240, tick: true },
+  { step: 3, value: 240, tick: true },
 
-  { step: 3, value: 260 },
-  { step: 3, value: 280 },
-  { step: 3, value: 300 },
-  { step: 3, value: 320 },
-  { step: 3, value: 340 },
-  { step: 3, value: 360 },
-  { step: 3, value: 380 },
-  { step: 3, value: 400 },
-  { step: 3, value: 420 },
-  { step: 3, value: 440 },
-  { step: 3, value: 460 },
-  { step: 3, value: 480 },
+  { step: 4, value: 260 },
+  { step: 4, value: 280 },
+  { step: 4, value: 300 },
+  { step: 4, value: 320 },
+  { step: 4, value: 340 },
+  { step: 4, value: 360 },
+  { step: 4, value: 380 },
+  { step: 4, value: 400 },
+  { step: 4, value: 420 },
+  { step: 4, value: 440 },
+  { step: 4, value: 460 },
+  { step: 4, value: 480 },
 
-  { step: 4, value: 500, tick: true },
+  { step: 5, value: 500, tick: true },
 
-  { step: 4, value: 550 },
-  { step: 4, value: 600 },
-  { step: 4, value: 650 },
-  { step: 4, value: 700 },
-  { step: 4, value: 750 },
-  { step: 4, value: 800 },
-  { step: 4, value: 850 },
-  { step: 4, value: 850 },
-  { step: 4, value: 900 },
-  { step: 4, value: 900 },
-  { step: 4, value: 950 },
-  { step: 4, value: 950 },
+  { step: 5, value: 550 },
+  { step: 5, value: 600 },
+  { step: 5, value: 650 },
+  { step: 5, value: 700 },
+  { step: 5, value: 750 },
+  { step: 5, value: 800 },
+  { step: 5, value: 850 },
+  { step: 5, value: 850 },
+  { step: 5, value: 900 },
+  { step: 5, value: 900 },
+  { step: 5, value: 950 },
+  { step: 5, value: 950 },
 
-  { step: 5, value: 1000, tick: true },
+  { step: 6, value: 1000, tick: true },
 ]

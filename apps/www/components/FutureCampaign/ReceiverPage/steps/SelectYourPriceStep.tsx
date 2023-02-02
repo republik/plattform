@@ -1,9 +1,12 @@
 import { css } from 'glamor'
 import { useState } from 'react'
-import AssetImage from '../../../../lib/images/AssetImage'
 import { StepProps } from '../../../Stepper/Stepper'
+import { getSliderStep, SliderStep } from '../price-slider-content-helpers'
 import { PriceSlider } from '../PriceSlider'
 import BottomPanel from './BottomPanel'
+import { Interaction, fontStyles, mediaQueries } from '@project-r/styleguide'
+import * as textStyles from '../styles'
+import AssetImage from '../../../../lib/images/AssetImage'
 
 const SelectYourPriceStep = ({
   stepperControls,
@@ -14,66 +17,42 @@ const SelectYourPriceStep = ({
   initialPrice: number
   onSubmit: (price: number) => void
 }) => {
-  const [price, setPrice] = useState(initialPrice)
-
-  // TODO: render different content based on the selected price
-  // Variants:
-  // 'Dabei sein ist alles'
-  //    - 5 <= Selected < average CHF
-  // 'Mit dem Schwarm schwimmen'
-  //    - average <= selected < 240 CHF
-  // 'Der Standard'
-  //    - selected = 240 CHF
-  // 'Die vertrauensvolle Investition'
-  //    - 240 < selected < 500 CHF
-  // 'Die kühne Investition'
-  //    - 500 <= selected < 1000 CHF
-  // 'Das Maximum'
-  //    - selected = 1000 CHF
-
-  // TODO: implement price-slider that snaps to the clicked
-  // price from above or to the nearest value from
-  // the slider-thumb point
+  const [step, setStep] = useState<SliderStep>(getSliderStep(3))
 
   return (
     <>
-      <h2>Bar</h2>
-      <div {...styles.main}>
-        <p>
-          Aliqua veniam aliqua commodo laborum. Do non sit quis do exercitation
-          pariatur eiusmod eu aliquip esse aliqua magna eu. Ut deserunt irure ex
-          sint proident adipisicing ut anim ea sint. Cupidatat officia duis
-          proident laborum. Non veniam velit occaecat culpa ut adipisicing amet
-          esse adipisicing ipsum voluptate nulla ad duis quis. Duis incididunt
-          ullamco elit cillum laborum eiusmod eiusmod. Elit nulla do sunt
-          pariatur commodo Lorem et aliqua qui. Ad veniam pariatur non.
-        </p>
-        <AssetImage
-          src='/static/climatelab/richardson.jpg'
-          width={800}
-          height={400}
-        />
-        <p>
-          Aliqua veniam aliqua commodo laborum. Do non sit quis do exercitation
-          pariatur eiusmod eu aliquip esse aliqua magna eu. Ut deserunt irure ex
-          sint proident adipisicing ut anim ea sint. Cupidatat officia duis
-          proident laborum. Non veniam velit occaecat culpa ut adipisicing amet
-          esse adipisicing ipsum voluptate nulla ad duis quis. Duis incididunt
-          ullamco elit cillum laborum eiusmod eiusmod. Elit nulla do sunt
-          pariatur commodo Lorem et aliqua qui. Ad veniam pariatur non.
-        </p>
+      <div {...styles.container}>
+        <div {...styles.content}>
+          <div {...styles.icon}>
+            <AssetImage
+              src={`/static/5-jahre-republik/receiver/slider-step-${step.step}.svg`}
+              width={100}
+              height={100}
+            />
+          </div>
+
+          <p {...textStyles.text}>
+            Ihr Preis:{' '}
+            <strong {...textStyles.textBold}>CHF {step.value}</strong>
+          </p>
+          <h2 {...styles.heading}>{step.label}</h2>
+          <div {...styles.main}>
+            <p {...textStyles.text}>{step.text}</p>
+          </div>
+        </div>
+
+        <div {...styles.slider}>
+          <PriceSlider onChange={(step) => setStep(step)} step={step} />
+        </div>
       </div>
-
-      <PriceSlider onChange={(price) => setPrice(price)} />
-
       <BottomPanel
         steps={stepperControls}
         onAdvance={() => {
-          onSubmit(price)
+          onSubmit(step.value)
           onAdvance()
         }}
       >
-        Für CHF {price.toFixed()} abonnieren
+        Für CHF {step?.value.toFixed()} abonnieren
       </BottomPanel>
     </>
   )
@@ -85,5 +64,28 @@ const styles = {
   main: css({
     flexGrow: 1,
     selfAlign: 'stretch',
+  }),
+  container: css({
+    display: 'flex',
+    width: '100%',
+  }),
+  content: css({
+    flexGrow: 1,
+  }),
+  slider: css({
+    flexShrink: 0,
+  }),
+
+  heading: css({
+    fontSize: 27,
+    ...fontStyles.sansSerifBold,
+    [mediaQueries.mUp]: {
+      fontSize: 36,
+    },
+    margin: `8px 0 32px 0`,
+  }),
+
+  icon: css({
+    marginBottom: 32,
   }),
 }
