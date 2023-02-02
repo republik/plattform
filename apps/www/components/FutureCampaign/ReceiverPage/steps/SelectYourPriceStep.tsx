@@ -6,6 +6,7 @@ import { PriceSlider } from '../PriceSlider'
 import BottomPanel from './BottomPanel'
 import { Interaction, fontStyles, mediaQueries } from '@project-r/styleguide'
 import * as textStyles from '../styles'
+import AssetImage from '../../../../lib/images/AssetImage'
 
 const SelectYourPriceStep = ({
   stepperControls,
@@ -22,6 +23,14 @@ const SelectYourPriceStep = ({
     <>
       <div {...styles.container}>
         <div {...styles.content}>
+          <div {...styles.icon}>
+            <AssetImage
+              src={`/static/5-jahre-republik/receiver/slider-step-${step.step}.svg`}
+              width={100}
+              height={100}
+            />
+          </div>
+
           <p {...textStyles.text}>
             Ihr Preis:{' '}
             <strong {...textStyles.textBold}>CHF {step.value}</strong>
@@ -74,5 +83,9 @@ const styles = {
       fontSize: 36,
     },
     margin: `8px 0 32px 0`,
+  }),
+
+  icon: css({
+    marginBottom: 32,
   }),
 }

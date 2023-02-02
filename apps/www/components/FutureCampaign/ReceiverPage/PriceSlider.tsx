@@ -1,5 +1,5 @@
 import { scalePoint } from 'd3-scale'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import { SLIDER_STEP_VALUES, SLIDER_TRANSITION } from '../constants'
 
 import { sansSerifMedium14, useColorContext } from '@project-r/styleguide'
