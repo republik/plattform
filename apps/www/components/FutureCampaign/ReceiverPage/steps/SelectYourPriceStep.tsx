@@ -2,6 +2,7 @@ import { css } from 'glamor'
 import { useState } from 'react'
 import AssetImage from '../../../../lib/images/AssetImage'
 import { StepProps } from '../../../Stepper/Stepper'
+import { PriceSlider } from '../PriceSlider'
 import BottomPanel from './BottomPanel'
 
 const SelectYourPriceStep = ({
@@ -62,15 +63,9 @@ const SelectYourPriceStep = ({
           pariatur commodo Lorem et aliqua qui. Ad veniam pariatur non.
         </p>
       </div>
-      <input
-        type='range'
-        min={5}
-        max={1000}
-        defaultValue={initialPrice}
-        onChange={(e) => {
-          setPrice(parseInt(e.target.value))
-        }}
-      />
+
+      <PriceSlider onChange={(price) => setPrice(price)} />
+
       <BottomPanel
         steps={stepperControls}
         onAdvance={() => {
