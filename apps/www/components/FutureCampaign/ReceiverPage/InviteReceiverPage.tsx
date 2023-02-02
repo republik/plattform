@@ -68,23 +68,37 @@ const InviteReceiverPage = ({ invalidInviteCode }: InviteReceiverPageProps) => {
   // TODO: if not logged in or probelesen show stepper
   const [price, setPrice] = useState<number>(240)
 
-  const handleComplete = useCallback(() => {
-    // TODO
-    // based on the selected price either choose the
-    // package that is associated with non coop membership.
-    // else choose the package that is associated with coop membership
-    // additionally attach ?utm_campaign received from the server based on the invite-code
-    const res = confirm(`Weiter zum Checkout für ${price.toFixed()} CHF`)
-    if (res) {
-      router.push({
-        pathname: '/angebote',
-        query: {
-          package: price >= 240 ? 'ABO' : 'MONTHLY_ABO',
-          utm_campaign: 'TODO_5-jahre-republik',
-        },
-      })
-    }
-  }, [price])
+  const handleComplete = useCallback(
+    (price) => {
+      setPrice(price)
+      // TODO
+      // based on the selected price either choose the
+      // package that is associated with non coop membership.
+      // else choose the package that is associated with coop membership
+      // additionally attach ?utm_campaign received from the server based on the invite-code
+      if (price >= 240) {
+        router.push({
+          pathname: '/angebote',
+          query: {
+            package: 'ABO',
+            price: price * 100, // price in Rp.
+            utm_campaign: senderProfileData?.sender?.id,
+          },
+        })
+      } else {
+        router.push({
+          pathname: '/angebote',
+          query: {
+            package: 'YEARLY_ABO',
+            price: price * 100, // price in Rp.
+            reason: 'Mitstreiter Abo',
+            utm_campaign: senderProfileData?.sender?.id,
+          },
+        })
+      }
+    },
+    [price],
+  )
 
   const steps: Step[] = [
     {
@@ -101,9 +115,9 @@ const InviteReceiverPage = ({ invalidInviteCode }: InviteReceiverPageProps) => {
       name: STEPS.PRICE_SELECTOR,
       content: (stepProps) => (
         <SelectYourPriceStep
-          {...stepProps}
           initialPrice={price}
-          onSubmit={setPrice}
+          onSubmit={handleComplete}
+          {...stepProps}
         />
       ),
     },
@@ -138,7 +152,6 @@ const InviteReceiverPage = ({ invalidInviteCode }: InviteReceiverPageProps) => {
       {isEligible && (
         <Stepper
           steps={steps}
-          onComplete={handleComplete}
           customStepperUIPlacement
           contentWrapperElement={({ children }) => (
             <div {...styles.wrapper}>{children}</div>
