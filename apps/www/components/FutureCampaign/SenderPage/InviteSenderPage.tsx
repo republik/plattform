@@ -7,7 +7,7 @@ import {
   Checkbox,
 } from '@project-r/styleguide'
 import { css } from 'glamor'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { Typewriter } from 'react-simple-typewriter'
 import { PUBLIC_BASE_URL } from '../../../lib/constants'
 import AssetImage from '../../../lib/images/AssetImage'
@@ -19,9 +19,12 @@ import {
 } from '../graphql/consentOperations'
 import { useUserInviteQuery } from '../graphql/useUserInviteQuery'
 import RewardProgress from './RewardProgress'
+import ShareOverlay from '../../ActionBar/ShareOverlay'
 
 import SendInviteSVG from '../../../public/static/5-jahre-republik/sender/send-invite.svg'
 import ReceiveMonthsSVG from '../../../public/static/5-jahre-republik/sender/receive-months_white.svg'
+import LogoLGSVG from '../../../public/static/5-jahre-republik/logo/logo-lg_white.svg'
+import LogoSMSVG from '../../../public/static/5-jahre-republik/logo/logo-sm_white.svg'
 
 const DONATE_MONTHS_CONSENT_KEY = '5YEAR_DONATE_MONTHS'
 
@@ -31,6 +34,7 @@ const LOGO_SRC_SM =
   '/static/5-jahre-republik/logo/republik_jubilaeumslogo-image-sm-white.png'
 
 const InviteSenderPage = () => {
+  const [showShareOverlay, setShowShareOverlay] = useState(false)
   const isDesktop = useMediaQuery(mediaQueries.mUp)
   const { data: userInviteData } = useUserInviteQuery()
   const {
@@ -93,28 +97,23 @@ const InviteSenderPage = () => {
     <Frame pageColorSchemeKey='dark'>
       <main {...styles.page}>
         <div {...styles.header}>
-          <div {...styles.logo}>
-            <AssetImage
-              src={isDesktop ? LOGO_SRC_LG : LOGO_SRC_SM}
-              width={isDesktop ? 100 : 65}
-              height={isDesktop ? 85 : 55}
-            />
-            <span {...styles.logoText}>
-              Fünf Jahre
-              <br /> Republik
-            </span>
+          <div {...styles.headingWrapper}>
+            <div {...styles.logo}>
+              <AssetImage src={LogoLGSVG} width={236} height={203} />
+            </div>
+            <h1 {...styles.heading}>
+              Journalismus hat eine Zukunft, wenn{' '}
+              <Typewriter
+                words={personasForTypeWriter}
+                loop={true}
+                typeSpeed={80}
+                delaySpeed={5000}
+                cursor
+              />{' '}
+              das auch will.
+            </h1>
           </div>
-          <h1 {...styles.heading}>
-            Unabhängiger Journalismus hat eine Zukunft, wenn{' '}
-            <Typewriter
-              words={personasForTypeWriter}
-              loop={true}
-              typeSpeed={80}
-              delaySpeed={5000}
-              cursor
-            />{' '}
-            das auch will.
-          </h1>
+
           <p {...styles.text}>
             An der Republik vorbeizukommen, wird einiges schwerer. Dank Ihnen
             und den Menschen, die Ihnen wichtig sind.
@@ -132,7 +131,7 @@ const InviteSenderPage = () => {
           </p>
           <div {...styles.inviteShareLinkSection}>
             <p {...styles.inviteShareLinkText}>Angebots-Link teilen</p>
-            <div>
+            <div {...styles.inviteActionWrapper}>
               <div {...styles.inviteLinkBox}>
                 <span {...styles.inviteLinkBoxText}>{inviteLink}</span>
                 <IconButton
@@ -143,18 +142,32 @@ const InviteSenderPage = () => {
                   size={20}
                 />
               </div>
+              <button onClick={() => setShowShareOverlay(true)}>Share</button>
             </div>
-            <div>TODO: Shareoverlay</div>
+            {showShareOverlay && (
+              <ShareOverlay
+                onClose={() => setShowShareOverlay(false)}
+                url={inviteLink}
+                title={''}
+                tweet=''
+                emailSubject={''}
+                emailBody=''
+                emailAttachUrl
+              />
+            )}
             {/*
                 TODO: what about just a share button?
                 If no: do we really only want these three?
                 // Add custom variant of share button that has all personal share options
                 // (meaning not twitter or facebook)
               */}
-            <p>
-              TODO: for private profiles place hint that the receiver will see
-              their profile picture and name on the invite
-            </p>
+            {userInviteData?.me && !userInviteData.me?.hasPublicProfile && (
+              <p>
+                *Da Sie ein privates Profil haben, möchten wir Sie darauf
+                hinweisen, dass der Empfänger beim öffnen der Einladung ihren
+                Namen und ihr Profilbild sehen kann.
+              </p>
+            )}
           </div>
         </div>
 
@@ -203,7 +216,18 @@ const styles = {
       marginTop: 28,
     },
   }),
+  headingWrapper: css({
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    gap: 48,
+    [mediaQueries.mUp]: {
+      flexDirection: 'row',
+      alignItems: 'flex-start',
+    },
+  }),
   logo: css({
+    flex: '0 1 auto',
     display: 'flex',
     flexDirection: 'row',
     gap: 16,
@@ -217,13 +241,14 @@ const styles = {
     },
   }),
   heading: css({
+    flex: '1 1 0',
     ...fontStyles.serifTitle,
     margin: 0,
-    minHeight: '30vw', // Necessary, else typwriter will cause layout-shifts
+    minHeight: '4em',
     fontSize: 24,
     [mediaQueries.mUp]: {
-      minHeight: '20vw', // Necessary, else typwriter will cause layout-shifts
       fontSize: 42,
+      minHeight: '5em',
     },
   }),
   text: css({
@@ -264,6 +289,7 @@ const styles = {
       fontSize: 24,
     },
   }),
+
   inviteBox: css({
     backgroundColor: '#FFFFFF',
     color: '#000000',
@@ -281,17 +307,26 @@ const styles = {
       fontSize: 24,
     },
   }),
+  inviteActionWrapper: css({
+    display: 'flex',
+    flexDirection: 'row',
+    gap: 16,
+    width: '100%',
+  }),
   inviteLinkBox: css({
     ...fontStyles.sansSerifRegular,
+    flexShrink: 0,
+    minWidth: 0,
     fontSize: 18,
-    width: '100%',
-    padding: '12px 15px',
-    backgroundColor: 'rgba(0, 0, 0, 0.1)',
-    display: 'inline-flex',
+    maxWidth: '100%',
+    flex: '1 1 auto',
+    display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
     gap: 8,
     alignItems: 'center',
+    padding: '12px 15px',
+    backgroundColor: 'rgba(0, 0, 0, 0.1)',
   }),
   inviteLinkBoxText: css({
     textOverflow: 'ellipsis',

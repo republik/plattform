@@ -25,21 +25,21 @@ const IntroductoryStep = ({
     <>
       <div {...styles.main}>
         <h1 {...styles.heading}>
-          {t('FutureCampaign/receiver/introductoryStep/heading')}
+          Unabhängiger Journalismus hat Zukunft, mit Ihnen.
         </h1>
         <div>
           {hasMonthlySubscription && (
             <div {...styles.monthlySubscription}>
               <p {...styles.text}>
-                {t('FutureCampaign/receiver/monthlySubscription/1')}
+                Wie wunderbar, dass Sie bereits ein Monatsabo haben!
               </p>
               <p {...styles.text}>
-                {t.elements('FutureCampaign/receiver/monthlySubscription/2', {
-                  senderName: name,
-                })}
+                Nun findet {name}, Sie sollten auch längerfristig Teil der
+                Republik-Community werden.
               </p>
               <p {...styles.text}>
-                {t('FutureCampaign/receiver/monthlySubscription/3')}
+                Bestreiten Sie mit uns die Zukunft des unabhängigen
+                Journalismus. Egal, wie viel Sie dafür zahlen können.
               </p>
             </div>
           )}
@@ -62,20 +62,20 @@ const IntroductoryStep = ({
           )}
           <div style={{ flex: '0 1 auto' }}>
             <p {...styles.text}>
-              {t('FutureCampaign/receiver/introductoryStep/inviteText1', {
-                name,
-              })}
+              Als Teil der Republik- Community, macht {name} unabhängigen
+              Journalismus in der Schweiz möglich.
             </p>
           </div>
         </div>
         <p {...styles.text}>
-          {t('FutureCampaign/receiver/introductoryStep/inviteText2', {
-            name,
-          })}
+          Geld ist nicht alles. Köpfe schon. Zahlen Sie für die Republik hier
+          den Beitrag, der für Sie stimmt. Möglich ist das, weil Sie von einem
+          unserer Mitglieder eingeladen wurden: {name} findet, dass Sie bei der
+          Republik noch fehlen.
         </p>
       </div>
       <BottomPanel steps={stepperControls} onAdvance={onAdvance}>
-        {t('FutureCampaign/receiver/introductoryStep/action')}
+        Wählen Sie Ihren Preis
       </BottomPanel>
     </>
   )

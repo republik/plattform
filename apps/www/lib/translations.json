@@ -7731,50 +7731,6 @@
     {
       "key": "ClimateInlineTeaser/Member/content/link",
       "value": "zum Klimalabor"
-    },
-    {
-      "key": "FutureCampaign/receiver/introductoryStep/heading",
-      "value": "Unabhängiger Journalismus hat Zukunft, mit Ihnen.\n"
-    },
-    {
-      "key": "FutureCampaign/receiver/introductoryStep/tryItText",
-      "value": "Eine Kostprobe unserer Inhalte"
-    },
-    {
-      "key": "FutureCampaign/receiver/introductoryStep/inviteText1",
-      "value": "Als Teil der Republik- Community, macht {name} unabhängigen Journalismus in der Schweiz möglich."
-    },
-    {
-      "key": "FutureCampaign/receiver/introductoryStep/inviteText2",
-      "value": "Geld ist nicht alles. Köpfe schon. Zahlen Sie für die Republik hier den Beitrag, der für Sie stimmt. Möglich ist das, weil Sie von einem unserer Mitglieder eingeladen wurden: {name} findet, dass Sie bei der Republik noch fehlen. "
-    },
-    {
-      "key": "FutureCampaign/receiver/introductoryStep/action",
-      "value": "Wählen Sie Ihren Preis"
-    },
-    {
-      "key": "FutureCampaign/receiver/monthlySubscription/1",
-      "value": "Wie wunderbar, dass Sie bereits ein Monatsabo haben! "
-    },
-    {
-      "key": "FutureCampaign/receiver/monthlySubscription/2",
-      "value": "Nun findet {senderName}, Sie sollten auch längerfristig Teil der Republik-Community werden. "
-    },
-    {
-      "key": "FutureCampaign/receiver/monthlySubscription/3",
-      "value": "Bestreiten Sie mit uns die Zukunft des unabhängigen Journalismus. Egal, wie viel Sie dafür zahlen können. "
-    },
-    {
-      "key": "FutureCampaign/receiver/yearlySubscription/1",
-      "value": "Sie sind bereits an Bord. Gratulation! Aber wie sieht es mit Ihrem Nachbarn, Ihrem alten Schulfreund und Ihrer Tante aus?"
-    },
-    {
-      "key": "FutureCampaign/receiver/yearlySubscription/2",
-      "value": "Die Republik ist nur so stark, wie ihre Community: {cta}!"
-    },
-    {
-      "key": "FutureCampaign/receiver/yearlySubscription/cta",
-      "value": "Jetzt Verstärkung holen"
     }
   ]
 }

@@ -31,7 +31,6 @@ export type InviteReceiverPageProps = {
 }
 
 const InviteReceiverPage = ({ invalidInviteCode }: InviteReceiverPageProps) => {
-  const [colorScheme] = useColorContext()
   const router = useRouter()
   const { me, meLoading } = useMe()
 
@@ -135,17 +134,16 @@ const InviteReceiverPage = ({ invalidInviteCode }: InviteReceiverPageProps) => {
       {invalidInviteCode && <p>Invalid invite code</p>}
       {hasYearlySubscription && (
         <div {...styles.hasYearlySubscription}>
-          <p>{t('FutureCampaign/receiver/yearlySubscription/1')}</p>
           <p>
-            {t.elements('FutureCampaign/receiver/yearlySubscription/2', {
-              cta: (
-                <Link href='/verstaerkung-holen' passHref>
-                  <a {...plainLinkRule}>
-                    {t('FutureCampaign/receiver/yearlySubscription/cta')}
-                  </a>
-                </Link>
-              ),
-            })}
+            Sie sind bereits an Bord. Gratulation! Aber wie sieht es mit Ihrem
+            Nachbarn, Ihrem alten Schulfreund und Ihrer Tante aus?
+          </p>
+          <p>
+            Die Republik ist nur so stark, wie ihre Community:{' '}
+            <Link href='/verstaerkung-holen' passHref>
+              <a {...plainLinkRule}>Jetzt Verstärkung holen</a>
+            </Link>
+            !
           </p>
         </div>
       )}
