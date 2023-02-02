@@ -1,4 +1,3 @@
-import { gql } from '@apollo/client'
 import {
   mediaQueries,
   fontStyles,
@@ -12,7 +11,6 @@ import { useMemo } from 'react'
 import { Typewriter } from 'react-simple-typewriter'
 import { PUBLIC_BASE_URL } from '../../../lib/constants'
 import AssetImage from '../../../lib/images/AssetImage'
-import { useTranslation } from '../../../lib/withT'
 import Frame from '../../Frame'
 import {
   useDonateMonthsConsentQuery,
@@ -33,7 +31,6 @@ const LOGO_SRC_SM =
   '/static/5-jahre-republik/logo/republik_jubilaeumslogo-image-sm-white.png'
 
 const InviteSenderPage = () => {
-  const { t } = useTranslation()
   const isDesktop = useMediaQuery(mediaQueries.mUp)
   const { data: userInviteData } = useUserInviteQuery()
   const {
@@ -108,33 +105,33 @@ const InviteSenderPage = () => {
             </span>
           </div>
           <h1 {...styles.heading}>
-            {t.elements('FutureCampaign/slogan/text', {
-              br: <br />,
-              persona: (
-                <>
-                  <Typewriter
-                    words={personasForTypeWriter}
-                    loop={true}
-                    typeSpeed={80}
-                    delaySpeed={5000}
-                    cursor
-                  />
-                </>
-              ),
-            })}
+            Unabhängiger Journalismus hat eine Zukunft, wenn{' '}
+            <Typewriter
+              words={personasForTypeWriter}
+              loop={true}
+              typeSpeed={80}
+              delaySpeed={5000}
+              cursor
+            />{' '}
+            das auch will.
           </h1>
-          <p {...styles.text}>{t('FutureCampaign/sender/headerText')}</p>
+          <p {...styles.text}>
+            An der Republik vorbeizukommen, wird einiges schwerer. Dank Ihnen
+            und den Menschen, die Ihnen wichtig sind.
+          </p>
         </div>
         <div {...styles.box} {...styles.inviteBox}>
           <h2 {...styles.boxHeading}>
             <AssetImage src={SendInviteSVG} width={58} height={58} />
-            {t('FutureCampaign/sender/invite/heading')}
+            Laden Sie ein…
           </h2>
-          <p {...styles.boxText}>{t('FutureCampaign/sender/invite/text')}</p>
+          <p {...styles.boxText}>
+            Als Verleger*in können Sie bis zu fünf Mitstreiter*innen einladen.
+            Diese können die Republik für ein Jahr abonnieren — für den Preis,
+            der für sie stimmt.
+          </p>
           <div {...styles.inviteShareLinkSection}>
-            <p {...styles.inviteShareLinkText}>
-              {t('FutureCampaign/sender/invite/shareText')}
-            </p>
+            <p {...styles.inviteShareLinkText}>Angebots-Link teilen</p>
             <div>
               <div {...styles.inviteLinkBox}>
                 <span {...styles.inviteLinkBoxText}>{inviteLink}</span>
@@ -164,23 +161,30 @@ const InviteSenderPage = () => {
         <div {...styles.box} {...styles.rewardBox}>
           <h2 {...styles.boxHeading}>
             <AssetImage src={ReceiveMonthsSVG} width={58} height={58} />
-            {t('FutureCampaign/sender/reward/heading')}
+            …und werden Sie eingeladen.
           </h2>
-          <p {...styles.boxText}>{t('FutureCampaign/sender/reward/text')}</p>
+          <p {...styles.boxText}>
+            Für jede neue Mitstreiter*in, die Sie zur Republik Community holen,
+            verlängern wir ihre Mitgliedschaft um einen Monat.
+          </p>
           <div>
             <RewardProgress reached={reachedRewards} max={maxRewards} />
-            <p>{t('FutureCampaign/sender/reward/donateHint')}</p>
+            <p>
+              Sie möchten keine Verlängerung? Kein Problem, Sie können am Ende
+              der Aktion ihre gesammelten Monate Spenden und erhalten dafür
+              nicht nur Ruhm und Ehre, sodndern auch unseren unendlichen Dank.
+            </p>
             <Checkbox
               disabled={donateMonthsConsentLoading}
               checked={Boolean(donateMonthsConsent?.me?.hasConsentedTo)}
               onChange={(_, value) => handleDonateMonthsChange(Boolean(value))}
             >
-              {t('FutureCampaign/sender/reward/donateText')}
+              Ja, ich will die Monate spenden.
             </Checkbox>
           </div>
         </div>
 
-        <p {...styles.text}>{t('FutureCampaign/sender/thankYou/text')}</p>
+        <p {...styles.text}>Danke fürs mitmachen!</p>
       </main>
     </Frame>
   )

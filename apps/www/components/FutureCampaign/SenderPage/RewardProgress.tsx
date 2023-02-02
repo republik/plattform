@@ -1,6 +1,5 @@
 import { css } from 'glamor'
 import { fontStyles, mediaQueries } from '@project-r/styleguide'
-import { useTranslation } from '../../../lib/withT'
 import { clamp } from '../../Audio/helpers/clamp'
 
 function getArrayOfSize(max: number): number[] {
@@ -13,7 +12,6 @@ type RewardProgressProps = {
 }
 
 const RewardProgress = ({ reached, max }: RewardProgressProps) => {
-  const { t } = useTranslation()
   const progressMarks = getArrayOfSize(max)
 
   return (
@@ -28,10 +26,7 @@ const RewardProgress = ({ reached, max }: RewardProgressProps) => {
       </ol>
       <p {...styles.text}>
         {' '}
-        {t('FutureCampaign/sender/reward/progressText', {
-          reached: clamp(reached, 0, max),
-          max: max,
-        })}
+        {clamp(reached, 0, max)} von {max} Mitstreiter*innen
       </p>
     </div>
   )
