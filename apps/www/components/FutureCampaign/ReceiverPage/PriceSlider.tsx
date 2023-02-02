@@ -13,12 +13,12 @@ import {
   useTransform,
 } from 'framer-motion'
 import { css } from 'glamor'
-import { useColorContext } from '@project-r/styleguide'
+import { useColorContext, sansSerifMedium14 } from '@project-r/styleguide'
 
 const styles = {
   container: css({
     position: 'relative',
-    width: '3rem',
+    width: 64,
     height: 400,
   }),
   track: css({
@@ -38,36 +38,38 @@ const styles = {
   }),
   tick: css({
     cursor: 'pointer',
-    width: '2rem',
-    height: '2rem',
+    width: 36,
+    height: 36,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     position: 'absolute',
-    marginTop: '-1rem',
-    left: '.5rem',
+    marginTop: -18,
+    left: '50%',
+    marginLeft: -18,
     borderRadius: '100vw',
-    fontSize: '0.6em',
     color: 'white',
+    ...sansSerifMedium14,
+    fontSize: 12,
   }),
   thumb: css({
     cursor: 'pointer',
     position: 'absolute',
     top: 0,
     left: '50%',
-    width: '2rem',
-    height: '2rem',
+    width: 42,
+    height: 42,
     background: 'white',
-    border: `5px solid transparent`,
+    borderWidth: 4,
+    borderStyle: 'solid',
     borderRadius: '100vw',
     // transform: `translate(0, -1.5rem)`,
     // marginLeft: "-1.5rem",
-    marginTop: '-1rem',
-    marginLeft: '-1rem',
+    marginTop: -21,
+    marginLeft: -21,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    fontSize: '2em',
   }),
 }
 
