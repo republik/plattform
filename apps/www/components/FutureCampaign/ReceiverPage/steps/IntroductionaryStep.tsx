@@ -1,21 +1,10 @@
 import { css } from 'glamor'
-import {
-  fontStyles,
-  mediaQueries,
-  plainButtonRule,
-  ChevronRightIcon,
-  Loader,
-} from '@project-r/styleguide'
+import { fontStyles, mediaQueries } from '@project-r/styleguide'
 import BottomPanel from './BottomPanel'
 import AssetImage from '../../../../lib/images/AssetImage'
 import { StepProps } from '../../../Stepper/Stepper'
-import { useState } from 'react'
-import { useCarouselQuery } from '../../graphql/useCarouselQuery'
-import Carousel from '../../../Marketing/Carousel'
 import { useTranslation } from '../../../../lib/withT'
 import { InviteSenderProfileQueryData } from '../../graphql/useSenderProfileQuery'
-
-const CAROUSEL_ELEMENT_ID = 'introductionary-step_carousel'
 
 type IntroductionaryStepProps = StepProps & {
   senderProfile: InviteSenderProfileQueryData['sender']
@@ -29,9 +18,6 @@ const IntroductoryStep = ({
   onAdvance,
 }: IntroductionaryStepProps) => {
   const { t } = useTranslation()
-  const [showCarousel, setShowCarousel] = useState(false)
-
-  const { data: carouselData, loading: carouselLoading } = useCarouselQuery()
 
   const name = `${senderProfile?.firstName} ${senderProfile?.lastName}`
 
@@ -55,39 +41,6 @@ const IntroductoryStep = ({
               <p {...styles.text}>
                 {t('FutureCampaign/receiver/monthlySubscription/3')}
               </p>
-            </div>
-          )}
-          <button
-            {...plainButtonRule}
-            {...styles.carourelToggle}
-            onClick={() => setShowCarousel(!showCarousel)}
-            aria-expanded={showCarousel}
-            aria-controls={CAROUSEL_ELEMENT_ID}
-          >
-            <span {...styles.tryIt}>
-              {t('FutureCampaign/receiver/introductoryStep/tryItText')}
-            </span>{' '}
-            <span>
-              <ChevronRightIcon
-                size={24}
-                style={{
-                  transform: `rotate(${showCarousel ? '270deg' : '90deg'})`,
-                }}
-              />
-            </span>
-          </button>
-          {showCarousel && (
-            <div id={CAROUSEL_ELEMENT_ID} {...styles.carouselWrapper}>
-              <Loader
-                loading={carouselLoading}
-                render={() => (
-                  <Carousel
-                    carouselData={carouselData.carousel}
-                    onlyAudio
-                    expandAudioPlayerOnPlayback={false}
-                  />
-                )}
-              />
             </div>
           )}
         </div>
