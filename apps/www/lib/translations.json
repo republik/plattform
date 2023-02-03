@@ -2493,6 +2493,10 @@
       "value": "Bitte begründen"
     },
     {
+      "key": "package/customize/userPrice/YEARLY_ABO/beforeReason",
+      "value": "TODO: String für package/customize/userPrice/YEARLY_ABO/beforeReason"
+    },
+    {
       "key": "package/customize/userPrice/beforeReason",
       "value": "Journalismus kostet. Aber wir wollen niemanden ausschliessen. Falls Sie sich die 240 Franken nicht leisten können, bitten wir Sie um eine knappe Begründung und einen Preis, der Ihnen gerecht scheint. "
     },
@@ -4751,6 +4755,10 @@
     {
       "key": "package/customize/price/payLess",
       "value": "Ich kann mir den Betrag nicht leisten"
+    },
+    {
+      "key": "package/customize/userPrice/YEARLY_ABO/beforePrice",
+      "value": "TODO: package/customize/userPrice/YEARLY_ABO/beforePrice"
     },
     {
       "key": "package/customize/userPrice/beforePrice",
