@@ -32,7 +32,6 @@ const style = css({
   minWidth: 160,
   width: '100%',
   padding: '10px 20px',
-  margin: '0 auto',
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',

@@ -41,15 +41,11 @@ const styles = {
   wrapper: css({
     display: 'flex',
     flexDirection: 'column',
-    position: 'fixed',
+    position: 'sticky',
     bottom: 0,
-    margin: '0 -15px',
     padding: '0px 15px 15px 15px',
-    width: '100vw',
+    width: '100%',
     [mediaQueries.mUp]: {
-      position: 'relative',
-      margin: 0,
-      width: '100%',
       padding: '15px 15px 15px 15px',
     },
   }),
