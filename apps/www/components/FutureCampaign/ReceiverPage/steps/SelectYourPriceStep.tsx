@@ -72,6 +72,7 @@ const styles = {
   container: css({
     display: 'flex',
     width: '100%',
+    flexGrow: 1,
   }),
   content: css({
     flexGrow: 1,

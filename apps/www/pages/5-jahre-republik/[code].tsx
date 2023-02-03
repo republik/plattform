@@ -7,8 +7,53 @@ import {
   InviteSenderProfileQueryVariables,
   INVITE_SENDER_PROFILE_QUERY,
 } from '../../components/FutureCampaign/graphql/useSenderProfileQuery'
+import FutureCampaignHeader from '../../components/FutureCampaign/ReceiverPage/FutureCampaignHeader'
+import {
+  ColorContextProvider,
+  useColorContext,
+  mediaQueries,
+} from '@project-r/styleguide'
+import { FUTURE_CAMPAIGN_SHARE_IMAGE_URL } from '../../components/FutureCampaign/constants'
+import { PUBLIC_BASE_URL } from '../../lib/constants'
+import { useRouter } from 'next/router'
+import Meta from '../../components/Frame/Meta'
+import { css } from 'glamor'
 
-export default InviteReceiverPage
+function Page(props: InviteReceiverPageProps) {
+  const router = useRouter()
+  const [colorScheme] = useColorContext()
+
+  const meta = {
+    pageTitle: 'Werden Sie Teil der Republik',
+    title: 'Werden Sie Teil der Republik',
+    //description: 'baz',
+    image: FUTURE_CAMPAIGN_SHARE_IMAGE_URL,
+    url: `${PUBLIC_BASE_URL}${router.asPath}`,
+  }
+
+  css.global('body', {
+    backgroundColor: colorScheme.getCSSColor('default'),
+    color: colorScheme.getCSSColor('text'),
+  })
+
+  return (
+    <div {...styles.page}>
+      <Meta data={meta} />
+      <FutureCampaignHeader />
+      <div {...styles.content}>
+        <InviteReceiverPage {...props} />
+      </div>
+    </div>
+  )
+}
+
+export default function WrappedPage(props: InviteReceiverPageProps) {
+  return (
+    <ColorContextProvider colorSchemeKey='dark'>
+      <Page {...props} />
+    </ColorContextProvider>
+  )
+}
 
 export const getServerSideProps = createGetServerSideProps<
   InviteReceiverPageProps,
@@ -44,3 +89,24 @@ export const getServerSideProps = createGetServerSideProps<
     },
   }
 })
+
+const styles = {
+  page: css({
+    height: '100vh',
+    display: 'grid',
+    width: '100%',
+    gap: 60,
+    gridTemplateRows: 'auto 1fr',
+    maxWidth: 600,
+    margin: '0 auto',
+  }),
+  content: css({
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    [mediaQueries.mUp]: {
+      height: 600,
+      maxHeight: '100%',
+    },
+  }),
+}

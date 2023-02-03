@@ -1,4 +1,4 @@
-import { FC, ReactNode, useEffect, useMemo, useRef, useState } from 'react'
+import { FC, ReactNode, Ref, useEffect, useMemo, useRef, useState } from 'react'
 import scrollIntoView from 'scroll-into-view'
 import { isDev } from '../../lib/constants'
 import { HEADER_HEIGHT } from '../constants'
@@ -33,7 +33,7 @@ function isContentRenderFunc(value: Step['content']): value is StepRenderFunc {
 type StepperProps = {
   steps?: Step[]
   customStepperUIPlacement?: boolean
-  contentWrapperElement?: FC
+  contentWrapperElement?: FC<{ ref: Ref<HTMLDivElement> }>
   onComplete?: () => void
 }
 
@@ -41,8 +41,8 @@ const Stepper = ({
   steps = [],
   onComplete,
   customStepperUIPlacement = false,
-  contentWrapperElement: ContentWrapper = ({ children }) => (
-    <div>{children}</div>
+  contentWrapperElement: ContentWrapper = ({ children, ref }) => (
+    <div ref={ref}>{children}</div>
   ),
 }: StepperProps) => {
   const containerRef = useRef<HTMLDivElement>(null)
@@ -87,22 +87,20 @@ const Stepper = ({
   )
 
   return (
-    <div ref={containerRef}>
-      <ContentWrapper>
-        {currentStep?.content && (
-          <>
-            {isContentRenderFunc(currentStep.content)
-              ? currentStep.content({
-                  stepperControls: stepsUI,
-                  onAdvance: handleNext,
-                  onBack: handleBack,
-                })
-              : currentStep.content}
-          </>
-        )}
-      </ContentWrapper>
+    <ContentWrapper ref={containerRef}>
+      {currentStep?.content && (
+        <>
+          {isContentRenderFunc(currentStep.content)
+            ? currentStep.content({
+                stepperControls: stepsUI,
+                onAdvance: handleNext,
+                onBack: handleBack,
+              })
+            : currentStep.content}
+        </>
+      )}
       {!customStepperUIPlacement && stepsUI}
-    </div>
+    </ContentWrapper>
   )
 }
 

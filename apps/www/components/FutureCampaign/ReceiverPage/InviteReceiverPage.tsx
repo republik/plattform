@@ -51,15 +51,6 @@ const InviteReceiverPage = ({ invalidInviteCode }: InviteReceiverPageProps) => {
     skip: !inviteCode || meLoading,
   })
 
-  // TODO: perhaps prevent indexing?
-  // TODO: add correct meta tags
-  const meta = {
-    pageTitle: 'Werden Sie Teil der Republik',
-    title: 'Werden Sie Teil der Republik',
-    //description: 'baz',
-    image: FUTURE_CAMPAIGN_SHARE_IMAGE_URL,
-    url: `${PUBLIC_BASE_URL}${router.asPath}`,
-  }
   // TODO: if user is logged in and has abo, show info text that the user already has an abo
   // TODO: if user has monthly abo, also show info text that not available if already subscirbed
 
@@ -117,14 +108,7 @@ const InviteReceiverPage = ({ invalidInviteCode }: InviteReceiverPageProps) => {
   ]
 
   return (
-    <Frame
-      isOnMarketingPage
-      footer={false}
-      containerMaxWidth={640}
-      pageColorSchemeKey='dark'
-      meta={meta}
-    >
-      <Header />
+    <>
       {invalidInviteCode && <p>Invalid invite code</p>}
       {hasYearlySubscription && (
         <div {...styles.hasYearlySubscription}>
@@ -145,45 +129,25 @@ const InviteReceiverPage = ({ invalidInviteCode }: InviteReceiverPageProps) => {
         <Stepper
           steps={steps}
           customStepperUIPlacement
-          contentWrapperElement={({ children }) => (
-            <div {...styles.wrapper}>{children}</div>
+          contentWrapperElement={({ children, ref }) => (
+            <div {...styles.wrapper} ref={ref}>
+              {children}
+            </div>
           )}
         />
       )}
-    </Frame>
+    </>
   )
 }
 
 export default InviteReceiverPage
 
 const styles = {
-  headerWrapper: css({
-    position: 'fixed',
-    top: 0,
-    left: 0,
-    right: 0,
-    width: '100%',
-  }),
-  header: css({
-    width: '100%',
-    maxWidth: 640,
-    margin: '0 auto',
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 16,
-    [mediaQueries.mUp]: {
-      height: 80,
-    },
-  }),
   wrapper: css({
-    marginTop: 70,
+    flexGrow: 1,
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'flex-start',
-    [mediaQueries.mUp]: {
-      marginTop: 80,
-    },
   }),
   hasYearlySubscription: css({
     display: 'flex',
@@ -203,25 +167,4 @@ const styles = {
       textDecoration: 'underline',
     },
   }),
-}
-
-const Header = () => {
-  const [colorScheme] = useColorContext()
-  return (
-    <div
-      {...styles.headerWrapper}
-      {...colorScheme.set('backgroundColor', 'default')}
-    >
-      <div {...styles.header}>
-        <Link href='/'>
-          <AssetImage
-            src={CombiLogo}
-            height={70}
-            width={250}
-            objectFit='contain'
-          />
-        </Link>
-      </div>
-    </div>
-  )
 }

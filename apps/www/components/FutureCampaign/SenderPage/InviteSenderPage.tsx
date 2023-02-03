@@ -35,7 +35,6 @@ const DONATE_MONTHS_CONSENT_KEY = '5YEAR_DONATE_MONTHS'
 const InviteSenderPage = ({ me }: { me: MeObjectType }) => {
   const [showShareOverlay, setShowShareOverlay] = useState(false)
   const { data: userInviteData } = useUserInviteQuery()
-  console.log('me', JSON.stringify(me, null, 2))
   const hasShareGrant = me?.accessCampaigns.length > 0
 
   const {
