@@ -529,18 +529,20 @@ class CustomizePackage extends Component {
               ].filter(Boolean),
             )}
           </Interaction.H2>
-          <Link
-            href={{
-              pathname: '/angebote',
-              query:
-                pkg.group && pkg.group !== 'ME'
-                  ? { group: pkg.group }
-                  : undefined,
-            }}
-            passHref
-          >
-            <A>{t('package/customize/changePackage')}</A>
-          </Link>
+          {pkg.group !== 'HIDDEN' && (
+            <Link
+              href={{
+                pathname: '/angebote',
+                query:
+                  pkg.group && pkg.group !== 'ME'
+                    ? { group: pkg.group }
+                    : undefined,
+              }}
+              passHref
+            >
+              <A>{t('package/customize/changePackage')}</A>
+            </Link>
+          )}
         </div>
         {description.split('\n\n').map((text, i) => (
           <P style={{ marginBottom: 10 }} key={i}>

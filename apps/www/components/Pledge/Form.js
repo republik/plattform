@@ -220,7 +220,7 @@ class Pledge extends Component {
       packageName: pkg ? pkg.name : undefined,
       forceAutoPay: pkg ? pkg.name === 'MONTHLY_ABO' : undefined,
       requiresStatutes: pkg
-        ? pkg.name !== 'MONTHLY_ABO' && pkg.name !== 'DONATE'
+        ? !['YEARLY_ABO', 'MONTHLY_ABO', 'DONATE'].includes(pkg.name)
         : undefined,
       paymentMethods: pkg ? pkg.paymentMethods : undefined,
       total: values.price || undefined,
@@ -444,7 +444,9 @@ class Pledge extends Component {
                   ) : (
                     <Accordion
                       crowdfundingName={crowdfundingName}
-                      packages={packages}
+                      packages={packages.filter(
+                        ({ group }) => group !== 'HIDDEN',
+                      )}
                       group={queryGroup}
                       extended
                     />
