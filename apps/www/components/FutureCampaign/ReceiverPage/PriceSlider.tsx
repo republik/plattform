@@ -203,8 +203,8 @@ export const PriceSlider = ({
           whileDrag={{ scale: 1.5 }}
           animate={animationControls}
           transition={SLIDER_TRANSITION}
-          drag='y'
-          dragConstraints={{ top: 0, bottom: 400 }}
+          drag
+          dragConstraints={trackRef}
           dragElastic={false}
           dragMomentum={false}
           onDrag={(e, info) => {
@@ -231,7 +231,6 @@ export const PriceSlider = ({
               // console.log(y);
 
               const step = getStepAtY(y)
-
               // setCurrentStep(step)
               onChange(step)
 
