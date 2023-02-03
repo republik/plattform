@@ -5,7 +5,7 @@ import { css } from 'glamor'
 type ButtonProps = {
   children?: ReactNode
   disabled?: boolean
-  onClick?: () => void
+  onClick?: () => void | Promise<void>
 }
 
 const Button = ({ children, onClick, disabled }: ButtonProps) => {

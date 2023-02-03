@@ -13,7 +13,7 @@ const BottomPanel = ({
   onClick,
 }: {
   children?: ReactNode
-  onClick: () => Promise<void>
+  onClick: () => void | Promise<void>
   steps: ReactNode
 }) => {
   const [colorScheme] = useColorContext()
@@ -41,10 +41,11 @@ const styles = {
   wrapper: css({
     display: 'flex',
     flexDirection: 'column',
-    position: 'sticky',
+    position: 'fixed',
     bottom: 0,
+    margin: '0 -15px',
     padding: '0px 15px 15px 15px',
-    width: '100%',
+    width: '100vw',
     [mediaQueries.mUp]: {
       position: 'relative',
       margin: 0,
