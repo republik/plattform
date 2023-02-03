@@ -1,5 +1,5 @@
 import { scalePoint } from 'd3-scale'
-import { useEffect, useMemo, useRef } from 'react'
+import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { SLIDER_STEP_VALUES, SLIDER_TRANSITION } from '../constants'
 
 import { sansSerifMedium14, useColorContext } from '@project-r/styleguide'
@@ -12,6 +12,7 @@ import {
 import { css } from 'glamor'
 import {
   getSliderStepAtPosition,
+  getSliderStep,
   SliderStep,
 } from './price-slider-content-helpers'
 
@@ -73,6 +74,9 @@ const styles = {
     justifyContent: 'center',
   }),
 }
+
+const minValue = SLIDER_STEP_VALUES[0].value
+const maxValue = SLIDER_STEP_VALUES[SLIDER_STEP_VALUES.length - 1].value
 
 const useSliderStuff = (sliderHeight = 400) => {
   return useMemo(() => {
@@ -167,6 +171,31 @@ export const PriceSlider = ({
     }
   }
 
+  /**
+   * Keyboard interaction to ensure users can operate
+   * the slider using only their keyboard.
+   */
+  const onKeyDown = useCallback(
+    (event: React.KeyboardEvent) => {
+      const keyMap: Record<string, React.KeyboardEventHandler> = {
+        // ArrowUp: () => actions.stepUp(),
+        // ArrowDown: () => actions.stepDown(),
+        // PageUp: () => actions.stepUp(tenSteps),
+        // PageDown: () => actions.stepDown(tenSteps),
+        Home: () => onChange(getSliderStep(0)),
+        End: () => onChange(getSliderStep(6)),
+      }
+
+      const action = keyMap[event.key]
+
+      if (action) {
+        event.preventDefault()
+        event.stopPropagation()
+        action(event)
+      }
+    },
+    [onChange, getSliderStep],
+  )
   return (
     <>
       <div {...styles.container} ref={trackRef} data-id='price-slider'>
@@ -201,14 +230,23 @@ export const PriceSlider = ({
         })}
 
         <motion.div
+          role='slider'
+          aria-orientation='vertical'
+          tabIndex={0}
+          aria-valuemin={minValue}
+          aria-valuemax={maxValue}
+          aria-valuenow={currentStep.value}
+          aria-valuetext={`CHF ${currentStep.value}`}
           style={{
             y,
             scale: 1,
             // transformOrigin: "50% 50%",
           }}
           whileHover={{ scale: 1.1 }}
+          whileFocus={{ scale: 1.5 }}
           whileTap={{ scale: 1.5 }}
           whileDrag={{ scale: 1.5 }}
+          onKeyDown={onKeyDown}
           animate={animationControls}
           transition={SLIDER_TRANSITION}
           drag
