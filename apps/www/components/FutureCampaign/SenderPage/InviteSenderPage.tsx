@@ -1,7 +1,6 @@
 import {
   mediaQueries,
   fontStyles,
-  useMediaQuery,
   IconButton,
   CopyToClippboardIcon,
   Checkbox,
@@ -21,21 +20,14 @@ import { useUserInviteQuery } from '../graphql/useUserInviteQuery'
 import RewardProgress from './RewardProgress'
 import ShareOverlay from '../../ActionBar/ShareOverlay'
 
-import SendInviteSVG from '../../../public/static/5-jahre-republik/sender/send-invite.svg'
+import SendInviteSVG from '../../../public/static/5-jahre-republik/sender/send-invite_white.svg'
 import ReceiveMonthsSVG from '../../../public/static/5-jahre-republik/sender/receive-months_white.svg'
 import LogoLGSVG from '../../../public/static/5-jahre-republik/logo/logo-lg_white.svg'
-import LogoSMSVG from '../../../public/static/5-jahre-republik/logo/logo-sm_white.svg'
 
 const DONATE_MONTHS_CONSENT_KEY = '5YEAR_DONATE_MONTHS'
 
-const LOGO_SRC_LG =
-  '/static/5-jahre-republik/logo/republik_jubilaeumslogo-image-lg-white.png'
-const LOGO_SRC_SM =
-  '/static/5-jahre-republik/logo/republik_jubilaeumslogo-image-sm-white.png'
-
 const InviteSenderPage = () => {
   const [showShareOverlay, setShowShareOverlay] = useState(false)
-  const isDesktop = useMediaQuery(mediaQueries.mUp)
   const { data: userInviteData } = useUserInviteQuery()
   const {
     data: donateMonthsConsent,
@@ -119,7 +111,7 @@ const InviteSenderPage = () => {
             und den Menschen, die Ihnen wichtig sind.
           </p>
         </div>
-        <div {...styles.box} {...styles.inviteBox}>
+        <div {...styles.box}>
           <h2 {...styles.boxHeading}>
             <AssetImage src={SendInviteSVG} width={58} height={58} />
             Laden Sie ein…
@@ -138,11 +130,16 @@ const InviteSenderPage = () => {
                   onClick={() => handleCopyLink(inviteLink)}
                   Icon={CopyToClippboardIcon}
                   title='Link kopieren'
-                  fill='#000000'
+                  fill='currentColor'
                   size={20}
                 />
               </div>
-              <button onClick={() => setShowShareOverlay(true)}>Share</button>
+              <button
+                {...styles.shareButton}
+                onClick={() => setShowShareOverlay(true)}
+              >
+                Link teilen
+              </button>
             </div>
             {showShareOverlay && (
               <ShareOverlay
@@ -171,7 +168,7 @@ const InviteSenderPage = () => {
           </div>
         </div>
 
-        <div {...styles.box} {...styles.rewardBox}>
+        <div {...styles.box}>
           <h2 {...styles.boxHeading}>
             <AssetImage src={ReceiveMonthsSVG} width={58} height={58} />
             …und werden Sie eingeladen.
@@ -289,11 +286,6 @@ const styles = {
       fontSize: 24,
     },
   }),
-
-  inviteBox: css({
-    backgroundColor: '#FFFFFF',
-    color: '#000000',
-  }),
   inviteShareLinkSection: css({
     display: 'flex',
     flexDirection: 'column',
@@ -326,16 +318,16 @@ const styles = {
     gap: 8,
     alignItems: 'center',
     padding: '12px 15px',
-    backgroundColor: 'rgba(0, 0, 0, 0.1)',
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
   }),
   inviteLinkBoxText: css({
     textOverflow: 'ellipsis',
     overflow: 'hidden',
     whiteSpace: 'nowrap',
   }),
-  rewardBox: css({
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-    color: '#FFFFFF',
+  shareButton: css({
+    padding: '12px 15px',
+    flex: '0 0 auto',
   }),
 }
 
