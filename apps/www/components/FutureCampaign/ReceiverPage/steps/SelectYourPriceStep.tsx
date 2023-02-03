@@ -1,12 +1,12 @@
+import { fontStyles, mediaQueries } from '@project-r/styleguide'
 import { css } from 'glamor'
 import { useState } from 'react'
+import AssetImage from '../../../../lib/images/AssetImage'
 import { StepProps } from '../../../Stepper/Stepper'
 import { getSliderStep, SliderStep } from '../price-slider-content-helpers'
 import { PriceSlider } from '../PriceSlider'
-import BottomPanel from './BottomPanel'
-import { Interaction, fontStyles, mediaQueries } from '@project-r/styleguide'
 import * as textStyles from '../styles'
-import AssetImage from '../../../../lib/images/AssetImage'
+import BottomPanel from './BottomPanel'
 
 const SelectYourPriceStep = ({
   stepperControls,
@@ -15,7 +15,7 @@ const SelectYourPriceStep = ({
 }: StepProps & {
   onSubmit: (price: number) => void
 }) => {
-  const [step, setStep] = useState<SliderStep>(getSliderStep(3))
+  const [sliderStep, setSliderStep] = useState<SliderStep>(getSliderStep(3))
 
   return (
     <>
@@ -23,7 +23,7 @@ const SelectYourPriceStep = ({
         <div {...styles.content}>
           <div {...styles.icon}>
             <AssetImage
-              src={`/static/5-jahre-republik/receiver/slider-step-${step.step}.svg`}
+              src={`/static/5-jahre-republik/receiver/slider-step-${sliderStep.step}.svg`}
               width={100}
               height={100}
             />
@@ -31,20 +31,26 @@ const SelectYourPriceStep = ({
 
           <p {...textStyles.text}>
             Ihr Preis:{' '}
-            <strong {...textStyles.textBold}>CHF {step.value}</strong>
+            <strong {...textStyles.textBold}>CHF {sliderStep.value}</strong>
           </p>
-          <h2 {...styles.heading}>{step.label}</h2>
+          <h2 {...styles.heading}>{sliderStep.label}</h2>
           <div {...styles.main}>
-            <p {...textStyles.text}>{step.text}</p>
+            <p {...textStyles.text}>{sliderStep.text}</p>
           </div>
         </div>
 
         <div {...styles.slider}>
-          <PriceSlider onChange={(step) => setStep(step)} step={step} />
+          <PriceSlider
+            onChange={(sliderStep) => setSliderStep(sliderStep)}
+            step={sliderStep}
+          />
         </div>
       </div>
-      <BottomPanel steps={stepperControls} onClick={() => onSubmit(step.value)}>
-        Für CHF {step?.value.toFixed()} abonnieren
+      <BottomPanel
+        steps={stepperControls}
+        onClick={() => onSubmit(sliderStep.value)}
+      >
+        Für CHF {sliderStep.value.toFixed()} abonnieren
       </BottomPanel>
     </>
   )
