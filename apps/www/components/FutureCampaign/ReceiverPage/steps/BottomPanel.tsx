@@ -1,7 +1,11 @@
 import { css } from 'glamor'
-import { mediaQueries, useColorContext } from '@project-r/styleguide'
+import {
+  mediaQueries,
+  useColorContext,
+  InlineSpinner,
+} from '@project-r/styleguide'
 import Button from './Button'
-import { ReactNode } from 'react'
+import { ReactNode, useState } from 'react'
 
 const BottomPanel = ({
   children,
@@ -9,15 +13,24 @@ const BottomPanel = ({
   onClick,
 }: {
   children?: ReactNode
-  onClick: () => void
+  onClick: () => Promise<void>
   steps: ReactNode
 }) => {
   const [colorScheme] = useColorContext()
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+
+  const handleClick = async () => {
+    setIsLoading(true)
+    await onClick()
+    setIsLoading(false)
+  }
 
   return (
     <div {...styles.wrapper} {...colorScheme.set('backgroundColor', 'default')}>
       {steps}
-      <Button onClick={() => onClick()}>{children}</Button>
+      <Button onClick={handleClick} disabled={isLoading}>
+        {children} {isLoading ? <InlineSpinner size={32} /> : undefined}
+      </Button>
     </div>
   )
 }

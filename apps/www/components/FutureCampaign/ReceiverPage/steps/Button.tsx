@@ -4,18 +4,20 @@ import { css } from 'glamor'
 
 type ButtonProps = {
   children?: ReactNode
+  disabled?: boolean
   onClick?: () => void
 }
 
-const Button = ({ children, onClick }: ButtonProps) => {
+const Button = ({ children, onClick, disabled }: ButtonProps) => {
   const [colorScheme] = useColorContext()
   return (
     <button
       {...plainButtonRule}
       {...style}
-      {...colorScheme.set('color', 'default')}
+      {...colorScheme.set('color', disabled ? 'disabled' : 'default')}
       {...colorScheme.set('backgroundColor', 'text')}
       onClick={onClick}
+      disabled={disabled}
     >
       {children}
     </button>
@@ -31,4 +33,8 @@ const style = css({
   width: '100%',
   padding: '10px 20px',
   margin: '0 auto',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  gap: 8,
 })

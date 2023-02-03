@@ -66,7 +66,7 @@ const InviteReceiverPage = ({ invalidInviteCode }: InviteReceiverPageProps) => {
   // TODO: if not logged in or probelesen show stepper
 
   const handleSubmitPrice = useCallback(
-    (price) => {
+    async (price) => {
       // setPrice(price)
       // TODO
       // based on the selected price either choose the
@@ -74,7 +74,7 @@ const InviteReceiverPage = ({ invalidInviteCode }: InviteReceiverPageProps) => {
       // else choose the package that is associated with coop membership
       // additionally attach ?utm_campaign received from the server based on the invite-code
       if (price >= 240) {
-        router.push({
+        return router.push({
           pathname: '/angebote',
           query: {
             package: price >= 1000 ? 'BENEFACTOR' : 'ABO',
@@ -83,7 +83,7 @@ const InviteReceiverPage = ({ invalidInviteCode }: InviteReceiverPageProps) => {
           },
         })
       } else {
-        router.push({
+        return router.push({
           pathname: '/angebote',
           query: {
             package: 'YEARLY_ABO',
