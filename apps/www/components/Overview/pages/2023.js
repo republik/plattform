@@ -49,7 +49,7 @@ const text = {
         Liechtenstein
       </Highlight>
       . Was{' '}
-      <Highlight {...p} ids={['IXNHPyVGH', 'FsIMwXGlu']}>
+      <Highlight {...p} ids={['IXNHPyVGH']}>
         beim «Fall Berset» übersehen
       </Highlight>{' '}
       wurde und wie die{' '}
