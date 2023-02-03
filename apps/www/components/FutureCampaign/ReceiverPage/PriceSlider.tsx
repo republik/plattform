@@ -19,7 +19,7 @@ const styles = {
   container: css({
     position: 'relative',
     width: 64,
-    height: 400,
+    height: '100%',
   }),
   track: css({
     position: 'absolute',
@@ -108,21 +108,25 @@ const useSliderStuff = (sliderHeight = 400) => {
 }
 
 type PriceSliderProps = {
+  initialStep: SliderStep
   step: SliderStep
+  height: number
   onChange: (step: SliderStep) => void
 }
 
 export const PriceSlider = ({
+  initialStep,
   step: currentStep,
+  height,
   onChange,
 }: PriceSliderProps) => {
-  const { sliderScale, getStepAtY, ticks } = useSliderStuff()
+  const { sliderScale, getStepAtY, ticks } = useSliderStuff(height)
 
   const [colorScheme] = useColorContext()
 
   const trackRef = useRef<HTMLDivElement>(null)
   const animationControls = useAnimationControls()
-  const y = useMotionValue(100)
+  const y = useMotionValue(0)
 
   // OK, OK, this is weird and we shouldn't create hooks in a loop but we rely on the fact that the number of ticks doesn't change. If there were a way to pass arguments to a MotionValue, this wouldn't be necessary.
   const tickBackgrounds = []
@@ -137,14 +141,18 @@ export const PriceSlider = ({
     )
   }
 
-  // const [currentStep, setCurrentStep] = useState(initialStep)
-
   useEffect(() => {
     animationControls.start({
-      y: sliderScale(26), // FIXME: base on price or step
+      y: sliderScale(initialStep.pos),
       transition: { ...SLIDER_TRANSITION, duration: 1 },
     })
-  }, [])
+  }, [initialStep])
+
+  useEffect(() => {
+    if (!y.isAnimating()) {
+      y.set(sliderScale(currentStep.pos))
+    }
+  }, [height])
 
   const gotoPos = (pos: number) => {
     if (currentStep !== getSliderStepAtPosition(pos)) {
@@ -204,7 +212,7 @@ export const PriceSlider = ({
           animate={animationControls}
           transition={SLIDER_TRANSITION}
           drag
-          dragConstraints={trackRef}
+          dragConstraints={{ top: 0, bottom: height, left: 0, right: 0 }}
           dragElastic={false}
           dragMomentum={false}
           onDrag={(e, info) => {

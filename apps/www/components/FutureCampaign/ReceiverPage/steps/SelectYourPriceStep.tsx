@@ -1,6 +1,7 @@
 import { fontStyles, mediaQueries } from '@project-r/styleguide'
 import { css } from 'glamor'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
+import { useResizeObserver } from '../../../../lib/hooks/useResizeObserver'
 import AssetImage from '../../../../lib/images/AssetImage'
 import { StepProps } from '../../../Stepper/Stepper'
 import { getSliderStep, SliderStep } from '../price-slider-content-helpers'
@@ -10,12 +11,13 @@ import BottomPanel from './BottomPanel'
 
 const SelectYourPriceStep = ({
   stepperControls,
-  onAdvance,
   onSubmit,
 }: StepProps & {
   onSubmit: (price: number) => void
 }) => {
-  const [sliderStep, setSliderStep] = useState<SliderStep>(getSliderStep(3))
+  const initialSliderStep = useMemo(() => getSliderStep(3), [])
+  const [sliderStep, setSliderStep] = useState<SliderStep>(initialSliderStep)
+  const [resizeRef, , height] = useResizeObserver()
 
   return (
     <>
@@ -39,11 +41,15 @@ const SelectYourPriceStep = ({
           </div>
         </div>
 
-        <div {...styles.slider}>
-          <PriceSlider
-            onChange={(sliderStep) => setSliderStep(sliderStep)}
-            step={sliderStep}
-          />
+        <div {...styles.slider} ref={resizeRef}>
+          {height > 50 && (
+            <PriceSlider
+              initialStep={initialSliderStep}
+              onChange={(sliderStep) => setSliderStep(sliderStep)}
+              step={sliderStep}
+              height={height}
+            />
+          )}
         </div>
       </div>
       <BottomPanel
@@ -72,6 +78,9 @@ const styles = {
   }),
   slider: css({
     flexShrink: 0,
+    paddingTop: 32,
+    paddingBottom: 32,
+    minHeight: 400,
   }),
 
   heading: css({

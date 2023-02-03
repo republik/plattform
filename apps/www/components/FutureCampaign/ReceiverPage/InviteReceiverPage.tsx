@@ -1,7 +1,7 @@
 import { css } from 'glamor'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { useCallback, useState } from 'react'
+import { useCallback } from 'react'
 import {
   fontStyles,
   mediaQueries,
@@ -10,7 +10,6 @@ import {
 } from '@project-r/styleguide'
 import { PUBLIC_BASE_URL } from '../../../lib/constants'
 import { useMe } from '../../../lib/context/MeContext'
-import { t } from '../../../lib/withT'
 import Frame from '../../Frame'
 import Stepper, { Step } from '../../Stepper/Stepper'
 import { FUTURE_CAMPAIGN_SHARE_IMAGE_URL } from '../constants'
