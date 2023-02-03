@@ -11,10 +11,8 @@ import AssetImage from '../../../../lib/images/AssetImage'
 const SelectYourPriceStep = ({
   stepperControls,
   onAdvance,
-  initialPrice,
   onSubmit,
 }: StepProps & {
-  initialPrice: number
   onSubmit: (price: number) => void
 }) => {
   const [step, setStep] = useState<SliderStep>(getSliderStep(3))

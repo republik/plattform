@@ -65,11 +65,10 @@ const InviteReceiverPage = ({ invalidInviteCode }: InviteReceiverPageProps) => {
   // TODO: if user has monthly abo, also show info text that not available if already subscirbed
 
   // TODO: if not logged in or probelesen show stepper
-  const [price, setPrice] = useState<number>(240)
 
   const handleComplete = useCallback(
     (price) => {
-      setPrice(price)
+      // setPrice(price)
       // TODO
       // based on the selected price either choose the
       // package that is associated with non coop membership.
@@ -96,7 +95,7 @@ const InviteReceiverPage = ({ invalidInviteCode }: InviteReceiverPageProps) => {
         })
       }
     },
-    [price],
+    [senderProfileData],
   )
 
   const steps: Step[] = [
@@ -113,11 +112,7 @@ const InviteReceiverPage = ({ invalidInviteCode }: InviteReceiverPageProps) => {
     {
       name: STEPS.PRICE_SELECTOR,
       content: (stepProps) => (
-        <SelectYourPriceStep
-          initialPrice={price}
-          onSubmit={handleComplete}
-          {...stepProps}
-        />
+        <SelectYourPriceStep onSubmit={handleComplete} {...stepProps} />
       ),
     },
   ]
