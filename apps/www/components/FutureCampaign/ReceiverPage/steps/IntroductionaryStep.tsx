@@ -74,7 +74,7 @@ const IntroductoryStep = ({
           Republik noch fehlen.
         </p>
       </div>
-      <BottomPanel steps={stepperControls} onAdvance={onAdvance}>
+      <BottomPanel steps={stepperControls} onClick={onAdvance}>
         Wählen Sie Ihren Preis
       </BottomPanel>
     </>

@@ -66,7 +66,7 @@ const InviteReceiverPage = ({ invalidInviteCode }: InviteReceiverPageProps) => {
 
   // TODO: if not logged in or probelesen show stepper
 
-  const handleComplete = useCallback(
+  const handleSubmitPrice = useCallback(
     (price) => {
       // setPrice(price)
       // TODO
@@ -112,7 +112,7 @@ const InviteReceiverPage = ({ invalidInviteCode }: InviteReceiverPageProps) => {
     {
       name: STEPS.PRICE_SELECTOR,
       content: (stepProps) => (
-        <SelectYourPriceStep onSubmit={handleComplete} {...stepProps} />
+        <SelectYourPriceStep onSubmit={handleSubmitPrice} {...stepProps} />
       ),
     },
   ]
@@ -142,7 +142,7 @@ const InviteReceiverPage = ({ invalidInviteCode }: InviteReceiverPageProps) => {
           </p>
         </div>
       )}
-      {isEligible && (
+      {!invalidInviteCode && isEligible && (
         <Stepper
           steps={steps}
           customStepperUIPlacement

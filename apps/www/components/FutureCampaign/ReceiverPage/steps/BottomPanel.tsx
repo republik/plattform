@@ -6,10 +6,10 @@ import { ReactNode } from 'react'
 const BottomPanel = ({
   children,
   steps,
-  onAdvance,
+  onClick,
 }: {
   children?: ReactNode
-  onAdvance: () => void
+  onClick: () => void
   steps: ReactNode
 }) => {
   const [colorScheme] = useColorContext()
@@ -17,7 +17,7 @@ const BottomPanel = ({
   return (
     <div {...styles.wrapper} {...colorScheme.set('backgroundColor', 'default')}>
       {steps}
-      <Button onClick={() => onAdvance()}>{children}</Button>
+      <Button onClick={() => onClick()}>{children}</Button>
     </div>
   )
 }

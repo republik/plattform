@@ -43,13 +43,7 @@ const SelectYourPriceStep = ({
           <PriceSlider onChange={(step) => setStep(step)} step={step} />
         </div>
       </div>
-      <BottomPanel
-        steps={stepperControls}
-        onAdvance={() => {
-          onSubmit(step.value)
-          onAdvance()
-        }}
-      >
+      <BottomPanel steps={stepperControls} onClick={() => onSubmit(step.value)}>
         Für CHF {step?.value.toFixed()} abonnieren
       </BottomPanel>
     </>
