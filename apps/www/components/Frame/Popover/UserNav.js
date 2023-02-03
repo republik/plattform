@@ -173,15 +173,17 @@ const UserNav = ({
                   />
                   <div {...styles.navSection}>
                     <div {...styles.navLinks}>
-                      <NavLink
-                        href='/verstaerkung-holen'
-                        currentPath={currentPath}
-                        closeHandler={closeHandler}
-                        large
-                      >
-                        {t('nav/invite-friends')}
-                      </NavLink>
                       {me.accessCampaigns.length > 0 && (
+                        <NavLink
+                          href='/verstaerkung-holen'
+                          currentPath={currentPath}
+                          closeHandler={closeHandler}
+                          large
+                        >
+                          {t('nav/invite-friends')}
+                        </NavLink>
+                      )}
+                      {/*}
                         <NavLink
                           href='/teilen'
                           currentPath={currentPath}
@@ -189,8 +191,7 @@ const UserNav = ({
                           large
                         >
                           {t('nav/share')}
-                        </NavLink>
-                      )}
+                      </NavLink>*/}
                       {!inNativeIOSApp && (
                         <>
                           <NavLink

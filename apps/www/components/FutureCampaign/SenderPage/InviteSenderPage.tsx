@@ -23,13 +23,21 @@ import ShareOverlay from '../../ActionBar/ShareOverlay'
 import SendInviteSVG from '../../../public/static/5-jahre-republik/sender/send-invite_white.svg'
 import ReceiveMonthsSVG from '../../../public/static/5-jahre-republik/sender/receive-months_white.svg'
 import LogoLGSVG from '../../../public/static/5-jahre-republik/logo/logo-lg_white.svg'
-import { enforceMembership } from '../../Auth/withMembership'
+import {
+  enforceMembership,
+  UnauthorizedMessage,
+} from '../../Auth/withMembership'
+import { MeObjectType } from '../../../lib/context/MeContext'
+import { PageCenter } from '../../Auth/withAuthorization'
 
 const DONATE_MONTHS_CONSENT_KEY = '5YEAR_DONATE_MONTHS'
 
-const InviteSenderPage = () => {
+const InviteSenderPage = ({ me }: { me: MeObjectType }) => {
   const [showShareOverlay, setShowShareOverlay] = useState(false)
   const { data: userInviteData } = useUserInviteQuery()
+  console.log('me', JSON.stringify(me, null, 2))
+  const hasShareGrant = me?.accessCampaigns.length > 0
+
   const {
     data: donateMonthsConsent,
     loading: donateMonthsConsentLoading,
@@ -85,6 +93,16 @@ const InviteSenderPage = () => {
   }
 
   // TODO: Show special UI if a user has no subscription
+
+  if (!hasShareGrant) {
+    return (
+      <Frame>
+        <PageCenter>
+          <UnauthorizedMessage />
+        </PageCenter>
+      </Frame>
+    )
+  }
 
   return (
     <Frame pageColorSchemeKey='dark'>
