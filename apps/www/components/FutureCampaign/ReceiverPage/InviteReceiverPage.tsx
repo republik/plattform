@@ -77,9 +77,9 @@ const InviteReceiverPage = ({ invalidInviteCode }: InviteReceiverPageProps) => {
         router.push({
           pathname: '/angebote',
           query: {
-            package: 'ABO',
+            package: price >= 1000 ? 'BENEFACTOR' : 'ABO',
             price: price * 100, // price in Rp.
-            utm_campaign: senderProfileData?.sender?.id,
+            campaign: senderProfileData?.sender?.id,
           },
         })
       } else {
@@ -89,7 +89,7 @@ const InviteReceiverPage = ({ invalidInviteCode }: InviteReceiverPageProps) => {
             package: 'YEARLY_ABO',
             price: price * 100, // price in Rp.
             reason: 'Mitstreiter Abo',
-            utm_campaign: senderProfileData?.sender?.id,
+            campaign: senderProfileData?.sender?.id,
           },
         })
       }
