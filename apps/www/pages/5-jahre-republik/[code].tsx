@@ -104,6 +104,7 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
+    padding: '0 15px',
     [mediaQueries.mUp]: {
       height: 600,
       maxHeight: '100%',

@@ -30,6 +30,7 @@ const styles = {
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 16,
+    padding: '15px 0px 15px 15px',
     height: 80,
   }),
 }

@@ -43,10 +43,7 @@ const styles = {
     flexDirection: 'column',
     position: 'sticky',
     bottom: 0,
-    padding: '0px 15px 15px 15px',
+    paddingBottom: 15,
     width: '100%',
-    [mediaQueries.mUp]: {
-      padding: '15px 15px 15px 15px',
-    },
   }),
 }
