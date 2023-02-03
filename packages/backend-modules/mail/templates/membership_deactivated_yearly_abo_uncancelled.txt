@@ -1,0 +1,11 @@
+Guten Tag
+
+membership_deactivated_yearly_abo_uncancelled
+
+Ihre Crew der Republik
+
+
+Republik AG
+Sihlhallenstrasse 1, CH-8004 Zürich
+{{frontend_base_url}}
+kontakt@republik.ch
