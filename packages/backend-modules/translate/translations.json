@@ -361,6 +361,10 @@
       "value": "Ihre Bestellung: Buch «Republik bei Stromausfall»"
     },
     {
+      "key": "api/email/pledge_yearly_abo/subject",
+      "value": "TODO: Betreff fehlt api/email/pledge_yearly_abo/subject"
+    },
+    {
       "key": "api/email/payment_successful_abo/subject",
       "value": "Vielen Dank! Wir haben Ihre Zahlung erhalten."
     },
@@ -387,6 +391,10 @@
     {
       "key": "api/email/payment_successful_tablebook/subject",
       "value": "Vielen Dank! Wir haben Ihre Zahlung erhalten."
+    },
+    {
+      "key": "api/email/payment_successful_yearly_abo/subject",
+      "value": "TODO: Betreff fehlt api/email/payment_successful_yearly_abo/subject"
     },
     {
       "key": "api/email/option/goodie/notebook/1",
@@ -475,6 +483,14 @@
     {
       "key": "api/email/option/membershiptype/abo_give_months/other",
       "value": "Monats-Abos als Geschenk für {interval}"
+    },
+    {
+      "key": "api/email/option/membershiptype/yearly_abo/1",
+      "value": "TODO: api/email/option/membershiptype/yearly_abo/1"
+    },
+    {
+      "key": "api/email/option/membershiptype/yearly_abo/other",
+      "value": "TODO: api/email/option/membershiptype/yearly_abo/other"
     },
     {
       "key": "api/email/option/other/gifted_membership",
@@ -633,8 +649,16 @@
       "value": "Bleiben Sie an Bord oder möchten Sie die Republik verlassen? Sie haben die Wahl"
     },
     {
+      "key": "api/email/membership_owner_prolong_yearly_abo_notice/subject",
+      "value": "TODO: api/email/membership_owner_prolong_yearly_abo_notice/subject"
+    },
+    {
       "key": "api/email/membership_owner_prolong_notice_7/subject",
       "value": "Am {endDate} erneuert sich Ihre Mitgliedschaft"
+    },
+    {
+      "key": "api/email/membership_owner_prolong_yearly_abo_notice_7/subject",
+      "value": "TODO: api/email/membership_owner_prolong_yearly_abo_notice_7/subject"
     },
     {
       "key": "api/email/membership_owner_prolong_notice_0/sequenceNumber/true/subject",
@@ -649,8 +673,16 @@
       "value": "Ihr letzter Tag an Bord"
     },
     {
+      "key": "api/email/membership_owner_prolong_yearly_abo_notice_0/subject",
+      "value": "TODO: api/email/membership_owner_prolong_yearly_abo_notice_0/subject"
+    },
+    {
       "key": "api/email/membership_owner_prolong_winback_7/subject",
       "value": "Ihr Mitgliedschaftsbeitrag ist überfällig"
+    },
+    {
+      "key": "api/email/membership_owner_prolong_yearly_abo_winback_7/subject",
+      "value": "TODO: api/email/membership_owner_prolong_yearly_abo_winback_7/subject"
     },
     {
       "key": "api/email/membership_owner_autopay_notice/subject",
@@ -675,6 +707,10 @@
     {
       "key": "api/email/membership_deactivated_abo_give_months_uncancelled/subject",
       "value": "Ihr Republik-Abonnement wurde deaktiviert"
+    },
+    {
+      "key": "api/email/membership_deactivated_yearly_abo_uncancelled/subject",
+      "value": "TODO: api/email/membership_deactivated_yearly_abo_uncancelled/subject"
     },
     {
       "key": "api/email/membership_deactivated/subject",
@@ -2295,6 +2331,10 @@
     {
       "key": "api/republik/revenueStats/segment/abo",
       "value": "Monats-Abos"
+    },
+    {
+      "key": "api/republik/revenueStats/segment/yearlyAbo",
+      "value": "TODO: api/republik/revenueStats/segment/yearlyAbo"
     },
     {
       "key": "api/republik/revenueStats/segment/goodie",

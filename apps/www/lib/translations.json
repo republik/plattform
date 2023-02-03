@@ -2497,6 +2497,10 @@
       "value": "Bitte begründen"
     },
     {
+      "key": "package/customize/userPrice/YEARLY_ABO/beforeReason",
+      "value": "TODO: String für package/customize/userPrice/YEARLY_ABO/beforeReason"
+    },
+    {
       "key": "package/customize/userPrice/beforeReason",
       "value": "Journalismus kostet. Aber wir wollen niemanden ausschliessen. Falls Sie sich die 240 Franken nicht leisten können, bitten wir Sie um eine knappe Begründung und einen Preis, der Ihnen gerecht scheint. "
     },
@@ -2545,6 +2549,18 @@
       "value": "Vielleicht das einzige Geschenk, das Sie Freunden und Feinden gleich herzlich machen können: einige Monate Republik."
     },
     {
+      "key": "package/YEARLY_ABO/price",
+      "value": "{formattedCHF}"
+    },
+    {
+      "key": "package/YEARLY_ABO/title",
+      "value": "TODO: String für package/YEARLY_ABO/title"
+    },
+    {
+      "key": "package/YEARLY_ABO/description",
+      "value": "TODO: STring für package/YEARLY_ABO/description"
+    },
+    {
       "key": "package/BENEFACTOR/title",
       "value": "Gönner-Mitgliedschaft"
     },
@@ -2575,6 +2591,10 @@
     {
       "key": "package/group/GIVE",
       "value": "Geschenke"
+    },
+    {
+      "key": "package/group/HIDDEN",
+      "value": "TODO: String package/group/HIDDEN"
     },
     {
       "key": "option/ABO/label/other",
@@ -2619,6 +2639,14 @@
     {
       "key": "option/ABO_GIVE_MONTHS/interval/month/label/other",
       "value": "Monate pro Abo"
+    },
+    {
+      "key": "option/YEARLY_ABO/label/other",
+      "value": "TODO: String für option/YEARLY_ABO/label/other"
+    },
+    {
+      "key": "option/YEARLY_ABO/label/1",
+      "value": "TODO: STring für option/YEARLY_ABO/label/1"
     },
     {
       "key": "package/customize/ABO_GIVE_MONTHS/years/1",
@@ -3629,6 +3657,9 @@
       "value": "Guten Tag, {name}"
     },
     {
+      "key": "merci/title/package/YEARLY_ABO"
+    },
+    {
       "key": "merci/title/package/DONATE",
       "value": "Guten Tag, {name}"
     },
@@ -3847,6 +3878,26 @@
     {
       "key": "memberships/ABO_GIVE_MONTHS/manage/reactivate",
       "value": "Abonnement reaktivieren"
+    },
+    {
+      "key": "memberships/YEARLY_ABO/manage/prolong/link",
+      "value": "TODO: String für memberships/YEARLY_ABO/manage/prolong/link Abonnement verlängern"
+    },
+    {
+      "key": "memberships/YEARLY_ABO/manage/cancel/link",
+      "value": "TODO: memberships/YEARLY_ABO/manage/cancel/link Abonnement künden"
+    },
+    {
+      "key": "memberships/YEARLY_ABO/manage/upgrade/link",
+      "value": "TODO: memberships/YEARLY_ABO/manage/upgrade/link Wenn Sie ein {buyLink}, beenden wir automatisch Ihr Monatsabo."
+    },
+    {
+      "key": "memberships/YEARLY_ABO/manage/upgrade/link/buyText",
+      "value": "TODO: memberships/YEARLY_ABO/manage/upgrade/link/buyText Jahresmitgliedschaft lösen"
+    },
+    {
+      "key": "memberships/YEARLY_ABO/manage/reactivate",
+      "value": "TODO: memberships/YEARLY_ABO/manage/reactivate Abonnement reaktivieren"
     },
     {
       "key": "memberships/claim/lead",
@@ -4757,6 +4808,10 @@
       "value": "Ich kann mir den Betrag nicht leisten"
     },
     {
+      "key": "package/customize/userPrice/YEARLY_ABO/beforePrice",
+      "value": "TODO: package/customize/userPrice/YEARLY_ABO/beforePrice"
+    },
+    {
       "key": "package/customize/userPrice/beforePrice",
       "value": "Wie viel können Sie bezahlen?"
     },
@@ -4883,6 +4938,14 @@
     {
       "key": "pledge/meta/package/ABO_GIVE_MONTHS/description",
       "value": "Wir sind ein digitales Magazin für Politik, Wirtschaft, Gesellschaft und Kultur. Unabhängig. Werbefrei."
+    },
+    {
+      "key": "pledge/meta/package/YEARLY_ABO/title",
+      "value": "TODO: String für pledge/meta/package/YEARLY_ABO/title"
+    },
+    {
+      "key": "pledge/meta/package/YEARLY_ABO/description",
+      "value": "TODO: String für pledge/meta/package/YEARLY_ABO/description"
     },
     {
       "key": "pledge/form/statement/share/title",

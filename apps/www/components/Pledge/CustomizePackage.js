@@ -963,7 +963,12 @@ class CustomizePackage extends Component {
         />
         {!!userPrice && (
           <div>
-            <P>{t('package/customize/userPrice/beforeReason')}</P>
+            <P>
+              {t.first([
+                `package/customize/userPrice/${pkg.name}/beforeReason`,
+                'package/customize/userPrice/beforeReason',
+              ])}
+            </P>
             <div style={{ marginBottom: 20 }}>
               <Field
                 label={t('package/customize/userPrice/reason/label')}
@@ -989,7 +994,12 @@ class CustomizePackage extends Component {
                 }}
               />
             </div>
-            <P>{t('package/customize/userPrice/beforePrice')}</P>
+            <P>
+              {t.first([
+                `package/customize/userPrice/${pkg.name}/beforePrice`,
+                'package/customize/userPrice/beforePrice',
+              ])}
+            </P>
           </div>
         )}
         <div style={{ marginBottom: 20 }}>
