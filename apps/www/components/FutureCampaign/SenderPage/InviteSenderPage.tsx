@@ -23,6 +23,7 @@ import ShareOverlay from '../../ActionBar/ShareOverlay'
 import SendInviteSVG from '../../../public/static/5-jahre-republik/sender/send-invite_white.svg'
 import ReceiveMonthsSVG from '../../../public/static/5-jahre-republik/sender/receive-months_white.svg'
 import LogoLGSVG from '../../../public/static/5-jahre-republik/logo/logo-lg_white.svg'
+import { enforceMembership } from '../../Auth/withMembership'
 
 const DONATE_MONTHS_CONSENT_KEY = '5YEAR_DONATE_MONTHS'
 
@@ -79,11 +80,11 @@ const InviteSenderPage = () => {
   const maxRewards = 5
   const reachedRewards = 1
 
-  // TODO: either read from t9n or add list of words as static arrays
-
   const handleCopyLink = (link: string) => {
     navigator.clipboard.writeText(link)
   }
+
+  // TODO: Show special UI if a user has no subscription
 
   return (
     <Frame pageColorSchemeKey='dark'>
@@ -200,7 +201,7 @@ const InviteSenderPage = () => {
   )
 }
 
-export default InviteSenderPage
+export default enforceMembership()(InviteSenderPage)
 
 const styles = {
   page: css({
