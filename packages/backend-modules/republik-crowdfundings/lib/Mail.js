@@ -1152,4 +1152,68 @@ mail.getPledgeMergeVars = async (
   ]
 }
 
+mail.send5YearsRewardsMail = async (
+  { giverUserId, claimerUserId, count, hasGiverConsentedToDonate },
+  { pgdb, t },
+) => {
+  const giver = pgdb.public.user.findOne({ id: giverUserId })
+  const safeGiver = transformUser(giver)
+
+  const claimer = pgdb.public.user.findOne({ id: claimerUserId })
+  const safeClaimer = transformUser(claimer)
+
+  const countNumber = parseInt(count, 10)
+
+  const templateName = 'future_campaign_sender_reward'
+
+  return sendMailTemplate(
+    {
+      to: safeGiver.email,
+      fromEmail: process.env.DEFAULT_MAIL_FROM_ADDRESS,
+      subject: t(`api/email/${templateName}/${count}/subject`),
+      templateName,
+      mergeLanguage: 'handlebars',
+      globalMergeVars: [
+        {
+          name: 'has_one_slot_filled',
+          content: countNumber === 1,
+        },
+        {
+          name: 'has_two_slots_filled',
+          content: countNumber === 2,
+        },
+        {
+          name: 'has_three_slots_filled',
+          content: countNumber === 3,
+        },
+        {
+          name: 'has_four_slots_filled',
+          content: countNumber === 4,
+        },
+        {
+          name: 'has_five_slots_filled',
+          content: countNumber === 5,
+        },
+        {
+          name: 'count_open_slots',
+          content: 5 - countNumber,
+        },
+        {
+          name: 'claimer',
+          content: safeClaimer.name ? safeClaimer.name : safeClaimer.email,
+        },
+        {
+          name: 'is_donating',
+          content: hasGiverConsentedToDonate,
+        },
+        {
+          name: 'link_sender_page',
+          content: `${FRONTEND_BASE_URL}/verstaerkung-holen`,
+        },
+      ],
+    },
+    { pgdb },
+  )
+}
+
 module.exports = mail

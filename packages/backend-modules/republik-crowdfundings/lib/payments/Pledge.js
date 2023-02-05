@@ -3,6 +3,7 @@ const { sendPledgeConfirmations } = require('../Mail')
 const slack = require('@orbiting/backend-modules-republik/lib/slack')
 const { refreshPotForPledgeId } = require('../membershipPot')
 const getClients = require('./stripe/clients')
+const { rewardSender } = require('../fiveYearsReward')
 
 const forUpdate = async ({ pledgeId, fn, pgdb }) => {
   const transaction = await pgdb.transactionBegin()
@@ -68,6 +69,13 @@ const afterChange = async ({ pledge }, context) => {
   let user
   if (pledge.status === 'PAID_INVESTIGATE') {
     user = await pgdb.public.users.findOne({ id: pledge.userId })
+  }
+
+  if (pledge.payload && pledge.payload.utm_campaign === '5Years') {
+    // campaign is just a mock
+    // find sender in payload and put its id in giverUserId
+    const giverUserId = ''
+    await rewardSender(giverUserId, pledge.userId, context)
   }
 
   return Promise.all([
