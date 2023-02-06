@@ -64,13 +64,30 @@ const InviteReceiverPage = ({ invalidInviteCode }: InviteReceiverPageProps) => {
       // package that is associated with non coop membership.
       // else choose the package that is associated with coop membership
       // additionally attach ?utm_campaign received from the server based on the invite-code
-      if (price >= 240) {
+      if (price >= 1000) {
         return router.push({
           pathname: '/angebote',
           query: {
-            package: price >= 1000 ? 'BENEFACTOR' : 'ABO',
+            package: 'BENEFACTOR',
             price: price * 100, // price in Rp.
-            campaign: senderProfileData?.sender?.id,
+
+            utm_campaign: 'mitstreiter',
+            utm_medium: 'website',
+            utm_source: 'meta',
+            utm_content: senderProfileData?.sender?.id,
+          },
+        })
+      } else if (price >= 240) {
+        return router.push({
+          pathname: '/angebote',
+          query: {
+            package: 'ABO',
+            price: price * 100, // price in Rp.
+
+            utm_campaign: 'mitstreiter',
+            utm_medium: 'website',
+            utm_source: 'meta',
+            utm_content: senderProfileData?.sender?.id,
           },
         })
       } else {
@@ -80,7 +97,11 @@ const InviteReceiverPage = ({ invalidInviteCode }: InviteReceiverPageProps) => {
             package: 'YEARLY_ABO',
             price: price * 100, // price in Rp.
             reason: 'Mitstreiter Abo',
-            campaign: senderProfileData?.sender?.id,
+
+            utm_campaign: 'mitstreiter',
+            utm_medium: 'website',
+            utm_source: 'meta',
+            utm_content: senderProfileData?.sender?.id,
           },
         })
       }
