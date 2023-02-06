@@ -80,8 +80,6 @@ const afterChange = async ({ pledge }, context) => {
     }
   }
 
-  console.log('B')
-
   return Promise.all([
     sendPledgeConfirmations({ userId: pledge.userId, pgdb, t }),
     pledge.status === 'SUCCESSFUL' && refreshPotForPledgeId(pledge.id, context),

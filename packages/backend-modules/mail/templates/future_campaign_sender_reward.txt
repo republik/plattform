@@ -100,7 +100,7 @@ können Sie die Einstellung jederzeit anpassen.
 {{/unless}} {{else}}
 
 PS: Wie abgemacht, haben wir Ihnen einen Monat auf Ihre aktuelle Mitgliedschaft
-gutgeschrieben, sie läuft neu bis [End date]
+gutgeschrieben, sie läuft neu bis {{membership_period_end_date}}.
 
 {{#unless has_five_slots_filled}}
 

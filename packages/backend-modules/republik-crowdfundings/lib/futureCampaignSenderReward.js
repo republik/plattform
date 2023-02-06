@@ -5,7 +5,6 @@ const DONATE_POLICY_NAME = '5YEAR_DONATE_MONTHS'
 
 const rewardSender = async (senderUserId, pledgeUserId, context) => {
   const { pgdb, t, mail } = context
-  console.log('rewarding')
 
   const transaction = await pgdb.transactionBegin()
 
@@ -72,7 +71,8 @@ const rewardSender = async (senderUserId, pledgeUserId, context) => {
             },
           )
 
-        rewardMailData.membershipPeriodEndDate = updatedMembershipPeriod.endDate
+        rewardMailData.membershipPeriodEndDate =
+          updatedMembershipPeriod[0]?.endDate
       }
 
       // send email to campaign sender without new membership period end date

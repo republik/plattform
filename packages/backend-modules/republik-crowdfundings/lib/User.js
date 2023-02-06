@@ -37,7 +37,7 @@ const getFutureCampaignAboCount = async ({ user, pgdb }) => {
     { orderBy: { createdAt: 'desc' } },
   )
 
-  return currentCount ? parseInt(currentCount.value, 10) : 0 // or should it be currentCount[0]
+  return currentCount ? parseInt(currentCount.value, 10) : 0
 }
 
 module.exports = {
