@@ -188,10 +188,11 @@ const getSampleAnswers = (questions, results) => {
 
 const getAnswersToSingleQuestion = (questionId, results) => {
   return results.nodes.map((submission) => {
+    const answer = submission.answers.nodes.find(
+      (answer) => answer.question.id === questionId,
+    )
     return {
-      answer: submission.answers.nodes.find(
-        (answer) => answer.question.id === questionId,
-      ),
+      answer,
       displayAuthor: submission.displayAuthor,
     }
   })
@@ -231,19 +232,16 @@ const Submissions = ({ slug, extract, share = {} }) => {
     )
   }, [debouncedSearch])
   const pathname = router.asPath.split('?')[0]
-  const { loading, error, data, previousData, fetchMore } = useQuery(
-    mainQuery,
-    {
-      variables: {
-        slug,
-        search: debouncedSearch,
-        first: 10,
-        sortBy,
-        sortDirection,
-        $questionIds: shareId ? [shareId] : [],
-      },
+  const { loading, error, data, fetchMore } = useQuery(mainQuery, {
+    variables: {
+      slug,
+      search: debouncedSearch,
+      first: 10,
+      sortBy,
+      sortDirection,
+      questionIds: shareId ? [shareId] : [],
     },
-  )
+  })
   const shareQuery = useQuery(singleSubmissionQuery, {
     skip: debouncedSearch || !shareId || shareType === 'question',
     variables: {
@@ -256,7 +254,6 @@ const Submissions = ({ slug, extract, share = {} }) => {
     return fetchMore({
       variables: {
         after: data.questionnaire.results.pageInfo.endCursor,
-        questionIds: shareId ? [shareId] : [],
       },
       updateQuery: (previousResult = {}, { fetchMoreResult = {} }) => {
         const previousNodes = previousResult.questionnaire.results.nodes || []
@@ -346,6 +343,7 @@ const Submissions = ({ slug, extract, share = {} }) => {
         />
       ))}
       */}
+
       <Loader
         loading={loading || shareQuery.loading}
         error={error || shareQuery.error}
@@ -357,6 +355,8 @@ const Submissions = ({ slug, extract, share = {} }) => {
           if (shareId && shareType === 'question') {
             const question = questions.find((q) => q.id === shareId)
             const answers = getAnswersToSingleQuestion(shareId, results)
+
+            // console.log({ answers })
             return (
               <div
                 key={question.id}
@@ -367,6 +367,16 @@ const Submissions = ({ slug, extract, share = {} }) => {
                 }}
                 ref={containerRef}
               >
+                <Button
+                  small
+                  onClick={() => {
+                    router.replace({
+                      pathname,
+                    })
+                  }}
+                >
+                  Zurück
+                </Button>
                 <Interaction.H3>{question.text}</Interaction.H3>
                 {answers.map(({ answer, displayAuthor }) => (
                   <Editorial.P key={question.id} attributes={{}}>
