@@ -361,7 +361,7 @@ class CustomizePackage extends Component {
 
     const minPrice = calculateMinPrice(pkg, values, userPrice)
     const regularMinPrice = calculateMinPrice(pkg, values, false)
-    const fixedPrice = pkg.name === 'MONTHLY_ABO'
+    const fixedPrice = ['MONTHLY_ABO', 'YEARLY_ABO'].includes(pkg.name)
 
     const onPriceChange = (_, value, shouldValidate) => {
       const price = String(value).length
