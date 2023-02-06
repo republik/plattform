@@ -88,36 +88,35 @@ const Actions = ({
         )}
       {membership.active && (
         <>
+          {membership.renew &&
+            ['MONTHLY_ABO', 'YEARLY_ABO'].includes(membership.type.name) && (
+              <P>
+                {t.elements(
+                  `memberships/${membership.type.name}/manage/upgrade/link`,
+                  {
+                    buyLink: (
+                      <Link
+                        href={{
+                          pathname: '/angebote',
+                          query: { package: 'ABO' },
+                        }}
+                        passHref
+                      >
+                        <A>
+                          {t(
+                            `memberships/${membership.type.name}/manage/upgrade/link/buyText`,
+                          )}
+                        </A>
+                      </Link>
+                    ),
+                  },
+                )}
+              </P>
+            )}
           {!hasWaitingMemberships && (
             <>
               {membership.renew && (
                 <>
-                  {['MONTHLY_ABO', 'YEARLY_ABO'].includes(
-                    membership.type.name,
-                  ) && (
-                    <P>
-                      {t.elements(
-                        `memberships/${membership.type.name}/manage/upgrade/link`,
-                        {
-                          buyLink: (
-                            <Link
-                              href={{
-                                pathname: '/angebote',
-                                query: { package: 'ABO' },
-                              }}
-                              passHref
-                            >
-                              <A>
-                                {t(
-                                  `memberships/${membership.type.name}/manage/upgrade/link/buyText`,
-                                )}
-                              </A>
-                            </Link>
-                          ),
-                        },
-                      )}
-                    </P>
-                  )}
                   {membership.autoPayIsMutable && (
                     <P>
                       <A
