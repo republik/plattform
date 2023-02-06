@@ -90,6 +90,7 @@ type PackageOption {
   vat: Int!
   minUserPrice: Int!
   userPrice: Boolean!
+  autoPay: Boolean
 
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -101,7 +102,6 @@ type PackageOption {
   # for custom packages
   optionGroup: String
   membership: Membership
-  autoPay: Boolean
   additionalPeriods: [MembershipPeriod!]
 
   accessGranted: Boolean
