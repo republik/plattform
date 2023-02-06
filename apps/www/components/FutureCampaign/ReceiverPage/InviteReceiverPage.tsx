@@ -95,8 +95,9 @@ const InviteReceiverPage = ({ invalidInviteCode }: InviteReceiverPageProps) => {
           pathname: '/angebote',
           query: {
             package: 'YEARLY_ABO',
-            price: price * 100, // price in Rp.
+            userPrice: 1,
             reason: 'Mitstreiter Abo',
+            price: price * 100, // price in Rp.
 
             utm_campaign: 'mitstreiter',
             utm_medium: 'website',
