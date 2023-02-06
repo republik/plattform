@@ -2,7 +2,7 @@ Guten Tag
 
 {{#if has_one_slot_filled}}
 
-Vor Kurzem hat {{claimer}} ein Abo bei der Republik gekauft, zu einem selbst
+Vor Kurzem hat {{receiver}} ein Abo bei der Republik gekauft, zu einem selbst
 gewählten Preis. Damit ist die Republik-Community um ein Mitglied gewachsen.
 
 Möglich gemacht haben das: Sie. Vielen Dank, dass Sie Verstärkung geholt haben!

@@ -677,8 +677,32 @@
       "value": "Ihr Republik-Abonnement wurde deaktiviert"
     },
     {
+      "key": "api/email/membership_deactivated_yearly_abo_uncancelled/subject",
+      "value": "TODO: api/email/membership_deactivated_yearly_abo_uncancelled/subject"
+    },
+    {
       "key": "api/email/membership_deactivated/subject",
       "value": "Ihre Mitgliedschaft wurde deaktiviert"
+    },
+    {
+      "key": "api/email/future_campaign_sender_reward/1/subject",
+      "value": "Sie haben Verstärkung geholt!"
+    },
+    {
+      "key": "api/email/future_campaign_sender_reward/2/subject",
+      "value": "Doppelte Verstärkung!"
+    },
+    {
+      "key": "api/email/future_campaign_sender_reward/3/subject",
+      "value": "Mit Ihnen wird die Zukunft greifbar!"
+    },
+    {
+      "key": "api/email/future_campaign_sender_reward/4/subject",
+      "value": "Da war es nur noch eins"
+    },
+    {
+      "key": "api/email/future_campaign_sender_reward/5/subject",
+      "value": "Herzliche Gratulation!"
     },
     {
       "key": "api/discussion/404",

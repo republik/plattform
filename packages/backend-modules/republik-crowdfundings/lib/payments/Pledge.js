@@ -3,7 +3,8 @@ const { sendPledgeConfirmations } = require('../Mail')
 const slack = require('@orbiting/backend-modules-republik/lib/slack')
 const { refreshPotForPledgeId } = require('../membershipPot')
 const getClients = require('./stripe/clients')
-const { rewardSender } = require('../fiveYearsReward')
+const { rewardSender } = require('../futureCampaignSenderReward')
+const isUUID = require('is-uuid')
 
 const forUpdate = async ({ pledgeId, fn, pgdb }) => {
   const transaction = await pgdb.transactionBegin()
@@ -71,12 +72,15 @@ const afterChange = async ({ pledge }, context) => {
     user = await pgdb.public.users.findOne({ id: pledge.userId })
   }
 
-  if (pledge.payload && pledge.payload.utm_campaign === '5Years') {
-    // campaign is just a mock
-    // find sender in payload and put its id in giverUserId
-    const giverUserId = ''
-    await rewardSender(giverUserId, pledge.userId, context)
+  const { payload } = pledge
+  if (payload && payload.utm_campaign === 'mitstreiter') {
+    const senderUserId = payload.utm_content
+    if (senderUserId && isUUID.v4(senderUserId)) {
+      await rewardSender(senderUserId, pledge.userId, context)
+    }
   }
+
+  console.log('B')
 
   return Promise.all([
     sendPledgeConfirmations({ userId: pledge.userId, pgdb, t }),

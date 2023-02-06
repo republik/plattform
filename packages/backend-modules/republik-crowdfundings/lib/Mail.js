@@ -1152,15 +1152,15 @@ mail.getPledgeMergeVars = async (
   ]
 }
 
-mail.send5YearsRewardsMail = async (
-  { giverUserId, claimerUserId, count, hasGiverConsentedToDonate },
+mail.sendFutureCampaignSenderRewardMail = async (
+  { senderUserId, pledgeUserId, count, hasSenderConsentedToDonate },
   { pgdb, t },
 ) => {
-  const giver = pgdb.public.user.findOne({ id: giverUserId })
-  const safeGiver = transformUser(giver)
+  const sender = await pgdb.public.users.findOne({ id: senderUserId })
+  const safeSender = transformUser(sender)
 
-  const claimer = pgdb.public.user.findOne({ id: claimerUserId })
-  const safeClaimer = transformUser(claimer)
+  const pledger = await pgdb.public.users.findOne({ id: pledgeUserId })
+  const safePledger = transformUser(pledger)
 
   const countNumber = parseInt(count, 10)
 
@@ -1168,7 +1168,7 @@ mail.send5YearsRewardsMail = async (
 
   return sendMailTemplate(
     {
-      to: safeGiver.email,
+      to: safeSender.email,
       fromEmail: process.env.DEFAULT_MAIL_FROM_ADDRESS,
       subject: t(`api/email/${templateName}/${count}/subject`),
       templateName,
@@ -1199,12 +1199,12 @@ mail.send5YearsRewardsMail = async (
           content: 5 - countNumber,
         },
         {
-          name: 'claimer',
-          content: safeClaimer.name ? safeClaimer.name : safeClaimer.email,
+          name: 'receiver',
+          content: safePledger.name ? safePledger.name : safePledger.email,
         },
         {
           name: 'is_donating',
-          content: hasGiverConsentedToDonate,
+          content: hasSenderConsentedToDonate,
         },
         {
           name: 'link_sender_page',

@@ -26,6 +26,7 @@ extend type User {
   # notes by the support team
   # required role: supporter
   adminNotes: String
+  futureCampaignAboCount: Int
 }
 
 type Crowdfunding {

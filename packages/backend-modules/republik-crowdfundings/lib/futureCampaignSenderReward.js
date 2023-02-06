@@ -1,45 +1,43 @@
 const { Consents } = require('@orbiting/backend-modules-auth')
 const dayjs = require('dayjs')
 
-const { send5YearsRewardsMail } = require('@orbiting/backend-modules-mail')
-
 const DONATE_POLICY_NAME = '5YEAR_DONATE_MONTHS'
 
-const rewardSender = async (giverUserId, claimerUserId, context) => {
-  const { pgdb, t } = context
+const rewardSender = async (senderUserId, pledgeUserId, context) => {
+  const { pgdb, t, mail } = context
+  console.log('rewarding')
 
   const transaction = await pgdb.transactionBegin()
 
   try {
     // update count of subscribers
 
-    const lastCount = transaction.public.userAttributes.findFirst(
-      { userId: giverUserId, name: 'mitstreiterCount' },
+    const lastCount = await transaction.public.userAttributes.findFirst(
+      { userId: senderUserId, name: 'futureCampaignAboCount' },
       { orderBy: { createdAt: 'desc' } },
     )
 
-    const hasLastCount = lastCount.length
-
-    const newCount = hasLastCount ? parseInt(lastCount[0].value, 10) + 1 : 1
+    const newCount = lastCount ? parseInt(lastCount.value, 10) + 1 : 1
 
     const count = await transaction.public.userAttributes.insertAndGet({
-      userId: giverUserId,
-      name: 'mitstreiterCount',
+      userId: senderUserId,
+      name: 'futureCampaignAboCount',
       value: newCount,
-      supersededAt: hasLastCount ? lastCount[0].createdAt : null,
+      supersededAt: lastCount ? lastCount.createdAt : null,
     })
 
-    // fetch consent of giver if month should be donated
-    const hasUserConsentedToDonate = Consents.statusForPolicyForUser({
-      userId: giverUserId,
+    const currentCount = count?.value
+    // fetch consent of campaign sender if month should be donated
+    const hasUserConsentedToDonate = await Consents.statusForPolicyForUser({
+      userId: senderUserId,
       policy: DONATE_POLICY_NAME,
-      transaction,
+      pgdb,
     })
 
     // if month should not be donated, add to current membership period
     if (!hasUserConsentedToDonate) {
       const activeMembership = await transaction.public.memberships.findOne({
-        userId: giverUserId,
+        userId: senderUserId,
         active: true,
       })
 
@@ -66,16 +64,21 @@ const rewardSender = async (giverUserId, claimerUserId, context) => {
       )
     }
 
-    // send email to giver
-    await send5YearsRewardsMail(
-      { giverUserId, claimerUserId, count, hasUserConsentedToDonate },
-      { transaction, t },
+    // send email to campaign sender
+    await mail.sendFutureCampaignSenderRewardMail(
+      {
+        senderUserId,
+        pledgeUserId,
+        count: currentCount,
+        hasUserConsentedToDonate,
+      },
+      { pgdb, t },
     )
     // TODO slack message?
     await transaction.transactionCommit()
   } catch (e) {
     await transaction.transactionRollback()
-    throw new Error(t('')) // TODO: Fehlermeldung
+    throw new Error(e) // TODO: Fehlermeldung
   }
 }
 
