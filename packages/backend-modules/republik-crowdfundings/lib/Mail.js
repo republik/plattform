@@ -1153,7 +1153,13 @@ mail.getPledgeMergeVars = async (
 }
 
 mail.sendFutureCampaignSenderRewardMail = async (
-  { senderUserId, pledgeUserId, count, hasSenderConsentedToDonate },
+  {
+    senderUserId,
+    pledgeUserId,
+    count,
+    hasSenderConsentedToDonate,
+    membershipPeriodEndDate,
+  },
   { pgdb, t },
 ) => {
   const sender = await pgdb.public.users.findOne({ id: senderUserId })
@@ -1209,6 +1215,11 @@ mail.sendFutureCampaignSenderRewardMail = async (
         {
           name: 'link_sender_page',
           content: `${FRONTEND_BASE_URL}/verstaerkung-holen`,
+        },
+        {
+          name: 'membership_period_end_date',
+          content:
+            membershipPeriodEndDate && dateFormat(membershipPeriodEndDate),
         },
       ],
     },
