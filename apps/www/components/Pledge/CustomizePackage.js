@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { css } from 'glamor'
 import AutosizeInput from 'react-textarea-autosize'
 import { nest } from 'd3-collection'
-import { sum, min, ascending } from 'd3-array'
+import { sum, min } from 'd3-array'
 import { timeDay } from 'd3-time'
 import compose from 'lodash/flowRight'
 import omit from 'lodash/omit'
@@ -361,7 +361,7 @@ class CustomizePackage extends Component {
 
     const minPrice = calculateMinPrice(pkg, values, userPrice)
     const regularMinPrice = calculateMinPrice(pkg, values, false)
-    const fixedPrice = pkg.name === 'MONTHLY_ABO'
+    const fixedPrice = ['MONTHLY_ABO', 'YEARLY_ABO'].includes(pkg.name)
 
     const onPriceChange = (_, value, shouldValidate) => {
       const price = String(value).length
@@ -425,19 +425,21 @@ class CustomizePackage extends Component {
           )
         }),
     )
-    const payMoreSuggestions =
-      pkg.name === 'DONATE' ||
-      pkg.name === 'ABO_GIVE_MONTHS' ||
-      pkg.name === 'ABO_GIVE'
-        ? []
-        : userPrice
-        ? [{ value: regularMinPrice, key: 'normal' }]
-        : [
-            price >= minPrice &&
-              bonusValue && { value: minPrice + bonusValue, key: 'bonus' },
-            price >= minPrice && { value: minPrice * 1.5, key: '1.5' },
-            price >= minPrice && { value: minPrice * 2, key: '2' },
-          ].filter(Boolean)
+    const payMoreSuggestions = [
+      'DONATE',
+      'ABO_GIVE',
+      'ABO_GIVE_MONTHS',
+      'YEARLY_ABO',
+    ].includes(pkg.name)
+      ? []
+      : userPrice
+      ? [{ value: regularMinPrice, key: 'normal' }]
+      : [
+          price >= minPrice &&
+            bonusValue && { value: minPrice + bonusValue, key: 'bonus' },
+          price >= minPrice && { value: minPrice * 1.5, key: '1.5' },
+          price >= minPrice && { value: minPrice * 2, key: '2' },
+        ].filter(Boolean)
     const payMoreReached = payMoreSuggestions
       .filter(({ value }) => price >= value)
       .pop()

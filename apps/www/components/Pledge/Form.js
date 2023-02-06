@@ -201,15 +201,9 @@ class Pledge extends Component {
             price: option.price,
             templateId: option.templateId,
             membershipId: option.membership ? option.membership.id : undefined,
-            /* ToDo: move logic to backend? */
-            autoPay:
-              option.reward &&
-              option.reward.__typename === 'MembershipType' &&
-              pkg.group !== 'GIVE' &&
-              (!option.membership ||
-                option.membership.user.id === (customMe && customMe.id))
-                ? true /* ToDo: check base pledge value once supported in backend */
-                : undefined,
+            autoPay: [true, false].includes(option.autoPay)
+              ? option.autoPay
+              : undefined,
           }
         })
       : []
@@ -508,6 +502,7 @@ const query = gql`
           id
           price
           userPrice
+          autoPay
           minAmount
           maxAmount
           defaultAmount
@@ -556,6 +551,7 @@ const query = gql`
           id
           price
           userPrice
+          autoPay
           minAmount
           maxAmount
           defaultAmount
