@@ -187,6 +187,10 @@ const membershipResolver = {
 
     const type = await membershipResolver.type(membership, null, context)
 
+    if (type.name === 'YEARLY_ABO') {
+      return false
+    }
+
     return type.interval === 'year'
   },
 
