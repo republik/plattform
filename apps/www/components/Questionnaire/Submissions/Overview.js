@@ -16,6 +16,7 @@ import {
   usePrevious,
   Editorial,
   inQuotes,
+  Button,
 } from '@project-r/styleguide'
 
 import { useInfiniteScroll } from '../../../lib/hooks/useInfiniteScroll'
@@ -83,6 +84,7 @@ const mainQuery = gql`
     $after: String
     $sortBy: SubmissionsSortBy!
     $sortDirection: OrderDirection
+    $questionIds: [ID!]
   ) {
     questionnaire(slug: $slug) {
       id
@@ -117,6 +119,7 @@ const mainQuery = gql`
         first: $first
         after: $after
         sort: { by: $sortBy, direction: $sortDirection }
+        filters: { answeredQuestionIds: $questionIds }
       ) {
         totalCount
         pageInfo {
@@ -183,11 +186,23 @@ const getSampleAnswers = (questions, results) => {
   })
 }
 
+const getAnswersToSingleQuestion = (questionId, results) => {
+  return results.nodes.map((submission) => {
+    return {
+      answer: submission.answers.nodes.find(
+        (answer) => answer.question.id === questionId,
+      ),
+      displayAuthor: submission.displayAuthor,
+    }
+  })
+}
+
 const Submissions = ({ slug, extract, share = {} }) => {
   const { t } = useTranslation()
   const router = useRouter()
   const { query } = router
   const shareId = query.share
+  const shareType = query.type
   const sortBy = query.skey || 'random'
   const sortDirection = query.sdir || undefined
   const searchQuery = query.q || ''
@@ -225,11 +240,12 @@ const Submissions = ({ slug, extract, share = {} }) => {
         first: 10,
         sortBy,
         sortDirection,
+        $questionIds: shareId ? [shareId] : [],
       },
     },
   )
   const shareQuery = useQuery(singleSubmissionQuery, {
-    skip: debouncedSearch || !shareId,
+    skip: debouncedSearch || !shareId || shareType === 'question',
     variables: {
       slug,
       id: shareId,
@@ -240,6 +256,7 @@ const Submissions = ({ slug, extract, share = {} }) => {
     return fetchMore({
       variables: {
         after: data.questionnaire.results.pageInfo.endCursor,
+        questionIds: shareId ? [shareId] : [],
       },
       updateQuery: (previousResult = {}, { fetchMoreResult = {} }) => {
         const previousNodes = previousResult.questionnaire.results.nodes || []
@@ -337,6 +354,53 @@ const Submissions = ({ slug, extract, share = {} }) => {
             questionnaire: { questions, results },
           } = data
 
+          if (shareId && shareType === 'question') {
+            const question = questions.find((q) => q.id === shareId)
+            const answers = getAnswersToSingleQuestion(shareId, results)
+            return (
+              <div
+                key={question.id}
+                style={{
+                  marginBottom: 20,
+                  paddingTop: 20,
+                  borderTop: '1px solid black',
+                }}
+                ref={containerRef}
+              >
+                <Interaction.H3>{question.text}</Interaction.H3>
+                {answers.map(({ answer, displayAuthor }) => (
+                  <Editorial.P key={question.id} attributes={{}}>
+                    <AnswerText
+                      text={answer.payload.text}
+                      value={answer.payload.value}
+                      question={question}
+                      isQuote
+                    />
+                    <br />
+                    <em>– {displayAuthor.name}</em>
+                  </Editorial.P>
+                ))}
+                <div style={{ marginTop: 10 }}>
+                  {loadingMoreError && (
+                    <ErrorMessage error={loadingMoreError} />
+                  )}
+                  {loadingMore && <InlineSpinner />}
+                  {!infiniteScroll && hasMore && (
+                    <PlainButton
+                      onClick={() => {
+                        setInfiniteScroll(true)
+                      }}
+                    >
+                      {t.pluralize('questionnaire/submissions/loadMore', {
+                        count: results.totalCount - results.nodes.length,
+                      })}
+                    </PlainButton>
+                  )}
+                </div>
+              </div>
+            )
+          }
+
           const sampleAnswers = getSampleAnswers(questions, results)
 
           return (
@@ -347,7 +411,7 @@ const Submissions = ({ slug, extract, share = {} }) => {
                   Math.random() * usableAnswers.length,
                 )
                 const { answer, displayAuthor } = usableAnswers[randomIdx]
-                console.log({ answer, displayAuthor })
+                // console.log({ answer, displayAuthor })
                 return (
                   <div
                     key={question.id}
@@ -368,6 +432,20 @@ const Submissions = ({ slug, extract, share = {} }) => {
                       <br />
                       <em>– {displayAuthor.name}</em>
                     </Editorial.P>
+                    <Button
+                      small
+                      onClick={() => {
+                        router.replace({
+                          pathname,
+                          query: {
+                            share: question.id,
+                            type: 'question',
+                          },
+                        })
+                      }}
+                    >
+                      alle Antworte lesen
+                    </Button>
                   </div>
                 )
               })}
