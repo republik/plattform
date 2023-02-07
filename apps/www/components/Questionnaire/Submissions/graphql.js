@@ -14,39 +14,95 @@ export const SORT_KEY_PARAM = 'skey'
 export const SORT_DIRECTION_PARAM = 'sdir'
 export const QUERY_PARAM = 'q'
 
+const submissionData = gql`
+  fragment QuestionnaireSubmissionFragment on Submission {
+    id
+    createdAt
+    updatedAt
+    displayAuthor {
+      id
+      name
+      slug
+      profilePicture
+    }
+    answers {
+      totalCount
+      nodes {
+        id
+        hasMatched
+        question {
+          __typename
+          id
+        }
+        payload
+      }
+    }
+  }
+`
+
+const questionnaireData = gql`
+  fragment QuestionnaireFragment on Questionnaire {
+    id
+    beginDate
+    endDate
+    userHasSubmitted
+    userSubmitDate
+    questions {
+      __typename
+      id
+      text
+      ... on QuestionTypeChoice {
+        options {
+          label
+          value
+          category
+        }
+        result {
+          count
+          option {
+            label
+            value
+          }
+        }
+      }
+      ... on QuestionTypeRange {
+        kind
+        ticks {
+          label
+          value
+        }
+      }
+    }
+    submissions {
+      totalCount
+    }
+  }
+`
+
 export const SINGLE_SUBMISSION_QUERY = gql`
   query getSingleQuestionnaireSubmission($slug: String!, $id: ID!) {
     questionnaire(slug: $slug) {
       id
       submissions(filters: { id: $id }) {
         nodes {
-          id
-          createdAt
-          updatedAt
-          displayAuthor {
-            id
-            name
-            slug
-            profilePicture
-          }
-          answers {
-            totalCount
-            nodes {
-              id
-              hasMatched
-              question {
-                __typename
-                id
-              }
-              payload
-            }
-          }
+          ...QuestionnaireSubmissionFragment
         }
       }
     }
   }
+  ${submissionData}
 `
 
+export const QUESTIONNAIRE_QUERY = gql`
+  query getQuestionnaire($slug: String!) {
+    questionnaire(slug: $slug) {
+      ...QuestionnaireFragment
+    }
+  }
+  ${questionnaireData}
+`
+
+// TODO: check that adding results to the questions don't mess the sommerfragebogen
 export const QUESTIONNAIRE_SUBMISSIONS_QUERY = gql`
   query getQuestionnaireSubmissions(
     $slug: String!
@@ -58,33 +114,7 @@ export const QUESTIONNAIRE_SUBMISSIONS_QUERY = gql`
     $questionIds: [ID!]
   ) {
     questionnaire(slug: $slug) {
-      id
-      beginDate
-      endDate
-      userHasSubmitted
-      userSubmitDate
-      questions {
-        __typename
-        id
-        text
-        ... on QuestionTypeChoice {
-          options {
-            label
-            value
-            category
-          }
-        }
-        ... on QuestionTypeRange {
-          kind
-          ticks {
-            label
-            value
-          }
-        }
-      }
-      submissions {
-        totalCount
-      }
+      ...QuestionnaireFragment
       results: submissions(
         search: $search
         first: $first
@@ -98,31 +128,13 @@ export const QUESTIONNAIRE_SUBMISSIONS_QUERY = gql`
           hasNextPage
         }
         nodes {
-          id
-          createdAt
-          updatedAt
-          displayAuthor {
-            id
-            name
-            slug
-            profilePicture
-          }
-          answers {
-            totalCount
-            nodes {
-              id
-              hasMatched
-              question {
-                __typename
-                id
-              }
-              payload
-            }
-          }
+          ...QuestionnaireSubmissionFragment
         }
       }
     }
   }
+  ${questionnaireData}
+  ${submissionData}
 `
 
 export const loadMoreSubmissions = (fetchMore, data) => () => {
