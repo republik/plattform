@@ -24,6 +24,7 @@ import {
   SORT_KEY_PARAM,
   SUPPORTED_SORT,
 } from './graphql'
+import { getTargetedAnswers } from './Overview'
 
 const getSortParams = (query, sort) => {
   if (sort.key === 'random' || !sort.key) {
@@ -41,19 +42,7 @@ const getSortParams = (query, sort) => {
   }
 }
 
-const getAnswersToSingleQuestion = (questionId, results) => {
-  return results.nodes.map((submission) => {
-    const answer = submission.answers.nodes.find(
-      (answer) => answer.question.id === questionId,
-    )
-    return {
-      answer,
-      displayAuthor: submission.displayAuthor,
-    }
-  })
-}
-
-const SingleQuestion = ({ slug, questionId, extract, share = {} }) => {
+const TargetedQuestions = ({ slug, questionIds, extract, share = {} }) => {
   const { t } = useTranslation()
   const router = useRouter()
   const { query } = router
@@ -68,7 +57,7 @@ const SingleQuestion = ({ slug, questionId, extract, share = {} }) => {
         first: 20,
         sortBy,
         sortDirection,
-        questionIds: [questionId],
+        questionIds,
       },
     },
   )
@@ -84,7 +73,7 @@ const SingleQuestion = ({ slug, questionId, extract, share = {} }) => {
 
   const questions = data?.questionnaire?.questions || []
 
-  // TODO: adapt this to work for a single quesiton
+  // TODO: adapt this to work for a single question
   const shareSubmission = data?.questionnaire?.submissions?.nodes?.[0]
   if (extract) {
     if (query.extract && shareSubmission) {
@@ -128,33 +117,43 @@ const SingleQuestion = ({ slug, questionId, extract, share = {} }) => {
         error={error}
         render={() => {
           const {
-            questionnaire: { questions, results },
+            questionnaire: { questions: allQuestions, results },
           } = data
 
-          const question = questions.find((q) => q.id === questionId)
-          const answers = getAnswersToSingleQuestion(questionId, results)
+          const questions = allQuestions.filter((q) =>
+            questionIds.includes(q.id),
+          )
+          const targetAnswers = getTargetedAnswers(questionIds, results)
 
           // console.log({ answers })
           return (
             <div
-              key={question.id}
               style={{
                 marginBottom: 20,
                 paddingTop: 50,
               }}
               ref={containerRef}
             >
-              <Interaction.H2>{question.text}</Interaction.H2>
+              {questions.map((question) => (
+                <Interaction.H2 key={question.id}>
+                  {question.text}
+                </Interaction.H2>
+              ))}
+
               <div style={{ marginTop: 50 }}>
-                {answers.map(({ answer, displayAuthor }) => (
-                  <Editorial.P key={answer.id} attributes={{}}>
-                    <AnswerText
-                      text={answer.payload.text}
-                      value={answer.payload.value}
-                      question={question}
-                      isQuote
-                    />
-                    <br />
+                {targetAnswers.map(({ answers, displayAuthor }) => (
+                  <Editorial.P key={answers[0].id} attributes={{}}>
+                    {answers.map((answer) => (
+                      <>
+                        <AnswerText
+                          text={answer.payload.text}
+                          value={answer.payload.value}
+                          question={answer.question}
+                          isQuote
+                        />
+                        <br />
+                      </>
+                    ))}
                     <em>– {displayAuthor.name}</em>
                   </Editorial.P>
                 ))}
@@ -182,4 +181,4 @@ const SingleQuestion = ({ slug, questionId, extract, share = {} }) => {
   )
 }
 
-export default SingleQuestion
+export default TargetedQuestions

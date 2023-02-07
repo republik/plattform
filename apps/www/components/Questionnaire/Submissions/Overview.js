@@ -18,15 +18,14 @@ import {
   Chart,
 } from '@project-r/styleguide'
 
-import SingleQuestion from './SingleQuestion'
+import TargetedQuestions from './TargetedQuestions'
 import { QUESTIONNAIRE_QUERY, QUESTIONNAIRE_SUBMISSIONS_QUERY } from './graphql'
-import { question } from '@orbiting/backend-modules-voting/graphql/resolvers/Answer'
 
-const getSampleAnswers = (questionId, results) => {
+export const getTargetedAnswers = (questionIds, results) => {
   return [...results.nodes].map((submission) => {
     return {
-      answer: submission.answers.nodes.find(
-        (answer) => answer.question.id === questionId,
+      answers: submission.answers.nodes.filter((answer) =>
+        questionIds.includes(answer.question.id),
       ),
       displayAuthor: submission.displayAuthor,
     }
@@ -41,7 +40,9 @@ const QuestionLink = ({ question, additionalQuestion, children }) => {
       href={{
         pathname,
         query: {
-          share: question.id,
+          share: [question?.id, additionalQuestion?.id]
+            .filter(Boolean)
+            .join(','),
           type: 'question',
         },
       }}
@@ -93,7 +94,7 @@ const AnswersCarousel = ({ slug, question, additionalQuestion }) => {
           questionnaire: { results },
         } = data
 
-        const sampleAnswers = getSampleAnswers(question.id, results)
+        const targetedAnswers = getTargetedAnswers([question.id], results)
 
         return (
           <Breakout size='breakout'>
@@ -105,10 +106,10 @@ const AnswersCarousel = ({ slug, question, additionalQuestion }) => {
                 <TeaserSectionTitle>{question.text}</TeaserSectionTitle>
               </QuestionLink>
               <TeaserCarouselTileContainer>
-                {sampleAnswers.map(({ answer, displayAuthor }) => (
-                  <TeaserCarouselTile key={answer.id}>
+                {targetedAnswers.map(({ answers, displayAuthor }) => (
+                  <TeaserCarouselTile key={answers[0].id}>
                     <TeaserCarouselHeadline.Editorial>
-                      {inQuotes(answer.payload.value)}
+                      {inQuotes(answers[0].payload.value)}
                     </TeaserCarouselHeadline.Editorial>
                     <Editorial.Credit>
                       Von{' '}
@@ -219,10 +220,10 @@ const AllQuestions = ({ slug }) => {
 const SubmissionsOverview = ({ slug }) => {
   const router = useRouter()
   const { query } = router
-  const questionId = query.type === 'question' && query.share
+  const questionIds = query.type === 'question' && query.share?.split(',')
 
-  if (questionId) {
-    return <SingleQuestion slug={slug} questionId={questionId} />
+  if (questionIds) {
+    return <TargetedQuestions slug={slug} questionIds={questionIds} />
   }
   return <AllQuestions slug={slug} />
 }
