@@ -17,7 +17,10 @@ const getAccessGrants = (accessGrants, type) => {
   return (
     accessGrants.length > 0 &&
     accessGrants.filter((grant) => {
-      return grant.campaign.type === type
+      return (
+        grant.campaign.type === type &&
+        grant.campaign.id === 'f35c2fcf-c254-482e-b4fb-5c51a48a13d2'
+      )
     })
   )
 }
@@ -32,13 +35,15 @@ const AccessGrants = ({ accessGrants, inNativeIOSApp, t }) => {
       new Date(),
     )
 
-  /* TODO: Special solution for CLIMATE lab, we know here that atm there is only 
-  one reduced campaign. 
-  As soon as we have the new access model we should revise this */
+  /* TODO: Special solution for CLIMATE lab, should be removed later */
   const reducedAccessGrants = getAccessGrants(accessGrants, 'REDUCED')
-  const currentReducedAccessGrant =
-    reducedAccessGrants.length > 0 && reducedAccessGrants[0]
-  const beginAtReduced = new Date(currentReducedAccessGrant.beginAt)
+  const reducedMaxEndAt =
+    reducedAccessGrants.length > 0 &&
+    reducedAccessGrants.reduce(
+      (acc, grant) =>
+        new Date(grant.endAt) > acc ? new Date(grant.endAt) : acc,
+      new Date(),
+    )
 
   return maxEndAt ? (
     <P>
@@ -56,17 +61,11 @@ const AccessGrants = ({ accessGrants, inNativeIOSApp, t }) => {
         </>
       )}
     </P>
-  ) : currentReducedAccessGrant ? (
+  ) : reducedMaxEndAt ? (
     <P>
       {t.elements('Account/Access/Grants/REDUCED/message/claimed', {
-        campaignTitle: currentReducedAccessGrant.campaign.title,
-        maxEndAt: (
-          <span>
-            {dayFormat(
-              new Date(beginAtReduced.setMonth(beginAtReduced.getMonth() + 1)),
-            )}
-          </span>
-        ),
+        campaignTitle: 'Klimalabor',
+        maxEndAt: <span>{dayFormat(new Date(reducedMaxEndAt))}</span>,
       })}
       {!inNativeIOSApp && (
         <>
