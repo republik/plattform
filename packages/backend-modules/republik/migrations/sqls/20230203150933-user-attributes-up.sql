@@ -3,11 +3,11 @@ CREATE TABLE "userAttributes" (
   "userId"          uuid references "users" on update cascade on delete set null,
   "name"            text not null,
   "value"           text,
-  "createdAt"       timestamp with time zone default now(),
-  "supersededAt"    timestamp with time zone
+  "createdAt"       timestamp with time zone default now()
 );
 
 
 CREATE INDEX IF NOT EXISTS "user_attributes_user_id_idx" ON "userAttributes" ("userId");
 CREATE INDEX IF NOT EXISTS "user_attributes_name_idx" ON "userAttributes" ("name");
 CREATE INDEX IF NOT EXISTS "user_attributes_value_idx" ON "userAttributes" ("value");
+CREATE INDEX IF NOT EXISTS "user_attributes_user_id_name_idx" ON "userAttributes" ("userId", "name");

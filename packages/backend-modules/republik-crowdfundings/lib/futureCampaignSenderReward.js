@@ -23,7 +23,6 @@ const rewardSender = async (senderUserId, pledgeUserId, context) => {
         userId: senderUserId,
         name: 'futureCampaignAboCount',
         value: newCount,
-        supersededAt: lastCount ? lastCount.createdAt : null,
       })
 
       const currentCount = count?.value
@@ -57,22 +56,20 @@ const rewardSender = async (senderUserId, pledgeUserId, context) => {
             { orderBy: { endDate: 'asc' } },
           )
 
-        const endDate = dayjs(currentMembershipPeriod.endDate)
+        const currentMembershipPeriodEndDate = dayjs(
+          currentMembershipPeriod.endDate,
+        )
 
-        const updatedMembershipPeriod =
-          await transaction.public.membershipPeriods.updateAndGet(
-            {
-              id: currentMembershipPeriod.id,
-              membershipId: activeMembership.id,
-              pledgeId: activeMembership.pledgeId,
-            },
-            {
-              endDate: endDate.add(1, 'month'),
-            },
-          )
+        const newMembershipPeriod =
+          await transaction.public.membershipPeriods.insertAndGet({
+            membershipId: activeMembership.id,
+            pledgeId: activeMembership.pledgeId,
+            beginDate: currentMembershipPeriodEndDate,
+            endDate: currentMembershipPeriodEndDate.add(1, 'month'),
+            kind: 'BONUS',
+          })
 
-        rewardMailData.membershipPeriodEndDate =
-          updatedMembershipPeriod[0]?.endDate
+        rewardMailData.membershipPeriodEndDate = newMembershipPeriod[0]?.endDate
       }
 
       // send email to campaign sender without new membership period end date
