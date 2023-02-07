@@ -1,9 +1,22 @@
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useQuery } from '@apollo/client'
 
-import { Interaction, Loader, Editorial, Button } from '@project-r/styleguide'
+import {
+  Breakout,
+  Loader,
+  Editorial,
+  Button,
+  TeaserCarousel,
+  TeaserCarouselTileContainer,
+  TeaserCarouselTile,
+  TeaserCarouselHeadline,
+  TeaserSectionTitle,
+  inQuotes,
+} from '@project-r/styleguide'
 
-import AnswerText from './AnswerText'
+import { PUBLIC_BASE_URL } from '../../../lib/constants'
+
 import SingleQuestion from './SingleQuestion'
 import { QUESTIONNAIRE_QUERY, QUESTIONNAIRE_SUBMISSIONS_QUERY } from './graphql'
 
@@ -18,15 +31,17 @@ const getSampleAnswers = (questionId, results) => {
   })
 }
 
-const AnswersChart = ({ question }) => {
+const AnswersChart = ({ question, additionalQuestion }) => {
   return <span>CHART</span>
 }
 
-const AnswersCarousel = ({ slug, question, count = 5 }) => {
+const AnswersCarousel = ({ slug, question, additionalQuestion }) => {
+  const router = useRouter()
+  const pathname = router.asPath.split('?')[0]
   const { loading, error, data } = useQuery(QUESTIONNAIRE_SUBMISSIONS_QUERY, {
     variables: {
       slug,
-      first: count,
+      first: 5,
       sortBy: 'random',
       questionIds: [question.id],
     },
@@ -44,55 +59,64 @@ const AnswersCarousel = ({ slug, question, count = 5 }) => {
         const sampleAnswers = getSampleAnswers(question.id, results)
 
         return (
-          <>
-            {sampleAnswers.map(({ answer, displayAuthor }) => (
-              <Editorial.P key={question.id}>
-                <AnswerText
-                  text={answer.payload.text}
-                  value={answer.payload.value}
-                  question={question}
-                  isQuote
-                />
-                <br />
-                <em>– {displayAuthor.name}</em>
-              </Editorial.P>
-            ))}
-          </>
+          <Breakout size='breakout'>
+            <TeaserCarousel outline>
+              <Link
+                href={{
+                  pathname,
+                  query: {
+                    share: question.id,
+                    type: 'question',
+                  },
+                }}
+                passHref
+              >
+                <TeaserSectionTitle>{question.text}</TeaserSectionTitle>
+              </Link>
+              <TeaserCarouselTileContainer>
+                {sampleAnswers.map(({ answer, displayAuthor }) => (
+                  <TeaserCarouselTile key={answer.id}>
+                    <TeaserCarouselHeadline.Editorial>
+                      {inQuotes(answer.payload.value)}
+                    </TeaserCarouselHeadline.Editorial>
+                    <Editorial.Credit>
+                      Von{' '}
+                      <Editorial.A href='#'>{displayAuthor.name}</Editorial.A>
+                    </Editorial.Credit>
+                  </TeaserCarouselTile>
+                ))}
+              </TeaserCarouselTileContainer>
+            </TeaserCarousel>
+          </Breakout>
         )
       }}
     />
   )
 }
 
-const Question = ({ slug, question, additionalQuestion, count = 5 }) => {
-  const router = useRouter()
-  const pathname = router.asPath.split('?')[0]
-
+const Question = ({ slug, question, additionalQuestion }) => {
   return (
     <div
       key={question.id}
       style={{
         marginBottom: 20,
         paddingTop: 20,
-        borderTop: '1px solid black',
       }}
     >
-      <Interaction.H3>{question.text}</Interaction.H3>
-      <AnswersCarousel slug={slug} question={question} />
-      <Button
-        small
-        onClick={() => {
-          router.replace({
-            pathname,
-            query: {
-              share: question.id,
-              type: 'question',
-            },
-          })
-        }}
-      >
-        alle Antworte lesen
-      </Button>
+      {question.__typename === 'QuestionTypeText' && (
+        <AnswersCarousel
+          slug={slug}
+          question={question}
+          additionalQuestion={additionalQuestion}
+        />
+      )}
+      {question.__typename === 'QuestionTypeChoice' && (
+        <AnswersChart
+          slug={slug}
+          question={question}
+          additionalQuestion={additionalQuestion}
+        />
+      )}
     </div>
   )
 }
