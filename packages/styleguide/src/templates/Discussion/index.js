@@ -68,10 +68,6 @@ const createDiscussionSchema = ({
         label: 'Tags (kommasepariert)',
         key: 'tags',
       },
-      {
-        label: 'Rollen (kommasepariert)',
-        key: 'discussionAllowedRoles',
-      },
       ...customMetaFields,
     ],
     ...args,
