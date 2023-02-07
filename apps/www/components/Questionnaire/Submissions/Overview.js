@@ -13,12 +13,14 @@ import {
   TeaserCarouselHeadline,
   TeaserSectionTitle,
   inQuotes,
+  ChartTitle,
+  ChartLead,
+  Chart,
 } from '@project-r/styleguide'
-
-import { PUBLIC_BASE_URL } from '../../../lib/constants'
 
 import SingleQuestion from './SingleQuestion'
 import { QUESTIONNAIRE_QUERY, QUESTIONNAIRE_SUBMISSIONS_QUERY } from './graphql'
+import { question } from '@orbiting/backend-modules-voting/graphql/resolvers/Answer'
 
 const getSampleAnswers = (questionId, results) => {
   return [...results.nodes].map((submission) => {
@@ -31,13 +33,48 @@ const getSampleAnswers = (questionId, results) => {
   })
 }
 
+const QuestionLink = ({ question, additionalQuestion, children }) => {
+  const router = useRouter()
+  const pathname = router.asPath.split('?')[0]
+  return (
+    <Link
+      href={{
+        pathname,
+        query: {
+          share: question.id,
+          type: 'question',
+        },
+      }}
+      passHref
+    >
+      {children}
+    </Link>
+  )
+}
+
 const AnswersChart = ({ question, additionalQuestion }) => {
-  return <span>CHART</span>
+  const totalAnswers = question.result.reduce((agg, r) => agg + r.count, 0)
+  const values = question.result.map((bucket) => ({
+    answer: bucket.option.label,
+    value: String(bucket.count / totalAnswers),
+  }))
+  return (
+    <div style={{ marginTop: 20 }}>
+      <ChartTitle>{question.text}</ChartTitle>
+      <Chart
+        config={{
+          type: 'Bar',
+          numberFormat: '.0%',
+          y: 'answer',
+          showBarValues: true,
+        }}
+        values={values}
+      />
+    </div>
+  )
 }
 
 const AnswersCarousel = ({ slug, question, additionalQuestion }) => {
-  const router = useRouter()
-  const pathname = router.asPath.split('?')[0]
   const { loading, error, data } = useQuery(QUESTIONNAIRE_SUBMISSIONS_QUERY, {
     variables: {
       slug,
@@ -61,18 +98,12 @@ const AnswersCarousel = ({ slug, question, additionalQuestion }) => {
         return (
           <Breakout size='breakout'>
             <TeaserCarousel outline>
-              <Link
-                href={{
-                  pathname,
-                  query: {
-                    share: question.id,
-                    type: 'question',
-                  },
-                }}
-                passHref
+              <QuestionLink
+                question={question}
+                additionalQuestion={additionalQuestion}
               >
                 <TeaserSectionTitle>{question.text}</TeaserSectionTitle>
-              </Link>
+              </QuestionLink>
               <TeaserCarouselTileContainer>
                 {sampleAnswers.map(({ answer, displayAuthor }) => (
                   <TeaserCarouselTile key={answer.id}>
@@ -137,9 +168,47 @@ const AllQuestions = ({ slug }) => {
 
         return (
           <div style={{ marginTop: 80 }}>
-            {questions.map((question) => (
-              <Question key={question.id} question={question} slug={slug} />
-            ))}
+            <Question question={questions[6]} slug={slug} />
+            <Editorial.P>☝️ Simple Chart. Not linked to anything.</Editorial.P>
+            <Question
+              question={questions[0]}
+              additionalQuestion={questions[1]}
+              slug={slug}
+            />
+            <Editorial.P>
+              ☝️ This text question is linked to a second, additional question.
+            </Editorial.P>
+            <Editorial.P>
+              Want some more? You can also explore the following questions:
+            </Editorial.P>
+            <Editorial.UL>
+              <Editorial.LI>
+                <QuestionLink
+                  question={questions[2]}
+                  additionalQuestion={questions[3]}
+                >
+                  <Editorial.A>{questions[2].text}</Editorial.A>
+                </QuestionLink>{' '}
+                (psst: es gibt da noch eine Bonusfrage)
+              </Editorial.LI>
+              <Editorial.LI>
+                <QuestionLink question={questions[5]}>
+                  <Editorial.A>{questions[5].text}</Editorial.A>
+                </QuestionLink>
+              </Editorial.LI>
+            </Editorial.UL>
+            <Question question={questions[16]} slug={slug} />
+            <Editorial.P>
+              ☝️ This is a question with rather long answers.
+            </Editorial.P>
+            <Question
+              question={questions[31]}
+              additionalQuestion={questions[32]}
+              slug={slug}
+            />
+            <Editorial.P>
+              ☝️ This is a multiple choice question with a Zusatzfrage.
+            </Editorial.P>
           </div>
         )
       }}
