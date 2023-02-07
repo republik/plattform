@@ -1,0 +1,156 @@
+import { gql } from '@apollo/client'
+
+export const SUPPORTED_SORT = [
+  {
+    key: 'random',
+  },
+  {
+    key: 'createdAt',
+    directions: ['DESC', 'ASC'],
+  },
+]
+
+export const SORT_KEY_PARAM = 'skey'
+export const SORT_DIRECTION_PARAM = 'sdir'
+export const QUERY_PARAM = 'q'
+
+export const SINGLE_SUBMISSION_QUERY = gql`
+  query getSingleQuestionnaireSubmission($slug: String!, $id: ID!) {
+    questionnaire(slug: $slug) {
+      id
+      submissions(filters: { id: $id }) {
+        nodes {
+          id
+          createdAt
+          updatedAt
+          displayAuthor {
+            id
+            name
+            slug
+            profilePicture
+          }
+          answers {
+            totalCount
+            nodes {
+              id
+              hasMatched
+              question {
+                __typename
+                id
+              }
+              payload
+            }
+          }
+        }
+      }
+    }
+  }
+`
+
+export const QUESTIONNAIRE_SUBMISSIONS_QUERY = gql`
+  query getQuestionnaireSubmissions(
+    $slug: String!
+    $search: String
+    $first: Int
+    $after: String
+    $sortBy: SubmissionsSortBy!
+    $sortDirection: OrderDirection
+    $questionIds: [ID!]
+  ) {
+    questionnaire(slug: $slug) {
+      id
+      beginDate
+      endDate
+      userHasSubmitted
+      userSubmitDate
+      questions {
+        __typename
+        id
+        text
+        ... on QuestionTypeChoice {
+          options {
+            label
+            value
+            category
+          }
+        }
+        ... on QuestionTypeRange {
+          kind
+          ticks {
+            label
+            value
+          }
+        }
+      }
+      submissions {
+        totalCount
+      }
+      results: submissions(
+        search: $search
+        first: $first
+        after: $after
+        sort: { by: $sortBy, direction: $sortDirection }
+        filters: { answeredQuestionIds: $questionIds }
+      ) {
+        totalCount
+        pageInfo {
+          endCursor
+          hasNextPage
+        }
+        nodes {
+          id
+          createdAt
+          updatedAt
+          displayAuthor {
+            id
+            name
+            slug
+            profilePicture
+          }
+          answers {
+            totalCount
+            nodes {
+              id
+              hasMatched
+              question {
+                __typename
+                id
+              }
+              payload
+            }
+          }
+        }
+      }
+    }
+  }
+`
+
+export const loadMoreSubmissions = (fetchMore, data) => () => {
+  return fetchMore({
+    variables: {
+      after: data.questionnaire.results.pageInfo.endCursor,
+    },
+    updateQuery: (previousResult = {}, { fetchMoreResult = {} }) => {
+      const previousNodes = previousResult.questionnaire.results.nodes || []
+      const newNodes = fetchMoreResult.questionnaire.results.nodes || []
+
+      const res = {
+        ...previousResult,
+        ...fetchMoreResult,
+        questionnaire: {
+          ...previousResult.questionnaire,
+          ...fetchMoreResult.questionnaire,
+          results: {
+            ...previousResult.questionnaire.results,
+            ...fetchMoreResult.questionnaire.results,
+            nodes: [...previousNodes, ...newNodes],
+          },
+        },
+      }
+      return res
+    },
+  })
+}
+
+export const hasMoreData = (data) =>
+  data?.questionnaire?.results?.pageInfo?.hasNextPage
