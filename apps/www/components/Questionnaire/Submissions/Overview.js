@@ -52,7 +52,7 @@ const QuestionLink = ({ question, additionalQuestion, children }) => {
   )
 }
 
-const AnswersChart = ({ question, additionalQuestion }) => {
+export const AnswersChart = ({ question, additionalQuestion, skipTitle }) => {
   const totalAnswers = question.result.reduce((agg, r) => agg + r.count, 0)
   const values = question.result.map((bucket) => ({
     answer: bucket.option.label,
@@ -60,7 +60,7 @@ const AnswersChart = ({ question, additionalQuestion }) => {
   }))
   return (
     <div style={{ marginTop: 20 }}>
-      <ChartTitle>{question.text}</ChartTitle>
+      {!skipTitle && <ChartTitle>{question.text}</ChartTitle>}
       <Chart
         config={{
           type: 'Bar',
@@ -153,7 +153,6 @@ const Question = ({ slug, question, additionalQuestion }) => {
       )}
       {question.__typename === 'QuestionTypeChoice' && (
         <AnswersChart
-          slug={slug}
           question={question}
           additionalQuestion={additionalQuestion}
         />

@@ -24,7 +24,7 @@ import {
   SORT_KEY_PARAM,
   SUPPORTED_SORT,
 } from './graphql'
-import { getTargetedAnswers } from './Overview'
+import { AnswersChart, getTargetedAnswers } from './Overview'
 
 const getSortParams = (query, sort) => {
   if (sort.key === 'random' || !sort.key) {
@@ -102,15 +102,18 @@ const TargetedQuestions = ({ slug, questionIds, extract, share = {} }) => {
       >
         Zurück
       </Button>
-      {SUPPORTED_SORT.map((sort, key) => (
-        <SortToggle
-          key={key}
-          sort={sort}
-          urlSort={{ key: sortBy, direction: sortDirection }}
-          getSearchParams={({ sort }) => getSortParams(query, sort)}
-          pathname={pathname}
-        />
-      ))}
+      <div style={{ marginTop: 20 }}>
+        <span style={{ marginRight: 20 }}>Sortierung:</span>
+        {SUPPORTED_SORT.map((sort, key) => (
+          <SortToggle
+            key={key}
+            sort={sort}
+            urlSort={{ key: sortBy, direction: sortDirection }}
+            getSearchParams={({ sort }) => getSortParams(query, sort)}
+            pathname={pathname}
+          />
+        ))}
+      </div>
 
       <Loader
         loading={loading}
@@ -123,6 +126,7 @@ const TargetedQuestions = ({ slug, questionIds, extract, share = {} }) => {
           const questions = allQuestions.filter((q) =>
             questionIds.includes(q.id),
           )
+          const [mainQuestion, addQuestion] = questions
           const targetAnswers = getTargetedAnswers(questionIds, results)
 
           // console.log({ answers })
@@ -134,11 +138,17 @@ const TargetedQuestions = ({ slug, questionIds, extract, share = {} }) => {
               }}
               ref={containerRef}
             >
-              {questions.map((question) => (
-                <Interaction.H2 key={question.id}>
-                  {question.text}
-                </Interaction.H2>
-              ))}
+              <Interaction.H2>{mainQuestion.text}</Interaction.H2>
+
+              {mainQuestion?.__typename === 'QuestionTypeChoice' && (
+                <AnswersChart question={mainQuestion} skipTitle={true} />
+              )}
+
+              {!!addQuestion && (
+                <Interaction.H3 style={{ marginTop: 40 }}>
+                  {addQuestion.text}
+                </Interaction.H3>
+              )}
 
               <div style={{ marginTop: 50 }}>
                 {targetAnswers.map(({ answers, displayAuthor }) => (
