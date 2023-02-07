@@ -69,7 +69,7 @@ const rewardSender = async (senderUserId, pledgeUserId, context) => {
             kind: 'BONUS',
           })
 
-        rewardMailData.membershipPeriodEndDate = newMembershipPeriod[0]?.endDate
+        rewardMailData.membershipPeriodEndDate = newMembershipPeriod?.endDate
       }
 
       // send email to campaign sender without new membership period end date
