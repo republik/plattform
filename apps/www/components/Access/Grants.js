@@ -17,10 +17,7 @@ const getAccessGrants = (accessGrants, type) => {
   return (
     accessGrants.length > 0 &&
     accessGrants.filter((grant) => {
-      return (
-        grant.campaign.type === type &&
-        grant.campaign.id === 'f35c2fcf-c254-482e-b4fb-5c51a48a13d2'
-      )
+      return grant.campaign.type === type
     })
   )
 }
@@ -37,13 +34,27 @@ const AccessGrants = ({ accessGrants, inNativeIOSApp, t }) => {
 
   /* TODO: Special solution for CLIMATE lab, should be removed later */
   const reducedAccessGrants = getAccessGrants(accessGrants, 'REDUCED')
-  const reducedMaxEndAt =
-    reducedAccessGrants.length > 0 &&
-    reducedAccessGrants.reduce(
-      (acc, grant) =>
-        new Date(grant.endAt) > acc ? new Date(grant.endAt) : acc,
-      new Date(),
-    )
+
+  const climateLabTrials = reducedAccessGrants.filter(
+    (grant) => grant.campaign.id === 'f35c2fcf-c254-482e-b4fb-5c51a48a13d2',
+  )
+  const climateLab = reducedAccessGrants.filter(
+    (grant) => grant.campaign.id === '3684f324-b694-4930-ad1a-d00a2e00934b',
+  )
+  const climateLabBeginDate = climateLab.length
+    ? new Date(climateLab[0].beginAt)
+    : null
+
+  const reducedMaxEndAt = climateLabTrials.length
+    ? climateLabTrials.reduce(
+        (acc, grant) =>
+          new Date(grant.endAt) > acc ? new Date(grant.endAt) : acc,
+        new Date(),
+      )
+    : climateLabBeginDate &&
+      new Date(climateLabBeginDate.setMonth(climateLabBeginDate.getMonth() + 1))
+
+  /* End special solution */
 
   return maxEndAt ? (
     <P>
@@ -61,7 +72,8 @@ const AccessGrants = ({ accessGrants, inNativeIOSApp, t }) => {
         </>
       )}
     </P>
-  ) : reducedMaxEndAt ? (
+  ) : /* TODO: special solution for CLIMATE lab, should be removed later on */
+  reducedMaxEndAt ? (
     <P>
       {t.elements('Account/Access/Grants/REDUCED/message/claimed', {
         campaignTitle: 'Klimalabor',
@@ -77,7 +89,7 @@ const AccessGrants = ({ accessGrants, inNativeIOSApp, t }) => {
           </Link>
         </>
       )}
-    </P>
+    </P> /* End special */
   ) : null
 }
 
