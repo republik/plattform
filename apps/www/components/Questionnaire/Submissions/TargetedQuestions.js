@@ -143,12 +143,12 @@ const TargetedQuestions = ({ slug, questionIds, extract, share = {} }) => {
               <div style={{ marginTop: 50 }}>
                 {targetAnswers.map(({ answers, displayAuthor }) => (
                   <Editorial.P key={answers[0].id} attributes={{}}>
-                    {answers.map((answer) => (
+                    {answers.map((answer, idx) => (
                       <>
                         <AnswerText
                           text={answer.payload.text}
                           value={answer.payload.value}
-                          question={answer.question}
+                          question={questions[idx]}
                           isQuote
                         />
                         <br />

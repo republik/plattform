@@ -6,7 +6,6 @@ import {
   Breakout,
   Loader,
   Editorial,
-  Button,
   TeaserCarousel,
   TeaserCarouselTileContainer,
   TeaserCarouselTile,
@@ -14,7 +13,7 @@ import {
   TeaserSectionTitle,
   inQuotes,
   ChartTitle,
-  ChartLead,
+  ChartLegend,
   Chart,
 } from '@project-r/styleguide'
 
@@ -71,6 +70,16 @@ const AnswersChart = ({ question, additionalQuestion }) => {
         }}
         values={values}
       />
+      {!!additionalQuestion && (
+        <ChartLegend>
+          <QuestionLink
+            question={question}
+            additionalQuestion={additionalQuestion}
+          >
+            <Editorial.A>Mehr darüber</Editorial.A>
+          </QuestionLink>
+        </ChartLegend>
+      )}
     </div>
   )
 }
