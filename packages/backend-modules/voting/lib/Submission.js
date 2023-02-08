@@ -77,7 +77,7 @@ const createSubmissionsQuery = ({
   }
   const mustUserId = userId && { term: { userId } }
   const mustUserIds = filters?.userIds && {
-    terms: { userId: filters?.userIds },
+    terms: { userId: filters.userIds },
   }
   const mustQuestionnaireId = questionnaireId && { term: { questionnaireId } }
   const mustSearch = search && {
