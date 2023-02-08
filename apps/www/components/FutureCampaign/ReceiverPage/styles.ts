@@ -11,6 +11,16 @@ export const text = css({
   },
 })
 
+export const textSmallMedium = css({
+  ...fontStyles.sansSerifMedium,
+  margin: 0,
+  fontSize: 14,
+  lineHeight: '1.4em',
+  [mediaQueries.mUp]: {
+    fontSize: 17,
+  },
+})
+
 export const textBold = css({
   ...fontStyles.sansSerifBold,
   margin: 0,

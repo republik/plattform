@@ -6,6 +6,9 @@ export type SliderStep = {
   value: number
   label: string
   text: string
+  goodie: boolean
+  goodieText: string
+  bonusHint: string
 }
 
 export const getSliderStepAtPosition = (pos: number): SliderStep => {
@@ -19,6 +22,9 @@ export const getSliderStepAtPosition = (pos: number): SliderStep => {
     value: val.value,
     label: step.label,
     text: step.text,
+    goodie: step.goodie,
+    goodieText: step.goodieText,
+    bonusHint: step.bonusHint,
   }
 }
 
@@ -35,5 +41,8 @@ export const getSliderStep = (index: number): SliderStep => {
     value: val.value,
     label: step.label,
     text: step.text,
+    goodie: step.goodie,
+    goodieText: step.goodieText,
+    bonusHint: step.bonusHint,
   }
 }

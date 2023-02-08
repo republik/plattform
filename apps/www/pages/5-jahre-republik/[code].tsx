@@ -95,7 +95,7 @@ const styles = {
     height: '100vh',
     display: 'grid',
     width: '100%',
-    gap: 24,
+    gap: 32,
     gridTemplateRows: 'auto 1fr',
     maxWidth: 600,
     margin: '0 auto',

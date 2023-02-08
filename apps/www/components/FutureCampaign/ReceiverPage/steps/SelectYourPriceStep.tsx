@@ -31,14 +31,31 @@ const SelectYourPriceStep = ({
             />
           </div>
 
-          <p {...textStyles.text}>
-            Ihr Preis:{' '}
-            <strong {...textStyles.textBold}>CHF {sliderStep.value}</strong>
-          </p>
-          <h2 {...styles.heading}>{sliderStep.label}</h2>
-          <div {...styles.main}>
-            <p {...textStyles.text}>{sliderStep.text}</p>
+          <div>
+            <div {...textStyles.text}>
+              Ihr Preis:{' '}
+              <strong {...textStyles.textBold}>CHF {sliderStep.value}</strong>
+            </div>
+            <h2 {...styles.heading}>{sliderStep.label}</h2>
           </div>
+
+          <p {...textStyles.text}>{sliderStep.text}</p>
+          <div {...styles.goodie}>
+            <div
+              {...styles.goodieImage}
+              style={{ opacity: sliderStep.goodie ? 1 : 0.5 }}
+            >
+              <AssetImage
+                src={`/static/5-jahre-republik/receiver/visualisierung-5jahr-totebag-traeger-gefaltet.png`}
+                width={60}
+                height={60}
+              />
+            </div>
+            <div>
+              <p {...textStyles.textSmallMedium}>{sliderStep.goodieText}</p>
+            </div>
+          </div>
+          <p {...textStyles.textSmallMedium}>{sliderStep.bonusHint}</p>
         </div>
 
         <div {...styles.slider} ref={resizeRef}>
@@ -68,6 +85,9 @@ const styles = {
   main: css({
     flexGrow: 1,
     selfAlign: 'stretch',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 24,
   }),
   container: css({
     display: 'flex',
@@ -76,6 +96,9 @@ const styles = {
   }),
   content: css({
     flexGrow: 1,
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 24,
   }),
   slider: css({
     flexShrink: 0,
@@ -90,10 +113,16 @@ const styles = {
     [mediaQueries.mUp]: {
       fontSize: 36,
     },
-    margin: `8px 0 32px 0`,
+    margin: `8px 0 0 0`,
   }),
 
-  icon: css({
-    marginBottom: 32,
+  icon: css({}),
+  goodie: css({
+    display: 'flex',
+    gap: 16,
+  }),
+  goodieImage: css({
+    flexShrink: 0,
+    width: 60,
   }),
 }

@@ -14,30 +14,56 @@ export const SLIDER_STEPS = [
   {
     label: 'Dabei sein ist alles',
     text: 'Sollten Sie aktuell knapp bei Kasse sein: Das kann jeder Lady und jedem Gentleman passieren. Willkommen an Bord!',
+    goodie: false,
+    goodieText:
+      'Die Jubiläumstasche gibts dazu, wenn Sie mehr als den Durchschnitt bezahlen.',
+    bonusHint: '',
   }, //  5 <= Selected < average CHF}
   {
     label: 'Mit dem Schwarm schwimmen',
     text: 'Wie gesagt: Wir wollen nichts Unbedachtes von Ihnen. Wählen Sie den Betrag, der für Sie stimmt. Im Schnitt zahlen neue Mitstreiter wie Sie.',
+    goodie: true,
+    goodieText: 'Zum Abo-Kauf schenken wir Ihnen eine Jubiläumstasche dazu.',
+    bonusHint: '',
   }, // average <= selected < 240 CHF}
   {
     label: 'Über dem Durchschnitt',
-    text: 'Im Schnitt zahlen Sie mehr als andere neue Mitstreiter.',
+    text: 'Sie gehen Ihren eigenen Weg, aber es ist kein Alleingang. Schön, sind Sie dabei!',
+    goodie: true,
+    goodieText: 'Zum Abo-Kauf schenken wir Ihnen eine Jubiläumstasche dazu.',
+    bonusHint: '',
   }, // average <= selected < 240 CHF}
   {
-    label: 'Der Standard',
-    text: 'Sie befinden sich im regulären Bereich! Die Republik ist bei diesem Preis selbsttragend. Es freut uns, wenn das für Sie passt.',
+    label: 'Der zuverlässige Standard',
+    text: 'Sie befinden sich im regulären Bereich und zahlen unseren Normalpreis. Es freut uns, wenn das für Sie passt!',
+    goodie: true,
+    goodieText: 'Zum Abo-Kauf schenken wir Ihnen eine Jubiläumstasche dazu.',
+    bonusHint:
+      'Hinweis: Ab einem Preis von CHF 240 werden Sie Mitglied der Project R Genossenschaft.',
   }, // selected = 240 CHF}
   {
     label: 'Die vertrauens\u00ADvolle Investition',
     text: 'Nicht alle, die sich mehr leisten können, tun es auch. Sie schon. Danke für Ihr Vertrauen, Ihren Mut, Ihre Investition in Journalismus.',
+    goodie: true,
+    goodieText: 'Zum Abo-Kauf schenken wir Ihnen eine Jubiläumstasche dazu.',
+    bonusHint:
+      'Hinweis: Ab einem Preis von CHF 240 werden Sie Mitglied der Project R Genossenschaft.',
   }, // 240 < selected < 500 CHF}
   {
     label: 'Die kühne Investition',
     text: 'Hiermit investieren Sie entschlossen in die Zukunft der Republik. Mögen sich Ihre kühnen Hoffnungen erfüllen!',
+    goodie: true,
+    goodieText: 'Zum Abo-Kauf schenken wir Ihnen eine Jubiläumstasche dazu.',
+    bonusHint:
+      'Hinweis: Ab einem Preis von CHF 240 werden Sie Mitglied der Project R Genossenschaft.',
   }, // >= 500 CHF}
   {
     label: 'Das Maximum',
-    text: 'Respekt – Sie gehen ans Maximum. Wir werden hart daran arbeiten, Ihnen dorthin zu folgen.',
+    text: 'Respekt – Sie geben alles. (Und wir arbeiten hart daran, es Ihnen gleichzutun.)',
+    goodie: true,
+    goodieText: 'Zum Abo-Kauf schenken wir Ihnen eine Jubiläumstasche dazu.',
+    bonusHint:
+      'Hinweis: Ab einem Preis von CHF 240 werden Sie Mitglied der Project R Genossenschaft.',
   }, // selected = 1000 CHF}
 ]
 
