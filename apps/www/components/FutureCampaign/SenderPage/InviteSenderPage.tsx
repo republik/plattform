@@ -22,13 +22,13 @@ import ShareOverlay from '../../ActionBar/ShareOverlay'
 
 import SendInviteSVG from '../../../public/static/5-jahre-republik/sender/send-invite_white.svg'
 import ReceiveMonthsSVG from '../../../public/static/5-jahre-republik/sender/receive-months_white.svg'
-import LogoLGSVG from '../../../public/static/5-jahre-republik/logo/logo-lg_white.svg'
 import {
   enforceMembership,
   UnauthorizedMessage,
 } from '../../Auth/withMembership'
 import { MeObjectType } from '../../../lib/context/MeContext'
 import { PageCenter } from '../../Auth/withAuthorization'
+import { isAbsolute } from 'node:path/win32'
 
 const DONATE_MONTHS_CONSENT_KEY = '5YEAR_DONATE_MONTHS'
 
@@ -108,11 +108,8 @@ const InviteSenderPage = ({ me }: { me: MeObjectType }) => {
       <main {...styles.page}>
         <div {...styles.header}>
           <div {...styles.headingWrapper}>
-            <div {...styles.logo}>
-              <AssetImage src={LogoLGSVG} width={236} height={203} />
-            </div>
             <h1 {...styles.heading}>
-              Journalismus hat eine Zukunft, wenn{' '}
+              Unabhängiger Journalismus hat eine Zukunft, wenn{' '}
               <Typewriter
                 words={personasForTypeWriter}
                 loop={true}
@@ -121,6 +118,10 @@ const InviteSenderPage = ({ me }: { me: MeObjectType }) => {
                 cursor
               />{' '}
               das auch will.
+            </h1>
+            <h1 {...styles.shadowHeading} {...styles.heading}>
+              Unabhängiger Journalismus hat eine Zukunft, wenn der Lehrer Ihrer
+              Kinder das auch will.
             </h1>
           </div>
 
@@ -132,7 +133,7 @@ const InviteSenderPage = ({ me }: { me: MeObjectType }) => {
         <div {...styles.box}>
           <h2 {...styles.boxHeading}>
             <AssetImage src={SendInviteSVG} width={58} height={58} />
-            Laden Sie ein…
+            Holen Sie Verstärkung!
           </h2>
           <p {...styles.boxText}>
             Als Verleger*in können Sie bis zu fünf Mitstreiter*innen einladen.
@@ -185,7 +186,6 @@ const InviteSenderPage = ({ me }: { me: MeObjectType }) => {
             )}
           </div>
         </div>
-
         <div {...styles.box}>
           <h2 {...styles.boxHeading}>
             <AssetImage src={ReceiveMonthsSVG} width={58} height={58} />
@@ -223,7 +223,7 @@ export default enforceMembership()(InviteSenderPage)
 const styles = {
   page: css({
     '> *:not(:first-child)': {
-      marginTop: 64,
+      marginTop: 42,
     },
   }),
   header: css({
@@ -232,63 +232,48 @@ const styles = {
     },
   }),
   headingWrapper: css({
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    gap: 48,
-    [mediaQueries.mUp]: {
-      flexDirection: 'row',
-      alignItems: 'flex-start',
-    },
+    display: 'grid',
   }),
-  logo: css({
-    flex: '0 1 auto',
-    display: 'flex',
-    flexDirection: 'row',
-    gap: 16,
-    alignItems: 'center',
-  }),
-  logoText: css({
-    ...fontStyles.sansSerifMedium,
-    fontSize: 21,
+  heading: css({
+    gridColumn: 1,
+    gridRow: 1,
+    ...fontStyles.serifTitle,
+    margin: 0,
+    fontSize: 24,
+    lineHeight: 1.3,
     [mediaQueries.mUp]: {
       fontSize: 36,
     },
   }),
-  heading: css({
-    flex: '1 1 0',
-    ...fontStyles.serifTitle,
-    margin: 0,
-    minHeight: '4em',
-    fontSize: 24,
-    [mediaQueries.mUp]: {
-      fontSize: 42,
-      minHeight: '5em',
-    },
+  shadowHeading: css({
+    display: 'block',
+    gridColumn: 1,
+    gridRow: 1,
+    overflow: 'hidden',
+    visibility: 'hidden',
   }),
   text: css({
     ...fontStyles.sansSerifRegular,
     margin: 0,
-    fontSize: 21,
+    fontSize: 17,
+    lineHeight: 1.3,
     [mediaQueries.mUp]: {
-      ...fontStyles.sansSerifMedium,
-      fontSize: 28,
+      fontSize: 24,
     },
   }),
   box: css({
-    padding: '1.5rem',
     display: 'flex',
     flexDirection: 'column',
     gap: 36,
   }),
   boxHeading: css({
-    ...fontStyles.sansSerifMedium,
+    ...fontStyles.sansSerifBold,
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
     gap: 16,
     margin: 0,
-    fontSize: 28,
+    fontSize: 27,
     [mediaQueries.mUp]: {
       fontSize: 34,
     },
