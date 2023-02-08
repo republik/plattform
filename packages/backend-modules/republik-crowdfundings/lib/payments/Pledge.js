@@ -3,6 +3,8 @@ const { sendPledgeConfirmations } = require('../Mail')
 const slack = require('@orbiting/backend-modules-republik/lib/slack')
 const { refreshPotForPledgeId } = require('../membershipPot')
 const getClients = require('./stripe/clients')
+const { rewardSender } = require('../futureCampaignSenderReward')
+const isUUID = require('is-uuid')
 
 const forUpdate = async ({ pledgeId, fn, pgdb }) => {
   const transaction = await pgdb.transactionBegin()
@@ -68,6 +70,14 @@ const afterChange = async ({ pledge }, context) => {
   let user
   if (pledge.status === 'PAID_INVESTIGATE') {
     user = await pgdb.public.users.findOne({ id: pledge.userId })
+  }
+
+  const { payload } = pledge
+  if (payload && payload.utm_campaign === 'mitstreiter') {
+    const senderUserId = payload.utm_content
+    if (senderUserId && isUUID.v4(senderUserId)) {
+      await rewardSender(senderUserId, pledge.userId, context)
+    }
   }
 
   return Promise.all([

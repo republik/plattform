@@ -12,7 +12,10 @@ const {
   hasDormantMembership,
   resolveMemberships,
 } = require('../../lib/CustomPackages')
-const { getCustomPackages } = require('../../lib/User')
+const {
+  getCustomPackages,
+  getFutureCampaignAboCount,
+} = require('../../lib/User')
 const { suggest: autoPaySuggest } = require('../../lib/AutoPay')
 const createCache = require('../../lib/cache')
 const { getLastEndDate } = require('../../lib/utils')
@@ -284,5 +287,9 @@ module.exports = {
   async adminNotes(user, args, { pgdb, user: me }) {
     Roles.ensureUserHasRole(me, 'supporter')
     return user.adminNotes || user._raw.adminNotes
+  },
+  async futureCampaignAboCount(user, args, { pgdb, user: me }) {
+    Roles.ensureUserIsMeOrInRoles(user, me, ['admin', 'supporter'])
+    return getFutureCampaignAboCount({ user, pgdb })
   },
 }
