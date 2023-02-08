@@ -4,6 +4,7 @@ import {
   IconButton,
   CopyToClippboardIcon,
   Checkbox,
+  Button,
 } from '@project-r/styleguide'
 import { css } from 'glamor'
 import { useMemo, useState } from 'react'
@@ -150,12 +151,15 @@ const InviteSenderPage = ({ me }: { me: MeObjectType }) => {
                   size={20}
                 />
               </div>
-              <button
-                {...styles.shareButton}
-                onClick={() => setShowShareOverlay(true)}
-              >
-                Link teilen
-              </button>
+              <div {...styles.buttonWrapper}>
+                <Button
+                  onClick={() => setShowShareOverlay(true)}
+                  block
+                  style={{ height: 45 }}
+                >
+                  Link teilen
+                </Button>
+              </div>
             </div>
             <p {...styles.boxText}>
               Als Verleger können Sie bis zu 5 Mitstreiter einladen. Diese
@@ -174,7 +178,7 @@ const InviteSenderPage = ({ me }: { me: MeObjectType }) => {
               />
             )}
             {userInviteData?.me && !userInviteData.me?.hasPublicProfile && (
-              <p {...styles.disclamar}>
+              <p {...styles.disclamerText}>
                 Hinweis, weil Ihr Profil bei der Republik auf «privat»
                 eingestellt ist: Die Person, mit der Sie diesen Link teilen,
                 wird Ihren Namen und Ihr Profilbild sehen können.
@@ -193,7 +197,7 @@ const InviteSenderPage = ({ me }: { me: MeObjectType }) => {
           </p>
           <div>
             <RewardProgress reached={reachedRewards} max={maxRewards} />
-            <p {...styles.disclamar}>
+            <p {...styles.disclamerText}>
               Sie möchten Ihnen gutgeschriebene Monate an die Republik spenden?
               Kein Problem:
             </p>
@@ -217,6 +221,9 @@ const styles = {
   page: css({
     '> *:not(:first-child)': {
       marginTop: 42,
+      [mediaQueries.mUp]: {
+        marginTop: 56,
+      },
     },
   }),
   header: css({
@@ -258,6 +265,9 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     gap: 16,
+    [mediaQueries.mUp]: {
+      gap: 24,
+    },
   }),
   boxHeading: css({
     ...fontStyles.sansSerifBold,
@@ -267,8 +277,10 @@ const styles = {
     gap: 16,
     margin: 0,
     fontSize: 21,
+    lineHeight: 1.3,
     [mediaQueries.mUp]: {
-      fontSize: 34,
+      fontSize: 32,
+      gap: 24,
     },
     '& > span:first-child': {
       marginRight: 8,
@@ -280,7 +292,7 @@ const styles = {
     fontSize: 17,
     lineHeight: 1.3,
     [mediaQueries.mUp]: {
-      fontSize: 24,
+      fontSize: 21,
     },
   }),
   inviteShareLinkSection: css({
@@ -294,7 +306,7 @@ const styles = {
     fontSize: 17,
     lineHeight: 1.3,
     [mediaQueries.mUp]: {
-      fontSize: 24,
+      fontSize: 21,
     },
   }),
   inviteActionWrapper: css({
@@ -308,11 +320,6 @@ const styles = {
   }),
   inviteLinkBox: css({
     ...fontStyles.sansSerifRegular,
-    flexShrink: 0,
-    minWidth: 0,
-    fontSize: 14,
-    maxWidth: '100%',
-    flex: '1 1 auto',
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -321,21 +328,24 @@ const styles = {
     padding: '12px 15px',
     backgroundColor: 'rgba(255, 255, 255, 0.2)',
   }),
+  buttonWrapper: css({
+    width: '100%',
+    [mediaQueries.mUp]: {
+      maxWidth: 200,
+    },
+  }),
   inviteLinkBoxText: css({
+    fontSize: 14,
     textOverflow: 'ellipsis',
     overflow: 'hidden',
     whiteSpace: 'nowrap',
   }),
-  shareButton: css({
-    padding: '12px 15px',
-    flex: '0 0 auto',
-  }),
-  disclamar: css({
+  disclamerText: css({
     ...fontStyles.sansSerifregular,
     fontSize: 16,
     lineHeight: 1.3,
     [mediaQueries.mUp]: {
-      fontSize: 24,
+      fontSize: 18,
     },
   }),
 }

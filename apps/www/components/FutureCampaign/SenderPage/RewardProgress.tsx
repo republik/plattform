@@ -62,8 +62,10 @@ const styles = {
     ...fontStyles.sansSerifMedium,
     fontSize: 22,
     lineHeight: 1.3,
+    margin: '8px 0 0 0',
     [mediaQueries.mUp]: {
-      fontSize: 32,
+      fontSize: 27,
+      margin: '16px 0 0 0',
     },
   }),
 }
