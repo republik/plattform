@@ -17,7 +17,10 @@ const getAccessGrants = (accessGrants, type) => {
   return (
     accessGrants.length > 0 &&
     accessGrants.filter((grant) => {
-      return grant.campaign.type === type
+      return (
+        grant.campaign.type === type &&
+        grant.campaign.id === 'f35c2fcf-c254-482e-b4fb-5c51a48a13d2'
+      )
     })
   )
 }
@@ -33,26 +36,15 @@ const AccessGrants = ({ accessGrants, inNativeIOSApp, t }) => {
     )
 
   /* TODO: Special solution for CLIMATE lab, should be removed later */
-  const reducedAccessGrants = getAccessGrants(accessGrants, 'REDUCED')
+  const climateLabTrials = getAccessGrants(accessGrants, 'REDUCED')
 
-  const climateLabTrials = reducedAccessGrants.filter(
-    (grant) => grant.campaign.id === 'f35c2fcf-c254-482e-b4fb-5c51a48a13d2',
-  )
-  const climateLab = reducedAccessGrants.filter(
-    (grant) => grant.campaign.id === '3684f324-b694-4930-ad1a-d00a2e00934b',
-  )
-  const climateLabBeginDate = climateLab.length
-    ? new Date(climateLab[0].beginAt)
-    : null
-
-  const reducedMaxEndAt = climateLabTrials.length
-    ? climateLabTrials.reduce(
-        (acc, grant) =>
-          new Date(grant.endAt) > acc ? new Date(grant.endAt) : acc,
-        new Date(),
-      )
-    : climateLabBeginDate &&
-      new Date(climateLabBeginDate.setMonth(climateLabBeginDate.getMonth() + 1))
+  const reducedMaxEndAt =
+    climateLabTrials.length > 0 &&
+    climateLabTrials.reduce(
+      (acc, grant) =>
+        new Date(grant.endAt) > acc ? new Date(grant.endAt) : acc,
+      new Date(),
+    )
 
   /* End special solution */
 
