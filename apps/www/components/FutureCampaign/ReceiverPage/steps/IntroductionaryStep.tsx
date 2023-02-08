@@ -49,7 +49,7 @@ const IntroductoryStep = ({
         <div>
           <p {...styles.text}>
             Geld ist nicht alles. Köpfe schon. Zahlen Sie für die Republik hier
-            den Beitrag, der für Sie stimmt.
+            den Betrag, der für Sie stimmt.
           </p>
           <p {...styles.text}>
             Möglich ist das, weil Sie von einem unserer Mitglieder eingeladen
