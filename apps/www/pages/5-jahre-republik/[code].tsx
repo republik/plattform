@@ -39,7 +39,9 @@ function Page(props: InviteReceiverPageProps) {
   return (
     <div {...styles.page}>
       <Meta data={meta} />
-      <FutureCampaignHeader />
+      <div {...styles.header}>
+        <FutureCampaignHeader />
+      </div>
       <div {...styles.content}>
         <InviteReceiverPage {...props} />
       </div>
@@ -95,10 +97,16 @@ const styles = {
     height: '100vh',
     display: 'grid',
     width: '100%',
-    gap: 32,
+    gap: 8,
     gridTemplateRows: 'auto 1fr',
     maxWidth: 600,
     margin: '0 auto',
+    position: 'relative',
+  }),
+  header: css({
+    position: 'sticky',
+    top: 0,
+    zIndex: 1,
   }),
   content: css({
     display: 'flex',

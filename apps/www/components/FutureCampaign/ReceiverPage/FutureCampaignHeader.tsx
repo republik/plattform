@@ -28,6 +28,6 @@ const styles = {
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    padding: '24px 15px 0 15px',
+    padding: '24px 15px',
   }),
 }
