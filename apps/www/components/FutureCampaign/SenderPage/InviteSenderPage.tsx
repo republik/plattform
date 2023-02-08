@@ -132,16 +132,13 @@ const InviteSenderPage = ({ me }: { me: MeObjectType }) => {
         </div>
         <div {...styles.box}>
           <h2 {...styles.boxHeading}>
-            <AssetImage src={SendInviteSVG} width={58} height={58} />
-            Holen Sie Verstärkung!
+            <AssetImage src={SendInviteSVG} width={80} height={80} />
+            Holen Sie Verstärkung...
           </h2>
-          <p {...styles.boxText}>
-            Als Verleger*in können Sie bis zu fünf Mitstreiter*innen einladen.
-            Diese können die Republik für ein Jahr abonnieren — für den Preis,
-            der für sie stimmt.
-          </p>
           <div {...styles.inviteShareLinkSection}>
-            <p {...styles.inviteShareLinkText}>Angebots-Link teilen</p>
+            <p {...styles.inviteShareLinkText}>
+              Über diesen Link werden aus Freundinnen Mitstreiterinnen:
+            </p>
             <div {...styles.inviteActionWrapper}>
               <div {...styles.inviteLinkBox}>
                 <span {...styles.inviteLinkBoxText}>{inviteLink}</span>
@@ -160,47 +157,45 @@ const InviteSenderPage = ({ me }: { me: MeObjectType }) => {
                 Link teilen
               </button>
             </div>
+            <p {...styles.boxText}>
+              Als Verleger können Sie bis zu 5 Mitstreiter einladen. Diese
+              können die Republik für ein Jahr abonnieren – zu einem Preis, der
+              für sie stimmt.
+            </p>
             {showShareOverlay && (
               <ShareOverlay
                 onClose={() => setShowShareOverlay(false)}
                 url={inviteLink}
-                title={''}
-                tweet=''
-                emailSubject={''}
-                emailBody=''
+                title='Angebot Teilen'
+                tweet='Ich habe 5 Einladungen zu vergeben: Erhalte ein Jahr lang die Republik – zu dem Preis, der für dich stimmt.'
+                emailSubject={'Ich habe 5 Republik Einladungen zu vergeben.'}
+                emailBody={`Ein Jahr lang die Republik – zu dem Preis, der für dich stimmt. Zum Angebot: ${inviteLink}`}
                 emailAttachUrl
               />
             )}
-            {/*
-                TODO: what about just a share button?
-                If no: do we really only want these three?
-                // Add custom variant of share button that has all personal share options
-                // (meaning not twitter or facebook)
-              */}
             {userInviteData?.me && !userInviteData.me?.hasPublicProfile && (
-              <p>
-                *Da Sie ein privates Profil haben, möchten wir Sie darauf
-                hinweisen, dass der Empfänger beim öffnen der Einladung ihren
-                Namen und ihr Profilbild sehen kann.
+              <p {...styles.disclamar}>
+                Hinweis, weil Ihr Profil bei der Republik auf «privat»
+                eingestellt ist: Die Person, mit der Sie diesen Link teilen,
+                wird Ihren Namen und Ihr Profilbild sehen können.
               </p>
             )}
           </div>
         </div>
         <div {...styles.box}>
           <h2 {...styles.boxHeading}>
-            <AssetImage src={ReceiveMonthsSVG} width={58} height={58} />
-            …und werden Sie eingeladen.
+            <AssetImage src={ReceiveMonthsSVG} width={80} height={80} />
+            ...und erhalten Sie Ruhm, Ehre und noch mehr Republik.
           </h2>
           <p {...styles.boxText}>
-            Für jede neue Mitstreiter*in, die Sie zur Republik Community holen,
-            verlängern wir ihre Mitgliedschaft um einen Monat.
+            Für jede neue Mitstreiterin, die Sie zur Republik-Community holen,
+            verlängern wir Ihre Mitgliedschaft um einen Monat.
           </p>
           <div>
             <RewardProgress reached={reachedRewards} max={maxRewards} />
-            <p>
-              Sie möchten keine Verlängerung? Kein Problem, Sie können am Ende
-              der Aktion ihre gesammelten Monate Spenden und erhalten dafür
-              nicht nur Ruhm und Ehre, sodndern auch unseren unendlichen Dank.
+            <p {...styles.disclamar}>
+              Sie möchten Ihnen gutgeschriebene Monate an die Republik spenden?
+              Kein Problem:
             </p>
             <Checkbox
               disabled={donateMonthsConsentLoading}
@@ -211,8 +206,6 @@ const InviteSenderPage = ({ me }: { me: MeObjectType }) => {
             </Checkbox>
           </div>
         </div>
-
-        <p {...styles.text}>Danke fürs mitmachen!</p>
       </main>
     </Frame>
   )
@@ -264,7 +257,7 @@ const styles = {
   box: css({
     display: 'flex',
     flexDirection: 'column',
-    gap: 36,
+    gap: 16,
   }),
   boxHeading: css({
     ...fontStyles.sansSerifBold,
@@ -273,7 +266,7 @@ const styles = {
     alignItems: 'center',
     gap: 16,
     margin: 0,
-    fontSize: 27,
+    fontSize: 21,
     [mediaQueries.mUp]: {
       fontSize: 34,
     },
@@ -284,7 +277,8 @@ const styles = {
   boxText: css({
     ...fontStyles.sansSerifRegular,
     margin: 0,
-    fontSize: 19,
+    fontSize: 17,
+    lineHeight: 1.3,
     [mediaQueries.mUp]: {
       fontSize: 24,
     },
@@ -297,22 +291,26 @@ const styles = {
   inviteShareLinkText: css({
     ...fontStyles.sansSerifMedium,
     margin: 0,
-    fontSize: 20,
+    fontSize: 17,
+    lineHeight: 1.3,
     [mediaQueries.mUp]: {
       fontSize: 24,
     },
   }),
   inviteActionWrapper: css({
     display: 'flex',
-    flexDirection: 'row',
+    flexDirection: 'column',
     gap: 16,
     width: '100%',
+    [mediaQueries.mUp]: {
+      flexDirection: 'row',
+    },
   }),
   inviteLinkBox: css({
     ...fontStyles.sansSerifRegular,
     flexShrink: 0,
     minWidth: 0,
-    fontSize: 18,
+    fontSize: 14,
     maxWidth: '100%',
     flex: '1 1 auto',
     display: 'flex',
@@ -331,6 +329,14 @@ const styles = {
   shareButton: css({
     padding: '12px 15px',
     flex: '0 0 auto',
+  }),
+  disclamar: css({
+    ...fontStyles.sansSerifregular,
+    fontSize: 16,
+    lineHeight: 1.3,
+    [mediaQueries.mUp]: {
+      fontSize: 24,
+    },
   }),
 }
 
