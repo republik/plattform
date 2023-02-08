@@ -1,10 +1,16 @@
+import {
+  ExpandLessIcon,
+  ExpandMoreIcon,
+  fontStyles,
+  mediaQueries,
+} from '@project-r/styleguide'
 import { css } from 'glamor'
-import { fontStyles, mediaQueries } from '@project-r/styleguide'
-import BottomPanel from './BottomPanel'
 import AssetImage from '../../../../lib/images/AssetImage'
-import { StepProps } from '../../../Stepper/Stepper'
 import { useTranslation } from '../../../../lib/withT'
+import { StepProps } from '../../../Stepper/Stepper'
 import { InviteSenderProfileQueryData } from '../../graphql/useSenderProfileQuery'
+import { Details } from '../Details'
+import BottomPanel from './BottomPanel'
 
 type IntroductionaryStepProps = StepProps & {
   senderProfile: InviteSenderProfileQueryData['sender']
@@ -24,25 +30,28 @@ const IntroductoryStep = ({
   return (
     <>
       <div {...styles.main}>
-        <h1 {...styles.heading}>
-          Unabhängiger Journalismus hat Zukunft, mit Ihnen.
-        </h1>
+        <h1 {...styles.heading}>Journalismus hat eine Zukunft, mit Ihnen.</h1>
+        {hasMonthlySubscription && (
+          <div {...styles.monthlySubscription}>
+            <p {...styles.text}>
+              Wie wunderbar, dass Sie bereits ein Monatsabo haben!
+            </p>
+            <p {...styles.text}>
+              Nun findet {name}, Sie sollten auch längerfristig Teil der
+              Republik-Community werden.
+            </p>
+            <p {...styles.text}>
+              Bestreiten Sie mit uns die Zukunft des unabhängigen Journalismus.
+              Egal, wie viel Sie dafür zahlen können.
+            </p>
+          </div>
+        )}
         <div>
-          {hasMonthlySubscription && (
-            <div {...styles.monthlySubscription}>
-              <p {...styles.text}>
-                Wie wunderbar, dass Sie bereits ein Monatsabo haben!
-              </p>
-              <p {...styles.text}>
-                Nun findet {name}, Sie sollten auch längerfristig Teil der
-                Republik-Community werden.
-              </p>
-              <p {...styles.text}>
-                Bestreiten Sie mit uns die Zukunft des unabhängigen
-                Journalismus. Egal, wie viel Sie dafür zahlen können.
-              </p>
-            </div>
-          )}
+          <p {...styles.text}>
+            Geld ist nicht alles. Köpfe schon. Zahlen Sie für die Republik hier
+            den Beitrag, der für Sie stimmt. Möglich ist das, weil Sie von einem
+            unserer Mitglieder eingeladen wurden:
+          </p>
         </div>
         <div {...styles.inviteSection}>
           {senderProfile.portrait && (
@@ -62,17 +71,40 @@ const IntroductoryStep = ({
           )}
           <div style={{ flex: '0 1 auto' }}>
             <p {...styles.text}>
-              Als Teil der Republik- Community, macht {name} unabhängigen
-              Journalismus in der Schweiz möglich.
+              {name} findet, dass Sie bei der Republik noch fehlen.
             </p>
           </div>
         </div>
-        <p {...styles.text}>
-          Geld ist nicht alles. Köpfe schon. Zahlen Sie für die Republik hier
-          den Beitrag, der für Sie stimmt. Möglich ist das, weil Sie von einem
-          unserer Mitglieder eingeladen wurden: {name} findet, dass Sie bei der
-          Republik noch fehlen.
-        </p>
+        <div>
+          <Details
+            summary={
+              <h2 {...styles.detailsHeading}>5 Gründe für die Republik</h2>
+            }
+            iconClose={<ExpandLessIcon size={24} />}
+            iconOpen={<ExpandMoreIcon size={24} />}
+          >
+            <h3 {...styles.headingReasons}>1. Unabhängig</h3>
+            <p {...styles.text}>
+              Exzellenter Journalismus. Werbefrei und ohne Bullshit.
+            </p>
+            <h3 {...styles.headingReasons}>2. Transparent</h3>
+            <p {...styles.text}>
+              Wir legen alles offen: unsere Finanzen, Arbeitsweisen, Fehler.
+            </p>
+            <h3 {...styles.headingReasons}>3. Bewegend</h3>
+            <p {...styles.text}>
+              Wir liefern Ihnen die Grundlage für vernünftige Entscheidungen.
+            </p>
+            <h3 {...styles.headingReasons}>4. Für Augen und Ohren</h3>
+            <p {...styles.text}>
+              Alle unsere Beiträge werden von Profis eingelesen.
+            </p>
+            <h3 {...styles.headingReasons}>5. Im Austausch</h3>
+            <p {...styles.text}>
+              Wir diskutieren auf Augenhöhe, dank Ihnen und mit Ihnen.
+            </p>
+          </Details>
+        </div>
       </div>
       <BottomPanel steps={stepperControls} onClick={onAdvance}>
         Wählen Sie Ihren Preis
@@ -90,6 +122,7 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     gap: 32,
+    marginBottom: 32,
   }),
   heading: css({
     margin: 0,
@@ -97,6 +130,14 @@ const styles = {
     ...fontStyles.serifTitle,
     [mediaQueries.mUp]: {
       fontSize: 36,
+    },
+  }),
+  headingReasons: css({
+    margin: `16px 0 0 0`,
+    fontSize: 22,
+    ...fontStyles.sansSerifMedium,
+    [mediaQueries.mUp]: {
+      fontSize: 26,
     },
   }),
   tryIt: css({
@@ -109,10 +150,20 @@ const styles = {
   text: css({
     ...fontStyles.sansSerifRegular,
     margin: 0,
-    fontSize: 17,
+    fontSize: 19,
     lineHeight: '1.4em',
     [mediaQueries.mUp]: {
       fontSize: 21,
+    },
+  }),
+  detailsHeading: css({
+    ...fontStyles.sansSerifMedium,
+    margin: 0,
+    fontSize: 16,
+    lineHeight: '1.4em',
+    display: 'inline',
+    [mediaQueries.mUp]: {
+      fontSize: 19,
     },
   }),
   monthlySubscription: css({
