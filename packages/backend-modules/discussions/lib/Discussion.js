@@ -32,6 +32,7 @@ const upsert = async (
       await loaders.Discussion.clear(legacyDiscussionId)
     }
   } else {
+    console.log(`meta roles ${settings.allowedRoles}`)
     if (
       (settings.title && settings.title !== discussion.title) ||
       (settings.maxLength && settings.maxLength !== discussion.maxLength) ||
@@ -51,6 +52,8 @@ const upsert = async (
       (settings.tagRequired !== undefined &&
         settings.tagRequired !== discussion.tagRequired) ||
       (settings.tags && settings.tags !== (discussion.tags || []).join(',')) ||
+      (settings.allowedRoles &&
+        settings.allowedRoles !== (discussion.allowedRoles || []).join(',')) ||
       (!discussion.repoId && id && !idIsUUID && legacyDiscussionId) // to save repoId to existing discussions
     ) {
       discussion = await pgdb.public.discussions.updateAndGetOne(

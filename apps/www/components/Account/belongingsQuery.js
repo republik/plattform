@@ -51,6 +51,7 @@ export default gql`
         endAt
         beginAt
         campaign {
+          id
           title
           description
           type
