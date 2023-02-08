@@ -5280,6 +5280,50 @@
       "value": "vor {count} Tagen"
     },
     {
+      "key": "EndingBox/YEARLY_ABO/before",
+      "value": "TODO Ihre Verlängerung steht an: {link}"
+    },
+    {
+      "key": "EndingBox/YEARLY_ABO/before/linkText",
+      "value": "TODO Jetzt bezahlen"
+    },
+    {
+      "key": "EndingBox/YEARLY_ABO/due",
+      "value": "TODO Ihr Abonnement läuft aus: {link}"
+    },
+    {
+      "key": "EndingBox/YEARLY_ABO/due/linkText",
+      "value": "TODO Jetzt verlängern"
+    },
+    {
+      "key": "EndingBox/YEARLY_ABO/overdue",
+      "value": "TODO Ihr Abonnement ist überfällig."
+    },
+    {
+      "key": "EndingBox/YEARLY_ABO/overdue/button",
+      "value": "TODO Jetzt verlängern"
+    },
+    {
+      "key": "EndingBox/YEARLY_ABO/overdue/explanation",
+      "value": "TODO Ihr Abonnement lief {daysAgo} aus und wird am {graceEndDate} deaktiviert. Sie möchten uns nicht mehr lesen? {cancelLink}."
+    },
+    {
+      "key": "EndingBox/YEARLY_ABO/overdue/explanation/cancelText",
+      "value": "TODO Sagen Sie uns, warum"
+    },
+    {
+      "key": "EndingBox/days/0",
+      "value": "heute"
+    },
+    {
+      "key": "EndingBox/days/1",
+      "value": "gestern"
+    },
+    {
+      "key": "EndingBox/days/other",
+      "value": "vor {count} Tagen"
+    },
+    {
       "key": "crowdfunding/status/time/ended/PROLONG",
       "value": "Ein detaillierter Überblick folgt Ende Monat."
     },
