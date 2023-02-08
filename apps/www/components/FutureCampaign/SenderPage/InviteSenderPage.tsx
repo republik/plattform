@@ -11,7 +11,7 @@ import { useMemo, useState } from 'react'
 import { Typewriter } from 'react-simple-typewriter'
 import { PUBLIC_BASE_URL } from '../../../lib/constants'
 import AssetImage from '../../../lib/images/AssetImage'
-import Frame from '../../Frame'
+import Frame, { MainContainer } from '../../Frame'
 import {
   useDonateMonthsConsentQuery,
   useGiveConsentToDonateMonthsMutation,
@@ -106,111 +106,115 @@ const InviteSenderPage = ({ me }: { me: MeObjectType }) => {
 
   return (
     <Frame pageColorSchemeKey='dark'>
-      <main {...styles.page}>
-        <div {...styles.header}>
-          <div {...styles.headingWrapper}>
-            <h1 {...styles.heading}>
-              Unabhängiger Journalismus hat eine Zukunft, wenn{' '}
-              <Typewriter
-                words={personasForTypeWriter}
-                loop={true}
-                typeSpeed={80}
-                delaySpeed={5000}
-                cursor
-              />{' '}
-              das auch will.
-            </h1>
-            <h1 {...styles.shadowHeading} {...styles.heading}>
-              Unabhängiger Journalismus hat eine Zukunft, wenn der Lehrer Ihrer
-              Kinder das auch will.
-            </h1>
-          </div>
-
-          <p {...styles.text}>
-            An der Republik vorbeizukommen, wird einiges schwerer. Dank Ihnen
-            und den Menschen, die Ihnen wichtig sind.
-          </p>
-        </div>
-        <div {...styles.box}>
-          <h2 {...styles.boxHeading}>
-            <AssetImage src={SendInviteSVG} width={80} height={80} />
-            Holen Sie Verstärkung...
-          </h2>
-          <div {...styles.inviteShareLinkSection}>
-            <p {...styles.inviteShareLinkText}>
-              Über diesen Link werden aus Freundinnen Mitstreiterinnen:
-            </p>
-            <div {...styles.inviteActionWrapper}>
-              <div {...styles.inviteLinkBox}>
-                <span {...styles.inviteLinkBoxText}>{inviteLink}</span>
-                <IconButton
-                  onClick={() => handleCopyLink(inviteLink)}
-                  Icon={CopyToClippboardIcon}
-                  title='Link kopieren'
-                  fill='currentColor'
-                  size={20}
-                />
-              </div>
-              <div {...styles.buttonWrapper}>
-                <Button
-                  onClick={() => setShowShareOverlay(true)}
-                  block
-                  style={{ height: 45 }}
-                >
-                  Link teilen
-                </Button>
-              </div>
+      <MainContainer maxWidth={'700px'}>
+        <main {...styles.page}>
+          <div {...styles.header}>
+            <div {...styles.headingWrapper}>
+              <h1 {...styles.heading}>
+                Unabhängiger Journalismus hat eine Zukunft, wenn{' '}
+                <Typewriter
+                  words={personasForTypeWriter}
+                  loop={true}
+                  typeSpeed={80}
+                  delaySpeed={5000}
+                  cursor
+                />{' '}
+                das auch will.
+              </h1>
+              <h1 {...styles.shadowHeading} {...styles.heading}>
+                Unabhängiger Journalismus hat eine Zukunft, wenn der Lehrer
+                Ihrer Kinder das auch will.
+              </h1>
             </div>
-            <p {...styles.boxText}>
-              Als Verleger können Sie bis zu 5 Mitstreiter einladen. Diese
-              können die Republik für ein Jahr abonnieren – zu einem Preis, der
-              für sie stimmt.
+
+            <p {...styles.text}>
+              An der Republik vorbeizukommen, wird einiges schwerer. Dank Ihnen
+              und den Menschen, die Ihnen wichtig sind.
             </p>
-            {showShareOverlay && (
-              <ShareOverlay
-                onClose={() => setShowShareOverlay(false)}
-                url={inviteLink}
-                title='Angebot Teilen'
-                tweet='Ich habe 5 Einladungen zu vergeben: Erhalte ein Jahr lang die Republik – zu dem Preis, der für dich stimmt.'
-                emailSubject={'Ich habe 5 Republik Einladungen zu vergeben.'}
-                emailBody={`Ein Jahr lang die Republik – zu dem Preis, der für dich stimmt. Zum Angebot: ${inviteLink}`}
-                emailAttachUrl
-              />
-            )}
-            {userInviteData?.me && !userInviteData.me?.hasPublicProfile && (
-              <p {...styles.disclamerText}>
-                Hinweis, weil Ihr Profil bei der Republik auf «privat»
-                eingestellt ist: Die Person, mit der Sie diesen Link teilen,
-                wird Ihren Namen und Ihr Profilbild sehen können.
+          </div>
+          <div {...styles.box}>
+            <h2 {...styles.boxHeading}>
+              <AssetImage src={SendInviteSVG} width={80} height={80} />
+              Holen Sie Verstärkung...
+            </h2>
+            <div {...styles.inviteShareLinkSection}>
+              <p {...styles.boxText}>
+                Als Verleger können Sie bis zu 5 Mitstreiter einladen. Diese
+                können die Republik für ein Jahr abonnieren – zu einem Preis,
+                der für sie stimmt.
               </p>
-            )}
+              <p {...styles.inviteShareLinkText}>
+                Über diesen Link werden aus Freundinnen Mitstreiterinnen:
+              </p>
+              <div {...styles.inviteActionWrapper}>
+                <div {...styles.inviteLinkBox}>
+                  <span {...styles.inviteLinkBoxText}>{inviteLink}</span>
+                  <IconButton
+                    onClick={() => handleCopyLink(inviteLink)}
+                    Icon={CopyToClippboardIcon}
+                    title='Link kopieren'
+                    fill='currentColor'
+                    size={20}
+                  />
+                </div>
+                <div {...styles.buttonWrapper}>
+                  <Button
+                    onClick={() => setShowShareOverlay(true)}
+                    block
+                    style={{ height: 45 }}
+                  >
+                    Link teilen
+                  </Button>
+                </div>
+              </div>
+              {showShareOverlay && (
+                <ShareOverlay
+                  onClose={() => setShowShareOverlay(false)}
+                  url={inviteLink}
+                  title='Angebot Teilen'
+                  tweet='Ich habe 5 Einladungen zu vergeben: Erhalte ein Jahr lang die Republik – zu dem Preis, der für dich stimmt.'
+                  emailSubject={'Ich habe 5 Republik Einladungen zu vergeben.'}
+                  emailBody={`Ein Jahr lang die Republik – zu dem Preis, der für dich stimmt. Zum Angebot: ${inviteLink}`}
+                  emailAttachUrl
+                />
+              )}
+              {userInviteData?.me && !userInviteData.me?.hasPublicProfile && (
+                <p {...styles.disclamerText}>
+                  Hinweis, weil Ihr Profil bei der Republik auf «privat»
+                  eingestellt ist: Die Person, mit der Sie diesen Link teilen,
+                  wird Ihren Namen und Ihr Profilbild sehen können.
+                </p>
+              )}
+            </div>
           </div>
-        </div>
-        <div {...styles.box}>
-          <h2 {...styles.boxHeading}>
-            <AssetImage src={ReceiveMonthsSVG} width={80} height={80} />
-            ...und erhalten Sie Ruhm, Ehre und noch mehr Republik.
-          </h2>
-          <p {...styles.boxText}>
-            Für jede neue Mitstreiterin, die Sie zur Republik-Community holen,
-            verlängern wir Ihre Mitgliedschaft um einen Monat.
-          </p>
-          <div>
-            <RewardProgress reached={reachedRewards} max={maxRewards} />
-            <p {...styles.disclamerText}>
-              Sie möchten Ihnen gutgeschriebene Monate an die Republik spenden?
-              Kein Problem:
+          <div {...styles.box}>
+            <h2 {...styles.boxHeading}>
+              <AssetImage src={ReceiveMonthsSVG} width={80} height={80} />
+              ...und erhalten Sie Ruhm, Ehre und noch mehr Republik.
+            </h2>
+            <p {...styles.boxText}>
+              Für jede neue Mitstreiterin, die Sie zur Republik-Community holen,
+              verlängern wir Ihre Mitgliedschaft um einen Monat.
             </p>
-            <Checkbox
-              disabled={donateMonthsConsentLoading}
-              checked={Boolean(donateMonthsConsent?.me?.hasConsentedTo)}
-              onChange={(_, value) => handleDonateMonthsChange(Boolean(value))}
-            >
-              Ja, ich will die Monate spenden.
-            </Checkbox>
+            <div>
+              <RewardProgress reached={reachedRewards} max={maxRewards} />
+              <p {...styles.disclamerText}>
+                Sie möchten Ihnen gutgeschriebene Monate an die Republik
+                spenden? Kein Problem:
+              </p>
+              <Checkbox
+                disabled={donateMonthsConsentLoading}
+                checked={Boolean(donateMonthsConsent?.me?.hasConsentedTo)}
+                onChange={(_, value) =>
+                  handleDonateMonthsChange(Boolean(value))
+                }
+              >
+                Ja, ich will die Monate spenden.
+              </Checkbox>
+            </div>
           </div>
-        </div>
-      </main>
+        </main>
+      </MainContainer>
     </Frame>
   )
 }
@@ -222,7 +226,7 @@ const styles = {
     '> *:not(:first-child)': {
       marginTop: 42,
       [mediaQueries.mUp]: {
-        marginTop: 56,
+        marginTop: 64,
       },
     },
   }),
@@ -256,9 +260,9 @@ const styles = {
     ...fontStyles.sansSerifRegular,
     margin: 0,
     fontSize: 17,
-    lineHeight: 1.3,
+    lineHeight: 1.4,
     [mediaQueries.mUp]: {
-      fontSize: 24,
+      fontSize: 19,
     },
   }),
   box: css({
@@ -277,9 +281,9 @@ const styles = {
     gap: 16,
     margin: 0,
     fontSize: 21,
-    lineHeight: 1.3,
+    lineHeight: 1.4,
     [mediaQueries.mUp]: {
-      fontSize: 32,
+      fontSize: 27,
       gap: 24,
     },
     '& > span:first-child': {
@@ -290,9 +294,9 @@ const styles = {
     ...fontStyles.sansSerifRegular,
     margin: 0,
     fontSize: 17,
-    lineHeight: 1.3,
+    lineHeight: 1.5,
     [mediaQueries.mUp]: {
-      fontSize: 21,
+      fontSize: 19,
     },
   }),
   inviteShareLinkSection: css({
@@ -304,9 +308,9 @@ const styles = {
     ...fontStyles.sansSerifMedium,
     margin: 0,
     fontSize: 17,
-    lineHeight: 1.3,
+    lineHeight: 1.4,
     [mediaQueries.mUp]: {
-      fontSize: 21,
+      fontSize: 19,
     },
   }),
   inviteActionWrapper: css({
@@ -321,6 +325,7 @@ const styles = {
   inviteLinkBox: css({
     ...fontStyles.sansSerifRegular,
     display: 'flex',
+    flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
     gap: 8,
@@ -345,7 +350,7 @@ const styles = {
     fontSize: 16,
     lineHeight: 1.3,
     [mediaQueries.mUp]: {
-      fontSize: 18,
+      fontSize: 16,
     },
   }),
 }
