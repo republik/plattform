@@ -12,6 +12,8 @@ extend type User {
   paymentSources: [PaymentSource!]! @deprecated(reason: "use \`defaultPaymentSource\` instead")
   defaultPaymentSource: PaymentSource
 
+  # Whether User has a dormant membership ligned up
+  hasDormantMembership: Boolean!
   # Custom-tailored packages available for User
   customPackages(crowdfundingName: String): [Package!]
   # Whether User is eligable to profit from additional BONUS periods
