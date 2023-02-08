@@ -2,7 +2,6 @@ import { useColorContext } from '@project-r/styleguide'
 import { css } from 'glamor'
 import Link from 'next/link'
 import AssetImage from '../../../lib/images/AssetImage'
-import CombiLogo from '../../../public/static/5-jahre-republik/logo/combo-logo_white.svg'
 
 const FutureCampaignHeader = () => {
   const [colorScheme] = useColorContext()
@@ -11,9 +10,9 @@ const FutureCampaignHeader = () => {
       <div {...styles.header}>
         <Link href='/'>
           <AssetImage
-            src={CombiLogo}
-            height={70}
-            width={250}
+            src={'/static/5-jahre-republik/logo/combo-logo_white.svg'}
+            height={32}
+            width={160}
             objectFit='contain'
           />
         </Link>
@@ -29,8 +28,6 @@ const styles = {
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 16,
-    padding: '15px 0px 15px 15px',
-    height: 80,
+    padding: '24px 15px 0 15px',
   }),
 }

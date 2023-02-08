@@ -1,24 +1,14 @@
+import { fontStyles, mediaQueries, plainLinkRule } from '@project-r/styleguide'
 import { css } from 'glamor'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useCallback } from 'react'
-import {
-  fontStyles,
-  mediaQueries,
-  plainLinkRule,
-  useColorContext,
-} from '@project-r/styleguide'
-import { PUBLIC_BASE_URL } from '../../../lib/constants'
 import { useMe } from '../../../lib/context/MeContext'
-import Frame from '../../Frame'
 import Stepper, { Step } from '../../Stepper/Stepper'
-import { FUTURE_CAMPAIGN_SHARE_IMAGE_URL } from '../constants'
 import { useInviteSenderProfileQuery } from '../graphql/useSenderProfileQuery'
 import IntroductoryStep from './steps/IntroductionaryStep'
 import SelectYourPriceStep from './steps/SelectYourPriceStep'
-import AssetImage from '../../../lib/images/AssetImage'
 
-import CombiLogo from '../../../public/static/5-jahre-republik/logo/combo-logo_white.svg'
 enum STEPS {
   INTRO = 'INTRO',
   PRICE_SELECTOR = 'PRICE_SELECTOR',

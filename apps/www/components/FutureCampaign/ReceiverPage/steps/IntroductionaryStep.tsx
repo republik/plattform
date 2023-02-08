@@ -141,15 +141,16 @@ const styles = {
     selfAlign: 'stretch',
     display: 'flex',
     flexDirection: 'column',
-    gap: 28,
-    marginBottom: 28,
+    gap: 24,
+    marginBottom: 24,
   }),
   heading: css({
     margin: 0,
-    fontSize: 28,
+    fontSize: 32,
+    lineHeight: 1.2,
     ...fontStyles.serifTitle,
     [mediaQueries.mUp]: {
-      fontSize: 36,
+      fontSize: 40,
     },
   }),
   headingReasons: css({
