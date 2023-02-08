@@ -103,7 +103,16 @@ export default compose(
         hasMemberships &&
         data.me.memberships.find((m) => m.type.name === 'MONTHLY_ABO')
       const hasAccessGrants =
-        isReady && data.me.accessGrants && !!data.me.accessGrants.length
+        isReady &&
+        data.me.accessGrants &&
+        !!data.me.accessGrants.length &&
+        /* TODO: special CLIMATE implementation, 
+        has to be replaced with filtering out all reduced 
+        campaigns as soon as all trials are expired */
+        data.me.accessGrants.find(
+          (grant) =>
+            grant.campaign.id !== '3684f324-b694-4930-ad1a-d00a2e00934b',
+        )
       const autoPayMembership =
         (hasMemberships &&
           data.me.memberships.find(
