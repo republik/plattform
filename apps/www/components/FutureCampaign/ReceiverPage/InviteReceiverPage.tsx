@@ -73,7 +73,7 @@ const InviteReceiverPage = ({ invalidInviteCode }: InviteReceiverPageProps) => {
 
             utm_campaign: 'mitstreiter',
             utm_medium: 'website',
-            utm_source: 'meta',
+            utm_source: 'republik',
             utm_content: senderProfileData?.sender?.id,
           },
         })
@@ -86,7 +86,7 @@ const InviteReceiverPage = ({ invalidInviteCode }: InviteReceiverPageProps) => {
 
             utm_campaign: 'mitstreiter',
             utm_medium: 'website',
-            utm_source: 'meta',
+            utm_source: 'republik',
             utm_content: senderProfileData?.sender?.id,
           },
         })
@@ -101,7 +101,7 @@ const InviteReceiverPage = ({ invalidInviteCode }: InviteReceiverPageProps) => {
 
             utm_campaign: 'mitstreiter',
             utm_medium: 'website',
-            utm_source: 'meta',
+            utm_source: 'republik',
             utm_content: senderProfileData?.sender?.id,
           },
         })
