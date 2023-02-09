@@ -83,7 +83,7 @@ export const SLIDER_STEP_VALUES = [
   { step: 0, value: 110 },
   { step: 0, value: 110 },
 
-  { step: 1, value: 120, tick: true },
+  { step: 1, value: 120, tick: true, isDefault: true },
 
   { step: 2, value: 130 },
   { step: 2, value: 140 },

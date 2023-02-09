@@ -4,6 +4,7 @@ export type SliderStep = {
   pos: number
   step: number
   value: number
+  isDefault?: boolean
   label: string
   text: string
   goodie: boolean
@@ -39,6 +40,25 @@ export const getSliderStep = (index: number): SliderStep => {
     pos,
     step: val.step,
     value: val.value,
+    label: step.label,
+    text: step.text,
+    goodie: step.goodie,
+    goodieText: step.goodieText,
+    bonusHint: step.bonusHint,
+  }
+}
+
+export const getDefaultSliderStep = (): SliderStep => {
+  const pos = SLIDER_STEP_VALUES.findIndex((v) => v.isDefault) ?? 0
+
+  const val = SLIDER_STEP_VALUES[pos]
+  const step = SLIDER_STEPS[val.step]
+
+  return {
+    pos,
+    step: val.step,
+    value: val.value,
+    isDefault: val.isDefault,
     label: step.label,
     text: step.text,
     goodie: step.goodie,

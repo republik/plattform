@@ -4,7 +4,10 @@ import { useMemo, useState } from 'react'
 import { useResizeObserver } from '../../../../lib/hooks/useResizeObserver'
 import AssetImage from '../../../../lib/images/AssetImage'
 import { StepProps } from '../../../Stepper/Stepper'
-import { getSliderStep, SliderStep } from '../price-slider-content-helpers'
+import {
+  getDefaultSliderStep,
+  SliderStep,
+} from '../price-slider-content-helpers'
 import { PriceSlider } from '../PriceSlider'
 import * as textStyles from '../styles'
 import BottomPanel from './BottomPanel'
@@ -15,7 +18,7 @@ const SelectYourPriceStep = ({
 }: StepProps & {
   onSubmit: (price: number) => Promise<any>
 }) => {
-  const initialSliderStep = useMemo(() => getSliderStep(3), [])
+  const initialSliderStep = useMemo(() => getDefaultSliderStep(), [])
   const [sliderStep, setSliderStep] = useState<SliderStep>(initialSliderStep)
   const [resizeRef, , height] = useResizeObserver()
 

@@ -2,7 +2,7 @@ import { scalePoint } from 'd3-scale'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { SLIDER_STEP_VALUES, SLIDER_TRANSITION } from '../constants'
 
-import { sansSerifMedium14, useColorContext } from '@project-r/styleguide'
+import { fontStyles, useColorContext } from '@project-r/styleguide'
 import {
   motion,
   useAnimationControls,
@@ -38,6 +38,7 @@ const styles = {
     marginLeft: -5,
   }),
   tick: css({
+    ...fontStyles.sansSerifMedium,
     cursor: 'pointer',
     width: 36,
     height: 36,
@@ -50,9 +51,13 @@ const styles = {
     marginLeft: -18,
     borderRadius: '100vw',
     color: 'white',
-    ...sansSerifMedium14,
     fontSize: 12,
     userSelect: 'none',
+  }),
+  tickDefault: css({
+    color: 'black',
+    height: 28,
+    margintTop: -14,
   }),
   thumb: css({
     cursor: 'pointer',
@@ -138,7 +143,9 @@ export const PriceSlider = ({
     tickBackgrounds.push(
       // eslint-disable-next-line
       useTransform(y, (yval) =>
-        getStepAtY(yval).value > tick.value
+        tick.isDefault
+          ? '#F0DC28'
+          : getStepAtY(yval).value > tick.value
           ? colorScheme.getCSSColor('primary')
           : colorScheme.getCSSColor('disabled'),
       ),
@@ -214,7 +221,9 @@ export const PriceSlider = ({
           return (
             <motion.div
               key={tick.value}
-              {...styles.tick}
+              {...(tick.isDefault
+                ? css(styles.tick, styles.tickDefault)
+                : styles.tick)}
               style={{
                 top: sliderScale(tick.pos),
                 background: tickBackgrounds[i],
