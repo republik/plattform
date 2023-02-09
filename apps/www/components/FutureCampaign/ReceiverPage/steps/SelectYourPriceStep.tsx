@@ -113,7 +113,7 @@ const styles = {
     top: '50%',
     transform: 'translateY(-50%)',
     right: `max(20px, calc(50vw - 300px + 20px))`,
-    height: 'calc(100vh - 230px)',
+    height: ['calc(100vh - 240px)', 'calc(100dvh - 240px)'],
     maxHeight: 550,
   }),
 
