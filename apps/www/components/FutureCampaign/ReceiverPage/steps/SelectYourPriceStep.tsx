@@ -60,17 +60,16 @@ const SelectYourPriceStep = ({
           </div>
           <p {...textStyles.textSmallMedium}>{sliderStep.bonusHint}</p>
         </div>
-
-        <div {...styles.slider} ref={resizeRef}>
-          {height > 50 && (
-            <PriceSlider
-              initialStep={initialSliderStep}
-              onChange={(sliderStep) => setSliderStep(sliderStep)}
-              step={sliderStep}
-              height={height}
-            />
-          )}
-        </div>
+      </div>
+      <div {...styles.slider} ref={resizeRef}>
+        {height > 50 && (
+          <PriceSlider
+            initialStep={initialSliderStep}
+            onChange={(sliderStep) => setSliderStep(sliderStep)}
+            step={sliderStep}
+            height={height}
+          />
+        )}
       </div>
       <BottomPanel
         steps={stepperControls}
@@ -102,12 +101,20 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     gap: 24,
+    overflowY: 'auto',
+    paddingRight: 74,
   }),
   slider: css({
     flexShrink: 0,
     paddingTop: 32,
     paddingBottom: 32,
-    minHeight: 400,
+    minHeight: 200,
+    position: 'fixed',
+    top: '50%',
+    transform: 'translateY(-50%)',
+    right: `max(20px, calc(50vw - 300px + 20px))`,
+    height: 'calc(100vh - 230px)',
+    maxHeight: 550,
   }),
 
   heading: css({
