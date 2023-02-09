@@ -64,6 +64,7 @@ const SelectYourPriceStep = ({
       <div {...styles.slider} ref={resizeRef}>
         {height > 50 && (
           <PriceSlider
+            key={`h-${height}`}
             initialStep={initialSliderStep}
             onChange={(sliderStep) => setSliderStep(sliderStep)}
             step={sliderStep}
