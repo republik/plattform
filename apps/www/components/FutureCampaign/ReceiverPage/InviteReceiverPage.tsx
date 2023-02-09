@@ -1,11 +1,11 @@
-import { fontStyles, mediaQueries, plainLinkRule } from '@project-r/styleguide'
+import { fontStyles, mediaQueries } from '@project-r/styleguide'
 import { css } from 'glamor'
-import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useCallback } from 'react'
 import { useMe } from '../../../lib/context/MeContext'
 import Stepper, { Step } from '../../Stepper/Stepper'
 import { useInviteSenderProfileQuery } from '../graphql/useSenderProfileQuery'
+import Button from './steps/Button'
 import IntroductoryStep from './steps/IntroductionaryStep'
 import SelectYourPriceStep from './steps/SelectYourPriceStep'
 
@@ -124,17 +124,14 @@ const InviteReceiverPage = ({ invalidInviteCode }: InviteReceiverPageProps) => {
       {invalidInviteCode && <p>Invalid invite code</p>}
       {hasYearlySubscription && (
         <div {...styles.hasYearlySubscription}>
+          <h1 {...styles.heading}>Journalismus hat eine Zukunft, mit Ihnen.</h1>
+          <p>Sie sind bereits an Bord. Gratulation!</p>
           <p>
-            Sie sind bereits an Bord. Gratulation! Aber wie sieht es mit Ihrem
-            Nachbarn, Ihrem alten Schulfreund und Ihrer Tante aus?
+            Aber wie sieht es mit Ihrem Nachbarn, Ihrem alten Schulfreund und
+            Ihrer Tante aus?
           </p>
-          <p>
-            Die Republik ist nur so stark, wie ihre Community:{' '}
-            <Link href='/verstaerkung-holen' passHref>
-              <a {...plainLinkRule}>Jetzt Verstärkung holen</a>
-            </Link>
-            !
-          </p>
+          <p>Die Republik ist nur so stark, wie ihre Community</p>
+          <Button>Jetzt Verstärkung holen</Button>
         </div>
       )}
       {!invalidInviteCode && isEligible && (
@@ -162,6 +159,7 @@ const styles = {
     alignItems: 'flex-start',
   }),
   hasYearlySubscription: css({
+    marginTop: 48,
     display: 'flex',
     flexDirection: 'column',
     gap: 16,
@@ -177,6 +175,15 @@ const styles = {
     }),
     '& a': {
       textDecoration: 'underline',
+    },
+  }),
+  heading: css({
+    ...fontStyles.serifTitle,
+    margin: 0,
+    fontSize: 24,
+    lineHeight: 1.3,
+    [mediaQueries.mUp]: {
+      fontSize: 36,
     },
   }),
 }

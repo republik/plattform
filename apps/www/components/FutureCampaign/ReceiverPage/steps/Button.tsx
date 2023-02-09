@@ -1,15 +1,37 @@
 import { ReactNode } from 'react'
-import { plainButtonRule, useColorContext } from '@project-r/styleguide'
+import {
+  plainButtonRule,
+  plainLinkRule,
+  useColorContext,
+} from '@project-r/styleguide'
 import { css } from 'glamor'
+import Link from 'next/link'
 
 type ButtonProps = {
   children?: ReactNode
   disabled?: boolean
+  href?: string
   onClick?: () => void | Promise<void>
 }
 
-const Button = ({ children, onClick, disabled }: ButtonProps) => {
+const Button = ({ children, onClick, href, disabled }: ButtonProps) => {
   const [colorScheme] = useColorContext()
+
+  if (href) {
+    return (
+      <Link href={href}>
+        <a
+          {...plainLinkRule}
+          {...style}
+          {...colorScheme.set('color', disabled ? 'disabled' : 'default')}
+          {...colorScheme.set('backgroundColor', 'text')}
+        >
+          {children}
+        </a>
+      </Link>
+    )
+  }
+
   return (
     <button
       {...plainButtonRule}
