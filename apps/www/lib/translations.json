@@ -4764,6 +4764,10 @@
       "value": "Abonnement (#{sequenceNumber})"
     },
     {
+      "key": "memberships/title/YEARLY_ABO",
+      "value": "Mitstreiter-Abo"
+    },
+    {
       "key": "memberships/title/ABO/give",
       "value": "{name} (#{sequenceNumber})"
     },
