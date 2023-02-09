@@ -86,7 +86,6 @@ const InviteReceiverPage = ({ invalidInviteCode }: InviteReceiverPageProps) => {
           query: {
             package: 'YEARLY_ABO',
             userPrice: 1,
-            reason: 'Mitstreiter Abo',
             price: price * 100, // price in Rp.
 
             utm_campaign: 'mitstreiter',
