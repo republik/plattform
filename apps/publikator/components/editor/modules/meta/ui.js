@@ -272,8 +272,8 @@ const MetaData = ({
           black
           getWidth={() => '50%'}
         />
-        {['article', 'discussion'].includes(titleData.meta.template) && (
-          <>
+        {!node.data.get('discussion') &&
+          ['article', 'discussion'].includes(titleData.meta.template) && (
             <Checkbox
               checked={node.data
                 .get('discussionAllowedRoles')
@@ -292,11 +292,9 @@ const MetaData = ({
             >
               {t('metaData/discussionAllowedRoles')}
             </Checkbox>
-            <br />
-            <br />
-            <br />
-          </>
-        )}
+          )}
+        <br />
+        <br />
         {!!series && (
           <SeriesForm
             repoId={titleData.repoId}
