@@ -57,7 +57,7 @@ const styles = {
   tickDefault: css({
     color: 'black',
     height: 28,
-    margintTop: -14,
+    marginTop: -14,
   }),
   thumb: css({
     cursor: 'pointer',
