@@ -178,7 +178,7 @@ const InviteSenderPage = ({ me }: { me: MeObjectType }) => {
                 title='Angebot Teilen'
                 tweet='Ich habe 5 Einladungen zu vergeben: Erhalte ein Jahr lang die Republik – zu dem Preis, der für dich stimmt.'
                 emailSubject={'Ich habe 5 Republik Einladungen zu vergeben.'}
-                emailBody={`Ein Jahr lang die Republik – zu dem Preis, der für dich stimmt. Zum Angebot: ${inviteLink}`}
+                emailBody={`Ein Jahr lang die Republik – zu dem Preis, der für dich stimmt. Zum Angebot:`}
                 emailAttachUrl
               />
             )}
