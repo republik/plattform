@@ -173,6 +173,10 @@ const envMergeVars = [
     content: `${FRONTEND_BASE_URL}/dialog`,
   },
   {
+    name: 'link_etikette',
+    content: `${FRONTEND_BASE_URL}/etikette`,
+  },
+  {
     name: 'link_app',
     content: `${FRONTEND_BASE_URL}/app`,
   },

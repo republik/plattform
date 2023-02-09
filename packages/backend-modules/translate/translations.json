@@ -362,7 +362,7 @@
     },
     {
       "key": "api/email/pledge_yearly_abo/subject",
-      "value": "TODO: Betreff fehlt api/email/pledge_yearly_abo/subject"
+      "value": "Willkommen bei der Republik!"
     },
     {
       "key": "api/email/payment_successful_abo/subject",
@@ -394,7 +394,7 @@
     },
     {
       "key": "api/email/payment_successful_yearly_abo/subject",
-      "value": "TODO: Betreff fehlt api/email/payment_successful_yearly_abo/subject"
+      "value": "Vielen Dank! Wir haben Ihre Zahlung erhalten."
     },
     {
       "key": "api/email/option/goodie/notebook/1",
