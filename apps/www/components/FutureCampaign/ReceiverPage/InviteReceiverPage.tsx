@@ -124,12 +124,14 @@ const InviteReceiverPage = ({ invalidInviteCode }: InviteReceiverPageProps) => {
       {hasYearlySubscription && (
         <div {...styles.hasYearlySubscription}>
           <h1 {...styles.heading}>Journalismus hat eine Zukunft, mit Ihnen.</h1>
-          <p>Sie sind bereits an Bord. Gratulation!</p>
-          <p>
+          <p {...styles.text}>Sie sind bereits an Bord. Gratulation!</p>
+          <p {...styles.text}>
             Aber wie sieht es mit Ihrem Nachbarn, Ihrem alten Schulfreund und
             Ihrer Tante aus?
           </p>
-          <p>Die Republik ist nur so stark, wie ihre Community</p>
+          <p {...styles.text}>
+            Die Republik ist nur so stark, wie ihre Community
+          </p>
           <Button>Jetzt Verstärkung holen</Button>
         </div>
       )}
@@ -183,6 +185,18 @@ const styles = {
     lineHeight: 1.3,
     [mediaQueries.mUp]: {
       fontSize: 36,
+    },
+  }),
+  text: css({
+    ...fontStyles.sansSerifRegular,
+    margin: 0,
+    fontSize: 19,
+    lineHeight: '1.4em',
+    [mediaQueries.mUp]: {
+      fontSize: 21,
+    },
+    '& + p': {
+      margin: `16px 0 0 0`,
     },
   }),
 }

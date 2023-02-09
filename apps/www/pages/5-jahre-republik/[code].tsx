@@ -7,18 +7,16 @@ import {
   InviteSenderProfileQueryVariables,
   INVITE_SENDER_PROFILE_QUERY,
 } from '../../components/FutureCampaign/graphql/useSenderProfileQuery'
-import FutureCampaignHeader from '../../components/FutureCampaign/ReceiverPage/FutureCampaignHeader'
-import { ColorContextProvider, useColorContext } from '@project-r/styleguide'
+import { ColorContextProvider } from '@project-r/styleguide'
 import { FUTURE_CAMPAIGN_SHARE_IMAGE_URL } from '../../components/FutureCampaign/constants'
 import { PUBLIC_BASE_URL } from '../../lib/constants'
 import { useRouter } from 'next/router'
 import Meta from '../../components/Frame/Meta'
 import { css } from 'glamor'
-import { useMemo } from 'react'
+import FutureCampaignPage from '../../components/FutureCampaign/FutureCampaignPage'
 
 function Page(props: InviteReceiverPageProps) {
   const router = useRouter()
-  const [colorScheme] = useColorContext()
 
   const meta = {
     pageTitle: 'Werden Sie Teil der Republik',
@@ -27,40 +25,11 @@ function Page(props: InviteReceiverPageProps) {
     url: `${PUBLIC_BASE_URL}${router.asPath}`,
   }
 
-  css.global('body', {
-    backgroundColor: colorScheme.getCSSColor('default'),
-    color: colorScheme.getCSSColor('text'),
-  })
-
-  const scrollbarStyle = useMemo(
-    () =>
-      css({
-        '&::-webkit-scrollbar': {
-          height: 6,
-          width: 6,
-          backgroundColor: colorScheme.getCSSColor('hover'),
-          borderRadius: 10,
-        },
-        '&::-webkit-scrollbar-thumb': {
-          backgroundColor: colorScheme.getCSSColor('divider'),
-          borderRadius: 10,
-        },
-      }),
-    [colorScheme],
-  )
-
   return (
-    <div {...styles.pageWrapper}>
-      <div {...styles.page} {...scrollbarStyle}>
-        <Meta data={meta} />
-        <div {...styles.header}>
-          <FutureCampaignHeader />
-        </div>
-        <div {...styles.content}>
-          <InviteReceiverPage {...props} />
-        </div>
-      </div>
-    </div>
+    <FutureCampaignPage>
+      <Meta data={meta} />
+      <InviteReceiverPage {...props} />
+    </FutureCampaignPage>
   )
 }
 
@@ -106,33 +75,3 @@ export const getServerSideProps = createGetServerSideProps<
     },
   }
 })
-
-const styles = {
-  pageWrapper: css({
-    display: 'flex',
-    minHeight: ['100vh', '100dvh'],
-  }),
-  page: css({
-    height: ['100vh', '100dvh'],
-    display: 'grid',
-    width: '100%',
-    gap: 8,
-    gridTemplateRows: 'auto 1fr',
-    maxWidth: 600,
-    maxHeight: 800,
-    margin: 'auto',
-    position: 'relative',
-    overflowY: 'auto',
-  }),
-  header: css({
-    position: 'sticky',
-    top: 0,
-    zIndex: 1,
-  }),
-  content: css({
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    padding: '0 15px',
-  }),
-}

@@ -1,0 +1,80 @@
+import { useColorContext } from '@project-r/styleguide/src/components/Colors/ColorContext'
+import { css } from 'glamor'
+import { useRouter } from 'next/router'
+import { ReactNode, useMemo } from 'react'
+import { PUBLIC_BASE_URL } from '../../lib/constants'
+import { FUTURE_CAMPAIGN_SHARE_IMAGE_URL } from './constants'
+import FutureCampaignHeader from './ReceiverPage/FutureCampaignHeader'
+
+type FutreCampaignPageProps = {
+  children?: ReactNode
+}
+
+const FutureCampaignPage = ({ children }: FutreCampaignPageProps) => {
+  const [colorScheme] = useColorContext()
+
+  css.global('body', {
+    backgroundColor: colorScheme.getCSSColor('default'),
+    color: colorScheme.getCSSColor('text'),
+  })
+
+  const scrollbarStyle = useMemo(
+    () =>
+      css({
+        '&::-webkit-scrollbar': {
+          height: 6,
+          width: 6,
+          backgroundColor: colorScheme.getCSSColor('hover'),
+          borderRadius: 10,
+        },
+        '&::-webkit-scrollbar-thumb': {
+          backgroundColor: colorScheme.getCSSColor('divider'),
+          borderRadius: 10,
+        },
+      }),
+    [colorScheme],
+  )
+
+  return (
+    <div {...styles.pageWrapper}>
+      <div {...styles.page} {...scrollbarStyle}>
+        <div {...styles.header}>
+          <FutureCampaignHeader />
+        </div>
+        <div {...styles.content}>{children}</div>
+      </div>
+    </div>
+  )
+}
+
+export default FutureCampaignPage
+
+const styles = {
+  pageWrapper: css({
+    display: 'flex',
+    minHeight: '100vh',
+  }),
+  page: css({
+    height: '100vh',
+    display: 'grid',
+    width: '100%',
+    gap: 8,
+    gridTemplateRows: 'auto 1fr',
+    maxWidth: 600,
+    maxHeight: 800,
+    margin: 'auto',
+    position: 'relative',
+    overflowY: 'auto',
+  }),
+  header: css({
+    position: 'sticky',
+    top: 0,
+    zIndex: 1,
+  }),
+  content: css({
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    padding: '0 15px',
+  }),
+}
