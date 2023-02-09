@@ -170,7 +170,6 @@ class Pledge extends Component {
     return pkg
   }
   submitPledgeProps({ values, query, pledge }) {
-    const { customMe } = this.props
     const pkg = this.getPkg({ query })
     const userPrice = !!query.userPrice
 
