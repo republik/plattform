@@ -486,11 +486,11 @@
     },
     {
       "key": "api/email/option/membershiptype/yearly_abo/1",
-      "value": "TODO: api/email/option/membershiptype/yearly_abo/1"
+      "value": "Mitstreiterinnen-Abo"
     },
     {
       "key": "api/email/option/membershiptype/yearly_abo/other",
-      "value": "TODO: api/email/option/membershiptype/yearly_abo/other"
+      "value": "Mitstreiterinnen-Abos"
     },
     {
       "key": "api/email/option/other/gifted_membership",
