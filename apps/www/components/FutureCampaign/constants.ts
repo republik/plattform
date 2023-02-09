@@ -21,7 +21,7 @@ export const SLIDER_STEPS = [
   }, //  5 <= Selected < average CHF}
   {
     label: 'Mit dem Schwarm schwimmen',
-    text: 'Wie gesagt: Wir wollen nichts Unbedachtes von Ihnen. Wählen Sie den Betrag, der für Sie stimmt. Im Schnitt zahlen neue Mitstreiter wie Sie.',
+    text: 'Wir wollen nichts Unbedachtes von Ihnen. Wählen Sie den Betrag, der für Sie stimmt. Im Schnitt zahlen neue Mitstreiter wie Sie.',
     goodie: true,
     goodieText: 'Zum Abo-Kauf schenken wir Ihnen eine Jubiläumstasche dazu.',
     bonusHint: '',
