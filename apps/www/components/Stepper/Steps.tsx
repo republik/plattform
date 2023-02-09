@@ -87,9 +87,9 @@ const styles = {
     display: 'grid',
     gridTemplateColumns: '1fr 4fr 1fr',
     gridAutoRows: 'auto',
-    padding: '0.5rem 0.25rem',
+    padding: '0.5rem 0',
     [mediaQueries.mUp]: {
-      padding: '1rem 0.5rem',
+      padding: '1rem 0',
     },
   }),
   steps: css({
