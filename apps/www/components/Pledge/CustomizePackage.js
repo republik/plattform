@@ -258,7 +258,7 @@ class CustomizePackage extends Component {
       }
     }
 
-    const { onChange, pkg, values, userPrice, t } = this.props
+    const { onChange, pkg, values, userPrice, fixedPrice, t } = this.props
 
     const price = this.getPriceWithSuggestion()
     const minPrice = calculateMinPrice(pkg, values, userPrice)
@@ -268,7 +268,7 @@ class CustomizePackage extends Component {
       },
       errors: {
         price: priceError(price, minPrice, t),
-        reason: userPrice && reasonError(values.reason, t),
+        reason: userPrice && !fixedPrice && reasonError(values.reason, t),
       },
     })
   }
@@ -317,6 +317,7 @@ class CustomizePackage extends Component {
       t,
       pkg,
       userPrice,
+      fixedPrice,
       customMe,
       ownMembership,
       router,
@@ -361,7 +362,6 @@ class CustomizePackage extends Component {
 
     const minPrice = calculateMinPrice(pkg, values, userPrice)
     const regularMinPrice = calculateMinPrice(pkg, values, false)
-    const fixedPrice = ['MONTHLY_ABO', 'YEARLY_ABO'].includes(pkg.name)
 
     const onPriceChange = (_, value, shouldValidate) => {
       const price = String(value).length
@@ -963,7 +963,7 @@ class CustomizePackage extends Component {
           }}
           fields={configurableGoodieFields}
         />
-        {!!userPrice && (
+        {!!userPrice && !fixedPrice && (
           <div>
             <P>
               {t.first([
@@ -996,14 +996,12 @@ class CustomizePackage extends Component {
                 }}
               />
             </div>
-            {!fixedPrice && (
-              <P>
-                {t.first([
-                  `package/customize/userPrice/${pkg.name}/beforePrice`,
-                  'package/customize/userPrice/beforePrice',
-                ])}
-              </P>
-            )}
+            <P>
+              {t.first([
+                `package/customize/userPrice/${pkg.name}/beforePrice`,
+                'package/customize/userPrice/beforePrice',
+              ])}
+            </P>
           </div>
         )}
         <div style={{ marginBottom: 20 }}>
