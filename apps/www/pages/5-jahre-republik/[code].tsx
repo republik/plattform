@@ -14,6 +14,7 @@ import { PUBLIC_BASE_URL } from '../../lib/constants'
 import { useRouter } from 'next/router'
 import Meta from '../../components/Frame/Meta'
 import { css } from 'glamor'
+import { useMemo } from 'react'
 
 function Page(props: InviteReceiverPageProps) {
   const router = useRouter()
@@ -31,9 +32,26 @@ function Page(props: InviteReceiverPageProps) {
     color: colorScheme.getCSSColor('text'),
   })
 
+  const scrollbarStyle = useMemo(
+    () =>
+      css({
+        '&::-webkit-scrollbar': {
+          height: 6,
+          width: 6,
+          backgroundColor: colorScheme.getCSSColor('hover'),
+          borderRadius: 10,
+        },
+        '&::-webkit-scrollbar-thumb': {
+          backgroundColor: colorScheme.getCSSColor('divider'),
+          borderRadius: 10,
+        },
+      }),
+    [colorScheme],
+  )
+
   return (
     <div {...styles.pageWrapper}>
-      <div {...styles.page}>
+      <div {...styles.page} {...scrollbarStyle}>
         <Meta data={meta} />
         <div {...styles.header}>
           <FutureCampaignHeader />
