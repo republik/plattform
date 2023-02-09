@@ -5556,6 +5556,10 @@
       "value": "Mit Ihrer Mitgliedschaft können Sie ab sofort nicht nur die Republik konsumieren, sondern Sie können und sollen sie auch beeinflussen."
     },
     {
+      "key": "Onboarding/Page/context:pledge/packageName:YEARLY_ABO/preface",
+      "value": "Mit Ihrem Abo können Sie ab sofort nicht nur die Republik lesen und hören, Sie können auch mitdiskutieren."
+    },
+    {
       "key": "Onboarding/Page/pledge/introduction",
       "value": "Dieser kurze Einrichtungsassistent hilft Ihnen mit dem Wichtigsten vorab."
     },
