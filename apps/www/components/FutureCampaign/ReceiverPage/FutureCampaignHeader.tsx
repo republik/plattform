@@ -1,4 +1,4 @@
-import { useColorContext } from '@project-r/styleguide'
+import { useColorContext, mediaQueries } from '@project-r/styleguide'
 import { css } from 'glamor'
 import Link from 'next/link'
 import AssetImage from '../../../lib/images/AssetImage'
@@ -9,12 +9,15 @@ const FutureCampaignHeader = () => {
     <div {...colorScheme.set('backgroundColor', 'default')}>
       <div {...styles.header}>
         <Link href='/'>
-          <AssetImage
-            src={'/static/5-jahre-republik/logo/combo-logo_white.svg'}
-            height={32}
-            width={160}
-            objectFit='contain'
-          />
+          <div {...styles.logo}>
+            <AssetImage
+              src={'/static/5-jahre-republik/logo/combo-logo_white.svg'}
+              height={48}
+              width={240}
+              layout='responsive'
+              // objectFit='contain'
+            />
+          </div>
         </Link>
       </div>
     </div>
@@ -29,5 +32,11 @@ const styles = {
     flexDirection: 'row',
     alignItems: 'center',
     padding: '24px 15px',
+  }),
+  logo: css({
+    width: 160,
+    [mediaQueries.mUp]: {
+      width: 200,
+    },
   }),
 }
