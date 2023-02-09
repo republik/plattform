@@ -7,7 +7,10 @@ import {
   InlineSpinner,
   Interaction,
   Loader,
+  useColorContext,
 } from '@project-r/styleguide'
+
+import { css } from 'glamor'
 
 import { useInfiniteScroll } from '../../../lib/hooks/useInfiniteScroll'
 import { useTranslation } from '../../../lib/withT'
@@ -24,7 +27,7 @@ import {
   SORT_KEY_PARAM,
   SUPPORTED_SORT,
 } from './graphql'
-import { AnswersChart, getTargetedAnswers } from './Overview'
+import { AnswersChart, getTargetedAnswers, COLORS } from './Overview'
 
 const getSortParams = (query, sort) => {
   if (sort.key === 'random' || !sort.key) {
@@ -44,6 +47,7 @@ const getSortParams = (query, sort) => {
 
 const TargetedQuestions = ({ slug, questionIds, extract, share = {} }) => {
   const { t } = useTranslation()
+  const [colorScheme] = useColorContext()
   const router = useRouter()
   const { query } = router
   const sortBy = query.skey || 'random'
@@ -93,14 +97,13 @@ const TargetedQuestions = ({ slug, questionIds, extract, share = {} }) => {
   return (
     <>
       <Button
-        small
         onClick={() => {
           router.replace({
             pathname,
           })
         }}
       >
-        Zurück
+        Zurück zur Übersicht
       </Button>
       <div style={{ marginTop: 20 }}>
         <span style={{ marginRight: 20 }}>Sortierung:</span>
@@ -129,7 +132,7 @@ const TargetedQuestions = ({ slug, questionIds, extract, share = {} }) => {
           const [mainQuestion, addQuestion] = questions
           const targetAnswers = getTargetedAnswers(questionIds, results)
 
-          // console.log({ answers })
+          console.log({ mainQuestion })
           return (
             <div
               style={{
@@ -145,27 +148,73 @@ const TargetedQuestions = ({ slug, questionIds, extract, share = {} }) => {
               )}
 
               {!!addQuestion && (
-                <Interaction.H3 style={{ marginTop: 40 }}>
+                <Interaction.H2 style={{ marginTop: 30 }}>
                   {addQuestion.text}
-                </Interaction.H3>
+                </Interaction.H2>
               )}
 
               <div style={{ marginTop: 50 }}>
                 {targetAnswers.map(({ answers, displayAuthor }) => (
-                  <Editorial.P key={answers[0].id} attributes={{}}>
-                    {answers.map((answer, idx) => (
-                      <>
-                        <AnswerText
-                          text={answer.payload.text}
-                          value={answer.payload.value}
-                          question={questions[idx]}
-                          isQuote
-                        />
-                        <br />
-                      </>
-                    ))}
-                    <em>– {displayAuthor.name}</em>
-                  </Editorial.P>
+                  <div
+                    key={answers[0].id}
+                    style={{
+                      padding: '10px',
+                      marginBottom: '20px',
+                      borderRadius: '2px',
+                    }}
+                    {...colorScheme.set('boxShadow', 'imageChoiceShadow')}
+                  >
+                    <Interaction.P attributes={{}}>
+                      {answers.map((answer, idx) => {
+                        const colorIndex =
+                          mainQuestion?.__typename === 'QuestionTypeChoice' &&
+                          mainQuestion.options
+                            .map((d) => d.value)
+                            .indexOf(answer.payload.value[0])
+
+                        return (
+                          <div
+                            style={{
+                              position: 'relative',
+                            }}
+                            key={answer.id}
+                          >
+                            {answer?.question?.__typename !==
+                              'QuestionTypeChoice' && (
+                              <div
+                                style={{
+                                  paddingTop: colorIndex ? '20px' : 0,
+                                }}
+                              >
+                                <AnswerText
+                                  text={answer.payload.text}
+                                  value={answer.payload.value}
+                                  question={questions[idx]}
+                                />
+                                <br />
+                                <br />
+                              </div>
+                            )}
+
+                            {mainQuestion?.__typename ===
+                              'QuestionTypeChoice' &&
+                              idx < 1 && (
+                                <div
+                                  {...styles.colorBar}
+                                  style={{
+                                    backgroundColor:
+                                      colorIndex !== -1
+                                        ? COLORS[colorIndex]
+                                        : undefined,
+                                  }}
+                                />
+                              )}
+                          </div>
+                        )
+                      })}
+                      <em>– {displayAuthor.name}</em>
+                    </Interaction.P>
+                  </div>
                 ))}
               </div>
               <div style={{ marginTop: 10 }}>
@@ -192,3 +241,14 @@ const TargetedQuestions = ({ slug, questionIds, extract, share = {} }) => {
 }
 
 export default TargetedQuestions
+
+const styles = {
+  colorBar: css({
+    position: 'absolute',
+    left: -10,
+    top: -10,
+    height: '10px',
+    width: '20%',
+    borderTopLeftRadius: '2px',
+  }),
+}

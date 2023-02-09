@@ -10,11 +10,10 @@ import {
   TeaserCarouselTileContainer,
   TeaserCarouselTile,
   TeaserCarouselHeadline,
-  TeaserSectionTitle,
   inQuotes,
-  ChartTitle,
   ChartLegend,
   Chart,
+  Interaction,
 } from '@project-r/styleguide'
 
 import TargetedQuestions from './TargetedQuestions'
@@ -30,6 +29,8 @@ export const getTargetedAnswers = (questionIds, results) => {
     }
   })
 }
+
+export const COLORS = ['#6954ff', '#9F92FF', '#D9D4FF']
 
 const QuestionLink = ({ question, additionalQuestion, children }) => {
   const router = useRouter()
@@ -60,39 +61,48 @@ export const AnswersChart = ({ question, additionalQuestion, skipTitle }) => {
   }))
   return (
     <div style={{ marginTop: 20 }}>
-      {!skipTitle && <ChartTitle>{question.text}</ChartTitle>}
-      <Chart
-        config={{
-          type: 'Bar',
-          numberFormat: '.0%',
-          y: 'answer',
-          showBarValues: true,
-        }}
-        values={values}
-      />
-      {!!additionalQuestion && (
-        <ChartLegend>
-          <QuestionLink
-            question={question}
-            additionalQuestion={additionalQuestion}
-          >
-            <Editorial.A>Mehr darüber</Editorial.A>
-          </QuestionLink>
-        </ChartLegend>
-      )}
+      {!skipTitle && <Interaction.H2>{question.text}</Interaction.H2>}
+      <div style={{ marginTop: 20 }}>
+        <Chart
+          config={{
+            type: 'Bar',
+            numberFormat: '.0%',
+            y: 'answer',
+            showBarValues: true,
+            colorRange: COLORS,
+            color: 'answer',
+            colorSort: 'none',
+          }}
+          values={values}
+        />
+        {!!additionalQuestion && (
+          <div style={{ marginTop: '20px' }}>
+            <Interaction.P>
+              <QuestionLink
+                question={question}
+                additionalQuestion={additionalQuestion}
+              >
+                <Editorial.A>Alle Antworten lesen</Editorial.A>
+              </QuestionLink>
+            </Interaction.P>
+          </div>
+        )}
+      </div>
     </div>
   )
 }
 
-const AnswersCarousel = ({ slug, question, additionalQuestion }) => {
+const AnswersCarousel = ({ slug, question, additionalQuestion, bgColor }) => {
   const { loading, error, data } = useQuery(QUESTIONNAIRE_SUBMISSIONS_QUERY, {
     variables: {
       slug,
-      first: 5,
+      first: 8,
       sortBy: 'random',
       questionIds: [question.id],
     },
   })
+
+  // TODO filter answers by length, make Carousel with short answers and carousels with long answers
 
   return (
     <Loader
@@ -106,36 +116,47 @@ const AnswersCarousel = ({ slug, question, additionalQuestion }) => {
         const targetedAnswers = getTargetedAnswers([question.id], results)
 
         return (
-          <Breakout size='breakout'>
-            <TeaserCarousel outline>
+          <>
+            <Interaction.H2>{question.text}</Interaction.H2>
+
+            <Breakout size='breakout'>
+              <TeaserCarousel outline>
+                <TeaserCarouselTileContainer>
+                  {targetedAnswers.map(({ answers, displayAuthor }) => (
+                    <TeaserCarouselTile key={answers[0].id} bgColor={bgColor}>
+                      <TeaserCarouselHeadline.Interaction>
+                        {inQuotes(answers[0].payload.value)}
+                      </TeaserCarouselHeadline.Interaction>
+
+                      <Editorial.Credit>
+                        Von{' '}
+                        <Editorial.A
+                          href={`/klimafragebogen/${displayAuthor.slug}`}
+                        >
+                          {displayAuthor.name}
+                        </Editorial.A>
+                      </Editorial.Credit>
+                    </TeaserCarouselTile>
+                  ))}
+                </TeaserCarouselTileContainer>
+              </TeaserCarousel>
+            </Breakout>
+            <Interaction.P>
               <QuestionLink
                 question={question}
                 additionalQuestion={additionalQuestion}
               >
-                <TeaserSectionTitle>{question.text}</TeaserSectionTitle>
+                <Editorial.A>Alle Antworten lesen</Editorial.A>
               </QuestionLink>
-              <TeaserCarouselTileContainer>
-                {targetedAnswers.map(({ answers, displayAuthor }) => (
-                  <TeaserCarouselTile key={answers[0].id}>
-                    <TeaserCarouselHeadline.Editorial>
-                      {inQuotes(answers[0].payload.value)}
-                    </TeaserCarouselHeadline.Editorial>
-                    <Editorial.Credit>
-                      Von{' '}
-                      <Editorial.A href='#'>{displayAuthor.name}</Editorial.A>
-                    </Editorial.Credit>
-                  </TeaserCarouselTile>
-                ))}
-              </TeaserCarouselTileContainer>
-            </TeaserCarousel>
-          </Breakout>
+            </Interaction.P>
+          </>
         )
       }}
     />
   )
 }
 
-const Question = ({ slug, question, additionalQuestion }) => {
+const Question = ({ slug, question, additionalQuestion, bgColor }) => {
   return (
     <div
       key={question.id}
@@ -149,6 +170,7 @@ const Question = ({ slug, question, additionalQuestion }) => {
           slug={slug}
           question={question}
           additionalQuestion={additionalQuestion}
+          bgColor={bgColor}
         />
       )}
       {question.__typename === 'QuestionTypeChoice' && (
@@ -178,46 +200,84 @@ const AllQuestions = ({ slug }) => {
         return (
           <div style={{ marginTop: 80 }}>
             <Question question={questions[6]} slug={slug} />
-            <Editorial.P>☝️ Simple Chart. Not linked to anything.</Editorial.P>
+            <Interaction.P>
+              Simple Chart. Not linked to anything. Lorem ipsum dolor sit amet,
+              consetetur sadipscing elitr, sed diam nonumy eirmod tempor
+              invidunt ut labore et dolore magna aliquyam erat, sed diam
+              voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
+              Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum
+              dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing
+              elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore
+              magna aliquyam erat, sed diam voluptua.
+            </Interaction.P>
             <Question
               question={questions[0]}
               additionalQuestion={questions[1]}
               slug={slug}
+              bgColor={'#FFFFC8'}
             />
-            <Editorial.P>
-              ☝️ This text question is linked to a second, additional question.
-            </Editorial.P>
-            <Editorial.P>
+            <Interaction.P>
+              This text question is linked to a second, additional question.
+              Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
+              nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam
+              erat, sed diam voluptua. At vero eos et accusam et justo duo
+              dolores et ea rebum. Stet clita kasd gubergren, no sea takimata
+              sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit
+              amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor
+              invidunt ut labore et dolore magna aliquyam erat, sed diam
+              voluptua.
+            </Interaction.P>
+            <Interaction.P>
               Want some more? You can also explore the following questions:
-            </Editorial.P>
-            <Editorial.UL>
-              <Editorial.LI>
-                <QuestionLink
-                  question={questions[2]}
-                  additionalQuestion={questions[3]}
-                >
-                  <Editorial.A>{questions[2].text}</Editorial.A>
-                </QuestionLink>{' '}
-                (psst: es gibt da noch eine Bonusfrage)
-              </Editorial.LI>
-              <Editorial.LI>
-                <QuestionLink question={questions[5]}>
-                  <Editorial.A>{questions[5].text}</Editorial.A>
-                </QuestionLink>
-              </Editorial.LI>
-            </Editorial.UL>
-            <Question question={questions[16]} slug={slug} />
-            <Editorial.P>
-              ☝️ This is a question with rather long answers.
-            </Editorial.P>
+            </Interaction.P>
+            <Interaction.P>
+              <ul>
+                <li>
+                  <QuestionLink
+                    question={questions[2]}
+                    additionalQuestion={questions[3]}
+                  >
+                    <Editorial.A>{questions[2].text}</Editorial.A>
+                  </QuestionLink>{' '}
+                  (psst: es gibt da noch eine Bonusfrage)
+                </li>
+                <li>
+                  <QuestionLink question={questions[5]}>
+                    <Editorial.A>{questions[5].text}</Editorial.A>
+                  </QuestionLink>
+                </li>
+              </ul>
+            </Interaction.P>
+            <Question
+              question={questions[16]}
+              slug={slug}
+              bgColor={'#FFFFC8'}
+            />
+            <Interaction.P>
+              This is a question with rather long answers. Lorem ipsum dolor sit
+              amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor
+              invidunt ut labore et dolore magna aliquyam erat, sed diam
+              voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
+              Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum
+              dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing
+              elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore
+              magna aliquyam erat, sed diam voluptua.
+            </Interaction.P>
             <Question
               question={questions[31]}
               additionalQuestion={questions[32]}
               slug={slug}
             />
-            <Editorial.P>
-              ☝️ This is a multiple choice question with a Zusatzfrage.
-            </Editorial.P>
+            <Interaction.P>
+              This is a multiple choice question with a Zusatzfrage. Lorem ipsum
+              dolor sit amet, consetetur sadipscing elitr, sed diam nonumy
+              eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
+              sed diam voluptua. At vero eos et accusam et justo duo dolores et
+              ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est
+              Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur
+              sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore
+              et dolore magna aliquyam erat, sed diam voluptua.
+            </Interaction.P>
           </div>
         )
       }}
