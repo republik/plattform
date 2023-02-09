@@ -170,7 +170,6 @@ class Pledge extends Component {
     return pkg
   }
   submitPledgeProps({ values, query, pledge }) {
-    const { customMe } = this.props
     const pkg = this.getPkg({ query })
     const userPrice = !!query.userPrice
 
@@ -429,6 +428,9 @@ class Pledge extends Component {
                       ownMembership={ownMembership}
                       customMe={customMe}
                       userPrice={userPrice}
+                      fixedPrice={['MONTHLY_ABO', 'YEARLY_ABO'].includes(
+                        pkg.name,
+                      )}
                       pkg={pkg}
                       packages={packages}
                       onChange={(fields) => {

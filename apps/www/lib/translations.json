@@ -2498,7 +2498,7 @@
     },
     {
       "key": "package/customize/userPrice/YEARLY_ABO/beforeReason",
-      "value": "TODO: String für package/customize/userPrice/YEARLY_ABO/beforeReason"
+      "value": "Eine grosse und vielfältige Community ist für ein leserinnenfinanziertes Magazin unbezahlbar. Deshalb geben wir Ihnen zum 5-Jahres-Jubiläum der Republik die Möglichkeit, den Preis für Ihr Abo selber zu wählen. "
     },
     {
       "key": "package/customize/userPrice/beforeReason",
@@ -2554,11 +2554,11 @@
     },
     {
       "key": "package/YEARLY_ABO/title",
-      "value": "TODO: String für package/YEARLY_ABO/title"
+      "value": "Mitstreiterinnen-Abo"
     },
     {
       "key": "package/YEARLY_ABO/description",
-      "value": "TODO: STring für package/YEARLY_ABO/description"
+      "value": "Es freut uns, dass Sie dabei sind! Mit Ihrem selbst gewählten Beitrag erhalten Sie ab sofort unser Magazin, zum Lesen und zum Hören. Und Sie investieren in die Zukunft unseres Journalismus."
     },
     {
       "key": "package/BENEFACTOR/title",
@@ -2594,7 +2594,7 @@
     },
     {
       "key": "package/group/HIDDEN",
-      "value": "TODO: String package/group/HIDDEN"
+      "value": "Angebote"
     },
     {
       "key": "option/ABO/label/other",
@@ -2642,11 +2642,11 @@
     },
     {
       "key": "option/YEARLY_ABO/label/other",
-      "value": "TODO: String für option/YEARLY_ABO/label/other"
+      "value": "Mitstreiter-Abos"
     },
     {
       "key": "option/YEARLY_ABO/label/1",
-      "value": "TODO: STring für option/YEARLY_ABO/label/1"
+      "value": "Mitstreiter-Abo"
     },
     {
       "key": "package/customize/ABO_GIVE_MONTHS/years/1",
@@ -3881,23 +3881,23 @@
     },
     {
       "key": "memberships/YEARLY_ABO/manage/prolong/link",
-      "value": "TODO: String für memberships/YEARLY_ABO/manage/prolong/link Abonnement verlängern"
+      "value": "Abonnement verlängern"
     },
     {
       "key": "memberships/YEARLY_ABO/manage/cancel/link",
-      "value": "TODO: memberships/YEARLY_ABO/manage/cancel/link Abonnement künden"
+      "value": "Abonnement kündigen"
     },
     {
       "key": "memberships/YEARLY_ABO/manage/upgrade/link",
-      "value": "TODO: memberships/YEARLY_ABO/manage/upgrade/link Wenn Sie ein {buyLink}, beenden wir automatisch Ihr Monatsabo."
+      "value": "{buyLink} und behalten Sie Ihren Zugang zur Republik auch nach Ablauf Ihres Mitstreiterinnen-Abos."
     },
     {
       "key": "memberships/YEARLY_ABO/manage/upgrade/link/buyText",
-      "value": "TODO: memberships/YEARLY_ABO/manage/upgrade/link/buyText Jahresmitgliedschaft lösen"
+      "value": "Lösen Sie eine Jahresmitgliedschaft"
     },
     {
       "key": "memberships/YEARLY_ABO/manage/reactivate",
-      "value": "TODO: memberships/YEARLY_ABO/manage/reactivate Abonnement reaktivieren"
+      "value": "Abonnement-Kündigung zurückziehen"
     },
     {
       "key": "memberships/claim/lead",
@@ -4809,7 +4809,7 @@
     },
     {
       "key": "package/customize/userPrice/YEARLY_ABO/beforePrice",
-      "value": "TODO: package/customize/userPrice/YEARLY_ABO/beforePrice"
+      "value": "Welcher Preis stimmt für Sie?"
     },
     {
       "key": "package/customize/userPrice/beforePrice",
@@ -4941,11 +4941,11 @@
     },
     {
       "key": "pledge/meta/package/YEARLY_ABO/title",
-      "value": "TODO: String für pledge/meta/package/YEARLY_ABO/title"
+      "value": "Verstärken Sie die Republik-Community!"
     },
     {
       "key": "pledge/meta/package/YEARLY_ABO/description",
-      "value": "TODO: String für pledge/meta/package/YEARLY_ABO/description"
+      "value": "Wir sind ein digitales Magazin für Politik, Wirtschaft, Gesellschaft und Kultur. Unabhängig. Werbefrei."
     },
     {
       "key": "pledge/form/statement/share/title",
@@ -5281,6 +5281,50 @@
     },
     {
       "key": "prolongNecessary/days/other",
+      "value": "vor {count} Tagen"
+    },
+    {
+      "key": "EndingBox/YEARLY_ABO/before",
+      "value": "Ihr Abo endet bald: {link}"
+    },
+    {
+      "key": "EndingBox/YEARLY_ABO/before/linkText",
+      "value": "jetzt Jahresmitglied werden!"
+    },
+    {
+      "key": "EndingBox/YEARLY_ABO/due",
+      "value": "Ihr Abo endet bald: {link}"
+    },
+    {
+      "key": "EndingBox/YEARLY_ABO/due/linkText",
+      "value": "Ihr Abo endet bald: jetzt Jahresmitglied werden!"
+    },
+    {
+      "key": "EndingBox/YEARLY_ABO/overdue",
+      "value": "Ihr Abo endet – und Ihre Mitgliedschaft beginnt?"
+    },
+    {
+      "key": "EndingBox/YEARLY_ABO/overdue/button",
+      "value": "Jetzt Jahresmitglied werden"
+    },
+    {
+      "key": "EndingBox/YEARLY_ABO/overdue/explanation",
+      "value": "Ihr Abo läuft am {endDate} aus. Doch das muss nicht das Ende Ihrer Zeit bei der Republik bedeuten: Werden Sie jetzt Jahresmitglied und unterstützen Sie unseren Journalismus auch in Zukunft."
+    },
+    {
+      "key": "EndingBox/YEARLY_ABO/overdue/explanation/cancelText",
+      "value": "Abonnement kündigen"
+    },
+    {
+      "key": "EndingBox/days/0",
+      "value": "heute"
+    },
+    {
+      "key": "EndingBox/days/1",
+      "value": "gestern"
+    },
+    {
+      "key": "EndingBox/days/other",
       "value": "vor {count} Tagen"
     },
     {
