@@ -120,7 +120,24 @@ const InviteReceiverPage = ({ invalidInviteCode }: InviteReceiverPageProps) => {
 
   return (
     <>
-      {invalidInviteCode && <p>Invalid invite code</p>}
+      {invalidInviteCode && (
+        <div>
+          <p {...styles.text}>
+            Ein aufmerksamer Mensch aus der Republik-Community möchte Ihnen ein
+            Mitstreiterinnen-Abo ermöglichen: 12 Monate Republik zu einem Preis,
+            der für Sie stimmt. Herzlichen Glückwunsch!
+          </p>
+          <p {...styles.text}>Einzig: Dieser Link hier ist ungültig.</p>
+          <p {...styles.text}>
+            Haken Sie bei der Person nach und lassen Sie sich den korrekten Link
+            geben.
+          </p>
+          <p {...styles.text}>
+            PS: Sollte die Person nicht erreichbar sein, dann melden Sie sich
+            gerne direkt unter kontakt@republik.ch.
+          </p>
+        </div>
+      )}
       {hasYearlySubscription && (
         <div {...styles.hasYearlySubscription}>
           <h1 {...styles.heading}>Journalismus hat eine Zukunft, mit Ihnen.</h1>
