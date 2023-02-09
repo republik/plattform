@@ -11,7 +11,7 @@ import { useMemo, useState } from 'react'
 import { Typewriter } from 'react-simple-typewriter'
 import { PUBLIC_BASE_URL } from '../../../lib/constants'
 import AssetImage from '../../../lib/images/AssetImage'
-import Frame, { MainContainer } from '../../Frame'
+import Frame from '../../Frame'
 import {
   useDonateMonthsConsentQuery,
   useGiveConsentToDonateMonthsMutation,
@@ -29,7 +29,6 @@ import {
 } from '../../Auth/withMembership'
 import { MeObjectType } from '../../../lib/context/MeContext'
 import { PageCenter } from '../../Auth/withAuthorization'
-import { isAbsolute } from 'node:path/win32'
 
 const DONATE_MONTHS_CONSENT_KEY = '5YEAR_DONATE_MONTHS'
 
@@ -325,13 +324,13 @@ const styles = {
   inviteLinkBox: css({
     ...fontStyles.sansSerifRegular,
     display: 'flex',
-    flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
     gap: 8,
     alignItems: 'center',
     padding: '12px 15px',
     backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    minWidth: 0,
   }),
   buttonWrapper: css({
     width: '100%',
