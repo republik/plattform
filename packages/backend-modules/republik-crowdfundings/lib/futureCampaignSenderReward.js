@@ -1,16 +1,44 @@
+const debug = require('debug')('crowdfundings:lib:futureCampaignSenderReward')
+
 const { Consents } = require('@orbiting/backend-modules-auth')
+
 const dayjs = require('dayjs')
+const isUUID = require('is-uuid')
+
+const { getPeriodEndingLast } = require('./utils')
 
 const DONATE_POLICY_NAME = '5YEAR_DONATE_MONTHS'
 
-const rewardSender = async (senderUserId, pledgeUserId, context) => {
+const rewardSender = async (pledge, context) => {
   const { pgdb, t, mail } = context
+
+  if (pledge?.payload?.utm_campaign !== 'mitstreiter') {
+    debug('no utm_campaign "mitstreiter" found')
+    return
+  }
+
+  const { payload } = pledge
+  const { utm_content: senderUserId } = payload
+
+  if (!senderUserId || !isUUID.v4(senderUserId)) {
+    debug('no utm_content does not contain an UUID')
+    return
+  }
 
   const transaction = await pgdb.transactionBegin()
 
   try {
-    // update count of subscribers
+    const activeMembership = await transaction.public.memberships.findOne({
+      userId: senderUserId,
+      active: true,
+    })
 
+    if (!activeMembership) {
+      debug('sender has no more active membership')
+      return
+    }
+
+    // update count of subscribers
     const lastCount = await transaction.public.userAttributes.findFirst(
       { userId: senderUserId, name: 'futureCampaignAboCount' },
       { orderBy: { createdAt: 'desc' } },
@@ -19,13 +47,12 @@ const rewardSender = async (senderUserId, pledgeUserId, context) => {
     const newCount = lastCount ? parseInt(lastCount.value, 10) + 1 : 1
 
     if (newCount <= 5) {
-      const count = await transaction.public.userAttributes.insertAndGet({
+      await transaction.public.userAttributes.insert({
         userId: senderUserId,
         name: 'futureCampaignAboCount',
         value: newCount,
       })
 
-      const currentCount = count?.value
       // fetch consent of campaign sender if month should be donated
       const hasDonateConsent = await Consents.statusForPolicyForUser({
         userId: senderUserId,
@@ -35,8 +62,8 @@ const rewardSender = async (senderUserId, pledgeUserId, context) => {
 
       const rewardMailData = {
         senderUserId,
-        pledgeUserId,
-        count: currentCount,
+        pledgeUserId: pledge.userId,
+        count: newCount,
         hasSenderConsentedToDonate: hasDonateConsent,
       }
 
@@ -47,25 +74,19 @@ const rewardSender = async (senderUserId, pledgeUserId, context) => {
           active: true,
         })
 
-        const currentMembershipPeriod =
-          await transaction.public.membershipPeriods.findFirst(
-            {
-              membershipId: activeMembership.id,
-              pledgeId: activeMembership.pledgeId,
-            },
-            { orderBy: { endDate: 'asc' } },
-          )
+        const membershipPeriods =
+          await transaction.public.membershipPeriods.find({
+            membershipId: activeMembership.id,
+          })
 
-        const currentMembershipPeriodEndDate = dayjs(
-          currentMembershipPeriod.endDate,
-        )
+        const lastPeriod = getPeriodEndingLast(membershipPeriods)
+        const endDate = dayjs(lastPeriod.endDate)
 
         const newMembershipPeriod =
           await transaction.public.membershipPeriods.insertAndGet({
             membershipId: activeMembership.id,
-            pledgeId: activeMembership.pledgeId,
-            beginDate: currentMembershipPeriodEndDate,
-            endDate: currentMembershipPeriodEndDate.add(1, 'month'),
+            beginDate: endDate,
+            endDate: endDate.add(1, 'month'),
             kind: 'BONUS',
           })
 
@@ -83,8 +104,8 @@ const rewardSender = async (senderUserId, pledgeUserId, context) => {
     }
   } catch (e) {
     await transaction.transactionRollback()
-    console.error(e)
-    throw new Error(t('')) // TODO: Fehlermeldung
+    console.error('transaction rollback', e)
+    throw e
   }
 }
 
