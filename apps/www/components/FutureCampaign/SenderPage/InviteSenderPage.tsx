@@ -5,6 +5,7 @@ import {
   CopyToClippboardIcon,
   Checkbox,
   Button,
+  Loader,
 } from '@project-r/styleguide'
 import { css } from 'glamor'
 import { useMemo, useState } from 'react'
@@ -29,12 +30,15 @@ import {
 } from '../../Auth/withMembership'
 import { MeObjectType } from '../../../lib/context/MeContext'
 import { PageCenter } from '../../Auth/withAuthorization'
+import { useNumOfRedeemedInvitesQuery } from '../graphql/useNumOfRedeemedInvitesQuery'
 
 const DONATE_MONTHS_CONSENT_KEY = '5YEAR_DONATE_MONTHS'
 
 const InviteSenderPage = ({ me }: { me: MeObjectType }) => {
   const [showShareOverlay, setShowShareOverlay] = useState(false)
   const { data: userInviteData } = useUserInviteQuery()
+  const { data: redeemedInvites, loading: loadingRedeemedInvites } =
+    useNumOfRedeemedInvitesQuery()
   const hasShareGrant = me?.accessCampaigns.length > 0
 
   const {
@@ -83,15 +87,11 @@ const InviteSenderPage = ({ me }: { me: MeObjectType }) => {
     }
   }
 
-  // TODO: Retrieve dynamically
-  const maxRewards = 5
-  const reachedRewards = 1
+  const MAX_REDEEMED_INVITES = 5
 
   const handleCopyLink = (link: string) => {
     navigator.clipboard.writeText(link)
   }
-
-  // TODO: Show special UI if a user has no subscription
 
   if (!hasShareGrant) {
     return (
@@ -195,7 +195,15 @@ const InviteSenderPage = ({ me }: { me: MeObjectType }) => {
             verlängern wir Ihre Mitgliedschaft um einen Monat.
           </p>
           <div>
-            <RewardProgress reached={reachedRewards} max={maxRewards} />
+            <Loader
+              loading={loadingRedeemedInvites}
+              render={() => (
+                <RewardProgress
+                  reached={redeemedInvites?.me?.futureCampaignAboCount || 0}
+                  max={MAX_REDEEMED_INVITES}
+                />
+              )}
+            />
             <p {...styles.disclamerText}>
               Sie möchten Ihnen gutgeschriebene Monate an die Republik spenden?
               Kein Problem:
