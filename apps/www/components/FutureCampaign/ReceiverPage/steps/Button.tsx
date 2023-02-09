@@ -19,7 +19,7 @@ const Button = ({ children, onClick, href, disabled }: ButtonProps) => {
 
   if (href) {
     return (
-      <Link href={href}>
+      <Link href={href} passHref>
         <a
           {...plainLinkRule}
           {...style}

@@ -149,7 +149,7 @@ const InviteReceiverPage = ({ invalidInviteCode }: InviteReceiverPageProps) => {
           <p {...styles.text}>
             Die Republik ist nur so stark, wie ihre Community
           </p>
-          <Button>Jetzt Verstärkung holen</Button>
+          <Button href='/verstaerkung-holen'>Jetzt Verstärkung holen</Button>
         </div>
       )}
       {!invalidInviteCode && isEligible && (
@@ -191,9 +191,6 @@ const styles = {
         fontSize: 21,
       },
     }),
-    '& a': {
-      textDecoration: 'underline',
-    },
   }),
   heading: css({
     ...fontStyles.serifTitle,
