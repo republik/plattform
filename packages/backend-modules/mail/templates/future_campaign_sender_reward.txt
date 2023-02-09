@@ -48,8 +48,8 @@ Ihren Zugang bereits ein neues Abo abgeschlossen. Das ist grossartig!
 Hätten Sie das gedacht?
 
 Und falls Sie jetzt der Ehrgeiz gepackt hat: Sie haben noch {{count_open_slots}}
-Zugänge zu Mitstreiterinnen-Abos zu vergeben. Ihr persönlicher Link zum
-Weitergeben: {{link_sender_page}}
+Zugänge zu Mitstreiterinnen-Abos zu vergeben. Hier {{link_sender_page}} ist ihr
+persönlicher Link zum Weitergeben.
 
 Vielen Dank fürs Dranbleiben und herzliche Grüsse
 
