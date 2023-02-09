@@ -717,6 +717,26 @@
       "value": "Ihre Mitgliedschaft wurde deaktiviert"
     },
     {
+      "key": "api/email/future_campaign_sender_reward/1/subject",
+      "value": "Sie haben Verstärkung geholt!"
+    },
+    {
+      "key": "api/email/future_campaign_sender_reward/2/subject",
+      "value": "Doppelte Verstärkung!"
+    },
+    {
+      "key": "api/email/future_campaign_sender_reward/3/subject",
+      "value": "Mit Ihnen wird die Zukunft greifbar!"
+    },
+    {
+      "key": "api/email/future_campaign_sender_reward/4/subject",
+      "value": "Da war es nur noch eins"
+    },
+    {
+      "key": "api/email/future_campaign_sender_reward/5/subject",
+      "value": "Herzliche Gratulation!"
+    },
+    {
       "key": "api/discussion/404",
       "value": "Die Diskussion konnte nicht gefunden werden."
     },
