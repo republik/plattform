@@ -37,13 +37,15 @@ function Page(props: InviteReceiverPageProps) {
   })
 
   return (
-    <div {...styles.page}>
-      <Meta data={meta} />
-      <div {...styles.header}>
-        <FutureCampaignHeader />
-      </div>
-      <div {...styles.content}>
-        <InviteReceiverPage {...props} />
+    <div {...styles.pageWrapper}>
+      <div {...styles.page}>
+        <Meta data={meta} />
+        <div {...styles.header}>
+          <FutureCampaignHeader />
+        </div>
+        <div {...styles.content}>
+          <InviteReceiverPage {...props} />
+        </div>
       </div>
     </div>
   )
@@ -93,6 +95,10 @@ export const getServerSideProps = createGetServerSideProps<
 })
 
 const styles = {
+  pageWrapper: css({
+    display: 'flex',
+    minHeight: '100vh',
+  }),
   page: css({
     height: '100vh',
     display: 'grid',
@@ -100,8 +106,10 @@ const styles = {
     gap: 8,
     gridTemplateRows: 'auto 1fr',
     maxWidth: 600,
-    margin: '0 auto',
+    maxHeight: 800,
+    margin: 'auto',
     position: 'relative',
+    overflowY: 'auto',
   }),
   header: css({
     position: 'sticky',
@@ -113,9 +121,5 @@ const styles = {
     flexDirection: 'column',
     alignItems: 'center',
     padding: '0 15px',
-    [mediaQueries.mUp]: {
-      height: 600,
-      maxHeight: '100%',
-    },
   }),
 }
