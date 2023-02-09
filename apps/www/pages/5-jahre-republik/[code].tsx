@@ -8,11 +8,7 @@ import {
   INVITE_SENDER_PROFILE_QUERY,
 } from '../../components/FutureCampaign/graphql/useSenderProfileQuery'
 import FutureCampaignHeader from '../../components/FutureCampaign/ReceiverPage/FutureCampaignHeader'
-import {
-  ColorContextProvider,
-  useColorContext,
-  mediaQueries,
-} from '@project-r/styleguide'
+import { ColorContextProvider, useColorContext } from '@project-r/styleguide'
 import { FUTURE_CAMPAIGN_SHARE_IMAGE_URL } from '../../components/FutureCampaign/constants'
 import { PUBLIC_BASE_URL } from '../../lib/constants'
 import { useRouter } from 'next/router'
@@ -26,7 +22,6 @@ function Page(props: InviteReceiverPageProps) {
   const meta = {
     pageTitle: 'Werden Sie Teil der Republik',
     title: 'Werden Sie Teil der Republik',
-    //description: 'baz',
     image: FUTURE_CAMPAIGN_SHARE_IMAGE_URL,
     url: `${PUBLIC_BASE_URL}${router.asPath}`,
   }
