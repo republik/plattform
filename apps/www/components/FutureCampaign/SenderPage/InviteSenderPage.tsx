@@ -104,7 +104,13 @@ const InviteSenderPage = ({ me }: { me: MeObjectType }) => {
   }
 
   return (
-    <Frame pageColorSchemeKey='dark' containerMaxWidth={'700px'}>
+    <Frame
+      pageColorSchemeKey='dark'
+      containerMaxWidth={'700px'}
+      meta={{
+        title: 'Verstärkung holen',
+      }}
+    >
       <main {...styles.page}>
         <div {...styles.header}>
           <div {...styles.headingWrapper}>
