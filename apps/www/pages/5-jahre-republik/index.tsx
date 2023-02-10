@@ -1,5 +1,9 @@
 import { css } from 'glamor'
-import { fontStyles, mediaQueries } from '@project-r/styleguide'
+import {
+  fontStyles,
+  mediaQueries,
+  ColorContextProvider,
+} from '@project-r/styleguide'
 import FutureCampaignPage from '../../components/FutureCampaign/FutureCampaignPage'
 import Meta from '../../components/Frame/Meta'
 
@@ -28,7 +32,13 @@ const FiveYearsIndexPage = () => {
   )
 }
 
-export default FiveYearsIndexPage
+export default function WrappedPage() {
+  return (
+    <ColorContextProvider colorSchemeKey='dark'>
+      <FiveYearsIndexPage />
+    </ColorContextProvider>
+  )
+}
 
 const styles = {
   heading: css({
