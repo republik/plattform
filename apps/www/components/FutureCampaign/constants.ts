@@ -23,7 +23,7 @@ export const SLIDER_STEPS = [
   }, //  5 <= Selected < average CHF}
   {
     label: 'Mit dem Schwarm schwimmen',
-    text: 'Wählen Sie den Betrag, der für Sie stimmt. Mitstreiter, die ihren Preis selber wählen, zahlen im Schnitt 120 CHF',
+    text: 'Wählen Sie den Betrag, der für Sie stimmt. Mitstreiter, die ihren Preis selber wählen, zahlen im Schnitt 120 CHF.',
     goodie: true,
     goodieText: 'Zum Abo-Kauf schenken wir Ihnen eine Jubiläumstasche dazu.',
     bonusHint: '',
