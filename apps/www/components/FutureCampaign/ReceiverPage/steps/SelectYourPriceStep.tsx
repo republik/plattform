@@ -13,7 +13,7 @@ const SelectYourPriceStep = ({
   stepperControls,
   onSubmit,
 }: StepProps & {
-  onSubmit: (price: number) => Promise<void>
+  onSubmit: (price: number) => Promise<any>
 }) => {
   const initialSliderStep = useMemo(() => getDefaultSliderStep(), [])
   const [sliderValue, setSliderValue] = useState<SliderValue>(initialSliderStep)
