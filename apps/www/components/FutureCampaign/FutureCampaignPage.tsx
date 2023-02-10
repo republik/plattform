@@ -69,6 +69,12 @@ const styles = {
     margin: 'auto',
     position: 'relative',
     overflowY: 'auto',
+    '::-webkit-scrollbar-track': {
+      background: '#1F1F1F',
+    },
+    '::-webkit-scrollbar-thumb': {
+      background: '#4C4D4C',
+    },
   }),
   header: css({
     position: 'sticky',
