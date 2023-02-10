@@ -289,7 +289,11 @@ module.exports = {
     return user.adminNotes || user._raw.adminNotes
   },
   async futureCampaignAboCount(user, args, { pgdb, user: me }) {
-    Roles.ensureUserIsMeOrInRoles(user, me, ['admin', 'supporter'])
-    return getFutureCampaignAboCount({ user, pgdb })
+    if (
+      Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter']) ||
+      isFieldExposed(user, 'futureCampaignAboCount')
+    ) {
+      return getFutureCampaignAboCount({ user, pgdb })
+    }
   },
 }
