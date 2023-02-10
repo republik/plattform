@@ -65,7 +65,7 @@ export const SLIDER_STEPS = [
     goodie: true,
     goodieText: 'Zum Abo-Kauf schenken wir Ihnen eine Jubiläumstasche dazu.',
     bonusHint:
-      'Hinweis: Ab einem Preis von CHF 240 werden Sie Mitglied der Project R Genossenschaft.',
+      'Hinweis: Ab einem Preis von CHF 1000 werden Sie Gönnerin und Mitglied der Project R Genossenschaft.',
   }, // selected = 1000 CHF}
 ]
 
