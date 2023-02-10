@@ -45,31 +45,40 @@ export const getServerSideProps = createGetServerSideProps<
   InviteReceiverPageProps,
   { code: string }
 >(async ({ client, ctx: { params }, user: me }) => {
-  // If a sender has a public-profile, the invite-code starts with '~'
+  try {
+    // If a sender has a public-profile, the invite-code starts with '~'
 
-  const { data } = await client.query<
-    InviteSenderProfileQueryData,
-    InviteSenderProfileQueryVariables
-  >({
-    query: INVITE_SENDER_PROFILE_QUERY,
-    variables: {
-      accessToken: params.code,
-    },
-  })
+    const { data } = await client.query<
+      InviteSenderProfileQueryData,
+      InviteSenderProfileQueryVariables
+    >({
+      query: INVITE_SENDER_PROFILE_QUERY,
+      variables: {
+        accessToken: params.code,
+      },
+    })
 
-  // If a user opens his own invite link, redirect to the sender page
-  if (me && data?.sender?.id === me.id) {
+    // If a user opens his own invite link, redirect to the sender page
+    if (me && data?.sender?.id === me.id) {
+      return {
+        redirect: {
+          destination: '/verstaerkung-holen',
+          permanent: false,
+        },
+      }
+    }
+
     return {
-      redirect: {
-        destination: '/verstaerkung-holen',
-        permanent: false,
+      props: {
+        invalidInviteCode: !data?.sender,
       },
     }
-  }
-
-  return {
-    props: {
-      invalidInviteCode: !data?.sender,
-    },
+  } catch (e) {
+    console.error(e)
+    return {
+      props: {
+        invalidInviteCode: true,
+      },
+    }
   }
 })
