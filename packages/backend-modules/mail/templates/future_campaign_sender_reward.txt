@@ -2,21 +2,18 @@ Guten Tag
 
 {{#if has_one_slot_filled}}
 
-Vor Kurzem hat {{receiver}} ein Abo bei der Republik gekauft, zu einem selbst
+Vor kurzem hat {{receiver}} ein Abo bei der Republik gekauft, zu einem selbst
 gewählten Preis. Damit ist die Republik-Community um ein Mitglied gewachsen.
 
 Möglich gemacht haben das: Sie. Vielen Dank, dass Sie Verstärkung geholt haben!
 
-Ein zusätzliches Mitglied mag sich nach wenig anhören. Aber für ein Magazin, das
-sich über seine Leserinnen finanziert und vom Austausch mit ihnen lebt, kommt es
+Sie haben noch {{count_open_slots}} Zugänge zu Mitstreiterinnen-Abos zu
+vergeben. Für ein Magazin, das sich über seine Leserinnen finanziert, kommt es
 auf jede einzelne Person an.
 
-Deshalb: Schicken Sie Ihren persönlichen Angebotslink {{link_sender_page}} gerne
-auch an Ihre Nachbarin, Ihren Kindergartenfreund, Ihre Arbeits- oder
-Vereinskollegen.
-
-Sie haben noch {{count_open_slots}} Zugänge zu Mitstreiterinnen-Abos zu
-vergeben.
+Deshalb: Ihren persönlichen Einladungslink zum Weiterreichen finden Sie hier
+{{link_sender_page}} . Schicken Sie ihn gerne auch an Ihre Nachbarin, Ihren
+Kindergartenfreund, Ihre Arbeits- oder Vereinskollegen.
 
 Merci für Ihre Zeit und Ihre Unterstützung!
 
@@ -43,31 +40,31 @@ Vorfreudige Grüsse
 
 Vor einigen Monaten hatten wir eine kühne Idee: Was wäre, wenn jede Verlegerin
 und jeder Verleger ein bis zwei Personen neu an Bord der Republik holen würde?
-Die Idee hörte sich einfach an, aber wir waren skeptisch, ob und wie das
-tatsächlich funktionieren würde.
 
 Und jetzt sind wir gerade ein bisschen begeistert, weil wir sehen, dass es
-Menschen wie Sie gibt: Nicht nur ein bis zwei, nein, drei Menschen haben über
+Menschen wie Sie gibt: Nicht nur ein oder zwei, nein, drei Menschen haben über
 Ihren Zugang bereits ein neues Abo abgeschlossen. Das ist grossartig!
 
 Hätten Sie das gedacht?
 
 Und falls Sie jetzt der Ehrgeiz gepackt hat: Sie haben noch {{count_open_slots}}
-Zugänge zu Mitstreiterinnen-Abos zu vergeben.
+Zugänge zu Mitstreiterinnen-Abos zu vergeben. Hier {{link_sender_page}} ist ihr
+persönlicher Link zum Weitergeben.
 
 Vielen Dank fürs Dranbleiben und herzliche Grüsse
 
 {{else if has_four_slots_filled}}
 
-Respekt! Seit Beginn dieser Aktion haben Sie die Republik-Community schon vier
-Mal verstärkt. Damit haben Sie fast alle Zugänge vergeben.
+Respekt! Seit Beginn dieser Aktion haben Sie die Republik-Community schon
+vierfach verstärkt. Damit haben Sie fast alle Ihre Zugänge vergeben.
 
 Fast.
 
 Ein letzter ist noch übrig.
 
-Und wir fragen uns: Wer ergattert sich Ihren letzten Zugang zum
-Mitstreiterinnen-Abo?
+Und wir fragen uns: Wer ergattert sich Ihr letztes Mitstreiterinnen-Abo? Hier
+zur Erinnerung nochmals Ihr persönlicher Link zum Weitergeben
+{{link_sender_page}} .
 
 Gespannte Grüsse
 
@@ -80,19 +77,13 @@ Zukunft. Wir freuen uns darauf und werden hart daran arbeiten, die neuen
 Mitstreiterinnen nach Ihrer erfolgreichen Vermittlung in den kommenden 12
 Monaten nachhaltig zu begeistern.
 
-Dankende Grüsse
+Mit herzlichen Grüssen, jubelnd und dankend
 
 {{/if}}
 
 Ihre Crew der Republik
 
-{{#if is_donating}}
-
-PS: Für jede geholte Verstärkung haben wir Ihnen einen Monat Republik als
-Gutschrift angeboten. Und Sie haben angegeben, dass Sie diese Gutschrift lieber
-der Republik spenden möchten. Das ist sehr aufmerksam, herzlichen Dank!
-
-{{#unless has_five_slots_filled}}
+{{#if is_donating}} {{#unless has_five_slots_filled}}
 
 Sollten Sie Ihre Meinung für zukünftige Fälle ändern: Hier {{link_sender_page}}
 können Sie die Einstellung jederzeit anpassen.
