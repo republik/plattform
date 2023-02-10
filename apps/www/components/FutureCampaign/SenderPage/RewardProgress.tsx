@@ -26,7 +26,7 @@ const RewardProgress = ({ reached, max }: RewardProgressProps) => {
       </ol>
       <p {...styles.text}>
         {' '}
-        {clamp(reached, 0, max)} von {max} Mitstreiterinnen an Bord geholt.
+        {clamp(reached, 0, max)} von {max} Mitstreiter an Bord geholt.
       </p>
     </div>
   )
@@ -59,13 +59,12 @@ const styles = {
     },
   }),
   text: css({
-    ...fontStyles.sansSerifMedium,
-    fontSize: 22,
-    lineHeight: 1.3,
-    margin: '8px 0 0 0',
+    ...fontStyles.sansSerifMedium18,
+    margin: 0,
+    marginTop: 8,
     [mediaQueries.mUp]: {
-      fontSize: 27,
-      margin: '16px 0 0 0',
+      ...fontStyles.sansSerifMedium19,
+      marginTop: 16,
     },
   }),
 }
