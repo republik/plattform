@@ -205,7 +205,12 @@ export const PriceSlider = ({
   )
   return (
     <>
-      <div {...styles.container} ref={trackRef} data-id='price-slider'>
+      <div
+        {...styles.container}
+        ref={trackRef}
+        data-id='price-slider'
+        key={`h-${height}`} // rerender content when slider resizes to re-initialize drag behavior
+      >
         <div
           {...styles.track}
           {...colorScheme.set('background', 'disabled')}
