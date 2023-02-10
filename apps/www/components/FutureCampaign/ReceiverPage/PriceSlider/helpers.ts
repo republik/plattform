@@ -18,6 +18,20 @@ export const getLastSliderStep = (): SliderValue => {
   return SLIDER_VALUES[SLIDER_VALUES.length - 1]
 }
 
+export const getNextSliderStep = (value: SliderValue): SliderValue => {
+  return (
+    SLIDER_VALUES.find((v) => v.position === value.position + 1) ??
+    getLastSliderStep()
+  )
+}
+
+export const getPreviousSliderStep = (value: SliderValue): SliderValue => {
+  return (
+    SLIDER_VALUES.find((v) => v.position === value.position - 1) ??
+    getFirstSliderStep()
+  )
+}
+
 export const getDefaultSliderStep = (): SliderValue => {
   return SLIDER_VALUES.find((v) => v.isDefault) ?? SLIDER_VALUES[0]
 }

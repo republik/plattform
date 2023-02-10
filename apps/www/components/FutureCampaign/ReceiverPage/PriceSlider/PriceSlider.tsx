@@ -13,6 +13,8 @@ import { css } from 'glamor'
 import {
   getFirstSliderStep,
   getLastSliderStep,
+  getNextSliderStep,
+  getPreviousSliderStep,
   getSliderStep,
   getSliderStepAtPosition,
   SliderValue,
@@ -158,7 +160,7 @@ export const PriceSlider = ({
     if (!y.isAnimating()) {
       y.set(sliderScale(currentStep.position))
     }
-  }, [height])
+  }, [height, currentStep])
 
   const gotoPos = (pos: number) => {
     if (currentStep !== getSliderStepAtPosition(pos)) {
@@ -180,12 +182,12 @@ export const PriceSlider = ({
   const onKeyDown = useCallback(
     (event: React.KeyboardEvent) => {
       const keyMap: Record<string, React.KeyboardEventHandler> = {
-        // ArrowUp: () => actions.stepUp(),
-        // ArrowDown: () => actions.stepDown(),
+        ArrowUp: () => gotoPos(getPreviousSliderStep(currentStep).position),
+        ArrowDown: () => gotoPos(getNextSliderStep(currentStep).position),
         // PageUp: () => actions.stepUp(tenSteps),
         // PageDown: () => actions.stepDown(tenSteps),
-        Home: () => onChange(getFirstSliderStep()),
-        End: () => onChange(getLastSliderStep()),
+        Home: () => gotoPos(getFirstSliderStep().position),
+        End: () => gotoPos(getLastSliderStep().position),
       }
 
       const action = keyMap[event.key]
