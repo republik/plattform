@@ -1,5 +1,6 @@
 import { useColorContext } from '@project-r/styleguide/src/components/Colors/ColorContext'
 import { css } from 'glamor'
+import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { ReactNode, useMemo } from 'react'
 import { PUBLIC_BASE_URL } from '../../lib/constants'
@@ -37,6 +38,9 @@ const FutureCampaignPage = ({ children }: FutreCampaignPageProps) => {
 
   return (
     <div {...styles.pageWrapper}>
+      <Head>
+        <meta name='theme-color' content={colorScheme.getCSSColor('default')} />
+      </Head>
       <div {...styles.page} {...scrollbarStyle}>
         <div {...styles.header}>
           <FutureCampaignHeader />
@@ -52,7 +56,7 @@ export default FutureCampaignPage
 const styles = {
   pageWrapper: css({
     display: 'flex',
-    height: ['100vh', '100dvh'],
+    minHeight: ['100vh', '100dvh'],
   }),
   page: css({
     height: ['100vh', '100dvh'],
