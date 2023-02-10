@@ -273,7 +273,7 @@ const MetaData = ({
           getWidth={() => '50%'}
         />
         {!node.data.get('discussion') &&
-          ['article', 'discussion'].includes(titleData.meta.template) && (
+          ['article', 'discussion'].includes(titleData.meta?.template) && (
             <Checkbox
               checked={node.data
                 .get('discussionAllowedRoles')
