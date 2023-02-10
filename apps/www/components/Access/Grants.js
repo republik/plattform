@@ -32,13 +32,29 @@ const AccessGrants = ({ accessGrants, inNativeIOSApp, t }) => {
       new Date(),
     )
 
-  /* TODO: Special solution for CLIMATE lab, we know here that atm there is only 
-  one reduced campaign. 
-  As soon as we have the new access model we should revise this */
+  /* TODO: Special solution for CLIMATE lab, should be removed later */
   const reducedAccessGrants = getAccessGrants(accessGrants, 'REDUCED')
-  const currentReducedAccessGrant =
-    reducedAccessGrants.length > 0 && reducedAccessGrants[0]
-  const beginAtReduced = new Date(currentReducedAccessGrant.beginAt)
+
+  const climateLabTrials = reducedAccessGrants.filter(
+    (grant) => grant.campaign.id === 'f35c2fcf-c254-482e-b4fb-5c51a48a13d2',
+  )
+  const climateLab = reducedAccessGrants.filter(
+    (grant) => grant.campaign.id === '3684f324-b694-4930-ad1a-d00a2e00934b',
+  )
+  const climateLabBeginDate = climateLab.length
+    ? new Date(climateLab[0].beginAt)
+    : null
+
+  const reducedMaxEndAt = climateLabTrials.length
+    ? climateLabTrials.reduce(
+        (acc, grant) =>
+          new Date(grant.endAt) > acc ? new Date(grant.endAt) : acc,
+        new Date(),
+      )
+    : climateLabBeginDate &&
+      new Date(climateLabBeginDate.setMonth(climateLabBeginDate.getMonth() + 1))
+
+  /* End special solution */
 
   return maxEndAt ? (
     <P>
@@ -56,17 +72,12 @@ const AccessGrants = ({ accessGrants, inNativeIOSApp, t }) => {
         </>
       )}
     </P>
-  ) : currentReducedAccessGrant ? (
+  ) : /* TODO: special solution for CLIMATE lab, should be removed later on */
+  reducedMaxEndAt ? (
     <P>
       {t.elements('Account/Access/Grants/REDUCED/message/claimed', {
-        campaignTitle: currentReducedAccessGrant.campaign.title,
-        maxEndAt: (
-          <span>
-            {dayFormat(
-              new Date(beginAtReduced.setMonth(beginAtReduced.getMonth() + 1)),
-            )}
-          </span>
-        ),
+        campaignTitle: 'Klimalabor',
+        maxEndAt: <span>{dayFormat(new Date(reducedMaxEndAt))}</span>,
       })}
       {!inNativeIOSApp && (
         <>
@@ -78,7 +89,7 @@ const AccessGrants = ({ accessGrants, inNativeIOSApp, t }) => {
           </Link>
         </>
       )}
-    </P>
+    </P> /* End special */
   ) : null
 }
 
