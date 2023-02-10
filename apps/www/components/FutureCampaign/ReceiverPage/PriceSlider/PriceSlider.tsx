@@ -1,6 +1,6 @@
 import { scalePoint } from 'd3-scale'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
-import { SLIDER_STEP_VALUES, SLIDER_TRANSITION } from '../constants'
+import { SLIDER_TRANSITION, SLIDER_VALUES } from './config'
 
 import { fontStyles, useColorContext } from '@project-r/styleguide'
 import {
@@ -11,10 +11,12 @@ import {
 } from 'framer-motion'
 import { css } from 'glamor'
 import {
-  getSliderStepAtPosition,
+  getFirstSliderStep,
+  getLastSliderStep,
   getSliderStep,
-  SliderStep,
-} from './price-slider-content-helpers'
+  getSliderStepAtPosition,
+  SliderValue,
+} from './helpers'
 
 const styles = {
   container: css({
@@ -80,14 +82,14 @@ const styles = {
   }),
 }
 
-const minValue = SLIDER_STEP_VALUES[0].value
-const maxValue = SLIDER_STEP_VALUES[SLIDER_STEP_VALUES.length - 1].value
+const minValue = getFirstSliderStep().value
+const maxValue = getLastSliderStep().value
 
 const useSliderStuff = (sliderHeight = 400) => {
   return useMemo(() => {
     // Scales
     const sliderScale = scalePoint(
-      Array.from({ length: SLIDER_STEP_VALUES.length }, (_, i) => i),
+      SLIDER_VALUES.map((v) => v.position),
       [0, sliderHeight],
     )
 
@@ -95,21 +97,14 @@ const useSliderStuff = (sliderHeight = 400) => {
       const i = isNaN(d)
         ? 0
         : Math.min(
-            SLIDER_STEP_VALUES.length - 1,
+            SLIDER_VALUES.length - 1,
             Math.max(0, Math.round(d / sliderScale.step())),
           )
       return getSliderStepAtPosition(i)
     }
 
-    const ticks = SLIDER_STEP_VALUES.flatMap((d, i) => {
+    const ticks = SLIDER_VALUES.filter((d) => {
       return d.tick
-        ? [
-            {
-              pos: i,
-              ...d,
-            },
-          ]
-        : []
     })
 
     return { sliderScale, getStepAtY, ticks }
@@ -117,10 +112,10 @@ const useSliderStuff = (sliderHeight = 400) => {
 }
 
 type PriceSliderProps = {
-  initialStep: SliderStep
-  step: SliderStep
+  initialStep: SliderValue
+  step: SliderValue
   height: number
-  onChange: (step: SliderStep) => void
+  onChange: (step: SliderValue) => void
 }
 
 export const PriceSlider = ({
@@ -154,14 +149,14 @@ export const PriceSlider = ({
 
   useEffect(() => {
     animationControls.start({
-      y: sliderScale(initialStep.pos),
+      y: sliderScale(initialStep.position),
       transition: { ...SLIDER_TRANSITION, duration: 1 },
     })
   }, [initialStep])
 
   useEffect(() => {
     if (!y.isAnimating()) {
-      y.set(sliderScale(currentStep.pos))
+      y.set(sliderScale(currentStep.position))
     }
   }, [height])
 
@@ -189,8 +184,8 @@ export const PriceSlider = ({
         // ArrowDown: () => actions.stepDown(),
         // PageUp: () => actions.stepUp(tenSteps),
         // PageDown: () => actions.stepDown(tenSteps),
-        Home: () => onChange(getSliderStep(0)),
-        End: () => onChange(getSliderStep(6)),
+        Home: () => onChange(getFirstSliderStep()),
+        End: () => onChange(getLastSliderStep()),
       }
 
       const action = keyMap[event.key]
@@ -225,17 +220,17 @@ export const PriceSlider = ({
         {ticks.map((tick, i) => {
           return (
             <motion.div
-              key={tick.value}
+              key={tick.position}
               {...(tick.isDefault
                 ? css(styles.tick, styles.tickDefault)
                 : styles.tick)}
               style={{
-                top: sliderScale(tick.pos),
+                top: sliderScale(tick.position),
                 background: tickBackgrounds[i],
               }}
               whileHover={{ scale: 1.1 }}
               onClick={() => {
-                gotoPos(tick.pos)
+                gotoPos(tick.position)
               }}
             >
               <div>{tick.value}</div>
@@ -275,7 +270,7 @@ export const PriceSlider = ({
                 window.scrollY
 
               const step = getStepAtY(y)
-              if (step.pos !== currentStep.pos) {
+              if (step.position !== currentStep.position) {
                 // console.log(step);
                 // setCurrentStep(step)
                 onChange(step)
@@ -295,7 +290,7 @@ export const PriceSlider = ({
               onChange(step)
 
               animationControls.start({
-                y: sliderScale(step.pos),
+                y: sliderScale(step.position),
                 scale: 1,
                 transition: {
                   delay: 0.01, // add slight delay, otherwise it interferes with drag

@@ -4,11 +4,8 @@ import { useMemo, useState } from 'react'
 import { useResizeObserver } from '../../../../lib/hooks/useResizeObserver'
 import AssetImage from '../../../../lib/images/AssetImage'
 import { StepProps } from '../../../Stepper/Stepper'
-import {
-  getDefaultSliderStep,
-  SliderStep,
-} from '../price-slider-content-helpers'
-import { PriceSlider } from '../PriceSlider'
+import { getDefaultSliderStep, SliderValue } from '../PriceSlider/helpers'
+import { PriceSlider } from '../PriceSlider/PriceSlider'
 import * as textStyles from '../styles'
 import BottomPanel from './BottomPanel'
 
@@ -16,28 +13,26 @@ const SelectYourPriceStep = ({
   stepperControls,
   onSubmit,
 }: StepProps & {
-  onSubmit: (price: number) => Promise<any>
+  onSubmit: (price: number) => Promise<void>
 }) => {
   const initialSliderStep = useMemo(() => getDefaultSliderStep(), [])
-  const [sliderStep, setSliderStep] = useState<SliderStep>(initialSliderStep)
+  const [sliderValue, setSliderValue] = useState<SliderValue>(initialSliderStep)
   const [resizeRef, , height] = useResizeObserver()
+
+  const sliderStep = sliderValue.step
 
   return (
     <>
       <div {...styles.container}>
         <div {...styles.content}>
           <div {...styles.icon}>
-            <AssetImage
-              src={`/static/5-jahre-republik/receiver/slider-step-${sliderStep.step}.svg`}
-              width={100}
-              height={100}
-            />
+            <AssetImage src={sliderStep.iconSrc} width={100} height={100} />
           </div>
 
           <div>
             <div {...textStyles.text}>
               Ihr Preis:{' '}
-              <strong {...textStyles.textBold}>CHF {sliderStep.value}</strong>
+              <strong {...textStyles.textBold}>CHF {sliderValue.value}</strong>
             </div>
             <h2 {...styles.heading}>{sliderStep.label}</h2>
           </div>
@@ -65,17 +60,17 @@ const SelectYourPriceStep = ({
         {height > 50 && (
           <PriceSlider
             initialStep={initialSliderStep}
-            onChange={(sliderStep) => setSliderStep(sliderStep)}
-            step={sliderStep}
+            onChange={(sliderStep) => setSliderValue(sliderStep)}
+            step={sliderValue}
             height={height}
           />
         )}
       </div>
       <BottomPanel
         steps={stepperControls}
-        onClick={() => onSubmit(sliderStep.value)}
+        onClick={() => onSubmit(sliderValue.value)}
       >
-        Für CHF {sliderStep.value.toFixed()} abonnieren
+        Für CHF {sliderValue.value.toFixed()} abonnieren
       </BottomPanel>
     </>
   )
