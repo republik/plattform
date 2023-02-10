@@ -1186,7 +1186,7 @@
     },
     {
       "key": "Account/Access/Grants/REDUCED/message/claimed",
-      "value": "Als Dankeschön fürs Mitmachen im «{campaignTitle}» haben Sie bis am {maxEndAt} vollen Zugriff auf alle Inhalte der Republik."
+      "value": "Dankeschön fürs Mitmachen im «{campaignTitle}»."
     },
     {
       "key": "Account/Access/Campaigns/title",
