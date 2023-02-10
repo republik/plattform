@@ -175,7 +175,7 @@ const InviteSenderPage = ({ me }: { me: MeObjectType }) => {
               <ShareOverlay
                 onClose={() => setShowShareOverlay(false)}
                 url={inviteLink}
-                title='Angebot Teilen'
+                title='Angebot teilen'
                 tweet='Ich habe 5 Einladungen zu vergeben: Erhalte ein Jahr lang die Republik – zu dem Preis, der für dich stimmt.'
                 emailSubject={'Ich habe 5 Republik Einladungen zu vergeben.'}
                 emailBody={`Ein Jahr lang die Republik – zu dem Preis, der für dich stimmt. Zum Angebot:`}
