@@ -21,12 +21,14 @@ const FiveYearsIndexPage = () => {
       </h1>
       <p {...styles.text}>
         Geld ist nicht alles. Köpfe schon. Zum 5-Jahres-Jubiläum sind unsere
-        Mitglieder dazu eingeladen, bis zu 5 Mitstreiter an Bord zu holen, zum
-        Preis, der für sie stimmt.
+        Mitglieder dazu eingeladen, bis zu 5 Mitstreiterinnen an Bord zu holen.
+        Diese erhalten ein Jahr lang die Republik zu einem Preis, der für sie
+        stimmt.
       </p>
+      <p {...styles.text}>Möchten Sie von dem Angebot profitieren?</p>
       <p {...styles.text}>
-        Möchten Sie von dem Angebot profitieren? Melden Sie sich bei einem
-        Republik-Mitglied und fragen Sie nach dem Mitstreiter-Abo.
+        Dann melden Sie sich bei einer Republik-Verlegerin und fragen Sie nach
+        dem Link zum Mitstreiter-Abo.
       </p>
     </FutureCampaignPage>
   )

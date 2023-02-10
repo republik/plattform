@@ -173,7 +173,7 @@ const UserNav = ({
                   />
                   <div {...styles.navSection}>
                     <div {...styles.navLinks}>
-                      {me.accessCampaigns.length > 0 && (
+                      {me?.activeMembership && (
                         <NavLink
                           href='/verstaerkung-holen'
                           currentPath={currentPath}
@@ -183,7 +183,7 @@ const UserNav = ({
                           {t('nav/invite-friends')}
                         </NavLink>
                       )}
-                      {/*}
+                      {!me?.activeMembership && me.accessCampaigns.length > 0 && (
                         <NavLink
                           href='/teilen'
                           currentPath={currentPath}
@@ -191,7 +191,8 @@ const UserNav = ({
                           large
                         >
                           {t('nav/share')}
-                      </NavLink>*/}
+                        </NavLink>
+                      )}
                       {!inNativeIOSApp && (
                         <>
                           <NavLink
