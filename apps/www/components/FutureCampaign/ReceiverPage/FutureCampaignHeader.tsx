@@ -38,5 +38,8 @@ const styles = {
     [mediaQueries.mUp]: {
       width: 200,
     },
+    ':hover': {
+      cursor: 'pointer',
+    },
   }),
 }
