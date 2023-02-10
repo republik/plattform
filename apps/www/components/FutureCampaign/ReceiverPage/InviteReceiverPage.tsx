@@ -1,12 +1,14 @@
 import { fontStyles, mediaQueries } from '@project-r/styleguide'
 import { css } from 'glamor'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useCallback } from 'react'
 import { useMe } from '../../../lib/context/MeContext'
 import Stepper, { Step } from '../../Stepper/Stepper'
 import { useInviteSenderProfileQuery } from '../graphql/useSenderProfileQuery'
+import { FUTURE_CAMPAIGN_MAX_REDEEMED_INVITES } from '../SenderPage/InviteSenderPage'
 import Button from './steps/Button'
-import IntroductoryStep from './steps/IntroductionaryStep'
+import IntroductoryStep, { SenderProfile } from './steps/IntroductionaryStep'
 import SelectYourPriceStep from './steps/SelectYourPriceStep'
 
 enum STEPS {
@@ -146,13 +148,16 @@ const InviteReceiverPage = ({ invalidInviteCode }: InviteReceiverPageProps) => {
             Aber wie sieht es mit Ihrem Nachbarn, Ihrem alten Schulfreund und
             Ihrer Tante aus?
           </p>
-          <p {...styles.text}>
+          <p {...styles.text} style={{ marginBottom: 32 }}>
             Die Republik ist nur so stark, wie ihre Community
           </p>
           <Button href='/verstaerkung-holen'>Jetzt Verstärkung holen</Button>
         </div>
       )}
       {!invalidInviteCode && isEligible && (
+        // TODO: readd once token can access futureCampaignAboCount
+        /*senderProfileData?.sender?.futureCampaignAboCount <
+          FUTURE_CAMPAIGN_MAX_REDEEMED_INVITES && */
         <Stepper
           steps={steps}
           customStepperUIPlacement
@@ -163,6 +168,39 @@ const InviteReceiverPage = ({ invalidInviteCode }: InviteReceiverPageProps) => {
           )}
         />
       )}
+      {/*
+       // TODO: readd once token can access futureCampaignAboCount
+      !invalidInviteCode &&
+        isEligible &&
+        senderProfileData?.sender?.futureCampaignAboCount >=
+          FUTURE_CAMPAIGN_MAX_REDEEMED_INVITES && (
+          <div {...styles.hasYearlySubscription}>
+            <SenderProfile
+              text={`${
+                senderProfileData.sender.firstName +
+                ' ' +
+                senderProfileData.sender.lastName
+              } wollte Ihnen ein Mistreiterinnen-Abo ermöglichen.`}
+              portrait={senderProfileData?.sender?.portrait}
+            />
+            <p {...styles.text} style={{ marginTop: 16 }}>
+              Es wurden aber schon alle Einladungen von diesem Link eingelöst.
+            </p>
+            <p {...styles.text}>
+              Vielleicht kennen Sie eine andere Republik-Verlegerin, die Sie
+              einladen kann?
+            </p>
+            <p {...styles.text} style={{ marginBottom: 32 }}>
+              Mit einem Probeabo können Sie die Republik ab sofort und{' '}
+              <Link href='/probelesen' passHref>
+                <a {...styles.inlineLink}>
+                  kostenlos für 3 Wochen kennenlernen
+                </a>
+              </Link>
+              .
+            </p>
+          </div>
+            )*/}
     </>
   )
 }
@@ -177,20 +215,10 @@ const styles = {
     alignItems: 'flex-start',
   }),
   hasYearlySubscription: css({
-    marginTop: 48,
     display: 'flex',
     flexDirection: 'column',
-    gap: 16,
+    marginTop: 48,
     marginBottom: 16,
-    '& p': css({
-      ...fontStyles.sansSerifRegular,
-      margin: 0,
-      fontSize: 17,
-      lineHeight: '1.4em',
-      [mediaQueries.mUp]: {
-        fontSize: 21,
-      },
-    }),
   }),
   heading: css({
     ...fontStyles.serifTitle,
@@ -212,5 +240,9 @@ const styles = {
     '& + p': {
       margin: `16px 0 0 0`,
     },
+  }),
+  inlineLink: css({
+    color: 'inherit',
+    textDecoration: 'underline',
   }),
 }

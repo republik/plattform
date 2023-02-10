@@ -11,6 +11,7 @@ export const INVITE_SENDER_PROFILE_QUERY = gql`
     }
   }
 `
+// TODO: readd 'futureCampaignAboCount' once we have a way to query it
 
 export type InviteSenderProfileQueryData = {
   sender?: {
@@ -18,6 +19,7 @@ export type InviteSenderProfileQueryData = {
     firstName?: string
     lastName?: string
     portrait?: string
+    futureCampaignAboCount?: number
   }
 }
 

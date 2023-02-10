@@ -16,7 +16,7 @@ type IntroductionaryStepProps = StepProps & {
   hasMonthlySubscription: boolean
 }
 
-const SenderProfile = ({
+export const SenderProfile = ({
   portrait,
   text,
 }: {

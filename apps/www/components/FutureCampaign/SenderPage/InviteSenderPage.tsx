@@ -32,6 +32,8 @@ import { MeObjectType } from '../../../lib/context/MeContext'
 import { PageCenter } from '../../Auth/withAuthorization'
 import { useNumOfRedeemedInvitesQuery } from '../graphql/useNumOfRedeemedInvitesQuery'
 
+export const FUTURE_CAMPAIGN_MAX_REDEEMED_INVITES = 5
+
 const DONATE_MONTHS_CONSENT_KEY = '5YEAR_DONATE_MONTHS'
 
 const InviteSenderPage = ({ me }: { me: MeObjectType }) => {
@@ -86,8 +88,6 @@ const InviteSenderPage = ({ me }: { me: MeObjectType }) => {
       console.error(e)
     }
   }
-
-  const MAX_REDEEMED_INVITES = 5
 
   const handleCopyLink = (link: string) => {
     navigator.clipboard.writeText(link)
@@ -206,7 +206,7 @@ const InviteSenderPage = ({ me }: { me: MeObjectType }) => {
               render={() => (
                 <RewardProgress
                   reached={redeemedInvites?.me?.futureCampaignAboCount || 0}
-                  max={MAX_REDEEMED_INVITES}
+                  max={FUTURE_CAMPAIGN_MAX_REDEEMED_INVITES}
                 />
               )}
             />
