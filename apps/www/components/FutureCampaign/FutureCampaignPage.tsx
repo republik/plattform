@@ -52,10 +52,10 @@ export default FutureCampaignPage
 const styles = {
   pageWrapper: css({
     display: 'flex',
-    minHeight: '100vh',
+    height: ['100vh', '100dvh'],
   }),
   page: css({
-    height: '100vh',
+    height: ['100vh', '100dvh'],
     display: 'grid',
     width: '100%',
     gap: 8,
