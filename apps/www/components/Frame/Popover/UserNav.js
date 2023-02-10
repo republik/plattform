@@ -173,7 +173,8 @@ const UserNav = ({
                   />
                   <div {...styles.navSection}>
                     <div {...styles.navLinks}>
-                      {me?.activeMembership && (
+                      {me?.activeMembership &&
+                      me.activeMembership?.type?.name !== 'YEARLY_ABO' ? (
                         <NavLink
                           href='/verstaerkung-holen'
                           currentPath={currentPath}
@@ -182,7 +183,16 @@ const UserNav = ({
                         >
                           {t('nav/invite-friends')}
                         </NavLink>
-                      )}
+                      ) : me.accessCampaigns.length > 0 ? (
+                        <NavLink
+                          href='/teilen'
+                          currentPath={currentPath}
+                          closeHandler={closeHandler}
+                          large
+                        >
+                          {t('nav/share')}
+                        </NavLink>
+                      ) : null}
                       {!me?.activeMembership && me.accessCampaigns.length > 0 && (
                         <NavLink
                           href='/teilen'
