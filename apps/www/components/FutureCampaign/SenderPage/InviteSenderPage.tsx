@@ -68,12 +68,8 @@ const InviteSenderPage = ({ me }: { me: MeObjectType }) => {
     if (!userInviteData || !userInviteData.me) {
       return null
     }
-    const { hasPublicProfile, slug, accessToken } = userInviteData.me
-    if (hasPublicProfile) {
-      return `${PUBLIC_BASE_URL}/5-jahre-republik/~${slug}`
-    } else {
-      return `${PUBLIC_BASE_URL}/5-jahre-republik/${accessToken}`
-    }
+    const { accessToken } = userInviteData.me
+    return `${PUBLIC_BASE_URL}/5-jahre-republik/${accessToken}`
   }, [userInviteData])
 
   const handleDonateMonthsChange = async (value: boolean) => {

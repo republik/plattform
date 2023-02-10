@@ -46,7 +46,6 @@ export const getServerSideProps = createGetServerSideProps<
   { code: string }
 >(async ({ client, ctx: { params }, user: me }) => {
   // If a sender has a public-profile, the invite-code starts with '~'
-  const isUserSlug = params.code.startsWith('~')
 
   const { data } = await client.query<
     InviteSenderProfileQueryData,
@@ -54,8 +53,7 @@ export const getServerSideProps = createGetServerSideProps<
   >({
     query: INVITE_SENDER_PROFILE_QUERY,
     variables: {
-      accessToken: !isUserSlug ? params.code : undefined,
-      slug: isUserSlug ? params.code.substring(1) : undefined,
+      accessToken: params.code,
     },
   })
 

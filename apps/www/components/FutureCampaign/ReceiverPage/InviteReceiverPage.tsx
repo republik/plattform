@@ -33,12 +33,10 @@ const InviteReceiverPage = ({ invalidInviteCode }: InviteReceiverPageProps) => {
   const inviteCode = Array.isArray(router.query?.code)
     ? router.query.code[0]
     : router.query?.code
-  const inviteCodeHasUserSlug = inviteCode?.startsWith('~')
 
   const { data: senderProfileData } = useInviteSenderProfileQuery({
     variables: {
-      accessToken: !inviteCodeHasUserSlug ? inviteCode : undefined,
-      slug: inviteCodeHasUserSlug ? inviteCode.substring(1) : undefined,
+      accessToken: inviteCode,
     },
     skip: !inviteCode || meLoading,
   })

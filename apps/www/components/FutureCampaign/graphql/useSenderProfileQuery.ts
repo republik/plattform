@@ -2,8 +2,8 @@ import { gql } from '@apollo/client'
 import { makeQueryHook } from '../../../lib/helpers/AbstractApolloGQLHooks.helper'
 
 export const INVITE_SENDER_PROFILE_QUERY = gql`
-  query UserInviterProfileInfo($accessToken: ID, $slug: String) {
-    sender: user(accessToken: $accessToken, slug: $slug) {
+  query UserInviterProfileInfo($accessToken: ID) {
+    sender: user(accessToken: $accessToken) {
       id
       firstName
       lastName
@@ -25,7 +25,6 @@ export type InviteSenderProfileQueryData = {
 
 export type InviteSenderProfileQueryVariables = {
   accessToken?: string
-  slug?: string
 }
 
 export const useInviteSenderProfileQuery = makeQueryHook<
