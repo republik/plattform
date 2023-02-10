@@ -41,19 +41,8 @@ const InviteReceiverPage = ({ invalidInviteCode }: InviteReceiverPageProps) => {
     skip: !inviteCode || meLoading,
   })
 
-  // TODO: if user is logged in and has abo, show info text that the user already has an abo
-  // TODO: if user has monthly abo, also show info text that not available if already subscirbed
-
-  // TODO: if not logged in or probelesen show stepper
-
   const handleSubmitPrice = useCallback(
     async (price) => {
-      // setPrice(price)
-      // TODO
-      // based on the selected price either choose the
-      // package that is associated with non coop membership.
-      // else choose the package that is associated with coop membership
-      // additionally attach ?utm_campaign received from the server based on the invite-code
       if (price >= 1000) {
         return router.push({
           pathname: '/angebote',
@@ -152,23 +141,21 @@ const InviteReceiverPage = ({ invalidInviteCode }: InviteReceiverPageProps) => {
           <Button href='/verstaerkung-holen'>Jetzt Verstärkung holen</Button>
         </div>
       )}
-      {!invalidInviteCode && isEligible && (
-        // TODO: readd once token can access futureCampaignAboCount
-        /*senderProfileData?.sender?.futureCampaignAboCount <
-          FUTURE_CAMPAIGN_MAX_REDEEMED_INVITES && */
-        <Stepper
-          steps={steps}
-          customStepperUIPlacement
-          contentWrapperElement={({ children, ref }) => (
-            <div {...styles.wrapper} ref={ref}>
-              {children}
-            </div>
-          )}
-        />
-      )}
-      {/*
-       // TODO: readd once token can access futureCampaignAboCount
-      !invalidInviteCode &&
+      {!invalidInviteCode &&
+        isEligible &&
+        senderProfileData?.sender?.futureCampaignAboCount <
+          FUTURE_CAMPAIGN_MAX_REDEEMED_INVITES && (
+          <Stepper
+            steps={steps}
+            customStepperUIPlacement
+            contentWrapperElement={({ children, ref }) => (
+              <div {...styles.wrapper} ref={ref}>
+                {children}
+              </div>
+            )}
+          />
+        )}
+      {!invalidInviteCode &&
         isEligible &&
         senderProfileData?.sender?.futureCampaignAboCount >=
           FUTURE_CAMPAIGN_MAX_REDEEMED_INVITES && (
@@ -198,7 +185,7 @@ const InviteReceiverPage = ({ invalidInviteCode }: InviteReceiverPageProps) => {
               .
             </p>
           </div>
-            )*/}
+        )}
     </>
   )
 }
