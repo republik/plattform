@@ -32,7 +32,6 @@ const upsert = async (
       await loaders.Discussion.clear(legacyDiscussionId)
     }
   } else {
-    console.log(`meta roles ${settings.allowedRoles}`)
     if (
       (settings.title && settings.title !== discussion.title) ||
       (settings.maxLength && settings.maxLength !== discussion.maxLength) ||
