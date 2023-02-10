@@ -79,6 +79,7 @@
   "cacheDirectories": [
     "node_modules",
     "packages/styleguide/.turbo",
+    "apps/www/.next/cache",
     "apps/www/.turbo",
     "apps/publikator/.turbo",
     "apps/admin/.turbo"
