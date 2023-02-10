@@ -105,7 +105,7 @@ const TargetedQuestions = ({ slug, questionIds, extract, share = {} }) => {
       >
         Zurück zur Übersicht
       </Button>
-      <div style={{ marginTop: 20 }}>
+      {/* <div style={{ marginTop: 20 }}>
         <span style={{ marginRight: 20 }}>Sortierung:</span>
         {SUPPORTED_SORT.map((sort, key) => (
           <SortToggle
@@ -116,7 +116,7 @@ const TargetedQuestions = ({ slug, questionIds, extract, share = {} }) => {
             pathname={pathname}
           />
         ))}
-      </div>
+      </div> */}
 
       <Loader
         loading={loading}
@@ -160,9 +160,10 @@ const TargetedQuestions = ({ slug, questionIds, extract, share = {} }) => {
                     style={{
                       padding: '10px',
                       marginBottom: '20px',
-                      borderRadius: '2px',
+                      borderRadius: '10px',
+                      backgroundColor: '#FFF',
+                      color: '#000',
                     }}
-                    {...colorScheme.set('boxShadow', 'imageChoiceShadow')}
                   >
                     <Interaction.P attributes={{}}>
                       {answers.map((answer, idx) => {
@@ -176,6 +177,7 @@ const TargetedQuestions = ({ slug, questionIds, extract, share = {} }) => {
                           <div
                             style={{
                               position: 'relative',
+                              color: '#000',
                             }}
                             key={answer.id}
                           >
@@ -212,7 +214,13 @@ const TargetedQuestions = ({ slug, questionIds, extract, share = {} }) => {
                           </div>
                         )
                       })}
-                      <em>– {displayAuthor.name}</em>
+                      <em
+                        style={{
+                          color: '#000',
+                        }}
+                      >
+                        – {displayAuthor.name}
+                      </em>
                     </Interaction.P>
                   </div>
                 ))}

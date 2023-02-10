@@ -30,7 +30,7 @@ export const getTargetedAnswers = (questionIds, results) => {
   })
 }
 
-export const COLORS = ['#6954ff', '#9F92FF', '#D9D4FF']
+export const COLORS = ['#00dd97', '#97f8fe', '#fefd67']
 
 const QuestionLink = ({ question, additionalQuestion, children }) => {
   const router = useRouter()
@@ -119,28 +119,35 @@ const AnswersCarousel = ({ slug, question, additionalQuestion, bgColor }) => {
           <>
             <Interaction.H2>{question.text}</Interaction.H2>
 
-            <Breakout size='breakout'>
+            <div style={{ margin: '0 -200px' }}>
               <TeaserCarousel outline>
                 <TeaserCarouselTileContainer>
                   {targetedAnswers.map(({ answers, displayAuthor }) => (
-                    <TeaserCarouselTile key={answers[0].id} bgColor={bgColor}>
-                      <TeaserCarouselHeadline.Interaction>
+                    <TeaserCarouselTile
+                      key={answers[0].id}
+                      bgColor={'#fff'}
+                      color={'#000'}
+                      borderRadius={'10px'}
+                    >
+                      <TeaserCarouselHeadline.Editorial>
                         {inQuotes(answers[0].payload.value)}
-                      </TeaserCarouselHeadline.Interaction>
+                      </TeaserCarouselHeadline.Editorial>
 
                       <Editorial.Credit>
-                        Von{' '}
+                        <span style={{ color: '#000' }}>Von </span>
                         <Editorial.A
                           href={`/klimafragebogen/${displayAuthor.slug}`}
                         >
-                          {displayAuthor.name}
+                          <span style={{ color: '#000' }}>
+                            {displayAuthor.name}
+                          </span>
                         </Editorial.A>
                       </Editorial.Credit>
                     </TeaserCarouselTile>
                   ))}
                 </TeaserCarouselTileContainer>
               </TeaserCarousel>
-            </Breakout>
+            </div>
             <Interaction.P>
               <QuestionLink
                 question={question}
@@ -161,6 +168,7 @@ const Question = ({ slug, question, additionalQuestion, bgColor }) => {
     <div
       key={question.id}
       style={{
+        marginTop: 60,
         marginBottom: 20,
         paddingTop: 20,
       }}
@@ -198,86 +206,44 @@ const AllQuestions = ({ slug }) => {
         } = data
 
         return (
-          <div style={{ marginTop: 80 }}>
+          <div style={{ marginTop: 80, width: '700px', margin: '0 auto' }}>
             <Question question={questions[6]} slug={slug} />
-            <Interaction.P>
-              Simple Chart. Not linked to anything. Lorem ipsum dolor sit amet,
-              consetetur sadipscing elitr, sed diam nonumy eirmod tempor
-              invidunt ut labore et dolore magna aliquyam erat, sed diam
-              voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
-              Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum
-              dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing
-              elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore
-              magna aliquyam erat, sed diam voluptua.
-            </Interaction.P>
             <Question
               question={questions[0]}
               additionalQuestion={questions[1]}
               slug={slug}
               bgColor={'#FFFFC8'}
             />
-            <Interaction.P>
-              This text question is linked to a second, additional question.
-              Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
-              nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam
-              erat, sed diam voluptua. At vero eos et accusam et justo duo
-              dolores et ea rebum. Stet clita kasd gubergren, no sea takimata
-              sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit
-              amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor
-              invidunt ut labore et dolore magna aliquyam erat, sed diam
-              voluptua.
-            </Interaction.P>
-            <Interaction.P>
-              Want some more? You can also explore the following questions:
-            </Interaction.P>
-            <Interaction.P>
-              <ul>
-                <li>
-                  <QuestionLink
-                    question={questions[2]}
-                    additionalQuestion={questions[3]}
-                  >
-                    <Editorial.A>{questions[2].text}</Editorial.A>
-                  </QuestionLink>{' '}
-                  (psst: es gibt da noch eine Bonusfrage)
-                </li>
-                <li>
-                  <QuestionLink question={questions[5]}>
-                    <Editorial.A>{questions[5].text}</Editorial.A>
-                  </QuestionLink>
-                </li>
-              </ul>
-            </Interaction.P>
+            <div style={{ marginTop: 60 }}>
+              <Interaction.P>
+                <ul style={{ listStyleType: 'square', paddingLeft: 25 }}>
+                  <li style={{ fontSize: 21, marginBottom: 20 }}>
+                    <QuestionLink
+                      question={questions[2]}
+                      additionalQuestion={questions[3]}
+                    >
+                      <Editorial.A>{questions[2].text}</Editorial.A>
+                    </QuestionLink>{' '}
+                    (psst: es gibt da noch eine Bonusfrage)
+                  </li>
+                  <li style={{ fontSize: 21, marginBottom: 20 }}>
+                    <QuestionLink question={questions[5]}>
+                      <Editorial.A>{questions[5].text}</Editorial.A>
+                    </QuestionLink>
+                  </li>
+                </ul>
+              </Interaction.P>
+            </div>
             <Question
               question={questions[16]}
               slug={slug}
               bgColor={'#FFFFC8'}
             />
-            <Interaction.P>
-              This is a question with rather long answers. Lorem ipsum dolor sit
-              amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor
-              invidunt ut labore et dolore magna aliquyam erat, sed diam
-              voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
-              Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum
-              dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing
-              elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore
-              magna aliquyam erat, sed diam voluptua.
-            </Interaction.P>
             <Question
               question={questions[31]}
               additionalQuestion={questions[32]}
               slug={slug}
             />
-            <Interaction.P>
-              This is a multiple choice question with a Zusatzfrage. Lorem ipsum
-              dolor sit amet, consetetur sadipscing elitr, sed diam nonumy
-              eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
-              sed diam voluptua. At vero eos et accusam et justo duo dolores et
-              ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est
-              Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur
-              sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore
-              et dolore magna aliquyam erat, sed diam voluptua.
-            </Interaction.P>
           </div>
         )
       }}

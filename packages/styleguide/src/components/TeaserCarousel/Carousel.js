@@ -29,6 +29,7 @@ export const Carousel = ({
   color,
   grid,
   isSeriesNav,
+  borderRadius,
 }) => {
   const [colorScheme] = useColorContext()
   const row = children && children[1]
@@ -51,6 +52,7 @@ export const Carousel = ({
         tileCount,
         tileMaxWidth,
         grid,
+        borderRadius,
       }}
     >
       <section
