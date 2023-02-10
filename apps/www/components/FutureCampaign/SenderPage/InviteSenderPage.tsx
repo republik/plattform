@@ -126,11 +126,6 @@ const InviteSenderPage = ({ me }: { me: MeObjectType }) => {
               Kinder das auch will.
             </h1>
           </div>
-
-          <p {...styles.text}>
-            An der Republik vorbeizukommen, wird einiges schwerer. Dank Ihnen
-            und den Menschen, die Ihnen wichtig sind.
-          </p>
         </div>
         <div {...styles.box}>
           <h2 {...styles.boxHeading}>
@@ -264,15 +259,6 @@ const styles = {
     gridRow: 1,
     overflow: 'hidden',
     visibility: 'hidden',
-  }),
-  text: css({
-    ...fontStyles.sansSerifRegular,
-    margin: 0,
-    fontSize: 17,
-    lineHeight: 1.4,
-    [mediaQueries.mUp]: {
-      fontSize: 19,
-    },
   }),
   box: css({
     display: 'flex',
