@@ -84,11 +84,6 @@ const rewardSender = async (pledge, context) => {
 
       // if month should not be donated, add to current membership period
       if (!hasDonateConsent) {
-        const activeMembership = await transaction.public.memberships.findOne({
-          userId: senderUserId,
-          active: true,
-        })
-
         const membershipPeriods =
           await transaction.public.membershipPeriods.find({
             membershipId: activeMembership.id,
