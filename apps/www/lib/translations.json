@@ -2493,6 +2493,10 @@
       "value": "Bitte begründen"
     },
     {
+      "key": "package/customize/userPrice/YEARLY_ABO/beforeReason",
+      "value": "Eine grosse und vielfältige Community ist für ein leserinnenfinanziertes Magazin unbezahlbar. Deshalb geben wir Ihnen zum 5-Jahres-Jubiläum der Republik die Möglichkeit, den Preis für Ihr Abo selber zu wählen. "
+    },
+    {
       "key": "package/customize/userPrice/beforeReason",
       "value": "Journalismus kostet. Aber wir wollen niemanden ausschliessen. Falls Sie sich die 240 Franken nicht leisten können, bitten wir Sie um eine knappe Begründung und einen Preis, der Ihnen gerecht scheint. "
     },
@@ -2541,6 +2545,18 @@
       "value": "Vielleicht das einzige Geschenk, das Sie Freunden und Feinden gleich herzlich machen können: einige Monate Republik."
     },
     {
+      "key": "package/YEARLY_ABO/price",
+      "value": "{formattedCHF}"
+    },
+    {
+      "key": "package/YEARLY_ABO/title",
+      "value": "Mitstreiterinnen-Abo"
+    },
+    {
+      "key": "package/YEARLY_ABO/description",
+      "value": "Es freut uns, dass Sie dabei sind! Mit Ihrem selbst gewählten Beitrag erhalten Sie ab sofort unser Magazin, zum Lesen und zum Hören. Und Sie investieren in die Zukunft unseres Journalismus."
+    },
+    {
       "key": "package/BENEFACTOR/title",
       "value": "Gönner-Mitgliedschaft"
     },
@@ -2571,6 +2587,10 @@
     {
       "key": "package/group/GIVE",
       "value": "Geschenke"
+    },
+    {
+      "key": "package/group/HIDDEN",
+      "value": "Angebote"
     },
     {
       "key": "option/ABO/label/other",
@@ -2615,6 +2635,14 @@
     {
       "key": "option/ABO_GIVE_MONTHS/interval/month/label/other",
       "value": "Monate pro Abo"
+    },
+    {
+      "key": "option/YEARLY_ABO/label/other",
+      "value": "Mitstreiter-Abos"
+    },
+    {
+      "key": "option/YEARLY_ABO/label/1",
+      "value": "Mitstreiter-Abo"
     },
     {
       "key": "package/customize/ABO_GIVE_MONTHS/years/1",
@@ -3625,6 +3653,9 @@
       "value": "Guten Tag, {name}"
     },
     {
+      "key": "merci/title/package/YEARLY_ABO"
+    },
+    {
       "key": "merci/title/package/DONATE",
       "value": "Guten Tag, {name}"
     },
@@ -3843,6 +3874,26 @@
     {
       "key": "memberships/ABO_GIVE_MONTHS/manage/reactivate",
       "value": "Abonnement reaktivieren"
+    },
+    {
+      "key": "memberships/YEARLY_ABO/manage/prolong/link",
+      "value": "Abonnement verlängern"
+    },
+    {
+      "key": "memberships/YEARLY_ABO/manage/cancel/link",
+      "value": "Abonnement kündigen"
+    },
+    {
+      "key": "memberships/YEARLY_ABO/manage/upgrade/link",
+      "value": "{buyLink} und behalten Sie Ihren Zugang zur Republik auch nach Ablauf Ihres Mitstreiterinnen-Abos."
+    },
+    {
+      "key": "memberships/YEARLY_ABO/manage/upgrade/link/buyText",
+      "value": "Lösen Sie eine Jahresmitgliedschaft"
+    },
+    {
+      "key": "memberships/YEARLY_ABO/manage/reactivate",
+      "value": "Abonnement-Kündigung zurückziehen"
     },
     {
       "key": "memberships/claim/lead",
@@ -4709,6 +4760,10 @@
       "value": "Abonnement (#{sequenceNumber})"
     },
     {
+      "key": "memberships/title/YEARLY_ABO",
+      "value": "Mitstreiter-Abo"
+    },
+    {
       "key": "memberships/title/ABO/give",
       "value": "{name} (#{sequenceNumber})"
     },
@@ -4751,6 +4806,10 @@
     {
       "key": "package/customize/price/payLess",
       "value": "Ich kann mir den Betrag nicht leisten"
+    },
+    {
+      "key": "package/customize/userPrice/YEARLY_ABO/beforePrice",
+      "value": "Welcher Preis stimmt für Sie?"
     },
     {
       "key": "package/customize/userPrice/beforePrice",
@@ -4878,6 +4937,14 @@
     },
     {
       "key": "pledge/meta/package/ABO_GIVE_MONTHS/description",
+      "value": "Wir sind ein digitales Magazin für Politik, Wirtschaft, Gesellschaft und Kultur. Unabhängig. Werbefrei."
+    },
+    {
+      "key": "pledge/meta/package/YEARLY_ABO/title",
+      "value": "Verstärken Sie die Republik-Community!"
+    },
+    {
+      "key": "pledge/meta/package/YEARLY_ABO/description",
       "value": "Wir sind ein digitales Magazin für Politik, Wirtschaft, Gesellschaft und Kultur. Unabhängig. Werbefrei."
     },
     {
@@ -5217,6 +5284,38 @@
       "value": "vor {count} Tagen"
     },
     {
+      "key": "prolongNecessary/YEARLY_ABO/before",
+      "value": "Ihr Abo endet bald: {link}"
+    },
+    {
+      "key": "prolongNecessary/YEARLY_ABO/before/linkText",
+      "value": "Jahresmitglied werden"
+    },
+    {
+      "key": "prolongNecessary/YEARLY_ABO/due",
+      "value": "Mitstreiter-Abo endet bald: {link}"
+    },
+    {
+      "key": "prolongNecessary/YEARLY_ABO/due/linkText",
+      "value": "Jetzt Jahresmitglied werden"
+    },
+    {
+      "key": "prolongNecessary/YEARLY_ABO/overdue",
+      "value": "Ihr Abo endet – und Ihre Mitgliedschaft beginnt?"
+    },
+    {
+      "key": "prolongNecessary/YEARLY_ABO/overdue/button",
+      "value": "Jetzt Jahresmitglied werden"
+    },
+    {
+      "key": "prolongNecessary/YEARLY_ABO/overdue/explanation",
+      "value": "Ihr Abo läuft am {endDate} aus. Doch das muss nicht das Ende Ihrer Zeit bei der Republik bedeuten: Werden Sie jetzt Jahresmitglied und unterstützen Sie unseren Journalismus auch in Zukunft."
+    },
+    {
+      "key": "prolongNecessary/YEARLY_ABO/overdue/explanation/cancelText",
+      "value": "Abonnement kündigen"
+    },
+    {
       "key": "crowdfunding/status/time/ended/PROLONG",
       "value": "Ein detaillierter Überblick folgt Ende Monat."
     },
@@ -5443,6 +5542,10 @@
     {
       "key": "Onboarding/Page/pledge/preface",
       "value": "Mit Ihrer Mitgliedschaft können Sie ab sofort nicht nur die Republik konsumieren, sondern Sie können und sollen sie auch beeinflussen."
+    },
+    {
+      "key": "Onboarding/Page/context:pledge/packageName:YEARLY_ABO/preface",
+      "value": "Mit Ihrem Abo können Sie ab sofort nicht nur die Republik lesen und hören, Sie können auch mitdiskutieren."
     },
     {
       "key": "Onboarding/Page/pledge/introduction",

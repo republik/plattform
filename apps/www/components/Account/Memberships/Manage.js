@@ -88,25 +88,31 @@ const Actions = ({
         )}
       {membership.active && (
         <>
-          {membership.renew && membership.type.name === 'MONTHLY_ABO' && (
-            <P>
-              {t.elements('memberships/MONTHLY_ABO/manage/upgrade/link', {
-                buyLink: (
-                  <Link
-                    href={{
-                      pathname: '/angebote',
-                      query: { package: 'ABO' },
-                    }}
-                    passHref
-                  >
-                    <A>
-                      {t('memberships/MONTHLY_ABO/manage/upgrade/link/buyText')}
-                    </A>
-                  </Link>
-                ),
-              })}
-            </P>
-          )}
+          {membership.renew &&
+            ['MONTHLY_ABO', 'YEARLY_ABO'].includes(membership.type.name) && (
+              <P>
+                {t.elements(
+                  `memberships/${membership.type.name}/manage/upgrade/link`,
+                  {
+                    buyLink: (
+                      <Link
+                        href={{
+                          pathname: '/angebote',
+                          query: { package: 'ABO' },
+                        }}
+                        passHref
+                      >
+                        <A>
+                          {t(
+                            `memberships/${membership.type.name}/manage/upgrade/link/buyText`,
+                          )}
+                        </A>
+                      </Link>
+                    ),
+                  },
+                )}
+              </P>
+            )}
           {!hasWaitingMemberships && (
             <>
               {membership.renew && (

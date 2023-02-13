@@ -26,11 +26,9 @@ kontakt@republik.ch .
 
 Möchten Sie mehr lesen, aber Sie wissen nicht, was?
 
-Vielleicht gefallen Ihnen als Einstieg unsere regelmässigen Formate: am Montag
-unser Datenbriefing «Auf lange Sicht
-{{frontend_base_url}}/format/auf-lange-sicht », mittwochs unsere Gerichtskolumne
-«Am Gericht {{frontend_base_url}}/format/am-gericht », am Donnerstag das
-Wichtigste aus dem Bundeshaus im «Briefing aus Bern
+Vielleicht gefallen Ihnen als Einstieg unsere regelmässigen Formate: mittwochs
+unsere Gerichtskolumne «Am Gericht {{frontend_base_url}}/format/am-gericht », am
+Donnerstag das Wichtigste aus dem Bundeshaus im «Briefing aus Bern
 {{frontend_base_url}}/format/briefing-aus-bern » und freitags der
 Nachrichtenüberblick «Was diese Woche wichtig war
 {{frontend_base_url}}/format/was-diese-woche-wichtig-war ». Mit der

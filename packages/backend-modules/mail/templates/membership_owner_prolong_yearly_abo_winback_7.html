@@ -36,40 +36,66 @@
               cellpadding="0"
               cellspacing="0"
               width="100%"
-              style="max-width:640px;color:#444;font-size:18px;{{sg_font_style_sans_serif_regular}}"
+              style="max-width:640px;color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}"
             >
               <tbody>
                 <tr>
                   <td style="padding: 20px">
                     <p>Guten Tag</p>
                     <p>
-                      {{#if membership_active}} Wir haben Ihre Kündigung
-                      erfasst. Ihr Abonnement läuft noch bis zum {{end_date}}
-                      und wird nicht erneuert. {{else}} Wir haben Ihre Kündigung
-                      erfasst und Ihr Abonnement deaktiviert. {{/if}}
+                      Kaum zu glauben, aber es ist tatsächlich schon der
+                      {{today}}.
                     </p>
                     <p>
-                      Herzlichen Dank für Ihr Interesse und Ihre Unterstützung
-                      bis hierhin!
+                      Das bedeutet: Am {{grace_end_date}} verlieren Ihre
+                      Zugangsdaten für das Republik-Magazin ihre Gültigkeit, da
+                      Ihr Mitstreiter-Abo ausgelaufen ist.
                     </p>
-                    {{#if reason_given}}
                     <p>
-                      Auch für Ihre Kündigungsbegründung, aus der wir lernen
-                      können.
+                      Aber keine Sorge, so weit muss es nicht kommen. Sie können
+                      einfach ein neues Abonnement für das nächste Jahr (oder
+                      den nächsten Monat) abschliessen und weiter wie gewohnt
+                      die Republik lesen (oder hören):
                     </p>
-                    {{/if}}
+                    <table
+                      width="100%"
+                      border="0"
+                      cellspacing="0"
+                      cellpadding="0"
+                    >
+                      <tr>
+                        <td>
+                          <table border="0" cellspacing="0" cellpadding="0">
+                            <tr>
+                              <td align="center" bgcolor="#3CAD00">
+                                <a
+                                  href="{{link_offers_overview}}"
+                                  style="font-size:20px;{{sg_font_style_sans_serif_regular}}color:#ffffff;text-decoration:none;border-radius:0;padding:15px 30px 15px 30px;border:1px solid #3CAD00;display:inline-block;"
+                                  >An Bord bleiben</a
+                                >
+                              </td>
+                            </tr>
+                          </table>
+                        </td>
+                      </tr>
+                    </table>
                     <p>
-                      Bekanntlich sieht man sich immer zweimal im Leben. Wir
-                      würden uns sehr freuen, wenn Sie zu einem späteren
-                      Zeitpunkt wieder bei uns vorbeischauten. Sie sind
-                      jederzeit willkommen.
+                      Sollten Sie noch unsicher sein oder Fragen haben, dann
+                      nehmen Sie ungeniert mit uns Kontakt auf: Schreiben Sie an
+                      <a href="mailto:kontakt@republik.ch"
+                        >kontakt@republik.ch</a
+                      >
+                      oder antworten Sie direkt auf diese E-Mail.
                     </p>
-                    <p>Herzlich</p>
+                    <p>
+                      Wir bedanken uns herzlich für das letzte Jahr, und es
+                      würde uns freuen, Sie für ein weiteres an Bord zu wissen!
+                    </p>
                     <p>Ihre Crew der Republik</p>
                   </td>
                 </tr>
                 <tr>
-                  <td style="padding: 20px">
+                  <td>
                     <p
                       style="color:#282828;font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}"
                     >

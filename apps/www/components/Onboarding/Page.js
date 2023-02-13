@@ -327,7 +327,7 @@ class Page extends Component {
   render() {
     const {
       router: {
-        query: { context },
+        query: { context, package: packageName },
       },
       t,
       inNativeIOSApp,
@@ -336,6 +336,8 @@ class Page extends Component {
 
     const meta = {
       title: t.first([
+        `Onboarding/Page/context:${context}/packageName:${packageName}/meta/title`,
+        `Onboarding/Page/context:${context}/meta/title`,
         `Onboarding/Page/${context}/meta/title`,
         'Onboarding/Page/meta/title',
       ]),
@@ -355,6 +357,8 @@ class Page extends Component {
               <Center>
                 <OnboardingHeader context={context}>
                   {t.first([
+                    `Onboarding/Page/context:${context}/packageName:${packageName}/meta/title`,
+                    `Onboarding/Page/context:${context}/meta/title`,
                     `Onboarding/Page/${context}/title`,
                     'Onboarding/Page/title',
                   ])}
@@ -363,6 +367,8 @@ class Page extends Component {
                 <P {...styles.p}>
                   {t.first(
                     [
+                      `Onboarding/Page/context:${context}/packageName:${packageName}/preface`,
+                      `Onboarding/Page/context:${context}/preface`,
                       `Onboarding/Page/${context}/preface`,
                       'Onboarding/Page/preface',
                     ],
@@ -376,6 +382,8 @@ class Page extends Component {
                   dangerouslySetInnerHTML={{
                     __html: t.first(
                       [
+                        `Onboarding/Page/context:${context}/packageName:${packageName}/introduction`,
+                        `Onboarding/Page/context:${context}/introduction`,
                         `Onboarding/Page/${context}/introduction`,
                         'Onboarding/Page/introduction',
                       ],
@@ -430,6 +438,8 @@ class Page extends Component {
                       >
                         <Button primary={this.state.hasOnceVisitedAll}>
                           {t.first([
+                            `Onboarding/Page/context:${context}/packageName:${packageName}/button`,
+                            `Onboarding/Page/context:${context}/button`,
                             `Onboarding/Page/${context}/button`,
                             'Onboarding/Page/button',
                           ])}
@@ -442,6 +452,8 @@ class Page extends Component {
                 <P {...styles.p}>
                   {t.first.elements(
                     [
+                      `Onboarding/Page/context:${context}/packageName:${packageName}/more/account`,
+                      `Onboarding/Page/context:${context}/more/account`,
                       `Onboarding/Page/${context}/more/account`,
                       'Onboarding/Page/more/account',
                     ],
@@ -450,6 +462,8 @@ class Page extends Component {
                         <Link key='account' href='/konto' passHref>
                           <A>
                             {t.first([
+                              `Onboarding/Page/context:${context}/packageName:${packageName}/more/account/link`,
+                              `Onboarding/Page/context:${context}/more/account/link`,
                               `Onboarding/Page/${context}/more/account/link`,
                               'Onboarding/Page/more/account/link',
                             ])}
@@ -464,6 +478,8 @@ class Page extends Component {
                   <P {...styles.p}>
                     {t.first.elements(
                       [
+                        `Onboarding/Page/context:${context}/packageName:${packageName}/more/questions`,
+                        `Onboarding/Page/context:${context}/more/questions`,
                         `Onboarding/Page/${context}/more/questions`,
                         'Onboarding/Page/more/questions',
                       ],
@@ -472,6 +488,8 @@ class Page extends Component {
                           <Link key='anleitung' href='/anleitung' passHref>
                             <A>
                               {t.first([
+                                `Onboarding/Page/context:${context}/packageName:${packageName}/more/questions/linkManual`,
+                                `Onboarding/Page/context:${context}/more/questions/linkManual`,
                                 `Onboarding/Page/${context}/more/questions/linkManual`,
                                 'Onboarding/Page/more/questions/linkManual',
                               ])}
@@ -482,6 +500,8 @@ class Page extends Component {
                           <Link key='route' href='/faq' passHref>
                             <A>
                               {t.first([
+                                `Onboarding/Page/context:${context}/packageName:${packageName}/more/questions/linkFaq`,
+                                `Onboarding/Page/context:${context}/more/questions/linkFaq`,
                                 `Onboarding/Page/${context}/more/questions/linkFaq`,
                                 'Onboarding/Page/more/questions/linkFaq',
                               ])}
@@ -495,6 +515,8 @@ class Page extends Component {
                 <P {...styles.p}>
                   {t.first.elements(
                     [
+                      `Onboarding/Page/context:${context}/packageName:${packageName}/more/help`,
+                      `Onboarding/Page/context:${context}/more/help`,
                       `Onboarding/Page/${context}/more/help`,
                       'Onboarding/Page/more/help',
                     ],
@@ -503,11 +525,15 @@ class Page extends Component {
                         <A
                           key='email'
                           href={`mailto:${t.first.elements([
+                            `Onboarding/Page/context:${context}/packageName:${packageName}/more/help/email`,
+                            `Onboarding/Page/context:${context}/more/help/email`,
                             `Onboarding/Page/${context}/more/help/email`,
                             `Onboarding/Page/more/help/email`,
                           ])}`}
                         >
                           {t.first.elements([
+                            `Onboarding/Page/context:${context}/packageName:${packageName}/more/help/email`,
+                            `Onboarding/Page/context:${context}/more/help/email`,
                             `Onboarding/Page/${context}/more/help/email`,
                             `Onboarding/Page/more/help/email`,
                           ])}

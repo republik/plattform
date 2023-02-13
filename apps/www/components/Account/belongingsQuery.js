@@ -4,6 +4,7 @@ export default gql`
   query myBelongings {
     me {
       id
+      hasDormantMembership
       memberships {
         id
         accessGranted
