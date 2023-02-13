@@ -12,6 +12,7 @@ import {
   Chart,
   Interaction,
   Editorial,
+  Breakout,
 } from '@project-r/styleguide'
 
 import TargetedQuestions from './TargetedQuestions'
@@ -117,7 +118,7 @@ const AnswersCarousel = ({ slug, question, additionalQuestion, bgColor }) => {
           <>
             <Interaction.H2>{question.text}</Interaction.H2>
 
-            <div style={{ margin: '0 -200px' }}>
+            <Breakout size='breakout'>
               <TeaserCarousel outline>
                 <TeaserCarouselTileContainer>
                   {targetedAnswers.map(({ answers, displayAuthor }) => (
@@ -145,7 +146,7 @@ const AnswersCarousel = ({ slug, question, additionalQuestion, bgColor }) => {
                   ))}
                 </TeaserCarouselTileContainer>
               </TeaserCarousel>
-            </div>
+            </Breakout>
             <Editorial.P>
               <QuestionLink
                 question={question}
@@ -214,8 +215,8 @@ const AllQuestions = ({ slug }) => {
             />
             <div style={{ marginTop: 60 }}>
               <Editorial.P>
-                <ul style={{ listStyleType: 'square', paddingLeft: 25 }}>
-                  <li style={{ fontSize: 21, marginBottom: 20 }}>
+                <Editorial.UL>
+                  <Editorial.LI>
                     <QuestionLink
                       question={questions[2]}
                       additionalQuestion={questions[3]}
@@ -223,13 +224,13 @@ const AllQuestions = ({ slug }) => {
                       <Editorial.A>{questions[2].text}</Editorial.A>
                     </QuestionLink>{' '}
                     (psst: es gibt da noch eine Bonusfrage)
-                  </li>
-                  <li style={{ fontSize: 21, marginBottom: 20 }}>
+                  </Editorial.LI>
+                  <Editorial.LI>
                     <QuestionLink question={questions[5]}>
                       <Editorial.A>{questions[5].text}</Editorial.A>
                     </QuestionLink>
-                  </li>
-                </ul>
+                  </Editorial.LI>
+                </Editorial.UL>
               </Editorial.P>
             </div>
             <Question
