@@ -288,12 +288,22 @@ module.exports = {
     Roles.ensureUserHasRole(me, 'supporter')
     return user.adminNotes || user._raw.adminNotes
   },
-  async futureCampaignAboCount(user, args, { pgdb, user: me }) {
+  async futureCampaignAboCount(user, args, context) {
+    const { pgdb, user: me } = context
+
     if (
       Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter']) ||
       isFieldExposed(user, 'futureCampaignAboCount')
     ) {
-      return getFutureCampaignAboCount({ user, pgdb })
+      const cache = createMembershipCache(
+        user,
+        `futureCampaignAboCount`,
+        context,
+      )
+
+      return cache.cache(async function () {
+        return getFutureCampaignAboCount({ user, pgdb })
+      })
     }
   },
 }

@@ -5,6 +5,7 @@ const { Consents } = require('@orbiting/backend-modules-auth')
 const dayjs = require('dayjs')
 const isUUID = require('is-uuid')
 
+const createCache = require('./cache')
 const { getPeriodEndingLast } = require('./utils')
 
 const DONATE_POLICY_NAME = '5YEAR_DONATE_MONTHS'
@@ -107,6 +108,15 @@ const rewardSender = async (pledge, context) => {
     console.error('transaction rollback', e)
     throw e
   }
+
+  const cache = createCache(
+    {
+      prefix: `User:${senderUserId}`,
+      key: 'futureCampaignAboCount',
+    },
+    context,
+  )
+  await cache.invalidate()
 }
 
 module.exports = { rewardSender }
