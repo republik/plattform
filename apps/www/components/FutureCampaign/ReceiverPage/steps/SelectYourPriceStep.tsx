@@ -6,7 +6,6 @@ import AssetImage from '../../../../lib/images/AssetImage'
 import { StepProps } from '../../../Stepper/Stepper'
 import { getDefaultSliderStep, SliderValue } from '../PriceSlider/helpers'
 import { PriceSlider } from '../PriceSlider/PriceSlider'
-import * as textStyles from '../styles'
 import BottomPanel from './BottomPanel'
 
 const SelectYourPriceStep = ({
@@ -25,35 +24,35 @@ const SelectYourPriceStep = ({
     <>
       <div {...styles.container}>
         <div {...styles.content}>
-          <div {...styles.icon}>
-            <AssetImage src={sliderStep.iconSrc} width={100} height={100} />
-          </div>
-
-          <div>
-            <div {...textStyles.text}>
+          <AssetImage src={sliderStep.iconSrc} width={100} height={100} />
+          <div {...styles.priceSection}>
+            <div {...styles.text}>
               Ihr Preis:{' '}
-              <strong {...textStyles.textBold}>CHF {sliderValue.value}</strong>
+              <strong {...styles.textBold}>CHF {sliderValue.value}</strong>
             </div>
             <h2 {...styles.heading}>{sliderStep.label}</h2>
+            <p {...styles.text}>{sliderStep.text}</p>
           </div>
-
-          <p {...textStyles.text}>{sliderStep.text}</p>
-          <div {...styles.goodie}>
-            <div
-              {...styles.goodieImage}
-              style={{ opacity: sliderStep.goodie ? 1 : 0.5 }}
-            >
-              <AssetImage
-                src={`/static/5-jahre-republik/receiver/visualisierung-5jahr-totebag-traeger-gefaltet.png`}
-                width={60}
-                height={60}
-              />
+          <div {...styles.goodieSection}>
+            <div {...styles.goodie}>
+              <div
+                {...styles.goodieImage}
+                style={{ opacity: sliderStep.goodie ? 1 : 0.5 }}
+              >
+                <AssetImage
+                  src={`/static/5-jahre-republik/receiver/visualisierung-5jahr-totebag-traeger-gefaltet.png`}
+                  width={60}
+                  height={60}
+                />
+              </div>
+              <div>
+                <p {...styles.textHint}>{sliderStep.goodieText}</p>
+              </div>
             </div>
-            <div>
-              <p {...textStyles.textSmallMedium}>{sliderStep.goodieText}</p>
-            </div>
+            <p {...styles.textHint} style={{ marginBottom: 24, opacity: 0.8 }}>
+              {sliderStep.bonusHint}
+            </p>
           </div>
-          <p {...textStyles.textSmallMedium}>{sliderStep.bonusHint}</p>
         </div>
       </div>
       <div {...styles.slider} ref={resizeRef}>
@@ -95,7 +94,8 @@ const styles = {
     flexGrow: 1,
     display: 'flex',
     flexDirection: 'column',
-    gap: 24,
+    alignItems: 'start',
+    gap: 32,
     overflowY: 'auto',
     paddingRight: 74,
   }),
@@ -111,17 +111,30 @@ const styles = {
     height: ['calc(100vh - 240px)', 'calc(100dvh - 240px)'],
     maxHeight: 550,
   }),
-
   heading: css({
-    fontSize: 27,
-    ...fontStyles.sansSerifBold,
+    ...fontStyles.sansSerifMedium26,
+    margin: 0,
     [mediaQueries.mUp]: {
-      fontSize: 36,
+      ...fontStyles.sansSerifMedium32,
     },
-    margin: `8px 0 0 0`,
   }),
-
-  icon: css({}),
+  priceSection: css({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 8,
+    [mediaQueries.mUp]: {
+      gap: 16,
+    },
+  }),
+  goodieSection: css({
+    display: 'flex',
+    alignItems: 'start',
+    flexDirection: 'column',
+    gap: 16,
+    [mediaQueries.mUp]: {
+      gap: 24,
+    },
+  }),
   goodie: css({
     display: 'flex',
     gap: 16,
@@ -129,5 +142,26 @@ const styles = {
   goodieImage: css({
     flexShrink: 0,
     width: 60,
+  }),
+  text: css({
+    ...fontStyles.sansSerifRegular15,
+    margin: 0,
+    [mediaQueries.mUp]: {
+      ...fontStyles.sansSerifRegular21,
+    },
+  }),
+  textHint: css({
+    ...fontStyles.sansSerifRegular14,
+    margin: 0,
+    [mediaQueries.mUp]: {
+      ...fontStyles.sansSerifRegular16,
+    },
+  }),
+  textBold: css({
+    ...fontStyles.sansSerifMedium15,
+    margin: 0,
+    [mediaQueries.mUp]: {
+      ...fontStyles.sansSerifMedium21,
+    },
   }),
 }
