@@ -25,7 +25,6 @@ export const meQuery = gql`
       firstName
       lastName
       email
-      hasAddress
       initials
       roles
       isListed

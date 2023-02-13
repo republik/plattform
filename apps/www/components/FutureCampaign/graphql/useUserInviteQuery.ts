@@ -6,6 +6,7 @@ export const USER_INVITE_QUERY = gql`
     me {
       accessToken(scope: NOW_YOU_SEE_ME)
       hasPublicProfile
+      hasAddress
     }
   }
 `
@@ -14,6 +15,7 @@ export type UserInviteQueryData = {
   me?: {
     accessToken: string
     hasPublicProfile: boolean
+    hasAddress: boolean
   }
 }
 

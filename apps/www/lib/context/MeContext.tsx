@@ -74,7 +74,6 @@ export type MeObjectType = {
     graceEndDate: string
   }
   progressConsent: boolean
-  hasAddress: boolean
 }
 
 type MeResponse = {
