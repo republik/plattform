@@ -45,6 +45,14 @@ const rewardSender = async (pledge, context) => {
       return
     }
 
+    const membershipType = await transaction.public.membershipTypes.findOne({
+      id: activeMembership.membershipTypeId,
+    })
+    if (!['ABO', 'BENEFACTOR'].includes(membershipType?.name)) {
+      debug('sender has an activeMembership type which wont receive a reward')
+      return
+    }
+
     // update count of subscribers
     const lastCount = await transaction.public.userAttributes.findFirst(
       { userId: senderUserId, name: 'futureCampaignAboCount' },
