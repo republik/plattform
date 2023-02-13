@@ -8,27 +8,24 @@ module.exports = async (_, args, context) => {
   const { pgdb, user, t, pubsub, loaders } = context
   const { id, content, tags } = args
 
-  Roles.ensureUserHasRole(user, 'member')
-
-  if (!content || !content.trim().length) {
-    throw new Error(t('api/comment/empty'))
-  }
-
-  let discussion
-  let comment
-  let newComment
   const transaction = await pgdb.transactionBegin()
   try {
     // ensure comment exists and belongs to user
-    comment = await transaction.public.comments.findOne({ id })
+    const comment = await transaction.public.comments.findOne({ id })
     if (!comment) {
       throw new Error(t('api/comment/404'))
     }
+
+    const discussion = await loaders.Discussion.byId.load(comment.discussionId)
+    Roles.ensureUserIsInRoles(user, discussion.allowedRoles)
+
+    if (!content || !content.trim().length) {
+      throw new Error(t('api/comment/empty'))
+    }
+
     if (!comment.userId || comment.userId !== user.id) {
       throw new Error(t('api/comment/notYours'))
     }
-
-    discussion = await loaders.Discussion.byId.load(comment.discussionId)
 
     if (discussion.closed) {
       throw new Error(t('api/comment/closed'))
@@ -52,31 +49,31 @@ module.exports = async (_, args, context) => {
       )
     }
 
-    newComment = await transaction.public.comments.updateAndGetOne(
+    const newComment = await transaction.public.comments.updateAndGetOne(
       { id: comment.id },
       unsavedComment,
     )
 
     await transaction.transactionCommit()
+
+    if (newComment) {
+      await Promise.all([
+        loaders.Comment.byId.clear(comment.id),
+        pubsub.publish('comment', {
+          comment: {
+            mutation: 'UPDATED',
+            node: newComment,
+          },
+        }),
+        slack.publishCommentUpdate(newComment, comment, discussion, context),
+      ]).catch((e) => {
+        console.error(e)
+      })
+    }
+
+    return newComment
   } catch (e) {
     await transaction.transactionRollback()
     throw e
   }
-
-  if (newComment) {
-    await Promise.all([
-      loaders.Comment.byId.clear(comment.id),
-      pubsub.publish('comment', {
-        comment: {
-          mutation: 'UPDATED',
-          node: newComment,
-        },
-      }),
-      slack.publishCommentUpdate(newComment, comment, discussion, context),
-    ]).catch((e) => {
-      console.error(e)
-    })
-  }
-
-  return newComment
 }

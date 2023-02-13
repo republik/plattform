@@ -430,7 +430,7 @@
     },
     {
       "key": "marketing/page/reasons/3/text",
-      "value": "Die Republik wird finanziert durch ihre rund 28’000 Abonnentinnen. Wir gehören niemandem – aber jedem unserer Mitglieder ein bisschen."
+      "value": "Die Republik wird finanziert durch ihre rund 27’000 Abonnentinnen. Wir gehören niemandem – aber jedem unserer Mitglieder ein bisschen."
     },
     {
       "key": "marketing/page/vision/headline",
@@ -1186,7 +1186,7 @@
     },
     {
       "key": "Account/Access/Grants/REDUCED/message/claimed",
-      "value": "Als Dankeschön fürs Mitmachen im «{campaignTitle}» haben Sie bis am {maxEndAt} vollen Zugriff auf alle Inhalte der Republik."
+      "value": "Dankeschön fürs Mitmachen im «{campaignTitle}»."
     },
     {
       "key": "Account/Access/Campaigns/title",
@@ -7205,7 +7205,7 @@
     },
     {
       "key": "article/payNote/220404-v1/before",
-      "value": "Journalismus kostet. Dass Sie diesen Beitrag trotzdem lesen können, verdanken Sie den über 28'000 Leserinnen, die die Republik schon finanzieren. Wenn auch Sie unabhängigen Journalismus möglich machen wollen: Kommen Sie an Bord!"
+      "value": "Journalismus kostet. Dass Sie diesen Beitrag trotzdem lesen können, verdanken Sie den über 27'000 Leserinnen, die die Republik schon finanzieren. Wenn auch Sie unabhängigen Journalismus möglich machen wollen: Kommen Sie an Bord!"
     },
     {
       "key": "article/payNote/220404-v1/after",
@@ -7225,7 +7225,7 @@
     },
     {
       "key": "article/tryNote/220404-v1/after",
-      "value": "Über 28'000 Menschen machen die Republik heute schon möglich. Lernen Sie uns jetzt auch kennen – 21 Tage lang, kostenlos und unverbindlich:"
+      "value": "Über 27'000 Menschen machen die Republik heute schon möglich. Lernen Sie uns jetzt auch kennen – 21 Tage lang, kostenlos und unverbindlich:"
     },
     {
       "key": "article/tryNote/220404-v2/before",

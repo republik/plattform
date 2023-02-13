@@ -4,8 +4,6 @@ const {
 } = require('../../../lib/discussionPreferences')
 
 module.exports = async (_, args, { pgdb, user, t, loaders }) => {
-  Roles.ensureUserHasRole(user, 'member')
-
   const { id, discussionPreferences } = args
 
   const transaction = await pgdb.transactionBegin()
@@ -16,6 +14,8 @@ module.exports = async (_, args, { pgdb, user, t, loaders }) => {
     if (!discussion) {
       throw new Error(t('api/discussion/404'))
     }
+
+    Roles.ensureUserIsInRoles(user, discussion.allowedRoles)
 
     await setDiscussionPreferences({
       discussionPreferences,
