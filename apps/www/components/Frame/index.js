@@ -17,7 +17,6 @@ import Header from './Header'
 import Footer from '../Footer'
 import Box from './Box'
 import ProlongBox from './ProlongBox'
-import EndingBox from './EndingBox'
 import {
   HEADER_HEIGHT,
   HEADER_HEIGHT_MOBILE,
@@ -199,9 +198,6 @@ const Frame = ({
                   membership={me.activeMembership}
                 />
               )}
-            {me && !me.hasDormantMembership && me.activeMembership && (
-              <EndingBox membership={me.activeMembership} />
-            )}
             <OptionalLocalColorContext
               localColorVariables={customContentColorContext}
             >
