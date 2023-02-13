@@ -114,7 +114,12 @@ const ProlongBox = ({ t, prolongBeforeDate, membership }) => {
         </Editorial.A>
       </TokenPackageLink>
     )) || (
-      <Link key='link' href='/angebote' passHref prefetch={false}>
+      <Link
+        key='link'
+        href={{ pathname: `/angebote`, query: { package: 'ABO' } }}
+        passHref
+        prefetch={false}
+      >
         <Editorial.A {...styleTextColor}>
           {t.first(prefixTranslationKeys.map((k) => `${k}/linkText`))}
         </Editorial.A>
@@ -137,7 +142,12 @@ const ProlongBox = ({ t, prolongBeforeDate, membership }) => {
             </TokenPackageLink>
           )}
           {buttonText && !membership.canProlong && (
-            <Link key='link' href='/angebote' passHref prefetch={false}>
+            <Link
+              key='link'
+              href={{ pathname: `/angebote`, query: { package: 'ABO' } }}
+              passHref
+              prefetch={false}
+            >
               <Button style={{ marginTop: 10 }} primary>
                 {buttonText}
               </Button>
