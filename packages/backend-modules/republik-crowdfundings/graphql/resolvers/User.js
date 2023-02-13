@@ -56,13 +56,6 @@ const defaultPaymentSource = async (user, args, { pgdb }) => {
   }
 }
 
-/**
- * membershipTypes which are not prolongable via PROLONG package but still
- * expire and require user action like buying a new membership.
- */
-const filterExpiringMemberships = (memberships) =>
-  memberships?.filter((m) => ['YEARLY_ABO'].includes(m.membershipType?.name))
-
 module.exports = {
   async memberships(user, args, { pgdb, user: me }) {
     if (
@@ -153,7 +146,7 @@ module.exports = {
         memberships,
         user,
         ignoreClaimedMemberships,
-      }).concat(filterExpiringMemberships(memberships))
+      })
 
       if (hasDormantMembership({ user, memberships: eligableMemberships })) {
         debug('found dormant membership, return prolongBeforeDate: null')
