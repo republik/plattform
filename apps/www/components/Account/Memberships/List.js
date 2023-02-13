@@ -84,7 +84,7 @@ export default compose(
         error: data.error,
         activeMembership,
         memberships,
-        hasDormantMembership: data?.me?.hasDormantMembership,
+        hasWaitingMemberships: data?.me?.hasDormantMembership,
       }
     },
   }),
