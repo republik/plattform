@@ -22,7 +22,7 @@ const rewardSender = async (pledge, context) => {
   const { utm_content: senderUserId } = payload
 
   if (!senderUserId || !isUUID.v4(senderUserId)) {
-    debug('no utm_content does not contain an UUID')
+    debug('utm_content does not contain an UUID')
     return
   }
 
