@@ -5284,48 +5284,36 @@
       "value": "vor {count} Tagen"
     },
     {
-      "key": "EndingBox/YEARLY_ABO/before",
+      "key": "prolongNecessary/YEARLY_ABO/before",
       "value": "Ihr Abo endet bald: {link}"
     },
     {
-      "key": "EndingBox/YEARLY_ABO/before/linkText",
-      "value": "jetzt Jahresmitglied werden!"
+      "key": "prolongNecessary/YEARLY_ABO/before/linkText",
+      "value": "Jahresmitglied werden"
     },
     {
-      "key": "EndingBox/YEARLY_ABO/due",
-      "value": "Ihr Abo endet bald: {link}"
+      "key": "prolongNecessary/YEARLY_ABO/due",
+      "value": "Mitstreiter-Abo endet bald: {link}"
     },
     {
-      "key": "EndingBox/YEARLY_ABO/due/linkText",
-      "value": "Ihr Abo endet bald: jetzt Jahresmitglied werden!"
-    },
-    {
-      "key": "EndingBox/YEARLY_ABO/overdue",
-      "value": "Ihr Abo endet – und Ihre Mitgliedschaft beginnt?"
-    },
-    {
-      "key": "EndingBox/YEARLY_ABO/overdue/button",
+      "key": "prolongNecessary/YEARLY_ABO/due/linkText",
       "value": "Jetzt Jahresmitglied werden"
     },
     {
-      "key": "EndingBox/YEARLY_ABO/overdue/explanation",
+      "key": "prolongNecessary/YEARLY_ABO/overdue",
+      "value": "Ihr Abo endet – und Ihre Mitgliedschaft beginnt?"
+    },
+    {
+      "key": "prolongNecessary/YEARLY_ABO/overdue/button",
+      "value": "Jetzt Jahresmitglied werden"
+    },
+    {
+      "key": "prolongNecessary/YEARLY_ABO/overdue/explanation",
       "value": "Ihr Abo läuft am {endDate} aus. Doch das muss nicht das Ende Ihrer Zeit bei der Republik bedeuten: Werden Sie jetzt Jahresmitglied und unterstützen Sie unseren Journalismus auch in Zukunft."
     },
     {
-      "key": "EndingBox/YEARLY_ABO/overdue/explanation/cancelText",
+      "key": "prolongNecessary/YEARLY_ABO/overdue/explanation/cancelText",
       "value": "Abonnement kündigen"
-    },
-    {
-      "key": "EndingBox/days/0",
-      "value": "heute"
-    },
-    {
-      "key": "EndingBox/days/1",
-      "value": "gestern"
-    },
-    {
-      "key": "EndingBox/days/other",
-      "value": "vor {count} Tagen"
     },
     {
       "key": "crowdfunding/status/time/ended/PROLONG",
