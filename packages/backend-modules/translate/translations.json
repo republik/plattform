@@ -677,10 +677,6 @@
       "value": "Ihr Republik-Abonnement wurde deaktiviert"
     },
     {
-      "key": "api/email/membership_deactivated_yearly_abo_uncancelled/subject",
-      "value": "TODO: api/email/membership_deactivated_yearly_abo_uncancelled/subject"
-    },
-    {
       "key": "api/email/membership_deactivated/subject",
       "value": "Ihre Mitgliedschaft wurde deaktiviert"
     },
