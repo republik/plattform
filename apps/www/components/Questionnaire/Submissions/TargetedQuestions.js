@@ -153,7 +153,15 @@ const TargetedQuestions = ({ slug, questionIds, extract, share = {} }) => {
                 </Interaction.H2>
               )}
 
-              <div style={{ marginTop: 50 }}>
+              <div
+                style={{
+                  marginTop: 50,
+                  display: 'flex',
+                  flexWrap: 'wrap',
+                  alignItems: 'flex-start',
+                  gap: '1rem',
+                }}
+              >
                 {targetAnswers.map(({ answers, displayAuthor }) => (
                   <div
                     key={answers[0].id}
@@ -163,6 +171,7 @@ const TargetedQuestions = ({ slug, questionIds, extract, share = {} }) => {
                       borderRadius: '10px',
                       backgroundColor: '#FFF',
                       color: '#000',
+                      flex: '1 auto',
                     }}
                   >
                     <Interaction.P attributes={{}}>
@@ -234,7 +243,7 @@ const TargetedQuestions = ({ slug, questionIds, extract, share = {} }) => {
                       setInfiniteScroll(true)
                     }}
                   >
-                    {t.pluralize('questionnaire/submissions/loadMore', {
+                    {t.pluralize('questionnaire/submissions/showAnswers', {
                       count: results.totalCount - results.nodes.length,
                     })}
                   </PlainButton>
@@ -258,5 +267,30 @@ const styles = {
     height: '10px',
     width: '20%',
     borderTopLeftRadius: '2px',
+  }),
+}
+
+const gridStyles = {
+  container: css({
+    maxWidth: '1600px',
+    margin: '20px auto 0',
+    padding: '0 60px',
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(170px, 1fr))',
+    gridTemplateRows: 'auto',
+    gridAutoFlow: 'row dense',
+    gap: '1rem',
+  }),
+  card: css({
+    background: 'transparent',
+    width: '100%',
+    height: '100%',
+    gridRowEnd: 'span 1',
+    gridColumnEnd: 'span 1',
+    cursor: 'pointer',
+    transition: 'transform .3s ease-in-out',
+    ':hover': {
+      transform: 'scale(1.03) !important',
+    },
   }),
 }

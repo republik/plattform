@@ -6,6 +6,7 @@ import {
   mediaQueries,
   useColorContext,
   ColorContextProvider,
+  Center,
 } from '@project-r/styleguide'
 
 import { css } from 'glamor'
@@ -32,7 +33,9 @@ const KlimafragebogenPage = () => {
       containerMaxWidth={1000}
       customContentColorContext={climateColors}
     >
-      <SubmissionsOverview slug={'sommer22'} />
+      <Center>
+        <SubmissionsOverview slug={'sommer22'} />
+      </Center>
     </Frame>
   )
 }
