@@ -17,7 +17,7 @@ const FiveYearsIndexPage = () => {
         }}
       />
       <h1 {...styles.heading}>
-        Unabhängiger Journalismus hat Zukunft, mit Ihnen.
+        Unabhängiger Journalismus hat Zukunft – mit Ihnen.
       </h1>
       <p {...styles.text}>
         Geld ist nicht alles. Köpfe schon. Zum 5-Jahres-Jubiläum sind unsere

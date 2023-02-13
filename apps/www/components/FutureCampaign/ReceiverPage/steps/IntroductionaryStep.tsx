@@ -53,7 +53,7 @@ const IntroductoryStep = ({
   return (
     <>
       <div {...styles.main}>
-        <h1 {...styles.heading}>Journalismus hat eine Zukunft, mit Ihnen.</h1>
+        <h1 {...styles.heading}>Journalismus hat eine Zukunft – mit Ihnen.</h1>
         {hasMonthlySubscription ? (
           <>
             <div>

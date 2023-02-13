@@ -129,7 +129,9 @@ const InviteReceiverPage = ({ invalidInviteCode }: InviteReceiverPageProps) => {
       )}
       {hasYearlySubscription && (
         <div {...styles.hasYearlySubscription}>
-          <h1 {...styles.heading}>Journalismus hat eine Zukunft, mit Ihnen.</h1>
+          <h1 {...styles.heading}>
+            Journalismus hat eine Zukunft – mit Ihnen.
+          </h1>
           <p {...styles.text}>Sie sind bereits an Bord. Gratulation!</p>
           <p {...styles.text}>
             Aber wie sieht es mit Ihrem Nachbarn, Ihrem alten Schulfreund und
@@ -169,6 +171,10 @@ const InviteReceiverPage = ({ invalidInviteCode }: InviteReceiverPageProps) => {
               portrait={senderProfileData?.sender?.portrait}
             />
             <p {...styles.text} style={{ marginTop: 16 }}>
+              Damit würden Sie die Republik ein Jahr lang zu einem selbst
+              gewählten Preis erhalten.
+            </p>
+            <p {...styles.text}>
               Es wurden aber schon alle Einladungen von diesem Link eingelöst.
             </p>
             <p {...styles.text}>
