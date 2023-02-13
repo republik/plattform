@@ -141,13 +141,13 @@ const InviteSenderPage = ({ me }: { me: MeObjectType }) => {
               Republik-Jubiläumstasche zugesandt.{' '}
               {!userInviteData?.me?.hasAddress && (
                 <span>
-                  Wenn Sie das Geschenk erhalten wollen, müssen Sie{' '}
+                  Vergessen Sie nicht,{' '}
                   <Link href='/konto' passHref>
                     <a {...styles.inlineLink}>
-                      eine Adresse im Konto hinterlegen
+                      im Konto Ihre Adresse zu hinterlegen
                     </a>
                   </Link>
-                  .
+                  , damit wir Ihnen das Geschenk zustellen können.
                 </span>
               )}
             </p>
