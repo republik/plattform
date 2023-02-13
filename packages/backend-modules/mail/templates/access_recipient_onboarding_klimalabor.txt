@@ -20,14 +20,6 @@ Gut zu wissen:
  * Etwa alle ein bis zwei Wochen melden wir uns per Newsletter bei Ihnen und
    informieren Sie, wo wir stehen und wie Sie sich einbringen können.
 
-   {{#unless RECIPIENT_HAS_MEMBERSHIPS}}
-
- * Damit Sie die Republik auch über das Klimalabor hinaus kennenlernen können,
-   erhalten Sie als kleines Dankeschön für Ihre Mitwirkung für einen Monat
-   Zugriff auf sämtliche Inhalte der Republik {{frontend_base_url}} .
-
-   {{/unless}}
-
 Wie Sie sich gleich zu Beginn einbringen können:
 
  * Machen Sie mit uns eine Zeitreise und zeigen Sie uns, wie Sie in die Zukunft

@@ -1273,6 +1273,10 @@
       "value": "Ihre Reise ist beendet"
     },
     {
+      "key": "api/access/email/recipient/expired_klimalabor/subject",
+      "value": "Machen Sie es wie wir: Investieren Sie in Klimajournalismus"
+    },
+    {
       "key": "api/access/email/recipient/followup/subject",
       "value": "Zeit für eine Entscheidung"
     },

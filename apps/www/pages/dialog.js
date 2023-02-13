@@ -77,7 +77,6 @@ const DialogContent = ({ tab, activeDiscussionId, serverContext }) => {
   const { t } = useTranslation()
   const { query } = useRouter()
   const [colorScheme] = useColorContext()
-
   const discussionContext = useDiscussion()
 
   if (
@@ -156,27 +155,29 @@ const DialogContent = ({ tab, activeDiscussionId, serverContext }) => {
               <ActionBar discussion={activeDiscussionId} fontSize />
             </div>
           )}
-          <WithoutAccess
-            render={() => (
-              <>
-                <UnauthorizedMessage
-                  unauthorizedTexts={{
-                    title: ' ',
-                    description: t.elements('feedback/unauthorized', {
-                      buyLink: (
-                        <Link href='/angebote' passHref>
-                          <A>{t('feedback/unauthorized/buyText')}</A>
-                        </Link>
-                      ),
-                    }),
-                  }}
-                />
-                <br />
-                <br />
-                <br />
-              </>
-            )}
-          />
+          {!discussionContext?.discussion?.userCanComment && (
+            <WithoutAccess
+              render={() => (
+                <>
+                  <UnauthorizedMessage
+                    unauthorizedTexts={{
+                      title: ' ',
+                      description: t.elements('feedback/unauthorized', {
+                        buyLink: (
+                          <Link href='/angebote' passHref>
+                            <A>{t('feedback/unauthorized/buyText')}</A>
+                          </Link>
+                        ),
+                      }),
+                    }}
+                  />
+                  <br />
+                  <br />
+                  <br />
+                </>
+              )}
+            />
+          )}
           {!tab && (
             <>
               <H3>{t('marketing/community/title/plain')}</H3>

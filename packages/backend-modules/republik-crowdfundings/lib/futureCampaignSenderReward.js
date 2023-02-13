@@ -5,6 +5,7 @@ const { Consents } = require('@orbiting/backend-modules-auth')
 const dayjs = require('dayjs')
 const isUUID = require('is-uuid')
 
+const createCache = require('./cache')
 const { getPeriodEndingLast } = require('./utils')
 
 const DONATE_POLICY_NAME = '5YEAR_DONATE_MONTHS'
@@ -21,7 +22,13 @@ const rewardSender = async (pledge, context) => {
   const { utm_content: senderUserId } = payload
 
   if (!senderUserId || !isUUID.v4(senderUserId)) {
-    debug('no utm_content does not contain an UUID')
+    debug('utm_content does not contain an UUID')
+    return
+  }
+
+  const pkg = await pgdb.public.packages.findOne({ id: pledge.packageId })
+  if (!['ABO', 'BENEFACTOR', 'YEARLY_ABO'].includes(pkg?.name)) {
+    debug('package "%s" wont reward anything', pkg?.name)
     return
   }
 
@@ -107,6 +114,15 @@ const rewardSender = async (pledge, context) => {
     console.error('transaction rollback', e)
     throw e
   }
+
+  const cache = createCache(
+    {
+      prefix: `User:${senderUserId}`,
+      key: 'futureCampaignAboCount',
+    },
+    context,
+  )
+  await cache.invalidate()
 }
 
 module.exports = { rewardSender }
