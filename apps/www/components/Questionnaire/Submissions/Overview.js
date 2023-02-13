@@ -3,17 +3,15 @@ import { useRouter } from 'next/router'
 import { useQuery } from '@apollo/client'
 
 import {
-  Breakout,
   Loader,
-  Editorial,
   TeaserCarousel,
   TeaserCarouselTileContainer,
   TeaserCarouselTile,
   TeaserCarouselHeadline,
   inQuotes,
-  ChartLegend,
   Chart,
   Interaction,
+  Editorial,
 } from '@project-r/styleguide'
 
 import TargetedQuestions from './TargetedQuestions'
@@ -77,14 +75,14 @@ export const AnswersChart = ({ question, additionalQuestion, skipTitle }) => {
         />
         {!!additionalQuestion && (
           <div style={{ marginTop: '20px' }}>
-            <Interaction.P>
+            <Editorial.P>
               <QuestionLink
                 question={question}
                 additionalQuestion={additionalQuestion}
               >
                 <Editorial.A>Alle Antworten lesen</Editorial.A>
               </QuestionLink>
-            </Interaction.P>
+            </Editorial.P>
           </div>
         )}
       </div>
@@ -148,14 +146,14 @@ const AnswersCarousel = ({ slug, question, additionalQuestion, bgColor }) => {
                 </TeaserCarouselTileContainer>
               </TeaserCarousel>
             </div>
-            <Interaction.P>
+            <Editorial.P>
               <QuestionLink
                 question={question}
                 additionalQuestion={additionalQuestion}
               >
                 <Editorial.A>Alle Antworten lesen</Editorial.A>
               </QuestionLink>
-            </Interaction.P>
+            </Editorial.P>
           </>
         )
       }}
@@ -206,7 +204,7 @@ const AllQuestions = ({ slug }) => {
         } = data
 
         return (
-          <div style={{ marginTop: 80, width: '700px', margin: '0 auto' }}>
+          <div style={{ margin: '0 auto' }}>
             <Question question={questions[6]} slug={slug} />
             <Question
               question={questions[0]}
@@ -215,7 +213,7 @@ const AllQuestions = ({ slug }) => {
               bgColor={'#FFFFC8'}
             />
             <div style={{ marginTop: 60 }}>
-              <Interaction.P>
+              <Editorial.P>
                 <ul style={{ listStyleType: 'square', paddingLeft: 25 }}>
                   <li style={{ fontSize: 21, marginBottom: 20 }}>
                     <QuestionLink
@@ -232,7 +230,7 @@ const AllQuestions = ({ slug }) => {
                     </QuestionLink>
                   </li>
                 </ul>
-              </Interaction.P>
+              </Editorial.P>
             </div>
             <Question
               question={questions[16]}
