@@ -40,7 +40,7 @@ const SLIDER_STEPS: Record<SliderStepKey, SliderStep> = {
     key: 'average',
     iconSrc: '/static/5-jahre-republik/receiver/slider-step-1.svg',
     label: 'Mit dem Schwarm schwimmen',
-    text: 'Wählen Sie den Betrag, der für Sie stimmt. Mitstreiter, die ihren Preis selber wählen, zahlen im Schnitt 120 CHF.',
+    text: 'Wählen Sie den Betrag, der für Sie stimmt. Mitglieder, die ihren Preis selber wählen, zahlen im Schnitt so viel.',
     goodie: true,
     goodieText: 'Zum Abo-Kauf schenken wir Ihnen eine Jubiläumstasche dazu.',
     bonusHint: '',
