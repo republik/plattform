@@ -17,6 +17,10 @@ Seite {{link_sender_page}} .
 
 Merci für Ihre Zeit und Ihre Unterstützung!
 
+Und als Hinweis für alle, die Handfestes mögen: Sobald Sie 5 Mitstreiterinnen an
+Bord geholt haben, schenken wir Ihnen eine schicke (und praktische!)
+Jubiläums-Tasche dazu.
+
 Herzlich
 
 {{else if has_two_slots_filled}}
