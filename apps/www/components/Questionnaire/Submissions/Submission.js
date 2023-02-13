@@ -28,6 +28,7 @@ import { useInNativeApp, postMessage } from '../../../lib/withInNativeApp'
 import ShareOverlay from '../../ActionBar/ShareOverlay'
 import { trackEvent } from '../../../lib/matomo'
 import { getSubmissionUrl } from './Share'
+import { useTranslation } from '../../../lib/withT'
 
 const styles = {
   highlightContainer: css({
@@ -86,6 +87,75 @@ const styles = {
 const dateTimeFormat = swissTime.format('%d. %B %Y %H:%M')
 const titleDate = (string) => dateTimeFormat(new Date(string))
 
+export const SubmissionAuthor = ({
+  displayAuthor,
+  createdAt,
+  updatedAt,
+  submissionUrl,
+  children,
+  isHighlighted,
+}) => {
+  const { t } = useTranslation()
+  const [colorScheme] = useColorContext()
+  const [headerHeight] = useHeaderHeight()
+  const isUpdated = updatedAt && updatedAt !== createdAt
+  return (
+    <div
+      {...styles.header}
+      style={{ top: headerHeight }}
+      {...colorScheme.set(
+        'backgroundColor',
+        isHighlighted ? 'alert' : 'default',
+      )}
+    >
+      {displayAuthor.profilePicture && (
+        <img
+          {...styles.headerPicture}
+          src={displayAuthor.profilePicture}
+          alt=''
+        />
+      )}
+      <div {...styles.headerText}>
+        <Interaction.H3>
+          {displayAuthor.slug ? (
+            <Link href={`/~${displayAuthor.slug}`}>
+              <a {...plainLinkRule}>{displayAuthor.name}</a>
+            </Link>
+          ) : (
+            displayAuthor.name
+          )}
+        </Interaction.H3>
+        <Label>
+          <span {...colorScheme.set('color', 'textSoft')}>
+            <Link href={submissionUrl}>
+              <a {...styles.linkUnderline} title={titleDate(createdAt)}>
+                <RelativeTime t={t} isDesktop date={createdAt} />
+              </a>
+            </Link>
+            {isUpdated && (
+              <>
+                {' · '}
+                <span title={titleDate(updatedAt)}>
+                  {t('styleguide/comment/header/updated')}
+                </span>
+              </>
+            )}
+          </span>
+        </Label>
+      </div>
+      {children}
+    </div>
+  )
+}
+
+export const SubmissionQa = ({ question, payload }) => (
+  <Editorial.P>
+    <strong>{question.text}</strong>
+    <br />
+    <AnswerText text={payload.text} value={payload.value} question={question} />
+  </Editorial.P>
+)
+
 const Submission = ({
   t,
   id,
@@ -126,15 +196,12 @@ const Submission = ({
   const { inNativeApp } = useInNativeApp()
   const [sharePayload, setSharePayload] = useState()
 
-  const [headerHeight] = useHeaderHeight()
   const hiddenAnswersCount =
     visibleIndexes === true ? 0 : answersCount - visibleIndexes.length
   let lastShownIndex
 
-  const isUpdated = updatedAt && updatedAt !== createdAt
-
   const rootRef = useRef()
-  const publicUrl = getSubmissionUrl(pathname, id)
+  const submissionUrl = getSubmissionUrl(pathname, id)
 
   return (
     <div
@@ -155,49 +222,12 @@ const Submission = ({
           eventCategory='SubmissionShare'
         />
       )}
-      <div
-        {...styles.header}
-        style={{ top: headerHeight }}
-        {...colorScheme.set(
-          'backgroundColor',
-          isHighlighted ? 'alert' : 'default',
-        )}
+      <SubmissionAuthor
+        displayAuthor={displayAuthor}
+        submissionUrl={submissionUrl}
+        createdAt={createdAt}
+        updatedAt={updatedAt}
       >
-        {displayAuthor.profilePicture && (
-          <img
-            {...styles.headerPicture}
-            src={displayAuthor.profilePicture}
-            alt=''
-          />
-        )}
-        <div {...styles.headerText}>
-          <Interaction.H3>
-            {displayAuthor.slug ? (
-              <Link href={`/~${displayAuthor.slug}`}>
-                <a {...plainLinkRule}>{displayAuthor.name}</a>
-              </Link>
-            ) : (
-              displayAuthor.name
-            )}
-          </Interaction.H3>
-          <Label>
-            <span {...colorScheme.set('color', 'textSoft')}>
-              <Link href={publicUrl}>
-                <a {...styles.linkUnderline} title={titleDate(createdAt)}>
-                  <RelativeTime t={t} isDesktop date={createdAt} />
-                </a>
-              </Link>
-              {isUpdated && (
-                <>
-                  {' · '}
-                  <span title={titleDate(updatedAt)}>
-                    {t('styleguide/comment/header/updated')}
-                  </span>
-                </>
-              )}
-            </span>
-          </Label>
-        </div>
         <div {...styles.headerActions}>
           <IconButton
             invert={true}
@@ -228,7 +258,7 @@ const Submission = ({
             }
           />
         </div>
-      </div>
+      </SubmissionAuthor>
 
       {isExpanded &&
         answers.nodes.map(({ id, question: { id: qid }, payload }, index) => {
@@ -268,17 +298,7 @@ const Submission = ({
             return null
           }
           lastShownIndex = index
-          return (
-            <Editorial.P key={id}>
-              <strong>{question.text}</strong>
-              <br />
-              <AnswerText
-                text={payload.text}
-                value={payload.value}
-                question={question}
-              />
-            </Editorial.P>
-          )
+          return <SubmissionQa key={id} question={question} payload={payload} />
         })}
       {isExpanded && (
         <div {...styles.footer}>
@@ -298,7 +318,7 @@ const Submission = ({
             label={t('styleguide/CommentActions/share/short')}
             labelShort={t('styleguide/CommentActions/share/short')}
             Icon={ShareIcon}
-            href={publicUrl}
+            href={submissionUrl}
             onClick={(e) => {
               e.preventDefault()
               const title = t('questionnaire/share/title', {

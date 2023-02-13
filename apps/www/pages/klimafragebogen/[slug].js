@@ -9,7 +9,10 @@ import Frame from '../../components/Frame'
 import { QUESTIONNAIRE_SUBMISSIONS_QUERY } from '../../components/Questionnaire/Submissions/graphql'
 import { withDefaultSSR } from '../../lib/apollo/helpers'
 import { useTranslation } from '../../lib/withT'
-import Submission from '../../components/Questionnaire/Submissions/Submission'
+import {
+  SubmissionAuthor,
+  SubmissionQa,
+} from '../../components/Questionnaire/Submissions/Submission'
 
 const QUESTIONNAIRE_SLUG = 'sommer22'
 
@@ -51,16 +54,24 @@ const Questionnaire = ({ userId }) => {
         const submission = results.nodes[0]
         return (
           <div>
-            <Submission
-              t={t}
-              id={submission.id}
-              pathname={pathname}
+            <SubmissionAuthor
               displayAuthor={submission.displayAuthor}
-              answers={submission.answers}
-              questions={questions}
+              submissionUrl={pathname}
               createdAt={submission.createdAt}
               updatedAt={submission.updatedAt}
             />
+            {submission.answers.nodes.map(
+              ({ id, question: { id: qid }, payload }) => {
+                const question = questions.find((q) => q.id === qid)
+                return (
+                  <SubmissionQa
+                    key={id}
+                    question={question}
+                    payload={payload}
+                  />
+                )
+              },
+            )}
           </div>
         )
       }}
