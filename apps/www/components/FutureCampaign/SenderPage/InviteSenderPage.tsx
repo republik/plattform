@@ -33,7 +33,7 @@ import { MeObjectType } from '../../../lib/context/MeContext'
 import { PageCenter } from '../../Auth/withAuthorization'
 import { useNumOfRedeemedInvitesQuery } from '../graphql/useNumOfRedeemedInvitesQuery'
 
-export const FUTURE_CAMPAIGN_MAX_REDEEMED_INVITES = 0
+export const FUTURE_CAMPAIGN_MAX_REDEEMED_INVITES = 5
 
 const DONATE_MONTHS_CONSENT_KEY = '5YEAR_DONATE_MONTHS'
 
@@ -137,7 +137,8 @@ const InviteSenderPage = ({ me }: { me: MeObjectType }) => {
               Sie haben 5 neue Mitstreiter an Bord geholt!
             </p>
             <p {...styles.boxText}>
-              Zum Dank schenken wir Ihnen eine Republik-Jubiläumstasche.{' '}
+              Zum Dank erhalten Sie in den nächsten Wochen eine
+              Republik-Jubiläumstasche zugesandt.{' '}
               {!me.hasAddress && (
                 <span>
                   Wenn Sie das Geschenk erhalten wollen, müssen Sie{' '}
