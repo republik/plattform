@@ -650,7 +650,7 @@
     },
     {
       "key": "api/email/membership_owner_prolong_yearly_abo_notice/subject",
-      "value": "TODO: api/email/membership_owner_prolong_yearly_abo_notice/subject"
+      "value": "Bald endet Ihr Republik-Abo, bleiben Sie an Bord!"
     },
     {
       "key": "api/email/membership_owner_prolong_notice_7/subject",
@@ -658,7 +658,7 @@
     },
     {
       "key": "api/email/membership_owner_prolong_yearly_abo_notice_7/subject",
-      "value": "TODO: api/email/membership_owner_prolong_yearly_abo_notice_7/subject"
+      "value": "Am {endDate} in die Zukunft des unabhängigen Journalismus investieren"
     },
     {
       "key": "api/email/membership_owner_prolong_notice_0/sequenceNumber/true/subject",
@@ -674,7 +674,7 @@
     },
     {
       "key": "api/email/membership_owner_prolong_yearly_abo_notice_0/subject",
-      "value": "TODO: api/email/membership_owner_prolong_yearly_abo_notice_0/subject"
+      "value": "Ihr Republik-Jubiläum! Und der Beginn von etwas Neuem?"
     },
     {
       "key": "api/email/membership_owner_prolong_winback_7/subject",
@@ -682,7 +682,7 @@
     },
     {
       "key": "api/email/membership_owner_prolong_yearly_abo_winback_7/subject",
-      "value": "TODO: api/email/membership_owner_prolong_yearly_abo_winback_7/subject"
+      "value": "Da war doch noch etwas: Ihr Mitstreiter-Abonnement"
     },
     {
       "key": "api/email/membership_owner_autopay_notice/subject",
@@ -710,7 +710,7 @@
     },
     {
       "key": "api/email/membership_deactivated_yearly_abo_uncancelled/subject",
-      "value": "TODO: api/email/membership_deactivated_yearly_abo_uncancelled/subject"
+      "value": "Ihr Abonnement wurde deaktiviert"
     },
     {
       "key": "api/email/membership_deactivated/subject",

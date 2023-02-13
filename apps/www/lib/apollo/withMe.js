@@ -43,6 +43,7 @@ export const meQuery = gql`
         renew
         endDate
         graceEndDate
+        canProlong
       }
       ...ProgressConsent
     }
