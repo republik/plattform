@@ -26,6 +26,12 @@ const rewardSender = async (pledge, context) => {
     return
   }
 
+  const pkg = await pgdb.public.packages.findOne({ id: pledge.packageId })
+  if (!['ABO', 'BENEFACTOR', 'YEARLY_ABO'].includes(pkg?.name)) {
+    debug('package "%s" wont reward anything', pkg?.name)
+    return
+  }
+
   const transaction = await pgdb.transactionBegin()
 
   try {
