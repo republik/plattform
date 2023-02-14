@@ -65,6 +65,7 @@
     "@dnd-kit/utilities": "^3.2.0",
     "@next/bundle-analyzer": "^12.3.1",
     "@project-r/styleguide": "*",
+    "@republik/icons": "*",
     "@republik/nextjs-apollo-client": "*",
     "@stripe/react-stripe-js": "^1.7.0",
     "@use-it/event-listener": "^0.1.7",

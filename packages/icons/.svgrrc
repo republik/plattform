@@ -1,0 +1,5 @@
+# See https://react-svgr.com/docs/options/
+
+icon: true
+typescript: true
+expandProps: true
