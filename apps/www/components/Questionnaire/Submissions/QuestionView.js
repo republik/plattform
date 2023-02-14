@@ -27,7 +27,11 @@ import {
   SORT_KEY_PARAM,
   SUPPORTED_SORT,
 } from './graphql'
-import { AnswersChart, getTargetedAnswers, COLORS } from './Overview'
+import {
+  AnswersChart,
+  getTargetedAnswers,
+  COLORS,
+} from '../../Climatelab/Questionnaire/Overview'
 
 const getSortParams = (query, sort) => {
   if (sort.key === 'random' || !sort.key) {
@@ -45,7 +49,7 @@ const getSortParams = (query, sort) => {
   }
 }
 
-const TargetedQuestions = ({ slug, questionIds, extract, share = {} }) => {
+const QuestionView = ({ slug, questionIds, extract, share = {} }) => {
   const { t } = useTranslation()
   const [colorScheme] = useColorContext()
   const router = useRouter()
@@ -257,7 +261,7 @@ const TargetedQuestions = ({ slug, questionIds, extract, share = {} }) => {
   )
 }
 
-export default TargetedQuestions
+export default QuestionView
 
 const styles = {
   colorBar: css({

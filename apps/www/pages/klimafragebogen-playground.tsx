@@ -1,4 +1,4 @@
-import SubmissionsOverview from '../components/Questionnaire/Submissions/Overview'
+import SubmissionsOverview from '../components/Climatelab/Questionnaire/Overview'
 
 import {
   colors,

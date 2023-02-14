@@ -177,7 +177,7 @@ const QuestionnaireSubmissions = dynamic(
 )
 
 const QuestionnaireSubmissionsOverview = dynamic(
-  () => import('../Questionnaire/Submissions/Overview'),
+  () => import('../Climatelab/Questionnaire/Overview'),
   {
     loading: LoadingComponent,
   },

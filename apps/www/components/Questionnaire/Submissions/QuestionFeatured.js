@@ -15,8 +15,7 @@ import {
   Breakout,
 } from '@project-r/styleguide'
 
-import TargetedQuestions from './TargetedQuestions'
-import { QUESTIONNAIRE_QUERY, QUESTIONNAIRE_SUBMISSIONS_QUERY } from './graphql'
+import { QUESTIONNAIRE_SUBMISSIONS_QUERY } from './graphql'
 
 export const getTargetedAnswers = (questionIds, results) => {
   return [...results.nodes].map((submission) => {
@@ -31,7 +30,7 @@ export const getTargetedAnswers = (questionIds, results) => {
 
 export const COLORS = ['#00dd97', '#97f8fe', '#fefd67']
 
-const QuestionLink = ({ question, additionalQuestion, children }) => {
+export const QuestionLink = ({ question, additionalQuestion, children }) => {
   const router = useRouter()
   const pathname = router.asPath.split('?')[0]
   return (
@@ -162,7 +161,12 @@ const AnswersCarousel = ({ slug, question, additionalQuestion, bgColor }) => {
   )
 }
 
-const Question = ({ slug, question, additionalQuestion, bgColor }) => {
+export const QuestionFeatured = ({
+  slug,
+  question,
+  additionalQuestion,
+  bgColor,
+}) => {
   return (
     <div
       key={question.id}
@@ -189,76 +193,3 @@ const Question = ({ slug, question, additionalQuestion, bgColor }) => {
     </div>
   )
 }
-
-const AllQuestions = ({ slug }) => {
-  const { loading, error, data } = useQuery(QUESTIONNAIRE_QUERY, {
-    variables: { slug },
-  })
-
-  return (
-    <Loader
-      loading={loading}
-      error={error}
-      render={() => {
-        const {
-          questionnaire: { questions },
-        } = data
-
-        return (
-          <div style={{ margin: '0 auto' }}>
-            <Question question={questions[6]} slug={slug} />
-            <Question
-              question={questions[0]}
-              additionalQuestion={questions[1]}
-              slug={slug}
-              bgColor={'#FFFFC8'}
-            />
-            <div style={{ marginTop: 60 }}>
-              <Editorial.P>
-                <Editorial.UL>
-                  <Editorial.LI>
-                    <QuestionLink
-                      question={questions[2]}
-                      additionalQuestion={questions[3]}
-                    >
-                      <Editorial.A>{questions[2].text}</Editorial.A>
-                    </QuestionLink>{' '}
-                    (psst: es gibt da noch eine Bonusfrage)
-                  </Editorial.LI>
-                  <Editorial.LI>
-                    <QuestionLink question={questions[5]}>
-                      <Editorial.A>{questions[5].text}</Editorial.A>
-                    </QuestionLink>
-                  </Editorial.LI>
-                </Editorial.UL>
-              </Editorial.P>
-            </div>
-            <Question
-              question={questions[16]}
-              slug={slug}
-              bgColor={'#FFFFC8'}
-            />
-            <Question
-              question={questions[31]}
-              additionalQuestion={questions[32]}
-              slug={slug}
-            />
-          </div>
-        )
-      }}
-    />
-  )
-}
-
-const SubmissionsOverview = ({ slug }) => {
-  const router = useRouter()
-  const { query } = router
-  const questionIds = query.type === 'question' && query.share?.split(',')
-
-  if (questionIds) {
-    return <TargetedQuestions slug={slug} questionIds={questionIds} />
-  }
-  return <AllQuestions slug={slug} />
-}
-
-export default SubmissionsOverview
