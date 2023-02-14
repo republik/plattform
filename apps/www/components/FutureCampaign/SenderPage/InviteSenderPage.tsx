@@ -216,12 +216,8 @@ const InviteSenderPage = ({ me }: { me: MeObjectType }) => {
                       onClose={() => setShowShareOverlay(false)}
                       url={inviteLink}
                       title='Angebot teilen'
-                      tweet={`Ich habe ${
-                        redeemedInvites?.me?.futureCampaignAboCount || 5
-                      } Einladungen zu vergeben: Erhalte ein Jahr lang die Republik – zu dem Preis, der für dich stimmt.`}
-                      emailSubject={`Ich habe ${
-                        redeemedInvites?.me?.futureCampaignAboCount || 5
-                      } Republik Einladungen zu vergeben.`}
+                      tweet={`Ich habe ${FUTURE_CAMPAIGN_MAX_REDEEMED_INVITES} Einladungen zu vergeben: Erhalte ein Jahr lang die Republik – zu dem Preis, der für dich stimmt.`}
+                      emailSubject={`Ich habe ${FUTURE_CAMPAIGN_MAX_REDEEMED_INVITES} Republik Einladungen zu vergeben.`}
                       emailBody={`Ein Jahr lang die Republik – zu dem Preis, der für dich stimmt. Zum Angebot:`}
                       emailAttachUrl
                     />
