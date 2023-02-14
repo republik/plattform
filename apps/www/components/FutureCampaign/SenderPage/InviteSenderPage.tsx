@@ -49,6 +49,15 @@ const InviteSenderPage = ({ me }: { me: MeObjectType }) => {
     useNumOfRedeemedInvitesQuery()
   const hasShareGrant = me?.accessCampaigns.length > 0
 
+  const hasYearlySubscription = ['ABO', 'BENEFACTOR_ABO'].includes(
+    me.activeMembership?.type?.name,
+  )
+  const hasMonthlySubscription =
+    me.activeMembership?.type?.name === 'MONTHLY_ABO'
+
+  const hasFutureCampaignSubscription =
+    me.activeMembership?.type?.name === 'YEARLY_ABO'
+
   const hasRedeemedAllInvites =
     FUTURE_CAMPAIGN_MAX_REDEEMED_INVITES ===
     redeemedInvites?.me?.futureCampaignAboCount
@@ -105,16 +114,6 @@ const InviteSenderPage = ({ me }: { me: MeObjectType }) => {
     navigator.clipboard.writeText(link)
   }
 
-  if (!hasShareGrant) {
-    return (
-      <Frame>
-        <PageCenter>
-          <UnauthorizedMessage />
-        </PageCenter>
-      </Frame>
-    )
-  }
-
   return (
     <Frame
       pageColorSchemeKey='dark'
@@ -141,108 +140,31 @@ const InviteSenderPage = ({ me }: { me: MeObjectType }) => {
             {longestPersonaString} das auch will.
           </h1>
         </div>
-        {hasRedeemedAllInvites ? (
-          <div {...styles.box}>
-            <Confetti renderOverlay={userInviteData?.me?.hasAddress} />
-            <h2 {...styles.boxHeading}>Vielen Dank!</h2>
-            <p {...styles.boxText}>
-              Sie haben {FUTURE_CAMPAIGN_MAX_REDEEMED_INVITES} neue Mitstreiter
-              an Bord geholt!
-            </p>
-            <p {...styles.boxText}>
-              Zum Dank erhalten Sie in den nächsten Wochen eine
-              Republik-Jubiläumstasche zugesandt.{' '}
-              {!userInviteData?.me?.hasAddress && (
-                <span>
-                  Vergessen Sie nicht,{' '}
-                  <Link href='/konto' passHref>
-                    <a {...styles.inlineLink}>
-                      im Konto Ihre Adresse zu hinterlegen
-                    </a>
-                  </Link>
-                  , damit wir Ihnen das Geschenk zustellen können.
-                </span>
-              )}
-            </p>
-            <Loader
-              loading={loadingRedeemedInvites}
-              render={() => (
-                <RewardProgress
-                  reached={redeemedInvites?.me?.futureCampaignAboCount || 0}
-                  max={FUTURE_CAMPAIGN_MAX_REDEEMED_INVITES}
-                />
-              )}
-            />
-          </div>
-        ) : (
+        {hasYearlySubscription ? (
           <>
-            <div {...styles.box}>
-              <h2 {...styles.boxHeading}>
-                <AssetImage src={SendInviteSVG} width={80} height={80} />
-                Holen Sie Verstärkung...
-              </h2>
-              <p {...styles.boxText}>
-                Als Verleger können Sie bis zu 5 Mitstreiterinnen einladen.
-                Diese können die Republik für ein Jahr abonnieren – zu einem
-                Preis, der für sie stimmt.
-              </p>
-              <p {...styles.boxText}>
-                Über diesen Link werden aus Freunden Mitstreiter:
-              </p>
-              <div {...styles.inviteActionWrapper}>
-                <div {...styles.inviteLinkBox}>
-                  <span {...styles.inviteLinkBoxText}>{inviteLink}</span>
-                  <IconButton
-                    onClick={() => handleCopyLink(inviteLink)}
-                    Icon={CopyToClippboardIcon}
-                    title='Link kopieren'
-                    fill='currentColor'
-                    size={20}
-                  />
-                </div>
-                <div {...styles.buttonWrapper}>
-                  <Button
-                    onClick={() => setShowShareOverlay(true)}
-                    block
-                    style={{ height: 45 }}
-                  >
-                    Link teilen
-                  </Button>
-                </div>
-              </div>
-              {showShareOverlay && (
-                <ShareOverlay
-                  onClose={() => setShowShareOverlay(false)}
-                  url={inviteLink}
-                  title='Angebot teilen'
-                  tweet={`Ich habe ${
-                    redeemedInvites?.me?.futureCampaignAboCount || 5
-                  } Einladungen zu vergeben: Erhalte ein Jahr lang die Republik – zu dem Preis, der für dich stimmt.`}
-                  emailSubject={`Ich habe ${
-                    redeemedInvites?.me?.futureCampaignAboCount || 5
-                  } Republik Einladungen zu vergeben.`}
-                  emailBody={`Ein Jahr lang die Republik – zu dem Preis, der für dich stimmt. Zum Angebot:`}
-                  emailAttachUrl
-                />
-              )}
-              {userInviteData?.me && !userInviteData.me?.hasPublicProfile && (
-                <p {...styles.disclamerText}>
-                  Hinweis, weil Ihr Profil bei der Republik auf «privat»
-                  eingestellt ist: Die Person, mit der Sie diesen Link teilen,
-                  wird Ihren Namen und Ihr Profilbild sehen können.
+            {hasRedeemedAllInvites ? (
+              <div {...styles.box}>
+                <Confetti renderOverlay={userInviteData?.me?.hasAddress} />
+                <h2 {...styles.boxHeading}>Vielen Dank!</h2>
+                <p {...styles.boxText}>
+                  Sie haben {FUTURE_CAMPAIGN_MAX_REDEEMED_INVITES} neue
+                  Mitstreiter an Bord geholt!
                 </p>
-              )}
-            </div>
-            <div {...styles.box}>
-              <h2 {...styles.boxHeading}>
-                <AssetImage src={ReceiveMonthsSVG} width={80} height={80} />
-                ...und erhalten Sie noch mehr Republik.
-              </h2>
-              <p {...styles.boxText}>
-                Für jede neue Mitstreiterin, die Sie zur Republik-Community
-                holen, verlängern wir Ihre Mitgliedschaft um einen Monat.
-              </p>
-              <div>
+                <p {...styles.boxText}>
+                  Zum Dank erhalten Sie in den nächsten Wochen eine
+                  Republik-Jubiläumstasche zugesandt.{' '}
+                  {!userInviteData?.me?.hasAddress && (
+                    <span>
+                      Vergessen Sie nicht,{' '}
+                      <Link href='/konto' passHref>
+                        <a {...styles.inlineLink}>
+                          im Konto Ihre Adresse zu hinterlegen
+                        </a>
+                      </Link>
+                      , damit wir Ihnen das Geschenk zustellen können.
+                    </span>
+                  )}
+                </p>
                 <Loader
                   loading={loadingRedeemedInvites}
                   render={() => (
@@ -252,23 +174,160 @@ const InviteSenderPage = ({ me }: { me: MeObjectType }) => {
                     />
                   )}
                 />
-                <p {...styles.disclamerText}>
-                  Sie möchten Ihnen gutgeschriebene Monate an die Republik
-                  spenden? Kein Problem:
-                </p>
-                <Checkbox
-                  disabled={donateMonthsConsentLoading}
-                  checked={Boolean(donateMonthsConsent?.me?.hasConsentedTo)}
-                  onChange={(_, value) =>
-                    handleDonateMonthsChange(Boolean(value))
-                  }
-                >
-                  Ja, ich will die Monate spenden.
-                </Checkbox>
               </div>
-            </div>
+            ) : (
+              <>
+                <div {...styles.box}>
+                  <h2 {...styles.boxHeading}>
+                    <AssetImage src={SendInviteSVG} width={80} height={80} />
+                    Holen Sie Verstärkung...
+                  </h2>
+                  <p {...styles.boxText}>
+                    Als Verleger können Sie bis zu 5 Mitstreiterinnen einladen.
+                    Diese können die Republik für ein Jahr abonnieren – zu einem
+                    Preis, der für sie stimmt.
+                  </p>
+                  <p {...styles.boxText}>
+                    Über diesen Link werden aus Freunden Mitstreiter:
+                  </p>
+                  <div {...styles.inviteActionWrapper}>
+                    <div {...styles.inviteLinkBox}>
+                      <span {...styles.inviteLinkBoxText}>{inviteLink}</span>
+                      <IconButton
+                        onClick={() => handleCopyLink(inviteLink)}
+                        Icon={CopyToClippboardIcon}
+                        title='Link kopieren'
+                        fill='currentColor'
+                        size={20}
+                      />
+                    </div>
+                    <div {...styles.buttonWrapper}>
+                      <Button
+                        onClick={() => setShowShareOverlay(true)}
+                        block
+                        style={{ height: 45 }}
+                      >
+                        Link teilen
+                      </Button>
+                    </div>
+                  </div>
+                  {showShareOverlay && (
+                    <ShareOverlay
+                      onClose={() => setShowShareOverlay(false)}
+                      url={inviteLink}
+                      title='Angebot teilen'
+                      tweet={`Ich habe ${
+                        redeemedInvites?.me?.futureCampaignAboCount || 5
+                      } Einladungen zu vergeben: Erhalte ein Jahr lang die Republik – zu dem Preis, der für dich stimmt.`}
+                      emailSubject={`Ich habe ${
+                        redeemedInvites?.me?.futureCampaignAboCount || 5
+                      } Republik Einladungen zu vergeben.`}
+                      emailBody={`Ein Jahr lang die Republik – zu dem Preis, der für dich stimmt. Zum Angebot:`}
+                      emailAttachUrl
+                    />
+                  )}
+                  {userInviteData?.me &&
+                    !userInviteData.me?.hasPublicProfile && (
+                      <p {...styles.disclamerText}>
+                        Hinweis, weil Ihr Profil bei der Republik auf «privat»
+                        eingestellt ist: Die Person, mit der Sie diesen Link
+                        teilen, wird Ihren Namen und Ihr Profilbild sehen
+                        können.
+                      </p>
+                    )}
+                </div>
+                <div {...styles.box}>
+                  <h2 {...styles.boxHeading}>
+                    <AssetImage src={ReceiveMonthsSVG} width={80} height={80} />
+                    ...und erhalten Sie noch mehr Republik.
+                  </h2>
+                  <p {...styles.boxText}>
+                    Für jede neue Mitstreiterin, die Sie zur Republik-Community
+                    holen, verlängern wir Ihre Mitgliedschaft um einen Monat.
+                  </p>
+                  <div>
+                    <Loader
+                      loading={loadingRedeemedInvites}
+                      render={() => (
+                        <RewardProgress
+                          reached={
+                            redeemedInvites?.me?.futureCampaignAboCount || 0
+                          }
+                          max={FUTURE_CAMPAIGN_MAX_REDEEMED_INVITES}
+                        />
+                      )}
+                    />
+                    <p {...styles.disclamerText}>
+                      Sie möchten Ihnen gutgeschriebene Monate an die Republik
+                      spenden? Kein Problem:
+                    </p>
+                    <Checkbox
+                      disabled={donateMonthsConsentLoading}
+                      checked={Boolean(donateMonthsConsent?.me?.hasConsentedTo)}
+                      onChange={(_, value) =>
+                        handleDonateMonthsChange(Boolean(value))
+                      }
+                    >
+                      Ja, ich will die Monate spenden.
+                    </Checkbox>
+                  </div>
+                </div>
+              </>
+            )}
           </>
-        )}
+        ) : hasMonthlySubscription ? (
+          <div>
+            <p {...styles.text}>
+              Wir freuen uns, dass Sie die Republik-Community verstärken wollen!
+            </p>
+            <p {...styles.text}>
+              Mit Ihrem Monatsabo können Sie keine Mitstreiterinnen an Bord
+              holen, aber: Sie selbst können Mitstreiter werden und ein Jahr
+              Republik erhalten, zum Preis, der für Sie stimmt.
+            </p>
+            <p {...styles.text}>
+              Melden Sie sich bei einer Verlegerin mit Jahresmitgliedschaft!
+            </p>
+            <p {...styles.text}>
+              Und: Es gibt noch andere Wege, wie Sie zur Bekanntheit der
+              Republik beitragen können. Hier finden Sie eine{' '}
+              <Link href='/komplizin'>
+                <a>Übersicht</a>
+              </Link>
+              .
+            </p>
+            <p {...styles.text}>Herzlichen Dank für Ihr Engagement!</p>
+          </div>
+        ) : hasFutureCampaignSubscription ? (
+          <div>
+            <p {...styles.text}>
+              Wir freuen uns sehr, dass Sie die Republik neu mit einem
+              Mitstreiter-Abo unterstützen und auch gleich selbst Verstärkung
+              holen möchten!
+            </p>
+            <p {...styles.text}>
+              Mit Ihrem Abo haben Sie Zugang zu allen Beiträgen der Republik.
+              Selbst Mitstreiterinnen an Bord holen können Sie allerdings nicht,
+              da Sie für Ihr Mitstreiter-Abo weniger als den regulären Preis
+              bezahlt und damit nicht Mitglied der Genossenschaft sind.{' '}
+            </p>
+            <p {...styles.text}>
+              Aber es gibt noch andere Wege, wie Sie zur Bekanntheit der
+              Republik beitragen können: Hier finden Sie eine{' '}
+              <Link href='/komplizin'>
+                <a>Übersicht</a>
+              </Link>
+              .
+            </p>
+            <p {...styles.text}>Herzlichen Dank für Ihr Engagement!</p>
+          </div>
+        ) : !hasShareGrant ? (
+          <Frame>
+            <PageCenter>
+              <UnauthorizedMessage />
+            </PageCenter>
+          </Frame>
+        ) : null}
       </main>
     </Frame>
   )
@@ -382,6 +441,22 @@ const styles = {
   inlineLink: css({
     color: 'inherit',
     textDecoration: 'underline',
+  }),
+  text: css({
+    ...fontStyles.sansSerifRegular,
+    margin: 0,
+    fontSize: 19,
+    lineHeight: '1.4em',
+    [mediaQueries.mUp]: {
+      fontSize: 21,
+    },
+    '& + p': {
+      margin: `16px 0 0 0`,
+    },
+    '& > a': {
+      color: 'inherit',
+      textDecoration: 'underline',
+    },
   }),
 }
 
