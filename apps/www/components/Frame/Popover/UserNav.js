@@ -174,7 +174,9 @@ const UserNav = ({
                   <div {...styles.navSection}>
                     <div {...styles.navLinks}>
                       {me?.activeMembership &&
-                      me.activeMembership?.type?.name !== 'YEARLY_ABO' ? (
+                      ['ABO', 'BENEFACTOR_ABO'].includes(
+                        me.activeMembership?.type?.name,
+                      ) ? (
                         <NavLink
                           href='/verstaerkung-holen'
                           currentPath={currentPath}
