@@ -29,7 +29,7 @@ import {
   enforceMembership,
   UnauthorizedMessage,
 } from '../../Auth/withMembership'
-import { useInNativeApp } from '../../../lib/withInNativeApp'
+import { postMessage, useInNativeApp } from '../../../lib/withInNativeApp'
 import { MeObjectType } from '../../../lib/context/MeContext'
 import { PageCenter } from '../../Auth/withAuthorization'
 import { useNumOfRedeemedInvitesQuery } from '../graphql/useNumOfRedeemedInvitesQuery'
