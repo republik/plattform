@@ -1,13 +1,14 @@
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 
-import { css } from 'glamor'
-
 import {
   fontStyles,
   SHARE_IMAGE_WIDTH,
   SHARE_IMAGE_HEIGHT,
+  ColorContextProvider,
+  ColorContextLocalExtension,
 } from '@project-r/styleguide'
+import { climateColors } from '../../Climatelab/config'
 
 export const ShareImageSplit = ({ question, user, img }) => {
   const router = useRouter()
@@ -27,41 +28,40 @@ export const ShareImageSplit = ({ question, user, img }) => {
       <Head>
         <meta name='robots' content='noindex' />
       </Head>
+
       <div
         style={{
           width: SHARE_IMAGE_WIDTH,
           height: SHARE_IMAGE_HEIGHT,
-          backgroundImage: `url(${img})`,
-          backgroundSize: 'cover',
-          padding: '120px 180px',
-          display: 'flex',
-          textAlign: 'center',
-          alignItems: 'center',
-          justifyContent: 'center',
-          ...fontStyles.serifRegular,
-          fontSize: 58,
-          lineHeight: 1.25,
+          display: 'grid',
+          gridAutoColumns: '1fr',
+          gridAutoFlow: 'column',
+          backgroundColor: climateColors.light.default,
+          color: climateColors.light.text,
         }}
       >
-        <span
+        <div
           style={{
-            overflow: 'hidden',
-            display: '-webkit-box',
-            WebkitLineClamp: 5,
-            WebkitBoxOrient: 'vertical',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
           }}
-          {...css({
-            textOverflow: ['ellipsis', '" …»"'],
-            '::before': {
-              content: '«',
-            },
-            '::after': {
-              content: '»',
-            },
-          })}
         >
-          {text}
-        </span>
+          <img src={img} width={SHARE_IMAGE_WIDTH / 4} />
+        </div>
+        <div
+          style={{
+            ...fontStyles.serifRegular,
+            fontSize: 48,
+            lineHeight: 1.25,
+            paddingRight: 60,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <span>{text}</span>
+        </div>
       </div>
     </>
   )
