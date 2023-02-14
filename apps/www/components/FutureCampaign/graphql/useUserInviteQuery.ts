@@ -4,6 +4,7 @@ import { makeQueryHook } from '../../../lib/helpers/AbstractApolloGQLHooks.helpe
 export const USER_INVITE_QUERY = gql`
   query UserInviteLinkInfo {
     me {
+      id
       accessToken(scope: NOW_YOU_SEE_ME)
       hasPublicProfile
       hasAddress

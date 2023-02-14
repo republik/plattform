@@ -32,6 +32,11 @@ import {
 import { MeObjectType } from '../../../lib/context/MeContext'
 import { PageCenter } from '../../Auth/withAuthorization'
 import { useNumOfRedeemedInvitesQuery } from '../graphql/useNumOfRedeemedInvitesQuery'
+import dynamic from 'next/dynamic'
+
+const Confetti = dynamic(() => import('./Confetti'), {
+  ssr: false,
+})
 
 export const FUTURE_CAMPAIGN_MAX_REDEEMED_INVITES = 5
 
@@ -76,6 +81,12 @@ const InviteSenderPage = ({ me }: { me: MeObjectType }) => {
     const { accessToken } = userInviteData.me
     return `${PUBLIC_BASE_URL}/5-jahre-republik/${accessToken}`
   }, [userInviteData])
+
+  const longestPersonaString = useMemo(
+    () =>
+      personasForTypeWriter.reduce((a, b) => (a.length > b.length ? a : b), ''),
+    [personasForTypeWriter],
+  )
 
   const handleDonateMonthsChange = async (value: boolean) => {
     try {
@@ -126,15 +137,17 @@ const InviteSenderPage = ({ me }: { me: MeObjectType }) => {
             das auch will.
           </h1>
           <h1 {...styles.shadowHeading} {...styles.heading}>
-            Unabhängiger Journalismus hat eine Zukunft, wenn der Lehrer Ihrer
-            Kinder das auch will.
+            Unabhängiger Journalismus hat eine Zukunft, wenn{' '}
+            {longestPersonaString} das auch will.
           </h1>
         </div>
         {hasRedeemedAllInvites ? (
           <div {...styles.box}>
+            <Confetti />
             <h2 {...styles.boxHeading}>Vielen Dank!</h2>
             <p {...styles.boxText}>
-              Sie haben 5 neue Mitstreiter an Bord geholt!
+              Sie haben {FUTURE_CAMPAIGN_MAX_REDEEMED_INVITES} neue Mitstreiter
+              an Bord geholt!
             </p>
             <p {...styles.boxText}>
               Zum Dank erhalten Sie in den nächsten Wochen eine

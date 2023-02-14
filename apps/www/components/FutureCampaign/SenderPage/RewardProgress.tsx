@@ -53,6 +53,9 @@ const styles = {
     '&:not(:last-child)': {
       borderRight: `2px solid #FFFFFF`,
     },
+    '&[data-reached="true"]:not(:last-child)': {
+      borderRight: `2px solid #000000`,
+    },
     '&[data-reached="true"]': {
       padding: 5,
       backgroundColor: '#FFFFFF',
