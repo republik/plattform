@@ -34,7 +34,7 @@ const KlimafragebogenPage = () => {
       customContentColorContext={climateColors}
     >
       <Center>
-        <SubmissionsOverview slug={'sommer22'} />
+        <SubmissionsOverview slug={'sommer22'} extract={false} share={{}} />
       </Center>
     </Frame>
   )
