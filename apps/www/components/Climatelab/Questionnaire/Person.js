@@ -1,17 +1,29 @@
+import { useState } from 'react'
+import { useQuery } from '@apollo/client'
+
 import { gql } from 'graphql-tag'
 import { useRouter } from 'next/router'
 
-import { useQuery } from '@apollo/client'
-import { Loader, Editorial } from '@project-r/styleguide'
+import { Loader, Editorial, ShareIcon, IconButton } from '@project-r/styleguide'
 
+import { ASSETS_SERVER_BASE_URL, PUBLIC_BASE_URL } from '../../../lib/constants'
+import { trackEvent } from '../../../lib/matomo'
+import { useTranslation } from '../../../lib/withT'
+import { postMessage, useInNativeApp } from '../../../lib/withInNativeApp'
+
+import ShareOverlay from '../../ActionBar/ShareOverlay'
 import Frame from '../../Frame'
+import Meta from '../../Frame/Meta'
 import { QUESTIONNAIRE_SUBMISSIONS_QUERY } from '../../Questionnaire/Submissions/graphql'
+import { ShareImageSplit } from '../../Questionnaire/Submissions/ShareImageSplit'
 import {
   SubmissionAuthor,
   SubmissionQa,
 } from '../../Questionnaire/Submissions/Submission'
 
 const QUESTIONNAIRE_SLUG = 'sommer22'
+const SHARE_IMG_URL =
+  'https://cdn.repub.ch/s3/republik-assets/dynamic-components/QUESTIONNAIRE_SUBMISSIONS/frame-sommer22.png'
 
 const USER_QUERY = gql`
   query getUserId($slug: String!) {
@@ -24,7 +36,56 @@ const USER_QUERY = gql`
   }
 `
 
-const Questionnaire = ({ userId }) => {
+const ShareQuestionnaire = ({ meta }) => {
+  const { t } = useTranslation()
+  const { inNativeApp } = useInNativeApp()
+  const [overlay, showOverlay] = useState(false)
+  const { url, title } = meta
+
+  return (
+    <>
+      <IconButton
+        label={t('article/actionbar/share')}
+        labelShort={t('article/actionbar/share')}
+        Icon={ShareIcon}
+        href={url}
+        onClick={(e) => {
+          e.preventDefault()
+          trackEvent(['ActionBar', 'shareJournalLink', url])
+          if (inNativeApp) {
+            postMessage({
+              type: 'share',
+              payload: {
+                title: title,
+                url,
+                subject: '',
+                dialogTitle: t('article/share/title'),
+              },
+            })
+            e.target.blur()
+          } else {
+            showOverlay(!overlay)
+          }
+        }}
+      />
+      {!!overlay && (
+        <ShareOverlay
+          onClose={() => showOverlay(false)}
+          url={url}
+          title={t('article/actionbar/share')}
+          tweet=''
+          emailSubject={t('article/share/emailSubject', {
+            title: title,
+          })}
+          emailBody=''
+          emailAttachUrl
+        />
+      )}
+    </>
+  )
+}
+
+const Questionnaire = ({ userId, meta }) => {
   const router = useRouter()
   const pathname = router.asPath.split('?')[0]
 
@@ -44,7 +105,9 @@ const Questionnaire = ({ userId }) => {
         const {
           questionnaire: { questions, results },
         } = data
+
         const submission = results.nodes[0]
+
         return (
           <div>
             <SubmissionAuthor
@@ -52,7 +115,9 @@ const Questionnaire = ({ userId }) => {
               submissionUrl={pathname}
               createdAt={submission.createdAt}
               updatedAt={submission.updatedAt}
-            />
+            >
+              <ShareQuestionnaire meta={meta} />
+            </SubmissionAuthor>
             {submission.answers.nodes.map(
               ({ id, question: { id: qid }, payload }) => {
                 const question = questions.find((q) => q.id === qid)
@@ -73,16 +138,30 @@ const Questionnaire = ({ userId }) => {
 }
 
 const Page = () => {
+  const { t } = useTranslation()
+
   const router = useRouter()
   const {
-    query: { slug },
+    query: { slug, image },
   } = router
+
+  const urlObj = new URL(router.asPath, PUBLIC_BASE_URL)
+  const url = urlObj.toString()
+
+  const shareImageUrlObj = urlObj
+  shareImageUrlObj.searchParams.set('image', true)
+  const shareImageUrl = shareImageUrlObj.toString()
 
   const { loading, error, data } = useQuery(USER_QUERY, {
     variables: {
       slug,
     },
   })
+
+  if (image) {
+    return <ShareImageSplit user={data?.user} img={SHARE_IMG_URL} />
+  }
+
   return (
     <Frame>
       <Loader
@@ -90,10 +169,22 @@ const Page = () => {
         error={error}
         render={() => {
           const { user } = data
+          const meta = {
+            url,
+            title: t('Climatelab/Questionnaire/title', {
+              name: user.name,
+            }),
+            description: t('Climatelab/Questionnaire/description'),
+            image: `${ASSETS_SERVER_BASE_URL}/render?width=1200&height=1&url=${encodeURIComponent(
+              shareImageUrl,
+            )}`,
+          }
+
           return (
             <div>
+              <Meta data={meta} />
               <Editorial.Headline>Klimafragebogen</Editorial.Headline>
-              <Questionnaire userId={user.id} />
+              <Questionnaire userId={user.id} meta={meta} />
             </div>
           )
         }}

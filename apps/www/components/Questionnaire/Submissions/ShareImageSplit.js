@@ -11,7 +11,7 @@ import { climateColors } from '../../Climatelab/config'
 export const ShareImageSplit = ({ question, user, img }) => {
   const router = useRouter()
   const { query } = router
-  if (!query.extract) {
+  if (!query.image && !query.extract) {
     return null
   }
   const text = question
@@ -19,6 +19,7 @@ export const ShareImageSplit = ({ question, user, img }) => {
     : user
     ? `${user.name} antwortet Klimafragen.`
     : undefined
+
   if (!text) return null
 
   return (

@@ -47,7 +47,7 @@ import { replaceText } from './utils'
   }
 }*/
 
-const QuestionViewMeta = ({ share, question, questionCount }) => {
+const QuestionViewMeta = ({ share, question }) => {
   const router = useRouter()
   const urlObj = new URL(router.asPath, PUBLIC_BASE_URL)
   const url = urlObj.toString()
@@ -61,12 +61,10 @@ const QuestionViewMeta = ({ share, question, questionCount }) => {
       data={{
         url,
         title: replaceText(share.title, { questionText: question.text }),
-        description: replaceText(share.description, { questionCount }),
-        image: share.extract
-          ? `${ASSETS_SERVER_BASE_URL}/render?width=1200&height=1&url=${encodeURIComponent(
-              shareImageUrl,
-            )}`
-          : '',
+        description: replaceText(share.description),
+        image: `${ASSETS_SERVER_BASE_URL}/render?width=1200&height=1&url=${encodeURIComponent(
+          shareImageUrl,
+        )}`,
       }}
     />
   )
@@ -102,9 +100,9 @@ const QuestionView = ({ slug, questionIds, extract, share = {} }) => {
   })
 
   const allQuestions = data?.questionnaire?.questions
-  const questions =
+  const currentQuestions =
     allQuestions?.filter((q) => questionIds.includes(q.id)) || []
-  const [mainQuestion, addQuestion] = questions
+  const [mainQuestion, addQuestion] = currentQuestions
   if (extract) {
     return <ShareImageSplit question={mainQuestion} {...share} />
   }
@@ -145,11 +143,7 @@ const QuestionView = ({ slug, questionIds, extract, share = {} }) => {
 
           return (
             <>
-              <QuestionViewMeta
-                share={share}
-                question={mainQuestion}
-                questionCount={allQuestions.length}
-              />
+              <QuestionViewMeta share={share} question={mainQuestion} />
               <div
                 style={{
                   marginBottom: 20,
@@ -216,7 +210,7 @@ const QuestionView = ({ slug, questionIds, extract, share = {} }) => {
                                   <AnswerText
                                     text={answer.payload.text}
                                     value={answer.payload.value}
-                                    question={questions[idx]}
+                                    question={currentQuestions[idx]}
                                   />
                                   <br />
                                   <br />

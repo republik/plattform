@@ -5852,8 +5852,12 @@
       "value": "Hier anmelden"
     },
     {
-      "key": "Climatelab/Postcard/PostcardDynamicComponent/noaccess/linkHref",
-      "value": "/willkommen-zum-klimalabor"
+      "key": "Climatelab/Questionnaire/title",
+      "value": "Klimafragebogen von {name}"
+    },
+    {
+      "key": "Climatelab/Questionnaire/description",
+      "value": "15 Fragen um die Klimakrise"
     },
     {
       "key": "Trial/Form/withAccess/button/label",
