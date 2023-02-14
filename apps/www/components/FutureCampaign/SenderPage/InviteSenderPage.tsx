@@ -132,7 +132,7 @@ const InviteSenderPage = ({ me }: { me: MeObjectType }) => {
               typeSpeed={80}
               delaySpeed={5000}
               cursor
-            />{' '}
+            />
             das auch will.
           </h1>
           <h1 {...styles.shadowHeading} {...styles.heading}>
