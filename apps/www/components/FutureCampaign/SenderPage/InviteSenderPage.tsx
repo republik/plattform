@@ -126,8 +126,8 @@ const InviteSenderPage = ({ me }: { me: MeObjectType }) => {
             das auch will.
           </h1>
           <h1 {...styles.shadowHeading} {...styles.heading}>
-            Unabhängiger Journalismus hat eine Zukunft, wenn der Lehrer Ihrer
-            Kinder das auch will.
+            Unabhängiger Journalismus hat eine Zukunft, wenn Ihr
+            Versicherungsvertreter das auch will.
           </h1>
         </div>
         {hasRedeemedAllInvites ? (
@@ -344,7 +344,8 @@ const styles = {
     alignItems: 'center',
     padding: '12px 15px',
     backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    minWidth: 0,
+    flex: 1,
+    overflow: 'hidden',
   }),
   buttonWrapper: css({
     width: '100%',
@@ -370,20 +371,50 @@ const styles = {
 // TODO: either read from t9n or add list of words as static arrays
 // (from t9n seems a bit insane though…)
 const personasForTypeWriter = [
+  'Ihre Yogalehrerin',
+  'Ihr Schönheitsoperateur',
+  'Ihre Hautärztin',
+  'Ihr Tennispartner',
+  'Ihre Fussballkollegin',
+  'Ihr Nachbar',
+  'Ihr Bruder',
+  'Ihre Tante',
+  'Ihr Butler',
+  'Ihre Psychiaterin',
+  'Ihr Versicherungsvertreter',
   'Ihre Schwiegermutter',
-  'Ihr Göttikind',
-  'Ihre Mitbewohnerin',
-  'der Lehrer Ihrer Kinder',
-  'Ihr Yogalehrer',
+  'Ihr Militärkollege',
+  'Ihre Bäckerin ',
+  'Ihr Zellennachbar',
+  'Ihre Kaffeebekanntschaft',
+  'Ihr Schwager',
+  'Ihre Nichte',
+  'Ihr Onkel',
+  'Ihr Tinderdate',
+  'Ihre Nanny',
+  'Ihr Nerdkollege',
   'Ihre Hebamme',
-  'Ihr Lieblingsbarista',
-  'Ihre Zugbegleiterin',
-  'Ihre Kollegin',
-  'Ihr Trauzeuge',
+  'Ihr Erzfeind',
+  'Ihre Sandkastenfreundin',
+  'Ihr Astrologe',
+  'Ihre PR-Beraterin',
+  'Ihr Spindoktor',
+  'Ihre Bürokollegin',
+  'Ihr Diätberater',
+  'Ihre Optikerin',
+  'Ihr Hundetrainer',
+  'Ihre Skilehrerin',
+  'Ihr Buchhändler',
+  'Ihre Biografin',
+  'Ihr Frenemy',
   'Ihre Steuerberaterin',
   'Ihr Betriebsleiter',
-  'Ihre Chefin',
-  'Ihr Ex',
-  'Ihre Nachbarin',
+  'Ihre Ex',
   'Ihr Coiffeur',
+  'Ihre Zugbegleiterin',
+  'Ihr Trauzeuge',
+  'Ihre Mitbewohnerin',
+  'Ihr Göttikind',
+  'Ihr Lieblingsbarista',
+  'Ihre Gesangslehrerin',
 ]
