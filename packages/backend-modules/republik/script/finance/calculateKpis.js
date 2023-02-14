@@ -407,7 +407,7 @@ const evaluateCompanyMonth = async (company, begin, end, pgdb) => {
     }
   })
 
-  console.log(data)
+  // console.log(data)
 
   Object.keys(data).forEach((method) => {
     Object.keys(data[method]).forEach((aggregation) => {
