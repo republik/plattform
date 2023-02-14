@@ -17,8 +17,7 @@ import { useTranslation } from '../../../lib/withT'
 import ErrorMessage from '../../ErrorMessage'
 import PlainButton from './PlainButton'
 import { SortToggle } from '../../Search/Sort'
-import ShareSubmission from './Share'
-import AnswerText from './AnswerText'
+
 import {
   hasMoreData,
   loadMoreSubmissions,
@@ -27,11 +26,10 @@ import {
   SORT_KEY_PARAM,
   SUPPORTED_SORT,
 } from './graphql'
-import {
-  AnswersChart,
-  getTargetedAnswers,
-  COLORS,
-} from '../../Climatelab/Questionnaire/Overview'
+import AnswerText from './AnswerText'
+import { AnswersChart, COLORS, getTargetedAnswers } from './QuestionFeatured'
+import ShareSubmission from './Share'
+import { ShareImageSplit } from './ShareImageSplit'
 
 const getSortParams = (query, sort) => {
   if (sort.key === 'random' || !sort.key) {
@@ -79,23 +77,12 @@ const QuestionView = ({ slug, questionIds, extract, share = {} }) => {
     loadMore: loadMoreSubmissions(fetchMore, data),
   })
 
-  const questions = data?.questionnaire?.questions || []
-
-  // TODO: adapt this to work for a single question
-  const shareSubmission = data?.questionnaire?.submissions?.nodes?.[0]
+  const questions =
+    data?.questionnaire?.questions?.filter((q) => questionIds.includes(q.id)) ||
+    []
+  const [mainQuestion, addQuestion] = questions
   if (extract) {
-    if (query.extract && shareSubmission) {
-      return (
-        <ShareSubmission
-          pathname={pathname}
-          qid={query.qid}
-          share={share}
-          submission={shareSubmission}
-          questions={questions}
-        />
-      )
-    }
-    return null
+    return <ShareImageSplit question={mainQuestion} {...share} />
   }
 
   return (
@@ -127,16 +114,11 @@ const QuestionView = ({ slug, questionIds, extract, share = {} }) => {
         error={error}
         render={() => {
           const {
-            questionnaire: { questions: allQuestions, results },
+            questionnaire: { results },
           } = data
 
-          const questions = allQuestions.filter((q) =>
-            questionIds.includes(q.id),
-          )
-          const [mainQuestion, addQuestion] = questions
           const targetAnswers = getTargetedAnswers(questionIds, results)
 
-          console.log({ mainQuestion })
           return (
             <div
               style={{

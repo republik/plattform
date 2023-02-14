@@ -17,6 +17,8 @@ import {
 
 import { QUESTIONNAIRE_SUBMISSIONS_QUERY } from './graphql'
 
+export const QUESTION_SEPARATOR = ','
+
 export const getTargetedAnswers = (questionIds, results) => {
   return [...results.nodes].map((submission) => {
     return {
@@ -40,7 +42,7 @@ export const QuestionLink = ({ question, additionalQuestion, children }) => {
         query: {
           share: [question?.id, additionalQuestion?.id]
             .filter(Boolean)
-            .join(','),
+            .join(QUESTION_SEPARATOR),
           type: 'question',
         },
       }}

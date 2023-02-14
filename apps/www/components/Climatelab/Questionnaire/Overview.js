@@ -4,6 +4,7 @@ import { Loader, Editorial } from '@project-r/styleguide'
 
 import { QUESTIONNAIRE_QUERY } from '../../Questionnaire/Submissions/graphql'
 import {
+  QUESTION_SEPARATOR,
   QuestionFeatured,
   QuestionLink,
 } from '../../Questionnaire/Submissions/QuestionFeatured'
@@ -69,13 +70,20 @@ const AllQuestionsView = ({ slug }) => {
   )
 }
 
-const SubmissionsOverview = ({ slug }) => {
+const SubmissionsOverview = ({ slug, extract, share }) => {
   const router = useRouter()
   const { query } = router
-  const questionIds = query.type === 'question' && query.share?.split(',')
+  const questionIds = query.share?.split(QUESTION_SEPARATOR)
 
   if (questionIds) {
-    return <QuestionView slug={slug} questionIds={questionIds} />
+    return (
+      <QuestionView
+        slug={slug}
+        extract={extract}
+        share={share}
+        questionIds={questionIds}
+      />
+    )
   }
   return <AllQuestionsView slug={slug} />
 }
