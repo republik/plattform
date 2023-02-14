@@ -27,7 +27,11 @@ const InviteReceiverPage = ({ invalidInviteCode }: InviteReceiverPageProps) => {
 
   const hasMonthlySubscription =
     me?.activeMembership?.type?.name === 'MONTHLY_ABO'
-  const hasYearlySubscription = me?.activeMembership?.type?.name === 'ABO'
+  const hasYearlySubscription = [
+    'ABO',
+    'YEARLY_ABO',
+    'BENEFACTOR_ABO',
+  ].includes(me?.activeMembership?.type?.name)
   const isEligible = !hasYearlySubscription
 
   const inviteCode = Array.isArray(router.query?.code)
