@@ -107,6 +107,25 @@ const ProlongBox = ({ t, prolongBeforeDate, membership }) => {
       '',
     )
 
+    const link = (membership.canProlong && (
+      <TokenPackageLink key='link' params={{ package: 'PROLONG' }}>
+        <Editorial.A {...styleTextColor}>
+          {t.first(prefixTranslationKeys.map((k) => `${k}/linkText`))}
+        </Editorial.A>
+      </TokenPackageLink>
+    )) || (
+      <Link
+        key='link'
+        href={{ pathname: `/angebote`, query: { package: 'ABO' } }}
+        passHref
+        prefetch={false}
+      >
+        <Editorial.A {...styleTextColor}>
+          {t.first(prefixTranslationKeys.map((k) => `${k}/linkText`))}
+        </Editorial.A>
+      </Link>
+    )
+
     return (
       <div
         {...styles.box}
@@ -114,23 +133,25 @@ const ProlongBox = ({ t, prolongBeforeDate, membership }) => {
         {...colorScheme.set('backgroundColor', 'alert')}
       >
         <Wrapper>
-          <Title>
-            {t.first.elements(prefixTranslationKeys, {
-              link: (
-                <TokenPackageLink key='link' params={{ package: 'PROLONG' }}>
-                  <Editorial.A {...styleTextColor}>
-                    {t.first(prefixTranslationKeys.map((k) => `${k}/linkText`))}
-                  </Editorial.A>
-                </TokenPackageLink>
-              ),
-            })}
-          </Title>
-          {buttonText && (
+          <Title>{t.first.elements(prefixTranslationKeys, { link })}</Title>
+          {buttonText && membership.canProlong && (
             <TokenPackageLink key='link' params={{ package: 'PROLONG' }}>
               <Button style={{ marginTop: 10 }} primary>
                 {buttonText}
               </Button>
             </TokenPackageLink>
+          )}
+          {buttonText && !membership.canProlong && (
+            <Link
+              key='link'
+              href={{ pathname: `/angebote`, query: { package: 'ABO' } }}
+              passHref
+              prefetch={false}
+            >
+              <Button style={{ marginTop: 10 }} primary>
+                {buttonText}
+              </Button>
+            </Link>
           )}
           {hasExplanation && (
             <Interaction.P style={{ marginTop: 10 }} {...styleTextColor}>

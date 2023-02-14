@@ -5,12 +5,16 @@ const path = require('path')
 const Promise = require('bluebird')
 const handlebars = require('handlebars')
 
+const { timeFormat } = require('@orbiting/backend-modules-formats')
+
 const shouldScheduleMessage = require('../utils/shouldScheduleMessage')
 const shouldSendMessage = require('../utils/shouldSendMessage')
 const sendResultNormalizer = require('../utils/sendResultNormalizer')
 const NodemailerInterface = require('../NodemailerInterface')
 const MandrillInterface = require('../MandrillInterface')
 const { send } = require('./mailLog')
+
+const dateFormat = timeFormat('%x')
 
 checkEnv([
   'DEFAULT_MAIL_FROM_ADDRESS',
@@ -165,12 +169,20 @@ const envMergeVars = [
     content: `${FRONTEND_BASE_URL}/angebote?package=ABO_GIVE`,
   },
   {
+    name: 'link_offer_reduced',
+    content: `${FRONTEND_BASE_URL}/angebote?package=ABO&userPrice=1`,
+  },
+  {
     name: 'link_offer_reduced_ausbildung',
     content: `${FRONTEND_BASE_URL}/angebote?package=ABO&userPrice=1&price=14000&reason=Ausbildung%3A%20`,
   },
   {
     name: 'link_dialog',
     content: `${FRONTEND_BASE_URL}/dialog`,
+  },
+  {
+    name: 'link_etikette',
+    content: `${FRONTEND_BASE_URL}/etikette`,
   },
   {
     name: 'link_app',
@@ -203,6 +215,10 @@ const envMergeVars = [
   {
     name: 'link_project_r',
     content: 'https://project-r.construction/news',
+  },
+  {
+    name: 'today',
+    content: dateFormat(new Date()),
   },
 ]
 

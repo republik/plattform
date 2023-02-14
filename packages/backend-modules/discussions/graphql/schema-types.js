@@ -58,6 +58,7 @@ type DiscussionRules {
   minInterval: Int
   anonymity: Permission!
   disableTopLevelComments: Boolean
+  allowedRoles: [String!]!
 }
 
 type DiscussionPreferences {
