@@ -3,11 +3,9 @@ import { useQuery } from '@apollo/client'
 
 import {
   Button,
-  Editorial,
   InlineSpinner,
   Interaction,
   Loader,
-  useColorContext,
 } from '@project-r/styleguide'
 
 import { css } from 'glamor'
@@ -16,22 +14,24 @@ import { useInfiniteScroll } from '../../../lib/hooks/useInfiniteScroll'
 import { useTranslation } from '../../../lib/withT'
 import ErrorMessage from '../../ErrorMessage'
 import PlainButton from './PlainButton'
-import { SortToggle } from '../../Search/Sort'
+// import { SortToggle } from '../../Search/Sort'
 
 import {
   hasMoreData,
   loadMoreSubmissions,
   QUESTIONNAIRE_SUBMISSIONS_QUERY,
-  SORT_DIRECTION_PARAM,
-  SORT_KEY_PARAM,
-  SUPPORTED_SORT,
+  // SORT_DIRECTION_PARAM,
+  // SORT_KEY_PARAM,
+  // SUPPORTED_SORT,
 } from './graphql'
 import AnswerText from './AnswerText'
 import { AnswersChart, COLORS, getTargetedAnswers } from './QuestionFeatured'
-import ShareSubmission from './Share'
 import { ShareImageSplit } from './ShareImageSplit'
+import Meta from '../../Frame/Meta'
+import { ASSETS_SERVER_BASE_URL, PUBLIC_BASE_URL } from '../../../lib/constants'
+import { replaceText } from './utils'
 
-const getSortParams = (query, sort) => {
+/*const getSortParams = (query, sort) => {
   if (sort.key === 'random' || !sort.key) {
     const {
       [SORT_KEY_PARAM]: key,
@@ -45,15 +45,39 @@ const getSortParams = (query, sort) => {
     [SORT_KEY_PARAM]: sort.key,
     [SORT_DIRECTION_PARAM]: sort.direction,
   }
+}*/
+
+const QuestionViewMeta = ({ share, question, questionCount }) => {
+  const router = useRouter()
+  const urlObj = new URL(router.asPath, PUBLIC_BASE_URL)
+  const url = urlObj.toString()
+
+  const shareImageUrlObj = urlObj
+  shareImageUrlObj.searchParams.set('extract', share.extract)
+  const shareImageUrl = shareImageUrlObj.toString()
+
+  return (
+    <Meta
+      data={{
+        url,
+        title: replaceText(share.title, { questionText: question.text }),
+        description: replaceText(share.description, { questionCount }),
+        image: share.extract
+          ? `${ASSETS_SERVER_BASE_URL}/render?width=1200&height=1&url=${encodeURIComponent(
+              shareImageUrl,
+            )}`
+          : '',
+      }}
+    />
+  )
 }
 
 const QuestionView = ({ slug, questionIds, extract, share = {} }) => {
   const { t } = useTranslation()
-  const [colorScheme] = useColorContext()
   const router = useRouter()
-  const { query } = router
-  const sortBy = query.skey || 'random'
-  const sortDirection = query.sdir || undefined
+  // const { query } = router
+  // const sortBy = query.skey || 'random'
+  // const sortDirection = query.sdir || undefined
   const pathname = router.asPath.split('?')[0]
   const { loading, error, data, fetchMore } = useQuery(
     QUESTIONNAIRE_SUBMISSIONS_QUERY,
@@ -61,8 +85,8 @@ const QuestionView = ({ slug, questionIds, extract, share = {} }) => {
       variables: {
         slug,
         first: 20,
-        sortBy,
-        sortDirection,
+        sortBy: 'random',
+        // sortDirection,
         questionIds,
       },
     },
@@ -77,9 +101,9 @@ const QuestionView = ({ slug, questionIds, extract, share = {} }) => {
     loadMore: loadMoreSubmissions(fetchMore, data),
   })
 
+  const allQuestions = data?.questionnaire?.questions
   const questions =
-    data?.questionnaire?.questions?.filter((q) => questionIds.includes(q.id)) ||
-    []
+    allQuestions?.filter((q) => questionIds.includes(q.id)) || []
   const [mainQuestion, addQuestion] = questions
   if (extract) {
     return <ShareImageSplit question={mainQuestion} {...share} />
@@ -120,122 +144,131 @@ const QuestionView = ({ slug, questionIds, extract, share = {} }) => {
           const targetAnswers = getTargetedAnswers(questionIds, results)
 
           return (
-            <div
-              style={{
-                marginBottom: 20,
-                paddingTop: 50,
-              }}
-              ref={containerRef}
-            >
-              <Interaction.H2>{mainQuestion.text}</Interaction.H2>
-
-              {mainQuestion?.__typename === 'QuestionTypeChoice' && (
-                <AnswersChart question={mainQuestion} skipTitle={true} />
-              )}
-
-              {!!addQuestion && (
-                <Interaction.H2 style={{ marginTop: 30 }}>
-                  {addQuestion.text}
-                </Interaction.H2>
-              )}
-
+            <>
+              <QuestionViewMeta
+                share={share}
+                question={mainQuestion}
+                questionCount={allQuestions.length}
+              />
               <div
                 style={{
-                  marginTop: 50,
-                  display: 'flex',
-                  flexWrap: 'wrap',
-                  alignItems: 'flex-start',
-                  gap: '1rem',
+                  marginBottom: 20,
+                  paddingTop: 50,
                 }}
+                ref={containerRef}
               >
-                {targetAnswers.map(({ answers, displayAuthor }) => (
-                  <div
-                    key={answers[0].id}
-                    style={{
-                      padding: '10px',
-                      marginBottom: '20px',
-                      borderRadius: '10px',
-                      backgroundColor: '#FFF',
-                      color: '#000',
-                      flex: '1 auto',
-                    }}
-                  >
-                    <Interaction.P attributes={{}}>
-                      {answers.map((answer, idx) => {
-                        const colorIndex =
-                          mainQuestion?.__typename === 'QuestionTypeChoice' &&
-                          mainQuestion.options
-                            .map((d) => d.value)
-                            .indexOf(answer.payload.value[0])
+                <Interaction.H2>{mainQuestion.text}</Interaction.H2>
 
-                        return (
-                          <div
-                            style={{
-                              position: 'relative',
-                              color: '#000',
-                            }}
-                            key={answer.id}
-                          >
-                            {answer?.question?.__typename !==
-                              'QuestionTypeChoice' && (
-                              <div
-                                style={{
-                                  paddingTop: colorIndex ? '20px' : 0,
-                                }}
-                              >
-                                <AnswerText
-                                  text={answer.payload.text}
-                                  value={answer.payload.value}
-                                  question={questions[idx]}
-                                />
-                                <br />
-                                <br />
-                              </div>
-                            )}
-
-                            {mainQuestion?.__typename ===
-                              'QuestionTypeChoice' &&
-                              idx < 1 && (
-                                <div
-                                  {...styles.colorBar}
-                                  style={{
-                                    backgroundColor:
-                                      colorIndex !== -1
-                                        ? COLORS[colorIndex]
-                                        : undefined,
-                                  }}
-                                />
-                              )}
-                          </div>
-                        )
-                      })}
-                      <em
-                        style={{
-                          color: '#000',
-                        }}
-                      >
-                        – {displayAuthor.name}
-                      </em>
-                    </Interaction.P>
-                  </div>
-                ))}
-              </div>
-              <div style={{ marginTop: 10 }}>
-                {loadingMoreError && <ErrorMessage error={loadingMoreError} />}
-                {loadingMore && <InlineSpinner />}
-                {!infiniteScroll && hasMore && (
-                  <PlainButton
-                    onClick={() => {
-                      setInfiniteScroll(true)
-                    }}
-                  >
-                    {t.pluralize('questionnaire/submissions/showAnswers', {
-                      count: results.totalCount - results.nodes.length,
-                    })}
-                  </PlainButton>
+                {mainQuestion?.__typename === 'QuestionTypeChoice' && (
+                  <AnswersChart question={mainQuestion} skipTitle={true} />
                 )}
+
+                {!!addQuestion && (
+                  <Interaction.H2 style={{ marginTop: 30 }}>
+                    {addQuestion.text}
+                  </Interaction.H2>
+                )}
+
+                <div
+                  style={{
+                    marginTop: 50,
+                    display: 'flex',
+                    flexWrap: 'wrap',
+                    alignItems: 'flex-start',
+                    gap: '1rem',
+                  }}
+                >
+                  {targetAnswers.map(({ answers, displayAuthor }) => (
+                    <div
+                      key={answers[0].id}
+                      style={{
+                        padding: '10px',
+                        marginBottom: '20px',
+                        borderRadius: '10px',
+                        backgroundColor: '#FFF',
+                        color: '#000',
+                        flex: '1 auto',
+                      }}
+                    >
+                      <Interaction.P attributes={{}}>
+                        {answers.map((answer, idx) => {
+                          const colorIndex =
+                            mainQuestion?.__typename === 'QuestionTypeChoice' &&
+                            mainQuestion.options
+                              .map((d) => d.value)
+                              .indexOf(answer.payload.value[0])
+
+                          return (
+                            <div
+                              style={{
+                                position: 'relative',
+                                color: '#000',
+                              }}
+                              key={answer.id}
+                            >
+                              {answer?.question?.__typename !==
+                                'QuestionTypeChoice' && (
+                                <div
+                                  style={{
+                                    paddingTop: colorIndex ? '20px' : 0,
+                                  }}
+                                >
+                                  <AnswerText
+                                    text={answer.payload.text}
+                                    value={answer.payload.value}
+                                    question={questions[idx]}
+                                  />
+                                  <br />
+                                  <br />
+                                </div>
+                              )}
+
+                              {mainQuestion?.__typename ===
+                                'QuestionTypeChoice' &&
+                                idx < 1 && (
+                                  <div
+                                    {...styles.colorBar}
+                                    style={{
+                                      backgroundColor:
+                                        colorIndex !== -1
+                                          ? COLORS[colorIndex]
+                                          : undefined,
+                                    }}
+                                  />
+                                )}
+                            </div>
+                          )
+                        })}
+                        <em
+                          style={{
+                            color: '#000',
+                          }}
+                        >
+                          – {displayAuthor.name}
+                        </em>
+                      </Interaction.P>
+                    </div>
+                  ))}
+                </div>
+                <div style={{ marginTop: 10 }}>
+                  {loadingMoreError && (
+                    <ErrorMessage error={loadingMoreError} />
+                  )}
+                  {loadingMore && <InlineSpinner />}
+                  {!infiniteScroll && hasMore && (
+                    <PlainButton
+                      onClick={() => {
+                        setInfiniteScroll(true)
+                      }}
+                    >
+                      {t.pluralize('questionnaire/submissions/showAnswers', {
+                        count: results.totalCount - results.nodes.length,
+                      })}
+                    </PlainButton>
+                  )}
+                </div>
               </div>
-            </div>
+            </>
           )
         }}
       />

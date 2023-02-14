@@ -5,8 +5,6 @@ import {
   fontStyles,
   SHARE_IMAGE_WIDTH,
   SHARE_IMAGE_HEIGHT,
-  ColorContextProvider,
-  ColorContextLocalExtension,
 } from '@project-r/styleguide'
 import { climateColors } from '../../Climatelab/config'
 

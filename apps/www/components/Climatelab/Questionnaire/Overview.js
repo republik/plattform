@@ -10,10 +10,13 @@ import {
 } from '../../Questionnaire/Submissions/QuestionFeatured'
 import QuestionView from '../../Questionnaire/Submissions/QuestionView'
 
-const AllQuestionsView = ({ slug }) => {
+const AllQuestionsView = ({ slug, extract }) => {
   const { loading, error, data } = useQuery(QUESTIONNAIRE_QUERY, {
     variables: { slug },
   })
+
+  // the extract flag is only used for custom share for in the QuestionView
+  if (extract) return null
 
   return (
     <Loader
@@ -85,7 +88,7 @@ const SubmissionsOverview = ({ slug, extract, share }) => {
       />
     )
   }
-  return <AllQuestionsView slug={slug} />
+  return <AllQuestionsView slug={slug} extract={extract} />
 }
 
 export default SubmissionsOverview

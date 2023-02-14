@@ -478,6 +478,7 @@ const ArticlePage = ({
       mode='articleTop'
       document={article}
       documentLoading={articleLoading || needsRefetch}
+      shareParam={share}
     />
   )
   const actionBarEnd = actionBar
