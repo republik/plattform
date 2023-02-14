@@ -29,6 +29,7 @@ import {
   enforceMembership,
   UnauthorizedMessage,
 } from '../../Auth/withMembership'
+import { useInNativeApp } from '../../../lib/withInNativeApp'
 import { MeObjectType } from '../../../lib/context/MeContext'
 import { PageCenter } from '../../Auth/withAuthorization'
 import { useNumOfRedeemedInvitesQuery } from '../graphql/useNumOfRedeemedInvitesQuery'
@@ -47,6 +48,8 @@ const InviteSenderPage = ({ me }: { me: MeObjectType }) => {
   const { data: userInviteData } = useUserInviteQuery()
   const { data: redeemedInvites, loading: loadingRedeemedInvites } =
     useNumOfRedeemedInvitesQuery()
+  const { inNativeApp } = useInNativeApp()
+
   const hasShareGrant = me?.accessCampaigns.length > 0
 
   const hasYearlySubscription = ['ABO', 'BENEFACTOR_ABO'].includes(
@@ -203,7 +206,22 @@ const InviteSenderPage = ({ me }: { me: MeObjectType }) => {
                     </div>
                     <div {...styles.buttonWrapper}>
                       <Button
-                        onClick={() => setShowShareOverlay(true)}
+                        onClick={(e) => {
+                          if (inNativeApp) {
+                            postMessage({
+                              type: 'share',
+                              payload: {
+                                title: 'Angebot teilen',
+                                url: inviteLink,
+                                subject: `Ich habe ${FUTURE_CAMPAIGN_MAX_REDEEMED_INVITES} Republik Einladungen zu vergeben.`,
+                                dialogTitle: 'Angebot teilen',
+                              },
+                            })
+                            e.target.blur()
+                          } else {
+                            setShowShareOverlay(true)
+                          }
+                        }}
                         block
                         style={{ height: 45 }}
                       >
