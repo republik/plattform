@@ -159,7 +159,12 @@ const Page = () => {
   })
 
   if (image) {
-    return <ShareImageSplit user={data?.user} img={SHARE_IMG_URL} />
+    return (
+      <ShareImageSplit
+        user={!loading && (data?.user || {})}
+        img={SHARE_IMG_URL}
+      />
+    )
   }
 
   return (
@@ -172,7 +177,7 @@ const Page = () => {
           const meta = {
             url,
             title: t('Climatelab/Questionnaire/title', {
-              name: user.name,
+              name: user?.name || 'einer Verlegerin der Republik',
             }),
             description: t('Climatelab/Questionnaire/description'),
             image: `${ASSETS_SERVER_BASE_URL}/render?width=1200&height=1&url=${encodeURIComponent(
@@ -184,7 +189,7 @@ const Page = () => {
             <div>
               <Meta data={meta} />
               <Editorial.Headline>Klimafragebogen</Editorial.Headline>
-              <Questionnaire userId={user.id} meta={meta} />
+              <Questionnaire userId={user?.id || slug} meta={meta} />
             </div>
           )
         }}

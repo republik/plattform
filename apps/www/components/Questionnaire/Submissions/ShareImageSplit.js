@@ -17,7 +17,7 @@ export const ShareImageSplit = ({ question, user, img }) => {
   const text = question
     ? question.text
     : user
-    ? `${user.name} antwortet Klimafragen.`
+    ? `${user?.name || 'Eine Verlegerin der Republik'} antwortet Klimafragen.`
     : undefined
 
   if (!text) return null
