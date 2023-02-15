@@ -48,8 +48,8 @@ const rewardSender = async (pledge, context) => {
     const membershipType = await transaction.public.membershipTypes.findOne({
       id: activeMembership.membershipTypeId,
     })
-    if (!['ABO', 'BENEFACTOR'].includes(membershipType?.name)) {
-      debug('sender has an activeMembership type which wont receive a reward')
+    if (membershipType?.name === 'MONTHLY_ABO') {
+      debug('sender has an activeMembership type which can not be extended')
       return
     }
 
