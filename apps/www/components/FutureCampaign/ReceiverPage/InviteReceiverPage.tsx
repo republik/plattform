@@ -142,7 +142,7 @@ const InviteReceiverPage = ({ invalidInviteCode }: InviteReceiverPageProps) => {
             Ihrer Tante aus?
           </p>
           <p {...styles.text} style={{ marginBottom: 32 }}>
-            Die Republik ist nur so stark, wie ihre Community
+            Die Republik ist nur so stark, wie ihre Community.
           </p>
           <Button href='/verstaerkung-holen'>Jetzt Verstärkung holen</Button>
         </div>
