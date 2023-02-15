@@ -14,6 +14,7 @@ import { useRouter } from 'next/router'
 import Meta from '../../components/Frame/Meta'
 import { css } from 'glamor'
 import FutureCampaignPage from '../../components/FutureCampaign/FutureCampaignPage'
+import { ColorHtmlBodyColors } from '@project-r/styleguide/src/components/Colors/ColorContext'
 
 function Page(props: InviteReceiverPageProps) {
   const router = useRouter()
@@ -36,6 +37,7 @@ function Page(props: InviteReceiverPageProps) {
 export default function WrappedPage(props: InviteReceiverPageProps) {
   return (
     <ColorContextProvider colorSchemeKey='dark' root>
+      <ColorHtmlBodyColors colorSchemeKey='dark' />
       <Page {...props} />
     </ColorContextProvider>
   )
