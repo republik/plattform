@@ -144,14 +144,9 @@ const AnswersCarousel = ({ slug, question, additionalQuestion, bgColor }) => {
                         </TeaserCarouselHeadline.Editorial>
 
                         <Editorial.Credit>
-                          <span style={{ color: '#000' }}>Von </span>
-                          <Editorial.A
-                            href={`/klimafragebogen/${displayAuthor.slug}`}
-                          >
-                            <span style={{ color: '#000' }}>
-                              {displayAuthor.name}
-                            </span>
-                          </Editorial.A>
+                          <span style={{ color: '#000' }}>
+                            Von {displayAuthor.name}
+                          </span>
                         </Editorial.Credit>
                       </TeaserCarouselTile>
                     </PersonLink>
