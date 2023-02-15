@@ -32,6 +32,14 @@ export const getTargetedAnswers = (questionIds, results) => {
 
 export const COLORS = ['#00dd97', '#97f8fe', '#fefd67']
 
+export const PersonLink = ({ displayAuthor, children }) => {
+  return (
+    <Link href={`/klimafragebogen/${displayAuthor.slug}`} passHref>
+      {children}
+    </Link>
+  )
+}
+
 export const QuestionLink = ({ question, additionalQuestion, children }) => {
   const router = useRouter()
   const pathname = router.asPath.split('?')[0]
@@ -122,27 +130,31 @@ const AnswersCarousel = ({ slug, question, additionalQuestion, bgColor }) => {
               <TeaserCarousel outline>
                 <TeaserCarouselTileContainer>
                   {targetedAnswers.map(({ answers, displayAuthor }) => (
-                    <TeaserCarouselTile
-                      key={answers[0].id}
-                      bgColor={'#fff'}
-                      color={'#000'}
-                      borderRadius={'10px'}
+                    <PersonLink
+                      key={displayAuthor.slug}
+                      displayAuthor={displayAuthor}
                     >
-                      <TeaserCarouselHeadline.Editorial>
-                        {inQuotes(answers[0].payload.value)}
-                      </TeaserCarouselHeadline.Editorial>
+                      <TeaserCarouselTile
+                        bgColor={'#fff'}
+                        color={'#000'}
+                        borderRadius={'10px'}
+                      >
+                        <TeaserCarouselHeadline.Editorial>
+                          {inQuotes(answers[0].payload.value)}
+                        </TeaserCarouselHeadline.Editorial>
 
-                      <Editorial.Credit>
-                        <span style={{ color: '#000' }}>Von </span>
-                        <Editorial.A
-                          href={`/klimafragebogen/${displayAuthor.slug}`}
-                        >
-                          <span style={{ color: '#000' }}>
-                            {displayAuthor.name}
-                          </span>
-                        </Editorial.A>
-                      </Editorial.Credit>
-                    </TeaserCarouselTile>
+                        <Editorial.Credit>
+                          <span style={{ color: '#000' }}>Von </span>
+                          <Editorial.A
+                            href={`/klimafragebogen/${displayAuthor.slug}`}
+                          >
+                            <span style={{ color: '#000' }}>
+                              {displayAuthor.name}
+                            </span>
+                          </Editorial.A>
+                        </Editorial.Credit>
+                      </TeaserCarouselTile>
+                    </PersonLink>
                   ))}
                 </TeaserCarouselTileContainer>
               </TeaserCarousel>

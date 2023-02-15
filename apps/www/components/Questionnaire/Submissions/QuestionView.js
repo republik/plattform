@@ -21,7 +21,12 @@ import {
   QUESTIONNAIRE_SUBMISSIONS_QUERY,
 } from './graphql'
 import AnswerText from './AnswerText'
-import { AnswersChart, COLORS, getTargetedAnswers } from './QuestionFeatured'
+import {
+  AnswersChart,
+  COLORS,
+  getTargetedAnswers,
+  PersonLink,
+} from './QuestionFeatured'
 import { ShareImageSplit } from './ShareImageSplit'
 import Meta from '../../Frame/Meta'
 import { ASSETS_SERVER_BASE_URL, PUBLIC_BASE_URL } from '../../../lib/constants'
@@ -136,75 +141,81 @@ const QuestionView = ({ slug, questionIds, extract, share = {} }) => {
                   }}
                 >
                   {targetAnswers.map(({ answers, displayAuthor }) => (
-                    <div
-                      key={answers[0].id}
-                      style={{
-                        padding: '10px',
-                        marginBottom: '20px',
-                        borderRadius: '10px',
-                        backgroundColor: '#FFF',
-                        color: '#000',
-                        flex: '1 auto',
-                      }}
+                    <PersonLink
+                      key={displayAuthor.slug}
+                      displayAuthor={displayAuthor}
                     >
-                      <Interaction.P attributes={{}}>
-                        {answers.map((answer, idx) => {
-                          const colorIndex =
-                            mainQuestion?.__typename === 'QuestionTypeChoice' &&
-                            mainQuestion.options
-                              .map((d) => d.value)
-                              .indexOf(answer.payload.value[0])
-
-                          return (
-                            <div
-                              style={{
-                                position: 'relative',
-                                color: '#000',
-                              }}
-                              key={answer.id}
-                            >
-                              {answer?.question?.__typename !==
-                                'QuestionTypeChoice' && (
-                                <div
-                                  style={{
-                                    paddingTop: colorIndex ? '20px' : 0,
-                                  }}
-                                >
-                                  <AnswerText
-                                    text={answer.payload.text}
-                                    value={answer.payload.value}
-                                    question={currentQuestions[idx]}
-                                  />
-                                  <br />
-                                  <br />
-                                </div>
-                              )}
-
-                              {mainQuestion?.__typename ===
+                      <div
+                        style={{
+                          cursor: 'pointer',
+                          padding: '10px',
+                          marginBottom: '20px',
+                          borderRadius: '10px',
+                          backgroundColor: '#FFF',
+                          color: '#000',
+                          flex: '1 auto',
+                        }}
+                      >
+                        <Interaction.P attributes={{}}>
+                          {answers.map((answer, idx) => {
+                            const colorIndex =
+                              mainQuestion?.__typename ===
                                 'QuestionTypeChoice' &&
-                                idx < 1 && (
+                              mainQuestion.options
+                                .map((d) => d.value)
+                                .indexOf(answer.payload.value[0])
+
+                            return (
+                              <div
+                                style={{
+                                  position: 'relative',
+                                  color: '#000',
+                                }}
+                                key={answer.id}
+                              >
+                                {answer?.question?.__typename !==
+                                  'QuestionTypeChoice' && (
                                   <div
-                                    {...styles.colorBar}
                                     style={{
-                                      backgroundColor:
-                                        colorIndex !== -1
-                                          ? COLORS[colorIndex]
-                                          : undefined,
+                                      paddingTop: colorIndex ? '20px' : 0,
                                     }}
-                                  />
+                                  >
+                                    <AnswerText
+                                      text={answer.payload.text}
+                                      value={answer.payload.value}
+                                      question={currentQuestions[idx]}
+                                    />
+                                    <br />
+                                    <br />
+                                  </div>
                                 )}
-                            </div>
-                          )
-                        })}
-                        <em
-                          style={{
-                            color: '#000',
-                          }}
-                        >
-                          – {displayAuthor.name}
-                        </em>
-                      </Interaction.P>
-                    </div>
+
+                                {mainQuestion?.__typename ===
+                                  'QuestionTypeChoice' &&
+                                  idx < 1 && (
+                                    <div
+                                      {...styles.colorBar}
+                                      style={{
+                                        backgroundColor:
+                                          colorIndex !== -1
+                                            ? COLORS[colorIndex]
+                                            : undefined,
+                                      }}
+                                    />
+                                  )}
+                              </div>
+                            )
+                          })}
+                          <em
+                            style={{
+                              color: '#000',
+                            }}
+                          >
+                            – {displayAuthor.name}
+                          </em>
+                        </Interaction.P>
+                      </div>
+                    </PersonLink>
                   ))}
                 </div>
                 <div style={{ marginTop: 10 }}>
