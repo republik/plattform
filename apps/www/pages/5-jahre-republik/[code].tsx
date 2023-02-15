@@ -35,7 +35,7 @@ function Page(props: InviteReceiverPageProps) {
 
 export default function WrappedPage(props: InviteReceiverPageProps) {
   return (
-    <ColorContextProvider colorSchemeKey='dark'>
+    <ColorContextProvider colorSchemeKey='dark' root>
       <Page {...props} />
     </ColorContextProvider>
   )
