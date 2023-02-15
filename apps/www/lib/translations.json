@@ -29,6 +29,10 @@
       "value": "Republik teilen"
     },
     {
+      "key": "nav/invite-friends",
+      "value": "Verstärkung holen"
+    },
+    {
       "key": "nav/becomemember",
       "value": "Mitglied werden"
     },
@@ -2554,7 +2558,7 @@
     },
     {
       "key": "package/YEARLY_ABO/description",
-      "value": "Es freut uns, dass Sie dabei sind! Mit Ihrem selbst gewählten Beitrag erhalten Sie ab sofort unser Magazin, zum Lesen und zum Hören. Und Sie investieren in die Zukunft unseres Journalismus."
+      "value": "Es freut uns, dass Sie dabei sind! Mit Ihrem selbst gewählten Beitrag erhalten Sie ab sofort und für ein Jahr unser Magazin, zum Lesen und zum Hören. Und Sie investieren in die Zukunft unseres Journalismus."
     },
     {
       "key": "package/BENEFACTOR/title",
