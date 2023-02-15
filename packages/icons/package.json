@@ -8,8 +8,13 @@
   "module": "./dist/republik-icons.js",
   "exports": {
     ".": {
-      "import": "./dist/republik-icons.js",
-      "require": "./dist/republik-icons.umd.cjs"
+      "import": "./dist/base.js",
+      "require": "./dist/base.cjs"
+    },
+    "./*": {
+      "import": "./dist/*.js",
+      "require": "./dist/*.cjs",
+      "types": "./dist/*.d.ts"
     }
   },
   "scripts": {
@@ -18,7 +23,6 @@
     "build": "yarn generate:icons && tsc && vite build"
   },
   "devDependencies": {
-    "@republik/eslint-config-frontend": "*",
     "@svgr/cli": "^6.1.2",
     "@types/react": "^18.0.27",
     "@types/react-dom": "^18.0.10",
