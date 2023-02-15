@@ -61,7 +61,7 @@ const QuestionViewMeta = ({ share, question }) => {
       data={{
         url,
         title: replaceText(share.title, { questionText: question.text }),
-        description: replaceText(share.description),
+        description: share.description,
         image: `${ASSETS_SERVER_BASE_URL}/render?width=1200&height=1&url=${encodeURIComponent(
           shareImageUrl,
         )}`,
