@@ -45,6 +45,14 @@ const rewardSender = async (pledge, context) => {
       return
     }
 
+    const membershipType = await transaction.public.membershipTypes.findOne({
+      id: activeMembership.membershipTypeId,
+    })
+    if (membershipType?.name === 'MONTHLY_ABO') {
+      debug('sender has an activeMembership type which can not be extended')
+      return
+    }
+
     // update count of subscribers
     const lastCount = await transaction.public.userAttributes.findFirst(
       { userId: senderUserId, name: 'futureCampaignAboCount' },
@@ -76,11 +84,6 @@ const rewardSender = async (pledge, context) => {
 
       // if month should not be donated, add to current membership period
       if (!hasDonateConsent) {
-        const activeMembership = await transaction.public.memberships.findOne({
-          userId: senderUserId,
-          active: true,
-        })
-
         const membershipPeriods =
           await transaction.public.membershipPeriods.find({
             membershipId: activeMembership.id,
