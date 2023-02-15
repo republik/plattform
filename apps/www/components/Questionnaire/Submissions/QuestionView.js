@@ -14,15 +14,11 @@ import { useInfiniteScroll } from '../../../lib/hooks/useInfiniteScroll'
 import { useTranslation } from '../../../lib/withT'
 import ErrorMessage from '../../ErrorMessage'
 import PlainButton from './PlainButton'
-// import { SortToggle } from '../../Search/Sort'
 
 import {
   hasMoreData,
   loadMoreSubmissions,
   QUESTIONNAIRE_SUBMISSIONS_QUERY,
-  // SORT_DIRECTION_PARAM,
-  // SORT_KEY_PARAM,
-  // SUPPORTED_SORT,
 } from './graphql'
 import AnswerText from './AnswerText'
 import { AnswersChart, COLORS, getTargetedAnswers } from './QuestionFeatured'
@@ -30,22 +26,6 @@ import { ShareImageSplit } from './ShareImageSplit'
 import Meta from '../../Frame/Meta'
 import { ASSETS_SERVER_BASE_URL, PUBLIC_BASE_URL } from '../../../lib/constants'
 import { replaceText } from './utils'
-
-/*const getSortParams = (query, sort) => {
-  if (sort.key === 'random' || !sort.key) {
-    const {
-      [SORT_KEY_PARAM]: key,
-      [SORT_DIRECTION_PARAM]: dir,
-      ...restQuery
-    } = query
-    return restQuery
-  }
-  return {
-    ...query,
-    [SORT_KEY_PARAM]: sort.key,
-    [SORT_DIRECTION_PARAM]: sort.direction,
-  }
-}*/
 
 const QuestionViewMeta = ({ share, question }) => {
   const router = useRouter()
@@ -73,9 +53,6 @@ const QuestionViewMeta = ({ share, question }) => {
 const QuestionView = ({ slug, questionIds, extract, share = {} }) => {
   const { t } = useTranslation()
   const router = useRouter()
-  // const { query } = router
-  // const sortBy = query.skey || 'random'
-  // const sortDirection = query.sdir || undefined
   const pathname = router.asPath.split('?')[0]
   const { loading, error, data, fetchMore } = useQuery(
     QUESTIONNAIRE_SUBMISSIONS_QUERY,
@@ -84,7 +61,6 @@ const QuestionView = ({ slug, questionIds, extract, share = {} }) => {
         slug,
         first: 20,
         sortBy: 'random',
-        // sortDirection,
         questionIds,
       },
     },
@@ -118,19 +94,6 @@ const QuestionView = ({ slug, questionIds, extract, share = {} }) => {
       >
         Zurück zur Übersicht
       </Button>
-      {/* <div style={{ marginTop: 20 }}>
-        <span style={{ marginRight: 20 }}>Sortierung:</span>
-        {SUPPORTED_SORT.map((sort, key) => (
-          <SortToggle
-            key={key}
-            sort={sort}
-            urlSort={{ key: sortBy, direction: sortDirection }}
-            getSearchParams={({ sort }) => getSortParams(query, sort)}
-            pathname={pathname}
-          />
-        ))}
-      </div> */}
-
       <Loader
         loading={loading}
         error={error}

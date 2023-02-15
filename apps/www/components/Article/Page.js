@@ -496,6 +496,7 @@ const ArticlePage = ({
   const actionBarFlyer = actionBar
     ? cloneElement(actionBar, {
         mode: 'flyer',
+        shareParam: undefined,
       })
     : undefined
 
