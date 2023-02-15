@@ -1,4 +1,1 @@
-# Logs
 dist
-# Ignore genereated icons
-lib/components/*

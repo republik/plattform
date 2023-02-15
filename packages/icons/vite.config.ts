@@ -9,7 +9,7 @@ import dts from 'vite-plugin-dts'
 // While providing a separate entry point for each sub-folder as well.
 const entryObject = Object.fromEntries(
   glob
-    .sync('./lib/components/**/index.ts')
+    .sync(path.resolve(__dirname, 'dist/components') + '/**/index.ts')
     .map((file) => [
       // This remove `src/` as well as the file extension from each
       // file, so e.g. src/nested/foo.js becomes nested/foo
@@ -23,7 +23,7 @@ const entryObject = Object.fromEntries(
     ])
     .map((keyVal) => {
       const key = keyVal[0]
-        .replace(/components\//, '')
+        .replace(/\.\.\/dist\/components\//, '')
         .replace(/\/index$/, '')
         // Transform 'md/md' to 'mdMd'
         .replace(/\/[a-zA-Z0-9]{1}/, (chars) => chars[1].toUpperCase())
@@ -34,6 +34,8 @@ const entryObject = Object.fromEntries(
       ]
     }),
 )
+
+console.log('entryObject', entryObject)
 
 // https://vitejs.dev/config/
 export default defineConfig({

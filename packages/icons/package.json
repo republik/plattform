@@ -18,7 +18,7 @@
     }
   },
   "scripts": {
-    "generate:icons": "svgr --typescript --icon --replace-attr-values '#000=currentColor' --out-dir ./lib/components ./lib/svg",
+    "generate:icons": "svgr --typescript --icon --replace-attr-values '#000=currentColor' --out-dir ./dist/components ./lib/svg",
     "dev": "vite",
     "build": "yarn generate:icons && tsc && vite build"
   },
