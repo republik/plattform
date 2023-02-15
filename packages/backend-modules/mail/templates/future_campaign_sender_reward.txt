@@ -52,8 +52,8 @@ hat nämlich {{receiver}} ein Abo bei der Republik gekauft.
 Hätten Sie das gedacht?
 
 Und falls Sie jetzt der Ehrgeiz gepackt hat: Sie haben noch {{count_open_slots}}
-Zugänge zu Mitstreiterinnen-Abos zu vergeben. Hier {{link_sender_page}} ist ihr
-persönlicher Link zum Weitergeben.
+Zugänge zu Mitstreiterinnen-Abos zu vergeben. Hier finden ihren persönlichen
+Link zum Weitergeben {{link_sender_page}} .
 
 Vielen Dank fürs Dranbleiben und herzliche Grüsse
 
@@ -76,6 +76,7 @@ Gespannte Grüsse
 {{else if has_five_slots_filled}}
 
 Herzliche Gratulation: Sie haben 5 Mitstreiter an Bord geholt!
+{{link_sender_page}}
 
 {{receiver}} hat Ihr letztes Mitstreiter-Abo ergattert.
 

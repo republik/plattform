@@ -14,14 +14,21 @@ import { useAudioContext } from '../Audio/AudioProvider'
 import scrollIntoView from 'scroll-into-view'
 import { AudioPlayerLocations } from '../Audio/types/AudioActionTracking'
 
-export type CarouselProps = { carouselData: any }
+export type CarouselProps = {
+  carouselData: any
+  onlyAudio?: boolean
+  expandAudioPlayerOnPlayback?: boolean
+}
 
 type CarouselItem = {
   src: string
   path: string
 }
 
-const PlayAudio: React.FC<{ path: string }> = ({ path }) => {
+const PlayAudio: React.FC<{
+  path: string
+  expandPlayerOnPlayback?: boolean
+}> = ({ path, expandPlayerOnPlayback = true }) => {
   const { data } = useQuery(GET_DOCUMENT_AUDIO, { variables: { path } })
   const {
     toggleAudioPlayer,
@@ -44,7 +51,9 @@ const PlayAudio: React.FC<{ path: string }> = ({ path }) => {
           toggleAudioPlayback()
         } else {
           toggleAudioPlayer(document, AudioPlayerLocations.MARKETING_FRONT)
-          setIsExpanded(true)
+          if (expandPlayerOnPlayback) {
+            setIsExpanded(true)
+          }
         }
       }}
       Icon={
@@ -58,7 +67,11 @@ const PlayAudio: React.FC<{ path: string }> = ({ path }) => {
   )
 }
 
-const Carousel: React.FC<CarouselProps> = ({ carouselData }) => {
+const Carousel: React.FC<CarouselProps> = ({
+  carouselData,
+  onlyAudio = false,
+  expandAudioPlayerOnPlayback = true,
+}) => {
   const items: CarouselItem[] = carouselData?.content?.children?.map(
     ({ data }) => ({
       src: getImgSrc(data, '/', 1200),
@@ -176,13 +189,18 @@ const Carousel: React.FC<CarouselProps> = ({ carouselData }) => {
           <div {...styles.slide} onClick={() => handleClick(i)} key={i}>
             <img {...styles.image} src={d.src} />
             <div {...styles.actions}>
-              <IconButton
-                href={d.path}
-                Icon={ArticleIcon}
-                labelShort='Lesen'
-                label='Lesen'
+              {!onlyAudio && (
+                <IconButton
+                  href={d.path}
+                  Icon={ArticleIcon}
+                  labelShort='Lesen'
+                  label='Lesen'
+                />
+              )}
+              <PlayAudio
+                path={d.path}
+                expandPlayerOnPlayback={expandAudioPlayerOnPlayback}
               />
-              <PlayAudio path={d.path} />
             </div>
           </div>
         ))}
