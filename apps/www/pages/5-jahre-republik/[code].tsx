@@ -12,9 +12,8 @@ import { FUTURE_CAMPAIGN_SHARE_IMAGE_URL } from '../../components/FutureCampaign
 import { PUBLIC_BASE_URL } from '../../lib/constants'
 import { useRouter } from 'next/router'
 import Meta from '../../components/Frame/Meta'
-import { css } from 'glamor'
 import FutureCampaignPage from '../../components/FutureCampaign/FutureCampaignPage'
-import { ColorHtmlBodyColors } from '@project-r/styleguide/src/components/Colors/ColorContext'
+import { ColorHtmlBodyColors } from '@project-r/styleguide'
 
 function Page(props: InviteReceiverPageProps) {
   const router = useRouter()
