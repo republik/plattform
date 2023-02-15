@@ -78,8 +78,8 @@ const IntroductoryStep = ({
           <>
             <div>
               <p {...styles.text}>
-                Geld ist nicht alles. Köpfe schon. Zahlen Sie für die Republik
-                hier den Betrag, der für Sie stimmt.
+                Geld ist nicht alles. Köpfe schon. Zahlen Sie für ein Jahr
+                Republik hier den Betrag, der für Sie stimmt.
               </p>
               <p {...styles.text}>
                 Möglich ist das, weil Sie von einem unserer Mitglieder
