@@ -2,7 +2,7 @@
 
 ## Adding an icon
 
-To add an icon, simply add a `.svg` file into the `icons` folder.
+To add an icon, simply add a `.svg` file into the `svg` folder.
 Once you run the `build` script again, your icon will be ready to use.
 You can import it from the entrypoint generated from it's location within the icons
 folder. See the explanation below on how the imports are grouped.
