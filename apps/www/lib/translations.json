@@ -3322,7 +3322,7 @@
     },
     {
       "key": "article/actionbar/link/label/error",
-      "value": "Nicht unterstützt :("
+      "value": "Kopieren fehlgeschlagen"
     },
     {
       "key": "article/actionbar/fontSize/title",
@@ -7177,7 +7177,7 @@
     },
     {
       "key": "PodcastButtons/copy/error",
-      "value": "Nicht unterstützt :("
+      "value": "Kopieren fehlgeschlagen"
     },
     {
       "key": "PodcastButtons/spotify",
