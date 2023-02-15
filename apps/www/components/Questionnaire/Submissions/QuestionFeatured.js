@@ -43,7 +43,6 @@ export const QuestionLink = ({ question, additionalQuestion, children }) => {
           share: [question?.id, additionalQuestion?.id]
             .filter(Boolean)
             .join(QUESTION_SEPARATOR),
-          type: 'question',
         },
       }}
       passHref
