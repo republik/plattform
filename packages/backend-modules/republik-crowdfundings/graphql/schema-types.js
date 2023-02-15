@@ -12,6 +12,8 @@ extend type User {
   paymentSources: [PaymentSource!]! @deprecated(reason: "use \`defaultPaymentSource\` instead")
   defaultPaymentSource: PaymentSource
 
+  # Whether User has a dormant membership ligned up
+  hasDormantMembership: Boolean!
   # Custom-tailored packages available for User
   customPackages(crowdfundingName: String): [Package!]
   # Whether User is eligable to profit from additional BONUS periods
@@ -74,6 +76,7 @@ type Package {
 enum PackageGroup {
   ME
   GIVE
+  HIDDEN
 }
 
 type PackageOption {
@@ -90,6 +93,7 @@ type PackageOption {
   vat: Int!
   minUserPrice: Int!
   userPrice: Boolean!
+  autoPay: Boolean
 
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -101,7 +105,6 @@ type PackageOption {
   # for custom packages
   optionGroup: String
   membership: Membership
-  autoPay: Boolean
   additionalPeriods: [MembershipPeriod!]
 
   accessGranted: Boolean

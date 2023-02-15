@@ -1,0 +1,27 @@
+Guten Tag
+
+Kaum zu glauben, aber es ist tatsächlich schon der {{today}}.
+
+Das bedeutet: Am {{grace_end_date}} verlieren Ihre Zugangsdaten für das
+Republik-Magazin ihre Gültigkeit, da Ihr Mitstreiter-Abo ausgelaufen ist.
+
+Aber keine Sorge, so weit muss es nicht kommen. Sie können einfach ein neues
+Abonnement für das nächste Jahr (oder den nächsten Monat) abschliessen und
+weiter wie gewohnt die Republik lesen (oder hören):
+
+An Bord bleiben {{link_offers_overview}}
+
+Sollten Sie noch unsicher sein oder Fragen haben, dann nehmen Sie ungeniert mit
+uns Kontakt auf: Schreiben Sie an kontakt@republik.ch oder antworten Sie direkt
+auf diese E-Mail.
+
+Wir bedanken uns herzlich für das letzte Jahr, und es würde uns freuen, Sie für
+ein weiteres an Bord zu wissen!
+
+Ihre Crew der Republik
+
+
+Republik AG
+Sihlhallenstrasse 1, CH-8004 Zürich
+{{frontend_base_url}}
+kontakt@republik.ch

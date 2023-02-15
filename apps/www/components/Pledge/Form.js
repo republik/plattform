@@ -170,7 +170,6 @@ class Pledge extends Component {
     return pkg
   }
   submitPledgeProps({ values, query, pledge }) {
-    const { customMe } = this.props
     const pkg = this.getPkg({ query })
     const userPrice = !!query.userPrice
 
@@ -201,15 +200,9 @@ class Pledge extends Component {
             price: option.price,
             templateId: option.templateId,
             membershipId: option.membership ? option.membership.id : undefined,
-            /* ToDo: move logic to backend? */
-            autoPay:
-              option.reward &&
-              option.reward.__typename === 'MembershipType' &&
-              pkg.group !== 'GIVE' &&
-              (!option.membership ||
-                option.membership.user.id === (customMe && customMe.id))
-                ? true /* ToDo: check base pledge value once supported in backend */
-                : undefined,
+            autoPay: [true, false].includes(option.autoPay)
+              ? option.autoPay
+              : undefined,
           }
         })
       : []
@@ -220,7 +213,7 @@ class Pledge extends Component {
       packageName: pkg ? pkg.name : undefined,
       forceAutoPay: pkg ? pkg.name === 'MONTHLY_ABO' : undefined,
       requiresStatutes: pkg
-        ? pkg.name !== 'MONTHLY_ABO' && pkg.name !== 'DONATE'
+        ? !['YEARLY_ABO', 'MONTHLY_ABO', 'DONATE'].includes(pkg.name)
         : undefined,
       paymentMethods: pkg ? pkg.paymentMethods : undefined,
       total: values.price || undefined,
@@ -435,6 +428,9 @@ class Pledge extends Component {
                       ownMembership={ownMembership}
                       customMe={customMe}
                       userPrice={userPrice}
+                      fixedPrice={['MONTHLY_ABO', 'YEARLY_ABO'].includes(
+                        pkg.name,
+                      )}
                       pkg={pkg}
                       packages={packages}
                       onChange={(fields) => {
@@ -444,7 +440,9 @@ class Pledge extends Component {
                   ) : (
                     <Accordion
                       crowdfundingName={crowdfundingName}
-                      packages={packages}
+                      packages={packages.filter(
+                        ({ group }) => group !== 'HIDDEN',
+                      )}
                       group={queryGroup}
                       extended
                     />
@@ -506,6 +504,7 @@ const query = gql`
           id
           price
           userPrice
+          autoPay
           minAmount
           maxAmount
           defaultAmount
@@ -554,6 +553,7 @@ const query = gql`
           id
           price
           userPrice
+          autoPay
           minAmount
           maxAmount
           defaultAmount

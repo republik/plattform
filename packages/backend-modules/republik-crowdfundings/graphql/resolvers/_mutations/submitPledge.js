@@ -234,15 +234,6 @@ module.exports = async (_, args, context) => {
     // calculate donation
     const pledgeRegularTotal = regularTotal(pledgeOptions, packageOptions)
     const donation = pledge.total - pledgeRegularTotal
-    // check reason
-    if (donation < 0 && !pledge.reason) {
-      logger.error('you must provide a reason for reduced pledges', {
-        req: req._log(),
-        args,
-        donation,
-      })
-      throw new Error(t('api/pledge/reason'))
-    }
 
     // email address check
     if (pledge.user?.email && !validator.isEmail(pledge.user.email)) {

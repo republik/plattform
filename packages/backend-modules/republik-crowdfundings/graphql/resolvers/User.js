@@ -93,6 +93,28 @@ module.exports = {
     }
     return null
   },
+  async hasDormantMembership(user, args, context) {
+    const { pgdb, user: me } = context
+    debug('hasDormantMembership')
+
+    Roles.ensureUserIsMeOrInRoles(user, me, ['admin', 'supporter'])
+
+    const cache = createMembershipCache(user, 'hasDormantMembership', context)
+
+    return cache.cache(async function () {
+      const memberships = findEligableMemberships({
+        memberships: await resolveMemberships({
+          memberships: await pgdb.public.memberships.find({
+            userId: user.id,
+          }),
+          pgdb,
+        }),
+        user,
+      })
+
+      return hasDormantMembership({ user, memberships })
+    })
+  },
   async prolongBeforeDate(
     user,
     { ignoreClaimedMemberships = false, ignoreAutoPayFlag = false },

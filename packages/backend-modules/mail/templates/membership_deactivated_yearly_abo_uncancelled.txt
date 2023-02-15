@@ -1,0 +1,37 @@
+Guten Tag
+
+Vielleicht ist es Ihnen aufgefallen: Wir haben uns in den letzten Wochen
+mehrfach bei Ihnen gemeldet und Sie per E-Mail darauf hingewiesen, dass Ihr
+Abonnement bei der Republik bald ausläuft. Leider haben wir nichts gehört von
+Ihnen. Deshalb verlieren Ihre Zugangsdaten ab sofort leider ihre Gültigkeit.
+
+Alles bloss ein blödes Missverständnis? Sie haben die E-Mails schlicht
+übersehen, Ihr Internet war kaputt oder Sie waren mit anderen Dingen
+beschäftigt?
+
+Kein Problem, hier entlang:
+
+Jetzt an Bord bleiben {{link_offers_overview}}
+
+Sollten Sie aus finanziellen Gründen zögern: Am Preis soll es nicht liegen.
+Journalismus kostet zwar, doch wir wollen niemanden ausschliessen. Wenn Sie
+einen finanziellen Engpass haben sollten, können Sie eine Mitgliedschaft zu
+einem tieferen Preis abschliessen {{link_offer_reduced}} .
+
+Vielleicht liegt das Missverständnis auch auf unserer Seite: Sollte uns ein
+Fehler unterlaufen sein, nehmen Sie bitte so schnell wie möglich Kontakt mit uns
+auf: kontakt@republik.ch .
+
+Wir würden uns freuen, Sie ein weiteres Jahr an Bord zu wissen. Und wenn Sie
+sich doch dagegen entscheiden, dann sehen wir uns vielleicht zu einem späteren
+Zeitpunkt wieder {{link_offers_overview}}.
+
+Herzlich
+
+Ihre Crew der Republik
+
+
+Republik AG
+Sihlhallenstrasse 1, CH-8004 Zürich
+{{frontend_base_url}}
+kontakt@republik.ch
