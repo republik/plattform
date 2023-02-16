@@ -28,12 +28,18 @@ const Popover = ({ expanded, id, children }) => {
     <div
       {...css({
         top: HEADER_HEIGHT_MOBILE,
-        height: `calc(100vh - ${HEADER_HEIGHT_MOBILE}px)`,
+        height: [
+          `calc(100dvh - ${HEADER_HEIGHT_MOBILE}px)`,
+          `calc(100vh - ${HEADER_HEIGHT_MOBILE}px)`,
+        ],
         borderTopWidth: 1,
         borderTopStyle: 'solid',
         [mediaQueries.mUp]: {
           top: HEADER_HEIGHT,
-          height: `calc(100vh - ${HEADER_HEIGHT}px)`,
+          height: [
+            `calc(100dvh - ${HEADER_HEIGHT}px)`,
+            `calc(100vh - ${HEADER_HEIGHT}px)`,
+          ],
         },
       })}
       {...colorScheme.set('borderColor', 'divider')}
