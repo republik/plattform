@@ -9,7 +9,7 @@ import dts from 'vite-plugin-dts'
 // While providing a separate entry point for each sub-folder as well.
 const entryObject = Object.fromEntries(
   glob
-    .sync(path.resolve(__dirname, 'dist/components') + '/**/index.ts')
+    .sync(path.resolve(__dirname, 'lib/components') + '/**/index.ts')
     .map((file) => [
       // This remove `src/` as well as the file extension from each
       // file, so e.g. src/nested/foo.js becomes nested/foo
@@ -22,14 +22,15 @@ const entryObject = Object.fromEntries(
       fileURLToPath(new URL(file, import.meta.url)),
     ])
     .map((keyVal) => {
+      console.log(keyVal)
       const key = keyVal[0]
-        .replace(/\.\.\/dist\/components\//, '')
+        .replace(/components\//, '')
         .replace(/\/index$/, '')
         // Transform 'md/md' to 'mdMd'
         .replace(/\/[a-zA-Z0-9]{1}/, (chars) => chars[1].toUpperCase())
 
       return [
-        key === 'index' ? 'base' : key, // special case for root index.ts
+        key.length === 0 ? 'index' : key, // special case for root index.ts
         keyVal[1],
       ]
     }),
@@ -43,12 +44,14 @@ export default defineConfig({
     react(),
     dts({
       insertTypesEntry: true,
+      outputDir: 'dist/types',
     }),
   ],
   build: {
     lib: {
       entry: entryObject,
       name: 'RepublikIcons',
+      formats: ['es'],
     },
     rollupOptions: {
       external: ['react', 'react-dom', 'react/jsx-runtime'],

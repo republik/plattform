@@ -3,23 +3,12 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "types": "dist/index.d.ts",
-  "main": "./dist/republik-icons.umd.cjs",
-  "module": "./dist/republik-icons.js",
-  "exports": {
-    ".": {
-      "import": "./dist/base.js",
-      "require": "./dist/base.cjs"
-    },
-    "./*": {
-      "import": "./dist/*.js",
-      "require": "./dist/*.cjs",
-      "types": "./dist/*.d.ts"
-    }
-  },
+  "types": "dist/types/index.d.ts",
+  "main": "dist/index.js",
+  "files": ["dist"],
   "scripts": {
-    "generate:icons": "svgr --typescript --icon --replace-attr-values '#000=currentColor' --out-dir ./dist/components ./lib/svg",
-    "dev": "vite",
+    "generate:icons": "svgr --typescript --icon --replace-attr-values '#000=currentColor' --out-dir ./lib/components ./lib/svg",
+    "dev": "nodemon --watch lib/svg --exec 'yarn build'",
     "build": "yarn generate:icons && tsc && vite build"
   },
   "devDependencies": {
