@@ -8,6 +8,7 @@ import {
   TeaserCarouselTileContainer,
   TeaserCarouselTile,
   TeaserCarouselHeadline,
+  TeaserCarouselLead,
   inQuotes,
   Chart,
   Interaction,
@@ -66,7 +67,11 @@ export const AnswersChart = ({ question, additionalQuestion, skipTitle }) => {
     answer: bucket.option.label,
     value: String(bucket.count / totalAnswers),
   }))
-  console.log(values)
+
+  const colorMap = {}
+  question.result.forEach(
+    (bucket, index) => (colorMap[bucket.option.label] = COLORS[index]),
+  )
   return (
     <div style={{ marginTop: 20 }}>
       {!skipTitle && <Interaction.H2>{question.text}</Interaction.H2>}
@@ -77,7 +82,7 @@ export const AnswersChart = ({ question, additionalQuestion, skipTitle }) => {
             numberFormat: '.0%',
             y: 'answer',
             showBarValues: true,
-            colorRange: COLORS,
+            colorMap: colorMap,
             color: 'answer',
             colorSort: 'none',
           }}
@@ -100,7 +105,7 @@ export const AnswersChart = ({ question, additionalQuestion, skipTitle }) => {
   )
 }
 
-const AnswersCarousel = ({ slug, question, additionalQuestion, bgColor }) => {
+const AnswersCarousel = ({ slug, question, additionalQuestion }) => {
   const { loading, error, data } = useQuery(QUESTIONNAIRE_SUBMISSIONS_QUERY, {
     variables: {
       slug,
@@ -128,7 +133,7 @@ const AnswersCarousel = ({ slug, question, additionalQuestion, bgColor }) => {
             <Interaction.H2>{question.text}</Interaction.H2>
 
             <Breakout size='breakout'>
-              <TeaserCarousel outline>
+              <TeaserCarousel>
                 <TeaserCarouselTileContainer>
                   {targetedAnswers.map(({ answers, displayAuthor }) => (
                     <PersonLink

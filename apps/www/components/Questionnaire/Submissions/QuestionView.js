@@ -8,6 +8,7 @@ import {
   Loader,
   Breakout,
   Editorial,
+  fontStyles,
 } from '@project-r/styleguide'
 
 import { css } from 'glamor'
@@ -61,7 +62,6 @@ const QuestionView = ({ slug, questionIds, extract, share = {} }) => {
   const { t } = useTranslation()
   const router = useRouter()
   const pathname = router.asPath.split('?')[0]
-  console.log(pathname)
   const { loading, error, data, fetchMore } = useQuery(
     QUESTIONNAIRE_SUBMISSIONS_QUERY,
     {
@@ -90,6 +90,14 @@ const QuestionView = ({ slug, questionIds, extract, share = {} }) => {
   if (extract) {
     return <ShareImageSplit question={mainQuestion} {...share} />
   }
+
+  const isChoiceQuestion = mainQuestion?.__typename === 'QuestionTypeChoice'
+
+  const colorMap = {}
+  isChoiceQuestion &&
+    mainQuestion.result.forEach(
+      (bucket, index) => (colorMap[bucket.option.value] = COLORS[index]),
+    )
 
   return (
     <>
@@ -124,11 +132,15 @@ const QuestionView = ({ slug, questionIds, extract, share = {} }) => {
               >
                 <Interaction.H2>
                   {mainQuestion.text}
-                  {!!addQuestion && ' ' + addQuestion.text}
+                  {!isChoiceQuestion && !!addQuestion && ' ' + addQuestion.text}
                 </Interaction.H2>
 
-                {mainQuestion?.__typename === 'QuestionTypeChoice' && (
-                  <AnswersChart question={mainQuestion} skipTitle={true} />
+                {isChoiceQuestion && (
+                  <>
+                    <AnswersChart question={mainQuestion} skipTitle={true} />
+                    <br />
+                    <Interaction.H2>{addQuestion.text}</Interaction.H2>
+                  </>
                 )}
 
                 <Breakout size='breakout'>
@@ -140,62 +152,74 @@ const QuestionView = ({ slug, questionIds, extract, share = {} }) => {
                       >
                         <div {...styles.answerCard}>
                           <Editorial.P attributes={{}}>
-                            {answers.map((answer, idx) => {
-                              const colorIndex =
-                                mainQuestion?.__typename ===
-                                  'QuestionTypeChoice' &&
-                                mainQuestion.options
-                                  .map((d) => d.value)
-                                  .indexOf(answer.payload.value[0])
-
-                              return (
-                                <div
-                                  style={{
-                                    position: 'relative',
-                                    color: '#000',
-                                  }}
-                                  key={answer.id}
-                                >
-                                  {answer?.question?.__typename !==
-                                    'QuestionTypeChoice' && (
-                                    <div
-                                      style={{
-                                        paddingTop: colorIndex ? '20px' : 0,
-                                      }}
-                                    >
-                                      <AnswerText
-                                        text={answer.payload.text}
-                                        value={answer.payload.value}
-                                        question={currentQuestions[idx]}
-                                      />
-                                      <br />
-                                      <br />
-                                    </div>
-                                  )}
-
-                                  {mainQuestion?.__typename ===
-                                    'QuestionTypeChoice' &&
-                                    idx < 1 && (
-                                      <div
-                                        {...styles.colorBar}
-                                        style={{
-                                          backgroundColor:
-                                            colorIndex !== -1
-                                              ? COLORS[colorIndex]
-                                              : undefined,
-                                        }}
-                                      />
-                                    )}
-                                </div>
-                              )
-                            })}
-                            <em
-                              style={{
-                                color: '#000',
-                              }}
+                            <div
+                              {...(!isChoiceQuestion &&
+                                styles.answerCardContent)}
                             >
-                              – {displayAuthor.name}
-                            </em>
+                              {answers.map((answer, idx) => {
+                                return (
+                                  <div key={answer.id}>
+                                    {isChoiceQuestion && idx === 0 && (
+                                      <div
+                                        {...styles.circleLabel}
+                                        style={{
+                                          color:
+                                            colorMap[answer?.payload?.value],
+                                        }}
+                                      >
+                                        <span
+                                          {...styles.circle}
+                                          style={{
+                                            backgroundColor:
+                                              colorMap[answer?.payload?.value],
+                                          }}
+                                        />
+                                        <AnswerText
+                                          text={answer.payload.text}
+                                          value={answer.payload.value}
+                                          question={currentQuestions[idx]}
+                                        />
+                                      </div>
+                                    )}
+                                    {isChoiceQuestion && idx === 0 ? (
+                                      ''
+                                    ) : (
+                                      <div
+                                        {...(isChoiceQuestion &&
+                                          styles.answerCardContent)}
+                                      >
+                                        <AnswerText
+                                          text={answer.payload.text}
+                                          value={answer.payload.value}
+                                          question={currentQuestions[idx]}
+                                        />
+                                        <br />
+                                        <br />
+
+                                        {isChoiceQuestion && (
+                                          <em
+                                            style={{
+                                              color: '#282828',
+                                            }}
+                                          >
+                                            – {displayAuthor.name}
+                                          </em>
+                                        )}
+                                      </div>
+                                    )}
+                                  </div>
+                                )
+                              })}
+                              {!isChoiceQuestion && (
+                                <em
+                                  style={{
+                                    color: '#282828',
+                                  }}
+                                >
+                                  – {displayAuthor.name}
+                                </em>
+                              )}
+                            </div>
                           </Editorial.P>
                         </div>
                       </PersonLink>
@@ -246,13 +270,25 @@ const styles = {
   }),
   answerCard: css({
     cursor: 'pointer',
+    breakInside: 'avoid',
+  }),
+  answerCardContent: css({
     padding: '15px',
     marginBottom: '20px',
     borderRadius: '10px',
     backgroundColor: '#FFF',
-    color: '#000',
-    breakInside: 'avoid',
+    color: '#282828',
     overflowWrap: 'break-word',
     hyphens: 'manual',
+  }),
+  circleLabel: css({
+    ...fontStyles.sansSerifRegular16,
+  }),
+  circle: css({
+    display: 'inline-block',
+    borderRadius: '50%',
+    width: '10px',
+    height: '10px',
+    marginRight: 5,
   }),
 }
