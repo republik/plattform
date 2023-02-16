@@ -6,6 +6,8 @@ import {
   InlineSpinner,
   Interaction,
   Loader,
+  Breakout,
+  Editorial,
 } from '@project-r/styleguide'
 
 import { css } from 'glamor'
@@ -119,105 +121,86 @@ const QuestionView = ({ slug, questionIds, extract, share = {} }) => {
                 }}
                 ref={containerRef}
               >
-                <Interaction.H2>{mainQuestion.text}</Interaction.H2>
+                <Interaction.H2>
+                  {mainQuestion.text}
+                  {!!addQuestion && ' ' + addQuestion.text}
+                </Interaction.H2>
 
                 {mainQuestion?.__typename === 'QuestionTypeChoice' && (
                   <AnswersChart question={mainQuestion} skipTitle={true} />
                 )}
 
-                {!!addQuestion && (
-                  <Interaction.H2 style={{ marginTop: 30 }}>
-                    {addQuestion.text}
-                  </Interaction.H2>
-                )}
-
-                <div
-                  style={{
-                    marginTop: 50,
-                    display: 'flex',
-                    flexWrap: 'wrap',
-                    alignItems: 'flex-start',
-                    gap: '1rem',
-                  }}
-                >
-                  {targetAnswers.map(({ answers, displayAuthor }) => (
-                    <PersonLink
-                      key={displayAuthor.slug}
-                      displayAuthor={displayAuthor}
-                    >
-                      <div
-                        style={{
-                          cursor: 'pointer',
-                          padding: '10px',
-                          marginBottom: '20px',
-                          borderRadius: '10px',
-                          backgroundColor: '#FFF',
-                          color: '#000',
-                          flex: '1 auto',
-                        }}
+                <Breakout size='breakout'>
+                  <div {...styles.answerGrid}>
+                    {targetAnswers.map(({ answers, displayAuthor }) => (
+                      <PersonLink
+                        key={displayAuthor.slug}
+                        displayAuthor={displayAuthor}
                       >
-                        <Interaction.P attributes={{}}>
-                          {answers.map((answer, idx) => {
-                            const colorIndex =
-                              mainQuestion?.__typename ===
-                                'QuestionTypeChoice' &&
-                              mainQuestion.options
-                                .map((d) => d.value)
-                                .indexOf(answer.payload.value[0])
-
-                            return (
-                              <div
-                                style={{
-                                  position: 'relative',
-                                  color: '#000',
-                                }}
-                                key={answer.id}
-                              >
-                                {answer?.question?.__typename !==
-                                  'QuestionTypeChoice' && (
-                                  <div
-                                    style={{
-                                      paddingTop: colorIndex ? '20px' : 0,
-                                    }}
-                                  >
-                                    <AnswerText
-                                      text={answer.payload.text}
-                                      value={answer.payload.value}
-                                      question={currentQuestions[idx]}
-                                    />
-                                    <br />
-                                    <br />
-                                  </div>
-                                )}
-
-                                {mainQuestion?.__typename ===
+                        <div {...styles.answerCard}>
+                          <Editorial.P attributes={{}}>
+                            {answers.map((answer, idx) => {
+                              const colorIndex =
+                                mainQuestion?.__typename ===
                                   'QuestionTypeChoice' &&
-                                  idx < 1 && (
+                                mainQuestion.options
+                                  .map((d) => d.value)
+                                  .indexOf(answer.payload.value[0])
+
+                              return (
+                                <div
+                                  style={{
+                                    position: 'relative',
+                                    color: '#000',
+                                  }}
+                                  key={answer.id}
+                                >
+                                  {answer?.question?.__typename !==
+                                    'QuestionTypeChoice' && (
                                     <div
-                                      {...styles.colorBar}
                                       style={{
-                                        backgroundColor:
-                                          colorIndex !== -1
-                                            ? COLORS[colorIndex]
-                                            : undefined,
+                                        paddingTop: colorIndex ? '20px' : 0,
                                       }}
-                                    />
+                                    >
+                                      <AnswerText
+                                        text={answer.payload.text}
+                                        value={answer.payload.value}
+                                        question={currentQuestions[idx]}
+                                      />
+                                      <br />
+                                      <br />
+                                    </div>
                                   )}
-                              </div>
-                            )
-                          })}
-                          <em
-                            style={{
-                              color: '#000',
-                            }}
-                          >
-                            – {displayAuthor.name}
-                          </em>
-                        </Interaction.P>
-                      </div>
-                    </PersonLink>
-                  ))}
-                </div>
+
+                                  {mainQuestion?.__typename ===
+                                    'QuestionTypeChoice' &&
+                                    idx < 1 && (
+                                      <div
+                                        {...styles.colorBar}
+                                        style={{
+                                          backgroundColor:
+                                            colorIndex !== -1
+                                              ? COLORS[colorIndex]
+                                              : undefined,
+                                        }}
+                                      />
+                                    )}
+                                </div>
+                              )
+                            })}
+                            <em
+                              style={{
+                                color: '#000',
+                              }}
+                            >
+                              – {displayAuthor.name}
+                            </em>
+                          </Editorial.P>
+                        </div>
+                      </PersonLink>
+                    ))}
+                  </div>
+                </Breakout>
                 <div style={{ marginTop: 10 }}>
                   {loadingMoreError && (
                     <ErrorMessage error={loadingMoreError} />
@@ -255,29 +238,20 @@ const styles = {
     width: '20%',
     borderTopLeftRadius: '2px',
   }),
-}
-
-const gridStyles = {
-  container: css({
-    maxWidth: '1600px',
-    margin: '20px auto 0',
-    padding: '0 60px',
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(170px, 1fr))',
-    gridTemplateRows: 'auto',
-    gridAutoFlow: 'row dense',
+  answerGrid: css({
+    marginTop: 50,
+    columnWidth: '300px',
     gap: '1rem',
   }),
-  card: css({
-    background: 'transparent',
-    width: '100%',
-    height: '100%',
-    gridRowEnd: 'span 1',
-    gridColumnEnd: 'span 1',
+  answerCard: css({
     cursor: 'pointer',
-    transition: 'transform .3s ease-in-out',
-    ':hover': {
-      transform: 'scale(1.03) !important',
-    },
+    padding: '15px',
+    marginBottom: '20px',
+    borderRadius: '10px',
+    backgroundColor: '#FFF',
+    color: '#000',
+    breakInside: 'avoid',
+    overflowWrap: 'break-word',
+    hyphens: 'manual',
   }),
 }
