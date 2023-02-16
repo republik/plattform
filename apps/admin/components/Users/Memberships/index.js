@@ -445,16 +445,6 @@ const Index = ({ userId }) => {
               return (
                 <Section>
                   <SectionTitle>Memberships</SectionTitle>
-                  <div style={{ marginBottom: 20 }}>
-                    <A
-                      href={`${REPUBLIK_FRONTEND_URL}/angebote?package=PROLONG&token=${accessToken}`}
-                      target='_blank'
-                    >
-                      Verlängerungs-Link ohne Anmelden
-                    </A>
-                    <br />
-                    <Label>In einem neuen, privaten Fenster öffnen.</Label>
-                  </div>
                   <table {...tableStyles.table}>
                     <colgroup>
                       <col style={{ width: '50%' }} />
