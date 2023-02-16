@@ -3,6 +3,8 @@ export const climateColors = {
     default: '#5A47E1',
     text: '#FFFFFF',
     textSoft: '#FFFFFF',
+    primary: '#0ED2DB',
+    primaryHover: '#0DA9B0',
     primaryText: '#000000',
     logo: '#FFFFFF',
     climateBorder: '#000000',

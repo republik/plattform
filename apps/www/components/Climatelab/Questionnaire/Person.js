@@ -4,7 +4,14 @@ import { useQuery } from '@apollo/client'
 import { gql } from 'graphql-tag'
 import { useRouter } from 'next/router'
 
-import { Loader, Editorial, ShareIcon, IconButton } from '@project-r/styleguide'
+import {
+  Loader,
+  Editorial,
+  ShareIcon,
+  IconButton,
+  Center,
+  Button,
+} from '@project-r/styleguide'
 
 import { ASSETS_SERVER_BASE_URL, PUBLIC_BASE_URL } from '../../../lib/constants'
 import { trackEvent } from '../../../lib/matomo'
@@ -20,6 +27,9 @@ import {
   SubmissionAuthor,
   SubmissionQa,
 } from '../../Questionnaire/Submissions/Submission'
+
+import { climateColors } from '../config'
+import { useMe } from '../../../lib/context/MeContext'
 
 const QUESTIONNAIRE_SLUG = 'sommer22'
 const SHARE_IMG_URL =
@@ -88,6 +98,11 @@ const ShareQuestionnaire = ({ meta }) => {
 const Questionnaire = ({ userId, meta }) => {
   const router = useRouter()
   const pathname = router.asPath.split('?')[0]
+  const baseUrl = router.asPath.split('/')[0]
+  console.log(baseUrl)
+  const { me } = useMe()
+
+  console.log(me)
 
   const { loading, error, data } = useQuery(QUESTIONNAIRE_SUBMISSIONS_QUERY, {
     variables: {
@@ -108,6 +123,8 @@ const Questionnaire = ({ userId, meta }) => {
 
         const submission = results.nodes[0]
 
+        console.log(submission)
+
         return (
           <div>
             <SubmissionAuthor
@@ -118,7 +135,7 @@ const Questionnaire = ({ userId, meta }) => {
             >
               <ShareQuestionnaire meta={meta} />
             </SubmissionAuthor>
-            {submission.answers.nodes.map(
+            {submission?.answers?.nodes.map(
               ({ id, question: { id: qid }, payload }) => {
                 const question = questions.find((q) => q.id === qid)
                 return (
@@ -130,6 +147,30 @@ const Questionnaire = ({ userId, meta }) => {
                 )
               },
             )}
+            <div
+              style={{
+                marginTop: 50,
+                display: 'flex',
+                gap: '1rem',
+                flexWrap: 'wrap',
+              }}
+            >
+              {/* TODO: me abfragen und nur dann Fragebogen anzeigen, Link zu Zur Übersicht */}
+              <Button
+                onClick={() => {
+                  router.replace('2023/02/13/klimafragebogen-fragen')
+                }}
+              >
+                Fragebogen bearbeiten
+              </Button>
+              <Button
+                onClick={() => {
+                  router.replace(baseUrl)
+                }}
+              >
+                Zur Übersicht
+              </Button>
+            </div>
           </div>
         )
       }}
@@ -168,7 +209,7 @@ const Page = () => {
   }
 
   return (
-    <Frame>
+    <Frame customContentColorContext={climateColors}>
       <Loader
         loading={loading}
         error={error}
@@ -186,11 +227,11 @@ const Page = () => {
           }
 
           return (
-            <div>
+            <Center>
               <Meta data={meta} />
               <Editorial.Headline>Klimafragebogen</Editorial.Headline>
               <Questionnaire userId={user?.id || slug} meta={meta} />
-            </div>
+            </Center>
           )
         }}
       />

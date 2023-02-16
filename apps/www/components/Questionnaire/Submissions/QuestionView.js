@@ -61,6 +61,7 @@ const QuestionView = ({ slug, questionIds, extract, share = {} }) => {
   const { t } = useTranslation()
   const router = useRouter()
   const pathname = router.asPath.split('?')[0]
+  console.log(pathname)
   const { loading, error, data, fetchMore } = useQuery(
     QUESTIONNAIRE_SUBMISSIONS_QUERY,
     {
