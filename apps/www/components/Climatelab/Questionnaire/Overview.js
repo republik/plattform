@@ -39,7 +39,6 @@ const AllQuestionsView = ({ slug, extract }) => {
               question={questions[0]}
               additionalQuestion={questions[1]}
               slug={slug}
-              bgColor={'#FFFFC8'}
             />
             <div style={{ marginTop: 60 }}>
               <Editorial.P>
@@ -61,11 +60,7 @@ const AllQuestionsView = ({ slug, extract }) => {
                 </Editorial.UL>
               </Editorial.P>
             </div>
-            <QuestionFeatured
-              question={questions[16]}
-              slug={slug}
-              bgColor={'#FFFFC8'}
-            />
+            <QuestionFeatured question={questions[16]} slug={slug} />
             <QuestionFeatured
               question={questions[31]}
               additionalQuestion={questions[32]}

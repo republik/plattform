@@ -119,9 +119,6 @@ const Questionnaire = ({ userId, meta }) => {
 
         const submission = results.nodes[0]
 
-        console.log(me)
-        console.log(submission)
-
         // FIXME: how can i check whether if submission is from the user that currently looks at this submission?
 
         // const isOwnQuestionnaire = me.slug === submission.slug
