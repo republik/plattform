@@ -224,29 +224,31 @@ const InviteSenderPage = ({ me }: { me: MeObjectType }) => {
                   <div {...styles.inviteActionWrapper}>
                     <div {...styles.inviteLinkBox}>
                       <span {...styles.inviteLinkBoxText}>{inviteLink}</span>
-                      {copyToClipboard.state === undefined ? (
-                        <IconButton
-                          onClick={() => copyToClipboard.copy(inviteLink)}
-                          Icon={CopyToClippboardIcon}
-                          title='Link kopieren'
-                          fill='currentColor'
-                          size={20}
-                        />
-                      ) : (
-                        <span
-                          style={{
-                            whiteSpace: 'nowrap',
-                          }}
-                        >
-                          {t(
-                            `article/actionbar/link/label${
-                              copyToClipboard.state
-                                ? `/${copyToClipboard.state}`
-                                : ''
-                            }`,
-                          )}
-                        </span>
-                      )}
+                      {!inNativeApp ? (
+                        copyToClipboard.state === undefined ? (
+                          <IconButton
+                            onClick={() => copyToClipboard.copy(inviteLink)}
+                            Icon={CopyToClippboardIcon}
+                            title='Link kopieren'
+                            fill='currentColor'
+                            size={20}
+                          />
+                        ) : (
+                          <span
+                            style={{
+                              whiteSpace: 'nowrap',
+                            }}
+                          >
+                            {t(
+                              `article/actionbar/link/label${
+                                copyToClipboard.state
+                                  ? `/${copyToClipboard.state}`
+                                  : ''
+                              }`,
+                            )}
+                          </span>
+                        )
+                      ) : null}
                     </div>
                     <div {...styles.buttonWrapper}>
                       <Button
