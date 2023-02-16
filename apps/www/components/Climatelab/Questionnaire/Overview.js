@@ -29,7 +29,12 @@ const AllQuestionsView = ({ slug, extract }) => {
 
         return (
           <div style={{ margin: '0 auto' }}>
-            <QuestionFeatured question={questions[6]} slug={slug} />
+            {/* FIXME: i know this looks really bad, but once we have the real questions in, we should take a look again. 
+            The idea (my idea, maybe a bad one) was to display to charts at the beginning */}
+            <div style={{ display: 'flex', gap: '1rem' }}>
+              <QuestionFeatured question={questions[6]} slug={slug} />
+              <QuestionFeatured question={questions[31]} slug={slug} />
+            </div>
             <QuestionFeatured
               question={questions[0]}
               additionalQuestion={questions[1]}

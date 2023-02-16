@@ -66,6 +66,7 @@ export const AnswersChart = ({ question, additionalQuestion, skipTitle }) => {
     answer: bucket.option.label,
     value: String(bucket.count / totalAnswers),
   }))
+  console.log(values)
   return (
     <div style={{ marginTop: 20 }}>
       {!skipTitle && <Interaction.H2>{question.text}</Interaction.H2>}
@@ -182,6 +183,7 @@ export const QuestionFeatured = ({
         marginTop: 60,
         marginBottom: 20,
         paddingTop: 20,
+        flexBasis: '50%',
       }}
     >
       {question.__typename === 'QuestionTypeText' && (

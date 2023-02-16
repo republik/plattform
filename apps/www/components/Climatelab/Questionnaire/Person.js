@@ -97,13 +97,9 @@ const ShareQuestionnaire = ({ meta }) => {
 
 const Questionnaire = ({ userId, meta }) => {
   const router = useRouter()
+  // FIXME: not sure about this pathname, the url has no ? in it
   const pathname = router.asPath.split('?')[0]
-  const baseUrl = router.asPath.split('/')[0]
-  console.log(baseUrl)
   const { me } = useMe()
-
-  console.log(me)
-
   const { loading, error, data } = useQuery(QUESTIONNAIRE_SUBMISSIONS_QUERY, {
     variables: {
       slug: QUESTIONNAIRE_SLUG,
@@ -123,7 +119,14 @@ const Questionnaire = ({ userId, meta }) => {
 
         const submission = results.nodes[0]
 
+        console.log(me)
         console.log(submission)
+
+        // FIXME: how can i check whether if submission is from the user that currently looks at this submission?
+
+        // const isOwnQuestionnaire = me.slug === submission.slug
+
+        // console.log(isOwnQuestionnaire)
 
         return (
           <div>
@@ -147,30 +150,20 @@ const Questionnaire = ({ userId, meta }) => {
                 )
               },
             )}
-            <div
-              style={{
-                marginTop: 50,
-                display: 'flex',
-                gap: '1rem',
-                flexWrap: 'wrap',
+
+            {/* FIXME: me abfragen und nur dann Fragebogen anzeigen, Link zu Zur Übersicht, Link hardcoded */}
+            <Editorial.A href='/2023/02/13/klimafragebogen-fragen'>
+              Fragebogen bearbeiten
+            </Editorial.A>
+            <br />
+            <br />
+            <Button
+              onClick={() => {
+                router.replace('/klimafragebogen')
               }}
             >
-              {/* TODO: me abfragen und nur dann Fragebogen anzeigen, Link zu Zur Übersicht */}
-              <Button
-                onClick={() => {
-                  router.replace('2023/02/13/klimafragebogen-fragen')
-                }}
-              >
-                Fragebogen bearbeiten
-              </Button>
-              <Button
-                onClick={() => {
-                  router.replace(baseUrl)
-                }}
-              >
-                Zur Übersicht
-              </Button>
-            </div>
+              Zur Übersicht
+            </Button>
           </div>
         )
       }}
