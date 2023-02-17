@@ -2303,6 +2303,16 @@
       "fr": "Adhésion annuelle"
     },
     {
+      "key": "package/PROLONG/title",
+      "de": "Unterstützung weiterführen",
+      "fr": "Continuer à soutenir"
+    },
+    {
+      "key": "package/PROLONG/description",
+      "de": "Mit Ihrem jährlichen Beitrag sind Sie Mitglied des Vereins Lobbywatch.ch.",
+      "fr": "Avec votre cotisation annuelle, vous devenez membre de l'association Lobbywatch.ch."
+    },
+    {
       "key": "payment/insecure",
       "de": "Unsichere Verbindung",
       "fr": "Connexion non sécurisée"
