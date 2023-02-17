@@ -8,12 +8,13 @@ import {
   TeaserCarouselTileContainer,
   TeaserCarouselTile,
   TeaserCarouselHeadline,
-  TeaserCarouselLead,
   inQuotes,
   Chart,
   Interaction,
   Editorial,
   Breakout,
+  ColorContextProvider,
+  colors,
 } from '@project-r/styleguide'
 
 import { QUESTIONNAIRE_SUBMISSIONS_QUERY } from './graphql'
@@ -135,28 +136,27 @@ const AnswersCarousel = ({ slug, question, additionalQuestion }) => {
             <Breakout size='breakout'>
               <TeaserCarousel>
                 <TeaserCarouselTileContainer>
-                  {targetedAnswers.map(({ answers, displayAuthor }) => (
-                    <PersonLink
-                      key={displayAuthor.slug}
-                      displayAuthor={displayAuthor}
-                    >
-                      <TeaserCarouselTile
-                        bgColor={'#fff'}
-                        color={'#000'}
-                        borderRadius={'10px'}
+                  <ColorContextProvider
+                    localColorVariables={colors}
+                    colorSchemeKey='light'
+                  >
+                    {targetedAnswers.map(({ answers, displayAuthor }) => (
+                      <PersonLink
+                        key={displayAuthor.slug}
+                        displayAuthor={displayAuthor}
                       >
-                        <TeaserCarouselHeadline.Editorial>
-                          {inQuotes(answers[0].payload.value)}
-                        </TeaserCarouselHeadline.Editorial>
+                        <TeaserCarouselTile borderRadius={'10px'}>
+                          <TeaserCarouselHeadline.Editorial>
+                            {inQuotes(answers[0].payload.value)}
+                          </TeaserCarouselHeadline.Editorial>
 
-                        <Editorial.Credit>
-                          <span style={{ color: '#000' }}>
+                          <Editorial.Credit>
                             Von {displayAuthor.name}
-                          </span>
-                        </Editorial.Credit>
-                      </TeaserCarouselTile>
-                    </PersonLink>
-                  ))}
+                          </Editorial.Credit>
+                        </TeaserCarouselTile>
+                      </PersonLink>
+                    ))}
+                  </ColorContextProvider>
                 </TeaserCarouselTileContainer>
               </TeaserCarousel>
             </Breakout>

@@ -9,6 +9,8 @@ import {
   Breakout,
   Editorial,
   fontStyles,
+  ColorContextProvider,
+  colors,
 } from '@project-r/styleguide'
 
 import { css } from 'glamor'
@@ -151,76 +153,68 @@ const QuestionView = ({ slug, questionIds, extract, share = {} }) => {
                         displayAuthor={displayAuthor}
                       >
                         <div {...styles.answerCard}>
-                          <Editorial.P attributes={{}}>
-                            <div
-                              {...(!isChoiceQuestion &&
-                                styles.answerCardContent)}
-                            >
-                              {answers.map((answer, idx) => {
-                                return (
-                                  <div key={answer.id}>
-                                    {isChoiceQuestion && idx === 0 && (
-                                      <div
-                                        {...styles.circleLabel}
-                                        style={{
-                                          color:
-                                            colorMap[answer?.payload?.value],
-                                        }}
-                                      >
-                                        <span
-                                          {...styles.circle}
+                          <ColorContextProvider
+                            localColorVariables={colors}
+                            colorSchemeKey='light'
+                          >
+                            <Editorial.P attributes={{}}>
+                              <div
+                                {...(!isChoiceQuestion &&
+                                  styles.answerCardContent)}
+                              >
+                                {answers.map((answer, idx) => {
+                                  return (
+                                    <div key={answer.id}>
+                                      {isChoiceQuestion && idx === 0 ? (
+                                        <div
+                                          {...styles.circleLabel}
                                           style={{
-                                            backgroundColor:
+                                            color:
                                               colorMap[answer?.payload?.value],
                                           }}
-                                        />
-                                        <AnswerText
-                                          text={answer.payload.text}
-                                          value={answer.payload.value}
-                                          question={currentQuestions[idx]}
-                                        />
-                                      </div>
-                                    )}
-                                    {isChoiceQuestion && idx === 0 ? (
-                                      ''
-                                    ) : (
-                                      <div
-                                        {...(isChoiceQuestion &&
-                                          styles.answerCardContent)}
-                                      >
-                                        <AnswerText
-                                          text={answer.payload.text}
-                                          value={answer.payload.value}
-                                          question={currentQuestions[idx]}
-                                        />
-                                        <br />
-                                        <br />
-
-                                        {isChoiceQuestion && (
-                                          <em
+                                        >
+                                          <span
+                                            {...styles.circle}
                                             style={{
-                                              color: '#282828',
+                                              backgroundColor:
+                                                colorMap[
+                                                  answer?.payload?.value
+                                                ],
                                             }}
-                                          >
-                                            – {displayAuthor.name}
-                                          </em>
-                                        )}
-                                      </div>
-                                    )}
-                                  </div>
-                                )
-                              })}
-                              {!isChoiceQuestion && (
-                                <em
-                                  style={{
-                                    color: '#282828',
-                                  }}
-                                >
-                                  – {displayAuthor.name}
-                                </em>
-                              )}
-                            </div>
-                          </Editorial.P>
+                                          />
+                                          <AnswerText
+                                            text={answer.payload.text}
+                                            value={answer.payload.value}
+                                            question={currentQuestions[idx]}
+                                          />
+                                        </div>
+                                      ) : (
+                                        <div
+                                          {...(isChoiceQuestion &&
+                                            styles.answerCardContent)}
+                                        >
+                                          <AnswerText
+                                            text={answer.payload.text}
+                                            value={answer.payload.value}
+                                            question={currentQuestions[idx]}
+                                          />
+                                          <br />
+                                          <br />
+
+                                          {isChoiceQuestion && (
+                                            <em>– {displayAuthor.name}</em>
+                                          )}
+                                        </div>
+                                      )}
+                                    </div>
+                                  )
+                                })}
+                                {!isChoiceQuestion && (
+                                  <em>– {displayAuthor.name}</em>
+                                )}
+                              </div>
+                            </Editorial.P>
+                          </ColorContextProvider>
                         </div>
                       </PersonLink>
                     ))}
@@ -277,7 +271,6 @@ const styles = {
     marginBottom: '20px',
     borderRadius: '10px',
     backgroundColor: '#FFF',
-    color: '#282828',
     overflowWrap: 'break-word',
     hyphens: 'manual',
   }),
