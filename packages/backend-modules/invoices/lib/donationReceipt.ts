@@ -45,11 +45,19 @@ export const generate = async function (
     FROM payments pay
     JOIN "pledgePayments" pp ON pp."paymentId" = pay.id
     JOIN pledges p ON p.id = pp."pledgeId"
+    LEFT JOIN "postfinancePayments" pfp ON pfp.mitteilung = pay.hrid
     WHERE
       p."userId" = :userId AND
       pay.status = 'PAID' AND
       pay."createdAt" AT TIME ZONE 'Europe/Zurich' >= :begin AND
-      pay."createdAt" AT TIME ZONE 'Europe/Zurich' <= :end
+      pay."createdAt" AT TIME ZONE 'Europe/Zurich' <= :end AND
+      (
+        pfp.buchungsdatum IS NULL OR
+        (
+          pfp.buchungsdatum AT TIME ZONE 'Europe/Zurich' >= :begin AND
+          pfp.buchungsdatum AT TIME ZONE 'Europe/Zurich' <= :end
+        )
+      )
   `,
     {
       begin: `${cleanYear}-01-01`,
@@ -98,11 +106,7 @@ export const generate = async function (
 
       doc.moveDown(2)
       doc
-        .text(
-          `${bankAccountAddress.city}, ${moment()
-            .locale('de')
-            .format('D. MMMM YYYY')}`,
-        )
+        .text(`Bern, ${moment().locale('de').format('D. MMMM YYYY')}`)
         .moveDown()
 
       addTitle(doc, `Spendenbescheinigung ${cleanYear}`)
@@ -139,8 +143,12 @@ export const generate = async function (
           `Dieser Betrag umfasst alle Zuwendungen vom 1. Januar bis 31. Dezember ${cleanYear}. Der Verein Lobbywatch.ch ist gemäss Entscheid der Steuerverwaltung des Kantons Bern gemeinnützig und steuerbefreit. Folglich können Sie Ihre Zuwendungen an Lobbywatch.ch von den Steuern abziehen.`,
           textOptions,
         )
-        .moveDown(3)
+        .moveDown(1.5)
 
+      doc
+        .moveDown(2)
+        .text(`Berne, ${moment().locale('fr').format('D MMMM YYYY')}`)
+        .moveDown()
       addTitle(doc, `Attestation de don ${cleanYear}`)
 
       doc
