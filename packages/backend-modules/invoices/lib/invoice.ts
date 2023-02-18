@@ -140,8 +140,8 @@ export function addTitle(doc: PDF, text: string) {
     .moveDown()
 }
 
-export function addBoldText(doc: PDF, text: string) {
-  doc.font(BOLD_FONT_NAME).text(text).font(REGULAR_FONT_NAME)
+export function addBoldText(doc: PDF, text: string, textOptions?: any) {
+  doc.font(BOLD_FONT_NAME).text(text, textOptions).font(REGULAR_FONT_NAME)
 }
 
 function addMeta(doc: PDF, payment: PaymentResolved, context: Context) {

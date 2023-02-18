@@ -104,28 +104,75 @@ export const generate = async function (
             .format('D. MMMM YYYY')}`,
         )
         .moveDown()
+
       addTitle(doc, `Spendenbescheinigung ${cleanYear}`)
 
       doc
         .moveDown()
         .text(`Guten Tag ${user.name}`)
         .moveDown(1.5)
-        .text(
-          `Gerne bestätigen wir Ihnen, dass wir als Verein Lobbywatch.ch im Jahr ${cleanYear} Zuwendungen von Ihnen erhalten haben.`,
-          textOptions,
-        )
-        .moveDown(1)
+        .text('Gerne bestätigen wir Ihnen, dass Sie Lobbywatch.ch', {
+          ...textOptions,
+          continued: true,
+        })
 
-      addBoldText(doc, `Zuwendungen 2022: CHF ${(total / 100).toFixed(2)}`)
+      addBoldText(
+        doc,
+        ` im Jahr ${cleanYear} mit einem Betrag von CHF ${(total / 100).toFixed(
+          2,
+        )} `,
+        {
+          ...textOptions,
+          continued: true,
+        },
+      )
 
       doc
-        .moveDown(1)
         .text(
-          'Lobbywatch.ch ist wegen Gemeinnützigkeit steuerbefreit. Ihre Spenden können Sie von den Steuern in Abzug bringen.',
+          'unterstützt haben. Herzlichen Dank für Ihren Beitrag an unsere Arbeit!',
           textOptions,
         )
         .moveDown(1.5)
-        .text('Vielen herzlichen Dank für die grosszügige Unterstützung!')
+
+      doc
+        .text(
+          `Dieser Betrag umfasst alle Zuwendungen vom 1. Januar bis 31. Dezember ${cleanYear}. Der Verein Lobbywatch.ch ist gemäss Entscheid der Steuerverwaltung des Kantons Bern gemeinnützig und steuerbefreit. Folglich können Sie Ihre Zuwendungen an Lobbywatch.ch von den Steuern abziehen.`,
+          textOptions,
+        )
+        .moveDown(3)
+
+      addTitle(doc, `Attestation de don ${cleanYear}`)
+
+      doc
+        .moveDown()
+        .text(`Bonjour ${user.name}`)
+        .moveDown(1.5)
+        .text(
+          `C'est avec plaisir que nous vous confirmons que vous avez soutenu Lobbywatch.ch à hauteur de`,
+          {
+            ...textOptions,
+            continued: true,
+          },
+        )
+
+      addBoldText(doc, ` CHF ${(total / 100).toFixed(2)} en ${cleanYear}`, {
+        ...textOptions,
+        continued: true,
+      })
+
+      doc
+        .text(
+          '. Nous vous remercions chaleureusement de votre contribution à notre travail !',
+          textOptions,
+        )
+        .moveDown(1.5)
+
+      doc
+        .text(
+          `Ce montant comprend toutes les donations du 1er janvier au 31 décembre ${cleanYear}. L'association Lobbywatch.ch est reconnue d'utilité publique et exonérée d'impôts selon la décision de l'administration fiscale du canton de Berne. Par conséquent, vous pouvez déduire de vos impôts vos dons à Lobbywatch.ch.`,
+          textOptions,
+        )
+        .moveDown(1.5)
 
       doc.end()
 
