@@ -49,10 +49,13 @@ export const generate = async function (
     WHERE
       p."userId" = :userId AND
       pay.status = 'PAID' AND
-      pay."createdAt" AT TIME ZONE 'Europe/Zurich' >= :begin AND
-      pay."createdAt" AT TIME ZONE 'Europe/Zurich' <= :end AND
       (
-        pfp.buchungsdatum IS NULL OR
+        (
+          pfp.buchungsdatum IS NULL AND
+          pay."createdAt" AT TIME ZONE 'Europe/Zurich' >= :begin AND
+          pay."createdAt" AT TIME ZONE 'Europe/Zurich' <= :end
+        )
+        OR
         (
           pfp.buchungsdatum AT TIME ZONE 'Europe/Zurich' >= :begin AND
           pfp.buchungsdatum AT TIME ZONE 'Europe/Zurich' <= :end
