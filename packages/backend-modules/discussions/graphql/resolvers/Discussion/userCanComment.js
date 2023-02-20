@@ -3,7 +3,7 @@ const { hasUserActiveMembership } = require('@orbiting/backend-modules-utils')
 
 /**
  * User can comment when either:
- * - a) it has a role which is allowed to comment (discussion.allowedRoles)
+ * - a) they have a role which is allowed to comment (discussion.allowedRoles)
  * - b) it has member role and either debater role or an active membership
  */
 module.exports = async (discussion, _, context) => {
