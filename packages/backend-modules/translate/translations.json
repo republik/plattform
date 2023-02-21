@@ -718,23 +718,23 @@
     },
     {
       "key": "api/email/future_campaign_sender_reward/1/subject",
-      "value": "Sie haben Verstärkung geholt!"
+      "value": "Sie haben Verstärkung geholt! Danke."
     },
     {
       "key": "api/email/future_campaign_sender_reward/2/subject",
-      "value": "Doppelte Verstärkung!"
+      "value": "Doppelte Verstärkung! Grossartig."
     },
     {
       "key": "api/email/future_campaign_sender_reward/3/subject",
-      "value": "Mit Ihnen wird die Zukunft greifbar!"
+      "value": "Sie haben drei Mal Verstärkung geholt. Mit Ihnen wird die Zukunft greifbar!"
     },
     {
       "key": "api/email/future_campaign_sender_reward/4/subject",
-      "value": "Da war es nur noch eins"
+      "value": "Wer ergattert sich Ihr letztes Mitstreiterinnen-Abo?"
     },
     {
       "key": "api/email/future_campaign_sender_reward/5/subject",
-      "value": "Herzliche Gratulation!"
+      "value": "Herzliche Gratulation! 5 neue Verlegerinnen für die Republik."
     },
     {
       "key": "api/discussion/404",

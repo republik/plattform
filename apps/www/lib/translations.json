@@ -5769,7 +5769,7 @@
     },
     {
       "key": "Onboarding/Page/climate/introduction",
-      "value": "In den kommenden Monaten wollen wir mit Ihnen über die Klimakrise und unsere Zukunft sprechen. Wir wollen Neues ausprobieren und verstehen, was Ihnen wirklich weiterhilft.<br /><br />Schön, sind Sie dabei. Legen wir gleich los!<br /><br />"
+      "value": "In den kommenden Monaten wollen wir mit Ihnen über die Klimakrise und unsere Zukunft sprechen. Wir wollen Neues ausprobieren und verstehen, was Ihnen im Umgang mit der Klimakrise wirklich weiterhilft.<br /><br />\nDas Ziel des Klimalabors: Wir wollen einen neuen Klimajournalismus für die Republik entwickeln, der in seiner Dringlichkeit und Ambition der Klimakrise gerecht wird. Der mehr Menschen erreicht als bisher und auch andere Medien und Journalistinnen inspiriert. Einen Klimajournalismus, der anregt, der trotz düsterer Aussichten nach vorn blickt, der verlässlich und nützlich ist.<br /><br />\nIm Januar sind wir gestartet, im Sommer werden wir ein konkretes Angebot präsentieren. Unterwegs werden wir Sie immer wieder um Ihre Ideen bitten, nach Ihren Bedürfnissen fragen, zum Austausch untereinander einladen – und Sie mit vielfältigen Inhalten zur Klimakrise versorgen.<br /><br />\nWir freuen uns sehr, dass Sie mit uns auf diese Expedition kommen."
     },
     {
       "key": "Climatelab/Onboarding/Postcard/heading",
@@ -5793,23 +5793,47 @@
     },
     {
       "key": "Climatelab/Onboarding/Mission/heading",
-      "value": "Was wir vorhaben"
+      "value": "Mitwirken"
     },
     {
       "key": "Climatelab/Onboarding/Mission/paragraph1",
-      "value": "Eine gemeinsame Expedition funktioniert nur dann, wenn alle den Plan kennen. Deshalb hier unsere Ziele und wie wir vorgehen werden:"
+      "value": "Wir bieten Ihnen im Klimalabor vielfältige Möglichkeiten, sich einzubringen und mit anderen auszutauschen. Aktuell:"
     },
     {
       "key": "Climatelab/Onboarding/Mission/bullet1",
-      "value": "Wir wollen gemeinsam einen neuen Klimajournalismus für die Republik entwickeln, der mehr Menschen erreicht als bisher und auch andere Medien und Journalistinnen inspiriert. Einen Klimajournalismus, der anregt, der trotz düsterer Aussichten nach vorn blickt, der verlässlich und nützlich ist."
+      "value": "Dialog: Sammeln und entdecken Sie mit uns {klimaheld}."
     },
     {
       "key": "Climatelab/Onboarding/Mission/bullet2",
-      "value": "Bis in den Sommer 2023 nehmen wir uns dafür Zeit. Was dabei herauskommen wird? Das kann ein eigenständiges journalistisches Produkt sein, eine Reihe neuer Formate, ein Ausbau der Redaktion oder ganz etwas anderes. Das Klimalabor ist bewusst ergebnisoffen. Klar ist: Wir wollen gross denken und ein Angebot entwickeln, das in seiner Dringlichkeit und Ambition der Klimakrise gerecht wird."
+      "value": "Interaktiv: {postcard}."
     },
     {
       "key": "Climatelab/Onboarding/Mission/bullet3",
-      "value": "Wir nähern uns dem Ziel schrittweise an und werden zunehmend konkreter. Wenn Sie mögen, können Sie sich auf vielfältige Arten und immer wieder aufs Neue einbringen. Sie können uns aber auch einfach interessiert begleiten. Per Newsletter halten wir Sie auf dem Laufenden."
+      "value": "Live: Kommen Sie zu unserer ersten Klimalabor-Veranstaltung, {event}."
+    },
+    {
+      "key": "Climatelab/Onboarding/Mission/bullet1/klimaheldText",
+      "value": "wenig bekannte Klimaheldinnen"
+    },
+    {
+      "key": "Climatelab/Onboarding/Mission/bullet1/klimaheldHref",
+      "value": "/2023/01/31/mit-voller-kraft-gegen-die-klimakrise-diskutieren-sie-mit/diskussion"
+    },
+    {
+      "key": "Climatelab/Onboarding/Mission/bullet2/postcardText",
+      "value": "Machen Sie mit uns eine Zeitreise"
+    },
+    {
+      "key": "Climatelab/Onboarding/Mission/bullet2/postcardHref",
+      "value": "/2023/01/18/klimafreundliche-gruesse-aus-der-zukunft"
+    },
+    {
+      "key": "Climatelab/Onboarding/Mission/bullet3/eventText",
+      "value": "am 27. Februar in Zürich"
+    },
+    {
+      "key": "Climatelab/Onboarding/Mission/bullet3/eventHref",
+      "value": "/veranstaltung/klimalabor-februar-2023"
     },
     {
       "key": "Climatelab/Onboarding/Invitation/heading",
