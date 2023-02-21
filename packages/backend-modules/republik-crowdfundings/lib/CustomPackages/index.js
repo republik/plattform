@@ -12,8 +12,8 @@ const { getPeriodEndingLast, getLastEndDate } = require('../utils')
 const rules = require('./rules')
 
 // Put that one into database.
-const EXTENDABLE_MEMBERSHIP_TYPES = ['YEAR']
-const EXTENDABLE_PACKAGE_NAMES = ['YEAR']
+const EXTENDABLE_MEMBERSHIP_TYPES = ['YEAR', 'LEGISLATION', 'BENEFACTOR']
+const EXTENDABLE_PACKAGE_NAMES = ['YEAR', 'LEGISLATION', 'BENEFACTOR']
 
 // Which options require you to own a membership?
 const OPTIONS_REQUIRE_CLAIMER = []
