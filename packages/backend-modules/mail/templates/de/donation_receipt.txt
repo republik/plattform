@@ -1,0 +1,28 @@
+Guten Tag {{name}}
+
+Ihre Zuwendungen an Lobbywatch.ch können Sie von den Steuern abziehen. Gerne
+senden wir Ihnen im Anhang eine Spendenbescheinigung für das vergangene Jahr.
+
+Vielen herzlichen Dank für Ihre Unterstützung!
+
+Unterstützen Sie uns auch im Wahljahr 2023?
+
+Die eidgenössischen Wahlen vom 22. Oktober bedeuten für uns viel Arbeit. Damit
+Sie als Wählerin oder Wähler eine informierte Entscheidung treffen können und
+nach den Wahlen wissen, wer im Bundeshaus wessen Interessen vertritt, müssen wir
+viel Zeit und Energie in die Recherchen der Lobbymandate investieren. Wir freuen
+uns, wenn Sie uns auch dieses Jahr dabei unterstützen, die Schweizer Politik
+transparenter zu machen.
+
+{{#if prolong_token}} Jährlicher Mitgliedschaftsbeitrag einzahlen
+{{frontend_base_url}}/de/patronage?package=PROLONG&token={{prolong_token}}
+{{else}} Jetzt spenden {{frontend_base_url}}/de/patronage?package=DONATE {{/if}}
+
+Mit freundlichen Grüssen
+Deborah Wanner
+Administratorin Lobbywatch.ch
+
+
+Lobbywatch.ch
+3000 Bern
+info@lobbywatch.ch

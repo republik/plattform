@@ -1,0 +1,29 @@
+Bonjour {{name}},
+
+Vous pouvez déduire vos dons à Lobbywatch.ch de vos impôts. Nous vous envoyons
+volontiers en annexe une attestation de don pour l'année écoulée.
+
+Un grand merci pour votre soutien !
+
+Nous soutiendrez-vous également lors des élections de 2023 ?
+
+Les élections fédérales du 22 octobre représentent pour nous beaucoup de
+travail. Pour que vous puissiez, en tant qu'électrice ou électeur, faire un
+choix éclairé et savoir, après les élections, qui défend les intérêts de qui au
+Palais fédéral, nous devons investir beaucoup de temps et d'énergie dans les
+recherches sur les mandats de lobbying. Nous serions heureux que vous nous
+aidiez cette année encore à rendre la politique suisse plus transparente.
+
+{{#if prolong_token}} Verser la cotisation annuelle de membre
+{{frontend_base_url}}/de/patronage?package=PROLONG&token={{prolong_token}}
+{{else}} Faire un don maintenant
+{{frontend_base_url}}/de/patronage?package=DONATE {{/if}}
+
+Avec nos meilleures salutations
+Deborah Wanner
+Administratorin Lobbywatch.ch
+
+
+Lobbywatch.ch
+3000 Berne
+info@lobbywatch.ch

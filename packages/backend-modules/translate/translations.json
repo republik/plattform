@@ -377,6 +377,14 @@
       "value": "Ihre Bestellung: Buch «Lobbywatch bei Stromausfall»"
     },
     {
+      "key": "api/email/de/donation_receipt/subject",
+      "value": "Spendenbescheinigung {year}"
+    },
+    {
+      "key": "api/email/fr/donation_receipt/subject",
+      "value": "Attestation de don {year}"
+    },
+    {
       "key": "api/email/de/payment_successful/subject",
       "value": "Vielen Dank! Wir haben Ihre Zahlung erhalten."
     },
