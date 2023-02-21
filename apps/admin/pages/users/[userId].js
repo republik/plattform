@@ -25,6 +25,7 @@ import Mailbox from '../../components/Users/Mailbox'
 import { Body, Content } from '../../components/Layout'
 import Header from '../../components/Layout/Header'
 import { withDefaultSSR } from '../../lib/apollo'
+import Links from '../../components/Users/Links'
 
 const styles = {
   row: css({
@@ -72,6 +73,7 @@ const SectionSwitch = ({ userId, section }) => {
       <div {...styles.fifty}>
         <AuthSettings userId={userId} />
         <Mailbox userId={userId} narrow={3} />
+        <Links userId={userId} />
         <AdminNotes userId={userId} />
       </div>
       <div {...styles.fifty}>

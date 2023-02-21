@@ -13,6 +13,13 @@ module.exports = {
       pgdb.public.membershipTypes.find({ rewardId: packageOption.rewardId }),
     ]).then((arr) => arr[0].concat(arr[1])[0])
   },
+  autoPay({ autoPay, membership }) {
+    if (membership && membership?.user?.id !== membership?.pledge?.userId) {
+      return undefined
+    }
+
+    return autoPay
+  },
   async membership({ membership, membershipId }, args, { pgdb }) {
     // no auth checks, as unauthorized users should not get Pledge.options
     if (membership) {

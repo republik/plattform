@@ -10,9 +10,8 @@ describe('Slate Editor', () => {
 
   const defaultConfig = { schema }
 
-  async function setup(structure, config = defaultConfig) {
+  async function setup(config) {
     return await mockEditor(createEditor(), {
-      structure,
       config,
       value,
       setValue: (val) => (value = val),
@@ -35,7 +34,7 @@ describe('Slate Editor', () => {
           children: [{ text: 'Lorem ipsum dolor sit amet.' }],
         },
       ]
-      const editor = await setup(structure)
+      const editor = await setup({ ...defaultConfig, structure })
 
       await Transforms.select(editor, { path: [0, 0], offset: 9 })
       changedSelection = selectNearestWord(editor)
@@ -54,7 +53,7 @@ describe('Slate Editor', () => {
           children: [{ text: 'Lorem ipsum dolor sit amet.' }],
         },
       ]
-      const editor = await setup(structure)
+      const editor = await setup({ ...defaultConfig, structure })
 
       await Transforms.select(editor, { path: [0, 0], offset: 6 })
       changedSelection = selectNearestWord(editor)
@@ -86,7 +85,7 @@ describe('Slate Editor', () => {
           children: [{ text: '' }],
         },
       ]
-      const editor = await setup(structure)
+      const editor = await setup({ ...defaultConfig, structure })
 
       await Transforms.select(editor, { path: [0, 0], offset: 5 })
       changedSelection = selectNearestWord(editor)
@@ -104,7 +103,7 @@ describe('Slate Editor', () => {
           children: [{ text: 'Lorem ipsum dolor sit amet.' }],
         },
       ]
-      const editor = await setup(structure)
+      const editor = await setup({ ...defaultConfig, structure })
 
       await Transforms.select(editor, { path: [0, 0], offset: 9 })
       changedSelection = selectNearestWord(editor, true)
@@ -131,7 +130,7 @@ describe('Slate Editor', () => {
           children: [{ text: 'Lorem ipsum dolor sit amet.' }],
         },
       ]
-      const editor = await setup(structure)
+      const editor = await setup({ ...defaultConfig, structure })
 
       await Transforms.select(editor, { path: [0, 0], offset: 9 })
       insertSpecialChars(editor, '%')
@@ -150,7 +149,7 @@ describe('Slate Editor', () => {
           children: [{ text: 'Lorem ipsum:.' }],
         },
       ]
-      const editor = await setup(structure)
+      const editor = await setup({ ...defaultConfig, structure })
 
       await Transforms.select(editor, { path: [0, 0], offset: 12 })
       insertSpecialChars(editor, '<>')
@@ -169,7 +168,7 @@ describe('Slate Editor', () => {
           children: [{ text: 'Lorem ipsum.' }],
         },
       ]
-      const editor = await setup(structure)
+      const editor = await setup({ ...defaultConfig, structure })
 
       await Transforms.select(editor, {
         anchor: { path: [0, 0], offset: 6 },

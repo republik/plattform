@@ -961,6 +961,10 @@
       "value": "Die Publikation ist für {date} geplant."
     },
     {
+      "key": "metaData/discussionAllowedRoles",
+      "value": "Diskussion für Klimalabor-User öffnen"
+    },
+    {
       "key": "colorPicker/contrastInfo/title",
       "value": "Farbkontrast"
     },
@@ -1767,6 +1771,10 @@
     {
       "key": "editor/element/link",
       "value": "Link"
+    },
+    {
+      "key": "editor/element/memo",
+      "value": "Memo"
     },
     {
       "key": "editor/element/ul",

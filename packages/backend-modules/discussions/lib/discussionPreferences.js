@@ -112,7 +112,6 @@ const ensureAnonymousDifferentiator = async ({
   t,
   loaders,
 }) => {
-  // const discussionId = discussion.id
   const discussionId = discussion.id
   const findQuery = {
     userId,

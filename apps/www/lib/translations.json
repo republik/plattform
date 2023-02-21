@@ -29,6 +29,10 @@
       "value": "Republik teilen"
     },
     {
+      "key": "nav/invite-friends",
+      "value": "Verstärkung holen"
+    },
+    {
       "key": "nav/becomemember",
       "value": "Mitglied werden"
     },
@@ -430,7 +434,7 @@
     },
     {
       "key": "marketing/page/reasons/3/text",
-      "value": "Die Republik wird finanziert durch ihre rund 28’000 Abonnentinnen. Wir gehören niemandem – aber jedem unserer Mitglieder ein bisschen."
+      "value": "Die Republik wird finanziert durch ihre rund 27’000 Abonnentinnen. Wir gehören niemandem – aber jedem unserer Mitglieder ein bisschen."
     },
     {
       "key": "marketing/page/vision/headline",
@@ -1186,7 +1190,7 @@
     },
     {
       "key": "Account/Access/Grants/REDUCED/message/claimed",
-      "value": "Als Dankeschön fürs Mitmachen im «{campaignTitle}» haben Sie bis am {maxEndAt} vollen Zugriff auf alle Inhalte der Republik."
+      "value": "Dankeschön fürs Mitmachen im «{campaignTitle}»."
     },
     {
       "key": "Account/Access/Campaigns/title",
@@ -2493,6 +2497,10 @@
       "value": "Bitte begründen"
     },
     {
+      "key": "package/customize/userPrice/YEARLY_ABO/beforeReason",
+      "value": "Eine grosse und vielfältige Community ist für ein leserinnenfinanziertes Magazin unbezahlbar. Deshalb geben wir Ihnen zum 5-Jahres-Jubiläum der Republik die Möglichkeit, den Preis für Ihr Abo selber zu wählen. "
+    },
+    {
       "key": "package/customize/userPrice/beforeReason",
       "value": "Journalismus kostet. Aber wir wollen niemanden ausschliessen. Falls Sie sich die 240 Franken nicht leisten können, bitten wir Sie um eine knappe Begründung und einen Preis, der Ihnen gerecht scheint. "
     },
@@ -2541,6 +2549,18 @@
       "value": "Vielleicht das einzige Geschenk, das Sie Freunden und Feinden gleich herzlich machen können: einige Monate Republik."
     },
     {
+      "key": "package/YEARLY_ABO/price",
+      "value": "{formattedCHF}"
+    },
+    {
+      "key": "package/YEARLY_ABO/title",
+      "value": "Mitstreiterinnen-Abo"
+    },
+    {
+      "key": "package/YEARLY_ABO/description",
+      "value": "Es freut uns, dass Sie dabei sind! Mit Ihrem selbst gewählten Beitrag erhalten Sie ab sofort und für ein Jahr unser Magazin, zum Lesen und zum Hören. Und Sie investieren in die Zukunft unseres Journalismus."
+    },
+    {
       "key": "package/BENEFACTOR/title",
       "value": "Gönner-Mitgliedschaft"
     },
@@ -2571,6 +2591,10 @@
     {
       "key": "package/group/GIVE",
       "value": "Geschenke"
+    },
+    {
+      "key": "package/group/HIDDEN",
+      "value": "Angebote"
     },
     {
       "key": "option/ABO/label/other",
@@ -2615,6 +2639,14 @@
     {
       "key": "option/ABO_GIVE_MONTHS/interval/month/label/other",
       "value": "Monate pro Abo"
+    },
+    {
+      "key": "option/YEARLY_ABO/label/other",
+      "value": "Mitstreiter-Abos"
+    },
+    {
+      "key": "option/YEARLY_ABO/label/1",
+      "value": "Mitstreiter-Abo"
     },
     {
       "key": "package/customize/ABO_GIVE_MONTHS/years/1",
@@ -3290,7 +3322,7 @@
     },
     {
       "key": "article/actionbar/link/label/error",
-      "value": "Nicht unterstützt :("
+      "value": "Kopieren fehlgeschlagen"
     },
     {
       "key": "article/actionbar/fontSize/title",
@@ -3625,6 +3657,9 @@
       "value": "Guten Tag, {name}"
     },
     {
+      "key": "merci/title/package/YEARLY_ABO"
+    },
+    {
       "key": "merci/title/package/DONATE",
       "value": "Guten Tag, {name}"
     },
@@ -3843,6 +3878,26 @@
     {
       "key": "memberships/ABO_GIVE_MONTHS/manage/reactivate",
       "value": "Abonnement reaktivieren"
+    },
+    {
+      "key": "memberships/YEARLY_ABO/manage/prolong/link",
+      "value": "Abonnement verlängern"
+    },
+    {
+      "key": "memberships/YEARLY_ABO/manage/cancel/link",
+      "value": "Abonnement kündigen"
+    },
+    {
+      "key": "memberships/YEARLY_ABO/manage/upgrade/link",
+      "value": "{buyLink} und behalten Sie Ihren Zugang zur Republik auch nach Ablauf Ihres Mitstreiterinnen-Abos."
+    },
+    {
+      "key": "memberships/YEARLY_ABO/manage/upgrade/link/buyText",
+      "value": "Lösen Sie eine Jahresmitgliedschaft"
+    },
+    {
+      "key": "memberships/YEARLY_ABO/manage/reactivate",
+      "value": "Abonnement-Kündigung zurückziehen"
     },
     {
       "key": "memberships/claim/lead",
@@ -4709,6 +4764,10 @@
       "value": "Abonnement (#{sequenceNumber})"
     },
     {
+      "key": "memberships/title/YEARLY_ABO",
+      "value": "Mitstreiter-Abo"
+    },
+    {
       "key": "memberships/title/ABO/give",
       "value": "{name} (#{sequenceNumber})"
     },
@@ -4751,6 +4810,10 @@
     {
       "key": "package/customize/price/payLess",
       "value": "Ich kann mir den Betrag nicht leisten"
+    },
+    {
+      "key": "package/customize/userPrice/YEARLY_ABO/beforePrice",
+      "value": "Welcher Preis stimmt für Sie?"
     },
     {
       "key": "package/customize/userPrice/beforePrice",
@@ -4878,6 +4941,14 @@
     },
     {
       "key": "pledge/meta/package/ABO_GIVE_MONTHS/description",
+      "value": "Wir sind ein digitales Magazin für Politik, Wirtschaft, Gesellschaft und Kultur. Unabhängig. Werbefrei."
+    },
+    {
+      "key": "pledge/meta/package/YEARLY_ABO/title",
+      "value": "Verstärken Sie die Republik-Community!"
+    },
+    {
+      "key": "pledge/meta/package/YEARLY_ABO/description",
       "value": "Wir sind ein digitales Magazin für Politik, Wirtschaft, Gesellschaft und Kultur. Unabhängig. Werbefrei."
     },
     {
@@ -5217,6 +5288,38 @@
       "value": "vor {count} Tagen"
     },
     {
+      "key": "prolongNecessary/YEARLY_ABO/before",
+      "value": "Ihr Abo endet bald: {link}"
+    },
+    {
+      "key": "prolongNecessary/YEARLY_ABO/before/linkText",
+      "value": "Jahresmitglied werden"
+    },
+    {
+      "key": "prolongNecessary/YEARLY_ABO/due",
+      "value": "Mitstreiter-Abo endet bald: {link}"
+    },
+    {
+      "key": "prolongNecessary/YEARLY_ABO/due/linkText",
+      "value": "Jetzt Jahresmitglied werden"
+    },
+    {
+      "key": "prolongNecessary/YEARLY_ABO/overdue",
+      "value": "Ihr Abo endet – und Ihre Mitgliedschaft beginnt?"
+    },
+    {
+      "key": "prolongNecessary/YEARLY_ABO/overdue/button",
+      "value": "Jetzt Jahresmitglied werden"
+    },
+    {
+      "key": "prolongNecessary/YEARLY_ABO/overdue/explanation",
+      "value": "Ihr Abo läuft am {endDate} aus. Doch das muss nicht das Ende Ihrer Zeit bei der Republik bedeuten: Werden Sie jetzt Jahresmitglied und unterstützen Sie unseren Journalismus auch in Zukunft."
+    },
+    {
+      "key": "prolongNecessary/YEARLY_ABO/overdue/explanation/cancelText",
+      "value": "Abonnement kündigen"
+    },
+    {
       "key": "crowdfunding/status/time/ended/PROLONG",
       "value": "Ein detaillierter Überblick folgt Ende Monat."
     },
@@ -5445,6 +5548,10 @@
       "value": "Mit Ihrer Mitgliedschaft können Sie ab sofort nicht nur die Republik konsumieren, sondern Sie können und sollen sie auch beeinflussen."
     },
     {
+      "key": "Onboarding/Page/context:pledge/packageName:YEARLY_ABO/preface",
+      "value": "Mit Ihrem Abo können Sie ab sofort nicht nur die Republik lesen und hören, Sie können auch mitdiskutieren."
+    },
+    {
       "key": "Onboarding/Page/pledge/introduction",
       "value": "Dieser kurze Einrichtungsassistent hilft Ihnen mit dem Wichtigsten vorab."
     },
@@ -5662,7 +5769,7 @@
     },
     {
       "key": "Onboarding/Page/climate/introduction",
-      "value": "In den kommenden Monaten wollen wir mit Ihnen über die Klimakrise und unsere Zukunft sprechen. Wir wollen Neues ausprobieren und verstehen, was Ihnen wirklich weiterhilft.<br /><br />Schön, sind Sie dabei. Legen wir gleich los!<br /><br />"
+      "value": "In den kommenden Monaten wollen wir mit Ihnen über die Klimakrise und unsere Zukunft sprechen. Wir wollen Neues ausprobieren und verstehen, was Ihnen im Umgang mit der Klimakrise wirklich weiterhilft.<br /><br />\nDas Ziel des Klimalabors: Wir wollen einen neuen Klimajournalismus für die Republik entwickeln, der in seiner Dringlichkeit und Ambition der Klimakrise gerecht wird. Der mehr Menschen erreicht als bisher und auch andere Medien und Journalistinnen inspiriert. Einen Klimajournalismus, der anregt, der trotz düsterer Aussichten nach vorn blickt, der verlässlich und nützlich ist.<br /><br />\nIm Januar sind wir gestartet, im Sommer werden wir ein konkretes Angebot präsentieren. Unterwegs werden wir Sie immer wieder um Ihre Ideen bitten, nach Ihren Bedürfnissen fragen, zum Austausch untereinander einladen – und Sie mit vielfältigen Inhalten zur Klimakrise versorgen.<br /><br />\nWir freuen uns sehr, dass Sie mit uns auf diese Expedition kommen."
     },
     {
       "key": "Climatelab/Onboarding/Postcard/heading",
@@ -5686,23 +5793,47 @@
     },
     {
       "key": "Climatelab/Onboarding/Mission/heading",
-      "value": "Was wir vorhaben"
+      "value": "Mitwirken"
     },
     {
       "key": "Climatelab/Onboarding/Mission/paragraph1",
-      "value": "Eine gemeinsame Expedition funktioniert nur dann, wenn alle den Plan kennen. Deshalb hier unsere Ziele und wie wir vorgehen werden:"
+      "value": "Wir bieten Ihnen im Klimalabor vielfältige Möglichkeiten, sich einzubringen und mit anderen auszutauschen. Aktuell:"
     },
     {
       "key": "Climatelab/Onboarding/Mission/bullet1",
-      "value": "Wir wollen gemeinsam einen neuen Klimajournalismus für die Republik entwickeln, der mehr Menschen erreicht als bisher und auch andere Medien und Journalistinnen inspiriert. Einen Klimajournalismus, der anregt, der trotz düsterer Aussichten nach vorn blickt, der verlässlich und nützlich ist."
+      "value": "Dialog: Sammeln und entdecken Sie mit uns {klimaheld}."
     },
     {
       "key": "Climatelab/Onboarding/Mission/bullet2",
-      "value": "Bis in den Sommer 2023 nehmen wir uns dafür Zeit. Was dabei herauskommen wird? Das kann ein eigenständiges journalistisches Produkt sein, eine Reihe neuer Formate, ein Ausbau der Redaktion oder ganz etwas anderes. Das Klimalabor ist bewusst ergebnisoffen. Klar ist: Wir wollen gross denken und ein Angebot entwickeln, das in seiner Dringlichkeit und Ambition der Klimakrise gerecht wird."
+      "value": "Interaktiv: {postcard}."
     },
     {
       "key": "Climatelab/Onboarding/Mission/bullet3",
-      "value": "Wir nähern uns dem Ziel schrittweise an und werden zunehmend konkreter. Wenn Sie mögen, können Sie sich auf vielfältige Arten und immer wieder aufs Neue einbringen. Sie können uns aber auch einfach interessiert begleiten. Per Newsletter halten wir Sie auf dem Laufenden."
+      "value": "Live: Kommen Sie zu unserer ersten Klimalabor-Veranstaltung, {event}."
+    },
+    {
+      "key": "Climatelab/Onboarding/Mission/bullet1/klimaheldText",
+      "value": "wenig bekannte Klimaheldinnen"
+    },
+    {
+      "key": "Climatelab/Onboarding/Mission/bullet1/klimaheldHref",
+      "value": "/2023/01/31/mit-voller-kraft-gegen-die-klimakrise-diskutieren-sie-mit/diskussion"
+    },
+    {
+      "key": "Climatelab/Onboarding/Mission/bullet2/postcardText",
+      "value": "Machen Sie mit uns eine Zeitreise"
+    },
+    {
+      "key": "Climatelab/Onboarding/Mission/bullet2/postcardHref",
+      "value": "/2023/01/18/klimafreundliche-gruesse-aus-der-zukunft"
+    },
+    {
+      "key": "Climatelab/Onboarding/Mission/bullet3/eventText",
+      "value": "am 27. Februar in Zürich"
+    },
+    {
+      "key": "Climatelab/Onboarding/Mission/bullet3/eventHref",
+      "value": "/veranstaltung/klimalabor-februar-2023"
     },
     {
       "key": "Climatelab/Onboarding/Invitation/heading",
@@ -7070,7 +7201,7 @@
     },
     {
       "key": "PodcastButtons/copy/error",
-      "value": "Nicht unterstützt :("
+      "value": "Kopieren fehlgeschlagen"
     },
     {
       "key": "PodcastButtons/spotify",
@@ -7102,7 +7233,7 @@
     },
     {
       "key": "article/payNote/220404-v1/before",
-      "value": "Journalismus kostet. Dass Sie diesen Beitrag trotzdem lesen können, verdanken Sie den über 28'000 Leserinnen, die die Republik schon finanzieren. Wenn auch Sie unabhängigen Journalismus möglich machen wollen: Kommen Sie an Bord!"
+      "value": "Journalismus kostet. Dass Sie diesen Beitrag trotzdem lesen können, verdanken Sie den über 27'000 Leserinnen, die die Republik schon finanzieren. Wenn auch Sie unabhängigen Journalismus möglich machen wollen: Kommen Sie an Bord!"
     },
     {
       "key": "article/payNote/220404-v1/after",
@@ -7122,7 +7253,7 @@
     },
     {
       "key": "article/tryNote/220404-v1/after",
-      "value": "Über 28'000 Menschen machen die Republik heute schon möglich. Lernen Sie uns jetzt auch kennen – 21 Tage lang, kostenlos und unverbindlich:"
+      "value": "Über 27'000 Menschen machen die Republik heute schon möglich. Lernen Sie uns jetzt auch kennen – 21 Tage lang, kostenlos und unverbindlich:"
     },
     {
       "key": "article/tryNote/220404-v2/before",

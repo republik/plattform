@@ -11,6 +11,8 @@ import { Marks } from './Mark'
 import { LayoutContainer } from './Containers'
 import { isSlateElement } from './helpers'
 
+export const SkipElement: React.FC = ({ children }) => <>{children}</>
+
 const RenderedLeaf: React.FC<{
   leaf: CustomText
   schema: SchemaConfig

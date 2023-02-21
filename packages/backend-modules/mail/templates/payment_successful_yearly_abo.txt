@@ -1,0 +1,83 @@
+Guten Tag
+
+Ihre Zahlung ist erfolgreich bei uns eingegangen.
+Herzlichen Dank und willkommen an Bord!
+
+{{#if totalPledgeAbove1000}} {{#if pledger_memberships_active_monthly}}
+
+Mit Ihrem Monats-Abo haben Sie die Republik bereits kennengelernt. Dass Sie sich
+nun entschieden haben, uns längerfristig zu unterstützen, freut und ehrt uns.
+Herzlichen Dank für Ihr Vertrauen.
+
+Wir werden Ihr neues Abo automatisch aktivieren, sobald die aktuelle Periode
+Ihres Monats-Abos ausgelaufen ist. So können Sie dann nahtlos weiterlesen (oder
+-hören).
+
+Mit dem Mitstreiterinnen-Abo erhalten Sie weiterhin von Montag bis Samstag ein
+hochwertiges digitales Magazin. Und Sie sorgen dafür, dass unabhängiger
+Journalismus eine Zukunft hat.
+
+{{else}}
+
+Herzlich willkommen! Wir freuen uns sehr, Sie bei der Republik begrüssen zu
+dürfen, und bedanken uns für Ihre Unterstützung: Mit Ihrem Beitrag machen Sie
+unabhängigen Journalismus möglich.
+
+Und hier gleich das Wichtigste zum Start in der Übersicht:
+
+ * Lesen und hören Sie die Republik: Unser Magazin erscheint von Montag bis
+   Samstag mit täglich ein bis drei neuen Beiträgen. In der Republik-App
+   {{link_app}} , auf der Website {{frontend_base_url}} und als Newsletter –
+   welche Newsletter und Benachrichtigungen Sie von uns erhalten, legen Sie in
+   Ihrem Konto {{link_account}} fest.
+ * Diskutieren Sie mit anderen Leserinnen und der Redaktion! Auf der
+   Dialog-Seite {{link_dialog}} sehen Sie, was aktuell bei der Republik zu reden
+   gibt, in der Etikette {{link_etikette}} finden Sie unsere Grundsätze für
+   einen höflichen Dialog.
+ * Lernen Sie unsere Crew kennen: Wir sind Ihr Team {{link_imprint}} .
+
+Haben Sie Fragen oder brauchen Sie Unterstützung? In der Gebrauchsanleitung
+{{link_manual}} haben wir die einzelnen Schritte zur Nutzung unseres Magazins
+ausgeführt (und bebildert). Bei allen weiteren Anliegen melden Sie sich gerne
+direkt via kontakt@republik.ch bei uns.
+
+Und nun wünschen wir Ihnen viel Freude mit der Republik.
+
+{{/if}} {{/if}}
+
+Details zum Kauf:
+
+   {{#options}}
+ * {{#if this.hasMultipleOAmounts}} {{this.oamount}} {{this.olabel}} à
+   {{this.oprice_formatted}}: {{this.ototal_formatted}} {{else}}
+   {{this.oamount}} {{this.olabel}}: {{this.ototal_formatted}} {{/if}}
+   {{/options}} {{#if discount}}
+ * Gewünschte Preisreduktion: –{{discount_formatted}}
+   {{/if}} {{#if donation}}
+ * Spende: {{donation_formatted}}
+   {{/if}}
+ * Total: {{total_formatted}}
+
+{{#if goodies_count}}
+
+{{#unless waiting_for_payment}} {{#if hasOneGoodie}} Sie haben sich noch ein
+Republik-Objekt gegönnt. {{else if hasMultipleGoodies}} Sie haben sich noch
+mehrere Republik-Objekte gegönnt. {{/if}}{{#if goodies_has_notebook}}Notizbücher
+liefern wir Ihnen innerhalb von 7 Werktagen. {{/if}}{{#if
+goodies_has_tablebook}}«Republik bei Stromausfall» liefern wir Ihnen innerhalb
+von 7 Werktagen. {{/if}}{{#if goodies_has_totebag}}Taschen liefern wir Ihnen
+innerhalb von 7 Werktagen. {{/if}}{{#if goodies_has_mask}}Republik-Masken
+liefern wir Ihnen innerhalb von 7 Werktagen. {{/if}}{{/unless}}{{#if
+goodies_has_fondue}}Republik-Fondues werden am 26. Januar 2022 verschickt.
+{{/if}}{{#if goodies_has_mug}}Republik-Tassen liefern wir Ihnen innerhalb von 10
+Werktagen. {{/if}}
+
+{{/if}}
+
+Ihre Crew der Republik
+
+
+Republik AG
+Sihlhallenstrasse 1, CH-8004 Zürich
+{{frontend_base_url}}
+kontakt@republik.ch

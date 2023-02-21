@@ -33,14 +33,17 @@ export const meQuery = gql`
       accessCampaigns {
         id
       }
+      hasDormantMembership
       prolongBeforeDate
       activeMembership {
         id
         type {
           name
         }
+        renew
         endDate
         graceEndDate
+        canProlong
       }
       ...ProgressConsent
     }

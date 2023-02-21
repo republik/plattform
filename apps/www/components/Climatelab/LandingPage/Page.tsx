@@ -75,10 +75,14 @@ const LandingPage = () => {
           <section
             {...css({ marginTop: 111, [mediaQueries.mUp]: { marginTop: 162 } })}
           >
-            <Counter />
-            <p {...styles.text}>
-              {t('ClimateLandingPage/content/counterText')}
-            </p>
+            <Counter
+              translations={[
+                {
+                  key: 'primaryNumber',
+                  value: 'Menschen machen im Klimalabor mit',
+                },
+              ]}
+            />
           </section>
           <section
             {...css({ marginTop: 111, [mediaQueries.mUp]: { marginTop: 162 } })}

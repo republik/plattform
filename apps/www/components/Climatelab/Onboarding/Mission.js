@@ -1,6 +1,6 @@
 import { css } from 'glamor'
 
-import { Interaction, mediaQueries } from '@project-r/styleguide'
+import { Interaction, mediaQueries, A } from '@project-r/styleguide'
 
 import Section from '../../Onboarding/Section'
 
@@ -38,11 +38,29 @@ const Mission = (props) => {
       <P {...styles.p}>
         {t('Climatelab/Onboarding/Mission/paragraph1', null, '')}
         <br /> <br />
-        {t('Climatelab/Onboarding/Mission/bullet1', null, '')}
+        {t.elements('Climatelab/Onboarding/Mission/bullet1', {
+          klimaheld: (
+            <A href={t('Climatelab/Onboarding/Mission/bullet1/klimaheldHref')}>
+              {t('Climatelab/Onboarding/Mission/bullet1/klimaheldText')}
+            </A>
+          ),
+        })}
         <br /> <br />
-        {t('Climatelab/Onboarding/Mission/bullet2', null, '')}
+        {t.elements('Climatelab/Onboarding/Mission/bullet2', {
+          postcard: (
+            <A href={t('Climatelab/Onboarding/Mission/bullet2/postcardHref')}>
+              {t('Climatelab/Onboarding/Mission/bullet2/postcardText')}
+            </A>
+          ),
+        })}
         <br /> <br />
-        {t('Climatelab/Onboarding/Mission/bullet3', null, '')}
+        {t.elements('Climatelab/Onboarding/Mission/bullet3', {
+          event: (
+            <A href={t('Climatelab/Onboarding/Mission/bullet3/eventHref')}>
+              {t('Climatelab/Onboarding/Mission/bullet3/eventText')}
+            </A>
+          ),
+        })}
         <br />
       </P>
     </Section>

@@ -13,9 +13,8 @@ describe('Slate Editor: Block Conversion', () => {
 
   const defaultConfig = { schema: articleSchema }
 
-  async function setup(structure, config = defaultConfig) {
+  async function setup(config) {
     return await mockEditor(createEditor(), {
-      structure,
       config,
       value,
       setValue: (val) => (value = val),
@@ -35,7 +34,7 @@ describe('Slate Editor: Block Conversion', () => {
           type: ['paragraph', 'blockQuote', 'ul', 'ol'],
         },
       ]
-      const editor = await setup(structure)
+      const editor = await setup({ ...defaultConfig, structure })
       await Transforms.select(editor, { path: [0, 0], offset: 0 })
 
       toggleElement(editor, 'blockQuote')
@@ -92,7 +91,7 @@ describe('Slate Editor: Block Conversion', () => {
           type: ['paragraph', 'pullQuote', 'ul', 'ol'],
         },
       ]
-      const editor = await setup(structure)
+      const editor = await setup({ ...defaultConfig, structure })
       await Transforms.select(editor, { path: [0, 0], offset: 0 })
 
       toggleElement(editor, 'ul')
@@ -137,7 +136,7 @@ describe('Slate Editor: Block Conversion', () => {
           repeat: true,
         },
       ]
-      const editor = await setup(structure)
+      const editor = await setup({ ...defaultConfig, structure })
       await Transforms.select(editor, { path: [1, 0], offset: 0 })
 
       toggleElement(editor, 'ol')
@@ -182,7 +181,7 @@ describe('Slate Editor: Block Conversion', () => {
           repeat: true,
         },
       ]
-      const editor = await setup(structure)
+      const editor = await setup({ ...defaultConfig, structure })
       await Transforms.select(editor, { path: [0, 0], offset: 0 })
 
       toggleElement(editor, 'blockQuote')
@@ -305,7 +304,7 @@ describe('Slate Editor: Block Conversion', () => {
           repeat: true,
         },
       ]
-      const editor = await setup(structure, { schema: flyerSchema })
+      const editor = await setup({ schema: flyerSchema, structure })
 
       // toggle inner tile elements
       await Transforms.select(editor, [0, 4, 0])
@@ -449,7 +448,7 @@ describe('Slate Editor: Block Conversion', () => {
           repeat: true,
         },
       ]
-      const editor = await setup(structure, { schema: flyerSchema })
+      const editor = await setup({ schema: flyerSchema, structure })
 
       // toggle inner tile elements
       await Transforms.select(editor, [0, 1, 1, 0])

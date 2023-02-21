@@ -147,7 +147,7 @@ const getTotalFn = (min, max, pgdb) => async () => {
 
   debug('query result: %o', result)
 
-  additionals.forEach(({ dateTime, amount }) => {
+  additionals?.forEach?.(({ dateTime, amount }) => {
     if (moment(dateTime).isBefore(max)) {
       result.total += parseInt(amount)
     }

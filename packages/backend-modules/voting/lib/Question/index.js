@@ -20,7 +20,6 @@ const validateAnswer = async (value, question, context, payload) => {
     case 'Document':
       return validateDocument(value, question, context, payload) // async
     case 'Choice':
-      return validateChoice(value, question, context)
     case 'ImageChoice':
       return validateChoice(value, question, context)
     default:
@@ -68,8 +67,6 @@ const resultForArchive = async (question, args, context) => {
       payload = await resultDocument(question, args, context)
       break
     case 'Choice':
-      payload = await resultChoice(question, args, context)
-      break
     case 'ImageChoice':
       payload = await resultChoice(question, args, context)
       break

@@ -1,6 +1,7 @@
 const debug = require('debug')('access:lib:grants')
 const moment = require('moment')
 const Promise = require('bluebird')
+const validator = require('validator')
 
 const { Roles } = require('@orbiting/backend-modules-auth')
 const {
@@ -97,6 +98,7 @@ const revokePerks = (grant, recipient, campaign, pgdb) =>
       recipient,
       settings,
       pgdb,
+      findByRecipient,
     )
 
     debug('revokePerks', {
@@ -130,6 +132,10 @@ const insert = async (granter, campaignId, grants = [], pgdb) => {
 }
 
 const grant = async (granter, campaignId, email, message, t, pgdb, mail) => {
+  if (email && !validator.isEmail(email)) {
+    throw new Error(t('api/email/invalid'))
+  }
+
   const campaign = await campaignsLib.findOne(campaignId, pgdb)
 
   if (!campaign) {
