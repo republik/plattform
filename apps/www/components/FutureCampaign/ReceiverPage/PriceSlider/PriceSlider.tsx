@@ -140,7 +140,7 @@ export const PriceSlider = ({
     tickBackgrounds.push(
       // eslint-disable-next-line
       useTransform(y, (yval) =>
-        tick.isDefault
+        tick.isAverage
           ? '#F0DC28'
           : getStepAtY(yval).value > tick.value
           ? colorScheme.getCSSColor('primary')
@@ -223,7 +223,7 @@ export const PriceSlider = ({
           return (
             <motion.div
               key={tick.position}
-              {...(tick.isDefault
+              {...(tick.isAverage
                 ? css(styles.tick, styles.tickDefault)
                 : styles.tick)}
               style={{
