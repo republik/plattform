@@ -8,7 +8,7 @@ import { DeleteIcon } from '../../Icons'
 
 const RepoField: React.FC<{
   href?: string
-  onChange: ({ value: any }) => void
+  onChange: ({ value }: { value: any }) => void
   onDelete: () => void
   template?: string
   label?: string
