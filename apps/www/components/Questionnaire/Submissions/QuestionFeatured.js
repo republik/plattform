@@ -40,7 +40,7 @@ export const PersonLink = ({ displayAuthor, children }) => {
   )
 }
 
-export const QuestionLink = ({ question, additionalQuestion, children }) => {
+export const QuestionLink = ({ questions, children }) => {
   const router = useRouter()
   const pathname = router.asPath.split('?')[0]
   return (
@@ -48,7 +48,7 @@ export const QuestionLink = ({ question, additionalQuestion, children }) => {
       href={{
         pathname,
         query: {
-          share: [question?.id, additionalQuestion?.id].filter(Boolean),
+          share: questions.map((q) => q.id),
         },
       }}
       passHref
@@ -58,7 +58,7 @@ export const QuestionLink = ({ question, additionalQuestion, children }) => {
   )
 }
 
-export const AnswersChart = ({ question, additionalQuestion, skipTitle }) => {
+export const AnswersChart = ({ question, skipTitle }) => {
   const totalAnswers = question.result.reduce((agg, r) => agg + r.count, 0)
   const values = question.result.map((bucket) => ({
     answer: bucket.option.label,
@@ -85,24 +85,12 @@ export const AnswersChart = ({ question, additionalQuestion, skipTitle }) => {
           }}
           values={values}
         />
-        {!!additionalQuestion && (
-          <div style={{ marginTop: '20px' }}>
-            <Editorial.P>
-              <QuestionLink
-                question={question}
-                additionalQuestion={additionalQuestion}
-              >
-                <Editorial.A>Alle Antworten lesen</Editorial.A>
-              </QuestionLink>
-            </Editorial.P>
-          </div>
-        )}
       </div>
     </div>
   )
 }
 
-const AnswersCarousel = ({ slug, question, additionalQuestion }) => {
+const AnswersCarousel = ({ slug, question }) => {
   const { loading, error, data } = useQuery(QUESTIONNAIRE_SUBMISSIONS_QUERY, {
     variables: {
       slug,
@@ -156,14 +144,6 @@ const AnswersCarousel = ({ slug, question, additionalQuestion }) => {
                 </TeaserCarouselTileContainer>
               </TeaserCarousel>
             </Breakout>
-            <Editorial.P>
-              <QuestionLink
-                question={question}
-                additionalQuestion={additionalQuestion}
-              >
-                <Editorial.A>Alle Antworten lesen</Editorial.A>
-              </QuestionLink>
-            </Editorial.P>
           </>
         )
       }}
@@ -171,35 +151,41 @@ const AnswersCarousel = ({ slug, question, additionalQuestion }) => {
   )
 }
 
-export const QuestionFeatured = ({
-  slug,
-  question,
-  additionalQuestion,
-  bgColor,
-}) => {
+export const QuestionFeatured = ({ slug, questions, bgColor }) => {
+  const hasTextAnswer = questions.some(
+    (q) => q.__typename === 'QuestionTypeText',
+  )
+
   return (
     <div
-      key={question.id}
       style={{
         marginTop: 60,
         marginBottom: 20,
         paddingTop: 20,
         flexBasis: '50%',
+
+        borderTop: '1px solid red',
       }}
     >
-      {question.__typename === 'QuestionTypeText' && (
-        <AnswersCarousel
-          slug={slug}
-          question={question}
-          additionalQuestion={additionalQuestion}
-          bgColor={bgColor}
-        />
-      )}
-      {question.__typename === 'QuestionTypeChoice' && (
-        <AnswersChart
-          question={question}
-          additionalQuestion={additionalQuestion}
-        />
+      {questions.map((q) => {
+        return q.__typename === 'QuestionTypeText' ? (
+          <AnswersCarousel
+            key={q.id}
+            slug={slug}
+            question={q}
+            bgColor={bgColor}
+          />
+        ) : q.__typename === 'QuestionTypeChoice' ? (
+          <AnswersChart key={q.id} question={q} />
+        ) : null
+      })}
+
+      {hasTextAnswer && (
+        <Editorial.P>
+          <QuestionLink questions={questions}>
+            <Editorial.A>Alle Antworten lesen</Editorial.A>
+          </QuestionLink>
+        </Editorial.P>
       )}
     </div>
   )

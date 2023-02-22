@@ -31,16 +31,12 @@ const AllQuestionsView = ({ slug, extract }) => {
             {/* FIXME: i know this looks really bad, but once we have the real questions in, we should take a look again. 
             The idea (my idea, maybe a bad one) was to display to charts at the beginning */}
             <div style={{ display: 'flex', gap: '1rem' }}></div>
-            <QuestionFeatured question={questions[0]} slug={slug} />
-            <QuestionFeatured question={questions[1]} slug={slug} />
             <QuestionFeatured
-              question={questions[2]}
-              additionalQuestion={questions[3]}
+              questions={[questions[0], questions[1]]}
               slug={slug}
             />
             <QuestionFeatured
-              question={questions[2]}
-              // additionalQuestion={questions[3]}
+              questions={[questions[2], questions[3]]}
               slug={slug}
             />
             {/* <div style={{ marginTop: 60 }}>
@@ -64,26 +60,20 @@ const AllQuestionsView = ({ slug, extract }) => {
               </Editorial.P>
             </div> */}
             <QuestionFeatured
-              question={questions[4]}
-              additionalQuestion={questions[5]}
+              questions={[questions[4], questions[5]]}
               slug={slug}
             />
-            <QuestionFeatured question={questions[6]} slug={slug} />
-            <QuestionFeatured question={questions[7]} slug={slug} />
-            <QuestionFeatured question={questions[8]} slug={slug} />
-            <QuestionFeatured question={questions[9]} slug={slug} />
-            <QuestionFeatured question={questions[10]} slug={slug} />
+            <QuestionFeatured questions={[questions[6]]} slug={slug} />
+            <QuestionFeatured questions={[questions[7]]} slug={slug} />
+            <QuestionFeatured questions={[questions[8]]} slug={slug} />
+            <QuestionFeatured questions={[questions[9]]} slug={slug} />
+            <QuestionFeatured questions={[questions[10]]} slug={slug} />
+            <QuestionFeatured questions={[questions[11]]} slug={slug} />
             <QuestionFeatured
-              question={questions[11]}
-              additionalQuestion={questions[12]}
+              questions={[questions[12], questions[13]]}
               slug={slug}
             />
-            <QuestionFeatured
-              question={questions[12]}
-              additionalQuestion={questions[13]}
-              slug={slug}
-            />
-            <QuestionFeatured question={questions[14]} slug={slug} />
+            <QuestionFeatured questions={[questions[14]]} slug={slug} />
             [CTA FRAGEBOGEN AUSFÜLLEN] [SHARE-KOMPONENTE]
           </div>
         )
