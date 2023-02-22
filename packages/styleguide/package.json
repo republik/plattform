@@ -85,7 +85,7 @@
     "slate-mdast-serializer": "^3",
     "topojson": "^3.0.2",
     "tslib": "^2.3.1",
-    "typescript": "^4.7.2",
+    "typescript": "^4.9.5",
     "validate-commit-msg": "^2.14.0"
   },
   "files": [
