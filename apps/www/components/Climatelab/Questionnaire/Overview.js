@@ -1,13 +1,35 @@
 import { useRouter } from 'next/router'
 import { useQuery } from '@apollo/client'
 import { Loader, Editorial } from '@project-r/styleguide'
-
+import { scaleOrdinal } from 'd3-scale'
 import { QUESTIONNAIRE_QUERY } from '../../Questionnaire/Submissions/graphql'
 import {
   QuestionFeatured,
   QuestionLink,
 } from '../../Questionnaire/Submissions/QuestionFeatured'
 import QuestionView from '../../Questionnaire/Submissions/QuestionView'
+
+const QUESTION_COLOR = scaleOrdinal([
+  '#c8c8ba',
+  '#bae1b4',
+  '#a7f9ae',
+  '#67b6b1',
+  '#2d72a9',
+])
+
+const QUESTION_IDS = [
+  [0, 1],
+  [2, 3],
+  [4, 5],
+  [6],
+  [7],
+  [8],
+  [9],
+  [10],
+  [11],
+  [12, 13],
+  [14],
+]
 
 const AllQuestionsView = ({ slug, extract }) => {
   const { loading, error, data } = useQuery(QUESTIONNAIRE_QUERY, {
@@ -31,49 +53,16 @@ const AllQuestionsView = ({ slug, extract }) => {
             {/* FIXME: i know this looks really bad, but once we have the real questions in, we should take a look again. 
             The idea (my idea, maybe a bad one) was to display to charts at the beginning */}
             <div style={{ display: 'flex', gap: '1rem' }}></div>
-            <QuestionFeatured
-              questions={[questions[0], questions[1]]}
-              slug={slug}
-            />
-            <QuestionFeatured
-              questions={[questions[2], questions[3]]}
-              slug={slug}
-            />
-            {/* <div style={{ marginTop: 60 }}>
-              <Editorial.P>
-                <Editorial.UL>
-                  <Editorial.LI>
-                    <QuestionLink
-                      question={questions[2]}
-                      additionalQuestion={questions[3]}
-                    >
-                      <Editorial.A>{questions[2].text}</Editorial.A>
-                    </QuestionLink>{' '}
-                    (psst: es gibt da noch eine Bonusfrage)
-                  </Editorial.LI>
-                  <Editorial.LI>
-                    <QuestionLink question={questions[5]}>
-                      <Editorial.A>{questions[5].text}</Editorial.A>
-                    </QuestionLink>
-                  </Editorial.LI>
-                </Editorial.UL>
-              </Editorial.P>
-            </div> */}
-            <QuestionFeatured
-              questions={[questions[4], questions[5]]}
-              slug={slug}
-            />
-            <QuestionFeatured questions={[questions[6]]} slug={slug} />
-            <QuestionFeatured questions={[questions[7]]} slug={slug} />
-            <QuestionFeatured questions={[questions[8]]} slug={slug} />
-            <QuestionFeatured questions={[questions[9]]} slug={slug} />
-            <QuestionFeatured questions={[questions[10]]} slug={slug} />
-            <QuestionFeatured questions={[questions[11]]} slug={slug} />
-            <QuestionFeatured
-              questions={[questions[12], questions[13]]}
-              slug={slug}
-            />
-            <QuestionFeatured questions={[questions[14]]} slug={slug} />
+            {QUESTION_IDS.map((ids, i) => {
+              return (
+                <QuestionFeatured
+                  key={ids.join('+')}
+                  questions={ids.map((id) => questions[id])}
+                  slug={slug}
+                  bgColor={QUESTION_COLOR(i)}
+                />
+              )
+            })}
             [CTA FRAGEBOGEN AUSFÜLLEN] [SHARE-KOMPONENTE]
           </div>
         )

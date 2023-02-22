@@ -15,6 +15,8 @@ import {
   Breakout,
   ColorContextProvider,
   colors,
+  Container,
+  ChevronRightIcon,
 } from '@project-r/styleguide'
 
 import { QUESTIONNAIRE_SUBMISSIONS_QUERY } from './graphql'
@@ -71,7 +73,7 @@ export const AnswersChart = ({ question, skipTitle }) => {
   )
   return (
     <div style={{ marginTop: 20 }}>
-      {!skipTitle && <Interaction.H2>{question.text}</Interaction.H2>}
+      {!skipTitle && <Editorial.Subhead>{question.text}</Editorial.Subhead>}
       <div style={{ marginTop: 20 }}>
         <Chart
           config={{
@@ -94,7 +96,7 @@ const AnswersCarousel = ({ slug, question }) => {
   const { loading, error, data } = useQuery(QUESTIONNAIRE_SUBMISSIONS_QUERY, {
     variables: {
       slug,
-      first: 1,
+      first: 8,
       sortBy: 'random',
       questionIds: [question.id],
     },
@@ -115,35 +117,83 @@ const AnswersCarousel = ({ slug, question }) => {
 
         return (
           <>
-            <Interaction.H2>{question.text}</Interaction.H2>
-
-            <Breakout size='breakout'>
-              <TeaserCarousel>
-                <TeaserCarouselTileContainer>
-                  <ColorContextProvider
-                    localColorVariables={colors}
-                    colorSchemeKey='light'
+            <Editorial.Subhead>{question.text}</Editorial.Subhead>
+            <ColorContextProvider
+              localColorVariables={colors}
+              colorSchemeKey='light'
+            >
+              <div
+                style={{
+                  display: 'grid',
+                  gap: '24px',
+                  gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
+                  gridTemplateRows: 'auto',
+                  gridAutoFlow: 'row dense',
+                  margin: '48px 0',
+                }}
+              >
+                {targetedAnswers.map(({ answers, displayAuthor }) => (
+                  <PersonLink
+                    key={displayAuthor.slug}
+                    displayAuthor={displayAuthor}
                   >
-                    {targetedAnswers.map(({ answers, displayAuthor }) => (
-                      <PersonLink
-                        key={displayAuthor.slug}
-                        displayAuthor={displayAuthor}
-                      >
-                        <TeaserCarouselTile borderRadius={'10px'}>
-                          <TeaserCarouselHeadline.Editorial>
-                            {inQuotes(answers[0].payload.value)}
-                          </TeaserCarouselHeadline.Editorial>
+                    <a style={{ textDecoration: 'none' }}>
+                      <div
+                        style={{
+                          background: 'white',
+                          borderRadius: 10,
+                          padding: 24,
+                          color: 'black',
+                          height: '100%',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
 
+                          textAlign: 'center',
+                        }}
+                      >
+                        <div>
+                          <Editorial.Question style={{ marginTop: 0 }}>
+                            {inQuotes(answers[0].payload.value)}
+                          </Editorial.Question>
                           <Editorial.Credit>
                             Von {displayAuthor.name}
                           </Editorial.Credit>
-                        </TeaserCarouselTile>
-                      </PersonLink>
-                    ))}
-                  </ColorContextProvider>
-                </TeaserCarouselTileContainer>
-              </TeaserCarousel>
-            </Breakout>
+                        </div>
+                      </div>
+                    </a>
+                  </PersonLink>
+                ))}
+              </div>
+            </ColorContextProvider>
+
+            {/* <Breakout size='breakout'> */}
+            {/* <TeaserCarousel>
+              <TeaserCarouselTileContainer>
+                <ColorContextProvider
+                  localColorVariables={colors}
+                  colorSchemeKey='light'
+                >
+                  {targetedAnswers.map(({ answers, displayAuthor }) => (
+                    <PersonLink
+                      key={displayAuthor.slug}
+                      displayAuthor={displayAuthor}
+                    >
+                      <TeaserCarouselTile borderRadius={'10px'}>
+                        <TeaserCarouselHeadline.Editorial>
+                          {inQuotes(answers[0].payload.value)}
+                        </TeaserCarouselHeadline.Editorial>
+
+                        <Editorial.Credit>
+                          Von {displayAuthor.name}
+                        </Editorial.Credit>
+                      </TeaserCarouselTile>
+                    </PersonLink>
+                  ))}
+                </ColorContextProvider>
+              </TeaserCarouselTileContainer>
+            </TeaserCarousel> */}
+            {/* </Breakout> */}
           </>
         )
       }}
@@ -159,34 +209,31 @@ export const QuestionFeatured = ({ slug, questions, bgColor }) => {
   return (
     <div
       style={{
-        marginTop: 60,
-        marginBottom: 20,
-        paddingTop: 20,
-        flexBasis: '50%',
-
-        borderTop: '1px solid red',
+        padding: '0 0 46px 0',
+        // flexBasis: '50%',
+        backgroundColor: bgColor,
+        display: 'flex',
       }}
     >
-      {questions.map((q) => {
-        return q.__typename === 'QuestionTypeText' ? (
-          <AnswersCarousel
-            key={q.id}
-            slug={slug}
-            question={q}
-            bgColor={bgColor}
-          />
-        ) : q.__typename === 'QuestionTypeChoice' ? (
-          <AnswersChart key={q.id} question={q} />
-        ) : null
-      })}
+      <Container>
+        {questions.map((q) => {
+          return q.__typename === 'QuestionTypeText' ? (
+            <AnswersCarousel key={q.id} slug={slug} question={q} />
+          ) : q.__typename === 'QuestionTypeChoice' ? (
+            <AnswersChart key={q.id} question={q} />
+          ) : null
+        })}
 
-      {hasTextAnswer && (
-        <Editorial.P>
-          <QuestionLink questions={questions}>
-            <Editorial.A>Alle Antworten lesen</Editorial.A>
-          </QuestionLink>
-        </Editorial.P>
-      )}
+        {hasTextAnswer && (
+          <Interaction.P style={{ fontSize: '0.9em' }}>
+            <QuestionLink questions={questions}>
+              <a style={{ textDecoration: 'none', color: 'currentColor' }}>
+                Alle Antworten lesen <ChevronRightIcon />
+              </a>
+            </QuestionLink>
+          </Interaction.P>
+        )}
+      </Container>
     </div>
   )
 }
