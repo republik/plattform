@@ -76,7 +76,7 @@ const AllQuestionsView = ({ slug, extract }) => {
 const SubmissionsOverview = ({ slug, extract, share }) => {
   const router = useRouter()
   const { query } = router
-  const questionIds = query.share?.split(QUESTION_SEPARATOR)
+  const questionIds = query.share ? [].concat(query.share) : undefined
 
   if (questionIds) {
     return (
