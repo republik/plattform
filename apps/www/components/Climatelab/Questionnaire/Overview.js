@@ -4,7 +4,6 @@ import { Loader, Editorial } from '@project-r/styleguide'
 
 import { QUESTIONNAIRE_QUERY } from '../../Questionnaire/Submissions/graphql'
 import {
-  QUESTION_SEPARATOR,
   QuestionFeatured,
   QuestionLink,
 } from '../../Questionnaire/Submissions/QuestionFeatured'
@@ -31,16 +30,20 @@ const AllQuestionsView = ({ slug, extract }) => {
           <div style={{ margin: '0 auto' }}>
             {/* FIXME: i know this looks really bad, but once we have the real questions in, we should take a look again. 
             The idea (my idea, maybe a bad one) was to display to charts at the beginning */}
-            <div style={{ display: 'flex', gap: '1rem' }}>
-              <QuestionFeatured question={questions[6]} slug={slug} />
-              <QuestionFeatured question={questions[31]} slug={slug} />
-            </div>
+            <div style={{ display: 'flex', gap: '1rem' }}></div>
+            <QuestionFeatured question={questions[0]} slug={slug} />
+            <QuestionFeatured question={questions[1]} slug={slug} />
             <QuestionFeatured
-              question={questions[0]}
-              additionalQuestion={questions[1]}
+              question={questions[2]}
+              additionalQuestion={questions[3]}
               slug={slug}
             />
-            <div style={{ marginTop: 60 }}>
+            <QuestionFeatured
+              question={questions[2]}
+              // additionalQuestion={questions[3]}
+              slug={slug}
+            />
+            {/* <div style={{ marginTop: 60 }}>
               <Editorial.P>
                 <Editorial.UL>
                   <Editorial.LI>
@@ -59,13 +62,29 @@ const AllQuestionsView = ({ slug, extract }) => {
                   </Editorial.LI>
                 </Editorial.UL>
               </Editorial.P>
-            </div>
-            <QuestionFeatured question={questions[16]} slug={slug} />
+            </div> */}
             <QuestionFeatured
-              question={questions[31]}
-              additionalQuestion={questions[32]}
+              question={questions[4]}
+              additionalQuestion={questions[5]}
               slug={slug}
             />
+            <QuestionFeatured question={questions[6]} slug={slug} />
+            <QuestionFeatured question={questions[7]} slug={slug} />
+            <QuestionFeatured question={questions[8]} slug={slug} />
+            <QuestionFeatured question={questions[9]} slug={slug} />
+            <QuestionFeatured question={questions[10]} slug={slug} />
+            <QuestionFeatured
+              question={questions[11]}
+              additionalQuestion={questions[12]}
+              slug={slug}
+            />
+            <QuestionFeatured
+              question={questions[12]}
+              additionalQuestion={questions[13]}
+              slug={slug}
+            />
+            <QuestionFeatured question={questions[14]} slug={slug} />
+            [CTA FRAGEBOGEN AUSFÜLLEN] [SHARE-KOMPONENTE]
           </div>
         )
       }}

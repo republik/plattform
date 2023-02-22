@@ -20,7 +20,7 @@ import {
 import { QUESTIONNAIRE_SUBMISSIONS_QUERY } from './graphql'
 
 export const getTargetedAnswers = (questionIds, results) => {
-  return [...results.nodes].map((submission) => {
+  return results?.nodes.map((submission) => {
     return {
       answers: submission.answers.nodes.filter((answer) =>
         questionIds.includes(answer.question.id),
@@ -106,7 +106,7 @@ const AnswersCarousel = ({ slug, question, additionalQuestion }) => {
   const { loading, error, data } = useQuery(QUESTIONNAIRE_SUBMISSIONS_QUERY, {
     variables: {
       slug,
-      first: 8,
+      first: 1,
       sortBy: 'random',
       questionIds: [question.id],
     },
@@ -123,7 +123,7 @@ const AnswersCarousel = ({ slug, question, additionalQuestion }) => {
           questionnaire: { results },
         } = data
 
-        const targetedAnswers = getTargetedAnswers([question.id], results)
+        const targetedAnswers = getTargetedAnswers([question.id], results) ?? []
 
         return (
           <>

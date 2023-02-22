@@ -31,7 +31,7 @@ import {
 import { climateColors } from '../config'
 import { useMe } from '../../../lib/context/MeContext'
 
-const QUESTIONNAIRE_SLUG = 'sommer22'
+const QUESTIONNAIRE_SLUG = 'klima-fragebogen'
 const SHARE_IMG_URL =
   'https://cdn.repub.ch/s3/republik-assets/dynamic-components/QUESTIONNAIRE_SUBMISSIONS/frame-sommer22.png'
 
