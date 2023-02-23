@@ -28,6 +28,7 @@ module.exports = {
         resolved: {
           properties: {
             answers: {
+              type: 'nested',
               properties: {
                 questionId: {
                   type: 'keyword',
