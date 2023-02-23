@@ -4,7 +4,7 @@
 
 The build-script consists of two commands:
 
-1. Using `svgr` the svg-files are converted into React-components (outputted into `lib/components`)
+1. Using [`svgr`](https://react-svgr.com/) the svg-files are converted into React-components (outputted into `lib/components`)
 
 2. In a second step `vite.js` is used to bundle the output of the previous step as a CSJ & ESM bundle. In addtion the type-descriptions are generated as well.
 

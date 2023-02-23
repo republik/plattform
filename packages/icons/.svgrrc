@@ -4,3 +4,7 @@ icon: true
 typescript: true
 expandProps: true
 removeDimensions: false
+replaceAttrValues:
+  "#000": currentColor
+svgProps:
+  fill: currentColor
