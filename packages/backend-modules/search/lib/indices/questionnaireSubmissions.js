@@ -59,6 +59,9 @@ module.exports = {
                           type: 'text',
                           analyzer: 'german',
                         },
+                        length: {
+                          type: 'integer',
+                        },
                       },
                     },
                     question: {
