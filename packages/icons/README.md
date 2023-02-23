@@ -1,9 +1,18 @@
 # @republik/icons
 
+## Build & Dev Scripts
+
+The build-script consists of two commands:
+
+1. Using `svgr` the svg-files are converted into React-components (outputted into `lib/components`)
+
+2. In a second step `vite.js` is used to bundle the output of the previous step as a CSJ & ESM bundle. In addtion the type-descriptions are generated as well.
+
+The dev-script uses `nodemon` to watch the `lib/svg` folder. If a change is detected, the build-script is re-run.
+
 ## Adding an icon
 
-To add an icon, simply add a `.svg` file into the `svg` folder.
-Once you run the `build` script again, your icon will be ready to use.
+To add an icon, simply add a `.svg` file into the `lib/svg` folder.
 
 ### How to import
 
