@@ -266,15 +266,20 @@ input SubmissionsFilterInput {
   submissionIds: [ID!]
   notSubmissionIds: [ID!]
 
-  answeredQuestionIds: [ID!]
-  hasAnswers: Boolean @deprecated(reason: "use \`answeredQuestionIds\` instead")
+  answeredQuestionIds: [ID!] @deprecated(reason: "use \`answers\` instead")
+  hasAnswers: Boolean @deprecated(reason: "use \`answers\` instead")
 
-  valueLength: SubmissionsInputValueLength
+  answers: [SubmissionFilterAnswer]
   
   userIds: [ID!]
 }
 
-input SubmissionsInputValueLength {
+input SubmissionFilterAnswer {
+  questionId: ID!
+  valueLength: SubmissionFilterAnswerValueLength
+}
+
+input SubmissionFilterAnswerValueLength {
   gte: Int
   lte: Int
 }

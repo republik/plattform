@@ -66,8 +66,6 @@ const createSubmissionsQuery = ({
 }) => {
   const { by, date } = sort
 
-  const hasAnswers = { exists: { field: 'resolved.answers' } }
-
   const mustBeforeDate = date && {
     range: {
       createdAt: {
@@ -80,20 +78,41 @@ const createSubmissionsQuery = ({
     terms: { userId: filters.userIds },
   }
   const mustQuestionnaireId = questionnaireId && { term: { questionnaireId } }
+  const mustSubmissionId = filters?.id && { term: { id: filters.id } }
+  const mustNotSubmissionId = filters?.not && { term: { id: filters.not } }
+  const mustSubmissionIds = filters?.submissionIds?.length && {
+    terms: { id: filters.submissionIds },
+  }
+  const mustNotSubmissionIds = filters?.notSubmissionIds?.length && {
+    terms: { id: filters.notSubmissionIds },
+  }
+
+  const mustHaveSomeAnswers = {
+    nested: {
+      path: 'resolved.answers',
+      query: { exists: { field: 'resolved.answers' } },
+    },
+  }
+
   const mustSearch = search && {
     bool: {
       should: [
         {
-          simple_query_string: {
-            query: search,
-            fields: [
-              'resolved.answers.payload.text',
-              'resolved.answers.resolved.question.text',
-              'resolved.answers.resolved.value.Text',
-              'resolved.answers.resolved.value.Choice',
-              'resolved.answers.resolved.value.ImageChoice',
-            ],
-            default_operator: 'AND',
+          nested: {
+            path: 'resolved.answer',
+            query: {
+              simple_query_string: {
+                query: search,
+                fields: [
+                  'resolved.answers.payload.text',
+                  'resolved.answers.resolved.question.text',
+                  'resolved.answers.resolved.value.Text',
+                  'resolved.answers.resolved.value.Choice',
+                  'resolved.answers.resolved.value.ImageChoice',
+                ],
+                default_operator: 'AND',
+              },
+            },
           },
         },
         {
@@ -117,47 +136,60 @@ const createSubmissionsQuery = ({
       ],
     },
   }
+
   const mustValue = value && {
-    term: { 'resolved.answers.payload.value': value },
-  }
-  const mustSubmissionId = filters?.id && { term: { id: filters.id } }
-  const mustNotSubmissionId = filters?.not && { term: { id: filters.not } }
-  const mustSubmissionIds = filters?.submissionIds?.length && {
-    terms: { id: filters.submissionIds },
-  }
-  const mustNotSubmissionIds = filters?.notSubmissionIds?.length && {
-    terms: { id: filters.notSubmissionIds },
-  }
-  const mustAnsweredQuestionIds = filters?.answeredQuestionIds && {
-    bool: {
-      must: filters?.answeredQuestionIds.map((id) => ({
-        term: { 'resolved.answers.questionId': id },
-      })),
+    nested: {
+      path: 'resolved.answers',
+      query: { term: { 'resolved.answers.payload.value': value } },
     },
   }
-  const mustValueLength = filters?.valueLength && {
-    range: {
-      'resolved.answers.resolved.value.length': {
-        gte: Math.max(0, filters.valueLength.gte),
-        lte: filters.valueLength.lte || null,
-      },
+
+  const expectedAnswers = (filters?.answeredQuestionIds || [])
+    .map((questionId) => ({
+      questionId,
+    }))
+    .concat(filters?.answers || [])
+
+  const mustHaveAnswers = expectedAnswers && {
+    bool: {
+      must: expectedAnswers.map(({ questionId, valueLength }) => {
+        return {
+          nested: {
+            path: 'resolved.answers',
+            query: {
+              bool: {
+                must: [
+                  { term: { 'resolved.answers.questionId': questionId } },
+                  valueLength && {
+                    range: {
+                      'resolved.answers.resolved.value.length': {
+                        gte: Math.max(0, valueLength.gte) || 0,
+                        lte: valueLength.lte || null,
+                      },
+                    },
+                  },
+                ].filter(Boolean),
+              },
+            },
+          },
+        }
+      }),
     },
   }
 
   const query = {
     bool: {
       must: [
-        hasAnswers,
         mustBeforeDate,
         mustUserId,
         mustUserIds,
         mustQuestionnaireId,
-        mustSearch,
-        mustValue,
         mustSubmissionId,
         mustSubmissionIds,
-        mustAnsweredQuestionIds,
-        mustValueLength,
+        mustHaveSomeAnswers,
+        mustSearch,
+        mustValue,
+        mustHaveAnswers,
       ].filter(Boolean),
       must_not: [mustNotSubmissionId, mustNotSubmissionIds].filter(Boolean),
     },
