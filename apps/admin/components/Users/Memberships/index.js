@@ -235,7 +235,11 @@ const MembershipDetails = ({ userId, membership, ...props }) => {
               <Fragment>
                 <DT>Gekauft durch</DT>
                 <DD>
-                  <Link href={`/users/${membership.pledge.user.id}`} passHref>
+                  <Link
+                    href={`/users/${membership.pledge.user.id}`}
+                    passHref
+                    legacyBehavior
+                  >
                     <A>{membership.pledge.user.name}</A>
                   </Link>
                 </DD>

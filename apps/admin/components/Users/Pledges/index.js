@@ -396,7 +396,7 @@ const MembershipDetails = ({ membership, ...props }) => {
         <DL>
           <DT>eingelöst von</DT>
           <DD>
-            <Link href={`/users/${membership.user.id}`} passHref>
+            <Link href={`/users/${membership.user.id}`} passHref legacyBehavior>
               <A>{membership.claimerName}</A>
             </Link>
           </DD>
