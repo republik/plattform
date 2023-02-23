@@ -1,8 +1,10 @@
 import { css } from 'glamor'
-import { FC } from 'react'
+import { FC, ReactNode } from 'react'
 import { fontStyles } from '@project-r/styleguide'
 
-const ErrorText: FC = ({ children }) => <p {...styles.text}>{children}</p>
+const ErrorText: FC<{ children?: ReactNode }> = ({ children }) => (
+  <p {...styles.text}>{children}</p>
+)
 
 export default ErrorText
 

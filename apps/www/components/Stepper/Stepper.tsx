@@ -33,7 +33,7 @@ function isContentRenderFunc(value: Step['content']): value is StepRenderFunc {
 type StepperProps = {
   steps?: Step[]
   customStepperUIPlacement?: boolean
-  contentWrapperElement?: FC<{ ref: Ref<HTMLDivElement> }>
+  contentWrapperElement?: FC<{ ref: Ref<HTMLDivElement>; children?: ReactNode }>
   onComplete?: () => void
 }
 

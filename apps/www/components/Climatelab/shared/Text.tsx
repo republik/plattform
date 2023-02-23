@@ -1,8 +1,10 @@
-import { FC } from 'react'
+import { FC, ReactNode } from 'react'
 import { fontStyles } from '@project-r/styleguide'
 import { css } from 'glamor'
 
-const Text: FC = ({ children }) => <p {...style}>{children}</p>
+const Text: FC<{ children?: ReactNode }> = ({ children }) => (
+  <p {...style}>{children}</p>
+)
 
 export default Text
 
