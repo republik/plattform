@@ -71,6 +71,7 @@ OverlayToolbarClose.propTypes = {
 }
 
 export const OverlayToolbar: React.FC<{
+  children?: ReactNode
   title: string | ReactNode
   onClose: MouseEventHandler<HTMLButtonElement>
 }> = ({ title, onClose, children }) => {

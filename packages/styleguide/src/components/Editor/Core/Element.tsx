@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { ReactNode, useEffect, useState } from 'react'
 import { ReactEditor, useSelected, useSlate } from 'slate-react'
 import {
   config as elementsConfig,
@@ -20,6 +20,7 @@ import BlockUi from './BlockUi'
 import { selectNode } from './helpers/tree'
 
 export const ElementComponent: React.FC<{
+  children?: ReactNode
   editor: CustomEditor
   element: CustomElement
   attributes: any

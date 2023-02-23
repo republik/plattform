@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+import React, { ReactNode, useMemo, useState } from 'react'
 import { css } from 'glamor'
 import { plainButtonRule } from '../Button'
 import schema from '../Editor/schema/flyer'
@@ -48,6 +48,7 @@ const styles = {
 }
 
 export const EditorQuizItem: React.FC<{
+  children?: ReactNode
   isCorrect?: boolean
   attributes: any
   [x: string]: unknown
@@ -94,6 +95,7 @@ export const EditorQuizItem: React.FC<{
 }
 
 export const EditorQuizContainer: React.FC<{
+  children?: ReactNode
   props: any
   attributes: any
   [x: string]: unknown
@@ -107,6 +109,7 @@ export const EditorQuizContainer: React.FC<{
 }
 
 export const QuizAnswer: React.FC<{
+  children?: ReactNode
   attributes: any
   [x: string]: unknown
 }> = ({ children, attributes, ...props }) => (

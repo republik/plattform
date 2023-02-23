@@ -1,4 +1,4 @@
-import React, { CSSProperties } from 'react'
+import React, { CSSProperties, ReactNode } from 'react'
 import { color as d3Color } from 'd3-color'
 
 export type MarkerType =
@@ -55,6 +55,7 @@ export const markersConfig: { [K in MarkerType]: MarkerConfig } = {
 export const markerKeys = Object.keys(markersConfig) as MarkerType[]
 
 export const Marker: React.FC<{
+  children?: ReactNode
   marker: MarkerType
   isSelected?: boolean
   attributes?: any

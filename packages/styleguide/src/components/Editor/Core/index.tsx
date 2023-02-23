@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react'
+import React, { ReactNode, useCallback, useEffect } from 'react'
 import { createEditor, Editor, Text } from 'slate'
 import { withHistory } from 'slate-history'
 import { Slate, Editable, withReact } from 'slate-react'
@@ -74,13 +74,19 @@ const SlateEditor: React.FC<SlateEditorProps> = ({
 
   const renderElement = useCallback(
     ({ children, ...props }) => (
+      // TODO: properly type
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       <ElementComponent {...props}>{children}</ElementComponent>
     ),
     [],
   )
 
   const renderLeaf = useCallback(
-    ({ children, ...props }) => (
+    ({ children, ...props }: { children: ReactNode }) => (
+      // TODO: properly type
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       <LeafComponent {...props}>{children}</LeafComponent>
     ),
     [],

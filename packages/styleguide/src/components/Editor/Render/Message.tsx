@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ReactNode } from 'react'
 import { useColorContext } from '../../Colors/ColorContext'
 import { Label } from '../../Typography'
 
@@ -34,6 +34,7 @@ export const Message: React.FC<{
 }
 
 export const ErrorMessage: React.FC<{
+  children?: ReactNode
   attributes: any
   error: string
 }> = ({ error, attributes, children }) => (

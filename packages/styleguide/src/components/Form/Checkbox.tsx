@@ -1,10 +1,11 @@
-import React from 'react'
+import React, { ReactNode } from 'react'
 import { css } from 'glamor'
 import { fontStyles } from '../../theme/fonts'
 import { pxToRem } from '../Typography/utils'
 import { useColorContext } from '../Colors/useColorContext'
 
 const Checkbox: React.FC<{
+  children?: ReactNode
   name?: string
   checked: boolean
   disabled?: boolean

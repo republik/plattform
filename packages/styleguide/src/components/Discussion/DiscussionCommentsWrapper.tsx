@@ -15,6 +15,7 @@ const styles = {
 }
 
 const propTypes = {
+  children: PropTypes.arrayOf(PropTypes.node),
   t: PropTypes.func.isRequired,
   loadMore: PropTypes.func.isRequired,
   moreAvailableCount: PropTypes.number,

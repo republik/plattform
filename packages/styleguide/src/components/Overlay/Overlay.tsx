@@ -65,7 +65,7 @@ const ssrAttribute = 'data-overlay-ssr'
 
 type OverlayProps = {
   onClose: MouseEventHandler<HTMLButtonElement>
-  children: ReactNode
+  children?: ReactNode
   mUpStyle?: MUpStyle
   mini?: boolean
 }

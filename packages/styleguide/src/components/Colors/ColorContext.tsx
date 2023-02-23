@@ -1,4 +1,10 @@
-import React, { useEffect, useMemo, useState, useContext } from 'react'
+import React, {
+  useEffect,
+  useMemo,
+  useState,
+  useContext,
+  ReactNode,
+} from 'react'
 import { css } from 'glamor'
 import memoize from 'lodash/memoize'
 
@@ -89,6 +95,7 @@ const getObjectForKeys = (colorKeys, mapper = (key) => key) =>
   }, {})
 
 export const ColorContextLocalExtension: React.FC<{
+  children?: ReactNode
   localColors: any
   localMappings: any
 }> = ({ children, localColors = localInvertedColors, localMappings = {} }) => {
@@ -221,6 +228,7 @@ export const ColorHtmlBodyColors = ({
 }
 
 export const ColorContextProvider: React.FC<{
+  children?: ReactNode
   colorSchemeKey: 'light' | 'dark' | 'auto'
   root?: boolean
 }> = ({ colorSchemeKey = 'auto', root = false, children }) => {

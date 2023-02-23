@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ReactNode } from 'react'
 import { css } from 'glamor'
 import { fontStyles } from '../../theme/fonts'
 import { pxToRem } from '../Typography/utils'
@@ -80,6 +80,7 @@ const RadioCircle = ({ checked, disabled }) => {
 }
 
 const Radio: React.FC<{
+  children?: ReactNode
   style?: React.CSSProperties
   name?: string
   value: string

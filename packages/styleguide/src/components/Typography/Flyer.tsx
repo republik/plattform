@@ -1,4 +1,4 @@
-import React, { forwardRef } from 'react'
+import React, { forwardRef, ReactNode } from 'react'
 import { css } from 'glamor'
 import { useColorContext } from '../Colors/ColorContext'
 import { mUp } from '../../theme/mediaQueries'
@@ -8,7 +8,11 @@ import { useRenderContext } from '../Editor/Render/Context'
 import { pxToRem } from './utils'
 import colors from '../../theme/colors'
 
-type BaseProps = { attributes?: any; [x: string]: unknown }
+type BaseProps = {
+  children?: ReactNode
+  attributes?: any
+  [x: string]: unknown
+}
 type Typography = React.FC<BaseProps>
 
 export const Layout: Typography = ({ children, attributes }) => {
