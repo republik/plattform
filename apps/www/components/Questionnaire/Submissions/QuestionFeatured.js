@@ -16,6 +16,7 @@ import {
   ColorContextProvider,
   colors,
   Container,
+  NarrowContainer,
   ChevronRightIcon,
 } from '@project-r/styleguide'
 
@@ -72,23 +73,29 @@ export const AnswersChart = ({ question, skipTitle }) => {
     (bucket, index) => (colorMap[bucket.option.label] = COLORS[index]),
   )
   return (
-    <div style={{ marginTop: 20 }}>
-      {!skipTitle && <Editorial.Subhead>{question.text}</Editorial.Subhead>}
+    <NarrowContainer>
       <div style={{ marginTop: 20 }}>
-        <Chart
-          config={{
-            type: 'Bar',
-            numberFormat: '.0%',
-            y: 'answer',
-            showBarValues: true,
-            colorMap: colorMap,
-            color: 'answer',
-            colorSort: 'none',
-          }}
-          values={values}
-        />
+        {!skipTitle && (
+          <Editorial.Subhead style={{ textAlign: 'center' }}>
+            {question.text}
+          </Editorial.Subhead>
+        )}
+        <div style={{ marginTop: 20 }}>
+          <Chart
+            config={{
+              type: 'Bar',
+              numberFormat: '.0%',
+              y: 'answer',
+              showBarValues: true,
+              colorMap: colorMap,
+              color: 'answer',
+              colorSort: 'none',
+            }}
+            values={values}
+          />
+        </div>
       </div>
-    </div>
+    </NarrowContainer>
   )
 }
 
@@ -117,7 +124,11 @@ const AnswersCarousel = ({ slug, question }) => {
 
         return (
           <>
-            <Editorial.Subhead>{question.text}</Editorial.Subhead>
+            <NarrowContainer>
+              <Editorial.Subhead style={{ textAlign: 'center' }}>
+                {question.text}
+              </Editorial.Subhead>
+            </NarrowContainer>
             <ColorContextProvider
               localColorVariables={colors}
               colorSchemeKey='light'
@@ -140,7 +151,7 @@ const AnswersCarousel = ({ slug, question }) => {
                     <a style={{ textDecoration: 'none' }}>
                       <div
                         style={{
-                          background: 'white',
+                          background: 'rgba(255,255,255,0.5)',
                           borderRadius: 10,
                           padding: 24,
                           color: 'black',
@@ -225,13 +236,15 @@ export const QuestionFeatured = ({ slug, questions, bgColor }) => {
         })}
 
         {hasTextAnswer && (
-          <Interaction.P style={{ fontSize: '0.9em' }}>
-            <QuestionLink questions={questions}>
-              <a style={{ textDecoration: 'none', color: 'currentColor' }}>
-                Alle Antworten lesen <ChevronRightIcon />
-              </a>
-            </QuestionLink>
-          </Interaction.P>
+          <NarrowContainer>
+            <Interaction.P style={{ fontSize: '0.9em' }}>
+              <QuestionLink questions={questions}>
+                <a style={{ textDecoration: 'none', color: 'currentColor' }}>
+                  Alle Antworten lesen <ChevronRightIcon />
+                </a>
+              </QuestionLink>
+            </Interaction.P>
+          </NarrowContainer>
         )}
       </Container>
     </div>
