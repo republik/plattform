@@ -173,8 +173,12 @@ const Submission = ({
         <div {...styles.headerText}>
           <Interaction.H3>
             {displayAuthor.slug ? (
-              <Link href={`/~${displayAuthor.slug}`}>
-                <a {...plainLinkRule}>{displayAuthor.name}</a>
+              <Link
+                href={`/~${displayAuthor.slug}`}
+                {...plainLinkRule}
+                legacyBehavior
+              >
+                {displayAuthor.name}
               </Link>
             ) : (
               displayAuthor.name
@@ -182,10 +186,13 @@ const Submission = ({
           </Interaction.H3>
           <Label>
             <span {...colorScheme.set('color', 'textSoft')}>
-              <Link href={publicUrl}>
-                <a {...styles.linkUnderline} title={titleDate(createdAt)}>
-                  <RelativeTime t={t} isDesktop date={createdAt} />
-                </a>
+              <Link
+                href={publicUrl}
+                {...styles.linkUnderline}
+                title={titleDate(createdAt)}
+                legacyBehavior
+              >
+                <RelativeTime t={t} isDesktop date={createdAt} />
               </Link>
               {isUpdated && (
                 <>

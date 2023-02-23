@@ -300,7 +300,7 @@ class Pledge extends Component {
       }`,
       {
         accountLink: (
-          <Link key='account' href='/konto' passHref>
+          <Link key='account' href='/konto' passHref legacyBehavior>
             <A>{t(`pledge/form/instruction/${queryPackage}/accountText`)}</A>
           </Link>
         ),

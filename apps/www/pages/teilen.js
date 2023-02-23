@@ -49,6 +49,7 @@ const Page = () => {
               query: { package: 'ABO' },
             }}
             passHref
+            legacyBehavior
           >
             <PackageItem
               t={t}
@@ -65,6 +66,7 @@ const Page = () => {
               query: { package: 'MONTHLY_ABO' },
             }}
             passHref
+            legacyBehavior
           >
             <PackageItem
               t={t}

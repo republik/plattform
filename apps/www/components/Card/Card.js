@@ -269,6 +269,7 @@ const Card = ({
                   },
                 }}
                 passHref
+                legacyBehavior
               >
                 <IconButton
                   Icon={DiscussionIcon}

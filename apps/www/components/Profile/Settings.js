@@ -68,7 +68,7 @@ export const ListedCheckbox = withT(({ user, values, onChange, t }) => (
     <Label>
       {t.elements(`profile/settings/isListed/${!!values.isListed}/note`, {
         communityLink: (
-          <Link key='communityLink' href='/community' passHref>
+          <Link key='communityLink' href='/community' passHref legacyBehavior>
             <A target='_blank'>{t('profile/settings/privacy/communityLink')}</A>
           </Link>
         ),

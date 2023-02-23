@@ -46,21 +46,19 @@ const ClimateTeaserContent = () => {
               isClimateLabMember ? CLIMATE_LAB_URL : CLIMATE_LAB_LANDINGPAGE_URL
             }
             passHref
+            {...colorScheme.set('backgroundColor', 'primary')}
+            {...colorScheme.set('color', 'climateButtonText')}
+            {...colorScheme.set('borderColor', 'climateBorder')}
+            {...css({
+              ':hover': {
+                backgroundColor: colorScheme.getCSSColor('primaryHover'),
+              },
+            })}
+            {...plainLinkRule}
+            {...styles.button}
+            legacyBehavior
           >
-            <a
-              {...colorScheme.set('backgroundColor', 'primary')}
-              {...colorScheme.set('color', 'climateButtonText')}
-              {...colorScheme.set('borderColor', 'climateBorder')}
-              {...css({
-                ':hover': {
-                  backgroundColor: colorScheme.getCSSColor('primaryHover'),
-                },
-              })}
-              {...plainLinkRule}
-              {...styles.button}
-            >
-              {t('ClimateTeaser/content/buttonAction')}
-            </a>
+            {t('ClimateTeaser/content/buttonAction')}
           </NextLink>
         </div>
       </div>

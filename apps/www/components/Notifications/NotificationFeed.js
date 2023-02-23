@@ -146,7 +146,7 @@ export default withT(
                   })}
             </Interaction.H1>
 
-            <Link href='/konto/benachrichtigungen' passHref>
+            <Link href='/konto/benachrichtigungen' passHref legacyBehavior>
               <A>{t('Notifications/settings')}</A>
             </Link>
 

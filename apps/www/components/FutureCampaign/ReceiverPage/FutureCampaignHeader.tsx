@@ -8,7 +8,7 @@ const FutureCampaignHeader = () => {
   return (
     <div {...colorScheme.set('backgroundColor', 'default')}>
       <div {...styles.header}>
-        <Link href='/'>
+        <Link href='/' legacyBehavior>
           <div {...styles.logo}>
             <AssetImage
               src={'/static/5-jahre-republik/logo/combo-logo_white.svg'}

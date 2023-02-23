@@ -187,10 +187,8 @@ const InviteReceiverPage = ({ invalidInviteCode }: InviteReceiverPageProps) => {
             </p>
             <p {...styles.text} style={{ marginBottom: 32 }}>
               Mit einem Probeabo können Sie die Republik ab sofort und{' '}
-              <Link href='/probelesen' passHref>
-                <a {...styles.inlineLink}>
-                  kostenlos für 3 Wochen kennenlernen
-                </a>
+              <Link href='/probelesen' passHref {...styles.inlineLink}>
+                kostenlos für 3 Wochen kennenlernen
               </Link>
               .
             </p>

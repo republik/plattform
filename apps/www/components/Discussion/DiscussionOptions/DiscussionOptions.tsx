@@ -70,6 +70,7 @@ const DiscussionOptions = ({ documentMeta }: Props) => {
               prefetch={false}
               passHref
               key={item}
+              legacyBehavior
             >
               <TabButton
                 border={false}

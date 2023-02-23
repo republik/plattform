@@ -120,7 +120,7 @@ const AuthNotification = ({ query, goTo, onClose, t, me }) => {
     ) : (
       ((!hasCurtain && !isUnkownType) || inNativeApp) && (
         <div style={{ marginTop: 20 }}>
-          <Link href='/' passHref>
+          <Link href='/' passHref legacyBehavior>
             <Button block primary>
               {t(`notifications/closeButton${inNativeApp ? '/app' : ''}`)}
             </Button>

@@ -116,6 +116,7 @@ const Accordion = withInNativeApp(
                   query: { package: 'PROLONG', token: query.token },
                 }}
                 passHref
+                legacyBehavior
               >
                 <PackageItem
                   t={t}
@@ -137,6 +138,7 @@ const Accordion = withInNativeApp(
                   },
                 }}
                 passHref
+                legacyBehavior
               >
                 <PackageItem
                   t={t}
@@ -162,6 +164,7 @@ const Accordion = withInNativeApp(
                   },
                 }}
                 passHref
+                legacyBehavior
               >
                 <PackageItem
                   t={t}
@@ -183,6 +186,7 @@ const Accordion = withInNativeApp(
                     query: { package: 'ABO_GIVE' },
                   }}
                   passHref
+                  legacyBehavior
                 >
                   <PackageItem
                     t={t}
@@ -201,6 +205,7 @@ const Accordion = withInNativeApp(
                       query: { package: 'MONTHLY_ABO' },
                     }}
                     passHref
+                    legacyBehavior
                   >
                     <PackageItem
                       t={t}
@@ -217,6 +222,7 @@ const Accordion = withInNativeApp(
                       query: { package: 'ABO' },
                     }}
                     passHref
+                    legacyBehavior
                   >
                     <PackageItem
                       t={t}
@@ -233,6 +239,7 @@ const Accordion = withInNativeApp(
                       query: { package: 'BENEFACTOR' },
                     }}
                     passHref
+                    legacyBehavior
                   >
                     <PackageItem
                       t={t}
@@ -253,6 +260,7 @@ const Accordion = withInNativeApp(
               query: { package: 'DONATE' },
             }}
             passHref
+            legacyBehavior
           >
             <PackageItem
               t={t}
@@ -315,13 +323,13 @@ const PrimaryCTA = withInNativeApp(
     }
     if (children) {
       return (
-        <Link href={href} passHref>
+        <Link href={href} passHref legacyBehavior>
           {children}
         </Link>
       )
     }
     return (
-      <Link href={href} passHref>
+      <Link href={href} passHref legacyBehavior>
         <Button primary block={block}>
           {text}
         </Button>
@@ -386,7 +394,7 @@ const Page = ({
                   <P>
                     {t('cockpit19/beforeNote')}{' '}
                     {
-                      <Link href='/cockpit' passHref>
+                      <Link href='/cockpit' passHref legacyBehavior>
                         <Editorial.A>
                           {t('cockpit19/beforeNote/link')}
                         </Editorial.A>
@@ -714,7 +722,7 @@ const Page = ({
                 ) : questionnaire && questionnaire.hasEnded ? (
                   'Nicht mehr verfügbar.'
                 ) : (
-                  <Link href='/umfrage/1-minute' passHref>
+                  <Link href='/umfrage/1-minute' passHref legacyBehavior>
                     <Editorial.A>Komplizin werden</Editorial.A>
                   </Link>
                 )}
@@ -998,7 +1006,7 @@ const Page = ({
               <br />
               <br />
               {questionnaire && questionnaire.shouldAnswer && (
-                <Link href='/umfrage/1-minute' passHref>
+                <Link href='/umfrage/1-minute' passHref legacyBehavior>
                   <Button white block>
                     Komplizin werden
                   </Button>

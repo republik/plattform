@@ -106,6 +106,7 @@ const DiscussionPage = ({ router, data, vt }) => {
                             }}
                             passHref
                             scroll={false}
+                            legacyBehavior
                           >
                             {selectedDiscussion === id ? (
                               <Strong>

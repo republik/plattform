@@ -45,7 +45,7 @@ const AudioInfo = ({
             ? intersperse(
                 speakers.map((s) =>
                   s.user?.slug ? (
-                    <Link href={`/~${s.user.slug}`} passHref>
+                    <Link href={`/~${s.user.slug}`} passHref legacyBehavior>
                       <Editorial.A>{s?.user?.name || s.name}</Editorial.A>
                     </Link>
                   ) : (

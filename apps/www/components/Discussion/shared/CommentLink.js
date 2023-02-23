@@ -58,7 +58,12 @@ const CommentLink = ({ displayAuthor, comment, discussion, ...props }) => {
      */
     if (displayAuthor.slug) {
       return (
-        <Link {...props} href={`/~${displayAuthor.slug}`} prefetch={false} />
+        <Link
+          {...props}
+          href={`/~${displayAuthor.slug}`}
+          prefetch={false}
+          legacyBehavior
+        />
       )
     }
   } else if (discussion) {
@@ -69,6 +74,7 @@ const CommentLink = ({ displayAuthor, comment, discussion, ...props }) => {
           {...props}
           href={getFocusHref(discussion, comment)}
           prefetch={false}
+          legacyBehavior
         />
       )
     }

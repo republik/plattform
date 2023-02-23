@@ -56,12 +56,12 @@ export const UnauthorizedMessage = ({
         <Interaction.P>
           {t.elements('withMembership/unauthorized', {
             buyLink: (
-              <Link key='pledge' href='/angebote' passHref>
+              <Link key='pledge' href='/angebote' passHref legacyBehavior>
                 <A>{t('withMembership/unauthorized/buyText')}</A>
               </Link>
             ),
             accountLink: (
-              <Link key='account' href='/konto' passHref>
+              <Link key='account' href='/konto' passHref legacyBehavior>
                 <A>{t('withMembership/unauthorized/accountText')}</A>
               </Link>
             ),
@@ -83,12 +83,12 @@ export const UnauthorizedMessage = ({
             {description ||
               t.elements('withMembership/signIn/note', {
                 buyLink: (
-                  <Link key='pledge' href='/angebote' passHref>
+                  <Link key='pledge' href='/angebote' passHref legacyBehavior>
                     <A>{t('withMembership/signIn/note/buyText')}</A>
                   </Link>
                 ),
                 moreLink: (
-                  <Link key='index' href='/' passHref>
+                  <Link key='index' href='/' passHref legacyBehavior>
                     <A>{t('withMembership/signIn/note/moreText')}</A>
                   </Link>
                 ),

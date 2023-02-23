@@ -59,7 +59,7 @@ const Campaigns = ({ t, data, grantAccess, revokeAccess }) => {
                   {t('Account/Access/Page/noCampaign')}
                 </Interaction.P>
                 {!inNativeIOSApp && (
-                  <Link href='/angebote' passHref>
+                  <Link href='/angebote' passHref legacyBehavior>
                     <Button style={{ marginTop: 24, marginBottom: 24 }} primary>
                       {t('Account/Access/Page/link')}
                     </Button>

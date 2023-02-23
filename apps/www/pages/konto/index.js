@@ -67,7 +67,7 @@ const AccountPage = ({ t, hasAccess, hasActiveMembership }) => {
               <HintArea>
                 {t.elements('Account/Onboarding/text', {
                   link: (
-                    <Link key='link' href='/einrichten' passHref>
+                    <Link key='link' href='/einrichten' passHref legacyBehavior>
                       <A>
                         <Emphasis>{t('Account/Onboarding/link')}</Emphasis>
                       </A>
@@ -88,7 +88,7 @@ const AccountPage = ({ t, hasAccess, hasActiveMembership }) => {
               <HintArea>
                 {t.elements('Account/Access/text', {
                   link: (
-                    <Link key='link' href='/teilen' passHref>
+                    <Link key='link' href='/teilen' passHref legacyBehavior>
                       <A>
                         <Emphasis>{t('Account/Access/link')}</Emphasis>
                       </A>

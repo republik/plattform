@@ -598,6 +598,7 @@ const LoadedProfile = (props) => {
                           query: { edit: true },
                         }}
                         passHref
+                        legacyBehavior
                       >
                         <A>Kandidatur bearbeiten</A>
                       </Link>
@@ -687,7 +688,11 @@ const Profile = (props) => {
                   <p>
                     {t.elements('pages/profile/empty/content', {
                       link: (
-                        <Link href={`/~${me.username || me.id}`} passHref>
+                        <Link
+                          href={`/~${me.username || me.id}`}
+                          passHref
+                          legacyBehavior
+                        >
                           <A>{t('pages/profile/empty/content/linktext')}</A>
                         </Link>
                       ),

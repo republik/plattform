@@ -42,7 +42,13 @@ const AccountTabs = ({ t }) => {
     <div {...styles.container}>
       <Scroller innerPadding={15} activeChildIndex={activeChildIndex}>
         {TabArray.map((n, i) => (
-          <Link href={n.path} scroll={false} passHref key={n.name}>
+          <Link
+            href={n.path}
+            scroll={false}
+            passHref
+            key={n.name}
+            legacyBehavior
+          >
             <TabButton
               key={n.name}
               text={t(`account/tabs/${n.name}`)}

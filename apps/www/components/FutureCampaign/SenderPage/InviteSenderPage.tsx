@@ -187,10 +187,8 @@ const InviteSenderPage = ({ me }: { me: MeObjectType }) => {
                   {!userInviteData?.me?.hasAddress && (
                     <span>
                       Vergessen Sie nicht,{' '}
-                      <Link href='/konto' passHref>
-                        <a {...styles.inlineLink}>
-                          im Konto Ihre Adresse zu hinterlegen
-                        </a>
+                      <Link href='/konto' passHref {...styles.inlineLink}>
+                        im Konto Ihre Adresse zu hinterlegen
                       </Link>
                       , damit wir Ihnen das Geschenk zustellen können.
                     </span>
@@ -351,10 +349,7 @@ const InviteSenderPage = ({ me }: { me: MeObjectType }) => {
             <p {...styles.text}>
               Und: Es gibt noch andere Wege, wie Sie zur Bekanntheit der
               Republik beitragen können. Hier finden Sie eine{' '}
-              <Link href='/komplizin'>
-                <a>Übersicht</a>
-              </Link>
-              .
+              <Link href='/komplizin'>Übersicht</Link>.
             </p>
             <p {...styles.text}>Herzlichen Dank für Ihr Engagement!</p>
           </div>
@@ -374,10 +369,7 @@ const InviteSenderPage = ({ me }: { me: MeObjectType }) => {
             <p {...styles.text}>
               Aber es gibt noch andere Wege, wie Sie zur Bekanntheit der
               Republik beitragen können: Hier finden Sie eine{' '}
-              <Link href='/komplizin'>
-                <a>Übersicht</a>
-              </Link>
-              .
+              <Link href='/komplizin'>Übersicht</Link>.
             </p>
             <p {...styles.text}>Herzlichen Dank für Ihr Engagement!</p>
           </div>

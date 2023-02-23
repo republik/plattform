@@ -704,6 +704,7 @@ const Group = ({
             query: medianSmartspiderQuery,
           }}
           passHref
+          legacyBehavior
         >
           <Editorial.A>
             {t(
@@ -757,6 +758,7 @@ const Group = ({
                     },
                   }}
                   passHref
+                  legacyBehavior
                 >
                   <Editorial.A>
                     {t('components/Card/Group/end/showList')}
@@ -796,6 +798,7 @@ const Group = ({
                       },
                     }}
                     passHref
+                    legacyBehavior
                   >
                     <Editorial.A>
                       {t('components/Card/Group/end/showList')}

@@ -28,7 +28,7 @@ const Vision = () => {
       <Editorial.P>{t('marketing/page/vision/paragraph1')}</Editorial.P>
       <Editorial.P>{t('marketing/page/vision/paragraph2')}</Editorial.P>
       <Editorial.P>
-        <Link href='/about' passHref>
+        <Link href='/about' passHref legacyBehavior>
           <Editorial.A>{t('marketing/page/vision/more')}</Editorial.A>
         </Link>
       </Editorial.P>

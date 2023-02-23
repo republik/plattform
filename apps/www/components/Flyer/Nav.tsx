@@ -112,7 +112,7 @@ const Nav: React.FC<{ repoId: string; publishDate: string }> = ({
     <div {...styles.navi}>
       {/* prevent flicker */}
       {hasAccess && (loading || prev) && (
-        <Link href={prev?.path || '#'} passHref>
+        <Link href={prev?.path || '#'} passHref legacyBehavior>
           <IconButton Icon={ArrowBackIcon} />
         </Link>
       )}
@@ -120,7 +120,7 @@ const Nav: React.FC<{ repoId: string; publishDate: string }> = ({
         <FlyerDate date={publishDate} />
       </div>
       {next && (
-        <Link href={next?.path || '#'} passHref>
+        <Link href={next?.path || '#'} passHref legacyBehavior>
           <IconButton invert Icon={ArrowForwardIcon} />
         </Link>
       )}

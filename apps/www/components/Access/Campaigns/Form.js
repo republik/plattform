@@ -128,6 +128,7 @@ class Form extends Component {
                           query: { context: 'access' },
                         }}
                         passHref
+                        legacyBehavior
                       >
                         <A>
                           {t(

@@ -31,7 +31,7 @@ const SurviveStatus = ({ t, crowdfunding, hasActiveMembership }) => {
       />
       {hasActiveMembership && (
         <div>
-          <Link href='/crowdfunding' passHref>
+          <Link href='/crowdfunding' passHref legacyBehavior>
             <A>{t('crowdfunding/SurviveStatus/link/crowdfunding2')}</A>
           </Link>
           {' – '}

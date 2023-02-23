@@ -150,6 +150,7 @@ class Merci extends Component {
                   query: { claim: query.id, package: query.package },
                 }}
                 passHref
+                legacyBehavior
               >
                 <A>
                   <br />
@@ -233,6 +234,7 @@ class Merci extends Component {
               query: { claim: query.id },
             }}
             passHref
+            legacyBehavior
           >
             <A>
               <br />

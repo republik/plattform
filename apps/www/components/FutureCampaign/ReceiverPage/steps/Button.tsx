@@ -19,15 +19,16 @@ const Button = ({ children, onClick, href, disabled }: ButtonProps) => {
 
   if (href) {
     return (
-      <Link href={href} passHref>
-        <a
-          {...plainLinkRule}
-          {...style}
-          {...colorScheme.set('color', disabled ? 'disabled' : 'default')}
-          {...colorScheme.set('backgroundColor', 'text')}
-        >
-          {children}
-        </a>
+      <Link
+        href={href}
+        passHref
+        {...plainLinkRule}
+        {...style}
+        {...colorScheme.set('color', disabled ? 'disabled' : 'default')}
+        {...colorScheme.set('backgroundColor', 'text')}
+        legacyBehavior
+      >
+        {children}
       </Link>
     )
   }

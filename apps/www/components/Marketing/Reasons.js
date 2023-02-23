@@ -34,12 +34,14 @@ const Reasons = ({ inNativeApp }) => {
           <Link
             href={{ pathname: '/angebote', query: { package: 'ABO' } }}
             passHref
+            legacyBehavior
           >
             <Button primary>{t('marketing/join/ABO/button/label')}</Button>
           </Link>
           <Link
             href={{ pathname: '/angebote', query: { package: 'MONTHLY_ABO' } }}
             passHref
+            legacyBehavior
           >
             <Button>{t('marketing/join/MONTHLY_ABO/button/label')}</Button>
           </Link>

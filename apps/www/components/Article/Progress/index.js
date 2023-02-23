@@ -21,7 +21,7 @@ const MIN_INDEX = 2
 export const getFeatureDescription = (t) =>
   t.elements('article/progressprompt/description/feature', {
     link: PROGRESS_EXPLAINER_PATH ? (
-      <Link href={PROGRESS_EXPLAINER_PATH} key='link' passHref>
+      <Link href={PROGRESS_EXPLAINER_PATH} key='link' passHref legacyBehavior>
         <A>{t('article/progressprompt/description/feature/link')}</A>
       </Link>
     ) : null,

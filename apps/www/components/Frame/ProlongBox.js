@@ -78,7 +78,13 @@ const ProlongBox = ({ t, prolongBeforeDate, membership }) => {
       prefixTranslationKeys.map((k) => `${k}/explanation`),
       {
         cancelLink: (
-          <Link key='cancelLink' href='/abgang' passHref prefetch={false}>
+          <Link
+            key='cancelLink'
+            href='/abgang'
+            passHref
+            prefetch={false}
+            legacyBehavior
+          >
             <Editorial.A {...styleTextColor}>
               {t.first(
                 prefixTranslationKeys.map((k) => `${k}/explanation/cancelText`),
@@ -119,6 +125,7 @@ const ProlongBox = ({ t, prolongBeforeDate, membership }) => {
         href={{ pathname: `/angebote`, query: { package: 'ABO' } }}
         passHref
         prefetch={false}
+        legacyBehavior
       >
         <Editorial.A {...styleTextColor}>
           {t.first(prefixTranslationKeys.map((k) => `${k}/linkText`))}
@@ -147,6 +154,7 @@ const ProlongBox = ({ t, prolongBeforeDate, membership }) => {
               href={{ pathname: `/angebote`, query: { package: 'ABO' } }}
               passHref
               prefetch={false}
+              legacyBehavior
             >
               <Button style={{ marginTop: 10 }} primary>
                 {buttonText}

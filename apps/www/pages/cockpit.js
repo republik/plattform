@@ -128,7 +128,7 @@ const Accordion = withInNativeApp(
           </Interaction.P>
           {me && me.activeMembership && (
             <>
-              <Link href='/komplizin' passHref>
+              <Link href='/komplizin' passHref legacyBehavior>
                 <PackageItem
                   t={t}
                   crowdfundingName={CROWDFUNDING}
@@ -150,6 +150,7 @@ const Accordion = withInNativeApp(
                       query: { package: 'PROLONG', token: query.token },
                     }}
                     passHref
+                    legacyBehavior
                   >
                     <PackageItem
                       t={t}
@@ -171,6 +172,7 @@ const Accordion = withInNativeApp(
                       },
                     }}
                     passHref
+                    legacyBehavior
                   >
                     <PackageItem
                       t={t}
@@ -196,6 +198,7 @@ const Accordion = withInNativeApp(
                       },
                     }}
                     passHref
+                    legacyBehavior
                   >
                     <PackageItem
                       t={t}
@@ -219,6 +222,7 @@ const Accordion = withInNativeApp(
                         query: { package: 'ABO_GIVE' },
                       }}
                       passHref
+                      legacyBehavior
                     >
                       <PackageItem
                         t={t}
@@ -237,6 +241,7 @@ const Accordion = withInNativeApp(
                           query: { package: 'MONTHLY_ABO' },
                         }}
                         passHref
+                        legacyBehavior
                       >
                         <PackageItem
                           t={t}
@@ -253,6 +258,7 @@ const Accordion = withInNativeApp(
                           query: { package: 'ABO' },
                         }}
                         passHref
+                        legacyBehavior
                       >
                         <PackageItem
                           t={t}
@@ -269,6 +275,7 @@ const Accordion = withInNativeApp(
                           query: { package: 'BENEFACTOR' },
                         }}
                         passHref
+                        legacyBehavior
                       >
                         <PackageItem
                           t={t}
@@ -289,6 +296,7 @@ const Accordion = withInNativeApp(
                   query: { package: 'DONATE' },
                 }}
                 passHref
+                legacyBehavior
               >
                 <PackageItem
                   t={t}
@@ -653,7 +661,11 @@ const Page = ({
                 Wir investieren in Journalismus und in konkrete Projekte. Und
                 fassen ein neues Wachstumsziel ins Auge:{' '}
                 {countFormat(numMembersNeeded)} Abonnentinnen und Mitglieder.{' '}
-                <Link href='/2022/11/11/hier-sehen-sie-unser-budget' passHref>
+                <Link
+                  href='/2022/11/11/hier-sehen-sie-unser-budget'
+                  passHref
+                  legacyBehavior
+                >
                   <Editorial.A>
                     Diese Zahl leitet sich aus dem aktuellen Budget 2022/23 ab.
                   </Editorial.A>

@@ -91,14 +91,12 @@ const Filters = compose(
                   }),
                 }}
                 passHref
+                {...colorScheme.set('color', 'text')}
+                {...styles[isActive ? 'linkSelected' : 'linkRegular']}
+                {...(!isActive && hoverRule)}
+                legacyBehavior
               >
-                <a
-                  {...colorScheme.set('color', 'text')}
-                  {...styles[isActive ? 'linkSelected' : 'linkRegular']}
-                  {...(!isActive && hoverRule)}
-                >
-                  {text}
-                </a>
+                {text}
               </Link>
             ) : (
               text
