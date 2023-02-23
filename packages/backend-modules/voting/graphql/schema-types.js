@@ -268,8 +268,15 @@ input SubmissionsFilterInput {
 
   answeredQuestionIds: [ID!]
   hasAnswers: Boolean @deprecated(reason: "use \`answeredQuestionIds\` instead")
+
+  valueLength: SubmissionsInputValueLength
   
   userIds: [ID!]
+}
+
+input SubmissionsInputValueLength {
+  gte: Int
+  lte: Int
 }
 
 input SubmissionsSortInput {

@@ -135,6 +135,14 @@ const createSubmissionsQuery = ({
       })),
     },
   }
+  const mustValueLength = filters?.valueLength && {
+    range: {
+      'resolved.answers.resolved.value.length': {
+        gte: Math.max(0, filters.valueLength.gte),
+        lte: filters.valueLength.lte || null,
+      },
+    },
+  }
 
   const query = {
     bool: {
@@ -149,6 +157,7 @@ const createSubmissionsQuery = ({
         mustSubmissionId,
         mustSubmissionIds,
         mustAnsweredQuestionIds,
+        mustValueLength,
       ].filter(Boolean),
       must_not: [mustNotSubmissionId, mustNotSubmissionIds].filter(Boolean),
     },
