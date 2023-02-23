@@ -29,8 +29,8 @@
     "glamor": "^2.20.40",
     "mdast-react-render": "^1.2.0",
     "prop-types": "^15.6.1",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "unist-util-visit": "^2.0.2"
   }
 }
