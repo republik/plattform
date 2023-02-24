@@ -280,8 +280,10 @@ input SubmissionFilterAnswer {
 }
 
 input SubmissionFilterAnswerValueLength {
-  gte: Int
-  lte: Int
+  "Expect a minimum amount of characters in answer given"
+  min: Int
+  "Expect a maximum amount of characters in answer given"
+  max: Int
 }
 
 input SubmissionsSortInput {

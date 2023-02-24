@@ -163,8 +163,8 @@ const createSubmissionsQuery = ({
                   valueLength && {
                     range: {
                       'resolved.answers.resolved.value.length': {
-                        gte: Math.max(0, valueLength.gte) || 0,
-                        lte: valueLength.lte || null,
+                        gte: Math.max(1, valueLength.min) || 1,
+                        lte: valueLength.max || undefined,
                       },
                     },
                   },
