@@ -12,9 +12,9 @@ const styles = {
   chart: css({
     display: 'grid',
     rowGap: 12,
-    columnGap: '10%',
+    // columnGap: '10%',
     width: '100%',
-    gridTemplateRows: 'auto 150px auto',
+    gridTemplateRows: 'auto auto',
     gridAutoColumns: '1fr',
     gridAutoFlow: 'column',
   }),
@@ -25,9 +25,17 @@ const styles = {
   bar: css({
     width: '100%',
     backgroundColor: `currentColor`,
-    opacity: 0.8,
-    borderRadius: 7,
+    opacity: 0.7,
+    borderRadius: '7px 7px 0 0',
+    marginTop: 12,
+  }),
+  barAndLabel: css({
+    // display: "flex",
+    // flexDirection: ""
+
     alignSelf: 'end',
+    borderBottom: '1px solid currentColor',
+    padding: '0 10%',
   }),
 }
 
@@ -43,14 +51,16 @@ export const QuestionSummaryChart = ({ answers }: Props) => {
         {answers.map((d) => {
           return (
             <Fragment key={d.answer}>
-              <div {...styles.label}>{pct(d.value)}</div>
+              <div {...styles.barAndLabel}>
+                <div {...styles.label}>{pct(d.value)}</div>
 
-              <div
-                {...styles.bar}
-                style={{
-                  height: `${y(d.value)}%`,
-                }}
-              ></div>
+                <div
+                  {...styles.bar}
+                  style={{
+                    height: y(d.value),
+                  }}
+                ></div>
+              </div>
               <div {...styles.label}>{d.answer}</div>
             </Fragment>
           )
