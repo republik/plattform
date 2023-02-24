@@ -1,26 +1,21 @@
+import { useQuery } from '@apollo/client'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { useQuery } from '@apollo/client'
 
 import {
-  Loader,
-  TeaserCarousel,
-  TeaserCarouselTileContainer,
-  TeaserCarouselTile,
-  TeaserCarouselHeadline,
-  inQuotes,
-  Chart,
-  Interaction,
-  Editorial,
-  Breakout,
+  ChevronRightIcon,
   ColorContextProvider,
   colors,
   Container,
+  Editorial,
+  inQuotes,
+  Interaction,
+  Loader,
   NarrowContainer,
-  ChevronRightIcon,
 } from '@project-r/styleguide'
 
 import { QUESTIONNAIRE_SUBMISSIONS_QUERY } from './graphql'
+import { QuestionSummaryChart } from './QuestionChart'
 
 export const getTargetedAnswers = (questionIds, results) => {
   return results?.nodes.map((submission) => {
@@ -63,9 +58,11 @@ export const QuestionLink = ({ questions, children }) => {
 
 export const AnswersChart = ({ question, skipTitle }) => {
   const totalAnswers = question.result.reduce((agg, r) => agg + r.count, 0)
-  const values = question.result.map((bucket) => ({
-    answer: bucket.option.label,
-    value: String(bucket.count / totalAnswers),
+  const values = question.options.map((option) => ({
+    answer: option.label,
+    value:
+      (question.result.find((result) => result.option.value === option.value)
+        ?.count ?? 0) / totalAnswers,
   }))
 
   const colorMap = {}
@@ -81,18 +78,7 @@ export const AnswersChart = ({ question, skipTitle }) => {
           </Editorial.Subhead>
         )}
         <div style={{ marginTop: 20 }}>
-          <Chart
-            config={{
-              type: 'Bar',
-              numberFormat: '.0%',
-              y: 'answer',
-              showBarValues: true,
-              colorMap: colorMap,
-              color: 'answer',
-              colorSort: 'none',
-            }}
-            values={values}
-          />
+          <QuestionSummaryChart answers={values} key='answer' />
         </div>
       </div>
     </NarrowContainer>
