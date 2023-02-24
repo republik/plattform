@@ -16,6 +16,8 @@ import {
 
 import { QUESTIONNAIRE_SUBMISSIONS_QUERY } from './graphql'
 import { QuestionSummaryChart } from './QuestionChart'
+import { AnswersGrid, AnswersGridCard } from './AnswersGrid'
+import { css } from 'glamor'
 
 export const getTargetedAnswers = (questionIds, results) => {
   return results?.nodes.map((submission) => {
@@ -119,78 +121,30 @@ const AnswersCarousel = ({ slug, question }) => {
               localColorVariables={colors}
               colorSchemeKey='light'
             >
-              <div
-                style={{
-                  display: 'grid',
-                  gap: '24px',
-                  gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
-                  gridTemplateRows: 'auto',
-                  gridAutoFlow: 'row dense',
-                  margin: '48px 0',
-                }}
-              >
+              <AnswersGrid>
                 {targetedAnswers.map(({ answers, displayAuthor }) => (
-                  <PersonLink
+                  <AnswersGridCard
                     key={displayAuthor.slug}
-                    displayAuthor={displayAuthor}
+                    textLength={answers[0].payload.value.length}
                   >
-                    <a style={{ textDecoration: 'none' }}>
-                      <div
-                        style={{
-                          background: 'rgba(255,255,255,0.5)',
-                          borderRadius: 10,
-                          padding: 24,
-                          color: 'black',
-                          height: '100%',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-
-                          textAlign: 'center',
-                        }}
-                      >
-                        <div>
-                          <Editorial.Question style={{ marginTop: 0 }}>
-                            {inQuotes(answers[0].payload.value)}
-                          </Editorial.Question>
-                          <Editorial.Credit>
-                            Von {displayAuthor.name}
-                          </Editorial.Credit>
+                    <PersonLink displayAuthor={displayAuthor}>
+                      <a style={{ textDecoration: 'none' }}>
+                        <div {...styles.answerCard}>
+                          <div>
+                            <Editorial.Question style={{ marginTop: 0 }}>
+                              {inQuotes(answers[0].payload.value)}
+                            </Editorial.Question>
+                            <Editorial.Credit>
+                              Von {displayAuthor.name}
+                            </Editorial.Credit>
+                          </div>
                         </div>
-                      </div>
-                    </a>
-                  </PersonLink>
-                ))}
-              </div>
-            </ColorContextProvider>
-
-            {/* <Breakout size='breakout'> */}
-            {/* <TeaserCarousel>
-              <TeaserCarouselTileContainer>
-                <ColorContextProvider
-                  localColorVariables={colors}
-                  colorSchemeKey='light'
-                >
-                  {targetedAnswers.map(({ answers, displayAuthor }) => (
-                    <PersonLink
-                      key={displayAuthor.slug}
-                      displayAuthor={displayAuthor}
-                    >
-                      <TeaserCarouselTile borderRadius={'10px'}>
-                        <TeaserCarouselHeadline.Editorial>
-                          {inQuotes(answers[0].payload.value)}
-                        </TeaserCarouselHeadline.Editorial>
-
-                        <Editorial.Credit>
-                          Von {displayAuthor.name}
-                        </Editorial.Credit>
-                      </TeaserCarouselTile>
+                      </a>
                     </PersonLink>
-                  ))}
-                </ColorContextProvider>
-              </TeaserCarouselTileContainer>
-            </TeaserCarousel> */}
-            {/* </Breakout> */}
+                  </AnswersGridCard>
+                ))}
+              </AnswersGrid>
+            </ColorContextProvider>
           </>
         )
       }}
@@ -235,4 +189,19 @@ export const QuestionFeatured = ({ slug, questions, bgColor }) => {
       </Container>
     </div>
   )
+}
+
+const styles = {
+  answerCard: css({
+    background: 'rgba(255,255,255,0.5)',
+    borderRadius: 10,
+    padding: 24,
+    color: 'black',
+    height: '100%',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+
+    textAlign: 'center',
+  }),
 }

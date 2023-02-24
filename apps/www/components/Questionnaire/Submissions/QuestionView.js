@@ -1,5 +1,6 @@
 import { useRouter } from 'next/router'
 import { useQuery } from '@apollo/client'
+import { sum } from 'd3-array'
 
 import NextLink from 'next/link'
 
@@ -42,6 +43,7 @@ import Meta from '../../Frame/Meta'
 import { ASSETS_SERVER_BASE_URL, PUBLIC_BASE_URL } from '../../../lib/constants'
 import { replaceText } from './utils'
 import { questionColor } from '../../Climatelab/Questionnaire/config'
+import { AnswersGrid, AnswersGridCard } from './AnswersGrid'
 
 const QuestionViewMeta = ({ share, question }) => {
   const router = useRouter()
@@ -141,7 +143,7 @@ const QuestionView = ({ slug, questionIds, extract, share = {}, bgColor }) => {
                   ref={containerRef}
                 >
                   <NarrowContainer>
-                    <Editorial.Subhead>
+                    <Editorial.Subhead style={{ textAlign: 'center' }}>
                       {mainQuestion.text}
                       {!isChoiceQuestion &&
                         !!addQuestion &&
@@ -155,88 +157,101 @@ const QuestionView = ({ slug, questionIds, extract, share = {}, bgColor }) => {
                           skipTitle={true}
                         />
                         <br />
-                        <Editorial.Subhead>
+                        <Editorial.Subhead style={{ textAlign: 'center' }}>
                           {addQuestion.text}
                         </Editorial.Subhead>
                       </>
                     )}
                   </NarrowContainer>
                   <Container>
-                    <div {...styles.answerGrid}>
+                    <AnswersGrid>
                       {targetAnswers.map(({ answers, displayAuthor }) => (
-                        <PersonLink
+                        <AnswersGridCard
                           key={displayAuthor.slug}
-                          displayAuthor={displayAuthor}
+                          textLength={sum(
+                            answers,
+                            (a) => a.payload.value.length,
+                          )}
                         >
-                          <div {...styles.answerCard}>
-                            <ColorContextProvider
-                              localColorVariables={colors}
-                              colorSchemeKey='light'
-                            >
-                              <Editorial.P attributes={{}}>
-                                <div
-                                  {...(!isChoiceQuestion &&
-                                    styles.answerCardContent)}
+                          <PersonLink displayAuthor={displayAuthor}>
+                            <a style={{ textDecoration: 'none' }}>
+                              <div {...styles.answerCard}>
+                                <ColorContextProvider
+                                  localColorVariables={colors}
+                                  colorSchemeKey='light'
                                 >
-                                  {answers.map((answer, idx) => {
-                                    return (
-                                      <div key={answer.id}>
-                                        {isChoiceQuestion && idx === 0 ? (
-                                          <div
-                                            {...styles.circleLabel}
-                                            style={{
-                                              color:
-                                                colorMap[
-                                                  answer?.payload?.value
-                                                ],
-                                            }}
-                                          >
-                                            <span
-                                              {...styles.circle}
-                                              style={{
-                                                backgroundColor:
-                                                  colorMap[
-                                                    answer?.payload?.value
-                                                  ],
-                                              }}
-                                            />
-                                            <AnswerText
-                                              text={answer.payload.text}
-                                              value={answer.payload.value}
-                                              question={currentQuestions[idx]}
-                                            />
-                                          </div>
-                                        ) : (
-                                          <div
-                                            {...(isChoiceQuestion &&
-                                              styles.answerCardContent)}
-                                          >
-                                            <AnswerText
-                                              text={answer.payload.text}
-                                              value={answer.payload.value}
-                                              question={currentQuestions[idx]}
-                                            />
-                                            <br />
-                                            <br />
+                                  <Editorial.P attributes={{}}>
+                                    <div
+                                      {...(!isChoiceQuestion &&
+                                        styles.answerCardContent)}
+                                    >
+                                      {answers.map((answer, idx) => {
+                                        return (
+                                          <div key={answer.id}>
+                                            {isChoiceQuestion && idx === 0 ? (
+                                              <div
+                                                {...styles.circleLabel}
+                                                style={{
+                                                  color:
+                                                    colorMap[
+                                                      answer?.payload?.value
+                                                    ],
+                                                }}
+                                              >
+                                                <span
+                                                  {...styles.circle}
+                                                  style={{
+                                                    backgroundColor:
+                                                      colorMap[
+                                                        answer?.payload?.value
+                                                      ],
+                                                  }}
+                                                />
+                                                <AnswerText
+                                                  text={answer.payload.text}
+                                                  value={answer.payload.value}
+                                                  question={
+                                                    currentQuestions[idx]
+                                                  }
+                                                />
+                                              </div>
+                                            ) : (
+                                              <div
+                                                {...(isChoiceQuestion &&
+                                                  styles.answerCardContent)}
+                                              >
+                                                <AnswerText
+                                                  text={answer.payload.text}
+                                                  value={answer.payload.value}
+                                                  question={
+                                                    currentQuestions[idx]
+                                                  }
+                                                />
+                                                <br />
+                                                <br />
 
-                                            {isChoiceQuestion && (
-                                              <em>– {displayAuthor.name}</em>
+                                                {isChoiceQuestion && (
+                                                  <em>
+                                                    – {displayAuthor.name}
+                                                  </em>
+                                                )}
+                                              </div>
                                             )}
                                           </div>
-                                        )}
-                                      </div>
-                                    )
-                                  })}
-                                  {!isChoiceQuestion && (
-                                    <em>– {displayAuthor.name}</em>
-                                  )}
-                                </div>
-                              </Editorial.P>
-                            </ColorContextProvider>
-                          </div>
-                        </PersonLink>
+                                        )
+                                      })}
+                                      {!isChoiceQuestion && (
+                                        <em>– {displayAuthor.name}</em>
+                                      )}
+                                    </div>
+                                  </Editorial.P>
+                                </ColorContextProvider>
+                              </div>
+                            </a>
+                          </PersonLink>
+                        </AnswersGridCard>
                       ))}
-                    </div>
+                    </AnswersGrid>
                   </Container>
                   <NarrowContainer>
                     <div style={{ marginTop: 10 }}>
@@ -281,20 +296,20 @@ const styles = {
     width: '20%',
     borderTopLeftRadius: '2px',
   }),
-  answerGrid: css({
-    marginTop: 50,
-    columnWidth: '300px',
-    gap: '1rem',
-  }),
+
   answerCard: css({
-    cursor: 'pointer',
-    breakInside: 'avoid',
+    background: 'rgba(255,255,255,0.5)',
+    borderRadius: 10,
+    padding: 24,
+    color: 'black',
+    height: '100%',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+
+    textAlign: 'center',
   }),
   answerCardContent: css({
-    padding: '15px',
-    marginBottom: '20px',
-    borderRadius: '10px',
-    backgroundColor: '#FFF',
     overflowWrap: 'break-word',
     hyphens: 'manual',
   }),
