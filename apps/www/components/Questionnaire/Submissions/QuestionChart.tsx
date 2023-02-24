@@ -1,8 +1,8 @@
-import { scaleLinear, scaleBand } from 'd3-scale'
 import { max } from 'd3-array'
 import { format } from 'd3-format'
-import { Fragment } from 'react'
+import { scaleLinear } from 'd3-scale'
 import { css } from 'glamor'
+import { Fragment } from 'react'
 type Props = {
   answers: { answer: string; value: number }[]
   key: string

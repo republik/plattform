@@ -1,6 +1,8 @@
 import { useRouter } from 'next/router'
 import { useQuery } from '@apollo/client'
 
+import NextLink from 'next/link'
+
 import {
   Button,
   InlineSpinner,
@@ -11,6 +13,9 @@ import {
   fontStyles,
   ColorContextProvider,
   colors,
+  NarrowContainer,
+  Container,
+  A,
 } from '@project-r/styleguide'
 
 import { css } from 'glamor'
@@ -36,6 +41,7 @@ import { ShareImageSplit } from './ShareImageSplit'
 import Meta from '../../Frame/Meta'
 import { ASSETS_SERVER_BASE_URL, PUBLIC_BASE_URL } from '../../../lib/constants'
 import { replaceText } from './utils'
+import { questionColor } from '../../Climatelab/Questionnaire/config'
 
 const QuestionViewMeta = ({ share, question }) => {
   const router = useRouter()
@@ -60,7 +66,7 @@ const QuestionViewMeta = ({ share, question }) => {
   )
 }
 
-const QuestionView = ({ slug, questionIds, extract, share = {} }) => {
+const QuestionView = ({ slug, questionIds, extract, share = {}, bgColor }) => {
   const { t } = useTranslation()
   const router = useRouter()
   const pathname = router.asPath.split('?')[0]
@@ -87,7 +93,7 @@ const QuestionView = ({ slug, questionIds, extract, share = {} }) => {
 
   const allQuestions = data?.questionnaire?.questions
   const currentQuestions =
-    allQuestions?.filter((q) => questionIds.includes(q.id)) || []
+    allQuestions?.filter((q) => questionIds.includes(q.id)) ?? []
   const [mainQuestion, addQuestion] = currentQuestions
   if (extract) {
     return <ShareImageSplit question={mainQuestion} {...share} />
@@ -103,15 +109,16 @@ const QuestionView = ({ slug, questionIds, extract, share = {} }) => {
 
   return (
     <>
-      <Button
-        onClick={() => {
-          router.replace({
+      <NarrowContainer>
+        <NextLink
+          href={{
             pathname,
-          })
-        }}
-      >
-        Zurück zur Übersicht
-      </Button>
+          }}
+          passHref
+        >
+          <A>Zurück zur Übersicht</A>
+        </NextLink>
+      </NarrowContainer>
       <Loader
         loading={loading}
         error={error}
@@ -125,118 +132,135 @@ const QuestionView = ({ slug, questionIds, extract, share = {} }) => {
           return (
             <>
               <QuestionViewMeta share={share} question={mainQuestion} />
-              <div
-                style={{
-                  marginBottom: 20,
-                  paddingTop: 50,
-                }}
-                ref={containerRef}
-              >
-                <Interaction.H2>
-                  {mainQuestion.text}
-                  {!isChoiceQuestion && !!addQuestion && ' ' + addQuestion.text}
-                </Interaction.H2>
+              <div style={{ backgroundColor: questionColor(mainQuestion.id) }}>
+                <div
+                  style={{
+                    marginBottom: 20,
+                    paddingTop: 50,
+                  }}
+                  ref={containerRef}
+                >
+                  <NarrowContainer>
+                    <Editorial.Subhead>
+                      {mainQuestion.text}
+                      {!isChoiceQuestion &&
+                        !!addQuestion &&
+                        ' ' + addQuestion.text}
+                    </Editorial.Subhead>
 
-                {isChoiceQuestion && (
-                  <>
-                    <AnswersChart question={mainQuestion} skipTitle={true} />
-                    <br />
-                    <Interaction.H2>{addQuestion.text}</Interaction.H2>
-                  </>
-                )}
-
-                <Breakout size='breakout'>
-                  <div {...styles.answerGrid}>
-                    {targetAnswers.map(({ answers, displayAuthor }) => (
-                      <PersonLink
-                        key={displayAuthor.slug}
-                        displayAuthor={displayAuthor}
-                      >
-                        <div {...styles.answerCard}>
-                          <ColorContextProvider
-                            localColorVariables={colors}
-                            colorSchemeKey='light'
-                          >
-                            <Editorial.P attributes={{}}>
-                              <div
-                                {...(!isChoiceQuestion &&
-                                  styles.answerCardContent)}
-                              >
-                                {answers.map((answer, idx) => {
-                                  return (
-                                    <div key={answer.id}>
-                                      {isChoiceQuestion && idx === 0 ? (
-                                        <div
-                                          {...styles.circleLabel}
-                                          style={{
-                                            color:
-                                              colorMap[answer?.payload?.value],
-                                          }}
-                                        >
-                                          <span
-                                            {...styles.circle}
+                    {isChoiceQuestion && (
+                      <>
+                        <AnswersChart
+                          question={mainQuestion}
+                          skipTitle={true}
+                        />
+                        <br />
+                        <Editorial.Subhead>
+                          {addQuestion.text}
+                        </Editorial.Subhead>
+                      </>
+                    )}
+                  </NarrowContainer>
+                  <Container>
+                    <div {...styles.answerGrid}>
+                      {targetAnswers.map(({ answers, displayAuthor }) => (
+                        <PersonLink
+                          key={displayAuthor.slug}
+                          displayAuthor={displayAuthor}
+                        >
+                          <div {...styles.answerCard}>
+                            <ColorContextProvider
+                              localColorVariables={colors}
+                              colorSchemeKey='light'
+                            >
+                              <Editorial.P attributes={{}}>
+                                <div
+                                  {...(!isChoiceQuestion &&
+                                    styles.answerCardContent)}
+                                >
+                                  {answers.map((answer, idx) => {
+                                    return (
+                                      <div key={answer.id}>
+                                        {isChoiceQuestion && idx === 0 ? (
+                                          <div
+                                            {...styles.circleLabel}
                                             style={{
-                                              backgroundColor:
+                                              color:
                                                 colorMap[
                                                   answer?.payload?.value
                                                 ],
                                             }}
-                                          />
-                                          <AnswerText
-                                            text={answer.payload.text}
-                                            value={answer.payload.value}
-                                            question={currentQuestions[idx]}
-                                          />
-                                        </div>
-                                      ) : (
-                                        <div
-                                          {...(isChoiceQuestion &&
-                                            styles.answerCardContent)}
-                                        >
-                                          <AnswerText
-                                            text={answer.payload.text}
-                                            value={answer.payload.value}
-                                            question={currentQuestions[idx]}
-                                          />
-                                          <br />
-                                          <br />
+                                          >
+                                            <span
+                                              {...styles.circle}
+                                              style={{
+                                                backgroundColor:
+                                                  colorMap[
+                                                    answer?.payload?.value
+                                                  ],
+                                              }}
+                                            />
+                                            <AnswerText
+                                              text={answer.payload.text}
+                                              value={answer.payload.value}
+                                              question={currentQuestions[idx]}
+                                            />
+                                          </div>
+                                        ) : (
+                                          <div
+                                            {...(isChoiceQuestion &&
+                                              styles.answerCardContent)}
+                                          >
+                                            <AnswerText
+                                              text={answer.payload.text}
+                                              value={answer.payload.value}
+                                              question={currentQuestions[idx]}
+                                            />
+                                            <br />
+                                            <br />
 
-                                          {isChoiceQuestion && (
-                                            <em>– {displayAuthor.name}</em>
-                                          )}
-                                        </div>
-                                      )}
-                                    </div>
-                                  )
-                                })}
-                                {!isChoiceQuestion && (
-                                  <em>– {displayAuthor.name}</em>
-                                )}
-                              </div>
-                            </Editorial.P>
-                          </ColorContextProvider>
-                        </div>
-                      </PersonLink>
-                    ))}
-                  </div>
-                </Breakout>
-                <div style={{ marginTop: 10 }}>
-                  {loadingMoreError && (
-                    <ErrorMessage error={loadingMoreError} />
-                  )}
-                  {loadingMore && <InlineSpinner />}
-                  {!infiniteScroll && hasMore && (
-                    <PlainButton
-                      onClick={() => {
-                        setInfiniteScroll(true)
-                      }}
-                    >
-                      {t.pluralize('questionnaire/submissions/showAnswers', {
-                        count: results.totalCount - results.nodes.length,
-                      })}
-                    </PlainButton>
-                  )}
-                </div>
+                                            {isChoiceQuestion && (
+                                              <em>– {displayAuthor.name}</em>
+                                            )}
+                                          </div>
+                                        )}
+                                      </div>
+                                    )
+                                  })}
+                                  {!isChoiceQuestion && (
+                                    <em>– {displayAuthor.name}</em>
+                                  )}
+                                </div>
+                              </Editorial.P>
+                            </ColorContextProvider>
+                          </div>
+                        </PersonLink>
+                      ))}
+                    </div>
+                  </Container>
+                  <NarrowContainer>
+                    <div style={{ marginTop: 10 }}>
+                      {loadingMoreError && (
+                        <ErrorMessage error={loadingMoreError} />
+                      )}
+                      {loadingMore && <InlineSpinner />}
+                      {!infiniteScroll && hasMore && (
+                        <PlainButton
+                          onClick={() => {
+                            setInfiniteScroll(true)
+                          }}
+                        >
+                          {t.pluralize(
+                            'questionnaire/submissions/showAnswers',
+                            {
+                              count: results.totalCount - results.nodes.length,
+                            },
+                          )}
+                        </PlainButton>
+                      )}
+                    </div>
+                  </NarrowContainer>
+                </div>{' '}
               </div>
             </>
           )
