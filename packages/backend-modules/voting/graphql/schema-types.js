@@ -249,9 +249,12 @@ type Questionnaire {
   turnout: QuestionnaireTurnout
 
   submissions(
+    "Find search term in answer values"
     search: String
+    "Find specific value in answers"
     value: String
     first: Int
+    "Filter submissions"
     filters: SubmissionsFilterInput
     sort: SubmissionsSortInput
     before: String
@@ -260,22 +263,36 @@ type Questionnaire {
 }
 
 input SubmissionsFilterInput {
+  "Return only submission with this ID"
   id: ID
+
+  "Omit submission with this ID"
   not: ID
 
+  "Return only submissions with these IDs"
   submissionIds: [ID!]
+
+  "Omit submissions with these IDs"
   notSubmissionIds: [ID!]
 
+  "Return only submissions with these answered question IDs"
   answeredQuestionIds: [ID!] @deprecated(reason: "use \`answers\` instead")
+
+  "Return only submissions with one or more answers" 
   hasAnswers: Boolean @deprecated(reason: "use \`answers\` instead")
 
+  "Return only submissions with these answered questions"
   answers: [SubmissionFilterAnswer]
   
+  "Return submission by these user IDs"
   userIds: [ID!]
 }
 
 input SubmissionFilterAnswer {
+  "Question wich must be answered"
   questionId: ID!
+
+  "Expected amount of characters in answer given"
   valueLength: SubmissionFilterAnswerValueLength
 }
 
