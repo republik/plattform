@@ -1,6 +1,6 @@
-{{name}}, willkommen!
+Hallo {{name}}
 
-Es ist schön, dass Sie dabei sind!
+Es ist schön, dass Sie uns unterstützen!
 
 {{#if paymentslip}}
 

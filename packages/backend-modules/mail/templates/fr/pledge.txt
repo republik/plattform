@@ -1,4 +1,4 @@
-{{name}}, bienvenue!
+Bonjour {{name}},
 
 Nous sommes ravis de vous compter parmi nous!
 
