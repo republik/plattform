@@ -447,7 +447,7 @@ const Index = ({ userId }) => {
                   <SectionTitle>Memberships</SectionTitle>
                   <div style={{ marginBottom: 20 }}>
                     <A
-                      href={`${REPUBLIK_FRONTEND_URL}/angebote?package=PROLONG&token=${accessToken}`}
+                      href={`${REPUBLIK_FRONTEND_URL}/de/patronage?package=PROLONG&token=${accessToken}`}
                       target='_blank'
                     >
                       Verlängerungs-Link ohne Anmelden
