@@ -14,7 +14,7 @@ const baseSize = {
 
 const styles = {
   base: css({
-    margin: '0 0 15px 0',
+    margin: '18px 0 15px 0',
     [mUp]: {
       marginBottom: '30px',
     },

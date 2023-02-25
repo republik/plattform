@@ -102,9 +102,6 @@ const PostcardGenerator = () => {
         SubmittedComponent={SubmittedPostcard}
         showAnonymize
       />
-      <Interaction.P>
-        {t('Climatelab/Postcard/PostcardPreview/merci2')}
-      </Interaction.P>
     </div>
   )
 }

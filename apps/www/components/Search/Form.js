@@ -81,8 +81,9 @@ const Form = compose(
 
     return (
       <div {...styles}>
-        <form onSubmit={submit}>
+        <form onSubmit={submit} action='/suche'>
           <Field
+            name='q'
             label={t('search/input/label')}
             value={formValue}
             onChange={update}

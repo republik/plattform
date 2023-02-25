@@ -11,9 +11,8 @@ describe('Slate Editor: Navigation (On Tab)', () => {
 
   const defaultConfig = { schema }
 
-  async function setup(structure, config = defaultConfig) {
+  async function setup(config) {
     return await mockEditor(createEditor(), {
-      structure,
       config,
       value,
       setValue: (val) => (value = val),
@@ -81,7 +80,7 @@ describe('Slate Editor: Navigation (On Tab)', () => {
         repeat: true,
       },
     ]
-    const editor = await setup(structure)
+    const editor = await setup({ ...defaultConfig, structure })
     await Transforms.select(editor, {
       path: [0, 0],
       offset: 3,
@@ -204,7 +203,7 @@ describe('Slate Editor: Navigation (On Tab)', () => {
         repeat: true,
       },
     ]
-    const editor = await setup(structure)
+    const editor = await setup({ ...defaultConfig, structure })
     await Transforms.select(editor, {
       anchor: { path: [1, 0], offset: 2 },
       focus: { path: [0, 0], offset: 4 },
@@ -239,7 +238,7 @@ describe('Slate Editor: Navigation (On Tab)', () => {
         repeat: true,
       },
     ]
-    const editor = await setup(structure)
+    const editor = await setup({ ...defaultConfig, structure })
     await Transforms.select(editor, {
       anchor: { path: [2, 0], offset: 2 },
       focus: { path: [1, 0], offset: 4 },
@@ -263,7 +262,7 @@ describe('Slate Editor: Navigation (On Tab)', () => {
         repeat: true,
       },
     ]
-    const editor = await setup(structure)
+    const editor = await setup({ ...defaultConfig, structure })
 
     // build tree
     await Transforms.select(editor, [0, 0])

@@ -15,7 +15,7 @@ const styles = {
     position: 'relative',
     backgroundColor: '#F9FBFF',
     width: '100%',
-    height: '100%',
+    height: 'calc(100% - 1px)', // weirdo fix for Safari 14
     aspectRatio: '16 / 9',
     display: 'flex',
     padding: '10px',
@@ -56,6 +56,7 @@ const styles = {
     '> span': { display: 'block !important' },
   }),
   adressBlock: css({
+    height: '15px',
     borderBottom: 'solid 1px #DADDDC',
     paddingBottom: '5px',
     lineHeight: '1.1',
@@ -89,7 +90,7 @@ export const PostcardPreview = (props) => {
       <div {...styles.textArea}>
         <AutoTextSize mode='box' maxFontSizePx={42}>
           {text}
-          {author && author.name !== 'Unbenannt' && (
+          {author && author.name !== 'Unbenannt' && author.anonymity === false && (
             <>
               <br />
               <em {...styles.italic}>– {author.name}</em>

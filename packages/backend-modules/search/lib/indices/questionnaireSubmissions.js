@@ -18,6 +18,9 @@ module.exports = {
         userId: {
           type: 'keyword',
         },
+        anonymized: {
+          type: 'boolean',
+        },
         createdAt: {
           type: 'date',
         },
@@ -26,6 +29,9 @@ module.exports = {
           properties: {
             answers: {
               properties: {
+                questionId: {
+                  type: 'keyword',
+                },
                 payload: {
                   properties: {
                     text: {

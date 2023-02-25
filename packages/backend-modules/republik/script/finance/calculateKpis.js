@@ -261,7 +261,7 @@ const evaluateCompanyMonth = async (company, begin, end, pgdb) => {
         .filter((i) => i.createdAt >= begin && i.createdAt < end)
         .filter((i) => i.companyName === company)
         .filter((i) => i.method === method)
-        .filter((i) => i.packageName === 'MONTHLY_ABO')
+        .filter((i) => ['MONTHLY_ABO', 'YEARLY_ABO'].includes(i.packageName))
         .filter((i) => i.type === 'MembershipType')
 
       results.Abonnements = {
@@ -284,7 +284,7 @@ const evaluateCompanyMonth = async (company, begin, end, pgdb) => {
         .filter((i) => i.updatedAt >= begin && i.updatedAt < end)
         .filter((i) => i.companyName === company)
         .filter((i) => i.method === method)
-        .filter((i) => i.packageName === 'MONTHLY_ABO')
+        .filter((i) => ['MONTHLY_ABO', 'YEARLY_ABO'].includes(i.packageName))
         .filter((i) => i.type === 'MembershipType')
         .filter((i) => ['CANCELLED', 'REFUNDED'].includes(i.status))
 
@@ -295,6 +295,34 @@ const evaluateCompanyMonth = async (company, begin, end, pgdb) => {
         Betrag:
           StornierteAbonnements.map(
             (m) => m.amount * (m.periods || 1) * m.price,
+          ).reduce((p, c) => p - c, 0) / 100,
+      }
+
+      /**
+       * Reduzierte Abonnements
+       */
+
+      const ReduzierteAbonnements = Abonnements.filter((m) => m.donation < 0)
+
+      results.ReduzierteAbonnements = {
+        Betrag:
+          ReduzierteAbonnements.map(
+            (m) => m.amount * (m.periods || 1) * m.donation,
+          ).reduce((p, c) => p + c, 0) / 100,
+      }
+
+      /**
+       * Stornierte, reduzierte Abonnements
+       */
+
+      const StornierteReduzierteAbonnements = StornierteAbonnements.filter(
+        (m) => m.donation < 0,
+      )
+
+      results.StornierteReduzierteAbonnements = {
+        Betrag:
+          StornierteReduzierteAbonnements.map(
+            (m) => m.amount * (m.periods || 1) * m.donation,
           ).reduce((p, c) => p - c, 0) / 100,
       }
 

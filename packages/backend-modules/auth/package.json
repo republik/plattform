@@ -36,7 +36,7 @@
     "express-session": "^1.17.1",
     "geoip-database": "^1.0.97",
     "is-uuid": "^1.0.2",
-    "jsonwebtoken": "^8.5.1",
+    "jsonwebtoken": "^9.0.0",
     "kraut": "^0.1.1",
     "maxmind": "^4.1.2",
     "otp": "^0.1.3",

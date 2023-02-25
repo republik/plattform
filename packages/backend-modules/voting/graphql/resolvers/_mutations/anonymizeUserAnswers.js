@@ -19,6 +19,7 @@ module.exports = async (_, { questionnaireId }, context) => {
     await transaction.public.questionnaireSubmissions.insert({
       questionnaireId,
       userId: me.id,
+      anonymized: true,
     })
 
     await loaders.QuestionnaireSubmissions.byKeyObj.clear({
@@ -26,7 +27,8 @@ module.exports = async (_, { questionnaireId }, context) => {
       questionnaireId,
     })
 
-    const queryParams = { questionnaireId, userId: me.id, pseudonym: uuid() }
+    const pseudonym = uuid()
+    const queryParams = { questionnaireId, userId: me.id, pseudonym }
 
     // move (unsubmitted) draft to payload
     await transaction.public.answers.query(
@@ -51,6 +53,23 @@ module.exports = async (_, { questionnaireId }, context) => {
     `,
       queryParams,
     )
+
+    const { createdAt, updatedAt } = await transaction.public.answers.queryOne(
+      `
+      SELECT MAX("createdAt") "createdAt", MAX("updatedAt") "updatedAt"
+      FROM answers
+      WHERE "questionnaireId" = :questionnaireId
+        AND pseudonym = :pseudonym
+    `,
+      queryParams,
+    )
+
+    await transaction.public.questionnaireSubmissions.insert({
+      questionnaireId,
+      pseudonym,
+      createdAt,
+      updatedAt,
+    })
 
     await transaction.transactionCommit()
 

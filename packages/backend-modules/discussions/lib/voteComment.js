@@ -1,4 +1,5 @@
 const hotness = require('./hotness')
+const { Roles } = require('@orbiting/backend-modules-auth')
 
 module.exports = async (commentId, vote, pgdb, user, t, pubsub, loaders) => {
   if (![-1, 0, 1].includes(vote)) {
@@ -24,6 +25,9 @@ module.exports = async (commentId, vote, pgdb, user, t, pubsub, loaders) => {
     if (!comment) {
       throw new Error(t('api/comment/404'))
     }
+
+    const discussion = await loaders.Discussion.byId.load(comment.discussionId)
+    Roles.ensureUserIsInRoles(user, discussion.allowedRoles)
 
     const existingUserVote = comment.votes.find(
       (vote) => vote.userId === user.id,
