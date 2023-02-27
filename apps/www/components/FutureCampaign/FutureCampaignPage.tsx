@@ -1,10 +1,7 @@
-import { useColorContext } from '@project-r/styleguide/src/components/Colors/ColorContext'
+import { useColorContext } from '@project-r/styleguide'
 import { css } from 'glamor'
 import Head from 'next/head'
-import { useRouter } from 'next/router'
 import { ReactNode, useMemo } from 'react'
-import { PUBLIC_BASE_URL } from '../../lib/constants'
-import { FUTURE_CAMPAIGN_SHARE_IMAGE_URL } from './constants'
 import FutureCampaignHeader from './ReceiverPage/FutureCampaignHeader'
 
 type FutreCampaignPageProps = {
@@ -13,11 +10,6 @@ type FutreCampaignPageProps = {
 
 const FutureCampaignPage = ({ children }: FutreCampaignPageProps) => {
   const [colorScheme] = useColorContext()
-
-  css.global('body', {
-    backgroundColor: colorScheme.getCSSColor('default'),
-    color: colorScheme.getCSSColor('text'),
-  })
 
   const scrollbarStyle = useMemo(
     () =>

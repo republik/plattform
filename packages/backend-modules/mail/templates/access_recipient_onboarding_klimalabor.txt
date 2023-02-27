@@ -20,16 +20,11 @@ Gut zu wissen:
  * Etwa alle ein bis zwei Wochen melden wir uns per Newsletter bei Ihnen und
    informieren Sie, wo wir stehen und wie Sie sich einbringen können.
 
-Wie Sie sich gleich zu Beginn einbringen können:
+Wie Sie sich aktuell einbringen können:
 
- * Machen Sie mit uns eine Zeitreise und zeigen Sie uns, wie Sie in die Zukunft
-   blicken
-   {{frontend_base_url}}/2023/01/10/wie-sieht-die-welt-in-60-jahren-aus-machen-sie-mit-uns-eine-zeitreise
+ * Sammeln und entdecken Sie mit uns wenig bekannte Klimaheldinnen
+   {{frontend_base_url}}/2023/01/31/mit-voller-kraft-gegen-die-klimakrise-diskutieren-sie-mit/diskussion
    .
-
- * Sagen Sie uns
-   {{frontend_base_url}}/2023/01/09/allgemeiner-dialog-klimalabor/diskussion ,
-   was Sie von uns erwarten.
 
  * Das Klimalabor lebt davon, dass viele unterschiedliche Perspektiven
    zusammenkommen. Wir freuen uns, wenn Sie Freundinnen und Bekannte ins
@@ -37,9 +32,6 @@ Wie Sie sich gleich zu Beginn einbringen können:
    {{frontend_base_url}}/willkommen-zum-klimalabor mit Ihnen oder klicken Sie
    hier {{link_climate_lab_email_invitation}} , um eine vorformulierte E-Mail zu
    öffnen.
-
- * Merken Sie sich das Datum gerne vor: Am 27. Februar laden wir Sie herzlich
-   ein zu einer Abendveranstaltung in Zürich. Details folgen.
 
  * Geben Sie uns ein paar Angaben zu Ihrer Person
    {{link_climate_lab_onboarding_personal_infos}} und helfen Sie uns damit,
@@ -60,26 +52,25 @@ Wie Sie sich gleich zu Beginn einbringen können:
 Über das Klimalabor — was wir vorhaben
 
 In den kommenden Monaten wollen wir mit Ihnen über die Klimakrise und unsere
-Zukunft sprechen. Eine gemeinsame Expedition funktioniert nur dann, wenn alle
-den Plan kennen. Deshalb hier unsere Ziele und wie wir vorgehen werden:
+Zukunft sprechen. Wir wollen Neues ausprobieren und verstehen, was Ihnen im
+Umgang mit der Klimakrise wirklich weiterhilft.
 
- * Wir wollen mit Ihnen gemeinsam einen neuen Klimajournalismus für die Republik
-   entwickeln, der mehr Menschen erreicht als bisher und auch andere Medien und
-   Journalistinnen inspiriert. Einen Klimajournalismus, der anregt, der trotz
-   düsterer Aussichten nach vorn blickt, der verlässlich und nützlich ist.
+Das Ziel des Klimalabors: Wir wollen einen neuen Klimajournalismus für die
+Republik entwickeln, der in seiner Dringlichkeit und Ambition der Klimakrise
+gerecht wird. Der mehr Menschen erreicht als bisher und auch andere Medien und
+Journalistinnen inspiriert. Einen Klimajournalismus, der anregt, der trotz
+düsterer Aussichten nach vorn blickt, der verlässlich und nützlich ist.
 
- * Bis in den Sommer 2023 nehmen wir uns dafür Zeit. Was dabei herauskommen
-   wird? Das kann ein eigenständiges journalistisches Produkt sein, eine Reihe
-   neuer Formate, ein Ausbau der Redaktion oder etwas ganz anderes. Das
-   Klimalabor ist bewusst ergebnisoffen. Klar ist: Wir wollen gross denken und
-   ein Angebot entwickeln, das in seiner Dringlichkeit und Ambition der
-   Klimakrise gerecht wird.
 
- * Wir nähern uns dem Ziel schrittweise an und werden zunehmend konkreter. Wenn
-   Sie mögen, können Sie sich auf ganz verschiedene Arten und immer wieder aufs
-   Neue einbringen. Sie können uns aber auch einfach interessiert begleiten.
+
+Im Januar sind wir gestartet, im Sommer werden wir ein konkretes Angebot
+präsentieren. Unterwegs werden wir Sie immer wieder um Ihre Ideen bitten, nach
+Ihren Bedürfnissen fragen, zum Austausch untereinander einladen – und Sie mit
+vielfältigen Inhalten zur Klimakrise versorgen.
 
 Wir freuen uns sehr, dass Sie mit uns auf diese Expedition kommen.
+
+
 
 Ihr Klimalabor-Team:
 

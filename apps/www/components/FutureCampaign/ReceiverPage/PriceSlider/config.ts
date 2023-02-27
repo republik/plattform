@@ -23,6 +23,7 @@ export type SliderValue = {
   value: number
   tick?: boolean
   isDefault?: boolean
+  isAverage?: boolean
 }
 
 const SLIDER_STEPS: Record<SliderStepKey, SliderStep> = {
@@ -112,7 +113,7 @@ export const SLIDER_VALUES: SliderValue[] = [
   { step: SLIDER_STEPS.belowStandard, value: 110 },
   { step: SLIDER_STEPS.belowStandard, value: 110 },
 
-  { step: SLIDER_STEPS.average, value: 120, tick: true, isDefault: true },
+  { step: SLIDER_STEPS.average, value: 120, tick: true, isAverage: true },
 
   { step: SLIDER_STEPS.aboveAverage, value: 130 },
   { step: SLIDER_STEPS.aboveAverage, value: 140 },
@@ -127,7 +128,7 @@ export const SLIDER_VALUES: SliderValue[] = [
   { step: SLIDER_STEPS.aboveAverage, value: 230 },
   { step: SLIDER_STEPS.aboveAverage, value: 230 },
 
-  { step: SLIDER_STEPS.standard, value: 240, tick: true },
+  { step: SLIDER_STEPS.standard, value: 240, tick: true, isDefault: true },
 
   { step: SLIDER_STEPS.investmentLow, value: 260 },
   { step: SLIDER_STEPS.investmentLow, value: 280 },

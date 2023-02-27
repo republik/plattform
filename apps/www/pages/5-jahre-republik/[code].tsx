@@ -12,8 +12,8 @@ import { FUTURE_CAMPAIGN_SHARE_IMAGE_URL } from '../../components/FutureCampaign
 import { PUBLIC_BASE_URL } from '../../lib/constants'
 import { useRouter } from 'next/router'
 import Meta from '../../components/Frame/Meta'
-import { css } from 'glamor'
 import FutureCampaignPage from '../../components/FutureCampaign/FutureCampaignPage'
+import { ColorHtmlBodyColors } from '@project-r/styleguide'
 
 function Page(props: InviteReceiverPageProps) {
   const router = useRouter()
@@ -35,7 +35,8 @@ function Page(props: InviteReceiverPageProps) {
 
 export default function WrappedPage(props: InviteReceiverPageProps) {
   return (
-    <ColorContextProvider colorSchemeKey='dark'>
+    <ColorContextProvider colorSchemeKey='dark' root>
+      <ColorHtmlBodyColors colorSchemeKey='dark' />
       <Page {...props} />
     </ColorContextProvider>
   )

@@ -26,7 +26,7 @@ const RewardProgress = ({ reached, max }: RewardProgressProps) => {
       </ol>
       <p {...styles.text}>
         {' '}
-        {clamp(reached, 0, max)} von {max} Mitstreiter an Bord geholt.
+        {clamp(reached, 0, max)} von {max} Mitstreitern an Bord geholt.
       </p>
     </div>
   )

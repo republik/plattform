@@ -9,7 +9,7 @@ import {
 } from '@project-r/styleguide'
 import Link from 'next/link'
 import { css } from 'glamor'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Typewriter } from 'react-simple-typewriter'
 import { PUBLIC_BASE_URL } from '../../../lib/constants'
 import AssetImage from '../../../lib/images/AssetImage'
@@ -34,10 +34,39 @@ import { MeObjectType } from '../../../lib/context/MeContext'
 import { PageCenter } from '../../Auth/withAuthorization'
 import { useNumOfRedeemedInvitesQuery } from '../graphql/useNumOfRedeemedInvitesQuery'
 import dynamic from 'next/dynamic'
+import clipboardCopy from 'clipboard-copy'
+import { useTranslation } from '../../../lib/withT'
 
 const Confetti = dynamic(() => import('./Confetti'), {
   ssr: false,
 })
+
+const useCopyToClipboard = () => {
+  const [copyState, setCopyState] = useState<'success' | 'error' | undefined>()
+
+  useEffect(() => {
+    if (copyState !== undefined) {
+      const timeout = setTimeout(() => {
+        setCopyState(undefined)
+      }, 5000)
+      return () => clearTimeout(timeout)
+    }
+  }, [copyState])
+
+  const copy = async (text: string) => {
+    try {
+      await clipboardCopy(text)
+      setCopyState('success')
+    } catch (error) {
+      setCopyState('error')
+    }
+  }
+
+  return {
+    copy,
+    state: copyState,
+  }
+}
 
 export const FUTURE_CAMPAIGN_MAX_REDEEMED_INVITES = 5
 
@@ -49,6 +78,9 @@ const InviteSenderPage = ({ me }: { me: MeObjectType }) => {
   const { data: redeemedInvites, loading: loadingRedeemedInvites } =
     useNumOfRedeemedInvitesQuery()
   const { inNativeApp } = useInNativeApp()
+  const { t } = useTranslation()
+
+  const copyToClipboard = useCopyToClipboard()
 
   const hasShareGrant = me?.accessCampaigns.length > 0
 
@@ -111,10 +143,6 @@ const InviteSenderPage = ({ me }: { me: MeObjectType }) => {
     } catch (e) {
       console.error(e)
     }
-  }
-
-  const handleCopyLink = (link: string) => {
-    navigator.clipboard.writeText(link)
   }
 
   return (
@@ -196,13 +224,31 @@ const InviteSenderPage = ({ me }: { me: MeObjectType }) => {
                   <div {...styles.inviteActionWrapper}>
                     <div {...styles.inviteLinkBox}>
                       <span {...styles.inviteLinkBoxText}>{inviteLink}</span>
-                      <IconButton
-                        onClick={() => handleCopyLink(inviteLink)}
-                        Icon={CopyToClippboardIcon}
-                        title='Link kopieren'
-                        fill='currentColor'
-                        size={20}
-                      />
+                      {!inNativeApp ? (
+                        copyToClipboard.state === undefined ? (
+                          <IconButton
+                            onClick={() => copyToClipboard.copy(inviteLink)}
+                            Icon={CopyToClippboardIcon}
+                            title='Link kopieren'
+                            fill='currentColor'
+                            size={20}
+                          />
+                        ) : (
+                          <span
+                            style={{
+                              whiteSpace: 'nowrap',
+                            }}
+                          >
+                            {t(
+                              `article/actionbar/link/label${
+                                copyToClipboard.state
+                                  ? `/${copyToClipboard.state}`
+                                  : ''
+                              }`,
+                            )}
+                          </span>
+                        )
+                      ) : null}
                     </div>
                     <div {...styles.buttonWrapper}>
                       <Button
