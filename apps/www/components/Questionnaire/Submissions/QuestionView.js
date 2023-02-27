@@ -5,11 +5,9 @@ import { sum } from 'd3-array'
 import NextLink from 'next/link'
 
 import {
-  Button,
   InlineSpinner,
   Interaction,
   Loader,
-  Breakout,
   Editorial,
   fontStyles,
   ColorContextProvider,
@@ -17,7 +15,6 @@ import {
   NarrowContainer,
   Container,
   Center,
-  A,
 } from '@project-r/styleguide'
 
 import { css } from 'glamor'
@@ -69,7 +66,7 @@ const QuestionViewMeta = ({ share, question }) => {
   )
 }
 
-const QuestionView = ({ slug, questionIds, extract, share = {}, bgColor }) => {
+const QuestionView = ({ slug, questionIds, extract, share = {} }) => {
   const { t } = useTranslation()
   const router = useRouter()
   const pathname = router.asPath.split('?')[0]
