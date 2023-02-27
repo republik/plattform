@@ -147,20 +147,6 @@ const Questionnaire = ({ userId, meta }) => {
                 )
               },
             )}
-
-            {/* FIXME: me abfragen und nur dann Fragebogen anzeigen, Link zu Zur Übersicht, Link hardcoded */}
-            <Interaction.P style={{ fontSize: '1.1em' }}>
-              <Editorial.A href='/2023/02/13/klimafragebogen-fragen'>
-                Fragebogen bearbeiten
-              </Editorial.A>
-            </Interaction.P>
-            <br />
-
-            <Interaction.P style={{ fontSize: '1.1em' }}>
-              <NextLink href={'/klimafragebogen'} passHref>
-                <Editorial.A>Zurück zur Übersicht</Editorial.A>
-              </NextLink>
-            </Interaction.P>
           </div>
         )
       }}
@@ -220,6 +206,20 @@ const Page = () => {
             <Center>
               <Meta data={meta} />
               <Editorial.Headline>Klimafragebogen</Editorial.Headline>
+              {/* FIXME: me abfragen und nur dann Fragebogen anzeigen, Link zu Zur Übersicht, Link hardcoded */}
+              <div style={{ marginBottom: 20 }}>
+                <Interaction.P style={{ fontSize: '1.1em' }}>
+                  <NextLink href={'/klimafragebogen'} passHref>
+                    <Editorial.A>Zurück zur Übersicht</Editorial.A>
+                  </NextLink>
+                </Interaction.P>
+                <br />
+                <Interaction.P style={{ fontSize: '1.1em' }}>
+                  <Editorial.A href='/2023/02/13/klimafragebogen-fragen'>
+                    Fragebogen bearbeiten
+                  </Editorial.A>
+                </Interaction.P>
+              </div>
               <Questionnaire userId={user?.id || slug} meta={meta} />
             </Center>
           )
