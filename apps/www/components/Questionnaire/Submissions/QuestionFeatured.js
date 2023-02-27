@@ -87,13 +87,18 @@ export const AnswersChart = ({ question, skipTitle }) => {
   )
 }
 
-const AnswersCarousel = ({ slug, question }) => {
+const AnswersCarousel = ({ slug, question, valueLength }) => {
   const { loading, error, data } = useQuery(QUESTIONNAIRE_SUBMISSIONS_QUERY, {
     variables: {
       slug,
       first: 8,
       sortBy: 'random',
-      questionIds: [question.id],
+      answers: [
+        {
+          questionId: question.id,
+          valueLength,
+        },
+      ],
     },
   })
 
@@ -152,7 +157,7 @@ const AnswersCarousel = ({ slug, question }) => {
   )
 }
 
-export const QuestionFeatured = ({ slug, questions, bgColor }) => {
+export const QuestionFeatured = ({ slug, questions, bgColor, valueLength }) => {
   const hasTextAnswer = questions.some(
     (q) => q.__typename === 'QuestionTypeText',
   )
@@ -169,7 +174,12 @@ export const QuestionFeatured = ({ slug, questions, bgColor }) => {
       <Container>
         {questions.map((q) => {
           return q.__typename === 'QuestionTypeText' ? (
-            <AnswersCarousel key={q.id} slug={slug} question={q} />
+            <AnswersCarousel
+              key={q.id}
+              slug={slug}
+              question={q}
+              valueLength={valueLength}
+            />
           ) : q.__typename === 'QuestionTypeChoice' ? (
             <AnswersChart key={q.id} question={q} />
           ) : null
