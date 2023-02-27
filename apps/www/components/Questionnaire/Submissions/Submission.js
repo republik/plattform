@@ -12,7 +12,10 @@ import {
   RemoveIcon,
   IconButton,
   ShareIcon,
+  RadioCheckedIcon,
+  RadioUncheckedIcon,
   usePrevious,
+  Radio,
 } from '@project-r/styleguide'
 import { useEffect, useRef, useState } from 'react'
 import { max, shuffle } from 'd3-array'
@@ -148,11 +151,49 @@ export const SubmissionAuthor = ({
   )
 }
 
+const ChoiceAnswerOption = ({ option, checked }) => {
+  const [colorScheme] = useColorContext()
+  const Icon = checked ? RadioCheckedIcon : RadioUncheckedIcon
+  return (
+    <span
+      style={{
+        marginRight: '2em',
+        display: 'inline-flex',
+        alignItems: 'center',
+      }}
+      {...colorScheme.set('color', checked ? 'text' : 'textSoft')}
+    >
+      <Icon style={{ marginRight: 7 }} />
+      {option.label}
+    </span>
+  )
+}
+
+const ChoiceAnswer = ({ question, payload }) => (
+  <div>
+    {question.options.map((option, i) => (
+      <ChoiceAnswerOption
+        key={i}
+        option={option}
+        checked={payload.value.includes(option.value)}
+      />
+    ))}
+  </div>
+)
+
 export const SubmissionQa = ({ question, payload }) => (
   <Editorial.P>
     <strong>{question.text}</strong>
     <br />
-    <AnswerText text={payload.text} value={payload.value} question={question} />
+    {question.__typename === 'QuestionTypeChoice' ? (
+      <ChoiceAnswer question={question} payload={payload} />
+    ) : (
+      <AnswerText
+        text={payload.text}
+        value={payload.value}
+        question={question}
+      />
+    )}
   </Editorial.P>
 )
 
