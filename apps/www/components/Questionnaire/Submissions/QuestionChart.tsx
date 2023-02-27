@@ -41,8 +41,8 @@ const styles = {
   }),
 }
 
-const pct = format('.1~%') // rounded to 1/10
-// const pct = format('.0%') // rounded
+// const pct = format('.1~%') // rounded to 1/10
+const pct = format('.0%') // rounded
 
 export const QuestionSummaryChart = ({ answers }: Props) => {
   const [colorScheme] = useColorContext()
