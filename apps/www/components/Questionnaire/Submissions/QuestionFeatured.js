@@ -117,29 +117,34 @@ const AnswersCarousel = ({ slug, question }) => {
                 {question.text}
               </Editorial.Subhead>
             </NarrowContainer>
-            <AnswersGrid>
-              {targetedAnswers.map(({ answers, displayAuthor }) => (
-                <AnswersGridCard
-                  key={displayAuthor.slug}
-                  textLength={answers[0].payload.value.length}
-                >
-                  <PersonLink displayAuthor={displayAuthor}>
-                    <a style={{ textDecoration: 'none' }}>
-                      <div {...styles.answerCard}>
-                        <div>
-                          <Editorial.Question style={{ marginTop: 0 }}>
-                            {inQuotes(answers[0].payload.value)}
-                          </Editorial.Question>
-                          <Editorial.Credit>
-                            Von {displayAuthor.name}
-                          </Editorial.Credit>
+            <ColorContextProvider
+              localColorVariables={colors}
+              colorSchemeKey='light'
+            >
+              <AnswersGrid>
+                {targetedAnswers.map(({ answers, displayAuthor }) => (
+                  <AnswersGridCard
+                    key={displayAuthor.slug}
+                    textLength={answers[0].payload.value.length}
+                  >
+                    <PersonLink displayAuthor={displayAuthor}>
+                      <a style={{ textDecoration: 'none' }}>
+                        <div {...styles.answerCard}>
+                          <div>
+                            <Editorial.Question style={{ marginTop: 0 }}>
+                              {inQuotes(answers[0].payload.value)}
+                            </Editorial.Question>
+                            <Editorial.Credit>
+                              Von {displayAuthor.name}
+                            </Editorial.Credit>
+                          </div>
                         </div>
-                      </div>
-                    </a>
-                  </PersonLink>
-                </AnswersGridCard>
-              ))}
-            </AnswersGrid>
+                      </a>
+                    </PersonLink>
+                  </AnswersGridCard>
+                ))}
+              </AnswersGrid>
+            </ColorContextProvider>
           </>
         )
       }}
@@ -174,10 +179,10 @@ export const QuestionFeatured = ({ slug, questions, bgColor }) => {
           <NarrowContainer>
             <Interaction.P style={{ fontSize: '1.1em' }}>
               <QuestionLink questions={questions}>
-                <>
-                  <Editorial.A>Alle Antworten lesen</Editorial.A>
+                <Editorial.A>
+                  Alle Antworten lesen
                   <ChevronRightIcon />
-                </>
+                </Editorial.A>
               </QuestionLink>
             </Interaction.P>
           </NarrowContainer>

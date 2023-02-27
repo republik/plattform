@@ -16,6 +16,7 @@ import {
   colors,
   NarrowContainer,
   Container,
+  Center,
   A,
 } from '@project-r/styleguide'
 
@@ -111,16 +112,18 @@ const QuestionView = ({ slug, questionIds, extract, share = {}, bgColor }) => {
 
   return (
     <>
-      <NarrowContainer>
-        <NextLink
-          href={{
-            pathname,
-          }}
-          passHref
-        >
-          <A>Zurück zur Übersicht</A>
-        </NextLink>
-      </NarrowContainer>
+      <Center>
+        <Interaction.P style={{ fontSize: '1.1em' }}>
+          <NextLink
+            href={{
+              pathname,
+            }}
+            passHref
+          >
+            <Editorial.A>Zurück zur Übersicht</Editorial.A>
+          </NextLink>
+        </Interaction.P>
+      </Center>
       <Loader
         loading={loading}
         error={error}
