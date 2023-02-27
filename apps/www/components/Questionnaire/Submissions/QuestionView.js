@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react'
 import { useRouter } from 'next/router'
 import { useQuery } from '@apollo/client'
 import { sum } from 'd3-array'
@@ -14,7 +15,6 @@ import {
   colors,
   NarrowContainer,
   Container,
-  Center,
 } from '@project-r/styleguide'
 
 import { css } from 'glamor'
@@ -42,6 +42,7 @@ import { ASSETS_SERVER_BASE_URL, PUBLIC_BASE_URL } from '../../../lib/constants'
 import { replaceText } from './utils'
 import { questionColor } from '../../Climatelab/Questionnaire/config'
 import { AnswersGrid, AnswersGridCard } from './AnswersGrid'
+import scrollIntoView from 'scroll-into-view'
 
 const QuestionViewMeta = ({ share, question }) => {
   const router = useRouter()
@@ -91,6 +92,12 @@ const QuestionView = ({ slug, questionIds, extract, share = {} }) => {
     loadMore: loadMoreSubmissions(fetchMore, data),
   })
 
+  const answerGridRef = useRef()
+  useEffect(() => {
+    if (extract) return
+    scrollIntoView(answerGridRef.current)
+  }, [])
+
   const allQuestions = data?.questionnaire?.questions
   const currentQuestions =
     allQuestions?.filter((q) => questionIds.includes(q.id)) ?? []
@@ -108,19 +115,7 @@ const QuestionView = ({ slug, questionIds, extract, share = {} }) => {
     )
 
   return (
-    <>
-      <Center>
-        <Interaction.P style={{ fontSize: '1.1em' }}>
-          <NextLink
-            href={{
-              pathname,
-            }}
-            passHref
-          >
-            <Editorial.A>Zurück zur Übersicht</Editorial.A>
-          </NextLink>
-        </Interaction.P>
-      </Center>
+    <div ref={answerGridRef}>
       <Loader
         loading={loading}
         error={error}
@@ -137,12 +132,20 @@ const QuestionView = ({ slug, questionIds, extract, share = {} }) => {
               <div style={{ backgroundColor: questionColor(mainQuestion.id) }}>
                 <div
                   style={{
+                    marginTop: 48,
                     marginBottom: 20,
-                    paddingTop: 50,
+                    paddingTop: 24,
                   }}
                   ref={containerRef}
                 >
                   <NarrowContainer>
+                    <Interaction.P
+                      style={{ fontSize: '1.1em', textAlign: 'center' }}
+                    >
+                      <NextLink href={`${pathname}#${questionIds[0]}`} passHref>
+                        <Editorial.A>Zurück zur Übersicht</Editorial.A>
+                      </NextLink>
+                    </Interaction.P>
                     <Editorial.Subhead style={{ textAlign: 'center' }}>
                       {mainQuestion.text}
                       {!isChoiceQuestion &&
@@ -238,7 +241,7 @@ const QuestionView = ({ slug, questionIds, extract, share = {} }) => {
                     </AnswersGrid>
                   </Container>
                   <NarrowContainer>
-                    <div style={{ marginTop: 10 }}>
+                    <div style={{ paddingBottom: 24 }}>
                       {loadingMoreError && (
                         <ErrorMessage error={loadingMoreError} />
                       )}
@@ -265,7 +268,7 @@ const QuestionView = ({ slug, questionIds, extract, share = {} }) => {
           )
         }}
       />
-    </>
+    </div>
   )
 }
 

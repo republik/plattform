@@ -42,7 +42,7 @@ export const PersonLink = ({ displayAuthor, children }) => {
 
 export const QuestionLink = ({ questions, children }) => {
   const router = useRouter()
-  const pathname = router.asPath.split('?')[0]
+  const pathname = router.asPath.split('?')[0].split('#')[0]
   return (
     <Link
       href={{
@@ -164,6 +164,7 @@ export const QuestionFeatured = ({ slug, questions, bgColor, valueLength }) => {
 
   return (
     <div
+      id={questions[0].id}
       style={{
         padding: '0 0 46px 0',
         // flexBasis: '50%',

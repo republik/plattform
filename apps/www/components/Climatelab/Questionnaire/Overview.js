@@ -24,7 +24,7 @@ const AllQuestionsView = ({ slug, extract }) => {
         } = data
 
         return (
-          <div style={{ margin: '0 auto' }}>
+          <div style={{ margin: '48px auto 0' }}>
             {/* FIXME: i know this looks really bad, but once we have the real questions in, we should take a look again. 
             The idea (my idea, maybe a bad one) was to display to charts at the beginning */}
             <div style={{ display: 'flex', gap: '1rem' }}></div>
