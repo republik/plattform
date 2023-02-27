@@ -189,24 +189,8 @@ const QuestionView = ({ slug, questionIds, extract, share = {} }) => {
                                         return (
                                           <div key={answer.id}>
                                             {isChoiceQuestion && idx === 0 ? (
-                                              <div
-                                                {...styles.circleLabel}
-                                                style={{
-                                                  color:
-                                                    colorMap[
-                                                      answer?.payload?.value
-                                                    ],
-                                                }}
-                                              >
-                                                <span
-                                                  {...styles.circle}
-                                                  style={{
-                                                    backgroundColor:
-                                                      colorMap[
-                                                        answer?.payload?.value
-                                                      ],
-                                                  }}
-                                                />
+                                              <div {...styles.circleLabel}>
+                                                <span {...styles.circle} />
                                                 <AnswerText
                                                   text={answer.payload.text}
                                                   value={answer.payload.value}
@@ -315,6 +299,7 @@ const styles = {
   }),
   circleLabel: css({
     ...fontStyles.sansSerifRegular16,
+    marginBottom: 30,
   }),
   circle: css({
     display: 'inline-block',
@@ -322,5 +307,7 @@ const styles = {
     width: '10px',
     height: '10px',
     marginRight: 5,
+    backgroundColor: `currentColor`,
+    opacity: 0.7,
   }),
 }
