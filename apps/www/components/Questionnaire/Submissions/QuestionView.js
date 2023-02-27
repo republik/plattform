@@ -139,9 +139,7 @@ const QuestionView = ({ slug, questionIds, extract, share = {} }) => {
                   ref={containerRef}
                 >
                   <NarrowContainer>
-                    <Interaction.P
-                      style={{ fontSize: '1.1em', textAlign: 'center' }}
-                    >
+                    <Interaction.P style={{ textAlign: 'center' }}>
                       <NextLink href={`${pathname}#${questionIds[0]}`} passHref>
                         <Editorial.A>Zurück zur Übersicht</Editorial.A>
                       </NextLink>

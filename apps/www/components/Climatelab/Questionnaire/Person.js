@@ -208,13 +208,13 @@ const Page = () => {
               <Editorial.Headline>Klimafragebogen</Editorial.Headline>
               {/* FIXME: me abfragen und nur dann Fragebogen anzeigen, Link zu Zur Übersicht, Link hardcoded */}
               <div style={{ marginBottom: 20 }}>
-                <Interaction.P style={{ fontSize: '1.1em' }}>
+                <Interaction.P>
                   <NextLink href={'/klimafragebogen'} passHref>
                     <Editorial.A>Zurück zur Übersicht</Editorial.A>
                   </NextLink>
                 </Interaction.P>
                 <br />
-                <Interaction.P style={{ fontSize: '1.1em' }}>
+                <Interaction.P>
                   <Editorial.A href='/2023/02/13/klimafragebogen-fragen'>
                     Fragebogen bearbeiten
                   </Editorial.A>

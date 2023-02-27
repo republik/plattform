@@ -87,11 +87,11 @@ export const AnswersChart = ({ question, skipTitle }) => {
   )
 }
 
-const AnswersCarousel = ({ slug, question, valueLength }) => {
+const AnswerGridOverview = ({ slug, question, valueLength }) => {
   const { loading, error, data } = useQuery(QUESTIONNAIRE_SUBMISSIONS_QUERY, {
     variables: {
       slug,
-      first: 8,
+      first: 6,
       sortBy: 'random',
       answers: [
         {
@@ -175,7 +175,7 @@ export const QuestionFeatured = ({ slug, questions, bgColor, valueLength }) => {
       <Container>
         {questions.map((q) => {
           return q.__typename === 'QuestionTypeText' ? (
-            <AnswersCarousel
+            <AnswerGridOverview
               key={q.id}
               slug={slug}
               question={q}
@@ -188,11 +188,11 @@ export const QuestionFeatured = ({ slug, questions, bgColor, valueLength }) => {
 
         {hasTextAnswer && (
           <NarrowContainer>
-            <Interaction.P style={{ fontSize: '1.1em' }}>
+            <Interaction.P style={{ textAlign: 'center' }}>
               <QuestionLink questions={questions}>
                 <Editorial.A>
                   Alle Antworten lesen
-                  <ChevronRightIcon />
+                  {/* <ChevronRightIcon /> */}
                 </Editorial.A>
               </QuestionLink>
             </Interaction.P>
