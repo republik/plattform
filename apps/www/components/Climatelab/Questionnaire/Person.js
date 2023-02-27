@@ -3,6 +3,7 @@ import { useQuery } from '@apollo/client'
 
 import { gql } from 'graphql-tag'
 import { useRouter } from 'next/router'
+import NextLink from 'next/link'
 
 import {
   Loader,
@@ -10,7 +11,7 @@ import {
   ShareIcon,
   IconButton,
   Center,
-  Button,
+  Interaction,
 } from '@project-r/styleguide'
 
 import { ASSETS_SERVER_BASE_URL, PUBLIC_BASE_URL } from '../../../lib/constants'
@@ -97,7 +98,7 @@ const ShareQuestionnaire = ({ meta }) => {
 const Questionnaire = ({ userId, meta }) => {
   const router = useRouter()
   // FIXME: not sure about this pathname, the url has no ? in it
-  const pathname = router.asPath.split('?')[0]
+  const pathname = router.asPath
   const { me } = useMe()
   const { loading, error, data } = useQuery(QUESTIONNAIRE_SUBMISSIONS_QUERY, {
     variables: {
@@ -148,18 +149,18 @@ const Questionnaire = ({ userId, meta }) => {
             )}
 
             {/* FIXME: me abfragen und nur dann Fragebogen anzeigen, Link zu Zur Übersicht, Link hardcoded */}
-            <Editorial.A href='/2023/02/13/klimafragebogen-fragen'>
-              Fragebogen bearbeiten
-            </Editorial.A>
+            <Interaction.P style={{ fontSize: '1.1em' }}>
+              <Editorial.A href='/2023/02/13/klimafragebogen-fragen'>
+                Fragebogen bearbeiten
+              </Editorial.A>
+            </Interaction.P>
             <br />
-            <br />
-            <Button
-              onClick={() => {
-                router.replace('/klimafragebogen')
-              }}
-            >
-              Zur Übersicht
-            </Button>
+
+            <Interaction.P style={{ fontSize: '1.1em' }}>
+              <NextLink href={'/klimafragebogen'} passHref>
+                <Editorial.A>Zurück zur Übersicht</Editorial.A>
+              </NextLink>
+            </Interaction.P>
           </div>
         )
       }}
