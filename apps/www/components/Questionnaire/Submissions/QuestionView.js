@@ -125,6 +125,7 @@ const QuestionView = ({ slug, questionIds, extract, share = {} }) => {
           } = data
 
           const targetAnswers = getTargetedAnswers(questionIds, results)
+          const twoTextQuestions = !isChoiceQuestion && !!addQuestion
 
           return (
             <>
@@ -146,9 +147,19 @@ const QuestionView = ({ slug, questionIds, extract, share = {} }) => {
                     </Interaction.P>
                     <Editorial.Subhead style={{ textAlign: 'center' }}>
                       {mainQuestion.text}
-                      {!isChoiceQuestion &&
-                        !!addQuestion &&
-                        ' ' + addQuestion.text}
+                      {twoTextQuestions && (
+                        <>
+                          <hr
+                            style={{
+                              opacity: 0.7,
+                              margin: '1.2em 33%',
+                              border: 0,
+                              borderTop: '1px solid currentColor',
+                            }}
+                          />
+                          <span>{addQuestion.text}</span>
+                        </>
+                      )}
                     </Editorial.Subhead>
 
                     {isChoiceQuestion && (
@@ -181,7 +192,9 @@ const QuestionView = ({ slug, questionIds, extract, share = {} }) => {
                                   localColorVariables={colors}
                                   colorSchemeKey='light'
                                 >
-                                  <Editorial.P attributes={{}}>
+                                  <Editorial.P
+                                    attributes={{ style: { width: '100%' } }}
+                                  >
                                     <div
                                       {...(!isChoiceQuestion &&
                                         styles.answerCardContent)}
@@ -189,7 +202,7 @@ const QuestionView = ({ slug, questionIds, extract, share = {} }) => {
                                       {answers.map((answer, idx) => {
                                         return (
                                           <div key={answer.id}>
-                                            {isChoiceQuestion && idx === 0 ? (
+                                            {isChoiceQuestion && !idx ? (
                                               <div {...styles.circleLabel}>
                                                 <span {...styles.circle} />
                                                 <AnswerText
@@ -212,22 +225,30 @@ const QuestionView = ({ slug, questionIds, extract, share = {} }) => {
                                                     currentQuestions[idx]
                                                   }
                                                 />
-                                                <br />
-                                                <br />
-
-                                                {isChoiceQuestion && (
-                                                  <em>
-                                                    – {displayAuthor.name}
-                                                  </em>
+                                                {idx === 0 && (
+                                                  <hr
+                                                    style={{
+                                                      opacity: 0.3,
+                                                      margin: '1.2em 33%',
+                                                      border: 0,
+                                                      borderTop:
+                                                        '1px solid currentColor',
+                                                    }}
+                                                  />
                                                 )}
                                               </div>
                                             )}
                                           </div>
                                         )
                                       })}
-                                      {!isChoiceQuestion && (
-                                        <em>– {displayAuthor.name}</em>
-                                      )}
+                                      <em
+                                        style={{
+                                          display: 'block',
+                                          marginTop: '1em',
+                                        }}
+                                      >
+                                        – {displayAuthor.name}
+                                      </em>
                                     </div>
                                   </Editorial.P>
                                 </ColorContextProvider>
