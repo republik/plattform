@@ -28,7 +28,6 @@ import {
   SubmissionQa,
 } from '../../Questionnaire/Submissions/Submission'
 
-import { climateColors } from '../config'
 import { useMe } from '../../../lib/context/MeContext'
 
 const QUESTIONNAIRE_SLUG = 'klima-fragebogen'
@@ -199,7 +198,7 @@ const Page = () => {
   }
 
   return (
-    <Frame customContentColorContext={climateColors}>
+    <Frame>
       <Loader
         loading={loading}
         error={error}
