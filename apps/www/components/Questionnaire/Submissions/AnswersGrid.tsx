@@ -13,6 +13,12 @@ const styles = {
       gridTemplateColumns: 'repeat(auto-fill, minmax(360px, 1fr))',
     },
   }),
+  card: css({
+    transition: 'transform .3s ease-in-out',
+    ':hover': {
+      transform: 'scale(1.03) !important',
+    },
+  }),
 }
 
 export const AnswersGrid = ({ children }: { children: ReactNode }) => {
@@ -28,6 +34,7 @@ export const AnswersGridCard = ({
 }) => {
   return (
     <div
+      {...styles.card}
       style={{
         gridRow: `span ${Math.max(1, Math.round(textLength / 60))}`, // Tweak the numerator here to adjust relative height of the cards in the grid
       }}
