@@ -150,7 +150,7 @@ const createSubmissionsQuery = ({
     }))
     .concat(filters?.answers || [])
 
-  const mustHaveAnswers = expectedAnswers && {
+  const mustHaveAnswers = expectedAnswers?.length && {
     bool: {
       must: expectedAnswers.map(({ questionId, valueLength }) => {
         return {
