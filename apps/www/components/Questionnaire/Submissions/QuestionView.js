@@ -77,7 +77,7 @@ const QuestionView = ({ slug, questionIds, extract, share = {} }) => {
         slug,
         first: 20,
         sortBy: 'random',
-        questionIds,
+        answers: questionIds.map((questionId) => ({ questionId })),
       },
     },
   )

@@ -111,7 +111,7 @@ export const QUESTIONNAIRE_SUBMISSIONS_QUERY = gql`
     $after: String
     $sortBy: SubmissionsSortBy!
     $sortDirection: OrderDirection
-    $questionIds: [ID!]
+    $answers: [SubmissionFilterAnswer]
     $userIds: [ID!]
   ) {
     questionnaire(slug: $slug) {
@@ -121,7 +121,7 @@ export const QUESTIONNAIRE_SUBMISSIONS_QUERY = gql`
         first: $first
         after: $after
         sort: { by: $sortBy, direction: $sortDirection }
-        filters: { answeredQuestionIds: $questionIds, userIds: $userIds }
+        filters: { answers: $answers, userIds: $userIds }
       ) {
         totalCount
         pageInfo {

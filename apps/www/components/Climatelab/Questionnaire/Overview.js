@@ -1,15 +1,10 @@
 import { useRouter } from 'next/router'
 import { useQuery } from '@apollo/client'
-import {
-  Loader,
-  colors,
-  ColorContextLocalExtension,
-  ColorContextProvider,
-} from '@project-r/styleguide'
+import { Loader, ColorContextProvider } from '@project-r/styleguide'
 import { QUESTIONNAIRE_QUERY } from '../../Questionnaire/Submissions/graphql'
 import { QuestionFeatured } from '../../Questionnaire/Submissions/QuestionFeatured'
 import QuestionView from '../../Questionnaire/Submissions/QuestionView'
-import { questionColor, QUESTION_IDS } from './config'
+import { questionColor, QUESTIONS } from './config'
 
 const AllQuestionsView = ({ slug, extract }) => {
   const { loading, error, data } = useQuery(QUESTIONNAIRE_QUERY, {
@@ -33,14 +28,15 @@ const AllQuestionsView = ({ slug, extract }) => {
             {/* FIXME: i know this looks really bad, but once we have the real questions in, we should take a look again. 
             The idea (my idea, maybe a bad one) was to display to charts at the beginning */}
             <div style={{ display: 'flex', gap: '1rem' }}></div>
-            {QUESTION_IDS.map((ids, i) => {
-              const groupQuestions = ids.map((id) => questions[id])
+            {QUESTIONS.map((question, i) => {
+              const groupQuestions = question.ids.map((id) => questions[id])
               return (
                 <QuestionFeatured
-                  key={ids.join('+')}
+                  key={question.ids.join('+')}
                   questions={groupQuestions}
                   slug={slug}
                   bgColor={questionColor(groupQuestions[0].id)}
+                  valueLength={question.valueLength}
                 />
               )
             })}
