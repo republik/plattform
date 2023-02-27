@@ -28,6 +28,7 @@ module.exports = {
         resolved: {
           properties: {
             answers: {
+              type: 'nested',
               properties: {
                 questionId: {
                   type: 'keyword',
@@ -58,6 +59,9 @@ module.exports = {
                         Text: {
                           type: 'text',
                           analyzer: 'german',
+                        },
+                        length: {
+                          type: 'integer',
                         },
                       },
                     },
