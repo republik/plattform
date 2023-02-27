@@ -3,7 +3,6 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 
 import {
-  ChevronRightIcon,
   ColorContextProvider,
   colors,
   Container,
@@ -18,6 +17,8 @@ import { QUESTIONNAIRE_SUBMISSIONS_QUERY } from './graphql'
 import { QuestionSummaryChart } from './QuestionChart'
 import { AnswersGrid, AnswersGridCard } from './AnswersGrid'
 import { css } from 'glamor'
+import { useEffect, useRef } from 'react'
+import scrollIntoView from 'scroll-into-view'
 
 export const getTargetedAnswers = (questionIds, results) => {
   return results?.nodes.map((submission) => {
@@ -158,12 +159,23 @@ const AnswerGridOverview = ({ slug, question, valueLength }) => {
 }
 
 export const QuestionFeatured = ({ slug, questions, bgColor, valueLength }) => {
+  const router = useRouter()
+  const { query } = router
+
   const hasTextAnswer = questions.some(
     (q) => q.__typename === 'QuestionTypeText',
   )
 
+  const questionRef = useRef()
+  useEffect(() => {
+    if (query?.focus === questions[0].id) {
+      scrollIntoView(questionRef.current)
+    }
+  }, [])
+
   return (
     <div
+      ref={questionRef}
       id={questions[0].id}
       style={{
         padding: '0 0 46px 0',

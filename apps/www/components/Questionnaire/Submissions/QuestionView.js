@@ -141,7 +141,15 @@ const QuestionView = ({ slug, questionIds, extract, share = {} }) => {
                 >
                   <NarrowContainer>
                     <Interaction.P style={{ textAlign: 'center' }}>
-                      <NextLink href={`${pathname}#${questionIds[0]}`} passHref>
+                      <NextLink
+                        href={{
+                          pathname,
+                          query: {
+                            focus: questionIds[0],
+                          },
+                        }}
+                        passHref
+                      >
                         <Editorial.A>Zurück zur Übersicht</Editorial.A>
                       </NextLink>
                     </Interaction.P>
@@ -225,7 +233,7 @@ const QuestionView = ({ slug, questionIds, extract, share = {} }) => {
                                                     currentQuestions[idx]
                                                   }
                                                 />
-                                                {idx === 0 && (
+                                                {idx === 0 && twoTextQuestions && (
                                                   <hr
                                                     style={{
                                                       opacity: 0.3,
