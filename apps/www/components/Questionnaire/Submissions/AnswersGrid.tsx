@@ -1,14 +1,17 @@
 import { css } from 'glamor'
 import { ReactNode } from 'react'
+import { mediaQueries } from '@project-r/styleguide'
 
 const styles = {
   grid: css({
     display: 'grid',
     gap: '24px',
-    gridTemplateColumns: 'repeat(auto-fill, minmax(360px, 1fr))',
     gridAutoRows: 'auto',
     gridAutoFlow: 'row dense',
     padding: '48px 0',
+    [mediaQueries.mUp]: {
+      gridTemplateColumns: 'repeat(auto-fill, minmax(360px, 1fr))',
+    },
   }),
 }
 
