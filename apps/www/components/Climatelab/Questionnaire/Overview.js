@@ -1,11 +1,13 @@
 import { useRouter } from 'next/router'
 import { useQuery } from '@apollo/client'
-import { Loader, Editorial } from '@project-r/styleguide'
-import { QUESTIONNAIRE_QUERY } from '../../Questionnaire/Submissions/graphql'
 import {
-  QuestionFeatured,
-  QuestionLink,
-} from '../../Questionnaire/Submissions/QuestionFeatured'
+  Loader,
+  colors,
+  ColorContextLocalExtension,
+  ColorContextProvider,
+} from '@project-r/styleguide'
+import { QUESTIONNAIRE_QUERY } from '../../Questionnaire/Submissions/graphql'
+import { QuestionFeatured } from '../../Questionnaire/Submissions/QuestionFeatured'
 import QuestionView from '../../Questionnaire/Submissions/QuestionView'
 import { questionColor, QUESTION_IDS } from './config'
 
@@ -55,17 +57,20 @@ const SubmissionsOverview = ({ slug, extract, share }) => {
   const { query } = router
   const questionIds = query.share ? [].concat(query.share) : undefined
 
-  if (questionIds) {
-    return (
-      <QuestionView
-        slug={slug}
-        extract={extract}
-        share={share}
-        questionIds={questionIds}
-      />
-    )
-  }
-  return <AllQuestionsView slug={slug} extract={extract} />
+  return (
+    <ColorContextProvider colorSchemeKey='light'>
+      {questionIds ? (
+        <QuestionView
+          slug={slug}
+          extract={extract}
+          share={share}
+          questionIds={questionIds}
+        />
+      ) : (
+        <AllQuestionsView slug={slug} extract={extract} />
+      )}
+    </ColorContextProvider>
+  )
 }
 
 export default SubmissionsOverview

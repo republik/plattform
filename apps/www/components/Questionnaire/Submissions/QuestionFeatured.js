@@ -117,34 +117,29 @@ const AnswersCarousel = ({ slug, question }) => {
                 {question.text}
               </Editorial.Subhead>
             </NarrowContainer>
-            <ColorContextProvider
-              localColorVariables={colors}
-              colorSchemeKey='light'
-            >
-              <AnswersGrid>
-                {targetedAnswers.map(({ answers, displayAuthor }) => (
-                  <AnswersGridCard
-                    key={displayAuthor.slug}
-                    textLength={answers[0].payload.value.length}
-                  >
-                    <PersonLink displayAuthor={displayAuthor}>
-                      <a style={{ textDecoration: 'none' }}>
-                        <div {...styles.answerCard}>
-                          <div>
-                            <Editorial.Question style={{ marginTop: 0 }}>
-                              {inQuotes(answers[0].payload.value)}
-                            </Editorial.Question>
-                            <Editorial.Credit>
-                              Von {displayAuthor.name}
-                            </Editorial.Credit>
-                          </div>
+            <AnswersGrid>
+              {targetedAnswers.map(({ answers, displayAuthor }) => (
+                <AnswersGridCard
+                  key={displayAuthor.slug}
+                  textLength={answers[0].payload.value.length}
+                >
+                  <PersonLink displayAuthor={displayAuthor}>
+                    <a style={{ textDecoration: 'none' }}>
+                      <div {...styles.answerCard}>
+                        <div>
+                          <Editorial.Question style={{ marginTop: 0 }}>
+                            {inQuotes(answers[0].payload.value)}
+                          </Editorial.Question>
+                          <Editorial.Credit>
+                            Von {displayAuthor.name}
+                          </Editorial.Credit>
                         </div>
-                      </a>
-                    </PersonLink>
-                  </AnswersGridCard>
-                ))}
-              </AnswersGrid>
-            </ColorContextProvider>
+                      </div>
+                    </a>
+                  </PersonLink>
+                </AnswersGridCard>
+              ))}
+            </AnswersGrid>
           </>
         )
       }}
