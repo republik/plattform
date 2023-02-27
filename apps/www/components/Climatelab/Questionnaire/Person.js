@@ -127,7 +127,7 @@ const Questionnaire = ({ userId, meta }) => {
               updatedAt={submission.updatedAt}
             >
               <ShareQuestionnaire meta={meta} />
-              {me.id === userId && (
+              {me?.id === userId && (
                 <IconButton
                   size={24}
                   label='Bearbeiten'
