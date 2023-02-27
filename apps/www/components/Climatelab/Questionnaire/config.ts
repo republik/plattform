@@ -41,3 +41,5 @@ export const QUESTIONS: QuestionConfigType[] = [
   { ids: [12, 13], valueLength: { max: 100 } },
   { ids: [14], valueLength: { min: 150 } },
 ]
+
+export const EDIT_QUESTIONNAIRE_PATH = '/2023/02/13/klimafragebogen-fragen'

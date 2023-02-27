@@ -12,6 +12,7 @@ import {
   IconButton,
   Center,
   Interaction,
+  EditIcon,
 } from '@project-r/styleguide'
 
 import { ASSETS_SERVER_BASE_URL, PUBLIC_BASE_URL } from '../../../lib/constants'
@@ -30,6 +31,7 @@ import {
 } from '../../Questionnaire/Submissions/Submission'
 
 import { useMe } from '../../../lib/context/MeContext'
+import { EDIT_QUESTIONNAIRE_PATH } from './config'
 
 const QUESTIONNAIRE_SLUG = 'klima-fragebogen'
 const SHARE_IMG_URL =
@@ -97,7 +99,6 @@ const ShareQuestionnaire = ({ meta }) => {
 
 const Questionnaire = ({ userId, meta }) => {
   const router = useRouter()
-  // FIXME: not sure about this pathname, the url has no ? in it
   const pathname = router.asPath
   const { me } = useMe()
   const { loading, error, data } = useQuery(QUESTIONNAIRE_SUBMISSIONS_QUERY, {
@@ -116,15 +117,7 @@ const Questionnaire = ({ userId, meta }) => {
         const {
           questionnaire: { questions, results },
         } = data
-
         const submission = results.nodes[0]
-
-        // FIXME: how can i check whether if submission is from the user that currently looks at this submission?
-
-        // const isOwnQuestionnaire = me.slug === submission.slug
-
-        // console.log(isOwnQuestionnaire)
-
         return (
           <div>
             <SubmissionAuthor
@@ -134,6 +127,15 @@ const Questionnaire = ({ userId, meta }) => {
               updatedAt={submission.updatedAt}
             >
               <ShareQuestionnaire meta={meta} />
+              {me.id === userId && (
+                <IconButton
+                  size={24}
+                  label='Bearbeiten'
+                  labelShort=''
+                  Icon={EditIcon}
+                  href={EDIT_QUESTIONNAIRE_PATH}
+                />
+              )}
             </SubmissionAuthor>
             {submission?.answers?.nodes.map(
               ({ id, question: { id: qid }, payload }) => {
@@ -212,12 +214,6 @@ const Page = () => {
                   <NextLink href={'/klimafragebogen'} passHref>
                     <Editorial.A>Zurück zur Übersicht</Editorial.A>
                   </NextLink>
-                </Interaction.P>
-                <br />
-                <Interaction.P>
-                  <Editorial.A href='/2023/02/13/klimafragebogen-fragen'>
-                    Fragebogen bearbeiten
-                  </Editorial.A>
                 </Interaction.P>
               </div>
               <Questionnaire userId={user?.id || slug} meta={meta} />
