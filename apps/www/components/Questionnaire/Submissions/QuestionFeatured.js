@@ -177,11 +177,12 @@ export const QuestionFeatured = ({ slug, questions, bgColor }) => {
 
         {hasTextAnswer && (
           <NarrowContainer>
-            <Interaction.P style={{ fontSize: '0.9em' }}>
+            <Interaction.P style={{ fontSize: '1.1em' }}>
               <QuestionLink questions={questions}>
-                <a style={{ textDecoration: 'none', color: 'currentColor' }}>
-                  Alle Antworten lesen <ChevronRightIcon />
-                </a>
+                <>
+                  <Editorial.A>Alle Antworten lesen</Editorial.A>
+                  <ChevronRightIcon />
+                </>
               </QuestionLink>
             </Interaction.P>
           </NarrowContainer>
