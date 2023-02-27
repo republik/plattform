@@ -3413,6 +3413,14 @@
       "value": "Vorgelesen von"
     },
     {
+      "key": "article/actionbar/audio/info/voices/0",
+      "value": "Vorgelesen von unserem Sprecherinnen-Team"
+    },
+    {
+      "key": "article/actionbar/audio/info/voices/other",
+      "value": "Vorgelesen von {names}"
+    },
+    {
       "key": "article/actionbar/audio/info/play-synth",
       "value": "Anhören (synthetisch)"
     },

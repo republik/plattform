@@ -38,7 +38,7 @@ import UserProgress from './UserProgress'
 import ShareButtons from './ShareButtons'
 import { useMe } from '../../lib/context/MeContext'
 import useAudioQueue from '../Audio/hooks/useAudioQueue'
-import AudioInfo from './AudioInfo'
+import AudioInfo from './Audio/Info'
 import {
   AudioPlayerLocations,
   AudioPlayerActions,
@@ -235,8 +235,6 @@ const ActionBar = ({
   const isActiveAudioItem = checkIfActivePlayerItem(document.id)
   const itemPlaying = isPlaying && isActiveAudioItem
   const itemInAudioQueue = checkIfInQueue(document.id)
-  const showAudioButtons =
-    !!meta.audioSource && meta.audioSource.kind !== 'syntheticReadAloud'
 
   const play = () => {
     toggleAudioPlayer(
@@ -253,8 +251,6 @@ const ActionBar = ({
       AudioPlayerLocations.ACTION_BAR,
     )
   }
-
-  const speakers = meta.contributors?.filter((c) => c.kind === 'voice')
 
   const ActionItems = [
     {
@@ -471,7 +467,9 @@ const ActionBar = ({
           : play
         : toggleAudioPlayback,
       modes: ['feed', 'seriesEpisode', 'articleTop'],
-      show: showAudioButtons,
+      show:
+        meta.audioSource?.mp3 &&
+        meta.audioSource?.kind !== 'syntheticReadAloud',
       group: 'audio',
     },
     {
@@ -503,7 +501,10 @@ const ActionBar = ({
         }
       },
       modes: ['feed', 'seriesEpisode', 'articleTop'],
-      show: isAudioQueueAvailable && showAudioButtons,
+      show:
+        isAudioQueueAvailable &&
+        meta.audioSource?.mp3 &&
+        meta.audioSource?.kind !== 'syntheticReadAloud',
       group: 'audio',
     },
     {
@@ -521,20 +522,9 @@ const ActionBar = ({
     },
     {
       title: t('article/actionbar/audio/info/title'),
-      element: (
-        <AudioInfo
-          play={play}
-          showAudioButtons={showAudioButtons}
-          speakers={speakers}
-          willBeReadAloud={meta.willBeReadAloud}
-          documentId={document.id}
-          documentPath={meta.path}
-        />
-      ),
+      element: <AudioInfo document={document} handlePlay={play} />,
       modes: ['articleTop'],
-      show: ['readAloud', 'syntheticReadAloud'].includes(
-        meta.audioSource?.kind,
-      ),
+      show: true, // meta.audioSource || meta.willBeReadAloud,
       group: 'audio',
     },
   ]
