@@ -12,7 +12,9 @@ import {
   IconButton,
   Center,
   EditIcon,
-  DynamicComponent,
+  Figure,
+  FigureImage,
+  TitleBlock,
 } from '@project-r/styleguide'
 
 import { ASSETS_SERVER_BASE_URL, PUBLIC_BASE_URL } from '../../../lib/constants'
@@ -37,6 +39,7 @@ import {
 import {
   EDIT_QUESTIONNAIRE_PATH,
   OVERVIEW_QUESTIONNAIRE_PATH,
+  QUESTIONNAIRE_BG_COLOR,
   QUESTIONNAIRE_SLUG,
   QUESTIONNAIRE_SQUARE_IMG_URL,
 } from './config'
@@ -51,6 +54,12 @@ const USER_QUERY = gql`
     }
   }
 `
+
+const OverviewLink = () => (
+  <NextLink href={OVERVIEW_QUESTIONNAIRE_PATH} passHref>
+    <Editorial.A>Übersicht</Editorial.A>
+  </NextLink>
+)
 
 const ShareQuestionnaire = ({ meta }) => {
   const { t } = useTranslation()
@@ -101,40 +110,55 @@ const ShareQuestionnaire = ({ meta }) => {
   )
 }
 
-const OverviewLink = () => (
-  <NextLink href={OVERVIEW_QUESTIONNAIRE_PATH} passHref>
-    <Editorial.A>Übersicht</Editorial.A>
-  </NextLink>
-)
+const Page = () => {
+  const { t } = useTranslation()
 
-const Questionnaire = ({ userId, meta }) => {
   const router = useRouter()
   const pathname = router.asPath
+  const {
+    query: { id, image },
+  } = router
+
   const { me } = useMe()
+
+  const urlObj = new URL(router.asPath, PUBLIC_BASE_URL)
+  const url = urlObj.toString()
+
+  const shareImageUrlObj = urlObj
+  shareImageUrlObj.searchParams.set('image', true)
+  const shareImageUrl = shareImageUrlObj.toString()
+
   const { loading, error, data } = useQuery(QUESTIONNAIRE_SUBMISSIONS_QUERY, {
     variables: {
       slug: QUESTIONNAIRE_SLUG,
-      userIds: [userId],
+      id,
       sortBy: 'random',
     },
   })
-  const isOwnQuestionnaire = me?.id === userId
+
+  const author = data?.questionnaire?.results?.nodes[0]?.displayAuthor
+  const slug = author?.slug
+
+  const { data: authorData } = useQuery(USER_QUERY, {
+    skip: !slug,
+    variables: {
+      slug,
+    },
+  })
+
+  if (image) {
+    return (
+      <ShareImageSplit
+        user={!loading && author}
+        img={QUESTIONNAIRE_SQUARE_IMG_URL}
+      />
+    )
+  }
+
+  const isOwnQuestionnaire = me?.id === authorData?.user?.id
 
   return (
-    <>
-      {isOwnQuestionnaire ? (
-        <Editorial.P>
-          Zurück zur <OverviewLink />.
-        </Editorial.P>
-      ) : (
-        <LinkToEditQuestionnaire slug={QUESTIONNAIRE_SLUG}>
-          <span>
-            {' '}
-            Oder gehen Sie zurück zur <OverviewLink />.
-          </span>
-        </LinkToEditQuestionnaire>
-      )}
-
+    <Frame raw>
       <Loader
         loading={loading}
         error={error}
@@ -144,87 +168,12 @@ const Questionnaire = ({ userId, meta }) => {
           } = data
           const submission = results.nodes[0]
           if (!submission) return null
-          return (
-            <div>
-              <SubmissionAuthor
-                displayAuthor={submission.displayAuthor}
-                submissionUrl={pathname}
-                createdAt={submission.createdAt}
-                updatedAt={submission.updatedAt}
-              >
-                <ShareQuestionnaire meta={meta} />
-                {isOwnQuestionnaire && (
-                  <IconButton
-                    size={24}
-                    label='Bearbeiten'
-                    labelShort=''
-                    Icon={EditIcon}
-                    href={EDIT_QUESTIONNAIRE_PATH}
-                  />
-                )}
-              </SubmissionAuthor>
-              {submission?.answers?.nodes.map(
-                ({ id, question: { id: qid }, payload }) => {
-                  const question = questions.find((q) => q.id === qid)
-                  return (
-                    <SubmissionQa
-                      key={id}
-                      question={question}
-                      payload={payload}
-                    />
-                  )
-                },
-              )}
-            </div>
-          )
-        }}
-      />
-    </>
-  )
-}
 
-const Page = () => {
-  const { t } = useTranslation()
-
-  const router = useRouter()
-  const {
-    query: { slug, image },
-  } = router
-
-  const urlObj = new URL(router.asPath, PUBLIC_BASE_URL)
-  const url = urlObj.toString()
-
-  const shareImageUrlObj = urlObj
-  shareImageUrlObj.searchParams.set('image', true)
-  const shareImageUrl = shareImageUrlObj.toString()
-
-  const { loading, error, data } = useQuery(USER_QUERY, {
-    variables: {
-      slug,
-    },
-  })
-
-  if (image) {
-    return (
-      <ShareImageSplit
-        user={!loading && (data?.user || {})}
-        img={QUESTIONNAIRE_SQUARE_IMG_URL}
-      />
-    )
-  }
-
-  return (
-    <Frame>
-      <Loader
-        loading={loading}
-        error={error}
-        render={() => {
-          const { user } = data
           const meta = {
             url,
             title: t('Climatelab/Questionnaire/title'),
             description: t('Climatelab/Questionnaire/description', {
-              name: user?.name,
+              name: author?.name,
             }),
             image: `${ASSETS_SERVER_BASE_URL}/render?width=1200&height=1&url=${encodeURIComponent(
               shareImageUrl,
@@ -232,39 +181,70 @@ const Page = () => {
           }
 
           return (
-            <Center>
+            <>
               <Meta data={meta} />
-              <Editorial.Headline>Klimafragebogen</Editorial.Headline>
-              <Questionnaire userId={user?.id || slug} meta={meta} />
-              <Editorial.Subhead attributes={{}}>
-                Wer fehlt noch?
-              </Editorial.Subhead>
-              <Editorial.P>
-                Wer in Ihrem Umfeld würde wohl Antworten geben, die sich von
-                Ihren maximal unterscheiden? Oder wessen Antworten würden Sie
-                einfach sehr gerne hier lesen? Machen Sie Freunde und Bekannte
-                auf den Fragebogen aufmerksam, per Direktnachricht oder via
-                Social Media.
-              </Editorial.P>
-              <DynamicComponent
-                src='https://cdn.repub.ch/s3/republik-assets/dynamic-components/101-reasons/share.js?v=3'
-                props={{
-                  url: `https://www.republik.ch${EDIT_QUESTIONNAIRE_PATH}`,
-                  body: `Die Republik hat 15 knifflige Fragen zum Klima zusammengestellt. Mich würde sehr interessieren, wie du sie beantwortest. Hier geht’s zum Fragebogen: www.republik.ch${EDIT_QUESTIONNAIRE_PATH}`,
-                  icons: [
-                    'linkedin',
-                    'facebook',
-                    'twitter',
-                    'whatsapp',
-                    'messenger',
-                    'telegram',
-                    'threema',
-                    'sms',
-                    'copy',
-                  ],
+              <div
+                style={{
+                  backgroundColor: QUESTIONNAIRE_BG_COLOR,
+                  padding: '24px 0',
                 }}
-              />
-            </Center>
+              >
+                <Figure size='tiny'>
+                  <FigureImage src={QUESTIONNAIRE_SQUARE_IMG_URL} />
+                </Figure>
+                <TitleBlock>
+                  <Editorial.Headline>
+                    15 Fragen zum Klima
+                    {author?.name ? ` – die Antworten von ${author.name}` : ''}
+                  </Editorial.Headline>
+                </TitleBlock>
+              </div>
+              <Center>
+                {isOwnQuestionnaire ? (
+                  <Editorial.P>
+                    Zurück zur <OverviewLink />.
+                  </Editorial.P>
+                ) : (
+                  <LinkToEditQuestionnaire slug={QUESTIONNAIRE_SLUG}>
+                    <span>
+                      {' '}
+                      Oder gehen Sie zurück zur <OverviewLink />.
+                    </span>
+                  </LinkToEditQuestionnaire>
+                )}
+                <div>
+                  <SubmissionAuthor
+                    displayAuthor={submission.displayAuthor}
+                    submissionUrl={pathname}
+                    createdAt={submission.createdAt}
+                    updatedAt={submission.updatedAt}
+                  >
+                    <ShareQuestionnaire meta={meta} />
+                    {isOwnQuestionnaire && (
+                      <IconButton
+                        size={24}
+                        label='Bearbeiten'
+                        labelShort=''
+                        Icon={EditIcon}
+                        href={EDIT_QUESTIONNAIRE_PATH}
+                      />
+                    )}
+                  </SubmissionAuthor>
+                  {submission?.answers?.nodes.map(
+                    ({ id, question: { id: qid }, payload }) => {
+                      const question = questions.find((q) => q.id === qid)
+                      return (
+                        <SubmissionQa
+                          key={id}
+                          question={question}
+                          payload={payload}
+                        />
+                      )
+                    },
+                  )}
+                </div>
+              </Center>
+            </>
           )
         }}
       />

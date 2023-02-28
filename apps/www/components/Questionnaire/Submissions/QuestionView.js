@@ -33,7 +33,7 @@ import AnswerText from './AnswerText'
 import {
   AnswersChart,
   getTargetedAnswers,
-  PersonLink,
+  SubmissionLink,
 } from './QuestionFeatured'
 import { ShareImageSplit } from './ShareImageSplit'
 import Meta from '../../Frame/Meta'
@@ -183,15 +183,15 @@ const QuestionView = ({ slug, questionIds, extract, share = {} }) => {
                   </NarrowContainer>
                   <Container>
                     <AnswersGrid>
-                      {targetAnswers.map(({ answers, displayAuthor }) => (
+                      {targetAnswers.map(({ answers, displayAuthor, id }) => (
                         <AnswersGridCard
-                          key={displayAuthor.slug}
+                          key={id}
                           textLength={sum(
                             answers,
                             (a) => a.payload.value.length,
                           )}
                         >
-                          <PersonLink displayAuthor={displayAuthor}>
+                          <SubmissionLink id={id}>
                             <a style={{ textDecoration: 'none' }}>
                               <div {...styles.answerCard}>
                                 <ColorContextProvider
@@ -253,14 +253,21 @@ const QuestionView = ({ slug, questionIds, extract, share = {} }) => {
                                           marginTop: '1em',
                                         }}
                                       >
-                                        – {displayAuthor.name}
+                                        –{' '}
+                                        <span
+                                          style={{
+                                            textDecoration: 'underline',
+                                          }}
+                                        >
+                                          {displayAuthor.name}
+                                        </span>
                                       </em>
                                     </div>
                                   </Editorial.P>
                                 </ColorContextProvider>
                               </div>
                             </a>
-                          </PersonLink>
+                          </SubmissionLink>
                         </AnswersGridCard>
                       ))}
                     </AnswersGrid>

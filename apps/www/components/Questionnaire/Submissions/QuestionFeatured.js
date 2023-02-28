@@ -31,6 +31,7 @@ import { QuestionSummaryChart } from './QuestionChart'
 export const getTargetedAnswers = (questionIds, results) => {
   return results?.nodes.map((submission) => {
     return {
+      id: submission.id,
       answers: submission.answers.nodes.filter((answer) =>
         questionIds.includes(answer.question.id),
       ),
@@ -39,9 +40,9 @@ export const getTargetedAnswers = (questionIds, results) => {
   })
 }
 
-export const PersonLink = ({ displayAuthor, children }) => {
+export const SubmissionLink = ({ id, children }) => {
   return (
-    <Link href={`/klimafragebogen/${displayAuthor.slug}`} passHref>
+    <Link href={`/klimafragebogen/${id}`} passHref>
       {children}
     </Link>
   )
@@ -161,35 +162,30 @@ const AnswerGridOverview = ({ slug, question, valueLength }) => {
               colorSchemeKey='light'
             >
               <AnswersGrid>
-                {targetedAnswers.map(({ answers, displayAuthor }) => {
-                  // FIXME: we have a problem for logged view of questionnaires
-                  //   without a public profile. Slug null. Quid facit?
-                  console.log({ displayAuthor })
-                  return (
-                    <AnswersGridCard
-                      key={displayAuthor.slug}
-                      textLength={answers[0].payload.value.length}
-                    >
-                      <PersonLink displayAuthor={displayAuthor}>
-                        <a style={{ textDecoration: 'none' }}>
-                          <div {...styles.answerCard}>
-                            <div>
-                              <Editorial.Question style={{ marginTop: 0 }}>
-                                {inQuotes(answers[0].payload.value)}
-                              </Editorial.Question>
-                              <Editorial.Credit>
-                                Von{' '}
-                                <span style={{ textDecoration: 'underline' }}>
-                                  {displayAuthor.name}
-                                </span>
-                              </Editorial.Credit>
-                            </div>
+                {targetedAnswers.map(({ answers, displayAuthor, id }) => (
+                  <AnswersGridCard
+                    key={id}
+                    textLength={answers[0].payload.value.length}
+                  >
+                    <SubmissionLink id={id}>
+                      <a style={{ textDecoration: 'none' }}>
+                        <div {...styles.answerCard}>
+                          <div>
+                            <Editorial.Question style={{ marginTop: 0 }}>
+                              {inQuotes(answers[0].payload.value)}
+                            </Editorial.Question>
+                            <Editorial.Credit>
+                              Von{' '}
+                              <span style={{ textDecoration: 'underline' }}>
+                                {displayAuthor.name}
+                              </span>
+                            </Editorial.Credit>
                           </div>
-                        </a>
-                      </PersonLink>
-                    </AnswersGridCard>
-                  )
-                })}
+                        </div>
+                      </a>
+                    </SubmissionLink>
+                  </AnswersGridCard>
+                ))}
               </AnswersGrid>
             </ColorContextProvider>
           </>
