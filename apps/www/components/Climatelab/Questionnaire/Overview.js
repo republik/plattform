@@ -25,14 +25,14 @@ const AllQuestionsView = ({ slug, extract }) => {
 
         return (
           <div style={{ margin: '48px auto 0' }}>
-            {QUESTIONS.map((question, i) => {
+            {QUESTIONS.map((question, idx) => {
               const groupQuestions = question.ids.map((id) => questions[id])
               return (
                 <QuestionFeatured
                   key={question.ids.join('+')}
                   questions={groupQuestions}
                   slug={slug}
-                  bgColor={questionColor(groupQuestions[0].id)}
+                  bgColor={questionColor(idx)}
                   valueLength={question.valueLength}
                 />
               )

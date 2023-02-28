@@ -40,7 +40,7 @@ import { ShareImageSplit } from './ShareImageSplit'
 import Meta from '../../Frame/Meta'
 import { ASSETS_SERVER_BASE_URL, PUBLIC_BASE_URL } from '../../../lib/constants'
 import { replaceText } from './utils'
-import { questionColor } from '../../Climatelab/Questionnaire/config'
+import { questionColor, QUESTIONS } from '../../Climatelab/Questionnaire/config'
 import { AnswersGrid, AnswersGridCard } from './AnswersGrid'
 import scrollIntoView from 'scroll-into-view'
 
@@ -108,11 +108,9 @@ const QuestionView = ({ slug, questionIds, extract, share = {} }) => {
 
   const isChoiceQuestion = mainQuestion?.__typename === 'QuestionTypeChoice'
 
-  const colorMap = {}
-  isChoiceQuestion &&
-    mainQuestion.result.forEach(
-      (bucket, index) => (colorMap[bucket.option.value] = COLORS[index]),
-    )
+  const questionGroupIdx = QUESTIONS.findIndex((q) =>
+    q.ids.includes(questionIds[0]),
+  )
 
   return (
     <div ref={answerGridRef}>
@@ -130,7 +128,7 @@ const QuestionView = ({ slug, questionIds, extract, share = {} }) => {
           return (
             <>
               <QuestionViewMeta share={share} question={mainQuestion} />
-              <div style={{ backgroundColor: questionColor(mainQuestion.id) }}>
+              <div style={{ backgroundColor: questionColor(questionGroupIdx) }}>
                 <div
                   style={{
                     marginTop: 48,
