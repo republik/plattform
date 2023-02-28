@@ -303,9 +303,13 @@ const Questionnaire = (props) => {
           }
           if (redirectPath) {
             setState({ updating: true })
-            submitQuestionnaire(id).then(() => {
+            submitQuestionnaire(id).then(({ data }) => {
+              console.log({ questionnaireData, data })
               router.replace({
-                pathname: redirectPath.replace('{slug}', detailsData.me.slug),
+                pathname: redirectPath.replace(
+                  '{slug}',
+                  data.submitQuestionnaire.id,
+                ),
               })
             })
           } else {

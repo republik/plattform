@@ -15,6 +15,9 @@ import {
   Figure,
   FigureImage,
   TitleBlock,
+  useHeaderHeight,
+  ChevronLeftIcon,
+  useColorContext,
 } from '@project-r/styleguide'
 
 import { ASSETS_SERVER_BASE_URL, PUBLIC_BASE_URL } from '../../../lib/constants'
@@ -29,11 +32,10 @@ import Frame from '../../Frame'
 import Meta from '../../Frame/Meta'
 
 import { QUESTIONNAIRE_SUBMISSIONS_QUERY } from '../../Questionnaire/Submissions/graphql'
-import { LinkToEditQuestionnaire } from '../../Questionnaire/Submissions/QuestionFeatured'
 import { ShareImageSplit } from '../../Questionnaire/Submissions/ShareImageSplit'
 import {
-  SubmissionAuthor,
   SubmissionQa,
+  styles as submissionStyles,
 } from '../../Questionnaire/Submissions/Submission'
 
 import {
@@ -54,12 +56,6 @@ const USER_QUERY = gql`
     }
   }
 `
-
-const OverviewLink = () => (
-  <NextLink href={OVERVIEW_QUESTIONNAIRE_PATH} passHref>
-    <Editorial.A>Übersicht</Editorial.A>
-  </NextLink>
-)
 
 const ShareQuestionnaire = ({ meta }) => {
   const { t } = useTranslation()
@@ -111,10 +107,12 @@ const ShareQuestionnaire = ({ meta }) => {
 }
 
 const Page = () => {
+  const [headerHeight] = useHeaderHeight()
+  const [colorScheme] = useColorContext()
+
   const { t } = useTranslation()
 
   const router = useRouter()
-  const pathname = router.asPath
   const {
     query: { id, image },
   } = router
@@ -187,7 +185,6 @@ const Page = () => {
                 style={{
                   backgroundColor: QUESTIONNAIRE_BG_COLOR,
                   padding: '24px 0 24px',
-                  marginBottom: 10,
                 }}
               >
                 <Figure
@@ -221,24 +218,25 @@ const Page = () => {
                 </div>
               </div>
               <Center>
-                {isOwnQuestionnaire ? (
-                  <Editorial.P>
-                    Zurück zur <OverviewLink />.
-                  </Editorial.P>
-                ) : (
-                  <LinkToEditQuestionnaire slug={QUESTIONNAIRE_SLUG}>
-                    <span>
-                      {' '}
-                      Oder gehen Sie zurück zur <OverviewLink />.
-                    </span>
-                  </LinkToEditQuestionnaire>
-                )}
-                <SubmissionAuthor
-                  displayAuthor={submission.displayAuthor}
-                  submissionUrl={pathname}
-                  createdAt={submission.createdAt}
-                  updatedAt={submission.updatedAt}
+                <div
+                  {...submissionStyles.header}
+                  style={{
+                    top: headerHeight,
+                    padding: '10px 0',
+                    marginBottom: 48,
+                  }}
+                  {...colorScheme.set('backgroundColor', 'default')}
                 >
+                  <div {...submissionStyles.headerText}>
+                    <NextLink href={OVERVIEW_QUESTIONNAIRE_PATH} passHref>
+                      <IconButton
+                        size={24}
+                        label='Zur Übersicht'
+                        labelShort='Zur Übersicht'
+                        Icon={ChevronLeftIcon}
+                      />
+                    </NextLink>
+                  </div>
                   <ShareQuestionnaire meta={meta} />
                   {isOwnQuestionnaire && (
                     <IconButton
@@ -249,7 +247,7 @@ const Page = () => {
                       href={EDIT_QUESTIONNAIRE_PATH}
                     />
                   )}
-                </SubmissionAuthor>
+                </div>
                 {submission?.answers?.nodes.map(
                   ({ id, question: { id: qid }, payload }) => {
                     const question = questions.find((q) => q.id === qid)

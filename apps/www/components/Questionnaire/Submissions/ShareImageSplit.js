@@ -61,7 +61,7 @@ export const ShareImageSplit = ({ question, user, img }) => {
             justifyContent: 'center',
           }}
         >
-          <span>{text}</span>
+          <span>{text.replace('..', '.')}</span>
         </div>
       </div>
     </>

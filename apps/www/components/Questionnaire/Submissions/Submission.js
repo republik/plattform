@@ -33,7 +33,7 @@ import { trackEvent } from '../../../lib/matomo'
 import { getSubmissionUrl } from './Share'
 import { useTranslation } from '../../../lib/withT'
 
-const styles = {
+export const styles = {
   highlightContainer: css({
     padding: '8px 7px',
     margin: '-8px -7px',
