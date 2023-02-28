@@ -11,7 +11,6 @@ import {
   ShareIcon,
   IconButton,
   Center,
-  Interaction,
   EditIcon,
 } from '@project-r/styleguide'
 
@@ -36,6 +35,7 @@ import {
   QUESTIONNAIRE_IMG_URL,
   QUESTIONNAIRE_SLUG,
 } from './config'
+import { LinkToEditQuestionnaire } from '../../Questionnaire/Submissions/QuestionFeatured'
 
 const USER_QUERY = gql`
   query getUserId($slug: String!) {
@@ -97,6 +97,12 @@ const ShareQuestionnaire = ({ meta }) => {
   )
 }
 
+const OverviewLink = () => (
+  <NextLink href={'/klimafragebogen'} passHref>
+    <Editorial.A>Übersicht</Editorial.A>
+  </NextLink>
+)
+
 const Questionnaire = ({ userId, meta }) => {
   const router = useRouter()
   const pathname = router.asPath
@@ -108,51 +114,67 @@ const Questionnaire = ({ userId, meta }) => {
       sortBy: 'random',
     },
   })
+  const isOwnQuestionnaire = me?.id === userId
 
   return (
-    <Loader
-      loading={loading}
-      error={error}
-      render={() => {
-        const {
-          questionnaire: { questions, results },
-        } = data
-        const submission = results.nodes[0]
-        return (
-          <div>
-            <SubmissionAuthor
-              displayAuthor={submission.displayAuthor}
-              submissionUrl={pathname}
-              createdAt={submission.createdAt}
-              updatedAt={submission.updatedAt}
-            >
-              <ShareQuestionnaire meta={meta} />
-              {me?.id === userId && (
-                <IconButton
-                  size={24}
-                  label='Bearbeiten'
-                  labelShort=''
-                  Icon={EditIcon}
-                  href={EDIT_QUESTIONNAIRE_PATH}
-                />
-              )}
-            </SubmissionAuthor>
-            {submission?.answers?.nodes.map(
-              ({ id, question: { id: qid }, payload }) => {
-                const question = questions.find((q) => q.id === qid)
-                return (
-                  <SubmissionQa
-                    key={id}
-                    question={question}
-                    payload={payload}
+    <>
+      {isOwnQuestionnaire ? (
+        <Editorial.P>
+          Zurück zur <OverviewLink />.
+        </Editorial.P>
+      ) : (
+        <LinkToEditQuestionnaire slug={QUESTIONNAIRE_SLUG}>
+          <span>
+            {' '}
+            Oder gehen Sie zurück zur <OverviewLink />.
+          </span>
+        </LinkToEditQuestionnaire>
+      )}
+
+      <Loader
+        loading={loading}
+        error={error}
+        render={() => {
+          const {
+            questionnaire: { questions, results },
+          } = data
+          const submission = results.nodes[0]
+          return (
+            <div>
+              <SubmissionAuthor
+                displayAuthor={submission.displayAuthor}
+                submissionUrl={pathname}
+                createdAt={submission.createdAt}
+                updatedAt={submission.updatedAt}
+              >
+                <ShareQuestionnaire meta={meta} />
+                {isOwnQuestionnaire && (
+                  <IconButton
+                    size={24}
+                    label='Bearbeiten'
+                    labelShort=''
+                    Icon={EditIcon}
+                    href={EDIT_QUESTIONNAIRE_PATH}
                   />
-                )
-              },
-            )}
-          </div>
-        )
-      }}
-    />
+                )}
+              </SubmissionAuthor>
+              {submission?.answers?.nodes.map(
+                ({ id, question: { id: qid }, payload }) => {
+                  const question = questions.find((q) => q.id === qid)
+                  return (
+                    <SubmissionQa
+                      key={id}
+                      question={question}
+                      payload={payload}
+                    />
+                  )
+                },
+              )}
+            </div>
+          )
+        }}
+      />
+    </>
   )
 }
 
@@ -208,14 +230,6 @@ const Page = () => {
             <Center>
               <Meta data={meta} />
               <Editorial.Headline>Klimafragebogen</Editorial.Headline>
-              {/* FIXME: me abfragen und nur dann Fragebogen anzeigen, Link zu Zur Übersicht, Link hardcoded */}
-              <div style={{ marginBottom: 20 }}>
-                <Interaction.P>
-                  <NextLink href={'/klimafragebogen'} passHref>
-                    <Editorial.A>Zurück zur Übersicht</Editorial.A>
-                  </NextLink>
-                </Interaction.P>
-              </div>
               <Questionnaire userId={user?.id || slug} meta={meta} />
             </Center>
           )

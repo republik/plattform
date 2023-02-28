@@ -2,7 +2,7 @@ import { useRouter } from 'next/router'
 
 import { useQuery } from '@apollo/client'
 
-import { Loader, ColorContextProvider } from '@project-r/styleguide'
+import { Loader, ColorContextProvider, Center } from '@project-r/styleguide'
 
 import { QUESTIONNAIRE_QUERY } from '../../Questionnaire/Submissions/graphql'
 import {
@@ -61,7 +61,11 @@ const SubmissionsOverview = ({ slug, extract, share }) => {
 
   return (
     <ColorContextProvider colorSchemeKey='light'>
-      {!extract && <LinkToEditQuestionnaire slug={slug} />}
+      {!extract && (
+        <Center>
+          <LinkToEditQuestionnaire slug={slug} />
+        </Center>
+      )}
       {questionIds ? (
         <QuestionView
           slug={slug}

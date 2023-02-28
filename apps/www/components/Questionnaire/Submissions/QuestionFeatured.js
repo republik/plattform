@@ -15,7 +15,6 @@ import {
   Interaction,
   Loader,
   NarrowContainer,
-  Center,
 } from '@project-r/styleguide'
 
 import { useMe } from '../../../lib/context/MeContext'
@@ -67,7 +66,7 @@ export const QuestionLink = ({ questions, children }) => {
   )
 }
 
-export const LinkToEditQuestionnaire = ({ slug }) => {
+export const LinkToEditQuestionnaire = ({ slug, children }) => {
   const { me } = useMe()
   const { loading, data } = useQuery(QUESTIONNAIRE_SUBMISSION_BOOL_QUERY, {
     skip: !me,
@@ -75,26 +74,25 @@ export const LinkToEditQuestionnaire = ({ slug }) => {
   })
   const hasFilledQuestionnaire = data?.questionnaire?.results?.totalCount > 0
   return (
-    <Center>
-      <Editorial.P>
-        {loading || !hasFilledQuestionnaire ? (
-          <span>
-            Wie lauten Ihre Antworten? Füllen Sie unseren Klimafragebogen{' '}
-            <Link href={EDIT_QUESTIONNAIRE_PATH}>
-              <Editorial.A>hier</Editorial.A>
-            </Link>{' '}
-            aus.
-          </span>
-        ) : (
-          <span>
-            Sie möchten Ihre eigenen Antworten teilen oder nochmals bearbeiten?{' '}
-            <Link href={`/klimafragebogen/${me.slug || me.id}`}>
-              <Editorial.A> Hierlang.</Editorial.A>
-            </Link>
-          </span>
-        )}
-      </Editorial.P>
-    </Center>
+    <Editorial.P>
+      {loading || !hasFilledQuestionnaire ? (
+        <span>
+          Wie lauten Ihre Antworten? Füllen Sie unseren Klimafragebogen{' '}
+          <Link href={EDIT_QUESTIONNAIRE_PATH}>
+            <Editorial.A>hier</Editorial.A>
+          </Link>{' '}
+          aus.
+        </span>
+      ) : (
+        <span>
+          Sie möchten Ihre eigenen Antworten teilen oder nochmals bearbeiten?{' '}
+          <Link href={`/klimafragebogen/${me.slug || me.id}`}>
+            <Editorial.A> Hierlang.</Editorial.A>
+          </Link>
+        </span>
+      )}
+      {children}
+    </Editorial.P>
   )
 }
 
