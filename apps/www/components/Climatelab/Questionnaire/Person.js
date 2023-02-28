@@ -186,18 +186,39 @@ const Page = () => {
               <div
                 style={{
                   backgroundColor: QUESTIONNAIRE_BG_COLOR,
-                  padding: '24px 0',
+                  padding: '24px 0 24px',
+                  marginBottom: 24,
                 }}
               >
-                <Figure size='tiny'>
+                <Figure
+                  size='tiny'
+                  attributes={{ style: { position: 'relative' } }}
+                >
                   <FigureImage src={QUESTIONNAIRE_SQUARE_IMG_URL} />
+                  {author?.profilePicture && (
+                    <img
+                      src={author.profilePicture}
+                      style={{
+                        position: 'absolute',
+                        width: 80,
+                        borderRadius: 80,
+                        left: 'calc(50% + 30px)',
+                        bottom: -45,
+                        border: '1px solid black',
+                      }}
+                    />
+                  )}
                 </Figure>
-                <TitleBlock>
-                  <Editorial.Headline>
-                    15 Fragen zum Klima
-                    {author?.name ? ` – die Antworten von ${author.name}` : ''}
-                  </Editorial.Headline>
-                </TitleBlock>
+                <div style={{ paddingTop: 24 }}>
+                  <TitleBlock>
+                    <Editorial.Headline>
+                      15 Fragen zum Klima
+                      {author?.name
+                        ? ` – die Antworten von ${author.name}`
+                        : ''}
+                    </Editorial.Headline>
+                  </TitleBlock>
+                </div>
               </div>
               <Center>
                 {isOwnQuestionnaire ? (
@@ -212,37 +233,35 @@ const Page = () => {
                     </span>
                   </LinkToEditQuestionnaire>
                 )}
-                <div>
-                  <SubmissionAuthor
-                    displayAuthor={submission.displayAuthor}
-                    submissionUrl={pathname}
-                    createdAt={submission.createdAt}
-                    updatedAt={submission.updatedAt}
-                  >
-                    <ShareQuestionnaire meta={meta} />
-                    {isOwnQuestionnaire && (
-                      <IconButton
-                        size={24}
-                        label='Bearbeiten'
-                        labelShort=''
-                        Icon={EditIcon}
-                        href={EDIT_QUESTIONNAIRE_PATH}
-                      />
-                    )}
-                  </SubmissionAuthor>
-                  {submission?.answers?.nodes.map(
-                    ({ id, question: { id: qid }, payload }) => {
-                      const question = questions.find((q) => q.id === qid)
-                      return (
-                        <SubmissionQa
-                          key={id}
-                          question={question}
-                          payload={payload}
-                        />
-                      )
-                    },
+                <SubmissionAuthor
+                  displayAuthor={submission.displayAuthor}
+                  submissionUrl={pathname}
+                  createdAt={submission.createdAt}
+                  updatedAt={submission.updatedAt}
+                >
+                  <ShareQuestionnaire meta={meta} />
+                  {isOwnQuestionnaire && (
+                    <IconButton
+                      size={24}
+                      label='Bearbeiten'
+                      labelShort=''
+                      Icon={EditIcon}
+                      href={EDIT_QUESTIONNAIRE_PATH}
+                    />
                   )}
-                </div>
+                </SubmissionAuthor>
+                {submission?.answers?.nodes.map(
+                  ({ id, question: { id: qid }, payload }) => {
+                    const question = questions.find((q) => q.id === qid)
+                    return (
+                      <SubmissionQa
+                        key={id}
+                        question={question}
+                        payload={payload}
+                      />
+                    )
+                  },
+                )}
               </Center>
             </>
           )
