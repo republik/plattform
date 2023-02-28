@@ -15,7 +15,6 @@ import {
   Interaction,
   Loader,
   NarrowContainer,
-  ArrowRightIcon,
 } from '@project-r/styleguide'
 
 import { useMe } from '../../../lib/context/MeContext'
@@ -175,7 +174,10 @@ const AnswerGridOverview = ({ slug, question, valueLength }) => {
                               {inQuotes(answers[0].payload.value)}
                             </Editorial.Question>
                             <Editorial.Credit>
-                              Von {displayAuthor.name} <ArrowRightIcon />
+                              Von{' '}
+                              <span style={{ textDecoration: 'underline' }}>
+                                {displayAuthor.name}
+                              </span>
                             </Editorial.Credit>
                           </div>
                         </div>
