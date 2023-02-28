@@ -6,7 +6,8 @@ import {
   SHARE_IMAGE_WIDTH,
   SHARE_IMAGE_HEIGHT,
 } from '@project-r/styleguide'
-import { climateColors } from '../../Climatelab/config'
+
+import { QUESTIONNAIRE_BG_COLOR } from '../../Climatelab/Questionnaire/config'
 
 export const ShareImageSplit = ({ question, user, img }) => {
   const router = useRouter()
@@ -17,7 +18,9 @@ export const ShareImageSplit = ({ question, user, img }) => {
   const text = question
     ? question.text
     : user
-    ? `${user?.name || 'Eine Verlegerin der Republik'} antwortet Klimafragen.`
+    ? `15 Fragen zum Klima${
+        user?.name ? ' — die Antworten von ' + user.name : ''
+      }.`
     : undefined
 
   if (!text) return null
@@ -35,8 +38,7 @@ export const ShareImageSplit = ({ question, user, img }) => {
           display: 'grid',
           gridAutoColumns: '1fr',
           gridAutoFlow: 'column',
-          backgroundColor: climateColors.light.default,
-          color: climateColors.light.text,
+          backgroundColor: QUESTIONNAIRE_BG_COLOR,
         }}
       >
         <div
@@ -46,14 +48,14 @@ export const ShareImageSplit = ({ question, user, img }) => {
             justifyContent: 'center',
           }}
         >
-          <img src={img} width={SHARE_IMAGE_WIDTH / 4} />
+          <img src={img} width={SHARE_IMAGE_WIDTH / 2} />
         </div>
         <div
           style={{
-            ...fontStyles.serifRegular,
-            fontSize: 48,
-            lineHeight: 1.25,
-            paddingRight: 60,
+            ...fontStyles.serifTitle,
+            fontSize: text.length < 80 ? 56 : 48,
+            lineHeight: 1.3,
+            paddingRight: text.length > 100 ? 100 : 150,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',

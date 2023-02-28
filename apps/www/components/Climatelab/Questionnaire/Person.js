@@ -12,6 +12,7 @@ import {
   IconButton,
   Center,
   EditIcon,
+  DynamicComponent,
 } from '@project-r/styleguide'
 
 import { ASSETS_SERVER_BASE_URL, PUBLIC_BASE_URL } from '../../../lib/constants'
@@ -36,8 +37,8 @@ import {
 import {
   EDIT_QUESTIONNAIRE_PATH,
   OVERVIEW_QUESTIONNAIRE_PATH,
-  QUESTIONNAIRE_IMG_URL,
   QUESTIONNAIRE_SLUG,
+  QUESTIONNAIRE_SQUARE_IMG_URL,
 } from './config'
 
 const USER_QUERY = gql`
@@ -142,6 +143,7 @@ const Questionnaire = ({ userId, meta }) => {
             questionnaire: { questions, results },
           } = data
           const submission = results.nodes[0]
+          if (!submission) return null
           return (
             <div>
               <SubmissionAuthor
@@ -206,7 +208,7 @@ const Page = () => {
     return (
       <ShareImageSplit
         user={!loading && (data?.user || {})}
-        img={QUESTIONNAIRE_IMG_URL}
+        img={QUESTIONNAIRE_SQUARE_IMG_URL}
       />
     )
   }
@@ -234,6 +236,34 @@ const Page = () => {
               <Meta data={meta} />
               <Editorial.Headline>Klimafragebogen</Editorial.Headline>
               <Questionnaire userId={user?.id || slug} meta={meta} />
+              <Editorial.Subhead attributes={{}}>
+                Wer fehlt noch?
+              </Editorial.Subhead>
+              <Editorial.P>
+                Wer in Ihrem Umfeld würde wohl Antworten geben, die sich von
+                Ihren maximal unterscheiden? Oder wessen Antworten würden Sie
+                einfach sehr gerne hier lesen? Machen Sie Freunde und Bekannte
+                auf den Fragebogen aufmerksam, per Direktnachricht oder via
+                Social Media.
+              </Editorial.P>
+              <DynamicComponent
+                src='https://cdn.repub.ch/s3/republik-assets/dynamic-components/101-reasons/share.js?v=3'
+                props={{
+                  url: `https://www.republik.ch${EDIT_QUESTIONNAIRE_PATH}`,
+                  body: `Die Republik hat 15 knifflige Fragen zum Klima zusammengestellt. Mich würde sehr interessieren, wie du sie beantwortest. Hier geht’s zum Fragebogen: www.republik.ch${EDIT_QUESTIONNAIRE_PATH}`,
+                  icons: [
+                    'linkedin',
+                    'facebook',
+                    'twitter',
+                    'whatsapp',
+                    'messenger',
+                    'telegram',
+                    'threema',
+                    'sms',
+                    'copy',
+                  ],
+                }}
+              />
             </Center>
           )
         }}

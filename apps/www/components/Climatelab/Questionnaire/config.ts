@@ -1,9 +1,12 @@
 import { scaleOrdinal } from 'd3-scale'
 
 // TODO: use correct color palette
+export const QUESTIONNAIRE_BG_COLOR = '#ffdc5e'
+const COLORS = [QUESTIONNAIRE_BG_COLOR, '#8fe5ad', '#adf6fc', '#74bfe8']
+
 export const questionColor = scaleOrdinal(
   [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-  ['#ffdc5e', '#8fe5ad', '#adf6fc', '#74bfe8'],
+  COLORS,
 )
 
 type QuestionConfigType = {
@@ -34,5 +37,8 @@ export const EDIT_QUESTIONNAIRE_PATH = '/2023/02/13/klimafragebogen-fragen'
 export const OVERVIEW_QUESTIONNAIRE_PATH = '/klimafragebogen'
 
 export const QUESTIONNAIRE_SLUG = 'klima-fragebogen'
-export const QUESTIONNAIRE_IMG_URL =
-  'https://cdn.repub.ch/s3/republik-assets/dynamic-components/QUESTIONNAIRE_SUBMISSIONS/frame-sommer22.png'
+
+export const QUESTIONNAIRE_SQUARE_IMG_URL =
+  'https://cdn.repub.ch/s3/republik-assets/repos/republik/page-klimafragebogen-uebersicht/files/034a0eca-8aaf-4511-90aa-504cca584981/final-art_questionnaire.png'
+export const QUESTIONNAIRE_LAND_IMG_URL =
+  'https://cdn.repub.ch/s3/republik-assets/repos/republik/page-klimafragebogen-uebersicht/files/4db30933-3abb-4ff5-876e-78db08daad93/final-art_questionnaire_quer.png'

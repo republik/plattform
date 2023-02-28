@@ -45,7 +45,6 @@ const AllQuestionsView = ({ slug, extract }) => {
                   />
                 )
               })}
-              [SHARE-KOMPONENTE]
             </div>
           )
         }}
