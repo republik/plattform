@@ -108,6 +108,9 @@ export const QUESTIONNAIRE_SUBMISSION_BOOL_QUERY = gql`
       id
       results: submissions(filters: { userIds: $userIds }) {
         totalCount
+        nodes {
+          id
+        }
       }
     }
   }

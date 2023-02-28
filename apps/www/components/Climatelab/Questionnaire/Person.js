@@ -187,7 +187,7 @@ const Page = () => {
                 style={{
                   backgroundColor: QUESTIONNAIRE_BG_COLOR,
                   padding: '24px 0 24px',
-                  marginBottom: 24,
+                  marginBottom: 10,
                 }}
               >
                 <Figure

@@ -87,7 +87,9 @@ export const LinkToEditQuestionnaire = ({ slug, children }) => {
       ) : (
         <span>
           Sie möchten Ihre eigenen Antworten teilen oder nochmals bearbeiten?{' '}
-          <Link href={`/klimafragebogen/${me.slug || me.id}`}>
+          <Link
+            href={`/klimafragebogen/${data.questionnaire.results.nodes[0].id}`}
+          >
             <Editorial.A> Hierlang.</Editorial.A>
           </Link>
         </span>
