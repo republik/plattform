@@ -5881,11 +5881,11 @@
     },
     {
       "key": "Climatelab/Questionnaire/title",
-      "value": "Klimafragebogen von {name}"
+      "value": "Können Sie einer 5-Jährigen die Klimakrise erklären? Und ihr dabei in die Augen schauen?"
     },
     {
       "key": "Climatelab/Questionnaire/description",
-      "value": "15 Fragen um die Klimakrise"
+      "value": "Fragen über Fragen zur Klimakrise. Das sind die Antworten von {name}. Was sind Ihre?"
     },
     {
       "key": "Trial/Form/withAccess/button/label",

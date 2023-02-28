@@ -222,10 +222,10 @@ const Page = () => {
           const { user } = data
           const meta = {
             url,
-            title: t('Climatelab/Questionnaire/title', {
-              name: user?.name || 'einer Verlegerin der Republik',
+            title: t('Climatelab/Questionnaire/title'),
+            description: t('Climatelab/Questionnaire/description', {
+              name: user?.name,
             }),
-            description: t('Climatelab/Questionnaire/description'),
             image: `${ASSETS_SERVER_BASE_URL}/render?width=1200&height=1&url=${encodeURIComponent(
               shareImageUrl,
             )}`,
