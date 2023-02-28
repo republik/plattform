@@ -1,6 +1,10 @@
-import { useQuery } from '@apollo/client'
+import { css } from 'glamor'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
+import { useEffect, useRef } from 'react'
+import scrollIntoView from 'scroll-into-view'
+
+import { useQuery } from '@apollo/client'
 
 import {
   ColorContextProvider,
@@ -11,14 +15,19 @@ import {
   Interaction,
   Loader,
   NarrowContainer,
+  Center,
 } from '@project-r/styleguide'
 
-import { QUESTIONNAIRE_SUBMISSIONS_QUERY } from './graphql'
-import { QuestionSummaryChart } from './QuestionChart'
+import { useMe } from '../../../lib/context/MeContext'
+
+import { EDIT_QUESTIONNAIRE_PATH } from '../../Climatelab/Questionnaire/config'
+
+import {
+  QUESTIONNAIRE_SUBMISSION_BOOL_QUERY,
+  QUESTIONNAIRE_SUBMISSIONS_QUERY,
+} from './graphql'
 import { AnswersGrid, AnswersGridCard } from './AnswersGrid'
-import { css } from 'glamor'
-import { useEffect, useRef } from 'react'
-import scrollIntoView from 'scroll-into-view'
+import { QuestionSummaryChart } from './QuestionChart'
 
 export const getTargetedAnswers = (questionIds, results) => {
   return results?.nodes.map((submission) => {
@@ -30,8 +39,6 @@ export const getTargetedAnswers = (questionIds, results) => {
     }
   })
 }
-
-export const COLORS = ['#00dd97', '#97f8fe', '#fefd67']
 
 export const PersonLink = ({ displayAuthor, children }) => {
   return (
@@ -52,10 +59,42 @@ export const QuestionLink = ({ questions, children }) => {
           share: questions.map((q) => q.id),
         },
       }}
+      shallow
       passHref
     >
       {children}
     </Link>
+  )
+}
+
+export const LinkToEditQuestionnaire = ({ slug }) => {
+  const { me } = useMe()
+  const { loading, data } = useQuery(QUESTIONNAIRE_SUBMISSION_BOOL_QUERY, {
+    skip: !me,
+    variables: { slug, userIds: [me?.id] },
+  })
+  const hasFilledQuestionnaire = data?.questionnaire?.results?.totalCount > 0
+  return (
+    <Center>
+      <Editorial.P>
+        {loading || !hasFilledQuestionnaire ? (
+          <span>
+            Wie lauten Ihre Antworten? Füllen Sie unseren Klimafragebogen{' '}
+            <Link href={EDIT_QUESTIONNAIRE_PATH}>
+              <Editorial.A>hier</Editorial.A>
+            </Link>{' '}
+            aus.
+          </span>
+        ) : (
+          <span>
+            Sie möchten Ihre eigenen Antworten teilen oder nochmals bearbeiten?{' '}
+            <Link href={`/klimafragebogen/${me.slug || me.id}`}>
+              <Editorial.A> Hierlang.</Editorial.A>
+            </Link>
+          </span>
+        )}
+      </Editorial.P>
+    </Center>
   )
 }
 
@@ -68,10 +107,6 @@ export const AnswersChart = ({ question, skipTitle }) => {
         ?.count ?? 0) / totalAnswers,
   }))
 
-  const colorMap = {}
-  question.result.forEach(
-    (bucket, index) => (colorMap[bucket.option.label] = COLORS[index]),
-  )
   return (
     <NarrowContainer>
       <div style={{ marginTop: 20 }}>

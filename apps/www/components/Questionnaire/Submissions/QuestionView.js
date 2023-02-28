@@ -108,7 +108,7 @@ const QuestionView = ({ slug, questionIds, extract, share = {} }) => {
   const isChoiceQuestion = mainQuestion?.__typename === 'QuestionTypeChoice'
 
   const questionGroupIdx = QUESTIONS.findIndex(
-    (q) => allQuestions[q.ids[0]]?.id === questionIds[0],
+    (q) => allQuestions && allQuestions[q.ids[0]]?.id === questionIds[0],
   )
 
   return (
@@ -145,6 +145,7 @@ const QuestionView = ({ slug, questionIds, extract, share = {} }) => {
                             focus: questionIds[0],
                           },
                         }}
+                        shallow
                         passHref
                       >
                         <Editorial.A>Zurück zur Übersicht</Editorial.A>

@@ -213,20 +213,19 @@ const Questionnaire = (props) => {
             />
           )
         }
-        if (
-          !updating &&
-          !redirectPath &&
-          !isResubmitAnswers &&
-          (hasEnded || userHasSubmitted)
-        ) {
-          return (
-            <QuestionnaireClosed
-              submitted={userHasSubmitted}
-              onResubmit={onResubmit}
-              onRevoke={onRevoke}
-              publicSubmission={publicSubmission}
-            />
-          )
+        if (!updating && !isResubmitAnswers && (hasEnded || userHasSubmitted)) {
+          if (redirectPath && resubmitAnswers) {
+            onResubmit()
+          } else {
+            return (
+              <QuestionnaireClosed
+                submitted={userHasSubmitted}
+                onResubmit={onResubmit}
+                onRevoke={onRevoke}
+                publicSubmission={publicSubmission}
+              />
+            )
+          }
         }
         // handle questions
         const questionCount = questions

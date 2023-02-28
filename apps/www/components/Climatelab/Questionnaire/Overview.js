@@ -1,9 +1,16 @@
 import { useRouter } from 'next/router'
+
 import { useQuery } from '@apollo/client'
+
 import { Loader, ColorContextProvider } from '@project-r/styleguide'
+
 import { QUESTIONNAIRE_QUERY } from '../../Questionnaire/Submissions/graphql'
-import { QuestionFeatured } from '../../Questionnaire/Submissions/QuestionFeatured'
+import {
+  LinkToEditQuestionnaire,
+  QuestionFeatured,
+} from '../../Questionnaire/Submissions/QuestionFeatured'
 import QuestionView from '../../Questionnaire/Submissions/QuestionView'
+
 import { questionColor, QUESTIONS } from './config'
 
 const AllQuestionsView = ({ slug, extract }) => {
@@ -15,33 +22,35 @@ const AllQuestionsView = ({ slug, extract }) => {
   if (extract) return null
 
   return (
-    <Loader
-      loading={loading}
-      error={error}
-      render={() => {
-        const {
-          questionnaire: { questions },
-        } = data
+    <>
+      <Loader
+        loading={loading}
+        error={error}
+        render={() => {
+          const {
+            questionnaire: { questions },
+          } = data
 
-        return (
-          <div style={{ margin: '48px auto 0' }}>
-            {QUESTIONS.map((question, idx) => {
-              const groupQuestions = question.ids.map((id) => questions[id])
-              return (
-                <QuestionFeatured
-                  key={question.ids.join('+')}
-                  questions={groupQuestions}
-                  slug={slug}
-                  bgColor={questionColor(idx)}
-                  valueLength={question.valueLength}
-                />
-              )
-            })}
-            [CTA FRAGEBOGEN AUSFÜLLEN] [SHARE-KOMPONENTE]
-          </div>
-        )
-      }}
-    />
+          return (
+            <div style={{ margin: '48px auto 0' }}>
+              {QUESTIONS.map((question, idx) => {
+                const groupQuestions = question.ids.map((id) => questions[id])
+                return (
+                  <QuestionFeatured
+                    key={question.ids.join('+')}
+                    questions={groupQuestions}
+                    slug={slug}
+                    bgColor={questionColor(idx)}
+                    valueLength={question.valueLength}
+                  />
+                )
+              })}
+              [SHARE-KOMPONENTE]
+            </div>
+          )
+        }}
+      />
+    </>
   )
 }
 
@@ -52,6 +61,7 @@ const SubmissionsOverview = ({ slug, extract, share }) => {
 
   return (
     <ColorContextProvider colorSchemeKey='light'>
+      {!extract && <LinkToEditQuestionnaire slug={slug} />}
       {questionIds ? (
         <QuestionView
           slug={slug}

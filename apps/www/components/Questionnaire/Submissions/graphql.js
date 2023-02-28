@@ -102,6 +102,17 @@ export const QUESTIONNAIRE_QUERY = gql`
   ${questionnaireData}
 `
 
+export const QUESTIONNAIRE_SUBMISSION_BOOL_QUERY = gql`
+  query getQuestionnaireSubmissionBool($slug: String!, $userIds: [ID!]) {
+    questionnaire(slug: $slug) {
+      id
+      results: submissions(filters: { userIds: $userIds }) {
+        totalCount
+      }
+    }
+  }
+`
+
 // TODO: check that adding results to the questions don't mess the sommerfragebogen
 export const QUESTIONNAIRE_SUBMISSIONS_QUERY = gql`
   query getQuestionnaireSubmissions(
