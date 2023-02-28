@@ -1,10 +1,9 @@
 import { scaleOrdinal } from 'd3-scale'
 
-// TODO: remove actual IDs from here
 // TODO: use correct color palette
 export const questionColor = scaleOrdinal(
   [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-  ['#c8c8ba', '#bae1b4', '#a7f9ae', '#67b6b1', '#2d72a9'],
+  ['#ffdc5e', '#8fe5ad', '#adf6fc', '#74bfe8'],
 )
 
 type QuestionConfigType = {
@@ -30,4 +29,9 @@ export const QUESTIONS: QuestionConfigType[] = [
   { ids: [14], valueLength: { min: 150 } },
 ]
 
+// TODO: double check path
 export const EDIT_QUESTIONNAIRE_PATH = '/2023/02/13/klimafragebogen-fragen'
+
+export const QUESTIONNAIRE_SLUG = 'klima-fragebogen'
+export const QUESTIONNAIRE_IMG_URL =
+  'https://cdn.repub.ch/s3/republik-assets/dynamic-components/QUESTIONNAIRE_SUBMISSIONS/frame-sommer22.png'

@@ -31,11 +31,11 @@ import {
 } from '../../Questionnaire/Submissions/Submission'
 
 import { useMe } from '../../../lib/context/MeContext'
-import { EDIT_QUESTIONNAIRE_PATH } from './config'
-
-const QUESTIONNAIRE_SLUG = 'klima-fragebogen'
-const SHARE_IMG_URL =
-  'https://cdn.repub.ch/s3/republik-assets/dynamic-components/QUESTIONNAIRE_SUBMISSIONS/frame-sommer22.png'
+import {
+  EDIT_QUESTIONNAIRE_PATH,
+  QUESTIONNAIRE_IMG_URL,
+  QUESTIONNAIRE_SLUG,
+} from './config'
 
 const USER_QUERY = gql`
   query getUserId($slug: String!) {
@@ -181,7 +181,7 @@ const Page = () => {
     return (
       <ShareImageSplit
         user={!loading && (data?.user || {})}
-        img={SHARE_IMG_URL}
+        img={QUESTIONNAIRE_IMG_URL}
       />
     )
   }

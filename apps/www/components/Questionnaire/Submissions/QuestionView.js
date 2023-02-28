@@ -32,7 +32,6 @@ import {
 import AnswerText from './AnswerText'
 import {
   AnswersChart,
-  COLORS,
   getTargetedAnswers,
   PersonLink,
 } from './QuestionFeatured'
@@ -108,8 +107,8 @@ const QuestionView = ({ slug, questionIds, extract, share = {} }) => {
 
   const isChoiceQuestion = mainQuestion?.__typename === 'QuestionTypeChoice'
 
-  const questionGroupIdx = QUESTIONS.findIndex((q) =>
-    q.ids.includes(questionIds[0]),
+  const questionGroupIdx = QUESTIONS.findIndex(
+    (q) => allQuestions[q.ids[0]]?.id === questionIds[0],
   )
 
   return (
