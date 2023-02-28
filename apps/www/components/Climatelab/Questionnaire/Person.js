@@ -1,9 +1,9 @@
-import { useState } from 'react'
-import { useQuery } from '@apollo/client'
-
 import { gql } from 'graphql-tag'
-import { useRouter } from 'next/router'
 import NextLink from 'next/link'
+import { useRouter } from 'next/router'
+import { useState } from 'react'
+
+import { useQuery } from '@apollo/client'
 
 import {
   Loader,
@@ -15,27 +15,30 @@ import {
 } from '@project-r/styleguide'
 
 import { ASSETS_SERVER_BASE_URL, PUBLIC_BASE_URL } from '../../../lib/constants'
+import { useMe } from '../../../lib/context/MeContext'
+import { postMessage, useInNativeApp } from '../../../lib/withInNativeApp'
 import { trackEvent } from '../../../lib/matomo'
 import { useTranslation } from '../../../lib/withT'
-import { postMessage, useInNativeApp } from '../../../lib/withInNativeApp'
 
 import ShareOverlay from '../../ActionBar/ShareOverlay'
+
 import Frame from '../../Frame'
 import Meta from '../../Frame/Meta'
+
 import { QUESTIONNAIRE_SUBMISSIONS_QUERY } from '../../Questionnaire/Submissions/graphql'
+import { LinkToEditQuestionnaire } from '../../Questionnaire/Submissions/QuestionFeatured'
 import { ShareImageSplit } from '../../Questionnaire/Submissions/ShareImageSplit'
 import {
   SubmissionAuthor,
   SubmissionQa,
 } from '../../Questionnaire/Submissions/Submission'
 
-import { useMe } from '../../../lib/context/MeContext'
 import {
   EDIT_QUESTIONNAIRE_PATH,
+  OVERVIEW_QUESTIONNAIRE_PATH,
   QUESTIONNAIRE_IMG_URL,
   QUESTIONNAIRE_SLUG,
 } from './config'
-import { LinkToEditQuestionnaire } from '../../Questionnaire/Submissions/QuestionFeatured'
 
 const USER_QUERY = gql`
   query getUserId($slug: String!) {
@@ -98,7 +101,7 @@ const ShareQuestionnaire = ({ meta }) => {
 }
 
 const OverviewLink = () => (
-  <NextLink href={'/klimafragebogen'} passHref>
+  <NextLink href={OVERVIEW_QUESTIONNAIRE_PATH} passHref>
     <Editorial.A>Übersicht</Editorial.A>
   </NextLink>
 )

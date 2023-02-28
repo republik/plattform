@@ -31,6 +31,7 @@ export const QUESTIONS: QuestionConfigType[] = [
 
 // TODO: double check path
 export const EDIT_QUESTIONNAIRE_PATH = '/2023/02/13/klimafragebogen-fragen'
+export const OVERVIEW_QUESTIONNAIRE_PATH = '/klimafragebogen'
 
 export const QUESTIONNAIRE_SLUG = 'klima-fragebogen'
 export const QUESTIONNAIRE_IMG_URL =
