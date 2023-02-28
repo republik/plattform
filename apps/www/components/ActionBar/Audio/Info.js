@@ -9,8 +9,8 @@ import {
   fontStyles,
   convertStyleToRem,
   mediaQueries,
-  NotificationIcon,
-  NotificationsNoneIcon,
+  Checkbox,
+  CalloutMenu,
 } from '@project-r/styleguide'
 
 import { intersperse } from '../../../lib/utils/helpers'
@@ -23,7 +23,12 @@ import useUnsubscribeDocumentMutation from '../graphql/useUnsubscribeDocumentMut
 
 const styles = {
   audioInfo: css({
+    margin: 0,
     textAlign: 'left',
+    display: 'flex',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    whiteSpace: 'pre-wrap',
     ...convertStyleToRem(fontStyles.sansSerifRegular14),
     [mediaQueries.mUp]: {
       ...convertStyleToRem(fontStyles.sansSerifRegular15),
@@ -53,7 +58,7 @@ const Contributors = ({ contributors }) => {
   })
 }
 
-const PlaySyntheticReadAloud = ({ onPlay }) => {
+const PlaySyntheticReadAloud = ({ onPlay, children }) => {
   const { t } = useTranslation()
   const [colorScheme] = useColorContext()
 
@@ -64,19 +69,8 @@ const PlaySyntheticReadAloud = ({ onPlay }) => {
         style={{ textDecoration: 'underline', display: 'inline' }}
         onClick={onPlay}
       >
-        {t('article/actionbar/audio/info/play-synth')}
+        {children ? children : t('article/actionbar/audio/info/play-synth')}
       </button>
-    </span>
-  )
-}
-
-const ReadAloudSoonHint = () => {
-  const { t } = useTranslation()
-  const [colorScheme] = useColorContext()
-
-  return (
-    <span {...colorScheme.set('color', 'textSoft')}>
-      {t('article/actionbar/audio/info/read-soon')}
     </span>
   )
 }
@@ -134,25 +128,20 @@ const SubscribeReadAloud = ({ document }) => {
   }
 
   return (
-    <span {...colorScheme.set('color', 'textSoft')}>
-      <button
-        {...plainButtonRule}
-        style={{ textDecoration: 'underline', display: 'inline' }}
-        onClick={handleMutation}
-        disabled={!!loading}
-      >
-        {isSubscribed ? (
-          <NotificationIcon size={24} />
-        ) : (
-          <NotificationsNoneIcon size={24} />
-        )}
-        {isSubscribed ? 'Nicht benachrichten' : 'Benachrichtigen'}
-      </button>
-    </span>
+    <Checkbox
+      checked={isSubscribed}
+      onChange={() => handleMutation()}
+      disabled={!!loading}
+    >
+      <span {...colorScheme.set('color', 'text')}>
+        Ich möchte benachrichtigt werden.
+      </span>
+    </Checkbox>
   )
 }
 
 const Info = ({ document, handlePlay }) => {
+  const [colorScheme] = useColorContext()
   const { kind, mp3, contributorsVoice, willBeReadAloud } = useMemo(() => {
     const kind = document.meta?.audioSource?.kind
     const mp3 = document.meta?.audioSource?.mp3
@@ -164,27 +153,59 @@ const Info = ({ document, handlePlay }) => {
   }, [document.id])
 
   return (
-    <span {...styles.audioInfo}>
+    <p {...styles.audioInfo} {...colorScheme.set('color', 'textSoft')}>
       {intersperse(
         [
           kind === 'readAloud' && !!mp3 && (
             <Contributors contributors={contributorsVoice} />
           ),
-          kind === 'syntheticReadAloud' && !!mp3 && (
+          !willBeReadAloud && kind === 'syntheticReadAloud' && !!mp3 && (
             <PlaySyntheticReadAloud onPlay={handlePlay} />
           ),
           (kind !== 'readAloud' || !mp3) && !!willBeReadAloud && (
-            <>
-              <ReadAloudSoonHint />
-              <SubscribeReadAloud document={document} />
-            </>
+            <span
+              {...css({
+                display: 'flex',
+                flexDirection: 'row',
+                whiteSpace: 'pre-wrap',
+              })}
+            >
+              <CalloutMenu
+                Element={(props) => (
+                  <button
+                    {...plainButtonRule}
+                    style={{
+                      display: 'inline-block',
+                      textDecoration: 'underline',
+                    }}
+                    {...props}
+                  >
+                    Benachrichtigen
+                  </button>
+                )}
+              >
+                <SubscribeReadAloud document={document} />
+              </CalloutMenu>
+              <span>
+                , sobald vorgelesen
+                {kind === 'syntheticReadAloud' && !!mp3 && (
+                  <>
+                    <span> oder synthetische Version </span>
+                    <PlaySyntheticReadAloud onPlay={handlePlay}>
+                      anhören
+                    </PlaySyntheticReadAloud>
+                    <span>.</span>
+                  </>
+                )}
+              </span>
+            </span>
           ),
         ].filter(Boolean),
         (_, i) => (
-          <span key={i}>. </span>
+          <span key={i}>.</span>
         ),
       )}
-    </span>
+    </p>
   )
 }
 
