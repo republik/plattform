@@ -15,7 +15,7 @@ import {
   RadioCheckedIcon,
   RadioUncheckedIcon,
   usePrevious,
-  Radio,
+  ChevronLeftIcon,
 } from '@project-r/styleguide'
 import { useEffect, useRef, useState } from 'react'
 import { max, shuffle } from 'd3-array'
@@ -163,26 +163,26 @@ const ChoiceAnswerOption = ({ option, checked }) => {
       }}
       {...colorScheme.set('color', checked ? 'text' : 'textSoft')}
     >
-      <Icon style={{ marginRight: 7 }} />
-      {option.label}
+      {!!Icon && <Icon style={{ marginRight: 7 }} />}
+      {option?.label}
     </span>
   )
 }
 
 const ChoiceAnswer = ({ question, payload }) => (
-  <div>
+  <span>
     {question.options.map((option, i) => (
       <ChoiceAnswerOption
         key={i}
         option={option}
-        checked={payload.value.includes(option.value)}
+        checked={payload?.value?.includes(option.value)}
       />
     ))}
-  </div>
+  </span>
 )
 
 export const SubmissionQa = ({ question, payload }) => (
-  <Editorial.P>
+  <Editorial.P attributes={{}}>
     <strong>{question.text}</strong>
     <br />
     {question.__typename === 'QuestionTypeChoice' ? (

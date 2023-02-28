@@ -71,6 +71,7 @@ export const query = gql`
   query myAddress {
     me {
       id
+      slug
       name
       firstName
       lastName
