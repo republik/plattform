@@ -239,9 +239,7 @@ async function send({
       `isLast:${isLast ? true : false}`,
       `packageName:${payment.packageName}`,
       'subject',
-    ]
-      .filter(Boolean)
-      .join('/'),
+    ].join('/'),
   ])
 
   // payment_rminder_[last_][$package.packageName.toLowerCase()]
