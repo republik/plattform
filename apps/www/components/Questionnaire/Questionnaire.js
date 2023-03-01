@@ -30,6 +30,9 @@ import ErrorMessage from '../ErrorMessage'
 import DetailsForm from '../Account/DetailsForm'
 import { withMyDetails, withMyDetailsMutation } from '../Account/enhancers'
 import { useRouter } from 'next/router'
+import { useLazyQuery, useQuery } from '@apollo/client'
+import { QUESTIONNAIRE_SUBMISSIONS_QUERY } from './Submissions/graphql'
+import { QUESTIONNAIRE_SLUG } from '../Climatelab/Questionnaire/config'
 
 const { Headline, P } = Interaction
 
@@ -86,6 +89,7 @@ const Questionnaire = (props) => {
     notEligibleCopy,
   } = props
 
+  const [getSubmissionId] = useLazyQuery(QUESTIONNAIRE_SUBMISSIONS_QUERY)
   const [state, setState] = useState({})
   const router = useRouter()
   const [isResubmitAnswers, setIsResubmitAnswers] = useState(false)
@@ -100,21 +104,49 @@ const Questionnaire = (props) => {
     dirty: {},
   })
 
+  const onSubmitSuccess = () => {
+    onQuestionnaireChange && onQuestionnaireChange()
+    return setState({
+      updating: false,
+    })
+  }
+
+  const onSubmitError = (error) => {
+    setState({
+      updating: false,
+      error,
+    })
+  }
+
   const processSubmit = (fn, ...args) => {
     setState({ updating: true })
     return fn(...args)
-      .then(() => {
-        onQuestionnaireChange && onQuestionnaireChange()
-        return setState({
-          updating: false,
-        })
+      .then(onSubmitSuccess)
+      .catch(onSubmitError)
+  }
+
+  const redirectToPath = () => {
+    setState({ updating: true })
+    submitQuestionnaire(id).then(() => {
+      getSubmissionId({
+        variables: {
+          slug,
+          userIds: [detailsData.me.id],
+          sortBy: 'random',
+        },
       })
-      .catch((error) => {
-        setState({
-          updating: false,
-          error,
+        .then(({ data }) => {
+          const {
+            questionnaire: { results },
+          } = data
+          const submission = results.nodes[0]
+          if (!submission) return onSubmitSuccess()
+          router.replace({
+            pathname: redirectPath.replace('{id}', submission.id),
+          })
         })
-      })
+        .catch(onSubmitError)
+    })
   }
 
   return (
@@ -302,16 +334,7 @@ const Questionnaire = (props) => {
             }
           }
           if (redirectPath) {
-            setState({ updating: true })
-            submitQuestionnaire(id).then(({ data }) => {
-              console.log({ questionnaireData, data })
-              router.replace({
-                pathname: redirectPath.replace(
-                  '{slug}',
-                  data.submitQuestionnaire.id,
-                ),
-              })
-            })
+            redirectToPath()
           } else {
             processSubmit(submitQuestionnaire, id)
           }

@@ -127,6 +127,7 @@ export const QUESTIONNAIRE_SUBMISSIONS_QUERY = gql`
     $sortDirection: OrderDirection
     $answers: [SubmissionFilterAnswer]
     $id: ID
+    $userIds: [ID!]
   ) {
     questionnaire(slug: $slug) {
       ...QuestionnaireFragment
@@ -135,7 +136,7 @@ export const QUESTIONNAIRE_SUBMISSIONS_QUERY = gql`
         first: $first
         after: $after
         sort: { by: $sortBy, direction: $sortDirection }
-        filters: { answers: $answers, id: $id }
+        filters: { answers: $answers, id: $id, userIds: $userIds }
       ) {
         totalCount
         pageInfo {
