@@ -115,7 +115,7 @@ const QUERY = gql`
 
 const CONTEXTS = {
   card: ['newsletter', 'notifications', 'app-login', 'usability'],
-  climate: ['climateprofile', 'climatepersonalinfo', 'mission', 'invitation'],
+  climate: ['climateprofile', 'climatepersonalinfo', 'invitation'],
   default: ['newsletter', 'notifications', 'app-login', 'usability', 'profile'],
 }
 
