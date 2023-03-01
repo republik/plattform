@@ -82,7 +82,6 @@ import { BrowserOnlyActionBar } from './BrowserOnly'
 import ArticleRecommendationsFeed from './ArticleRecommendationsFeed'
 import TeaserAudioPlayButton from '../Audio/shared/TeaserAudioPlayButton'
 import useAudioQueue from '../Audio/hooks/useAudioQueue'
-import { climateColors } from '../Climatelab/config'
 
 const LoadingComponent = () => <SmallLoader loading />
 
@@ -610,7 +609,7 @@ const ArticlePage = ({
       hasOverviewNav={hasOverviewNav}
       stickySecondaryNav={hasStickySecondaryNav}
       pageColorSchemeKey={colorSchemeKey}
-      customContentColorContext={isClimate && climateColors}
+      isClimate={isClimate}
     >
       <PageLoader
         loading={articleLoading && !articleData}
