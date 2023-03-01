@@ -16,6 +16,7 @@ import {
   mediaQueries,
   convertStyleToRem,
   inQuotes,
+  Center,
 } from '@project-r/styleguide'
 
 import { css } from 'glamor'
@@ -136,7 +137,7 @@ const QuestionView = ({ slug, questionIds, extract, share = {} }) => {
                   }}
                   ref={containerRef}
                 >
-                  <NarrowContainer>
+                  <Center>
                     <div style={{ textAlign: 'center' }}>
                       <Interaction.P>
                         <NextLink
@@ -254,8 +255,7 @@ const QuestionView = ({ slug, questionIds, extract, share = {} }) => {
                         </SubmissionLink>
                       ))}
                     </div>
-                  </NarrowContainer>
-                  <NarrowContainer>
+
                     <div style={{ paddingBottom: 24 }}>
                       {loadingMoreError && (
                         <ErrorMessage error={loadingMoreError} />
@@ -276,7 +276,7 @@ const QuestionView = ({ slug, questionIds, extract, share = {} }) => {
                         </PlainButton>
                       )}
                     </div>
-                  </NarrowContainer>
+                  </Center>
                 </div>
               </div>
             </>
@@ -311,6 +311,10 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 20,
+    transition: 'transform .3s ease-in-out',
+    ':hover': {
+      transform: 'scale(1.03) !important',
+    },
   }),
   answerCardContent: css({
     textAlign: 'center',
