@@ -12,7 +12,7 @@ module.exports = async (_, args, context) => {
     throw new Error(t('api/email/invalid'))
   }
 
-  if (!['PROJECTR', 'CLIMATE', 'WINTER'].includes(name)) {
+  if (!['PROJECTR', 'CLIMATE'].includes(name)) {
     throw new Error(t('api/newsletters/request/notSupported'))
   }
 
