@@ -5,7 +5,7 @@ import { mediaQueries } from '@project-r/styleguide'
 const styles = {
   grid: css({
     display: 'flex',
-    columnWidth: '360px',
+    columnWidth: '100%',
     flexWrap: 'wrap',
     gap: '1rem',
     marginBottom: 30,
@@ -14,6 +14,7 @@ const styles = {
     },
   }),
   card: css({
+    width: '100%',
     breakInside: 'avoid',
     transition: 'transform .3s ease-in-out',
     ':hover': {
