@@ -881,10 +881,6 @@
       "value": "Bestätigen Sie Ihre Anmeldung zum Wochenend-Newsletter."
     },
     {
-      "key": "api/newsletters/request/COVID19/subject",
-      "value": "Bestätigen Sie Ihre Anmeldung zum Covid-19-Uhr-Newsletter."
-    },
-    {
       "key": "api/newsletters/request/PROJECTR/subject",
       "value": "Bestätigen Sie Ihre Anmeldung zum Project-R-Newsletter."
     },
