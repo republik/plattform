@@ -46,6 +46,7 @@ import {
   QUESTIONNAIRE_SQUARE_IMG_URL,
 } from './config'
 import Link from 'next/link'
+import { LinkToEditQuestionnaire } from '../../Questionnaire/Submissions/QuestionFeatured'
 
 const USER_QUERY = gql`
   query getUserId($slug: String!) {
@@ -281,6 +282,18 @@ const Page = () => {
                     )
                   },
                 )}
+                <Editorial.Subhead>Wer fehlt noch?</Editorial.Subhead>
+                <LinkToEditQuestionnaire slug={QUESTIONNAIRE_SLUG} newOnly />
+                <Editorial.P>
+                  Wer in Ihrem Umfeld würde wohl Antworten geben, die sich von
+                  Ihren maximal unterscheiden? Oder wessen Antworten würden Sie
+                  einfach sehr gerne hier lesen? Machen Sie Freunde und Bekannte
+                  auf den Fragebogen aufmerksam, per Direktnachricht oder via
+                  Social Media.
+                </Editorial.P>
+                <Editorial.P>
+                  Insert Invite Dynamic Component * H E R E *
+                </Editorial.P>
               </Center>
             </>
           )

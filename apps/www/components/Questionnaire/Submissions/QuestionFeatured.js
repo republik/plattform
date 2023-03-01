@@ -67,13 +67,14 @@ export const QuestionLink = ({ questions, children }) => {
   )
 }
 
-export const LinkToEditQuestionnaire = ({ slug, children }) => {
+export const LinkToEditQuestionnaire = ({ slug, children, newOnly }) => {
   const { me } = useMe()
   const { loading, data } = useQuery(QUESTIONNAIRE_SUBMISSION_BOOL_QUERY, {
     skip: !me,
     variables: { slug, userIds: [me?.id] },
   })
   const hasFilledQuestionnaire = data?.questionnaire?.results?.totalCount > 0
+  if (hasFilledQuestionnaire && newOnly) return null
   return (
     <Editorial.P>
       {loading || !hasFilledQuestionnaire ? (

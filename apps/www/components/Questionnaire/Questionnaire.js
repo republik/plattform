@@ -30,9 +30,8 @@ import ErrorMessage from '../ErrorMessage'
 import DetailsForm from '../Account/DetailsForm'
 import { withMyDetails, withMyDetailsMutation } from '../Account/enhancers'
 import { useRouter } from 'next/router'
-import { useLazyQuery, useQuery } from '@apollo/client'
+import { useLazyQuery } from '@apollo/client'
 import { QUESTIONNAIRE_SUBMISSIONS_QUERY } from './Submissions/graphql'
-import { QUESTIONNAIRE_SLUG } from '../Climatelab/Questionnaire/config'
 
 const { Headline, P } = Interaction
 
