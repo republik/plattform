@@ -210,6 +210,7 @@ const QuestionView = ({ slug, questionIds, extract, share = {} }) => {
                                                 text={answer.payload.text}
                                                 value={answer.payload.value}
                                                 question={currentQuestions[idx]}
+                                                isQuote
                                               />
                                             </div>
                                           ) : (
@@ -221,6 +222,7 @@ const QuestionView = ({ slug, questionIds, extract, share = {} }) => {
                                                 text={answer.payload.text}
                                                 value={answer.payload.value}
                                                 question={currentQuestions[idx]}
+                                                isQuote
                                               />
 
                                               {idx === 0 && twoTextQuestions && (
@@ -310,6 +312,7 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+    textAlign: 'center',
     marginBottom: 20,
     transition: 'transform .3s ease-in-out',
     ':hover': {
@@ -317,7 +320,6 @@ const styles = {
     },
   }),
   answerCardContent: css({
-    textAlign: 'center',
     overflowWrap: 'break-word',
     hyphens: 'manual',
     ...convertStyleToRem(fontStyles.serifBold17),
