@@ -28,6 +28,8 @@ import {
 import { AnswersGrid, AnswersGridCard } from './AnswersGrid'
 import { QuestionSummaryChart } from './QuestionChart'
 
+// re-introduced since actionbar/article only expect a single share param
+// (otherwise share for multiple questions fails)
 export const QUESTION_SEPARATOR = ','
 
 export const getTargetedAnswers = (questionIds, results) => {
