@@ -39,5 +39,3 @@ export const QUESTIONNAIRE_SLUG = 'klima-fragebogen'
 
 export const QUESTIONNAIRE_SQUARE_IMG_URL =
   'https://cdn.repub.ch/s3/republik-assets/repos/republik/page-klimafragebogen-uebersicht/files/034a0eca-8aaf-4511-90aa-504cca584981/final-art_questionnaire.png'
-export const QUESTIONNAIRE_LAND_IMG_URL =
-  'https://cdn.repub.ch/s3/republik-assets/repos/republik/page-klimafragebogen-uebersicht/files/4db30933-3abb-4ff5-876e-78db08daad93/final-art_questionnaire_quer.png'
