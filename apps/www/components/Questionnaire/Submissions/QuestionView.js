@@ -1,7 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { useRouter } from 'next/router'
 import { useQuery } from '@apollo/client'
-import { sum } from 'd3-array'
 
 import NextLink from 'next/link'
 
@@ -14,7 +13,9 @@ import {
   ColorContextProvider,
   colors,
   NarrowContainer,
-  Container,
+  mediaQueries,
+  convertStyleToRem,
+  inQuotes,
 } from '@project-r/styleguide'
 
 import { css } from 'glamor'
@@ -40,7 +41,6 @@ import Meta from '../../Frame/Meta'
 import { ASSETS_SERVER_BASE_URL, PUBLIC_BASE_URL } from '../../../lib/constants'
 import { replaceText } from './utils'
 import { questionColor, QUESTIONS } from '../../Climatelab/Questionnaire/config'
-import { AnswersGrid, AnswersGridCard } from './AnswersGrid'
 import scrollIntoView from 'scroll-into-view'
 
 const QuestionViewMeta = ({ share, question }) => {
@@ -137,141 +137,124 @@ const QuestionView = ({ slug, questionIds, extract, share = {} }) => {
                   ref={containerRef}
                 >
                   <NarrowContainer>
-                    <Interaction.P style={{ textAlign: 'center' }}>
-                      <NextLink
-                        href={{
-                          pathname,
-                          query: {
-                            focus: questionIds[0],
-                          },
-                        }}
-                        shallow
-                        passHref
-                      >
-                        <Editorial.A>Zurück zur Übersicht</Editorial.A>
-                      </NextLink>
-                    </Interaction.P>
-                    <Editorial.Subhead style={{ textAlign: 'center' }}>
-                      {mainQuestion.text}
-                      {twoTextQuestions && (
+                    <div style={{ textAlign: 'center' }}>
+                      <Interaction.P>
+                        <NextLink
+                          href={{
+                            pathname,
+                            query: {
+                              focus: questionIds[0],
+                            },
+                          }}
+                          shallow
+                          passHref
+                        >
+                          <Editorial.A>Zurück zur Übersicht</Editorial.A>
+                        </NextLink>
+                      </Interaction.P>
+                      <Editorial.Subhead>
+                        {mainQuestion.text}
+                        {twoTextQuestions && (
+                          <>
+                            <hr
+                              style={{
+                                opacity: 0.7,
+                                margin: '1.2em 33%',
+                                border: 0,
+                                borderTop: '1px solid currentColor',
+                              }}
+                            />
+                            <span>{addQuestion.text}</span>
+                          </>
+                        )}
+                      </Editorial.Subhead>
+
+                      {isChoiceQuestion && (
                         <>
-                          <hr
-                            style={{
-                              opacity: 0.7,
-                              margin: '1.2em 33%',
-                              border: 0,
-                              borderTop: '1px solid currentColor',
-                            }}
+                          <AnswersChart
+                            question={mainQuestion}
+                            skipTitle={true}
                           />
-                          <span>{addQuestion.text}</span>
+                          <br />
+                          <Editorial.Subhead style={{ textAlign: 'center' }}>
+                            {addQuestion.text}
+                          </Editorial.Subhead>
                         </>
                       )}
-                    </Editorial.Subhead>
+                    </div>
 
-                    {isChoiceQuestion && (
-                      <>
-                        <AnswersChart
-                          question={mainQuestion}
-                          skipTitle={true}
-                        />
-                        <br />
-                        <Editorial.Subhead style={{ textAlign: 'center' }}>
-                          {addQuestion.text}
-                        </Editorial.Subhead>
-                      </>
-                    )}
-                  </NarrowContainer>
-                  <Container>
-                    <AnswersGrid>
+                    <div {...styles.answerCardWrapper}>
                       {targetAnswers.map(({ answers, displayAuthor, id }) => (
-                        <AnswersGridCard
-                          key={id}
-                          textLength={sum(
-                            answers,
-                            (a) => a.payload.value.length,
-                          )}
-                        >
-                          <SubmissionLink id={id}>
-                            <a style={{ textDecoration: 'none' }}>
-                              <div {...styles.answerCard}>
-                                <ColorContextProvider
-                                  localColorVariables={colors}
-                                  colorSchemeKey='light'
+                        <SubmissionLink id={id} key={id}>
+                          <a style={{ textDecoration: 'none' }}>
+                            <div {...styles.answerCard}>
+                              <ColorContextProvider
+                                localColorVariables={colors}
+                                colorSchemeKey='light'
+                              >
+                                <Editorial.P
+                                  attributes={{ style: { width: '100%' } }}
                                 >
-                                  <Editorial.P
-                                    attributes={{ style: { width: '100%' } }}
+                                  <div
+                                    {...(!isChoiceQuestion &&
+                                      styles.answerCardContent)}
                                   >
-                                    <div
-                                      {...(!isChoiceQuestion &&
-                                        styles.answerCardContent)}
-                                    >
-                                      {answers.map((answer, idx) => {
-                                        return (
-                                          <div key={answer.id}>
-                                            {isChoiceQuestion && !idx ? (
-                                              <div {...styles.circleLabel}>
-                                                <span {...styles.circle} />
-                                                <AnswerText
-                                                  text={answer.payload.text}
-                                                  value={answer.payload.value}
-                                                  question={
-                                                    currentQuestions[idx]
-                                                  }
+                                    {answers.map((answer, idx) => {
+                                      return (
+                                        <div key={answer.id}>
+                                          {isChoiceQuestion && !idx ? (
+                                            <div {...styles.circleLabel}>
+                                              <span {...styles.circle} />
+                                              <AnswerText
+                                                text={answer.payload.text}
+                                                value={answer.payload.value}
+                                                question={currentQuestions[idx]}
+                                              />
+                                            </div>
+                                          ) : (
+                                            <div
+                                              {...(isChoiceQuestion &&
+                                                styles.answerCardContent)}
+                                            >
+                                              <AnswerText
+                                                text={answer.payload.text}
+                                                value={answer.payload.value}
+                                                question={currentQuestions[idx]}
+                                              />
+
+                                              {idx === 0 && twoTextQuestions && (
+                                                <hr
+                                                  style={{
+                                                    opacity: 0.3,
+                                                    margin: '1.2em 33%',
+                                                    border: 0,
+                                                    borderTop:
+                                                      '1px solid currentColor',
+                                                  }}
                                                 />
-                                              </div>
-                                            ) : (
-                                              <div
-                                                {...(isChoiceQuestion &&
-                                                  styles.answerCardContent)}
-                                              >
-                                                <AnswerText
-                                                  text={answer.payload.text}
-                                                  value={answer.payload.value}
-                                                  question={
-                                                    currentQuestions[idx]
-                                                  }
-                                                />
-                                                {idx === 0 && twoTextQuestions && (
-                                                  <hr
-                                                    style={{
-                                                      opacity: 0.3,
-                                                      margin: '1.2em 33%',
-                                                      border: 0,
-                                                      borderTop:
-                                                        '1px solid currentColor',
-                                                    }}
-                                                  />
-                                                )}
-                                              </div>
-                                            )}
-                                          </div>
-                                        )
-                                      })}
-                                      <em
-                                        style={{
-                                          display: 'block',
-                                          marginTop: '1em',
-                                        }}
+                                              )}
+                                            </div>
+                                          )}
+                                        </div>
+                                      )
+                                    })}
+                                    <Editorial.Credit>
+                                      Von{' '}
+                                      <span
+                                        style={{ textDecoration: 'underline' }}
                                       >
-                                        –{' '}
-                                        <span
-                                          style={{
-                                            textDecoration: 'underline',
-                                          }}
-                                        >
-                                          {displayAuthor.name}
-                                        </span>
-                                      </em>
-                                    </div>
-                                  </Editorial.P>
-                                </ColorContextProvider>
-                              </div>
-                            </a>
-                          </SubmissionLink>
-                        </AnswersGridCard>
+                                        {displayAuthor.name}
+                                      </span>
+                                    </Editorial.Credit>
+                                  </div>
+                                </Editorial.P>
+                              </ColorContextProvider>
+                            </div>
+                          </a>
+                        </SubmissionLink>
                       ))}
-                    </AnswersGrid>
-                  </Container>
+                    </div>
+                  </NarrowContainer>
                   <NarrowContainer>
                     <div style={{ paddingBottom: 24 }}>
                       {loadingMoreError && (
@@ -294,7 +277,7 @@ const QuestionView = ({ slug, questionIds, extract, share = {} }) => {
                       )}
                     </div>
                   </NarrowContainer>
-                </div>{' '}
+                </div>
               </div>
             </>
           )
@@ -315,22 +298,28 @@ const styles = {
     width: '20%',
     borderTopLeftRadius: '2px',
   }),
-
+  answerCardWrapper: css({
+    marginTop: 40,
+  }),
   answerCard: css({
     background: 'rgba(255,255,255,0.5)',
     borderRadius: 10,
-    padding: 24,
+    padding: 30,
     color: 'black',
     height: '100%',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-
-    textAlign: 'center',
+    marginBottom: 20,
   }),
   answerCardContent: css({
+    textAlign: 'center',
     overflowWrap: 'break-word',
     hyphens: 'manual',
+    ...convertStyleToRem(fontStyles.serifBold17),
+    [mediaQueries.mUp]: {
+      ...convertStyleToRem(fontStyles.serifBold19),
+    },
   }),
   circleLabel: css({
     ...fontStyles.sansSerifRegular16,
