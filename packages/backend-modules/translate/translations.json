@@ -2070,39 +2070,39 @@
     },
     {
       "key": "api/email/payment/reminder/isLast:false/packageName:ABO_GIVE_MONTHS/subject",
-      "value": "Republik"
+      "value": "Zahlungserinnerung Republik"
     },
     {
       "key": "api/email/payment/reminder/isLast:false/packageName:ABO_GIVE/subject",
-      "value": "Republik-Mitgliedschaft"
+      "value": "Zahlungserinnerung Republik-Mitgliedschaft"
     },
     {
       "key": "api/email/payment/reminder/isLast:false/packageName:ABO/subject",
-      "value": "Republik-Mitgliedschaft"
+      "value": "Zahlungserinnerung Republik-Mitgliedschaft"
     },
     {
       "key": "api/email/payment/reminder/isLast:false/packageName:BENEFACTOR/subject",
-      "value": "Republik-Mitgliedschaft"
+      "value": "Zahlungserinnerung Republik-Mitgliedschaft"
     },
     {
       "key": "api/email/payment/reminder/isLast:false/packageName:DONATE_POT/subject",
-      "value": "Republik"
+      "value": "Zahlungserinnerung Republik"
     },
     {
       "key": "api/email/payment/reminder/isLast:false/packageName:DONATE/subject",
-      "value": "Republik-Spende"
+      "value": "Zahlungserinnerung Republik-Spende"
     },
     {
       "key": "api/email/payment/reminder/isLast:false/packageName:MASK/subject",
-      "value": "Republik"
+      "value": "Zahlungserinnerung Republik"
     },
     {
       "key": "api/email/payment/reminder/isLast:false/packageName:PROLONG/subject",
-      "value": "Republik-Mitgliedschaft"
+      "value": "Zahlungserinnerung Republik-Mitgliedschaft"
     },
     {
       "key": "api/email/payment/reminder/isLast:false/packageName:TABLEBOOK/subject",
-      "value": "Republik"
+      "value": "Zahlungserinnerung Republik"
     },
     {
       "key": "api/email/payment/reminder/isLast:false/packageName:YEARLY_ABO/subject",
