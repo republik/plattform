@@ -85,14 +85,6 @@ export {
   TeaserFrontCredit,
   TeaserFrontCreditLink,
 } from './components/TeaserFront'
-
-export {
-  TeaserCarousel,
-  TeaserCarouselTileContainer,
-  TeaserCarouselTile,
-  TeaserCarouselHeadline,
-} from './components/TeaserCarousel'
-
 export { FormatTag } from './components/Format'
 
 export { TeaserSectionTitle } from './components/TeaserShared'

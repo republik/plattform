@@ -127,7 +127,6 @@ const Tile = ({
   color: tileColor,
   outline: tileOutlineColor,
   bigger: tileBigger,
-  borderRadius: tileBorderRadius,
   audioPlayButton,
 }) => {
   const [colorScheme] = useColorContext()
@@ -137,7 +136,6 @@ const Tile = ({
   const bgColor = tileBgColor || context.bgColor
   const bigger = tileBigger || context.bigger
   const outline = tileOutlineColor || context.outline
-  const borderRadius = tileBorderRadius || context.borderRadius
 
   const tileStyle = merge(
     styles.tile,
@@ -179,7 +177,6 @@ const Tile = ({
       {...(outline &&
         colorScheme.set('borderColor', outline === true ? 'divider' : outline))}
       {...colorScheme.set('color', color)}
-      style={{ borderRadius: borderRadius }}
       onClick={onClick}
       className='tile'
     >
