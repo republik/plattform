@@ -32,11 +32,15 @@ async function transform(row) {
             )) ||
           answer.payload?.value
 
+        const length =
+          type === 'Text' && typeValue?.length ? typeValue.length : undefined
+
         return {
           ...answer,
           resolved: {
             value: {
               [type]: typeValue,
+              length,
             },
             question: {
               id,

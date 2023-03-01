@@ -108,16 +108,13 @@ export const SLIDER_VALUES: SliderValue[] = [
   { step: SLIDER_STEPS.belowStandard, value: 60 },
   { step: SLIDER_STEPS.belowStandard, value: 70 },
   { step: SLIDER_STEPS.belowStandard, value: 80 },
-  { step: SLIDER_STEPS.belowStandard, value: 80 },
-  { step: SLIDER_STEPS.belowStandard, value: 90 },
   { step: SLIDER_STEPS.belowStandard, value: 90 },
   { step: SLIDER_STEPS.belowStandard, value: 100 },
-  { step: SLIDER_STEPS.belowStandard, value: 100 },
+  { step: SLIDER_STEPS.belowStandard, value: 110 },
+  { step: SLIDER_STEPS.belowStandard, value: 110 },
 
-  { step: SLIDER_STEPS.average, value: 103, tick: true, isAverage: true },
+  { step: SLIDER_STEPS.average, value: 120, tick: true, isAverage: true },
 
-  { step: SLIDER_STEPS.aboveAverage, value: 110 },
-  { step: SLIDER_STEPS.aboveAverage, value: 120 },
   { step: SLIDER_STEPS.aboveAverage, value: 130 },
   { step: SLIDER_STEPS.aboveAverage, value: 140 },
   { step: SLIDER_STEPS.aboveAverage, value: 150 },
@@ -128,6 +125,7 @@ export const SLIDER_VALUES: SliderValue[] = [
   { step: SLIDER_STEPS.aboveAverage, value: 200 },
   { step: SLIDER_STEPS.aboveAverage, value: 210 },
   { step: SLIDER_STEPS.aboveAverage, value: 220 },
+  { step: SLIDER_STEPS.aboveAverage, value: 230 },
   { step: SLIDER_STEPS.aboveAverage, value: 230 },
 
   { step: SLIDER_STEPS.standard, value: 240, tick: true, isDefault: true },
@@ -144,7 +142,6 @@ export const SLIDER_VALUES: SliderValue[] = [
   { step: SLIDER_STEPS.investmentLow, value: 440 },
   { step: SLIDER_STEPS.investmentLow, value: 460 },
   { step: SLIDER_STEPS.investmentLow, value: 480 },
-  { step: SLIDER_STEPS.investmentLow, value: 480 },
 
   { step: SLIDER_STEPS.investmentHigh, value: 500, tick: true },
 
@@ -153,7 +150,6 @@ export const SLIDER_VALUES: SliderValue[] = [
   { step: SLIDER_STEPS.investmentHigh, value: 650 },
   { step: SLIDER_STEPS.investmentHigh, value: 700 },
   { step: SLIDER_STEPS.investmentHigh, value: 750 },
-  { step: SLIDER_STEPS.investmentHigh, value: 800 },
   { step: SLIDER_STEPS.investmentHigh, value: 800 },
   { step: SLIDER_STEPS.investmentHigh, value: 850 },
   { step: SLIDER_STEPS.investmentHigh, value: 850 },
