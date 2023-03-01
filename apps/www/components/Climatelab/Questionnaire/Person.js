@@ -32,10 +32,11 @@ import Frame from '../../Frame'
 import Meta from '../../Frame/Meta'
 
 import { QUESTIONNAIRE_SUBMISSIONS_QUERY } from '../../Questionnaire/Submissions/graphql'
+import { LinkToEditQuestionnaire } from '../../Questionnaire/Submissions/QuestionFeatured'
 import { ShareImageSplit } from '../../Questionnaire/Submissions/ShareImageSplit'
 import {
   SubmissionQa,
-  styles as submissionStyles,
+  SubmissionAuthor,
 } from '../../Questionnaire/Submissions/Submission'
 
 import {
@@ -45,8 +46,6 @@ import {
   QUESTIONNAIRE_SLUG,
   QUESTIONNAIRE_SQUARE_IMG_URL,
 } from './config'
-import Link from 'next/link'
-import { LinkToEditQuestionnaire } from '../../Questionnaire/Submissions/QuestionFeatured'
 
 const USER_QUERY = gql`
   query getUserId($slug: String!) {
@@ -69,7 +68,7 @@ const ShareQuestionnaire = ({ meta }) => {
     <>
       <IconButton
         label={t('article/actionbar/share')}
-        labelShort={t('article/actionbar/share')}
+        labelShort=''
         Icon={ShareIcon}
         href={url}
         onClick={(e) => {
@@ -115,6 +114,7 @@ const Page = () => {
   const { t } = useTranslation()
 
   const router = useRouter()
+  const pathname = router.asPath
   const {
     query: { id, image },
   } = router
@@ -189,76 +189,30 @@ const Page = () => {
                   padding: '24px 0 24px',
                 }}
               >
-                <Figure
-                  size='tiny'
-                  attributes={{ style: { position: 'relative' } }}
-                >
+                <Figure size='tiny'>
                   <FigureImage src={QUESTIONNAIRE_SQUARE_IMG_URL} />
-                  {author?.profilePicture && (
-                    <img
-                      src={author.profilePicture}
-                      style={{
-                        position: 'absolute',
-                        width: 80,
-                        borderRadius: 80,
-                        left: 'calc(50% + 30px)',
-                        bottom: -45,
-                        border: '1px solid black',
-                      }}
-                    />
-                  )}
                 </Figure>
-                <div style={{ paddingTop: 24 }}>
-                  <TitleBlock>
-                    <Editorial.Headline>
-                      15 Fragen zum Klima
-                      {author?.name
-                        ? ` – die Antworten von ${author.name}`
-                        : ''}
-                    </Editorial.Headline>
-                    <Editorial.Lead>
-                      Können Sie einer 5-Jährigen die Klimakrise erklären? Und
-                      ihr dabei in die Augen schauen?
-                    </Editorial.Lead>
-                    <Editorial.Credit>
-                      Von der{' '}
-                      <Link href='/willkommen-zum-klimalabor' passHref>
-                        <Editorial.A>Klimalabor-Crew</Editorial.A>
-                      </Link>{' '}
-                      und{' '}
-                      <>
-                        {author.slug ? (
-                          <Link href={`/~${author.slug}`} passHref>
-                            <Editorial.A>{author.name}</Editorial.A>
-                          </Link>
-                        ) : (
-                          author.name
-                        )}
-                      </>
-                    </Editorial.Credit>
-                  </TitleBlock>
-                </div>
               </div>
+              <TitleBlock>
+                <Editorial.Headline>
+                  15 Fragen zum Klima – die Antworten von {author.name}
+                </Editorial.Headline>
+              </TitleBlock>
               <Center>
-                <div
-                  {...submissionStyles.header}
-                  style={{
-                    top: headerHeight,
-                    padding: '10px 0',
-                    marginBottom: 48,
-                  }}
-                  {...colorScheme.set('backgroundColor', 'default')}
+                <SubmissionAuthor
+                  displayAuthor={author}
+                  submissionUrl={pathname}
+                  createdAt={submission.createdAt}
+                  updatedAt={submission.updatedAt}
                 >
-                  <div {...submissionStyles.headerText}>
-                    <NextLink href={OVERVIEW_QUESTIONNAIRE_PATH} passHref>
-                      <IconButton
-                        size={24}
-                        label='Zur Übersicht'
-                        labelShort='Zur Übersicht'
-                        Icon={ChevronLeftIcon}
-                      />
-                    </NextLink>
-                  </div>
+                  <NextLink href={OVERVIEW_QUESTIONNAIRE_PATH} passHref>
+                    <IconButton
+                      size={24}
+                      label='Zur Übersicht'
+                      labelShort='Zurück'
+                      Icon={ChevronLeftIcon}
+                    />
+                  </NextLink>
                   <ShareQuestionnaire meta={meta} />
                   {isOwnQuestionnaire && (
                     <IconButton
@@ -269,7 +223,7 @@ const Page = () => {
                       href={EDIT_QUESTIONNAIRE_PATH}
                     />
                   )}
-                </div>
+                </SubmissionAuthor>
                 {submission?.answers?.nodes.map(
                   ({ id, question: { id: qid }, payload }) => {
                     const question = questions.find((q) => q.id === qid)
@@ -282,18 +236,7 @@ const Page = () => {
                     )
                   },
                 )}
-                <Editorial.Subhead>Wer fehlt noch?</Editorial.Subhead>
                 <LinkToEditQuestionnaire slug={QUESTIONNAIRE_SLUG} newOnly />
-                <Editorial.P>
-                  Wer in Ihrem Umfeld würde wohl Antworten geben, die sich von
-                  Ihren maximal unterscheiden? Oder wessen Antworten würden Sie
-                  einfach sehr gerne hier lesen? Machen Sie Freunde und Bekannte
-                  auf den Fragebogen aufmerksam, per Direktnachricht oder via
-                  Social Media.
-                </Editorial.P>
-                <Editorial.P>
-                  Insert Invite Dynamic Component * H E R E *
-                </Editorial.P>
               </Center>
             </>
           )
