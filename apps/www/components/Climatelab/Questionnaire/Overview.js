@@ -6,6 +6,7 @@ import { Loader, ColorContextProvider, Center } from '@project-r/styleguide'
 
 import { QUESTIONNAIRE_QUERY } from '../../Questionnaire/Submissions/graphql'
 import {
+  QUESTION_SEPARATOR,
   LinkToEditQuestionnaire,
   QuestionFeatured,
 } from '../../Questionnaire/Submissions/QuestionFeatured'
@@ -56,7 +57,7 @@ const AllQuestionsView = ({ slug, extract }) => {
 const SubmissionsOverview = ({ slug, extract, share }) => {
   const router = useRouter()
   const { query } = router
-  const questionIds = query.share ? [].concat(query.share) : undefined
+  const questionIds = query.share?.split(QUESTION_SEPARATOR)
 
   return (
     <ColorContextProvider colorSchemeKey='light'>

@@ -12,10 +12,8 @@ import {
   fontStyles,
   ColorContextProvider,
   colors,
-  NarrowContainer,
   mediaQueries,
   convertStyleToRem,
-  inQuotes,
   Center,
 } from '@project-r/styleguide'
 

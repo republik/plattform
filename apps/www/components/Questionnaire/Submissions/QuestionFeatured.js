@@ -28,6 +28,8 @@ import {
 import { AnswersGrid, AnswersGridCard } from './AnswersGrid'
 import { QuestionSummaryChart } from './QuestionChart'
 
+export const QUESTION_SEPARATOR = ','
+
 export const getTargetedAnswers = (questionIds, results) => {
   return results?.nodes.map((submission) => {
     return {
@@ -56,7 +58,7 @@ export const QuestionLink = ({ questions, children }) => {
       href={{
         pathname,
         query: {
-          share: questions.map((q) => q.id),
+          share: questions.map((q) => q.id).join(QUESTION_SEPARATOR),
         },
       }}
       shallow
