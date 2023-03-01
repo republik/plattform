@@ -76,7 +76,10 @@ const IconButton = React.forwardRef<
       >
         <Icon
           size={size || ICON_SIZE}
+          width={size}
+          height={size}
           {...colorScheme.set('fill', fillValue)}
+          style={{ display: 'block' }}
         />
         {label && (
           <span

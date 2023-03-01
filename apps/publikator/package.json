@@ -51,6 +51,7 @@
         "@orbiting/remark-preset": "^1.2.4",
         "@project-r/styleguide": "*",
         "@project-r/template-newsletter": "^1.5.0",
+        "@republik/icons": "*",
         "@republik/nextjs-apollo-client": "*",
         "axios": "^1.0.0",
         "clipboard-copy": "^3.1.0",

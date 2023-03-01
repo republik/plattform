@@ -1,15 +1,22 @@
 import { useColorContext, plainButtonRule } from '@project-r/styleguide'
-import Person from 'react-icons/lib/io/ios-person'
-import PersonOutline from 'react-icons/lib/io/ios-person-outline'
+import { PersonIcon, PersonOutlineIcon } from '@republik/icons'
 
 function HasAccessToggle({ previewHasAccess, onToggle }) {
   const [colorScheme] = useColorContext()
   return (
     <button {...plainButtonRule} onClick={() => onToggle()}>
       {previewHasAccess ? (
-        <Person {...colorScheme.set('fill', 'text')} size={26} />
+        <PersonIcon
+          {...colorScheme.set('fill', 'text')}
+          width={26}
+          height={26}
+        />
       ) : (
-        <PersonOutline {...colorScheme.set('fill', 'text')} size={26} />
+        <PersonOutlineIcon
+          {...colorScheme.set('fill', 'text')}
+          width={26}
+          height={26}
+        />
       )}
     </button>
   )
