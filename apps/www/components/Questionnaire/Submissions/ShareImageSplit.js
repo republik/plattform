@@ -7,9 +7,12 @@ import {
   SHARE_IMAGE_HEIGHT,
 } from '@project-r/styleguide'
 
+import { useTranslation } from '../../../lib/withT'
+
 import { QUESTIONNAIRE_BG_COLOR } from '../../Climatelab/Questionnaire/config'
 
 export const ShareImageSplit = ({ question, user, img }) => {
+  const { t } = useTranslation()
   const router = useRouter()
   const { query } = router
   if (!query.image && !query.extract) {
@@ -18,9 +21,9 @@ export const ShareImageSplit = ({ question, user, img }) => {
   const text = question
     ? question.text
     : user
-    ? `15 Fragen zum Klima${
-        user?.name ? ' — die Antworten von ' + user.name : ''
-      }.`
+    ? t('Climatelab/Questionnaire/Person/title', {
+        name: user?.name,
+      })
     : undefined
 
   if (!text) return null
@@ -61,7 +64,7 @@ export const ShareImageSplit = ({ question, user, img }) => {
             justifyContent: 'center',
           }}
         >
-          <span>{text.replace('..', '.')}</span>
+          <span>{text}</span>
         </div>
       </div>
     </>

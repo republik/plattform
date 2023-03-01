@@ -195,7 +195,9 @@ const Page = () => {
               </div>
               <TitleBlock>
                 <Editorial.Headline>
-                  15 Fragen zum Klima – die Antworten von {author.name}
+                  {t('Climatelab/Questionnaire/Person/title', {
+                    name: author?.name,
+                  })}
                 </Editorial.Headline>
               </TitleBlock>
               <Center>

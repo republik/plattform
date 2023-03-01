@@ -5888,6 +5888,10 @@
       "value": "Fragen über Fragen zur Klimakrise. Das sind die Antworten von {name}. Was sind Ihre?"
     },
     {
+      "key": "Climatelab/Questionnaire/Person/title",
+      "value": "15 Fragen zum Klima – die Antworten von {name}"
+    },
+    {
       "key": "Trial/Form/withAccess/button/label",
       "value": "Zum Magazin"
     },
