@@ -14,22 +14,14 @@ export default ({ meta }) => {
   // https://github.com/orbiting/backends/compare/feat-article-email
   // specifically resolved meta object
   // https://github.com/orbiting/backends/commit/cce72915353d60c3cd3b4ecafefa3a11fb092933
-  const isCovid19 =
-    (typeof format === 'string' &&
-      format.includes('format-covid-19-uhr-newsletter')) ||
-    format?.repoId?.includes('format-covid-19-uhr-newsletter')
-
   const isClimate =
     (typeof format === 'string' &&
       format.includes('format-das-neue-klimaprojekt')) ||
     format?.repoId?.includes('format-das-neue-klimaprojekt')
 
-  const width = (isCovid19 && 234) || (isClimate && 179) || 178
-
+  const width = (isClimate && 179) || 178
   const height = (isClimate && 110) || 79
-
   const imageFile =
-    (isCovid19 && 'logo_republik_newsletter_covid19_wave3.png') ||
     (isClimate && 'logo_republik_newsletter_climate-1.png') ||
     'logo_republik_newsletter.png'
 
