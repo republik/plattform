@@ -45,6 +45,7 @@ import {
   QUESTIONNAIRE_SLUG,
   QUESTIONNAIRE_SQUARE_IMG_URL,
 } from './config'
+import Link from 'next/link'
 
 const USER_QUERY = gql`
   query getUserId($slug: String!) {
@@ -214,6 +215,26 @@ const Page = () => {
                         ? ` – die Antworten von ${author.name}`
                         : ''}
                     </Editorial.Headline>
+                    <Editorial.Lead>
+                      Können Sie einer 5-Jährigen die Klimakrise erklären? Und
+                      ihr dabei in die Augen schauen?
+                    </Editorial.Lead>
+                    <Editorial.Credit>
+                      Von der{' '}
+                      <Link href='/willkommen-zum-klimalabor' passHref>
+                        <Editorial.A>Klimalabor-Crew</Editorial.A>
+                      </Link>{' '}
+                      und{' '}
+                      <>
+                        {author.slug ? (
+                          <Link href={`/~${author.slug}`} passHref>
+                            <Editorial.A>{author.name}</Editorial.A>
+                          </Link>
+                        ) : (
+                          author.name
+                        )}
+                      </>
+                    </Editorial.Credit>
                   </TitleBlock>
                 </div>
               </div>
