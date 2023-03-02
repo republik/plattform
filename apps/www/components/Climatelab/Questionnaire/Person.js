@@ -15,9 +15,7 @@ import {
   Figure,
   FigureImage,
   TitleBlock,
-  useHeaderHeight,
   ChevronLeftIcon,
-  useColorContext,
 } from '@project-r/styleguide'
 
 import { ASSETS_SERVER_BASE_URL, PUBLIC_BASE_URL } from '../../../lib/constants'
@@ -108,9 +106,6 @@ const ShareQuestionnaire = ({ meta }) => {
 }
 
 const Page = () => {
-  const [headerHeight] = useHeaderHeight()
-  const [colorScheme] = useColorContext()
-
   const { t } = useTranslation()
 
   const router = useRouter()
