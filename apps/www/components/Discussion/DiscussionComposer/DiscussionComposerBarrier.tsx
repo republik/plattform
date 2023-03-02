@@ -16,6 +16,7 @@ import { useTranslation } from '../../../lib/withT'
 type Props = {
   children: ReactNode
   isRoot?: boolean
+  isEditing?: boolean
   showPayNotes?: boolean
 }
 
@@ -23,12 +24,14 @@ type Props = {
  * Handle rendering of a DiscussionComposer
  * @param children
  * @param isRoot
+ * @param isEditing
  * @param showPayNotes
  * @constructor
  */
 const DiscussionComposerBarrier = ({
   children,
   isRoot,
+  isEditing = false,
   showPayNotes,
 }: Props): ReactElement => {
   const { inNativeIOSApp } = useInNativeApp()
@@ -56,7 +59,7 @@ const DiscussionComposerBarrier = ({
   }
 
   // In case the user can't comment on the discussion, e.g. not signed in or no membership
-  if (!discussion?.userCanComment) {
+  if (!isEditing && !discussion?.userCanComment) {
     if (hidePayNote || hasActiveMembership) {
       return null
     }
