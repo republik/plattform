@@ -204,13 +204,11 @@ const Page = () => {
                       attributes={{ style: { position: 'relative' } }}
                     >
                       <FigureImage src={QUESTIONNAIRE_SQUARE_IMG_URL} />
-                      <div style={{ textAlign: 'left' }}>
-                        <FigureCaption>
-                          <FigureByline>Cristina Spanò</FigureByline>
-                        </FigureCaption>
-                      </div>
+                      <FigureCaption>
+                        <FigureByline>Cristina Spanò</FigureByline>
+                      </FigureCaption>
                     </Figure>
-                    <NarrowContainer style={{ paddingTop: 20 }}>
+                    <NarrowContainer style={{ padding: '20px 0' }}>
                       <Interaction.Headline>
                         {t('Climatelab/Questionnaire/Person/title', {
                           name: author?.name,
