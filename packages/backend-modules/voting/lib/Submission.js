@@ -99,7 +99,7 @@ const createSubmissionsQuery = ({
       should: [
         {
           nested: {
-            path: 'resolved.answer',
+            path: 'resolved.answers',
             query: {
               simple_query_string: {
                 query: search,
