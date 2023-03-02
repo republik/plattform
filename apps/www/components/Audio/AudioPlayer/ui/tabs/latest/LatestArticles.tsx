@@ -123,6 +123,7 @@ const LatestArticlesTab = ({
               </li>
             ))}
           </ul>
+
           {data?.latestArticles.pageInfo.hasNextPage && (
             <button
               onClick={() => {
@@ -133,22 +134,6 @@ const LatestArticlesTab = ({
                 fetchMore({
                   variables: {
                     after: data?.latestArticles.pageInfo.endCursor,
-                  },
-                  updateQuery(
-                    previousQueryResult: LatestArticleQueryData,
-                    { fetchMoreResult },
-                  ) {
-                    const next = {
-                      ...previousQueryResult,
-                      latestArticles: {
-                        pageInfo: fetchMoreResult.latestArticles.pageInfo,
-                        nodes: [
-                          ...previousQueryResult.latestArticles.nodes,
-                          ...fetchMoreResult.latestArticles.nodes,
-                        ],
-                      },
-                    }
-                    return next
                   },
                 })
               }}

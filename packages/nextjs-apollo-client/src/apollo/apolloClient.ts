@@ -38,7 +38,8 @@ function createApolloClient(
     ssrMode: !isClient,
     cache: new InMemoryCache({
       typePolicies: {
-        Query: {
+        queries: {
+          queryType: true,
           fields: {
             documents: {
               keyArgs: false,
@@ -52,9 +53,6 @@ function createApolloClient(
               },
             },
           },
-        },
-        queries: {
-          queryType: true,
         },
         mutations: {
           mutationType: true,
