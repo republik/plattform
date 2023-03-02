@@ -941,18 +941,6 @@
       "value": "8 bis 12 Mal pro Jahr\n"
     },
     {
-      "key": "account/newsletterSubscriptions/COVID19/label",
-      "value": "Covid-19-Uhr-Newsletter"
-    },
-    {
-      "key": "account/newsletterSubscriptions/COVID19/frequency",
-      "value": "Montags um 19 Uhr"
-    },
-    {
-      "key": "account/newsletterSubscriptions/COVID19/description",
-      "value": "Brauchbares zur Pandemie – was man wissen sollte, obwohl es niemand mehr hören mag. Der kostenlose Newsletter ist unser Angebot zur Bewältigung der Corona-Pandemie."
-    },
-    {
       "key": "account/newsletterSubscriptions/ACCOMPLICE/label",
       "value": "Komplizen-Newsletter"
     },
