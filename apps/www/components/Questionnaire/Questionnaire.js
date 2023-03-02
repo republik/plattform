@@ -29,6 +29,7 @@ import QuestionnaireActions from './QuestionnaireActions'
 import ErrorMessage from '../ErrorMessage'
 import DetailsForm from '../Account/DetailsForm'
 import { withMyDetails, withMyDetailsMutation } from '../Account/enhancers'
+import { useRouter } from 'next/router'
 
 const { Headline, P } = Interaction
 
@@ -81,9 +82,12 @@ const Questionnaire = (props) => {
     hideReset = false,
     requireName = true,
     showAnonymize = false,
+    redirectPath,
+    notEligibleCopy,
   } = props
 
   const [state, setState] = useState({})
+  const router = useRouter()
   const [isResubmitAnswers, setIsResubmitAnswers] = useState(false)
   const [headerHeight] = useHeaderHeight()
   const { t } = useTranslation()
@@ -96,21 +100,39 @@ const Questionnaire = (props) => {
     dirty: {},
   })
 
+  const onSubmitSuccess = () => {
+    onQuestionnaireChange && onQuestionnaireChange()
+    return setState({
+      updating: false,
+    })
+  }
+
+  const onSubmitError = (error) => {
+    setState({
+      updating: false,
+      error,
+    })
+  }
+
   const processSubmit = (fn, ...args) => {
     setState({ updating: true })
     return fn(...args)
-      .then(() => {
-        onQuestionnaireChange && onQuestionnaireChange()
-        return setState({
-          updating: false,
+      .then(onSubmitSuccess)
+      .catch(onSubmitError)
+  }
+
+  const redirectToPath = () => {
+    setState({ updating: true })
+    submitQuestionnaire(id)
+      .then(({ data }) => {
+        router.replace({
+          pathname: redirectPath.replace(
+            '{id}',
+            data?.submitQuestionnaire?.userSubmissionId,
+          ),
         })
       })
-      .catch((error) => {
-        setState({
-          updating: false,
-          error,
-        })
-      })
+      .catch(onSubmitError)
   }
 
   return (
@@ -145,6 +167,16 @@ const Questionnaire = (props) => {
         const updating = state.updating || props.updating || props.submitting
         const hasUserAnswers = questions.some(({ userAnswer }) => !!userAnswer)
 
+        if (!userIsEligible && notEligibleCopy) {
+          return (
+            <RawHtml
+              type={Interaction.P}
+              dangerouslySetInnerHTML={{
+                __html: notEligibleCopy,
+              }}
+            />
+          )
+        }
         if (!userIsEligible) {
           return null
         }
@@ -200,14 +232,18 @@ const Questionnaire = (props) => {
           )
         }
         if (!updating && !isResubmitAnswers && (hasEnded || userHasSubmitted)) {
-          return (
-            <QuestionnaireClosed
-              submitted={userHasSubmitted}
-              onResubmit={onResubmit}
-              onRevoke={onRevoke}
-              publicSubmission={publicSubmission}
-            />
-          )
+          if (redirectPath && resubmitAnswers) {
+            onResubmit()
+          } else {
+            return (
+              <QuestionnaireClosed
+                submitted={userHasSubmitted}
+                onResubmit={onResubmit}
+                onRevoke={onRevoke}
+                publicSubmission={publicSubmission}
+              />
+            )
+          }
         }
         // handle questions
         const questionCount = questions
@@ -283,7 +319,11 @@ const Questionnaire = (props) => {
               return
             }
           }
-          processSubmit(submitQuestionnaire, id)
+          if (redirectPath) {
+            redirectToPath()
+          } else {
+            processSubmit(submitQuestionnaire, id)
+          }
         }
 
         const onSubmitAnonymized = () =>
