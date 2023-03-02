@@ -144,8 +144,6 @@ const AnswerGridOverview = ({ slug, question, valueLength, hint }) => {
     },
   })
 
-  // TODO filter answers by length, make Carousel with short answers and carousels with long answers
-
   return (
     <Loader
       loading={loading}
