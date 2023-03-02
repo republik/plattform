@@ -40,19 +40,6 @@ function createApolloClient(
       typePolicies: {
         queries: {
           queryType: true,
-          fields: {
-            documents: {
-              keyArgs: false,
-              merge: (existing = {}, incoming) => {
-                const existingNodes = existing?.nodes ?? []
-                const incomingNodes = incoming?.nodes ?? []
-                return {
-                  pageInfo: incoming?.pageInfo,
-                  nodes: [...existingNodes, ...incomingNodes],
-                }
-              },
-            },
-          },
         },
         mutations: {
           mutationType: true,

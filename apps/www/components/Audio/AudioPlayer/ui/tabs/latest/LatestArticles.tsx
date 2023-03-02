@@ -1,18 +1,13 @@
 import { useMemo, useState } from 'react'
 import { css } from 'glamor'
 import NoAccess from '../shared/NoAccess'
-import {
-  LatestArticleQueryData,
-  LatestArticleQueryVariables,
-  useLatestArticlesQuery,
-} from '../../../../graphql/LatestArticlesHook'
+import { useLatestArticlesQuery } from '../../../../graphql/LatestArticlesHook'
 import { useTranslation } from '../../../../../../lib/withT'
 import { AudioQueueItem } from '../../../../graphql/AudioQueueHooks'
 import LoadingPlaceholder from '../shared/LoadingPlaceholder'
 import FilterButton from './FilterButton'
 import { useMe } from '../../../../../../lib/context/MeContext'
 import LatestArticleItem from './LatestArticleItem'
-import { FetchMoreOptions } from '@apollo/client'
 
 const styles = {
   root: css({
@@ -134,6 +129,17 @@ const LatestArticlesTab = ({
                 fetchMore({
                   variables: {
                     after: data?.latestArticles.pageInfo.endCursor,
+                  },
+                  updateQuery(previous, { fetchMoreResult }) {
+                    const previousNodes = previous?.latestArticles.nodes ?? []
+                    const incomingNodes =
+                      fetchMoreResult?.latestArticles.nodes ?? []
+                    return {
+                      latestArticles: {
+                        ...fetchMoreResult.latestArticles,
+                        nodes: [...previousNodes, ...incomingNodes],
+                      },
+                    }
                   },
                 })
               }}
