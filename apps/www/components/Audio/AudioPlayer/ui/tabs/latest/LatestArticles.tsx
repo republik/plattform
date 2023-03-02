@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
 import { css } from 'glamor'
+import { A, Spinner } from '@project-r/styleguide'
 import NoAccess from '../shared/NoAccess'
 import { useLatestArticlesQuery } from '../../../../graphql/LatestArticlesHook'
 import { useTranslation } from '../../../../../../lib/withT'
@@ -45,6 +46,29 @@ const LatestArticlesTab = ({
       count: 20,
     },
   })
+  const [isLoadingMore, setLoadingMore] = useState(false)
+  const loadMore = () => {
+    setLoadingMore(true)
+    fetchMore({
+      variables: {
+        after: data?.latestArticles.pageInfo.endCursor,
+      },
+      updateQuery(previous, { fetchMoreResult }) {
+        const previousNodes = previous?.latestArticles.nodes ?? []
+        const incomingNodes = fetchMoreResult?.latestArticles.nodes ?? []
+        const nodes = [...previousNodes, ...incomingNodes]
+        return {
+          latestArticles: {
+            ...fetchMoreResult.latestArticles,
+            nodes: nodes.filter(
+              (node, index) =>
+                nodes.findIndex((obj) => node.id === obj.id) === index,
+            ),
+          },
+        }
+      },
+    }).then(() => setLoadingMore(false))
+  }
 
   // Define if the real-aloud filter should be shown
   const hasReadAloudDocuments =
@@ -120,32 +144,17 @@ const LatestArticlesTab = ({
           </ul>
 
           {data?.latestArticles.pageInfo.hasNextPage && (
-            <button
-              onClick={() => {
-                console.log(
-                  'fetchMore',
-                  data?.latestArticles.pageInfo.endCursor,
-                )
-                fetchMore({
-                  variables: {
-                    after: data?.latestArticles.pageInfo.endCursor,
-                  },
-                  updateQuery(previous, { fetchMoreResult }) {
-                    const previousNodes = previous?.latestArticles.nodes ?? []
-                    const incomingNodes =
-                      fetchMoreResult?.latestArticles.nodes ?? []
-                    return {
-                      latestArticles: {
-                        ...fetchMoreResult.latestArticles,
-                        nodes: [...previousNodes, ...incomingNodes],
-                      },
-                    }
-                  },
-                })
-              }}
-            >
-              Fetch more
-            </button>
+            <>
+              {isLoadingMore ? (
+                <p>
+                  <Spinner size={16} />
+                </p>
+              ) : (
+                <A href='#' onClick={() => loadMore()}>
+                  {t('AudioPlayer/Latest/LoadMore')}
+                </A>
+              )}
+            </>
           )}
         </>
       ) : (
