@@ -4,6 +4,7 @@ const {
   isEligible,
   userHasSubmitted,
   userSubmitDate,
+  userSubmissionId,
   getQuestions,
 } = require('../../lib/Questionnaire')
 
@@ -20,6 +21,10 @@ module.exports = {
   async userSubmitDate(entity, args, context) {
     const { user: me } = context
     return userSubmitDate(entity.id, me && me.id, context)
+  },
+  async userSubmissionId(entity, args, context) {
+    const { user: me } = context
+    return userSubmissionId(entity.id, me && me.id, context)
   },
   allowedRoles(entity) {
     const roles = entity?.allowedRoles?.filter((role) =>
