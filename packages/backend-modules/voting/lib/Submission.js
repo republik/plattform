@@ -315,8 +315,56 @@ const getConnection = (anchors, args, context) => {
   return pageini(args, countFn, nodesFn, pageInfoFn)
 }
 
+const getSubmissionById = async (anchors, args, context) => {
+  const { questionnaireId } = anchors
+  const { loaders } = context
+  const { after, before } = args
+
+  const size = Math.min(
+    Math.abs(
+      [after?.first, before?.first, args.first, 10].find(Number.isFinite),
+    ),
+    100,
+  )
+
+  const search = after?.search || before?.search || args.search || undefined
+  const value = after?.value || before?.value || args.value || undefined
+  const filters = after?.filters || before?.filters || args.filters || {}
+  // sort is irrelevant
+  const unwantedFilters = Object.keys(filters).filter((key) => key !== 'id')
+
+  if (size < 1 || !!search || !!value || unwantedFilters?.length) {
+    return false
+  }
+
+  const submissionId = filters?.id
+  if (!submissionId) {
+    return false
+  }
+
+  const submission = await loaders.QuestionnaireSubmissions.byKeyObj.load({
+    questionnaireId,
+    id: submissionId,
+  })
+  if (!submission) {
+    return false
+  }
+
+  return {
+    pageInfo: {
+      endCursor: null,
+      startCursor: null,
+      hasNextPage: false,
+      hasPreviousPage: false,
+    },
+    totalCount: 1,
+    nodes: [submission],
+  }
+}
+
 module.exports = {
   count,
   find,
   getConnection,
+  getSubmissionById,
 }
