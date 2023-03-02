@@ -30,8 +30,6 @@ import ErrorMessage from '../ErrorMessage'
 import DetailsForm from '../Account/DetailsForm'
 import { withMyDetails, withMyDetailsMutation } from '../Account/enhancers'
 import { useRouter } from 'next/router'
-import { useLazyQuery } from '@apollo/client'
-import { QUESTIONNAIRE_SUBMISSIONS_QUERY } from './Submissions/graphql'
 
 const { Headline, P } = Interaction
 
@@ -88,7 +86,6 @@ const Questionnaire = (props) => {
     notEligibleCopy,
   } = props
 
-  const [getSubmissionId] = useLazyQuery(QUESTIONNAIRE_SUBMISSIONS_QUERY)
   const [state, setState] = useState({})
   const router = useRouter()
   const [isResubmitAnswers, setIsResubmitAnswers] = useState(false)
@@ -126,26 +123,16 @@ const Questionnaire = (props) => {
 
   const redirectToPath = () => {
     setState({ updating: true })
-    submitQuestionnaire(id).then(() => {
-      getSubmissionId({
-        variables: {
-          slug,
-          userIds: [detailsData.me.id],
-          sortBy: 'random',
-        },
-      })
-        .then(({ data }) => {
-          const {
-            questionnaire: { results },
-          } = data
-          const submission = results.nodes[0]
-          if (!submission) return onSubmitSuccess()
-          router.replace({
-            pathname: redirectPath.replace('{id}', submission.id),
-          })
+    submitQuestionnaire(id)
+      .then(({ data }) => {
+        router.replace({
+          pathname: redirectPath.replace(
+            '{id}',
+            data?.submitQuestionnaire?.userSubmissionId,
+          ),
         })
-        .catch(onSubmitError)
-    })
+      })
+      .catch(onSubmitError)
   }
 
   return (

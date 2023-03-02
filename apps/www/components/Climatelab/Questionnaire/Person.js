@@ -15,8 +15,8 @@ import {
   Figure,
   FigureImage,
   useHeaderHeight,
-  ChevronLeftIcon,
   useColorContext,
+  ChevronLeftIcon,
   NarrowContainer,
   FigureCaption,
   ColorContextProvider,
@@ -111,10 +111,9 @@ const ShareQuestionnaire = ({ meta }) => {
 }
 
 const Page = () => {
+  const { t } = useTranslation()
   const [headerHeight] = useHeaderHeight()
   const [colorScheme] = useColorContext()
-
-  const { t } = useTranslation()
 
   const router = useRouter()
   const pathname = router.asPath
