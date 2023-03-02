@@ -21,7 +21,7 @@ export type ApolloClientOptions = {
   apiUrl: string
   wsUrl?: string
   headers?: { [key: string]: string | number | boolean } | IncomingHttpHeaders
-  onResponse?: (response: any) => void
+  onResponse?: (response: unknown) => void
   mobileConfigOptions?: {
     isInMobileApp: boolean
     createAppWorkerLink: () => ApolloLink
@@ -36,6 +36,21 @@ function createApolloClient(
     ssrMode: !isClient,
     cache: new InMemoryCache({
       typePolicies: {
+        Query: {
+          fields: {
+            documents: {
+              keyArgs: false,
+              merge: (existing = {}, incoming) => {
+                const existingNodes = existing?.nodes ?? []
+                const incomingNodes = incoming?.nodes ?? []
+                return {
+                  pageInfo: incoming?.pageInfo,
+                  nodes: [...existingNodes, ...incomingNodes],
+                }
+              },
+            },
+          },
+        },
         queries: {
           queryType: true,
         },
@@ -50,7 +65,7 @@ function createApolloClient(
         User: {
           fields: {
             audioQueue: {
-              merge: (existing, incoming, options) => {
+              merge: (existing, incoming) => {
                 return incoming
               },
             },
