@@ -129,7 +129,7 @@ export const AnswersChart = ({ question, skipTitle }) => {
   )
 }
 
-const AnswerGridOverview = ({ slug, question, valueLength }) => {
+const AnswerGridOverview = ({ slug, question, valueLength, hint }) => {
   const { loading, error, data } = useQuery(QUESTIONNAIRE_SUBMISSIONS_QUERY, {
     variables: {
       slug,
@@ -143,8 +143,6 @@ const AnswerGridOverview = ({ slug, question, valueLength }) => {
       ],
     },
   })
-
-  // TODO filter answers by length, make Carousel with short answers and carousels with long answers
 
   return (
     <Loader
@@ -163,6 +161,11 @@ const AnswerGridOverview = ({ slug, question, valueLength }) => {
               <Editorial.Subhead style={{ textAlign: 'center' }}>
                 {question.text}
               </Editorial.Subhead>
+              {hint && (
+                <Interaction.P style={{ textAlign: 'center', fontSize: '1em' }}>
+                  {hint}
+                </Interaction.P>
+              )}
             </NarrowContainer>
             <ColorContextProvider
               localColorVariables={colors}
@@ -207,7 +210,13 @@ const AnswerGridOverview = ({ slug, question, valueLength }) => {
   )
 }
 
-export const QuestionFeatured = ({ slug, questions, bgColor, valueLength }) => {
+export const QuestionFeatured = ({
+  slug,
+  questions,
+  bgColor,
+  valueLength,
+  hint,
+}) => {
   const router = useRouter()
   const { query } = router
 
@@ -241,6 +250,7 @@ export const QuestionFeatured = ({ slug, questions, bgColor, valueLength }) => {
               slug={slug}
               question={q}
               valueLength={valueLength}
+              hint={hint}
             />
           ) : q.__typename === 'QuestionTypeChoice' ? (
             <AnswersChart key={q.id} question={q} />

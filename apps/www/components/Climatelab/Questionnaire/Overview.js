@@ -40,6 +40,7 @@ const AllQuestionsView = ({ slug, extract }) => {
                   <QuestionFeatured
                     key={question.ids.join('+')}
                     questions={groupQuestions}
+                    hint={question.hint}
                     slug={slug}
                     bgColor={questionColor(idx)}
                     valueLength={question.valueLength}
