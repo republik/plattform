@@ -14,11 +14,13 @@ import {
   EditIcon,
   Figure,
   FigureImage,
-  TitleBlock,
   useHeaderHeight,
   ChevronLeftIcon,
   useColorContext,
   NarrowContainer,
+  FigureCaption,
+  ColorContextProvider,
+  FigureByline,
 } from '@project-r/styleguide'
 
 import { ASSETS_SERVER_BASE_URL, PUBLIC_BASE_URL } from '../../../lib/constants'
@@ -190,47 +192,43 @@ const Page = () => {
                   padding: '24px 0 24px',
                 }}
               >
-                <div style={{ paddingTop: 24, textAlign: 'center' }}>
-                  <Figure
-                    size='tiny'
-                    attributes={{ style: { position: 'relative' } }}
+                <ColorContextProvider colorSchemeKey='light'>
+                  <div
+                    style={{
+                      paddingTop: 24,
+                      textAlign: 'center',
+                    }}
                   >
-                    <FigureImage src={QUESTIONNAIRE_SQUARE_IMG_URL} />
-                  </Figure>
-                  <NarrowContainer style={{ paddingTop: 20 }}>
-                    <Interaction.Headline>
-                      {t('Climatelab/Questionnaire/Person/title', {
-                        name: author?.name,
-                      })}
-                    </Interaction.Headline>
-                    {author?.profilePicture && (
-                      <img
-                        src={author.profilePicture}
-                        style={{
-                          marginTop: 30,
-                          width: 120,
-                          borderRadius: 80,
-                        }}
-                      />
-                    )}
-                    {/* <Editorial.Credit>
-                      Von der{' '}
-                      <Link href='/willkommen-zum-klimalabor' passHref>
-                        <Editorial.A>Klimalabor-Crew</Editorial.A>
-                      </Link>{' '}
-                      und{' '}
-                      <>
-                        {author.slug ? (
-                          <Link href={`/~${author.slug}`} passHref>
-                            <Editorial.A>{author.name}</Editorial.A>
-                          </Link>
-                        ) : (
-                          author.name
-                        )}
-                      </>
-                    </Editorial.Credit> */}
-                  </NarrowContainer>
-                </div>
+                    <Figure
+                      size='tiny'
+                      attributes={{ style: { position: 'relative' } }}
+                    >
+                      <FigureImage src={QUESTIONNAIRE_SQUARE_IMG_URL} />
+                      <div style={{ textAlign: 'left' }}>
+                        <FigureCaption>
+                          <FigureByline>Cristina Spanò</FigureByline>
+                        </FigureCaption>
+                      </div>
+                    </Figure>
+                    <NarrowContainer style={{ paddingTop: 20 }}>
+                      <Interaction.Headline>
+                        {t('Climatelab/Questionnaire/Person/title', {
+                          name: author?.name,
+                        })}
+                      </Interaction.Headline>
+                      {author?.profilePicture && (
+                        <img
+                          src={author.profilePicture}
+                          style={{
+                            marginTop: 30,
+                            width: 120,
+                            borderRadius: 80,
+                          }}
+                        />
+                      )}
+                    </NarrowContainer>
+                  </div>
+                </ColorContextProvider>
               </div>
               <Center>
                 <div
