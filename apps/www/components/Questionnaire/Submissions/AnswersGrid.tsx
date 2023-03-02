@@ -4,24 +4,24 @@ import { mediaQueries } from '@project-r/styleguide'
 
 const styles = {
   grid: css({
-    display: 'flex',
-    columnWidth: '100%',
-    flexWrap: 'wrap',
-    gap: '1rem',
-    marginBottom: 30,
+    columnCount: 1,
+    columnGap: '1em',
+    margin: '30px 0 40px',
     [mediaQueries.mUp]: {
-      columnWidth: '360px',
+      columnCount: 3,
     },
   }),
   card: css({
+    display: 'table',
     width: '100%',
+    padding: '0.5em 0',
     breakInside: 'avoid',
-    transition: 'transform .3s ease-in-out',
+    transition: 'all .3s ease-in-out',
     ':hover': {
       transform: 'scale(1.03) !important',
-    },
-    [mediaQueries.mUp]: {
-      width: '360px',
+      '& span': {
+        color: '#757575',
+      },
     },
   }),
 }

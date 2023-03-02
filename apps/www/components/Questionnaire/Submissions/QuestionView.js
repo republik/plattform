@@ -239,10 +239,18 @@ const QuestionView = ({ slug, questionIds, extract, share = {} }) => {
                                         </div>
                                       )
                                     })}
-                                    <Editorial.Credit>
+
+                                    <Editorial.Credit
+                                      style={{
+                                        marginTop: '0',
+                                        paddingTop: '5px',
+                                      }}
+                                    >
                                       Von{' '}
                                       <span
-                                        style={{ textDecoration: 'underline' }}
+                                        style={{
+                                          textDecoration: 'underline',
+                                        }}
                                       >
                                         {displayAuthor.name}
                                       </span>
@@ -312,9 +320,12 @@ const styles = {
     justifyContent: 'center',
     textAlign: 'center',
     marginBottom: 20,
-    transition: 'transform .3s ease-in-out',
+    transition: 'all .3s ease-in-out',
     ':hover': {
       transform: 'scale(1.03) !important',
+      '& span': {
+        color: '#757575',
+      },
     },
   }),
   answerCardContent: css({
