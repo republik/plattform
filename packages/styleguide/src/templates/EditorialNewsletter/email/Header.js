@@ -19,24 +19,17 @@ export default ({ meta }) => {
       format.includes('format-covid-19-uhr-newsletter')) ||
     format?.repoId?.includes('format-covid-19-uhr-newsletter')
 
-  const isWinter =
-    (typeof format === 'string' &&
-      format.includes('format-winter-is-coming')) ||
-    format?.repoId?.includes('format-winter-is-coming')
-
   const isClimate =
     (typeof format === 'string' &&
       format.includes('format-das-neue-klimaprojekt')) ||
     format?.repoId?.includes('format-das-neue-klimaprojekt')
 
-  const width =
-    (isCovid19 && 234) || (isWinter && 232) || (isClimate && 179) || 178
+  const width = (isCovid19 && 234) || (isClimate && 179) || 178
 
   const height = (isClimate && 110) || 79
 
   const imageFile =
     (isCovid19 && 'logo_republik_newsletter_covid19_wave3.png') ||
-    (isWinter && 'logo_republik_newsletter_winter_wave-1.png') ||
     (isClimate && 'logo_republik_newsletter_climate-1.png') ||
     'logo_republik_newsletter.png'
 
