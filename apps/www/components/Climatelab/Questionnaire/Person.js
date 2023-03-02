@@ -244,6 +244,7 @@ const Page = () => {
                         label='Zur Übersicht'
                         labelShort='Zur Übersicht'
                         Icon={ChevronLeftIcon}
+                        href={pathname}
                       />
                     </NextLink>
                   </div>
