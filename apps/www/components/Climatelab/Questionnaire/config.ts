@@ -15,6 +15,7 @@ type QuestionConfigType = {
     min?: number
     max?: number
   }
+  hint?: string
 }
 
 // TODO: adjust min and max length
@@ -23,7 +24,11 @@ export const QUESTIONS: QuestionConfigType[] = [
   { ids: [2, 3], valueLength: { max: 200 } },
   { ids: [4, 5], valueLength: { max: 200 } },
   { ids: [6], valueLength: { max: 200 } },
-  { ids: [7], valueLength: { max: 200 } },
+  {
+    ids: [7],
+    valueLength: { max: 200 },
+    hint: 'Tippen Sie eine Antwort an, um den ganzen Fragebogen dieser Person zu sehen.',
+  },
   { ids: [8] },
   { ids: [9], valueLength: { max: 200 } },
   { ids: [10], valueLength: { max: 200 } },
