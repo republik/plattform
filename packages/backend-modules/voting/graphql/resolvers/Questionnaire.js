@@ -8,7 +8,7 @@ const {
   getQuestions,
 } = require('../../lib/Questionnaire')
 
-const { getConnection } = require('../../lib/Submission')
+const { getSubmissionById, getConnection } = require('../../lib/Submission')
 
 module.exports = {
   async userIsEligible(entity, args, { pgdb, user: me }) {
@@ -43,7 +43,7 @@ module.exports = {
     }
     return { entity: questionnaire }
   },
-  submissions(questionnaire, args, context) {
+  async submissions(questionnaire, args, context) {
     const { submissionsAccessRole, id: questionnaireId } = questionnaire
     const { user: me } = context
 
@@ -53,6 +53,15 @@ module.exports = {
         Roles.userHasRole(me, submissionsAccessRole.toLowerCase()))
     ) {
       const isMember = Roles.userIsInRoles(me, ['member'])
+
+      const connection = await getSubmissionById(
+        { questionnaireId, isMember },
+        args,
+        context,
+      )
+      if (connection) {
+        return connection
+      }
 
       return getConnection({ questionnaireId, isMember }, args, context)
     }
