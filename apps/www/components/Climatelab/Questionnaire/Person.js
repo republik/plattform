@@ -7,15 +7,20 @@ import { useQuery } from '@apollo/client'
 
 import {
   Loader,
-  Editorial,
+  Interaction,
   ShareIcon,
   IconButton,
   Center,
   EditIcon,
   Figure,
   FigureImage,
-  TitleBlock,
+  useHeaderHeight,
+  useColorContext,
   ChevronLeftIcon,
+  NarrowContainer,
+  FigureCaption,
+  ColorContextProvider,
+  FigureByline,
 } from '@project-r/styleguide'
 
 import { ASSETS_SERVER_BASE_URL, PUBLIC_BASE_URL } from '../../../lib/constants'
@@ -34,7 +39,7 @@ import { LinkToEditQuestionnaire } from '../../Questionnaire/Submissions/Questio
 import { ShareImageSplit } from '../../Questionnaire/Submissions/ShareImageSplit'
 import {
   SubmissionQa,
-  SubmissionAuthor,
+  styles as submissionStyles,
 } from '../../Questionnaire/Submissions/Submission'
 
 import {
@@ -107,6 +112,8 @@ const ShareQuestionnaire = ({ meta }) => {
 
 const Page = () => {
   const { t } = useTranslation()
+  const [headerHeight] = useHeaderHeight()
+  const [colorScheme] = useColorContext()
 
   const router = useRouter()
   const pathname = router.asPath
@@ -184,32 +191,62 @@ const Page = () => {
                   padding: '24px 0 24px',
                 }}
               >
-                <Figure size='tiny'>
-                  <FigureImage src={QUESTIONNAIRE_SQUARE_IMG_URL} />
-                </Figure>
+                <ColorContextProvider colorSchemeKey='light'>
+                  <div
+                    style={{
+                      paddingTop: 24,
+                      textAlign: 'center',
+                    }}
+                  >
+                    <Figure
+                      size='tiny'
+                      attributes={{ style: { position: 'relative' } }}
+                    >
+                      <FigureImage src={QUESTIONNAIRE_SQUARE_IMG_URL} />
+                      <FigureCaption>
+                        <FigureByline>Cristina Spanò</FigureByline>
+                      </FigureCaption>
+                    </Figure>
+                    <NarrowContainer style={{ padding: '20px 0' }}>
+                      <Interaction.Headline>
+                        {t('Climatelab/Questionnaire/Person/title', {
+                          name: author?.name,
+                        })}
+                      </Interaction.Headline>
+                      {author?.profilePicture && (
+                        <img
+                          src={author.profilePicture}
+                          style={{
+                            marginTop: 30,
+                            width: 120,
+                            borderRadius: 80,
+                          }}
+                        />
+                      )}
+                    </NarrowContainer>
+                  </div>
+                </ColorContextProvider>
               </div>
-              <TitleBlock>
-                <Editorial.Headline>
-                  {t('Climatelab/Questionnaire/Person/title', {
-                    name: author?.name,
-                  })}
-                </Editorial.Headline>
-              </TitleBlock>
               <Center>
-                <SubmissionAuthor
-                  displayAuthor={author}
-                  submissionUrl={pathname}
-                  createdAt={submission.createdAt}
-                  updatedAt={submission.updatedAt}
+                <div
+                  {...submissionStyles.header}
+                  style={{
+                    top: headerHeight,
+                    padding: '10px 0',
+                    margin: '10px 0 0',
+                  }}
+                  {...colorScheme.set('backgroundColor', 'default')}
                 >
-                  <NextLink href={OVERVIEW_QUESTIONNAIRE_PATH} passHref>
-                    <IconButton
-                      size={24}
-                      label='Zur Übersicht'
-                      labelShort='Zurück'
-                      Icon={ChevronLeftIcon}
-                    />
-                  </NextLink>
+                  <div {...submissionStyles.headerText}>
+                    <NextLink href={OVERVIEW_QUESTIONNAIRE_PATH} passHref>
+                      <IconButton
+                        size={24}
+                        label='Zur Übersicht'
+                        labelShort='Zur Übersicht'
+                        Icon={ChevronLeftIcon}
+                      />
+                    </NextLink>
+                  </div>
                   <ShareQuestionnaire meta={meta} />
                   {isOwnQuestionnaire && (
                     <IconButton
@@ -220,7 +257,8 @@ const Page = () => {
                       href={EDIT_QUESTIONNAIRE_PATH}
                     />
                   )}
-                </SubmissionAuthor>
+                </div>
+
                 {submission?.answers?.nodes.map(
                   ({ id, question: { id: qid }, payload }) => {
                     const question = questions.find((q) => q.id === qid)
@@ -233,6 +271,7 @@ const Page = () => {
                     )
                   },
                 )}
+                <br />
                 <LinkToEditQuestionnaire slug={QUESTIONNAIRE_SLUG} newOnly />
               </Center>
             </>

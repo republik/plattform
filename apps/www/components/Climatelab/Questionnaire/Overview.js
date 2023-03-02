@@ -60,23 +60,25 @@ const SubmissionsOverview = ({ slug, extract, share }) => {
   const questionIds = query.share?.split(QUESTION_SEPARATOR)
 
   return (
-    <ColorContextProvider colorSchemeKey='light'>
+    <>
       {!extract && (
         <Center>
           <LinkToEditQuestionnaire slug={slug} />
         </Center>
       )}
-      {questionIds ? (
-        <QuestionView
-          slug={slug}
-          extract={extract}
-          share={share}
-          questionIds={questionIds}
-        />
-      ) : (
-        <AllQuestionsView slug={slug} extract={extract} />
-      )}
-    </ColorContextProvider>
+      <ColorContextProvider colorSchemeKey='light'>
+        {questionIds ? (
+          <QuestionView
+            slug={slug}
+            extract={extract}
+            share={share}
+            questionIds={questionIds}
+          />
+        ) : (
+          <AllQuestionsView slug={slug} extract={extract} />
+        )}
+      </ColorContextProvider>
+    </>
   )
 }
 

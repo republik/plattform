@@ -181,7 +181,12 @@ const AnswerGridOverview = ({ slug, question, valueLength }) => {
                             <Editorial.Question style={{ marginTop: 0 }}>
                               {inQuotes(answers[0].payload.value)}
                             </Editorial.Question>
-                            <Editorial.Credit>
+                            <Editorial.Credit
+                              style={{
+                                marginTop: '0',
+                                paddingTop: '20px',
+                              }}
+                            >
                               Von{' '}
                               <span style={{ textDecoration: 'underline' }}>
                                 {displayAuthor.name}
@@ -246,10 +251,7 @@ export const QuestionFeatured = ({ slug, questions, bgColor, valueLength }) => {
           <NarrowContainer>
             <Interaction.P style={{ textAlign: 'center' }}>
               <QuestionLink questions={questions}>
-                <Editorial.A>
-                  Alle Antworten lesen
-                  {/* <ChevronRightIcon /> */}
-                </Editorial.A>
+                <Editorial.A>Alle Antworten lesen</Editorial.A>
               </QuestionLink>
             </Interaction.P>
           </NarrowContainer>
@@ -269,7 +271,6 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-
     textAlign: 'center',
   }),
 }
