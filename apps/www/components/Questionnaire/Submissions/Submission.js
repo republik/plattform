@@ -15,7 +15,6 @@ import {
   RadioCheckedIcon,
   RadioUncheckedIcon,
   usePrevious,
-  ChevronLeftIcon,
 } from '@project-r/styleguide'
 import { useEffect, useRef, useState } from 'react'
 import { max, shuffle } from 'd3-array'

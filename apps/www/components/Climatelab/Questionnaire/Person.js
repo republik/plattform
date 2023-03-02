@@ -271,8 +271,8 @@ const Page = () => {
                     )
                   },
                 )}
-                <br />
                 <LinkToEditQuestionnaire slug={QUESTIONNAIRE_SLUG} newOnly />
+                <br />
               </Center>
             </>
           )
