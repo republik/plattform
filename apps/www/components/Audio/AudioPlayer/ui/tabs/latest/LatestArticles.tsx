@@ -1,13 +1,18 @@
 import { useMemo, useState } from 'react'
 import { css } from 'glamor'
 import NoAccess from '../shared/NoAccess'
-import { useLatestArticlesQuery } from '../../../../graphql/LatestArticlesHook'
+import {
+  LatestArticleQueryData,
+  LatestArticleQueryVariables,
+  useLatestArticlesQuery,
+} from '../../../../graphql/LatestArticlesHook'
 import { useTranslation } from '../../../../../../lib/withT'
 import { AudioQueueItem } from '../../../../graphql/AudioQueueHooks'
 import LoadingPlaceholder from '../shared/LoadingPlaceholder'
 import FilterButton from './FilterButton'
 import { useMe } from '../../../../../../lib/context/MeContext'
 import LatestArticleItem from './LatestArticleItem'
+import { FetchMoreOptions } from '@apollo/client'
 
 const styles = {
   root: css({
@@ -40,7 +45,7 @@ const LatestArticlesTab = ({
   const [filter, setFilter] = useState<'all' | 'read-aloud'>('read-aloud')
   const { t } = useTranslation()
   const { hasAccess } = useMe()
-  const { data, loading, error } = useLatestArticlesQuery({
+  const { data, loading, error, fetchMore } = useLatestArticlesQuery({
     variables: {
       count: 20,
     },
@@ -106,17 +111,52 @@ const LatestArticlesTab = ({
         </FilterButton>
       </div>
       {filteredArticles?.length > 0 ? (
-        <ul {...styles.list}>
-          {filteredArticles.map((article) => (
-            <li key={article.id}>
-              <LatestArticleItem
-                article={article}
-                handleOpenArticle={handleOpenArticle}
-                handleDownload={handleDownload}
-              />
-            </li>
-          ))}
-        </ul>
+        <>
+          <ul {...styles.list}>
+            {filteredArticles.map((article) => (
+              <li key={article.id}>
+                <LatestArticleItem
+                  article={article}
+                  handleOpenArticle={handleOpenArticle}
+                  handleDownload={handleDownload}
+                />
+              </li>
+            ))}
+          </ul>
+          {data?.latestArticles.pageInfo.hasNextPage && (
+            <button
+              onClick={() => {
+                console.log(
+                  'fetchMore',
+                  data?.latestArticles.pageInfo.endCursor,
+                )
+                fetchMore({
+                  variables: {
+                    after: data?.latestArticles.pageInfo.endCursor,
+                  },
+                  updateQuery(
+                    previousQueryResult: LatestArticleQueryData,
+                    { fetchMoreResult },
+                  ) {
+                    const next = {
+                      ...previousQueryResult,
+                      latestArticles: {
+                        pageInfo: fetchMoreResult.latestArticles.pageInfo,
+                        nodes: [
+                          ...previousQueryResult.latestArticles.nodes,
+                          ...fetchMoreResult.latestArticles.nodes,
+                        ],
+                      },
+                    }
+                    return next
+                  },
+                })
+              }}
+            >
+              Fetch more
+            </button>
+          )}
+        </>
       ) : (
         <p style={{ marginTop: 32 }}>{t('AudioPlayer/Latest/NoItems')}</p>
       )}
