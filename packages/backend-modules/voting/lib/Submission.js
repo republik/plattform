@@ -73,7 +73,9 @@ const createSubmissionsQuery = ({
                 default_operator: 'AND',
               },
             },
-            inner_hits: {},
+            inner_hits: {
+              fields: ['id'],
+            },
           },
         },
         {
@@ -102,7 +104,9 @@ const createSubmissionsQuery = ({
     nested: {
       path: 'resolved.answers',
       query: { term: { 'resolved.answers.payload.value': value } },
-      inner_hits: {},
+      inner_hits: {
+        fields: ['id'],
+      },
     },
   }
 
