@@ -3,46 +3,6 @@ const {
   paginate: { pageini },
 } = require('@orbiting/backend-modules-utils')
 
-const findMatchingAnswerIds = async ({ search, hits }, elastic) => {
-  if (!search || !hits?.length) {
-    return []
-  }
-
-  const answerIds = hits
-    .map(({ _source }) => _source.resolved.answers.map((answer) => answer.id))
-    .flat()
-
-  const { body: answersBody } = await elastic.search({
-    index: utils.getIndexAlias('answer', 'read'),
-    size: answerIds.length,
-    _source: ['_id'],
-    body: {
-      query: {
-        bool: {
-          must: [
-            { terms: { _id: answerIds } },
-            {
-              simple_query_string: {
-                query: search,
-                fields: [
-                  'payload.text',
-                  'resolved.question.text',
-                  'resolved.value.Text',
-                  'resolved.value.Choice',
-                  'resolved.value.ImageChoice',
-                ],
-                default_operator: 'AND',
-              },
-            },
-          ],
-        },
-      },
-    },
-  })
-
-  return answersBody.hits.hits.map(({ _id }) => _id)
-}
-
 const createSubmissionsFrom = (_, { after, before } = {}) =>
   after?.count || before?.count || 0
 
@@ -113,6 +73,9 @@ const createSubmissionsQuery = ({
                 default_operator: 'AND',
               },
             },
+            inner_hits: {
+              fields: ['id'],
+            },
           },
         },
         {
@@ -141,6 +104,9 @@ const createSubmissionsQuery = ({
     nested: {
       path: 'resolved.answers',
       query: { term: { 'resolved.answers.payload.value': value } },
+      inner_hits: {
+        fields: ['id'],
+      },
     },
   }
 
@@ -232,8 +198,6 @@ const count = async (args, elastic) => {
 }
 
 const find = async (args, cursors, elastic) => {
-  const { search } = args
-
   try {
     const submissionsFrom = createSubmissionsFrom(args, cursors)
     const submissionsSize = createSubmissionsSize(args, cursors)
@@ -253,12 +217,14 @@ const find = async (args, cursors, elastic) => {
 
     const hits = submissionsBody.hits.hits
 
-    const _matchedAnswerIds = await findMatchingAnswerIds(
-      { search, hits },
-      elastic,
-    )
+    return hits.map(({ _source, inner_hits }) => {
+      const matchedAnswers = inner_hits?.['resolved.answers']?.hits?.hits
 
-    return hits.map(({ _source }) => ({ ..._source, _matchedAnswerIds }))
+      return {
+        ..._source,
+        _matchedAnswerIds: matchedAnswers?.map((hit) => hit._source.id),
+      }
+    })
   } catch (e) {
     console.warn(e.message)
   }
