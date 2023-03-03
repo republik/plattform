@@ -6,7 +6,8 @@
     "packages": [
       "apps/*",
       "packages/*",
-      "packages/backend-modules/*"
+      "packages/backend-modules/*",
+      "docs"
     ],
     "nohoist": [
       "styleguide/slate",
@@ -21,6 +22,7 @@
     "start:scheduler": "cd apps/api && yarn start:scheduler",
     "build": "scripts/build.sh",
     "dev": "turbo run dev --parallel",
+    "dev:docs": "turbo run dev --filter=@republik/docs...",
     "dev:www": "turbo run dev --filter=@orbiting/www-app...",
     "dev:www-api": "turbo run dev --filter=@orbiting/www-app --filter=@orbiting/api-app",
     "lint": "turbo run lint",
@@ -80,6 +82,7 @@
     "node_modules",
     "packages/styleguide/.turbo",
     "apps/www/.next/cache",
+    "docs/.next/cache",
     "apps/www/.turbo",
     "apps/publikator/.turbo",
     "apps/admin/.turbo"
