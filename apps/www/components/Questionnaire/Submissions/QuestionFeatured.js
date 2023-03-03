@@ -77,6 +77,7 @@ export const LinkToEditQuestionnaire = ({ slug, children, newOnly }) => {
     skip: !me,
     variables: { slug, userIds: [me?.id] },
   })
+
   const hasFilledQuestionnaire = data?.questionnaire?.results?.totalCount > 0
   if (hasFilledQuestionnaire && newOnly) return null
   return (

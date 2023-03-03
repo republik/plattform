@@ -301,14 +301,6 @@ const QuestionView = ({ slug, questionIds, extract, share = {} }) => {
 export default QuestionView
 
 const styles = {
-  colorBar: css({
-    position: 'absolute',
-    left: -10,
-    top: -10,
-    height: '10px',
-    width: '20%',
-    borderTopLeftRadius: '2px',
-  }),
   answerCardWrapper: css({
     marginTop: 40,
   }),
@@ -341,7 +333,7 @@ const styles = {
   }),
   circleLabel: css({
     ...fontStyles.sansSerifRegular16,
-    marginBottom: 30,
+    marginBottom: 20,
   }),
   circle: css({
     display: 'inline-block',
