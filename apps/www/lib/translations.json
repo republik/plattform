@@ -3393,6 +3393,26 @@
       "value": "Anhören (synthetisch)"
     },
     {
+      "key": "article/actionbar/audio/info/readAloud",
+      "value": "{subscribe}, sobald vorgelesen{synthetic}."
+    },
+    {
+      "key": "article/actionbar/audio/info/readAloud/subscribe",
+      "value": "Benachrichtigen"
+    },
+    {
+      "key": "article/actionbar/audio/info/readAloud/checkbox",
+      "value": "Ich möchte benachrichtig werden."
+    },
+    {
+      "key": "article/actionbar/audio/info/readAloud/synthetic",
+      "value": "oder synthetische Version {action}"
+    },
+    {
+      "key": "article/actionbar/audio/info/readAloud/synthetic/action",
+      "value": "Anhören (synthetisch)"
+    },
+    {
       "key": "article/actionbar/audio/info/read-soon",
       "value": "Diesen Beitrag lesen wir im Laufe des Tages ein."
     },

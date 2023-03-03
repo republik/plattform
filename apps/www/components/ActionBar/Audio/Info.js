@@ -77,6 +77,7 @@ const PlaySyntheticReadAloud = ({ onPlay, children }) => {
 
 const SubscribeReadAloud = ({ document }) => {
   const [colorScheme] = useColorContext()
+  const { t } = useTranslation()
 
   const { data, loading: loadingQuery } = useDocumentSubscriptionQuery({
     variables: {
@@ -131,20 +132,28 @@ const SubscribeReadAloud = ({ document }) => {
   }
 
   return (
-    <Checkbox
-      checked={isSubscribed}
-      onChange={() => handleMutation()}
-      disabled={loading}
+    <div
+      {...css({
+        display: 'block',
+        width: 'max-content',
+      })}
     >
-      <span {...colorScheme.set('color', 'text')}>
-        Ich möchte benachrichtigt werden.
-      </span>
-    </Checkbox>
+      <Checkbox
+        checked={isSubscribed}
+        onChange={() => handleMutation()}
+        disabled={loading}
+      >
+        <span {...colorScheme.set('color', 'text')}>
+          {t('article/actionbar/audio/info/readAloud/checkbox')}
+        </span>
+      </Checkbox>
+    </div>
   )
 }
 
 const Info = ({ document, handlePlay }) => {
   const [colorScheme] = useColorContext()
+  const { t } = useTranslation()
   const { kind, mp3, contributorsVoice, willBeReadAloud } = useMemo(() => {
     const kind = document.meta?.audioSource?.kind
     const mp3 = document.meta?.audioSource?.mp3
@@ -166,41 +175,45 @@ const Info = ({ document, handlePlay }) => {
             <PlaySyntheticReadAloud onPlay={handlePlay} />
           ),
           (kind !== 'readAloud' || !mp3) && !!willBeReadAloud && (
-            <span
-              {...css({
-                display: 'flex',
-                flexDirection: 'row',
-                whiteSpace: 'pre-wrap',
-              })}
-            >
-              <CalloutMenu
-                Element={(props) => (
-                  <button
-                    {...plainButtonRule}
-                    style={{
-                      display: 'inline-block',
-                      textDecoration: 'underline',
-                    }}
-                    {...props}
+            <span>
+              {t.elements('article/actionbar/audio/info/readAloud', {
+                subscribe: (
+                  <CalloutMenu
+                    inline
+                    Element={(props) => (
+                      <button
+                        {...plainButtonRule}
+                        style={{
+                          display: 'inline-block !important',
+                          textDecoration: 'underline',
+                        }}
+                        {...props}
+                      >
+                        {t('article/actionbar/audio/info/readAloud/subscribe')}
+                      </button>
+                    )}
                   >
-                    Benachrichtigen
-                  </button>
-                )}
-              >
-                <SubscribeReadAloud document={document} />
-              </CalloutMenu>
-              <span>
-                , sobald vorgelesen
-                {kind === 'syntheticReadAloud' && !!mp3 && (
-                  <>
-                    <span> oder synthetische Version </span>
-                    <PlaySyntheticReadAloud onPlay={handlePlay}>
-                      anhören
-                    </PlaySyntheticReadAloud>
-                    <span>.</span>
-                  </>
-                )}
-              </span>
+                    <SubscribeReadAloud document={document} />
+                  </CalloutMenu>
+                ),
+                synthetic:
+                  kind === 'syntheticReadAloud' && !!mp3 ? (
+                    <span>
+                      {' '}
+                      {/* Don't question the space, we need it. */}
+                      {t.elements(
+                        'article/actionbar/audio/info/readAloud/synthetic',
+                        {
+                          action: (
+                            <PlaySyntheticReadAloud onPlay={handlePlay}>
+                              anhören
+                            </PlaySyntheticReadAloud>
+                          ),
+                        },
+                      )}
+                    </span>
+                  ) : null,
+              })}
             </span>
           ),
         ].filter(Boolean),
