@@ -270,18 +270,21 @@ const QuestionView = ({ slug, questionIds, extract, share = {} }) => {
                       )}
                       {loadingMore && <InlineSpinner />}
                       {!infiniteScroll && hasMore && (
-                        <PlainButton
-                          onClick={() => {
-                            setInfiniteScroll(true)
-                          }}
-                        >
-                          {t.pluralize(
-                            'questionnaire/submissions/showAnswers',
-                            {
-                              count: results.totalCount - results.nodes.length,
-                            },
-                          )}
-                        </PlainButton>
+                        <Interaction.P style={{ textAlign: 'center' }}>
+                          <Editorial.A
+                            onClick={() => {
+                              setInfiniteScroll(true)
+                            }}
+                          >
+                            {t.pluralize(
+                              'questionnaire/submissions/showAnswers',
+                              {
+                                count:
+                                  results.totalCount - results.nodes.length,
+                              },
+                            )}
+                          </Editorial.A>
+                        </Interaction.P>
                       )}
                     </div>
                   </Center>
