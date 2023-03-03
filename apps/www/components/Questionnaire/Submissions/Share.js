@@ -8,6 +8,7 @@ import Meta from '../../Frame/Meta'
 import AnswerText from './AnswerText'
 import { ASSETS_SERVER_BASE_URL, PUBLIC_BASE_URL } from '../../../lib/constants'
 import { useTranslation } from '../../../lib/withT'
+import { replaceText } from './utils'
 
 export const SHARE_IMAGE_WIDTH = 1200
 export const SHARE_IMAGE_HEIGHT = 628
@@ -20,16 +21,6 @@ export const getSubmissionUrl = (pathname, id, query) =>
       ...query,
     },
   })}`
-
-const replaceText = (text, { name, answerText, questionText }) => {
-  return (
-    text &&
-    text
-      .replace('{name}', name)
-      .replace('{answerText}', answerText)
-      .replace('{questionText}', questionText)
-  )
-}
 
 const ShareSubmission = ({
   pathname,

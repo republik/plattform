@@ -1,5 +1,4 @@
 const dict = {
-  answer: require('./answer'),
   comment: require('./comment'),
   document: require('./document'),
   documentzone: require('./documentzone'),

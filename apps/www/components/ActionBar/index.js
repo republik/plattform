@@ -65,6 +65,7 @@ const ActionBar = ({
   discussion,
   fontSize,
   isCentered,
+  shareParam,
 }) => {
   const { me, meLoading, hasAccess, isEditor } = useMe()
   const [pdfOverlayVisible, setPdfOverlayVisible] = useState(false)
@@ -158,6 +159,11 @@ const ActionBar = ({
     ...document.meta,
     url: `${PUBLIC_BASE_URL}${document.meta.path}`,
   }
+
+  // if share query param is set, it also gets included in the share url
+  const shareUrlObj = new URL(meta.url)
+  if (shareParam) shareUrlObj.searchParams.set('share', shareParam)
+  const shareUrl = shareUrlObj.toString()
 
   const podcast =
     (meta && meta.podcast) ||
@@ -360,16 +366,16 @@ const ActionBar = ({
     {
       title: t('article/actionbar/share'),
       Icon: ShareIcon,
-      href: meta.url,
+      href: shareUrl,
       onClick: (e) => {
         e.preventDefault()
-        trackEvent(['ActionBar', 'share', meta.url])
+        trackEvent(['ActionBar', 'share', shareUrl])
         if (inNativeApp) {
           postMessage({
             type: 'share',
             payload: {
               title: document.title,
-              url: meta.url,
+              url: shareUrl,
               subject: emailSubject,
               dialogTitle: t('article/share/title'),
             },
@@ -596,7 +602,7 @@ const ActionBar = ({
               </Interaction.P>
             ) : null}
             <ShareButtons
-              url={meta.url}
+              url={shareUrl}
               title={document.title}
               tweet=''
               emailSubject={emailSubject}
@@ -620,7 +626,7 @@ const ActionBar = ({
       {shareOverlayVisible && (
         <ShareOverlay
           onClose={() => setShareOverlayVisible(false)}
-          url={meta.url}
+          url={shareUrl}
           title={t('article/actionbar/share')}
           tweet={''}
           emailSubject={emailSubject}

@@ -71,7 +71,82 @@ const text = {
       .
     </>
   ),
-  //Februar: (p) => <></>,
+  Februar: (p) => (
+    <>
+      <Highlight {...p} ids={['IgFtBonck']}>
+        Ja, Zukunftslust, verdammt
+      </Highlight>
+      ! Die{' '}
+      <Highlight
+        {...p}
+        ids={['rxhAUQ8WU']}
+        series='republik/article-serie-islamische-republik-versus-iran'
+      >
+        Revolution im Iran
+      </Highlight>
+      . Die{' '}
+      <Highlight {...p} ids={['KzSZtqzQt']}>
+        Türme in Basel
+      </Highlight>
+      . Und{' '}
+      <Highlight {...p} ids={['uyW5-2Vvi']}>
+        überall Sisi
+      </Highlight>
+      .{' '}
+      <Highlight {...p} ids={['IXv0O_1Z0']}>
+        MeToo bei Tamedia
+      </Highlight>{' '}
+      und{' '}
+      <Highlight {...p} ids={['6mf-Hrkw5']}>
+        warum sich Opfer erst spät wehren
+      </Highlight>
+      .{' '}
+      <Highlight {...p} ids={['agfNZVm3y']}>
+        Wie unser Immunsystem funktioniert
+      </Highlight>{' '}
+      und{' '}
+      <Highlight {...p} ids={['2B6IXmT9V']}>
+        wer von Ihrem Trinkgeld profitiert
+      </Highlight>
+      . Das{' '}
+      <Highlight {...p} ids={['e6OilgIiW']}>
+        etwas andere Interview
+      </Highlight>
+      . Zum Ende der{' '}
+      <Highlight
+        {...p}
+        ids={['3q2REyYgj']}
+        series='republik/article-do-not-feed-the-google'
+      >
+        Google-Serie
+      </Highlight>
+      :{' '}
+      <Highlight {...p} ids={['58yLdtvY6L']}>
+        Ein Hintergrundgespräch
+      </Highlight>{' '}
+      und{' '}
+      <Highlight
+        {...p}
+        ids={['OHQo01tczO']}
+        format='republik/format-republik-live'
+      >
+        eine Gala
+      </Highlight>
+      . Und ein Jahr nach Kriegsbeginn: die{' '}
+      <Highlight {...p} ids={['tmUjk1wS2']}>
+        Debatte über Kriegsmaterialexporte
+      </Highlight>
+      , die{' '}
+      <Highlight {...p} ids={['C_y2ac2-d']}>
+        Schweiz schaut weg beim Rohstoffhandel
+      </Highlight>{' '}
+      – und eine{' '}
+      <Highlight {...p} ids={['7Cvb-eUh3']}>
+        Würdigung der Getöteten in der Ukraine
+      </Highlight>
+      .
+    </>
+  ),
   //März: (p) => <></>,
   //April: (p) => <></>,
   //Mai: (p) => <></>,
