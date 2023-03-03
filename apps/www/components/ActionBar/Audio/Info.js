@@ -76,10 +76,9 @@ const PlaySyntheticReadAloud = ({ onPlay, children }) => {
 }
 
 const SubscribeReadAloud = ({ document }) => {
-  const { t } = useTranslation()
   const [colorScheme] = useColorContext()
 
-  const { data, loading } = useDocumentSubscriptionQuery({
+  const { data, loading: loadingQuery } = useDocumentSubscriptionQuery({
     variables: {
       path: document.meta?.path,
       onlyMe: true,
@@ -87,8 +86,12 @@ const SubscribeReadAloud = ({ document }) => {
     skip: !document.meta?.path,
   })
 
-  const [subscribe] = useSubscribeDocumentMutation()
-  const [unsubscribe] = useUnsubscribeDocumentMutation()
+  const [subscribe, { loading: loadingSubscribe }] =
+    useSubscribeDocumentMutation()
+  const [unsubscribe, { loading: loadingUnsubscribe }] =
+    useUnsubscribeDocumentMutation()
+
+  const loading = loadingQuery || loadingSubscribe || loadingUnsubscribe
 
   const readAloudSubscription = data?.document?.subscriptions?.nodes.find(
     ({ object: { id } }) => id === document.id,
@@ -131,7 +134,7 @@ const SubscribeReadAloud = ({ document }) => {
     <Checkbox
       checked={isSubscribed}
       onChange={() => handleMutation()}
-      disabled={!!loading}
+      disabled={loading}
     >
       <span {...colorScheme.set('color', 'text')}>
         Ich möchte benachrichtigt werden.
