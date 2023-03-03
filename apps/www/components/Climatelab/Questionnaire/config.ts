@@ -21,8 +21,8 @@ type QuestionConfigType = {
 // TODO: adjust min and max length
 export const QUESTIONS: QuestionConfigType[] = [
   { ids: [0, 1] },
-  { ids: [2, 3], valueLength: { max: 200 } },
-  { ids: [4, 5], valueLength: { max: 200 } },
+  { ids: [2, 3], valueLength: { min: 100, max: 250 } },
+  { ids: [4, 5], valueLength: { max: 100 } },
   {
     ids: [6],
     valueLength: { max: 200 },
@@ -31,9 +31,9 @@ export const QUESTIONS: QuestionConfigType[] = [
   { ids: [7], valueLength: { max: 200 } },
   { ids: [8] },
   { ids: [9], valueLength: { max: 200 } },
-  { ids: [10], valueLength: { max: 200 } },
+  { ids: [10], valueLength: { max: 80 } },
   { ids: [11], valueLength: { max: 200 } },
-  { ids: [12, 13], valueLength: { max: 200 } },
+  { ids: [12, 13], valueLength: { max: 100 } },
   { ids: [14] },
 ]
 

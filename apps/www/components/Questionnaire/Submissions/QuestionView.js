@@ -270,18 +270,21 @@ const QuestionView = ({ slug, questionIds, extract, share = {} }) => {
                       )}
                       {loadingMore && <InlineSpinner />}
                       {!infiniteScroll && hasMore && (
-                        <PlainButton
-                          onClick={() => {
-                            setInfiniteScroll(true)
-                          }}
-                        >
-                          {t.pluralize(
-                            'questionnaire/submissions/showAnswers',
-                            {
-                              count: results.totalCount - results.nodes.length,
-                            },
-                          )}
-                        </PlainButton>
+                        <Interaction.P style={{ textAlign: 'center' }}>
+                          <Editorial.A
+                            onClick={() => {
+                              setInfiniteScroll(true)
+                            }}
+                          >
+                            {t.pluralize(
+                              'questionnaire/submissions/showAnswers',
+                              {
+                                count:
+                                  results.totalCount - results.nodes.length,
+                              },
+                            )}
+                          </Editorial.A>
+                        </Interaction.P>
                       )}
                     </div>
                   </Center>
@@ -298,14 +301,6 @@ const QuestionView = ({ slug, questionIds, extract, share = {} }) => {
 export default QuestionView
 
 const styles = {
-  colorBar: css({
-    position: 'absolute',
-    left: -10,
-    top: -10,
-    height: '10px',
-    width: '20%',
-    borderTopLeftRadius: '2px',
-  }),
   answerCardWrapper: css({
     marginTop: 40,
   }),
@@ -338,7 +333,7 @@ const styles = {
   }),
   circleLabel: css({
     ...fontStyles.sansSerifRegular16,
-    marginBottom: 30,
+    marginBottom: 20,
   }),
   circle: css({
     display: 'inline-block',
