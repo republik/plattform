@@ -11,9 +11,7 @@
     ],
     "nohoist": [
       "styleguide/slate",
-      "styleguide/slate-*",
-      "**/react",
-      "**/react-dom"
+      "styleguide/slate-*"
     ]
   },
   "scripts": {
