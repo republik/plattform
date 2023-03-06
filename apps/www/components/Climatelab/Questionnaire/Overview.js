@@ -62,11 +62,6 @@ const SubmissionsOverview = ({ slug, extract, share }) => {
 
   return (
     <>
-      {!extract && (
-        <Center>
-          <LinkToEditQuestionnaire slug={slug} />
-        </Center>
-      )}
       <ColorContextProvider colorSchemeKey='light'>
         {questionIds ? (
           <QuestionView
@@ -79,6 +74,11 @@ const SubmissionsOverview = ({ slug, extract, share }) => {
           <AllQuestionsView slug={slug} extract={extract} />
         )}
       </ColorContextProvider>
+      {!extract && (
+        <Center attributes={{ style: { marginBottom: -48, marginTop: 20 } }}>
+          <LinkToEditQuestionnaire slug={slug} />
+        </Center>
+      )}
     </>
   )
 }

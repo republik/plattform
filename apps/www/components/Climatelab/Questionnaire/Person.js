@@ -1,7 +1,7 @@
 import { gql } from 'graphql-tag'
 import NextLink from 'next/link'
 import { useRouter } from 'next/router'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 import { useQuery } from '@apollo/client'
 
@@ -116,7 +116,6 @@ const Page = () => {
   const [colorScheme] = useColorContext()
 
   const router = useRouter()
-  const pathname = router.asPath
   const {
     query: { id, image },
   } = router
@@ -163,13 +162,23 @@ const Page = () => {
     <Frame raw>
       <Loader
         loading={loading}
-        error={error}
         render={() => {
+          if (error) {
+            if (process.browser) {
+              router.replace({ pathname: OVERVIEW_QUESTIONNAIRE_PATH })
+            }
+            return null
+          }
           const {
             questionnaire: { questions, results },
           } = data
           const submission = results.nodes[0]
-          if (!submission) return null
+          if (!submission) {
+            if (process.browser) {
+              router.replace({ pathname: OVERVIEW_QUESTIONNAIRE_PATH })
+            }
+            return null
+          }
 
           const meta = {
             url,
