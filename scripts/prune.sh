@@ -1,3 +1,6 @@
+#!/bin/sh
+set -xe
+
 # experiemntal script that is used as an heroku-prebuild
 SERVER=${SERVER:-api}
 
