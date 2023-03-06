@@ -1,3 +1,4 @@
 # Un-ignore stuff from root .nowignore
 
+!./\*
 !../packages
