@@ -5,9 +5,7 @@
   "workspaces": {
     "packages": [
       "docs",
-      "apps/*",
-      "packages/*",
-      "packages/backend-modules/*"
+      "packages/*"
     ],
     "nohoist": [
       "styleguide/slate",
