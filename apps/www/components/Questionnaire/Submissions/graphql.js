@@ -116,7 +116,6 @@ export const QUESTIONNAIRE_SUBMISSION_BOOL_QUERY = gql`
   }
 `
 
-// TODO: check that adding results to the questions don't mess the sommerfragebogen
 export const QUESTIONNAIRE_SUBMISSIONS_QUERY = gql`
   query getQuestionnaireSubmissions(
     $slug: String!
@@ -151,6 +150,15 @@ export const QUESTIONNAIRE_SUBMISSIONS_QUERY = gql`
   }
   ${questionnaireData}
   ${submissionData}
+`
+
+export const CONTENT_FROM_PAGE_QUERY = gql`
+  query getContentFromPage($path: String!) {
+    document(path: $path) {
+      id
+      content
+    }
+  }
 `
 
 export const loadMoreSubmissions = (fetchMore, data) => () => {

@@ -160,6 +160,7 @@ const Questionnaire = dynamic(
     ssr: false,
   },
 )
+
 const ClimateLabInlineTeaser = dynamic(
   () => import('../Climatelab/InlineTeaser/ClimateLabInlineTeaser'),
   {
@@ -170,6 +171,13 @@ const ClimateLabInlineTeaser = dynamic(
 
 const QuestionnaireSubmissions = dynamic(
   () => import('../Questionnaire/Submissions'),
+  {
+    loading: LoadingComponent,
+  },
+)
+
+const QuestionScroll = dynamic(
+  () => import('../Questionnaire/Submissions/QuestionScroll'),
   {
     loading: LoadingComponent,
   },
@@ -426,6 +434,7 @@ const ArticlePage = ({
           ELECTION_RESULT_DIVERSITY: ElectionResultDiversity,
           QUESTIONNAIRE: Questionnaire,
           QUESTIONNAIRE_SUBMISSIONS: QuestionnaireSubmissions,
+          QUESTION_SCROLL: QuestionScroll,
           NEWSLETTER_SIGNUP: NewsletterSignUpDynamic,
           CLIMATE_LAB_COUNTER: ClimateLabCounter,
           CLIMATE_LAB_INLINE_TEASER: ClimateLabInlineTeaser,
@@ -574,6 +583,7 @@ const ArticlePage = ({
   }
 
   const splitContent = article && splitByTitle(article.content)
+  console.log({ splitContent })
   const renderSchema = (content) =>
     renderMdast(
       {
