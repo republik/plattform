@@ -6,10 +6,6 @@
     "packages": [
       "docs",
       "packages/*"
-    ],
-    "nohoist": [
-      "styleguide/slate",
-      "styleguide/slate-*"
     ]
   },
   "scripts": {
