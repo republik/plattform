@@ -583,20 +583,12 @@ const Page = ({
                       '2020-01',
                       '2021-01',
                       '2022-01',
+                      '2023-01',
                     ],
                     height: 300,
                     domain: [minValue, maxValue + 2000],
                     yTicks: [
                       -5000, 0, 5000, 10000, 15000, 20000, 25000, 30000, 35000,
-                    ],
-                    xAnnotations: [
-                      {
-                        x1: currentBucket.key,
-                        x2: currentBucket.key,
-                        value: activeCount,
-                        label: 'Stand jetzt',
-                        position: 'top',
-                      },
                     ],
                     xBandPadding: 0,
                   }}
