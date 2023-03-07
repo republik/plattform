@@ -287,6 +287,13 @@ module.exports = {
                 },
               },
             },
+            contributors: {
+              properties: {
+                userId: {
+                  type: 'keyword',
+                },
+              },
+            },
             dossier: {
               type: 'keyword',
             },
