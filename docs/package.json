@@ -1,0 +1,30 @@
+{
+  "name": "@republik/docs",
+  "version": "0.0.1",
+  "private": true,
+  "workspaces": {
+    "nohoist": [
+      "next",
+      "react",
+      "react-dom"
+    ]
+  },
+  "scripts": {
+    "dev": "next",
+    "build": "next build"
+  },
+  "dependencies": {
+    "next": "^13.2.3",
+    "nextra": "^2.2.17",
+    "nextra-theme-docs": "^2.2.17",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@next/eslint-plugin-next": "^13.2.3",
+    "@republik/eslint-config-frontend": "*",
+    "@types/node": "16",
+    "@types/react": "^18.0.28",
+    "@types/react-dom": "^18.0.11"
+  }
+}
