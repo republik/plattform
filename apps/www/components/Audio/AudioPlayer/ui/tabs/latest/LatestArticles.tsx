@@ -101,7 +101,7 @@ const LatestArticlesTab = ({
   if (!hasAccess) {
     return (
       <NoAccess
-        text={t('AudioPlayer/Latest/NoAcces')}
+        text={t('AudioPlayer/Latest/NoAccess')}
         heading={t('AudioPlayer/shared/NoAccess/heading')}
       />
     )
