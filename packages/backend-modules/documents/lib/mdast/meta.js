@@ -1,6 +1,8 @@
 const visit = require('unist-util-visit')
-const Promise = require('bluebird')
-const { v4: isUuid } = require('is-uuid')
+
+const {
+  Analyzer,
+} = require('@orbiting/backend-modules-statistics/lib/credits/analyzer')
 
 const {
   getAudioSource,
@@ -11,8 +13,6 @@ const {
 const { metaFieldResolver } = require('../common/resolve')
 
 const { stringifyNode } = require('./resolve')
-
-const { FRONTEND_BASE_URL } = process.env
 
 /**
  * Obtain credits from either {doc.content.children} or {doc.meta}.
@@ -89,7 +89,6 @@ const getMeta = (doc) => {
   doc._meta = {
     ...doc.content.meta,
     credits,
-    creditsString: stringifyNode(credits),
     audioSource: getAudioSource(doc),
     ...times,
     ...resolvedFields,
@@ -98,60 +97,52 @@ const getMeta = (doc) => {
   return doc._meta
 }
 
-const getContributorUserLinks = (meta, { loaders }) => {
-  const { contributorUserLinks, credits, path } = meta
-  if (contributorUserLinks) {
-    // computed on publish
-    return Promise.resolve(contributorUserLinks)
-  }
-  return Promise.map(
-    credits.children?.filter((c) => c.type === 'link'),
-    async (node) => {
-      let { url } = node
-      if (url.startsWith(FRONTEND_BASE_URL)) {
-        url = url.replace(FRONTEND_BASE_URL, '')
-      }
-      const name = stringifyNode(node).trim()
-      if (url.startsWith('/~')) {
-        const idOrUsername = url.substring(2)
-        if (isUuid(idOrUsername)) {
-          return {
-            id: idOrUsername,
-            name,
-          }
-        } else {
-          return loaders.User.byUsername.load(idOrUsername).then((u) => {
-            if (!u) {
-              console.warn(
-                `linked contributor username not found: ${name} url=${url} path=${path}`,
-              )
-              return
-            }
-            return {
-              id: u.id,
-              name,
-            }
-          })
+const getContributors = (meta, context) => {
+  const creditsContributors =
+    meta?.credits?.children
+      ?.filter((c) => c.type === 'link')
+      .map((node) => {
+        return {
+          name: stringifyNode(node),
+          userId: node.url?.startsWith('/~') && node.url.replace(/^\/~/, ''),
         }
-      } else {
-        console.warn(`unkown contributor link: ${name} url=${url} path=${path}`)
-      }
-    },
-  ).then((userLinks) => {
-    meta.contributorUserLinks = userLinks.filter(Boolean)
-    return meta.contributorUserLinks
-  })
-}
+      })
+      .filter(Boolean) || []
 
-const getContributorUserIds = (meta, context) =>
-  (meta.authorUserIds && Promise.resolve(meta.authorUserIds)) || // legacy in redis and elastic search caches
-  getContributorUserLinks(meta, context).then((userLinks) =>
-    userLinks.map((userLink) => userLink.id),
-  )
+  const creditsString = stringifyNode(meta.credits)
+  const creditsStringContributors =
+    new Analyzer().getAnalysis(creditsString).contributors || []
+
+  const metaContributors = meta?.contributors || []
+
+  const contributors = [
+    ...creditsContributors,
+    ...creditsStringContributors,
+    ...metaContributors,
+  ].reduce((contributors, potentialContributor) => {
+    const sameAtIndex = contributors?.findIndex(
+      (contributor) =>
+        contributor.name === potentialContributor.name &&
+        (!contributor.kind || contributor.kind === potentialContributor.kind),
+    )
+
+    if (sameAtIndex < 0) {
+      contributors.push(potentialContributor)
+    } else {
+      contributors[sameAtIndex] = {
+        ...potentialContributor,
+        ...contributors[sameAtIndex],
+      }
+    }
+
+    return contributors
+  }, [])
+
+  return contributors
+}
 
 module.exports = {
   getCredits,
   getMeta,
-  getContributorUserIds,
-  getContributorUserLinks,
+  getContributors,
 }
