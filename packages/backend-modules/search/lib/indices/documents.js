@@ -276,17 +276,6 @@ module.exports = {
               type: 'text',
               analyzer: 'german_with_stopwords',
             },
-            credits: {
-              properties: {
-                children: {
-                  properties: {
-                    url: {
-                      type: 'keyword',
-                    },
-                  },
-                },
-              },
-            },
             contributors: {
               properties: {
                 userId: {
