@@ -5,7 +5,7 @@ const {
 const {
   getRepoIdsForDoc,
   getTemplate,
-  getContributorUserIds,
+  getContributors,
 } = require('@orbiting/backend-modules-documents/lib/meta')
 
 const getSubscriptionsForDoc = async (
@@ -56,11 +56,12 @@ const getSubscriptionsForDoc = async (
   }
 
   // from prepareMetaForPublish
-  const contributorUserIds = await getContributorUserIds(
+  const contributors = await getContributors(
     doc.type,
     doc.meta || doc._meta,
     context,
   )
+  const contributorUserIds = contributors.map((c) => c.userId).filter(Boolean)
   if (contributorUserIds.length) {
     const authorSubscriptions = await getSubscriptionsForUserAndObjects(
       userId,
