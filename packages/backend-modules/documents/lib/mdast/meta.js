@@ -1,4 +1,5 @@
 const visit = require('unist-util-visit')
+const { v4: isUuid } = require('is-uuid')
 
 const {
   Analyzer,
@@ -97,16 +98,25 @@ const getMeta = (doc) => {
   return doc._meta
 }
 
+const toContributor = (node) => {
+  const contributor = {
+    name: stringifyNode(node),
+  }
+
+  const identifier = node.url?.startsWith('/~') && node.url.replace(/^\/~/, '')
+
+  if (identifier && isUuid(identifier)) {
+    contributor.userId = identifier
+  }
+
+  return contributor
+}
+
 const getContributors = (meta, context) => {
   const creditsContributors =
     meta?.credits?.children
       ?.filter((c) => c.type === 'link')
-      .map((node) => {
-        return {
-          name: stringifyNode(node),
-          userId: node.url?.startsWith('/~') && node.url.replace(/^\/~/, ''),
-        }
-      })
+      .map(toContributor)
       .filter(Boolean) || []
 
   const creditsString = stringifyNode(meta.credits)
