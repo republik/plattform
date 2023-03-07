@@ -70,6 +70,11 @@ const LatestArticlesTab = ({
     }).then(() => setLoadingMore(false))
   }
 
+  const onLoadMore = (e) => {
+    e?.preventDefault()
+    loadMore()
+  }
+
   // Define if the real-aloud filter should be shown
   const hasReadAloudDocuments =
     data?.latestArticles?.nodes.some(
@@ -150,7 +155,7 @@ const LatestArticlesTab = ({
                   <Spinner size={16} />
                 </p>
               ) : (
-                <A href='#' onClick={() => loadMore()}>
+                <A href='#' onClick={onLoadMore}>
                   {t('AudioPlayer/Latest/LoadMore')}
                 </A>
               )}
