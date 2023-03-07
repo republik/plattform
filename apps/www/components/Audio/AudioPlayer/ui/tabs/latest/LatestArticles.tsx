@@ -149,17 +149,15 @@ const LatestArticlesTab = ({
           </ul>
 
           {data?.latestArticles.pageInfo.hasNextPage && (
-            <>
+            <p style={{ paddingBottom: '2rem' }}>
               {isLoadingMore ? (
-                <p>
-                  <Spinner size={16} />
-                </p>
+                <Spinner size={16} />
               ) : (
                 <A href='#' onClick={onLoadMore}>
                   {t('AudioPlayer/Latest/LoadMore')}
                 </A>
               )}
-            </>
+            </p>
           )}
         </>
       ) : (
