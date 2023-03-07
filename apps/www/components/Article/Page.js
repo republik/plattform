@@ -583,7 +583,6 @@ const ArticlePage = ({
   }
 
   const splitContent = article && splitByTitle(article.content)
-  console.log({ splitContent })
   const renderSchema = (content) =>
     renderMdast(
       {
