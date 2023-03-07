@@ -21,20 +21,20 @@ type QuestionConfigType = {
 // TODO: adjust min and max length
 export const QUESTIONS: QuestionConfigType[] = [
   { ids: [0, 1] },
-  { ids: [2, 3], valueLength: { max: 200 } },
-  { ids: [4, 5], valueLength: { max: 200 } },
-  { ids: [6], valueLength: { max: 200 } },
+  { ids: [2, 3], valueLength: { min: 100, max: 250 } },
+  { ids: [4, 5], valueLength: { min: 5, max: 100 } },
   {
-    ids: [7],
-    valueLength: { max: 200 },
+    ids: [6],
+    valueLength: { min: 5, max: 200 },
     hint: 'Tippen Sie eine Antwort an, um den ganzen Fragebogen dieser Person zu sehen.',
   },
+  { ids: [7], valueLength: { min: 5, max: 200 } },
   { ids: [8] },
-  { ids: [9], valueLength: { max: 200 } },
-  { ids: [10], valueLength: { max: 200 } },
-  { ids: [11], valueLength: { max: 200 } },
-  { ids: [12, 13], valueLength: { max: 200 } },
-  { ids: [14] },
+  { ids: [9], valueLength: { min: 5, max: 200 } },
+  { ids: [10], valueLength: { min: 5, max: 80 } },
+  { ids: [11], valueLength: { min: 5, max: 200 } },
+  { ids: [12, 13], valueLength: { min: 5, max: 100 } },
+  { ids: [14], valueLength: { min: 5 } },
 ]
 
 export const EDIT_QUESTIONNAIRE_PATH = '/2023/03/03/fragen-zur-klimakrise'
