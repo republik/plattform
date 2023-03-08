@@ -3394,7 +3394,7 @@
     },
     {
       "key": "article/actionbar/audio/info/readAloud",
-      "value": "{subscribe} sobald vorgelesen, {synthetic}."
+      "value": "{subscribe} sobald vorgelesen{synthetic}"
     },
     {
       "key": "article/actionbar/audio/info/readAloud/subscribe",
@@ -3402,11 +3402,11 @@
     },
     {
       "key": "article/actionbar/audio/info/readAloud/checkbox",
-      "value": "Ich möchte benachrichtig werden."
+      "value": "Ich möchte benachrichtigt werden."
     },
     {
       "key": "article/actionbar/audio/info/readAloud/synthetic",
-      "value": "oder synthetische Version {action}"
+      "value": ", oder synthetische Version {action}"
     },
     {
       "key": "article/actionbar/audio/info/readAloud/synthetic/action",
