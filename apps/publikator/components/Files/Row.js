@@ -1,7 +1,10 @@
 import { css } from 'glamor'
-import LockIcon from 'react-icons/lib/md/lock'
-import PublicIcon from 'react-icons/lib/md/public'
-import ErrorIcon from 'react-icons/lib/md/error-outline'
+
+import {
+    LockIcon,
+    PublicIcon,
+    ErrorIcon,
+} from '@republik/icons'
 
 import { IconButton, Label, ReadingTimeIcon } from '@project-r/styleguide'
 

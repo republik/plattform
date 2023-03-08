@@ -1,10 +1,12 @@
 import { matchMark, createMarkButton, buttonStyles } from '../../utils'
 
-import BoldIcon from 'react-icons/lib/fa/bold'
-import ItalicIcon from 'react-icons/lib/fa/italic'
-import StrikethroughIcon from 'react-icons/lib/fa/strikethrough'
-import SubIcon from 'react-icons/lib/fa/subscript'
-import SupIcon from 'react-icons/lib/fa/superscript'
+import {
+  FormatBoldIcon as BoldIcon,
+  FormatItalicIcon as ItalicIcon,
+  StrikethroughIcon,
+  SuperscriptIcon as SupIcon,
+  SubscriptIcon as SubIcon,
+} from '@republik/icons'
 
 import MarkdownSerializer from 'slate-mdast-serializer'
 

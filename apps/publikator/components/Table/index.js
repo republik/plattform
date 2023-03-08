@@ -2,8 +2,10 @@ import { css } from 'glamor'
 
 import { fontStyles, colors } from '@project-r/styleguide'
 
-import DownIcon from 'react-icons/lib/md/arrow-drop-down'
-import UpIcon from 'react-icons/lib/md/arrow-drop-up'
+import {
+  ArrowDropDownIcon as DownIcon,
+  ArrowDropUpIcon as UpIcon
+} from '@republik/icons'
 
 import Link from 'next/link'
 
