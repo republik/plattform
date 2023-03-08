@@ -61,9 +61,9 @@ const cascadeUpdateConfig = {
   questions: [
     {
       source: 'public.questions',
-      target: 'public.answers', // update all answers
-      via: 'id', // via questions.id
-      where: 'questionId', // where answers.questionId === <via>
+      target: 'public.questionnaireSubmissions', // update all questionnaireSubmissions
+      via: 'questionnaireId', // via questions.questionnaireId
+      where: 'questionnaireId', // where questionnaireSubmissions.questionnaireId === <via>
     },
   ],
   users: [

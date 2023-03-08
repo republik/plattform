@@ -22,9 +22,14 @@ Gut zu wissen:
 
 Wie Sie sich aktuell einbringen können:
 
- * Sammeln und entdecken Sie mit uns wenig bekannte Klimaheldinnen
-   {{frontend_base_url}}/2023/01/31/mit-voller-kraft-gegen-die-klimakrise-diskutieren-sie-mit/diskussion
-   .
+ * 15 Fragen zum Klima, die zum Nachdenken anregen
+   {{frontend_base_url}}/2023/03/03/fragen-zur-klimakrise . Teilen Sie Ihre
+   Antworten und lesen Sie, was andere schreiben.
+
+ * Es hat sich schon einiges getan im Klimalabor seit dem Start. Schauen Sie
+   sich unsere erste Zwischenbilanz
+   {{frontend_base_url}}/2023/03/02/das-ende-vom-anfang-was-bisher-geschah-im-klimalabor
+   an.
 
  * Das Klimalabor lebt davon, dass viele unterschiedliche Perspektiven
    zusammenkommen. Wir freuen uns, wenn Sie Freundinnen und Bekannte ins
