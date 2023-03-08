@@ -83,7 +83,7 @@ function getCommentActions({
     })
   }
 
-  if (setEditMode && comment.userCanEdit && !comment.adminUnpublished) {
+  if (setEditMode && comment.userCanEdit) {
     items.push({
       icon: EditIcon,
       label: t('styleguide/CommentActions/edit'),

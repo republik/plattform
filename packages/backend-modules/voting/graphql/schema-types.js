@@ -221,6 +221,7 @@ type Questionnaire {
   # current user (me) has submitted an answer
   userHasSubmitted: Boolean
   userSubmitDate: DateTime
+  userSubmissionId: ID
 
   allowedMemberships: [VotingMembershipRequirement!]
   allowedRoles: [String!]
