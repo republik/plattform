@@ -165,7 +165,7 @@ const Info = ({ document, handlePlay }) => {
   }, [document.id])
 
   return (
-    <p {...styles.audioInfo} {...colorScheme.set('color', 'textSoft')}>
+    <p {...styles.audioInfo}>
       {intersperse(
         [
           kind === 'readAloud' && !!mp3 && (
@@ -175,7 +175,7 @@ const Info = ({ document, handlePlay }) => {
             <PlaySyntheticReadAloud onPlay={handlePlay} />
           ),
           (kind !== 'readAloud' || !mp3) && !!willBeReadAloud && (
-            <span>
+            <span {...colorScheme.set('color', 'textSoft')}>
               {t.elements('article/actionbar/audio/info/readAloud', {
                 subscribe: (
                   <CalloutMenu
