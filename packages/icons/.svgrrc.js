@@ -10,7 +10,8 @@ module.exports = {
   },
   svgProps: {
     fill: "currentColor",
-    stroke: "currentColor"
+    stroke: "currentColor",
+    style: "{props.style || { verticalAlign: 'middle' }}"
   },
   indexTemplate: require("./lib/icon-template.cjs")
 }
