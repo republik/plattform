@@ -171,7 +171,7 @@ const Info = ({ document, handlePlay }) => {
           kind === 'readAloud' && !!mp3 && (
             <Contributors contributors={contributorsVoice} />
           ),
-          !willBeReadAloud && kind === 'syntheticReadAloud' && !!mp3 && (
+          kind === 'syntheticReadAloud' && !!mp3 && !willBeReadAloud && (
             <PlaySyntheticReadAloud onPlay={handlePlay} />
           ),
           (kind !== 'readAloud' || !mp3) && !!willBeReadAloud && (
