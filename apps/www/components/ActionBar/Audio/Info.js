@@ -199,14 +199,14 @@ const Info = ({ document, handlePlay }) => {
                 synthetic:
                   kind === 'syntheticReadAloud' && !!mp3 ? (
                     <span>
-                      {' '}
-                      {/* Don't question the space, we need it. */}
                       {t.elements(
                         'article/actionbar/audio/info/readAloud/synthetic',
                         {
                           action: (
                             <PlaySyntheticReadAloud onPlay={handlePlay}>
-                              anhören
+                              {t(
+                                'article/actionbar/audio/info/readAloud/synthetic/action',
+                              )}
                             </PlaySyntheticReadAloud>
                           ),
                         },

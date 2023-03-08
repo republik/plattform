@@ -3394,7 +3394,7 @@
     },
     {
       "key": "article/actionbar/audio/info/readAloud",
-      "value": "{subscribe}, sobald vorgelesen{synthetic}."
+      "value": "{subscribe} sobald vorgelesen, {synthetic}."
     },
     {
       "key": "article/actionbar/audio/info/readAloud/subscribe",
@@ -3410,7 +3410,7 @@
     },
     {
       "key": "article/actionbar/audio/info/readAloud/synthetic/action",
-      "value": "Anhören (synthetisch)"
+      "value": "anhören"
     },
     {
       "key": "article/actionbar/audio/info/read-soon",
