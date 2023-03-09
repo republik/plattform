@@ -33,7 +33,7 @@ export const AnswersGrid = ({ children }: { children: ReactNode }) => {
 export const AnswersGridCard = ({
   children,
 }: {
-  textLength: number
+  textLength?: number
   children: ReactNode
 }) => {
   return <div {...styles.card}>{children}</div>
