@@ -47,6 +47,7 @@ const submitQuestionnaireMutation = gql`
       id
       userSubmitDate
       userHasSubmitted
+      userSubmissionId
     }
   }
 `
