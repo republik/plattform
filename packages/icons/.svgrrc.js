@@ -10,7 +10,6 @@ module.exports = {
   },
   svgProps: {
     fill: "currentColor",
-    stroke: "currentColor",
     style: "{props.style || { verticalAlign: 'middle' }}",
     width: '{props.width || props.size || "1em"}',
     height: '{props.height || props.size || "1em"}',
