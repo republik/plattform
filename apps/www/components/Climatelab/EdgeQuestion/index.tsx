@@ -4,8 +4,10 @@ import {
   Center,
   Editorial,
   inQuotes,
+  slug,
 } from '@project-r/styleguide'
 import QuestionScroll from './QuestionScroll'
+import NextLink from 'next/link'
 
 const styles = {
   grid: css({
@@ -60,19 +62,24 @@ const CardsOverview: React.FC<{
       {data.map(({ name, excerpt }, idx) => {
         return (
           <div {...styles.card} key={idx}>
-            <div>
-              <Editorial.Question style={{ marginTop: 0 }}>
-                {inQuotes(excerpt)}
-              </Editorial.Question>
-              <Editorial.Credit
-                style={{
-                  marginTop: '0',
-                  paddingTop: '20px',
-                }}
-              >
-                Von <span style={{ textDecoration: 'underline' }}>{name}</span>
-              </Editorial.Credit>
-            </div>
+            <NextLink href={`#${slug(name)}`}>
+              <a style={{ textDecoration: 'none' }}>
+                <div>
+                  <Editorial.Question style={{ marginTop: 0 }}>
+                    {inQuotes(excerpt)}
+                  </Editorial.Question>
+                  <Editorial.Credit
+                    style={{
+                      marginTop: '0',
+                      paddingTop: '20px',
+                    }}
+                  >
+                    Von{' '}
+                    <span style={{ textDecoration: 'underline' }}>{name}</span>
+                  </Editorial.Credit>
+                </div>
+              </a>
+            </NextLink>
           </div>
         )
       })}
