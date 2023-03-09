@@ -117,9 +117,9 @@ class Poller extends Component {
           {!!Icon && (
             <Icon
               fill='inherit'
-              width='1.2em'
-              height='1.2em'
+              size='1.2em'
               strokeWidth={20}
+              stroke='currentColor'
               style={{
                 verticalAlign: 'baseline',
                 marginRight: 6,

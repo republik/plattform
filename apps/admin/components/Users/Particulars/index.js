@@ -206,7 +206,7 @@ export default class User extends Component {
                         className='show-on-focus'
                         onClick={this.openHandler}
                       >
-                        <EditIcon width={28} height={28} />
+                        <EditIcon size={28} />
                       </TextButton>
                     </SectionMenu>
                     {isOpen && (
