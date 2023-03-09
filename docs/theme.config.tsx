@@ -2,8 +2,7 @@ import { DocsThemeConfig } from 'nextra-theme-docs'
 
 const config: DocsThemeConfig = {
   logo: <span>Republik</span>,
-  docsRepositoryBase:
-    'https://github.com/republik/plattform/blob/main/docs/pages/',
+  docsRepositoryBase: 'https://github.com/republik/plattform/blob/main/docs/',
   project: {
     link: 'https://github.com/republik/plattform',
   },
