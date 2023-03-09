@@ -89,6 +89,7 @@ const Header: React.FC<{ author: Author }> = ({ author }) => {
     margin: '0 auto',
     paddingLeft: 15,
     paddingRight: 15,
+    paddingBottom: 10,
     zIndex: 10,
   }
   return (
