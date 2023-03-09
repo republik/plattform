@@ -1,5 +1,5 @@
 import { useColorContext, plainButtonRule } from '@project-r/styleguide'
-import { DarkModeIcon, LightModeIcon } from '@republik/icons/dist/icons.mjs'
+import { DarkModeIcon, LightModeIcon } from '@republik/icons'
 
 function DarkmodeToggle({ previewDarkmode, onToggle }) {
   const [colorScheme] = useColorContext()
