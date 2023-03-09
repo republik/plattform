@@ -7,8 +7,8 @@ import { Loader, createArticleSchema, slug } from '@project-r/styleguide'
 import { useTranslation } from '../../../lib/withT'
 import HrefLink from '../../Link/Href'
 
-import { CONTENT_FROM_PAGE_QUERY } from './graphql'
-import { SubmissionAuthor } from './Submission'
+import { CONTENT_FROM_PAGE_QUERY } from '../../Questionnaire/Submissions/graphql'
+import { SubmissionAuthor } from '../../Questionnaire/Submissions/Submission'
 
 type Mdast = {
   identifier?: string

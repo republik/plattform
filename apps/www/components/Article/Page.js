@@ -177,7 +177,7 @@ const QuestionnaireSubmissions = dynamic(
 )
 
 const QuestionScroll = dynamic(
-  () => import('../Questionnaire/Submissions/QuestionScroll'),
+  () => import('../Climatelab/EdgeQuestion/QuestionScroll'),
   {
     loading: LoadingComponent,
   },
