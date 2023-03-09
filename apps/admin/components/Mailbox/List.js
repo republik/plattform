@@ -10,7 +10,7 @@ import Mail from './Mail'
 import Address, { Bucket as AddressBucket } from './Address'
 
 import { MAILBOX_SELF } from '../../server/constants'
-import { CallReceivedIcon, ErrorIcon } from '@republik/icons/dist/icons.mjs'
+import { CallReceivedIcon, ErrorIcon } from '@republik/icons'
 
 const self = MAILBOX_SELF?.split(',') ?? []
 
