@@ -18,7 +18,7 @@ const icons = {
   sup: SupIcon,
 }
 
-export default ({ rule, subModules, TYPE }) => {
+const MarkComponent = ({ rule, subModules, TYPE }) => {
   const { type, mdastType: mdastTypeOption } = rule.editorOptions
   const mdastType = mdastTypeOption || type
   if (!mdastType) {
@@ -68,7 +68,7 @@ export default ({ rule, subModules, TYPE }) => {
             data-disabled={disabled}
             data-visible={visible}
           >
-            <Icon />
+            <Icon size={24} />
           </span>
         )),
       ],
@@ -84,3 +84,5 @@ export default ({ rule, subModules, TYPE }) => {
     ],
   }
 }
+
+export default MarkComponent
