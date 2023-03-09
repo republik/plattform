@@ -105,7 +105,7 @@ class UpdateRole extends Component {
                     <InlineSpinner size={22} />
                   ) : initialValue !== value ? (
                     <TextButton type='submit'>
-                      <DoneIcon width={22} height={22} />
+                      <DoneIcon size={22} />
                     </TextButton>
                   ) : undefined}
                 </span>

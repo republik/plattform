@@ -79,7 +79,7 @@ const UpdateCredential = ({
                   <InlineSpinner size={22} />
                 ) : verified !== value ? (
                   <TextButton type='submit'>
-                    <DoneIcon width={22} height={22} />
+                    <DoneIcon size={22} />
                   </TextButton>
                 ) : null}
               </span>

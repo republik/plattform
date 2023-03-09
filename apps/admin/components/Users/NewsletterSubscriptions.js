@@ -120,7 +120,7 @@ class UpdateSubscription extends Component {
                     <InlineSpinner size={22} />
                   ) : subscribed !== value ? (
                     <TextButton type='submit'>
-                      <DoneIcon width={24} height={24} />
+                      <DoneIcon size={24} />
                     </TextButton>
                   ) : undefined}
                 </span>

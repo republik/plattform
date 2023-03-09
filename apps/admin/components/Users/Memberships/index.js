@@ -263,11 +263,7 @@ const MembershipDetails = ({ userId, membership, ...props }) => {
                     {displayDate(new Date(period.beginDate))} –{' '}
                     {displayDate(new Date(period.endDate))}
                     {period.isCurrent && (
-                      <ChevronLeftIcon
-                        width='1.1em'
-                        height='1.1em'
-                        {...styles.icon}
-                      />
+                      <ChevronLeftIcon size='1.1em' {...styles.icon} />
                     )}
                   </DD>
                 ))}
