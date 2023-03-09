@@ -2,7 +2,7 @@
   "version": 2,
   "builds": [
     {
-      "src": "lambdas/chromium/screenshot.js",
+      "src": "screenshot.js",
       "use": "@now/node",
       "config": {
         "maxLambdaSize": "50mb"
@@ -12,7 +12,7 @@
   "routes": [
     {
       "src": "/screenshot",
-      "dest": "/lambdas/chromium/screenshot.js"
+      "dest": "/screenshot.js"
     },
     {
       "src": "/",

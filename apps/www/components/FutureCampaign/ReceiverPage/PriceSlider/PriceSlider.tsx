@@ -1,10 +1,17 @@
 import { scalePoint } from 'd3-scale'
-import { useCallback, useEffect, useMemo, useRef } from 'react'
+import {
+  MouseEventHandler,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+} from 'react'
 import { SLIDER_TRANSITION, SLIDER_VALUES } from './config'
 
 import { fontStyles, useColorContext } from '@project-r/styleguide'
 import {
   motion,
+  MotionValue,
   useAnimationControls,
   useMotionValue,
   useTransform,
@@ -120,6 +127,42 @@ type PriceSliderProps = {
   onChange: (step: SliderValue) => void
 }
 
+const Tick = ({
+  sliderY,
+  tickY,
+  tick,
+  onClick,
+}: {
+  sliderY: MotionValue
+  tickY: number
+  tick: SliderValue
+  onClick: MouseEventHandler<HTMLDivElement>
+}) => {
+  const [colorScheme] = useColorContext()
+
+  const background = useTransform(sliderY, (value) =>
+    tick.isAverage
+      ? '#F0DC28'
+      : value > tickY
+      ? colorScheme.getCSSColor('primary')
+      : colorScheme.getCSSColor('disabled'),
+  )
+
+  return (
+    <motion.div
+      {...(tick.isAverage ? css(styles.tick, styles.tickDefault) : styles.tick)}
+      style={{
+        y: tickY,
+        background,
+      }}
+      whileHover={{ scale: 1.1 }}
+      onClick={onClick}
+    >
+      <div>{tick.value}</div>
+    </motion.div>
+  )
+}
+
 export const PriceSlider = ({
   initialStep,
   step: currentStep,
@@ -133,21 +176,6 @@ export const PriceSlider = ({
   const trackRef = useRef<HTMLDivElement>(null)
   const animationControls = useAnimationControls()
   const y = useMotionValue(0)
-
-  // OK, OK, this is weird and we shouldn't create hooks in a loop but we rely on the fact that the number of ticks doesn't change. If there were a way to pass arguments to a MotionValue, this wouldn't be necessary.
-  const tickBackgrounds = []
-  for (const tick of ticks) {
-    tickBackgrounds.push(
-      // eslint-disable-next-line
-      useTransform(y, (yval) =>
-        tick.isAverage
-          ? '#F0DC28'
-          : getStepAtY(yval).value > tick.value
-          ? colorScheme.getCSSColor('primary')
-          : colorScheme.getCSSColor('disabled'),
-      ),
-    )
-  }
 
   useEffect(() => {
     animationControls.start({
@@ -219,24 +247,17 @@ export const PriceSlider = ({
           style={{ height: y }}
         ></motion.div>
 
-        {ticks.map((tick, i) => {
+        {ticks.map((tick) => {
           return (
-            <motion.div
+            <Tick
               key={tick.position}
-              {...(tick.isAverage
-                ? css(styles.tick, styles.tickDefault)
-                : styles.tick)}
-              style={{
-                top: sliderScale(tick.position),
-                background: tickBackgrounds[i],
-              }}
-              whileHover={{ scale: 1.1 }}
+              tick={tick}
+              tickY={sliderScale(tick.position)}
+              sliderY={y}
               onClick={() => {
                 gotoPos(tick.position)
               }}
-            >
-              <div>{tick.value}</div>
-            </motion.div>
+            />
           )
         })}
 
