@@ -1,7 +1,4 @@
-import {
-  LockIcon,
-  PublicIcon
-} from '@republik/icons'
+import { LockIcon, PublicIcon } from '@republik/icons'
 
 import { IconButton } from '@project-r/styleguide'
 
@@ -20,6 +17,7 @@ const PublicationLink = ({ publication }) => {
     <IconButton
       Icon={publication.prepublication ? LockIcon : PublicIcon}
       style={{ marginRight: 0 }}
+      size={24}
       title={publication.document.meta.title}
       invert
       label={publication.prepublication ? 'Vorschau öffnen' : 'Beitrag öffnen'}
