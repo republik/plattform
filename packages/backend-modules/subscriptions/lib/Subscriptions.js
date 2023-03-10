@@ -264,7 +264,7 @@ const getSubscriptionsForUserAndObject = (
 
 const getSubscriptionsForUserAndObjects = (
   userId,
-  { type, ids, filter },
+  { type, ids, filters },
   context,
   { includeNotActive = false, onlyEligibles = false } = {},
 ) => {
@@ -278,7 +278,7 @@ const getSubscriptionsForUserAndObjects = (
     return []
   }
 
-  if (ids.length === 1 && !filter) {
+  if (ids.length === 1 && !filters) {
     return getSubscriptionsForUserAndObject(
       userId,
       {
@@ -303,7 +303,7 @@ const getSubscriptionsForUserAndObjects = (
     WHERE
       ${userId ? 's."userId" = :userId AND' : ''}
       ARRAY[s."${objectColumn}"] && :objectIds AND
-      ${filter ? '(s.filters IS NULL OR s.filters ? :filter) AND' : ''}
+      ${filters ? `(s.filters IS NULL OR s.filters ?| :filters) AND` : ''}
       ${includeNotActive ? '' : 's."active" = true AND'}
       s."objectType" = :type
   `,
@@ -311,7 +311,7 @@ const getSubscriptionsForUserAndObjects = (
         ...(userId ? { userId } : {}),
         type,
         objectIds: ids,
-        filter,
+        filters,
       },
     )
     .then((subs) =>

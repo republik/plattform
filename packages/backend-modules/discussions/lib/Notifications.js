@@ -159,7 +159,7 @@ const submitComment = async (comment, discussion, context, testUsers) => {
         {
           type: 'User',
           ids: [comment.userId],
-          filter: 'Comment',
+          filters: ['Comment'],
         },
         context,
       )
