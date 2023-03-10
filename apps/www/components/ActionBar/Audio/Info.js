@@ -85,7 +85,9 @@ const SubscribeReadAloud = ({ subscription }) => {
 
   const loading = loadingSubscribe || loadingUnsubscribe
 
-  const isSubscribed = subscription?.active
+  const isSubscribed =
+    subscription.filters.includes(EventObjectType.READ_ALOUD) &&
+    subscription.active
 
   const handleMutation = useMemo(
     () => async () => {
@@ -152,10 +154,8 @@ const Info = ({ document, handlePlay }) => {
       document.meta?.contributors?.filter((c) => c.kind === 'voice') || []
     const willBeReadAloud = document.meta?.willBeReadAloud
     const readAloudSubscription = document?.subscribedBy?.nodes.find(
-      ({ filters, isEligibleForNotifications, object: { id } }) =>
-        filters.includes(EventObjectType.READ_ALOUD) &&
-        isEligibleForNotifications &&
-        id === document.id,
+      ({ isEligibleForNotifications, object: { id } }) =>
+        isEligibleForNotifications && id === document.id,
     )
 
     return {
