@@ -8,6 +8,9 @@ const styles = {
     columnGap: '1em',
     margin: '30px 0 40px',
     [mediaQueries.mUp]: {
+      columnCount: 2,
+    },
+    [mediaQueries.lUp]: {
       columnCount: 3,
     },
   }),

@@ -31,6 +31,7 @@ type Props<ElementProps = any> = {
   contentPaddingMobile?: string
   padded?: boolean
   attributes?: any
+  inline?: boolean
 }
 
 const CalloutMenu = ({
@@ -42,6 +43,7 @@ const CalloutMenu = ({
   contentPaddingMobile,
   padded,
   attributes,
+  inline = false,
 }: Props) => {
   const [showMenu, setMenu] = React.useState(initiallyOpen)
   const toggleRef = React.useRef()
@@ -65,7 +67,10 @@ const CalloutMenu = ({
     <span
       {...(padded && styles.padded)}
       {...attributes}
-      style={{ position: 'relative', display: 'block' }}
+      style={{
+        position: 'relative',
+        display: inline ? 'inline-block' : 'block',
+      }}
       ref={toggleRef}
     >
       {showMenu && (

@@ -14,6 +14,11 @@ import { countFormat, swissTime } from '../../../lib/utils/format'
 import withT from '../../../lib/withT'
 import { scaleLinear } from 'd3-scale'
 
+/* Currently not in use.
+This component can be used to show how many «Geteilte Zugriffe» have been sent, 
+have been redeemed and have converted into paid subscriptions, e.g. at /teilen page 
+especially if there are special campaigns where we want to show off  */
+
 const CAMPAIGN_IDS = {
   first: 'e3568e03-b6b3-46c5-b07a-e9afeea92023', // "Teilen Sie Ihr Abonnement"
   second: 'b86c78c5-b36b-4de6-8656-44d5e1ba410b', // "Verschenken"

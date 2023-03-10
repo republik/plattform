@@ -1197,6 +1197,22 @@
       "value": "Benachrichtigungen senden: aktuell {count} Empfangende"
     },
     {
+      "key": "publish/label/notifyFiltersDocument/1",
+      "value": "Benachrichtigung senden: aktuell eine Empfängerin"
+    },
+    {
+      "key": "publish/label/notifyFiltersDocument/other",
+      "value": "Benachrichtigungen senden: aktuell {count} Empfänger"
+    },
+    {
+      "key": "publish/label/notifyFiltersReadAloud/1",
+      "value": "«Vorgelesen» benachrichtigen: aktuell ein Follower"
+    },
+    {
+      "key": "publish/label/notifyFiltersReadAloud/other",
+      "value": "«Vorgelesen» benachrichtigen: aktuell {count} Follower"
+    },
+    {
       "key": "publish/validation/links/1",
       "value": "Im Text ist ein Link enthalten."
     },
