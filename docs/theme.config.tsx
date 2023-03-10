@@ -1,3 +1,4 @@
+import { CodeDemo } from '@/theme/components/code-demo'
 import { DocsThemeConfig } from 'nextra-theme-docs'
 
 const config: DocsThemeConfig = {
@@ -15,6 +16,9 @@ const config: DocsThemeConfig = {
     }
   },
   head: null,
+  components: {
+    CodeDemo,
+  },
 }
 
 export default config
