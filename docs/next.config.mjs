@@ -5,4 +5,9 @@ const withNextra = nextra({
   themeConfig: './theme.config.tsx',
 })
 
-export default withNextra({})
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  transpilePackages: ['@project-r/styleguide', '@republik/ui-docs-demo'],
+}
+
+export default withNextra(nextConfig)

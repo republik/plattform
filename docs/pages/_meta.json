@@ -1,0 +1,5 @@
+{
+  "index": { "title": "Introduction", "type": "page", "display": "hidden" },
+  "components": { "title": "Components", "type": "page" },
+  "legacy-styleguide": { "title": "Styleguide (Legacy)", "type": "page" }
+}
