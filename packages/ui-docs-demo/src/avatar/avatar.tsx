@@ -11,7 +11,7 @@ export const Avatar = ({
   fallback?: string
   color?: string
 }) => (
-  <span className={styles.avatar} style={{ '--avatar-background': color }}>
+  <span className={styles.avatar} style={{ backgroundColor: color }}>
     {src && <img src={src} alt={alt}></img>}
     {fallback && <span className={styles.fallback}>{fallback}</span>}
   </span>
