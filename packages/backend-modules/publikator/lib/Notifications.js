@@ -115,7 +115,7 @@ const notifyPublish = async (
 
     const title =
       subscribedDoc.meta.notificationTitle ||
-      t('api/notifications/doc/readAloud/title', {
+      t('api/notifications/doc/title', {
         title: inQuotes(subscribedDoc.meta.title),
       })
 
