@@ -7,5 +7,7 @@ module.exports = {
       : meta.credits?.children
   },
 
+  contributors: (meta) => meta.contributors || [],
+
   audioCover: getAudioCover,
 }
