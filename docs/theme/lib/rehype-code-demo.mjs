@@ -1,7 +1,12 @@
 import path from 'node:path'
 import fs from 'node:fs'
 import { visit } from 'unist-util-visit'
+import { customAlphabet } from 'nanoid'
 import { mdxElement, mdxImport } from './unist-mdx-element.mjs'
+
+const nanoid = customAlphabet(
+  'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789',
+)
 
 export const rehypeCodeDemo = () => (tree) => {
   visit(tree, (node) => {
@@ -18,11 +23,11 @@ export const rehypeCodeDemo = () => (tree) => {
           const syntax = getSyntax(extension)
           const source = fs.readFileSync(path.join(filePath), 'utf8')
 
-          node.children.push(
-            mdxImport({ identifier: 'Demo', source: filePath }),
-          )
+          const identifier = `Demo${nanoid()}`
 
-          node.children.push(mdxElement({ name: 'Demo' }))
+          node.children.push(mdxImport({ identifier, source: filePath }))
+
+          node.children.push(mdxElement({ name: identifier }))
 
           node.children.push(
             mdxElement({
