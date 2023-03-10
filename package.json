@@ -22,7 +22,7 @@
     "start:scheduler": "cd apps/api && yarn start:scheduler",
     "build": "scripts/build.sh",
     "dev": "turbo run dev --parallel",
-    "dev:docs": "turbo run dev --filter=@republik/docs...",
+    "dev:docs": "turbo run dev --filter=@republik/docs",
     "dev:www": "turbo run dev --filter=@orbiting/www-app...",
     "dev:www-api": "turbo run dev --filter=@orbiting/www-app --filter=@orbiting/api-app",
     "lint": "turbo run lint",
