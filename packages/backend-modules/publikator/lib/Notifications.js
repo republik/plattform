@@ -22,6 +22,7 @@ const groupSubscribersByObjectId = (subscribers, key) =>
 
 const notifyPublish = async (
   repoId,
+  filters,
   context,
   testUser,
   simulateAllPossibleSubscriptions,
@@ -50,7 +51,9 @@ const notifyPublish = async (
   }
 
   const docsSubscriptions = []
+  const readAloudSubscriptions = []
   const authorsSubscriptions = []
+
   await getSubscriptionsForDoc(
     doc,
     testUser?.id, // otherwise null => for all users
@@ -64,6 +67,7 @@ const notifyPublish = async (
             simulate: true,
           }
         : {
+            filters,
             onlyEligibles: true,
             includeParents: true,
             uniqueUsers: true,
@@ -72,10 +76,25 @@ const notifyPublish = async (
     context,
   ).then((subs) =>
     subs.forEach((sub) => {
-      if (sub.objectType === 'Document') {
+      if (
+        (!filters || filters.includes('Document')) &&
+        sub.objectType === 'Document' &&
+        (!sub.filters || sub.filters.includes('Document'))
+      ) {
         docsSubscriptions.push(sub)
-      } else {
+      } else if (
+        filters.includes('ReadAloud') &&
+        sub.objectType === 'Document' &&
+        (!sub.filters || sub.filters.includes('ReadAloud'))
+      ) {
+        readAloudSubscriptions.push(sub)
+      } else if (
+        sub.objectType === 'User' &&
+        (!sub.filters || sub.filters.includes('Document'))
+      ) {
         authorsSubscriptions.push(sub)
+      } else {
+        console.warn('discarded subscription', sub.id)
       }
     }),
   )
@@ -93,12 +112,47 @@ const notifyPublish = async (
 
   await Promise.each(Object.keys(docSubscribersByDocId), async (docId) => {
     const subscribedDoc = await loaders.Document.byRepoId.load(docId)
-    const subscribers = docSubscribersByDocId[docId]
+
     const title =
       subscribedDoc.meta.notificationTitle ||
       t('api/notifications/doc/title', {
         title: inQuotes(subscribedDoc.meta.title),
       })
+
+    const subscribers = docSubscribersByDocId[docId]
+
+    event = await sendNotification(
+      {
+        event: event ? { id: event.id } : eventInfo,
+        users: subscribers,
+        content: {
+          app: {
+            ...appContent,
+            title,
+          },
+        },
+      },
+      context,
+    )
+  })
+
+  const readAloudSubscribers = await getUsersWithSubscriptions(
+    readAloudSubscriptions,
+    context,
+  )
+  const readAloudSubscribersByDoc = groupSubscribersByObjectId(
+    readAloudSubscribers,
+    'objectDocumentId',
+  )
+
+  await Promise.each(Object.keys(readAloudSubscribersByDoc), async (docId) => {
+    const subscribedDoc = await loaders.Document.byRepoId.load(docId)
+
+    const title = t('api/notifications/doc/readAloud/title', {
+      title: inQuotes(subscribedDoc.meta.title),
+    })
+
+    const subscribers = readAloudSubscribersByDoc[docId]
 
     event = await sendNotification(
       {
