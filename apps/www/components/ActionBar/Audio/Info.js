@@ -117,6 +117,7 @@ const SubscribeReadAloud = ({ document }) => {
           await subscribe({
             variables: {
               documentId: document.id,
+              filters: [EventObjectType.READ_ALOUD],
             },
           })
         }
