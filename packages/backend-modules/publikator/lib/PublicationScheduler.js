@@ -58,19 +58,20 @@ const init = async (context) => {
         // repos:republik/article-briefing-aus-bern-14/scheduled-publication
         const versionName = doc.versionName
         const repoId = doc.meta.repoId
-        const prepublication = doc.meta.prepublication
-        const scheduledAt = doc.meta.scheduledAt
-        const notifySubscribers = doc.meta.notifySubscribers
+
+        const milestone = await pgdb.publikator.milestones.findOne({
+          repoId,
+          name: versionName,
+        })
+
+        const prepublication = milestone.scope === 'prepublication'
+        const scheduledAt = milestone.scheduledAt
+        const { notifyFilters } = milestone.meta || {}
 
         console.log(`scheduler: publishing ${repoId}`)
 
         const tx = await pgdb.transactionBegin()
         try {
-          const milestone = await pgdb.publikator.milestones.findOne({
-            repoId,
-            name: versionName,
-          })
-
           await maybeDelcareMilestonePublished(milestone, tx)
           await updateCurrentPhase(repoId, tx)
 
@@ -115,8 +116,8 @@ const init = async (context) => {
           await upsertDiscussion(doc.meta, context)
         }
 
-        if (notifySubscribers && !prepublication) {
-          await notifyPublish(repoId, context).catch((e) => {
+        if (!prepublication && notifyFilters) {
+          await notifyPublish(repoId, notifyFilters, context).catch((e) => {
             console.error('error in notifyPublish', e)
           })
         }

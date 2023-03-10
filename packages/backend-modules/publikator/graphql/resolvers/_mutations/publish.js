@@ -55,19 +55,15 @@ const { document: getDocument } = require('../Commit')
 const { FRONTEND_BASE_URL, PIWIK_URL_BASE, PIWIK_SITE_ID, DISABLE_PUBLISH } =
   process.env
 
-module.exports = async (
-  _,
-  {
-    repoId,
-    commitId,
-    prepublication,
+module.exports = async (_, args, context) => {
+  const { repoId, commitId, settings } = args
+  const {
+    prepublication = false,
     scheduledAt: _scheduledAt,
     updateMailchimp = false,
-    notifySubscribers = false,
     ignoreUnresolvedRepoIds = false,
-  },
-  context,
-) => {
+    notifyFilters = [],
+  } = settings
   const { user, t, redis, elastic, pgdb, pubsub, loaders } = context
   ensureUserHasRole(user, 'editor')
 
@@ -192,7 +188,6 @@ module.exports = async (
     repoMeta,
     scheduledAt,
     prepublication,
-    notifySubscribers,
     doc,
     now,
     context,
@@ -278,7 +273,7 @@ module.exports = async (
 
   const meta = {
     ...(updateMailchimp && { updateMailchimp }),
-    ...(notifySubscribers && { notifySubscribers }),
+    ...(notifyFilters && { notifyFilters }),
   }
 
   const scope = (prepublication && 'prepublication') || 'publication'
@@ -442,8 +437,8 @@ module.exports = async (
   ]
   await purgeUrls(purgeQueries.map((q) => `/pdf${newPath}.pdf${q}`))
 
-  if (notifySubscribers && !prepublication && !scheduledAt) {
-    await notifyPublish(repoId, context)
+  if (!prepublication && !scheduledAt && notifyFilters) {
+    await notifyPublish(repoId, notifyFilters, context)
   }
 
   const publication = (
