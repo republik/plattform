@@ -1,6 +1,7 @@
 import { gql } from '@apollo/client'
 import EventObjectType from './EventObjectType'
 import { makeMutationHook } from '../../../lib/helpers/AbstractApolloGQLHooks.helper'
+import { subInfo } from '../../Notifications/enhancers'
 
 const SUBSCRIBE_DOCUMENT_MUTATION = gql`
   mutation subscribeDocumentMutation(
@@ -12,16 +13,11 @@ const SUBSCRIBE_DOCUMENT_MUTATION = gql`
       type: Document
       filters: $filters
     ) {
-      id
-      filters
-      active
-      object {
-        ... on Document {
-          id
-        }
-      }
+      ...subInfo
     }
   }
+
+  ${subInfo}
 `
 
 type SubscribeDocumentData = {

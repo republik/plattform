@@ -1,5 +1,6 @@
 import { gql } from '@apollo/client'
 import { makeMutationHook } from '../../../lib/helpers/AbstractApolloGQLHooks.helper'
+import { subInfo } from '../../Notifications/enhancers'
 import EventObjectType from './EventObjectType'
 
 const UNSUBSCRIBE_DOCUMENT_MUTATION = gql`
@@ -8,11 +9,11 @@ const UNSUBSCRIBE_DOCUMENT_MUTATION = gql`
     $filters: [EventObjectType!]
   ) {
     unsubscribe(subscriptionId: $subscriptionId, filters: $filters) {
-      id
-      filters
-      active
+      ...subInfo
     }
   }
+
+  ${subInfo}
 `
 
 type UnsubscribeDocumentData = {

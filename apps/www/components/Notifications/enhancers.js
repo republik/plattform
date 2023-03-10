@@ -13,6 +13,7 @@ export const notificationInfo = gql`
 export const subInfo = gql`
   fragment subInfo on Subscription {
     id
+    isEligibleForNotifications
     active
     filters
     object {

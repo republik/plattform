@@ -17,7 +17,6 @@ import { intersperse } from '../../../lib/utils/helpers'
 import { useTranslation } from '../../../lib/withT'
 import EventObjectType from '../graphql/EventObjectType'
 
-import useDocumentSubscriptionQuery from '../graphql/useDocumentSubscriptionQuery'
 import useSubscribeDocumentMutation from '../graphql/useSubscribeDocumentMutation'
 import useUnsubscribeDocumentMutation from '../graphql/useUnsubscribeDocumentMutation'
 
@@ -75,33 +74,18 @@ const PlaySyntheticReadAloud = ({ onPlay, children }) => {
   )
 }
 
-const SubscribeReadAloud = ({ document }) => {
+const SubscribeReadAloud = ({ subscription }) => {
   const [colorScheme] = useColorContext()
   const { t } = useTranslation()
-
-  const { data, loading: loadingQuery } = useDocumentSubscriptionQuery({
-    variables: {
-      path: document.meta?.path,
-      onlyMe: true,
-    },
-    skip: !document.meta?.path,
-  })
 
   const [subscribe, { loading: loadingSubscribe }] =
     useSubscribeDocumentMutation()
   const [unsubscribe, { loading: loadingUnsubscribe }] =
     useUnsubscribeDocumentMutation()
 
-  const loading = loadingQuery || loadingSubscribe || loadingUnsubscribe
+  const loading = loadingSubscribe || loadingUnsubscribe
 
-  const readAloudSubscription = data?.document?.subscriptions?.nodes.find(
-    ({ object: { id } }) => id === document.id,
-  )
-
-  const isSubscribed =
-    readAloudSubscription?.filters.includes(EventObjectType.READ_ALOUD) &&
-    readAloudSubscription?.active &&
-    readAloudSubscription?.isEligibleForNotifications
+  const isSubscribed = subscription?.active
 
   const handleMutation = useMemo(
     () => async () => {
@@ -109,14 +93,14 @@ const SubscribeReadAloud = ({ document }) => {
         if (isSubscribed) {
           await unsubscribe({
             variables: {
-              subscriptionId: readAloudSubscription.id,
+              subscriptionId: subscription.id,
               filters: [EventObjectType.READ_ALOUD],
             },
           })
         } else {
           await subscribe({
             variables: {
-              documentId: document.id,
+              documentId: subscription.object.id,
               filters: [EventObjectType.READ_ALOUD],
             },
           })
@@ -125,10 +109,10 @@ const SubscribeReadAloud = ({ document }) => {
         console.error(e)
       }
     },
-    [readAloudSubscription],
+    [subscription],
   )
 
-  if (!readAloudSubscription?.isEligibleForNotifications) {
+  if (!subscription?.isEligibleForNotifications) {
     return null
   }
 
@@ -155,15 +139,33 @@ const SubscribeReadAloud = ({ document }) => {
 const Info = ({ document, handlePlay }) => {
   const [colorScheme] = useColorContext()
   const { t } = useTranslation()
-  const { kind, mp3, contributorsVoice, willBeReadAloud } = useMemo(() => {
+  const {
+    kind,
+    mp3,
+    contributorsVoice,
+    willBeReadAloud,
+    readAloudSubscription,
+  } = useMemo(() => {
     const kind = document.meta?.audioSource?.kind
     const mp3 = document.meta?.audioSource?.mp3
     const contributorsVoice =
       document.meta?.contributors?.filter((c) => c.kind === 'voice') || []
     const willBeReadAloud = document.meta?.willBeReadAloud
+    const readAloudSubscription = document?.subscribedBy?.nodes.find(
+      ({ filters, isEligibleForNotifications, object: { id } }) =>
+        filters.includes(EventObjectType.READ_ALOUD) &&
+        isEligibleForNotifications &&
+        id === document.id,
+    )
 
-    return { kind, mp3, contributorsVoice, willBeReadAloud }
-  }, [document.id])
+    return {
+      kind,
+      mp3,
+      contributorsVoice,
+      willBeReadAloud,
+      readAloudSubscription,
+    }
+  }, [document.id, document.subscribedBy])
 
   return (
     <p {...styles.audioInfo}>
@@ -172,51 +174,59 @@ const Info = ({ document, handlePlay }) => {
           kind === 'readAloud' && !!mp3 && (
             <Contributors contributors={contributorsVoice} />
           ),
-          kind === 'syntheticReadAloud' && !!mp3 && !willBeReadAloud && (
-            <PlaySyntheticReadAloud onPlay={handlePlay} />
-          ),
-          (kind !== 'readAloud' || !mp3) && !!willBeReadAloud && (
-            <span {...colorScheme.set('color', 'textSoft')}>
-              {t.elements('article/actionbar/audio/info/readAloud', {
-                subscribe: (
-                  <CalloutMenu
-                    inline
-                    Element={(props) => (
-                      <button
-                        {...plainButtonRule}
-                        style={{
-                          display: 'inline-block !important',
-                          textDecoration: 'underline',
-                        }}
-                        {...props}
-                      >
-                        {t('article/actionbar/audio/info/readAloud/subscribe')}
-                      </button>
-                    )}
-                  >
-                    <SubscribeReadAloud document={document} />
-                  </CalloutMenu>
-                ),
-                synthetic:
-                  kind === 'syntheticReadAloud' && !!mp3 ? (
-                    <span>
-                      {t.elements(
-                        'article/actionbar/audio/info/readAloud/synthetic',
-                        {
-                          action: (
-                            <PlaySyntheticReadAloud onPlay={handlePlay}>
-                              {t(
-                                'article/actionbar/audio/info/readAloud/synthetic/action',
-                              )}
-                            </PlaySyntheticReadAloud>
-                          ),
-                        },
+          kind === 'syntheticReadAloud' &&
+            !!mp3 &&
+            (!willBeReadAloud || !readAloudSubscription) && (
+              <PlaySyntheticReadAloud onPlay={handlePlay} />
+            ),
+          (kind !== 'readAloud' || !mp3) &&
+            !!willBeReadAloud &&
+            readAloudSubscription && (
+              <span {...colorScheme.set('color', 'textSoft')}>
+                {t.elements('article/actionbar/audio/info/readAloud', {
+                  subscribe: (
+                    <CalloutMenu
+                      inline
+                      Element={(props) => (
+                        <button
+                          {...plainButtonRule}
+                          style={{
+                            display: 'inline-block !important',
+                            textDecoration: 'underline',
+                          }}
+                          {...props}
+                        >
+                          {t(
+                            'article/actionbar/audio/info/readAloud/subscribe',
+                          )}
+                        </button>
                       )}
-                    </span>
-                  ) : null,
-              })}
-            </span>
-          ),
+                    >
+                      <SubscribeReadAloud
+                        subscription={readAloudSubscription}
+                      />
+                    </CalloutMenu>
+                  ),
+                  synthetic:
+                    kind === 'syntheticReadAloud' && !!mp3 ? (
+                      <span>
+                        {t.elements(
+                          'article/actionbar/audio/info/readAloud/synthetic',
+                          {
+                            action: (
+                              <PlaySyntheticReadAloud onPlay={handlePlay}>
+                                {t(
+                                  'article/actionbar/audio/info/readAloud/synthetic/action',
+                                )}
+                              </PlaySyntheticReadAloud>
+                            ),
+                          },
+                        )}
+                      </span>
+                    ) : null,
+                })}
+              </span>
+            ),
         ].filter(Boolean),
         (_, i) => (
           <span key={i}>.</span>
