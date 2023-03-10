@@ -319,7 +319,15 @@ const ActionBar = ({
           discussionId={isDiscussion && meta.ownDiscussion?.id}
           subscriptions={document?.subscribedBy?.nodes?.filter(
             (subscription) =>
-              !(subscription?.object?.id === document.id && !!meta.format),
+              // keep all subscriptions onto Users objects
+              subscription?.object?.__typename === 'User' ||
+              // keep some subscriptions onto Documents objects …
+              (subscription?.object?.__typename === 'Document' &&
+                // … subscription object is not referring to current doc
+                (subscription?.object?.id !== document.id ||
+                  // … current doc is a format and subscription object referrs to current doc
+                  (meta.template === 'format' &&
+                    subscription?.object?.id === document.id))),
           )}
           label={t('SubscribeMenu/title')}
           labelShort={isArticleBottom ? t('SubscribeMenu/title') : undefined}
