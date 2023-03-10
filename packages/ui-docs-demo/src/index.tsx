@@ -1,1 +1,1 @@
-export const UIDemo = () => <div>UI Demo</div>
+export { Avatar } from './avatar/avatar'

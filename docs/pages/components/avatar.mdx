@@ -1,0 +1,18 @@
+---
+title: 'Avatar (Demo)'
+---
+
+# Avatar
+
+This is just a demo to show that we can import packages with TSX and [CSS Modules](https://nextjs.org/docs/basic-features/built-in-css-support#adding-component-level-css) directly 🎉
+
+import { Avatar } from '@republik/ui-docs-demo'
+
+<div style={{ display: 'flex', gap: 20, margin: 50 }}>
+  <Avatar
+    src='https://fillmurray.lucidinternets.com/200/200'
+    alt='Fill Murray'
+  />
+  <Avatar fallback='FM' />
+  <Avatar fallback='FM' color='hotpink' />
+</div>
