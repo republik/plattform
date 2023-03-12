@@ -1,8 +1,12 @@
+const { ensureSignedIn } = require('@orbiting/backend-modules-auth')
+
 const { getCache } = require('../../../lib/cache')
 
 module.exports = async (_, args, context) => {
   const { id, response } = args
-  const { pgdb, t, user: me } = context
+  const { req, pgdb, t, user: me } = context
+
+  ensureSignedIn(req)
 
   const tx = await pgdb.transactionBegin()
 
