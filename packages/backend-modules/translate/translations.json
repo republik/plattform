@@ -2515,6 +2515,18 @@
     {
       "key": "api/publikator/file/error/notYours",
       "value": "Datei gehört nicht Ihnen"
+    },
+    {
+      "key": "api/call-to-action/notAllowed",
+      "value": "Sie dürfen \"callToActions\" nicht abfragen."
+    },
+    {
+      "key": "api/call-to-action/acknowledge/notAllowed",
+      "value": "Sie dürfen diesen Call-To-Action nicht quittieren."
+    },
+    {
+      "key": "api/call-to-actions/acknowledge/404",
+      "value": "Call-To-Action nicht gefunden"
     }
   ]
 }

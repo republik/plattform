@@ -10,7 +10,7 @@ module.exports = async (_, args, context) => {
     const cta = await tx.public.callToActions.findOne({ id })
 
     if (cta.userId !== me.id) {
-      throw new Error(t('api/call-to-action/User/callToAction/notAllowed'))
+      throw new Error(t('api/call-to-action/acknowledge/notAllowed'))
     }
 
     if (!cta) {
@@ -26,9 +26,9 @@ module.exports = async (_, args, context) => {
       { response, acknowledgedAt: new Date() },
     )
 
-    await tx.transactionCommit()
-
     await getCache(cta.userId, context).invalidate()
+
+    await tx.transactionCommit()
 
     return updatedCta
   } catch (err) {
