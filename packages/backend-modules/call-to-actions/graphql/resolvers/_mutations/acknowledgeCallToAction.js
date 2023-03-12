@@ -14,7 +14,7 @@ module.exports = async (_, args, context) => {
     const cta = await tx.public.callToActions.findOne({ id })
 
     if (cta.userId !== me.id) {
-      throw new Error(t('api/call-to-action/acknowledge/notAllowed'))
+      throw new Error(t('api/call-to-actions/acknowledge/notAllowed'))
     }
 
     if (!cta) {

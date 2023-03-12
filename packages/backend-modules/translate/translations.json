@@ -2521,11 +2521,11 @@
       "value": "Datei gehört nicht Ihnen"
     },
     {
-      "key": "api/call-to-action/notAllowed",
+      "key": "api/call-to-actions/notAllowed",
       "value": "Sie dürfen \"callToActions\" nicht abfragen."
     },
     {
-      "key": "api/call-to-action/acknowledge/notAllowed",
+      "key": "api/call-to-actions/acknowledge/notAllowed",
       "value": "Sie dürfen diesen Call-To-Action nicht quittieren."
     },
     {

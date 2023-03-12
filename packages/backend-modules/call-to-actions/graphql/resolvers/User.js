@@ -9,7 +9,7 @@ module.exports = {
     const { user: me } = context
 
     if (!Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter'])) {
-      throw new Error('api/call-to-action/notAllowed')
+      throw new Error('api/call-to-actions/notAllowed')
     }
 
     return getCache(user.id, context).cache(async () => {
