@@ -102,15 +102,25 @@ const localColors = {
   },
 }
 
-type EdgeQuestionProps = { contentPath: string }
+export type Mdast = {
+  identifier?: string
+  type?: string
+  meta?: object
+  children?: Mdast[]
+  value?: string
+  url?: string
+  [x: string]: unknown
+}
 
-const EdgeQuestion: React.FC<EdgeQuestionProps> = ({ contentPath }) => {
+export type EdgeQuestionProps = { contentPath?: string; mdast?: Mdast[] }
+
+const EdgeQuestion: React.FC<EdgeQuestionProps> = ({ contentPath, mdast }) => {
   return (
     <Center>
       <Breakout size='breakout'>
         <CardsOverview data={OVERVIEW_DATA} />
       </Breakout>
-      <QuestionScroll contentPath={contentPath} />
+      <QuestionScroll contentPath={contentPath} mdast={mdast} />
     </Center>
   )
 }

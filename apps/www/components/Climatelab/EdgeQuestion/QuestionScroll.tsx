@@ -9,16 +9,7 @@ import HrefLink from '../../Link/Href'
 
 import { CONTENT_FROM_PAGE_QUERY } from '../../Questionnaire/Submissions/graphql'
 import { SubmissionAuthor } from '../../Questionnaire/Submissions/Submission'
-
-type Mdast = {
-  identifier?: string
-  type?: string
-  meta?: object
-  children?: Mdast[]
-  value?: string
-  url?: string
-  [x: string]: unknown
-}
+import { Mdast } from './index'
 
 type Author = {
   name: string
@@ -138,7 +129,9 @@ const RenderQuestion: React.FC<{ mdast: Mdast[] }> = ({ mdast }) => {
   )
 }
 
-const QuestionScroll: React.FC<{ contentPath: string }> = ({ contentPath }) => {
+const QuestionScrollLoader: React.FC<{ contentPath: string }> = ({
+  contentPath,
+}) => {
   const { data, loading, error } = useQuery(CONTENT_FROM_PAGE_QUERY, {
     variables: { path: contentPath },
   })
@@ -153,5 +146,15 @@ const QuestionScroll: React.FC<{ contentPath: string }> = ({ contentPath }) => {
     />
   )
 }
+
+const QuestionScroll: React.FC<{ contentPath?: string; mdast: Mdast[] }> = ({
+  contentPath,
+  mdast,
+}) =>
+  mdast ? (
+    <RenderQuestion mdast={mdast} />
+  ) : (
+    <QuestionScrollLoader contentPath={contentPath} />
+  )
 
 export default QuestionScroll
