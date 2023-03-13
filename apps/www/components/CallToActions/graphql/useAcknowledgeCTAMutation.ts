@@ -12,7 +12,10 @@ const ACKNOWLEDGE_CTA_MUTATION = gql`
       updatedAt
       createdAt
       payload {
-        customComponent
+        customComponent {
+          key
+          args
+        }
       }
       response
     }

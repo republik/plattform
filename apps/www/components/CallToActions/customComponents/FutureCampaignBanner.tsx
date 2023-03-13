@@ -44,6 +44,8 @@ function FutureCampaignBanner({
   const showBanner =
     !HIDE_ON_PATHNAMES.includes(router.pathname) && visitedPageTop
 
+  const { sender, receiver } = callToAction.payload.customComponent.args
+
   return (
     <motion.div
       {...colorScheme.set('backgroundColor', 'default')}
@@ -69,7 +71,8 @@ function FutureCampaignBanner({
           })}
         >
           <h2 {...styles.heading}>
-            Dank 834 Verlegerinnen wurde die Republik um 1’944 Stimmen reicher.{' '}
+            Dank {sender} Verlegerinnen wurde die Republik um {receiver} Stimmen
+            reicher.{' '}
           </h2>
           <button
             {...plainButtonRule}

@@ -17,8 +17,8 @@ export default function CallToActionBanner() {
       return null
     }
 
-    if (callToAction?.payload.customComponent) {
-      return getCustomComponent(callToAction.payload.customComponent)
+    if (callToAction.payload.customComponent) {
+      return getCustomComponent(callToAction.payload.customComponent.key)
     }
 
     return null // TODO: Implement default component

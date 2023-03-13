@@ -14,7 +14,10 @@ const CALL_TO_ACTIONS_QUERY = gql`
         updatedAt
         createdAt
         payload {
-          customComponent
+          customComponent {
+            key
+            args
+          }
         }
       }
     }

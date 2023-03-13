@@ -6,7 +6,12 @@ export type CallToAction = {
   updatedAt: string
   createdAt: string
   payload: {
-    customComponent: string
+    customComponent: {
+      key: string
+      args?: {
+        [key: string]: unknown
+      }
+    }
   }
   response?: unknown
 }
