@@ -19,7 +19,7 @@ export default function useCallToAction(): {
   refetch: () => void
 } {
   const { data, loading, error, refetch } = useCallToActionsQuery()
-  const callToActions = data?.me.callToActions
+  const callToActions = data?.me?.callToActions
   const activeCTA: CallToAction = useMemo(() => {
     if (!callToActions || callToActions.length === 0) {
       return undefined
