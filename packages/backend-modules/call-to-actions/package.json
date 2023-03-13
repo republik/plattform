@@ -23,5 +23,7 @@
   "devDependencies": {
   },
   "dependencies": {
+    "apollo-modules-node": "*",
+    "dayjs": "^1.11.7"
   }
 }
