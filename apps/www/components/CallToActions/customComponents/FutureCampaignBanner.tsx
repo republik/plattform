@@ -5,6 +5,7 @@ import {
   IconButton,
   CloseIcon,
   plainButtonRule,
+  Center,
 } from '@project-r/styleguide'
 import { motion } from 'framer-motion'
 import { css } from 'glamor'
@@ -61,40 +62,42 @@ function FutureCampaignBanner({
       exit={{ opacity: 0, height: 0 }}
       transition={{ duration: 0.5, delay: 0.5, bounce: 0, ease: 'easeIn' }}
     >
-      <div {...styles.wrapper}>
-        <div
-          {...css({
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'flex-start',
-            gap: 16,
-          })}
-        >
-          <h2 {...styles.heading}>
-            Dank {sender} Verlegerinnen wurde die Republik um {receiver} Stimmen
-            reicher.{' '}
-          </h2>
-          <button
-            {...plainButtonRule}
-            {...styles.action}
-            onClick={() => {
-              router.push('/verstaerkung-holen')
-              handleAcknowledge()
-            }}
+      <Center>
+        <div {...styles.wrapper}>
+          <div
+            {...css({
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'flex-start',
+              gap: 16,
+            })}
           >
-            Noch {daysLeft} Tage Verstärkung holen und Gratismonate sichern.
-          </button>
+            <h2 {...styles.heading}>
+              Dank {sender} Verlegerinnen wurde die Republik um {receiver}{' '}
+              Stimmen reicher.{' '}
+            </h2>
+            <button
+              {...plainButtonRule}
+              {...styles.action}
+              onClick={() => {
+                router.push('/verstaerkung-holen')
+                handleAcknowledge()
+              }}
+            >
+              Noch {daysLeft} Tage Verstärkung holen und Gratismonate sichern.
+            </button>
+          </div>
+          <div {...styles.close}>
+            <IconButton
+              Icon={CloseIcon}
+              size={24}
+              onClick={() => {
+                handleAcknowledge()
+              }}
+            />
+          </div>
         </div>
-        <div {...styles.close}>
-          <IconButton
-            Icon={CloseIcon}
-            size={24}
-            onClick={() => {
-              handleAcknowledge()
-            }}
-          />
-        </div>
-      </div>
+      </Center>
     </motion.div>
   )
 }
@@ -107,10 +110,10 @@ const styles = {
     display: 'flex',
     flexDirection: 'row',
     gap: 0,
-    padding: '24px 25px',
+    padding: '24px 0',
     [mediaQueries.mUp]: {
       gap: 16,
-      padding: '43px 158px',
+      padding: '43px 0',
     },
   }),
   heading: css({
