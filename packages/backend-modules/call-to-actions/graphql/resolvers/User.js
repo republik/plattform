@@ -6,10 +6,10 @@ const { getCache } = require('../../lib/cache')
 
 module.exports = {
   callToActions: async (user, args, context) => {
-    const { user: me } = context
+    const { user: me, t } = context
 
     if (!Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter'])) {
-      throw new Error('api/call-to-actions/notAllowed')
+      throw new Error(t('api/call-to-actions/notAllowed'))
     }
 
     return getCache(user.id, context).cache(async () => {
