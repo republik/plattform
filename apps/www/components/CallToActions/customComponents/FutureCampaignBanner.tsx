@@ -13,6 +13,14 @@ import { useMemo, useState } from 'react'
 import { withDarkMode } from '../../FutureCampaign/withDarkMode'
 import { CATComponentBaseProps } from '../CustomComponentBase'
 
+const HIDE_ON_PATHNAMES: string[] = [
+  '/404',
+  '/angebote',
+  '/abgang',
+  '/cockpit',
+  '/verstaerkung-holen',
+]
+
 function FutureCampaignBanner({
   callToAction,
   handleAcknowledge,
@@ -33,7 +41,8 @@ function FutureCampaignBanner({
     return days
   }, [callToAction.endAt])
 
-  const showBanner = router.asPath !== '/verstaerkung-holen' && visitedPageTop
+  const showBanner =
+    !HIDE_ON_PATHNAMES.includes(router.pathname) && visitedPageTop
 
   return (
     <motion.div
