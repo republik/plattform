@@ -15,7 +15,12 @@ type CallToAction {
 }
 
 type CallToActionPayload {
-  customComponent: String!
+  customComponent: CallToActionPayloadCustomComponent!
+}
+
+type CallToActionPayloadCustomComponent {
+  key: String!
+  args: JSON
 }
 
 extend type User {
