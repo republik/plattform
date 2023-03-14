@@ -2,7 +2,7 @@ import { RefObject, useEffect, useState } from 'react'
 
 /**
  * Create an IntersectionObserver to detect when an element is visible in the viewport.
- * Once can either use the returned boolean value or the callback function to get the visibility
+ * The returned boolean value or the callback function can be used to retrieve the visibility
  * of the element.
  *
  * @param ref element to observe
