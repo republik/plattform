@@ -15,7 +15,6 @@ module.exports = {
     return getCache(user.id, context).cache(async () => {
       const now = dayjs()
 
-      // Find oldest callToActions row by oldest beginAt
       return context.pgdb.public.callToActions.find(
         {
           userId: user.id,
