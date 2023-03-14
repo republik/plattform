@@ -28,8 +28,8 @@ import { useTranslation } from '../../lib/withT'
 import { useInNativeApp } from '../../lib/withInNativeApp'
 import LegacyAppNoticeBox from './LegacyAppNoticeBox'
 import { useMe } from '../../lib/context/MeContext'
-import { climateColors } from '../Climatelab/config'
 import { checkRoles } from '../../lib/apollo/withMe'
+import CallToActionBanner from '../CallToActions/CallToActionBanner'
 
 css.global('html', { boxSizing: 'border-box' })
 css.global('*, *:before, *:after', { boxSizing: 'inherit' })
@@ -204,8 +204,9 @@ const Frame = ({
               <OptionalContentBackground
                 hasCustomColorContext={!!customContentColorContext}
               >
+                <CallToActionBanner />
                 {raw ? (
-                  children
+                  <>{children}</>
                 ) : (
                   <MainContainer maxWidth={containerMaxWidth}>
                     <Content>{children}</Content>
