@@ -45,17 +45,20 @@ function FutureCampaignBanner({
   const showBanner =
     !HIDE_ON_PATHNAMES.includes(router.pathname) && visitedPageTop
 
-  const { sender, receiver } = callToAction.payload.customComponent.args
+  const { sender = 834, receiver = '1’944' } =
+    callToAction?.payload?.customComponent?.args || {}
 
   return (
     <motion.div
       {...colorScheme.set('backgroundColor', 'default')}
       {...colorScheme.set('color', 'text')}
+      {...colorScheme.set('borderColor', 'divider')}
       style={{
         overflow: 'hidden',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
+        borderBottom: '1px solid',
       }}
       initial={{ opacity: 0, height: 0 }}
       animate={showBanner ? { opacity: 1, height: 'auto' } : undefined}
