@@ -62,7 +62,7 @@ function FutureCampaignBanner({
 
   const showBanner = !HIDE_ON_PATHNAMES.includes(router.pathname)
 
-  const { sender = 834, receiver = '1’944' } =
+  const { sender = '1162', receiver = '2121' } =
     callToAction?.payload?.customComponent?.args || {}
 
   if (!showBanner) {
