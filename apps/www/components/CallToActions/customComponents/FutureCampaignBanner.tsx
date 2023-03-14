@@ -119,7 +119,7 @@ function FutureCampaignBanner({
             >
               {t.pluralize(
                 'CallToActions/customComponents/FutureCampaignBanner/button',
-                { count: 0, daysLeft },
+                { count: daysLeft, daysLeft },
               )}
             </button>
           </div>
