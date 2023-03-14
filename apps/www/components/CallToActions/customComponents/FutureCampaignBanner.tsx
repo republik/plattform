@@ -10,9 +10,10 @@ import {
 import { motion } from 'framer-motion'
 import { css } from 'glamor'
 import { useRouter } from 'next/router'
-import { useMemo, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import { withDarkMode } from '../../FutureCampaign/withDarkMode'
 import { CATComponentBaseProps } from '../CustomComponentBase'
+import { useIntersectionObserver } from '../../../lib/hooks/useIntersectionObserver'
 
 const HIDE_ON_PATHNAMES: string[] = [
   '/404',
@@ -22,21 +23,29 @@ const HIDE_ON_PATHNAMES: string[] = [
   '/verstaerkung-holen',
 ]
 
+// we want to ensure that the banner is only animated once per page reload
+let campaignBannerHasBeenRenderd = false
+
 function FutureCampaignBanner({
   callToAction,
   handleAcknowledge,
 }: CATComponentBaseProps) {
   const [colorScheme] = useColorContext()
   const router = useRouter()
-  // TODO: use intersection observer to check if the motion-div is in the top 50 % of the viewpoert
-  // if so set visitedPageTop to true -> show the banner
-  // this will prevent the banner from showing up on the first page load
-  // if the user is somewhere in the middle of the page
+  const elemRef = useRef<HTMLDivElement>(null)
+  const [renderedCta, setRenderedCTA] = useState<boolean>(
+    campaignBannerHasBeenRenderd,
+  )
+  // Keep tack on whether the banner has been in the viewport
+  // Only aniamte in the banner once the page top has been visited
   const [visitedPageTop, setVisitedPageTop] = useState(true)
-  // Keep track on whether the banner has been rendered before
-  // if so we don't want to animate it in again.
-  const [renderedCta, setRenderedCTA] = useState<boolean>(() => {
-    return Boolean(sessionStorage.getItem(`cta-${callToAction.id}`))
+  useIntersectionObserver(elemRef, {
+    callback(isIntersecting) {
+      if (isIntersecting) setVisitedPageTop(isIntersecting)
+    },
+    intersectionObserverOptions: {
+      threshold: 0.5,
+    },
   })
 
   const daysLeft = useMemo(() => {
@@ -53,8 +62,13 @@ function FutureCampaignBanner({
   const { sender = 834, receiver = '1’944' } =
     callToAction?.payload?.customComponent?.args || {}
 
+  if (!visitedPageTop) {
+    return null
+  }
+
   return (
     <motion.div
+      ref={elemRef}
       {...colorScheme.set('backgroundColor', 'default')}
       {...colorScheme.set('color', 'text')}
       {...colorScheme.set('borderColor', 'divider')}
@@ -65,15 +79,17 @@ function FutureCampaignBanner({
         alignItems: 'center',
         borderBottom: '1px solid',
       }}
-      initial={!renderedCta ? { opacity: 0, height: 0 } : undefined}
-      animate={
-        !renderedCta && showBanner ? { opacity: 1, height: 'auto' } : undefined
+      initial={
+        renderedCta ? { opacity: 1, height: 'auto' } : { opacity: 0, height: 0 }
+      }
+      animate={showBanner ? { opacity: 1, height: 'auto' } : undefined}
+      exit={
+        renderedCta ? { opacity: 1, height: 'auto' } : { opacity: 0, height: 0 }
       }
       onAnimationComplete={() => {
-        sessionStorage.setItem(`cta-${callToAction.id}`, 'true')
+        campaignBannerHasBeenRenderd = true
         setRenderedCTA(true)
       }}
-      exit={!renderedCta ? { opacity: 0, height: 0 } : undefined}
       transition={{ duration: 0.5, delay: 0.5, bounce: 0, ease: 'easeIn' }}
     >
       <Center>
