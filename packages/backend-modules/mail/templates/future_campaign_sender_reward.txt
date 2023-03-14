@@ -20,7 +20,7 @@ Deshalb: Laden Sie gerne auch Ihre Nachbarin, Ihren Kindergartenfreund, Ihre
 Arbeits- oder Vereinskollegen ein. Den persönlichen Link finden Sie auf dieser
 Seite {{link_sender_page}} .
 
-Merci für Ihre Zeit und Ihre Unterstützung!
+Merci für Ihre Zeit, Ihre Hilfe, Ihre Überzeugungskraft.
 
 Und als Hinweis für alle, die Köpfe und Dinge sammeln: Sobald Sie alle 5
 möglichen Mitstreiterinnen an Bord geholt haben, schicken wir Ihnen als
@@ -47,9 +47,8 @@ vergeben.
 Vielleicht wäre das etwas für Ihren Coiffeur, Ihre Skilehrerin, Ihre Yoga- oder
 Pokerrunde, Ihren Hausarzt?
 
-Finden Sie es heraus, indem Sie ihnen einen Link zum Angebot schicken.
-
-{{link_sender_page}}
+Finden Sie es heraus {{link_sender_page}} , indem Sie ihnen einen Link zum
+Angebot schicken.
 
 Unabhängiger Journalismus hat eine Zukunft, dank Ihnen.
 
@@ -103,6 +102,9 @@ Herzliche Gratulation: Sie haben 5 Mitstreiterinnen an Bord geholt!
 {{link_sender_page}}
 
 {{receiver}} hat Ihr letztes Mitstreiter-Abo ergattert.
+
+Und Sie: als meisterhafter Sammler das Sammlerinnen-Stück – die
+Republik-Jubiläums-Tasche.
 
 Dank dem Engagement von Menschen wie Ihnen hat unabhängiger Journalismus eine
 Zukunft. Wir freuen uns darauf und werden hart daran arbeiten, die fünf neuen
