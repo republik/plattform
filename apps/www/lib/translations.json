@@ -7881,11 +7881,11 @@
     },
     {
       "key": "CallToActions/customComponents/FutureCampaignBanner/headline",
-      "value": "Dank {sender} Verlegerinnen ist die Republik um {receiver} Stimmen reicher geworden."
+      "value": "Dank {sender} Verlegerinnen ist die Republik um {receiver} Stimmen reicher geworden."
     },
     {
       "key": "CallToActions/customComponents/FutureCampaignBanner/button/other",
-      "value": "Noch {daysLeft} Tage Verstärkung holen und Gratismonate sichern"
+      "value": "Noch {daysLeft} Tage Verstärkung holen und Gratismonate sichern"
     },
     {
       "key": "CallToActions/customComponents/FutureCampaignBanner/button/1",

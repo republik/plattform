@@ -146,20 +146,21 @@ const styles = {
     display: 'flex',
     flexDirection: 'row',
     gap: 0,
-    padding: '24px 0',
+    padding: '12px 0 18px',
     [mediaQueries.mUp]: {
       gap: 16,
-      padding: '43px 0',
+      padding: '28px 0 32px',
     },
   }),
   heading: css({
     gridColumn: 1,
     gridRow: 1,
     margin: 0,
-    ...fontStyles.serifTitle26,
+    ...fontStyles.sansSerifMedium20,
     lineHeight: 1.3,
     [mediaQueries.mUp]: {
-      ...fontStyles.serifTitle38,
+      ...fontStyles.sansSerifMedium26,
+      lineHeight: 1.2,
     },
   }),
   action: css({
