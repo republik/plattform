@@ -33,6 +33,11 @@ function FutureCampaignBanner({
   // this will prevent the banner from showing up on the first page load
   // if the user is somewhere in the middle of the page
   const [visitedPageTop, setVisitedPageTop] = useState(true)
+  // Keep track on whether the banner has been rendered before
+  // if so we don't want to animate it in again.
+  const [renderedCta, setRenderedCTA] = useState<boolean>(() => {
+    return Boolean(sessionStorage.getItem(`cta-${callToAction.id}`))
+  })
 
   const daysLeft = useMemo(() => {
     const now = new Date()
@@ -60,9 +65,15 @@ function FutureCampaignBanner({
         alignItems: 'center',
         borderBottom: '1px solid',
       }}
-      initial={{ opacity: 0, height: 0 }}
-      animate={showBanner ? { opacity: 1, height: 'auto' } : undefined}
-      exit={{ opacity: 0, height: 0 }}
+      initial={!renderedCta ? { opacity: 0, height: 0 } : undefined}
+      animate={
+        !renderedCta && showBanner ? { opacity: 1, height: 'auto' } : undefined
+      }
+      onAnimationComplete={() => {
+        sessionStorage.setItem(`cta-${callToAction.id}`, 'true')
+        setRenderedCTA(true)
+      }}
+      exit={!renderedCta ? { opacity: 0, height: 0 } : undefined}
       transition={{ duration: 0.5, delay: 0.5, bounce: 0, ease: 'easeIn' }}
     >
       <Center>
