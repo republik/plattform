@@ -1,4 +1,4 @@
-import { RefObject, useEffect, useState } from 'react'
+import { RefObject, useEffect, useRef, useState } from 'react'
 
 /**
  * Create an IntersectionObserver to detect when an element is visible in the viewport.
@@ -18,16 +18,31 @@ export function useIntersectionObserver(
     callback?: (isIntersecting: boolean) => void
   },
 ): [boolean, Pick<IntersectionObserver, 'root' | 'rootMargin' | 'thresholds'>] {
+  const { root, rootMargin, threshold } = options.intersectionObserverOptions
   const [isVisible, setIsVisible] = useState(false)
   const [observer, setObserver] = useState<IntersectionObserver>()
+  const callbackRef = useRef<(val: boolean) => void>()
+
+  // For performance reasons we store the callback function in a ref
+  // to ensure the intersection observer is not recreated on every render
+  useEffect(() => {
+    callbackRef.current = options?.callback
+  }, [options?.callback])
 
   useEffect(() => {
-    const observer = new IntersectionObserver(([entry]) => {
-      if (options?.callback) {
-        options.callback(entry.isIntersecting)
-      }
-      setIsVisible(entry.isIntersecting)
-    }, options?.intersectionObserverOptions)
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (callbackRef.current) {
+          callbackRef.current(entry.isIntersecting)
+        }
+        setIsVisible(entry.isIntersecting)
+      },
+      {
+        root,
+        rootMargin,
+        threshold,
+      },
+    )
     setObserver(observer)
 
     const target = ref?.current
@@ -41,7 +56,7 @@ export function useIntersectionObserver(
         observer.unobserve(target)
       }
     }
-  }, [options?.callback, options?.intersectionObserverOptions, ref])
+  }, [ref?.current, root, rootMargin, threshold])
 
   return [
     isVisible,
