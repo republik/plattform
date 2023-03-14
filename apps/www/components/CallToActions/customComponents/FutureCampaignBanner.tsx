@@ -102,8 +102,8 @@ function FutureCampaignBanner({
             })}
           >
             <h2 {...styles.heading}>
-              Dank {sender} Verlegerinnen wurde die Republik um {receiver}{' '}
-              Stimmen reicher.{' '}
+              Dank {sender} Verlegerinnen ist die Republik um {receiver} Stimmen
+              reicher geworden.{' '}
             </h2>
             <button
               {...plainButtonRule}
