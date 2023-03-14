@@ -1,10 +1,8 @@
 const { ensureSignedIn } = require('@orbiting/backend-modules-auth')
 
-const { getCache } = require('../../../lib/cache')
-
 module.exports = async (_, args, context) => {
   const { id, response } = args
-  const { req, pgdb, t, user: me } = context
+  const { req, pgdb, redis, t, user: me } = context
 
   ensureSignedIn(req)
 
@@ -32,7 +30,9 @@ module.exports = async (_, args, context) => {
 
     await tx.transactionCommit()
 
-    await getCache(cta.userId, context).invalidate()
+    await redis
+      .delAsync(`crowdfundings:cache:User:${cta.userId}:callToActions`)
+      .catch(() => null)
 
     return updatedCta
   } catch (err) {
