@@ -32,7 +32,6 @@ export default function CallToActionBanner() {
     <Component
       callToAction={callToAction}
       handleAcknowledge={async () => {
-        console.log('handleAcknowledge')
         handleAcknowledge({
           variables: {
             id: callToAction.id,
@@ -45,7 +44,7 @@ export default function CallToActionBanner() {
               response: null,
             },
           },
-        }).then(() => refetch())
+        })
       }}
     />
   )

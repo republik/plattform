@@ -38,10 +38,12 @@ function FutureCampaignBanner({
   )
   // Keep tack on whether the banner has been in the viewport
   // Only aniamte in the banner once the page top has been visited
-  const [visitedPageTop, setVisitedPageTop] = useState(true)
+  const [visitedPageTop, setVisitedPageTop] = useState(false)
   useIntersectionObserver(elemRef, {
-    callback(isIntersecting) {
-      if (isIntersecting) setVisitedPageTop(isIntersecting)
+    callback: (value: boolean) => {
+      if (value) {
+        setVisitedPageTop(true)
+      }
     },
     intersectionObserverOptions: {
       threshold: 0.5,
@@ -56,13 +58,12 @@ function FutureCampaignBanner({
     return days
   }, [callToAction.endAt])
 
-  const showBanner =
-    !HIDE_ON_PATHNAMES.includes(router.pathname) && visitedPageTop
+  const showBanner = !HIDE_ON_PATHNAMES.includes(router.pathname)
 
   const { sender = 834, receiver = '1’944' } =
     callToAction?.payload?.customComponent?.args || {}
 
-  if (!visitedPageTop) {
+  if (!showBanner) {
     return null
   }
 
@@ -77,20 +78,18 @@ function FutureCampaignBanner({
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        borderBottom: '1px solid',
+        // Hide border on front
+        borderBottom: router.pathname !== '/front' ? '1px solid' : '0px solid',
       }}
       initial={
         renderedCta ? { opacity: 1, height: 'auto' } : { opacity: 0, height: 0 }
       }
-      animate={showBanner ? { opacity: 1, height: 'auto' } : undefined}
-      exit={
-        renderedCta ? { opacity: 1, height: 'auto' } : { opacity: 0, height: 0 }
-      }
+      animate={visitedPageTop ? { opacity: 1, height: 'auto' } : undefined}
       onAnimationComplete={() => {
         campaignBannerHasBeenRenderd = true
         setRenderedCTA(true)
       }}
-      transition={{ duration: 0.5, delay: 0.5, bounce: 0, ease: 'easeIn' }}
+      transition={{ duration: 0.5, delay: 0.3, bounce: 0, ease: 'easeIn' }}
     >
       <Center>
         <div {...styles.wrapper}>
