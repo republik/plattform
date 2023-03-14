@@ -30,9 +30,9 @@ module.exports = async (_, args, context) => {
       { response, acknowledgedAt: new Date() },
     )
 
-    await getCache(cta.userId, context).invalidate()
-
     await tx.transactionCommit()
+
+    await getCache(cta.userId, context).invalidate()
 
     return updatedCta
   } catch (err) {
