@@ -7878,6 +7878,22 @@
     {
       "key": "ClimateInlineTeaser/Member/content/link",
       "value": "zum Klimalabor"
+    },
+    {
+      "key": "CallToActions/customComponents/FutureCampaignBanner/headline",
+      "value": "Dank {sender} Verlegerinnen ist die Republik um {receiver} Stimmen reicher geworden."
+    },
+    {
+      "key": "CallToActions/customComponents/FutureCampaignBanner/button/other",
+      "value": "Noch {daysLeft} Tage Verstärkung holen und Gratismonate sichern"
+    },
+    {
+      "key": "CallToActions/customComponents/FutureCampaignBanner/button/1",
+      "value": "Noch heute Verstärkung holen und Gratismonate sichern"
+    },
+    {
+      "key": "CallToActions/customComponents/FutureCampaignBanner/button/0",
+      "value": "Noch heute Verstärkung holen und Gratismonate sichern"
     }
   ]
 }

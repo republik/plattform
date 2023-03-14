@@ -14,6 +14,7 @@ import { useMemo, useRef, useState } from 'react'
 import { withDarkMode } from '../../FutureCampaign/withDarkMode'
 import { CATComponentBaseProps } from '../CustomComponentBase'
 import { useIntersectionObserver } from '../../../lib/hooks/useIntersectionObserver'
+import { useTranslation } from '../../../lib/withT'
 
 const HIDE_ON_PATHNAMES: string[] = [
   '/404',
@@ -31,6 +32,7 @@ function FutureCampaignBanner({
   handleAcknowledge,
 }: CATComponentBaseProps) {
   const [colorScheme] = useColorContext()
+  const { t } = useTranslation()
   const router = useRouter()
   const elemRef = useRef<HTMLDivElement>(null)
   const [renderedCta, setRenderedCTA] = useState<boolean>(
@@ -102,8 +104,10 @@ function FutureCampaignBanner({
             })}
           >
             <h2 {...styles.heading}>
-              Dank {sender} Verlegerinnen ist die Republik um {receiver} Stimmen
-              reicher geworden.{' '}
+              {t(
+                'CallToActions/customComponents/FutureCampaignBanner/headline',
+                { sender, receiver },
+              )}
             </h2>
             <button
               {...plainButtonRule}
@@ -113,7 +117,10 @@ function FutureCampaignBanner({
                 handleAcknowledge()
               }}
             >
-              Noch {daysLeft} Tage Verstärkung holen und Gratismonate sichern.
+              {t.pluralize(
+                'CallToActions/customComponents/FutureCampaignBanner/button',
+                { count: 0, daysLeft },
+              )}
             </button>
           </div>
           <div {...styles.close}>
