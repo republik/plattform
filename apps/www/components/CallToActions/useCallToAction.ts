@@ -20,15 +20,7 @@ export default function useCallToAction(): {
 } {
   const { data, loading, error, refetch } = useCallToActionsQuery()
   const callToActions = data?.me?.callToActions
-  const activeCTA: CallToAction = useMemo(() => {
-    if (!callToActions || callToActions.length === 0) {
-      return undefined
-    }
-    // TODO: Even with the optimistic update when dismissing a CTA, the CTA
-    // is still returned with the find function below.
-    // As a workaround, we refetch the ctas atm. but this is not ideal.
-    return callToActions.find((cta) => !cta.acknowlegedAt)
-  }, [JSON.stringify(callToActions)])
+  const activeCTA = callToActions?.find((cta) => !cta.acknowledgedAt)
 
   return {
     data: activeCTA,

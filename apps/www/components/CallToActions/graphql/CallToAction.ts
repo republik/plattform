@@ -2,15 +2,13 @@ export type CallToAction = {
   id: string
   beginAt: string
   endAt?: string
-  acknowlegedAt?: string
+  acknowledgedAt?: string
   updatedAt: string
   createdAt: string
   payload: {
     customComponent: {
       key: string
-      args?: {
-        [key: string]: unknown
-      }
+      args?: Record<string, unknown>
     }
   }
   response?: unknown

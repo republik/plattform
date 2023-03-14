@@ -41,7 +41,7 @@ export default function CallToActionBanner() {
           optimisticResponse: {
             acknowledgeCallToAction: {
               ...callToAction,
-              acknowlegedAt: new Date().toISOString(),
+              acknowledgedAt: new Date().toISOString(),
               response: null,
             },
           },
