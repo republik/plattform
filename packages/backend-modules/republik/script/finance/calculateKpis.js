@@ -283,7 +283,7 @@ const evaluateCompanyMonth = async (
         .filter((i) => i.createdAt >= begin && i.createdAt < end)
         .filter((i) => i.companyName === company)
         .filter((i) => i.method === method)
-        .filter((i) => ['MONTHLY_ABO', 'YEARLY_ABO'].includes(i.packageName))
+        .filter((i) => ['MONTHLY_ABO'].includes(i.packageName))
         .filter((i) => i.type === 'MembershipType')
 
       results.Abonnements = {
@@ -306,7 +306,7 @@ const evaluateCompanyMonth = async (
         .filter((i) => i.updatedAt >= begin && i.updatedAt < end)
         .filter((i) => i.companyName === company)
         .filter((i) => i.method === method)
-        .filter((i) => ['MONTHLY_ABO', 'YEARLY_ABO'].includes(i.packageName))
+        .filter((i) => ['MONTHLY_ABO'].includes(i.packageName))
         .filter((i) => i.type === 'MembershipType')
         .filter((i) => ['CANCELLED', 'REFUNDED'].includes(i.status))
 
@@ -317,34 +317,6 @@ const evaluateCompanyMonth = async (
         Betrag:
           StornierteAbonnements.map(
             (m) => m.amount * (m.periods || 1) * m.price,
-          ).reduce((p, c) => p - c, 0) / 100,
-      }
-
-      /**
-       * Reduzierte Abonnements
-       */
-
-      const ReduzierteAbonnements = Abonnements.filter((m) => m.donation < 0)
-
-      results.ReduzierteAbonnements = {
-        Betrag:
-          ReduzierteAbonnements.map(
-            (m) => m.amount * (m.periods || 1) * m.donation,
-          ).reduce((p, c) => p + c, 0) / 100,
-      }
-
-      /**
-       * Stornierte, reduzierte Abonnements
-       */
-
-      const StornierteReduzierteAbonnements = StornierteAbonnements.filter(
-        (m) => m.donation < 0,
-      )
-
-      results.StornierteReduzierteAbonnements = {
-        Betrag:
-          StornierteReduzierteAbonnements.map(
-            (m) => m.amount * (m.periods || 1) * m.donation,
           ).reduce((p, c) => p - c, 0) / 100,
       }
 
@@ -388,6 +360,74 @@ const evaluateCompanyMonth = async (
         Betrag:
           StornierteMonatsgeschenkabos.map(
             (m) => m.amount * (m.periods || 1) * m.price,
+          ).reduce((p, c) => p - c, 0) / 100,
+      }
+
+      /**
+       * Jahresabonnements (YEARLY_ABO)
+       */
+
+      const Jahresabonnements = transactionItems
+        .filter((i) => i.createdAt >= begin && i.createdAt < end)
+        .filter((i) => i.companyName === company)
+        .filter((i) => i.method === method)
+        .filter((i) => ['YEARLY_ABO'].includes(i.packageName))
+        .filter((i) => i.type === 'MembershipType')
+
+      results.JahresabonnementsAktuellesGeschaeftsjahr = {
+        Betrag:
+          Jahresabonnements.map((a) => a.precomputed.totalFiscalYear).reduce(
+            (p, c) => p + c,
+            0,
+          ) / 100,
+      }
+      results.JahresabonnementsTransitorischePassive = {
+        Betrag:
+          Jahresabonnements.map(
+            (a) => a.precomputed.totalTransitoryLiabilites,
+          ).reduce((p, c) => p + c, 0) / 100,
+      }
+
+      /**
+       * Stornierte Jahresabonnements (YEARLY_ABO)
+       */
+      const StornierteJahresabonnements = transactionItems
+        .filter((i) => i.updatedAt >= begin && i.updatedAt < end)
+        .filter((i) => i.companyName === company)
+        .filter((i) => i.method === method)
+        .filter((i) => ['YEARLY_ABO'].includes(i.packageName))
+        .filter((i) => i.type === 'MembershipType')
+        .filter((i) => ['CANCELLED', 'REFUNDED'].includes(i.status))
+
+      /**
+       * SAFETY MEASURE, a rather dirty one. Computing a cancellation
+       * of a YEARLY_ABO outside fiscal year it was bought requires
+       * some more code changes:
+       *
+       * Instead of splitting cancellation to AktuellesGeschaeftsjahr
+       * and TransitorischePassive, full amount should wander into
+       * AktuellesGeschaeftsjahr.
+       *
+       */
+      StornierteJahresabonnements.forEach((a) => {
+        if (endFiscalYear.isBefore(a.updatedAt)) {
+          console.log(a)
+          throw new Error(
+            'Unhandled: Computing cancellation YEARLY_ABO outside fiscal year it was bought',
+          )
+        }
+      })
+
+      results.StornierteJahresabonnementsAktuellesGeschaeftsjahr = {
+        Betrag:
+          StornierteJahresabonnements.map(
+            (a) => a.precomputed.totalFiscalYear,
+          ).reduce((p, c) => p - c, 0) / 100,
+      }
+      results.StornierteJahresabonnementsTransitorischePassive = {
+        Betrag:
+          StornierteJahresabonnements.map(
+            (a) => a.precomputed.totalTransitoryLiabilites,
           ).reduce((p, c) => p - c, 0) / 100,
       }
     }
