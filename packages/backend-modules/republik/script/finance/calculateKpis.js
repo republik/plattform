@@ -1,8 +1,11 @@
 require('@orbiting/backend-modules-env').config()
 const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
-const moment = require('moment')
+const dayjs = require('dayjs')
+const duration = require('dayjs/plugin/duration')
 const _ = require('lodash')
 const yargs = require('yargs')
+
+dayjs.extend(duration)
 
 const argv = yargs
   .option('company', {
@@ -13,14 +16,14 @@ const argv = yargs
   .option('begin', {
     alias: 'b',
     describe: '(day in) first month e.g. 2019-02-01',
-    coerce: moment,
-    default: moment().subtract(1, 'month'),
+    coerce: dayjs,
+    default: dayjs().subtract(1, 'month'),
   })
   .option('end', {
     alias: 'e',
     describe: '(day in) last month e.g. 2019-03-01',
-    coerce: moment,
-    default: moment().subtract(1, 'month'),
+    coerce: dayjs,
+    default: dayjs().subtract(1, 'month'),
   })
   .help()
   .version().argv
