@@ -233,13 +233,21 @@ const AudioPlaybackElement = ({
     return () => setWebHandlers(null)
   }, [])
 
-  useMediaSession(activeItem, isPlaying, {
-    onPlay,
-    onPause,
-    onSeekForward: () => onForward(30),
-    onSeekBackward: () => onBackward(10),
-    onSkipToNext: () => onSkipToNext(),
-    onStop: () => onClose(),
+  useMediaSession(activeItem, {
+    isPlaying,
+    callbacks: {
+      onPlay,
+      onPause,
+      onSeekForward: () => onForward(30),
+      onSeekBackward: () => onBackward(10),
+      onSkipToNext: () => onSkipToNext(),
+      onStop: () => onClose(),
+      onRetrievePlayerState: () => ({
+        currentTime: mediaRef.current?.currentTime || 0,
+        duration: mediaRef.current?.duration || 0,
+        playbackRate: mediaRef.current?.playbackRate || 1,
+      }),
+    },
   })
 
   const {
