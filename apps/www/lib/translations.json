@@ -7008,6 +7008,10 @@
       "value": "Noch etwas Handfestes?"
     },
     {
+      "key": "Goodies/note/delivery",
+      "value": "Versand nur in die Schweiz und Liechtenstein möglich"
+    },
+    {
       "key": "Goodie/dropdown/label",
       "value": "Anzahl"
     },
@@ -7041,7 +7045,7 @@
     },
     {
       "key": "Goodie/description/MUG",
-      "value": "Mit Logo und Claim «Ohne Journalismus keine Demokratie». Lieferung innerhalb von 10 Werktagen. Nur innerhalb der Schweiz möglich."
+      "value": "Mit Logo und Claim «Ohne Journalismus keine Demokratie». Lieferung innerhalb von 10 Werktagen."
     },
     {
       "key": "Goodie/label/MUG_CERAMIC",
@@ -7049,7 +7053,7 @@
     },
     {
       "key": "Goodie/description/MUG_CERAMIC",
-      "value": "Mit Logo und Claim «Ohne Journalismus keine Demokratie». Lieferung innerhalb von 10 Werktagen. Nur innerhalb der Schweiz möglich."
+      "value": "Mit Logo und Claim «Ohne Journalismus keine Demokratie». Lieferung innerhalb von 10 Werktagen."
     },
     {
       "key": "option/TABLEBOOK/label/other",
