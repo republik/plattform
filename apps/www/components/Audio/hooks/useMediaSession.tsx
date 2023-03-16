@@ -80,15 +80,16 @@ export function useMediaSession(
         })
         mediaSession.setActionHandler('seekto', ({ seekTime }) => {
           const { duration } = callbackRefs.current.onRetrievePlayerState()
-          if (duration > seekTime) {
-            callbackRefs.current.onSeekTo(seekTime / duration)
+          if (duration >= seekTime) {
+            callbackRefs.current.onSeekTo(
+              Math.round((seekTime / duration) * 100) / 100,
+            )
           } else {
             console.warn('Seeking to a position outside of the duration', {
               seekTime,
               duration,
             })
           }
-
           updatePlayerState()
         })
         mediaSession.setActionHandler('seekforward', ({ seekOffset }) => {
@@ -110,6 +111,7 @@ export function useMediaSession(
       }
     } else {
       mediaSession.playbackState = 'none'
+      mediaSession.metadata = null
     }
 
     return () => {
