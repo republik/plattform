@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef } from 'react'
+import { CDN_FRONTEND_BASE_URL } from '../../../lib/constants'
 import { getImageCropURL } from '../AudioPlayer/ui/AudioCover'
 import { AudioQueueItem } from '../graphql/AudioQueueHooks'
 
@@ -49,11 +50,6 @@ export function useMediaSession(
       return
     }
     const mediaSession = navigator.mediaSession
-    console.debug({
-      playerItem,
-      isPlaying,
-      mediaSession,
-    })
 
     mediaSession.metadata = new MediaMetadata({
       title: playerItem.document?.meta?.title || 'Ein Beitrag der Republik',
@@ -122,7 +118,8 @@ function getMediaImage(audioItem: AudioQueueItem, size: number) {
   return {
     src:
       getImageCropURL(
-        audioItem.document.meta.image,
+        audioItem.document.meta.image ||
+          CDN_FRONTEND_BASE_URL + '/static/audioplayer-fallback.png',
         size,
         audioItem.document.meta.audioCoverCrop,
       ) + '&format=png',
