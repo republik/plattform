@@ -49,13 +49,8 @@ const AudioCover = ({
       <img {...styles.cover} src={cover} style={{ width: size }} alt={alt} />
     )
   } else if (imageUrl) {
-    let resizeUrl
-    if (audioCoverCrop) {
-      const { x, y, width: w, height: h } = audioCoverCrop
-      resizeUrl = `${imageUrl}&crop=${x}x${y}y${w}w${h}h&resize=${size * 2}x`
-    } else {
-      resizeUrl = `${imageUrl}&resize=${getResizefromURL(imageUrl, size * 2)}`
-    }
+    const resizeUrl = getImageCropURL(imageUrl, size * 2, audioCoverCrop)
+
     return (
       <img
         src={resizeUrl || imageUrl}
@@ -69,3 +64,23 @@ const AudioCover = ({
 }
 
 export default AudioCover
+
+/**
+ * Get a resized and cropped image url
+ * @param imageUrl image to crop
+ * @param size defines the width and height of the image
+ * @param audioCoverCrop crop parameters
+ * @returns image url with crop and resize parameters
+ */
+export function getImageCropURL(
+  imageUrl: string,
+  size: number,
+  audioCoverCrop?: AudioCoverProps['audioCoverCrop'],
+) {
+  if (audioCoverCrop) {
+    const { x, y, width: w, height: h } = audioCoverCrop
+    return `${imageUrl}&crop=${x}x${y}y${w}w${h}h&resize=${size}x`
+  } else {
+    return `${imageUrl}&resize=${getResizefromURL(imageUrl, size)}`
+  }
+}
