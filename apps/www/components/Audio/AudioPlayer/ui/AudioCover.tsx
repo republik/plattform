@@ -27,6 +27,10 @@ const styles = {
 const getResizefromURL = (url, size) => {
   const imgURL = new URL(url)
   const sizeString = imgURL.searchParams.get('size')
+  if (!sizeString) {
+    return `${size}x`
+  }
+
   const [w, h] = sizeString.split('x')
 
   if (w >= h) {
@@ -77,10 +81,16 @@ export function getImageCropURL(
   size: number,
   audioCoverCrop?: AudioCoverProps['audioCoverCrop'],
 ) {
+  const url = new URL(imageUrl)
+  if (!url.searchParams.has('size')) {
+    url.searchParams.set('size', `${size}x${size}`)
+  }
   if (audioCoverCrop) {
     const { x, y, width: w, height: h } = audioCoverCrop
-    return `${imageUrl}&crop=${x}x${y}y${w}w${h}h&resize=${size}x`
+    url.searchParams.set('crop', `${x}x${y}y${w}w${h}h`)
+    url.searchParams.set('resize', `${size}x`)
   } else {
-    return `${imageUrl}&resize=${getResizefromURL(imageUrl, size)}`
+    url.searchParams.set('resize', getResizefromURL(imageUrl, size))
   }
+  return url.toString()
 }
