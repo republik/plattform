@@ -30,7 +30,7 @@ const argv = yargs
 
 const METHODS = ['PAYMENTSLIP', 'STRIPE', 'POSTFINANCECARD', 'PAYPAL']
 
-const currency = new Intl.NumberFormat('de-DE', {
+const currency = new Intl.NumberFormat('de-CH', {
   minimumFractionDigits: 2,
   useGrouping: false,
 })
