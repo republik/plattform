@@ -1,5 +1,20 @@
 import { ReactNode } from 'react'
+import { ErrorBoundary } from 'react-error-boundary'
 
-export const CodeDemo = ({ children }: { children: ReactNode }) => (
-  <div data-name='CODEDEMO'>{children}</div>
+const ErrorFallback = () => (
+  <div style={{ background: 'hotpink', color: 'white' }}>
+    Oh ho! Something happened here.
+  </div>
+)
+
+export const CodeDemo = ({
+  children,
+  code,
+}: {
+  children: ReactNode
+  code?: string
+}) => (
+  <div data-name='CODEDEMO'>
+    <ErrorBoundary FallbackComponent={ErrorFallback}>{children}</ErrorBoundary>
+  </div>
 )
