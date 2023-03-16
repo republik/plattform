@@ -35,7 +35,13 @@ const currency = new Intl.NumberFormat('de-DE', {
   useGrouping: false,
 })
 
-const evaluateCompanyMonth = async (company, begin, end, pgdb) => {
+const evaluateCompanyMonth = async (
+  company,
+  begin,
+  end,
+  endFiscalYear,
+  pgdb,
+) => {
   const query = `
     SELECT
       pay.id,
@@ -83,7 +89,20 @@ const evaluateCompanyMonth = async (company, begin, end, pgdb) => {
 
   // console.log(query)
 
-  const transactionItems = await pgdb.query(query)
+  const transactionItems = (await pgdb.query(query)).map((i) => {
+    const days = endFiscalYear.diff(i.createdAt, 'days')
+
+    const totalFiscalYear = Math.round((i.total / 365) * days)
+    const totalTransitoryLiabilites = i.total - totalFiscalYear
+
+    return {
+      ...i,
+      precomputed: {
+        totalFiscalYear,
+        totalTransitoryLiabilites,
+      },
+    }
+  })
 
   const data = {}
 
@@ -432,12 +451,20 @@ PgDb.connect()
     )
 
     for (
-      const begin = argv.begin.clone().startOf('month');
+      let begin = argv.begin.startOf('month');
       begin <= argv.end;
-      begin.add(1, 'month')
+      begin = begin.add(1, 'month')
     ) {
-      const end = begin.clone().add(1, 'month')
-      await evaluateCompanyMonth(argv.company, begin, end, pgdb)
+      const end = begin.add(1, 'month')
+
+      const month = begin.get('month')
+      const year = begin.get('year')
+      const endFiscalYear = begin
+        .set('year', month <= 5 ? year : year + 1)
+        .endOf('month')
+        .set('month', 5)
+
+      await evaluateCompanyMonth(argv.company, begin, end, endFiscalYear, pgdb)
     }
 
     await pgdb.close()
