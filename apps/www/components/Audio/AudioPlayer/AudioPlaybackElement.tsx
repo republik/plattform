@@ -238,7 +238,6 @@ const AudioPlaybackElement = ({
     callbacks: {
       onPlay,
       onPause,
-      onSeekTo,
       onSeekForward: (seekOffset: number) => onForward(seekOffset),
       onSeekBackward: (seekOffset: number) => onBackward(seekOffset),
       onSkipToNext: () => onSkipToNext(),

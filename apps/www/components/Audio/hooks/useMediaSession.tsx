@@ -12,7 +12,6 @@ type PlayerState = {
 type MediaSessionCallbacks = {
   onPlay: () => void
   onPause: () => void
-  onSeekTo: (x: number) => void
   onSeekForward: (seekOffset: number) => void
   onSeekBackward: (seekOffset: number) => void
   onSkipToNext: () => void
@@ -78,20 +77,6 @@ export function useMediaSession(
           callbackRefs.current.onPause()
           updatePlayerState()
         })
-        mediaSession.setActionHandler('seekto', ({ seekTime }) => {
-          const { duration } = callbackRefs.current.onRetrievePlayerState()
-          if (duration >= seekTime) {
-            callbackRefs.current.onSeekTo(
-              Math.round((seekTime / duration) * 100) / 100,
-            )
-          } else {
-            console.warn('Seeking to a position outside of the duration', {
-              seekTime,
-              duration,
-            })
-          }
-          updatePlayerState()
-        })
         mediaSession.setActionHandler('seekforward', ({ seekOffset }) => {
           callbackRefs.current.onSeekForward(seekOffset || 10)
           updatePlayerState()
@@ -117,7 +102,6 @@ export function useMediaSession(
     return () => {
       mediaSession.setActionHandler('play', null)
       mediaSession.setActionHandler('pause', null)
-      mediaSession.setActionHandler('seekto', null)
       mediaSession.setActionHandler('seekforward', null)
       mediaSession.setActionHandler('seekbackward', null)
       mediaSession.setActionHandler('nexttrack', null)
