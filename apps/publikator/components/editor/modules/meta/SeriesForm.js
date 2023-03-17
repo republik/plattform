@@ -9,11 +9,9 @@ import {
   Dropdown,
   Interaction,
   IconButton,
-  AddIcon,
-  ArrowDownwardIcon,
   HighlightOffIcon,
 } from '@project-r/styleguide'
-import ArrowUpwardIcon from 'react-icons/lib/md/arrow-upward'
+import { AddIcon, ArrowUpwardIcon, ArrowDownwardIcon } from '@republik/icons'
 
 import AutosizeInput from 'react-textarea-autosize'
 
@@ -326,6 +324,7 @@ export default withT(({ t, editor, node, onRepoInputChange, repoId }) => {
                     {i !== 0 && (
                       <IconButton
                         Icon={ArrowUpwardIcon}
+                        size={24}
                         label={t('metaData/series/episodes/up')}
                         onClick={() => {
                           onEpisodeChange(
@@ -340,6 +339,7 @@ export default withT(({ t, editor, node, onRepoInputChange, repoId }) => {
                     )}
                     {i !== episodes.length - 1 && (
                       <IconButton
+                        size={24}
                         Icon={ArrowDownwardIcon}
                         label={t('metaData/series/episodes/down')}
                         onClick={() => {
@@ -356,6 +356,7 @@ export default withT(({ t, editor, node, onRepoInputChange, repoId }) => {
                     <IconButton
                       Icon={HighlightOffIcon}
                       label={t('metaData/series/episodes/rm')}
+                      size={24}
                       onClick={() => {
                         onEpisodeChange(
                           episodes.slice(0, i).concat(episodes.slice(i + 1)),
@@ -394,6 +395,7 @@ export default withT(({ t, editor, node, onRepoInputChange, repoId }) => {
           })}
           <IconButton
             Icon={AddIcon}
+            size={24}
             label={t('metaData/series/episodes/add')}
             onClick={() => {
               onEpisodeChange(

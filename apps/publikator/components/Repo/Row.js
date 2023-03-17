@@ -1,5 +1,7 @@
-import LockIcon from 'react-icons/lib/md/lock'
-import PublicIcon from 'react-icons/lib/md/public'
+import {
+  LockIcon,
+  PublicIcon
+} from '@republik/icons'
 
 import { A, Label, colors } from '@project-r/styleguide'
 

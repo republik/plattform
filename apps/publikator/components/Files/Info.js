@@ -1,5 +1,5 @@
 import { css } from 'glamor'
-import WarningIcon from 'react-icons/lib/md/warning'
+import { WarningIcon } from '@republik/icons'
 
 import { useColorContext } from '@project-r/styleguide'
 

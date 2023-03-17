@@ -1,7 +1,6 @@
 import { Component, Fragment } from 'react'
 import { Query, Mutation } from '@apollo/client/react/components'
 import { gql } from '@apollo/client'
-import { MdModeEdit as EditIcon } from 'react-icons/md'
 
 import {
   Overlay,
@@ -10,6 +9,7 @@ import {
   Loader,
   InlineSpinner,
 } from '@project-r/styleguide'
+import { EditIcon } from '@republik/icons'
 
 import {
   InteractiveSection,

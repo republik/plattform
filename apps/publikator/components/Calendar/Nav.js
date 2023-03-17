@@ -1,6 +1,4 @@
 import { css } from 'glamor'
-import BackIcon from 'react-icons/lib/md/chevron-left'
-import ForthIcon from 'react-icons/lib/md/chevron-right'
 import {
   IconButton,
   fontFamilies,
@@ -8,6 +6,10 @@ import {
 } from '@project-r/styleguide'
 import { datePickerFormat, reformatUrlDate } from '../../lib/utils/calendar'
 import withT from '../../lib/withT'
+import {
+  ChevronLeftIcon,
+  ChevronRightIcon,
+} from '@project-r/styleguide/dist/components/Icons'
 
 const styles = {
   navigation: css({
@@ -38,7 +40,7 @@ export const Nav = ({ children }) => (
 
 export const NavButton = ({ goBack, goForth }) => (
   <IconButton
-    Icon={goBack ? BackIcon : ForthIcon}
+    Icon={goBack ? ChevronLeftIcon : ChevronRightIcon}
     onClick={goBack || goForth}
     style={styles.navButton}
     size={24}
