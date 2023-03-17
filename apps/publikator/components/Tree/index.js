@@ -2,9 +2,9 @@ import { Component } from 'react'
 import { css } from 'glamor'
 
 import {
-  LockOpenIcon as LocalIcon,
-  CheckIcon,
-  GradeIcon as TagIcon,
+  IconLockOpen as LocalIcon,
+  IconCheck,
+  IconGrade as TagIcon,
 } from '@republik/icons'
 
 import { Interaction, Label } from '@project-r/styleguide'
@@ -337,7 +337,7 @@ class Tree extends Component {
                               style={styles.checkIcon}
                             />
                           ) : (
-                            <CheckIcon
+                            <IconCheck
                               color='#000'
                               size={MILESTONEICON_SIZE}
                               style={styles.checkIcon}

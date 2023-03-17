@@ -11,7 +11,7 @@ import EditOverlay from './EditOverlay'
 import dynamicComponentRequire from './require'
 import dynamicComponentIdentifiers from './identifiers'
 import InlineUI, { MarkButton } from '../../utils/InlineUI'
-import { EditIcon as MdEdit } from '@republik/icons'
+import { IconEdit as MdEdit } from '@republik/icons'
 import {
   OverlayFormContext,
   OverlayFormContextProvider,

@@ -10,7 +10,7 @@ import ErrorMessage from '../ErrorMessage'
 
 import { SUPPORTED_TOKEN_TYPES } from '../constants'
 
-import { MailIcon, DevicesIcon } from '@republik/icons'
+import { IconMail, IconDevices } from '@republik/icons'
 
 import { Label, Interaction, RawHtml, linkRule } from '@project-r/styleguide'
 import { graphql } from '@apollo/client/react/hoc'
@@ -18,8 +18,8 @@ import { graphql } from '@apollo/client/react/hoc'
 const { H3, P } = Interaction
 
 const Icons = {
-  EMAIL_TOKEN: MailIcon,
-  APP: DevicesIcon,
+  EMAIL_TOKEN: IconMail,
+  APP: IconDevices,
 }
 
 const styles = {

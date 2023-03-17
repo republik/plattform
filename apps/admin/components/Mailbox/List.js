@@ -10,7 +10,7 @@ import Mail from './Mail'
 import Address, { Bucket as AddressBucket } from './Address'
 
 import { MAILBOX_SELF } from '../../server/constants'
-import { CallReceivedIcon, ErrorIcon } from '@republik/icons'
+import { IconCallReceived, IconError } from '@republik/icons'
 
 const self = MAILBOX_SELF?.split(',') ?? []
 
@@ -35,9 +35,9 @@ export const Subject = ({ mail }) => {
 
   return (
     <>
-      {hasFrom && !isSelfSent && <CallReceivedIcon {...styles.icon} />}
+      {hasFrom && !isSelfSent && <IconCallReceived {...styles.icon} />}
       {mail.status !== 'sent' && mail.error && (
-        <ErrorIcon {...merge(styles.icon, styles.error)} />
+        <IconError {...merge(styles.icon, styles.error)} />
       )}
       {mail.subject || mail.template || mail.type}
     </>

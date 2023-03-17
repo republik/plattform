@@ -15,7 +15,7 @@ import {
   fontFamilies,
   Checkbox,
 } from '@project-r/styleguide'
-import { InfoOutlineIcon as InfoIcon, LensIcon as CircleIcon } from '@republik/icons'
+import { IconInfoOutline as InfoIcon, IconLens as CircleIcon } from '@republik/icons'
 import { Controlled as CodeMirror } from 'react-codemirror2'
 import {
   UncommittedChanges,

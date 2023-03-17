@@ -12,7 +12,7 @@ import {
   OverlayToolbar,
   Interaction,
 } from '@project-r/styleguide'
-import { HearingIcon, PlayArrowIcon } from '@republik/icons'
+import { IconHearing, IconPlayArrow } from '@republik/icons'
 
 import * as fragments from '../../lib/graphql/fragments'
 import withT from '../../lib/withT'
@@ -65,7 +65,7 @@ const SynthesizedAudio = withT(({ t, derivative, onClickGenerate }) => {
         <IconButton
           invert
           style={{ marginRight: 0 }}
-          Icon={HearingIcon}
+          Icon={IconHearing}
           label='Audio-Version erzeugen'
           labelShort=''
           size={24}
@@ -78,7 +78,7 @@ const SynthesizedAudio = withT(({ t, derivative, onClickGenerate }) => {
             marginRight: 0,
             animation: `${pulsate} 0.5s linear infinite alternate`,
           }}
-          Icon={HearingIcon}
+          Icon={IconHearing}
           label='Audio-Version wird erzeugt'
           labelShort=''
           size={24}
@@ -90,7 +90,7 @@ const SynthesizedAudio = withT(({ t, derivative, onClickGenerate }) => {
             invert
             style={{ marginRight: 0 }}
             fillColorName='error'
-            Icon={HearingIcon}
+            Icon={IconHearing}
             label='Audio-Version fehlerhaft'
             labelShort='Fehler'
             size={24}
@@ -107,7 +107,7 @@ const SynthesizedAudio = withT(({ t, derivative, onClickGenerate }) => {
                 <P>Derivative-ID: {derivative.id}</P>
                 <IconButton
                   style={{ marginTop: 10 }}
-                  Icon={HearingIcon}
+                  Icon={IconHearing}
                   label='Audio-Version erneut erzeugen'
                   labelShort=''
                   size={24}
@@ -124,7 +124,7 @@ const SynthesizedAudio = withT(({ t, derivative, onClickGenerate }) => {
         <IconButton
           invert
           style={{ marginRight: 0 }}
-          Icon={PlayArrowIcon}
+          Icon={IconPlayArrow}
           label='Audio-Version anhören'
           labelShort='anhören'
           size={24}

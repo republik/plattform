@@ -6,10 +6,10 @@ import {
 } from '@project-r/styleguide'
 
 import {
-  PhoneIPhoneIcon,
-  TabletMacIcon,
-  LaptopMacIcon,
-  DesktopMacIcon,
+  IconPhoneIPhone,
+  IconTabletMac,
+  IconLaptopMac,
+  IconDesktopMac,
 } from '@republik/icons'
 
 const styles = {
@@ -50,22 +50,22 @@ export const screenSizes = [
   {
     name: 'phone',
     label: 'Mobile',
-    Icon: PhoneIPhoneIcon,
+    Icon: IconPhoneIPhone,
   },
   {
     name: 'tablet',
     label: 'Tablet',
-    Icon: TabletMacIcon,
+    Icon: IconTabletMac,
   },
   {
     name: 'laptop',
     label: 'Laptop',
-    Icon: LaptopMacIcon,
+    Icon: IconLaptopMac,
   },
   {
     name: 'desktop',
     label: 'Desktop',
-    Icon: DesktopMacIcon,
+    Icon: IconDesktopMac,
   },
 ]
 

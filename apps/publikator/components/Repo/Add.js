@@ -28,7 +28,7 @@ import {
 } from '../../lib/settings'
 
 import { withRouter } from 'next/router'
-import { InfoOutlineIcon as InfoIcon, SearchIcon } from '@republik/icons'
+import { IconInfoOutline as InfoIcon, IconSearch } from '@republik/icons'
 
 const getTemplateRepos = gql`
   query templateListSearch {
@@ -185,7 +185,7 @@ const TemplatePicker = compose(
               setTemplateFilter(newFilter)
             }
           }}
-          icon={<SearchIcon size={30} style={{ color: colors.lightText }} />}
+          icon={<IconSearch size={30} style={{ color: colors.lightText }} />}
         />
       )}
     />

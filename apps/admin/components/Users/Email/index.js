@@ -20,7 +20,7 @@ import {
 } from '../../Display/utils'
 
 import EmailForm from './EmailForm'
-import { EditIcon } from '@republik/icons'
+import { IconEdit } from '@republik/icons'
 
 const GET_EMAIL = gql`
   query user($id: String) {
@@ -106,7 +106,7 @@ export default class Email extends Component {
                         className='show-on-focus'
                         onClick={this.openHandler}
                       >
-                        <EditIcon size={28} />
+                        <IconEdit size={28} />
                       </TextButton>
                     </SectionMenu>
                     {isOpen && (

@@ -1,9 +1,9 @@
 import { css } from 'glamor'
 
 import {
-    LockIcon,
-    PublicIcon,
-    ErrorIcon,
+    IconLock,
+    IconPublic,
+    IconError,
 } from '@republik/icons'
 
 import { IconButton, Label, ReadingTimeIcon } from '@project-r/styleguide'
@@ -32,21 +32,21 @@ const statusMap = {
     Action: undefined,
   },
   Failure: {
-    Icon: ErrorIcon,
+    Icon: IconError,
     disabled: false,
     colorName: 'error',
     crumb: undefined,
     Action: Destroy,
   },
   Private: {
-    Icon: LockIcon,
+    Icon: IconLock,
     disabled: false,
     colorName: undefined,
     crumb: 'nicht öffentlich',
     Action: Publish,
   },
   Public: {
-    Icon: PublicIcon,
+    Icon: IconPublic,
     disabled: false,
     colorName: 'primary',
     crumb: undefined,

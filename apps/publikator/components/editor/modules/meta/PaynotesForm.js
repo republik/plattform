@@ -8,9 +8,9 @@ import {
   Checkbox,
 } from '@project-r/styleguide'
 import { 
-  AddIcon as MdAdd,
-  CloseIcon as MdClose,
-  InfoOutlineIcon as MdInfoOutline 
+  IconAdd as MdAdd,
+  IconClose as MdClose,
+  IconInfoOutline as MdInfoOutline 
 } from '@republik/icons'
 import { css } from 'glamor'
 

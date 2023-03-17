@@ -8,7 +8,7 @@ import { InlineSpinner, Loader, Checkbox } from '@project-r/styleguide'
 
 import { Section, SectionTitle, TextButton } from '../Display/utils'
 import ErrorMessage from '../ErrorMessage'
-import { DoneIcon } from '@republik/icons'
+import { IconDone } from '@republik/icons'
 
 export const RESUBSCRIBE_EMAIL = gql`
   mutation resubscribeEmail($userId: ID!) {
@@ -120,7 +120,7 @@ class UpdateSubscription extends Component {
                     <InlineSpinner size={22} />
                   ) : subscribed !== value ? (
                     <TextButton type='submit'>
-                      <DoneIcon size={24} />
+                      <IconDone size={24} />
                     </TextButton>
                   ) : undefined}
                 </span>

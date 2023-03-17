@@ -2,7 +2,7 @@ import { css } from 'glamor'
 import { Label } from '@project-r/styleguide'
 import withT from '../../../lib/withT'
 import {
-  CloseIcon as MdClose
+  IconClose as MdClose
 } from '@republik/icons'
 
 const styles = {

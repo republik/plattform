@@ -9,7 +9,7 @@ import {
   Loader,
   InlineSpinner,
 } from '@project-r/styleguide'
-import { EditIcon } from '@republik/icons'
+import { IconEdit } from '@republik/icons'
 
 import {
   InteractiveSection,
@@ -206,7 +206,7 @@ export default class User extends Component {
                         className='show-on-focus'
                         onClick={this.openHandler}
                       >
-                        <EditIcon size={28} />
+                        <IconEdit size={28} />
                       </TextButton>
                     </SectionMenu>
                     {isOpen && (

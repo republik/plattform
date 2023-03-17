@@ -4,8 +4,8 @@ import { gql } from '@apollo/client'
 import ReactDiffViewer, { DiffMethod } from 'react-diff-viewer'
 
 import {
-  WrapTextIcon as MdWrapText,
-  MoreHorizontalIcon as MdMoreHoriz,
+  IconWrapText as MdWrapText,
+  IconMoreHorizontal as MdMoreHoriz,
 } from '@republik/icons'
 
 import {

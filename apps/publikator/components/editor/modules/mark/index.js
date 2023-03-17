@@ -1,11 +1,11 @@
 import { matchMark, createMarkButton, buttonStyles } from '../../utils'
 
 import {
-  FormatBoldIcon as BoldIcon,
-  FormatItalicIcon as ItalicIcon,
-  StrikethroughIcon,
-  SuperscriptIcon as SupIcon,
-  SubscriptIcon as SubIcon,
+  IconFormatBold as BoldIcon,
+  IconFormatItalic as ItalicIcon,
+  IconStrikethrough,
+  IconSuperscript as SupIcon,
+  IconSubscript as SubIcon,
 } from '@republik/icons'
 
 import MarkdownSerializer from 'slate-mdast-serializer'
@@ -13,7 +13,7 @@ import MarkdownSerializer from 'slate-mdast-serializer'
 const icons = {
   strong: BoldIcon,
   emphasis: ItalicIcon,
-  delete: StrikethroughIcon,
+  delete: IconStrikethrough,
   sub: SubIcon,
   sup: SupIcon,
 }

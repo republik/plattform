@@ -4,7 +4,7 @@ import { gql } from '@apollo/client'
 import { Checkbox, Loader, InlineSpinner } from '@project-r/styleguide'
 
 import { InteractiveSection, SectionTitle, TextButton } from '../Display/utils'
-import { DoneIcon } from '@republik/icons'
+import { IconDone } from '@republik/icons'
 
 const ROLES = [
   'editor',
@@ -105,7 +105,7 @@ class UpdateRole extends Component {
                     <InlineSpinner size={22} />
                   ) : initialValue !== value ? (
                     <TextButton type='submit'>
-                      <DoneIcon size={22} />
+                      <IconDone size={22} />
                     </TextButton>
                   ) : undefined}
                 </span>

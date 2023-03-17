@@ -22,15 +22,15 @@ import { getNewBlock } from './'
 import { getSubmodules } from './serializer'
 
 import {
-  ArrowLeftIcon,
-  ArrowRightIcon,
-  ArrowUpwardIcon as ArrowUpIcon,
-  ArrowDownwardIcon as ArrowDownIcon,
-  CloseIcon,
-  VerticalAlignBottomIcon as MoveToEndIcon,
-  CheckIcon as Check,
-  ContentCopyIcon as CopyToClipboard,
-  SubdirectoryArrowRight as MoveIntoIcon
+  IconArrowLeft,
+  IconArrowRight,
+  IconArrowUpward as ArrowUpIcon,
+  IconArrowDownward as ArrowDownIcon,
+  IconClose,
+  IconVerticalAlignBottom as MoveToEndIcon,
+  IconCheck as Check,
+  IconContentCopy as CopyToClipboard,
+  IconSubdirectoryArrowRight as MoveIntoIcon
 } from '@republik/icons'
 
 import UIForm from '../../UIForm'
@@ -565,7 +565,7 @@ export const TeaserForm = ({ subModuleResolver, ...options }) => {
               data-disabled={existingIndex === 0}
               onMouseDown={createMoveNode(-1)}
             >
-              <ArrowLeftIcon />
+              <IconArrowLeft />
             </span>
             {' bewegen '}
             <span
@@ -574,7 +574,7 @@ export const TeaserForm = ({ subModuleResolver, ...options }) => {
               data-disabled={existingIndex === group.nodes.size - 1}
               onMouseDown={createMoveNode(+1)}
             >
-              <ArrowRightIcon />
+              <IconArrowRight />
             </span>
           </>
         )}
@@ -707,7 +707,7 @@ export const TeaserInlineUI = ({
           <P {...styles.uiInlineRow}>
             {!isOnlyChild && removable && (
               <MarkButton onMouseDown={removeHandler}>
-                <CloseIcon size={24} />
+                <IconClose size={24} />
               </MarkButton>
             )}
             {!isFirstChild && (

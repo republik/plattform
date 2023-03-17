@@ -3,8 +3,8 @@ import { css, merge } from 'glamor'
 import buttonStyles from './buttonStyles'
 import { parent } from './selection'
 import {
-  ArrowUpwardIcon,
-  ArrowDownwardIcon
+  IconArrowUpward,
+  IconArrowDownward
 } from '@republik/icons'
 import scrollIntoView from 'scroll-into-view'
 
@@ -117,10 +117,10 @@ const InlineUI = ({ editor, node, isMatch, children }) => {
         {showMoveUI && (
           <>
             <MarkButton onMouseDown={moveHandler(-1)}>
-              <ArrowUpwardIcon size={24} />
+              <IconArrowUpward size={24} />
             </MarkButton>
             <MarkButton onMouseDown={moveHandler(+1)}>
-              <ArrowDownwardIcon size={24} />
+              <IconArrowDownward size={24} />
             </MarkButton>
           </>
         )}

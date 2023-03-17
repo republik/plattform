@@ -1,4 +1,4 @@
-import { LockIcon, PublicIcon } from '@republik/icons'
+import { IconLock, IconPublic } from '@republik/icons'
 
 import { IconButton } from '@project-r/styleguide'
 
@@ -15,7 +15,7 @@ const PublicationLink = ({ publication }) => {
 
   return (
     <IconButton
-      Icon={publication.prepublication ? LockIcon : PublicIcon}
+      Icon={publication.prepublication ? IconLock : IconPublic}
       style={{ marginRight: 0 }}
       size={24}
       title={publication.document.meta.title}

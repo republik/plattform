@@ -3,7 +3,7 @@ import * as React from 'react'
 import { css } from 'glamor'
 import { Query, Mutation } from '@apollo/client/react/components'
 import { gql } from '@apollo/client'
-import { ChevronLeftIcon } from '@republik/icons'
+import { IconChevronLeft } from '@republik/icons'
 
 import {
   A,
@@ -263,7 +263,7 @@ const MembershipDetails = ({ userId, membership, ...props }) => {
                     {displayDate(new Date(period.beginDate))} –{' '}
                     {displayDate(new Date(period.endDate))}
                     {period.isCurrent && (
-                      <ChevronLeftIcon size='1.1em' {...styles.icon} />
+                      <IconChevronLeft size='1.1em' {...styles.icon} />
                     )}
                   </DD>
                 ))}

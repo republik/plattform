@@ -4,7 +4,7 @@ import { Block, Inline } from 'slate'
 
 import { Label } from '@project-r/styleguide'
 import {
-  TagIcon as InsertVarIcon
+  IconTag as InsertVarIcon
 } from '@republik/icons'
 
 import MetaForm from '../../utils/MetaForm'

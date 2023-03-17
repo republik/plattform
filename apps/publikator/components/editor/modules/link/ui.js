@@ -9,8 +9,8 @@ import withT from '../../../../lib/withT'
 import { createInlineButton, matchInline, buttonStyles } from '../../utils'
 import AutosizeInput from 'react-textarea-autosize'
 import { css } from 'glamor'
-import { LinkIcon } from '@republik/icons'
-import { InfoOutlineIcon as MdInfoOutline } from '@republik/icons'
+import { IconLink } from '@republik/icons'
+import { IconInfoOutline as MdInfoOutline } from '@republik/icons'
 
 const styles = {
   autoSize: css({
@@ -138,7 +138,7 @@ const createLink = (options) =>
       data-disabled={disabled}
       data-visible={visible}
     >
-      <LinkIcon />
+      <IconLink />
     </span>
   ))
 

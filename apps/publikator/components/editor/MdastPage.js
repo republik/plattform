@@ -45,7 +45,7 @@ import {
   colors,
   plainButtonRule,
 } from '@project-r/styleguide'
-import { GearsIcon as SettingsIcon } from '@republik/icons'
+import { IconGears as SettingsIcon } from '@republik/icons'
 
 import createDebug from 'debug'
 import {

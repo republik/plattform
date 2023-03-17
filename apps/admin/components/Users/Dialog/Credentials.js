@@ -3,7 +3,7 @@ import { Query, Mutation } from '@apollo/client/react/components'
 import { gql } from '@apollo/client'
 import { Checkbox, Loader, InlineSpinner } from '@project-r/styleguide'
 
-import { DoneIcon } from '@republik/icons'
+import { IconDone } from '@republik/icons'
 
 import {
   InteractiveSection,
@@ -79,7 +79,7 @@ const UpdateCredential = ({
                   <InlineSpinner size={22} />
                 ) : verified !== value ? (
                   <TextButton type='submit'>
-                    <DoneIcon size={22} />
+                    <IconDone size={22} />
                   </TextButton>
                 ) : null}
               </span>

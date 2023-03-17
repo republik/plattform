@@ -3,8 +3,8 @@ import { css } from 'glamor'
 import { fontStyles, colors } from '@project-r/styleguide'
 
 import {
-  ArrowDropDownIcon as DownIcon,
-  ArrowDropUpIcon as UpIcon
+  IconArrowDropDown as DownIcon,
+  IconArrowDropUp as UpIcon
 } from '@republik/icons'
 
 import Link from 'next/link'

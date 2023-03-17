@@ -68,7 +68,7 @@ export default ({
             onRefChange(null)
           }}
         >
-          <CloseIcon size={25} />
+          <IconClose size={25} />
         </A>
       </div>
     )

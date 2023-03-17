@@ -10,7 +10,7 @@ import { baseCharts } from './config'
 import { css, merge } from 'glamor'
 import { JSONEditor, PlainEditor } from '../../../utils/CodeEditorFields'
 import {
-  ChevronLeftIcon as BackIcon
+  IconChevronLeft as BackIcon
 } from '@republik/icons'
 import { styles as overlayStyles } from '../../../utils/OverlayForm'
 import ChartActions from './ChartActions'

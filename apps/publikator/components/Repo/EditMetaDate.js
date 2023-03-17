@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { css } from 'glamor'
 import MaskedInput from 'react-maskedinput'
 import {
-  EditIcon
+  IconEdit
 } from '@republik/icons'
 
 import { timeParse, timeFormat } from 'd3-time-format'
@@ -69,7 +69,7 @@ const PublishDate = ({ date, readOnly }) =>
   date ? (
     <span>
       {displayDateTime(date)}{' '}
-      {!readOnly && <EditIcon style={{ marginTop: -4, marginLeft: 5 }} />}
+      {!readOnly && <IconEdit style={{ marginTop: -4, marginLeft: 5 }} />}
     </span>
   ) : null
 

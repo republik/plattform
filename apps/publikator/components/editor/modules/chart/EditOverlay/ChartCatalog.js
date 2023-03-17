@@ -19,9 +19,9 @@ import {
   Interaction,
 } from '@project-r/styleguide'
 import {
-  CodeIcon as Code,
-  EditIcon as Edit,
-  PublicIcon as Public
+  IconCode as Code,
+  IconEdit as Edit,
+  IconPublic as Public
 } from '@republik/icons'
 import { css } from 'glamor'
 import TypeSelector from './TypeSelector'
