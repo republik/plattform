@@ -8,13 +8,19 @@ const ErrorFallback = () => (
 )
 
 export const ComponentDemo = ({
+  file,
+  Component,
   children,
-  code,
 }: {
+  file: string
+  Component: () => JSX.Element
   children: ReactNode
-  code?: string
 }) => (
-  <div data-name='CODEDEMO'>
-    <ErrorBoundary FallbackComponent={ErrorFallback}>{children}</ErrorBoundary>
+  <div data-file={file}>
+    <ErrorBoundary FallbackComponent={ErrorFallback}>
+      <Component />
+    </ErrorBoundary>
+
+    {children}
   </div>
 )
