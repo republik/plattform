@@ -7,7 +7,7 @@ const ErrorFallback = () => (
   </div>
 )
 
-export const CodeDemo = ({
+export const ComponentDemo = ({
   children,
   code,
 }: {

@@ -8,9 +8,9 @@ const nanoid = customAlphabet(
   'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789',
 )
 
-export const rehypeCodeDemo = () => (tree) => {
+export const rehypeComponentDemo = () => (tree) => {
   visit(tree, (node) => {
-    if (node.name === 'CodeDemo') {
+    if (node.name === 'ComponentDemo') {
       const file = getAttribute(node, 'file')
 
       if (typeof file === 'string') {

@@ -1,4 +1,4 @@
-import { CodeDemo } from '@/theme/components/code-demo'
+import { ComponentDemo } from '@/theme/components/component-demo'
 import { DocsThemeConfig } from 'nextra-theme-docs'
 
 const config: DocsThemeConfig = {
@@ -17,7 +17,7 @@ const config: DocsThemeConfig = {
   },
   head: null,
   components: {
-    CodeDemo,
+    ComponentDemo,
   },
 }
 
