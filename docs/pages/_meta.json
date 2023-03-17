@@ -1,6 +1,7 @@
 {
-  "index": { "title": "Introduction", "type": "page", "display": "hidden" },
-  "components": { "title": "Components", "type": "page" },
-  "about": { "title": "About", "type": "page" },
-  "legacy-styleguide": { "title": "Styleguide (Legacy)", "type": "page" }
+  "*": { "type": "page" },
+  "index": { "title": "Introduction", "display": "hidden" },
+  "components": { "title": "Components" },
+  "about": { "title": "About" },
+  "legacy-styleguide": { "title": "Styleguide (Legacy)" }
 }
