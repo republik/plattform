@@ -24,8 +24,6 @@ module.exports = async (_, args, context) => {
       id: comment.discussionId,
     })
 
-    Roles.ensureUserIsInRoles(user, discussion.allowedRoles)
-
     const update =
       comment.userId === user.id
         ? { published: false }
