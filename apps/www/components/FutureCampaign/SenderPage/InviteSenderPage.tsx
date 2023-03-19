@@ -53,7 +53,7 @@ const InviteSenderPage = ({ me }: { me: MeObjectType }) => {
           <>
             <p {...styles.largeText}>
               Sie haben {redeemedInvites?.me?.futureCampaignAboCount} neue
-              Mitstreiter an Bord geholt!
+              Mitstreiter an Bord geholt.
             </p>
 
             <Loader
