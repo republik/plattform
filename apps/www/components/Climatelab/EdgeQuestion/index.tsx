@@ -235,6 +235,9 @@ const EdgeQuestion: React.FC<EdgeQuestionProps> = ({
       />
     )
   }
+  if (extract) {
+    return null
+  }
   return (
     <Center>
       <Breakout size='breakout'>
