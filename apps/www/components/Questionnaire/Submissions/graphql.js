@@ -152,15 +152,6 @@ export const QUESTIONNAIRE_SUBMISSIONS_QUERY = gql`
   ${submissionData}
 `
 
-export const CONTENT_FROM_PAGE_QUERY = gql`
-  query getContentFromPage($path: String!) {
-    document(path: $path) {
-      id
-      content
-    }
-  }
-`
-
 export const loadMoreSubmissions = (fetchMore, data) => () => {
   return fetchMore({
     variables: {

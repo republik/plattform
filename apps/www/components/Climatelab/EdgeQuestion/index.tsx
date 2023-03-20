@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { css } from 'glamor'
 import {
   useColorContext,
@@ -12,6 +13,8 @@ import {
 } from '@project-r/styleguide'
 import QuestionScroll from './QuestionScroll'
 import NextLink from 'next/link'
+import ShareImage from '../../Article/ShareImage'
+import { useRouter } from 'next/router'
 
 const styles = {
   grid: css({
@@ -136,15 +139,108 @@ export type Mdast = {
   [x: string]: unknown
 }
 
-export type EdgeQuestionProps = { contentPath?: string; mdast?: Mdast[] }
+export type ShareProps = {
+  extract?: string
+  title?: string
+  description?: string
+}
 
-const EdgeQuestion: React.FC<EdgeQuestionProps> = ({ contentPath, mdast }) => {
+export type EdgeQuestionProps = {
+  mdast?: Mdast[]
+  share: ShareProps
+  extract: boolean
+}
+
+export type Author = {
+  name: string
+  // currently, credentials supports links but no other formatting
+  credentials: string
+  profilePicture: string
+}
+
+export type QuestionAnswer = {
+  content: Mdast
+  author: Author
+}
+
+const groupNodes = (mdast: Mdast[]): Mdast[][] =>
+  mdast.reduce((acc: Mdast[][], current: Mdast) => {
+    if (!acc.length) return [[current]]
+    const lastElement = acc[acc.length - 1]
+    const lastIdentifier = lastElement[lastElement.length - 1].identifier
+    // new bucket – infobox acts as separator
+    if (lastIdentifier === 'INFOBOX') {
+      return acc.concat([[current]])
+    }
+    return acc.map((el, idx, arr) =>
+      idx === arr.length - 1 ? el.concat(current) : el,
+    )
+  }, [])
+
+// the renderer expects a specific mdast structure...
+const wrapContent = (mdast: Mdast[]): Mdast => ({
+  type: 'root',
+  meta: {
+    template: 'article',
+  },
+  children: [{ identifier: 'CENTER', type: 'zone', children: mdast }],
+})
+
+const getText = (node: Mdast): string => {
+  if (node.type === 'link')
+    return `<a href="${node.url}">${getText(node.children[0])}</a>`
+  if (node.type === 'text') return node.value
+  return ''
+}
+
+const extractData = (mdast: Mdast[]): QuestionAnswer => {
+  const infobox = mdast[mdast.length - 1]
+  // if we have random crap at the end of the file we ignore it
+  if (infobox.identifier !== 'INFOBOX') return
+
+  return {
+    content: wrapContent(mdast.slice(0, -1)),
+    author: {
+      name: infobox.children.find((child) => child.type === 'heading')
+        .children[0].value,
+      credentials: infobox.children
+        .find((child) => child.type === 'paragraph')
+        .children.map(getText)
+        .join(''),
+      profilePicture: infobox.children.find(
+        (child) => child.identifier === 'FIGURE',
+      )?.children[0].children[0].url,
+    },
+  }
+}
+
+const EdgeQuestion: React.FC<EdgeQuestionProps> = ({
+  mdast,
+  share,
+  extract,
+}) => {
+  const router = useRouter()
+  const { query } = router
+  const answerId = query.share
+  const answers: QuestionAnswer[] = useMemo(
+    () => groupNodes(mdast).map(extractData).filter(Boolean),
+    [mdast],
+  )
+
+  if (extract && query.extract) {
+    const answer = answers.find((d) => slug(d.author.name) === answerId)
+    return (
+      <ShareImage
+        meta={{ shareText: `${answer.author.name} anwortet eine Frage.` }}
+      />
+    )
+  }
   return (
     <Center>
       <Breakout size='breakout'>
         <CardsOverview data={OVERVIEW_DATA} />
       </Breakout>
-      <QuestionScroll contentPath={contentPath} mdast={mdast} />
+      <QuestionScroll answers={answers} share={share} />
     </Center>
   )
 }

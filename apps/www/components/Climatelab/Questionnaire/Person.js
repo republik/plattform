@@ -61,7 +61,7 @@ const USER_QUERY = gql`
   }
 `
 
-const ShareQuestionnaire = ({ meta }) => {
+export const ShareQuestionnaire = ({ meta }) => {
   const { t } = useTranslation()
   const { inNativeApp } = useInNativeApp()
   const [overlay, showOverlay] = useState(false)
