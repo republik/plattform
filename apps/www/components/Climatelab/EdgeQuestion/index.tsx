@@ -231,7 +231,16 @@ const EdgeQuestion: React.FC<EdgeQuestionProps> = ({
     const answer = answers.find((d) => slug(d.author.name) === answerId)
     return (
       <ShareImage
-        meta={{ shareText: `${answer.author.name} anwortet eine Frage.` }}
+        meta={{
+          shareText: `${answer.author.name}, was wünschten Sie, würden alle über die Klimakrise verstehen?`,
+          shareInverted: true,
+          shareFontSize: 64,
+          format: {
+            meta: {
+              color: '#d732d4',
+            },
+          },
+        }}
       />
     )
   }
