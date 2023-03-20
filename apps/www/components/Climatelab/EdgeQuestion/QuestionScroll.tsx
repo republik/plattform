@@ -84,6 +84,7 @@ const RenderQuestion: React.FC<{
           <div style={{ marginBottom: 40 }} id={authorSlug} key={idx}>
             <Header author={author}>
               <ShareQuestionnaire
+                noLabel
                 meta={{
                   ...meta,
                   url: `${removeQuery(meta.url)}?share=${authorSlug}`,

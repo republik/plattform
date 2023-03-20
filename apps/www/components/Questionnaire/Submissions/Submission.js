@@ -129,7 +129,7 @@ export const SubmissionAuthor = ({
             displayAuthor.name
           )}
         </Interaction.H3>
-        <Label>
+        <Label style={{ paddingRight: '20px' }}>
           <span {...colorScheme.set('color', 'textSoft')}>
             {displayAuthor.credentials && (
               <RawHtml
