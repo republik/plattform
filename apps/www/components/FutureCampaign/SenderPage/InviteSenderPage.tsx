@@ -14,8 +14,8 @@ const Confetti = dynamic(() => import('./Confetti'), {
 })
 
 export const FUTURE_CAMPAIGN_MAX_REDEEMED_INVITES = 5
-export const FUTURE_CAMPAIGN_TOTAL_PARTICIPANTS = 1332
-export const FUTURE_CAMPAIGN_TOTAL_ABOS = 2492
+export const FUTURE_CAMPAIGN_TOTAL_PARTICIPANTS = 1364
+export const FUTURE_CAMPAIGN_TOTAL_ABOS = 2588
 
 const InviteSenderPage = ({ me }: { me: MeObjectType }) => {
   const { data: userInviteData } = useUserInviteQuery()
@@ -44,10 +44,13 @@ const InviteSenderPage = ({ me }: { me: MeObjectType }) => {
         <p {...styles.largeText}>
           Dank{' '}
           {redeemedInvites?.me?.futureCampaignAboCount !== 0
-            ? `Ihnen und ${FUTURE_CAMPAIGN_TOTAL_PARTICIPANTS - 1}`
-            : FUTURE_CAMPAIGN_TOTAL_PARTICIPANTS}{' '}
-          Verlegerinnen ist die Republik um {FUTURE_CAMPAIGN_TOTAL_ABOS} Stimmen
-          reicher geworden.
+            ? `Ihnen und ${(
+                FUTURE_CAMPAIGN_TOTAL_PARTICIPANTS - 1
+              ).toLocaleString('de-CH')}`
+            : FUTURE_CAMPAIGN_TOTAL_PARTICIPANTS.toLocaleString('de-CH')}{' '}
+          Verlegerinnen ist die Republik um{' '}
+          {FUTURE_CAMPAIGN_TOTAL_ABOS.toLocaleString('de-CH')} Stimmen reicher
+          geworden.
         </p>
         {redeemedInvites?.me?.futureCampaignAboCount !== 0 && (
           <>
