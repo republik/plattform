@@ -19,6 +19,9 @@
     "@orbiting/backend-modules-calendar#build": {
       "cache": false
     },
+    "@orbiting/backend-modules-call-to-actions#build": {
+      "cache": false
+    },
     "@orbiting/backend-modules-databroom#build": {
       "cache": false
     },
