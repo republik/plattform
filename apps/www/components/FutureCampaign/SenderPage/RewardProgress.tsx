@@ -1,6 +1,5 @@
 import { css } from 'glamor'
-import { fontStyles, mediaQueries } from '@project-r/styleguide'
-import { clamp } from '../../Audio/helpers/clamp'
+import { mediaQueries } from '@project-r/styleguide'
 
 function getArrayOfSize(max: number): number[] {
   return Array.from({ length: max }, (_, i) => i + 1)
@@ -24,10 +23,6 @@ const RewardProgress = ({ reached, max }: RewardProgressProps) => {
           )
         })}
       </ol>
-      <p {...styles.text}>
-        {' '}
-        {clamp(reached, 0, max)} von {max} Mitstreitern an Bord geholt.
-      </p>
     </div>
   )
 }
@@ -46,6 +41,10 @@ const styles = {
     listStyle: 'none',
     padding: 0,
     margin: 0,
+    marginBottom: 24,
+    [mediaQueries.mUp]: {
+      marginBottom: 32,
+    },
   }),
   progressStep: css({
     flexGrow: 1,
@@ -59,15 +58,6 @@ const styles = {
     '&[data-reached="true"]': {
       padding: 5,
       backgroundColor: '#FFFFFF',
-    },
-  }),
-  text: css({
-    ...fontStyles.sansSerifMedium18,
-    margin: 0,
-    marginTop: 8,
-    [mediaQueries.mUp]: {
-      ...fontStyles.sansSerifMedium19,
-      marginTop: 16,
     },
   }),
 }

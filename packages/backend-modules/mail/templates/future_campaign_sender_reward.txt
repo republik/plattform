@@ -3,23 +3,28 @@ Guten Tag
 {{#if has_one_slot_filled}}
 
 Vor kurzem hat {{receiver}} ein Abo bei der Republik gekauft, zu einem selbst
-gewählten Preis. Damit ist die Republik-Community um ein Mitglied gewachsen.
+gewählten Preis. Damit ist die Republik-Verlagsetage um ein (sicherlich
+hervorragendes) Mitglied gewachsen.
 
 Möglich gemacht haben das: Sie. Vielen Dank, dass Sie Verstärkung geholt haben!
 
+Zwar sagt Ambrose Bierce in seinem «Wörterbuch des Teufels»: «Einmal: oft
+genug.» Doch wir halten es diesen Frühling lieber mit Cicero, der schrieb: «Aus
+kleinem Anfang entspringen alle Dinge.»
+
 Sie haben noch {{count_open_slots}} Zugänge zu Mitstreiterinnen-Abos zu
 vergeben. Für ein Magazin, das sich über seine Leserinnen finanziert, kommt es
-auf jede einzelne Person an.
+auf jedes neue Mitglied an Bord an.
 
 Deshalb: Laden Sie gerne auch Ihre Nachbarin, Ihren Kindergartenfreund, Ihre
 Arbeits- oder Vereinskollegen ein. Den persönlichen Link finden Sie auf dieser
 Seite {{link_sender_page}} .
 
-Merci für Ihre Zeit und Ihre Unterstützung!
+Merci für Ihre Zeit, Ihre Hilfe, Ihre Überzeugungskraft.
 
-Und als Hinweis für alle, die Handfestes mögen: Sobald Sie 5 Mitstreiterinnen an
-Bord geholt haben, schenken wir Ihnen eine schicke (und praktische!)
-Jubiläums-Tasche dazu.
+Und als Hinweis für alle, die Köpfe und Dinge sammeln: Sobald Sie alle 5
+möglichen Mitstreiterinnen an Bord geholt haben, schicken wir Ihnen als
+tragbaren Orden die dafür höchst praktische Republik-Jubiläums-Tasche zu.
 
 Herzlich
 
@@ -28,64 +33,87 @@ Herzlich
 Und schon wieder hat jemand über Ihren Angebotslink ein Mitstreiter-Abo bei der
 Republik gekauft, nämlich {{receiver}}!
 
-Damit haben Sie noch {{count_open_slots}} Zugänge zu vergeben.
+Zwei ist nicht nur die kleinste und einzig gerade Primzahl – sondern auch die
+Zahl der Arme, der Arche, der Liebe.
 
-Vielleicht wäre das etwas für Ihren Coiffeur, Ihre Skilehrerin oder Ihren
-Hausarzt?
+Wobei, manchmal ist zwei auch zu wenig. Im Fall der Arme etwa bei den
+Tintenfischen, im Fall der Liebe im französischen Film, und im Fall der Arche
+sang Tom Combo einmal zu Recht: «Bakterien waren auf der Arche Noah – und es
+waren mehr als zwei.»
 
-Finden Sie es heraus {{link_sender_page}} !
+Was im Fall der Republik heisst: Sie haben noch {{count_open_slots}} Zugänge zu
+vergeben.
 
-Unabhängiger Journalismus hat eine Zukunft, mit Ihnen.
+Vielleicht wäre das etwas für Ihren Coiffeur, Ihre Skilehrerin, Ihre Yoga- oder
+Pokerrunde, Ihren Hausarzt?
 
-Vorfreudige Grüsse
+Finden Sie es heraus {{link_sender_page}} , indem Sie ihnen einen Link zum
+Angebot schicken.
+
+Unabhängiger Journalismus hat eine Zukunft, dank Ihnen.
+
+Mit herzlichen Grüssen
 
 {{else if has_three_slots_filled}}
 
-Vor einigen Monaten hatten wir eine kühne Idee: Was wäre, wenn jede Verlegerin
-und jeder Verleger ein bis zwei Personen neu an Bord der Republik holen würde?
+Danke! Schon drei Mitstreitende!
 
-Und jetzt sind wir gerade ein bisschen begeistert, weil wir sehen, dass es
-Menschen wie Sie gibt: Nicht nur ein oder zwei, nein, drei Menschen haben über
-Ihren Zugang bereits ein neues Abo abgeschlossen. Das ist grossartig! Vor kurzem
-hat nämlich {{receiver}} ein Abo bei der Republik gekauft.
+Vor kurzem hat nämlich {{receiver}} ein Abo bei der Republik gekauft.
 
-Hätten Sie das gedacht?
+Zum Dank für Ihren Einsatz hier ein sehr brauchbarer Trick, wie Sie sich zum
+Beispiel in Redaktionskonferenzen etwas Platz verschaffen. Beginnen Sie Ihr
+Statement – egal ob Sie schon eine Idee haben oder nicht – damit, dass Sie
+sagen: «Dazu fallen mir drei Dinge ein …»
 
-Und falls Sie jetzt der Ehrgeiz gepackt hat: Sie haben noch {{count_open_slots}}
-Zugänge zu Mitstreiterinnen-Abos zu vergeben. Hier finden ihren persönlichen
-Link zum Weitergeben {{link_sender_page}} .
+Dann haben Sie den Raum, sich um Kopf und Kragen zu reden.
 
-Vielen Dank fürs Dranbleiben und herzliche Grüsse
+Nun, Sie scheinen solche Tipps nicht nötig zu haben. Offensichtlich hören
+mindestens drei Leute auf Sie.
+
+Falls Sie den Ehrgeiz haben, aus drei gleich fünf zu machen: Sie haben noch
+{{count_open_slots}} Zugänge zu Mitstreiterinnen-Abos zu vergeben. Hier finden
+Sie Ihren persönlichen Link zum Weitergeben: {{link_sender_page}} .
+
+Danke für Ihre Überzeugungskraft und herzliche Grüsse
 
 {{else if has_four_slots_filled}}
 
-Respekt! Seit Beginn dieser Aktion haben Sie die Republik-Community schon
-vierfach verstärkt. Zuletzt stiess {{receiver}} dazu. Damit haben Sie fast alle
-Ihre Zugänge vergeben.
+Respekt!
+
+Seit Anfang haben Sie die Republik-Community schon vierfach verstärkt. Zuletzt
+stiess {{receiver}} dazu. Damit haben Sie so gut wie alle Ihre Zugänge vergeben.
 
 Fast.
 
 Ein letzter ist noch übrig.
 
-Und wir fragen uns: Wer ergattert sich Ihr letztes Mitstreiterinnen-Abo? Zur
-Erinnerung: Hier finden Sie Ihren persönlichen Link zum Weitergeben:
-{{link_sender_page}}
+Der letzte Schritt vor den perfekten 5.
 
-Gespannte Grüsse
+Und wir fragen uns: Wer ist der Kandidat, die Kandidatin für Ihr letztes
+Mitstreiterinnen-Abo? Zur Erinnerung: Hier finden Sie Ihren persönlichen Link
+zum Weitergeben: {{link_sender_page}} Die Vollendung Ihrer Mission würde uns
+umso mehr freuen, da wir Ihnen dann endlich – als tragbaren Orden – das perfekte
+Sammler- und Sammlerinnenstück zuschicken könnten: die
+Republik-Jubiläums-Tasche.
+
+Mit Verbeugung
 
 {{else if has_five_slots_filled}}
 
-Herzliche Gratulation: Sie haben 5 Mitstreiter an Bord geholt!
+Herzliche Gratulation: Sie haben 5 Mitstreiterinnen an Bord geholt!
 {{link_sender_page}}
 
 {{receiver}} hat Ihr letztes Mitstreiter-Abo ergattert.
 
-Dank dem Engagement von Menschen wie Ihnen hat unabhängiger Journalismus eine
-Zukunft. Wir freuen uns darauf und werden hart daran arbeiten, die neuen
-Mitstreiterinnen nach Ihrer erfolgreichen Vermittlung in den kommenden 12
-Monaten nachhaltig zu begeistern.
+Und Sie: als meisterhafter Sammler das Sammlerinnen-Stück – die
+Republik-Jubiläums-Tasche.
 
-Mit herzlichen Grüssen, jubelnd und dankend
+Dank dem Engagement von Menschen wie Ihnen hat unabhängiger Journalismus eine
+Zukunft. Wir freuen uns darauf und werden hart daran arbeiten, die fünf neuen
+Verlegerinnen im kommenden Jahr von der Klugheit ihrer Entscheidung zu
+überzeugen.
+
+Mit herzlicher Gratulation und herzlichen Grüssen
 
 {{/if}}
 

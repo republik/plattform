@@ -7008,6 +7008,10 @@
       "value": "Noch etwas Handfestes?"
     },
     {
+      "key": "Goodies/note/delivery",
+      "value": "Versand nur in die Schweiz und Liechtenstein möglich"
+    },
+    {
       "key": "Goodie/dropdown/label",
       "value": "Anzahl"
     },
@@ -7041,7 +7045,7 @@
     },
     {
       "key": "Goodie/description/MUG",
-      "value": "Mit Logo und Claim «Ohne Journalismus keine Demokratie». Lieferung innerhalb von 10 Werktagen. Nur innerhalb der Schweiz möglich."
+      "value": "Mit Logo und Claim «Ohne Journalismus keine Demokratie». Lieferung innerhalb von 10 Werktagen."
     },
     {
       "key": "Goodie/label/MUG_CERAMIC",
@@ -7049,7 +7053,7 @@
     },
     {
       "key": "Goodie/description/MUG_CERAMIC",
-      "value": "Mit Logo und Claim «Ohne Journalismus keine Demokratie». Lieferung innerhalb von 10 Werktagen. Nur innerhalb der Schweiz möglich."
+      "value": "Mit Logo und Claim «Ohne Journalismus keine Demokratie». Lieferung innerhalb von 10 Werktagen."
     },
     {
       "key": "option/TABLEBOOK/label/other",
@@ -7878,6 +7882,22 @@
     {
       "key": "ClimateInlineTeaser/Member/content/link",
       "value": "zum Klimalabor"
+    },
+    {
+      "key": "CallToActions/customComponents/FutureCampaignBanner/headline",
+      "value": "Dank {sender} Verlegerinnen ist die Republik um {receiver} Stimmen reicher geworden."
+    },
+    {
+      "key": "CallToActions/customComponents/FutureCampaignBanner/button/other",
+      "value": "Noch {daysLeft} Tage Verstärkung holen und Gratismonate sichern"
+    },
+    {
+      "key": "CallToActions/customComponents/FutureCampaignBanner/button/1",
+      "value": "Noch heute Verstärkung holen und Gratismonate sichern"
+    },
+    {
+      "key": "CallToActions/customComponents/FutureCampaignBanner/button/0",
+      "value": "Noch heute Verstärkung holen und Gratismonate sichern"
     }
   ]
 }

@@ -158,7 +158,7 @@ export const getTextNode = (
         nearest = [n, p]
       }
     }
-    if (!nearest && path !== []) {
+    if (!nearest && path.length > 0) {
       // console.log('couldnt find nearest')
       const parent = Editor.parent(editor, path)
       // console.log('trying parent node')
