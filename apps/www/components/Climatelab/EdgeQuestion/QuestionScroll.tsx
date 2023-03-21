@@ -12,7 +12,7 @@ import Meta from '../../Frame/Meta'
 import HrefLink from '../../Link/Href'
 import { SubmissionAuthor } from '../../Questionnaire/Submissions/Submission'
 
-import { ShareQuestionnaire } from '../Questionnaire/Person'
+import HeaderShare from '../shared/HeaderShare'
 
 import { PORTRAITS } from './config'
 import { Author, QuestionAnswer, ShareProps } from './index'
@@ -92,7 +92,7 @@ const QuestionScroll: React.FC<{
         return (
           <div style={{ marginBottom: 40 }} id={authorSlug} key={idx}>
             <Header author={author}>
-              <ShareQuestionnaire
+              <HeaderShare
                 meta={{
                   ...meta,
                   url: `${cleanAsPath(meta.url)}?share=${authorSlug}`,
