@@ -1,18 +1,21 @@
 import { renderMdast } from 'mdast-react-render'
-import React, { useMemo } from 'react'
 import { useRouter } from 'next/router'
+import React, { useMemo } from 'react'
 
 import { createArticleSchema, slug } from '@project-r/styleguide'
 
-import { useTranslation } from '../../../lib/withT'
-import HrefLink from '../../Link/Href'
-
 import { ASSETS_SERVER_BASE_URL, PUBLIC_BASE_URL } from '../../../lib/constants'
-import { SubmissionAuthor } from '../../Questionnaire/Submissions/Submission'
-import { Author, QuestionAnswer, ShareProps } from './index'
-import Meta from '../../Frame/Meta'
-import { ShareQuestionnaire } from '../Questionnaire/Person'
 import { removeQuery } from '../../../lib/utils/link'
+import { useTranslation } from '../../../lib/withT'
+
+import Meta from '../../Frame/Meta'
+import HrefLink from '../../Link/Href'
+import { SubmissionAuthor } from '../../Questionnaire/Submissions/Submission'
+
+import { ShareQuestionnaire } from '../Questionnaire/Person'
+
+import { portraits } from './config'
+import { Author, QuestionAnswer, ShareProps } from './index'
 
 const Header: React.FC<{ author: Author }> = ({ author, children }) => {
   const customStyle = {
@@ -29,7 +32,13 @@ const Header: React.FC<{ author: Author }> = ({ author, children }) => {
       {/*
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore */}
-      <SubmissionAuthor displayAuthor={author} customStyle={customStyle}>
+      <SubmissionAuthor
+        displayAuthor={{
+          ...author,
+          profilePicture: portraits[slug(author.name)],
+        }}
+        customStyle={customStyle}
+      >
         {children}
       </SubmissionAuthor>
     </>

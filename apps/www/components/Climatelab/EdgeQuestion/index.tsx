@@ -1,5 +1,8 @@
-import { useMemo } from 'react'
 import { css } from 'glamor'
+import NextLink from 'next/link'
+import { useRouter } from 'next/router'
+import { useMemo } from 'react'
+
 import {
   useColorContext,
   Center,
@@ -11,10 +14,10 @@ import {
   ColorContextLocalExtension,
   ChevronRightIcon,
 } from '@project-r/styleguide'
-import QuestionScroll from './QuestionScroll'
-import NextLink from 'next/link'
+
 import ShareImage from '../../Article/ShareImage'
-import { useRouter } from 'next/router'
+
+import QuestionScroll from './QuestionScroll'
 
 const styles = {
   grid: css({
