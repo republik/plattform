@@ -12,12 +12,12 @@ import ErrorMessage from '../ErrorMessage'
 import { SUPPORTED_TOKEN_TYPES } from '../constants'
 
 import { Interaction, Label, A, RawHtml } from '@project-r/styleguide'
-import { IconDevices, IconMail } from '@republik/icons'
+import { IconDevices, IconMailOutline } from '@republik/icons'
 
 const { H3, P } = Interaction
 
 const Icons = {
-  EMAIL_TOKEN: IconMail,
+  EMAIL_TOKEN: IconMailOutline,
   APP: IconDevices,
 }
 
