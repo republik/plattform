@@ -5,7 +5,7 @@ import React, { useMemo } from 'react'
 import { createArticleSchema, slug } from '@project-r/styleguide'
 
 import { ASSETS_SERVER_BASE_URL, PUBLIC_BASE_URL } from '../../../lib/constants'
-import { removeQuery } from '../../../lib/utils/link'
+import { cleanAsPath } from '../../../lib/utils/link'
 import { useTranslation } from '../../../lib/withT'
 
 import Meta from '../../Frame/Meta'
@@ -95,7 +95,7 @@ const QuestionScroll: React.FC<{
               <ShareQuestionnaire
                 meta={{
                   ...meta,
-                  url: `${removeQuery(meta.url)}?share=${authorSlug}`,
+                  url: `${cleanAsPath(meta.url)}?share=${authorSlug}`,
                 }}
               />
             </Header>
