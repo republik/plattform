@@ -1,6 +1,9 @@
+// =========== NOTES ===========
+// d = done, a corresponding icon has been found and added
+
 export { IconContextProvider, useIconContext } from './IconContext'
 export {
-  MdPictureAsPdf as PdfIcon,
+  MdPictureAsPdf as PdfIcon, // d
   MdFileDownload as DownloadIcon,
   MdVolumeUp as AudioIcon,
   MdBookmark as BookmarkIcon,
@@ -9,7 +12,7 @@ export {
   MdPlayArrow as PlayIcon,
   MdPause as PauseIcon,
   MdSkipPrevious as RewindIcon,
-  MdClose as CloseIcon,
+  MdClose as CloseIcon, // d
   MdOpenInNew as NewPageIcon,
   MdMood as MoodIcon,
   MdKeyboardArrowDown as ArrowDownIcon,
@@ -24,8 +27,8 @@ export {
   MdMoreVert as MoreIcon,
   MdCheck as CheckIcon,
   MdFilter as GalleryIcon,
-  MdChevronLeft as ChevronLeftIcon,
-  MdChevronRight as ChevronRightIcon,
+  MdChevronLeft as ChevronLeftIcon, // d
+  MdChevronRight as ChevronRightIcon, // d
   MdFullscreen as FullscreenIcon,
   MdFullscreenExit as FullscreenExitIcon,
   MdPodcasts as PodcastIcon,
@@ -35,16 +38,16 @@ export {
   MdMail as MailIcon,
   MdMailOutline as MailOutlineIcon,
   MdPhonelink as PhonelinkIcon,
-  MdLink as LinkIcon,
+  MdLink as LinkIcon, // d
   MdHighlightOff as HighlightOffIcon,
   MdLaunch as LaunchIcon,
   MdRssFeed as RssFeedIcon,
-  MdArrowDownward as ArrowDownwardIcon,
-  MdArrowForward as ArrowForwardIcon,
-  MdArrowBack as ArrowBackIcon,
-  MdExpandMore as ExpandMoreIcon,
-  MdExpandLess as ExpandLessIcon,
-  MdDone as DoneIcon,
+  MdArrowDownward as ArrowDownwardIcon, // d
+  MdArrowForward as ArrowForwardIcon, // d 
+  MdArrowBack as ArrowBackIcon, // d
+  MdExpandMore as ExpandMoreIcon, //d
+  MdExpandLess as ExpandLessIcon, //d 
+  MdDone as DoneIcon, // d
   MdNotificationsActive as NotificationsActiveIcon,
   MdNotificationsActive as FollowIcon,
   MdNotifications as NotificationIcon,
@@ -56,7 +59,7 @@ export {
   MdFormatListBulleted as UlIcon,
   MdFormatListNumbered as OlIcon,
   MdFilterList as FilterListIcon,
-  MdAdd as AddIcon,
+  MdAdd as AddIcon, // d
   MdRemove as RemoveIcon,
   MdRemoveCircleOutline as RemoveCircleIcon,
   MdAccountBox as AccountBoxIcon,
@@ -71,17 +74,17 @@ export {
   MdForward30 as ForwardIcon,
   MdReplay10 as ReplayIcon,
   MdCheckCircle as CheckCircleIcon,
-  MdLock as LockIcon,
+  MdLock as LockIcon, // d
   MdTextFormat as TextFormatIcon,
   MdOutlineSmsFailed as EtiquetteIcon,
   MdUnfoldLess as UnfoldLessIcon,
   MdUnfoldMore as UnfoldMoreIcon,
-  MdFormatBold as BoldIcon,
-  MdFormatItalic as ItalicIcon,
+  MdFormatBold as BoldIcon, // d
+  MdFormatItalic as ItalicIcon, // d
   MdKeyboardReturn as BreakIcon,
   MdOutlineImage as ImageIcon,
   MdFormatQuote as QuoteIcon,
-  MdStrikethroughS as StrikeThrough,
+  MdStrikethroughS as StrikeThrough, // d
   MdTitle as TitleIcon,
   MdCode as CodeIcon,
   MdDragHandle as PunchlineIcon,
@@ -92,10 +95,10 @@ export {
   MdOutlineDelete as DeleteIcon,
   MdRateReview as MemoIcon,
   MdMic as MicIcon,
-  MdPlaylistAdd as PlaylistAddIcon,
+  MdPlaylistAdd as PlaylistAddIcon, // d
   MdPlaylistAddCheck as PlaylistRemoveIcon,
   MdDragHandle as DragHandleIcon,
-  MdSkipNext as SkipNextIcon,
+  MdSkipNext as SkipNextIcon, // d
   MdSubject as ArticleIcon,
   MdContentCopy as CopyToClippboardIcon,
   MdRadioButtonChecked as RadioCheckedIcon,
@@ -103,33 +106,33 @@ export {
 } from 'react-icons/md'
 
 export {
-  FaTelegramPlane as TelegramIcon,
-  FaSubscript as SubIcon,
-  FaSuperscript as SupIcon,
+  FaTelegramPlane as TelegramIcon, // d
+  FaSubscript as SubIcon, // d
+  FaSuperscript as SupIcon, // d
 } from 'react-icons/fa'
 
 export {
   AiFillInstagram as InstagramIcon,
   AiOutlineCode as BlockCodeIcon,
 } from 'react-icons/ai'
-export { SiThreema as ThreemaIcon } from 'react-icons/si'
-export { DiOpensource as OpenSourceIcon } from 'react-icons/di'
-export { BiParagraph as ParagraphIcon } from 'react-icons/bi'
+export { SiThreema as ThreemaIcon } from 'react-icons/si' // d
+export { DiOpensource as OpenSourceIcon } from 'react-icons/di' // d
+export { BiParagraph as ParagraphIcon } from 'react-icons/bi' // d
 
 // Separately export io icons to prevent a re-export conflict
 // caused by react-icons export both io4 and io5 on the /all path.
 // This causes duplicate exports which causes a rollup error.
 export {
-  IoLogoTwitter as TwitterIcon,
-  IoLogoYoutube as YoutubeIcon,
-  IoLogoVimeo as VimeoIcon,
-  IoLogoWhatsapp as WhatsappIcon,
-  IoLogoGoogle as GoogleIcon,
-  IoLogoApple as AppleIcon,
-  IoLogoFacebook as FacebookIcon,
+  IoLogoTwitter as TwitterIcon, // d
+  IoLogoYoutube as YoutubeIcon, // d
+  IoLogoVimeo as VimeoIcon, // d
+  IoLogoWhatsapp as WhatsappIcon, // d
+  IoLogoGoogle as GoogleIcon, // d
+  IoLogoApple as AppleIcon, // d
+  IoLogoFacebook as FacebookIcon, // d
 } from 'react-icons/io5'
 
-export { BsBlockquoteLeft as BlockQuoteIcon } from 'react-icons/bs'
+export { BsBlockquoteLeft as BlockQuoteIcon } from 'react-icons/bs' // d
 
 export { ShareIcon } from './CustomIcons/ShareIcon'
 export { MarkdownIcon } from './CustomIcons/MarkdownIcon'
