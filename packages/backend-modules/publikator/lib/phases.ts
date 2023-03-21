@@ -1,3 +1,6 @@
+import { GraphqlContext } from '@orbiting/backend-modules-types'
+import auth from '@orbiting/backend-modules-auth'
+
 import { debug as _debug } from 'debug'
 
 interface Phase {
@@ -9,6 +12,11 @@ interface Phase {
   published?: boolean
   scheduled?: boolean
   live?: boolean
+  predicates?: PhasePredicates
+}
+
+interface PhasePredicates {
+  canAccess?: (context: GraphqlContext) => boolean
 }
 
 interface Milestone {
@@ -44,48 +52,80 @@ const phases: Phase[] = [
     lock: false,
     fallback: true,
     tags: [],
+    predicates: {
+      canAccess: (context: GraphqlContext) =>
+        auth.Roles.userIsInRoles(context.user, ['editor']),
+    },
   },
   {
     key: 'creation',
     color: 'Gold',
     lock: false,
     tags: ['startCreation'],
+    predicates: {
+      canAccess: (context: GraphqlContext) =>
+        auth.Roles.userIsInRoles(context.user, ['editor']),
+    },
   },
   {
     key: 'tc',
     color: 'Orange',
     lock: false,
     tags: ['startTC'],
+    predicates: {
+      canAccess: (context: GraphqlContext) =>
+        auth.Roles.userIsInRoles(context.user, ['editor']),
+    },
   },
   {
     key: 'finalEditing',
     color: 'Chocolate',
     lock: false,
     tags: ['finalEditing'],
+    predicates: {
+      canAccess: (context: GraphqlContext) =>
+        auth.Roles.userIsInRoles(context.user, ['editor']),
+    },
   },
   {
     key: 'cr',
     color: 'Brown',
     lock: false,
     tags: ['startCR'],
+    predicates: {
+      canAccess: (context: GraphqlContext) =>
+        auth.Roles.userIsInRoles(context.user, ['editor']),
+    },
   },
   {
     key: 'production',
     color: 'Tomato',
     lock: true,
     tags: ['startProduction'],
+    predicates: {
+      canAccess: (context: GraphqlContext) =>
+        auth.Roles.userIsInRoles(context.user, ['editor']),
+    },
   },
   {
     key: 'proofReading',
     color: 'HotPink',
     lock: true,
     tags: ['startProofReading'],
+    predicates: {
+      canAccess: (context: GraphqlContext) =>
+        auth.Roles.userIsInRoles(context.user, ['editor', 'vorlesen']),
+    },
   },
   {
     key: 'finalControl',
     color: 'Fuchsia',
     lock: true,
     tags: ['proofReadingOk'],
+    predicates: {
+      canAccess: (context: GraphqlContext) =>
+        auth.Roles.userIsInRoles(context.user, ['editor', 'vorlesen']),
+    },
   },
   {
     key: 'ready',
@@ -98,6 +138,10 @@ const phases: Phase[] = [
       'factCheckOk',
       'finalControl',
     ],
+    predicates: {
+      canAccess: (context: GraphqlContext) =>
+        auth.Roles.userIsInRoles(context.user, ['editor', 'vorlesen']),
+    },
   },
   {
     key: 'scheduled',
@@ -105,6 +149,10 @@ const phases: Phase[] = [
     lock: true,
     published: true,
     scheduled: true,
+    predicates: {
+      canAccess: (context: GraphqlContext) =>
+        auth.Roles.userIsInRoles(context.user, ['editor', 'vorlesen']),
+    },
   },
   {
     key: 'published',
@@ -113,6 +161,10 @@ const phases: Phase[] = [
     published: true,
     scheduled: false,
     live: true,
+    predicates: {
+      canAccess: (context: GraphqlContext) =>
+        auth.Roles.userIsInRoles(context.user, ['editor', 'vorlesen']),
+    },
   },
 ]
 

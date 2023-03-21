@@ -172,6 +172,7 @@ const getPublicUser = gql`
       twitterHandle
       publicUrl
       badges
+      prolitterisId
       documents(first: $firstDocuments, after: $afterDocument) {
         ...DocumentListConnection
       }

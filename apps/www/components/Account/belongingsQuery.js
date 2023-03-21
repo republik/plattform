@@ -4,6 +4,7 @@ export default gql`
   query myBelongings {
     me {
       id
+      hasDormantMembership
       memberships {
         id
         accessGranted
@@ -49,9 +50,12 @@ export default gql`
       }
       accessGrants {
         endAt
+        beginAt
         campaign {
+          id
           title
           description
+          type
         }
       }
       pledges {

@@ -63,7 +63,7 @@ const Form = (props) => {
   const {
     payload,
     router,
-    showTitleBlock,
+    titleBlockKey,
     onBeforeSignIn,
     onSuccess,
     onReset,
@@ -76,6 +76,19 @@ const Form = (props) => {
     initialEmail,
     campaign,
     isInSeriesNav,
+    context = 'trial',
+    /**
+     * Certain TrialForms are used to request access for roles other than membership.
+     * In that case the default-behaviour is to be skipped,
+     * and even members should be able to request access to the campaign.
+     */
+    skipForMembers = true,
+    /**
+     * Boolean to skip the trial-form (isComplete=true) and show the isComplete UI.
+     * This is to be used together with the skipForMembers prop,
+     * when we should differ from the default-behaviour.
+     */
+    shouldSkipTrialForm = false,
   } = props
   const { query } = router
 
@@ -152,7 +165,7 @@ const Form = (props) => {
 
     setIsSigningIn(false)
 
-    if (!isMember) {
+    if (!isMember || !skipForMembers) {
       props
         .requestAccess({
           payload: { ...getConversionPayload(query), ...payload },
@@ -170,7 +183,7 @@ const Form = (props) => {
           if (shouldRedirect) {
             window.location = format({
               pathname: `/einrichten`,
-              query: { context: 'trial' },
+              query: { context },
             })
           } else {
             minimal && setShowButtons(true)
@@ -212,15 +225,16 @@ const Form = (props) => {
     setIsSigningIn(false)
   }
 
-  const isComplete = showButtons || isMember
+  const isComplete =
+    showButtons || (skipForMembers && isMember) || shouldSkipTrialForm
 
-  const titleBlock = showTitleBlock && (
+  const titleBlock = titleBlockKey && (
     <>
       <Interaction.H2 style={{ marginBottom: 10 }}>
         <RawHtml
           dangerouslySetInnerHTML={{
             __html: t(
-              `Trial/Form/${
+              `Trial/Form/${titleBlockKey}/${
                 isComplete ? 'completed' : isSigningIn ? 'waiting' : 'initial'
               }/title`,
             ),
@@ -230,7 +244,9 @@ const Form = (props) => {
       {!isSigningIn && (
         <Interaction.P>
           {t(
-            `Trial/Form/initial/${isComplete ? 'afterSignIn' : 'beforeSignIn'}`,
+            `Trial/Form/${titleBlockKey}/initial/${
+              isComplete ? 'afterSignIn' : 'beforeSignIn'
+            }`,
           )}
         </Interaction.P>
       )}
@@ -266,7 +282,7 @@ const Form = (props) => {
                 onClick={() =>
                   router.push({
                     pathname: '/einrichten',
-                    query: { context: 'trial' },
+                    query: { context },
                   })
                 }
               >
@@ -320,13 +336,17 @@ const Form = (props) => {
                         !!email.value &&
                           !email.error &&
                           colorScheme.set('backgroundColor', 'primary'),
+                        colorScheme.set('color', 'textSoft'),
                       )}
                     >
                       <ArrowForwardIcon
-                        style={{ cursor: 'pointer' }}
+                        style={{
+                          cursor: 'pointer',
+                          color:
+                            !!email.value && !email.error ? '#fff' : 'inherit',
+                        }}
                         size={22}
                         onClick={requestAccess}
-                        {...colorScheme.set('fill', 'text')}
                       />
                     </button>
                   ))
@@ -418,6 +438,8 @@ Form.propTypes = {
   accessCampaignId: PropTypes.string,
   onBeforeSignIn: PropTypes.func,
   narrow: PropTypes.bool,
+  skipForMembers: PropTypes.bool,
+  shouldSkipTrialForm: PropTypes.bool,
 }
 
 const REQUEST_ACCESS = gql`

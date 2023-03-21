@@ -158,7 +158,7 @@ export const getTextNode = (
         nearest = [n, p]
       }
     }
-    if (!nearest && path !== []) {
+    if (!nearest && path.length > 0) {
       // console.log('couldnt find nearest')
       const parent = Editor.parent(editor, path)
       // console.log('trying parent node')
@@ -319,6 +319,7 @@ export const getAncestry = (
 ): {
   text?: NodeEntry<CustomText>
   element?: NodeEntry<CustomElement>
+  moreElements?: NodeEntry<CustomElement>[]
   container?: NodeEntry<CustomElement>
   convertContainer?: NodeEntry<CustomElement>
 } => {
@@ -328,6 +329,7 @@ export const getAncestry = (
   const lastParent = getParent(editor, last)
   let text: NodeEntry<CustomText>
   let element: NodeEntry<CustomElement>
+  const moreElements: NodeEntry<CustomElement>[] = []
   let container: NodeEntry<CustomElement>
   let convertContainer: NodeEntry<CustomElement>
   if (
@@ -355,9 +357,15 @@ export const getAncestry = (
 
   // for the convert options in the toolbar
   if (!hasConvertChoices(element[0])) {
-    for (const [n, p] of Node.ancestors(editor, element[1])) {
-      if (SlateElement.isElement(n) && hasConvertChoices(n)) {
-        convertContainer = [n as CustomElement, p]
+    for (const [n, p] of Node.ancestors(editor, element[1], {
+      reverse: true,
+    })) {
+      if (SlateElement.isElement(n)) {
+        if (hasConvertChoices(n)) {
+          convertContainer = [n as CustomElement, p]
+          break
+        }
+        moreElements.push([n, p])
       }
     }
   }
@@ -365,13 +373,15 @@ export const getAncestry = (
   return {
     text,
     element,
+    moreElements,
     container,
     convertContainer,
   }
 }
 
-const isTextInline = (element: CustomElement): boolean =>
-  elConfig[element.type].attrs?.isTextInline
+export const isTextInline = (element: CustomElement): boolean =>
+  elConfig[element.type].attrs?.isInline &&
+  !elConfig[element.type].attrs?.isInlineBlock
 
 export const getSelectedElement = (
   editor: CustomEditor,
@@ -386,6 +396,9 @@ export const getSelectedElement = (
   }
   return selectedNode as NodeEntry<CustomElement>
 }
+
+export const isFirstSibling = (node: NodeEntry<CustomNode>): boolean =>
+  node[1].slice(-1)[0] === 0
 
 export const hasNextSibling = (
   editor: CustomEditor,

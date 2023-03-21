@@ -3,8 +3,12 @@ import { AudioQueueItem } from './AudioQueueHooks'
 import { makeQueryHook } from '../../../lib/helpers/AbstractApolloGQLHooks.helper'
 
 const LATEST_ARTICLE_QUERIES = gql`
-  query LatestArticles($count: Int!) {
-    latestArticles: documents(first: $count) {
+  query LatestArticles($count: Int!, $after: String) {
+    latestArticles: documents(first: $count, after: $after) {
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
       nodes {
         id
         meta {
@@ -47,12 +51,17 @@ const LATEST_ARTICLE_QUERIES = gql`
   }
 `
 
-type LatestArticleQueryVariables = {
+export type LatestArticleQueryVariables = {
   count: number
+  after?: string
 }
 
-type LatestArticleQueryData = {
+export type LatestArticleQueryData = {
   latestArticles: {
+    pageInfo: {
+      hasNextPage: boolean
+      endCursor: string
+    }
     nodes: Omit<AudioQueueItem['document'], 'coverMd' | 'coverForNativeApp'>[]
   }
 }

@@ -1,6 +1,9 @@
 import {
+  CustomAncestor,
   CustomEditor,
+  CustomElement,
   CustomMarksType,
+  CustomNode,
   CustomText,
   DecorateFn,
   NormalizeFn,
@@ -24,7 +27,7 @@ import {
   config as mConfig,
 } from '../../config/marks'
 import { config as charConfig } from '../../config/special-chars'
-import { cleanupNode, overlaps } from './tree'
+import { cleanupNode, overlaps, isTextInline } from './tree'
 import { SelectionEdge } from 'slate/dist/interfaces/types'
 import { swissNumbers } from '../../../Chart/utils'
 
@@ -34,14 +37,30 @@ export const getCharCount = (nodes: (Descendant | Node)[]): number =>
 export const getCountDown = (editor: CustomEditor, maxSigns: number): number =>
   maxSigns - getCharCount(editor.children)
 
+export const canFormatText = (
+  editor: CustomEditor,
+  node: NodeEntry<CustomAncestor>,
+): boolean => {
+  if (!node || !SlateElement.isElement(node[0])) return false
+
+  const formatText = elConfig[node[0].type].attrs?.formatText
+  if (!isTextInline(node[0])) return formatText
+
+  if (typeof formatText === 'boolean') return formatText
+
+  const parent = Editor.parent(editor, node[1])
+  if (!SlateElement.isElement(parent[0])) return false
+
+  return elConfig[parent[0].type].attrs?.formatText
+}
+
 const baseTextProps = ['text', 'placeholder', 'template', 'end']
 export const removeNonTextProps: NormalizeFn<CustomText> = (
   [node, path],
   editor,
 ) => {
-  const parent = Editor.parent(editor, path)[0]
-  const formatText =
-    SlateElement.isElement(parent) && elConfig[parent.type].attrs?.formatText
+  const parent = Editor.parent(editor, path)
+  const formatText = canFormatText(editor, parent)
   const allowedProps = (
     (formatText ? mKeys : MARKS_ALLOW_LIST) as string[]
   ).concat(baseTextProps)
@@ -135,7 +154,10 @@ export const selectEmptyTextNode = (
   selectEmptyParentPath(editor, parent[1], edge)
 }
 
-export const isEmpty = (text?: string) => !text || text === ''
+export const isEmpty = (text?: string): boolean => !text || text === ''
+
+export const isEmptyTextNode = (node: CustomNode): boolean =>
+  Text.isText(node) && isEmpty(node.text)
 
 export const getLinkInText = (text: string) => {
   // regex should only return one link!

@@ -37,7 +37,7 @@ class ProgressContextProvider extends Component {
     }
   }
   render() {
-    return <Fragment>{this.props.children}</Fragment>;
+    return <Fragment>{this.props.children}</Fragment>
   }
 }
 

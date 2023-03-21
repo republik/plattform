@@ -1,11 +1,53 @@
 const debug = require('debug')('publikator:resolver:query:search')
 const { ascending } = require('d3-array')
 
-const {
-  Roles: { ensureUserHasRole },
-} = require('@orbiting/backend-modules-auth')
+const { ensureSignedIn } = require('@orbiting/backend-modules-auth')
 
 const client = require('../../../lib/cache/search')
+
+const ALLOWED_OPTIONS = [
+  'first',
+  'from',
+  'search',
+  'template',
+  'phases',
+  'orderBy',
+  'isTemplate',
+  'isSeriesMaster',
+  'isSeriesEpisode',
+  'publishDateRange',
+]
+
+const getOptions = (args) => {
+  const { after, before } = args
+
+  /**
+   * If cursors {after} (1) or {before} (2) are provided, their contents
+   * replace options provided: Changing search term or {first} won't have
+   * any effect.
+   */
+  const options =
+    (after && decodeCursor(after)) || (before && decodeCursor(before)) || args
+
+  const defaultOptions = {
+    first: 10,
+    from: 0,
+  }
+
+  const result = {
+    ...defaultOptions,
+    ...Object.keys(options)
+      .filter((key) => ALLOWED_OPTIONS.includes(key))
+      .reduce((prev, key) => {
+        prev[key] = options[key]
+        return prev
+      }, {}),
+  }
+
+  debug('options: %o', result)
+
+  return result
+}
 
 const encodeCursor = (payload) => {
   return Buffer.from(JSON.stringify(payload)).toString('base64')
@@ -30,7 +72,8 @@ const appendHitIndex = (hits) => (repo) => ({
 const byIndex = (a, b) => ascending(a.__index, b.__index)
 
 module.exports = async (__, args, context) => {
-  ensureUserHasRole(context.user, 'editor')
+  const { req } = context
+  ensureSignedIn(req)
 
   debug({ args })
 
@@ -38,46 +81,11 @@ module.exports = async (__, args, context) => {
     throw new Error('"last" argument is not implemented')
   }
 
-  const { after, before } = args
+  const options = getOptions(args)
 
-  /**
-   * If cursors {after} (1) or {before} (2) are provided, their contents
-   * replace options provided: Changing search term or {first} won't have
-   * any effect.
-   */
-  const options =
-    (after && decodeCursor(after)) || (before && decodeCursor(before)) || args
+  const { body } = await client.find(options, context)
 
-  const {
-    first = 10,
-    from = 0,
-    search,
-    template,
-    phases,
-    orderBy,
-    isTemplate,
-    isSeriesMaster,
-    isSeriesEpisode,
-    publishDateRange,
-    // last - "last" parameter is not implemented in search API
-  } = options
-
-  const { body } = await client.find(
-    {
-      first,
-      from,
-      search,
-      template,
-      phases,
-      orderBy,
-      isTemplate,
-      isSeriesMaster,
-      isSeriesEpisode,
-      publishDateRange,
-    },
-    context,
-  )
-
+  const { first, from } = options
   const {
     hits: { total, hits },
   } = body
@@ -100,31 +108,15 @@ module.exports = async (__, args, context) => {
       hasNextPage,
       endCursor: hasNextPage
         ? encodeCursor({
-            first,
+            ...options,
             from: from + first,
-            search,
-            template,
-            phases,
-            orderBy,
-            isTemplate,
-            isSeriesMaster,
-            isSeriesEpisode,
-            publishDateRange,
           })
         : null,
       hasPreviousPage,
       startCursor: hasPreviousPage
         ? encodeCursor({
-            first,
+            ...options,
             from: from - first,
-            search,
-            template,
-            phases,
-            orderBy,
-            isTemplate,
-            isSeriesMaster,
-            isSeriesEpisode,
-            publishDateRange,
           })
         : null,
     },

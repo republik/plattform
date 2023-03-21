@@ -1,0 +1,25 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "screenshot.js",
+      "use": "@now/node",
+      "config": {
+        "maxLambdaSize": "50mb"
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/screenshot",
+      "dest": "/screenshot.js"
+    },
+    {
+      "src": "/",
+      "status": 302,
+      "headers": {
+        "Location": "/screenshot?url=https://github.com/republik/plattform/tree/master/lambdas/chromium"
+      }
+    }
+  ]
+}

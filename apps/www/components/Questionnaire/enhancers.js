@@ -17,6 +17,14 @@ const submitAnswerMutation = gql`
   }
 `
 
+const anonymizeQuestionnaireMutation = gql`
+  mutation anonymizeUserAnswers($questionnaireId: ID!) {
+    anonymizeUserAnswers(questionnaireId: $questionnaireId) {
+      id
+    }
+  }
+`
+
 const resetQuestionnaireMutation = gql`
   mutation resetQuestionnaire($id: ID!) {
     resetQuestionnaire(id: $id) {
@@ -39,6 +47,7 @@ const submitQuestionnaireMutation = gql`
       id
       userSubmitDate
       userHasSubmitted
+      userSubmissionId
     }
   }
 `
@@ -76,6 +85,15 @@ const getQuestionnaire = gql`
             value
             category
             requireAddress
+          }
+        }
+        ... on QuestionTypeImageChoice {
+          options {
+            label
+            value
+            category
+            requireAddress
+            imageUrl
           }
         }
         ... on QuestionTypeRange {
@@ -145,10 +163,33 @@ export const withQuestionnaireRevoke = graphql(revokeQuestionnaireMutation, {
             variables: { slug },
           },
         ],
+        awaitRefetchQueries: true,
       })
     },
   }),
 })
+
+export const withQuestionnaireAnonymize = graphql(
+  anonymizeQuestionnaireMutation,
+  {
+    props: ({ mutate, ownProps: { slug } }) => ({
+      anonymizeQuestionnaire: (questionnaireId) => {
+        return mutate({
+          variables: {
+            questionnaireId,
+          },
+          refetchQueries: [
+            {
+              query: getQuestionnaire,
+              variables: { slug },
+            },
+          ],
+          awaitRefetchQueries: true,
+        })
+      },
+    }),
+  },
+)
 
 export const withAnswerMutation = graphql(submitAnswerMutation, {
   props: ({ mutate, ownProps: { slug } }) => ({

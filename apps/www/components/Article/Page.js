@@ -73,13 +73,15 @@ import ActionBarOverlay from './ActionBarOverlay'
 import SeriesNavBar from './SeriesNavBar'
 import TrialPayNoteMini from './TrialPayNoteMini'
 import Extract from './Extract'
-import { FlyerWrapper, PayNote } from './PayNote'
+import { PayNote } from './PayNote'
 import Progress from './Progress'
 import PodcastButtons from './PodcastButtons'
 import { getDocument } from './graphql/getDocument'
 import ShareImage from './ShareImage'
 import { BrowserOnlyActionBar } from './BrowserOnly'
 import ArticleRecommendationsFeed from './ArticleRecommendationsFeed'
+import TeaserAudioPlayButton from '../Audio/shared/TeaserAudioPlayButton'
+import useAudioQueue from '../Audio/hooks/useAudioQueue'
 
 const LoadingComponent = () => <SmallLoader loading />
 
@@ -144,6 +146,10 @@ const ElectionResultDiversity = dynamic(
     ssr: false,
   },
 )
+const ClimateLabCounter = dynamic(() => import('../Climatelab/Counter'), {
+  loading: LoadingComponent,
+  ssr: false,
+})
 const Questionnaire = dynamic(
   () =>
     import('../Questionnaire/Questionnaire').then(
@@ -154,11 +160,41 @@ const Questionnaire = dynamic(
     ssr: false,
   },
 )
+const ClimateLabInlineTeaser = dynamic(
+  () => import('../Climatelab/InlineTeaser/ClimateLabInlineTeaser'),
+  {
+    loading: LoadingComponent,
+    ssr: false,
+  },
+)
 
 const QuestionnaireSubmissions = dynamic(
   () => import('../Questionnaire/Submissions'),
   {
     loading: LoadingComponent,
+  },
+)
+
+const ClimateLabQuestionnaire = dynamic(
+  () => import('../Climatelab/Questionnaire/Overview'),
+  {
+    loading: LoadingComponent,
+  },
+)
+
+const Postcard = dynamic(
+  () => import('../Climatelab/Postcard/PostcardDynamicComponent'),
+  {
+    loading: LoadingComponent,
+    ssr: false,
+  },
+)
+
+const PostcardGallery = dynamic(
+  () => import('../Climatelab/Postcard/Gallery/PostcardGallery'),
+  {
+    loading: LoadingComponent,
+    ssr: false,
   },
 )
 
@@ -243,6 +279,8 @@ const ArticlePage = ({
 
   const { me, meLoading, hasAccess, hasActiveMembership, isEditor } = useMe()
 
+  const { isAudioQueueAvailable } = useAudioQueue()
+
   const cleanedPath = cleanAsPath(router.asPath)
 
   const {
@@ -266,6 +304,7 @@ const ArticlePage = ({
   const articleContent = article?.content
   const articleUnreadNotifications = article?.unreadNotifications
   const routerQuery = router.query
+  const isClimate = !!article?.content?.meta?.climate
 
   useEffect(() => {
     if (share) {
@@ -359,6 +398,8 @@ const ArticlePage = ({
     }
   }, [trialSignup])
 
+  const showPlayButton = !extract && hasAccess && isAudioQueueAvailable
+
   const template = meta?.template
   const schema = useMemo(
     () =>
@@ -386,6 +427,11 @@ const ArticlePage = ({
           QUESTIONNAIRE: Questionnaire,
           QUESTIONNAIRE_SUBMISSIONS: QuestionnaireSubmissions,
           NEWSLETTER_SIGNUP: NewsletterSignUpDynamic,
+          CLIMATE_LAB_COUNTER: ClimateLabCounter,
+          CLIMATE_LAB_INLINE_TEASER: ClimateLabInlineTeaser,
+          CLIMATE_LAB_QUESTIONNAIRE: ClimateLabQuestionnaire,
+          POSTCARD: Postcard,
+          POSTCARD_GALLERY: PostcardGallery,
         },
         titleMargin: false,
         titleBreakout,
@@ -419,6 +465,7 @@ const ArticlePage = ({
         CommentLink,
         ActionBar: BrowserOnlyActionBar,
         PayNote: showInlinePaynote ? TrialPayNoteMini : undefined,
+        AudioPlayButton: showPlayButton ? TeaserAudioPlayButton : undefined,
       }),
     [template, inNativeIOSApp, inNativeApp, showInlinePaynote, titleBreakout],
   )
@@ -430,6 +477,7 @@ const ArticlePage = ({
       mode='articleTop'
       document={article}
       documentLoading={articleLoading || needsRefetch}
+      shareParam={share}
     />
   )
   const actionBarEnd = actionBar
@@ -447,6 +495,7 @@ const ArticlePage = ({
   const actionBarFlyer = actionBar
     ? cloneElement(actionBar, {
         mode: 'flyer',
+        shareParam: undefined,
       })
     : undefined
 
@@ -560,6 +609,7 @@ const ArticlePage = ({
       hasOverviewNav={hasOverviewNav}
       stickySecondaryNav={hasStickySecondaryNav}
       pageColorSchemeKey={colorSchemeKey}
+      isClimate={isClimate}
     >
       <PageLoader
         loading={articleLoading && !articleData}
@@ -583,7 +633,7 @@ const ArticlePage = ({
             router.query.utm_source && router.query.utm_source === 'newsletter'
 
           const suppressPayNotes =
-            isSection || (!!episodes && showInlinePaynote)
+            isSection || (!!episodes && showInlinePaynote) || isFlyer
           const suppressFirstPayNote =
             suppressPayNotes ||
             podcast ||
@@ -591,6 +641,13 @@ const ArticlePage = ({
             meta.path === '/top-storys' ||
             hasNewsletterUtms ||
             (router.query.utm_source && router.query.utm_source === 'flyer-v1')
+
+          // For this proof of concept I chose to show the climate paynote
+          // only at the bottom. This could/should be evaluated.
+          // We could also suppress the second paynote. (Code commented below.)
+          // I wouldn't show both, since it's a very big paynote,
+          // and the text would be the same twice.
+          // const suppressSecondPayNote = climatePaynote
 
           const payNote = (
             <PayNote
@@ -602,10 +659,11 @@ const ArticlePage = ({
               customMode={meta.paynoteMode}
               customOnly={isPage || isFormat}
               position='before'
-              Wrapper={isFlyer ? FlyerWrapper : undefined}
             />
           )
+
           const payNoteAfter =
+            // !suppressSecondPayNote &&
             payNote && cloneElement(payNote, { position: 'after' })
 
           const ownDiscussion = meta.ownDiscussion

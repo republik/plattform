@@ -26,6 +26,7 @@ type queries {
   membershipStats: MembershipStats!
   memberStats: MemberStats!
   revenueStats: RevenueStats!
+  roleStats(role: String!): RoleStats!
 }
 
 type mutations {
@@ -57,6 +58,7 @@ type mutations {
     publicUrl: String
     disclosures: String
     gender: String
+    prolitterisId: String
   ): User!
 
   # required role: supporter

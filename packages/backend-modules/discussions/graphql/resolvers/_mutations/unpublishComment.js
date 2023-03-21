@@ -5,8 +5,6 @@ module.exports = async (_, args, context) => {
   const { id } = args
   const { pgdb, user, t, pubsub } = context
 
-  Roles.ensureUserHasRole(user, 'member')
-
   const transaction = await pgdb.transactionBegin()
   try {
     // ensure comment exists and belongs to user
@@ -21,6 +19,10 @@ module.exports = async (_, args, context) => {
     ) {
       throw new Error(t('api/comment/notYours'))
     }
+
+    const discussion = await pgdb.public.discussions.findOne({
+      id: comment.discussionId,
+    })
 
     const update =
       comment.userId === user.id
@@ -41,10 +43,6 @@ module.exports = async (_, args, context) => {
         mutation: 'UPDATED',
         node: updatedComment,
       },
-    })
-
-    const discussion = await pgdb.public.discussions.findOne({
-      id: comment.discussionId,
     })
 
     await slack.publishCommentUnpublish(

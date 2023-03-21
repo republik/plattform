@@ -35,10 +35,10 @@ export const fragments = {
 const Subscriptions = (props) => {
   const { sections, t } = props
 
-  const formats = sections.reduce(
-    (reducer, section) => reducer.concat(section.linkedDocuments.nodes),
-    [],
-  )
+  const formats = sections
+    .filter((section) => section.meta.suggestSubscription)
+    .reduce((reducer, section) => reducer.concat(section.formats.nodes), [])
+
   const isTicked = formats.some(
     (format) => format.subscribedByMe && format.subscribedByMe.active,
   )
@@ -52,7 +52,11 @@ const Subscriptions = (props) => {
       <P {...styles.p}>{t('Onboarding/Sections/Subscriptions/preamble')}</P>
       <div style={{ margin: '20px 0' }}>
         {formats.map((format, i) => (
-          <SubscribeCheckbox subscription={format.subscribedByMe} key={i} />
+          <SubscribeCheckbox
+            key={i}
+            subscription={format.subscribedByMe}
+            filterName='Document'
+          />
         ))}
       </div>
       <P {...styles.p}>

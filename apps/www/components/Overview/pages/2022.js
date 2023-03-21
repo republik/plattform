@@ -502,6 +502,58 @@ const text = {
       .
     </>
   ),
+  Dezember: (p) => (
+    <>
+      Was passiert,{' '}
+      <Highlight {...p} ids={['dFQVRve7W']}>
+        wenn man Bundesrat wird
+      </Highlight>
+      ? Verliert Russland{' '}
+      <Highlight {...p} ids={['-0zVxxYwu']}>
+        den Krieg
+      </Highlight>
+      ? Und wie steht es eigentlich um{' '}
+      <Highlight {...p} ids={['V3quYn6KE']}>
+        Chinas Neue Seidenstrasse
+      </Highlight>
+      ? Dann: ein{' '}
+      <Highlight {...p} ids={['Lh_bdJU2F']}>
+        Interview mit Brian
+      </Highlight>
+      , alles über{' '}
+      <Highlight {...p} ids={['XofnVB-AW']}>
+        Gummischrot
+      </Highlight>{' '}
+      und eine{' '}
+      <Highlight {...p} ids={['-s7pU1JJ_']}>
+        Verteidigung der Freundlichkeit
+      </Highlight>
+      . Wir haben uns{' '}
+      <Highlight
+        {...p}
+        ids={['mBRrvK31g']}
+        format='republik/format-ich-hab-mich-getaeuscht'
+      >
+        getäuscht
+      </Highlight>{' '}
+      – Sie{' '}
+      <Highlight {...p} ids={['qSJmrqniV']}>
+        auch
+      </Highlight>
+      ? Arielle{' '}
+      <Highlight {...p} ids={['UCatm8Y3e']}>
+        ist ein Badass
+      </Highlight>
+      , Putins Milliarden{' '}
+      <Highlight {...p} ids={['maleNsDoq']}>
+        fliessen durch Zug
+      </Highlight>{' '}
+      und Julie hat{' '}
+      <Highlight {...p} ids={['01v2uvFI4']}>
+        ihre Eizellen eingefroren.
+      </Highlight>
+    </>
+  ),
 }
 
 const Overview2022 = (props) => <Page {...props} year={2022} text={text} />

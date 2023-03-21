@@ -90,12 +90,16 @@ export {
   MdViewHeadline as FlyerTileMetaIcon,
   MdOutlineQuiz as QuizIcon,
   MdOutlineDelete as DeleteIcon,
+  MdRateReview as MemoIcon,
   MdMic as MicIcon,
   MdPlaylistAdd as PlaylistAddIcon,
   MdPlaylistAddCheck as PlaylistRemoveIcon,
   MdDragHandle as DragHandleIcon,
   MdSkipNext as SkipNextIcon,
   MdSubject as ArticleIcon,
+  MdContentCopy as CopyToClippboardIcon,
+  MdRadioButtonChecked as RadioCheckedIcon,
+  MdRadioButtonUnchecked as RadioUncheckedIcon,
 } from 'react-icons/md'
 
 export {
@@ -146,7 +150,6 @@ export { BoldSearchIcon } from './CustomIcons/BoldSearchIcon'
 // export { MdStrikethroughS as StrikethroughIcon } from '@react-icons/all'
 // export { MdFormatItalic as ItalicIcon } from '@react-icons/all'
 // export { MdInfoOutline as InfoOutlineIcon } from '@react-icons/all'
-// export { MdContentCopy as CopyToClippboardIcon } from '@react-icons/all'
 // export { MdSubdirectoryArrowLeft as MoveToEndIcon } from '@react-icons/all'
 // export { MdSubdirectoryArrowRight as MoveIntoIcon } from '@react-icons/all'
 // export { FaTag as InsertVarIcon } from '@react-icons/all'

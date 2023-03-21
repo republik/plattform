@@ -5,9 +5,9 @@ import { intersperse } from '../../../lib/utils/helpers'
 const insetBr = (text) =>
   intersperse(text.split('\n'), (_, i) => <br key={i} />)
 
-const AnswerText = ({ text, value, question }) => {
+const AnswerText = ({ text, value, question, isQuote }) => {
   if (text) {
-    return insetBr(text)
+    return insetBr(isQuote ? inQuotes(text) : text)
   }
   if (question.options) {
     const selectedOptions = question.options.filter((option) =>
@@ -30,7 +30,7 @@ const AnswerText = ({ text, value, question }) => {
     )
   }
 
-  return insetBr(value)
+  return insetBr(isQuote ? inQuotes(value) : value)
 }
 
 export default AnswerText

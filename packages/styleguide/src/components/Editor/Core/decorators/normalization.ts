@@ -1,4 +1,4 @@
-import { CustomEditor, CustomElement, NodeTemplate } from '../../custom-types'
+import { CustomEditor, CustomElement, EditorConfig } from '../../custom-types'
 import { config } from '../../config/elements'
 import { Element as SlateElement, Text, Transforms, Range } from 'slate'
 import { fixStructure } from '../helpers/structure'
@@ -15,8 +15,9 @@ import { cleanupElement, cleanupVoids } from '../helpers/tree'
 let originalSelection: Range
 
 export const withNormalizations =
-  (topLevelStructure?: NodeTemplate[]) =>
+  (editorConfig: EditorConfig) =>
   (editor: CustomEditor): CustomEditor => {
+    const { structure: topLevelStructure } = editorConfig
     const { normalizeNode } = editor
 
     editor.normalizeNode = ([node, path]) => {

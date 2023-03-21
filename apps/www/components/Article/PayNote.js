@@ -58,14 +58,6 @@ const styles = {
       marginTop: 0,
     },
   }),
-  flyerWrapper: css({
-    maxWidth: 700,
-    margin: '0 auto',
-    padding: 15,
-    [mediaQueries.mUp]: {
-      padding: '15px 0',
-    },
-  }),
 }
 
 const TRY_TO_BUY_RATIO = 0.5
@@ -297,25 +289,22 @@ const SecondaryCta = ({ payNote, payload }) => {
   )
 }
 
-const BuyNoteCta = ({ payNote, payload }) => (
+export const BuyNoteCta = ({ payNote, payload }) => (
   <div {...styles.actions}>
     <BuyButton payNote={payNote} payload={payload} />
     <SecondaryCta payNote={payNote} payload={payload} />
   </div>
 )
 
-const TryNoteCta = ({ payload }) => {
-  const router = useRouter()
-  return (
-    <TrialForm
-      onSuccess={() => {
-        return false
-      }}
-      payload={payload}
-      minimal
-    />
-  )
-}
+const TryNoteCta = ({ payload }) => (
+  <TrialForm
+    onSuccess={() => {
+      return false
+    }}
+    payload={payload}
+    minimal
+  />
+)
 
 const PayNoteCta = ({ payNote, payload, hasAccess }) => {
   const router = useRouter()
@@ -393,10 +382,6 @@ const withDarkContextWhenBefore = (WrappedComponent) => (props) => {
   return <WrappedComponent {...props} />
 }
 
-export const FlyerWrapper = ({ children }) => (
-  <div {...styles.flyerWrapper}>{children}</div>
-)
-
 export const InnerPaynote = ({
   payNote,
   trackingPayload,
@@ -425,7 +410,6 @@ export const PayNote = compose(withDarkContextWhenBefore)(
     customPayNotes,
     customMode,
     customOnly,
-    Wrapper = Center,
   }) => {
     const { meLoading, hasActiveMembership, hasAccess } = useMe()
     const { inNativeIOSApp } = useInNativeApp()
@@ -470,7 +454,7 @@ export const PayNote = compose(withDarkContextWhenBefore)(
           position === 'before' ? 'hover' : 'alert',
         )}
       >
-        <Wrapper>
+        <Center>
           <InnerPaynote
             payNote={positionedNote}
             overwriteContent={
@@ -482,7 +466,7 @@ export const PayNote = compose(withDarkContextWhenBefore)(
             hasAccess={hasAccess}
             position={position}
           />
-        </Wrapper>
+        </Center>
       </div>
     )
   },

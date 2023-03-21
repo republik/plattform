@@ -77,11 +77,12 @@ module.exports = {
       { pgdb },
     )
   },
-  validateChallenge: async ({ pgdb }, { payload }) => {
-    const foundToken = await pgdb.public.tokens.findOne({
+  validateChallenge: async ({ email, pgdb }, { payload }) => {
+    const token = await pgdb.public.tokens.findOne({
       type: Type,
+      email,
       payload,
     })
-    return foundToken.id
+    return token && token.id
   },
 }

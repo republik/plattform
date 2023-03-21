@@ -9,7 +9,9 @@ import {
   mediaQueries,
   ColorHtmlBodyColors,
   ColorContextProvider,
+  useColorContext,
 } from '@project-r/styleguide'
+import OptionalLocalColorContext from './OptionalLocalColorContext'
 import Meta from './Meta'
 import Header from './Header'
 import Footer from '../Footer'
@@ -26,6 +28,8 @@ import { useTranslation } from '../../lib/withT'
 import { useInNativeApp } from '../../lib/withInNativeApp'
 import LegacyAppNoticeBox from './LegacyAppNoticeBox'
 import { useMe } from '../../lib/context/MeContext'
+import { checkRoles } from '../../lib/apollo/withMe'
+import CallToActionBanner from '../CallToActions/CallToActionBanner'
 
 css.global('html', { boxSizing: 'border-box' })
 css.global('*, *:before, *:after', { boxSizing: 'inherit' })
@@ -82,6 +86,24 @@ const styles = {
   }),
 }
 
+/**
+ * If a page has a custom color context that is to be applied to the page content
+ * a wrapping div is rendered where the default color is applied to the background.
+ */
+const OptionalContentBackground = ({
+  children,
+  hasCustomColorContext = false,
+}) => {
+  const [colorScheme] = useColorContext()
+  if (hasCustomColorContext) {
+    return (
+      <div {...colorScheme.set('backgroundColor', 'default')}>{children}</div>
+    )
+  } else {
+    return <>{children}</>
+  }
+}
+
 export const MainContainer = ({ children, maxWidth = '840px' }) => (
   <Container style={{ maxWidth }}>{children}</Container>
 )
@@ -107,12 +129,19 @@ const Frame = ({
   isOnMarketingPage,
   pageColorSchemeKey,
   containerMaxWidth,
+  /**
+   * customContentColorContext are the colors passed to the color-context
+   * that only wraps the content of the page.
+   * (This will not be applied to the header, footer and body of the page)
+   */
+  customContentColorContext,
 }) => {
   const { inNativeApp, inNativeAppLegacy } = useInNativeApp()
   const { t } = useTranslation()
   const { me, hasAccess } = useMe()
+  const isClimateLabOnlyUser = checkRoles(me, ['climate'])
 
-  const hasOverviewNav = hasAccess && wantOverviewNav
+  const hasOverviewNav = (hasAccess || isClimateLabOnlyUser) && wantOverviewNav
   const hasSecondaryNav = !!(secondaryNav || hasOverviewNav)
   const padHeaderRule = useMemo(() => {
     return css({
@@ -169,13 +198,22 @@ const Frame = ({
                   membership={me.activeMembership}
                 />
               )}
-            {raw ? (
-              children
-            ) : (
-              <MainContainer maxWidth={containerMaxWidth}>
-                <Content>{children}</Content>
-              </MainContainer>
-            )}
+            <OptionalLocalColorContext
+              localColorVariables={customContentColorContext}
+            >
+              <OptionalContentBackground
+                hasCustomColorContext={!!customContentColorContext}
+              >
+                <CallToActionBanner />
+                {raw ? (
+                  <>{children}</>
+                ) : (
+                  <MainContainer maxWidth={containerMaxWidth}>
+                    <Content>{children}</Content>
+                  </MainContainer>
+                )}
+              </OptionalContentBackground>
+            </OptionalLocalColorContext>
           </Header>
         </div>
         {!inNativeApp && footer && (
@@ -200,7 +238,8 @@ Frame.propTypes = {
   stickySecondaryNav: PropTypes.any,
   isOnMarketingPage: PropTypes.bool,
   pageColorSchemeKey: PropTypes.string,
-  containerMaxWidth: PropTypes.number,
+  containerMaxWidth: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  customContentColorContext: PropTypes.object,
 }
 
 export default Frame

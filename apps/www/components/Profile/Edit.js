@@ -180,6 +180,7 @@ export const mutation = gql`
     $phoneNumberAccessRole: AccessRole
     $pgpPublicKey: String
     $isListed: Boolean
+    $prolitterisId: String
   ) {
     updateMe(
       username: $username
@@ -196,6 +197,7 @@ export const mutation = gql`
       phoneNumberAccessRole: $phoneNumberAccessRole
       pgpPublicKey: $pgpPublicKey
       isListed: $isListed
+      prolitterisId: $prolitterisId
     ) {
       id
       username
@@ -214,6 +216,7 @@ export const mutation = gql`
       pgpPublicKey
       pgpPublicKeyId
       isListed
+      prolitterisId
       credentials {
         isListed
         description

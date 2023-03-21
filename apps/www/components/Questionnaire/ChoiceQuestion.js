@@ -52,6 +52,7 @@ class ChoiceQuestion extends Component {
         (props.question.userAnswer && props.question.userAnswer.id) || uuid(),
     }
   }
+
   handleChange = (value) => {
     const {
       onChange,

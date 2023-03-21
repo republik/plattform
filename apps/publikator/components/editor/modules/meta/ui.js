@@ -211,15 +211,19 @@ const MetaData = ({
         />
         <br />
         {slugFieldElement}
-        {(customFieldsByRef['bool'] || [])
-          .concat(
-            darkMode
-              ? {
-                  key: 'darkMode',
-                  label: t('metaData/darkMode'),
-                }
-              : [],
-          )
+        {[
+          ...(customFieldsByRef['bool'] || []),
+          darkMode && {
+            key: 'darkMode',
+            label: t('metaData/darkMode'),
+          },
+          darkMode && {
+            key: 'climate',
+            label: t('metaData/climateLab'),
+          },
+          { key: 'isRestricted', label: t('metaData/isRestricted') },
+        ]
+          .filter(Boolean)
           .map((customField) => {
             return (
               <div key={customField.key} {...styles.bool}>
@@ -268,6 +272,29 @@ const MetaData = ({
           black
           getWidth={() => '50%'}
         />
+        {!node.data.get('discussion') &&
+          ['article', 'discussion'].includes(titleData.meta?.template) && (
+            <Checkbox
+              checked={node.data
+                .get('discussionAllowedRoles')
+                ?.includes('climate')}
+              onChange={(_, checked) => {
+                let newData = node.data
+                editor.change((change) => {
+                  change.setNodeByKey(node.key, {
+                    data: checked
+                      ? newData.set('discussionAllowedRoles', ['climate'])
+                      : newData.remove('discussionAllowedRoles'),
+                  })
+                })
+              }}
+              black
+            >
+              {t('metaData/discussionAllowedRoles')}
+            </Checkbox>
+          )}
+        <br />
+        <br />
         {!!series && (
           <SeriesForm
             repoId={titleData.repoId}

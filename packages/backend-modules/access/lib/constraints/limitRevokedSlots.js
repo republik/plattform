@@ -13,17 +13,20 @@ const isGrantable = async (args, context) => {
   const { settings, granter, campaign } = args
   const { pgdb } = context
 
-  const revokedSlots = await pgdb.query(`
+  const revokedSlots = await pgdb.query(
+    `
     SELECT "accessGrants".id
 
     FROM "accessGrants"
 
     WHERE
-      "accessGrants"."accessCampaignId" = '${campaign.id}'
-      AND "accessGrants"."granterUserId" = '${granter.id}'
+      "accessGrants"."accessCampaignId" = :campaignId
+      AND "accessGrants"."granterUserId" = :granterId
       AND "accessGrants"."revokedAt" IS NOT NULL
       AND "accessGrants"."invalidatedAt" IS NULL
-  `)
+  `,
+    { campaignId: campaign.id, granterId: granter.id },
+  )
 
   debug('isGrantable', {
     granter: granter.id,

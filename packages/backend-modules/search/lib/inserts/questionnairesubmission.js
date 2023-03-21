@@ -3,16 +3,13 @@ const Promise = require('bluebird')
 const bulk = require('../indexPgTable')
 
 async function transform(row) {
-  const { questionnaireId, userId } = row
+  const { questionnaireId, userId, pseudonym } = row
 
   const { questions, answers, user } = await Promise.props({
     questions: this.payload.getQuestions(questionnaireId),
-    answers: this.payload.getAnswers(questionnaireId, userId),
+    answers: this.payload.getAnswers(questionnaireId, userId, pseudonym),
     user: this.payload.getUser(userId),
   })
-
-  const { firstName, lastName, hasPublicProfile } = user
-  const name = [firstName, lastName].join(' ').trim()
 
   row.resolved = {
     answers: answers
@@ -27,7 +24,7 @@ async function transform(row) {
         }
 
         const typeValue =
-          (type === 'Choice' &&
+          (['Choice', 'ImageChoice'].includes(type) &&
             answer.payload?.value.map(
               (value) =>
                 typePayload.options.find((option) => option.value == value) // eslint-disable-line eqeqeq
@@ -35,11 +32,15 @@ async function transform(row) {
             )) ||
           answer.payload?.value
 
+        const length =
+          type === 'Text' && typeValue?.length ? typeValue.length : undefined
+
         return {
           ...answer,
           resolved: {
             value: {
               [type]: typeValue,
+              length,
             },
             question: {
               id,
@@ -49,10 +50,12 @@ async function transform(row) {
         }
       })
       .filter(Boolean),
-    user: {
-      name,
-      hasPublicProfile,
-    },
+    ...(user && {
+      user: {
+        name: [user.firstName, user.lastName].join(' ').trim(),
+        hasPublicProfile: user.hasPublicProfile,
+      },
+    }),
   }
 
   return row
@@ -68,9 +71,18 @@ const getDefaultResource = async ({ pgdb }) => {
           { fields: ['id', 'text', 'type', 'typePayload'] },
         )
       },
-      getAnswers: async function (questionnaireId, userId) {
+      getAnswers: async function (questionnaireId, userId, pseudonym) {
+        if (!userId && !pseudonym) {
+          return []
+        }
+
         return pgdb.public.answers.find(
-          { questionnaireId, userId },
+          {
+            questionnaireId,
+            ...(userId && { userId }),
+            ...(pseudonym && { pseudonym }),
+            submitted: true,
+          },
           { fields: ['id', 'questionId', 'payload'] },
         )
       },

@@ -35,7 +35,7 @@ interface Params extends ParsedUrlQuery {
 export const getServerSideProps: GetServerSideProps = createGetServerSideProps<
   Props,
   Params
->(async (client, { params }) => {
+>(async ({ client, ctx: { params } }) => {
   const extractId = paramToString(params.extractId)
 
   await client.query({

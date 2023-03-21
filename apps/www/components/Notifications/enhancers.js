@@ -13,6 +13,7 @@ export const notificationInfo = gql`
 export const subInfo = gql`
   fragment subInfo on Subscription {
     id
+    isEligibleForNotifications
     active
     filters
     object {
@@ -159,8 +160,9 @@ export const possibleSubscriptions = gql`
         meta {
           title
           color
+          suggestSubscription
         }
-        formats: linkedDocuments(feed: true) {
+        formats: linkedDocuments {
           nodes {
             id
             subscribedByMe {
@@ -245,16 +247,16 @@ const markAllAsReadMutation = gql`
 `
 
 const subscribeToDocumentMutation = gql`
-  mutation subToDoc($documentId: ID!) {
-    subscribe(objectId: $documentId, type: Document) {
+  mutation subToDoc($documentId: ID!, $filters: [EventObjectType!]) {
+    subscribe(objectId: $documentId, type: Document, filters: $filters) {
       ...subInfo
     }
   }
   ${subInfo}
 `
 const unsubscribeFromDocumentMutation = gql`
-  mutation unsubscribe($subscriptionId: ID!) {
-    unsubscribe(subscriptionId: $subscriptionId) {
+  mutation unSubFromDoc($subscriptionId: ID!, $filters: [EventObjectType!]) {
+    unsubscribe(subscriptionId: $subscriptionId, filters: $filters) {
       ...subInfo
     }
   }

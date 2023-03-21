@@ -78,7 +78,7 @@ const Usability = (props) => {
             {t.elements(
               'Onboarding/Sections/Usability/paragraph3',
               {
-                linkMore: (
+                linkMore: PROGRESS_EXPLAINER_PATH && (
                   <Link key='linkMore' href={PROGRESS_EXPLAINER_PATH} passHref>
                     <A>{t('Onboarding/Sections/Usability/linkMore')}</A>
                   </Link>
