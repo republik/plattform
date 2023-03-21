@@ -1,3 +1,4 @@
+import React from 'react'
 import Link from 'next/link'
 import {
   InfoBox,
@@ -15,10 +16,14 @@ import {
 import { useMe } from '../../../lib/context/MeContext'
 import ClimateLabLogo from '../shared/ClimateLabLogo'
 
-const ClimateLabInlineTeaser = () => {
+const ClimateLabInlineTeaser: React.FC<{ hideForMembers?: boolean }> = ({
+  hideForMembers = false,
+}) => {
   const { t } = useTranslation()
   const { me } = useMe()
   const isClimateLabMember = me?.roles?.includes(CLIMATE_LAB_ROLE)
+
+  if (isClimateLabMember && hideForMembers) return null
 
   return (
     <InfoBox figureSize='XXS'>

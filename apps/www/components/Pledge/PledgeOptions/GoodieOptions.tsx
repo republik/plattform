@@ -48,6 +48,7 @@ function GoodieOptions({ fields, values, onChange, t }: FieldsType) {
   return (
     <>
       <Interaction.H3>{t('Goodies/title')}</Interaction.H3>
+      <div>{t('Goodies/note/delivery')}</div>
 
       <div {...styles.goodieContainer}>
         {fields.map((field) => {

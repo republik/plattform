@@ -1,0 +1,29 @@
+{
+  "name": "@orbiting/backend-modules-call-to-actions",
+  "version": "0.0.1",
+  "description": "Call to actions",
+  "main": "index.js",
+  "scripts": {
+    "dev": "tsc -w",
+    "build": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/republik/plattform.git"
+  },
+  "author": "Patrick Venetz <patrick.venetz@republik.ch>",
+  "license": "AGPL-3.0",
+  "publishConfig": {
+    "access": "public"
+  },
+  "bugs": {
+    "url": "https://github.com/republik/plattform/issues"
+  },
+  "homepage": "https://github.com/republik/plattform#readme",
+  "devDependencies": {
+  },
+  "dependencies": {
+    "apollo-modules-node": "*",
+    "dayjs": "^1.11.7"
+  }
+}

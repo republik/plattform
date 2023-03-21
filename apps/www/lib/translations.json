@@ -3369,6 +3369,10 @@
       "value": "Entfernen"
     },
     {
+      "key": "article/actionbar/audio/info/title",
+      "value": "Vorgelesener Beitrag"
+    },
+    {
       "key": "article/actionbar/audio/info/speaker/default",
       "value": "unserem Sprecherinnen-Team"
     },
@@ -3377,12 +3381,44 @@
       "value": "Vorgelesen von"
     },
     {
+      "key": "article/actionbar/audio/info/voices/0",
+      "value": "Vorgelesen von unserem Sprecherinnen-Team"
+    },
+    {
+      "key": "article/actionbar/audio/info/voices/other",
+      "value": "Vorgelesen von {names}"
+    },
+    {
       "key": "article/actionbar/audio/info/play-synth",
       "value": "Anhören (synthetisch)"
     },
     {
+      "key": "article/actionbar/audio/info/readAloud",
+      "value": "{subscribe} sobald vorgelesen {synthetic}"
+    },
+    {
+      "key": "article/actionbar/audio/info/readAloud/subscribe",
+      "value": "Benachrichtigen"
+    },
+    {
+      "key": "article/actionbar/audio/info/readAloud/checkbox",
+      "value": "Ich möchte benachrichtigt werden."
+    },
+    {
+      "key": "article/actionbar/audio/info/readAloud/synthetic",
+      "value": "oder synthetische Version {action}"
+    },
+    {
+      "key": "article/actionbar/audio/info/readAloud/synthetic/action",
+      "value": "anhören"
+    },
+    {
       "key": "article/actionbar/audio/info/read-soon",
       "value": "Diesen Beitrag lesen wir im Laufe des Tages ein."
+    },
+    {
+      "key": "article/actionbar/audio/info/read-aloud-notification",
+      "value": "Benachrichtigen."
     },
     {
       "key": "article/syntheticReadAloud/title",
@@ -5380,12 +5416,16 @@
       "value": "Alle"
     },
     {
-      "key": "AudioPlayer/Latest/NoAcces",
+      "key": "AudioPlayer/Latest/NoAccess",
       "value": "Die neusten Beiträge sind für Mitglieder und Abonnentinnen der Republik zugänglich."
     },
     {
       "key": "AudioPlayer/Latest/NoItems",
       "value": "Keine Beiträge verfügbar."
+    },
+    {
+      "key": "AudioPlayer/Latest/LoadMore",
+      "value": "Weitere Beiträge laden"
     },
     {
       "key": "AudioPlayer/Queue",
@@ -6968,6 +7008,10 @@
       "value": "Noch etwas Handfestes?"
     },
     {
+      "key": "Goodies/note/delivery",
+      "value": "Versand nur in die Schweiz und Liechtenstein möglich"
+    },
+    {
       "key": "Goodie/dropdown/label",
       "value": "Anzahl"
     },
@@ -7001,7 +7045,7 @@
     },
     {
       "key": "Goodie/description/MUG",
-      "value": "Mit Logo und Claim «Ohne Journalismus keine Demokratie». Lieferung innerhalb von 10 Werktagen. Nur innerhalb der Schweiz möglich."
+      "value": "Mit Logo und Claim «Ohne Journalismus keine Demokratie». Lieferung innerhalb von 10 Werktagen."
     },
     {
       "key": "Goodie/label/MUG_CERAMIC",
@@ -7009,7 +7053,7 @@
     },
     {
       "key": "Goodie/description/MUG_CERAMIC",
-      "value": "Mit Logo und Claim «Ohne Journalismus keine Demokratie». Lieferung innerhalb von 10 Werktagen. Nur innerhalb der Schweiz möglich."
+      "value": "Mit Logo und Claim «Ohne Journalismus keine Demokratie». Lieferung innerhalb von 10 Werktagen."
     },
     {
       "key": "option/TABLEBOOK/label/other",
@@ -7608,12 +7652,16 @@
       "value": "Im Magazin"
     },
     {
+      "key": "SubscribeCallout/ReadAloud",
+      "value": "Benachrichtigung, sobald vorgelesen"
+    },
+    {
       "key": "SubscribeCallout/settingsLink",
       "value": "Allgemeine Einstellungen"
     },
     {
       "key": "SubscribeCallout/onlyYourself",
-      "value": "Andere können hier Ihnen folgen."
+      "value": "Andere können Ihnen hier folgen."
     },
     {
       "key": "SubscribeMenu/title",
@@ -7834,6 +7882,22 @@
     {
       "key": "ClimateInlineTeaser/Member/content/link",
       "value": "zum Klimalabor"
+    },
+    {
+      "key": "CallToActions/customComponents/FutureCampaignBanner/headline",
+      "value": "Dank {sender} Verlegerinnen ist die Republik um {receiver} Stimmen reicher geworden."
+    },
+    {
+      "key": "CallToActions/customComponents/FutureCampaignBanner/button/other",
+      "value": "Noch {daysLeft} Tage Verstärkung holen und Gratismonate sichern"
+    },
+    {
+      "key": "CallToActions/customComponents/FutureCampaignBanner/button/1",
+      "value": "Noch heute Verstärkung holen und Gratismonate sichern"
+    },
+    {
+      "key": "CallToActions/customComponents/FutureCampaignBanner/button/0",
+      "value": "Noch heute Verstärkung holen und Gratismonate sichern"
     }
   ]
 }

@@ -6,7 +6,9 @@ module.exports = {
   expandProps: true,
   removeDimensions: false,
   replaceAttrValues: {
-    "#000": "currentColor"
+    "#000": "currentColor",
+    "#000000": "currentColor",
+    "black": "currentColor",
   },
   svgProps: {
     fill: "currentColor",
