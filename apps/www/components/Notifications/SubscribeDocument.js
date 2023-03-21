@@ -12,6 +12,7 @@ const SubscribeDocument = ({ t, subscriptions, setAnimate }) => {
         <SubscribeCheckbox
           key={subscription.id}
           subscription={subscription}
+          filterName='Document'
           setAnimate={setAnimate}
           callout
         />
