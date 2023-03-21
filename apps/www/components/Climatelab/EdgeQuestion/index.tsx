@@ -1,49 +1,12 @@
-import { css } from 'glamor'
-import NextLink from 'next/link'
 import { useRouter } from 'next/router'
 import { useMemo } from 'react'
 
-import {
-  useColorContext,
-  Center,
-  Editorial,
-  inQuotes,
-  slug,
-  Breakout,
-  fontStyles,
-  ColorContextLocalExtension,
-  ChevronRightIcon,
-} from '@project-r/styleguide'
+import { Center, slug, Breakout } from '@project-r/styleguide'
 
 import ShareImage from '../../Article/ShareImage'
 
+import CardsOverview from './Cards'
 import QuestionScroll from './QuestionScroll'
-import { localColors, OVERVIEW_DATA } from './config'
-
-const styles = {
-  grid: css({
-    display: 'flex',
-    flexDirection: 'column',
-    // gap: '1rem',
-    marginBottom: 60,
-  }),
-  card: css({
-    marginBottom: 10,
-    padding: 10,
-    maxWidth: '700px',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: '10px 10px 10px 3px',
-    transition: '500ms filter',
-    ':hover': {
-      filter: 'brightness(85%)',
-    },
-  }),
-  boldCitation: css({
-    ...fontStyles.serifBold32,
-  }),
-}
 
 export type Mdast = {
   identifier?: string
@@ -155,75 +118,11 @@ const EdgeQuestion: React.FC<EdgeQuestionProps> = ({
   return (
     <Center>
       <Breakout size='breakout'>
-        <CardsOverview data={OVERVIEW_DATA} />
+        <CardsOverview />
       </Breakout>
       <QuestionScroll answers={answers} share={share} />
     </Center>
   )
 }
 
-const CardsOverview: React.FC<{
-  data: Array<{ name: string; excerpt: string; color: string; tagline: string }>
-}> = ({ data }) => {
-  return (
-    <div {...styles.grid}>
-      {data.map(({ name, excerpt, color, tagline }, idx) => {
-        return (
-          <div
-            {...styles.card}
-            key={idx}
-            style={{
-              alignSelf: idx % 3 === 0 ? 'flex-end' : 'flex-start',
-              textAlign: idx % 3 === 0 ? 'right' : 'left',
-            }}
-          >
-            <NextLink href={`#${slug(name)}`}>
-              <a style={{ textDecoration: 'none' }}>
-                <ColorContextLocalExtension localColors={localColors}>
-                  <GetColorScheme>
-                    {(colorScheme) => (
-                      <>
-                        <div>
-                          <Editorial.Question
-                            style={{ marginTop: 0 }}
-                            {...styles.boldCitation}
-                            {...colorScheme.set('color', color)}
-                          >
-                            {inQuotes(excerpt)}
-                          </Editorial.Question>
-                          <Editorial.Credit
-                            style={{
-                              marginTop: '0',
-                              paddingTop: '20px',
-                              textDecoration: 'underline',
-                            }}
-                            {...colorScheme.set('color', color)}
-                          >
-                            <span>{name}</span>
-                            <span>
-                              {', '}
-                              {tagline}
-                            </span>
-                            <ChevronRightIcon />
-                          </Editorial.Credit>
-                        </div>
-                      </>
-                    )}
-                  </GetColorScheme>
-                </ColorContextLocalExtension>
-              </a>
-            </NextLink>
-          </div>
-        )
-      })}
-    </div>
-  )
-}
-
 export default EdgeQuestion
-
-const GetColorScheme = ({ children }) => {
-  const [colorScheme] = useColorContext()
-
-  return children(colorScheme)
-}
