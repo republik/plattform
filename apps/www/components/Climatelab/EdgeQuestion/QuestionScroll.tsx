@@ -14,7 +14,7 @@ import { SubmissionAuthor } from '../../Questionnaire/Submissions/Submission'
 
 import { ShareQuestionnaire } from '../Questionnaire/Person'
 
-import { portraits } from './config'
+import { PORTRAITS } from './config'
 import { Author, QuestionAnswer, ShareProps } from './index'
 
 const Header: React.FC<{ author: Author }> = ({ author, children }) => {
@@ -35,7 +35,7 @@ const Header: React.FC<{ author: Author }> = ({ author, children }) => {
       <SubmissionAuthor
         displayAuthor={{
           ...author,
-          profilePicture: portraits[slug(author.name)],
+          profilePicture: PORTRAITS[slug(author.name)],
         }}
         customStyle={customStyle}
       >
@@ -45,7 +45,7 @@ const Header: React.FC<{ author: Author }> = ({ author, children }) => {
   )
 }
 
-const RenderQuestion: React.FC<{
+const QuestionScroll: React.FC<{
   answers: QuestionAnswer[]
   share: ShareProps
 }> = ({ answers, share = {} }) => {
@@ -105,13 +105,6 @@ const RenderQuestion: React.FC<{
       })}
     </>
   )
-}
-
-const QuestionScroll: React.FC<{
-  answers: QuestionAnswer[]
-  share: ShareProps
-}> = ({ answers, share }) => {
-  return <RenderQuestion answers={answers} share={share} />
 }
 
 export default QuestionScroll
