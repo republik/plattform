@@ -1,135 +1,138 @@
+// =========== NOTES ===========
+// d = done, a corresponding icon has been found and added
+
 export { IconContextProvider, useIconContext } from './IconContext'
 export {
-  MdPictureAsPdf as PdfIcon,
-  MdFileDownload as DownloadIcon,
-  MdVolumeUp as AudioIcon,
-  MdBookmark as BookmarkIcon,
-  MdBookmarkBorder as BookmarkBorderIcon,
-  MdSearch as SearchIcon,
-  MdPlayArrow as PlayIcon,
-  MdPause as PauseIcon,
+  MdPictureAsPdf as PdfIcon, // d
+  MdFileDownload as DownloadIcon, // d
+  MdVolumeUp as AudioIcon, // d
+  MdBookmark as BookmarkIcon, // d
+  MdBookmarkBorder as BookmarkBorderIcon, // d
+  MdSearch as SearchIcon, // d
+  MdPlayArrow as PlayIcon, // d
+  MdPause as PauseIcon, // d
   MdSkipPrevious as RewindIcon,
-  MdClose as CloseIcon,
+  MdClose as CloseIcon, // d
   MdOpenInNew as NewPageIcon,
-  MdMood as MoodIcon,
-  MdKeyboardArrowDown as ArrowDownIcon,
-  MdKeyboardArrowUp as ArrowUpIcon,
-  MdKeyboardArrowLeft as ArrowLeftIcon,
-  MdKeyboardArrowRight as ArrowRightIcon,
-  MdFlag as ReportIcon,
-  MdEdit as EditIcon,
-  MdVisibilityOff as UnpublishIcon,
-  MdReply as ReplyIcon,
-  MdStarBorder as FeaturedIcon,
+  MdMood as MoodIcon, // d
+  MdKeyboardArrowDown as ArrowDownIcon, // d
+  MdKeyboardArrowUp as ArrowUpIcon, //d
+  MdKeyboardArrowLeft as ArrowLeftIcon, //d
+  MdKeyboardArrowRight as ArrowRightIcon, //d
+  MdFlag as ReportIcon, // d
+  MdEdit as EditIcon, //d
+  MdVisibilityOff as UnpublishIcon, //d
+  MdReply as ReplyIcon, // d
+  MdStarBorder as FeaturedIcon, // d
   MdMoreVert as MoreIcon,
-  MdCheck as CheckIcon,
-  MdFilter as GalleryIcon,
-  MdChevronLeft as ChevronLeftIcon,
-  MdChevronRight as ChevronRightIcon,
-  MdFullscreen as FullscreenIcon,
-  MdFullscreenExit as FullscreenExitIcon,
-  MdPodcasts as PodcastIcon,
-  MdPlayCircleOutline as PlayCircleIcon,
-  MdPauseCircleOutline as PauseCircleIcon,
-  MdQueryBuilder as ReadingTimeIcon,
-  MdMail as MailIcon,
-  MdMailOutline as MailOutlineIcon,
-  MdPhonelink as PhonelinkIcon,
-  MdLink as LinkIcon,
-  MdHighlightOff as HighlightOffIcon,
-  MdLaunch as LaunchIcon,
-  MdRssFeed as RssFeedIcon,
-  MdArrowDownward as ArrowDownwardIcon,
-  MdArrowForward as ArrowForwardIcon,
-  MdArrowBack as ArrowBackIcon,
-  MdExpandMore as ExpandMoreIcon,
-  MdExpandLess as ExpandLessIcon,
-  MdDone as DoneIcon,
-  MdNotificationsActive as NotificationsActiveIcon,
-  MdNotificationsActive as FollowIcon,
-  MdNotifications as NotificationIcon,
-  MdNotificationsOff as NotificationsOffIcon,
-  MdNotificationsNone as NotificationsNoneIcon,
-  MdRotateLeft as RotateLeftIcon,
-  MdRotateLeft as RevertIcon,
-  MdList as ListIcon,
-  MdFormatListBulleted as UlIcon,
-  MdFormatListNumbered as OlIcon,
+  MdCheck as CheckIcon, // d
+  MdFilter as GalleryIcon, // d
+  MdChevronLeft as ChevronLeftIcon, // d
+  MdChevronRight as ChevronRightIcon, // d
+  MdFullscreen as FullscreenIcon, // d
+  MdFullscreenExit as FullscreenExitIcon, // d
+  MdPodcasts as PodcastIcon, // d
+  MdPlayCircleOutline as PlayCircleIcon, // d
+  MdPauseCircleOutline as PauseCircleIcon, // d
+  MdQueryBuilder as ReadingTimeIcon, // r -> IconSchedule
+  MdMail as MailIcon, // d
+  MdMailOutline as MailOutlineIcon, // d
+  MdPhonelink as PhonelinkIcon, // r -> IconDevices
+  MdLink as LinkIcon, // d
+  MdHighlightOff as HighlightOffIcon, // r -> IconCancel
+  MdLaunch as LaunchIcon, // r -> IconOpenInNew
+  MdRssFeed as RssFeedIcon, // d
+  MdArrowDownward as ArrowDownwardIcon, // d
+  MdArrowForward as ArrowForwardIcon, // d
+  MdArrowBack as ArrowBackIcon, // d
+  MdExpandMore as ExpandMoreIcon, //d
+  MdExpandLess as ExpandLessIcon, //d
+  MdDone as DoneIcon, // d
+  MdNotificationsActive as NotificationsActiveIcon, // d
+  MdNotificationsActive as FollowIcon, // r -> IconNotificationsActive
+  MdNotifications as NotificationIcon, // d
+  MdNotificationsOff as NotificationsOffIcon, //d
+  MdNotificationsNone as NotificationsNoneIcon, // r -> IconNotificationsOutline
+  MdRotateLeft as RotateLeftIcon, //d
+  MdRotateLeft as RevertIcon, // r -> IconRotateLeft
+  MdList as ListIcon, // d
+  MdFormatListBulleted as UlIcon, // d
+  MdFormatListNumbered as OlIcon, // d
   MdFilterList as FilterListIcon,
-  MdAdd as AddIcon,
-  MdRemove as RemoveIcon,
-  MdRemoveCircleOutline as RemoveCircleIcon,
+  MdAdd as AddIcon, // d
+  MdRemove as RemoveIcon, // d
+  MdRemoveCircleOutline as RemoveCircleIcon, // r -> IconDoNotDisturbOutline
   MdAccountBox as AccountBoxIcon,
-  MdNoteAdd as NoteAddIcon,
-  MdVpnKey as VpnKeyIcon,
-  MdLanguage as LanguageIcon,
-  MdFavorite as FavoriteIcon,
-  MdStars as StarsIcon,
-  MdTrendingFlat as TrendingFlatIcon,
-  MdFolder as FolderIcon,
-  MdBrightness2 as DarkmodeIcon,
-  MdForward30 as ForwardIcon,
-  MdReplay10 as ReplayIcon,
+  MdNoteAdd as NoteAddIcon, // d
+  MdVpnKey as VpnKeyIcon, // dV
+  MdLanguage as LanguageIcon, // d
+  MdFavorite as FavoriteIcon, // d
+  MdStars as StarsIcon, // d
+  MdTrendingFlat as TrendingFlatIcon, // d
+  MdFolder as FolderIcon, // d
+  MdBrightness2 as DarkmodeIcon, // r -> IconDarkMode
+  MdForward30 as ForwardIcon, // d
+  MdReplay10 as ReplayIcon, // d
   MdCheckCircle as CheckCircleIcon,
-  MdLock as LockIcon,
-  MdTextFormat as TextFormatIcon,
-  MdOutlineSmsFailed as EtiquetteIcon,
-  MdUnfoldLess as UnfoldLessIcon,
-  MdUnfoldMore as UnfoldMoreIcon,
-  MdFormatBold as BoldIcon,
-  MdFormatItalic as ItalicIcon,
-  MdKeyboardReturn as BreakIcon,
-  MdOutlineImage as ImageIcon,
-  MdFormatQuote as QuoteIcon,
-  MdStrikethroughS as StrikeThrough,
-  MdTitle as TitleIcon,
-  MdCode as CodeIcon,
-  MdDragHandle as PunchlineIcon,
-  MdOutlineCallToAction as ArticlePreviewIcon,
-  MdViewQuilt as FlyerTileIcon,
-  MdViewHeadline as FlyerTileMetaIcon,
-  MdOutlineQuiz as QuizIcon,
-  MdOutlineDelete as DeleteIcon,
-  MdRateReview as MemoIcon,
-  MdMic as MicIcon,
-  MdPlaylistAdd as PlaylistAddIcon,
-  MdPlaylistAddCheck as PlaylistRemoveIcon,
-  MdDragHandle as DragHandleIcon,
-  MdSkipNext as SkipNextIcon,
-  MdSubject as ArticleIcon,
-  MdContentCopy as CopyToClippboardIcon,
-  MdRadioButtonChecked as RadioCheckedIcon,
-  MdRadioButtonUnchecked as RadioUncheckedIcon,
+  MdLock as LockIcon, // d
+  MdTextFormat as TextFormatIcon, // r -> IconFormatColorText
+  MdOutlineSmsFailed as EtiquetteIcon, // d
+  MdUnfoldLess as UnfoldLessIcon, // d
+  MdUnfoldMore as UnfoldMoreIcon, // d
+  MdFormatBold as BoldIcon, // d
+  MdFormatItalic as ItalicIcon, // d
+  MdKeyboardReturn as BreakIcon, // d
+  MdOutlineImage as ImageIcon, //  -> IconImageOutline
+  MdFormatQuote as QuoteIcon, // d
+  MdStrikethroughS as StrikeThrough, // d
+  MdTitle as TitleIcon, // d
+  MdCode as CodeIcon, // d
+  MdDragHandle as PunchlineIcon, // r -> IconDragHandle
+  MdOutlineCallToAction as ArticlePreviewIcon, // r -> IconCallToActionOutline
+  MdViewQuilt as FlyerTileIcon, // d
+  MdViewHeadline as FlyerTileMetaIcon, // d
+  MdOutlineQuiz as QuizIcon, // d
+  MdOutlineDelete as DeleteIcon, // r -> IconDeleteOutline
+  MdRateReview as MemoIcon, // d
+  MdMic as MicIcon, // d
+  MdPlaylistAdd as PlaylistAddIcon, // d
+  MdPlaylistAddCheck as PlaylistRemoveIcon, // r -> IconPlaylistAddCheck
+  MdDragHandle as DragHandleIcon, // d
+  MdSkipNext as SkipNextIcon, // d
+  MdSubject as ArticleIcon, // d
+  MdContentCopy as CopyToClippboardIcon, // r -> IconContentCopyOutline
+  MdRadioButtonChecked as RadioCheckedIcon, // d
+  MdRadioButtonUnchecked as RadioUncheckedIcon, //
 } from 'react-icons/md'
 
 export {
-  FaTelegramPlane as TelegramIcon,
-  FaSubscript as SubIcon,
-  FaSuperscript as SupIcon,
+  FaTelegramPlane as TelegramIcon, // d
+  FaSubscript as SubIcon, // d
+  FaSuperscript as SupIcon, // d
 } from 'react-icons/fa'
 
 export {
-  AiFillInstagram as InstagramIcon,
-  AiOutlineCode as BlockCodeIcon,
+  AiFillInstagram as InstagramIcon, // r -> IconInstagram (FontAwesome)
+  AiOutlineCode as BlockCodeIcon, // r -> IconTerminal (MaterialDesign)
 } from 'react-icons/ai'
-export { SiThreema as ThreemaIcon } from 'react-icons/si'
-export { DiOpensource as OpenSourceIcon } from 'react-icons/di'
-export { BiParagraph as ParagraphIcon } from 'react-icons/bi'
+export { SiThreema as ThreemaIcon } from 'react-icons/si' // d
+export { DiOpensource as OpenSourceIcon } from 'react-icons/di' // d
+export { BiParagraph as ParagraphIcon } from 'react-icons/bi' // d
 
 // Separately export io icons to prevent a re-export conflict
 // caused by react-icons export both io4 and io5 on the /all path.
 // This causes duplicate exports which causes a rollup error.
 export {
-  IoLogoTwitter as TwitterIcon,
-  IoLogoYoutube as YoutubeIcon,
-  IoLogoVimeo as VimeoIcon,
-  IoLogoWhatsapp as WhatsappIcon,
-  IoLogoGoogle as GoogleIcon,
-  IoLogoApple as AppleIcon,
-  IoLogoFacebook as FacebookIcon,
+  IoLogoTwitter as TwitterIcon, // d
+  IoLogoYoutube as YoutubeIcon, // d
+  IoLogoVimeo as VimeoIcon, // d
+  IoLogoWhatsapp as WhatsappIcon, // d
+  IoLogoGoogle as GoogleIcon, // d
+  IoLogoApple as AppleIcon, // d
+  IoLogoFacebook as FacebookIcon, // d
 } from 'react-icons/io5'
 
-export { BsBlockquoteLeft as BlockQuoteIcon } from 'react-icons/bs'
+export { BsBlockquoteLeft as BlockQuoteIcon } from 'react-icons/bs' // d
 
 export { ShareIcon } from './CustomIcons/ShareIcon'
 export { MarkdownIcon } from './CustomIcons/MarkdownIcon'
