@@ -97,6 +97,7 @@ const QuestionScroll: React.FC<{
                   ...meta,
                   url: `${cleanAsPath(meta.url)}?share=${authorSlug}`,
                 }}
+                noLabel
               />
             </Header>
             {renderSchema(content)}

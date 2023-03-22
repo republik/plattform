@@ -8,7 +8,7 @@ import { useTranslation } from '../../../lib/withT'
 
 import ShareOverlay from '../../ActionBar/ShareOverlay'
 
-export const HeaderShare = ({ meta }) => {
+export const HeaderShare = ({ meta, noLabel }) => {
   const { t } = useTranslation()
   const { inNativeApp } = useInNativeApp()
   const [overlay, showOverlay] = useState(false)
@@ -17,7 +17,7 @@ export const HeaderShare = ({ meta }) => {
   return (
     <>
       <IconButton
-        label={t('article/actionbar/share')}
+        label={!noLabel && t('article/actionbar/share')}
         labelShort=''
         Icon={ShareIcon}
         href={url}
