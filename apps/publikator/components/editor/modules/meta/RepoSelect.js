@@ -1,6 +1,6 @@
 import { css } from 'glamor'
 
-import { CloseIcon } from '@republik/icons'
+import { IconClose } from '@republik/icons'
 
 import { A, Label, colors } from '@project-r/styleguide'
 import { RepoSearch } from '@project-r/styleguide/editor'
