@@ -167,7 +167,7 @@ const prepareMetaForPublish = async ({
   }
 
   await getMeta(doc)
-  const { credits } = doc._meta
+  const { credits, creditsString, contributors } = doc._meta
 
   // transform docMeta
   return {
@@ -183,6 +183,8 @@ const prepareMetaForPublish = async ({
     scheduledAt,
     audioSource,
     credits,
+    creditsString,
+    contributors,
     isSeriesMaster,
     isSeriesEpisode,
     seriesEpisodes,
