@@ -4,7 +4,6 @@ import { css } from 'glamor'
 import { ellipsize, underline } from '../../lib/styleMixins'
 import { useColorContext } from '../Colors/useColorContext'
 import { plainButtonRule } from '../Button'
-import { MdExpandLess, MdReplay10 } from 'react-icons/md'
 import {
   sansSerifRegular12,
   sansSerifRegular14,
@@ -21,6 +20,8 @@ import {
   ForwardIcon,
   CloseIcon,
   DownloadIcon,
+  ReplayIcon,
+  ExpandLessIcon,
 } from '../Icons'
 import Scrubber from './Scrubber'
 
@@ -311,7 +312,7 @@ const ExpandableAudioPlayer = ({
                 }
                 title={t('styleguide/AudioPlayer/partialfastforward')}
               >
-                <MdReplay10
+                <ReplayIcon
                   size={24}
                   {...(canSetTime && progress > 0
                     ? colorScheme.set('fill', 'text')
@@ -482,7 +483,7 @@ const ExpandableAudioPlayer = ({
             onClick={() => setIsExpanded(!isExpanded)}
             {...plainButtonRule}
           >
-            <MdExpandLess
+            <ExpandLessIcon
               size={32}
               {...colorScheme.set('fill', 'text')}
               style={{
