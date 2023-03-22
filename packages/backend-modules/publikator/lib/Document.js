@@ -10,8 +10,11 @@ const {
 } = require('@orbiting/backend-modules-redirections')
 const {
   getMeta,
-  getContributorUserLinks,
+  getContributors,
 } = require('@orbiting/backend-modules-documents/lib/meta')
+const {
+  stringifyNode,
+} = require('@orbiting/backend-modules-documents/lib/resolve')
 
 const { upsert: upsertDiscussion } = require('./Discussion')
 const { updateRepo } = require('./postgres')
@@ -170,16 +173,9 @@ const prepareMetaForPublish = async ({
   }
 
   await getMeta(doc)
-  const { credits, creditsString } = doc._meta
-
-  const contributorUserLinks = await getContributorUserLinks(
-    doc.type,
-    {
-      path,
-      credits,
-    },
-    context,
-  )
+  const { credits } = doc._meta
+  const creditsString = await stringifyNode(credits.type, credits)
+  const contributors = await getContributors(doc.type, doc._meta, context)
 
   // transform docMeta
   return {
@@ -196,7 +192,7 @@ const prepareMetaForPublish = async ({
     audioSource,
     credits,
     creditsString,
-    contributorUserLinks,
+    contributors,
     isSeriesMaster,
     isSeriesEpisode,
     seriesEpisodes,
