@@ -1,18 +1,21 @@
 import { renderMdast } from 'mdast-react-render'
-import React, { useMemo } from 'react'
 import { useRouter } from 'next/router'
+import React, { useMemo } from 'react'
 
 import { createArticleSchema, slug } from '@project-r/styleguide'
 
-import { useTranslation } from '../../../lib/withT'
-import HrefLink from '../../Link/Href'
-
 import { ASSETS_SERVER_BASE_URL, PUBLIC_BASE_URL } from '../../../lib/constants'
-import { SubmissionAuthor } from '../../Questionnaire/Submissions/Submission'
-import { Author, QuestionAnswer, ShareProps } from './index'
+import { cleanAsPath } from '../../../lib/utils/link'
+import { useTranslation } from '../../../lib/withT'
+
 import Meta from '../../Frame/Meta'
-import { ShareQuestionnaire } from '../Questionnaire/Person'
-import { removeQuery } from '../../../lib/utils/link'
+import HrefLink from '../../Link/Href'
+import { SubmissionAuthor } from '../../Questionnaire/Submissions/Submission'
+
+import HeaderShare from '../shared/HeaderShare'
+
+import { PORTRAITS } from './config'
+import { Author, QuestionAnswer, ShareProps } from './index'
 
 const Header: React.FC<{ author: Author }> = ({ author, children }) => {
   const customStyle = {
@@ -29,14 +32,20 @@ const Header: React.FC<{ author: Author }> = ({ author, children }) => {
       {/*
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore */}
-      <SubmissionAuthor displayAuthor={author} customStyle={customStyle}>
+      <SubmissionAuthor
+        displayAuthor={{
+          ...author,
+          profilePicture: PORTRAITS[slug(author.name)],
+        }}
+        customStyle={customStyle}
+      >
         {children}
       </SubmissionAuthor>
     </>
   )
 }
 
-const RenderQuestion: React.FC<{
+const QuestionScroll: React.FC<{
   answers: QuestionAnswer[]
   share: ShareProps
 }> = ({ answers, share = {} }) => {
@@ -83,11 +92,10 @@ const RenderQuestion: React.FC<{
         return (
           <div style={{ marginBottom: 40 }} id={authorSlug} key={idx}>
             <Header author={author}>
-              <ShareQuestionnaire
-                noLabel
+              <HeaderShare
                 meta={{
                   ...meta,
-                  url: `${removeQuery(meta.url)}?share=${authorSlug}`,
+                  url: `${cleanAsPath(meta.url)}?share=${authorSlug}`,
                 }}
               />
             </Header>
@@ -97,13 +105,6 @@ const RenderQuestion: React.FC<{
       })}
     </>
   )
-}
-
-const QuestionScroll: React.FC<{
-  answers: QuestionAnswer[]
-  share: ShareProps
-}> = ({ answers, share }) => {
-  return <RenderQuestion answers={answers} share={share} />
 }
 
 export default QuestionScroll

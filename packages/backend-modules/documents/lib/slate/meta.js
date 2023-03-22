@@ -41,12 +41,15 @@ const getMeta = (doc) => {
 
   // Populate {doc._meta}. Is used to recognize provided {doc} for which meta
   // information was retrieved already.
+
+  const credits = {
+    type: 'slate',
+    children: getCredits(doc),
+  }
+
   doc._meta = {
     ...doc.content.meta,
-    credits: {
-      type: 'slate',
-      children: getCredits(doc),
-    },
+    credits,
     /* credits: getCredits(doc),
     audioSource: getAudioSource(doc),
     ...times, */
@@ -56,24 +59,22 @@ const getMeta = (doc) => {
   return doc._meta
 }
 
-const getContributorUserIds = (meta, context) =>
-  (meta.authorUserIds && Promise.resolve(meta.authorUserIds)) || // legacy in redis and elastic search caches
-  getContributorUserLinks(meta, context).then((userLinks) =>
-    userLinks.map((userLink) => userLink.id),
-  )
+const getContributors = (meta, context) => {
+  /* // const creditsString = stringifyNode(meta.credits?.type, meta.credits)
+  const creditsContributors = new Analyzer().getAnalysis(creditsString).contributors
+  const metaContriburors = meta?.contributors || []
 
-const getContributorUserLinks = (meta, { loaders }) => {
-  const { contributorUserLinks } = meta
-  if (contributorUserLinks) {
-    // computed on publish
-    return Promise.resolve(contributorUserLinks)
-  }
-  return Promise.resolve([])
+  console.log({
+    creditsString,
+    creditsContributors,
+    metaContriburors,
+  }) */
+
+  return []
 }
 
 module.exports = {
   getCredits,
   getMeta,
-  getContributorUserIds,
-  getContributorUserLinks,
+  getContributors,
 }

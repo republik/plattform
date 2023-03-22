@@ -726,15 +726,15 @@
     },
     {
       "key": "api/email/future_campaign_sender_reward/3/subject",
-      "value": "Sie haben drei Mal Verstärkung geholt. Mit Ihnen wird die Zukunft greifbar!"
+      "value": "Sie haben drei Mal Verstärkung geholt. Mit Ihnen beginnt die Zukunft schon heute!"
     },
     {
       "key": "api/email/future_campaign_sender_reward/4/subject",
-      "value": "Wer ergattert sich Ihr letztes Mitstreiterinnen-Abo?"
+      "value": "Wer verdient Ihr letztes Mitstreiterinnen-Abo? "
     },
     {
       "key": "api/email/future_campaign_sender_reward/5/subject",
-      "value": "Herzliche Gratulation! 5 neue Verlegerinnen für die Republik."
+      "value": "Mission erfüllt! 5 neue Verlegerinnen für die Republik."
     },
     {
       "key": "api/discussion/404",
@@ -2519,6 +2519,18 @@
     {
       "key": "api/publikator/file/error/notYours",
       "value": "Datei gehört nicht Ihnen"
+    },
+    {
+      "key": "api/call-to-actions/notAllowed",
+      "value": "Sie dürfen \"callToActions\" nicht abfragen."
+    },
+    {
+      "key": "api/call-to-actions/acknowledge/notAllowed",
+      "value": "Sie dürfen diesen Call-To-Action nicht quittieren."
+    },
+    {
+      "key": "api/call-to-actions/acknowledge/404",
+      "value": "Call-To-Action nicht gefunden"
     }
   ]
 }
