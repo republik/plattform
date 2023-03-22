@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 
 import { Center, slug, Breakout } from '@project-r/styleguide'
 
@@ -7,6 +7,8 @@ import ShareImage from '../../Article/ShareImage'
 
 import CardsOverview from './Cards'
 import QuestionScroll from './QuestionScroll'
+
+import { localColors } from './config'
 
 export type Mdast = {
   identifier?: string
@@ -108,6 +110,9 @@ const EdgeQuestion: React.FC<EdgeQuestionProps> = ({
 
   if (extract && query.extract) {
     const answer = answers.find((d) => slug(d.author.name) === answerId)
+    const personColorIndex =
+      answer.author.name.length % Object.keys(localColors.light).length
+
     return (
       <ShareImage
         meta={{
@@ -116,7 +121,7 @@ const EdgeQuestion: React.FC<EdgeQuestionProps> = ({
           shareFontSize: 64,
           format: {
             meta: {
-              color: '#d732d4',
+              color: localColors.light[`color${personColorIndex}`],
             },
           },
         }}

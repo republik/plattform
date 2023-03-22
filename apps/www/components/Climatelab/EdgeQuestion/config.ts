@@ -72,42 +72,42 @@ export const OVERVIEW_DATA = [
       'Leiterin der Abteilung Energie, Verkehr, Umwelt beim Deutschen Institut für Wirtschaftsforschung',
     excerpt:
       'Die Uhr tickt. Es geht um nichts weniger, als die Erde ungefähr so zu erhalten, wie wir sie kennen.',
-    color: 'color1',
+    color: 'color0',
   },
   {
     name: 'Patrick Hofstetter',
     tagline: 'Klimaschutzexperte des WWF Schweiz',
     excerpt:
       'Ich wünsche mir, dass alle verstehen, dass die Klimakrise real ist, dass unsere Warnungen auf Fakten beruhen und dass die heute nötigen Investitionen und Verhaltensänderungen viel kleiner sind als alles, was uns das Klimachaos aufzwingen wird.',
-    color: 'color2',
+    color: 'color1',
   },
   {
     name: 'Sherry Rehman',
     tagline: 'Ministerin für Klimawandel von Pakistan',
     excerpt:
       'Es gibt kein Patentrezept zur Lösung der Klimakrise. Die Klimakrise ist ein vielschichtiges Problem, das einen ganzheitlichen Ansatz erfordert.',
-    color: 'color4',
+    color: 'color2',
   },
   {
     name: 'Bernd Ulrich',
     tagline: 'Stellvertretender Chefredakteur, Die ZEIT',
     excerpt:
       'Ich würde mir wünschen, dass die Politiker:innen all ihr gewohntes und im letzten Jahrhundert erlerntes politisches Denken einmal durch die klimapolitische Relativitätstheorie schicken würden.',
-    color: 'color5',
+    color: 'color3',
   },
   {
     name: 'Mitzi Jonelle Tan',
     tagline: '«Fridays for Future»-Aktivistin aus den Philippinen',
     excerpt:
       'Was den Klimawandel wirklich zur Krise werden lässt, ist die historische Ausbeutung von marginalisierten Gruppen, vor allem im Globalen Süden, vor allem durch den Globalen Norden.',
-    color: 'color3',
+    color: 'color4',
   },
   {
     name: 'Rebecca Solnit',
     tagline: 'Schriftstellerin, Mitgründerin des Klimaprojekts Not too Late',
     excerpt:
       'Die aktuelle Klimarevolution könnte uns in allen Bereichen wohlhabender machen. ',
-    color: 'color6',
+    color: 'color5',
   },
   {
     name: 'Reinhard Steurer',
@@ -115,7 +115,7 @@ export const OVERVIEW_DATA = [
       'assoz. Professor für Klimapolitik an der Universität für Bodenkultur in Wien',
     excerpt:
       'Ich wünschte, eine große Mehrheit würde verstehen, dass Klimaschutz kein „grünes Anliegen“ ist. Es geht um den Schutz von Leben und von unserer Zivilisation.',
-    color: 'color7',
+    color: 'color0',
   },
   {
     name: 'Claudia Traidl-Hoffmann',
@@ -133,22 +133,20 @@ export const OVERVIEW_DATA = [
 ]
 
 export const localColors = {
-  dark: {
-    color1: '#7BA7D2',
-    color2: '#1189C7',
-    color3: '#c6aa90',
-    color4: '#f06a54',
-    color5: '#b8b6bd',
-    color6: '#96c5e4',
-    color7: '#4CADAA',
-  },
   light: {
-    color1: '#3f7dba',
-    color2: '#0c6695',
-    color3: '#a87e57',
-    color4: '#df3013',
-    color5: '#888590',
-    color6: '#4a9bd0',
-    color7: '#38817f',
+    color0: '#ef476f',
+    color1: '#e6a623',
+    color2: '#7209b7',
+    color3: '#05c090',
+    color4: '#118ab2',
+    color5: '#073b4c',
+  },
+  dark: {
+    color0: '#f0597d',
+    color1: '#ffd166',
+    color2: '#be67f7',
+    color3: '#06d6a0',
+    color4: '#85d7f2',
+    color5: '#1196c1',
   },
 }
