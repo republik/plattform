@@ -3,7 +3,6 @@ import {
   fontStyles,
   mediaQueries,
   IconButton,
-  CloseIcon,
   plainButtonRule,
   Center,
 } from '@project-r/styleguide'
@@ -15,6 +14,7 @@ import { withDarkMode } from '../../FutureCampaign/withDarkMode'
 import { CATComponentBaseProps } from '../CustomComponentBase'
 import { useIntersectionObserver } from '../../../lib/hooks/useIntersectionObserver'
 import { useTranslation } from '../../../lib/withT'
+import { IconClose } from '@republik/icons'
 
 const HIDE_ON_PATHNAMES: string[] = [
   '/404',
@@ -125,7 +125,7 @@ function FutureCampaignBanner({
           </div>
           <div {...styles.close}>
             <IconButton
-              Icon={CloseIcon}
+              Icon={IconClose}
               size={24}
               onClick={() => {
                 handleAcknowledge()

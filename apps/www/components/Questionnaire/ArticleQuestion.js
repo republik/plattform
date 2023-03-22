@@ -2,7 +2,6 @@ import { Component } from 'react'
 import { gql } from '@apollo/client'
 import compose from 'lodash/flowRight'
 import { withApollo } from '@apollo/client/react/hoc'
-import { CloseIcon } from '@project-r/styleguide'
 import { css } from 'glamor'
 import debounce from 'lodash/debounce'
 import uuid from 'uuid/v4'
@@ -17,6 +16,7 @@ import {
 
 import questionStyles from './questionStyles'
 import withT from '../../lib/withT'
+import { IconClose } from '@republik/icons'
 
 const { H2, H3, P } = Interaction
 
@@ -108,7 +108,7 @@ class ArticleQuestion extends Component {
           })}
           onClick={() => this.handleChange(null)}
         >
-          <CloseIcon size={24} />
+          <IconClose size={24} />
         </div>
       </div>
     )

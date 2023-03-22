@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { css } from 'glamor'
 
-import { IconButton, ShareIcon, ImageIcon } from '@project-r/styleguide'
+import { IconButton } from '@project-r/styleguide'
 
 import { PUBLIC_BASE_URL } from '../../lib/constants'
 import { trackEvent } from '../../lib/matomo'
@@ -12,6 +12,7 @@ import ShareOverlay from '../ActionBar/ShareOverlay'
 
 import { getShareImageUrls } from './Meta'
 import { MetaProps } from './index'
+import { IconImage, IconShare } from '@republik/icons'
 
 const ShareButton: React.FC<{
   meta: MetaProps
@@ -30,7 +31,7 @@ const ShareButton: React.FC<{
       <IconButton
         label={t('article/actionbar/share')}
         labelShort={t('article/actionbar/share')}
-        Icon={ShareIcon}
+        Icon={IconShare}
         href={url}
         onClick={(e) => {
           e.preventDefault()
@@ -102,7 +103,7 @@ const DownloadButton: React.FC<{
       href={shareImageUrl}
       label={t('article/actionbar/download')}
       labelShort={t('article/actionbar/download')}
-      Icon={ImageIcon}
+      Icon={IconImage}
       onClick={downloadScreenshot}
     />
   )

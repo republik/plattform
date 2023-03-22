@@ -4,7 +4,8 @@ import Dropzone from 'react-dropzone'
 
 import withT from '../../lib/withT'
 
-import { CloseIcon, useColorContext } from '@project-r/styleguide'
+import { useColorContext } from '@project-r/styleguide'
+import { IconClose } from '@republik/icons'
 
 const styles = {
   img: css({
@@ -190,7 +191,7 @@ const PortraitSelector = withT(
               })
             }}
           >
-            <CloseIcon size={16} style={{ display: 'block' }} />
+            <IconClose size={16} style={{ display: 'block' }} />
           </div>
         )}
         {img}

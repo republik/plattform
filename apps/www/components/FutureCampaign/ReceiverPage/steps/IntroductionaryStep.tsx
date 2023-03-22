@@ -1,9 +1,8 @@
 import {
-  ExpandLessIcon,
-  ExpandMoreIcon,
   fontStyles,
   mediaQueries,
 } from '@project-r/styleguide'
+import { IconExpandLess, IconExpandMore } from '@republik/icons'
 import { css } from 'glamor'
 import AssetImage from '../../../../lib/images/AssetImage'
 import { StepProps } from '../../../Stepper/Stepper'
@@ -97,8 +96,8 @@ const IntroductoryStep = ({
                 summary={
                   <h2 {...styles.detailsHeading}>5 Gründe für die Republik</h2>
                 }
-                iconClose={<ExpandLessIcon size={24} />}
-                iconOpen={<ExpandMoreIcon size={24} />}
+                iconClose={<IconExpandLess size={24} />}
+                iconOpen={<IconExpandMore size={24} />}
               >
                 <h3 {...styles.headingReasons}>1. Unabhängig</h3>
                 <p {...styles.text}>

@@ -1,10 +1,7 @@
 import AudioListItem from '../shared/AudioListItem'
 
 import {
-  DownloadIcon,
   IconButton,
-  LinkIcon,
-  PlaylistAddIcon,
   Spinner,
 } from '@project-r/styleguide'
 import { AudioQueueItem } from '../../../../graphql/AudioQueueHooks'
@@ -18,6 +15,7 @@ import {
   AudioPlayerActions,
 } from '../../../../types/AudioActionTracking'
 import { trackEvent } from '../../../../../../lib/matomo'
+import { IconDownload, IconLink, IconPlaylistAdd } from '@republik/icons'
 
 type ArticleItemProps = {
   article: AudioQueueItem['document']
@@ -78,7 +76,7 @@ const LatestArticleItem = ({
           </div>
         ) : (
           <IconButton
-            Icon={PlaylistAddIcon}
+            Icon={IconPlaylistAdd}
             title={t('AudioPlayer/Queue/Add')}
             onClick={() => handleAddToQueue(article)}
             disabled={checkIfInQueue(article.id)}
@@ -88,7 +86,7 @@ const LatestArticleItem = ({
       }
       actions={[
         {
-          Icon: PlaylistAddIcon,
+          Icon: IconPlaylistAdd,
           label: t('AudioPlayer/Queue/AddToQueueAsNext'),
           onClick: () => handleAddToQueue(article, 2),
           hidden:
@@ -96,12 +94,12 @@ const LatestArticleItem = ({
             getAudioQueueItemIndex(article.id) <= 1,
         },
         {
-          Icon: DownloadIcon,
+          Icon: IconDownload,
           label: t('AudioPlayer/Queue/Download'),
           onClick: () => handleDownload(article),
         },
         {
-          Icon: LinkIcon,
+          Icon: IconLink,
           label: t('AudioPlayer/Queue/GoToItem'),
           onClick: () => handleOpenArticle(article.meta.path),
         },

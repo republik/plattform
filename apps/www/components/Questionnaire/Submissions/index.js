@@ -6,8 +6,6 @@ import { useQuery } from '@apollo/client'
 import {
   Interaction,
   Loader,
-  SearchIcon,
-  CloseIcon,
   Field,
   useDebounce,
   HR,
@@ -33,6 +31,7 @@ import {
   SORT_KEY_PARAM,
   SUPPORTED_SORT,
 } from './graphql'
+import { IconClose, IconSearch } from '@republik/icons'
 
 const getTotalCount = (data) => data?.questionnaire?.submissions?.totalCount
 const getSearchParams = ({ sort, search }) => {
@@ -149,10 +148,10 @@ const Submissions = ({ slug, extract, share = {} }) => {
         icon={
           searchValue ? (
             <button {...plainButtonRule} onClick={onReset}>
-              <CloseIcon size={30} />
+              <IconClose size={30} />
             </button>
           ) : (
-            <SearchIcon size={30} />
+            <IconSearch size={30} />
           )
         }
       />

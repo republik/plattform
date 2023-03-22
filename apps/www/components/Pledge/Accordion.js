@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 import { css, merge } from 'glamor'
 import { graphql } from '@apollo/client/react/hoc'
 import { gql } from '@apollo/client'
-import { ChevronRightIcon } from '@project-r/styleguide'
 import { nest } from 'd3-collection'
 import { min, ascending } from 'd3-array'
 
@@ -17,6 +16,7 @@ import {
   useColorContext,
 } from '@project-r/styleguide'
 import Link from 'next/link'
+import { IconChevronRight } from '@republik/icons'
 
 const styles = {
   packageHeader: css({
@@ -179,7 +179,7 @@ export const PackageItem = forwardRef(
             </div>
           )}
           <span {...styles.packageIcon}>
-            <ChevronRightIcon size={24} />
+            <IconChevronRight size={24} />
           </span>
         </div>
       </a>

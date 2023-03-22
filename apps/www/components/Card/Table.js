@@ -4,7 +4,6 @@ import { nest } from 'd3-collection'
 import { ascending, descending } from 'd3-array'
 
 import IgnoreIcon from './IgnoreIcon'
-import { FollowIcon, RevertIcon, CheckIcon } from '@project-r/styleguide'
 
 import {
   fontStyles,
@@ -18,6 +17,7 @@ import { countFormat } from '../../lib/utils/format'
 
 import { cardColors } from './constants'
 import Link from 'next/link'
+import { IconCheck, IconFollow, IconRevert } from '@republik/icons'
 
 const PADDING = 10
 
@@ -178,7 +178,7 @@ export const CardRows = ({ nodes, revertCard, ignoreCard, followCard, t }) => (
                       <>
                         {'SR: '}
                         {card.payload.councilOfStates.elected && (
-                          <CheckIcon {...mdCheckProps} />
+                          <IconCheck {...mdCheckProps} />
                         )}
                         {!!card.payload.councilOfStates.votes &&
                           countFormat(card.payload.councilOfStates.votes)}
@@ -197,7 +197,7 @@ export const CardRows = ({ nodes, revertCard, ignoreCard, followCard, t }) => (
                       <>
                         {dualCandidacy ? 'NR: ' : ''}
                         {card.payload.nationalCouncil.elected && (
-                          <CheckIcon {...mdCheckProps} />
+                          <IconCheck {...mdCheckProps} />
                         )}
                         {!!card.payload.nationalCouncil.votes &&
                           countFormat(card.payload.nationalCouncil.votes)}
@@ -228,7 +228,7 @@ export const CardRows = ({ nodes, revertCard, ignoreCard, followCard, t }) => (
                           backgroundColor: cardColors.revert,
                         }}
                       >
-                        <RevertIcon fill='#fff' size={14} />
+                        <IconRevert fill='#fff' size={14} />
                       </button>
                       <button
                         {...styles.actionButton}
@@ -260,7 +260,7 @@ export const CardRows = ({ nodes, revertCard, ignoreCard, followCard, t }) => (
                           cursor: followCard ? 'pointer' : 'default',
                         }}
                       >
-                        <FollowIcon fill='#fff' size={14} />
+                        <IconFollow fill='#fff' size={14} />
                       </button>
                     </>
                   )}

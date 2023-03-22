@@ -6,11 +6,6 @@ import compose from 'lodash/flowRight'
 import withT from '../../lib/withT'
 import datetime from '../Article/Progress/datetime'
 
-import {
-  HighlightOffIcon,
-  CheckSmallIcon,
-  ReadIcon as OutlinedReadIcon,
-} from '@project-r/styleguide'
 import { withProgressApi } from '../Article/Progress/api'
 import {
   ProgressCircle,
@@ -19,6 +14,7 @@ import {
   Label,
 } from '@project-r/styleguide'
 import { getFeatureDescription } from '../Article/Progress'
+import { IconCheckSmall, IconHighlightOff, IconRead } from '@republik/icons'
 
 const styles = {
   consent: css({
@@ -65,7 +61,7 @@ const UserProgress = (
             labelShort={t('article/progressprompt/button/confirm')}
           />
           <IconButton
-            Icon={HighlightOffIcon}
+            Icon={IconHighlightOff}
             onClick={revokeProgressConsent}
             label={t('article/progressprompt/button/reject')}
             labelShort={t('article/progressprompt/button/reject')}
@@ -86,7 +82,7 @@ const UserProgress = (
 
   const ReadIcon = forwardRef((props, ref) => (
     <IconButton
-      Icon={OutlinedReadIcon}
+      Icon={IconRead}
       label={!forceShortLabel && t('article/actionbar/progress/read')}
       title={t('article/actionbar/progress/read')}
       onClick={() => {
@@ -99,7 +95,7 @@ const UserProgress = (
 
   const MarkAsReadIcon = forwardRef((props, ref) => (
     <IconButton
-      Icon={CheckSmallIcon}
+      Icon={IconCheckSmall}
       title={t('article/actionbar/progress/markasread')}
       onClick={() => {
         upsertDocumentProgress(documentId, 1, '')
@@ -126,7 +122,7 @@ const UserProgress = (
       return (
         <CalloutMenu Element={ReadIcon} padded>
           <IconButton
-            Icon={HighlightOffIcon}
+            Icon={IconHighlightOff}
             title={t('article/actionbar/progress/unread')}
             label={t('article/actionbar/progress/unread')}
             labelShort={t('article/actionbar/progress/unread')}

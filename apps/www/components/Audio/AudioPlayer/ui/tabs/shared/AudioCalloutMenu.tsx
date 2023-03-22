@@ -1,9 +1,9 @@
 import {
   useColorContext,
   CalloutMenu,
-  MoreIcon,
   IconButton,
 } from '@project-r/styleguide'
+import { IconMoreVertical } from '@republik/icons'
 import { css } from 'glamor'
 import { ComponentType } from 'react'
 
@@ -25,7 +25,7 @@ export type AudioListItemAction = {
   hidden?: boolean
 }
 
-const MoreIconButton = (props) => <IconButton Icon={MoreIcon} {...props} />
+const MoreIconButton = (props) => <IconButton Icon={IconMoreVertical} {...props} />
 
 const AudioCalloutMenu = ({ actions }: { actions: AudioListItemAction[] }) => {
   const [colorScheme] = useColorContext()

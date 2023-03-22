@@ -1,8 +1,8 @@
 import { css } from 'glamor'
-import { CheckIcon } from '@project-r/styleguide'
 import { useColorContext } from '@project-r/styleguide'
 
 import withT from '../../lib/withT'
+import { IconCheck } from '@republik/icons'
 
 const styles = {
   check: css({
@@ -26,7 +26,7 @@ const Credential = ({ description, verified, t, textColor }) => {
     >
       {description}
       {verified && (
-        <CheckIcon
+        <IconCheck
           {...styles.check}
           {...(textColor && colorScheme.set('fill', 'primary'))}
         />

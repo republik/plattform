@@ -15,7 +15,6 @@ import {
   Checkbox,
   Radio,
 } from '@project-r/styleguide'
-import { LockIcon } from '@project-r/styleguide'
 
 import { AutoForm as AddressForm, AddressView } from '../Account/AddressForm'
 
@@ -34,6 +33,7 @@ import StripeForm from './Form/Stripe'
 import ApplePayMark from './Form/ApplePayMark'
 import GooglePayMark from './Form/GooglePayMark'
 import { WalletPaymentMethod } from './PaymentRequest/usePaymentRequest'
+import { IconLock } from '@republik/icons'
 
 const pad2 = format('02')
 
@@ -301,7 +301,7 @@ class PaymentForm extends Component {
           )}
         </H3>
         <div {...styles.secureContainer}>
-          <LockIcon size={16} />
+          <IconLock size={16} />
           <span {...styles.secureText}>{t('payment/secure')}</span>
         </div>
         <Loader

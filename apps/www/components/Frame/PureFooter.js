@@ -1,6 +1,5 @@
 import { css } from 'glamor'
 import 'glamor/reset'
-import { FacebookIcon, TwitterIcon } from '@project-r/styleguide'
 import {
   mediaQueries,
   fontFamilies,
@@ -8,6 +7,7 @@ import {
   IconButton,
 } from '@project-r/styleguide'
 import { EMAIL_CONTACT } from '../../lib/constants'
+import { IconLogoFacebook, IconLogoTwitter } from '@republik/icons'
 
 css.global('html', { boxSizing: 'border-box' })
 css.global('*, *:before, *:after', { boxSizing: 'inherit' })
@@ -94,12 +94,12 @@ const Footer = ({ en }) => (
 
     <div {...styles.icons}>
       <IconButton
-        Icon={FacebookIcon}
+        Icon={IconLogoFacebook}
         href='https://www.facebook.com/RepublikMagazin'
         target='_blank'
       />
       <IconButton
-        Icon={TwitterIcon}
+        Icon={IconLogoTwitter}
         href='https://twitter.com/RepublikMagazin'
         target='_blank'
       />

@@ -4,8 +4,6 @@ import {
   Overlay,
   OverlayBody,
   OverlayToolbar,
-  OverlayToolbarClose,
-  Interaction,
   mediaQueries,
   fontStyles,
   Editorial,
@@ -13,13 +11,13 @@ import {
   plainButtonRule,
   useColorContext,
 } from '@project-r/styleguide'
-import { AddIcon, RemoveIcon } from '@project-r/styleguide'
 import compose from 'lodash/flowRight'
 import { css } from 'glamor'
 
 import withT from '../../lib/withT'
 import { useFontSize } from '../../lib/fontSize'
 import { trackEvent } from '../../lib/matomo'
+import { IconAdd, IconRemove } from '@republik/icons'
 
 const FONT_SIZE_STEP = 3.2
 const MIN_FONT_SIZE = 8
@@ -70,7 +68,7 @@ const FontSizeOverlay = ({ t, onClose }) => {
             title={t('article/actionbar/fontSize/decrease')}
             onClick={decreaseFontSize}
           >
-            <RemoveIcon />
+            <IconRemove />
           </button>
           <label {...styles.label} {...colorScheme.set('color', 'text')}>
             {fontPercentage.current}
@@ -80,7 +78,7 @@ const FontSizeOverlay = ({ t, onClose }) => {
             title={t('article/actionbar/fontSize/increase')}
             onClick={increaseFontSize}
           >
-            <AddIcon />
+            <IconAdd />
           </button>
           <div {...styles.container}>
             <button

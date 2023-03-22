@@ -3,7 +3,6 @@ import { css } from 'glamor'
 import {
   fontStyles,
   useColorContext,
-  DownloadIcon,
 } from '@project-r/styleguide'
 import { dateFormatter, formatMinutes } from '../shared'
 import AudioPlayerTitle from './AudioPlayerTitle'
@@ -11,6 +10,7 @@ import { AudioQueueItem } from '../../graphql/AudioQueueHooks'
 import AudioCover from './AudioCover'
 import AudioCalloutMenu from './tabs/shared/AudioCalloutMenu'
 import { useInNativeApp } from '../../../../lib/withInNativeApp'
+import { IconDownload } from '@republik/icons'
 
 const styles = {
   root: css({
@@ -114,7 +114,7 @@ const CurrentlyPlaying = ({
         <AudioCalloutMenu
           actions={[
             {
-              Icon: DownloadIcon,
+              Icon: IconDownload,
               label: t('AudioPlayer/Queue/Download'),
               onClick: () => handleDownload(item.document),
               hidden: inNativeApp,

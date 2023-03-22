@@ -5,11 +5,11 @@ import {
   Radio,
   Label,
   useColorContext,
-  DarkmodeIcon,
 } from '@project-r/styleguide'
 import { useInNativeApp } from '../../lib/withInNativeApp'
 
 import { useColorSchemeKeyPreference } from '../ColorScheme/lib'
+import { IconDarkMode } from '@republik/icons'
 
 const DarkmodeSwitch = ({ t }) => {
   const { inNativeApp, inNativeAppLegacy } = useInNativeApp()
@@ -25,7 +25,7 @@ const DarkmodeSwitch = ({ t }) => {
 
   const Icon = forwardRef((props, ref) => (
     <IconButton
-      Icon={DarkmodeIcon}
+      Icon={IconDarkMode}
       label={t('darkmode/switch/label', {
         iconLabel,
       })}

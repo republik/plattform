@@ -2,10 +2,9 @@ import { css } from 'glamor'
 import withT from '../../../lib/withT'
 import {
   IconButton,
-  TextFormatIcon,
-  EtiquetteIcon,
 } from '@project-r/styleguide'
 import PropTypes from 'prop-types'
+import { IconEtiquette, IconFormatColorText } from '@republik/icons'
 
 const styles = {
   container: css({
@@ -16,7 +15,7 @@ const styles = {
 const SecondaryActions = ({ t, isReply = false }) => (
   <div {...styles.container}>
     <IconButton
-      Icon={TextFormatIcon}
+      Icon={IconFormatColorText}
       href='/markdown'
       target='_blank'
       title={t('components/Discussion/markdown/title')}
@@ -24,7 +23,7 @@ const SecondaryActions = ({ t, isReply = false }) => (
     {isReply && (
       <IconButton
         size={20}
-        Icon={EtiquetteIcon}
+        Icon={IconEtiquette}
         href='/etikette'
         target='_blank'
         title={t('components/Discussion/etiquette')}

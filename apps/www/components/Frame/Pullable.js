@@ -10,7 +10,7 @@ import {
   isBodyScrollLocked,
   useColorContext,
 } from '@project-r/styleguide'
-import { ArrowDownwardIcon } from '@project-r/styleguide'
+import { IconArrowDownward } from '@republik/icons'
 
 const styles = {
   container: css({
@@ -167,7 +167,7 @@ class Pullable extends Component {
           {shouldSpin ? (
             <InlineSpinner size={32} />
           ) : (
-            <ArrowDownwardIcon size={32} />
+            <IconArrowDownward size={32} />
           )}
         </Container>
         {this.props.children}

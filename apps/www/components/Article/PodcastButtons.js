@@ -6,16 +6,8 @@ import { IconButton, shouldIgnoreClick } from '@project-r/styleguide'
 import withT from '../../lib/withT'
 import { trackEvent } from '../../lib/matomo'
 
-import {
-  SpotifyIcon,
-  PlayCircleIcon,
-  LinkIcon,
-  LaunchIcon,
-  RssFeedIcon,
-  AppleIcon,
-  GoogleIcon,
-} from '@project-r/styleguide'
 import { useUserAgent } from '../../lib/context/UserAgentContext'
+import { IconLink, IconLogoApple, IconLogoGoogle, IconOpenInNew, IconPlayCircleOutline, IconRssFeed, IconSpotify } from '@republik/icons'
 
 const styles = {
   buttonGroup: css({
@@ -86,7 +78,7 @@ const PodcastButtons = ({
     canPlay && {
       animate: true,
       href: audioSource.mp3,
-      icon: PlayCircleIcon,
+      icon: IconPlayCircleOutline,
       title: t('PodcastButtons/play'),
       label: t('PodcastButtons/play'),
       onClick: (e) => {
@@ -102,38 +94,38 @@ const PodcastButtons = ({
         plattformWithApp === 'android' || plattformWithApp === 'chrome'
           ? `pcast:${podigeeSlug}.podigee.io/feed/mp3`
           : `podcast://${podigeeSlug}.podigee.io/feed/aac`,
-      icon: LaunchIcon,
+      icon: IconOpenInNew,
       label: t('PodcastButtons/app'),
     },
     spotifyUrl && {
       href: spotifyUrl,
       target: '_blank',
-      icon: SpotifyIcon,
+      icon: IconSpotify,
       label: t('PodcastButtons/spotify'),
     },
     appleUrl &&
       !isAndroid && {
         href: appleUrl,
         target: '_blank',
-        icon: AppleIcon,
+        icon: IconLogoApple,
         label: t('PodcastButtons/apple'),
       },
     googleUrl &&
       !isIOS && {
         href: googleUrl,
         target: '_blank',
-        icon: GoogleIcon,
+        icon: IconLogoGoogle,
         label: t('PodcastButtons/google'),
       },
     {
       href: `https://${podigeeSlug}.podigee.io/feed/mp3`,
       target: '_blank',
-      icon: RssFeedIcon,
+      icon: IconRssFeed,
       label: t('PodcastButtons/rss'),
     },
     {
       href: mainFeed,
-      icon: LinkIcon,
+      icon: IconLink,
       title: t('PodcastButtons/copy'),
       label: t(
         `PodcastButtons/copy${copyLinkSuffix ? `/${copyLinkSuffix}` : ''}`,

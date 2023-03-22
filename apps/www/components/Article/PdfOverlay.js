@@ -8,11 +8,10 @@ import {
   Button,
   Checkbox,
   Radio,
-  Interaction,
 } from '@project-r/styleguide'
-import { DownloadIcon } from '@project-r/styleguide'
 import withT from '../../lib/withT'
 import { ASSETS_SERVER_BASE_URL } from '../../lib/constants'
+import { IconDownload } from '@republik/icons'
 
 export const getPdfUrl = (
   meta,
@@ -99,7 +98,7 @@ const PdfOverlay = ({ onClose, article, t }) => {
             })}
             download
           >
-            <DownloadIcon /> {t('article/pdf/download')}
+            <IconDownload /> {t('article/pdf/download')}
           </A>
         </div>
       </OverlayBody>

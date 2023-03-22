@@ -10,9 +10,9 @@ import {
   HEADER_HEIGHT_MOBILE,
   HEADER_HORIZONTAL_PADDING,
 } from '../constants'
-import { AccountBoxIcon } from '@project-r/styleguide'
 import withT, { useTranslation } from '../../lib/withT'
 import { ME_PORTRAIT_STORAGE_KEY } from '../../lib/context/MeContext'
+import { IconAccountBox } from '@republik/icons'
 
 const BUTTON_SIZE = 32
 const BUTTON_SIZE_MOBILE = 26
@@ -25,7 +25,7 @@ export const SignInLink = ({ isOnMarketingPage }) => {
   return (
     <div data-hide-if-me='true'>
       <span {...styles.anonymous}>
-        <AccountBoxIcon {...colorScheme.set('fill', 'text')} />
+        <IconAccountBox {...colorScheme.set('fill', 'text')} />
       </span>
       <span
         {...(isOnMarketingPage ? styles.labelMarketing : styles.labelDefault)}

@@ -8,12 +8,10 @@ import {
   mediaQueries,
   Radio,
   useColorContext,
-  FavoriteIcon,
-  StarsIcon,
-  ChevronRightIcon,
 } from '@project-r/styleguide'
 import { Strong } from './text'
 import CandidateCard from './CandidateCard'
+import { IconChevronRight, IconFavorite, IconStars } from '@republik/icons'
 
 const styles = {
   row: css({
@@ -106,7 +104,7 @@ const ElectionBallotRow = (props) => {
             {...styles.icon}
             style={{ transform: expanded && 'rotate(90deg)' }}
           >
-            <ChevronRightIcon />
+            <IconChevronRight />
           </div>
           <div>
             <Strong>
@@ -121,8 +119,8 @@ const ElectionBallotRow = (props) => {
         </div>
         {showMeta && (
           <div {...styles.icon}>
-            {candidate.recommendation && <StarsIcon />}
-            {mandatory && <FavoriteIcon />}
+            {candidate.recommendation && <IconStars />}
+            {mandatory && <IconFavorite />}
           </div>
         )}
         {onChange && (

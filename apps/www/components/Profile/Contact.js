@@ -3,14 +3,6 @@ import { isURL } from 'validator'
 import compose from 'lodash/flowRight'
 import { css } from 'glamor'
 import { Dropdown, Label, Interaction, IconButton } from '@project-r/styleguide'
-import {
-  FacebookIcon,
-  TwitterIcon,
-  LanguageIcon,
-  MailOutlineIcon,
-  NoteAddIcon,
-  VpnKeyIcon,
-} from '@project-r/styleguide'
 import withT from '../../lib/withT'
 import withInNativeApp from '../../lib/withInNativeApp'
 import { checkRoles } from '../../lib/apollo/withMe'
@@ -19,6 +11,7 @@ import { ADMIN_BASE_URL } from '../../lib/constants'
 import FieldSet, { styles as fieldSetStyles } from '../FieldSet'
 
 import { DEFAULT_VALUES } from './Page'
+import { IconLanguage, IconLogoFacebook, IconLogoTwitter, IconMailOutline, IconNoteAdd, IconVpnKey } from '@republik/icons'
 
 const isHTTPUrl = (url) =>
   isURL(url, { require_protocol: true, protocols: ['http', 'https'] })
@@ -181,26 +174,26 @@ const Contact = ({
       <div {...styles.icons} {...styles.contactRow}>
         {user.facebookId && (
           <IconButton
-            Icon={FacebookIcon}
+            Icon={IconLogoFacebook}
             style={customStyle}
             href={`https://www.facebook.com/${user.facebookId}`}
           />
         )}
         {user.twitterHandle && (
           <IconButton
-            Icon={TwitterIcon}
+            Icon={IconLogoTwitter}
             style={customStyle}
             href={`https://twitter.com/${user.twitterHandle}`}
           />
         )}
         {user.email && (
-          <IconButton Icon={MailOutlineIcon} href={`mailto:${user.email}`} />
+          <IconButton Icon={IconMailOutline} href={`mailto:${user.email}`} />
         )}
         {user.publicUrl &&
           user.publicUrl !== DEFAULT_VALUES.publicUrl &&
           isHTTPUrl(user.publicUrl) && (
             <IconButton
-              Icon={LanguageIcon}
+              Icon={IconLanguage}
               style={
                 electionBallot
                   ? {
@@ -214,7 +207,7 @@ const Contact = ({
           )}
         {isSupporter && showSupportLink && ADMIN_BASE_URL && (
           <IconButton
-            Icon={NoteAddIcon}
+            Icon={IconNoteAdd}
             fill='#FF10D9'
             size={22}
             href={`${ADMIN_BASE_URL}/users/${user.id}`}
@@ -226,7 +219,7 @@ const Contact = ({
         <div {...styles.contactRow}>
           <IconButton
             href={`/pgp/${user.username || user.id}.asc`}
-            Icon={VpnKeyIcon}
+            Icon={IconVpnKey}
             label={user.pgpPublicKeyId.toUpperCase()}
             labelShort={user.pgpPublicKeyId.toUpperCase()}
           />
