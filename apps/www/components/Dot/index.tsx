@@ -1,7 +1,7 @@
 import { motion, useScroll, Variant } from 'framer-motion'
 import { ReactNode, useRef, useState, useEffect } from 'react'
 
-import { css } from 'glamor'
+import { css, merge } from 'glamor'
 import {
   Center,
   Editorial,
@@ -46,12 +46,15 @@ const ChapterIndicator = ({
   children: ReactNode
 }) => {
   const [colorScheme] = useColorContext()
+  const styling = merge(
+    styles.chapterIndicator,
+    mini && styles.chapterIndicatorMini,
+  )
   return (
     <span
-      {...styles.chapterIndicator}
-      {...(mini && styles.chapterIndicatorMini)}
+      {...styling}
       {...(highlighted
-        ? colorScheme.set('background-color', 'textSoft')
+        ? colorScheme.set('background-color', 'defaultInverted')
         : colorScheme.set('background-color', 'hover'))}
       {...(highlighted
         ? colorScheme.set('color', 'default')
@@ -927,7 +930,7 @@ const styles = {
     height: '1.675em',
     lineHeight: '1.675em',
     borderRadius: '0.2rem',
-    marginRight: '0.5rem',
+    marginRight: '1rem',
     marginTop: '-0.3rem',
   }),
   label: css({
