@@ -151,6 +151,7 @@ const colors = {
     imageChoiceShadowHover:
       '0 4px 8px 0 rgba(0, 0, 0, 0.24), 0 0 8px 0 rgba(0, 0, 0, 0.12)',
     boxShadowBottomNavBar: '0 -5px 10px -3px rgba(0, 0, 0, 0.1)',
+    transparentBackground: 'rgba(255, 255, 255, 0.9)',
   },
   dark: {
     logo: '#FFFFFF',
@@ -212,6 +213,7 @@ const colors = {
     imageChoiceShadowHover:
       '0 4px 8px 0 rgba(255, 255, 255, 0.24), 0 0 8px 0 rgba(255, 255, 255, 0.12)',
     boxShadowBottomNavBar: '0 -5px 10px -3px rgba(0, 0, 0, 0.1)',
+    transparentBackground: 'rgba(25, 25, 25, 0.95)',
   },
   mappings: {
     format: {

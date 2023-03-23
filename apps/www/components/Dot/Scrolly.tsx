@@ -2,12 +2,7 @@ import { useState } from 'react'
 
 import { css } from 'glamor'
 
-import {
-  Editorial,
-  useColorContext,
-  mediaQueries,
-  fontStyles,
-} from '@project-r/styleguide'
+import { Editorial, useColorContext } from '@project-r/styleguide'
 
 import { ScrollySlide } from './ScrollySlide'
 import { ChapterIndicator } from './ChapterIndicator'
@@ -191,12 +186,11 @@ const styles = {
     width: '100%',
     zIndex: 1,
     display: 'flex',
-    height: '50vw',
+    height: '100%',
     maxHeight:
-      '30vh' /* don't use dvh here, otherwise the layout will jump when scrolling */,
+      '40vh' /* don't use dvh here, otherwise the layout will jump when scrolling */,
     backdropFilter: 'blur(2px)',
     flexWrap: 'wrap',
-    marginBottom: '15vh',
   }),
   scrollyGraphicsChapters: css({
     width: '100%',
