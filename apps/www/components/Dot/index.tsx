@@ -18,7 +18,7 @@ import Frame from '../Frame'
 
 const RADIUS = 15
 const PADDING_TOP = 250
-const PADDING_LEFT = -100
+const PADDING_LEFT = -70
 const CIRCLE_PADDING = 5
 const COLUMNS = 10
 const SIZE = RADIUS + CIRCLE_PADDING
@@ -145,12 +145,12 @@ const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
   const [colorScheme] = useColorContext()
   return (
     <motion.svg
-      viewBox='0 0 750 563'
+      viewBox='0 0 1000 664.6616541255'
       preserveAspectRatio='xMidYMid meet'
       style={{ width: '100%', height: '100%' }}
       {...colorScheme.set('background-color', 'default')}
-      // width='750'
-      // height='563'
+      width='1000'
+      height='664.6616541255'
       initial='step0'
       animate={getVariant(highlighted)}
     >
@@ -173,7 +173,7 @@ const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
         {dataSet.map((d, i) => {
           return (
             <motion.rect
-              key={`ref-${d}`}
+              key={`ref-age-29-${i}`}
               transition={{ duration: 0.5 }}
               variants={defineVariants(
                 {
@@ -188,7 +188,7 @@ const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                     width: d.r,
                     height: d.r,
                     opacity: 1,
-                    fill: i >= 42 ? '#737373' : '#30A5A3',
+                    fill: i > 40 ? '#737373' : '#0ddfdc',
                   },
                   step2: {
                     y: d.cy,
@@ -196,7 +196,12 @@ const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                     width: d.r,
                     height: d.r,
                     opacity: 1,
-                    fill: i >= 63 ? '#737373' : '#30A5A3',
+                    fill:
+                      i > 40 && i < 63
+                        ? '#2efffc'
+                        : i >= 63
+                        ? '#737373'
+                        : '#2a9492',
                   },
                   step3: {
                     y: d.cy,
@@ -204,7 +209,12 @@ const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                     width: d.r,
                     height: d.r,
                     opacity: 1,
-                    fill: i >= 73 ? '#737373' : '#30A5A3',
+                    fill:
+                      i > 63 && i < 73
+                        ? '#2efffc'
+                        : i >= 73
+                        ? '#737373'
+                        : '#2a9492',
                   },
                   step4: {
                     y: d.cy,
@@ -212,7 +222,12 @@ const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                     width: d.r,
                     height: d.r,
                     opacity: 1,
-                    fill: i >= 78 ? '#737373' : '#30A5A3',
+                    fill:
+                      i > 72 && i < 78
+                        ? '#2efffc'
+                        : i >= 78
+                        ? '#737373'
+                        : '#2a9492',
                   },
                   step5: {
                     y: d.cy,
@@ -220,7 +235,12 @@ const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                     width: d.r,
                     height: d.r,
                     opacity: 1,
-                    fill: i >= 83 ? '#737373' : '#30A5A3',
+                    fill:
+                      i > 78 && i < 83
+                        ? '#2efffc'
+                        : i >= 83
+                        ? '#737373'
+                        : '#2a9492',
                   },
                 },
               )}
@@ -270,11 +290,11 @@ const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
       </g>
 
       {/* second age group, 30 to 34 */}
-      <g transform={`translate(${135}, ${PADDING_TOP})`}>
+      <g transform={`translate(${165}, ${PADDING_TOP})`}>
         {dataSet.map((d, i) => {
           return (
             <motion.rect
-              key={`ref-${d}`}
+              key={`ref-age30-34-${i}`}
               transition={{ duration: 0.5 }}
               variants={defineVariants(
                 {
@@ -289,7 +309,7 @@ const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                     width: d.r,
                     height: d.r,
                     opacity: 1,
-                    fill: i >= 40 ? '#737373' : '#b481d3',
+                    fill: i >= 40 ? '#737373' : '#ab25ff',
                   },
                   step2: {
                     y: d.cy,
@@ -297,7 +317,12 @@ const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                     width: d.r,
                     height: d.r,
                     opacity: 1,
-                    fill: i >= 61 ? '#737373' : '#b481d3',
+                    fill:
+                      i >= 41 && i < 61
+                        ? '#ab25ff'
+                        : i >= 61
+                        ? '#737373'
+                        : '#b481d3',
                   },
                   step3: {
                     y: d.cy,
@@ -305,7 +330,13 @@ const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                     width: d.r,
                     height: d.r,
                     opacity: 1,
-                    fill: i >= 72 ? '#737373' : '#b481d3',
+                    fill:
+                      i >= 62 && i < 72
+                        ? '#ab25ff'
+                        : i >= 72
+                        ? '#737373'
+                        : '#b481d3',
+                    // fill: i >= 72 ? '#737373' : '#b481d3',
                   },
                   step4: {
                     y: d.cy,
@@ -313,7 +344,12 @@ const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                     width: d.r,
                     height: d.r,
                     opacity: 1,
-                    fill: i >= 77 ? '#737373' : '#b481d3',
+                    fill:
+                      i >= 73 && i < 77
+                        ? '#ab25ff'
+                        : i >= 77
+                        ? '#737373'
+                        : '#b481d3',
                   },
                   step5: {
                     y: d.cy,
@@ -321,7 +357,12 @@ const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                     width: d.r,
                     height: d.r,
                     opacity: 1,
-                    fill: i >= 82 ? '#737373' : '#b481d3',
+                    fill:
+                      i >= 78 && i < 82
+                        ? '#ab25ff'
+                        : i >= 82
+                        ? '#737373'
+                        : '#b481d3',
                   },
                 },
               )}
@@ -371,11 +412,11 @@ const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
       </g>
 
       {/* third age group, 35 to 39 */}
-      <g transform={`translate(${370}, ${PADDING_TOP})`}>
+      <g transform={`translate(${400}, ${PADDING_TOP})`}>
         {dataSet.map((d, i) => {
           return (
             <motion.rect
-              key={`ref-${d}`}
+              key={`ref-age35-39-${i}`}
               transition={{ duration: 0.5 }}
               variants={defineVariants(
                 {
@@ -390,7 +431,7 @@ const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                     width: d.r,
                     height: d.r,
                     opacity: 1,
-                    fill: i >= 33 ? '#737373' : '#c08c44',
+                    fill: i >= 33 ? '#737373' : '#ffb34a',
                   },
                   step2: {
                     y: d.cy,
@@ -398,7 +439,12 @@ const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                     width: d.r,
                     height: d.r,
                     opacity: 1,
-                    fill: i >= 50 ? '#737373' : '#c08c44',
+                    fill:
+                      i >= 34 && i < 50
+                        ? '#ffb34a'
+                        : i >= 50
+                        ? '#737373'
+                        : '#a97c3e',
                   },
                   step3: {
                     y: d.cy,
@@ -406,7 +452,12 @@ const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                     width: d.r,
                     height: d.r,
                     opacity: 1,
-                    fill: i >= 59 ? '#737373' : '#c08c44',
+                    fill:
+                      i >= 51 && i < 59
+                        ? '#ffb34a'
+                        : i >= 59
+                        ? '#737373'
+                        : '#a97c3e',
                   },
                   step4: {
                     y: d.cy,
@@ -414,7 +465,12 @@ const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                     width: d.r,
                     height: d.r,
                     opacity: 1,
-                    fill: i >= 64 ? '#737373' : '#c08c44',
+                    fill:
+                      i >= 60 && i < 64
+                        ? '#ffb34a'
+                        : i >= 64
+                        ? '#737373'
+                        : '#a97c3e',
                   },
                   step5: {
                     y: d.cy,
@@ -422,7 +478,12 @@ const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                     width: d.r,
                     height: d.r,
                     opacity: 1,
-                    fill: i >= 68 ? '#737373' : '#c08c44',
+                    fill:
+                      i >= 65 && i < 68
+                        ? '#ffb34a'
+                        : i >= 68
+                        ? '#737373'
+                        : '#a97c3e',
                   },
                 },
               )}
@@ -471,11 +532,11 @@ const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
       </g>
 
       {/* fourth age group, greater than 40 */}
-      <g transform={`translate(${605}, ${PADDING_TOP})`}>
+      <g transform={`translate(${635}, ${PADDING_TOP})`}>
         {dataSet.map((d, i) => {
           return (
             <motion.rect
-              key={`ref-${d}`}
+              key={`ref-age-40-${i}`}
               transition={{ duration: 0.5 }}
               variants={defineVariants(
                 {
@@ -490,7 +551,7 @@ const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                     width: d.r,
                     height: d.r,
                     opacity: 1,
-                    fill: i >= 18 ? '#737373' : '#aa3700',
+                    fill: i >= 18 ? '#737373' : '#ff5100',
                   },
                   step2: {
                     y: d.cy,
@@ -498,7 +559,12 @@ const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                     width: d.r,
                     height: d.r,
                     opacity: 1,
-                    fill: i >= 27 ? '#737373' : '#aa3700',
+                    fill:
+                      i >= 19 && i < 27
+                        ? '#ff5100'
+                        : i >= 27
+                        ? '#737373'
+                        : '#863814',
                   },
                   step3: {
                     y: d.cy,
@@ -506,7 +572,12 @@ const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                     width: d.r,
                     height: d.r,
                     opacity: 1,
-                    fill: i >= 31 ? '#737373' : '#aa3700',
+                    fill:
+                      i >= 28 && i < 31
+                        ? '#ff5100'
+                        : i >= 31
+                        ? '#737373'
+                        : '#863814',
                   },
                   step4: {
                     y: d.cy,
@@ -514,7 +585,12 @@ const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                     width: d.r,
                     height: d.r,
                     opacity: 1,
-                    fill: i >= 33 ? '#737373' : '#aa3700',
+                    fill:
+                      i >= 32 && i < 34
+                        ? '#ff5100'
+                        : i >= 34
+                        ? '#737373'
+                        : '#863814',
                   },
                   step5: {
                     y: d.cy,
@@ -522,7 +598,12 @@ const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                     width: d.r,
                     height: d.r,
                     opacity: 1,
-                    fill: i >= 36 ? '#737373' : '#aa3700',
+                    fill:
+                      i >= 34 && i < 36
+                        ? '#ff5100'
+                        : i >= 36
+                        ? '#737373'
+                        : '#863814',
                   },
                 },
               )}
@@ -601,23 +682,21 @@ const Scrolly = () => {
           {...styles.scrollyGraphicsChapters}
           {...colorScheme.set('background-color', 'default')}
         >
-          <div style={{ width: '100%' }}>
-            <ChapterIndicator mini highlighted={lastInView === 0}>
-              1
-            </ChapterIndicator>
-            <ChapterIndicator mini highlighted={lastInView === 1}>
-              2
-            </ChapterIndicator>
-            <ChapterIndicator mini highlighted={lastInView === 2}>
-              3
-            </ChapterIndicator>
-            <ChapterIndicator mini highlighted={lastInView === 3}>
-              4
-            </ChapterIndicator>
-            <ChapterIndicator mini highlighted={lastInView === 4}>
-              5
-            </ChapterIndicator>
-          </div>
+          <ChapterIndicator mini highlighted={lastInView === 0}>
+            1
+          </ChapterIndicator>
+          <ChapterIndicator mini highlighted={lastInView === 1}>
+            2
+          </ChapterIndicator>
+          <ChapterIndicator mini highlighted={lastInView === 2}>
+            3
+          </ChapterIndicator>
+          <ChapterIndicator mini highlighted={lastInView === 3}>
+            4
+          </ChapterIndicator>
+          <ChapterIndicator mini highlighted={lastInView === 4}>
+            5
+          </ChapterIndicator>
         </div>
 
         <StoryGraphic highlighted={lastInView} />
