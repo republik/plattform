@@ -1,5 +1,6 @@
 import { ReactNode } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
+import styles from './component-demo.module.css'
 
 const ErrorFallback = () => (
   <div style={{ background: 'hotpink', color: 'white' }}>
@@ -17,9 +18,11 @@ export const ComponentDemo = ({
   children: ReactNode
 }) => (
   <div data-file={file}>
-    <ErrorBoundary FallbackComponent={ErrorFallback}>
-      <Component />
-    </ErrorBoundary>
+    <div className={styles.demoArea}>
+      <ErrorBoundary FallbackComponent={ErrorFallback}>
+        <Component />
+      </ErrorBoundary>
+    </div>
 
     {children}
   </div>
