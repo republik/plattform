@@ -18,7 +18,7 @@ import Frame from '../Frame'
 
 const RADIUS = 15
 const PADDING_TOP = 250
-const PADDING_LEFT = -70
+const PADDING_LEFT = 0
 const CIRCLE_PADDING = 5
 const COLUMNS = 10
 const SIZE = RADIUS + CIRCLE_PADDING
@@ -145,12 +145,10 @@ const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
   const [colorScheme] = useColorContext()
   return (
     <motion.svg
-      viewBox='0 0 1000 664.6616541255'
+      viewBox='0 0 930 540'
       preserveAspectRatio='xMidYMid meet'
       style={{ width: '100%', height: '100%' }}
       {...colorScheme.set('background-color', 'default')}
-      width='1000'
-      height='664.6616541255'
       initial='step0'
       animate={getVariant(highlighted)}
     >
@@ -290,7 +288,7 @@ const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
       </g>
 
       {/* second age group, 30 to 34 */}
-      <g transform={`translate(${165}, ${PADDING_TOP})`}>
+      <g transform={`translate(${235}, ${PADDING_TOP})`}>
         {dataSet.map((d, i) => {
           return (
             <motion.rect
@@ -412,7 +410,7 @@ const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
       </g>
 
       {/* third age group, 35 to 39 */}
-      <g transform={`translate(${400}, ${PADDING_TOP})`}>
+      <g transform={`translate(${470}, ${PADDING_TOP})`}>
         {dataSet.map((d, i) => {
           return (
             <motion.rect
@@ -532,7 +530,7 @@ const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
       </g>
 
       {/* fourth age group, greater than 40 */}
-      <g transform={`translate(${635}, ${PADDING_TOP})`}>
+      <g transform={`translate(${705}, ${PADDING_TOP})`}>
         {dataSet.map((d, i) => {
           return (
             <motion.rect
