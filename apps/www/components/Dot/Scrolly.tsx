@@ -187,8 +187,7 @@ const styles = {
     zIndex: 1,
     display: 'flex',
     height: '100%',
-    maxHeight:
-      '40vh' /* don't use dvh here, otherwise the layout will jump when scrolling */,
+    // maxHeight: '35vh' /* don't use dvh here, otherwise the layout will jump when scrolling */,
     backdropFilter: 'blur(2px)',
     flexWrap: 'wrap',
   }),

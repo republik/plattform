@@ -50,7 +50,7 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
   const [colorScheme] = useColorContext()
   return (
     <motion.svg
-      viewBox='0 0 930 540'
+      viewBox='0 0 930 360'
       preserveAspectRatio='xMidYMid meet'
       style={{ width: '100%', height: '100%' }}
       {...colorScheme.set('background-color', 'transparentBackground')}
