@@ -1,6 +1,7 @@
 import { cloneElement, useRef, useEffect, useMemo, useContext } from 'react'
 import { css } from 'glamor'
 import Link from 'next/link'
+import fetch from 'isomorphic-unfetch'
 import { useRouter } from 'next/router'
 import dynamic from 'next/dynamic'
 import { renderMdast } from 'mdast-react-render'
@@ -44,7 +45,7 @@ import { parseJSONObject } from '../../lib/safeJSON'
 import { formatDate } from '../../lib/utils/format'
 import withInNativeApp, { postMessage } from '../../lib/withInNativeApp'
 import { splitByTitle } from '../../lib/utils/mdast'
-import { PUBLIKATOR_BASE_URL } from '../../lib/constants'
+import { PUBLIKATOR_BASE_URL, PROLITTERIS_BASE_URL } from '../../lib/constants'
 import { useMe } from '../../lib/context/MeContext'
 import { cleanAsPath } from '../../lib/utils/link'
 
@@ -310,6 +311,15 @@ const ArticlePage = ({
   const articleUnreadNotifications = article?.unreadNotifications
   const routerQuery = router.query
   const isClimate = !!article?.content?.meta?.climate
+
+  // Prolitteris Tracking with Proxy
+  useEffect(async () => {
+    fetch(
+      `${PROLITTERIS_BASE_URL}?paid=${
+        hasAccess ? 'pw' : 'na'
+      }&uid=${documentId}&path=${cleanedPath}`,
+    )
+  }, [])
 
   useEffect(() => {
     if (share) {
