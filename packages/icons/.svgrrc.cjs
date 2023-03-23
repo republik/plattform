@@ -40,6 +40,7 @@ module.exports = {
       ${variables.jsx}
     );
 
+    ${variables.componentName}.displayName = "${variables.componentName}";
     ${variables.exports};
     `
   },
