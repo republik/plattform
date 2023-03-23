@@ -11,7 +11,7 @@ const { getPeriodEndingLast } = require('./utils')
 const DONATE_POLICY_NAME = '5YEAR_DONATE_MONTHS'
 
 const rewardSender = async (pledge, context) => {
-  const { pgdb, t, mail } = context
+  const { pgdb } = context
 
   if (pledge?.payload?.utm_campaign !== 'mitstreiter') {
     debug('no utm_campaign "mitstreiter" found')
@@ -104,12 +104,13 @@ const rewardSender = async (pledge, context) => {
       }
 
       // send email to campaign sender without new membership period end date
+      /*
       await mail.sendFutureCampaignSenderRewardMail(
         { ...rewardMailData },
         { pgdb, t },
       )
+      */
 
-      // TODO slack message?
       await transaction.transactionCommit()
     }
   } catch (e) {
