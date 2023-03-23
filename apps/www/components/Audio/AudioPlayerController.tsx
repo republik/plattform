@@ -23,7 +23,6 @@ import {
   AudioPlayerLocations,
   AudioPlayerActions,
 } from './types/AudioActionTracking'
-import { useMediaSession } from './hooks/useMediaSession'
 
 const DEFAULT_PLAYBACK_RATE = 1
 const SKIP_FORWARD_TIME = 30
