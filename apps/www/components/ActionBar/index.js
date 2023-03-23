@@ -31,7 +31,20 @@ import {
   AudioPlayerLocations,
   AudioPlayerActions,
 } from '../Audio/types/AudioActionTracking'
-import { IconDownload, IconEdit, IconEtiquette, IconFontSize, IconPdf, IconPlayCircleOutline, IconPlaylistAdd, IconPlayListAddCheck, IconPodcast, IconReadTime, IconSchedule, IconShare } from '@republik/icons'
+import {
+  IconDownload,
+  IconEdit,
+  IconEtiquette,
+  IconFontSize,
+  IconPdf,
+  IconPlayCircleOutline,
+  IconPlaylistAdd,
+  IconPlaylistRemove,
+  IconPodcast,
+  IconReadTime,
+  IconSchedule,
+  IconShare,
+} from '@republik/icons'
 
 const RenderItems = ({ items }) => (
   <>
@@ -484,7 +497,7 @@ const ActionBar = ({
             }`,
           )
         : '',
-      Icon: itemInAudioQueue ? IconPlayListAddCheck : IconPlaylistAdd,
+      Icon: itemInAudioQueue ? IconPlaylistRemove : IconPlaylistAdd,
       onClick: async (e) => {
         e.preventDefault()
         if (itemInAudioQueue) {

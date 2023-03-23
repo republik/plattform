@@ -1,9 +1,7 @@
 import { useState, useEffect } from 'react'
 import compose from 'lodash/flowRight'
 import { css } from 'glamor'
-import {
-  IconButton,
-} from '@project-r/styleguide'
+import { IconButton } from '@project-r/styleguide'
 
 import withT from '../../lib/withT'
 import withInNativeApp, { postMessage } from '../../lib/withInNativeApp'
@@ -11,7 +9,16 @@ import { trackEvent } from '../../lib/matomo'
 
 import copyToClipboard from 'clipboard-copy'
 import { useUserAgent } from '../../lib/context/UserAgentContext'
-import { IconLink, IconLogoFacebook, IconLogoTwitter, IconLogoWhatsApp, IconMail, IconShare, IconTelegram, IconThreema } from '@republik/icons'
+import {
+  IconLink,
+  IconLogoFacebook,
+  IconLogoTwitter,
+  IconLogoWhatsApp,
+  IconMail,
+  IconShare,
+  IconLogoTelegram,
+  IconLogoThreema,
+} from '@republik/icons'
 
 const ShareButtons = ({
   t,
@@ -101,7 +108,7 @@ const ShareButtons = ({
       name: 'threema',
       target: '_blank',
       href: `https://threema.id/compose?text=${encodeURIComponent(url)}`,
-      icon: IconThreema,
+      icon: IconLogoThreema,
       title: t('article/actionbar/threema/title'),
       label: t('article/actionbar/threema/label'),
     },
@@ -109,7 +116,7 @@ const ShareButtons = ({
       name: 'telegram',
       target: '_blank',
       href: `https://t.me/share/url?url=${encodeURIComponent(url)}`,
-      icon: IconTelegram,
+      icon: IconLogoTelegram,
       title: t('article/actionbar/telegram/title'),
       label: t('article/actionbar/telegram/label'),
     },

@@ -55,7 +55,7 @@ const UserProgress = (
         <div {...styles.consent}>
           <IconButton
             style={{ marginBottom: 16 }}
-            Icon={OutlinedReadIcon}
+            Icon={ReadIcon}
             onClick={submitProgressConsent}
             label={t('article/progressprompt/button/confirm')}
             labelShort={t('article/progressprompt/button/confirm')}
@@ -163,7 +163,7 @@ const UserProgress = (
       ) : (
         <CalloutMenu Element={MarkAsReadIcon} padded>
           <IconButton
-            Icon={OutlinedReadIcon}
+            Icon={IconRead}
             title={t('article/actionbar/progress/markasread')}
             label={t('article/actionbar/progress/markasread')}
             labelShort={t('article/actionbar/progress/markasread')}

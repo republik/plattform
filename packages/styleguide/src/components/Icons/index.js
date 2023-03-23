@@ -96,7 +96,6 @@ export {
   MdRateReview as MemoIcon, // d -> IconMemo w
   MdMic as MicIcon, // d -> IconMic w
   MdPlaylistAdd as PlaylistAddIcon, // d -> IconPlaylistAdd w
-  // TODO: UPDATE new name
   MdPlaylistAddCheck as PlaylistRemoveIcon, // r -> IconPlaylistAddCheck w
   MdDragHandle as DragHandleIcon, // d -> IconDragHandle w
   MdSkipNext as SkipNextIcon, // d -> IconSkipNext w
@@ -117,7 +116,6 @@ export {
   AiOutlineCode as BlockCodeIcon, // r -> IconTerminal (MaterialDesign) w
 } from 'react-icons/ai'
 export { SiThreema as ThreemaIcon } from 'react-icons/si' // d -> IconThreema
-// TODO: fix casing of new name
 export { DiOpensource as OpenSourceIcon } from 'react-icons/di' // d -> IconOpenSource w
 export { BiParagraph as ParagraphIcon } from 'react-icons/bi' // d -> IconParagraph w
 
@@ -139,7 +137,7 @@ export { BsBlockquoteLeft as BlockQuoteIcon } from 'react-icons/bs' // d -> Icon
 export { ShareIcon } from './CustomIcons/ShareIcon' // d -> IconShare w
 export { MarkdownIcon } from './CustomIcons/MarkdownIcon' // d -> IconMarkdown w
 export { BackIcon } from './CustomIcons/BackIcon' // d -> IconBack w
-export { DiscussionIcon } from './CustomIcons/DiscussionIcon' // d -> IconDiscussion w 
+export { DiscussionIcon } from './CustomIcons/DiscussionIcon' // d -> IconDiscussion w
 export { FontSizeIcon } from './CustomIcons/FontSizeIcon' // d -> IconFontSize w
 export { CheckSmallIcon } from './CustomIcons/MdCheckSmall' // d -> IconCheckSmall w
 export { ReadIcon } from './CustomIcons/MdCheckCircleOutlined' // d -> IconRead w
