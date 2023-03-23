@@ -575,7 +575,7 @@ const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
 }
 
 const Scrolly = () => {
-  const [headerHeight] = useHeaderHeight()
+  const [colorScheme] = useColorContext()
   const [inViewList, setInViewList] = useState([
     false,
     false,
@@ -599,25 +599,25 @@ const Scrolly = () => {
       <div {...styles.scrollyGraphicsContainer}>
         <div
           {...styles.scrollyGraphicsChapters}
-          style={{
-            top: headerHeight + 20,
-          }}
+          {...colorScheme.set('background-color', 'default')}
         >
-          <ChapterIndicator mini highlighted={lastInView === 0}>
-            1
-          </ChapterIndicator>
-          <ChapterIndicator mini highlighted={lastInView === 1}>
-            2
-          </ChapterIndicator>
-          <ChapterIndicator mini highlighted={lastInView === 2}>
-            3
-          </ChapterIndicator>
-          <ChapterIndicator mini highlighted={lastInView === 3}>
-            4
-          </ChapterIndicator>
-          <ChapterIndicator mini highlighted={lastInView === 4}>
-            5
-          </ChapterIndicator>
+          <div style={{ width: '100%' }}>
+            <ChapterIndicator mini highlighted={lastInView === 0}>
+              1
+            </ChapterIndicator>
+            <ChapterIndicator mini highlighted={lastInView === 1}>
+              2
+            </ChapterIndicator>
+            <ChapterIndicator mini highlighted={lastInView === 2}>
+              3
+            </ChapterIndicator>
+            <ChapterIndicator mini highlighted={lastInView === 3}>
+              4
+            </ChapterIndicator>
+            <ChapterIndicator mini highlighted={lastInView === 4}>
+              5
+            </ChapterIndicator>
+          </div>
         </div>
 
         <StoryGraphic highlighted={lastInView} />
@@ -796,12 +796,15 @@ const styles = {
     display: 'flex',
     height: '50vw',
     maxHeight:
-      '25vh' /* don't use dvh here, otherwise the layout will jump when scrolling */,
+      '30vh' /* don't use dvh here, otherwise the layout will jump when scrolling */,
     backdropFilter: 'blur(2px)',
+    flexWrap: 'wrap',
+    marginBottom: 100,
   }),
   scrollyGraphicsChapters: css({
-    position: 'absolute',
-    right: '0.5rem',
+    width: '100%',
+    textAlign: 'center',
+    paddingTop: 20,
   }),
   chapterIndicatorMini: css({
     width: '1.3rem',
