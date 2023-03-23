@@ -243,9 +243,9 @@ const AudioPlaybackElement = ({
       onSkipToNext: () => onSkipToNext(),
       onStop: () => onClose(),
       onRetrievePlayerState: () => ({
-        currentTime: mediaRef.current?.currentTime || 0,
-        duration: mediaRef.current?.duration || 0,
-        playbackRate: mediaRef.current?.playbackRate || 1,
+        currentTime: mediaRef.current?.currentTime ?? 0,
+        duration: mediaRef.current?.duration ?? 0,
+        playbackRate: mediaRef.current?.playbackRate ?? 1,
       }),
     },
   })
