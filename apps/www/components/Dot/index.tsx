@@ -704,6 +704,7 @@ const Scrolly = () => {
         <div
           {...styles.scrollyGraphicsChapters}
           {...colorScheme.set('background-color', 'default')}
+          style={{ opacity: lastInView >= 0 ? 1 : 0 }}
         >
           <ChapterIndicator mini highlighted={lastInView === 0}>
             1
@@ -906,7 +907,8 @@ const styles = {
   scrollyGraphicsChapters: css({
     width: '100%',
     textAlign: 'center',
-    paddingTop: 20,
+    paddingTop: 80,
+    opacity: 0,
   }),
   chapterIndicatorMini: css({
     width: '1.3rem',
