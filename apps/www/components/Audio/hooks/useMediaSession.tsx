@@ -36,7 +36,7 @@ export function useMediaSession(
 
   const updatePlayerState = useCallback(() => {
     if ('mediaSession' in navigator) {
-      const playerState = callbackRefs.current.onRetrievePlayerState()
+      const playerState = callbackRefs.current?.onRetrievePlayerState()
       navigator.mediaSession.setPositionState({
         duration: playerState.duration,
         playbackRate: playerState.playbackRate,
