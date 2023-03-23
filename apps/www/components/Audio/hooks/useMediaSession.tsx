@@ -68,7 +68,7 @@ export function useMediaSession(
     if (playerItem) {
       mediaSession.playbackState = isPlaying ? 'playing' : 'paused'
 
-      if (callbackRefs?.current) {
+      if (callbackRefs.current) {
         mediaSession.setActionHandler('play', () => {
           callbackRefs.current.onPlay()
           updatePlayerState()
@@ -78,11 +78,11 @@ export function useMediaSession(
           updatePlayerState()
         })
         mediaSession.setActionHandler('seekforward', ({ seekOffset }) => {
-          callbackRefs.current.onSeekForward(seekOffset || 10)
+          callbackRefs.current.onSeekForward(seekOffset ?? 10)
           updatePlayerState()
         })
         mediaSession.setActionHandler('seekbackward', ({ seekOffset }) => {
-          callbackRefs.current.onSeekBackward(seekOffset || 10)
+          callbackRefs.current.onSeekBackward(seekOffset ?? 10)
           updatePlayerState()
         })
         mediaSession.setActionHandler('nexttrack', () => {
@@ -105,6 +105,7 @@ export function useMediaSession(
       mediaSession.setActionHandler('seekforward', null)
       mediaSession.setActionHandler('seekbackward', null)
       mediaSession.setActionHandler('nexttrack', null)
+      mediaSession.setActionHandler('stop', null)
     }
   }, [JSON.stringify(playerItem), isPlaying, updatePlayerState])
 }
@@ -117,8 +118,8 @@ function getMediaImage(audioItem: AudioQueueItem, size: number) {
           CDN_FRONTEND_BASE_URL + '/static/audioplayer-fallback.png',
         size,
         audioItem.document.meta.audioCoverCrop,
-      ) + '&format=png',
+      ) + '&format=webp',
     sizes: `${size}x${size}`,
-    type: 'image/png',
+    type: 'image/webp',
   }
 }
