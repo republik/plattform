@@ -178,7 +178,6 @@ export const Scrolly = () => {
 const styles = {
   scrolly: css({
     position: 'relative',
-    scrollSnapType: 'y mandatory',
   }),
   scrollyGraphicsContainer: css({
     position: 'sticky',

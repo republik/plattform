@@ -48,7 +48,6 @@ export const ScrollySlide = ({
 
 const styles = {
   scrollySlide: css({
-    scrollSnapAlign: 'start',
     transition: TRANSITION,
     maxWidth: '43rem',
     margin: '0 auto',
