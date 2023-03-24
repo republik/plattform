@@ -93,7 +93,7 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                     // width: d.r,
                     // height: d.r,
                     opacity: 1,
-                    fill: i > 40 ? '#737373' : '#0ddfdc',
+                    fill: i > 40 ? '#737373' : '#0dcbc8',
                   },
                   step2: {
                     y: d.cy,
@@ -104,10 +104,10 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                     opacity: 1,
                     fill:
                       i > 40 && i < 63
-                        ? '#2efffc'
+                        ? '#0dcbc8'
                         : i > 62
                         ? '#737373'
-                        : '#2a9492',
+                        : '#376867',
                   },
                   step3: {
                     y: d.cy,
@@ -118,10 +118,10 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                     opacity: 1,
                     fill:
                       i > 62 && i < 73
-                        ? '#2efffc'
+                        ? '#0dcbc8'
                         : i >= 73
                         ? '#737373'
-                        : '#2a9492',
+                        : '#376867',
                   },
                   step4: {
                     y: d.cy,
@@ -132,10 +132,10 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                     opacity: 1,
                     fill:
                       i > 72 && i < 78
-                        ? '#2efffc'
+                        ? '#0dcbc8'
                         : i >= 78
                         ? '#737373'
-                        : '#2a9492',
+                        : '#376867',
                   },
                   step5: {
                     y: d.cy,
@@ -146,10 +146,10 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                     opacity: 1,
                     fill:
                       i > 77 && i < 83
-                        ? '#2efffc'
+                        ? '#0dcbc8'
                         : i >= 83
                         ? '#737373'
-                        : '#2a9492',
+                        : '#376867',
                   },
                 },
               )}
@@ -234,7 +234,7 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                         ? '#b743ff'
                         : i >= 61
                         ? '#737373'
-                        : '#b481d3',
+                        : '#8b63a4',
                   },
                   step3: {
                     y: d.cy,
@@ -248,8 +248,8 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                         ? '#b743ff'
                         : i >= 72
                         ? '#737373'
-                        : '#b481d3',
-                    // fill: i >= 72 ? '#737373' : '#b481d3',
+                        : '#8b63a4',
+                    // fill: i >= 72 ? '#737373' : '#8b63a4',
                   },
                   step4: {
                     y: d.cy,
@@ -263,7 +263,7 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                         ? '#b743ff'
                         : i >= 77
                         ? '#737373'
-                        : '#b481d3',
+                        : '#8b63a4',
                   },
                   step5: {
                     y: d.cy,
@@ -277,7 +277,7 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                         ? '#b743ff'
                         : i >= 82
                         ? '#737373'
-                        : '#b481d3',
+                        : '#8b63a4',
                   },
                 },
               )}
@@ -348,7 +348,7 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                     // width: d.r,
                     // height: d.r,
                     opacity: 1,
-                    fill: i > 33 ? '#737373' : '#ffb34a',
+                    fill: i > 33 ? '#737373' : '#fa9e1e',
                   },
                   step2: {
                     y: d.cy,
@@ -359,10 +359,10 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                     opacity: 1,
                     fill:
                       i >= 34 && i < 51
-                        ? '#ffb34a'
+                        ? '#fa9e1e'
                         : i >= 50
                         ? '#737373'
-                        : '#a97c3e',
+                        : '#9b794a',
                   },
                   step3: {
                     y: d.cy,
@@ -373,10 +373,10 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                     opacity: 1,
                     fill:
                       i >= 51 && i < 60
-                        ? '#ffb34a'
+                        ? '#fa9e1e'
                         : i >= 59
                         ? '#737373'
-                        : '#a97c3e',
+                        : '#9b794a',
                   },
                   step4: {
                     y: d.cy,
@@ -387,10 +387,10 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                     opacity: 1,
                     fill:
                       i >= 60 && i < 64
-                        ? '#ffb34a'
+                        ? '#fa9e1e'
                         : i >= 64
                         ? '#737373'
-                        : '#a97c3e',
+                        : '#9b794a',
                   },
                   step5: {
                     y: d.cy,
@@ -401,10 +401,10 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                     opacity: 1,
                     fill:
                       i >= 64 && i < 68
-                        ? '#ffb34a'
+                        ? '#fa9e1e'
                         : i >= 68
                         ? '#737373'
-                        : '#a97c3e',
+                        : '#9b794a',
                   },
                 },
               )}
@@ -474,7 +474,7 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                     // width: d.r,
                     // height: d.r,
                     opacity: 1,
-                    fill: i > 17 ? '#737373' : '#ff5100',
+                    fill: i > 17 ? '#737373' : '#00d5ff',
                   },
                   step2: {
                     y: d.cy,
@@ -485,10 +485,10 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                     opacity: 1,
                     fill:
                       i > 17 && i < 27
-                        ? '#ff5100'
+                        ? '#00d5ff'
                         : i >= 27
                         ? '#737373'
-                        : '#863814',
+                        : '#5c8f99',
                   },
                   step3: {
                     y: d.cy,
@@ -499,10 +499,10 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                     opacity: 1,
                     fill:
                       i > 26 && i < 31
-                        ? '#ff5100'
+                        ? '#00d5ff'
                         : i >= 31
                         ? '#737373'
-                        : '#863814',
+                        : '#5c8f99',
                   },
                   step4: {
                     y: d.cy,
@@ -513,10 +513,10 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                     opacity: 1,
                     fill:
                       i > 30 && i < 34
-                        ? '#ff5100'
+                        ? '#00d5ff'
                         : i >= 34
                         ? '#737373'
-                        : '#863814',
+                        : '#5c8f99',
                   },
                   step5: {
                     y: d.cy,
@@ -527,10 +527,10 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                     opacity: 1,
                     fill:
                       i > 33 && i < 36
-                        ? '#ff5100'
+                        ? '#00d5ff'
                         : i >= 36
                         ? '#737373'
-                        : '#863814',
+                        : '#5c8f99',
                   },
                 },
               )}
