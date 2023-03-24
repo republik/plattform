@@ -19,3 +19,28 @@ export const dataSet = [...Array(100)].map((d, i) => {
     id: i,
   }
 })
+
+export const COLORS = {
+  light: {
+    one: '#98d7d5',
+    oneBright: '#08dedb',
+    two: '#b79ec6',
+    twoBright: '#a92bf8',
+    three: '#e2ba81',
+    threeBright: '#ff9500',
+    four: '#b2e2ec',
+    fourBright: '#00d5ff',
+    default: '#cfcfcf',
+  },
+  dark: {
+    one: '#376867',
+    oneBright: '#0dcbc8',
+    two: '#8b63a4',
+    twoBright: '#b743ff',
+    three: '#9b794a',
+    threeBright: '#fa9e1e',
+    four: '#5c8f99',
+    fourBright: '#00d5ff',
+    default: '#737373',
+  },
+}

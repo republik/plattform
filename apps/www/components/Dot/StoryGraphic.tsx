@@ -8,7 +8,14 @@ import {
   fontStyles,
 } from '@project-r/styleguide'
 
-import { dataSet, PADDING_TOP, PADDING_LEFT, SMALL_RADIUS } from './config'
+import {
+  dataSet,
+  PADDING_TOP,
+  PADDING_LEFT,
+  SMALL_RADIUS,
+  COLORS,
+} from './config'
+import { useResolvedColorSchemeKey } from '../ColorScheme/lib'
 
 type StoryVariant = 'step0' | 'step1' | 'step2' | 'step3' | 'step4' | 'step5'
 const variantKeys: StoryVariant[] = [
@@ -48,6 +55,7 @@ const getVariant = (highlighted: number) => {
 
 export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
   const [colorScheme] = useColorContext()
+  const key = useResolvedColorSchemeKey()
   return (
     <motion.svg
       viewBox='0 0 930 360'
@@ -93,7 +101,7 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                     // width: d.r,
                     // height: d.r,
                     opacity: 1,
-                    fill: i > 40 ? '#737373' : '#0dcbc8',
+                    fill: i > 40 ? COLORS[key].default : COLORS[key].oneBright,
                   },
                   step2: {
                     y: d.cy,
@@ -104,10 +112,10 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                     opacity: 1,
                     fill:
                       i > 40 && i < 63
-                        ? '#0dcbc8'
+                        ? COLORS[key].oneBright
                         : i > 62
-                        ? '#737373'
-                        : '#376867',
+                        ? COLORS[key].default
+                        : COLORS[key].one,
                   },
                   step3: {
                     y: d.cy,
@@ -118,10 +126,10 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                     opacity: 1,
                     fill:
                       i > 62 && i < 73
-                        ? '#0dcbc8'
+                        ? COLORS[key].oneBright
                         : i >= 73
-                        ? '#737373'
-                        : '#376867',
+                        ? COLORS[key].default
+                        : COLORS[key].one,
                   },
                   step4: {
                     y: d.cy,
@@ -132,10 +140,10 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                     opacity: 1,
                     fill:
                       i > 72 && i < 78
-                        ? '#0dcbc8'
+                        ? COLORS[key].oneBright
                         : i >= 78
-                        ? '#737373'
-                        : '#376867',
+                        ? COLORS[key].default
+                        : COLORS[key].one,
                   },
                   step5: {
                     y: d.cy,
@@ -146,10 +154,10 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                     opacity: 1,
                     fill:
                       i > 77 && i < 83
-                        ? '#0dcbc8'
+                        ? COLORS[key].oneBright
                         : i >= 83
-                        ? '#737373'
-                        : '#376867',
+                        ? COLORS[key].default
+                        : COLORS[key].one,
                   },
                 },
               )}
@@ -220,7 +228,7 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                     // width: d.r,
                     // height: d.r,
                     opacity: 1,
-                    fill: i > 39 ? '#737373' : '#b743ff',
+                    fill: i > 39 ? COLORS[key].default : COLORS[key].twoBright,
                   },
                   step2: {
                     y: d.cy,
@@ -231,10 +239,10 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                     opacity: 1,
                     fill:
                       i > 39 && i < 61
-                        ? '#b743ff'
+                        ? COLORS[key].twoBright
                         : i >= 61
-                        ? '#737373'
-                        : '#8b63a4',
+                        ? COLORS[key].default
+                        : COLORS[key].two,
                   },
                   step3: {
                     y: d.cy,
@@ -245,11 +253,10 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                     opacity: 1,
                     fill:
                       i > 60 && i < 72
-                        ? '#b743ff'
+                        ? COLORS[key].twoBright
                         : i >= 72
-                        ? '#737373'
-                        : '#8b63a4',
-                    // fill: i >= 72 ? '#737373' : '#8b63a4',
+                        ? COLORS[key].default
+                        : COLORS[key].two,
                   },
                   step4: {
                     y: d.cy,
@@ -260,10 +267,10 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                     opacity: 1,
                     fill:
                       i > 71 && i < 77
-                        ? '#b743ff'
+                        ? COLORS[key].twoBright
                         : i >= 77
-                        ? '#737373'
-                        : '#8b63a4',
+                        ? COLORS[key].default
+                        : COLORS[key].two,
                   },
                   step5: {
                     y: d.cy,
@@ -274,10 +281,10 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                     opacity: 1,
                     fill:
                       i > 76 && i < 82
-                        ? '#b743ff'
+                        ? COLORS[key].twoBright
                         : i >= 82
-                        ? '#737373'
-                        : '#8b63a4',
+                        ? COLORS[key].default
+                        : COLORS[key].two,
                   },
                 },
               )}
@@ -348,7 +355,8 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                     // width: d.r,
                     // height: d.r,
                     opacity: 1,
-                    fill: i > 33 ? '#737373' : '#fa9e1e',
+                    fill:
+                      i > 33 ? COLORS[key].default : COLORS[key].threeBright,
                   },
                   step2: {
                     y: d.cy,
@@ -359,10 +367,10 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                     opacity: 1,
                     fill:
                       i >= 34 && i < 51
-                        ? '#fa9e1e'
+                        ? COLORS[key].threeBright
                         : i >= 50
-                        ? '#737373'
-                        : '#9b794a',
+                        ? COLORS[key].default
+                        : COLORS[key].three,
                   },
                   step3: {
                     y: d.cy,
@@ -373,10 +381,10 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                     opacity: 1,
                     fill:
                       i >= 51 && i < 60
-                        ? '#fa9e1e'
+                        ? COLORS[key].threeBright
                         : i >= 59
-                        ? '#737373'
-                        : '#9b794a',
+                        ? COLORS[key].default
+                        : COLORS[key].three,
                   },
                   step4: {
                     y: d.cy,
@@ -387,10 +395,10 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                     opacity: 1,
                     fill:
                       i >= 60 && i < 64
-                        ? '#fa9e1e'
+                        ? COLORS[key].threeBright
                         : i >= 64
-                        ? '#737373'
-                        : '#9b794a',
+                        ? COLORS[key].default
+                        : COLORS[key].three,
                   },
                   step5: {
                     y: d.cy,
@@ -401,10 +409,10 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                     opacity: 1,
                     fill:
                       i >= 64 && i < 68
-                        ? '#fa9e1e'
+                        ? COLORS[key].threeBright
                         : i >= 68
-                        ? '#737373'
-                        : '#9b794a',
+                        ? COLORS[key].default
+                        : COLORS[key].three,
                   },
                 },
               )}
@@ -474,7 +482,7 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                     // width: d.r,
                     // height: d.r,
                     opacity: 1,
-                    fill: i > 17 ? '#737373' : '#00d5ff',
+                    fill: i > 17 ? COLORS[key].default : COLORS[key].fourBright,
                   },
                   step2: {
                     y: d.cy,
@@ -485,10 +493,10 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                     opacity: 1,
                     fill:
                       i > 17 && i < 27
-                        ? '#00d5ff'
+                        ? COLORS[key].fourBright
                         : i >= 27
-                        ? '#737373'
-                        : '#5c8f99',
+                        ? COLORS[key].default
+                        : COLORS[key].four,
                   },
                   step3: {
                     y: d.cy,
@@ -499,10 +507,10 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                     opacity: 1,
                     fill:
                       i > 26 && i < 31
-                        ? '#00d5ff'
+                        ? COLORS[key].fourBright
                         : i >= 31
-                        ? '#737373'
-                        : '#5c8f99',
+                        ? COLORS[key].default
+                        : COLORS[key].four,
                   },
                   step4: {
                     y: d.cy,
@@ -513,10 +521,10 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                     opacity: 1,
                     fill:
                       i > 30 && i < 34
-                        ? '#00d5ff'
+                        ? COLORS[key].fourBright
                         : i >= 34
-                        ? '#737373'
-                        : '#5c8f99',
+                        ? COLORS[key].default
+                        : COLORS[key].four,
                   },
                   step5: {
                     y: d.cy,
@@ -527,10 +535,10 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                     opacity: 1,
                     fill:
                       i > 33 && i < 36
-                        ? '#00d5ff'
+                        ? COLORS[key].fourBright
                         : i >= 36
-                        ? '#737373'
-                        : '#5c8f99',
+                        ? COLORS[key].default
+                        : COLORS[key].four,
                   },
                 },
               )}
