@@ -18,34 +18,16 @@ const getMeta = (doc) => {
   return getMeta(doc)
 }
 
-const getContributorUserLinks = (type, docMeta, { loaders }) => {
-  const getContributorUserLinks =
-    meta[type || 'mdast']?.getContributorUserLinks ||
-    meta.common?.getContributorUserLinks
+const getContributors = (type, docMeta) => {
+  const getContributors =
+    meta[type || 'mdast']?.getContributors || meta.common?.getContributors
 
-  if (!getContributorUserLinks) {
-    console.warn(
-      `meta/getContributorUserLinks for type "${type}" not implemented`,
-    )
+  if (!getContributors) {
+    console.warn(`meta/getContributors for type "${type}" not implemented`)
     return
   }
 
-  return getContributorUserLinks(docMeta, { loaders })
-}
-
-const getContributorUserIds = (type, docMeta, context) => {
-  const getContributorUserIds =
-    meta[type || 'mdast']?.getContributorUserIds ||
-    meta.common?.getContributorUserIds
-
-  if (!getContributorUserIds) {
-    console.warn(
-      `meta/getContributorUserIds for type "${type}" not implemented`,
-    )
-    return
-  }
-
-  return getContributorUserIds(docMeta, context)
+  return getContributors(docMeta)
 }
 
 module.exports = {
@@ -55,6 +37,5 @@ module.exports = {
   getTemplate,
 
   getMeta,
-  getContributorUserLinks,
-  getContributorUserIds,
+  getContributors,
 }
