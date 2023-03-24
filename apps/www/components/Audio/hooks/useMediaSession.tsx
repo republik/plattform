@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef } from 'react'
 import { CDN_FRONTEND_BASE_URL } from '../../../lib/constants'
-import { getImageCropURL } from '../AudioPlayer/ui/AudioCover'
 import { AudioQueueItem } from '../graphql/AudioQueueHooks'
+import { getImageCropURL } from '../helpers/getImageCropURL'
 
 type PlayerState = {
   duration: number
