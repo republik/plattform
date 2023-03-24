@@ -5,51 +5,19 @@ import {
   mediaQueries,
 } from '@project-r/styleguide'
 import { css } from 'glamor'
-import AssetImage from '../../../../lib/images/AssetImage'
 import { StepProps } from '../../../Stepper/Stepper'
-import { InviteSenderProfileQueryData } from '../../graphql/useSenderProfileQuery'
 import { Details } from '../Details'
 import BottomPanel from './BottomPanel'
 
 type IntroductionaryStepProps = StepProps & {
-  senderProfile: InviteSenderProfileQueryData['sender']
   hasMonthlySubscription: boolean
 }
 
-export const SenderProfile = ({
-  portrait,
-  text,
-}: {
-  portrait?: string
-  text: string
-}) => {
-  return (
-    <div {...styles.inviteSection}>
-      {portrait && (
-        <div
-          style={{
-            flexShrink: 0,
-            position: 'relative',
-          }}
-        >
-          <AssetImage src={portrait} width={96} height={96} unoptimized />
-        </div>
-      )}
-      <div style={{ flex: '0 1 auto' }}>
-        <p {...styles.text}>{text}</p>
-      </div>
-    </div>
-  )
-}
-
 const IntroductoryStep = ({
-  senderProfile,
   hasMonthlySubscription,
   stepperControls,
   onAdvance,
 }: IntroductionaryStepProps) => {
-  const name = `${senderProfile?.firstName} ${senderProfile?.lastName}`
-
   return (
     <>
       <div {...styles.main}>
@@ -61,12 +29,7 @@ const IntroductoryStep = ({
                 Wie wunderbar, dass Sie bereits ein Monatsabo haben!
               </p>
             </div>
-            <div>
-              <SenderProfile
-                portrait={senderProfile?.portrait}
-                text={`${name} findet, Sie sollten längerfristig Teil der Republik-Community werden.`}
-              />
-            </div>
+
             <div>
               <p {...styles.text}>
                 Bestreiten Sie mit uns die Zukunft des unabhängigen
@@ -85,12 +48,6 @@ const IntroductoryStep = ({
                 Möglich ist das, weil Sie von einem unserer Mitglieder
                 eingeladen wurden:
               </p>
-            </div>
-            <div>
-              <SenderProfile
-                portrait={senderProfile?.portrait}
-                text={`${name} findet, dass Sie bei der Republik noch fehlen.`}
-              />
             </div>
             <div>
               <Details

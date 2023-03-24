@@ -1,68 +1,63 @@
-import { css } from 'glamor'
+import InviteReceiverPage from '../../components/FutureCampaign/ReceiverPage/InviteReceiverPage'
+import { createGetServerSideProps } from '../../lib/apollo/helpers'
 import {
-  fontStyles,
-  mediaQueries,
   ColorContextProvider,
+  ColorHtmlBodyColors,
 } from '@project-r/styleguide'
-import FutureCampaignPage from '../../components/FutureCampaign/FutureCampaignPage'
+import { useRouter } from 'next/router'
 import Meta from '../../components/Frame/Meta'
+import { FUTURE_CAMPAIGN_SHARE_IMAGE_URL } from '../../components/FutureCampaign/constants'
+import FutureCampaignPage from '../../components/FutureCampaign/FutureCampaignPage'
+import { PUBLIC_BASE_URL } from '../../lib/constants'
 
-const FiveYearsIndexPage = () => {
+function Page() {
+  const router = useRouter()
+
+  const meta = {
+    pageTitle: 'Werden Sie Teil der Republik',
+    title: 'Werden Sie Teil der Republik',
+    image: FUTURE_CAMPAIGN_SHARE_IMAGE_URL,
+    url: `${PUBLIC_BASE_URL}${router.asPath}`,
+  }
+
   return (
     <FutureCampaignPage>
-      <Meta
-        data={{
-          pageTitle: 'Werden Sie Teil der Republik',
-          title: 'Werden Sie Teil der Republik',
-        }}
-      />
-      <h1 {...styles.heading}>
-        Unabhängiger Journalismus hat Zukunft – mit Ihnen.
-      </h1>
-      <p {...styles.text}>
-        Geld ist nicht alles. Köpfe schon. Zum 5-Jahres-Jubiläum sind unsere
-        Mitglieder dazu eingeladen, bis zu 5 Mitstreiterinnen an Bord zu holen.
-        Diese erhalten ein Jahr lang die Republik zu einem Preis, der für sie
-        stimmt.
-      </p>
-      <p {...styles.text}>Möchten Sie von dem Angebot profitieren?</p>
-      <p {...styles.text}>
-        Dann melden Sie sich bei einer Republik-Verlegerin und fragen Sie nach
-        dem Link zum Mitstreiter-Abo.
-      </p>
+      <Meta data={meta} />
+      <InviteReceiverPage />
     </FutureCampaignPage>
   )
 }
 
 export default function WrappedPage() {
   return (
-    <ColorContextProvider colorSchemeKey='dark'>
-      <FiveYearsIndexPage />
+    <ColorContextProvider colorSchemeKey='dark' root>
+      <ColorHtmlBodyColors colorSchemeKey='dark' />
+      <Page />
     </ColorContextProvider>
   )
 }
 
-const styles = {
-  heading: css({
-    ...fontStyles.serifTitle,
-    margin: 0,
-    fontSize: 24,
-    lineHeight: 1.3,
-    marginBottom: 28,
-    [mediaQueries.mUp]: {
-      fontSize: 36,
-    },
-  }),
-  text: css({
-    ...fontStyles.sansSerifRegular,
-    margin: 0,
-    fontSize: 19,
-    lineHeight: '1.4em',
-    [mediaQueries.mUp]: {
-      fontSize: 21,
-    },
-    '& + p': {
-      margin: `16px 0 0 0`,
-    },
-  }),
-}
+export const getServerSideProps = createGetServerSideProps(
+  async ({ client, ctx: { params }, user: me }) => {
+    try {
+      // If a user opens his own invite link, redirect to the sender page
+      if (me) {
+        return {
+          redirect: {
+            destination: '/verstaerkung-holen',
+            permanent: false,
+          },
+        }
+      }
+
+      return {
+        props: {},
+      }
+    } catch (e) {
+      console.error(e)
+      return {
+        props: {},
+      }
+    }
+  },
+)
