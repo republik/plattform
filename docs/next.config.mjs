@@ -22,12 +22,7 @@ const nextConfig = {
         resourceQuery: /props/,
         use: './theme/lib/props-loader',
       },
-      // ... but make sure that no other rules are applied!
-      ...config.module.rules.map((rule) => {
-        return rule.resourceQuery
-          ? rule
-          : { ...rule, resourceQuery: { not: [/props/] } }
-      }),
+      ...config.module.rules,
     ]
     return config
   },
