@@ -1,5 +1,8 @@
 import styles from './avatar.module.css'
 
+/**
+ * Avatar hey whassup
+ */
 export const Avatar = ({
   src,
   alt,

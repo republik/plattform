@@ -21064,6 +21064,11 @@ react-diff-viewer@^3.1.1:
     memoize-one "^5.0.4"
     prop-types "^15.6.2"
 
+react-docgen-typescript@^2.0.0, react-docgen-typescript@^2.2.2:
+  version "2.2.2"
+  resolved "https://registry.yarnpkg.com/react-docgen-typescript/-/react-docgen-typescript-2.2.2.tgz#4611055e569edc071204aadb20e1c93e1ab1659c"
+  integrity sha512-tvg2ZtOpOi6QDwsb3GZhOjDkkX0h8Z2gipvTg6OVMUyoYoURhEiRNePT8NZItTVCDh39JJHnLdfCOkzoLbFnTg==
+
 react-document-title@^2.0.3:
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/react-document-title/-/react-document-title-2.0.3.tgz#bbf922a0d71412fc948245e4283b2412df70f2b9"
@@ -24659,6 +24664,13 @@ trough@^2.0.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/trough/-/trough-2.1.0.tgz#0f7b511a4fde65a46f18477ab38849b22c554876"
   integrity sha512-AqTiAOLcj85xS7vQ8QkAV41hPDIJ71XJB4RCUrzo/1GM2CQwhkJGaf9Hgr7BOugMRpgGUrqRg/DrBDl4H40+8g==
+
+ts-docgen-next@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/ts-docgen-next/-/ts-docgen-next-1.1.0.tgz#077547eaf5ae30c3340cdf6b96dc3342bd91211f"
+  integrity sha512-HtKNVRX2YubApFUWADXSFuFT9j7KfynH0kYnW70bXi9rqdW39IuhGwtlgz9Lm6QEKYyl06pjUEPmhu/5AQBjUA==
+  dependencies:
+    react-docgen-typescript "^2.0.0"
 
 ts-invariant@^0.10.3:
   version "0.10.3"
