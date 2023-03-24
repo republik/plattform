@@ -30,9 +30,7 @@ export function useMediaSession(
 ) {
   const callbackRefs = useRef(callbacks)
 
-  useEffect(() => {
-    callbackRefs.current = callbacks
-  }, [callbacks])
+  callbackRefs.current = callbacks
 
   const updatePlayerState = useCallback(() => {
     if ('mediaSession' in navigator) {
@@ -52,7 +50,7 @@ export function useMediaSession(
     const mediaSession = navigator.mediaSession
 
     mediaSession.metadata = new MediaMetadata({
-      title: playerItem.document?.meta?.title || 'Ein Beitrag der Republik',
+      title: playerItem.document?.meta?.title ?? 'Ein Beitrag der Republik',
       artist: 'Republik Magazin',
       album: 'Republik «Vorgelesen»',
       artwork: [
