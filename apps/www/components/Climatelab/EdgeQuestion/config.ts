@@ -68,8 +68,7 @@ export const PORTRAITS = {
 export const OVERVIEW_DATA = [
   {
     name: 'Claudia Kemfert',
-    tagline:
-      'Leiterin der Abteilung Energie, Verkehr, Umwelt beim Deutschen Institut für Wirtschaftsforschung',
+    tagline: 'Umweltökonomin',
     excerpt:
       'Die Uhr tickt. Es geht um nichts weniger, als die Erde ungefähr so zu erhalten, wie wir sie kennen.',
     color: 'color0',
@@ -104,15 +103,14 @@ export const OVERVIEW_DATA = [
   },
   {
     name: 'Rebecca Solnit',
-    tagline: 'Schriftstellerin, Mitgründerin des Klimaprojekts Not too Late',
+    tagline: 'Schriftstellerin',
     excerpt:
       'Die aktuelle Klimarevolution könnte uns in allen Bereichen wohlhabender machen. ',
     color: 'color5',
   },
   {
     name: 'Reinhard Steurer',
-    tagline:
-      'assoz. Professor für Klimapolitik an der Universität für Bodenkultur in Wien',
+    tagline: 'assoz. Professor für Klimapolitik',
     excerpt:
       'Ich wünschte, eine große Mehrheit würde verstehen, dass Klimaschutz kein „grünes Anliegen“ ist. Es geht um den Schutz von Leben und von unserer Zivilisation.',
     color: 'color0',
@@ -126,7 +124,7 @@ export const OVERVIEW_DATA = [
   },
   {
     name: 'Kimberly Nicholas',
-    tagline: 'Nachhaltigkeitswissenschaftlerin an der Universität Lund',
+    tagline: 'Nachhaltigkeitswissenschaftlerin',
     excerpt: 'It’s warming. It’s us. We’re sure. It’s bad. We can fix it.',
     color: 'color2',
   },

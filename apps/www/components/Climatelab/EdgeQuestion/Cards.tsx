@@ -12,7 +12,8 @@ import {
   ChevronRightIcon,
 } from '@project-r/styleguide'
 
-import { localColors, OVERVIEW_DATA } from './config'
+import { localColors } from './config'
+import { CardProps } from '.'
 
 const styles = {
   grid: css({
@@ -37,13 +38,6 @@ const styles = {
   boldCitation: css({
     ...fontStyles.serifBold32,
   }),
-}
-
-type CardProps = {
-  name: string
-  excerpt: string
-  color: string
-  tagline: string
 }
 
 const GetColorScheme = ({ children }) => {
@@ -105,12 +99,17 @@ const Card: React.FC<{
   )
 }
 
-const CardsOverview: React.FC = () => (
-  <div {...styles.grid}>
-    {OVERVIEW_DATA.map((card, idx) => (
-      <Card card={card} key={idx} idx={idx} />
-    ))}
-  </div>
-)
+const CardsOverview: React.FC<{ overviewData: CardProps[] }> = ({
+  overviewData,
+}) => {
+  if (!overviewData) return
+  return (
+    <div {...styles.grid}>
+      {overviewData.map((card, idx) => (
+        <Card card={card} key={idx} idx={idx} />
+      ))}
+    </div>
+  )
+}
 
 export default CardsOverview
