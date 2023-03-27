@@ -23,7 +23,12 @@ const SIZE = 28
 const PADDING_MOBILE = Math.floor((HEADER_HEIGHT_MOBILE - SIZE) / 2)
 const PADDING_DESKTOP = Math.floor((HEADER_HEIGHT - SIZE) / 2)
 
-const AudioToggle = ({ expanded, closeOverlay, ...props }) => {
+/**
+ * Component to render the toggle element in the top right corner of the frame on top of the nav.
+ * If a sub-navigation is expaned, it renders a close button.
+ * Otherwise it renders the audio player toggle.
+ */
+const Toggle = ({ expanded, closeOverlay, ...props }) => {
   const [colorScheme] = useColorContext()
   const { audioQueue, isAudioQueueAvailable } = useAudioQueue()
   const {
@@ -60,16 +65,18 @@ const AudioToggle = ({ expanded, closeOverlay, ...props }) => {
 
   return expanded || isAudioQueueAvailable ? (
     <button {...styles.menuToggle} onClick={onClick} {...props}>
-      <MicIcon {...colorScheme.set('fill', 'text')} size={SIZE} />
-      {!!audioItemsCount && (
-        <span
-          {...colorScheme.set('background', 'default')}
-          {...colorScheme.set('color', 'text')}
-          {...styles.audioCount}
-        >
-          {audioItemsCount}
-        </span>
-      )}
+      <div style={{ opacity: !expanded ? 1 : 0 }} {...styles.audioButton}>
+        <MicIcon {...colorScheme.set('fill', 'text')} size={SIZE} />
+        {!!audioItemsCount && (
+          <span
+            {...colorScheme.set('background', 'default')}
+            {...colorScheme.set('color', 'text')}
+            {...styles.audioCount}
+          >
+            {audioItemsCount}
+          </span>
+        )}
+      </div>
       <CloseIcon
         style={{ opacity: expanded ? 1 : 0 }}
         {...styles.closeButton}
@@ -108,6 +115,9 @@ const styles = {
       left: 36,
     },
   }),
+  audioButton: css({
+    transition: `opacity ${TRANSITION_MS}ms ease-out`,
+  }),
   closeButton: css({
     position: 'absolute',
     // Additional 4 px to account for scrollbar
@@ -120,4 +130,4 @@ const styles = {
   }),
 }
 
-export default AudioToggle
+export default Toggle
