@@ -28,8 +28,9 @@ const knownYears = {
   2018: { path: '/2018' },
   2019: { path: '/2019' },
   2020: { path: '/2020' },
-  2021: { path: '/' },
-  2022: { path: '/' },
+  2021: { path: '/2021' },
+  2022: { path: '/2022' },
+  2023: { path: '/' },
 }
 
 const getAll = gql`
