@@ -4,7 +4,7 @@ export const RADIUS = 9
 export const SMALL_RADIUS = 6
 export const PADDING_TOP = 100
 export const PADDING_LEFT = 0
-export const CIRCLE_PADDING = 3
+export const CIRCLE_PADDING = 2
 export const COLUMNS = 10
 export const SIZE = 2 * RADIUS + CIRCLE_PADDING
 
