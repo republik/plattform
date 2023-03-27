@@ -22,7 +22,7 @@ import Popover from './Popover'
 import UserNavPopover from './Popover/UserNav'
 import LoadingBar from './LoadingBar'
 import Pullable from './Pullable'
-import AudioToggle from './Toggle'
+import Toggle from './Toggle'
 import SecondaryNav from './SecondaryNav'
 import CallToAction from './CallToAction'
 
@@ -243,7 +243,7 @@ const Header = ({
             <div {...styles.rightBarItem}>
               {!showToggle && (
                 <div data-show-if-me='true'>
-                  <AudioToggle
+                  <Toggle
                     expanded={isAnyNavExpanded}
                     title={t(
                       `header/nav/${
@@ -254,7 +254,7 @@ const Header = ({
                 </div>
               )}
               {showToggle ? (
-                <AudioToggle
+                <Toggle
                   expanded={isAnyNavExpanded}
                   title={t(
                     `header/nav/${

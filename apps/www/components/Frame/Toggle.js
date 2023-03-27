@@ -23,7 +23,7 @@ const SIZE = 28
 const PADDING_MOBILE = Math.floor((HEADER_HEIGHT_MOBILE - SIZE) / 2)
 const PADDING_DESKTOP = Math.floor((HEADER_HEIGHT - SIZE) / 2)
 
-const AudioToggle = ({ expanded, closeOverlay, ...props }) => {
+const Toggle = ({ expanded, closeOverlay, ...props }) => {
   const [colorScheme] = useColorContext()
   const { audioQueue, isAudioQueueAvailable } = useAudioQueue()
   const {
@@ -125,4 +125,4 @@ const styles = {
   }),
 }
 
-export default AudioToggle
+export default Toggle
