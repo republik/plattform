@@ -60,16 +60,18 @@ const AudioToggle = ({ expanded, closeOverlay, ...props }) => {
 
   return expanded || isAudioQueueAvailable ? (
     <button {...styles.menuToggle} onClick={onClick} {...props}>
-      <MicIcon {...colorScheme.set('fill', 'text')} size={SIZE} />
-      {!!audioItemsCount && (
-        <span
-          {...colorScheme.set('background', 'default')}
-          {...colorScheme.set('color', 'text')}
-          {...styles.audioCount}
-        >
-          {audioItemsCount}
-        </span>
-      )}
+      <div style={{ opacity: !expanded ? 1 : 0 }} {...styles.audioButton}>
+        <MicIcon {...colorScheme.set('fill', 'text')} size={SIZE} />
+        {!!audioItemsCount && (
+          <span
+            {...colorScheme.set('background', 'default')}
+            {...colorScheme.set('color', 'text')}
+            {...styles.audioCount}
+          >
+            {audioItemsCount}
+          </span>
+        )}
+      </div>
       <CloseIcon
         style={{ opacity: expanded ? 1 : 0 }}
         {...styles.closeButton}
@@ -107,6 +109,9 @@ const styles = {
       top: 22,
       left: 36,
     },
+  }),
+  audioButton: css({
+    transition: `opacity ${TRANSITION_MS}ms ease-out`,
   }),
   closeButton: css({
     position: 'absolute',
