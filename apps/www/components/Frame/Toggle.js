@@ -23,6 +23,11 @@ const SIZE = 28
 const PADDING_MOBILE = Math.floor((HEADER_HEIGHT_MOBILE - SIZE) / 2)
 const PADDING_DESKTOP = Math.floor((HEADER_HEIGHT - SIZE) / 2)
 
+/**
+ * Component to render the toggle element in the top right corner of the frame on top of the nav.
+ * If a sub-navigation is expaned, it renders a close button.
+ * Otherwise it renders the audio player toggle.
+ */
 const Toggle = ({ expanded, closeOverlay, ...props }) => {
   const [colorScheme] = useColorContext()
   const { audioQueue, isAudioQueueAvailable } = useAudioQueue()
