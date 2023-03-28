@@ -54,6 +54,7 @@ module.exports = async ({
     webp,
     format: _format,
     cacheTags = [],
+    responseHeaders,
     crop,
     size,
     quality,
@@ -108,6 +109,13 @@ module.exports = async ({
       }
     }
   }
+
+  // Loop through options.reponseHeaders array and set each as a
+  // response header.
+  responseHeaders &&
+    responseHeaders.forEach(({ name, value }) => {
+      res.set(name, value)
+    })
 
   /**
    * {stream} is a ReadableStream provided by fetch Response.body
