@@ -101,14 +101,13 @@ module.exports = async ({
   }
 
   // forward filtered headers
-  if (headers) {
-    for (const key of pipeHeaders) {
-      const value = headers.get(key)
+  headers &&
+    pipeHeaders.forEach((name) => {
+      const value = headers.get(name)
       if (value) {
-        res.set(key, value)
+        res.set(name, value)
       }
-    }
-  }
+    })
 
   // Loop through options.reponseHeaders array and set each as a
   // response header.
