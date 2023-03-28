@@ -1,5 +1,4 @@
 const { descending, ascending } = require('d3-array')
-const fetch = require('isomorphic-unfetch')
 
 const { VIMEO_APP_ACCESS_TOKEN } = process.env
 
