@@ -1,4 +1,3 @@
-const fetch = require('isomorphic-unfetch')
 const debug = require('debug')('assets:proxy')
 const { authenticate, returnImage } = require('../lib')
 
