@@ -139,7 +139,9 @@ module.exports = async ({
             reject.bind(null, 'Could not read enough of file to get mimetype'),
           )
       })
-      mime = fileTypeResult && fileTypeResult.mime
+      mime =
+        fileTypeResult?.mime !== 'application/octet-stream' &&
+        fileTypeResult.mime
     } catch (e2) {
       debug('detecting mime failed: ', e2)
     }
@@ -147,34 +149,28 @@ module.exports = async ({
 
     // svg is not detected by fileTypeStream
     if (
-      (!mime ||
-        mime === 'application/octet-stream' ||
-        mime === 'application/xml') &&
       path &&
-      new RegExp(/\.svg(\.webp)?$/).test(path)
+      new RegExp(/\.svg(\.webp)?$/).test(path) &&
+      (!mime || mime === 'application/xml')
     ) {
       mime = 'image/svg+xml'
     }
 
     // apks are detected as zip by fileTypeStream
     if (
-      (!mime || mime === 'application/zip') &&
       path &&
-      new RegExp(/\.apk$/).test(path)
+      new RegExp(/\.apk$/).test(path) &&
+      (!mime || mime === 'application/zip')
     ) {
       mime = 'application/vnd.android.package-archive'
     }
 
     // fix content type if necessary
-    // - e.g. requests to github always return Content-Type: text/plain
     // - s3 svg need to be rewritten from application/octet-stream to image/svg+xml
-    if (
-      mime &&
-      (mime !== 'application/octet-stream' ||
-        headers?.get('Content-Type')?.startsWith('text/plain'))
-    ) {
+    if (mime) {
       res.set('Content-Type', mime)
     }
+
     res.set(
       'Cache-Tag',
       cacheTags
