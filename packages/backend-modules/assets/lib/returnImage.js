@@ -2,7 +2,7 @@ const sharp = require('sharp')
 const getWidthHeight = require('./getWidthHeight')
 const getCropDimensions = require('./getCropDimensions')
 const { fileTypeStream } = require('file-type-stream2')
-const { PassThrough } = require('stream')
+const { PassThrough, Readable } = require('stream')
 const toArray = require('stream-to-array')
 const debug = require('debug')('assets:returnImage')
 const { parse: parsePath } = require('path')
@@ -109,13 +109,22 @@ module.exports = async ({
     }
   }
 
+  /**
+   * {stream} is a ReadableStream provided by fetch Response.body
+   * @see https://developer.mozilla.org/en-US/docs/Web/API/Response/body
+   *
+   * To process futher, we need a (node) "Readable" stream.
+   * @see https://nodejs.org/docs/latest-v18.x/api/stream.html#readable-streams
+   */
+  const readableStream = Readable.fromWeb(stream)
+
   // detect mime
   const passThrough = new PassThrough()
   try {
     let mime
     try {
       const fileTypeResult = await new Promise((resolve, reject) => {
-        stream
+        readableStream
           .pipe(fileTypeStream(resolve))
           .pipe(passThrough)
           .on(
@@ -245,7 +254,7 @@ module.exports = async ({
         : await toBuffer(passThrough)
       res.end(result)
 
-      stream.destroy()
+      readableStream.destroy()
       passThrough.destroy()
 
       if (returnResult) {
@@ -258,7 +267,7 @@ module.exports = async ({
   } catch (e) {
     console.error(e)
     res.status(500).end()
-    stream && stream.destroy()
+    readableStream && readableStream.destroy()
     passThrough && passThrough.destroy()
   }
   debug('sharp stats: %o', sharp.cache())
