@@ -1,43 +1,59 @@
 /**
  * This is a CJS file because webpack can't deal with loader files in ESM format?
  */
-const docgen = require('react-docgen-typescript')
 
-module.exports = function loader() {
-  const declarations = docgen.parse(this.resourcePath, {
-    skipChildrenPropWithoutDoc: false,
-    shouldExtractValuesFromUnion: true,
-  })
+module.exports = async function loader(content) {
+  const callback = this.async()
 
-  const declarationMap = {}
+  const docgen = await import('react-docgen')
 
-  for (const d of declarations) {
-    const propsList = []
-    for (const [name, props] of Object.entries(d.props)) {
-      let type = props.type.name
+  this.addContextDependency(this.resourcePath)
+  try {
+    // console.time('props-parse')
 
-      if (type === 'enum') {
-        const unionValues = props.type.value.map((v) => v.value).join(' | ')
+    const declarations = docgen.parse(content, {
+      filename: this.resourcePath,
+      resolver: new docgen.builtinResolvers.FindExportedDefinitionsResolver({
+        limit: 0, // Allow multiple definitions per file
+      }),
+      importer: docgen.makeFsImporter(),
+    })
 
-        type =
-          props.type.raw === unionValues
-            ? props.type.raw
-            : `${props.type.raw} (${unionValues})`
+    // console.timeEnd('props-parse')
+
+    const declarationMap = {}
+
+    for (const d of declarations) {
+      const propsList = []
+      for (const [name, props] of Object.entries(d.props ?? {})) {
+        let type = props.tsType.name
+
+        if (type === 'union') {
+          type = props.tsType.raw
+        }
+
+        propsList.push({
+          name,
+          description: props.description,
+          required: props.required,
+          type,
+          defaultValue: props.defaultValue
+            ? props.defaultValue.value
+            : undefined,
+        })
       }
 
-      propsList.push({
-        name,
-        description: props.description,
-        required: props.required,
-        type,
-        defaultValue: props.defaultValue ? props.defaultValue.value : undefined,
-      })
+      declarationMap[d.displayName] = propsList
     }
 
-    declarationMap[d.displayName] = propsList
-  }
-
-  return `
+    const result = `
   if (module.hot) { module.hot.accept([]) }
-  module.exports = ${JSON.stringify(declarationMap)}`
+  module.exports = ${JSON.stringify(declarationMap)}
+  `
+
+    callback(null, result)
+  } catch (e) {
+    callback(e)
+  }
+  return
 }

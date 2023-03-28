@@ -7,10 +7,11 @@ type Flavor = 'strawberry' | 'banana' | 'chocolate'
  */
 export const Avatar = ({
   src,
-  alt,
+  alt = 'Alternative teggscht',
   fallback,
   color,
 }: {
+  /** Image source */
   src?: string
   /** Alternative text for the photo */
   alt?: string
