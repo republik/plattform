@@ -9,6 +9,7 @@ import Meta from '../../components/Frame/Meta'
 import { FUTURE_CAMPAIGN_SHARE_IMAGE_URL } from '../../components/FutureCampaign/constants'
 import FutureCampaignPage from '../../components/FutureCampaign/FutureCampaignPage'
 import { PUBLIC_BASE_URL } from '../../lib/constants'
+import { FUTURE_CAMPAIGN_COUNTDOWN_DATE } from '../../components/FutureCampaign/ReceiverPage/steps/IntroductionaryStep'
 
 function Page() {
   const router = useRouter()
@@ -40,8 +41,18 @@ export default function WrappedPage() {
 export const getServerSideProps = createGetServerSideProps(
   async ({ client, ctx: { params }, user: me }) => {
     try {
-      // If a user opens his own invite link, redirect to the sender page
+      const now = new Date(Date.now())
+      if (now.getTime() > FUTURE_CAMPAIGN_COUNTDOWN_DATE.getTime()) {
+        return {
+          redirect: {
+            destination: '/',
+            permanent: false,
+          },
+        }
+      }
+
       if (me) {
+        // TODO: should we redirect people with monthly_abo?
         return {
           redirect: {
             destination: '/verstaerkung-holen',
