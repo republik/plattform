@@ -7,6 +7,7 @@ const withNextra = nextra({
   theme: 'nextra-theme-docs',
   themeConfig: './theme.config.tsx',
   mdxOptions: { rehypePlugins: [rehypeComponentDemo] },
+  latex: true,
 })
 
 /** @type {import('next').NextConfig} */
