@@ -1,13 +1,15 @@
-import {
-  ExpandLessIcon,
-  ExpandMoreIcon,
-  fontStyles,
-  mediaQueries,
-} from '@project-r/styleguide'
+import { fontStyles, mediaQueries } from '@project-r/styleguide'
 import { css } from 'glamor'
+import { useState } from 'react'
+import useInterval from '../../../../lib/hooks/useInterval'
 import { StepProps } from '../../../Stepper/Stepper'
-import { Details } from '../Details'
+import CountDownTime from '../CountdownTime'
 import BottomPanel from './BottomPanel'
+
+// export const FUTURE_CAMPAIGN_COUNTDOWN_DATE = new Date('6 April, 2023 23:59:59 GMT+2')
+export const FUTURE_CAMPAIGN_COUNTDOWN_DATE = new Date(
+  '29 March, 2023 13:31:00 GMT+2',
+)
 
 type IntroductionaryStepProps = StepProps & {
   hasMonthlySubscription: boolean
@@ -18,6 +20,12 @@ const IntroductoryStep = ({
   stepperControls,
   onAdvance,
 }: IntroductionaryStepProps) => {
+  const [countDownReached, setCountDownReached] = useState(false)
+
+  const onCountDownReached = () => {
+    setCountDownReached(true)
+  }
+
   return (
     <>
       <div {...styles.main}>
@@ -41,51 +49,32 @@ const IntroductoryStep = ({
           <>
             <div>
               <p {...styles.text}>
-                Geld ist nicht alles. Köpfe schon. Zahlen Sie für ein Jahr
-                Republik hier den Betrag, der für Sie stimmt.
+                Für diese Zukunft braucht es eine Vielfalt an Perspektiven.
               </p>
               <p {...styles.text}>
-                Möglich ist das, weil Sie von einem unserer Mitglieder
-                eingeladen wurden:
+                Bereichern Sie unsere Verlagsetage mit Ihrer Stimme und
+                abonnieren Sie die Republik für ein Jahr zum Preis, der Ihnen
+                fair erscheint.
               </p>
             </div>
             <div>
-              <Details
-                summary={
-                  <h2 {...styles.detailsHeading}>5 Gründe für die Republik</h2>
-                }
-                iconClose={<ExpandLessIcon size={24} />}
-                iconOpen={<ExpandMoreIcon size={24} />}
-              >
-                <h3 {...styles.headingReasons}>1. Unabhängig</h3>
-                <p {...styles.text}>
-                  Exzellenter Journalismus. Werbefrei und ohne Bullshit.
-                </p>
-                <h3 {...styles.headingReasons}>2. Transparent</h3>
-                <p {...styles.text}>
-                  Wir legen alles offen: unsere Finanzen, Arbeitsweisen, Fehler.
-                </p>
-                <h3 {...styles.headingReasons}>3. Bewegend</h3>
-                <p {...styles.text}>
-                  Wir liefern Ihnen die Grundlage für vernünftige
-                  Entscheidungen.
-                </p>
-                <h3 {...styles.headingReasons}>4. Für Augen und Ohren</h3>
-                <p {...styles.text}>
-                  Alle unsere Beiträge werden von Profis eingelesen.
-                </p>
-                <h3 {...styles.headingReasons}>5. Im Austausch</h3>
-                <p {...styles.text}>
-                  Wir diskutieren auf Augenhöhe, dank Ihnen und mit Ihnen.
-                </p>
-              </Details>
+              <p {...styles.textBig}>
+                Dieses Angebot gilt noch: <br />
+                <CountDownTime
+                  endDate={new Date(FUTURE_CAMPAIGN_COUNTDOWN_DATE)}
+                  onCountDownReached={onCountDownReached}
+                  reachedContent='Das Angebot ist leider abgelaufen.'
+                />
+              </p>
             </div>
           </>
         )}
       </div>
-      <BottomPanel steps={stepperControls} onClick={onAdvance}>
-        Wählen Sie Ihren Preis
-      </BottomPanel>
+      {!countDownReached && (
+        <BottomPanel steps={stepperControls} onClick={onAdvance}>
+          Wählen Sie Ihren Preis
+        </BottomPanel>
+      )}
     </>
   )
 }
@@ -132,6 +121,19 @@ const styles = {
     lineHeight: '1.4em',
     [mediaQueries.mUp]: {
       fontSize: 21,
+    },
+    '& + p': {
+      margin: `16px 0 0 0`,
+    },
+  }),
+  textBig: css({
+    ...fontStyles.sansSerifRegular,
+    margin: 0,
+    fontSize: 21,
+    fontWeight: '500',
+    lineHeight: '1.4em',
+    [mediaQueries.mUp]: {
+      fontSize: 24,
     },
     '& + p': {
       margin: `16px 0 0 0`,
