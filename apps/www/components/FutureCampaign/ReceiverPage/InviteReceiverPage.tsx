@@ -32,7 +32,7 @@ const InviteReceiverPage = () => {
           package: 'BENEFACTOR',
           price: price * 100, // price in Rp.
 
-          utm_campaign: 'mitstreiter',
+          utm_campaign: 'mitstreiter2',
           utm_medium: 'website',
           utm_source: 'republik',
         },
@@ -44,7 +44,7 @@ const InviteReceiverPage = () => {
           package: 'ABO',
           price: price * 100, // price in Rp.
 
-          utm_campaign: 'mitstreiter',
+          utm_campaign: 'mitstreiter2',
           utm_medium: 'website',
           utm_source: 'republik',
         },
@@ -57,7 +57,7 @@ const InviteReceiverPage = () => {
           userPrice: 1,
           price: price * 100, // price in Rp.
 
-          utm_campaign: 'mitstreiter',
+          utm_campaign: 'mitstreiter2',
           utm_medium: 'website',
           utm_source: 'republik',
         },
