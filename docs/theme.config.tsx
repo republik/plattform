@@ -3,16 +3,17 @@ import { PropsTable } from '@/theme/components/props-table'
 import { DocsThemeConfig } from 'nextra-theme-docs'
 
 const config: DocsThemeConfig = {
-  logo: <span>Republik</span>,
+  logo: <span>Republik Styleguide</span>,
   docsRepositoryBase: 'https://github.com/republik/plattform/blob/main/docs/',
   project: {
     link: 'https://github.com/republik/plattform',
   },
+  primaryHue: 260,
   feedback: { content: null },
   footer: { text: null },
   useNextSeoProps() {
     return {
-      titleTemplate: '%s – Republik Docs',
+      titleTemplate: '%s – Republik Styleguide',
       description: 'Hello',
     }
   },

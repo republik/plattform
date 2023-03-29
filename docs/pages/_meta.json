@@ -1,7 +1,9 @@
 {
   "*": { "type": "page" },
   "index": { "title": "Introduction", "display": "hidden" },
+  "ux": { "title": "UX Guidelines" },
+  "design-system": { "title": "Design System" },
   "components": { "title": "Components" },
-  "about": { "title": "About" },
-  "legacy-styleguide": { "title": "Styleguide (Legacy)" }
+  "about": { "display": "hidden" },
+  "playground": { "display": "hidden" }
 }
