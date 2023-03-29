@@ -115,16 +115,39 @@ const toContributor = (node) => {
   return contributor
 }
 
-const getContributors = (meta) => {
-  const creditsContributors =
-    meta?.credits?.children
+const getCreditsContributors = (meta) => {
+  try {
+    const creditsContributors = meta?.credits?.children
       ?.filter((c) => c.type === 'link')
       .map(toContributor)
-      .filter(Boolean) || []
+      .filter(Boolean)
 
+    return creditsContributors || []
+  } catch (e) {
+    // swallow error
+    console.warn(e)
+    return []
+  }
+}
+
+const getCreditsStringContributors = (creditsString) => {
+  try {
+    const analyzer = new Analyzer()
+    const creditsStringContributors =
+      analyzer.getAnalysis(creditsString).contributors
+
+    return creditsStringContributors || []
+  } catch (e) {
+    // swallow error
+    console.warn(e)
+    return []
+  }
+}
+
+const getContributors = (meta) => {
+  const creditsContributors = getCreditsContributors(meta)
   const creditsString = stringifyNode(meta.credits)
-  const creditsStringContributors =
-    new Analyzer().getAnalysis(creditsString).contributors || []
+  const creditsStringContributors = getCreditsStringContributors(creditsString)
 
   const metaContributors = meta?.contributors || []
 
