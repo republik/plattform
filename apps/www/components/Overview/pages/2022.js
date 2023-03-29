@@ -439,7 +439,7 @@ const text = {
       in England.{' '}
       <Highlight {...p} ids={['HX_y3VOQT']}>
         Auflehnung
-      </Highlight>
+      </Highlight>{' '}
       im Iran. Und schliesslich: die ganze (!) Republik zum{' '}
       <Highlight {...p} ids={['DWq5HyuSY']}>
         Hören
