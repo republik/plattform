@@ -15,10 +15,8 @@ enum STEPS {
 
 const InviteReceiverPage = () => {
   const router = useRouter()
-  const { me, meLoading } = useMe()
+  const { me } = useMe()
 
-  const hasMonthlySubscription =
-    me?.activeMembership?.type?.name === 'MONTHLY_ABO'
   const hasYearlySubscription = [
     'ABO',
     'YEARLY_ABO',
@@ -70,12 +68,7 @@ const InviteReceiverPage = () => {
   const steps: Step[] = [
     {
       name: STEPS.INTRO,
-      content: (stepProps) => (
-        <IntroductoryStep
-          hasMonthlySubscription={hasMonthlySubscription}
-          {...stepProps}
-        />
-      ),
+      content: (stepProps) => <IntroductoryStep {...stepProps} />,
     },
     {
       name: STEPS.PRICE_SELECTOR,

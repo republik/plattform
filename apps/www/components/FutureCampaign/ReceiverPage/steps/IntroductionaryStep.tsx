@@ -1,22 +1,15 @@
 import { fontStyles, mediaQueries } from '@project-r/styleguide'
 import { css } from 'glamor'
 import { useState } from 'react'
-import useInterval from '../../../../lib/hooks/useInterval'
 import { StepProps } from '../../../Stepper/Stepper'
 import CountDownTime from '../CountdownTime'
 import BottomPanel from './BottomPanel'
 
-// export const FUTURE_CAMPAIGN_COUNTDOWN_DATE = new Date('6 April, 2023 23:59:59 GMT+2')
-export const FUTURE_CAMPAIGN_COUNTDOWN_DATE = new Date(
-  '29 March, 2023 14:50:00 GMT+2',
-)
+export const FUTURE_CAMPAIGN_END_DATE = new Date('5 April, 2023 18:00:00 GMT+2')
 
-type IntroductionaryStepProps = StepProps & {
-  hasMonthlySubscription: boolean
-}
+type IntroductionaryStepProps = StepProps
 
 const IntroductoryStep = ({
-  hasMonthlySubscription,
   stepperControls,
   onAdvance,
 }: IntroductionaryStepProps) => {
@@ -30,46 +23,32 @@ const IntroductoryStep = ({
     <>
       <div {...styles.main}>
         <h1 {...styles.heading}>Journalismus hat eine Zukunft – mit Ihnen.</h1>
-        {hasMonthlySubscription ? (
-          <>
-            <div>
-              <p {...styles.text}>
-                Wie wunderbar, dass Sie bereits ein Monatsabo haben!
-              </p>
-            </div>
-
-            <div>
-              <p {...styles.text}>
-                Bestreiten Sie mit uns die Zukunft des unabhängigen
-                Journalismus. Egal, wie viel Sie dafür zahlen können.
-              </p>
-            </div>
-          </>
-        ) : (
-          <>
-            <div>
-              <p {...styles.text}>
-                Für die Zukunft der Republik wünschen wir uns eine Vielfalt an
-                Perspektiven.
-              </p>
-              <p {...styles.text}>
-                Bereichern Sie unsere Verlagsetage mit Ihrer Stimme und
-                abonnieren Sie die Republik für ein Jahr zum Preis, der Ihnen
-                fair erscheint.
-              </p>
-            </div>
-            <div>
-              <p {...styles.textBig}>
+        <div>
+          <p {...styles.text}>
+            Für die Zukunft der Republik wünschen wir uns eine Vielfalt an
+            Perspektiven.
+          </p>
+          <p {...styles.text}>
+            Bereichern Sie unsere Verlagsetage mit Ihrer Stimme und abonnieren
+            Sie die Republik für ein Jahr zum Preis, der Ihnen fair erscheint.
+          </p>
+        </div>
+        <div>
+          <p {...styles.textBig}>
+            {!countDownReached ? (
+              <>
                 Dieses Angebot gilt noch: <br />
                 <CountDownTime
-                  endDate={new Date(FUTURE_CAMPAIGN_COUNTDOWN_DATE)}
+                  endDate={new Date(FUTURE_CAMPAIGN_END_DATE)}
                   onCountDownReached={onCountDownReached}
                   reachedContent='Das Angebot ist leider nicht mehr verfügbar.'
                 />
-              </p>
-            </div>
-          </>
-        )}
+              </>
+            ) : (
+              <>Das Angebot ist leider nicht mehr verfügbar.</>
+            )}
+          </p>
+        </div>
       </div>
       {!countDownReached && (
         <BottomPanel steps={stepperControls} onClick={onAdvance}>
