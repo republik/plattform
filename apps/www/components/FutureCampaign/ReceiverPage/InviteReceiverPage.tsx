@@ -25,6 +25,9 @@ const InviteReceiverPage = () => {
   const isEligible = !hasYearlySubscription
 
   const handleSubmitPrice = useCallback(async (price) => {
+    const { utm_campaign: givenUtmCampaign } = router.query
+    const resolvedUtmCampaign = givenUtmCampaign || 'mitstreiter2'
+
     if (price >= 1000) {
       return router.push({
         pathname: '/angebote',
@@ -32,7 +35,7 @@ const InviteReceiverPage = () => {
           package: 'BENEFACTOR',
           price: price * 100, // price in Rp.
 
-          utm_campaign: 'mitstreiter2',
+          utm_campaign: resolvedUtmCampaign,
           utm_medium: 'website',
           utm_source: 'republik',
         },
@@ -44,7 +47,7 @@ const InviteReceiverPage = () => {
           package: 'ABO',
           price: price * 100, // price in Rp.
 
-          utm_campaign: 'mitstreiter2',
+          utm_campaign: resolvedUtmCampaign,
           utm_medium: 'website',
           utm_source: 'republik',
         },
@@ -57,7 +60,7 @@ const InviteReceiverPage = () => {
           userPrice: 1,
           price: price * 100, // price in Rp.
 
-          utm_campaign: 'mitstreiter2',
+          utm_campaign: resolvedUtmCampaign,
           utm_medium: 'website',
           utm_source: 'republik',
         },
