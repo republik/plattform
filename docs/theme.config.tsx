@@ -3,7 +3,7 @@ import { PropsTable } from '@/theme/components/props-table'
 import { DocsThemeConfig } from 'nextra-theme-docs'
 
 const config: DocsThemeConfig = {
-  logo: <span>Republik Styleguide</span>,
+  logo: <strong>💅 Republik Styleguide</strong>,
   docsRepositoryBase: 'https://github.com/republik/plattform/blob/main/docs/',
   project: {
     link: 'https://github.com/republik/plattform',
