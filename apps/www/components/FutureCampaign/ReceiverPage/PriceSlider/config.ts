@@ -30,8 +30,8 @@ const SLIDER_STEPS: Record<SliderStepKey, SliderStep> = {
   minimum: {
     key: 'minimum',
     iconSrc: '/static/5-jahre-republik/receiver/slider-step-0.svg',
-    label: 'TBD',
-    text: 'TBD',
+    label: 'Das Minimum',
+    text: 'Sie sind knapp bei Kasse? Das kann passieren. Für ein Jahr unabhängigen Journalismus liegt vielleicht etwas mehr drin?',
     goodie: false,
     goodieText:
       'Die Jubiläumstasche gibts dazu, wenn Sie mehr als den Durchschnitt bezahlen.',
