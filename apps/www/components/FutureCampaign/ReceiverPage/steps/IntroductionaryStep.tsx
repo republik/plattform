@@ -49,7 +49,8 @@ const IntroductoryStep = ({
           <>
             <div>
               <p {...styles.text}>
-                Für diese Zukunft braucht es eine Vielfalt an Perspektiven.
+                Für die Zukunft der Republik wünschen wir uns eine Vielfalt an
+                Perspektiven.
               </p>
               <p {...styles.text}>
                 Bereichern Sie unsere Verlagsetage mit Ihrer Stimme und
