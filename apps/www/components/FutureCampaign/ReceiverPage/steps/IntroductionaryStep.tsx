@@ -8,7 +8,7 @@ import BottomPanel from './BottomPanel'
 
 // export const FUTURE_CAMPAIGN_COUNTDOWN_DATE = new Date('6 April, 2023 23:59:59 GMT+2')
 export const FUTURE_CAMPAIGN_COUNTDOWN_DATE = new Date(
-  '29 March, 2023 13:31:00 GMT+2',
+  '29 March, 2023 14:50:00 GMT+2',
 )
 
 type IntroductionaryStepProps = StepProps & {
@@ -63,7 +63,7 @@ const IntroductoryStep = ({
                 <CountDownTime
                   endDate={new Date(FUTURE_CAMPAIGN_COUNTDOWN_DATE)}
                   onCountDownReached={onCountDownReached}
-                  reachedContent='Das Angebot ist leider abgelaufen.'
+                  reachedContent='Das Angebot ist leider nicht mehr verfügbar.'
                 />
               </p>
             </div>
