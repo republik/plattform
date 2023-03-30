@@ -11,7 +11,7 @@ const { NODE_ENV, CDN_FRONTEND_BASE_URL } = process.env
 
 /**
  * For Vercel Preview Deployments, make sure the PUBLIC_BASE_URL_PATTERN is set
- * and has the pattern `https://project-name-<branch-name>-team-slug.vercel.app`
+ * and has the pattern `https://project-name-git-<branch-name>-team-slug.vercel.app`
  * (<branch-name> will be replaced with the Git commit ref)
  **/
 const PUBLIC_BASE_URL =
