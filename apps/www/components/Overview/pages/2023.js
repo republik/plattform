@@ -147,7 +147,64 @@ const text = {
       .
     </>
   ),
-  //März: (p) => <></>,
+  März: (p) => (
+    <>
+      Erst lockt das grosse Geld, dann ist plötzlich alles weg:{' '}
+      <Highlight
+        {...p}
+        ids={['tAI0y2D-m']}
+        series='republik/article-der-groesste-betrug'
+      >
+        Anlagebetrug per Internet wird immer professioneller
+      </Highlight>
+      .{' '}
+      <Highlight {...p} ids={['7IDdSMLv4']}>
+        Können Sie einer Fünfjährigen die Klimakrise erklären
+      </Highlight>
+      ?{' '}
+      <Highlight {...p} ids={['0OoQ7oKxf']}>
+        Das letzte Interview
+      </Highlight>
+      , das Peter Weibel gab und das unter anderem vom Tod handelt. Dank diesen
+      vier Frauen heisst{' '}
+      <Highlight {...p} ids={['gfogrzE5Y']}>
+        Nein jetzt Nein
+      </Highlight>
+      . Wer bist du, wenn der Faschismus marschiert,{' '}
+      <Highlight {...p} ids={['oz8oe43Dx']}>
+        wenn es wirklich auf dich ankommt
+      </Highlight>
+      ?{' '}
+      <Highlight
+        {...p}
+        ids={['DOPGNz-j3']}
+        series='republik/article-tod-im-waaghof'
+      >
+        Die Asylsuchende Kowsika hätte nicht sterben müssen
+      </Highlight>{' '}
+      – wenn die Schweizer Behörden sich korrekt verhalten hätten.{' '}
+      <Highlight {...p} ids={['WgiT3AH-c']}>
+        Wir übersetzen für Sie das Ende der Credit Suisse
+      </Highlight>{' '}
+      und fragen,{' '}
+      <Highlight {...p} ids={['DNdisl0Mn']}>
+        was von «too big to fail» geblieben ist
+      </Highlight>
+      . Ausserdem:{' '}
+      <Highlight {...p} ids={['bo_bnjcB4']}>
+        Alkohol
+      </Highlight>
+      ,{' '}
+      <Highlight {...p} ids={['_1z53GC7d']}>
+        Buchtipps
+      </Highlight>{' '}
+      und{' '}
+      <Highlight {...p} ids={['In6JZmE-0']}>
+        wie Sie veganes Essen lieben lernen
+      </Highlight>
+      .
+    </>
+  ),
   //April: (p) => <></>,
   //Mai: (p) => <></>,
   //Juni: (p) => <></>,
