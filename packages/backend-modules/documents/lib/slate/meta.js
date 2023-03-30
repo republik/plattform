@@ -13,9 +13,16 @@ const getMeta = async (doc) => {
       ? metaFieldResolver(doc.content.meta, doc._all, doc._users)
       : {}
 
+  // Dummy credits in meta necessary
+  const credits = {
+    type: 'slate',
+    children: [],
+  }
+
   doc._meta = {
     ...doc.content.meta,
     ...resolvedFields,
+    credits,
   }
 
   return doc._meta

@@ -2,6 +2,7 @@ import { AudioPlayerProps } from '../AudioPlayerController'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import useInterval from '../../../lib/hooks/useInterval'
 import { AudioQueueItem } from '../graphql/AudioQueueHooks'
+import { useMediaSession } from '../hooks/useMediaSession'
 
 const DEFAULT_SYNC_INTERVAL = 500 // in ms
 
@@ -25,7 +26,11 @@ type AudioPlaybackElementProps = Pick<
 > & {
   actions: Pick<
     AudioPlayerProps['actions'],
-    'onEnded' | 'handleError' | 'syncWithMediaElement'
+    | 'onEnded'
+    | 'handleError'
+    | 'syncWithMediaElement'
+    | 'onSkipToNext'
+    | 'onClose'
   >
 }
 
@@ -36,7 +41,13 @@ const AudioPlaybackElement = ({
   playbackRate,
   setWebHandlers,
   setHasAutoPlayed,
-  actions: { onEnded, handleError, syncWithMediaElement },
+  actions: {
+    onEnded,
+    handleError,
+    syncWithMediaElement,
+    onSkipToNext,
+    onClose,
+  },
 }: AudioPlaybackElementProps) => {
   const mediaRef = useRef<HTMLMediaElement>(null)
   const trackedPlayerItem = useRef<AudioQueueItem>(null)
@@ -221,6 +232,23 @@ const AudioPlaybackElement = ({
   useEffect(() => {
     return () => setWebHandlers(null)
   }, [])
+
+  useMediaSession(activeItem, {
+    isPlaying,
+    callbacks: {
+      onPlay,
+      onPause,
+      onSeekForward: (seekOffset: number) => onForward(seekOffset),
+      onSeekBackward: (seekOffset: number) => onBackward(seekOffset),
+      onSkipToNext: () => onSkipToNext(),
+      onStop: () => onClose(),
+      onRetrievePlayerState: () => ({
+        currentTime: mediaRef.current?.currentTime ?? 0,
+        duration: mediaRef.current?.duration ?? 0,
+        playbackRate: mediaRef.current?.playbackRate ?? 1,
+      }),
+    },
+  })
 
   const {
     document: { meta: { audioSource } = {} },
