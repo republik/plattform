@@ -319,6 +319,9 @@ const ArticlePage = ({
         hasAccess ? 'pw' : 'na'
       }&uid=${documentId}&path=${cleanedPath}`,
     )
+      .then((r) => r.json())
+      .then((data) => console.log('prolitteris', data))
+      .catch((error) => console.log('prolitteris error', error))
   }, [])
 
   useEffect(() => {
