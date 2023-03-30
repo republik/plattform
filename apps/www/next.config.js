@@ -9,9 +9,19 @@ const withTM = require('next-transpile-modules')([
 
 const { NODE_ENV, CDN_FRONTEND_BASE_URL } = process.env
 
+/**
+ * For Vercel Preview Deployments, make sure the PUBLIC_BASE_URL_PATTERN is set
+ * and has the pattern `https://project-name-<branch-name>-team-slug.vercel.app`
+ * (<branch-name> will be replaced with the Git commit ref)
+ **/
 const PUBLIC_BASE_URL =
   process.env.PUBLIC_BASE_URL ??
-  (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : undefined)
+  (process.env.VERCEL_GIT_COMMIT_REF && process.env.PUBLIC_BASE_URL_PATTERN)
+    ? process.env.PUBLIC_BASE_URL_PATTERN.replace(
+        '<branch-name>',
+        process.env.VERCEL_GIT_COMMIT_REF,
+      )
+    : undefined
 
 const buildId =
   process.env.SOURCE_VERSION?.substring(0, 10) ||
