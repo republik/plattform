@@ -23,6 +23,7 @@
   "devDependencies": {
     "@next/eslint-plugin-next": "^13.2.3",
     "@republik/eslint-config-frontend": "*",
+    "@republik/tsconfig": "*",
     "@types/node": "16",
     "@types/react": "^18.0.28",
     "@types/react-dom": "^18.0.11"
