@@ -44,7 +44,7 @@ export const getServerSideProps = createGetServerSideProps(
       const hasMonthlySubscription =
         me?.activeMembership?.type?.name === 'MONTHLY_ABO'
 
-      if (me && !hasMonthlySubscription) {
+      if (!!me?.activeMembership && !hasMonthlySubscription) {
         return {
           redirect: {
             destination: '/verstaerkung-holen',
