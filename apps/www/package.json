@@ -9,8 +9,7 @@
   "main": "server/index.js",
   "scripts": {
     "dev": "cross-env NODE_ENV=development nodemon --watch server --watch .env --watch next.config.js server/index.js",
-    "dev-only-next": "next dev",
-    "start": "node server/index.js",
+    "dev:next": "next dev -p 3010",
     "build": "next build",
     "heroku-postbuild": "npm run build",
     "test": "jest",

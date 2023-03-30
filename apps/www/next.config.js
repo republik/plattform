@@ -9,6 +9,10 @@ const withTM = require('next-transpile-modules')([
 
 const { NODE_ENV, CDN_FRONTEND_BASE_URL } = process.env
 
+const PUBLIC_BASE_URL =
+  process.env.PUBLIC_BASE_URL ??
+  (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : undefined)
+
 const buildId =
   process.env.SOURCE_VERSION?.substring(0, 10) ||
   new Date(Date.now()).toISOString()
@@ -19,7 +23,7 @@ const buildId =
 module.exports = withTM(
   withBundleAnalyzer({
     generateBuildId: () => buildId,
-    env: { BUILD_ID: buildId },
+    env: { BUILD_ID: buildId, PUBLIC_BASE_URL },
     webpack: (config) => {
       config.externals = config.externals || {}
       config.externals['lru-cache'] = 'lru-cache'
