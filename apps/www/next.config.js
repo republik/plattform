@@ -16,12 +16,12 @@ const { NODE_ENV, CDN_FRONTEND_BASE_URL } = process.env
  **/
 const PUBLIC_BASE_URL =
   process.env.PUBLIC_BASE_URL ??
-  (process.env.VERCEL_GIT_COMMIT_REF && process.env.PUBLIC_BASE_URL_PATTERN)
+  (process.env.VERCEL_GIT_COMMIT_REF && process.env.PUBLIC_BASE_URL_PATTERN
     ? process.env.PUBLIC_BASE_URL_PATTERN.replace(
         '<branch-name>',
         process.env.VERCEL_GIT_COMMIT_REF,
       )
-    : undefined
+    : undefined)
 
 const buildId =
   process.env.SOURCE_VERSION?.substring(0, 10) ||
