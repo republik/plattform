@@ -1,0 +1,8 @@
+{
+  "name": "@republik/tsconfig",
+  "private": true,
+  "version": "0.0.0",
+  "files": [
+    "nextjs.json"
+  ]
+}
