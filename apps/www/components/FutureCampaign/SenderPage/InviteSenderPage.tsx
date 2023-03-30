@@ -14,8 +14,8 @@ const Confetti = dynamic(() => import('./Confetti'), {
 })
 
 export const FUTURE_CAMPAIGN_MAX_REDEEMED_INVITES = 5
-export const FUTURE_CAMPAIGN_TOTAL_PARTICIPANTS = 1364
-export const FUTURE_CAMPAIGN_TOTAL_ABOS = 2588
+export const FUTURE_CAMPAIGN_TOTAL_PARTICIPANTS = 1424
+export const FUTURE_CAMPAIGN_TOTAL_ABOS = 2720
 
 const InviteSenderPage = ({ me }: { me: MeObjectType }) => {
   const { data: userInviteData } = useUserInviteQuery()
