@@ -45,7 +45,7 @@ import { parseJSONObject } from '../../lib/safeJSON'
 import { formatDate } from '../../lib/utils/format'
 import withInNativeApp, { postMessage } from '../../lib/withInNativeApp'
 import { splitByTitle } from '../../lib/utils/mdast'
-import { PUBLIKATOR_BASE_URL, PROLITTERIS_BASE_URL } from '../../lib/constants'
+import { PUBLIKATOR_BASE_URL } from '../../lib/constants'
 import { useMe } from '../../lib/context/MeContext'
 import { cleanAsPath } from '../../lib/utils/link'
 
@@ -315,7 +315,7 @@ const ArticlePage = ({
   // Prolitteris Tracking with Proxy
   useEffect(async () => {
     fetch(
-      `${PROLITTERIS_BASE_URL}?paid=${
+      `/api/prolitteris?paid=${
         hasAccess ? 'pw' : 'na'
       }&uid=${documentId}&path=${cleanedPath}`,
     )
