@@ -77,30 +77,30 @@ module.exports = withTM(
             destination: '/~/:slug',
           },
           // Avoid SSG for extract urls used for image rendering
-          {
-            source: '/:path*',
-            destination: '/_ssr/:path*',
-            has: [{ type: 'query', key: 'extract' }],
-          },
-          // Avoid SSG for share urls, e.g. meta.fromQuery
-          {
-            source: '/:path*',
-            destination: '/_ssr/:path*',
-            has: [{ type: 'query', key: 'share' }],
-          },
-          // Rewrite for crawlers when a comment is focused inside a debate on the article-site
-          {
-            source: '/:path*',
-            destination: '/_ssr/:path*',
-            has: [
-              { type: 'query', key: 'focus' },
-              {
-                type: 'header',
-                key: 'User-Agent',
-                value: '.*(Googlebot|facebookexternalhit|Twitterbot).*',
-              },
-            ],
-          },
+          // {
+          //   source: '/:path*',
+          //   destination: '/_ssr/:path*',
+          //   has: [{ type: 'query', key: 'extract' }],
+          // },
+          // // Avoid SSG for share urls, e.g. meta.fromQuery
+          // {
+          //   source: '/:path*',
+          //   destination: '/_ssr/:path*',
+          //   has: [{ type: 'query', key: 'share' }],
+          // },
+          // // Rewrite for crawlers when a comment is focused inside a debate on the article-site
+          // {
+          //   source: '/:path*',
+          //   destination: '/_ssr/:path*',
+          //   has: [
+          //     { type: 'query', key: 'focus' },
+          //     {
+          //       type: 'header',
+          //       key: 'User-Agent',
+          //       value: '.*(Googlebot|facebookexternalhit|Twitterbot).*',
+          //     },
+          //   ],
+          // },
           {
             source: '/pgp/:userSlug',
             destination: '/api/pgp/:userSlug',
