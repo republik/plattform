@@ -1,7 +1,6 @@
 import { cloneElement, useRef, useEffect, useMemo, useContext } from 'react'
 import { css } from 'glamor'
 import Link from 'next/link'
-import fetch from 'isomorphic-unfetch'
 import { useRouter } from 'next/router'
 import dynamic from 'next/dynamic'
 import { renderMdast } from 'mdast-react-render'
@@ -48,6 +47,7 @@ import { splitByTitle } from '../../lib/utils/mdast'
 import { PUBLIKATOR_BASE_URL } from '../../lib/constants'
 import { useMe } from '../../lib/context/MeContext'
 import { cleanAsPath } from '../../lib/utils/link'
+import useProlitterisTracking from '../../lib/hooks/useProlitterisTracking'
 
 import CommentLink from '../Discussion/shared/CommentLink'
 import DiscussionContextProvider from '../Discussion/context/DiscussionContextProvider'
@@ -312,17 +312,7 @@ const ArticlePage = ({
   const routerQuery = router.query
   const isClimate = !!article?.content?.meta?.climate
 
-  // Prolitteris Tracking with Proxy
-  useEffect(async () => {
-    fetch(
-      `/api/prolitteris?paid=${
-        hasAccess ? 'pw' : 'na'
-      }&uid=${documentId}&path=${cleanedPath}`,
-    )
-      .then((r) => r.json())
-      .then((data) => console.log('prolitteris', data))
-      .catch((error) => console.log('prolitteris error', error))
-  }, [])
+  useProlitterisTracking(hasAccess, documentId, cleanedPath)
 
   useEffect(() => {
     if (share) {

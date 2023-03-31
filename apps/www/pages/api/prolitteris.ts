@@ -23,10 +23,9 @@ function getHash(input: string | number | object): string {
 const {
   PROLITTERIS_MEMBER_ID,
   PROLITTERIS_DOMAIN,
-  DEFAULT_USER_AGENT,
-  DOCUMENT_BASE_URL,
-  DEV_IP,
-  DEV_UID,
+  PROLITTERIS_USER_AGENT,
+  PUBLIC_BASE_URL,
+  PROLITTERIS_DEV_UID,
 } = process.env
 
 /**
@@ -36,7 +35,7 @@ const {
  */
 async function handler(request: NextApiRequest, response: NextApiResponse) {
   const requestIps =
-    DEV_IP || request.headers['x-forwarded-for'] || request.socket.remoteAddress
+    request.headers['x-forwarded-for'] || request.socket.remoteAddress
 
   const ua = request.headers['user-agent']
 
@@ -82,7 +81,7 @@ async function handler(request: NextApiRequest, response: NextApiResponse) {
 
   // create unique C-Parameter for each request (20 characters hex) from the ip and user agent
   const cParam: string = getHash([requestIp, ua]).substring(0, 20)
-  const uidParam = DEV_UID || uid
+  const uidParam = PROLITTERIS_DEV_UID || uid
   const maskedIP = truncateIP(requestIp)
 
   const fetchUrl =
@@ -91,8 +90,8 @@ async function handler(request: NextApiRequest, response: NextApiResponse) {
     `?c=${cParam}`
 
   const requestHeaders = {
-    'User-Agent': DEFAULT_USER_AGENT,
-    Referer: DOCUMENT_BASE_URL + path,
+    'User-Agent': PROLITTERIS_USER_AGENT,
+    Referer: PUBLIC_BASE_URL + path,
     'X-Forwarded-For': maskedIP,
   }
 
