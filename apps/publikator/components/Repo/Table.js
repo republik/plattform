@@ -264,6 +264,20 @@ const RepoList = ({
           </Tr>
         </thead>
         <tbody>
+          {!(showLoader || data.loading || data.error) &&
+            data.repos &&
+            data.repos.nodes.length === 0 && (
+              <Tr>
+                <Td colSpan='8'>{t('repo/search/noResults')}</Td>
+              </Tr>
+            )}
+          {!showLoader &&
+            data.repos &&
+            [...data.repos.nodes]
+              .sort((a, b) => orderCompare(orderAccessor(a), orderAccessor(b)))
+              .map((repo) => (
+                <RepoRow key={repo.id} repo={repo} showPhases={showPhases} />
+              ))}
           {(data.loading || data.error) && (
             <tr>
               <td colSpan='8'>
@@ -271,20 +285,6 @@ const RepoList = ({
               </td>
             </tr>
           )}
-          {!(showLoader || data.loading) &&
-            data?.repos &&
-            data?.repos?.nodes.length === 0 && (
-              <Tr>
-                <Td colSpan='8'>{t('repo/search/noResults')}</Td>
-              </Tr>
-            )}
-          {!showLoader &&
-            data.repos &&
-            [...data.repos.nodes.filter(Boolean)]
-              .sort((a, b) => orderCompare(orderAccessor(a), orderAccessor(b)))
-              .map((repo) => (
-                <RepoRow key={repo.id} repo={repo} showPhases={showPhases} />
-              ))}
         </tbody>
       </Table>
       <PageInfo
@@ -302,7 +302,6 @@ const RepoListWithQuery = compose(
   graphql(filterAndOrderRepos, {
     options: ({ router }) => ({
       fetchPolicy: 'cache-and-network',
-      errorPolicy: 'all',
       ssr: false,
       notifyOnNetworkStatusChange: true,
       variables: {
