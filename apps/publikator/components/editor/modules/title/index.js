@@ -147,7 +147,7 @@ export default ({ rule, subModules, TYPE }) => {
                 }
                 if (reason === 'child_unknown') {
                   if (index >= subModules.length) {
-                    change.unwrapNodeByKey(child.key)
+                    change.removeNodeByKey(child.key)
                   }
                 }
               },
