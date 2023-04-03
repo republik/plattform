@@ -1,5 +1,3 @@
-import { ComponentDemo } from '@/theme/components/component-demo'
-import { PropsTable } from '@/theme/components/props-table'
 import { DocsThemeConfig } from 'nextra-theme-docs'
 
 const config: DocsThemeConfig = {
@@ -20,10 +18,6 @@ const config: DocsThemeConfig = {
     }
   },
   head: null,
-  components: {
-    ComponentDemo,
-    PropsTable,
-  },
 }
 
 export default config
