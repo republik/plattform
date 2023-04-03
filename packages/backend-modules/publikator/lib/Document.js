@@ -1,7 +1,6 @@
 const visit = require('unist-util-visit')
 const debug = require('debug')('publikator:lib:Document')
 const mp3Duration = require('@rocka/mp3-duration')
-const fetch = require('isomorphic-unfetch')
 const Promise = require('bluebird')
 
 const { timeFormat } = require('@orbiting/backend-modules-formats')

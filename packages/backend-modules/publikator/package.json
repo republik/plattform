@@ -36,7 +36,6 @@
     "github": "^14.0.0",
     "hyphen": "^1.6.4",
     "is-uuid": "^1.0.2",
-    "isomorphic-unfetch": "^3.0.0",
     "istanbul": "1.1.0-alpha.1",
     "js-yaml": "^3.14.0",
     "jsonwebtoken": "^8.2.1",

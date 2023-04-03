@@ -1,5 +1,3 @@
-const fetch = require('isomorphic-unfetch')
-
 const { MAILCHIMP_URL, MAILCHIMP_API_KEY } = process.env
 
 module.exports = async ({ id }) => {
