@@ -61,10 +61,15 @@ const QuestionScroll: React.FC<{
   shareImageUrlObj.searchParams.set('extract', share.extract)
   const shareImageUrl = shareImageUrlObj.toString()
 
+  const sharedAnswer =
+    answerId && answers.find((d) => slug(d.author.name) === answerId)
   const meta = {
     url,
-    title: share.title, // TODO: integrate placeholder
-    description: share.description,
+    title: share.title,
+    description: share.description.replace(
+      '{name}',
+      sharedAnswer ? sharedAnswer.author.name : '',
+    ),
     image: `${ASSETS_SERVER_BASE_URL}/render?width=1200&height=1&url=${encodeURIComponent(
       shareImageUrl,
     )}`,
