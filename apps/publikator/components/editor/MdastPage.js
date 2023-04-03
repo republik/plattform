@@ -727,10 +727,21 @@ export class EditorPage extends Component {
     const { router } = this.props
     const { commitId, schema, template } = router.query
     const repoId = getRepoIdFromQuery(router.query)
-    const { editorState } = this.state
-    const serializedState = this.editor.serializer.serialize(editorState)
-    this.beginChanges()
-    this.store.set('editorState', serializedState)
+
+    // When an error happens inside the editor, its state can't be serialized anymore.
+    // This is okay, we just redirect to the raw editor anyway, so the user can fix whatever caused the problem.
+    try {
+      const { editorState } = this.state
+      const serializedState = this.editor.serializer.serialize(editorState)
+      this.beginChanges()
+      this.store.set('editorState', serializedState)
+    } catch (e) {
+      console.error(
+        'Could not set new editorState, going to raw editor anyway.',
+        e,
+      )
+    }
+
     this.props.router.push({
       pathname: `/repo/${repoId}/raw`,
       query: {
