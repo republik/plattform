@@ -6,7 +6,12 @@ import {
   useMemo,
   useRef,
 } from 'react'
-import { SLIDER_TRANSITION, SLIDER_VALUES } from './config'
+import {
+  SLIDER_VALUE_AVERAGE,
+  SLIDER_TRANSITION,
+  SLIDER_VALUES,
+  SLIDER_VALUE_MINIMUM,
+} from './config'
 
 import { fontStyles, useColorContext } from '@project-r/styleguide'
 import {
@@ -129,31 +134,60 @@ type PriceSliderProps = {
 
 const Tick = ({
   sliderY,
+  sliderValue,
   tickY,
   tick,
   onClick,
 }: {
   sliderY: MotionValue
+  sliderValue: number
   tickY: number
   tick: SliderValue
   onClick: MouseEventHandler<HTMLDivElement>
 }) => {
   const [colorScheme] = useColorContext()
 
-  const background = useTransform(sliderY, (value) =>
-    tick.isAverage
-      ? '#F0DC28'
-      : value > tickY
+  const background = useTransform(sliderY, (sliderYValue) => {
+    if (tick.value === SLIDER_VALUE_AVERAGE) {
+      return '#F0DC28'
+    }
+
+    if (
+      sliderValue <= SLIDER_VALUE_AVERAGE &&
+      tick.value <= SLIDER_VALUE_AVERAGE
+    ) {
+      return '#F0DC28'
+    }
+
+    return sliderYValue > tickY
       ? colorScheme.getCSSColor('primary')
-      : colorScheme.getCSSColor('disabled'),
-  )
+      : colorScheme.getCSSColor('disabled')
+  })
+
+  const color = useTransform(sliderY, (sliderYValue) => {
+    if (tick.value === SLIDER_VALUE_AVERAGE) {
+      return 'black'
+    }
+
+    if (
+      sliderValue <= SLIDER_VALUE_AVERAGE &&
+      tick.value <= SLIDER_VALUE_AVERAGE
+    ) {
+      return 'black'
+    }
+
+    return 'white'
+  })
 
   return (
     <motion.div
-      {...(tick.isAverage ? css(styles.tick, styles.tickDefault) : styles.tick)}
+      {...(tick.value === SLIDER_VALUE_AVERAGE
+        ? css(styles.tick, styles.tickDefault)
+        : styles.tick)}
       style={{
         y: tickY,
         background,
+        color,
       }}
       whileHover={{ scale: 1.1 }}
       onClick={onClick}
@@ -176,6 +210,13 @@ export const PriceSlider = ({
   const trackRef = useRef<HTMLDivElement>(null)
   const animationControls = useAnimationControls()
   const y = useMotionValue(0)
+
+  const sliderColor =
+    currentStep.value === SLIDER_VALUE_MINIMUM
+      ? '#D0913C'
+      : currentStep.value <= SLIDER_VALUE_AVERAGE
+      ? '#F0DC28'
+      : colorScheme.getCSSColor('primary')
 
   useEffect(() => {
     animationControls.start({
@@ -243,8 +284,8 @@ export const PriceSlider = ({
 
         <motion.div
           {...styles.trackFill}
-          {...colorScheme.set('background', 'primary')}
-          style={{ height: y }}
+          // {...colorScheme.set('background', 'primary')}
+          style={{ height: y, background: sliderColor }}
         ></motion.div>
 
         {ticks.map((tick) => {
@@ -254,6 +295,7 @@ export const PriceSlider = ({
               tick={tick}
               tickY={sliderScale(tick.position)}
               sliderY={y}
+              sliderValue={currentStep.value}
               onClick={() => {
                 gotoPos(tick.position)
               }}
@@ -322,7 +364,7 @@ export const PriceSlider = ({
             }
           }}
         >
-          <div {...styles.thumb} {...colorScheme.set('borderColor', 'primary')}>
+          <div {...styles.thumb} style={{ borderColor: sliderColor }}>
             <svg
               width='18'
               height='16'
