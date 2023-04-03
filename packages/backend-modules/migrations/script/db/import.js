@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 require('@orbiting/backend-modules-env').config()
 
-const fetch = require('isomorphic-unfetch')
 const yargs = require('yargs')
 
 const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
