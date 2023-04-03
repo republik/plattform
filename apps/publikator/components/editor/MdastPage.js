@@ -43,6 +43,7 @@ import * as fragments from '../../lib/graphql/fragments'
 import {
   ColorContextProvider,
   colors,
+  ErrorBoundary,
   plainButtonRule,
 } from '@project-r/styleguide'
 import SettingsIcon from 'react-icons/lib/fa/cogs'
@@ -907,17 +908,22 @@ export class EditorPage extends Component {
                       darkmode={this.state.previewDarkmode}
                     />
                   ) : null}
-                  <Editor
-                    ref={this.editorRef}
-                    schema={schema}
-                    isTemplate={isTemplate}
-                    meta={meta}
-                    value={editorState}
-                    onChange={this.changeHandler}
-                    onDocumentChange={this.documentChangeHandler}
-                    readOnly={readOnly}
-                    hide={showPreview}
-                  />
+                  <ErrorBoundary
+                    failureMessage='Ein Fehler trat im Editor auf. Bitte den Quellcode bearbeiten.'
+                    showException
+                  >
+                    <Editor
+                      ref={this.editorRef}
+                      schema={schema}
+                      isTemplate={isTemplate}
+                      meta={meta}
+                      value={editorState}
+                      onChange={this.changeHandler}
+                      onDocumentChange={this.documentChangeHandler}
+                      readOnly={readOnly}
+                      hide={showPreview}
+                    />
+                  </ErrorBoundary>
                 </ColorContextProvider>
               </div>
             )}
