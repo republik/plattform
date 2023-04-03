@@ -1,4 +1,3 @@
-const fetch = require('isomorphic-unfetch')
 const AbortController = require('abort-controller')
 const debug = require('debug')('utils:fetchWithTimeout')
 
