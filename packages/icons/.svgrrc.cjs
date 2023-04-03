@@ -10,6 +10,14 @@ module.exports = {
     "#000000": "currentColor",
     "black": "currentColor",
   },
+  svgoConfig: {
+    plugins: [
+      {
+        name: 'mergePaths',
+        enabled: false,
+      }
+    ]
+  },
   svgProps: {
     fill: "currentColor",
     style: "{props.style || { verticalAlign: 'middle' }}",
@@ -34,5 +42,5 @@ module.exports = {
 
     ${variables.exports};
     `
-  }
+  },
 }

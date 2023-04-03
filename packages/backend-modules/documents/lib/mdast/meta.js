@@ -53,7 +53,7 @@ const getCredits = (doc) => {
  * @param  {Object}      doc An MDAST tree
  * @return {Object|null}     e.g. { audioSource: null, auto: true, [...] }
  */
-const getMeta = (doc) => {
+const getMeta = async (doc) => {
   // If {doc._meta} is present, this indicates meta information was retrieved
   // already.
   if (doc._meta) {
@@ -89,11 +89,14 @@ const getMeta = (doc) => {
 
   doc._meta = {
     ...doc.content.meta,
-    credits,
-    audioSource: getAudioSource(doc),
     ...times,
     ...resolvedFields,
+    credits,
+    creditsString: await stringifyNode(credits),
+    audioSource: getAudioSource(doc),
   }
+
+  doc._meta.contributors = getContributors(doc._meta)
 
   return doc._meta
 }
@@ -112,7 +115,7 @@ const toContributor = (node) => {
   return contributor
 }
 
-const getContributors = (meta, context) => {
+const getContributors = (meta) => {
   const creditsContributors =
     meta?.credits?.children
       ?.filter((c) => c.type === 'link')
@@ -152,7 +155,6 @@ const getContributors = (meta, context) => {
 }
 
 module.exports = {
-  getCredits,
   getMeta,
   getContributors,
 }
