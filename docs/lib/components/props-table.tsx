@@ -1,3 +1,5 @@
+import { useMDXComponents } from 'nextra-theme-docs'
+
 export const PropsTable = ({
   props,
 }: {
@@ -9,36 +11,36 @@ export const PropsTable = ({
     required?: boolean
   }[]
 }) => {
+  const mdx = useMDXComponents()
+
   return (
-    <div>
-      <table>
-        <thead>
-          <tr>
-            <td>Name</td>
-            <td>Type</td>
-            <td>Default</td>
-            <td>Description</td>
-          </tr>
-        </thead>
-        <tbody>
-          {props.map(({ name, type, defaultValue, required, description }) => {
-            return (
-              <tr key={name}>
-                <td>
-                  <code>{`${name}${required ? '' : '?'}`}</code>
-                </td>
-                <td>
-                  <code>{type}</code>
-                </td>
-                <td>
-                  <code>{defaultValue}</code>
-                </td>
-                <td>{description}</td>
-              </tr>
-            )
-          })}
-        </tbody>
-      </table>
-    </div>
+    <mdx.table>
+      <thead>
+        <mdx.tr>
+          <mdx.th align='left'>Name</mdx.th>
+          <mdx.th align='left'>Type</mdx.th>
+          <mdx.th align='left'>Default</mdx.th>
+          <mdx.th align='left'>Description</mdx.th>
+        </mdx.tr>
+      </thead>
+      <tbody>
+        {props.map(({ name, type, defaultValue, required, description }) => {
+          return (
+            <mdx.tr key={name}>
+              <mdx.td>
+                <mdx.code>{`${name}${required ? '' : '?'}`}</mdx.code>
+              </mdx.td>
+              <mdx.td>
+                <mdx.code style={{ whiteSpace: 'nowrap' }}>{type}</mdx.code>
+              </mdx.td>
+              <mdx.td>
+                {defaultValue ? <mdx.code>{defaultValue}</mdx.code> : '–'}
+              </mdx.td>
+              <mdx.td>{description}</mdx.td>
+            </mdx.tr>
+          )
+        })}
+      </tbody>
+    </mdx.table>
   )
 }
