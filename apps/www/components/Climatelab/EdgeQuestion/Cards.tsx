@@ -10,6 +10,7 @@ import {
   fontStyles,
   ColorContextLocalExtension,
   ChevronRightIcon,
+  mediaQueries,
 } from '@project-r/styleguide'
 
 import { localColors } from './config'
@@ -36,7 +37,10 @@ const styles = {
     },
   }),
   boldCitation: css({
-    ...fontStyles.serifBold32,
+    ...fontStyles.serifBold24,
+    [mediaQueries.mUp]: {
+      ...fontStyles.serifBold32,
+    },
   }),
 }
 
