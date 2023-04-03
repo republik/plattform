@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 require('@orbiting/backend-modules-env').config()
 
-const fetch = require('node-fetch')
 const Promise = require('bluebird')
 const url = require('url')
 const yargs = require('yargs')

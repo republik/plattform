@@ -3,7 +3,6 @@ require('@orbiting/backend-modules-env').config()
 
 const { dsvFormat } = require('d3-dsv')
 const assert = require('assert')
-const fetch = require('node-fetch')
 const Promise = require('bluebird')
 const yargs = require('yargs')
 
