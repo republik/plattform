@@ -15,8 +15,8 @@
   },
   "dependencies": {
     "next": "^13.2.4",
-    "nextra": "^2.2.20",
-    "nextra-theme-docs": "^2.2.20",
+    "nextra": "^2.3.0",
+    "nextra-theme-docs": "^2.3.0",
     "react": "^18.2.0",
     "react-docgen": "^6.0.0-beta.6",
     "react-dom": "^18.2.0",
