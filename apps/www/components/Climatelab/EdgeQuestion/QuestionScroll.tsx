@@ -2,7 +2,7 @@ import { renderMdast } from 'mdast-react-render'
 import { useRouter } from 'next/router'
 import React, { useMemo } from 'react'
 
-import { createArticleSchema, slug } from '@project-r/styleguide'
+import { createArticleSchema, slug, pxToRem } from '@project-r/styleguide'
 
 import { ASSETS_SERVER_BASE_URL, PUBLIC_BASE_URL } from '../../../lib/constants'
 import { cleanAsPath } from '../../../lib/utils/link'
@@ -27,6 +27,12 @@ const Header: React.FC<{ author: Author }> = ({ author, children }) => {
     paddingTop: 10,
     zIndex: 10,
   }
+
+  const customStylePicture = {
+    width: pxToRem(80),
+    height: pxToRem(80),
+  }
+
   return (
     <>
       {/*
@@ -38,6 +44,7 @@ const Header: React.FC<{ author: Author }> = ({ author, children }) => {
           profilePicture: PORTRAITS[slug(author.name)],
         }}
         customStyle={customStyle}
+        customStylePicture={customStylePicture}
       >
         {children}
       </SubmissionAuthor>
