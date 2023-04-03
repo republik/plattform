@@ -116,7 +116,7 @@ export const SubmissionAuthor = ({
       {displayAuthor.profilePicture && (
         <img
           {...styles.headerPicture}
-          style={{ ...customStylePicture }}
+          style={customStylePicture}
           src={displayAuthor.profilePicture}
           alt=''
         />
