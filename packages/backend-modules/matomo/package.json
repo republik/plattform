@@ -23,7 +23,6 @@
     "@zeit/fetch-retry": "^5.0.0",
     "bluebird": "^3.7.2",
     "debug": "^4.1.1",
-    "mysql2": "^2.2.5",
-    "node-fetch": "^2.6.1"
+    "mysql2": "^2.2.5"
   }
 }
