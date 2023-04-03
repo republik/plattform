@@ -7,7 +7,6 @@
 require('@orbiting/backend-modules-env').config()
 const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
 const rw = require('rw')
-const fetch = require('isomorphic-unfetch')
 const {
   getInterestsForUser,
 } = require('@orbiting/backend-modules-republik-crowdfundings/lib/Mail.js')
@@ -112,12 +111,12 @@ PgDb.connect()
     })
     console.log(`#users: ${users.length}`)
 
-    let operations = []
+    const operations = []
 
     const newsletterName = 'PROJECTR'
     const subscribed = 1
     let numSubscribeUrls = 0
-    let emailsWithSubscribeUrl = diffInput && []
+    const emailsWithSubscribeUrl = diffInput && []
 
     // this is only correct as long as PRIVACY is not REVOKEable
     const privacyConsentsUserIds = await pgdb.queryOneColumn(`

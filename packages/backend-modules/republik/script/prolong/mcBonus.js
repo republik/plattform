@@ -13,7 +13,6 @@ const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
 const Promise = require('bluebird')
 const crypto = require('crypto')
 const sleep = require('await-sleep')
-const fetch = require('isomorphic-unfetch')
 const moment = require('moment')
 const { transformUser, AccessToken } = require('@orbiting/backend-modules-auth')
 const {

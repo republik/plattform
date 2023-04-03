@@ -6,7 +6,6 @@
  * ./script/migratePortraitUrls.js [--dry]
  */
 require('@orbiting/backend-modules-env').config()
-const fetch = require('isomorphic-unfetch')
 const Promise = require('bluebird')
 const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
 const {
