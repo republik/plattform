@@ -63,6 +63,8 @@ export const PORTRAITS = {
     'https://cdn.repub.ch/s3/republik-assets/repos/republik/article-edge-question/files/a6af49c3-e656-48a7-aa5b-d0bc52380ab0/ashish-kothari.jpg',
   'anthony-patt':
     'https://cdn.repub.ch/s3/republik-assets/repos/republik/article-edge-question/files/cc7f3e9e-d58a-4143-8ec1-72f44b9438fc/anthony-patt.jpg',
+  julian_schuetter:
+    'https://cdn.repub.ch/s3/republik-assets/repos/republik/article-edge-question/files/deed8d8f-9a2d-4a00-ac5c-0fc8d2723ee0/julian_schuetter.jpeg',
 }
 
 export const localColors = {
