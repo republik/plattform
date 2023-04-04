@@ -43,7 +43,7 @@
     "glamor": "^2.20.40",
     "graphql": "^15.3.0",
     "helmet": "^3.23.3",
-    "isomorphic-unfetch": "^3.1.0",
+    "isomorphic-unfetch": "^3.0.0",
     "lodash": "^4.17.21",
     "lodash.debounce": "^4.0.8",
     "mdast-react-render": "^1.2.0",
