@@ -1,3 +1,4 @@
+/// <reference lib="dom" />
 require('@orbiting/backend-modules-env').config()
 
 import yargs from 'yargs'

@@ -1,3 +1,4 @@
+/// <reference lib="dom" />
 import createDebug from 'debug'
 import moment from 'moment'
 import crypto from 'crypto'
