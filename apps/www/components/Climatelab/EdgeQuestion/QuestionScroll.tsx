@@ -1,6 +1,7 @@
 import { renderMdast } from 'mdast-react-render'
 import { useRouter } from 'next/router'
-import React, { useMemo } from 'react'
+import React, { useMemo, useEffect, useRef } from 'react'
+import scrollIntoView from 'scroll-into-view'
 
 import { createArticleSchema, slug, pxToRem } from '@project-r/styleguide'
 
@@ -16,6 +17,13 @@ import HeaderShare from '../shared/HeaderShare'
 
 import { PORTRAITS } from './config'
 import { Author, QuestionAnswer, ShareProps } from './index'
+
+type MetaProps = {
+  url: string
+  title: string
+  description: string
+  image: string
+}
 
 const Header: React.FC<{ author: Author }> = ({ author, children }) => {
   const customStyle = {
@@ -52,6 +60,35 @@ const Header: React.FC<{ author: Author }> = ({ author, children }) => {
   )
 }
 
+const Answer: React.FC<{
+  author: Author
+  meta: MetaProps
+  sharedAnswer?: QuestionAnswer
+  renderedContent: any
+}> = ({ author, meta, sharedAnswer, renderedContent }) => {
+  const authorSlug = slug(author.name)
+  const ref = useRef()
+  useEffect(() => {
+    if (sharedAnswer && sharedAnswer.author.name === author.name) {
+      scrollIntoView(ref.current, { align: { top: 0, topOffset: 60 } })
+    }
+  }, [])
+  return (
+    <div style={{ marginBottom: 40 }} id={authorSlug} ref={ref}>
+      <Header author={author}>
+        <HeaderShare
+          meta={{
+            ...meta,
+            url: `${cleanAsPath(meta.url)}?share=${authorSlug}`,
+          }}
+          noLabel
+        />
+      </Header>
+      {renderedContent}
+    </div>
+  )
+}
+
 const QuestionScroll: React.FC<{
   answers: QuestionAnswer[]
   share: ShareProps
@@ -60,7 +97,6 @@ const QuestionScroll: React.FC<{
   const router = useRouter()
   const { query } = router
   const answerId = query.share
-
   const urlObj = new URL(router.asPath, PUBLIC_BASE_URL)
   const url = urlObj.toString()
 
@@ -70,7 +106,7 @@ const QuestionScroll: React.FC<{
 
   const sharedAnswer =
     answerId && answers.find((d) => slug(d.author.name) === answerId)
-  const meta = {
+  const meta: MetaProps = {
     url,
     title: share.title,
     description: share.description.replace(
@@ -99,23 +135,15 @@ const QuestionScroll: React.FC<{
   return (
     <>
       {answerId && <Meta data={meta} />}
-      {answers.map(({ content, author }, idx) => {
-        const authorSlug = slug(author.name)
-        return (
-          <div style={{ marginBottom: 40 }} id={authorSlug} key={idx}>
-            <Header author={author}>
-              <HeaderShare
-                meta={{
-                  ...meta,
-                  url: `${cleanAsPath(meta.url)}?share=${authorSlug}`,
-                }}
-                noLabel
-              />
-            </Header>
-            {renderSchema(content)}
-          </div>
-        )
-      })}
+      {answers.map(({ content, author }, idx) => (
+        <Answer
+          key={idx}
+          author={author}
+          meta={meta}
+          renderedContent={renderSchema(content)}
+          sharedAnswer={sharedAnswer}
+        />
+      ))}
     </>
   )
 }
