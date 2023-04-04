@@ -1,7 +1,6 @@
 import { renderMdast } from 'mdast-react-render'
 import { useRouter } from 'next/router'
-import React, { useMemo, useEffect, useRef } from 'react'
-import scrollIntoView from 'scroll-into-view'
+import React, { useMemo } from 'react'
 
 import { createArticleSchema, slug, pxToRem } from '@project-r/styleguide'
 
@@ -63,18 +62,11 @@ const Header: React.FC<{ author: Author }> = ({ author, children }) => {
 const Answer: React.FC<{
   author: Author
   meta: MetaProps
-  sharedAnswer?: QuestionAnswer
   renderedContent: any
-}> = ({ author, meta, sharedAnswer, renderedContent }) => {
+}> = ({ author, meta, renderedContent }) => {
   const authorSlug = slug(author.name)
-  const ref = useRef()
-  useEffect(() => {
-    if (sharedAnswer && sharedAnswer.author.name === author.name) {
-      scrollIntoView(ref.current, { align: { top: 0, topOffset: 60 } })
-    }
-  }, [])
   return (
-    <div style={{ marginBottom: 40 }} id={authorSlug} ref={ref}>
+    <div style={{ paddingTop: 40 }} id={authorSlug}>
       <Header author={author}>
         <HeaderShare
           meta={{
@@ -141,7 +133,6 @@ const QuestionScroll: React.FC<{
           author={author}
           meta={meta}
           renderedContent={renderSchema(content)}
-          sharedAnswer={sharedAnswer}
         />
       ))}
     </>

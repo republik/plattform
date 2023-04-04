@@ -21,7 +21,7 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     // gap: '1rem',
-    marginBottom: 60,
+    marginBottom: 20,
   }),
   card: css({
     marginBottom: 10,
