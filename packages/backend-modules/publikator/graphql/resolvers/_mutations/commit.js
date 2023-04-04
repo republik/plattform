@@ -49,7 +49,8 @@ const maybeFetchToBlob = async (url) => {
   }
 
   return fetch(url)
-    .then((r) => r.buffer())
+    .then((res) => res.arrayBuffer())
+    .then((res) => Buffer.from(res))
     .then(generateImageData)
 }
 
