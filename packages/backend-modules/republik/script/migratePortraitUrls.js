@@ -38,7 +38,8 @@ PgDb.connect()
           .catch((error) => {
             console.error('image fetch failed', { portraitUrl, error })
           })
-          .then((result) => result.buffer())
+          .then((res) => res.arrayBuffer())
+          .then((res) => Buffer.from(res))
 
         if (!portrait) {
           return
