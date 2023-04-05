@@ -1,3 +1,3 @@
-import DotApp from '../components/Dot'
+import { DotAppPrototyp1 } from '../components/Dot'
 
-export default DotApp
+export default DotAppPrototyp1
