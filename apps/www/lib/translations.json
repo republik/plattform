@@ -7841,7 +7841,19 @@
     },
     {
       "key": "ClimateLandingPage/content/paragraph2",
-      "value": "Darum starten wir das Klimalabor. Einen Ort für Austausch und Experimente. Um gemeinsam herauszufinden, was das ist: Journalismus, der uns in der Klimakrise wirklich weiterbringt."
+      "value": "Darum haben wir das Klimalabor gestartet. Einen Ort für Austausch und Experimente. Gemeinsam wollen wir herausfinden: Wie bringt uns Journalismus in der Klimakrise wirklich weiter?"
+    },
+    {
+      "key": "ClimateLandingPage/content/paragraph3",
+      "value": "Melden Sie sich an, um sich einzubringen, an unseren {eventsLink} teilzunehmen und um nichts zu verpassen, was wir zur Klimakrise schreiben."
+    },
+    {
+      "key": "ClimateLandingPage/content/eventsLinkText",
+      "value": "Veranstaltungen"
+    },
+    {
+      "key": "ClimateLandingPage/content/eventsLinkHref",
+      "value": "https://tally.so/r/mRxbdd"
     },
     {
       "key": "ClimateLandingPage/content/counterText",

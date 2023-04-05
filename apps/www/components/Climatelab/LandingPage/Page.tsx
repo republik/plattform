@@ -4,6 +4,7 @@ import {
   mediaQueries,
   useColorContext,
   ColorContextProvider,
+  A,
 } from '@project-r/styleguide'
 
 import { css } from 'glamor'
@@ -59,6 +60,15 @@ const LandingPage = () => {
               </p>
               <p {...styles.text}>
                 {t('ClimateLandingPage/content/paragraph2')}
+              </p>
+              <p {...styles.text}>
+                {t.elements('ClimateLandingPage/content/paragraph3', {
+                  eventsLink: (
+                    <A href={t('ClimateLandingPage/content/eventsLinkHref')}>
+                      {t('ClimateLandingPage/content/eventsLinkText')}
+                    </A>
+                  ),
+                })}
               </p>
             </div>
           </section>
