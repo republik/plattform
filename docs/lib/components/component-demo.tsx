@@ -24,6 +24,6 @@ export const ComponentDemo = ({
       </ErrorBoundary>
     </div>
 
-    {children}
+    <div className={styles.demoCode}>{children}</div>
   </div>
 )
