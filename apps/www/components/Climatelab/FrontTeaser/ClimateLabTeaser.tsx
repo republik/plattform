@@ -40,6 +40,7 @@ const ClimateTeaserContent = () => {
             br2: <br key='2' />,
           })}
         </h3>
+        <p {...styles.text}>{t('ClimateTeaser/content/text2')}</p>
         <div style={{ maxWidth: 'max-content' }}>
           <NextLink
             href={
@@ -110,7 +111,7 @@ const styles = {
     lineHeight: '1.3em',
     textAlign: 'center',
     marginTop: '3rem',
-    marginBottom: '3rem',
+    marginBottom: 68,
     [mediaQueries.mUp]: {
       fontSize: 58,
     },
@@ -118,8 +119,20 @@ const styles = {
       fontSize: 80,
     },
   }),
+  text: css({
+    ...fontStyles.sansSerifMedium,
+    lineHeight: '1.54em',
+    fontSize: 23,
+    [mediaQueries.mUp]: {
+      fontSize: 24,
+    },
+    textAlign: 'center',
+    marginTop: 0,
+    marginBottom: 68,
+  }),
   button: css({
     ...fontStyles.sansSerifBold,
+    display: 'block',
     fontSize: 20,
     boxSizing: 'border-box',
     padding: '12px 16px',

@@ -7872,6 +7872,10 @@
       "value": "Die Klimakrise ist hier. {br1}Die Lage ist ernst. {br2}Was tun?"
     },
     {
+      "key": "ClimateTeaser/content/text2",
+      "value": "Das Klimalabor der Republik ist ein Ort für Austausch und Experimente. Gemeinsam wollen wir herausfinden: Wie bringt uns Journalismus in der Klimakrise wirklich weiter?"
+    },
+    {
       "key": "ClimateTeaser/content/buttonAction",
       "value": "Zum Klimalabor"
     },
