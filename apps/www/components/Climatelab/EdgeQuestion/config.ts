@@ -49,7 +49,7 @@ export const PORTRAITS = {
     'https://cdn.repub.ch/s3/republik-assets/repos/republik/article-edge-question/files/b28323c4-156d-403c-b42e-3043190b62a5/dr.reinhard-steurer.jpg',
   'claudia-kemfert':
     'https://cdn.repub.ch/s3/republik-assets/repos/republik/article-edge-question/files/e3620e55-1e85-4a71-b8ac-310a9973667a/claudia_kemfert_by_oliver-betke.jpg',
-  chatgpt:
+  'chat-gpt':
     'https://cdn.repub.ch/s3/republik-assets/repos/republik/article-edge-question/files/bba5604d-f372-4c82-b8f6-b0f29faef1b7/chatgpt.jpg',
   'carola-rackete':
     'https://cdn.repub.ch/s3/republik-assets/repos/republik/article-edge-question/files/722afae3-c741-4184-a66c-65df46568f71/carola-rackete.jpeg',
@@ -63,6 +63,8 @@ export const PORTRAITS = {
     'https://cdn.repub.ch/s3/republik-assets/repos/republik/article-edge-question/files/a6af49c3-e656-48a7-aa5b-d0bc52380ab0/ashish-kothari.jpg',
   'anthony-patt':
     'https://cdn.repub.ch/s3/republik-assets/repos/republik/article-edge-question/files/cc7f3e9e-d58a-4143-8ec1-72f44b9438fc/anthony-patt.jpg',
+  'julian-schuetter':
+    'https://cdn.repub.ch/s3/republik-assets/repos/republik/article-edge-question/files/deed8d8f-9a2d-4a00-ac5c-0fc8d2723ee0/julian_schuetter.jpeg',
 }
 
 export const localColors = {
