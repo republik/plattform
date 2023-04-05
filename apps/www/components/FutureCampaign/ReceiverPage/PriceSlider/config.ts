@@ -1,4 +1,5 @@
 export type SliderStepKey =
+  | 'minimum'
   | 'belowStandard'
   | 'average'
   | 'aboveAverage'
@@ -23,33 +24,43 @@ export type SliderValue = {
   value: number
   tick?: boolean
   isDefault?: boolean
-  isAverage?: boolean
 }
 
 const SLIDER_STEPS: Record<SliderStepKey, SliderStep> = {
+  minimum: {
+    key: 'minimum',
+    iconSrc: '/static/5-jahre-republik/receiver/slider-step-0.svg',
+    label: 'Das Minimum',
+    text: 'Zahlen Sie den Preis, der Ihnen fair erscheint. Aber für ein Jahr unabhängigen Journalismus liegt vielleicht etwas mehr drin?',
+    goodie: false,
+    goodieText:
+      'Die Jubiläumstasche gibts dazu, wenn Sie mehr als CHF 120 bezahlen.',
+    bonusHint: '',
+  }, //  5 = Selected
   belowStandard: {
     key: 'belowStandard',
     iconSrc: '/static/5-jahre-republik/receiver/slider-step-0.svg',
     label: 'Dabei sein ist alles',
-    text: 'Sollten Sie aktuell knapp bei Kasse sein: Das kann jeder Lady und jedem Gentleman passieren. Willkommen an Bord!',
+    text: 'Sie sind knapp bei Kasse? Das kann passieren. Jeder zusätzliche Beitrag stärkt die Republik und ihren unabhängigen Journalismus.',
     goodie: false,
     goodieText:
-      'Die Jubiläumstasche gibts dazu, wenn Sie mehr als den Durchschnitt bezahlen.',
+      'Die Jubiläumstasche gibts dazu, wenn Sie mehr als CHF 120 bezahlen.',
     bonusHint: '',
   }, //  5 <= Selected < average CHF}
   average: {
     key: 'average',
     iconSrc: '/static/5-jahre-republik/receiver/slider-step-1.svg',
     label: 'Mit dem Schwarm schwimmen',
-    text: 'Wählen Sie den Betrag, der für Sie stimmt. Mitglieder, die ihren Preis selber wählen, zahlen im Schnitt so viel.',
-    goodie: true,
-    goodieText: 'Zum Abo-Kauf schenken wir Ihnen eine Jubiläumstasche dazu.',
+    text: 'Wer sich den Normalpreis nicht leisten kann, zahlt in der Regel die Hälfte. Sie auch?',
+    goodie: false,
+    goodieText:
+      'Die Jubiläumstasche gibts dazu, wenn Sie mehr als CHF 120 bezahlen.',
     bonusHint: '',
   }, // average <= selected < 240 CHF}
   aboveAverage: {
     key: 'aboveAverage',
     iconSrc: '/static/5-jahre-republik/receiver/slider-step-2.svg',
-    label: 'Über dem Durchschnitt',
+    label: 'Mehr als die Hälfte',
     text: 'Sie gehen Ihren eigenen Weg, aber es ist kein Alleingang. Schön, sind Sie dabei!',
     goodie: true,
     goodieText: 'Zum Abo-Kauf schenken wir Ihnen eine Jubiläumstasche dazu.',
@@ -69,7 +80,7 @@ const SLIDER_STEPS: Record<SliderStepKey, SliderStep> = {
     key: 'investmentLow',
     iconSrc: '/static/5-jahre-republik/receiver/slider-step-4.svg',
     label: 'Die vertrauens\u00ADvolle Investition',
-    text: 'Nicht alle, die sich mehr leisten können, tun es auch. Sie schon. Danke für Ihr Vertrauen, Ihren Mut, Ihre Investition in Journalismus.',
+    text: 'Sie gehen Ihren eigenen Weg, aber es ist kein Alleingang. Schön, sind Sie dabei!',
     goodie: true,
     goodieText: 'Zum Abo-Kauf schenken wir Ihnen eine Jubiläumstasche dazu.',
     bonusHint:
@@ -97,8 +108,11 @@ const SLIDER_STEPS: Record<SliderStepKey, SliderStep> = {
   }, // selected = 1000 CHF}
 } as const
 
+export const SLIDER_VALUE_MINIMUM = 5
+export const SLIDER_VALUE_AVERAGE = 120
+
 export const SLIDER_VALUES: SliderValue[] = [
-  { step: SLIDER_STEPS.belowStandard, value: 5, tick: true },
+  { step: SLIDER_STEPS.minimum, value: SLIDER_VALUE_MINIMUM, tick: true },
 
   { step: SLIDER_STEPS.belowStandard, value: 10 },
   { step: SLIDER_STEPS.belowStandard, value: 20 },
@@ -113,7 +127,7 @@ export const SLIDER_VALUES: SliderValue[] = [
   { step: SLIDER_STEPS.belowStandard, value: 110 },
   { step: SLIDER_STEPS.belowStandard, value: 110 },
 
-  { step: SLIDER_STEPS.average, value: 120, tick: true, isAverage: true },
+  { step: SLIDER_STEPS.average, value: SLIDER_VALUE_AVERAGE, tick: true },
 
   { step: SLIDER_STEPS.aboveAverage, value: 130 },
   { step: SLIDER_STEPS.aboveAverage, value: 140 },

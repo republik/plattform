@@ -22,9 +22,13 @@ Gut zu wissen:
 
 Wie Sie sich aktuell einbringen können:
 
- * 15 Fragen zum Klima, die zum Nachdenken anregen
-   {{frontend_base_url}}/2023/03/03/fragen-zur-klimakrise . Teilen Sie Ihre
-   Antworten und lesen Sie, was andere schreiben.
+ * Melden Sie sich für unsere nächsten Online-Veranstaltungen
+   https://tally.so/r/mRxbdd an: Gespräche mit Expertinnen aus verschiedenen
+   Bereichen zur Frage «Was kann ich tun?»
+
+ * 15 Fragen zum Klima, die zum Nachdenken anregen. Teilen Sie Ihre Antworten
+   {{frontend_base_url}}/2023/03/03/fragen-zur-klimakrise und lesen Sie, was
+   andere schreiben {{frontend_base_url}}/15-fragen-zum-klima-ihre-antworten .
 
  * Es hat sich schon einiges getan im Klimalabor seit dem Start. Schauen Sie
    sich unsere erste Zwischenbilanz
