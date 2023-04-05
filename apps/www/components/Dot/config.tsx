@@ -31,6 +31,7 @@ export const COLORS = {
     four: '#b2e2ec',
     fourBright: '#00d5ff',
     default: '#cfcfcf',
+    lightBackground: 'rgba(0, 0, 0, 0.05)',
   },
   dark: {
     one: '#376867',
@@ -42,5 +43,81 @@ export const COLORS = {
     four: '#5c8f99',
     fourBright: '#00d5ff',
     default: '#737373',
+    lightBackground: 'rgba(255, 255, 255, 0.05)',
   },
 }
+
+export const NEW_COLORS = {
+  light: {
+    one: '#1571B7',
+    two: '#DB4C81',
+    three: '#72C3C4',
+    four: '#887BD3',
+    five: '#FFD13C',
+    default: '#cfcfcf',
+  },
+  dark: {
+    one: '#1571B7',
+    two: '#DB4C81',
+    three: '#72C3C4',
+    four: '#887BD3',
+    five: '#FFD13C',
+    default: '#737373',
+  },
+}
+
+export const bankingData = [
+  {
+    bank: 'UBS',
+    costs: 257575,
+    benefit: 104462,
+  },
+  {
+    bank: 'Credit Suisse',
+    costs: 178866,
+    benefit: -32928,
+  },
+  {
+    bank: 'Zuger Kantonalbank',
+    costs: 168291,
+    benefit: 181005,
+  },
+  {
+    bank: 'Raiffeisen',
+    costs: 143899,
+    benefit: 109877,
+  },
+  {
+    bank: 'Kantonalbank Vaudoise',
+    costs: 180797,
+    benefit: 196169,
+  },
+]
+
+export const bankingDataWithoutCSLow = [
+  {
+    bank: 'UBS',
+    costs: 257575,
+    benefit: 104462,
+  },
+  {
+    bank: 'Credit Suisse',
+    costs: 178866,
+    benefit: 109877,
+  },
+  {
+    bank: 'Zuger Kantonalbank',
+    costs: 163291,
+    benefit: 181005,
+  },
+  {
+    bank: 'Raiffeisen',
+    costs: 143899,
+    benefit: 109877,
+  },
+  {
+    bank: 'Kantonalbank Vaudoise',
+    costs: 185797,
+    benefit: 196169,
+  },
+]
