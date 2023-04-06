@@ -11,10 +11,12 @@ const {
 } = require('@orbiting/backend-modules-republik/lib/slack')
 const { v4: uuid } = require('uuid')
 const mergeCustomers = require('../../../lib/payments/stripe/mergeCustomers')
+const cache = require('@orbiting/backend-modules-search/lib/cache')
 
 module.exports = async (_, args, context) => {
   const {
     pgdb,
+    redis,
     req,
     t,
     mail: { moveNewsletterSubscriptions },
@@ -147,6 +149,7 @@ module.exports = async (_, args, context) => {
       { issuerUserId: sourceUser.id },
       { issuerUserId: targetUser.id },
     )
+    await transaction.public.userAttributes.update(from, to)
 
     await mergeCustomers({
       targetUserId: targetUser.id,
@@ -325,6 +328,10 @@ module.exports = async (_, args, context) => {
     logger.info('transaction rollback', { req: req._log(), args, error: e })
     throw e
   }
+
+  // add deletion of cached content for sourceUser
+  const options = { prefix: `User:${sourceUserId}` }
+  await cache.createInvalidate(options, redis).catch(() => null)
 
   return transformUser(await pgdb.public.users.findOne({ id: targetUserId }))
 }
