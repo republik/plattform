@@ -118,7 +118,6 @@ const styles = {
     gap: '4rem',
     [mediaQueries.mUp]: {
       width: '80%',
-      fontSize: 48,
       alignItems: 'flex-start',
       textAlign: 'center',
     },

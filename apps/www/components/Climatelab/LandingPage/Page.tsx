@@ -153,10 +153,8 @@ const styles = {
     margin: 'auto',
     flexDirection: 'column',
     gap: '4rem',
-    // marginTop: 68,
     [mediaQueries.mUp]: {
       width: '80%',
-      fontSize: 48,
     },
   }),
   pageTitle: css({
