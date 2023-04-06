@@ -36,8 +36,8 @@ const ClimateTeaserContent = () => {
       <div {...styles.content} {...colorScheme.set('color', 'text')}>
         <h3 {...styles.title}>
           {t.elements('ClimateTeaser/content/text1', {
-            br1: <br key='1' />,
-            br2: <br key='2' />,
+            br: <br />,
+            nbsp: <>&nbsp;</>,
           })}
         </h3>
         <p {...styles.text}>{t('ClimateTeaser/content/text2')}</p>
@@ -82,11 +82,20 @@ export const climateLabTeaserXlBreakpoint =
 
 const styles = {
   wrapper: css({
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    gap: '1rem',
-    padding: '1rem 2rem 5rem 2rem',
+    display: 'grid',
+    gridTemplateAreas: `
+      'image'
+      'content'
+    `,
+    gap: '4rem',
+    [mediaQueries.mUp]: {
+      gridTemplateColumns: '1fr 1fr',
+      gridTemplateAreas: `
+        'image content'
+      `,
+      gap: 0,
+    },
+    padding: '4rem 1rem',
   }),
   img: css({
     width: '80%',
@@ -98,21 +107,34 @@ const styles = {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
+    gridArea: 'image',
   }),
   content: css({
-    flex: '1 1 auto',
     display: 'flex',
+    margin: 'auto',
     flexDirection: 'column',
+    gridArea: 'content',
     alignItems: 'center',
+    textAlign: 'center',
+    gap: '4rem',
+    [mediaQueries.mUp]: {
+      width: '80%',
+      fontSize: 48,
+      alignItems: 'flex-start',
+      textAlign: 'center',
+    },
   }),
   title: css({
     ...fontStyles.serifTitle,
-    fontSize: 38,
+    fontSize: 32,
     lineHeight: '1.3em',
-    textAlign: 'center',
-    marginTop: '3rem',
-    marginBottom: 68,
+    margin: 0,
+    marginBottom: '-0.3em',
     [mediaQueries.mUp]: {
+      fontSize: 48,
+      textAlign: 'left',
+    },
+    ['@media only screen and (min-width: 1350px)']: {
       fontSize: 58,
     },
     [climateLabTeaserXlBreakpoint]: {
@@ -125,10 +147,9 @@ const styles = {
     fontSize: 23,
     [mediaQueries.mUp]: {
       fontSize: 24,
+      textAlign: 'left',
     },
-    textAlign: 'center',
-    marginTop: 0,
-    marginBottom: 68,
+    margin: 0,
   }),
   button: css({
     ...fontStyles.sansSerifBold,

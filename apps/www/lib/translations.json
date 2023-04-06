@@ -7829,11 +7829,7 @@
     },
     {
       "key": "ClimateLandingPage/content/heading1",
-      "value": "Die Klimakrise ist hier. {br}Die Lage ist ernst."
-    },
-    {
-      "key": "ClimateLandingPage/content/callToAction",
-      "value": "Was tun?"
+      "value": "Die Klimakrise ist{nbsp}hier.{br}Die Lage ist ernst.{br}Was{nbsp}tun?"
     },
     {
       "key": "ClimateLandingPage/content/paragraph1",
@@ -7869,7 +7865,7 @@
     },
     {
       "key": "ClimateTeaser/content/text1",
-      "value": "Die Klimakrise ist hier. {br1}Die Lage ist ernst. {br2}Was tun?"
+      "value": "Die Klimakrise ist{nbsp}hier.{br}Die Lage ist ernst.{br}Was{nbsp}tun?"
     },
     {
       "key": "ClimateTeaser/content/text2",

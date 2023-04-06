@@ -47,9 +47,8 @@ const LandingPage = () => {
           <h1 {...styles.pageTitle}>
             {t.elements('ClimateLandingPage/content/heading1', {
               br: <br />,
+              nbsp: <>&nbsp;</>,
             })}
-            <br />
-            {t('ClimateLandingPage/content/callToAction')}
           </h1>
         </div>
         <div {...styles.contentWrapper}>
@@ -139,7 +138,7 @@ const styles = {
     gridArea: 'title',
     marginTop: 38,
     [mediaQueries.mUp]: {
-      marginTop: 200,
+      // marginTop: 200,
     },
   }),
   imageWrapper: css({
@@ -166,7 +165,7 @@ const styles = {
   }),
   contentWrapper: css({
     gridArea: 'content',
-    marginTop: 68,
+    // marginTop: 68,
     [mediaQueries.mUp]: {
       maxWidth: 550,
     },
