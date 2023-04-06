@@ -10,12 +10,15 @@ import {
   fontStyles,
 } from '@project-r/styleguide'
 
+import { swissNumbers } from '../../lib/utils/format'
+
 import {
-  bankingData,
+  bankingLabelData,
+  bankingPositionData,
   PADDING_TOP,
   PADDING_LEFT,
   NEW_COLORS,
-  bankingDataWithoutCSLow,
+  creditSuiseHistoricalData,
 } from './config'
 import { useResolvedColorSchemeKey } from '../ColorScheme/lib'
 
@@ -55,41 +58,47 @@ const getVariant = (highlighted: number) => {
   return 'step0'
 }
 
-const getDomain = (values, ...keys) => {
-  const maxValue = Math.max(
-    ...keys.map((key) => Math.max(...values.map((d) => d[key]))),
-  )
-  const minValue = Math.min(
-    ...keys.map((key) => Math.min(...values.map((d) => d[key]))),
-  )
-  return [minValue, maxValue]
-}
+const formatOneDecimal = swissNumbers.format(',.3r')
 
-const costDomain = getDomain(bankingDataWithoutCSLow, 'costs', 'benefit')
-const costDomainWithCS = getDomain(bankingData, 'costs', 'benefit')
+// const getDomain = (values, ...keys) => {
+//   const maxValue = Math.max(
+//     ...keys.map((key) => Math.max(...values.map((d) => d[key]))),
+//   )
+//   const minValue = Math.min(
+//     ...keys.map((key) => Math.min(...values.map((d) => d[key]))),
+//   )
+//   return [minValue, maxValue]
+// }
+
+// TODO: refactor
+
+const costDomainWithoutCS = [104462, 257575]
+const costDomainAll = [-32928, 257575]
+
 const chartRange = [0, 235]
 
-const costScale = scaleLinear().domain(costDomain).range(chartRange)
+const costScale = scaleLinear().domain(costDomainWithoutCS).range(chartRange)
 
-const costScaleAll = scaleLinear().domain(costDomainWithCS).range(chartRange)
+const costScaleAll = scaleLinear().domain(costDomainAll).range(chartRange)
 
 const getBankById = (array, bank) => array.find((d) => d.bank === bank)
 
 const getCostPosition = (bank) =>
-  chartRange[1] - costScale(getBankById(bankingDataWithoutCSLow, bank).costs)
+  chartRange[1] - costScale(getBankById(bankingPositionData, bank).costs)
 
 const getBenefitPosition = (bank) =>
-  chartRange[1] - costScale(getBankById(bankingDataWithoutCSLow, bank).benefit)
+  chartRange[1] - costScale(getBankById(bankingPositionData, bank).benefit)
 
 const getCostPositionWithCS = (bank) =>
-  chartRange[1] - costScaleAll(getBankById(bankingData, bank).costs)
+  chartRange[1] - costScaleAll(getBankById(bankingPositionData, bank).costs)
 
 const getBenefitPositionWithCS = (bank) =>
-  chartRange[1] - costScaleAll(getBankById(bankingData, bank).benefit)
+  chartRange[1] - costScaleAll(getBankById(bankingPositionData, bank).benefit)
 
 const RADIUS = 14
-const PADDING_LEFT_CHART = 150
-const CHART_WIDTH = 250
+const PADDING_LEFT_CHART = 100
+const WIDTH = 930
+const CENTER = WIDTH / 2
 
 export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
   const [colorScheme] = useColorContext()
@@ -123,17 +132,17 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
           transition={{ duration: 0.5 }}
           variants={defineVariants(
             {
-              x1: PADDING_LEFT_CHART,
+              x1: CENTER,
               y1: chartRange[1],
-              x2: PADDING_LEFT_CHART,
+              x2: CENTER,
               y2: '0',
               pathLength: 0,
             },
             {
               step1: {
-                x1: PADDING_LEFT_CHART,
+                x1: CENTER,
                 y1: chartRange[1],
-                x2: PADDING_LEFT_CHART,
+                x2: CENTER,
                 y2: '0',
                 stroke: NEW_COLORS[key].default,
                 strokeWidth: '3px',
@@ -141,29 +150,31 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                 pathLength: 1,
               },
               step2: {
-                x1: PADDING_LEFT_CHART,
+                x1: CENTER,
                 y1: chartRange[1],
-                x2: PADDING_LEFT_CHART,
+                x2: CENTER,
                 y2: '0',
                 stroke: NEW_COLORS[key].default,
                 strokeWidth: '3px',
                 opacity: 1,
                 pathLength: 1,
+                transition: { duration: 0.5, delay: 1 },
               },
               step3: {
-                x1: PADDING_LEFT_CHART,
+                x1: CENTER - PADDING_LEFT_CHART,
                 y1: chartRange[1],
-                x2: PADDING_LEFT_CHART,
+                x2: CENTER - PADDING_LEFT_CHART,
                 y2: '0',
                 stroke: NEW_COLORS[key].default,
                 strokeWidth: '3px',
                 opacity: 1,
                 pathLength: 1,
+                transition: { duration: 0.5, delay: 1 },
               },
               step4: {
-                x1: PADDING_LEFT_CHART,
+                x1: CENTER - PADDING_LEFT_CHART,
                 y1: chartRange[1],
-                x2: PADDING_LEFT_CHART,
+                x2: CENTER - PADDING_LEFT_CHART,
                 y2: '0',
                 stroke: NEW_COLORS[key].default,
                 strokeWidth: '3px',
@@ -178,27 +189,28 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
           transition={{ duration: 0.5 }}
           variants={defineVariants(
             {
-              x1: PADDING_LEFT_CHART + CHART_WIDTH,
+              x1: CENTER + PADDING_LEFT_CHART,
               y1: chartRange[1],
-              x2: PADDING_LEFT_CHART + CHART_WIDTH,
+              x2: CENTER + PADDING_LEFT_CHART,
               y2: '0',
               opacity: 0,
             },
             {
               step3: {
-                x1: PADDING_LEFT_CHART + CHART_WIDTH,
+                x1: CENTER + PADDING_LEFT_CHART,
                 y1: chartRange[1],
-                x2: PADDING_LEFT_CHART + CHART_WIDTH,
+                x2: CENTER + PADDING_LEFT_CHART,
                 y2: '0',
                 stroke: NEW_COLORS[key].default,
                 strokeWidth: '3px',
                 opacity: 1,
+                transition: { duration: 0.5, delay: 1.5 },
               },
 
               step4: {
-                x1: PADDING_LEFT_CHART + CHART_WIDTH,
+                x1: CENTER + PADDING_LEFT_CHART,
                 y1: chartRange[1],
-                x2: PADDING_LEFT_CHART + CHART_WIDTH,
+                x2: CENTER + PADDING_LEFT_CHART,
                 y2: '0',
                 stroke: NEW_COLORS[key].default,
                 strokeWidth: '3px',
@@ -211,35 +223,35 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
         <motion.line
           variants={defineVariants(
             {
-              x1: PADDING_LEFT_CHART,
+              x1: CENTER - PADDING_LEFT_CHART,
               y1: getCostPosition('UBS'),
-              x2: PADDING_LEFT_CHART + CHART_WIDTH,
+              x2: CENTER + PADDING_LEFT_CHART,
               y2: getBenefitPosition('UBS'),
               pathLength: 0,
               stroke: NEW_COLORS[key].one,
             },
             {
               step3: {
-                x1: PADDING_LEFT_CHART,
+                x1: CENTER - PADDING_LEFT_CHART,
                 y1: getCostPosition('UBS'),
-                x2: PADDING_LEFT_CHART + CHART_WIDTH,
+                x2: CENTER + PADDING_LEFT_CHART,
                 y2: getBenefitPosition('UBS'),
                 stroke: NEW_COLORS[key].one,
                 strokeWidth: '3px',
                 opacity: 1,
                 pathLength: 1,
-                transition: { delay: 1, duration: 0.5 },
+                transition: { delay: 2, duration: 1 },
               },
               step4: {
-                x1: PADDING_LEFT_CHART,
+                x1: CENTER - PADDING_LEFT_CHART,
                 y1: getCostPositionWithCS('UBS'),
-                x2: PADDING_LEFT_CHART + CHART_WIDTH,
+                x2: CENTER + PADDING_LEFT_CHART,
                 y2: getBenefitPositionWithCS('UBS'),
                 stroke: NEW_COLORS[key].one,
                 strokeWidth: '3px',
-                opacity: 1,
+                opacity: 0.3,
                 pathLength: 1,
-                transition: { duration: 0.5, delay: 0.5 },
+                transition: { duration: 0.5, delay: 1 },
               },
             },
           )}
@@ -247,35 +259,35 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
         <motion.line
           variants={defineVariants(
             {
-              x1: PADDING_LEFT_CHART,
+              x1: CENTER - PADDING_LEFT_CHART,
               y1: getCostPosition('Raiffeisen'),
-              x2: PADDING_LEFT_CHART + CHART_WIDTH,
+              x2: CENTER + PADDING_LEFT_CHART,
               y2: getBenefitPosition('Raiffeisen'),
               pathLength: 0,
               stroke: NEW_COLORS[key].four,
             },
             {
               step3: {
-                x1: PADDING_LEFT_CHART,
+                x1: CENTER - PADDING_LEFT_CHART,
                 y1: getCostPosition('Raiffeisen'),
-                x2: PADDING_LEFT_CHART + CHART_WIDTH,
+                x2: CENTER + PADDING_LEFT_CHART,
                 y2: getBenefitPosition('Raiffeisen'),
                 stroke: NEW_COLORS[key].four,
                 strokeWidth: '3px',
                 opacity: 1,
                 pathLength: 1,
-                transition: { delay: 1, duration: 0.5 },
+                transition: { delay: 2, duration: 1 },
               },
               step4: {
-                x1: PADDING_LEFT_CHART,
+                x1: CENTER - PADDING_LEFT_CHART,
                 y1: getCostPositionWithCS('Raiffeisen'),
-                x2: PADDING_LEFT_CHART + CHART_WIDTH,
+                x2: CENTER + PADDING_LEFT_CHART,
                 y2: getBenefitPositionWithCS('Raiffeisen'),
                 stroke: NEW_COLORS[key].four,
                 strokeWidth: '3px',
-                opacity: 1,
+                opacity: 0.3,
                 pathLength: 1,
-                transition: { duration: 0.5, delay: 0.5 },
+                transition: { duration: 0.5, delay: 1 },
               },
             },
           )}
@@ -283,35 +295,35 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
         <motion.line
           variants={defineVariants(
             {
-              x1: PADDING_LEFT_CHART,
+              x1: CENTER - PADDING_LEFT_CHART,
               y1: getCostPosition('Zuger Kantonalbank'),
-              x2: PADDING_LEFT_CHART + CHART_WIDTH,
+              x2: CENTER + PADDING_LEFT_CHART,
               y2: getBenefitPosition('Zuger Kantonalbank'),
               pathLength: 0,
               stroke: NEW_COLORS[key].three,
             },
             {
               step3: {
-                x1: PADDING_LEFT_CHART,
+                x1: CENTER - PADDING_LEFT_CHART,
                 y1: getCostPosition('Zuger Kantonalbank'),
-                x2: PADDING_LEFT_CHART + CHART_WIDTH,
+                x2: CENTER + PADDING_LEFT_CHART,
                 y2: getBenefitPosition('Zuger Kantonalbank'),
                 stroke: NEW_COLORS[key].three,
                 strokeWidth: '3px',
                 opacity: 1,
                 pathLength: 1,
-                transition: { delay: 1, duration: 0.5 },
+                transition: { delay: 2, duration: 1 },
               },
               step4: {
-                x1: PADDING_LEFT_CHART,
+                x1: CENTER - PADDING_LEFT_CHART,
                 y1: getCostPositionWithCS('Zuger Kantonalbank'),
-                x2: PADDING_LEFT_CHART + CHART_WIDTH,
+                x2: CENTER + PADDING_LEFT_CHART,
                 y2: getBenefitPositionWithCS('Zuger Kantonalbank'),
                 stroke: NEW_COLORS[key].three,
                 strokeWidth: '3px',
-                opacity: 1,
+                opacity: 0.3,
                 pathLength: 1,
-                transition: { duration: 0.5, delay: 0.5 },
+                transition: { duration: 0.5, delay: 1 },
               },
             },
           )}
@@ -319,35 +331,60 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
         <motion.line
           variants={defineVariants(
             {
-              x1: PADDING_LEFT_CHART,
+              x1: CENTER - PADDING_LEFT_CHART,
               y1: getCostPosition('Kantonalbank Vaudoise'),
-              x2: PADDING_LEFT_CHART + CHART_WIDTH,
+              x2: CENTER + PADDING_LEFT_CHART,
               y2: getBenefitPosition('Kantonalbank Vaudoise'),
               pathLength: 0,
               stroke: NEW_COLORS[key].five,
             },
             {
               step3: {
-                x1: PADDING_LEFT_CHART,
+                x1: CENTER - PADDING_LEFT_CHART,
                 y1: getCostPosition('Kantonalbank Vaudoise'),
-                x2: PADDING_LEFT_CHART + CHART_WIDTH,
+                x2: CENTER + PADDING_LEFT_CHART,
                 y2: getBenefitPosition('Kantonalbank Vaudoise'),
                 stroke: NEW_COLORS[key].five,
                 strokeWidth: '3px',
                 opacity: 1,
                 pathLength: 1,
-                transition: { delay: 1, duration: 0.5 },
+                transition: { delay: 2, duration: 1 },
               },
               step4: {
-                x1: PADDING_LEFT_CHART,
+                x1: CENTER - PADDING_LEFT_CHART,
                 y1: getCostPositionWithCS('Kantonalbank Vaudoise'),
-                x2: PADDING_LEFT_CHART + CHART_WIDTH,
+                x2: CENTER + PADDING_LEFT_CHART,
                 y2: getBenefitPositionWithCS('Kantonalbank Vaudoise'),
                 stroke: NEW_COLORS[key].five,
                 strokeWidth: '3px',
+                opacity: 0.3,
+                pathLength: 1,
+                transition: { duration: 0.5, delay: 1 },
+              },
+            },
+          )}
+        ></motion.line>
+        <motion.line
+          variants={defineVariants(
+            {
+              x1: CENTER - PADDING_LEFT_CHART,
+              y1: getCostPositionWithCS('Credit Suisse'),
+              x2: CENTER + PADDING_LEFT_CHART,
+              y2: getBenefitPositionWithCS('Credit Suisse'),
+              pathLength: 0,
+              stroke: NEW_COLORS[key].two,
+            },
+            {
+              step4: {
+                x1: CENTER - PADDING_LEFT_CHART,
+                y1: getCostPositionWithCS('Credit Suisse'),
+                x2: CENTER + PADDING_LEFT_CHART,
+                y2: getBenefitPositionWithCS('Credit Suisse'),
+                stroke: NEW_COLORS[key].two,
+                strokeWidth: '3px',
                 opacity: 1,
                 pathLength: 1,
-                transition: { duration: 0.5, delay: 0.5 },
+                transition: { duration: 1.5, delay: 2 },
               },
             },
           )}
@@ -357,14 +394,14 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
           variants={defineVariants(
             {
               y: getCostPosition('UBS'),
-              x: 150,
+              x: CENTER,
               opacity: 0,
               r: 0,
             },
             {
               step1: {
                 y: getCostPosition('UBS'),
-                x: 150,
+                x: CENTER,
                 r: RADIUS,
                 opacity: 1,
                 fill: NEW_COLORS[key].one,
@@ -372,71 +409,27 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
               },
               step2: {
                 y: getCostPosition('UBS'),
-                x: 150,
+                x: CENTER,
                 r: RADIUS,
                 opacity: 1,
                 fill: NEW_COLORS[key].one,
-                transition: { duration: 0.5, delay: 0.5 },
+                transition: { duration: 0.5, delay: 1 },
               },
               step3: {
                 y: getCostPosition('UBS'),
-                x: 150,
+                x: CENTER - PADDING_LEFT_CHART,
                 r: RADIUS,
                 opacity: 1,
                 fill: NEW_COLORS[key].one,
-                transition: { duration: 0.5, delay: 0.5 },
+                transition: { duration: 0.5, delay: 1 },
               },
               step4: {
                 y: getCostPositionWithCS('UBS'),
-                x: 150,
+                x: CENTER - PADDING_LEFT_CHART,
                 r: RADIUS,
                 opacity: 1,
                 fill: NEW_COLORS[key].one,
-                transition: { duration: 0.5, delay: 0.5 },
-              },
-            },
-          )}
-        ></motion.circle>
-        <motion.circle
-          variants={defineVariants(
-            {
-              y: getCostPosition('Credit Suisse'),
-              x: 150,
-              opacity: 0,
-              r: 0,
-            },
-            {
-              step1: {
-                y: getCostPosition('Credit Suisse'),
-                x: 150,
-                r: RADIUS,
-                opacity: 1,
-                fill: NEW_COLORS[key].two,
                 transition: { duration: 0.5, delay: 1 },
-              },
-              step2: {
-                y: getCostPosition('Credit Suisse'),
-                x: 150,
-                r: RADIUS,
-                opacity: 1,
-                fill: NEW_COLORS[key].two,
-                transition: { duration: 0.5, delay: 0.5 },
-              },
-              step3: {
-                y: getCostPosition('Credit Suisse'),
-                x: 150,
-                r: RADIUS,
-                opacity: 1,
-                fill: NEW_COLORS[key].two,
-                transition: { duration: 0.5, delay: 0.5 },
-              },
-              step4: {
-                y: getCostPositionWithCS('Credit Suisse'),
-                x: 150,
-                r: RADIUS,
-                opacity: 1,
-                fill: NEW_COLORS[key].two,
-                transition: { duration: 0.5, delay: 0.5 },
               },
             },
           )}
@@ -445,34 +438,78 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
           variants={defineVariants(
             {
               y: getCostPosition('Zuger Kantonalbank'),
-              x: 150,
+              x: CENTER,
               opacity: 0,
               r: 0,
             },
             {
               step2: {
                 y: getCostPosition('Zuger Kantonalbank'),
-                x: 150,
+                x: CENTER,
                 r: RADIUS,
                 opacity: 1,
                 fill: NEW_COLORS[key].three,
-                transition: { duration: 0.5, delay: 0.5 },
+                transition: { duration: 0.5, delay: 1 },
               },
               step3: {
                 y: getCostPosition('Zuger Kantonalbank'),
-                x: 150,
+                x: CENTER - PADDING_LEFT_CHART,
                 r: RADIUS,
                 opacity: 1,
                 fill: NEW_COLORS[key].three,
-                transition: { duration: 0.5, delay: 0.5 },
+                transition: { duration: 0.5, delay: 1 },
               },
               step4: {
                 y: getCostPositionWithCS('Zuger Kantonalbank'),
-                x: 150,
+                x: CENTER - PADDING_LEFT_CHART,
                 r: RADIUS,
                 opacity: 1,
                 fill: NEW_COLORS[key].three,
-                transition: { duration: 0.5, delay: 0.5 },
+                transition: { duration: 0.5, delay: 1 },
+              },
+            },
+          )}
+        ></motion.circle>
+        <motion.circle
+          variants={defineVariants(
+            {
+              y: getCostPosition('Credit Suisse'),
+              x: CENTER,
+              opacity: 0,
+              r: 0,
+            },
+            {
+              step1: {
+                y: getCostPosition('Credit Suisse'),
+                x: CENTER,
+                r: RADIUS,
+                opacity: 1,
+                fill: NEW_COLORS[key].two,
+                transition: { duration: 0.5, delay: 1 },
+              },
+              step2: {
+                y: getCostPosition('Credit Suisse'),
+                x: CENTER,
+                r: RADIUS,
+                opacity: 1,
+                fill: NEW_COLORS[key].two,
+                transition: { duration: 0.5, delay: 1 },
+              },
+              step3: {
+                y: getCostPosition('Credit Suisse'),
+                x: CENTER - PADDING_LEFT_CHART,
+                r: RADIUS,
+                opacity: 1,
+                fill: NEW_COLORS[key].two,
+                transition: { duration: 0.5, delay: 1 },
+              },
+              step4: {
+                y: getCostPositionWithCS('Credit Suisse'),
+                x: CENTER - PADDING_LEFT_CHART,
+                r: RADIUS,
+                opacity: 1,
+                fill: NEW_COLORS[key].two,
+                transition: { duration: 0.5, delay: 1 },
               },
             },
           )}
@@ -481,14 +518,14 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
           variants={defineVariants(
             {
               y: getCostPosition('Raiffeisen'),
-              x: 150,
+              x: CENTER,
               opacity: 0,
               r: 0,
             },
             {
               step2: {
                 y: getCostPosition('Raiffeisen'),
-                x: 150,
+                x: CENTER,
                 r: RADIUS,
                 opacity: 1,
                 fill: NEW_COLORS[key].four,
@@ -496,7 +533,7 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
               },
               step3: {
                 y: getCostPosition('Raiffeisen'),
-                x: 150,
+                x: CENTER - PADDING_LEFT_CHART,
                 r: RADIUS,
                 opacity: 1,
                 fill: NEW_COLORS[key].four,
@@ -504,7 +541,7 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
               },
               step4: {
                 y: getCostPositionWithCS('Raiffeisen'),
-                x: 150,
+                x: CENTER - PADDING_LEFT_CHART,
                 r: RADIUS,
                 opacity: 1,
                 fill: NEW_COLORS[key].four,
@@ -517,14 +554,14 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
           variants={defineVariants(
             {
               y: getCostPosition('Kantonalbank Vaudoise'),
-              x: 150,
+              x: CENTER,
               opacity: 0,
               r: 0,
             },
             {
               step2: {
                 y: getCostPosition('Kantonalbank Vaudoise'),
-                x: 150,
+                x: CENTER,
                 r: RADIUS,
                 opacity: 1,
                 fill: NEW_COLORS[key].five,
@@ -532,7 +569,7 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
               },
               step3: {
                 y: getCostPosition('Kantonalbank Vaudoise'),
-                x: 150,
+                x: CENTER - PADDING_LEFT_CHART,
                 r: RADIUS,
                 opacity: 1,
                 fill: NEW_COLORS[key].five,
@@ -540,7 +577,7 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
               },
               step4: {
                 y: getCostPositionWithCS('Kantonalbank Vaudoise'),
-                x: 150,
+                x: CENTER - PADDING_LEFT_CHART,
                 r: RADIUS,
                 opacity: 1,
                 fill: NEW_COLORS[key].five,
@@ -554,24 +591,26 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
           variants={defineVariants(
             {
               y: getBenefitPosition('UBS'),
-              x: PADDING_LEFT_CHART + CHART_WIDTH,
+              x: CENTER + PADDING_LEFT_CHART,
               opacity: 0,
               r: 0,
             },
             {
               step3: {
                 y: getBenefitPosition('UBS'),
-                x: PADDING_LEFT_CHART + CHART_WIDTH,
+                x: CENTER + PADDING_LEFT_CHART,
                 r: RADIUS,
                 opacity: 1,
                 fill: NEW_COLORS[key].one,
+                transition: { duration: 0.5, delay: 3 },
               },
               step4: {
-                y: getBenefitPosition('UBS'),
-                x: PADDING_LEFT_CHART + CHART_WIDTH,
+                y: getBenefitPositionWithCS('UBS'),
+                x: CENTER + PADDING_LEFT_CHART,
                 r: RADIUS,
                 opacity: 1,
                 fill: NEW_COLORS[key].one,
+                transition: { duration: 0.5, delay: 1 },
               },
             },
           )}
@@ -579,19 +618,19 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
         <motion.circle
           variants={defineVariants(
             {
-              y: getBenefitPosition('Credit Suisse'),
-              x: PADDING_LEFT_CHART + CHART_WIDTH,
+              y: getBenefitPositionWithCS('Credit Suisse'),
+              x: CENTER + PADDING_LEFT_CHART,
               opacity: 0,
               r: 0,
             },
             {
               step4: {
                 y: getBenefitPositionWithCS('Credit Suisse'),
-                x: PADDING_LEFT_CHART + CHART_WIDTH,
+                x: CENTER + PADDING_LEFT_CHART,
                 r: RADIUS,
                 opacity: 1,
                 fill: NEW_COLORS[key].two,
-                transition: { duration: 0.5, delay: 0.5 },
+                transition: { duration: 0.5, delay: 3 },
               },
             },
           )}
@@ -600,24 +639,26 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
           variants={defineVariants(
             {
               y: getBenefitPosition('Zuger Kantonalbank'),
-              x: PADDING_LEFT_CHART + CHART_WIDTH,
+              x: CENTER + PADDING_LEFT_CHART,
               opacity: 0,
               r: 0,
             },
             {
               step3: {
                 y: getBenefitPosition('Zuger Kantonalbank'),
-                x: PADDING_LEFT_CHART + CHART_WIDTH,
+                x: CENTER + PADDING_LEFT_CHART,
                 r: RADIUS,
                 opacity: 1,
                 fill: NEW_COLORS[key].three,
+                transition: { duration: 0.5, delay: 3 },
               },
               step4: {
                 y: getBenefitPositionWithCS('Zuger Kantonalbank'),
-                x: PADDING_LEFT_CHART + CHART_WIDTH,
+                x: CENTER + PADDING_LEFT_CHART,
                 r: RADIUS,
                 opacity: 1,
                 fill: NEW_COLORS[key].three,
+                transition: { duration: 0.5, delay: 1 },
               },
             },
           )}
@@ -626,24 +667,26 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
           variants={defineVariants(
             {
               y: getBenefitPosition('Raiffeisen'),
-              x: PADDING_LEFT_CHART + CHART_WIDTH,
+              x: CENTER + PADDING_LEFT_CHART,
               opacity: 0,
               r: 0,
             },
             {
               step3: {
                 y: getBenefitPosition('Raiffeisen'),
-                x: PADDING_LEFT_CHART + CHART_WIDTH,
+                x: CENTER + PADDING_LEFT_CHART,
                 r: RADIUS,
                 opacity: 1,
                 fill: NEW_COLORS[key].four,
+                transition: { duration: 0.5, delay: 3 },
               },
               step4: {
                 y: getBenefitPositionWithCS('Raiffeisen'),
-                x: PADDING_LEFT_CHART + CHART_WIDTH,
+                x: CENTER + PADDING_LEFT_CHART,
                 r: RADIUS,
                 opacity: 1,
                 fill: NEW_COLORS[key].four,
+                transition: { duration: 0.5, delay: 1 },
               },
             },
           )}
@@ -652,21 +695,22 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
           variants={defineVariants(
             {
               y: getBenefitPosition('Kantonalbank Vaudoise'),
-              x: PADDING_LEFT_CHART + CHART_WIDTH,
+              x: CENTER + PADDING_LEFT_CHART,
               opacity: 0,
               r: 0,
             },
             {
               step3: {
                 y: getBenefitPosition('Kantonalbank Vaudoise'),
-                x: PADDING_LEFT_CHART + CHART_WIDTH,
+                x: CENTER + PADDING_LEFT_CHART,
                 r: RADIUS,
                 opacity: 1,
                 fill: NEW_COLORS[key].five,
+                transition: { duration: 0.5, delay: 3 },
               },
               step4: {
                 y: getBenefitPositionWithCS('Kantonalbank Vaudoise'),
-                x: PADDING_LEFT_CHART + CHART_WIDTH,
+                x: CENTER + PADDING_LEFT_CHART,
                 r: RADIUS,
                 opacity: 1,
                 fill: NEW_COLORS[key].five,
@@ -675,6 +719,569 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
             },
           )}
         ></motion.circle>
+        {/* labels */}
+        <motion.text
+          {...styles.label}
+          {...colorScheme.set('fill', 'text')}
+          variants={defineVariants(
+            {
+              y: getCostPosition('UBS'),
+              x: CENTER - 25,
+              opacity: 0,
+              textAnchor: 'end',
+            },
+            {
+              step1: {
+                y: getCostPosition('UBS'),
+                x: CENTER - 25,
+                opacity: 1,
+                transition: { duration: 0.5 },
+                textAnchor: 'end',
+              },
+              step2: {
+                y: getCostPosition('UBS'),
+                x: CENTER - 25,
+                opacity: 1,
+                transition: { duration: 0.5, delay: 1 },
+                textAnchor: 'end',
+              },
+              step3: {
+                y: getCostPosition('UBS'),
+                x: CENTER - PADDING_LEFT_CHART - 25,
+                opacity: 1,
+                textAnchor: 'end',
+                transition: { duration: 0.5, delay: 1 },
+              },
+              step4: {
+                y: getCostPositionWithCS('UBS'),
+                x: CENTER - PADDING_LEFT_CHART - 25,
+                opacity: 0,
+                textAnchor: 'end',
+                transition: { duration: 0.5, delay: 1 },
+              },
+            },
+          )}
+          dy='.35em'
+        >
+          UBS
+        </motion.text>
+        <motion.text
+          {...styles.label}
+          {...colorScheme.set('fill', 'text')}
+          variants={defineVariants(
+            {
+              y: getCostPosition('Credit Suisse'),
+              x: CENTER - 25,
+              opacity: 0,
+              textAnchor: 'end',
+            },
+            {
+              step1: {
+                y: getCostPosition('Credit Suisse'),
+                x: CENTER - 25,
+                opacity: 1,
+                transition: { duration: 0.5, delay: 1 },
+                textAnchor: 'end',
+              },
+              step2: {
+                y: getCostPosition('Credit Suisse'),
+                x: CENTER - 25,
+                opacity: 1,
+                transition: { duration: 0.5, delay: 1 },
+                textAnchor: 'end',
+              },
+              step3: {
+                y: getCostPosition('Credit Suisse'),
+                x: CENTER - PADDING_LEFT_CHART - 25,
+                opacity: 1,
+                transition: { duration: 0.5, delay: 1 },
+                textAnchor: 'end',
+              },
+              step4: {
+                y: getCostPositionWithCS('Credit Suisse'),
+                x: CENTER - PADDING_LEFT_CHART - 25,
+                opacity: 1,
+                transition: { duration: 0.5, delay: 1 },
+                textAnchor: 'end',
+              },
+              step5: {
+                y: getCostPositionWithCS('Credit Suisse'),
+                x: CENTER - PADDING_LEFT_CHART - 25,
+                opacity: 1,
+                transition: { duration: 0.5, delay: 1 },
+                textAnchor: 'end',
+              },
+            },
+          )}
+          dy='.35em'
+        >
+          Credit Suisse
+        </motion.text>
+        <motion.text
+          {...styles.label}
+          {...colorScheme.set('fill', 'text')}
+          variants={defineVariants(
+            {
+              y: getCostPosition('Zuger Kantonalbank'),
+              x: CENTER - 25,
+              opacity: 0,
+              textAnchor: 'end',
+            },
+            {
+              step2: {
+                y: getCostPosition('Zuger Kantonalbank'),
+                x: CENTER - 25,
+                opacity: 1,
+                transition: { duration: 0.5, delay: 1 },
+                textAnchor: 'end',
+              },
+              step3: {
+                y: getCostPosition('Zuger Kantonalbank'),
+                x: CENTER - PADDING_LEFT_CHART - 25,
+                opacity: 1,
+                transition: { duration: 0.5, delay: 1 },
+                textAnchor: 'end',
+              },
+              step4: {
+                y: getCostPositionWithCS('Zuger Kantonalbank'),
+                x: CENTER - PADDING_LEFT_CHART - 25,
+                opacity: 0,
+                transition: { duration: 0.5, delay: 1 },
+                textAnchor: 'end',
+              },
+            },
+          )}
+          dy='.35em'
+        >
+          Zuger Kantonalbank
+        </motion.text>
+        <motion.text
+          {...styles.label}
+          {...colorScheme.set('fill', 'text')}
+          variants={defineVariants(
+            {
+              y: getCostPosition('Kantonalbank Vaudoise') - 10,
+              x: CENTER - 25,
+              opacity: 0,
+              textAnchor: 'end',
+            },
+            {
+              step2: {
+                y: getCostPosition('Kantonalbank Vaudoise') - 10,
+                x: CENTER - 25,
+                opacity: 1,
+                transition: { duration: 0.5, delay: 1 },
+                textAnchor: 'end',
+              },
+              step3: {
+                y: getCostPosition('Kantonalbank Vaudoise') - 10,
+                x: CENTER - PADDING_LEFT_CHART - 25,
+                opacity: 1,
+                transition: { duration: 0.5, delay: 1 },
+                textAnchor: 'end',
+              },
+              step4: {
+                y: getCostPositionWithCS('Kantonalbank Vaudoise') - 10,
+                x: CENTER - PADDING_LEFT_CHART - 25,
+                opacity: 0,
+                transition: { duration: 0.5, delay: 1 },
+                textAnchor: 'end',
+              },
+            },
+          )}
+          dy='.35em'
+        >
+          Kantonalbank Vaudoise
+        </motion.text>
+        <motion.text
+          {...styles.label}
+          {...colorScheme.set('fill', 'text')}
+          variants={defineVariants(
+            {
+              y: getCostPosition('Raiffeisen'),
+              x: CENTER - 25,
+              opacity: 0,
+              textAnchor: 'end',
+            },
+            {
+              step2: {
+                y: getCostPosition('Raiffeisen'),
+                x: CENTER - 25,
+                opacity: 1,
+                transition: { duration: 0.5, delay: 1 },
+                textAnchor: 'end',
+              },
+              step3: {
+                y: getCostPosition('Raiffeisen'),
+                x: CENTER - PADDING_LEFT_CHART - 25,
+                opacity: 1,
+                transition: { duration: 0.5, delay: 1 },
+                textAnchor: 'end',
+              },
+              step4: {
+                y: getCostPositionWithCS('Raiffeisen'),
+                x: CENTER - PADDING_LEFT_CHART - 25,
+                opacity: 0,
+                transition: { duration: 0.5, delay: 1 },
+                textAnchor: 'end',
+              },
+            },
+          )}
+          dy='.35em'
+        >
+          Raiffeisen
+        </motion.text>
+
+        {/* costs */}
+        <motion.text
+          {...styles.label}
+          {...colorScheme.set('fill', 'text')}
+          variants={defineVariants(
+            {
+              y: getCostPosition('UBS'),
+              x: CENTER + 25,
+              opacity: 0,
+              textAnchor: 'start',
+            },
+            {
+              step1: {
+                y: getCostPosition('UBS'),
+                x: CENTER + 25,
+                opacity: 1,
+                transition: { duration: 0.5 },
+                textAnchor: 'start',
+              },
+              step2: {
+                y: getCostPosition('UBS'),
+                x: CENTER + 25,
+                opacity: 1,
+                transition: { duration: 0.5, delay: 1 },
+                textAnchor: 'start',
+              },
+              step3: {
+                y: getCostPosition('UBS'),
+                x: CENTER + 25,
+                opacity: 0,
+                transition: { duration: 0.5 },
+                textAnchor: 'start',
+              },
+            },
+          )}
+          dy='.35em'
+        >
+          {formatOneDecimal(getBankById(bankingLabelData, 'UBS').costs)}
+        </motion.text>
+        <motion.text
+          {...styles.label}
+          {...colorScheme.set('fill', 'text')}
+          variants={defineVariants(
+            {
+              y: getCostPosition('Credit Suisse'),
+              x: CENTER + 25,
+              opacity: 0,
+              textAnchor: 'start',
+            },
+            {
+              step1: {
+                y: getCostPosition('Credit Suisse'),
+                x: CENTER + 25,
+                opacity: 1,
+                transition: { duration: 0.5, delay: 1 },
+                textAnchor: 'start',
+              },
+              step2: {
+                y: getCostPosition('Credit Suisse'),
+                x: CENTER + 25,
+                opacity: 1,
+                transition: { duration: 0.5, delay: 1 },
+                textAnchor: 'start',
+              },
+              step3: {
+                y: getCostPosition('Credit Suisse'),
+                x: CENTER + 25,
+                opacity: 0,
+                transition: { duration: 0.5 },
+                textAnchor: 'start',
+              },
+            },
+          )}
+          dy='.35em'
+        >
+          {formatOneDecimal(
+            getBankById(bankingLabelData, 'Credit Suisse').costs,
+          )}
+        </motion.text>
+        <motion.text
+          {...styles.label}
+          {...colorScheme.set('fill', 'text')}
+          variants={defineVariants(
+            {
+              y: getCostPosition('Zuger Kantonalbank'),
+              x: CENTER + 25,
+              opacity: 0,
+              textAnchor: 'start',
+            },
+            {
+              step2: {
+                y: getCostPosition('Zuger Kantonalbank'),
+                x: CENTER + 25,
+                opacity: 1,
+                transition: { duration: 0.5, delay: 1 },
+                textAnchor: 'start',
+              },
+              step3: {
+                y: getCostPosition('Zuger Kantonalbank'),
+                x: CENTER + 25,
+                opacity: 0,
+              },
+            },
+          )}
+          dy='.35em'
+        >
+          {formatOneDecimal(
+            getBankById(bankingLabelData, 'Zuger Kantonalbank').costs,
+          )}
+        </motion.text>
+        <motion.text
+          {...styles.label}
+          {...colorScheme.set('fill', 'text')}
+          variants={defineVariants(
+            {
+              y: getCostPosition('Raiffeisen'),
+              x: CENTER + 25,
+              opacity: 0,
+              textAnchor: 'start',
+            },
+            {
+              step2: {
+                y: getCostPosition('Raiffeisen'),
+                x: CENTER + 25,
+                opacity: 1,
+                transition: { duration: 0.5, delay: 1 },
+                textAnchor: 'start',
+              },
+              step3: {
+                y: getCostPosition('Raiffeisen'),
+                x: CENTER + 25,
+                opacity: 0,
+              },
+            },
+          )}
+          dy='.35em'
+        >
+          {formatOneDecimal(getBankById(bankingLabelData, 'Raiffeisen').costs)}
+        </motion.text>
+        <motion.text
+          {...styles.label}
+          {...colorScheme.set('fill', 'text')}
+          variants={defineVariants(
+            {
+              y: getCostPosition('Kantonalbank Vaudoise') - 10,
+              x: CENTER + 25,
+              opacity: 0,
+              textAnchor: 'start',
+            },
+            {
+              step2: {
+                y: getCostPosition('Kantonalbank Vaudoise') - 10,
+                x: CENTER + 25,
+                opacity: 1,
+                transition: { duration: 0.5, delay: 1 },
+                textAnchor: 'start',
+              },
+              step3: {
+                y: getCostPosition('Kantonalbank Vaudoise') - 10,
+                x: CENTER + 25,
+                opacity: 0,
+              },
+            },
+          )}
+          dy='.35em'
+        >
+          {formatOneDecimal(
+            getBankById(bankingLabelData, 'Kantonalbank Vaudoise').costs,
+          )}
+        </motion.text>
+
+        {/* benefits */}
+        <motion.text
+          {...styles.label}
+          {...colorScheme.set('fill', 'text')}
+          variants={defineVariants(
+            {
+              y: getBenefitPosition('UBS'),
+              x: CENTER + PADDING_LEFT_CHART + 25,
+              opacity: 0,
+              textAnchor: 'start',
+            },
+            {
+              step3: {
+                y: getBenefitPosition('UBS'),
+                x: CENTER + PADDING_LEFT_CHART + 25,
+                opacity: 1,
+                transition: { duration: 0.5, delay: 3.5 },
+                textAnchor: 'start',
+              },
+            },
+          )}
+          dy='.35em'
+        >
+          {formatOneDecimal(getBankById(bankingLabelData, 'UBS').benefit)}
+        </motion.text>
+        <motion.text
+          {...styles.label}
+          {...colorScheme.set('fill', 'text')}
+          variants={defineVariants(
+            {
+              y: getBenefitPositionWithCS('Credit Suisse'),
+              x: CENTER + PADDING_LEFT_CHART + 25,
+              opacity: 0,
+              textAnchor: 'start',
+            },
+            {
+              step4: {
+                y: getBenefitPositionWithCS('Credit Suisse'),
+                x: CENTER + PADDING_LEFT_CHART + 25,
+                opacity: 1,
+                transition: { duration: 0.5, delay: 3.5 },
+                textAnchor: 'start',
+              },
+            },
+          )}
+          dy='.35em'
+        >
+          {formatOneDecimal(
+            getBankById(bankingLabelData, 'Credit Suisse').benefit,
+          )}
+        </motion.text>
+        <motion.text
+          {...styles.label}
+          {...colorScheme.set('fill', 'text')}
+          variants={defineVariants(
+            {
+              y: getBenefitPosition('Zuger Kantonalbank'),
+              x: CENTER + PADDING_LEFT_CHART + 25,
+              opacity: 0,
+              textAnchor: 'start',
+            },
+            {
+              step3: {
+                y: getBenefitPosition('Zuger Kantonalbank'),
+                x: CENTER + PADDING_LEFT_CHART + 25,
+                opacity: 1,
+                textAnchor: 'start',
+                transition: { duration: 0.5, delay: 3.5 },
+              },
+            },
+          )}
+          dy='.35em'
+        >
+          {formatOneDecimal(
+            getBankById(bankingLabelData, 'Zuger Kantonalbank').benefit,
+          )}
+        </motion.text>
+        <motion.text
+          {...styles.label}
+          {...colorScheme.set('fill', 'text')}
+          variants={defineVariants(
+            {
+              y: getBenefitPosition('Raiffeisen') - 10,
+              x: CENTER + PADDING_LEFT_CHART + 25,
+              opacity: 0,
+              textAnchor: 'start',
+            },
+            {
+              step3: {
+                y: getBenefitPosition('Raiffeisen') - 10,
+                x: CENTER + PADDING_LEFT_CHART + 25,
+                opacity: 1,
+                textAnchor: 'start',
+                transition: { duration: 0.5, delay: 3.5 },
+              },
+            },
+          )}
+          dy='.35em'
+        >
+          {formatOneDecimal(
+            getBankById(bankingLabelData, 'Raiffeisen').benefit,
+          )}
+        </motion.text>
+        <motion.text
+          {...styles.label}
+          {...colorScheme.set('fill', 'text')}
+          variants={defineVariants(
+            {
+              y: getBenefitPosition('Kantonalbank Vaudoise'),
+              x: CENTER + PADDING_LEFT_CHART + 25,
+              opacity: 0,
+              textAnchor: 'start',
+            },
+            {
+              step3: {
+                y: getBenefitPosition('Kantonalbank Vaudoise'),
+                x: CENTER + PADDING_LEFT_CHART + 25,
+                opacity: 1,
+                textAnchor: 'start',
+                transition: { duration: 0.5, delay: 3.5 },
+              },
+            },
+          )}
+          dy='.35em'
+        >
+          {formatOneDecimal(
+            getBankById(bankingLabelData, 'Kantonalbank Vaudoise').benefit,
+          )}
+        </motion.text>
+        {creditSuiseHistoricalData.map((d, i) => {
+          return (
+            <motion.circle
+              key={`cs-history-${i}`}
+              transition={{ duration: 0.5 }}
+              variants={defineVariants(
+                {
+                  y: chartRange[1] - costScaleAll(d.benefit),
+                  x: CENTER + PADDING_LEFT_CHART,
+                  opacity: 0,
+                  r: 0,
+                },
+                {
+                  step5: {
+                    y: chartRange[1] - costScaleAll(d.benefit),
+                    x: CENTER + PADDING_LEFT_CHART,
+                    opacity: 1,
+                    r: RADIUS,
+                    fill: NEW_COLORS[key].two,
+                  },
+                },
+              )}
+            ></motion.circle>
+          )
+        })}
+        {creditSuiseHistoricalData.map((d, i) => {
+          return (
+            <motion.circle
+              key={`cs-history-${i}`}
+              transition={{ duration: 0.5 }}
+              variants={defineVariants(
+                {
+                  y: chartRange[1] - costScaleAll(d.costs),
+                  x: CENTER - PADDING_LEFT_CHART,
+                  opacity: 0,
+                  r: 0,
+                },
+                {
+                  step5: {
+                    y: chartRange[1] - costScaleAll(d.costs),
+                    x: CENTER - PADDING_LEFT_CHART,
+                    opacity: 1,
+                    r: RADIUS,
+                    fill: NEW_COLORS[key].two,
+                  },
+                },
+              )}
+            ></motion.circle>
+          )
+        })}
       </g>
     </motion.svg>
   )
@@ -683,6 +1290,7 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
 const styles = {
   label: css({
     ...fontStyles.sansSerifRegular23,
+    fontFeatureSettings: '"tnum", "kern"',
     [mediaQueries.onlyS]: {
       fontSize: '1.7rem',
     },

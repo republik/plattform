@@ -60,13 +60,13 @@ export const DotAppPrototyp2 = () => {
     <Frame>
       <Center>
         <div>
-          <Editorial.Headline>Bad Banks</Editorial.Headline>
+          <Editorial.Headline>Die Besten</Editorial.Headline>
           <Editorial.Lead>
-            Die Schule ist aus, die Winterferien beginnen. Nur: Wo bleibt der
-            Schnee. Eine Einordnung in vier Schritten.
+            Mit dem Untergang der Credit Suisse und der Geburt der Monster-UBS
+            stellt sich die Frage: Führen hohe Löhne zu mehr Leistung?
           </Editorial.Lead>
           <p className='byline'>
-            Von Philipp Albrecht und Felix Michel, 23.03.2023
+            Von Philipp Albrecht und Felix Michel, 06.04.2023
           </p>
         </div>
         <ScrollyBanks />
@@ -74,12 +74,7 @@ export const DotAppPrototyp2 = () => {
           <InfoBox>
             <InfoBoxTitle>Zu den Daten</InfoBoxTitle>
 
-            <InfoBoxText>
-              Die Daten zu den Niederschlägen stammen von Meteoschweiz. Für die
-              Referenzperioden wurden die Durchschnittswerte berechnet. Die
-              Daten zum Gletscher Plaine Morte wurden von Matthias Huss
-              aufbereitet und der Republik zur Verfügung gestellt.
-            </InfoBoxText>
+            <InfoBoxText>Daten aus Geschäftsberichten etc.</InfoBoxText>
           </InfoBox>
         </section>
       </Center>

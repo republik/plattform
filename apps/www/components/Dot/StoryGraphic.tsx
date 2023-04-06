@@ -98,8 +98,6 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                     y: d.cy,
                     x: d.cx,
                     r: i > 40 ? SMALL_RADIUS : d.r,
-                    // width: d.r,
-                    // height: d.r,
                     opacity: 1,
                     fill: i > 40 ? COLORS[key].default : COLORS[key].oneBright,
                   },
@@ -107,8 +105,6 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                     y: d.cy,
                     x: d.cx,
                     r: i > 62 ? SMALL_RADIUS : d.r,
-                    // width: d.r,
-                    // height: d.r,
                     opacity: 1,
                     fill:
                       i > 40 && i < 63
@@ -121,8 +117,6 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                     y: d.cy,
                     x: d.cx,
                     r: i > 72 ? SMALL_RADIUS : d.r,
-                    // width: d.r,
-                    // height: d.r,
                     opacity: 1,
                     fill:
                       i > 62 && i < 73
@@ -135,8 +129,6 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                     y: d.cy,
                     x: d.cx,
                     r: i > 77 ? SMALL_RADIUS : d.r,
-                    // width: d.r,
-                    // height: d.r,
                     opacity: 1,
                     fill:
                       i > 72 && i < 78
@@ -149,8 +141,6 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                     y: d.cy,
                     x: d.cx,
                     r: i > 82 ? SMALL_RADIUS : d.r,
-                    // width: d.r,
-                    // height: d.r,
                     opacity: 1,
                     fill:
                       i > 77 && i < 83
@@ -225,8 +215,6 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                     y: d.cy,
                     x: d.cx,
                     r: i > 39 ? SMALL_RADIUS : d.r,
-                    // width: d.r,
-                    // height: d.r,
                     opacity: 1,
                     fill: i > 39 ? COLORS[key].default : COLORS[key].twoBright,
                   },
@@ -234,8 +222,7 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                     y: d.cy,
                     x: d.cx,
                     r: i > 60 ? SMALL_RADIUS : d.r,
-                    // width: d.r,
-                    // height: d.r,
+                    transition: { duration: 0.5, delay: 0.1 },
                     opacity: 1,
                     fill:
                       i > 39 && i < 61
@@ -248,8 +235,7 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                     y: d.cy,
                     x: d.cx,
                     r: i > 71 ? SMALL_RADIUS : d.r,
-                    // width: d.r,
-                    // height: d.r,
+                    transition: { duration: 0.5, delay: 0.1 },
                     opacity: 1,
                     fill:
                       i > 60 && i < 72
@@ -262,8 +248,7 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                     y: d.cy,
                     x: d.cx,
                     r: i > 76 ? SMALL_RADIUS : d.r,
-                    // width: d.r,
-                    // height: d.r,
+                    transition: { duration: 0.5, delay: 0.1 },
                     opacity: 1,
                     fill:
                       i > 71 && i < 77
@@ -276,8 +261,7 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                     y: d.cy,
                     x: d.cx,
                     r: i > 81 ? SMALL_RADIUS : d.r,
-                    // width: d.r,
-                    // height: d.r,
+                    transition: { duration: 0.5, delay: 0.1 },
                     opacity: 1,
                     fill:
                       i > 76 && i < 82
@@ -352,8 +336,6 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                     y: d.cy,
                     x: d.cx,
                     r: i > 33 ? SMALL_RADIUS : d.r,
-                    // width: d.r,
-                    // height: d.r,
                     opacity: 1,
                     fill:
                       i > 33 ? COLORS[key].default : COLORS[key].threeBright,
@@ -362,8 +344,7 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                     y: d.cy,
                     x: d.cx,
                     r: i > 50 ? SMALL_RADIUS : d.r,
-                    // width: d.r,
-                    // height: d.r,
+                    transition: { duration: 0.5, delay: 0.3 },
                     opacity: 1,
                     fill:
                       i >= 34 && i < 51
@@ -376,8 +357,7 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                     y: d.cy,
                     x: d.cx,
                     r: i > 59 ? SMALL_RADIUS : d.r,
-                    // width: d.r,
-                    // height: d.r,
+                    transition: { duration: 0.5, delay: 0.3 },
                     opacity: 1,
                     fill:
                       i >= 51 && i < 60
@@ -390,8 +370,7 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                     y: d.cy,
                     x: d.cx,
                     r: i > 63 ? SMALL_RADIUS : d.r,
-                    // width: d.r,
-                    // height: d.r,
+                    transition: { duration: 0.5, delay: 0.3 },
                     opacity: 1,
                     fill:
                       i >= 60 && i < 64
@@ -404,8 +383,7 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                     y: d.cy,
                     x: d.cx,
                     r: i > 67 ? SMALL_RADIUS : d.r,
-                    // width: d.r,
-                    // height: d.r,
+                    transition: { duration: 0.5, delay: 0.3 },
                     opacity: 1,
                     fill:
                       i >= 64 && i < 68
@@ -479,8 +457,6 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                     y: d.cy,
                     x: d.cx,
                     r: i > 17 ? SMALL_RADIUS : d.r,
-                    // width: d.r,
-                    // height: d.r,
                     opacity: 1,
                     fill: i > 17 ? COLORS[key].default : COLORS[key].fourBright,
                   },
@@ -488,9 +464,8 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                     y: d.cy,
                     x: d.cx,
                     r: i > 26 ? SMALL_RADIUS : d.r,
-                    // width: d.r,
-                    // height: d.r,
                     opacity: 1,
+                    transition: { duration: 0.5, delay: 0.5 },
                     fill:
                       i > 17 && i < 27
                         ? COLORS[key].fourBright
@@ -502,9 +477,8 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                     y: d.cy,
                     x: d.cx,
                     r: i > 30 ? SMALL_RADIUS : d.r,
-                    // width: d.r,
-                    // height: d.r,
                     opacity: 1,
+                    transition: { duration: 0.5, delay: 0.5 },
                     fill:
                       i > 26 && i < 31
                         ? COLORS[key].fourBright
@@ -516,8 +490,7 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                     y: d.cy,
                     x: d.cx,
                     r: i > 33 ? SMALL_RADIUS : d.r,
-                    // width: d.r,
-                    // height: d.r,
+                    transition: { duration: 0.5, delay: 0.5 },
                     opacity: 1,
                     fill:
                       i > 30 && i < 34
@@ -530,8 +503,7 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                     y: d.cy,
                     x: d.cx,
                     r: i > 35 ? SMALL_RADIUS : d.r,
-                    // width: d.r,
-                    // height: d.r,
+                    transition: { duration: 0.5, delay: 0.5 },
                     opacity: 1,
                     fill:
                       i > 33 && i < 36

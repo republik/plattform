@@ -1,7 +1,7 @@
 export const TRANSITION = 'all 0.3s cubic-bezier(0.17, 0.55, 0.55, 1)'
 
 export const RADIUS = 9
-export const SMALL_RADIUS = 6
+export const SMALL_RADIUS = 2
 export const PADDING_TOP = 100
 export const PADDING_LEFT = 0
 export const CIRCLE_PADDING = 2
@@ -66,7 +66,7 @@ export const NEW_COLORS = {
   },
 }
 
-export const bankingData = [
+export const bankingLabelData = [
   {
     bank: 'UBS',
     costs: 257575,
@@ -94,7 +94,7 @@ export const bankingData = [
   },
 ]
 
-export const bankingDataWithoutCSLow = [
+export const bankingPositionData = [
   {
     bank: 'UBS',
     costs: 257575,
@@ -103,7 +103,7 @@ export const bankingDataWithoutCSLow = [
   {
     bank: 'Credit Suisse',
     costs: 178866,
-    benefit: 109877,
+    benefit: -32928,
   },
   {
     bank: 'Zuger Kantonalbank',
@@ -119,5 +119,68 @@ export const bankingDataWithoutCSLow = [
     bank: 'Kantonalbank Vaudoise',
     costs: 185797,
     benefit: 196169,
+  },
+]
+
+export const creditSuiseHistoricalData = [
+  {
+    year: 2021,
+    costs: 178866,
+    benefit: -32928,
+  },
+  {
+    year: 2020,
+    costs: 202789,
+    benefit: 54726,
+  },
+  {
+    year: 2019,
+    costs: 209695,
+    benefit: 71438,
+  },
+  {
+    year: 2018,
+    costs: 210595,
+    benefit: 44308,
+  },
+  {
+    year: 2017,
+    costs: 221328,
+    benefit: -20986,
+  },
+  {
+    year: 2016,
+    costs: 225821,
+    benefit: 57452,
+  },
+  {
+    year: 2015,
+    costs: 239544,
+    benefit: -61079,
+  },
+  {
+    year: 2014,
+    costs: 247467,
+    benefit: 40939,
+  },
+  {
+    year: 2013,
+    costs: 244696,
+    benefit: 50565,
+  },
+  {
+    year: 2012,
+    costs: 264346,
+    benefit: 29409,
+  },
+  {
+    year: 2011,
+    costs: 265855,
+    benefit: 39296,
+  },
+  {
+    year: 2010,
+    costs: 291397,
+    benefit: 101756,
   },
 ]

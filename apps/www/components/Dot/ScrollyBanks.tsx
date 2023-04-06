@@ -6,7 +6,7 @@ import { Editorial, useColorContext } from '@project-r/styleguide'
 
 import { ScrollySlide } from './ScrollySlide'
 import { ChapterIndicator } from './ChapterIndicator'
-import { StoryGraphic } from './StoryGraphicBanks'
+import { StoryGraphic } from './StoryGraphicBanksV2'
 
 export const Scrolly = () => {
   const [colorScheme] = useColorContext()
@@ -62,40 +62,38 @@ export const Scrolly = () => {
       >
         <Editorial.Subhead>
           <ChapterIndicator highlighted={lastInView === 0}>1</ChapterIndicator>
-          Hoffnung auf ein Kind versus Realität der Statistik
         </Editorial.Subhead>
         <Editorial.P>
-          Unsere Grafik zeigt, wie gross die Wahrscheinlichkeit einer
-          Schwangerschaft nach einer künstlichen Befruchtung ist. Und zwar
-          unterschieden nach Altersgruppen.
+          260’000 Franken lässt sich die UBS eine Vollzeitstelle im Schnitt
+          kosten.
         </Editorial.P>
         <Editorial.P>
-          Das bedeutet: Nach einem IVF-Transfer sind um die 40 von 100 Frauen in
-          der Altersgruppe bis Mitte 30 schwanger.
+          Das ist überdurchschnittlich viel für eine Schweizer Bank.
         </Editorial.P>
         <Editorial.P>
-          Bei Frauen bis Ende 30 ist nach dem ersten Versuch rund jede dritte
-          Frau schwanger (32 von 100).
+          Auch die CS gab zuletzt viel Geld aus für ihr Personal: 180’000
+          Franken. Das ist zwar deutlich weniger als die Erzrivalin, von der sie
+          unlängst geschluckt wurde. Aber immer noch viel im Vergleich mit
+          anderen Banken und Konzernen.
         </Editorial.P>
         <Editorial.P>
-          Ab einem Alter von 40 Jahren wird nach einem IVF-Transfer weniger als
-          jede fünfte Frau schwanger (18 von 100).
+          Müssten die Löhne nicht endlich sinken, nachdem die CS übernommen
+          werden musste und die UBS dafür Sicherheiten in Form von Steuergeldern
+          erhielt?
         </Editorial.P>
         <Editorial.P>
-          Die Grafik umfasst alle In-vitro-Befruchtungen in Deutschland aus den
-          Jahren von 2018 bis 2020. Enthalten sind die klassischen
-          IVF-Verfahren, also diejenigen, bei denen die Eizelle und Spermien in
-          der Petrischale zusammengebracht werden. Ausserdem alle Befruchtungen,
-          bei denen gezielt ein Spermium in eine Eizelle gepflanzt wurde
-          (Intrazytoplasmatische Spermieninjektion oder ISCI).
+          Die UBS widerspricht. Man brauche die besten Leute, um im globalen
+          Wettbewerb zu bestehen. Die Löhne seien darum so hoch, um zu
+          verhindern, dass die Talente in andere Industrien abwandern, sagte
+          UBS-Konzernchef Sergio Ermotti einmal.
         </Editorial.P>
         <Editorial.P>
-          Ausserdem ist relevant, dass hier die künstlichen Befruchtungen
-          abgebildet sind, bei denen die Eizellen bei der Mutter frisch
-          entnommen und nach kurzer Entwicklungszeit in die Gebärmutter
-          transferiert wurden. Zudem alle, bei denen die befruchteten Eizellen
-          zwischenzeitlich eingefroren waren und dann transferiert wurden
-          (Auftau- oder Kytozyklen).
+          Die Wissenschaft hat bisher keine Belege dafür gefunden, dass etwa
+          Boni die Leistung steigern. Und wie sieht es beim Grundgehalt aus?
+          Führen hohe Löhne zu einer besseren Performance?
+        </Editorial.P>
+        <Editorial.P>
+          Holen die teuren Leute das beste für ihre Arbeitgeberinnen heraus?
         </Editorial.P>
       </ScrollySlide>
 
@@ -105,20 +103,26 @@ export const Scrolly = () => {
       >
         <Editorial.Subhead>
           <ChapterIndicator highlighted={lastInView === 1}>2</ChapterIndicator>
-          Januar 2022
         </Editorial.Subhead>
-        <Editorial.P>Gleicher Ort, gleiche Zeit. Ein Jahr vorher.</Editorial.P>
-
-        <Editorial.P>Die 2000mm wirken ein bisschen dürftig.</Editorial.P>
-
         <Editorial.P>
-          War nun der Januar 2023 aussergewöhnlich trocken oder der Januar 2022
-          übermässig nass?
+          Bleiben wir auf dem Schweizer Finanzplatz und nehmen die
+          Genossenschaftsbank Raiffeisen und die Kantonalbanken aus den Kantonen
+          Waadt und Zug als Vergleich dazu.
         </Editorial.P>
 
         <Editorial.P>
-          Was wäre nun, wenn eine Meteorologin sagen würde: «Der Januar 2022 war
-          ebenfalls ziemlich trocken.»
+          Zwar sind die Grössenunterschiede bei den Personalausgaben riesig. So
+          meldet etwa die UBS mit 71’000 FTEs 172-mal mehr Vollzeitstellen als
+          die Zuger Kantonalbank mit 416 FTE. Doch für den Vergleich spielt die
+          Grösse keine Rolle, weil wir die Ausgaben auf eine Vollzeitstelle
+          herunterbrechen.
+        </Editorial.P>
+
+        <Editorial.P>
+          Hier zeigt sich, dass das Personal der Raiffeisen und der
+          Kantonalbanken deutlich schlechter bezahlt wird, als jenes der UBS.
+          Und die Personalkosten der Waadtländer Kantonalbank sind minim höher
+          als bei der CS.
         </Editorial.P>
       </ScrollySlide>
 
@@ -128,25 +132,27 @@ export const Scrolly = () => {
       >
         <Editorial.Subhead>
           <ChapterIndicator highlighted={lastInView === 2}>3</ChapterIndicator>
-          Referenzperiode
         </Editorial.Subhead>
         <Editorial.P>
-          Die geringe Niederschlagsmenge im Januar 2023 ist nicht einfach eine
-          statistische Anomalie, sondern Teil eines grösseren Trends.
-        </Editorial.P>
-
-        <Editorial.P>Die Schweizer Winter werden immer trockener.</Editorial.P>
-
-        <Editorial.P>
-          Vergleicht man die Referenzperiode von 1931 bis 1960 mit der aktuellen
-          Referenzperiode, zeigt sich deutlich, dass unsere Eltern noch mehr
-          Schnee gesehen haben als unsere Kinder heute.
+          Nun nehmen wir einen neuen Wert dazu: den Konzerngewinn pro
+          Vollzeitstelle. Oder mit anderen Worten: die Effizienz.
         </Editorial.P>
 
         <Editorial.P>
-          Und es geht um mehr als die Kindheits-erinnerungen an ein
-          Winterwunderland.{' '}
+          Auf einen Schlag ändert sich das Bild. Die UBS rutscht ab und die
+          kleineren Banken mit dem vermeintlich weniger guten Personal schwingen
+          obenauf. Zum Sonderfall CS kommen wir gleich.
         </Editorial.P>
+
+        <Editorial.P>
+          Was auffällt bei den Kantonalbanken: Hier ist der Wert «Gewinn pro
+          Vollzeitstelle» sogar noch höher als «Kosten pro Vollzeitstelle». Das
+          bedeutet, dass ihr Personal nicht nur seine Lohn- und Sozialkosten
+          (via Umsatz) wieder reinholt, sondern darüber hinaus sogar mehr Gewinn
+          erwirtschaftet als es Kosten verursacht.
+        </Editorial.P>
+
+        <Editorial.P>Und das führt uns zur CS.</Editorial.P>
       </ScrollySlide>
 
       <ScrollySlide
@@ -155,22 +161,24 @@ export const Scrolly = () => {
       >
         <Editorial.Subhead>
           <ChapterIndicator highlighted={lastInView === 3}>4</ChapterIndicator>
-          Gletscher
         </Editorial.Subhead>
         <Editorial.P>
-          «Wir haben mehr als die Hälfte des Winters hinter uns, und die
-          Schneedecke auf den Schweizer Gletschern ist immer noch stark
-          unterdurchschnittlich», sagt der Glaziologe Matthias Huss.
+          Sie hat im Vergleichsjahr 2021 einen Verlust von 1,65 Milliarden
+          Franken eingefahren. Damit fällt auch der Gewinn pro Person ins Minus.
         </Editorial.P>
 
         <Editorial.P>
-          Eine Analyse der bisherigen Daten zur Schneedecke zeigt: Das Jahr 2023
-          kommt dem Extrem vom letzten Jahr erschreckend nahe.
+          Die UBS steht schlechter da als Raiffeisen und Kantonalbanken und die
+          CS findet sich im Keller wieder. Haben sich die hohen Ausgaben im
+          globalen Gerangel um die besten Talente ausbezahlt?
         </Editorial.P>
 
+        <Editorial.P>Zugegeben, das ist eine rhetorische Frage.</Editorial.P>
         <Editorial.P>
-          Obwohl die Daten noch nicht vollständig vorhanden sind, ist für Huss
-          klar: «Die extreme Winterdürre betrifft alle Regionen der Schweiz.»
+          Und es könnte mitunter der Verdacht aufkommen, dass hier ein Jahr
+          gewählt wurde, das für die CS besonders schlecht war. Wie sieht also
+          das Bild in einem Geschäftsjahr aus, das die CS mit schwarzen Zahlen
+          abgeschlossen hat?
         </Editorial.P>
       </ScrollySlide>
       <ScrollySlide
@@ -179,22 +187,18 @@ export const Scrolly = () => {
       >
         <Editorial.Subhead>
           <ChapterIndicator highlighted={lastInView === 4}>5</ChapterIndicator>
-          Mehr als 4 Transfers
         </Editorial.Subhead>
+        <Editorial.P>Nicht wirklich besser.</Editorial.P>
+
         <Editorial.P>
-          «Wir haben mehr als die Hälfte des Winters hinter uns, und die
-          Schneedecke auf den Schweizer Gletschern ist immer noch stark
-          unterdurchschnittlich», sagt der Glaziologe Matthias Huss.
+          Mit anderen Worten: Viele Jahre hat die CS einen Haufen Geld für die
+          angeblich besten Leute verschwendet.
         </Editorial.P>
 
         <Editorial.P>
-          Eine Analyse der bisherigen Daten zur Schneedecke zeigt: Das Jahr 2023
-          kommt dem Extrem vom letzten Jahr erschreckend nahe.
-        </Editorial.P>
-
-        <Editorial.P>
-          Obwohl die Daten noch nicht vollständig vorhanden sind, ist für Huss
-          klar: «Die extreme Winterdürre betrifft alle Regionen der Schweiz.»
+          Ein grosser Teil dieses Geldes ist in Form von Bonuszahlungen für
+          Kaderleute ausgegeben worden, die Risiken missachteten und persönliche
+          Bereicherung über beruflichen Erfolg stellten.
         </Editorial.P>
       </ScrollySlide>
     </div>
