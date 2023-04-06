@@ -103,11 +103,10 @@ const styles = {
     justifyContent: 'center',
   }),
   imgWrapper: css({
-    flex: '0 1 auto',
+    gridArea: 'image',
     display: 'flex',
     justifyContent: 'center',
-    alignItems: 'center',
-    gridArea: 'image',
+    alignItems: 'flex-start',
   }),
   content: css({
     display: 'flex',
@@ -126,10 +125,9 @@ const styles = {
   }),
   title: css({
     ...fontStyles.serifTitle,
-    fontSize: 32,
+    fontSize: 38,
     lineHeight: '1.3em',
-    margin: 0,
-    marginBottom: '-0.3em',
+    margin: '1rem 0 -0.3em 0',
     [mediaQueries.mUp]: {
       fontSize: 48,
       textAlign: 'left',
