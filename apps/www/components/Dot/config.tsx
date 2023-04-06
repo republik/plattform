@@ -124,62 +124,57 @@ export const bankingPositionData = [
 
 export const creditSuiseHistoricalData = [
   {
-    year: 2021,
-    costs: 178866,
-    benefit: -32928,
-  },
-  {
-    year: 2020,
+    year: '2020',
     costs: 202789,
     benefit: 54726,
   },
   {
-    year: 2019,
+    year: '2019',
     costs: 209695,
     benefit: 71438,
   },
   {
-    year: 2018,
+    year: '2018',
     costs: 210595,
     benefit: 44308,
   },
   {
-    year: 2017,
+    year: '2017',
     costs: 221328,
     benefit: -20986,
   },
   {
-    year: 2016,
+    year: '2016',
     costs: 225821,
     benefit: 57452,
   },
   {
-    year: 2015,
+    year: '2015',
     costs: 239544,
     benefit: -61079,
   },
   {
-    year: 2014,
+    year: '2014',
     costs: 247467,
     benefit: 40939,
   },
   {
-    year: 2013,
+    year: '2013',
     costs: 244696,
     benefit: 50565,
   },
   {
-    year: 2012,
+    year: '2012',
     costs: 264346,
     benefit: 29409,
   },
   {
-    year: 2011,
+    year: '2011',
     costs: 265855,
     benefit: 39296,
   },
   {
-    year: 2010,
+    year: '2010',
     costs: 291397,
     benefit: 101756,
   },

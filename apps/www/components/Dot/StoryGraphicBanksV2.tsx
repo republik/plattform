@@ -76,22 +76,13 @@ const PADDING_LEFT_CHART = 100
 const WIDTH = 930
 const CENTER = WIDTH / 2
 
-const costDomainWithoutCS = [0, 257575]
 const costDomainAll = [0, 257575]
 
 const chartRange = [235, 0]
 
-const costScale = scaleLinear().domain(costDomainWithoutCS).range(chartRange)
-
 const costScaleAll = scaleLinear().domain(costDomainAll).range(chartRange)
 
 const getBankById = (array, bank) => array.find((d) => d.bank === bank)
-
-const getCostPosition = (bank) =>
-  costScale(getBankById(bankingPositionData, bank).costs)
-
-const getBenefitPosition = (bank) =>
-  costScale(getBankById(bankingPositionData, bank).benefit)
 
 const getCostPositionWithCS = (bank) =>
   costScaleAll(getBankById(bankingPositionData, bank).costs)
@@ -106,6 +97,23 @@ const barPositionScale = scaleBand()
     'Credit Suisse',
     'Zuger Kantonalbank',
     'Raiffeisen',
+  ])
+  .range([PADDING_LEFT_CHART, 800])
+
+const csHistoricalScale = scaleBand()
+  .domain([
+    '2010',
+    '2011',
+    '2012',
+    '2013',
+    '2014',
+    '2015',
+    '2016',
+    '2017',
+    '2018',
+    '2019',
+    '2020',
+    'Credit Suisse',
   ])
   .range([PADDING_LEFT_CHART, 800])
 
@@ -225,6 +233,15 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                 height: chartRange[0] - getCostPositionWithCS('Credit Suisse'),
                 y: getCostPositionWithCS('Credit Suisse'),
                 x: barPositionScale('Credit Suisse'),
+                fill: NEW_COLORS[key].two,
+                opacity: 1,
+                transition: { duration: 0.5, delay: 1 },
+              },
+              step5: {
+                width: 20,
+                height: chartRange[0] - getCostPositionWithCS('Credit Suisse'),
+                y: getCostPositionWithCS('Credit Suisse'),
+                x: csHistoricalScale('Credit Suisse'),
                 fill: NEW_COLORS[key].two,
                 opacity: 1,
               },
@@ -390,7 +407,6 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
           )}
         ></motion.rect>
         <motion.rect
-          transition={{ duration: 1 }}
           variants={defineVariants(
             {
               width: 20,
@@ -409,6 +425,17 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                 x: barPositionScale('Credit Suisse') + 25,
                 fill: NEW_COLORS[key].two,
                 opacity: 1,
+                transition: { duration: 0.5, delay: 1 },
+              },
+              step5: {
+                width: 20,
+                height:
+                  costScaleAll(0) - getBenefitPositionWithCS('Credit Suisse'),
+                y: costScaleAll(0),
+                x: csHistoricalScale('Credit Suisse') + 25,
+                fill: NEW_COLORS[key].two,
+                opacity: 1,
+                transition: { duration: 0.5 },
               },
             },
           )}
@@ -514,10 +541,92 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
             },
           )}
         ></motion.rect>
+        {creditSuiseHistoricalData.map((d, i) => {
+          return (
+            <motion.rect
+              key={`costs-${i}`}
+              transition={{ duration: 1 }}
+              variants={defineVariants(
+                {
+                  width: 20,
+                  height: 0,
+                  y: chartRange[0],
+                  x: csHistoricalScale(d.year),
+                  opacity: 0,
+                  fill: NEW_COLORS[key].two,
+                },
+                {
+                  step5: {
+                    width: 20,
+                    height: chartRange[0] - costScaleAll(d.costs),
+                    y: costScaleAll(d.costs),
+                    x: csHistoricalScale(d.year),
+                    fill: NEW_COLORS[key].two,
+                    opacity: 1,
+                    transition: { duration: 1, delay: 1 },
+                  },
+                },
+              )}
+            ></motion.rect>
+          )
+        })}
+        {creditSuiseHistoricalData.map((d, i) => {
+          return (
+            <motion.rect
+              key={`costs-${i}`}
+              transition={{ duration: 1 }}
+              variants={defineVariants(
+                {
+                  width: 20,
+                  height: 0,
+                  y: d.benefit < 0 ? costScaleAll(0) : chartRange[0],
+                  x: csHistoricalScale(d.year) + 25,
+                  opacity: 0,
+                  fill: NEW_COLORS[key].two,
+                },
+                {
+                  step5: {
+                    width: 20,
+                    height:
+                      d.benefit < 0
+                        ? costScaleAll(0) - costScaleAll(-d.benefit)
+                        : chartRange[0] - costScaleAll(d.benefit),
+                    y:
+                      d.benefit < 0 ? costScaleAll(0) : costScaleAll(d.benefit),
+                    x: csHistoricalScale(d.year) + 25,
+                    fill: NEW_COLORS[key].two,
+                    opacity: 1,
+                    transition: { duration: 1, delay: 1.5 },
+                  },
+                },
+              )}
+            ></motion.rect>
+          )
+        })}
       </g>
     </motion.svg>
   )
 }
+
+// {
+//   width: 20,
+//   height: 0,
+//   y: costScaleAll(0),
+//   x: barPositionScale('Credit Suisse') + 25,
+//   opacity: 0,
+//   fill: NEW_COLORS[key].two,
+// },
+// {
+//   step4: {
+//     width: 20,
+//     height:
+//       costScaleAll(0) - getBenefitPositionWithCS('Credit Suisse'),
+//     y: costScaleAll(0),
+//     x: barPositionScale('Credit Suisse') + 25,
+//     fill: NEW_COLORS[key].two,
+//     opacity: 1,
+//     transition: { duration: 0.5, delay: 1 },
+//   },
 
 const styles = {
   label: css({
