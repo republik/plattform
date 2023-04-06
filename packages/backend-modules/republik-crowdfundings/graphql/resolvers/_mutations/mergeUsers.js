@@ -11,7 +11,7 @@ const {
 } = require('@orbiting/backend-modules-republik/lib/slack')
 const { v4: uuid } = require('uuid')
 const mergeCustomers = require('../../../lib/payments/stripe/mergeCustomers')
-const cache = require('@orbiting/backend-modules-search/lib/cache')
+const createInvalidate = require('../../../lib/cache')
 
 module.exports = async (_, args, context) => {
   const {
@@ -331,7 +331,7 @@ module.exports = async (_, args, context) => {
 
   // add deletion of cached content for sourceUser
   const options = { prefix: `User:${sourceUserId}` }
-  await cache.createInvalidate(options, redis).catch(() => null)
+  await createInvalidate(options, redis).catch(() => null)
 
   return transformUser(await pgdb.public.users.findOne({ id: targetUserId }))
 }
