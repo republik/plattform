@@ -7829,11 +7829,7 @@
     },
     {
       "key": "ClimateLandingPage/content/heading1",
-      "value": "Die Klimakrise ist hier. {br}Die Lage ist ernst."
-    },
-    {
-      "key": "ClimateLandingPage/content/callToAction",
-      "value": "Was tun?"
+      "value": "Die Klimakrise ist{nbsp}hier.{br}Die Lage ist ernst.{br}Was{nbsp}tun?"
     },
     {
       "key": "ClimateLandingPage/content/paragraph1",
@@ -7841,7 +7837,19 @@
     },
     {
       "key": "ClimateLandingPage/content/paragraph2",
-      "value": "Darum starten wir das Klimalabor. Einen Ort für Austausch und Experimente. Um gemeinsam herauszufinden, was das ist: Journalismus, der uns in der Klimakrise wirklich weiterbringt."
+      "value": "Darum haben wir das Klimalabor gestartet. Einen Ort für Austausch und Experimente. Gemeinsam wollen wir herausfinden: Wie bringt uns Journalismus in der Klimakrise wirklich weiter?"
+    },
+    {
+      "key": "ClimateLandingPage/content/paragraph3",
+      "value": "Melden Sie sich an, um sich einzubringen, an unseren {eventsLink} teilzunehmen und um nichts zu verpassen, was wir zur Klimakrise schreiben."
+    },
+    {
+      "key": "ClimateLandingPage/content/eventsLinkText",
+      "value": "Veranstaltungen"
+    },
+    {
+      "key": "ClimateLandingPage/content/eventsLinkHref",
+      "value": "https://tally.so/r/mRxbdd"
     },
     {
       "key": "ClimateLandingPage/content/counterText",
@@ -7857,7 +7865,11 @@
     },
     {
       "key": "ClimateTeaser/content/text1",
-      "value": "Die Klimakrise ist hier. {br1}Die Lage ist ernst. {br2}Was tun?"
+      "value": "Die Klimakrise ist{nbsp}hier.{br}Die Lage ist ernst.{br}Was{nbsp}tun?"
+    },
+    {
+      "key": "ClimateTeaser/content/text2",
+      "value": "Das Klimalabor der Republik ist ein Ort für Austausch und Experimente. Gemeinsam wollen wir herausfinden: Wie bringt uns Journalismus in der Klimakrise wirklich weiter?"
     },
     {
       "key": "ClimateTeaser/content/buttonAction",
