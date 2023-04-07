@@ -55,27 +55,30 @@ const CENTER = 930 / 2
 const OFFSET = 105
 
 const getDelayBelow34 = (index: number) => {
-  if (index < 40) return 0.5
-  if (index > 39 && index < 61) return 1
-  if (index > 60 && index < 72) return 1.5
-  if (index > 71 && index < 77) return 2
-  if (index > 76 && index < 82) return 2.5
+  if (index < 40) return 1
+  if (index > 39 && index < 61) return 1.5
+  if (index > 60 && index < 72) return 2.5
+  if (index > 71 && index < 77) return 2.5
+  if (index > 76 && index < 82) return 3
+  return 0
 }
 
 const getDelayBelow40 = (index: number) => {
-  if (index < 34) return 0.5
-  if (index >= 34 && index < 51) return 1
-  if (index >= 51 && index < 60) return 1.5
-  if (index >= 60 && index < 64) return 2
-  if (index >= 64 && index < 68) return 2.5
+  if (index < 34) return 1
+  if (index >= 34 && index < 51) return 1.5
+  if (index >= 51 && index < 60) return 2
+  if (index >= 60 && index < 64) return 2.5
+  if (index >= 64 && index < 68) return 3
+  return 0
 }
 
 const getDelayAbove40 = (index: number) => {
-  if (index < 18) return 0.5
-  if (index > 17 && index < 27) return 1
-  if (index > 26 && index < 31) return 1.5
-  if (index > 30 && index < 34) return 2
-  if (index > 33 && index < 36) return 2.5
+  if (index < 18) return 1
+  if (index > 17 && index < 27) return 1.5
+  if (index > 26 && index < 31) return 2
+  if (index > 30 && index < 34) return 2.5
+  if (index > 33 && index < 36) return 3
+  return 0
 }
 
 export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
@@ -262,7 +265,6 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                     opacity: 0,
                     fill:
                       i >= 68 ? COLORS[key].default : COLORS[key].threeBright,
-                    transition: { duration: 0.5 },
                   },
                   step4: {
                     y: d.cy,
@@ -357,7 +359,6 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                     r: i >= 82 ? SMALL_RADIUS : d.r,
                     opacity: 0,
                     fill: i >= 82 ? COLORS[key].default : COLORS[key].twoBright,
-                    transition: { duration: 0.5 },
                   },
                   step3: {
                     y: d.cy,
@@ -365,7 +366,6 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                     r: i >= 82 ? SMALL_RADIUS : d.r,
                     opacity: 0,
                     fill: i >= 82 ? COLORS[key].default : COLORS[key].twoBright,
-                    transition: { duration: 0.5 },
                   },
                   step4: {
                     y: d.cy,

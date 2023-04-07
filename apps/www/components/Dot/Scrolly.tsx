@@ -83,14 +83,14 @@ export const Scrolly = () => {
           Gesunde Paare ohne Einschränkungen der Fruchtbarkeit haben im Alter
           von rund 30 Jahren gut 25 Prozent Chancen pro Zyklus, schwanger zu
           werden. Das bedeutet, im Durchschnitt erwarten sie nach vier Monaten
-          ein Kind. Gebärmutter.
+          ein Kind.
         </Editorial.P>
         <Editorial.P>
           Mit IVF sieht es so ähnlich aus: Nach dem ersten Transfer sind laut
           Statistik gut 40 von 100 Frauen schwanger in der Altersgruppe bis 34
           Jahre. Die Zahlen steigen schnell. Nach dem dritten Versuch konnten
           sich bereits gut zwei Drittel über einen positiven Test freuen. Und
-          nach fünf oder mehr IVF-Transfers erwartet die grosse Mehrheit von der
+          nach fünf oder mehr IVF-Transfers erwartet die grosse Mehrheit der
           Frauen bis Mitte 30 ein Kind: Dann hat es bei
           <Highlight colorKey={key} color='two'>
             82 von 100
