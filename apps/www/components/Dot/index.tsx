@@ -18,9 +18,10 @@ export const DotAppPrototyp1 = () => {
             Die Wirksamkeit von IVF wird überschätzt
           </Editorial.Headline>
           <Editorial.Lead>
-            Künstliche Befruchtung ist eine grosse Hoffnung für Paare mit
-            unerfülltem Kinderwunsch. Aber bei Frauen ab 40 Jahren wird eine
-            Schwangerschaft auch mit In-Vitro-Fertilisation unwahrscheinlicher.
+            Künstliche Befruchtung bedeutet grosse Hoffnung für Paare mit
+            unerfülltem Kinderwunsch. Aber bei Frauen ab Mitte 30 wird eine
+            Schwangerschaft auch mit In-Vitro-Fertilisation immer
+            unwahrscheinlicher.
           </Editorial.Lead>
           <p className='byline'>
             Von Karen Merkel und Felix Michel, 05.04.2023

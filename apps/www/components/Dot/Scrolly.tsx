@@ -6,7 +6,7 @@ import { Editorial, useColorContext } from '@project-r/styleguide'
 
 import { ScrollySlide } from './ScrollySlide'
 import { ChapterIndicator } from './ChapterIndicator'
-import { StoryGraphic } from './StoryGraphic'
+import { StoryGraphic } from './StoryGraphicV2'
 
 import { useResolvedColorSchemeKey } from '../ColorScheme/lib'
 import { COLORS } from './config'
@@ -52,9 +52,6 @@ export const Scrolly = () => {
           <ChapterIndicator mini highlighted={lastInView === 3}>
             4
           </ChapterIndicator>
-          <ChapterIndicator mini highlighted={lastInView === 4}>
-            5
-          </ChapterIndicator>
         </div>
 
         <StoryGraphic highlighted={lastInView} />
@@ -66,63 +63,39 @@ export const Scrolly = () => {
       >
         <Editorial.Subhead>
           <ChapterIndicator highlighted={lastInView === 0}>1</ChapterIndicator>
-          Hoffnung sprengt jede Statistik
+          Gute Chancen bis Mitte 30
         </Editorial.Subhead>
         <Editorial.P>
-          Es ist absurd: Frauen sorgen sich oft Jahrzehnte darum, wie sie am
-          sichersten nicht schwanger werden. Und dann läuft es für einen Teil
-          von ihnen so: Sie entscheiden sich gemeinsam mit ihrem Partner, ein
-          Kind zu bekommen. Und es passiert: nichts. Einen Monat lang. Drei.
-          Zwölf.
+          Unerfüllter Kinderwunsch ist ein intimes Thema, über das Paare selten
+          offen sprechen. Wenn sie es aber tun, machen viele von ihnen die
+          Erfahrung, dass eine künstliche Befruchtung als Königsweg angesehen
+          wird. So, als müsste man einmal kurz in die Kinderwunschklinik und
+          schwupps, sei der Nachwuchs unterwegs.
         </Editorial.P>
         <Editorial.P>
-          Wenn der Kinderwunsch unerfüllt bleibt, dauert es – manchmal Jahre –
-          bis Paare Hilfe in einem Kinderwunschzentrum suchen. Dann sitzen sie
-          ihrer Reproduktionsmedizinerin gegenüber und hören Prozentzahlen.
-          Wahrscheinlichkeiten.
+          Es sei darum gesagt: Das Prozedere einer In-vitro-Fertilisation (IVF)
+          ist auch für Frauen bis Mitte 30 strapaziös. Es stimmt aber, dass die
+          Mehrheit von ihnen mit grosser Wahrscheinlichkeit nach einigen
+          IVF-Transfers schwanger wird. Ähnlich wie bei der natürlichen
+          Fruchtbarkeit kumulieren die Chancen über mehrere Zyklen.
         </Editorial.P>
         <Editorial.P>
-          10 Prozent Wahrscheinlichkeit pro Zyklus, schwanger zu werden. 5
-          Prozent. 2 Prozent. Hoffnung auf Besserung verspricht, wenn sie das
-          gesamte Prozedere der In-Vitro-Fertilisation (IVF) absolvieren mit
-          täglichen Hormonspritzen, Medikamenten, Eizellentnahme unter Narkose,
-          Sperma-Abgabe, Einpflanzen der befruchteten Eizelle in die
-          Gebärmutter.
-        </Editorial.P>
-        <Editorial.P>Dann bleibt, zu hoffen.</Editorial.P>
-        <Editorial.P>
-          Hoffnung lässt sich nicht von Berechnungen eingrenzen. Und das ist
-          auch gut so. Nichtsdestotrotz kann ein Blick auf die Zahlen helfen,
-          mehr zu verstehen.
+          Gesunde Paare ohne Einschränkungen der Fruchtbarkeit haben im Alter
+          von rund 30 Jahren gut 25 Prozent Chancen pro Zyklus, schwanger zu
+          werden. Das bedeutet, im Durchschnitt erwarten sie nach vier Monaten
+          ein Kind. Gebärmutter.
         </Editorial.P>
         <Editorial.P>
-          Unsere Grafik zeigt, wie gross die Wahrscheinlichkeit einer
-          Schwangerschaft nach einer künstlichen Befruchtung per IVF ist. Und
-          zwar kumuliert über mehrere IVF-Transfers hinweg, unterschieden nach
-          Altersgruppen.
-        </Editorial.P>
-        <Editorial.P>
-          Das bedeutet: Nach dem ersten IVF-Transfer sind um die{' '}
+          Mit IVF sieht es so ähnlich aus: Nach dem ersten Transfer sind laut
+          Statistik gut 40 von 100 Frauen schwanger in der Altersgruppe bis 34
+          Jahre. Die Zahlen steigen schnell. Nach dem dritten Versuch konnten
+          sich bereits gut zwei Drittel über einen positiven Test freuen. Und
+          nach fünf oder mehr IVF-Transfers erwartet die grosse Mehrheit von der
+          Frauen bis Mitte 30 ein Kind: Dann hat es bei
           <Highlight colorKey={key} color='two'>
-            40 von 100 Frauen
+            82 von 100
           </Highlight>
-          in der Altersgruppe bis Mitte 30 schwanger.
-        </Editorial.P>
-        <Editorial.P>
-          Bei Frauen bis Ende 30 ist nach dem ersten Versuch rund jede dritte
-          Frau schwanger (
-          <Highlight colorKey={key} color='three'>
-            32 von 100
-          </Highlight>
-          ).
-        </Editorial.P>
-        <Editorial.P>
-          Ab einem Alter von 40 Jahren wird nach einem IVF-Transfer weniger als
-          jede fünfte Frau schwanger (
-          <Highlight colorKey={key} color='four'>
-            18 von 100
-          </Highlight>
-          ).
+          geklappt.
         </Editorial.P>
       </ScrollySlide>
 
@@ -132,50 +105,39 @@ export const Scrolly = () => {
       >
         <Editorial.Subhead>
           <ChapterIndicator highlighted={lastInView === 1}>2</ChapterIndicator>
-          Die realen Chancen
+          Ende 30 wird es schwieriger
         </Editorial.Subhead>
         <Editorial.P>
-          Unerfüllter Kinderwunsch ist ein intimes Thema, über das Paare selten
-          offen sprechen. Wenn sie es aber tun, machen viele von ihnen die
-          Erfahrung, dass eine künstliche Befruchtung als Königsweg angesehen
-          wird. So, als müsste man einmal kurz zur IVF und schwupps, sei der
-          Nachwuchs unterwegs. Auch dann, wenn die Frau 42 oder 43 Jahre alt
-          ist.
+          Es ist absurd: Frauen sorgen sich oft Jahrzehnte darum, wie sie am
+          sichersten nicht schwanger werden. Und dann läuft es für einen Teil
+          von ihnen so: Sie entscheiden sich gemeinsam mit ihrem Partner, ein
+          Kind zu bekommen. Und es passiert: nichts. Einen Monat lang. Drei.
+          Zwölf.
         </Editorial.P>
 
         <Editorial.P>
-          Auf natürlichem Wege haben gesunde Paare in ihren Zwanzigern eine
-          Chance von rund 25 Prozent pro Zyklus, schwanger zu werden. Das
-          heisst, im Durchschnitt erwartet eine Frau nach vier Monaten
-          ungeschütztem Verkehr ein Kind. Ende 30 dauert es bereits doppelt so
-          lang – im Durchschnitt acht Monate. Ob eine Frau schwanger wird, hängt
-          real von vielen Faktoren ab. .
+          Als Unfruchtbarkeit definiert die World Health Organisation (WHO),
+          wenn durch regelmässigem ungeschützten Sex nach einem Jahr keine
+          Schwangerschaft entstanden ist. Gleichzeitig dauert es oft lange, bis
+          Paare bei unerfülltem Kinderwunsch Hilfe bei einer
+          Reproduktionsspezialistin suchen. Dabei empfiehlt die WHO Frauen ab
+          Mitte 30 und ihren Partnern, sich bereits in Behandlung zu geben, wenn
+          sie nach sechs Monaten nicht schwanger sind.
         </Editorial.P>
 
-        <Editorial.P>
-          Mit Hilfe von IVF sieht es nach zwei Zyklen so aus:
-        </Editorial.P>
+        <Editorial.P>Denn die Zeit läuft. Leider.</Editorial.P>
 
         <Editorial.P>
-          Frauen bis Mitte 30 sind in der Mehrheit schwanger (
-          <Highlight colorKey={key} color='two'>
-            gut 60 von 100
-          </Highlight>
-          ).
-        </Editorial.P>
-        <Editorial.P>
-          Bei den Frauen bis Ende 30 wird jede Zweite schwanger (
+          Frauen im Alter von 35 bis 39 Jahren haben zwar noch ziemlich gute
+          Chancen, mit IVF schwanger zu werden. Aber schon sichtbar schlechtere
+          als noch ein paar Jahre zuvor. Die Statistik zeigt, dass nach dem
+          ersten Transfer
           <Highlight colorKey={key} color='three'>
-            50 von 100
+            32 von 100
           </Highlight>
-          ).
-        </Editorial.P>
-        <Editorial.P>
-          Jenseits der 40 ist es gut jede Vierte (
-          <Highlight colorKey={key} color='four'>
-            26 von 100
-          </Highlight>
-          ).
+          Enddreissigerinnen ein Kind erwarten. Nach dem zweiten Transfer ist es
+          jede Zweite. Und nach fünf oder mehr Transfers sind zwei Drittel der
+          Kinderwunsch-Patientinnen schwanger.
         </Editorial.P>
       </ScrollySlide>
 
@@ -185,65 +147,10 @@ export const Scrolly = () => {
       >
         <Editorial.Subhead>
           <ChapterIndicator highlighted={lastInView === 2}>3</ChapterIndicator>
-          Der Weg zum Kind
+          Jenseits der 40 – schwanger, aber kein Kind
         </Editorial.Subhead>
         <Editorial.P>
-          Halten Eltern glücklich ihr Baby auf dem Arm, sieht man ihnen den Weg
-          nicht an, den sie für dieses Kind gegangen sind.
-        </Editorial.P>
-
-        <Editorial.P>
-          Als 1978 in Grossbritannien Louise Joy Brown geboren wurde, das erste
-          In-Vitro-Baby, hatten ihre Eltern seit neun Jahren einen unerfüllten
-          Kinderwunsch. Ihre Mutter konnte nicht auf natürlichem Weg schwanger
-          werden. Hätten der Genetiker Robert Edwards und der Gynäkologe Patrick
-          Steptoe nicht just die Befruchtung in der Petrischale zur Reife
-          gebracht, die Browns wären kinderlos geblieben.
-        </Editorial.P>
-
-        <Editorial.P>
-          IVF entstand, um Probleme mit der Zeugungsfähigkeit auszugleichen.
-          Wenn zum Beispiel die Eileiter der Frau nicht durchlässig sind oder
-          die Spermien des Mannes zu langsam. Ähnlich wie bei einer natürlichen
-          Zeugung kumulieren sich die Chancen der Paare mit der Zeit, schwanger
-          zu werden:
-        </Editorial.P>
-
-        <Editorial.P>
-          Nach dem dritten IVF-Transfer sind fast drei Viertel aller Frauen bis
-          Mitte 30 schwanger (
-          <Highlight colorKey={key} color='two'>
-            70-73 von 100
-          </Highlight>
-          ).
-        </Editorial.P>
-        <Editorial.P>
-          Bis Ende 30 sind es weniger: knapp
-          <Highlight colorKey={key} color='three'>
-            60 von 100
-          </Highlight>
-          werden nach drei Transfers schwanger.
-        </Editorial.P>
-        <Editorial.P>
-          Im Alter von mehr als 40 Jahren ist nach dem dritten Transfer knapp
-          jede dritte Frau schwanger (
-          <Highlight colorKey={key} color='four'>
-            31 von 100
-          </Highlight>
-          ).
-        </Editorial.P>
-      </ScrollySlide>
-
-      <ScrollySlide
-        highlighted={lastInView === 3}
-        onChangeInView={handleInView(3)}
-      >
-        <Editorial.Subhead>
-          <ChapterIndicator highlighted={lastInView === 3}>4</ChapterIndicator>
-          Schwanger, aber kein Kind
-        </Editorial.Subhead>
-        <Editorial.P>
-          Bei Paaren mit Kinderwunsch wird der weibliche Zyklus schnell zum
+          Bei Paaren mit Kinderwunsch wird der weibliche Zyklus zum
           Teufelskreis.
         </Editorial.P>
 
@@ -257,108 +164,68 @@ export const Scrolly = () => {
         </Editorial.P>
 
         <Editorial.P>Warten.</Editorial.P>
-
         <Editorial.P>Warten.</Editorial.P>
-
         <Editorial.P>Test. Negativ. Trauer, Wut, Verzweiflung.</Editorial.P>
-
         <Editorial.P>
-          Wer Monat für Monat gezittert und gehadert hat, für den ist allein ein
+          Wer Monat für Monat zittern und hadern musste, für den ist ein
           positiver Schwangerschaftstest ein Geschenk des Himmels. Ein konkretes
-          Wesen, das entsteht, wo vorher immer nur nichts war. Hoffen dürfen.{' '}
-        </Editorial.P>
-
-        <Editorial.P>
-          Und dann kann es sein, leider, dass das Kind in diesen ersten Wochen
-          stirbt. Jede vierte Schwangerschaft, die per IVF entsteht, endet mit
-          einer Fehlgeburt. Das erscheint mehr als bei natürlich entstandenen
-          Schwangerschaften, allerdings gibt es hier nur Schätzwerte (10-20
-          Prozent). Ein Vergleich lässt sich darum nicht gut ziehen.
-        </Editorial.P>
-
-        <Editorial.P>
-          Bei Frauen ist der Vorrat an Eizellen seit der Geburt angelegt, darum
-          nimmt die Qualität der Eizellen über die Jahrzehnte ab. In Folge
-          steigt die Zahl der Fehlgeburten – der Körper verabschiedet sich so
-          von Embryonen, deren chromosomale Entwicklung nicht so verläuft, dass
-          das Kind lebensfähig wäre.
-        </Editorial.P>
-
-        <Editorial.P>Die Realität sieht so aus:</Editorial.P>
-        <Editorial.P>
-          Nach dem vierten Transfer sind fast vier von fünf Frauen bis Mitte 30
-          schwanger (
-          <Highlight colorKey={key} color='two'>
-            78 von 100
-          </Highlight>
-          ). Die Fehlgeburtsrate liegt im Alter von 35 Jahren bei 20 Prozent.
+          Wesen, das entsteht, wo vorher immer nur nichts war. Hoffen dürfen.
         </Editorial.P>
         <Editorial.P>
-          Bis Ende 30 werden bis nach dem vierten Transfer knapp zwei Drittel
-          der Frauen schwanger (
-          <Highlight colorKey={key} color='three'>
-            63 von 100
-          </Highlight>
-          ). Die Fehlgeburtsrate liegt mit 39 Jahren bei 30 Prozent.
+          Dies bleibt Frauen jenseits der 40 und ihren Partnern auch mit allen
+          Mitteln der Unterstützung oft verwehrt. Im Gegensatz zu den jüngeren
+          Altersgruppen wird die Mehrheit von ihnen gar nicht mehr schwanger.
         </Editorial.P>
         <Editorial.P>
-          Mit dem vierten Transfer steigt die Schwangerschaftsrate jenseits der
-          40 noch einmal etwas (
-          <Highlight colorKey={key} color='four'>
-            33 von 100 Frauen
-          </Highlight>
-          ). Jede dritte Schwangere verliert das Kind dann wieder, im Alter von
-          44 Jahren ist es bereits mehr als jede Zweite.
-        </Editorial.P>
-      </ScrollySlide>
-      <ScrollySlide
-        highlighted={lastInView === 4}
-        onChangeInView={handleInView(4)}
-      >
-        <Editorial.Subhead>
-          <ChapterIndicator highlighted={lastInView === 4}>5</ChapterIndicator>
-          Ein Kind muss man sich leisten können
-        </Editorial.Subhead>
-        <Editorial.P>
-          In der Schweiz hängen die Chancen auf ein Kind nicht nur ab von der
-          Medizin, sondern auch vom eigenen Geldbeutel. Denn anders als in
-          vielen Ländern Europas werden die Kosten für eine IVF nicht von der
-          Krankenkasse übernommen.
-        </Editorial.P>
-
-        <Editorial.P>
-          Wer fünf IVF-Transfers braucht, hat an die 50’000 Franken ausgegeben,
-          um schwanger zu werden.
-        </Editorial.P>
-
-        <Editorial.P>Die Chancen auf Erfolg:</Editorial.P>
-        <Editorial.P>
-          Bis Mitte 30 wird die grosse Mehrheit der Frauen schwanger nach fünf
-          oder mehr Transfers (
-          <Highlight colorKey={key} color='two'>
-            82 von 100
-          </Highlight>
-          ).
-        </Editorial.P>
-        <Editorial.P>
-          Mitte bis Ende 30 sind nach fünf Transfers oder mehr gut zwei Drittel
-          der Frauen schwanger, die ein Kind möchten (
-          <Highlight colorKey={key} color='three'>
-            68 von 100
-          </Highlight>
-          ).
-        </Editorial.P>
-        <Editorial.P>
-          Im Alter von 40 Jahren ist nach fünf oder mehr Transfers gut jede
-          dritte Frau schwanger (
-          <Highlight colorKey={key} color='four'>
+          Bei Frauen ab 40 erwarten nach dem ersten IVF-Transfer 18 von 100
+          Frauen ein Kind. Nach fünf Transfers oder mehr steigt diese Zahl
+          <Highlight colorKey={key} color='one'>
             35 von 100
           </Highlight>
-          ). Zwei von drei Frauen müssen also akzeptieren, dass der
-          Schwangerschaftstest negativ bleibt.
+          Frauen an. Mehr ist nicht.
         </Editorial.P>
         <Editorial.P>
-          Aber die Hoffnung, die Ausnahme zu sein, bleibt berechtigt.
+          Und noch dazu, leider, wächst mit jedem Jahr das Fehlgeburtsrisiko.
+          Bereits mit 40 verliert mehr als jede dritte Frau ihr Kind wieder, in
+          den allermeisten Fällen in der frühen Schwangerschaft. Im Alter von 44
+          Jahren ist es jede Zweite.
+        </Editorial.P>
+        <Editorial.P>
+          Was bleibt, ist Akzeptanz. Oder die unerbittliche Hoffnung, die so gut
+          zu verstehen ist.
+        </Editorial.P>
+        <Editorial.P>
+          In Deutschland haben über einen Zeitraum von vier Jahren 513 Frauen im
+          Alter von 45 eine IVF versucht.
+        </Editorial.P>
+        <Editorial.P>15 von ihnen sind heute Mutter.</Editorial.P>
+      </ScrollySlide>
+
+      <ScrollySlide
+        highlighted={lastInView === 3}
+        onChangeInView={handleInView(3)}
+      >
+        <Editorial.Subhead>
+          <ChapterIndicator highlighted={lastInView === 3}>4</ChapterIndicator>
+          Der Weg zum Kind
+        </Editorial.Subhead>
+        <Editorial.P>
+          Halten Eltern glücklich ihr Baby auf dem Arm, sieht man ihnen den Weg
+          nicht an, den sie für dieses Kind gegangen sind. Und sie haben dann
+          guten Grund, viele der Mühen zu vergessen.
+        </Editorial.P>
+
+        <Editorial.P>
+          Doch nicht ganz zu vergessen, ist wichtig. Und zwar auch dies: In der
+          Schweiz ist es bereits ein Privileg, Unterstützung im Kinderwunsch
+          suchen zu können. Denn dies hängt vom eigenen Portemonnaie ab. Anders
+          als in vielen Ländern Europas werden die Kosten für eine IVF nicht von
+          der Krankenkasse übernommen.
+        </Editorial.P>
+
+        <Editorial.P>
+          Das bedeutet: Wer fünf IVF-Transfers braucht, hat an die 50’000
+          Franken ausgegeben, um schwanger zu werden.
         </Editorial.P>
       </ScrollySlide>
     </div>
