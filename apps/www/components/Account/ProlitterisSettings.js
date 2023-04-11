@@ -52,7 +52,7 @@ const REVOKE_PROLITTERIS = gql`
 `
 
 const ProlitterisSettings = () => {
-  const { me, meLoading, hasActiveMembership } = useMe()
+  const { me, meLoading, hasAccess } = useMe()
   const { t } = useTranslation()
   const [revokeConsent] = useMutation(REVOKE_PROLITTERIS)
   const [submitConsent] = useMutation(CONSENT_TO_PROLITTERIS)
@@ -77,12 +77,6 @@ const ProlitterisSettings = () => {
             checked={hasAccepted}
             disabled={mutating}
             onChange={() => {
-              if (
-                hasAccepted &&
-                !window.confirm(t('account/prolitteris/consent/confirmRevoke'))
-              ) {
-                return
-              }
               isMutating(true)
               const consentMutation = hasAccepted
                 ? revokeConsent
@@ -104,7 +98,7 @@ const ProlitterisSettings = () => {
               )}
             </span>
           </Checkbox>
-          {!hasActiveMembership && (
+          {!hasAccess && (
             <Box style={{ margin: '10px 0', padding: 15 }}>
               <P>{t('account/progress/consent/noMembership')}</P>
             </Box>

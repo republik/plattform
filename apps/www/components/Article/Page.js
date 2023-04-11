@@ -312,7 +312,7 @@ const ArticlePage = ({
   const routerQuery = router.query
   const isClimate = !!article?.content?.meta?.climate
 
-  useProlitterisTracking(hasAccess, documentId, cleanedPath)
+  useProlitterisTracking(documentId, cleanedPath)
 
   useEffect(() => {
     if (share) {
