@@ -18,7 +18,7 @@ const POLICIES = [
 ]
 */
 
-const REVOKABLE_POLICIES = ['PROGRESS', '5YEAR_DONATE_MONTHS']
+const REVOKABLE_POLICIES = ['PROGRESS', '5YEAR_DONATE_MONTHS', 'PROLITTERIS']
 
 const getAllConsentRecords = ({ userId, pgdb }) =>
   pgdb.public.consents.find(
