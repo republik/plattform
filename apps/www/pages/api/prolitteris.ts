@@ -50,7 +50,7 @@ async function handler(request: NextApiRequest, response: NextApiResponse) {
   // Query Parameters of request
   // 1) paid (string, 'pw' || 'na'): request by paying user (pw) or public (na)
   // 2) uid (string): documentId of the article
-  // 3) slug (string): article slug
+  // 3) path (string): article slug
 
   const { paid, uid, path } = request.query
 
