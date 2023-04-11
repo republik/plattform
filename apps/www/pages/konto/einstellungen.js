@@ -6,6 +6,7 @@ import Frame from '../../components/Frame'
 import AccountTabs from '../../components/Account/AccountTabs'
 import AccountSection from '../../components/Account/AccountSection'
 import ProgressSettings from '../../components/Account/ProgressSettings'
+import ProlitterisSettings from '../../components/Account/ProlitterisSettings'
 import AuthSettings from '../../components/Account/AuthSettings'
 import { AccountEnforceMe } from '../../components/Account/Elements'
 
@@ -23,6 +24,10 @@ const SettingsPage = ({ t }) => {
 
         <AccountSection id='position' title={t('account/progress/title')}>
           <ProgressSettings />
+        </AccountSection>
+
+        <AccountSection id='prolitteris' title='ProLitteris Integration'>
+          <ProlitterisSettings />
         </AccountSection>
 
         {APP_OPTIONS && (

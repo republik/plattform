@@ -7,6 +7,12 @@ export const userProgressConsentFragment = `
   }
 `
 
+export const userProlitterisConsentFragment = `
+  fragment ProlitterisConsent on User {
+    prolitterisConsent: hasConsentedTo(name: "PROLITTERIS")
+  }
+`
+
 export const checkRoles = (me, roles) => {
   return !!(
     me &&
@@ -46,9 +52,11 @@ export const meQuery = gql`
         canProlong
       }
       ...ProgressConsent
+      ...ProlitterisConsent
     }
   }
   ${userProgressConsentFragment}
+  ${userProlitterisConsentFragment}
 `
 
 export default graphql(meQuery, {
