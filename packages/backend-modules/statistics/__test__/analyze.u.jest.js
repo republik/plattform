@@ -88,6 +88,21 @@ const cases = [
     ],
     text: 'Von Philipp Albrecht (Text) und Andrea Ventura (Illustration), XY.05.2022',
   },
+  {
+    name: 'ignore undeclared characters',
+    contributors: [],
+    text: '[COUNTER AKTUELLER MITGLIEDERZAHL]',
+  },
+  {
+    name: 'ignore undeclared characters (contains "by" indicator MIT)',
+    contributors: [{ name: 'AKTUELLER MITGLIEDERZAHL', kind: 'Text' }],
+    text: '[COUNTER MIT AKTUELLER MITGLIEDERZAHL]',
+  },
+  {
+    name: 'ignore lingering parenthesis',
+    contributors: [{ name: 'Brigitte Hürlimann', kind: 'Text' }],
+    text: 'Von Brigitte Hürlimann (, 01.04.2023',
+  },
 ]
 
 describe('Analyzer', () => {
