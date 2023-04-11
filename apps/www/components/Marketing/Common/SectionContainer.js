@@ -1,9 +1,12 @@
 import { css } from 'glamor'
 import { mediaQueries } from '@project-r/styleguide'
 
-export default function SectionContainer({ children, maxWidth }) {
+export default function SectionContainer({ children, maxWidth, padding }) {
   return (
-    <div {...sectionContainerStyle} style={{ maxWidth: maxWidth || 1280 }}>
+    <div
+      {...sectionContainerStyle}
+      style={{ maxWidth: maxWidth ?? 1280, padding }}
+    >
       {children}
     </div>
   )
