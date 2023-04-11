@@ -9,15 +9,11 @@ module.exports = async (_, args, context) => {
     throw new Error(t('api/reportUser/userNotFound'))
   }
 
-  if (!me) {
-    throw new Error(t('api/signIn'))
-  }
-
-  if (userId === me.id) {
+  if (userId === me?.id) {
     throw new Error(t('api/reportUser/self'))
   }
 
-  await slack.reportUser(me?.name || me?.email || 'Gast', user, reason)
+  await slack.reportUser(me, user, reason)
 
   return true
 }

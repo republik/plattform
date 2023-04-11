@@ -80,17 +80,19 @@ exports.publishPledge = async (_user, pledge, action) => {
 }
 
 const getProfileLink = (user) =>
-  `<${FRONTEND_BASE_URL}/~${user.username || user.id}>|${
-    user.username || user.email
-  }>`
+  user.username
+    ? `<${FRONTEND_BASE_URL}/~${user.username || user.id}|${user.name}>`
+    : user.name
 
-exports.reportUser = async (userName, reportedUser, reason) => {
+exports.reportUser = async (user, reportedUser, reason) => {
   try {
     const content = `
-    :bomb: *${userName}* reported  *${getProfileLink(reportedUser)}*: \n
-    Reason: "${reason}"
+    :bomb: *${user ? getProfileLink(user) : 'Gast'}* reported *${getProfileLink(
+      reportedUser,
+    )}*: \n
+    Reason: \n
+    ${reason}
     `
-    console.log('reportUser', content)
 
     return await publish(SLACK_CHANNEL_COMMENTS_ADMIN, content, {
       unfurl_links: true,
