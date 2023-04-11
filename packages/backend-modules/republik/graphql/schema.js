@@ -112,6 +112,8 @@ type mutations {
     name: NewsletterName!
     context: String!
   ): Boolean!
+
+  reportUser(userId: ID!, reason: String!): Boolean!
 }
 
 type subscriptions {
