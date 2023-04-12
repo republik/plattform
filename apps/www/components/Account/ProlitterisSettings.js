@@ -8,7 +8,6 @@ import ErrorMessage from '../ErrorMessage'
 import { P } from './Elements'
 import { InlineSpinner, Checkbox, Loader } from '@project-r/styleguide'
 
-import { getFeatureDescription } from '../Article/Progress'
 import { gql, useMutation } from '@apollo/client'
 import { useMe } from '../../lib/context/MeContext'
 
@@ -66,12 +65,7 @@ const ProlitterisSettings = () => {
       render={() => (
         <>
           <P style={{ margin: '20px 0' }}>
-            Unsere Autorinnen bekommen von der Schweizer Verwertungsgesellschaft
-            ProLitteris Entschädigung. Diese wird auf Basis von
-            Beitragszugriffen und mit Hilfe anonymisierten IP Adressen der
-            Leserinnen berechnet. Falls Sie sich trotz Anonymisierung von der
-            Enschädigungsprozess abmelden wollen, können Sie es jede Zeit
-            machen.
+            {t('account/prolitteris/description')}
           </P>
           <Checkbox
             checked={hasAccepted}
@@ -96,7 +90,7 @@ const ProlitterisSettings = () => {
             }}
           >
             <span {...styles.label}>
-              {t('account/progress/consent/label')}
+              {t('account/prolitteris/consent/label')}
               {mutating['consent'] && (
                 <span {...styles.spinnerWrapper}>
                   <InlineSpinner size={24} />
@@ -106,7 +100,7 @@ const ProlitterisSettings = () => {
           </Checkbox>
           {!hasActiveMembership && (
             <Box style={{ margin: '10px 0', padding: 15 }}>
-              <P>{t('account/progress/consent/noMembership')}</P>
+              <P>{t('account/prolitteris/consent/noMembership')}</P>
             </Box>
           )}
           {serverError && <ErrorMessage error={serverError} />}

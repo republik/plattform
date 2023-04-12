@@ -1029,6 +1029,22 @@
       "value": "Die Funktion ist nur für Mitglieder und Abonnentinnen die Republik zugänglich."
     },
     {
+      "key": "account/prolitteris/title",
+      "value": "ProLitteris Integration"
+    },
+    {
+      "key": "account/prolitteris/consent/label",
+      "value": "Ich möchte diese Funktion nutzen"
+    },
+    {
+      "key": "account/prolitteris/description",
+      "value": "Unsere Autorinnen bekommen von der Schweizer Verwertungsgesellschaft ProLitteris Entschädigung. Diese wird auf Basis von Beitragszugriffen und mit Hilfe anonymisierten IP Adressen der Leserinnen berechnet. Falls Sie sich trotz Anonymisierung von der Enschädigungsprozess abmelden wollen, können Sie es jede Zeit machen."
+    },
+    {
+      "key": "account/prolitteris/consent/noMembership",
+      "value": "Die Funktion ist nur für Mitglieder und Abonnentinnen die Republik zugänglich."
+    },
+    {
       "key": "account/pledges/free-delivery",
       "value": "Kostenlose Lieferung"
     },
