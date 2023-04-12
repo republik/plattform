@@ -2511,6 +2511,22 @@
     {
       "key": "api/call-to-actions/acknowledge/404",
       "value": "Call-To-Action nicht gefunden"
+    },
+    {
+      "key": "api/reportUser/self",
+      "value": "Das eigene Profil kann nich gemeldet werden"
+    },
+    {
+      "key": "api/reportUser/failed",
+      "value": "Es ist ein Fehler aufgetreten, das Profil konnte nicht gemeldet werden."
+    },
+    {
+      "key": "api/reportUser/userNotFound",
+      "value": "Der gemeldete Benutzer konnte nicht gefunden werden."
+    },
+    {
+      "key": "api/reportUser/reasonTooLong",
+      "value": "Die Begründung ist zu lange. (Maximal {max} Zeichen)"
     }
   ]
 }
