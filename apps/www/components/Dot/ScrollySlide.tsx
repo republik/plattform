@@ -16,7 +16,7 @@ export const ScrollySlide = ({
   // const isInView = useInView(ref, { amount: 0.5, margin: '-30% 0px 0px 0px' }) // FIXME margin top should be correct bottom of graphic
   const { scrollYProgress } = useScroll({
     target: ref,
-    offset: ['start end', 'start 55vh'],
+    offset: ['start end', 'start 60vh'],
   })
 
   useEffect(() => {

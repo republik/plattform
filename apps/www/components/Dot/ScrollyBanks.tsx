@@ -48,9 +48,6 @@ export const Scrolly = () => {
           <ChapterIndicator mini highlighted={lastInView === 3}>
             4
           </ChapterIndicator>
-          <ChapterIndicator mini highlighted={lastInView === 4}>
-            5
-          </ChapterIndicator>
         </div>
 
         <StoryGraphic highlighted={lastInView} />
@@ -179,26 +176,6 @@ export const Scrolly = () => {
           gewählt wurde, das für die CS besonders schlecht war. Wie sieht also
           das Bild in einem Geschäftsjahr aus, das die CS mit schwarzen Zahlen
           abgeschlossen hat?
-        </Editorial.P>
-      </ScrollySlide>
-      <ScrollySlide
-        highlighted={lastInView === 4}
-        onChangeInView={handleInView(4)}
-      >
-        <Editorial.Subhead>
-          <ChapterIndicator highlighted={lastInView === 4}>5</ChapterIndicator>
-        </Editorial.Subhead>
-        <Editorial.P>Nicht wirklich besser.</Editorial.P>
-
-        <Editorial.P>
-          Mit anderen Worten: Viele Jahre hat die CS einen Haufen Geld für die
-          angeblich besten Leute verschwendet.
-        </Editorial.P>
-
-        <Editorial.P>
-          Ein grosser Teil dieses Geldes ist in Form von Bonuszahlungen für
-          Kaderleute ausgegeben worden, die Risiken missachteten und persönliche
-          Bereicherung über beruflichen Erfolg stellten.
         </Editorial.P>
       </ScrollySlide>
     </div>

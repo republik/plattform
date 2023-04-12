@@ -92,7 +92,7 @@ export const Scrolly = () => {
           sich bereits gut zwei Drittel über einen positiven Test freuen. Und
           nach fünf oder mehr IVF-Transfers erwartet die grosse Mehrheit der
           Frauen bis Mitte 30 ein Kind: Dann hat es bei
-          <Highlight colorKey={key} color='two'>
+          <Highlight colorKey={key} color='one500'>
             82 von 100
           </Highlight>
           geklappt.
@@ -132,7 +132,7 @@ export const Scrolly = () => {
           Chancen, mit IVF schwanger zu werden. Aber schon sichtbar schlechtere
           als noch ein paar Jahre zuvor. Die Statistik zeigt, dass nach dem
           ersten Transfer
-          <Highlight colorKey={key} color='three'>
+          <Highlight colorKey={key} color='two100'>
             32 von 100
           </Highlight>
           Enddreissigerinnen ein Kind erwarten. Nach dem zweiten Transfer ist es
@@ -179,7 +179,7 @@ export const Scrolly = () => {
         <Editorial.P>
           Bei Frauen ab 40 erwarten nach dem ersten IVF-Transfer 18 von 100
           Frauen ein Kind. Nach fünf Transfers oder mehr steigt diese Zahl
-          <Highlight colorKey={key} color='one'>
+          <Highlight colorKey={key} color='three500'>
             35 von 100
           </Highlight>
           Frauen an. Mehr ist nicht.
@@ -233,7 +233,6 @@ export const Scrolly = () => {
 }
 
 const Highlight = ({ color, colorKey, children }) => {
-  const bright = `${color}Bright`
   return (
     <span
       style={{
@@ -248,7 +247,7 @@ const Highlight = ({ color, colorKey, children }) => {
       >
         <span
           {...styles.circle}
-          style={{ backgroundColor: COLORS[colorKey][bright] }}
+          style={{ backgroundColor: COLORS[colorKey][color] }}
         />
         {children}
       </span>
