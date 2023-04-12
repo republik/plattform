@@ -26,7 +26,7 @@ const SettingsPage = ({ t }) => {
           <ProgressSettings />
         </AccountSection>
 
-        <AccountSection id='prolitteris' title='ProLitteris Integration'>
+        <AccountSection id='prolitteris' title={t('account/prolitteris/title')}>
           <ProlitterisSettings />
         </AccountSection>
 
