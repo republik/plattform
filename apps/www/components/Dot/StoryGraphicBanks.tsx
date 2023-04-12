@@ -136,7 +136,7 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
               y1: chartRange[1],
               x2: CENTER,
               y2: '0',
-              pathLength: 0,
+              pathLength: 1,
             },
             {
               step1: {
@@ -529,7 +529,7 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                 r: RADIUS,
                 opacity: 1,
                 fill: NEW_COLORS[key].four,
-                transition: { duration: 0.5, delay: 1 },
+                transition: { duration: 0.5, delay: 1.5 },
               },
               step3: {
                 y: getCostPosition('Raiffeisen'),
@@ -565,7 +565,7 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                 r: RADIUS,
                 opacity: 1,
                 fill: NEW_COLORS[key].five,
-                transition: { duration: 0.5, delay: 1 },
+                transition: { duration: 0.5, delay: 0.5 },
               },
               step3: {
                 y: getCostPosition('Kantonalbank Vaudoise'),
@@ -870,7 +870,7 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                 y: getCostPosition('Kantonalbank Vaudoise') - 10,
                 x: CENTER - 25,
                 opacity: 1,
-                transition: { duration: 0.5, delay: 1 },
+                transition: { duration: 0.5, delay: 0.5 },
                 textAnchor: 'end',
               },
               step3: {
@@ -908,7 +908,7 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                 y: getCostPosition('Raiffeisen'),
                 x: CENTER - 25,
                 opacity: 1,
-                transition: { duration: 0.5, delay: 1 },
+                transition: { duration: 0.5, delay: 1.5 },
                 textAnchor: 'end',
               },
               step3: {
@@ -1057,7 +1057,7 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                 y: getCostPosition('Raiffeisen'),
                 x: CENTER + 25,
                 opacity: 1,
-                transition: { duration: 0.5, delay: 1 },
+                transition: { duration: 0.5, delay: 1.5 },
                 textAnchor: 'start',
               },
               step3: {
@@ -1086,7 +1086,7 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                 y: getCostPosition('Kantonalbank Vaudoise') - 10,
                 x: CENTER + 25,
                 opacity: 1,
-                transition: { duration: 0.5, delay: 1 },
+                transition: { duration: 0.5, delay: 0.5 },
                 textAnchor: 'start',
               },
               step3: {
