@@ -11,7 +11,7 @@ const {
 } = require('@orbiting/backend-modules-republik/lib/slack')
 const { v4: uuid } = require('uuid')
 const mergeCustomers = require('../../../lib/payments/stripe/mergeCustomers')
-const createInvalidate = require('../../../lib/cache')
+const cache = require('../../../lib/cache')
 
 module.exports = async (_, args, context) => {
   const {
@@ -312,6 +312,16 @@ module.exports = async (_, args, context) => {
       logger.error('newsletter subscription changes failed in mergeUsers!', _e)
     }
 
+    try {
+      const options = { prefix: `User:${sourceUserId}` }
+      await cache(options, redis).invalidate()
+    } catch (_e) {
+      logger.error(
+        'failed to clear user cache for source user in mergeUsers',
+        _e,
+      )
+    }
+
     await publishMonitor(
       req.user,
       `mergeUsers ${sourceUser.email} -> ${targetUser.email}`,
@@ -328,10 +338,6 @@ module.exports = async (_, args, context) => {
     logger.info('transaction rollback', { req: req._log(), args, error: e })
     throw e
   }
-
-  // add deletion of cached content for sourceUser
-  const options = { prefix: `User:${sourceUserId}` }
-  await createInvalidate(options, redis).catch(() => null)
 
   return transformUser(await pgdb.public.users.findOne({ id: targetUserId }))
 }
