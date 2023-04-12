@@ -119,10 +119,11 @@ const styles = {
     float: 'right',
     verticalAlign: 'middle',
   }),
-  headInfoWrapper: css({
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+  headInfoReportButton: css({
+    marginLeft: 12,
+    [mediaQueries.mUp]: {
+      marginLeft: 24,
+    },
   }),
   badges: css({
     margin: '20px 0 30px 0',
@@ -493,6 +494,16 @@ const LoadedProfile = (props) => {
             {!!user.hasPublicProfile && (
               <span {...styles.headInfoShare}>
                 <ActionBar share={shareObject} download={metaData.image} />
+                {!isMe && (
+                  <div {...styles.headInfoReportButton}>
+                    <IconButton
+                      Icon={ReportIcon}
+                      title={t('profile/report/label')}
+                      onClick={() => reportUser(user.id)}
+                      style={{ margin: 0 }}
+                    />
+                  </div>
+                )}
               </span>
             )}
             {!!user.sequenceNumber && (
@@ -578,14 +589,6 @@ const LoadedProfile = (props) => {
                       showAuthorFilter
                       userHasNoDocuments={!user.documents.totalCount}
                       subscriptions={[user.subscribedByMe]}
-                    />
-                  )}
-                  {!isMe && (
-                    <IconButton
-                      Icon={ReportIcon}
-                      title={t('profile/report/label')}
-                      label={t('profile/report/label')}
-                      onClick={() => reportUser(user.id)}
                     />
                   )}
                 </div>
