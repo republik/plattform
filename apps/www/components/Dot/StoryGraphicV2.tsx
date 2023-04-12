@@ -2,6 +2,8 @@ import { motion, Variant } from 'framer-motion'
 
 import { css } from 'glamor'
 
+import { scaleThreshold, scaleBand } from 'd3-scale'
+
 import {
   useColorContext,
   mediaQueries,
@@ -13,6 +15,7 @@ import {
   PADDING_TOP,
   PADDING_LEFT,
   SMALL_RADIUS,
+  RADIUS,
   COLORS,
 } from './config'
 import { useResolvedColorSchemeKey } from '../ColorScheme/lib'
@@ -54,14 +57,38 @@ const getVariant = (highlighted: number) => {
 const CENTER = 930 / 2
 const OFFSET = 105
 
-const getDelayBelow34 = (index: number) => {
-  if (index < 40) return 1
-  if (index > 39 && index < 61) return 1.5
-  if (index > 60 && index < 72) return 2.5
-  if (index > 71 && index < 77) return 2.5
-  if (index > 76 && index < 82) return 3
-  return 0
-}
+const TRANSFERS = [
+  '1. Transfer',
+  '2. Transfer',
+  '3. Transfer',
+  '4. Transfer',
+  'Mehr als 4',
+]
+
+const DELAY_TIMES = [1, 1.5, 2, 2.5, 3]
+const BELOW_34_THRESHOLDS = [40, 61, 72, 77, 82]
+const BELOW_40_THRESHOLDS = [34, 51, 60, 64, 68]
+const ABOVE_40_THRESHOLDS = [18, 27, 31, 34, 36]
+
+const below34AnimationScale = scaleThreshold()
+  .domain(BELOW_34_THRESHOLDS)
+  .range(DELAY_TIMES)
+
+const transferAnimationScale = scaleThreshold()
+  .domain([1, 2, 3, 4, 5])
+  .range(DELAY_TIMES)
+
+const below34ColorScale = scaleThreshold()
+  .domain(BELOW_34_THRESHOLDS)
+  .range(['one100', 'one200', 'one300', 'one400', 'one500'])
+
+const below40ColorScale = scaleThreshold()
+  .domain(BELOW_40_THRESHOLDS)
+  .range(['two100', 'two200', 'two300', 'two400', 'two500'])
+
+const above40ColorScale = scaleThreshold()
+  .domain(ABOVE_40_THRESHOLDS)
+  .range(['three100', 'three200', 'three300', 'three400', 'three500'])
 
 const getDelayBelow40 = (index: number) => {
   if (index < 34) return 1
@@ -148,7 +175,10 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                     x: d.cx,
                     r: i >= 36 ? SMALL_RADIUS : d.r,
                     opacity: 1,
-                    fill: i >= 36 ? COLORS[key].default : COLORS[key].oneBright,
+                    fill:
+                      i >= 36
+                        ? COLORS[key].default
+                        : COLORS[key][above40ColorScale(i)],
                     transition: { duration: 0.5, delay: getDelayAbove40(i) },
                   },
                   step4: {
@@ -255,7 +285,9 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                     r: i >= 68 ? SMALL_RADIUS : d.r,
                     opacity: 1,
                     fill:
-                      i >= 68 ? COLORS[key].default : COLORS[key].threeBright,
+                      i >= 68
+                        ? COLORS[key].default
+                        : COLORS[key][below40ColorScale(i)],
                     transition: { duration: 0.5, delay: getDelayBelow40(i) },
                   },
                   step3: {
@@ -350,29 +382,33 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                     x: d.cx,
                     r: i >= 82 ? SMALL_RADIUS : d.r,
                     opacity: 1,
-                    fill: i >= 82 ? COLORS[key].default : COLORS[key].twoBright,
-                    transition: { duration: 0.5, delay: getDelayBelow34(i) },
+                    fill:
+                      i >= 82
+                        ? COLORS[key].default
+                        : COLORS[key][below34ColorScale(i)],
+                    transition: {
+                      duration: 0.5,
+                      delay: below34AnimationScale(i),
+                    },
                   },
                   step2: {
                     y: d.cy,
                     x: d.cx,
                     r: i >= 82 ? SMALL_RADIUS : d.r,
                     opacity: 0,
-                    fill: i >= 82 ? COLORS[key].default : COLORS[key].twoBright,
                   },
                   step3: {
                     y: d.cy,
                     x: d.cx,
                     r: i >= 82 ? SMALL_RADIUS : d.r,
                     opacity: 0,
-                    fill: i >= 82 ? COLORS[key].default : COLORS[key].twoBright,
                   },
                   step4: {
                     y: d.cy,
                     x: d.cx,
                     r: i >= 82 ? SMALL_RADIUS : d.r,
                     opacity: 1,
-                    fill: i >= 82 ? COLORS[key].default : COLORS[key].twoBright,
+
                     transition: { duration: 0.5 },
                   },
                 },
@@ -415,6 +451,162 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
         >
           30–34 Jahre
         </motion.text>
+
+        {/* labels */}
+        <motion.g
+          variants={defineVariants(
+            {
+              x: 250,
+              y: 10,
+            },
+            {},
+          )}
+        >
+          {TRANSFERS.map((d, i) => {
+            return (
+              <motion.g
+                key={`34-${d}`}
+                {...styles.label}
+                {...colorScheme.set('fill', 'text')}
+                variants={defineVariants(
+                  {
+                    x: 0,
+                    y: 35 * i,
+                    opacity: 0,
+                  },
+                  {
+                    step1: {
+                      opacity: 1,
+                      transition: {
+                        duration: 0.5,
+                        delay: transferAnimationScale(i),
+                      },
+                    },
+                  },
+                )}
+              >
+                <motion.circle
+                  variants={defineVariants(
+                    {
+                      r: RADIUS,
+                      y: -RADIUS,
+                      x: -RADIUS,
+                      fill: COLORS[key][`one${i + 1}00`],
+                    },
+                    {},
+                  )}
+                ></motion.circle>
+                <motion.text
+                  variants={defineVariants(
+                    {
+                      y: 0,
+                      x: 10,
+                    },
+                    {},
+                  )}
+                >
+                  {d}
+                </motion.text>
+              </motion.g>
+            )
+          })}
+          {TRANSFERS.map((d, i) => {
+            return (
+              <motion.g
+                key={`39-${d}`}
+                {...styles.label}
+                {...colorScheme.set('fill', 'text')}
+                variants={defineVariants(
+                  {
+                    x: 0,
+                    y: 35 * i,
+                    opacity: 0,
+                  },
+                  {
+                    step2: {
+                      opacity: 1,
+                      transition: {
+                        duration: 0.5,
+                        delay: transferAnimationScale(i),
+                      },
+                    },
+                  },
+                )}
+              >
+                <motion.circle
+                  variants={defineVariants(
+                    {
+                      r: RADIUS,
+                      y: -RADIUS,
+                      x: -RADIUS,
+                      fill: COLORS[key][`two${i + 1}00`],
+                    },
+                    {},
+                  )}
+                ></motion.circle>
+                <motion.text
+                  variants={defineVariants(
+                    {
+                      y: 0,
+                      x: 10,
+                    },
+                    {},
+                  )}
+                >
+                  {d}
+                </motion.text>
+              </motion.g>
+            )
+          })}
+          {TRANSFERS.map((d, i) => {
+            return (
+              <motion.g
+                key={`40-${d}`}
+                {...styles.label}
+                {...colorScheme.set('fill', 'text')}
+                variants={defineVariants(
+                  {
+                    x: 0,
+                    y: 35 * i,
+                    opacity: 0,
+                  },
+                  {
+                    step3: {
+                      opacity: 1,
+                      transition: {
+                        duration: 0.5,
+                        delay: transferAnimationScale(i),
+                      },
+                    },
+                  },
+                )}
+              >
+                <motion.circle
+                  variants={defineVariants(
+                    {
+                      r: RADIUS,
+                      y: -RADIUS,
+                      x: -RADIUS,
+                      fill: COLORS[key][`three${i + 1}00`],
+                    },
+                    {},
+                  )}
+                ></motion.circle>
+                <motion.text
+                  variants={defineVariants(
+                    {
+                      y: 0,
+                      x: 10,
+                    },
+                    {},
+                  )}
+                >
+                  {d}
+                </motion.text>
+              </motion.g>
+            )
+          })}
+        </motion.g>
       </motion.g>
     </motion.svg>
   )

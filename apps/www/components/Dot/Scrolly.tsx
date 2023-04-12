@@ -283,8 +283,8 @@ const styles = {
     margin: '-1px 0 1px 0',
     display: 'flex',
     alignItems: 'center',
-    borderRadius: '0.8em 0.3em',
-    padding: '0.1em 0.1em 0.1em 0.2em',
+    borderRadius: '0.3em',
+    padding: '0.2em',
     lineHeight: '20px',
   }),
   circle: css({
@@ -293,6 +293,5 @@ const styles = {
     width: '12px',
     height: '12px',
     marginRight: '5px',
-    marginTop: '0.1em',
   }),
 }
