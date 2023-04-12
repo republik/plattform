@@ -4,6 +4,7 @@ const screenshot = require('../lib/screenshot/chromium')
 const debug = require('debug')('assets:render')
 const crypto = require('crypto')
 const { ascending } = require('d3-array')
+const { Readable } = require('stream')
 
 const { AWS_S3_BUCKET } = process.env
 const cacheS3Path = `render-cache/`
@@ -66,7 +67,9 @@ module.exports = (server) => {
             .filter(Boolean)
             .join(' '),
         )
-        cacheResult.body.pipe(res)
+
+        const readableStream = Readable.fromWeb(cacheResult.body)
+        readableStream.pipe(res)
         return
       }
     }
