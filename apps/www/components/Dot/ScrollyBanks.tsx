@@ -173,9 +173,20 @@ export const Scrolly = () => {
         <Editorial.P>Zugegeben, das ist eine rhetorische Frage.</Editorial.P>
         <Editorial.P>
           Und es könnte mitunter der Verdacht aufkommen, dass hier ein Jahr
-          gewählt wurde, das für die CS besonders schlecht war. Wie sieht also
-          das Bild in einem Geschäftsjahr aus, das die CS mit schwarzen Zahlen
-          abgeschlossen hat?
+          gewählt wurde, das für die CS besonders schlecht war. Doch das Bild
+          ändert sich auch in jenen Jahren nicht, welche die CS mit schwarzen
+          Zahlen abgeschlossen hat. Man muss bis ins Jahr 2010 zurück, um einen
+          Durchschnittswert zu finden, der mit den kleineren Banken mithalten
+          kann.
+        </Editorial.P>
+        <Editorial.P>
+          Mit anderen Worten: Viele Jahre hat die CS einen Haufen Geld für die
+          angeblich besten Leute verschwendet.
+        </Editorial.P>
+        <Editorial.P>
+          Ein grosser Teil dieses Geldes ist in Form von Bonuszahlungen für
+          Kaderleute ausgegeben worden, die Risiken missachteten und persönliche
+          Bereicherung über beruflichen Erfolg stellten.
         </Editorial.P>
       </ScrollySlide>
     </div>
