@@ -113,7 +113,11 @@ type mutations {
     context: String!
   ): Boolean!
 
-  reportUser(userId: ID!, reason: String!): Boolean!
+  reportUser(
+    userId: ID!,
+    """Reason for reporting the user. Max 500 characters."""
+    reason: String!
+  ): Boolean!
 }
 
 type subscriptions {

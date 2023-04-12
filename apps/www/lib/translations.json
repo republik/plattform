@@ -1593,6 +1593,10 @@
       "value": "Beim Senden der Meldung ist ein Fehler aufgetreten."
     },
     {
+      "key": "profile/report/tooLong",
+      "value": "Sie können maximal {max} Zeichen eingeben.{br}Ihre Eingabe: {input}"
+    },
+    {
       "key": "profile/gender",
       "value": "Geschlecht"
     },

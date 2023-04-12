@@ -2523,6 +2523,10 @@
     {
       "key": "api/reportUser/userNotFound",
       "value": "Der gemeldete Benutzer konnte nicht gefunden werden."
+    },
+    {
+      "key": "api/reportUser/reasonTooLong",
+      "value": "Die Begründung ist zu lange. (Maximal {max} Zeichen)"
     }
   ]
 }

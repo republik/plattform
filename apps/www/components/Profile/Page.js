@@ -387,19 +387,31 @@ const LoadedProfile = (props) => {
     }
     if (reportReason.length === 0) {
       alert(t('profile/report/provideReason'))
-    } else {
-      try {
-        await reportUserMutation({
-          variables: {
-            userId: user.id,
-            reason: reportReason,
-          },
-        })
-        alert(t('profile/report/success'))
-      } catch (e) {
-        console.warn(e)
-        alert(t('profile/report/error'))
-      }
+      return
+    }
+    const maxLength = 500
+    if (reportReason.length > maxLength) {
+      alert(
+        t('profile/report/tooLong', {
+          max: maxLength,
+          input: reportReason.slice(0, maxLength) + '…',
+          br: '\n',
+        }),
+      )
+      return
+    }
+
+    try {
+      await reportUserMutation({
+        variables: {
+          userId: user.id,
+          reason: reportReason,
+        },
+      })
+      alert(t('profile/report/success'))
+    } catch (e) {
+      console.warn(e)
+      alert(t('profile/report/error'))
     }
   }
 
