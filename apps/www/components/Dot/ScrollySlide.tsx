@@ -51,7 +51,7 @@ const styles = {
     transition: TRANSITION,
     maxWidth: '43rem',
     margin: '0 auto',
-    marginTop: '5vh',
-    '&:first-of-type': { marginTop: '15vh' },
+    marginTop: '30vh',
+    // '&:first-of-type': { marginTop: '15vh' },
   }),
 }
