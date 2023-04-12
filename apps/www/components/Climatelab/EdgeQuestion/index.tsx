@@ -79,6 +79,7 @@ const getText = (node: Mdast): string => {
   if (node.type === 'link')
     return `<a href="${node.url}">${getText(node.children[0])}</a>`
   if (node.type === 'text') return node.value
+  if (node.type === 'emphasis') return `<em>${getText(node.children[0])}</em>`
   return ''
 }
 
