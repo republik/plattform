@@ -7,16 +7,13 @@ import { useMe } from '../../lib/context/MeContext'
 import useUpsertMediaProgress from './hooks/useUpsertMediaProgress'
 import { useMediaProgressLazyQuery } from './hooks/useMediaProgressQuery'
 
-type GetMediaProgress = (
-  {
-    mediaId,
-    durationMs,
-  }: Partial<{
-    mediaId: string
-    durationMs: number
-  }>,
-  forceLocalLookUp?: boolean,
-) => Promise<number | void>
+type GetMediaProgress = ({
+  mediaId,
+  durationMs,
+}: Partial<{
+  mediaId: string
+  durationMs: number
+}>) => Promise<number | void>
 
 type SaveMediaProgress = (
   mediaId: string,
@@ -66,13 +63,12 @@ const MediaProgressProvider = ({ children }) => {
   const [upsertMediaProgress] = useUpsertMediaProgress()
 
   const isTrackingAllowed = me && me.progressConsent === true
-  const isMember = me && me.roles.includes('member')
 
   const saveMediaProgressNotPlaying = useMemo(
     () =>
       debounce((mediaId, currentTime) => {
         // Fires on pause, on scrub, on end of video.
-        if (isTrackingAllowed && isMember) {
+        if (isTrackingAllowed) {
           return upsertMediaProgress({
             variables: { mediaId, secs: currentTime },
           })
@@ -80,7 +76,7 @@ const MediaProgressProvider = ({ children }) => {
           return setLocalMediaProgress({ mediaId, currentTime })
         }
       }, 300),
-    [isTrackingAllowed, isMember, upsertMediaProgress, setLocalMediaProgress],
+    [isTrackingAllowed, upsertMediaProgress, setLocalMediaProgress],
   )
 
   const saveMediaProgressWhilePlaying = useMemo(
@@ -88,7 +84,7 @@ const MediaProgressProvider = ({ children }) => {
       throttle(
         (mediaId, currentTime) => {
           // Fires every 5 seconds while playing.
-          if (isTrackingAllowed && isMember) {
+          if (isTrackingAllowed) {
             return upsertMediaProgress({
               variables: { mediaId, secs: currentTime },
             })
@@ -99,7 +95,7 @@ const MediaProgressProvider = ({ children }) => {
         5000,
         { trailing: true },
       ),
-    [isTrackingAllowed, isMember, upsertMediaProgress, setLocalMediaProgress],
+    [isTrackingAllowed, upsertMediaProgress, setLocalMediaProgress],
   )
 
   const saveMediaProgress: SaveMediaProgress = (
@@ -117,24 +113,17 @@ const MediaProgressProvider = ({ children }) => {
     }
   }
 
-  const getMediaProgress: GetMediaProgress = (
-    { mediaId, durationMs } = {},
-    forceLocalLookUp = false,
-  ) => {
+  const getMediaProgress: GetMediaProgress = ({ mediaId, durationMs } = {}) => {
     if (!mediaId) {
       return Promise.resolve()
     }
-    if (!forceLocalLookUp && isTrackingAllowed) {
+    if (isTrackingAllowed) {
       return (
         queryMediaProgress({
           variables: { mediaId },
         })
           .then(({ data: { mediaProgress } }) => {
             // mediaProgress can be null
-            // If so, check local storage as well.
-            if (mediaProgress === null) {
-              return getMediaProgress({ mediaId, durationMs }, true)
-            }
             const { secs } = mediaProgress || {}
             if (secs) {
               if (
