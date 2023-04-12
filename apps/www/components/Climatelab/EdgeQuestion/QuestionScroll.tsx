@@ -1,8 +1,9 @@
 import { renderMdast } from 'mdast-react-render'
 import { useRouter } from 'next/router'
-import React, { useMemo } from 'react'
+import React, { useMemo, useEffect, useRef } from 'react'
+import scrollIntoView from 'scroll-into-view'
 
-import { createArticleSchema, slug } from '@project-r/styleguide'
+import { createArticleSchema, slug, pxToRem } from '@project-r/styleguide'
 
 import { ASSETS_SERVER_BASE_URL, PUBLIC_BASE_URL } from '../../../lib/constants'
 import { cleanAsPath } from '../../../lib/utils/link'
@@ -17,6 +18,13 @@ import HeaderShare from '../shared/HeaderShare'
 import { PORTRAITS } from './config'
 import { Author, QuestionAnswer, ShareProps } from './index'
 
+type MetaProps = {
+  url: string
+  title: string
+  description: string
+  image: string
+}
+
 const Header: React.FC<{ author: Author }> = ({ author, children }) => {
   const customStyle = {
     maxWidth: 695,
@@ -27,6 +35,12 @@ const Header: React.FC<{ author: Author }> = ({ author, children }) => {
     paddingTop: 10,
     zIndex: 10,
   }
+
+  const customStylePicture = {
+    width: pxToRem(80),
+    height: pxToRem(80),
+  }
+
   return (
     <>
       {/*
@@ -38,10 +52,40 @@ const Header: React.FC<{ author: Author }> = ({ author, children }) => {
           profilePicture: PORTRAITS[slug(author.name)],
         }}
         customStyle={customStyle}
+        customStylePicture={customStylePicture}
       >
         {children}
       </SubmissionAuthor>
     </>
+  )
+}
+
+const Answer: React.FC<{
+  author: Author
+  meta: MetaProps
+  sharedAnswer?: QuestionAnswer
+  renderedContent: any
+}> = ({ author, meta, sharedAnswer, renderedContent }) => {
+  const authorSlug = slug(author.name)
+  const ref = useRef()
+  useEffect(() => {
+    if (sharedAnswer && sharedAnswer.author.name === author.name) {
+      scrollIntoView(ref.current, { align: { top: 0 } })
+    }
+  }, [])
+  return (
+    <div style={{ marginBottom: 40 }} ref={ref} className={authorSlug}>
+      <Header author={author}>
+        <HeaderShare
+          meta={{
+            ...meta,
+            url: `${cleanAsPath(meta.url)}?share=${authorSlug}`,
+          }}
+          noLabel
+        />
+      </Header>
+      {renderedContent}
+    </div>
   )
 }
 
@@ -53,7 +97,6 @@ const QuestionScroll: React.FC<{
   const router = useRouter()
   const { query } = router
   const answerId = query.share
-
   const urlObj = new URL(router.asPath, PUBLIC_BASE_URL)
   const url = urlObj.toString()
 
@@ -61,10 +104,15 @@ const QuestionScroll: React.FC<{
   shareImageUrlObj.searchParams.set('extract', share.extract)
   const shareImageUrl = shareImageUrlObj.toString()
 
-  const meta = {
+  const sharedAnswer =
+    answerId && answers.find((d) => slug(d.author.name) === answerId)
+  const meta: MetaProps = {
     url,
-    title: share.title, // TODO: integrate placeholder
-    description: share.description,
+    title: share.title,
+    description: share.description.replace(
+      '{name}',
+      sharedAnswer ? sharedAnswer.author.name : '',
+    ),
     image: `${ASSETS_SERVER_BASE_URL}/render?width=1200&height=1&url=${encodeURIComponent(
       shareImageUrl,
     )}`,
@@ -87,23 +135,15 @@ const QuestionScroll: React.FC<{
   return (
     <>
       {answerId && <Meta data={meta} />}
-      {answers.map(({ content, author }, idx) => {
-        const authorSlug = slug(author.name)
-        return (
-          <div style={{ marginBottom: 40 }} id={authorSlug} key={idx}>
-            <Header author={author}>
-              <HeaderShare
-                meta={{
-                  ...meta,
-                  url: `${cleanAsPath(meta.url)}?share=${authorSlug}`,
-                }}
-                noLabel
-              />
-            </Header>
-            {renderSchema(content)}
-          </div>
-        )
-      })}
+      {answers.map(({ content, author }, idx) => (
+        <Answer
+          key={idx}
+          author={author}
+          meta={meta}
+          renderedContent={renderSchema(content)}
+          sharedAnswer={sharedAnswer}
+        />
+      ))}
     </>
   )
 }
