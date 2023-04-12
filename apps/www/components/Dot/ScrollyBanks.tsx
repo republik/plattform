@@ -6,7 +6,7 @@ import { Editorial, useColorContext } from '@project-r/styleguide'
 
 import { ScrollySlide } from './ScrollySlide'
 import { ChapterIndicator } from './ChapterIndicator'
-import { StoryGraphic } from './StoryGraphicBanksV2'
+import { StoryGraphic } from './StoryGraphicBanks'
 
 export const Scrolly = () => {
   const [colorScheme] = useColorContext()

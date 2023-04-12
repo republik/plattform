@@ -74,6 +74,14 @@ const below34AnimationScale = scaleThreshold()
   .domain(BELOW_34_THRESHOLDS)
   .range(DELAY_TIMES)
 
+const below40AnimationScale = scaleThreshold()
+  .domain(BELOW_40_THRESHOLDS)
+  .range(DELAY_TIMES)
+
+const above40AnimationScale = scaleThreshold()
+  .domain(ABOVE_40_THRESHOLDS)
+  .range(DELAY_TIMES)
+
 const transferAnimationScale = scaleThreshold()
   .domain([1, 2, 3, 4, 5])
   .range(DELAY_TIMES)
@@ -121,20 +129,6 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
       initial='step0'
       animate={getVariant(highlighted)}
     >
-      {/* <defs>
-        <marker
-          id='arrowhead'
-          viewBox='0 0 10 10'
-          refX='3'
-          refY='5'
-          markerWidth='6'
-          markerHeight='6'
-          orient='auto'
-        >
-          <path d='M 0 0 L 10 5 L 0 10 z' style={{ fill: 'currentcolor' }} />
-        </marker>
-      </defs> */}
-
       {/* second age group, 30 to 34 */}
       <motion.g
         variants={defineVariants(
@@ -179,15 +173,24 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                       i >= 36
                         ? COLORS[key].default
                         : COLORS[key][above40ColorScale(i)],
-                    transition: { duration: 0.5, delay: getDelayAbove40(i) },
+                    transition: {
+                      duration: 0.5,
+                      delay: above40AnimationScale(i),
+                    },
                   },
                   step4: {
                     y: d.cy,
                     x: d.cx,
                     r: i >= 36 ? SMALL_RADIUS : d.r,
                     opacity: 1,
-                    fill: i >= 36 ? COLORS[key].default : COLORS[key].oneBright,
-                    transition: { duration: 0.5, delay: getDelayAbove40(i) },
+                    fill:
+                      i >= 36
+                        ? COLORS[key].default
+                        : COLORS[key][above40ColorScale(i)],
+                    transition: {
+                      duration: 0.5,
+                      delay: above40AnimationScale(i),
+                    },
                   },
                 },
               )}
@@ -288,7 +291,10 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                       i >= 68
                         ? COLORS[key].default
                         : COLORS[key][below40ColorScale(i)],
-                    transition: { duration: 0.5, delay: getDelayBelow40(i) },
+                    transition: {
+                      duration: 0.5,
+                      delay: below40AnimationScale(i),
+                    },
                   },
                   step3: {
                     y: d.cy,
@@ -296,7 +302,9 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                     r: i >= 68 ? SMALL_RADIUS : d.r,
                     opacity: 0,
                     fill:
-                      i >= 68 ? COLORS[key].default : COLORS[key].threeBright,
+                      i >= 68
+                        ? COLORS[key].default
+                        : COLORS[key][below40ColorScale(i)],
                   },
                   step4: {
                     y: d.cy,
@@ -304,7 +312,9 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                     r: i >= 68 ? SMALL_RADIUS : d.r,
                     opacity: 1,
                     fill:
-                      i >= 68 ? COLORS[key].default : COLORS[key].threeBright,
+                      i >= 68
+                        ? COLORS[key].default
+                        : COLORS[key][below40ColorScale(i)],
                     transition: { duration: 0.5 },
                   },
                 },
@@ -396,19 +406,30 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                     x: d.cx,
                     r: i >= 82 ? SMALL_RADIUS : d.r,
                     opacity: 0,
+                    fill:
+                      i >= 82
+                        ? COLORS[key].default
+                        : COLORS[key][below34ColorScale(i)],
                   },
                   step3: {
                     y: d.cy,
                     x: d.cx,
                     r: i >= 82 ? SMALL_RADIUS : d.r,
                     opacity: 0,
+                    fill:
+                      i >= 82
+                        ? COLORS[key].default
+                        : COLORS[key][below34ColorScale(i)],
                   },
                   step4: {
                     y: d.cy,
                     x: d.cx,
                     r: i >= 82 ? SMALL_RADIUS : d.r,
                     opacity: 1,
-
+                    fill:
+                      i >= 82
+                        ? COLORS[key].default
+                        : COLORS[key][below34ColorScale(i)],
                     transition: { duration: 0.5 },
                   },
                 },
