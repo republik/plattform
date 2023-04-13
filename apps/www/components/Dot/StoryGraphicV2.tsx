@@ -244,7 +244,7 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
             eine
           </tspan>
           <tspan x='0' dy='30'>
-            Schwangerschaft steigt bei mehreren Transfers.
+            Schwangerschaft steigt bei mehreren Versuchen.
           </tspan>
         </motion.text>
 
