@@ -1,10 +1,10 @@
-const { Roles } = require('@orbiting/backend-modules-auth')
+const { ensureSignedIn } = require('@orbiting/backend-modules-auth')
 const Collection = require('../../lib/Collection')
 
 module.exports = {
   userProgress({ mediaId }, args, context) {
-    const { user: me } = context
-    if (!Roles.userIsInRoles(me, ['member']) || !mediaId) {
+    const { user: me, req } = context
+    if (!ensureSignedIn(req) || !mediaId) {
       return
     }
     return Collection.getMediaProgressItem(

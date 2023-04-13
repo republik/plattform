@@ -1,4 +1,4 @@
-const { Roles } = require('@orbiting/backend-modules-auth')
+const { Roles, ensureSignedIn } = require('@orbiting/backend-modules-auth')
 const Collection = require('../../lib/Collection')
 
 module.exports = {
@@ -30,8 +30,8 @@ module.exports = {
     )
   },
   userProgress({ meta: { repoId } }, args, context) {
-    const { user: me } = context
-    if (!Roles.userIsInRoles(me, ['member']) || !repoId) {
+    const { user: me, req } = context
+    if (!ensureSignedIn(req) || !repoId) {
       return
     }
     return Collection.getDocumentProgressItem(
