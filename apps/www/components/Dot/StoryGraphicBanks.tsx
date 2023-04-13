@@ -95,7 +95,7 @@ const getCostPositionWithCS = (bank) =>
 const getBenefitPositionWithCS = (bank) =>
   chartRange[1] - costScaleAll(getBankById(bankingPositionData, bank).benefit)
 
-const RADIUS = 14
+const RADIUS = 9
 const PADDING_LEFT_CHART = 100
 const WIDTH = 930
 const CENTER = WIDTH / 2
@@ -461,8 +461,8 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
             {
               y: getCostPosition('UBS'),
               x: CENTER,
-              opacity: 0,
-              r: 0,
+              opacity: 1,
+              r: RADIUS,
             },
             {
               step1: {
@@ -541,8 +541,8 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
             {
               y: getCostPosition('Credit Suisse'),
               x: CENTER,
-              opacity: 0,
-              r: 0,
+              opacity: 1,
+              r: RADIUS,
             },
             {
               step1: {
@@ -846,7 +846,7 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                 y: getCostPosition('Credit Suisse'),
                 x: CENTER - 25,
                 opacity: 1,
-                transition: { duration: 0.5, delay: 1 },
+                transition: { duration: 0.5 },
                 textAnchor: 'end',
               },
               step2: {
@@ -1052,7 +1052,7 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                 y: getCostPosition('Credit Suisse'),
                 x: CENTER + 25,
                 opacity: 1,
-                transition: { duration: 0.5, delay: 1 },
+                transition: { duration: 0.5 },
                 textAnchor: 'start',
               },
               step2: {
