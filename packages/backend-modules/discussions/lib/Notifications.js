@@ -206,6 +206,7 @@ const submitComment = async (comment, discussion, context, testUsers) => {
       subjectParams,
       isTopLevelComment,
       icon,
+      commentTag,
     } = await getCommentInfo(comment, displayAuthor, discussion, context)
 
     await sendNotification(
@@ -261,6 +262,10 @@ const submitComment = async (comment, discussion, context, testUsers) => {
               {
                 name: 'DISCUSSION_MUTE_URL',
                 content: muteUrl,
+              },
+              {
+                name: 'COMMENT_TAG',
+                content: commentTag,
               },
               {
                 name: 'CONTENT_HTML',
