@@ -15,16 +15,16 @@ export const DotAppPrototyp1 = () => {
       <Center>
         <div>
           <Editorial.Headline>
-            Die Wirksamkeit von IVF wird überschätzt
+            Künstliche Befruchtung wird überschätzt
           </Editorial.Headline>
           <Editorial.Lead>
-            Künstliche Befruchtung bedeutet grosse Hoffnung für Paare mit
-            unerfülltem Kinderwunsch. Aber bei Frauen ab Mitte 30 wird eine
-            Schwangerschaft auch mit In-Vitro-Fertilisation immer
+            Die Befruchtung in der Petrischale bedeutet grosse Hoffnung für
+            Paare mit unerfülltem Kinderwunsch. Aber bei Frauen ab Mitte 30 wird
+            eine Schwangerschaft auch mit In-Vitro-Fertilisation
             unwahrscheinlicher.
           </Editorial.Lead>
           <p className='byline'>
-            Von Karen Merkel und Felix Michel, 05.04.2023
+            Von Karen Merkel und Felix Michel, 13.04.2023
           </p>
         </div>
         <Scrolly />
@@ -33,13 +33,19 @@ export const DotAppPrototyp1 = () => {
             <InfoBoxTitle>Zu den Daten</InfoBoxTitle>
 
             <InfoBoxText>
-              Die Grafik umfasst alle In-vitro-Befruchtungen in Deutschland aus
-              den Jahren von 2018 bis 2020. Enthalten sind die klassischen
-              IVF-Verfahren, also diejenigen, bei denen die Eizelle und Spermien
-              in der Petrischale zusammengebracht werden. Ausserdem alle
-              Befruchtungen, bei denen gezielt ein Spermium in eine Eizelle
-              gepflanzt wurde (Intrazytoplasmatische Spermieninjektion oder
-              ISCI).
+              Diese Grafik basiert auf den Daten, die das Deutsche IVF-Register
+              im Jahrbuch 2021 publiziert hat. Das DIR hat zum zweiten Mal die
+              kumulative Schwangerschaftsrate bei allen In-vitro-Fertilisationen
+              in Deutschland über zwei Jahre berechnet (2018-2020). Diese zeigt,
+              wie viele Schwangerschaften nach einer oder mehreren IVF
+              entstanden sind.
+              <br />
+              <br />
+              Enthalten sind dabei die klassischen IVF-Verfahren, also
+              diejenigen, bei denen die Eizelle und Spermien in der Petrischale
+              zusammengebracht werden. Ausserdem alle Befruchtungen, bei denen
+              gezielt ein Spermium in eine Eizelle gepflanzt wurde
+              (Intrazytoplasmatische Spermieninjektion oder ISCI).
               <br />
               <br />
               Ausserdem ist relevant, dass hier die künstlichen Befruchtungen

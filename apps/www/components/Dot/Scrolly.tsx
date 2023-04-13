@@ -76,8 +76,8 @@ export const Scrolly = () => {
           Es sei darum gesagt: Das Prozedere einer In-vitro-Fertilisation (IVF)
           ist auch für Frauen bis Mitte 30 strapaziös. Es stimmt aber, dass die
           Mehrheit von ihnen mit grosser Wahrscheinlichkeit nach einigen
-          IVF-Transfers schwanger wird. Ähnlich wie bei der natürlichen
-          Fruchtbarkeit kumulieren die Chancen über mehrere Zyklen.
+          Embryonentransfers schwanger wird. Ähnlich wie bei der natürlichen
+          Fruchtbarkeit kumulieren die Chancen über mehrere Zyklen.{' '}
         </Editorial.P>
         <Editorial.P>
           Gesunde Paare ohne Einschränkungen der Fruchtbarkeit haben im Alter
@@ -87,11 +87,15 @@ export const Scrolly = () => {
         </Editorial.P>
         <Editorial.P>
           Mit IVF sieht es so ähnlich aus: Nach dem ersten Transfer sind laut
-          Statistik gut 40 von 100 Frauen schwanger in der Altersgruppe bis 34
-          Jahre. Die Zahlen steigen schnell. Nach dem dritten Versuch konnten
-          sich bereits gut zwei Drittel über einen positiven Test freuen. Und
-          nach fünf oder mehr IVF-Transfers erwartet die grosse Mehrheit der
-          Frauen bis Mitte 30 ein Kind: Dann hat es bei
+          Statistik gut
+          <Highlight colorKey={key} color='one100'>
+            40 von 100
+          </Highlight>
+          Frauen schwanger in der Altersgruppe bis 34 Jahre. Die Zahlen steigen
+          schnell. Nach dem dritten Versuch konnten sich bereits gut zwei
+          Drittel über einen positiven Test freuen. Und nach fünf oder mehr
+          IVF-Transfers erwartet die grosse Mehrheit von der Frauen bis Mitte 30
+          ein Kind: Dann hat es bei
           <Highlight colorKey={key} color='one500'>
             82 von 100
           </Highlight>
@@ -108,10 +112,10 @@ export const Scrolly = () => {
           Ende 30 wird es schwieriger
         </Editorial.Subhead>
         <Editorial.P>
-          Es ist absurd: Frauen sorgen sich oft Jahrzehnte darum, wie sie am
+          Es ist absurd, Frauen sorgen sich oft Jahrzehnte darum, wie sie am
           sichersten nicht schwanger werden. Und dann läuft es für einen Teil
           von ihnen so: Sie entscheiden sich gemeinsam mit ihrem Partner, ein
-          Kind zu bekommen. Und es passiert: nichts. Einen Monat lang. Drei.
+          Kind zu bekommen. Und es passiert nichts. Einen Monat lang. Drei.
           Zwölf.
         </Editorial.P>
 
@@ -139,6 +143,7 @@ export const Scrolly = () => {
           jede Zweite. Und nach fünf oder mehr Transfers sind zwei Drittel der
           Kinderwunsch-Patientinnen schwanger.
         </Editorial.P>
+        <Editorial.P>Das ist aber immer noch die Mehrheit.</Editorial.P>
       </ScrollySlide>
 
       <ScrollySlide
@@ -169,7 +174,7 @@ export const Scrolly = () => {
         <Editorial.P>
           Wer Monat für Monat zittern und hadern musste, für den ist ein
           positiver Schwangerschaftstest ein Geschenk des Himmels. Ein konkretes
-          Wesen, das entsteht, wo vorher immer nur nichts war. Hoffen dürfen.
+          Wesen, das entsteht, wo vorher immer nur nichts war. Hoffen dürfen.{' '}
         </Editorial.P>
         <Editorial.P>
           Dies bleibt Frauen jenseits der 40 und ihren Partnern auch mit allen
@@ -178,7 +183,7 @@ export const Scrolly = () => {
         </Editorial.P>
         <Editorial.P>
           Bei Frauen ab 40 erwarten nach dem ersten IVF-Transfer 18 von 100
-          Frauen ein Kind. Nach fünf Transfers oder mehr steigt diese Zahl
+          Frauen ein Kind. Nach fünf Transfers oder mehr steigt diese Zahl auf
           <Highlight colorKey={key} color='three500'>
             35 von 100
           </Highlight>
@@ -191,14 +196,14 @@ export const Scrolly = () => {
           Jahren ist es jede Zweite.
         </Editorial.P>
         <Editorial.P>
-          Was bleibt, ist Akzeptanz. Oder die unerbittliche Hoffnung, die so gut
-          zu verstehen ist.
+          Was bleibt, ist Akzeptanz und Abschied vom Kinderwunsch. Oder die
+          unerbittliche Hoffnung, die so gut zu verstehen ist.
         </Editorial.P>
         <Editorial.P>
-          In Deutschland haben über einen Zeitraum von vier Jahren 513 Frauen im
-          Alter von 45 eine IVF versucht.
+          In Deutschland haben über einen Zeitraum von vier Jahren knapp 2500
+          Frauen im Alter von 45 eine IVF oder eine ICSI versucht.
         </Editorial.P>
-        <Editorial.P>15 von ihnen sind heute Mutter.</Editorial.P>
+        <Editorial.P>65 von ihnen sind heute Mutter.</Editorial.P>
       </ScrollySlide>
 
       <ScrollySlide

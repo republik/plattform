@@ -98,31 +98,13 @@ const above40ColorScale = scaleThreshold()
   .domain(ABOVE_40_THRESHOLDS)
   .range(['three100', 'three200', 'three300', 'three400', 'three500'])
 
-const getDelayBelow40 = (index: number) => {
-  if (index < 34) return 1
-  if (index >= 34 && index < 51) return 1.5
-  if (index >= 51 && index < 60) return 2
-  if (index >= 60 && index < 64) return 2.5
-  if (index >= 64 && index < 68) return 3
-  return 0
-}
-
-const getDelayAbove40 = (index: number) => {
-  if (index < 18) return 1
-  if (index > 17 && index < 27) return 1.5
-  if (index > 26 && index < 31) return 2
-  if (index > 30 && index < 34) return 2.5
-  if (index > 33 && index < 36) return 3
-  return 0
-}
-
 export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
   const [colorScheme] = useColorContext()
   const key = useResolvedColorSchemeKey()
 
   return (
     <motion.svg
-      viewBox='0 0 930 360'
+      viewBox='0 0 930 400'
       preserveAspectRatio='xMidYMid meet'
       style={{ width: '100%', height: '100%' }}
       {...colorScheme.set('background-color', 'transparentBackground')}
@@ -133,12 +115,12 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
       <motion.g
         variants={defineVariants(
           {
-            x: CENTER - OFFSET,
+            x: OFFSET,
             y: PADDING_TOP,
           },
           {
             step3: {
-              x: CENTER - OFFSET,
+              x: OFFSET,
               y: PADDING_TOP,
               transition: { duration: 0.5 },
             },
@@ -216,7 +198,6 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
               },
             },
           )}
-          dy='.35em'
           transition={{ duration: 0.5 }}
         >
           über 40 Jahre
@@ -225,49 +206,48 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
       <motion.g
         variants={defineVariants(
           {
-            x: CENTER - OFFSET,
+            x: OFFSET,
             y: PADDING_TOP,
           },
-          {},
+          {
+            step4: {
+              x: CENTER - OFFSET,
+              y: PADDING_TOP,
+            },
+          },
         )}
       >
         <motion.text
           {...styles.label}
           {...colorScheme.set('fill', 'text')}
-          style={{ textAnchor: 'middle' }}
           variants={defineVariants(
-            { x: OFFSET, y: -50, opacity: 0 },
+            { x: 0, y: -80, opacity: 0 },
             {
               step1: {
-                x: OFFSET,
-                y: -50,
+                x: 0,
+                y: -80,
                 opacity: 1,
                 transition: { duration: 0.5 },
               },
               step2: {
-                x: OFFSET,
-                y: -50,
-                opacity: 1,
+                x: 0,
+                y: -80,
+                opacity: 0,
                 transition: { duration: 0.5 },
-              },
-              step3: {
-                x: OFFSET,
-                y: -50,
-                opacity: 1,
-                transition: { duration: 0.5 },
-              },
-              step4: {
-                x: OFFSET,
-                y: -50,
-                opacity: 1,
               },
             },
           )}
-          dy='.35em'
           transition={{ duration: 0.5 }}
         >
-          kumulative Schwangerschaftsrate
+          <tspan>
+            Befruchtung per In-vitro-Fertilisation: Die Wahrscheinlichkeit auf
+            eine
+          </tspan>
+          <tspan x='0' dy='30'>
+            Schwangerschaft steigt bei mehreren Transfers.
+          </tspan>
         </motion.text>
+
         {dataSet.map((d, i) => {
           return (
             <motion.circle
@@ -347,7 +327,6 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
               },
             },
           )}
-          dy='.35em'
           transition={{ duration: 0.5 }}
         >
           35–39 Jahre
@@ -356,12 +335,12 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
       <motion.g
         variants={defineVariants(
           {
-            x: CENTER - OFFSET,
+            x: OFFSET,
             y: PADDING_TOP,
           },
           {
             step3: {
-              x: CENTER - OFFSET,
+              x: OFFSET,
               y: PADDING_TOP,
               transition: { duration: 0.5 },
             },
@@ -441,7 +420,7 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
           {...styles.label}
           {...colorScheme.set('fill', 'text')}
           variants={defineVariants(
-            { x: 5, y: 225, opacity: 0 },
+            { opacity: 0, x: 5, y: 225 },
             {
               step1: {
                 x: 5,
@@ -454,6 +433,28 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                 y: 225,
                 opacity: 0,
               },
+            },
+          )}
+        >
+          Alter der Frau:
+        </motion.text>
+        <motion.text
+          {...styles.label}
+          {...colorScheme.set('fill', 'text')}
+          variants={defineVariants(
+            { x: 160, y: 225, opacity: 0 },
+            {
+              step1: {
+                x: 160,
+                y: 225,
+                opacity: 1,
+                transition: { duration: 0.5 },
+              },
+              step2: {
+                x: 160,
+                y: 225,
+                opacity: 0,
+              },
               step3: {
                 x: 5,
                 y: 225,
@@ -463,11 +464,11 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                 x: 5,
                 y: 225,
                 opacity: 1,
+
                 transition: { duration: 0.5, delay: 0.5 },
               },
             },
           )}
-          dy='.35em'
           transition={{ duration: 0.5 }}
         >
           30–34 Jahre
