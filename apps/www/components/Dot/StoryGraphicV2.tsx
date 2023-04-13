@@ -104,7 +104,7 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
 
   return (
     <motion.svg
-      viewBox='0 0 930 400'
+      viewBox='0 0 930 420'
       preserveAspectRatio='xMidYMid meet'
       style={{ width: '100%', height: '100%' }}
       {...colorScheme.set('background-color', 'transparentBackground')}
