@@ -4,7 +4,6 @@ import {
   useCallback,
   useContext,
   useEffect,
-  useMemo,
   useState,
 } from 'react'
 import NextHead from 'next/head'
@@ -18,6 +17,11 @@ const HAS_ACTIVE_MEMBERSHIP_STORAGE_KEY = 'me.hasActiveMembership'
 
 const ME_PORTRAIT_ATTRIBUTE = 'data-me-portrait'
 export const ME_PORTRAIT_STORAGE_KEY = 'me.portraitOrInitials'
+
+const IS_CLIMATELAB_MEMBER_ATTRIBUTE = 'data-is-climatelab-member'
+const IS_CLIMATELAB_MEMBER_STORAGE_KEY = 'me.isClimatelabMember'
+
+const CLIMATELAB_ONLY_ITEM_ATTRIBUTE = 'data-climatelab-only'
 
 // Rule to hide elements while a statically generated page is fetching the active-user
 css.global(`[${ME_PORTRAIT_ATTRIBUTE}="true"] [data-hide-if-me="true"]`, {
@@ -49,6 +53,21 @@ css.global(
     display: 'block',
   },
 )
+
+// Climate-lab global styles
+
+css.global(
+  `[${IS_CLIMATELAB_MEMBER_ATTRIBUTE}="true"] [${CLIMATELAB_ONLY_ITEM_ATTRIBUTE}="true"]`,
+  {
+    display: 'block',
+  },
+)
+
+// Hide climate-lab only items for non-climate-lab members
+
+css.global(`[${CLIMATELAB_ONLY_ITEM_ATTRIBUTE}="true"]`, {
+  display: 'none',
+})
 
 export type MeObjectType = {
   id: string
@@ -88,6 +107,7 @@ type MeContextValues = {
   hasActiveMembership: boolean
   hasAccess: boolean
   isEditor: boolean
+  isClimateLabMember: boolean
 }
 
 const MeContext = createContext<MeContextValues>({} as MeContextValues)
@@ -108,6 +128,7 @@ const MeContextProvider = ({ children, assumeAccess = false }: Props) => {
 
   const me = data?.me
   const isMember = checkRoles(me, ['member'])
+  const isClimateLabMember = checkRoles(me, ['climate'])
   const hasActiveMembership = !!me?.activeMembership
   const portraitOrInitials = me ? me.portrait ?? getInitials(me) : false
 
@@ -148,6 +169,22 @@ const MeContextProvider = ({ children, assumeAccess = false }: Props) => {
     } catch (e) {}
   }, [loading, portraitOrInitials, hasActiveMembership])
 
+  useEffect(() => {
+    try {
+      if (loading) return
+      if (isClimateLabMember) {
+        localStorage.setItem(IS_CLIMATELAB_MEMBER_STORAGE_KEY, 'true')
+        document.documentElement.setAttribute(
+          IS_CLIMATELAB_MEMBER_ATTRIBUTE,
+          'true',
+        )
+      } else {
+        localStorage.setItem(IS_CLIMATELAB_MEMBER_STORAGE_KEY, 'false')
+        document.documentElement.removeAttribute(IS_CLIMATELAB_MEMBER_ATTRIBUTE)
+      }
+    } catch (e) {}
+  }, [isClimateLabMember, loading])
+
   return (
     <MeContext.Provider
       value={{
@@ -158,6 +195,7 @@ const MeContextProvider = ({ children, assumeAccess = false }: Props) => {
         hasActiveMembership,
         hasAccess: !data && assumeAccess ? assumeAccess : isMember,
         isEditor: checkRoles(me, ['editor']),
+        isClimateLabMember,
       }}
     >
       <NextHead>
@@ -165,12 +203,15 @@ const MeContextProvider = ({ children, assumeAccess = false }: Props) => {
           dangerouslySetInnerHTML={{
             __html: [
               'try{',
-              `var value = localStorage.getItem("${HAS_ACTIVE_MEMBERSHIP_STORAGE_KEY}");`,
-              `if (value && value === "true")`,
-              `document.documentElement.setAttribute("${HAS_ACTIVE_MEMBERSHIP_ATTRIBUTE}", value);`,
+              `var isMember = localStorage.getItem("${HAS_ACTIVE_MEMBERSHIP_STORAGE_KEY}");`,
+              `if (isMember === "true")`,
+              `document.documentElement.setAttribute("${HAS_ACTIVE_MEMBERSHIP_ATTRIBUTE}", isMember);`,
               `if (localStorage.getItem("${ME_PORTRAIT_STORAGE_KEY}"))`,
               `document.documentElement.setAttribute("${ME_PORTRAIT_ATTRIBUTE}", "true");`,
-              '} catch(e) {}',
+              `var isClimateLabMember = localStorage.getItem("${IS_CLIMATELAB_MEMBER_STORAGE_KEY}");`,
+              `if (isClimateLabMember === "true")`,
+              `document.documentElement.setAttribute("${IS_CLIMATELAB_MEMBER_ATTRIBUTE}", isClimateLabMember); `,
+              '} catch(e) {console.error(e)}',
             ].join(''),
           }}
         />
