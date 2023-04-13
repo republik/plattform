@@ -4,7 +4,7 @@ import { visit } from 'unist-util-visit'
 import { mdxElement, mdxImport } from './unist-mdx-element.mjs'
 
 const getIdentifier = (filePath) => {
-  return filePath.replace(/(\/|\\|\.)/g, '_')
+  return filePath.replace(/[^a-z0-9]/gi, '_')
 }
 
 export const rehypeComponentDemo = () => (tree) => {
@@ -57,8 +57,6 @@ export const rehypeComponentDemo = () => (tree) => {
             mdxElement({
               name: 'pre',
               props: {
-                // cssLib: lib,
-                title: 'Hero',
                 file: filePath,
                 syntax,
                 source,
@@ -68,7 +66,7 @@ export const rehypeComponentDemo = () => (tree) => {
                   name: 'code',
                   props: {
                     // Recreate the language class for syntax highlighting
-                    className: [`language-${'tsx'}`],
+                    className: [`language-${syntax}`],
                   },
                   children: [
                     {
