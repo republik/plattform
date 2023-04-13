@@ -176,29 +176,11 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
               x2: CENTER,
               y2: '0',
               pathLength: 1,
+              opacity: 1,
+              strokeWidth: '3px',
+              stroke: NEW_COLORS[key].default,
             },
             {
-              step1: {
-                x1: CENTER,
-                y1: chartRange[1],
-                x2: CENTER,
-                y2: '0',
-                stroke: NEW_COLORS[key].default,
-                strokeWidth: '3px',
-                opacity: 1,
-                pathLength: 1,
-              },
-              step2: {
-                x1: CENTER,
-                y1: chartRange[1],
-                x2: CENTER,
-                y2: '0',
-                stroke: NEW_COLORS[key].default,
-                strokeWidth: '3px',
-                opacity: 1,
-                pathLength: 1,
-                transition: { duration: 0.5, delay: 1 },
-              },
               step3: {
                 x1: CENTER - PADDING_LEFT_CHART,
                 y1: chartRange[1],
@@ -463,6 +445,7 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
               x: CENTER,
               opacity: 1,
               r: RADIUS,
+              fill: NEW_COLORS[key].one,
             },
             {
               step1: {
@@ -543,6 +526,7 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
               x: CENTER,
               opacity: 1,
               r: RADIUS,
+              fill: NEW_COLORS[key].two,
             },
             {
               step1: {
