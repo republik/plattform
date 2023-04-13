@@ -313,11 +313,11 @@ module.exports = async (_, args, context) => {
     }
 
     try {
-      const options = { prefix: `User:${sourceUserId}` }
-      await cache(options, { redis }).invalidate()
+      await cache({ prefix: `User:${sourceUserId}` }, { redis }).invalidate()
+      await cache({ prefix: `User:${targetUserId}` }, { redis }).invalidate()
     } catch (_e) {
       logger.error(
-        'failed to clear user cache for source user in mergeUsers',
+        'failed to clear user cache for source and/or target user in mergeUsers',
         _e,
       )
     }
