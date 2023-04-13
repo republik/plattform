@@ -434,7 +434,7 @@
     },
     {
       "key": "marketing/page/reasons/3/text",
-      "value": "Die Republik wird finanziert durch ihre rund 27’000 Abonnentinnen. Wir gehören niemandem – aber jedem unserer Mitglieder ein bisschen."
+      "value": "Die Republik wird finanziert durch ihre rund 29’000 Abonnentinnen. Wir gehören niemandem – aber jedem unserer Mitglieder ein bisschen."
     },
     {
       "key": "marketing/page/vision/headline",
@@ -1571,6 +1571,30 @@
     {
       "key": "profile/portrait/empty",
       "value": "Sie müssen ein Porträtbild hochladen"
+    },
+    {
+      "key": "profile/report/label",
+      "value": "Benutzer melden"
+    },
+    {
+      "key": "profile/report/confirm",
+      "value": "Sind Sie sicher, dass dieser Benutzer gegen die Etikette verstossen hat und Sie die Moderation herbeirufen möchten? Nennen Sie bitte den Grund für diese Meldung."
+    },
+    {
+      "key": "profile/report/provideReason",
+      "value": "Bitte geben Sie einen Grund an, warum Sie diesen Benutzer melden möchten."
+    },
+    {
+      "key": "profile/report/success",
+      "value": "Wir haben Ihre Meldung erhalten."
+    },
+    {
+      "key": "profile/report/error",
+      "value": "Beim Senden der Meldung ist ein Fehler aufgetreten."
+    },
+    {
+      "key": "profile/report/tooLong",
+      "value": "Sie können maximal {max} Zeichen eingeben.{br}Ihre Eingabe: {input}"
     },
     {
       "key": "profile/gender",
@@ -7253,7 +7277,7 @@
     },
     {
       "key": "article/payNote/220404-v1/before",
-      "value": "Journalismus kostet. Dass Sie diesen Beitrag trotzdem lesen können, verdanken Sie den über 27'000 Leserinnen, die die Republik schon finanzieren. Wenn auch Sie unabhängigen Journalismus möglich machen wollen: Kommen Sie an Bord!"
+      "value": "Journalismus kostet. Dass Sie diesen Beitrag trotzdem lesen können, verdanken Sie den rund 29’000 Leserinnen, die die Republik schon finanzieren. Wenn auch Sie unabhängigen Journalismus möglich machen wollen: Kommen Sie an Bord!"
     },
     {
       "key": "article/payNote/220404-v1/after",
@@ -7273,7 +7297,7 @@
     },
     {
       "key": "article/tryNote/220404-v1/after",
-      "value": "Über 27'000 Menschen machen die Republik heute schon möglich. Lernen Sie uns jetzt auch kennen – 21 Tage lang, kostenlos und unverbindlich:"
+      "value": "Rund 29’000 Menschen machen die Republik heute schon möglich. Lernen Sie uns jetzt auch kennen – 21 Tage lang, kostenlos und unverbindlich:"
     },
     {
       "key": "article/tryNote/220404-v2/before",
@@ -7829,11 +7853,7 @@
     },
     {
       "key": "ClimateLandingPage/content/heading1",
-      "value": "Die Klimakrise ist hier. {br}Die Lage ist ernst."
-    },
-    {
-      "key": "ClimateLandingPage/content/callToAction",
-      "value": "Was tun?"
+      "value": "Die Klimakrise ist{nbsp}hier.{br}Die Lage ist ernst.{br}Was{nbsp}tun?"
     },
     {
       "key": "ClimateLandingPage/content/paragraph1",
@@ -7841,7 +7861,19 @@
     },
     {
       "key": "ClimateLandingPage/content/paragraph2",
-      "value": "Darum starten wir das Klimalabor. Einen Ort für Austausch und Experimente. Um gemeinsam herauszufinden, was das ist: Journalismus, der uns in der Klimakrise wirklich weiterbringt."
+      "value": "Darum haben wir das Klimalabor gestartet. Einen Ort für Austausch und Experimente. Gemeinsam wollen wir herausfinden: Wie bringt uns Journalismus in der Klimakrise wirklich weiter?"
+    },
+    {
+      "key": "ClimateLandingPage/content/paragraph3",
+      "value": "Melden Sie sich an, um sich einzubringen, an unseren {eventsLink} teilzunehmen und um nichts zu verpassen, was wir zur Klimakrise schreiben."
+    },
+    {
+      "key": "ClimateLandingPage/content/eventsLinkText",
+      "value": "Veranstaltungen"
+    },
+    {
+      "key": "ClimateLandingPage/content/eventsLinkHref",
+      "value": "https://tally.so/r/mRxbdd"
     },
     {
       "key": "ClimateLandingPage/content/counterText",
@@ -7857,7 +7889,11 @@
     },
     {
       "key": "ClimateTeaser/content/text1",
-      "value": "Die Klimakrise ist hier. {br1}Die Lage ist ernst. {br2}Was tun?"
+      "value": "Die Klimakrise ist{nbsp}hier.{br}Die Lage ist ernst.{br}Was{nbsp}tun?"
+    },
+    {
+      "key": "ClimateTeaser/content/text2",
+      "value": "Das Klimalabor der Republik ist ein Ort für Austausch und Experimente. Gemeinsam wollen wir herausfinden: Wie bringt uns Journalismus in der Klimakrise wirklich weiter?"
     },
     {
       "key": "ClimateTeaser/content/buttonAction",

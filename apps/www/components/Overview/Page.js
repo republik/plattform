@@ -30,7 +30,6 @@ const knownYears = {
   2020: { path: '/2020' },
   2021: { path: '/2021' },
   2022: { path: '/2022' },
-  2023: { path: '/' },
 }
 
 const getAll = gql`

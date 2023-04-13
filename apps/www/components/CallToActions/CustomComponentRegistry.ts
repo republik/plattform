@@ -5,12 +5,13 @@ import { CATComponentBaseProps } from './CustomComponentBase'
 // This is a registry of the available custom CTA components.
 // The components are dynamically imported to avoid bloating the main bundle.
 const customComponentsRegistry = {
-  futureCampaign: dynamic(
-    () => import('./customComponents/FutureCampaignBanner'),
-    {
-      ssr: false,
-    },
-  ),
+  // ==== Below are examples of how to add custom components ====
+  // futureCampaign: dynamic(
+  //   () => import('./customComponents/FutureCampaignBanner'),
+  //   {
+  //     ssr: false,
+  //   },
+  // ),
 }
 
 /**

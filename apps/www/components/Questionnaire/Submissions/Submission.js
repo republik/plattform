@@ -59,7 +59,7 @@ export const styles = {
     alignSelf: 'stretch',
     display: 'flex',
     flexDirection: 'column',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     flexGrow: 1,
     minWidth: 0,
   }),
@@ -98,6 +98,7 @@ export const SubmissionAuthor = ({
   children,
   isHighlighted,
   customStyle = {},
+  customStylePicture = {},
 }) => {
   const { t } = useTranslation()
   const [colorScheme] = useColorContext()
@@ -115,6 +116,7 @@ export const SubmissionAuthor = ({
       {displayAuthor.profilePicture && (
         <img
           {...styles.headerPicture}
+          style={customStylePicture}
           src={displayAuthor.profilePicture}
           alt=''
         />
