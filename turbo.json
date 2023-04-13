@@ -65,10 +65,6 @@
     "test": {
       "outputs": [
         "coverage/**"
-      ],
-      "dependsOn": [
-        "^build",
-        "build"
       ]
     },
     "prepare": {
