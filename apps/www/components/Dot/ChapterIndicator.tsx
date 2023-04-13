@@ -41,8 +41,6 @@ export const ChapterIndicator = ({
   )
 }
 
-console.log(Object.keys(fontStyles))
-
 const styles = {
   chapterIndicatorMini: css({
     ...fontStyles.sansSerifRegular14,
