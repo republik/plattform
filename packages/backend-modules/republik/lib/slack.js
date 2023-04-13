@@ -6,7 +6,9 @@ const {
   SLACK_CHANNEL_IT_MONITOR,
   SLACK_CHANNEL_ADMIN,
   SLACK_CHANNEL_FINANCE,
+  SLACK_CHANNEL_COMMENTS_ADMIN,
   ADMIN_FRONTEND_BASE_URL,
+  FRONTEND_BASE_URL,
 } = process.env
 
 exports.publishScheduler = async (message) => {
@@ -72,6 +74,30 @@ exports.publishPledge = async (_user, pledge, action) => {
     }
     content += `\n${ADMIN_FRONTEND_BASE_URL}/users/${user.id}`
     return await publish(SLACK_CHANNEL_FINANCE, content)
+  } catch (e) {
+    console.warn(e)
+  }
+}
+
+const getProfileLink = (user) =>
+  user.username
+    ? `<${FRONTEND_BASE_URL}/~${user.username || user.id}|${user.name}>`
+    : user.name
+
+exports.reportUser = async (user, reportedUser, reason) => {
+  try {
+    const content = `
+    :bomb: *${user ? getProfileLink(user) : 'Gast'}* reported *${getProfileLink(
+      reportedUser,
+    )}*: \n
+    Reason: \n
+    ${reason}
+    `
+
+    return await publish(SLACK_CHANNEL_COMMENTS_ADMIN, content, {
+      unfurl_links: true,
+      unfurl_media: true,
+    })
   } catch (e) {
     console.warn(e)
   }

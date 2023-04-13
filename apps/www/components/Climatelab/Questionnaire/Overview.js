@@ -23,35 +23,33 @@ const AllQuestionsView = ({ slug, extract }) => {
   if (extract) return null
 
   return (
-    <>
-      <Loader
-        loading={loading}
-        error={error}
-        render={() => {
-          const {
-            questionnaire: { questions },
-          } = data
+    <Loader
+      loading={loading}
+      error={error}
+      render={() => {
+        const {
+          questionnaire: { questions },
+        } = data
 
-          return (
-            <div style={{ margin: '48px auto 0' }}>
-              {QUESTIONS.map((question, idx) => {
-                const groupQuestions = question.ids.map((id) => questions[id])
-                return (
-                  <QuestionFeatured
-                    key={question.ids.join('+')}
-                    questions={groupQuestions}
-                    hint={question.hint}
-                    slug={slug}
-                    bgColor={questionColor(idx)}
-                    valueLength={question.valueLength}
-                  />
-                )
-              })}
-            </div>
-          )
-        }}
-      />
-    </>
+        return (
+          <div style={{ margin: '48px auto 0' }}>
+            {QUESTIONS.map((question, idx) => {
+              const groupQuestions = question.ids.map((id) => questions[id])
+              return (
+                <QuestionFeatured
+                  key={question.ids.join('+')}
+                  questions={groupQuestions}
+                  hint={question.hint}
+                  slug={slug}
+                  bgColor={questionColor(idx)}
+                  valueLength={question.valueLength}
+                />
+              )
+            })}
+          </div>
+        )
+      }}
+    />
   )
 }
 

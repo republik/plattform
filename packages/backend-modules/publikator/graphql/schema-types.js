@@ -104,6 +104,18 @@ interface MilestoneInterface {
   date: DateTime!
 }
 
+input PublishSettings {
+  prepublication: Boolean!
+
+  # on all channels
+  scheduledAt: DateTime
+  # this API never triggers sending
+  # not immediately, not scheduled
+  updateMailchimp: Boolean!
+
+  ignoreUnresolvedRepoIds: Boolean
+}
+
 type PublishResponse {
   # repoIds of related documents that could not be resolved
   unresolvedRepoIds: [ID!]!

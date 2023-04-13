@@ -1,4 +1,3 @@
-const { Roles } = require('@orbiting/backend-modules-auth')
 const slack = require('../../../lib/slack')
 const { transform } = require('../../../lib/Comment')
 const { contentLength } = require('../Comment')
@@ -17,7 +16,6 @@ module.exports = async (_, args, context) => {
     }
 
     const discussion = await loaders.Discussion.byId.load(comment.discussionId)
-    Roles.ensureUserIsInRoles(user, discussion.allowedRoles)
 
     if (!content || !content.trim().length) {
       throw new Error(t('api/comment/empty'))

@@ -123,7 +123,7 @@ const getOverlappingForm = (
 //  - has inline ancestor
 //  - has inline ancestor which only contains one non-empty element
 export const getForms = (editor: CustomEditor, path: number[]): FormData[] => {
-  if (!path || path === []) return []
+  if (!path || path.length === 0) return []
 
   const rootNode = getRootFormNode(editor, path)
   let forms = getDescendantForms(editor, rootNode)

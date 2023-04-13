@@ -160,6 +160,7 @@ const Questionnaire = dynamic(
     ssr: false,
   },
 )
+
 const ClimateLabInlineTeaser = dynamic(
   () => import('../Climatelab/InlineTeaser/ClimateLabInlineTeaser'),
   {
@@ -174,6 +175,10 @@ const QuestionnaireSubmissions = dynamic(
     loading: LoadingComponent,
   },
 )
+
+const EdgeQuestion = dynamic(() => import('../Climatelab/EdgeQuestion/index'), {
+  loading: LoadingComponent,
+})
 
 const ClimateLabQuestionnaire = dynamic(
   () => import('../Climatelab/Questionnaire/Overview'),
@@ -426,6 +431,7 @@ const ArticlePage = ({
           ELECTION_RESULT_DIVERSITY: ElectionResultDiversity,
           QUESTIONNAIRE: Questionnaire,
           QUESTIONNAIRE_SUBMISSIONS: QuestionnaireSubmissions,
+          EDGE_QUESTION: EdgeQuestion,
           NEWSLETTER_SIGNUP: NewsletterSignUpDynamic,
           CLIMATE_LAB_COUNTER: ClimateLabCounter,
           CLIMATE_LAB_INLINE_TEASER: ClimateLabInlineTeaser,

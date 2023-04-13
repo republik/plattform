@@ -1,14 +1,12 @@
 import { gql } from 'graphql-tag'
 import NextLink from 'next/link'
 import { useRouter } from 'next/router'
-import { useState, useEffect } from 'react'
 
 import { useQuery } from '@apollo/client'
 
 import {
   Loader,
   Interaction,
-  ShareIcon,
   IconButton,
   Center,
   EditIcon,
@@ -25,11 +23,7 @@ import {
 
 import { ASSETS_SERVER_BASE_URL, PUBLIC_BASE_URL } from '../../../lib/constants'
 import { useMe } from '../../../lib/context/MeContext'
-import { postMessage, useInNativeApp } from '../../../lib/withInNativeApp'
-import { trackEvent } from '../../../lib/matomo'
 import { useTranslation } from '../../../lib/withT'
-
-import ShareOverlay from '../../ActionBar/ShareOverlay'
 
 import Frame from '../../Frame'
 import Meta from '../../Frame/Meta'
@@ -41,6 +35,8 @@ import {
   SubmissionQa,
   styles as submissionStyles,
 } from '../../Questionnaire/Submissions/Submission'
+
+import HeaderShare from '../shared/HeaderShare'
 
 import {
   EDIT_QUESTIONNAIRE_PATH,
@@ -60,55 +56,6 @@ const USER_QUERY = gql`
     }
   }
 `
-
-const ShareQuestionnaire = ({ meta }) => {
-  const { t } = useTranslation()
-  const { inNativeApp } = useInNativeApp()
-  const [overlay, showOverlay] = useState(false)
-  const { url, title } = meta
-
-  return (
-    <>
-      <IconButton
-        label={t('article/actionbar/share')}
-        labelShort=''
-        Icon={ShareIcon}
-        href={url}
-        onClick={(e) => {
-          e.preventDefault()
-          trackEvent(['ActionBar', 'shareJournalLink', url])
-          if (inNativeApp) {
-            postMessage({
-              type: 'share',
-              payload: {
-                title: title,
-                url,
-                subject: '',
-                dialogTitle: t('article/share/title'),
-              },
-            })
-            e.target.blur()
-          } else {
-            showOverlay(!overlay)
-          }
-        }}
-      />
-      {!!overlay && (
-        <ShareOverlay
-          onClose={() => showOverlay(false)}
-          url={url}
-          title={t('article/actionbar/share')}
-          tweet=''
-          emailSubject={t('article/share/emailSubject', {
-            title: title,
-          })}
-          emailBody=''
-          emailAttachUrl
-        />
-      )}
-    </>
-  )
-}
 
 const Page = () => {
   const { t } = useTranslation()
@@ -256,7 +203,7 @@ const Page = () => {
                       />
                     </NextLink>
                   </div>
-                  <ShareQuestionnaire meta={meta} />
+                  <HeaderShare meta={meta} />
                   {isOwnQuestionnaire && (
                     <IconButton
                       size={24}

@@ -204,7 +204,7 @@ const filterCards = async (cards, { filters = {} }, context) => {
           {
             type: 'User',
             ids: filteredCards.map((card) => card.userId),
-            filter: 'COMMENTS',
+            filters: ['Comment'],
           },
           context,
         )

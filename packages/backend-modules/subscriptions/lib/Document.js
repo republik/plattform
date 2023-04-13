@@ -4,14 +4,14 @@ const {
 } = require('./Subscriptions')
 const {
   getRepoIdsForDoc,
-  getTemplate,
-  getContributorUserIds,
+  getContributors,
 } = require('@orbiting/backend-modules-documents/lib/meta')
 
 const getSubscriptionsForDoc = async (
   doc,
   userId,
   {
+    filters = false,
     onlyEligibles = false,
     includeParents = false,
     includeNotActive = false,
@@ -29,6 +29,7 @@ const getSubscriptionsForDoc = async (
     {
       type: 'Document',
       ids: repoIds,
+      filters,
     },
     context,
     {
@@ -37,36 +38,39 @@ const getSubscriptionsForDoc = async (
       includeNotActive,
     },
   )
-  if (docsSubscriptions.length) {
-    docsSubscriptions.forEach((s) => subscriptions.push(s))
-  } else if (
-    simulate &&
-    (repoIds.length > 1 || getTemplate(doc) === 'format')
-  ) {
-    subscriptions.push(
-      getSimulatedSubscriptionForUserAndObject(
-        userId,
-        {
-          type: 'Document',
-          id: repoIds[repoIds.length - 1], // format see getRepoIdsForDoc
-        },
-        context,
-      ),
-    )
+
+  docsSubscriptions.forEach((s) => subscriptions.push(s))
+
+  if (simulate) {
+    repoIds
+      .filter(
+        (repoId) =>
+          !docsSubscriptions.map((s) => s.objectDocumentId).includes(repoId),
+      )
+      .map((repoId) =>
+        getSimulatedSubscriptionForUserAndObject(
+          userId,
+          {
+            type: 'Document',
+            id: repoId,
+            filters,
+          },
+          context,
+        ),
+      )
+      .forEach((sub) => subscriptions.push(sub))
   }
 
   // from prepareMetaForPublish
-  const contributorUserIds = await getContributorUserIds(
-    doc.type,
-    doc.meta || doc._meta,
-    context,
-  )
+  const contributors = getContributors(doc.type, doc.meta || doc._meta)
+  const contributorUserIds = contributors.map((c) => c.userId).filter(Boolean)
   if (contributorUserIds.length) {
     const authorSubscriptions = await getSubscriptionsForUserAndObjects(
       userId,
       {
         type: 'User',
         ids: contributorUserIds,
+        filters,
       },
       context,
       {

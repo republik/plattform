@@ -1,0 +1,29 @@
+{
+  "name": "@republik/icons",
+  "version": "0.0.0",
+  "private": true,
+  "types": "dist/types/index.d.ts",
+  "main": "dist/icons.js",
+  "module": "dist/icons.js",
+  "files": ["dist"],
+  "type": "module",
+  "scripts": {
+    "generate:icons": "svgr --out-dir ./lib/components ./lib/svg",
+    "dev": "nodemon --watch lib/svg --exec 'yarn build'",
+    "build": "yarn generate:icons && tsc && vite build"
+  },
+  "devDependencies": {
+    "@svgr/cli": "^6.1.2",
+    "@types/react": "^18.0.27",
+    "@types/react-dom": "^18.0.10",
+    "@vitejs/plugin-react": "^3.1.0",
+    "react": "^18.2.0",
+    "typescript": "^4.7.2",
+    "vite": "^4.1.0",
+    "vite-plugin-dts": "^1.7.3"
+  },
+  "peerDependencies": {
+    "react": ">=17.0.0"
+  },
+  "sideEffects": false
+}

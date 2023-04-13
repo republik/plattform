@@ -168,12 +168,15 @@ const getEstimatedConsumptionMinutes = (doc, estimatedReadingMinutes) => {
   return Math.max(audioDurationMinutes, estimatedReadingMinutes)
 }
 
-// _meta is present on unpublished docs
-// { repo { publication { commit { document } } } }
+// doc.repoId, doc._meta is present on unpublished docs
+// { repo { commit { document } } }
 const getRepoIdsForDoc = (doc, includeParents) =>
   [
-    doc.meta?.repoId || doc._meta?.repoId,
-    includeParents && getRepoId(doc.meta?.format || doc._meta?.format).repoId,
+    doc.meta?.repoId || doc._meta?.repoId || doc.repoId,
+    includeParents &&
+      getRepoId(
+        doc.meta?.format || doc._meta?.format || doc.content?.meta?.format,
+      ).repoId,
   ].filter(Boolean)
 
 const getTemplate = (doc) => doc.meta?.template || doc._meta?.template

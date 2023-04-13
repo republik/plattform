@@ -109,7 +109,7 @@ const Panel = ({
             key={id}
             passHref
             {...styles.formatLink}
-            onClick={() => closeHandler()}
+            onClick={() => closeHandler?.()}
             legacyBehavior
           >
             <FormatTag

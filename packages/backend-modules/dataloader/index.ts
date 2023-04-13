@@ -61,7 +61,7 @@ type FindFunction<Key, Value> = (
 
 export default module.exports = function createDataLoader<
   Key extends KeyConstraint,
-  Value,
+  Value extends ValueConstraint,
 >(
   loader: (keys: readonly Key[]) => Promise<Value[]>,
   options?: CreateDataLoaderOptions<Key, Value> | null,

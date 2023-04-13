@@ -8,6 +8,9 @@ const styles = {
     columnGap: '1em',
     margin: '30px 0 40px',
     [mediaQueries.mUp]: {
+      columnCount: 2,
+    },
+    [mediaQueries.lUp]: {
       columnCount: 3,
     },
   }),
@@ -33,7 +36,7 @@ export const AnswersGrid = ({ children }: { children: ReactNode }) => {
 export const AnswersGridCard = ({
   children,
 }: {
-  textLength: number
+  textLength?: number
   children: ReactNode
 }) => {
   return <div {...styles.card}>{children}</div>

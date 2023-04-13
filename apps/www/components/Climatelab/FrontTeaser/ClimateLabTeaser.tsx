@@ -36,10 +36,11 @@ const ClimateTeaserContent = () => {
       <div {...styles.content} {...colorScheme.set('color', 'text')}>
         <h3 {...styles.title}>
           {t.elements('ClimateTeaser/content/text1', {
-            br1: <br key='1' />,
-            br2: <br key='2' />,
+            br: <br />,
+            nbsp: <>&nbsp;</>,
           })}
         </h3>
+        <p {...styles.text}>{t('ClimateTeaser/content/text2')}</p>
         <div style={{ maxWidth: 'max-content' }}>
           <NextLink
             href={
@@ -79,11 +80,20 @@ export const climateLabTeaserXlBreakpoint =
 
 const styles = {
   wrapper: css({
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    gap: '1rem',
-    padding: '1rem 2rem 5rem 2rem',
+    display: 'grid',
+    gridTemplateAreas: `
+      'image'
+      'content'
+    `,
+    gap: '4rem',
+    [mediaQueries.mUp]: {
+      gridTemplateColumns: '1fr 1fr',
+      gridTemplateAreas: `
+        'image content'
+      `,
+      gap: 0,
+    },
+    padding: '4rem 1rem',
   }),
   img: css({
     width: '80%',
@@ -91,33 +101,54 @@ const styles = {
     justifyContent: 'center',
   }),
   imgWrapper: css({
-    flex: '0 1 auto',
+    gridArea: 'image',
     display: 'flex',
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'flex-start',
   }),
   content: css({
-    flex: '1 1 auto',
     display: 'flex',
+    margin: 'auto',
     flexDirection: 'column',
+    gridArea: 'content',
     alignItems: 'center',
+    textAlign: 'center',
+    gap: '4rem',
+    [mediaQueries.mUp]: {
+      width: '80%',
+      alignItems: 'flex-start',
+      textAlign: 'center',
+    },
   }),
   title: css({
     ...fontStyles.serifTitle,
     fontSize: 38,
     lineHeight: '1.3em',
-    textAlign: 'center',
-    marginTop: '3rem',
-    marginBottom: '3rem',
+    margin: '1rem 0 -0.3em 0',
     [mediaQueries.mUp]: {
+      fontSize: 48,
+      textAlign: 'left',
+    },
+    ['@media only screen and (min-width: 1350px)']: {
       fontSize: 58,
     },
     [climateLabTeaserXlBreakpoint]: {
       fontSize: 80,
     },
   }),
+  text: css({
+    ...fontStyles.sansSerifMedium,
+    lineHeight: '1.54em',
+    fontSize: 23,
+    [mediaQueries.mUp]: {
+      fontSize: 24,
+      textAlign: 'left',
+    },
+    margin: 0,
+  }),
   button: css({
     ...fontStyles.sansSerifBold,
+    display: 'block',
     fontSize: 20,
     boxSizing: 'border-box',
     padding: '12px 16px',

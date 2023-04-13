@@ -17,7 +17,7 @@ import { timeFormat } from '../../lib/utils/format'
 import withT from '../../lib/withT'
 import Link from 'next/link'
 
-const dateFormat = timeFormat('%d.%m')
+const dateFormat = timeFormat('%d.%m.')
 
 const groupByDate = nest().key((n) => {
   return dateFormat(new Date(n.createdAt))

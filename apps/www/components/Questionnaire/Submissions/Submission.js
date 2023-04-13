@@ -15,6 +15,7 @@ import {
   RadioCheckedIcon,
   RadioUncheckedIcon,
   usePrevious,
+  RawHtml,
 } from '@project-r/styleguide'
 import { useEffect, useRef, useState } from 'react'
 import { max, shuffle } from 'd3-array'
@@ -58,7 +59,7 @@ export const styles = {
     alignSelf: 'stretch',
     display: 'flex',
     flexDirection: 'column',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     flexGrow: 1,
     minWidth: 0,
   }),
@@ -96,15 +97,17 @@ export const SubmissionAuthor = ({
   submissionUrl,
   children,
   isHighlighted,
+  customStyle = {},
+  customStylePicture = {},
 }) => {
   const { t } = useTranslation()
   const [colorScheme] = useColorContext()
   const [headerHeight] = useHeaderHeight()
-  const isUpdated = updatedAt && updatedAt !== createdAt
+  const isUpdated = createdAt && updatedAt && updatedAt !== createdAt
   return (
     <div
       {...styles.header}
-      style={{ top: headerHeight }}
+      style={{ top: headerHeight, ...customStyle }}
       {...colorScheme.set(
         'backgroundColor',
         isHighlighted ? 'alert' : 'default',
@@ -113,6 +116,7 @@ export const SubmissionAuthor = ({
       {displayAuthor.profilePicture && (
         <img
           {...styles.headerPicture}
+          style={customStylePicture}
           src={displayAuthor.profilePicture}
           alt=''
         />
@@ -127,13 +131,22 @@ export const SubmissionAuthor = ({
             displayAuthor.name
           )}
         </Interaction.H3>
-        <Label>
+        <Label style={{ paddingRight: '20px' }}>
           <span {...colorScheme.set('color', 'textSoft')}>
-            <Link href={submissionUrl}>
-              <a {...styles.linkUnderline} title={titleDate(createdAt)}>
-                <RelativeTime t={t} isDesktop date={createdAt} />
-              </a>
-            </Link>
+            {displayAuthor.credentials && (
+              <RawHtml
+                dangerouslySetInnerHTML={{
+                  __html: displayAuthor.credentials,
+                }}
+              />
+            )}
+            {createdAt && !displayAuthor.credentials && (
+              <Link href={submissionUrl}>
+                <a {...styles.linkUnderline} title={titleDate(createdAt)}>
+                  <RelativeTime t={t} isDesktop date={createdAt} />
+                </a>
+              </Link>
+            )}
             {isUpdated && (
               <>
                 {' · '}

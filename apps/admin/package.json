@@ -67,6 +67,7 @@
   "devDependencies": {
     "@next/eslint-plugin-next": "^13.1.6",
     "@republik/eslint-config-frontend": "*",
+    "@republik/tsconfig": "*",
     "@testing-library/jest-dom": "^5.16.3",
     "@testing-library/react": "^12.1.4",
     "@types/jest": "^27.5.0",

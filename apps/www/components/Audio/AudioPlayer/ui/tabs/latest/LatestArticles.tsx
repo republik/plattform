@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
 import { css } from 'glamor'
+import { A, Spinner } from '@project-r/styleguide'
 import NoAccess from '../shared/NoAccess'
 import { useLatestArticlesQuery } from '../../../../graphql/LatestArticlesHook'
 import { useTranslation } from '../../../../../../lib/withT'
@@ -40,11 +41,39 @@ const LatestArticlesTab = ({
   const [filter, setFilter] = useState<'all' | 'read-aloud'>('read-aloud')
   const { t } = useTranslation()
   const { hasAccess } = useMe()
-  const { data, loading, error } = useLatestArticlesQuery({
+  const { data, loading, error, fetchMore } = useLatestArticlesQuery({
     variables: {
       count: 20,
     },
   })
+  const [isLoadingMore, setLoadingMore] = useState(false)
+  const loadMore = () => {
+    setLoadingMore(true)
+    fetchMore({
+      variables: {
+        after: data?.latestArticles.pageInfo.endCursor,
+      },
+      updateQuery(previous, { fetchMoreResult }) {
+        const previousNodes = previous?.latestArticles.nodes ?? []
+        const incomingNodes = fetchMoreResult?.latestArticles.nodes ?? []
+        const nodes = [...previousNodes, ...incomingNodes]
+        return {
+          latestArticles: {
+            ...fetchMoreResult.latestArticles,
+            nodes: nodes.filter(
+              (node, index) =>
+                nodes.findIndex((obj) => node.id === obj.id) === index,
+            ),
+          },
+        }
+      },
+    }).then(() => setLoadingMore(false))
+  }
+
+  const onLoadMore = (e) => {
+    e?.preventDefault()
+    loadMore()
+  }
 
   // Define if the real-aloud filter should be shown
   const hasReadAloudDocuments =
@@ -72,7 +101,7 @@ const LatestArticlesTab = ({
   if (!hasAccess) {
     return (
       <NoAccess
-        text={t('AudioPlayer/Latest/NoAcces')}
+        text={t('AudioPlayer/Latest/NoAccess')}
         heading={t('AudioPlayer/shared/NoAccess/heading')}
       />
     )
@@ -106,17 +135,31 @@ const LatestArticlesTab = ({
         </FilterButton>
       </div>
       {filteredArticles?.length > 0 ? (
-        <ul {...styles.list}>
-          {filteredArticles.map((article) => (
-            <li key={article.id}>
-              <LatestArticleItem
-                article={article}
-                handleOpenArticle={handleOpenArticle}
-                handleDownload={handleDownload}
-              />
-            </li>
-          ))}
-        </ul>
+        <>
+          <ul {...styles.list}>
+            {filteredArticles.map((article) => (
+              <li key={article.id}>
+                <LatestArticleItem
+                  article={article}
+                  handleOpenArticle={handleOpenArticle}
+                  handleDownload={handleDownload}
+                />
+              </li>
+            ))}
+          </ul>
+
+          {data?.latestArticles.pageInfo.hasNextPage && (
+            <p style={{ paddingBottom: '2rem' }}>
+              {isLoadingMore ? (
+                <Spinner size={16} />
+              ) : (
+                <A href='#' onClick={onLoadMore}>
+                  {t('AudioPlayer/Latest/LoadMore')}
+                </A>
+              )}
+            </p>
+          )}
+        </>
       ) : (
         <p style={{ marginTop: 32 }}>{t('AudioPlayer/Latest/NoItems')}</p>
       )}
