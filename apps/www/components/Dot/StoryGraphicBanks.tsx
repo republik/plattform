@@ -128,6 +128,45 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
 
       <g transform={`translate(${PADDING_LEFT}, ${PADDING_TOP})`}>
         {/* left side */}
+        <motion.text
+          {...styles.axisTick}
+          style={{ textAnchor: 'middle' }}
+          variants={defineVariants(
+            {
+              x: CENTER,
+              y: chartRange[0] - 40,
+              opacity: 0,
+            },
+            {
+              step1: {
+                x: CENTER,
+                y: chartRange[0] - 40,
+                opacity: 1,
+                transition: { duration: 0.5 },
+              },
+              step2: {
+                x: CENTER,
+                y: chartRange[0] - 40,
+                opacity: 1,
+                transition: { duration: 0.5, delay: 1 },
+              },
+              step3: {
+                x: CENTER - PADDING_LEFT_CHART,
+                y: chartRange[0] - 40,
+                opacity: 1,
+                transition: { duration: 0.5, delay: 1 },
+              },
+              step4: {
+                x: CENTER - PADDING_LEFT_CHART,
+                y: chartRange[0] - 40,
+                opacity: 1,
+                transition: { duration: 0.5, delay: 1 },
+              },
+            },
+          )}
+        >
+          Ausgaben Personal
+        </motion.text>
         <motion.line
           transition={{ duration: 0.5 }}
           variants={defineVariants(
@@ -219,6 +258,33 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
             },
           )}
         ></motion.line>
+        <motion.text
+          {...styles.axisTick}
+          style={{ textAnchor: 'middle' }}
+          variants={defineVariants(
+            {
+              x: CENTER + PADDING_LEFT_CHART,
+              y: chartRange[0] - 40,
+              opacity: 0,
+            },
+            {
+              step3: {
+                x: CENTER + PADDING_LEFT_CHART,
+                y: chartRange[0] - 40,
+                opacity: 1,
+                transition: { duration: 0.5, delay: 1 },
+              },
+              step4: {
+                x: CENTER + PADDING_LEFT_CHART,
+                y: chartRange[0] - 40,
+                opacity: 1,
+                transition: { duration: 0.5, delay: 1 },
+              },
+            },
+          )}
+        >
+          Gewinn
+        </motion.text>
         {/* slope lines */}
         <motion.line
           variants={defineVariants(
@@ -1290,6 +1356,13 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
 const styles = {
   label: css({
     ...fontStyles.sansSerifRegular23,
+    fontFeatureSettings: '"tnum", "kern"',
+    [mediaQueries.onlyS]: {
+      fontSize: '1.7rem',
+    },
+  }),
+  axisTick: css({
+    ...fontStyles.sansSerifRegular19,
     fontFeatureSettings: '"tnum", "kern"',
     [mediaQueries.onlyS]: {
       fontSize: '1.7rem',
