@@ -6,45 +6,32 @@ on:
   pull_request:
 
 jobs:
-  build:
-
+  setup:
     runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
 
-    strategy:
-      matrix:
-        node-version: [16.x]
-
+  build:
+    runs-on: ubuntu-latest
     env:
       API_URL: ${{ secrets.API_URL }}
       SSG_DOCUMENTS_API_KEY: ${{ secrets.SSG_DOCUMENTS_API_KEY }}
-
     steps:
     - uses: actions/checkout@v3
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
+    - uses: actions/setup-node@v3
       with:
-        node-version: ${{ matrix.node-version }}
+        node-version: 16.x
         cache: 'yarn'
     - run: yarn --frozen-lockfile
     - run: yarn build
+
   test:
-
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [16.x]
-
-    env:
-      API_URL: ${{ secrets.API_URL }}
-      SSG_DOCUMENTS_API_KEY: ${{ secrets.SSG_DOCUMENTS_API_KEY }}
-
     steps:
     - uses: actions/checkout@v3
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
+    - uses: actions/setup-node@v3
       with:
-        node-version: ${{ matrix.node-version }}
+        node-version: 16.x
         cache: 'yarn'
     - run: yarn --frozen-lockfile
     - run: yarn test
