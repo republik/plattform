@@ -2,7 +2,7 @@ import { ReactNode } from 'react'
 
 import { css, merge } from 'glamor'
 
-import { useColorContext } from '@project-r/styleguide'
+import { useColorContext, fontStyles } from '@project-r/styleguide'
 import { TRANSITION } from './config'
 
 export const ChapterIndicator = ({
@@ -18,41 +18,54 @@ export const ChapterIndicator = ({
   const styling = merge(
     styles.chapterIndicator,
     mini && styles.chapterIndicatorMini,
+    mini && highlighted && styles.miniHighlighted,
   )
   return (
     <span
       {...styling}
       {...(highlighted
-        ? colorScheme.set('background-color', 'defaultInverted')
-        : colorScheme.set('background-color', 'hover'))}
+        ? colorScheme.set('background-color', 'divider')
+        : colorScheme.set('background-color', 'default'))}
       {...(highlighted
-        ? colorScheme.set('color', 'default')
-        : colorScheme.set('color', 'text'))}
+        ? colorScheme.set('color', 'text')
+        : colorScheme.set('color', 'textSoft'))}
+      {...(highlighted
+        ? colorScheme.set('border-color', 'divider')
+        : colorScheme.set('border-color', 'divider'))}
+      {...(highlighted
+        ? colorScheme.set('font-weight', 'bold')
+        : colorScheme.set('font-weight', 'normal'))}
     >
       {children}
     </span>
   )
 }
 
+console.log(Object.keys(fontStyles))
+
 const styles = {
   chapterIndicatorMini: css({
-    width: '1.3rem',
-    height: '1.3rem',
-    lineHeight: '1.3em',
-    fontSize: '0.875rem',
-    marginRight: '0.25rem',
+    ...fontStyles.sansSerifRegular14,
+    width: '1.4rem',
+    height: '1.4rem',
+    margin: 0,
+  }),
+  miniHighlighted: css({
+    ...fontStyles.sansSerifMedium14,
+    margin: '0.3rem 0',
   }),
   chapterIndicator: css({
+    ...fontStyles.sansSerifMedium22,
     transition: TRANSITION,
-    fontSize: '1rem',
+    // fontSize: '1rem',
     display: 'inline-flex',
     justifyContent: 'center',
+    alignItems: 'center',
     verticalAlign: 'middle',
-    width: '1.675em',
-    height: '1.675em',
-    lineHeight: '1.675em',
-    borderRadius: '0.2rem',
-    marginRight: '1rem',
-    marginTop: '-0.3rem',
+    width: '2.2rem',
+    height: '2.2rem',
+    borderRadius: '50%',
+    marginTop: '-0.35rem',
+    marginRight: '0.3em',
   }),
 }

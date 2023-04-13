@@ -272,10 +272,16 @@ const styles = {
     flexWrap: 'wrap',
   }),
   scrollyGraphicsChapters: css({
-    width: '100%',
+    position: 'absolute',
+    // width: '100%',
     textAlign: 'center',
-    paddingTop: 80,
+    justifyContent: 'center',
+    // paddingTop: 80,
     opacity: 0,
+    display: 'flex',
+    flexDirection: 'column',
+    height: '100%',
+    gap: 0,
   }),
   highlight: css({
     whiteSpace: 'nowrap',
