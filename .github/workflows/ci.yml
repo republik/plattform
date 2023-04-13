@@ -6,11 +6,6 @@ on:
   pull_request:
 
 jobs:
-  setup:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-
   build:
     runs-on: ubuntu-latest
     env:
