@@ -97,7 +97,7 @@ const getBenefitPositionWithCS = (bank) =>
 
 const RADIUS = 9
 const PADDING_LEFT_CHART = 100
-const WIDTH = 600
+const WIDTH = 700
 const CENTER = WIDTH / 2
 
 export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
@@ -105,7 +105,7 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
   const key = useResolvedColorSchemeKey()
   return (
     <motion.svg
-      viewBox='0 0 600 400'
+      viewBox='0 0 700 400'
       preserveAspectRatio='xMidYMid meet'
       style={{ width: '100%' }}
       {...colorScheme.set('background-color', 'transparentBackground')}

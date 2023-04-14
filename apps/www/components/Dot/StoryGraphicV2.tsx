@@ -54,8 +54,8 @@ const getVariant = (highlighted: number) => {
   return 'step0'
 }
 
-const CENTER = 600 / 2
-const OFFSET = -130
+const CENTER = 700 / 2
+const OFFSET = 10
 
 const TRANSFERS = [
   '1. Transfer',
@@ -104,7 +104,7 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
 
   return (
     <motion.svg
-      viewBox='0 0 600 400'
+      viewBox='0 0 700 400'
       preserveAspectRatio='xMidYMid meet'
       style={{
         width: '100%',
@@ -213,7 +213,7 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
           },
           {
             step4: {
-              x: CENTER - 140,
+              x: CENTER - 95,
               y: PADDING_TOP,
             },
           },
@@ -422,7 +422,7 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
           {...styles.label}
           {...colorScheme.set('fill', 'text')}
           variants={defineVariants(
-            { opacity: 0, x: 5, y: 225 },
+            { x: 5, y: 225, opacity: 0 },
             {
               step1: {
                 x: 5,
@@ -432,28 +432,6 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
               },
               step2: {
                 x: 5,
-                y: 225,
-                opacity: 0,
-              },
-            },
-          )}
-        >
-          Alter der Frau:
-        </motion.text>
-        <motion.text
-          {...styles.label}
-          {...colorScheme.set('fill', 'text')}
-          variants={defineVariants(
-            { x: 160, y: 225, opacity: 0 },
-            {
-              step1: {
-                x: 160,
-                y: 225,
-                opacity: 1,
-                transition: { duration: 0.5 },
-              },
-              step2: {
-                x: 160,
                 y: 225,
                 opacity: 0,
               },
