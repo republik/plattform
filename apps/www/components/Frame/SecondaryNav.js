@@ -21,7 +21,6 @@ import {
 } from '../constants'
 import { useRouter } from 'next/router'
 import { useMe } from '../../lib/context/MeContext'
-import { checkRoles } from '../../lib/apollo/withMe'
 
 const JournalPathRegex = new RegExp('^/[0-9]{4}/[0-9]{2}/[0-9]{2}/journal$')
 
@@ -34,9 +33,8 @@ export const SecondaryNav = ({
   const [colorScheme] = useColorContext()
   const router = useRouter()
   const currentPath = router.asPath
-  const { me, hasAccess } = useMe()
-  const hasClimateLabRole = checkRoles(me, ['climate'])
-  const isClimateLabOnlyUser = !hasAccess && hasClimateLabRole
+  const { hasAccess, isClimateLabMember } = useMe()
+  const isClimateLabOnlyUser = !hasAccess && isClimateLabMember
 
   // Sine ClimateLab the elements are rendered in a Scroller.
   // To calculate the active index inside the scroller,
@@ -52,9 +50,9 @@ export const SecondaryNav = ({
     }
 
     return ['/', '/feed', '/journal', '/klimalabor', '/dialog', '/suche']
-      .filter((path) => path !== '/klimalabor' || hasClimateLabRole)
+      .filter((path) => path !== '/klimalabor' || isClimateLabMember)
       .indexOf(currentPath)
-  }, [currentPath, hasClimateLabRole, isClimateLabOnlyUser, hasOverviewNav])
+  }, [currentPath, isClimateLabMember, isClimateLabOnlyUser, hasOverviewNav])
 
   return (
     <>
@@ -111,7 +109,7 @@ export const SecondaryNav = ({
               >
                 {t('navbar/flyer')}
               </NavLink>
-              {hasClimateLabRole && (
+              <div data-climatelab-only>
                 <NavLink
                   href='/klimalabor'
                   currentPath={currentPath}
@@ -120,7 +118,7 @@ export const SecondaryNav = ({
                 >
                   {t('navbar/climatelab')}
                 </NavLink>
-              )}
+              </div>
               <NavLink
                 href='/dialog'
                 currentPath={currentPath}
