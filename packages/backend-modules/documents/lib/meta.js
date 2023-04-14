@@ -18,7 +18,7 @@ const getMeta = (doc) => {
   return getMeta(doc)
 }
 
-const getContributors = (type, docMeta, context) => {
+const getContributors = (type, docMeta) => {
   const getContributors =
     meta[type || 'mdast']?.getContributors || meta.common?.getContributors
 
@@ -27,7 +27,7 @@ const getContributors = (type, docMeta, context) => {
     return
   }
 
-  return getContributors(docMeta, context)
+  return getContributors(docMeta)
 }
 
 module.exports = {

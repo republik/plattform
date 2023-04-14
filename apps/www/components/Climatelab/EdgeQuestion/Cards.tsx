@@ -10,16 +10,18 @@ import {
   fontStyles,
   ColorContextLocalExtension,
   ChevronRightIcon,
+  mediaQueries,
 } from '@project-r/styleguide'
 
-import { localColors, OVERVIEW_DATA } from './config'
+import { localColors } from './config'
+import { CardProps } from '.'
 
 const styles = {
   grid: css({
     display: 'flex',
     flexDirection: 'column',
     // gap: '1rem',
-    marginBottom: 60,
+    marginBottom: 20,
   }),
   card: css({
     marginBottom: 10,
@@ -35,15 +37,11 @@ const styles = {
     },
   }),
   boldCitation: css({
-    ...fontStyles.serifBold32,
+    ...fontStyles.serifBold24,
+    [mediaQueries.mUp]: {
+      ...fontStyles.serifBold32,
+    },
   }),
-}
-
-type CardProps = {
-  name: string
-  excerpt: string
-  color: string
-  tagline: string
 }
 
 const GetColorScheme = ({ children }) => {
@@ -57,60 +55,71 @@ const Card: React.FC<{
   idx: number
 }> = ({ card, idx }) => {
   const { name, excerpt, color, tagline } = card
+  const onClick = () => {
+    const classElements = document.getElementsByClassName(slug(name))
+    if (!classElements?.length) return
+    const element = classElements[0]
+    if (element) {
+      element.scrollIntoView()
+    }
+  }
   return (
     <div
       {...styles.card}
       style={{
         alignSelf: idx % 3 === 0 ? 'flex-end' : 'flex-start',
         textAlign: idx % 3 === 0 ? 'right' : 'left',
+        cursor: 'pointer',
       }}
+      onClick={onClick}
     >
-      <NextLink href={`#${slug(name)}`}>
-        <a style={{ textDecoration: 'none' }}>
-          <ColorContextLocalExtension localColors={localColors}>
-            <GetColorScheme>
-              {(colorScheme) => (
-                <>
-                  <div>
-                    <Editorial.Question
-                      style={{ marginTop: 0 }}
-                      {...styles.boldCitation}
-                      {...colorScheme.set('color', color)}
-                    >
-                      {inQuotes(excerpt)}
-                    </Editorial.Question>
-                    <Editorial.Credit
-                      style={{
-                        marginTop: '0',
-                        paddingTop: '20px',
-                        textDecoration: 'underline',
-                      }}
-                      {...colorScheme.set('color', color)}
-                    >
-                      <span>{name}</span>
-                      <span>
-                        {', '}
-                        {tagline}
-                      </span>
-                      <ChevronRightIcon />
-                    </Editorial.Credit>
-                  </div>
-                </>
-              )}
-            </GetColorScheme>
-          </ColorContextLocalExtension>
-        </a>
-      </NextLink>
+      <ColorContextLocalExtension localColors={localColors}>
+        <GetColorScheme>
+          {(colorScheme) => (
+            <>
+              <div>
+                <Editorial.Question
+                  style={{ marginTop: 0 }}
+                  {...styles.boldCitation}
+                  {...colorScheme.set('color', color)}
+                >
+                  {inQuotes(excerpt)}
+                </Editorial.Question>
+                <Editorial.Credit
+                  style={{
+                    marginTop: '0',
+                    paddingTop: '20px',
+                    textDecoration: 'underline',
+                  }}
+                  {...colorScheme.set('color', color)}
+                >
+                  <span>{name}</span>
+                  <span>
+                    {', '}
+                    {tagline}
+                  </span>
+                  <ChevronRightIcon />
+                </Editorial.Credit>
+              </div>
+            </>
+          )}
+        </GetColorScheme>
+      </ColorContextLocalExtension>
     </div>
   )
 }
 
-const CardsOverview: React.FC = () => (
-  <div {...styles.grid}>
-    {OVERVIEW_DATA.map((card, idx) => (
-      <Card card={card} key={idx} idx={idx} />
-    ))}
-  </div>
-)
+const CardsOverview: React.FC<{ overviewData: CardProps[] }> = ({
+  overviewData,
+}) => {
+  if (!overviewData) return
+  return (
+    <div {...styles.grid}>
+      {overviewData.map((card, idx) => (
+        <Card card={card} key={idx} idx={idx} />
+      ))}
+    </div>
+  )
+}
 
 export default CardsOverview

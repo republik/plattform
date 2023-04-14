@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router'
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 
 import { Center, slug, Breakout } from '@project-r/styleguide'
 
@@ -20,6 +20,13 @@ export type Mdast = {
   [x: string]: unknown
 }
 
+export type CardProps = {
+  name: string
+  tagline: string
+  excerpt: string
+  color: string
+}
+
 export type ShareProps = {
   extract?: string
   title?: string
@@ -30,6 +37,7 @@ export type EdgeQuestionProps = {
   mdast?: Mdast[]
   share: ShareProps
   extract: boolean
+  overviewData?: CardProps[]
 }
 
 export type Author = {
@@ -71,6 +79,7 @@ const getText = (node: Mdast): string => {
   if (node.type === 'link')
     return `<a href="${node.url}">${getText(node.children[0])}</a>`
   if (node.type === 'text') return node.value
+  if (node.type === 'emphasis') return `<em>${getText(node.children[0])}</em>`
   return ''
 }
 
@@ -99,6 +108,7 @@ const EdgeQuestion: React.FC<EdgeQuestionProps> = ({
   mdast,
   share,
   extract,
+  overviewData,
 }) => {
   const router = useRouter()
   const { query } = router
@@ -134,7 +144,7 @@ const EdgeQuestion: React.FC<EdgeQuestionProps> = ({
   return (
     <Center>
       <Breakout size='breakout'>
-        <CardsOverview />
+        <CardsOverview overviewData={overviewData} />
       </Breakout>
       <QuestionScroll answers={answers} share={share} />
     </Center>

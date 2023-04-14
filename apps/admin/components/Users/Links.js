@@ -10,7 +10,6 @@ const GET_ACCESS_TOKENS = gql`
     user(slug: $userId) {
       id
       customPledge: accessToken(scope: CUSTOM_PLEDGE)
-      nowYouSeeMe: accessToken(scope: NOW_YOU_SEE_ME)
     }
   }
 `
@@ -21,7 +20,6 @@ const Links = ({ userId }) => {
   })
 
   const customPledge = data?.user?.customPledge
-  const nowYouSeeMe = data?.user?.nowYouSeeMe
 
   return (
     <Section>
@@ -35,16 +33,6 @@ const Links = ({ userId }) => {
                 target='_blank'
               >
                 Verlängerungs-Link
-              </A>
-            </DD>
-          )}
-          {nowYouSeeMe && (
-            <DD>
-              <A
-                href={`${REPUBLIK_FRONTEND_URL}/5-jahre-republik/${nowYouSeeMe}`}
-                target='_blank'
-              >
-                Mitstreiter-Abo Einladungs-Link
               </A>
             </DD>
           )}

@@ -4,6 +4,7 @@ import {
   mediaQueries,
   useColorContext,
   ColorContextProvider,
+  A,
 } from '@project-r/styleguide'
 
 import { css } from 'glamor'
@@ -42,16 +43,13 @@ const LandingPage = () => {
             <ClimateLabLogo width={480} height={480} />
           </div>
         </div>
-        <div {...styles.titleWrapper}>
+        <div {...styles.contentWrapper}>
           <h1 {...styles.pageTitle}>
             {t.elements('ClimateLandingPage/content/heading1', {
               br: <br />,
+              nbsp: <>&nbsp;</>,
             })}
-            <br />
-            {t('ClimateLandingPage/content/callToAction')}
           </h1>
-        </div>
-        <div {...styles.contentWrapper}>
           <section>
             <div>
               <p {...styles.text}>
@@ -60,11 +58,23 @@ const LandingPage = () => {
               <p {...styles.text}>
                 {t('ClimateLandingPage/content/paragraph2')}
               </p>
+              <p {...styles.text}>
+                {t.elements('ClimateLandingPage/content/paragraph3', {
+                  eventsLink: (
+                    <A
+                      style={{ textDecoration: 'underline' }}
+                      href={t('ClimateLandingPage/content/eventsLinkHref')}
+                      target='_blank'
+                      rel='noopener noreferrer'
+                    >
+                      {t('ClimateLandingPage/content/eventsLinkText')}
+                    </A>
+                  ),
+                })}
+              </p>
             </div>
           </section>
-          <section
-            {...css({ marginTop: 111, [mediaQueries.mUp]: { marginTop: 162 } })}
-          >
+          <section>
             <ColorContextProvider
               localColorVariables={colors}
               colorSchemeKey='light'
@@ -72,9 +82,7 @@ const LandingPage = () => {
               <ClimateLabTrialform />
             </ColorContextProvider>
           </section>
-          <section
-            {...css({ marginTop: 111, [mediaQueries.mUp]: { marginTop: 162 } })}
-          >
+          <section>
             <Counter
               translations={[
                 {
@@ -84,13 +92,10 @@ const LandingPage = () => {
               ]}
             />
           </section>
-          <section
-            {...css({ marginTop: 111, [mediaQueries.mUp]: { marginTop: 162 } })}
-          >
+          <section>
             <p {...styles.text}>
               {t('ClimateLandingPage/content/byRepublikText')}
             </p>
-            <br />
             <p {...styles.text}>
               {t('ClimateLandingPage/content/questionsText')}
             </p>
@@ -105,38 +110,31 @@ export default LandingPage
 
 const styles = {
   page: css({
+    position: 'relative',
     display: 'grid',
     gridTemplateAreas: `
       'image'
-      'title'
       'content'
     `,
+    gap: '4rem',
     [mediaQueries.mUp]: {
       gridTemplateColumns: '1fr 1fr',
       gridTemplateAreas: `
-        'image title'
         'image content'
       `,
-      gap: '0 2rem',
+      gap: 0,
     },
-  }),
-  titleWrapper: css({
-    gridArea: 'title',
-    marginTop: 38,
-    [mediaQueries.mUp]: {
-      marginTop: 200,
-    },
+    padding: '4rem 0 0 0',
   }),
   imageWrapper: css({
     gridArea: 'image',
     alignSelf: 'start',
     display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
+    justifyContent: 'center',
+    alignItems: 'flex-start',
     [mediaQueries.mUp]: {
       position: 'sticky',
-      top: '15vh',
+      top: '10vh',
     },
   }),
   image: css({
@@ -151,21 +149,23 @@ const styles = {
   }),
   contentWrapper: css({
     gridArea: 'content',
-    marginTop: 68,
+    display: 'flex',
+    margin: 'auto',
+    flexDirection: 'column',
+    gap: '4rem',
     [mediaQueries.mUp]: {
-      maxWidth: 550,
+      width: '80%',
     },
   }),
   pageTitle: css({
     ...fontStyles.serifTitle,
-    fontSize: 32,
+    fontSize: 38,
     lineHeight: '1.3em',
     textAlign: 'center',
-    margin: '0.67em 0',
+    margin: '1rem 0 -0.3em 0',
     [mediaQueries.mUp]: {
       fontSize: 48,
       textAlign: 'left',
-      margin: 0,
     },
     ['@media only screen and (min-width: 1350px)']: {
       fontSize: 58,
@@ -181,5 +181,7 @@ const styles = {
     [mediaQueries.mUp]: {
       fontSize: 24,
     },
+    '&:first-child': { marginTop: 0 },
+    '&:last-child': { marginBottom: 0 },
   }),
 }

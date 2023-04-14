@@ -49,7 +49,7 @@ export const PORTRAITS = {
     'https://cdn.repub.ch/s3/republik-assets/repos/republik/article-edge-question/files/b28323c4-156d-403c-b42e-3043190b62a5/dr.reinhard-steurer.jpg',
   'claudia-kemfert':
     'https://cdn.repub.ch/s3/republik-assets/repos/republik/article-edge-question/files/e3620e55-1e85-4a71-b8ac-310a9973667a/claudia_kemfert_by_oliver-betke.jpg',
-  chatgpt:
+  'chat-gpt':
     'https://cdn.repub.ch/s3/republik-assets/repos/republik/article-edge-question/files/bba5604d-f372-4c82-b8f6-b0f29faef1b7/chatgpt.jpg',
   'carola-rackete':
     'https://cdn.repub.ch/s3/republik-assets/repos/republik/article-edge-question/files/722afae3-c741-4184-a66c-65df46568f71/carola-rackete.jpeg',
@@ -63,74 +63,9 @@ export const PORTRAITS = {
     'https://cdn.repub.ch/s3/republik-assets/repos/republik/article-edge-question/files/a6af49c3-e656-48a7-aa5b-d0bc52380ab0/ashish-kothari.jpg',
   'anthony-patt':
     'https://cdn.repub.ch/s3/republik-assets/repos/republik/article-edge-question/files/cc7f3e9e-d58a-4143-8ec1-72f44b9438fc/anthony-patt.jpg',
+  'julian-schuetter':
+    'https://cdn.repub.ch/s3/republik-assets/repos/republik/article-edge-question/files/deed8d8f-9a2d-4a00-ac5c-0fc8d2723ee0/julian_schuetter.jpeg',
 }
-
-export const OVERVIEW_DATA = [
-  {
-    name: 'Claudia Kemfert',
-    tagline:
-      'Leiterin der Abteilung Energie, Verkehr, Umwelt beim Deutschen Institut für Wirtschaftsforschung',
-    excerpt:
-      'Die Uhr tickt. Es geht um nichts weniger, als die Erde ungefähr so zu erhalten, wie wir sie kennen.',
-    color: 'color0',
-  },
-  {
-    name: 'Patrick Hofstetter',
-    tagline: 'Klimaschutzexperte des WWF Schweiz',
-    excerpt:
-      'Ich wünsche mir, dass alle verstehen, dass die Klimakrise real ist, dass unsere Warnungen auf Fakten beruhen und dass die heute nötigen Investitionen und Verhaltensänderungen viel kleiner sind als alles, was uns das Klimachaos aufzwingen wird.',
-    color: 'color1',
-  },
-  {
-    name: 'Sherry Rehman',
-    tagline: 'Ministerin für Klimawandel von Pakistan',
-    excerpt:
-      'Es gibt kein Patentrezept zur Lösung der Klimakrise. Die Klimakrise ist ein vielschichtiges Problem, das einen ganzheitlichen Ansatz erfordert.',
-    color: 'color2',
-  },
-  {
-    name: 'Bernd Ulrich',
-    tagline: 'Stellvertretender Chefredakteur, Die ZEIT',
-    excerpt:
-      'Ich würde mir wünschen, dass die Politiker:innen all ihr gewohntes und im letzten Jahrhundert erlerntes politisches Denken einmal durch die klimapolitische Relativitätstheorie schicken würden.',
-    color: 'color3',
-  },
-  {
-    name: 'Mitzi Jonelle Tan',
-    tagline: '«Fridays for Future»-Aktivistin aus den Philippinen',
-    excerpt:
-      'Was den Klimawandel wirklich zur Krise werden lässt, ist die historische Ausbeutung von marginalisierten Gruppen, vor allem im Globalen Süden, vor allem durch den Globalen Norden.',
-    color: 'color4',
-  },
-  {
-    name: 'Rebecca Solnit',
-    tagline: 'Schriftstellerin, Mitgründerin des Klimaprojekts Not too Late',
-    excerpt:
-      'Die aktuelle Klimarevolution könnte uns in allen Bereichen wohlhabender machen. ',
-    color: 'color5',
-  },
-  {
-    name: 'Reinhard Steurer',
-    tagline:
-      'assoz. Professor für Klimapolitik an der Universität für Bodenkultur in Wien',
-    excerpt:
-      'Ich wünschte, eine große Mehrheit würde verstehen, dass Klimaschutz kein „grünes Anliegen“ ist. Es geht um den Schutz von Leben und von unserer Zivilisation.',
-    color: 'color0',
-  },
-  {
-    name: 'Claudia Traidl-Hoffmann',
-    tagline: 'Professorin für Umweltmedizin',
-    excerpt:
-      'Selbst wenn wir es als Weltgemeinschaft schaffen sollten, die Erderwärmung auf 1,5 Grad zu begrenzen, bedeutet das nicht, dass alles beim Alten bleiben wird.',
-    color: 'color1',
-  },
-  {
-    name: 'Kimberly Nicholas',
-    tagline: 'Nachhaltigkeitswissenschaftlerin an der Universität Lund',
-    excerpt: 'It’s warming. It’s us. We’re sure. It’s bad. We can fix it.',
-    color: 'color2',
-  },
-]
 
 export const localColors = {
   light: {

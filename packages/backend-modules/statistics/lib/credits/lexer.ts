@@ -47,6 +47,10 @@ export class Lexer {
         .rule(/\u00AB?([\p{L}\p{M}/.\u2019-]+)\u00BB?/u, (ctx, match) => {
           ctx.accept(TokenType.WORD, match[1])
         })
+        // catch-all: ignore character
+        .rule(/./, (ctx) => {
+          ctx.ignore()
+        })
     )
   }
 }

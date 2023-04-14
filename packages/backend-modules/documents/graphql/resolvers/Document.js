@@ -86,7 +86,7 @@ module.exports = {
     return doc.content
   },
   async meta(doc, { urlPrefix, searchString }, context, info) {
-    const meta = getMeta(doc)
+    const meta = await getMeta(doc)
     if (doc._all || doc._users) {
       metaUrlResolver(
         doc.type,
