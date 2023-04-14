@@ -39,7 +39,7 @@ export const ScrollySlide = ({
     <section
       ref={ref}
       {...styles.scrollySlide}
-      style={{ opacity: highlighted ? 1 : 0.5 }}
+      // style={{ opacity: highlighted ? 1 : 0.5 }}
     >
       {children}
     </section>
@@ -51,7 +51,7 @@ const styles = {
     transition: TRANSITION,
     maxWidth: '43rem',
     margin: '0 auto',
-    marginTop: '30vh',
+    marginTop: '10vh',
     // '&:first-of-type': { marginTop: '15vh' },
   }),
 }
