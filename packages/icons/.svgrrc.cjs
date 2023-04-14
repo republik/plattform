@@ -1,9 +1,10 @@
 // See https://react-svgr.com/docs/options/
 
 module.exports = {
+  jsxRuntime: 'automatic',
   icon: true,
   typescript: true,
-  expandProps: true,
+  expandProps: 'end',
   removeDimensions: false,
   replaceAttrValues: {
     '#000': 'currentColor',
