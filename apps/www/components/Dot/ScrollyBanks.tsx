@@ -232,8 +232,12 @@ export const Scrolly = () => {
         <Editorial.P>
           Mit anderen Worten: Viele Jahre lang hat die CS für Vergütungen und
           Bonuszahlungen zuhanden der angeblich besten Leute einen Haufen Geld
-          zum Fenster raus geworfen. Selbst die UBS, die heute viel besser
-          dasteht, hätte die Leistung womöglich günstiger haben können.
+          zum Fenster raus geworfen. Selbst die
+          <Highlight colorKey={key} color='one'>
+            UBS
+          </Highlight>
+          , die heute viel besser dasteht, hätte die Leistung womöglich
+          günstiger haben können.
         </Editorial.P>
         <Editorial.P>
           Die schlechten Effizienzwerte zeigen, dass die Rechnung für die
