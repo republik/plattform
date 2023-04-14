@@ -64,7 +64,7 @@ const BackgroundImage = ({
       {...(disabled ? styles.disabledImage : undefined)}
       {...colorScheme.set('boxShadow', 'imageChoiceShadow')}
     >
-      <AssetImage width={600} height={420} src={imageUrl} />
+      <AssetImage alt={imageUrl} width={600} height={420} src={imageUrl} />
     </div>
   )
 }
