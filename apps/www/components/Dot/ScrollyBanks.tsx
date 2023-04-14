@@ -8,8 +8,12 @@ import { ScrollySlide } from './ScrollySlide'
 import { ChapterIndicator } from './ChapterIndicator'
 import { StoryGraphic } from './StoryGraphicBanks'
 
+import { useResolvedColorSchemeKey } from '../ColorScheme/lib'
+import { NEW_COLORS } from './config'
+
 export const Scrolly = () => {
   const [colorScheme] = useColorContext()
+  const key = useResolvedColorSchemeKey()
   const [inViewList, setInViewList] = useState([
     false,
     false,
@@ -61,17 +65,24 @@ export const Scrolly = () => {
           <ChapterIndicator highlighted={lastInView === 0}>1</ChapterIndicator>
         </Editorial.Subhead>
         <Editorial.P>
-          260’000 Franken lässt sich die UBS eine Vollzeitstelle im Schnitt
-          kosten.
+          258’000 Franken lässt sich die
+          <Highlight colorKey={key} color='one'>
+            UBS
+          </Highlight>
+          eine Vollzeitstelle im Schnitt kosten.
         </Editorial.P>
         <Editorial.P>
           Das ist überdurchschnittlich viel für eine Schweizer Bank.
         </Editorial.P>
         <Editorial.P>
-          Auch die CS gab zuletzt viel Geld aus für ihr Personal: 180’000
-          Franken. Das ist zwar deutlich weniger als die Erzrivalin, von der sie
-          unlängst geschluckt wurde. Aber immer noch viel im Vergleich mit
-          anderen Banken und Konzernen.
+          Auch die
+          <Highlight colorKey={key} color='two'>
+            CS
+          </Highlight>
+          gab zuletzt viel Geld aus für ihr Personal: 179’000 Franken pro
+          Vollzeitstelle (FTE). Das ist zwar deutlich weniger als die
+          Erzrivalin, von der sie unlängst geschluckt wurde. Aber immer noch
+          viel im Vergleich mit anderen Banken und Konzernen.
         </Editorial.P>
         <Editorial.P>
           Müssten die Löhne nicht endlich sinken, nachdem die CS übernommen
@@ -103,23 +114,40 @@ export const Scrolly = () => {
         </Editorial.Subhead>
         <Editorial.P>
           Bleiben wir auf dem Schweizer Finanzplatz und nehmen die
-          Genossenschaftsbank Raiffeisen und die Kantonalbanken aus den Kantonen
-          Waadt und Zug als Vergleich dazu.
+          Genossenschaftsbank
+          <Highlight colorKey={key} color='four'>
+            Raiffeisen
+          </Highlight>
+          und die Kantonalbanken aus den Kantonen
+          <Highlight colorKey={key} color='five'>
+            Waadt
+          </Highlight>
+          und
+          <Highlight colorKey={key} color='three'>
+            Zug
+          </Highlight>
+          als Vergleich dazu.
         </Editorial.P>
 
         <Editorial.P>
-          Zwar sind die Grössenunterschiede bei den Personalausgaben riesig. So
-          meldet etwa die UBS mit 71’000 FTEs 172-mal mehr Vollzeitstellen als
-          die Zuger Kantonalbank mit 416 FTE. Doch für den Vergleich spielt die
-          Grösse keine Rolle, weil wir die Ausgaben auf eine Vollzeitstelle
-          herunterbrechen.
+          Zwar sind die Grössenunterschiede bei den Personalausgaben riesig. Die
+          UBS bezahlt 71’000 FTE und damit 172-mal mehr als die
+          <Highlight colorKey={key} color='three'>
+            Zuger Kantonalbank
+          </Highlight>
+          mit gerade mal 416 FTE. Doch für den Vergleich spielt die Grösse keine
+          Rolle, weil wir die Ausgaben auf eine Vollzeitstelle herunterbrechen.
         </Editorial.P>
 
         <Editorial.P>
           Hier zeigt sich, dass das Personal der Raiffeisen und der
           Kantonalbanken deutlich schlechter bezahlt wird, als jenes der UBS.
-          Und die Personalkosten der Waadtländer Kantonalbank sind minim höher
-          als bei der CS.
+          Die
+          <Highlight colorKey={key} color='two'>
+            CS
+          </Highlight>
+          reiht sich bei den Personalkosten im oberen Mittelfeld der kleineren
+          Banken ein.
         </Editorial.P>
       </ScrollySlide>
 
@@ -131,14 +159,20 @@ export const Scrolly = () => {
           <ChapterIndicator highlighted={lastInView === 2}>3</ChapterIndicator>
         </Editorial.Subhead>
         <Editorial.P>
-          Nun nehmen wir einen neuen Wert dazu: den Konzerngewinn pro
-          Vollzeitstelle. Oder mit anderen Worten: die Effizienz.
+          Nun nehmen wir einen neuen Wert dazu: den Konzerngewinn pro FTE. Oder
+          mit anderen Worten: die Effizienz. Wir sehen zum Beispiel, dass die
+          <Highlight colorKey={key} color='five'>
+            Waadtländer Kantonalbank
+          </Highlight>
+          pro Vollzeitstelle 196’000 Franken Gewinn macht, während die
+          Personalausgaben bei 181’000 Franken liegen.
         </Editorial.P>
 
         <Editorial.P>
-          Auf einen Schlag ändert sich das Bild. Die UBS rutscht ab und die
-          kleineren Banken mit dem vermeintlich weniger guten Personal schwingen
-          obenauf. Zum Sonderfall CS kommen wir gleich.
+          Das ist ein hervorragendes Verhältnis. Es zeigt: Das Personal der
+          kleinen Bank ist derart effizient, dass es nicht nur seine Lohn- und
+          Sozialkosten (via Umsatz) wieder reinholt, sondern darüber hinaus
+          sogar mehr Gewinn erwirtschaftet als es Kosten verursacht.
         </Editorial.P>
 
         <Editorial.P>
@@ -147,6 +181,14 @@ export const Scrolly = () => {
           bedeutet, dass ihr Personal nicht nur seine Lohn- und Sozialkosten
           (via Umsatz) wieder reinholt, sondern darüber hinaus sogar mehr Gewinn
           erwirtschaftet als es Kosten verursacht.
+        </Editorial.P>
+        <Editorial.P>
+          Davon können die Banker bei der
+          <Highlight colorKey={key} color='one'>
+            UBS
+          </Highlight>
+          nur träumen. Sie sehen im Vergleich mit dem günstigeren Personal der
+          Regionalbanken bleich aus.
         </Editorial.P>
 
         <Editorial.P>Und das führt uns zur CS.</Editorial.P>
@@ -160,14 +202,22 @@ export const Scrolly = () => {
           <ChapterIndicator highlighted={lastInView === 3}>4</ChapterIndicator>
         </Editorial.Subhead>
         <Editorial.P>
-          Sie hat im Vergleichsjahr 2021 einen Verlust von 1,65 Milliarden
-          Franken eingefahren. Damit fällt auch der Gewinn pro Person ins Minus.
+          Die
+          <Highlight colorKey={key} color='two'>
+            CS
+          </Highlight>
+          hat im Vergleichsjahr 2021 einen Verlust von 1.65 Milliarden Franken
+          eingefahren. Damit fällt auch der Gewinn pro Person ins Minus. Konkret
+          machte die Grossbank pro FTE einen Verlust von 32’900 Franken.
         </Editorial.P>
 
         <Editorial.P>
-          Die UBS steht schlechter da als Raiffeisen und Kantonalbanken und die
-          CS findet sich im Keller wieder. Haben sich die hohen Ausgaben im
-          globalen Gerangel um die besten Talente ausbezahlt?
+          Die Frage drängt sich auf, ob hier einfach ein Jahr ausgesucht wurde,
+          das für die CS besonders schlecht lief. Doch das spielt keine Rolle.
+          Es sieht für die CS auch in Jahren mit Schwarzen Zahlen nicht besser
+          aus. Wir mussten bis ins Jahr 2010 zurück, um einen Durchschnittswert
+          zu finden, der mit den kleineren Banken mithalten kann. Damals machte
+          die CS einen Gewinn von 102’000 Franken pro FTE.
         </Editorial.P>
 
         <Editorial.P>Zugegeben, das ist eine rhetorische Frage.</Editorial.P>
@@ -180,13 +230,14 @@ export const Scrolly = () => {
           kann.
         </Editorial.P>
         <Editorial.P>
-          Mit anderen Worten: Viele Jahre hat die CS einen Haufen Geld für die
-          angeblich besten Leute verschwendet.
+          Mit anderen Worten: Viele Jahre lang hat die CS für Vergütungen und
+          Bonuszahlungen zuhanden der angeblich besten Leute einen Haufen Geld
+          zum Fenster raus geworfen. Selbst die UBS, die heute viel besser
+          dasteht, hätte die Leistung womöglich günstiger haben können.
         </Editorial.P>
         <Editorial.P>
-          Ein grosser Teil dieses Geldes ist in Form von Bonuszahlungen für
-          Kaderleute ausgegeben worden, die Risiken missachteten und persönliche
-          Bereicherung über beruflichen Erfolg stellten.
+          Die schlechten Effizienzwerte zeigen, dass die Rechnung für die
+          Grossbanken nicht aufgegangen ist.
         </Editorial.P>
       </ScrollySlide>
     </div>
@@ -237,4 +288,27 @@ const styles = {
     height: '12px',
     marginRight: '5px',
   }),
+}
+
+const Highlight = ({ color, colorKey, children }) => {
+  return (
+    <span
+      style={{
+        display: 'inline-block',
+        verticalAlign: 'text-top',
+        padding: '0 5px',
+      }}
+    >
+      <span
+        {...styles.highlight}
+        style={{ backgroundColor: NEW_COLORS[colorKey].lightBackground }}
+      >
+        <span
+          {...styles.circle}
+          style={{ backgroundColor: NEW_COLORS[colorKey][color] }}
+        />
+        {children}
+      </span>
+    </span>
+  )
 }

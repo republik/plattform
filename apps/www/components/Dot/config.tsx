@@ -69,6 +69,7 @@ export const NEW_COLORS = {
     four: '#887BD3',
     five: '#FFD13C',
     default: '#cfcfcf',
+    lightBackground: 'rgba(0, 0, 0, 0.05)',
   },
   dark: {
     one: '#1571B7',
@@ -77,6 +78,7 @@ export const NEW_COLORS = {
     four: '#887BD3',
     five: '#FFD13C',
     default: '#737373',
+    lightBackground: 'rgba(255, 255, 255, 0.05)',
   },
 }
 

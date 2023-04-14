@@ -81,7 +81,12 @@ export const DotAppPrototyp2 = () => {
           <InfoBox>
             <InfoBoxTitle>Zu den Daten</InfoBoxTitle>
 
-            <InfoBoxText>Daten aus Geschäftsberichten etc.</InfoBoxText>
+            <InfoBoxText>
+              Den Gewinn, die Anzahl Vollzeitstellen (FTE) und den
+              Personalaufwand weisen die Banken jeweils in ihren Jahresberichten
+              aus. Den Aufwand pro FTE und den Gewinn pro FTE ergeben sich aus
+              diesen Zahlen.
+            </InfoBoxText>
           </InfoBox>
         </section>
       </Center>

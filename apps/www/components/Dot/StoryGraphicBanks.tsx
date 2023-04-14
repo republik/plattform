@@ -130,42 +130,46 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
         {/* left side */}
         <motion.text
           {...styles.axisTick}
-          style={{ textAnchor: 'middle' }}
           variants={defineVariants(
             {
               x: CENTER,
-              y: chartRange[0] - 40,
+              y: chartRange[0] - 35,
               opacity: 0,
+              textAnchor: 'middle',
             },
             {
               step1: {
                 x: CENTER,
-                y: chartRange[0] - 40,
+                y: chartRange[0] - 35,
                 opacity: 1,
                 transition: { duration: 0.5 },
+                textAnchor: 'middle',
               },
               step2: {
                 x: CENTER,
-                y: chartRange[0] - 40,
+                y: chartRange[0] - 35,
                 opacity: 1,
                 transition: { duration: 0.5, delay: 1 },
+                textAnchor: 'middle',
               },
               step3: {
                 x: CENTER - PADDING_LEFT_CHART,
-                y: chartRange[0] - 40,
+                y: chartRange[0] - 35,
                 opacity: 1,
                 transition: { duration: 0.5, delay: 1 },
+                textAnchor: 'end',
               },
               step4: {
                 x: CENTER - PADDING_LEFT_CHART,
-                y: chartRange[0] - 40,
+                y: chartRange[0] - 35,
                 opacity: 1,
                 transition: { duration: 0.5, delay: 1 },
+                textAnchor: 'end',
               },
             },
           )}
         >
-          Ausgaben Personal
+          Personalausgaben pro FTE
         </motion.text>
         <motion.line
           transition={{ duration: 0.5 }}
@@ -242,30 +246,32 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
         ></motion.line>
         <motion.text
           {...styles.axisTick}
-          style={{ textAnchor: 'middle' }}
           variants={defineVariants(
             {
               x: CENTER + PADDING_LEFT_CHART,
-              y: chartRange[0] - 40,
+              y: chartRange[0] - 35,
               opacity: 0,
+              textAnchor: 'start',
             },
             {
               step3: {
                 x: CENTER + PADDING_LEFT_CHART,
-                y: chartRange[0] - 40,
+                y: chartRange[0] - 35,
                 opacity: 1,
                 transition: { duration: 0.5, delay: 1 },
+                textAnchor: 'start',
               },
               step4: {
                 x: CENTER + PADDING_LEFT_CHART,
-                y: chartRange[0] - 40,
+                y: chartRange[0] - 35,
                 opacity: 1,
                 transition: { duration: 0.5, delay: 1 },
+                textAnchor: 'start',
               },
             },
           )}
         >
-          Gewinn
+          Gewinn pro FTE
         </motion.text>
         {/* slope lines */}
         <motion.line
@@ -910,28 +916,28 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
           {...colorScheme.set('fill', 'text')}
           variants={defineVariants(
             {
-              y: getCostPosition('Kantonalbank Vaudoise') - 10,
+              y: getCostPosition('Kantonalbank Vaudoise') - 12,
               x: CENTER - 25,
               opacity: 0,
               textAnchor: 'end',
             },
             {
               step2: {
-                y: getCostPosition('Kantonalbank Vaudoise') - 10,
+                y: getCostPosition('Kantonalbank Vaudoise') - 12,
                 x: CENTER - 25,
                 opacity: 1,
                 transition: { duration: 0.5, delay: 0.5 },
                 textAnchor: 'end',
               },
               step3: {
-                y: getCostPosition('Kantonalbank Vaudoise') - 10,
+                y: getCostPosition('Kantonalbank Vaudoise') - 12,
                 x: CENTER - PADDING_LEFT_CHART - 25,
                 opacity: 1,
                 transition: { duration: 0.5, delay: 1 },
                 textAnchor: 'end',
               },
               step4: {
-                y: getCostPositionWithCS('Kantonalbank Vaudoise') - 10,
+                y: getCostPositionWithCS('Kantonalbank Vaudoise') - 12,
                 x: CENTER - PADDING_LEFT_CHART - 25,
                 opacity: 0,
                 transition: { duration: 0.5, delay: 1 },
@@ -941,7 +947,7 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
           )}
           dy='.35em'
         >
-          Kantonalbank Vaudoise
+          Waadtländer Kantonalbank
         </motion.text>
         <motion.text
           {...styles.label}
