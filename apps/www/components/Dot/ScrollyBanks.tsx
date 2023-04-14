@@ -191,7 +191,7 @@ export const Scrolly = () => {
           Regionalbanken bleich aus.
         </Editorial.P>
 
-        <Editorial.P>Und das führt uns zur CS.</Editorial.P>
+        <Editorial.P>Und die CS?</Editorial.P>
       </ScrollySlide>
 
       <ScrollySlide
@@ -218,16 +218,6 @@ export const Scrolly = () => {
           aus. Wir mussten bis ins Jahr 2010 zurück, um einen Durchschnittswert
           zu finden, der mit den kleineren Banken mithalten kann. Damals machte
           die CS einen Gewinn von 102’000 Franken pro FTE.
-        </Editorial.P>
-
-        <Editorial.P>Zugegeben, das ist eine rhetorische Frage.</Editorial.P>
-        <Editorial.P>
-          Und es könnte mitunter der Verdacht aufkommen, dass hier ein Jahr
-          gewählt wurde, das für die CS besonders schlecht war. Doch das Bild
-          ändert sich auch in jenen Jahren nicht, welche die CS mit schwarzen
-          Zahlen abgeschlossen hat. Man muss bis ins Jahr 2010 zurück, um einen
-          Durchschnittswert zu finden, der mit den kleineren Banken mithalten
-          kann.
         </Editorial.P>
         <Editorial.P>
           Mit anderen Worten: Viele Jahre lang hat die CS für Vergütungen und
