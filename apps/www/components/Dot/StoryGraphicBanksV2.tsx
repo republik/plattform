@@ -124,7 +124,7 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
     <motion.svg
       viewBox='0 0 930 360'
       preserveAspectRatio='xMidYMid meet'
-      style={{ width: '100%', height: '100%' }}
+      style={{ width: '100%' }}
       {...colorScheme.set('background-color', 'transparentBackground')}
       initial='step0'
       animate={getVariant(highlighted)}

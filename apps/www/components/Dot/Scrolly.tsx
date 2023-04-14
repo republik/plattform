@@ -2,7 +2,7 @@ import { useState } from 'react'
 
 import { css } from 'glamor'
 
-import { Editorial, useColorContext } from '@project-r/styleguide'
+import { Editorial, useColorContext, mediaQueries } from '@project-r/styleguide'
 
 import { ScrollySlide } from './ScrollySlide'
 import { ChapterIndicator } from './ChapterIndicator'
@@ -34,7 +34,10 @@ export const Scrolly = () => {
 
   return (
     <div className='Scrolly' {...styles.scrolly}>
-      <div {...styles.scrollyGraphicsContainer}>
+      <div
+        {...styles.scrollyGraphicsContainer}
+        {...colorScheme.set('background-color', 'default')}
+      >
         <div
           {...styles.scrollyGraphicsChapters}
           {...colorScheme.set('background-color', 'default')}
@@ -56,7 +59,6 @@ export const Scrolly = () => {
 
         <StoryGraphic highlighted={lastInView} />
       </div>
-
       <ScrollySlide
         highlighted={lastInView === 0}
         onChangeInView={handleInView(0)}
@@ -267,21 +269,29 @@ const styles = {
   scrollyGraphicsContainer: css({
     position: 'sticky',
     top: 0,
+    padding: '48px',
     /* min-height: 50dvh; */
-    width: '100%',
+    width: '100vw',
+    // Beautiful hack to break out to full width from whatever the container size is at the moment
+    marginLeft: 'calc(-50vw + 50%)',
     zIndex: 1,
     display: 'flex',
-    height: '100%',
-    // maxHeight: '35vh' /* don't use dvh here, otherwise the layout will jump when scrolling */,
+    maxHeight:
+      '50vh' /* don't use dvh here, otherwise the layout will jump when scrolling */,
     backdropFilter: 'blur(2px)',
-    flexWrap: 'wrap',
+    boxShadow: '0px 15px 15px 0px rgba(0,0,0,0.05)',
+
+    [mediaQueries.mUp]: {
+      padding: '60px',
+    },
   }),
   scrollyGraphicsChapters: css({
     position: 'absolute',
-    // width: '100%',
+    left: 10,
+    top: 0,
+    bottom: 0,
     textAlign: 'center',
     justifyContent: 'center',
-    // paddingTop: 80,
     opacity: 0,
     display: 'flex',
     flexDirection: 'column',
