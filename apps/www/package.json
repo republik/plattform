@@ -38,7 +38,7 @@
   },
   "homepage": "https://github.com/republik/plattform#readme",
   "devDependencies": {
-    "@next/eslint-plugin-next": "^13.1.6",
+    "@next/eslint-plugin-next": "^13.3.0",
     "@republik/eslint-config-frontend": "*",
     "@republik/tsconfig": "*",
     "@stripe/stripe-js": "^1.22.0",
@@ -109,7 +109,7 @@
     "lodash": "^4.17.21",
     "lru-cache": "^4.1.3",
     "mdast-react-render": "^1.2.0",
-    "next": "^13.1.6",
+    "next": "^13.3.0",
     "photoswipe": "^4.1.3",
     "prop-types": "^15.8.1",
     "react": "^18.2.0",

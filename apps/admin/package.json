@@ -48,7 +48,7 @@
     "lodash.debounce": "^4.0.8",
     "mdast-react-render": "^1.2.0",
     "moment": "^2.29.1",
-    "next": "^13.1.6",
+    "next": "^13.3.0",
     "prop-types": "^15.7.2",
     "react": "^18.2.0",
     "react-autosize-textarea": "^5.0.1",
@@ -65,7 +65,7 @@
     "validator": "^10.11.0"
   },
   "devDependencies": {
-    "@next/eslint-plugin-next": "^13.1.6",
+    "@next/eslint-plugin-next": "^13.3.0",
     "@republik/eslint-config-frontend": "*",
     "@republik/tsconfig": "*",
     "@testing-library/jest-dom": "^5.16.3",
