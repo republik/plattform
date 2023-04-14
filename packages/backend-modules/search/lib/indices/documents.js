@@ -276,14 +276,10 @@ module.exports = {
               type: 'text',
               analyzer: 'german_with_stopwords',
             },
-            credits: {
+            contributors: {
               properties: {
-                children: {
-                  properties: {
-                    url: {
-                      type: 'keyword',
-                    },
-                  },
+                userId: {
+                  type: 'keyword',
                 },
               },
             },

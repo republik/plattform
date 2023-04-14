@@ -173,7 +173,10 @@ const getEstimatedConsumptionMinutes = (doc, estimatedReadingMinutes) => {
 const getRepoIdsForDoc = (doc, includeParents) =>
   [
     doc.meta?.repoId || doc._meta?.repoId || doc.repoId,
-    includeParents && getRepoId(doc.meta?.format || doc._meta?.format).repoId,
+    includeParents &&
+      getRepoId(
+        doc.meta?.format || doc._meta?.format || doc.content?.meta?.format,
+      ).repoId,
   ].filter(Boolean)
 
 const getTemplate = (doc) => doc.meta?.template || doc._meta?.template

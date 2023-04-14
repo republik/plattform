@@ -22,34 +22,40 @@ const SIZE = 28
 const PADDING_MOBILE = Math.floor((HEADER_HEIGHT_MOBILE - SIZE) / 2)
 const PADDING_DESKTOP = Math.floor((HEADER_HEIGHT - SIZE) / 2)
 
+/**
+ * Component to render the toggle element in the top right corner of the frame on top of the nav.
+ * If a sub-navigation is expaned, it renders a close button.
+ * Otherwise it renders the audio player toggle.
+ */
 const Toggle = ({ expanded, closeOverlay, ...props }) => {
   const [colorScheme] = useColorContext()
   const { audioQueue, isAudioQueueAvailable } = useAudioQueue()
   const {
     audioPlayerVisible,
     setAudioPlayerVisible,
+    isPlaying,
     isExpanded: audioPlayerExpanded,
     setIsExpanded: setAudioPlayerExpanded,
   } = useAudioContext()
   const audioItemsCount = audioQueue?.length
 
-  const disableAudioBtn = !expanded && audioPlayerVisible && audioPlayerExpanded
-
-  const buttonStyle = useMemo(
-    () => ({
-      opacity: expanded ? 0.000001 : disableAudioBtn ? 0.33 : 1, // hacky fix for browser rendering issue in FF
-      transition: `opacity ${TRANSITION_MS}ms ease-out`,
-    }),
-    [expanded, disableAudioBtn],
-  )
-
   const onClick = () => {
     if (expanded) {
       return closeOverlay && closeOverlay()
     }
+    // handle close audio player
+    if (audioPlayerVisible && audioPlayerExpanded) {
+      if (isPlaying) {
+        setAudioPlayerExpanded(false)
+      } else {
+        setAudioPlayerVisible(false)
+      }
+    }
+    // expand mini-player or player if not visible yet
     if (!audioPlayerExpanded) {
       setAudioPlayerExpanded(true)
     }
+    // make visible if previously hidden
     if (!audioPlayerVisible) {
       trackEvent(['Navigation', 'toggleAudioPlayer', audioItemsCount])
       setAudioPlayerVisible(true)
@@ -57,28 +63,20 @@ const Toggle = ({ expanded, closeOverlay, ...props }) => {
   }
 
   return expanded || isAudioQueueAvailable ? (
-    <button
-      {...styles.menuToggle}
-      disabled={disableAudioBtn}
-      onClick={onClick}
-      {...props}
-    >
-      <IconMic
-        style={buttonStyle}
-        {...colorScheme.set('fill', 'text')}
-        size={SIZE}
-      />
-      {!!audioItemsCount && (
-        <span
-          style={buttonStyle}
-          {...colorScheme.set('background', 'default')}
-          {...colorScheme.set('color', 'text')}
-          {...styles.audioCount}
-        >
-          {audioItemsCount}
-        </span>
-      )}
-      <IconClose
+    <button {...styles.menuToggle} onClick={onClick} {...props}>
+      <div style={{ opacity: !expanded ? 1 : 0 }} {...styles.audioButton}>
+        <IconMic {...colorScheme.set('fill', 'text')} size={SIZE} />
+        {!!audioItemsCount && (
+          <span
+            {...colorScheme.set('background', 'default')}
+            {...colorScheme.set('color', 'text')}
+            {...styles.audioCount}
+          >
+            {audioItemsCount}
+          </span>
+        )}
+      </div>
+      <CloseIcon
         style={{ opacity: expanded ? 1 : 0 }}
         {...styles.closeButton}
         {...colorScheme.set('fill', 'text')}
@@ -115,6 +113,9 @@ const styles = {
       top: 22,
       left: 36,
     },
+  }),
+  audioButton: css({
+    transition: `opacity ${TRANSITION_MS}ms ease-out`,
   }),
   closeButton: css({
     position: 'absolute',

@@ -1,18 +1,17 @@
 import React from 'react'
 import { css } from 'glamor'
 import { AudioCoverGenerator } from '@project-r/styleguide'
+import {
+  AudioCoverPropsOptions,
+  getImageCropURL,
+} from '../../helpers/getImageCropURL'
 
 type AudioCoverProps = {
   cover?: string
   size: number
   format?: any
   image?: string
-  audioCoverCrop?: {
-    x: number
-    y: number
-    width: number
-    height: number
-  }
+  audioCoverCrop?: AudioCoverPropsOptions
   alt?: string
 }
 
@@ -22,18 +21,6 @@ const styles = {
     objectFit: 'cover',
     height: 'auto',
   }),
-}
-
-const getResizefromURL = (url, size) => {
-  const imgURL = new URL(url)
-  const sizeString = imgURL.searchParams.get('size')
-  const [w, h] = sizeString.split('x')
-
-  if (w >= h) {
-    return `x${size}`
-  }
-
-  return `${size}x`
 }
 
 const AudioCover = ({
@@ -49,13 +36,8 @@ const AudioCover = ({
       <img {...styles.cover} src={cover} style={{ width: size }} alt={alt} />
     )
   } else if (imageUrl) {
-    let resizeUrl
-    if (audioCoverCrop) {
-      const { x, y, width: w, height: h } = audioCoverCrop
-      resizeUrl = `${imageUrl}&crop=${x}x${y}y${w}w${h}h&resize=${size * 2}x`
-    } else {
-      resizeUrl = `${imageUrl}&resize=${getResizefromURL(imageUrl, size * 2)}`
-    }
+    const resizeUrl = getImageCropURL(imageUrl, size * 2, audioCoverCrop)
+
     return (
       <img
         src={resizeUrl || imageUrl}

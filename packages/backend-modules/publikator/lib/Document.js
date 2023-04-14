@@ -8,10 +8,7 @@ const { timeFormat } = require('@orbiting/backend-modules-formats')
 const {
   Redirections: { upsert: upsertRedirection },
 } = require('@orbiting/backend-modules-redirections')
-const {
-  getMeta,
-  getContributorUserLinks,
-} = require('@orbiting/backend-modules-documents/lib/meta')
+const { getMeta } = require('@orbiting/backend-modules-documents/lib/meta')
 
 const { upsert: upsertDiscussion } = require('./Discussion')
 const { updateRepo } = require('./postgres')
@@ -170,16 +167,7 @@ const prepareMetaForPublish = async ({
   }
 
   await getMeta(doc)
-  const { credits, creditsString } = doc._meta
-
-  const contributorUserLinks = await getContributorUserLinks(
-    doc.type,
-    {
-      path,
-      credits,
-    },
-    context,
-  )
+  const { credits, creditsString, contributors } = doc._meta
 
   // transform docMeta
   return {
@@ -196,7 +184,7 @@ const prepareMetaForPublish = async ({
     audioSource,
     credits,
     creditsString,
-    contributorUserLinks,
+    contributors,
     isSeriesMaster,
     isSeriesEpisode,
     seriesEpisodes,
