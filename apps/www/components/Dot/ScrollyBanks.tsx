@@ -256,12 +256,12 @@ const styles = {
     zIndex: 1,
     display: 'flex',
     maxHeight:
-      '45vh' /* don't use dvh here, otherwise the layout will jump when scrolling */,
+      '40vh' /* don't use dvh here, otherwise the layout will jump when scrolling */,
     backdropFilter: 'blur(2px)',
     boxShadow: '0px 5px 5px 0px rgba(0,0,0,0.05)',
 
     [mediaQueries.mUp]: {
-      padding: '60px',
+      padding: '40px',
     },
   }),
   scrollyGraphicsChapters: css({

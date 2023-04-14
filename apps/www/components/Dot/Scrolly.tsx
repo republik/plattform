@@ -282,7 +282,7 @@ const styles = {
     boxShadow: '0px 5px 5px 0px rgba(0,0,0,0.05)',
 
     [mediaQueries.mUp]: {
-      padding: '60px',
+      padding: '40px',
     },
   }),
   scrollyGraphicsChapters: css({

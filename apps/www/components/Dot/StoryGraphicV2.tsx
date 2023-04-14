@@ -54,8 +54,8 @@ const getVariant = (highlighted: number) => {
   return 'step0'
 }
 
-const CENTER = 930 / 2
-const OFFSET = 105
+const CENTER = 600 / 2
+const OFFSET = 20
 
 const TRANSFERS = [
   '1. Transfer',
@@ -104,7 +104,7 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
 
   return (
     <motion.svg
-      viewBox='0 0 930 420'
+      viewBox='0 0 600 400'
       preserveAspectRatio='xMidYMid meet'
       style={{
         width: '100%',
@@ -213,7 +213,7 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
           },
           {
             step4: {
-              x: CENTER - OFFSET,
+              x: CENTER - 110,
               y: PADDING_TOP,
             },
           },
