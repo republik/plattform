@@ -173,8 +173,8 @@ export const Scrolly = () => {
         <Editorial.P>Test. Negativ. Trauer, Wut, Verzweiflung.</Editorial.P>
         <Editorial.P>
           Wer Monat für Monat zittern und hadern musste, für den ist ein
-          positiver Schwangerschaftstest ein Geschenk des Himmels. Ein konkretes
-          Wesen, das entsteht, wo vorher immer nur nichts war. Hoffen dürfen.{' '}
+          positiver Schwangerschaftstest ein Geschenk des Himmels. Hoffen
+          dürfen.
         </Editorial.P>
         <Editorial.P>
           Dies bleibt Frauen jenseits der 40 und ihren Partnern auch mit allen
