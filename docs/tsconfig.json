@@ -1,7 +1,6 @@
 {
   "extends": "@republik/tsconfig/nextjs.json",
   "compilerOptions": {
-    "strict": true,
     "baseUrl": ".",
     "paths": {}
   },
