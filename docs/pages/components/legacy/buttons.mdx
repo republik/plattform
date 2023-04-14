@@ -1,0 +1,129 @@
+import { Button } from '@project-r/styleguide'
+
+# Le Mighty Button
+
+## Default
+
+<Button>Weiter</Button>
+
+<Button disabled>Weiter</Button>
+
+<Button simulate='hover'>Weiter</Button>
+
+```tsx
+<Button simulate='hover'>Weiter</Button>
+```
+
+<Button simulate='active'>Weiter</Button>
+
+## Primary
+
+<Button primary>Mitmachen</Button>
+
+<Button primary disabled>
+  Mitmachen
+</Button>
+
+<Button primary simulate='hover'>
+  Mitmachen
+</Button>
+
+<Button primary simulate='active'>
+  Mitmachen
+</Button>
+
+## Naked
+
+The naked prop removes the background color from the button. They retain size and padding consistencies, so they can easily be paired with buttons for less desired actions, like cancelling.
+
+<>
+  <Button primary>Mitmachen</Button>
+  <Button naked primary>
+    Monatsabo
+  </Button>
+  <Button naked>Abbrechen</Button>
+</>
+
+<>
+  <Button naked simulate='hover'>
+    Mitmachen
+  </Button>
+  <Button naked primary simulate='hover'>
+    Mitmachen
+  </Button>
+</>
+
+<>
+  <Button naked simulate='active'>
+    Mitmachen
+  </Button>
+  <Button naked primary simulate='active'>
+    Mitmachen
+  </Button>
+</>
+
+<>
+  <Button naked disabled>
+    Mitmachen
+  </Button>
+  <Button naked primary disabled>
+    Mitmachen
+  </Button>
+</>
+
+## Button Link
+
+<Button href='https://www.republik.ch/feed' primary>
+  Zum Feed
+</Button>
+
+<Button href='https://www.republik.ch/feed' title='Republik feed anzeigen'>
+  Zum Feed
+</Button>
+
+<Button
+  href='https://reactjs.org/'
+  title="You don't know what's gonna hit you"
+  target='_blank'
+  block
+>
+  Open link in a new tab
+</Button>
+
+## Small
+
+Small buttons have no minimum width. They can be used for narrow UI spaces, like save actions on forms.
+
+<>
+  <Button small style={{ marginRight: 16 }}>
+    Jöh!
+  </Button>
+  <Button small primary>
+    Jöh!
+  </Button>
+</>
+
+<>
+  <Button small primary style={{ marginRight: 16 }}>
+    speichern
+  </Button>
+  <Button small naked>
+    abbrechen
+  </Button>
+</>
+
+### Special Cases
+
+To fit, e.g. in a header, it's permissible to set an explicit height.
+
+<Button style={{ height: 50 }}>Päng</Button>
+
+## Block
+
+<Button block>Volle Breite</Button>
+
+Use [glamors `css` or `merge`](https://github.com/threepointone/glamor/blob/master/docs/howto.md#combined-selectors) to ensure your `border`, `background`, `padding` and other styles take precedence over the plain rule.
+
+```
+
+```
