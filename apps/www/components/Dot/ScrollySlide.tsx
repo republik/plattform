@@ -52,6 +52,6 @@ const styles = {
     maxWidth: '43rem',
     margin: '0 auto',
     marginTop: '10vh',
-    // '&:first-of-type': { marginTop: '15vh' },
+    '&:first-of-type': { paddingTop: '15vh' },
   }),
 }

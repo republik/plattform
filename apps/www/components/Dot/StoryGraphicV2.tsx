@@ -55,7 +55,7 @@ const getVariant = (highlighted: number) => {
 }
 
 const CENTER = 600 / 2
-const OFFSET = 20
+const OFFSET = -130
 
 const TRANSFERS = [
   '1. Transfer',
@@ -113,7 +113,7 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
       initial='step0'
       animate={getVariant(highlighted)}
     >
-      {/* second age group, 30 to 34 */}
+      {/* second age group, 40 plus */}
       <motion.g
         variants={defineVariants(
           {
@@ -213,7 +213,7 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
           },
           {
             step4: {
-              x: CENTER - 110,
+              x: CENTER - 140,
               y: PADDING_TOP,
             },
           },
@@ -347,7 +347,7 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
               transition: { duration: 0.5 },
             },
             step4: {
-              x: CENTER - 360,
+              x: OFFSET,
               y: PADDING_TOP,
               transition: { duration: 0.5 },
             },
