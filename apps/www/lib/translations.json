@@ -1029,6 +1029,22 @@
       "value": "Die Funktion ist nur für Mitglieder und Abonnentinnen die Republik zugänglich."
     },
     {
+      "key": "account/audio/title",
+      "value": "Automatisches Abspielen der Wiedergabeliste"
+    },
+    {
+      "key": "account/audio/description",
+      "value": "Standardmässig spielt die Wiedergabeliste automatisch den nächsten Beitrag ab, wenn der aktuelle Beitrag fertig gehört ist."
+    },
+    {
+      "key": "account/audio/consent",
+      "value": "Automatisches Abspielen deaktivieren"
+    },
+    {
+      "key": "account/audio/consent/noMembership",
+      "value": "Die Funktion ist nur für Mitglieder und Abonnentinnen die Republik zugänglich."
+    },
+    {
       "key": "account/pledges/free-delivery",
       "value": "Kostenlose Lieferung"
     },

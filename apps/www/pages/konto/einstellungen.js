@@ -7,6 +7,7 @@ import AccountTabs from '../../components/Account/AccountTabs'
 import AccountSection from '../../components/Account/AccountSection'
 import ProgressSettings from '../../components/Account/ProgressSettings'
 import AuthSettings from '../../components/Account/AuthSettings'
+import { AudioSettings } from '../../components/Account/AudioSettings'
 import { AccountEnforceMe } from '../../components/Account/Elements'
 
 import { APP_OPTIONS } from '../../lib/constants'
@@ -24,7 +25,9 @@ const SettingsPage = ({ t }) => {
         <AccountSection id='position' title={t('account/progress/title')}>
           <ProgressSettings />
         </AccountSection>
-
+        <AccountSection id='audio' title={t('account/audio/title')}>
+          <AudioSettings />
+        </AccountSection>
         {APP_OPTIONS && (
           <AccountSection
             id='anmeldung'

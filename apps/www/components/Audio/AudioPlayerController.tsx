@@ -23,6 +23,7 @@ import {
   AudioPlayerLocations,
   AudioPlayerActions,
 } from './types/AudioActionTracking'
+import { useAudioAutoPlayPrefQuery } from './graphql/AutoPlayConsentHook'
 
 const DEFAULT_PLAYBACK_RATE = 1
 const SKIP_FORWARD_TIME = 30
@@ -92,6 +93,9 @@ type AudioPlayerContainerProps = {
 
 const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
   const { inNativeApp } = useInNativeApp()
+  const { data: autoPlayPreferences } = useAudioAutoPlayPrefQuery()
+  const hasOptedOutFromAutoPlay: boolean | undefined =
+    autoPlayPreferences?.me?.shouldNotAutoPlay
   const {
     activePlayerItem,
     setActivePlayerItem,
@@ -456,7 +460,7 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
   }
 
   // Handle track ending on media element
-  const onQueueAdvance = async (shouldAutoPlay = true) => {
+  const onQueueAdvance = async (shouldAutoPlay) => {
     if (!activePlayerItem) {
       return
     }
@@ -652,10 +656,11 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
         audioQueue && audioQueue.length > 0 && audioQueue[0].id === itemId
       const isActiveItem = activePlayerItem && activePlayerItem.id === itemId
       if (isHeadOfQueue || isActiveItem) {
-        await onQueueAdvance()
+        // HasOptedOutFromAutoPlay might be null, which should then result in 'true'
+        await onQueueAdvance(hasOptedOutFromAutoPlay ? false : true)
       }
     },
-    [initialized, activePlayerItem],
+    [initialized, activePlayerItem, hasOptedOutFromAutoPlay],
   )
   useNativeAppEvent(AudioEvent.ERROR, handleError, [
     initialized,
@@ -710,8 +715,9 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
           onBackward,
           onClose: onStop,
           onPlaybackRateChange,
-          // onEnded is web only
-          onEnded: () => onQueueAdvance(true),
+          // onEnded is web only and is called whenever a track ends
+          // HasOptedOutFromAutoPlay might be null, which should then result in 'true'
+          onEnded: () => onQueueAdvance(hasOptedOutFromAutoPlay ? false : true),
           onSkipToNext: () => {
             onQueueAdvance(isPlaying)
             trackEvent([
