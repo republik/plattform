@@ -86,10 +86,10 @@ const getAudioCover = (meta, args) => {
   const bw = properties?.bw ?? false
 
   // desired output format
-  const format = properties.format
+  const format = properties?.format
 
   // optional postfix
-  const postfix = properties.postfix
+  const postfix = properties?.postfix
 
   try {
     const url = new URL(metaImage)
