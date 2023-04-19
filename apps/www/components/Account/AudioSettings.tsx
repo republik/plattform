@@ -45,17 +45,17 @@ export const AudioSettings = () => {
     <Loader
       loading={prefLoading}
       render={() => {
-        const hasAccepted = pref?.me?.shouldNotAutoPlay === true
+        const hasOptedOut = pref?.me?.shouldNotAutoPlay === true
 
         return (
           <Fragment>
             <P style={{ margin: '20px 0' }}>{t('account/audio/description')}</P>
             <Checkbox
-              checked={hasAccepted}
+              checked={!hasOptedOut}
               disabled={isMutating}
               onChange={(_, checked) => {
                 setIsMutating(true)
-                const consentMutation = hasAccepted
+                const consentMutation = hasOptedOut
                   ? revokeConsent
                   : giveConsent
                 consentMutation()

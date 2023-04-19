@@ -1034,11 +1034,11 @@
     },
     {
       "key": "account/audio/description",
-      "value": "Standardmässig spielt die Wiedergabeliste automatisch den nächsten Beitrag ab, wenn der aktuelle Beitrag fertig gehört ist."
+      "value": "Standardmässig spielen wir automatisch den nächsten Beitrag in der Wiedergabeliste ab, wenn ein Beitrag fertig gehört ist."
     },
     {
       "key": "account/audio/consent",
-      "value": "Automatisches Abspielen deaktivieren"
+      "value": "Automatisches Abspielen aktivieren"
     },
     {
       "key": "account/audio/consent/noMembership",
