@@ -2,7 +2,7 @@ import { motion, Variant } from 'framer-motion'
 
 import { css } from 'glamor'
 
-import { scaleThreshold, scaleBand } from 'd3-scale'
+import { scaleThreshold } from 'd3-scale'
 
 import {
   useColorContext,
@@ -50,6 +50,8 @@ const getVariant = (highlighted: number) => {
       return 'step3'
     case 3:
       return 'step4'
+    case 4:
+      return 'step5'
   }
   return 'step0'
 }
@@ -121,12 +123,12 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
             y: PADDING_TOP,
           },
           {
-            step3: {
+            step4: {
               x: OFFSET,
               y: PADDING_TOP,
               transition: { duration: 0.5 },
             },
-            step4: {
+            step5: {
               x: CENTER + 150,
               y: PADDING_TOP,
               transition: { duration: 0.5 },
@@ -148,7 +150,7 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                   fill: COLORS[key].default,
                 },
                 {
-                  step3: {
+                  step4: {
                     y: d.cy,
                     x: d.cx,
                     r: i >= 36 ? SMALL_RADIUS : d.r,
@@ -162,7 +164,7 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                       delay: above40AnimationScale(i),
                     },
                   },
-                  step4: {
+                  step5: {
                     y: d.cy,
                     x: d.cx,
                     r: i >= 36 ? SMALL_RADIUS : d.r,
@@ -187,13 +189,13 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
           variants={defineVariants(
             { x: 5, y: 225, opacity: 0 },
             {
-              step3: {
+              step4: {
                 x: 5,
                 y: 225,
                 opacity: 1,
                 transition: { duration: 0.5 },
               },
-              step4: {
+              step5: {
                 x: 5,
                 y: 225,
                 opacity: 1,
@@ -212,7 +214,7 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
             y: PADDING_TOP,
           },
           {
-            step4: {
+            step5: {
               x: CENTER - 95,
               y: PADDING_TOP,
             },
@@ -223,15 +225,39 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
           {...styles.label}
           {...colorScheme.set('fill', 'text')}
           variants={defineVariants(
-            { x: 0, y: -80, opacity: 0 },
+            { x: 0, y: -30, opacity: 0 },
             {
               step1: {
+                x: 0,
+                y: -30,
+                opacity: 1,
+                transition: { duration: 0.5 },
+              },
+              step2: {
+                x: 0,
+                y: -30,
+                opacity: 0,
+                transition: { duration: 0.5 },
+              },
+            },
+          )}
+          transition={{ duration: 0.5 }}
+        >
+          100 Frauen unter 35 Jahren wollen schwanger werden
+        </motion.text>
+        <motion.text
+          {...styles.label}
+          {...colorScheme.set('fill', 'text')}
+          variants={defineVariants(
+            { x: 0, y: -80, opacity: 0 },
+            {
+              step2: {
                 x: 0,
                 y: -80,
                 opacity: 1,
                 transition: { duration: 0.5 },
               },
-              step2: {
+              step3: {
                 x: 0,
                 y: -80,
                 opacity: 0,
@@ -260,11 +286,11 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                   y: d.cy,
                   x: d.cx,
                   r: SMALL_RADIUS,
-                  opacity: 1,
+                  opacity: 0,
                   fill: COLORS[key].default,
                 },
                 {
-                  step2: {
+                  step3: {
                     y: d.cy,
                     x: d.cx,
                     r: i >= 68 ? SMALL_RADIUS : d.r,
@@ -278,7 +304,7 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                       delay: below40AnimationScale(i),
                     },
                   },
-                  step3: {
+                  step4: {
                     y: d.cy,
                     x: d.cx,
                     r: i >= 68 ? SMALL_RADIUS : d.r,
@@ -288,7 +314,7 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                         ? COLORS[key].default
                         : COLORS[key][below40ColorScale(i)],
                   },
-                  step4: {
+                  step5: {
                     y: d.cy,
                     x: d.cx,
                     r: i >= 68 ? SMALL_RADIUS : d.r,
@@ -310,18 +336,18 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
           variants={defineVariants(
             { x: 5, y: 225, opacity: 0 },
             {
-              step2: {
+              step3: {
                 x: 5,
                 y: 225,
                 opacity: 1,
                 transition: { duration: 0.5 },
               },
-              step3: {
+              step4: {
                 x: 5,
                 y: 225,
                 opacity: 0,
               },
-              step4: {
+              step5: {
                 x: 5,
                 y: 225,
                 opacity: 1,
@@ -341,12 +367,12 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
             y: PADDING_TOP,
           },
           {
-            step3: {
+            step4: {
               x: OFFSET,
               y: PADDING_TOP,
               transition: { duration: 0.5 },
             },
-            step4: {
+            step5: {
               x: OFFSET,
               y: PADDING_TOP,
               transition: { duration: 0.5 },
@@ -364,11 +390,11 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                   y: d.cy,
                   x: d.cx,
                   r: SMALL_RADIUS,
-                  opacity: 1,
+                  opacity: 0,
                   fill: COLORS[key].default,
                 },
                 {
-                  step1: {
+                  step2: {
                     y: d.cy,
                     x: d.cx,
                     r: i >= 82 ? SMALL_RADIUS : d.r,
@@ -382,16 +408,6 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                       delay: below34AnimationScale(i),
                     },
                   },
-                  step2: {
-                    y: d.cy,
-                    x: d.cx,
-                    r: i >= 82 ? SMALL_RADIUS : d.r,
-                    opacity: 0,
-                    fill:
-                      i >= 82
-                        ? COLORS[key].default
-                        : COLORS[key][below34ColorScale(i)],
-                  },
                   step3: {
                     y: d.cy,
                     x: d.cx,
@@ -403,6 +419,16 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                         : COLORS[key][below34ColorScale(i)],
                   },
                   step4: {
+                    y: d.cy,
+                    x: d.cx,
+                    r: i >= 82 ? SMALL_RADIUS : d.r,
+                    opacity: 0,
+                    fill:
+                      i >= 82
+                        ? COLORS[key].default
+                        : COLORS[key][below34ColorScale(i)],
+                  },
+                  step5: {
                     y: d.cy,
                     x: d.cx,
                     r: i >= 82 ? SMALL_RADIUS : d.r,
@@ -424,16 +450,11 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
           variants={defineVariants(
             { x: 5, y: 225, opacity: 0 },
             {
-              step1: {
+              step2: {
                 x: 5,
                 y: 225,
                 opacity: 1,
                 transition: { duration: 0.5 },
-              },
-              step2: {
-                x: 5,
-                y: 225,
-                opacity: 0,
               },
               step3: {
                 x: 5,
@@ -441,6 +462,11 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                 opacity: 0,
               },
               step4: {
+                x: 5,
+                y: 225,
+                opacity: 0,
+              },
+              step5: {
                 x: 5,
                 y: 225,
                 opacity: 1,
@@ -477,7 +503,7 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                     opacity: 0,
                   },
                   {
-                    step1: {
+                    step2: {
                       opacity: 1,
                       transition: {
                         duration: 0.5,
@@ -525,7 +551,7 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                     opacity: 0,
                   },
                   {
-                    step2: {
+                    step3: {
                       opacity: 1,
                       transition: {
                         duration: 0.5,
@@ -573,7 +599,7 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                     opacity: 0,
                   },
                   {
-                    step3: {
+                    step4: {
                       opacity: 1,
                       transition: {
                         duration: 0.5,

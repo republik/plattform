@@ -1,7 +1,7 @@
 export const TRANSITION = 'all 0.3s cubic-bezier(0.17, 0.55, 0.55, 1)'
 
 export const RADIUS = 9
-export const SMALL_RADIUS = 2
+export const SMALL_RADIUS = 9
 export const PADDING_TOP = 150
 export const PADDING_LEFT = 0
 export const CIRCLE_PADDING = 2

@@ -41,7 +41,7 @@ export const DotAppPrototyp1 = () => {
               entstanden sind.
               <br />
               <br />
-              Enthalten sind dabei die klassischen IVF-Verfahren, also
+              Enthalten sind sowohl die klassischen IVF-Verfahren, also
               diejenigen, bei denen die Eizelle und Spermien in der Petrischale
               zusammengebracht werden. Ausserdem alle Befruchtungen, bei denen
               gezielt ein Spermium in eine Eizelle gepflanzt wurde

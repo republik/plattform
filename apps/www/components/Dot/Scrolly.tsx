@@ -55,6 +55,9 @@ export const Scrolly = () => {
           <ChapterIndicator mini highlighted={lastInView === 3}>
             4
           </ChapterIndicator>
+          <ChapterIndicator mini highlighted={lastInView === 4}>
+            5
+          </ChapterIndicator>
         </div>
 
         <StoryGraphic highlighted={lastInView} />
@@ -65,6 +68,21 @@ export const Scrolly = () => {
       >
         <Editorial.Subhead>
           <ChapterIndicator highlighted={lastInView === 0}>1</ChapterIndicator>
+          100 Frauen
+        </Editorial.Subhead>
+        <Editorial.P>
+          Dargestellt ist eine Gruppe von 100 Frauen. In Farbstufen wird
+          gezeigt, wie viele von ihnen nach wie vielen Embryonentransfers
+          schwanger sind. Lesebeispiel: Nach mehr als vier Embryonentransfers
+          sind in der Altersgruppe 30-34 Jahre 82 von 100 Frauen schwanger.
+        </Editorial.P>
+      </ScrollySlide>
+      <ScrollySlide
+        highlighted={lastInView === 1}
+        onChangeInView={handleInView(1)}
+      >
+        <Editorial.Subhead>
+          <ChapterIndicator highlighted={lastInView === 1}>2</ChapterIndicator>
           Gute Chancen bis Mitte 30
         </Editorial.Subhead>
         <Editorial.P>
@@ -79,7 +97,7 @@ export const Scrolly = () => {
           ist auch für Frauen bis Mitte 30 strapaziös. Es stimmt aber, dass die
           Mehrheit von ihnen mit grosser Wahrscheinlichkeit nach einigen
           Embryonentransfers schwanger wird. Ähnlich wie bei der natürlichen
-          Fruchtbarkeit kumulieren die Chancen über mehrere Zyklen.{' '}
+          Fruchtbarkeit kumulieren die Chancen über mehrere IVF-Zyklen.
         </Editorial.P>
         <Editorial.P>
           Gesunde Paare ohne Einschränkungen der Fruchtbarkeit haben im Alter
@@ -88,8 +106,8 @@ export const Scrolly = () => {
           ein Kind.
         </Editorial.P>
         <Editorial.P>
-          Mit IVF sieht es so ähnlich aus: Nach dem ersten Transfer sind laut
-          Statistik gut
+          Mit IVF geht es sogar etwas schneller: Nach dem ersten Transfer sind
+          laut Statistik gut
           <Highlight colorKey={key} color='one100'>
             40 von 100
           </Highlight>
@@ -106,11 +124,11 @@ export const Scrolly = () => {
       </ScrollySlide>
 
       <ScrollySlide
-        highlighted={lastInView === 1}
-        onChangeInView={handleInView(1)}
+        highlighted={lastInView === 2}
+        onChangeInView={handleInView(2)}
       >
         <Editorial.Subhead>
-          <ChapterIndicator highlighted={lastInView === 1}>2</ChapterIndicator>
+          <ChapterIndicator highlighted={lastInView === 2}>3</ChapterIndicator>
           Ende 30 wird es schwieriger
         </Editorial.Subhead>
         <Editorial.P>
@@ -149,11 +167,11 @@ export const Scrolly = () => {
       </ScrollySlide>
 
       <ScrollySlide
-        highlighted={lastInView === 2}
-        onChangeInView={handleInView(2)}
+        highlighted={lastInView === 3}
+        onChangeInView={handleInView(3)}
       >
         <Editorial.Subhead>
-          <ChapterIndicator highlighted={lastInView === 2}>3</ChapterIndicator>
+          <ChapterIndicator highlighted={lastInView === 3}>4</ChapterIndicator>
           Jenseits der 40 – schwanger, aber kein Kind
         </Editorial.Subhead>
         <Editorial.P>
@@ -209,11 +227,11 @@ export const Scrolly = () => {
       </ScrollySlide>
 
       <ScrollySlide
-        highlighted={lastInView === 3}
-        onChangeInView={handleInView(3)}
+        highlighted={lastInView === 4}
+        onChangeInView={handleInView(4)}
       >
         <Editorial.Subhead>
-          <ChapterIndicator highlighted={lastInView === 3}>4</ChapterIndicator>
+          <ChapterIndicator highlighted={lastInView === 4}>5</ChapterIndicator>
           Der Weg zum Kind
         </Editorial.Subhead>
         <Editorial.P>
