@@ -17,6 +17,7 @@ import {
   SMALL_RADIUS,
   RADIUS,
   COLORS,
+  SIZE,
 } from './config'
 import { useResolvedColorSchemeKey } from '../ColorScheme/lib'
 
@@ -57,17 +58,11 @@ const getVariant = (highlighted: number) => {
 }
 
 const CENTER = 700 / 2
-const OFFSET = 10
+const OFFSET = 5 * SIZE
 
-const TRANSFERS = [
-  '1. Transfer',
-  '2. Transfer',
-  '3. Transfer',
-  '4. Transfer',
-  'Mehr als 4',
-]
+const TRANSFERS = ['1', '2', '3', '4', 'Mehr als 4']
 
-const DELAY_TIMES = [1, 1.5, 2, 2.5, 3]
+const DELAY_TIMES = [0.5, 1.5, 2.5, 3.5, 4.5]
 const BELOW_34_THRESHOLDS = [40, 61, 72, 77, 82]
 const BELOW_40_THRESHOLDS = [34, 51, 60, 64, 68]
 const ABOVE_40_THRESHOLDS = [18, 27, 31, 34, 36]
@@ -119,12 +114,12 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
       <motion.g
         variants={defineVariants(
           {
-            x: OFFSET,
+            x: CENTER - OFFSET,
             y: PADDING_TOP,
           },
           {
             step4: {
-              x: OFFSET,
+              x: CENTER - OFFSET,
               y: PADDING_TOP,
               transition: { duration: 0.5 },
             },
@@ -210,12 +205,12 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
       <motion.g
         variants={defineVariants(
           {
-            x: OFFSET,
+            x: CENTER,
             y: PADDING_TOP,
           },
           {
             step5: {
-              x: CENTER - 95,
+              x: CENTER,
               y: PADDING_TOP,
             },
           },
@@ -224,8 +219,9 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
         <motion.text
           {...styles.label}
           {...colorScheme.set('fill', 'text')}
+          style={{ textAnchor: 'middle' }}
           variants={defineVariants(
-            { x: 0, y: -30, opacity: 0 },
+            { x: 0, y: -30, opacity: 1 },
             {
               step1: {
                 x: 0,
@@ -239,27 +235,21 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                 opacity: 0,
                 transition: { duration: 0.5 },
               },
-            },
-          )}
-          transition={{ duration: 0.5 }}
-        >
-          100 Frauen unter 35 Jahren wollen schwanger werden
-        </motion.text>
-        <motion.text
-          {...styles.label}
-          {...colorScheme.set('fill', 'text')}
-          variants={defineVariants(
-            { x: 0, y: -80, opacity: 0 },
-            {
-              step2: {
-                x: 0,
-                y: -80,
-                opacity: 1,
-                transition: { duration: 0.5 },
-              },
               step3: {
                 x: 0,
-                y: -80,
+                y: -30,
+                opacity: 0,
+                transition: { duration: 0.5 },
+              },
+              step4: {
+                x: 0,
+                y: -30,
+                opacity: 0,
+                transition: { duration: 0.5 },
+              },
+              step5: {
+                x: 0,
+                y: -30,
                 opacity: 0,
                 transition: { duration: 0.5 },
               },
@@ -267,15 +257,51 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
           )}
           transition={{ duration: 0.5 }}
         >
-          <tspan>
-            Befruchtung per In-vitro-Fertilisation: Die Wahrscheinlichkeit auf
-            eine
-          </tspan>
+          100 Frauen wollen schwanger werden per In-vitro-Fertilisation (IVF).
+        </motion.text>
+        <motion.text
+          {...styles.label}
+          style={{ textAnchor: 'middle' }}
+          {...colorScheme.set('fill', 'text')}
+          variants={defineVariants(
+            { x: 0, y: -60, opacity: 0 },
+            {
+              step2: {
+                x: 0,
+                y: -60,
+                opacity: 1,
+                transition: { duration: 0.5 },
+              },
+              step3: {
+                x: 0,
+                y: -60,
+                opacity: 0,
+                transition: { duration: 0.5 },
+              },
+            },
+          )}
+          transition={{ duration: 0.5 }}
+        >
+          <tspan>Die Wahrscheinlichkeit auf eine Schwangerschaft</tspan>
           <tspan x='0' dy='30'>
-            Schwangerschaft steigt bei mehreren Versuchen.
+            steigt bei mehreren Versuchen.
           </tspan>
         </motion.text>
-
+      </motion.g>
+      <motion.g
+        variants={defineVariants(
+          {
+            x: CENTER - OFFSET,
+            y: PADDING_TOP,
+          },
+          {
+            step5: {
+              x: CENTER - OFFSET,
+              y: PADDING_TOP,
+            },
+          },
+        )}
+      >
         {dataSet.map((d, i) => {
           return (
             <motion.circle
@@ -363,17 +389,17 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
       <motion.g
         variants={defineVariants(
           {
-            x: OFFSET,
+            x: CENTER - OFFSET,
             y: PADDING_TOP,
           },
           {
             step4: {
-              x: OFFSET,
+              x: CENTER - OFFSET,
               y: PADDING_TOP,
               transition: { duration: 0.5 },
             },
             step5: {
-              x: OFFSET,
+              x: 0,
               y: PADDING_TOP,
               transition: { duration: 0.5 },
             },
@@ -405,7 +431,7 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                         : COLORS[key][below34ColorScale(i)],
                     transition: {
                       duration: 0.5,
-                      delay: below34AnimationScale(i),
+                      delay: 0.5 + below34AnimationScale(i),
                     },
                   },
                   step3: {
@@ -485,11 +511,44 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
           variants={defineVariants(
             {
               x: 250,
-              y: 10,
+              y: 50,
             },
             {},
           )}
         >
+          <motion.text
+            {...styles.label}
+            {...colorScheme.set('fill', 'text')}
+            variants={defineVariants(
+              {
+                x: -20,
+                y: 0,
+                opacity: 0,
+              },
+              {
+                step2: {
+                  opacity: 1,
+                  transition: {
+                    duration: 0.5,
+                  },
+                },
+                step3: {
+                  opacity: 1,
+                  transition: {
+                    duration: 0.5,
+                  },
+                },
+                step4: {
+                  opacity: 1,
+                  transition: {
+                    duration: 0.5,
+                  },
+                },
+              },
+            )}
+          >
+            Embryonentransfers
+          </motion.text>
           {TRANSFERS.map((d, i) => {
             return (
               <motion.g
@@ -498,8 +557,8 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                 {...colorScheme.set('fill', 'text')}
                 variants={defineVariants(
                   {
-                    x: 0,
-                    y: 35 * i,
+                    x: 50 * i,
+                    y: 35,
                     opacity: 0,
                   },
                   {
@@ -507,7 +566,7 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                       opacity: 1,
                       transition: {
                         duration: 0.5,
-                        delay: transferAnimationScale(i),
+                        delay: 0.5 + transferAnimationScale(i),
                       },
                     },
                   },
@@ -546,8 +605,8 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                 {...colorScheme.set('fill', 'text')}
                 variants={defineVariants(
                   {
-                    x: 0,
-                    y: 35 * i,
+                    x: 50 * i,
+                    y: 35,
                     opacity: 0,
                   },
                   {
@@ -594,8 +653,8 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                 {...colorScheme.set('fill', 'text')}
                 variants={defineVariants(
                   {
-                    x: 0,
-                    y: 35 * i,
+                    x: 50 * i,
+                    y: 35,
                     opacity: 0,
                   },
                   {

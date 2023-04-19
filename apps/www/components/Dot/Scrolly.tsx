@@ -68,22 +68,7 @@ export const Scrolly = () => {
       >
         <Editorial.Subhead>
           <ChapterIndicator highlighted={lastInView === 0}>1</ChapterIndicator>
-          100 Frauen
-        </Editorial.Subhead>
-        <Editorial.P>
-          Dargestellt ist eine Gruppe von 100 Frauen. In Farbstufen wird
-          gezeigt, wie viele von ihnen nach wie vielen Embryonentransfers
-          schwanger sind. Lesebeispiel: Nach mehr als vier Embryonentransfers
-          sind in der Altersgruppe 30-34 Jahre 82 von 100 Frauen schwanger.
-        </Editorial.P>
-      </ScrollySlide>
-      <ScrollySlide
-        highlighted={lastInView === 1}
-        onChangeInView={handleInView(1)}
-      >
-        <Editorial.Subhead>
-          <ChapterIndicator highlighted={lastInView === 1}>2</ChapterIndicator>
-          Gute Chancen bis Mitte 30
+          Schwanger werden mit IVF - ein sensibles Thema
         </Editorial.Subhead>
         <Editorial.P>
           Unerfüllter Kinderwunsch ist ein intimes Thema, über das Paare selten
@@ -97,8 +82,17 @@ export const Scrolly = () => {
           ist auch für Frauen bis Mitte 30 strapaziös. Es stimmt aber, dass die
           Mehrheit von ihnen mit grosser Wahrscheinlichkeit nach einigen
           Embryonentransfers schwanger wird. Ähnlich wie bei der natürlichen
-          Fruchtbarkeit kumulieren die Chancen über mehrere IVF-Zyklen.
+          Fruchtbarkeit kumulieren die Chancen über mehrere Zyklen.
         </Editorial.P>
+      </ScrollySlide>
+      <ScrollySlide
+        highlighted={lastInView === 1}
+        onChangeInView={handleInView(1)}
+      >
+        <Editorial.Subhead>
+          <ChapterIndicator highlighted={lastInView === 1}>2</ChapterIndicator>
+          Gute Chancen bis Mitte 30
+        </Editorial.Subhead>
         <Editorial.P>
           Gesunde Paare ohne Einschränkungen der Fruchtbarkeit haben im Alter
           von rund 30 Jahren gut 25 Prozent Chancen pro Zyklus, schwanger zu
