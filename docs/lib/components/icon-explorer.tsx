@@ -9,24 +9,7 @@ export const IconExplorer = ({
   const [search, setSearch] = useState('')
   const deferredSearch = useDeferredValue(search)
 
-  const items = [
-    ...icons,
-    ...icons,
-    ...icons,
-    ...icons,
-    ...icons,
-    ...icons,
-    ...icons,
-    ...icons,
-    ...icons,
-    ...icons,
-    ...icons,
-    ...icons,
-    ...icons,
-    ...icons,
-    ...icons,
-    ...icons,
-  ].filter(({ title }, i) =>
+  const items = icons.filter(({ title }, i) =>
     `${title}${i}`.match(new RegExp(deferredSearch, 'i')),
   )
 
