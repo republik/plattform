@@ -20,6 +20,7 @@ import {
   SIZE,
 } from './config'
 import { useResolvedColorSchemeKey } from '../ColorScheme/lib'
+import { useAnimatedValue, useMotionValueTextContent } from './useAnimatedValue'
 
 type StoryVariant = 'step0' | 'step1' | 'step2' | 'step3' | 'step4' | 'step5'
 const variantKeys: StoryVariant[] = [
@@ -99,6 +100,18 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
   const [colorScheme] = useColorContext()
   const key = useResolvedColorSchemeKey()
 
+  const count = useAnimatedValue({
+    initialValue: 0,
+    value:
+      getVariant(highlighted) === 'step1'
+        ? 10000
+        : getVariant(highlighted) === 'step2'
+        ? 20000
+        : 0,
+  })
+
+  const animatedValueRef = useMotionValueTextContent(count)
+
   return (
     <motion.svg
       viewBox='0 0 700 400'
@@ -110,6 +123,10 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
       initial='step0'
       animate={getVariant(highlighted)}
     >
+      <motion.text style={{ x: 100, y: 300 }}>
+        Hey&nbsp;
+        <tspan ref={animatedValueRef}></tspan>
+      </motion.text>
       {/* second age group, 40 plus */}
       <motion.g
         variants={defineVariants(
