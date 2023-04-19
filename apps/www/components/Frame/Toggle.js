@@ -76,7 +76,7 @@ const Toggle = ({ expanded, closeOverlay, ...props }) => {
           </span>
         )}
       </div>
-      <CloseIcon
+      <IconClose
         style={{ opacity: expanded ? 1 : 0 }}
         {...styles.closeButton}
         {...colorScheme.set('fill', 'text')}

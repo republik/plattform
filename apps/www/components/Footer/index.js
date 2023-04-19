@@ -19,7 +19,7 @@ import { ZINDEX_FOOTER } from '../constants'
 
 import SocialLinks from './SocialLinks'
 import Address from './Address'
-import { IconOpenSource } from '@republik/icons'
+import { IconOpensource } from '@republik/icons'
 
 const styles = {
   bg: css({
@@ -337,7 +337,7 @@ const Footer = ({ t, me, signOut, isOnMarketingPage, hasActiveMembership }) => {
             style={{ ...fontStyles.sansSerifRegular14 }}
             {...colorScheme.set('color', 'text')}
           >
-            <IconOpenSource
+            <IconOpensource
               style={{ margin: '0 6px 5px 0', verticalAlign: 'middle' }}
               size={20}
               {...colorScheme.set('fill', 'text')}
