@@ -44,7 +44,6 @@ const CallToAction = ({ formatColor, isOnMarketingPage }) => {
   ) : (
     <Link
       href='/angebote'
-      passHref
       prefetch={false}
       data-hide-if-me='true'
       {...styles.button}
@@ -54,7 +53,6 @@ const CallToAction = ({ formatColor, isOnMarketingPage }) => {
         ? styles.buttonFormatColor
         : styles.buttonGeneric)}
       {...buttonColorRule}
-      legacyBehavior
     >
       <span {...styles.buttonTextMobile}>
         {t('marketing/page/carpet/buttonsmall')}

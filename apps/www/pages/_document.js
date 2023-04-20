@@ -35,7 +35,7 @@ class NoJsHead extends DefaultHead {
             ...node.props,
             children: Children.map(node.props.children, transform),
           },
-        };
+        }
       }
       if (Array.isArray(node)) {
         return node.map(transform)
@@ -50,8 +50,8 @@ class NoJsHead extends DefaultHead {
 
 export default class MyDocument extends Document {
   static async getInitialProps({ renderPage, pathname, query, req, res }) {
-    const page = renderPage()
-    const styles = renderStaticOptimized(() => page.html)
+    const page = await renderPage()
+    const styles = await renderStaticOptimized(() => page.html)
     const nojs = pathname === '/' && !!query.extractId
 
     if (nojs) {
