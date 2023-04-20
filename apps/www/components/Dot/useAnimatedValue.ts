@@ -1,4 +1,5 @@
 import {
+  AnimationOptions,
   MotionValue,
   animate,
   useMotionValue,
@@ -12,20 +13,20 @@ export const useAnimatedValue = ({
   value,
   initialValue = 0,
   format = defaultFmt,
-  duration = 1,
+  transition = { duration: 1 },
 }: {
   value: number
   initialValue?: number
   format?: (value: number) => string
-  duration?: number
+  transition?: AnimationOptions<number>
 }) => {
   const count = useMotionValue(initialValue)
   const rounded = useTransform(count, format)
 
   useEffect(() => {
-    const animationControls = animate(count, value, { duration })
+    const animationControls = animate(count, value, transition)
     return animationControls.stop
-  }, [count, value, duration])
+  }, [count, value, transition])
 
   return rounded
 }
