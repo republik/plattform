@@ -849,6 +849,7 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
 const styles = {
   label: css({
     ...fontStyles.sansSerifRegular23,
+    fontFeatureSettings: '"tnum", "kern"',
     [mediaQueries.onlyS]: {
       fontSize: '1.7rem',
     },
