@@ -3,12 +3,12 @@ import PropTypes from 'prop-types'
 import { css } from 'glamor'
 import CalloutMenu from '../../../Callout/CalloutMenu'
 import IconButton from '../../../IconButton'
-import { MoreIcon } from '../../../Icons'
 import { useColorContext } from '../../../Colors/ColorContext'
 import { IconType } from 'react-icons/lib/esm/iconBase'
+import { IconMoreVertical } from '@republik/icons'
 
 const MoreIconWithProps = (props) => (
-  <IconButton title='Mehr' Icon={MoreIcon} {...props} />
+  <IconButton title='Mehr' Icon={IconMoreVertical} {...props} />
 )
 
 const styles = {

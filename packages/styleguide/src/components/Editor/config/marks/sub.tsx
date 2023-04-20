@@ -1,7 +1,7 @@
+import { IconFormatSubscript } from '@republik/icons'
 import { MarkConfigI } from '../../custom-types'
-import { SubIcon } from '../../../Icons'
 
 export const config: MarkConfigI = {
   remove: ['sup'],
-  button: { icon: SubIcon, small: true },
+  button: { icon: IconFormatSubscript, small: true },
 }

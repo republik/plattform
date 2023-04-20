@@ -4,7 +4,6 @@ import {
   LinkElement,
   NormalizeFn,
 } from '../../custom-types'
-import { LinkIcon } from '../../../Icons'
 import React, { useEffect, useRef, useState } from 'react'
 import Field from '../../../Form/Field'
 import { Editor, Transforms } from 'slate'
@@ -15,6 +14,7 @@ import { formStyles } from '../../Forms/layout'
 import { useRenderContext } from '../../Render/Context'
 import { AutoSlugLinkInfo } from '../../Forms/github'
 import { unwrapWhenEmpty } from './_shared/utils'
+import { IconLink } from '@republik/icons'
 
 const Form: React.FC<ElementFormProps<LinkElement>> = ({
   element,
@@ -95,7 +95,7 @@ export const config: ElementConfigI = {
     isInline: true,
     stopFormIteration: true,
   },
-  button: { icon: LinkIcon },
+  button: { icon: IconLink },
   normalizations: [unwrapWhenEmpty, checkAutolink],
   structure: [{ type: ['text', 'memo'], repeat: true }],
   props: ['href', 'title'],

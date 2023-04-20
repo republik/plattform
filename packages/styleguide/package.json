@@ -9,6 +9,7 @@
   },
   "peerDependencies": {
     "@apollo/client": "~3.5.10",
+    "@republik/icons": "*",
     "d3-array": "1.x",
     "d3-color": "1.x",
     "d3-dsv": "1.x",
@@ -38,6 +39,7 @@
     "@catalog/core": "^4.0.1-canary.2",
     "@orbiting/remark-preset": "^1.2.4",
     "@republik/eslint-config-frontend": "*",
+    "@republik/icons": "*",
     "@testing-library/jest-dom": "^5.16.3",
     "@testing-library/react": "^12.1.4",
     "@types/jest": "^27.5.0",
@@ -124,7 +126,6 @@
     }
   },
   "dependencies": {
-    "@republik/icons": "*",
     "body-scroll-lock": "^3.1.5",
     "react-icons": "^4.3.1",
     "serve": "^13.0.2",

@@ -1,12 +1,4 @@
 import React, { useEffect, useMemo, useState } from 'react'
-import {
-  AddIcon,
-  ArrowDownIcon,
-  ArrowUpIcon,
-  EditIcon,
-  DeleteIcon,
-  MoreIcon,
-} from '../../Icons'
 import IconButton from '../../IconButton'
 import { css } from 'glamor'
 import { insertElement, moveElement, removeElement } from './helpers/structure'
@@ -18,6 +10,14 @@ import CalloutMenu from '../../Callout/CalloutMenu'
 import colors from '../../../theme/colors'
 import { Node } from 'slate'
 import { useRenderContext } from '../Render/Context'
+import {
+  IconAdd,
+  IconArrowDownward,
+  IconArrowUpward,
+  IconDeleteOutline,
+  IconEdit,
+  IconMoreVertical,
+} from '@republik/icons'
 
 const DEFAULT_POSITION = {
   top: 0,
@@ -53,7 +53,7 @@ const MoveUp: React.FC<{
   )
   return (
     <IconButton
-      Icon={ArrowUpIcon}
+      Icon={IconArrowUpward}
       onClick={(e) => {
         e.preventDefault()
         moveElement(editor, path, 'up')
@@ -78,7 +78,7 @@ const MoveDown: React.FC<{
   )
   return (
     <IconButton
-      Icon={ArrowDownIcon}
+      Icon={IconArrowDownward}
       onClick={(e) => {
         e.preventDefault()
         moveElement(editor, path, 'down')
@@ -100,7 +100,7 @@ const Remove: React.FC<{
   const isDisabled = useMemo(() => !removeElement(editor, path, true), [path])
   return (
     <IconButton
-      Icon={DeleteIcon}
+      Icon={IconDeleteOutline}
       fill={colors.error}
       onClick={(e) => {
         e.preventDefault()
@@ -135,7 +135,7 @@ const Insert: React.FC<{
 
   return (
     <IconButton
-      Icon={AddIcon}
+      Icon={IconAdd}
       onClick={(e) => {
         e.preventDefault()
         const insertPath = insertElement(editor, template, path, direction)
@@ -158,7 +158,7 @@ const Edit: React.FC<{
   const label = standalone ? undefined : t('editor/blockUi/edit')
   return (
     <IconButton
-      Icon={EditIcon}
+      Icon={IconEdit}
       onClick={(e) => {
         e.preventDefault()
         setFormPath(path)
@@ -194,7 +194,7 @@ const BlockUi: React.FC<{
         <CalloutMenu
           Element={(props) => (
             <span {...props}>
-              <MoreIcon size={24} />
+              <IconMoreVertical size={24} />
             </span>
           )}
           elementProps={{ style: { display: 'flex' } }}
