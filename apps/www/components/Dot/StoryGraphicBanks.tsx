@@ -560,7 +560,7 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
               y: getCostPosition('Zuger Kantonalbank'),
               x: CENTER,
               opacity: 0,
-              r: 0,
+              r: RADIUS,
             },
             {
               step2: {
@@ -641,7 +641,7 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
               y: getCostPosition('Raiffeisen'),
               x: CENTER,
               opacity: 0,
-              r: 0,
+              r: RADIUS,
             },
             {
               step2: {
@@ -677,7 +677,7 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
               y: getCostPosition('Kantonalbank Vaudoise'),
               x: CENTER,
               opacity: 0,
-              r: 0,
+              r: RADIUS,
             },
             {
               step2: {
@@ -1374,56 +1374,6 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
             getBankById(bankingLabelData, 'Kantonalbank Vaudoise').benefit,
           )}
         </motion.text>
-        {creditSuiseHistoricalData.map((d, i) => {
-          return (
-            <motion.circle
-              key={`cs-history-${i}`}
-              transition={{ duration: 0.5 }}
-              variants={defineVariants(
-                {
-                  y: chartRange[1] - costScaleAll(d.benefit),
-                  x: CENTER + PADDING_LEFT_CHART,
-                  opacity: 0,
-                  r: 0,
-                },
-                {
-                  step5: {
-                    y: chartRange[1] - costScaleAll(d.benefit),
-                    x: CENTER + PADDING_LEFT_CHART,
-                    opacity: 1,
-                    r: RADIUS,
-                    fill: NEW_COLORS[key].two,
-                  },
-                },
-              )}
-            ></motion.circle>
-          )
-        })}
-        {creditSuiseHistoricalData.map((d, i) => {
-          return (
-            <motion.circle
-              key={`cs-history-${i}`}
-              transition={{ duration: 0.5 }}
-              variants={defineVariants(
-                {
-                  y: chartRange[1] - costScaleAll(d.costs),
-                  x: CENTER - PADDING_LEFT_CHART,
-                  opacity: 0,
-                  r: 0,
-                },
-                {
-                  step5: {
-                    y: chartRange[1] - costScaleAll(d.costs),
-                    x: CENTER - PADDING_LEFT_CHART,
-                    opacity: 1,
-                    r: RADIUS,
-                    fill: NEW_COLORS[key].two,
-                  },
-                },
-              )}
-            ></motion.circle>
-          )
-        })}
       </g>
     </motion.svg>
   )
