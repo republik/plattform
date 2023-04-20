@@ -1,5 +1,5 @@
 import * as jose from 'jose'
-import { NextRequest } from 'next/server'
+import type { NextRequest } from 'next/server'
 import { COOKIE_NAME, JWT_COOKIE_NAME } from './constants'
 
 // Extend jose JWTPayload with our expected payload properties
@@ -8,13 +8,13 @@ export type JWTPayload = jose.JWTPayload & {
 }
 
 export function getSessionCookieValue(req: NextRequest): string {
-  const { value } = req.cookies.get(COOKIE_NAME)
-  return value
+  const cookie = req.cookies.get(COOKIE_NAME)
+  return cookie?.value
 }
 
 export function getJWTCookieValue(req: NextRequest) {
-  const { value } = req.cookies.get(JWT_COOKIE_NAME)
-  return value
+  const cookie = req.cookies.get(JWT_COOKIE_NAME)
+  return cookie?.value
 }
 
 /**
