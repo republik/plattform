@@ -42,6 +42,7 @@ const {
   updateCampaignContent,
   getCampaign,
 } = require('../../../lib/mailchimp')
+const { maybeUpsert: maybeUpsertAuphonic } = require('../../../lib/auphonic')
 const {
   prepareMetaForPublish,
   handleRedirection,
@@ -419,6 +420,8 @@ module.exports = async (_, args, context) => {
       throw new Error(t('api/publish/error/updateCampaignContent'))
     })
   }
+
+  await maybeUpsertAuphonic(repoId, resolvedDoc, context)
 
   // @TODO: Safe to remove, once repoChange is adopted
   await pubsub.publish('repoUpdate', {
