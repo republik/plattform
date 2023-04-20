@@ -378,6 +378,25 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
           <tspan ref={animatedValueRef3}></tspan> von 100 Frauen über 40 Jahren
           sind schwanger
         </motion.text>
+        <motion.text
+          {...styles.label}
+          {...colorScheme.set('fill', 'text')}
+          style={{ textAnchor: 'middle' }}
+          variants={defineVariants(
+            { x: 0, y: -30, opacity: 0 },
+            {
+              step5: {
+                x: 1,
+                y: -30,
+                opacity: 1,
+                transition: { duration: 0.5 },
+              },
+            },
+          )}
+          transition={{ duration: 0.5 }}
+        >
+          Kumulative Schwangerschaftsrate nach Altersgruppe
+        </motion.text>
         {/* <motion.text
           {...styles.label}
           style={{ textAnchor: 'middle' }}
