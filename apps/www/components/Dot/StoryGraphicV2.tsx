@@ -102,15 +102,31 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
 
   const count = useAnimatedValue({
     initialValue: 0,
-    value:
-      getVariant(highlighted) === 'step1'
-        ? 10000
-        : getVariant(highlighted) === 'step2'
-        ? 20000
-        : 0,
+    transition: { duration: 4.5, delay: 1 },
+    value: 0,
   })
 
-  const animatedValueRef = useMotionValueTextContent(count)
+  const count1 = useAnimatedValue({
+    initialValue: 0,
+    transition: { duration: 4.5, delay: 1 },
+    value: getVariant(highlighted) === 'step2' ? 82 : 0,
+  })
+
+  const count2 = useAnimatedValue({
+    initialValue: 0,
+    transition: { duration: 4.5, delay: 0.5 },
+    value: getVariant(highlighted) === 'step3' ? 68 : 0,
+  })
+
+  const count3 = useAnimatedValue({
+    initialValue: 0,
+    transition: { duration: 4.5, delay: 0.5 },
+    value: getVariant(highlighted) === 'step4' ? 36 : 0,
+  })
+
+  const animatedValueRef1 = useMotionValueTextContent(count1)
+  const animatedValueRef2 = useMotionValueTextContent(count2)
+  const animatedValueRef3 = useMotionValueTextContent(count3)
 
   return (
     <motion.svg
@@ -123,10 +139,6 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
       initial='step0'
       animate={getVariant(highlighted)}
     >
-      <motion.text style={{ x: 100, y: 300 }}>
-        Hey&nbsp;
-        <tspan ref={animatedValueRef}></tspan>
-      </motion.text>
       {/* second age group, 40 plus */}
       <motion.g
         variants={defineVariants(
@@ -201,12 +213,6 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
           variants={defineVariants(
             { x: 5, y: 225, opacity: 0 },
             {
-              step4: {
-                x: 5,
-                y: 225,
-                opacity: 1,
-                transition: { duration: 0.5 },
-              },
               step5: {
                 x: 5,
                 y: 225,
@@ -240,41 +246,137 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
           variants={defineVariants(
             { x: 0, y: -30, opacity: 1 },
             {
-              // step1: {
-              //   x: 0,
-              //   y: -30,
-              //   opacity: 1,
-              //   transition: { duration: 0.5 },
-              // },
-              // step2: {
-              //   x: 0,
-              //   y: -30,
-              //   opacity: 1,
-              //   transition: { duration: 0.5 },
-              // },
-              // step3: {
-              //   x: 0,
-              //   y: -30,
-              //   opacity: 1,
-              //   transition: { duration: 0.5 },
-              // },
-              // step4: {
-              //   x: 0,
-              //   y: -30,
-              //   opacity: 0,
-              //   transition: { duration: 0.5 },
-              // },
-              // step5: {
-              //   x: 0,
-              //   y: -30,
-              //   opacity: 0,
-              //   transition: { duration: 0.5 },
-              // },
+              step1: {
+                x: 0,
+                y: -30,
+                opacity: 1,
+                transition: { duration: 0.5 },
+              },
+              step2: {
+                x: 0,
+                y: -30,
+                opacity: 0,
+                transition: { duration: 0.5 },
+              },
+              step3: {
+                x: 0,
+                y: -30,
+                opacity: 0,
+                transition: { duration: 0.5 },
+              },
+              step4: {
+                x: 0,
+                y: -30,
+                opacity: 0,
+                transition: { duration: 0.5 },
+              },
+              step5: {
+                x: 0,
+                y: -30,
+                opacity: 0,
+                transition: { duration: 0.5 },
+              },
             },
           )}
           transition={{ duration: 0.5 }}
         >
           100 Frauen wollen schwanger werden per In-Vitro-Fertilisation
+        </motion.text>
+        <motion.text
+          {...styles.label}
+          style={{ textAnchor: 'middle' }}
+          variants={defineVariants(
+            {
+              x: 0,
+              y: -30,
+              opacity: 0,
+            },
+            {
+              step2: {
+                opacity: 1,
+                x: 0,
+                y: -30,
+                transition: {
+                  duration: 0.5,
+                },
+              },
+              step3: {
+                opacity: 0,
+                x: 0,
+                y: -30,
+                transition: {
+                  duration: 0.5,
+                },
+              },
+            },
+          )}
+        >
+          <tspan ref={animatedValueRef1}></tspan> von 100 Frauen im Alter von
+          30–34 Jahren sind schwanger
+        </motion.text>
+        <motion.text
+          {...styles.label}
+          style={{ textAnchor: 'middle' }}
+          variants={defineVariants(
+            {
+              x: 0,
+              y: -30,
+              opacity: 0,
+            },
+            {
+              step3: {
+                opacity: 1,
+                x: 0,
+                y: -30,
+                transition: {
+                  duration: 0.5,
+                },
+              },
+              step4: {
+                opacity: 0,
+                x: 0,
+                y: -30,
+                transition: {
+                  duration: 0.5,
+                },
+              },
+            },
+          )}
+        >
+          <tspan ref={animatedValueRef2}></tspan> von 100 Frauen im Alter von
+          35–39 Jahren sind schwanger
+        </motion.text>
+        <motion.text
+          {...styles.label}
+          style={{ textAnchor: 'middle' }}
+          variants={defineVariants(
+            {
+              x: 0,
+              y: -30,
+              opacity: 0,
+            },
+            {
+              step4: {
+                opacity: 1,
+                x: 0,
+                y: -30,
+                transition: {
+                  duration: 0.5,
+                },
+              },
+              step5: {
+                opacity: 0,
+                x: 0,
+                y: -30,
+                transition: {
+                  duration: 0.5,
+                },
+              },
+            },
+          )}
+        >
+          <tspan ref={animatedValueRef3}></tspan> von 100 Frauen über 40 Jahren
+          sind schwanger
         </motion.text>
         {/* <motion.text
           {...styles.label}
@@ -379,17 +481,6 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
           variants={defineVariants(
             { x: 5, y: 225, opacity: 0 },
             {
-              step3: {
-                x: 5,
-                y: 225,
-                opacity: 1,
-                transition: { duration: 0.5 },
-              },
-              step4: {
-                x: 5,
-                y: 225,
-                opacity: 0,
-              },
               step5: {
                 x: 5,
                 y: 225,
@@ -491,18 +582,18 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
           {...styles.label}
           {...colorScheme.set('fill', 'text')}
           variants={defineVariants(
-            { x: 5, y: 225, opacity: 1 },
+            { x: 5, y: 225, opacity: 0 },
             {
               step1: {
                 x: 5,
                 y: 225,
-                opacity: 1,
+                opacity: 0,
                 transition: { duration: 0.5 },
               },
               step2: {
                 x: 5,
                 y: 225,
-                opacity: 1,
+                opacity: 0,
                 transition: { duration: 0.5 },
               },
               step3: {
@@ -533,35 +624,42 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
         <motion.g
           variants={defineVariants(
             {
-              x: 250,
-              y: 50,
+              x: 0,
+              y: 230,
             },
             {},
           )}
         >
           <motion.text
             {...styles.label}
+            style={{ textAnchor: 'middle' }}
             {...colorScheme.set('fill', 'text')}
             variants={defineVariants(
               {
-                x: -20,
+                x: 95,
                 y: 0,
                 opacity: 0,
               },
               {
                 step2: {
+                  x: 95,
+                  y: 0,
                   opacity: 1,
                   transition: {
                     duration: 0.5,
                   },
                 },
                 step3: {
+                  x: 95,
+                  y: 0,
                   opacity: 1,
                   transition: {
                     duration: 0.5,
                   },
                 },
                 step4: {
+                  x: 95,
+                  y: 0,
                   opacity: 1,
                   transition: {
                     duration: 0.5,
@@ -580,12 +678,14 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                 {...colorScheme.set('fill', 'text')}
                 variants={defineVariants(
                   {
-                    x: 50 * i,
+                    x: -50 + 50 * i,
                     y: 35,
                     opacity: 0,
                   },
                   {
                     step2: {
+                      x: -50 + 50 * i,
+                      y: 35,
                       opacity: 1,
                       transition: {
                         duration: 0.5,
@@ -620,6 +720,7 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
               </motion.g>
             )
           })}
+
           {TRANSFERS.map((d, i) => {
             return (
               <motion.g
@@ -628,12 +729,14 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                 {...colorScheme.set('fill', 'text')}
                 variants={defineVariants(
                   {
-                    x: 50 * i,
+                    x: -50 + 50 * i,
                     y: 35,
                     opacity: 0,
                   },
                   {
                     step3: {
+                      x: -50 + 50 * i,
+                      y: 35,
                       opacity: 1,
                       transition: {
                         duration: 0.5,
@@ -676,12 +779,14 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                 {...colorScheme.set('fill', 'text')}
                 variants={defineVariants(
                   {
-                    x: 50 * i,
+                    x: -50 + 50 * i,
                     y: 35,
                     opacity: 0,
                   },
                   {
                     step4: {
+                      x: -50 + 50 * i,
+                      y: 35,
                       opacity: 1,
                       transition: {
                         duration: 0.5,
