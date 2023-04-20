@@ -32,6 +32,8 @@ const DevEditor: React.FC<{
       <Editor value={value} setValue={setValue} config={config} />
       {config.debug && (
         <>
+          {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
+          {/* @ts-ignore */}
           <CodeSpecimen lang='javascript'>{displayValue}</CodeSpecimen>
           <Button
             small
