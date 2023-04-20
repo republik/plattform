@@ -4,7 +4,7 @@ import { fontFaces } from '@project-r/styleguide'
 
 export default class MyDocument extends Document {
   static async getInitialProps({ renderPage }) {
-    const page = renderPage()
+    const page = await renderPage()
     const styles = renderStatic(() => page.html)
     return {
       ...page,
