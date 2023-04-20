@@ -8,6 +8,7 @@ import SubscribeCallout from './SubscribeCallout'
 import { getSelectedDiscussionPreference } from './SubscribeDebate'
 import withMe from '../../lib/apollo/withMe'
 import { DISCUSSION_PREFERENCES_QUERY } from '../Discussion/graphql/queries/DiscussionPreferencesQuery.graphql'
+import EventObjectType from '../ActionBar/graphql/EventObjectType'
 
 const checkIfSubscribedToAny = ({ data, subscriptions, showAuthorFilter }) =>
   //checks if any of the subscription nodes is set to active
@@ -15,6 +16,9 @@ const checkIfSubscribedToAny = ({ data, subscriptions, showAuthorFilter }) =>
     subscriptions.some(
       (subscription) =>
         subscription.active &&
+        // Prevent showing subscribed if only read aloud is selected
+        (subscription.filters?.length > 1 ||
+          !subscription.filters?.includes(EventObjectType.READ_ALOUD)) &&
         (showAuthorFilter ||
           subscription.object?.__typename !== 'User' ||
           subscription.filters.includes('Document')),

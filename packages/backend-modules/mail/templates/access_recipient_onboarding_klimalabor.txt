@@ -22,9 +22,18 @@ Gut zu wissen:
 
 Wie Sie sich aktuell einbringen können:
 
- * Sammeln und erkunden Sie mit uns wenig bekannte Klimaheldinnen
-   {{frontend_base_url}}/2023/01/31/mit-voller-kraft-gegen-die-klimakrise-diskutieren-sie-mit/diskussion
-   .
+ * Melden Sie sich für unsere nächsten Online-Veranstaltungen
+   https://tally.so/r/mRxbdd an: Gespräche mit Expertinnen aus verschiedenen
+   Bereichen zur Frage «Was kann ich tun?»
+
+ * 15 Fragen zum Klima, die zum Nachdenken anregen. Teilen Sie Ihre Antworten
+   {{frontend_base_url}}/2023/03/03/fragen-zur-klimakrise und lesen Sie, was
+   andere schreiben {{frontend_base_url}}/15-fragen-zum-klima-ihre-antworten .
+
+ * Es hat sich schon einiges getan im Klimalabor seit dem Start. Schauen Sie
+   sich unsere erste Zwischenbilanz
+   {{frontend_base_url}}/2023/03/02/das-ende-vom-anfang-was-bisher-geschah-im-klimalabor
+   an.
 
  * Das Klimalabor lebt davon, dass viele unterschiedliche Perspektiven
    zusammenkommen. Wir freuen uns, wenn Sie Freundinnen und Bekannte ins
@@ -32,10 +41,6 @@ Wie Sie sich aktuell einbringen können:
    {{frontend_base_url}}/willkommen-zum-klimalabor mit Ihnen oder klicken Sie
    hier {{link_climate_lab_email_invitation}} , um eine vorformulierte E-Mail zu
    öffnen.
-
- * Erleben Sie das Klimalabor live: Am 27. Februar laden wir Sie herzlich ein zu
-   einer Abendveranstaltung in Zürich
-   {{frontend_base_url}}/veranstaltung/klimalabor-februar-2023 .
 
  * Geben Sie uns ein paar Angaben zu Ihrer Person
    {{link_climate_lab_onboarding_personal_infos}} und helfen Sie uns damit,

@@ -155,8 +155,7 @@ const schema = {
     criteria: termCriteriaBuilder('versionName'),
   },
   userId: {
-    criteria: termCriteriaBuilder('meta.credits.children.url'),
-    parser: (value) => `/~${value}`,
+    criteria: termCriteriaBuilder('meta.contributors.userId'),
   },
   publishedAt: {
     criteria: dateRangeCriteriaBuilder('meta.publishDate'),

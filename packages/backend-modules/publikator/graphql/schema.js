@@ -56,17 +56,7 @@ type mutations {
   publish(
     repoId: ID!
     commitId: ID!
-    prepublication: Boolean!
-
-    # on all channels
-    scheduledAt: DateTime
-    # this API never triggers sending
-    # not immediately, not scheduled
-    updateMailchimp: Boolean!
-
-    ignoreUnresolvedRepoIds: Boolean
-
-    notifySubscribers: Boolean
+    settings: PublishSettings!
   ): PublishResponse!
 
   unpublish(

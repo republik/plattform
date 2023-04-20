@@ -17,7 +17,7 @@ module.exports = {
       {
         type: 'User',
         ids: commenterIds,
-        filter: 'COMMENTS',
+        filters: ['Comment'],
       },
       context,
     )

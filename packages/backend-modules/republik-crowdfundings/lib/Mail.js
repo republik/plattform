@@ -28,7 +28,6 @@ const {
   MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR,
   MAILCHIMP_INTEREST_NEWSLETTER_ACCOMPLICE,
   MAILCHIMP_INTEREST_NEWSLETTER_CLIMATE,
-  MAILCHIMP_INTEREST_NEWSLETTER_WINTER,
   FRONTEND_BASE_URL,
 } = process.env
 
@@ -40,10 +39,6 @@ const mail = createMail([
   {
     name: 'WEEKLY',
     interestId: MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY,
-  },
-  {
-    name: 'WINTER',
-    interestId: MAILCHIMP_INTEREST_NEWSLETTER_WINTER,
   },
   {
     name: 'CLIMATE',
@@ -1150,81 +1145,6 @@ mail.getPledgeMergeVars = async (
       content: hasActiveMonthly,
     },
   ]
-}
-
-mail.sendFutureCampaignSenderRewardMail = async (
-  {
-    senderUserId,
-    pledgeUserId,
-    count,
-    hasSenderConsentedToDonate,
-    membershipPeriodEndDate,
-  },
-  { pgdb, t },
-) => {
-  const sender = await pgdb.public.users.findOne({ id: senderUserId })
-  const safeSender = transformUser(sender)
-
-  const pledger = await pgdb.public.users.findOne({ id: pledgeUserId })
-  const safePledger = transformUser(pledger)
-
-  const countNumber = parseInt(count, 10)
-
-  const templateName = 'future_campaign_sender_reward'
-
-  return sendMailTemplate(
-    {
-      to: safeSender.email,
-      fromEmail: process.env.DEFAULT_MAIL_FROM_ADDRESS,
-      subject: t(`api/email/${templateName}/${count}/subject`),
-      templateName,
-      mergeLanguage: 'handlebars',
-      globalMergeVars: [
-        {
-          name: 'has_one_slot_filled',
-          content: countNumber === 1,
-        },
-        {
-          name: 'has_two_slots_filled',
-          content: countNumber === 2,
-        },
-        {
-          name: 'has_three_slots_filled',
-          content: countNumber === 3,
-        },
-        {
-          name: 'has_four_slots_filled',
-          content: countNumber === 4,
-        },
-        {
-          name: 'has_five_slots_filled',
-          content: countNumber === 5,
-        },
-        {
-          name: 'count_open_slots',
-          content: 5 - countNumber,
-        },
-        {
-          name: 'receiver',
-          content: safePledger.name ? safePledger.name : safePledger.email,
-        },
-        {
-          name: 'is_donating',
-          content: hasSenderConsentedToDonate,
-        },
-        {
-          name: 'link_sender_page',
-          content: `${FRONTEND_BASE_URL}/verstaerkung-holen`,
-        },
-        {
-          name: 'membership_period_end_date',
-          content:
-            membershipPeriodEndDate && dateFormat(membershipPeriodEndDate),
-        },
-      ],
-    },
-    { pgdb },
-  )
 }
 
 module.exports = mail

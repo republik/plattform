@@ -717,26 +717,6 @@
       "value": "Ihre Mitgliedschaft wurde deaktiviert"
     },
     {
-      "key": "api/email/future_campaign_sender_reward/1/subject",
-      "value": "Sie haben Verstärkung geholt! Danke."
-    },
-    {
-      "key": "api/email/future_campaign_sender_reward/2/subject",
-      "value": "Doppelte Verstärkung! Grossartig."
-    },
-    {
-      "key": "api/email/future_campaign_sender_reward/3/subject",
-      "value": "Sie haben drei Mal Verstärkung geholt. Mit Ihnen wird die Zukunft greifbar!"
-    },
-    {
-      "key": "api/email/future_campaign_sender_reward/4/subject",
-      "value": "Wer ergattert sich Ihr letztes Mitstreiterinnen-Abo?"
-    },
-    {
-      "key": "api/email/future_campaign_sender_reward/5/subject",
-      "value": "Herzliche Gratulation! 5 neue Verlegerinnen für die Republik."
-    },
-    {
       "key": "api/discussion/404",
       "value": "Die Diskussion konnte nicht gefunden werden."
     },
@@ -881,20 +861,12 @@
       "value": "Bestätigen Sie Ihre Anmeldung zum Wochenend-Newsletter."
     },
     {
-      "key": "api/newsletters/request/COVID19/subject",
-      "value": "Bestätigen Sie Ihre Anmeldung zum Covid-19-Uhr-Newsletter."
-    },
-    {
       "key": "api/newsletters/request/PROJECTR/subject",
       "value": "Bestätigen Sie Ihre Anmeldung zum Project-R-Newsletter."
     },
     {
       "key": "api/newsletters/request/CLIMATE/subject",
       "value": "Bestätigen Sie Ihre Anmeldung zum Klimalabor-Newsletter."
-    },
-    {
-      "key": "api/newsletters/request/WINTER/subject",
-      "value": "Anmeldung zum Winter-is-coming-Newsletter bestätigen"
     },
     {
       "key": "api/newsletters/request/notSupported",
@@ -2065,48 +2037,92 @@
       "value": "Neuer Beitrag von {name}"
     },
     {
+      "key": "api/notifications/doc/readAloud/title",
+      "value": "Neu vorgelesen: {title}"
+    },
+    {
       "key": "api/github/unavailable",
       "value": "GitHub scheint zur Zeit nicht verfügbar zu sein. Bitte versuchen Sie es später nochmals."
     },
     {
-      "key": "api/email/payment/reminder/default/subject",
+      "key": "api/email/payment/reminder/isLast:false/packageName:ABO_GIVE_MONTHS/subject",
       "value": "Zahlungserinnerung Republik"
     },
     {
-      "key": "api/email/payment/reminder/ABO/subject",
+      "key": "api/email/payment/reminder/isLast:false/packageName:ABO_GIVE/subject",
       "value": "Zahlungserinnerung Republik-Mitgliedschaft"
     },
     {
-      "key": "api/email/payment/reminder/PROLONG/subject",
+      "key": "api/email/payment/reminder/isLast:false/packageName:ABO/subject",
       "value": "Zahlungserinnerung Republik-Mitgliedschaft"
     },
     {
-      "key": "api/email/payment/reminder/DONATE/subject",
+      "key": "api/email/payment/reminder/isLast:false/packageName:BENEFACTOR/subject",
+      "value": "Zahlungserinnerung Republik-Mitgliedschaft"
+    },
+    {
+      "key": "api/email/payment/reminder/isLast:false/packageName:DONATE_POT/subject",
+      "value": "Zahlungserinnerung Republik"
+    },
+    {
+      "key": "api/email/payment/reminder/isLast:false/packageName:DONATE/subject",
       "value": "Zahlungserinnerung Republik-Spende"
     },
     {
-      "key": "api/email/payment/reminder/BENEFACTOR/subject",
+      "key": "api/email/payment/reminder/isLast:false/packageName:MASK/subject",
+      "value": "Zahlungserinnerung Republik"
+    },
+    {
+      "key": "api/email/payment/reminder/isLast:false/packageName:PROLONG/subject",
       "value": "Zahlungserinnerung Republik-Mitgliedschaft"
     },
     {
-      "key": "api/email/payment/reminder/last/default/subject",
+      "key": "api/email/payment/reminder/isLast:false/packageName:TABLEBOOK/subject",
+      "value": "Zahlungserinnerung Republik"
+    },
+    {
+      "key": "api/email/payment/reminder/isLast:false/packageName:YEARLY_ABO/subject",
+      "value": "Sie haben den Preis gewählt: Zahlungserinnerung für Ihr neues Republik-Abo"
+    },
+    {
+      "key": "api/email/payment/reminder/isLast:true/packageName:ABO_GIVE_MONTHS/subject",
       "value": "LETZTE MAHNUNG Republik"
     },
     {
-      "key": "api/email/payment/reminder/last/ABO/subject",
+      "key": "api/email/payment/reminder/isLast:true/packageName:ABO_GIVE/subject",
       "value": "LETZTE MAHNUNG Republik-Mitgliedschaft"
     },
     {
-      "key": "api/email/payment/reminder/last/PROLONG/subject",
+      "key": "api/email/payment/reminder/isLast:true/packageName:ABO/subject",
       "value": "LETZTE MAHNUNG Republik-Mitgliedschaft"
     },
     {
-      "key": "api/email/payment/reminder/last/DONATE/subject",
+      "key": "api/email/payment/reminder/isLast:true/packageName:BENEFACTOR/subject",
+      "value": "LETZTE MAHNUNG Republik-Mitgliedschaft"
+    },
+    {
+      "key": "api/email/payment/reminder/isLast:true/packageName:DONATE_POT/subject",
+      "value": "LETZTE MAHNUNG Republik"
+    },
+    {
+      "key": "api/email/payment/reminder/isLast:true/packageName:DONATE/subject",
       "value": "LETZTE MAHNUNG Republik-Spende"
     },
     {
-      "key": "api/email/payment/reminder/last/BENEFACTOR/subject",
+      "key": "api/email/payment/reminder/isLast:true/packageName:MASK/subject",
+      "value": "LETZTE MAHNUNG Republik"
+    },
+    {
+      "key": "api/email/payment/reminder/isLast:true/packageName:PROLONG/subject",
       "value": "LETZTE MAHNUNG Republik-Mitgliedschaft"
+    },
+    {
+      "key": "api/email/payment/reminder/isLast:true/packageName:TABLEBOOK/subject",
+      "value": "LETZTE MAHNUNG Republik"
+    },
+    {
+      "key": "api/email/payment/reminder/isLast:true/packageName:YEARLY_ABO/subject",
+      "value": "Der von Ihnen festgelegte Betrag für Ihr neues Republik-Abo ist noch nicht bezahlt"
     },
     {
       "key": "api/repo/phase/draft",
@@ -2483,6 +2499,34 @@
     {
       "key": "api/publikator/file/error/notYours",
       "value": "Datei gehört nicht Ihnen"
+    },
+    {
+      "key": "api/call-to-actions/notAllowed",
+      "value": "Sie dürfen \"callToActions\" nicht abfragen."
+    },
+    {
+      "key": "api/call-to-actions/acknowledge/notAllowed",
+      "value": "Sie dürfen diesen Call-To-Action nicht quittieren."
+    },
+    {
+      "key": "api/call-to-actions/acknowledge/404",
+      "value": "Call-To-Action nicht gefunden"
+    },
+    {
+      "key": "api/reportUser/self",
+      "value": "Das eigene Profil kann nich gemeldet werden"
+    },
+    {
+      "key": "api/reportUser/failed",
+      "value": "Es ist ein Fehler aufgetreten, das Profil konnte nicht gemeldet werden."
+    },
+    {
+      "key": "api/reportUser/userNotFound",
+      "value": "Der gemeldete Benutzer konnte nicht gefunden werden."
+    },
+    {
+      "key": "api/reportUser/reasonTooLong",
+      "value": "Die Begründung ist zu lange. (Maximal {max} Zeichen)"
     }
   ]
 }

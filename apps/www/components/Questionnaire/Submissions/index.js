@@ -1,7 +1,7 @@
 import { Fragment, useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { format } from 'url'
-import { gql, useQuery } from '@apollo/client'
+import { useQuery } from '@apollo/client'
 
 import {
   Interaction,
@@ -23,129 +23,16 @@ import Submission from './Submission'
 import PlainButton from './PlainButton'
 import { SortToggle } from '../../Search/Sort'
 import ShareSubmission from './Share'
-
-const SUPPORTED_SORT = [
-  {
-    key: 'random',
-  },
-  {
-    key: 'createdAt',
-    directions: ['DESC', 'ASC'],
-  },
-]
-
-const SORT_KEY_PARAM = 'skey'
-const SORT_DIRECTION_PARAM = 'sdir'
-const QUERY_PARAM = 'q'
-
-const singleSubmissionQuery = gql`
-  query getSingleQuestionnaireSubmission($slug: String!, $id: ID!) {
-    questionnaire(slug: $slug) {
-      id
-      submissions(filters: { id: $id }) {
-        nodes {
-          id
-          createdAt
-          updatedAt
-          displayAuthor {
-            id
-            name
-            slug
-            profilePicture
-          }
-          answers {
-            totalCount
-            nodes {
-              id
-              hasMatched
-              question {
-                __typename
-                id
-              }
-              payload
-            }
-          }
-        }
-      }
-    }
-  }
-`
-
-const mainQuery = gql`
-  query getQuestionnaireSubmissions(
-    $slug: String!
-    $search: String
-    $first: Int
-    $after: String
-    $sortBy: SubmissionsSortBy!
-    $sortDirection: OrderDirection
-  ) {
-    questionnaire(slug: $slug) {
-      id
-      beginDate
-      endDate
-      userHasSubmitted
-      userSubmitDate
-      questions {
-        __typename
-        id
-        text
-        ... on QuestionTypeChoice {
-          options {
-            label
-            value
-            category
-          }
-        }
-        ... on QuestionTypeRange {
-          kind
-          ticks {
-            label
-            value
-          }
-        }
-      }
-      submissions {
-        totalCount
-      }
-      results: submissions(
-        search: $search
-        first: $first
-        after: $after
-        sort: { by: $sortBy, direction: $sortDirection }
-      ) {
-        totalCount
-        pageInfo {
-          endCursor
-          hasNextPage
-        }
-        nodes {
-          id
-          createdAt
-          updatedAt
-          displayAuthor {
-            id
-            name
-            slug
-            profilePicture
-          }
-          answers {
-            totalCount
-            nodes {
-              id
-              hasMatched
-              question {
-                __typename
-                id
-              }
-              payload
-            }
-          }
-        }
-      }
-    }
-  }
-`
+import {
+  hasMoreData,
+  loadMoreSubmissions,
+  QUERY_PARAM,
+  QUESTIONNAIRE_SUBMISSIONS_QUERY,
+  SINGLE_SUBMISSION_QUERY,
+  SORT_DIRECTION_PARAM,
+  SORT_KEY_PARAM,
+  SUPPORTED_SORT,
+} from './graphql'
 
 const getTotalCount = (data) => data?.questionnaire?.submissions?.totalCount
 const getSearchParams = ({ sort, search }) => {
@@ -196,7 +83,7 @@ const Submissions = ({ slug, extract, share = {} }) => {
   }, [debouncedSearch])
   const pathname = router.asPath.split('?')[0]
   const { loading, error, data, previousData, fetchMore } = useQuery(
-    mainQuery,
+    QUESTIONNAIRE_SUBMISSIONS_QUERY,
     {
       variables: {
         slug,
@@ -207,7 +94,7 @@ const Submissions = ({ slug, extract, share = {} }) => {
       },
     },
   )
-  const shareQuery = useQuery(singleSubmissionQuery, {
+  const shareQuery = useQuery(SINGLE_SUBMISSION_QUERY, {
     skip: debouncedSearch || !shareId,
     variables: {
       slug,
@@ -215,40 +102,13 @@ const Submissions = ({ slug, extract, share = {} }) => {
     },
   })
 
-  const loadMore = () => {
-    return fetchMore({
-      variables: {
-        after: data.questionnaire.results.pageInfo.endCursor,
-      },
-      updateQuery: (previousResult = {}, { fetchMoreResult = {} }) => {
-        const previousNodes = previousResult.questionnaire.results.nodes || []
-        const newNodes = fetchMoreResult.questionnaire.results.nodes || []
-
-        const res = {
-          ...previousResult,
-          ...fetchMoreResult,
-          questionnaire: {
-            ...previousResult.questionnaire,
-            ...fetchMoreResult.questionnaire,
-            results: {
-              ...previousResult.questionnaire.results,
-              ...fetchMoreResult.questionnaire.results,
-              nodes: [...previousNodes, ...newNodes],
-            },
-          },
-        }
-        return res
-      },
-    })
-  }
-
-  const hasMore = data?.questionnaire?.results?.pageInfo?.hasNextPage
+  const hasMore = hasMoreData(data)
   const [
     { containerRef, infiniteScroll, loadingMore, loadingMoreError },
     setInfiniteScroll,
   ] = useInfiniteScroll({
     hasMore,
-    loadMore,
+    loadMore: loadMoreSubmissions(fetchMore, data),
   })
 
   const questions = data?.questionnaire?.questions || []

@@ -8,7 +8,7 @@ import { CustomDescendant } from '../Editor/custom-types'
 import { isSlateElement } from '../Editor/Render/helpers'
 import { useRenderContext } from '../Editor/Render/Context'
 
-const MAX_CHAR = 800
+const MAX_CHAR = 2500
 export const FLYER_CONTAINER_MAXWIDTH = 700
 
 const styles = {

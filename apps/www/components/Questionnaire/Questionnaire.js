@@ -1,9 +1,7 @@
-import { useState } from 'react'
-import Loader from '../Loader'
-
 import { css } from 'glamor'
 import compose from 'lodash/flowRight'
-import { CheckCircleIcon, useColorContext } from '@project-r/styleguide'
+import { useRouter } from 'next/router'
+import { useState } from 'react'
 
 import {
   Interaction,
@@ -11,11 +9,19 @@ import {
   RawHtml,
   useHeaderHeight,
   FieldSet,
+  CheckCircleIcon,
+  useColorContext,
 } from '@project-r/styleguide'
 
 import { useTranslation } from '../../lib/withT'
 
+import { withMyDetails, withMyDetailsMutation } from '../Account/enhancers'
+import DetailsForm from '../Account/DetailsForm'
+import ErrorMessage from '../ErrorMessage'
+import Box from '../Frame/Box'
+import Loader from '../Loader'
 import StatusError from '../StatusError'
+
 import {
   withQuestionnaire,
   withQuestionnaireMutation,
@@ -26,9 +32,6 @@ import {
 import Questions from './Questions'
 import QuestionnaireClosed from './QuestionnaireClosed'
 import QuestionnaireActions from './QuestionnaireActions'
-import ErrorMessage from '../ErrorMessage'
-import DetailsForm from '../Account/DetailsForm'
-import { withMyDetails, withMyDetailsMutation } from '../Account/enhancers'
 
 const { Headline, P } = Interaction
 
@@ -81,9 +84,12 @@ const Questionnaire = (props) => {
     hideReset = false,
     requireName = true,
     showAnonymize = false,
+    redirectPath,
+    notEligibleCopy,
   } = props
 
   const [state, setState] = useState({})
+  const router = useRouter()
   const [isResubmitAnswers, setIsResubmitAnswers] = useState(false)
   const [headerHeight] = useHeaderHeight()
   const { t } = useTranslation()
@@ -96,21 +102,39 @@ const Questionnaire = (props) => {
     dirty: {},
   })
 
+  const onSubmitSuccess = () => {
+    onQuestionnaireChange && onQuestionnaireChange()
+    return setState({
+      updating: false,
+    })
+  }
+
+  const onSubmitError = (error) => {
+    setState({
+      updating: false,
+      error,
+    })
+  }
+
   const processSubmit = (fn, ...args) => {
     setState({ updating: true })
     return fn(...args)
-      .then(() => {
-        onQuestionnaireChange && onQuestionnaireChange()
-        return setState({
-          updating: false,
+      .then(onSubmitSuccess)
+      .catch(onSubmitError)
+  }
+
+  const redirectToPath = () => {
+    setState({ updating: true })
+    submitQuestionnaire(id)
+      .then(({ data }) => {
+        router.replace({
+          pathname: redirectPath.replace(
+            '{id}',
+            data?.submitQuestionnaire?.userSubmissionId,
+          ),
         })
       })
-      .catch((error) => {
-        setState({
-          updating: false,
-          error,
-        })
-      })
+      .catch(onSubmitError)
   }
 
   return (
@@ -145,6 +169,18 @@ const Questionnaire = (props) => {
         const updating = state.updating || props.updating || props.submitting
         const hasUserAnswers = questions.some(({ userAnswer }) => !!userAnswer)
 
+        if (!userIsEligible && notEligibleCopy) {
+          return (
+            <Box style={{ padding: 15 }}>
+              <RawHtml
+                type={Interaction.P}
+                dangerouslySetInnerHTML={{
+                  __html: notEligibleCopy,
+                }}
+              />
+            </Box>
+          )
+        }
         if (!userIsEligible) {
           return null
         }
@@ -200,14 +236,18 @@ const Questionnaire = (props) => {
           )
         }
         if (!updating && !isResubmitAnswers && (hasEnded || userHasSubmitted)) {
-          return (
-            <QuestionnaireClosed
-              submitted={userHasSubmitted}
-              onResubmit={onResubmit}
-              onRevoke={onRevoke}
-              publicSubmission={publicSubmission}
-            />
-          )
+          if (redirectPath && resubmitAnswers) {
+            onResubmit()
+          } else {
+            return (
+              <QuestionnaireClosed
+                submitted={userHasSubmitted}
+                onResubmit={onResubmit}
+                onRevoke={onRevoke}
+                publicSubmission={publicSubmission}
+              />
+            )
+          }
         }
         // handle questions
         const questionCount = questions
@@ -283,7 +323,11 @@ const Questionnaire = (props) => {
               return
             }
           }
-          processSubmit(submitQuestionnaire, id)
+          if (redirectPath) {
+            redirectToPath()
+          } else {
+            processSubmit(submitQuestionnaire, id)
+          }
         }
 
         const onSubmitAnonymized = () =>

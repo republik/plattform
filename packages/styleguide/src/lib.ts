@@ -203,3 +203,4 @@ export { RenderContextProvider } from './components/Editor/Render/Context'
 
 export { FlyerTile, FlyerTileMeta } from './components/Flyer'
 export { FlyerDate } from './components/Flyer/Date'
+export { default as ErrorBoundary } from './components/ErrorBoundary'

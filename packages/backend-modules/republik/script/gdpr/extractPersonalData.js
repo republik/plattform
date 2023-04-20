@@ -169,6 +169,22 @@ Promise.props({ pgdb: PgDb.connect(), elastic: Elasticsearch.connect() })
     )
 
     /**
+     * userAttributes
+     */
+    const userAttributes = await pgdb.public.userAttributes.find({
+      userId,
+    })
+
+    await save(
+      destination,
+      'users-attributes',
+      'weitere, lose Informationen zu einem Nutzerkonto. Änderungen werden als neuen Eintrag hinzugefügt.',
+      userAttributes.map((attribute) => ({
+        ...pick(attribute, ['name', 'value', 'createdAt']),
+      })),
+    )
+
+    /**
      * accessGrants
      */
 
@@ -311,6 +327,48 @@ Promise.props({ pgdb: PgDb.connect(), elastic: Elasticsearch.connect() })
         }),
       )
     }
+
+    /**
+     * calendarSlots
+     */
+    const calendarSlots = await pgdb.public.calendarSlots.find({
+      userId: user.id,
+    })
+    await save(
+      destination,
+      'calendars-slots',
+      'Kalender-Einträge',
+      calendarSlots.map((slot) => {
+        return {
+          ...pick(slot, ['calendarSlug', 'key', 'createdAt', 'revokedAt']),
+        }
+      }),
+    )
+
+    /**
+     * callToActions
+     */
+    const callToActions = await pgdb.public.callToActions.find({
+      userId: user.id,
+    })
+    await save(
+      destination,
+      'callToActions',
+      'Call-To-Actions-Einträge wie Störer oder Mini-Umfragen',
+      callToActions.map((slot) => {
+        return {
+          ...pick(slot, [
+            'payload',
+            'response',
+            'beginAt',
+            'endAt',
+            'createdAt',
+            'updatedAt',
+            'acknowledgedAt',
+          ]),
+        }
+      }),
+    )
 
     /**
      * cards
@@ -564,6 +622,31 @@ Promise.props({ pgdb: PgDb.connect(), elastic: Elasticsearch.connect() })
     }
 
     /**
+     * discussionSuspensions
+     */
+
+    const discussionSuspensions = await pgdb.public.discussionSuspensions.find({
+      userId: user.id,
+    })
+
+    await save(
+      destination,
+      'discussion-suspensions',
+      'Suspendierungen vom Dialog verhindern während einer gewissen Zeitspanne, dass ebenda kommentiert oder geantwortet werden kann',
+      discussionSuspensions.map((comment) => {
+        return {
+          ...pick(comment, [
+            'beginAt',
+            'endAt',
+            'reason',
+            'createdAt',
+            'updatedAt',
+          ]),
+        }
+      }),
+    )
+
+    /**
      * consents
      */
     const consents = await pgdb.public.consents.find({ userId: user.id })
@@ -687,6 +770,32 @@ Promise.props({ pgdb: PgDb.connect(), elastic: Elasticsearch.connect() })
       'mailLog',
       'versendete Transaktions-E-Mails',
       mailLog.map((row) => pick(row, ['createdAt', 'type', 'status'])),
+    )
+
+    /**
+     * mailchimpLog
+     */
+    const mailchimpLog = await pgdb.public.mailchimpLog.find({
+      email: user.email,
+    })
+
+    await save(
+      destination,
+      'mailchimpLog',
+      'Signale von MailChimp über Änderungen der Newsletter-Anmeldungen',
+      mailchimpLog.map((row) =>
+        pick(row, [
+          'type',
+          'firedAt',
+          'campaign',
+          'action',
+          'reason',
+          'customer',
+          'newsletter',
+          'oldEmail',
+          'createdAt',
+        ]),
+      ),
     )
 
     /**
@@ -857,6 +966,25 @@ Promise.props({ pgdb: PgDb.connect(), elastic: Elasticsearch.connect() })
           'type',
         ])
       }),
+    )
+
+    /**
+     * stripeCustomers
+     */
+    const stripeCustomers = await pgdb.public.stripeCustomers.find({
+      userId,
+    })
+
+    await save(
+      destination,
+      'stripeCustomers',
+      'verbundene Zahlungsmittel wie Kreditkarte bei Stripe. "cache" sind zwischengespeicherte Informationen von Stripe.',
+      stripeCustomers.map((payment) => ({
+        ...pick(payment, ['createdAt', 'updatedAt']),
+        cache: payment.cache?.paymentMethods.map((paymentMethod) =>
+          pick(paymentMethod, ['card', 'status', 'isDefault']),
+        ),
+      })),
     )
 
     /**

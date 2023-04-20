@@ -137,6 +137,27 @@ const buildQueries = (tableName) => {
     }
     return !!(await userSubmitDate(id, userId, context))
   }
+  const userSubmissionId = async (id, userId, context) => {
+    const {
+      loaders: { QuestionnaireSubmissions },
+    } = context
+    if (!userId) {
+      return null
+    }
+
+    if (table.ballotsTable === 'questionnaireSubmissions') {
+      const submission = await QuestionnaireSubmissions.byKeyObj.load({
+        userId,
+        [table.foreignKey]: id,
+      })
+
+      if (submission) {
+        return submission.id
+      }
+    }
+
+    return null
+  }
 
   const numSubmitted = async (entityId, pgdb) => {
     return pgdb.queryOneField(
@@ -316,6 +337,7 @@ const buildQueries = (tableName) => {
     findByGroupSlug,
     userSubmitDate,
     userHasSubmitted,
+    userSubmissionId,
     numSubmitted,
     numSubmittedByGroup,
     haveSameRestrictions,

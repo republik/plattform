@@ -38,7 +38,7 @@ import UserProgress from './UserProgress'
 import ShareButtons from './ShareButtons'
 import { useMe } from '../../lib/context/MeContext'
 import useAudioQueue from '../Audio/hooks/useAudioQueue'
-import AudioInfo from './AudioInfo'
+import AudioInfo from './Audio/Info'
 import {
   AudioPlayerLocations,
   AudioPlayerActions,
@@ -65,6 +65,7 @@ const ActionBar = ({
   discussion,
   fontSize,
   isCentered,
+  shareParam,
 }) => {
   const { me, meLoading, hasAccess, isEditor } = useMe()
   const [pdfOverlayVisible, setPdfOverlayVisible] = useState(false)
@@ -159,6 +160,11 @@ const ActionBar = ({
     url: `${PUBLIC_BASE_URL}${document.meta.path}`,
   }
 
+  // if share query param is set, it also gets included in the share url
+  const shareUrlObj = new URL(meta.url)
+  if (shareParam) shareUrlObj.searchParams.set('share', shareParam)
+  const shareUrl = shareUrlObj.toString()
+
   const podcast =
     (meta && meta.podcast) ||
     (meta && meta.audioSource && meta.format && meta.format.meta.podcast)
@@ -235,8 +241,6 @@ const ActionBar = ({
   const isActiveAudioItem = checkIfActivePlayerItem(document.id)
   const itemPlaying = isPlaying && isActiveAudioItem
   const itemInAudioQueue = checkIfInQueue(document.id)
-  const showAudioButtons =
-    !!meta.audioSource && meta.audioSource.kind !== 'syntheticReadAloud'
 
   const play = () => {
     toggleAudioPlayer(
@@ -253,8 +257,6 @@ const ActionBar = ({
       AudioPlayerLocations.ACTION_BAR,
     )
   }
-
-  const speakers = meta.contributors?.filter((c) => c.kind === 'voice')
 
   const ActionItems = [
     {
@@ -315,7 +317,18 @@ const ActionBar = ({
       element: (
         <SubscribeMenu
           discussionId={isDiscussion && meta.ownDiscussion?.id}
-          subscriptions={document?.subscribedBy?.nodes}
+          subscriptions={document?.subscribedBy?.nodes?.filter(
+            (subscription) =>
+              // keep all subscriptions onto Users objects
+              subscription?.object?.__typename === 'User' ||
+              // keep some subscriptions onto Documents objects …
+              (subscription?.object?.__typename === 'Document' &&
+                // … subscription object is not referring to current doc
+                (subscription?.object?.id !== document.id ||
+                  // … current doc is a format and subscription object referrs to current doc
+                  (meta.template === 'format' &&
+                    subscription?.object?.id === document.id))),
+          )}
           label={t('SubscribeMenu/title')}
           labelShort={isArticleBottom ? t('SubscribeMenu/title') : undefined}
           padded
@@ -361,16 +374,16 @@ const ActionBar = ({
     {
       title: t('article/actionbar/share'),
       Icon: ShareIcon,
-      href: meta.url,
+      href: shareUrl,
       onClick: (e) => {
         e.preventDefault()
-        trackEvent(['ActionBar', 'share', meta.url])
+        trackEvent(['ActionBar', 'share', shareUrl])
         if (inNativeApp) {
           postMessage({
             type: 'share',
             payload: {
               title: document.title,
-              url: meta.url,
+              url: shareUrl,
               subject: emailSubject,
               dialogTitle: t('article/share/title'),
             },
@@ -468,7 +481,9 @@ const ActionBar = ({
           : play
         : toggleAudioPlayback,
       modes: ['feed', 'seriesEpisode', 'articleTop'],
-      show: showAudioButtons,
+      show:
+        meta.audioSource?.mp3 &&
+        meta.audioSource?.kind !== 'syntheticReadAloud',
       group: 'audio',
     },
     {
@@ -500,7 +515,10 @@ const ActionBar = ({
         }
       },
       modes: ['feed', 'seriesEpisode', 'articleTop'],
-      show: isAudioQueueAvailable && showAudioButtons,
+      show:
+        isAudioQueueAvailable &&
+        meta.audioSource?.mp3 &&
+        meta.audioSource?.kind !== 'syntheticReadAloud',
       group: 'audio',
     },
     {
@@ -517,18 +535,10 @@ const ActionBar = ({
       group: mode === 'articleTop' ? 'audio' : undefined,
     },
     {
-      element: (
-        <AudioInfo
-          play={play}
-          showAudioButtons={showAudioButtons}
-          speakers={speakers}
-          willBeReadAloud={meta.willBeReadAloud}
-        />
-      ),
+      title: t('article/actionbar/audio/info/title'),
+      element: <AudioInfo document={document} handlePlay={play} />,
       modes: ['articleTop'],
-      show: ['readAloud', 'syntheticReadAloud'].includes(
-        meta.audioSource?.kind,
-      ),
+      show: true, // meta.audioSource || meta.willBeReadAloud,
       group: 'audio',
     },
   ]
@@ -600,7 +610,7 @@ const ActionBar = ({
               </Interaction.P>
             ) : null}
             <ShareButtons
-              url={meta.url}
+              url={shareUrl}
               title={document.title}
               tweet=''
               emailSubject={emailSubject}
@@ -624,7 +634,7 @@ const ActionBar = ({
       {shareOverlayVisible && (
         <ShareOverlay
           onClose={() => setShareOverlayVisible(false)}
-          url={meta.url}
+          url={shareUrl}
           title={t('article/actionbar/share')}
           tweet={''}
           emailSubject={emailSubject}

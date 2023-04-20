@@ -73,7 +73,7 @@ import ActionBarOverlay from './ActionBarOverlay'
 import SeriesNavBar from './SeriesNavBar'
 import TrialPayNoteMini from './TrialPayNoteMini'
 import Extract from './Extract'
-import { FlyerWrapper, PayNote } from './PayNote'
+import { PayNote } from './PayNote'
 import Progress from './Progress'
 import PodcastButtons from './PodcastButtons'
 import { getDocument } from './graphql/getDocument'
@@ -160,6 +160,7 @@ const Questionnaire = dynamic(
     ssr: false,
   },
 )
+
 const ClimateLabInlineTeaser = dynamic(
   () => import('../Climatelab/InlineTeaser/ClimateLabInlineTeaser'),
   {
@@ -170,6 +171,17 @@ const ClimateLabInlineTeaser = dynamic(
 
 const QuestionnaireSubmissions = dynamic(
   () => import('../Questionnaire/Submissions'),
+  {
+    loading: LoadingComponent,
+  },
+)
+
+const EdgeQuestion = dynamic(() => import('../Climatelab/EdgeQuestion/index'), {
+  loading: LoadingComponent,
+})
+
+const ClimateLabQuestionnaire = dynamic(
+  () => import('../Climatelab/Questionnaire/Overview'),
   {
     loading: LoadingComponent,
   },
@@ -419,9 +431,11 @@ const ArticlePage = ({
           ELECTION_RESULT_DIVERSITY: ElectionResultDiversity,
           QUESTIONNAIRE: Questionnaire,
           QUESTIONNAIRE_SUBMISSIONS: QuestionnaireSubmissions,
+          EDGE_QUESTION: EdgeQuestion,
           NEWSLETTER_SIGNUP: NewsletterSignUpDynamic,
           CLIMATE_LAB_COUNTER: ClimateLabCounter,
           CLIMATE_LAB_INLINE_TEASER: ClimateLabInlineTeaser,
+          CLIMATE_LAB_QUESTIONNAIRE: ClimateLabQuestionnaire,
           POSTCARD: Postcard,
           POSTCARD_GALLERY: PostcardGallery,
         },
@@ -469,6 +483,7 @@ const ArticlePage = ({
       mode='articleTop'
       document={article}
       documentLoading={articleLoading || needsRefetch}
+      shareParam={share}
     />
   )
   const actionBarEnd = actionBar
@@ -486,6 +501,7 @@ const ArticlePage = ({
   const actionBarFlyer = actionBar
     ? cloneElement(actionBar, {
         mode: 'flyer',
+        shareParam: undefined,
       })
     : undefined
 

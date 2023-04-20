@@ -103,8 +103,21 @@ export const getRepoWithCommit = gql`
                 }
               }
             }
+            audioSource {
+              mp3
+              kind
+            }
           }
-          subscribedBy(
+          documentSubscribedBy: subscribedBy(
+            filters: [Document]
+            includeParents: true
+            onlyEligibles: true
+            uniqueUsers: true
+          ) {
+            totalCount
+          }
+          readAloudSubscribedBy: subscribedBy(
+            filters: [ReadAloud]
             includeParents: true
             onlyEligibles: true
             uniqueUsers: true

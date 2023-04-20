@@ -583,20 +583,12 @@ const Page = ({
                       '2020-01',
                       '2021-01',
                       '2022-01',
+                      '2023-01',
                     ],
                     height: 300,
                     domain: [minValue, maxValue + 2000],
                     yTicks: [
                       -5000, 0, 5000, 10000, 15000, 20000, 25000, 30000, 35000,
-                    ],
-                    xAnnotations: [
-                      {
-                        x1: currentBucket.key,
-                        x2: currentBucket.key,
-                        value: activeCount,
-                        label: 'Stand jetzt',
-                        position: 'top',
-                      },
                     ],
                     xBandPadding: 0,
                   }}
@@ -649,16 +641,6 @@ const Page = ({
                   {formatDateTime(new Date(updatedAt))}
                 </ChartLegend>
               </div>
-              <P>
-                Wir investieren in Journalismus und in konkrete Projekte. Und
-                fassen ein neues Wachstumsziel ins Auge:{' '}
-                {countFormat(numMembersNeeded)} Abonnentinnen und Mitglieder.{' '}
-                <Link href='/2022/11/11/hier-sehen-sie-unser-budget' passHref>
-                  <Editorial.A>
-                    Diese Zahl leitet sich aus dem aktuellen Budget 2022/23 ab.
-                  </Editorial.A>
-                </Link>
-              </P>
               <H2>
                 {countFormat(lastSeen)} Verlegerinnen sind monatlich&nbsp;aktiv
               </H2>
@@ -687,7 +669,14 @@ const Page = ({
                     timeFormat: '%Y',
                     xTicks: isMobile
                       ? ['2018-01', '2020-01', '2022-01']
-                      : ['2018-01', '2019-01', '2020-01', '2021-01', '2022-01'], // lastSeenBucket.key
+                      : [
+                          '2018-01',
+                          '2019-01',
+                          '2020-01',
+                          '2021-01',
+                          '2022-01',
+                          '2023-01',
+                        ], // lastSeenBucket.key
                     yNice: 0,
                     yTicks: [0, 3000, 6000, 9000, 12000, 15000],
                     colorMap: {

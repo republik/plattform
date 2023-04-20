@@ -434,7 +434,7 @@
     },
     {
       "key": "marketing/page/reasons/3/text",
-      "value": "Die Republik wird finanziert durch ihre rund 27’000 Abonnentinnen. Wir gehören niemandem – aber jedem unserer Mitglieder ein bisschen."
+      "value": "Die Republik wird finanziert durch ihre rund 29’000 Abonnentinnen. Wir gehören niemandem – aber jedem unserer Mitglieder ein bisschen."
     },
     {
       "key": "marketing/page/vision/headline",
@@ -527,14 +527,6 @@
     {
       "key": "marketing/page/sections/title/audio",
       "value": "Alle Beiträge, auch zum Hören"
-    },
-    {
-      "key": "marketing/page/sections/description/winter",
-      "value": "Es ist eine kalte, aufreibende und verwirrende Zeit. Soll man sich all den Krisen stellen oder sich davon ablenken? Wir meinen: Beides. Und bieten Hand dazu – immer montags bei Sonnenuntergang"
-    },
-    {
-      "key": "marketing/page/sections/title/winter",
-      "value": "Winter-is-coming-Newsletter"
     },
     {
       "key": "marketing/page/vision/more",
@@ -949,18 +941,6 @@
       "value": "8 bis 12 Mal pro Jahr\n"
     },
     {
-      "key": "account/newsletterSubscriptions/COVID19/label",
-      "value": "Covid-19-Uhr-Newsletter"
-    },
-    {
-      "key": "account/newsletterSubscriptions/COVID19/frequency",
-      "value": "Montags um 19 Uhr"
-    },
-    {
-      "key": "account/newsletterSubscriptions/COVID19/description",
-      "value": "Brauchbares zur Pandemie – was man wissen sollte, obwohl es niemand mehr hören mag. Der kostenlose Newsletter ist unser Angebot zur Bewältigung der Corona-Pandemie."
-    },
-    {
       "key": "account/newsletterSubscriptions/ACCOMPLICE/label",
       "value": "Komplizen-Newsletter"
     },
@@ -971,18 +951,6 @@
     {
       "key": "account/newsletterSubscriptions/ACCOMPLICE/frequency",
       "value": "4 bis 6 Mal pro Jahr"
-    },
-    {
-      "key": "account/newsletterSubscriptions/WINTER/label",
-      "value": "Winter-is-coming-Newsletter"
-    },
-    {
-      "key": "account/newsletterSubscriptions/WINTER/frequency",
-      "value": "Montags um 17 Uhr"
-    },
-    {
-      "key": "account/newsletterSubscriptions/WINTER/description",
-      "value": "Es ist eine kalte, aufreibende und verwirrende Zeit. Soll man sich all den Krisen stellen oder sich davon ablenken? Wir meinen: beides. "
     },
     {
       "key": "account/newsletterSubscriptions/CLIMATE/label",
@@ -1603,6 +1571,30 @@
     {
       "key": "profile/portrait/empty",
       "value": "Sie müssen ein Porträtbild hochladen"
+    },
+    {
+      "key": "profile/report/label",
+      "value": "Benutzer melden"
+    },
+    {
+      "key": "profile/report/confirm",
+      "value": "Sind Sie sicher, dass dieser Benutzer gegen die Etikette verstossen hat und Sie die Moderation herbeirufen möchten? Nennen Sie bitte den Grund für diese Meldung."
+    },
+    {
+      "key": "profile/report/provideReason",
+      "value": "Bitte geben Sie einen Grund an, warum Sie diesen Benutzer melden möchten."
+    },
+    {
+      "key": "profile/report/success",
+      "value": "Wir haben Ihre Meldung erhalten."
+    },
+    {
+      "key": "profile/report/error",
+      "value": "Beim Senden der Meldung ist ein Fehler aufgetreten."
+    },
+    {
+      "key": "profile/report/tooLong",
+      "value": "Sie können maximal {max} Zeichen eingeben.{br}Ihre Eingabe: {input}"
     },
     {
       "key": "profile/gender",
@@ -3401,6 +3393,10 @@
       "value": "Entfernen"
     },
     {
+      "key": "article/actionbar/audio/info/title",
+      "value": "Vorgelesener Beitrag"
+    },
+    {
       "key": "article/actionbar/audio/info/speaker/default",
       "value": "unserem Sprecherinnen-Team"
     },
@@ -3409,12 +3405,44 @@
       "value": "Vorgelesen von"
     },
     {
+      "key": "article/actionbar/audio/info/voices/0",
+      "value": "Vorgelesen von unserem Sprecherinnen-Team"
+    },
+    {
+      "key": "article/actionbar/audio/info/voices/other",
+      "value": "Vorgelesen von {names}"
+    },
+    {
       "key": "article/actionbar/audio/info/play-synth",
       "value": "Anhören (synthetisch)"
     },
     {
+      "key": "article/actionbar/audio/info/readAloud",
+      "value": "{subscribe} sobald vorgelesen {synthetic}"
+    },
+    {
+      "key": "article/actionbar/audio/info/readAloud/subscribe",
+      "value": "Benachrichtigen"
+    },
+    {
+      "key": "article/actionbar/audio/info/readAloud/checkbox",
+      "value": "Ich möchte benachrichtigt werden."
+    },
+    {
+      "key": "article/actionbar/audio/info/readAloud/synthetic",
+      "value": "oder synthetische Version {action}"
+    },
+    {
+      "key": "article/actionbar/audio/info/readAloud/synthetic/action",
+      "value": "anhören"
+    },
+    {
       "key": "article/actionbar/audio/info/read-soon",
       "value": "Diesen Beitrag lesen wir im Laufe des Tages ein."
+    },
+    {
+      "key": "article/actionbar/audio/info/read-aloud-notification",
+      "value": "Benachrichtigen."
     },
     {
       "key": "article/syntheticReadAloud/title",
@@ -5412,12 +5440,16 @@
       "value": "Alle"
     },
     {
-      "key": "AudioPlayer/Latest/NoAcces",
+      "key": "AudioPlayer/Latest/NoAccess",
       "value": "Die neusten Beiträge sind für Mitglieder und Abonnentinnen der Republik zugänglich."
     },
     {
       "key": "AudioPlayer/Latest/NoItems",
       "value": "Keine Beiträge verfügbar."
+    },
+    {
+      "key": "AudioPlayer/Latest/LoadMore",
+      "value": "Weitere Beiträge laden"
     },
     {
       "key": "AudioPlayer/Queue",
@@ -5880,8 +5912,16 @@
       "value": "Hier anmelden"
     },
     {
-      "key": "Climatelab/Postcard/PostcardDynamicComponent/noaccess/linkHref",
-      "value": "/willkommen-zum-klimalabor"
+      "key": "Climatelab/Questionnaire/title",
+      "value": "Können Sie einer 5-Jährigen die Klimakrise erklären? Und ihr dabei in die Augen schauen?"
+    },
+    {
+      "key": "Climatelab/Questionnaire/description",
+      "value": "Fragen über Fragen zur Klimakrise. Das sind die Antworten von {name}. Was sind Ihre?"
+    },
+    {
+      "key": "Climatelab/Questionnaire/Person/title",
+      "value": "15 Fragen zum Klima – die Antworten von {name}"
     },
     {
       "key": "Trial/Form/withAccess/button/label",
@@ -6992,6 +7032,10 @@
       "value": "Noch etwas Handfestes?"
     },
     {
+      "key": "Goodies/note/delivery",
+      "value": "Versand nur in die Schweiz und Liechtenstein möglich"
+    },
+    {
       "key": "Goodie/dropdown/label",
       "value": "Anzahl"
     },
@@ -7025,7 +7069,7 @@
     },
     {
       "key": "Goodie/description/MUG",
-      "value": "Mit Logo und Claim «Ohne Journalismus keine Demokratie». Lieferung innerhalb von 10 Werktagen. Nur innerhalb der Schweiz möglich."
+      "value": "Mit Logo und Claim «Ohne Journalismus keine Demokratie». Lieferung innerhalb von 10 Werktagen."
     },
     {
       "key": "Goodie/label/MUG_CERAMIC",
@@ -7033,7 +7077,7 @@
     },
     {
       "key": "Goodie/description/MUG_CERAMIC",
-      "value": "Mit Logo und Claim «Ohne Journalismus keine Demokratie». Lieferung innerhalb von 10 Werktagen. Nur innerhalb der Schweiz möglich."
+      "value": "Mit Logo und Claim «Ohne Journalismus keine Demokratie». Lieferung innerhalb von 10 Werktagen."
     },
     {
       "key": "option/TABLEBOOK/label/other",
@@ -7233,7 +7277,7 @@
     },
     {
       "key": "article/payNote/220404-v1/before",
-      "value": "Journalismus kostet. Dass Sie diesen Beitrag trotzdem lesen können, verdanken Sie den über 27'000 Leserinnen, die die Republik schon finanzieren. Wenn auch Sie unabhängigen Journalismus möglich machen wollen: Kommen Sie an Bord!"
+      "value": "Journalismus kostet. Dass Sie diesen Beitrag trotzdem lesen können, verdanken Sie den rund 29’000 Leserinnen, die die Republik schon finanzieren. Wenn auch Sie unabhängigen Journalismus möglich machen wollen: Kommen Sie an Bord!"
     },
     {
       "key": "article/payNote/220404-v1/after",
@@ -7253,7 +7297,7 @@
     },
     {
       "key": "article/tryNote/220404-v1/after",
-      "value": "Über 27'000 Menschen machen die Republik heute schon möglich. Lernen Sie uns jetzt auch kennen – 21 Tage lang, kostenlos und unverbindlich:"
+      "value": "Rund 29’000 Menschen machen die Republik heute schon möglich. Lernen Sie uns jetzt auch kennen – 21 Tage lang, kostenlos und unverbindlich:"
     },
     {
       "key": "article/tryNote/220404-v2/before",
@@ -7632,12 +7676,16 @@
       "value": "Im Magazin"
     },
     {
+      "key": "SubscribeCallout/ReadAloud",
+      "value": "Benachrichtigung, sobald vorgelesen"
+    },
+    {
       "key": "SubscribeCallout/settingsLink",
       "value": "Allgemeine Einstellungen"
     },
     {
       "key": "SubscribeCallout/onlyYourself",
-      "value": "Andere können hier Ihnen folgen."
+      "value": "Andere können Ihnen hier folgen."
     },
     {
       "key": "SubscribeMenu/title",
@@ -7713,7 +7761,7 @@
     },
     {
       "key": "crowdfunding/status/goal/PERMANENT/memberships",
-      "value": "Mitgliedschaften und Abos. Wachstumsziel: {count}."
+      "value": "Mitgliedschaften und Abos."
     },
     {
       "key": "Trial/Form/button",
@@ -7805,11 +7853,7 @@
     },
     {
       "key": "ClimateLandingPage/content/heading1",
-      "value": "Die Klimakrise ist hier. {br}Die Lage ist ernst."
-    },
-    {
-      "key": "ClimateLandingPage/content/callToAction",
-      "value": "Was tun?"
+      "value": "Die Klimakrise ist{nbsp}hier.{br}Die Lage ist ernst.{br}Was{nbsp}tun?"
     },
     {
       "key": "ClimateLandingPage/content/paragraph1",
@@ -7817,7 +7861,19 @@
     },
     {
       "key": "ClimateLandingPage/content/paragraph2",
-      "value": "Darum starten wir das Klimalabor. Einen Ort für Austausch und Experimente. Um gemeinsam herauszufinden, was das ist: Journalismus, der uns in der Klimakrise wirklich weiterbringt."
+      "value": "Darum haben wir das Klimalabor gestartet. Einen Ort für Austausch und Experimente. Gemeinsam wollen wir herausfinden: Wie bringt uns Journalismus in der Klimakrise wirklich weiter?"
+    },
+    {
+      "key": "ClimateLandingPage/content/paragraph3",
+      "value": "Melden Sie sich an, um sich einzubringen, an unseren {eventsLink} teilzunehmen und um nichts zu verpassen, was wir zur Klimakrise schreiben."
+    },
+    {
+      "key": "ClimateLandingPage/content/eventsLinkText",
+      "value": "Veranstaltungen"
+    },
+    {
+      "key": "ClimateLandingPage/content/eventsLinkHref",
+      "value": "https://tally.so/r/mRxbdd"
     },
     {
       "key": "ClimateLandingPage/content/counterText",
@@ -7833,7 +7889,11 @@
     },
     {
       "key": "ClimateTeaser/content/text1",
-      "value": "Die Klimakrise ist hier. {br1}Die Lage ist ernst. {br2}Was tun?"
+      "value": "Die Klimakrise ist{nbsp}hier.{br}Die Lage ist ernst.{br}Was{nbsp}tun?"
+    },
+    {
+      "key": "ClimateTeaser/content/text2",
+      "value": "Das Klimalabor der Republik ist ein Ort für Austausch und Experimente. Gemeinsam wollen wir herausfinden: Wie bringt uns Journalismus in der Klimakrise wirklich weiter?"
     },
     {
       "key": "ClimateTeaser/content/buttonAction",
@@ -7858,6 +7918,22 @@
     {
       "key": "ClimateInlineTeaser/Member/content/link",
       "value": "zum Klimalabor"
+    },
+    {
+      "key": "CallToActions/customComponents/FutureCampaignBanner/headline",
+      "value": "Dank {sender} Verlegerinnen ist die Republik um {receiver} Stimmen reicher geworden."
+    },
+    {
+      "key": "CallToActions/customComponents/FutureCampaignBanner/button/other",
+      "value": "Noch {daysLeft} Tage Verstärkung holen und Gratismonate sichern"
+    },
+    {
+      "key": "CallToActions/customComponents/FutureCampaignBanner/button/1",
+      "value": "Noch heute Verstärkung holen und Gratismonate sichern"
+    },
+    {
+      "key": "CallToActions/customComponents/FutureCampaignBanner/button/0",
+      "value": "Noch heute Verstärkung holen und Gratismonate sichern"
     }
   ]
 }

@@ -17,6 +17,7 @@ fi
 rm yarn.lock
 rm -rf packages
 rm -rf apps
+rm -rf docs
 mv out/yarn.lock ./
 if [ -d out/packages ]
 then

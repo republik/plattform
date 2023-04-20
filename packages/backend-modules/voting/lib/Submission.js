@@ -3,46 +3,6 @@ const {
   paginate: { pageini },
 } = require('@orbiting/backend-modules-utils')
 
-const findMatchingAnswerIds = async ({ search, hits }, elastic) => {
-  if (!search || !hits?.length) {
-    return []
-  }
-
-  const answerIds = hits
-    .map(({ _source }) => _source.resolved.answers.map((answer) => answer.id))
-    .flat()
-
-  const { body: answersBody } = await elastic.search({
-    index: utils.getIndexAlias('answer', 'read'),
-    size: answerIds.length,
-    _source: ['_id'],
-    body: {
-      query: {
-        bool: {
-          must: [
-            { terms: { _id: answerIds } },
-            {
-              simple_query_string: {
-                query: search,
-                fields: [
-                  'payload.text',
-                  'resolved.question.text',
-                  'resolved.value.Text',
-                  'resolved.value.Choice',
-                  'resolved.value.ImageChoice',
-                ],
-                default_operator: 'AND',
-              },
-            },
-          ],
-        },
-      },
-    },
-  })
-
-  return answersBody.hits.hits.map(({ _id }) => _id)
-}
-
 const createSubmissionsFrom = (_, { after, before } = {}) =>
   after?.count || before?.count || 0
 
@@ -66,8 +26,6 @@ const createSubmissionsQuery = ({
 }) => {
   const { by, date } = sort
 
-  const hasAnswers = { exists: { field: 'resolved.answers' } }
-
   const mustBeforeDate = date && {
     range: {
       createdAt: {
@@ -80,20 +38,44 @@ const createSubmissionsQuery = ({
     terms: { userId: filters.userIds },
   }
   const mustQuestionnaireId = questionnaireId && { term: { questionnaireId } }
+  const mustSubmissionId = filters?.id && { term: { id: filters.id } }
+  const mustNotSubmissionId = filters?.not && { term: { id: filters.not } }
+  const mustSubmissionIds = filters?.submissionIds?.length && {
+    terms: { id: filters.submissionIds },
+  }
+  const mustNotSubmissionIds = filters?.notSubmissionIds?.length && {
+    terms: { id: filters.notSubmissionIds },
+  }
+
+  const mustHaveSomeAnswers = {
+    nested: {
+      path: 'resolved.answers',
+      query: { exists: { field: 'resolved.answers' } },
+    },
+  }
+
   const mustSearch = search && {
     bool: {
       should: [
         {
-          simple_query_string: {
-            query: search,
-            fields: [
-              'resolved.answers.payload.text',
-              'resolved.answers.resolved.question.text',
-              'resolved.answers.resolved.value.Text',
-              'resolved.answers.resolved.value.Choice',
-              'resolved.answers.resolved.value.ImageChoice',
-            ],
-            default_operator: 'AND',
+          nested: {
+            path: 'resolved.answers',
+            query: {
+              simple_query_string: {
+                query: search,
+                fields: [
+                  'resolved.answers.payload.text',
+                  'resolved.answers.resolved.question.text',
+                  'resolved.answers.resolved.value.Text',
+                  'resolved.answers.resolved.value.Choice',
+                  'resolved.answers.resolved.value.ImageChoice',
+                ],
+                default_operator: 'AND',
+              },
+            },
+            inner_hits: {
+              fields: ['id'],
+            },
           },
         },
         {
@@ -117,38 +99,63 @@ const createSubmissionsQuery = ({
       ],
     },
   }
+
   const mustValue = value && {
-    term: { 'resolved.answers.payload.value': value },
+    nested: {
+      path: 'resolved.answers',
+      query: { term: { 'resolved.answers.payload.value': value } },
+      inner_hits: {
+        fields: ['id'],
+      },
+    },
   }
-  const mustSubmissionId = filters?.id && { term: { id: filters.id } }
-  const mustNotSubmissionId = filters?.not && { term: { id: filters.not } }
-  const mustSubmissionIds = filters?.submissionIds?.length && {
-    terms: { id: filters.submissionIds },
-  }
-  const mustNotSubmissionIds = filters?.notSubmissionIds?.length && {
-    terms: { id: filters.notSubmissionIds },
-  }
-  const mustAnsweredQuestionIds = filters?.answeredQuestionIds && {
+
+  const expectedAnswers = (filters?.answeredQuestionIds || [])
+    .map((questionId) => ({
+      questionId,
+    }))
+    .concat(filters?.answers || [])
+
+  const mustHaveAnswers = expectedAnswers?.length && {
     bool: {
-      must: filters?.answeredQuestionIds.map((id) => ({
-        term: { 'resolved.answers.questionId': id },
-      })),
+      must: expectedAnswers.map(({ questionId, valueLength }) => {
+        return {
+          nested: {
+            path: 'resolved.answers',
+            query: {
+              bool: {
+                must: [
+                  { term: { 'resolved.answers.questionId': questionId } },
+                  valueLength && {
+                    range: {
+                      'resolved.answers.resolved.value.length': {
+                        gte: Math.max(1, valueLength.min) || 1,
+                        lte: valueLength.max || undefined,
+                      },
+                    },
+                  },
+                ].filter(Boolean),
+              },
+            },
+          },
+        }
+      }),
     },
   }
 
   const query = {
     bool: {
       must: [
-        hasAnswers,
         mustBeforeDate,
         mustUserId,
         mustUserIds,
         mustQuestionnaireId,
-        mustSearch,
-        mustValue,
         mustSubmissionId,
         mustSubmissionIds,
-        mustAnsweredQuestionIds,
+        mustHaveSomeAnswers,
+        mustSearch,
+        mustValue,
+        mustHaveAnswers,
       ].filter(Boolean),
       must_not: [mustNotSubmissionId, mustNotSubmissionIds].filter(Boolean),
     },
@@ -191,8 +198,6 @@ const count = async (args, elastic) => {
 }
 
 const find = async (args, cursors, elastic) => {
-  const { search } = args
-
   try {
     const submissionsFrom = createSubmissionsFrom(args, cursors)
     const submissionsSize = createSubmissionsSize(args, cursors)
@@ -212,12 +217,14 @@ const find = async (args, cursors, elastic) => {
 
     const hits = submissionsBody.hits.hits
 
-    const _matchedAnswerIds = await findMatchingAnswerIds(
-      { search, hits },
-      elastic,
-    )
+    return hits.map(({ _source, inner_hits }) => {
+      const matchedAnswers = inner_hits?.['resolved.answers']?.hits?.hits
 
-    return hits.map(({ _source }) => ({ ..._source, _matchedAnswerIds }))
+      return {
+        ..._source,
+        _matchedAnswerIds: matchedAnswers?.map((hit) => hit._source.id),
+      }
+    })
   } catch (e) {
     console.warn(e.message)
   }
@@ -310,8 +317,56 @@ const getConnection = (anchors, args, context) => {
   return pageini(args, countFn, nodesFn, pageInfoFn)
 }
 
+const getSubmissionById = async (anchors, args, context) => {
+  const { questionnaireId } = anchors
+  const { loaders } = context
+  const { after, before } = args
+
+  const size = Math.min(
+    Math.abs(
+      [after?.first, before?.first, args.first, 10].find(Number.isFinite),
+    ),
+    100,
+  )
+
+  const search = after?.search || before?.search || args.search || undefined
+  const value = after?.value || before?.value || args.value || undefined
+  const filters = after?.filters || before?.filters || args.filters || {}
+  // sort is irrelevant
+  const unwantedFilters = Object.keys(filters).filter((key) => key !== 'id')
+
+  if (size < 1 || !!search || !!value || unwantedFilters?.length) {
+    return false
+  }
+
+  const submissionId = filters?.id
+  if (!submissionId) {
+    return false
+  }
+
+  const submission = await loaders.QuestionnaireSubmissions.byKeyObj.load({
+    questionnaireId,
+    id: submissionId,
+  })
+  if (!submission) {
+    return false
+  }
+
+  return {
+    pageInfo: {
+      endCursor: null,
+      startCursor: null,
+      hasNextPage: false,
+      hasPreviousPage: false,
+    },
+    totalCount: 1,
+    nodes: [submission],
+  }
+}
+
 module.exports = {
   count,
   find,
   getConnection,
+  getSubmissionById,
 }
