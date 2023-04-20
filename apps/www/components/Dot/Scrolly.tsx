@@ -78,11 +78,16 @@ export const Scrolly = () => {
           schwupps, sei der Nachwuchs unterwegs.
         </Editorial.P>
         <Editorial.P>
-          Es sei darum gesagt: Das Prozedere einer In-vitro-Fertilisation (IVF)
-          ist auch für Frauen bis Mitte 30 strapaziös. Es stimmt aber, dass die
-          Mehrheit von ihnen mit grosser Wahrscheinlichkeit nach einigen
-          Embryonentransfers schwanger wird. Ähnlich wie bei der natürlichen
-          Fruchtbarkeit kumulieren die Chancen über mehrere Zyklen.
+          Die Grafik zeigt eine Gruppe von
+          <Highlight colorKey={key} color='default'>
+            100 Frauen,
+          </Highlight>
+          die per In-vitro-Fertilisation schwanger werden wollen. Das Prozedere
+          einer IVF ist auch für Frauen bis Mitte 30 strapaziös. Es stimmt aber,
+          dass die Mehrheit von ihnen mit grosser Wahrscheinlichkeit nach
+          einigen Embryonentransfers schwanger wird. Ähnlich wie bei der
+          natürlichen Fruchtbarkeit steigt die Wahrscheinlichkeit einer
+          Schwangerschaft bei mehreren Versuchen.
         </Editorial.P>
       </ScrollySlide>
       <ScrollySlide
@@ -100,20 +105,22 @@ export const Scrolly = () => {
           ein Kind.
         </Editorial.P>
         <Editorial.P>
-          Mit IVF geht es sogar etwas schneller: Nach dem ersten Transfer sind
-          laut Statistik gut
+          Mit IVF geht es sogar etwas schneller: Nach dem
           <Highlight colorKey={key} color='one100'>
-            40 von 100
+            ersten Transfer
           </Highlight>
-          Frauen schwanger in der Altersgruppe bis 34 Jahre. Die Zahlen steigen
-          schnell. Nach dem dritten Versuch konnten sich bereits gut zwei
-          Drittel über einen positiven Test freuen. Und nach fünf oder mehr
-          IVF-Transfers erwartet die grosse Mehrheit von der Frauen bis Mitte 30
-          ein Kind: Dann hat es bei
+          sind laut Statistik gut 40 von 100 Frauen schwanger in der
+          Altersgruppe bis 34 Jahre. Die Zahlen steigen schnell. Nach dem
+          <Highlight colorKey={key} color='one300'>
+            dritten Versuch
+          </Highlight>
+          konnten sich bereits gut zwei Drittel über einen positiven Test
+          freuen. Nach
           <Highlight colorKey={key} color='one500'>
-            82 von 100
+            mehr als vier IVF-Transfers
           </Highlight>
-          geklappt.
+          erwartet die grosse Mehrheit der Frauen bis Mitte 30 ein Kind: Dann
+          sind 82 von 100 Frauen schwanger.
         </Editorial.P>
       </ScrollySlide>
 
@@ -135,9 +142,9 @@ export const Scrolly = () => {
 
         <Editorial.P>
           Als Unfruchtbarkeit definiert die World Health Organisation (WHO),
-          wenn durch regelmässigem ungeschützten Sex nach einem Jahr keine
-          Schwangerschaft entstanden ist. Gleichzeitig dauert es oft lange, bis
-          Paare bei unerfülltem Kinderwunsch Hilfe bei einer
+          wenn es durch regelmässigen ungeschützten Sex nach einem Jahr nicht
+          zur Schwangerschaft gekommen ist. Gleichzeitig dauert es oft lange,
+          bis Paare bei unerfülltem Kinderwunsch Hilfe bei einer
           Reproduktionsspezialistin suchen. Dabei empfiehlt die WHO Frauen ab
           Mitte 30 und ihren Partnern, sich bereits in Behandlung zu geben, wenn
           sie nach sechs Monaten nicht schwanger sind.
@@ -149,15 +156,20 @@ export const Scrolly = () => {
           Frauen im Alter von 35 bis 39 Jahren haben zwar noch ziemlich gute
           Chancen, mit IVF schwanger zu werden. Aber schon sichtbar schlechtere
           als noch ein paar Jahre zuvor. Die Statistik zeigt, dass nach dem
-          ersten Transfer
           <Highlight colorKey={key} color='two100'>
-            32 von 100
+            ersten Transfer
           </Highlight>
-          Enddreissigerinnen ein Kind erwarten. Nach dem zweiten Transfer ist es
-          jede Zweite. Und nach fünf oder mehr Transfers sind zwei Drittel der
-          Kinderwunsch-Patientinnen schwanger.
+          32 von 100 Enddreissigerinnen ein Kind erwarten. Nach dem
+          <Highlight colorKey={key} color='two200'>
+            zweiten Transfer
+          </Highlight>
+          ist es jede Zweite. Nach
+          <Highlight colorKey={key} color='two500'>
+            mehr als vier Transfers
+          </Highlight>
+          sind zwei Drittel der Kinderwunsch-Patientinnen schwanger.
         </Editorial.P>
-        <Editorial.P>Das ist aber immer noch die Mehrheit.</Editorial.P>
+        <Editorial.P>Das ist immer noch die Mehrheit.</Editorial.P>
       </ScrollySlide>
 
       <ScrollySlide
@@ -196,12 +208,15 @@ export const Scrolly = () => {
           Altersgruppen wird die Mehrheit von ihnen gar nicht mehr schwanger.
         </Editorial.P>
         <Editorial.P>
-          Bei Frauen ab 40 erwarten nach dem ersten IVF-Transfer 18 von 100
-          Frauen ein Kind. Nach fünf Transfers oder mehr steigt diese Zahl auf
-          <Highlight colorKey={key} color='three500'>
-            35 von 100
+          Bei Frauen ab 40 erwarten nach dem
+          <Highlight colorKey={key} color='three100'>
+            ersten IVF-Transfer
           </Highlight>
-          Frauen an. Mehr ist nicht.
+          18 von 100 Frauen ein Kind. Nach
+          <Highlight colorKey={key} color='three500'>
+            mehr als vier Transfers
+          </Highlight>
+          steigt diese Zahl auf 35 von 100 Frauen an. Mehr ist nicht.
         </Editorial.P>
         <Editorial.P>
           Und noch dazu, leider, wächst mit jedem Jahr das Fehlgeburtsrisiko.
@@ -311,7 +326,7 @@ const styles = {
     gap: 0,
   }),
   highlight: css({
-    whiteSpace: 'nowrap',
+    wordBreak: 'break-word',
     margin: '-1px 0 1px 0',
     display: 'flex',
     alignItems: 'center',

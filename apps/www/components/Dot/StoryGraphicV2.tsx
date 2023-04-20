@@ -223,43 +223,43 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
           variants={defineVariants(
             { x: 0, y: -30, opacity: 1 },
             {
-              step1: {
-                x: 0,
-                y: -30,
-                opacity: 1,
-                transition: { duration: 0.5 },
-              },
-              step2: {
-                x: 0,
-                y: -30,
-                opacity: 0,
-                transition: { duration: 0.5 },
-              },
-              step3: {
-                x: 0,
-                y: -30,
-                opacity: 0,
-                transition: { duration: 0.5 },
-              },
-              step4: {
-                x: 0,
-                y: -30,
-                opacity: 0,
-                transition: { duration: 0.5 },
-              },
-              step5: {
-                x: 0,
-                y: -30,
-                opacity: 0,
-                transition: { duration: 0.5 },
-              },
+              // step1: {
+              //   x: 0,
+              //   y: -30,
+              //   opacity: 1,
+              //   transition: { duration: 0.5 },
+              // },
+              // step2: {
+              //   x: 0,
+              //   y: -30,
+              //   opacity: 1,
+              //   transition: { duration: 0.5 },
+              // },
+              // step3: {
+              //   x: 0,
+              //   y: -30,
+              //   opacity: 1,
+              //   transition: { duration: 0.5 },
+              // },
+              // step4: {
+              //   x: 0,
+              //   y: -30,
+              //   opacity: 0,
+              //   transition: { duration: 0.5 },
+              // },
+              // step5: {
+              //   x: 0,
+              //   y: -30,
+              //   opacity: 0,
+              //   transition: { duration: 0.5 },
+              // },
             },
           )}
           transition={{ duration: 0.5 }}
         >
           100 Frauen wollen schwanger werden per In-vitro-Fertilisation (IVF).
         </motion.text>
-        <motion.text
+        {/* <motion.text
           {...styles.label}
           style={{ textAnchor: 'middle' }}
           {...colorScheme.set('fill', 'text')}
@@ -286,7 +286,7 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
           <tspan x='0' dy='30'>
             steigt bei mehreren Versuchen.
           </tspan>
-        </motion.text>
+        </motion.text> */}
       </motion.g>
       <motion.g
         variants={defineVariants(
@@ -474,8 +474,14 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
           {...styles.label}
           {...colorScheme.set('fill', 'text')}
           variants={defineVariants(
-            { x: 5, y: 225, opacity: 0 },
+            { x: 5, y: 225, opacity: 1 },
             {
+              step1: {
+                x: 5,
+                y: 225,
+                opacity: 1,
+                transition: { duration: 0.5 },
+              },
               step2: {
                 x: 5,
                 y: 225,

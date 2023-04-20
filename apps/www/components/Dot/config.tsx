@@ -2,7 +2,7 @@ export const TRANSITION = 'all 0.3s cubic-bezier(0.17, 0.55, 0.55, 1)'
 
 export const RADIUS = 9
 export const SMALL_RADIUS = 9
-export const PADDING_TOP = 150
+export const PADDING_TOP = 100
 export const PADDING_LEFT = 0
 export const CIRCLE_PADDING = 2
 export const COLUMNS = 10
@@ -45,7 +45,7 @@ export const COLORS = {
     four: '#b2e2ec',
     fourBright: '#00d5ff',
     default: '#cfcfcf',
-    lightBackground: 'rgba(0, 0, 0, 0.05)',
+    lightBackground: 'rgba(0, 0, 0, 0.02)',
   },
   dark: {
     one: '#376867',
@@ -57,7 +57,7 @@ export const COLORS = {
     four: '#5c8f99',
     fourBright: '#00d5ff',
     default: '#737373',
-    lightBackground: 'rgba(255, 255, 255, 0.05)',
+    lightBackground: 'rgba(255, 255, 255, 0.02)',
   },
 }
 
