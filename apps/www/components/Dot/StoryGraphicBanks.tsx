@@ -134,7 +134,7 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
             {
               x: CENTER,
               y: chartRange[0] - 35,
-              opacity: 0,
+              opacity: 1,
               textAnchor: 'middle',
             },
             {
@@ -209,6 +209,71 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
             },
           )}
         ></motion.line>
+        {/* bottom line */}
+        <motion.line
+          variants={defineVariants(
+            {
+              x1: 330,
+              y1: chartRange[1] - costScale(costDomainWithoutCS[0]),
+              x2: 370,
+              y2: chartRange[1] - costScale(costDomainWithoutCS[0]),
+              opacity: 0,
+              strokeWidth: '2px',
+              stroke: NEW_COLORS[key].default,
+              strokeDasharray: '4',
+              transition: { duration: 0.5 },
+            },
+            {
+              step3: {
+                x1: 200,
+                y1: chartRange[1] - costScale(costDomainWithoutCS[0]),
+                x2: 450,
+                y2: chartRange[1] - costScale(costDomainWithoutCS[0]),
+                opacity: 1,
+                strokeWidth: '2px',
+                stroke: NEW_COLORS[key].default,
+                strokeDasharray: '4',
+                transition: { duration: 0.5, delay: 1 },
+              },
+              step4: {
+                x1: 200,
+                y1: chartRange[1] - costScaleAll(costDomainWithoutCS[0]),
+                x2: 450,
+                y2: chartRange[1] - costScaleAll(costDomainWithoutCS[0]),
+                opacity: 1,
+                strokeWidth: '2px',
+                stroke: NEW_COLORS[key].default,
+                strokeDasharray: '4',
+                transition: { duration: 0.5, delay: 1 },
+              },
+            },
+          )}
+        ></motion.line>
+        <motion.text
+          {...styles.axisTick}
+          style={{ textAnchor: 'middle' }}
+          variants={defineVariants(
+            {
+              x: CENTER,
+              y: chartRange[1] - costScale(costDomainWithoutCS[0]) + 25,
+              transition: { duration: 0.5 },
+            },
+            {
+              step3: {
+                x: 150,
+                y: chartRange[1] - costScale(costDomainWithoutCS[0]),
+                transition: { duration: 0.5, delay: 1 },
+              },
+              step4: {
+                x: 150,
+                y: chartRange[1] - costScaleAll(costDomainWithoutCS[0]),
+                transition: { duration: 0.5, delay: 1 },
+              },
+            },
+          )}
+        >
+          {formatOneDecimal(costDomainWithoutCS[0])}
+        </motion.text>
         {/* right side */}
         <motion.line
           transition={{ duration: 0.5 }}
@@ -783,7 +848,7 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
             {
               y: getCostPosition('UBS'),
               x: CENTER - 25,
-              opacity: 0,
+              opacity: 1,
               textAnchor: 'end',
             },
             {
@@ -828,7 +893,7 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
             {
               y: getCostPosition('Credit Suisse'),
               x: CENTER - 25,
-              opacity: 0,
+              opacity: 1,
               textAnchor: 'end',
             },
             {
@@ -996,7 +1061,7 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
             {
               y: getCostPosition('UBS'),
               x: CENTER + 25,
-              opacity: 0,
+              opacity: 1,
               textAnchor: 'start',
             },
             {
@@ -1021,6 +1086,13 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                 transition: { duration: 0.5 },
                 textAnchor: 'start',
               },
+              step4: {
+                y: getCostPosition('UBS'),
+                x: CENTER + 25,
+                opacity: 0,
+                transition: { duration: 0.5 },
+                textAnchor: 'start',
+              },
             },
           )}
           dy='.35em'
@@ -1034,7 +1106,7 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
             {
               y: getCostPosition('Credit Suisse'),
               x: CENTER + 25,
-              opacity: 0,
+              opacity: 1,
               textAnchor: 'start',
             },
             {
@@ -1053,6 +1125,13 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                 textAnchor: 'start',
               },
               step3: {
+                y: getCostPosition('Credit Suisse'),
+                x: CENTER + 25,
+                opacity: 0,
+                transition: { duration: 0.5 },
+                textAnchor: 'start',
+              },
+              step4: {
                 y: getCostPosition('Credit Suisse'),
                 x: CENTER + 25,
                 opacity: 0,
@@ -1176,13 +1255,6 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                 x: CENTER + PADDING_LEFT_CHART + 25,
                 opacity: 1,
                 transition: { duration: 0.5, delay: 3.5 },
-                textAnchor: 'start',
-              },
-              step4: {
-                y: getBenefitPositionWithCS('UBS'),
-                x: CENTER + PADDING_LEFT_CHART + 25,
-                opacity: 1,
-                transition: { duration: 0.5, delay: 1 },
                 textAnchor: 'start',
               },
             },
