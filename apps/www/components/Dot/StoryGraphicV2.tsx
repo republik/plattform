@@ -257,7 +257,7 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
           )}
           transition={{ duration: 0.5 }}
         >
-          100 Frauen wollen schwanger werden per In-vitro-Fertilisation (IVF).
+          100 Frauen wollen schwanger werden per In-Vitro-Fertilisation
         </motion.text>
         {/* <motion.text
           {...styles.label}

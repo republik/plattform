@@ -82,12 +82,12 @@ export const Scrolly = () => {
           <Highlight colorKey={key} color='default'>
             100 Frauen,
           </Highlight>
-          die per In-vitro-Fertilisation schwanger werden wollen. Das Prozedere
-          einer IVF ist auch für Frauen bis Mitte 30 strapaziös. Es stimmt aber,
-          dass die Mehrheit von ihnen mit grosser Wahrscheinlichkeit nach
-          einigen Embryonentransfers schwanger wird. Ähnlich wie bei der
-          natürlichen Fruchtbarkeit steigt die Wahrscheinlichkeit einer
-          Schwangerschaft bei mehreren Versuchen.
+          die per In-Vitro-Fertilisation (IVF) schwanger werden wollen. Das
+          Prozedere einer IVF ist auch für Frauen bis Mitte 30 strapaziös. Es
+          stimmt aber, dass die Mehrheit von ihnen mit grosser
+          Wahrscheinlichkeit nach einigen Embryonentransfers schwanger wird.
+          Ähnlich wie bei der natürlichen Fruchtbarkeit steigt die
+          Wahrscheinlichkeit einer Schwangerschaft bei mehreren Versuchen.
         </Editorial.P>
       </ScrollySlide>
       <ScrollySlide
