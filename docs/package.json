@@ -5,9 +5,7 @@
   "main": "./lib/index.ts",
   "workspaces": {
     "nohoist": [
-      "next",
-      "react",
-      "react-dom"
+      "next"
     ]
   },
   "scripts": {

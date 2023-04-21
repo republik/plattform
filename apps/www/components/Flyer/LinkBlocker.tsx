@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ReactNode } from 'react'
 
 import {
   Overlay,
@@ -76,6 +76,7 @@ export const TrialOverlay: React.FC<{
 
 const getLinkBlocker: (preventAccess: () => void) => React.FC<{
   href: string
+  children?: ReactNode
 }> =
   (preventAccess) =>
   ({ href, children }) => {

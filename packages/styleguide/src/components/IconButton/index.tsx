@@ -1,8 +1,8 @@
 import React, {
   Attributes,
-  Component,
   ComponentType,
   MouseEventHandler,
+  ReactNode,
   SVGProps,
 } from 'react'
 import { css } from 'glamor'
@@ -16,6 +16,7 @@ const ICON_SIZE = 24
 const IconButton = React.forwardRef<
   HTMLAnchorElement & HTMLButtonElement,
   {
+    children?: ReactNode
     Icon: ComponentType<SVGProps<SVGSVGElement> & { size?: number | string }>
     href?: string
     target?: string
