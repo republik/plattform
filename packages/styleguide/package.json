@@ -4,6 +4,12 @@
   "main": "dist/lib.js",
   "module": "src/lib.ts",
   "types": "dist/lib.d.ts",
+  "exports": {
+    ".": {
+      "import": "./src/lib.ts",
+      "require": "./dist/lib.js"
+    }
+  },
   "engines": {
     "node": "^16.0.0"
   },
