@@ -1,12 +1,12 @@
 import React, { useMemo } from 'react'
 import { css } from 'glamor'
-import { TwitterIcon } from '../Icons'
 import { mUp } from '../../theme/mediaQueries'
 import { sansSerifMedium16, sansSerifRegular14 } from '../Typography/styles'
 import { ellipsize } from '../../lib/styleMixins'
 import { timeFormat } from '../../lib/timeFormat'
 import { convertStyleToRem, pxToRem } from '../Typography/utils'
 import { useColorContext } from '../Colors/useColorContext'
+import { IconLogoTwitter } from '@republik/icons'
 
 export const profilePictureSize = 40
 export const profilePictureMargin = 10
@@ -120,7 +120,7 @@ export const Header = ({ url, userProfileImageUrl, name, handle, date }) => {
         />
       </UserLink>
       <Link href={url}>
-        <TwitterIcon
+        <IconLogoTwitter
           {...styles.icon}
           {...colorScheme.set('color', 'divider')}
         />

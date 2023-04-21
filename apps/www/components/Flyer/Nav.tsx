@@ -4,14 +4,13 @@ import { gql, useQuery } from '@apollo/client'
 import Link from 'next/link'
 
 import {
-  ArrowForwardIcon,
   IconButton,
   FlyerDate,
   mediaQueries,
 } from '@project-r/styleguide'
 
 import { useMe } from '../../lib/context/MeContext'
-import { IconArrowBack } from '@republik/icons'
+import { IconArrowBack, IconArrowForward } from '@republik/icons'
 
 const FORMAT_REPO_ID = 'republik/format-journal'
 
@@ -121,7 +120,7 @@ const Nav: React.FC<{ repoId: string; publishDate: string }> = ({
       </div>
       {next && (
         <Link href={next?.path || '#'} passHref>
-          <IconButton invert Icon={ArrowForwardIcon} />
+          <IconButton invert Icon={IconArrowForward} />
         </Link>
       )}
     </div>

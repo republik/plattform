@@ -1,12 +1,12 @@
 import { css } from 'glamor'
 import React from 'react'
-import { ChevronRightIcon } from '../Icons'
 import { mUp } from '../TeaserFront/mediaQueries'
 import {
   sansSerifMedium16,
   sansSerifMedium22,
   sansSerifRegular30,
 } from '../Typography/styles'
+import { IconChevronRight } from '@republik/icons'
 
 const styles = {
   container: css({
@@ -48,7 +48,7 @@ const SectionTitle = React.forwardRef(
     return href ? (
       <a href={href} onClick={onClick} {...style} ref={ref}>
         {children}
-        {<ChevronRightIcon />}
+        {<IconChevronRight />}
       </a>
     ) : (
       <span onClick={onClick} {...style} ref={ref}>
