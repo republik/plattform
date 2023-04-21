@@ -12,7 +12,7 @@ import { SUPPORTED_SORT } from './constants'
 
 import withT from '../../lib/withT'
 import Link from 'next/link'
-import { IconArrowDownward, IconArrowUpward } from '@republik/icons'
+import { IconKeyboardArrowDown, IconKeyboardArrowUp } from '@republik/icons'
 
 const styles = {
   container: css({
@@ -41,8 +41,8 @@ const styles = {
 }
 
 const SORT_DIRECTION_ICONS = {
-  ASC: IconArrowDownward,
-  DESC: IconArrowUpward,
+  ASC: IconKeyboardArrowDown,
+  DESC: IconKeyboardArrowUp,
 }
 
 const getDefaultDirection = (sort) => sort.directions && sort.directions[0]

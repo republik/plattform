@@ -4,7 +4,7 @@ import IconButton from '../../../IconButton'
 import { useColorContext } from '../../../Colors/ColorContext'
 import { fontStyles } from '../../../Typography'
 import comment from '../../../../templates/Comment'
-import { IconArrowDownward, IconArrowUpward } from '@republik/icons'
+import { IconKeyboardArrowDown, IconKeyboardArrowUp } from '@republik/icons'
 
 const styles = {
   votes: css({
@@ -59,7 +59,7 @@ export const VoteButtons = ({
         <IconButton
           size={24}
           fill={comment.userVote === 'UP' && colorScheme.getCSSColor('primary')}
-          Icon={IconArrowUpward}
+          Icon={IconKeyboardArrowUp}
           disabled={disabled}
           onClick={() => upVoteHandler(comment.id)}
           title={t('styleguide/CommentActions/upvote')}
@@ -91,7 +91,7 @@ export const VoteButtons = ({
           fill={
             comment.userVote === 'DOWN' && colorScheme.getCSSColor('primary')
           }
-          Icon={IconArrowDownward}
+          Icon={IconKeyboardArrowDown}
           disabled={disabled}
           onClick={() => downVoteHandler(comment.id)}
           title={t('styleguide/CommentActions/downvote')}

@@ -12,12 +12,12 @@ import { Node } from 'slate'
 import { useRenderContext } from '../Render/Context'
 import {
   IconAdd,
-  IconArrowDownward,
-  IconArrowUpward,
   IconDeleteOutline,
   IconEdit,
   IconMoreVertical,
 } from '@republik/icons'
+import { IconKeyboardArrowUp } from '@republik/icons'
+import { IconKeyboardArrowDown } from '@republik/icons'
 
 const DEFAULT_POSITION = {
   top: 0,
@@ -53,7 +53,7 @@ const MoveUp: React.FC<{
   )
   return (
     <IconButton
-      Icon={IconArrowUpward}
+      Icon={IconKeyboardArrowUp}
       onClick={(e) => {
         e.preventDefault()
         moveElement(editor, path, 'up')
@@ -78,7 +78,7 @@ const MoveDown: React.FC<{
   )
   return (
     <IconButton
-      Icon={IconArrowDownward}
+      Icon={IconKeyboardArrowDown}
       onClick={(e) => {
         e.preventDefault()
         moveElement(editor, path, 'down')

@@ -17,7 +17,7 @@ import {
 import { cleanAsPath } from '../../lib/utils/link'
 import TrialPayNoteMini from './TrialPayNoteMini'
 import withT from '../../lib/withT'
-import { IconArrowDownward, IconArrowUpward } from '@republik/icons'
+import { IconKeyboardArrowDown, IconKeyboardArrowUp } from '@republik/icons'
 const styles = {
   button: css({
     ...fontStyles.sansSerifRegular,
@@ -146,10 +146,16 @@ const SeriesNavBar = ({ t, me, showInlinePaynote, series, router, repoId }) => {
               : ` – ${currentEpisode.label}`)}
           <span>
             {expanded && (
-              <IconArrowUpward size='28' {...colorScheme.set('fill', 'text')} />
+              <IconKeyboardArrowUp
+                size='28'
+                {...colorScheme.set('fill', 'text')}
+              />
             )}
             {!expanded && (
-              <IconArrowDownward size='28' {...colorScheme.set('fill', 'text')} />
+              <IconKeyboardArrowDown
+                size='28'
+                {...colorScheme.set('fill', 'text')}
+              />
             )}
           </span>
         </span>

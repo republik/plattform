@@ -24,13 +24,13 @@ import { getSubmodules } from './serializer'
 import {
   IconArrowLeft,
   IconArrowRight,
-  IconArrowUpward as ArrowUpIcon,
-  IconArrowDownward as ArrowDownIcon,
+  IconKeyboardArrowUp as ArrowUpIcon,
+  IconKeyboardArrowDown as ArrowDownIcon,
   IconClose,
   IconVerticalAlignBottom as MoveToEndIcon,
   IconCheck as Check,
   IconContentCopy as CopyToClipboard,
-  IconSubdirectoryArrowRight as MoveIntoIcon
+  IconSubdirectoryArrowRight as MoveIntoIcon,
 } from '@republik/icons'
 
 import UIForm from '../../UIForm'

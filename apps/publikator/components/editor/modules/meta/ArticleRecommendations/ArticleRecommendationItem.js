@@ -12,7 +12,12 @@ import { graphql } from '@apollo/client/react/hoc'
 import { gql } from '@apollo/client'
 import { getRelativeRepoUrl } from './util/RepoLinkUtility'
 import PublicationLink from '../../../../Publication/PublicationLink'
-import { IconArrowDownward, IconArrowUpward, IconClose, IconEdit } from '@republik/icons'
+import {
+  IconClose,
+  IconEdit,
+  IconKeyboardArrowDown,
+  IconKeyboardArrowUp,
+} from '@republik/icons'
 
 const styles = {
   recommendationItem: css({
@@ -96,12 +101,12 @@ const ArticleRecommendationItem = ({
     <li {...styles.recommendationItem}>
       <div {...styles.arrowWrapper}>
         <IconButton
-          Icon={IconArrowUpward}
+          Icon={IconKeyboardArrowUp}
           onClick={handleUp}
           disabled={isFirst || loading}
         />
         <IconButton
-          Icon={IconArrowDownward}
+          Icon={IconKeyboardArrowDown}
           onClick={handleDown}
           disabled={isLast || loading}
         />
