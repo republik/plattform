@@ -53,7 +53,7 @@ const SectionTitle = React.forwardRef(
     ) : (
       <span onClick={onClick} {...style} ref={ref}>
         {children}
-        {!!clickable && <ChevronRightIcon />}
+        {!!clickable && <IconChevronRight />}
       </span>
     )
   },
