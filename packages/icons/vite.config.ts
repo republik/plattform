@@ -17,7 +17,7 @@ export default defineConfig({
       // entry: entryObject,
       entry: path.resolve(__dirname, 'lib/components/index.ts'),
       name: 'RepublikIcons',
-      formats: ['es'],
+      formats: ['es', 'cjs'],
     },
     rollupOptions: {
       external: ['react', 'react-dom', 'react/jsx-runtime'],

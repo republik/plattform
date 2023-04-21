@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "types": "dist/types/index.d.ts",
-  "main": "dist/icons.js",
+  "main": "dist/icons.cjs",
   "module": "dist/icons.js",
   "files": ["dist"],
   "type": "module",
