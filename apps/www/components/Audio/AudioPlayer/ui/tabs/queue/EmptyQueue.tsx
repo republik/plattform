@@ -1,9 +1,8 @@
 import React from 'react'
 import Link from 'next/link'
 import { css } from 'glamor'
-import { fontStyles, A } from '@project-r/styleguide'
+import { fontStyles, A, useColorContext } from '@project-r/styleguide'
 import { useMe } from '../../../../../../lib/context/MeContext'
-import { useColorContext } from '@project-r/styleguide/src/components/Colors/ColorContext'
 import { IconPlaylistAdd } from '@republik/icons'
 
 const styles = {
