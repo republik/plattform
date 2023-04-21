@@ -12,7 +12,7 @@ import {
   OverlayToolbar,
   Interaction,
 } from '@project-r/styleguide'
-import { IconHearing, IconPlayArrow } from '@republik/icons'
+import { IconHearing, IconPlay } from '@republik/icons'
 
 import * as fragments from '../../lib/graphql/fragments'
 import withT from '../../lib/withT'
@@ -124,7 +124,7 @@ const SynthesizedAudio = withT(({ t, derivative, onClickGenerate }) => {
         <IconButton
           invert
           style={{ marginRight: 0 }}
-          Icon={IconPlayArrow}
+                Icon={IconPlay}
           label='Audio-Version anhören'
           labelShort='anhören'
           size={24}

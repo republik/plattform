@@ -5,7 +5,6 @@ import { gql } from '@apollo/client'
 import { getSchema } from '../../../../Templates'
 import { renderMdast } from 'mdast-react-render'
 import { JSONEditor, PlainEditor } from '../../../utils/CodeEditorFields'
-import { CloseIcon } from '@project-r/styleguide'
 import {
   Center,
   IconButton,
@@ -21,6 +20,7 @@ import {
 import {
   IconCode as Code,
   IconEdit as Edit,
+  IconClose,
   IconPublic as Public
 } from '@republik/icons'
 import { css } from 'glamor'
@@ -297,7 +297,7 @@ const TextSearch = ({ setText }) => {
       }}
       icon={
         formText && (
-          <CloseIcon
+          <IconClose
             style={{ cursor: 'pointer' }}
             size={30}
             onClick={() => {

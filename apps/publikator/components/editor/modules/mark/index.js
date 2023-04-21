@@ -1,21 +1,21 @@
 import { matchMark, createMarkButton, buttonStyles } from '../../utils'
 
 import {
-  IconFormatBold as BoldIcon,
-  IconFormatItalic as ItalicIcon,
-  IconStrikethrough,
-  IconSuperscript as SupIcon,
-  IconSubscript as SubIcon,
+  IconFormatStrikethrough,
+  IconFormatBold,
+  IconFormatItalic,
+  IconFormatSuperscript,
+  IconFormatSubscript,
 } from '@republik/icons'
 
 import MarkdownSerializer from 'slate-mdast-serializer'
 
 const icons = {
-  strong: BoldIcon,
-  emphasis: ItalicIcon,
-  delete: IconStrikethrough,
-  sub: SubIcon,
-  sup: SupIcon,
+  strong: IconFormatBold,
+  emphasis: IconFormatItalic,
+  delete: IconFormatStrikethrough,
+  sub: IconFormatSuperscript,
+  sup: IconFormatSubscript,
 }
 
 const MarkComponent = ({ rule, subModules, TYPE }) => {

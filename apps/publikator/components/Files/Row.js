@@ -4,9 +4,10 @@ import {
     IconLock,
     IconPublic,
     IconError,
+  IconReadTime,
 } from '@republik/icons'
 
-import { IconButton, Label, ReadingTimeIcon } from '@project-r/styleguide'
+import { IconButton, Label } from '@project-r/styleguide'
 
 import { swissTime } from '../../lib/utils/format'
 
@@ -25,7 +26,7 @@ const styles = {
 
 const statusMap = {
   Pending: {
-    Icon: ReadingTimeIcon,
+    Icon: IconReadTime,
     disabled: true,
     colorName: undefined,
     crumb: undefined,

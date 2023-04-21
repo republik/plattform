@@ -6,10 +6,7 @@ import {
 } from '@project-r/styleguide'
 import { datePickerFormat, reformatUrlDate } from '../../lib/utils/calendar'
 import withT from '../../lib/withT'
-import {
-  ChevronLeftIcon,
-  ChevronRightIcon,
-} from '@project-r/styleguide/dist/components/Icons'
+import { IconChevronLeft, IconChevronRight } from '@republik/icons'
 
 const styles = {
   navigation: css({
@@ -40,7 +37,7 @@ export const Nav = ({ children }) => (
 
 export const NavButton = ({ goBack, goForth }) => (
   <IconButton
-    Icon={goBack ? ChevronLeftIcon : ChevronRightIcon}
+    Icon={goBack ? IconChevronLeft : IconChevronRight}
     onClick={goBack || goForth}
     style={styles.navButton}
     size={24}

@@ -8,6 +8,14 @@
     ".": {
       "import": "./src/lib.ts",
       "require": "./dist/lib.js"
+    },
+    "./chart": {
+      "import": "./src/chart.ts",
+      "require": "./dist/chart.js"
+    },
+    "./editor": {
+      "import": "./src/editor.ts",
+      "require": "./dist/editor.js"
     }
   },
   "engines": {

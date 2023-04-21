@@ -1,14 +1,10 @@
 import { css } from 'glamor'
 import {
   IconButton,
-  ArrowUpIcon,
-  ArrowDownIcon,
-  CloseIcon,
   fontStyles,
   InlineSpinner,
   useColorContext,
   TeaserFeed,
-  EditIcon,
 } from '@project-r/styleguide'
 import withT from '../../../../../lib/withT'
 import compose from 'lodash/flowRight'
@@ -16,6 +12,7 @@ import { graphql } from '@apollo/client/react/hoc'
 import { gql } from '@apollo/client'
 import { getRelativeRepoUrl } from './util/RepoLinkUtility'
 import PublicationLink from '../../../../Publication/PublicationLink'
+import { IconArrowDownward, IconArrowUpward, IconClose, IconEdit } from '@republik/icons'
 
 const styles = {
   recommendationItem: css({
@@ -99,12 +96,12 @@ const ArticleRecommendationItem = ({
     <li {...styles.recommendationItem}>
       <div {...styles.arrowWrapper}>
         <IconButton
-          Icon={ArrowUpIcon}
+          Icon={IconArrowUpward}
           onClick={handleUp}
           disabled={isFirst || loading}
         />
         <IconButton
-          Icon={ArrowDownIcon}
+          Icon={IconArrowDownward}
           onClick={handleDown}
           disabled={isLast || loading}
         />
@@ -178,7 +175,7 @@ const ArticleRecommendationItem = ({
             <IconButton
               href={`/repo/${getRelativeRepoUrl(repoId)}/tree`}
               target='_blank'
-              Icon={EditIcon}
+              Icon={IconEdit}
               fill='#E9A733'
             />
           </div>
@@ -186,7 +183,7 @@ const ArticleRecommendationItem = ({
       </div>
       <div {...styles.closeWrapper}>
         <IconButton
-          Icon={CloseIcon}
+          Icon={IconClose}
           onClick={handleRemove}
           disabled={loading}
         />

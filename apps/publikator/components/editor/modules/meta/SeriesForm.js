@@ -9,9 +9,8 @@ import {
   Dropdown,
   Interaction,
   IconButton,
-  HighlightOffIcon,
 } from '@project-r/styleguide'
-import { IconAdd, IconArrowUpward, IconArrowDownward } from '@republik/icons'
+import { IconAdd, IconArrowUpward, IconArrowDownward, IconHighlightOff } from '@republik/icons'
 
 import AutosizeInput from 'react-textarea-autosize'
 
@@ -354,7 +353,7 @@ export default withT(({ t, editor, node, onRepoInputChange, repoId }) => {
                       />
                     )}
                     <IconButton
-                      Icon={HighlightOffIcon}
+                      Icon={IconHighlightOff}
                       label={t('metaData/series/episodes/rm')}
                       size={24}
                       onClick={() => {
