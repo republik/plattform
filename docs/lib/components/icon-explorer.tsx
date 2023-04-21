@@ -1,4 +1,4 @@
-import { useDeferredValue, useState } from 'react'
+import { ComponentType, SVGProps, useDeferredValue, useState } from 'react'
 import styles from './icon-explorer.module.css'
 
 export const IconExplorer = ({
@@ -32,7 +32,9 @@ export const IconExplorer = ({
           return (
             <li key={title + i} className={styles.icon}>
               <div className={styles.iconTitle}>{title}</div>
-              <Icon />
+              <div className={styles.iconWrapper}>
+                <Icon />
+              </div>
             </li>
           )
         })}
