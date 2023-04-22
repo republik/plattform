@@ -421,7 +421,9 @@ module.exports = async (_, args, context) => {
     })
   }
 
-  await maybeUpsertAuphonic(repoId, resolvedDoc, context)
+  if (!prepublication) {
+    await maybeUpsertAuphonic(repoId, resolvedDoc, context)
+  }
 
   // @TODO: Safe to remove, once repoChange is adopted
   await pubsub.publish('repoUpdate', {
