@@ -145,6 +145,10 @@ const toBody = (data: Data) => {
   const title = data.title.slice(0, 240) // slice, keep within usual filename length
   const image = data.image
 
+  const presetCoverImage = AUPHONIC_PRESET
+    ? { preset_cover_image: AUPHONIC_PRESET }
+    : {}
+
   const body = {
     metadata: {
       title,
@@ -153,7 +157,7 @@ const toBody = (data: Data) => {
     output_basename: `Republik, ${title}`,
     // set image or, as fallback, use cover image from preset
     // @see https://auphonic.com/help/api/update.html?highlight=preset_cover#use-a-cover-image-from-a-preset
-    ...(image ? { image } : { preset_cover_image: AUPHONIC_PRESET }),
+    ...(image ? { image } : presetCoverImage),
   }
 
   toBodyDebug('body: %o', body)
@@ -170,7 +174,7 @@ const create = async (data: Data) => {
 
   const production = await call('/productions.json', 'POST', {
     ...toBody(data),
-    preset: AUPHONIC_PRESET,
+    ...(AUPHONIC_PRESET ? { preset: AUPHONIC_PRESET } : {}),
   })
   createDebug('production: %o', production)
 
@@ -204,6 +208,11 @@ export const upsert = async (
   const upsertDebug = debug.extend('upsert')
   upsertDebug('repoId: %s', repoId)
   upsertDebug('doc: %o', doc)
+
+  if (!AUPHONIC_BEARER) {
+    upsertDebug('abort upsert: AUPHONIC_BEARER missing')
+    return false
+  }
 
   if (!doc.content.meta.willBeReadAloud) {
     upsertDebug('abort upsert: doc.content.meta.willBeReadAloud falsy')
