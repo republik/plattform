@@ -37,6 +37,15 @@ type Document = {
       willBeReadAloud?: boolean
     }
   }
+  resolved: {
+    meta: {
+      format?: {
+        meta: {
+          title: string
+        }
+      }
+    }
+  }
 }
 
 // @see https://auphonic.com/api/info/production_status.json
@@ -143,6 +152,7 @@ const toBody = (data: Data) => {
   toBodyDebug('data: %o', data)
 
   const title = data.title.slice(0, 240) // slice, keep within usual filename length
+  const outputBasename = `Republik, ${title}`.replace(/[^\p{L}\s\-–, ]/u, '') // strip unwanted chars
   const image = data.image
 
   const presetCoverImage = AUPHONIC_PRESET
@@ -154,7 +164,7 @@ const toBody = (data: Data) => {
       title,
     },
     // filename
-    output_basename: `Republik, ${title}`,
+    output_basename: outputBasename,
     // set image or, as fallback, use cover image from preset
     // @see https://auphonic.com/help/api/update.html?highlight=preset_cover#use-a-cover-image-from-a-preset
     ...(image ? { image } : presetCoverImage),
@@ -227,11 +237,24 @@ export const upsert = async (
   }
 
   const { meta } = repo
-  const audioCoverUrl = getAudioCover(doc.content.meta, {
-    properties: { height: 1400, width: 1400, format: 'jpeg', postfix: '.jpeg' },
-  })
+  const audioCoverUrl = getAudioCover(
+    { ...doc.content.meta, ...doc.resolved.meta },
+    {
+      properties: {
+        height: 1400,
+        width: 1400,
+        format: 'jpeg',
+        postfix: '.jpeg',
+      },
+    },
+  )
 
-  const data = { title: doc.content.meta.title, image: audioCoverUrl }
+  const data = {
+    title: [doc.resolved.meta.format?.meta.title, doc.content.meta.title]
+      .filter(Boolean)
+      .join(': '),
+    image: audioCoverUrl,
+  }
   upsertDebug('data: %o', data)
 
   const production = await get(meta.auphonicProductionId)
