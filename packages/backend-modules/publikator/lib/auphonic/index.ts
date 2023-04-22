@@ -39,9 +39,29 @@ type Document = {
   }
 }
 
+// @see https://auphonic.com/api/info/production_status.json
+enum AuphonicProductionStatus {
+  FILE_UPLOAD = 0,
+  WAITING = 1,
+  ERROR = 2,
+  DONE = 3,
+  AUDIO_PROCESSING = 4,
+  AUDIO_ENCODING = 5,
+  OUTGOING_FILE_TRANSFER = 6,
+  AUDIO_MONO_MIXDOWN = 7,
+  SPLIT_AUDIO_ON_CHAPTER_MARKS = 8,
+  INCOMPLETE = 9,
+  PRODUCTION_NOT_STARTED_YET = 10,
+  PRODUCTION_OUTDATED = 11,
+  INCOMING_FILE_TRANSFER = 12,
+  STOPPING_THE_PRODUCTION = 13,
+  SPEECH_RECOGNITION = 14,
+}
+
 type AuphonicProduction = {
   data: {
     uuid: string
+    status: AuphonicProductionStatus
   }
 }
 
@@ -218,9 +238,24 @@ export const upsert = async (
   }
 
   const id = production.data.uuid
-  upsertDebug('production found (%s). updating…', id)
+  const status = production.data.status
 
-  await update(id, data)
+  if (
+    [
+      AuphonicProductionStatus.INCOMPLETE,
+      AuphonicProductionStatus.PRODUCTION_NOT_STARTED_YET,
+    ].includes(status)
+  ) {
+    upsertDebug('production found (%s). updating…', id)
+
+    return update(id, data)
+  }
+
+  upsertDebug(
+    'production found (%s) but skipping due status (%i). ',
+    id,
+    status,
+  )
 }
 
 /**
