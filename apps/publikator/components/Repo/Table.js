@@ -238,7 +238,7 @@ const RepoList = ({
         <PhaseFilter phases={data.phasesAgg?.phases} />
       )}
 
-      <Table style={{ marginTop: !showPhases && -15 }}>
+      <Table style={{ marginTop: showPhases ? 0 : -15 }}>
         <thead>
           <Tr>
             <Th style={{ width: '28%' }}>{t('repo/table/col/title')}</Th>
