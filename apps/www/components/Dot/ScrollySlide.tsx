@@ -28,7 +28,7 @@ export const ScrollySlide = ({
       }
     }
 
-    const unsubY = scrollYProgress.onChange(doSomething)
+    const unsubY = scrollYProgress.on('change', doSomething)
 
     return () => {
       unsubY()

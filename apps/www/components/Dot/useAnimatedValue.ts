@@ -1,5 +1,5 @@
 import {
-  AnimationOptions,
+  ValueAnimationTransition,
   MotionValue,
   animate,
   useMotionValue,
@@ -18,7 +18,7 @@ export const useAnimatedValue = ({
   value: number
   initialValue?: number
   format?: (value: number) => string
-  transition?: AnimationOptions<number>
+  transition?: ValueAnimationTransition<number>
 }) => {
   const count = useMotionValue(initialValue)
   const rounded = useTransform(count, format)
@@ -40,7 +40,7 @@ export const useMotionValueTextContent = (value: MotionValue<string>) => {
       elRef.current.textContent = value.get()
     }
 
-    return value.onChange((v) => {
+    return value.on('change', (v) => {
       changed = true
       if (elRef.current) {
         elRef.current.textContent = v
