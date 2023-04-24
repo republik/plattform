@@ -217,9 +217,9 @@ const EnPage = ({
 
       <div style={{ textAlign: 'center', marginBottom: SPACE }}>
         <P>Share manifesto</P>
-        <P style={{ marginBottom: SPACE / 2 }}>
+        <div style={{ marginBottom: SPACE / 2 }}>
           <ActionBar isCentered share={shareObject} />
-        </P>
+        </div>
         <P>
           <A href={`${CDN_FRONTEND_BASE_URL}/static/manifesto_en.pdf`}>
             Download PDF
