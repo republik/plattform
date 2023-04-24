@@ -24,17 +24,17 @@ export const ChapterIndicator = ({
     <span
       {...styling}
       {...(highlighted
-        ? colorScheme.set('background-color', 'divider')
-        : colorScheme.set('background-color', 'default'))}
+        ? colorScheme.set('backgroundColor', 'divider')
+        : colorScheme.set('backgroundColor', 'default'))}
       {...(highlighted
         ? colorScheme.set('color', 'text')
         : colorScheme.set('color', 'textSoft'))}
       {...(highlighted
-        ? colorScheme.set('border-color', 'divider')
-        : colorScheme.set('border-color', 'divider'))}
+        ? colorScheme.set('borderColor', 'divider')
+        : colorScheme.set('borderColor', 'divider'))}
       {...(highlighted
-        ? colorScheme.set('font-weight', 'bold')
-        : colorScheme.set('font-weight', 'normal'))}
+        ? colorScheme.set('fontWeight', 'bold')
+        : colorScheme.set('fontWeight', 'normal'))}
     >
       {children}
     </span>

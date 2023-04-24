@@ -135,7 +135,7 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
       style={{
         width: '100%',
       }}
-      {...colorScheme.set('background-color', 'transparentBackground')}
+      {...colorScheme.set('backgroundColor', 'transparentBackground')}
       initial='step0'
       animate={getVariant(highlighted)}
     >

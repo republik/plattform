@@ -36,11 +36,11 @@ export const Scrolly = () => {
     <div className='Scrolly' {...styles.scrolly}>
       <div
         {...styles.scrollyGraphicsContainer}
-        {...colorScheme.set('background-color', 'default')}
+        {...colorScheme.set('backgroundColor', 'default')}
       >
         <div
           {...styles.scrollyGraphicsChapters}
-          {...colorScheme.set('background-color', 'default')}
+          {...colorScheme.set('backgroundColor', 'default')}
           style={{ opacity: lastInView >= 0 ? 1 : 0 }}
         >
           <ChapterIndicator mini highlighted={lastInView === 0}>

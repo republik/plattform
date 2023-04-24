@@ -125,7 +125,7 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
       viewBox='0 0 930 360'
       preserveAspectRatio='xMidYMid meet'
       style={{ width: '100%' }}
-      {...colorScheme.set('background-color', 'transparentBackground')}
+      {...colorScheme.set('backgroundColor', 'transparentBackground')}
       initial='step0'
       animate={getVariant(highlighted)}
     >
