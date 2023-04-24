@@ -1,7 +1,7 @@
 import React from 'react'
 import { useColorContext } from '../Colors/useColorContext'
 
-const SwitchImage = ({ src, srcSet, dark, alt, ...props }) => {
+const SwitchImage = ({ src, srcSet, dark, alt, maxWidth, ...props }) => {
   const [colorScheme] = useColorContext()
 
   return (
@@ -11,6 +11,7 @@ const SwitchImage = ({ src, srcSet, dark, alt, ...props }) => {
         src={src}
         srcSet={srcSet}
         alt={alt}
+        style={{ ...props.style, maxWidth }}
         {...colorScheme.set('display', dark ? 'displayLight' : 'block')}
       />
       {dark && (
@@ -19,6 +20,7 @@ const SwitchImage = ({ src, srcSet, dark, alt, ...props }) => {
           src={dark.src}
           srcSet={dark.srcSet}
           alt={alt}
+          style={{ ...props.style, maxWidth }}
           {...colorScheme.set('display', 'displayDark')}
         />
       )}
