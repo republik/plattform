@@ -229,6 +229,8 @@ const RepoList = ({
     ? activeOrderField.accessor
     : orderFields[0].accessor
 
+  const colsCount = orderFields.length + 4
+
   return (
     <>
       <DebouncedSearch />
@@ -268,7 +270,7 @@ const RepoList = ({
             data.repos &&
             data.repos.nodes.length === 0 && (
               <Tr>
-                <Td colSpan='8'>{t('repo/search/noResults')}</Td>
+                <Td colSpan={colsCount}>{t('repo/search/noResults')}</Td>
               </Tr>
             )}
           {!showLoader &&
@@ -280,7 +282,7 @@ const RepoList = ({
               ))}
           {(data.loading || data.error) && (
             <tr>
-              <td colSpan='8'>
+              <td colSpan={colsCount}>
                 <Loader loading={data.loading} error={data.error} />
               </td>
             </tr>
