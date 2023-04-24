@@ -85,7 +85,7 @@ const Form = compose(
           <Field
             name='q'
             label={t('search/input/label')}
-            value={formValue}
+            value={formValue ?? ''}
             onChange={update}
             icon={
               !startState ? (
