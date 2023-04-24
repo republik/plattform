@@ -37,7 +37,7 @@ type AudioInfoProps = {
   reload: () => void
   title: string
   sourcePath: string
-  Link: React.ReactType
+  Link: React.ElementType
   formattedCurrentTime: string
   formattedDuration: string
   t: (key: string) => string

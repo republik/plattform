@@ -1,8 +1,9 @@
-import React from 'react'
+import React, { ReactNode } from 'react'
 import { CustomText, MarksConfig, SchemaConfig } from '../custom-types'
 
 const Recurse: React.FC<{
-  components?: React.FC[]
+  children?: ReactNode
+  components?: React.ElementType[]
 }> = ({ children, components = [] }) => {
   if (!components.length) {
     return <>{children}</>
@@ -16,6 +17,7 @@ const Recurse: React.FC<{
 }
 
 export const Marks: React.FC<{
+  children?: ReactNode
   leaf: CustomText
   schema: SchemaConfig
   editorSchema?: SchemaConfig

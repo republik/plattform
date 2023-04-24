@@ -108,6 +108,12 @@ module.exports = withTM(
           destination: '/konto',
           permanent: true,
         },
+        // Redirect 5-years campaign token URLs to static page
+        {
+          source: '/5-jahre-republik/:token',
+          destination: '/5-jahre-republik',
+          permanent: true,
+        },
       ]
     },
     experimental: {

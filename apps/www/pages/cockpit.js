@@ -641,16 +641,6 @@ const Page = ({
                   {formatDateTime(new Date(updatedAt))}
                 </ChartLegend>
               </div>
-              <P>
-                Wir investieren in Journalismus und in konkrete Projekte. Und
-                fassen ein neues Wachstumsziel ins Auge:{' '}
-                {countFormat(numMembersNeeded)} Abonnentinnen und Mitglieder.{' '}
-                <Link href='/2022/11/11/hier-sehen-sie-unser-budget' passHref>
-                  <Editorial.A>
-                    Diese Zahl leitet sich aus dem aktuellen Budget 2022/23 ab.
-                  </Editorial.A>
-                </Link>
-              </P>
               <H2>
                 {countFormat(lastSeen)} Verlegerinnen sind monatlich&nbsp;aktiv
               </H2>
