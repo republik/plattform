@@ -78,12 +78,6 @@ export default ({ rule, subModules, TYPE }) => {
     return data.equals(newData) ? null : newData
   }
 
-  const hasParent = (type, document, key) => {
-    const parent = document.getParent(key)
-    if (!parent) return
-    return parent.type === type ? true : hasParent(type, document, parent.key)
-  }
-
   const documentRule = {
     match: (object) => object.kind === 'document',
     matchMdast: rule.matchMdast,
