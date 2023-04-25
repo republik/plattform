@@ -201,9 +201,9 @@ ${PUBLIC_BASE_URL}
 
       <div style={{ textAlign: 'center', marginBottom: SPACE }}>
         <P>Manifest teilen</P>
-        <P style={{ marginBottom: SPACE / 2 }}>
+        <div style={{ marginBottom: SPACE / 2 }}>
           <ActionBar isCentered share={shareObject} />
-        </P>
+        </div>
         <P>
           <A href={`${CDN_FRONTEND_BASE_URL}/static/manifest.pdf`}>
             Manifest als PDF herunterladen
