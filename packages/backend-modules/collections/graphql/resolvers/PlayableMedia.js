@@ -4,9 +4,13 @@ const Collection = require('../../lib/Collection')
 module.exports = {
   userProgress({ mediaId }, args, context) {
     const { user: me, req } = context
-    if (!ensureSignedIn(req) || !mediaId) {
+
+    ensureSignedIn(req)
+
+    if (!mediaId) {
       return
     }
+
     return Collection.getMediaProgressItem(
       {
         mediaId,

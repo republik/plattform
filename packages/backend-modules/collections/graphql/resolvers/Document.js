@@ -31,9 +31,12 @@ module.exports = {
   },
   userProgress({ meta: { repoId } }, args, context) {
     const { user: me, req } = context
-    if (!ensureSignedIn(req) || !repoId) {
+    ensureSignedIn(req)
+
+    if (!repoId) {
       return
     }
+
     return Collection.getDocumentProgressItem(
       {
         repoId,
