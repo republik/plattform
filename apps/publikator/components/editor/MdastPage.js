@@ -64,6 +64,7 @@ import {
   withLatestCommit,
 } from '../Edit/enhancers'
 import Preview from '../Preview'
+import Replace from './Replace'
 
 const getTemplateById = gql`
   query getLatestCommit($repoId: ID!) {
@@ -956,6 +957,7 @@ export class EditorPage extends Component {
                 >
                   {t('pages/raw/title')}
                 </button>
+                <Replace />
                 <CharCount value={editorState} />
                 {!!this.editor && (
                   <EditorUI
