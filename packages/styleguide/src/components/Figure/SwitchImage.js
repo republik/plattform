@@ -11,7 +11,6 @@ const SwitchImage = ({ src, srcSet, dark, alt, maxWidth, ...props }) => {
         src={src}
         srcSet={srcSet}
         alt={alt}
-        style={{ ...props.style, maxWidth }}
         {...colorScheme.set('display', dark ? 'displayLight' : 'block')}
       />
       {dark && (
@@ -20,7 +19,6 @@ const SwitchImage = ({ src, srcSet, dark, alt, maxWidth, ...props }) => {
           src={dark.src}
           srcSet={dark.srcSet}
           alt={alt}
-          style={{ ...props.style, maxWidth }}
           {...colorScheme.set('display', 'displayDark')}
         />
       )}
