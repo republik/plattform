@@ -72,14 +72,7 @@ export default ({ rule, subModules, TYPE }) => {
       }
     }
     if (autoSlug) {
-      newData = newData.set(
-        'slug',
-        slug(
-          newData.get('seoTitle') ||
-            newData.get('twitterTitle') ||
-            newData.get('title'),
-        ),
-      )
+      newData = newData.set('slug', slug(newData.get('title')))
     }
 
     return data.equals(newData) ? null : newData
