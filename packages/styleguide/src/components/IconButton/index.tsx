@@ -1,4 +1,4 @@
-import React, { Attributes, MouseEventHandler } from 'react'
+import React, { Attributes, MouseEventHandler, ReactNode } from 'react'
 import { css } from 'glamor'
 
 import { mUp } from '../../theme/mediaQueries'
@@ -11,6 +11,7 @@ const ICON_SIZE = 24
 const IconButton = React.forwardRef<
   HTMLAnchorElement & HTMLButtonElement,
   {
+    children?: ReactNode
     Icon: IconType
     href?: string
     target?: string

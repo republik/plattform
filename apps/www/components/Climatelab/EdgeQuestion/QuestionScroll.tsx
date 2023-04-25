@@ -1,6 +1,6 @@
 import { renderMdast } from 'mdast-react-render'
 import { useRouter } from 'next/router'
-import React, { useMemo, useEffect, useRef } from 'react'
+import React, { useMemo, useEffect, useRef, ReactNode } from 'react'
 import scrollIntoView from 'scroll-into-view'
 
 import { createArticleSchema, slug, pxToRem } from '@project-r/styleguide'
@@ -25,7 +25,10 @@ type MetaProps = {
   image: string
 }
 
-const Header: React.FC<{ author: Author }> = ({ author, children }) => {
+const Header: React.FC<{ author: Author; children: ReactNode }> = ({
+  author,
+  children,
+}) => {
   const customStyle = {
     maxWidth: 695,
     margin: '0 auto',
