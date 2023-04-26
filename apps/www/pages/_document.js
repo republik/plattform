@@ -5,6 +5,7 @@ import Document, {
   Main,
   NextScript,
 } from 'next/document'
+import Script from 'next/script'
 import { renderStaticOptimized } from 'glamor/server'
 import { fontFaces, DEFAULT_FONT_SIZE } from '@project-r/styleguide'
 
@@ -141,14 +142,16 @@ export default class MyDocument extends Document {
         </Head>
         <body>
           {!nojs && (
-            <script
+            <Script
+              id='matomo-init-script'
               dangerouslySetInnerHTML={{ __html: `var _paq = _paq || [];` }}
             />
           )}
           <Main />
           {!nojs && <NextScript />}
           {!nojs && matomo && (
-            <script
+            <Script
+              id='matomo-script'
               dangerouslySetInnerHTML={{
                 __html: `
             _paq.push(['enableLinkTracking']);

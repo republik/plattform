@@ -4,6 +4,7 @@ import { imageSizeInfo, imageResizeUrl } from 'mdast-react-render/lib/utils'
 
 import { CDN_FRONTEND_BASE_URL } from '../../lib/constants'
 import withT from '../../lib/withT'
+import Script from 'next/script'
 
 const Meta = ({ data, t }) => {
   const {
@@ -102,7 +103,8 @@ const Meta = ({ data, t }) => {
           .map(([key, value]) => <meta key={key} name={key} content={value} />)}
 
       {jsonLds?.map((jsonLd, index) => (
-        <script
+        <Script
+          id='inject-json-ld-script'
           key={index}
           type='application/ld+json'
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

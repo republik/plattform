@@ -11,6 +11,7 @@ import { ApolloError, useQuery } from '@apollo/client'
 import { checkRoles, meQuery } from '../apollo/withMe'
 import { css } from 'glamor'
 import { getInitials } from '../../components/Frame/User'
+import Script from 'next/script'
 
 const HAS_ACTIVE_MEMBERSHIP_ATTRIBUTE = 'data-has-active-membership'
 const HAS_ACTIVE_MEMBERSHIP_STORAGE_KEY = 'me.hasActiveMembership'
@@ -199,7 +200,9 @@ const MeContextProvider = ({ children, assumeAccess = false }: Props) => {
       }}
     >
       <NextHead>
-        <script
+        <Script
+          id='inject-me-into-static-script'
+          strategy='beforeInteractive'
           dangerouslySetInnerHTML={{
             __html: [
               'try{',

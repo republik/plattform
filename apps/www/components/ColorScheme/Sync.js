@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { COLOR_SCHEME_KEY, OS_COLOR_SCHEME_KEY, useColorSchemeKey } from './lib'
 import NextHead from 'next/head'
+import Script from 'next/script'
 
 const ColorSchemeSync = () => {
   const { key: colorSchemeKey, defaultKey } = useColorSchemeKey()
@@ -24,7 +25,9 @@ const ColorSchemeSync = () => {
   }, [])
   return (
     <NextHead>
-      <script
+      <Script
+        id='color-scheme-sync-script'
+        strategy='beforeInteractive'
         dangerouslySetInnerHTML={{
           __html: [
             'var key;try{',

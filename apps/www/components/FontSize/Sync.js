@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react'
 import { FONT_SIZE_KEY, useFontSize } from '../../lib/fontSize'
 import { DEFAULT_FONT_SIZE, useDebounce } from '@project-r/styleguide'
 import NextHead from 'next/head'
+import Script from 'next/script'
 
 const FontSizeSync = () => {
   const [fontSize] = useFontSize(DEFAULT_FONT_SIZE)
@@ -37,7 +38,9 @@ const FontSizeSync = () => {
   }, [])
   return (
     <NextHead>
-      <script
+      <Script
+        id='font-size-sync-script'
+        strategy='beforeInteractive'
         dangerouslySetInnerHTML={{
           __html: `try {document.documentElement.style.fontSize = (localStorage.getItem('${FONT_SIZE_KEY}') || ${DEFAULT_FONT_SIZE}) + 'px'} catch (e) {}`,
         }}

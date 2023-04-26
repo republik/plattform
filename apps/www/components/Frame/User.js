@@ -13,6 +13,7 @@ import {
 import { AccountBoxIcon } from '@project-r/styleguide'
 import withT, { useTranslation } from '../../lib/withT'
 import { ME_PORTRAIT_STORAGE_KEY } from '../../lib/context/MeContext'
+import Script from 'next/script'
 
 const BUTTON_SIZE = 32
 const BUTTON_SIZE_MOBILE = 26
@@ -81,7 +82,9 @@ const User = ({ me, title, backButton, onClick }) => {
                 {...styles.temporaryPortrait}
               />
             </div>
-            <script
+            <Script
+              id='inject-me-profile-pic-on-static-script'
+              strategy='beforeInteractive'
               dangerouslySetInnerHTML={{
                 __html: [
                   'try{',
