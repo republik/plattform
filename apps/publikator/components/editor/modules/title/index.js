@@ -107,8 +107,6 @@ export default ({ rule, subModules, TYPE }) => {
 
           const props = node.data.toJS()
 
-          console.log(props.breakout, isSeriesOverview(editor.value.document))
-
           return (
             <Container
               {...props}

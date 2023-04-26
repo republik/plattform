@@ -55,6 +55,7 @@ const Replace: React.FC<{ value: any; onSave: (e: any) => undefined }> = ({
 
   // todo: checkbox to replace in meta block
   // iterate through meta keys and replace titles & descriptions
+  // special characters
 
   const replace = () => {
     const newValue = {
