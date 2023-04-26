@@ -151,10 +151,12 @@ class MergeUsers extends Component {
         {mergedUser && (
           <div style={{ marginTop: '30px' }}>
             Prima! Die Accounts wurden zusammen geführt. <br />
-            <Link href={`/users/${mergedUser.id}`}>
-              <a className={`${link}`} style={interactiveStyles}>
-                Zum neuen User-Profil
-              </a>
+            <Link
+              href={`/users/${mergedUser.id}`}
+              className={`${link}`}
+              style={interactiveStyles}
+            >
+              Zum neuen User-Profil
             </Link>
           </div>
         )}

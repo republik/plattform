@@ -79,10 +79,12 @@ const getLastPeriod = (periods) =>
 
 const Subnav = ({ userId, section }) => (
   <div>
-    <Link href={`/users/${userId}`}>
-      <a {...styles.navLink} data-active={section === 'index'}>
-        Übersicht
-      </a>
+    <Link
+      href={`/users/${userId}`}
+      {...styles.navLink}
+      data-active={section === 'index'}
+    >
+      Übersicht
     </Link>
     <Link
       href={{
@@ -91,10 +93,10 @@ const Subnav = ({ userId, section }) => (
           section: 'sessions',
         },
       }}
+      {...styles.navLink}
+      data-active={section === 'sessions'}
     >
-      <a {...styles.navLink} data-active={section === 'sessions'}>
-        Sessions
-      </a>
+      Sessions
     </Link>
     <Link
       href={{
@@ -103,10 +105,10 @@ const Subnav = ({ userId, section }) => (
           section: 'access-grants',
         },
       }}
+      {...styles.navLink}
+      data-active={section === 'access-grants'}
     >
-      <a {...styles.navLink} data-active={section === 'access-grants'}>
-        Access Grants
-      </a>
+      Access Grants
     </Link>
     <Link
       href={{
@@ -115,10 +117,10 @@ const Subnav = ({ userId, section }) => (
           section: 'mailbox',
         },
       }}
+      {...styles.navLink}
+      data-active={section === 'mailbox'}
     >
-      <a {...styles.navLink} data-active={section === 'mailbox'}>
-        E-Mails
-      </a>
+      E-Mails
     </Link>
     <Link
       href={{
@@ -127,10 +129,10 @@ const Subnav = ({ userId, section }) => (
           section: 'dialog',
         },
       }}
+      {...styles.navLink}
+      data-active={section === 'dialog'}
     >
-      <a {...styles.navLink} data-active={section === 'dialog'}>
-        Dialog
-      </a>
+      Dialog
     </Link>
   </div>
 )

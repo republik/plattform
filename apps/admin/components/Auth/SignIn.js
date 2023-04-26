@@ -218,12 +218,12 @@ class SignIn extends Component {
           </div>
         </form>
         <Label {...styles.hint}>
-          <Link href='/legal/privacy'>
-            <a {...styles.hintA}>{t('signIn/privacy')}</a>
+          <Link href='/legal/privacy' {...styles.hintA}>
+            {t('signIn/privacy')}
           </Link>
           {' – '}
-          <Link href='/faq'>
-            <a {...styles.hintA}>{t('signIn/faq')}</a>
+          <Link href='/faq' {...styles.hintA}>
+            {t('signIn/faq')}
           </Link>
           {' – '}
           {t('signIn/hint')}

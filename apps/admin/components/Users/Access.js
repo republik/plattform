@@ -246,7 +246,7 @@ class Grant extends Component {
           <Interaction.P>
             <Label>{t('account/access/Grant/granter/label')}</Label>
             <br />
-            <Link href={`/users/${grant.granter.id}`} passHref>
+            <Link href={`/users/${grant.granter.id}`} passHref legacyBehavior>
               <A>{`${grant.granter.name} (${grant.granter.email})`}</A>
             </Link>
           </Interaction.P>
@@ -256,7 +256,7 @@ class Grant extends Component {
           <Interaction.P>
             <Label>{t('account/access/Grant/recipient/label')}</Label>
             <br />
-            <Link href={`/users/${grant.recipient.id}`} passHref>
+            <Link href={`/users/${grant.recipient.id}`} passHref legacyBehavior>
               <A>{`${grant.recipient.name} (${grant.recipient.email})`}</A>
             </Link>
           </Interaction.P>

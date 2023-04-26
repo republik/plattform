@@ -36,8 +36,8 @@ const Table = ({ items, ...props }) => {
         {items.map((user) => (
           <tr key={`user-${user.id}`} {...styles.row}>
             <td>
-              <Link href={`/users/${user.id}`}>
-                <a {...styles.link}>{user.email}</a>
+              <Link href={`/users/${user.id}`} {...styles.link}>
+                {user.email}
               </Link>
             </td>
             <td>{user.firstName}</td>
