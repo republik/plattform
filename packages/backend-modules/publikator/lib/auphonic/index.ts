@@ -39,9 +39,29 @@ type Document = {
   }
 }
 
+// @see https://auphonic.com/api/info/production_status.json
+enum AuphonicProductionStatus {
+  FILE_UPLOAD = 0,
+  WAITING = 1,
+  ERROR = 2,
+  DONE = 3,
+  AUDIO_PROCESSING = 4,
+  AUDIO_ENCODING = 5,
+  OUTGOING_FILE_TRANSFER = 6,
+  AUDIO_MONO_MIXDOWN = 7,
+  SPLIT_AUDIO_ON_CHAPTER_MARKS = 8,
+  INCOMPLETE = 9,
+  PRODUCTION_NOT_STARTED_YET = 10,
+  PRODUCTION_OUTDATED = 11,
+  INCOMING_FILE_TRANSFER = 12,
+  STOPPING_THE_PRODUCTION = 13,
+  SPEECH_RECOGNITION = 14,
+}
+
 type AuphonicProduction = {
   data: {
     uuid: string
+    status: AuphonicProductionStatus
   }
 }
 
@@ -125,6 +145,10 @@ const toBody = (data: Data) => {
   const title = data.title.slice(0, 240) // slice, keep within usual filename length
   const image = data.image
 
+  const presetCoverImage = AUPHONIC_PRESET
+    ? { preset_cover_image: AUPHONIC_PRESET }
+    : {}
+
   const body = {
     metadata: {
       title,
@@ -133,7 +157,7 @@ const toBody = (data: Data) => {
     output_basename: `Republik, ${title}`,
     // set image or, as fallback, use cover image from preset
     // @see https://auphonic.com/help/api/update.html?highlight=preset_cover#use-a-cover-image-from-a-preset
-    ...(image ? { image } : { preset_cover_image: AUPHONIC_PRESET }),
+    ...(image ? { image } : presetCoverImage),
   }
 
   toBodyDebug('body: %o', body)
@@ -150,7 +174,7 @@ const create = async (data: Data) => {
 
   const production = await call('/productions.json', 'POST', {
     ...toBody(data),
-    preset: AUPHONIC_PRESET,
+    ...(AUPHONIC_PRESET ? { preset: AUPHONIC_PRESET } : {}),
   })
   createDebug('production: %o', production)
 
@@ -185,6 +209,11 @@ export const upsert = async (
   upsertDebug('repoId: %s', repoId)
   upsertDebug('doc: %o', doc)
 
+  if (!AUPHONIC_BEARER) {
+    upsertDebug('abort upsert: AUPHONIC_BEARER missing')
+    return false
+  }
+
   if (!doc.content.meta.willBeReadAloud) {
     upsertDebug('abort upsert: doc.content.meta.willBeReadAloud falsy')
     return false
@@ -218,9 +247,24 @@ export const upsert = async (
   }
 
   const id = production.data.uuid
-  upsertDebug('production found (%s). updating…', id)
+  const status = production.data.status
 
-  await update(id, data)
+  if (
+    [
+      AuphonicProductionStatus.INCOMPLETE,
+      AuphonicProductionStatus.PRODUCTION_NOT_STARTED_YET,
+    ].includes(status)
+  ) {
+    upsertDebug('production found (%s). updating…', id)
+
+    return update(id, data)
+  }
+
+  upsertDebug(
+    'production found (%s) but skipping due status (%i). ',
+    id,
+    status,
+  )
 }
 
 /**

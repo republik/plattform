@@ -126,7 +126,9 @@ const Counter = ({
                 <div {...styles.footnoteContainer}>
                   <Label>
                     {t.elements('footnote', {
-                      link: <Link href={linkHref} text={linkText} />,
+                      link: (
+                        <Link href={linkHref} text={linkText} key={linkHref} />
+                      ),
                     })}
                   </Label>
                 </div>

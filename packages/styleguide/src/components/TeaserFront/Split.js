@@ -102,8 +102,8 @@ const Split = ({
   feuilleton,
   audioPlayButton,
 }) => {
-  const background = bgColor || ''
-  const flexDirection = reverse ? 'row-reverse' : ''
+  const background = bgColor
+  const flexDirection = reverse ? 'row-reverse' : undefined
   const bylinePosition = feuilleton
     ? 'belowFeuilleton'
     : portrait
