@@ -101,6 +101,7 @@ const Actions = ({
                           query: { package: 'ABO' },
                         }}
                         passHref
+                        legacyBehavior
                       >
                         <A>
                           {t(
@@ -162,6 +163,7 @@ const Actions = ({
                         query: { membershipId: membership.id },
                       }}
                       passHref
+                      legacyBehavior
                     >
                       <A>
                         {t.first([

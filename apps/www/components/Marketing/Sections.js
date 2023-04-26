@@ -72,10 +72,8 @@ const Sections = () => {
               {...colorScheme.set('color', section.color, 'format')}
             >
               {section.href ? (
-                <Link href={section.href} passHref>
-                  <a {...styles.link}>
-                    {t(`marketing/page/sections/title/${section.name}`)}
-                  </a>
+                <Link href={section.href} passHref {...styles.link}>
+                  {t(`marketing/page/sections/title/${section.name}`)}
                 </Link>
               ) : (
                 <>{t(`marketing/page/sections/title/${section.name}`)}</>

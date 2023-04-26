@@ -42,7 +42,7 @@ const Contributors = ({ contributors }) => {
     contributors.map((s) => (
       <Fragment key={s.user?.slug ?? s.name}>
         {s.user?.slug ? (
-          <Link href={`/~${s.user.slug}`} passHref>
+          <Link href={`/~${s.user.slug}`} passHref legacyBehavior>
             <Editorial.A>{s?.user?.name || s.name}</Editorial.A>
           </Link>
         ) : (

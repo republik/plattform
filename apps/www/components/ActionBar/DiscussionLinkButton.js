@@ -49,6 +49,7 @@ const DiscussionLinkButton = ({
       }}
       passHref
       prefetch={false}
+      legacyBehavior
     >
       <IconButton
         Icon={DiscussionIcon}

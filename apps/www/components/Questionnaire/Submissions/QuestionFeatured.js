@@ -46,7 +46,7 @@ export const getTargetedAnswers = (questionIds, results) => {
 
 export const SubmissionLink = ({ id, children }) => {
   return (
-    <Link href={`/klimafragebogen/${id}`} passHref>
+    <Link href={`/klimafragebogen/${id}`} passHref legacyBehavior>
       {children}
     </Link>
   )
@@ -65,6 +65,7 @@ export const QuestionLink = ({ questions, children }) => {
       }}
       shallow
       passHref
+      legacyBehavior
     >
       {children}
     </Link>
@@ -85,7 +86,7 @@ export const LinkToEditQuestionnaire = ({ slug, children, newOnly }) => {
       {loading || !hasFilledQuestionnaire ? (
         <span>
           Wie lauten Ihre Antworten? Füllen Sie unseren Klimafragebogen{' '}
-          <Link href={EDIT_QUESTIONNAIRE_PATH}>
+          <Link href={EDIT_QUESTIONNAIRE_PATH} legacyBehavior>
             <Editorial.A>hier</Editorial.A>
           </Link>{' '}
           aus.
@@ -95,6 +96,7 @@ export const LinkToEditQuestionnaire = ({ slug, children, newOnly }) => {
           Sie möchten Ihre eigenen Antworten teilen oder nochmals bearbeiten?{' '}
           <Link
             href={`/klimafragebogen/${data.questionnaire.results.nodes[0].id}`}
+            legacyBehavior
           >
             <Editorial.A> Hierlang.</Editorial.A>
           </Link>

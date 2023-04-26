@@ -147,6 +147,7 @@ const QuestionView = ({ slug, questionIds, extract, share = {} }) => {
                           }}
                           shallow
                           passHref
+                          legacyBehavior
                         >
                           <Editorial.A>Zurück zur Übersicht</Editorial.A>
                         </NextLink>

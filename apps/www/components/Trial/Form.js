@@ -267,7 +267,7 @@ const Form = (props) => {
           {isInSeriesNav ? (
             <>
               <Interaction.P>
-                <Link href='/einrichten' passHref>
+                <Link href='/einrichten' passHref legacyBehavior>
                   <A>{t('Trial/Form/withAccess/setup/label')}</A>
                 </Link>
               </Interaction.P>

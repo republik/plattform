@@ -904,6 +904,7 @@ class Submit extends Component {
                   }}
                   replace
                   passHref
+                  legacyBehavior
                 >
                   <A>{t('pledge/contact/signIn/wrongToken')}</A>
                 </Link>

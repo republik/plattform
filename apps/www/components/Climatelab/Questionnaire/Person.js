@@ -194,7 +194,11 @@ const Page = () => {
                   {...colorScheme.set('backgroundColor', 'default')}
                 >
                   <div {...submissionStyles.headerText}>
-                    <NextLink href={OVERVIEW_QUESTIONNAIRE_PATH} passHref>
+                    <NextLink
+                      href={OVERVIEW_QUESTIONNAIRE_PATH}
+                      passHref
+                      legacyBehavior
+                    >
                       <IconButton
                         size={24}
                         label='Zur Übersicht'

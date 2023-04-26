@@ -210,23 +210,22 @@ const Page = ({ data, data: { cardGroups }, router, t }) => (
                       query: { group: 'bundesversammlung', ...partyQuery },
                     }}
                     passHref
+                    {...styles.cardsLink}
                   >
-                    <a {...styles.cardsLink}>
-                      <AllFlag
-                        size={SIZE}
-                        style={{ top: 10 + 3, left: 10 }}
-                        {...styles.flag}
-                      />
-                      <strong>{t('pages/cardGroups/elected/title')}</strong>
-                      <br />
-                      {t('pages/cardGroups/elected/nationalCouncil')}{' '}
-                      <strong>{data.nElected.totalCount}</strong>{' '}
-                      <CheckIcon {...mdCheckProps} />
-                      <br />
-                      {t('pages/cardGroups/elected/councilOfStates')}{' '}
-                      <strong>{data.sElected.totalCount}</strong>{' '}
-                      <CheckIcon {...mdCheckProps} />
-                    </a>
+                    <AllFlag
+                      size={SIZE}
+                      style={{ top: 10 + 3, left: 10 }}
+                      {...styles.flag}
+                    />
+                    <strong>{t('pages/cardGroups/elected/title')}</strong>
+                    <br />
+                    {t('pages/cardGroups/elected/nationalCouncil')}{' '}
+                    <strong>{data.nElected.totalCount}</strong>{' '}
+                    <CheckIcon {...mdCheckProps} />
+                    <br />
+                    {t('pages/cardGroups/elected/councilOfStates')}{' '}
+                    <strong>{data.sElected.totalCount}</strong>{' '}
+                    <CheckIcon {...mdCheckProps} />
                   </Link>
                 </div>
               </div>
@@ -281,42 +280,41 @@ const Page = ({ data, data: { cardGroups }, router, t }) => (
                           query: { group: cardGroup.slug, ...partyQuery },
                         }}
                         passHref
+                        {...styles.cardsLink}
                       >
-                        <a {...styles.cardsLink}>
-                          {Flag && <Flag size={SIZE} {...styles.flag} />}
-                          <strong>{cardGroup.name}</strong>
-                          <br />
-                          <span {...styles.cardCount}>
-                            {!!(
-                              cardGroup.nElected.totalCount ||
-                              cardGroup.sElected.totalCount
-                            ) && (
-                              <>
-                                <strong>{cardGroup.nElected.totalCount}</strong>
-                                {' + '}
-                                <strong>
-                                  {cardGroup.sElected.totalCount}
-                                </strong>{' '}
-                                <CheckIcon {...mdCheckProps} />
-                              </>
-                            )}
-                            {!!openSeats && (
-                              <>
-                                {' '}
-                                {openSeats > 2 ? (
-                                  <>
-                                    {nSeats - cardGroup.nElected.totalCount}
-                                    {' + '}
-                                    {sSeats - cardGroup.sElected.totalCount}
-                                  </>
-                                ) : (
-                                  openSeats
-                                )}
-                                &nbsp;{t('pages/cardGroups/openSuffix')}
-                              </>
-                            )}
-                          </span>
-                        </a>
+                        {Flag && <Flag size={SIZE} {...styles.flag} />}
+                        <strong>{cardGroup.name}</strong>
+                        <br />
+                        <span {...styles.cardCount}>
+                          {!!(
+                            cardGroup.nElected.totalCount ||
+                            cardGroup.sElected.totalCount
+                          ) && (
+                            <>
+                              <strong>{cardGroup.nElected.totalCount}</strong>
+                              {' + '}
+                              <strong>
+                                {cardGroup.sElected.totalCount}
+                              </strong>{' '}
+                              <CheckIcon {...mdCheckProps} />
+                            </>
+                          )}
+                          {!!openSeats && (
+                            <>
+                              {' '}
+                              {openSeats > 2 ? (
+                                <>
+                                  {nSeats - cardGroup.nElected.totalCount}
+                                  {' + '}
+                                  {sSeats - cardGroup.sElected.totalCount}
+                                </>
+                              ) : (
+                                openSeats
+                              )}
+                              &nbsp;{t('pages/cardGroups/openSuffix')}
+                            </>
+                          )}
+                        </span>
                       </Link>
                       {!!commentCount && (
                         <span {...styles.discussionLink}>
@@ -330,6 +328,7 @@ const Page = ({ data, data: { cardGroups }, router, t }) => (
                               },
                             }}
                             passHref
+                            legacyBehavior
                           >
                             <IconButton
                               Icon={DiscussionIcon}

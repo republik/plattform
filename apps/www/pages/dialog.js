@@ -124,6 +124,7 @@ const DialogContent = ({ tab, activeDiscussionId, serverContext }) => {
                           query: { t: 'general' },
                         }}
                         passHref
+                        legacyBehavior
                       >
                         <A>{t('feedback/link/general')}</A>
                       </Link>
@@ -136,10 +137,12 @@ const DialogContent = ({ tab, activeDiscussionId, serverContext }) => {
           {!!tab && (
             <div style={{ marginBottom: 30 }}>
               <Editorial.Format color='primary'>
-                <Link href='/dialog' passHref>
-                  <a style={{ color: 'inherit', textDecoration: 'none' }}>
-                    {t('feedback/title')}
-                  </a>
+                <Link
+                  href='/dialog'
+                  passHref
+                  style={{ color: 'inherit', textDecoration: 'none' }}
+                >
+                  {t('feedback/title')}
                 </Link>
               </Editorial.Format>
               <Interaction.H1>
@@ -164,7 +167,7 @@ const DialogContent = ({ tab, activeDiscussionId, serverContext }) => {
                       title: ' ',
                       description: t.elements('feedback/unauthorized', {
                         buyLink: (
-                          <Link href='/angebote' passHref>
+                          <Link href='/angebote' passHref legacyBehavior>
                             <A>{t('feedback/unauthorized/buyText')}</A>
                           </Link>
                         ),
@@ -188,7 +191,7 @@ const DialogContent = ({ tab, activeDiscussionId, serverContext }) => {
                 share={false}
               />
               <div style={{ marginTop: 10 }}>
-                <Link href='/community' passHref>
+                <Link href='/community' passHref legacyBehavior>
                   <A>{t('marketing/community/link')}</A>
                 </Link>
               </div>

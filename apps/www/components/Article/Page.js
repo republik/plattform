@@ -749,13 +749,12 @@ const ArticlePage = ({
                                     colors[format.meta.kind]
                                   }
                                 >
-                                  <Link href={format.meta.path} passHref>
-                                    <a
-                                      {...plainLinkRule}
-                                      href={format.meta.path}
-                                    >
-                                      {format.meta.title}
-                                    </a>
+                                  <Link
+                                    href={format.meta.path}
+                                    passHref
+                                    {...plainLinkRule}
+                                  >
+                                    {format.meta.title}
                                   </Link>
                                 </Editorial.Format>
                               )}

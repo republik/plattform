@@ -30,33 +30,34 @@ const CallToAction = ({ formatColor, isOnMarketingPage }) => {
   }, [colorScheme, formatColor])
 
   return showTrialButton ? (
-    <Link href='#probelesen' passHref>
-      <a
-        data-hide-if-me='true'
-        {...styles.button}
-        {...(formatColor ? styles.buttonFormatColor : styles.buttonGeneric)}
-        {...buttonColorRule}
-      >
-        <span>{t('marketing/preview/button/label')}</span>
-      </a>
+    <Link
+      href='#probelesen'
+      passHref
+      data-hide-if-me='true'
+      {...styles.button}
+      {...(formatColor ? styles.buttonFormatColor : styles.buttonGeneric)}
+      {...buttonColorRule}
+    >
+      <span>{t('marketing/preview/button/label')}</span>
     </Link>
   ) : (
-    <Link href='/angebote' passHref prefetch={false}>
-      <a
-        data-hide-if-me='true'
-        {...styles.button}
-        {...(isOnMarketingPage
-          ? styles.buttonMarketing
-          : formatColor
-          ? styles.buttonFormatColor
-          : styles.buttonGeneric)}
-        {...buttonColorRule}
-      >
-        <span {...styles.buttonTextMobile}>
-          {t('marketing/page/carpet/buttonsmall')}
-        </span>
-        <span {...styles.buttonText}>{t('marketing/page/carpet/button')}</span>
-      </a>
+    <Link
+      href='/angebote'
+      passHref
+      prefetch={false}
+      data-hide-if-me='true'
+      {...styles.button}
+      {...(isOnMarketingPage
+        ? styles.buttonMarketing
+        : formatColor
+        ? styles.buttonFormatColor
+        : styles.buttonGeneric)}
+      {...buttonColorRule}
+    >
+      <span {...styles.buttonTextMobile}>
+        {t('marketing/page/carpet/buttonsmall')}
+      </span>
+      <span {...styles.buttonText}>{t('marketing/page/carpet/button')}</span>
     </Link>
   )
 }

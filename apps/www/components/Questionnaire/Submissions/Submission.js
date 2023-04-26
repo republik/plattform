@@ -124,8 +124,8 @@ export const SubmissionAuthor = ({
       <div {...styles.headerText}>
         <Interaction.H3>
           {displayAuthor.slug ? (
-            <Link href={`/~${displayAuthor.slug}`}>
-              <a {...plainLinkRule}>{displayAuthor.name}</a>
+            <Link href={`/~${displayAuthor.slug}`} {...plainLinkRule}>
+              {displayAuthor.name}
             </Link>
           ) : (
             displayAuthor.name
@@ -141,10 +141,12 @@ export const SubmissionAuthor = ({
               />
             )}
             {createdAt && !displayAuthor.credentials && (
-              <Link href={submissionUrl}>
-                <a {...styles.linkUnderline} title={titleDate(createdAt)}>
-                  <RelativeTime t={t} isDesktop date={createdAt} />
-                </a>
+              <Link
+                href={submissionUrl}
+                {...styles.linkUnderline}
+                title={titleDate(createdAt)}
+              >
+                <RelativeTime t={t} isDesktop date={createdAt} />
               </Link>
             )}
             {isUpdated && (

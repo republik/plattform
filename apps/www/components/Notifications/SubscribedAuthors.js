@@ -140,7 +140,11 @@ const SubscribedAuthors = ({
                   key={author.object.id}
                 >
                   <div {...styles.author}>
-                    <Link href={`/~${author.userDetails.slug}`} passHref>
+                    <Link
+                      href={`/~${author.userDetails.slug}`}
+                      passHref
+                      legacyBehavior
+                    >
                       <Editorial.A>{author.object.name}</Editorial.A>
                     </Link>
                   </div>

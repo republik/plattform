@@ -105,7 +105,7 @@ const Page = ({ t, me }) => {
                 ].filter(Boolean),
                 {
                   feedLink: (
-                    <Link href='/feed' key='link' passHref>
+                    <Link href='/feed' key='link' passHref legacyBehavior>
                       <A>{t('pages/bookmarks/placeholder/feedText')}</A>
                     </Link>
                   ),
