@@ -35,13 +35,17 @@ const Nav = ({ router: { query, asPath }, t, isTemplate, isNew }) => {
     currentPath === editPath && query.commitId
       ? { commitId: query.commitId }
       : undefined
+  const pageTitle = query.preview
+    ? 'preview'
+    : currentPath.split('/').slice(-1) +
+      ': ' +
+      repoId.split('/')[1] +
+      ' – Publikator'
+
   return (
     <Frame.Nav>
       <Head>
-        <title>
-          {query.preview ? 'preview' : currentPath.split('/').slice(-1)}:{' '}
-          {repoId.split('/')[1]} – Publikator
-        </title>
+        <title>{pageTitle}</title>
       </Head>
       <NavLink
         href={{ pathname: editPath, query: editQuery }}
