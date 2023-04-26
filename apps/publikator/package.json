@@ -31,7 +31,7 @@
     },
     "homepage": "https://github.com/republik/plattform#readme",
     "devDependencies": {
-        "@next/eslint-plugin-next": "^12.3.1",
+        "@next/eslint-plugin-next": "^13.3.1",
         "@republik/eslint-config-frontend": "*",
         "@republik/tsconfig": "*",
         "@testing-library/jest-dom": "^5.16.1",
@@ -48,7 +48,7 @@
     },
     "dependencies": {
         "@apollo/client": "~3.5.10",
-        "@next/bundle-analyzer": "^12.3.1",
+        "@next/bundle-analyzer": "^13.3.1",
         "@orbiting/remark-preset": "^1.2.4",
         "@project-r/styleguide": "*",
         "@project-r/template-newsletter": "^1.5.0",
@@ -82,7 +82,7 @@
         "jsonlint-mod": "^1.7.6",
         "lodash": "^4.17.21",
         "mdast-react-render": "^1.2.0",
-        "next": "^12.3.1",
+        "next": "^13.3.1",
         "next-transpile-modules": "^9.0.0",
         "prop-types": "^15.6.2",
         "query-string": "^7.1.1",
