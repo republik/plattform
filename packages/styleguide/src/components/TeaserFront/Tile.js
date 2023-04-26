@@ -89,7 +89,7 @@ const Tile = ({
 }) => {
   const [colorScheme] = useColorContext()
   const justifyContent =
-    align === 'top' ? 'flex-start' : align === 'bottom' ? 'flex-end' : ''
+    align === 'top' ? 'flex-start' : align === 'bottom' ? 'flex-end' : undefined
   const imageProps =
     image &&
     FigureImage.utils.getResizedSrcs(image, imageDark, IMAGE_SIZE.large, false)

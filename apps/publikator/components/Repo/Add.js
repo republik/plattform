@@ -104,6 +104,7 @@ const TemplatePicker = compose(
   withRouter,
   graphql(getTemplateRepos, {
     options: () => ({
+      ssr: false, // Disable SSR because of React hydration error
       fetchPolicy: 'network-only',
     }),
     skip: ({ isTemplate }) => isTemplate,
