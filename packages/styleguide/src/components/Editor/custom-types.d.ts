@@ -1,10 +1,10 @@
 import React, { ForwardRefExoticComponent } from 'react'
-import { IconType } from '@react-icons/all-files/lib'
 import { BaseEditor, BaseRange, Path } from 'slate'
 import { ReactEditor } from 'slate-react'
 import { HistoryEditor } from 'slate-history'
 import { Formatter } from '../../lib/translate'
 import { MarkerType } from '../Marker'
+import { IconType } from '../../types/icon'
 
 type MarkType =
   | 'italic'

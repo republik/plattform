@@ -1,11 +1,11 @@
-import React from 'react'
+import React, { SVGAttributes } from 'react'
 import PropTypes from 'prop-types'
 import { css } from 'glamor'
 import CalloutMenu from '../../../Callout/CalloutMenu'
 import IconButton from '../../../IconButton'
 import { useColorContext } from '../../../Colors/ColorContext'
-import { IconType } from 'react-icons/lib/esm/iconBase'
 import { IconMoreVertical } from '@republik/icons'
+import { IconType } from '../../../../types/icon'
 
 const MoreIconWithProps = (props) => (
   <IconButton title='Mehr' Icon={IconMoreVertical} {...props} />
