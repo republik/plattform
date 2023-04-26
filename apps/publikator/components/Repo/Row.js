@@ -58,7 +58,7 @@ const RepoRow = ({ repo, showPhases }) => {
             <br />
           </>
         )}
-        <Link href={`repo/${id}/tree`} passHref>
+        <Link href={`repo/${id}/tree`} passHref legacyBehavior>
           <A title={id}>{getTitle(repo)}</A>
         </Link>
       </Td>

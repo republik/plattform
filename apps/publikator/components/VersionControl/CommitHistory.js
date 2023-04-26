@@ -49,6 +49,7 @@ class CommitHistory extends Component {
                       query: { commitId: commit.id },
                     }}
                     passHref
+                    legacyBehavior
                   >
                     <A>{commit.message}</A>
                   </Link>
@@ -62,7 +63,7 @@ class CommitHistory extends Component {
               </li>
             ))}
           </ul>
-          <Link href={`/repo/${repoId}/tree`}>
+          <Link href={`/repo/${repoId}/tree`} legacyBehavior>
             <A>{t('commitHistory/more')}</A>
           </Link>
         </div>

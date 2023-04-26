@@ -93,16 +93,14 @@ export const ThOrder = ({
 }) => (
   <Th style={style}>
     <span {...styles.order}>
-      <Link href={href} replace>
-        <a {...styles.orderLink}>
-          {children}
-          {activeField === field &&
-            (activeDirection === 'DESC' ? (
-              <DownIcon size={20} {...styles.orderLinkIcon} />
-            ) : (
-              <UpIcon size={20} {...styles.orderLinkIcon} />
-            ))}
-        </a>
+      <Link href={href} replace {...styles.orderLink}>
+        {children}
+        {activeField === field &&
+          (activeDirection === 'DESC' ? (
+            <DownIcon size={20} {...styles.orderLinkIcon} />
+          ) : (
+            <UpIcon size={20} {...styles.orderLinkIcon} />
+          ))}
       </Link>
     </span>
   </Th>
