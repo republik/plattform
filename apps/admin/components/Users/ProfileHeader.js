@@ -210,16 +210,19 @@ const ProfileHeader = ({ userId, section }) => {
                   </span>
                 )
               )
+
+              const pageTitle = [
+                section !== 'index' ? `${section}:` : '',
+                name ? `${name} (${user.email.split('@')[1]})` : user.email,
+                '– Admin',
+              ]
+                .join(' ')
+                .trim()
+
               return (
                 <Section {...styles.header}>
                   <Head>
-                    <title>
-                      {section !== 'index' ? `${section}: ` : ''}
-                      {name
-                        ? `${name} (${user.email.split('@')[1]})`
-                        : user.email}{' '}
-                      – Admin
-                    </title>
+                    <title>{pageTitle}</title>
                   </Head>
                   <div style={{ clear: 'both', margin: '0 2px' }}>
                     {user.portrait && (
