@@ -12,7 +12,10 @@ const buildId =
  * @type {import('next').NextConfig}
  */
 module.exports = withBundleAnalyzer({
-  transpileModules: ['@project-r/styleguide', '@republik/nextjs-apollo-client'],
+  transpilePackages: [
+    '@project-r/styleguide',
+    '@republik/nextjs-apollo-client',
+  ],
   generateBuildId: () => buildId,
   env: { BUILD_ID: buildId },
   webpack: (config) => {
