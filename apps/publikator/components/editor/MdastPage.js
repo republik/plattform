@@ -601,6 +601,14 @@ export class EditorPage extends Component {
     this.setState({ editorState: value })
   }
 
+  persistChanges(serializedValue) {
+    const deserializedValue =
+      this.editor.serializer.deserialize(serializedValue)
+    this.setState({ editorState: deserializedValue })
+    this.store.set('editorState', serializedValue)
+    this.beginChanges()
+  }
+
   documentChangeHandler(_, { value: newEditorState }) {
     const { committedRawDocString, hasUncommittedChanges } = this.state
 
@@ -957,7 +965,10 @@ export class EditorPage extends Component {
                 >
                   {t('pages/raw/title')}
                 </button>
-                <Replace />
+                <Replace
+                  value={this.editor?.serializer.serialize(editorState)}
+                  onSave={this.persistChanges.bind(this)}
+                />
                 <CharCount value={editorState} />
                 {!!this.editor && (
                   <EditorUI

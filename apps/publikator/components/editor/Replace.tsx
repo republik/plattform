@@ -1,5 +1,5 @@
 import { css } from 'glamor'
-import { useState } from 'react'
+import React, { useState } from 'react'
 import {
   Overlay,
   OverlayToolbar,
@@ -18,7 +18,34 @@ const styles = {
   }),
 }
 
-const Replace = () => {
+type Node = {
+  type: string
+  value?: string
+  children: Node[]
+}
+
+const replaceText =
+  (searchTerm: string, replaceTerm: string) =>
+  (node: Node): Node => {
+    if (node.type === 'text') {
+      return {
+        ...node,
+        value: node.value.replace(searchTerm, replaceTerm),
+      }
+    } else if (node.children) {
+      return {
+        ...node,
+        children: node.children.map(replaceText(searchTerm, replaceTerm)),
+      }
+    } else {
+      return node
+    }
+  }
+
+const Replace: React.FC<{ value: any; onSave: (e: any) => undefined }> = ({
+  value,
+  onSave,
+}) => {
   const [isReplacerVisible, setReplacerVisible] = useState(false)
   const [searchTerm, setSearchTerm] = useState<string>()
   const [replaceTerm, setReplaceTerm] = useState<string>()
@@ -27,9 +54,15 @@ const Replace = () => {
   const closeReplacer = () => setReplacerVisible(false)
 
   // todo: checkbox to replace in meta block
+  // iterate through meta keys and replace titles & descriptions
 
   const replace = () => {
-    console.log('replacing!')
+    const newValue = {
+      ...value,
+      children: value.children.map(replaceText(searchTerm, replaceTerm)),
+    }
+    onSave(newValue)
+    closeReplacer()
   }
   return (
     <>
