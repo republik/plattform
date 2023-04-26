@@ -111,7 +111,12 @@ const PostcardsGrid = ({
                   {...gridStyles.imageFix}
                   {...colorScheme.set('boxShadow', 'imageChoiceShadow')}
                 >
-                  <AssetImage width='600' height='420' src={p.imageUrl} />
+                  <AssetImage
+                    alt='Klimalabor Postkarte'
+                    width='600'
+                    height='420'
+                    src={p.imageUrl}
+                  />
                 </div>
               )}
             </div>

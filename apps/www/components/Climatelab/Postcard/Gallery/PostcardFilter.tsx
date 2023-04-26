@@ -118,7 +118,12 @@ const PostcardFilter: React.FC<PostcardFilterProps> = ({
             {...plainButtonRule}
             {...styles.image}
           >
-            <AssetImage width={'200'} height={'133'} src={imageUrl} />
+            <AssetImage
+              alt='Klimalabor Postkarte'
+              width={'200'}
+              height={'133'}
+              src={imageUrl}
+            />
           </button>
         </div>
       </div>
