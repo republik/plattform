@@ -1,4 +1,3 @@
-import fetch, { Response } from 'node-fetch'
 import Debug from 'debug'
 import { ConnectionContext } from '@orbiting/backend-modules-types'
 
