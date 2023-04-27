@@ -1,13 +1,10 @@
-const { ensureSignedIn } = require('@orbiting/backend-modules-auth')
 const Collection = require('../../lib/Collection')
 
 module.exports = {
   userProgress({ mediaId }, args, context) {
-    const { user: me, req } = context
+    const { user: me } = context
 
-    ensureSignedIn(req)
-
-    if (!mediaId) {
+    if (!mediaId || !me) {
       return
     }
 
