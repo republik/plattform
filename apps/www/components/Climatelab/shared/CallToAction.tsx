@@ -1,8 +1,8 @@
 import { css } from 'glamor'
-import { FC } from 'react'
+import { FC, ReactNode } from 'react'
 import { fontStyles, useColorContext } from '@project-r/styleguide'
 
-const CallToAction: FC = ({ children }) => {
+const CallToAction: FC<{ children?: ReactNode }> = ({ children }) => {
   const [colorScheme] = useColorContext()
 
   return (

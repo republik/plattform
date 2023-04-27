@@ -72,23 +72,10 @@ export default ({ rule, subModules, TYPE }) => {
       }
     }
     if (autoSlug) {
-      newData = newData.set(
-        'slug',
-        slug(
-          newData.get('seoTitle') ||
-            newData.get('twitterTitle') ||
-            newData.get('title'),
-        ),
-      )
+      newData = newData.set('slug', slug(newData.get('title')))
     }
 
     return data.equals(newData) ? null : newData
-  }
-
-  const hasParent = (type, document, key) => {
-    const parent = document.getParent(key)
-    if (!parent) return
-    return parent.type === type ? true : hasParent(type, document, parent.key)
   }
 
   const documentRule = {

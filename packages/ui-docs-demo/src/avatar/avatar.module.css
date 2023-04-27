@@ -1,0 +1,23 @@
+.avatar {
+  display: inline-flex;
+  border-radius: 100%;
+  overflow: hidden;
+  width: 3rem;
+  height: 3rem;
+  vertical-align: middle;
+  overflow: hidden;
+  user-select: none;
+  align-items: center;
+  justify-content: center;
+}
+
+.avatar img {
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  object-fit: cover;
+}
+
+.fallback {
+  font-weight: 500;
+}

@@ -5,7 +5,7 @@ import {
   useColorContext,
   mediaQueries,
 } from '@project-r/styleguide'
-import { motion, useMotionValue } from 'framer-motion'
+import { motion } from 'framer-motion'
 
 function getIndeciesArray(value: number): number[] {
   if (value < 1) {

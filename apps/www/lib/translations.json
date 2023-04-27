@@ -1573,6 +1573,30 @@
       "value": "Sie müssen ein Porträtbild hochladen"
     },
     {
+      "key": "profile/report/label",
+      "value": "Benutzer melden"
+    },
+    {
+      "key": "profile/report/confirm",
+      "value": "Sind Sie sicher, dass dieser Benutzer gegen die Etikette verstossen hat und Sie die Moderation herbeirufen möchten? Nennen Sie bitte den Grund für diese Meldung."
+    },
+    {
+      "key": "profile/report/provideReason",
+      "value": "Bitte geben Sie einen Grund an, warum Sie diesen Benutzer melden möchten."
+    },
+    {
+      "key": "profile/report/success",
+      "value": "Wir haben Ihre Meldung erhalten."
+    },
+    {
+      "key": "profile/report/error",
+      "value": "Beim Senden der Meldung ist ein Fehler aufgetreten."
+    },
+    {
+      "key": "profile/report/tooLong",
+      "value": "Sie können maximal {max} Zeichen eingeben.{br}Ihre Eingabe: {input}"
+    },
+    {
       "key": "profile/gender",
       "value": "Geschlecht"
     },
@@ -7737,7 +7761,7 @@
     },
     {
       "key": "crowdfunding/status/goal/PERMANENT/memberships",
-      "value": "Mitgliedschaften und Abos. Wachstumsziel: {count}."
+      "value": "Mitgliedschaften und Abos."
     },
     {
       "key": "Trial/Form/button",

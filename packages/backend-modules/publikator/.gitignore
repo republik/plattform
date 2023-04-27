@@ -1,3 +1,4 @@
+lib/auphonic/**/*.js
 lib/File/**/*.js
 lib/cache/**/*.js
 lib/Derivative/**/*.js

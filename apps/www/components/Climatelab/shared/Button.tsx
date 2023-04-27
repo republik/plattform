@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { FC, ReactNode } from 'react'
 import { css } from 'glamor'
 import NextLink from 'next/link'
 import {
@@ -9,11 +9,12 @@ import {
 } from '@project-r/styleguide'
 
 type ButtonProps = {
+  children?: ReactNode
   onClick?: () => void
   href?: string
   type?: 'submit' | 'button'
   disabled?: boolean
-} & unknown
+}
 
 const Button: FC<ButtonProps> = ({
   children,

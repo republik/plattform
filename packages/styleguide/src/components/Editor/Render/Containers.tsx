@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ReactNode } from 'react'
 import { SchemaConfig } from '../custom-types'
 
 export const DefaultContainer: React.FC<{
@@ -13,6 +13,7 @@ export const DefaultContainer: React.FC<{
 }
 
 export const LayoutContainer: React.FC<{
+  children?: ReactNode
   schema: SchemaConfig
   style?: Record<string, unknown>
 }> = ({ schema, children, style = {} }) => {
