@@ -3,7 +3,7 @@
     "private": true,
     "version": "1.0.0",
     "engines": {
-        "node": "^16.0.0"
+        "node": "^18.0.0"
     },
     "description": "",
     "main": "server/index.js",
@@ -78,7 +78,6 @@
         "immutable-treeutils": "^1.2.0",
         "is-url": "^1.2.4",
         "is-uuid": "^1.0.2",
-        "isomorphic-unfetch": "^3.0.0",
         "js-yaml": "^3.14.0",
         "jsonlint-mod": "^1.7.6",
         "lodash": "^4.17.21",

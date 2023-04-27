@@ -1,4 +1,3 @@
-import fetch from 'isomorphic-unfetch'
 import { Component } from 'react'
 
 let lastError

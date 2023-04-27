@@ -19,7 +19,7 @@
     }
   },
   "engines": {
-    "node": "^16.0.0"
+    "node": "^18.0.0"
   },
   "peerDependencies": {
     "@apollo/client": "~3.5.10",
@@ -35,7 +35,6 @@
     "d3-time-format": "2.x",
     "downshift": "^2.2.2",
     "glamor": "^2.20.40",
-    "isomorphic-unfetch": "3.x",
     "lodash": "4.x",
     "mdast-react-render": ">=1.1",
     "prop-types": ">=15.5",
@@ -83,7 +82,6 @@
     "graphql": "^15.3.0",
     "gsheets": "^3.0.1",
     "identity-obj-proxy": "^3.0.0",
-    "isomorphic-unfetch": "^3.1.0",
     "jest": "^27.5.1",
     "lodash": "^4.17.21",
     "mdast-react-render": "^1.1.0",

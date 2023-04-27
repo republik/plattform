@@ -1,10 +1,11 @@
-const { Roles } = require('@orbiting/backend-modules-auth')
+const { ensureSignedIn } = require('@orbiting/backend-modules-auth')
 const Collection = require('../../../lib/Collection')
 const Progress = require('../../../lib/Progress')
 
 module.exports = async (_, { mediaId, secs }, context) => {
-  const { user: me, t } = context
-  Roles.ensureUserHasRole(me, 'member')
+  const { user: me, t, req } = context
+
+  ensureSignedIn(req)
 
   const collection = await Collection.byNameForUser(
     Progress.COLLECTION_NAME,

@@ -675,7 +675,7 @@ const ArticlePage = ({
           const ownDiscussion = meta.ownDiscussion
 
           const ProgressComponent =
-            hasAccess &&
+            !!me &&
             !isSection &&
             !isFormat &&
             !isPage &&
