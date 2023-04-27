@@ -1,4 +1,3 @@
-const fetch = require('isomorphic-unfetch')
 const checkEnv = require('check-env')
 const crypto = require('crypto')
 const debug = require('debug')('mail:MailchimpInterface')

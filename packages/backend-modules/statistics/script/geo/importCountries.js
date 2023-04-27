@@ -1,6 +1,5 @@
 require('@orbiting/backend-modules-env').config()
 const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
-const fetch = require('node-fetch')
 
 console.log('running import of country information....')
 

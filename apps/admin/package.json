@@ -3,7 +3,7 @@
   "private": true,
   "version": "1.1.0",
   "engines": {
-    "node": "^16.0.0"
+    "node": "^18.0.0"
   },
   "scripts": {
     "dev": "cross-env NODE_ENV=development nodemon --watch server --watch .env --watch server/constants.js server/server.js",
@@ -43,7 +43,6 @@
     "glamor": "^2.20.40",
     "graphql": "^15.3.0",
     "helmet": "^3.23.3",
-    "isomorphic-unfetch": "^3.1.0",
     "lodash": "^4.17.21",
     "lodash.debounce": "^4.0.8",
     "mdast-react-render": "^1.2.0",

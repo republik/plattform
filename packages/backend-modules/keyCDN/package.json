@@ -18,8 +18,5 @@
   "homepage": "https://github.com/republik/plattform#readme",
   "scripts": {
     "link": "yarn link"
-  },
-  "dependencies": {
-    "isomorphic-unfetch": "^3.0.0"
   }
 }

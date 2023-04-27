@@ -1,7 +1,6 @@
 const visit = require('unist-util-visit')
 const debug = require('debug')('publikator:lib:Document')
 const mp3Duration = require('@rocka/mp3-duration')
-const fetch = require('isomorphic-unfetch')
 const Promise = require('bluebird')
 
 const { timeFormat } = require('@orbiting/backend-modules-formats')
@@ -107,7 +106,8 @@ const prepareMetaForPublish = async ({
   if (audioSourceMp3 && !SUPPRESS_AUDIO_DURATION_MEASURE) {
     debug(repoId, 'fetching audio source', audioSourceMp3)
     durationMs = await fetch(audioSourceMp3)
-      .then((res) => res.buffer())
+      .then((res) => res.arrayBuffer())
+      .then((res) => Buffer.from(res))
       .then((res) => mp3Duration(res))
       .then((res) => res * 1000)
       .then(Math.round)

@@ -1,4 +1,3 @@
-const fetch = require('isomorphic-unfetch')
 const { returnImage } = require('../lib')
 const {
   FRONTEND_BASE_URL,
@@ -45,8 +44,6 @@ module.exports = (server) => {
       console.error('frontend fetch failed', result.url, result.status)
       return res.status(result.status).end()
     }
-    // add Link header, to be copied to final response
-    result.headers.set('Link', `<${frontendUrl}>; rel="canonical"`)
 
     return returnImage({
       response: res,
@@ -57,6 +54,9 @@ module.exports = (server) => {
         ...req.query,
         webp: !!webp,
         cacheTags: ['frontend'],
+        responseHeaders: [
+          { name: 'Link', value: `<${frontendUrl}>; rel="canonical"` },
+        ],
       },
       req,
     })

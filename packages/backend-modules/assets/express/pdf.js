@@ -1,4 +1,3 @@
-const fetch = require('isomorphic-unfetch')
 const { returnImage } = require('../lib')
 const { PDF_BASE_URL } = process.env
 
