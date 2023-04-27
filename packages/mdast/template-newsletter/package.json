@@ -1,0 +1,50 @@
+{
+  "name": "@project-r/template-newsletter",
+  "version": "1.5.0",
+  "description": "a newsletter template",
+  "main": "lib/index.js",
+  "scripts": {
+    "prepublish": "npm run prebuild && npm run build",
+    "prebuild": "rimraf lib",
+    "build": "babel src --out-dir lib",
+    "dev": "babel -w src --out-dir lib",
+    "test": "babel-tape-runner src/**/*.test.js | faucet",
+    "tape": "babel-tape-runner"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/orbiting/mdast.git"
+  },
+  "author": "Thomas Preusse <t@preus.se> (https://t.preus.se/)",
+  "license": "BSD-3-Clause",
+  "bugs": {
+    "url": "https://github.com/orbiting/mdast/issues"
+  },
+  "homepage": "https://github.com/orbiting/mdast#readme",
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-react": "^6.24.1",
+    "babel-preset-stage-3": "^6.24.1",
+    "babel-tape-runner": "^2.0.1",
+    "d3-format": "^1.2.1",
+    "d3-time-format": "^2.1.0",
+    "enzyme": "^3.1.1",
+    "enzyme-adapter-react-16": "^1.0.4",
+    "faucet": "0.0.1",
+    "glamor": "^2.20.40",
+    "mdast-react-render": "*",
+    "react": "^16.0.0",
+    "react-dom": "^16.0.0",
+    "rimraf": "^2.6.2",
+    "tape": "^4.8.0"
+  },
+  "peerDependencies": {
+    "d3-format": "^1.2.1",
+    "d3-time-format": "^2.1.0",
+    "glamor": "^2.20.40",
+    "mdast-react-render": "*",
+    "react": ">=16",
+    "react-dom": ">=16"
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "name": "@orbiting/remark-preset",
+  "version": "1.2.4",
+  "description": "a preconfigured mdast processor with zones and meta data",
+  "keywords": [
+    "remark",
+    "mdast",
+    "markdown",
+    "md",
+    "serializer",
+    "serialization",
+    "parse",
+    "stringify"
+  ],
+  "main": "lib/index.js",
+  "scripts": {
+    "prepublish": "npm run prebuild && npm run build",
+    "prebuild": "rimraf lib",
+    "build": "babel src --out-dir lib",
+    "dev": "babel -w src --out-dir lib",
+    "test": "babel-tape-runner src/**/*.test.js | faucet",
+    "tape": "babel-tape-runner"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/orbiting/mdast.git"
+  },
+  "author": "Thomas Preusse <t@preus.se> (https://t.preus.se/)",
+  "license": "BSD-3-Clause",
+  "bugs": {
+    "url": "https://github.com/orbiting/mdast/issues"
+  },
+  "homepage": "https://github.com/orbiting/mdast/tree/master/packages/remark-preset#readme",
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "babel-tape-runner": "^2.0.1",
+    "faucet": "0.0.1",
+    "rimraf": "^2.6.2",
+    "tape": "^4.8.0"
+  },
+  "dependencies": {
+    "js-yaml": "^3.10.0",
+    "parse-entities": "^1.1.1",
+    "remark-frontmatter": "^1.1.0",
+    "remark-parse": "^4.0.0",
+    "remark-stringify": "^4.0.0",
+    "stringify-entities": "^1.3.1",
+    "unified": "^6.1.5"
+  }
+}
