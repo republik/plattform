@@ -10,6 +10,9 @@ jobs:
       with:
         node-version: '18.x'
     - run: SERVER=styleguide ./scripts/prune.sh
+    - name: Build Icons
+      run: |
+        yarn turbo run build --filter=@republik/icons
     - name: Test and Pack
       working-directory: ./packages/styleguide
       run: |
