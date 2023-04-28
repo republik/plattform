@@ -44,12 +44,23 @@ const articles = []
 const elastic = Elasticsearch.connect()
 const days = argv.end.diff(argv.begin, 'days')
 
+const normalize = (string) =>
+  string
+    .replace(/\u00AD/g, '') // 0x00AD = Soft Hyphen (SHY)
+    .replace(/\u00A0/g, ' ') // 0x00AD = NO-BREAK SPACE
+    .toLowerCase()
+    .trim()
+
 PgDb.connect()
   .then(async (pgdb) => {
-    const classifiedAuthors = await pgdb.public.gsheets.findOneFieldOnly(
-      { name: 'authors' },
-      'data',
-    )
+    const classifiedAuthors = await pgdb.public.gsheets
+      .findOneFieldOnly({ name: 'authors' }, 'data')
+      .then((rows) =>
+        rows.map((r) => ({
+          ...r,
+          normalizedName: normalize(r.name),
+        })),
+      )
 
     const { body } = await elastic
       .search({
@@ -115,7 +126,7 @@ PgDb.connect()
         const gender = contributors
           .map(({ name: authorName }) => {
             const classifiedAuthor = classifiedAuthors.find(
-              (a) => a.name === authorName,
+              (ca) => ca.normalizedName === normalize(authorName),
             )
             if (!classifiedAuthor) {
               unclassifiedAuthors.push({ author: authorName, path: meta.path })
