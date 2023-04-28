@@ -3,8 +3,14 @@
   "version": "0.0.0",
   "private": true,
   "types": "dist/types/index.d.ts",
-  "main": "dist/icons.cjs",
-  "module": "dist/icons.js",
+  "main": "dist/icons.js",
+  "exports": {
+    ".": {
+      "import": "./dist/icons.js",
+      "require": "./dist/icons.cjs",
+      "types": "./dist/types/index.d.ts"
+    }
+  },
   "files": [
     "dist"
   ],
