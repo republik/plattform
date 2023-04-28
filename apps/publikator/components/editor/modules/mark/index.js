@@ -14,8 +14,8 @@ const icons = {
   strong: IconFormatBold,
   emphasis: IconFormatItalic,
   delete: IconFormatStrikethrough,
-  sub: IconFormatSuperscript,
-  sup: IconFormatSubscript,
+  sup: IconFormatSuperscript,
+  sub: IconFormatSubscript,
 }
 
 const MarkComponent = ({ rule, subModules, TYPE }) => {
