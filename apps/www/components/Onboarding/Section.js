@@ -1,7 +1,6 @@
 import { Fragment } from 'react'
 import { css } from 'glamor'
 
-import { DoneIcon } from '@project-r/styleguide'
 import {
   Button,
   Loader,
@@ -102,7 +101,7 @@ const Section = (props) => {
       >
         <div {...styles.heading}>{heading}</div>
         {(isTicked || isVisited) && (
-          <DoneIcon
+          <IconDone
             {...styles.doneIcon}
             {...colorScheme.set('color', 'primary')}
           />

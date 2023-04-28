@@ -5,7 +5,6 @@ import { css } from 'glamor'
 import ActionBar from '../ActionBar'
 import { imageResizeUrl } from 'mdast-react-render/lib/utils'
 import Link from 'next/link'
-import { ArrowDownIcon, ArrowUpIcon } from '@project-r/styleguide'
 import {
   mediaQueries,
   fontStyles,
@@ -18,6 +17,7 @@ import {
 import { cleanAsPath } from '../../lib/utils/link'
 import TrialPayNoteMini from './TrialPayNoteMini'
 import withT from '../../lib/withT'
+import { IconKeyboardArrowDown, IconKeyboardArrowUp } from '@republik/icons'
 const styles = {
   button: css({
     ...fontStyles.sansSerifRegular,
@@ -146,10 +146,16 @@ const SeriesNavBar = ({ t, me, showInlinePaynote, series, router, repoId }) => {
               : ` – ${currentEpisode.label}`)}
           <span>
             {expanded && (
-              <ArrowUpIcon size='28' {...colorScheme.set('fill', 'text')} />
+              <IconKeyboardArrowUp
+                size='28'
+                {...colorScheme.set('fill', 'text')}
+              />
             )}
             {!expanded && (
-              <ArrowDownIcon size='28' {...colorScheme.set('fill', 'text')} />
+              <IconKeyboardArrowDown
+                size='28'
+                {...colorScheme.set('fill', 'text')}
+              />
             )}
           </span>
         </span>

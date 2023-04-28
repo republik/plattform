@@ -1,7 +1,7 @@
 import { css } from 'glamor'
 
 import { colors, plainButtonRule } from '@project-r/styleguide'
-import MdClose from 'react-icons/lib/md/close'
+import { IconClose } from '@republik/icons'
 
 const styles = {
   warning: css({
@@ -24,7 +24,7 @@ const Warning = ({ message, onRemove }) => {
       {message}
       {onRemove && (
         <button {...styles.remove} onClick={onRemove}>
-          <MdClose />
+          <IconClose />
         </button>
       )}
     </div>

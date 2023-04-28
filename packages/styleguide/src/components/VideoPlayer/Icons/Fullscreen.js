@@ -1,10 +1,10 @@
+import { IconFullscreen, IconFullscreenExit } from '@republik/icons'
 import React from 'react'
-import { FullscreenIcon, FullscreenExitIcon } from '../../Icons'
 
 const Icon = ({ size, fill, off }) => {
   if (off) {
     return (
-      <FullscreenIcon
+      <IconFullscreen
         size={size}
         height={size}
         fill={fill}
@@ -13,7 +13,7 @@ const Icon = ({ size, fill, off }) => {
     )
   } else {
     return (
-      <FullscreenExitIcon
+      <IconFullscreenExit
         size={size}
         height={size}
         fill={fill}

@@ -22,6 +22,7 @@
   "dependencies": {
     "@project-r/styleguide": "*",
     "@project-r/template-newsletter": "^1.5.0",
+    "@republik/icons": "*",
     "d3-array": "1.x",
     "d3-color": "1.x",
     "d3-dsv": "1.x",

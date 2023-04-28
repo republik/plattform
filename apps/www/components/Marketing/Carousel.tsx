@@ -1,9 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import {
-  ArticleIcon,
   IconButton,
-  PlayCircleIcon,
-  PauseCircleIcon,
   useColorContext,
 } from '@project-r/styleguide'
 import { css } from 'glamor'
@@ -13,6 +10,7 @@ import { GET_DOCUMENT_AUDIO } from './graphql/DocumentAudio.graphql'
 import { useAudioContext } from '../Audio/AudioProvider'
 import scrollIntoView from 'scroll-into-view'
 import { AudioPlayerLocations } from '../Audio/types/AudioActionTracking'
+import { IconArticle, IconPauseCircle, IconPlayCircleOutline } from '@republik/icons'
 
 export type CarouselProps = {
   carouselData: any
@@ -58,8 +56,8 @@ const PlayAudio: React.FC<{
       }}
       Icon={
         checkIfActivePlayerItem(document.id) && isPlaying
-          ? PauseCircleIcon
-          : PlayCircleIcon
+          ? IconPauseCircle
+          : IconPlayCircleOutline
       }
       labelShort='Hören'
       label='Hören'
@@ -192,7 +190,7 @@ const Carousel: React.FC<CarouselProps> = ({
               {!onlyAudio && (
                 <IconButton
                   href={d.path}
-                  Icon={ArticleIcon}
+                  Icon={IconArticle}
                   labelShort='Lesen'
                   label='Lesen'
                 />

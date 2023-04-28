@@ -5,10 +5,12 @@ import {
   useColorContext,
 } from '@project-r/styleguide'
 
-import MdPhoneIphone from 'react-icons/lib/md/phone-iphone'
-import MdTabletMac from 'react-icons/lib/md/tablet-mac'
-import MdLaptopMac from 'react-icons/lib/md/laptop-mac'
-import MdDesktopMac from 'react-icons/lib/md/desktop-mac'
+import {
+  IconPhoneIPhone,
+  IconTabletMac,
+  IconLaptopMac,
+  IconDesktopMac,
+} from '@republik/icons'
 
 const styles = {
   container: css({
@@ -48,22 +50,22 @@ export const screenSizes = [
   {
     name: 'phone',
     label: 'Mobile',
-    Icon: MdPhoneIphone,
+    Icon: IconPhoneIPhone,
   },
   {
     name: 'tablet',
     label: 'Tablet',
-    Icon: MdTabletMac,
+    Icon: IconTabletMac,
   },
   {
     name: 'laptop',
     label: 'Laptop',
-    Icon: MdLaptopMac,
+    Icon: IconLaptopMac,
   },
   {
     name: 'desktop',
     label: 'Desktop',
-    Icon: MdDesktopMac,
+    Icon: IconDesktopMac,
   },
 ]
 
@@ -92,7 +94,8 @@ const ScreenSizePicker = ({
             >
               <size.Icon
                 {...colorScheme.set('fill', isSelected ? 'default' : 'text')}
-                size={inline ? 18 : 24}
+                height={inline ? 18 : 24}
+                width={inline ? 18 : 24}
               />
               {!inline ? (
                 <span
