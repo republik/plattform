@@ -1,4 +1,3 @@
-const fetch = require('isomorphic-unfetch')
 const { SendMailError } = require('./errors')
 
 const { MANDRILL_API_KEY } = process.env

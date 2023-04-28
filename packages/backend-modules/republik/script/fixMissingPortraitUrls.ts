@@ -1,8 +1,8 @@
+/// <reference lib="dom" />
 require('@orbiting/backend-modules-env').config()
 
 import yargs from 'yargs'
 import Promise from 'bluebird'
-import fetch from 'node-fetch'
 import _debug from 'debug'
 
 import { ConnectionContext } from '@orbiting/backend-modules-types'

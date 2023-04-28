@@ -10,8 +10,6 @@ Accept-Encoding: gzip
 grant_type=client_credentials
 */
 
-const fetch = require('isomorphic-unfetch')
-
 const { TWITTER_APP_KEY, TWITTER_APP_SECRET } = process.env
 
 if (!TWITTER_APP_KEY) {

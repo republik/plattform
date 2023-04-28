@@ -33,7 +33,6 @@
     "d3-time-format": "2.x",
     "downshift": "^2.2.2",
     "glamor": "^2.20.40",
-    "isomorphic-unfetch": "3.x",
     "lodash": "4.x",
     "mdast-react-render": ">=1.1",
     "prop-types": ">=15.5",

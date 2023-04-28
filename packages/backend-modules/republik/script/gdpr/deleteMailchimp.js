@@ -8,7 +8,6 @@
 require('@orbiting/backend-modules-env').config()
 const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
 const rw = require('rw')
-const fetch = require('isomorphic-unfetch')
 const crypto = require('crypto')
 const sleep = require('await-sleep')
 
@@ -108,7 +107,7 @@ PgDb.connect()
   `)
     console.log(`#consentedUsersEmails: ${consentedUsersEmails.length}`)
 
-    let operations = []
+    const operations = []
     let numDeletes = 0
 
     mailchimpEmails.forEach((email) => {
