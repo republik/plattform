@@ -1,13 +1,13 @@
 import { css } from 'glamor'
 import PropTypes from 'prop-types'
-import React, { useRef, useState, useContext, useEffect } from 'react'
+import { useRef, useState, useContext, useEffect } from 'react'
 import scrollIntoView from 'scroll-into-view'
 
-import { ChevronLeftIcon, ChevronRightIcon } from '../Icons'
 import { PADDING, TILE_MARGIN_RIGHT } from './constants'
 import CarouselContext from './Context'
 import { plainButtonRule } from '../Button'
 import { useColorContext } from '../Colors/useColorContext'
+import { IconChevronLeft, IconChevronRight } from '@republik/icons'
 
 const styles = {
   container: css({
@@ -169,7 +169,7 @@ const Row = ({ initialScrollTileIndex, children, isSeriesNav }) => {
           {...styles.arrowBg}
           {...colorScheme.set('backgroundColor', context.bgColor)}
         />
-        <ChevronLeftIcon
+        <IconChevronLeft
           size={50}
           {...styles.arrowIcon}
           {...colorScheme.set('fill', context.color)}
@@ -207,7 +207,7 @@ const Row = ({ initialScrollTileIndex, children, isSeriesNav }) => {
           {...styles.arrowBg}
           {...colorScheme.set('backgroundColor', context.bgColor)}
         />
-        <ChevronRightIcon
+        <IconChevronRight
           size={50}
           {...styles.arrowIcon}
           {...colorScheme.set('fill', context.color)}

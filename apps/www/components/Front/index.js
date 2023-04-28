@@ -11,7 +11,6 @@ import {
   InlineSpinner,
   Interaction,
   createFrontSchema,
-  CheckCircleIcon,
 } from '@project-r/styleguide'
 import StatusError from '../StatusError'
 
@@ -34,6 +33,7 @@ import useAudioQueue from '../Audio/hooks/useAudioQueue'
 import TeaserAudioPlayButton from '../Audio/shared/TeaserAudioPlayButton'
 import ClimateLabTeaser from '../Climatelab/FrontTeaser/ClimateLabTeaser'
 import * as withData from './withData'
+import { IconCheckCircle } from '@republik/icons'
 
 const styles = {
   prepublicationNotice: css({
@@ -229,7 +229,7 @@ const Front = ({
             <div {...styles.more}>
               {finite && (
                 <div style={{ marginBottom: 10 }}>
-                  <CheckCircleIcon size={32} style={{ marginBottom: 10 }} />
+                  <IconCheckCircle size={32} style={{ marginBottom: 10 }} />
                   <br />
                   {t('front/finite')}
                   <br />

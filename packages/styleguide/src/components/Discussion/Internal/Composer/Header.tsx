@@ -1,6 +1,5 @@
 import React, { useMemo } from 'react'
 import { css } from 'glamor'
-import { CheckIcon } from '../../../Icons'
 import {
   sansSerifMedium16,
   sansSerifRegular14,
@@ -10,6 +9,7 @@ import { convertStyleToRem, pxToRem } from '../../../Typography/utils'
 import { useColorContext } from '../../../Colors/ColorContext'
 import PropTypes, { InferProps } from 'prop-types'
 import { DisplayAuthorPropType } from '../PropTypes'
+import { IconCheck } from '@republik/icons'
 
 const buttonStyle = {
   background: 'none',
@@ -132,7 +132,7 @@ export const CommentHeaderProfile = ({
                     {credential.description}
                   </div>
                   {credential.verified && (
-                    <CheckIcon
+                    <IconCheck
                       {...styles.verifiedCheck}
                       {...colorScheme.set('color', 'primary')}
                     />

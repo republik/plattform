@@ -1,6 +1,6 @@
+import { IconFormatStrikethrough } from '@republik/icons'
 import { MarkConfigI } from '../../custom-types'
-import { StrikeThrough } from '../../../Icons'
 
 export const config: MarkConfigI = {
-  button: { icon: StrikeThrough },
+  button: { icon: IconFormatStrikethrough },
 }

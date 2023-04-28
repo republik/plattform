@@ -3,7 +3,6 @@ import compose from 'lodash/flowRight'
 import { graphql } from '@apollo/client/react/hoc'
 import { gql } from '@apollo/client'
 import { withRouter } from 'next/router'
-import { BookmarkIcon, BookmarkBorderIcon } from '@project-r/styleguide'
 import { IconButton } from '@project-r/styleguide'
 
 import withT from '../../lib/withT'
@@ -12,6 +11,7 @@ import {
   BOOKMARKS_COLLECTION_NAME,
 } from '../Bookmarks/fragments'
 import { getRefetchQueries } from '../Bookmarks/queries'
+import { IconBookmark, IconBookmarkBorder } from '@republik/icons'
 
 const Bookmark = ({
   t,
@@ -28,7 +28,7 @@ const Bookmark = ({
 }) => {
   const [mutating, setMutating] = useState(false)
   const [error, setError] = useState(undefined)
-  const Icon = bookmarked ? BookmarkIcon : BookmarkBorderIcon
+  const Icon = bookmarked ? IconBookmark : IconBookmarkBorder
 
   const toggle = () => {
     if (mutating) {

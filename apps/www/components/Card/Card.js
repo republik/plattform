@@ -6,8 +6,6 @@ import {
   colors,
   IconButton,
   shouldIgnoreClick,
-  CheckIcon,
-  DiscussionIcon,
 } from '@project-r/styleguide'
 
 import withInNativeApp, { postMessage } from '../../lib/withInNativeApp'
@@ -23,6 +21,7 @@ import { SmallParagraph, Finance } from './Shared'
 
 import { rgb } from 'd3-color'
 import Link from 'next/link'
+import { IconCheck, IconDiscussion } from '@republik/icons'
 
 export const MEDIUM_MIN_WIDTH = 360
 
@@ -271,7 +270,7 @@ const Card = ({
                 passHref
               >
                 <IconButton
-                  Icon={DiscussionIcon}
+                  Icon={IconDiscussion}
                   label={1 + statement.comments.totalCount}
                   fill={colors.primary}
                 />
@@ -395,7 +394,7 @@ const Card = ({
                   count: councilOfStates.votes,
                   formattedCount: countFormat(councilOfStates.votes),
                 })}
-                {councilOfStates.elected && <CheckIcon {...mdCheckProps} />}
+                {councilOfStates.elected && <IconCheck {...mdCheckProps} />}
                 {!!councilOfStates.secondBallotNecessary &&
                   !councilOfStates.elected &&
                   ', noch offen'}
@@ -410,7 +409,7 @@ const Card = ({
                     count: nationalCouncil.votes,
                     formattedCount: countFormat(nationalCouncil.votes),
                   })}
-                {nationalCouncil.elected && <CheckIcon {...mdCheckProps} />}
+                {nationalCouncil.elected && <IconCheck {...mdCheckProps} />}
               </>
             )}
           </div>

@@ -6,7 +6,7 @@ import createUi from './ui'
 import { matchBlock } from '../../utils'
 import { createRemoveEmptyKeyHandler } from '../../utils/keyHandlers'
 import InlineUI, { MarkButton } from '../../utils/InlineUI'
-import MdEdit from 'react-icons/lib/md/edit'
+import { IconEdit } from '@republik/icons'
 import { matchSubmodules } from '../../utils/matchers'
 import {
   OverlayFormContext,
@@ -22,7 +22,7 @@ const CustomUi = ({ editor, node, TYPE, subModules }) => {
       isMatch={(value) => value.blocks.some(matchSubmodules(TYPE, subModules))}
     >
       <MarkButton onMouseDown={() => setShowModal(true)}>
-        <MdEdit size={20} />
+        <IconEdit size={20} />
       </MarkButton>
     </InlineUI>
   )

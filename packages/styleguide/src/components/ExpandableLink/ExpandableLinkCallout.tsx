@@ -4,11 +4,11 @@ import { mUp } from '../../theme/mediaQueries'
 import zIndex from '../../theme/zIndex'
 import { useColorContext } from '../Colors/useColorContext'
 import RawHtml from '../RawHtml'
-import { LinkIcon } from '../Icons'
 import { fontStyles } from '../Typography'
 import { ellipsize } from '../../lib/styleMixins'
 import { StateProps, DELAY } from './ExpandableLink'
 import { interactionFontRule } from '../Typography/fontRules'
+import { IconLink } from '@republik/icons'
 
 type Props = {
   inNativeApp?: boolean
@@ -242,7 +242,7 @@ const ExpandableLinkCallout = ({
           error={false}
         />
         <a href={expandedLink.href} {...styles.contentLink} {...linkRule}>
-          <LinkIcon
+          <IconLink
             size={20}
             {...styles.linkIcon}
             {...colorScheme.set('fill', 'textSoft')}

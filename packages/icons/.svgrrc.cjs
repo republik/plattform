@@ -1,14 +1,23 @@
 // See https://react-svgr.com/docs/options/
 
 module.exports = {
+  jsxRuntime: 'automatic',
   icon: true,
   typescript: true,
-  expandProps: true,
+  expandProps: 'end',
   removeDimensions: false,
   replaceAttrValues: {
-    "#000": "currentColor",
-    "#000000": "currentColor",
-    "black": "currentColor",
+    '#000': 'currentColor',
+    '#000000': 'currentColor',
+    black: 'currentColor',
+  },
+  svgoConfig: {
+    plugins: [
+      {
+        name: 'mergePaths',
+        enabled: false,
+      },
+    ],
   },
   svgoConfig: {
     plugins: [
@@ -19,12 +28,13 @@ module.exports = {
     ]
   },
   svgProps: {
-    fill: "currentColor",
-    style: "{props.style || { verticalAlign: 'middle' }}",
-    width: '{props.width || props.size || "1em"}',
-    height: '{props.height || props.size || "1em"}',
+    fill: 'currentColor',
+    style:
+      "{props.style ? { verticalAlign: 'middle', ...props.style } : { verticalAlign: 'middle' }}",
+    width: '{props.width ?? props.size ?? "1em"}',
+    height: '{props.height ?? props.size ?? "1em"}',
   },
-  indexTemplate: require("./lib/icon-template.cjs"),
+  indexTemplate: require('./lib/icon-template.cjs'),
   template: (variables, { tpl }) => {
     return tpl`
     ${variables.imports};
@@ -40,6 +50,7 @@ module.exports = {
       ${variables.jsx}
     );
 
+    ${variables.componentName}.displayName = "${variables.componentName}";
     ${variables.exports};
     `
   },

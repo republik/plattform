@@ -1,5 +1,5 @@
 import { css } from 'glamor'
-import WarningIcon from 'react-icons/lib/md/warning'
+import { IconWarning } from '@republik/icons'
 
 import { useColorContext } from '@project-r/styleguide'
 
@@ -15,7 +15,7 @@ const Info = () => {
 
   return (
     <div {...styles.container} {...colorScheme.set('backgroundColor', 'alert')}>
-      <WarningIcon
+      <IconWarning
         fill='inherit'
         size='1.2em'
         style={{
