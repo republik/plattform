@@ -223,6 +223,9 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
           transition={{ duration: 0.5 }}
         >
           über 40 Jahre
+          <tspan x='0' y='30'>
+            36 von 100
+          </tspan>
         </motion.text>
       </motion.g>
       <motion.g
@@ -280,7 +283,8 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
           )}
           transition={{ duration: 0.5 }}
         >
-          100 Frauen wollen schwanger werden per In-Vitro-Fertilisation
+          Wie wahrscheinlich ist eine Schwangerschaft per
+          In-Vitro-Fertilisation?
         </motion.text>
         <motion.text
           {...styles.label}
@@ -387,7 +391,7 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
             {
               step5: {
                 x: 1,
-                y: -30,
+                y: -60,
                 opacity: 1,
                 transition: { duration: 0.5 },
               },
@@ -395,7 +399,10 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
           )}
           transition={{ duration: 0.5 }}
         >
-          Kumulative Schwangerschaftsrate nach Altersgruppe
+          Nach vier oder mehr Embryonentransfers sind je nach Altersgruppe
+          <tspan x='1' y='30'>
+            unterschiedlich viele Frauen schwanger
+          </tspan>
         </motion.text>
         {/* <motion.text
           {...styles.label}
@@ -511,6 +518,9 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
           transition={{ duration: 0.5 }}
         >
           35–39 Jahre
+          <tspan x='0' y='30'>
+            68 von 100
+          </tspan>
         </motion.text>
       </motion.g>
       <motion.g
@@ -637,6 +647,9 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
           transition={{ duration: 0.5 }}
         >
           30–34 Jahre
+          <tspan x='0' y='30'>
+            82 von 100
+          </tspan>
         </motion.text>
 
         {/* labels */}

@@ -82,12 +82,12 @@ export const Scrolly = () => {
           <Highlight colorKey={key} color='default'>
             100 Frauen,
           </Highlight>
-          die per In-Vitro-Fertilisation (IVF) schwanger werden wollen. Das
-          Prozedere einer IVF ist auch für Frauen bis Mitte 30 strapaziös. Es
-          stimmt aber, dass die Mehrheit von ihnen mit grosser
-          Wahrscheinlichkeit nach einigen Embryonentransfers schwanger wird.
-          Ähnlich wie bei der natürlichen Fruchtbarkeit steigt die
-          Wahrscheinlichkeit einer Schwangerschaft bei mehreren Versuchen.
+          die per In-Vitro-Fertilisation (IVF) schwanger werden wollen. Die
+          Frauen führen erst einen Embryotransfer, dann immer einen weiteren
+          durch. Bei jedem Versuch wird ein Teil von ihnen schwanger. Am Schluss
+          zeigt die Grafik, wie viele Frauen von 100 über mehr als vier
+          Embryonentransfers schwanger geworden sind, pro Altersgruppe. Dies
+          nennt sich kumulative Schwangerschaftsrate.
         </Editorial.P>
       </ScrollySlide>
       <ScrollySlide
@@ -122,6 +122,13 @@ export const Scrolly = () => {
           erwartet die grosse Mehrheit der Frauen bis Mitte 30 ein Kind: Dann
           sind 82 von 100 Frauen schwanger.
         </Editorial.P>
+        <Editorial.P>
+          Das Prozedere einer IVF ist auch für Frauen bis Mitte 30 strapaziös.
+          Es stimmt aber, dass die Mehrheit von ihnen mit grosser
+          Wahrscheinlichkeit nach einigen Embryonentransfers schwanger wird.
+          Ähnlich wie bei der natürlichen Fruchtbarkeit steigt die
+          Wahrscheinlichkeit einer Schwangerschaft bei mehreren Versuchen.
+        </Editorial.P>
       </ScrollySlide>
 
       <ScrollySlide
@@ -132,13 +139,6 @@ export const Scrolly = () => {
           <ChapterIndicator highlighted={lastInView === 2}>3</ChapterIndicator>
           Ende 30 wird es schwieriger
         </Editorial.Subhead>
-        <Editorial.P>
-          Es ist absurd, Frauen sorgen sich oft Jahrzehnte darum, wie sie am
-          sichersten nicht schwanger werden. Und dann läuft es für einen Teil
-          von ihnen so: Sie entscheiden sich gemeinsam mit ihrem Partner, ein
-          Kind zu bekommen. Und es passiert nichts. Einen Monat lang. Drei.
-          Zwölf.
-        </Editorial.P>
 
         <Editorial.P>
           Als Unfruchtbarkeit definiert die World Health Organisation (WHO),
@@ -170,6 +170,13 @@ export const Scrolly = () => {
           sind zwei Drittel der Kinderwunsch-Patientinnen schwanger.
         </Editorial.P>
         <Editorial.P>Das ist immer noch die Mehrheit.</Editorial.P>
+        <Editorial.P>
+          Gleichzeitig ist wichtig, sich zu vergegenwärtigen, dass IVF
+          entstanden ist, um gesundheitliche Probleme bei der Fruchtbarkeit
+          auszugleichen (zum Beispiel undurchlässige Eileiter bei der Frau,
+          langsame Spermien beim Mann). IVF wirkt nur in engen Grenzen der
+          natürlichen Abnahme der Fruchtbarkeit mit steigendem Alter entgegen.
+        </Editorial.P>
       </ScrollySlide>
 
       <ScrollySlide
@@ -180,23 +187,6 @@ export const Scrolly = () => {
           <ChapterIndicator highlighted={lastInView === 3}>4</ChapterIndicator>
           Jenseits der 40 – schwanger, aber kein Kind
         </Editorial.Subhead>
-        <Editorial.P>
-          Bei Paaren mit Kinderwunsch wird der weibliche Zyklus zum
-          Teufelskreis.
-        </Editorial.P>
-
-        <Editorial.P>
-          Zwei Wochen der Verdrängung. Normalität, vielleicht sogar mal ein Glas
-          Wein.
-        </Editorial.P>
-
-        <Editorial.P>
-          Die fruchtbaren Tage. Jetzt kommt es drauf an.
-        </Editorial.P>
-
-        <Editorial.P>Warten.</Editorial.P>
-        <Editorial.P>Warten.</Editorial.P>
-        <Editorial.P>Test. Negativ. Trauer, Wut, Verzweiflung.</Editorial.P>
         <Editorial.P>
           Wer Monat für Monat zittern und hadern musste, für den ist ein
           positiver Schwangerschaftstest ein Geschenk des Himmels. Hoffen
@@ -225,14 +215,19 @@ export const Scrolly = () => {
           Jahren ist es jede Zweite.
         </Editorial.P>
         <Editorial.P>
-          Was bleibt, ist Akzeptanz und Abschied vom Kinderwunsch. Oder die
-          unerbittliche Hoffnung, die so gut zu verstehen ist.
+          Was bleibt, ist Akzeptanz und der Abschied vom Kinderwunsch. Die
+          unerbittliche Hoffnung, die so gut zu verstehen ist. Oder ein anderer
+          Schritt: die Eizellspende.
         </Editorial.P>
         <Editorial.P>
           In Deutschland haben über einen Zeitraum von vier Jahren knapp 2500
-          Frauen im Alter von 45 eine IVF oder eine ICSI versucht.
+          Frauen im Alter von 45 Jahren eine IVF oder eine ICSI versucht. Eine
+          ICSI ist eine Befruchtung in der Petrischale, bei der ein Spermium
+          direkt in die Eizelle injiziert wird.
         </Editorial.P>
-        <Editorial.P>65 von ihnen sind heute Mutter.</Editorial.P>
+        <Editorial.P>
+          2500 Frauen haben es versucht. 65 von ihnen sind heute Mutter.
+        </Editorial.P>
       </ScrollySlide>
 
       <ScrollySlide
