@@ -81,6 +81,7 @@ const getCommentInfo = async (comment, displayAuthor, discussion, context) => {
     icon:
       displayAuthor.profilePicture ||
       t('api/comment/notification/new/app/icon'),
+    commentTags: comment.tags,
   }
 }
 
@@ -206,7 +207,7 @@ const submitComment = async (comment, discussion, context, testUsers) => {
       subjectParams,
       isTopLevelComment,
       icon,
-      commentTag,
+      commentTags,
     } = await getCommentInfo(comment, displayAuthor, discussion, context)
 
     await sendNotification(
@@ -264,8 +265,8 @@ const submitComment = async (comment, discussion, context, testUsers) => {
                 content: muteUrl,
               },
               {
-                name: 'COMMENT_TAG',
-                content: commentTag,
+                name: 'COMMENT_TAGS',
+                content: commentTags,
               },
               {
                 name: 'CONTENT_HTML',
