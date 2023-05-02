@@ -1,17 +1,17 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`mdastCollapseLink collapse link nodes 1`] = `
-Object {
-  "children": Array [
-    Object {
-      "children": Array [
-        Object {
+{
+  "children": [
+    {
+      "children": [
+        {
           "type": "text",
           "value": "Kurzer Link: ",
         },
-        Object {
-          "children": Array [
-            Object {
+        {
+          "children": [
+            {
               "type": "text",
               "value": "https://www.ise.fraunhofer.de",
             },
@@ -23,15 +23,15 @@ Object {
       ],
       "type": "paragraph",
     },
-    Object {
-      "children": Array [
-        Object {
+    {
+      "children": [
+        {
           "type": "text",
           "value": "Langer Link: ",
         },
-        Object {
-          "children": Array [
-            Object {
+        {
+          "children": [
+            {
               "type": "text",
               "value": "https://www.ise.fraunhofer.de/conte…2017_e.pdf",
             },
@@ -43,11 +43,11 @@ Object {
       ],
       "type": "paragraph",
     },
-    Object {
-      "children": Array [
-        Object {
-          "children": Array [
-            Object {
+    {
+      "children": [
+        {
+          "children": [
+            {
               "type": "text",
               "value": "Beschrifteter Link",
             },
@@ -59,22 +59,22 @@ Object {
       ],
       "type": "paragraph",
     },
-    Object {
-      "children": Array [
-        Object {
+    {
+      "children": [
+        {
           "type": "text",
           "value": "Textpassage",
         },
       ],
       "type": "paragraph",
     },
-    Object {
-      "children": Array [
-        Object {
-          "children": Array [
-            Object {
-              "children": Array [
-                Object {
+    {
+      "children": [
+        {
+          "children": [
+            {
+              "children": [
+                {
                   "type": "text",
                   "value": "Hack",
                 },
@@ -95,17 +95,17 @@ Object {
 `;
 
 exports[`mdastCollapseLink collapse link nodes w/ options 1`] = `
-Object {
-  "children": Array [
-    Object {
-      "children": Array [
-        Object {
+{
+  "children": [
+    {
+      "children": [
+        {
           "type": "text",
           "value": "Kurzer Link: ",
         },
-        Object {
-          "children": Array [
-            Object {
+        {
+          "children": [
+            {
               "type": "text",
               "value": "https://ww–er.de",
             },
@@ -117,15 +117,15 @@ Object {
       ],
       "type": "paragraph",
     },
-    Object {
-      "children": Array [
-        Object {
+    {
+      "children": [
+        {
           "type": "text",
           "value": "Langer Link: ",
         },
-        Object {
-          "children": Array [
-            Object {
+        {
+          "children": [
+            {
               "type": "text",
               "value": "https://ww–e.pdf",
             },
@@ -137,11 +137,11 @@ Object {
       ],
       "type": "paragraph",
     },
-    Object {
-      "children": Array [
-        Object {
-          "children": Array [
-            Object {
+    {
+      "children": [
+        {
+          "children": [
+            {
               "type": "text",
               "value": "Beschrifteter Link",
             },
@@ -153,22 +153,22 @@ Object {
       ],
       "type": "paragraph",
     },
-    Object {
-      "children": Array [
-        Object {
+    {
+      "children": [
+        {
           "type": "text",
           "value": "Textpassage",
         },
       ],
       "type": "paragraph",
     },
-    Object {
-      "children": Array [
-        Object {
-          "children": Array [
-            Object {
-              "children": Array [
-                Object {
+    {
+      "children": [
+        {
+          "children": [
+            {
+              "children": [
+                {
                   "type": "text",
                   "value": "Hack",
                 },
