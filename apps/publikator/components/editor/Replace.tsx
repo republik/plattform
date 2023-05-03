@@ -6,6 +6,7 @@ import {
   OverlayBody,
   Field,
   Button,
+  Checkbox,
 } from '@project-r/styleguide'
 
 const styles = {
@@ -55,6 +56,7 @@ const Replace: React.FC<{ value: any; onSave: (e: any) => undefined }> = ({
   const [isReplacerVisible, setReplacerVisible] = useState(false)
   const [searchTerm, setSearchTerm] = useState<string>()
   const [replaceTerm, setReplaceTerm] = useState<string>()
+  const [includeMeta, setIncludeMeta] = useState<boolean>()
 
   const title = 'Suchen und ersetzen'
   const closeReplacer = () => setReplacerVisible(false)
@@ -65,14 +67,16 @@ const Replace: React.FC<{ value: any; onSave: (e: any) => undefined }> = ({
     const newValue = {
       ...value,
       children: value.children.map(replaceText(searchTerm, replaceTerm)),
-      meta: allMetaKeys.reduce((next, key) => {
-        return {
-          ...next,
-          [key]: metaKeys.includes(key)
-            ? value.meta[key].replace(searchTerm, replaceTerm)
-            : value.meta[key],
-        }
-      }, {}),
+      meta: includeMeta
+        ? allMetaKeys.reduce((next, key) => {
+            return {
+              ...next,
+              [key]: metaKeys.includes(key)
+                ? value.meta[key].replace(searchTerm, replaceTerm)
+                : value.meta[key],
+            }
+          }, {})
+        : value.meta,
     }
     onSave(newValue)
     closeReplacer()
@@ -88,6 +92,12 @@ const Replace: React.FC<{ value: any; onSave: (e: any) => undefined }> = ({
         >
           <OverlayToolbar title={title} onClose={closeReplacer} />
           <OverlayBody>
+            <Checkbox
+              checked={includeMeta}
+              onChange={(_, value) => setIncludeMeta(value)}
+            >
+              Metabereich einschliessen
+            </Checkbox>
             <div style={{ textAlign: 'center' }}>
               <Field
                 label='Suchen'
