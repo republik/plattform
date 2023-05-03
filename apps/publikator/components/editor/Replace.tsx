@@ -42,10 +42,16 @@ const replaceText =
     }
   }
 
+// todo: add more searchable fields
+const metaKeys = ['description']
+
+// todo: add checkbox to enable meta search
+
 const Replace: React.FC<{ value: any; onSave: (e: any) => undefined }> = ({
   value,
   onSave,
 }) => {
+  console.log(value)
   const [isReplacerVisible, setReplacerVisible] = useState(false)
   const [searchTerm, setSearchTerm] = useState<string>()
   const [replaceTerm, setReplaceTerm] = useState<string>()
@@ -53,18 +59,25 @@ const Replace: React.FC<{ value: any; onSave: (e: any) => undefined }> = ({
   const title = 'Suchen und ersetzen'
   const closeReplacer = () => setReplacerVisible(false)
 
-  // todo: checkbox to replace in meta block
-  // iterate through meta keys and replace titles & descriptions
-  // special characters
-
   const replace = () => {
+    const allMetaKeys = Object.keys(value.meta)
+
     const newValue = {
       ...value,
       children: value.children.map(replaceText(searchTerm, replaceTerm)),
+      meta: allMetaKeys.reduce((next, key) => {
+        return {
+          ...next,
+          [key]: metaKeys.includes(key)
+            ? value.meta[key].replace(searchTerm, replaceTerm)
+            : value.meta[key],
+        }
+      }, {}),
     }
     onSave(newValue)
     closeReplacer()
   }
+
   return (
     <>
       <button onClick={() => setReplacerVisible(true)}>{title}</button>
