@@ -205,7 +205,67 @@ const text = {
       .
     </>
   ),
-  //April: (p) => <></>,
+  April: (p) => (
+    <>
+      <Highlight {...p} ids={['uTeih5sng']}>
+        Braucht es Pazifismus noch
+      </Highlight>
+      ?{' '}
+      <Highlight {...p} ids={['A5JI9h1QR']}>
+        Was Sie über die neue UBS-Megabank wissen müssen
+      </Highlight>{' '}
+      und{' '}
+      <Highlight {...p} ids={['tD4O9PbI1']}>
+        was das gleichzeitige Wachstum von Armut und extremem Reichtum in der
+        Schweiz konkret bedeutet
+      </Highlight>
+      .{' '}
+      <Highlight {...p} ids={['RkM2dQGoy']}>
+        Chat GPT versteht nicht, was es schreibt
+      </Highlight>
+      . Und{' '}
+      <Highlight {...p} ids={['oI8HN6mWn']}>
+        wir verstehen noch viel zu wenig von PMS
+      </Highlight>
+      . Zu Besuch beim{' '}
+      <Highlight {...p} ids={['LkrZI9HWF']}>
+        Portemonnaie der SVP
+      </Highlight>
+      .{' '}
+      <Highlight {...p} ids={['YN4yGRW11']}>
+        Salman Rushdie ist zurück
+      </Highlight>{' '}
+      und{' '}
+      <Highlight {...p} ids={['_HM3qz4k5']}>
+        Nan Goldin kämpft gegen die Pharmaindustrie
+      </Highlight>
+      . Dazu:{' '}
+      <Highlight {...p} ids={['cFVML-PlY']}>
+        Arbeitsausbeutung in Gstaad
+      </Highlight>
+      ,{' '}
+      <Highlight
+        {...p}
+        ids={['M5fIOBoA-']}
+        series='republik/article-israel-am-abgrund'
+      >
+        die politische Krise in Israel
+      </Highlight>
+      ,{' '}
+      <Highlight {...p} ids={['EQRSSxgNP']}>
+        Klimaseniorinnen in Strassburg
+      </Highlight>
+      . Ausserdem:{' '}
+      <Highlight
+        {...p}
+        ids={['ZazUXUGNOT']}
+        format='republik/format-project-r-newsletter'
+      >
+        Unsere Fehler und wie es jetzt weitergeht
+      </Highlight>
+      .
+    </>
+  ),
   //Mai: (p) => <></>,
   //Juni: (p) => <></>,
   //Juli: (p) => <></>,

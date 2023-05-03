@@ -1,7 +1,7 @@
+/// <reference lib="dom" />
 import createDebug from 'debug'
 import moment from 'moment'
 import crypto from 'crypto'
-import fetch from 'node-fetch'
 
 import { GraphqlContext } from '@orbiting/backend-modules-types'
 const {

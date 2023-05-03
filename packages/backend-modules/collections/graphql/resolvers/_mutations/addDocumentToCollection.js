@@ -1,9 +1,9 @@
-const { Roles } = require('@orbiting/backend-modules-auth')
+const { ensureSignedIn } = require('@orbiting/backend-modules-auth')
 const Collection = require('../../../lib/Collection')
 
 module.exports = async (_, { documentId, collectionName, data }, context) => {
-  const { user: me, t, loaders } = context
-  Roles.ensureUserHasRole(me, 'member')
+  const { req, user: me, t, loaders } = context
+  ensureSignedIn(req)
 
   const collection = await Collection.byNameForUser(
     collectionName,

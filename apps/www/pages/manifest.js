@@ -17,11 +17,11 @@ import {
   useColorContext,
   ColorHtmlBodyColors,
 } from '@project-r/styleguide'
-import { BackIcon } from '@project-r/styleguide'
 
 import { PUBLIC_BASE_URL, CDN_FRONTEND_BASE_URL } from '../lib/constants'
 import Link from 'next/link'
 import { withDefaultSSR } from '../lib/apollo/helpers'
+import { IconBack } from '@republik/icons'
 
 const pRule = css({
   fontFamily: fontFamilies.sansSerifRegular,
@@ -104,7 +104,7 @@ export const Back = withInNativeApp(({ inNativeApp, label }) => {
       {...styles.back}
       {...colorScheme.set('color', 'logo')}
     >
-      <BackIcon size={25} style={{ marginTop: -3 }} />
+      <IconBack size={25} style={{ marginTop: -3 }} />
       {label}
     </Link>
   )

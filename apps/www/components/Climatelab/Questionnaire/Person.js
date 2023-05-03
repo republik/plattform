@@ -9,12 +9,10 @@ import {
   Interaction,
   IconButton,
   Center,
-  EditIcon,
   Figure,
   FigureImage,
   useHeaderHeight,
   useColorContext,
-  ChevronLeftIcon,
   NarrowContainer,
   FigureCaption,
   ColorContextProvider,
@@ -45,6 +43,7 @@ import {
   QUESTIONNAIRE_SLUG,
   QUESTIONNAIRE_SQUARE_IMG_URL,
 } from './config'
+import { IconChevronLeft, IconEdit, IconShare } from '@republik/icons'
 
 const USER_QUERY = gql`
   query getUserId($slug: String!) {
@@ -203,7 +202,7 @@ const Page = () => {
                         size={24}
                         label='Zur Übersicht'
                         labelShort='Zur Übersicht'
-                        Icon={ChevronLeftIcon}
+                        Icon={IconChevronLeft}
                       />
                     </NextLink>
                   </div>
@@ -213,7 +212,7 @@ const Page = () => {
                       size={24}
                       label='Bearbeiten'
                       labelShort=''
-                      Icon={EditIcon}
+                      Icon={IconEdit}
                       href={EDIT_QUESTIONNAIRE_PATH}
                     />
                   )}

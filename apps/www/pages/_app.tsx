@@ -4,7 +4,6 @@ import Head from 'next/head'
 
 import {
   ColorContextProvider,
-  IconContextProvider,
 } from '@project-r/styleguide'
 import type { PagePropsWithApollo } from '@republik/nextjs-apollo-client'
 
@@ -64,7 +63,6 @@ const WebApp = ({
       <MeContextProvider assumeAccess={assumeAccess}>
         <UserAgentProvider providedValue={providedUserAgent}>
           <MediaProgressContext>
-            <IconContextProvider value={{ style: { verticalAlign: 'middle' } }}>
               <AudioProvider>
                 <AppVariableContext>
                   <ColorContextProvider root colorSchemeKey='auto'>
@@ -84,8 +82,7 @@ const WebApp = ({
                     <AudioPlayerOrchestrator />
                   </ColorContextProvider>
                 </AppVariableContext>
-              </AudioProvider>
-            </IconContextProvider>
+            </AudioProvider>
           </MediaProgressContext>
         </UserAgentProvider>
       </MeContextProvider>

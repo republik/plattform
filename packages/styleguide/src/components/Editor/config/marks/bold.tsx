@@ -1,6 +1,6 @@
+import { IconFormatBold } from '@republik/icons'
 import { MarkConfigI } from '../../custom-types'
-import { BoldIcon } from '../../../Icons'
 
 export const config: MarkConfigI = {
-  button: { icon: BoldIcon },
+  button: { icon: IconFormatBold },
 }

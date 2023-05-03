@@ -16,7 +16,7 @@ import Consents, { getConsentsError } from '../Pledge/Consents'
 import withMe from '../../lib/apollo/withMe'
 import withT from '../../lib/withT'
 
-import { ArrowForwardIcon, plainButtonRule } from '@project-r/styleguide'
+import { plainButtonRule } from '@project-r/styleguide'
 import {
   Button,
   Field,
@@ -29,6 +29,7 @@ import {
 import { withRouter } from 'next/router'
 import { getConversionPayload } from '../../lib/utils/track'
 import { TRIAL_CAMPAIGN } from '../../lib/constants'
+import { IconArrowForward } from '@republik/icons'
 
 const styles = {
   errorMessages: css({
@@ -339,7 +340,7 @@ const Form = (props) => {
                         colorScheme.set('color', 'textSoft'),
                       )}
                     >
-                      <ArrowForwardIcon
+                        <IconArrowForward
                         style={{
                           cursor: 'pointer',
                           color:

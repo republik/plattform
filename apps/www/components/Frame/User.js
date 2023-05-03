@@ -10,10 +10,11 @@ import {
   HEADER_HEIGHT_MOBILE,
   HEADER_HORIZONTAL_PADDING,
 } from '../constants'
-import { AccountBoxIcon } from '@project-r/styleguide'
 import withT, { useTranslation } from '../../lib/withT'
 import { ME_PORTRAIT_STORAGE_KEY } from '../../lib/context/MeContext'
+import { IconAccountBox } from '@republik/icons'
 import Script from 'next/script'
+
 
 const BUTTON_SIZE = 32
 const BUTTON_SIZE_MOBILE = 26
@@ -26,7 +27,7 @@ export const SignInLink = ({ isOnMarketingPage }) => {
   return (
     <div data-hide-if-me='true'>
       <span {...styles.anonymous}>
-        <AccountBoxIcon {...colorScheme.set('fill', 'text')} />
+        <IconAccountBox {...colorScheme.set('fill', 'text')} />
       </span>
       <span
         {...(isOnMarketingPage ? styles.labelMarketing : styles.labelDefault)}
@@ -42,9 +43,9 @@ export const getInitials = (me) =>
   (me.name && me.name.trim()
     ? me.name.split(' ').filter((n, i, all) => i === 0 || all.length - 1 === i)
     : me.email
-        .split('@')[0]
-        .split(/\.|-|_/)
-        .slice(0, 2)
+      .split('@')[0]
+      .split(/\.|-|_/)
+      .slice(0, 2)
   )
     .slice(0, 2)
     .filter(Boolean)

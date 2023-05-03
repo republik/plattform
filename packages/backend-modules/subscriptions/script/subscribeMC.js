@@ -10,7 +10,6 @@
 
 require('@orbiting/backend-modules-env').config()
 const Promise = require('bluebird')
-const fetch = require('isomorphic-unfetch')
 const { csvParse } = require('d3-dsv')
 const { t } = require('@orbiting/backend-modules-translate')
 

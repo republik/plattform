@@ -1,7 +1,6 @@
 import { createElement, useMemo } from 'react'
 import { css } from 'glamor'
 
-import { ArrowDownIcon, ArrowUpIcon } from '@project-r/styleguide'
 import {
   fontStyles,
   mediaQueries,
@@ -13,6 +12,7 @@ import { SUPPORTED_SORT } from './constants'
 
 import withT from '../../lib/withT'
 import Link from 'next/link'
+import { IconKeyboardArrowDown, IconKeyboardArrowUp } from '@republik/icons'
 
 const styles = {
   container: css({
@@ -41,8 +41,8 @@ const styles = {
 }
 
 const SORT_DIRECTION_ICONS = {
-  ASC: ArrowDownIcon,
-  DESC: ArrowUpIcon,
+  ASC: IconKeyboardArrowDown,
+  DESC: IconKeyboardArrowUp,
 }
 
 const getDefaultDirection = (sort) => sort.directions && sort.directions[0]

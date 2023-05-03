@@ -3,7 +3,6 @@ import {
   ElementFormProps,
   MemoElement,
 } from '../../custom-types'
-import { MemoIcon } from '../../../Icons'
 import React from 'react'
 import MemoForm from '../../Forms/Memo'
 import { useRenderContext } from '../../Render/Context'
@@ -11,6 +10,7 @@ import { Marker } from '../../../Marker'
 import renderAsText from '../../Render/text'
 import { Interaction } from '../../../Typography'
 import { unwrapWhenEmpty } from './_shared/utils'
+import { IconMemo } from '@republik/icons'
 
 const Form: React.FC<ElementFormProps<MemoElement>> = ({
   element,
@@ -45,7 +45,7 @@ export const config: ElementConfigI = {
     isInline: true,
     stopFormIteration: true,
   },
-  button: { icon: MemoIcon, small: true },
+  button: { icon: IconMemo, small: true },
   normalizations: [unwrapWhenEmpty],
   structure: [{ type: 'inherit' }],
   props: ['parentId', 'marker'],

@@ -8,8 +8,11 @@ jobs:
     - uses: actions/checkout@v3
     - uses: actions/setup-node@v1
       with:
-        node-version: '16.x'
+        node-version: '18.x'
     - run: SERVER=styleguide ./scripts/prune.sh
+    - name: Build workspace dependencies
+      run: |
+        yarn turbo run build --filter=@project-r/styleguide... --filter=!@project-r/styleguide
     - name: Test and Pack
       working-directory: ./packages/styleguide
       run: |

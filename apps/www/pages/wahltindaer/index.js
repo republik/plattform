@@ -5,7 +5,6 @@ import { gql } from '@apollo/client'
 import { descending } from 'd3-array'
 import { css } from 'glamor'
 
-import { CheckIcon } from '@project-r/styleguide'
 
 import withT from '../../lib/withT'
 import { PUBLIC_BASE_URL, CDN_FRONTEND_BASE_URL } from '../../lib/constants'
@@ -24,9 +23,9 @@ import {
   colors,
   IconButton,
 } from '@project-r/styleguide'
-import { DiscussionIcon } from '@project-r/styleguide'
 import Link from 'next/link'
 import { withDefaultSSR } from '../../lib/apollo/helpers'
+import { IconCheck, IconDiscussion } from '@republik/icons'
 
 const query = gql`
   query getCardGroups {
@@ -156,10 +155,9 @@ const Page = ({ data, data: { cardGroups }, router, t }) => (
 
         <Editorial.P>
           {t(
-            `pages/cardGroups/lead/${
-              data.nElected && data.nElected.totalCount === 200
-                ? 'complete'
-                : 'pending'
+            `pages/cardGroups/lead/${data.nElected && data.nElected.totalCount === 200
+              ? 'complete'
+              : 'pending'
             }`,
           )}
           <br />
@@ -221,40 +219,40 @@ const Page = ({ data, data: { cardGroups }, router, t }) => (
                     <br />
                     {t('pages/cardGroups/elected/nationalCouncil')}{' '}
                     <strong>{data.nElected.totalCount}</strong>{' '}
-                    <CheckIcon {...mdCheckProps} />
+                    <IconCheck {...mdCheckProps} />
                     <br />
                     {t('pages/cardGroups/elected/councilOfStates')}{' '}
                     <strong>{data.sElected.totalCount}</strong>{' '}
-                    <CheckIcon {...mdCheckProps} />
+                    <IconCheck {...mdCheckProps} />
                   </Link>
                 </div>
               </div>
               {(data.nElected.totalCount !== 200 ||
                 data.sElected.totalCount !== 46) && (
-                <Interaction.P
-                  style={{
-                    padding: 10,
-                    margin: '10px auto',
-                    fontSize: 16,
-                    textAlign: 'center',
-                  }}
-                >
-                  {t('pages/cardGroups/elected/open', {
-                    nationalCouncil: t.pluralize(
-                      'pages/cardGroups/elected/open/nationalCouncil',
-                      {
-                        count: 200 - (data.nElected.totalCount || 0),
-                      },
-                    ),
-                    councilOfStates: t.pluralize(
-                      'pages/cardGroups/elected/open/councilOfStates',
-                      {
-                        count: 46 - (data.sElected.totalCount || 0),
-                      },
-                    ),
-                  })}
-                </Interaction.P>
-              )}
+                  <Interaction.P
+                    style={{
+                      padding: 10,
+                      margin: '10px auto',
+                      fontSize: 16,
+                      textAlign: 'center',
+                    }}
+                  >
+                    {t('pages/cardGroups/elected/open', {
+                      nationalCouncil: t.pluralize(
+                        'pages/cardGroups/elected/open/nationalCouncil',
+                        {
+                          count: 200 - (data.nElected.totalCount || 0),
+                        },
+                      ),
+                      councilOfStates: t.pluralize(
+                        'pages/cardGroups/elected/open/councilOfStates',
+                        {
+                          count: 46 - (data.sElected.totalCount || 0),
+                        },
+                      ),
+                    })}
+                  </Interaction.P>
+                )}
               <Interaction.P
                 style={{ margin: '40px auto 20px', textAlign: 'center' }}
               >
@@ -290,15 +288,15 @@ const Page = ({ data, data: { cardGroups }, router, t }) => (
                             cardGroup.nElected.totalCount ||
                             cardGroup.sElected.totalCount
                           ) && (
-                            <>
-                              <strong>{cardGroup.nElected.totalCount}</strong>
-                              {' + '}
-                              <strong>
-                                {cardGroup.sElected.totalCount}
-                              </strong>{' '}
-                              <CheckIcon {...mdCheckProps} />
-                            </>
-                          )}
+                              <>
+                                <strong>{cardGroup.nElected.totalCount}</strong>
+                                {' + '}
+                                <strong>
+                                  {cardGroup.sElected.totalCount}
+                                </strong>{' '}
+                                <IconCheck {...mdCheckProps} />
+                              </>
+                            )}
                           {!!openSeats && (
                             <>
                               {' '}
@@ -315,7 +313,7 @@ const Page = ({ data, data: { cardGroups }, router, t }) => (
                             </>
                           )}
                         </span>
-                      </Link>
+                      </Link >
                       {!!commentCount && (
                         <span {...styles.discussionLink}>
                           <Link
@@ -331,25 +329,25 @@ const Page = ({ data, data: { cardGroups }, router, t }) => (
                             legacyBehavior
                           >
                             <IconButton
-                              Icon={DiscussionIcon}
+                              Icon={IconDiscussion}
                               label={commentCount}
                               fill={colors.primary}
                             />
                           </Link>
                         </span>
                       )}
-                    </div>
+                    </div >
                   )
                 })}
-              </div>
+              </div >
             </>
           )
         }}
       />
+      < br />
       <br />
-      <br />
-    </Container>
-  </Frame>
+    </Container >
+  </Frame >
 )
 
 export default withDefaultSSR(compose(withRouter, withT, graphql(query))(Page))

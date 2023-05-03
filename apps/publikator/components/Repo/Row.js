@@ -1,5 +1,7 @@
-import LockIcon from 'react-icons/lib/md/lock'
-import PublicIcon from 'react-icons/lib/md/public'
+import {
+  IconLock,
+  IconPublic
+} from '@republik/icons'
 
 import { A, Label, colors } from '@project-r/styleguide'
 
@@ -97,10 +99,10 @@ const RepoRow = ({ repo, showPhases }) => {
       <Td style={{ textAlign: 'right' }}>
         {repo.latestPublications
           .filter(isPrepublished)
-          .map(PublicationLink(LockIcon))}{' '}
+          .map(PublicationLink(IconLock))}{' '}
         {repo.latestPublications
           .filter(isPublished)
-          .map(PublicationLink(PublicIcon))}{' '}
+          .map(PublicationLink(IconPublic))}{' '}
       </Td>
     </Tr>
   )

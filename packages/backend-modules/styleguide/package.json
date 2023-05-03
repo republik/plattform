@@ -22,6 +22,7 @@
   "dependencies": {
     "@project-r/styleguide": "*",
     "@project-r/template-newsletter": "^1.5.0",
+    "@republik/icons": "*",
     "d3-array": "1.x",
     "d3-color": "1.x",
     "d3-dsv": "1.x",
@@ -33,7 +34,6 @@
     "d3-time-format": "2.x",
     "downshift": "^2.2.2",
     "glamor": "^2.20.40",
-    "isomorphic-unfetch": "3.x",
     "lodash": "4.x",
     "mdast-react-render": ">=1.1",
     "prop-types": ">=15.5",

@@ -10,7 +10,6 @@ import {
   ColorContextProvider,
   useColorContext,
 } from '@project-r/styleguide'
-import { OpenSourceIcon } from '@project-r/styleguide'
 
 import withT from '../../lib/withT'
 import withMe from '../../lib/apollo/withMe'
@@ -20,6 +19,7 @@ import { ZINDEX_FOOTER } from '../constants'
 
 import SocialLinks from './SocialLinks'
 import Address from './Address'
+import { IconOpensource } from '@republik/icons'
 
 const styles = {
   bg: css({
@@ -339,8 +339,8 @@ const Footer = ({ t, me, signOut, isOnMarketingPage, hasActiveMembership }) => {
             style={{ ...fontStyles.sansSerifRegular14 }}
             {...colorScheme.set('color', 'text')}
           >
-            <OpenSourceIcon
-              style={{ margin: '0 6px 5px 0' }}
+            <IconOpensource
+              style={{ margin: '0 6px 5px 0', verticalAlign: 'middle' }}
               size={20}
               {...colorScheme.set('fill', 'text')}
             />

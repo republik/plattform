@@ -9,7 +9,6 @@ import withT from '../lib/withT'
 import withInNativeApp from '../lib/withInNativeApp'
 import { intersperse } from '../lib/utils/helpers'
 
-import { CloseIcon } from '@project-r/styleguide'
 
 import {
   HEADER_HEIGHT,
@@ -35,6 +34,7 @@ import {
 } from '@project-r/styleguide'
 import Link from 'next/link'
 import { withDefaultSSR } from '../lib/apollo/helpers'
+import { IconClose } from '@republik/icons'
 
 const styles = {
   bar: css({
@@ -117,11 +117,11 @@ const Page = ({ router: { query: rawQuery }, t, me, inNativeApp }) => {
 
   const links = [
     me &&
-      context === 'pledge' &&
-      type !== 'token-authorization' && {
-        pathname: '/konto',
-        label: t('notifications/links/merci'),
-      },
+    context === 'pledge' &&
+    type !== 'token-authorization' && {
+      pathname: '/konto',
+      label: t('notifications/links/merci'),
+    },
   ].filter(Boolean)
 
   const isProjectR = context === 'projectr'
@@ -177,7 +177,7 @@ const Page = ({ router: { query: rawQuery }, t, me, inNativeApp }) => {
         </div>
         {inNativeApp && (
           <Link href='/' passHref {...styles.close}>
-            <CloseIcon {...colorScheme.set('fill', 'text')} size={32} />
+            <IconClose {...colorScheme.set('fill', 'text')} size={32} />
           </Link>
         )}
         <div

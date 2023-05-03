@@ -10,13 +10,13 @@ import { useColorContext } from '../../Colors/ColorContext'
 import { stripTag } from './helpers/tagHelper'
 import { renderCommentMdast } from '../Internal/Comment/render'
 import IconButton from '../../IconButton'
-import { ShareIcon } from '../../Icons'
 import ActionsMenu, {
   ActionsMenuItemPropType,
 } from '../Internal/Comment/ActionsMenu'
 import HeaderMetaLine from '../Internal/Comment/HeaderMetaLine'
 import { pxToRem } from '../../Typography/utils'
 import { DiscussionContext } from '../DiscussionContext'
+import { IconShare } from '@republik/icons'
 
 const HIGHLIGHT_PADDING = 7
 
@@ -239,7 +239,7 @@ const StatementNode = ({
           title={t('styleguide/CommentActions/share')}
           label={t('styleguide/CommentActions/share/short')}
           labelShort={t('styleguide/CommentActions/share/short')}
-          Icon={ShareIcon}
+          Icon={IconShare}
           onClick={() => handleShare(comment)}
           size={20}
         />

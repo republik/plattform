@@ -16,9 +16,9 @@ import {
   A,
   plainButtonRule,
 } from '@project-r/styleguide'
-import { BookmarkBorderIcon } from '@project-r/styleguide'
 import { getCollectionItems, registerQueryVariables } from './queries'
 import Link from 'next/link'
+import { IconBookmarkBorder } from '@republik/icons'
 
 const getConnection = (data) => data.me.collectionItems
 
@@ -32,7 +32,7 @@ const mergeConnection = (data, connection) => {
   }
 }
 
-const bookmarkIcon = <BookmarkBorderIcon size={22} key='icon' />
+const bookmarkIcon = <IconBookmarkBorder size={22} key='icon' />
 
 const Page = ({ t, me }) => {
   const showProgressTabs = !!me?.progressConsent
