@@ -24,7 +24,7 @@
   ],
   "dependencies": {
     "@apollo/client": "~3.5.10",
-    "@next/bundle-analyzer": "^13.3.1",
+    "@next/bundle-analyzer": "^13.3.4",
     "@project-r/styleguide": "*",
     "@republik/icons": "*",
     "@republik/nextjs-apollo-client": "*",
@@ -48,7 +48,7 @@
     "lodash.debounce": "^4.0.8",
     "mdast-react-render": "^1.2.0",
     "moment": "^2.29.1",
-    "next": "^13.3.1",
+    "next": "^13.3.4",
     "prop-types": "^15.7.2",
     "react": "^18.2.0",
     "react-autosize-textarea": "^5.0.1",
@@ -64,7 +64,7 @@
     "validator": "^10.11.0"
   },
   "devDependencies": {
-    "@next/eslint-plugin-next": "^13.3.1",
+    "@next/eslint-plugin-next": "^13.3.4",
     "@republik/eslint-config-frontend": "*",
     "@republik/tsconfig": "*",
     "@testing-library/jest-dom": "^5.16.5",
