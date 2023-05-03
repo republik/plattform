@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ReactNode } from 'react'
 import { css } from 'glamor'
 import { ResolvedAuthor } from '../Editor/custom-types'
 import { useColorContext } from '../Colors/ColorContext'
@@ -8,6 +8,7 @@ import { PLACEHOLDER } from '../Figure/Slate'
 import { useRenderContext } from '../Editor/Render/Context'
 
 type FlyerProps = {
+  children?: ReactNode
   resolvedAuthor?: ResolvedAuthor
   authorId?: string
   attributes: any

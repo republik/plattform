@@ -15,6 +15,10 @@ const styles = {
 }
 
 const propTypes = {
+  children: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.node),
+    PropTypes.node,
+  ]),
   t: PropTypes.func.isRequired,
   loadMore: PropTypes.func.isRequired,
   moreAvailableCount: PropTypes.number,

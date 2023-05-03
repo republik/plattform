@@ -6,10 +6,10 @@ import { A } from '../Typography'
 import { sansSerifRegular15, sansSerifRegular18 } from '../Typography/styles'
 import { Figure, FigureImage, FigureCaption } from '../Figure'
 import { Header } from './Header'
-import { PlayIcon } from '../Icons'
 import { convertStyleToRem } from '../Typography/utils'
 import { useColorContext } from '../Colors/useColorContext'
 import RawHtml from '../RawHtml'
+import { IconPlay } from '@republik/icons'
 
 const styles = {
   container: css({
@@ -83,7 +83,7 @@ const Tweet = ({
           <a href={url} {...styles.mediaContainer}>
             {playable && (
               <span {...styles.playIcon}>
-                <PlayIcon />
+                <IconPlay />
               </span>
             )}
             <FigureImage src={image} alt='' />

@@ -252,6 +252,7 @@ const Query = compose(
     skip: (props) => !props.me || specialGroups[props.variables.slug],
     options: ({ variables: { slug } }) => ({
       fetchPolicy: 'network-only',
+      ssr: false,
       variables: {
         slug,
       },
@@ -267,6 +268,7 @@ const Query = compose(
   graphql(query, {
     skip: (props) => specialGroups[props.variables.slug],
     options: ({ variables }) => ({
+      ssr: false,
       variables,
     }),
     props: ({ data }) => ({
@@ -304,6 +306,7 @@ const Query = compose(
     skip: (props) => !props.me || !specialGroups[props.variables.slug],
     options: ({ variables: { slug } }) => ({
       fetchPolicy: 'network-only',
+      ssr: false,
       variables: specialGroups[slug].forcedVariables,
     }),
     props: ({ data }) => ({
@@ -317,6 +320,7 @@ const Query = compose(
   graphql(specialQuery, {
     skip: (props) => !specialGroups[props.variables.slug],
     options: ({ variables: { slug, ...variables } }) => ({
+      ssr: false,
       variables: {
         ...variables,
         ...specialGroups[slug].forcedVariables,

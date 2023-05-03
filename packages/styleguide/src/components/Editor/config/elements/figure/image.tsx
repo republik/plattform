@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import {
   ElementConfigI,
   ElementFormProps,
@@ -7,7 +7,6 @@ import {
 import ImageInput from '../../../Forms/ImageInput'
 import { Label } from '../../../../Typography'
 import { css } from 'glamor'
-import Checkbox from '../../../../Form/Checkbox'
 
 const styles = {
   container: css({

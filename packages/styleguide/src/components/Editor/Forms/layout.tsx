@@ -1,6 +1,6 @@
 import React from 'react'
 import { css } from 'glamor'
-import { MdInfoOutline } from 'react-icons/md'
+import { IconInfoOutline } from '@republik/icons'
 
 export const formStyles = {
   section: css({ ':not(:first-child)': { marginTop: 64 } }),
@@ -13,7 +13,7 @@ export const formStyles = {
 export const Hint = ({ text }) => (
   <p {...formStyles.hint}>
     <small>
-      <MdInfoOutline style={{ verticalAlign: 'sub' }} /> {text}
+      <IconInfoOutline style={{ verticalAlign: 'sub' }} /> {text}
     </small>
   </p>
 )

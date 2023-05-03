@@ -1,6 +1,6 @@
 import React, { ChangeEvent } from 'react'
 import { css } from 'glamor'
-import { CloseIcon } from '../../Icons'
+import { IconClose } from '@republik/icons'
 
 const styles = {
   label: css({
@@ -61,7 +61,7 @@ const ImageInput: React.FC<{
   >
     <label>
       {src && (
-        <CloseIcon
+        <IconClose
           {...styles.close}
           onClick={(e) => {
             e.preventDefault()

@@ -1,4 +1,3 @@
-const fetch = require('isomorphic-unfetch')
 const debug = require('debug')('cdn')
 
 const { KEYCDN_API_KEY, KEYCDN_ZONE_ID, KEYCDN_ZONE_URL } = process.env

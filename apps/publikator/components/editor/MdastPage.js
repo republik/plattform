@@ -46,7 +46,7 @@ import {
   ErrorBoundary,
   plainButtonRule,
 } from '@project-r/styleguide'
-import SettingsIcon from 'react-icons/lib/fa/cogs'
+import { IconGears as SettingsIcon } from '@republik/icons'
 
 import createDebug from 'debug'
 import {

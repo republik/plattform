@@ -58,9 +58,7 @@ export function makeSSRDataFetchingHelpers<U>(
         // Pass headers of the client-request to the apollo-link
         headers: context.req.headers,
         onResponse: (response) => {
-          // headers.raw() is a node-fetch specific API and apparently the only way to get multiple cookies
-          // https://github.com/bitinn/node-fetch/issues/251
-          const cookies = response.headers.raw()['set-cookie']
+          const cookies = response.headers.get('Set-Cookie')
           if (cookies) {
             context.res.setHeader('Set-Cookie', cookies)
           }

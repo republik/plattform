@@ -5,9 +5,7 @@
   "main": "./lib/index.ts",
   "workspaces": {
     "nohoist": [
-      "next",
-      "react",
-      "react-dom"
+      "next"
     ]
   },
   "scripts": {
@@ -33,8 +31,6 @@
     "@next/eslint-plugin-next": "^13.2.4",
     "@republik/eslint-config-frontend": "*",
     "@republik/tsconfig": "*",
-    "@types/node": "16",
-    "@types/react": "^18.0.31",
-    "@types/react-dom": "^18.0.11"
+    "@types/node": "16"
   }
 }

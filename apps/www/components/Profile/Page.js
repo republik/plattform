@@ -4,7 +4,7 @@ import { graphql } from '@apollo/client/react/hoc'
 import { gql } from '@apollo/client'
 import { css } from 'glamor'
 import { withRouter } from 'next/router'
-import { IconButton, ReportIcon } from '@project-r/styleguide'
+import { IconButton } from '@project-r/styleguide'
 import withT, { t } from '../../lib/withT'
 import withMe from '../../lib/apollo/withMe'
 
@@ -44,6 +44,7 @@ import { documentListQueryFragment } from '../Feed/DocumentListContainer'
 import Link from 'next/link'
 import { InnerPaynote } from '../Article/PayNote'
 import { useReportUserMutation } from './graphql/useReportUserMutation'
+import { IconReport } from '@republik/icons'
 
 const SIDEBAR_TOP = 20
 const PORTRAIT_SIZE_M = TESTIMONIAL_IMAGE_SIZE
@@ -509,7 +510,7 @@ const LoadedProfile = (props) => {
                 {!isMe && (
                   <div {...styles.headInfoReportButton}>
                     <IconButton
-                      Icon={ReportIcon}
+                      Icon={IconReport}
                       title={t('profile/report/label')}
                       onClick={() => reportUser(user.id)}
                       style={{ margin: 0 }}

@@ -1,7 +1,5 @@
 import { useState } from 'react'
 import { css, merge } from 'glamor'
-import { MdError as ProblemIcon } from 'react-icons/md'
-import { MdCallReceived as ReceivedIcon } from 'react-icons/md'
 
 import { Label, A, colors } from '@project-r/styleguide'
 
@@ -12,6 +10,7 @@ import Mail from './Mail'
 import Address, { Bucket as AddressBucket } from './Address'
 
 import { MAILBOX_SELF } from '../../server/constants'
+import { IconCallReceived, IconError } from '@republik/icons'
 
 const self = MAILBOX_SELF?.split(',') ?? []
 
@@ -36,9 +35,9 @@ export const Subject = ({ mail }) => {
 
   return (
     <>
-      {hasFrom && !isSelfSent && <ReceivedIcon {...styles.icon} />}
+      {hasFrom && !isSelfSent && <IconCallReceived {...styles.icon} />}
       {mail.status !== 'sent' && mail.error && (
-        <ProblemIcon {...merge(styles.icon, styles.error)} />
+        <IconError {...merge(styles.icon, styles.error)} />
       )}
       {mail.subject || mail.template || mail.type}
     </>

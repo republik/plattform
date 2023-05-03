@@ -1,8 +1,8 @@
+/// <reference lib="dom" />
 require('@orbiting/backend-modules-env').config()
 
 import yargs from 'yargs'
 import Promise from 'bluebird'
-import fetch from 'node-fetch'
 import moment from 'moment'
 import _debug from 'debug'
 
@@ -33,15 +33,19 @@ import { Commit } from '../loaders/Commit'
 const debug = _debug('publikator:script:copyImages')
 
 const fetchToBlob = (url: string) =>
-  fetch(url).then((res) => {
-    if (!res.ok) {
-      throw Error(
-        `Unable to fetch url "${url}" (HTTP Status Code: ${res.status})`,
-      )
-    }
+  fetch(url)
+    .then((res) => {
+      if (!res.ok) {
+        throw Error(
+          `Unable to fetch url "${url}" (HTTP Status Code: ${res.status})`,
+        )
+      }
 
-    return res.buffer()
-  })
+      return res.arrayBuffer()
+    })
+    .then((arrayBuffer) => {
+      return Buffer.from(arrayBuffer)
+    })
 
 interface Image {
   path: string

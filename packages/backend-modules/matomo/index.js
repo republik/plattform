@@ -1,6 +1,5 @@
 const debug = require('debug')('matomo:api')
 const Promise = require('bluebird')
-const fetch = require('node-fetch')
 
 const retry = require('@zeit/fetch-retry')
 

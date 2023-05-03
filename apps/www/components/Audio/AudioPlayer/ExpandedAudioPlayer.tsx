@@ -3,7 +3,6 @@ import { css } from 'glamor'
 import { useRouter } from 'next/router'
 import {
   IconButton,
-  ExpandMoreIcon,
   mediaQueries,
   useMediaQuery,
   Scroller,
@@ -26,6 +25,7 @@ import {
   AudioPlayerLocations,
   AudioPlayerActions,
 } from '../types/AudioActionTracking'
+import { IconExpandMore } from '@republik/icons'
 
 const styles = {
   root: css({
@@ -199,7 +199,7 @@ const ExpandedAudioPlayer = ({
           {t('AudioPlayer/Queue/ActiveHeading')}
         </p>
         <IconButton
-          Icon={ExpandMoreIcon}
+          Icon={IconExpandMore}
           size={32}
           style={{ marginRight: 0, marginTop: -8 }}
           onClick={handleMinimize}

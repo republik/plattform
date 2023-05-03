@@ -1,12 +1,11 @@
-import React from 'react'
 import { css } from 'glamor'
 
 import { Picker } from './Picker'
 import MemoTree from './MemoTree'
 import IconButton from '../../../IconButton'
-import { RemoveIcon } from '../../../Icons'
 import { Interaction } from '../../../Typography'
 import { markerKeys } from '../../../Marker'
+import { IconRemove } from '@republik/icons'
 
 const styles = {
   tooling: css({
@@ -56,7 +55,7 @@ const MemoForm = ({
         {!!deleteMemo && (
           <IconButton
             label={t('memo/modal/remove')}
-            Icon={RemoveIcon}
+            Icon={IconRemove}
             onClick={deleteMemo}
           />
         )}

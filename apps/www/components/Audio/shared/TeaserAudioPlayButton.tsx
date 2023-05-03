@@ -1,12 +1,11 @@
 import {
-  PauseCircleIcon,
-  PlayCircleIcon,
   plainButtonRule,
 } from '@project-r/styleguide'
 
 import useAudioQueue from '../hooks/useAudioQueue'
 import { useAudioContext } from '../AudioProvider'
 import { AudioPlayerLocations } from '../types/AudioActionTracking'
+import { IconPauseCircle, IconPlayCircleOutline } from '@republik/icons'
 
 type FrontAudioPlayButtonProps = {
   documentId?: string
@@ -56,13 +55,13 @@ const TeaserAudioPlayButton = ({ documentId }: FrontAudioPlayButtonProps) => {
       {isActivePlayerItem ? (
         <>
           {isPlaying ? (
-            <PauseCircleIcon size={36} />
+            <IconPauseCircle size={36} />
           ) : (
-            <PlayCircleIcon size={36} />
+            <IconPlayCircleOutline size={36} />
           )}
         </>
       ) : (
-        <PlayCircleIcon size={36} />
+        <IconPlayCircleOutline size={36} />
       )}
     </button>
   )

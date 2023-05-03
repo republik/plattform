@@ -2,11 +2,6 @@ import React from 'react'
 import { css } from 'glamor'
 import {
   IconButton,
-  ReplayIcon,
-  ForwardIcon,
-  PlayIcon,
-  PauseIcon,
-  SkipNextIcon,
   Spinner,
   mediaQueries,
 } from '@project-r/styleguide'
@@ -14,6 +9,7 @@ import { useTranslation } from '../../../../lib/withT'
 import { AudioPlayerProps } from '../shared'
 import PlaybackRateControl from './PlaybackRateControl'
 import Scrubber from './Scrubber'
+import { IconForward, IconPause, IconPlay, IconReplay, IconSkipNext } from '@republik/icons'
 
 const styles = {
   root: css({
@@ -102,7 +98,7 @@ const AudioControl = ({
             size={32}
             fillColorName={'text'}
             onClick={handleBackward}
-            Icon={ReplayIcon}
+            Icon={IconReplay}
             style={{ marginRight: 0 }}
           />
           {isLoading ? (
@@ -116,7 +112,7 @@ const AudioControl = ({
                 `styleguide/AudioPlayer/${isPlaying ? 'pause' : 'play'}`,
               )}
               aria-live='assertive'
-              Icon={isPlaying ? PauseIcon : PlayIcon}
+              Icon={isPlaying ? IconPause : IconPlay}
               size={64}
               fillColorName={'text'}
               style={{ marginRight: 0 }}
@@ -126,14 +122,14 @@ const AudioControl = ({
             size={32}
             fillColorName={'text'}
             onClick={handleForward}
-            Icon={ForwardIcon}
+            Icon={IconForward}
             style={{ marginRight: 0 }}
           />
           <IconButton
             size={32}
             fillColorName={'text'}
             onClick={handleSkipToNext}
-            Icon={SkipNextIcon}
+            Icon={IconSkipNext}
             style={{ marginRight: 0 }}
           />
         </div>
