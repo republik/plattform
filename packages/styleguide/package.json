@@ -4,11 +4,26 @@
   "main": "dist/lib.js",
   "module": "src/lib.ts",
   "types": "dist/lib.d.ts",
+  "exports": {
+    ".": {
+      "import": "./src/lib.ts",
+      "require": "./dist/lib.js"
+    },
+    "./chart": {
+      "import": "./src/chart.ts",
+      "require": "./dist/chart.js"
+    },
+    "./editor": {
+      "import": "./src/editor.ts",
+      "require": "./dist/editor.js"
+    }
+  },
   "engines": {
-    "node": "^16.0.0"
+    "node": "^18.0.0"
   },
   "peerDependencies": {
     "@apollo/client": "~3.5.10",
+    "@republik/icons": "*",
     "d3-array": "1.x",
     "d3-color": "1.x",
     "d3-dsv": "1.x",
@@ -20,7 +35,6 @@
     "d3-time-format": "2.x",
     "downshift": "^2.2.2",
     "glamor": "^2.20.40",
-    "isomorphic-unfetch": "3.x",
     "lodash": "4.x",
     "mdast-react-render": ">=1.1",
     "prop-types": ">=15.5",
@@ -38,6 +52,7 @@
     "@catalog/core": "^4.0.1-canary.2",
     "@orbiting/remark-preset": "^1.2.4",
     "@republik/eslint-config-frontend": "*",
+    "@republik/icons": "*",
     "@testing-library/jest-dom": "^5.16.3",
     "@testing-library/react": "^12.1.4",
     "@types/jest": "^27.5.0",
@@ -67,7 +82,6 @@
     "graphql": "^15.3.0",
     "gsheets": "^3.0.1",
     "identity-obj-proxy": "^3.0.0",
-    "isomorphic-unfetch": "^3.1.0",
     "jest": "^27.5.1",
     "lodash": "^4.17.21",
     "mdast-react-render": "^1.1.0",
@@ -125,7 +139,6 @@
   },
   "dependencies": {
     "body-scroll-lock": "^3.1.5",
-    "react-icons": "^4.3.1",
     "serve": "^13.0.2",
     "slate": "^0.88.1",
     "slate-history": "^0.86.0",

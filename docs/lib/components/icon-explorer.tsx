@@ -1,4 +1,4 @@
-import { useDeferredValue, useState } from 'react'
+import { ComponentType, SVGProps, useDeferredValue, useState } from 'react'
 import styles from './icon-explorer.module.css'
 
 export const IconExplorer = ({
@@ -9,24 +9,7 @@ export const IconExplorer = ({
   const [search, setSearch] = useState('')
   const deferredSearch = useDeferredValue(search)
 
-  const items = [
-    ...icons,
-    ...icons,
-    ...icons,
-    ...icons,
-    ...icons,
-    ...icons,
-    ...icons,
-    ...icons,
-    ...icons,
-    ...icons,
-    ...icons,
-    ...icons,
-    ...icons,
-    ...icons,
-    ...icons,
-    ...icons,
-  ].filter(({ title }, i) =>
+  const items = icons.filter(({ title }, i) =>
     `${title}${i}`.match(new RegExp(deferredSearch, 'i')),
   )
 
@@ -49,7 +32,9 @@ export const IconExplorer = ({
           return (
             <li key={title + i} className={styles.icon}>
               <div className={styles.iconTitle}>{title}</div>
-              <Icon />
+              <div className={styles.iconWrapper}>
+                <Icon />
+              </div>
             </li>
           )
         })}

@@ -3,7 +3,7 @@
   "private": true,
   "version": "1.0.0",
   "engines": {
-    "node": "^16.0.0"
+    "node": "^18.0.0"
   },
   "description": "",
   "main": "server/index.js",
@@ -67,6 +67,7 @@
     "@juggle/resize-observer": "^3.4.0",
     "@next/bundle-analyzer": "^12.3.1",
     "@project-r/styleguide": "*",
+    "@republik/icons": "*",
     "@republik/nextjs-apollo-client": "*",
     "@stripe/react-stripe-js": "^1.7.0",
     "@use-it/event-listener": "^0.1.7",
@@ -102,7 +103,6 @@
     "graphql": "^15.3.0",
     "helmet": "^3.23.3",
     "immer": "^9.0.12",
-    "isomorphic-unfetch": "^3.1.0",
     "jose": "^4.8.3",
     "jstoxml": "^3.2.3",
     "load-script": "^1.0.0",

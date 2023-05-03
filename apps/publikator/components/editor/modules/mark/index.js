@@ -1,22 +1,24 @@
 import { matchMark, createMarkButton, buttonStyles } from '../../utils'
 
-import BoldIcon from 'react-icons/lib/fa/bold'
-import ItalicIcon from 'react-icons/lib/fa/italic'
-import StrikethroughIcon from 'react-icons/lib/fa/strikethrough'
-import SubIcon from 'react-icons/lib/fa/subscript'
-import SupIcon from 'react-icons/lib/fa/superscript'
+import {
+  IconFormatStrikethrough,
+  IconFormatBold,
+  IconFormatItalic,
+  IconFormatSuperscript,
+  IconFormatSubscript,
+} from '@republik/icons'
 
 import MarkdownSerializer from 'slate-mdast-serializer'
 
 const icons = {
-  strong: BoldIcon,
-  emphasis: ItalicIcon,
-  delete: StrikethroughIcon,
-  sub: SubIcon,
-  sup: SupIcon,
+  strong: IconFormatBold,
+  emphasis: IconFormatItalic,
+  delete: IconFormatStrikethrough,
+  sup: IconFormatSuperscript,
+  sub: IconFormatSubscript,
 }
 
-export default ({ rule, subModules, TYPE }) => {
+const MarkComponent = ({ rule, subModules, TYPE }) => {
   const { type, mdastType: mdastTypeOption } = rule.editorOptions
   const mdastType = mdastTypeOption || type
   if (!mdastType) {
@@ -66,7 +68,7 @@ export default ({ rule, subModules, TYPE }) => {
             data-disabled={disabled}
             data-visible={visible}
           >
-            <Icon />
+            <Icon size={24} />
           </span>
         )),
       ],
@@ -82,3 +84,5 @@ export default ({ rule, subModules, TYPE }) => {
     ],
   }
 }
+
+export default MarkComponent

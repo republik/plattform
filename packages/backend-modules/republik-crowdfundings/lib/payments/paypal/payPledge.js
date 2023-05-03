@@ -1,4 +1,3 @@
-const fetch = require('isomorphic-unfetch')
 const querystring = require('querystring')
 
 const { PAYPAL_USER, PAYPAL_PWD, PAYPAL_SIGNATURE, PAYPAL_URL } = process.env

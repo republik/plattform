@@ -5,7 +5,6 @@ import { gql } from '@apollo/client'
 import { descending } from 'd3-array'
 import { css } from 'glamor'
 
-import { CheckIcon } from '@project-r/styleguide'
 
 import withT from '../../lib/withT'
 import { PUBLIC_BASE_URL, CDN_FRONTEND_BASE_URL } from '../../lib/constants'
@@ -24,9 +23,9 @@ import {
   colors,
   IconButton,
 } from '@project-r/styleguide'
-import { DiscussionIcon } from '@project-r/styleguide'
 import Link from 'next/link'
 import { withDefaultSSR } from '../../lib/apollo/helpers'
+import { IconCheck, IconDiscussion } from '@republik/icons'
 
 const query = gql`
   query getCardGroups {
@@ -221,11 +220,11 @@ const Page = ({ data, data: { cardGroups }, router, t }) => (
                       <br />
                       {t('pages/cardGroups/elected/nationalCouncil')}{' '}
                       <strong>{data.nElected.totalCount}</strong>{' '}
-                      <CheckIcon {...mdCheckProps} />
+                      <IconCheck {...mdCheckProps} />
                       <br />
                       {t('pages/cardGroups/elected/councilOfStates')}{' '}
                       <strong>{data.sElected.totalCount}</strong>{' '}
-                      <CheckIcon {...mdCheckProps} />
+                      <IconCheck {...mdCheckProps} />
                     </a>
                   </Link>
                 </div>
@@ -297,7 +296,7 @@ const Page = ({ data, data: { cardGroups }, router, t }) => (
                                 <strong>
                                   {cardGroup.sElected.totalCount}
                                 </strong>{' '}
-                                <CheckIcon {...mdCheckProps} />
+                                <IconCheck {...mdCheckProps} />
                               </>
                             )}
                             {!!openSeats && (
@@ -332,7 +331,7 @@ const Page = ({ data, data: { cardGroups }, router, t }) => (
                             passHref
                           >
                             <IconButton
-                              Icon={DiscussionIcon}
+                              Icon={IconDiscussion}
                               label={commentCount}
                               fill={colors.primary}
                             />

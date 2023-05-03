@@ -3,7 +3,6 @@ import { css } from 'glamor'
 import {
   A,
   Center,
-  DiscussionIcon,
   Editorial,
   inQuotes,
   Interaction,
@@ -36,6 +35,7 @@ import { useDiscussion } from '../components/Discussion/context/DiscussionContex
 import Meta from '../components/Frame/Meta'
 import { getFocusUrl } from '../components/Discussion/shared/CommentLink'
 import StatusError from '../components/StatusError'
+import { IconDiscussion } from '@republik/icons'
 
 const styles = {
   container: css({
@@ -203,7 +203,7 @@ const DialogContent = ({ tab, activeDiscussionId, serverContext }) => {
                     >
                       {t('feedback/activeDiscussions/label')}
                       <span style={{ position: 'absolute', right: 0, top: -1 }}>
-                        <DiscussionIcon
+                        <IconDiscussion
                           size={24}
                           {...colorScheme.set('fill', 'primary')}
                         />

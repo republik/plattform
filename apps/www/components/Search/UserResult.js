@@ -1,6 +1,5 @@
 import { useMemo } from 'react'
 import { css } from 'glamor'
-import { CheckIcon } from '@project-r/styleguide'
 
 import {
   Editorial,
@@ -11,6 +10,7 @@ import {
 import { findHighlight } from '../../lib/utils/mdast'
 import { formatExcerpt } from '../../lib/utils/format'
 import Link from 'next/link'
+import { IconCheck } from '@republik/icons'
 
 export const profilePictureSize = 70
 export const profilePictureMargin = 10
@@ -139,7 +139,7 @@ export const UserResult = ({ node }) => {
                 {credential.description}
               </div>
               {credential.verified && (
-                <CheckIcon
+                <IconCheck
                   {...styles.verifiedCheck}
                   {...colorScheme.set('fill', 'primary')}
                 />

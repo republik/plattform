@@ -3,8 +3,8 @@ import { Block } from 'slate'
 import { FigureGroupButton, FigureGroupForm, isFigureGroup } from './ui'
 import { matchBlock } from '../../utils'
 import { createRemoveEmptyKeyHandler } from '../../utils/keyHandlers'
-import GalleryIcon from 'react-icons/lib/md/filter'
 import InlineUI from '../../utils/InlineUI'
+import { IconFilter } from '@republik/icons'
 
 export const getData = (data) => ({
   columns: 2,
@@ -108,7 +108,7 @@ const figureGroupPlugin = (options) => {
           <InlineUI node={node} editor={editor} isMatch={isFigureGroup} />
           {node.data.get('slideshow') > 0 && (
             <div style={{ position: 'absolute', left: -25 }}>
-              <GalleryIcon />
+              <IconFilter />
             </div>
           )}
           {children}

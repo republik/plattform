@@ -1,6 +1,5 @@
 import React, { useMemo } from 'react'
 import { css } from 'glamor'
-import { CheckIcon } from '../../../Icons'
 import {
   sansSerifMedium16,
   sansSerifRegular14,
@@ -10,6 +9,7 @@ import { convertStyleToRem, pxToRem } from '../../../Typography/utils'
 import { useColorContext } from '../../../Colors/ColorContext'
 import PropTypes, { InferProps } from 'prop-types'
 import { DisplayAuthorPropType } from '../PropTypes'
+import { IconCheck, IconEditCircle } from '@republik/icons'
 
 const buttonStyle = {
   background: 'none',
@@ -132,7 +132,7 @@ export const CommentHeaderProfile = ({
                     {credential.description}
                   </div>
                   {credential.verified && (
-                    <CheckIcon
+                    <IconCheck
                       {...styles.verifiedCheck}
                       {...colorScheme.set('color', 'primary')}
                     />
@@ -193,7 +193,7 @@ export const Header = ({
         />
         {onClick && (
           <div {...styles.action} {...colorScheme.set('color', 'primary')}>
-            <EditIcon />
+            <IconEditCircle size={24} />
           </div>
         )}
       </div>
@@ -202,13 +202,3 @@ export const Header = ({
 }
 
 Header.propTypes = headerPropTypes
-
-const EditIcon = () => (
-  <svg width='24px' height='24px' viewBox='0 0 24 24'>
-    <circle fill='currentColor' cx='12' cy='12' r='12' />
-    <path
-      d='M6,15.5003472 L6,18 L8.49965283,18 L15.8719622,10.6276906 L13.3723094,8.12803777 L6,15.5003472 Z M17.8050271,8.69462575 C18.064991,8.43466185 18.064991,8.01472018 17.8050271,7.75475628 L16.2452437,6.19497292 C15.9852798,5.93500903 15.5653381,5.93500903 15.3053743,6.19497292 L14.0855437,7.4148035 L16.5851965,9.91445633 L17.8050271,8.69462575 Z'
-      fill='white'
-    />
-  </svg>
-)

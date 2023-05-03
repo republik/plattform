@@ -1,4 +1,3 @@
-const fetch = require('isomorphic-unfetch')
 const debug = require('debug')('publikator:lib:mailchimp:updateCampaign')
 
 const {

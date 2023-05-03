@@ -1,9 +1,8 @@
-const { Roles } = require('@orbiting/backend-modules-auth')
 const Collection = require('../../../lib/Collection')
 
 module.exports = async (_, { mediaId }, context) => {
   const { user: me } = context
-  if (!Roles.userIsInRoles(me, ['member'])) {
+  if (!me) {
     return
   }
   return Collection.getMediaProgressItem(

@@ -2,7 +2,6 @@ const debug = require('debug')('publikator:mutation:commit')
 const sharp = require('sharp')
 const dataUriToBuffer = require('data-uri-to-buffer')
 const Promise = require('bluebird')
-const fetch = require('isomorphic-unfetch')
 
 const {
   lib: {
@@ -50,7 +49,8 @@ const maybeFetchToBlob = async (url) => {
   }
 
   return fetch(url)
-    .then((r) => r.buffer())
+    .then((res) => res.arrayBuffer())
+    .then((res) => Buffer.from(res))
     .then(generateImageData)
 }
 

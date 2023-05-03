@@ -842,13 +842,7 @@ const findTemplates = async function (elastic, template, repoId) {
     ...indexRef,
     size: 10000,
     body: {
-      _source: [
-        'meta.repoId',
-        'meta.title',
-        'meta.description',
-        'meta.kind',
-        'meta.template',
-      ],
+      _source: ['meta'],
       query: {
         bool: {
           must: {

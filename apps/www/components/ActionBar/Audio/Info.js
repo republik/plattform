@@ -1,6 +1,6 @@
 import { css } from 'glamor'
 import Link from 'next/link'
-import { useMemo } from 'react'
+import { Fragment, useMemo } from 'react'
 
 import {
   Editorial,
@@ -39,15 +39,17 @@ const Contributors = ({ contributors }) => {
   const { t } = useTranslation()
 
   const names = intersperse(
-    contributors.map((s) =>
-      s.user?.slug ? (
-        <Link href={`/~${s.user.slug}`} passHref>
-          <Editorial.A>{s?.user?.name || s.name}</Editorial.A>
-        </Link>
-      ) : (
-        s.name
-      ),
-    ),
+    contributors.map((s) => (
+      <Fragment key={s.user?.slug ?? s.name}>
+        {s.user?.slug ? (
+          <Link href={`/~${s.user.slug}`} passHref>
+            <Editorial.A>{s?.user?.name || s.name}</Editorial.A>
+          </Link>
+        ) : (
+          s.name
+        )}
+      </Fragment>
+    )),
     (_, i) => <span key={i}>, </span>,
   )
 
@@ -172,20 +174,21 @@ const Info = ({ document, handlePlay }) => {
       {intersperse(
         [
           kind === 'readAloud' && !!mp3 && (
-            <Contributors contributors={contributorsVoice} />
+            <Contributors contributors={contributorsVoice} key='contributors' />
           ),
           kind === 'syntheticReadAloud' &&
             !!mp3 &&
             (!willBeReadAloud || !readAloudSubscription) && (
-              <PlaySyntheticReadAloud onPlay={handlePlay} />
+              <PlaySyntheticReadAloud onPlay={handlePlay} key='synthetic' />
             ),
           (kind !== 'readAloud' || !mp3) &&
             !!willBeReadAloud &&
             readAloudSubscription && (
-              <span {...colorScheme.set('color', 'textSoft')}>
+              <span {...colorScheme.set('color', 'textSoft')} key='subscribe'>
                 {t.elements('article/actionbar/audio/info/readAloud', {
                   subscribe: (
                     <CalloutMenu
+                      key='subscribe'
                       inline
                       Element={(props) => (
                         <button
@@ -209,12 +212,15 @@ const Info = ({ document, handlePlay }) => {
                   ),
                   synthetic:
                     kind === 'syntheticReadAloud' && !!mp3 ? (
-                      <span>
+                      <span key='synthetic'>
                         {t.elements(
                           'article/actionbar/audio/info/readAloud/synthetic',
                           {
                             action: (
-                              <PlaySyntheticReadAloud onPlay={handlePlay}>
+                              <PlaySyntheticReadAloud
+                                onPlay={handlePlay}
+                                key='syntheticaction'
+                              >
                                 {t(
                                   'article/actionbar/audio/info/readAloud/synthetic/action',
                                 )}

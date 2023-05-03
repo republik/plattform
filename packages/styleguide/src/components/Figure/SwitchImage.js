@@ -1,7 +1,7 @@
 import React from 'react'
 import { useColorContext } from '../Colors/useColorContext'
 
-const SwitchImage = ({ src, srcSet, dark, alt, ...props }) => {
+const SwitchImage = ({ src, srcSet, dark, alt, maxWidth, ...props }) => {
   const [colorScheme] = useColorContext()
 
   return (

@@ -3,8 +3,6 @@ import { keyframes, css } from 'glamor'
 import compose from 'lodash/flowRight'
 import { graphql } from '@apollo/client/react/hoc'
 import { gql } from '@apollo/client'
-import MdHearingIcon from 'react-icons/lib/md/hearing'
-import MdPlayArrow from 'react-icons/lib/md/play-arrow'
 import {
   IconButton,
   AudioPlayer,
@@ -14,6 +12,7 @@ import {
   OverlayToolbar,
   Interaction,
 } from '@project-r/styleguide'
+import { IconHearing, IconPlay } from '@republik/icons'
 
 import * as fragments from '../../lib/graphql/fragments'
 import withT from '../../lib/withT'
@@ -66,7 +65,7 @@ const SynthesizedAudio = withT(({ t, derivative, onClickGenerate }) => {
         <IconButton
           invert
           style={{ marginRight: 0 }}
-          Icon={MdHearingIcon}
+          Icon={IconHearing}
           label='Audio-Version erzeugen'
           labelShort=''
           size={24}
@@ -79,7 +78,7 @@ const SynthesizedAudio = withT(({ t, derivative, onClickGenerate }) => {
             marginRight: 0,
             animation: `${pulsate} 0.5s linear infinite alternate`,
           }}
-          Icon={MdHearingIcon}
+          Icon={IconHearing}
           label='Audio-Version wird erzeugt'
           labelShort=''
           size={24}
@@ -91,7 +90,7 @@ const SynthesizedAudio = withT(({ t, derivative, onClickGenerate }) => {
             invert
             style={{ marginRight: 0 }}
             fillColorName='error'
-            Icon={MdHearingIcon}
+            Icon={IconHearing}
             label='Audio-Version fehlerhaft'
             labelShort='Fehler'
             size={24}
@@ -108,7 +107,7 @@ const SynthesizedAudio = withT(({ t, derivative, onClickGenerate }) => {
                 <P>Derivative-ID: {derivative.id}</P>
                 <IconButton
                   style={{ marginTop: 10 }}
-                  Icon={MdHearingIcon}
+                  Icon={IconHearing}
                   label='Audio-Version erneut erzeugen'
                   labelShort=''
                   size={24}
@@ -125,7 +124,7 @@ const SynthesizedAudio = withT(({ t, derivative, onClickGenerate }) => {
         <IconButton
           invert
           style={{ marginRight: 0 }}
-          Icon={MdPlayArrow}
+                Icon={IconPlay}
           label='Audio-Version anhören'
           labelShort='anhören'
           size={24}

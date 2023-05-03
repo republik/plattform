@@ -1,5 +1,5 @@
+import { IconParagraph } from '@republik/icons'
 import { ElementConfigI } from '../../custom-types'
-import { ParagraphIcon } from '../../../Icons'
 
 export const config: ElementConfigI = {
   structure: [
@@ -13,5 +13,5 @@ export const config: ElementConfigI = {
       },
     },
   },
-  button: { icon: ParagraphIcon },
+  button: { icon: IconParagraph },
 }

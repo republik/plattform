@@ -9,10 +9,10 @@ import {
 } from '../../../Typography/styles'
 import { mUp } from '../../../../theme/mediaQueries'
 import { linkStyle } from '../../../Typography'
-import { TwitterIcon } from '../../../Icons'
 import { useColorContext } from '../../../Colors/ColorContext'
 import { timeFormat } from '../../../../lib/timeFormat'
 import PropTypes from 'prop-types'
+import { IconLogoTwitter } from '@republik/icons'
 
 const styles = {
   link: css({
@@ -160,7 +160,7 @@ export const CommentEmbed = ({ embed, mentioningDocument }) => {
         )}
         {embed?.userScreenName && (
           <Interaction.P {...styles.paragraph}>
-            <TwitterIcon size={19} {...colorScheme.set('fill', 'disabled')} />{' '}
+            <IconLogoTwitter size={19} {...colorScheme.set('fill', 'disabled')} />{' '}
             {dateFormat(new Date(embed.createdAt))}
           </Interaction.P>
         )}

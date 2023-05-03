@@ -4,10 +4,10 @@ import { css } from 'glamor'
 import { imageSizeInfo } from 'mdast-react-render/lib/utils'
 import { getResizedSrcs } from './utils'
 import LazyImage from '../LazyLoad/Image'
-import { GalleryIcon } from '../Icons'
 import { sansSerifRegular12, sansSerifRegular15 } from '../Typography/styles'
 import { mUp } from '../../theme/mediaQueries'
 import SwitchImage from './SwitchImage'
+import { IconGallery } from '@republik/icons'
 
 export const MIN_GALLERY_IMG_WIDTH = 600
 
@@ -41,7 +41,7 @@ const GalleryButton = ({ gallerySize, onClick }) => {
   return (
     <div {...styles.galleryButton} onClick={onClick}>
       <span style={{ paddingRight: 10 }}>
-        <GalleryIcon color='#fff' />
+        <IconGallery color='#fff' />
       </span>
       {`${gallerySize} Bilder`}
     </div>

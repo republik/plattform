@@ -1,7 +1,6 @@
-import React, { useMemo, useState, useContext } from 'react'
+import { useMemo, useState, useContext } from 'react'
 import compose from 'lodash/flowRight'
 import { withMemos, getDisplayAuthor } from './graphql'
-import { EditIcon, UnpublishIcon } from '../../../Icons'
 import {
   CommentComposer,
   CommentComposerPlaceholder,
@@ -9,6 +8,7 @@ import {
 import { DiscussionContext } from '../../../Discussion/DiscussionContext'
 import { CommentNode } from '../../../Discussion/Tree'
 import withMe from '../../../../lib/apollo/withMe'
+import { IconEdit, IconUnpublish } from '@republik/icons'
 
 const MemoTree = (props) => {
   const {
@@ -77,12 +77,12 @@ const MemoContainer = ({ memo }) => {
       [
         !!userCanEdit && {
           label: t('memo/container/edit'),
-          icon: EditIcon,
+          icon: IconEdit,
           onClick: () => setIsEditing(true),
         },
         !!userCanEdit && {
           label: t('memo/container/unpublish'),
-          icon: UnpublishIcon,
+          icon: IconUnpublish,
           onClick: () => actions.unpublishMemo(memo.id),
           disabled: !published,
         },

@@ -1,20 +1,19 @@
 import { css } from 'glamor'
-import NextLink from 'next/link'
 import React from 'react'
 
 import {
-  useColorContext,
-  Editorial,
-  inQuotes,
-  slug,
-  fontStyles,
   ColorContextLocalExtension,
-  ChevronRightIcon,
+  Editorial,
+  fontStyles,
+  inQuotes,
   mediaQueries,
+  slug,
+  useColorContext,
 } from '@project-r/styleguide'
 
-import { localColors } from './config'
+import { IconChevronRight } from '@republik/icons'
 import { CardProps } from '.'
+import { localColors } from './config'
 
 const styles = {
   grid: css({
@@ -98,7 +97,7 @@ const Card: React.FC<{
                     {', '}
                     {tagline}
                   </span>
-                  <ChevronRightIcon />
+                  <IconChevronRight />
                 </Editorial.Credit>
               </div>
             </>
