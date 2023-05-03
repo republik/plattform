@@ -43,16 +43,26 @@ const replaceText =
     }
   }
 
+const replaceMeta = (meta: object, searchTerm: string, replaceTerm: string) => {
+  const allMetaKeys = Object.keys(meta)
+  const metaReplacement = allMetaKeys.reduce((next, key) => {
+    return {
+      ...next,
+      [key]: metaKeys.includes(key)
+        ? meta[key].replace(searchTerm, replaceTerm)
+        : meta[key],
+    }
+  }, {})
+  return metaReplacement
+}
+
 // todo: add more searchable fields
 const metaKeys = ['description']
-
-// todo: add checkbox to enable meta search
 
 const Replace: React.FC<{ value: any; onSave: (e: any) => undefined }> = ({
   value,
   onSave,
 }) => {
-  console.log(value)
   const [isReplacerVisible, setReplacerVisible] = useState(false)
   const [searchTerm, setSearchTerm] = useState<string>()
   const [replaceTerm, setReplaceTerm] = useState<string>()
@@ -62,20 +72,11 @@ const Replace: React.FC<{ value: any; onSave: (e: any) => undefined }> = ({
   const closeReplacer = () => setReplacerVisible(false)
 
   const replace = () => {
-    const allMetaKeys = Object.keys(value.meta)
-
     const newValue = {
       ...value,
       children: value.children.map(replaceText(searchTerm, replaceTerm)),
       meta: includeMeta
-        ? allMetaKeys.reduce((next, key) => {
-            return {
-              ...next,
-              [key]: metaKeys.includes(key)
-                ? value.meta[key].replace(searchTerm, replaceTerm)
-                : value.meta[key],
-            }
-          }, {})
+        ? replaceMeta(value.meta, searchTerm, replaceTerm)
         : value.meta,
     }
     onSave(newValue)
