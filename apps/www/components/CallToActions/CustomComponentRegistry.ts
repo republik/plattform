@@ -12,6 +12,12 @@ const customComponentsRegistry = {
   //     ssr: false,
   //   },
   // ),
+  datenschutzUpdate: dynamic(
+    () => import('./customComponents/DatenschutzBanner'),
+    {
+      ssr: false,
+    },
+  ),
 }
 
 /**

@@ -9,9 +9,9 @@ import useCallToAction from './useCallToAction'
  */
 export default function CallToActionBanner() {
   const [handleAcknowledge] = useAcknowledgeCTAMutation()
-  const { data: callToAction, loading, error, refetch } = useCallToAction()
-
+  const { data: callToAction, loading, error } = useCallToAction()
   // Retrieve the right component based on the calltoAction.payload
+
   const Component: React.ComponentType<CATComponentBaseProps> = useMemo(() => {
     if (!callToAction) {
       return null
