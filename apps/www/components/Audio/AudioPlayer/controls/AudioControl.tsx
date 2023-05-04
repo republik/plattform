@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction } from 'react'
+import React, { Dispatch, SetStateAction, useMemo } from 'react'
 import { css } from 'glamor'
 import { IconButton, Spinner, mediaQueries } from '@project-r/styleguide'
 import { useTranslation } from '../../../../lib/withT'
@@ -25,7 +25,7 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-between',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     marginTop: 8,
     gap: 8,
   }),
@@ -42,10 +42,10 @@ const styles = {
   secondaryControls: css({
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'flex-start',
     alignItems: 'center',
     width: '100%',
-    gap: 16,
+    gap: 32,
   }),
   spinner: css({
     position: 'relative',
@@ -97,6 +97,10 @@ const AudioControl = ({
   setAutoPlayEnabled,
 }: AudioControlProps) => {
   const { t } = useTranslation()
+
+  const isAutoPlayOnText = t('styleguide/AudioPlayer/autoplayOn')
+  const isAutoPlayOffText = t('styleguide/AudioPlayer/autoplayOff')
+  const autoPlayText = isAutoPlayEnabled ? isAutoPlayOnText : isAutoPlayOffText
 
   return (
     <div>
@@ -154,17 +158,10 @@ const AudioControl = ({
           <div>
             <IconButton
               Icon={isAutoPlayEnabled ? IconAutoplay : IconAutopause}
-              label={t(
-                isAutoPlayEnabled
-                  ? 'styleguide/AudioPlayer/autoplayOn'
-                  : 'styleguide/AudioPlayer/autoplayOff',
-              )}
-              labelShort={t(
-                isAutoPlayEnabled
-                  ? 'styleguide/AudioPlayer/autoplayOn'
-                  : 'styleguide/AudioPlayer/autoplayOff',
-              )}
+              label={autoPlayText}
+              labelShort={autoPlayText}
               onClick={() => setAutoPlayEnabled(!isAutoPlayEnabled)}
+              style={{ marginRight: 0, minWidth: 125 }}
             />
           </div>
           <PlaybackRateControl

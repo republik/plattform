@@ -37,6 +37,7 @@ const DEFAULT_PLAYBACK_RATE = 1
 const SKIP_FORWARD_TIME = 30
 const SKIP_BACKWARD_TIME = 10
 const SAVE_MEDIA_PROGRESS_INTERVAL = 5000 // in ms
+const AUDIO_PLAYER_AUTOPLAY_STORAGE_KEY = 'audio-player-auto-play'
 
 /**
  * Enum to represent the state of the react-native-track-player lib.
@@ -102,7 +103,7 @@ type AudioPlayerContainerProps = {
 }
 
 const usePersistedAutoPlayToggle = createPersistedState<boolean>(
-  'audio-player_auto-play',
+  AUDIO_PLAYER_AUTOPLAY_STORAGE_KEY,
 )
 
 const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {

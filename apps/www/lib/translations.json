@@ -2022,11 +2022,11 @@
     },
     {
       "key": "styleguide/AudioPlayer/autoplayOn",
-      "value": "Autoplay: an"
+      "value": "Autoplay an"
     },
     {
       "key": "styleguide/AudioPlayer/autoplayOff",
-      "value": "Autoplay: aus"
+      "value": "Autoplay aus"
     },
     {
       "key": "styleguide/CommentComposer/placeholder",
