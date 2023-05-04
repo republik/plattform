@@ -4,7 +4,9 @@ import Link from 'next/link'
 import { CATComponentBaseProps } from '../CustomComponentBase'
 import { IconButton, useColorContext } from '@project-r/styleguide'
 import { PUBLIC_BASE_URL } from '../../../lib/constants'
+import CTAAnimatedBase from '../CTAAnimatedBase'
 
+// Ensures that the link is a local link else it returns undefined
 function parseLocalLink(href?: unknown): string | undefined {
   if (!href || typeof href !== 'string') return undefined
   if (href.startsWith('/')) return href
@@ -27,7 +29,8 @@ const DatenschutzBanner = ({
   const linkHref = parseLocalLink(args?.link)
 
   return (
-    <div
+    <CTAAnimatedBase
+      ctaId={callToAction.id}
       {...colorScheme.set('backgroundColor', 'text')}
       {...colorScheme.set('color', 'default')}
     >
@@ -46,7 +49,7 @@ const DatenschutzBanner = ({
           fillColorName='default'
         />
       </div>
-    </div>
+    </CTAAnimatedBase>
   )
 }
 
