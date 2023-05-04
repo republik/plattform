@@ -7,6 +7,8 @@ import {
   Field,
   Button,
   Checkbox,
+  plainButtonRule,
+  colors,
 } from '@project-r/styleguide'
 
 const styles = {
@@ -85,7 +87,13 @@ const Replace: React.FC<{ value: any; onSave: (e: any) => undefined }> = ({
 
   return (
     <>
-      <button onClick={() => setReplacerVisible(true)}>{title}</button>
+      <button
+        {...plainButtonRule}
+        style={{ color: colors.primary, marginTop: 10 }}
+        onClick={() => setReplacerVisible(true)}
+      >
+        {title}
+      </button>
       {isReplacerVisible && (
         <Overlay
           onClose={closeReplacer}
