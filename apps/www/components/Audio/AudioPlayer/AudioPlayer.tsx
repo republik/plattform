@@ -90,6 +90,8 @@ const AudioPlayer = ({
   actions,
   buffered,
   hasError,
+  isAutoPlayEnabled,
+  setAutoPlayEnabled,
 }: AudioPlayerProps) => {
   const { inNativeApp, inIOS } = useInNativeApp()
   const { isAndroid, isFirefox } = useUserAgent()
@@ -226,6 +228,8 @@ const AudioPlayer = ({
                   bodyLockTargetRef={ref}
                   setForceScrollLock={setForceScrollLock}
                   hasError={hasError}
+                  isAutoPlayEnabled={isAutoPlayEnabled}
+                  setAutoPlayEnabled={setAutoPlayEnabled}
                 />
               ) : (
                 <MiniAudioPlayer

@@ -2021,6 +2021,14 @@
       "value": "Nochmal versuchen"
     },
     {
+      "key": "styleguide/AudioPlayer/autoplayOn",
+      "value": "Autoplay: an"
+    },
+    {
+      "key": "styleguide/AudioPlayer/autoplayOff",
+      "value": "Autoplay: aus"
+    },
+    {
       "key": "styleguide/CommentComposer/placeholder",
       "value": "Einen Beitrag verfassen…"
     },
