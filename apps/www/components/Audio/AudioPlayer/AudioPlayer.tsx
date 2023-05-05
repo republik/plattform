@@ -250,11 +250,10 @@ const AudioPlayer = ({
               )}
             </motion.div>
           </Backdrop>
-          {activeItem && !inNativeApp && (
+          {!inNativeApp && (
             <AudioPlaybackElement
               setWebHandlers={setWebHandlers}
               setHasAutoPlayed={setHasAutoPlayed}
-              activeItem={activeItem}
               playbackRate={playbackRate}
               autoPlay={autoPlay}
               currentTime={currentTime}

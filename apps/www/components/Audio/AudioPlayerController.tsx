@@ -255,6 +255,10 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
   const fetchInitialTime = async (item: AudioQueueItem): Promise<number> => {
     const mediaId = item.document?.meta?.audioSource.mediaId
     const duration = item.document?.meta?.audioSource.durationMs / 1000
+    console.log('Audio Controller: fetchInitialTime', {
+      mediaId,
+      duration,
+    })
     if (mediaId && duration) {
       const progress = await getMediaProgress({
         mediaId,
@@ -278,6 +282,11 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
       autoPlay = false,
       initialTime = 0,
     ): Promise<void> => {
+      console.log('Audio Controller: setUpAppPlayer', {
+        item,
+        autoPlay,
+        initialTime,
+      })
       notifyApp(AudioEvent.SETUP_TRACK, {
         item,
         autoPlay,
@@ -301,15 +310,21 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
     // The code here can be called by the browser-refocusing
     // in that case auto-play is to be ignored
 
+    console.log('Audio Controller: setupNextAudioItem', {
+      nextUp,
+      autoPlay,
+      initialTime,
+    })
+
     setOptimisticTimeUI(nextUp, initialTime)
     if (inNativeApp) {
       return setUpAppPlayer(nextUp, autoPlay, initialTime)
     } else if (audioEventHandlers.current) {
-      if (autoPlay) {
-        return audioEventHandlers.current.handlePlay(initialTime)
-      } else {
-        return audioEventHandlers.current.handleSetPosition(initialTime)
-      }
+      return audioEventHandlers.current.handleSetupTrack(
+        nextUp,
+        autoPlay,
+        initialTime,
+      )
     } else if (autoPlay) {
       // Handle auto-play being called before the audio-element could be loaded
       setHasDelayedAutoPlay(true)
@@ -318,6 +333,7 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
 
   const onPlay = async () => {
     try {
+      console.log('Audio Controller: onPlay')
       // After opening up the player, the first track is loaded
       // then when the user presses play for the first time, track as playTrack
       if (firstTrackIsPrepared?.current) {
@@ -341,6 +357,7 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
 
   const onPause = async () => {
     try {
+      console.log('Audio Controller: onPause')
       if (!activePlayerItem || !isPlaying) return
       if (inNativeApp) {
         notifyApp(AudioEvent.PAUSE)
@@ -483,6 +500,11 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
       await saveActiveItemProgress({ currentTime: duration, isPlaying: false })
       const { data } = await removeAudioQueueItem(activePlayerItem.id)
 
+      console.log('Audio Controller: onQueueAdvance', {
+        data,
+        shouldAutoPlay,
+      })
+
       audioQueueRef.current = data.audioQueueItems
       setInitialized(true)
       if (data.audioQueueItems.length === 0) {
@@ -585,6 +607,9 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
   )
 
   const togglePlayback = useCallback(async () => {
+    console.log('Audio Controller: togglePlayback', {
+      currentlyPlaying: isPlaying,
+    })
     if (isPlaying) {
       await onPause()
     } else {

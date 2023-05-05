@@ -1,3 +1,5 @@
+import { AudioQueueItem } from '../graphql/AudioQueueHooks'
+
 export enum AudioEvent {
   // Sent to app
   PLAY = 'audio:play',
@@ -18,6 +20,11 @@ export enum AudioEvent {
 
 // Object with callbacks to control the web audio player
 export type AudioEventHandlers = {
+  handleSetupTrack: (
+    track: AudioQueueItem,
+    autoPlay: boolean,
+    initialTime?: number,
+  ) => Promise<void>
   handlePlay: (initialPosition?: number) => Promise<void>
   handleSetPosition: (position: number) => Promise<void>
   handlePause: () => Promise<void>
