@@ -1,5 +1,5 @@
 import { AudioPlayerProps } from '../AudioPlayerController'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useId, useRef, useState } from 'react'
 import useInterval from '../../../lib/hooks/useInterval'
 import { AudioQueueItem } from '../graphql/AudioQueueHooks'
 import { useMediaSession } from '../hooks/useMediaSession'
@@ -85,6 +85,7 @@ const AudioPlaybackElement = ({
     onClose,
   },
 }: AudioPlaybackElementProps) => {
+  const audioElementId = useId()
   const mediaRef = useRef<HTMLMediaElement>(null)
   const trackedPlayerItem = useRef<AudioQueueItem>(null)
   const [activePlayerItem, setActivePlayerItem] =
@@ -202,6 +203,7 @@ const AudioPlaybackElement = ({
 
       setActivePlayerItem(playerItem)
       setAudioSources(mediaRef.current, playerItem.document.meta.audioSource)
+      mediaRef.current.preload = autoPlay ? 'auto' : 'metadata'
 
       setIsLoading(true)
       mediaRef.current.load()
@@ -324,8 +326,9 @@ const AudioPlaybackElement = ({
 
   return (
     <audio
+      data-audioplayer-element
+      id={audioElementId}
       ref={mediaRef}
-      preload={autoPlay ? 'auto' : 'metadata'}
       onPlay={() => onPlay}
       onPause={onPause}
       onCanPlay={onCanPlay}
