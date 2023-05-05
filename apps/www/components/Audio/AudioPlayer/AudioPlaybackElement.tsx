@@ -55,11 +55,7 @@ export type AudioElementState = {
 
 type AudioPlaybackElementProps = Pick<
   AudioPlayerProps,
-  | 'autoPlay'
-  | 'currentTime'
-  | 'playbackRate'
-  | 'setWebHandlers'
-  | 'setHasAutoPlayed'
+  'playbackRate' | 'setWebHandlers'
 > & {
   actions: Pick<
     AudioPlayerProps['actions'],
@@ -72,11 +68,8 @@ type AudioPlaybackElementProps = Pick<
 }
 
 const AudioPlaybackElement = ({
-  autoPlay,
-  currentTime,
   playbackRate,
   setWebHandlers,
-  setHasAutoPlayed,
   actions: {
     onEnded,
     handleError,
@@ -114,34 +107,6 @@ const AudioPlaybackElement = ({
 
   // Sync the state of the media-element with the UI while playing
   useInterval(syncStateWithUI, isPlaying ? DEFAULT_SYNC_INTERVAL : null)
-
-  const onCanPlay = async () => {
-    try {
-      if (!activePlayerItem) return
-
-      setIsLoading(false)
-      syncStateWithUI()
-      let activeItemHasChanged = false
-      if (activePlayerItem?.id !== trackedPlayerItem?.current?.id) {
-        trackedPlayerItem.current = activePlayerItem
-        activeItemHasChanged = true
-
-        if (mediaRef.current) {
-          mediaRef.current.playbackRate = playbackRate
-        }
-
-        mediaRef.current.currentTime = currentTime
-      }
-
-      // Don't call on play if already playing, unless the activeItem has changed
-      if ((activeItemHasChanged || !isPlaying) && autoPlay) {
-        setHasAutoPlayed()
-        await onPlay()
-      }
-    } catch (error) {
-      handleError(error)
-    }
-  }
 
   // Handle media-element errors
   const onError = useCallback(() => {
@@ -331,7 +296,6 @@ const AudioPlaybackElement = ({
       ref={mediaRef}
       onPlay={() => onPlay}
       onPause={onPause}
-      onCanPlay={onCanPlay}
       onEnded={onEnded}
       onError={onError}
     />

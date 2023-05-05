@@ -78,10 +78,8 @@ const AudioPlayer = ({
   isExpanded,
   setIsExpanded,
   setWebHandlers,
-  setHasAutoPlayed,
   activeItem,
   queue,
-  autoPlay,
   currentTime,
   playbackRate,
   duration,
@@ -257,10 +255,7 @@ const AudioPlayer = ({
       {!inNativeApp && (
         <AudioPlaybackElement
           setWebHandlers={setWebHandlers}
-          setHasAutoPlayed={setHasAutoPlayed}
           playbackRate={playbackRate}
-          autoPlay={autoPlay}
-          currentTime={currentTime}
           actions={actions}
         />
       )}
