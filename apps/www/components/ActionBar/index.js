@@ -42,8 +42,8 @@ import {
   IconPlaylistRemove,
   IconPodcast,
   IconReadTime,
-  IconSchedule,
   IconShare,
+  IconPauseCircleOutline,
 } from '@republik/icons'
 
 const RenderItems = ({ items }) => (
@@ -476,7 +476,7 @@ const ActionBar = ({
     {
       title: t('article/actionbar/audio/play'),
       label: !forceShortLabel ? t('article/actionbar/audio/play') : '',
-      Icon: itemPlaying ? IconPlayCircleOutline : IconPlayCircleOutline,
+      Icon: itemPlaying ? IconPauseCircleOutline : IconPlayCircleOutline,
       onClick: !itemPlaying
         ? isActiveAudioItem
           ? toggleAudioPlayback
