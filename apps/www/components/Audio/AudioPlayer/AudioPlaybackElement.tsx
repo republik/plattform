@@ -21,12 +21,17 @@ function setAudioSources(
     'audio/aac': audioSource.aac,
   }
 
-  const sourceElements = Object.keys(sources).map((type) => {
-    const source = document.createElement('source')
-    source.type = type
-    source.src = sources[type]
-    return source
-  })
+  const sourceElements = Object.keys(sources)
+    .map((type) => {
+      if (sources[type] === null) {
+        return null
+      }
+      const source = document.createElement('source')
+      source.type = type
+      source.src = sources[type]
+      return source
+    })
+    .filter(Boolean)
 
   console.log('Audio Elem: setAudioSources', {
     elem,
@@ -36,7 +41,7 @@ function setAudioSources(
   })
 
   elem.innerHTML = '' // Hack to remove all previous sources
-  sourceElements.forEach((source) => elem.appendChild(source))
+  elem.append(...sourceElements)
 }
 
 export type AudioElementState = {

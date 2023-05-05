@@ -1,3 +1,5 @@
+import Nullable from '../../../lib/types/Nullable'
+
 /**
  * PlayerItem is a partial of the Document type.
  */
@@ -20,9 +22,9 @@ export type AudioPlayerItem = {
     audioSource?: {
       mediaId: string
       kind: 'syntheticReadAloud' | 'readAloud'
-      mp3: string
-      aac: string
-      ogg: string
+      mp3: Nullable<string>
+      aac: Nullable<string>
+      ogg: Nullable<string>
       durationMs: number
       userProgress?: {
         id: string
