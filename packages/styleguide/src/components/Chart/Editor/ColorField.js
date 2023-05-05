@@ -9,12 +9,12 @@ import {
 } from '../../Colors/ColorContext'
 import { createRanges } from '..'
 import { colorMaps, CHART_DEFAULT_FILL } from '../colorMaps'
-import { CloseIcon } from '../../Icons'
 import { plainButtonRule } from '../../Button'
 import omit from 'lodash/omit'
 import Checkbox from '../../Form/Checkbox'
 import ColorPickerCallout from './ColorPickerCallout'
 import Field from '../../Form/Field'
+import { IconClose } from '@republik/icons'
 
 const TYPES_WITH_COLOR_SORT = ['Bar', 'Lollipop', 'ScatterPlot']
 
@@ -218,7 +218,7 @@ export const ColorField = (props) => {
                         )
                       }}
                     >
-                      <CloseIcon size={16} />
+                      <IconClose size={16} />
                     </button>
                   )}
                   <ColorPickerCallout

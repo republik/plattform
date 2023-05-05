@@ -21,13 +21,6 @@ import {
 
 import IgnoreIcon from './IgnoreIcon'
 
-import {
-  FollowIcon,
-  RevertIcon,
-  ListIcon,
-  FilterListIcon,
-} from '@project-r/styleguide'
-
 import withT from '../../lib/withT'
 import { useWindowSize } from '../../lib/hooks/useWindowSize'
 import createPersistedState from '../../lib/hooks/use-persisted-state'
@@ -48,6 +41,7 @@ import { cardColors } from './constants'
 import Link from 'next/link'
 import DiscussionContextProvider from '../Discussion/context/DiscussionContextProvider'
 import Discussion from '../Discussion/Discussion'
+import { IconFilterList, IconFollow, IconList, IconRevert } from '@republik/icons'
 
 const styles = {
   swipeIndicator: css({
@@ -864,7 +858,7 @@ const Group = ({
               title={t('components/Card/Group/revert')}
               onClick={onRevert}
             >
-              <RevertIcon />
+              <IconRevert />
             </button>
             <button
               {...styles.button}
@@ -886,7 +880,7 @@ const Group = ({
               title={t('components/Card/Group/follow')}
               onClick={onRight}
             >
-              <FollowIcon />
+              <IconFollow />
             </button>
             <a
               {...styles.button}
@@ -898,7 +892,7 @@ const Group = ({
               title={t('components/Card/Group/overview')}
               onClick={onShowMyList}
             >
-              {rightSwipes.length || <ListIcon />}
+              {rightSwipes.length || <IconList />}
             </a>
             <br />
             <Editorial.A
@@ -912,7 +906,7 @@ const Group = ({
                   windowHeight < 500 ? 'rgba(222,239,245,0.5)' : 'none',
               }}
             >
-              <FilterListIcon
+              <IconFilterList
                 style={{
                   verticalAlign: 'top',
                   marginRight: 5,

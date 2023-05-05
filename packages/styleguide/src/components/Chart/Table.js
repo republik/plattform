@@ -8,13 +8,13 @@ import { descending, ascending, extent } from 'd3-array'
 import { useColorContext } from '../Colors/ColorContext'
 import { getFormat, getTextColor, deduplicate } from './utils'
 import { timeFormat, timeParse } from '../../lib/timeFormat'
-import { ExpandMoreIcon, ExpandLessIcon } from '../Icons'
 import { defaultProps } from './ChartContext'
 import { sansSerifRegular18 } from '../Typography/styles'
 import { PADDING } from '../Center'
 import { getColorMapper } from './colorMaps'
 import { Collapsable } from '../Collapsable'
 import { createTextGauger } from '../../lib/textGauger'
+import { IconExpandLess, IconExpandMore } from '@republik/icons'
 
 const labelGauger = createTextGauger(sansSerifRegular18, {
   dimension: 'width',
@@ -199,9 +199,9 @@ const Table = (props) => {
                 {sortBy.key &&
                   sortBy.key === tableHead &&
                   (sortBy.order === 'desc' ? (
-                    <ExpandMoreIcon style={{ paddingLeft: '2px' }} />
+                  <IconExpandMore style={{ paddingLeft: '2px' }} />
                   ) : (
-                    <ExpandLessIcon style={{ paddingLeft: '2px' }} />
+                    <IconExpandLess style={{ paddingLeft: '2px' }} />
                   ))}
               </th>
             ))}

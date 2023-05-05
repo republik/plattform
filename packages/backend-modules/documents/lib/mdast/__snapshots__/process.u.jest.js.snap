@@ -1,13 +1,13 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`process processIfHasAccess keeps member nodes if user has access 1`] = `
-Object {
-  "children": Array [
-    Object {
-      "children": Array [
-        Object {
-          "children": Array [
-            Object {
+{
+  "children": [
+    {
+      "children": [
+        {
+          "children": [
+            {
               "alt": null,
               "title": null,
               "type": "image",
@@ -16,11 +16,11 @@ Object {
           ],
           "type": "paragraph",
         },
-        Object {
-          "children": Array [
-            Object {
-              "children": Array [
-                Object {
+        {
+          "children": [
+            {
+              "children": [
+                {
                   "type": "text",
                   "value": "P",
                 },
@@ -31,87 +31,87 @@ Object {
           "type": "paragraph",
         },
       ],
-      "data": Object {},
+      "data": {},
       "identifier": "FIGURE",
       "type": "zone",
     },
-    Object {
-      "children": Array [
-        Object {
-          "children": Array [
-            Object {
+    {
+      "children": [
+        {
+          "children": [
+            {
               "type": "text",
               "value": "Paragraph 1",
             },
           ],
           "type": "paragraph",
         },
-        Object {
-          "children": Array [
-            Object {
+        {
+          "children": [
+            {
               "type": "text",
               "value": "If 2-1",
             },
           ],
           "type": "paragraph",
         },
-        Object {
-          "children": Array [
-            Object {
+        {
+          "children": [
+            {
               "type": "text",
               "value": "If 2-2",
             },
           ],
           "type": "paragraph",
         },
-        Object {
-          "children": Array [
-            Object {
+        {
+          "children": [
+            {
               "type": "text",
               "value": "Paragraph 2",
             },
           ],
           "type": "paragraph",
         },
-        Object {
-          "children": Array [
-            Object {
+        {
+          "children": [
+            {
               "type": "text",
               "value": "If 4-1",
             },
           ],
           "type": "paragraph",
         },
-        Object {
-          "children": Array [
-            Object {
+        {
+          "children": [
+            {
               "type": "text",
               "value": "Paragraph 6",
             },
           ],
           "type": "paragraph",
         },
-        Object {
-          "children": Array [
-            Object {
+        {
+          "children": [
+            {
               "type": "text",
               "value": "If 7-1",
             },
           ],
           "type": "paragraph",
         },
-        Object {
-          "children": Array [
-            Object {
+        {
+          "children": [
+            {
               "type": "text",
               "value": "If 7-2",
             },
           ],
           "type": "paragraph",
         },
-        Object {
-          "children": Array [
-            Object {
+        {
+          "children": [
+            {
               "type": "text",
               "value": "Paragraph 8",
             },
@@ -119,7 +119,7 @@ Object {
           "type": "paragraph",
         },
       ],
-      "data": Object {},
+      "data": {},
       "identifier": "CENTER",
       "type": "zone",
     },
@@ -129,13 +129,13 @@ Object {
 `;
 
 exports[`process processIfHasAccess keeps non-member nodes if user has no access 1`] = `
-Object {
-  "children": Array [
-    Object {
-      "children": Array [
-        Object {
-          "children": Array [
-            Object {
+{
+  "children": [
+    {
+      "children": [
+        {
+          "children": [
+            {
               "alt": null,
               "title": null,
               "type": "image",
@@ -144,11 +144,11 @@ Object {
           ],
           "type": "paragraph",
         },
-        Object {
-          "children": Array [
-            Object {
-              "children": Array [
-                Object {
+        {
+          "children": [
+            {
+              "children": [
+                {
                   "type": "text",
                   "value": "P",
                 },
@@ -159,123 +159,123 @@ Object {
           "type": "paragraph",
         },
       ],
-      "data": Object {},
+      "data": {},
       "identifier": "FIGURE",
       "type": "zone",
     },
-    Object {
-      "children": Array [
-        Object {
-          "children": Array [
-            Object {
+    {
+      "children": [
+        {
+          "children": [
+            {
               "type": "text",
               "value": "Paragraph 1",
             },
           ],
           "type": "paragraph",
         },
-        Object {
-          "children": Array [
-            Object {
+        {
+          "children": [
+            {
               "type": "text",
               "value": "Else 2-1",
             },
           ],
           "type": "paragraph",
         },
-        Object {
-          "children": Array [
-            Object {
+        {
+          "children": [
+            {
               "type": "text",
               "value": "Else 2-2",
             },
           ],
           "type": "paragraph",
         },
-        Object {
-          "children": Array [
-            Object {
+        {
+          "children": [
+            {
               "type": "text",
               "value": "Paragraph 2",
             },
           ],
           "type": "paragraph",
         },
-        Object {
-          "children": Array [
-            Object {
+        {
+          "children": [
+            {
               "type": "text",
               "value": "Else 3-1",
             },
           ],
           "type": "paragraph",
         },
-        Object {
-          "children": Array [
-            Object {
+        {
+          "children": [
+            {
               "type": "text",
               "value": "Else 3-2",
             },
           ],
           "type": "paragraph",
         },
-        Object {
-          "children": Array [
-            Object {
+        {
+          "children": [
+            {
               "type": "text",
               "value": "Else 3-3",
             },
           ],
           "type": "paragraph",
         },
-        Object {
-          "children": Array [
-            Object {
+        {
+          "children": [
+            {
               "type": "text",
               "value": "Else 4-1",
             },
           ],
           "type": "paragraph",
         },
-        Object {
-          "children": Array [
-            Object {
+        {
+          "children": [
+            {
               "type": "text",
               "value": "Else 4-2",
             },
           ],
           "type": "paragraph",
         },
-        Object {
-          "children": Array [
-            Object {
+        {
+          "children": [
+            {
               "type": "text",
               "value": "Else 5-1",
             },
           ],
           "type": "paragraph",
         },
-        Object {
-          "children": Array [
-            Object {
+        {
+          "children": [
+            {
               "type": "text",
               "value": "Else 5-2",
             },
           ],
           "type": "paragraph",
         },
-        Object {
-          "children": Array [
-            Object {
+        {
+          "children": [
+            {
               "type": "text",
               "value": "Paragraph 6",
             },
           ],
           "type": "paragraph",
         },
-        Object {
-          "children": Array [
-            Object {
+        {
+          "children": [
+            {
               "type": "text",
               "value": "Paragraph 8",
             },
@@ -283,7 +283,7 @@ Object {
           "type": "paragraph",
         },
       ],
-      "data": Object {},
+      "data": {},
       "identifier": "CENTER",
       "type": "zone",
     },

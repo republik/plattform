@@ -8,7 +8,6 @@ import {
   fontStyles,
   useColorContext,
 } from '@project-r/styleguide'
-import { DiscussionIcon } from '@project-r/styleguide'
 import { css } from 'glamor'
 import compose from 'lodash/flowRight'
 import { graphql } from '@apollo/client/react/hoc'
@@ -19,6 +18,7 @@ import Loader from '../../Loader'
 import Link from 'next/link'
 import DiscussionContextProvider from '../../Discussion/context/DiscussionContextProvider'
 import Discussion from '../../Discussion/Discussion'
+import { IconDiscussion } from '@republik/icons'
 
 const { P } = Interaction
 
@@ -111,7 +111,7 @@ const DiscussionPage = ({ router, data, vt }) => {
                               <Strong>
                                 {vt(`${DISCUSSION_TITLES[id]}Title`)}
                                 <span {...styles.count}>
-                                  <DiscussionIcon
+                                  <IconDiscussion
                                     size={17}
                                     fill={colors.primary}
                                   />{' '}
@@ -123,7 +123,7 @@ const DiscussionPage = ({ router, data, vt }) => {
                               <A>
                                 {vt(`${DISCUSSION_TITLES[id]}Title`)}
                                 <span {...styles.count}>
-                                  <DiscussionIcon
+                                  <IconDiscussion
                                     size={17}
                                     fill={colors.primary}
                                   />{' '}

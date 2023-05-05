@@ -1,9 +1,10 @@
 import { css } from 'glamor'
-import { colors, plainButtonRule, CloseIcon } from '@project-r/styleguide'
+import { colors, plainButtonRule } from '@project-r/styleguide'
 import { EDITOR_TOOLBAR_HEIGHT } from '@project-r/styleguide/editor'
 import { HEADER_HEIGHT } from '../Frame/constants'
 import { createContext, useContext, useState } from 'react'
 import { timeFormat } from 'd3-time-format'
+import { IconClose } from '@republik/icons'
 
 const styles = {
   warnings: css({
@@ -72,7 +73,7 @@ const Warning = ({ warning }) => {
     <div {...styles.warning}>
       <b {...styles.time}>{warning.time}</b> {warning.message}
       <button {...styles.remove} onClick={() => rmWarning(warning.message)}>
-        <CloseIcon />
+        <IconClose />
       </button>
     </div>
   )

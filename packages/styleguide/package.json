@@ -4,11 +4,26 @@
   "main": "dist/lib.js",
   "module": "src/lib.ts",
   "types": "dist/lib.d.ts",
+  "exports": {
+    ".": {
+      "import": "./src/lib.ts",
+      "require": "./dist/lib.js"
+    },
+    "./chart": {
+      "import": "./src/chart.ts",
+      "require": "./dist/chart.js"
+    },
+    "./editor": {
+      "import": "./src/editor.ts",
+      "require": "./dist/editor.js"
+    }
+  },
   "engines": {
     "node": "^18.0.0"
   },
   "peerDependencies": {
     "@apollo/client": "~3.5.10",
+    "@republik/icons": "*",
     "d3-array": "1.x",
     "d3-color": "1.x",
     "d3-dsv": "1.x",
@@ -37,14 +52,15 @@
     "@catalog/core": "^4.0.1-canary.2",
     "@orbiting/remark-preset": "^1.2.4",
     "@republik/eslint-config-frontend": "*",
-    "@testing-library/jest-dom": "^5.16.3",
-    "@testing-library/react": "^12.1.4",
-    "@types/jest": "^27.5.0",
+    "@republik/icons": "*",
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^14.0.0",
+    "@types/jest": "^29.5.1",
     "@types/node": "^16.11.6",
     "@types/prop-types": "^15.7.4",
     "@types/react": "^18.0.28",
     "@types/react-dom": "^18.0.11",
-    "babel-jest": "^27.5.1",
+    "babel-jest": "^29.5.0",
     "clipboard-copy": "^4.0.1",
     "commitizen": "^4.2.4",
     "concurrently": "^7.0.0",
@@ -66,7 +82,8 @@
     "graphql": "^15.3.0",
     "gsheets": "^3.0.1",
     "identity-obj-proxy": "^3.0.0",
-    "jest": "^27.5.1",
+    "jest": "^29.5.0",
+    "jest-environment-jsdom": "^29.5.0",
     "lodash": "^4.17.21",
     "mdast-react-render": "^1.1.0",
     "prop-types": "^15.7.2",
@@ -106,8 +123,8 @@
     "dev": "yarn dev:lib",
     "dev:lib": "tsc -w --project tsconfig.dist.json",
     "dev:docs": "concurrently \"yarn:dev:lib\" \"SKIP_PREFLIGHT_CHECK=true BROWSER=none PORT=3003 react-scripts start\"",
-    "test": "CI=true react-scripts test",
-    "test:dev": "react-scripts test",
+    "test": "jest",
+    "test:dev": "jest --watch",
     "cloc": "find . -name '*.js' -not -path \"./node_modules*\" -not -path \"./lib*\" | xargs wc -l",
     "eject": "react-scripts eject",
     "semantic-release": "semantic-release",
@@ -123,11 +140,11 @@
   },
   "dependencies": {
     "body-scroll-lock": "^3.1.5",
-    "react-icons": "^4.3.1",
     "serve": "^13.0.2",
     "slate": "^0.88.1",
     "slate-history": "^0.86.0",
     "slate-react": "^0.88.2",
+    "ts-jest": "^29.1.0",
     "use-memo-one": "^1.1.2"
   },
   "browserslist": [

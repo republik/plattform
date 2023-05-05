@@ -6,8 +6,6 @@ import {
   mediaQueries,
   fontStyles,
   useColorContext,
-  SearchMenuIcon,
-  BoldSearchIcon,
   Scroller,
 } from '@project-r/styleguide'
 
@@ -21,6 +19,7 @@ import {
 } from '../constants'
 import { useRouter } from 'next/router'
 import { useMe } from '../../lib/context/MeContext'
+import { IconSearchMenu, IconSearchMenuBold } from '@republik/icons'
 
 const JournalPathRegex = new RegExp('^/[0-9]{4}/[0-9]{2}/[0-9]{2}/journal$')
 
@@ -136,12 +135,12 @@ export const SecondaryNav = ({
                 minifeed
               >
                 {'/suche' === currentPath ? (
-                  <BoldSearchIcon
+                  <IconSearchMenuBold
                     {...colorScheme.set('fill', 'text')}
                     size={18}
                   />
                 ) : (
-                  <SearchMenuIcon
+                  <IconSearchMenu
                     {...colorScheme.set('fill', 'text')}
                     size={18}
                   />

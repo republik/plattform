@@ -1,11 +1,11 @@
 import React from 'react'
 import { css } from 'glamor'
 import PropTypes from 'prop-types'
-import { VimeoIcon, YoutubeIcon } from '../Icons'
 import colors from '../../theme/colors'
 import { sansSerifMedium16, sansSerifRegular14 } from '../Typography/styles'
 import { ellipsize } from '../../lib/styleMixins'
 import { timeFormat } from '../../lib/timeFormat'
+import { IconLogoVimeo, IconLogoYouTube } from '@republik/icons'
 
 export const profilePictureSize = 40
 export const profilePictureMargin = 10
@@ -83,8 +83,8 @@ const styles = {
 const dateFormat = timeFormat('%d. %B %Y')
 
 const ICON = {
-  vimeo: VimeoIcon,
-  youtube: YoutubeIcon,
+  vimeo: IconLogoVimeo,
+  youtube: IconLogoYouTube,
 }
 
 const Link = ({ href, children }) => (

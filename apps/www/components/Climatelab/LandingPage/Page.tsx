@@ -59,18 +59,7 @@ const LandingPage = () => {
                 {t('ClimateLandingPage/content/paragraph2')}
               </p>
               <p {...styles.text}>
-                {t.elements('ClimateLandingPage/content/paragraph3', {
-                  eventsLink: (
-                    <A
-                      style={{ textDecoration: 'underline' }}
-                      href={t('ClimateLandingPage/content/eventsLinkHref')}
-                      target='_blank'
-                      rel='noopener noreferrer'
-                    >
-                      {t('ClimateLandingPage/content/eventsLinkText')}
-                    </A>
-                  ),
-                })}
+                {t('ClimateLandingPage/content/paragraph3')}
               </p>
             </div>
           </section>
