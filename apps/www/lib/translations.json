@@ -7873,15 +7873,7 @@
     },
     {
       "key": "ClimateLandingPage/content/paragraph3",
-      "value": "Melden Sie sich an, um sich einzubringen, an unseren {eventsLink} teilzunehmen und um nichts zu verpassen, was wir zur Klimakrise schreiben."
-    },
-    {
-      "key": "ClimateLandingPage/content/eventsLinkText",
-      "value": "Veranstaltungen"
-    },
-    {
-      "key": "ClimateLandingPage/content/eventsLinkHref",
-      "value": "https://tally.so/r/mRxbdd"
+      "value": "Melden Sie sich an, um sich einzubringen, an unseren Veranstaltungen teilzunehmen und um nichts zu verpassen, was wir zur Klimakrise schreiben."
     },
     {
       "key": "ClimateLandingPage/content/counterText",
