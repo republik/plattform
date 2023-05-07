@@ -47,6 +47,18 @@ app.prepare().then(() => {
     }),
   )
 
+  server.use((req, res, next) => {
+    const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress
+
+    if (ip === '213.59.118.11') {
+      return res
+        .status(429)
+        .json({ message: 'Too many requests. Try again later.' })
+    }
+
+    next()
+  })
+
   // Disable FLoC
   // @see https://twitter.com/natfriedman/status/1387159870667849731
   server.use((req, res, next) => {
