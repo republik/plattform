@@ -18,7 +18,6 @@ import {
   PADDING_TOP,
   PADDING_LEFT,
   NEW_COLORS,
-  creditSuiseHistoricalData,
 } from './config'
 import { useResolvedColorSchemeKey } from '../ColorScheme/lib'
 
@@ -209,22 +208,19 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
             },
           )}
         ></motion.line>
-        {/* bottom line */}
-        <motion.line
+        {/* chart legend */}
+        <motion.g
           variants={defineVariants(
             {
-              x1: 330,
-              y1: chartRange[1] - costScale(costDomainWithoutCS[0]),
-              x2: 370,
-              y2: chartRange[1] - costScale(costDomainWithoutCS[0]),
-              opacity: 0,
-              strokeWidth: '2px',
-              stroke: NEW_COLORS[key].default,
-              strokeDasharray: '4',
-              transition: { duration: 0.5 },
+              x: 0,
+              opacity: 1,
             },
-            {
-              step3: {
+            {},
+          )}
+        >
+          <motion.line
+            variants={defineVariants(
+              {
                 x1: 200,
                 y1: chartRange[1] - costScale(costDomainWithoutCS[0]),
                 x2: 450,
@@ -233,47 +229,44 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                 strokeWidth: '2px',
                 stroke: NEW_COLORS[key].default,
                 strokeDasharray: '4',
-                transition: { duration: 0.5, delay: 1 },
+                transition: { duration: 0.5 },
               },
-              step4: {
-                x1: 200,
-                y1: chartRange[1] - costScaleAll(costDomainWithoutCS[0]),
-                x2: 450,
-                y2: chartRange[1] - costScaleAll(costDomainWithoutCS[0]),
-                opacity: 1,
-                strokeWidth: '2px',
-                stroke: NEW_COLORS[key].default,
-                strokeDasharray: '4',
-                transition: { duration: 0.5, delay: 1 },
+              {
+                step4: {
+                  x1: 200,
+                  y1: chartRange[1] - costScaleAll(costDomainWithoutCS[0]),
+                  x2: 450,
+                  y2: chartRange[1] - costScaleAll(costDomainWithoutCS[0]),
+                  opacity: 1,
+                  strokeWidth: '2px',
+                  stroke: NEW_COLORS[key].default,
+                  strokeDasharray: '4',
+                  transition: { duration: 0.5, delay: 1 },
+                },
               },
-            },
-          )}
-        ></motion.line>
-        <motion.text
-          {...styles.axisTick}
-          style={{ textAnchor: 'middle' }}
-          variants={defineVariants(
-            {
-              x: CENTER,
-              y: chartRange[1] - costScale(costDomainWithoutCS[0]) + 25,
-              transition: { duration: 0.5 },
-            },
-            {
-              step3: {
+            )}
+          ></motion.line>
+          <motion.text
+            {...styles.axisTick}
+            style={{ textAnchor: 'middle' }}
+            variants={defineVariants(
+              {
                 x: 150,
                 y: chartRange[1] - costScale(costDomainWithoutCS[0]),
                 transition: { duration: 0.5, delay: 1 },
               },
-              step4: {
-                x: 150,
-                y: chartRange[1] - costScaleAll(costDomainWithoutCS[0]),
-                transition: { duration: 0.5, delay: 1 },
+              {
+                step4: {
+                  x: 150,
+                  y: chartRange[1] - costScaleAll(costDomainWithoutCS[0]),
+                  transition: { duration: 0.5, delay: 1 },
+                },
               },
-            },
-          )}
-        >
-          {formatOneDecimal(costDomainWithoutCS[0])}
-        </motion.text>
+            )}
+          >
+            {formatOneDecimal(100000)}
+          </motion.text>
+        </motion.g>
         {/* right side */}
         <motion.line
           transition={{ duration: 0.5 }}
