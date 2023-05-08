@@ -1,5 +1,5 @@
 import { css } from 'glamor'
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import {
   Overlay,
   OverlayToolbar,
@@ -69,10 +69,12 @@ const Replace: React.FC<{ value: any; onSave: (e: any) => undefined }> = ({
   const [searchTerm, setSearchTerm] = useState<string>()
   const [replaceTerm, setReplaceTerm] = useState<string>()
   const [includeMeta, setIncludeMeta] = useState<boolean>()
+  const ref = useRef<HTMLDivElement>()
 
   const title = 'Suchen und ersetzen'
   const closeReplacer = () => setReplacerVisible(false)
 
+  // TODO: global replace
   const replace = () => {
     const newValue = {
       ...value,
@@ -83,6 +85,24 @@ const Replace: React.FC<{ value: any; onSave: (e: any) => undefined }> = ({
     }
     onSave(newValue)
     closeReplacer()
+  }
+
+  useEffect(() => {
+    const keyDownHandler = (event) => {
+      console.log('User pressed: ', event.key)
+    }
+    document.addEventListener('keydown', keyDownHandler)
+
+    return () => {
+      document.removeEventListener('keydown', keyDownHandler)
+    }
+  }, [])
+
+  const handleClick = (e) => {
+    console.log('handler called')
+    e.preventDefault()
+    const event = new KeyboardEvent('keydown', { key: 'a' })
+    document.dispatchEvent(event)
   }
 
   return (
@@ -101,23 +121,38 @@ const Replace: React.FC<{ value: any; onSave: (e: any) => undefined }> = ({
         >
           <OverlayToolbar title={title} onClose={closeReplacer} />
           <OverlayBody>
+            <div>
+              <button
+                {...plainButtonRule}
+                style={{ paddingRight: 20 }}
+                onMouseDown={handleClick}
+              >
+                Dauerleerzeichen (
+                <span style={{ color: 'rgb(30, 144, 255)' }}>␣</span>)
+              </button>
+              <button {...plainButtonRule}>
+                Weiches Trennzeichen (
+                <span style={{ color: 'rgb(30, 144, 255)' }}>‧</span>)
+              </button>
+            </div>
+            <Field
+              ref={ref}
+              label='Suchen'
+              value={searchTerm}
+              onChange={(_, value) => setSearchTerm(value)}
+            />
+            <Field
+              label='Ersetzen'
+              value={replaceTerm}
+              onChange={(_, value) => setReplaceTerm(value)}
+            />
             <Checkbox
               checked={includeMeta}
               onChange={(_, value) => setIncludeMeta(value)}
             >
               Metabereich einschliessen
             </Checkbox>
-            <div style={{ textAlign: 'center' }}>
-              <Field
-                label='Suchen'
-                value={searchTerm}
-                onChange={(_, value) => setSearchTerm(value)}
-              />
-              <Field
-                label='Ersetzen'
-                value={replaceTerm}
-                onChange={(_, value) => setReplaceTerm(value)}
-              />
+            <div style={{ textAlign: 'center', marginTop: 15 }}>
               <Button primary onClick={replace}>
                 Ersetzen
               </Button>
