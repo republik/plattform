@@ -88,6 +88,9 @@ const getAudioCover = (meta, args) => {
   // desired output format
   const format = properties?.format
 
+  // optional background color
+  const bg = properties?.bg
+
   // optional postfix
   const postfix = properties?.postfix
 
@@ -103,6 +106,7 @@ const getAudioCover = (meta, args) => {
     url.searchParams.set('resize', resize)
     url.searchParams.set('bw', bw ? '1' : '')
     url.searchParams.set('format', format || 'auto')
+    bg && url.searchParams.set('bg', bg)
     postfix && url.searchParams.set('postfix', postfix)
 
     return url.toString()
