@@ -81,7 +81,7 @@ const getCommentInfo = async (comment, displayAuthor, discussion, context) => {
     icon:
       displayAuthor.profilePicture ||
       t('api/comment/notification/new/app/icon'),
-    commentTags: comment.tags,
+    commentTags: comment.tags.join(', '),
   }
 }
 
