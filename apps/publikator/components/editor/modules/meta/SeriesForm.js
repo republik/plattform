@@ -9,11 +9,8 @@ import {
   Dropdown,
   Interaction,
   IconButton,
-  AddIcon,
-  ArrowDownwardIcon,
-  HighlightOffIcon,
 } from '@project-r/styleguide'
-import ArrowUpwardIcon from 'react-icons/lib/md/arrow-upward'
+import { IconAdd, IconArrowUpward, IconArrowDownward, IconHighlightOff } from '@republik/icons'
 
 import AutosizeInput from 'react-textarea-autosize'
 
@@ -279,7 +276,7 @@ export default withT(({ t, editor, node, onRepoInputChange, repoId }) => {
           <Interaction.H2>Episoden</Interaction.H2>
           <br />
           <IconButton
-            Icon={AddIcon}
+            Icon={IconAdd}
             label={t('metaData/series/episodes/add')}
             onClick={() => {
               onEpisodeChange(
@@ -325,7 +322,8 @@ export default withT(({ t, editor, node, onRepoInputChange, repoId }) => {
                   <div {...styles.episodeActionBar}>
                     {i !== 0 && (
                       <IconButton
-                        Icon={ArrowUpwardIcon}
+                        Icon={IconArrowUpward}
+                        size={24}
                         label={t('metaData/series/episodes/up')}
                         onClick={() => {
                           onEpisodeChange(
@@ -340,7 +338,8 @@ export default withT(({ t, editor, node, onRepoInputChange, repoId }) => {
                     )}
                     {i !== episodes.length - 1 && (
                       <IconButton
-                        Icon={ArrowDownwardIcon}
+                        size={24}
+                        Icon={IconArrowDownward}
                         label={t('metaData/series/episodes/down')}
                         onClick={() => {
                           onEpisodeChange(
@@ -354,8 +353,9 @@ export default withT(({ t, editor, node, onRepoInputChange, repoId }) => {
                       />
                     )}
                     <IconButton
-                      Icon={HighlightOffIcon}
+                      Icon={IconHighlightOff}
                       label={t('metaData/series/episodes/rm')}
+                      size={24}
                       onClick={() => {
                         onEpisodeChange(
                           episodes.slice(0, i).concat(episodes.slice(i + 1)),
@@ -393,7 +393,8 @@ export default withT(({ t, editor, node, onRepoInputChange, repoId }) => {
             )
           })}
           <IconButton
-            Icon={AddIcon}
+            Icon={IconAdd}
+            size={24}
             label={t('metaData/series/episodes/add')}
             onClick={() => {
               onEpisodeChange(

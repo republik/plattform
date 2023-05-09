@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types'
 import { css } from 'glamor'
-import { CloseIcon, ArrowDownwardIcon } from '@project-r/styleguide'
 import datetime from './datetime'
 
 import withT from '../../../lib/withT'
@@ -15,6 +14,7 @@ import {
   mediaQueries,
   useColorContext,
 } from '@project-r/styleguide'
+import { IconArrowDownward, IconClose } from '@republik/icons'
 
 const RADIUS = 16
 const formatPercent = swissNumbers.format('.0%')
@@ -51,7 +51,7 @@ const RestoreButton = ({ t, onClick, onClose, opacity, userProgress }) => {
                   radius={RADIUS}
                   strokeWidth={3}
                 />
-                <ArrowDownwardIcon
+                <IconArrowDownward
                   {...styles.buttonIcon}
                   {...colorScheme.set('fill', 'text')}
                 />
@@ -77,7 +77,7 @@ const RestoreButton = ({ t, onClick, onClose, opacity, userProgress }) => {
                 onClick={onClose}
                 title={t('progress/restore/close')}
               >
-                <CloseIcon size={30} fill='#000' />
+                <IconClose size={30} fill='#000' />
               </button>
             </div>
           </div>

@@ -1,9 +1,9 @@
 import React from 'react'
 import Link from 'next/link'
 import { css } from 'glamor'
-import { PlaylistAddIcon, fontStyles, A } from '@project-r/styleguide'
+import { fontStyles, A, useColorContext } from '@project-r/styleguide'
 import { useMe } from '../../../../../../lib/context/MeContext'
-import { useColorContext } from '@project-r/styleguide/src/components/Colors/ColorContext'
+import { IconPlaylistAdd } from '@republik/icons'
 
 const styles = {
   text: css({
@@ -26,7 +26,7 @@ const EmptyQueue = ({ t }: { t: any }) => {
       <p {...styles.text}>{t('AudioPlayer/Queue/EmptyQueue/p1')}</p>
       <p {...styles.text}>
         {t.elements('AudioPlayer/Queue/EmptyQueue/p2', {
-          icon: <PlaylistAddIcon size={24} />,
+          icon: <IconPlaylistAdd key='add-icon' size={24} />,
         })}
       </p>
       {me && !me.progressConsent && (

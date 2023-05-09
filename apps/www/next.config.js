@@ -3,7 +3,8 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 })
 const withTM = require('next-transpile-modules')([
   '@project-r/styleguide',
-  '@republik/nextjs-apollo-client', // Ensures ES5 compatibility to work in IE11
+  '@republik/nextjs-apollo-client', // Ensures ES5 compatibility to work in IE11 and older safari versions
+  '@republik/icons', // Ensures ES5 compatibility to work in IE11 and older safari versions
 ])
 
 const { NODE_ENV, CDN_FRONTEND_BASE_URL } = process.env

@@ -1,9 +1,10 @@
 const visit = require('unist-util-visit')
+const Promise = require('bluebird')
 
 const {
   stringifyNode,
 } = require('@orbiting/backend-modules-documents/lib/resolve')
-const { mdastToString } = require('@orbiting/backend-modules-utils')
+const { parse: mdastParse } = require('@orbiting/remark-preset')
 
 const bulk = require('../indexPgTable')
 
@@ -12,55 +13,66 @@ function getCommit(restCommit) {
   return { id, message, createdAt }
 }
 
+async function toStrings(type, nodes) {
+  const keys = Object.keys(nodes)
+
+  const nodeToString = async (key) => {
+    const node = nodes[key]
+    const string = await stringifyNode(type, node)
+    return { [key]: string }
+  }
+
+  const toObject = (strings, resolvedNode) => {
+    return {
+      ...strings,
+      ...resolvedNode,
+    }
+  }
+
+  return Promise.map(keys, nodeToString).reduce(toObject)
+}
+
 async function getCommitStrings(type, content) {
   if (!content) {
     return {}
   }
 
-  const strings = {}
+  const nodes = {
+    text: content,
+  }
 
-  const text = await stringifyNode(type, content)
-  text && Object.assign(strings, { text })
-
-  // @TODO: make this work, slate needs a sibling to this.
+  // @TODO: slate needs a sibling to this.
   if (type === 'mdast') {
     visit(content, 'zone', (node) => {
       if (node.identifier === 'TITLE') {
-        const title = mdastToString({
+        nodes.title = {
           children: node.children.filter(
             (n) => n.type === 'heading' && n.depth === 1,
           ),
-        }).trim()
+        }
 
-        const subject = mdastToString({
+        nodes.subject = {
           children: node.children.filter(
             (n) => n.type === 'heading' && n.depth === 2,
           ),
-        }).trim()
+        }
 
-        const lead = mdastToString({
+        nodes.lead = {
           children: [
             node.children.filter((n) => n.type === 'paragraph')[0],
           ].filter(Boolean),
-        }).trim()
+        }
 
-        const credits = mdastToString({
+        nodes.credits = {
           children: [
             node.children.filter((n) => n.type === 'paragraph')[1],
           ].filter(Boolean),
-        }).trim()
-
-        Object.assign(strings, {
-          title,
-          subject,
-          lead,
-          credits,
-        })
+        }
       }
     })
   }
 
-  return { strings }
+  return { strings: await toStrings(type, nodes) }
 }
 
 function getCommitMeta(meta) {
@@ -120,10 +132,13 @@ const getDefaultResource = async ({ pgdb }) => {
     table: pgdb.publikator.repos,
     payload: {
       getLatestCommit: async function (repoId) {
-        return pgdb.publikator.commits.findOne(
-          { repoId },
-          { orderBy: { createdAt: 'desc' }, limit: 1 },
-        )
+        return pgdb.publikator.commits
+          .findOne({ repoId }, { orderBy: { createdAt: 'desc' }, limit: 1 })
+          .then((row) => ({
+            ...row,
+            content: row.content || mdastParse(row.content__markdown),
+            type: row.type || 'mdast',
+          }))
       },
     },
     transform,

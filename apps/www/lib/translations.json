@@ -2021,6 +2021,14 @@
       "value": "Nochmal versuchen"
     },
     {
+      "key": "styleguide/AudioPlayer/autoplayOn",
+      "value": "Autoplay an"
+    },
+    {
+      "key": "styleguide/AudioPlayer/autoplayOff",
+      "value": "Autoplay aus"
+    },
+    {
       "key": "styleguide/CommentComposer/placeholder",
       "value": "Einen Beitrag verfassen…"
     },
@@ -7761,7 +7769,7 @@
     },
     {
       "key": "crowdfunding/status/goal/PERMANENT/memberships",
-      "value": "Mitgliedschaften und Abos. Wachstumsziel: {count}."
+      "value": "Mitgliedschaften und Abos."
     },
     {
       "key": "Trial/Form/button",
@@ -7865,15 +7873,7 @@
     },
     {
       "key": "ClimateLandingPage/content/paragraph3",
-      "value": "Melden Sie sich an, um sich einzubringen, an unseren {eventsLink} teilzunehmen und um nichts zu verpassen, was wir zur Klimakrise schreiben."
-    },
-    {
-      "key": "ClimateLandingPage/content/eventsLinkText",
-      "value": "Veranstaltungen"
-    },
-    {
-      "key": "ClimateLandingPage/content/eventsLinkHref",
-      "value": "https://tally.so/r/mRxbdd"
+      "value": "Melden Sie sich an, um sich einzubringen, an unseren Veranstaltungen teilzunehmen und um nichts zu verpassen, was wir zur Klimakrise schreiben."
     },
     {
       "key": "ClimateLandingPage/content/counterText",

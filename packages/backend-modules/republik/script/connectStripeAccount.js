@@ -10,7 +10,6 @@
  */
 
 require('@orbiting/backend-modules-env').config()
-const fetch = require('isomorphic-unfetch')
 const querystring = require('querystring')
 const { STRIPE_PLATFORM_CLIENT_ID, STRIPE_SECRET_KEY_PROJECT_R } = process.env
 

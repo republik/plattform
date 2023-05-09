@@ -1,10 +1,10 @@
 import React, { useMemo } from 'react'
 import { css } from 'glamor'
 import IconButton from '../../../IconButton'
-import { ArrowDownIcon, ArrowUpIcon } from '../../../Icons'
 import { useColorContext } from '../../../Colors/ColorContext'
 import { fontStyles } from '../../../Typography'
 import comment from '../../../../templates/Comment'
+import { IconKeyboardArrowDown, IconKeyboardArrowUp } from '@republik/icons'
 
 const styles = {
   votes: css({
@@ -59,7 +59,7 @@ export const VoteButtons = ({
         <IconButton
           size={24}
           fill={comment.userVote === 'UP' && colorScheme.getCSSColor('primary')}
-          Icon={ArrowUpIcon}
+          Icon={IconKeyboardArrowUp}
           disabled={disabled}
           onClick={() => upVoteHandler(comment.id)}
           title={t('styleguide/CommentActions/upvote')}
@@ -91,7 +91,7 @@ export const VoteButtons = ({
           fill={
             comment.userVote === 'DOWN' && colorScheme.getCSSColor('primary')
           }
-          Icon={ArrowDownIcon}
+          Icon={IconKeyboardArrowDown}
           disabled={disabled}
           onClick={() => downVoteHandler(comment.id)}
           title={t('styleguide/CommentActions/downvote')}

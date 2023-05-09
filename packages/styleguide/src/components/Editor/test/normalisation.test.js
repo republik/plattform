@@ -3,6 +3,7 @@ import { cleanupTree } from '../Core/helpers/tree'
 import schema from '../schema/article'
 import flyerSchema from '../schema/flyer'
 import mockEditor from './mockEditor'
+import { act } from '@testing-library/react'
 
 describe('Slate Editor: Normalisation', () => {
   window.document.getSelection = jest.fn()
@@ -12,11 +13,13 @@ describe('Slate Editor: Normalisation', () => {
   const defaultConfig = { schema }
 
   async function setup(config) {
-    return await mockEditor(createEditor(), {
-      config,
-      value,
-      setValue: (val) => (value = val),
-    })
+    return act(async () =>
+      mockEditor(createEditor(), {
+        config,
+        value,
+        setValue: (val) => (value = val),
+      }),
+    )
   }
 
   describe('fixStructure()', () => {

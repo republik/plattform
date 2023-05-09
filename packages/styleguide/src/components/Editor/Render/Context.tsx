@@ -1,8 +1,9 @@
-import React, { createContext, useContext, useMemo } from 'react'
+import React, { createContext, ReactNode, useContext, useMemo } from 'react'
 import { createFormatter, Formatter } from '../../../lib/translate'
 import { FlyerDate } from '../../Flyer/Date'
 
 type RenderProps = {
+  children?: ReactNode
   Link?: React.FC<any>
   t?: Formatter
   nav?: JSX.Element

@@ -1,6 +1,6 @@
 import { ElementConfigI } from '../../../custom-types'
-import { FlyerTileIcon } from '../../../../Icons'
 import { getId } from '../../../Core/helpers/utils'
+import { IconFlyerTile } from '@republik/icons'
 
 export const baseConfig: Partial<ElementConfigI> = {
   attrs: {
@@ -29,5 +29,5 @@ export const config: ElementConfigI = {
       type: ['flyerPunchline', 'pullQuote', 'articlePreview', 'figure'],
     },
   ],
-  button: { icon: FlyerTileIcon },
+  button: { icon: IconFlyerTile },
 }

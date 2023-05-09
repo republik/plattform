@@ -3,19 +3,14 @@ const querystring = require('querystring')
 // const sleep = require('await-sleep')
 const debug = require('debug')('publikator:mutation:publish')
 const uniq = require('lodash/uniq')
+const pick = require('lodash/pick')
 
 const {
   Roles: { ensureUserHasRole },
 } = require('@orbiting/backend-modules-auth')
 const {
   lib: {
-    Documents: {
-      createPublish,
-      getElasticDoc,
-      isPathUsed,
-      findTemplates,
-      addRelatedDocs,
-    },
+    Documents: { createPublish, getElasticDoc, isPathUsed, addRelatedDocs },
     utils: { getIndexAlias },
   },
 } = require('@orbiting/backend-modules-search')
@@ -42,6 +37,7 @@ const {
   updateCampaignContent,
   getCampaign,
 } = require('../../../lib/mailchimp')
+const { maybeUpsert: maybeUpsertAuphonic } = require('../../../lib/auphonic')
 const {
   prepareMetaForPublish,
   handleRedirection,
@@ -165,7 +161,18 @@ module.exports = async (_, args, context) => {
     searchString,
   )
 
-  metaFieldResolver(resolvedDoc.content.meta, _all, _users, unresolvedRepoIds)
+  const resolved = {
+    meta: pick(
+      // metaFieldResolver returns docs, but also mutates unresolvedRepoIds
+      metaFieldResolver(
+        resolvedDoc.content.meta,
+        _all,
+        _users,
+        unresolvedRepoIds,
+      ),
+      ['dossier.meta', 'format.meta', 'section.meta'],
+    ),
+  }
 
   unresolvedRepoIds = uniq(unresolvedRepoIds).filter(
     (unresolvedRepoId) => unresolvedRepoId !== repoId,
@@ -311,41 +318,6 @@ module.exports = async (_, args, context) => {
     throw e
   }
 
-  const resolved = {}
-
-  if (doc.content.meta.dossier) {
-    const dossiers = await findTemplates(
-      elastic,
-      'dossier',
-      doc.content.meta.dossier,
-    )
-
-    if (!resolved.meta) resolved.meta = {}
-    resolved.meta.dossier = dossiers.pop()
-  }
-
-  if (doc.content.meta.format) {
-    const formats = await findTemplates(
-      elastic,
-      'format',
-      doc.content.meta.format,
-    )
-
-    if (!resolved.meta) resolved.meta = {}
-    resolved.meta.format = formats.pop()
-  }
-
-  if (doc.content.meta.section) {
-    const sections = await findTemplates(
-      elastic,
-      'section',
-      doc.content.meta.section,
-    )
-
-    if (!resolved.meta) resolved.meta = {}
-    resolved.meta.section = sections.pop()
-  }
-
   // publish to elasticsearch
   const elasticDoc = await getElasticDoc({
     indexName: getIndexAlias(indexType.toLowerCase(), 'write'),
@@ -418,6 +390,10 @@ module.exports = async (_, args, context) => {
       console.error(error)
       throw new Error(t('api/publish/error/updateCampaignContent'))
     })
+  }
+
+  if (!prepublication) {
+    await maybeUpsertAuphonic(repoId, { ...resolvedDoc, resolved }, context)
   }
 
   // @TODO: Safe to remove, once repoChange is adopted

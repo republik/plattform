@@ -1,7 +1,5 @@
 import { useMemo } from 'react'
 import {
-  CloseIcon,
-  MicIcon,
   mediaQueries,
   plainButtonRule,
   useColorContext,
@@ -18,6 +16,7 @@ import {
 import useAudioQueue from '../Audio/hooks/useAudioQueue'
 import { useAudioContext } from '../Audio/AudioProvider'
 import { trackEvent } from '../../lib/matomo'
+import { IconClose, IconMic } from '@republik/icons'
 
 const SIZE = 28
 const PADDING_MOBILE = Math.floor((HEADER_HEIGHT_MOBILE - SIZE) / 2)
@@ -66,7 +65,7 @@ const Toggle = ({ expanded, closeOverlay, ...props }) => {
   return expanded || isAudioQueueAvailable ? (
     <button {...styles.menuToggle} onClick={onClick} {...props}>
       <div style={{ opacity: !expanded ? 1 : 0 }} {...styles.audioButton}>
-        <MicIcon {...colorScheme.set('fill', 'text')} size={SIZE} />
+        <IconMic {...colorScheme.set('fill', 'text')} size={SIZE} />
         {!!audioItemsCount && (
           <span
             {...colorScheme.set('background', 'default')}
@@ -77,7 +76,7 @@ const Toggle = ({ expanded, closeOverlay, ...props }) => {
           </span>
         )}
       </div>
-      <CloseIcon
+      <IconClose
         style={{ opacity: expanded ? 1 : 0 }}
         {...styles.closeButton}
         {...colorScheme.set('fill', 'text')}

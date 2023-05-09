@@ -1,8 +1,9 @@
-import { IconButton, CloseIcon } from '@project-r/styleguide'
+import { IconButton } from '@project-r/styleguide'
 import { AuthorSearch } from '@project-r/styleguide/editor'
 
 import { MetaOption } from '../../../MetaDataForm/components/Layout'
 import { css } from 'glamor'
+import { IconClose } from '@republik/icons'
 
 const styles = {
   pill: css({
@@ -38,7 +39,7 @@ export default ({ contributors, onChange }) => {
               <span key={contributor.userId} {...styles.pill}>
                 {contributor.name}
                 <IconButton
-                  Icon={CloseIcon}
+                  Icon={IconClose}
                   style={{ marginLeft: 10 }}
                   size={16}
                   onClick={() => {

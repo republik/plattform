@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ReactNode } from 'react'
 import { Flyer } from '../Typography'
 import { timeFormat, timeParse } from '../../lib/timeFormat'
 import { useRenderContext } from '../Editor/Render/Context'
@@ -32,6 +32,7 @@ export const FlyerDate: React.FC<{
 }
 
 export const FlyerNav: React.FC<{
+  children?: ReactNode
   attributes: any
   [x: string]: unknown
 }> = ({ attributes, children, ...props }) => {

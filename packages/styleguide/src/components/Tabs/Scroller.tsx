@@ -1,10 +1,10 @@
 import { css } from 'glamor'
 import React, { useRef, useState, useEffect } from 'react'
 import scrollIntoView from 'scroll-into-view'
-import { ChevronLeftIcon, ChevronRightIcon } from '../Icons'
 import { plainButtonRule } from '../Button'
 import { useColorContext } from '../Colors/useColorContext'
 import { mUp } from '../../theme/mediaQueries'
+import { IconChevronLeft, IconChevronRight } from '@republik/icons'
 
 const styles = {
   container: css({
@@ -209,7 +209,7 @@ const Scroller = ({
               {...styles.arrowBg}
               {...colorScheme.set('backgroundColor', 'default')}
             />
-            <ChevronLeftIcon
+            <IconChevronLeft
               size={arrowSize}
               {...styles.arrowIcon}
               {...colorScheme.set('fill', 'text')}
@@ -226,7 +226,7 @@ const Scroller = ({
               {...styles.arrowBg}
               {...colorScheme.set('backgroundColor', 'default')}
             />
-            <ChevronRightIcon
+            <IconChevronRight
               size={arrowSize}
               {...styles.arrowIcon}
               {...colorScheme.set('fill', 'text')}

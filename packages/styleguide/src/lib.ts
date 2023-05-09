@@ -188,7 +188,7 @@ export { createRequire } from './components/DynamicComponent'
 
 export * from './chart'
 
-export * from './components/Icons'
+// export * from './components/Icons'
 
 export * from './templates'
 

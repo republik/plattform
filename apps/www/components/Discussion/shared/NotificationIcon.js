@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types'
 import { css } from 'glamor'
 import { convertStyleToRem, fontStyles } from '@project-r/styleguide'
-import { NotificationIcon, NotificationsOffIcon } from '@project-r/styleguide'
+import { IconNotifications, IconNotificationsOff } from '@republik/icons'
 
 const DEFAULT_SIZE = 24
 
@@ -17,7 +17,7 @@ export const styles = {
 }
 
 const Icon = ({ off, fill, children, size = DEFAULT_SIZE, style, onClick }) => {
-  const Icon = off ? NotificationsOffIcon : NotificationIcon
+  const Icon = off ? IconNotificationsOff : IconNotifications
 
   return (
     <a {...styles.link} onClick={onClick} style={style}>
