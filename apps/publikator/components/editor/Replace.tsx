@@ -66,10 +66,11 @@ const Replace: React.FC<{ value: any; onSave: (e: any) => undefined }> = ({
   onSave,
 }) => {
   const [isReplacerVisible, setReplacerVisible] = useState(false)
-  const [searchTerm, setSearchTerm] = useState<string>()
-  const [replaceTerm, setReplaceTerm] = useState<string>()
+  const [searchTerm, setSearchTerm] = useState<string>('')
+  const [replaceTerm, setReplaceTerm] = useState<string>('')
   const [includeMeta, setIncludeMeta] = useState<boolean>()
-  const ref = useRef<HTMLDivElement>()
+  const searchRef = useRef<HTMLInputElement>()
+  const replaceRef = useRef<HTMLInputElement>()
 
   const title = 'Suchen und ersetzen'
   const closeReplacer = () => setReplacerVisible(false)
@@ -98,11 +99,28 @@ const Replace: React.FC<{ value: any; onSave: (e: any) => undefined }> = ({
     }
   }, [])
 
-  const handleClick = (e) => {
-    console.log('handler called')
-    e.preventDefault()
-    const event = new KeyboardEvent('keydown', { key: 'a' })
-    document.dispatchEvent(event)
+  const insertValueAtPositionInString = (
+    text: string,
+    value: string,
+    position: number,
+  ) => {
+    return [text.slice(0, position), value, text.slice(position)].join('')
+  }
+
+  /**
+   * Append special character to search or replace term.
+   * The handler must be set on a buttons onMouseDown event
+   * (using onClick would loose the input focus before appending the character)
+   * @param value
+   */
+  const handleClickSpecialCharacter = (value: string) => {
+    if (document.activeElement === searchRef.current) {
+      const pos = searchRef.current.selectionStart
+      setSearchTerm((prev) => insertValueAtPositionInString(prev, value, pos))
+    } else if (document.activeElement === replaceRef.current) {
+      const pos = replaceRef.current.selectionStart
+      setReplaceTerm((prev) => insertValueAtPositionInString(prev, value, pos))
+    }
   }
 
   return (
@@ -125,23 +143,27 @@ const Replace: React.FC<{ value: any; onSave: (e: any) => undefined }> = ({
               <button
                 {...plainButtonRule}
                 style={{ paddingRight: 20 }}
-                onMouseDown={handleClick}
+                onMouseDown={() => handleClickSpecialCharacter('␣')}
               >
                 Dauerleerzeichen (
                 <span style={{ color: 'rgb(30, 144, 255)' }}>␣</span>)
               </button>
-              <button {...plainButtonRule}>
+              <button
+                {...plainButtonRule}
+                onMouseDown={() => handleClickSpecialCharacter('‧')}
+              >
                 Weiches Trennzeichen (
                 <span style={{ color: 'rgb(30, 144, 255)' }}>‧</span>)
               </button>
             </div>
             <Field
-              ref={ref}
+              ref={searchRef}
               label='Suchen'
               value={searchTerm}
               onChange={(_, value) => setSearchTerm(value)}
             />
             <Field
+              ref={replaceRef}
               label='Ersetzen'
               value={replaceTerm}
               onChange={(_, value) => setReplaceTerm(value)}
