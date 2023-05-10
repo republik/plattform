@@ -88,17 +88,6 @@ const Replace: React.FC<{ value: any; onSave: (e: any) => undefined }> = ({
     closeReplacer()
   }
 
-  useEffect(() => {
-    const keyDownHandler = (event) => {
-      console.log('User pressed: ', event.key)
-    }
-    document.addEventListener('keydown', keyDownHandler)
-
-    return () => {
-      document.removeEventListener('keydown', keyDownHandler)
-    }
-  }, [])
-
   const insertValueAtPositionInString = (
     text: string,
     value: string,
