@@ -1,15 +1,19 @@
-import React from 'react'
+import React, { Dispatch, SetStateAction, useMemo } from 'react'
 import { css } from 'glamor'
-import {
-  IconButton,
-  Spinner,
-  mediaQueries,
-} from '@project-r/styleguide'
+import { IconButton, Spinner, mediaQueries } from '@project-r/styleguide'
 import { useTranslation } from '../../../../lib/withT'
 import { AudioPlayerProps } from '../shared'
 import PlaybackRateControl from './PlaybackRateControl'
 import Scrubber from './Scrubber'
-import { IconForward, IconPause, IconPlay, IconReplay, IconSkipNext } from '@republik/icons'
+import {
+  IconForward,
+  IconPause,
+  IconPlay,
+  IconReplay,
+  IconSkipNext,
+} from '@republik/icons'
+import { IconAutoplay } from '@republik/icons'
+import { IconAutopause } from '@republik/icons'
 
 const styles = {
   root: css({
@@ -19,10 +23,11 @@ const styles = {
   }),
   controlWrapper: css({
     display: 'flex',
-    flexDirection: 'row',
+    flexDirection: 'column',
     justifyContent: 'space-between',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     marginTop: 8,
+    gap: 8,
   }),
   mainControls: css({
     display: 'flex',
@@ -33,6 +38,14 @@ const styles = {
     [mediaQueries.sDown]: {
       gap: 8,
     },
+  }),
+  secondaryControls: css({
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    width: '100%',
+    gap: 32,
   }),
   spinner: css({
     position: 'relative',
@@ -55,6 +68,8 @@ export type AudioControlProps = {
   handleBackward: () => void
   handleSkipToNext: () => void
   handlePlaybackRateChange: (value: number) => void
+  isAutoPlayEnabled: boolean
+  setAutoPlayEnabled: Dispatch<SetStateAction<boolean>>
 } & Pick<
   AudioPlayerProps,
   | 'isPlaying'
@@ -78,8 +93,14 @@ const AudioControl = ({
   currentTime,
   duration,
   buffered,
+  isAutoPlayEnabled,
+  setAutoPlayEnabled,
 }: AudioControlProps) => {
   const { t } = useTranslation()
+
+  const isAutoPlayOnText = t('styleguide/AudioPlayer/autoplayOn')
+  const isAutoPlayOffText = t('styleguide/AudioPlayer/autoplayOff')
+  const autoPlayText = isAutoPlayEnabled ? isAutoPlayOnText : isAutoPlayOffText
 
   return (
     <div>
@@ -133,10 +154,21 @@ const AudioControl = ({
             style={{ marginRight: 0 }}
           />
         </div>
-        <PlaybackRateControl
-          playbackRate={playbackRate}
-          setPlaybackRate={handlePlaybackRateChange}
-        />
+        <div {...styles.secondaryControls}>
+          <div>
+            <IconButton
+              Icon={isAutoPlayEnabled ? IconAutoplay : IconAutopause}
+              label={autoPlayText}
+              labelShort={autoPlayText}
+              onClick={() => setAutoPlayEnabled(!isAutoPlayEnabled)}
+              style={{ marginRight: 0, minWidth: 125 }}
+            />
+          </div>
+          <PlaybackRateControl
+            playbackRate={playbackRate}
+            setPlaybackRate={handlePlaybackRateChange}
+          />
+        </div>
       </div>
     </div>
   )

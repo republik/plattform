@@ -386,6 +386,7 @@ Promise.all([PgDb.connect(), Elasticsearch.connect()]).spread(
           username: 'Departement für Buchstabenvermessung',
           icon_emoji: ':triangular_ruler:',
           blocks,
+          text: '(keine Textversion)',
         })
       }
     } catch (e) {

@@ -243,6 +243,7 @@ export const upsert = async (
         height: 1400,
         width: 1400,
         format: 'jpeg',
+        bg: 'white',
         postfix: '.jpeg',
       },
     },
