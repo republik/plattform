@@ -87,6 +87,7 @@ const Replace: React.FC<{ value: any; onSave: (e: any) => undefined }> = ({
     setReplacerVisible(false)
     setSearchTerm('')
     setReplaceTerm('')
+    setIncludeMeta(false)
   }
 
   // TODO: global replace
