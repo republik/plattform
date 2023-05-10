@@ -39,6 +39,14 @@ module.exports = withTM(
     eslint: {
       ignoreDuringBuilds: true,
     },
+    compiler: {
+      removeConsole:
+        process.env.NODE_ENV === 'production'
+          ? {
+              exclude: ['error', 'warn'],
+            }
+          : false,
+    },
     async rewrites() {
       return {
         beforeFiles: [
