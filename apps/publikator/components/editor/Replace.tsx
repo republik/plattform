@@ -30,15 +30,25 @@ type Node = {
 const replaceText =
   (searchTerm: string, replaceTerm: string) =>
   (node: Node): Node => {
+    const replaceTermHyphens = replaceTerm
+      .replace(/‧/g, '\u00AD')
+      .replace(/␣/g, '\u00a0')
+
+    const searchTermHyphens = searchTerm
+      .replace(/‧/g, '\u00AD')
+      .replace(/␣/g, '\u00a0')
+
     if (node.type === 'text') {
       return {
         ...node,
-        value: node.value.replace(searchTerm, replaceTerm),
+        value: node.value.replaceAll(searchTermHyphens, replaceTermHyphens),
       }
     } else if (node.children) {
       return {
         ...node,
-        children: node.children.map(replaceText(searchTerm, replaceTerm)),
+        children: node.children.map(
+          replaceText(searchTermHyphens, replaceTermHyphens),
+        ),
       }
     } else {
       return node
@@ -51,7 +61,7 @@ const replaceMeta = (meta: object, searchTerm: string, replaceTerm: string) => {
     return {
       ...next,
       [key]: metaKeys.includes(key)
-        ? meta[key].replace(searchTerm, replaceTerm)
+        ? meta[key].replaceAll(searchTerm, replaceTerm)
         : meta[key],
     }
   }, {})
