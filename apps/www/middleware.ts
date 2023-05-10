@@ -5,7 +5,6 @@ import {
   verifyJWT,
 } from './lib/auth/JWTHelper'
 import fetchMyRoles from './lib/helpers/middleware/FetchMeObject'
-import { getLatestJournalPath } from './lib/middleware/journalRedirect'
 
 /**
  * Middleware used to conditionally redirect between the marketing and front page
