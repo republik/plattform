@@ -83,7 +83,11 @@ const Replace: React.FC<{ value: any; onSave: (e: any) => undefined }> = ({
   const replaceRef = useRef<HTMLInputElement>()
 
   const title = 'Suchen und ersetzen'
-  const closeReplacer = () => setReplacerVisible(false)
+  const closeReplacer = () => {
+    setReplacerVisible(false)
+    setSearchTerm('')
+    setReplaceTerm('')
+  }
 
   // TODO: global replace
   const replace = () => {
