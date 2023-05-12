@@ -1,0 +1,20 @@
+{
+  "name": "@republik/mdast-templates",
+  "version": "0.0.0",
+  "private": true,
+  "exports": {
+    ".": "./index.ts"
+  },
+  "dependencies": {},
+  "devDependencies": {},
+  "peerDependencies": {
+    "@project-r/styleguide": "*",
+    "@republik/dynamic-components": "*",
+    "mdast-react-render": "^1.2.0",
+    "@orbiting/remark-preset": "^1.2.4",
+    "glamor": "^2.20.40",
+    "prop-types": "^15.7.2",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  }
+}

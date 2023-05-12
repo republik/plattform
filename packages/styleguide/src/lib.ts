@@ -183,14 +183,12 @@ export { default as TeaserEmbedComment } from './components/TeaserEmbedComment'
 export { SeriesNav } from './components/SeriesNav'
 export { default as TabButton } from './components/Tabs/TabButton'
 export { default as Scroller } from './components/Tabs/Scroller'
-// Export createRequire for dynamic-components
-export { createRequire } from './components/DynamicComponent'
 
 export * from './chart'
 
 // export * from './components/Icons'
 
-export * from './templates'
+export * from '../../mdast-templates'
 
 export { default as SlateRender } from './components/Editor/Render'
 export { default as renderSlateAsText } from './components/Editor/Render/text'

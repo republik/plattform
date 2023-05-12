@@ -27,15 +27,7 @@ import {
   IconButton,
   SeriesNav,
   Loader as SmallLoader,
-  createArticleSchema,
-  createFormatSchema,
-  createDossierSchema,
-  createDiscussionSchema,
-  createNewsletterWebSchema,
-  createSectionSchema,
-  createPageSchema,
   flyerSchema,
-  createRequire,
 } from '@project-r/styleguide'
 
 import withT from '../../lib/withT'
@@ -82,6 +74,16 @@ import ArticleRecommendationsFeed from './ArticleRecommendationsFeed'
 import TeaserAudioPlayButton from '../Audio/shared/TeaserAudioPlayButton'
 import useAudioQueue from '../Audio/hooks/useAudioQueue'
 import { IconEdit } from '@republik/icons'
+import {
+  createArticleSchema,
+  createDiscussionSchema,
+  createDossierSchema,
+  createFormatSchema,
+  createNewsletterEmailSchema,
+  createPageSchema,
+  createSectionSchema,
+} from '@republik/mdast-templates'
+import { createRequire } from '@republik/dynamic-components'
 
 const LoadingComponent = () => <SmallLoader loading />
 
@@ -210,7 +212,7 @@ const schemaCreators = {
   format: createFormatSchema,
   dossier: createDossierSchema,
   discussion: createDiscussionSchema,
-  editorialNewsletter: createNewsletterWebSchema,
+  editorialNewsletter: createNewsletterEmailSchema,
   section: createSectionSchema,
   page: createPageSchema,
   flyer: () => {

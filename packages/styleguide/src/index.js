@@ -806,20 +806,21 @@ const Styleguide = () => {
                       path: '/templates/article',
                       title: 'Article',
                       imports: {
-                        schema: require('./templates/Article').default({
-                          t,
-                          PayNote: require('./components/SeriesNav/__docs__')
-                            .TestPayNote,
-                        }),
+                        schema:
+                          require('../../mdast-templates/src/Article').default({
+                            t,
+                            PayNote: require('./components/SeriesNav/__docs__')
+                              .TestPayNote,
+                          }),
                         customSchema: (options) =>
-                          require('./templates/Article').default({
+                          require('../../mdast-templates/src/Article').default({
                             t,
                             PayNote: require('./components/SeriesNav/__docs__')
                               .TestPayNote,
                             ...options,
                           }),
                         ...require('./components/SeriesNav/__docs__'),
-                        ...require('./templates/docs'),
+                        ...require('../../mdast-templates/src/docs'),
                         renderMdast: require('mdast-react-render').renderMdast,
                       },
                       src: require('./templates/Article/docs.md'),
@@ -828,11 +829,13 @@ const Styleguide = () => {
                       path: '/templates/article-email',
                       title: 'Article Email',
                       imports: {
-                        schema: require('./templates/Article/email').default,
-                        ...require('./templates/docs'),
+                        schema:
+                          require('../../mdast-templates/src/Article/email')
+                            .default,
+                        ...require('../../mdast-templates/src/docs'),
                         renderMdast: require('mdast-react-render').renderMdast,
                         fixtures: {
-                          ...require('./templates/Article/test/article.stub'),
+                          ...require('../../mdast-templates/src/Article/test/article.stub'),
                         },
                       },
                       src: require('./templates/Article/email/docs.md'),
@@ -841,8 +844,9 @@ const Styleguide = () => {
                       path: '/templates/discussion',
                       title: 'Discussion',
                       imports: {
-                        schema: require('./templates/Discussion').default(),
-                        ...require('./templates/docs'),
+                        schema:
+                          require('../../mdast-templates/src/Discussion').default(),
+                        ...require('../../mdast-templates/src/docs'),
                         renderMdast: require('mdast-react-render').renderMdast,
                       },
                       src: require('./templates/Discussion/docs.md'),
@@ -851,10 +855,11 @@ const Styleguide = () => {
                       path: '/templates/comment',
                       title: 'Comment',
                       imports: {
-                        webSchema: require('./templates/Comment/web').default(),
+                        webSchema:
+                          require('../../mdast-templates/src/Comment/web').default(),
                         emailSchema:
-                          require('./templates/Comment/email').default(),
-                        ...require('./templates/docs'),
+                          require('../../mdast-templates/src/Comment/email').default(),
+                        ...require('../../mdast-templates/src/docs'),
                         renderMdast: require('mdast-react-render').renderMdast,
                       },
                       src: require('./templates/Comment/docs.md'),
@@ -863,8 +868,9 @@ const Styleguide = () => {
                       path: '/templates/section',
                       title: 'Section',
                       imports: {
-                        schema: require('./templates/Section').default(),
-                        ...require('./templates/docs'),
+                        schema:
+                          require('../../mdast-templates/src/Section').default(),
+                        ...require('../../mdast-templates/src/docs'),
                         renderMdast: require('mdast-react-render').renderMdast,
                       },
                       src: require('./templates/Section/docs.md'),
@@ -873,8 +879,9 @@ const Styleguide = () => {
                       path: '/templates/format',
                       title: 'Format',
                       imports: {
-                        schema: require('./templates/Format').default(),
-                        ...require('./templates/docs'),
+                        schema:
+                          require('../../mdast-templates/src/Format').default(),
+                        ...require('../../mdast-templates/src/docs'),
                         renderMdast: require('mdast-react-render').renderMdast,
                       },
                       src: require('./templates/Format/docs.md'),
@@ -883,8 +890,9 @@ const Styleguide = () => {
                       path: '/templates/dossier',
                       title: 'Dossier',
                       imports: {
-                        schema: require('./templates/Dossier').default(),
-                        ...require('./templates/docs'),
+                        schema:
+                          require('../../mdast-templates/src/Dossier').default(),
+                        ...require('../../mdast-templates/src/docs'),
                         renderMdast: require('mdast-react-render').renderMdast,
                       },
                       src: require('./templates/Dossier/docs.md'),
@@ -893,8 +901,11 @@ const Styleguide = () => {
                       path: '/templates/front',
                       title: 'Front',
                       imports: {
-                        schema: require('./templates/Front').default({ t }),
-                        ...require('./templates/docs'),
+                        schema:
+                          require('../../mdast-templates/src/Front').default({
+                            t,
+                          }),
+                        ...require('../../mdast-templates/src/docs'),
                         renderMdast: require('mdast-react-render').renderMdast,
                       },
                       src: require('./templates/Front/docs.md'),
@@ -906,11 +917,11 @@ const Styleguide = () => {
                         VariableContext: require('./components/Variables')
                           .VariableContext,
                         webSchema:
-                          require('./templates/EditorialNewsletter/web').default(),
+                          require('../../mdast-templates/src/EditorialNewsletter/web').default(),
                         createEmailSchema:
-                          require('./templates/EditorialNewsletter/email')
+                          require('../../mdast-templates/src/EditorialNewsletter/email')
                             .default,
-                        ...require('./templates/docs'),
+                        ...require('../../mdast-templates/src/docs'),
                         renderMdast: require('mdast-react-render').renderMdast,
                       },
                       src: require('./templates/EditorialNewsletter/docs.md'),
@@ -919,8 +930,9 @@ const Styleguide = () => {
                       path: '/templates/page',
                       title: 'Page',
                       imports: {
-                        schema: require('./templates/Page').default(),
-                        ...require('./templates/docs'),
+                        schema:
+                          require('../../mdast-templates/src/Page').default(),
+                        ...require('../../mdast-templates/src/docs'),
                         renderMdast: require('mdast-react-render').renderMdast,
                       },
                       src: require('./templates/Page/docs.md'),
@@ -1197,8 +1209,9 @@ const Styleguide = () => {
                       title: 'ColorContext',
                       src: require('./components/Colors/docs.md'),
                       imports: {
-                        Container: require('./templates/Article/Container')
-                          .default,
+                        Container:
+                          require('../../mdast-templates/src/Article/Container')
+                            .default,
                         ...require('./components/Typography'),
                         ColorContextProvider,
                         ColorContextLocalExtension:

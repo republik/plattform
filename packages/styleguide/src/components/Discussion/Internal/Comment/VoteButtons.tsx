@@ -3,7 +3,7 @@ import { css } from 'glamor'
 import IconButton from '../../../IconButton'
 import { useColorContext } from '../../../Colors/ColorContext'
 import { fontStyles } from '../../../Typography'
-import comment from '../../../../templates/Comment'
+import comment from '../../../../../../mdast-templates/src/Comment'
 import { IconKeyboardArrowDown, IconKeyboardArrowUp } from '@republik/icons'
 
 const styles = {

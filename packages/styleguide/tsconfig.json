@@ -19,10 +19,10 @@
     "isolatedModules": true,
     "jsx": "react-jsx",
     "allowSyntheticDefaultImports": true,
-    "downlevelIteration": true
+    "downlevelIteration": true,
   },
   "include": [
-    "src"
+    "src",
   ],
   "exclude": [
     "node_modules",

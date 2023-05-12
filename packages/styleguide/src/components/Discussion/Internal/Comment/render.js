@@ -1,6 +1,6 @@
 import React from 'react'
 import { renderMdast } from 'mdast-react-render'
-import createCommentSchema from '../../../../templates/Comment'
+import createCommentSchema from '../../../../../../mdast-templates/src/Comment'
 import { useColorContext } from '../../../Colors/useColorContext'
 
 const schema = createCommentSchema()
