@@ -22,3 +22,14 @@ test('audio player shows up on article page', async ({ page }) => {
 
   await expect(audioPlayerWrapper).not.toBeInViewport()
 })
+
+test('audio player screenshot', async ({ page }) => {
+  await page.goto(
+    'http://localhost:3010/2023/05/03/die-wiederkehr-des-war-on-terror',
+  )
+  const audioPlayerWrapper = page.locator('#audio-player-wrapper')
+
+  await page.getByRole('button', { name: 'Hören' }).click()
+
+  await expect(audioPlayerWrapper).toHaveScreenshot()
+})
