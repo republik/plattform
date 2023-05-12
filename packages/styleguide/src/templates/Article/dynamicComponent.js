@@ -29,7 +29,10 @@ const createDynamicComponent = ({
     }
 
     return (
-      <Figure size={size} attributes={attributes}>
+      <Figure
+        size={size}
+        attributes={{ ...attributes, 'data-testid': 'DYNAMIC_COMPONENT' }}
+      >
         {content}
       </Figure>
     )
