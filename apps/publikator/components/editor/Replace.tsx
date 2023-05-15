@@ -255,6 +255,12 @@ const Replace: React.FC<{ value: any; onSave: (e: any) => undefined }> = ({
                     </li>
                   )}
                 </ul>
+                <small>
+                  <b>Small print:</b> this action can only be undone by throwing
+                  away all uncommitted changes. If you have lots of these and/or
+                  aren&apos;t sure what you are doing with yourself here, please
+                  close this window, commit your changes, and come back.
+                </small>
                 <div style={{ marginTop: 15, textAlign: 'center' }}>
                   <Button
                     primary
