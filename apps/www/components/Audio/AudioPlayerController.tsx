@@ -1,4 +1,12 @@
-import { ReactNode, useCallback, useEffect, useRef, useState } from 'react'
+import {
+  Dispatch,
+  ReactNode,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react'
 import { usePlaybackRate } from '../../lib/playbackRate'
 import {
   AudioContextEvent,
@@ -23,11 +31,13 @@ import {
   AudioPlayerLocations,
   AudioPlayerActions,
 } from './types/AudioActionTracking'
+import createPersistedState from '../../lib/hooks/use-persisted-state'
 
 const DEFAULT_PLAYBACK_RATE = 1
 const SKIP_FORWARD_TIME = 30
 const SKIP_BACKWARD_TIME = 10
 const SAVE_MEDIA_PROGRESS_INTERVAL = 5000 // in ms
+const AUDIO_PLAYER_AUTOPLAY_STORAGE_KEY = 'audio-player-auto-play'
 
 /**
  * Enum to represent the state of the react-native-track-player lib.
@@ -49,10 +59,8 @@ export type AudioPlayerProps = {
   isExpanded: boolean
   setIsExpanded: (isExpanded: boolean) => void
   setWebHandlers: (handlers: AudioEventHandlers) => void
-  setHasAutoPlayed: () => void
   activeItem: AudioQueueItem | null
   queue: AudioQueueItem[]
-  autoPlay?: boolean
   playbackRate: number
   currentTime: number
   duration: number
@@ -75,6 +83,8 @@ export type AudioPlayerProps = {
     syncWithMediaElement: (state: AudioElementState) => void
   }
   buffered: TimeRanges
+  isAutoPlayEnabled: boolean
+  setAutoPlayEnabled: Dispatch<SetStateAction<boolean>>
 }
 
 type AppAudioPlayerState = {
@@ -90,8 +100,14 @@ type AudioPlayerContainerProps = {
   children: (props: AudioPlayerProps) => ReactNode
 }
 
+const usePersistedAutoPlayToggle = createPersistedState<boolean>(
+  AUDIO_PLAYER_AUTOPLAY_STORAGE_KEY,
+)
+
 const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
   const { inNativeApp } = useInNativeApp()
+  const [isAutoPlayEnabled, setAutoPlayEnabled] =
+    usePersistedAutoPlayToggle<boolean>(false)
   const {
     activePlayerItem,
     setActivePlayerItem,
@@ -121,7 +137,6 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
   const audioQueueRef = useRef<AudioQueueItem[] | null>(null)
 
   const [initialized, setInitialized] = useState(false)
-  const [shouldAutoPlay, setShouldAutoPlay] = useState(false)
   const firstTrackIsPrepared = useRef<boolean>(false)
 
   const [isLoading, setIsLoading] = useState(true)
@@ -237,6 +252,10 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
   const fetchInitialTime = async (item: AudioQueueItem): Promise<number> => {
     const mediaId = item.document?.meta?.audioSource.mediaId
     const duration = item.document?.meta?.audioSource.durationMs / 1000
+    console.log('Audio Controller: fetchInitialTime', {
+      mediaId,
+      duration,
+    })
     if (mediaId && duration) {
       const progress = await getMediaProgress({
         mediaId,
@@ -260,6 +279,11 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
       autoPlay = false,
       initialTime = 0,
     ): Promise<void> => {
+      console.log('Audio Controller: setUpAppPlayer', {
+        item,
+        autoPlay,
+        initialTime,
+      })
       notifyApp(AudioEvent.SETUP_TRACK, {
         item,
         autoPlay,
@@ -283,15 +307,21 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
     // The code here can be called by the browser-refocusing
     // in that case auto-play is to be ignored
 
+    console.log('Audio Controller: setupNextAudioItem', {
+      nextUp,
+      autoPlay,
+      initialTime,
+    })
+
     setOptimisticTimeUI(nextUp, initialTime)
     if (inNativeApp) {
       return setUpAppPlayer(nextUp, autoPlay, initialTime)
     } else if (audioEventHandlers.current) {
-      if (autoPlay) {
-        return audioEventHandlers.current.handlePlay(initialTime)
-      } else {
-        return audioEventHandlers.current.handleSetPosition(initialTime)
-      }
+      return audioEventHandlers.current.handleSetupTrack(
+        nextUp,
+        autoPlay,
+        initialTime,
+      )
     } else if (autoPlay) {
       // Handle auto-play being called before the audio-element could be loaded
       setHasDelayedAutoPlay(true)
@@ -300,6 +330,7 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
 
   const onPlay = async () => {
     try {
+      console.log('Audio Controller: onPlay')
       // After opening up the player, the first track is loaded
       // then when the user presses play for the first time, track as playTrack
       if (firstTrackIsPrepared?.current) {
@@ -323,6 +354,7 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
 
   const onPause = async () => {
     try {
+      console.log('Audio Controller: onPause')
       if (!activePlayerItem || !isPlaying) return
       if (inNativeApp) {
         notifyApp(AudioEvent.PAUSE)
@@ -342,7 +374,6 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
       if (!activePlayerItem) {
         return
       }
-      setShouldAutoPlay(false)
       if (inNativeApp) {
         notifyApp(AudioEvent.STOP)
       } else if (audioEventHandlers.current) {
@@ -456,7 +487,7 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
   }
 
   // Handle track ending on media element
-  const onQueueAdvance = async (shouldAutoPlay = true) => {
+  const onQueueAdvance = async (autoPlay: boolean) => {
     if (!activePlayerItem) {
       return
     }
@@ -465,11 +496,15 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
       await saveActiveItemProgress({ currentTime: duration, isPlaying: false })
       const { data } = await removeAudioQueueItem(activePlayerItem.id)
 
+      console.log('Audio Controller: onQueueAdvance', {
+        data,
+        autoPlay,
+      })
+
       audioQueueRef.current = data.audioQueueItems
       setInitialized(true)
       if (data.audioQueueItems.length === 0) {
         setActivePlayerItem(null)
-        setShouldAutoPlay(false)
         if (inNativeApp && isPlaying) {
           onStop(false)
         }
@@ -480,7 +515,7 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
         ])
       } else {
         const nextItem = data.audioQueueItems[0]
-        setupNextAudioItem(nextItem, shouldAutoPlay).catch(handleError)
+        setupNextAudioItem(nextItem, autoPlay).catch(handleError)
         trackEvent([
           AudioPlayerLocations.AUDIO_PLAYER,
           AudioPlayerActions.QUEUE_ADVANCE,
@@ -536,9 +571,6 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
           const { data } = await addAudioQueueItem(item, 1)
           const queue = data.audioQueueItems
           if (!queue || queue.length === 0) {
-            // In case the audioQueue is not yet available (slow audio-queue sync)
-            // Set should auto-play to allow onCanPlay to trigger play once ready
-            setShouldAutoPlay(true)
             return
           }
 
@@ -567,6 +599,9 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
   )
 
   const togglePlayback = useCallback(async () => {
+    console.log('Audio Controller: togglePlayback', {
+      currentlyPlaying: isPlaying,
+    })
     if (isPlaying) {
       await onPause()
     } else {
@@ -652,10 +687,11 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
         audioQueue && audioQueue.length > 0 && audioQueue[0].id === itemId
       const isActiveItem = activePlayerItem && activePlayerItem.id === itemId
       if (isHeadOfQueue || isActiveItem) {
-        await onQueueAdvance()
+        // HasOptedOutFromAutoPlay might be null, which should then result in 'true'
+        await onQueueAdvance(isAutoPlayEnabled)
       }
     },
-    [initialized, activePlayerItem],
+    [initialized, activePlayerItem, isAutoPlayEnabled],
   )
   useNativeAppEvent(AudioEvent.ERROR, handleError, [
     initialized,
@@ -687,10 +723,8 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
         isExpanded,
         setIsExpanded,
         setWebHandlers,
-        setHasAutoPlayed: () => setShouldAutoPlay(false),
         activeItem: activePlayerItem,
         queue: audioQueue,
-        autoPlay: shouldAutoPlay,
         isLoading: isPlaying && isLoading,
         isPlaying,
         isSeeking: false,
@@ -710,8 +744,8 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
           onBackward,
           onClose: onStop,
           onPlaybackRateChange,
-          // onEnded is web only
-          onEnded: () => onQueueAdvance(true),
+          // onEnded is web only and is called whenever a track ends
+          onEnded: () => onQueueAdvance(isAutoPlayEnabled),
           onSkipToNext: () => {
             onQueueAdvance(isPlaying)
             trackEvent([
@@ -725,6 +759,8 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
         },
         buffered,
         hasError,
+        isAutoPlayEnabled,
+        setAutoPlayEnabled,
       })}
     </>
   )

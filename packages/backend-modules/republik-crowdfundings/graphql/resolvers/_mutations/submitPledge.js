@@ -235,8 +235,8 @@ module.exports = async (_, args, context) => {
     const pledgeRegularTotal = regularTotal(pledgeOptions, packageOptions)
     const donation = pledge.total - pledgeRegularTotal
 
-    // email address check
-    if (pledge.user?.email && !validator.isEmail(pledge.user.email)) {
+    // email address check if pledge.user is provided
+    if (pledge.user && !validator.isEmail(pledge.user.email)) {
       logger.error('pledge.user.email is invalid.', { req: req._log(), args })
       throw new Error(t('api/email/invalid'))
     }

@@ -6,6 +6,7 @@ const { PassThrough, Readable } = require('stream')
 const toArray = require('stream-to-array')
 const debug = require('debug')('assets:returnImage')
 const { parse: parsePath } = require('path')
+const colorString = require('color-string')
 
 const { SHARP_NO_CACHE } = process.env
 
@@ -58,6 +59,7 @@ module.exports = async ({
     crop,
     size,
     quality,
+    bg, // background color-string
   } = options
   const qualityInt = parseInt(quality, 10)
   const resolvedQuality =
@@ -230,6 +232,11 @@ module.exports = async ({
             `inline; filename="${parsePath(path).name}.${format}"`,
           )
         }
+
+        if (bg && colorString.get(bg)) {
+          pipeline.flatten({ background: bg })
+        }
+
         pipeline.toFormat(format, {
           // avoid interlaced pngs
           // - not supported in pdfkit

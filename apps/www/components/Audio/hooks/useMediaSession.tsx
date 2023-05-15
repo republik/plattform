@@ -27,7 +27,7 @@ type MediaSessionOptions = {
 export function useMediaSession(
   playerItem: AudioQueueItem | null,
   { isPlaying, callbacks }: MediaSessionOptions,
-) {
+): void {
   const callbackRefs = useRef(callbacks)
 
   callbackRefs.current = callbacks
@@ -44,7 +44,7 @@ export function useMediaSession(
   }, [])
 
   useEffect(() => {
-    if (!('mediaSession' in navigator)) {
+    if (!('mediaSession' in navigator) || !playerItem) {
       return
     }
     const mediaSession = navigator.mediaSession
