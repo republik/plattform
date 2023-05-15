@@ -31,4 +31,4 @@ export { default as createSectionSchema } from './templates/Section'
 // Export Teaser components
 export { TeaserActiveDebates } from './components/TeaserActiveDebates'
 export { TeaserMyMagazine } from './components/TeaserMyMagazine'
-export { TeaserFlyer } from './components/TeaserFlyer'
+export { TeaserFlyer } from './components/SeparatorGutenTag'
