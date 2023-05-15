@@ -1,4 +1,3 @@
-import { css } from 'glamor'
 import React, { useEffect, useRef, useState } from 'react'
 import {
   Overlay,
@@ -9,17 +8,20 @@ import {
   Checkbox,
   plainButtonRule,
   colors,
+  Interaction,
 } from '@project-r/styleguide'
 
-const styles = {
-  inline: css({
-    pointerEvents: 'none',
-    opacity: 0.333,
-    ':empty::before': {
-      content: 'attr(data-text)',
-    },
-  }),
-}
+const META_KEYS = [
+  'title',
+  'shortTitle',
+  'description',
+  'twitterTitle',
+  'twitterDescription',
+  'facebookTitle',
+  'facebookDescription',
+  'seoTitle',
+  'seoDescription',
+]
 
 type Node = {
   type: string
@@ -27,28 +29,47 @@ type Node = {
   children: Node[]
 }
 
+const replaceSpecialChars = (term: string): string =>
+  term.replace(/‧/g, '\u00AD').replace(/␣/g, '\u00a0')
+
+const countTextReplaces =
+  (searchTerm: string) =>
+  (node: Node): number => {
+    const searchRe = new RegExp(searchTerm, 'g')
+    if (node.type === 'text') {
+      return (node.value.match(searchRe) || []).length
+    } else if (node.children) {
+      return node.children.reduce(
+        (acc, child) => acc + countTextReplaces(searchTerm)(child),
+        0,
+      )
+    } else {
+      return 0
+    }
+  }
+
+const countMetaReplaces = (meta: object, searchTerm: string): number => {
+  const searchRe = new RegExp(searchTerm, 'g')
+  const allMetaKeys = Object.keys(meta)
+  return allMetaKeys.reduce((acc, key) => {
+    if (META_KEYS.includes(key) && !!meta[key]) {
+      return acc + (meta[key].match(searchRe) || []).length
+    } else return acc
+  }, 0)
+}
+
 const replaceText =
   (searchTerm: string, replaceTerm: string) =>
   (node: Node): Node => {
-    const replaceTermHyphens = replaceTerm
-      .replace(/‧/g, '\u00AD')
-      .replace(/␣/g, '\u00a0')
-
-    const searchTermHyphens = searchTerm
-      .replace(/‧/g, '\u00AD')
-      .replace(/␣/g, '\u00a0')
-
     if (node.type === 'text') {
       return {
         ...node,
-        value: node.value.replaceAll(searchTermHyphens, replaceTermHyphens),
+        value: node.value.replaceAll(searchTerm, replaceTerm),
       }
     } else if (node.children) {
       return {
         ...node,
-        children: node.children.map(
-          replaceText(searchTermHyphens, replaceTermHyphens),
-        ),
+        children: node.children.map(replaceText(searchTerm, replaceTerm)),
       }
     } else {
       return node
@@ -57,41 +78,63 @@ const replaceText =
 
 const replaceMeta = (meta: object, searchTerm: string, replaceTerm: string) => {
   const allMetaKeys = Object.keys(meta)
-  const metaReplacement = allMetaKeys.reduce((next, key) => {
+  return allMetaKeys.reduce((acc, key) => {
     return {
-      ...next,
-      [key]: metaKeys.includes(key)
-        ? meta[key].replaceAll(searchTerm, replaceTerm)
-        : meta[key],
+      ...acc,
+      [key]:
+        META_KEYS.includes(key) && !!meta[key]
+          ? meta[key].replaceAll(searchTerm, replaceTerm)
+          : meta[key],
     }
   }, {})
-  return metaReplacement
 }
-
-// todo: add more searchable fields
-const metaKeys = ['description']
 
 const Replace: React.FC<{ value: any; onSave: (e: any) => undefined }> = ({
   value,
   onSave,
 }) => {
   const [isReplacerVisible, setReplacerVisible] = useState(false)
+  const [displaySearchTerm, setDisplaySearchTerm] = useState<string>('')
+  const [displayReplaceTerm, setDisplayReplaceTerm] = useState<string>('')
   const [searchTerm, setSearchTerm] = useState<string>('')
   const [replaceTerm, setReplaceTerm] = useState<string>('')
-  const [includeMeta, setIncludeMeta] = useState<boolean>()
+  const [includeMeta, setIncludeMeta] = useState<boolean>(true)
+  const [step, setStep] = useState<number>(1)
+  const [countText, setCountText] = useState<number>(0)
+  const [countMeta, setCountMeta] = useState<number>(0)
   const searchRef = useRef<HTMLInputElement>()
   const replaceRef = useRef<HTMLInputElement>()
+
+  useEffect(() => {
+    setSearchTerm(replaceSpecialChars(displaySearchTerm))
+  }, [displaySearchTerm])
+
+  useEffect(() => {
+    setReplaceTerm(replaceSpecialChars(displayReplaceTerm))
+  }, [displayReplaceTerm])
 
   const title = 'Suchen und ersetzen'
   const closeReplacer = () => {
     setReplacerVisible(false)
+    setDisplaySearchTerm('')
+    setDisplayReplaceTerm('')
     setSearchTerm('')
     setReplaceTerm('')
-    setIncludeMeta(false)
+    setIncludeMeta(true)
+    setStep(1)
+    setCountText(0)
+    setCountMeta(0)
   }
 
-  // TODO: global replace
-  const replace = () => {
+  const handleCount = () => {
+    setCountText(countTextReplaces(searchTerm)(value))
+    if (includeMeta) {
+      setCountMeta(countMetaReplaces(value.meta, searchTerm))
+    }
+    setStep(2)
+  }
+
+  const handleReplace = () => {
     const newValue = {
       ...value,
       children: value.children.map(replaceText(searchTerm, replaceTerm)),
@@ -120,10 +163,14 @@ const Replace: React.FC<{ value: any; onSave: (e: any) => undefined }> = ({
   const handleClickSpecialCharacter = (value: string) => {
     if (document.activeElement === searchRef.current) {
       const pos = searchRef.current.selectionStart
-      setSearchTerm((prev) => insertValueAtPositionInString(prev, value, pos))
+      setDisplaySearchTerm((prev) =>
+        insertValueAtPositionInString(prev, value, pos),
+      )
     } else if (document.activeElement === replaceRef.current) {
       const pos = replaceRef.current.selectionStart
-      setReplaceTerm((prev) => insertValueAtPositionInString(prev, value, pos))
+      setDisplayReplaceTerm((prev) =>
+        insertValueAtPositionInString(prev, value, pos),
+      )
     }
   }
 
@@ -143,7 +190,7 @@ const Replace: React.FC<{ value: any; onSave: (e: any) => undefined }> = ({
         >
           <OverlayToolbar title={title} onClose={closeReplacer} />
           <OverlayBody>
-            <div>
+            <div style={{ marginBottom: 15 }}>
               <button
                 {...plainButtonRule}
                 style={{ paddingRight: 20 }}
@@ -163,26 +210,63 @@ const Replace: React.FC<{ value: any; onSave: (e: any) => undefined }> = ({
             <Field
               ref={searchRef}
               label='Suchen'
-              value={searchTerm}
-              onChange={(_, value) => setSearchTerm(value)}
+              value={displaySearchTerm}
+              disabled={step === 2}
+              onChange={(_, value) => setDisplaySearchTerm(value)}
             />
             <Field
               ref={replaceRef}
               label='Ersetzen'
-              value={replaceTerm}
-              onChange={(_, value) => setReplaceTerm(value)}
+              value={displayReplaceTerm}
+              disabled={step === 2}
+              onChange={(_, value) => setDisplayReplaceTerm(value)}
             />
             <Checkbox
               checked={includeMeta}
               onChange={(_, value) => setIncludeMeta(value)}
+              disabled={step === 2}
             >
               Metabereich einschliessen
             </Checkbox>
-            <div style={{ textAlign: 'center', marginTop: 15 }}>
-              <Button primary onClick={replace}>
-                Ersetzen
-              </Button>
-            </div>
+            {step === 1 && (
+              <div style={{ textAlign: 'center', marginTop: 30 }}>
+                <Button
+                  primary
+                  onClick={handleCount}
+                  disabled={replaceTerm === searchTerm}
+                >
+                  Ersetzen
+                </Button>
+              </div>
+            )}
+            {step === 2 && (
+              <div style={{ marginTop: 30 }}>
+                <ul>
+                  <li>
+                    <Interaction.P>
+                      <b>Fliesstext:</b> {countText} occurrences
+                    </Interaction.P>
+                  </li>
+                  {includeMeta && (
+                    <li>
+                      <Interaction.P>
+                        <b>Metabereicht:</b> {countMeta} occurrences
+                      </Interaction.P>
+                    </li>
+                  )}
+                </ul>
+                <div style={{ marginTop: 15, textAlign: 'center' }}>
+                  <Button
+                    primary
+                    onClick={handleReplace}
+                    style={{ marginRight: 15 }}
+                  >
+                    Ersetzen
+                  </Button>
+                  <Button onClick={() => setStep(1)}>Stöp</Button>
+                </div>
+              </div>
+            )}
           </OverlayBody>
         </Overlay>
       )}
