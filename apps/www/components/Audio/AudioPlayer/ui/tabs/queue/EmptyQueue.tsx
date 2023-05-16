@@ -26,7 +26,7 @@ const EmptyQueue = ({ t }: { t: any }) => {
       <p {...styles.text}>{t('AudioPlayer/Queue/EmptyQueue/p1')}</p>
       <p {...styles.text}>
         {t.elements('AudioPlayer/Queue/EmptyQueue/p2', {
-          icon: <IconPlaylistAdd size={24} />,
+          icon: <IconPlaylistAdd key='add-icon' size={24} />,
         })}
       </p>
       {me && !me.progressConsent && (

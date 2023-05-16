@@ -116,6 +116,8 @@ type ExpandedAudioPlayerProps = {
   handleOpenArticle: (path: string) => Promise<void>
   bodyLockTargetRef: React.RefObject<HTMLDivElement>
   setForceScrollLock: Dispatch<SetStateAction<boolean>>
+  isAutoPlayEnabled: boolean
+  setAutoPlayEnabled: Dispatch<SetStateAction<boolean>>
 } & AudioControlProps &
   Omit<AudioPlayerProps, 'actions'>
 
@@ -140,6 +142,8 @@ const ExpandedAudioPlayer = ({
   bodyLockTargetRef,
   setForceScrollLock,
   hasError,
+  isAutoPlayEnabled,
+  setAutoPlayEnabled,
 }: ExpandedAudioPlayerProps) => {
   const [colorScheme] = useColorContext()
   const [activeTab, setActiveTab] = React.useState<'QUEUE' | 'LATEST'>('QUEUE')
@@ -170,7 +174,6 @@ const ExpandedAudioPlayer = ({
         activeItem.document.meta?.path,
       ])
     } catch (err) {
-      // TODO: handle download error
       console.error(err)
     }
   }
@@ -228,6 +231,8 @@ const ExpandedAudioPlayer = ({
             currentTime={currentTime}
             duration={duration}
             buffered={buffered}
+            isAutoPlayEnabled={isAutoPlayEnabled}
+            setAutoPlayEnabled={setAutoPlayEnabled}
           />
           {hasError && <AudioError />}
         </div>

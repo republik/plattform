@@ -78,10 +78,8 @@ const AudioPlayer = ({
   isExpanded,
   setIsExpanded,
   setWebHandlers,
-  setHasAutoPlayed,
   activeItem,
   queue,
-  autoPlay,
   currentTime,
   playbackRate,
   duration,
@@ -90,6 +88,8 @@ const AudioPlayer = ({
   actions,
   buffered,
   hasError,
+  isAutoPlayEnabled,
+  setAutoPlayEnabled,
 }: AudioPlayerProps) => {
   const { inNativeApp, inIOS } = useInNativeApp()
   const { isAndroid, isFirefox } = useUserAgent()
@@ -182,84 +182,84 @@ const AudioPlayer = ({
   }, [isDesktop, inNativeApp, isAndroid, isFirefox, isExpanded])
 
   return (
-    <AnimatePresence>
-      {isVisible && (
-        <>
-          <Backdrop
-            isExpanded={isExpanded}
-            onBackdropClick={() => setIsExpanded(false)}
-          >
-            <motion.div
-              id={AUDIO_PLAYER_WRAPPER_ID}
-              {...(inNativeApp && inIOS && !isExpanded && iOSSafeInsets)}
-              ref={ref}
-              initial={{ opacity: 0, y: 50 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 50 }}
-              {...styles.wrapper}
-              {...(isExpanded ? styles.wrapperExpanded : styles.wrapperMini)}
-              {...(inNativeApp && isExpanded
-                ? colorScheme.set('backgroundColor', 'default')
-                : colorScheme.set('backgroundColor', 'overlay'))}
-              {...colorScheme.set('boxShadow', 'overlayShadow')}
+    <>
+      <AnimatePresence>
+        {isVisible && (
+          <>
+            <Backdrop
+              isExpanded={isExpanded}
+              onBackdropClick={() => setIsExpanded(false)}
             >
-              {isExpanded ? (
-                <ExpandedAudioPlayer
-                  t={t}
-                  activeItem={activeItem}
-                  queuedItems={queuedItems}
-                  currentTime={currentTime}
-                  duration={duration}
-                  playbackRate={playbackRate}
-                  isPlaying={isPlaying}
-                  isLoading={isLoading}
-                  buffered={buffered}
-                  handleMinimize={() => setIsExpanded(false)}
-                  handleToggle={toggleAudioPlayer}
-                  handleSeek={actions.onSeek}
-                  handleClose={actions.onClose}
-                  handleForward={actions.onForward}
-                  handleBackward={actions.onBackward}
-                  handlePlaybackRateChange={actions.onPlaybackRateChange}
-                  handleSkipToNext={actions.onSkipToNext}
-                  handleOpenArticle={handleOpenArticle}
-                  bodyLockTargetRef={ref}
-                  setForceScrollLock={setForceScrollLock}
-                  hasError={hasError}
-                />
-              ) : (
-                <MiniAudioPlayer
-                  t={t}
-                  activeItem={activeItem}
-                  currentTime={currentTime}
-                  duration={duration}
-                  isPlaying={isPlaying}
-                  isLoading={isLoading}
-                  buffered={buffered}
-                  handleExpand={() => setIsExpanded(true)}
-                  handleToggle={toggleAudioPlayer}
-                  handleSeek={actions.onSeek}
-                  handleClose={actions.onClose}
-                  handleOpenArticle={handleOpenArticle}
-                  hasError={hasError}
-                />
-              )}
-            </motion.div>
-          </Backdrop>
-          {activeItem && !inNativeApp && (
-            <AudioPlaybackElement
-              setWebHandlers={setWebHandlers}
-              setHasAutoPlayed={setHasAutoPlayed}
-              activeItem={activeItem}
-              playbackRate={playbackRate}
-              autoPlay={autoPlay}
-              currentTime={currentTime}
-              actions={actions}
-            />
-          )}
-        </>
+              <motion.div
+                id={AUDIO_PLAYER_WRAPPER_ID}
+                {...(inNativeApp && inIOS && !isExpanded && iOSSafeInsets)}
+                ref={ref}
+                initial={{ opacity: 0, y: 50 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 50 }}
+                {...styles.wrapper}
+                {...(isExpanded ? styles.wrapperExpanded : styles.wrapperMini)}
+                {...(inNativeApp && isExpanded
+                  ? colorScheme.set('backgroundColor', 'default')
+                  : colorScheme.set('backgroundColor', 'overlay'))}
+                {...colorScheme.set('boxShadow', 'overlayShadow')}
+              >
+                {isExpanded ? (
+                  <ExpandedAudioPlayer
+                    t={t}
+                    activeItem={activeItem}
+                    queuedItems={queuedItems}
+                    currentTime={currentTime}
+                    duration={duration}
+                    playbackRate={playbackRate}
+                    isPlaying={isPlaying}
+                    isLoading={isLoading}
+                    buffered={buffered}
+                    handleMinimize={() => setIsExpanded(false)}
+                    handleToggle={toggleAudioPlayer}
+                    handleSeek={actions.onSeek}
+                    handleClose={actions.onClose}
+                    handleForward={actions.onForward}
+                    handleBackward={actions.onBackward}
+                    handlePlaybackRateChange={actions.onPlaybackRateChange}
+                    handleSkipToNext={actions.onSkipToNext}
+                    handleOpenArticle={handleOpenArticle}
+                    bodyLockTargetRef={ref}
+                    setForceScrollLock={setForceScrollLock}
+                    hasError={hasError}
+                    isAutoPlayEnabled={isAutoPlayEnabled}
+                    setAutoPlayEnabled={setAutoPlayEnabled}
+                  />
+                ) : (
+                  <MiniAudioPlayer
+                    t={t}
+                    activeItem={activeItem}
+                    currentTime={currentTime}
+                    duration={duration}
+                    isPlaying={isPlaying}
+                    isLoading={isLoading}
+                    buffered={buffered}
+                    handleExpand={() => setIsExpanded(true)}
+                    handleToggle={toggleAudioPlayer}
+                    handleSeek={actions.onSeek}
+                    handleClose={actions.onClose}
+                    handleOpenArticle={handleOpenArticle}
+                    hasError={hasError}
+                  />
+                )}
+              </motion.div>
+            </Backdrop>
+          </>
+        )}
+      </AnimatePresence>
+      {!inNativeApp && (
+        <AudioPlaybackElement
+          setWebHandlers={setWebHandlers}
+          playbackRate={playbackRate}
+          actions={actions}
+        />
       )}
-    </AnimatePresence>
+    </>
   )
 }
 
