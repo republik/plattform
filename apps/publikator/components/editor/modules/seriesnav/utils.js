@@ -4,7 +4,8 @@ export const isSeriesOverview = (document, titleNodeInput) => {
 
   const repoId = titleNode.data.get('repoId')
   return (
-    repoId === titleNode.data.get('series')?.overview?.repoId ||
-    document.data.get('series')?.overview?.endsWith(repoId)
+    !!repoId &&
+    (repoId === titleNode.data.get('series')?.overview?.repoId ||
+      document.data.get('series')?.overview?.endsWith(repoId))
   )
 }
