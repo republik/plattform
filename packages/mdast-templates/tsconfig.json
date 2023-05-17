@@ -1,0 +1,13 @@
+{
+  "extends": "@republik/tsconfig/reactjs.json",
+  "compilerOptions": {
+    "strict": false
+  },
+  "include": [
+    "**/*.ts",
+    "**/*.tsx"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

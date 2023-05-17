@@ -17,9 +17,9 @@
       "import": "./src/editor.ts",
       "require": "./dist/editor.js"
     },
-    "./*": {
-      "import": "./src/*.ts",
-      "require": "./dist/*.js"
+    "./src/*": {
+      "import": "./src/*",
+      "require": "./dist/*"
     }
   },
   "engines": {
