@@ -20,9 +20,9 @@ function withForcedColorScheme<P>(
     </ColorContextProvider>
   )
 
-  // ComponentWithColorScheme.displayName = `withForcedColorScheme(${
-  //   component.displayName || component || 'Component'
-  // })`
+  ComponentWithColorScheme.displayName = `withForcedColorScheme(${
+    Component.displayName || 'Component'
+  })`
 
   return ComponentWithColorScheme
 }

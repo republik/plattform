@@ -5,6 +5,7 @@ import { CATComponentBaseProps } from '../CustomComponentBase'
 import { IconButton, useColorContext } from '@project-r/styleguide'
 import { PUBLIC_BASE_URL } from '../../../lib/constants'
 import CTAAnimatedBase from '../CTAAnimatedBase'
+import withForcedColorScheme from '../../../lib/withForcedColorScheme'
 
 // Ensures that the link is a local link else it returns undefined
 function parseLocalLink(href?: unknown): string | undefined {
@@ -31,8 +32,8 @@ const DatenschutzBanner = ({
   return (
     <CTAAnimatedBase
       ctaId={callToAction.id}
-      {...colorScheme.set('backgroundColor', 'text')}
-      {...colorScheme.set('color', 'default')}
+      {...colorScheme.set('backgroundColor', 'default')}
+      {...colorScheme.set('color', 'text')}
     >
       <div {...styles.banner}>
         <IconInfoOutline size='1.5rem' />
@@ -46,14 +47,15 @@ const DatenschutzBanner = ({
           Icon={IconClose}
           style={{ alignSelf: 'start' }}
           onClick={() => handleAcknowledge()}
-          fillColorName='default'
+          fillColorName='text'
         />
       </div>
     </CTAAnimatedBase>
   )
 }
 
-export default DatenschutzBanner
+// export default DatenschutzBanner
+export default withForcedColorScheme(DatenschutzBanner, 'dark')
 
 const styles = {
   banner: css({
