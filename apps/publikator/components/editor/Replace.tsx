@@ -11,6 +11,8 @@ import {
   Interaction,
 } from '@project-r/styleguide'
 
+import { useTranslation } from '../../lib/withT'
+
 const META_KEYS = [
   'title',
   'shortTitle',
@@ -93,6 +95,7 @@ const Replace: React.FC<{ value: any; onSave: (e: any) => undefined }> = ({
   value,
   onSave,
 }) => {
+  const { t } = useTranslation()
   const [isReplacerVisible, setReplacerVisible] = useState(false)
   const [displaySearchTerm, setDisplaySearchTerm] = useState<string>('')
   const [displayReplaceTerm, setDisplayReplaceTerm] = useState<string>('')
@@ -113,7 +116,7 @@ const Replace: React.FC<{ value: any; onSave: (e: any) => undefined }> = ({
     setReplaceTerm(replaceSpecialChars(displayReplaceTerm))
   }, [displayReplaceTerm])
 
-  const title = 'Suchen und Ersetzen'
+  const title = t('editor/replace/title')
   const closeReplacer = () => {
     setReplacerVisible(false)
     setDisplaySearchTerm('')
@@ -196,14 +199,14 @@ const Replace: React.FC<{ value: any; onSave: (e: any) => undefined }> = ({
                 style={{ paddingRight: 20 }}
                 onMouseDown={() => handleClickSpecialCharacter('␣')}
               >
-                Dauerleerzeichen (
+                {t('editor/specialChar/nbsp')} (
                 <span style={{ color: 'rgb(30, 144, 255)' }}>␣</span>)
               </button>
               <button
                 {...plainButtonRule}
                 onMouseDown={() => handleClickSpecialCharacter('‧')}
               >
-                Weiches Trennzeichen (
+                {t('editor/specialChar/shy')} (
                 <span style={{ color: 'rgb(30, 144, 255)' }}>‧</span>)
               </button>
             </div>
@@ -219,7 +222,7 @@ const Replace: React.FC<{ value: any; onSave: (e: any) => undefined }> = ({
               onChange={(_, value) => setIncludeMeta(value)}
               disabled={step === 2}
             >
-              Metabereich einschliessen
+              {t('editor/replace/includeMeta')}
             </Checkbox>
             {step === 1 && (
               <div style={{ marginTop: 30 }}>
@@ -228,7 +231,7 @@ const Replace: React.FC<{ value: any; onSave: (e: any) => undefined }> = ({
                   onClick={handleCount}
                   disabled={replaceTerm === searchTerm}
                 >
-                  Suchen
+                  {t('editor/replace/button/search')}
                 </Button>
               </div>
             )}
@@ -236,12 +239,18 @@ const Replace: React.FC<{ value: any; onSave: (e: any) => undefined }> = ({
               <div style={{ marginTop: 15 }}>
                 <div style={{ marginBottom: 15 }}>
                   <Interaction.P>
-                    <b>Fliesstext:</b> {countText} Treffer
+                    <b>{t('editor/replace/text')}</b>{' '}
+                    {t.elements('editor/replace/foundOccurences', {
+                      count: countText,
+                    })}
                   </Interaction.P>
 
                   {includeMeta && (
                     <Interaction.P>
-                      <b>Metabereich:</b> {countMeta} Treffer
+                      <b>{t('editor/replace/meta')}</b>{' '}
+                      {t.elements('editor/replace/foundOccurences', {
+                        count: countMeta,
+                      })}
                     </Interaction.P>
                   )}
                 </div>
@@ -252,20 +261,18 @@ const Replace: React.FC<{ value: any; onSave: (e: any) => undefined }> = ({
                   onChange={(_, value) => setDisplayReplaceTerm(value)}
                 />
 
-                <small>
-                  Diese Änderung kann nur rückgängig gemacht werden, indem du
-                  alle Änderungen verwirfst. Falls du viel geändert hast, lieber
-                  nochmal speichern, bevor du auf «Ersetzen» klickst.
-                </small>
+                <small>{t('editor/replace/searchReplaceHint')}</small>
                 <div style={{ marginTop: 15 }}>
                   <Button
                     primary
                     onClick={handleReplace}
                     style={{ marginRight: 15 }}
                   >
-                    Ersetzen
+                    {t('editor/replace/button/replace')}
                   </Button>
-                  <Button onClick={() => setStep(1)}>Zurück</Button>
+                  <Button onClick={() => setStep(1)}>
+                    {t('editor/replace/button/back')}
+                  </Button>
                 </div>
               </div>
             )}
