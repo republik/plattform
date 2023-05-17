@@ -10,6 +10,7 @@ import {
   colors,
   Interaction,
 } from '@project-r/styleguide'
+import { escapeRegExp } from 'lodash'
 
 const META_KEYS = [
   'title',
@@ -35,7 +36,7 @@ const replaceSpecialChars = (term: string): string =>
 const countTextReplaces =
   (searchTerm: string) =>
   (node: Node): number => {
-    const searchRe = new RegExp(searchTerm, 'g')
+    const searchRe = new RegExp(escapeRegExp(searchTerm), 'g')
     if (node.type === 'text') {
       return (node.value.match(searchRe) || []).length
     } else if (node.children) {
@@ -49,7 +50,7 @@ const countTextReplaces =
   }
 
 const countMetaReplaces = (meta: object, searchTerm: string): number => {
-  const searchRe = new RegExp(searchTerm, 'g')
+  const searchRe = new RegExp(escapeRegExp(searchTerm), 'g')
   const allMetaKeys = Object.keys(meta)
   return allMetaKeys.reduce((acc, key) => {
     if (META_KEYS.includes(key) && !!meta[key]) {
