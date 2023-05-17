@@ -28,6 +28,7 @@ const META_KEYS = [
 
 type Node = {
   type: string
+  identifier?: string
   value?: string
   children: Node[]
 }
@@ -41,6 +42,15 @@ const countTextReplaces =
     const searchRe = new RegExp(escapeRegExp(searchTerm), 'g')
     if (node.type === 'text') {
       return (node.value.match(searchRe) || []).length
+      // exclude byline (aka last paragraph of title node)
+    } else if (node.children && node.identifier === 'TITLE') {
+      return node.children.reduce(
+        (acc, child, idx) =>
+          idx === 3 && child.type === 'paragraph'
+            ? acc
+            : acc + countTextReplaces(searchTerm)(child),
+        0,
+      )
     } else if (node.children) {
       return node.children.reduce(
         (acc, child) => acc + countTextReplaces(searchTerm)(child),
@@ -68,6 +78,16 @@ const replaceText =
       return {
         ...node,
         value: node.value.replaceAll(searchTerm, replaceTerm),
+      }
+      // exclude byline (aka last paragraph of title node)
+    } else if (node.children && node.identifier === 'TITLE') {
+      return {
+        ...node,
+        children: node.children.map((child, idx) =>
+          idx === 3 && child.type === 'paragraph'
+            ? child
+            : replaceText(searchTerm, replaceTerm)(child),
+        ),
       }
     } else if (node.children) {
       return {
@@ -102,7 +122,7 @@ const Replace: React.FC<{ value: any; onSave: (e: any) => undefined }> = ({
   const [displayReplaceTerm, setDisplayReplaceTerm] = useState<string>('')
   const [searchTerm, setSearchTerm] = useState<string>('')
   const [replaceTerm, setReplaceTerm] = useState<string>('')
-  const [includeMeta, setIncludeMeta] = useState<boolean>(true)
+  const [includeMeta, setIncludeMeta] = useState<boolean>(false)
   const [step, setStep] = useState<number>(1)
   const [countText, setCountText] = useState<number>(0)
   const [countMeta, setCountMeta] = useState<number>(0)
@@ -125,7 +145,7 @@ const Replace: React.FC<{ value: any; onSave: (e: any) => undefined }> = ({
     setDisplayReplaceTerm('')
     setSearchTerm('')
     setReplaceTerm('')
-    setIncludeMeta(true)
+    setIncludeMeta(false)
     setStep(1)
     setCountText(0)
     setCountMeta(0)
