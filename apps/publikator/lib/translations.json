@@ -2007,6 +2007,10 @@
     {
       "key": "editor/replace/foundOccurences",
       "value": "{count} Treffer"
+    },
+    {
+      "key": "editor/replace/nothingFound",
+      "value": "Kein Treffer"
     }
   ]
 }

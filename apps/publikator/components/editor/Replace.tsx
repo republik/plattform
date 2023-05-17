@@ -106,6 +106,7 @@ const Replace: React.FC<{ value: any; onSave: (e: any) => undefined }> = ({
   const [step, setStep] = useState<number>(1)
   const [countText, setCountText] = useState<number>(0)
   const [countMeta, setCountMeta] = useState<number>(0)
+  const [searched, setSearched] = useState<boolean>(false)
   const searchRef = useRef<HTMLInputElement>()
   const replaceRef = useRef<HTMLInputElement>()
 
@@ -128,6 +129,7 @@ const Replace: React.FC<{ value: any; onSave: (e: any) => undefined }> = ({
     setStep(1)
     setCountText(0)
     setCountMeta(0)
+    setSearched(false)
   }
 
   const canSubmit =
@@ -137,11 +139,18 @@ const Replace: React.FC<{ value: any; onSave: (e: any) => undefined }> = ({
     if (!canSubmit) {
       return
     }
-    setCountText(countTextReplaces(searchTerm)(value))
-    if (includeMeta) {
-      setCountMeta(countMetaReplaces(value.meta, searchTerm))
+    const textReplacesCount = countTextReplaces(searchTerm)(value)
+    const metaReplacesCount = includeMeta
+      ? countMetaReplaces(value.meta, searchTerm)
+      : 0
+
+    setSearched(true)
+
+    if (textReplacesCount + metaReplacesCount > 0) {
+      setCountText(textReplacesCount)
+      setCountMeta(metaReplacesCount)
+      setStep(2)
     }
-    setStep(2)
   }
 
   const handleReplace = () => {
@@ -157,6 +166,13 @@ const Replace: React.FC<{ value: any; onSave: (e: any) => undefined }> = ({
     }
     onSave(newValue)
     closeReplacer()
+  }
+
+  const handleBack = () => {
+    setCountText(0)
+    setCountMeta(0)
+    setSearched(false)
+    setStep(1)
   }
 
   const insertValueAtPositionInString = (
@@ -189,7 +205,6 @@ const Replace: React.FC<{ value: any; onSave: (e: any) => undefined }> = ({
 
   useEffect(() => {
     if (isReplacerVisible && step === 1) {
-      console.log('hey', searchRef.current)
       searchRef.current?.focus()
     } else if (isReplacerVisible && step === 2) {
       replaceRef.current?.focus()
@@ -253,20 +268,14 @@ const Replace: React.FC<{ value: any; onSave: (e: any) => undefined }> = ({
               >
                 {t('editor/replace/includeMeta')}
               </Checkbox>
-              {step === 1 && (
-                <div style={{ marginTop: 30 }}>
-                  <Button primary onClick={handleCount} disabled={!canSubmit}>
-                    {t('editor/replace/button/search')}
-                  </Button>
-                </div>
-              )}
-              {step === 2 && (
-                <div style={{ marginTop: 15 }}>
-                  <div style={{ marginBottom: 15 }}>
+
+              <div style={{ marginTop: 15 }}>
+                {step === 2 && (
+                  <>
                     <Interaction.P>
                       <b>{t('editor/replace/text')}</b>{' '}
                       {t.elements('editor/replace/foundOccurences', {
-                        count: countText,
+                        count: countText.toFixed(0),
                       })}
                     </Interaction.P>
 
@@ -274,11 +283,30 @@ const Replace: React.FC<{ value: any; onSave: (e: any) => undefined }> = ({
                       <Interaction.P>
                         <b>{t('editor/replace/meta')}</b>{' '}
                         {t.elements('editor/replace/foundOccurences', {
-                          count: countMeta,
+                          count: countMeta.toFixed(0),
                         })}
                       </Interaction.P>
                     )}
-                  </div>
+                  </>
+                )}
+
+                {searched && countText + countMeta === 0 && (
+                  <Interaction.P>
+                    {t('editor/replace/nothingFound')}
+                  </Interaction.P>
+                )}
+              </div>
+
+              {step === 1 && (
+                <div style={{ marginTop: 30 }}>
+                  <Button primary onClick={handleCount} disabled={!canSubmit}>
+                    {t('editor/replace/button/search')}
+                  </Button>
+                </div>
+              )}
+
+              {step === 2 && (
+                <div style={{ marginTop: 15 }}>
                   <Field
                     ref={replaceRef}
                     label='Ersetzen'
@@ -296,7 +324,7 @@ const Replace: React.FC<{ value: any; onSave: (e: any) => undefined }> = ({
                     >
                       {t('editor/replace/button/replace')}
                     </Button>
-                    <Button onClick={() => setStep(1)}>
+                    <Button onClick={handleBack}>
                       {t('editor/replace/button/back')}
                     </Button>
                   </div>
