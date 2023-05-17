@@ -178,6 +178,14 @@ const Replace: React.FC<{ value: any; onSave: (e: any) => undefined }> = ({
     }
   }
 
+  useEffect(() => {
+    if (step === 1) {
+      searchRef.current?.focus()
+    } else if (step === 2) {
+      replaceRef.current?.focus()
+    }
+  }, [step])
+
   return (
     <>
       <button
