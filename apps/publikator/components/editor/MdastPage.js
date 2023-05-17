@@ -958,13 +958,6 @@ export class EditorPage extends Component {
           >
             {!readOnly && !showPreview && (
               <Sidebar.Tab tabId='edit' label='Editieren'>
-                <button
-                  onClick={() => this.goToRaw(isTemplate)}
-                  {...plainButtonRule}
-                  style={{ color: colors.primary }}
-                >
-                  {t('pages/raw/title')}
-                </button>
                 <Replace
                   value={this.editor?.serializer.serialize(editorState)}
                   onSave={this.persistChanges.bind(this)}
@@ -977,6 +970,13 @@ export class EditorPage extends Component {
                     value={editorState}
                   />
                 )}
+                <button
+                  onClick={() => this.goToRaw(isTemplate)}
+                  {...plainButtonRule}
+                  style={{ color: colors.primary }}
+                >
+                  {t('pages/raw/title')}
+                </button>
               </Sidebar.Tab>
             )}
             {!showPreview && (

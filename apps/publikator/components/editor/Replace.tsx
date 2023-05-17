@@ -61,7 +61,7 @@ const countMetaReplaces = (meta: object, searchTerm: string): number => {
 const replaceText =
   (searchTerm: string, replaceTerm: string) =>
   (node: Node): Node => {
-    if (node.type === 'text') {
+    if (node.type === 'text' && node.value) {
       return {
         ...node,
         value: node.value.replaceAll(searchTerm, replaceTerm),
@@ -113,7 +113,7 @@ const Replace: React.FC<{ value: any; onSave: (e: any) => undefined }> = ({
     setReplaceTerm(replaceSpecialChars(displayReplaceTerm))
   }, [displayReplaceTerm])
 
-  const title = 'Suchen und ersetzen'
+  const title = 'Suchen und Ersetzen'
   const closeReplacer = () => {
     setReplacerVisible(false)
     setDisplaySearchTerm('')
@@ -214,13 +214,6 @@ const Replace: React.FC<{ value: any; onSave: (e: any) => undefined }> = ({
               disabled={step === 2}
               onChange={(_, value) => setDisplaySearchTerm(value)}
             />
-            <Field
-              ref={replaceRef}
-              label='Ersetzen'
-              value={displayReplaceTerm}
-              disabled={step === 2}
-              onChange={(_, value) => setDisplayReplaceTerm(value)}
-            />
             <Checkbox
               checked={includeMeta}
               onChange={(_, value) => setIncludeMeta(value)}
@@ -229,39 +222,42 @@ const Replace: React.FC<{ value: any; onSave: (e: any) => undefined }> = ({
               Metabereich einschliessen
             </Checkbox>
             {step === 1 && (
-              <div style={{ textAlign: 'center', marginTop: 30 }}>
+              <div style={{ marginTop: 30 }}>
                 <Button
                   primary
                   onClick={handleCount}
                   disabled={replaceTerm === searchTerm}
                 >
-                  Ersetzen
+                  Suchen
                 </Button>
               </div>
             )}
             {step === 2 && (
-              <div style={{ marginTop: 30 }}>
-                <ul>
-                  <li>
-                    <Interaction.P>
-                      <b>Fliesstext:</b> {countText} occurrences
-                    </Interaction.P>
-                  </li>
+              <div style={{ marginTop: 15 }}>
+                <div style={{ marginBottom: 15 }}>
+                  <Interaction.P>
+                    <b>Fliesstext:</b> {countText} Treffer
+                  </Interaction.P>
+
                   {includeMeta && (
-                    <li>
-                      <Interaction.P>
-                        <b>Metabereicht:</b> {countMeta} occurrences
-                      </Interaction.P>
-                    </li>
+                    <Interaction.P>
+                      <b>Metabereich:</b> {countMeta} Treffer
+                    </Interaction.P>
                   )}
-                </ul>
+                </div>
+                <Field
+                  ref={replaceRef}
+                  label='Ersetzen'
+                  value={displayReplaceTerm}
+                  onChange={(_, value) => setDisplayReplaceTerm(value)}
+                />
+
                 <small>
-                  <b>Small print:</b> this action can only be undone by throwing
-                  away all uncommitted changes. If you have lots of these and/or
-                  aren&apos;t sure what you are doing with yourself here, please
-                  close this window, commit your changes, and come back.
+                  Diese Änderung kann nur rückgängig gemacht werden, indem du
+                  alle Änderungen verwirfst. Falls du viel geändert hast, lieber
+                  nochmal speichern, bevor du auf «Ersetzen» klickst.
                 </small>
-                <div style={{ marginTop: 15, textAlign: 'center' }}>
+                <div style={{ marginTop: 15 }}>
                   <Button
                     primary
                     onClick={handleReplace}
@@ -269,7 +265,7 @@ const Replace: React.FC<{ value: any; onSave: (e: any) => undefined }> = ({
                   >
                     Ersetzen
                   </Button>
-                  <Button onClick={() => setStep(1)}>Stöp</Button>
+                  <Button onClick={() => setStep(1)}>Zurück</Button>
                 </div>
               </div>
             )}
