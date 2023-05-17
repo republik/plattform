@@ -202,89 +202,100 @@ const Replace: React.FC<{ value: any; onSave: (e: any) => undefined }> = ({
         >
           <OverlayToolbar title={title} onClose={closeReplacer} />
           <OverlayBody>
-            <div style={{ marginBottom: 15 }}>
-              <button
-                {...plainButtonRule}
-                style={{ paddingRight: 20 }}
-                onMouseDown={() => handleClickSpecialCharacter('␣')}
-              >
-                {t('editor/specialChar/nbsp')} (
-                <span style={{ color: 'rgb(30, 144, 255)' }}>␣</span>)
-              </button>
-              <button
-                {...plainButtonRule}
-                onMouseDown={() => handleClickSpecialCharacter('‧')}
-              >
-                {t('editor/specialChar/shy')} (
-                <span style={{ color: 'rgb(30, 144, 255)' }}>‧</span>)
-              </button>
-            </div>
-            <Field
-              ref={searchRef}
-              label='Suchen'
-              value={displaySearchTerm}
-              disabled={step === 2}
-              onChange={(_, value) => setDisplaySearchTerm(value)}
-            />
-            <Checkbox
-              checked={includeMeta}
-              onChange={(_, value) => setIncludeMeta(value)}
-              disabled={step === 2}
+            <form
+              onSubmit={(e) => {
+                if (step === 1) {
+                  handleCount()
+                } else if (step === 2) {
+                  handleReplace()
+                }
+                e.preventDefault()
+              }}
             >
-              {t('editor/replace/includeMeta')}
-            </Checkbox>
-            {step === 1 && (
-              <div style={{ marginTop: 30 }}>
-                <Button
-                  primary
-                  onClick={handleCount}
-                  disabled={replaceTerm === searchTerm}
+              <div style={{ marginBottom: 15 }}>
+                <button
+                  {...plainButtonRule}
+                  style={{ paddingRight: 20 }}
+                  onMouseDown={() => handleClickSpecialCharacter('␣')}
                 >
-                  {t('editor/replace/button/search')}
-                </Button>
+                  {t('editor/specialChar/nbsp')} (
+                  <span style={{ color: 'rgb(30, 144, 255)' }}>␣</span>)
+                </button>
+                <button
+                  {...plainButtonRule}
+                  onMouseDown={() => handleClickSpecialCharacter('‧')}
+                >
+                  {t('editor/specialChar/shy')} (
+                  <span style={{ color: 'rgb(30, 144, 255)' }}>‧</span>)
+                </button>
               </div>
-            )}
-            {step === 2 && (
-              <div style={{ marginTop: 15 }}>
-                <div style={{ marginBottom: 15 }}>
-                  <Interaction.P>
-                    <b>{t('editor/replace/text')}</b>{' '}
-                    {t.elements('editor/replace/foundOccurences', {
-                      count: countText,
-                    })}
-                  </Interaction.P>
-
-                  {includeMeta && (
-                    <Interaction.P>
-                      <b>{t('editor/replace/meta')}</b>{' '}
-                      {t.elements('editor/replace/foundOccurences', {
-                        count: countMeta,
-                      })}
-                    </Interaction.P>
-                  )}
-                </div>
-                <Field
-                  ref={replaceRef}
-                  label='Ersetzen'
-                  value={displayReplaceTerm}
-                  onChange={(_, value) => setDisplayReplaceTerm(value)}
-                />
-
-                <small>{t('editor/replace/searchReplaceHint')}</small>
-                <div style={{ marginTop: 15 }}>
+              <Field
+                ref={searchRef}
+                label='Suchen'
+                value={displaySearchTerm}
+                disabled={step === 2}
+                onChange={(_, value) => setDisplaySearchTerm(value)}
+              />
+              <Checkbox
+                checked={includeMeta}
+                onChange={(_, value) => setIncludeMeta(value)}
+                disabled={step === 2}
+              >
+                {t('editor/replace/includeMeta')}
+              </Checkbox>
+              {step === 1 && (
+                <div style={{ marginTop: 30 }}>
                   <Button
                     primary
-                    onClick={handleReplace}
-                    style={{ marginRight: 15 }}
+                    onClick={handleCount}
+                    disabled={replaceTerm === searchTerm}
                   >
-                    {t('editor/replace/button/replace')}
-                  </Button>
-                  <Button onClick={() => setStep(1)}>
-                    {t('editor/replace/button/back')}
+                    {t('editor/replace/button/search')}
                   </Button>
                 </div>
-              </div>
-            )}
+              )}
+              {step === 2 && (
+                <div style={{ marginTop: 15 }}>
+                  <div style={{ marginBottom: 15 }}>
+                    <Interaction.P>
+                      <b>{t('editor/replace/text')}</b>{' '}
+                      {t.elements('editor/replace/foundOccurences', {
+                        count: countText,
+                      })}
+                    </Interaction.P>
+
+                    {includeMeta && (
+                      <Interaction.P>
+                        <b>{t('editor/replace/meta')}</b>{' '}
+                        {t.elements('editor/replace/foundOccurences', {
+                          count: countMeta,
+                        })}
+                      </Interaction.P>
+                    )}
+                  </div>
+                  <Field
+                    ref={replaceRef}
+                    label='Ersetzen'
+                    value={displayReplaceTerm}
+                    onChange={(_, value) => setDisplayReplaceTerm(value)}
+                  />
+
+                  <small>{t('editor/replace/searchReplaceHint')}</small>
+                  <div style={{ marginTop: 15 }}>
+                    <Button
+                      primary
+                      onClick={handleReplace}
+                      style={{ marginRight: 15 }}
+                    >
+                      {t('editor/replace/button/replace')}
+                    </Button>
+                    <Button onClick={() => setStep(1)}>
+                      {t('editor/replace/button/back')}
+                    </Button>
+                  </div>
+                </div>
+              )}
+            </form>
           </OverlayBody>
         </Overlay>
       )}
