@@ -23,14 +23,14 @@ const reducer = (markType) => (props) => (event) => {
     let has = true
     while (has) {
       i--
-      has = characters.get(i).marks.some(matchMark(markType))
+      has = characters.get(i)?.marks.some(matchMark(markType))
     }
     const start = i
     i = offset
     has = true
     while (has) {
       i++
-      has = characters.get(i).marks.some(matchMark(markType))
+      has = characters.get(i)?.marks.some(matchMark(markType))
     }
     const end = i
     const length = end - start
