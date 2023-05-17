@@ -130,7 +130,13 @@ const Replace: React.FC<{ value: any; onSave: (e: any) => undefined }> = ({
     setCountMeta(0)
   }
 
+  const canSubmit =
+    (step === 1 && searchTerm !== '') || (step === 2 && replaceTerm !== '')
+
   const handleCount = () => {
+    if (!canSubmit) {
+      return
+    }
     setCountText(countTextReplaces(searchTerm)(value))
     if (includeMeta) {
       setCountMeta(countMetaReplaces(value.meta, searchTerm))
@@ -139,6 +145,9 @@ const Replace: React.FC<{ value: any; onSave: (e: any) => undefined }> = ({
   }
 
   const handleReplace = () => {
+    if (!canSubmit) {
+      return
+    }
     const newValue = {
       ...value,
       children: value.children.map(replaceText(searchTerm, replaceTerm)),
@@ -179,12 +188,13 @@ const Replace: React.FC<{ value: any; onSave: (e: any) => undefined }> = ({
   }
 
   useEffect(() => {
-    if (step === 1) {
+    if (isReplacerVisible && step === 1) {
+      console.log('hey', searchRef.current)
       searchRef.current?.focus()
-    } else if (step === 2) {
+    } else if (isReplacerVisible && step === 2) {
       replaceRef.current?.focus()
     }
-  }, [step])
+  }, [step, isReplacerVisible])
 
   return (
     <>
@@ -245,11 +255,7 @@ const Replace: React.FC<{ value: any; onSave: (e: any) => undefined }> = ({
               </Checkbox>
               {step === 1 && (
                 <div style={{ marginTop: 30 }}>
-                  <Button
-                    primary
-                    onClick={handleCount}
-                    disabled={replaceTerm === searchTerm}
-                  >
+                  <Button primary onClick={handleCount} disabled={!canSubmit}>
                     {t('editor/replace/button/search')}
                   </Button>
                 </div>
@@ -286,6 +292,7 @@ const Replace: React.FC<{ value: any; onSave: (e: any) => undefined }> = ({
                       primary
                       onClick={handleReplace}
                       style={{ marginRight: 15 }}
+                      disabled={!canSubmit}
                     >
                       {t('editor/replace/button/replace')}
                     </Button>
