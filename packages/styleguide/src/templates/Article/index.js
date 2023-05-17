@@ -189,6 +189,7 @@ const createSchema = ({
   PayNote,
   noEmpty = true,
   AudioPlayButton,
+  DynamicComponent,
 } = {}) => {
   const base = createBase({ metaBody, metaHeadlines })
   const blocks = createBlocks({
@@ -208,6 +209,7 @@ const createSchema = ({
 
   const dynamicComponent = createDynamicComponent({
     t,
+    DynamicComponent,
     dynamicComponentRequire,
     dynamicComponentIdentifiers,
     insertButtonText: 'Dynamic Component',

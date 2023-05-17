@@ -1,13 +1,18 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import * as glamor from 'glamor'
-import * as styleguide from '../../lib'
-import { Chart, ChartTitle, ChartLead, ChartLegend } from '../Chart'
+import * as styleguide from '@project-r/styleguide'
+import { Loader } from '@project-r/styleguide'
+import {
+  Chart,
+  ChartTitle,
+  ChartLead,
+  ChartLegend,
+} from '@project-r/styleguide/chart'
 
 import { requireFrom } from './require'
-import Loader from '../Loader'
 
-import SG from '../../theme/env'
+import SG from './env'
 
 const DEFAULT_ALLOW_LIST = (SG.DYNAMIC_COMPONENT_BASE_URLS || '')
   .split(',')

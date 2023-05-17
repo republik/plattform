@@ -1,4 +1,4 @@
-import { createRequire } from '@project-r/styleguide'
+import { createRequire } from '@republik/dynamic-components'
 
 /*
  * import all react-apollo and graphql-tag functions
@@ -6,10 +6,16 @@ import { createRequire } from '@project-r/styleguide'
  */
 
 /* eslint-disable */
-import { ApolloConsumer, ApolloProvider, gql } from "@apollo/client";
-import { Mutation, Query, Subscription } from "@apollo/client/react/components";
-import { graphql, withApollo, withMutation, withQuery, withSubscription } from "@apollo/client/react/hoc";
-import compose from "lodash/flowRight";
+import { ApolloConsumer, ApolloProvider, gql } from '@apollo/client'
+import { Mutation, Query, Subscription } from '@apollo/client/react/components'
+import {
+  graphql,
+  withApollo,
+  withMutation,
+  withQuery,
+  withSubscription,
+} from '@apollo/client/react/hoc'
+import compose from 'lodash/flowRight'
 /* eslint-enable */
 
 export default createRequire().alias({

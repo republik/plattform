@@ -11,6 +11,7 @@ import {
   createDiscussionSchema,
   createDossierSchema,
 } from '@project-r/styleguide'
+import DynamicComponent from '@republik/dynamic-components'
 
 import { getDatePath } from '@project-r/styleguide/editor'
 import { t } from '../../lib/withT'
@@ -29,6 +30,7 @@ const NoOpLink = ({ children }) =>
 
 const articleSchemaParams = {
   t,
+  DynamicComponent,
   dynamicComponentRequire,
   dynamicComponentIdentifiers,
   ...withArticleData,

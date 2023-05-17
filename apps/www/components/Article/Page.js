@@ -35,8 +35,8 @@ import {
   createSectionSchema,
   createPageSchema,
   flyerSchema,
-  createRequire,
 } from '@project-r/styleguide'
+import DynamicComponent, { createRequire } from '@republik/dynamic-components'
 
 import withT from '../../lib/withT'
 import { parseJSONObject } from '../../lib/safeJSON'
@@ -472,6 +472,7 @@ const ArticlePage = ({
         ActionBar: BrowserOnlyActionBar,
         PayNote: showInlinePaynote ? TrialPayNoteMini : undefined,
         AudioPlayButton: showPlayButton ? TeaserAudioPlayButton : undefined,
+        DynamicComponent,
       }),
     [template, inNativeIOSApp, inNativeApp, showInlinePaynote, titleBreakout],
   )
