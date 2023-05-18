@@ -1,46 +1,38 @@
-import httpProxy from 'http-proxy'
+import { createProxyMiddleware } from 'http-proxy-middleware'
+import { PUBLIC_BASE_URL } from '../../../lib/constants'
 
-const API_URL = 'https://api.republik.love/graphql' // The actual URL of your API
+const publicHostname = PUBLIC_BASE_URL
+  ? new URL(PUBLIC_BASE_URL).hostname
+  : 'localhost'
 
-const proxy = httpProxy.createProxyServer()
-
-proxy.on('proxyRes', (proxyRes) => {
-  proxyRes.headers['set-cookie'] = (proxyRes.headers['set-cookie'] || [])
-    .map((header) => header.replace('; Secure', ''))
-    .map((header) => header.replace('; SameSite=None', '; SameSite=Lax'))
-})
-
-proxy.on('proxyReq', (proxyReq, req, res) => {
-  req.headers['set-cookie'] = (req.headers['set-cookie'] || [])
-    .map((header) => header + '; Secure')
-    .map((header) => header.replace('; SameSite=Lax', '; SameSite=None'))
+const proxy = createProxyMiddleware({
+  target: process.env.PROXY_API_URL,
+  changeOrigin: true,
+  onProxyRes: (proxyRes) => {
+    // Don't use secure cookie on local domains
+    if (publicHostname.match(/(localhost|\.local)$/)) {
+      proxyRes.headers['set-cookie'] = (proxyRes.headers['set-cookie'] || [])
+        .map((header) => header.replace('; Secure', ''))
+        .map((header) => header.replace('; SameSite=None', '; SameSite=Lax'))
+    }
+  },
+  cookieDomainRewrite: {
+    '*': publicHostname,
+  },
 })
 
 // Make sure that we don't parse JSON bodies on this route:
 export const config = {
   api: {
+    externalResolver: true,
     bodyParser: false,
   },
 }
 
 export default (req, res) => {
-  console.log(req)
-  return new Promise((resolve, reject) => {
-    proxy.web(
-      req,
-      res,
-      {
-        target: API_URL,
-        changeOrigin: true,
-        cookieDomainRewrite: { '*': 'localhost' },
-      },
-      (err) => {
-        if (err) {
-          console.error('Whoops, something went wrong with proxying')
-          return reject(err)
-        }
-        resolve(null)
-      },
-    )
+  proxy(req, res, (err) => {
+    if (err) {
+      throw err
+    }
   })
 }
