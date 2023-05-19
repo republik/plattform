@@ -747,13 +747,13 @@ const Styleguide = () => {
                       src: require('./components/TeaserMyMagazine/docs.md'),
                     },
                     {
-                      path: '/teaserflyer',
-                      title: 'TeaserFlyer',
+                      path: '/separatorgutentag',
+                      title: '"Guten Tag" separator',
                       imports: {
                         css,
-                        ...require('./components/TeaserFlyer'),
+                        ...require('./components/SeparatorGutenTag'),
                       },
-                      src: require('./components/TeaserFlyer/docs.md'),
+                      src: require('./components/SeparatorGutenTag/docs.md'),
                     },
                     {
                       path: '/teasercarousel',
