@@ -1,5 +1,6 @@
 {
   "name": "@project-r/styleguide",
+  "private": true,
   "version": "0.0.0",
   "main": "dist/lib.js",
   "module": "src/lib.ts",
@@ -32,17 +33,13 @@
     "url": "https://github.com/republik/plattform.git"
   },
   "scripts": {
-    "commit": "git-cz",
-    "prepublishOnly": "yarn prebuild && yarn build",
     "build": "tsc --project tsconfig.dist.json",
     "start": "serve -s build",
     "dev": "tsc -w --project tsconfig.dist.json",
     "test": "jest",
     "test:dev": "jest --watch",
-    "commitmsg": "validate-commit-msg",
     "translations-raw": "NODE_OPTIONS='-r dotenv/config' gsheets --key=1sMS5u4SIFY2loAmx8jftDXqTbq2RheJLY7FBeXSm1Tc --title=live --pretty --out src/lib/translations.json",
-    "translations": "yarn translations-raw && git add -p src/lib/translations.json && git checkout -- src/lib/translations.json",
-    "upgrade-interactive": "npx npm-check -u"
+    "translations": "yarn translations-raw && git add -p src/lib/translations.json && git checkout -- src/lib/translations.json"
   },
   "dependencies": {
     "body-scroll-lock": "^3.1.5",
@@ -68,9 +65,6 @@
     "@types/react-dom": "^18.0.11",
     "babel-jest": "^29.5.0",
     "clipboard-copy": "^4.0.1",
-    "commitizen": "^4.2.4",
-    "concurrently": "^7.0.0",
-    "cz-conventional-changelog": "^3.3.0",
     "d3-array": "^1.2.1",
     "d3-color": "^1.4.1",
     "d3-dsv": "^1.2.0",
@@ -130,11 +124,6 @@
     "react-textarea-autosize": ">=5.1.0",
     "scroll-into-view": "1.15.0",
     "topojson": "3.x"
-  },
-  "config": {
-    "commitizen": {
-      "path": "./node_modules/cz-conventional-changelog"
-    }
   },
   "browserslist": [
     ">0.2%",
