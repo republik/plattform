@@ -1,5 +1,5 @@
 {
   "extends": "@republik/tsconfig/nextjs.json",
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "pages/cable-globe.js"],
   "exclude": ["node_modules"]
 }
