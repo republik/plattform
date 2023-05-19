@@ -35,9 +35,9 @@ const SeparatorGutenTag = () => {
     <div {...styles.outerContainer}>
       <div {...styles.innerContainer}>
         <Flyer.H1>
-          Guten Tag
+          Guten Tag.
           <br />
-          schön, sind Sie da!
+          Schön, sind Sie da!
         </Flyer.H1>
       </div>
     </div>
