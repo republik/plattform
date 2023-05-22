@@ -188,9 +188,11 @@ module.exports = async (_, args, context) => {
     const claimedMemberships = memberships.filter(
       (m) => !!m.pledges.find((p) => p.userId !== userId),
     )
-    if (claimedMemberships.length > 0) {
-      throw new Error(t('api/users/delete/claimedMembershipsNotSupported'))
-    }
+
+    const hasClaimedMemberships = claimedMemberships > 0
+    // if (claimedMemberships.length > 0) {
+    //   throw new Error(t('api/users/delete/claimedMembershipsNotSupported'))
+    // }
 
     const grants = await transaction.public.accessGrants.find({
       or: [{ granterUserId: userId }, { recipientUserId: userId }],
@@ -214,7 +216,12 @@ module.exports = async (_, args, context) => {
 
     // if the user doesn't have pledges, nor grants, nor candidacies we can delete everything,
     // otherwise we need to keep (firstName, lastName, address) for bookkeeping
-    if (!hasPledges && !hasGrants && !hasCandidacies) {
+    if (
+      !hasPledges &&
+      !hasGrants &&
+      !hasCandidacies &&
+      !hasClaimedMemberships
+    ) {
       // delete stripe data
       await deleteStripeCustomer({ userId, pgdb: transaction })
 
