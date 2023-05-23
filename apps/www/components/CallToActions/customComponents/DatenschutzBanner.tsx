@@ -1,4 +1,4 @@
-import { IconClose, IconInfoOutline } from '@republik/icons'
+import { IconClose } from '@republik/icons'
 import { css } from 'glamor'
 import Link from 'next/link'
 import { CATComponentBaseProps } from '../CustomComponentBase'
@@ -36,7 +36,6 @@ const DatenschutzBanner = ({
       {...colorScheme.set('color', 'text')}
     >
       <div {...styles.banner}>
-        <IconInfoOutline size='1.5rem' />
         <div {...styles.text}>
           <p>
             Wir erweitern unsere Datenschutzbestimmungen, um der
