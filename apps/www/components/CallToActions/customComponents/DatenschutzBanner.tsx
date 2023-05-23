@@ -38,9 +38,13 @@ const DatenschutzBanner = ({
       <div {...styles.banner}>
         <IconInfoOutline size='1.5rem' />
         <div {...styles.text}>
-          <p>Wir haben unsere Datenschutz-Bestimmungen angepasst.</p>
+          <p>
+            Wir erweitern unsere Datenschutzbestimmungen, um der
+            Urheberrechtsgesellschaft Pro Litteris anonymisierte Zugriffszahlen
+            unserer Beiträge übermitteln zu können.
+          </p>
           <Link href={linkHref || DATENSCHUTZ_URL}>
-            <a onClick={() => handleAcknowledge()}>Mehr Informationen</a>
+            <a onClick={() => handleAcknowledge()}>Wie und warum wir das tun</a>
           </Link>
         </div>
         <IconButton
