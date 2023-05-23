@@ -52,7 +52,7 @@ const REVOKE_PROLITTERIS = gql`
 `
 
 const ProlitterisSettings = () => {
-  const { me, meLoading, hasActiveMembership } = useMe()
+  const { me, meLoading } = useMe()
   const { t } = useTranslation()
   const [revokeOptOut] = useMutation(REVOKE_PROLITTERIS)
   const [submitOptOut] = useMutation(CONSENT_TO_PROLITTERIS)
@@ -91,11 +91,6 @@ const ProlitterisSettings = () => {
               )}
             </span>
           </Checkbox>
-          {!hasActiveMembership && (
-            <Box style={{ margin: '10px 0', padding: 15 }}>
-              <P>{t('account/prolitteris/consent/noMembership')}</P>
-            </Box>
-          )}
           {serverError && <ErrorMessage error={serverError} />}
         </>
       )}
