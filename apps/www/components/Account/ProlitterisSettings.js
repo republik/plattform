@@ -10,6 +10,7 @@ import { InlineSpinner, Checkbox, Loader } from '@project-r/styleguide'
 
 import { gql, useMutation } from '@apollo/client'
 import { useMe } from '../../lib/context/MeContext'
+import { PROLITTERIS_OPT_OUT_CONSENT } from '../../lib/constants'
 
 const styles = {
   headline: css({
@@ -32,7 +33,7 @@ const styles = {
 
 const CONSENT_TO_PROLITTERIS = gql`
   mutation submitConsent {
-    submitConsent(name: "PROLITTERIS") {
+    submitConsent(name: "${PROLITTERIS_OPT_OUT_CONSENT}") {
       id
       ...ProlitterisConsent
     }
@@ -42,7 +43,7 @@ const CONSENT_TO_PROLITTERIS = gql`
 
 const REVOKE_PROLITTERIS = gql`
   mutation revokeConsent {
-    revokeConsent(name: "PROLITTERIS") {
+    revokeConsent(name: "${PROLITTERIS_OPT_OUT_CONSENT}") {
       id
       ...ProlitterisConsent
     }
@@ -57,7 +58,7 @@ const ProlitterisSettings = () => {
   const [submitConsent] = useMutation(CONSENT_TO_PROLITTERIS)
   const [mutating, isMutating] = useState(false)
   const [serverError, setServerError] = useState(false)
-  const hasAccepted = me && me.prolitterisConsent === true
+  const isActive = me && me.prolitterisOptOut === false
 
   return (
     <Loader
@@ -68,19 +69,17 @@ const ProlitterisSettings = () => {
             {t('account/prolitteris/description')}
           </P>
           <Checkbox
-            checked={hasAccepted}
+            checked={isActive}
             disabled={mutating}
             onChange={() => {
               if (
-                hasAccepted &&
+                isActive &&
                 !window.confirm(t('account/prolitteris/consent/confirmRevoke'))
               ) {
                 return
               }
               isMutating(true)
-              const consentMutation = hasAccepted
-                ? revokeConsent
-                : submitConsent
+              const consentMutation = isActive ? revokeConsent : submitConsent
               consentMutation()
                 .then(() => isMutating(false))
                 .catch((err) => {
