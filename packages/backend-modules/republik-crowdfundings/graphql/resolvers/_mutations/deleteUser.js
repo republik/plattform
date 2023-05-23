@@ -189,10 +189,7 @@ module.exports = async (_, args, context) => {
       (m) => !!m.pledges.find((p) => p.userId !== userId),
     )
 
-    const hasClaimedMemberships = claimedMemberships > 0
-    // if (claimedMemberships.length > 0) {
-    //   throw new Error(t('api/users/delete/claimedMembershipsNotSupported'))
-    // }
+    const hasClaimedMemberships = claimedMemberships.length > 0
 
     const grants = await transaction.public.accessGrants.find({
       or: [{ granterUserId: userId }, { recipientUserId: userId }],
