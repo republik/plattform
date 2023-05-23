@@ -643,7 +643,12 @@ class Submit extends Component {
           })
         }
 
-        return this.submitPledge(ev.paymentMethod)
+        return new Promise((resolve) => {
+          setTimeout(() => {
+            this.submitPledge(ev.paymentMethod)
+            resolve()
+          }, 10)
+        })
       },
       // Cancel Handler
       () => {

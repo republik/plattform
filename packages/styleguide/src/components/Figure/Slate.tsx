@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ReactNode } from 'react'
 import { FigureImages } from '../Editor/custom-types'
 import {
   Figure as InnerFigure,
@@ -13,7 +13,7 @@ import { useRenderContext } from '../Editor/Render/Context'
 export const PLACEHOLDER = '/static/placeholder.png'
 
 export const FigureByline: React.FC<{
-  children: any
+  children?: ReactNode
   attributes: any
   [x: string]: unknown
 }> = ({ children, attributes, ...props }) => {
@@ -57,7 +57,7 @@ export const FigureImage: React.FC<{
 }
 
 export const Figure: React.FC<{
-  children: any
+  children?: ReactNode
   size: string
   attributes: any
   [x: string]: unknown

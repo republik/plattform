@@ -7,16 +7,13 @@ import {
   IconButton,
   Spinner,
   fontStyles,
-  PlayIcon,
-  PauseIcon,
-  CloseIcon,
-  ExpandLessIcon,
   mediaQueries,
   useMediaQuery,
 } from '@project-r/styleguide'
 import AudioPlayerTitle from './ui/AudioPlayerTitle'
 import AudioCover from '../AudioPlayer/ui/AudioCover'
 import AudioError from './ui/AudioError'
+import { IconClose, IconExpandLess, IconPause, IconPlay } from '@republik/icons'
 
 export const MINI_AUDIO_PLAYER_HEIGHT = 68
 
@@ -115,7 +112,7 @@ const MiniAudioPlayer = ({
             onClick={handleToggle}
             title={t(`styleguide/AudioPlayer/${isPlaying ? 'pause' : 'play'}`)}
             aria-live='assertive'
-            Icon={isPlaying ? PauseIcon : PlayIcon}
+            Icon={isPlaying ? IconPause : IconPlay}
             size={42}
             fillColorName={'text'}
             style={{ marginRight: 0 }}
@@ -141,14 +138,14 @@ const MiniAudioPlayer = ({
             </div>
             <div {...styles.buttonWrapper}>
               <IconButton
-                Icon={ExpandLessIcon}
+                Icon={IconExpandLess}
                 size={32}
                 fillColorName='text'
                 title={t(`styleguide/AudioPlayer/expand`)}
                 onClick={handleExpand}
               />
               <IconButton
-                Icon={CloseIcon}
+                Icon={IconClose}
                 size={24}
                 fillColorName={'text'}
                 onClick={handleClose}

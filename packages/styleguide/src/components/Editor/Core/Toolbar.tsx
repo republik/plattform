@@ -2,6 +2,7 @@ import React, {
   MouseEvent,
   MouseEventHandler,
   ReactElement,
+  ReactNode,
   useEffect,
   useMemo,
   useState,
@@ -181,6 +182,7 @@ const getAllowedBlocks = (
 }
 
 export const ToolbarContainer: React.FC<{
+  children?: ReactNode
   onClick?: MouseEventHandler<HTMLDivElement>
   style?: object
   centered?: boolean

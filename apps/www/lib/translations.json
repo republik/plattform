@@ -1030,15 +1030,15 @@
     },
     {
       "key": "account/prolitteris/title",
-      "value": "ProLitteris Integration"
+      "value": "Zugriffszählung"
     },
     {
       "key": "account/prolitteris/consent/label",
-      "value": "Ich möchte diese Funktion nutzen"
+      "value": "Zählung erlauben"
     },
     {
       "key": "account/prolitteris/description",
-      "value": "Unsere Autorinnen bekommen von der Schweizer Verwertungsgesellschaft ProLitteris Entschädigung. Diese wird auf Basis von Beitragszugriffen und mit Hilfe anonymisierten IP Adressen der Leserinnen berechnet. Falls Sie sich trotz Anonymisierung von der Enschädigungsprozess abmelden wollen, können Sie es jede Zeit machen."
+      "value": "Um die Kopiervergütung durch die Verwertungsgesellschaft Pro Litteris zu ermöglichen, senden wir beim Besuch eines Beitrages die Uhrzeit und das Datum des Zugriffs sowie eine anonymisierte Version der IP-Adressen der Leser an Pro Litteris. Falls Sie trotz Anonymisierung die Zählung unterbinden wollen, können Sie dies hier tun."
     },
     {
       "key": "account/prolitteris/consent/noMembership",
@@ -1589,6 +1589,30 @@
       "value": "Sie müssen ein Porträtbild hochladen"
     },
     {
+      "key": "profile/report/label",
+      "value": "Benutzer melden"
+    },
+    {
+      "key": "profile/report/confirm",
+      "value": "Sind Sie sicher, dass dieser Benutzer gegen die Etikette verstossen hat und Sie die Moderation herbeirufen möchten? Nennen Sie bitte den Grund für diese Meldung."
+    },
+    {
+      "key": "profile/report/provideReason",
+      "value": "Bitte geben Sie einen Grund an, warum Sie diesen Benutzer melden möchten."
+    },
+    {
+      "key": "profile/report/success",
+      "value": "Wir haben Ihre Meldung erhalten."
+    },
+    {
+      "key": "profile/report/error",
+      "value": "Beim Senden der Meldung ist ein Fehler aufgetreten."
+    },
+    {
+      "key": "profile/report/tooLong",
+      "value": "Sie können maximal {max} Zeichen eingeben.{br}Ihre Eingabe: {input}"
+    },
+    {
       "key": "profile/gender",
       "value": "Geschlecht"
     },
@@ -2011,6 +2035,14 @@
     {
       "key": "styleguide/AudioPlayer/sourceErrorTryAgain",
       "value": "Nochmal versuchen"
+    },
+    {
+      "key": "styleguide/AudioPlayer/autoplayOn",
+      "value": "Autoplay an"
+    },
+    {
+      "key": "styleguide/AudioPlayer/autoplayOff",
+      "value": "Autoplay aus"
     },
     {
       "key": "styleguide/CommentComposer/placeholder",
@@ -7753,7 +7785,7 @@
     },
     {
       "key": "crowdfunding/status/goal/PERMANENT/memberships",
-      "value": "Mitgliedschaften und Abos. Wachstumsziel: {count}."
+      "value": "Mitgliedschaften und Abos."
     },
     {
       "key": "Trial/Form/button",
@@ -7857,15 +7889,7 @@
     },
     {
       "key": "ClimateLandingPage/content/paragraph3",
-      "value": "Melden Sie sich an, um sich einzubringen, an unseren {eventsLink} teilzunehmen und um nichts zu verpassen, was wir zur Klimakrise schreiben."
-    },
-    {
-      "key": "ClimateLandingPage/content/eventsLinkText",
-      "value": "Veranstaltungen"
-    },
-    {
-      "key": "ClimateLandingPage/content/eventsLinkHref",
-      "value": "https://tally.so/r/mRxbdd"
+      "value": "Melden Sie sich an, um sich einzubringen, an unseren Veranstaltungen teilzunehmen und um nichts zu verpassen, was wir zur Klimakrise schreiben."
     },
     {
       "key": "ClimateLandingPage/content/counterText",

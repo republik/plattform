@@ -2,7 +2,6 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { css, merge } from 'glamor'
 
-import { AudioIcon } from '../Icons'
 
 import { mUp } from '../../theme/mediaQueries'
 import {
@@ -14,6 +13,7 @@ import {
 } from '../Center'
 
 import { plainButtonRule } from '../Button'
+import { IconAudio } from '@republik/icons'
 
 export { default as FigureImage, MIN_GALLERY_IMG_WIDTH } from './Image'
 export { default as FigureCaption } from './Caption'
@@ -197,7 +197,7 @@ const AudioButton = ({ color, backgroundColor, onClick, meta }) => {
         animation: `${pulse} 2s 3`,
       })}
     >
-      <AudioIcon />
+      <IconAudio />
     </button>
   )
 }

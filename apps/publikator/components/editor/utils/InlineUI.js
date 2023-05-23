@@ -2,8 +2,10 @@ import { useEffect, useRef, useState } from 'react'
 import { css, merge } from 'glamor'
 import buttonStyles from './buttonStyles'
 import { parent } from './selection'
-import ArrowUpIcon from 'react-icons/lib/md/arrow-upward'
-import ArrowDownIcon from 'react-icons/lib/md/arrow-downward'
+import {
+  IconArrowUpward,
+  IconArrowDownward
+} from '@republik/icons'
 import scrollIntoView from 'scroll-into-view'
 
 const styles = {
@@ -115,10 +117,10 @@ const InlineUI = ({ editor, node, isMatch, children }) => {
         {showMoveUI && (
           <>
             <MarkButton onMouseDown={moveHandler(-1)}>
-              <ArrowUpIcon size={24} />
+              <IconArrowUpward size={24} />
             </MarkButton>
             <MarkButton onMouseDown={moveHandler(+1)}>
-              <ArrowDownIcon size={24} />
+              <IconArrowDownward size={24} />
             </MarkButton>
           </>
         )}

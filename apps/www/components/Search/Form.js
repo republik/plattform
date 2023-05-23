@@ -6,7 +6,6 @@ import {
   usePrevious,
   useColorContext,
   plainButtonRule,
-  CloseIcon,
 } from '@project-r/styleguide'
 import compose from 'lodash/flowRight'
 import withSearchRouter from './withSearchRouter'
@@ -17,6 +16,7 @@ import { css } from 'glamor'
 
 import withT from '../../lib/withT'
 import { useRouter } from 'next/router'
+import { IconClose } from '@republik/icons'
 
 const styles = css({
   paddingTop: 15,
@@ -85,12 +85,12 @@ const Form = compose(
           <Field
             name='q'
             label={t('search/input/label')}
-            value={formValue}
+            value={formValue ?? ''}
             onChange={update}
             icon={
               !startState ? (
                 <button {...plainButtonRule} onClick={reset} type='button'>
-                  <CloseIcon
+                  <IconClose
                     style={{ cursor: 'pointer' }}
                     size={30}
                     {...colorScheme.set('fill', 'text')}

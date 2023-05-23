@@ -10,6 +10,7 @@ import { InlineSpinner, Checkbox, Loader } from '@project-r/styleguide'
 
 import { gql, useMutation } from '@apollo/client'
 import { useMe } from '../../lib/context/MeContext'
+import { PROLITTERIS_OPT_OUT_CONSENT } from '../../lib/constants'
 
 const styles = {
   headline: css({
@@ -32,7 +33,7 @@ const styles = {
 
 const CONSENT_TO_PROLITTERIS = gql`
   mutation submitConsent {
-    submitConsent(name: "PROLITTERIS") {
+    submitConsent(name: "${PROLITTERIS_OPT_OUT_CONSENT}") {
       id
       ...ProlitterisConsent
     }
@@ -42,7 +43,7 @@ const CONSENT_TO_PROLITTERIS = gql`
 
 const REVOKE_PROLITTERIS = gql`
   mutation revokeConsent {
-    revokeConsent(name: "PROLITTERIS") {
+    revokeConsent(name: "${PROLITTERIS_OPT_OUT_CONSENT}") {
       id
       ...ProlitterisConsent
     }
@@ -51,13 +52,13 @@ const REVOKE_PROLITTERIS = gql`
 `
 
 const ProlitterisSettings = () => {
-  const { me, meLoading, hasAccess } = useMe()
+  const { me, meLoading } = useMe()
   const { t } = useTranslation()
-  const [revokeConsent] = useMutation(REVOKE_PROLITTERIS)
-  const [submitConsent] = useMutation(CONSENT_TO_PROLITTERIS)
+  const [revokeOptOut] = useMutation(REVOKE_PROLITTERIS)
+  const [submitOptOut] = useMutation(CONSENT_TO_PROLITTERIS)
   const [mutating, isMutating] = useState(false)
   const [serverError, setServerError] = useState(false)
-  const hasAccepted = me && me.prolitterisConsent === true
+  const isActive = me && me.prolitterisOptOut !== true
 
   return (
     <Loader
@@ -68,13 +69,11 @@ const ProlitterisSettings = () => {
             {t('account/prolitteris/description')}
           </P>
           <Checkbox
-            checked={hasAccepted}
+            checked={isActive}
             disabled={mutating}
             onChange={() => {
               isMutating(true)
-              const consentMutation = hasAccepted
-                ? revokeConsent
-                : submitConsent
+              const consentMutation = isActive ? submitOptOut : revokeOptOut
               consentMutation()
                 .then(() => isMutating(false))
                 .catch((err) => {
@@ -92,11 +91,6 @@ const ProlitterisSettings = () => {
               )}
             </span>
           </Checkbox>
-          {!hasAccess && (
-            <Box style={{ margin: '10px 0', padding: 15 }}>
-              <P>{t('account/prolitteris/consent/noMembership')}</P>
-            </Box>
-          )}
           {serverError && <ErrorMessage error={serverError} />}
         </>
       )}

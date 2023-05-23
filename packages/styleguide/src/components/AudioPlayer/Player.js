@@ -10,14 +10,6 @@ import { breakoutStyles } from '../Center'
 import { InlineSpinner } from '../Spinner'
 import { sansSerifRegular12, sansSerifRegular15 } from '../Typography/styles'
 import { mUp } from '../../theme/mediaQueries'
-import {
-  PlayIcon,
-  PauseIcon,
-  ForwardIcon,
-  ReplayIcon,
-  DownloadIcon,
-  CloseIcon,
-} from '../Icons'
 import { useColorContext } from '../Colors/useColorContext'
 
 import Scrubber from './Scrubber'
@@ -31,6 +23,7 @@ import {
   DefaultLink,
   progressbarStyle,
 } from './constants'
+import { IconClose, IconDownload, IconForward, IconPause, IconPlay, IconReplay } from '@republik/icons'
 
 const CONTROLS_HEIGHT = 25
 const ICON_SPACING = 8
@@ -579,7 +572,7 @@ class AudioPlayer extends Component {
               }
               title={t('styleguide/AudioPlayer/partialrewind')}
             >
-              <ReplayIcon
+              <IconReplay
                 size={SIZE.replay}
                 {...(canSetTime && progress > 0
                   ? colorScheme.set('fill', 'text')
@@ -593,7 +586,7 @@ class AudioPlayer extends Component {
               aria-live='assertive'
             >
               {playing ? (
-                <PauseIcon
+                <IconPause
                   size={SIZE.play}
                   {...colorScheme.set(
                     'fill',
@@ -601,7 +594,7 @@ class AudioPlayer extends Component {
                   )}
                 />
               ) : (
-                <PlayIcon
+                  <IconPlay
                   size={SIZE.play}
                   {...colorScheme.set(
                     'fill',
@@ -621,7 +614,7 @@ class AudioPlayer extends Component {
               }
               title={t('styleguide/AudioPlayer/partialfastforward')}
             >
-              <ForwardIcon
+              <IconForward
                 size={SIZE.forward}
                 {...(canSetTime && progress > 0
                   ? colorScheme.set('fill', 'text')
@@ -636,7 +629,7 @@ class AudioPlayer extends Component {
                 download
                 title={t('styleguide/AudioPlayer/download')}
               >
-                <DownloadIcon
+                <IconDownload
                   size={SIZE.download}
                   {...colorScheme.set('fill', 'text')}
                 />
@@ -649,7 +642,7 @@ class AudioPlayer extends Component {
               {...styles.close}
               onClick={closeHandler}
             >
-              <CloseIcon
+              <IconClose
                 size={SIZE.close}
                 {...colorScheme.set('fill', 'text')}
               />

@@ -4,7 +4,6 @@ import { css } from 'glamor'
 import { ellipsize, underline } from '../../lib/styleMixins'
 import { useColorContext } from '../Colors/useColorContext'
 import { plainButtonRule } from '../Button'
-import { MdExpandLess, MdReplay10 } from 'react-icons/md'
 import {
   sansSerifRegular12,
   sansSerifRegular14,
@@ -15,13 +14,6 @@ import {
 } from '../Typography/styles'
 import { InlineSpinner } from '../Spinner'
 
-import {
-  PlayIcon,
-  PauseIcon,
-  ForwardIcon,
-  CloseIcon,
-  DownloadIcon,
-} from '../Icons'
 import Scrubber from './Scrubber'
 
 import {
@@ -29,6 +21,15 @@ import {
   progressbarStyle,
   DefaultLink,
 } from './constants'
+import {
+  IconArrowForward,
+  IconClose,
+  IconDownload,
+  IconExpandLess,
+  IconPause,
+  IconPlay,
+  IconReplay10,
+} from '@republik/icons'
 
 type AudioInfoProps = {
   expanded: boolean
@@ -37,7 +38,7 @@ type AudioInfoProps = {
   reload: () => void
   title: string
   sourcePath: string
-  Link: React.ReactType
+  Link: React.ElementType
   formattedCurrentTime: string
   formattedDuration: string
   t: (key: string) => string
@@ -311,7 +312,7 @@ const ExpandableAudioPlayer = ({
                 }
                 title={t('styleguide/AudioPlayer/partialfastforward')}
               >
-                <MdReplay10
+                <IconReplay10
                   size={24}
                   {...(canSetTime && progress > 0
                     ? colorScheme.set('fill', 'text')
@@ -328,7 +329,7 @@ const ExpandableAudioPlayer = ({
                 aria-live='assertive'
               >
                 {playing ? (
-                  <PauseIcon
+                  <IconPause
                     size={54}
                     {...colorScheme.set(
                       'fill',
@@ -336,7 +337,7 @@ const ExpandableAudioPlayer = ({
                     )}
                   />
                 ) : (
-                  <PlayIcon
+                  <IconPlay
                     size={54}
                     {...colorScheme.set(
                       'fill',
@@ -357,7 +358,7 @@ const ExpandableAudioPlayer = ({
                 }
                 title={t('styleguide/AudioPlayer/partialfastforward')}
               >
-                <ForwardIcon
+                <IconArrowForward
                   size={24}
                   {...(canSetTime && progress > 0
                     ? colorScheme.set('fill', 'text')
@@ -421,7 +422,7 @@ const ExpandableAudioPlayer = ({
                     download
                     title={t('styleguide/AudioPlayer/download')}
                   >
-                    <DownloadIcon
+                    <IconDownload
                       size={22}
                       {...colorScheme.set('fill', 'text')}
                     />
@@ -442,7 +443,7 @@ const ExpandableAudioPlayer = ({
                 aria-live='assertive'
               >
                 {playing ? (
-                  <PauseIcon
+                  <IconPause
                     size={42}
                     {...colorScheme.set(
                       'fill',
@@ -450,7 +451,7 @@ const ExpandableAudioPlayer = ({
                     )}
                   />
                 ) : (
-                  <PlayIcon
+                  <IconPlay
                     size={42}
                     {...colorScheme.set(
                       'fill',
@@ -482,7 +483,7 @@ const ExpandableAudioPlayer = ({
             onClick={() => setIsExpanded(!isExpanded)}
             {...plainButtonRule}
           >
-            <MdExpandLess
+            <IconExpandLess
               size={32}
               {...colorScheme.set('fill', 'text')}
               style={{
@@ -496,7 +497,7 @@ const ExpandableAudioPlayer = ({
             onClick={closeHandler}
             {...plainButtonRule}
           >
-            <CloseIcon size={24} {...colorScheme.set('fill', 'text')} />
+            <IconClose size={24} {...colorScheme.set('fill', 'text')} />
           </button>
         </div>
       </div>

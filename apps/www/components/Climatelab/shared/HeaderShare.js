@@ -1,11 +1,12 @@
 import { useState } from 'react'
 
-import { ShareIcon, IconButton } from '@project-r/styleguide'
+import { IconButton } from '@project-r/styleguide'
 
-import { postMessage, useInNativeApp } from '../../../lib/withInNativeApp'
 import { trackEvent } from '../../../lib/matomo'
+import { postMessage, useInNativeApp } from '../../../lib/withInNativeApp'
 import { useTranslation } from '../../../lib/withT'
 
+import { IconShare } from '@republik/icons'
 import ShareOverlay from '../../ActionBar/ShareOverlay'
 
 export const HeaderShare = ({ meta, noLabel }) => {
@@ -19,7 +20,7 @@ export const HeaderShare = ({ meta, noLabel }) => {
       <IconButton
         label={!noLabel && t('article/actionbar/share')}
         labelShort=''
-        Icon={ShareIcon}
+        Icon={IconShare}
         href={url}
         onClick={(e) => {
           e.preventDefault()

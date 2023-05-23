@@ -2,10 +2,10 @@ import React, { MouseEventHandler, ReactElement, ReactNode } from 'react'
 import PropTypes from 'prop-types'
 import { css } from 'glamor'
 
-import { CloseIcon } from '../Icons'
 import { useColorContext } from '../Colors/ColorContext'
 import { mUp } from '../../theme/mediaQueries'
 import { sansSerifMedium16 } from '../Typography/styles'
+import { IconClose } from '@republik/icons'
 
 export const height = 48
 
@@ -62,7 +62,7 @@ const OverlayToolbarClose = ({
   const [colorScheme] = useColorContext()
   return (
     <button {...styles.close} onClick={onClick}>
-      <CloseIcon {...colorScheme.set('fill', 'text')} />
+      <IconClose {...colorScheme.set('fill', 'text')} />
     </button>
   )
 }
@@ -71,6 +71,7 @@ OverlayToolbarClose.propTypes = {
 }
 
 export const OverlayToolbar: React.FC<{
+  children?: ReactNode
   title: string | ReactNode
   onClose: MouseEventHandler<HTMLButtonElement>
 }> = ({ title, onClose, children }) => {

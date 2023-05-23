@@ -1,5 +1,5 @@
+import { IconOrderedList, IconUnorderedList } from '@republik/icons'
 import { ElementConfigI } from '../../../custom-types'
-import { UlIcon, OlIcon } from '../../../../Icons'
 
 // TODO: 'ordered' prop can be deleted
 //  this should be done together with slate tree migration in BE
@@ -17,11 +17,11 @@ const baseConfig: Partial<ElementConfigI> = {
 }
 
 export const ulConfig: ElementConfigI = {
-  button: { icon: UlIcon },
+  button: { icon: IconUnorderedList },
   ...baseConfig,
 }
 
 export const olConfig: ElementConfigI = {
-  button: { icon: OlIcon },
+  button: { icon: IconOrderedList },
   ...baseConfig,
 }

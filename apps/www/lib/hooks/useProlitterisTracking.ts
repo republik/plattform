@@ -1,17 +1,14 @@
 import { useEffect, useState } from 'react'
-import fetch from 'isomorphic-unfetch'
 import { reportError } from '../../lib/errors'
 import { useMe } from '../context/MeContext'
 
 const useProlitterisTracking = (documentId: string, cleanedPath: string) => {
-  // if we try to pass me/prolitterisConsent into the hook we run into
-  // 'me is not defined'-type of issues. :-/
   const { me, meLoading, hasAccess } = useMe()
   const [onceAndDone, setOnceAndDone] = useState(false)
   useEffect(() => {
     if (onceAndDone) return
     if (meLoading) return
-    if (me && !me.prolitterisConsent) return
+    if (me && me.prolitterisOptOut) return
     async function fetchProlitteris() {
       fetch(
         `/api/prolitteris?paid=${

@@ -69,7 +69,7 @@ export default withT(({ t, editor, node, onInputChange, format }) => {
             black
             label={t('metaData/audio/source/kind')}
             items={audioSourceKinds}
-            value={audioSourceKind || null}
+            value={audioSourceKind || ''}
             onChange={({ value }) => {
               editor.change((change) => {
                 if (!value) {
@@ -122,7 +122,7 @@ export default withT(({ t, editor, node, onInputChange, format }) => {
             black
             label='Position'
             items={audioCoverAnchors}
-            value={audioCover ? audioCover.anchor : null}
+            value={audioCover ? audioCover.anchor : ''}
             onChange={({ value }) =>
               onChange('audioCover')(
                 value && {

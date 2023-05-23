@@ -1,17 +1,23 @@
-import React, { Attributes, MouseEventHandler } from 'react'
+import React, {
+  Attributes,
+  ComponentType,
+  MouseEventHandler,
+  ReactNode,
+  SVGProps,
+} from 'react'
 import { css } from 'glamor'
 
 import { mUp } from '../../theme/mediaQueries'
 import { fontStyles } from '../../theme/fonts'
 import { useColorContext } from '../Colors/ColorContext'
-import { IconType } from 'react-icons/lib/esm/iconBase'
 
 const ICON_SIZE = 24
 
 const IconButton = React.forwardRef<
   HTMLAnchorElement & HTMLButtonElement,
   {
-    Icon: IconType
+    children?: ReactNode
+    Icon: ComponentType<SVGProps<SVGSVGElement> & { size?: number | string }>
     href?: string
     target?: string
     label?: string
@@ -76,6 +82,8 @@ const IconButton = React.forwardRef<
       >
         <Icon
           size={size || ICON_SIZE}
+          width={size || ICON_SIZE}
+          height={size || ICON_SIZE}
           {...colorScheme.set('fill', fillValue)}
         />
         {label && (

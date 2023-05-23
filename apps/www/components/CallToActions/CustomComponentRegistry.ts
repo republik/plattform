@@ -12,6 +12,12 @@ const customComponentsRegistry = {
   //     ssr: false,
   //   },
   // ),
+  datenschutzUpdate: dynamic(
+    () => import('./customComponents/DatenschutzBanner'),
+    {
+      ssr: false,
+    },
+  ),
 }
 
 /**
@@ -23,7 +29,7 @@ export function getCustomComponent(
   const customComponent = customComponentsRegistry[key]
   if (!customComponent) {
     if (isDev) {
-      throw new Error(`Custom component ${key} not found`)
+      console.error(`Custom component ${key} not found`)
     } else {
       console.warn(`Custom component ${key} not found`)
     }

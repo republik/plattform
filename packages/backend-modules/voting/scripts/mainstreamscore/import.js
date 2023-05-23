@@ -3,7 +3,6 @@
 // creates Choice questions with boolean (yes/no) options
 
 require('@orbiting/backend-modules-env').config()
-require('isomorphic-unfetch') // for gsheets
 const gsheets = require('gsheets')
 const Promise = require('bluebird')
 const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')

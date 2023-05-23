@@ -17,8 +17,8 @@ import {
   LINE_HEIGHT,
   FIELD_HEIGHT,
 } from './constants'
-import { CloseIcon } from '../Icons'
 import { plainButtonRule } from '../Button'
+import { IconClose } from '@republik/icons'
 
 const styles = {
   container: css({
@@ -309,7 +309,7 @@ const Field = React.forwardRef<
             }}
             type='button'
           >
-            <CloseIcon
+            <IconClose
               {...(isFocused
                 ? colorScheme.set('fill', 'text')
                 : colorScheme.set('fill', 'disabled'))}

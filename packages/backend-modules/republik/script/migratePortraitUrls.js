@@ -6,7 +6,6 @@
  * ./script/migratePortraitUrls.js [--dry]
  */
 require('@orbiting/backend-modules-env').config()
-const fetch = require('isomorphic-unfetch')
 const Promise = require('bluebird')
 const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
 const {
@@ -39,7 +38,8 @@ PgDb.connect()
           .catch((error) => {
             console.error('image fetch failed', { portraitUrl, error })
           })
-          .then((result) => result.buffer())
+          .then((res) => res.arrayBuffer())
+          .then((res) => Buffer.from(res))
 
         if (!portrait) {
           return

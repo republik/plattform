@@ -2,18 +2,6 @@ import { useState, Fragment } from 'react'
 import { css } from 'glamor'
 import compose from 'lodash/flowRight'
 import {
-  PdfIcon,
-  ReadingTimeIcon,
-  PlayCircleIcon,
-  PauseCircleIcon,
-  PlaylistAddIcon,
-  PlaylistRemoveIcon,
-  DownloadIcon,
-  PodcastIcon,
-  FontSizeIcon,
-  ShareIcon,
-  EditIcon,
-  EtiquetteIcon,
   IconButton,
   Interaction,
   shouldIgnoreClick,
@@ -43,6 +31,20 @@ import {
   AudioPlayerLocations,
   AudioPlayerActions,
 } from '../Audio/types/AudioActionTracking'
+import {
+  IconDownload,
+  IconEdit,
+  IconEtiquette,
+  IconFontSize,
+  IconPdf,
+  IconPlayCircleOutline,
+  IconPlaylistAdd,
+  IconPlaylistRemove,
+  IconPodcast,
+  IconReadTime,
+  IconShare,
+  IconPauseCircleOutline,
+} from '@republik/icons'
 
 const RenderItems = ({ items }) => (
   <>
@@ -86,11 +88,11 @@ const ActionBar = ({
     return (
       <div {...styles.topRow} {...(isCentered && { ...styles.centered })}>
         {download && (
-          <IconButton href={download} Icon={DownloadIcon} target='_blank' />
+          <IconButton href={download} Icon={IconDownload} target='_blank' />
         )}
         {fontSize && (
           <IconButton
-            Icon={FontSizeIcon}
+            Icon={IconFontSize}
             onClick={(e) => {
               e.preventDefault()
               setFontSizeOverlayVisible(!fontSizeOverlayVisible)
@@ -105,7 +107,7 @@ const ActionBar = ({
               padded
             />
             <IconButton
-              Icon={EtiquetteIcon}
+              Icon={IconEtiquette}
               label={t('components/Discussion/etiquette')}
               labelShort={t('components/Discussion/etiquette')}
               href='/etikette'
@@ -115,7 +117,7 @@ const ActionBar = ({
         {share && (
           <IconButton
             label={share.label || ''}
-            Icon={ShareIcon}
+            Icon={IconShare}
             href={share.url}
             onClick={(e) => {
               e.preventDefault()
@@ -261,7 +263,7 @@ const ActionBar = ({
   const ActionItems = [
     {
       title: readingTimeTitle,
-      Icon: ReadingTimeIcon,
+      Icon: IconReadTime,
       label: readingTimeLabel,
       labelShort: readingTimeLabelShort,
       modes: ['feed', 'seriesEpisode'],
@@ -288,7 +290,7 @@ const ActionBar = ({
     },
     {
       title: t('article/actionbar/pdf/options'),
-      Icon: PdfIcon,
+      Icon: IconPdf,
       href: hasPdf ? getPdfUrl(meta) : undefined,
       onClick: (e) => {
         if (shouldIgnoreClick(e)) {
@@ -302,7 +304,7 @@ const ActionBar = ({
     },
     {
       title: t('article/actionbar/fontSize/title'),
-      Icon: FontSizeIcon,
+      Icon: IconFontSize,
       href: meta.url,
       onClick: (e) => {
         e.preventDefault()
@@ -373,7 +375,7 @@ const ActionBar = ({
     },
     {
       title: t('article/actionbar/share'),
-      Icon: ShareIcon,
+      Icon: IconShare,
       href: shareUrl,
       onClick: (e) => {
         e.preventDefault()
@@ -413,7 +415,7 @@ const ActionBar = ({
     },
     {
       title: readingTimeTitle,
-      Icon: ReadingTimeIcon,
+      Icon: IconReadTime,
       label: readingTimeLabel,
       labelShort: readingTimeLabelShort,
       show: showReadingTime,
@@ -461,7 +463,7 @@ const ActionBar = ({
       title: t('feed/actionbar/edit'),
       element: (
         <IconButton
-          Icon={EditIcon}
+          Icon={IconEdit}
           href={`${PUBLIKATOR_BASE_URL}/repo/${document?.repoId}/tree`}
           target='_blank'
           title={t('feed/actionbar/edit')}
@@ -474,7 +476,7 @@ const ActionBar = ({
     {
       title: t('article/actionbar/audio/play'),
       label: !forceShortLabel ? t('article/actionbar/audio/play') : '',
-      Icon: itemPlaying ? PauseCircleIcon : PlayCircleIcon,
+      Icon: itemPlaying ? IconPauseCircleOutline : IconPlayCircleOutline,
       onClick: !itemPlaying
         ? isActiveAudioItem
           ? toggleAudioPlayback
@@ -495,7 +497,7 @@ const ActionBar = ({
             }`,
           )
         : '',
-      Icon: itemInAudioQueue ? PlaylistRemoveIcon : PlaylistAddIcon,
+      Icon: itemInAudioQueue ? IconPlaylistRemove : IconPlaylistAdd,
       onClick: async (e) => {
         e.preventDefault()
         if (itemInAudioQueue) {
@@ -523,7 +525,7 @@ const ActionBar = ({
     },
     {
       title: t('PodcastButtons/title'),
-      Icon: PodcastIcon,
+      Icon: IconPodcast,
       onClick: (e) => {
         e.preventDefault()
         trackEvent(['ActionBar', 'podcasts', meta.url])

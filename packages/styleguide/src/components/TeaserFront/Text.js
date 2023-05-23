@@ -170,9 +170,4 @@ Text.propTypes = {
   audioPlayButton: PropTypes.node,
 }
 
-Text.defaultProps = {
-  maxWidth: '',
-  margin: '',
-}
-
 export default Text

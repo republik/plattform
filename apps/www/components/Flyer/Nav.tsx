@@ -4,14 +4,13 @@ import { gql, useQuery } from '@apollo/client'
 import Link from 'next/link'
 
 import {
-  ArrowForwardIcon,
-  ArrowBackIcon,
   IconButton,
   FlyerDate,
   mediaQueries,
 } from '@project-r/styleguide'
 
 import { useMe } from '../../lib/context/MeContext'
+import { IconArrowBack, IconArrowForward } from '@republik/icons'
 
 const FORMAT_REPO_ID = 'republik/format-journal'
 
@@ -113,7 +112,7 @@ const Nav: React.FC<{ repoId: string; publishDate: string }> = ({
       {/* prevent flicker */}
       {hasAccess && (loading || prev) && (
         <Link href={prev?.path || '#'} passHref>
-          <IconButton Icon={ArrowBackIcon} />
+          <IconButton Icon={IconArrowBack} />
         </Link>
       )}
       <div {...styles.date}>
@@ -121,7 +120,7 @@ const Nav: React.FC<{ repoId: string; publishDate: string }> = ({
       </div>
       {next && (
         <Link href={next?.path || '#'} passHref>
-          <IconButton invert Icon={ArrowForwardIcon} />
+          <IconButton invert Icon={IconArrowForward} />
         </Link>
       )}
     </div>

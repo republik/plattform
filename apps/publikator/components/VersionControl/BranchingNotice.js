@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Subscription } from '@apollo/client/react/components'
-import NewerVersionIcon from 'react-icons/lib/md/call-split'
+import { IconCallSplit as NewerVersionIcon } from '@republik/icons'
 
 import { Button, colors } from '@project-r/styleguide'
 import { getCommits, repoSubscription } from './index'

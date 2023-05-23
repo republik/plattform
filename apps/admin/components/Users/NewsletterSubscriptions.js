@@ -1,7 +1,6 @@
 import { Component } from 'react'
 import { Query, Mutation } from '@apollo/client/react/components'
 import { gql } from '@apollo/client'
-import { MdDone as SaveIcon } from 'react-icons/md'
 
 import withT from '../../lib/withT'
 
@@ -9,6 +8,7 @@ import { InlineSpinner, Loader, Checkbox } from '@project-r/styleguide'
 
 import { Section, SectionTitle, TextButton } from '../Display/utils'
 import ErrorMessage from '../ErrorMessage'
+import { IconDone } from '@republik/icons'
 
 export const RESUBSCRIBE_EMAIL = gql`
   mutation resubscribeEmail($userId: ID!) {
@@ -120,7 +120,7 @@ class UpdateSubscription extends Component {
                     <InlineSpinner size={22} />
                   ) : subscribed !== value ? (
                     <TextButton type='submit'>
-                      <SaveIcon size={22} />
+                      <IconDone size={24} />
                     </TextButton>
                   ) : undefined}
                 </span>

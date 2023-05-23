@@ -4,6 +4,7 @@ import { moveElement, removeElement } from '../Core/helpers/structure'
 import { cleanupTree } from '../Core/helpers/tree'
 import { blockQuote, figure, headline, paragraph } from './blocks'
 import articleSchema from '../schema/article'
+import { act } from '@testing-library/react'
 
 describe('Slate Editor', () => {
   window.document.getSelection = jest.fn()
@@ -13,11 +14,13 @@ describe('Slate Editor', () => {
   const defaultConfig = { schema: articleSchema }
 
   async function setup(config) {
-    return await mockEditor(createEditor(), {
-      config,
-      value,
-      setValue: (val) => (value = val),
-    })
+    return act(async () =>
+      mockEditor(createEditor(), {
+        config,
+        value,
+        setValue: (val) => (value = val),
+      }),
+    )
   }
 
   describe('moveElement()', () => {
@@ -33,8 +36,8 @@ describe('Slate Editor', () => {
       ]
       const editor = await setup({ ...defaultConfig, structure })
 
-      moveElement(editor, [2], 'up')
-      await new Promise(process.nextTick)
+      await act(async () => moveElement(editor, [2], 'up'))
+
       expect(cleanupTree(value)).toEqual([
         headline,
         paragraph,
@@ -55,8 +58,8 @@ describe('Slate Editor', () => {
       ]
       const editor = await setup({ ...defaultConfig, structure })
 
-      moveElement(editor, [1], 'down')
-      await new Promise(process.nextTick)
+      await act(async () => moveElement(editor, [1], 'down'))
+
       expect(cleanupTree(value)).toEqual([
         headline,
         paragraph,
@@ -77,8 +80,8 @@ describe('Slate Editor', () => {
       ]
       const editor = await setup({ ...defaultConfig, structure })
 
-      moveElement(editor, [1], 'up')
-      await new Promise(process.nextTick)
+      await act(async () => moveElement(editor, [1], 'up'))
+
       expect(cleanupTree(value)).toEqual([
         headline,
         blockQuote,
@@ -99,8 +102,8 @@ describe('Slate Editor', () => {
       ]
       const editor = await setup({ ...defaultConfig, structure })
 
-      moveElement(editor, [2], 'down')
-      await new Promise(process.nextTick)
+      await act(async () => moveElement(editor, [2], 'down'))
+
       expect(cleanupTree(value)).toEqual([
         headline,
         blockQuote,
@@ -121,8 +124,10 @@ describe('Slate Editor', () => {
       ]
       const editor = await setup({ ...defaultConfig, structure })
 
-      const canMove = moveElement(editor, [2], 'up', true)
-      await new Promise(process.nextTick)
+      const canMove = await act(async () =>
+        moveElement(editor, [2], 'up', true),
+      )
+
       expect(cleanupTree(value)).toEqual([
         headline,
         blockQuote,
@@ -146,8 +151,8 @@ describe('Slate Editor', () => {
       ]
       const editor = await setup({ ...defaultConfig, structure })
 
-      removeElement(editor, [2])
-      await new Promise(process.nextTick)
+      await act(async () => removeElement(editor, [2]))
+
       expect(cleanupTree(value)).toEqual([headline, blockQuote, figure])
     })
 
@@ -163,8 +168,8 @@ describe('Slate Editor', () => {
       ]
       const editor = await setup({ ...defaultConfig, structure })
 
-      removeElement(editor, [1])
-      await new Promise(process.nextTick)
+      await act(async () => removeElement(editor, [1]))
+
       expect(cleanupTree(value)).toEqual([headline, paragraph, figure])
     })
 
@@ -180,8 +185,8 @@ describe('Slate Editor', () => {
       ]
       const editor = await setup({ ...defaultConfig, structure })
 
-      const canRemove = removeElement(editor, [2], true)
-      await new Promise(process.nextTick)
+      const canRemove = await act(async () => removeElement(editor, [2], true))
+
       expect(cleanupTree(value)).toEqual([
         headline,
         blockQuote,

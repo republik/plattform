@@ -114,7 +114,7 @@ export const ChartLegend = ({ children, ...props }) => {
 
 const ssrAttribute = 'data-chart-ssr'
 
-const Chart = (props) => {
+export const Chart = (props) => {
   const [colorScheme] = useColorContext()
 
   const isDomAvailable = typeof document !== 'undefined'
@@ -249,5 +249,3 @@ Chart.propTypes = {
 Chart.defaultProps = {
   tLabel: (identity) => identity,
 }
-
-export default Chart
