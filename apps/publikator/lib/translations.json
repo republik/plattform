@@ -1971,6 +1971,46 @@
     {
       "key": "editor/workflow/uncommittedChanges",
       "value": "Committen oder verwerfen Sie Ihre Änderungen, um die Phase anzupassen."
+    },
+    {
+      "key": "editor/replace/title",
+      "value": "Suchen und Ersetzen"
+    },
+    {
+      "key": "editor/replace/includeMeta",
+      "value": "Metabereich einschliessen"
+    },
+    {
+      "key": "editor/replace/searchReplaceHint",
+      "value": " Diese Änderung kann nur rückgängig gemacht werden, indem du alle Änderungen verwirfst. Falls du viel geändert hast, lieber nochmal speichern, bevor du auf «Ersetzen» klickst."
+    },
+    {
+      "key": "editor/replace/text",
+      "value": "Fliesstext:"
+    },
+    {
+      "key": "editor/replace/meta",
+      "value": "Metabereich:"
+    },
+    {
+      "key": "editor/replace/button/search",
+      "value": "Suchen"
+    },
+    {
+      "key": "editor/replace/button/replace",
+      "value": "Ersetzen"
+    },
+    {
+      "key": "editor/replace/button/back",
+      "value": "Zurück"
+    },
+    {
+      "key": "editor/replace/foundOccurences",
+      "value": "{count} Treffer"
+    },
+    {
+      "key": "editor/replace/nothingFound",
+      "value": "Kein Treffer"
     }
   ]
 }

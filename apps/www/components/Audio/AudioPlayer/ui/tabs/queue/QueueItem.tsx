@@ -1,13 +1,15 @@
-import {
-  useColorContext,
-} from '@project-r/styleguide'
+import { useColorContext } from '@project-r/styleguide'
 import { css } from 'glamor'
 import { AudioQueueItem } from '../../../../graphql/AudioQueueHooks'
 import AudioListItem from '../shared/AudioListItem'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import { useInNativeApp } from '../../../../../../lib/withInNativeApp'
-import { IconDownload, IconDragHandle, IconLink, IconRemoveCircle } from '@republik/icons'
+import {
+  IconDownload,
+  IconDragHandle,
+  IconLink,
+  IconRemoveCircle,
+} from '@republik/icons'
 
 const styles = {
   root: css({
@@ -64,7 +66,6 @@ const QueueItem = ({
     transition,
     isDragging,
   } = useSortable({ id: item.id })
-  const { inNativeApp } = useInNativeApp()
 
   return (
     <li
@@ -105,7 +106,6 @@ const QueueItem = ({
             Icon: IconDownload,
             label: t('AudioPlayer/Queue/Download'),
             onClick: () => onDownload(item.document),
-            hidden: inNativeApp,
           },
           {
             Icon: IconLink,
