@@ -1030,15 +1030,15 @@
     },
     {
       "key": "account/prolitteris/title",
-      "value": "ProLitteris Integration"
+      "value": "Zugriffszählung"
     },
     {
       "key": "account/prolitteris/consent/label",
-      "value": "Ich möchte diese Funktion nutzen"
+      "value": "Zählung erlauben"
     },
     {
       "key": "account/prolitteris/description",
-      "value": "Unsere Autorinnen bekommen von der Schweizer Verwertungsgesellschaft ProLitteris Entschädigung. Diese wird auf Basis von Beitragszugriffen und mit Hilfe anonymisierten IP Adressen der Leserinnen berechnet. Falls Sie sich trotz Anonymisierung von der Enschädigungsprozess abmelden wollen, können Sie es jede Zeit machen."
+      "value": "Um die Kopiervergütung durch die Verwertungsgesellschaft Pro Litteris zu ermöglichen, senden wir beim Besuch eines Beitrages die Uhrzeit und das Datum des Zugriffs sowie eine anonymisierte Version der IP-Adressen der Leser an Pro Litteris. Falls Sie trotz Anonymisierung die Zählung unterbinden wollen, können Sie dies hier tun."
     },
     {
       "key": "account/prolitteris/consent/noMembership",
