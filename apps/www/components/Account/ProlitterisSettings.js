@@ -54,11 +54,11 @@ const REVOKE_PROLITTERIS = gql`
 const ProlitterisSettings = () => {
   const { me, meLoading, hasActiveMembership } = useMe()
   const { t } = useTranslation()
-  const [revokeConsent] = useMutation(REVOKE_PROLITTERIS)
-  const [submitConsent] = useMutation(CONSENT_TO_PROLITTERIS)
+  const [revokeOptOut] = useMutation(REVOKE_PROLITTERIS)
+  const [submitOptOut] = useMutation(CONSENT_TO_PROLITTERIS)
   const [mutating, isMutating] = useState(false)
   const [serverError, setServerError] = useState(false)
-  const isActive = me && me.prolitterisOptOut === false
+  const isActive = me && me.prolitterisOptOut !== true
 
   return (
     <Loader
@@ -72,14 +72,8 @@ const ProlitterisSettings = () => {
             checked={isActive}
             disabled={mutating}
             onChange={() => {
-              if (
-                isActive &&
-                !window.confirm(t('account/prolitteris/consent/confirmRevoke'))
-              ) {
-                return
-              }
               isMutating(true)
-              const consentMutation = isActive ? revokeConsent : submitConsent
+              const consentMutation = isActive ? submitOptOut : revokeOptOut
               consentMutation()
                 .then(() => isMutating(false))
                 .catch((err) => {
