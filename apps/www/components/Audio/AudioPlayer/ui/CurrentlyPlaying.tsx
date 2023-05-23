@@ -1,16 +1,11 @@
-import React from 'react'
-import { css } from 'glamor'
-import {
-  fontStyles,
-  useColorContext,
-} from '@project-r/styleguide'
-import { dateFormatter, formatMinutes } from '../shared'
-import AudioPlayerTitle from './AudioPlayerTitle'
-import { AudioQueueItem } from '../../graphql/AudioQueueHooks'
-import AudioCover from './AudioCover'
-import AudioCalloutMenu from './tabs/shared/AudioCalloutMenu'
-import { useInNativeApp } from '../../../../lib/withInNativeApp'
+import { fontStyles, useColorContext } from '@project-r/styleguide'
 import { IconDownload } from '@republik/icons'
+import { css } from 'glamor'
+import { AudioQueueItem } from '../../graphql/AudioQueueHooks'
+import { dateFormatter, formatMinutes } from '../shared'
+import AudioCover from './AudioCover'
+import AudioPlayerTitle from './AudioPlayerTitle'
+import AudioCalloutMenu from './tabs/shared/AudioCalloutMenu'
 
 const styles = {
   root: css({
@@ -52,7 +47,6 @@ const CurrentlyPlaying = ({
   handleDownload,
 }: CurrentlyPlayingProps) => {
   const [colorScheme] = useColorContext()
-  const { inNativeApp } = useInNativeApp()
 
   const {
     document: {
@@ -117,7 +111,6 @@ const CurrentlyPlaying = ({
               Icon: IconDownload,
               label: t('AudioPlayer/Queue/Download'),
               onClick: () => handleDownload(item.document),
-              hidden: inNativeApp,
             },
           ]}
         />
