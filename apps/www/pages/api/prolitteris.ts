@@ -3,7 +3,8 @@ import truncateIP from '../../lib/api/TruncateIP'
 import withReqMethodGuard from '../../lib/api/withReqMethodGuard'
 import HTTPMethods from '../../lib/api/HTTPMethods'
 import crypto from 'node:crypto'
-import { object } from 'prop-types'
+
+const PROLITTERIS_HASH_SALT = process.env.PROLITTERIS_HASH_SALT || ''
 
 /**
  * Generate a sha256 hash from a string, number, object or array
@@ -12,11 +13,12 @@ import { object } from 'prop-types'
  */
 function getHash(input: string | number | object): string {
   const hash = crypto.createHash('sha256')
-  if (input instanceof object || Array.isArray(input)) {
+  if (input instanceof Object || Array.isArray(input)) {
     hash.update(JSON.stringify(input))
   } else {
     hash.update(input.toString())
   }
+  hash.update(PROLITTERIS_HASH_SALT)
   return hash.digest('hex')
 }
 
