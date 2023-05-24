@@ -4,7 +4,14 @@ import withReqMethodGuard from '../../lib/api/withReqMethodGuard'
 import HTTPMethods from '../../lib/api/HTTPMethods'
 import crypto from 'node:crypto'
 
-const PROLITTERIS_HASH_SALT = process.env.PROLITTERIS_HASH_SALT || ''
+const {
+  PROLITTERIS_MEMBER_ID,
+  PROLITTERIS_DOMAIN,
+  PROLITTERIS_USER_AGENT,
+  PUBLIC_BASE_URL,
+  PROLITTERIS_DEV_UID,
+  PROLITTERIS_HASH_SALT = '',
+} = process.env
 
 /**
  * Generate a sha256 hash from a string, number, object or array
@@ -21,14 +28,6 @@ function getHash(input: string | number | object): string {
   hash.update(PROLITTERIS_HASH_SALT)
   return hash.digest('hex')
 }
-
-const {
-  PROLITTERIS_MEMBER_ID,
-  PROLITTERIS_DOMAIN,
-  PROLITTERIS_USER_AGENT,
-  PUBLIC_BASE_URL,
-  PROLITTERIS_DEV_UID,
-} = process.env
 
 /**
  *
