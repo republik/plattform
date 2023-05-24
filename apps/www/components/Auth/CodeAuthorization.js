@@ -14,9 +14,9 @@ import {
 import withT from '../../lib/withT'
 import withMe from '../../lib/apollo/withMe'
 import { scrollIt } from '../../lib/utils/scroll'
-import { DoneIcon } from '@project-r/styleguide'
 
 import withAuthorizeSession from './withAuthorizeSession'
+import { IconDone } from '@republik/icons'
 
 const { H3, P, Emphasis } = Interaction
 
@@ -158,7 +158,7 @@ const CodeAuthorization = ({
           (mutating ? (
             <InlineSpinner size='30px' />
           ) : (
-            <DoneIcon
+            <IconDone
               style={{ cursor: 'pointer' }}
               size={30}
               onClick={onSubmit}

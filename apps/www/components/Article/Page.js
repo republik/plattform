@@ -35,7 +35,6 @@ import {
   createSectionSchema,
   createPageSchema,
   flyerSchema,
-  EditIcon,
   createRequire,
 } from '@project-r/styleguide'
 
@@ -82,6 +81,7 @@ import { BrowserOnlyActionBar } from './BrowserOnly'
 import ArticleRecommendationsFeed from './ArticleRecommendationsFeed'
 import TeaserAudioPlayButton from '../Audio/shared/TeaserAudioPlayButton'
 import useAudioQueue from '../Audio/hooks/useAudioQueue'
+import { IconEdit } from '@republik/icons'
 
 const LoadingComponent = () => <SmallLoader loading />
 
@@ -778,7 +778,7 @@ const ArticlePage = ({
                                   : {})}
                               >
                                 <IconButton
-                                  Icon={EditIcon}
+                                  Icon={IconEdit}
                                   href={`${PUBLIKATOR_BASE_URL}/repo/${repoId}/tree`}
                                   target='_blank'
                                   title={t('feed/actionbar/edit')}

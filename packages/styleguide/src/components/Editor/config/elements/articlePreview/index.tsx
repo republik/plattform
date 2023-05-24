@@ -7,13 +7,13 @@ import {
   ElementConfigI,
   ElementFormProps,
 } from '../../../custom-types'
-import { ArticlePreviewIcon } from '../../../../Icons'
 import { css } from 'glamor'
 import ColorPicker from '../../../Forms/ColorPicker'
 import { useSlate } from 'slate-react'
 import { Transforms } from 'slate'
 import Dropdown from '../../../../Form/Dropdown'
 import RepoField from '../../../Forms/RepoField'
+import { IconCallToActionOutline } from '@republik/icons'
 
 const ARTICLE_KINDS: { value: ArticleKind; text: string }[] = [
   {
@@ -173,5 +173,5 @@ export const config: ElementConfigI = {
     { type: 'articlePreviewTextContainer', main: true },
   ],
   props: ['backgroundColor', 'color', 'href', 'kind'],
-  button: { icon: ArticlePreviewIcon },
+  button: { icon: IconCallToActionOutline },
 }

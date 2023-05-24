@@ -10,10 +10,7 @@ import ErrorMessage from '../ErrorMessage'
 
 import { SUPPORTED_TOKEN_TYPES } from '../constants'
 
-import {
-  MdPhonelink as AppTokenIcon,
-  MdMailOutline as EmailTokenIcon,
-} from 'react-icons/md'
+import { IconDevices, IconMailOutline } from '@republik/icons'
 
 import { Label, Interaction, RawHtml, linkRule } from '@project-r/styleguide'
 import { graphql } from '@apollo/client/react/hoc'
@@ -21,8 +18,8 @@ import { graphql } from '@apollo/client/react/hoc'
 const { H3, P } = Interaction
 
 const Icons = {
-  EMAIL_TOKEN: EmailTokenIcon,
-  APP: AppTokenIcon,
+  EMAIL_TOKEN: IconMailOutline,
+  APP: IconDevices,
 }
 
 const styles = {
@@ -121,6 +118,8 @@ class Poller extends Component {
             <Icon
               fill='inherit'
               size='1.2em'
+              strokeWidth={20}
+              stroke='currentColor'
               style={{
                 verticalAlign: 'baseline',
                 marginRight: 6,

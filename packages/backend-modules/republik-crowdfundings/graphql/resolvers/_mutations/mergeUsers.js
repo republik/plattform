@@ -11,10 +11,12 @@ const {
 } = require('@orbiting/backend-modules-republik/lib/slack')
 const { v4: uuid } = require('uuid')
 const mergeCustomers = require('../../../lib/payments/stripe/mergeCustomers')
+const cache = require('../../../lib/cache')
 
 module.exports = async (_, args, context) => {
   const {
     pgdb,
+    redis,
     req,
     t,
     mail: { moveNewsletterSubscriptions },
@@ -147,6 +149,7 @@ module.exports = async (_, args, context) => {
       { issuerUserId: sourceUser.id },
       { issuerUserId: targetUser.id },
     )
+    await transaction.public.userAttributes.update(from, to)
 
     await mergeCustomers({
       targetUserId: targetUser.id,
@@ -307,6 +310,16 @@ module.exports = async (_, args, context) => {
       })
     } catch (_e) {
       logger.error('newsletter subscription changes failed in mergeUsers!', _e)
+    }
+
+    try {
+      await cache({ prefix: `User:${sourceUserId}` }, { redis }).invalidate()
+      await cache({ prefix: `User:${targetUserId}` }, { redis }).invalidate()
+    } catch (_e) {
+      logger.error(
+        'failed to clear user cache for source and/or target user in mergeUsers',
+        _e,
+      )
     }
 
     await publishMonitor(

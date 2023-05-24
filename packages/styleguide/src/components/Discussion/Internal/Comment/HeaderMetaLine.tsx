@@ -9,7 +9,7 @@ import { sansSerifRegular14 } from '../../../Typography/styles'
 import { ellipsize, underline } from '../../../../lib/styleMixins'
 import * as mediaQueries from '../../../../theme/mediaQueries'
 import { useMediaQuery } from '../../../../lib/useMediaQuery'
-import { CheckIcon } from '../../../Icons'
+import { IconCheck } from '@republik/icons'
 
 const styles = {
   meta: css({
@@ -94,7 +94,7 @@ const HeaderMetaLine = ({ t, comment, discussion, CommentLink, isPreview }) => {
               {credential.description}
             </div>
             {credential.verified && (
-              <CheckIcon
+              <IconCheck
                 {...styles.verifiedCheck}
                 {...colorScheme.set('color', 'primary')}
               />

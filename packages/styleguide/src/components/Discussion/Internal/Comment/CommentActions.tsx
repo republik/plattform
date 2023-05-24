@@ -2,7 +2,6 @@ import React, { useMemo } from 'react'
 import { css } from 'glamor'
 import { sansSerifMedium14 } from '../../../Typography/styles'
 import { formatTimeRelative } from '../../DiscussionContext'
-import { ShareIcon, ReplyIcon, DiscussionIcon } from '../../../Icons'
 import { useColorContext } from '../../../Colors/ColorContext'
 import { useCurrentMinute } from '../../../../lib/useCurrentMinute'
 import IconButton from '../../../IconButton'
@@ -10,6 +9,7 @@ import { VoteButtons } from './VoteButtons'
 import PropTypes from 'prop-types'
 import { useMediaQuery } from '../../../../lib/useMediaQuery'
 import { mUp } from '../../../../theme/mediaQueries'
+import { IconDiscussion, IconReply, IconShare } from '@republik/icons'
 
 const styles = {
   root: css({
@@ -78,7 +78,7 @@ export const CommentActions = ({
           <IconButton
             onClick={handleLoadReplies}
             title={t('styleguide/CommentActions/expand')}
-            Icon={DiscussionIcon}
+            Icon={IconDiscussion}
             fillColorName='primary'
             size={20}
             label={
@@ -96,7 +96,7 @@ export const CommentActions = ({
         {handleShare && comment?.published && (
           <IconButton
             title={t('styleguide/CommentActions/share')}
-            Icon={ShareIcon}
+            Icon={IconShare}
             onClick={() => handleShare(comment)}
             size={20}
           />
@@ -105,7 +105,7 @@ export const CommentActions = ({
           <IconButton
             disabled={!!replyBlockedMessage}
             onClick={handleReply}
-            Icon={ReplyIcon}
+            Icon={IconReply}
             size={20}
             title={replyBlockedMessage || t('styleguide/CommentActions/answer')}
             label={t('styleguide/CommentActions/answer')}

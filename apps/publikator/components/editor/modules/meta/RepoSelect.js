@@ -1,6 +1,6 @@
 import { css } from 'glamor'
 
-import CloseIcon from 'react-icons/lib/md/close'
+import { IconClose } from '@republik/icons'
 
 import { A, Label, colors } from '@project-r/styleguide'
 import { RepoSearch } from '@project-r/styleguide/editor'
@@ -68,7 +68,7 @@ export default ({
             onRefChange(null)
           }}
         >
-          <CloseIcon size={25} />
+          <IconClose size={25} />
         </A>
       </div>
     )

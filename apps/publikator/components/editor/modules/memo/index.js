@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react'
 import compose from 'lodash/flowRight'
 import MarkdownSerializer from 'slate-mdast-serializer'
 import {
-  MemoIcon,
   Editorial,
   Overlay,
   OverlayToolbar,
@@ -16,6 +15,7 @@ import { matchInline, createInlineButton, buttonStyles } from '../../utils'
 import { getRepoIdFromQuery } from '../../../../lib/repoIdHelper'
 
 import { withRouter } from 'next/router'
+import { IconMemo } from '@republik/icons'
 
 const Memo = compose(
   withT,
@@ -138,7 +138,7 @@ const MemoModule = ({ rule, TYPE, context }) => {
               data-disabled={disabled}
               data-visible={visible}
             >
-              <MemoIcon />
+              <IconMemo />
             </span>
           )
         }),

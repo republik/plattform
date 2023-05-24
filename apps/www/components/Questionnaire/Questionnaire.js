@@ -9,7 +9,6 @@ import {
   RawHtml,
   useHeaderHeight,
   FieldSet,
-  CheckCircleIcon,
   useColorContext,
 } from '@project-r/styleguide'
 
@@ -32,6 +31,7 @@ import {
 import Questions from './Questions'
 import QuestionnaireClosed from './QuestionnaireClosed'
 import QuestionnaireActions from './QuestionnaireActions'
+import { IconCheckCircle } from '@republik/icons'
 
 const { Headline, P } = Interaction
 
@@ -372,7 +372,7 @@ const Questionnaire = (props) => {
                     </P>
                     {questionCount === userAnswerCount ? (
                       <div {...styles.progressIcon}>
-                        <CheckCircleIcon
+                        <IconCheckCircle
                           size={22}
                           {...colorScheme.set('fill', 'primary')}
                         />

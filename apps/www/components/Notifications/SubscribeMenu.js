@@ -3,12 +3,12 @@ import compose from 'lodash/flowRight'
 import { graphql } from '@apollo/client/react/hoc'
 import { withRouter } from 'next/router'
 import { CalloutMenu, IconButton } from '@project-r/styleguide'
-import { NotificationIcon, NotificationsNoneIcon } from '@project-r/styleguide'
 import SubscribeCallout from './SubscribeCallout'
 import { getSelectedDiscussionPreference } from './SubscribeDebate'
 import withMe from '../../lib/apollo/withMe'
 import { DISCUSSION_PREFERENCES_QUERY } from '../Discussion/graphql/queries/DiscussionPreferencesQuery.graphql'
 import EventObjectType from '../ActionBar/graphql/EventObjectType'
+import { IconNotifications, IconNotificationsNone } from '@republik/icons'
 
 const checkIfSubscribedToAny = ({ data, subscriptions, showAuthorFilter }) =>
   //checks if any of the subscription nodes is set to active
@@ -80,7 +80,7 @@ const SubscribeMenu = ({
     return null
   }
 
-  const Icon = isSubscribedToAny ? NotificationIcon : NotificationsNoneIcon
+  const Icon = isSubscribedToAny ? IconNotifications : IconNotificationsNone
 
   // Render disabled IconButton until loaded and ready
   // - initiallyOpen is only respected on first CalloutMenu render

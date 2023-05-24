@@ -6,8 +6,6 @@ import {
   mediaQueries,
   fontStyles,
   useColorContext,
-  SearchMenuIcon,
-  BoldSearchIcon,
   Scroller,
 } from '@project-r/styleguide'
 
@@ -21,8 +19,7 @@ import {
 } from '../constants'
 import { useRouter } from 'next/router'
 import { useMe } from '../../lib/context/MeContext'
-
-const JournalPathRegex = new RegExp('^/[0-9]{4}/[0-9]{2}/[0-9]{2}/journal$')
+import { IconSearchMenu, IconSearchMenuBold } from '@republik/icons'
 
 export const SecondaryNav = ({
   secondaryNav,
@@ -99,16 +96,6 @@ export const SecondaryNav = ({
               >
                 {t('navbar/feed')}
               </NavLink>
-              <NavLink
-                href='/journal'
-                currentPath={currentPath}
-                isActive={JournalPathRegex.test(currentPath)}
-                formatColor='accentColorFlyer'
-                minifeed
-                title={t('navbar/flyer')}
-              >
-                {t('navbar/flyer')}
-              </NavLink>
               <div data-climatelab-only>
                 <NavLink
                   href='/klimalabor'
@@ -136,12 +123,12 @@ export const SecondaryNav = ({
                 minifeed
               >
                 {'/suche' === currentPath ? (
-                  <BoldSearchIcon
+                  <IconSearchMenuBold
                     {...colorScheme.set('fill', 'text')}
                     size={18}
                   />
                 ) : (
-                  <SearchMenuIcon
+                  <IconSearchMenu
                     {...colorScheme.set('fill', 'text')}
                     size={18}
                   />

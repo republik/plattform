@@ -8,7 +8,6 @@ import {
   HeaderHeightProvider,
   useColorContext,
   shouldIgnoreClick,
-  BackIcon,
 } from '@project-r/styleguide'
 import { withMembership } from '../Auth/checkRoles'
 import withT from '../../lib/withT'
@@ -37,6 +36,7 @@ import {
   LOGO_PADDING_MOBILE,
   TRANSITION_MS,
 } from '../constants'
+import { IconBack } from '@republik/icons'
 
 const BACK_BUTTON_SIZE = 24
 
@@ -202,7 +202,7 @@ const Header = ({
                     }
                   }}
                 >
-                  <BackIcon
+                  <IconBack
                     size={BACK_BUTTON_SIZE}
                     {...colorScheme.set('fill', 'text')}
                   />

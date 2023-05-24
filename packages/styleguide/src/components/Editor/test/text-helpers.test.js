@@ -2,6 +2,7 @@ import { createEditor, Transforms } from 'slate'
 import { insertSpecialChars, selectNearestWord } from '../Core/helpers/text'
 import schema from '../schema/article'
 import mockEditor from './mockEditor'
+import { act } from '@testing-library/react'
 
 describe('Slate Editor', () => {
   window.document.getSelection = jest.fn()
@@ -11,11 +12,13 @@ describe('Slate Editor', () => {
   const defaultConfig = { schema }
 
   async function setup(config) {
-    return await mockEditor(createEditor(), {
-      config,
-      value,
-      setValue: (val) => (value = val),
-    })
+    return act(async () =>
+      mockEditor(createEditor(), {
+        config,
+        value,
+        setValue: (val) => (value = val),
+      }),
+    )
   }
 
   describe('selectNearestWord()', () => {
@@ -35,10 +38,10 @@ describe('Slate Editor', () => {
         },
       ]
       const editor = await setup({ ...defaultConfig, structure })
-
-      await Transforms.select(editor, { path: [0, 0], offset: 9 })
-      changedSelection = selectNearestWord(editor)
-      await new Promise(process.nextTick)
+      await act(async () => {
+        await Transforms.select(editor, { path: [0, 0], offset: 9 })
+        changedSelection = selectNearestWord(editor)
+      })
       expect(editor.selection).toEqual({
         anchor: { path: [0, 0], offset: 6 },
         focus: { path: [0, 0], offset: 11 },
@@ -54,19 +57,19 @@ describe('Slate Editor', () => {
         },
       ]
       const editor = await setup({ ...defaultConfig, structure })
-
-      await Transforms.select(editor, { path: [0, 0], offset: 6 })
-      changedSelection = selectNearestWord(editor)
-      await new Promise(process.nextTick)
+      await act(async () => {
+        await Transforms.select(editor, { path: [0, 0], offset: 6 })
+        changedSelection = selectNearestWord(editor)
+      })
       expect(editor.selection).toEqual({
         anchor: { path: [0, 0], offset: 6 },
         focus: { path: [0, 0], offset: 6 },
       })
       expect(changedSelection).toBe(false)
-
-      await Transforms.select(editor, { path: [0, 0], offset: 11 })
-      changedSelection = selectNearestWord(editor)
-      await new Promise(process.nextTick)
+      await act(async () => {
+        await Transforms.select(editor, { path: [0, 0], offset: 11 })
+        changedSelection = selectNearestWord(editor)
+      })
       expect(editor.selection).toEqual({
         anchor: { path: [0, 0], offset: 11 },
         focus: { path: [0, 0], offset: 11 },
@@ -86,10 +89,10 @@ describe('Slate Editor', () => {
         },
       ]
       const editor = await setup({ ...defaultConfig, structure })
-
-      await Transforms.select(editor, { path: [0, 0], offset: 5 })
-      changedSelection = selectNearestWord(editor)
-      await new Promise(process.nextTick)
+      await act(async () => {
+        await Transforms.select(editor, { path: [0, 0], offset: 5 })
+        changedSelection = selectNearestWord(editor)
+      })
       expect(editor.selection).toEqual({
         anchor: { path: [0, 0], offset: 5 },
         focus: { path: [0, 0], offset: 5 },
@@ -104,10 +107,10 @@ describe('Slate Editor', () => {
         },
       ]
       const editor = await setup({ ...defaultConfig, structure })
-
-      await Transforms.select(editor, { path: [0, 0], offset: 9 })
-      changedSelection = selectNearestWord(editor, true)
-      await new Promise(process.nextTick)
+      await act(async () => {
+        await Transforms.select(editor, { path: [0, 0], offset: 9 })
+        changedSelection = selectNearestWord(editor, true)
+      })
       expect(editor.selection).toEqual({
         anchor: { path: [0, 0], offset: 9 },
         focus: { path: [0, 0], offset: 9 },
@@ -131,10 +134,10 @@ describe('Slate Editor', () => {
         },
       ]
       const editor = await setup({ ...defaultConfig, structure })
-
-      await Transforms.select(editor, { path: [0, 0], offset: 9 })
-      insertSpecialChars(editor, '%')
-      await new Promise(process.nextTick)
+      await act(async () => {
+        await Transforms.select(editor, { path: [0, 0], offset: 9 })
+        await insertSpecialChars(editor, '%')
+      })
       expect(editor.selection).toEqual({
         anchor: { path: [0, 0], offset: 10 },
         focus: { path: [0, 0], offset: 10 },
@@ -150,10 +153,10 @@ describe('Slate Editor', () => {
         },
       ]
       const editor = await setup({ ...defaultConfig, structure })
-
-      await Transforms.select(editor, { path: [0, 0], offset: 12 })
-      insertSpecialChars(editor, '<>')
-      await new Promise(process.nextTick)
+      await act(async () => {
+        await Transforms.select(editor, { path: [0, 0], offset: 12 })
+        await insertSpecialChars(editor, '<>')
+      })
       expect(editor.selection).toEqual({
         anchor: { path: [0, 0], offset: 13 },
         focus: { path: [0, 0], offset: 13 },
@@ -169,13 +172,13 @@ describe('Slate Editor', () => {
         },
       ]
       const editor = await setup({ ...defaultConfig, structure })
-
-      await Transforms.select(editor, {
-        anchor: { path: [0, 0], offset: 6 },
-        focus: { path: [0, 0], offset: 11 },
+      await act(async () => {
+        await Transforms.select(editor, {
+          anchor: { path: [0, 0], offset: 6 },
+          focus: { path: [0, 0], offset: 11 },
+        })
+        await insertSpecialChars(editor, '<>')
       })
-      insertSpecialChars(editor, '<>')
-      await new Promise(process.nextTick)
       expect(editor.selection).toEqual({
         anchor: { path: [0, 0], offset: 7 },
         focus: { path: [0, 0], offset: 12 },

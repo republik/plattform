@@ -8,12 +8,7 @@ import {
   RelativeTime,
   useColorContext,
   useHeaderHeight,
-  AddIcon,
-  RemoveIcon,
   IconButton,
-  ShareIcon,
-  RadioCheckedIcon,
-  RadioUncheckedIcon,
   usePrevious,
   RawHtml,
 } from '@project-r/styleguide'
@@ -32,6 +27,7 @@ import ShareOverlay from '../../ActionBar/ShareOverlay'
 import { trackEvent } from '../../../lib/matomo'
 import { getSubmissionUrl } from './Share'
 import { useTranslation } from '../../../lib/withT'
+import { IconAdd, IconRadioChecked, IconRadioUnchecked, IconRemove, IconShare } from '@republik/icons'
 
 export const styles = {
   highlightContainer: css({
@@ -165,7 +161,7 @@ export const SubmissionAuthor = ({
 
 const ChoiceAnswerOption = ({ option, checked }) => {
   const [colorScheme] = useColorContext()
-  const Icon = checked ? RadioCheckedIcon : RadioUncheckedIcon
+  const Icon = checked ? IconRadioChecked : IconRadioUnchecked
   return (
     <span
       style={{
@@ -284,7 +280,7 @@ const Submission = ({
         <div {...styles.headerActions}>
           <IconButton
             invert={true}
-            Icon={isExpanded ? RemoveIcon : AddIcon}
+            Icon={isExpanded ? IconRemove : IconAdd }
             fillColorName='textSoft'
             size={20}
             onClick={() => {
@@ -370,7 +366,7 @@ const Submission = ({
             title={t('article/actionbar/share')}
             label={t('styleguide/CommentActions/share/short')}
             labelShort={t('styleguide/CommentActions/share/short')}
-            Icon={ShareIcon}
+            Icon={IconShare}
             href={submissionUrl}
             onClick={(e) => {
               e.preventDefault()

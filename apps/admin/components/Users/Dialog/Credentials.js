@@ -1,13 +1,9 @@
 import { useState } from 'react'
 import { Query, Mutation } from '@apollo/client/react/components'
 import { gql } from '@apollo/client'
-import { MdDone as SaveIcon } from 'react-icons/md'
-import {
-  Checkbox,
-  Loader,
-  InlineSpinner,
-  Interaction,
-} from '@project-r/styleguide'
+import { Checkbox, Loader, InlineSpinner } from '@project-r/styleguide'
+
+import { IconDone } from '@republik/icons'
 
 import {
   InteractiveSection,
@@ -83,7 +79,7 @@ const UpdateCredential = ({
                   <InlineSpinner size={22} />
                 ) : verified !== value ? (
                   <TextButton type='submit'>
-                    <SaveIcon size={22} />
+                    <IconDone size={22} />
                   </TextButton>
                 ) : null}
               </span>
@@ -107,29 +103,8 @@ const Credentials = ({ userId }) => {
             render={() => {
               const { user } = data
               const { credentials } = user
-              const profileRole = credentials.find(
-                (credential) => credential.isListed,
-              )
-              if (profileRole) {
-                credentials.unshift(
-                  credentials.splice(credentials.indexOf(profileRole), 1)[0],
-                )
-              }
 
-              if (credentials.length > 0) {
-                return (
-                  <InteractiveSection>
-                    <SectionTitle>Rollen verifizieren</SectionTitle>
-                    {credentials.map((credential) => (
-                      <UpdateCredential
-                        key={`${credential.description}-${credential.verified}`}
-                        user={user}
-                        credential={credential}
-                      />
-                    ))}
-                  </InteractiveSection>
-                )
-              } else {
+              if (!credentials.length) {
                 return (
                   <Section>
                     <SectionTitle>Rollen verifizieren</SectionTitle>
@@ -137,6 +112,21 @@ const Credentials = ({ userId }) => {
                   </Section>
                 )
               }
+
+              return (
+                <InteractiveSection>
+                  <SectionTitle>Rollen verifizieren</SectionTitle>
+                  {[...credentials]
+                    .sort((a) => (a.isListed ? -1 : 0)) // bubble listed credentials to top
+                    .map((credential) => (
+                      <UpdateCredential
+                        key={credential.id}
+                        user={user}
+                        credential={credential}
+                      />
+                    ))}
+                </InteractiveSection>
+              )
             }}
           />
         )
