@@ -1,4 +1,5 @@
 import net from 'node:net'
+import { intToIpv4, ipv4ToInt } from './IPv4Helpers'
 
 export default function truncateIP(ip: string): string {
   const ipV = net.isIP(ip)
@@ -19,8 +20,7 @@ function maskIpv6(ip: string): string {
 }
 
 function maskIpv4(ip: string): string {
-  const ipArray = ip.split('.')
-  ipArray.splice(3, 1, '0')
-  const maskedIp4 = ipArray.join('.')
-  return maskedIp4
+  const numIP = ipv4ToInt(ip)
+  const maskedIp = numIP & 0xff_ff_ff_00 // retain only first 3 octets¨
+  return intToIpv4(maskedIp)
 }

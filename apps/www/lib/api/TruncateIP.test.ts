@@ -3,6 +3,7 @@ import truncateIP from './TruncateIP'
 describe('truncateIP test-suite', () => {
   test('trunkates valid ip4', () => {
     expect(truncateIP('82.197.167.186')).toBe('82.197.167.0')
+    expect(truncateIP('1.0.0.1')).toBe('1.0.0.0')
   })
 
   test('trunkates valid ip6', () => {
