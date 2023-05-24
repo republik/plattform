@@ -9,7 +9,7 @@
   "main": "server/index.js",
   "scripts": {
     "dev": "cross-env NODE_ENV=development nodemon --watch server --watch .env --watch next.config.js server/index.js",
-    "start": "node server/index.js",
+    "dev:next": "next dev -p 3010",
     "build": "next build",
     "heroku-postbuild": "npm run build",
     "test": "jest",
@@ -103,6 +103,7 @@
     "glamor": "^2.20.40",
     "graphql": "^15.3.0",
     "helmet": "^3.23.3",
+    "http-proxy-middleware": "^2.0.6",
     "immer": "^9.0.12",
     "jose": "^4.8.3",
     "jstoxml": "^3.2.3",

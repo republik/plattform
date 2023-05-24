@@ -9,6 +9,20 @@ const withTM = require('next-transpile-modules')([
 
 const { NODE_ENV, CDN_FRONTEND_BASE_URL } = process.env
 
+/**
+ * For Vercel Preview Deployments, make sure the PUBLIC_BASE_URL_PATTERN is set
+ * and has the pattern `https://project-name-git-<branch-name>-team-slug.vercel.app`
+ * (<branch-name> will be replaced with the Git commit ref)
+ **/
+const PUBLIC_BASE_URL =
+  process.env.PUBLIC_BASE_URL ??
+  (process.env.VERCEL_GIT_COMMIT_REF && process.env.PUBLIC_BASE_URL_PATTERN
+    ? process.env.PUBLIC_BASE_URL_PATTERN.replace(
+        '<branch-name>',
+        process.env.VERCEL_GIT_COMMIT_REF,
+      )
+    : undefined)
+
 const buildId =
   process.env.SOURCE_VERSION?.substring(0, 10) ||
   new Date(Date.now()).toISOString()
@@ -19,7 +33,7 @@ const buildId =
 module.exports = withTM(
   withBundleAnalyzer({
     generateBuildId: () => buildId,
-    env: { BUILD_ID: buildId },
+    env: { BUILD_ID: buildId, PUBLIC_BASE_URL },
     webpack: (config) => {
       config.externals = config.externals || {}
       config.externals['lru-cache'] = 'lru-cache'
@@ -63,30 +77,30 @@ module.exports = withTM(
             destination: '/~/:slug',
           },
           // Avoid SSG for extract urls used for image rendering
-          {
-            source: '/:path*',
-            destination: '/_ssr/:path*',
-            has: [{ type: 'query', key: 'extract' }],
-          },
-          // Avoid SSG for share urls, e.g. meta.fromQuery
-          {
-            source: '/:path*',
-            destination: '/_ssr/:path*',
-            has: [{ type: 'query', key: 'share' }],
-          },
-          // Rewrite for crawlers when a comment is focused inside a debate on the article-site
-          {
-            source: '/:path*',
-            destination: '/_ssr/:path*',
-            has: [
-              { type: 'query', key: 'focus' },
-              {
-                type: 'header',
-                key: 'User-Agent',
-                value: '.*(Googlebot|facebookexternalhit|Twitterbot).*',
-              },
-            ],
-          },
+          // {
+          //   source: '/:path*',
+          //   destination: '/_ssr/:path*',
+          //   has: [{ type: 'query', key: 'extract' }],
+          // },
+          // // Avoid SSG for share urls, e.g. meta.fromQuery
+          // {
+          //   source: '/:path*',
+          //   destination: '/_ssr/:path*',
+          //   has: [{ type: 'query', key: 'share' }],
+          // },
+          // // Rewrite for crawlers when a comment is focused inside a debate on the article-site
+          // {
+          //   source: '/:path*',
+          //   destination: '/_ssr/:path*',
+          //   has: [
+          //     { type: 'query', key: 'focus' },
+          //     {
+          //       type: 'header',
+          //       key: 'User-Agent',
+          //       value: '.*(Googlebot|facebookexternalhit|Twitterbot).*',
+          //     },
+          //   ],
+          // },
           {
             source: '/pgp/:userSlug',
             destination: '/api/pgp/:userSlug',
