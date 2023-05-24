@@ -1,4 +1,4 @@
-import { matchType } from 'mdast-react-render/lib/utils'
+import { matchType } from '@republik/mdast-react-render/lib/utils'
 import HorizontalRule from '../components/HorizontalRule'
 
 const hrRule = {

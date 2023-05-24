@@ -1,5 +1,5 @@
 import React from 'react'
-import { Mso } from 'mdast-react-render/lib/email'
+import { Mso } from '@republik/mdast-react-render/lib/email'
 import { fontFamilies } from '../../../../theme/fonts'
 
 const Center = ({ children }) => {

@@ -20,7 +20,7 @@ import {
   matchZone,
   matchHeading,
   matchParagraph,
-} from 'mdast-react-render/lib/utils'
+} from '@republik/mdast-react-render/lib/utils'
 
 import {
   InfoBox,

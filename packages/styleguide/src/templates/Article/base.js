@@ -23,7 +23,7 @@ import {
   matchZone,
   matchParagraph,
   imageSizeInfo,
-} from 'mdast-react-render/lib/utils'
+} from '@republik/mdast-react-render/lib/utils'
 
 import {
   matchFigure,

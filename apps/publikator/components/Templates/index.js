@@ -1,5 +1,5 @@
 import { cloneElement, Children } from 'react'
-import newsletterSchema from '@project-r/template-newsletter'
+import newsletterSchema from '@republik/template-newsletter'
 
 import {
   createNewsletterWebSchema,

@@ -11,7 +11,7 @@ import {
   matchImage,
   matchParagraph,
   matchImageParagraph,
-} from 'mdast-react-render/lib/utils'
+} from '@republik/mdast-react-render/lib/utils'
 
 import { FIGURE_SIZES } from '../../components/Figure'
 import { PULLQUOTE_IMAGE_SIZE } from '../../components/PullQuote'

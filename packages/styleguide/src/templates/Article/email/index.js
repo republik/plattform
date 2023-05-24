@@ -1,4 +1,4 @@
-import { matchType } from 'mdast-react-render/lib/utils'
+import { matchType } from '@republik/mdast-react-render/lib/utils'
 import Container from '../../EditorialNewsletter/email/Container'
 import { editorialParagraphRule } from '../../shared/email/rules/paragraphRule'
 import centerRule from '../../shared/email/rules/centerRule'

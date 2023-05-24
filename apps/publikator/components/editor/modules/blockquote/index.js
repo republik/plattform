@@ -1,4 +1,4 @@
-import MarkdownSerializer from 'slate-mdast-serializer'
+import MarkdownSerializer from '@republik/slate-mdast-serializer'
 import { Block } from 'slate'
 
 import injectBlock from '../../utils/injectBlock'

@@ -820,7 +820,8 @@ const Styleguide = () => {
                           }),
                         ...require('./components/SeriesNav/__docs__'),
                         ...require('./templates/docs'),
-                        renderMdast: require('mdast-react-render').renderMdast,
+                        renderMdast: require('@republik/mdast-react-render')
+                          .renderMdast,
                       },
                       src: require('./templates/Article/docs.md'),
                     },
@@ -830,7 +831,8 @@ const Styleguide = () => {
                       imports: {
                         schema: require('./templates/Article/email').default,
                         ...require('./templates/docs'),
-                        renderMdast: require('mdast-react-render').renderMdast,
+                        renderMdast: require('@republik/mdast-react-render')
+                          .renderMdast,
                         fixtures: {
                           ...require('./templates/Article/test/article.stub'),
                         },
@@ -843,7 +845,8 @@ const Styleguide = () => {
                       imports: {
                         schema: require('./templates/Discussion').default(),
                         ...require('./templates/docs'),
-                        renderMdast: require('mdast-react-render').renderMdast,
+                        renderMdast: require('@republik/mdast-react-render')
+                          .renderMdast,
                       },
                       src: require('./templates/Discussion/docs.md'),
                     },
@@ -855,7 +858,8 @@ const Styleguide = () => {
                         emailSchema:
                           require('./templates/Comment/email').default(),
                         ...require('./templates/docs'),
-                        renderMdast: require('mdast-react-render').renderMdast,
+                        renderMdast: require('@republik/mdast-react-render')
+                          .renderMdast,
                       },
                       src: require('./templates/Comment/docs.md'),
                     },
@@ -865,7 +869,8 @@ const Styleguide = () => {
                       imports: {
                         schema: require('./templates/Section').default(),
                         ...require('./templates/docs'),
-                        renderMdast: require('mdast-react-render').renderMdast,
+                        renderMdast: require('@republik/mdast-react-render')
+                          .renderMdast,
                       },
                       src: require('./templates/Section/docs.md'),
                     },
@@ -875,7 +880,8 @@ const Styleguide = () => {
                       imports: {
                         schema: require('./templates/Format').default(),
                         ...require('./templates/docs'),
-                        renderMdast: require('mdast-react-render').renderMdast,
+                        renderMdast: require('@republik/mdast-react-render')
+                          .renderMdast,
                       },
                       src: require('./templates/Format/docs.md'),
                     },
@@ -885,7 +891,8 @@ const Styleguide = () => {
                       imports: {
                         schema: require('./templates/Dossier').default(),
                         ...require('./templates/docs'),
-                        renderMdast: require('mdast-react-render').renderMdast,
+                        renderMdast: require('@republik/mdast-react-render')
+                          .renderMdast,
                       },
                       src: require('./templates/Dossier/docs.md'),
                     },
@@ -895,7 +902,8 @@ const Styleguide = () => {
                       imports: {
                         schema: require('./templates/Front').default({ t }),
                         ...require('./templates/docs'),
-                        renderMdast: require('mdast-react-render').renderMdast,
+                        renderMdast: require('@republik/mdast-react-render')
+                          .renderMdast,
                       },
                       src: require('./templates/Front/docs.md'),
                     },
@@ -911,7 +919,8 @@ const Styleguide = () => {
                           require('./templates/EditorialNewsletter/email')
                             .default,
                         ...require('./templates/docs'),
-                        renderMdast: require('mdast-react-render').renderMdast,
+                        renderMdast: require('@republik/mdast-react-render')
+                          .renderMdast,
                       },
                       src: require('./templates/EditorialNewsletter/docs.md'),
                     },
@@ -921,7 +930,8 @@ const Styleguide = () => {
                       imports: {
                         schema: require('./templates/Page').default(),
                         ...require('./templates/docs'),
-                        renderMdast: require('mdast-react-render').renderMdast,
+                        renderMdast: require('@republik/mdast-react-render')
+                          .renderMdast,
                       },
                       src: require('./templates/Page/docs.md'),
                     },

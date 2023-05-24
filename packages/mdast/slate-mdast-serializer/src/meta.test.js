@@ -1,10 +1,10 @@
 import test from 'tape'
 import MarkdownSerializer from './'
-import { parse } from '@orbiting/remark-preset'
+import { parse } from '@republik/remark-preset'
 
 const serializer = new MarkdownSerializer()
 
-test('meta serialization', assert => {
+test('meta serialization', (assert) => {
   const mdast = parse(`---
 foo: true
 bar: foomobile

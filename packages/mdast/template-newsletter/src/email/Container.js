@@ -1,8 +1,8 @@
 import React from 'react'
 
-import { Mso } from 'mdast-react-render/lib/email'
+import { Mso } from '@republik/mdast-react-render/lib/email'
 
-export default ({children}) => (
+export default ({ children }) => (
   <html>
     <head>
       <meta charSet='UTF-8' />
@@ -35,15 +35,20 @@ export default ({children}) => (
         </style>
         `}
       </Mso>
-      <style type='text/css' dangerouslySetInnerHTML={{__html: `
+      <style
+        type='text/css'
+        dangerouslySetInnerHTML={{
+          __html: `
         img{
           height:auto !important;
           max-width:100% !important;
           width:100% !important;
         }
-      `}} />
+      `,
+        }}
+      />
     </head>
-    <body style={{margin: 0, padding: 0, backgroundColor: '#fff'}}>
+    <body style={{ margin: 0, padding: 0, backgroundColor: '#fff' }}>
       <Mso>
         {`
         <div>
@@ -53,9 +58,7 @@ export default ({children}) => (
         `}
       </Mso>
       <table border='0' cellPadding='0' cellSpacing='0' width='100%'>
-        <tbody>
-          {children}
-        </tbody>
+        <tbody>{children}</tbody>
       </table>
       <Mso>
         {`

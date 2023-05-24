@@ -1,5 +1,5 @@
 import createHeadlineModule from './'
-import { parse, stringify } from '@orbiting/remark-preset'
+import { parse, stringify } from '@republik/remark-preset'
 
 describe('headline serializer test-suite', () => {
   it('h1 serialization', () => {

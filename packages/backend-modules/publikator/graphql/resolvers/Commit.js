@@ -1,4 +1,4 @@
-const { stringify } = require('@orbiting/remark-preset')
+const { stringify } = require('@republik/remark-preset')
 const {
   lib: { createRepoUrlPrefixer, createProxyUrlPrefixer },
 } = require('@orbiting/backend-modules-assets')

@@ -1,7 +1,7 @@
 import createCoverModule from './'
 import createHeadlineModule from '../headline'
 import createParagraphModule from '../paragraph'
-import { parse, stringify } from '@orbiting/remark-preset'
+import { parse, stringify } from '@republik/remark-preset'
 
 const TYPE = 'COVER'
 

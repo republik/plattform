@@ -21,7 +21,7 @@
   },
   "dependencies": {
     "@project-r/styleguide": "*",
-    "@project-r/template-newsletter": "^1.5.0",
+    "@republik/template-newsletter": "*",
     "@republik/icons": "*",
     "d3-array": "1.x",
     "d3-color": "1.x",
@@ -35,7 +35,7 @@
     "downshift": "^2.2.2",
     "glamor": "^2.20.40",
     "lodash": "4.x",
-    "mdast-react-render": ">=1.1",
+    "@republik/mdast-react-render": "*",
     "prop-types": ">=15.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

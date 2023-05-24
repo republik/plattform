@@ -4,7 +4,7 @@ import {
   matchParagraph,
   matchType,
   matchZone,
-} from 'mdast-react-render/lib/utils'
+} from '@republik/mdast-react-render/lib/utils'
 import InfoBox, { Title, SubTitle, Text } from '../components/InfoBox'
 import { Figure } from '../components/Figure'
 import { getImageRules } from './figureRule'

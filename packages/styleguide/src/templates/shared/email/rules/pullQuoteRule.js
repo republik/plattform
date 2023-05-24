@@ -1,4 +1,7 @@
-import { matchParagraph, matchZone } from 'mdast-react-render/lib/utils'
+import {
+  matchParagraph,
+  matchZone,
+} from '@republik/mdast-react-render/lib/utils'
 import { matchFigure, matchLast } from '../../../Article/utils'
 import inlineRules from './inlineRules'
 import { linkRule } from './linkRule'

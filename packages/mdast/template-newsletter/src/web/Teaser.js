@@ -1,8 +1,8 @@
 import React from 'react'
-import {css} from 'glamor'
+import { css } from 'glamor'
 import { timeFormatLocale } from 'd3-time-format'
 import timeDefinition from 'd3-time-format/locale/de-CH'
-import { imageResizeUrl } from 'mdast-react-render/lib/utils'
+import { imageResizeUrl } from '@republik/mdast-react-render/lib/utils'
 
 import { H3 } from './Headlines'
 import P from './Paragraph'
@@ -11,32 +11,41 @@ const timeFormat = timeFormatLocale(timeDefinition).format
 
 const containerStyle = css({
   height: '100%',
-  backgroundColor: '#f2f2f2'
+  backgroundColor: '#f2f2f2',
 })
 const imageStyle = css({
   display: 'block',
   '& img': {
-    width: '100%'
-  }
+    width: '100%',
+  },
 })
 const textStyle = css({
   display: 'block',
   padding: '5px 10px 10px',
   textDecoration: 'none',
   '& p': {
-    marginBottom: 0
-  }
+    marginBottom: 0,
+  },
 })
 
-const parseDate = string => {
+const parseDate = (string) => {
   const date = new Date(string)
   return isNaN(date) ? undefined : date
 }
 const formatPublishDate = timeFormat('%d. %B %Y')
 
-const CardLink = ({path, slug, href, children}) => children
+const CardLink = ({ path, slug, href, children }) => children
 
-const Card = ({path, slug, href, title, publishDate, image, imageAlt, Link = CardLink}) => {
+const Card = ({
+  path,
+  slug,
+  href,
+  title,
+  publishDate,
+  image,
+  imageAlt,
+  Link = CardLink,
+}) => {
   let parsedDate = parseDate(publishDate)
   return (
     <div {...containerStyle}>

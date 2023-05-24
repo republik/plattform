@@ -1,5 +1,5 @@
 {
-  "name": "mdast-react-render",
+  "name": "@republik/mdast-react-render",
   "version": "1.2.0",
   "description": "render mdast nodes according to a schema",
   "keywords": [

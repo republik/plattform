@@ -1,5 +1,5 @@
 import { Block } from 'slate'
-import MarkdownSerializer from 'slate-mdast-serializer'
+import MarkdownSerializer from '@republik/slate-mdast-serializer'
 
 import { matchBlock } from '../../utils'
 

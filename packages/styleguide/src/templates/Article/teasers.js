@@ -8,7 +8,7 @@ import {
   matchZone,
   matchParagraph,
   matchHeading,
-} from 'mdast-react-render/lib/utils'
+} from '@republik/mdast-react-render/lib/utils'
 
 import {
   matchTeaser,

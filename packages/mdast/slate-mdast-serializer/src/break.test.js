@@ -1,47 +1,46 @@
 import test from 'tape'
 import MarkdownSerializer from './'
-import { parse, stringify } from '@orbiting/remark-preset'
+import { parse, stringify } from '@republik/remark-preset'
 
 const serializer = new MarkdownSerializer({
   rules: [
     {
-      match: object => object.type === 'p',
+      match: (object) => object.type === 'p',
       matchMdast: (node) => node.type === 'paragraph',
-      fromMdast: (node, index, parent, {visitChildren}) => ({
+      fromMdast: (node, index, parent, { visitChildren }) => ({
         object: 'block',
         type: 'p',
-        nodes: visitChildren(node)
+        nodes: visitChildren(node),
       }),
-      toMdast: (object, index, parent, {visitChildren}) => ({
+      toMdast: (object, index, parent, { visitChildren }) => ({
         type: 'paragraph',
-        children: visitChildren(object)
-      })
+        children: visitChildren(object),
+      }),
     },
     {
-      match: object => object.type === 'b',
+      match: (object) => object.type === 'b',
       matchMdast: (node) => node.type === 'strong',
-      fromMdast: (node, index, parent, {visitChildren}) => ({
+      fromMdast: (node, index, parent, { visitChildren }) => ({
         object: 'mark',
         type: 'b',
-        nodes: visitChildren(node)
+        nodes: visitChildren(node),
       }),
-      toMdast: (object, index, parent, {visitChildren}) => ({
+      toMdast: (object, index, parent, { visitChildren }) => ({
         type: 'strong',
-        children: visitChildren(object)
-      })
+        children: visitChildren(object),
+      }),
     },
     {
       matchMdast: (node) => node.type === 'break',
       fromMdast: () => ({
         object: 'text',
-        leaves: [{object: 'leaf', text: '\n', marks: []}],
-      })
-    }
-  ]
+        leaves: [{ object: 'leaf', text: '\n', marks: [] }],
+      }),
+    },
+  ],
 })
 
-
-test('mark with a break', assert => {
+test('mark with a break', (assert) => {
   const md = `A**  
 B**
 `

@@ -1,7 +1,7 @@
 import { Component, Fragment } from 'react'
 import PropTypes from 'prop-types'
 import Gallery from './Gallery'
-import { imageSizeInfo } from 'mdast-react-render/lib/utils'
+import { imageSizeInfo } from '@republik/mdast-react-render/lib/utils'
 import { postMessage } from '../../lib/withInNativeApp'
 import { removeQuery } from '../../lib/utils/link'
 import { MIN_GALLERY_IMG_WIDTH } from '@project-r/styleguide'

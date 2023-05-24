@@ -2,7 +2,7 @@ import React from 'react'
 import { css } from 'glamor'
 
 import { mq } from './styles'
-import { imageResizeUrl } from 'mdast-react-render/lib/utils'
+import { imageResizeUrl } from '@republik/mdast-react-render/lib/utils'
 
 const styles = {
   cover: {
@@ -12,15 +12,15 @@ const styles = {
       minHeight: 500,
       height: ['700px', '80vh'],
       backgroundSize: 'cover',
-      backgroundPosition: 'center'
-    }
+      backgroundPosition: 'center',
+    },
   },
   coverImage: {
     display: 'block',
     width: '100%',
     [mq.large]: {
-      display: 'none'
-    }
+      display: 'none',
+    },
   },
   coverLead: {
     position: 'relative',
@@ -31,8 +31,9 @@ const styles = {
       right: 0,
       height: '40%',
       color: '#fff',
-      backgroundImage: 'linear-gradient(-180deg, rgba(0,0,0,0.00) 0%, rgba(0,0,0,0.3) 20%, rgba(0,0,0,0.80) 100%)'
-    }
+      backgroundImage:
+        'linear-gradient(-180deg, rgba(0,0,0,0.00) 0%, rgba(0,0,0,0.3) 20%, rgba(0,0,0,0.80) 100%)',
+    },
   },
   coverLeadContainer: {
     [mq.medium]: {
@@ -40,21 +41,21 @@ const styles = {
       zIndex: 1000,
       bottom: '15%',
       left: 0,
-      right: 0
-    }
+      right: 0,
+    },
   },
   coverLeadCenter: {
     padding: '20px 20px 0',
     [mq.medium]: {
       textAlign: 'center',
       maxWidth: 640,
-      margin: '0 auto'
-    }
+      margin: '0 auto',
+    },
   },
   lead: {
     fontWeight: 'bold',
     margin: 0,
-    position: 'relative'
+    position: 'relative',
   },
   title: {
     position: 'relative',
@@ -62,17 +63,17 @@ const styles = {
     fontFamily: 'sans-serif',
     fontWeight: 'bold',
     lineHeight: '1.2em',
-    margin: '0 0 0.2em'
-  }
+    margin: '0 0 0.2em',
+  },
 }
 
-export const Lead = ({children, attributes = {}}) => (
+export const Lead = ({ children, attributes = {} }) => (
   <div {...css(styles.lead)} {...attributes}>
     {children}
   </div>
 )
 
-export const Title = ({children, attributes = {}}) => (
+export const Title = ({ children, attributes = {} }) => (
   <h1 {...css(styles.title)} {...attributes}>
     {children}
   </h1>
@@ -81,22 +82,18 @@ export const Title = ({children, attributes = {}}) => (
 export default ({ data: { src, alt }, children, attributes = {} }) => {
   const src2000 = imageResizeUrl(src, '2000x')
 
-  return <div
-    {...css(styles.cover)}
-    {...css({ [mq.large]: { backgroundImage: `url('${src2000}')` } })}
-    {...attributes}
+  return (
+    <div
+      {...css(styles.cover)}
+      {...css({ [mq.large]: { backgroundImage: `url('${src2000}')` } })}
+      {...attributes}
     >
-    <img
-      src={src2000}
-      alt={alt}
-      {...css(styles.coverImage)}
-    />
-    <div {...css(styles.coverLead)}>
-      <div {...css(styles.coverLeadContainer)}>
-        <div {...css(styles.coverLeadCenter)}>
-          {children}
+      <img src={src2000} alt={alt} {...css(styles.coverImage)} />
+      <div {...css(styles.coverLead)}>
+        <div {...css(styles.coverLeadContainer)}>
+          <div {...css(styles.coverLeadCenter)}>{children}</div>
         </div>
       </div>
     </div>
-  </div>
+  )
 }

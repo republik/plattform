@@ -3,7 +3,7 @@ import compose from 'lodash/flowRight'
 import { graphql } from '@apollo/client/react/hoc'
 import { gql } from '@apollo/client'
 import { getSchema } from '../../../../Templates'
-import { renderMdast } from 'mdast-react-render'
+import { renderMdast } from '@republik/mdast-react-render'
 import { JSONEditor, PlainEditor } from '../../../utils/CodeEditorFields'
 import {
   Center,
@@ -21,7 +21,7 @@ import {
   IconCode as Code,
   IconEdit as Edit,
   IconClose,
-  IconPublic as Public
+  IconPublic as Public,
 } from '@republik/icons'
 import { css } from 'glamor'
 import TypeSelector from './TypeSelector'

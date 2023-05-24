@@ -5,7 +5,7 @@ import {
   matchZone,
   matchParagraph,
   matchHeading,
-} from 'mdast-react-render/lib/utils'
+} from '@republik/mdast-react-render/lib/utils'
 
 import colors from '../../theme/colors'
 

@@ -1,5 +1,5 @@
 {
-  "name": "slate-mdast-serializer",
+  "name": "@republik/slate-mdast-serializer",
   "version": "3.0.0",
   "description": "serialize slate to mdast and vice versa",
   "keywords": [
@@ -29,9 +29,9 @@
   "bugs": {
     "url": "https://github.com/orbiting/mdast/issues"
   },
-  "homepage": "https://github.com/orbiting/mdast/tree/master/packages/slate-mdast-serializer#readme",
+  "homepage": "https://github.com/orbiting/mdast/tree/master/packages/@republik/slate-mdast-serializer#readme",
   "devDependencies": {
-    "@orbiting/remark-preset": "*",
+    "@republik/remark-preset": "*",
     "babel-cli": "^6.26.0",
     "babel-preset-env": "^1.6.1",
     "babel-tape-runner": "^2.0.1",

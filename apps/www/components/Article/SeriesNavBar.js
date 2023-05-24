@@ -3,7 +3,7 @@ import compose from 'lodash/flowRight'
 import { withRouter } from 'next/router'
 import { css } from 'glamor'
 import ActionBar from '../ActionBar'
-import { imageResizeUrl } from 'mdast-react-render/lib/utils'
+import { imageResizeUrl } from '@republik/mdast-react-render/lib/utils'
 import Link from 'next/link'
 import {
   mediaQueries,

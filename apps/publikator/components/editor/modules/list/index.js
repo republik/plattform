@@ -5,7 +5,7 @@ import {
   // #TODO Enable Form with compact modus
   // ListForm
 } from './ui'
-import MarkdownSerializer from 'slate-mdast-serializer'
+import MarkdownSerializer from '@republik/slate-mdast-serializer'
 import { Block } from 'slate'
 import InlineUI from '../../utils/InlineUI'
 import { matchAncestor } from '../../utils/matchers'

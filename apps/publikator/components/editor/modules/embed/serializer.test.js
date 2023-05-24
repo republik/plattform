@@ -1,5 +1,5 @@
-import { matchZone } from 'mdast-react-render/lib/utils'
-import { parse, stringify } from '@orbiting/remark-preset'
+import { matchZone } from '@republik/mdast-react-render/lib/utils'
+import { parse, stringify } from '@republik/remark-preset'
 
 import { createEmbedVideoModule, createEmbedTwitterModule } from './'
 import createParagraphModule from '../paragraph'

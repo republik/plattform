@@ -1,4 +1,7 @@
-import { matchParagraph, matchType } from 'mdast-react-render/lib/utils'
+import {
+  matchParagraph,
+  matchType,
+} from '@republik/mdast-react-render/lib/utils'
 import List, { ListItem, ListParagraph } from '../components/List'
 import { inlineEditorialParagraphRules } from './paragraphRule'
 

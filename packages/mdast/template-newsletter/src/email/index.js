@@ -1,6 +1,6 @@
 import Container from './Container'
-import Cover, {Title, Lead} from './Cover'
-import Paragraph, {Strong, Em, Link, Br} from './Paragraph'
+import Cover, { Title, Lead } from './Cover'
+import Paragraph, { Strong, Em, Link, Br } from './Paragraph'
 import Center from './Center'
 import { H2, H3 } from './Headlines'
 import Figure, { Image, Caption } from './Figure'
@@ -13,8 +13,8 @@ import {
   matchZone,
   matchHeading,
   matchParagraph,
-  matchImageParagraph
-} from 'mdast-react-render/lib/utils'
+  matchImageParagraph,
+} from '@republik/mdast-react-render/lib/utils'
 
 const paragraph = {
   matchMdast: matchParagraph,
@@ -23,25 +23,25 @@ const paragraph = {
     {
       matchMdast: matchType('break'),
       component: Br,
-      isVoid: true
+      isVoid: true,
     },
     {
       matchMdast: matchType('strong'),
-      component: Strong
+      component: Strong,
     },
     {
       matchMdast: matchType('emphasis'),
-      component: Em
+      component: Em,
     },
     {
       matchMdast: matchType('link'),
-      props: node => ({
+      props: (node) => ({
         title: node.title,
-        href: node.url
+        href: node.url,
       }),
-      component: Link
-    }
-  ]
+      component: Link,
+    },
+  ],
 }
 
 const schema = {
@@ -53,33 +53,31 @@ const schema = {
         {
           matchMdast: matchZone('COVER'),
           component: Cover,
-          props: node => {
-            const img =
-              node.children[0]
-                .children[0]
+          props: (node) => {
+            const img = node.children[0].children[0]
             return {
               data: {
                 alt: img.alt,
-                src: img.url
-              }
+                src: img.url,
+              },
             }
           },
           rules: [
             {
               matchMdast: matchImageParagraph,
               component: () => null,
-              isVoid: true
+              isVoid: true,
             },
             {
               matchMdast: matchHeading(1),
-              component: Title
+              component: Title,
             },
             {
               matchMdast: matchType('paragraph'),
               component: Lead,
-              rules: paragraph.rules
-            }
-          ]
+              rules: paragraph.rules,
+            },
+          ],
         },
         {
           matchMdast: matchZone('CENTER'),
@@ -88,11 +86,11 @@ const schema = {
             paragraph,
             {
               matchMdast: matchHeading(2),
-              component: H2
+              component: H2,
             },
             {
               matchMdast: matchHeading(3),
-              component: H3
+              component: H3,
             },
             {
               matchMdast: matchZone('FIGURE'),
@@ -101,56 +99,54 @@ const schema = {
                 {
                   matchMdast: matchImageParagraph,
                   component: Image,
-                  props: node => ({
+                  props: (node) => ({
                     src: node.children[0].url,
-                    alt: node.children[0].alt
+                    alt: node.children[0].alt,
                   }),
-                  isVoid: true
+                  isVoid: true,
                 },
                 {
                   matchMdast: matchParagraph,
                   component: Caption,
                   props: (node, index, parent) => ({
-                    data: (parent && parent.data) || {}
+                    data: (parent && parent.data) || {},
                   }),
-                  rules: paragraph.rules
-                }
-              ]
+                  rules: paragraph.rules,
+                },
+              ],
             },
             {
               matchMdast: matchType('blockquote'),
               component: Blockquote,
-              rules: [
-                paragraph
-              ]
+              rules: [paragraph],
             },
             {
               matchMdast: matchType('list'),
               component: List,
-              props: node => ({
+              props: (node) => ({
                 data: {
                   ordered: node.ordered,
-                  start: node.start
-                }
+                  start: node.start,
+                },
               }),
               rules: [
                 {
                   matchMdast: matchType('listItem'),
                   component: ListItem,
-                  rules: [paragraph]
-                }
-              ]
+                  rules: [paragraph],
+                },
+              ],
             },
             {
               matchMdast: matchZone('SPECIAL_REPUBLIK_SHAREHOLDER'),
               component: RepublikShareholder,
-              isVoid: true
-            }
-          ]
-        }
-      ]
-    }
-  ]
+              isVoid: true,
+            },
+          ],
+        },
+      ],
+    },
+  ],
 }
 
 export default schema

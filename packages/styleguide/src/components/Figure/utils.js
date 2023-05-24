@@ -1,4 +1,7 @@
-import { imageSizeInfo, imageResizeUrl } from 'mdast-react-render/lib/utils'
+import {
+  imageSizeInfo,
+  imageResizeUrl,
+} from '@republik/mdast-react-render/lib/utils'
 import { MAX_WIDTH_MOBILE } from '../Center'
 
 const getSrcSet = (src, widths) =>

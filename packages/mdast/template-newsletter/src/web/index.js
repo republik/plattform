@@ -1,20 +1,9 @@
 import Container from './Container'
-import Cover, {
-  Title,
-  Lead
-} from './Cover'
-import Paragraph, {
-  Strong,
-  Em,
-  Link,
-  Br
-} from './Paragraph'
+import Cover, { Title, Lead } from './Cover'
+import Paragraph, { Strong, Em, Link, Br } from './Paragraph'
 import Center from './Center'
 import { H2, H3 } from './Headlines'
-import Figure, {
-  Image,
-  Caption
-} from './Figure'
+import Figure, { Image, Caption } from './Figure'
 import Blockquote from './Blockquote'
 import List, { ListItem } from './List'
 import RBlueprint from './RBlueprint'
@@ -26,48 +15,48 @@ import {
   matchZone,
   matchHeading,
   matchParagraph,
-  matchImageParagraph
-} from 'mdast-react-render/lib/utils'
+  matchImageParagraph,
+} from '@republik/mdast-react-render/lib/utils'
 
 const paragraph = {
   matchMdast: matchParagraph,
   component: Paragraph,
   editorModule: 'paragraph',
   editorOptions: {
-    formatButtonText: 'Paragraph'
+    formatButtonText: 'Paragraph',
   },
   rules: [
     {
       matchMdast: matchType('break'),
       component: Br,
-      isVoid: true
+      isVoid: true,
     },
     {
       matchMdast: matchType('strong'),
       component: Strong,
       editorModule: 'mark',
       editorOptions: {
-        type: 'strong'
-      }
+        type: 'strong',
+      },
     },
     {
       matchMdast: matchType('emphasis'),
       component: Em,
       editorModule: 'mark',
       editorOptions: {
-        type: 'emphasis'
-      }
+        type: 'emphasis',
+      },
     },
     {
       matchMdast: matchType('link'),
-      props: node => ({
+      props: (node) => ({
         title: node.title,
-        href: node.url
+        href: node.url,
       }),
       component: Link,
-      editorModule: 'link'
-    }
-  ]
+      editorModule: 'link',
+    },
+  ],
 }
 
 const schema = {
@@ -83,23 +72,19 @@ const schema = {
           editorModule: 'meta',
           editorOptions: {
             additionalFields: ['emailSubject'],
-            teaser: Teaser
-          }
+            teaser: Teaser,
+          },
         },
         {
-          matchMdast: matchZone(
-            'COVER'
-          ),
+          matchMdast: matchZone('COVER'),
           component: Cover,
-          props: node => {
-            const img =
-              node.children[0]
-                .children[0]
+          props: (node) => {
+            const img = node.children[0].children[0]
             return {
               data: {
                 alt: img.alt,
-                src: img.url
-              }
+                src: img.url,
+              },
             }
           },
           editorModule: 'cover',
@@ -107,19 +92,17 @@ const schema = {
             {
               matchMdast: matchImageParagraph,
               component: () => null,
-              isVoid: true
+              isVoid: true,
             },
             {
-              matchMdast: matchHeading(
-                1
-              ),
+              matchMdast: matchHeading(1),
               component: Title,
               editorModule: 'headline',
               editorOptions: {
                 type: 'title',
                 depth: 1,
-                placeholder: 'Title'
-              }
+                placeholder: 'Title',
+              },
             },
             {
               matchMdast: matchParagraph,
@@ -127,114 +110,103 @@ const schema = {
               editorModule: 'paragraph',
               editorOptions: {
                 type: 'lead',
-                placeholder: 'Lead'
+                placeholder: 'Lead',
               },
-              rules: paragraph.rules
+              rules: paragraph.rules,
             },
             // support legacy blockquote lead for rendering
             {
               matchMdast: matchType('blockquote'),
               component: Lead,
-              rules: [
-                paragraph
-              ]
-            }
-          ]
+              rules: [paragraph],
+            },
+          ],
         },
         {
-          matchMdast: matchZone(
-            'CENTER'
-          ),
+          matchMdast: matchZone('CENTER'),
           component: Center,
           editorModule: 'center',
           rules: [
             paragraph,
             {
-              matchMdast: matchHeading(
-                2
-              ),
+              matchMdast: matchHeading(2),
               component: H2,
               editorModule: 'headline',
               editorOptions: {
                 type: 'h2',
                 depth: 2,
-                formatButtonText:
-                  'Zwischentitel 1'
-              }
+                formatButtonText: 'Zwischentitel 1',
+              },
             },
             {
-              matchMdast: matchHeading(
-                3
-              ),
+              matchMdast: matchHeading(3),
               component: H3,
               editorModule: 'headline',
               editorOptions: {
                 type: 'h3',
                 depth: 3,
-                formatButtonText:
-                  'Zwischentitel 2'
-              }
+                formatButtonText: 'Zwischentitel 2',
+              },
             },
             {
               matchMdast: matchZone('FIGURE'),
               component: Figure,
-              props: node => ({
-                float: node.data.float
+              props: (node) => ({
+                float: node.data.float,
               }),
               editorModule: 'figure',
               editorOptions: {
                 afterType: 'PARAGRAPH',
-                pixelNote: 'Anzeigegrössen: 1200x und 600x (proportionaler Schnitt)',
+                pixelNote:
+                  'Anzeigegrössen: 1200x und 600x (proportionaler Schnitt)',
                 insertButtonText: 'Bild',
                 captionRight: true,
                 sizes: [
-                  {label: 'Gross', props: {float: undefined}},
-                  {label: 'Left', props: {float: 'left'}},
-                  {label: 'Right', props: {float: 'right'}},
-                ]
+                  { label: 'Gross', props: { float: undefined } },
+                  { label: 'Left', props: { float: 'left' } },
+                  { label: 'Right', props: { float: 'right' } },
+                ],
               },
               rules: [
                 {
                   matchMdast: matchImageParagraph,
                   component: Image,
-                  props: node => ({
+                  props: (node) => ({
                     src: node.children[0].url,
-                    alt: node.children[0].alt
+                    alt: node.children[0].alt,
                   }),
                   editorModule: 'figureImage',
-                  isVoid: true
+                  isVoid: true,
                 },
                 {
                   matchMdast: matchParagraph,
                   component: Caption,
                   props: (node, index, parent) => ({
-                    data: (parent && parent.data) || {}
+                    data: (parent && parent.data) || {},
                   }),
                   editorModule: 'figureCaption',
                   editorOptions: {
                     type: 'figureCaption',
-                    placeholder: 'Legende'
+                    placeholder: 'Legende',
                   },
-                  rules: paragraph.rules
-                }
-              ]
+                  rules: paragraph.rules,
+                },
+              ],
             },
             {
               matchMdast: matchType('blockquote'),
               component: Blockquote,
               editorModule: 'blockquote',
-              rules: [
-                paragraph
-              ]
+              rules: [paragraph],
             },
             {
               matchMdast: matchType('list'),
               component: List,
-              props: node => ({
+              props: (node) => ({
                 data: {
                   ordered: node.ordered,
-                  start: node.start
-                }
+                  start: node.start,
+                },
               }),
               editorModule: 'list',
               rules: [
@@ -242,27 +214,27 @@ const schema = {
                   matchMdast: matchType('listItem'),
                   component: ListItem,
                   editorModule: 'listItem',
-                  rules: [paragraph]
-                }
-              ]
+                  rules: [paragraph],
+                },
+              ],
             },
             {
               matchMdast: matchZone('SPECIAL_R_BLUEPRINT'),
               component: RBlueprint,
               isVoid: true,
-              editorModule: 'special'
+              editorModule: 'special',
             },
             {
               matchMdast: matchZone('SPECIAL_REPUBLIK_SHAREHOLDER'),
               component: RepublikShareholder,
               isVoid: true,
-              editorModule: 'special'
-            }
-          ]
-        }
-      ]
-    }
-  ]
+              editorModule: 'special',
+            },
+          ],
+        },
+      ],
+    },
+  ],
 }
 
 export default schema

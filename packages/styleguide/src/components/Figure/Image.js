@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { css } from 'glamor'
-import { imageSizeInfo } from 'mdast-react-render/lib/utils'
+import { imageSizeInfo } from '@republik/mdast-react-render/lib/utils'
 import { getResizedSrcs } from './utils'
 import LazyImage from '../LazyLoad/Image'
 import { sansSerifRegular12, sansSerifRegular15 } from '../Typography/styles'

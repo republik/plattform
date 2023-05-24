@@ -1,4 +1,4 @@
-import { parse } from '@orbiting/remark-preset'
+import { parse } from '@republik/remark-preset'
 
 import * as htmlParse from 'rehype-parse'
 import rehype2remark from 'rehype-remark'

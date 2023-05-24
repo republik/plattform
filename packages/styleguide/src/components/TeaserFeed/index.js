@@ -6,10 +6,10 @@ import Lead from './Lead'
 import Credit from './Credit'
 import { css } from 'glamor'
 import colors from '../../theme/colors'
-import { renderMdast } from 'mdast-react-render'
+import { renderMdast } from '@republik/mdast-react-render'
 import { timeFormat } from '../../lib/timeFormat'
 import { Editorial } from '../Typography'
-import { matchType } from 'mdast-react-render/lib/utils'
+import { matchType } from '@republik/mdast-react-render/lib/utils'
 import Highlight from './Highlight'
 
 const dateFormat = timeFormat('%d.%m.%Y')

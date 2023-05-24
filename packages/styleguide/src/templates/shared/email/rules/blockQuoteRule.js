@@ -7,7 +7,7 @@ import {
   matchParagraph,
   matchType,
   matchZone,
-} from 'mdast-react-render/lib/utils'
+} from '@republik/mdast-react-render/lib/utils'
 import legendRule from './legendRules'
 import { inlineInteractionParagraphRules } from './paragraphRule'
 

@@ -1,29 +1,29 @@
 import test from 'tape'
 import MarkdownSerializer from './'
-import { parse, stringify } from '@orbiting/remark-preset'
+import { parse, stringify } from '@republik/remark-preset'
 
 const serializer = new MarkdownSerializer({
   rules: [
     {
-      match: object => object.object === 'block',
+      match: (object) => object.object === 'block',
       matchMdast: (node) => node.type === 'zone',
-      fromMdast: (node, index, parent, {visitChildren}) => ({
+      fromMdast: (node, index, parent, { visitChildren }) => ({
         object: 'block',
         type: node.identifier,
         data: node.data,
-        nodes: visitChildren(node)
+        nodes: visitChildren(node),
       }),
-      toMdast: (object, index, parent, {visitChildren}) => ({
+      toMdast: (object, index, parent, { visitChildren }) => ({
         type: 'zone',
         identifier: object.type,
         data: object.data,
-        children: visitChildren(object)
-      })
-    }
-  ]
+        children: visitChildren(object),
+      }),
+    },
+  ],
 })
 
-test('zone serialization', assert => {
+test('zone serialization', (assert) => {
   const md = `<section><h6>Z</h6>
 
 
@@ -40,7 +40,7 @@ test('zone serialization', assert => {
   assert.end()
 })
 
-test('zone data serialization', assert => {
+test('zone data serialization', (assert) => {
   const md = `<section><h6>WithData</h6>
 
 \`\`\`
@@ -65,7 +65,7 @@ test('zone data serialization', assert => {
   assert.end()
 })
 
-test('nested zone serialization', assert => {
+test('nested zone serialization', (assert) => {
   const md = `<section><h6>A</h6>
 
 <section><h6>AB</h6>
@@ -91,7 +91,7 @@ test('nested zone serialization', assert => {
   assert.end()
 })
 
-test('sequential zone serialization', assert => {
+test('sequential zone serialization', (assert) => {
   const md = `<section><h6>A</h6>
 
 
@@ -119,7 +119,7 @@ test('sequential zone serialization', assert => {
   assert.end()
 })
 
-test('sequential and nested zone serialization', assert => {
+test('sequential and nested zone serialization', (assert) => {
   const md = `<section><h6>A</h6>
 
 
