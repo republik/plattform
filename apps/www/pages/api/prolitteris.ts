@@ -99,15 +99,21 @@ async function handler(request: NextApiRequest, response: NextApiResponse) {
   return await fetch(fetchUrl, {
     method: 'GET',
     headers: requestHeaders,
-  }).then((res: Response) => {
-    if (!res.ok) {
-      console.error('Prolitteris API responded with an error', {
-        status: res.status,
-        statusText: res.statusText,
-      })
-    }
-    return response.status(204).send(null)
   })
+    .then((res: Response) => {
+      if (!res.ok) {
+        console.error('Prolitteris API responded with an error', {
+          status: res.status,
+          statusText: res.statusText,
+        })
+      }
+    })
+    .catch((err: Error) => {
+      console.error('Prolitteris API responded with an error', err)
+    })
+    .finally(() => {
+      return response.status(204).send(null)
+    })
 }
 
 export default withReqMethodGuard(handler, [HTTPMethods.GET, HTTPMethods.HEAD])
