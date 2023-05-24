@@ -10,7 +10,7 @@ const {
   PROLITTERIS_USER_AGENT,
   PUBLIC_BASE_URL,
   PROLITTERIS_DEV_UID,
-  PROLITTERIS_HASH_SALT = '',
+  PROLITTERIS_HASH_SECRET = '',
 } = process.env
 
 /**
@@ -25,7 +25,7 @@ function getHash(input: string | number | object): string {
   } else {
     hash.update(input.toString())
   }
-  hash.update(PROLITTERIS_HASH_SALT)
+  hash.update(PROLITTERIS_HASH_SECRET)
   return hash.digest('hex')
 }
 
