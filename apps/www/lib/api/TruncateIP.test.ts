@@ -7,15 +7,10 @@ describe('truncateIP test-suite', () => {
   })
 
   test('trunkates valid ip6', () => {
-    expect(truncateIP('2a02:168:2112:1:9cc1:a103:eeee:ffce')).toBe(
-      '2a02:168:2112:1:9cc1:a103:0:0',
-    )
-  })
-
-  test('trunkates already trunkated ip6', () => {
-    expect(truncateIP('2a02:168:2112:1:9cc1:a103:0:0')).toBe(
-      '2a02:168:2112:1:9cc1:a103:0:0',
-    )
+    expect(truncateIP('1:2:3::1')).toBe('1:2:3:0:0:0:0:0')
+    expect(truncateIP('1:2:3:4:5:6:7:8')).toBe('1:2:3:0:0:0:0:0')
+    expect(truncateIP('1:2:3:4:5:6:7::')).toBe('1:2:3:0:0:0:0:0')
+    expect(truncateIP('2001:db8:6:bbb0::7')).toBe('2001:db8:6:0:0:0:0:0')
   })
 
   test('throws if not valid IP', () => {
