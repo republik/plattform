@@ -2,12 +2,16 @@ import { useState, useEffect, useRef } from 'react'
 
 import dynamic from 'next/dynamic'
 import submarineGeoJson from './cable-geo.json'
+import type { GlobeMethods } from 'react-globe.gl'
 
-const Globe = dynamic(() => import('react-globe.gl'), { ssr: false })
+const Globe = dynamic(() => import('../components/CableGlobe/CableGlobe'), {
+  ssr: false,
+  loading: () => <>Loading</>,
+})
 
 const CustomGlobe = () => {
   const [cablePaths, setCablePaths] = useState([])
-  const globeEl = useRef()
+  const globeEl = useRef<GlobeMethods>(null)
 
   useEffect(() => {
     // from https://www.submarinecablemap.com
@@ -26,12 +30,12 @@ const CustomGlobe = () => {
     // globeEl.current.controls().autoRotateSpeed = 0.2;
 
     const MAP_CENTER = { lat: 0, lng: 0, altitude: 1.5 }
-    globeEl.current && globeEl.current.pointOfView(MAP_CENTER, 0)
-  }, [globeEl])
+    globeEl.current?.pointOfView(MAP_CENTER, 0)
+  }, [globeEl.current])
 
   return (
     <Globe
-      ref={globeEl}
+      globeRef={globeEl}
       globeImageUrl='//unpkg.com/three-globe/example/img/earth-dark.jpg'
       bumpImageUrl='//unpkg.com/three-globe/example/img/earth-topology.png'
       backgroundImageUrl='//unpkg.com/three-globe/example/img/night-sky.png'
