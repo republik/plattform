@@ -1029,6 +1029,22 @@
       "value": "Die Funktion ist nur für Mitglieder und Abonnentinnen die Republik zugänglich."
     },
     {
+      "key": "account/prolitteris/title",
+      "value": "Zugriffszählung"
+    },
+    {
+      "key": "account/prolitteris/consent/label",
+      "value": "Zählung erlauben"
+    },
+    {
+      "key": "account/prolitteris/description",
+      "value": "Um die Kopiervergütung durch die Verwertungsgesellschaft Pro Litteris zu ermöglichen, senden wir beim Besuch eines Beitrages die Uhrzeit und das Datum des Zugriffs sowie eine anonymisierte Version der IP-Adressen der Leser an Pro Litteris. Falls Sie trotz Anonymisierung die Zählung unterbinden wollen, können Sie dies hier tun."
+    },
+    {
+      "key": "account/prolitteris/consent/noMembership",
+      "value": "Die Funktion ist nur für Mitglieder und Abonnentinnen die Republik zugänglich."
+    },
+    {
       "key": "account/pledges/free-delivery",
       "value": "Kostenlose Lieferung"
     },

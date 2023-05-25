@@ -93,6 +93,7 @@ export type MeObjectType = {
     graceEndDate: string
   }
   progressConsent: boolean
+  prolitterisOptOut: boolean
 }
 
 type MeResponse = {
