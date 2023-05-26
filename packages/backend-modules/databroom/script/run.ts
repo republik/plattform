@@ -30,7 +30,8 @@ const argv = yargs
     description: 'Make run very talkative',
     boolean: true,
     default: false,
-  }).argv
+  })
+  .parseSync()
 
 if (argv.verbose) {
   _debug.enable('databroom:*,-databroom:job:*:handler')
