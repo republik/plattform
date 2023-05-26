@@ -66,6 +66,7 @@
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^16.0.0",
+    "@playwright/test": "^1.33.0",
     "commitizen": "^4.2.4",
     "commitlint": "^16.1.0",
     "cz-conventional-changelog": "^3.3.0",

@@ -41,3 +41,6 @@ docker-data
 
 # editor config
 .idea
+
+# playwright
+/playwright-report
