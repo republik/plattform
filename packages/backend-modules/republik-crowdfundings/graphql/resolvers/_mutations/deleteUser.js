@@ -9,6 +9,7 @@ const deleteStripeCustomer = require('../../../lib/payments/stripe/deleteCustome
 const deleteRelatedData = async (
   { id: userId },
   hasPledges,
+  hasClaimedMemberships,
   unpublishComments,
   pgdb,
 ) => {
@@ -21,7 +22,7 @@ const deleteRelatedData = async (
     'stripeCustomers',
     'comments', // get nullified, see below
   ]
-  if (hasPledges) {
+  if (hasPledges || hasClaimedMemberships) {
     keepRelations.push('memberships')
   }
   const relations = await pgdb
