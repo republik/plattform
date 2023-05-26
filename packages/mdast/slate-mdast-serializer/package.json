@@ -38,11 +38,11 @@
     "faucet": "0.0.1",
     "immutable": "^3.8.2",
     "rimraf": "^2.6.2",
-    "slate": ">=0.32",
+    "slate": "~0.31",
     "tape": "^4.8.0"
   },
   "peerDependencies": {
-    "slate": ">=0.32"
+    "slate": "~0.31"
   },
   "dependencies": {
     "lodash.isequal": "^4.5.0"

@@ -16,9 +16,7 @@
     "lint": "eslint --fix .",
     "translations-raw": "NODE_OPTIONS='-r dotenv/config' gsheets --key=1qPubCKz2YzbcFkRfF0MrgRqD0KLsgRPxoZfG5G3tHOA --title=live --pretty --out lib/translations.json",
     "translations": "npm run translations-raw && git add -p lib/translations.json && git checkout -- lib/translations.json",
-    "analyze": "ANALYZE=true next build",
-    "sg:link": "./scripts/sg_link.sh",
-    "sg:unlink": "./scripts/sg_unlink.sh"
+    "analyze": "ANALYZE=true next build"
   },
   "repository": {
     "type": "git",
@@ -51,11 +49,13 @@
   "dependencies": {
     "@apollo/client": "~3.5.10",
     "@next/bundle-analyzer": "^12.3.1",
-    "@republik/remark-preset": "*",
     "@project-r/styleguide": "*",
-    "@republik/template-newsletter": "*",
     "@republik/icons": "*",
+    "@republik/mdast-react-render": "*",
     "@republik/nextjs-apollo-client": "*",
+    "@republik/remark-preset": "*",
+    "@republik/slate-mdast-serializer": "*",
+    "@republik/template-newsletter": "*",
     "axios": "^1.0.0",
     "clipboard-copy": "^3.1.0",
     "codemirror": "^5.57.0",
@@ -83,7 +83,6 @@
     "js-yaml": "^3.14.0",
     "jsonlint-mod": "^1.7.6",
     "lodash": "^4.17.21",
-    "@republik/mdast-react-render": "*",
     "next": "^12.3.1",
     "next-transpile-modules": "^9.0.0",
     "prop-types": "^15.6.2",
@@ -108,13 +107,13 @@
     "scroll-into-view": "1.15.0",
     "shortid": "^2.2.15",
     "slate": "^0.31.8",
-    "@republik/slate-mdast-serializer": "*",
     "slate-prop-types": "^0.4.16",
     "slate-react": "^0.10.23",
     "subscriptions-transport-ws": "^0.9.17",
     "topojson": "^3.0.2",
     "unified": "^7.0.0",
     "unist-util-visit": "^2.0.3",
+    "url": "^0.11.0",
     "validator": "^10.11.0"
   }
 }

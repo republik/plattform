@@ -1,9 +1,16 @@
 import { graphql } from '@apollo/client/react/hoc'
 import { gql } from '@apollo/client'
+import { PROLITTERIS_OPT_OUT_CONSENT } from '../constants'
 
 export const userProgressConsentFragment = `
   fragment ProgressConsent on User {
     progressConsent: hasConsentedTo(name: "PROGRESS")
+  }
+`
+
+export const userProlitterisConsentFragment = `
+  fragment ProlitterisConsent on User {
+    prolitterisOptOut: hasConsentedTo(name: "${PROLITTERIS_OPT_OUT_CONSENT}")
   }
 `
 
@@ -46,9 +53,11 @@ export const meQuery = gql`
         canProlong
       }
       ...ProgressConsent
+      ...ProlitterisConsent
     }
   }
   ${userProgressConsentFragment}
+  ${userProlitterisConsentFragment}
 `
 
 export default graphql(meQuery, {

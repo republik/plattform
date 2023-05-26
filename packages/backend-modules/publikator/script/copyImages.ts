@@ -91,25 +91,24 @@ const createMaybeUpload = (repoId: string, origin: string) => {
   }
 }
 
-const argv: { origin: string; after: moment.Moment; concurrency: number } =
-  yargs
-    .option('origin', {
-      description: 'Publicly accessible URL to fetch images from',
-      required: true,
-      default:
-        'https://assets.republik.space/s3/republik-assets/repos/republik',
-    })
-    .option('after', {
-      description: 'Check commits created after this date',
-      required: true,
-      default: moment().subtract(30, 'days'),
-      coerce: moment,
-    })
-    .option('concurrency', {
-      description: 'Concurrent image handler',
-      required: true,
-      default: 10,
-    }).argv
+const argv = yargs
+  .option('origin', {
+    description: 'Publicly accessible URL to fetch images from',
+    required: true,
+    default: 'https://assets.republik.space/s3/republik-assets/repos/republik',
+  })
+  .option('after', {
+    description: 'Check commits created after this date',
+    required: true,
+    default: moment().subtract(30, 'days'),
+    coerce: moment,
+  })
+  .option('concurrency', {
+    description: 'Concurrent image handler',
+    required: true,
+    default: 10,
+  })
+  .parseSync()
 
 const applicationName = 'backends publikator script copyImages'
 
