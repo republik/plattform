@@ -1,5 +1,4 @@
-
-#!/bin/sh
+#!/bin/bash
 set -e
 
 if [[ -z "${MAXMIND_LICENSE_KEY}" ]]; then
