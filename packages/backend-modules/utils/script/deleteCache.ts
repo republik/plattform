@@ -27,7 +27,8 @@ const argv = yargs
   })
   .option('dry-run', {
     default: true,
-  }).argv
+  })
+  .parseSync()
 
 const applicationName = 'backends utils script deleteCache'
 
