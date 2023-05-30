@@ -32,11 +32,13 @@ const fetchHead = (url: string) =>
       debug(`failed to fetch head for ${url}: ${e.message}`)
     })
 
-const argv: { 'dry-run': boolean } = yargs.option('dry-run', {
-  description: 'Run script in dry-mode',
-  required: true,
-  default: true,
-}).argv
+const argv = yargs
+  .option('dry-run', {
+    description: 'Run script in dry-mode',
+    required: true,
+    default: true,
+  })
+  .parseSync()
 
 const applicationName = 'backends republik script fixMissingPortraitUrls'
 

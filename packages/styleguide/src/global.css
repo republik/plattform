@@ -1,9 +1,0 @@
-*, *:before, *:after {
-  box-sizing: inherit;
-}
-* {
-  -webkit-tap-highlight-color: transparent;
-}
-html {
-  box-sizing: border-box;
-}
