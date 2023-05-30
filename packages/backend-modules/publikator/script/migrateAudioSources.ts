@@ -195,7 +195,6 @@ ConnectionContext.create(applicationName)
         { handleFn: handleBatch, size: 10 },
         `SELECT id "repoId", "archivedAt"
         FROM publikator.repos
-        WHERE id = 'republik/article-wochen-s01e04'
         ORDER BY RANDOM()
         `,
       )
