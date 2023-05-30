@@ -91,6 +91,17 @@ const handleBatch = async (rows: any[], count: number, pgdb: any) => {
       return
     }
 
+    const hasAudioSourceDurationMs = !!meta.audioSourceDurationMs
+    if (hasAudioSourceDurationMs) {
+      debug('meta.audioSourceDurationMs present. done')
+      console.log(
+        'meta.audioSourceDurationMs present. done',
+        repoId,
+        `https://publikator.republik.ch/repo/${repoId}/tree`,
+      )
+      return
+    }
+
     await maybeApplyAudioSourceDuration(meta)
 
     const tx = await pgdb.transactionBegin()
@@ -184,6 +195,7 @@ ConnectionContext.create(applicationName)
         { handleFn: handleBatch, size: 10 },
         `SELECT id "repoId", "archivedAt"
         FROM publikator.repos
+        WHERE id = 'republik/article-wochen-s01e04'
         ORDER BY RANDOM()
         `,
       )
