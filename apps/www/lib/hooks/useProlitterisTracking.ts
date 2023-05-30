@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { reportError } from '../../lib/errors'
 import { useMe } from '../context/MeContext'
 
-const useProlitterisTracking = (documentId: string, cleanedPath: string) => {
+const useProlitterisTracking = (repoId: string, cleanedPath: string) => {
   const { me, meLoading, hasAccess } = useMe()
   const [onceAndDone, setOnceAndDone] = useState(false)
   useEffect(() => {
@@ -13,7 +13,7 @@ const useProlitterisTracking = (documentId: string, cleanedPath: string) => {
       fetch(
         `/api/prolitteris?paid=${
           hasAccess ? 'pw' : 'na'
-        }&uid=${documentId}&path=${cleanedPath}`,
+        }&uid=${repoId}&path=${cleanedPath}`,
       ).catch((error) => reportError('prolitterisApiError', error))
     }
     fetchProlitteris()

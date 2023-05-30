@@ -50,7 +50,7 @@ async function handler(request: NextApiRequest, response: NextApiResponse) {
 
   // Query Parameters of request
   // 1) paid (string, 'pw' || 'na'): request by paying user (pw) or public (na)
-  // 2) uid (string): documentId of the article
+  // 2) uid (string): repoId of the article
   // 3) path (string): article slug
 
   const { paid, uid, path } = request.query
@@ -82,7 +82,12 @@ async function handler(request: NextApiRequest, response: NextApiResponse) {
 
   // create unique C-Parameter for each request (20 characters hex) from the ip and user agent
   const cParam: string = getHash([requestIp, ua]).substring(0, 20)
-  const uidParam = PROLITTERIS_DEV_UID || uid
+  // replace repoID forward slash with dash, as forward slashes are not allowed in uid parameter
+  const uidParam = PROLITTERIS_DEV_UID
+    ? PROLITTERIS_DEV_UID
+    : Array.isArray(uid)
+    ? uid[0].replace('/', '-')
+    : uid.replace('/', '-')
   const maskedIP = truncateIP(requestIp)
 
   const fetchURL = new URL(
