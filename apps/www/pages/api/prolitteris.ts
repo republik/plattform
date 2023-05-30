@@ -68,9 +68,11 @@ async function handler(request: NextApiRequest, response: NextApiResponse) {
     })
   }
 
-  if (!uid) {
+  if (!uid || Array.isArray(uid)) {
     return response.status(400).json({
-      body: 'uid parameter required.',
+      body: ` ${
+        Array.isArray(uid) ? 'multiple uid provided' : 'uid parameter required.'
+      }`,
     })
   }
 
@@ -83,11 +85,7 @@ async function handler(request: NextApiRequest, response: NextApiResponse) {
   // create unique C-Parameter for each request (20 characters hex) from the ip and user agent
   const cParam: string = getHash([requestIp, ua]).substring(0, 20)
   // replace repoID forward slash with dash, as forward slashes are not allowed in uid parameter
-  const uidParam = PROLITTERIS_DEV_UID
-    ? PROLITTERIS_DEV_UID
-    : Array.isArray(uid)
-    ? uid[0].replace('/', '-')
-    : uid.replace('/', '-')
+  const uidParam = PROLITTERIS_DEV_UID || uid.replace('/', '-')
   const maskedIP = truncateIP(requestIp)
 
   const fetchURL = new URL(
