@@ -85,10 +85,11 @@ async function handler(request: NextApiRequest, response: NextApiResponse) {
   const uidParam = PROLITTERIS_DEV_UID || uid
   const maskedIP = truncateIP(requestIp)
 
-  const fetchUrl =
+  const fetchURL = new URL(
     `${PROLITTERIS_DOMAIN}` +
-    `/${paid}/vzm.${PROLITTERIS_MEMBER_ID}-${uidParam}` +
-    `?c=${cParam}`
+      `/${paid}/vzm.${PROLITTERIS_MEMBER_ID}-${uidParam}`,
+  )
+  fetchURL.searchParams.append('c', cParam)
 
   const requestHeaders = {
     'User-Agent': PROLITTERIS_USER_AGENT,
@@ -96,7 +97,7 @@ async function handler(request: NextApiRequest, response: NextApiResponse) {
     'X-Forwarded-For': maskedIP,
   }
 
-  return await fetch(fetchUrl, {
+  return await fetch(fetchURL.toString(), {
     method: 'GET',
     headers: requestHeaders,
   })
