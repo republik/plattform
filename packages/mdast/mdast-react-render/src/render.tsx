@@ -1,21 +1,23 @@
-import React from 'react'
-
-const DefaultMissingNode = ({node, children}) => (
-  <span style={{background: '#FF5555', color: '#FFFFFF', display: 'inline-block', margin: 4}}>
-    Missing Markdown node type "{node.type}"
-    {node.identifier ? `with identifier "${node.identifier}"` : ''}
-    {' '}
-    {children}
+const DefaultMissingNode = ({ node, children }) => (
+  <span
+    style={{
+      background: '#FF5555',
+      color: '#FFFFFF',
+      display: 'inline-block',
+      margin: 4,
+    }}
+  >
+    Missing Markdown node type &quot;{node.type}&quot;
+    {node.identifier ? `with identifier "${node.identifier}"` : ''} {children}
   </span>
 )
 
 export const renderMdast = (mdast, schema, options = {}) => {
-  const {
-    ancestors = [],
-    MissingNode = DefaultMissingNode
-  } = options
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  const { ancestors = [], MissingNode = DefaultMissingNode } = options
 
-  const rules = schema.rules.filter(rule => rule.matchMdast && rule.component)
+  const rules = schema.rules.filter((rule) => rule.matchMdast && rule.component)
 
   const visit = (node, index, nodeAncestors) => {
     if (node.type === 'text') {
@@ -23,17 +25,25 @@ export const renderMdast = (mdast, schema, options = {}) => {
     }
     const parent = nodeAncestors[0]
 
-    const rule = rules.find(r => r.matchMdast(node, index, parent))
+    const rule = rules.find((r) => r.matchMdast(node, index, parent))
     if (!rule) {
       if (!MissingNode) {
-        throw new Error([
-          `Missing Rule for Markdown node type "${node.type}"`,
-          node.identifier ? `with identifier "${node.identifier}"` : '',
-          'Note: A valid rules needs an renderMdast and component function'
-        ].join(' '))
+        throw new Error(
+          [
+            `Missing Rule for Markdown node type "${node.type}"`,
+            node.identifier ? `with identifier "${node.identifier}"` : '',
+            'Note: A valid rules needs an renderMdast and component function',
+          ].join(' '),
+        )
       }
       return (
-        <MissingNode key={index} node={node} index={index} parent={parent} ancestors={nodeAncestors}>
+        <MissingNode
+          key={index}
+          node={node}
+          index={index}
+          parent={parent}
+          ancestors={nodeAncestors}
+        >
           {visitChildren(node, nodeAncestors)}
         </MissingNode>
       )
@@ -44,11 +54,11 @@ export const renderMdast = (mdast, schema, options = {}) => {
     let props
     if (rule.props) {
       props = rule.props(node, index, parent, {
-        ancestors: nodeAncestors
+        ancestors: nodeAncestors,
       })
     } else {
       props = {
-        data: node.data
+        data: node.data,
       }
     }
 
@@ -57,12 +67,12 @@ export const renderMdast = (mdast, schema, options = {}) => {
       children = renderMdast(
         node.children,
         {
-          rules: rule.rules
+          rules: rule.rules,
         },
         {
           ...options,
-          ancestors: [node].concat(nodeAncestors)
-        }
+          ancestors: [node].concat(nodeAncestors),
+        },
       )
     } else if (!rule.isVoid) {
       children = visitChildren(node, nodeAncestors)
