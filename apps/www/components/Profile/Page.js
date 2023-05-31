@@ -506,7 +506,7 @@ const LoadedProfile = (props) => {
           <div {...styles.headInfo}>
             {!!user.hasPublicProfile && (
               <span {...styles.headInfoShare}>
-                <ActionBar share={shareObject} download={metaData.image} />
+                <ActionBar share={shareObject} />
                 {!isMe && (
                   <div {...styles.headInfoReportButton}>
                     <IconButton
@@ -716,14 +716,6 @@ const Profile = (props) => {
   const card = user && user.cards && user.cards.nodes && user.cards.nodes[0]
   const metaData = {
     url: user ? `${PUBLIC_BASE_URL}/~${user.slug}` : undefined,
-    image:
-      user && user.portrait
-        ? `${ASSETS_SERVER_BASE_URL}/render?width=1200&height=628&updatedAt=${encodeURIComponent(
-            user.updatedAt,
-          )}b2&url=${encodeURIComponent(
-            `${PUBLIC_BASE_URL}/community?share=${user.id}`,
-          )}`
-        : '',
     pageTitle: user
       ? t('pages/profile/pageTitle', { name: user.name })
       : t('pages/profile/empty/pageTitle'),
