@@ -13,8 +13,6 @@ const DefaultMissingNode = ({ node, children }) => (
 )
 
 export const renderMdast = (mdast, schema, options = {}) => {
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
   const { ancestors = [], MissingNode = DefaultMissingNode } = options
 
   const rules = schema.rules.filter((rule) => rule.matchMdast && rule.component)

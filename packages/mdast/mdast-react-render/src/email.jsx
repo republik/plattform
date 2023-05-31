@@ -3,25 +3,18 @@ import * as ReactDOMServer from 'react-dom/server'
 import { renderMdast } from './'
 
 export const Mso = ({ children, gte }) => (
-  <>
-    {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
-    {/* 
-// @ts-ignore */}
-    <mso
-      data-gte={gte}
-      dangerouslySetInnerHTML={{
-        __html: children,
-      }}
-    />
-  </>
+  <mso
+    data-gte={gte}
+    dangerouslySetInnerHTML={{
+      __html: children,
+    }}
+  />
 )
 
 const DEFAULT_DOCTYPE =
   '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">'
 
 export const renderEmail = (mdast, schema, options = {}) => {
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
   const { doctype = DEFAULT_DOCTYPE } = options
   return (
     doctype +
