@@ -57,7 +57,6 @@
     "@republik/icons": "*",
     "@republik/mdast-react-render": "*",
     "@republik/remark-preset": "*",
-    "@republik/slate-mdast-serializer": "*",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^14.0.0",
     "@types/jest": "^29.5.1",
