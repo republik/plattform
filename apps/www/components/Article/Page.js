@@ -46,6 +46,7 @@ import { splitByTitle } from '../../lib/utils/mdast'
 import { PUBLIKATOR_BASE_URL } from '../../lib/constants'
 import { useMe } from '../../lib/context/MeContext'
 import { cleanAsPath } from '../../lib/utils/link'
+import useProlitterisTracking from '../../lib/hooks/useProlitterisTracking'
 
 import CommentLink from '../Discussion/shared/CommentLink'
 import DiscussionContextProvider from '../Discussion/context/DiscussionContextProvider'
@@ -310,6 +311,8 @@ const ArticlePage = ({
   const articleUnreadNotifications = article?.unreadNotifications
   const routerQuery = router.query
   const isClimate = !!article?.content?.meta?.climate
+
+  useProlitterisTracking(repoId, cleanedPath)
 
   useEffect(() => {
     if (share) {

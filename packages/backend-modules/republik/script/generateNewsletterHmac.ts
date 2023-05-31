@@ -4,7 +4,7 @@ import yargs from 'yargs'
 
 const { getConsentLink } = require('../lib/Newsletter')
 
-const argv: { email: string; name: string } = yargs
+const argv = yargs
   .option('email', {
     description: 'Email address',
     required: true,
@@ -14,7 +14,8 @@ const argv: { email: string; name: string } = yargs
     description: 'Newsletter subscription name',
     required: true,
     type: 'string',
-  }).argv
+  })
+  .parseSync()
 
 const { email, name } = argv
 

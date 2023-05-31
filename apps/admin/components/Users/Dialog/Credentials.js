@@ -103,27 +103,8 @@ const Credentials = ({ userId }) => {
             render={() => {
               const { user } = data
               const { credentials } = user
-              const profileRole = credentials.find(
-                (credential) => credential.isListed,
-              )
 
-              if (credentials.length > 0) {
-                return (
-                  <InteractiveSection>
-                    <SectionTitle>Rollen verifizieren</SectionTitle>
-                    {[
-                      profileRole,
-                      ...credentials.filter((c) => c.id !== profileRole.id),
-                    ].map((credential) => (
-                      <UpdateCredential
-                        key={`${credential.description}-${credential.verified}`}
-                        user={user}
-                        credential={credential}
-                      />
-                    ))}
-                  </InteractiveSection>
-                )
-              } else {
+              if (!credentials.length) {
                 return (
                   <Section>
                     <SectionTitle>Rollen verifizieren</SectionTitle>
@@ -131,6 +112,21 @@ const Credentials = ({ userId }) => {
                   </Section>
                 )
               }
+
+              return (
+                <InteractiveSection>
+                  <SectionTitle>Rollen verifizieren</SectionTitle>
+                  {[...credentials]
+                    .sort((a) => (a.isListed ? -1 : 0)) // bubble listed credentials to top
+                    .map((credential) => (
+                      <UpdateCredential
+                        key={credential.id}
+                        user={user}
+                        credential={credential}
+                      />
+                    ))}
+                </InteractiveSection>
+              )
             }}
           />
         )

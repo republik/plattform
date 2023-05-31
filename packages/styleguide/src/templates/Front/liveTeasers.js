@@ -9,7 +9,7 @@ import { TeaserActiveDebates } from '../../components/TeaserActiveDebates'
 
 import { TeaserSectionTitle } from '../../components/TeaserShared'
 import { TeaserMyMagazine } from '../../components/TeaserMyMagazine'
-import { TeaserFlyer } from '../../components/TeaserFlyer'
+import { SeparatorGutenTag } from '../../components/SeparatorGutenTag'
 
 import Center from '../../components/Center'
 import Loader from '../../components/Loader'
@@ -58,7 +58,6 @@ const createLiveTeasers = ({
   withFeedData = withData,
   withDiscussionsData = withData,
   withMyMagazineData = withData,
-  withFlyerData = withData,
   ActionBar,
   showMyMagazine = true,
   ClimateLabTeaser,
@@ -128,20 +127,6 @@ const createLiveTeasers = ({
       )
     },
   )
-
-  const FlyerTeaserWithData = withFlyerData(({ attributes, data }) => {
-    return (
-      <Loader
-        error={data.error}
-        loading={!data || data.loading}
-        style={{ minHeight: LAZYLOADER_MYMAGAZINE_HEIGHT }}
-        render={() => {
-          if (!data.flyer) return null
-          return <TeaserFlyer flyer={data.flyer} Link={Link} />
-        }}
-      />
-    )
-  })
 
   const extractRepoIds = (children) => {
     if (!children) {
@@ -285,18 +270,14 @@ const createLiveTeasers = ({
       matchMdast: (node) =>
         matchZone('LIVETEASER')(node) && node.data.id === 'flyer',
       props: (node) => node.data,
-      component: (props) => {
-        return (
-          <LazyLoad style={{ minHeight: LAZYLOADER_MYMAGAZINE_HEIGHT }}>
-            <FlyerTeaserWithData {...props} />
-          </LazyLoad>
-        )
+      component: () => {
+        return <SeparatorGutenTag />
       },
       isVoid: true,
       editorModule: 'liveteaser',
       editorOptions: {
         type: 'LIVETEASERFLYER',
-        insertButtonText: 'Flyer Teaser',
+        insertButtonText: 'Guten Tag',
         insertId: 'flyer',
       },
     },

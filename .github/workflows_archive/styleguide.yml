@@ -1,0 +1,35 @@
+on: push
+name: Package Styleguide to S3
+jobs:
+  checkoutAndUpload:
+    name: Checkout and Upload
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '18.x'
+      - run: SERVER=styleguide ./scripts/prune.sh
+      - name: Build workspace dependencies
+        run: |
+          yarn turbo run build --filter=@project-r/styleguide... --filter=!@project-r/styleguide
+      - name: Test and Pack
+        working-directory: ./packages/styleguide
+        run: |
+          yarn test
+          yarn build
+          npm pack
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-central-1
+      - name: Upload S3
+        env:
+          PKG_NAME: project-r-styleguide
+          S3_PATH: republik-assets-dev/plattform
+        working-directory: ./packages/styleguide
+        run: |
+          aws s3 cp $PKG_NAME-0.0.0.tgz s3://$S3_PATH/$PKG_NAME-`echo ${{ github.sha }} | cut -c-7`.tgz --acl public-read
+          aws s3 cp $PKG_NAME-0.0.0.tgz s3://$S3_PATH/$PKG_NAME-`echo ${{ github.ref }} | cut -d/ -f3`.tgz --acl public-read
