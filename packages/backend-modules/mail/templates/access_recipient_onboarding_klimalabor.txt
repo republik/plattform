@@ -28,11 +28,9 @@ Was bisher geschah:
    .
 
  * Ein paar Highlights, die Sie interessieren könnten. Ja, Zukunftslust,
-   verdammt!
-   {{frontend_base_url}}/2023/04/19/halbzeit-im-klimalabor-so-geht-es-jetzt-weiter
-   >; 15 Fragen zum Klima
-   {{frontend_base_url}}/15-fragen-zum-klima-ihre-antworten ; «Wir brauchen den
-   Klima­notstand»
+   verdammt! {{frontend_base_url}}/2023/02/14/ja-zukunftslust-verdammt ; 15
+   Fragen zum Klima {{frontend_base_url}}/15-fragen-zum-klima-ihre-antworten ;
+   «Wir brauchen den Klima­notstand»
    {{frontend_base_url}}/2023/04/29/wir-brauchen-den-klimanotstand ; Wir haben
    kein Recht, vor der Klima­krise zu kapitulieren
    {{frontend_base_url}}/2023/01/16/wir-haben-kein-recht-vor-der-klimakrise-zu-kapitulieren
@@ -41,10 +39,6 @@ Was bisher geschah:
    .
 
 Wie Sie uns unterstützen können:
-
- * 15 Fragen zum Klima, die zum Nachdenken anregen. Teilen Sie Ihre Antworten
-   {{frontend_base_url}}/2023/03/03/fragen-zur-klimakrise und lesen Sie, was
-   andere schreiben {{frontend_base_url}}/15-fragen-zum-klima-ihre-antworten .
 
  * Die Klimakrise geht uns alle an. Laden Sie drei Freundinnen oder Bekannte
    ein, die vom Klimalabor erfahren sollten. Teilen Sie diesen Link
