@@ -1,8 +1,8 @@
 import test from 'tape'
 import React from 'react'
 
-import { renderEmail, Mso } from './email'
-import { matchType, matchHeading, matchParagraph } from './utils'
+import { renderEmail, Mso } from '../src/email'
+import { matchType, matchHeading, matchParagraph } from '../src/utils'
 
 const mdast = {
   'type': 'root',

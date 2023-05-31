@@ -3,8 +3,8 @@ import React from 'react'
 import Enzyme, { shallow } from 'enzyme'
 import Adapter from 'enzyme-adapter-react-16'
 
-import { renderMdast } from './'
-import { matchType, matchHeading, matchParagraph } from './utils'
+import { renderMdast } from '../src'
+import { matchType, matchHeading, matchParagraph } from '../src/utils'
 
 Enzyme.configure({ adapter: new Adapter() })
 
