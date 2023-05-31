@@ -1,30 +1,30 @@
-import test from 'tape'
-import React from 'react'
-
 import { renderEmail, Mso } from '../src/email'
 import { matchType, matchHeading, matchParagraph } from '../src/utils'
 
 const mdast = {
-  'type': 'root',
-  'children': [
+  type: 'root',
+  children: [
     {
-      'type': 'heading',
-      'depth': 1,
-      'children': [{
-        'type': 'text',
-        'value': 'The Titel'
-      }]
+      type: 'heading',
+      depth: 1,
+      children: [
+        {
+          type: 'text',
+          value: 'The Titel',
+        },
+      ],
     },
     {
-      'type': 'paragraph',
-      'children': [{
-        'type': 'text',
-        'value': '«A good lead.»'
-      }]
-    }
-  ]
+      type: 'paragraph',
+      children: [
+        {
+          type: 'text',
+          value: '«A good lead.»',
+        },
+      ],
+    },
+  ],
 }
-
 
 const schema = {
   rules: [
@@ -42,7 +42,7 @@ const schema = {
             </xml>
             `}
           </Mso>
-          <Mso>
+          <Mso gte={undefined}>
             {`
             <style>
               table img {
@@ -64,33 +64,31 @@ const schema = {
       rules: [
         {
           matchMdast: matchHeading(1),
-          component: ({ children }) => <h1>{children}</h1>
+          component: ({ children }) => <h1>{children}</h1>,
         },
         {
           matchMdast: matchParagraph,
-          component: ({ children }) => <p>{children}</p>
-        }
-      ]
-    }
-  ]
+          component: ({ children }) => <p>{children}</p>,
+        },
+      ],
+    },
+  ],
 }
 
-test('render email', assert => {
-  let emailHtml
-  assert.doesNotThrow(() => {
-    emailHtml = renderEmail(mdast, schema, {MissingNode: false})
+describe('email rendering', () => {
+  test('render email', () => {
+    expect(() => {
+      renderEmail(mdast, schema, { MissingNode: false })
+    }).not.toThrow()
   })
 
-  assert.notEqual(
-    emailHtml.indexOf('<!--[if mso]>'),
-    -1,
-    'transforms <Mso> into html comment'
-  )
-  assert.notEqual(
-    emailHtml.indexOf('<!--[if gte mso 15]>'),
-    -1,
-    'transforms <Mso gte=\'15\'> into html comment'
-  )
+  test('transforms <Mso> into html comment', () => {
+    const emailHtml = renderEmail(mdast, schema, { MissingNode: false })
+    expect(emailHtml.indexOf('<!--[if mso]>')).not.toEqual(-1)
+  })
 
-  assert.end()
+  test('transforms <Mso gte="15"> into html comment', () => {
+    const emailHtml = renderEmail(mdast, schema, { MissingNode: false })
+    expect(emailHtml.indexOf('<!--[if gte mso 15]>')).not.toEqual(-1)
+  })
 })
