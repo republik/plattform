@@ -72,3 +72,5 @@ export const SCHEMA_PUBLISHER = ENV.SCHEMA_PUBLISHER
 
 export const isDev = ENV.NODE_ENV !== 'production'
 export const isClient = typeof window !== 'undefined'
+
+export const PROLITTERIS_OPT_OUT_CONSENT = 'PROLITTERIS_OPT_OUT'

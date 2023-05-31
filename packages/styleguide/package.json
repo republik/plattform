@@ -1,5 +1,6 @@
 {
   "name": "@project-r/styleguide",
+  "private": true,
   "version": "0.0.0",
   "main": "dist/lib.js",
   "module": "src/lib.ts",
@@ -21,35 +22,37 @@
   "engines": {
     "node": "^18.0.0"
   },
-  "peerDependencies": {
-    "@apollo/client": "~3.5.10",
-    "@republik/icons": "*",
-    "d3-array": "1.x",
-    "d3-color": "1.x",
-    "d3-dsv": "1.x",
-    "d3-format": "1.x",
-    "d3-geo": "^1.x",
-    "d3-scale": "2.x",
-    "d3-shape": "1.x",
-    "d3-time": "1.x",
-    "d3-time-format": "2.x",
-    "downshift": "^2.2.2",
-    "glamor": "^2.20.40",
-    "lodash": "4.x",
-    "mdast-react-render": ">=1.1",
-    "prop-types": ">=15.5",
-    "react": "^18.2.0",
-    "react-color": "^2.18.1",
-    "react-dom": "^18.2.0",
-    "react-maskedinput": ">=4.0.1",
-    "react-textarea-autosize": ">=5.1.0",
-    "scroll-into-view": "1.15.0",
-    "topojson": "3.x"
+  "files": [
+    "dist",
+    "editor.js"
+  ],
+  "author": "Thomas Preusse <t@preus.se> (https://t.preus.se/)",
+  "license": "BSD-3-Clause",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/republik/plattform.git"
+  },
+  "scripts": {
+    "build": "tsc --project tsconfig.dist.json",
+    "start": "serve -s build",
+    "dev": "tsc -w --project tsconfig.dist.json",
+    "test": "jest",
+    "test:dev": "jest --watch",
+    "translations-raw": "NODE_OPTIONS='-r dotenv/config' gsheets --key=1sMS5u4SIFY2loAmx8jftDXqTbq2RheJLY7FBeXSm1Tc --title=live --pretty --out src/lib/translations.json",
+    "translations": "yarn translations-raw && git add -p src/lib/translations.json && git checkout -- src/lib/translations.json"
+  },
+  "dependencies": {
+    "body-scroll-lock": "^3.1.5",
+    "serve": "^13.0.2",
+    "slate": "^0.88.1",
+    "slate-history": "^0.86.0",
+    "slate-react": "^0.88.2",
+    "ts-jest": "^29.1.0",
+    "use-memo-one": "^1.1.2"
   },
   "devDependencies": {
     "@apollo/client": "~3.5.10",
     "@babel/standalone": "^7.15.8",
-    "@catalog/core": "^4.0.1-canary.2",
     "@orbiting/remark-preset": "^1.2.4",
     "@republik/eslint-config-frontend": "*",
     "@republik/icons": "*",
@@ -62,10 +65,6 @@
     "@types/react-dom": "^18.0.11",
     "babel-jest": "^29.5.0",
     "clipboard-copy": "^4.0.1",
-    "commitizen": "^4.2.4",
-    "concurrently": "^7.0.0",
-    "core-js": "^3.19.0",
-    "cz-conventional-changelog": "^3.3.0",
     "d3-array": "^1.2.1",
     "d3-color": "^1.4.1",
     "d3-dsv": "^1.2.0",
@@ -92,60 +91,39 @@
     "react-color": "^2.18.1",
     "react-dom": "^18.2.0",
     "react-maskedinput": "^4.0.1",
-    "react-scripts": "^3.4.1",
     "react-textarea-autosize": "^5.1.0",
     "rw": "^1.3.3",
     "scroll-into-view": "1.15.0",
     "semantic-release": "^17.1.1",
     "slate-mdast-serializer": "^3",
     "topojson": "^3.0.2",
-    "tslib": "^2.3.1",
     "typescript": "^4.7.2",
     "validate-commit-msg": "^2.14.0"
   },
-  "files": [
-    "dist",
-    "editor.js"
-  ],
-  "author": "Thomas Preusse <t@preus.se> (https://t.preus.se/)",
-  "license": "BSD-3-Clause",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/republik/plattform.git"
-  },
-  "scripts": {
-    "commit": "git-cz",
-    "prepublishOnly": "yarn prebuild && yarn build:lib",
-    "build": "yarn build:lib && if [ \"$SERVER\" = \"styleguide\" ]; then yarn build:docs; fi",
-    "build:lib": "tsc --project tsconfig.dist.json",
-    "build:docs": "react-scripts build",
-    "start": "serve -s build",
-    "dev": "yarn dev:lib",
-    "dev:lib": "tsc -w --project tsconfig.dist.json",
-    "dev:docs": "concurrently \"yarn:dev:lib\" \"SKIP_PREFLIGHT_CHECK=true BROWSER=none PORT=3003 react-scripts start\"",
-    "test": "jest",
-    "test:dev": "jest --watch",
-    "cloc": "find . -name '*.js' -not -path \"./node_modules*\" -not -path \"./lib*\" | xargs wc -l",
-    "eject": "react-scripts eject",
-    "semantic-release": "semantic-release",
-    "commitmsg": "validate-commit-msg",
-    "translations-raw": "NODE_OPTIONS='-r dotenv/config' gsheets --key=1sMS5u4SIFY2loAmx8jftDXqTbq2RheJLY7FBeXSm1Tc --title=live --pretty --out src/lib/translations.json",
-    "translations": "yarn translations-raw && git add -p src/lib/translations.json && git checkout -- src/lib/translations.json",
-    "upgrade-interactive": "npx npm-check -u"
-  },
-  "config": {
-    "commitizen": {
-      "path": "./node_modules/cz-conventional-changelog"
-    }
-  },
-  "dependencies": {
-    "body-scroll-lock": "^3.1.5",
-    "serve": "^13.0.2",
-    "slate": "^0.88.1",
-    "slate-history": "^0.86.0",
-    "slate-react": "^0.88.2",
-    "ts-jest": "^29.1.0",
-    "use-memo-one": "^1.1.2"
+  "peerDependencies": {
+    "@apollo/client": "~3.5.10",
+    "@republik/icons": "*",
+    "d3-array": "1.x",
+    "d3-color": "1.x",
+    "d3-dsv": "1.x",
+    "d3-format": "1.x",
+    "d3-geo": "^1.x",
+    "d3-scale": "2.x",
+    "d3-shape": "1.x",
+    "d3-time": "1.x",
+    "d3-time-format": "2.x",
+    "downshift": "^2.2.2",
+    "glamor": "^2.20.40",
+    "lodash": "4.x",
+    "mdast-react-render": ">=1.1",
+    "prop-types": ">=15.5",
+    "react": "^18.2.0",
+    "react-color": "^2.18.1",
+    "react-dom": "^18.2.0",
+    "react-maskedinput": ">=4.0.1",
+    "react-textarea-autosize": ">=5.1.0",
+    "scroll-into-view": "1.15.0",
+    "topojson": "3.x"
   },
   "browserslist": [
     ">0.2%",
