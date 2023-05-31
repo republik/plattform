@@ -6,12 +6,9 @@
     "access": "public"
   },
   "devDependencies": {
-    "@babel/core": "7.17.2",
-    "@babel/eslint-parser": "^7.17.0",
-    "@babel/preset-react": "^7.16.7",
-    "@typescript-eslint/eslint-plugin": "^5.10.2",
-    "@typescript-eslint/parser": "^5.10.2",
-    "eslint-plugin-react": "^7.28.0",
-    "eslint-plugin-react-hooks": "^4.3.0"
+    "@typescript-eslint/eslint-plugin": "^5.59.8",
+    "@typescript-eslint/parser": "^5.59.8",
+    "eslint-plugin-react": "^7.32.2",
+    "eslint-plugin-react-hooks": "^4.6.0"
   }
 }
