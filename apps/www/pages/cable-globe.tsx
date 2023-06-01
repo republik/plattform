@@ -37,13 +37,35 @@ const CustomGlobe = () => {
       if (v1[idx] !== inView) {
         const v2 = [...v1]
         v2[idx] = inView
+        if (globeEl.current) {
+          switch (idx) {
+            case 0:
+              globeEl.current.pointOfView(
+                { lat: 32, lng: 30, altitude: 1 },
+                1000,
+              )
+              break
+            case 1:
+              globeEl.current.pointOfView(
+                { lat: -45, lng: 7, altitude: 1 },
+                1000,
+              )
+              break
+            case 2:
+              globeEl.current.pointOfView(
+                { lat: 45, lng: 7, altitude: 1 },
+                1000,
+              )
+              break
+          }
+        }
         return v2
       }
       return v1
     })
   }
 
-  const lastInView = inViewList.lastIndexOf(true) || -1
+  const lastInView = inViewList.lastIndexOf(true)
 
   return (
     <div className='Scrolly' {...styles.scrolly}>
@@ -63,11 +85,12 @@ const CustomGlobe = () => {
           pathStroke={2}
           animateIn={false}
           showAtmosphere={false}
+          rendererConfig={{ antialias: false }}
           // pathDashLength={0.1}
           // pathDashGap={0.008}
           // pathDashAnimateTime={12000}
           onGlobeReady={() => {
-            const MAP_CENTER = { lat: 32, lng: 30, altitude: 0.3 }
+            const MAP_CENTER = { lat: 32, lng: 30, altitude: 1 }
             if (globeEl.current) {
               globeEl.current.controls().enableZoom = false
               globeEl.current.pointOfView(MAP_CENTER, 0)
@@ -93,6 +116,7 @@ const CustomGlobe = () => {
       >
         Step 3
       </ScrollySlide>
+      <p style={{ height: '100vh' }}></p>
     </div>
   )
 }
@@ -110,11 +134,10 @@ const ScrollySlide = ({
 
   const { scrollYProgress } = useScroll({
     target: ref,
-    offset: ['start end', 'start 60vh'],
+    offset: ['start end', 'start 50vh'],
   })
 
   useMotionValueEvent(scrollYProgress, 'change', (value) => {
-    console.log({ value })
     if (value >= 1) {
       onChangeInView(true)
     } else {
@@ -137,16 +160,23 @@ const ScrollySlide = ({
 const styles = {
   scrolly: css({
     position: 'relative',
+    pointerEvents: 'none',
   }),
   scrollySlide: css({
     position: 'relative',
-    maxWidth: '43rem',
-    margin: '0 auto',
+    maxWidth: '30rem',
+    marginLeft: '10vh',
     marginTop: '10vh',
-    height: '50vh',
+    padding: '20px',
+    height: '30vh',
+    marginBottom: '60vh',
     zIndex: 1,
-    backgroundColor: 'white',
-    '&:first-of-type': { paddingTop: '15vh' },
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    color: 'white',
+    fontSize: '18px',
+    '&:last-of-type': {
+      marginBottom: 0,
+    },
   }),
   scrollyGraphicsContainer: css({
     position: 'sticky',
