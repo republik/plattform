@@ -47,19 +47,17 @@ const CustomGlobe = () => {
 
   const handleInView = (idx: number) => (inView: boolean) => {
     setInViewList((v1) => {
-      const v2 = [...v1]
-      v2[idx] = inView
-      return v2
+      // Check for different value, only return new array if it has changed -> fewer state updates
+      if (v1[idx] !== inView) {
+        const v2 = [...v1]
+        v2[idx] = inView
+        return v2
+      }
+      return v1
     })
   }
 
-  const list = [false, false, false]
-  const lastInList = list.lastIndexOf(true)
-  console.log(lastInList)
-
   const lastInView = inViewList.lastIndexOf(true) || -1
-
-  console.log('irgend öppis')
 
   return (
     <div className='Scrolly' {...styles.scrolly}>
