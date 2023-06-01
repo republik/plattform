@@ -5688,14 +5688,6 @@
       "value": "kontakt@republik.ch"
     },
     {
-      "key": "Onboarding/Page/climate/more/account",
-      "value": "Mit Ihrer Anmeldung sind Sie auch für den Newsletter zum Klimalabor eingetragen. Diese und weitere Einstellungen finden Sie in Ihrem {link}."
-    },
-    {
-      "key": "Onboarding/Page/climate/more/account/link",
-      "value": "Konto"
-    },
-    {
       "key": "Onboarding/Page/climate/more/help",
       "value": "Haben Sie Fragen oder benötigen Sie Hilfe? Wir sind gerne für Sie da. {email}"
     },
