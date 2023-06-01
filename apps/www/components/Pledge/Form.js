@@ -428,9 +428,11 @@ class Pledge extends Component {
                       ownMembership={ownMembership}
                       customMe={customMe}
                       userPrice={userPrice}
-                      fixedPrice={['MONTHLY_ABO', 'YEARLY_ABO'].includes(
-                        pkg.name,
-                      )}
+                      fixedPrice={[
+                        'MONTHLY_ABO',
+                        'YEARLY_ABO',
+                        'LESHA',
+                      ].includes(pkg.name)}
                       pkg={pkg}
                       packages={packages}
                       onChange={(fields) => {

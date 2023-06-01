@@ -430,6 +430,7 @@ class CustomizePackage extends Component {
       'ABO_GIVE',
       'ABO_GIVE_MONTHS',
       'YEARLY_ABO',
+      'LESHA',
     ].includes(pkg.name)
       ? []
       : userPrice
