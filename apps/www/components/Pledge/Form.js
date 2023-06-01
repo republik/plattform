@@ -213,7 +213,7 @@ class Pledge extends Component {
       packageName: pkg ? pkg.name : undefined,
       forceAutoPay: pkg ? pkg.name === 'MONTHLY_ABO' : undefined,
       requiresStatutes: pkg
-        ? !['YEARLY_ABO', 'MONTHLY_ABO', 'DONATE', 'LESHA'].includes(pkg.name)
+        ? !['YEARLY_ABO', 'MONTHLY_ABO', 'DONATE', ''].includes(pkg.name)
         : undefined,
       paymentMethods: pkg ? pkg.paymentMethods : undefined,
       total: values.price || undefined,
