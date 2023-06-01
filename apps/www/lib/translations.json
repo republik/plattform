@@ -2597,8 +2597,16 @@
       "value": "Schön, dass Sie dabei sind. Sie erhalten ab sofort unser Magazin. Und sind während der Zeit Ihres Abonnements Verlegerin oder Verleger der Republik. Das Monatsabonnement wird jeweils automatisch verlängert. Sie können es aber jederzeit in Ihrem Konto kündigen."
     },
     {
-      "key": "package/choose",
-      "value": "Auswählen"
+      "key": "package/LESHA/title",
+      "value": "Buch «We Stay»"
+    },
+    {
+      "key": "package/LESHA/price",
+      "value": "{formattedCHF}"
+    },
+    {
+      "key": "package/LESHA/description",
+      "value": "Als er am Morgen des 24. Februar 2022 aufwacht, ist Lesha Lesha Berezovskiys Leben mit einem Schlag anders. Bomben­alarm in Kiew, Russland hat die ukrainische Hauptstadt angegriffen.\nIn seiner Kolumne «Leben in Trümmern» lässt er uns seither an seinem Alltag teilhaben.\nDaraus ist nun ein Buch entstanden: Ein Zeitdokument, das das Leben in einem Land unter Beschuss aus einer persönlichen Perspektive auch uns hier näher­bringt, die vom Krieg nicht unmittelbar betroffen sind.\n"
     },
     {
       "key": "package/group/ME",
@@ -7052,8 +7060,7 @@
       "value": "Eine funktionierende Demokratie braucht funktionierende Medien. Und dafür braucht es nicht nur Journalistinnen und Journalisten, sondern auch Sie. Als Leserin. Als Bürger. Als Verlegerin, die bereit ist, langfristig auf unabhängigen Journalismus zu setzen. Durch Ihren jährlichen Beitrag werden Sie Mitglied der Project R Genossenschaft."
     },
     {
-      "key": "Goodies/title",
-      "value": "Noch etwas Handfestes?"
+      "key": "Goodies/title"
     },
     {
       "key": "Goodies/note/delivery",
@@ -7102,6 +7109,14 @@
     {
       "key": "Goodie/description/MUG_CERAMIC",
       "value": "Mit Logo und Claim «Ohne Journalismus keine Demokratie». Lieferung innerhalb von 10 Werktagen."
+    },
+    {
+      "key": "Goodie/label/LESHA",
+      "value": "Buch «We Stay»"
+    },
+    {
+      "key": "Goodie/description/LESHA",
+      "value": "Lesha Berezovskiys Bildkolumne «Leben in Trümmern» als Buch"
     },
     {
       "key": "option/TABLEBOOK/label/other",
