@@ -51,9 +51,7 @@ app.prepare().then(() => {
   if (process.env.DENY_IPS) {
     try {
       // We use JSON.parse because to filter a IP range it needs to be specified as an array, e.g. [['127.0.0.1', '127.0.0.10']]
-      const denyIPs = process.env.DENY_IPS
-        ? JSON.parse(process.env.DENY_IPS)
-        : []
+      const denyIPs = JSON.parse(process.env.DENY_IPS)
 
       console.log('Denying the following IPs:', denyIPs)
 
