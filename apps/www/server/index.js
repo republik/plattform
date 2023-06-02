@@ -61,13 +61,7 @@ app.prepare().then(() => {
         ipfilter(denyIPs, {
           mode: 'deny',
           logLevel: 'deny',
-          detectIp: (req, res) => {
-            const ip = req.headers['x-forwarded-for']
-              ? req.headers['x-forwarded-for'].split(',')[0]
-              : req.connection.remoteAddress
-
-            return ip
-          },
+          trustProxy: !DEV
         }),
       )
     } catch (e) {
