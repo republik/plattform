@@ -13,8 +13,6 @@ const withNextra = nextra({
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   transpilePackages: ['@project-r/styleguide', '@republik/ui-docs-demo'],
-  // Disable eslint because of monorepo weirdness :/
-  eslint: { ignoreDuringBuilds: true },
 }
 
 export default withDocs(withNextra(nextConfig))
