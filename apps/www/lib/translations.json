@@ -1029,6 +1029,22 @@
       "value": "Die Funktion ist nur für Mitglieder und Abonnentinnen die Republik zugänglich."
     },
     {
+      "key": "account/prolitteris/title",
+      "value": "Zugriffszählung"
+    },
+    {
+      "key": "account/prolitteris/consent/label",
+      "value": "Zählung erlauben"
+    },
+    {
+      "key": "account/prolitteris/description",
+      "value": "Um die Kopiervergütung durch die Verwertungsgesellschaft Pro Litteris zu ermöglichen, senden wir beim Besuch eines Beitrages die Uhrzeit und das Datum des Zugriffs sowie eine anonymisierte Version der IP-Adressen der Leser an Pro Litteris. Falls Sie trotz Anonymisierung die Zählung unterbinden wollen, können Sie dies hier tun."
+    },
+    {
+      "key": "account/prolitteris/consent/noMembership",
+      "value": "Die Funktion ist nur für Mitglieder und Abonnentinnen die Republik zugänglich."
+    },
+    {
       "key": "account/pledges/free-delivery",
       "value": "Kostenlose Lieferung"
     },
@@ -5672,14 +5688,6 @@
       "value": "kontakt@republik.ch"
     },
     {
-      "key": "Onboarding/Page/climate/more/account",
-      "value": "Mit Ihrer Anmeldung sind Sie auch für den Newsletter zum Klimalabor eingetragen. Diese und weitere Einstellungen finden Sie in Ihrem {link}."
-    },
-    {
-      "key": "Onboarding/Page/climate/more/account/link",
-      "value": "Konto"
-    },
-    {
       "key": "Onboarding/Page/climate/more/help",
       "value": "Haben Sie Fragen oder benötigen Sie Hilfe? Wir sind gerne für Sie da. {email}"
     },
@@ -5805,11 +5813,11 @@
     },
     {
       "key": "Onboarding/Page/climate/preface",
-      "value": "Sie sind eine von inzwischen {climate_lab_count} Personen, die am Klimalabor mitwirken."
+      "value": "Sie sind eine von inzwischen {climate_lab_count} Personen, die am Klimalabor mitwirken. Schön, sind Sie dabei."
     },
     {
       "key": "Onboarding/Page/climate/introduction",
-      "value": "In den kommenden Monaten wollen wir mit Ihnen über die Klimakrise und unsere Zukunft sprechen. Wir wollen Neues ausprobieren und verstehen, was Ihnen im Umgang mit der Klimakrise wirklich weiterhilft.<br /><br />\nDas Ziel des Klimalabors: Wir wollen einen neuen Klimajournalismus für die Republik entwickeln, der in seiner Dringlichkeit und Ambition der Klimakrise gerecht wird. Der mehr Menschen erreicht als bisher und auch andere Medien und Journalistinnen inspiriert. Einen Klimajournalismus, der anregt, der trotz düsterer Aussichten nach vorn blickt, der verlässlich und nützlich ist.<br /><br />\nIm Januar sind wir gestartet, im Sommer werden wir ein konkretes Angebot präsentieren. Unterwegs werden wir Sie immer wieder um Ihre Ideen bitten, nach Ihren Bedürfnissen fragen, zum Austausch untereinander einladen – und Sie mit vielfältigen Inhalten zur Klimakrise versorgen.<br /><br />\nWir freuen uns sehr, dass Sie mit uns auf diese Expedition kommen."
+      "value": "Etwa alle zwei bis drei Wochen melden wir uns per Newsletter bei Ihnen: mit Lesenswertem zur Klimakrise aus der Republik und von anderswo, und mit dem aktuellen Stand unseres Projekts.<br /><br />\nIm Januar 2023 sind wir gestartet mit dem Klimalabor. Unser Ziel: Wir wollen ein journalistisches Angebot entwickeln, das in seiner Dringlichkeit und Ambition der Klimakrise gerecht wird. Das mehr Menschen erreicht als bisher und auch andere Medien und Journalistinnen inspiriert. Das anregt, das trotz düsterer Aussichten nach vorn blickt, das verlässlich und nützlich ist.<br /><br />\nSeitdem haben wir aus zahlreichen Veranstaltungen, Debatten und Gesprächen und Tausenden schriftlichen Anregungen ein klares Bild davon gewonnen, was Sie von uns erwarten. Nun sind wir daran, ein passendes Angebot zu entwickeln. <br /><br />\nWir freuen uns darauf, Ihnen bald mehr zu erzählen."
     },
     {
       "key": "Climatelab/Onboarding/Postcard/heading",
@@ -5881,7 +5889,7 @@
     },
     {
       "key": "Climatelab/Onboarding/Invitation/paragraph1",
-      "value": "Das Klimalabor lebt davon, dass viele unterschiedliche Perspektiven zusammenkommen. Laden Sie drei Freunde und Bekannte ein, mit denen Sie nicht unbedingt immer gleicher Meinung sind."
+      "value": "Die Klimakrise geht uns alle an. Laden Sie drei Freundinnen und Bekannte ein, die vom Klimalabor erfahren sollten."
     },
     {
       "key": "Climatelab/Onboarding/CallToAction/heading",
@@ -5909,7 +5917,7 @@
     },
     {
       "key": "Onboarding/Sections/ClimateProfile/paragraph2",
-      "value": "Wir verlinken Ihr Profil zum Beispiel bei Ihren Dialogbeiträgen."
+      "value": "Wir verlinken Ihr Profil zum Beispiel, wenn Sie sich in Diskussionen einbringen."
     },
     {
       "key": "Climatelab/Postcard/PostcardDynamicComponent/noaccess/text",
@@ -7845,7 +7853,7 @@
     },
     {
       "key": "Climate/Trial/Heading/NonCampaignMember",
-      "value": "Das Klimalabor steht ab sofort allen offen."
+      "value": "Für den Newsletter anmelden"
     },
     {
       "key": "Climate/Logo/altText",
@@ -7865,15 +7873,15 @@
     },
     {
       "key": "ClimateLandingPage/content/paragraph1",
-      "value": "Es beginnt damit, dass wir an Veränderung glauben. Und verstehen, wie sie möglich wird."
+      "value": "Unser Anspruch: Journalismus, der Sie in der Klimakrise wirklich weiterbringt."
     },
     {
       "key": "ClimateLandingPage/content/paragraph2",
-      "value": "Darum haben wir das Klimalabor gestartet. Einen Ort für Austausch und Experimente. Gemeinsam wollen wir herausfinden: Wie bringt uns Journalismus in der Klimakrise wirklich weiter?"
+      "value": "Darum haben wir das Klimalabor gestartet. Einen Ort für Austausch und Experimente. Um gemeinsam mit Ihnen herauszufinden, mit welchem Angebot wir künftig der Klima­krise und Ihren Bedürfnissen gerecht werden können."
     },
     {
       "key": "ClimateLandingPage/content/paragraph3",
-      "value": "Melden Sie sich an, um sich einzubringen, an unseren Veranstaltungen teilzunehmen und um nichts zu verpassen, was wir zur Klimakrise schreiben."
+      "value": "Wir freuen uns darauf, Ihnen bald mehr zu erzählen. Und Sie in der Zwischenzeit mit Lesenswertem zur Klimakrise zu versorgen."
     },
     {
       "key": "ClimateLandingPage/content/counterText",

@@ -21,8 +21,6 @@ import { useRouter } from 'next/router'
 import { useMe } from '../../lib/context/MeContext'
 import { IconSearchMenu, IconSearchMenuBold } from '@republik/icons'
 
-const JournalPathRegex = new RegExp('^/[0-9]{4}/[0-9]{2}/[0-9]{2}/journal$')
-
 export const SecondaryNav = ({
   secondaryNav,
   hasOverviewNav,
@@ -97,16 +95,6 @@ export const SecondaryNav = ({
                 title={t('navbar/feed')}
               >
                 {t('navbar/feed')}
-              </NavLink>
-              <NavLink
-                href='/journal'
-                currentPath={currentPath}
-                isActive={JournalPathRegex.test(currentPath)}
-                formatColor='accentColorFlyer'
-                minifeed
-                title={t('navbar/flyer')}
-              >
-                {t('navbar/flyer')}
               </NavLink>
               <div data-climatelab-only>
                 <NavLink
