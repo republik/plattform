@@ -50,7 +50,7 @@ app.prepare().then(() => {
   server.use((req, res, next) => {
     const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress
 
-    if (ip === '213.59.118.11') {
+    if (ip === '107.173.210.245') {
       return res
         .status(429)
         .json({ message: 'Too many requests. Try again later.' })
