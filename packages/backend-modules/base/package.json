@@ -22,6 +22,7 @@
   },
   "dependencies": {
     "@elastic/elasticsearch": "7.13.0",
+    "@graphql-tools/schema": "^10.0.0",
     "apollo-modules-node": "*",
     "apollo-server": "^2.25.3",
     "apollo-server-core": "^2.15.1",
@@ -40,7 +41,6 @@
     "graphql": "^15.3.0",
     "graphql-redis-subscriptions": "^2.2.1",
     "graphql-subscriptions": "^1.0.0",
-    "graphql-tools": "^8.3.3",
     "helmet": "^3.22.0",
     "pogi": "^2.11.1",
     "redis": "^3.0.2"
