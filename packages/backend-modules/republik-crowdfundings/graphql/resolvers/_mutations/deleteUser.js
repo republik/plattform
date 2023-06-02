@@ -9,6 +9,7 @@ const deleteStripeCustomer = require('../../../lib/payments/stripe/deleteCustome
 const deleteRelatedData = async (
   { id: userId },
   hasPledges,
+  hasClaimedMemberships,
   unpublishComments,
   pgdb,
 ) => {
@@ -21,7 +22,7 @@ const deleteRelatedData = async (
     'stripeCustomers',
     'comments', // get nullified, see below
   ]
-  if (hasPledges) {
+  if (hasPledges || hasClaimedMemberships) {
     keepRelations.push('memberships')
   }
   const relations = await pgdb
@@ -184,7 +185,6 @@ module.exports = async (_, args, context) => {
         userId,
       },
     )
-    // returning claimed memberships not supported yet
     const claimedMemberships = memberships.filter(
       (m) => !!m.pledges.find((p) => p.userId !== userId),
     )
@@ -209,7 +209,13 @@ module.exports = async (_, args, context) => {
       console.warn(`deleteUser: could not delete ${user.email} from mailchimp.`)
     }
 
-    await deleteRelatedData(user, hasPledges, unpublishComments, transaction)
+    await deleteRelatedData(
+      user,
+      hasPledges,
+      hasClaimedMemberships,
+      unpublishComments,
+      transaction,
+    )
 
     // if the user doesn't have pledges, nor grants, nor candidacies we can delete everything,
     // otherwise we need to keep (firstName, lastName, address) for bookkeeping
