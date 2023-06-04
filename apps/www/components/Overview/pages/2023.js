@@ -266,7 +266,75 @@ const text = {
       .
     </>
   ),
-  //Mai: (p) => <></>,
+  Mai: (p) => (
+    <>
+      Jung sein,{' '}
+      <Highlight {...p} ids={['zzR8wnOnA']}>
+        wenn die Wälder brennen
+      </Highlight>
+      . Wie SVP-Bundesrat Albert Rösti für das Klimaschutzgesetz wirbt –{' '}
+      <Highlight {...p} ids={['pNMsKhibo']}>
+        oder auch nicht
+      </Highlight>
+      . Was ist eigentlich «
+      <Highlight {...p} ids={['XNyOAFhas']}>
+        Cancel Culture
+      </Highlight>
+      »?{' '}
+      <Highlight {...p} ids={['QFDNcYmJs']}>
+        Eingekesselt am 1. Mai in Basel
+      </Highlight>{' '}
+      und{' '}
+      <Highlight {...p} ids={['7RD0yt-rC']}>
+        wie man sich juristisch dagegen wehrt
+      </Highlight>
+      . Übrigens:{' '}
+      <Highlight {...p} ids={['hge2GFEDI']}>
+        Fast alle Straffälle in der Schweiz werden ohne Gerichtsentscheid
+        erledigt
+      </Highlight>
+      .{' '}
+      <Highlight {...p} ids={['xeBqCB9BM']}>
+        Zwei
+      </Highlight>{' '}
+      <Highlight {...p} ids={['gET0b3aVc']}>
+        Pionierinnen
+      </Highlight>
+      ,{' '}
+      <Highlight {...p} ids={['f6HgBrjIh']}>
+        Boni für Banker
+      </Highlight>
+      ,{' '}
+      <Highlight {...p} ids={['irKqYoqKx']}>
+        5G
+      </Highlight>
+      ,{' '}
+      <Highlight {...p} ids={['KqrmkodGA']}>
+        ein Auftragsmord im Darknet
+      </Highlight>
+      . Reportagen aus{' '}
+      <Highlight
+        {...p}
+        ids={['ClZQNKmG5']}
+        series='republik/article-serie-das-neue-taliban-regime'
+      >
+        Afghanistan
+      </Highlight>{' '}
+      und der{' '}
+      <Highlight {...p} ids={['kRXLY3snR']}>
+        Ukraine
+      </Highlight>
+      . Und:{' '}
+      <Highlight
+        {...p}
+        ids={['sP9qtB2_k']}
+        series='republik/article-serienuebersicht-meine-testamente'
+      >
+        Mely Kiyak kann wieder schreiben
+      </Highlight>
+      .
+    </>
+  ),
   //Juni: (p) => <></>,
   //Juli: (p) => <></>,
   //August: (p) => <></>,

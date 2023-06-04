@@ -231,7 +231,7 @@ const YOUTUBE_REGEX =
 
 // One capturing group at match[1] that catches the video id
 const VIMEO_REGEX =
-  /^(?:http|https)?:\/\/(?:www\.)?vimeo.com\/(?:channels\/(?:\w+\/)?|groups\/(?:[^/]*)\/videos\/|)(\d+)(?:|\/\?)$/
+  /^(?:http|https)?:\/\/(?:www\.)?vimeo.com\/(?:channels\/(?:\w+\/)?|groups\/(?:[^/]*)\/videos\/|)(\d+)(?:|\/\?)/
 
 const COMMENT_REGEX = new RegExp(
   `^${FRONTEND_BASE_URL}\\/.+[?&]focus=([a-f\\d-]{36})`,
