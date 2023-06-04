@@ -2,10 +2,10 @@
 require('@orbiting/backend-modules-env').config()
 
 const Promise = require('bluebird')
-const moment = require('moment')
 const debug = require('debug')(
   'republik:script:prolong:segmentUsersForMailchimp',
 )
+const dayjs = require('dayjs')
 
 const {
   lib: { ConnectionContext },
@@ -20,8 +20,6 @@ const {
   getPeriodEndingLast,
 } = require('@orbiting/backend-modules-republik-crowdfundings/lib/utils')
 
-// const { getConsentLink } = require('../../lib/Newsletter')
-
 const applicationName =
   'backends republik script prolong segmentUsersForMailchimp'
 
@@ -30,11 +28,23 @@ const stats = {}
 const handleRow = async (row) => {
   const { memberships, accessGrants, ...user } = row
 
+  const periods = memberships
+    .reduce((acc, cur) => acc.concat(cur.periods), [])
+    .filter(Boolean)
+
+  const now = dayjs('2023-01-20')
+
+  const daysUntilNow = periods.reduce((days, period) => {
+    const endDate = dayjs(period.endDate)
+    const anchor = endDate < now ? endDate : now
+
+    return days + anchor.diff(period.beginDate, 'day')
+  }, 0)
+
+  const daysSinceBegin = now.diff('2018-01-15', 'day')
+
   // whether or not a user had any periods
-  const hadSomePeriods =
-    memberships
-      .reduce((acc, cur) => acc.concat(cur.periods), [])
-      .filter(Boolean).length > 0
+  const hadSomePeriods = periods.length > 0
 
   // had a non-monthly-abo membership once
   const hadAbo = !!memberships
@@ -58,14 +68,26 @@ const handleRow = async (row) => {
   })
 
   // return last period of all memberships
-  const lastPeriod = getPeriodEndingLast(
-    memberships
-      .reduce((acc, cur) => acc.concat(cur.periods), [])
-      .filter(Boolean),
-  )
+  const lastPeriod = getPeriodEndingLast(periods)
 
   // return last end date of all memberships
-  const lastEndDate = !!lastPeriod && moment(lastPeriod.endDate)
+  const lastEndDate = !!lastPeriod && dayjs(lastPeriod.endDate)
+
+  // return first period of all memberships
+  const firstPeriod = periods
+    .map((p) => p)
+    .reduce((accumulator, currentValue) => {
+      if (!accumulator) {
+        return currentValue
+      }
+
+      return currentValue.beginDate < accumulator.beginDate
+        ? currentValue
+        : accumulator
+    }, false)
+
+  // return last end date of all memberships
+  const firstBeginDate = !!firstPeriod && dayjs(firstPeriod.beginDate)
 
   // if active, package option used to pay latest period
   const mostRecentPackageOption =
@@ -99,12 +121,18 @@ const handleRow = async (row) => {
 
   const vars = {
     activeMembership: !!activeMembership,
+    autoPay: activeMembership?.autoPay,
+    renew: activeMembership?.renew,
     hasDormantMembership,
     membershipTypeName,
+    suggestedMembershipTypeName,
+    suggestedPrice,
     lastEndDate: lastEndDate?.format?.('YYYY-MM-DD'),
+    firstBeginDate: firstBeginDate?.format?.('YYYY-MM-DD'),
     hadSomePeriods,
     hadAbo,
     hadGrant,
+    daysUntilNow,
   }
 
   const record = {
@@ -112,11 +140,9 @@ const handleRow = async (row) => {
     EMAIL: row.email,
     FNAME: `"${row.firstName ?? ''}"`,
     LNAME: `"${row.lastName ?? ''}"`,
-    PRLG_MT: membershipTypeName || '',
-    PRLG_PRC: '',
-    PRLG_PRC2: '',
     PRLG_SEG: '',
     CP_ATOKEN: '',
+    KAMPA_GRP: '',
     // NL_LINK: getConsentLink(row.email, 'WINTER'),
 
     __vars: Object.keys(vars)
@@ -126,74 +152,28 @@ const handleRow = async (row) => {
 
   if (
     activeMembership &&
+    !activeMembership.autoPay &&
     !hasDormantMembership &&
     membershipTypeName !== 'MONTHLY_ABO' &&
     lastEndDate?.isBefore('2023-04-01')
   ) {
     record.PRLG_SEG = 'prolong-before-2023-04'
     record.CP_ATOKEN = row.accessToken
-    record.PRLG_MT = suggestedMembershipTypeName
-    record.PRLG_PRC = suggestedPrice
-    record.PRLG_PRC2 = suggestedPrice * 2
-  } else if (
-    activeMembership &&
-    (membershipTypeName !== 'MONTHLY_ABO' ||
-      (membershipTypeName === 'MONTHLY_ABO' && hasDormantMembership)) // those upgrading from MONTHLY_ABO
-  ) {
-    // - prolong after
-    // - (maybe) hasDormantMembership
-    // - monthly abo but going to changeover
-    record.PRLG_SEG = 'is-active-abo'
-    record.CP_ATOKEN = row.accessToken
-    record.PRLG_MT = suggestedMembershipTypeName
-    record.PRLG_PRC = suggestedPrice
-    record.PRLG_PRC2 = suggestedPrice * 2
-  } else if (
-    activeMembership &&
-    membershipTypeName === 'MONTHLY_ABO' &&
-    !hasDormantMembership
-  ) {
-    // - monthly abo
-    // - but not those in changeover to ABO
-    record.PRLG_SEG = 'is-active-monthly'
-    record.CP_ATOKEN = hadAbo ? row.accessToken : ''
-    record.PRLG_MT = hadAbo ? suggestedMembershipTypeName : ''
-    record.PRLG_PRC = hadAbo ? suggestedPrice : ''
-    record.PRLG_PRC2 = hadAbo ? suggestedPrice * 2 : ''
-  } else if (!activeMembership && hadSomePeriods && hadAbo) {
-    // find memberships which were not MONTHLY_ABO
-    record.PRLG_SEG = 'is-alumni-abo'
-    record.CP_ATOKEN = row.accessToken
-    record.PRLG_MT = hadAbo ? suggestedMembershipTypeName : ''
-    record.PRLG_PRC = hadAbo ? suggestedPrice : ''
-    record.PRLG_PRC2 = hadAbo ? suggestedPrice * 2 : ''
-  } else if (!activeMembership && hadSomePeriods && !hadAbo) {
-    // find memberships which were MONTHLY_ABO
-    record.PRLG_SEG = 'is-alumni-monthly'
-    record.CP_ATOKEN = ''
-  } else if (!activeMembership && !hadSomePeriods && hadGrant) {
-    // had access grant
-    record.PRLG_SEG = 'had-grant'
-    record.CP_ATOKEN = ''
-  } else if (
-    !activeMembership &&
-    !hasDormantMembership &&
-    !membershipTypeName &&
-    !lastEndDate &&
-    !hadSomePeriods &&
-    !hadAbo &&
-    !hadGrant
-  ) {
-    // neither props is true
-    record.PRLG_SEG = 'is-prospect'
+  } else if (activeMembership) {
+    record.PRLG_SEG = 'is-active'
     record.CP_ATOKEN = ''
   } else {
-    record.PRLG_SEG = 'n/a'
-    console.error(record)
-    throw new Error(`fall through: userId:${row.id}`)
+    // neither props is true
+    record.PRLG_SEG = 'other'
+    record.CP_ATOKEN = ''
   }
 
-  const key = record.PRLG_SEG // [record.PRLG_SEG, record.PRLG_MT].filter(Boolean).join(' - ')
+  record.KAMPA_GRP =
+    firstBeginDate?.isBefore?.('2018-01-16') && daysUntilNow >= daysSinceBegin
+      ? 'is-loyal'
+      : 'is-other'
+
+  const key = record.PRLG_SEG // [record.PRLG_SEG, record.KAMPA_GRP].filter(Boolean).join(' - ')
 
   if (!stats[key]) {
     stats[key] = 1
@@ -248,11 +228,9 @@ ConnectionContext.create(applicationName)
         'EMAIL',
         'FNAME',
         'LNAME',
-        'PRLG_MT',
-        'PRLG_PRC',
-        'PRLG_PRC2',
         'PRLG_SEG',
         'CP_ATOKEN',
+        'KAMPA_GRP',
         // 'NL_LINK',
 
         '__vars',
@@ -266,16 +244,16 @@ ConnectionContext.create(applicationName)
           SELECT u.*
           FROM users u
           -- Include if only users with memberships matter
-          -- JOIN memberships m ON m."userId" = u.id
+          JOIN memberships m ON m."userId" = u.id
 
           -- Test Geschenk-Monatsabos:
           -- JOIN "membershipTypes" mt ON mt.id = m."membershipTypeId" AND mt.name IN ('ABO_GIVE_MONTHS') AND m.active = TRUE
-          
+
           -- Test Monatsabos:
           -- JOIN "membershipTypes" mt ON mt.id = m."membershipTypeId" AND mt.name IN ('MONTHLY_ABO') AND m.active = TRUE
 
           -- Link to temp MailChimp Audience table
-          LEFT JOIN "paeMailchimpAudience" pmc ON pmc.email = u.email
+          -- LEFT JOIN "paeMailchimpAudience" pmc ON pmc.email = u.email
 
           WHERE
             u.email != 'jefferson@project-r.construction'
@@ -286,7 +264,7 @@ ConnectionContext.create(applicationName)
             -- AND m.active = TRUE
             -- Test specific user:
             -- AND u.id = 'd94a7540-afbd-4134-b35d-19f9f5a28598'
-            AND pmc."Republik NL" LIKE '%Project R%'
+            -- ND pmc."Republik NL" LIKE '%Project R%'
             -- AND u.id = 
             /* AND u.id IN (
               '8320ccba-529b-4682-907d-1d8c1fe5aca3',

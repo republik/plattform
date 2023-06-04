@@ -14,20 +14,15 @@ export default ({ meta }) => {
   // https://github.com/orbiting/backends/compare/feat-article-email
   // specifically resolved meta object
   // https://github.com/orbiting/backends/commit/cce72915353d60c3cd3b4ecafefa3a11fb092933
-  const isCovid19 =
+  const isClimate =
     (typeof format === 'string' &&
-      format.includes('format-covid-19-uhr-newsletter')) ||
-    format?.repoId?.includes('format-covid-19-uhr-newsletter')
+      format.includes('format-das-neue-klimaprojekt')) ||
+    format?.repoId?.includes('format-das-neue-klimaprojekt')
 
-  const isWinter =
-    (typeof format === 'string' &&
-      format.includes('format-winter-is-coming')) ||
-    format?.repoId?.includes('format-winter-is-coming')
-
-  const width = (isCovid19 && 234) || (isWinter && 232) || 178
+  const width = (isClimate && 179) || 178
+  const height = (isClimate && 110) || 79
   const imageFile =
-    (isCovid19 && 'logo_republik_newsletter_covid19_wave3.png') ||
-    (isWinter && 'logo_republik_newsletter_winter_wave-1.png') ||
+    (isClimate && 'logo_republik_newsletter_climate-1.png') ||
     'logo_republik_newsletter.png'
 
   const formatLine = useMemo(() => {
@@ -57,13 +52,13 @@ export default ({ meta }) => {
             title='Im Web lesen'
           >
             <img
-              height='79'
               width={width}
+              height={height}
               src={`https://www.republik.ch/static/${imageFile}`}
               style={{
                 border: 0,
                 width: `${width}px !important`,
-                height: '79px !important',
+                height: `${height}px !important`,
                 margin: 0,
                 maxWidth: '100% !important',
               }}

@@ -34,24 +34,8 @@ import useValidation from './useValidation'
 import { useRouter } from 'next/router'
 
 const publishMutation = gql`
-  mutation publish(
-    $repoId: ID!
-    $commitId: ID!
-    $prepublication: Boolean!
-    $scheduledAt: DateTime
-    $updateMailchimp: Boolean!
-    $ignoreUnresolvedRepoIds: Boolean
-    $notifySubscribers: Boolean
-  ) {
-    publish(
-      repoId: $repoId
-      commitId: $commitId
-      prepublication: $prepublication
-      scheduledAt: $scheduledAt
-      updateMailchimp: $updateMailchimp
-      ignoreUnresolvedRepoIds: $ignoreUnresolvedRepoIds
-      notifySubscribers: $notifySubscribers
-    ) {
+  mutation publish($repoId: ID!, $commitId: ID!, $settings: PublishSettings!) {
+    publish(repoId: $repoId, commitId: $commitId, settings: $settings) {
       unresolvedRepoIds
       publication {
         name
@@ -95,11 +79,15 @@ const Form = ({
   const hasBeenPublished = !!repo.latestPublications.find(
     (pub) => !pub.prepublication && pub.live,
   )
+  const audioSource = repo.commit.document?.meta?.audioSource
+  const hasReadAloudAudio =
+    !!audioSource?.mp3 && audioSource?.kind === 'readAloud'
+
   const [state, setCompleteState] = useState({
     prepublication: true,
     scheduled: false,
     updateMailchimp: false,
-    notifySubscribers: !hasBeenPublished,
+    notifyFilters: [!hasBeenPublished && 'Document'].filter(Boolean),
   })
   const setState = (newState) =>
     setCompleteState((state) => ({ ...state, ...newState }))
@@ -107,7 +95,7 @@ const Form = ({
   const {
     prepublication,
     updateMailchimp,
-    notifySubscribers,
+    notifyFilters,
     scheduled,
     scheduledAt,
     publishing,
@@ -283,15 +271,36 @@ const Form = ({
       <br />
       <Checkbox
         disabled={prepublication}
-        checked={!prepublication && notifySubscribers}
+        checked={!prepublication && notifyFilters.includes('Document')}
         onChange={(_, value) => {
           setState({
-            notifySubscribers: value,
+            notifyFilters: [
+              value && 'Document',
+              ...notifyFilters.filter((f) => f !== 'Document'),
+            ].filter(Boolean),
           })
         }}
       >
-        {t.pluralize('publish/label/notifySubscribers', {
-          count: commit.document.subscribedBy.totalCount,
+        {t.pluralize('publish/label/notifyFiltersDocument', {
+          count: commit.document.documentSubscribedBy.totalCount,
+        })}
+      </Checkbox>
+      <br />
+      <br />
+      <Checkbox
+        disabled={prepublication || !hasReadAloudAudio}
+        checked={!prepublication && notifyFilters.includes('ReadAloud')}
+        onChange={(_, value) => {
+          setState({
+            notifyFilters: [
+              value && 'ReadAloud',
+              ...notifyFilters.filter((f) => f !== 'ReadAloud'),
+            ].filter(Boolean),
+          })
+        }}
+      >
+        {t.pluralize('publish/label/notifyFiltersReadAloud', {
+          count: commit.document.readAloudSubscribedBy.totalCount,
         })}
       </Checkbox>
       <br />
@@ -420,11 +429,13 @@ const Form = ({
               publish({
                 repoId: repo.id,
                 commitId: commit.id,
-                prepublication,
-                updateMailchimp,
-                notifySubscribers: notifySubscribers && !prepublication,
-                scheduledAt: scheduled ? scheduledAtDate : undefined,
-                ignoreUnresolvedRepoIds: state.ignoreUnresolvedRepoIds,
+                settings: {
+                  prepublication,
+                  updateMailchimp,
+                  notifyFilters,
+                  scheduledAt: scheduled ? scheduledAtDate : undefined,
+                  ignoreUnresolvedRepoIds: state.ignoreUnresolvedRepoIds,
+                },
               })
                 .then(({ data }) => {
                   if (data.publish.publication) {

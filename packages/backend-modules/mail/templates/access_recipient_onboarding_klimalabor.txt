@@ -1,0 +1,90 @@
+Willkommen. Sie sind eine von inzwischen {{count_climate_lab_users}} Personen,
+die am Klimalabor mitwirken. Schön, sind Sie dabei!
+
+In dieser E-Mail fassen wir das Wichtigste zusammen, damit Sie gut informiert
+mit uns starten und jederzeit wissen, wo Sie uns finden.
+
+Damit sicher keines unserer künftigen Updates in Ihrem Spam-Ordner landet,
+empfehlen wir Ihnen, unsere Mailadresse klimalabor@republik.ch Ihren Kontakten
+hinzuzufügen. Danke.
+
+Gut zu wissen:
+
+ * Unter www.republik.ch/klimalabor {{frontend_base_url}}/klimalabor finden Sie
+   alles zum Klimalabor: was bisher geschah, wie es weitergeht.
+
+ * Haben Sie Fragen, Anregungen oder eine geniale Idee, von der wir sofort
+   wissen sollten? Schreiben Sie uns an klimalabor@republik.ch .
+
+ * Etwa alle zwei bis drei Wochen melden wir uns per Newsletter bei Ihnen: Mit
+   Lesenswertem zur Klimakrise und dem aktuellen Stand unseres Projekts.
+
+Was bisher geschah:
+
+ * Veranstaltungen, journalistische Experimente und viele verschiedene Formen
+   der Mitwirkung. Was seit Januar im Klimalabor geschehen ist und wo wir nun
+   stehen, lesen Sie in unserer Halbzeitbilanz
+   {{frontend_base_url}}/2023/04/19/halbzeit-im-klimalabor-so-geht-es-jetzt-weiter
+   .
+
+ * Ein paar Highlights, die Sie interessieren könnten. Ja, Zukunftslust,
+   verdammt! {{frontend_base_url}}/2023/02/14/ja-zukunftslust-verdammt ; 15
+   Fragen zum Klima {{frontend_base_url}}/15-fragen-zum-klima-ihre-antworten ;
+   «Wir brauchen den Klima­notstand»
+   {{frontend_base_url}}/2023/04/29/wir-brauchen-den-klimanotstand ; Wir haben
+   kein Recht, vor der Klima­krise zu kapitulieren
+   {{frontend_base_url}}/2023/01/16/wir-haben-kein-recht-vor-der-klimakrise-zu-kapitulieren
+   ; «Wir können eine globale Katastrophe abwenden»
+   {{frontend_base_url}}/2023/04/04/wir-koennen-eine-globale-katastrophe-abwenden
+   .
+
+Wie Sie uns unterstützen können:
+
+ * Die Klimakrise geht uns alle an. Laden Sie drei Freundinnen oder Bekannte
+   ein, die vom Klimalabor erfahren sollten. Teilen Sie diesen Link
+   {{frontend_base_url}}/willkommen-zum-klimalabor mit Ihnen.
+
+ * {{#if RECIPIENT_HAS_MEMBERSHIPS}}
+   
+   Investieren Sie in Klimajournalismus: Verschenken Sie eine
+   Jahresmitgliedschaft {{link_climate_lab_offer_abo_give}} .
+   
+   {{else}}
+   
+   Investieren Sie in Klimajournalismus: Werden Sie Verlegerin oder Verleger der
+   Republik {{link_climate_lab_offer_abo}} .
+   
+   {{/if}}
+
+Über das Klimalabor — was wir vorhaben
+
+Im Januar 2023 sind wir gestartet mit dem Klimalabor. Wir sind überzeugt:
+Journalismus kann und muss mehr leisten, um in der Klimakrise seiner
+Verantwortung gerecht zu werden.
+
+Unser Ziel: Wir wollen ein journalistisches Angebot entwickeln, das in seiner
+Dringlichkeit und Ambition der Klimakrise gerecht wird. Das mehr Menschen
+erreicht als bisher und auch andere Medien und Journalistinnen inspiriert. Das
+anregt, das trotz düsterer Aussichten nach vorn blickt, das verlässlich und
+nützlich ist.
+
+Seitdem haben wir aus zahlreichen Veranstaltungen, Debatten und Gesprächen und
+Tausenden schriftlichen Anregungen ein klares Bild davon gewonnen, was Sie von
+uns erwarten. Nun sind wir daran, ein passendes Angebot zu entwickeln.
+
+Wir freuen uns darauf, Ihnen bald mehr zu erzählen.
+
+Ihr Klimalabor-Team:
+
+David Bauer, Elia Blülle, Theresa Leisgang
+
+Zum Klimalabor {{frontend_base_url}}/klimalabor
+
+Haben Sie Fragen oder benötigen Sie Hilfe? Wir sind gerne für Sie da. Antworten
+Sie einfach auf diese E-Mail.
+
+
+Republik AG
+Sihlhallenstrasse 1, CH-8004 Zürich
+{{frontend_base_url}}
+kontakt@republik.ch

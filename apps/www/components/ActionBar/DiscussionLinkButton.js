@@ -1,8 +1,8 @@
 import { IconButton } from '@project-r/styleguide'
-import { DiscussionIcon } from '@project-r/styleguide'
 import { focusSelector } from '../../lib/utils/scroll'
 import { getDiscussionLinkProps } from './utils'
 import Link from 'next/link'
+import { IconDiscussion } from '@republik/icons'
 
 const DiscussionLinkButton = ({
   t,
@@ -51,7 +51,7 @@ const DiscussionLinkButton = ({
       prefetch={false}
     >
       <IconButton
-        Icon={DiscussionIcon}
+        Icon={IconDiscussion}
         label={getLabel()}
         labelShort={useCallToActionLabel ? getLabel() : discussionCount}
         fillColorName='primary'

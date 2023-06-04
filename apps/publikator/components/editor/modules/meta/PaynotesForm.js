@@ -7,9 +7,11 @@ import {
   Dropdown,
   Checkbox,
 } from '@project-r/styleguide'
-import MdClose from 'react-icons/lib/md/close'
-import MdAdd from 'react-icons/lib/md/add'
-import MdInfoOutline from 'react-icons/lib/md/info-outline'
+import { 
+  IconAdd as MdAdd,
+  IconClose as MdClose,
+  IconInfoOutline as MdInfoOutline 
+} from '@republik/icons'
 import { css } from 'glamor'
 
 import withT from '../../../../lib/withT'
@@ -44,6 +46,7 @@ const styles = {
 const PAYNOTE_KEY = 'paynotes'
 const PAYNOTE_MODE_KEY = 'paynoteMode'
 const TARGETS = ['hasActiveMembership', 'isEligibleForTrial']
+
 const MODE_KEYS = {
   AUTO: 'auto',
   BUY: 'button',

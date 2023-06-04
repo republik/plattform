@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { css } from 'glamor'
 import AutosizeInput from 'react-textarea-autosize'
 import { nest } from 'd3-collection'
-import { sum, min, ascending } from 'd3-array'
+import { sum, min } from 'd3-array'
 import { timeDay } from 'd3-time'
 import compose from 'lodash/flowRight'
 import omit from 'lodash/omit'
@@ -258,7 +258,7 @@ class CustomizePackage extends Component {
       }
     }
 
-    const { onChange, pkg, values, userPrice, t } = this.props
+    const { onChange, pkg, values, userPrice, fixedPrice, t } = this.props
 
     const price = this.getPriceWithSuggestion()
     const minPrice = calculateMinPrice(pkg, values, userPrice)
@@ -268,7 +268,7 @@ class CustomizePackage extends Component {
       },
       errors: {
         price: priceError(price, minPrice, t),
-        reason: userPrice && reasonError(values.reason, t),
+        reason: userPrice && !fixedPrice && reasonError(values.reason, t),
       },
     })
   }
@@ -317,6 +317,7 @@ class CustomizePackage extends Component {
       t,
       pkg,
       userPrice,
+      fixedPrice,
       customMe,
       ownMembership,
       router,
@@ -361,7 +362,6 @@ class CustomizePackage extends Component {
 
     const minPrice = calculateMinPrice(pkg, values, userPrice)
     const regularMinPrice = calculateMinPrice(pkg, values, false)
-    const fixedPrice = pkg.name === 'MONTHLY_ABO'
 
     const onPriceChange = (_, value, shouldValidate) => {
       const price = String(value).length
@@ -425,19 +425,21 @@ class CustomizePackage extends Component {
           )
         }),
     )
-    const payMoreSuggestions =
-      pkg.name === 'DONATE' ||
-      pkg.name === 'ABO_GIVE_MONTHS' ||
-      pkg.name === 'ABO_GIVE'
-        ? []
-        : userPrice
-        ? [{ value: regularMinPrice, key: 'normal' }]
-        : [
-            price >= minPrice &&
-              bonusValue && { value: minPrice + bonusValue, key: 'bonus' },
-            price >= minPrice && { value: minPrice * 1.5, key: '1.5' },
-            price >= minPrice && { value: minPrice * 2, key: '2' },
-          ].filter(Boolean)
+    const payMoreSuggestions = [
+      'DONATE',
+      'ABO_GIVE',
+      'ABO_GIVE_MONTHS',
+      'YEARLY_ABO',
+    ].includes(pkg.name)
+      ? []
+      : userPrice
+      ? [{ value: regularMinPrice, key: 'normal' }]
+      : [
+          price >= minPrice &&
+            bonusValue && { value: minPrice + bonusValue, key: 'bonus' },
+          price >= minPrice && { value: minPrice * 1.5, key: '1.5' },
+          price >= minPrice && { value: minPrice * 2, key: '2' },
+        ].filter(Boolean)
     const payMoreReached = payMoreSuggestions
       .filter(({ value }) => price >= value)
       .pop()
@@ -529,18 +531,20 @@ class CustomizePackage extends Component {
               ].filter(Boolean),
             )}
           </Interaction.H2>
-          <Link
-            href={{
-              pathname: '/angebote',
-              query:
-                pkg.group && pkg.group !== 'ME'
-                  ? { group: pkg.group }
-                  : undefined,
-            }}
-            passHref
-          >
-            <A>{t('package/customize/changePackage')}</A>
-          </Link>
+          {pkg.group !== 'HIDDEN' && (
+            <Link
+              href={{
+                pathname: '/angebote',
+                query:
+                  pkg.group && pkg.group !== 'ME'
+                    ? { group: pkg.group }
+                    : undefined,
+              }}
+              passHref
+            >
+              <A>{t('package/customize/changePackage')}</A>
+            </Link>
+          )}
         </div>
         {description.split('\n\n').map((text, i) => (
           <P style={{ marginBottom: 10 }} key={i}>
@@ -959,9 +963,14 @@ class CustomizePackage extends Component {
           }}
           fields={configurableGoodieFields}
         />
-        {!!userPrice && (
+        {!!userPrice && !fixedPrice && (
           <div>
-            <P>{t('package/customize/userPrice/beforeReason')}</P>
+            <P>
+              {t.first([
+                `package/customize/userPrice/${pkg.name}/beforeReason`,
+                'package/customize/userPrice/beforeReason',
+              ])}
+            </P>
             <div style={{ marginBottom: 20 }}>
               <Field
                 label={t('package/customize/userPrice/reason/label')}
@@ -987,7 +996,12 @@ class CustomizePackage extends Component {
                 }}
               />
             </div>
-            <P>{t('package/customize/userPrice/beforePrice')}</P>
+            <P>
+              {t.first([
+                `package/customize/userPrice/${pkg.name}/beforePrice`,
+                'package/customize/userPrice/beforePrice',
+              ])}
+            </P>
           </div>
         )}
         <div style={{ marginBottom: 20 }}>

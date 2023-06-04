@@ -9,6 +9,7 @@ const deleteStripeCustomer = require('../../../lib/payments/stripe/deleteCustome
 const deleteRelatedData = async (
   { id: userId },
   hasPledges,
+  hasClaimedMemberships,
   unpublishComments,
   pgdb,
 ) => {
@@ -21,7 +22,7 @@ const deleteRelatedData = async (
     'stripeCustomers',
     'comments', // get nullified, see below
   ]
-  if (hasPledges) {
+  if (hasPledges || hasClaimedMemberships) {
     keepRelations.push('memberships')
   }
   const relations = await pgdb
@@ -184,13 +185,11 @@ module.exports = async (_, args, context) => {
         userId,
       },
     )
-    // returning claimed memberships not supported yet
     const claimedMemberships = memberships.filter(
       (m) => !!m.pledges.find((p) => p.userId !== userId),
     )
-    if (claimedMemberships.length > 0) {
-      throw new Error(t('api/users/delete/claimedMembershipsNotSupported'))
-    }
+
+    const hasClaimedMemberships = claimedMemberships.length > 0
 
     const grants = await transaction.public.accessGrants.find({
       or: [{ granterUserId: userId }, { recipientUserId: userId }],
@@ -210,11 +209,22 @@ module.exports = async (_, args, context) => {
       console.warn(`deleteUser: could not delete ${user.email} from mailchimp.`)
     }
 
-    await deleteRelatedData(user, hasPledges, unpublishComments, transaction)
+    await deleteRelatedData(
+      user,
+      hasPledges,
+      hasClaimedMemberships,
+      unpublishComments,
+      transaction,
+    )
 
     // if the user doesn't have pledges, nor grants, nor candidacies we can delete everything,
     // otherwise we need to keep (firstName, lastName, address) for bookkeeping
-    if (!hasPledges && !hasGrants && !hasCandidacies) {
+    if (
+      !hasPledges &&
+      !hasGrants &&
+      !hasCandidacies &&
+      !hasClaimedMemberships
+    ) {
       // delete stripe data
       await deleteStripeCustomer({ userId, pgdb: transaction })
 
@@ -249,7 +259,7 @@ module.exports = async (_, args, context) => {
       `deleteUser *${user.firstName} ${user.lastName} - ${user.email}*`,
     )
 
-    return hasPledges || hasGrants || hasCandidacies
+    return hasPledges || hasGrants || hasCandidacies || hasClaimedMemberships
       ? transformUser(
           await pgdb.public.users.findOne({
             id: userId,

@@ -6,6 +6,7 @@ const next = require('next')
 const compression = require('compression')
 const helmet = require('helmet')
 const rateLimit = require('express-rate-limit')
+const ipfilter = require('express-ipfilter').IpFilter
 const { COOKIE_NAME } = require('../lib/auth/constants')
 
 const DEV = process.env.NODE_ENV ? process.env.NODE_ENV !== 'production' : true
@@ -46,6 +47,26 @@ app.prepare().then(() => {
       },
     }),
   )
+
+  if (process.env.DENY_IPS) {
+    try {
+      // We use JSON.parse because to filter a IP range it needs to be specified as an array, e.g. [['127.0.0.1', '127.0.0.10']]
+      const denyIPs = JSON.parse(process.env.DENY_IPS)
+
+      console.log('Denying the following IPs:', denyIPs)
+
+      server.use(
+        ipfilter(denyIPs, {
+          mode: 'deny',
+          logLevel: 'deny',
+          trustProxy: !DEV
+        }),
+      )
+    } catch (e) {
+      console.error('Could not JSON-parse DENY_IPS')
+      console.error(e)
+    }
+  }
 
   // Disable FLoC
   // @see https://twitter.com/natfriedman/status/1387159870667849731
@@ -215,8 +236,19 @@ app.prepare().then(() => {
     return handler(req, res)
   })
 
+  // Handle errors (e.g. when IPs are denied)
+  server.use((err, req, res, next) => {
+    if (err) {
+      res
+        .status(err.status || 500)
+        .send(err.status === 403 ? 'Forbidden' : 'Something went wrong')
+    }
+  })
+
   server.listen(PORT, (err) => {
-    if (err) throw err
+    if (err) {
+      throw err
+    }
     console.log(`> Ready on port ${PORT}`)
   })
 })

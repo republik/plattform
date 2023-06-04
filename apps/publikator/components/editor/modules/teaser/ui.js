@@ -21,15 +21,17 @@ import { getNewBlock } from './'
 
 import { getSubmodules } from './serializer'
 
-import ArrowLeftIcon from 'react-icons/lib/md/arrow-back'
-import ArrowRightIcon from 'react-icons/lib/md/arrow-forward'
-import ArrowUpIcon from 'react-icons/lib/md/arrow-upward'
-import ArrowDownIcon from 'react-icons/lib/md/arrow-downward'
-import CloseIcon from 'react-icons/lib/md/close'
-import MoveIntoIcon from 'react-icons/lib/md/subdirectory-arrow-right'
-import MoveToEndIcon from 'react-icons/lib/md/vertical-align-bottom'
-import CopyToClipboard from 'react-icons/lib/md/content-copy'
-import Check from 'react-icons/lib/md/check'
+import {
+  IconArrowLeft,
+  IconArrowRight,
+  IconKeyboardArrowUp as ArrowUpIcon,
+  IconKeyboardArrowDown as ArrowDownIcon,
+  IconClose,
+  IconVerticalAlignBottom as MoveToEndIcon,
+  IconCheck as Check,
+  IconContentCopy as CopyToClipboard,
+  IconSubdirectoryArrowRight as MoveIntoIcon,
+} from '@republik/icons'
 
 import UIForm from '../../UIForm'
 import ImageInput from '../../utils/ImageInput'
@@ -563,7 +565,7 @@ export const TeaserForm = ({ subModuleResolver, ...options }) => {
               data-disabled={existingIndex === 0}
               onMouseDown={createMoveNode(-1)}
             >
-              <ArrowLeftIcon />
+              <IconArrowLeft />
             </span>
             {' bewegen '}
             <span
@@ -572,7 +574,7 @@ export const TeaserForm = ({ subModuleResolver, ...options }) => {
               data-disabled={existingIndex === group.nodes.size - 1}
               onMouseDown={createMoveNode(+1)}
             >
-              <ArrowRightIcon />
+              <IconArrowRight />
             </span>
           </>
         )}
@@ -705,7 +707,7 @@ export const TeaserInlineUI = ({
           <P {...styles.uiInlineRow}>
             {!isOnlyChild && removable && (
               <MarkButton onMouseDown={removeHandler}>
-                <CloseIcon size={24} />
+                <IconClose size={24} />
               </MarkButton>
             )}
             {!isFirstChild && (

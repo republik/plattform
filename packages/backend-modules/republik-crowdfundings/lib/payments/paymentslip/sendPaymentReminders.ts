@@ -222,13 +222,6 @@ async function send({
   isLast,
   context,
 }: SendParameters): Promise<void> {
-  const emailSubject = context.t.first([
-    `api/email/payment/reminder${isLast ? '/last' : ''}/${
-      payment.packageName
-    }/subject`,
-    `api/email/payment/reminder${isLast ? '/last' : ''}/default/subject`,
-  ])
-
   const resolvedPayment = await invoices.commons.resolvePayment(
     { hrid: payment.hrid },
     context,
@@ -236,12 +229,35 @@ async function send({
 
   const creditor = resolvedPayment.pledge?.package?.bankAccount
 
+  // api/email/payment/reminder/isLast:${isLast}/packageName:${packageName}/subject
+  const subject = context.t([
+    [
+      'api',
+      'email',
+      'payment',
+      'reminder',
+      `isLast:${isLast ? true : false}`,
+      `packageName:${payment.packageName}`,
+      'subject',
+    ].join('/'),
+  ])
+
+  // payment_rminder_[last_][$package.packageName.toLowerCase()]
+  const templateName = [
+    'payment',
+    'reminder',
+    isLast && 'last',
+    payment.packageName.toLowerCase(),
+  ]
+    .filter(Boolean)
+    .join('_')
+
   await sendMailTemplate(
     {
       to: payment.email,
       fromEmail: process.env.DEFAULT_MAIL_FROM_ADDRESS,
-      subject: emailSubject,
-      templateName: isLast ? 'cf_payment_reminder_last' : 'cf_payment_reminder',
+      subject,
+      templateName,
       globalMergeVars: [
         {
           name: 'total',

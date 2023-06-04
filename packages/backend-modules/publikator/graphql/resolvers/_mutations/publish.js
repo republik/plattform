@@ -3,19 +3,14 @@ const querystring = require('querystring')
 // const sleep = require('await-sleep')
 const debug = require('debug')('publikator:mutation:publish')
 const uniq = require('lodash/uniq')
+const pick = require('lodash/pick')
 
 const {
   Roles: { ensureUserHasRole },
 } = require('@orbiting/backend-modules-auth')
 const {
   lib: {
-    Documents: {
-      createPublish,
-      getElasticDoc,
-      isPathUsed,
-      findTemplates,
-      addRelatedDocs,
-    },
+    Documents: { createPublish, getElasticDoc, isPathUsed, addRelatedDocs },
     utils: { getIndexAlias },
   },
 } = require('@orbiting/backend-modules-search')
@@ -42,6 +37,7 @@ const {
   updateCampaignContent,
   getCampaign,
 } = require('../../../lib/mailchimp')
+const { maybeUpsert: maybeUpsertAuphonic } = require('../../../lib/auphonic')
 const {
   prepareMetaForPublish,
   handleRedirection,
@@ -55,19 +51,15 @@ const { document: getDocument } = require('../Commit')
 const { FRONTEND_BASE_URL, PIWIK_URL_BASE, PIWIK_SITE_ID, DISABLE_PUBLISH } =
   process.env
 
-module.exports = async (
-  _,
-  {
-    repoId,
-    commitId,
-    prepublication,
+module.exports = async (_, args, context) => {
+  const { repoId, commitId, settings } = args
+  const {
+    prepublication = false,
     scheduledAt: _scheduledAt,
     updateMailchimp = false,
-    notifySubscribers = false,
     ignoreUnresolvedRepoIds = false,
-  },
-  context,
-) => {
+    notifyFilters = [],
+  } = settings
   const { user, t, redis, elastic, pgdb, pubsub, loaders } = context
   ensureUserHasRole(user, 'editor')
 
@@ -169,7 +161,18 @@ module.exports = async (
     searchString,
   )
 
-  metaFieldResolver(resolvedDoc.content.meta, _all, _users, unresolvedRepoIds)
+  const resolved = {
+    meta: pick(
+      // metaFieldResolver returns docs, but also mutates unresolvedRepoIds
+      metaFieldResolver(
+        resolvedDoc.content.meta,
+        _all,
+        _users,
+        unresolvedRepoIds,
+      ),
+      ['dossier.meta', 'format.meta', 'section.meta'],
+    ),
+  }
 
   unresolvedRepoIds = uniq(unresolvedRepoIds).filter(
     (unresolvedRepoId) => unresolvedRepoId !== repoId,
@@ -192,7 +195,6 @@ module.exports = async (
     repoMeta,
     scheduledAt,
     prepublication,
-    notifySubscribers,
     doc,
     now,
     context,
@@ -278,7 +280,7 @@ module.exports = async (
 
   const meta = {
     ...(updateMailchimp && { updateMailchimp }),
-    ...(notifySubscribers && { notifySubscribers }),
+    ...(notifyFilters && { notifyFilters }),
   }
 
   const scope = (prepublication && 'prepublication') || 'publication'
@@ -314,41 +316,6 @@ module.exports = async (
     debug('rollback', { repoId, user: user.id })
 
     throw e
-  }
-
-  const resolved = {}
-
-  if (doc.content.meta.dossier) {
-    const dossiers = await findTemplates(
-      elastic,
-      'dossier',
-      doc.content.meta.dossier,
-    )
-
-    if (!resolved.meta) resolved.meta = {}
-    resolved.meta.dossier = dossiers.pop()
-  }
-
-  if (doc.content.meta.format) {
-    const formats = await findTemplates(
-      elastic,
-      'format',
-      doc.content.meta.format,
-    )
-
-    if (!resolved.meta) resolved.meta = {}
-    resolved.meta.format = formats.pop()
-  }
-
-  if (doc.content.meta.section) {
-    const sections = await findTemplates(
-      elastic,
-      'section',
-      doc.content.meta.section,
-    )
-
-    if (!resolved.meta) resolved.meta = {}
-    resolved.meta.section = sections.pop()
   }
 
   // publish to elasticsearch
@@ -425,6 +392,10 @@ module.exports = async (
     })
   }
 
+  if (!prepublication) {
+    await maybeUpsertAuphonic(repoId, { ...resolvedDoc, resolved }, context)
+  }
+
   // @TODO: Safe to remove, once repoChange is adopted
   await pubsub.publish('repoUpdate', {
     repoUpdate: {
@@ -442,8 +413,8 @@ module.exports = async (
   ]
   await purgeUrls(purgeQueries.map((q) => `/pdf${newPath}.pdf${q}`))
 
-  if (notifySubscribers && !prepublication && !scheduledAt) {
-    await notifyPublish(repoId, context)
+  if (!prepublication && !scheduledAt && notifyFilters) {
+    await notifyPublish(repoId, notifyFilters, context)
   }
 
   const publication = (

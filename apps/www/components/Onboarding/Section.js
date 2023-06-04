@@ -1,7 +1,6 @@
-import { Fragment } from 'react'
 import { css } from 'glamor'
+import { Fragment } from 'react'
 
-import { DoneIcon } from '@project-r/styleguide'
 import {
   Button,
   Loader,
@@ -9,6 +8,7 @@ import {
   useColorContext,
 } from '@project-r/styleguide'
 
+import { IconDone } from '@republik/icons'
 import withT from '../../lib/withT'
 
 export const SECTION_SPACE = 30
@@ -102,7 +102,7 @@ const Section = (props) => {
       >
         <div {...styles.heading}>{heading}</div>
         {(isTicked || isVisited) && (
-          <DoneIcon
+          <IconDone
             {...styles.doneIcon}
             {...colorScheme.set('color', 'primary')}
           />

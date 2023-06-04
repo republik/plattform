@@ -2,18 +2,6 @@ import { useState, Fragment } from 'react'
 import { css } from 'glamor'
 import compose from 'lodash/flowRight'
 import {
-  PdfIcon,
-  ReadingTimeIcon,
-  PlayCircleIcon,
-  PauseCircleIcon,
-  PlaylistAddIcon,
-  PlaylistRemoveIcon,
-  DownloadIcon,
-  PodcastIcon,
-  FontSizeIcon,
-  ShareIcon,
-  EditIcon,
-  EtiquetteIcon,
   IconButton,
   Interaction,
   shouldIgnoreClick,
@@ -38,11 +26,25 @@ import UserProgress from './UserProgress'
 import ShareButtons from './ShareButtons'
 import { useMe } from '../../lib/context/MeContext'
 import useAudioQueue from '../Audio/hooks/useAudioQueue'
-import AudioInfo from './AudioInfo'
+import AudioInfo from './Audio/Info'
 import {
   AudioPlayerLocations,
   AudioPlayerActions,
 } from '../Audio/types/AudioActionTracking'
+import {
+  IconDownload,
+  IconEdit,
+  IconEtiquette,
+  IconFontSize,
+  IconPdf,
+  IconPlayCircleOutline,
+  IconPlaylistAdd,
+  IconPlaylistRemove,
+  IconPodcast,
+  IconReadTime,
+  IconShare,
+  IconPauseCircleOutline,
+} from '@republik/icons'
 
 const RenderItems = ({ items }) => (
   <>
@@ -65,6 +67,7 @@ const ActionBar = ({
   discussion,
   fontSize,
   isCentered,
+  shareParam,
 }) => {
   const { me, meLoading, hasAccess, isEditor } = useMe()
   const [pdfOverlayVisible, setPdfOverlayVisible] = useState(false)
@@ -85,11 +88,11 @@ const ActionBar = ({
     return (
       <div {...styles.topRow} {...(isCentered && { ...styles.centered })}>
         {download && (
-          <IconButton href={download} Icon={DownloadIcon} target='_blank' />
+          <IconButton href={download} Icon={IconDownload} target='_blank' />
         )}
         {fontSize && (
           <IconButton
-            Icon={FontSizeIcon}
+            Icon={IconFontSize}
             onClick={(e) => {
               e.preventDefault()
               setFontSizeOverlayVisible(!fontSizeOverlayVisible)
@@ -104,7 +107,7 @@ const ActionBar = ({
               padded
             />
             <IconButton
-              Icon={EtiquetteIcon}
+              Icon={IconEtiquette}
               label={t('components/Discussion/etiquette')}
               labelShort={t('components/Discussion/etiquette')}
               href='/etikette'
@@ -114,7 +117,7 @@ const ActionBar = ({
         {share && (
           <IconButton
             label={share.label || ''}
-            Icon={ShareIcon}
+            Icon={IconShare}
             href={share.url}
             onClick={(e) => {
               e.preventDefault()
@@ -158,6 +161,11 @@ const ActionBar = ({
     ...document.meta,
     url: `${PUBLIC_BASE_URL}${document.meta.path}`,
   }
+
+  // if share query param is set, it also gets included in the share url
+  const shareUrlObj = new URL(meta.url)
+  if (shareParam) shareUrlObj.searchParams.set('share', shareParam)
+  const shareUrl = shareUrlObj.toString()
 
   const podcast =
     (meta && meta.podcast) ||
@@ -235,8 +243,6 @@ const ActionBar = ({
   const isActiveAudioItem = checkIfActivePlayerItem(document.id)
   const itemPlaying = isPlaying && isActiveAudioItem
   const itemInAudioQueue = checkIfInQueue(document.id)
-  const showAudioButtons =
-    !!meta.audioSource && meta.audioSource.kind !== 'syntheticReadAloud'
 
   const play = () => {
     toggleAudioPlayer(
@@ -254,12 +260,10 @@ const ActionBar = ({
     )
   }
 
-  const speakers = meta.contributors?.filter((c) => c.kind === 'voice')
-
   const ActionItems = [
     {
       title: readingTimeTitle,
-      Icon: ReadingTimeIcon,
+      Icon: IconReadTime,
       label: readingTimeLabel,
       labelShort: readingTimeLabelShort,
       modes: ['feed', 'seriesEpisode'],
@@ -286,7 +290,7 @@ const ActionBar = ({
     },
     {
       title: t('article/actionbar/pdf/options'),
-      Icon: PdfIcon,
+      Icon: IconPdf,
       href: hasPdf ? getPdfUrl(meta) : undefined,
       onClick: (e) => {
         if (shouldIgnoreClick(e)) {
@@ -300,7 +304,7 @@ const ActionBar = ({
     },
     {
       title: t('article/actionbar/fontSize/title'),
-      Icon: FontSizeIcon,
+      Icon: IconFontSize,
       href: meta.url,
       onClick: (e) => {
         e.preventDefault()
@@ -315,7 +319,18 @@ const ActionBar = ({
       element: (
         <SubscribeMenu
           discussionId={isDiscussion && meta.ownDiscussion?.id}
-          subscriptions={document?.subscribedBy?.nodes}
+          subscriptions={document?.subscribedBy?.nodes?.filter(
+            (subscription) =>
+              // keep all subscriptions onto Users objects
+              subscription?.object?.__typename === 'User' ||
+              // keep some subscriptions onto Documents objects …
+              (subscription?.object?.__typename === 'Document' &&
+                // … subscription object is not referring to current doc
+                (subscription?.object?.id !== document.id ||
+                  // … current doc is a format and subscription object referrs to current doc
+                  (meta.template === 'format' &&
+                    subscription?.object?.id === document.id))),
+          )}
           label={t('SubscribeMenu/title')}
           labelShort={isArticleBottom ? t('SubscribeMenu/title') : undefined}
           padded
@@ -360,17 +375,17 @@ const ActionBar = ({
     },
     {
       title: t('article/actionbar/share'),
-      Icon: ShareIcon,
-      href: meta.url,
+      Icon: IconShare,
+      href: shareUrl,
       onClick: (e) => {
         e.preventDefault()
-        trackEvent(['ActionBar', 'share', meta.url])
+        trackEvent(['ActionBar', 'share', shareUrl])
         if (inNativeApp) {
           postMessage({
             type: 'share',
             payload: {
               title: document.title,
-              url: meta.url,
+              url: shareUrl,
               subject: emailSubject,
               dialogTitle: t('article/share/title'),
             },
@@ -400,7 +415,7 @@ const ActionBar = ({
     },
     {
       title: readingTimeTitle,
-      Icon: ReadingTimeIcon,
+      Icon: IconReadTime,
       label: readingTimeLabel,
       labelShort: readingTimeLabelShort,
       show: showReadingTime,
@@ -448,7 +463,7 @@ const ActionBar = ({
       title: t('feed/actionbar/edit'),
       element: (
         <IconButton
-          Icon={EditIcon}
+          Icon={IconEdit}
           href={`${PUBLIKATOR_BASE_URL}/repo/${document?.repoId}/tree`}
           target='_blank'
           title={t('feed/actionbar/edit')}
@@ -461,14 +476,16 @@ const ActionBar = ({
     {
       title: t('article/actionbar/audio/play'),
       label: !forceShortLabel ? t('article/actionbar/audio/play') : '',
-      Icon: itemPlaying ? PauseCircleIcon : PlayCircleIcon,
+      Icon: itemPlaying ? IconPauseCircleOutline : IconPlayCircleOutline,
       onClick: !itemPlaying
         ? isActiveAudioItem
           ? toggleAudioPlayback
           : play
         : toggleAudioPlayback,
       modes: ['feed', 'seriesEpisode', 'articleTop'],
-      show: showAudioButtons,
+      show:
+        meta.audioSource?.mp3 &&
+        meta.audioSource?.kind !== 'syntheticReadAloud',
       group: 'audio',
     },
     {
@@ -480,7 +497,7 @@ const ActionBar = ({
             }`,
           )
         : '',
-      Icon: itemInAudioQueue ? PlaylistRemoveIcon : PlaylistAddIcon,
+      Icon: itemInAudioQueue ? IconPlaylistRemove : IconPlaylistAdd,
       onClick: async (e) => {
         e.preventDefault()
         if (itemInAudioQueue) {
@@ -500,12 +517,15 @@ const ActionBar = ({
         }
       },
       modes: ['feed', 'seriesEpisode', 'articleTop'],
-      show: isAudioQueueAvailable && showAudioButtons,
+      show:
+        isAudioQueueAvailable &&
+        meta.audioSource?.mp3 &&
+        meta.audioSource?.kind !== 'syntheticReadAloud',
       group: 'audio',
     },
     {
       title: t('PodcastButtons/title'),
-      Icon: PodcastIcon,
+      Icon: IconPodcast,
       onClick: (e) => {
         e.preventDefault()
         trackEvent(['ActionBar', 'podcasts', meta.url])
@@ -517,18 +537,10 @@ const ActionBar = ({
       group: mode === 'articleTop' ? 'audio' : undefined,
     },
     {
-      element: (
-        <AudioInfo
-          play={play}
-          showAudioButtons={showAudioButtons}
-          speakers={speakers}
-          willBeReadAloud={meta.willBeReadAloud}
-        />
-      ),
+      title: t('article/actionbar/audio/info/title'),
+      element: <AudioInfo document={document} handlePlay={play} />,
       modes: ['articleTop'],
-      show: ['readAloud', 'syntheticReadAloud'].includes(
-        meta.audioSource?.kind,
-      ),
+      show: true, // meta.audioSource || meta.willBeReadAloud,
       group: 'audio',
     },
   ]
@@ -600,7 +612,7 @@ const ActionBar = ({
               </Interaction.P>
             ) : null}
             <ShareButtons
-              url={meta.url}
+              url={shareUrl}
               title={document.title}
               tweet=''
               emailSubject={emailSubject}
@@ -624,7 +636,7 @@ const ActionBar = ({
       {shareOverlayVisible && (
         <ShareOverlay
           onClose={() => setShareOverlayVisible(false)}
-          url={meta.url}
+          url={shareUrl}
           title={t('article/actionbar/share')}
           tweet={''}
           emailSubject={emailSubject}

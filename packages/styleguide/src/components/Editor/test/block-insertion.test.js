@@ -5,6 +5,7 @@ import schema from '../schema/article'
 import flyerSchema from '../schema/flyer'
 import mockEditor from './mockEditor'
 import { figure, flyerTile, flyerTileMeta, paragraph } from './blocks'
+import { act } from '@testing-library/react'
 
 describe('Slate Editor: Block Insertion (On Enter)', () => {
   window.document.getSelection = jest.fn()
@@ -13,13 +14,15 @@ describe('Slate Editor: Block Insertion (On Enter)', () => {
 
   const defaultConfig = { schema }
 
-  async function setup(structure, config = defaultConfig) {
-    return await mockEditor(createEditor(), {
-      structure,
-      config,
-      value,
-      setValue: (val) => (value = val),
-    })
+  async function setup(config) {
+    return act(
+      async () =>
+        await mockEditor(createEditor(), {
+          config,
+          value,
+          setValue: (val) => (value = val),
+        }),
+    )
   }
 
   it('should create a new element of the same type if possible (repeatable)', async () => {
@@ -35,10 +38,11 @@ describe('Slate Editor: Block Insertion (On Enter)', () => {
         repeat: true,
       },
     ]
-    const editor = await setup(structure)
-    await Transforms.select(editor, { path: [0, 0], offset: 5 })
-    insertRepeat(editor)
-    await new Promise(process.nextTick)
+    const editor = await setup({ ...defaultConfig, structure })
+    await act(async () => {
+      await Transforms.select(editor, { path: [0, 0], offset: 5 })
+      await insertRepeat(editor)
+    })
     expect(cleanupTree(value)).toEqual([
       {
         type: 'paragraph',
@@ -75,10 +79,11 @@ describe('Slate Editor: Block Insertion (On Enter)', () => {
         repeat: true,
       },
     ]
-    const editor = await setup(structure)
-    await Transforms.select(editor, { path: [0, 2], offset: 22 })
-    insertRepeat(editor)
-    await new Promise(process.nextTick)
+    const editor = await setup({ ...defaultConfig, structure })
+    await act(async () => {
+      await Transforms.select(editor, { path: [0, 2], offset: 22 })
+      await insertRepeat(editor)
+    })
     expect(cleanupTree(value)).toEqual([
       {
         type: 'paragraph',
@@ -125,10 +130,11 @@ describe('Slate Editor: Block Insertion (On Enter)', () => {
         repeat: true,
       },
     ]
-    const editor = await setup(structure)
-    await Transforms.select(editor, { path: [0, 1, 0], offset: 4 })
-    insertRepeat(editor)
-    await new Promise(process.nextTick)
+    const editor = await setup({ ...defaultConfig, structure })
+    await act(async () => {
+      await Transforms.select(editor, { path: [0, 1, 0], offset: 4 })
+      await insertRepeat(editor)
+    })
     expect(cleanupTree(value)).toEqual([
       {
         type: 'paragraph',
@@ -172,10 +178,11 @@ describe('Slate Editor: Block Insertion (On Enter)', () => {
         type: 'paragraph',
       },
     ]
-    const editor = await setup(structure)
-    await Transforms.select(editor, { path: [0, 0], offset: 5 })
-    insertRepeat(editor)
-    await new Promise(process.nextTick)
+    const editor = await setup({ ...defaultConfig, structure })
+    await act(async () => {
+      await Transforms.select(editor, { path: [0, 0], offset: 5 })
+      await insertRepeat(editor)
+    })
     expect(cleanupTree(value)).toEqual([
       {
         type: 'paragraph',
@@ -205,10 +212,11 @@ describe('Slate Editor: Block Insertion (On Enter)', () => {
         repeat: true,
       },
     ]
-    const editor = await setup(structure)
-    await Transforms.select(editor, { path: [0, 0], offset: 5 })
-    insertRepeat(editor)
-    await new Promise(process.nextTick)
+    const editor = await setup({ ...defaultConfig, structure })
+    await act(async () => {
+      await Transforms.select(editor, { path: [0, 0], offset: 5 })
+      await insertRepeat(editor)
+    })
     expect(cleanupTree(value)).toEqual([
       {
         type: 'headline',
@@ -246,10 +254,11 @@ describe('Slate Editor: Block Insertion (On Enter)', () => {
         repeat: true,
       },
     ]
-    const editor = await setup(structure)
-    await Transforms.select(editor, { path: [0, 0], offset: 10 })
-    insertRepeat(editor)
-    await new Promise(process.nextTick)
+    const editor = await setup({ ...defaultConfig, structure })
+    await act(async () => {
+      await Transforms.select(editor, { path: [0, 0], offset: 10 })
+      await insertRepeat(editor)
+    })
     expect(cleanupTree(value)).toEqual([
       {
         type: 'headline',
@@ -287,13 +296,14 @@ describe('Slate Editor: Block Insertion (On Enter)', () => {
         repeat: true,
       },
     ]
-    const editor = await setup(structure)
-    await Transforms.select(editor, {
-      anchor: { path: [0, 0], offset: 6 },
-      focus: { path: [0, 0], offset: 10 },
+    const editor = await setup({ ...defaultConfig, structure })
+    await act(async () => {
+      await Transforms.select(editor, {
+        anchor: { path: [0, 0], offset: 6 },
+        focus: { path: [0, 0], offset: 10 },
+      })
+      await insertRepeat(editor)
     })
-    insertRepeat(editor)
-    await new Promise(process.nextTick)
     expect(cleanupTree(value)).toEqual([
       {
         type: 'headline',
@@ -336,13 +346,14 @@ describe('Slate Editor: Block Insertion (On Enter)', () => {
         repeat: true,
       },
     ]
-    const editor = await setup(structure)
-    await Transforms.select(editor, {
-      focus: { path: [0, 0], offset: 5 },
-      anchor: { path: [1, 0], offset: 6 },
+    const editor = await setup({ ...defaultConfig, structure })
+    await act(async () => {
+      await Transforms.select(editor, {
+        focus: { path: [0, 0], offset: 5 },
+        anchor: { path: [1, 0], offset: 6 },
+      })
+      await insertRepeat(editor)
     })
-    insertRepeat(editor)
-    await new Promise(process.nextTick)
     expect(cleanupTree(value)).toEqual([
       {
         type: 'headline',
@@ -389,10 +400,11 @@ describe('Slate Editor: Block Insertion (On Enter)', () => {
         repeat: true,
       },
     ]
-    const editor = await setup(structure)
-    await Transforms.select(editor, { path: [0, 1, 1, 0], offset: 6 })
-    insertRepeat(editor)
-    await new Promise(process.nextTick)
+    const editor = await setup({ ...defaultConfig, structure })
+    await act(async () => {
+      await Transforms.select(editor, { path: [0, 1, 1, 0], offset: 6 })
+      await insertRepeat(editor)
+    })
     expect(cleanupTree(value)).toEqual([
       {
         type: 'figure',
@@ -440,10 +452,11 @@ describe('Slate Editor: Block Insertion (On Enter)', () => {
         repeat: true,
       },
     ]
-    const editor = await setup(structure)
-    await Transforms.select(editor, { path: [0, 0, 0], offset: 3 })
-    insertRepeat(editor)
-    await new Promise(process.nextTick)
+    const editor = await setup({ ...defaultConfig, structure })
+    await act(async () => {
+      await Transforms.select(editor, { path: [0, 0, 0], offset: 3 })
+      await insertRepeat(editor)
+    })
     expect(cleanupTree(value)).toEqual([
       {
         type: 'ul',
@@ -492,10 +505,11 @@ describe('Slate Editor: Block Insertion (On Enter)', () => {
         repeat: true,
       },
     ]
-    const editor = await setup(structure)
-    await Transforms.select(editor, { path: [0, 1, 0], offset: 0 })
-    insertRepeat(editor)
-    await new Promise(process.nextTick)
+    const editor = await setup({ ...defaultConfig, structure })
+    await act(async () => {
+      await Transforms.select(editor, { path: [0, 1, 0], offset: 0 })
+      await insertRepeat(editor)
+    })
     expect(cleanupTree(value)).toEqual([
       {
         type: 'blockQuote',
@@ -540,10 +554,11 @@ describe('Slate Editor: Block Insertion (On Enter)', () => {
         repeat: true,
       },
     ]
-    const editor = await setup(structure)
-    await Transforms.select(editor, { path: [0, 1, 0], offset: 0 })
-    insertRepeat(editor)
-    await new Promise(process.nextTick)
+    const editor = await setup({ ...defaultConfig, structure })
+    await act(async () => {
+      await Transforms.select(editor, { path: [0, 1, 0], offset: 0 })
+      await insertRepeat(editor)
+    })
     expect(cleanupTree(value)).toEqual([
       {
         type: 'ol',
@@ -596,10 +611,11 @@ describe('Slate Editor: Block Insertion (On Enter)', () => {
         type: 'flyerTile',
       },
     ]
-    const editor = await setup(structure)
-    await Transforms.select(editor, [0, 1, 0])
-    insertRepeat(editor)
-    await new Promise(process.nextTick)
+    const editor = await setup({ ...defaultConfig, structure })
+    await act(async () => {
+      await Transforms.select(editor, [0, 1, 0])
+      await insertRepeat(editor)
+    })
     expect(cleanupTree(value)).toMatchObject([flyerTileMeta, flyerTile])
     expect(editor.selection.focus.path).toEqual([1, 0, 0])
   })
@@ -639,10 +655,13 @@ describe('Slate Editor: Block Insertion (On Enter)', () => {
         repeat: true,
       },
     ]
-    const editor = await setup(structure, { schema: flyerSchema })
-    await Transforms.select(editor, [0, 1, 0])
-    insertRepeat(editor)
-    await new Promise(process.nextTick)
+    const editor = await act(async () =>
+      setup({ schema: flyerSchema, structure }),
+    )
+    await act(async () => {
+      await Transforms.select(editor, [0, 1, 0])
+      await insertRepeat(editor)
+    })
     expect(cleanupTree(value)).toMatchObject([
       flyerTileMeta,
       flyerTile,
@@ -677,10 +696,11 @@ describe('Slate Editor: Block Insertion (On Enter)', () => {
         repeat: true,
       },
     ]
-    const editor = await setup(structure)
-    await Transforms.select(editor, { path: [0, 1, 0], offset: 0 })
-    insertRepeat(editor)
-    await new Promise(process.nextTick)
+    const editor = await setup({ ...defaultConfig, structure })
+    await act(async () => {
+      await Transforms.select(editor, { path: [0, 1, 0], offset: 0 })
+      await insertRepeat(editor)
+    })
     expect(cleanupTree(value)).toEqual([
       {
         type: 'ol',
@@ -715,11 +735,12 @@ describe('Slate Editor: Block Insertion (On Enter)', () => {
         repeat: true,
       },
     ]
-    const editor = await setup(structure)
-    // select figure caption
-    await Transforms.select(editor, { path: [0, 1, 0], offset: 0 })
-    insertRepeat(editor)
-    await new Promise(process.nextTick)
+    const editor = await setup({ ...defaultConfig, structure })
+    await act(async () => {
+      // select figure caption
+      await Transforms.select(editor, { path: [0, 1, 0], offset: 0 })
+      await insertRepeat(editor)
+    })
     expect(cleanupTree(value)).toEqual([figure])
     // jump to figure byline
     expect(editor.selection.focus.path).toEqual([0, 1, 1, 0])
@@ -733,10 +754,11 @@ describe('Slate Editor: Block Insertion (On Enter)', () => {
         repeat: true,
       },
     ]
-    const editor = await setup(structure)
-    await Transforms.select(editor, { path: [0, 1, 2], offset: 0 })
-    insertRepeat(editor)
-    await new Promise(process.nextTick)
+    const editor = await setup({ ...defaultConfig, structure })
+    await act(async () => {
+      await Transforms.select(editor, { path: [0, 1, 2], offset: 0 })
+      await insertRepeat(editor)
+    })
     expect(cleanupTree(value)).toEqual([figure, paragraph])
     expect(editor.selection.focus).toEqual({ path: [1, 0], offset: 0 })
   })
@@ -749,10 +771,13 @@ describe('Slate Editor: Block Insertion (On Enter)', () => {
         repeat: true,
       },
     ]
-    const editor = await setup(structure, { schema: flyerSchema })
-    await Transforms.select(editor, { path: [0, 5, 0], offset: 0 })
-    insertRepeat(editor)
-    await new Promise(process.nextTick)
+    const editor = await act(async () =>
+      setup({ schema: flyerSchema, structure }),
+    )
+    await act(async () => {
+      await Transforms.select(editor, { path: [0, 5, 0], offset: 0 })
+      await insertRepeat(editor)
+    })
     expect(cleanupTree(value)[1].id).toBeDefined()
   })
 })

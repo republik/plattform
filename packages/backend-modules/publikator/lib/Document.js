@@ -1,17 +1,13 @@
 const visit = require('unist-util-visit')
 const debug = require('debug')('publikator:lib:Document')
 const mp3Duration = require('@rocka/mp3-duration')
-const fetch = require('isomorphic-unfetch')
 const Promise = require('bluebird')
 
 const { timeFormat } = require('@orbiting/backend-modules-formats')
 const {
   Redirections: { upsert: upsertRedirection },
 } = require('@orbiting/backend-modules-redirections')
-const {
-  getMeta,
-  getContributorUserLinks,
-} = require('@orbiting/backend-modules-documents/lib/meta')
+const { getMeta } = require('@orbiting/backend-modules-documents/lib/meta')
 
 const { upsert: upsertDiscussion } = require('./Discussion')
 const { updateRepo } = require('./postgres')
@@ -69,7 +65,6 @@ const prepareMetaForPublish = async ({
   scheduledAt,
   lastPublishedAt,
   prepublication,
-  notifySubscribers,
   doc,
   now = new Date(),
   context,
@@ -111,7 +106,8 @@ const prepareMetaForPublish = async ({
   if (audioSourceMp3 && !SUPPRESS_AUDIO_DURATION_MEASURE) {
     debug(repoId, 'fetching audio source', audioSourceMp3)
     durationMs = await fetch(audioSourceMp3)
-      .then((res) => res.buffer())
+      .then((res) => res.arrayBuffer())
+      .then((res) => Buffer.from(res))
       .then((res) => mp3Duration(res))
       .then((res) => res * 1000)
       .then(Math.round)
@@ -171,16 +167,7 @@ const prepareMetaForPublish = async ({
   }
 
   await getMeta(doc)
-  const { credits, creditsString } = doc._meta
-
-  const contributorUserLinks = await getContributorUserLinks(
-    doc.type,
-    {
-      path,
-      credits,
-    },
-    context,
-  )
+  const { credits, creditsString, contributors } = doc._meta
 
   // transform docMeta
   return {
@@ -194,11 +181,10 @@ const prepareMetaForPublish = async ({
     lastPublishedAt: lastPublishedAt || now,
     prepublication,
     scheduledAt,
-    notifySubscribers,
     audioSource,
     credits,
     creditsString,
-    contributorUserLinks,
+    contributors,
     isSeriesMaster,
     isSeriesEpisode,
     seriesEpisodes,

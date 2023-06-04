@@ -15,17 +15,20 @@ const getMeta = async (args, context) => {
   const { granter, campaign } = args
   const { pgdb } = context
 
-  const hasGrants = await pgdb.query(`
+  const hasGrants = await pgdb.query(
+    `
     SELECT "accessGrants".id
 
     FROM "accessGrants"
 
     WHERE
-      "accessGrants"."accessCampaignId" = '${campaign.id}'
-      AND "accessGrants"."granterUserId" = '${granter.id}'
+      "accessGrants"."accessCampaignId" = :campaignId
+      AND "accessGrants"."granterUserId" = :granterId
       AND "accessGrants"."revokedAt" IS NULL
       AND "accessGrants"."invalidatedAt" IS NULL
-  `)
+  `,
+    { campaignId: campaign.id, granterId: granter.id },
+  )
 
   const meta = {
     visible: hasGrants.length > 0,

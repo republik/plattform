@@ -1,6 +1,7 @@
-import React from 'react'
+import React, { ReactNode } from 'react'
 
 export const Break: React.FC<{
+  children?: ReactNode
   attributes: any
   [x: string]: unknown
 }> = ({ children, attributes, ...props }) => (

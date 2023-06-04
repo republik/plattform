@@ -52,7 +52,11 @@ const Subscriptions = (props) => {
       <P {...styles.p}>{t('Onboarding/Sections/Subscriptions/preamble')}</P>
       <div style={{ margin: '20px 0' }}>
         {formats.map((format, i) => (
-          <SubscribeCheckbox subscription={format.subscribedByMe} key={i} />
+          <SubscribeCheckbox
+            key={i}
+            subscription={format.subscribedByMe}
+            filterName='Document'
+          />
         ))}
       </div>
       <P {...styles.p}>

@@ -2,7 +2,7 @@
   "name": "@orbiting/api-app",
   "version": "0.0.1",
   "engines": {
-    "node": "^16.0.0"
+    "node": "^18.0.0"
   },
   "private": true,
   "license": "AGPL-3.0",
@@ -13,6 +13,7 @@
     "@orbiting/backend-modules-base": "*",
     "@orbiting/backend-modules-base64u": "*",
     "@orbiting/backend-modules-calendar": "*",
+    "@orbiting/backend-modules-call-to-actions": "*",
     "@orbiting/backend-modules-cards": "*",
     "@orbiting/backend-modules-collections": "*",
     "@orbiting/backend-modules-databroom": "*",
@@ -50,13 +51,12 @@
     "d3-array": "^2.4.0",
     "d3-dsv": "^1.2.0",
     "d3-time": "^1.0.8",
-    "dayjs": "^1.11.6",
+    "dayjs": "^1.11.7",
     "debug": "^4.1.1",
     "emojione_minimal": "^2.1.2",
     "graphql": "^15.3.0",
     "graphql-fields": "^2.0.3",
     "is-uuid": "^1.0.2",
-    "isomorphic-unfetch": "^3.0.0",
     "lodash": "^4.17.19",
     "moment": "^2.26.0",
     "openpgp": "^4.10.4",

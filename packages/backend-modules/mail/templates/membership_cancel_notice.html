@@ -43,13 +43,10 @@
                   <td style="padding: 20px">
                     <p>Guten Tag</p>
                     <p>
-                    {{#if membership_active}}
-                      Wir haben Ihre Kündigung erfasst. Ihr Abonnement läuft noch
-                      bis zum {{end_date}} und wird nicht erneuert.
-                    {{else}}
-                      Wir haben Ihre Kündigung erfasst und Ihr Abonnement
-                      deaktiviert.
-                    {{/if}}
+                      {{#if membership_active}} Wir haben Ihre Kündigung
+                      erfasst. Ihr Abonnement läuft noch bis zum {{end_date}}
+                      und wird nicht erneuert. {{else}} Wir haben Ihre Kündigung
+                      erfasst und Ihr Abonnement deaktiviert. {{/if}}
                     </p>
                     <p>
                       Herzlichen Dank für Ihr Interesse und Ihre Unterstützung
@@ -57,12 +54,13 @@
                     </p>
                     {{#if reason_given}}
                     <p>
-                      Auch für Ihre Kündigungs­begründung, aus der wir lernen
+                      Auch für Ihre Kündigungsbegründung, aus der wir lernen
                       können.
                     </p>
                     {{/if}}
                     <p>
-                      Wir würden uns sehr freuen, wenn Sie zu einem späteren
+                      Bekanntlich sieht man sich immer zweimal im Leben. Wir
+                      würden uns sehr freuen, wenn Sie zu einem späteren
                       Zeitpunkt wieder bei uns vorbeischauten. Sie sind
                       jederzeit willkommen.
                     </p>

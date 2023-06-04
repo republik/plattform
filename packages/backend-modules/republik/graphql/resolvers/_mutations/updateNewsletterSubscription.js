@@ -1,8 +1,11 @@
+const validator = require('validator')
+
 const {
   Roles,
   Users: { upsertUserAndConsents },
   Consents: { saveConsents, revokeConsent },
 } = require('@orbiting/backend-modules-auth')
+
 const { authenticate } = require('../../../lib/Newsletter')
 
 // this endpoint is called for two distinct situations
@@ -33,6 +36,10 @@ module.exports = async (_, args, context) => {
   // if email and mac is set and correct, the user is upserted (used for newsletter signup)
   let user
   if (email) {
+    if (!validator.isEmail(email)) {
+      throw new Error(t('api/email/invalid'))
+    }
+
     if (mac && mac === authenticate(email, name, subscribed, t)) {
       ;({ user } = await upsertUserAndConsents({
         pgdb,

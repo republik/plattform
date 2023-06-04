@@ -3,12 +3,9 @@ import { ReportCommentHandler } from '../hooks/actions/useReportCommentHandler'
 import { UnpublishCommentHandler } from '../hooks/actions/useUnpublishCommentHandler'
 import { Dispatch, SetStateAction } from 'react'
 import {
-  EditIcon,
-  FeaturedIcon,
-  ReportIcon,
-  UnpublishIcon,
 } from '@project-r/styleguide'
 import { timeFormat } from 'd3-time-format'
+import { IconEdit, IconFeatured, IconReport, IconUnpublish } from '@republik/icons'
 
 const dateFormat = timeFormat('%d.%m.%Y')
 const hmFormat = timeFormat('%H:%M')
@@ -45,7 +42,7 @@ function getCommentActions({
       ? checkIfAlreadyReported(comment.id)
       : false
     items.push({
-      icon: ReportIcon,
+      icon: IconReport,
       label:
         comment.numReports && comment.numReports > 0
           ? t('styleguide/CommentActions/reportWithAmount', {
@@ -70,7 +67,7 @@ function getCommentActions({
     comment.published
   ) {
     items.push({
-      icon: FeaturedIcon,
+      icon: IconFeatured,
       label: comment.featuredAt
         ? t('styleguide/CommentActions/featured', {
             date: dateFormat(new Date(comment.featuredAt)),
@@ -83,9 +80,9 @@ function getCommentActions({
     })
   }
 
-  if (setEditMode && comment.userCanEdit && !comment.adminUnpublished) {
+  if (setEditMode && comment.userCanEdit) {
     items.push({
-      icon: EditIcon,
+      icon: IconEdit,
       label: t('styleguide/CommentActions/edit'),
       onClick: () => setEditMode(true),
     })
@@ -100,7 +97,7 @@ function getCommentActions({
     (canUnpublish || comment.userCanEdit)
   ) {
     items.push({
-      icon: UnpublishIcon,
+      icon: IconUnpublish,
       label: t('styleguide/CommentActions/unpublish'),
       onClick: async () => {
         const message = t(

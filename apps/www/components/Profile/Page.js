@@ -4,7 +4,7 @@ import { graphql } from '@apollo/client/react/hoc'
 import { gql } from '@apollo/client'
 import { css } from 'glamor'
 import { withRouter } from 'next/router'
-
+import { IconButton } from '@project-r/styleguide'
 import withT, { t } from '../../lib/withT'
 import withMe from '../../lib/apollo/withMe'
 
@@ -43,6 +43,8 @@ import ElectionBallotRow from '../Vote/ElectionBallotRow'
 import { documentListQueryFragment } from '../Feed/DocumentListContainer'
 import Link from 'next/link'
 import { InnerPaynote } from '../Article/PayNote'
+import { useReportUserMutation } from './graphql/useReportUserMutation'
+import { IconReport } from '@republik/icons'
 
 const SIDEBAR_TOP = 20
 const PORTRAIT_SIZE_M = TESTIMONIAL_IMAGE_SIZE
@@ -117,6 +119,12 @@ const styles = {
     display: 'flex',
     float: 'right',
     verticalAlign: 'middle',
+  }),
+  headInfoReportButton: css({
+    marginLeft: 12,
+    [mediaQueries.mUp]: {
+      marginLeft: 24,
+    },
   }),
   badges: css({
     margin: '20px 0 30px 0',
@@ -322,6 +330,7 @@ const LoadedProfile = (props) => {
   const currentRef = useRef({})
   currentRef.current.headerHeight = headerHeight
   currentRef.current.layout = layout
+  const [reportUserMutation] = useReportUserMutation()
 
   useEffect(() => {
     const onScroll = () => {
@@ -371,6 +380,41 @@ const LoadedProfile = (props) => {
       window.removeEventListener('resize', measure)
     }
   }, [])
+
+  const reportUser = async () => {
+    const reportReason = window.prompt(t('profile/report/confirm'))
+    if (reportReason === null) {
+      return
+    }
+    if (reportReason.length === 0) {
+      alert(t('profile/report/provideReason'))
+      return
+    }
+    const maxLength = 500
+    if (reportReason.length > maxLength) {
+      alert(
+        t('profile/report/tooLong', {
+          max: maxLength,
+          input: reportReason.slice(0, maxLength) + '…',
+          br: '\n',
+        }),
+      )
+      return
+    }
+
+    try {
+      await reportUserMutation({
+        variables: {
+          userId: user.id,
+          reason: reportReason,
+        },
+      })
+      alert(t('profile/report/success'))
+    } catch (e) {
+      console.warn(e)
+      alert(t('profile/report/error'))
+    }
+  }
 
   const {
     t,
@@ -463,6 +507,16 @@ const LoadedProfile = (props) => {
             {!!user.hasPublicProfile && (
               <span {...styles.headInfoShare}>
                 <ActionBar share={shareObject} download={metaData.image} />
+                {!isMe && (
+                  <div {...styles.headInfoReportButton}>
+                    <IconButton
+                      Icon={IconReport}
+                      title={t('profile/report/label')}
+                      onClick={() => reportUser(user.id)}
+                      style={{ margin: 0 }}
+                    />
+                  </div>
+                )}
               </span>
             )}
             {!!user.sequenceNumber && (
@@ -533,8 +587,15 @@ const LoadedProfile = (props) => {
                   dirty={dirty}
                   showSupportLink
                 />
-                {!!me && user.subscribedByMe && user.id !== me.id && (
-                  <div style={{ marginTop: 16 }}>
+                <div
+                  style={{
+                    marginTop: 16,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: 8,
+                  }}
+                >
+                  {!!me && user.subscribedByMe && user.id !== me.id && (
                     <SubscribeMenu
                       label={t('SubscribeMenu/title')}
                       labelShort={t('SubscribeMenu/title')}
@@ -542,8 +603,8 @@ const LoadedProfile = (props) => {
                       userHasNoDocuments={!user.documents.totalCount}
                       subscriptions={[user.subscribedByMe]}
                     />
-                  </div>
-                )}
+                  )}
+                </div>
               </div>
             </div>
           </div>

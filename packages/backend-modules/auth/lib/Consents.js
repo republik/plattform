@@ -18,7 +18,11 @@ const POLICIES = [
 ]
 */
 
-const REVOKABLE_POLICIES = ['PROGRESS']
+const REVOKABLE_POLICIES = [
+  'PROGRESS',
+  '5YEAR_DONATE_MONTHS',
+  'PROLITTERIS_OPT_OUT',
+]
 
 const getAllConsentRecords = ({ userId, pgdb }) =>
   pgdb.public.consents.find(
@@ -34,8 +38,8 @@ const getAllConsentRecords = ({ userId, pgdb }) =>
 const consentsOfUser = async ({ userId, pgdb }) => {
   const consents = await getAllConsentRecords({ userId, pgdb })
 
-  let grantedPolicies = {}
-  for (let consent of consents) {
+  const grantedPolicies = {}
+  for (const consent of consents) {
     if (consent.record === 'GRANT') {
       grantedPolicies[consent.policy] = true
     } else {
@@ -119,7 +123,7 @@ const revokeConsent = async ({ userId, consent }, context) => {
     ip: req.ip,
     record: 'REVOKE',
   })
-  for (let hook of revokeHooks) {
+  for (const hook of revokeHooks) {
     await hook({ userId, consent }, context)
   }
 }

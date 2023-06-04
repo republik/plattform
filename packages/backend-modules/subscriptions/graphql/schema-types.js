@@ -3,6 +3,7 @@ module.exports = `
 enum EventObjectType {
   Comment
   Document
+  ReadAloud
 }
 union EventObject = Comment | Document
 
@@ -46,6 +47,7 @@ extend type Document {
     last: Int
     before: String
     after: String
+    filters: [EventObjectType!]
     includeParents: Boolean
     onlyEligibles: Boolean
     uniqueUsers: Boolean
@@ -72,6 +74,10 @@ extend type Discussion {
     before: String
     after: String
   ): SubscriptionConnection!
+}
+
+extend input PublishSettings {
+  notifyFilters: [EventObjectType!]
 }
 
 type Subscription {

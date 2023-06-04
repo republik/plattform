@@ -1,18 +1,18 @@
 import { Fragment, useMemo, useEffect, useState } from 'react'
 import { css } from 'glamor'
+import { renderMdast } from 'mdast-react-render'
+import Head from 'next/head'
+import Link from 'next/link'
+import { useRouter } from 'next/router'
+
 import {
   colors,
   Editorial,
   InlineSpinner,
   Interaction,
-  PlayCircleIcon,
-  PauseCircleIcon,
-  plainButtonRule,
+  createFrontSchema,
 } from '@project-r/styleguide'
 import StatusError from '../StatusError'
-import Head from 'next/head'
-import { createFrontSchema } from '@project-r/styleguide'
-import { CheckCircleIcon } from '@project-r/styleguide'
 
 import { useTranslation } from '../../lib/withT'
 import Loader from '../Loader'
@@ -23,22 +23,17 @@ import CommentLink from '../Discussion/shared/CommentLink'
 import DiscussionLink from '../Discussion/shared/DiscussionLink'
 import ActionBar from '../ActionBar'
 
-import { renderMdast } from 'mdast-react-render'
-
 import { PUBLIC_BASE_URL } from '../../lib/constants'
-
+import { useMe } from '../../lib/context/MeContext'
 import { useInfiniteScroll } from '../../lib/hooks/useInfiniteScroll'
 import { intersperse } from '../../lib/utils/helpers'
-import * as withData from './withData'
 import { cleanAsPath } from '../../lib/utils/link'
-import Link from 'next/link'
 import { useGetFrontQuery } from './graphql/getFrontQuery.graphql'
-import { useRouter } from 'next/router'
-import { useMe } from '../../lib/context/MeContext'
-import { useAudioContext } from '../Audio/AudioProvider'
 import useAudioQueue from '../Audio/hooks/useAudioQueue'
-import { AudioPlayerLocations } from '../Audio/types/AudioActionTracking'
-import FrontAudioPlayButton from './FrontAudioPlayButton'
+import TeaserAudioPlayButton from '../Audio/shared/TeaserAudioPlayButton'
+import ClimateLabTeaser from '../Climatelab/FrontTeaser/ClimateLabTeaser'
+import * as withData from './withData'
+import { IconCheckCircle } from '@republik/icons'
 
 const styles = {
   prepublicationNotice: css({
@@ -67,11 +62,12 @@ export const RenderFront = ({ front, nodes, isFrontExtract = false }) => {
     () =>
       createFrontSchema({
         Link: HrefLink,
-        AudioPlayButton: showPlayButton ? FrontAudioPlayButton : undefined,
+        AudioPlayButton: showPlayButton ? TeaserAudioPlayButton : undefined,
         CommentLink,
         DiscussionLink,
         ...withData,
         ActionBar,
+        ClimateLabTeaser,
         t,
       }),
     [],
@@ -233,7 +229,7 @@ const Front = ({
             <div {...styles.more}>
               {finite && (
                 <div style={{ marginBottom: 10 }}>
-                  <CheckCircleIcon size={32} style={{ marginBottom: 10 }} />
+                  <IconCheckCircle size={32} style={{ marginBottom: 10 }} />
                   <br />
                   {t('front/finite')}
                   <br />

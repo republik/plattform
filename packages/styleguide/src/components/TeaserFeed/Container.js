@@ -4,10 +4,10 @@ import { css } from 'glamor'
 import { mUp } from '../../theme/mediaQueries'
 import { Format } from './Format'
 import CalloutMenu from '../Callout/CalloutMenu'
-import { MoreIcon } from '../Icons'
 import { useColorContext } from '../Colors/useColorContext'
 import IconButton from '../IconButton'
 import { getFormatLine } from './utils'
+import { IconMoreVertical } from '@republik/icons'
 
 const styles = {
   main: css({
@@ -33,7 +33,7 @@ const styles = {
 }
 
 const MoreIconWithProps = (props) => (
-  <IconButton title='Mehr' Icon={MoreIcon} {...props} />
+  <IconButton title='Mehr' Icon={IconMoreVertical} {...props} />
 )
 
 const Teaser = ({

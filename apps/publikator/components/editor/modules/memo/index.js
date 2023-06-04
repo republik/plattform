@@ -1,36 +1,21 @@
 import { useState, useEffect } from 'react'
 import compose from 'lodash/flowRight'
-import { css } from 'glamor'
 import MarkdownSerializer from 'slate-mdast-serializer'
-import MemoIcon from 'react-icons/lib/md/rate-review'
-import RemoveIcon from 'react-icons/lib/md/delete'
-import { Editorial, Interaction } from '@project-r/styleguide'
 import {
+  Editorial,
   Overlay,
   OverlayToolbar,
   OverlayBody,
-  IconButton,
 } from '@project-r/styleguide'
+
+import { MemoForm, Marker } from '@project-r/styleguide/editor'
 
 import withT from '../../../../lib/withT'
 import { matchInline, createInlineButton, buttonStyles } from '../../utils'
 import { getRepoIdFromQuery } from '../../../../lib/repoIdHelper'
 
-import standard, * as markers from './Markers'
-import MemoTree from './MemoTree'
 import { withRouter } from 'next/router'
-
-const styles = {
-  tooling: css({
-    display: 'flex',
-    alignItems: 'center',
-    paddingBottom: 40,
-  }),
-}
-
-const getMarker = (name) => {
-  return markers[name] || standard
-}
+import { IconMemo } from '@republik/icons'
 
 const Memo = compose(
   withT,
@@ -45,11 +30,6 @@ const Memo = compose(
   useEffect(() => {
     !node.data.get('noOpen') && open()
   }, [])
-
-  const pickMarker = (name) => (e) => {
-    e?.preventDefault()
-    setMarker(name)
-  }
 
   const open = (e) => {
     e?.preventDefault()
@@ -70,23 +50,8 @@ const Memo = compose(
     })
   }
 
-  const remove = (e) => {
-    e?.preventDefault()
-    editor.change((change) => {
-      change.unwrapInline(node.type)
-    })
-  }
-
-  const onPublished = (memo) => {
-    const isRoot = !memo.parentIds.length
-    if (isRoot) {
-      setParentId(memo.id)
-    }
-  }
-
   const { commitId } = router.query
   const repoId = getRepoIdFromQuery(router.query)
-  const { Marker } = getMarker(marker)
 
   return (
     <>
@@ -94,42 +59,29 @@ const Memo = compose(
         <Overlay mUpStyle={{ maxWidth: 720, minHeight: 0 }} onClose={close}>
           <OverlayToolbar title='Memo' onClose={close} />
           <OverlayBody>
-            <Editorial.P attributes={{ style: { marginBottom: 20 } }}>
-              <Marker>{children}</Marker>
-            </Editorial.P>
-            <div {...styles.tooling}>
-              {Object.keys(markers)
-                .filter((name) => name !== 'default')
-                .map((name) => {
-                  const { Picker } = getMarker(name)
-                  return (
-                    <Picker
-                      key={`marker-${name}`}
-                      isSelected={marker === name}
-                      onClick={pickMarker(name)}
-                    />
-                  )
-                })}
-              <div style={{ flexGrow: 1 }} />
-              <IconButton
-                label={t('memo/modal/remove')}
-                Icon={RemoveIcon}
-                onClick={remove}
-              />
-            </div>
-            {commitId !== 'new' ? (
-              <MemoTree
-                repoId={repoId}
-                parentId={parentId}
-                onPublished={onPublished}
-              />
-            ) : (
-              <Interaction.P>{t('memo/modal/warning/newDoc')}</Interaction.P>
-            )}
+            <MemoForm
+              t={t}
+              repoId={repoId}
+              commitId={commitId}
+              parentId={parentId}
+              setParentId={setParentId}
+              marker={marker}
+              setMarker={setMarker}
+              deleteMemo={() =>
+                editor.change((change) => {
+                  change.unwrapInline(node.type)
+                })
+              }
+              MarkedSection={
+                <Editorial.P attributes={{ style: { marginBottom: 20 } }}>
+                  <Marker marker={marker}>{children}</Marker>
+                </Editorial.P>
+              }
+            />
           </OverlayBody>
         </Overlay>
       )}
-      <Marker isSelected={isSelected} onDoubleClick={open}>
+      <Marker marker={marker} isSelected={isSelected} onDoubleClick={open}>
         {children}
       </Marker>
     </>
@@ -186,7 +138,7 @@ const MemoModule = ({ rule, TYPE, context }) => {
               data-disabled={disabled}
               data-visible={visible}
             >
-              <MemoIcon />
+              <IconMemo />
             </span>
           )
         }),
@@ -194,10 +146,14 @@ const MemoModule = ({ rule, TYPE, context }) => {
     },
     plugins: [
       {
-        renderNode(props) {
+        renderNode({ attributes, ...props }) {
           const { node } = props
           if (!memo.match(node)) return
-          return <Memo {...props} />
+          return (
+            <span {...attributes}>
+              <Memo {...props} />
+            </span>
+          )
         },
       },
     ],

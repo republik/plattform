@@ -155,8 +155,7 @@ const schema = {
     criteria: termCriteriaBuilder('versionName'),
   },
   userId: {
-    criteria: termCriteriaBuilder('meta.credits.children.url'),
-    parser: (value) => `/~${value}`,
+    criteria: termCriteriaBuilder('meta.contributors.userId'),
   },
   publishedAt: {
     criteria: dateRangeCriteriaBuilder('meta.publishDate'),
@@ -843,13 +842,7 @@ const findTemplates = async function (elastic, template, repoId) {
     ...indexRef,
     size: 10000,
     body: {
-      _source: [
-        'meta.repoId',
-        'meta.title',
-        'meta.description',
-        'meta.kind',
-        'meta.template',
-      ],
+      _source: ['meta'],
       query: {
         bool: {
           must: {

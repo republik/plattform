@@ -3,7 +3,8 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 })
 const withTM = require('next-transpile-modules')([
   '@project-r/styleguide',
-  '@republik/nextjs-apollo-client', // Ensures ES5 compatibility to work in IE11
+  '@republik/nextjs-apollo-client', // Ensures ES5 compatibility to work in IE11 and older safari versions
+  '@republik/icons', // Ensures ES5 compatibility to work in IE11 and older safari versions
 ])
 
 const { NODE_ENV, CDN_FRONTEND_BASE_URL } = process.env
@@ -37,6 +38,14 @@ module.exports = withTM(
     // }
     eslint: {
       ignoreDuringBuilds: true,
+    },
+    compiler: {
+      removeConsole:
+        process.env.NODE_ENV === 'production'
+          ? {
+              exclude: ['error', 'warn'],
+            }
+          : false,
     },
     async rewrites() {
       return {
@@ -106,6 +115,12 @@ module.exports = withTM(
         {
           source: '/merci',
           destination: '/konto',
+          permanent: true,
+        },
+        // Redirect 5-years campaign token URLs to static page
+        {
+          source: '/5-jahre-republik/:token',
+          destination: '/5-jahre-republik',
           permanent: true,
         },
       ]

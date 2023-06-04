@@ -3,7 +3,7 @@ import * as React from 'react'
 import { css } from 'glamor'
 import { Query, Mutation } from '@apollo/client/react/components'
 import { gql } from '@apollo/client'
-import { MdChevronLeft as CurrentIcon } from 'react-icons/md'
+import { IconChevronLeft } from '@republik/icons'
 
 import {
   A,
@@ -263,7 +263,7 @@ const MembershipDetails = ({ userId, membership, ...props }) => {
                     {displayDate(new Date(period.beginDate))} –{' '}
                     {displayDate(new Date(period.endDate))}
                     {period.isCurrent && (
-                      <CurrentIcon size='1.1em' {...styles.icon} />
+                      <IconChevronLeft size='1.1em' {...styles.icon} />
                     )}
                   </DD>
                 ))}
@@ -445,16 +445,6 @@ const Index = ({ userId }) => {
               return (
                 <Section>
                   <SectionTitle>Memberships</SectionTitle>
-                  <div style={{ marginBottom: 20 }}>
-                    <A
-                      href={`${REPUBLIK_FRONTEND_URL}/angebote?package=PROLONG&token=${accessToken}`}
-                      target='_blank'
-                    >
-                      Verlängerungs-Link ohne Anmelden
-                    </A>
-                    <br />
-                    <Label>In einem neuen, privaten Fenster öffnen.</Label>
-                  </div>
                   <table {...tableStyles.table}>
                     <colgroup>
                       <col style={{ width: '50%' }} />

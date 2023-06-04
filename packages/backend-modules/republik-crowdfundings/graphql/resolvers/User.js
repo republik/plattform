@@ -12,7 +12,10 @@ const {
   hasDormantMembership,
   resolveMemberships,
 } = require('../../lib/CustomPackages')
-const { getCustomPackages } = require('../../lib/User')
+const {
+  getCustomPackages,
+  getFutureCampaignAboCount,
+} = require('../../lib/User')
 const { suggest: autoPaySuggest } = require('../../lib/AutoPay')
 const createCache = require('../../lib/cache')
 const { getLastEndDate } = require('../../lib/utils')
@@ -89,6 +92,28 @@ module.exports = {
       )
     }
     return null
+  },
+  async hasDormantMembership(user, args, context) {
+    const { pgdb, user: me } = context
+    debug('hasDormantMembership')
+
+    Roles.ensureUserIsMeOrInRoles(user, me, ['admin', 'supporter'])
+
+    const cache = createMembershipCache(user, 'hasDormantMembership', context)
+
+    return cache.cache(async function () {
+      const memberships = findEligableMemberships({
+        memberships: await resolveMemberships({
+          memberships: await pgdb.public.memberships.find({
+            userId: user.id,
+          }),
+          pgdb,
+        }),
+        user,
+      })
+
+      return hasDormantMembership({ user, memberships })
+    })
   },
   async prolongBeforeDate(
     user,
@@ -284,5 +309,23 @@ module.exports = {
   async adminNotes(user, args, { pgdb, user: me }) {
     Roles.ensureUserHasRole(me, 'supporter')
     return user.adminNotes || user._raw.adminNotes
+  },
+  async futureCampaignAboCount(user, args, context) {
+    const { pgdb, user: me } = context
+
+    if (
+      Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter']) ||
+      isFieldExposed(user, 'futureCampaignAboCount')
+    ) {
+      const cache = createMembershipCache(
+        user,
+        `futureCampaignAboCount`,
+        context,
+      )
+
+      return cache.cache(async function () {
+        return getFutureCampaignAboCount({ user, pgdb })
+      })
+    }
   },
 }

@@ -117,7 +117,11 @@ const DiscussionComposer = ({
   }
 
   return (
-    <DiscussionComposerBarrier isRoot={isRoot} showPayNotes={showPayNotes}>
+    <DiscussionComposerBarrier
+      isRoot={isRoot}
+      isEditing={!!commentId}
+      showPayNotes={showPayNotes}
+    >
       {active ? (
         <CommentComposer
           t={t}

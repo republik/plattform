@@ -26,6 +26,7 @@ type queries {
   membershipStats: MembershipStats!
   memberStats: MemberStats!
   revenueStats: RevenueStats!
+  roleStats(role: String!): RoleStats!
 }
 
 type mutations {
@@ -110,6 +111,12 @@ type mutations {
     email: String!
     name: NewsletterName!
     context: String!
+  ): Boolean!
+
+  reportUser(
+    userId: ID!,
+    """Reason for reporting the user. Max 500 characters."""
+    reason: String!
   ): Boolean!
 }
 

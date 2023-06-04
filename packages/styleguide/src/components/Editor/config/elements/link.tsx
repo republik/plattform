@@ -4,7 +4,6 @@ import {
   LinkElement,
   NormalizeFn,
 } from '../../custom-types'
-import { LinkIcon } from '../../../Icons'
 import React, { useEffect, useRef, useState } from 'react'
 import Field from '../../../Form/Field'
 import { Editor, Transforms } from 'slate'
@@ -14,6 +13,8 @@ import AuthorSearch from '../../Forms/AuthorSearch'
 import { formStyles } from '../../Forms/layout'
 import { useRenderContext } from '../../Render/Context'
 import { AutoSlugLinkInfo } from '../../Forms/github'
+import { unwrapWhenEmpty } from './_shared/utils'
+import { IconLink } from '@republik/icons'
 
 const Form: React.FC<ElementFormProps<LinkElement>> = ({
   element,
@@ -78,14 +79,6 @@ const Form: React.FC<ElementFormProps<LinkElement>> = ({
   )
 }
 
-const unlinkWhenEmpty: NormalizeFn<LinkElement> = ([node, path], editor) => {
-  if (Editor.string(editor, path) === '') {
-    Transforms.unwrapNodes(editor, { at: path })
-    return true
-  }
-  return false
-}
-
 const checkAutolink: NormalizeFn<LinkElement> = ([node, path], editor) => {
   const linkInText = getLinkInText(Editor.string(editor, path))
   // if there is no link in text, this is not an autolink
@@ -100,12 +93,10 @@ export const config: ElementConfigI = {
   Form,
   attrs: {
     isInline: true,
-    isTextInline: true,
-    formatText: true,
     stopFormIteration: true,
   },
-  button: { icon: LinkIcon },
-  normalizations: [unlinkWhenEmpty, checkAutolink],
-  structure: [{ type: ['text'], repeat: true }],
+  button: { icon: IconLink },
+  normalizations: [unwrapWhenEmpty, checkAutolink],
+  structure: [{ type: ['text', 'memo'], repeat: true }],
   props: ['href', 'title'],
 }

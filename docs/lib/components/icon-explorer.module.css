@@ -1,0 +1,34 @@
+.explorer {
+  padding: 2rem 0;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(8rem, 1fr));
+  grid-auto-rows: minmax(8rem, 1fr);
+  list-style: none;
+  gap: 1px;
+}
+
+.icon {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  /* border: 1px solid hotpink; */
+  box-shadow: 0 0 0 1px lightgray;
+  gap: 0.5rem;
+  padding: .5rem;
+  box-sizing: border-box;
+}
+
+.iconTitle {
+  font-size: 0.8em;
+  word-wrap: normal;
+}
+
+.iconWrapper {
+  font-size: 1.2em;
+  border: none;
+}

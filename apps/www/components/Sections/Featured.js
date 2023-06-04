@@ -11,7 +11,6 @@ import {
   FormatTag,
   fontStyles,
   mediaQueries,
-  ChevronRightIcon,
   useColorContext,
   Center,
 } from '@project-r/styleguide'
@@ -19,6 +18,7 @@ import NavLink from '../Frame/Popover/NavLink'
 import Link from 'next/link'
 import { HEADER_HEIGHT, HEADER_HEIGHT_MOBILE } from '../constants'
 import withT from '../../lib/withT'
+import { IconChevronRight } from '@republik/icons'
 
 const getSectionNav = gql`
   query getSectionNav {
@@ -105,7 +105,7 @@ const Panel = ({
         .sort((a, b) => ascending(a.meta.title, b.meta.title))
         .map(({ id, meta: formatMeta, linkedDocuments }) => (
           <Link href={formatMeta.path} key={id} passHref>
-            <a {...styles.formatLink} onClick={() => closeHandler()}>
+            <a {...styles.formatLink} onClick={() => closeHandler?.()}>
               <FormatTag
                 color={formatMeta.color || colors[formatMeta.kind]}
                 label={formatMeta.title}
@@ -190,7 +190,7 @@ const Sections = compose(graphql(getSectionNav))(
                           >
                             {meta.title}
                           </NavLink>
-                          <ChevronRightIcon
+                          <IconChevronRight
                             size={22}
                             style={{
                               transition: 'transform 0.3s ease-out',

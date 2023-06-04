@@ -1,6 +1,7 @@
 const logger = console
 const postfinanceSHA = require('../../../lib/payments/postfinance/sha')
 const { v4: uuid } = require('uuid')
+const validator = require('validator')
 const {
   minTotal,
   regularTotal,
@@ -233,14 +234,11 @@ module.exports = async (_, args, context) => {
     // calculate donation
     const pledgeRegularTotal = regularTotal(pledgeOptions, packageOptions)
     const donation = pledge.total - pledgeRegularTotal
-    // check reason
-    if (donation < 0 && !pledge.reason) {
-      logger.error('you must provide a reason for reduced pledges', {
-        req: req._log(),
-        args,
-        donation,
-      })
-      throw new Error(t('api/pledge/reason'))
+
+    // email address check if pledge.user is provided
+    if (pledge.user && !validator.isEmail(pledge.user.email)) {
+      logger.error('pledge.user.email is invalid.', { req: req._log(), args })
+      throw new Error(t('api/email/invalid'))
     }
 
     // check user

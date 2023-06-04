@@ -43,9 +43,10 @@ import * as fragments from '../../lib/graphql/fragments'
 import {
   ColorContextProvider,
   colors,
+  ErrorBoundary,
   plainButtonRule,
 } from '@project-r/styleguide'
-import SettingsIcon from 'react-icons/lib/fa/cogs'
+import { IconGears as SettingsIcon } from '@republik/icons'
 
 import createDebug from 'debug'
 import {
@@ -63,6 +64,7 @@ import {
   withLatestCommit,
 } from '../Edit/enhancers'
 import Preview from '../Preview'
+import Replace from './Replace'
 
 const getTemplateById = gql`
   query getLatestCommit($repoId: ID!) {
@@ -599,6 +601,14 @@ export class EditorPage extends Component {
     this.setState({ editorState: value })
   }
 
+  persistChanges(serializedValue) {
+    const deserializedValue =
+      this.editor.serializer.deserialize(serializedValue)
+    this.setState({ editorState: deserializedValue })
+    this.store.set('editorState', serializedValue)
+    this.beginChanges()
+  }
+
   documentChangeHandler(_, { value: newEditorState }) {
     const { committedRawDocString, hasUncommittedChanges } = this.state
 
@@ -726,10 +736,21 @@ export class EditorPage extends Component {
     const { router } = this.props
     const { commitId, schema, template } = router.query
     const repoId = getRepoIdFromQuery(router.query)
-    const { editorState } = this.state
-    const serializedState = this.editor.serializer.serialize(editorState)
-    this.beginChanges()
-    this.store.set('editorState', serializedState)
+
+    // When an error happens inside the editor, its state can't be serialized anymore.
+    // This is okay, we just redirect to the raw editor anyway, so the user can fix whatever caused the problem.
+    try {
+      const { editorState } = this.state
+      const serializedState = this.editor.serializer.serialize(editorState)
+      this.beginChanges()
+      this.store.set('editorState', serializedState)
+    } catch (e) {
+      console.error(
+        'Could not set new editorState, going to raw editor anyway.',
+        e,
+      )
+    }
+
     this.props.router.push({
       pathname: `/repo/${repoId}/raw`,
       query: {
@@ -907,17 +928,22 @@ export class EditorPage extends Component {
                       darkmode={this.state.previewDarkmode}
                     />
                   ) : null}
-                  <Editor
-                    ref={this.editorRef}
-                    schema={schema}
-                    isTemplate={isTemplate}
-                    meta={meta}
-                    value={editorState}
-                    onChange={this.changeHandler}
-                    onDocumentChange={this.documentChangeHandler}
-                    readOnly={readOnly}
-                    hide={showPreview}
-                  />
+                  <ErrorBoundary
+                    failureMessage='Ein Fehler trat im Editor auf. Bitte den Quellcode bearbeiten.'
+                    showException
+                  >
+                    <Editor
+                      ref={this.editorRef}
+                      schema={schema}
+                      isTemplate={isTemplate}
+                      meta={meta}
+                      value={editorState}
+                      onChange={this.changeHandler}
+                      onDocumentChange={this.documentChangeHandler}
+                      readOnly={readOnly}
+                      hide={showPreview}
+                    />
+                  </ErrorBoundary>
                 </ColorContextProvider>
               </div>
             )}
@@ -932,13 +958,10 @@ export class EditorPage extends Component {
           >
             {!readOnly && !showPreview && (
               <Sidebar.Tab tabId='edit' label='Editieren'>
-                <button
-                  onClick={() => this.goToRaw(isTemplate)}
-                  {...plainButtonRule}
-                  style={{ color: colors.primary }}
-                >
-                  {t('pages/raw/title')}
-                </button>
+                <Replace
+                  value={this.editor?.serializer.serialize(editorState)}
+                  onSave={this.persistChanges.bind(this)}
+                />
                 <CharCount value={editorState} />
                 {!!this.editor && (
                   <EditorUI
@@ -947,6 +970,13 @@ export class EditorPage extends Component {
                     value={editorState}
                   />
                 )}
+                <button
+                  onClick={() => this.goToRaw(isTemplate)}
+                  {...plainButtonRule}
+                  style={{ color: colors.primary }}
+                >
+                  {t('pages/raw/title')}
+                </button>
               </Sidebar.Tab>
             )}
             {!showPreview && (

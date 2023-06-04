@@ -11,9 +11,13 @@ const {
 const { getPeriodEndingLast, getLastEndDate } = require('../utils')
 const rules = require('./rules')
 
-// Put that one into database.
+// membershipTypes and packages which are prolongable
 const EXTENDABLE_MEMBERSHIP_TYPES = ['ABO', 'BENEFACTOR_ABO', 'ABO_GIVE_MONTHS']
 const EXTENDABLE_PACKAGE_NAMES = ['ABO', 'BENEFACTOR']
+
+// membershipTypes which are can be dormant but are not
+// prolongabl by themselves
+const DORMANT_ONLY_MEMBERSHIP_TYPES = ['YEARLY_ABO']
 
 // Which options require you to own a membership?
 const OPTIONS_REQUIRE_CLAIMER = ['BENEFACTOR_ABO']
@@ -30,6 +34,10 @@ const findEligableMemberships = ({
     const isExtendable =
       EXTENDABLE_MEMBERSHIP_TYPES.includes(m.membershipType.name) &&
       EXTENDABLE_PACKAGE_NAMES.includes(m.pledge.package.name)
+
+    const isDormantOnly = DORMANT_ONLY_MEMBERSHIP_TYPES.includes(
+      m.membershipType.name,
+    )
 
     // A membership that was not bought by user itself.
     const isClaimedMembership = m.pledge.userId !== m.userId
@@ -54,7 +62,7 @@ const findEligableMemberships = ({
 
     return (
       isCurrentClaimer &&
-      (isExtendable || isClaimedMembership || isSelfClaimed) &&
+      (isExtendable || isDormantOnly || isClaimedMembership || isSelfClaimed) &&
       (!ignoreClaimedMemberships || !isClaimedMembership)
     )
   })
@@ -153,7 +161,7 @@ const evaluate = async ({
     // Can membership.membershipType be extended?
     // Not all membershipTypes can be extended
     if (!EXTENDABLE_MEMBERSHIP_TYPES.includes(membershipType.name)) {
-      debug('not extenable membershipType "%s"', membershipType.name)
+      debug('not extendable membershipType "%s"', membershipType.name)
       return false
     }
 

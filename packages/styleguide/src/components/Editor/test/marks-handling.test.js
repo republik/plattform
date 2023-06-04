@@ -3,6 +3,7 @@ import { cleanupTree } from '../Core/helpers/tree'
 import { toggleMark } from '../Core/helpers/text'
 import schema from '../schema/article'
 import mockEditor from './mockEditor'
+import { act } from '@testing-library/react'
 
 describe('Slate Editor: Marks Handling', () => {
   window.document.getSelection = jest.fn()
@@ -11,9 +12,8 @@ describe('Slate Editor: Marks Handling', () => {
 
   const defaultConfig = { schema }
 
-  async function setup(structure, config = defaultConfig) {
+  async function setup(config) {
     return await mockEditor(createEditor(), {
-      structure,
       config,
       value,
       setValue: (val) => (value = val),
@@ -32,14 +32,14 @@ describe('Slate Editor: Marks Handling', () => {
         type: 'paragraph',
       },
     ]
-    const editor = await setup(structure)
-
-    await Transforms.select(editor, {
-      anchor: { path: [0, 0], offset: 6 },
-      focus: { path: [0, 0], offset: 11 },
+    const editor = await act(async () => setup({ ...defaultConfig, structure }))
+    await act(async () => {
+      await Transforms.select(editor, {
+        anchor: { path: [0, 0], offset: 6 },
+        focus: { path: [0, 0], offset: 11 },
+      })
+      await toggleMark(editor, 'italic')
     })
-    toggleMark(editor, 'italic')
-    await new Promise(process.nextTick)
 
     expect(cleanupTree(value)).toEqual([
       {
@@ -73,15 +73,15 @@ describe('Slate Editor: Marks Handling', () => {
         type: 'paragraph',
       },
     ]
-    const editor = await setup(structure)
+    const editor = await act(async () => setup({ ...defaultConfig, structure }))
     const selection = {
       anchor: { path: [0, 1], offset: 6 },
       focus: { path: [0, 1], offset: 11 },
     }
-
-    await Transforms.select(editor, selection)
-    toggleMark(editor, 'sup')
-    await new Promise(process.nextTick)
+    await act(async () => {
+      await Transforms.select(editor, selection)
+      await toggleMark(editor, 'sup')
+    })
 
     expect(cleanupTree(value)).toEqual([
       {
@@ -109,15 +109,15 @@ describe('Slate Editor: Marks Handling', () => {
         type: 'paragraph',
       },
     ]
-    const editor = await setup(structure)
+    const editor = await act(async () => setup({ ...defaultConfig, structure }))
     const selection = {
       anchor: { path: [0, 0], offset: 9 },
       focus: { path: [0, 0], offset: 9 },
     }
-
-    await Transforms.select(editor, selection)
-    toggleMark(editor, 'italic')
-    await new Promise(process.nextTick)
+    await act(async () => {
+      await Transforms.select(editor, selection)
+      await toggleMark(editor, 'italic')
+    })
 
     expect(cleanupTree(value)).toEqual([
       {
@@ -151,15 +151,15 @@ describe('Slate Editor: Marks Handling', () => {
         type: 'paragraph',
       },
     ]
-    const editor = await setup(structure)
+    const editor = await act(async () => setup({ ...defaultConfig, structure }))
     const selection = {
       anchor: { path: [0, 1], offset: 0 },
       focus: { path: [0, 1], offset: 5 },
     }
-
-    await Transforms.select(editor, selection)
-    toggleMark(editor, 'italic')
-    await new Promise(process.nextTick)
+    await act(async () => {
+      await Transforms.select(editor, selection)
+      await toggleMark(editor, 'italic')
+    })
 
     expect(cleanupTree(value)).toEqual([
       {
@@ -189,14 +189,14 @@ describe('Slate Editor: Marks Handling', () => {
         type: 'paragraph',
       },
     ]
-    const editor = await setup(structure)
-
-    await Transforms.select(editor, {
-      anchor: { path: [0, 1], offset: 3 },
-      focus: { path: [0, 1], offset: 3 },
+    const editor = await act(async () => setup({ ...defaultConfig, structure }))
+    await act(async () => {
+      await Transforms.select(editor, {
+        anchor: { path: [0, 1], offset: 3 },
+        focus: { path: [0, 1], offset: 3 },
+      })
+      await toggleMark(editor, 'italic')
     })
-    toggleMark(editor, 'italic')
-    await new Promise(process.nextTick)
 
     expect(cleanupTree(value)).toEqual([
       {
@@ -226,14 +226,14 @@ describe('Slate Editor: Marks Handling', () => {
         type: 'paragraph',
       },
     ]
-    const editor = await setup(structure)
-
-    await Transforms.select(editor, {
-      anchor: { path: [0, 0], offset: 3 },
-      focus: { path: [0, 2], offset: 6 },
+    const editor = await act(async () => setup({ ...defaultConfig, structure }))
+    await act(async () => {
+      await Transforms.select(editor, {
+        anchor: { path: [0, 0], offset: 3 },
+        focus: { path: [0, 2], offset: 6 },
+      })
+      await toggleMark(editor, 'bold')
     })
-    toggleMark(editor, 'bold')
-    await new Promise(process.nextTick)
 
     expect(cleanupTree(value)).toEqual([
       {
@@ -267,14 +267,14 @@ describe('Slate Editor: Marks Handling', () => {
         type: 'paragraph',
       },
     ]
-    const editor = await setup(structure)
-
-    await Transforms.select(editor, {
-      anchor: { path: [0, 1], offset: 0 },
-      focus: { path: [0, 1], offset: 5 },
+    const editor = await act(async () => setup({ ...defaultConfig, structure }))
+    await act(async () => {
+      await Transforms.select(editor, {
+        anchor: { path: [0, 1], offset: 0 },
+        focus: { path: [0, 1], offset: 5 },
+      })
+      await toggleMark(editor, 'italic')
     })
-    toggleMark(editor, 'italic')
-    await new Promise(process.nextTick)
 
     expect(cleanupTree(value)).toEqual([
       {
@@ -300,15 +300,16 @@ describe('Slate Editor: Marks Handling', () => {
         type: 'paragraph',
       },
     ]
-    const editor = await setup(structure)
-
-    await Transforms.select(editor, {
-      anchor: { path: [0, 0], offset: 5 },
-      focus: { path: [0, 0], offset: 5 },
+    const editor = await act(async () => setup({ ...defaultConfig, structure }))
+    await act(async () => {
+      await Transforms.select(editor, {
+        anchor: { path: [0, 0], offset: 5 },
+        focus: { path: [0, 0], offset: 5 },
+      })
     })
     expect(editor.marks).toBeNull()
-    toggleMark(editor, 'italic')
-    await new Promise(process.nextTick)
+
+    await act(async () => toggleMark(editor, 'italic'))
 
     expect(cleanupTree(value)).toEqual([
       {

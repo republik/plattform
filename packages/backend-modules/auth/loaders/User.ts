@@ -7,6 +7,10 @@ import { UserRow } from '@orbiting/backend-modules-types'
 
 const transformUser = auth.transformUser
 
+function nonNullable<T>(value: T): value is NonNullable<T> {
+  return value !== null && value !== undefined
+}
+
 module.exports = (context: any) => {
   const users: PgTable<UserRow> = context.pgdb.public.users
   const credentials: PgTable<any> = context.pgdb.public.credentials
@@ -20,11 +24,13 @@ module.exports = (context: any) => {
 
       return users
         .find({ id: userIds })
-        .then((users) => users.map(transformUser))
+        .then((users) => users.map(transformUser).filter(nonNullable))
     }),
     byEmail: createDataLoader(
       (emails: readonly string[]) =>
-        users.find({ email: emails }).then((users) => users.map(transformUser)),
+        users
+          .find({ email: emails })
+          .then((users) => users.map(transformUser).filter(nonNullable)),
       null,
       (key, rows) =>
         rows.find((row) => {
@@ -46,7 +52,9 @@ module.exports = (context: any) => {
           return Promise.resolve([])
         }
 
-        return users.find({ or }).then((users) => users.map(transformUser))
+        return users
+          .find({ or })
+          .then((users) => users.map(transformUser).filter(nonNullable))
       },
       null,
       (key, rows) =>
@@ -63,7 +71,7 @@ module.exports = (context: any) => {
       (usernames: readonly string[]) =>
         users
           .find({ username: usernames })
-          .then((users) => users.map(transformUser)),
+          .then((users) => users.map(transformUser).filter(nonNullable)),
       null,
       (key, rows) =>
         rows.find((row) => {

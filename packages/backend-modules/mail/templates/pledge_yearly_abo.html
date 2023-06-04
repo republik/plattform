@@ -1,0 +1,225 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="x-ua-compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <!--[if gte mso 15]>
+      <xml>
+        <o:officedocumentsettings>
+          <o:allowpng />
+          <o:pixelsperinch>96</o:pixelsperinch>
+        </o:officedocumentsettings>
+      </xml>
+    <![endif]-->
+    <style type="text/css">
+      {{sg_font_faces}}
+    </style>
+    <style type="text/css">
+      p {
+        color:#282828;font-size:17px;line-height:24px;
+        {{sg_font_style_sans_serif_regular}}
+      }
+      p strong {
+        {{sg_font_style_sans_serif_medium}}
+      }
+    </style>
+  </head>
+  <body style="margin: 0; padding: 0; background-color: #fff">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tbody>
+        <tr>
+          <td align="center" valign="top">
+            <table
+              align="center"
+              border="0"
+              cellpadding="0"
+              cellspacing="0"
+              width="100%"
+              style="max-width:640px;color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}"
+            >
+              <tbody>
+                <tr>
+                  <td style="padding: 20px">
+                    <p>Guten Tag</p>
+                    {{#if waiting_for_payment}}
+                    <p>
+                      Wir sind Ihnen sehr dankbar für Ihren grosszügigen
+                      Beitrag. Da er CHF 1000 übersteigt, können Ihr Abonnement
+                      und Ihr Zugang erst nach Zahlungseingang aktiviert werden.
+                      Sie erhalten eine Bestätigung, wenn Ihre Überweisung bei
+                      uns eingetroffen ist.
+                    </p>
+                    {{else if pledger_memberships_active_monthly}}
+                    <p>
+                      Mit Ihrem Monats-Abo haben Sie die Republik bereits
+                      kennengelernt. Dass Sie sich nun entschieden haben, uns
+                      längerfristig zu unterstützen, freut und ehrt uns.
+                      Herzlichen Dank für Ihr Vertrauen.
+                    </p>
+                    <p>
+                      Wir werden Ihr neues Abo automatisch aktivieren, sobald
+                      die aktuelle Periode Ihres Monats-Abos ausgelaufen ist. So
+                      können Sie dann nahtlos weiterlesen (oder -hören).
+                    </p>
+                    <p>
+                      Mit dem Mitstreiterinnen-Abo erhalten Sie weiterhin von
+                      Montag bis Samstag ein hochwertiges digitales Magazin. Und
+                      Sie sorgen dafür, dass unabhängiger Journalismus eine
+                      Zukunft hat.
+                    </p>
+                    {{else}}
+
+                    <p>
+                      Herzlich willkommen! Wir freuen uns sehr, Sie bei der
+                      Republik begrüssen zu dürfen, und bedanken uns für Ihre
+                      Unterstützung: Mit Ihrem Beitrag machen Sie unabhängigen
+                      Journalismus möglich.
+                    </p>
+
+                    <p>
+                      Und hier gleich das Wichtigste zum Start in der Übersicht:
+                    </p>
+
+                    <ul
+                      style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}"
+                    >
+                      <li>
+                        Lesen und hören Sie die Republik: Unser Magazin
+                        erscheint von Montag bis Samstag mit täglich ein bis
+                        drei neuen Beiträgen. In der
+                        <a href="{{link_app}}">Republik-App</a>, auf der
+                        <a href="{{frontend_base_url}}">Website</a> und als
+                        Newsletter – welche Newsletter und Benachrichtigungen
+                        Sie von uns erhalten, legen Sie
+                        <a href="{{link_account}}">in Ihrem Konto</a>
+                        fest.
+                      </li>
+                      <li>
+                        Diskutieren Sie mit anderen Leserinnen und der
+                        Redaktion! Auf der
+                        <a href="{{link_dialog}}">Dialog-Seite</a> sehen Sie,
+                        was aktuell bei der Republik zu reden gibt, in der
+                        <a href="{{link_etikette}}">Etikette</a> finden Sie
+                        unsere Grundsätze für einen höflichen Dialog.
+                      </li>
+                      <li>
+                        Lernen Sie unsere Crew kennen:
+                        <a href="{{link_imprint}}">Wir sind Ihr Team</a>.
+                      </li>
+                    </ul>
+
+                    <p>
+                      Haben Sie Fragen oder brauchen Sie Unterstützung? In der
+                      <a href="{{link_manual}}">Gebrauchsanleitung</a> haben wir
+                      die einzelnen Schritte zur Nutzung unseres Magazins
+                      ausgeführt (und bebildert). Bei allen weiteren Anliegen
+                      melden Sie sich gerne direkt via
+                      <a href="mailto:kontakt@republik.ch"
+                        >kontakt@republik.ch</a
+                      >
+                      bei uns.
+                    </p>
+                    <p>
+                      Und nun wünschen wir Ihnen viel Freude mit der Republik.
+                    </p>
+                    {{/if}}
+
+                    <p>Details zum Kauf:</p>
+                    <ul
+                      style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}"
+                    >
+                      {{#options}}
+                      <li>
+                        {{#if this.hasMultipleOAmounts}} {{this.oamount}}
+                        {{this.olabel}} à {{this.oprice_formatted}}:
+                        {{this.ototal_formatted}} {{else}} {{this.oamount}}
+                        {{this.olabel}}: {{this.ototal_formatted}} {{/if}}
+                      </li>
+                      {{/options}} {{#if discount}}
+                      <li>
+                        Gewünschte Preisreduktion: –{{discount_formatted}}
+                      </li>
+                      {{/if}} {{#if donation}}
+                      <li>Spende: {{donation_formatted}}</li>
+                      {{/if}}
+                      <li>
+                        <strong>Total: {{total_formatted}}</strong>
+                      </li>
+                    </ul>
+
+                    {{#if goodies_count}}
+                    <p>
+                      {{#unless waiting_for_payment}} {{#if hasOneGoodie}} Sie
+                      haben sich noch ein Republik-Objekt gegönnt. {{else if
+                      hasMultipleGoodies}} Sie haben sich noch mehrere
+                      Republik-Objekte gegönnt. {{/if}}{{#if
+                      goodies_has_notebook}}Notizbücher liefern wir Ihnen
+                      innerhalb von 7 Werktagen. {{/if}}{{#if
+                      goodies_has_tablebook}}«Republik bei Stromausfall» liefern
+                      wir Ihnen innerhalb von 7 Werktagen. {{/if}}{{#if
+                      goodies_has_totebag}}Taschen liefern wir Ihnen innerhalb
+                      von 7 Werktagen. {{/if}}{{#if
+                      goodies_has_mask}}Republik-Masken liefern wir Ihnen
+                      innerhalb von 7 Werktagen. {{/if}}{{/unless}}{{#if
+                      goodies_has_fondue}}Republik-Fondues werden am 26. Januar
+                      2022 verschickt. {{/if}}{{#if
+                      goodies_has_mug}}Republik-Tassen liefern wir Ihnen
+                      innerhalb von 10 Werktagen. {{/if}}
+                    </p>
+
+                    {{/if}} {{#if paymentslip}}
+                    <p>Zahlungsinformationen:</p>
+                    <ul
+                      style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}"
+                    >
+                      <li>IBAN: {{iban}}</li>
+                      <li>Referenz: {{reference}}</li>
+                      <li>Betrag: {{total_formatted}}</li>
+                      <li>Zahlbar bis: {{due_date}}</li>
+                    </ul>
+                    <p>Anbei finden Sie eine QR-Rechnung.</p>
+                    <p>
+                      Die QR-Rechnung ersetzt den Einzahlungsschein. Sie können
+                      damit die Zahlung via Mobile Banking, E-Banking oder am
+                      Schalter bei Bank und Post auslösen.
+                    </p>
+                    {{/if}}
+                    <p>Ihre Crew der Republik</p>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding: 20px">
+                    <p
+                      style="color:#282828;font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}"
+                    >
+                      <img
+                        height="79"
+                        src="{{frontend_base_url}}/static/logo_republik_newsletter.png"
+                        style="
+                          border: 0px;
+                          width: 180px !important;
+                          height: 79px !important;
+                          margin: 0px;
+                        "
+                        width="180"
+                        alt=""
+                      />
+                      <br />
+                      Republik AG<br />
+                      Sihlhallenstrasse 1, CH-8004 Zürich<br />
+                      <a href="{{frontend_base_url}}">www.republik.ch</a><br />
+                      <a href="mailto:kontakt@republik.ch"
+                        >kontakt@republik.ch</a
+                      >
+                    </p>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </body>
+</html>

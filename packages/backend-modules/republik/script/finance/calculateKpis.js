@@ -1,8 +1,11 @@
 require('@orbiting/backend-modules-env').config()
 const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
-const moment = require('moment')
+const dayjs = require('dayjs')
+const duration = require('dayjs/plugin/duration')
 const _ = require('lodash')
 const yargs = require('yargs')
+
+dayjs.extend(duration)
 
 const argv = yargs
   .option('company', {
@@ -13,26 +16,32 @@ const argv = yargs
   .option('begin', {
     alias: 'b',
     describe: '(day in) first month e.g. 2019-02-01',
-    coerce: moment,
-    default: moment().subtract(1, 'month'),
+    coerce: dayjs,
+    default: dayjs().subtract(1, 'month'),
   })
   .option('end', {
     alias: 'e',
     describe: '(day in) last month e.g. 2019-03-01',
-    coerce: moment,
-    default: moment().subtract(1, 'month'),
+    coerce: dayjs,
+    default: dayjs().subtract(1, 'month'),
   })
   .help()
   .version().argv
 
 const METHODS = ['PAYMENTSLIP', 'STRIPE', 'POSTFINANCECARD', 'PAYPAL']
 
-const currency = new Intl.NumberFormat('de-DE', {
+const currency = new Intl.NumberFormat('de-CH', {
   minimumFractionDigits: 2,
   useGrouping: false,
 })
 
-const evaluateCompanyMonth = async (company, begin, end, pgdb) => {
+const evaluateCompanyMonth = async (
+  company,
+  begin,
+  end,
+  endFiscalYear,
+  pgdb,
+) => {
   const query = `
     SELECT
       pay.id,
@@ -80,7 +89,20 @@ const evaluateCompanyMonth = async (company, begin, end, pgdb) => {
 
   // console.log(query)
 
-  const transactionItems = await pgdb.query(query)
+  const transactionItems = (await pgdb.query(query)).map((i) => {
+    const days = endFiscalYear.diff(i.createdAt, 'days')
+
+    const totalFiscalYear = Math.round((i.total / 365) * days)
+    const totalTransitoryLiabilites = i.total - totalFiscalYear
+
+    return {
+      ...i,
+      precomputed: {
+        totalFiscalYear,
+        totalTransitoryLiabilites,
+      },
+    }
+  })
 
   const data = {}
 
@@ -261,7 +283,7 @@ const evaluateCompanyMonth = async (company, begin, end, pgdb) => {
         .filter((i) => i.createdAt >= begin && i.createdAt < end)
         .filter((i) => i.companyName === company)
         .filter((i) => i.method === method)
-        .filter((i) => i.packageName === 'MONTHLY_ABO')
+        .filter((i) => ['MONTHLY_ABO'].includes(i.packageName))
         .filter((i) => i.type === 'MembershipType')
 
       results.Abonnements = {
@@ -284,7 +306,7 @@ const evaluateCompanyMonth = async (company, begin, end, pgdb) => {
         .filter((i) => i.updatedAt >= begin && i.updatedAt < end)
         .filter((i) => i.companyName === company)
         .filter((i) => i.method === method)
-        .filter((i) => i.packageName === 'MONTHLY_ABO')
+        .filter((i) => ['MONTHLY_ABO'].includes(i.packageName))
         .filter((i) => i.type === 'MembershipType')
         .filter((i) => ['CANCELLED', 'REFUNDED'].includes(i.status))
 
@@ -338,6 +360,74 @@ const evaluateCompanyMonth = async (company, begin, end, pgdb) => {
         Betrag:
           StornierteMonatsgeschenkabos.map(
             (m) => m.amount * (m.periods || 1) * m.price,
+          ).reduce((p, c) => p - c, 0) / 100,
+      }
+
+      /**
+       * Jahresabonnements (YEARLY_ABO)
+       */
+
+      const Jahresabonnements = transactionItems
+        .filter((i) => i.createdAt >= begin && i.createdAt < end)
+        .filter((i) => i.companyName === company)
+        .filter((i) => i.method === method)
+        .filter((i) => ['YEARLY_ABO'].includes(i.packageName))
+        .filter((i) => i.type === 'MembershipType')
+
+      results.JahresabonnementsAktuellesGeschaeftsjahr = {
+        Betrag:
+          Jahresabonnements.map((a) => a.precomputed.totalFiscalYear).reduce(
+            (p, c) => p + c,
+            0,
+          ) / 100,
+      }
+      results.JahresabonnementsTransitorischePassive = {
+        Betrag:
+          Jahresabonnements.map(
+            (a) => a.precomputed.totalTransitoryLiabilites,
+          ).reduce((p, c) => p + c, 0) / 100,
+      }
+
+      /**
+       * Stornierte Jahresabonnements (YEARLY_ABO)
+       */
+      const StornierteJahresabonnements = transactionItems
+        .filter((i) => i.updatedAt >= begin && i.updatedAt < end)
+        .filter((i) => i.companyName === company)
+        .filter((i) => i.method === method)
+        .filter((i) => ['YEARLY_ABO'].includes(i.packageName))
+        .filter((i) => i.type === 'MembershipType')
+        .filter((i) => ['CANCELLED', 'REFUNDED'].includes(i.status))
+
+      /**
+       * SAFETY MEASURE, a rather dirty one. Computing a cancellation
+       * of a YEARLY_ABO outside fiscal year it was bought requires
+       * some more code changes:
+       *
+       * Instead of splitting cancellation to AktuellesGeschaeftsjahr
+       * and TransitorischePassive, full amount should wander into
+       * AktuellesGeschaeftsjahr.
+       *
+       */
+      StornierteJahresabonnements.forEach((a) => {
+        if (endFiscalYear.isBefore(a.updatedAt)) {
+          console.log(a)
+          throw new Error(
+            'Unhandled: Computing cancellation YEARLY_ABO outside fiscal year it was bought',
+          )
+        }
+      })
+
+      results.StornierteJahresabonnementsAktuellesGeschaeftsjahr = {
+        Betrag:
+          StornierteJahresabonnements.map(
+            (a) => a.precomputed.totalFiscalYear,
+          ).reduce((p, c) => p - c, 0) / 100,
+      }
+      results.StornierteJahresabonnementsTransitorischePassive = {
+        Betrag:
+          StornierteJahresabonnements.map(
+            (a) => a.precomputed.totalTransitoryLiabilites,
           ).reduce((p, c) => p - c, 0) / 100,
       }
     }
@@ -401,12 +491,20 @@ PgDb.connect()
     )
 
     for (
-      const begin = argv.begin.clone().startOf('month');
+      let begin = argv.begin.startOf('month');
       begin <= argv.end;
-      begin.add(1, 'month')
+      begin = begin.add(1, 'month')
     ) {
-      const end = begin.clone().add(1, 'month')
-      await evaluateCompanyMonth(argv.company, begin, end, pgdb)
+      const end = begin.add(1, 'month')
+
+      const month = begin.get('month')
+      const year = begin.get('year')
+      const endFiscalYear = begin
+        .set('year', month <= 5 ? year : year + 1)
+        .endOf('month')
+        .set('month', 5)
+
+      await evaluateCompanyMonth(argv.company, begin, end, endFiscalYear, pgdb)
     }
 
     await pgdb.close()

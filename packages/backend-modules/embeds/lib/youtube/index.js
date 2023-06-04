@@ -1,4 +1,3 @@
-const fetch = require('isomorphic-unfetch')
 const moment = require('moment')
 
 const { YOUTUBE_APP_KEY } = process.env

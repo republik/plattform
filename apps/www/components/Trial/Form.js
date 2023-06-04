@@ -16,7 +16,7 @@ import Consents, { getConsentsError } from '../Pledge/Consents'
 import withMe from '../../lib/apollo/withMe'
 import withT from '../../lib/withT'
 
-import { ArrowForwardIcon, plainButtonRule } from '@project-r/styleguide'
+import { plainButtonRule } from '@project-r/styleguide'
 import {
   Button,
   Field,
@@ -29,6 +29,7 @@ import {
 import { withRouter } from 'next/router'
 import { getConversionPayload } from '../../lib/utils/track'
 import { TRIAL_CAMPAIGN } from '../../lib/constants'
+import { IconArrowForward } from '@republik/icons'
 
 const styles = {
   errorMessages: css({
@@ -76,6 +77,19 @@ const Form = (props) => {
     initialEmail,
     campaign,
     isInSeriesNav,
+    context = 'trial',
+    /**
+     * Certain TrialForms are used to request access for roles other than membership.
+     * In that case the default-behaviour is to be skipped,
+     * and even members should be able to request access to the campaign.
+     */
+    skipForMembers = true,
+    /**
+     * Boolean to skip the trial-form (isComplete=true) and show the isComplete UI.
+     * This is to be used together with the skipForMembers prop,
+     * when we should differ from the default-behaviour.
+     */
+    shouldSkipTrialForm = false,
   } = props
   const { query } = router
 
@@ -152,7 +166,7 @@ const Form = (props) => {
 
     setIsSigningIn(false)
 
-    if (!isMember) {
+    if (!isMember || !skipForMembers) {
       props
         .requestAccess({
           payload: { ...getConversionPayload(query), ...payload },
@@ -170,7 +184,7 @@ const Form = (props) => {
           if (shouldRedirect) {
             window.location = format({
               pathname: `/einrichten`,
-              query: { context: 'trial' },
+              query: { context },
             })
           } else {
             minimal && setShowButtons(true)
@@ -212,7 +226,8 @@ const Form = (props) => {
     setIsSigningIn(false)
   }
 
-  const isComplete = showButtons || isMember
+  const isComplete =
+    showButtons || (skipForMembers && isMember) || shouldSkipTrialForm
 
   const titleBlock = titleBlockKey && (
     <>
@@ -268,7 +283,7 @@ const Form = (props) => {
                 onClick={() =>
                   router.push({
                     pathname: '/einrichten',
-                    query: { context: 'trial' },
+                    query: { context },
                   })
                 }
               >
@@ -325,7 +340,7 @@ const Form = (props) => {
                         colorScheme.set('color', 'textSoft'),
                       )}
                     >
-                      <ArrowForwardIcon
+                        <IconArrowForward
                         style={{
                           cursor: 'pointer',
                           color:
@@ -424,6 +439,8 @@ Form.propTypes = {
   accessCampaignId: PropTypes.string,
   onBeforeSignIn: PropTypes.func,
   narrow: PropTypes.bool,
+  skipForMembers: PropTypes.bool,
+  shouldSkipTrialForm: PropTypes.bool,
 }
 
 const REQUEST_ACCESS = gql`

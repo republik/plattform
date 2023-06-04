@@ -21,6 +21,8 @@ export type ApolloClientOptions = {
   apiUrl: string
   wsUrl?: string
   headers?: { [key: string]: string | number | boolean } | IncomingHttpHeaders
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   onResponse?: (response: any) => void
   mobileConfigOptions?: {
     isInMobileApp: boolean
@@ -36,6 +38,15 @@ function createApolloClient(
     ssrMode: !isClient,
     cache: new InMemoryCache({
       typePolicies: {
+        queries: {
+          queryType: true,
+        },
+        mutations: {
+          mutationType: true,
+        },
+        AudioSource: {
+          merge: true,
+        },
         // Since Meta doesn't have a key-field, update cached data
         // Source: https://www.apollographql.com/docs/react/caching/cache-field-behavior/#merging-non-normalized-objects
         Meta: {
@@ -44,7 +55,7 @@ function createApolloClient(
         User: {
           fields: {
             audioQueue: {
-              merge: (existing, incoming, options) => {
+              merge: (existing, incoming) => {
                 return incoming
               },
             },

@@ -1,4 +1,3 @@
-import { Component } from 'react'
 import compose from 'lodash/flowRight'
 import { graphql } from '@apollo/client/react/hoc'
 
@@ -85,9 +84,7 @@ export default compose(
         error: data.error,
         activeMembership,
         memberships,
-        hasWaitingMemberships: memberships.some(
-          (m) => !m.active && !m.periods.length,
-        ),
+        hasWaitingMemberships: data?.me?.hasDormantMembership,
       }
     },
   }),

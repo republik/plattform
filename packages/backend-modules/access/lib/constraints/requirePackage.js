@@ -12,9 +12,8 @@ const debug = require('debug')('access:lib:constraints:requirePackage')
  */
 
 const hasValidMembership = async ({ granter, settings }, { pgdb }) => {
-  const packages = settings.packages.map((pkg) => `'${pkg}'`).join(', ')
-
-  const activeMemberships = await pgdb.query(`
+  const activeMemberships = await pgdb.query(
+    `
     SELECT memberships.id, packages.name
     FROM memberships
 
@@ -28,11 +27,13 @@ const hasValidMembership = async ({ granter, settings }, { pgdb }) => {
       ON pledges."packageId" = packages.id
 
     WHERE
-      memberships."userId" = '${granter.id}'
-      AND packages.name IN (${packages})
+      memberships."userId" = :granterId
+      AND ARRAY[packages.name] && :packages
       AND "beginDate" <= NOW()
       AND "endDate" > NOW()
-  `)
+  `,
+    { granterId: granter.id, packages: settings.packages },
+  )
 
   return activeMemberships.length > 0
 }

@@ -124,9 +124,9 @@ export const WithoutAccess = ({ render }) => {
   return null
 }
 
-export const enforceMembership =
-  (meta, unauthorizedTexts) => (WrappedComponent) =>
-    withAuthorization(['member'])(({ isAuthorized, ...props }) => {
+export const enforceRoles =
+  (roles, meta, unauthorizedTexts) => (WrappedComponent) =>
+    withAuthorization(roles)(({ isAuthorized, ...props }) => {
       if (isAuthorized) {
         return <WrappedComponent meta={meta} {...props} />
       }
@@ -134,5 +134,8 @@ export const enforceMembership =
         <UnauthorizedPage meta={meta} unauthorizedTexts={unauthorizedTexts} />
       )
     })
+
+export const enforceMembership = (meta, unauthorizedTexts) =>
+  enforceRoles(['member'], meta, unauthorizedTexts)
 
 export default withMembership

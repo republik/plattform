@@ -126,7 +126,11 @@ module.exports = async (_, args, context) => {
           updatedAt: now,
         },
       )
-    } else if (['ABO', 'BENEFACTOR_ABO'].includes(membershipType.name)) {
+    } else if (
+      ['ABO', 'ABO_GIVE_MONTHS', 'BENEFACTOR_ABO', 'YEARLY_ABO'].includes(
+        membershipType.name,
+      )
+    ) {
       if (membership.renew) {
         console.info('reactivateMembership: membership is already renew===true')
         await transaction.transactionCommit()

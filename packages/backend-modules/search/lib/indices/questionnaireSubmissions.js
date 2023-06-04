@@ -18,6 +18,9 @@ module.exports = {
         userId: {
           type: 'keyword',
         },
+        anonymized: {
+          type: 'boolean',
+        },
         createdAt: {
           type: 'date',
         },
@@ -25,12 +28,19 @@ module.exports = {
         resolved: {
           properties: {
             answers: {
+              type: 'nested',
               properties: {
+                questionId: {
+                  type: 'keyword',
+                },
                 payload: {
                   properties: {
                     text: {
                       type: 'text',
                       analyzer: 'german',
+                    },
+                    value: {
+                      type: 'keyword',
                     },
                   },
                 },
@@ -38,6 +48,10 @@ module.exports = {
                   properties: {
                     value: {
                       properties: {
+                        ImageChoice: {
+                          type: 'text',
+                          analyzer: 'german',
+                        },
                         Choice: {
                           type: 'text',
                           analyzer: 'german',
@@ -45,6 +59,9 @@ module.exports = {
                         Text: {
                           type: 'text',
                           analyzer: 'german',
+                        },
+                        length: {
+                          type: 'integer',
                         },
                       },
                     },

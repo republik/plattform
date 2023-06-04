@@ -32,6 +32,9 @@ const { graphql: embeds } = require('@orbiting/backend-modules-embeds')
 const { graphql: gsheets } = require('@orbiting/backend-modules-gsheets')
 const { graphql: mailbox } = require('@orbiting/backend-modules-mailbox')
 const { graphql: slots } = require('@orbiting/backend-modules-calendar')
+const {
+  graphql: callToActions,
+} = require('@orbiting/backend-modules-call-to-actions')
 
 const loaderBuilders = {
   ...require('@orbiting/backend-modules-voting/loaders'),
@@ -118,6 +121,7 @@ const run = async (workerId, config) => {
     gsheets,
     mailbox,
     slots,
+    callToActions,
   ])
 
   // middlewares

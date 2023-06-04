@@ -2,10 +2,11 @@ const sharp = require('sharp')
 const getWidthHeight = require('./getWidthHeight')
 const getCropDimensions = require('./getCropDimensions')
 const { fileTypeStream } = require('file-type-stream2')
-const { PassThrough } = require('stream')
+const { PassThrough, Readable } = require('stream')
 const toArray = require('stream-to-array')
 const debug = require('debug')('assets:returnImage')
 const { parse: parsePath } = require('path')
+const colorString = require('color-string')
 
 const { SHARP_NO_CACHE } = process.env
 
@@ -54,9 +55,16 @@ module.exports = async ({
     webp,
     format: _format,
     cacheTags = [],
+    responseHeaders,
     crop,
     size,
+    quality,
+    bg, // background color-string
   } = options
+  const qualityInt = parseInt(quality, 10)
+  const resolvedQuality =
+    !isNaN(qualityInt) && qualityInt <= 100 && qualityInt > 0 ? qualityInt : 80
+
   let format =
     _format && supportedFormats.indexOf(_format) !== -1
       ? _format
@@ -95,14 +103,29 @@ module.exports = async ({
   }
 
   // forward filtered headers
-  if (headers) {
-    for (const key of pipeHeaders) {
-      const value = headers.get(key)
+  headers &&
+    pipeHeaders.forEach((name) => {
+      const value = headers.get(name)
       if (value) {
-        res.set(key, value)
+        res.set(name, value)
       }
-    }
-  }
+    })
+
+  // Loop through options.reponseHeaders array and set each as a
+  // response header.
+  responseHeaders &&
+    responseHeaders.forEach(({ name, value }) => {
+      res.set(name, value)
+    })
+
+  /**
+   * {stream} is a ReadableStream provided by fetch Response.body
+   * @see https://developer.mozilla.org/en-US/docs/Web/API/Response/body
+   *
+   * To process futher, we need a (node) "Readable" stream.
+   * @see https://nodejs.org/docs/latest-v18.x/api/stream.html#readable-streams
+   */
+  const readableStream = Readable.fromWeb(stream)
 
   // detect mime
   const passThrough = new PassThrough()
@@ -110,7 +133,7 @@ module.exports = async ({
     let mime
     try {
       const fileTypeResult = await new Promise((resolve, reject) => {
-        stream
+        readableStream
           .pipe(fileTypeStream(resolve))
           .pipe(passThrough)
           .on(
@@ -209,16 +232,21 @@ module.exports = async ({
             `inline; filename="${parsePath(path).name}.${format}"`,
           )
         }
+
+        if (bg && colorString.get(bg)) {
+          pipeline.flatten({ background: bg })
+        }
+
         pipeline.toFormat(format, {
           // avoid interlaced pngs
           // - not supported in pdfkit
           progressive: format === 'jpeg',
-          quality: 80,
+          quality: resolvedQuality,
         })
       } else if (isJPEG) {
         pipeline.jpeg({
           progressive: true,
-          quality: 80,
+          quality: resolvedQuality,
         })
       }
     }
@@ -240,7 +268,7 @@ module.exports = async ({
         : await toBuffer(passThrough)
       res.end(result)
 
-      stream.destroy()
+      readableStream.destroy()
       passThrough.destroy()
 
       if (returnResult) {
@@ -253,7 +281,7 @@ module.exports = async ({
   } catch (e) {
     console.error(e)
     res.status(500).end()
-    stream && stream.destroy()
+    readableStream && readableStream.destroy()
     passThrough && passThrough.destroy()
   }
   debug('sharp stats: %o', sharp.cache())

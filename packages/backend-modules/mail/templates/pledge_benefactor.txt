@@ -34,9 +34,7 @@ Hier finden Sie die Gebrauchsanleitung {{link_manual}} , die die wichtigsten
 davon klärt.
 
 Um uns für Ihre besonders grosse Unterstützung ein kleines bisschen zu
-revanchieren, schicken wir Ihnen postwendend das Gönner-Paket mit Manifest und
-einer signierten Ausgabe von Constantin Seibts Buch «Deadline – Wie man besser
-schreibt https://keinundaber.ch/de/literary-work/deadline/ » zu.
+revanchieren, schicken wir Ihnen postwendend das Gönner-Willkommens-Paket zu.
 
 {{/if}}
 

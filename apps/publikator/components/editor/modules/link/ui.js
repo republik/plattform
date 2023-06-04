@@ -1,7 +1,6 @@
 import { Text } from 'slate'
 import { Label, Field, RawHtml } from '@project-r/styleguide'
 import { AuthorSearch, RepoSearch } from '@project-r/styleguide/editor'
-import LinkIcon from 'react-icons/lib/fa/chain'
 import UIForm from '../../UIForm'
 import createOnFieldChange from '../../utils/createOnFieldChange'
 import { AutoSlugLinkInfo } from '../../utils/github'
@@ -10,7 +9,8 @@ import withT from '../../../../lib/withT'
 import { createInlineButton, matchInline, buttonStyles } from '../../utils'
 import AutosizeInput from 'react-textarea-autosize'
 import { css } from 'glamor'
-import MdInfoOutline from 'react-icons/lib/md/info-outline'
+import { IconLink } from '@republik/icons'
+import { IconInfoOutline as MdInfoOutline } from '@republik/icons'
 
 const styles = {
   autoSize: css({
@@ -138,7 +138,7 @@ const createLink = (options) =>
       data-disabled={disabled}
       data-visible={visible}
     >
-      <LinkIcon />
+      <IconLink />
     </span>
   ))
 

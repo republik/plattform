@@ -31,6 +31,16 @@ const getCustomPackages = async ({ user, crowdfundingName, pgdb }) => {
   ).filter(Boolean)
 }
 
+const getFutureCampaignAboCount = async ({ user, pgdb }) => {
+  const currentCount = await pgdb.public.userAttributes.findFirst(
+    { userId: user.id, name: 'futureCampaignAboCount' },
+    { orderBy: { createdAt: 'desc' } },
+  )
+
+  return currentCount ? parseInt(currentCount.value, 10) : 0
+}
+
 module.exports = {
   getCustomPackages,
+  getFutureCampaignAboCount,
 }

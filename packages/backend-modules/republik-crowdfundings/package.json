@@ -25,10 +25,10 @@
     "apollo-modules-node": "*",
     "d3-array": "^2.4.0",
     "d3-dsv": "^1.2.0",
+    "dayjs": "^1.11.7",
     "debug": "^4.1.1",
     "fast-xml-parser": "^3.17.4",
     "graphql": "^15.3.0",
-    "isomorphic-unfetch": "^3.0.0",
     "lodash": "^4.17.19",
     "memfs": "^3.2.0",
     "moment": "^2.26.0",
@@ -37,7 +37,8 @@
     "stream-to-array": "^2.3.0",
     "stripe": "^8.119.0",
     "tar": "^6.1.9",
-    "uuid": "^8.3.1"
+    "uuid": "^8.3.1",
+    "validator": "^13.7.0"
   },
   "devDependencies": {
     "@orbiting/backend-modules-types": "*",

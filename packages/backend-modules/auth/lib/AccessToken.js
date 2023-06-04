@@ -63,6 +63,15 @@ const scopeConfigs = {
     ],
     ttlDays: 5,
   },
+  NOW_YOU_SEE_ME: {
+    exposeFields: [
+      'firstName',
+      'lastName',
+      'portrait',
+      'futureCampaignAboCount',
+    ],
+    ttlDays: 30,
+  },
 }
 
 const getScopeConfig = (scope) => {

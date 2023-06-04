@@ -2,6 +2,7 @@ import React, {
   MouseEvent,
   MouseEventHandler,
   ReactElement,
+  ReactNode,
   useEffect,
   useMemo,
   useState,
@@ -31,6 +32,7 @@ import { useColorContext } from '../../Colors/ColorContext'
 import IconButton from '../../IconButton'
 import { getAncestry } from './helpers/tree'
 import {
+  canFormatText,
   countFormat,
   getCharCount,
   isEmpty,
@@ -109,12 +111,11 @@ const getAllowedMarks = (
   editor: CustomEditor,
   selectedElement?: NodeEntry<CustomElement>,
 ): ButtonConfig[] => {
-  const allowedMarks =
-    selectedElement && elConfig[selectedElement[0].type].attrs?.formatText
-      ? mKeys
-      : selectedElement
-      ? MARKS_ALLOW_LIST
-      : []
+  const allowedMarks = canFormatText(editor, selectedElement)
+    ? mKeys
+    : selectedElement
+    ? MARKS_ALLOW_LIST
+    : []
   return mKeys.map((t) => ({
     type: t as CustomMarksType,
     disabled: allowedMarks.indexOf(t) === -1, // only useful in fixed mode
@@ -136,6 +137,7 @@ const getAllowedInlines = (
   shown: ButtonConfig[],
   selectedText?: NodeEntry<CustomText>,
   selectedElement?: NodeEntry<CustomElement>,
+  moreSelectedElements?: NodeEntry<CustomElement>[],
 ): ButtonConfig[] => {
   if (!shown.length && noWordSelected(editor)) return []
   // make it link icon grey in sticky mode
@@ -143,8 +145,11 @@ const getAllowedInlines = (
     ? []
     : getAllowedTypes(selectedText)
   const buttons = shown.length ? shown.map((b) => b.type) : allowedTypes
+  const currentlySelected = [selectedElement, ...moreSelectedElements].filter(
+    Boolean,
+  )
   return buttons.map((t) => {
-    const isSelected = selectedElement && t === selectedElement[0].type
+    const isSelected = currentlySelected.some((e) => e[0].type === t)
     return {
       type: t,
       disabled: !isSelected && allowedTypes.indexOf(t) === -1,
@@ -177,6 +182,7 @@ const getAllowedBlocks = (
 }
 
 export const ToolbarContainer: React.FC<{
+  children?: ReactNode
   onClick?: MouseEventHandler<HTMLDivElement>
   style?: object
   centered?: boolean
@@ -310,10 +316,18 @@ const Toolbar: React.FC = () => {
     }
   }, [focused])
 
-  const setButtons = (text, element, convertContainer) => {
+  const setButtons = (text, element, moreElements, convertContainer) => {
     setChars(getAllowedChars(element))
     setMarks(getAllowedMarks(editor, element))
-    setInlines(getAllowedInlines(editor, initialInlineButtons, text, element))
+    setInlines(
+      getAllowedInlines(
+        editor,
+        initialInlineButtons,
+        text,
+        element,
+        moreElements,
+      ),
+    )
     const allowedBlocks = getAllowedBlocks(
       editor,
       initialBlockButtons,
@@ -327,9 +341,10 @@ const Toolbar: React.FC = () => {
     if (!hasSelection(editor)) {
       return reset()
     }
-    const { text, element, convertContainer } = getAncestry(editor)
+    const { text, element, moreElements, convertContainer } =
+      getAncestry(editor)
     if (element) {
-      setButtons(text, element, convertContainer)
+      setButtons(text, element, moreElements, convertContainer)
     } else {
       reset()
     }

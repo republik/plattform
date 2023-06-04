@@ -105,11 +105,19 @@ type SignInNotification {
   expiresAt: DateTime!
 }
 
+"Scope of an access token"
 enum AccessTokenScope {
+  "A token to access me.customPackages (TTL: 90 days)"
   CUSTOM_PLEDGE
+  "A token to access me.customPackages (TTL: 120 days)"
   CUSTOM_PLEDGE_EXTENDED
+  "A token to use mutation claimCard (TTL: 90 days)"
   CLAIM_CARD
+  "A token authorize a session (TTL: 5 days)"
   AUTHORIZE_SESSION
+  "A token access a invoices (TTL: 5 days)"
   INVOICE
+  "A token to access a users name and portrait (TTL: 30 days)"
+  NOW_YOU_SEE_ME
 }
 `

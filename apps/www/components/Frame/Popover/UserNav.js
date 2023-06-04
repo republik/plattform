@@ -173,7 +173,7 @@ const UserNav = ({
                   />
                   <div {...styles.navSection}>
                     <div {...styles.navLinks}>
-                      {me.accessCampaigns.length > 0 && (
+                      {me?.accessCampaigns?.length > 0 && (
                         <NavLink
                           href='/teilen'
                           currentPath={currentPath}

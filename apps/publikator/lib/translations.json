@@ -769,6 +769,10 @@
       "value": "keine"
     },
     {
+      "key": "metaData/paynotes/mode/climate",
+      "value": "Klimalab"
+    },
+    {
       "key": "metaData/paynotes/add",
       "value": "Spezialangefertigte Störer hinzufügen"
     },
@@ -955,6 +959,10 @@
     {
       "key": "metaData/recommendations/releaseScheduledFor",
       "value": "Die Publikation ist für {date} geplant."
+    },
+    {
+      "key": "metaData/discussionAllowedRoles",
+      "value": "Diskussion für Klimalabor-User öffnen"
     },
     {
       "key": "colorPicker/contrastInfo/title",
@@ -1187,6 +1195,22 @@
     {
       "key": "publish/label/notifySubscribers/other",
       "value": "Benachrichtigungen senden: aktuell {count} Empfangende"
+    },
+    {
+      "key": "publish/label/notifyFiltersDocument/1",
+      "value": "Benachrichtigung senden: aktuell eine Empfängerin"
+    },
+    {
+      "key": "publish/label/notifyFiltersDocument/other",
+      "value": "Benachrichtigungen senden: aktuell {count} Empfänger"
+    },
+    {
+      "key": "publish/label/notifyFiltersReadAloud/1",
+      "value": "«Vorgelesen» benachrichtigen: aktuell ein Follower"
+    },
+    {
+      "key": "publish/label/notifyFiltersReadAloud/other",
+      "value": "«Vorgelesen» benachrichtigen: aktuell {count} Follower"
     },
     {
       "key": "publish/validation/links/1",
@@ -1765,6 +1789,10 @@
       "value": "Link"
     },
     {
+      "key": "editor/element/memo",
+      "value": "Memo"
+    },
+    {
       "key": "editor/element/ul",
       "value": "Liste"
     },
@@ -1943,6 +1971,46 @@
     {
       "key": "editor/workflow/uncommittedChanges",
       "value": "Committen oder verwerfen Sie Ihre Änderungen, um die Phase anzupassen."
+    },
+    {
+      "key": "editor/replace/title",
+      "value": "Suchen und Ersetzen"
+    },
+    {
+      "key": "editor/replace/includeMeta",
+      "value": "Metabereich einschliessen"
+    },
+    {
+      "key": "editor/replace/searchReplaceHint",
+      "value": " Diese Änderung kann nur rückgängig gemacht werden, indem du alle Änderungen verwirfst. Falls du viel geändert hast, lieber nochmal speichern, bevor du auf «Ersetzen» klickst."
+    },
+    {
+      "key": "editor/replace/text",
+      "value": "Fliesstext:"
+    },
+    {
+      "key": "editor/replace/meta",
+      "value": "Metabereich:"
+    },
+    {
+      "key": "editor/replace/button/search",
+      "value": "Suchen"
+    },
+    {
+      "key": "editor/replace/button/replace",
+      "value": "Ersetzen"
+    },
+    {
+      "key": "editor/replace/button/back",
+      "value": "Zurück"
+    },
+    {
+      "key": "editor/replace/foundOccurences",
+      "value": "{count} Treffer"
+    },
+    {
+      "key": "editor/replace/nothingFound",
+      "value": "Kein Treffer"
     }
   ]
 }

@@ -1,16 +1,15 @@
-import {
-  RemoveCircleIcon,
-  DragHandleIcon,
-  LinkIcon,
-  DownloadIcon,
-  useColorContext,
-} from '@project-r/styleguide'
+import { useColorContext } from '@project-r/styleguide'
 import { css } from 'glamor'
 import { AudioQueueItem } from '../../../../graphql/AudioQueueHooks'
 import AudioListItem from '../shared/AudioListItem'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import { useInNativeApp } from '../../../../../../lib/withInNativeApp'
+import {
+  IconDownload,
+  IconDragHandle,
+  IconLink,
+  IconRemoveCircle,
+} from '@republik/icons'
 
 const styles = {
   root: css({
@@ -67,7 +66,6 @@ const QueueItem = ({
     transition,
     isDragging,
   } = useSortable({ id: item.id })
-  const { inNativeApp } = useInNativeApp()
 
   return (
     <li
@@ -95,23 +93,22 @@ const QueueItem = ({
             {...attributes}
             {...listeners}
           >
-            <DragHandleIcon size={24} />
+            <IconDragHandle size={24} />
           </button>
         }
         actions={[
           {
-            Icon: RemoveCircleIcon,
+            Icon: IconRemoveCircle,
             label: t('AudioPlayer/Queue/Remove'),
             onClick: () => onRemove(item),
           },
           {
-            Icon: DownloadIcon,
+            Icon: IconDownload,
             label: t('AudioPlayer/Queue/Download'),
             onClick: () => onDownload(item.document),
-            hidden: inNativeApp,
           },
           {
-            Icon: LinkIcon,
+            Icon: IconLink,
             label: t('AudioPlayer/Queue/GoToItem'),
             onClick: () => onOpen(item.document.meta.path),
           },

@@ -133,7 +133,6 @@ enum NewsletterName {
   PROJECTR
   ACCOMPLICE
   CLIMATE
-  WINTER
 }
 
 type Video {
@@ -201,6 +200,10 @@ type MembershipStats {
 
 type MemberStats {
   count: Int!
+}
+
+type RoleStats {
+  count: Int
 }
 
 type MonthlyMembershipStat {

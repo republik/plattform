@@ -22,6 +22,8 @@ The frontends are Next.js apps, the backends use Express.js.
 - `backend-modules/*`: packages used by the `api` and `assets` server
 - `eslint-config-*`: multiple eslint configurations which are used accross our apps
 - `nextjs-apollo-client`: a reusable Nextjs / Apollo Client setup
+- `tsconfig`: a package to store shared typescript configurations
+- `icons`: A package to make SVG-files available as react.js components to be used across our frontends.
 
 All packages and apps support [TypeScript](https://www.typescriptlang.org/) and plain ECMAScript.
 

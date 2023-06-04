@@ -17,6 +17,7 @@ const query = gql`
       accessCampaigns {
         id
         title
+        type
         description
         defaultMessage
         grants {

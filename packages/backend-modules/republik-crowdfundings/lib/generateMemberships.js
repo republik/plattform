@@ -8,7 +8,13 @@ const mail = require('./Mail')
 const Promise = require('bluebird')
 const omit = require('lodash/omit')
 
-const MONTHLY_ABO_UPGRADE_PKGS = ['ABO', 'BENEFACTOR']
+const UPGRADE_PKG_PATHS = [
+  {
+    fromMembershipType: 'MONTHLY_ABO',
+    toPackageNames: ['ABO', 'BENEFACTOR', 'YEARLY_ABO'],
+  },
+  { fromMembershipType: 'YEARLY_ABO', toPackageNames: ['ABO', 'BENEFACTOR'] },
+]
 
 module.exports = async (pledgeId, pgdb, t, redis) => {
   const pledge = await pgdb.public.pledges.findOne({ id: pledgeId })
@@ -48,7 +54,8 @@ module.exports = async (pledgeId, pgdb, t, redis) => {
   // voucherCodes get generated inside the db, but not for reducedPrice
   const reducedPrice = pledge.donation < 0
 
-  const activeMemberships = await pgdb.public.query(`
+  const activeMemberships = await pgdb.public.query(
+    `
     SELECT
       "memberships".*,
       "membershipTypes"."name"
@@ -59,9 +66,11 @@ module.exports = async (pledgeId, pgdb, t, redis) => {
       ON "memberships"."membershipTypeId" = "membershipTypes"."id"
 
     WHERE
-      "memberships"."userId" = '${user.id}'
+      "memberships"."userId" = :userId
       AND "memberships"."active" = true
-  `)
+  `,
+    { userId: user.id },
+  )
 
   const userHasActiveMembership = activeMemberships.length > 0
 
@@ -180,15 +189,18 @@ module.exports = async (pledgeId, pgdb, t, redis) => {
               membership,
             }
           } else {
-            // Cancel active memberships because bought package (option) contains
-            // a better abo.
-            if (MONTHLY_ABO_UPGRADE_PKGS.includes(pkg.name)) {
+            // Cancel active membership(s) if there is an upgrade path available
+            const membershipTypes = UPGRADE_PKG_PATHS.filter(
+              ({ toPackageNames }) => toPackageNames.includes(pkg.name),
+            ).map(({ fromMembershipType }) => fromMembershipType)
+
+            if (membershipTypes.length) {
               cancelableMemberships = activeMemberships.filter(
-                (m) => m.name === 'MONTHLY_ABO' && m.renew === true,
+                (m) => membershipTypes.includes(m.name) && m.renew === true,
               )
             }
 
-            debug({ activeMemberships, cancelableMemberships })
+            debug({ membershipTypes, activeMemberships, cancelableMemberships })
 
             memberships.push(membership)
           }

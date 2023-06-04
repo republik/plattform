@@ -7,6 +7,7 @@ const { timeFormat } = require('@orbiting/backend-modules-formats')
 const { transformUser, AccessToken } = require('@orbiting/backend-modules-auth')
 const base64u = require('@orbiting/backend-modules-base64u')
 const { hasUserActiveMembership } = require('@orbiting/backend-modules-utils')
+const { count } = require('@orbiting/backend-modules-republik/lib/roleStats')
 
 const campaignsLib = require('./campaigns')
 const eventsLib = require('./events')
@@ -133,11 +134,18 @@ const sendMail = async (
   }
 
   const actualTemplate = (emailConfig && emailConfig.actualTemplate) || template
+  const fromEmail =
+    (emailConfig && emailConfig.fromEmail) ||
+    process.env.DEFAULT_MAIL_FROM_ADDRESS
+
+  const fromName =
+    (emailConfig && emailConfig.fromName) || process.env.DEFAULT_MAIL_FROM_NAME
 
   const mail = await sendMailTemplate(
     {
       to,
-      fromEmail: process.env.DEFAULT_MAIL_FROM_ADDRESS,
+      fromEmail,
+      fromName,
       subject: t(
         `api/access/email/${party}/${actualTemplate}/subject`,
         getTranslationVars(granter, recipient),
@@ -197,6 +205,8 @@ const getGlobalMergeVars = async (
   const accessToken =
     !!recipient &&
     (await AccessToken.generateForUser(recipient, 'AUTHORIZE_SESSION'))
+
+  const countClimateLabUsers = await count('climate', { pgdb })
 
   const pledgerName =
     grant.perks &&
@@ -310,6 +320,35 @@ const getGlobalMergeVars = async (
     pledgeMessageToClaimers && {
       name: 'message_to_claimer',
       content: escape(pledgeMessageToClaimers).replace(/\n/g, '<br />'),
+    },
+
+    // campaign «Klimalabor»
+    {
+      name: 'count_climate_lab_users',
+      content: countClimateLabUsers,
+    },
+    {
+      name: 'link_climate_lab_offer_abo',
+      content: `${FRONTEND_BASE_URL}/angebote?package=ABO&utm_campaign=klimalabor`,
+    },
+    {
+      name: 'link_climate_lab_offer_abo_give',
+      content: `${FRONTEND_BASE_URL}/angebote?package=ABO_GIVE&utm_campaign=klimalabor`,
+    },
+    {
+      name: 'link_climate_lab_onboarding_personal_infos',
+      content: `${FRONTEND_BASE_URL}/einrichten?context=climate&section=climatepersonalinfo`,
+    },
+    {
+      name: 'link_climate_lab_email_invitation',
+      content:
+        'mailto:?subject=Klimalabor%20%E2%80%94%20machst%20du%20mit%3F&body=Hallo%0D%0A%0D%0ADie%20Republik%20hat%20ein%20Klimalabor%20gestartet%2C%20einen%20Ort%20f%C3%BCr%20Austausch%20und%20Experimente%20f%C3%BCr%20alle%2C%20die%20der%20Klimakrise%20etwas%20entgegensetzen%20wollen%2C%20aber%20nicht%20so%20genau%20wissen%20wie.%20Letzlich%20geht%20es%20darum%2C%20herauszufinden%2C%20was%20Journalismus%20leisten%20kann%2C%20um%20in%20der%20Klimakrise%20seiner%20Rolle%20gerecht%20zu%20werden.%0D%0A%0D%0AIch%20bin%20dabei%20und%20w%C3%BCrde%20mich%20freuen%2C%20wenn%20du%20es%20dir%20auch%20mal%20anschaust%3A%20https%3A%2F%2Fwww.republik.ch/willkommen-zum-klimalabor',
+    },
+    {
+      name: 'inviter_climate',
+      content: safeGranter.name
+        ? `${safeGranter.name} (${safeGranter.email})`
+        : safeGranter.email,
     },
   ].filter(Boolean)
 }

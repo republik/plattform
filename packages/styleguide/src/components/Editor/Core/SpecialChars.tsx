@@ -64,8 +64,17 @@ export const CharButton: React.FC<{
   )
 }
 
+const getChar = (children) => {
+  if (!children) return
+  if (children?.props?.leaf) return children?.props?.leaf?.text
+  // normally only single characters are marked as "invisible"
+  // if we have more marks on that segment though, the leaf could be a few levels down
+  if (children?.props?.children) return getChar(children?.props?.children)
+  return
+}
+
 export const Invisible = ({ children, attributes, ...props }) => {
-  const char = children?.props?.leaf?.text
+  const char = getChar(children)
   const config = char && charConfig.find((c) => c.insert === char)
   const displayAs = config?.render
   const invisibleRule = useMemo(

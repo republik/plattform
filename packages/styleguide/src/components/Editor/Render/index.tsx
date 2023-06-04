@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ReactNode } from 'react'
 import {
   CustomDescendant,
   CustomElement,
@@ -10,6 +10,10 @@ import {
 import { Marks } from './Mark'
 import { LayoutContainer } from './Containers'
 import { isSlateElement } from './helpers'
+
+export const SkipElement: React.FC<{ children?: ReactNode }> = ({
+  children,
+}) => <>{children}</>
 
 const RenderedLeaf: React.FC<{
   leaf: CustomText

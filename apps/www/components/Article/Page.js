@@ -35,7 +35,6 @@ import {
   createSectionSchema,
   createPageSchema,
   flyerSchema,
-  EditIcon,
   createRequire,
 } from '@project-r/styleguide'
 
@@ -47,6 +46,7 @@ import { splitByTitle } from '../../lib/utils/mdast'
 import { PUBLIKATOR_BASE_URL } from '../../lib/constants'
 import { useMe } from '../../lib/context/MeContext'
 import { cleanAsPath } from '../../lib/utils/link'
+import useProlitterisTracking from '../../lib/hooks/useProlitterisTracking'
 
 import CommentLink from '../Discussion/shared/CommentLink'
 import DiscussionContextProvider from '../Discussion/context/DiscussionContextProvider'
@@ -73,13 +73,16 @@ import ActionBarOverlay from './ActionBarOverlay'
 import SeriesNavBar from './SeriesNavBar'
 import TrialPayNoteMini from './TrialPayNoteMini'
 import Extract from './Extract'
-import { FlyerWrapper, PayNote } from './PayNote'
+import { PayNote } from './PayNote'
 import Progress from './Progress'
 import PodcastButtons from './PodcastButtons'
 import { getDocument } from './graphql/getDocument'
 import ShareImage from './ShareImage'
 import { BrowserOnlyActionBar } from './BrowserOnly'
 import ArticleRecommendationsFeed from './ArticleRecommendationsFeed'
+import TeaserAudioPlayButton from '../Audio/shared/TeaserAudioPlayButton'
+import useAudioQueue from '../Audio/hooks/useAudioQueue'
+import { IconEdit } from '@republik/icons'
 
 const LoadingComponent = () => <SmallLoader loading />
 
@@ -144,6 +147,10 @@ const ElectionResultDiversity = dynamic(
     ssr: false,
   },
 )
+const ClimateLabCounter = dynamic(() => import('../Climatelab/Counter'), {
+  loading: LoadingComponent,
+  ssr: false,
+})
 const Questionnaire = dynamic(
   () =>
     import('../Questionnaire/Questionnaire').then(
@@ -155,10 +162,45 @@ const Questionnaire = dynamic(
   },
 )
 
+const ClimateLabInlineTeaser = dynamic(
+  () => import('../Climatelab/InlineTeaser/ClimateLabInlineTeaser'),
+  {
+    loading: LoadingComponent,
+    ssr: false,
+  },
+)
+
 const QuestionnaireSubmissions = dynamic(
   () => import('../Questionnaire/Submissions'),
   {
     loading: LoadingComponent,
+  },
+)
+
+const EdgeQuestion = dynamic(() => import('../Climatelab/EdgeQuestion/index'), {
+  loading: LoadingComponent,
+})
+
+const ClimateLabQuestionnaire = dynamic(
+  () => import('../Climatelab/Questionnaire/Overview'),
+  {
+    loading: LoadingComponent,
+  },
+)
+
+const Postcard = dynamic(
+  () => import('../Climatelab/Postcard/PostcardDynamicComponent'),
+  {
+    loading: LoadingComponent,
+    ssr: false,
+  },
+)
+
+const PostcardGallery = dynamic(
+  () => import('../Climatelab/Postcard/Gallery/PostcardGallery'),
+  {
+    loading: LoadingComponent,
+    ssr: false,
   },
 )
 
@@ -243,6 +285,8 @@ const ArticlePage = ({
 
   const { me, meLoading, hasAccess, hasActiveMembership, isEditor } = useMe()
 
+  const { isAudioQueueAvailable } = useAudioQueue()
+
   const cleanedPath = cleanAsPath(router.asPath)
 
   const {
@@ -267,6 +311,8 @@ const ArticlePage = ({
   const articleUnreadNotifications = article?.unreadNotifications
   const routerQuery = router.query
   const isClimate = !!article?.content?.meta?.climate
+
+  useProlitterisTracking(repoId, cleanedPath)
 
   useEffect(() => {
     if (share) {
@@ -360,6 +406,8 @@ const ArticlePage = ({
     }
   }, [trialSignup])
 
+  const showPlayButton = !extract && hasAccess && isAudioQueueAvailable
+
   const template = meta?.template
   const schema = useMemo(
     () =>
@@ -386,7 +434,13 @@ const ArticlePage = ({
           ELECTION_RESULT_DIVERSITY: ElectionResultDiversity,
           QUESTIONNAIRE: Questionnaire,
           QUESTIONNAIRE_SUBMISSIONS: QuestionnaireSubmissions,
+          EDGE_QUESTION: EdgeQuestion,
           NEWSLETTER_SIGNUP: NewsletterSignUpDynamic,
+          CLIMATE_LAB_COUNTER: ClimateLabCounter,
+          CLIMATE_LAB_INLINE_TEASER: ClimateLabInlineTeaser,
+          CLIMATE_LAB_QUESTIONNAIRE: ClimateLabQuestionnaire,
+          POSTCARD: Postcard,
+          POSTCARD_GALLERY: PostcardGallery,
         },
         titleMargin: false,
         titleBreakout,
@@ -420,6 +474,7 @@ const ArticlePage = ({
         CommentLink,
         ActionBar: BrowserOnlyActionBar,
         PayNote: showInlinePaynote ? TrialPayNoteMini : undefined,
+        AudioPlayButton: showPlayButton ? TeaserAudioPlayButton : undefined,
       }),
     [template, inNativeIOSApp, inNativeApp, showInlinePaynote, titleBreakout],
   )
@@ -431,6 +486,7 @@ const ArticlePage = ({
       mode='articleTop'
       document={article}
       documentLoading={articleLoading || needsRefetch}
+      shareParam={share}
     />
   )
   const actionBarEnd = actionBar
@@ -448,6 +504,7 @@ const ArticlePage = ({
   const actionBarFlyer = actionBar
     ? cloneElement(actionBar, {
         mode: 'flyer',
+        shareParam: undefined,
       })
     : undefined
 
@@ -594,6 +651,13 @@ const ArticlePage = ({
             hasNewsletterUtms ||
             (router.query.utm_source && router.query.utm_source === 'flyer-v1')
 
+          // For this proof of concept I chose to show the climate paynote
+          // only at the bottom. This could/should be evaluated.
+          // We could also suppress the second paynote. (Code commented below.)
+          // I wouldn't show both, since it's a very big paynote,
+          // and the text would be the same twice.
+          // const suppressSecondPayNote = climatePaynote
+
           const payNote = (
             <PayNote
               seed={payNoteSeed}
@@ -604,16 +668,17 @@ const ArticlePage = ({
               customMode={meta.paynoteMode}
               customOnly={isPage || isFormat}
               position='before'
-              Wrapper={isFlyer ? FlyerWrapper : undefined}
             />
           )
+
           const payNoteAfter =
+            // !suppressSecondPayNote &&
             payNote && cloneElement(payNote, { position: 'after' })
 
           const ownDiscussion = meta.ownDiscussion
 
           const ProgressComponent =
-            hasAccess &&
+            !!me &&
             !isSection &&
             !isFormat &&
             !isPage &&
@@ -716,7 +781,7 @@ const ArticlePage = ({
                                   : {})}
                               >
                                 <IconButton
-                                  Icon={EditIcon}
+                                  Icon={IconEdit}
                                   href={`${PUBLIKATOR_BASE_URL}/repo/${repoId}/tree`}
                                   target='_blank'
                                   title={t('feed/actionbar/edit')}

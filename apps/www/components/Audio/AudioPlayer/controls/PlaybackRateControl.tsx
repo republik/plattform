@@ -1,13 +1,12 @@
 import { css } from 'glamor'
 import {
   IconButton,
-  AddIcon,
-  RemoveIcon,
   fontStyles,
   mediaQueries,
   useColorContext,
 } from '@project-r/styleguide'
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
+import { IconAdd, IconRemove } from '@republik/icons'
 
 const styles = {
   root: css({
@@ -66,7 +65,7 @@ const PlaybackRateControl = ({
   return (
     <div {...styles.root}>
       <IconButton
-        Icon={RemoveIcon}
+        Icon={IconRemove}
         onClick={handleDecrease}
         disabled={currentIndex === 0}
         style={{ marginRight: 0 }}
@@ -79,7 +78,7 @@ const PlaybackRateControl = ({
         {'×'}
       </span>
       <IconButton
-        Icon={AddIcon}
+        Icon={IconAdd}
         onClick={handleIncrease}
         disabled={currentIndex >= availablePlaybackRates.length - 1}
         style={{ marginRight: 0 }}

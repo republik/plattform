@@ -46,6 +46,13 @@ WITH "totals" AS (
         ELSE 0
       END "aboValue",
 
+      -- Jahres-Abo
+      CASE
+        WHEN pkg.name = 'YEARLY_ABO'
+          THEN pay.total
+        ELSE 0
+      END "yearlyAboValue",
+
       -- Goodie
       GREATEST(pog.amount * pog.price, 0) "goodieValue"
 
@@ -71,12 +78,14 @@ WITH "totals" AS (
     rd."paymentTotal"
       - COALESCE(SUM(rd."membershipValue"), 0)
       - COALESCE(SUM(rd."aboValue"), 0)
+      - COALESCE(SUM(rd."yearlyAboValue"), 0)
       - COALESCE(SUM(rd."giveValue"), 0)
       - COALESCE(SUM(rd."goodieValue"), 0)
         "surplusTotal",
     SUM(rd."membershipValue") "membershipValue",
     SUM(rd."giveValue") "giveValue",
     SUM(rd."aboValue") "aboValue",
+    SUM(rd."yearlyAboValue") "yearlyAboValue",
     SUM(rd."goodieValue") "goodieValue"
   FROM "resolvedData" rd
   GROUP BY "unit", rd."paymentId", rd."paymentTotal"
@@ -88,6 +97,7 @@ SELECT
   SUM("membershipValue" + LEAST(0, "surplusTotal"))::int "membership",
   SUM("giveValue")::int "give",
   SUM("aboValue")::int "abo",
+  SUM("yearlyAboValue")::int "yearlyAbo",
   SUM("goodieValue")::int "goodie",
   SUM(GREATEST(0, "surplusTotal"))::int "donation"
 

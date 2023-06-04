@@ -1,11 +1,9 @@
 import { Component, Fragment } from 'react'
 import compose from 'lodash/flowRight'
 import { css } from 'glamor'
-import { withMembership } from '../Auth/checkRoles'
 import withT from '../../lib/withT'
 import withMe from '../../lib/apollo/withMe'
 
-import Box from '../Frame/Box'
 import ErrorMessage from '../ErrorMessage'
 import { P } from './Elements'
 import { Loader, InlineSpinner, Checkbox } from '@project-r/styleguide'
@@ -48,8 +46,7 @@ class ProgressSettings extends Component {
   }
 
   render() {
-    const { t, me, isMember, revokeProgressConsent, submitProgressConsent } =
-      this.props
+    const { t, me, revokeProgressConsent, submitProgressConsent } = this.props
 
     return (
       <Loader
@@ -94,11 +91,6 @@ class ProgressSettings extends Component {
                   )}
                 </span>
               </Checkbox>
-              {!isMember && (
-                <Box style={{ margin: '10px 0', padding: 15 }}>
-                  <P>{t('account/progress/consent/noMembership')}</P>
-                </Box>
-              )}
               {serverError && <ErrorMessage error={serverError} />}
             </Fragment>
           )
@@ -108,9 +100,4 @@ class ProgressSettings extends Component {
   }
 }
 
-export default compose(
-  withProgressApi,
-  withMembership,
-  withT,
-  withMe,
-)(ProgressSettings)
+export default compose(withProgressApi, withT, withMe)(ProgressSettings)

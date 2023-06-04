@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { css } from 'glamor'
 import compose from 'lodash/flowRight'
 import {
@@ -5,8 +6,7 @@ import {
   mediaQueries,
   fontStyles,
   useColorContext,
-  SearchMenuIcon,
-  BoldSearchIcon,
+  Scroller,
 } from '@project-r/styleguide'
 
 import withT from '../../lib/withT'
@@ -18,8 +18,8 @@ import {
   HEADER_HORIZONTAL_PADDING,
 } from '../constants'
 import { useRouter } from 'next/router'
-
-const JournalPathRegex = new RegExp('^/[0-9]{4}/[0-9]{2}/[0-9]{2}/journal$')
+import { useMe } from '../../lib/context/MeContext'
+import { IconSearchMenu, IconSearchMenuBold } from '@republik/icons'
 
 export const SecondaryNav = ({
   secondaryNav,
@@ -30,6 +30,26 @@ export const SecondaryNav = ({
   const [colorScheme] = useColorContext()
   const router = useRouter()
   const currentPath = router.asPath
+  const { hasAccess, isClimateLabMember } = useMe()
+  const isClimateLabOnlyUser = !hasAccess && isClimateLabMember
+
+  // Sine ClimateLab the elements are rendered in a Scroller.
+  // To calculate the active index inside the scroller,
+  // we must handle conditional rendering of the elements
+  // individually.
+  const activeNavigationItemIndex = useMemo(() => {
+    if (!hasOverviewNav) {
+      return -1
+    }
+
+    if (isClimateLabOnlyUser) {
+      return ['/klimalabor'].indexOf(currentPath)
+    }
+
+    return ['/', '/feed', '/journal', '/klimalabor', '/dialog', '/suche']
+      .filter((path) => path !== '/klimalabor' || isClimateLabMember)
+      .indexOf(currentPath)
+  }, [currentPath, isClimateLabMember, isClimateLabOnlyUser, hasOverviewNav])
 
   return (
     <>
@@ -48,55 +68,74 @@ export const SecondaryNav = ({
             textAlign: 'center',
           }}
         >
-          <NavLink
-            href='/'
-            currentPath={currentPath === '/front' ? '/' : currentPath}
-            minifeed
-            title={t('navbar/front')}
-          >
-            {t('navbar/front')}
-          </NavLink>
-          <NavLink
-            prefetch
-            href='/feed'
-            currentPath={currentPath}
-            minifeed
-            title={t('navbar/feed')}
-          >
-            {t('navbar/feed')}
-          </NavLink>
-          <NavLink
-            href='/journal'
-            currentPath={currentPath}
-            isActive={JournalPathRegex.test(currentPath)}
-            formatColor='accentColorFlyer'
-            minifeed
-            title={t('navbar/flyer')}
-          >
-            {t('navbar/flyer')}
-          </NavLink>
-          <NavLink
-            href='/dialog'
-            currentPath={currentPath}
-            formatColor={colors.primary}
-            minifeed
-            title={t('navbar/discussion')}
-          >
-            {t('navbar/discussion')}
-          </NavLink>
-          <NavLink
-            href='/suche'
-            currentPath={currentPath}
-            title={t('pages/search/title')}
-            noPlaceholder
-            minifeed
-          >
-            {'/suche' === currentPath ? (
-              <BoldSearchIcon {...colorScheme.set('fill', 'text')} size={18} />
-            ) : (
-              <SearchMenuIcon {...colorScheme.set('fill', 'text')} size={18} />
-            )}
-          </NavLink>
+          {isClimateLabOnlyUser ? (
+            <NavLink
+              href='/klimalabor'
+              currentPath={currentPath}
+              title={t('navbar/climatelab')}
+              minifeed
+            >
+              {t('navbar/climatelab')}
+            </NavLink>
+          ) : (
+            <Scroller activeChildIndex={activeNavigationItemIndex}>
+              <NavLink
+                href='/'
+                currentPath={currentPath === '/front' ? '/' : currentPath}
+                minifeed
+                title={t('navbar/front')}
+              >
+                {t('navbar/front')}
+              </NavLink>
+              <NavLink
+                prefetch
+                href='/feed'
+                currentPath={currentPath}
+                minifeed
+                title={t('navbar/feed')}
+              >
+                {t('navbar/feed')}
+              </NavLink>
+              <div data-climatelab-only>
+                <NavLink
+                  href='/klimalabor'
+                  currentPath={currentPath}
+                  title={t('navbar/climatelab')}
+                  minifeed
+                >
+                  {t('navbar/climatelab')}
+                </NavLink>
+              </div>
+              <NavLink
+                href='/dialog'
+                currentPath={currentPath}
+                formatColor={colors.primary}
+                minifeed
+                title={t('navbar/discussion')}
+              >
+                {t('navbar/discussion')}
+              </NavLink>
+              <NavLink
+                href='/suche'
+                currentPath={currentPath}
+                title={t('pages/search/title')}
+                noPlaceholder
+                minifeed
+              >
+                {'/suche' === currentPath ? (
+                  <IconSearchMenuBold
+                    {...colorScheme.set('fill', 'text')}
+                    size={18}
+                  />
+                ) : (
+                  <IconSearchMenu
+                    {...colorScheme.set('fill', 'text')}
+                    size={18}
+                  />
+                )}
+              </NavLink>
+            </Scroller>
+          )}
         </div>
       ) : (
         secondaryNav && (
@@ -180,7 +219,6 @@ const styles = {
       '&.is-active': {
         ...fontStyles.sansSerifMedium,
         lineHeight: '16px',
-        marginTop: -1,
       },
     },
     '@media print': {

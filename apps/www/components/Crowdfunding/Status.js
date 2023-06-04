@@ -199,14 +199,14 @@ class Status extends Component {
               )}
             </span>
           </P>
-          <Bar
+          {/* <Bar
             goals={goalsByPeople}
             showLast={this.state.showGoal}
             status={status}
             accessor={accessor}
             format={countFormat}
             color={barColor}
-          />
+          /> */}
         </div>
       )
     }
@@ -271,14 +271,14 @@ class Status extends Component {
                   )}
                 </span>
               </P>
-              <Bar
+              {/* <Bar
                 goals={goalsByPeople}
                 showLast={this.state.showGoal && i === 0}
                 status={status}
                 accessor={accessor}
                 format={format}
                 color={barColor}
-              />
+              /> */}
             </Fragment>
           ))}
         {status.lastSeen !== undefined && (

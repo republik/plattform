@@ -3,7 +3,6 @@ const { sendPledgeConfirmations } = require('../Mail')
 const slack = require('@orbiting/backend-modules-republik/lib/slack')
 const { refreshPotForPledgeId } = require('../membershipPot')
 const getClients = require('./stripe/clients')
-
 const forUpdate = async ({ pledgeId, fn, pgdb }) => {
   const transaction = await pgdb.transactionBegin()
   try {

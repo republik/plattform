@@ -221,6 +221,7 @@ type Questionnaire {
   # current user (me) has submitted an answer
   userHasSubmitted: Boolean
   userSubmitDate: DateTime
+  userSubmissionId: ID
 
   allowedMemberships: [VotingMembershipRequirement!]
   allowedRoles: [String!]
@@ -249,8 +250,12 @@ type Questionnaire {
   turnout: QuestionnaireTurnout
 
   submissions(
+    "Find search term in answer values"
     search: String
+    "Find specific value in answers"
+    value: String
     first: Int
+    "Filter submissions"
     filters: SubmissionsFilterInput
     sort: SubmissionsSortInput
     before: String
@@ -259,8 +264,44 @@ type Questionnaire {
 }
 
 input SubmissionsFilterInput {
+  "Return only submission with this ID"
   id: ID
+
+  "Omit submission with this ID"
   not: ID
+
+  "Return only submissions with these IDs"
+  submissionIds: [ID!]
+
+  "Omit submissions with these IDs"
+  notSubmissionIds: [ID!]
+
+  "Return only submissions with these answered question IDs"
+  answeredQuestionIds: [ID!] @deprecated(reason: "use \`answers\` instead")
+
+  "Return only submissions with one or more answers" 
+  hasAnswers: Boolean @deprecated(reason: "use \`answers\` instead")
+
+  "Return only submissions with these answered questions"
+  answers: [SubmissionFilterAnswer]
+  
+  "Return submission by these user IDs"
+  userIds: [ID!]
+}
+
+input SubmissionFilterAnswer {
+  "Question wich must be answered"
+  questionId: ID!
+
+  "Expected amount of characters in answer given"
+  valueLength: SubmissionFilterAnswerValueLength
+}
+
+input SubmissionFilterAnswerValueLength {
+  "Expect a minimum amount of characters in answer given"
+  min: Int
+  "Expect a maximum amount of characters in answer given"
+  max: Int
 }
 
 input SubmissionsSortInput {
@@ -431,6 +472,37 @@ type QuestionTypeChoiceOption {
 }
 type QuestionTypeChoiceResult {
   option: QuestionTypeChoiceOption!
+  count: Int!
+}
+
+type QuestionTypeImageChoice implements QuestionInterface {
+  id: ID!
+  questionnaire: Questionnaire!
+  order: Int!
+  private: Boolean!
+  text: String!
+  explanation: String
+  metadata: JSON
+  userAnswer: Answer
+  turnout: QuestionTurnout!
+
+  # 1: single-select
+  # >1: multi-select (max: n)
+  # 0: multi-select (infinite)
+  cardinality: Int!
+  options: [QuestionTypeImageChoiceOption!]!
+
+  result(top: Int, min: Int): [QuestionTypeImageChoiceResult!]
+}
+type QuestionTypeImageChoiceOption {
+  label: String!
+  value: ID!
+  category: String
+  requireAddress: Boolean
+  imageUrl: String
+}
+type QuestionTypeImageChoiceResult {
+  option: QuestionTypeImageChoiceOption!
   count: Int!
 }
 

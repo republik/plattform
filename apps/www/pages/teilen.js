@@ -8,7 +8,6 @@ import { CROWDFUNDING } from '../lib/constants'
 import { useMe } from '../lib/context/MeContext'
 import { PackageBuffer, PackageItem } from '../components/Pledge/Accordion'
 import AccessCampaigns from '../components/Access/Campaigns'
-import ShareChart from '../components/Access/Campaigns/ShareChart'
 import Frame from '../components/Frame'
 import SignIn from '../components/Auth/SignIn'
 import { useInNativeApp } from '../lib/withInNativeApp'
@@ -28,7 +27,6 @@ const Page = () => {
 
   return (
     <Frame meta={meta}>
-      <ShareChart />
       <AccessCampaigns />
       {!me && (
         <div style={{ marginTop: 36 }}>

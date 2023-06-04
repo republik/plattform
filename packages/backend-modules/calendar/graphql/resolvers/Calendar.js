@@ -34,9 +34,11 @@ module.exports = {
       revokedAt: null,
     })
 
-    const slotsUsers = await pgdb.public.users
-      .find({ id: [...new Set(slots.map((slot) => slot.userId))] })
-      .then((users) => users.map(transformUser))
+    const slotsUsers = !slots.length
+      ? []
+      : await pgdb.public.users
+          .find({ id: [...new Set(slots.map((slot) => slot.userId))] })
+          .then((users) => users.map(transformUser))
 
     const today = dayjs().startOf('day')
 

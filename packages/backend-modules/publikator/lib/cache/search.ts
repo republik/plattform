@@ -1,6 +1,7 @@
 const debug = require('debug')('publikator:cache:search')
 
 import { GraphqlContext } from '@orbiting/backend-modules-types'
+
 const utils = require('@orbiting/backend-modules-search/lib/utils')
 
 import { getPhases } from '../../lib/phases'
@@ -43,7 +44,16 @@ const getSourceFilter = () => ({
   },
 })
 
-const find = async (args: any, { elastic }: GraphqlContext) => {
+const applyRolebasedFilter = (query: any, context: GraphqlContext) => {
+  const phases = getPhases()
+    .filter((phase) => phase.predicates?.canAccess?.(context))
+    .map((phase) => phase.key)
+
+  query.bool.must.push({ terms: { 'currentPhase.keyword': phases } })
+}
+
+const find = async (args: any, context: GraphqlContext) => {
+  const { elastic } = context
   debug('args: %o', args)
 
   const fields = [
@@ -114,6 +124,8 @@ const find = async (args: any, { elastic }: GraphqlContext) => {
       },
     })
   }
+
+  applyRolebasedFilter(query, context)
 
   const aggs = {
     phases: {

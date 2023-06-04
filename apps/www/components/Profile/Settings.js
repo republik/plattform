@@ -5,7 +5,7 @@ import withT from '../../lib/withT'
 import UsernameField from './UsernameField'
 import Link from 'next/link'
 
-const Settings = ({ user, isEditing, onChange, values, errors, dirty, t }) => {
+const Settings = ({ user, isEditing, onChange, values, errors, t }) => {
   if (!isEditing) {
     return null
   }

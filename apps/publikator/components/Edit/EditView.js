@@ -89,6 +89,9 @@ const EditView = ({
     })
   }, [debouncedContent, syncKeys, keysSynced])
 
+  const repoId = repo?.id
+  const commitId = (repo?.commit || repo?.latestCommit)?.id
+
   return (
     <>
       {interruptingUsers && (
@@ -108,14 +111,16 @@ const EditView = ({
       {!readOnly && (
         <div {...styles.phase}>
           <PhaseSummary
-            commitId={(repo?.commit || repo?.latestCommit)?.id}
-            repoId={repo?.id}
+            commitId={commitId}
+            repoId={repoId}
             hasUncommittedChanges={hasUncommittedChanges}
           />
         </div>
       )}
       {!!content?.children && (
         <ContentEditor
+          commitId={commitId}
+          repoId={repoId}
           publishDate={publishDate}
           value={content.children}
           onChange={(newValue) =>

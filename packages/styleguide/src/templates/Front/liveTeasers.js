@@ -9,7 +9,7 @@ import { TeaserActiveDebates } from '../../components/TeaserActiveDebates'
 
 import { TeaserSectionTitle } from '../../components/TeaserShared'
 import { TeaserMyMagazine } from '../../components/TeaserMyMagazine'
-import { TeaserFlyer } from '../../components/TeaserFlyer'
+import { SeparatorGutenTag } from '../../components/SeparatorGutenTag'
 
 import Center from '../../components/Center'
 import Loader from '../../components/Loader'
@@ -58,9 +58,9 @@ const createLiveTeasers = ({
   withFeedData = withData,
   withDiscussionsData = withData,
   withMyMagazineData = withData,
-  withFlyerData = withData,
   ActionBar,
   showMyMagazine = true,
+  ClimateLabTeaser,
 }) => {
   const MyMagazineWithData = withMyMagazineData(
     ({
@@ -127,20 +127,6 @@ const createLiveTeasers = ({
       )
     },
   )
-
-  const FlyerTeaserWithData = withFlyerData(({ attributes, data }) => {
-    return (
-      <Loader
-        error={data.error}
-        loading={!data || data.loading}
-        style={{ minHeight: LAZYLOADER_MYMAGAZINE_HEIGHT }}
-        render={() => {
-          if (!data.flyer) return null
-          return <TeaserFlyer flyer={data.flyer} Link={Link} />
-        }}
-      />
-    )
-  })
 
   const extractRepoIds = (children) => {
     if (!children) {
@@ -284,18 +270,14 @@ const createLiveTeasers = ({
       matchMdast: (node) =>
         matchZone('LIVETEASER')(node) && node.data.id === 'flyer',
       props: (node) => node.data,
-      component: (props) => {
-        return (
-          <LazyLoad style={{ minHeight: LAZYLOADER_MYMAGAZINE_HEIGHT }}>
-            <FlyerTeaserWithData {...props} />
-          </LazyLoad>
-        )
+      component: () => {
+        return <SeparatorGutenTag />
       },
       isVoid: true,
       editorModule: 'liveteaser',
       editorOptions: {
         type: 'LIVETEASERFLYER',
-        insertButtonText: 'Flyer Teaser',
+        insertButtonText: 'Guten Tag',
         insertId: 'flyer',
       },
     },
@@ -364,6 +346,32 @@ const createLiveTeasers = ({
         type: 'LIVETEASEREND',
         insertButtonText: 'The End',
         insertId: 'end',
+      },
+    },
+    // I know, I know, technically, this is not a live teaser: we pass the Component
+    // as prop to the schema in the FE and the Publikator only shows a placeholder.
+    // However, it feels a bit overkill to put Klimalab stuff
+    // (including queries/mutations) in the SG, just for the sake of showing
+    // a preview in Publikator.
+    // It also makes reusing the component for paynotes trickier and frankly,
+    // who has time for that right now?
+    {
+      matchMdast: (node) =>
+        matchZone('LIVETEASER')(node) && node.data.id === 'climatelab',
+      props: (node) => node.data,
+      component: (props) => {
+        return ClimateLabTeaser ? (
+          <ClimateLabTeaser {...props} />
+        ) : (
+          <Placeholder attributes={props.attributes}>Klimalabor</Placeholder>
+        )
+      },
+      isVoid: true,
+      editorModule: 'liveteaser',
+      editorOptions: {
+        type: 'LIVETEASERCLIMATELAB',
+        insertButtonText: 'Klimalabor Teaser',
+        insertId: 'climatelab',
       },
     },
   ]

@@ -1,8 +1,12 @@
 import { Component } from 'react'
 import { css } from 'glamor'
-import LocalIcon from 'react-icons/lib/md/lock-open'
-import CheckIcon from 'react-icons/lib/md/check'
-import TagIcon from 'react-icons/lib/md/grade'
+
+import {
+  IconLockOpen as LocalIcon,
+  IconCheck,
+  IconGrade as TagIcon,
+} from '@republik/icons'
+
 import { Interaction, Label } from '@project-r/styleguide'
 import { lab } from 'd3-color'
 import Link from 'next/link'
@@ -333,7 +337,7 @@ class Tree extends Component {
                               style={styles.checkIcon}
                             />
                           ) : (
-                            <CheckIcon
+                            <IconCheck
                               color='#000'
                               size={MILESTONEICON_SIZE}
                               style={styles.checkIcon}

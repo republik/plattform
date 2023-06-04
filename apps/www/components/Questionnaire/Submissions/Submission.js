@@ -8,11 +8,9 @@ import {
   RelativeTime,
   useColorContext,
   useHeaderHeight,
-  AddIcon,
-  RemoveIcon,
   IconButton,
-  ShareIcon,
   usePrevious,
+  RawHtml,
 } from '@project-r/styleguide'
 import { useEffect, useRef, useState } from 'react'
 import { max, shuffle } from 'd3-array'
@@ -28,8 +26,10 @@ import { useInNativeApp, postMessage } from '../../../lib/withInNativeApp'
 import ShareOverlay from '../../ActionBar/ShareOverlay'
 import { trackEvent } from '../../../lib/matomo'
 import { getSubmissionUrl } from './Share'
+import { useTranslation } from '../../../lib/withT'
+import { IconAdd, IconRadioChecked, IconRadioUnchecked, IconRemove, IconShare } from '@republik/icons'
 
-const styles = {
+export const styles = {
   highlightContainer: css({
     padding: '8px 7px',
     margin: '-8px -7px',
@@ -55,7 +55,7 @@ const styles = {
     alignSelf: 'stretch',
     display: 'flex',
     flexDirection: 'column',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     flexGrow: 1,
     minWidth: 0,
   }),
@@ -85,6 +85,125 @@ const styles = {
 
 const dateTimeFormat = swissTime.format('%d. %B %Y %H:%M')
 const titleDate = (string) => dateTimeFormat(new Date(string))
+
+export const SubmissionAuthor = ({
+  displayAuthor,
+  createdAt,
+  updatedAt,
+  submissionUrl,
+  children,
+  isHighlighted,
+  customStyle = {},
+  customStylePicture = {},
+}) => {
+  const { t } = useTranslation()
+  const [colorScheme] = useColorContext()
+  const [headerHeight] = useHeaderHeight()
+  const isUpdated = createdAt && updatedAt && updatedAt !== createdAt
+  return (
+    <div
+      {...styles.header}
+      style={{ top: headerHeight, ...customStyle }}
+      {...colorScheme.set(
+        'backgroundColor',
+        isHighlighted ? 'alert' : 'default',
+      )}
+    >
+      {displayAuthor.profilePicture && (
+        <img
+          {...styles.headerPicture}
+          style={customStylePicture}
+          src={displayAuthor.profilePicture}
+          alt=''
+        />
+      )}
+      <div {...styles.headerText}>
+        <Interaction.H3>
+          {displayAuthor.slug ? (
+            <Link href={`/~${displayAuthor.slug}`}>
+              <a {...plainLinkRule}>{displayAuthor.name}</a>
+            </Link>
+          ) : (
+            displayAuthor.name
+          )}
+        </Interaction.H3>
+        <Label style={{ paddingRight: '20px' }}>
+          <span {...colorScheme.set('color', 'textSoft')}>
+            {displayAuthor.credentials && (
+              <RawHtml
+                dangerouslySetInnerHTML={{
+                  __html: displayAuthor.credentials,
+                }}
+              />
+            )}
+            {createdAt && !displayAuthor.credentials && (
+              <Link href={submissionUrl}>
+                <a {...styles.linkUnderline} title={titleDate(createdAt)}>
+                  <RelativeTime t={t} isDesktop date={createdAt} />
+                </a>
+              </Link>
+            )}
+            {isUpdated && (
+              <>
+                {' · '}
+                <span title={titleDate(updatedAt)}>
+                  {t('styleguide/comment/header/updated')}
+                </span>
+              </>
+            )}
+          </span>
+        </Label>
+      </div>
+      {children}
+    </div>
+  )
+}
+
+const ChoiceAnswerOption = ({ option, checked }) => {
+  const [colorScheme] = useColorContext()
+  const Icon = checked ? IconRadioChecked : IconRadioUnchecked
+  return (
+    <span
+      style={{
+        marginRight: '2em',
+        display: 'inline-flex',
+        alignItems: 'center',
+      }}
+      {...colorScheme.set('color', checked ? 'text' : 'textSoft')}
+    >
+      {!!Icon && <Icon style={{ marginRight: 7 }} />}
+      {option?.label}
+    </span>
+  )
+}
+
+const ChoiceAnswer = ({ question, payload }) => (
+  <span>
+    {question.options.map((option, i) => (
+      <ChoiceAnswerOption
+        key={i}
+        option={option}
+        checked={payload?.value?.includes(option.value)}
+      />
+    ))}
+  </span>
+)
+
+export const SubmissionQa = ({ question, payload }) => (
+  <Editorial.P attributes={{}}>
+    <strong>{question.text}</strong>
+    <br />
+    {question.__typename === 'QuestionTypeChoice' ? (
+      <ChoiceAnswer question={question} payload={payload} />
+    ) : (
+      <AnswerText
+        text={payload.text}
+        value={payload.value}
+        question={question}
+      />
+    )}
+  </Editorial.P>
+)
 
 const Submission = ({
   t,
@@ -126,15 +245,12 @@ const Submission = ({
   const { inNativeApp } = useInNativeApp()
   const [sharePayload, setSharePayload] = useState()
 
-  const [headerHeight] = useHeaderHeight()
   const hiddenAnswersCount =
     visibleIndexes === true ? 0 : answersCount - visibleIndexes.length
   let lastShownIndex
 
-  const isUpdated = updatedAt && updatedAt !== createdAt
-
   const rootRef = useRef()
-  const publicUrl = getSubmissionUrl(pathname, id)
+  const submissionUrl = getSubmissionUrl(pathname, id)
 
   return (
     <div
@@ -155,53 +271,16 @@ const Submission = ({
           eventCategory='SubmissionShare'
         />
       )}
-      <div
-        {...styles.header}
-        style={{ top: headerHeight }}
-        {...colorScheme.set(
-          'backgroundColor',
-          isHighlighted ? 'alert' : 'default',
-        )}
+      <SubmissionAuthor
+        displayAuthor={displayAuthor}
+        submissionUrl={submissionUrl}
+        createdAt={createdAt}
+        updatedAt={updatedAt}
       >
-        {displayAuthor.profilePicture && (
-          <img
-            {...styles.headerPicture}
-            src={displayAuthor.profilePicture}
-            alt=''
-          />
-        )}
-        <div {...styles.headerText}>
-          <Interaction.H3>
-            {displayAuthor.slug ? (
-              <Link href={`/~${displayAuthor.slug}`}>
-                <a {...plainLinkRule}>{displayAuthor.name}</a>
-              </Link>
-            ) : (
-              displayAuthor.name
-            )}
-          </Interaction.H3>
-          <Label>
-            <span {...colorScheme.set('color', 'textSoft')}>
-              <Link href={publicUrl}>
-                <a {...styles.linkUnderline} title={titleDate(createdAt)}>
-                  <RelativeTime t={t} isDesktop date={createdAt} />
-                </a>
-              </Link>
-              {isUpdated && (
-                <>
-                  {' · '}
-                  <span title={titleDate(updatedAt)}>
-                    {t('styleguide/comment/header/updated')}
-                  </span>
-                </>
-              )}
-            </span>
-          </Label>
-        </div>
         <div {...styles.headerActions}>
           <IconButton
             invert={true}
-            Icon={isExpanded ? RemoveIcon : AddIcon}
+            Icon={isExpanded ? IconRemove : IconAdd }
             fillColorName='textSoft'
             size={20}
             onClick={() => {
@@ -228,7 +307,7 @@ const Submission = ({
             }
           />
         </div>
-      </div>
+      </SubmissionAuthor>
 
       {isExpanded &&
         answers.nodes.map(({ id, question: { id: qid }, payload }, index) => {
@@ -268,17 +347,7 @@ const Submission = ({
             return null
           }
           lastShownIndex = index
-          return (
-            <Editorial.P key={id}>
-              <strong>{question.text}</strong>
-              <br />
-              <AnswerText
-                text={payload.text}
-                value={payload.value}
-                question={question}
-              />
-            </Editorial.P>
-          )
+          return <SubmissionQa key={id} question={question} payload={payload} />
         })}
       {isExpanded && (
         <div {...styles.footer}>
@@ -297,8 +366,8 @@ const Submission = ({
             title={t('article/actionbar/share')}
             label={t('styleguide/CommentActions/share/short')}
             labelShort={t('styleguide/CommentActions/share/short')}
-            Icon={ShareIcon}
-            href={publicUrl}
+            Icon={IconShare}
+            href={submissionUrl}
             onClick={(e) => {
               e.preventDefault()
               const title = t('questionnaire/share/title', {

@@ -172,7 +172,7 @@ const updateResultIncrementally = async (
   if (!question) {
     throw new Error(t('api/questionnaire/question/404'))
   }
-  if (!['Choice', 'Range'].includes(question.type)) {
+  if (!['Choice', 'ImageChoice', 'Range'].includes(question.type)) {
     throw new Error(
       t('api/questionnaire/answer/updateResultIncrementally/choiceOnly'),
     )
@@ -188,10 +188,10 @@ const updateResultIncrementally = async (
     turnout.unattributed += 1
   }
 
-  if (question.type === 'Choice') {
+  if (['Choice', 'ImageChoice'].includes(question.type)) {
     const optionPayload = (question.result.payload || []).find(
-      (p) => p.option.value == answer.payload.value,
-    ) // eslint-disable-line eqeqeq
+      (p) => p.option.value == answer.payload.value, // eslint-disable-line eqeqeq
+    )
 
     if (!optionPayload) {
       console.error('optionPayload not found', optionPayload)

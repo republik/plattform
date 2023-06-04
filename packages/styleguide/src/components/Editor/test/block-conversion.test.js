@@ -1,4 +1,5 @@
 import { createEditor, Transforms } from 'slate'
+import { act } from '@testing-library/react'
 import { cleanupTree } from '../Core/helpers/tree'
 import { toggleElement } from '../Core/helpers/structure'
 import mockEditor from './mockEditor'
@@ -13,13 +14,14 @@ describe('Slate Editor: Block Conversion', () => {
 
   const defaultConfig = { schema: articleSchema }
 
-  async function setup(structure, config = defaultConfig) {
-    return await mockEditor(createEditor(), {
-      structure,
-      config,
-      value,
-      setValue: (val) => (value = val),
-    })
+  async function setup(config) {
+    return act(async () =>
+      mockEditor(createEditor(), {
+        config,
+        value,
+        setValue: (val) => (value = val),
+      }),
+    )
   }
 
   describe('simple conversion', () => {
@@ -35,36 +37,43 @@ describe('Slate Editor: Block Conversion', () => {
           type: ['paragraph', 'blockQuote', 'ul', 'ol'],
         },
       ]
-      const editor = await setup(structure)
-      await Transforms.select(editor, { path: [0, 0], offset: 0 })
 
-      toggleElement(editor, 'blockQuote')
-      await new Promise(process.nextTick)
+      const editor = await setup({ ...defaultConfig, structure })
+
+      await act(async () => {
+        await Transforms.select(editor, { path: [0, 0], offset: 0 })
+        toggleElement(editor, 'blockQuote')
+      })
       expect(value.length).toBe(1)
       expect(value[0].type).toBe('blockQuote')
 
-      toggleElement(editor, 'ul')
-      await new Promise(process.nextTick)
+      await act(async () => {
+        toggleElement(editor, 'ul')
+      })
       expect(value.length).toBe(1)
       expect(value[0].type).toBe('ul')
 
-      toggleElement(editor, 'ol')
-      await new Promise(process.nextTick)
+      await act(async () => {
+        toggleElement(editor, 'ol')
+      })
       expect(value.length).toBe(1)
       expect(value[0].type).toBe('ol')
 
-      toggleElement(editor, 'ul')
-      await new Promise(process.nextTick)
+      await act(async () => {
+        toggleElement(editor, 'ul')
+      })
       expect(value.length).toBe(1)
       expect(value[0].type).toBe('ul')
 
-      toggleElement(editor, 'blockQuote')
-      await new Promise(process.nextTick)
+      await act(async () => {
+        toggleElement(editor, 'blockQuote')
+      })
       expect(value.length).toBe(1)
       expect(value[0].type).toBe('blockQuote')
 
-      toggleElement(editor, 'paragraph')
-      await new Promise(process.nextTick)
+      await act(async () => {
+        toggleElement(editor, 'paragraph')
+      })
       expect(value.length).toBe(1)
       expect(value[0].type).toBe('paragraph')
     })
@@ -92,27 +101,32 @@ describe('Slate Editor: Block Conversion', () => {
           type: ['paragraph', 'pullQuote', 'ul', 'ol'],
         },
       ]
-      const editor = await setup(structure)
-      await Transforms.select(editor, { path: [0, 0], offset: 0 })
 
-      toggleElement(editor, 'ul')
-      await new Promise(process.nextTick)
+      const editor = await setup({ ...defaultConfig, structure })
+
+      await act(async () => {
+        await Transforms.select(editor, { path: [0, 0], offset: 0 })
+        toggleElement(editor, 'ul')
+      })
       expect(cleanupTree(value[0].children[0].children)).toEqual(formattedText)
 
-      toggleElement(editor, 'ol')
-      await new Promise(process.nextTick)
+      await act(async () => {
+        toggleElement(editor, 'ol')
+      })
       expect(cleanupTree(value[0].children[0].children)).toEqual(formattedText)
 
-      toggleElement(editor, 'pullQuote')
-      await new Promise(process.nextTick)
+      await act(async () => {
+        toggleElement(editor, 'pullQuote')
+      })
       expect(cleanupTree(value[0].children[0].children)).toEqual([
         { text: 'CO' },
         { text: '2', sub: true },
         { text: 'levels are increasing' },
       ])
 
-      toggleElement(editor, 'paragraph')
-      await new Promise(process.nextTick)
+      await act(async () => {
+        toggleElement(editor, 'paragraph')
+      })
       expect(cleanupTree(value[0].children)).toEqual([
         { text: 'CO' },
         { text: '2', sub: true },
@@ -137,11 +151,13 @@ describe('Slate Editor: Block Conversion', () => {
           repeat: true,
         },
       ]
-      const editor = await setup(structure)
-      await Transforms.select(editor, { path: [1, 0], offset: 0 })
 
-      toggleElement(editor, 'ol')
-      await new Promise(process.nextTick)
+      const editor = await setup({ ...defaultConfig, structure })
+
+      await act(async () => {
+        await Transforms.select(editor, { path: [1, 0], offset: 0 })
+        toggleElement(editor, 'ol')
+      })
       expect(cleanupTree(value)).toEqual([
         {
           type: 'paragraph',
@@ -182,11 +198,12 @@ describe('Slate Editor: Block Conversion', () => {
           repeat: true,
         },
       ]
-      const editor = await setup(structure)
-      await Transforms.select(editor, { path: [0, 0], offset: 0 })
+      const editor = await setup({ ...defaultConfig, structure })
 
-      toggleElement(editor, 'blockQuote')
-      await new Promise(process.nextTick)
+      await act(async () => {
+        await Transforms.select(editor, { path: [0, 0], offset: 0 })
+        toggleElement(editor, 'blockQuote')
+      })
       expect(cleanupTree(value)).toEqual([
         {
           type: 'blockQuote',
@@ -212,9 +229,10 @@ describe('Slate Editor: Block Conversion', () => {
       ])
       expect(editor.selection.focus.path).toEqual([0, 1, 0])
 
-      await Transforms.select(editor, [0, 0, 0])
-      toggleElement(editor, 'ol')
-      await new Promise(process.nextTick)
+      await act(async () => {
+        await Transforms.select(editor, [0, 0, 0])
+        toggleElement(editor, 'ol')
+      })
       expect(cleanupTree(value)).toEqual([
         {
           type: 'ol',
@@ -232,9 +250,10 @@ describe('Slate Editor: Block Conversion', () => {
       ])
       expect(editor.selection.focus.path).toEqual([0, 1, 0])
 
-      await Transforms.select(editor, [0, 0])
-      toggleElement(editor, 'paragraph')
-      await new Promise(process.nextTick)
+      await act(async () => {
+        await Transforms.select(editor, [0, 0])
+        toggleElement(editor, 'paragraph')
+      })
       expect(cleanupTree(value)).toEqual([
         {
           type: 'paragraph',
@@ -305,12 +324,15 @@ describe('Slate Editor: Block Conversion', () => {
           repeat: true,
         },
       ]
-      const editor = await setup(structure, { schema: flyerSchema })
+      const editor = await act(async () => {
+        return setup({ schema: flyerSchema, structure })
+      })
 
       // toggle inner tile elements
-      await Transforms.select(editor, [0, 4, 0])
-      toggleElement(editor, 'ul')
-      await new Promise(process.nextTick)
+      await act(async () => {
+        await Transforms.select(editor, [0, 4, 0])
+        toggleElement(editor, 'ul')
+      })
       expect(cleanupTree(value)[0].children[4]).toEqual({
         type: 'ul',
         children: [
@@ -322,23 +344,27 @@ describe('Slate Editor: Block Conversion', () => {
       })
 
       // toggle inner tile elements
-      await Transforms.select(editor, [0, 5, 0])
-      toggleElement(editor, 'figure')
-      await new Promise(process.nextTick)
+      await act(async () => {
+        await Transforms.select(editor, [0, 5, 0])
+        toggleElement(editor, 'figure')
+      })
       expect(cleanupTree(value)[0].children[5]).toEqual(figure)
 
-      toggleElement(editor, 'pullQuote')
-      await new Promise(process.nextTick)
+      await act(async () => {
+        toggleElement(editor, 'pullQuote')
+      })
       expect(cleanupTree(value)[0].children[5]).toEqual(pullQuote)
 
-      toggleElement(editor, 'figure')
-      await new Promise(process.nextTick)
+      await act(async () => {
+        toggleElement(editor, 'figure')
+      })
       expect(cleanupTree(value)[0].children[5]).toEqual(figure)
 
       // toggle tile type
-      await Transforms.select(editor, [0, 0, 0])
-      toggleElement(editor, 'flyerTileMeta')
-      await new Promise(process.nextTick)
+      await act(async () => {
+        await Transforms.select(editor, [0, 0, 0])
+        toggleElement(editor, 'flyerTileMeta')
+      })
       expect(cleanupTree(value)).toMatchObject([
         {
           type: 'flyerTileMeta',
@@ -449,12 +475,15 @@ describe('Slate Editor: Block Conversion', () => {
           repeat: true,
         },
       ]
-      const editor = await setup(structure, { schema: flyerSchema })
+      const editor = await act(async () => {
+        return setup({ schema: flyerSchema, structure })
+      })
 
       // toggle inner tile elements
-      await Transforms.select(editor, [0, 1, 1, 0])
-      toggleElement(editor, 'articlePreview')
-      await new Promise(process.nextTick)
+      await act(async () => {
+        await Transforms.select(editor, [0, 1, 1, 0])
+        toggleElement(editor, 'articlePreview')
+      })
       expect(cleanupTree(value)).toEqual([
         {
           children: [

@@ -29,8 +29,16 @@
       "value": "Republik teilen"
     },
     {
+      "key": "nav/invite-friends",
+      "value": "Verstärkung holen"
+    },
+    {
       "key": "nav/becomemember",
       "value": "Mitglied werden"
+    },
+    {
+      "key": "nav/active-page",
+      "value": "(aktive Seite)"
     },
     {
       "key": "nav/sections",
@@ -51,6 +59,10 @@
     {
       "key": "navbar/discussion",
       "value": "Dialog"
+    },
+    {
+      "key": "navbar/climatelab",
+      "value": "Klimalabor"
     },
     {
       "key": "pages/magazine/title",
@@ -422,7 +434,7 @@
     },
     {
       "key": "marketing/page/reasons/3/text",
-      "value": "Die Republik wird finanziert durch ihre rund 28’000 Abonnentinnen. Wir gehören niemandem – aber jedem unserer Mitglieder ein bisschen."
+      "value": "Die Republik wird finanziert durch ihre rund 29’000 Abonnentinnen. Wir gehören niemandem – aber jedem unserer Mitglieder ein bisschen."
     },
     {
       "key": "marketing/page/vision/headline",
@@ -515,14 +527,6 @@
     {
       "key": "marketing/page/sections/title/audio",
       "value": "Alle Beiträge, auch zum Hören"
-    },
-    {
-      "key": "marketing/page/sections/description/winter",
-      "value": "Es ist eine kalte, aufreibende und verwirrende Zeit. Soll man sich all den Krisen stellen oder sich davon ablenken? Wir meinen: Beides. Und bieten Hand dazu – immer montags bei Sonnenuntergang"
-    },
-    {
-      "key": "marketing/page/sections/title/winter",
-      "value": "Winter-is-coming-Newsletter"
     },
     {
       "key": "marketing/page/vision/more",
@@ -937,18 +941,6 @@
       "value": "8 bis 12 Mal pro Jahr\n"
     },
     {
-      "key": "account/newsletterSubscriptions/COVID19/label",
-      "value": "Covid-19-Uhr-Newsletter"
-    },
-    {
-      "key": "account/newsletterSubscriptions/COVID19/frequency",
-      "value": "Montags um 19 Uhr"
-    },
-    {
-      "key": "account/newsletterSubscriptions/COVID19/description",
-      "value": "Brauchbares zur Pandemie – was man wissen sollte, obwohl es niemand mehr hören mag. Der kostenlose Newsletter ist unser Angebot zur Bewältigung der Corona-Pandemie."
-    },
-    {
       "key": "account/newsletterSubscriptions/ACCOMPLICE/label",
       "value": "Komplizen-Newsletter"
     },
@@ -959,18 +951,6 @@
     {
       "key": "account/newsletterSubscriptions/ACCOMPLICE/frequency",
       "value": "4 bis 6 Mal pro Jahr"
-    },
-    {
-      "key": "account/newsletterSubscriptions/WINTER/label",
-      "value": "Winter-is-coming-Newsletter"
-    },
-    {
-      "key": "account/newsletterSubscriptions/WINTER/frequency",
-      "value": "Montags um 17 Uhr"
-    },
-    {
-      "key": "account/newsletterSubscriptions/WINTER/description",
-      "value": "Es ist eine kalte, aufreibende und verwirrende Zeit. Soll man sich all den Krisen stellen oder sich davon ablenken? Wir meinen: beides. "
     },
     {
       "key": "account/newsletterSubscriptions/CLIMATE/label",
@@ -1046,6 +1026,22 @@
     },
     {
       "key": "account/progress/consent/noMembership",
+      "value": "Die Funktion ist nur für Mitglieder und Abonnentinnen die Republik zugänglich."
+    },
+    {
+      "key": "account/prolitteris/title",
+      "value": "Zugriffszählung"
+    },
+    {
+      "key": "account/prolitteris/consent/label",
+      "value": "Zählung erlauben"
+    },
+    {
+      "key": "account/prolitteris/description",
+      "value": "Um die Kopiervergütung durch die Verwertungsgesellschaft Pro Litteris zu ermöglichen, senden wir beim Besuch eines Beitrages die Uhrzeit und das Datum des Zugriffs sowie eine anonymisierte Version der IP-Adressen der Leser an Pro Litteris. Falls Sie trotz Anonymisierung die Zählung unterbinden wollen, können Sie dies hier tun."
+    },
+    {
+      "key": "account/prolitteris/consent/noMembership",
       "value": "Die Funktion ist nur für Mitglieder und Abonnentinnen die Republik zugänglich."
     },
     {
@@ -1177,6 +1173,10 @@
       "value": "Ein eigenes Abonnement kaufen"
     },
     {
+      "key": "Account/Access/Grants/REDUCED/message/claimed",
+      "value": "Dankeschön fürs Mitmachen im «{campaignTitle}»."
+    },
+    {
       "key": "Account/Access/Campaigns/title",
       "value": "Republik teilen"
     },
@@ -1238,7 +1238,7 @@
     },
     {
       "key": "Account/Access/Campaigns/Form/input/message/label",
-      "value": "Persönliche Nachricht"
+      "value": "Persönliche Nachricht (optional)"
     },
     {
       "key": "Account/Access/Campaigns/Form/input/message/tooLong",
@@ -1477,6 +1477,10 @@
       "value": "Ihr Name, Ihr Profilbild und Ihr Statement erscheinen auf {communityLink} und sind für alle sichtbar."
     },
     {
+      "key": "climate/profile/settings/isListed/true/note",
+      "value": "Ihr Name und Ihr Profilbild erscheinen auf {communityLink} und sind für alle sichtbar."
+    },
+    {
       "key": "profile/settings/isListed/false/note",
       "value": "Ihr Name, Ihr Profilbild und Ihr Statement erscheinen nicht auf {communityLink}."
     },
@@ -1498,7 +1502,7 @@
     },
     {
       "key": "profile/settings/isEligibleForProfile/notEligible",
-      "value": "Sie benötigen ein laufendes Abonnement um eine öffentliches Profil oder Statement anzulegen."
+      "value": "Sie benötigen ein laufendes Abonnement um Ihr Profil öffentlich zu machen oder auf der Community-Seite anzeigen zu lassen."
     },
     {
       "key": "profile/settings/privacy/communityLink",
@@ -1583,6 +1587,30 @@
     {
       "key": "profile/portrait/empty",
       "value": "Sie müssen ein Porträtbild hochladen"
+    },
+    {
+      "key": "profile/report/label",
+      "value": "Benutzer melden"
+    },
+    {
+      "key": "profile/report/confirm",
+      "value": "Sind Sie sicher, dass dieser Benutzer gegen die Etikette verstossen hat und Sie die Moderation herbeirufen möchten? Nennen Sie bitte den Grund für diese Meldung."
+    },
+    {
+      "key": "profile/report/provideReason",
+      "value": "Bitte geben Sie einen Grund an, warum Sie diesen Benutzer melden möchten."
+    },
+    {
+      "key": "profile/report/success",
+      "value": "Wir haben Ihre Meldung erhalten."
+    },
+    {
+      "key": "profile/report/error",
+      "value": "Beim Senden der Meldung ist ein Fehler aufgetreten."
+    },
+    {
+      "key": "profile/report/tooLong",
+      "value": "Sie können maximal {max} Zeichen eingeben.{br}Ihre Eingabe: {input}"
     },
     {
       "key": "profile/gender",
@@ -1849,6 +1877,26 @@
       "value": "Anmelden"
     },
     {
+      "key": "footer/icon/instagram",
+      "value": "Instagram"
+    },
+    {
+      "key": "footer/icon/facebook",
+      "value": "Facebook"
+    },
+    {
+      "key": "footer/icon/twitter",
+      "value": "Twitter"
+    },
+    {
+      "key": "footer/icon/github",
+      "value": "Github"
+    },
+    {
+      "key": "components/Discussion/OrderBy/selected",
+      "value": "(aktive Sortierung)"
+    },
+    {
       "key": "components/Discussion/OrderBy/DATE",
       "value": "Neueste"
     },
@@ -1863,6 +1911,10 @@
     {
       "key": "components/Discussion/OrderBy/REPLIES",
       "value": "Meiste Antworten"
+    },
+    {
+      "key": "components/Discussion/TagFilter/selected",
+      "value": "(aktiver Filter)"
     },
     {
       "key": "components/Discussion/reload",
@@ -1983,6 +2035,14 @@
     {
       "key": "styleguide/AudioPlayer/sourceErrorTryAgain",
       "value": "Nochmal versuchen"
+    },
+    {
+      "key": "styleguide/AudioPlayer/autoplayOn",
+      "value": "Autoplay an"
+    },
+    {
+      "key": "styleguide/AudioPlayer/autoplayOff",
+      "value": "Autoplay aus"
     },
     {
       "key": "styleguide/CommentComposer/placeholder",
@@ -2203,6 +2263,10 @@
     {
       "key": "styleguide/SeriesNav/current",
       "value": "Sie lesen:"
+    },
+    {
+      "key": "styleguide/Tag/count",
+      "value": "Beiträge"
     },
     {
       "key": "timeago/justNow/other",
@@ -2449,6 +2513,10 @@
       "value": "Bitte begründen"
     },
     {
+      "key": "package/customize/userPrice/YEARLY_ABO/beforeReason",
+      "value": "Eine grosse und vielfältige Community ist für ein leserinnenfinanziertes Magazin unbezahlbar. Deshalb geben wir Ihnen zum 5-Jahres-Jubiläum der Republik die Möglichkeit, den Preis für Ihr Abo selber zu wählen. "
+    },
+    {
       "key": "package/customize/userPrice/beforeReason",
       "value": "Journalismus kostet. Aber wir wollen niemanden ausschliessen. Falls Sie sich die 240 Franken nicht leisten können, bitten wir Sie um eine knappe Begründung und einen Preis, der Ihnen gerecht scheint. "
     },
@@ -2497,6 +2565,18 @@
       "value": "Vielleicht das einzige Geschenk, das Sie Freunden und Feinden gleich herzlich machen können: einige Monate Republik."
     },
     {
+      "key": "package/YEARLY_ABO/price",
+      "value": "{formattedCHF}"
+    },
+    {
+      "key": "package/YEARLY_ABO/title",
+      "value": "Mitstreiterinnen-Abo"
+    },
+    {
+      "key": "package/YEARLY_ABO/description",
+      "value": "Es freut uns, dass Sie dabei sind! Mit Ihrem selbst gewählten Beitrag erhalten Sie ab sofort und für ein Jahr unser Magazin, zum Lesen und zum Hören. Und Sie investieren in die Zukunft unseres Journalismus."
+    },
+    {
       "key": "package/BENEFACTOR/title",
       "value": "Gönner-Mitgliedschaft"
     },
@@ -2527,6 +2607,10 @@
     {
       "key": "package/group/GIVE",
       "value": "Geschenke"
+    },
+    {
+      "key": "package/group/HIDDEN",
+      "value": "Angebote"
     },
     {
       "key": "option/ABO/label/other",
@@ -2571,6 +2655,14 @@
     {
       "key": "option/ABO_GIVE_MONTHS/interval/month/label/other",
       "value": "Monate pro Abo"
+    },
+    {
+      "key": "option/YEARLY_ABO/label/other",
+      "value": "Mitstreiter-Abos"
+    },
+    {
+      "key": "option/YEARLY_ABO/label/1",
+      "value": "Mitstreiter-Abo"
     },
     {
       "key": "package/customize/ABO_GIVE_MONTHS/years/1",
@@ -2643,6 +2735,10 @@
     {
       "key": "payment/stripe/only/MONTHLY_ABO",
       "value": "Das Monatsabo ist nur mit Kreditkarte (Visa, Mastercard, Amex) verfügbar."
+    },
+    {
+      "key": "payment/method/selected",
+      "value": "(ausgewählte Zahlungsart)"
     },
     {
       "key": "payment/stripe/js/failed",
@@ -3213,6 +3309,10 @@
       "value": "Herunterladen"
     },
     {
+      "key": "article/actionbar/download/processing",
+      "value": "wird heruntergeladen..."
+    },
+    {
       "key": "article/actionbar/audio",
       "value": "Beitrag anhören"
     },
@@ -3238,7 +3338,7 @@
     },
     {
       "key": "article/actionbar/link/label/error",
-      "value": "Nicht unterstützt :("
+      "value": "Kopieren fehlgeschlagen"
     },
     {
       "key": "article/actionbar/fontSize/title",
@@ -3317,6 +3417,10 @@
       "value": "Entfernen"
     },
     {
+      "key": "article/actionbar/audio/info/title",
+      "value": "Vorgelesener Beitrag"
+    },
+    {
       "key": "article/actionbar/audio/info/speaker/default",
       "value": "unserem Sprecherinnen-Team"
     },
@@ -3325,12 +3429,44 @@
       "value": "Vorgelesen von"
     },
     {
+      "key": "article/actionbar/audio/info/voices/0",
+      "value": "Vorgelesen von unserem Sprecherinnen-Team"
+    },
+    {
+      "key": "article/actionbar/audio/info/voices/other",
+      "value": "Vorgelesen von {names}"
+    },
+    {
       "key": "article/actionbar/audio/info/play-synth",
       "value": "Anhören (synthetisch)"
     },
     {
+      "key": "article/actionbar/audio/info/readAloud",
+      "value": "{subscribe} sobald vorgelesen {synthetic}"
+    },
+    {
+      "key": "article/actionbar/audio/info/readAloud/subscribe",
+      "value": "Benachrichtigen"
+    },
+    {
+      "key": "article/actionbar/audio/info/readAloud/checkbox",
+      "value": "Ich möchte benachrichtigt werden."
+    },
+    {
+      "key": "article/actionbar/audio/info/readAloud/synthetic",
+      "value": "oder synthetische Version {action}"
+    },
+    {
+      "key": "article/actionbar/audio/info/readAloud/synthetic/action",
+      "value": "anhören"
+    },
+    {
       "key": "article/actionbar/audio/info/read-soon",
       "value": "Diesen Beitrag lesen wir im Laufe des Tages ein."
+    },
+    {
+      "key": "article/actionbar/audio/info/read-aloud-notification",
+      "value": "Benachrichtigen."
     },
     {
       "key": "article/syntheticReadAloud/title",
@@ -3573,6 +3709,9 @@
       "value": "Guten Tag, {name}"
     },
     {
+      "key": "merci/title/package/YEARLY_ABO"
+    },
+    {
       "key": "merci/title/package/DONATE",
       "value": "Guten Tag, {name}"
     },
@@ -3791,6 +3930,26 @@
     {
       "key": "memberships/ABO_GIVE_MONTHS/manage/reactivate",
       "value": "Abonnement reaktivieren"
+    },
+    {
+      "key": "memberships/YEARLY_ABO/manage/prolong/link",
+      "value": "Abonnement verlängern"
+    },
+    {
+      "key": "memberships/YEARLY_ABO/manage/cancel/link",
+      "value": "Abonnement kündigen"
+    },
+    {
+      "key": "memberships/YEARLY_ABO/manage/upgrade/link",
+      "value": "{buyLink} und behalten Sie Ihren Zugang zur Republik auch nach Ablauf Ihres Mitstreiterinnen-Abos."
+    },
+    {
+      "key": "memberships/YEARLY_ABO/manage/upgrade/link/buyText",
+      "value": "Lösen Sie eine Jahresmitgliedschaft"
+    },
+    {
+      "key": "memberships/YEARLY_ABO/manage/reactivate",
+      "value": "Abonnement-Kündigung zurückziehen"
     },
     {
       "key": "memberships/claim/lead",
@@ -4378,15 +4537,15 @@
     },
     {
       "key": "questionnaire/submit",
-      "value": "abschicken"
+      "value": "Abschicken"
     },
     {
       "key": "questionnaire/publish",
-      "value": "publizieren"
+      "value": "Publizieren"
     },
     {
       "key": "questionnaire/update",
-      "value": "aktualisieren"
+      "value": "Aktualisieren"
     },
     {
       "key": "questionnaire/reset",
@@ -4533,6 +4692,34 @@
       "value": "Das 1-Minuten-Formular"
     },
     {
+      "key": "questionnaire/postcard/submit",
+      "value": "Karte speichern"
+    },
+    {
+      "key": "questionnaire/postcard/publish",
+      "value": "Abschicken"
+    },
+    {
+      "key": "questionnaire/submitanonym",
+      "value": "Anonym abschicken"
+    },
+    {
+      "key": "questionnaire/postcard/revoke",
+      "value": "Nochmals bearbeiten"
+    },
+    {
+      "key": "questionnaire/climatepersonalinfo/submit",
+      "value": "Speichern"
+    },
+    {
+      "key": "questionnaire/postcard/privacy/public",
+      "value": "Sie haben ein öffentliches Profil bei der Republik. Wenn Sie nicht möchten, dass Sie als Absenderin erkennbar sind, wählen Sie «Anonym abschicken»."
+    },
+    {
+      "key": "questionnaire/postcard/privacy/private",
+      "value": "Wenn Sie nicht möchten, dass Sie als Absenderin erkennbar sind, wählen Sie «Anonym abschicken»."
+    },
+    {
       "key": "package/PROLONG/title",
       "value": "Verlängern"
     },
@@ -4629,6 +4816,10 @@
       "value": "Abonnement (#{sequenceNumber})"
     },
     {
+      "key": "memberships/title/YEARLY_ABO",
+      "value": "Mitstreiter-Abo"
+    },
+    {
       "key": "memberships/title/ABO/give",
       "value": "{name} (#{sequenceNumber})"
     },
@@ -4671,6 +4862,10 @@
     {
       "key": "package/customize/price/payLess",
       "value": "Ich kann mir den Betrag nicht leisten"
+    },
+    {
+      "key": "package/customize/userPrice/YEARLY_ABO/beforePrice",
+      "value": "Welcher Preis stimmt für Sie?"
     },
     {
       "key": "package/customize/userPrice/beforePrice",
@@ -4798,6 +4993,14 @@
     },
     {
       "key": "pledge/meta/package/ABO_GIVE_MONTHS/description",
+      "value": "Wir sind ein digitales Magazin für Politik, Wirtschaft, Gesellschaft und Kultur. Unabhängig. Werbefrei."
+    },
+    {
+      "key": "pledge/meta/package/YEARLY_ABO/title",
+      "value": "Verstärken Sie die Republik-Community!"
+    },
+    {
+      "key": "pledge/meta/package/YEARLY_ABO/description",
       "value": "Wir sind ein digitales Magazin für Politik, Wirtschaft, Gesellschaft und Kultur. Unabhängig. Werbefrei."
     },
     {
@@ -5137,6 +5340,38 @@
       "value": "vor {count} Tagen"
     },
     {
+      "key": "prolongNecessary/YEARLY_ABO/before",
+      "value": "Ihr Abo endet bald: {link}"
+    },
+    {
+      "key": "prolongNecessary/YEARLY_ABO/before/linkText",
+      "value": "Jahresmitglied werden"
+    },
+    {
+      "key": "prolongNecessary/YEARLY_ABO/due",
+      "value": "Mitstreiter-Abo endet bald: {link}"
+    },
+    {
+      "key": "prolongNecessary/YEARLY_ABO/due/linkText",
+      "value": "Jetzt Jahresmitglied werden"
+    },
+    {
+      "key": "prolongNecessary/YEARLY_ABO/overdue",
+      "value": "Ihr Abo endet – und Ihre Mitgliedschaft beginnt?"
+    },
+    {
+      "key": "prolongNecessary/YEARLY_ABO/overdue/button",
+      "value": "Jetzt Jahresmitglied werden"
+    },
+    {
+      "key": "prolongNecessary/YEARLY_ABO/overdue/explanation",
+      "value": "Ihr Abo läuft am {endDate} aus. Doch das muss nicht das Ende Ihrer Zeit bei der Republik bedeuten: Werden Sie jetzt Jahresmitglied und unterstützen Sie unseren Journalismus auch in Zukunft."
+    },
+    {
+      "key": "prolongNecessary/YEARLY_ABO/overdue/explanation/cancelText",
+      "value": "Abonnement kündigen"
+    },
+    {
       "key": "crowdfunding/status/time/ended/PROLONG",
       "value": "Ein detaillierter Überblick folgt Ende Monat."
     },
@@ -5229,12 +5464,16 @@
       "value": "Alle"
     },
     {
-      "key": "AudioPlayer/Latest/NoAcces",
+      "key": "AudioPlayer/Latest/NoAccess",
       "value": "Die neusten Beiträge sind für Mitglieder und Abonnentinnen der Republik zugänglich."
     },
     {
       "key": "AudioPlayer/Latest/NoItems",
       "value": "Keine Beiträge verfügbar."
+    },
+    {
+      "key": "AudioPlayer/Latest/LoadMore",
+      "value": "Weitere Beiträge laden"
     },
     {
       "key": "AudioPlayer/Queue",
@@ -5365,6 +5604,10 @@
       "value": "Mit Ihrer Mitgliedschaft können Sie ab sofort nicht nur die Republik konsumieren, sondern Sie können und sollen sie auch beeinflussen."
     },
     {
+      "key": "Onboarding/Page/context:pledge/packageName:YEARLY_ABO/preface",
+      "value": "Mit Ihrem Abo können Sie ab sofort nicht nur die Republik lesen und hören, Sie können auch mitdiskutieren."
+    },
+    {
       "key": "Onboarding/Page/pledge/introduction",
       "value": "Dieser kurze Einrichtungsassistent hilft Ihnen mit dem Wichtigsten vorab."
     },
@@ -5413,6 +5656,10 @@
       "value": "Zum Magazin"
     },
     {
+      "key": "Onboarding/Page/climate/button",
+      "value": "Weiter ins Klimalabor"
+    },
+    {
       "key": "Onboarding/Page/more/account",
       "value": "Weitere Einstellungen finden Sie im {link}."
     },
@@ -5439,6 +5686,14 @@
     {
       "key": "Onboarding/Page/more/help/email",
       "value": "kontakt@republik.ch"
+    },
+    {
+      "key": "Onboarding/Page/climate/more/help",
+      "value": "Haben Sie Fragen oder benötigen Sie Hilfe? Wir sind gerne für Sie da. {email}"
+    },
+    {
+      "key": "Onboarding/Page/climate/more/help/email",
+      "value": "klimalabor@republik.ch"
     },
     {
       "key": "Onboarding/Section/button/continue",
@@ -5551,6 +5806,138 @@
     {
       "key": "Onboarding/Sections/Profile/button/continue",
       "value": "Später"
+    },
+    {
+      "key": "Onboarding/Page/climate/title",
+      "value": "Willkommen"
+    },
+    {
+      "key": "Onboarding/Page/climate/preface",
+      "value": "Sie sind eine von inzwischen {climate_lab_count} Personen, die am Klimalabor mitwirken. Schön, sind Sie dabei."
+    },
+    {
+      "key": "Onboarding/Page/climate/introduction",
+      "value": "Etwa alle zwei bis drei Wochen melden wir uns per Newsletter bei Ihnen: mit Lesenswertem zur Klimakrise aus der Republik und von anderswo, und mit dem aktuellen Stand unseres Projekts.<br /><br />\nIm Januar 2023 sind wir gestartet mit dem Klimalabor. Unser Ziel: Wir wollen ein journalistisches Angebot entwickeln, das in seiner Dringlichkeit und Ambition der Klimakrise gerecht wird. Das mehr Menschen erreicht als bisher und auch andere Medien und Journalistinnen inspiriert. Das anregt, das trotz düsterer Aussichten nach vorn blickt, das verlässlich und nützlich ist.<br /><br />\nSeitdem haben wir aus zahlreichen Veranstaltungen, Debatten und Gesprächen und Tausenden schriftlichen Anregungen ein klares Bild davon gewonnen, was Sie von uns erwarten. Nun sind wir daran, ein passendes Angebot zu entwickeln. <br /><br />\nWir freuen uns darauf, Ihnen bald mehr zu erzählen."
+    },
+    {
+      "key": "Climatelab/Onboarding/Postcard/heading",
+      "value": "Ein Blick in die Zukunft"
+    },
+    {
+      "key": "Climatelab/Onboarding/Postcard/paragraph1",
+      "value": "Im Klimalabor bieten wir Ihnen die Gelegenheit, Ihre Ideen, Ihre Bedürfnisse, Ihre Expertise einzubringen. Zum Start laden wir Sie ein, etwas Einzigartiges zum Gelingen des Klimalabors beizutragen: Ihre Vorstellungskraft.<br /><br />Stellen Sie sich vor, Sie reisen mit einer Zeitmaschine 60 Jahre in die Zukunft. Was sehen Sie, was löst das in Ihnen aus? Nehmen Sie sich einen Moment. Sammeln Sie Ihre Gedanken. Und dann schicken Sie eine Postkarte zurück ins Jahr 2023."
+    },
+    {
+      "key": "Climatelab/Postcard/PostcardPreview/merci1",
+      "value": "Danke für Ihre Postkarte. Sie wird uns helfen, zu verstehen, wie Sie in die Zukunft blicken. Darum wird es im Klimalabor immer wieder gehen: Wir wollen über die Zukunft nachdenken, den Blick für positive Entwicklungen schärfen und herausfinden, was es braucht, damit wir zuversichtlich und handlungsfähig bleiben."
+    },
+    {
+      "key": "Climatelab/Postcard/PostcardPreview/merci2",
+      "value": "Wir sammeln alle Postkarten und machen sie demnächst in einer Online-Galerie öffentlich, damit Sie sehen können, wie andere Zeitreisende die Zukunft erleben."
+    },
+    {
+      "key": "Climatelab/Postcard/PostcardPreview/credit",
+      "value": "Illustration: «2083» von {credit}"
+    },
+    {
+      "key": "Climatelab/Onboarding/Mission/heading",
+      "value": "Mitwirken"
+    },
+    {
+      "key": "Climatelab/Onboarding/Mission/paragraph1",
+      "value": "Wir bieten Ihnen im Klimalabor vielfältige Möglichkeiten, sich einzubringen und mit anderen auszutauschen. Aktuell:"
+    },
+    {
+      "key": "Climatelab/Onboarding/Mission/bullet1",
+      "value": "Dialog: Sammeln und entdecken Sie mit uns {klimaheld}."
+    },
+    {
+      "key": "Climatelab/Onboarding/Mission/bullet2",
+      "value": "Interaktiv: {postcard}."
+    },
+    {
+      "key": "Climatelab/Onboarding/Mission/bullet3",
+      "value": "Live: Kommen Sie zu unserer ersten Klimalabor-Veranstaltung, {event}."
+    },
+    {
+      "key": "Climatelab/Onboarding/Mission/bullet1/klimaheldText",
+      "value": "wenig bekannte Klimaheldinnen"
+    },
+    {
+      "key": "Climatelab/Onboarding/Mission/bullet1/klimaheldHref",
+      "value": "/2023/01/31/mit-voller-kraft-gegen-die-klimakrise-diskutieren-sie-mit/diskussion"
+    },
+    {
+      "key": "Climatelab/Onboarding/Mission/bullet2/postcardText",
+      "value": "Machen Sie mit uns eine Zeitreise"
+    },
+    {
+      "key": "Climatelab/Onboarding/Mission/bullet2/postcardHref",
+      "value": "/2023/01/18/klimafreundliche-gruesse-aus-der-zukunft"
+    },
+    {
+      "key": "Climatelab/Onboarding/Mission/bullet3/eventText",
+      "value": "am 27. Februar in Zürich"
+    },
+    {
+      "key": "Climatelab/Onboarding/Mission/bullet3/eventHref",
+      "value": "/veranstaltung/klimalabor-februar-2023"
+    },
+    {
+      "key": "Climatelab/Onboarding/Invitation/heading",
+      "value": "Freunde und Bekannte einladen"
+    },
+    {
+      "key": "Climatelab/Onboarding/Invitation/paragraph1",
+      "value": "Die Klimakrise geht uns alle an. Laden Sie drei Freundinnen und Bekannte ein, die vom Klimalabor erfahren sollten."
+    },
+    {
+      "key": "Climatelab/Onboarding/CallToAction/heading",
+      "value": "In Klimajournalismus investieren"
+    },
+    {
+      "key": "Climatelab/Onboarding/CallToAction/paragraph1",
+      "value": "Investieren Sie in Klimajournalismus:"
+    },
+    {
+      "key": "Climatelab/Onboarding/ClimatePersonalInfo/heading",
+      "value": "Persönliche Angaben"
+    },
+    {
+      "key": "Climatelab/Onboarding/ClimatePersonalInfo/paragraph1",
+      "value": "Uns ist wichtig, dass Menschen aus unterschiedlichen Lebenswelten zusammenfinden, sich gegenseitig inspirieren und herausfordern. Damit wir die Diversität des Klimalabors tatsächlich im Blick haben, wären wir froh um ein paar Angaben zu Ihrer Person. Diese Angaben werden nicht auf Ihrem Profil angezeigt."
+    },
+    {
+      "key": "Climatelab/Onboarding/ClimatePersonalInfo/merci1",
+      "value": "Vielen Dank für Ihre Angaben."
+    },
+    {
+      "key": "Onboarding/Sections/ClimateProfile/paragraph1",
+      "value": "Das Profil ist Ihre Visitenkarte im Klimalabor."
+    },
+    {
+      "key": "Onboarding/Sections/ClimateProfile/paragraph2",
+      "value": "Wir verlinken Ihr Profil zum Beispiel, wenn Sie sich in Diskussionen einbringen."
+    },
+    {
+      "key": "Climatelab/Postcard/PostcardDynamicComponent/noaccess/text",
+      "value": "Die Zeitreise ist für alle, die beim Klimalabor der Republik mitmachen. Noch nicht dabei? {link}"
+    },
+    {
+      "key": "Climatelab/Postcard/PostcardDynamicComponent/noaccess/linkText",
+      "value": "Hier anmelden"
+    },
+    {
+      "key": "Climatelab/Questionnaire/title",
+      "value": "Können Sie einer 5-Jährigen die Klimakrise erklären? Und ihr dabei in die Augen schauen?"
+    },
+    {
+      "key": "Climatelab/Questionnaire/description",
+      "value": "Fragen über Fragen zur Klimakrise. Das sind die Antworten von {name}. Was sind Ihre?"
+    },
+    {
+      "key": "Climatelab/Questionnaire/Person/title",
+      "value": "15 Fragen zum Klima – die Antworten von {name}"
     },
     {
       "key": "Trial/Form/withAccess/button/label",
@@ -6661,6 +7048,10 @@
       "value": "Noch etwas Handfestes?"
     },
     {
+      "key": "Goodies/note/delivery",
+      "value": "Versand nur in die Schweiz und Liechtenstein möglich"
+    },
+    {
       "key": "Goodie/dropdown/label",
       "value": "Anzahl"
     },
@@ -6694,7 +7085,7 @@
     },
     {
       "key": "Goodie/description/MUG",
-      "value": "Mit Logo und Claim «Ohne Journalismus keine Demokratie». Lieferung innerhalb von 10 Werktagen. Nur innerhalb der Schweiz möglich."
+      "value": "Mit Logo und Claim «Ohne Journalismus keine Demokratie». Lieferung innerhalb von 10 Werktagen."
     },
     {
       "key": "Goodie/label/MUG_CERAMIC",
@@ -6702,7 +7093,7 @@
     },
     {
       "key": "Goodie/description/MUG_CERAMIC",
-      "value": "Mit Logo und Claim «Ohne Journalismus keine Demokratie». Lieferung innerhalb von 10 Werktagen. Nur innerhalb der Schweiz möglich."
+      "value": "Mit Logo und Claim «Ohne Journalismus keine Demokratie». Lieferung innerhalb von 10 Werktagen."
     },
     {
       "key": "option/TABLEBOOK/label/other",
@@ -6870,7 +7261,7 @@
     },
     {
       "key": "PodcastButtons/copy/error",
-      "value": "Nicht unterstützt :("
+      "value": "Kopieren fehlgeschlagen"
     },
     {
       "key": "PodcastButtons/spotify",
@@ -6902,7 +7293,7 @@
     },
     {
       "key": "article/payNote/220404-v1/before",
-      "value": "Journalismus kostet. Dass Sie diesen Beitrag trotzdem lesen können, verdanken Sie den über 28'000 Leserinnen, die die Republik schon finanzieren. Wenn auch Sie unabhängigen Journalismus möglich machen wollen: Kommen Sie an Bord!"
+      "value": "Journalismus kostet. Dass Sie diesen Beitrag trotzdem lesen können, verdanken Sie den rund 29’000 Leserinnen, die die Republik schon finanzieren. Wenn auch Sie unabhängigen Journalismus möglich machen wollen: Kommen Sie an Bord!"
     },
     {
       "key": "article/payNote/220404-v1/after",
@@ -6922,7 +7313,7 @@
     },
     {
       "key": "article/tryNote/220404-v1/after",
-      "value": "Über 28'000 Menschen machen die Republik heute schon möglich. Lernen Sie uns jetzt auch kennen – 21 Tage lang, kostenlos und unverbindlich:"
+      "value": "Rund 29’000 Menschen machen die Republik heute schon möglich. Lernen Sie uns jetzt auch kennen – 21 Tage lang, kostenlos und unverbindlich:"
     },
     {
       "key": "article/tryNote/220404-v2/before",
@@ -7141,6 +7532,14 @@
       "value": "Sie dürfen noch {count} verschenken."
     },
     {
+      "key": "Account/Access/Campaigns/Grants/reducedCampaign/title/1",
+      "value": "Verschickte Einladung"
+    },
+    {
+      "key": "Account/Access/Campaigns/Grants/reducedCampaign/title/other",
+      "value": "Verschickte Einladungen"
+    },
+    {
       "key": "Auth/NewsletterSignUp/submit",
       "value": "Abonnieren"
     },
@@ -7293,12 +7692,16 @@
       "value": "Im Magazin"
     },
     {
+      "key": "SubscribeCallout/ReadAloud",
+      "value": "Benachrichtigung, sobald vorgelesen"
+    },
+    {
       "key": "SubscribeCallout/settingsLink",
       "value": "Allgemeine Einstellungen"
     },
     {
       "key": "SubscribeCallout/onlyYourself",
-      "value": "Andere können hier Ihnen folgen."
+      "value": "Andere können Ihnen hier folgen."
     },
     {
       "key": "SubscribeMenu/title",
@@ -7374,7 +7777,7 @@
     },
     {
       "key": "crowdfunding/status/goal/PERMANENT/memberships",
-      "value": "Mitgliedschaften und Abos. Wachstumsziel: {count}."
+      "value": "Mitgliedschaften und Abos."
     },
     {
       "key": "Trial/Form/button",
@@ -7431,6 +7834,114 @@
     {
       "key": "AppSignInOverlay/title",
       "value": "Zugriff bestätigen"
+    },
+    {
+      "key": "Trial/Form/climate/button/signedIn",
+      "value": "Ich bin dabei!"
+    },
+    {
+      "key": "Trial/Form/climate/button",
+      "value": "Ich bin dabei!"
+    },
+    {
+      "key": "Climate/Trial/Heading/CampaignMember",
+      "value": "Willkommen zurück"
+    },
+    {
+      "key": "Climate/Trial/Action/CampaignMember",
+      "value": "Zum Klimalabor"
+    },
+    {
+      "key": "Climate/Trial/Heading/NonCampaignMember",
+      "value": "Für den Newsletter anmelden"
+    },
+    {
+      "key": "Climate/Logo/altText",
+      "value": "Das Klimalabor der Republik"
+    },
+    {
+      "key": "ClimateLandingPage/seo/title",
+      "value": "Klimalabor der Republik — machen Sie mit!"
+    },
+    {
+      "key": "ClimateLandingPage/seo/description",
+      "value": "Die Klimakrise ist hier. Die Lage ist ernst. Was tun? Das Klimalabor der Republik ist ein Ort für Austausch und Experimente. Melden Sie sich jetzt an."
+    },
+    {
+      "key": "ClimateLandingPage/content/heading1",
+      "value": "Die Klimakrise ist{nbsp}hier.{br}Die Lage ist ernst.{br}Was{nbsp}tun?"
+    },
+    {
+      "key": "ClimateLandingPage/content/paragraph1",
+      "value": "Unser Anspruch: Journalismus, der Sie in der Klimakrise wirklich weiterbringt."
+    },
+    {
+      "key": "ClimateLandingPage/content/paragraph2",
+      "value": "Darum haben wir das Klimalabor gestartet. Einen Ort für Austausch und Experimente. Um gemeinsam mit Ihnen herauszufinden, mit welchem Angebot wir künftig der Klima­krise und Ihren Bedürfnissen gerecht werden können."
+    },
+    {
+      "key": "ClimateLandingPage/content/paragraph3",
+      "value": "Wir freuen uns darauf, Ihnen bald mehr zu erzählen. Und Sie in der Zwischenzeit mit Lesenswertem zur Klimakrise zu versorgen."
+    },
+    {
+      "key": "ClimateLandingPage/content/counterText",
+      "value": "Menschen machen schon mit im Klimalabor."
+    },
+    {
+      "key": "ClimateLandingPage/content/byRepublikText",
+      "value": "Das Klimalabor ist ein Projekt der Republik. Die Republik ist ein digitales Magazin für Politik, Wirtschaft, Gesellschaft und Kultur. Finanziert von seinen Leserinnen und Lesern."
+    },
+    {
+      "key": "ClimateLandingPage/content/questionsText",
+      "value": "Fragen, Anregungen? klimalabor@republik.ch"
+    },
+    {
+      "key": "ClimateTeaser/content/text1",
+      "value": "Die Klimakrise ist{nbsp}hier.{br}Die Lage ist ernst.{br}Was{nbsp}tun?"
+    },
+    {
+      "key": "ClimateTeaser/content/text2",
+      "value": "Das Klimalabor der Republik ist ein Ort für Austausch und Experimente. Gemeinsam wollen wir herausfinden: Wie bringt uns Journalismus in der Klimakrise wirklich weiter?"
+    },
+    {
+      "key": "ClimateTeaser/content/buttonAction",
+      "value": "Zum Klimalabor"
+    },
+    {
+      "key": "ClimateInlineTeaser/content/title",
+      "value": "Zum Klimalabor"
+    },
+    {
+      "key": "ClimateInlineTeaser/NonMember/content/text",
+      "value": "Die Klimakrise ist hier. Die Lage ist ernst. Was tun? Im Klimalabor der Republik machen wir uns gemeinsam mit Ihnen auf die Suche nach Antworten."
+    },
+    {
+      "key": "ClimateInlineTeaser/NonMember/content/link",
+      "value": "Mehr erfahren und mitmachen"
+    },
+    {
+      "key": "ClimateInlineTeaser/Member/content/text",
+      "value": "Die Klimakrise ist hier. Die Lage ist ernst. Was tun? Das Klimalabor ist unser Ort für Austausch und Experimente. Wo wir gerade stehen und was es gerade zu tun gibt:"
+    },
+    {
+      "key": "ClimateInlineTeaser/Member/content/link",
+      "value": "zum Klimalabor"
+    },
+    {
+      "key": "CallToActions/customComponents/FutureCampaignBanner/headline",
+      "value": "Dank {sender} Verlegerinnen ist die Republik um {receiver} Stimmen reicher geworden."
+    },
+    {
+      "key": "CallToActions/customComponents/FutureCampaignBanner/button/other",
+      "value": "Noch {daysLeft} Tage Verstärkung holen und Gratismonate sichern"
+    },
+    {
+      "key": "CallToActions/customComponents/FutureCampaignBanner/button/1",
+      "value": "Noch heute Verstärkung holen und Gratismonate sichern"
+    },
+    {
+      "key": "CallToActions/customComponents/FutureCampaignBanner/button/0",
+      "value": "Noch heute Verstärkung holen und Gratismonate sichern"
     }
   ]
 }

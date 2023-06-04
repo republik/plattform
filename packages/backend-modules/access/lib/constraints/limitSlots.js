@@ -12,17 +12,20 @@ const debug = require('debug')('access:lib:constraints:limitSlots')
 const getSlots = async ({ settings, granter, campaign }, { pgdb }) => {
   const slots = settings.slots
 
-  const usedSlots = await pgdb.query(`
+  const usedSlots = await pgdb.query(
+    `
     SELECT "accessGrants".id
 
     FROM "accessGrants"
 
     WHERE
-      "accessGrants"."accessCampaignId" = '${campaign.id}'
-      AND "accessGrants"."granterUserId" = '${granter.id}'
+      "accessGrants"."accessCampaignId" = :campaignId
+      AND "accessGrants"."granterUserId" = :granterId
       AND "accessGrants"."revokedAt" IS NULL
       AND "accessGrants"."invalidatedAt" IS NULL
-  `)
+  `,
+    { campaignId: campaign.id, granterId: granter.id },
+  )
 
   return {
     total: slots,

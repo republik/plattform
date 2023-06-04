@@ -9,6 +9,7 @@ import {
   mediaQueries,
   ColorHtmlBodyColors,
   ColorContextProvider,
+  useColorContext,
 } from '@project-r/styleguide'
 import OptionalLocalColorContext from './OptionalLocalColorContext'
 import Meta from './Meta'
@@ -27,7 +28,8 @@ import { useTranslation } from '../../lib/withT'
 import { useInNativeApp } from '../../lib/withInNativeApp'
 import LegacyAppNoticeBox from './LegacyAppNoticeBox'
 import { useMe } from '../../lib/context/MeContext'
-import { climateColors } from '../Climatelab/config'
+import { checkRoles } from '../../lib/apollo/withMe'
+import CallToActionBanner from '../CallToActions/CallToActionBanner'
 
 css.global('html', { boxSizing: 'border-box' })
 css.global('*, *:before, *:after', { boxSizing: 'inherit' })
@@ -84,6 +86,24 @@ const styles = {
   }),
 }
 
+/**
+ * If a page has a custom color context that is to be applied to the page content
+ * a wrapping div is rendered where the default color is applied to the background.
+ */
+const OptionalContentBackground = ({
+  children,
+  hasCustomColorContext = false,
+}) => {
+  const [colorScheme] = useColorContext()
+  if (hasCustomColorContext) {
+    return (
+      <div {...colorScheme.set('backgroundColor', 'default')}>{children}</div>
+    )
+  } else {
+    return <>{children}</>
+  }
+}
+
 export const MainContainer = ({ children, maxWidth = '840px' }) => (
   <Container style={{ maxWidth }}>{children}</Container>
 )
@@ -109,13 +129,19 @@ const Frame = ({
   isOnMarketingPage,
   pageColorSchemeKey,
   containerMaxWidth,
-  isClimate,
+  /**
+   * customContentColorContext are the colors passed to the color-context
+   * that only wraps the content of the page.
+   * (This will not be applied to the header, footer and body of the page)
+   */
+  customContentColorContext,
 }) => {
   const { inNativeApp, inNativeAppLegacy } = useInNativeApp()
   const { t } = useTranslation()
   const { me, hasAccess } = useMe()
+  const isClimateLabOnlyUser = checkRoles(me, ['climate'])
 
-  const hasOverviewNav = hasAccess && wantOverviewNav
+  const hasOverviewNav = (hasAccess || isClimateLabOnlyUser) && wantOverviewNav
   const hasSecondaryNav = !!(secondaryNav || hasOverviewNav)
   const padHeaderRule = useMemo(() => {
     return css({
@@ -131,67 +157,69 @@ const Frame = ({
   }, [hasSecondaryNav])
   return (
     <ColorContextProvider colorSchemeKey={pageColorSchemeKey}>
-      <ColorHtmlBodyColors
-        colorsObject={isClimate ? climateColors : undefined}
-        colorSchemeKey={pageColorSchemeKey || 'auto'}
-      />
-      <OptionalLocalColorContext
-        localColorVariables={isClimate ? climateColors : undefined}
+      <ColorHtmlBodyColors colorSchemeKey={pageColorSchemeKey || 'auto'} />
+      <noscript>
+        <Box style={{ padding: 30 }}>
+          <RawHtml
+            dangerouslySetInnerHTML={{
+              __html: t('noscript'),
+            }}
+          />
+        </Box>
+      </noscript>
+      <div
+        {...(footer || inNativeApp ? styles.bodyGrowerContainer : undefined)}
       >
-        <noscript>
-          <Box style={{ padding: 30 }}>
-            <RawHtml
-              dangerouslySetInnerHTML={{
-                __html: t('noscript'),
-              }}
-            />
-          </Box>
-        </noscript>
+        {/* body growing only needed when rendering a footer */}
         <div
-          {...(footer || inNativeApp ? styles.bodyGrowerContainer : undefined)}
+          {...(footer || inNativeApp ? styles.bodyGrower : undefined)}
+          {...(!isOnMarketingPage && padHeaderRule)}
         >
-          {/* body growing only needed when rendering a footer */}
-          <div
-            {...(footer || inNativeApp ? styles.bodyGrower : undefined)}
-            {...(!isOnMarketingPage && padHeaderRule)}
+          {!!meta && <Meta data={meta} />}
+          <Header
+            me={me}
+            cover={cover}
+            onNavExpanded={onNavExpanded}
+            secondaryNav={secondaryNav}
+            formatColor={formatColor}
+            pullable={pullable}
+            hasOverviewNav={hasOverviewNav}
+            stickySecondaryNav={stickySecondaryNav}
+            isOnMarketingPage={isOnMarketingPage}
+            pageColorSchemeKey={pageColorSchemeKey}
           >
-            {!!meta && <Meta data={meta} />}
-            <Header
-              me={me}
-              cover={cover}
-              onNavExpanded={onNavExpanded}
-              secondaryNav={secondaryNav}
-              formatColor={formatColor}
-              pullable={pullable}
-              hasOverviewNav={hasOverviewNav}
-              stickySecondaryNav={stickySecondaryNav}
-              isOnMarketingPage={isOnMarketingPage}
-              pageColorSchemeKey={pageColorSchemeKey}
-            >
-              {inNativeAppLegacy && <LegacyAppNoticeBox t={t} />}
-              {me &&
-                me.prolongBeforeDate !== null &&
-                me.activeMembership !== null && (
-                  <ProlongBox
-                    t={t}
-                    prolongBeforeDate={me.prolongBeforeDate}
-                    membership={me.activeMembership}
-                  />
-                )}
-              {raw ? (
-                children
-              ) : (
-                <MainContainer maxWidth={containerMaxWidth}>
-                  <Content>{children}</Content>
-                </MainContainer>
+            {inNativeAppLegacy && <LegacyAppNoticeBox t={t} />}
+            {me &&
+              me.prolongBeforeDate !== null &&
+              me.activeMembership !== null && (
+                <ProlongBox
+                  t={t}
+                  prolongBeforeDate={me.prolongBeforeDate}
+                  membership={me.activeMembership}
+                />
               )}
-            </Header>
-          </div>
-          {!inNativeApp && footer && (
-            <Footer isOnMarketingPage={isOnMarketingPage} />
-          )}
+            <OptionalLocalColorContext
+              localColorVariables={customContentColorContext}
+            >
+              <OptionalContentBackground
+                hasCustomColorContext={!!customContentColorContext}
+              >
+                <CallToActionBanner />
+                {raw ? (
+                  <>{children}</>
+                ) : (
+                  <MainContainer maxWidth={containerMaxWidth}>
+                    <Content>{children}</Content>
+                  </MainContainer>
+                )}
+              </OptionalContentBackground>
+            </OptionalLocalColorContext>
+          </Header>
         </div>
-      </OptionalLocalColorContext>
+        {!inNativeApp && footer && (
+          <Footer isOnMarketingPage={isOnMarketingPage} />
+        )}
+      </div>
     </ColorContextProvider>
   )
 }
@@ -210,8 +238,8 @@ Frame.propTypes = {
   stickySecondaryNav: PropTypes.any,
   isOnMarketingPage: PropTypes.bool,
   pageColorSchemeKey: PropTypes.string,
-  containerMaxWidth: PropTypes.number,
-  isClimate: PropTypes.bool,
+  containerMaxWidth: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  customContentColorContext: PropTypes.object,
 }
 
 export default Frame

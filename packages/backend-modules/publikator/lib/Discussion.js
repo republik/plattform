@@ -2,6 +2,8 @@ const {
   Discussion: { upsert: upsertDiscussion },
 } = require('@orbiting/backend-modules-discussions')
 
+const DEFAULT_ROLES = ['member']
+
 const upsert = async (docMeta, context, legacyDiscussionId) => {
   const {
     title,
@@ -15,6 +17,7 @@ const upsert = async (docMeta, context, legacyDiscussionId) => {
     board = null,
     tags,
     tagRequired,
+    discussionAllowedRoles,
     template,
   } = docMeta
 
@@ -38,6 +41,9 @@ const upsert = async (docMeta, context, legacyDiscussionId) => {
     ...(board !== null ? { isBoard: !!board } : {}),
     tags: tags ? tags.trim().split(',') : null,
     tagRequired: !!tagRequired,
+    allowedRoles: discussionAllowedRoles
+      ? discussionAllowedRoles.concat(DEFAULT_ROLES)
+      : DEFAULT_ROLES,
   }
 
   return upsertDiscussion(repoId, settings, context, legacyDiscussionId)

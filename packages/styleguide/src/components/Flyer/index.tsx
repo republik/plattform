@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { ReactNode, useMemo } from 'react'
 import { css } from 'glamor'
 import { useColorContext } from '../Colors/ColorContext'
 import { mUp } from '../../theme/mediaQueries'
@@ -8,7 +8,7 @@ import { CustomDescendant } from '../Editor/custom-types'
 import { isSlateElement } from '../Editor/Render/helpers'
 import { useRenderContext } from '../Editor/Render/Context'
 
-const MAX_CHAR = 800
+const MAX_CHAR = 2500
 export const FLYER_CONTAINER_MAXWIDTH = 700
 
 const styles = {
@@ -53,6 +53,7 @@ const styles = {
 }
 
 export const FlyerTile: React.FC<{
+  children?: ReactNode
   attributes: any
   innerStyle?: object
   id?: string
@@ -86,6 +87,7 @@ export const FlyerTile: React.FC<{
 }
 
 export const FlyerTileMeta: React.FC<{
+  children?: ReactNode
   attributes: any
   innerStyle?: object
   [x: string]: unknown
@@ -107,6 +109,7 @@ export const FlyerTileMeta: React.FC<{
 }
 
 export const FlyerTileOpening: React.FC<{
+  children?: ReactNode
   attributes: any
   [x: string]: unknown
 }> = ({ children, attributes, ...props }) => {
@@ -125,6 +128,7 @@ export const FlyerTileOpening: React.FC<{
 }
 
 export const EditorFlyerTile: React.FC<{
+  children?: ReactNode
   slatechildren: CustomDescendant[]
   attributes: any
   [x: string]: unknown

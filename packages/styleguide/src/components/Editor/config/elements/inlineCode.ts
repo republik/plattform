@@ -1,11 +1,11 @@
 import { ElementConfigI } from '../../custom-types'
-import { CodeIcon } from '../../../Icons'
+import { IconCode } from '@republik/icons'
 
 export const config: ElementConfigI = {
-  structure: [{ type: ['text'], repeat: true }],
+  structure: [{ type: ['text', 'memo'], repeat: true }],
   attrs: {
     isInline: true,
-    isTextInline: true,
+    formatText: false,
   },
-  button: { icon: CodeIcon },
+  button: { icon: IconCode },
 }

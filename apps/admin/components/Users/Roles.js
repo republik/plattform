@@ -1,10 +1,10 @@
 import { Component } from 'react'
 import { Query, Mutation } from '@apollo/client/react/components'
 import { gql } from '@apollo/client'
-import { MdDone as SaveIcon } from 'react-icons/md'
 import { Checkbox, Loader, InlineSpinner } from '@project-r/styleguide'
 
 import { InteractiveSection, SectionTitle, TextButton } from '../Display/utils'
+import { IconDone } from '@republik/icons'
 
 const ROLES = [
   'editor',
@@ -105,7 +105,7 @@ class UpdateRole extends Component {
                     <InlineSpinner size={22} />
                   ) : initialValue !== value ? (
                     <TextButton type='submit'>
-                      <SaveIcon size={22} />
+                      <IconDone size={22} />
                     </TextButton>
                   ) : undefined}
                 </span>

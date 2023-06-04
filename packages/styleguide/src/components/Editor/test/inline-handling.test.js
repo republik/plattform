@@ -3,6 +3,7 @@ import { toggleElement } from '../Core/helpers/structure'
 import { cleanupTree } from '../Core/helpers/tree'
 import schema from '../schema/article'
 import mockEditor from './mockEditor'
+import { act } from '@testing-library/react'
 
 describe('Slate Editor: Inline Insertion', () => {
   window.document.getSelection = jest.fn()
@@ -11,19 +12,8 @@ describe('Slate Editor: Inline Insertion', () => {
 
   const defaultConfig = { schema }
 
-  const defaultStructure = [
-    {
-      type: 'headline',
-    },
-    {
-      type: ['paragraph', 'blockQuote', 'ul', 'ol'],
-      repeat: true,
-    },
-  ]
-
-  async function setup(structure = defaultStructure, config = defaultConfig) {
+  async function setup(config) {
     return await mockEditor(createEditor(), {
-      structure,
       config,
       value,
       setValue: (val) => (value = val),
@@ -43,15 +33,16 @@ describe('Slate Editor: Inline Insertion', () => {
           type: 'paragraph',
         },
       ]
-      const editor = await setup(structure)
-
-      await Transforms.select(editor, {
-        anchor: { path: [0, 0], offset: 6 },
-        focus: { path: [0, 0], offset: 11 },
+      const editor = await act(async () =>
+        setup({ ...defaultConfig, structure }),
+      )
+      await act(async () => {
+        await Transforms.select(editor, {
+          anchor: { path: [0, 0], offset: 6 },
+          focus: { path: [0, 0], offset: 11 },
+        })
+        await toggleElement(editor, 'link')
       })
-      toggleElement(editor, 'link')
-      await new Promise(process.nextTick)
-
       expect(cleanupTree(value)).toEqual([
         {
           type: 'paragraph',
@@ -89,11 +80,13 @@ describe('Slate Editor: Inline Insertion', () => {
           type: 'paragraph',
         },
       ]
-      const editor = await setup(structure)
-
-      await Transforms.select(editor, { path: [0, 0], offset: 9 })
-      toggleElement(editor, 'link')
-      await new Promise(process.nextTick)
+      const editor = await act(async () =>
+        setup({ ...defaultConfig, structure }),
+      )
+      await act(async () => {
+        await Transforms.select(editor, { path: [0, 0], offset: 9 })
+        await toggleElement(editor, 'link')
+      })
 
       expect(cleanupTree(value)).toEqual([
         {
@@ -136,15 +129,16 @@ describe('Slate Editor: Inline Insertion', () => {
           type: 'paragraph',
         },
       ]
-      const editor = await setup(structure)
-
-      await Transforms.select(editor, {
-        anchor: { path: [0, 1], offset: 0 },
-        focus: { path: [0, 1], offset: 5 },
+      const editor = await act(async () =>
+        setup({ ...defaultConfig, structure }),
+      )
+      await act(async () => {
+        await Transforms.select(editor, {
+          anchor: { path: [0, 1], offset: 0 },
+          focus: { path: [0, 1], offset: 5 },
+        })
+        await toggleElement(editor, 'link')
       })
-      toggleElement(editor, 'link')
-      await new Promise(process.nextTick)
-
       expect(cleanupTree(value)).toEqual([
         {
           type: 'paragraph',
@@ -155,6 +149,45 @@ describe('Slate Editor: Inline Insertion', () => {
               children: [{ text: 'ipsum', bold: true }],
             },
             { text: ' dolor' },
+          ],
+        },
+      ])
+      expect(editor.selection.anchor.path).toEqual([0, 1, 0])
+    })
+
+    it('should work across an entire node', async () => {
+      value = [
+        {
+          type: 'paragraph',
+          children: [{ text: 'Lorem ipsum dolor.' }],
+        },
+      ]
+      const structure = [
+        {
+          type: 'paragraph',
+        },
+      ]
+      const editor = await act(async () =>
+        setup({ ...defaultConfig, structure }),
+      )
+      await act(async () => {
+        await Transforms.select(editor, {
+          anchor: { path: [0, 0], offset: 0 },
+          focus: { path: [0, 0], offset: 18 },
+        })
+        await toggleElement(editor, 'memo')
+      })
+
+      expect(cleanupTree(value)).toEqual([
+        {
+          type: 'paragraph',
+          children: [
+            { text: '' },
+            {
+              type: 'memo',
+              children: [{ text: 'Lorem ipsum dolor.' }],
+            },
+            { text: '' },
           ],
         },
       ])
@@ -180,15 +213,16 @@ describe('Slate Editor: Inline Insertion', () => {
           type: 'paragraph',
         },
       ]
-      const editor = await setup(structure)
-
-      await Transforms.select(editor, {
-        anchor: { path: [0, 0], offset: 4 },
-        focus: { path: [0, 2], offset: 2 },
+      const editor = await act(async () =>
+        setup({ ...defaultConfig, structure }),
+      )
+      await act(async () => {
+        await Transforms.select(editor, {
+          anchor: { path: [0, 0], offset: 4 },
+          focus: { path: [0, 2], offset: 2 },
+        })
+        await toggleElement(editor, 'inlineCode')
       })
-      toggleElement(editor, 'inlineCode')
-      await new Promise(process.nextTick)
-
       expect(cleanupTree(value)).toEqual([
         {
           type: 'paragraph',
@@ -224,11 +258,13 @@ describe('Slate Editor: Inline Insertion', () => {
           type: 'paragraph',
         },
       ]
-      const editor = await setup(structure)
-
-      await Transforms.select(editor, { path: [0, 1], offset: 2 })
-      toggleElement(editor, 'link')
-      await new Promise(process.nextTick)
+      const editor = await act(async () =>
+        setup({ ...defaultConfig, structure }),
+      )
+      await act(async () => {
+        await Transforms.select(editor, { path: [0, 1], offset: 2 })
+        await toggleElement(editor, 'link')
+      })
 
       expect(cleanupTree(value)).toEqual([
         {
@@ -247,6 +283,133 @@ describe('Slate Editor: Inline Insertion', () => {
         },
       })
     })
+
+    it('should handle nested inlines on insert', async () => {
+      value = [
+        {
+          type: 'paragraph',
+          children: [{ text: 'Lorem ipsum dolor sit amet.' }],
+        },
+      ]
+      const structure = [
+        {
+          type: 'paragraph',
+        },
+      ]
+      const editor = await act(async () =>
+        setup({ ...defaultConfig, structure }),
+      )
+      await act(async () => {
+        await Transforms.select(editor, { path: [0, 0], offset: 9 })
+        await toggleElement(editor, 'link')
+        await Transforms.select(editor, { path: [0, 1, 0], offset: 3 })
+        await toggleElement(editor, 'memo')
+      })
+
+      expect(cleanupTree(value)).toEqual([
+        {
+          type: 'paragraph',
+          children: [
+            { text: 'Lorem ' },
+            {
+              type: 'link',
+              children: [
+                { text: '' },
+                { type: 'memo', children: [{ text: 'ipsum' }] },
+                { text: '' },
+              ],
+            },
+            { text: ' dolor sit amet.' },
+          ],
+        },
+      ])
+    })
+
+    it('should delete outermost nested inline', async () => {
+      value = [
+        {
+          type: 'paragraph',
+          children: [
+            { text: 'Lorem ' },
+            {
+              type: 'link',
+              children: [
+                { text: '' },
+                { type: 'memo', children: [{ text: 'ipsum' }] },
+                { text: '' },
+              ],
+            },
+            { text: ' dolor sit amet.' },
+          ],
+        },
+      ]
+      const structure = [
+        {
+          type: 'paragraph',
+        },
+      ]
+      const editor = await act(async () =>
+        setup({ ...defaultConfig, structure }),
+      )
+      await act(async () => {
+        await Transforms.select(editor, { path: [0, 1, 1, 0], offset: 3 })
+        await toggleElement(editor, 'link')
+      })
+
+      expect(cleanupTree(value)).toEqual([
+        {
+          type: 'paragraph',
+          children: [
+            { text: 'Lorem ' },
+            { type: 'memo', children: [{ text: 'ipsum' }] },
+            { text: ' dolor sit amet.' },
+          ],
+        },
+      ])
+    })
+
+    it('should delete innermost nested inline', async () => {
+      value = [
+        {
+          type: 'paragraph',
+          children: [
+            { text: 'Lorem ' },
+            {
+              type: 'link',
+              children: [
+                { text: '' },
+                { type: 'memo', children: [{ text: 'ipsum' }] },
+                { text: '' },
+              ],
+            },
+            { text: ' dolor sit amet.' },
+          ],
+        },
+      ]
+      const structure = [
+        {
+          type: 'paragraph',
+        },
+      ]
+      const editor = await act(async () =>
+        setup({ ...defaultConfig, structure }),
+      )
+      await act(async () => {
+        await Transforms.select(editor, { path: [0, 1, 1, 0], offset: 3 })
+        await toggleElement(editor, 'memo')
+      })
+
+      expect(cleanupTree(value)).toEqual([
+        {
+          type: 'paragraph',
+          children: [
+            { text: 'Lorem ' },
+            { type: 'link', children: [{ text: 'ipsum' }] },
+            { text: ' dolor sit amet.' },
+          ],
+        },
+      ])
+    })
   })
 
   describe('void element (e.g. break)', () => {
@@ -262,14 +425,16 @@ describe('Slate Editor: Inline Insertion', () => {
           type: 'paragraph',
         },
       ]
-      const editor = await setup(structure)
-
-      await Transforms.select(editor, {
-        anchor: { path: [0, 0], offset: 6 },
-        focus: { path: [0, 0], offset: 11 },
+      const editor = await act(async () =>
+        setup({ ...defaultConfig, structure }),
+      )
+      await act(async () => {
+        await Transforms.select(editor, {
+          anchor: { path: [0, 0], offset: 6 },
+          focus: { path: [0, 0], offset: 11 },
+        })
+        await toggleElement(editor, 'break')
       })
-      toggleElement(editor, 'break')
-      await new Promise(process.nextTick)
 
       expect(cleanupTree(value)).toEqual([
         {
@@ -298,11 +463,13 @@ describe('Slate Editor: Inline Insertion', () => {
           type: 'paragraph',
         },
       ]
-      const editor = await setup(structure)
-
-      await Transforms.select(editor, { path: [0, 0], offset: 6 })
-      toggleElement(editor, 'break')
-      await new Promise(process.nextTick)
+      const editor = await act(async () =>
+        setup({ ...defaultConfig, structure }),
+      )
+      await act(async () => {
+        await Transforms.select(editor, { path: [0, 0], offset: 6 })
+        await toggleElement(editor, 'break')
+      })
 
       expect(cleanupTree(value)).toEqual([
         {
@@ -332,11 +499,13 @@ describe('Slate Editor: Inline Insertion', () => {
           repeat: true,
         },
       ]
-      const editor = await setup(structure)
-      await Transforms.select(editor, { path: [0, 0], offset: 5 })
-
-      toggleElement(editor, 'break')
-      await new Promise(process.nextTick)
+      const editor = await act(async () =>
+        setup({ ...defaultConfig, structure }),
+      )
+      await act(async () => {
+        await Transforms.select(editor, { path: [0, 0], offset: 5 })
+        await toggleElement(editor, 'break')
+      })
       expect(cleanupTree(value)).toEqual([
         {
           type: 'paragraph',
@@ -369,11 +538,13 @@ describe('Slate Editor: Inline Insertion', () => {
           type: 'paragraph',
         },
       ]
-      const editor = await setup(structure)
-
-      await Transforms.select(editor, { path: [0, 1, 0], offset: 0 })
-      toggleElement(editor, 'break')
-      await new Promise(process.nextTick)
+      const editor = await act(async () =>
+        setup({ ...defaultConfig, structure }),
+      )
+      await act(async () => {
+        await Transforms.select(editor, { path: [0, 1, 0], offset: 0 })
+        await toggleElement(editor, 'break')
+      })
 
       expect(cleanupTree(value)).toEqual([
         {
@@ -395,14 +566,16 @@ describe('Slate Editor: Inline Insertion', () => {
           type: 'pullQuoteText',
         },
       ]
-      const editor = await setup(structure)
-
-      await Transforms.select(editor, {
-        anchor: { path: [0, 0], offset: 6 },
-        focus: { path: [0, 0], offset: 11 },
+      const editor = await act(async () =>
+        setup({ ...defaultConfig, structure }),
+      )
+      await act(async () => {
+        await Transforms.select(editor, {
+          anchor: { path: [0, 0], offset: 6 },
+          focus: { path: [0, 0], offset: 11 },
+        })
+        await toggleElement(editor, 'link')
       })
-      toggleElement(editor, 'link')
-      await new Promise(process.nextTick)
 
       expect(cleanupTree(value)).toEqual([
         {

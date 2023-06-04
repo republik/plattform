@@ -83,30 +83,15 @@ export default withInNativeApp(({ inNativeIOSApp }) => {
         <A href='/manifest'>republik.ch/manifest</A>
       </P>
       <br />
-      <br />
 
       {!inNativeIOSApp && (
-        <Fragment>
-          <H2>Mitgliedschaft und Abonnement</H2>
+        <>
+          <H2>Mitgliedschaften und Abonnements</H2>
           <P>
-            <A href='/angebote?package=ABO'>Jahresmitgliedschaft: CHF 240</A>
-            <br />
-            <A href='/angebote?package=MONTHLY_ABO'>Monatsabonnement: CHF 22</A>
-            <br />
-            <A href='/angebote?package=BENEFACTOR'>
-              Gönnermitgliedschaft: CHF 1000
-            </A>
-            <br />
-            <A href='/angebote?package=ABO_GIVE'>
-              Jahresmitgliedschaft verschenken: CHF 240
-            </A>
-            <br />
-            <A href='/angebote?package=ABO_GIVE_MONTHS'>
-              Monatsabonnement verschenken: CHF 22
-            </A>
+            <A href='/angebote'>republik.ch/angebote</A>
           </P>
           <br />
-        </Fragment>
+        </>
       )}
       <H2>Dank</H2>
       <P>

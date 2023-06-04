@@ -6,6 +6,7 @@ import TextQuestion from './TextQuestion'
 import ArticleQuestion from './ArticleQuestion'
 import RangeQuestion from './RangeQuestion'
 import ChoiceQuestion from './ChoiceQuestion'
+import ImageChoiceQuestion from '../Climatelab/Postcard/ImageChoiceQuestion'
 import { withAnswerMutation } from './enhancers'
 
 const QUESTION_TYPES = {
@@ -13,6 +14,7 @@ const QUESTION_TYPES = {
   QuestionTypeText: TextQuestion,
   QuestionTypeChoice: ChoiceQuestion,
   QuestionTypeRange: RangeQuestion,
+  QuestionTypeImageChoice: ImageChoiceQuestion,
 }
 
 const QuestionList = compose(withAnswerMutation)(
@@ -22,16 +24,18 @@ const QuestionList = compose(withAnswerMutation)(
       processSubmit(submitAnswer, questionId, payload, answerId)
     }
 
-    return <>
-      {questions.map((q) =>
-        createElement(QUESTION_TYPES[q.__typename], {
-          onChange: createHandleChange(q.id),
-          question: q,
-          key: q.id,
-          disabled,
-        }),
-      )}
-    </>;
+    return (
+      <>
+        {questions.map((q) =>
+          createElement(QUESTION_TYPES[q.__typename], {
+            onChange: createHandleChange(q.id),
+            question: q,
+            key: q.id,
+            disabled,
+          }),
+        )}
+      </>
+    )
   },
 )
 

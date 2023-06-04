@@ -127,9 +127,7 @@ const Event = withT(
           {!!where && <Label>{t('events/labels/location')}</Label>}
           {!!where && <P>{location}</P>}
           {!!where && <hr {...styles.hr} {...borderRule} />}
-          <P>
-            <ActionBar share={shareObject} />
-          </P>
+          <ActionBar share={shareObject} />
         </div>
       </div>
     )

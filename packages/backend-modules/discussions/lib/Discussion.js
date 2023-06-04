@@ -51,6 +51,8 @@ const upsert = async (
       (settings.tagRequired !== undefined &&
         settings.tagRequired !== discussion.tagRequired) ||
       (settings.tags && settings.tags !== (discussion.tags || []).join(',')) ||
+      (settings.allowedRoles &&
+        settings.allowedRoles !== (discussion.allowedRoles || []).join(',')) ||
       (!discussion.repoId && id && !idIsUUID && legacyDiscussionId) // to save repoId to existing discussions
     ) {
       discussion = await pgdb.public.discussions.updateAndGetOne(

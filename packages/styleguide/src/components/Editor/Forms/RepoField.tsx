@@ -4,11 +4,11 @@ import Field from '../../Form/Field'
 import IconButton from '../../IconButton'
 import { AutoSlugLinkInfo } from './github'
 import RepoSearch from './RepoSearch'
-import { DeleteIcon } from '../../Icons'
+import { IconDeleteOutline } from '@republik/icons'
 
 const RepoField: React.FC<{
   href?: string
-  onChange: ({ value: any }) => void
+  onChange: ({ value }: { value: any }) => void
   onDelete: () => void
   template?: string
   label?: string
@@ -20,7 +20,9 @@ const RepoField: React.FC<{
         label={label || 'URL'}
         value={href}
         disabled
-        icon={<IconButton Icon={DeleteIcon} onClick={onDelete} size={30} />}
+        icon={
+          <IconButton Icon={IconDeleteOutline} onClick={onDelete} size={30} />
+        }
       />
       <AutoSlugLinkInfo
         value={href || ''}

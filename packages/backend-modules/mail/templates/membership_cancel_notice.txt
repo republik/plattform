@@ -8,12 +8,13 @@ Herzlichen Dank für Ihr Interesse und Ihre Unterstützung bis hierhin!
 
 {{#if reason_given}}
 
-Auch für Ihre Kündigungs­begründung, aus der wir lernen können.
+Auch für Ihre Kündigungsbegründung, aus der wir lernen können.
 
 {{/if}}
 
-Wir würden uns sehr freuen, wenn Sie zu einem späteren Zeitpunkt wieder bei uns
-vorbeischauten. Sie sind jederzeit willkommen.
+Bekanntlich sieht man sich immer zweimal im Leben. Wir würden uns sehr freuen,
+wenn Sie zu einem späteren Zeitpunkt wieder bei uns vorbeischauten. Sie sind
+jederzeit willkommen.
 
 Herzlich
 

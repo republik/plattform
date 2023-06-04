@@ -1,9 +1,13 @@
 import { css } from 'glamor'
-import LockIcon from 'react-icons/lib/md/lock'
-import PublicIcon from 'react-icons/lib/md/public'
-import ErrorIcon from 'react-icons/lib/md/error-outline'
 
-import { IconButton, Label, ReadingTimeIcon } from '@project-r/styleguide'
+import {
+    IconLock,
+    IconPublic,
+    IconError,
+  IconReadTime,
+} from '@republik/icons'
+
+import { IconButton, Label } from '@project-r/styleguide'
 
 import { swissTime } from '../../lib/utils/format'
 
@@ -22,28 +26,28 @@ const styles = {
 
 const statusMap = {
   Pending: {
-    Icon: ReadingTimeIcon,
+    Icon: IconReadTime,
     disabled: true,
     colorName: undefined,
     crumb: undefined,
     Action: undefined,
   },
   Failure: {
-    Icon: ErrorIcon,
+    Icon: IconError,
     disabled: false,
     colorName: 'error',
     crumb: undefined,
     Action: Destroy,
   },
   Private: {
-    Icon: LockIcon,
+    Icon: IconLock,
     disabled: false,
     colorName: undefined,
     crumb: 'nicht öffentlich',
     Action: Publish,
   },
   Public: {
-    Icon: PublicIcon,
+    Icon: IconPublic,
     disabled: false,
     colorName: 'primary',
     crumb: undefined,

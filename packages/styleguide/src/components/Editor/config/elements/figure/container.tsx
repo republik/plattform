@@ -4,9 +4,9 @@ import {
   ElementFormProps,
   FigureElement,
 } from '../../../custom-types'
-import { ImageIcon } from '../../../../Icons'
 import { Interaction, Label } from '../../../../Typography'
 import Radio from '../../../../Form/Radio'
+import { IconImageOutline } from '@republik/icons'
 
 // TODO: not the best code – just meant as an example of
 //  a parent form accessed through clicking the child...
@@ -38,7 +38,7 @@ const Form: React.FC<ElementFormProps<FigureElement>> = ({
 
 export const config: ElementConfigI = {
   Form,
-  button: { icon: ImageIcon },
+  button: { icon: IconImageOutline },
   props: ['size'],
   structure: [{ type: 'figureImage', main: true }, { type: 'figureCaption' }],
 }

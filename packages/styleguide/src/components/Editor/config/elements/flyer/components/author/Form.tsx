@@ -5,10 +5,10 @@ import {
 } from '../../../../../custom-types'
 import AuthorSearch from '../../../../../Forms/AuthorSearch'
 import Field from '../../../../../../Form/Field'
-import { DeleteIcon } from '../../../../../../Icons'
 import { Transforms } from 'slate'
 import { useSlate } from 'slate-react'
 import IconButton from '../../../../../../IconButton'
+import { IconDeleteOutline } from '@republik/icons'
 
 const Form: React.FC<ElementFormProps<FlyerAuthorElement>> = ({
   element,
@@ -26,7 +26,7 @@ const Form: React.FC<ElementFormProps<FlyerAuthorElement>> = ({
           icon={
             element.resolvedAuthor && (
               <IconButton
-                Icon={DeleteIcon}
+                Icon={IconDeleteOutline}
                 onClick={() => {
                   Transforms.unsetNodes(
                     editor,

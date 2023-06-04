@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react'
+import React, { ReactNode, useCallback, useEffect } from 'react'
 import { createEditor, Editor, Text } from 'slate'
 import { withHistory } from 'slate-history'
 import { Slate, Editable, withReact } from 'slate-react'
@@ -9,12 +9,7 @@ import Footer from './Footer'
 import { FormContextProvider, FormOverlay } from './Forms'
 import Toolbar from './Toolbar'
 import { LeafComponent } from './Mark'
-import {
-  CustomDescendant,
-  CustomEditor,
-  EditorConfig,
-  NodeTemplate,
-} from '../custom-types'
+import { CustomDescendant, CustomEditor, EditorConfig } from '../custom-types'
 import { NAV_KEYS, navigateOnTab } from './helpers/tree'
 import { handleInsert, insertOnKey } from './helpers/structure'
 import { withInsert } from './decorators/insert'
@@ -33,7 +28,6 @@ import { ElementComponent } from './Element'
 export type SlateEditorProps = {
   value: CustomDescendant[]
   setValue: (t: CustomDescendant[]) => void
-  structure?: NodeTemplate[]
   editor?: CustomEditor
   config: EditorConfig
 }
@@ -41,7 +35,6 @@ export type SlateEditorProps = {
 const SlateEditor: React.FC<SlateEditorProps> = ({
   value,
   setValue,
-  structure,
   editor: mockEditor,
   config,
 }) => {
@@ -49,7 +42,7 @@ const SlateEditor: React.FC<SlateEditorProps> = ({
     () =>
       withInsert(config)(
         withDelete(
-          withNormalizations(structure)(
+          withNormalizations(config)(
             withElAttrsConfig(
               withCustomConfig(config)(
                 withReact(withHistory(mockEditor ?? createEditor())),
@@ -81,20 +74,26 @@ const SlateEditor: React.FC<SlateEditorProps> = ({
 
   const renderElement = useCallback(
     ({ children, ...props }) => (
+      // TODO: properly type
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       <ElementComponent {...props}>{children}</ElementComponent>
     ),
     [],
   )
 
   const renderLeaf = useCallback(
-    ({ children, ...props }) => (
+    ({ children, ...props }: { children: ReactNode }) => (
+      // TODO: properly type
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       <LeafComponent {...props}>{children}</LeafComponent>
     ),
     [],
   )
 
   return (
-    <RenderContextProvider t={config.t} Link={config.Link} nav={config.nav}>
+    <RenderContextProvider {...config.context}>
       <FormContextProvider>
         <Slate
           editor={editor}

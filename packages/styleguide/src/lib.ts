@@ -188,14 +188,19 @@ export { createRequire } from './components/DynamicComponent'
 
 export * from './chart'
 
-export * from './components/Icons'
+// export * from './components/Icons'
 
 export * from './templates'
 
 export { default as SlateRender } from './components/Editor/Render'
 export { default as renderSlateAsText } from './components/Editor/Render/text'
-export { default as flyerSchema } from './components/Editor/schema/flyer'
+export {
+  default as flyerSchema,
+  flyerStructure,
+  flyerTemplate,
+} from './components/Editor/schema/flyer'
 export { RenderContextProvider } from './components/Editor/Render/Context'
 
 export { FlyerTile, FlyerTileMeta } from './components/Flyer'
 export { FlyerDate } from './components/Flyer/Date'
+export { default as ErrorBoundary } from './components/ErrorBoundary'

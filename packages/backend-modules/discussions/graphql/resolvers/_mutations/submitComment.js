@@ -15,7 +15,6 @@ const { submitComment: notify } = require('../../../lib/Notifications')
 
 module.exports = async (_, args, context) => {
   const { pgdb, loaders, user: me, t, pubsub } = context
-  Roles.ensureUserHasRole(me, 'member')
 
   const { id, discussionId, parentId, content, discussionPreferences, tags } =
     args
@@ -28,6 +27,8 @@ module.exports = async (_, args, context) => {
   if (!discussion) {
     throw new Error(t('api/discussion/404'))
   }
+
+  Roles.ensureUserIsInRoles(me, discussion.allowedRoles)
 
   // check if client-side generated ID already exists
   if (id && !!(await loaders.Comment.byId.load(id))) {

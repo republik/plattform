@@ -1,6 +1,5 @@
 import React, { useContext } from 'react'
 import { css } from 'glamor'
-import { AddIcon, RemoveIcon } from '../../../Icons'
 import { sansSerifMedium16 } from '../../../Typography/styles'
 import { ellipsize, underline } from '../../../../lib/styleMixins'
 import * as config from '../../config'
@@ -12,6 +11,7 @@ import ActionsMenu, { ActionsMenuItemPropType } from './ActionsMenu'
 import PropTypes from 'prop-types'
 import HeaderMetaLine from './HeaderMetaLine'
 import { DiscussionContext } from '../../DiscussionContext'
+import { IconAdd, IconRemove } from '@republik/icons'
 
 export const profilePictureSize = 40
 export const profilePictureMargin = 10
@@ -197,7 +197,7 @@ export const Header = ({
           <div className={COLLAPSE_WRAPPER_CLASSNAME}>
             <IconButton
               invert={true}
-              Icon={isExpanded ? RemoveIcon : AddIcon}
+              Icon={isExpanded ? IconRemove : IconAdd}
               fillColorName='textSoft'
               size={20}
               onClick={onToggle}

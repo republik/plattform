@@ -1,9 +1,10 @@
 import React, { ForwardRefExoticComponent } from 'react'
-import { IconType } from '@react-icons/all-files/lib'
 import { BaseEditor, BaseRange, Path } from 'slate'
 import { ReactEditor } from 'slate-react'
 import { HistoryEditor } from 'slate-history'
 import { Formatter } from '../../lib/translate'
+import { MarkerType } from '../Marker'
+import { IconType } from '../../types/icon'
 
 type MarkType =
   | 'italic'
@@ -51,6 +52,12 @@ export type LinkElement = SharedElement & {
   type: 'link'
   href?: string
   title?: string
+}
+
+export type MemoElement = SharedElement & {
+  type: 'memo'
+  parentId?: string
+  marker?: MarkerType
 }
 
 export type FigureElement = SharedElement & {
@@ -240,6 +247,7 @@ export type CustomElement =
   | ParagraphElement
   | BreakElement
   | LinkElement
+  | MemoElement
   | FigureElement
   | FigureImageElement
   | FigureCaptionElement
@@ -286,6 +294,7 @@ export type CustomElementsType =
   | 'paragraph'
   | 'break'
   | 'link'
+  | 'memo'
   | 'figure'
   | 'figureImage'
   | 'figureCaption'
@@ -340,7 +349,7 @@ export interface BlockUiAttrsI {
 interface ElementAttrsI extends EditorAttrsI {
   formatText?: boolean
   blockUi?: BlockUiAttrsI
-  isTextInline?: boolean
+  isInlineBlock?: boolean
   stopFormIteration?: boolean
   neverDelete?: boolean
 }
@@ -377,7 +386,7 @@ export type ElementFormProps<E> = {
   onClose: () => void
 }
 
-export type TemplateType = CustomElementsType | 'text'
+export type TemplateType = CustomElementsType | 'text' | 'inherit'
 
 export type NodeTemplate = {
   type: TemplateType | TemplateType[]
@@ -412,16 +421,23 @@ interface ToolbarConfig {
   showChartCount?: boolean
 }
 
+export type EditorContext = {
+  t?: Formatter
+  Link?: React.FC<any>
+  nav?: JSX.Element
+  repoId?: string
+  commitId?: string
+}
+
 export type EditorConfig = {
   schema: SchemaConfig
   editorSchema?: SchemaConfig
+  structure?: NodeTemplate[]
   maxSigns?: number
   debug?: boolean
   toolbar?: ToolbarConfig
   readOnly?: boolean
-  t?: Formatter
-  Link?: React.FC
-  nav?: JSX.Element
+  context: EditorContext
 }
 
 export type KeyCombo = {

@@ -361,6 +361,10 @@
       "value": "Ihre Bestellung: Buch «Republik bei Stromausfall»"
     },
     {
+      "key": "api/email/pledge_yearly_abo/subject",
+      "value": "Willkommen bei der Republik!"
+    },
+    {
       "key": "api/email/payment_successful_abo/subject",
       "value": "Vielen Dank! Wir haben Ihre Zahlung erhalten."
     },
@@ -386,6 +390,10 @@
     },
     {
       "key": "api/email/payment_successful_tablebook/subject",
+      "value": "Vielen Dank! Wir haben Ihre Zahlung erhalten."
+    },
+    {
+      "key": "api/email/payment_successful_yearly_abo/subject",
       "value": "Vielen Dank! Wir haben Ihre Zahlung erhalten."
     },
     {
@@ -475,6 +483,14 @@
     {
       "key": "api/email/option/membershiptype/abo_give_months/other",
       "value": "Monats-Abos als Geschenk für {interval}"
+    },
+    {
+      "key": "api/email/option/membershiptype/yearly_abo/1",
+      "value": "Mitstreiterinnen-Abo"
+    },
+    {
+      "key": "api/email/option/membershiptype/yearly_abo/other",
+      "value": "Mitstreiterinnen-Abos"
     },
     {
       "key": "api/email/option/other/gifted_membership",
@@ -633,8 +649,16 @@
       "value": "Bleiben Sie an Bord oder möchten Sie die Republik verlassen? Sie haben die Wahl"
     },
     {
+      "key": "api/email/membership_owner_prolong_yearly_abo_notice/subject",
+      "value": "Bald endet Ihr Republik-Abo, bleiben Sie an Bord!"
+    },
+    {
       "key": "api/email/membership_owner_prolong_notice_7/subject",
       "value": "Am {endDate} erneuert sich Ihre Mitgliedschaft"
+    },
+    {
+      "key": "api/email/membership_owner_prolong_yearly_abo_notice_7/subject",
+      "value": "Am {endDate} in die Zukunft des unabhängigen Journalismus investieren"
     },
     {
       "key": "api/email/membership_owner_prolong_notice_0/sequenceNumber/true/subject",
@@ -649,8 +673,16 @@
       "value": "Ihr letzter Tag an Bord"
     },
     {
+      "key": "api/email/membership_owner_prolong_yearly_abo_notice_0/subject",
+      "value": "Ihr Republik-Jubiläum! Und der Beginn von etwas Neuem?"
+    },
+    {
       "key": "api/email/membership_owner_prolong_winback_7/subject",
       "value": "Ihr Mitgliedschaftsbeitrag ist überfällig"
+    },
+    {
+      "key": "api/email/membership_owner_prolong_yearly_abo_winback_7/subject",
+      "value": "Da war doch noch etwas: Ihr Mitstreiter-Abonnement"
     },
     {
       "key": "api/email/membership_owner_autopay_notice/subject",
@@ -675,6 +707,10 @@
     {
       "key": "api/email/membership_deactivated_abo_give_months_uncancelled/subject",
       "value": "Ihr Republik-Abonnement wurde deaktiviert"
+    },
+    {
+      "key": "api/email/membership_deactivated_yearly_abo_uncancelled/subject",
+      "value": "Ihr Abonnement wurde deaktiviert"
     },
     {
       "key": "api/email/membership_deactivated/subject",
@@ -829,20 +865,12 @@
       "value": "Bestätigen Sie Ihre Anmeldung zum Wochenend-Newsletter."
     },
     {
-      "key": "api/newsletters/request/COVID19/subject",
-      "value": "Bestätigen Sie Ihre Anmeldung zum Covid-19-Uhr-Newsletter."
-    },
-    {
       "key": "api/newsletters/request/PROJECTR/subject",
       "value": "Bestätigen Sie Ihre Anmeldung zum Project-R-Newsletter."
     },
     {
       "key": "api/newsletters/request/CLIMATE/subject",
       "value": "Bestätigen Sie Ihre Anmeldung zum Klimalabor-Newsletter."
-    },
-    {
-      "key": "api/newsletters/request/WINTER/subject",
-      "value": "Anmeldung zum Winter-is-coming-Newsletter bestätigen"
     },
     {
       "key": "api/newsletters/request/notSupported",
@@ -1185,6 +1213,10 @@
       "value": "Einladung von {granterName}"
     },
     {
+      "key": "api/access/email/recipient/invitation_klimalabor/subject",
+      "value": "Einladung zum Klimalabor der Republik"
+    },
+    {
       "key": "api/access/email/recipient/invitation_kampa202202/subject",
       "value": "Einladung von {granterName} für acht Wochen Republik"
     },
@@ -1201,6 +1233,10 @@
       "value": "Ihr Republik-Probezugang: Willkommen!"
     },
     {
+      "key": "api/access/email/recipient/onboarding_klimalabor/subject",
+      "value": "Willkommen im Klimalabor"
+    },
+    {
       "key": "api/access/email/recipient/onboarding_gifted_membership/subject",
       "value": "Willkommen an Bord"
     },
@@ -1211,6 +1247,10 @@
     {
       "key": "api/access/email/recipient/expired/subject",
       "value": "Ihre Reise ist beendet"
+    },
+    {
+      "key": "api/access/email/recipient/expired_klimalabor/subject",
+      "value": "Machen Sie es wie wir: Investieren Sie in Klimajournalismus"
     },
     {
       "key": "api/access/email/recipient/followup/subject",
@@ -2001,48 +2041,92 @@
       "value": "Neuer Beitrag von {name}"
     },
     {
+      "key": "api/notifications/doc/readAloud/title",
+      "value": "Neu vorgelesen: {title}"
+    },
+    {
       "key": "api/github/unavailable",
       "value": "GitHub scheint zur Zeit nicht verfügbar zu sein. Bitte versuchen Sie es später nochmals."
     },
     {
-      "key": "api/email/payment/reminder/default/subject",
+      "key": "api/email/payment/reminder/isLast:false/packageName:ABO_GIVE_MONTHS/subject",
       "value": "Zahlungserinnerung Republik"
     },
     {
-      "key": "api/email/payment/reminder/ABO/subject",
+      "key": "api/email/payment/reminder/isLast:false/packageName:ABO_GIVE/subject",
       "value": "Zahlungserinnerung Republik-Mitgliedschaft"
     },
     {
-      "key": "api/email/payment/reminder/PROLONG/subject",
+      "key": "api/email/payment/reminder/isLast:false/packageName:ABO/subject",
       "value": "Zahlungserinnerung Republik-Mitgliedschaft"
     },
     {
-      "key": "api/email/payment/reminder/DONATE/subject",
+      "key": "api/email/payment/reminder/isLast:false/packageName:BENEFACTOR/subject",
+      "value": "Zahlungserinnerung Republik-Mitgliedschaft"
+    },
+    {
+      "key": "api/email/payment/reminder/isLast:false/packageName:DONATE_POT/subject",
+      "value": "Zahlungserinnerung Republik"
+    },
+    {
+      "key": "api/email/payment/reminder/isLast:false/packageName:DONATE/subject",
       "value": "Zahlungserinnerung Republik-Spende"
     },
     {
-      "key": "api/email/payment/reminder/BENEFACTOR/subject",
+      "key": "api/email/payment/reminder/isLast:false/packageName:MASK/subject",
+      "value": "Zahlungserinnerung Republik"
+    },
+    {
+      "key": "api/email/payment/reminder/isLast:false/packageName:PROLONG/subject",
       "value": "Zahlungserinnerung Republik-Mitgliedschaft"
     },
     {
-      "key": "api/email/payment/reminder/last/default/subject",
+      "key": "api/email/payment/reminder/isLast:false/packageName:TABLEBOOK/subject",
+      "value": "Zahlungserinnerung Republik"
+    },
+    {
+      "key": "api/email/payment/reminder/isLast:false/packageName:YEARLY_ABO/subject",
+      "value": "Sie haben den Preis gewählt: Zahlungserinnerung für Ihr neues Republik-Abo"
+    },
+    {
+      "key": "api/email/payment/reminder/isLast:true/packageName:ABO_GIVE_MONTHS/subject",
       "value": "LETZTE MAHNUNG Republik"
     },
     {
-      "key": "api/email/payment/reminder/last/ABO/subject",
+      "key": "api/email/payment/reminder/isLast:true/packageName:ABO_GIVE/subject",
       "value": "LETZTE MAHNUNG Republik-Mitgliedschaft"
     },
     {
-      "key": "api/email/payment/reminder/last/PROLONG/subject",
+      "key": "api/email/payment/reminder/isLast:true/packageName:ABO/subject",
       "value": "LETZTE MAHNUNG Republik-Mitgliedschaft"
     },
     {
-      "key": "api/email/payment/reminder/last/DONATE/subject",
+      "key": "api/email/payment/reminder/isLast:true/packageName:BENEFACTOR/subject",
+      "value": "LETZTE MAHNUNG Republik-Mitgliedschaft"
+    },
+    {
+      "key": "api/email/payment/reminder/isLast:true/packageName:DONATE_POT/subject",
+      "value": "LETZTE MAHNUNG Republik"
+    },
+    {
+      "key": "api/email/payment/reminder/isLast:true/packageName:DONATE/subject",
       "value": "LETZTE MAHNUNG Republik-Spende"
     },
     {
-      "key": "api/email/payment/reminder/last/BENEFACTOR/subject",
+      "key": "api/email/payment/reminder/isLast:true/packageName:MASK/subject",
+      "value": "LETZTE MAHNUNG Republik"
+    },
+    {
+      "key": "api/email/payment/reminder/isLast:true/packageName:PROLONG/subject",
       "value": "LETZTE MAHNUNG Republik-Mitgliedschaft"
+    },
+    {
+      "key": "api/email/payment/reminder/isLast:true/packageName:TABLEBOOK/subject",
+      "value": "LETZTE MAHNUNG Republik"
+    },
+    {
+      "key": "api/email/payment/reminder/isLast:true/packageName:YEARLY_ABO/subject",
+      "value": "Der von Ihnen festgelegte Betrag für Ihr neues Republik-Abo ist noch nicht bezahlt"
     },
     {
       "key": "api/repo/phase/draft",
@@ -2293,6 +2377,10 @@
       "value": "Monats-Abos"
     },
     {
+      "key": "api/republik/revenueStats/segment/yearlyAbo",
+      "value": "Mitstreiterinnen-Abos"
+    },
+    {
       "key": "api/republik/revenueStats/segment/goodie",
       "value": "Waren wie Bücher, Taschen, Masken, Fondues und Tassen"
     },
@@ -2415,6 +2503,34 @@
     {
       "key": "api/publikator/file/error/notYours",
       "value": "Datei gehört nicht Ihnen"
+    },
+    {
+      "key": "api/call-to-actions/notAllowed",
+      "value": "Sie dürfen \"callToActions\" nicht abfragen."
+    },
+    {
+      "key": "api/call-to-actions/acknowledge/notAllowed",
+      "value": "Sie dürfen diesen Call-To-Action nicht quittieren."
+    },
+    {
+      "key": "api/call-to-actions/acknowledge/404",
+      "value": "Call-To-Action nicht gefunden"
+    },
+    {
+      "key": "api/reportUser/self",
+      "value": "Das eigene Profil kann nich gemeldet werden"
+    },
+    {
+      "key": "api/reportUser/failed",
+      "value": "Es ist ein Fehler aufgetreten, das Profil konnte nicht gemeldet werden."
+    },
+    {
+      "key": "api/reportUser/userNotFound",
+      "value": "Der gemeldete Benutzer konnte nicht gefunden werden."
+    },
+    {
+      "key": "api/reportUser/reasonTooLong",
+      "value": "Die Begründung ist zu lange. (Maximal {max} Zeichen)"
     }
   ]
 }

@@ -1,9 +1,7 @@
-import { useState } from 'react'
-import Loader from '../Loader'
-
 import { css } from 'glamor'
 import compose from 'lodash/flowRight'
-import { CheckCircleIcon, useColorContext } from '@project-r/styleguide'
+import { useRouter } from 'next/router'
+import { useState } from 'react'
 
 import {
   Interaction,
@@ -11,23 +9,29 @@ import {
   RawHtml,
   useHeaderHeight,
   FieldSet,
+  useColorContext,
 } from '@project-r/styleguide'
 
 import { useTranslation } from '../../lib/withT'
 
+import { withMyDetails, withMyDetailsMutation } from '../Account/enhancers'
+import DetailsForm from '../Account/DetailsForm'
+import ErrorMessage from '../ErrorMessage'
+import Box from '../Frame/Box'
+import Loader from '../Loader'
 import StatusError from '../StatusError'
+
 import {
   withQuestionnaire,
   withQuestionnaireMutation,
   withQuestionnaireReset,
   withQuestionnaireRevoke,
+  withQuestionnaireAnonymize,
 } from './enhancers'
 import Questions from './Questions'
 import QuestionnaireClosed from './QuestionnaireClosed'
 import QuestionnaireActions from './QuestionnaireActions'
-import ErrorMessage from '../ErrorMessage'
-import DetailsForm from '../Account/DetailsForm'
-import { withMyDetails, withMyDetailsMutation } from '../Account/enhancers'
+import { IconCheckCircle } from '@republik/icons'
 
 const { Headline, P } = Interaction
 
@@ -62,18 +66,35 @@ const Questionnaire = (props) => {
     submitQuestionnaire,
     resetQuestionnaire,
     revokeQuestionnaire,
+    anonymizeQuestionnaire,
     onQuestionnaireChange,
     detailsData,
+    submittedMessage,
+    SubmittedComponent,
+    questionnaireName,
+    context,
+    sliceAt,
+    showSlice2,
+    slug,
+    updateDetails,
+    externalSubmit = false,
     publicSubmission = true,
-    hideInvalid,
-    hideReset,
+    hideCount = false,
+    hideInvalid = false,
+    hideReset = false,
+    requireName = true,
+    showAnonymize = false,
+    redirectPath,
+    notEligibleCopy,
   } = props
+
   const [state, setState] = useState({})
+  const router = useRouter()
   const [isResubmitAnswers, setIsResubmitAnswers] = useState(false)
   const [headerHeight] = useHeaderHeight()
   const { t } = useTranslation()
   const [colorScheme] = useColorContext()
-  const id = questionnaireData.questionnaire?.id
+  const id = questionnaireData?.questionnaire?.id
   const [detailsState, setDetailsState] = useState({
     showErrors: false,
     values: {},
@@ -81,33 +102,41 @@ const Questionnaire = (props) => {
     dirty: {},
   })
 
+  const onSubmitSuccess = () => {
+    onQuestionnaireChange && onQuestionnaireChange()
+    return setState({
+      updating: false,
+    })
+  }
+
+  const onSubmitError = (error) => {
+    setState({
+      updating: false,
+      error,
+    })
+  }
+
   const processSubmit = (fn, ...args) => {
     setState({ updating: true })
     return fn(...args)
-      .then(() => {
-        onQuestionnaireChange && onQuestionnaireChange()
-        return setState({
-          updating: false,
-        })
-      })
-      .catch((error) => {
-        setState({
-          updating: false,
-          error,
-        })
-      })
+      .then(onSubmitSuccess)
+      .catch(onSubmitError)
   }
 
-  const {
-    submittedMessage,
-    questionnaireName,
-    externalSubmit,
-    hideCount,
-    sliceAt,
-    showSlice2,
-    slug,
-    updateDetails,
-  } = props
+  const redirectToPath = () => {
+    setState({ updating: true })
+    submitQuestionnaire(id)
+      .then(({ data }) => {
+        router.replace({
+          pathname: redirectPath.replace(
+            '{id}',
+            data?.submitQuestionnaire?.userSubmissionId,
+          ),
+        })
+      })
+      .catch(onSubmitError)
+  }
+
   return (
     <Loader
       loading={questionnaireData.loading}
@@ -116,7 +145,7 @@ const Questionnaire = (props) => {
         const now = new Date()
         // handle not found or not started
         if (
-          !questionnaireData.questionnaire ||
+          !questionnaireData?.questionnaire ||
           new Date(questionnaireData.questionnaire.beginDate) > now
         ) {
           return (
@@ -138,7 +167,20 @@ const Questionnaire = (props) => {
         } = questionnaireData
         const error = state.error || props.error
         const updating = state.updating || props.updating || props.submitting
+        const hasUserAnswers = questions.some(({ userAnswer }) => !!userAnswer)
 
+        if (!userIsEligible && notEligibleCopy) {
+          return (
+            <Box style={{ padding: 15 }}>
+              <RawHtml
+                type={Interaction.P}
+                dangerouslySetInnerHTML={{
+                  __html: notEligibleCopy,
+                }}
+              />
+            </Box>
+          )
+        }
         if (!userIsEligible) {
           return null
         }
@@ -171,26 +213,41 @@ const Questionnaire = (props) => {
             updating: false,
           }))
         }
+
+        const onResubmit = resubmitAnswers && (() => setIsResubmitAnswers(true))
+
         const onRevoke =
           revokeSubmissions &&
-          (() => {
-            processSubmit(revokeQuestionnaire, id)
-          })
+          hasUserAnswers &&
+          (() => processSubmit(revokeQuestionnaire, id))
 
-        if (!updating && !isResubmitAnswers && (hasEnded || userHasSubmitted)) {
+        if (
+          !updating &&
+          !isResubmitAnswers &&
+          userHasSubmitted &&
+          SubmittedComponent
+        ) {
           return (
-            <QuestionnaireClosed
-              submitted={userHasSubmitted}
-              onResubmit={
-                resubmitAnswers &&
-                (() => {
-                  setIsResubmitAnswers(true)
-                })
-              }
+            <SubmittedComponent
+              questionnaire={questionnaireData.questionnaire}
+              onResubmit={onResubmit}
               onRevoke={onRevoke}
-              publicSubmission={publicSubmission}
             />
           )
+        }
+        if (!updating && !isResubmitAnswers && (hasEnded || userHasSubmitted)) {
+          if (redirectPath && resubmitAnswers) {
+            onResubmit()
+          } else {
+            return (
+              <QuestionnaireClosed
+                submitted={userHasSubmitted}
+                onResubmit={onResubmit}
+                onRevoke={onRevoke}
+                publicSubmission={publicSubmission}
+              />
+            )
+          }
         }
         // handle questions
         const questionCount = questions
@@ -210,7 +267,8 @@ const Questionnaire = (props) => {
           )
         })
         const askForName =
-          !detailsData.me?.firstName || !detailsData.me?.lastName
+          requireName &&
+          (!detailsData.me?.firstName || !detailsData.me?.lastName)
         const needsMeUpdate = askForName || askForAddress
 
         const detailsErrorMessages = Object.keys(detailsState.errors)
@@ -265,8 +323,15 @@ const Questionnaire = (props) => {
               return
             }
           }
-          processSubmit(submitQuestionnaire, id)
+          if (redirectPath) {
+            redirectToPath()
+          } else {
+            processSubmit(submitQuestionnaire, id)
+          }
         }
+
+        const onSubmitAnonymized = () =>
+          processSubmit(anonymizeQuestionnaire, id)
 
         return (
           <div>
@@ -307,7 +372,7 @@ const Questionnaire = (props) => {
                     </P>
                     {questionCount === userAnswerCount ? (
                       <div {...styles.progressIcon}>
-                        <CheckCircleIcon
+                        <IconCheckCircle
                           size={22}
                           {...colorScheme.set('fill', 'primary')}
                         />
@@ -349,11 +414,14 @@ const Questionnaire = (props) => {
               <QuestionnaireActions
                 isResubmitAnswers={isResubmitAnswers}
                 onSubmit={onSubmit}
+                onSubmitAnonymized={onSubmitAnonymized}
+                showAnonymize={showAnonymize}
                 onReset={!hideReset && onReset}
                 updating={updating}
                 invalid={userAnswerCount < 1}
                 publicSubmission={publicSubmission}
                 hideInvalid={hideInvalid}
+                context={context}
               />
             )}
           </div>
@@ -367,6 +435,7 @@ const QuestionnaireWithMutations = compose(
   withQuestionnaireMutation,
   withQuestionnaireReset,
   withQuestionnaireRevoke,
+  withQuestionnaireAnonymize,
   withMyDetails,
   withMyDetailsMutation,
 )(Questionnaire)
