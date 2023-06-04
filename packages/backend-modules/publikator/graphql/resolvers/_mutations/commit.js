@@ -18,6 +18,7 @@ const {
 
 const { hashObject } = require('../../../lib/git')
 const { updateCurrentPhase, toCommit } = require('../../../lib/postgres')
+const { maybeApplyAudioSourceDuration } = require('../../../lib/audioSource')
 
 const {
   lib: {
@@ -155,7 +156,13 @@ module.exports = async (_, args, context) => {
     delete content.meta
 
     const parentCommit =
-      parentId && (await tx.publikator.commits.findOne({ id: parentId }))
+      parentId &&
+      (await tx.publikator.commits.findOne(
+        { id: parentId },
+        { fields: ['id', 'meta'] },
+      ))
+
+    await maybeApplyAudioSourceDuration(meta, parentCommit?.meta)
 
     const author = {
       name: user.name,
