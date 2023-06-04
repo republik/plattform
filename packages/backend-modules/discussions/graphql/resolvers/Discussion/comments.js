@@ -36,9 +36,9 @@ const assembleTree = (
     .filter((comment) => {
       const missingParentId = !parentId
       const isCommentParent = comment.id === parentId
-      const isCommentParentChid = comment.parentIds?.includes(parentId)
+      const isCommentParentChild = comment.parentIds?.includes(parentId)
 
-      return missingParentId || isCommentParent || isCommentParentChid
+      return missingParentId || isCommentParent || isCommentParentChild
     })
     .forEach((comment) => {
       const isCommentRoot = !comment.parentIds?.length
