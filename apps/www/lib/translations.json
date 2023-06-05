@@ -7156,6 +7156,14 @@
       "value": "Tasse"
     },
     {
+      "key": "option/LESHA/label/1",
+      "value": "Buch «We Stay»"
+    },
+    {
+      "key": "option/LESHA/label/other",
+      "value": "Bücher «We Stay»"
+    },
+    {
       "key": "package/customize/price/payMore/userPrice",
       "value": "Können Sie Ihr Investment erhöhen?"
     },
