@@ -453,6 +453,14 @@
       "value": "Tassen"
     },
     {
+      "key": "api/email/option/goodie/lesha/1",
+      "value": "Buch «We Stay»"
+    },
+    {
+      "key": "api/email/option/goodie/lesha/other",
+      "value": "Bücher «We Stay»"
+    },
+    {
       "key": "api/email/option/membershiptype/abo/1",
       "value": "Jahresmitgliedschaft"
     },
