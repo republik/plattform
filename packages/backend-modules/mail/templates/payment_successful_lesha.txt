@@ -1,0 +1,28 @@
+Guten Tag
+
+Ihre Zahlung ist erfolgreich bei uns eingegangen. Vielen Dank!
+
+   {{#options}}
+ * {{#if this.hasMultipleOAmounts}} {{this.oamount}} {{this.olabel}} à
+   {{this.oprice_formatted}}: {{this.ototal_formatted}} {{else}}
+   {{this.oamount}} {{this.olabel}}: {{this.ototal_formatted}} {{/if}}
+   {{/options}} {{#if discount}}
+ * Gewünschte Preisreduktion: –{{discount_formatted}}
+   {{/if}} {{#if donation}}
+ * Spende: {{donation_formatted}}
+   {{/if}}
+ * Total: {{total_formatted}}
+
+Der Versand erfolgt innerhalb von sieben Tagen.
+
+Wir wünschen Ihnen anregende Lektüre mit «We Stay».
+
+Herzlich
+
+Ihre Crew der Republik
+
+
+Republik AG
+Sihlhallenstrasse 1, CH-8004 Zürich
+{{frontend_base_url}}
+kontakt@republik.ch
