@@ -13,6 +13,14 @@ describe('truncateIP test-suite', () => {
     expect(truncateIP('2001:db8:6:bbb0::7')).toBe('2001:db8:6:0:0:0:0:0')
   })
 
+  test('array of ip strings', () => {
+    expect(truncateIP(['82.197.167.186', 'other-string'])).toBe('82.197.167.0')
+  })
+
+  test('string of arrays', () => {
+    expect(truncateIP('82.197.167.186, other-string')).toBe('82.197.167.0')
+  })
+
   test('throws if not valid IP', () => {
     expect(() => {
       truncateIP('random-string')

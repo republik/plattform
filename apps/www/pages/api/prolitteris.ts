@@ -45,9 +45,6 @@ async function handler(request: NextApiRequest, response: NextApiResponse) {
     throw new Error('IP undefined')
   }
 
-  // if x-forwarded-for contains an array of ip's, use the left most (client)
-  const requestIp = Array.isArray(requestIps) ? requestIps[0] : requestIps
-
   // Query Parameters of request
   // 1) paid (string, 'pw' || 'na'): request by paying user (pw) or public (na)
   // 2) uid (string): repoId of the article
@@ -83,10 +80,10 @@ async function handler(request: NextApiRequest, response: NextApiResponse) {
   }
 
   // create unique C-Parameter for each request (20 characters hex) from the ip and user agent
-  const cParam: string = getHash([requestIp, ua]).substring(0, 20)
+  const cParam: string = getHash([truncateIP(requestIps), ua]).substring(0, 20)
   // replace repoID forward slash with dash, as forward slashes are not allowed in uid parameter
   const uidParam = PROLITTERIS_DEV_UID || uid.replace('/', '-')
-  const maskedIP = truncateIP(requestIp)
+  const maskedIP = truncateIP(requestIps)
 
   const fetchURL = new URL(
     `${PROLITTERIS_DOMAIN}` +
