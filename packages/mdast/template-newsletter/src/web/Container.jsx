@@ -8,11 +8,11 @@ const styles = {
     color: '#444',
     WebkitFontSmoothing: 'antialiased',
     backgroundColor: '#fff',
-    width: '100%'
-  }
+    width: '100%',
+  },
 }
 
-export default ({children, attributes = {}}) => (
+export default ({ children, attributes = {} }) => (
   <div {...css(styles.container)} {...attributes}>
     {children}
   </div>

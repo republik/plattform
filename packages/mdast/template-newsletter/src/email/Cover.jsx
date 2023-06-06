@@ -6,7 +6,7 @@ export const Lead = () => null
 
 export const Title = () => null
 
-export default ({ data: { src, alt }, children }) => {
+export default ({ data: { src, alt } }) => {
   return (
     <tr>
       <td align='center' valign='top'>

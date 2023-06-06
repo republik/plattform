@@ -1,46 +1,57 @@
 import React from 'react'
-import {css} from 'glamor'
+import { css } from 'glamor'
 
 const tableStyle = css({
   borderSpacing: '20px 0',
   '@media (max-width: 600px)': {
-    fontSize: 14
+    fontSize: 14,
   },
   '@media (min-width: 321px) and (max-width: 600px)': {
-    borderSpacing: '10px 0'
+    borderSpacing: '10px 0',
   },
   '& th': {
-    fontStyle: 'italic'
+    fontStyle: 'italic',
   },
   '& th, & td': {
     textAlign: 'left',
     verticalAlign: 'top',
     borderBottom: '1px solid #000',
     paddingTop: 3,
-    paddingBottom: 20
+    paddingBottom: 20,
   },
   '& tr:last-child th, & tr:last-child td': {
-    borderBottom: 'none'
-  }
+    borderBottom: 'none',
+  },
 })
 const PADDING = 20
 
 export default () => (
-  <div style={{overflowX: 'auto', overflowY: 'hidden', marginLeft: -PADDING, marginRight: -PADDING}}>
+  <div
+    style={{
+      overflowX: 'auto',
+      overflowY: 'hidden',
+      marginLeft: -PADDING,
+      marginRight: -PADDING,
+    }}
+  >
     <table {...tableStyle}>
       <tbody>
         <tr>
           <th />
           <td>
             <img
-              style={{height: 40, marginBottom: 10}}
-              src='https://assets.project-r.construction/images/project_r_logo.svg' /><br />
+              style={{ height: 40, marginBottom: 10 }}
+              src='https://assets.project-r.construction/images/project_r_logo.svg'
+            />
+            <br />
             Genossenschaft
           </td>
           <td>
             <img
-              style={{height: 40, marginLeft: -10, marginBottom: 10}}
-              src='https://assets.project-r.construction/images/magazine_logo.png' /><br />
+              style={{ height: 40, marginLeft: -10, marginBottom: 10 }}
+              src='https://assets.project-r.construction/images/magazine_logo.png'
+            />
+            <br />
             Aktiengesellschaft
           </td>
         </tr>
@@ -55,7 +66,8 @@ export default () => (
             <p>Alles Institutionelle.</p>
             <p>Dem Journalismus seine Rolle in der Demokratie sichern.</p>
             <p>
-              <em>Gemeinnützig;</em><br />
+              <em>Gemeinnützig;</em>
+              <br />
               mitglieder-, spenden- und stiftungsfinanziert
             </p>
           </td>
@@ -63,7 +75,8 @@ export default () => (
             <p>Alles Journalistische.</p>
             <p>Das digitale Magazin herstellen.</p>
             <p>
-              <em>Gewinnorientiert</em><br />
+              <em>Gewinnorientiert</em>
+              <br />
               (mit dem Ziel, mindestens selbsttragend zu werden)
             </p>
           </td>
@@ -73,11 +86,16 @@ export default () => (
           <td>
             <p>Alles, was Journalismus schützt und voranbringt</p>
             <ul>
-              <li>Entwicklung und Weiterentwicklung journalistischer Formate</li>
+              <li>
+                Entwicklung und Weiterentwicklung journalistischer Formate
+              </li>
               <li>Nachwuchsförderung, Aus- und Weiterbildung</li>
               <li>Entwicklung IT-Infrastruktur (Open Source)</li>
               <li>Veranstaltungen</li>
-              <li>Sensibilisierung von Öffentlichkeit für unabhängigen Journalismus</li>
+              <li>
+                Sensibilisierung von Öffentlichkeit für unabhängigen
+                Journalismus
+              </li>
               <li>Mittelbeschaffung, Recherchefonds</li>
               <li>Rechtliches</li>
               <li>Kooperationen</li>

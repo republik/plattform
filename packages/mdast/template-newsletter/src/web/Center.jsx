@@ -8,13 +8,13 @@ const containerStyle = css({
   paddingTop: PADDING / 2,
   maxWidth: 640,
   '@media (min-width: 600px)': {
-    paddingTop: PADDING
-  }
+    paddingTop: PADDING,
+  },
 })
 
-export default ({children, attributes = {}}) => (
+export default ({ children, attributes = {} }) => (
   <div {...containerStyle} {...attributes}>
     {children}
-    <div style={{clear: 'both'}} />
+    <div style={{ clear: 'both' }} />
   </div>
 )

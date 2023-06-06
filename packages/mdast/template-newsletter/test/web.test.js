@@ -3,7 +3,7 @@ import Enzyme, { shallow } from 'enzyme'
 import Adapter from 'enzyme-adapter-react-16'
 
 import { renderMdast } from '@republik/mdast-react-render'
-import newsletterSchema from './web'
+import newsletterSchema from '../src/web'
 
 import mdast from './sample'
 import mdastLegacy from './sample.legacy'

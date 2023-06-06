@@ -1,7 +1,5 @@
 import React from 'react'
 
 export default ({ children, attributes = {} }) => (
-  <blockquote {...attributes}>
-    {children}
-  </blockquote>
+  <blockquote {...attributes}>{children}</blockquote>
 )
