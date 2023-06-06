@@ -165,11 +165,7 @@ Not valid JSON
 \`\`\`
 
 <hr /></section>\n`
-    let rootNode
-    expect(() => {
-      rootNode = parse(md)
-    })
-
+    const rootNode = parse(md)
     const zone = rootNode.children[0]
 
     expect(zone.data).toEqual({})
