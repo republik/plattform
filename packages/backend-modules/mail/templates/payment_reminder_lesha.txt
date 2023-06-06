@@ -6,8 +6,8 @@ Falls sich unsere Buchhaltung nicht irrt, ist allerdings Ihre Zahlung in der
 Höhe von CHF {{total}} noch ausstehend.
 
 Dürfen wir Sie freundlich bitten, den Betrag in den nächsten Tagen zu
-überweisen? Leider können wir das Buch erst versenden, wenn die Zahlung bei uns
-eingegangen ist.
+überweisen? Leider können wir Ihre Bestellung erst versenden, wenn die Zahlung
+bei uns eingegangen ist.
 
 Zahlungsinformationen:
 
