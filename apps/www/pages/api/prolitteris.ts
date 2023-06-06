@@ -100,6 +100,8 @@ async function handler(request: NextApiRequest, response: NextApiResponse) {
     'X-Forwarded-For': maskedIP,
   }
 
+  console.log(fetchURL, requestHeaders)
+
   return await fetch(fetchURL.toString(), {
     method: 'GET',
     headers: requestHeaders,
