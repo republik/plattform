@@ -1,8 +1,6 @@
-# Slate Mdast Serializer
+# Mdast React Render
 
-Convert [Slate](https://github.com/ianstormtaylor/slate) trees to [MDAST](https://github.com/syntax-tree/mdast) trees.
-
-See [`@orbiting/remark-preset`](../remark-preset) for a good preset to parse markdown and stringify mdast to markdown.
+A util to render an [MDAST](https://github.com/syntax-tree/mdast) tree accroding to a schema.
 
 ## API
 
@@ -10,183 +8,222 @@ See [`@orbiting/remark-preset`](../remark-preset) for a good preset to parse mar
 
 ```js
 {
-  match: fn(slateJson): Boolean,
   matchMdast: fn(mdast, index, parent): Boolean,
-  fromMdast: fn(mdast, index, parent, {visitChildren, context}): SlateJson,
-  toMdast: fn(slateJson, index, parent, {visitChildren, context}): Mdast
+  props: fn(mdast, index, parent, {ancestors}): Object,
+  rules: [rule],
+  isVoid: Boolean,
+  component: ReactComponent
 }
 ```
 
-- `match`
-  Return true if the rule should serialize the slate object.
 - `matchMdast`
-  Return true if the rule should deserialize the mdast node.
-- `fromMdast`
-  Return slate objects for a given mdast node.
-- `toMdast`
-  Return mdast nodes for a given slate object.
+  Return true if the rule should render the mdast node.
+- `props`
+  Extract props from mdast to be passed to `component`. Additional context is available from the ordered `ancestors` array—index zero is equal to the parent.
+- `rules`
+  Optional array of sub rules to render children with. Defaults to recursively visit children.
+- `isVoid`
+  Skip rendering children. Default `false`.
+- `component`
+  The React component to render.
 
-See [most common rules](#most-common-rules) below.
-
-### `constructor(options): instance`
-
-`options.rules` array of rule objects
-
-### `instance.deserialize(mdast, options): Slate.Value`
-
-`mdast`: `Mdast`  
-`options`: `Object`
-
-### `instance.deserialize(value, options): Mdast`
-
-`value`: `Slate.Value`  
-`options`: `Object`
-
-### `instance.fromMdast(mdast, index = 0, parent = null, options)`
-
-### `instance.toMdast(slateJson, index = 0, parent = null, options)`
-
-### `instance.parse(markdown): Mdast`
-
-### `instance.stringify(mdast): String`
-
-## Most Common Rules
-
-### Arbitrary Children
-
-Delegate children processing back to the serializer.
+### `renderMdast`
 
 ```js
-{
-  match: matchBlock(TYPE),
-  matchMdast: (node) => node.type === 'heading' && node.depth === 1,
-  fromMdast: (node, index, parent, {visitChildren}) => ({
-    kind: 'block',
-    type: TYPE,
-    nodes: visitChildren(node)
-  }),
-  toMdast: (object, index, parent, {visitChildren}) => ({
-    type: 'heading',
-    depth: 1,
-    children: visitChildren(object)
-  })
-}
+import { renderMdast } from 'mdast-react-render'
+
+renderMdast(mdast, schema, options): ReactElement | [ReactElement]
 ```
 
-### Block with Specific Children
+`mdast`: `Mdast | [Mdast]`  
+The mdast tree to render.
 
-Delegate to a `childSerializer`. Another instance with just the rules you want.
+`schema.rules`: `[rule]`  
+Rules to render with
 
-Make sure to forward parent information and rest (e.g. context) to the `childSerializer`. 
+`options.MissingNode`: `false | ReactComponent`  
+A component to display when no rules matches. You can also pass false to throw if there is an unhandled mdast node. The component receives an `node`, `index`, `parent` and `ancestors` prop.
+
+`options.ancestors`: `undefined | [Mdast]`  
+If you're rendering a sub tree you should pass the ancestors via options. The immediate parent is expected at index 0. Used for `matchMdast` (immediate parent) and `props` (parent and ancestors).
+
+### `renderEmail`
 
 ```js
-{
-  match: matchBlock(TYPE),
-  matchMdast: rule.matchMdast,
-  fromMdast: (node, index, parent, rest) => ({
-    kind: 'block',
-    type: TYPE,
-    nodes: childSerializer.fromMdast(node.children, 0, node, rest)
-  }),
-  toMdast: (object, index, parent, rest) => ({
-    type: 'zone',
-    identifier: TYPE,
-    children: childSerializer.toMdast(object.nodes, 0, object, rest)
-  })
-}
+import { renderMdast } from 'mdast-react-render/lib/email'
+
+renderEmail(mdast, schema, options): HtmlString
 ```
 
-### Void Node
+A drop in replacement for rendering emails. Params like `renderMdast` with following addition:
 
-Skip processing children further.
+`options.doctype`: `String`  
+Defaults to a `xhtml1-transitional` doctype string.
+
+Renders with `renderMdast`, stringifies with renderToStaticMarkup `ReactDOMServer.renderToStaticMarkup`, add a doctype and supports Outlook conditional comments via the mso component.
+
+#### `<Mso>`
+
+A dangerous helper for Outlook conditional comments.
+
+Props:
+- `gte`: `String`  
+  a optional gte conition, usually `'15'`
+- `children`: `String`  
+  a dangerous html string to be between the conditional comment.
+
+Usage:
+```js
+import { Mso } from 'mdast-react-render/lib/email'
+
+<Mso>
+  {`
+  <style>
+    img {
+      width:800px !important;
+    }
+  </style>
+  `}
+</Mso>
+```
+
+### General Note
+
+The `schema` and `rule` objects can and should be enriched with arbitrary additional data your app might need e.g. initiate an editor for the `schema`.
+
+## Utils
+
+The packages also includes a suite of utils useful for writing your schemas.
+
+- `matchType(type: String): matchMdastFn`
+- `matchHeading(depth: Number): matchMdastFn`
+- `matchZone(identifier: String): matchMdastFn`  
+  `zone` is a custom mdast node type
+- `matchParagraph: matchMdastFn`
+- `matchImage: matchMdastFn`
+- `matchImageParagraph: matchMdastFn`  
+  A paragraph with one image child
+- `imageSizeInfo(url: string): null | {width, height}`  
+  Parses an url with an `?size=${width}x${height}` suffix
+- `imageResizeUrl(url: string, size: string)`  
+  Appends a `resize` query param with `size` as value
 
 ```js
-{
-  match: matchBlock(TYPE),
-  matchMdast: (node) => node.type === 'image',
-  fromMdast: (node) => {
-    return ({
-      kind: 'block',
-      type: TYPE,
-      data: {
-        alt: node.alt,
-        src: node.url
-      },
-      isVoid: true,
-      nodes: []
-    })
-  },
-  toMdast: (object) => ({
-    type: 'image',
-    alt: object.data.alt,
-    url: object.data.src
-  })
-}
+import { matchImageParagraph } from 'mdast-react-render/lib/utils'
 ```
 
 ## Example
 
-[Try it in your browser.](https://runkit.com/tpreusse/slate-mdast-serializer)
+[Try it in your browser.](https://runkit.com/tpreusse/mdast-react-render)
 
 ```js
-const MarkdownSerializer = require('slate-mdast-serializer')
-const { parse, stringify } = require('@orbiting/remark-preset')
-const assert = require('assert')
+import assert from 'assert'
+import React from 'react'
+import Enzyme, { shallow } from 'enzyme'
+import Adapter from 'enzyme-adapter-react-16'
 
-const paragraph = {
-  match: node => node.kind === 'block' && node.type === 'PARAGRAPH',
-  matchMdast: node => node.type === 'paragraph',
-  fromMdast: (node, index, parent, {visitChildren}) => ({
-    kind: 'block',
-    type: 'PARAGRAPH',
-    nodes: visitChildren(node)
-  }),
-  toMdast: (object, index, parent, {visitChildren}) => ({
-    type: 'paragraph',
-    children: visitChildren(object)
-  })
-}
-const bold = {
-  match: node => node.kind === 'mark' && node.type === 'BOLD',
-  matchMdast: node => node.type === 'strong',
-  fromMdast: (node, index, parent, {visitChildren}) => ({
-    kind: 'mark',
-    type: 'BOLD',
-    nodes: visitChildren(node)
-  }),
-  toMdast: (mark, index, parent, {visitChildren}) => ({
-    type: 'strong',
-    children: visitChildren(mark)
-  })
-}
+import { renderMdast } from 'mdast-react-render'
+import { matchType, matchHeading, matchParagraph } from 'mdast-react-render/lib/utils'
 
-const serializer = new MarkdownSerializer({
-  rules: [
-    paragraph,
-    bold
+Enzyme.configure({ adapter: new Adapter() })
+
+const mdast = {
+  'type': 'root',
+  'children': [
+    {
+      'type': 'heading',
+      'depth': 1,
+      'children': [{
+        'type': 'text',
+        'value': 'The Titel'
+      }]
+    },
+    {
+      'type': 'paragraph',
+      'children': [{
+        'type': 'text',
+        'value': '«A good lead.»'
+      }]
+    }
   ]
+}
+
+
+const schema = {
+  rules: [
+    {
+      matchMdast: matchType('root'),
+      component: ({ children }) => <div>{children}</div>,
+      rules: [
+        {
+          matchMdast: matchHeading(1),
+          component: ({ children }) => <h1>{children}</h1>
+        },
+        {
+          matchMdast: matchParagraph,
+          component: ({ children }) => <p>{children}</p>
+        }
+      ]
+    }
+  ]
+}
+
+assert.doesNotThrow(() => {
+shallow(
+  renderMdast(mdast, schema, {MissingNode: false})
+)
+})
+```
+
+## Example Email
+
+```js
+import assert from 'assert'
+import React from 'react'
+
+import { renderMdast, Mso } from 'mdast-react-render/lib/email'
+import { matchType } from 'mdast-react-render/lib/utils'
+
+const schema = {
+  rules: [
+    {
+      matchMdast: matchType('root'),
+      component: ({ children }) => (
+        <html>
+          <head>
+            <Mso gte='15'>
+              {`
+              <xml>
+                <o:officedocumentsettings>
+                  <o:allowpng />
+                  <o:pixelsperinch>96</o:pixelsperinch>
+                </o:officedocumentsettings>
+              </xml>
+              `}
+            </Mso>
+          </head>
+          <body>
+            {children}
+          </body>
+        </html>
+      )
+    }
+  ]
+}
+
+const mdast = {
+  'type': 'root',
+  'children': []
+}
+
+let emailHtml
+assert.doesNotThrow(() => {
+  emailHtml = renderEmail(mdast, schema, {MissingNode: false})
 })
 
-const md = 'Hello **World**\n'
-
-const value = serializer.deserialize(parse(md))
-const node = value.document.nodes.first()
-
-assert.equal(node.kind, 'block')
-assert.equal(node.type, 'PARAGRAPH')
-
-assert.equal(node.text, 'Hello World')
-
-const textKey = node.getFirstText().key
-const worldMarks = value.change().select({
-  anchorKey: textKey,
-  anchorOffset: 5,
-  focusKey: textKey,
-  focusOffset: 10
-}).value.marks
-
-assert.equal(worldMarks.size, 1)
-assert.equal(worldMarks.first().type, 'BOLD')
-
-assert.equal(stringify(serializer.serialize(value)), md)
+assert.notEqual(
+  emailHtml.indexOf('<!--[if gte mso 15]>'),
+  -1,
+  'transforms <Mso gte=\'15\'> into html comment'
+)
 ```
