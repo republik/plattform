@@ -365,6 +365,10 @@
       "value": "Willkommen bei der Republik!"
     },
     {
+      "key": "api/email/pledge_lesha/subject",
+      "value": "Ihre Bestellung: Buch «We stay»"
+    },
+    {
       "key": "api/email/payment_successful_abo/subject",
       "value": "Vielen Dank! Wir haben Ihre Zahlung erhalten."
     },
@@ -394,6 +398,10 @@
     },
     {
       "key": "api/email/payment_successful_yearly_abo/subject",
+      "value": "Vielen Dank! Wir haben Ihre Zahlung erhalten."
+    },
+    {
+      "key": "api/email/payment_successful_lesha/subject",
       "value": "Vielen Dank! Wir haben Ihre Zahlung erhalten."
     },
     {
@@ -2093,6 +2101,10 @@
       "value": "Sie haben den Preis gewählt: Zahlungserinnerung für Ihr neues Republik-Abo"
     },
     {
+      "key": "api/email/payment/reminder/isLast:false/packageName:LESHA/subject",
+      "value": "Zahlungserinnerung Republik - Buch «We stay»"
+    },
+    {
       "key": "api/email/payment/reminder/isLast:true/packageName:ABO_GIVE_MONTHS/subject",
       "value": "LETZTE MAHNUNG Republik"
     },
@@ -2131,6 +2143,10 @@
     {
       "key": "api/email/payment/reminder/isLast:true/packageName:YEARLY_ABO/subject",
       "value": "Der von Ihnen festgelegte Betrag für Ihr neues Republik-Abo ist noch nicht bezahlt"
+    },
+    {
+      "key": "api/email/payment/reminder/isLast:true/packageName:LESHA/subject",
+      "value": "LETZTE MAHNUNG Republik - Buch «We stay»"
     },
     {
       "key": "api/repo/phase/draft",
@@ -2299,6 +2315,14 @@
     {
       "key": "api/invoices/option/Goodie/MUG_CERAMIC/other",
       "value": "Tassen"
+    },
+    {
+      "key": "api/invoices/option/Goodie/LESHA/1",
+      "value": "Buch «We stay»"
+    },
+    {
+      "key": "api/invoices/option/Goodie/LESHA/other",
+      "value": "Bücher «We stay»"
     },
     {
       "key": "api/invoices/option/MembershipType/ABO/1",
