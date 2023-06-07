@@ -3,6 +3,8 @@ import truncateIP from '../../lib/api/TruncateIP'
 import withReqMethodGuard from '../../lib/api/withReqMethodGuard'
 import HTTPMethods from '../../lib/api/HTTPMethods'
 import crypto from 'node:crypto'
+import { v4 } from 'uuid'
+import { error } from 'node:console'
 
 const {
   PROLITTERIS_MEMBER_ID,
@@ -12,6 +14,22 @@ const {
   PROLITTERIS_DEV_UID,
   PROLITTERIS_HASH_SECRET = '',
 } = process.env
+
+enum LogLevel {
+  LOG = 'log',
+  ERROR = 'error',
+}
+
+function log(logLevel: LogLevel | 'error', id, ...args) {
+  const msg = `ProLitteris API Req [${id}]`
+  switch (logLevel) {
+    case LogLevel.ERROR:
+      console.error(msg, ...args)
+      break
+    default:
+      console.log(msg, ...args)
+  }
+}
 
 /**
  * Generate a sha256 hash from a string, number, object or array
@@ -30,7 +48,7 @@ function getHash(input: string | number | object): string {
 }
 
 /**
- *
+ * Proxy a request to the ProLitteris API & anonymize the IP
  * @param req
  * @param res
  */
@@ -42,7 +60,10 @@ async function handler(request: NextApiRequest, response: NextApiResponse) {
 
   // throw error if no IP is supplied
   if (!requestIps) {
-    throw new Error('IP undefined')
+    log(LogLevel.ERROR, v4(), 'IP undefined')
+    return response.status(400).json({
+      body: 'IP undefined',
+    })
   }
 
   // if x-forwarded-for contains an array of ip's, use the left most (client)
@@ -54,21 +75,30 @@ async function handler(request: NextApiRequest, response: NextApiResponse) {
   // 3) path (string): article slug
 
   const { paid, uid, path } = request.query
+  const requestID = v4()
 
   // Check that all query parameters are defined.
   if (!paid) {
+    log(LogLevel.ERROR, requestID, 'Paid parameter required.')
     return response.status(400).json({
       body: 'paid parameter required.',
     })
   }
 
   if (paid !== 'na' && paid !== 'pw') {
+    log(
+      LogLevel.ERROR,
+      requestID,
+      'Paid parameter must be string "na" or "pw". Got',
+      paid,
+    )
     return response.status(400).json({
       body: "Paid parameter must be string 'na' or 'pw'",
     })
   }
 
   if (!uid || Array.isArray(uid)) {
+    log(LogLevel.ERROR, requestID, 'Uid parameter required. Got', uid)
     return response.status(400).json({
       body: ` ${
         Array.isArray(uid) ? 'multiple uid provided' : 'uid parameter required.'
@@ -77,6 +107,7 @@ async function handler(request: NextApiRequest, response: NextApiResponse) {
   }
 
   if (!path) {
+    log(LogLevel.ERROR, requestID, 'Path parameter required.')
     return response.status(400).json({
       body: 'path parameter required.',
     })
@@ -100,7 +131,9 @@ async function handler(request: NextApiRequest, response: NextApiResponse) {
     'X-Forwarded-For': maskedIP,
   }
 
-  console.log(fetchURL, requestHeaders)
+  log(LogLevel.LOG, requestID, 'Requesting', fetchURL.toString(), {
+    headers: requestHeaders,
+  })
 
   return await fetch(fetchURL.toString(), {
     method: 'GET',
@@ -108,14 +141,18 @@ async function handler(request: NextApiRequest, response: NextApiResponse) {
   })
     .then((res: Response) => {
       if (!res.ok) {
-        console.error('Prolitteris API responded with an error', {
+        log(LogLevel.ERROR, requestID, 'Error', {
           status: res.status,
           statusText: res.statusText,
         })
+      } else {
+        log(LogLevel.LOG, requestID, 'Request successful')
       }
     })
     .catch((err: Error) => {
-      console.error('Prolitteris API responded with an error', err)
+      log(LogLevel.ERROR, requestID, 'Error', {
+        err,
+      })
     })
     .finally(() => {
       return response.status(204).send(null)
