@@ -1,5 +1,5 @@
 // Schema for Project-R newsletter
-const newsletterEmailSchema = require('@republik/template-newsletter/lib/email')
+const { newsletterEmailSchema } = require('@republik/template-newsletter')
 const {
   createCommentEmailSchema,
   createNewsletterEmailSchema,
