@@ -13,6 +13,7 @@
     "test:dev": "jest --watch"
   },
   "devDependencies": {
+    "@republik/remark-preset": "*",
     "@republik/tsconfig": "*",
     "@swc/core": "^1.3.57",
     "@testing-library/jest-dom": "^5.16.5",

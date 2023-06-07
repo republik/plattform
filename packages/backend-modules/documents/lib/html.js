@@ -2,7 +2,7 @@ const {
   newsletterEmailSchema,
   createNewsletterEmailSchema,
 } = require('@orbiting/backend-modules-styleguide')
-const { renderEmail } = require('@republik/mdast-react-render/lib/email')
+const { renderEmail } = require('@republik/mdast-react-render')
 
 const get = (doc) => {
   const emailSchema =

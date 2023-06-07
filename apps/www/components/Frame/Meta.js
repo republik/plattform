@@ -3,7 +3,7 @@ import Head from 'next/head'
 import {
   imageSizeInfo,
   imageResizeUrl,
-} from '@republik/mdast-react-render/lib/utils'
+} from '@republik/mdast-react-render'
 
 import { CDN_FRONTEND_BASE_URL } from '../../lib/constants'
 import withT from '../../lib/withT'

@@ -1,4 +1,4 @@
-import { matchHeading } from '@republik/mdast-react-render/lib/utils'
+import { matchHeading } from '@republik/mdast-react-render'
 import { Heading2 } from '../components/Heading'
 import inlineRules from './inlineRules'
 

@@ -2,7 +2,7 @@ import { matchBlock } from '../../utils'
 import { Block } from 'slate'
 
 import MarkdownSerializer from '@republik/slate-mdast-serializer'
-import { matchImageParagraph } from '@republik/mdast-react-render/lib/utils'
+import { matchImageParagraph } from '@republik/mdast-react-render'
 
 import { TeaserForm } from '../teaser/ui'
 

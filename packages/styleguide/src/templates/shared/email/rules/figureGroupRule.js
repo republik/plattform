@@ -1,5 +1,5 @@
 import React from 'react'
-import { matchZone } from '@republik/mdast-react-render/lib/utils'
+import { matchZone } from '@republik/mdast-react-render'
 import { figureRule } from './figureRule'
 import legendRule from './legendRules'
 

@@ -1,8 +1,5 @@
 import React from 'react'
-import {
-  matchParagraph,
-  matchType,
-} from '@republik/mdast-react-render/lib/utils'
+import { matchParagraph, matchType } from '@republik/mdast-react-render'
 import {
   EditorialParagraph,
   InteractionParagraph,

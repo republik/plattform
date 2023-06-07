@@ -30,7 +30,7 @@ import {
   matchHeading,
   matchParagraph,
   matchImage,
-} from '@republik/mdast-react-render/lib/utils'
+} from '@republik/mdast-react-render'
 
 import { matchLast, globalInlines, styles, getDatePath } from './utils'
 

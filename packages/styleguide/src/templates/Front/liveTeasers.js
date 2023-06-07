@@ -1,7 +1,7 @@
 import React from 'react'
 import { css } from 'glamor'
 
-import { matchZone } from '@republik/mdast-react-render/lib/utils'
+import { matchZone } from '@republik/mdast-react-render'
 
 import { TeaserFeed } from '../../components/TeaserFeed'
 

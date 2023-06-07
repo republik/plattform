@@ -1,7 +1,7 @@
 import {
   matchParagraph,
   matchType,
-} from '@republik/mdast-react-render/lib/utils'
+} from '@republik/mdast-react-render'
 import { Byline, Caption } from '../components/Caption'
 import { linkRule } from './linkRule'
 import inlineRules from './inlineRules'

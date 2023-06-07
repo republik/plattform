@@ -1,6 +1,6 @@
 import React from 'react'
 import { fontFamilies } from '../../../theme/fonts'
-import { imageResizeUrl } from '@republik/mdast-react-render/lib/utils'
+import { imageResizeUrl } from '@republik/mdast-react-render'
 
 export const Image = ({ src, alt, plain }) => (
   <img

@@ -3,7 +3,7 @@ import {
   matchHeading,
   matchParagraph,
   matchZone,
-} from '@republik/mdast-react-render/lib/utils'
+} from '@republik/mdast-react-render'
 import inlineRules from './inlineRules'
 import { interactionParagraphRule } from './paragraphRule'
 import { linkRule } from './linkRule'

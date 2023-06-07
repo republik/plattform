@@ -6,7 +6,7 @@
 
 require('dotenv').config()
 
-const { renderEmail } = require('@republik/mdast-react-render/lib/email')
+const { renderEmail } = require('@republik/mdast-react-render')
 const { parse } = require('@republik/remark-preset')
 const rw = require('rw')
 const editorialNewsletterSchema =

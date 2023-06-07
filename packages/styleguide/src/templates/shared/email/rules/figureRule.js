@@ -1,5 +1,5 @@
 import React from 'react'
-import { matchType, matchZone } from '@republik/mdast-react-render/lib/utils'
+import { matchType, matchZone } from '@republik/mdast-react-render'
 import { extractImages, matchImagesParagraph } from '../../../Article/utils'
 import { FigureImage } from '../../../../components/Figure'
 import { Figure, Image } from '../components/Figure'

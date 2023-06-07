@@ -8,7 +8,7 @@ import MarkdownSerializer from '@republik/slate-mdast-serializer'
 
 import createUi from './ui'
 
-import { matchImage } from '@republik/mdast-react-render/lib/utils'
+import { matchImage } from '@republik/mdast-react-render'
 
 const styles = {
   border: css({

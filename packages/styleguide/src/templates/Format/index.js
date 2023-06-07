@@ -13,7 +13,7 @@ import {
   matchZone,
   matchHeading,
   matchParagraph,
-} from '@republik/mdast-react-render/lib/utils'
+} from '@republik/mdast-react-render'
 
 const DefaultLink = ({ children }) => children
 

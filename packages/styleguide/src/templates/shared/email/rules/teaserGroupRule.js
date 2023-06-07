@@ -1,4 +1,4 @@
-import { matchZone } from '@republik/mdast-react-render/lib/utils'
+import { matchZone } from '@republik/mdast-react-render'
 
 const teaserGroupRule = {
   matchMdast: matchZone('TEASERGROUP'),
