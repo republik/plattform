@@ -63,7 +63,8 @@
     "yaproxy:android-staging": "COOKIE_DOMAIN_REWRITE=*:10.0.2.2 CORS_ORIGIN=http://10.0.2.2:3010 PORT=5010 TARGET=https://api.republik.love yaproxy",
     "yaproxy:android-kufo": "COOKIE_DOMAIN_REWRITE=*:10.0.2.2 CORS_ORIGIN=http://10.0.2.2:3010 PORT=5010 TARGET=https://api.kufo.republik.love yaproxy",
     "ngrok:start": "ngrok start republik-frontend republik-backend --region=eu",
-    "stripe:forward-webhooks": "stripe listen --latest --forward-to localhost:5010/payments/stripe"
+    "stripe:forward-webhooks": "stripe listen --latest --forward-to localhost:5010/payments/stripe",
+    "geoip:download": "scripts/download-geoip-data.sh"
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^16.0.0",
@@ -94,7 +95,7 @@
   },
   "lint-staged": {
     "*.{js,ts,tsx}": [
-      "eslint --fix"
+      "yarn eslint --fix"
     ]
   },
   "engines": {

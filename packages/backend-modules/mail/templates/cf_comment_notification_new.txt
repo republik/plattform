@@ -1,5 +1,11 @@
 {{COMMENTER_NAME}} schreibt:
 
+
+
+{{COMMENT_TAGS}}
+
+
+
 {{{CONTENT_HTML}}}
 
 {{URL}} . Dort können Sie antworten und weiter debattieren.
