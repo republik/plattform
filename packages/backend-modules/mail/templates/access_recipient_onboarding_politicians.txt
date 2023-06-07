@@ -1,0 +1,19 @@
+Guten Tag {{GRANTER_MESSAGE}},
+
+Vielen Dank, dass Sie bereit sind, unseren Fragebogen auszufüllen! Sie erreichen
+damit fast 30 000 unserer Leserinnen.
+
+Zum Fragebogen https://www.republik.love/2023/06/02/politikerfragebogen-fragen
+
+Haben Sie Fragen oder brauchen Sie Unterstützung? Unter kontakt@republik.ch
+helfen wir Ihnen gerne weiter.
+
+Und nun wünschen wir Ihnen viel Freude mit der Republik.
+
+Ihre Crew der Republik
+
+
+Republik AG
+Sihlhallenstrasse 1, CH-8004 Zürich
+{{frontend_base_url}}
+kontakt@republik.ch
