@@ -4,7 +4,7 @@ import withReqMethodGuard from '../../lib/api/withReqMethodGuard'
 import HTTPMethods from '../../lib/api/HTTPMethods'
 import crypto from 'node:crypto'
 import { v4 } from 'uuid'
-import { error } from 'node:console'
+import chalk from 'chalk'
 
 const {
   PROLITTERIS_MEMBER_ID,
@@ -17,6 +17,7 @@ const {
 
 enum LogLevel {
   LOG = 'log',
+  INFO = 'info',
   ERROR = 'error',
 }
 
@@ -24,7 +25,10 @@ function log(logLevel: LogLevel | 'error', id, ...args) {
   const msg = `ProLitteris API Req [${id}]`
   switch (logLevel) {
     case LogLevel.ERROR:
-      console.error(msg, ...args)
+      console.error(chalk.red(msg), ...args)
+      break
+    case LogLevel.INFO:
+      console.info(chalk.yellow(msg), ...args)
       break
     default:
       console.log(msg, ...args)
@@ -131,7 +135,7 @@ async function handler(request: NextApiRequest, response: NextApiResponse) {
     'X-Forwarded-For': maskedIP,
   }
 
-  log(LogLevel.LOG, requestID, 'Requesting', fetchURL.toString(), {
+  log(LogLevel.INFO, requestID, 'Requesting', fetchURL.toString(), {
     headers: requestHeaders,
   })
 
@@ -146,7 +150,7 @@ async function handler(request: NextApiRequest, response: NextApiResponse) {
           statusText: res.statusText,
         })
       } else {
-        log(LogLevel.LOG, requestID, 'Request successful')
+        log(LogLevel.INFO, requestID, 'Request successful')
       }
     })
     .catch((err: Error) => {
