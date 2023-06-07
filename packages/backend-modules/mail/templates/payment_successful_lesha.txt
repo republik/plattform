@@ -13,7 +13,7 @@ Ihre Zahlung ist erfolgreich bei uns eingegangen. Vielen Dank!
    {{/if}}
  * Total: {{total_formatted}}
 
-Der Versand erfolgt innerhalb von sieben Tagen.
+Der Versand erfolgt innerhalb von 7 Tagen.
 
 Wir wünschen anregende Momente mit «We Stay».
 

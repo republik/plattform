@@ -2,7 +2,7 @@ Guten Tag
 
 Schön, dass Sie das Buch «We Stay» von Lesha Berezovskiy bestellt haben.
 
-Falls sich unsere Buchhaltung nicht irrt, ist Ihre Zahlung in der Höhe von CHF
+Falls sich unsere Buchhaltung nicht irrt, ist Ihre Zahlung in Höhe von CHF
 {{total}} aber weiterhin ausstehend.
 
 Dürfen wir Sie freundlich bitten, den Betrag in den nächsten Tagen zu

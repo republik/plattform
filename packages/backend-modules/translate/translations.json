@@ -366,7 +366,7 @@
     },
     {
       "key": "api/email/pledge_lesha/subject",
-      "value": "Ihre Bestellung: Buch «We stay»"
+      "value": "Ihre Bestellung: Buch «We Stay»"
     },
     {
       "key": "api/email/payment_successful_abo/subject",
@@ -2102,7 +2102,7 @@
     },
     {
       "key": "api/email/payment/reminder/isLast:false/packageName:LESHA/subject",
-      "value": "Zahlungserinnerung Republik - Buch «We stay»"
+      "value": "Zahlungserinnerung Republik – Buch «We Stay»"
     },
     {
       "key": "api/email/payment/reminder/isLast:true/packageName:ABO_GIVE_MONTHS/subject",
@@ -2146,7 +2146,7 @@
     },
     {
       "key": "api/email/payment/reminder/isLast:true/packageName:LESHA/subject",
-      "value": "LETZTE MAHNUNG Republik - Buch «We stay»"
+      "value": "LETZTE MAHNUNG Republik – Buch «We Stay»"
     },
     {
       "key": "api/repo/phase/draft",
@@ -2318,11 +2318,11 @@
     },
     {
       "key": "api/invoices/option/Goodie/LESHA/1",
-      "value": "Buch «We stay»"
+      "value": "Buch «We Stay»"
     },
     {
       "key": "api/invoices/option/Goodie/LESHA/other",
-      "value": "Bücher «We stay»"
+      "value": "Bücher «We Stay»"
     },
     {
       "key": "api/invoices/option/MembershipType/ABO/1",

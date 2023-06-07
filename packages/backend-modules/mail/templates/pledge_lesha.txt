@@ -13,7 +13,7 @@ Vielen Dank für Ihre Bestellung.
    {{/if}}
  * Total: {{total_formatted}}
 
-Der Versand erfolgt innerhalb von sieben Tagen{{#if paymentslip}} nach
+Der Versand erfolgt innerhalb von 7 Tagen{{#if paymentslip}} nach
 Zahlungseingang{{/if}}.
 
 {{#if paymentslip}}
