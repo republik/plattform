@@ -11,36 +11,38 @@ hinzuzufügen. Danke.
 Gut zu wissen:
 
  * Unter www.republik.ch/klimalabor {{frontend_base_url}}/klimalabor finden Sie
-   den aktuellen Stand des Projekts und Verweise auf alles, was sich im
-   Klimalabor tut.
+   alles zum Klimalabor: was bisher geschah, wie es weitergeht.
 
  * Haben Sie Fragen, Anregungen oder eine geniale Idee, von der wir sofort
    wissen sollten? Schreiben Sie uns an klimalabor@republik.ch .
 
- * Etwa alle ein bis zwei Wochen melden wir uns per Newsletter bei Ihnen und
-   informieren Sie, wo wir stehen und wie Sie sich einbringen können.
+ * Etwa alle zwei bis drei Wochen melden wir uns per Newsletter bei Ihnen: Mit
+   Lesenswertem zur Klimakrise und dem aktuellen Stand unseres Projekts.
 
-Wie Sie sich aktuell einbringen können:
+Was bisher geschah:
 
- * 15 Fragen zum Klima, die zum Nachdenken anregen. Teilen Sie Ihre Antworten
-   {{frontend_base_url}}/2023/03/03/fragen-zur-klimakrise und lesen Sie, was
-   andere schreiben {{frontend_base_url}}/15-fragen-zum-klima-ihre-antworten .
-
- * Es hat sich schon einiges getan im Klimalabor seit dem Start. Schauen Sie
-   sich unsere Zwischenbilanz
+ * Veranstaltungen, journalistische Experimente und viele verschiedene Formen
+   der Mitwirkung. Was seit Januar im Klimalabor geschehen ist und wo wir nun
+   stehen, lesen Sie in unserer Halbzeitbilanz
    {{frontend_base_url}}/2023/04/19/halbzeit-im-klimalabor-so-geht-es-jetzt-weiter
-   an.
+   .
 
- * Das Klimalabor lebt davon, dass viele unterschiedliche Perspektiven
-   zusammenkommen. Wir freuen uns, wenn Sie Freundinnen und Bekannte ins
-   Klimalabor einladen. Teilen Sie diesen Link
-   {{frontend_base_url}}/willkommen-zum-klimalabor mit Ihnen oder klicken Sie
-   hier {{link_climate_lab_email_invitation}} , um eine vorformulierte E-Mail zu
-   öffnen.
+ * Ein paar Highlights, die Sie interessieren könnten. Ja, Zukunftslust,
+   verdammt! {{frontend_base_url}}/2023/02/14/ja-zukunftslust-verdammt ; 15
+   Fragen zum Klima {{frontend_base_url}}/15-fragen-zum-klima-ihre-antworten ;
+   «Wir brauchen den Klima­notstand»
+   {{frontend_base_url}}/2023/04/29/wir-brauchen-den-klimanotstand ; Wir haben
+   kein Recht, vor der Klima­krise zu kapitulieren
+   {{frontend_base_url}}/2023/01/16/wir-haben-kein-recht-vor-der-klimakrise-zu-kapitulieren
+   ; «Wir können eine globale Katastrophe abwenden»
+   {{frontend_base_url}}/2023/04/04/wir-koennen-eine-globale-katastrophe-abwenden
+   .
 
- * Geben Sie uns ein paar Angaben zu Ihrer Person
-   {{link_climate_lab_onboarding_personal_infos}} und helfen Sie uns damit,
-   Diversität im Klimalabor sicherzustellen
+Wie Sie uns unterstützen können:
+
+ * Die Klimakrise geht uns alle an. Laden Sie drei Freundinnen oder Bekannte
+   ein, die vom Klimalabor erfahren sollten. Teilen Sie diesen Link
+   {{frontend_base_url}}/willkommen-zum-klimalabor mit Ihnen.
 
  * {{#if RECIPIENT_HAS_MEMBERSHIPS}}
    
@@ -56,26 +58,21 @@ Wie Sie sich aktuell einbringen können:
 
 Über das Klimalabor — was wir vorhaben
 
-In den kommenden Monaten wollen wir mit Ihnen über die Klimakrise und unsere
-Zukunft sprechen. Wir wollen Neues ausprobieren und verstehen, was Ihnen im
-Umgang mit der Klimakrise wirklich weiterhilft.
+Im Januar 2023 sind wir gestartet mit dem Klimalabor. Wir sind überzeugt:
+Journalismus kann und muss mehr leisten, um in der Klimakrise seiner
+Verantwortung gerecht zu werden.
 
-Das Ziel des Klimalabors: Wir wollen einen neuen Klimajournalismus für die
-Republik entwickeln, der in seiner Dringlichkeit und Ambition der Klimakrise
-gerecht wird. Der mehr Menschen erreicht als bisher und auch andere Medien und
-Journalistinnen inspiriert. Einen Klimajournalismus, der anregt, der trotz
-düsterer Aussichten nach vorn blickt, der verlässlich und nützlich ist.
+Unser Ziel: Wir wollen ein journalistisches Angebot entwickeln, das in seiner
+Dringlichkeit und Ambition der Klimakrise gerecht wird. Das mehr Menschen
+erreicht als bisher und auch andere Medien und Journalistinnen inspiriert. Das
+anregt, das trotz düsterer Aussichten nach vorn blickt, das verlässlich und
+nützlich ist.
 
+Seitdem haben wir aus zahlreichen Veranstaltungen, Debatten und Gesprächen und
+Tausenden schriftlichen Anregungen ein klares Bild davon gewonnen, was Sie von
+uns erwarten. Nun sind wir daran, ein passendes Angebot zu entwickeln.
 
-
-Im Januar sind wir gestartet, im Sommer werden wir ein konkretes Angebot
-präsentieren. Unterwegs werden wir Sie immer wieder um Ihre Ideen bitten, nach
-Ihren Bedürfnissen fragen, zum Austausch untereinander einladen – und Sie mit
-vielfältigen Inhalten zur Klimakrise versorgen.
-
-Wir freuen uns sehr, dass Sie mit uns auf diese Expedition kommen.
-
-
+Wir freuen uns darauf, Ihnen bald mehr zu erzählen.
 
 Ihr Klimalabor-Team:
 

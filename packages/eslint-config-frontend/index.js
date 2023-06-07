@@ -4,14 +4,9 @@ module.exports = {
     'eslint:recommended',
     'plugin:react/recommended',
     'plugin:prettier/recommended',
+    'plugin:@typescript-eslint/recommended',
   ],
-  parser: '@babel/eslint-parser',
-  parserOptions: {
-    requireConfigFile: false,
-    babelOptions: {
-      presets: ['@babel/preset-react'],
-    },
-  },
+  parser: '@typescript-eslint/parser',
   env: {
     browser: true,
     es6: true,
@@ -35,12 +30,4 @@ module.exports = {
       version: 'detect',
     },
   },
-  overrides: [
-    {
-      files: ['*.ts', '*.tsx'],
-      extends: ['plugin:@typescript-eslint/recommended'],
-      parser: '@typescript-eslint/parser',
-      rules: {},
-    },
-  ],
 }
