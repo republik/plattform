@@ -2,7 +2,7 @@ import React from 'react'
 import { css } from 'glamor'
 import { timeFormatLocale } from 'd3-time-format'
 import timeDefinition from 'd3-time-format/locale/de-CH'
-import { imageResizeUrl } from '@republik/mdast-react-render/lib/utils'
+import { imageResizeUrl } from '@republik/mdast-react-render'
 
 import { H3 } from './Headlines'
 import P from './Paragraph'

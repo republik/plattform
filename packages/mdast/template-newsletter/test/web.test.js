@@ -1,27 +1,19 @@
-import test from 'tape'
-import Enzyme, { shallow } from 'enzyme'
-import Adapter from 'enzyme-adapter-react-16'
-
 import { renderMdast } from '@republik/mdast-react-render'
 import newsletterSchema from '../src/web'
 
 import mdast from './sample'
 import mdastLegacy from './sample.legacy'
 
-Enzyme.configure({ adapter: new Adapter() })
-
-test('render for web', (assert) => {
-  assert.doesNotThrow(() => {
-    shallow(renderMdast(mdast, newsletterSchema, { MissingNode: false }))
+describe('web rendering', () => {
+  test('does not throw', () => {
+    expect(() => {
+      renderMdast(mdast, newsletterSchema, { MissingNode: false })
+    }).not.toThrow()
   })
 
-  assert.end()
-})
-
-test('render legacy cover for web', (assert) => {
-  assert.doesNotThrow(() => {
-    shallow(renderMdast(mdastLegacy, newsletterSchema, { MissingNode: false }))
+  test('handles legacy mdast', () => {
+    expect(() => {
+      renderMdast(mdastLegacy, newsletterSchema, { MissingNode: false })
+    }).not.toThrow()
   })
-
-  assert.end()
 })

@@ -2,7 +2,7 @@ import React from 'react'
 import { css, merge } from 'glamor'
 
 import { mq } from './styles'
-import { imageResizeUrl } from '@republik/mdast-react-render/lib/utils'
+import { imageResizeUrl } from '@republik/mdast-react-render'
 
 const styles = {
   image: css({

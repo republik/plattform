@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Mso } from '@republik/mdast-react-render/lib/email'
+import { Mso } from '@republik/mdast-react-render'
 
 export default ({ children }) => (
   <tr>

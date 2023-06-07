@@ -1,4 +1,4 @@
-import { renderEmail } from '@republik/mdast-react-render/lib/email'
+import { renderEmail } from '@republik/mdast-react-render'
 
 import newsletterEmailSchema from '../src/email'
 import mdast from './sample'
