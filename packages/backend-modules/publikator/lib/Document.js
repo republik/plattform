@@ -1,6 +1,5 @@
 const visit = require('unist-util-visit')
 const debug = require('debug')('publikator:lib:Document')
-const mp3Duration = require('@rocka/mp3-duration')
 const Promise = require('bluebird')
 
 const { timeFormat } = require('@orbiting/backend-modules-formats')
@@ -14,8 +13,7 @@ const { updateRepo } = require('./postgres')
 
 const slugDateFormat = timeFormat('%Y/%m/%d')
 
-const { PREFIX_PREPUBLICATION_PATH, SUPPRESS_AUDIO_DURATION_MEASURE } =
-  process.env
+const { PREFIX_PREPUBLICATION_PATH } = process.env
 
 // @see GraphQL schema-types enum AudioSourceKind
 const getAudioSourceKind = (string) =>
@@ -100,25 +98,14 @@ const prepareMetaForPublish = async ({
     await updateRepo(repoId, { publishDate }, context.pgdb)
   }
 
-  const { audioSourceKind, audioSourceMp3, audioSourceAac, audioSourceOgg } =
-    doc.content.meta
-  let durationMs = 0
-  if (audioSourceMp3 && !SUPPRESS_AUDIO_DURATION_MEASURE) {
-    debug(repoId, 'fetching audio source', audioSourceMp3)
-    durationMs = await fetch(audioSourceMp3)
-      .then((res) => res.arrayBuffer())
-      .then((res) => Buffer.from(res))
-      .then((res) => mp3Duration(res))
-      .then((res) => res * 1000)
-      .then(Math.round)
-      .catch((e) => {
-        console.error(
-          `Could not download/measure audioSourceMp3 (${audioSourceMp3})`,
-          e,
-        )
-        return 0
-      })
-  }
+  const {
+    audioSourceKind,
+    audioSourceMp3,
+    audioSourceAac,
+    audioSourceOgg,
+    audioSourceDurationMs,
+  } = doc.content.meta
+
   const audioSource =
     audioSourceMp3 || audioSourceAac || audioSourceOgg
       ? {
@@ -127,7 +114,7 @@ const prepareMetaForPublish = async ({
           mp3: audioSourceMp3,
           aac: audioSourceAac,
           ogg: audioSourceOgg,
-          durationMs,
+          durationMs: audioSourceDurationMs,
         }
       : null
 

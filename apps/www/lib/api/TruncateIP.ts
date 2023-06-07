@@ -12,7 +12,7 @@ const RETAINED_BITS_IN_IPv6_MASKING = 48 // 3 blocks
 export default function truncateIP(ip: string): string {
   const ipV = net.isIP(ip)
   if (ipV === 0) {
-    throw new Error('no valid IP supplied')
+    throw new Error('no valid IP supplied: ' + ip)
   }
   if (ipV === 6) {
     return maskIpv6(ip)
