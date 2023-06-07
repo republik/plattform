@@ -34,20 +34,29 @@ type FieldsType = {
   values: Record<string, number>
   onChange: (fields) => void
   t: (string: string) => string
+  showGoodiesTitle?: boolean
 }
 
 const styles = {
   goodieContainer: css({ marginBottom: 24 }),
 }
 
-function GoodieOptions({ fields, values, onChange, t }: FieldsType) {
+function GoodieOptions({
+  fields,
+  values,
+  onChange,
+  t,
+  showGoodiesTitle = true,
+}: FieldsType) {
   if (!fields.length) {
     return null
   }
 
   return (
     <>
-      <Interaction.H3>{t('Goodies/title')}</Interaction.H3>
+      {showGoodiesTitle && (
+        <Interaction.H3>{t('Goodies/title')}</Interaction.H3>
+      )}
       <div>{t('Goodies/note/delivery')}</div>
 
       <div {...styles.goodieContainer}>
