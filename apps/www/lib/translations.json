@@ -2606,7 +2606,7 @@
     },
     {
       "key": "package/LESHA/description",
-      "value": "Als er am Morgen des 24. Februar 2022 aufwacht, ist Lesha Berezovskiys Leben mit einem Schlag anders. Bomben­alarm in Kiew, Russland hat die ukrainische Hauptstadt angegriffen.\nIn seiner Kolumne «Leben in Trümmern» lässt er uns seither an seinem Alltag teilhaben.\nDaraus ist nun ein Buch entstanden: Ein Zeitdokument, das das Leben in einem Land unter Beschuss aus einer persönlichen Perspektive auch uns hier näher­bringt, die vom Krieg nicht unmittelbar betroffen sind.\n"
+      "value": "Als er am Morgen des 24. Februar 2022 aufwacht, ist Lesha Berezovskiys Leben mit einem Schlag anders. Bomben­alarm in Kiew, Russland hat die ukrainische Hauptstadt angegriffen.\nIn seiner Kolumne «Leben in Trümmern» lässt er uns seither an seinem Alltag teilhaben.\nDaraus ist nun ein Buch entstanden: Ein Zeitdokument, das das Leben in einem Land unter Beschuss aus einer persönlichen Perspektive auch uns hier näher­bringt, die vom Krieg nicht unmittelbar betroffen sind."
     },
     {
       "key": "package/group/ME",
@@ -3744,6 +3744,14 @@
       "value": "Guten Tag"
     },
     {
+      "key": "merci/title/package/LESHA",
+      "value": "Vielen Dank für Ihre Bestellung, {name}!"
+    },
+    {
+      "key": "merci/title/package/LESHA/noName",
+      "value": "Vielen Dank für Ihre Bestellung!"
+    },
+    {
       "key": "merci/lead",
       "value": "Vielen Dank für Ihre Unterstützung. Es ist uns eine Ehre, Sie bei uns als Verlegerin respektive Verleger zu begrüssen. Also als Teil unseres Unternehmens.\n\nAuf dieser Seite finden Sie alles, was wir von Ihnen wissen: Ihre Einkäufe, Ihre persönlichen Angaben und Ihre Newsletter-Einstellungen."
     },
@@ -3786,6 +3794,10 @@
     {
       "key": "merci/title/package/UNKOWN/noName",
       "value": "Danke"
+    },
+    {
+      "key": "merci/lead/package/LESHA",
+      "value": "Viel Spass mit «We Stay» von Lesha Berezovskiy. Wir versenden das Buch innerhalb von 7 Werktagen."
     },
     {
       "key": "merci/action/read",
