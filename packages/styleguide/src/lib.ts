@@ -91,6 +91,7 @@ export { TeaserSectionTitle } from './components/TeaserShared'
 
 export { ProgressCircle } from './components/Progress'
 export { Spinner, InlineSpinner } from './components/Spinner'
+export { default as BabySpinner } from './components/Spinner/BabySpinner'
 export {
   CommentBodyBlockQuote,
   CommentBodyBlockQuoteParagraph,
