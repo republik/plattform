@@ -2597,8 +2597,16 @@
       "value": "Schön, dass Sie dabei sind. Sie erhalten ab sofort unser Magazin. Und sind während der Zeit Ihres Abonnements Verlegerin oder Verleger der Republik. Das Monatsabonnement wird jeweils automatisch verlängert. Sie können es aber jederzeit in Ihrem Konto kündigen."
     },
     {
-      "key": "package/choose",
-      "value": "Auswählen"
+      "key": "package/LESHA/title",
+      "value": "Buch «We Stay»"
+    },
+    {
+      "key": "package/LESHA/price",
+      "value": "{formattedCHF}"
+    },
+    {
+      "key": "package/LESHA/description",
+      "value": "Als er am Morgen des 24. Februar 2022 aufwacht, ist Lesha Berezovskiys Leben mit einem Schlag anders. Bomben­alarm in Kiew, Russland hat die ukrainische Hauptstadt angegriffen.\nIn seiner Kolumne «Leben in Trümmern» lässt er uns seither an seinem Alltag teilhaben.\nDaraus ist nun ein Buch entstanden: Ein Zeitdokument, das das Leben in einem Land unter Beschuss aus einer persönlichen Perspektive auch uns hier näher­bringt, die vom Krieg nicht unmittelbar betroffen sind."
     },
     {
       "key": "package/group/ME",
@@ -3736,6 +3744,14 @@
       "value": "Guten Tag"
     },
     {
+      "key": "merci/title/package/LESHA",
+      "value": "Vielen Dank für Ihre Bestellung, {name}!"
+    },
+    {
+      "key": "merci/title/package/LESHA/noName",
+      "value": "Vielen Dank für Ihre Bestellung!"
+    },
+    {
       "key": "merci/lead",
       "value": "Vielen Dank für Ihre Unterstützung. Es ist uns eine Ehre, Sie bei uns als Verlegerin respektive Verleger zu begrüssen. Also als Teil unseres Unternehmens.\n\nAuf dieser Seite finden Sie alles, was wir von Ihnen wissen: Ihre Einkäufe, Ihre persönlichen Angaben und Ihre Newsletter-Einstellungen."
     },
@@ -3778,6 +3794,10 @@
     {
       "key": "merci/title/package/UNKOWN/noName",
       "value": "Danke"
+    },
+    {
+      "key": "merci/lead/package/LESHA",
+      "value": "Viel Spass mit «We Stay» von Lesha Berezovskiy. Wir versenden das Buch innerhalb von 7 Werktagen."
     },
     {
       "key": "merci/action/read",
@@ -7096,6 +7116,14 @@
       "value": "Mit Logo und Claim «Ohne Journalismus keine Demokratie». Lieferung innerhalb von 10 Werktagen."
     },
     {
+      "key": "Goodie/label/LESHA",
+      "value": "Buch «We Stay»"
+    },
+    {
+      "key": "Goodie/description/LESHA",
+      "value": "Lesha Berezovskiys Bildkolumne «Leben in Trümmern» als Buch. Lieferung innerhalb von 7 Werktagen."
+    },
+    {
       "key": "option/TABLEBOOK/label/other",
       "value": "Republik bei Stromausfall"
     },
@@ -7130,6 +7158,14 @@
     {
       "key": "option/MUG_CERAMIC/label/1",
       "value": "Tasse"
+    },
+    {
+      "key": "option/LESHA/label/1",
+      "value": "Buch «We Stay»"
+    },
+    {
+      "key": "option/LESHA/label/other",
+      "value": "Bücher «We Stay»"
     },
     {
       "key": "package/customize/price/payMore/userPrice",

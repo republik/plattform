@@ -12,7 +12,7 @@ import { Item as AccountItem } from './Elements'
 import GiveMemberships from './Memberships/Give'
 import query from './belongingsQuery'
 
-const dayFormat = timeFormat('%d. %B %Y')
+const dayFormat = timeFormat('%-d. %B %Y')
 
 class PledgeList extends Component {
   componentDidMount() {
