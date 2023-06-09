@@ -552,15 +552,17 @@ class CustomizePackage extends Component {
             </Link>
           )}
         </div>
-        {description.split('\n\n').map((text, i) => (
-          <P style={{ marginBottom: 10 }} key={i}>
-            {text.indexOf('<') !== -1 ? (
-              <RawHtml dangerouslySetInnerHTML={{ __html: text }} />
-            ) : (
-              text
-            )}
-          </P>
-        ))}
+        <div style={{ marginBottom: 40 }}>
+          {description.split('\n\n').map((text, i) => (
+            <P style={{ marginBottom: 10 }} key={i}>
+              {text.indexOf('<') !== -1 ? (
+                <RawHtml dangerouslySetInnerHTML={{ __html: text }} />
+              ) : (
+                text
+              )}
+            </P>
+          ))}
+        </div>
 
         {optionGroups.map(
           (
