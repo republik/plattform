@@ -1,3 +1,4 @@
+import { css } from 'glamor'
 import { csv, nest } from 'd3'
 import { useEffect, useState } from 'react'
 import { PUBLIC_BASE_URL } from '../../lib/constants'
@@ -10,6 +11,11 @@ import {
   Interaction,
   NarrowContainer,
 } from '@project-r/styleguide'
+
+import {
+  AnswersGrid,
+  AnswersGridCard,
+} from '../Questionnaire/Submissions/AnswersGrid'
 
 const SubmissionsOverview = () => {
   const [politicsMetaData, setPoliticsMetaData] = useState([])
@@ -38,7 +44,6 @@ const SubmissionsOverview = () => {
 export default SubmissionsOverview
 
 const AnswerGridOverview = ({ question }) => {
-  console.log(question)
   return (
     <>
       <NarrowContainer>
@@ -51,19 +56,16 @@ const AnswerGridOverview = ({ question }) => {
           </Interaction.P>
         )} */}
       </NarrowContainer>
-      {/* <ColorContextProvider localColorVariables={colors} colorSchemeKey='light'>
+      <ColorContextProvider localColorVariables={colors} colorSchemeKey='light'>
         <AnswersGrid>
-          {targetedAnswers.map(({ answers, displayAuthor, id }) => (
-            <AnswersGridCard
-              key={id}
-              textLength={answers[0].payload.value.length}
-            >
-              <SubmissionLink id={id}>
+          {question.values.map(({ uuid, answers }) => (
+            <AnswersGridCard key={uuid}>
+              <div>
                 <a style={{ textDecoration: 'none' }}>
                   <div {...styles.answerCard}>
                     <div>
                       <Editorial.Question style={{ marginTop: 0 }}>
-                        {inQuotes(answers[0].payload.value)}
+                        {answers}
                       </Editorial.Question>
                       <Editorial.Credit
                         style={{
@@ -73,17 +75,31 @@ const AnswerGridOverview = ({ question }) => {
                       >
                         Von{' '}
                         <span style={{ textDecoration: 'underline' }}>
-                          {displayAuthor.name}
+                          {uuid}
                         </span>
                       </Editorial.Credit>
                     </div>
                   </div>
                 </a>
-              </SubmissionLink>
+              </div>
             </AnswersGridCard>
           ))}
         </AnswersGrid>
-      </ColorContextProvider> */}
+      </ColorContextProvider>
     </>
   )
+}
+
+const styles = {
+  answerCard: css({
+    background: 'rgba(255,255,255,0.5)',
+    borderRadius: 10,
+    padding: 24,
+    color: 'black',
+    height: '100%',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    textAlign: 'center',
+  }),
 }
