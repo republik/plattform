@@ -1,84 +1,89 @@
-import { useRouter } from 'next/router'
+import { csv, nest } from 'd3'
+import { useEffect, useState } from 'react'
+import { PUBLIC_BASE_URL } from '../../lib/constants'
 
-import { useQuery } from '@apollo/client'
-
-import { Loader, ColorContextProvider, Center } from '@project-r/styleguide'
-
-import { QUESTIONNAIRE_QUERY } from '../Questionnaire/Submissions/graphql'
 import {
-  QUESTION_SEPARATOR,
-  LinkToEditQuestionnaire,
-  QuestionFeatured,
-} from '../Questionnaire/Submissions/QuestionFeatured'
-import QuestionView from '../Questionnaire/Submissions/QuestionView'
+  ColorContextProvider,
+  colors,
+  Editorial,
+  inQuotes,
+  Interaction,
+  NarrowContainer,
+} from '@project-r/styleguide'
 
-import { questionColor, QUESTIONS } from './config'
+const SubmissionsOverview = () => {
+  const [politicsMetaData, setPoliticsMetaData] = useState([])
+  const [submissionData, setSubmissionData] = useState([])
+  useEffect(() => {
+    csv(
+      `${PUBLIC_BASE_URL}/static/politicsquestionnaire2023/politics_dummy_data.csv`,
+    ).then((data) => setPoliticsMetaData(data))
+    csv(
+      `${PUBLIC_BASE_URL}/static/politicsquestionnaire2023/submissions_dummy_data.csv`,
+    ).then((data) => {
+      const groupedData = nest()
+        .key((d) => d.questions)
+        .entries(data)
 
-const AllQuestionsView = ({ slug, extract }) => {
-  const { loading, error, data } = useQuery(QUESTIONNAIRE_QUERY, {
-    variables: { slug },
-  })
-
-  // the extract flag is only used for custom share for in the QuestionView
-  if (extract) return null
-
-  return (
-    <Loader
-      loading={loading}
-      error={error}
-      render={() => {
-        const {
-          questionnaire: { questions },
-        } = data
-
-        return (
-          <div style={{ margin: '48px auto 0' }}>
-            {QUESTIONS.map((question, idx) => {
-              const groupQuestions = question.ids.map((id) => questions[id])
-              return (
-                <QuestionFeatured
-                  key={question.ids.join('+')}
-                  questions={groupQuestions}
-                  hint={question.hint}
-                  slug={slug}
-                  bgColor={questionColor(idx)}
-                  valueLength={question.valueLength}
-                />
-              )
-            })}
-          </div>
-        )
-      }}
-    />
-  )
-}
-
-const SubmissionsOverview = ({ slug, extract, share }) => {
-  const router = useRouter()
-  const { query } = router
-  const questionIds = query.share?.split(QUESTION_SEPARATOR)
-
-  return (
-    <>
-      <ColorContextProvider colorSchemeKey='light'>
-        {questionIds ? (
-          <QuestionView
-            slug={slug}
-            extract={extract}
-            share={share}
-            questionIds={questionIds}
-          />
-        ) : (
-          <AllQuestionsView slug={slug} extract={extract} />
-        )}
-      </ColorContextProvider>
-      {!extract && (
-        <Center attributes={{ style: { marginBottom: -48, marginTop: 20 } }}>
-          <LinkToEditQuestionnaire slug={slug} />
-        </Center>
-      )}
-    </>
-  )
+      return setSubmissionData(groupedData)
+    })
+  }, [])
+  console.log({ politicsMetaData })
+  console.log({ submissionData })
+  return submissionData.map((question) => (
+    <AnswerGridOverview key={question.key} question={question} />
+  ))
 }
 
 export default SubmissionsOverview
+
+const AnswerGridOverview = ({ question }) => {
+  console.log(question)
+  return (
+    <>
+      <NarrowContainer>
+        <Editorial.Subhead style={{ textAlign: 'center' }}>
+          {question.key}
+        </Editorial.Subhead>
+        {/* {hint && (
+          <Interaction.P style={{ textAlign: 'center', fontSize: '1em' }}>
+            {hint}
+          </Interaction.P>
+        )} */}
+      </NarrowContainer>
+      {/* <ColorContextProvider localColorVariables={colors} colorSchemeKey='light'>
+        <AnswersGrid>
+          {targetedAnswers.map(({ answers, displayAuthor, id }) => (
+            <AnswersGridCard
+              key={id}
+              textLength={answers[0].payload.value.length}
+            >
+              <SubmissionLink id={id}>
+                <a style={{ textDecoration: 'none' }}>
+                  <div {...styles.answerCard}>
+                    <div>
+                      <Editorial.Question style={{ marginTop: 0 }}>
+                        {inQuotes(answers[0].payload.value)}
+                      </Editorial.Question>
+                      <Editorial.Credit
+                        style={{
+                          marginTop: '0',
+                          paddingTop: '20px',
+                        }}
+                      >
+                        Von{' '}
+                        <span style={{ textDecoration: 'underline' }}>
+                          {displayAuthor.name}
+                        </span>
+                      </Editorial.Credit>
+                    </div>
+                  </div>
+                </a>
+              </SubmissionLink>
+            </AnswersGridCard>
+          ))}
+        </AnswersGrid>
+      </ColorContextProvider> */}
+    </>
+  )
+}
