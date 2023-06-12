@@ -1,4 +1,4 @@
-import { matchZone } from '@republik/mdast-react-render/lib/utils'
+import { matchZone } from '@republik/mdast-react-render'
 import { parse, stringify } from '@republik/remark-preset'
 
 import { createEmbedVideoModule, createEmbedTwitterModule } from './'
