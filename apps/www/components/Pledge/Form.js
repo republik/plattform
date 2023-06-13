@@ -332,7 +332,7 @@ class Pledge extends Component {
               'pledge/meta/description',
             ]),
             image:
-              pkg.name === 'LESHA'
+              pkg && pkg.name === 'LESHA'
                 ? `${CDN_FRONTEND_BASE_URL}/static/social-media/we_stay.jpg`
                 : `${CDN_FRONTEND_BASE_URL}/static/social-media/logo.png`,
           })
