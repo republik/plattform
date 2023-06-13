@@ -65,8 +65,6 @@ const moduleCreators = {
   link: createLinkModule,
   mark: createMarkModule,
   memo: createMemoModule,
-  // for @republik/template-newsletter compat
-  // - change when updating project r
   blockquote: createBlockQuoteModule,
   blocktext: createBlockTextModule,
   list: createListModule,

@@ -21,7 +21,6 @@
   },
   "dependencies": {
     "@project-r/styleguide": "*",
-    "@republik/template-newsletter": "*",
     "@republik/icons": "*",
     "d3-array": "1.x",
     "d3-color": "1.x",

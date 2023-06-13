@@ -55,7 +55,6 @@
     "@republik/nextjs-apollo-client": "*",
     "@republik/remark-preset": "*",
     "@republik/slate-mdast-serializer": "*",
-    "@republik/template-newsletter": "*",
     "axios": "^1.0.0",
     "clipboard-copy": "^3.1.0",
     "codemirror": "^5.57.0",
