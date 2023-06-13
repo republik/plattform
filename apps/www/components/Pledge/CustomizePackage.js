@@ -430,6 +430,7 @@ class CustomizePackage extends Component {
       'ABO_GIVE',
       'ABO_GIVE_MONTHS',
       'YEARLY_ABO',
+      'LESHA',
     ].includes(pkg.name)
       ? []
       : userPrice
@@ -458,6 +459,11 @@ class CustomizePackage extends Component {
     const configurableGoodieFields = configurableFields.filter(
       (field) => field.option.reward.__typename === 'Goodie',
     )
+
+    const goodiesOnly = pkg.options.every(
+      (opt) => opt.reward.__typename === 'Goodie',
+    )
+
     const optionGroups = nest()
       .key((d) =>
         d.option.optionGroup
@@ -546,15 +552,17 @@ class CustomizePackage extends Component {
             </Link>
           )}
         </div>
-        {description.split('\n\n').map((text, i) => (
-          <P style={{ marginBottom: 10 }} key={i}>
-            {text.indexOf('<') !== -1 ? (
-              <RawHtml dangerouslySetInnerHTML={{ __html: text }} />
-            ) : (
-              text
-            )}
-          </P>
-        ))}
+        <div style={{ marginBottom: 40 }}>
+          {description.split('\n\n').map((text, i) => (
+            <P style={{ marginBottom: 10 }} key={i}>
+              {text.indexOf('<') !== -1 ? (
+                <RawHtml dangerouslySetInnerHTML={{ __html: text }} />
+              ) : (
+                text
+              )}
+            </P>
+          ))}
+        </div>
 
         {optionGroups.map(
           (
@@ -962,6 +970,7 @@ class CustomizePackage extends Component {
             onChange(this.calculateNextPrice(fields))
           }}
           fields={configurableGoodieFields}
+          showGoodiesTitle={!goodiesOnly}
         />
         {!!userPrice && !fixedPrice && (
           <div>

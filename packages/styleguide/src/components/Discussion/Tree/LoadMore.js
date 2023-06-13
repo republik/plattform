@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useState } from 'react'
 import PropTypes from 'prop-types'
 import { css } from 'glamor'
 
@@ -6,6 +6,7 @@ import { sansSerifRegular14 } from '../../Typography/styles'
 import { usePrevious } from '../../../lib/usePrevious'
 import { convertStyleToRem, pxToRem } from '../../Typography/utils'
 import { useColorContext } from '../../Colors/ColorContext'
+import BabySpinner from '../../Spinner/BabySpinner'
 
 const styles = {
   root: css({
@@ -65,6 +66,7 @@ LoadMore.propTypes = {
  */
 export const LoadMore1 = ({ t, alternative, count, onClick }) => {
   const [colorScheme] = useColorContext()
+  const [showSpinner, setShowSpinner] = useState(false)
   const styleRules = useMemo(() => {
     return {
       root: css({
@@ -93,10 +95,24 @@ export const LoadMore1 = ({ t, alternative, count, onClick }) => {
       {...colorScheme.set('color', alternative ? 'default' : 'primary')}
       {...(alternative && styles.alternative)}
       {...(alternative ? styleRules.alternative : styleRules.root)}
-      onClick={onClick}
+      onClick={(e) => {
+        setShowSpinner(true)
+        onClick(e).finally(() => {
+          setShowSpinner(false)
+        })
+      }}
     >
       <span>
         {t.pluralize('styleguide/CommentTreeLoadMore/label', { count })}
+        {showSpinner && (
+          <span
+            style={{
+              paddingLeft: 6,
+            }}
+          >
+            <BabySpinner />
+          </span>
+        )}
       </span>
     </button>
   )

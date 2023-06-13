@@ -15,6 +15,8 @@ import SecondaryActions from '../shared/SecondaryActions'
 import DiscussionComposerBarrier from './DiscussionComposerBarrier'
 import usePreviewCommentHandler from '../helpers/usePreviewCommentHandler'
 
+const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
+
 const propTypes = {
   showPayNotes: PropTypes.bool,
   isRoot: PropTypes.bool,
@@ -40,6 +42,9 @@ const DiscussionComposer = ({
   placeholder,
 }: PropTypes.InferProps<typeof propTypes>) => {
   const { t } = useTranslation()
+  // In case of a reply the composer can be visually hidden after the comment has been submitted
+  // due to the fact that the reply has a optimistic response
+  const [hasSubmittedNewComment, setHasSubmittedNewComment] = useState(false)
 
   const { id: discussionId, discussion, overlays, activeTag } = useDiscussion()
   const { tags, rules, displayAuthor } = discussion
@@ -69,6 +74,7 @@ const DiscussionComposer = ({
   }, [preferences])
 
   const [active, setActive] = useState(!!(initialText || initialActiveState))
+
   useEffect(() => {
     const draft = readDiscussionCommentDraft(discussionId, parentId)
     if (draft) {
@@ -100,7 +106,12 @@ const DiscussionComposer = ({
         response = await submitCommentHandler(value, [], {
           discussionId,
           parentId,
+        }).catch((err) => {
+          // ensure that the compose is shown again in case of an error
+          setHasSubmittedNewComment(false)
+          throw err
         })
+        setHasSubmittedNewComment(true)
       } else {
         // Edit a comment
         response = await editCommentHandler(commentId, value, tags)
@@ -114,6 +125,10 @@ const DiscussionComposer = ({
         error: err,
       }
     }
+  }
+
+  if (hasSubmittedNewComment && !isRoot && !commentId) {
+    return null
   }
 
   return (
