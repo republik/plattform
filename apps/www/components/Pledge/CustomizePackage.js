@@ -461,7 +461,7 @@ class CustomizePackage extends Component {
     )
 
     const goodiesOnly = pkg.options.every(
-      (opt) => opt.reward.__typename === 'Goodie',
+      (opt) => opt.reward?.__typename === 'Goodie',
     )
 
     const optionGroups = nest()
