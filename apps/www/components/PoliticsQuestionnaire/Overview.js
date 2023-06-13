@@ -17,7 +17,7 @@ import {
   AnswersGridCard,
 } from '../Questionnaire/Submissions/AnswersGrid'
 
-const SubmissionsOverview = () => {
+const SubmissionsOverview = ({ extract }) => {
   const [politicsMetaData, setPoliticsMetaData] = useState([])
   const [submissionData, setSubmissionData] = useState([])
   useEffect(() => {
@@ -36,6 +36,10 @@ const SubmissionsOverview = () => {
   }, [])
   console.log({ politicsMetaData })
   console.log({ submissionData })
+
+  // the extract flag is only used for custom share for in the QuestionView
+  if (extract) return null
+
   return submissionData.map((question) => (
     <AnswerGridOverview key={question.key} question={question} />
   ))
