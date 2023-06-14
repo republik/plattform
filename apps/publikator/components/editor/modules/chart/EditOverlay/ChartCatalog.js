@@ -21,7 +21,7 @@ import {
   IconCode as Code,
   IconEdit as Edit,
   IconClose,
-  IconPublic as Public,
+  IconPublic as Public
 } from '@republik/icons'
 import { css } from 'glamor'
 import TypeSelector from './TypeSelector'
