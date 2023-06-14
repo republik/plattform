@@ -1,8 +1,6 @@
 import NextLink from 'next/link'
 import { useRouter } from 'next/router'
 
-import { useQuery } from '@apollo/client'
-
 import {
   Interaction,
   IconButton,
@@ -18,6 +16,8 @@ import {
   Editorial,
 } from '@project-r/styleguide'
 
+import { PUBLIC_BASE_URL, ASSETS_SERVER_BASE_URL } from '../../lib/constants'
+
 // import { useMe } from '../../../lib/context/MeContext'
 import { useTranslation } from '../../lib/withT'
 
@@ -28,7 +28,7 @@ import Frame from '../Frame'
 import { ShareImageSplit } from '../Questionnaire/Submissions/ShareImageSplit'
 import { styles as submissionStyles } from '../Questionnaire/Submissions/Submission'
 
-// import HeaderShare from '../shared/HeaderShare'
+import HeaderShare from './HeaderShare'
 
 import {
   // EDIT_QUESTIONNAIRE_PATH,
@@ -51,12 +51,12 @@ const Page = ({ responses, authorData }) => {
 
   // const { me } = useMe()
 
-  // const urlObj = new URL(router.asPath, PUBLIC_BASE_URL)
-  // const url = urlObj.toString()
+  const urlObj = new URL(router.asPath, PUBLIC_BASE_URL)
+  const url = urlObj.toString()
 
-  // const shareImageUrlObj = urlObj
-  // shareImageUrlObj.searchParams.set('image', true)
-  // const shareImageUrl = shareImageUrlObj.toString()
+  const shareImageUrlObj = urlObj
+  shareImageUrlObj.searchParams.set('image', true)
+  const shareImageUrl = shareImageUrlObj.toString()
 
   if (image) {
     return (
@@ -78,16 +78,16 @@ const Page = ({ responses, authorData }) => {
   //   return null
   // }
 
-  // const meta = {
-  //   url,
-  //   title: 'Politikerfragebogen 2023',
-  //   description: t('Climatelab/Questionnaire/description', {
-  //     name: author?.name,
-  //   }),
-  //   image: `${ASSETS_SERVER_BASE_URL}/render?width=1200&height=1&url=${encodeURIComponent(
-  //     shareImageUrl,
-  //   )}`,
-  // }
+  const meta = {
+    url,
+    title: 'Politikerfragebogen 2023',
+    description: t('Climatelab/Questionnaire/description', {
+      name: authorData.name,
+    }),
+    image: `${ASSETS_SERVER_BASE_URL}/render?width=1200&height=1&url=${encodeURIComponent(
+      shareImageUrl,
+    )}`,
+  }
 
   return (
     <Frame raw>
@@ -154,7 +154,7 @@ const Page = ({ responses, authorData }) => {
               />
             </NextLink>
           </div>
-          {/* <HeaderShare meta={meta} /> */}
+          <HeaderShare meta={meta} />
           {/* {isOwnQuestionnaire && (
             <IconButton
               size={24}

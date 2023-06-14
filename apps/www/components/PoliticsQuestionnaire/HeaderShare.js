@@ -2,12 +2,12 @@ import { useState } from 'react'
 
 import { IconButton } from '@project-r/styleguide'
 
-import { trackEvent } from '../../../lib/matomo'
-import { postMessage, useInNativeApp } from '../../../../lib/withInNativeApp'
-import { useTranslation } from '../../../../lib/withT'
+import { trackEvent } from '../../lib/matomo'
+import { postMessage, useInNativeApp } from '../../lib/withInNativeApp'
+import { useTranslation } from '../../lib/withT'
 
 import { IconShare } from '@republik/icons'
-import ShareOverlay from '../../../ActionBar/ShareOverlay'
+import ShareOverlay from '../ActionBar/ShareOverlay'
 
 export const HeaderShare = ({ meta, noLabel }) => {
   const { t } = useTranslation()
