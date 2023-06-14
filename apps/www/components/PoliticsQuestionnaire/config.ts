@@ -21,8 +21,7 @@ type QuestionConfigType = {
 // TODO: adjust min and max length
 export const QUESTIONS: QuestionConfigType[] = [{ ids: [0] }]
 
-export const EDIT_QUESTIONNAIRE_PATH = '/2023/03/03/fragen-zur-klimakrise'
-export const OVERVIEW_QUESTIONNAIRE_PATH = '/15-fragen-zum-klima-ihre-antworten'
+export const OVERVIEW_QUESTIONNAIRE_PATH = '/politikerfragebogen-2023'
 
 export const QUESTIONNAIRE_SLUG = 'politiker-wahlen'
 
