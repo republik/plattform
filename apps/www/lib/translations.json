@@ -5024,6 +5024,14 @@
       "value": "Wir sind ein digitales Magazin für Politik, Wirtschaft, Gesellschaft und Kultur. Unabhängig. Werbefrei."
     },
     {
+      "key": "pledge/meta/package/LESHA/title",
+      "value": "Lesha Berezovskiy: «We Stay»"
+    },
+    {
+      "key": "pledge/meta/package/LESHA/description",
+      "value": "Ein persönlicher, fotografischer Blick auf den Krieg in der Ukraine."
+    },
+    {
       "key": "pledge/form/statement/share/title",
       "value": "{name} bleibt der Republik treu."
     },
