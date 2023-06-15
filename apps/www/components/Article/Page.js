@@ -83,6 +83,7 @@ import ArticleRecommendationsFeed from './ArticleRecommendationsFeed'
 import TeaserAudioPlayButton from '../Audio/shared/TeaserAudioPlayButton'
 import useAudioQueue from '../Audio/hooks/useAudioQueue'
 import { IconEdit } from '@republik/icons'
+import { ArticleAudioPlayer } from '../ActionBar/Audio/ArticleAudioPlayer'
 
 const LoadingComponent = () => <SmallLoader loading />
 
@@ -812,6 +813,11 @@ const ArticlePage = ({
                                   {actionBar}
                                 </div>
                               )}
+
+                              <ArticleAudioPlayer
+                                documentId={article.id}
+                                documentMeta={article.meta}
+                              />
                               {isSection && !hideSectionNav && (
                                 <Breakout size='breakout'>
                                   <SectionNav
