@@ -10,16 +10,23 @@ export const questionColor = scaleOrdinal(
 )
 
 type QuestionConfigType = {
-  ids: number[]
-  valueLength?: {
-    min?: number
-    max?: number
-  }
-  hint?: string
+  questionSlug: string[]
 }
 
-// TODO: adjust min and max length
-export const QUESTIONS: QuestionConfigType[] = [{ ids: [0] }]
+export const QUESTIONS: QuestionConfigType[] = [
+  {
+    questionSlug: ['welche-partei-musste-aus-ihrer-sicht-neu-gegrundet-werden'],
+  },
+  { questionSlug: ['ihr-grundsatz'] },
+  { questionSlug: ['wo-geben-sie-gern-nach'] },
+  {
+    questionSlug: [
+      'ab-welcher-ferien-destinations-distanz-ist-fliegen-erlaubt',
+    ],
+  },
+  { questionSlug: ['ihr-verhaltnis-zu-sand'] },
+  { questionSlug: ['es-ist-ein-tag-vor-ferienende-ihre-stimmung'] },
+]
 
 export const OVERVIEW_QUESTIONNAIRE_PATH = '/politikerfragebogen-2023'
 

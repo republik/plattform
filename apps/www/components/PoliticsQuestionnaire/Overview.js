@@ -33,7 +33,7 @@ const SubmissionsOverview = ({ extract }) => {
       `${PUBLIC_BASE_URL}/static/politicsquestionnaire2023/submissions_dummy_data.csv`,
     ).then((data) => {
       const groupedData = nest()
-        .key((d) => d.questions)
+        .key((d) => d.question)
         .entries(data)
 
       return setSubmissionData(groupedData)
@@ -48,6 +48,7 @@ const SubmissionsOverview = ({ extract }) => {
       {submissionData.map((question, idx) => (
         <QuestionFeatured
           key={question.key}
+          questionSlug={question.values[0].questionSlug}
           question={question}
           bgColor={questionColor(idx)}
         />
@@ -58,7 +59,7 @@ const SubmissionsOverview = ({ extract }) => {
 
 export default SubmissionsOverview
 
-const QuestionFeatured = ({ question, bgColor }) => {
+const QuestionFeatured = ({ question, bgColor, questionSlug }) => {
   // const router = useRouter()
   // const { query } = router
 
@@ -81,14 +82,11 @@ const QuestionFeatured = ({ question, bgColor }) => {
       }}
     >
       <Container>
-        <AnswerGridOverview
-          // key={q.id}
-          question={question}
-        />
+        <AnswerGridOverview question={question} />
 
         <NarrowContainer>
           <Interaction.P style={{ textAlign: 'center' }}>
-            <QuestionLink question={question}>
+            <QuestionLink questionSlug={questionSlug}>
               <Editorial.A>Alle Antworten lesen</Editorial.A>
             </QuestionLink>
           </Interaction.P>
@@ -113,14 +111,14 @@ const AnswerGridOverview = ({ question }) => {
       </NarrowContainer>
       <ColorContextProvider localColorVariables={colors} colorSchemeKey='light'>
         <AnswersGrid>
-          {question.values.map(({ uuid, answers, name }) => (
+          {question.values.map(({ uuid, answer, name }) => (
             <AnswersGridCard key={uuid}>
               <SubmissionLink id={uuid}>
                 <a style={{ textDecoration: 'none' }}>
                   <div {...styles.answerCard}>
                     <div>
                       <Editorial.Question style={{ marginTop: 0 }}>
-                        {inQuotes(answers)}
+                        {inQuotes(answer)}
                       </Editorial.Question>
                       <Editorial.Credit
                         style={{
@@ -145,26 +143,15 @@ const AnswerGridOverview = ({ question }) => {
   )
 }
 
-export const QuestionLink = ({ question, children }) => {
-  const router = useRouter()
-  const pathname = router.asPath.split('?')[0].split('#')[0]
+export const QuestionLink = ({ questionSlug, children }) => {
   return (
-    <Link
-      href={{
-        pathname,
-        query: {
-          share: question,
-        },
-      }}
-      shallow
-      passHref
-    >
+    <Link href={`/politikfragebogen/frage/${questionSlug}`} passHref>
       {children}
     </Link>
   )
 }
 
-const SubmissionLink = ({ id, children }) => {
+export const SubmissionLink = ({ id, children }) => {
   return (
     <Link href={`/politikfragebogen/${id}`} passHref>
       {children}

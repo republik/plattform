@@ -26,7 +26,7 @@ export const getServerSideProps = createGetServerSideProps(
     const responsesById = responses.filter((d) => d.uuid === id)
 
     const questionAnswerPair = responsesById.map((d) => {
-      return { question: d.questions, answer: d.answers }
+      return { question: d.question, answer: d.answer }
     })
 
     const authorData = responsesById.map((d) => {
