@@ -103,7 +103,7 @@ const Page = ({ question, answers }) => {
               localColorVariables={colors}
               colorSchemeKey='light'
             >
-              <AnswersGrid>
+              <div {...styles.answerCardWrapper}>
                 {answers.map(({ uuid, answer, name }) => (
                   <AnswersGridCard key={uuid}>
                     <SubmissionLink id={uuid}>
@@ -130,7 +130,7 @@ const Page = ({ question, answers }) => {
                     </SubmissionLink>
                   </AnswersGridCard>
                 ))}
-              </AnswersGrid>
+              </div>
             </ColorContextProvider>
           </Center>
         </div>
