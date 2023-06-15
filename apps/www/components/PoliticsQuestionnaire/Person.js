@@ -22,7 +22,7 @@ import { PUBLIC_BASE_URL, ASSETS_SERVER_BASE_URL } from '../../lib/constants'
 import { useTranslation } from '../../lib/withT'
 
 import Frame from '../Frame'
-// import Meta from '../Frame/Meta'
+import Meta from '../Frame/Meta'
 
 // import { LinkToEditQuestionnaire } from '../../Questionnaire/Submissions/QuestionFeatured'
 import { ShareImageSplit } from '../Questionnaire/Submissions/ShareImageSplit'
@@ -91,7 +91,7 @@ const Page = ({ responses, authorData }) => {
 
   return (
     <Frame raw>
-      {/* <Meta data={meta} /> */}
+      <Meta data={meta} />
       <div
         style={{
           backgroundColor: QUESTIONNAIRE_BG_COLOR,

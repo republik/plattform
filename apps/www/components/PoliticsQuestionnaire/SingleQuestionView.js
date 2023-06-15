@@ -1,6 +1,5 @@
 import { useEffect, useRef } from 'react'
 import { useRouter } from 'next/router'
-import { useQuery } from '@apollo/client'
 
 import NextLink from 'next/link'
 
@@ -30,11 +29,12 @@ import { useTranslation } from '../../lib/withT'
 import { SubmissionLink } from './Overview'
 
 import { ShareImageSplit } from '../Questionnaire/Submissions/ShareImageSplit'
+import Frame from '../Frame'
 import Meta from '../Frame/Meta'
 import { ASSETS_SERVER_BASE_URL, PUBLIC_BASE_URL } from '../../lib/constants'
 import { questionColor, QUESTIONS, OVERVIEW_QUESTIONNAIRE_PATH } from './config'
 
-const QuestionViewMeta = ({ share, question }) => {
+const QuestionViewMeta = ({ question }) => {
   const router = useRouter()
   const urlObj = new URL(router.asPath, PUBLIC_BASE_URL)
   const url = urlObj.toString()
@@ -79,63 +79,65 @@ const Page = ({ question, answers }) => {
   // )
 
   return (
-    <div ref={answerGridRef}>
-      <QuestionViewMeta question={question} />
-      <div style={{ backgroundColor: questionColor(0) }}>
-        <div
-          style={{
-            marginTop: 48,
-            marginBottom: 20,
-            paddingTop: 24,
-          }}
-          // ref={containerRef}
-        >
-          <Center>
-            <div style={{ textAlign: 'center' }}>
-              <Interaction.P>
-                <NextLink href={OVERVIEW_QUESTIONNAIRE_PATH} passHref>
-                  <Editorial.A>Zurück zur Übersicht</Editorial.A>
-                </NextLink>
-              </Interaction.P>
-            </div>
-
-            <ColorContextProvider
-              localColorVariables={colors}
-              colorSchemeKey='light'
-            >
-              <div {...styles.answerCardWrapper}>
-                {answers.map(({ uuid, answer, name }) => (
-                  <AnswersGridCard key={uuid}>
-                    <SubmissionLink id={uuid}>
-                      <a style={{ textDecoration: 'none' }}>
-                        <div {...styles.answerCard}>
-                          <div>
-                            <Editorial.Question style={{ marginTop: 0 }}>
-                              {inQuotes(answer)}
-                            </Editorial.Question>
-                            <Editorial.Credit
-                              style={{
-                                marginTop: '0',
-                                paddingTop: '20px',
-                              }}
-                            >
-                              Von{' '}
-                              <span style={{ textDecoration: 'underline' }}>
-                                {name}
-                              </span>
-                            </Editorial.Credit>
-                          </div>
-                        </div>
-                      </a>
-                    </SubmissionLink>
-                  </AnswersGridCard>
-                ))}
+    <Frame raw>
+      <div ref={answerGridRef}>
+        <QuestionViewMeta question={question} />
+        <div style={{ backgroundColor: questionColor(0) }}>
+          <div
+            style={{
+              marginTop: 48,
+              marginBottom: 20,
+              paddingTop: 24,
+            }}
+            // ref={containerRef}
+          >
+            <Center>
+              <div style={{ textAlign: 'center' }}>
+                <Interaction.P>
+                  <NextLink href={OVERVIEW_QUESTIONNAIRE_PATH} passHref>
+                    <Editorial.A>Zurück zur Übersicht</Editorial.A>
+                  </NextLink>
+                </Interaction.P>
               </div>
-            </ColorContextProvider>
-          </Center>
+
+              <ColorContextProvider
+                localColorVariables={colors}
+                colorSchemeKey='light'
+              >
+                <div {...styles.answerCardWrapper}>
+                  {answers.map(({ uuid, answer, name }) => (
+                    <AnswersGridCard key={uuid}>
+                      <SubmissionLink id={uuid}>
+                        <a style={{ textDecoration: 'none' }}>
+                          <div {...styles.answerCard}>
+                            <div>
+                              <Editorial.Question style={{ marginTop: 0 }}>
+                                {inQuotes(answer)}
+                              </Editorial.Question>
+                              <Editorial.Credit
+                                style={{
+                                  marginTop: '0',
+                                  paddingTop: '20px',
+                                }}
+                              >
+                                Von{' '}
+                                <span style={{ textDecoration: 'underline' }}>
+                                  {name}
+                                </span>
+                              </Editorial.Credit>
+                            </div>
+                          </div>
+                        </a>
+                      </SubmissionLink>
+                    </AnswersGridCard>
+                  ))}
+                </div>
+              </ColorContextProvider>
+            </Center>
+          </div>
         </div>
       </div>
-    </div>
+    </Frame>
   )
 }
 
