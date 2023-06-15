@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { reportError } from '../../lib/errors'
+import { reportError } from '../errors/reportError'
 import { useMe } from '../context/MeContext'
 
 const useProlitterisTracking = (repoId: string, cleanedPath: string) => {
