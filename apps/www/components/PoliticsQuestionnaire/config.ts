@@ -9,11 +9,17 @@ export const questionColor = scaleOrdinal(
   COLORS,
 )
 
-type QuestionConfigType = {
+type QuestionConfigOrder = {
   questionSlug: string[]
 }
 
-export const QUESTIONS: QuestionConfigType[] = [
+type QuestionConfigType = {
+  questionSlug: string
+  type: string
+  options?: string[]
+}
+
+export const QUESTIONS: QuestionConfigOrder[] = [
   {
     questionSlug: ['welche-partei-musste-aus-ihrer-sicht-neu-gegrundet-werden'],
   },
@@ -26,6 +32,34 @@ export const QUESTIONS: QuestionConfigType[] = [
   },
   { questionSlug: ['ihr-verhaltnis-zu-sand'] },
   { questionSlug: ['es-ist-ein-tag-vor-ferienende-ihre-stimmung'] },
+]
+
+export const QUESTION_TYPES: QuestionConfigType[] = [
+  {
+    questionSlug: 'welche-partei-musste-aus-ihrer-sicht-neu-gegrundet-werden',
+    type: 'text',
+  },
+  {
+    questionSlug: 'ihr-grundsatz',
+    type: 'text',
+  },
+  {
+    questionSlug: 'wo-geben-sie-gern-nach',
+    type: 'text',
+  },
+  {
+    questionSlug: 'ab-welcher-ferien-destinations-distanz-ist-fliegen-erlaubt',
+    type: 'text',
+  },
+  {
+    questionSlug: 'ihr-verhaltnis-zu-sand',
+    type: 'choice',
+    options: ['Gut, danke der Nachfrage', 'nein', 'vielleicht'],
+  },
+  {
+    questionSlug: 'es-ist-ein-tag-vor-ferienende-ihre-stimmung',
+    type: 'text',
+  },
 ]
 
 export const OVERVIEW_QUESTIONNAIRE_PATH = '/politikerfragebogen-2023'

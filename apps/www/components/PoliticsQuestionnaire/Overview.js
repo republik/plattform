@@ -15,7 +15,14 @@ import {
   Container,
 } from '@project-r/styleguide'
 
-import { questionColor } from './config'
+import { questionColor, QUESTION_TYPES } from './config'
+import { QuestionSummaryChart } from '../Questionnaire/Submissions/QuestionChart'
+
+const leftJoin = (objArr1, objArr2, key) =>
+  objArr1.map((anObj1) => ({
+    ...objArr2.find((anObj2) => anObj1[key] === anObj2[key]),
+    ...anObj1,
+  }))
 
 // re-introduced since actionbar/article only expect a single share param
 // (otherwise share for multiple questions fails)
@@ -32,9 +39,10 @@ const SubmissionsOverview = ({ extract }) => {
     csv(
       `${PUBLIC_BASE_URL}/static/politicsquestionnaire2023/submissions_dummy_data.csv`,
     ).then((data) => {
+      const joinedData = leftJoin(data, QUESTION_TYPES, 'questionSlug')
       const groupedData = nest()
         .key((d) => d.question)
-        .entries(data)
+        .entries(joinedData)
 
       return setSubmissionData(groupedData)
     })
@@ -49,6 +57,7 @@ const SubmissionsOverview = ({ extract }) => {
         <QuestionFeatured
           key={question.key}
           questionSlug={question.values[0].questionSlug}
+          questionType={question.values[0].type}
           question={question}
           bgColor={questionColor(idx)}
         />
@@ -59,7 +68,12 @@ const SubmissionsOverview = ({ extract }) => {
 
 export default SubmissionsOverview
 
-const QuestionFeatured = ({ question, bgColor, questionSlug }) => {
+const QuestionFeatured = ({
+  question,
+  bgColor,
+  questionSlug,
+  questionType,
+}) => {
   // const router = useRouter()
   // const { query } = router
 
@@ -82,15 +96,21 @@ const QuestionFeatured = ({ question, bgColor, questionSlug }) => {
       }}
     >
       <Container>
-        <AnswerGridOverview question={question} />
+        {questionType === 'text' ? (
+          <AnswerGridOverview question={question} />
+        ) : (
+          <AnswersChart question={question} />
+        )}
 
-        <NarrowContainer>
-          <Interaction.P style={{ textAlign: 'center' }}>
-            <QuestionLink questionSlug={questionSlug}>
-              <Editorial.A>Alle Antworten lesen</Editorial.A>
-            </QuestionLink>
-          </Interaction.P>
-        </NarrowContainer>
+        {questionType === 'text' && (
+          <NarrowContainer>
+            <Interaction.P style={{ textAlign: 'center' }}>
+              <QuestionLink questionSlug={questionSlug}>
+                <Editorial.A>Alle Antworten lesen</Editorial.A>
+              </QuestionLink>
+            </Interaction.P>
+          </NarrowContainer>
+        )}
       </Container>
     </div>
   )
@@ -156,6 +176,31 @@ export const SubmissionLink = ({ id, children }) => {
     <Link href={`/politikfragebogen/${id}`} passHref>
       {children}
     </Link>
+  )
+}
+
+const AnswersChart = ({ question, skipTitle }) => {
+  const totalAnswers = question.values.length
+  const values = question.values[0].options.map((option) => ({
+    answer: option,
+    value:
+      question.values.filter((result) => result.answer === option).length ??
+      0 / totalAnswers,
+  }))
+
+  return (
+    <NarrowContainer>
+      <div style={{ marginTop: 20 }}>
+        {!skipTitle && (
+          <Editorial.Subhead style={{ textAlign: 'center' }}>
+            {question.key}
+          </Editorial.Subhead>
+        )}
+        <div style={{ marginTop: 20 }}>
+          <QuestionSummaryChart answers={values} key='answer' />
+        </div>
+      </div>
+    </NarrowContainer>
   )
 }
 
