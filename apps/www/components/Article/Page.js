@@ -814,10 +814,7 @@ const ArticlePage = ({
                                 </div>
                               )}
 
-                              <ArticleAudioPlayer
-                                documentId={article.id}
-                                documentMeta={article.meta}
-                              />
+                              <ArticleAudioPlayer document={article} />
                               {isSection && !hideSectionNav && (
                                 <Breakout size='breakout'>
                                   <SectionNav

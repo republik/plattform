@@ -5,13 +5,13 @@ import { useGlobalAudioState } from '../../Audio/globalAudioState'
 import useAudioQueue from '../../Audio/hooks/useAudioQueue'
 import { AudioPlayerLocations } from '../../Audio/types/AudioActionTracking'
 import { renderTime } from '../../Audio/AudioPlayer/shared'
+import Info from './Info'
 
 type Props = {
-  documentId: string
-  documentMeta: any
+  document: any
 }
 
-export const ArticleAudioPlayer = ({ documentId, documentMeta }: Props) => {
+export const ArticleAudioPlayer = ({ document }: Props) => {
   const {
     toggleAudioPlayer,
     toggleAudioPlayback,
@@ -23,22 +23,22 @@ export const ArticleAudioPlayer = ({ documentId, documentMeta }: Props) => {
   const { currentTime } = useGlobalAudioState()
   const { isAudioQueueAvailable, checkIfInQueue } = useAudioQueue()
 
-  const isActiveAudioItem = checkIfActivePlayerItem(documentId)
+  const isActiveAudioItem = checkIfActivePlayerItem(document.id)
   const itemPlaying = isPlaying && isActiveAudioItem
-  const itemInAudioQueue = checkIfInQueue(documentId)
+  const itemInAudioQueue = checkIfInQueue(document.id)
   const { getMediaProgress } = useMediaProgress()
 
   const [mediaProgress, setMediaProgress] = useState(0)
 
   const currentDisplayTime =
     isActiveAudioItem && currentTime > 0 ? currentTime : mediaProgress
-  const duration = documentMeta.audioSource.durationMs / 1000
+  const duration = document.meta.audioSource.durationMs / 1000
 
   useEffect(() => {
     const updateMediaProgress = async () => {
       const mp = await getMediaProgress({
-        mediaId: documentMeta.audioSource.mediaId,
-        durationMs: documentMeta.audioSource.durationMs,
+        mediaId: document.meta.audioSource.mediaId,
+        durationMs: document.meta.audioSource.durationMs,
       })
       setMediaProgress(mp || 0)
     }
@@ -46,22 +46,10 @@ export const ArticleAudioPlayer = ({ documentId, documentMeta }: Props) => {
     if (currentTime === 0) {
       updateMediaProgress()
     }
-  }, [documentMeta.audioSource.mediaId, currentTime])
+  }, [document.meta.audioSource.mediaId, currentTime])
 
   const play = () => {
-    toggleAudioPlayer(
-      {
-        id: documentId,
-        meta: {
-          title: documentMeta.title,
-          path: documentMeta.path,
-          publishDate: documentMeta.publishDate,
-          image: documentMeta.image,
-          audioSource: documentMeta.audioSource,
-        },
-      },
-      AudioPlayerLocations.ACTION_BAR,
-    )
+    toggleAudioPlayer(document, AudioPlayerLocations.ACTION_BAR)
   }
 
   return (
@@ -77,8 +65,30 @@ export const ArticleAudioPlayer = ({ documentId, documentMeta }: Props) => {
       >
         {itemPlaying ? 'Pause' : 'Play'}
       </button>
-      Plaing some shitz ({renderTime(currentDisplayTime)} /{' '}
-      {renderTime(duration)})
+      <Info document={document} handlePlay={play} /> (
+      {renderTime(currentDisplayTime)} / {renderTime(duration)})
+      <button
+        onClick={async (e) => {
+          e.preventDefault()
+          if (itemInAudioQueue) {
+            await removeAudioQueueItem(itemInAudioQueue.id)
+            //  trackEvent([
+            //       AudioPlayerLocations.ACTION_BAR,
+            //       AudioPlayerActions.REMOVE_QUEUE_ITEM,
+            //       meta?.path,
+            //     ])
+          } else {
+            await addAudioQueueItem(document)
+            // trackEvent([
+            //   AudioPlayerLocations.ACTION_BAR,
+            //   AudioPlayerActions.ADD_QUEUE_ITEM,
+            //   meta?.path,
+            // ])
+          }
+        }}
+      >
+        {itemInAudioQueue ? 'X' : '+'}
+      </button>
     </div>
   )
 }
