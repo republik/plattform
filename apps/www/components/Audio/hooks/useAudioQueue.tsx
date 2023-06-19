@@ -274,8 +274,15 @@ const useAudioQueue = (): {
     ? meWithAudioQueue?.me?.audioQueue ?? []
     : null
 
+  // In case faulty audio queue items are in the queue, remove them
+  resolvedQueue
+    ?.filter((item) => !item.document?.meta?.audioSource)
+    .forEach((item) => handleRemoveQueueItem(item.id))
+
   return {
-    audioQueue: resolvedQueue,
+    audioQueue: resolvedQueue?.filter(
+      (item) => item.document?.meta?.audioSource,
+    ),
     audioQueueIsLoading: isLoading,
     audioQueueHasError: !hasAccess ? null : audioQueueHasError,
     refetchAudioQueue: !hasAccess ? () => null : refetchAudioQueue,
