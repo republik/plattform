@@ -4,7 +4,7 @@ import {
   matchType,
   matchParagraph,
   matchImage,
-} from 'mdast-react-render/lib/utils'
+} from '@republik/mdast-react-render'
 
 import { HR } from '../../components/Typography'
 

@@ -40,7 +40,7 @@ import createOnFieldChange from '../../utils/createOnFieldChange'
 import { AutoSlugLinkInfo } from '../../utils/github'
 
 import withT from '../../../../lib/withT'
-import { stringify } from '@orbiting/remark-preset'
+import { stringify } from '@republik/remark-preset'
 import copyToClipboard from 'clipboard-copy'
 
 const textPositions = [

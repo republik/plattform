@@ -5,7 +5,7 @@ import createUi from './ui'
 import { findOrCreate } from '../../utils/serialization'
 import { createRemoveEmptyKeyHandler } from '../../utils/keyHandlers'
 
-import MarkdownSerializer from 'slate-mdast-serializer'
+import MarkdownSerializer from '@republik/slate-mdast-serializer'
 import InlineUI from '../../utils/InlineUI'
 import { isFigureGroup } from '../figuregroup/ui'
 

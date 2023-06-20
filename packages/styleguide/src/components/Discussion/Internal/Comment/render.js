@@ -1,5 +1,5 @@
 import React from 'react'
-import { renderMdast } from 'mdast-react-render'
+import { renderMdast } from '@republik/mdast-react-render'
 import createCommentSchema from '../../../../templates/Comment'
 import { useColorContext } from '../../../Colors/useColorContext'
 

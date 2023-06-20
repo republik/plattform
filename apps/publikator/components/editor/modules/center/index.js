@@ -1,5 +1,5 @@
 import { matchBlock } from '../../utils'
-import MarkdownSerializer from 'slate-mdast-serializer'
+import MarkdownSerializer from '@republik/slate-mdast-serializer'
 
 export default ({ rule, subModules, TYPE }) => {
   const paragraphModule = subModules.find((m) => m.name === 'paragraph')

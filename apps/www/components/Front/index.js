@@ -1,6 +1,6 @@
 import { Fragment, useMemo, useEffect, useState } from 'react'
 import { css } from 'glamor'
-import { renderMdast } from 'mdast-react-render'
+import { renderMdast } from '@republik/mdast-react-render'
 import Head from 'next/head'
 import Link from 'next/link'
 import { useRouter } from 'next/router'

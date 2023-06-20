@@ -4,7 +4,7 @@ const Promise = require('bluebird')
 const {
   stringifyNode,
 } = require('@orbiting/backend-modules-documents/lib/resolve')
-const { parse: mdastParse } = require('@orbiting/remark-preset')
+const { parse: mdastParse } = require('@republik/remark-preset')
 
 const bulk = require('../indexPgTable')
 

@@ -8,7 +8,7 @@ import {
   IconFormatSubscript,
 } from '@republik/icons'
 
-import MarkdownSerializer from 'slate-mdast-serializer'
+import MarkdownSerializer from '@republik/slate-mdast-serializer'
 
 const icons = {
   strong: IconFormatBold,

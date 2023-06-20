@@ -2,7 +2,7 @@ import { colors } from '@project-r/styleguide'
 import { Block } from 'slate'
 
 import { matchBlock } from '../../utils'
-import MarkdownSerializer from 'slate-mdast-serializer'
+import MarkdownSerializer from '@republik/slate-mdast-serializer'
 
 import createUi from './ui'
 
