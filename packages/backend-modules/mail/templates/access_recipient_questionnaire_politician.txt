@@ -1,0 +1,23 @@
+Guten Tag {{firstName}} {{lastName}},
+
+Für unsere Berichterstattung zu den Nationalsrats-Wahlen, für die Sie
+kandidieren, möchten wir Sie herzlich zum Ausfüllen eines kurzen Fragebogens
+einladen.
+
+Wir würden uns sehr freuen, wenn Sie sich fünf Minuten Zeit nehmen.
+
+Zum Fragebogen Fragebogen-Link?uuid={{uuid}}
+
+Falls dieser Button nicht funktioniert: Kopieren Sie bitte folgenden Link in
+ihren Browser: Fragebogen-Link?uuid={{uuid}} .
+
+Bei Fragen und Anliegen stehen wir Ihnen gerne unter kontakt@republik.ch zur
+Verfügung.
+
+Ihre Crew der Republik
+
+
+Republik AG
+Sihlhallenstrasse 1, CH-8004 Zürich
+{{frontend_base_url}}
+kontakt@republik.ch
