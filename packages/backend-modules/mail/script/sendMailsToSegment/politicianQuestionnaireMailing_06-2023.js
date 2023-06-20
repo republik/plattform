@@ -79,13 +79,17 @@ const sendQuestionnaireInvitations = async () => {
 
   delete emailArray.columns
 
-  columns.forEach((c) => {
-    emailArray.map((emailData) => {
-      emailData.data = []
-      emailData.data.name = c
-      emailData.data.content = emailData[c]
+  emailArray.map((emailData) => {
+    emailData.globalMergeVars = []
+    columns.forEach((c) => {
+      const tempObj = {}
+      tempObj.name = c
+      tempObj.content = emailData[c]
+      emailData.globalMergeVars.push(tempObj)
     })
   })
+
+  debug(emailArray[0].globalMergeVars[3])
 
   console.log(
     `Found ${emailArray.length} email addresses. Starting to send emails...`,
@@ -96,7 +100,7 @@ const sendQuestionnaireInvitations = async () => {
   await BluePromise.each(emailArray, async (emailData) => {
     const templateName = mailInfo.message?.templateName
 
-    const values = emailData?.data.reduce((prev, curr) => {
+    const values = emailData?.globalMergeVars?.reduce((prev, curr) => {
       const { name, content } = curr
 
       prev[name] = content
@@ -104,6 +108,8 @@ const sendQuestionnaireInvitations = async () => {
       prev[name.toUpperCase()] = content
       return prev
     }, {})
+
+    debug(values)
 
     const { getHtml, getText } = await getTemplates(templateName)
     const html = getHtml(values)
