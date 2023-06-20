@@ -19,7 +19,7 @@ import Consents, { getConsentsError } from '../Pledge/Consents'
 
 import withT from '../../lib/withT'
 import { meQuery } from '../../lib/apollo/withMe'
-import { reportError } from '../../lib/errors'
+import { reportError } from '../../lib/errors/reportError'
 
 import ErrorMessage from '../ErrorMessage'
 
