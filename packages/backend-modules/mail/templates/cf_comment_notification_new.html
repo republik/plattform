@@ -57,17 +57,13 @@
                     >
                     </p>
                     <div
-                      style="background-color:#ebf6e5;padding:10px;color:#696b67;font-size:17px;line-height:24px;{{sg_font_style_serif_regular}}"
-                    >
-                      {{COMMENT_TAGS}}
-                    </div>
-                    <p
-                      style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}"
-                    >
-                    </p>
-                    <div
                       style="background-color:#ebf6e5;padding:10px;color:#282828;font-size:17px;line-height:24px;{{sg_font_style_serif_regular}}"
                     >
+                      {{#if COMMENT_TAGS}}
+                      <div style="padding-bottom:24px;">
+                        {{COMMENT_TAGS}}
+                      </div>
+                      {{/if}}
                       {{{CONTENT_HTML}}}
                     </div>
                     <p
