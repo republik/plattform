@@ -31,7 +31,7 @@ const argv = yargs
   .version().argv
 
 if (argv.dryRun) {
-  console.warn('In dry-run mode. Use --no-dry-run to send emails to segment.')
+  console.warn('In dry-run mode. Use --no-dry-run to send emails.')
 }
 
 const mailInfo = {
@@ -40,6 +40,9 @@ const mailInfo = {
     templateName: 'access_recipient_questionnaire_politician',
   },
 }
+
+const from_email = DEFAULT_MAIL_FROM_ADDRESS
+const from_name = DEFAULT_MAIL_FROM_NAME
 
 const requiredColumns = [
   'email',
@@ -105,15 +108,15 @@ const sendQuestionnaireInvitations = async () => {
     const { getHtml, getText } = await getTemplates(templateName)
     const html = getHtml(values)
     const text = getText(values)
-
-    const mail = { templateName }
     const to = emailData.email
-    const from_email = DEFAULT_MAIL_FROM_ADDRESS
-    const from_name = DEFAULT_MAIL_FROM_NAME
+    const mail = { templateName }
+    const subject = mailInfo.message.subject
+
     const message = {
       to,
       from_email,
       from_name,
+      subject,
       mailInfo,
       html,
       text,
