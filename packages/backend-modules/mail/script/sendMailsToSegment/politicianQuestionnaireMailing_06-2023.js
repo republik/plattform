@@ -13,6 +13,7 @@ const { getTemplates } = require('../../lib/sendMailTemplate')
 const NodemailerInterface = require('../../NodemailerInterface')
 const MandrillInterface = require('../../MandrillInterface')
 const { error } = require('console')
+const { DEFAULT_MAIL_FROM_ADDRESS, DEFAULT_MAIL_FROM_NAME } = process.env
 
 const debug = require('debug')(
   'mail:script:politicianQuestionnaireMailing_06-2023',
@@ -24,19 +25,13 @@ const argv = yargs
   })
   .option('file', {
     default:
-      '~/plattform/packages/backend-modules/mail/script/sendMailsToSegment/test_politicians.csv',
+      '/home/luciana-republik/plattform/packages/backend-modules/mail/script/sendMailsToSegment/test_politicians.csv',
   })
   .help()
   .version().argv
 
 if (argv.dryRun) {
   console.warn('In dry-run mode. Use --no-dry-run to send emails to segment.')
-}
-
-if (argv.onceFor) {
-  console.log(
-    'onceFor set, i.e. mail template will be sent to email address only once. Use --no-once-for to switch this off',
-  )
 }
 
 const mailInfo = {
@@ -113,8 +108,12 @@ const sendQuestionnaireInvitations = async () => {
 
     const mail = { templateName }
     const to = emailData.email
+    const from_email = DEFAULT_MAIL_FROM_ADDRESS
+    const from_name = DEFAULT_MAIL_FROM_NAME
     const message = {
       to,
+      from_email,
+      from_name,
       mailInfo,
       html,
       text,
