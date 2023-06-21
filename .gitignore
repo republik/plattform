@@ -19,6 +19,7 @@ build
 local/
 .idea
 .run
+packages/backend-modules/mail/script/sendMailsToSegment/*.csv
 
 # debug
 npm-debug.log*
