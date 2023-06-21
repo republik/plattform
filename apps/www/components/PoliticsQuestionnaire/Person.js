@@ -16,6 +16,8 @@ import {
   Editorial,
 } from '@project-r/styleguide'
 
+import { IconRadioChecked, IconRadioUnchecked } from '@republik/icons'
+
 import { PUBLIC_BASE_URL, ASSETS_SERVER_BASE_URL } from '../../lib/constants'
 
 // import { useMe } from '../../../lib/context/MeContext'
@@ -166,8 +168,14 @@ const Page = ({ responses, authorData }) => {
           )} */}
         </div>
 
-        {responses.map(({ question, answer, idx }) => (
-          <QuestionAnswerPair key={idx} question={question} answer={answer} />
+        {responses.map(({ question, answer, type, options, idx }) => (
+          <QuestionAnswerPair
+            key={idx}
+            question={question}
+            answer={answer}
+            type={type}
+            options={options}
+          />
         ))}
         <br />
       </Center>
@@ -177,10 +185,43 @@ const Page = ({ responses, authorData }) => {
 
 export default Page
 
-const QuestionAnswerPair = ({ question, answer }) => (
-  <Editorial.P attributes={{}}>
-    <strong>{question}</strong>
-    <br />
-    {answer}
-  </Editorial.P>
+const QuestionAnswerPair = ({ question, answer, type, options }) => {
+  console.log(type)
+  return (
+    <Editorial.P attributes={{}}>
+      <strong>{question}</strong>
+      <br />
+      {type === 'choice' ? (
+        <ChoiceAnswer options={options} answer={answer} />
+      ) : (
+        answer
+      )}
+    </Editorial.P>
+  )
+}
+
+const ChoiceAnswerOption = ({ option, checked }) => {
+  const [colorScheme] = useColorContext()
+  const Icon = checked ? IconRadioChecked : IconRadioUnchecked
+  return (
+    <span
+      style={{
+        marginRight: '2em',
+        display: 'inline-flex',
+        alignItems: 'center',
+      }}
+      {...colorScheme.set('color', checked ? 'text' : 'textSoft')}
+    >
+      {!!Icon && <Icon style={{ marginRight: 7 }} />}
+      {option}
+    </span>
+  )
+}
+
+const ChoiceAnswer = ({ options, answer }) => (
+  <span>
+    {options.map((option, i) => (
+      <ChoiceAnswerOption key={i} option={option} checked={answer === option} />
+    ))}
+  </span>
 )

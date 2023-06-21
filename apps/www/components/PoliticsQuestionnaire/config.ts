@@ -1,5 +1,11 @@
 import { scaleOrdinal } from 'd3-scale'
 
+export const leftJoin = (objArr1, objArr2, key) =>
+  objArr1.map((anObj1) => ({
+    ...objArr2.find((anObj2) => anObj1[key] === anObj2[key]),
+    ...anObj1,
+  }))
+
 // TODO: use correct color palette
 export const QUESTIONNAIRE_BG_COLOR = '#ffdc5e'
 const COLORS = ['#ffdd5e', '#ce9fc7', '#67a9d9', '#f49787', '#75d69c']

@@ -4,6 +4,11 @@ import fs from 'node:fs/promises'
 import path from 'node:path'
 import { csvParse } from 'd3'
 
+import {
+  QUESTION_TYPES,
+  leftJoin,
+} from '../../../www/components/PoliticsQuestionnaire/config'
+
 export default ({ responses, authorData }) => (
   <Page responses={responses} authorData={authorData} />
 )
@@ -23,13 +28,26 @@ export const getServerSideProps = createGetServerSideProps(
     )
     const responses = csvParse(data)
 
-    const responsesById = responses.filter((d) => d.uuid === id)
+    const responsesWithTypes = leftJoin(
+      responses,
+      QUESTION_TYPES,
+      'questionSlug',
+    )
 
-    const questionAnswerPair = responsesById.map((d) => {
-      return { question: d.question, answer: d.answer }
+    const responsesWithTypesById = responsesWithTypes.filter(
+      (d) => d.uuid === id,
+    )
+
+    const questionAnswerPair = responsesWithTypesById.map((d) => {
+      return {
+        type: d.type,
+        question: d.question,
+        answer: d.answer,
+        options: d.options || [],
+      }
     })
 
-    const authorData = responsesById.map((d) => {
+    const authorData = responsesWithTypesById.map((d) => {
       return { id: d.uuid, name: d.name }
     })
 

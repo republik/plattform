@@ -3,7 +3,6 @@ import { csv, nest } from 'd3'
 import { useEffect, useState } from 'react'
 import { PUBLIC_BASE_URL } from '../../lib/constants'
 import Link from 'next/link'
-import { useRouter } from 'next/router'
 
 import {
   ColorContextProvider,
@@ -15,14 +14,8 @@ import {
   Container,
 } from '@project-r/styleguide'
 
-import { questionColor, QUESTION_TYPES } from './config'
+import { questionColor, QUESTION_TYPES, leftJoin } from './config'
 import { QuestionSummaryChart } from '../Questionnaire/Submissions/QuestionChart'
-
-const leftJoin = (objArr1, objArr2, key) =>
-  objArr1.map((anObj1) => ({
-    ...objArr2.find((anObj2) => anObj1[key] === anObj2[key]),
-    ...anObj1,
-  }))
 
 // re-introduced since actionbar/article only expect a single share param
 // (otherwise share for multiple questions fails)
