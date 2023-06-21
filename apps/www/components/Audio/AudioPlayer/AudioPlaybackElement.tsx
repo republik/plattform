@@ -177,6 +177,8 @@ const AudioPlaybackElement = ({
 
       if (autoPlay) {
         await onPlay(initialTime)
+      } else {
+        mediaRef.current.currentTime = initialTime
       }
     },
     [onPlay],
