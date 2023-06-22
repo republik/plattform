@@ -1,5 +1,5 @@
-import MarkdownSerializer from 'slate-mdast-serializer'
-import { parse } from '@orbiting/remark-preset'
+import MarkdownSerializer from '@republik/slate-mdast-serializer'
+import { parse } from '@republik/remark-preset'
 import { Set, is } from 'immutable'
 
 import { matchBlock } from '../../utils'

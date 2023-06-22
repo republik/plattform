@@ -1,5 +1,5 @@
-import { renderMdast } from 'mdast-react-render'
-import { parse } from '@orbiting/remark-preset'
+import { renderMdast } from '@republik/mdast-react-render'
+import { parse } from '@republik/remark-preset'
 
 export const Markdown = ({ children, schema, rootData }) => {
   return renderMdast(

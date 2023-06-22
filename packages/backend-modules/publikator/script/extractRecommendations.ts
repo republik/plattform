@@ -14,7 +14,7 @@ const {
 const {
   parse: mdastParse,
   stringify: mdastStringify,
-} = require('@orbiting/remark-preset')
+} = require('@republik/remark-preset')
 
 const { maybeDelcareMilestonePublished } = require('../lib/postgres')
 

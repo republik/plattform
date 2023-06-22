@@ -1,5 +1,5 @@
 import React from 'react'
-import { imageResizeUrl } from 'mdast-react-render/lib/utils'
+import { imageResizeUrl } from '@republik/mdast-react-render'
 
 export const Figure = ({ children }) => (
   <span style={{ marginBottom: '15px' }}>{children}</span>

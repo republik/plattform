@@ -1,7 +1,7 @@
 import { Children, Fragment } from 'react'
 import PropTypes from 'prop-types'
 import Head from 'next/head'
-import { renderMdast } from 'mdast-react-render'
+import { renderMdast } from '@republik/mdast-react-render'
 import { withEditor } from '../Auth/checkRoles'
 
 // convert string into array of slice arguments, see tests
@@ -39,7 +39,7 @@ const Extract = ({ schema, mdast, ranges, unpack, isEditor }) => {
     if (level > 0) {
       return Children.toArray(children)
         .map((child) => unpackChildren(child.props.children, level - 1))
-        .reduce((all, someChildren) => all.concat(someChildren), []);
+        .reduce((all, someChildren) => all.concat(someChildren), [])
     }
     return children
   }

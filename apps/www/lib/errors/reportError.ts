@@ -1,5 +1,3 @@
-import { Component } from 'react'
-
 let lastError
 
 export const reportError = async (context, error) => {
@@ -21,17 +19,4 @@ export const reportError = async (context, error) => {
       buildId ? `(buildId: ${buildId})\n` : ''
     }${error}`,
   })
-}
-
-export class ErrorBoundary extends Component {
-  componentDidCatch(error, info) {
-    reportError(
-      'componentDidCatch',
-      `${error}${info.componentStack}\n${error && error.stack}`,
-    )
-  }
-
-  render() {
-    return <>{this.props.children}</>
-  }
 }

@@ -3,7 +3,7 @@ import { css } from 'glamor'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import dynamic from 'next/dynamic'
-import { renderMdast } from 'mdast-react-render'
+import { renderMdast } from '@republik/mdast-react-render'
 import compose from 'lodash/flowRight'
 import {
   graphql,

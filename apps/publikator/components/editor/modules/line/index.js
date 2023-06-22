@@ -5,7 +5,7 @@ import { Block } from 'slate'
 import { matchBlock, buttonStyles } from '../../utils'
 import injectBlock from '../../utils/injectBlock'
 
-import MarkdownSerializer from 'slate-mdast-serializer'
+import MarkdownSerializer from '@republik/slate-mdast-serializer'
 
 const styles = {
   border: css({

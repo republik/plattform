@@ -5,7 +5,7 @@ import { withRouter } from 'next/router'
 import withT from '../../../../lib/withT'
 import withAuthorization from '../../../../components/Auth/withAuthorization'
 import compose from 'lodash/flowRight'
-import { stringify, parse } from '@orbiting/remark-preset'
+import { stringify, parse } from '@republik/remark-preset'
 import { css } from 'glamor'
 import {
   A,
@@ -15,7 +15,10 @@ import {
   fontFamilies,
   Checkbox,
 } from '@project-r/styleguide'
-import { IconInfoOutline as InfoIcon, IconLens as CircleIcon } from '@republik/icons'
+import {
+  IconInfoOutline as InfoIcon,
+  IconLens as CircleIcon,
+} from '@republik/icons'
 import { Controlled as CodeMirror } from 'react-codemirror2'
 import {
   UncommittedChanges,

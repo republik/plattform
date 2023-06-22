@@ -5,7 +5,7 @@ import { graphql } from '@apollo/client/react/hoc'
 import { Value, resetKeyGenerator } from 'slate'
 import debounce from 'lodash/debounce'
 import { timeFormat } from 'd3-time-format'
-import { parse, stringify } from '@orbiting/remark-preset'
+import { parse, stringify } from '@republik/remark-preset'
 
 import Frame from '../Frame'
 import { HEADER_HEIGHT } from '../Frame/constants'

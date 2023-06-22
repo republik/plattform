@@ -1,8 +1,8 @@
 import { Document as SlateDocument } from 'slate'
-import { parse } from '@orbiting/remark-preset'
+import { parse } from '@republik/remark-preset'
 import { slug } from '@project-r/styleguide'
 
-import MarkdownSerializer from 'slate-mdast-serializer'
+import MarkdownSerializer from '@republik/slate-mdast-serializer'
 import { findOrCreate } from '../../utils/serialization'
 
 export default ({ rule, subModules, TYPE }) => {

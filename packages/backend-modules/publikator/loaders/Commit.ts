@@ -5,7 +5,7 @@ import { v4 } from 'is-uuid'
 import createDataLoader from '@orbiting/backend-modules-dataloader'
 import { GraphqlContext } from '@orbiting/backend-modules-types'
 
-const { parse: mdastParse } = require('@orbiting/remark-preset')
+const { parse: mdastParse } = require('@republik/remark-preset')
 const {
   cache: { create: createCache },
 } = require('@orbiting/backend-modules-utils')

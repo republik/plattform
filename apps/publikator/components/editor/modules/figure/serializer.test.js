@@ -2,7 +2,7 @@ import createFigureModule from './'
 import createImageModule from './image'
 import createParagraphModule from '../paragraph'
 import createCaptionModule from './caption'
-import { parse, stringify } from '@orbiting/remark-preset'
+import { parse, stringify } from '@republik/remark-preset'
 import { boldModule } from '../mark/testUtils'
 
 const TYPE = 'FIGURE'

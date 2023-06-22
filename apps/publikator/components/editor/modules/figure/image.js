@@ -3,7 +3,7 @@ import { colors } from '@project-r/styleguide'
 
 import { matchBlock } from '../../utils'
 import { gray2x1 } from '../../utils/placeholder'
-import MarkdownSerializer from 'slate-mdast-serializer'
+import MarkdownSerializer from '@republik/slate-mdast-serializer'
 
 const styles = {
   border: css({

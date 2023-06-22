@@ -1,5 +1,4 @@
 import { cloneElement, Children } from 'react'
-import newsletterSchema from '@project-r/template-newsletter'
 
 import {
   createNewsletterWebSchema,
@@ -36,9 +35,6 @@ const articleSchemaParams = {
 }
 
 const schemas = {
-  // first is default schema for the editor
-  // - for Project R this should be the newsletter
-  newsletter: newsletterSchema,
   editorialNewsletter: createNewsletterWebSchema(),
   flyer: {
     getPath: getDatePath,
