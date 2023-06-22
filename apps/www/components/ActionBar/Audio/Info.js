@@ -59,23 +59,6 @@ const Contributors = ({ contributors }) => {
   })
 }
 
-const PlaySyntheticReadAloud = ({ onPlay, children }) => {
-  const { t } = useTranslation()
-  const [colorScheme] = useColorContext()
-
-  return (
-    <span {...colorScheme.set('color', 'textSoft')}>
-      <button
-        {...plainButtonRule}
-        style={{ textDecoration: 'underline', display: 'inline' }}
-        onClick={onPlay}
-      >
-        {children ? children : t('article/actionbar/audio/info/play-synth')}
-      </button>
-    </span>
-  )
-}
-
 const SubscribeReadAloud = ({ subscription }) => {
   const [colorScheme] = useColorContext()
   const { t } = useTranslation()
@@ -178,9 +161,8 @@ const Info = ({ document, handlePlay }) => {
           ),
           kind === 'syntheticReadAloud' &&
             !!mp3 &&
-            (!willBeReadAloud || !readAloudSubscription) && (
-              <PlaySyntheticReadAloud onPlay={handlePlay} key='synthetic' />
-            ),
+            (!willBeReadAloud || !readAloudSubscription) &&
+            t('article/actionbar/audio/info/synthetic'),
           (kind !== 'readAloud' || !mp3) &&
             !!willBeReadAloud &&
             readAloudSubscription && (
@@ -213,21 +195,7 @@ const Info = ({ document, handlePlay }) => {
                   synthetic:
                     kind === 'syntheticReadAloud' && !!mp3 ? (
                       <span key='synthetic'>
-                        {t.elements(
-                          'article/actionbar/audio/info/readAloud/synthetic',
-                          {
-                            action: (
-                              <PlaySyntheticReadAloud
-                                onPlay={handlePlay}
-                                key='syntheticaction'
-                              >
-                                {t(
-                                  'article/actionbar/audio/info/readAloud/synthetic/action',
-                                )}
-                              </PlaySyntheticReadAloud>
-                            ),
-                          },
-                        )}
+                        {t('article/actionbar/audio/info/readAloud/synthetic')}
                       </span>
                     ) : null,
                 })}

@@ -814,7 +814,10 @@ const ArticlePage = ({
                                 </div>
                               )}
 
-                              <ArticleAudioPlayer document={article} />
+                              <div style={{ marginTop: 32 }}>
+                                <ArticleAudioPlayer document={article} />
+                              </div>
+
                               {isSection && !hideSectionNav && (
                                 <Breakout size='breakout'>
                                   <SectionNav

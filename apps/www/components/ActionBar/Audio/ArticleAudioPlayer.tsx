@@ -6,9 +6,44 @@ import useAudioQueue from '../../Audio/hooks/useAudioQueue'
 import { AudioPlayerLocations } from '../../Audio/types/AudioActionTracking'
 import { renderTime } from '../../Audio/AudioPlayer/shared'
 import Info from './Info'
-import { IconPauseCircleOutline, IconPlayCircleOutline } from '@republik/icons'
-import { IconButton } from '@project-r/styleguide'
+import {
+  IconPauseCircleOutline,
+  IconPlayCircleOutline,
+  IconPlaylistAdd,
+  IconPlaylistRemove,
+} from '@republik/icons'
+import {
+  IconButton,
+  useColorContext,
+  convertStyleToRem,
+  fontStyles,
+  mediaQueries,
+} from '@project-r/styleguide'
 import { useTranslation } from '../../../lib/withT'
+import { css } from 'glamor'
+
+const styles = {
+  container: css({
+    padding: 12,
+    background: '#eee',
+    borderRadius: 4,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'stretch',
+    gap: 12,
+  }),
+  labels: css({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 4,
+    flexGrow: '1',
+    ...convertStyleToRem(fontStyles.sansSerifRegular14),
+    [mediaQueries.mUp]: {
+      ...convertStyleToRem(fontStyles.sansSerifRegular15),
+    },
+  }),
+}
+
 type Props = {
   document: any
 }
@@ -23,6 +58,8 @@ export const ArticleAudioPlayer = ({ document }: Props) => {
     isPlaying,
   } = useAudioContext()
   const { t } = useTranslation()
+  const [colorScheme] = useColorContext()
+
   const { currentTime } = useGlobalAudioState()
   const { isAudioQueueAvailable, checkIfInQueue } = useAudioQueue()
 
@@ -56,7 +93,7 @@ export const ArticleAudioPlayer = ({ document }: Props) => {
   }
 
   return (
-    <div style={{ padding: 20, background: '#ddd' }}>
+    <div {...styles.container} {...colorScheme.set('background', 'hover')}>
       <IconButton
         Icon={itemPlaying ? IconPauseCircleOutline : IconPlayCircleOutline}
         size={42}
@@ -68,10 +105,20 @@ export const ArticleAudioPlayer = ({ document }: Props) => {
             play()
           }
         }}
+        style={{ marginRight: 0 }}
       />
-      <Info document={document} handlePlay={play} /> (
-      {renderTime(currentDisplayTime)} / {renderTime(duration)})
-      <button
+      <div {...styles.labels}>
+        <Info document={document} handlePlay={play} />
+        {renderTime(currentDisplayTime)} / {renderTime(duration)}
+      </div>
+
+      <IconButton
+        Icon={itemInAudioQueue ? IconPlaylistRemove : IconPlaylistAdd}
+        title={
+          itemInAudioQueue
+            ? t('AudioPlayer/Queue/Remove')
+            : t('AudioPlayer/Queue/Add')
+        }
         onClick={async (e) => {
           e.preventDefault()
           if (itemInAudioQueue) {
@@ -90,9 +137,8 @@ export const ArticleAudioPlayer = ({ document }: Props) => {
             // ])
           }
         }}
-      >
-        {itemInAudioQueue ? 'X' : '+'}
-      </button>
+        style={{ marginRight: 0 }}
+      />
     </div>
   )
 }

@@ -3449,6 +3449,10 @@
       "value": "Anhören (synthetisch)"
     },
     {
+      "key": "article/actionbar/audio/info/synthetic",
+      "value": "Synthetische Stimme"
+    },
+    {
       "key": "article/actionbar/audio/info/readAloud",
       "value": "{subscribe} sobald vorgelesen {synthetic}"
     },

@@ -26,7 +26,7 @@ import UserProgress from './UserProgress'
 import ShareButtons from './ShareButtons'
 import { useMe } from '../../lib/context/MeContext'
 import useAudioQueue from '../Audio/hooks/useAudioQueue'
-import AudioInfo from './Audio/Info'
+
 import {
   AudioPlayerLocations,
   AudioPlayerActions,
