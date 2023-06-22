@@ -173,12 +173,12 @@ const AudioPlaybackElement = ({
       setIsLoading(true)
       mediaRef.current.load()
       mediaRef.current.playbackRate = playbackRate
+      mediaRef.current.currentTime = initialTime
+
       setIsLoading(false)
 
       if (autoPlay) {
         await onPlay(initialTime)
-      } else {
-        mediaRef.current.currentTime = initialTime
       }
     },
     [onPlay],
