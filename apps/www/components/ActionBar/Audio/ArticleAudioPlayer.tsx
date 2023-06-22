@@ -6,7 +6,9 @@ import useAudioQueue from '../../Audio/hooks/useAudioQueue'
 import { AudioPlayerLocations } from '../../Audio/types/AudioActionTracking'
 import { renderTime } from '../../Audio/AudioPlayer/shared'
 import Info from './Info'
-
+import { IconPauseCircleOutline, IconPlayCircleOutline } from '@republik/icons'
+import { IconButton } from '@project-r/styleguide'
+import { useTranslation } from '../../../lib/withT'
 type Props = {
   document: any
 }
@@ -20,6 +22,7 @@ export const ArticleAudioPlayer = ({ document }: Props) => {
     checkIfActivePlayerItem,
     isPlaying,
   } = useAudioContext()
+  const { t } = useTranslation()
   const { currentTime } = useGlobalAudioState()
   const { isAudioQueueAvailable, checkIfInQueue } = useAudioQueue()
 
@@ -54,7 +57,10 @@ export const ArticleAudioPlayer = ({ document }: Props) => {
 
   return (
     <div style={{ padding: 20, background: '#ddd' }}>
-      <button
+      <IconButton
+        Icon={itemPlaying ? IconPauseCircleOutline : IconPlayCircleOutline}
+        size={42}
+        title={t(`styleguide/AudioPlayer/${isPlaying ? 'pause' : 'play'}`)}
         onClick={() => {
           if (isActiveAudioItem) {
             toggleAudioPlayback()
@@ -62,9 +68,7 @@ export const ArticleAudioPlayer = ({ document }: Props) => {
             play()
           }
         }}
-      >
-        {itemPlaying ? 'Pause' : 'Play'}
-      </button>
+      />
       <Info document={document} handlePlay={play} /> (
       {renderTime(currentDisplayTime)} / {renderTime(duration)})
       <button
