@@ -44,14 +44,7 @@ const mailInfo = {
 const from_email = DEFAULT_MAIL_FROM_ADDRESS
 const from_name = DEFAULT_MAIL_FROM_NAME
 
-const requiredColumns = [
-  'email',
-  'firstName',
-  'lastName',
-  'canton',
-  'party',
-  'uuid',
-]
+const requiredColumns = ['firstname', 'lastname', 'email', 'uuid']
 
 debug(mailInfo)
 
@@ -114,7 +107,12 @@ const sendQuestionnaireInvitations = async () => {
     const { getHtml, getText } = await getTemplates(templateName)
     const html = getHtml(values)
     const text = getText(values)
-    const to = emailData.email
+    const to = [
+      {
+        email: values.email,
+        name: values.firstname + ' ' + values.lastname,
+      },
+    ]
     const mail = { templateName }
     const subject = mailInfo.message.subject
 
