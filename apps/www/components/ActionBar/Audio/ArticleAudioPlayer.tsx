@@ -1,26 +1,26 @@
-import { useEffect, useState } from 'react'
-import { useAudioContext } from '../../Audio/AudioProvider'
-import { useMediaProgress } from '../../Audio/MediaProgress'
-import { useGlobalAudioState } from '../../Audio/globalAudioState'
-import useAudioQueue from '../../Audio/hooks/useAudioQueue'
-import { AudioPlayerLocations } from '../../Audio/types/AudioActionTracking'
-import { renderTime } from '../../Audio/AudioPlayer/shared'
-import Info from './Info'
+import {
+  IconButton,
+  convertStyleToRem,
+  fontStyles,
+  mediaQueries,
+  useColorContext,
+} from '@project-r/styleguide'
 import {
   IconPauseCircleOutline,
   IconPlayCircleOutline,
   IconPlaylistAdd,
   IconPlaylistRemove,
 } from '@republik/icons'
-import {
-  IconButton,
-  useColorContext,
-  convertStyleToRem,
-  fontStyles,
-  mediaQueries,
-} from '@project-r/styleguide'
-import { useTranslation } from '../../../lib/withT'
 import { css } from 'glamor'
+import { useEffect, useState } from 'react'
+import { useTranslation } from '../../../lib/withT'
+import Time from '../../Audio/AudioPlayer/ui/Time'
+import { useAudioContext } from '../../Audio/AudioProvider'
+import { useMediaProgress } from '../../Audio/MediaProgress'
+import { useGlobalAudioState } from '../../Audio/globalAudioState'
+import useAudioQueue from '../../Audio/hooks/useAudioQueue'
+import { AudioPlayerLocations } from '../../Audio/types/AudioActionTracking'
+import Info from './Info'
 
 const styles = {
   container: css({
@@ -109,7 +109,7 @@ export const ArticleAudioPlayer = ({ document }: Props) => {
       />
       <div {...styles.labels}>
         <Info document={document} handlePlay={play} />
-        {renderTime(currentDisplayTime)} / {renderTime(duration)}
+        <Time currentTime={currentDisplayTime} duration={duration} />
       </div>
 
       <IconButton
