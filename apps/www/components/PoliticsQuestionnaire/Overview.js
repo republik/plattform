@@ -1,8 +1,8 @@
 import { css } from 'glamor'
-import { csv, nest } from 'd3'
-import { useEffect, useState } from 'react'
-import { PUBLIC_BASE_URL } from '../../lib/constants'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
+
+import Frame from '../Frame'
 
 import {
   ColorContextProvider,
@@ -14,48 +14,40 @@ import {
   Container,
 } from '@project-r/styleguide'
 
-import { questionColor, QUESTION_TYPES, leftJoin } from './config'
+import {
+  questionColor,
+  QUESTIONS,
+  QUESTIONNAIRE_SQUARE_IMG_URL,
+} from './config'
 import { QuestionSummaryChart } from '../Questionnaire/Submissions/QuestionChart'
-
-// re-introduced since actionbar/article only expect a single share param
-// (otherwise share for multiple questions fails)
-export const QUESTION_SEPARATOR = ','
+import { PUBLIC_BASE_URL, ASSETS_SERVER_BASE_URL } from '../../lib/constants'
 
 import {
   AnswersGrid,
   AnswersGridCard,
 } from '../Questionnaire/Submissions/AnswersGrid'
 
-const SubmissionsOverview = ({ extract }) => {
-  const [submissionData, setSubmissionData] = useState([])
-  useEffect(() => {
-    csv(
-      `${PUBLIC_BASE_URL}/static/politicsquestionnaire2023/submissions_dummy_data.csv`,
-    ).then((data) => {
-      const joinedData = leftJoin(data, QUESTION_TYPES, 'questionSlug')
-      const groupedData = nest()
-        .key((d) => d.question)
-        .entries(joinedData)
-
-      return setSubmissionData(groupedData)
-    })
-  }, [])
-
-  // the extract flag is only used for custom share for in the QuestionView
-  if (extract) return null
-
+export const SubmissionsOverview = ({ submissionData }) => {
   return (
-    <div style={{ margin: '48px auto 0' }}>
-      {submissionData.map((question, idx) => (
-        <QuestionFeatured
-          key={question.key}
-          questionSlug={question.values[0].questionSlug}
-          questionType={question.values[0].type}
-          question={question}
-          bgColor={questionColor(idx)}
-        />
-      ))}
-    </div>
+    <Frame raw>
+      <div style={{ margin: '48px auto 0' }}>
+        {QUESTIONS.map((question, idx) => {
+          const groupQuestions = question.questionSlugs.map((slug) =>
+            submissionData.find((d) => d.key === slug),
+          )
+
+          return (
+            <QuestionFeatured
+              key={groupQuestions[0].key}
+              questionSlug={groupQuestions[0].values[0].questionSlug}
+              questionType={groupQuestions[0].values[0].type}
+              question={groupQuestions[0]}
+              bgColor={questionColor(idx)}
+            />
+          )
+        })}
+      </div>
+    </Frame>
   )
 }
 

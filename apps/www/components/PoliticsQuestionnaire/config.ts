@@ -16,7 +16,7 @@ export const questionColor = scaleOrdinal(
 )
 
 type QuestionConfigOrder = {
-  questionSlug: string[]
+  questionSlugs: string[]
 }
 
 type QuestionConfigType = {
@@ -27,17 +27,19 @@ type QuestionConfigType = {
 
 export const QUESTIONS: QuestionConfigOrder[] = [
   {
-    questionSlug: ['welche-partei-musste-aus-ihrer-sicht-neu-gegrundet-werden'],
+    questionSlugs: [
+      'welche-partei-musste-aus-ihrer-sicht-neu-gegrundet-werden',
+    ],
   },
-  { questionSlug: ['ihr-grundsatz'] },
-  { questionSlug: ['wo-geben-sie-gern-nach'] },
+  { questionSlugs: ['ihr-grundsatz'] },
+  { questionSlugs: ['wo-geben-sie-gern-nach'] },
   {
-    questionSlug: [
+    questionSlugs: [
       'ab-welcher-ferien-destinations-distanz-ist-fliegen-erlaubt',
     ],
   },
-  { questionSlug: ['ihr-verhaltnis-zu-sand'] },
-  { questionSlug: ['es-ist-ein-tag-vor-ferienende-ihre-stimmung'] },
+  { questionSlugs: ['ihr-verhaltnis-zu-sand'] },
+  { questionSlugs: ['es-ist-ein-tag-vor-ferienende-ihre-stimmung'] },
 ]
 
 export const QUESTION_TYPES: QuestionConfigType[] = [
