@@ -1,11 +1,21 @@
-const Redlock = require('redlock')
-const Promise = require('bluebird')
+import Redlock, { LockError } from 'redlock'
+import Promise from 'bluebird'
 
 const LOCK_RETRY_COUNT = 3
 const LOCK_RETRY_DELAY = 600
 const LOCK_RETRY_JITTER = 200
 const MIN_TTL_MS = LOCK_RETRY_COUNT * (LOCK_RETRY_DELAY + LOCK_RETRY_JITTER)
 const TTL_EXP_MS = MIN_TTL_MS * 1.5
+
+type IntervalSchedulerProps = {
+  name: string
+  context: unknown
+  runFunc: (options: { dryRun?: boolean }, context: unknown) => Promise<void>
+  lockTtlSecs: number
+  runIntervalSecs: number
+  runInitially?: boolean
+  dryRun?: boolean
+}
 
 const init = async ({
   name,
@@ -15,7 +25,7 @@ const init = async ({
   runIntervalSecs,
   runInitially = true,
   dryRun = false,
-}) => {
+}: IntervalSchedulerProps) => {
   if (!name || !context || !runFunc || !lockTtlSecs || !runIntervalSecs) {
     console.error(`missing input, scheduler ${name}`, {
       name,
@@ -48,7 +58,7 @@ const init = async ({
   const debug = require('debug')(`scheduler:${name}`)
   debug('init')
 
-  let timeout
+  let timeout: NodeJS.Timeout
   const scheduleNextRun = () => {
     // Set timeout slightly off to usual interval
     if (timeout) {
@@ -68,8 +78,9 @@ const init = async ({
 
   if (lockTtlSecs * 1000 < MIN_TTL_MS) {
     throw new Error(
-      `lockTtlSecs must be at least ${Math.ceil(MIN_TTL_MS / 1000)})`,
-      { lockTtlSecs },
+      `lockTtlSecs must be at least ${Math.ceil(
+        MIN_TTL_MS / 1000,
+      )}) but was: ${lockTtlSecs}`,
     )
   }
 
@@ -105,8 +116,9 @@ const init = async ({
 
       // wait until other processes exceeded waiting time
       // then give up lock
-      const blockLockMs =
-        BigInt(TTL_EXP_MS) * BigInt(1000) - process.hrtime.bigint() - beginTime
+      const blockLockMs = Number(
+        BigInt(TTL_EXP_MS) * BigInt(1000) - process.hrtime.bigint() - beginTime,
+      )
       await Promise.delay(blockLockMs > 0 ? blockLockMs : 0).then(() =>
         lock
           .unlock()
@@ -120,7 +132,7 @@ const init = async ({
 
       debug('run completed')
     } catch (e) {
-      if (e.name === 'LockError') {
+      if (e instanceof LockError) {
         if (e.attempts && e.attempts > LOCK_RETRY_COUNT) {
           debug('give up, others are doing the work:', e.message)
         } else {
@@ -146,7 +158,7 @@ const init = async ({
     debug('run initially')
     await run()
   } else {
-    await scheduleNextRun()
+    scheduleNextRun()
   }
 
   return {
@@ -155,6 +167,6 @@ const init = async ({
   }
 }
 
-module.exports = {
+export default {
   init,
 }

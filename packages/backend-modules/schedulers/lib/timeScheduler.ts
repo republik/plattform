@@ -1,7 +1,7 @@
-const Redlock = require('redlock')
-const Promise = require('bluebird')
+import Redlock from 'redlock'
+import Promise from 'bluebird'
 
-const moment = require('moment')
+import moment from 'moment'
 
 const LOCK_RETRY_COUNT = 3
 const LOCK_RETRY_DELAY = 600
@@ -167,6 +167,6 @@ const init = async ({
   }
 }
 
-module.exports = {
+export default {
   init,
 }
