@@ -7,7 +7,7 @@ import SubscribeCallout from './SubscribeCallout'
 import { getSelectedDiscussionPreference } from './SubscribeDebate'
 import withMe from '../../lib/apollo/withMe'
 import { DISCUSSION_PREFERENCES_QUERY } from '../Discussion/graphql/queries/DiscussionPreferencesQuery.graphql'
-import EventObjectType from '../ActionBar/graphql/EventObjectType'
+import EventObjectType from '../../lib/graphql-types/EventObjectType'
 import { IconNotifications, IconNotificationsNone } from '@republik/icons'
 
 const checkIfSubscribedToAny = ({ data, subscriptions, showAuthorFilter }) =>
