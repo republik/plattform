@@ -18,6 +18,7 @@ import {
   questionColor,
   QUESTIONS,
   QUESTIONNAIRE_SQUARE_IMG_URL,
+  QUESTION_TYPES,
 } from './config'
 import { QuestionSummaryChart } from '../Questionnaire/Submissions/QuestionChart'
 import { PUBLIC_BASE_URL, ASSETS_SERVER_BASE_URL } from '../../lib/constants'
@@ -39,9 +40,7 @@ export const SubmissionsOverview = ({ submissionData }) => {
           return (
             <QuestionFeatured
               key={groupQuestions[0].key}
-              questionSlug={groupQuestions[0].values[0].questionSlug}
-              questionType={groupQuestions[0].values[0].type}
-              question={groupQuestions[0]}
+              questions={groupQuestions}
               bgColor={questionColor(idx)}
             />
           )
@@ -53,12 +52,10 @@ export const SubmissionsOverview = ({ submissionData }) => {
 
 export default SubmissionsOverview
 
-const QuestionFeatured = ({
-  question,
-  bgColor,
-  questionSlug,
-  questionType,
-}) => {
+const getTypeBySlug = (slug) =>
+  QUESTION_TYPES.find((q) => q.questionSlug === slug).type
+
+const QuestionFeatured = ({ questions, bgColor, questionSlug }) => {
   // const router = useRouter()
   // const { query } = router
 
@@ -68,6 +65,10 @@ const QuestionFeatured = ({
   //     scrollIntoView(questionRef.current)
   //   }
   // }, [])
+
+  const questionTypes = questions.map((q) => getTypeBySlug(q.key))
+
+  const hasTextAnswer = questionTypes.includes('text')
 
   return (
     <div
@@ -81,13 +82,15 @@ const QuestionFeatured = ({
       }}
     >
       <Container>
-        {questionType === 'text' ? (
-          <AnswerGridOverview question={question} />
-        ) : (
-          <AnswersChart question={question} />
-        )}
+        {questions.map((q) => {
+          return getTypeBySlug(q.key) === 'text' ? (
+            <AnswerGridOverview question={q} />
+          ) : getTypeBySlug(q.key) === 'choice' ? (
+            <AnswersChart question={q} />
+          ) : null
+        })}
 
-        {questionType === 'text' && (
+        {hasTextAnswer && (
           <NarrowContainer>
             <Interaction.P style={{ textAlign: 'center' }}>
               <QuestionLink questionSlug={questionSlug}>
@@ -106,7 +109,7 @@ const AnswerGridOverview = ({ question }) => {
     <>
       <NarrowContainer>
         <Editorial.Subhead style={{ textAlign: 'center' }}>
-          {question.key}
+          {question.values[0].question}
         </Editorial.Subhead>
         {/* {hint && (
           <Interaction.P style={{ textAlign: 'center', fontSize: '1em' }}>
@@ -178,7 +181,7 @@ const AnswersChart = ({ question, skipTitle }) => {
       <div style={{ marginTop: 20 }}>
         {!skipTitle && (
           <Editorial.Subhead style={{ textAlign: 'center' }}>
-            {question.key}
+            {question.values[0].question}
           </Editorial.Subhead>
         )}
         <div style={{ marginTop: 20 }}>

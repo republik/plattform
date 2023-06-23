@@ -29,9 +29,9 @@ export const QUESTIONS: QuestionConfigOrder[] = [
   {
     questionSlugs: [
       'welche-partei-musste-aus-ihrer-sicht-neu-gegrundet-werden',
+      'ihr-grundsatz',
     ],
   },
-  { questionSlugs: ['ihr-grundsatz'] },
   { questionSlugs: ['wo-geben-sie-gern-nach'] },
   {
     questionSlugs: [
