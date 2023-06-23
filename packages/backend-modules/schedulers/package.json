@@ -17,6 +17,8 @@
   },
   "homepage": "https://github.com/republik/plattform#readme",
   "scripts": {
+    "dev": "tsc -w",
+    "build": "tsc",
     "link": "yarn link"
   },
   "dependencies": {
