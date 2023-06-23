@@ -21,6 +21,7 @@ import { useGlobalAudioState } from '../globalAudioState'
 import useAudioQueue from '../hooks/useAudioQueue'
 import { AudioPlayerLocations } from '../types/AudioActionTracking'
 import Info from './Info'
+import { AUDIO_PLAYER_WRAPPER_ID } from './constants'
 
 const styles = {
   container: css({
@@ -95,6 +96,7 @@ export const ArticleAudioPlayer = ({ document }: Props) => {
   return (
     <div {...styles.container} {...colorScheme.set('background', 'hover')}>
       <IconButton
+        aria-controls={AUDIO_PLAYER_WRAPPER_ID}
         Icon={itemPlaying ? IconPauseCircleOutline : IconPlayCircleOutline}
         size={42}
         title={t(`styleguide/AudioPlayer/${isPlaying ? 'pause' : 'play'}`)}
