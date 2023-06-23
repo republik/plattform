@@ -14,12 +14,12 @@ import {
 import { css } from 'glamor'
 import { useEffect, useState } from 'react'
 import { useTranslation } from '../../../lib/withT'
-import Time from '../../Audio/AudioPlayer/ui/Time'
-import { useAudioContext } from '../../Audio/AudioProvider'
-import { useMediaProgress } from '../../Audio/MediaProgress'
-import { useGlobalAudioState } from '../../Audio/globalAudioState'
-import useAudioQueue from '../../Audio/hooks/useAudioQueue'
-import { AudioPlayerLocations } from '../../Audio/types/AudioActionTracking'
+import Time from './ui/Time'
+import { useAudioContext } from '../AudioProvider'
+import { useMediaProgress } from '../MediaProgress'
+import { useGlobalAudioState } from '../globalAudioState'
+import useAudioQueue from '../hooks/useAudioQueue'
+import { AudioPlayerLocations } from '../types/AudioActionTracking'
 import Info from './Info'
 
 const styles = {

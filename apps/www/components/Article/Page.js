@@ -83,7 +83,7 @@ import ArticleRecommendationsFeed from './ArticleRecommendationsFeed'
 import TeaserAudioPlayButton from '../Audio/shared/TeaserAudioPlayButton'
 import useAudioQueue from '../Audio/hooks/useAudioQueue'
 import { IconEdit } from '@republik/icons'
-import { ArticleAudioPlayer } from '../ActionBar/Audio/ArticleAudioPlayer'
+import { ArticleAudioPlayer } from '../Audio/AudioPlayer/ArticleAudioPlayer'
 
 const LoadingComponent = () => <SmallLoader loading />
 

@@ -15,10 +15,10 @@ import {
 
 import { intersperse } from '../../../lib/utils/helpers'
 import { useTranslation } from '../../../lib/withT'
-import EventObjectType from '../graphql/EventObjectType'
+import EventObjectType from '../../ActionBar/graphql/EventObjectType'
 
-import useSubscribeDocumentMutation from '../graphql/useSubscribeDocumentMutation'
-import useUnsubscribeDocumentMutation from '../graphql/useUnsubscribeDocumentMutation'
+import useSubscribeDocumentMutation from '../../ActionBar/graphql/useSubscribeDocumentMutation'
+import useUnsubscribeDocumentMutation from '../../ActionBar/graphql/useUnsubscribeDocumentMutation'
 
 const styles = {
   audioInfo: css({
