@@ -23,6 +23,10 @@ type QuestionConfigType = {
   questionSlug: string
   type: string
   options?: string[]
+  answerLength?: {
+    min?: number
+    max?: number
+  }
 }
 
 export const QUESTIONS: QuestionConfigOrder[] = [
@@ -46,18 +50,22 @@ export const QUESTION_TYPES: QuestionConfigType[] = [
   {
     questionSlug: 'welche-partei-musste-aus-ihrer-sicht-neu-gegrundet-werden',
     type: 'text',
+    answerLength: { min: 0, max: 250 },
   },
   {
     questionSlug: 'ihr-grundsatz',
     type: 'text',
+    answerLength: { min: 0, max: 250 },
   },
   {
     questionSlug: 'wo-geben-sie-gern-nach',
     type: 'text',
+    answerLength: { min: 0, max: 250 },
   },
   {
     questionSlug: 'ab-welcher-ferien-destinations-distanz-ist-fliegen-erlaubt',
     type: 'text',
+    answerLength: { min: 0, max: 250 },
   },
   {
     questionSlug: 'ihr-verhaltnis-zu-sand',
@@ -67,6 +75,7 @@ export const QUESTION_TYPES: QuestionConfigType[] = [
   {
     questionSlug: 'es-ist-ein-tag-vor-ferienende-ihre-stimmung',
     type: 'text',
+    answerLength: { min: 0, max: 250 },
   },
 ]
 

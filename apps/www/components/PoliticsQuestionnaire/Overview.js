@@ -55,6 +55,9 @@ export default SubmissionsOverview
 const getTypeBySlug = (slug) =>
   QUESTION_TYPES.find((q) => q.questionSlug === slug).type
 
+const getAnswerLenghtBySlug = (slug) =>
+  QUESTION_TYPES.find((q) => q.questionSlug === slug).answerLength
+
 const QuestionFeatured = ({ questions, bgColor, questionSlug }) => {
   // const router = useRouter()
   // const { query } = router
@@ -119,32 +122,38 @@ const AnswerGridOverview = ({ question }) => {
       </NarrowContainer>
       <ColorContextProvider localColorVariables={colors} colorSchemeKey='light'>
         <AnswersGrid>
-          {question.values.map(({ uuid, answer, name }) => (
-            <AnswersGridCard key={uuid}>
-              <SubmissionLink id={uuid}>
-                <a style={{ textDecoration: 'none' }}>
-                  <div {...styles.answerCard}>
-                    <div>
-                      <Editorial.Question style={{ marginTop: 0 }}>
-                        {inQuotes(answer)}
-                      </Editorial.Question>
-                      <Editorial.Credit
-                        style={{
-                          marginTop: '0',
-                          paddingTop: '20px',
-                        }}
-                      >
-                        Von{' '}
-                        <span style={{ textDecoration: 'underline' }}>
-                          {name}
-                        </span>
-                      </Editorial.Credit>
+          {question.values
+            .filter(
+              ({ answer }) =>
+                answer.length > getAnswerLenghtBySlug(question.key).min &&
+                answer.length < getAnswerLenghtBySlug(question.key).max,
+            )
+            .map(({ uuid, answer, name }) => (
+              <AnswersGridCard key={uuid}>
+                <SubmissionLink id={uuid}>
+                  <a style={{ textDecoration: 'none' }}>
+                    <div {...styles.answerCard}>
+                      <div>
+                        <Editorial.Question style={{ marginTop: 0 }}>
+                          {inQuotes(answer)}
+                        </Editorial.Question>
+                        <Editorial.Credit
+                          style={{
+                            marginTop: '0',
+                            paddingTop: '20px',
+                          }}
+                        >
+                          Von{' '}
+                          <span style={{ textDecoration: 'underline' }}>
+                            {name}
+                          </span>
+                        </Editorial.Credit>
+                      </div>
                     </div>
-                  </div>
-                </a>
-              </SubmissionLink>
-            </AnswersGridCard>
-          ))}
+                  </a>
+                </SubmissionLink>
+              </AnswersGridCard>
+            ))}
         </AnswersGrid>
       </ColorContextProvider>
     </>
