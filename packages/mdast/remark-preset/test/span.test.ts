@@ -46,4 +46,32 @@ describe('spans', () => {
       stringify(rootNode)
     }).toThrow()
   })
+
+  test('span data contains equal sign', () => {
+    const md = '<span data-attr="foo=bar">child</span>\n'
+    const rootNode = parse(md)
+
+    const { data } = rootNode.children[0].children[0]
+
+    expect(data.attr).toEqual('foo=bar')
+  })
+
+  test('span data contains multiple equal signs', () => {
+    const md = '<span data-attr="foo=bar, fizz=buzz">child</span>\n'
+    const rootNode = parse(md)
+
+    const { data } = rootNode.children[0].children[0]
+
+    expect(data.attr).toEqual('foo=bar, fizz=buzz')
+  })
+
+  test('span data contains data attribute resembling data', () => {
+    const md =
+      '<span data-attr="data-hero=&#x22;Spiderman&#x22;">child</span>\n'
+    const rootNode = parse(md)
+
+    const { data } = rootNode.children[0].children[0]
+
+    expect(data.attr).toEqual('data-hero="Spiderman"')
+  })
 })
