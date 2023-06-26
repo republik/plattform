@@ -8,7 +8,7 @@ Zum Fragebogen
 
 Sollte dieser Button nicht funktionieren, kopieren Sie bitte den folgenden Link in Ihren Browser: https://tally.so/r/mRd8Bv?uuid={{UUID}}&email={{email}}
 
-Haben Sie noch Fragen? Wir stehen Ihnen gerne unter kontakt@republik.ch zur Verfügung. 
+Haben Sie noch Fragen? Wir stehen Ihnen gerne unter fragebogen-wahlen@republik.ch zur Verfügung. 
 
 Ihre Crew der Republik
 
@@ -17,4 +17,4 @@ Ihre Crew der Republik
 Republik AG
 Sihlhallenstrasse 1, CH-8004 Zürich
 https://republik.ch
-kontakt@republik.ch
+fragebogen-wahlen@republik.ch
