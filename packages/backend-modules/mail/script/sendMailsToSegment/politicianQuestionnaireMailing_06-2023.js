@@ -25,7 +25,7 @@ const argv = yargs
   })
   .option('file', {
     default:
-      '/home/luciana-republik/plattform/packages/backend-modules/mail/script/sendMailsToSegment/test_politicians.csv',
+      'packages/backend-modules/mail/script/sendMailsToSegment/test_politicians.csv',
   })
   .help()
   .version().argv
