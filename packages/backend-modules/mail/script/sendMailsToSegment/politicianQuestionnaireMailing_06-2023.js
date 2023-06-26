@@ -36,7 +36,7 @@ if (argv.dryRun) {
 
 const mailInfo = {
   message: {
-    subject: 'Berichterstattung Nationalratswahlen - Unsere Fragen an Sie',
+    subject: 'Sommerfragebogen der Republik für Politikerinnen',
     templateName: 'access_recipient_questionnaire_politician',
   },
 }
