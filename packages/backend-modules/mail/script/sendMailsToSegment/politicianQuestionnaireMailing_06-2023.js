@@ -36,7 +36,7 @@ if (argv.dryRun) {
 
 const mailInfo = {
   message: {
-    subject: 'Sommerfragebogen der Republik für Politikerinnen',
+    subject: 'Republik-Wahl-Umfrage',
     templateName: 'access_recipient_questionnaire_politician',
   },
 }
