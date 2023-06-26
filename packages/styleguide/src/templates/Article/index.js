@@ -39,6 +39,7 @@ import createBlocks from './blocks'
 import createTeasers from './teasers'
 import createDynamicComponent from './dynamicComponent'
 import TeaserEmbedComment from '../../components/TeaserEmbedComment'
+import StoryComponent from '../../../../StoryComponent'
 
 const getProgressId = (node, index, parent, { ancestors }) => {
   if (parent.identifier === 'CENTER') {
@@ -67,6 +68,9 @@ const getProgressId = (node, index, parent, { ancestors }) => {
       return index
     }
     if (node.identifier === 'DYNAMIC_COMPONENT' && ancestors.length === 1) {
+      return index
+    }
+    if (node.identifier === 'STORY_COMPONENT' && ancestors.length === 1) {
       return index
     }
   }
@@ -213,6 +217,43 @@ const createSchema = ({
     insertButtonText: 'Dynamic Component',
     type: DYNAMICCOMPONENT_TYPE,
   })
+
+  const storyComponent = {
+    matchMdast: matchZone('STORY_COMPONENT'),
+    component: ({ showException, raw = false, size, attributes, ...props }) => {
+      const content = (
+        <ErrorBoundary
+          showException={showException}
+          failureMessage={t('styleguide/DynamicComponent/error')}
+        >
+          <StoryComponent {...props} />
+        </ErrorBoundary>
+      )
+
+      if (raw) {
+        return content
+      }
+
+      return (
+        <Figure size={size} attributes={attributes}>
+          {content}
+        </Figure>
+      )
+    },
+    props: (node) => ({
+      raw: node.data.raw,
+      size: node.data.size,
+      name: node.data.name,
+      props: node.data.props,
+    }),
+    editorModule: 'dynamiccomponent',
+    editorOptions: {
+      type: 'STORYCOMPONENT', // why do we need this?
+      insertTypes: ['PARAGRAPH'],
+      insertButtonText: 'Story Component',
+    },
+    isVoid: true,
+  }
 
   const TeaserEmbedCommentWithLiveData = withCommentData(TeaserEmbedComment)
   const TeaserEmbedCommentSwitch = (props) => {
@@ -720,6 +761,7 @@ const createSchema = ({
                 isVoid: true,
               },
               dynamicComponent,
+              storyComponent,
             ].map(addProgressProps),
           },
           addProgressProps(base.centerFigure),
