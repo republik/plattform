@@ -4,7 +4,7 @@ import DynamicComponent from '../../components/DynamicComponent'
 import ErrorBoundary from '../../components/ErrorBoundary'
 import { Figure } from '../../components/Figure'
 
-import { matchZone } from 'mdast-react-render/lib/utils'
+import { matchZone } from '@republik/mdast-react-render'
 
 const createDynamicComponent = ({
   t,

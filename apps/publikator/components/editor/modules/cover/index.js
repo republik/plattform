@@ -2,7 +2,7 @@ import { matchBlock } from '../../utils'
 import { findOrCreate } from '../../utils/serialization'
 import { gray2x1 } from '../../utils/placeholder'
 import { createCoverForm } from './ui'
-import MarkdownSerializer from 'slate-mdast-serializer'
+import MarkdownSerializer from '@republik/slate-mdast-serializer'
 
 export default ({ rule, subModules, TYPE }) => {
   const titleModule = subModules.find((m) => m.name === 'headline')

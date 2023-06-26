@@ -6,7 +6,7 @@ import Promise from 'bluebird'
 import moment from 'moment'
 import _debug from 'debug'
 
-const { parse: mdastParse } = require('@orbiting/remark-preset')
+const { parse: mdastParse } = require('@republik/remark-preset')
 
 const {
   lib: { ConnectionContext },

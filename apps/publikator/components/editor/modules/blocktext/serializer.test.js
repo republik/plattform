@@ -1,4 +1,4 @@
-import { parse, stringify } from '@orbiting/remark-preset'
+import { parse, stringify } from '@republik/remark-preset'
 
 import createBlockquoteModule from './'
 import createParagraphModule from '../paragraph'

@@ -1,4 +1,4 @@
-import { matchParagraph, matchZone } from 'mdast-react-render/lib/utils'
+import { matchParagraph, matchZone } from '@republik/mdast-react-render'
 import { Note, NoteParagraph } from '../components/Note'
 import inlineRules from './inlineRules'
 import { linkRule } from './linkRule'

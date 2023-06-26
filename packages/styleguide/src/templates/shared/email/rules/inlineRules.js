@@ -1,5 +1,5 @@
 import React from 'react'
-import { matchType } from 'mdast-react-render/lib/utils'
+import { matchType } from '@republik/mdast-react-render'
 import Sup from '../components/Sup'
 import Sub from '../components/Sub'
 

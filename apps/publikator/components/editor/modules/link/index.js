@@ -1,5 +1,5 @@
 import { matchInline } from '../../utils'
-import MarkdownSerializer from 'slate-mdast-serializer'
+import MarkdownSerializer from '@republik/slate-mdast-serializer'
 import { EXPANDABLE_LINK_SEPARATOR as SEPARATOR } from '@project-r/styleguide'
 
 import createUi from './ui'

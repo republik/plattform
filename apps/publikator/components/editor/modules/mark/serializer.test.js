@@ -1,5 +1,5 @@
 import { paragraphModule } from './testUtils'
-import { parse, stringify } from '@orbiting/remark-preset'
+import { parse, stringify } from '@republik/remark-preset'
 
 const serializer = paragraphModule.helpers.serializer
 

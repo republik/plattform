@@ -1,7 +1,6 @@
 import { BaB153Stub, ArticleStub } from './article.stub'
-import { renderEmail } from 'mdast-react-render/lib/email'
-import { renderMdast } from 'mdast-react-render'
-import { parse } from '@orbiting/remark-preset'
+import { renderMdast, renderEmail } from '@republik/mdast-react-render'
+import { parse } from '@republik/remark-preset'
 import articleEmailSchema from '../email'
 import createSchema from '../index'
 

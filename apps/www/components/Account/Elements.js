@@ -32,7 +32,7 @@ const styles = {
 const { H3 } = Interaction
 
 const hourFormat = timeFormat('%H:%M')
-const dayFormat = timeFormat('%d. %B %Y')
+const dayFormat = timeFormat('%-d. %B %Y')
 
 export const Item = withT(
   ({ t, highlighted, title, createdAt, children, compact }) => {

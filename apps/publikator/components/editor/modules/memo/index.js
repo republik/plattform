@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import compose from 'lodash/flowRight'
-import MarkdownSerializer from 'slate-mdast-serializer'
+import MarkdownSerializer from '@republik/slate-mdast-serializer'
 import {
   Editorial,
   Overlay,

@@ -1,0 +1,43 @@
+Guten Tag
+
+Vielen Dank für Ihre Bestellung.
+
+   {{#options}}
+ * {{#if this.hasMultipleOAmounts}} {{this.oamount}} {{this.olabel}} à
+   {{this.oprice_formatted}}: {{this.ototal_formatted}} {{else}}
+   {{this.oamount}} {{this.olabel}}: {{this.ototal_formatted}} {{/if}}
+   {{/options}} {{#if discount}}
+ * Gewünschte Preisreduktion: –{{discount_formatted}}
+   {{/if}} {{#if donation}}
+ * Spende: {{donation_formatted}}
+   {{/if}}
+ * Total: {{total_formatted}}
+
+Der Versand erfolgt innerhalb von 7 Tagen{{#if paymentslip}} nach
+Zahlungseingang{{/if}}.
+
+{{#if paymentslip}}
+
+Zahlungsinformationen:
+
+ * IBAN: {{iban}}
+ * Referenz: {{reference}}
+ * Betrag: {{total_formatted}}
+ * Zahlbar bis: {{due_date}}
+
+Anbei finden Sie eine QR-Rechnung.
+
+Die QR-Rechnung ersetzt den Einzahlungsschein. Sie können damit die Zahlung via
+Mobile Banking, E-Banking oder am Schalter bei Bank und Post auslösen.
+
+{{/if}}
+
+Herzlich
+
+Ihre Crew der Republik
+
+
+Republik AG
+Sihlhallenstrasse 1, CH-8004 Zürich
+{{frontend_base_url}}
+kontakt@republik.ch

@@ -506,7 +506,10 @@ const LoadedProfile = (props) => {
           <div {...styles.headInfo}>
             {!!user.hasPublicProfile && (
               <span {...styles.headInfoShare}>
-                <ActionBar share={shareObject} download={metaData.image} />
+                <ActionBar
+                  share={shareObject}
+                  download={isMe ? metaData.image : undefined}
+                />
                 {!isMe && (
                   <div {...styles.headInfoReportButton}>
                     <IconButton

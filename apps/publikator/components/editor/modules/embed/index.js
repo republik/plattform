@@ -1,4 +1,4 @@
-import MarkdownSerializer from 'slate-mdast-serializer'
+import MarkdownSerializer from '@republik/slate-mdast-serializer'
 
 import { matchBlock } from '../../utils'
 import { findOrCreate } from '../../utils/serialization'
@@ -9,7 +9,7 @@ import EmbedLoader from './EmbedLoader'
 
 import { gql } from '@apollo/client'
 import { FRONTEND_BASE_URL } from '../../../../lib/settings'
-import { stringify, parse } from '@orbiting/remark-preset'
+import { stringify, parse } from '@republik/remark-preset'
 import InlineUI from '../../utils/InlineUI'
 import { withApollo } from '@apollo/client/react/hoc'
 

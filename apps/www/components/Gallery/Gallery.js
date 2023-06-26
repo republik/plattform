@@ -2,7 +2,7 @@ import { useRef, useEffect, useMemo } from 'react'
 import compose from 'lodash/flowRight'
 import PhotoSwipe from 'photoswipe'
 import PhotoSwipeUIDefault from 'photoswipe/dist/photoswipe-ui-default'
-import { imageSizeInfo, imageResizeUrl } from 'mdast-react-render/lib/utils'
+import { imageSizeInfo, imageResizeUrl } from '@republik/mdast-react-render'
 import { Spinner } from '@project-r/styleguide'
 
 import withT from '../../lib/withT'

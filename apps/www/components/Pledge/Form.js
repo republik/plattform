@@ -213,7 +213,7 @@ class Pledge extends Component {
       packageName: pkg ? pkg.name : undefined,
       forceAutoPay: pkg ? pkg.name === 'MONTHLY_ABO' : undefined,
       requiresStatutes: pkg
-        ? !['YEARLY_ABO', 'MONTHLY_ABO', 'DONATE'].includes(pkg.name)
+        ? !['YEARLY_ABO', 'MONTHLY_ABO', 'DONATE', 'LESHA'].includes(pkg.name)
         : undefined,
       paymentMethods: pkg ? pkg.paymentMethods : undefined,
       total: values.price || undefined,
@@ -331,7 +331,10 @@ class Pledge extends Component {
               queryGroup && `pledge/meta/group/${queryGroup}/description`,
               'pledge/meta/description',
             ]),
-            image: `${CDN_FRONTEND_BASE_URL}/static/social-media/logo.png`,
+            image:
+              pkg?.name === 'LESHA'
+                ? `${CDN_FRONTEND_BASE_URL}/static/social-media/we_stay.jpg`
+                : `${CDN_FRONTEND_BASE_URL}/static/social-media/logo.png`,
           })
 
     return (
@@ -428,9 +431,11 @@ class Pledge extends Component {
                       ownMembership={ownMembership}
                       customMe={customMe}
                       userPrice={userPrice}
-                      fixedPrice={['MONTHLY_ABO', 'YEARLY_ABO'].includes(
-                        pkg.name,
-                      )}
+                      fixedPrice={[
+                        'MONTHLY_ABO',
+                        'YEARLY_ABO',
+                        'LESHA',
+                      ].includes(pkg.name)}
                       pkg={pkg}
                       packages={packages}
                       onChange={(fields) => {
