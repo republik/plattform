@@ -41,7 +41,7 @@
               <tbody>
                 <tr>
                   <td style="padding: 20px">
-                    <p>Guten Tag, {{firstname}} {{lastname}}</p>
+                    <p>Guten Tag {{firstname}} {{lastname}},</p>
                     <p>
                       Sie beabsichtigen, sich bei den Parlamentswahlen im Herbst von der Bevölkerung wählen zu lassen. Die Bevölkerung wiederum beabsichtigt – zumindest unterstellen wir ihr das –, zuerst noch ein bisschen mehr über Sie zu erfahren. Wofür Sie wirklich stehen, zum Beispiel. Was Sie politisch zur Weissglut bringt. Und: Ab welcher Destination erlauben Sie sich einen Flug in die Ferien?
                     </p>
@@ -60,7 +60,7 @@
                             <tr>
                               <td align="center" bgcolor="#3CAD00">
                                 <a
-                                  href="https://tally.so/r/mRd8Bv?uuid={{UUID}}&email={{email}}"
+                                  href="{{link}}"
                                   style="font-size:20px;{{sg_font_style_sans_serif_regular}}color:#ffffff;text-decoration:none;border-radius:0;padding:15px 30px 15px 30px;border:1px solid #3CAD00;display:inline-block;"
                                   >Zum Fragebogen</a
                                 >
@@ -73,8 +73,8 @@
                     <br />
                     <p>
                       Sollte dieser Button nicht funktionieren, kopieren Sie bitte den folgenden Link in Ihren Browser: 
-                      <a href="https://tally.so/r/mRd8Bv?uuid={{UUID}}&email={{email}}"
-                        >https://tally.so/r/mRd8Bv?uuid={{UUID}}&email={{email}}</a
+                      <a href="{{link}}"
+                        >{{link}}</a
                       >.
                     </p>
                     
