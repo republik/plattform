@@ -1,5 +1,5 @@
 {
-  "name": "@republik/stories-example",
+  "name": "@republik/stories-example-blue",
   "version": "0.0.1",
   "description": "renders a story component based on its name",
   "private": true,
@@ -7,8 +7,8 @@
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "tsup src/index.ts --format cjs,esm --dts --minify --clean --out-dir dist",
-    "dev": "tsup src/index.ts --format cjs,esm --dts --minify --clean --out-dir dist --sourcemap --watch"
+    "build": "node_modules/.bin/tsup src/index.ts --format cjs,esm --dts --minify --clean --out-dir dist",
+    "dev": "node_modules/.bin/tsup src/index.ts --format cjs,esm --dts --minify --clean --out-dir dist --sourcemap --watch"
   },
   "devDependencies": {
     "@republik/tsconfig": "*",

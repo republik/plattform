@@ -1,132 +1,126 @@
-import { Component, Fragment } from 'react'
+import { Fragment } from 'react'
 import { fromJS } from 'immutable'
 
-import OverlayFormManager from '../../utils/OverlayFormManager'
-import { JSONEditor } from '../../utils/CodeEditorFields'
-
 import { Interaction, Label, Radio } from '@project-r/styleguide'
+import { STORY_NAMES } from '@republik/story-loader'
 
-class Form extends Component {
-  constructor(...args) {
-    super(...args)
-    this.state = {}
-  }
+import { JSONEditor } from '../../utils/CodeEditorFields'
+import OverlayFormManager from '../../utils/OverlayFormManager'
 
-  render() {
-    const { data, onChange, editor, node } = this.props
-    const config = data.toJS()
-    const parent = editor.value.document.getParent(node.key)
+const Form = ({ data, onChange, editor, node }) => {
+  const config = data.toJS()
+  const parent = editor.value.document.getParent(node.key)
 
-    return (
-      <Fragment>
-        <Interaction.P>
-          <Label>Size</Label>
-          <br />
-          {[
-            {
-              label: 'Edge to Edge',
-              props: { size: undefined },
-              parent: {
-                kinds: ['document', 'block'],
-                types: ['CENTER'],
-              },
-              unwrap: true,
+  return (
+    <Fragment>
+      <Interaction.P>
+        <Label>Size</Label>
+        <br />
+        {[
+          {
+            label: 'Edge to Edge',
+            props: { size: undefined },
+            parent: {
+              kinds: ['document', 'block'],
+              types: ['CENTER'],
             },
-            {
-              label: 'Gross',
-              props: { size: 'breakout' },
-              parent: {
-                kinds: ['document', 'block'],
-                types: ['CENTER'],
-              },
-              wrap: 'CENTER',
+            unwrap: true,
+          },
+          {
+            label: 'Gross',
+            props: { size: 'breakout' },
+            parent: {
+              kinds: ['document', 'block'],
+              types: ['CENTER'],
             },
-            {
-              label: 'Normal',
-              props: { size: undefined },
-              parent: {
-                kinds: ['document', 'block'],
-                types: ['CENTER'],
-              },
-              wrap: 'CENTER',
+            wrap: 'CENTER',
+          },
+          {
+            label: 'Normal',
+            props: { size: undefined },
+            parent: {
+              kinds: ['document', 'block'],
+              types: ['CENTER'],
             },
-            {
-              label: 'Klein',
-              props: { size: 'narrow' },
-              parent: {
-                kinds: ['document', 'block'],
-                types: ['CENTER'],
-              },
-              wrap: 'CENTER',
+            wrap: 'CENTER',
+          },
+          {
+            label: 'Klein',
+            props: { size: 'narrow' },
+            parent: {
+              kinds: ['document', 'block'],
+              types: ['CENTER'],
             },
-            {
-              label: 'Links',
-              props: { size: 'floatTiny' },
-              parent: {
-                kinds: ['document', 'block'],
-                types: ['CENTER'],
-              },
-              wrap: 'CENTER',
+            wrap: 'CENTER',
+          },
+          {
+            label: 'Links',
+            props: { size: 'floatTiny' },
+            parent: {
+              kinds: ['document', 'block'],
+              types: ['CENTER'],
             },
-          ].map((size) => {
-            let checked = Object.keys(size.props).every(
-              (key) => data.get(key) === size.props[key],
-            )
-            if (size.unwrap) {
-              checked = checked && parent.kind === 'document'
-            }
-            if (size.wrap) {
-              checked = checked && parent.type === size.wrap
-            }
+            wrap: 'CENTER',
+          },
+        ].map((size) => {
+          let checked = Object.keys(size.props).every(
+            (key) => data.get(key) === size.props[key],
+          )
+          if (size.unwrap) {
+            checked = checked && parent.kind === 'document'
+          }
+          if (size.wrap) {
+            checked = checked && parent.type === size.wrap
+          }
 
-            return (
-              <Radio
-                key={size.label}
-                checked={checked}
-                onChange={(event) => {
-                  event.preventDefault()
-                  if (checked) {
-                    return
-                  }
+          return (
+            <Radio
+              key={size.label}
+              checked={checked}
+              onChange={(event) => {
+                event.preventDefault()
+                if (checked) {
+                  return
+                }
 
-                  editor.change((change) => {
-                    change.setNodeByKey(node.key, {
-                      data: data.merge(size.props),
-                    })
-                    if (size.unwrap) {
-                      for (
-                        let i = change.value.document.getDepth(node.key);
-                        i > 1;
-                        i--
-                      ) {
-                        change = change.unwrapNodeByKey(node.key)
-                      }
-                    } else if (size.wrap && parent.type !== size.wrap) {
-                      change = change.wrapBlockByKey(node.key, {
-                        type: size.wrap,
-                      })
-                    }
+                editor.change((change) => {
+                  change.setNodeByKey(node.key, {
+                    data: data.merge(size.props),
                   })
-                }}
-                style={{ marginRight: 15 }}
-              >
-                {size.label}
-              </Radio>
-            )
-          })}
-        </Interaction.P>
-        <Interaction.P>
-          <JSONEditor
-            label='Config'
-            config={config}
-            onChange={(value) => {
-              onChange(fromJS(value))
-            }}
-          />
-        </Interaction.P>
-      </Fragment>
-    )
-  }
+                  if (size.unwrap) {
+                    for (
+                      let i = change.value.document.getDepth(node.key);
+                      i > 1;
+                      i--
+                    ) {
+                      change = change.unwrapNodeByKey(node.key)
+                    }
+                  } else if (size.wrap && parent.type !== size.wrap) {
+                    change = change.wrapBlockByKey(node.key, {
+                      type: size.wrap,
+                    })
+                  }
+                })
+              }}
+              style={{ marginRight: 15 }}
+            >
+              {size.label}
+            </Radio>
+          )
+        })}
+      </Interaction.P>
+      <Interaction.P>{STORY_NAMES}</Interaction.P>
+      <Interaction.P>
+        <JSONEditor
+          label='Config'
+          config={config}
+          onChange={(value) => {
+            onChange(fromJS(value))
+          }}
+        />
+      </Interaction.P>
+    </Fragment>
+  )
 }
 
 const EditOverlay = (props) => {

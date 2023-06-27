@@ -7,11 +7,12 @@
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "tsup src/index.ts --format cjs,esm --dts --minify --clean --out-dir dist",
-    "dev": "tsup src/index.ts --format cjs,esm --dts --minify --clean --out-dir dist --sourcemap --watch"
+    "build": "node_modules/.bin/tsup src/index.ts --format cjs,esm --dts --minify --clean --out-dir dist",
+    "dev": "node_modules/.bin/tsup src/index.ts --format cjs,esm --dts --minify --clean --out-dir dist --sourcemap --watch"
   },
   "dependencies": {
-    "@republik/stories-example": "*"
+    "@republik/stories-example-pink": "*",
+    "@republik/stories-example-blue": "*"
   },
   "devDependencies": {
     "@republik/tsconfig": "*",

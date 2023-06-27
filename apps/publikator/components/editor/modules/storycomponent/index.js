@@ -1,19 +1,19 @@
 import { cloneElement, useContext } from 'react'
 import { Block } from 'slate'
 
-import { matchBlock } from '../../utils'
-import MarkdownSerializer from '@republik/slate-mdast-serializer'
-
-import createUi from './ui'
-
-import EditOverlay from './EditOverlay'
-
-import InlineUI, { MarkButton } from '../../utils/InlineUI'
 import { IconEdit as MdEdit } from '@republik/icons'
+import MarkdownSerializer from '@republik/slate-mdast-serializer'
+import { STORY_NAMES } from '@republik/story-loader'
+
+import { matchBlock } from '../../utils'
+import InlineUI, { MarkButton } from '../../utils/InlineUI'
 import {
   OverlayFormContext,
   OverlayFormContextProvider,
 } from '../../utils/OverlayFormContext'
+
+import EditOverlay from './EditOverlay'
+import createUi from './ui'
 
 const CustomUi = ({ editor, node, TYPE }) => {
   const { setShowModal } = useContext(OverlayFormContext)
@@ -61,16 +61,14 @@ const StoryComponent = ({ rule, TYPE }) => {
 
   const Component = rule.component
 
-  const newItem = () => {
-    console.log('newItem', { TYPE })
-    return Block.create({
+  const newItem = () =>
+    Block.create({
       type: TYPE,
       isVoid: true,
       data: {
-        name: '@republik/stories-example',
+        name: STORY_NAMES[0],
       },
     })
-  }
 
   return {
     TYPE,
