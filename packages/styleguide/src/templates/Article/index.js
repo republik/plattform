@@ -39,7 +39,7 @@ import createBlocks from './blocks'
 import createTeasers from './teasers'
 import createDynamicComponent from './dynamicComponent'
 import TeaserEmbedComment from '../../components/TeaserEmbedComment'
-import StoryComponent from '../../../../StoryComponent'
+import StoryComponent from '@republik/story-loader'
 
 const getProgressId = (node, index, parent, { ancestors }) => {
   if (parent.identifier === 'CENTER') {

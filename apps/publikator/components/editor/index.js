@@ -46,6 +46,7 @@ import createArticleGroup from './modules/article/group'
 import createChartModule from './modules/chart'
 import createChartCanvasModule from './modules/chart/canvas'
 import createDynamicComponentModule from './modules/dynamiccomponent'
+import createStoryComponentModule from './modules/storycomponent'
 import createLiveTeaserModule from './modules/liveteaser'
 import createButtonModule from './modules/button'
 import createVariableModule from './modules/variable'
@@ -93,6 +94,7 @@ const moduleCreators = {
   chart: createChartModule,
   chartCanvas: createChartCanvasModule,
   dynamiccomponent: createDynamicComponentModule,
+  storycomponent: createStoryComponentModule,
   liveteaser: createLiveTeaserModule,
   button: createButtonModule,
   variable: createVariableModule,

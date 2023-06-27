@@ -22,6 +22,9 @@ export default ({ rule, subModules, TYPE }) => {
   const dynamicComponentModule = subModules.find(
     (m) => m.name === 'dynamiccomponent',
   )
+  const storyComponentModule = subModules.find(
+    (m) => m.name === 'storycomponent',
+  )
 
   const childSerializer = new MarkdownSerializer({
     rules: subModules
@@ -226,6 +229,11 @@ ${titleModule ? 'Text' : title}
                 min: 0,
                 max: 1,
               },
+              storyComponentModule && {
+                types: [storyComponentModule.TYPE],
+                min: 0,
+                max: 1,
+              },
               figureModule && {
                 types: [figureModule.TYPE],
                 min: 0,
@@ -248,6 +256,7 @@ ${titleModule ? 'Text' : title}
                 titleModule && titleModule.TYPE,
                 figureModule && figureModule.TYPE,
                 dynamicComponentModule && dynamicComponentModule.TYPE,
+                storyComponentModule && storyComponentModule.TYPE,
               ].filter(Boolean),
             },
             last: {
