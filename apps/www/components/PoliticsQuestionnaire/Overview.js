@@ -1,6 +1,6 @@
 import { css } from 'glamor'
 import Link from 'next/link'
-import { useRouter } from 'next/router'
+import { useState } from 'react'
 
 import Frame from '../Frame'
 
@@ -12,26 +12,49 @@ import {
   Interaction,
   NarrowContainer,
   Container,
+  Dropdown,
 } from '@project-r/styleguide'
 
-import {
-  questionColor,
-  QUESTIONS,
-  QUESTIONNAIRE_SQUARE_IMG_URL,
-  QUESTION_TYPES,
-} from './config'
+import { questionColor, QUESTIONS, QUESTION_TYPES } from './config'
 import { QuestionSummaryChart } from '../Questionnaire/Submissions/QuestionChart'
-import { PUBLIC_BASE_URL, ASSETS_SERVER_BASE_URL } from '../../lib/constants'
 
 import {
   AnswersGrid,
   AnswersGridCard,
 } from '../Questionnaire/Submissions/AnswersGrid'
 
+// filter needs to be this text/value object
+const CANTONS = [
+  { text: 'Alle', value: undefined },
+  { text: 'Bern', value: 'BE' },
+  { text: 'Wallis', value: 'VS' },
+  { text: 'Zug', value: 'ZG' },
+]
+
+// @Felix: if you prefer I guess a filter context could be a good solution, too
+// @Felix: i'd use this in the single question view too
+export const Filters = ({ canton, setCanton }) => (
+  <NarrowContainer>
+    <Dropdown
+      label='Kanton'
+      items={CANTONS}
+      value={canton}
+      onChange={(item) => {
+        setCanton(item)
+      }}
+    />
+  </NarrowContainer>
+)
+
 export const SubmissionsOverview = ({ submissionData }) => {
+  // @Felix: it would be cool to also set a query param for the filters, then we
+  //  can open the single answer pages with the right filters, as well as share prefiltered pages
+  // @Felix mechanics for partei filter would be exactly the same
+  const [canton, setCanton] = useState(CANTONS[0])
   return (
     <Frame raw>
       <div style={{ margin: '48px auto 0' }}>
+        <Filters canton={canton} setCanton={setCanton} />
         {QUESTIONS.map((question, idx) => {
           const groupQuestions = question.questionSlugs.map((slug) =>
             submissionData.find((d) => d.key === slug),
@@ -42,6 +65,7 @@ export const SubmissionsOverview = ({ submissionData }) => {
               key={groupQuestions[0].key}
               questions={groupQuestions}
               bgColor={questionColor(idx)}
+              canton={canton}
             />
           )
         })}
@@ -58,7 +82,7 @@ const getTypeBySlug = (slug) =>
 const getAnswerLenghtBySlug = (slug) =>
   QUESTION_TYPES.find((q) => q.questionSlug === slug).answerLength
 
-const QuestionFeatured = ({ questions, bgColor, questionSlug }) => {
+const QuestionFeatured = ({ questions, bgColor, questionSlug, canton }) => {
   // const router = useRouter()
   // const { query } = router
 
@@ -87,9 +111,9 @@ const QuestionFeatured = ({ questions, bgColor, questionSlug }) => {
       <Container>
         {questions.map((q) => {
           return getTypeBySlug(q.key) === 'text' ? (
-            <AnswerGridOverview question={q} />
+            <AnswerGridOverview question={q} canton={canton} />
           ) : getTypeBySlug(q.key) === 'choice' ? (
-            <AnswersChart question={q} />
+            <AnswersChart question={q} canton={canton} />
           ) : null
         })}
 
@@ -107,7 +131,7 @@ const QuestionFeatured = ({ questions, bgColor, questionSlug }) => {
   )
 }
 
-const AnswerGridOverview = ({ question }) => {
+const AnswerGridOverview = ({ question, canton }) => {
   return (
     <>
       <NarrowContainer>
@@ -123,11 +147,16 @@ const AnswerGridOverview = ({ question }) => {
       <ColorContextProvider localColorVariables={colors} colorSchemeKey='light'>
         <AnswersGrid>
           {question.values
-            .filter(
-              ({ answer }) =>
+            .filter(({ answer, canton: answerCanton }) => {
+              console.log({ canton, answer })
+              return (
+                // @Felix: this could be made a bit more elegant, but you catch the gist
+                (canton.value ? answerCanton === canton.value : true) &&
+                // @Felix: answer length this seems to be available with answerLength.min/max
                 answer.length > getAnswerLenghtBySlug(question.key).min &&
-                answer.length < getAnswerLenghtBySlug(question.key).max,
-            )
+                answer.length < getAnswerLenghtBySlug(question.key).max
+              )
+            })
             .map(({ uuid, answer, name }) => (
               <AnswersGridCard key={uuid}>
                 <SubmissionLink id={uuid}>
@@ -176,7 +205,10 @@ export const SubmissionLink = ({ id, children }) => {
   )
 }
 
-const AnswersChart = ({ question, skipTitle }) => {
+// @Felix: for the filter to work here we need more detailed data
+//  (i.e. individual answers, which we can filter and aggregate ourselves
+//  here depending of the value of the filters)
+const AnswersChart = ({ question, skipTitle, canton }) => {
   const totalAnswers = question.values.length
   const values = question.values[0].options.map((option) => ({
     answer: option,
@@ -184,6 +216,8 @@ const AnswersChart = ({ question, skipTitle }) => {
       question.values.filter((result) => result.answer === option).length ??
       0 / totalAnswers,
   }))
+
+  console.log('AnswerChart', { values })
 
   return (
     <NarrowContainer>
@@ -194,7 +228,10 @@ const AnswersChart = ({ question, skipTitle }) => {
           </Editorial.Subhead>
         )}
         <div style={{ marginTop: 20 }}>
-          <QuestionSummaryChart answers={values} key='answer' />
+          <QuestionSummaryChart
+            answers={values.filter((item) => true)}
+            key='answer'
+          />
         </div>
       </div>
     </NarrowContainer>
