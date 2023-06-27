@@ -1,15 +1,22 @@
-import { Fragment } from 'react'
+import { Fragment, useState } from 'react'
 import { fromJS } from 'immutable'
 
-import { Interaction, Label, Radio } from '@project-r/styleguide'
+import { Interaction, Label, Radio, Autocomplete } from '@project-r/styleguide'
 import { STORY_NAMES } from '@republik/story-loader'
 
 import { JSONEditor } from '../../utils/CodeEditorFields'
 import OverlayFormManager from '../../utils/OverlayFormManager'
 
+const storyNamesAutocomplete = STORY_NAMES.map((name) => ({
+  value: name,
+  text: name,
+}))
+
 const Form = ({ data, onChange, editor, node }) => {
-  const config = data.toJS()
+  const { name, ...config } = data.toJS()
   const parent = editor.value.document.getParent(node.key)
+  const [nameFilter, setNameFilter] = useState()
+  const [nameValue, setNameValue] = useState({ value: name, text: name })
 
   return (
     <Fragment>
@@ -109,13 +116,30 @@ const Form = ({ data, onChange, editor, node }) => {
           )
         })}
       </Interaction.P>
-      <Interaction.P>{STORY_NAMES}</Interaction.P>
+      <Interaction.P>
+        <Autocomplete
+          label='Name'
+          value={nameValue}
+          filter={nameFilter}
+          items={storyNamesAutocomplete.filter(
+            ({ text }) =>
+              !nameFilter ||
+              text.toLowerCase().includes(nameFilter.toLowerCase()),
+          )}
+          onChange={(value) => {
+            setNameValue(value)
+            let newData = data.set('name', value.value)
+            onChange(newData)
+          }}
+          onFilterChange={(filter) => setNameFilter(filter)}
+        />
+      </Interaction.P>
       <Interaction.P>
         <JSONEditor
           label='Config'
           config={config}
           onChange={(value) => {
-            onChange(fromJS(value))
+            onChange(fromJS(value).set('name', nameValue.value))
           }}
         />
       </Interaction.P>
