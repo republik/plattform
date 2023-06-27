@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import { withRouter } from 'next/router'
 import compose from 'lodash/flowRight'
 import { ColorContextProvider, VariableContext } from '@project-r/styleguide'
-import { renderMdast } from 'mdast-react-render'
+import { renderMdast } from '@republik/mdast-react-render'
 
 import Loader from '../../../../components/Loader'
 import Frame from '../../../../components/Frame'

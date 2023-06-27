@@ -1,4 +1,4 @@
-import { matchType } from 'mdast-react-render/lib/utils'
+import { matchType } from '@republik/mdast-react-render'
 
 /**
  * Get the depth relative to closest ancestor that matches the given matcher

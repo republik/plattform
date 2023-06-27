@@ -8,6 +8,14 @@
       "outputs": [
         "dist/**",
         ".next/**"
+      ],
+      "dotEnv": [
+        ".env.production.local",
+        ".env.development.local",
+        ".env.local",
+        ".env.production",
+        ".env.development",
+        ".env"
       ]
     },
     "@orbiting/backend-modules-auth#build": {
@@ -60,7 +68,13 @@
     },
     "dev": {
       "cache": false,
-      "persistent": true
+      "persistent": true,
+      "dotEnv": [
+        ".env.development.local",
+        ".env.local",
+        ".env.development",
+        ".env"
+      ]
     },
     "test": {
       "outputs": [
@@ -69,6 +83,12 @@
       "dependsOn": [
         "^build",
         "build"
+      ],
+      "dotEnv": [
+        ".env.test.local",
+        ".env.local",
+        ".env.test",
+        ".env"
       ]
     },
     "prepare": {
@@ -78,7 +98,8 @@
       ]
     }
   },
-  "globalDependencies": [
-    ".env.*"
+  "globalDotEnv": [
+    ".env.local",
+    ".env"
   ]
 }

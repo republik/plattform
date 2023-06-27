@@ -1,8 +1,8 @@
 import { matchBlock } from '../../utils'
 import { Block } from 'slate'
 
-import MarkdownSerializer from 'slate-mdast-serializer'
-import { matchImageParagraph } from 'mdast-react-render/lib/utils'
+import MarkdownSerializer from '@republik/slate-mdast-serializer'
+import { matchImageParagraph } from '@republik/mdast-react-render'
 
 import { TeaserForm } from '../teaser/ui'
 

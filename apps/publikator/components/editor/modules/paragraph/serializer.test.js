@@ -1,5 +1,5 @@
 import createParagraphModule from './'
-import { parse, stringify } from '@orbiting/remark-preset'
+import { parse, stringify } from '@republik/remark-preset'
 import { boldModule } from '../mark/testUtils'
 
 describe('paragraph serialization test-suite', () => {

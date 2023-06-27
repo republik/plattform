@@ -1,4 +1,4 @@
-import { parse } from '@orbiting/remark-preset'
+import { parse } from '@republik/remark-preset'
 
 import {
   INFOBOX_IMAGE_SIZES,

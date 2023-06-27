@@ -46,7 +46,7 @@
     "helmet": "^3.23.3",
     "lodash": "^4.17.21",
     "lodash.debounce": "^4.0.8",
-    "mdast-react-render": "^1.2.0",
+    "@republik/mdast-react-render": "*",
     "moment": "^2.29.1",
     "next": "^12.3.1",
     "next-transpile-modules": "^9.0.0",

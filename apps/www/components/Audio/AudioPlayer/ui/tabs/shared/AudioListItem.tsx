@@ -88,20 +88,20 @@ const AudioListItem = ({
   actions,
 }: AudioListItemProps) => {
   const [colorScheme] = useColorContext()
-  const { inNativeApp, inIOS } = useInNativeApp()
+  const { inNativeApp } = useInNativeApp()
 
   const { meta } = item
   const { audioSource } = meta
   const publishDate = new Date(Date.parse(meta.publishDate))
   const { data: progress } = useMediaProgressQuery({
     variables: {
-      mediaId: item?.meta.audioSource.mediaId,
+      mediaId: item?.meta?.audioSource?.mediaId,
     },
-    skip: !item?.meta.audioSource.mediaId,
+    skip: !item?.meta?.audioSource?.mediaId,
   })
 
   const durationString = formatMinutes(
-    Math.max(audioSource.durationMs / 1000, 60),
+    audioSource ? Math.max(audioSource.durationMs / 1000, 60) : 0,
   )
 
   return (
@@ -146,7 +146,7 @@ const AudioListItem = ({
                     wordBreak: 'break-all',
                   }}
                 >
-                  {item.meta.audioSource.kind === 'syntheticReadAloud' &&
+                  {item.meta?.audioSource?.kind === 'syntheticReadAloud' &&
                     'synthetisch'}
                 </span>
               </span>

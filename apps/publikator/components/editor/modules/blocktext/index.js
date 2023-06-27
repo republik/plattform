@@ -1,5 +1,5 @@
 import { matchBlock, createBlockButton, buttonStyles } from '../../utils'
-import MarkdownSerializer from 'slate-mdast-serializer'
+import MarkdownSerializer from '@republik/slate-mdast-serializer'
 import { createStaticKeyHandler } from '../../utils/keyHandlers'
 
 export default ({ rule, subModules, TYPE }) => {

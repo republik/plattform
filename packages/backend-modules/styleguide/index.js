@@ -1,5 +1,3 @@
-// Schema for Project-R newsletter
-const newsletterEmailSchema = require('@project-r/template-newsletter/lib/email')
 const {
   createCommentEmailSchema,
   createNewsletterEmailSchema,
@@ -8,7 +6,6 @@ const {
 
 module.exports = {
   createCommentEmailSchema,
-  newsletterEmailSchema,
   createNewsletterEmailSchema,
   inQuotes,
 }

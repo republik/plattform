@@ -11,7 +11,7 @@ import {
   matchZone,
   matchHeading,
   matchParagraph,
-} from 'mdast-react-render/lib/utils'
+} from '@republik/mdast-react-render'
 
 import { FigureImage } from '../../components/Figure'
 import { If, Else, Variable } from '../../components/Variables'

@@ -9,7 +9,7 @@
 const Promise = require('bluebird')
 const { promises: fs } = require('fs')
 const path = require('path')
-const MDAST = require('@orbiting/remark-preset')
+const MDAST = require('@republik/remark-preset')
 const moment = require('moment')
 const { max } = require('d3-array')
 const visit = require('unist-util-visit')
