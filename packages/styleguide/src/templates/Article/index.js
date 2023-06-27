@@ -246,7 +246,7 @@ const createSchema = ({
       name: node.data.name,
       props: node.data.props,
     }),
-    editorModule: 'dynamiccomponent',
+    editorModule: 'storycomponent',
     editorOptions: {
       type: 'STORYCOMPONENT', // why do we need this?
       insertTypes: ['PARAGRAPH'],

@@ -61,14 +61,16 @@ const StoryComponent = ({ rule, TYPE }) => {
 
   const Component = rule.component
 
-  const newItem = () =>
-    Block.create({
+  const newItem = () => {
+    console.log('newItem', { TYPE })
+    return Block.create({
       type: TYPE,
       isVoid: true,
       data: {
         name: '@republik/stories-example',
       },
     })
+  }
 
   return {
     TYPE,

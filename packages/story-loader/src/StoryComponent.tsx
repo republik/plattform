@@ -1,10 +1,11 @@
 import React, { Suspense } from 'react'
 
+const LoadedComponent = React.lazy(() => import('@republik/stories-example'))
+
 const StoryComponent: React.FC<{
   name: string
   [x: string]: unknown
 }> = ({ name, ...props }) => {
-  const LoadedComponent = React.lazy(() => import(name))
   return (
     <Suspense fallback={<div>Loading...</div>}>
       <LoadedComponent {...props} />
