@@ -37,14 +37,14 @@ if (argv.dryRun) {
 const mailInfo = {
   message: {
     subject: 'Republik-Wahl-Umfrage',
-    templateName: 'access_recipient_questionnaire_politician',
+    templateName: 'questionnaire_politician',
   },
 }
 
 const from_email = DEFAULT_MAIL_FROM_ADDRESS
 const from_name = DEFAULT_MAIL_FROM_NAME
 
-const requiredColumns = ['firstname', 'lastname', 'email', 'uuid']
+const requiredColumns = ['firstname', 'lastname', 'email', 'uuid', 'link']
 
 debug(mailInfo)
 
@@ -168,13 +168,21 @@ const sendQuestionnaireInvitations = async () => {
     if (error) {
       errors.push({
         email: emailData.email,
+        uuid: emailData.uuid,
         result: result,
         status: status,
         error: error,
       })
     }
 
-    console.log(emailData.email, templateName, result, status, error)
+    console.log(
+      emailData.email,
+      emailData.uuid,
+      templateName,
+      result,
+      status,
+      error,
+    )
   })
 
   return errors

@@ -1,10 +1,10 @@
-Guten Tag {{firstname}} {{lastname}},
+Guten Tag, {{firstname}} {{lastname}}
 
 Sie beabsichtigen, sich bei den Parlamentswahlen im Herbst von der Bevölkerung
 wählen zu lassen. Die Bevölkerung wiederum beabsichtigt – zumindest unterstellen
 wir ihr das –, zuerst noch ein bisschen mehr über Sie zu erfahren. Wofür Sie
-wirklich stehen, zum Beispiel. Was Sie politisch zur Weissglut bringt. Und: Ab
-welcher Destination erlauben Sie sich einen Flug in die Ferien?
+wirklich stehen, zum Beispiel. Was Sie politisch zur Weissglut bringt. Und: An
+welche Destination erlauben Sie sich einen Flug in die Ferien?
 
 Wir würden uns deshalb freuen, wenn Sie sich ein paar Minuten Zeit nähmen, um
 unseren Sommerfragebogen für Politikerinnen auszufüllen. Sie müssen dabei nicht
