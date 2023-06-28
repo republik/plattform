@@ -220,13 +220,20 @@ const createSchema = ({
 
   const storyComponent = {
     matchMdast: matchZone('STORY_COMPONENT'),
-    component: ({ showException, raw = false, size, attributes, ...props }) => {
+    component: ({
+      showException,
+      raw = false,
+      size,
+      attributes,
+      name,
+      ...props
+    }) => {
       const content = (
         <ErrorBoundary
           showException={showException}
           failureMessage={t('styleguide/DynamicComponent/error')}
         >
-          <StoryComponent {...props} />
+          <StoryComponent {...props} name={name} />
         </ErrorBoundary>
       )
 
@@ -240,12 +247,7 @@ const createSchema = ({
         </Figure>
       )
     },
-    props: (node) => ({
-      raw: node.data.raw,
-      size: node.data.size,
-      name: node.data.name,
-      props: node.data.props,
-    }),
+    props: (node) => node.data,
     editorModule: 'storycomponent',
     editorOptions: {
       type: 'STORYCOMPONENT', // why do we need this?
