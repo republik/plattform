@@ -15,7 +15,12 @@ import {
   Dropdown,
 } from '@project-r/styleguide'
 
-import { questionColor, QUESTIONS, QUESTION_TYPES } from './config'
+import {
+  questionColor,
+  QUESTIONS,
+  QUESTION_TYPES,
+  QUESTION_SEPARATOR,
+} from './config'
 import { QuestionSummaryChart } from '../Questionnaire/Submissions/QuestionChart'
 
 import {
@@ -120,7 +125,7 @@ const QuestionFeatured = ({ questions, bgColor, questionSlug, canton }) => {
         {hasTextAnswer && (
           <NarrowContainer>
             <Interaction.P style={{ textAlign: 'center' }}>
-              <QuestionLink questionSlug={questionSlug}>
+              <QuestionLink questions={questions}>
                 <Editorial.A>Alle Antworten lesen</Editorial.A>
               </QuestionLink>
             </Interaction.P>
@@ -189,9 +194,10 @@ const AnswerGridOverview = ({ question, canton }) => {
   )
 }
 
-export const QuestionLink = ({ questionSlug, children }) => {
+export const QuestionLink = ({ questions, children }) => {
+  const link = questions.map((q) => q.key).join(QUESTION_SEPARATOR)
   return (
-    <Link href={`/politikfragebogen/frage/${questionSlug}`} passHref>
+    <Link href={`/politikfragebogen/frage/${link}`} passHref>
       {children}
     </Link>
   )

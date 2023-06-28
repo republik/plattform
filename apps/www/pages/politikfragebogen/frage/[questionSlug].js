@@ -3,6 +3,7 @@ import Page from '../../../components/PoliticsQuestionnaire/SingleQuestionView'
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import { csvParse } from 'd3'
+import { QUESTION_SEPARATOR } from '../../../components/PoliticsQuestionnaire/config'
 
 export default ({ answers, question }) => (
   <Page answers={answers} question={question} />
@@ -23,8 +24,10 @@ export const getServerSideProps = createGetServerSideProps(
     )
     const responses = csvParse(data)
 
-    const responsesBySlug = responses.filter(
-      (d) => d.questionSlug === questionSlug,
+    const questionSlugs = questionSlug.split(QUESTION_SEPARATOR)
+
+    const responsesBySlug = responses.filter((d) =>
+      questionSlugs.includes(d.questionSlug),
     )
 
     const answers = responsesBySlug.map((d) => {

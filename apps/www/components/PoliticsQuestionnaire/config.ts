@@ -10,6 +10,8 @@ export const leftJoin = (objArr1, objArr2, key) =>
 export const QUESTIONNAIRE_BG_COLOR = '#ffdc5e'
 const COLORS = ['#ffdd5e', '#ce9fc7', '#67a9d9', '#f49787', '#75d69c']
 
+export const QUESTION_SEPARATOR = ','
+
 export const questionColor = scaleOrdinal(
   [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
   COLORS,
