@@ -124,7 +124,28 @@ const SubscribeReadAloud = ({ subscription }) => {
   )
 }
 
-const Info = ({ document, handlePlay }) => {
+// FIXME: totally manually inferred from gql schema. This should be automated!
+type Props = {
+  document: {
+    id: string
+    subscribedBy: any
+    meta?: {
+      contributors: { name: string; kind?: string; user: any }[]
+      willBeReadAloud?: boolean
+      audioSource?: {
+        mediaId: string
+        kind?: 'podcast' | 'readAloud' | 'syntheticReadAloud'
+        mp3?: string
+        aac?: string
+        ogg?: string
+        durationMs: number
+        userProgress: any
+      }
+    }
+  }
+}
+
+const Info = ({ document }: Props) => {
   const [colorScheme] = useColorContext()
   const { t } = useTranslation()
   const {
