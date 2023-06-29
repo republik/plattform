@@ -249,6 +249,7 @@ const subscribeStyles = {
   }),
   label: css({
     cursor: 'pointer',
+    position: 'relative',
     ...convertStyleToRem(fontStyles.sansSerifRegular14),
     // [mediaQueries.mUp]: {
     //   ...convertStyleToRem(fontStyles.sansSerifRegular15),
