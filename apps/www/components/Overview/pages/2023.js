@@ -335,7 +335,102 @@ const text = {
       .
     </>
   ),
-  //Juni: (p) => <></>,
+  Juni: (p) => (
+    <>
+      Der{' '}
+      <Highlight
+        {...p}
+        ids={['4omWBj7HQ']}
+        series='republik/article-serienuebersicht-kurt-goger'
+      >
+        grösste Lohndumpingskandal der Schweiz
+      </Highlight>
+      .{' '}
+      <Highlight {...p} ids={['jzwyD6nmie']}>
+        Wie behalten wir die Macht über unseren Körper
+      </Highlight>
+      ?{' '}
+      <Highlight
+        {...p}
+        ids={['stJUw9QhS']}
+        series='republik/article-serienuebersicht-ich-fordere'
+      >
+        Autorinnen
+      </Highlight>{' '}
+      <Highlight
+        {...p}
+        ids={['ZtBmkO_mf']}
+        series='republik/article-serienuebersicht-ich-fordere'
+      >
+        stellen
+      </Highlight>{' '}
+      <Highlight
+        {...p}
+        ids={['amb81dwRL']}
+        series='republik/article-serienuebersicht-ich-fordere'
+      >
+        Forderungen
+      </Highlight>{' '}
+      <Highlight
+        {...p}
+        ids={['UwHOK-lXK']}
+        series='republik/article-serienuebersicht-ich-fordere'
+      >
+        zum
+      </Highlight>{' '}
+      <Highlight
+        {...p}
+        ids={['cLEhe5Q59']}
+        series='republik/article-serienuebersicht-ich-fordere'
+      >
+        feministischen
+      </Highlight>{' '}
+      <Highlight
+        {...p}
+        ids={['ZqK9S9FEE']}
+        series='republik/article-serienuebersicht-ich-fordere'
+      >
+        Streik
+      </Highlight>
+      . Übrigens: Das Problem ist nicht das{' '}
+      <Highlight {...p} ids={['A4g-pUcK4']}>
+        Gendersternchen
+      </Highlight>
+      . Willkommen,{' '}
+      <Highlight {...p} ids={['J8l1LXJkU']}>
+        Anna Rosenwasser
+      </Highlight>
+      ! Dazu:{' '}
+      <Highlight {...p} ids={['O9ZRFcg9u']}>
+        Putins Koch
+      </Highlight>
+      ,{' '}
+      <Highlight {...p} ids={['6heXWm9zw']}>
+        Libanons Zentralbankchef
+      </Highlight>{' '}
+      und{' '}
+      <Highlight {...p} ids={['1K4JZFqPb']}>
+        Schwedens Asylpolitik unter Druck
+      </Highlight>
+      . Im{' '}
+      <Highlight {...p} ids={['8t0pwwqNx']}>
+        Simmental
+      </Highlight>
+      , im{' '}
+      <Highlight {...p} ids={['lzY7Z2N-5']}>
+        Wolkenkuckucksheim
+      </Highlight>{' '}
+      und im{' '}
+      <Highlight {...p} ids={['pCA87kQl5']}>
+        Schlaraffenland der Zukunft
+      </Highlight>
+      . Und für alle Eltern:{' '}
+      <Highlight {...p} ids={['hvZv2UIQ_']}>
+        Handyzeit fertig, jetzt
+      </Highlight>
+      !
+    </>
+  ),
   //Juli: (p) => <></>,
   //August: (p) => <></>,
   //September: (p) => <></>,
