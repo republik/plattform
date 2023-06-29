@@ -17,6 +17,7 @@ import {
 import { css } from 'glamor'
 import Link from 'next/link'
 import { Fragment, useEffect, useMemo, useState } from 'react'
+import { useMe } from '../../../lib/context/MeContext'
 import EventObjectType from '../../../lib/graphql-types/EventObjectType'
 import { intersperse } from '../../../lib/utils/helpers'
 import { useTranslation } from '../../../lib/withT'
@@ -96,7 +97,8 @@ export const ArticleAudioPlayer = ({ document }: PlayerProps) => {
   const [colorScheme] = useColorContext()
 
   const { currentTime } = useGlobalAudioState()
-  const { isAudioQueueAvailable, checkIfInQueue } = useAudioQueue()
+  const { audioQueue, checkIfInQueue } = useAudioQueue()
+  const { hasAccess } = useMe()
 
   const isActiveAudioItem = checkIfActivePlayerItem(document.id)
   const itemPlaying = isPlaying && isActiveAudioItem
@@ -179,34 +181,36 @@ export const ArticleAudioPlayer = ({ document }: PlayerProps) => {
         )}
       </div>
 
-      <IconButton
-        Icon={itemInAudioQueue ? IconPlaylistRemove : IconPlaylistAdd}
-        title={
-          itemInAudioQueue
-            ? t('AudioPlayer/Queue/Remove')
-            : t('AudioPlayer/Queue/Add')
-        }
-        disabled={itemInAudioQueue}
-        onClick={async (e) => {
-          e.preventDefault()
-          if (itemInAudioQueue) {
-            await removeAudioQueueItem(itemInAudioQueue.id)
-            //  trackEvent([
-            //       AudioPlayerLocations.ACTION_BAR,
-            //       AudioPlayerActions.REMOVE_QUEUE_ITEM,
-            //       meta?.path,
-            //     ])
-          } else {
-            await addAudioQueueItem(document)
-            // trackEvent([
-            //   AudioPlayerLocations.ACTION_BAR,
-            //   AudioPlayerActions.ADD_QUEUE_ITEM,
-            //   meta?.path,
-            // ])
+      {hasAccess && (
+        <IconButton
+          Icon={itemInAudioQueue ? IconPlaylistRemove : IconPlaylistAdd}
+          title={
+            itemInAudioQueue
+              ? t('AudioPlayer/Queue/Remove')
+              : t('AudioPlayer/Queue/Add')
           }
-        }}
-        style={{ marginRight: 0 }}
-      />
+          disabled={itemInAudioQueue}
+          onClick={async (e) => {
+            e.preventDefault()
+            if (itemInAudioQueue) {
+              await removeAudioQueueItem(itemInAudioQueue.id)
+              //  trackEvent([
+              //       AudioPlayerLocations.ACTION_BAR,
+              //       AudioPlayerActions.REMOVE_QUEUE_ITEM,
+              //       meta?.path,
+              //     ])
+            } else {
+              await addAudioQueueItem(document)
+              // trackEvent([
+              //   AudioPlayerLocations.ACTION_BAR,
+              //   AudioPlayerActions.ADD_QUEUE_ITEM,
+              //   meta?.path,
+              // ])
+            }
+          }}
+          style={{ marginRight: 0 }}
+        />
+      )}
     </div>
   )
 }
