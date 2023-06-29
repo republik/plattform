@@ -17,22 +17,18 @@ import {
   Center,
 } from '@project-r/styleguide'
 
-import {
-  AnswersGrid,
-  AnswersGridCard,
-} from '../Questionnaire/Submissions/AnswersGrid'
+import { AnswersGridCard } from '../Questionnaire/Submissions/AnswersGrid'
 
 import { css } from 'glamor'
 
-import { useTranslation } from '../../lib/withT'
-
 import { SubmissionLink } from './Overview'
 
-import { ShareImageSplit } from '../Questionnaire/Submissions/ShareImageSplit'
 import Frame from '../Frame'
 import Meta from '../Frame/Meta'
 import { ASSETS_SERVER_BASE_URL, PUBLIC_BASE_URL } from '../../lib/constants'
-import { questionColor, QUESTIONS, OVERVIEW_QUESTIONNAIRE_PATH } from './config'
+import { questionColor, OVERVIEW_QUESTIONNAIRE_PATH } from './config'
+
+import { getTypeBySlug, AnswersChart } from './Overview'
 
 const QuestionViewMeta = ({ question }) => {
   const router = useRouter()
@@ -57,26 +53,15 @@ const QuestionViewMeta = ({ question }) => {
   )
 }
 
-const Page = ({ question, answers }) => {
-  const { t } = useTranslation()
-  const router = useRouter()
-  const pathname = router.asPath.split('?')[0]
+const Page = ({ question, answers, nestedResponses }) => {
+  const questionTypes = nestedResponses.map((q) => getTypeBySlug(q.key))
+
+  const isChoiceQuestion = questionTypes.includes('choice')
+  const twoTextQuestions = !isChoiceQuestion && nestedResponses.length > 1
+
+  console.log(twoTextQuestions)
 
   const answerGridRef = useRef()
-  // useEffect(() => {
-  //   if (extract) return
-  //   scrollIntoView(answerGridRef.current)
-  // }, [])
-
-  // if (extract) {
-  //   return <ShareImageSplit question={mainQuestion} {...share} />
-  // }
-
-  // const isChoiceQuestion = mainQuestion?.__typename === 'QuestionTypeChoice'
-
-  // const questionGroupIdx = QUESTIONS.findIndex(
-  //   (q) => allQuestions && allQuestions[q.ids[0]]?.id === questionIds[0],
-  // )
 
   return (
     <Frame raw>
@@ -98,6 +83,35 @@ const Page = ({ question, answers }) => {
                     <Editorial.A>Zurück zur Übersicht</Editorial.A>
                   </NextLink>
                 </Interaction.P>
+                <Editorial.Subhead>
+                  {nestedResponses[0].values[0].question}
+                  {twoTextQuestions && (
+                    <>
+                      <hr
+                        style={{
+                          opacity: 0.7,
+                          margin: '1.2em 33%',
+                          border: 0,
+                          borderTop: '1px solid currentColor',
+                        }}
+                      />
+                      <span>{nestedResponses[1].values[0].question}</span>
+                    </>
+                  )}
+                </Editorial.Subhead>
+
+                {isChoiceQuestion && (
+                  <>
+                    <AnswersChart
+                      question={nestedResponses[0]}
+                      skipTitle={true}
+                    />
+                    <br />
+                    <Editorial.Subhead style={{ textAlign: 'center' }}>
+                      {nestedResponses[1].values[0].question}
+                    </Editorial.Subhead>
+                  </>
+                )}
               </div>
 
               <ColorContextProvider

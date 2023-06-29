@@ -67,7 +67,7 @@ export const SubmissionsOverview = ({ submissionData }) => {
 
           return (
             <QuestionFeatured
-              key={groupQuestions[0].key}
+              key={question.questionSlugs[0]}
               questions={groupQuestions}
               bgColor={questionColor(idx)}
               canton={canton}
@@ -81,7 +81,7 @@ export const SubmissionsOverview = ({ submissionData }) => {
 
 export default SubmissionsOverview
 
-const getTypeBySlug = (slug) =>
+export const getTypeBySlug = (slug) =>
   QUESTION_TYPES.find((q) => q.questionSlug === slug).type
 
 const getAnswerLenghtBySlug = (slug) =>
@@ -137,6 +137,7 @@ const QuestionFeatured = ({ questions, bgColor, questionSlug, canton }) => {
 }
 
 const AnswerGridOverview = ({ question, canton }) => {
+  const questionSlug = question.key
   return (
     <>
       <NarrowContainer>
@@ -153,7 +154,6 @@ const AnswerGridOverview = ({ question, canton }) => {
         <AnswersGrid>
           {question.values
             .filter(({ answer, canton: answerCanton }) => {
-              console.log({ canton, answer })
               return (
                 // @Felix: this could be made a bit more elegant, but you catch the gist
                 (canton.value ? answerCanton === canton.value : true) &&
@@ -163,7 +163,7 @@ const AnswerGridOverview = ({ question, canton }) => {
               )
             })
             .map(({ uuid, answer, name }) => (
-              <AnswersGridCard key={uuid}>
+              <AnswersGridCard key={`${questionSlug}-${uuid}`}>
                 <SubmissionLink id={uuid}>
                   <a style={{ textDecoration: 'none' }}>
                     <div {...styles.answerCard}>

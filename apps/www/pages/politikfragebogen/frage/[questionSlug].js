@@ -2,11 +2,15 @@ import { createGetServerSideProps } from '../../../lib/apollo/helpers'
 import Page from '../../../components/PoliticsQuestionnaire/SingleQuestionView'
 import fs from 'node:fs/promises'
 import path from 'node:path'
-import { csvParse } from 'd3'
+import { csvParse, nest } from 'd3'
 import { QUESTION_SEPARATOR } from '../../../components/PoliticsQuestionnaire/config'
 
-export default ({ answers, question }) => (
-  <Page answers={answers} question={question} />
+export default ({ answers, question, nestedResponses }) => (
+  <Page
+    answers={answers}
+    question={question}
+    nestedResponses={nestedResponses}
+  />
 )
 
 export const getServerSideProps = createGetServerSideProps(
@@ -30,6 +34,12 @@ export const getServerSideProps = createGetServerSideProps(
       questionSlugs.includes(d.questionSlug),
     )
 
+    const nestedResponses = nest()
+      .key((d) => d.questionSlug)
+      .entries(responsesBySlug)
+
+    // console.log(nestedResponses)
+
     const answers = responsesBySlug.map((d) => {
       return { answer: d.answer, name: d.name, uuid: d.uuid }
     })
@@ -41,7 +51,8 @@ export const getServerSideProps = createGetServerSideProps(
     return {
       props: {
         answers: answers,
-        question: question[0],
+        question: question,
+        nestedResponses: nestedResponses,
       },
     }
   },
