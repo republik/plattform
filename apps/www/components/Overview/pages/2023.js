@@ -346,7 +346,11 @@ const text = {
         grösste Lohndumpingskandal der Schweiz
       </Highlight>
       .{' '}
-      <Highlight {...p} ids={['jzwyD6nmie']}>
+      <Highlight
+        {...p}
+        ids={['jzwyD6nmie']}
+        series='republik/article-feminismus-gespraeche-uebersicht'
+      >
         Wie behalten wir die Macht über unseren Körper
       </Highlight>
       ?{' '}
