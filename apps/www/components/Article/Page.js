@@ -392,6 +392,8 @@ const ArticlePage = ({
     meta.audioSource.kind === 'syntheticReadAloud'
   const isReadAloud =
     hasMeta && meta.audioSource && meta.audioSource.kind === 'readAloud'
+
+  const hasAudioSource = !!meta?.audioSource
   const newsletterMeta =
     hasMeta && (meta.newsletter || meta.format?.meta?.newsletter)
 
@@ -814,7 +816,7 @@ const ArticlePage = ({
                                 </div>
                               )}
 
-                              {(isSyntheticReadAloud || isReadAloud) && (
+                              {hasAudioSource && (
                                 <div style={{ marginTop: 32 }}>
                                   <ArticleAudioPlayer document={article} />
                                 </div>
