@@ -13,7 +13,7 @@ const { getTemplates } = require('../../lib/sendMailTemplate')
 const NodemailerInterface = require('../../NodemailerInterface')
 const MandrillInterface = require('../../MandrillInterface')
 const { error } = require('console')
-const { DEFAULT_MAIL_FROM_ADDRESS, DEFAULT_MAIL_FROM_NAME } = process.env
+const { DEFAULT_MAIL_FROM_NAME } = process.env
 
 const debug = require('debug')(
   'mail:script:politicianQuestionnaireMailing_06-2023',
@@ -36,12 +36,12 @@ if (argv.dryRun) {
 
 const mailInfo = {
   message: {
-    subject: 'Republik-Wahl-Umfrage',
-    templateName: 'questionnaire_politician',
+    subject: 'Sommerfragebogen der Republik',
+    templateName: 'questionnaire_politician_reminder',
   },
 }
 
-const from_email = DEFAULT_MAIL_FROM_ADDRESS
+const from_email = 'fragebogen-wahlen@republik.ch'
 const from_name = DEFAULT_MAIL_FROM_NAME
 
 const requiredColumns = ['firstname', 'lastname', 'email', 'uuid', 'link']
