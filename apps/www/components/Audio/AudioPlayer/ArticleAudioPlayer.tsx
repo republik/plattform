@@ -254,10 +254,11 @@ const subscribeStyles = {
   label: css({
     cursor: 'pointer',
     position: 'relative',
+    display: 'inline-block',
+    textWrap: 'balance',
+    // width: 'max-content',
     ...convertStyleToRem(fontStyles.sansSerifRegular14),
-    // [mediaQueries.mUp]: {
-    //   ...convertStyleToRem(fontStyles.sansSerifRegular15),
-    // },
+
     // verticalAlign: 'middle',
     '&:hover': {
       color: 'primary',
@@ -324,14 +325,7 @@ const SubscribeReadAloud = ({ subscription }) => {
   }
 
   return (
-    <label
-      {...css({
-        display: 'inline-block',
-        width: 'max-content',
-      })}
-      {...subscribeStyles.label}
-      {...linkStyleRule}
-    >
+    <label {...subscribeStyles.label} {...linkStyleRule}>
       <input
         {...subscribeStyles.input}
         type='checkbox'
