@@ -63,11 +63,12 @@ module.exports = async (_, args, context) => {
 
   const isInFuture = !today.isAfter(date)
 
+  const isOnAllowedWeekday = calendar.limitWeekdays.includes(date.day())
   const isSlotAvailable =
     userSlots.filter((slot) => slot.key === key && slot.userId !== user.id)
       .length < calendar.limitSlotsPerKey
 
-  const userCanBook = isInFuture && isSlotAvailable
+  const userCanBook = isInFuture && isOnAllowedWeekday && isSlotAvailable
   // const userHasBooked = false
   const userCanCancel = false
 

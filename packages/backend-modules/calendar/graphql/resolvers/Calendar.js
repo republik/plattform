@@ -12,7 +12,7 @@ module.exports = {
     return stringify({ userId: user.id, calendarSlug: calendar.slug })
   },
   slots: async (calendar, args, context) => {
-    const { __user: user, limitSlotsPerKey } = calendar
+    const { __user: user, limitSlotsPerKey, limitWeekdays } = calendar
     const { from, to } = args
     const { pgdb, loaders } = context
 
@@ -47,12 +47,14 @@ module.exports = {
 
       const keySlots = slots.filter((slot) => slot.key === key)
 
+      const isOnAllowedWeekday = limitWeekdays.includes(date.day())
       const isSlotAvailable =
         keySlots.filter((slot) => slot.userId !== user.id).length <
         limitSlotsPerKey
       const userHasBooked = !!keySlots.find((slot) => slot.userId === user.id)
 
-      const userCanBook = isInFuture && isSlotAvailable && !userHasBooked
+      const userCanBook =
+        isInFuture && isOnAllowedWeekday && isSlotAvailable && !userHasBooked
       const userCanCancel = isInFuture && userHasBooked
 
       const users = slotsUsers.filter((user) =>
