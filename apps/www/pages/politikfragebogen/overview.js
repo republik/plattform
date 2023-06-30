@@ -17,7 +17,7 @@ export const getServerSideProps = createGetServerSideProps(async () => {
   const data = await fs.readFile(
     path.join(
       process.cwd(),
-      'public/static/politicsquestionnaire2023/submissions_dummy_data.csv',
+      'public/static/politicsquestionnaire2023/submissions_data.csv',
     ),
     'utf-8',
   )

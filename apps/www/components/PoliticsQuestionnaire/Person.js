@@ -186,7 +186,6 @@ const Page = ({ responses, authorData }) => {
 export default Page
 
 const QuestionAnswerPair = ({ question, answer, type, options }) => {
-  console.log(type)
   return (
     <Editorial.P attributes={{}}>
       <strong>{question}</strong>

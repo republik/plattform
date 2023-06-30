@@ -158,8 +158,8 @@ const AnswerGridOverview = ({ question, canton }) => {
                 // @Felix: this could be made a bit more elegant, but you catch the gist
                 (canton.value ? answerCanton === canton.value : true) &&
                 // @Felix: answer length this seems to be available with answerLength.min/max
-                answer.length > getAnswerLenghtBySlug(question.key).min &&
-                answer.length < getAnswerLenghtBySlug(question.key).max
+                answer.length > getAnswerLenghtBySlug(question.key)?.min &&
+                answer.length < getAnswerLenghtBySlug(question.key)?.max
               )
             })
             .map(({ uuid, answer, name }) => (
@@ -215,15 +215,19 @@ export const SubmissionLink = ({ id, children }) => {
 //  (i.e. individual answers, which we can filter and aggregate ourselves
 //  here depending of the value of the filters)
 const AnswersChart = ({ question, skipTitle, canton }) => {
-  const totalAnswers = question.values.length
-  const values = question.values[0].options.map((option) => ({
+  const options = question.values[0].options
+
+  const validAnswers = question.values.filter((item) =>
+    options.includes(item.answer),
+  )
+
+  const totalAnswers = validAnswers.length
+  const values = options.map((option) => ({
     answer: option,
     value:
-      question.values.filter((result) => result.answer === option).length ??
-      0 / totalAnswers,
+      (question.values.filter((result) => result.answer === option).length ??
+        0) / totalAnswers,
   }))
-
-  console.log('AnswerChart', { values })
 
   return (
     <NarrowContainer>
