@@ -1,0 +1,26 @@
+Guten Tag, {{firstname}} {{lastname}}
+
+Es ist Sommer, es ist heiss, es ist hektisch. Wir haben Ihnen letzte Woche
+unseren Sommerfragebogen für Politiker geschickt und würden uns sehr freuen,
+wenn Sie sich ein paar Minuten Zeit dafür nehmen würden.
+
+Sie müssen dabei nicht jede Frage beantworten, wenn Sie nicht wollen. Alle
+eingegangenen Antworten werden wir danach veröffentlichen, einzelne Fragebogen
+in unserem Magazin speziell hervorheben.
+
+Zum Fragebogen {{link}}
+
+
+Sollte dieser Button nicht funktionieren, kopieren Sie bitte den folgenden Link
+in Ihren Browser: {{link}} .
+
+Haben Sie noch Fragen? Wir stehen Ihnen gerne unter
+fragebogen-wahlen@republik.ch zur Verfügung.
+
+Ihre Crew der Republik
+
+
+Republik AG
+Sihlhallenstrasse 1, CH-8004 Zürich
+www.republik.ch https://republik.ch
+fragebogen-wahlen@republik.ch
