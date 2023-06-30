@@ -32,9 +32,9 @@ export const getServerSideProps = createGetServerSideProps(
     const joinedData = leftJoin(responses, QUESTION_TYPES, 'questionSlug')
 
     const filteredData = canton
-      ? joinedData
-          .filter((response) => response.canton === canton)
-          .filter((response) => response.party === party)
+      ? joinedData.filter(
+          (response) => response.canton === canton && response.party === party,
+        )
       : joinedData
 
     const groupedData = nest()
