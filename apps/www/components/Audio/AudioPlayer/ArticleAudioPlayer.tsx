@@ -19,6 +19,7 @@ import Link from 'next/link'
 import { Fragment, useEffect, useMemo, useState } from 'react'
 import { useMe } from '../../../lib/context/MeContext'
 import EventObjectType from '../../../lib/graphql-types/EventObjectType'
+import { trackEvent } from '../../../lib/matomo'
 import { intersperse } from '../../../lib/utils/helpers'
 import { useTranslation } from '../../../lib/withT'
 import {
@@ -29,7 +30,10 @@ import { useAudioContext } from '../AudioProvider'
 import { useMediaProgress } from '../MediaProgress'
 import { useGlobalAudioState } from '../globalAudioState'
 import useAudioQueue from '../hooks/useAudioQueue'
-import { AudioPlayerLocations } from '../types/AudioActionTracking'
+import {
+  AudioPlayerActions,
+  AudioPlayerLocations,
+} from '../types/AudioActionTracking'
 import { AudioPlayerItem } from '../types/AudioPlayerItem'
 import { AUDIO_PLAYER_WRAPPER_ID } from './constants'
 import Time from './ui/Time'
@@ -75,7 +79,7 @@ type PlayerProps = {
   document: {
     id: string
     subscribedBy: any
-    meta?: {
+    meta: {
       contributors: { name: string; kind?: string; user: any }[]
       willBeReadAloud?: boolean
     } & AudioPlayerItem['meta']
@@ -97,7 +101,7 @@ export const ArticleAudioPlayer = ({ document }: PlayerProps) => {
   const [colorScheme] = useColorContext()
 
   const { currentTime } = useGlobalAudioState()
-  const { audioQueue, checkIfInQueue } = useAudioQueue()
+  const { checkIfInQueue } = useAudioQueue()
   const { hasAccess } = useMe()
 
   const isActiveAudioItem = checkIfActivePlayerItem(document.id)
@@ -107,19 +111,24 @@ export const ArticleAudioPlayer = ({ document }: PlayerProps) => {
 
   const [mediaProgress, setMediaProgress] = useState(0)
 
+  const {
+    meta,
+    meta: { audioSource },
+  } = document
+
   const currentDisplayTime =
     isActiveAudioItem && currentTime > 0 ? currentTime : mediaProgress
-  const duration = document.meta.audioSource.durationMs / 1000
+  const duration = audioSource.durationMs / 1000
 
-  const playerKind: PlayerKind = document?.meta?.audioSource?.kind ?? 'other'
+  const playerKind: PlayerKind = audioSource.kind ?? 'other'
 
-  const readAloudSubscription = document?.subscribedBy?.nodes.find(
+  const readAloudSubscription = document.subscribedBy?.nodes.find(
     ({ isEligibleForNotifications, object: { id } }) =>
       isEligibleForNotifications && id === document.id,
   )
 
   const showReadAloudSubscribe =
-    document.meta?.willBeReadAloud &&
+    meta.willBeReadAloud &&
     readAloudSubscription &&
     playerKind === 'syntheticReadAloud'
       ? true
@@ -128,19 +137,20 @@ export const ArticleAudioPlayer = ({ document }: PlayerProps) => {
   useEffect(() => {
     const updateMediaProgress = async () => {
       const mp = await getMediaProgress({
-        mediaId: document.meta.audioSource.mediaId,
-        durationMs: document.meta.audioSource.durationMs,
+        mediaId: audioSource.mediaId,
+        durationMs: audioSource.durationMs,
       })
+
       setMediaProgress(mp || 0)
     }
 
     if (currentTime === 0) {
       updateMediaProgress()
     }
-  }, [document.meta.audioSource.mediaId, currentTime])
+  }, [audioSource, currentTime])
 
   const play = () => {
-    toggleAudioPlayer(document, AudioPlayerLocations.ACTION_BAR)
+    toggleAudioPlayer(document, AudioPlayerLocations.ARTICLE_PLAYER)
   }
 
   return (
@@ -164,20 +174,21 @@ export const ArticleAudioPlayer = ({ document }: PlayerProps) => {
           {playerKind === 'readAloud' ? (
             <Contributors
               contributors={
-                document.meta?.contributors?.filter(
-                  (c) => c.kind === 'voice',
-                ) || []
+                meta.contributors?.filter((c) => c.kind === 'voice') || []
               }
             />
           ) : playerKind === 'syntheticReadAloud' ? (
             t('article/actionbar/audio/info/synthetic')
           ) : (
-            document.meta?.title
+            meta.title
           )}
         </div>
         <Time currentTime={currentDisplayTime} duration={duration} />
         {showReadAloudSubscribe && (
-          <SubscribeReadAloud subscription={readAloudSubscription} />
+          <SubscribeReadAloud
+            meta={meta}
+            subscription={readAloudSubscription}
+          />
         )}
       </div>
 
@@ -190,22 +201,22 @@ export const ArticleAudioPlayer = ({ document }: PlayerProps) => {
               : t('AudioPlayer/Queue/Add')
           }
           disabled={itemInAudioQueue}
-          onClick={async (e) => {
+          onClick={(e) => {
             e.preventDefault()
             if (itemInAudioQueue) {
-              await removeAudioQueueItem(itemInAudioQueue.id)
-              //  trackEvent([
-              //       AudioPlayerLocations.ACTION_BAR,
-              //       AudioPlayerActions.REMOVE_QUEUE_ITEM,
-              //       meta?.path,
-              //     ])
+              removeAudioQueueItem(itemInAudioQueue.id)
+              trackEvent([
+                AudioPlayerLocations.ARTICLE_PLAYER,
+                AudioPlayerActions.REMOVE_QUEUE_ITEM,
+                meta.path,
+              ])
             } else {
-              await addAudioQueueItem(document)
-              // trackEvent([
-              //   AudioPlayerLocations.ACTION_BAR,
-              //   AudioPlayerActions.ADD_QUEUE_ITEM,
-              //   meta?.path,
-              // ])
+              addAudioQueueItem(document)
+              trackEvent([
+                AudioPlayerLocations.ARTICLE_PLAYER,
+                AudioPlayerActions.ADD_QUEUE_ITEM,
+                meta.path,
+              ])
             }
           }}
           style={{ marginRight: 0 }}
@@ -265,7 +276,7 @@ const subscribeStyles = {
     },
   }),
 }
-const SubscribeReadAloud = ({ subscription }) => {
+const SubscribeReadAloud = ({ meta, subscription }) => {
   const [colorScheme] = useColorContext()
   const { t } = useTranslation()
 
@@ -305,6 +316,11 @@ const SubscribeReadAloud = ({ subscription }) => {
               filters: [EventObjectType.READ_ALOUD],
             },
           })
+          trackEvent([
+            AudioPlayerLocations.ARTICLE_PLAYER,
+            AudioPlayerActions.UNSUBSCRIBE_READ_ALOUD,
+            meta.path,
+          ])
         } else {
           await subscribe({
             variables: {
@@ -312,6 +328,11 @@ const SubscribeReadAloud = ({ subscription }) => {
               filters: [EventObjectType.READ_ALOUD],
             },
           })
+          trackEvent([
+            AudioPlayerLocations.ARTICLE_PLAYER,
+            AudioPlayerActions.SUBSCRIBE_READ_ALOUD,
+            meta.path,
+          ])
         }
       } catch (e) {
         console.error(e)

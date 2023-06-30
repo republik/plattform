@@ -7,6 +7,7 @@ export enum AudioPlayerLocations {
   MARKETING_FRONT = 'MarketingFront',
   ACTION_BAR = 'ActionBar',
   ARTICLE = 'Article',
+  ARTICLE_PLAYER = 'ArticlePlayer',
 }
 
 /**
@@ -26,4 +27,6 @@ export enum AudioPlayerActions {
   ERROR = 'error',
   ILLEGAL_PROGRESS_UPDATE = 'illegalProgressUpdate',
   DOWNLOAD_TRACK = 'downloadTrack',
+  SUBSCRIBE_READ_ALOUD = 'subscribeReadAloud',
+  UNSUBSCRIBE_READ_ALOUD = 'unsubscribeReadAloud',
 }
