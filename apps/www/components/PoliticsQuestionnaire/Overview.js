@@ -50,20 +50,24 @@ export const Filters = () => {
 
   return (
     <NarrowContainer>
-      <Dropdown
-        label='Kanton'
-        items={CANTONS}
-        value={canton}
-        onChange={(item) => router.push(`?party=${party}&canton=${item.value}`)}
-      />
-      <Dropdown
-        label='Partei'
-        items={PARTIES}
-        value={party}
-        onChange={(item) => {
-          router.push(`?party=${item.value}&canton=${canton}`)
-        }}
-      />
+      <div {...styles.filterContainer}>
+        <Dropdown
+          label='Kanton'
+          items={CANTONS}
+          value={canton}
+          onChange={(item) =>
+            router.push(`?party=${party}&canton=${item.value}`)
+          }
+        />
+        <Dropdown
+          label='Partei'
+          items={PARTIES}
+          value={party}
+          onChange={(item) => {
+            router.push(`?party=${item.value}&canton=${canton}`)
+          }}
+        />
+      </div>
     </NarrowContainer>
   )
 }
@@ -267,5 +271,12 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'center',
     textAlign: 'center',
+  }),
+  filterContainer: css({
+    display: 'flex',
+    gap: '30px',
+    '& > div': {
+      flexGrow: 1,
+    },
   }),
 }
