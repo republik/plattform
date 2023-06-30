@@ -385,10 +385,6 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
       if (shouldHide) {
         setIsVisible(false)
       }
-      // await saveActiveItemProgress({
-      //   isPlaying: false,
-      // })
-
       // Cleanup the internal state with a slight delay
       // to await the last syncs with the native app
       setTimeout(() => {
