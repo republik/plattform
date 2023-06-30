@@ -2497,6 +2497,14 @@
       "value": "Kalendereintrag bereits vorhanden"
     },
     {
+      "key": "api/calendar/slot/error/slotIsNotInFuture",
+      "value": "Kalendereintrag liegt in Vergangenheit"
+    },
+    {
+      "key": "api/calendar/slot/error/slotIsNotOnAllowedWeekday",
+      "value": "Kalendereintrag nicht verfügbar (Wochentag nicht möglich)"
+    },
+    {
       "key": "api/calendar/slot/error/slotIsNotAvailable",
       "value": "Kalendereintrag nicht mehr verfügbar"
     },
