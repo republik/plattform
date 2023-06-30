@@ -83,6 +83,7 @@ import ArticleRecommendationsFeed from './ArticleRecommendationsFeed'
 import TeaserAudioPlayButton from '../Audio/shared/TeaserAudioPlayButton'
 import useAudioQueue from '../Audio/hooks/useAudioQueue'
 import { IconEdit } from '@republik/icons'
+import { ArticleAudioPlayer } from '../Audio/AudioPlayer/ArticleAudioPlayer'
 
 const LoadingComponent = () => <SmallLoader loading />
 
@@ -391,6 +392,8 @@ const ArticlePage = ({
     meta.audioSource.kind === 'syntheticReadAloud'
   const isReadAloud =
     hasMeta && meta.audioSource && meta.audioSource.kind === 'readAloud'
+
+  const hasAudioSource = !!meta?.audioSource
   const newsletterMeta =
     hasMeta && (meta.newsletter || meta.format?.meta?.newsletter)
 
@@ -812,6 +815,13 @@ const ArticlePage = ({
                                   {actionBar}
                                 </div>
                               )}
+
+                              {hasAudioSource && (
+                                <div style={{ marginTop: 32 }}>
+                                  <ArticleAudioPlayer document={article} />
+                                </div>
+                              )}
+
                               {isSection && !hideSectionNav && (
                                 <Breakout size='breakout'>
                                   <SectionNav

@@ -13,6 +13,7 @@ export const progressbarStyle = {
   left: 0,
   right: 0,
 }
+export const AUDIO_PLAYER_WRAPPER_ID = 'audio-player-wrapper'
 
 export const hoursDurationFormat = timeFormat('%-H:%M:%S')
 export const minutesDurationFormat = timeFormat('%-M:%S')
