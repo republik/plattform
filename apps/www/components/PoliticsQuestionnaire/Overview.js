@@ -36,20 +36,32 @@ const CANTONS = [
   { text: 'Wallis', value: 'VS' },
 ]
 
+const PARTIES = [
+  { text: 'Alle', value: undefined },
+  { text: 'SVP', value: 'SVP' },
+  { text: 'SP', value: 'SP' },
+]
+
 // @Felix: if you prefer I guess a filter context could be a good solution, too
 // @Felix: i'd use this in the single question view too
 export const Filters = () => {
   const router = useRouter()
-  const { canton } = router.query
-  console.log(canton)
+  const { canton, party } = router.query
+
   return (
     <NarrowContainer>
       <Dropdown
         label='Kanton'
         items={CANTONS}
         value={canton}
+        onChange={(item) => router.push(`?party=${party}&canton=${item.value}`)}
+      />
+      <Dropdown
+        label='Partei'
+        items={PARTIES}
+        value={party}
         onChange={(item) => {
-          router.push(`?canton=${item.value}`)
+          router.push(`?party=${item.value}&canton=${canton}`)
         }}
       />
     </NarrowContainer>
