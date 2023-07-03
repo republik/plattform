@@ -36,7 +36,7 @@ if (argv.dryRun) {
 
 const mailInfo = {
   message: {
-    subject: 'Sommerfragebogen der Republik',
+    subject: 'Erinnerung: Sommerfragebogen der Republik',
     templateName: 'questionnaire_politician_reminder',
   },
 }
