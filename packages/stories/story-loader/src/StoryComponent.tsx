@@ -3,6 +3,9 @@ import React, { Suspense } from 'react'
 const STORY_COMPONENTS = {
   'Example Pink': React.lazy(() => import('@republik/stories-example-pink')),
   'Example Blue': React.lazy(() => import('@republik/stories-example-blue')),
+  'Auf den Punkt: Banken': React.lazy(
+    () => import('@republik/stories-the-dot-banks'),
+  ),
 }
 
 export const STORY_NAMES = Object.keys(STORY_COMPONENTS)
