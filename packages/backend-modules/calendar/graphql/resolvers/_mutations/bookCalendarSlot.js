@@ -1,3 +1,5 @@
+const dayjs = require('dayjs')
+
 const { Roles, transformUser } = require('@orbiting/backend-modules-auth')
 
 const { parse, stringify, isKeyValid } = require('../../../lib/utils')
@@ -11,6 +13,8 @@ module.exports = async (_, args, context) => {
   if (!isKeyValid(key)) {
     throw new Error(t('api/calendar/slot/error/keyInvalid'))
   }
+
+  const date = dayjs(key)
 
   const calendar = await loaders.Calendar.bySlug.load(calendarSlug)
   if (!calendar) {
@@ -44,6 +48,11 @@ module.exports = async (_, args, context) => {
   )
   if (userHasBooked) {
     throw new Error(t('api/calendar/slot/error/userBookedAlready'))
+  }
+
+  const isOnAllowedWeekday = calendar.limitWeekdays.includes(date.day())
+  if (!isOnAllowedWeekday) {
+    throw new Error(t('api/calendar/slot/error/slotIsNotOnAllowedWeekday'))
   }
 
   const isSlotAvailable =
