@@ -1,6 +1,7 @@
-import dayjs from 'dayjs'
+import dayjs, { Dayjs } from 'dayjs'
 
 import { encode, decode } from '@orbiting/backend-modules-base64u'
+import { User } from '@orbiting/backend-modules-types'
 
 interface CalendarIdentifier {
   userId?: string
@@ -47,4 +48,69 @@ export function isKeyValid(key: string): boolean {
   }
 
   return true
+}
+
+interface CreateEvaluateArguments {
+  calendar: CalendarRow
+  slots: SlotRow[]
+  users: User[]
+  user: User
+}
+
+interface CalendarRow {
+  slug: string
+  limitSlotsPerKey: number
+  limitWeekdays: number[]
+}
+
+interface SlotRow {
+  key: string
+  userId: string
+}
+
+interface EvaluateArguments {
+  date: Dayjs
+  key: string
+}
+
+interface CalendarSlot {
+  id: string
+  key: string
+  userCanBook: boolean
+  userHasBooked: boolean
+  userCanCancel: boolean
+  users: User[]
+}
+
+export function createEvaluateSlot({
+  calendar,
+  slots,
+  users,
+  user,
+}: CreateEvaluateArguments) {
+  return function evaluateSlot({ date, key }: EvaluateArguments): CalendarSlot {
+    const today = dayjs().startOf('day')
+
+    const isInFuture = !today.isAfter(date)
+    const isOnAllowedWeekday = calendar.limitWeekdays.includes(date.day())
+
+    const keySlots = slots.filter((slot) => slot.key === key)
+    const isSlotAvailable =
+      keySlots.filter((slot) => slot.userId !== user.id).length <
+      calendar.limitSlotsPerKey
+
+    const userHasBooked = !!keySlots.find((slot) => slot.userId === user.id)
+
+    return {
+      id: stringify({ userId: user.id, calendarSlug: calendar.slug, key }),
+      key,
+      userCanBook:
+        isInFuture && isOnAllowedWeekday && isSlotAvailable && !userHasBooked,
+      userHasBooked,
+      userCanCancel: isInFuture && userHasBooked,
+      users: users.filter((user) =>
+        keySlots.map((slot) => slot.userId).includes(user.id),
+      ),
+    }
+  }
 }

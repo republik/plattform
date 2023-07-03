@@ -2,7 +2,7 @@ const dayjs = require('dayjs')
 
 const { Roles, transformUser } = require('@orbiting/backend-modules-auth')
 
-const { parse, stringify, isKeyValid } = require('../../../lib/utils')
+const { parse, isKeyValid, createEvaluateSlot } = require('../../../lib/utils')
 
 module.exports = async (_, args, context) => {
   const { id, userId } = args
@@ -13,8 +13,6 @@ module.exports = async (_, args, context) => {
   if (!isKeyValid(key)) {
     throw new Error(t('api/calendar/slot/error/keyInvalid'))
   }
-
-  const date = dayjs(key)
 
   const calendar = await loaders.Calendar.bySlug.load(calendarSlug)
   if (!calendar) {
@@ -50,6 +48,13 @@ module.exports = async (_, args, context) => {
     throw new Error(t('api/calendar/slot/error/userBookedAlready'))
   }
 
+  const today = dayjs().startOf('day')
+  const date = dayjs(key)
+  const isInFuture = !today.isAfter(date)
+  if (!isInFuture) {
+    throw new Error(t('api/calendar/slot/error/slotIsNotInFuture'))
+  }
+
   const isOnAllowedWeekday = calendar.limitWeekdays.includes(date.day())
   if (!isOnAllowedWeekday) {
     throw new Error(t('api/calendar/slot/error/slotIsNotOnAllowedWeekday'))
@@ -80,12 +85,7 @@ module.exports = async (_, args, context) => {
         .then((users) => users.map(transformUser))
     : []
 
-  return {
-    id: stringify({ userId: user.id, calendarSlug: calendar.slug, key }),
-    key,
-    userCanBook: false,
-    userHasBooked: true,
-    userCanCancel: true,
-    users,
-  }
+  const evaluateSlot = createEvaluateSlot({ calendar, slots, user: me, users })
+
+  return evaluateSlot({ date, key })
 }
