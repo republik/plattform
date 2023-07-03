@@ -1,8 +1,8 @@
 Guten Tag, {{firstname}} {{lastname}}
 
 Es ist Sommer, es ist heiss, es ist hektisch. Wir haben Ihnen letzte Woche
-unseren Sommerfragebogen für Politiker geschickt und würden uns sehr freuen,
-wenn Sie sich ein paar Minuten Zeit dafür nehmen würden.
+unseren Sommerfragebogen für Politikerinnen und Politiker geschickt und würden
+uns sehr freuen, wenn Sie sich ein paar Minuten Zeit dafür nehmen würden.
 
 Sie müssen dabei nicht jede Frage beantworten, wenn Sie nicht wollen. Alle
 eingegangenen Antworten werden wir danach veröffentlichen, einzelne Fragebogen
