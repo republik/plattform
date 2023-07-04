@@ -138,20 +138,13 @@ const resolve = async (token, { pgdb }) => {
   const [userId, scope, expiresAt, hmac] = base64u.decode(token).split('/')
   if (userId && scope && expiresAt && hmac) {
     const payload = getPayload({ userId, scope, expiresAt })
-    const userRecord = await pgdb.public.users.findOne({ id: userId })
-    if (userRecord.deletedAt) {
-      return null
-    }
-    const key = userRecord.accessKey
+    const key = await pgdb.public.users.findOneFieldOnly(
+      { id: userId, deletedAt: null },
+      'accessKey',
+    )
     if (key && getHmac(payload, key) === hmac) {
       const scopeConfig = getScopeConfig(scope)
-      return {
-        userId,
-        scope,
-        scopeConfig,
-        expiresAt: moment(expiresAt),
-        hmac,
-      }
+      return { userId, scope, scopeConfig, expiresAt: moment(expiresAt), hmac }
     }
   }
   return null
