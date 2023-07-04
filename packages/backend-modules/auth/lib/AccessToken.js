@@ -139,7 +139,7 @@ const resolve = async (token, { pgdb }) => {
   if (userId && scope && expiresAt && hmac) {
     const payload = getPayload({ userId, scope, expiresAt })
     const userRecord = await pgdb.public.users.findOne({ id: userId })
-    if (userRecord.revokedAt) {
+    if (userRecord.deletedAt) {
       return null
     }
     const key = userRecord.accessKey
