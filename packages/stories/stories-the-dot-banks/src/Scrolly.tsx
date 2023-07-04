@@ -1,5 +1,5 @@
-import { css } from 'glamor'
-import { useEffect, useState } from 'react'
+import { css, merge } from 'glamor'
+import { useEffect, useRef, useState } from 'react'
 
 // TODO: get rid of styleguide dep
 import { useColorContext } from './__styleguide/components/Colors/ColorContext'
@@ -14,6 +14,9 @@ const CHAPTER_IDS = ['kapitel-1', 'kapitel-2', 'kapitel-3', 'kapitel-4']
 export const Scrolly = () => {
   const [colorScheme] = useColorContext()
   const [currentChapter, setCurrentChapter] = useState<number>(1)
+  const containerRef = useRef<HTMLDivElement>()
+  const chartRef = useRef<HTMLDivElement>()
+  const [isFixed, setFixed] = useState<boolean>(false)
 
   const handleScroll = () => {
     const tops = CHAPTER_IDS.map((id) =>
@@ -24,6 +27,14 @@ export const Scrolly = () => {
     const i = tops.indexOf(Math.min(...tops))
     // console.log(i + 1)
     setCurrentChapter(i + 1)
+
+    // hack for the chart to stay in view
+    if (chartRef.current.getBoundingClientRect().top <= 80) setFixed(true)
+    if (
+      chartRef.current.getBoundingClientRect().bottom <
+      containerRef.current.getBoundingClientRect().bottom
+    )
+      setFixed(false)
   }
 
   useEffect(() => {
@@ -32,45 +43,47 @@ export const Scrolly = () => {
   }, [])
 
   return (
-    <div
-      {...styles.scrollyGraphicsContainer}
-      {...colorScheme.set('backgroundColor', 'default')}
-    >
+    <div style={{ height: 3000, maxHeight: '40vh' }} ref={containerRef}>
       <div
-        {...styles.scrollyGraphicsChapters}
+        {...merge(
+          styles.scrollyGraphicsContainer,
+          isFixed && styles.scrollyGraphicsContainerScrolled,
+        )}
         {...colorScheme.set('backgroundColor', 'default')}
-        style={{ opacity: currentChapter ? 1 : 0 }}
+        ref={chartRef}
       >
-        <ChapterIndicator mini highlighted={currentChapter === 1}>
-          1
-        </ChapterIndicator>
-        <ChapterIndicator mini highlighted={currentChapter === 2}>
-          2
-        </ChapterIndicator>
-        <ChapterIndicator mini highlighted={currentChapter === 3}>
-          3
-        </ChapterIndicator>
-        <ChapterIndicator mini highlighted={currentChapter === 4}>
-          4
-        </ChapterIndicator>
-      </div>
+        <div
+          {...styles.scrollyGraphicsChapters}
+          {...colorScheme.set('backgroundColor', 'default')}
+          style={{ opacity: currentChapter ? 1 : 0 }}
+        >
+          <ChapterIndicator mini highlighted={currentChapter === 1}>
+            1
+          </ChapterIndicator>
+          <ChapterIndicator mini highlighted={currentChapter === 2}>
+            2
+          </ChapterIndicator>
+          <ChapterIndicator mini highlighted={currentChapter === 3}>
+            3
+          </ChapterIndicator>
+          <ChapterIndicator mini highlighted={currentChapter === 4}>
+            4
+          </ChapterIndicator>
+        </div>
 
-      <StoryGraphic highlighted={currentChapter} />
+        <StoryGraphic highlighted={currentChapter} />
+      </div>
     </div>
   )
 }
 
 const styles = {
   scrollyGraphicsContainer: css({
-    position: 'fixed',
-    // position: 'sticky',
-    // top: 0,
-    top: 80,
     padding: '48px',
     /* min-height: 50dvh; */
     width: '100vw',
     // Beautiful hack to break out to full width from whatever the container size is at the moment
-    // marginLeft: 'calc(-50vw + 50%)',
+    marginLeft: 'calc(-50vw + 50%)',
     left: 0,
     zIndex: 1,
     display: 'flex',
@@ -82,6 +95,12 @@ const styles = {
     [mediaQueries.mUp]: {
       padding: '40px',
     },
+  }),
+  scrollyGraphicsContainerScrolled: css({
+    position: 'fixed',
+    top: 80,
+    left: 0,
+    marginLeft: 'auto',
   }),
   scrollyGraphicsChapters: css({
     position: 'absolute',
