@@ -142,7 +142,6 @@ const resolve = async (token, { pgdb }) => {
       { id: userId, deletedAt: null },
       'accessKey',
     )
-    console.log(key)
     if (key && getHmac(payload, key) === hmac) {
       const scopeConfig = getScopeConfig(scope)
       return { userId, scope, scopeConfig, expiresAt: moment(expiresAt), hmac }
