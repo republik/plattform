@@ -53,15 +53,15 @@ const defineVariants = (
 
 const getVariant = (highlighted: number) => {
   switch (highlighted) {
-    case 0:
-      return 'step1'
     case 1:
-      return 'step2'
+      return 'step1'
     case 2:
-      return 'step3'
+      return 'step2'
     case 3:
-      return 'step4'
+      return 'step3'
     case 4:
+      return 'step4'
+    case 5:
       return 'step5'
   }
   return 'step0'

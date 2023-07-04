@@ -5,6 +5,8 @@ import {
   createStaticKeyHandler,
   createInsertAfterKeyHandler,
 } from '../../utils/keyHandlers'
+import { slug, mdastToString, mUp } from '@project-r/styleguide'
+import { css } from 'glamor'
 
 export default ({ rule, subModules, TYPE }) => {
   const {
@@ -35,6 +37,9 @@ export default ({ rule, subModules, TYPE }) => {
         kind: 'block',
         type: TYPE,
         nodes: inlineSerializer.fromMdast(node.children, 0, node, rest),
+        data: {
+          id: slug(mdastToString(node)),
+        },
       }
     },
     toMdast: (object, index, parent, rest) => {
@@ -92,6 +97,9 @@ export default ({ rule, subModules, TYPE }) => {
         renderNode({ node, children, attributes }) {
           if (!title.match(node)) return
 
+          // TODO: generate id here.
+          // console.log(node.data.toJS().id)
+
           return (
             <rule.component
               attributes={{
@@ -100,6 +108,7 @@ export default ({ rule, subModules, TYPE }) => {
               }}
               {...node.data.toJS()}
             >
+              <a {...styles.anchor} id={node.data.toJS().id} />
               <span
                 style={{
                   position: 'relative',
@@ -121,4 +130,20 @@ export default ({ rule, subModules, TYPE }) => {
       },
     ],
   }
+}
+
+const styles = {
+  link: css({
+    color: 'inherit',
+    textDecoration: 'none',
+  }),
+  anchor: css({
+    display: 'block',
+    visibility: 'hidden',
+    position: 'relative',
+    top: -65, // HEADER_HEIGHT_MOBILE + 20
+    [mUp]: {
+      top: -80, // HEADER_HEIGHT + 20
+    },
+  }),
 }
