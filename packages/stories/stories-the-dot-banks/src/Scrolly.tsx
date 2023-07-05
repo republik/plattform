@@ -89,7 +89,7 @@ const styles = {
     display: 'flex',
     maxHeight:
       '40vh' /* don't use dvh here, otherwise the layout will jump when scrolling */,
-    backdropFilter: 'blur(2px)',
+    backdropFilter: 'blur(20px)',
     boxShadow: '0px 5px 5px 0px rgba(0,0,0,0.05)',
 
     [mediaQueries.mUp]: {

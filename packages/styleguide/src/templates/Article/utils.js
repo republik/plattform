@@ -19,6 +19,8 @@ import {
   INFOBOX_IMAGE_SIZES,
   INFOBOX_DEFAULT_IMAGE_SIZE,
 } from '../../components/InfoBox'
+import { NEW_COLORS } from '@republik/stories-the-dot-banks/src/config'
+import * as mediaQueries from '@republik/stories-the-dot-banks/src/__styleguide/theme/mediaQueries'
 
 export const matchSpan = matchType('span')
 export const matchSpanType = (type) => (node) =>
@@ -103,6 +105,39 @@ const nestedInlines = [
       type: 'MEMO',
     },
   },
+  {
+    matchMdast: matchSpanType('COLOR_LABEL'),
+    props: (node) => {
+      console.log({ node })
+      return {
+        color: node.data.color,
+      }
+    },
+    component: ({ color, children }) => {
+      console.log({ color })
+      return (
+        <span
+          style={{
+            display: 'inline-block',
+            verticalAlign: 'text-top',
+            padding: '0 5px',
+          }}
+        >
+          <span
+            {...styles.highlight}
+            style={{ backgroundColor: 'rgba(0, 0, 0, 0.05)' }}
+          >
+            <span {...styles.circle} style={{ backgroundColor: color }} />
+            {children}
+          </span>
+        </span>
+      )
+    },
+    editorModule: 'colorLabel',
+    editorOptions: {
+      type: 'COLOR_LABEL',
+    },
+  },
 ]
 
 export const globalInlines = [
@@ -133,6 +168,22 @@ export const styles = {
     [mUp]: {
       top: -80, // HEADER_HEIGHT + 20
     },
+  }),
+  highlight: css({
+    whiteSpace: 'nowrap',
+    margin: '-1px 0 1px 0',
+    display: 'flex',
+    alignItems: 'center',
+    borderRadius: '0.3em',
+    padding: '0.2em',
+    lineHeight: '20px',
+  }),
+  circle: css({
+    display: 'inline-block',
+    borderRadius: '50%',
+    width: '12px',
+    height: '12px',
+    marginRight: '5px',
   }),
 }
 

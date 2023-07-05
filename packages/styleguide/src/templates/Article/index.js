@@ -32,7 +32,13 @@ import {
   matchImage,
 } from '@republik/mdast-react-render'
 
-import { matchLast, globalInlines, styles, getDatePath } from './utils'
+import {
+  matchLast,
+  globalInlines,
+  styles,
+  getDatePath,
+  matchSpanType,
+} from './utils'
 
 import createBase from './base'
 import createBlocks from './blocks'
