@@ -46,7 +46,7 @@ const PARTIES = [
 // @Felix: i'd use this in the single question view too
 export const Filters = () => {
   const router = useRouter()
-  const { canton, party } = router.query
+  const query = router.query
 
   return (
     <NarrowContainer>
@@ -54,18 +54,18 @@ export const Filters = () => {
         <Dropdown
           label='Kanton'
           items={CANTONS}
-          value={canton}
+          value={query.canton}
           onChange={(item) =>
-            router.push(`?party=${party}&canton=${item.value}`)
+            router.push({ query: { ...query, canton: item.value } })
           }
         />
         <Dropdown
           label='Partei'
           items={PARTIES}
-          value={party}
-          onChange={(item) => {
-            router.push(`?party=${item.value}&canton=${canton}`)
-          }}
+          value={query.party}
+          onChange={(item) =>
+            router.push({ query: { ...query, party: item.value } })
+          }
         />
       </div>
     </NarrowContainer>
