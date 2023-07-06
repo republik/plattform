@@ -5,11 +5,19 @@ export type CallToAction = {
   acknowledgedAt?: string
   updatedAt: string
   createdAt: string
-  payload: {
-    customComponent: {
-      key: string
-      args?: Record<string, unknown>
-    }
-  }
+  payload:
+    | {
+        __typename: 'CallToActionBasicPayload'
+        text: string
+        linkHref: string
+        linkLabel: string
+      }
+    | {
+        __typename: 'CallToActionComponentPayload'
+        customComponent: {
+          key: string
+          args?: Record<string, unknown>
+        }
+      }
   response?: unknown
 }

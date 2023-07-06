@@ -1,5 +1,4 @@
-import { useMemo } from 'react'
-import { CATComponentBaseProps } from './CustomComponentBase'
+import BasicCallToAction from './BasicCallToAction'
 import { getCustomComponent } from './CustomComponentRegistry'
 import { useAcknowledgeCTAMutation } from './graphql/useAcknowledgeCTAMutation'
 import useCallToAction from './useCallToAction'
@@ -12,40 +11,44 @@ export default function CallToActionBanner() {
   const { data: callToAction, loading, error } = useCallToAction()
   // Retrieve the right component based on the calltoAction.payload
 
-  const Component: React.ComponentType<CATComponentBaseProps> = useMemo(() => {
-    if (!callToAction) {
-      return null
-    }
-
-    if (callToAction.payload.customComponent) {
-      return getCustomComponent(callToAction.payload.customComponent.key)
-    }
-
-    return null // TODO: Implement default component
-  }, [callToAction?.id, callToAction?.payload.customComponent])
-
-  if (loading || error || !callToAction || !Component) {
+  if (loading || error || !callToAction) {
     return null
   }
 
-  return (
-    <Component
-      callToAction={callToAction}
-      handleAcknowledge={async () => {
-        handleAcknowledge({
-          variables: {
-            id: callToAction.id,
-            response: undefined,
-          },
-          optimisticResponse: {
-            acknowledgeCallToAction: {
-              ...callToAction,
-              acknowledgedAt: new Date().toISOString(),
-              response: null,
-            },
-          },
-        })
-      }}
-    />
-  )
+  const acknowledge = () => {
+    handleAcknowledge({
+      variables: {
+        id: callToAction.id,
+        response: undefined,
+      },
+      optimisticResponse: {
+        acknowledgeCallToAction: {
+          id: callToAction.id,
+          acknowledgedAt: new Date().toISOString(),
+        },
+      },
+    })
+  }
+
+  if (callToAction.payload.__typename === 'CallToActionComponentPayload') {
+    const CustomComponent = getCustomComponent(
+      callToAction.payload.customComponent.key,
+    )
+    return CustomComponent ? (
+      <CustomComponent
+        id={callToAction.id}
+        payload={callToAction.payload}
+        handleAcknowledge={acknowledge}
+      />
+    ) : null
+  } else if (callToAction.payload.__typename === 'CallToActionBasicPayload') {
+    return (
+      <BasicCallToAction
+        id={callToAction.id}
+        payload={callToAction.payload}
+        handleAcknowledge={acknowledge}
+      />
+    )
+  }
+  return null
 }

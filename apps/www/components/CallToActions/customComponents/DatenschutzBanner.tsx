@@ -1,7 +1,7 @@
 import { IconClose } from '@republik/icons'
 import { css } from 'glamor'
 import Link from 'next/link'
-import { CATComponentBaseProps } from '../CustomComponentBase'
+import { CTAComponentBaseProps } from '../CustomComponentBase'
 import { IconButton, useColorContext } from '@project-r/styleguide'
 import { PUBLIC_BASE_URL } from '../../../lib/constants'
 import CTAAnimatedBase from '../CTAAnimatedBase'
@@ -19,19 +19,20 @@ function parseLocalLink(href?: unknown): string | undefined {
 const DATENSCHUTZ_URL = '/datenschutz'
 
 const DatenschutzBanner = ({
-  callToAction,
+  id,
+  payload,
   handleAcknowledge,
-}: CATComponentBaseProps) => {
+}: CTAComponentBaseProps) => {
   const [colorScheme] = useColorContext()
 
   const {
     customComponent: { args },
-  } = callToAction.payload
+  } = payload
   const linkHref = parseLocalLink(args?.link)
 
   return (
     <CTAAnimatedBase
-      ctaId={callToAction.id}
+      ctaId={id}
       {...colorScheme.set('backgroundColor', 'default')}
       {...colorScheme.set('color', 'text')}
     >
@@ -74,6 +75,7 @@ const styles = {
     '> p': {
       margin: 0,
       marginBottom: '0.5em',
+      lineHeight: '1.25',
     },
     '> a': {
       color: 'inherit',
