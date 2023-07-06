@@ -14,8 +14,16 @@ const MINIMUM_HTTP_RESPONSE_STATUS_ERROR = 400
 const MailchimpInterface = ({ logger }) => {
   checkEnv(['MAILCHIMP_API_KEY', 'MAILCHIMP_URL', 'MAILCHIMP_MAIN_LIST_ID'])
   return {
-    buildApiUrl(path) {
+    buildApiUrl(audienceId, path) {
       return `${MAILCHIMP_URL}/3.0/lists/${MAILCHIMP_MAIN_LIST_ID}${path}`
+    },
+    buildAudienceApiUrl(email, audienceId) {
+      const hash = crypto
+        .createHash('md5')
+        .update(email.toLowerCase())
+        .digest('hex')
+
+      return this.buildApiUrl(audienceId, `/members/${hash}`)
     },
     buildMembersApiUrl(email) {
       const hash = crypto
@@ -23,7 +31,7 @@ const MailchimpInterface = ({ logger }) => {
         .update(email.toLowerCase())
         .digest('hex')
 
-      return this.buildApiUrl(`/members/${hash}`)
+      return this.buildApiUrl(MAILCHIMP_MAIN_LIST_ID, `/members/${hash}`)
     },
     buildBatchesApiUrl(id) {
       // returns {MAILCHIMP_URL}/3.0/batches[/{id}]
@@ -88,6 +96,34 @@ const MailchimpInterface = ({ logger }) => {
       } catch (error) {
         logger.error(`mailchimp -> exception: ${error.message}`)
         throw new NewsletterMemberMailError({ error, email })
+      }
+    },
+    async updateMemberInAudience(email, data, audienceId) {
+      const url = this.buildAudienceApiUrl(email, audienceId)
+      try {
+        // Build PUT request, and drop props where value is null or undefined to avoid
+        // malformatted error responses from API.
+        const body = {
+          ...data,
+          // TODO ...(data.interests && { interests: omitBy(data.interests, isNil) }), TODO check if required or not
+          merge_fields: {
+            ...(data.merge_fields && omitBy(data.merge_fields, isNil)),
+            EMAILB64U: base64u.encode(email),
+          },
+        }
+        debug('MailchimpInterface.updateMemberInAudience PUT', { body })
+        const response = await this.fetchAuthenticated('PUT', url, {
+          body: JSON.stringify(body),
+        })
+        const json = await response.json()
+        if (response.status >= MINIMUM_HTTP_RESPONSE_STATUS_ERROR) {
+          debug(`could not update member: ${email} ${json.detail}`)
+          return null
+        }
+        return json
+      } catch (error) {
+        logger.error(`mailchimp -> exception: ${error.message}`)
+        throw new NewsletterMemberMailError({ error, email }) // TODO different error or not?
       }
     },
     /* 

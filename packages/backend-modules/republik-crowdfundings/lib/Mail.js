@@ -28,32 +28,46 @@ const {
   MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR,
   MAILCHIMP_INTEREST_NEWSLETTER_ACCOMPLICE,
   MAILCHIMP_INTEREST_NEWSLETTER_CLIMATE,
+  MAILCHIMP_MAIN_LIST_ID,
+  MAILCHIMP_ONBOARDING_AUDIENCE_ID,
   FRONTEND_BASE_URL,
 } = process.env
 
-const mail = createMail([
-  {
-    name: 'DAILY',
-    interestId: MAILCHIMP_INTEREST_NEWSLETTER_DAILY,
-  },
-  {
-    name: 'WEEKLY',
-    interestId: MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY,
-  },
-  {
-    name: 'CLIMATE',
-    interestId: MAILCHIMP_INTEREST_NEWSLETTER_CLIMATE,
-  },
-  {
-    name: 'ACCOMPLICE',
-    interestId: MAILCHIMP_INTEREST_NEWSLETTER_ACCOMPLICE,
-    visibleToRoles: ['accomplice'],
-  },
-  {
-    name: 'PROJECTR',
-    interestId: MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR,
-  },
-])
+const mail = createMail(
+  [
+    {
+      name: 'DAILY',
+      interestId: MAILCHIMP_INTEREST_NEWSLETTER_DAILY,
+    },
+    {
+      name: 'WEEKLY',
+      interestId: MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY,
+    },
+    {
+      name: 'CLIMATE',
+      interestId: MAILCHIMP_INTEREST_NEWSLETTER_CLIMATE,
+    },
+    {
+      name: 'ACCOMPLICE',
+      interestId: MAILCHIMP_INTEREST_NEWSLETTER_ACCOMPLICE,
+      visibleToRoles: ['accomplice'],
+    },
+    {
+      name: 'PROJECTR',
+      interestId: MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR,
+    },
+  ],
+  [
+    {
+      name: 'MAIN_AUDIENCE',
+      audienceId: MAILCHIMP_MAIN_LIST_ID,
+    },
+    {
+      name: 'ONBOARDING',
+      audienceId: MAILCHIMP_ONBOARDING_AUDIENCE_ID,
+    },
+  ],
+)
 
 const getInterestsForUser = async ({
   userId,
@@ -120,6 +134,7 @@ mail.getInterestsForUser = getInterestsForUser
 mail.enforceSubscriptions = async ({
   userId,
   email,
+  isNew,
   subscribeToEditorialNewsletters,
   pgdb,
   ...rest
@@ -132,11 +147,36 @@ mail.enforceSubscriptions = async ({
     pgdb,
   })
 
-  return mail.updateNewsletterSubscriptions({
+  const newsletterSubscriptions = mail.updateNewsletterSubscriptions({
     user: user || { email },
     interests,
     ...rest,
   })
+
+  if (isNew) {
+    const onboardingSubscription = mail.addUserToAudience({
+      user: user || { email },
+      audienceId: MAILCHIMP_ONBOARDING_AUDIENCE_ID,
+      ...rest,
+    })
+    return [
+      {
+        audienceId: MAILCHIMP_MAIN_LIST_ID,
+        subscriptions: newsletterSubscriptions,
+      },
+      {
+        audienceId: MAILCHIMP_ONBOARDING_AUDIENCE_ID,
+        subscriptions: onboardingSubscription,
+      },
+    ]
+  }
+
+  return [
+    {
+      audienceId: MAILCHIMP_MAIN_LIST_ID,
+      subscriptions: newsletterSubscriptions,
+    },
+  ]
 }
 
 mail.sendMembershipProlongConfirmation = async ({

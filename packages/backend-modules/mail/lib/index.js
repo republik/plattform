@@ -8,6 +8,7 @@ const handlers = {
   updateMergeFields: require('./updateMergeFields'),
   updateNewsletterSubscription: require('./updateNewsletterSubscription'),
   updateNewsletterSubscriptions: require('./updateNewsletterSubscriptions'),
+  addUserToAudience: require('./updateAudience.js'),
 
   // MailChimp batch operations types
   operations: {
@@ -20,9 +21,12 @@ const errors = require('../errors')
 
 module.exports = {
   ...handlers,
-  createMail: (interestConfiguration) => {
+  createMail: (interestConfiguration, audienceConfiguration) => {
     if (!interestConfiguration)
       throw new errors.SubscriptionConfigurationMissingMailError()
+    if (!audienceConfiguration)
+      throw new errors.AudienceConfigurationMissingMailError() // TODO add error
+    // TODO add audienceConfiguration here too?
     return Object.keys(handlers).reduce(
       (result, handlerName) => {
         return {
