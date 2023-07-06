@@ -11,17 +11,17 @@ import { useCallToActionsQuery } from './graphql/useCallToActionsQuery'
  * }
  */
 export default function useCallToAction(): {
-  data?: CallToAction
+  data?: CallToAction[]
   loading: boolean
   error?: ApolloError
   refetch: () => void
 } {
   const { data, loading, error, refetch } = useCallToActionsQuery()
   const callToActions = data?.me?.callToActions
-  const activeCTA = callToActions?.find((cta) => !cta.acknowledgedAt)
+  const activeCTAs = callToActions?.filter((cta) => !cta.acknowledgedAt)
 
   return {
-    data: activeCTA,
+    data: activeCTAs,
     loading,
     error,
     refetch,
