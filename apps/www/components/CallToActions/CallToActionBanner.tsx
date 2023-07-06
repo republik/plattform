@@ -1,7 +1,11 @@
-import BasicCallToAction from './BasicCallToAction'
+import dynamic from 'next/dynamic'
 import { getCustomComponent } from './CustomComponentRegistry'
 import { useAcknowledgeCTAMutation } from './graphql/useAcknowledgeCTAMutation'
 import useCallToAction from './useCallToAction'
+
+const BasicCallToAction = dynamic(() => import('./BasicCallToAction'), {
+  ssr: false,
+})
 
 /**
  * Render a call to action banner that faddes in underneath the frame-haeder
