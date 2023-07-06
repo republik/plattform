@@ -41,7 +41,6 @@ import Time from './ui/Time'
 const styles = {
   container: css({
     padding: 12,
-    background: '#eee',
     borderRadius: 4,
     display: 'flex',
     alignItems: 'center',
