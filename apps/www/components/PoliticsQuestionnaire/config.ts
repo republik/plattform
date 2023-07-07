@@ -7,8 +7,8 @@ export const leftJoin = (objArr1, objArr2, key) =>
   }))
 
 // TODO: use correct color palette
-export const QUESTIONNAIRE_BG_COLOR = '#ffdc5e'
-const COLORS = ['#ffdd5e', '#ce9fc7', '#67a9d9', '#f49787', '#75d69c']
+export const QUESTIONNAIRE_BG_COLOR = '#ffffff'
+const COLORS = ['#56a9df', '#66b7ed']
 
 export const QUESTION_SEPARATOR = ','
 
@@ -258,4 +258,4 @@ export const OVERVIEW_QUESTIONNAIRE_PATH = '/politikfragebogen/overview'
 export const QUESTIONNAIRE_SLUG = 'politiker-wahlen'
 
 export const QUESTIONNAIRE_SQUARE_IMG_URL =
-  'https://cdn.repub.ch/s3/republik-assets/repos/republik/page-klimafragebogen-uebersicht/files/034a0eca-8aaf-4511-90aa-504cca584981/final-art_questionnaire.png'
+  'https://cdn.repub.ch/s3/republik-assets/repos/republik/article-community-fragebogen-politik-sommer-2023/files/36c07305-f4e0-4bdc-91a2-287c087fe89e/politiker.png'

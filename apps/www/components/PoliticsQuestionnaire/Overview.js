@@ -2,6 +2,7 @@ import { css } from 'glamor'
 import Link from 'next/link'
 import { useState } from 'react'
 import { useRouter } from 'next/router'
+import { PUBLIC_BASE_URL, ASSETS_SERVER_BASE_URL } from '../../lib/constants'
 
 import Frame from '../Frame'
 
@@ -14,6 +15,10 @@ import {
   NarrowContainer,
   Container,
   Dropdown,
+  Figure,
+  FigureImage,
+  FigureCaption,
+  FigureByline,
 } from '@project-r/styleguide'
 
 import {
@@ -21,6 +26,8 @@ import {
   QUESTIONS,
   QUESTION_TYPES,
   QUESTION_SEPARATOR,
+  QUESTIONNAIRE_BG_COLOR,
+  QUESTIONNAIRE_SQUARE_IMG_URL,
 } from './config'
 import { QuestionSummaryChart } from '../Questionnaire/Submissions/QuestionChart'
 
@@ -28,6 +35,8 @@ import {
   AnswersGrid,
   AnswersGridCard,
 } from '../Questionnaire/Submissions/AnswersGrid'
+
+import HeaderShare from './HeaderShare'
 
 // filter needs to be this text/value object
 const CANTONS = [
@@ -40,6 +49,12 @@ const PARTIES = [
   { text: 'Alle', value: undefined },
   { text: 'SVP', value: 'SVP' },
   { text: 'SP', value: 'SP' },
+  { text: 'Grüne', value: 'GRÜNE' },
+  { text: 'Mitte', value: 'M-E' },
+  { text: 'FDP', value: 'FDP-Liberale' },
+  { text: 'LDP', value: 'LDP' },
+  { text: 'glp', value: 'glp' },
+  { text: 'EVP', value: 'EVP' },
 ]
 
 // @Felix: if you prefer I guess a filter context could be a good solution, too
@@ -51,14 +66,14 @@ export const Filters = () => {
   return (
     <NarrowContainer>
       <div {...styles.filterContainer}>
-        <Dropdown
+        {/* <Dropdown
           label='Kanton'
           items={CANTONS}
           value={query.canton}
           onChange={(item) =>
             router.push({ query: { ...query, canton: item.value } })
           }
-        />
+        /> */}
         <Dropdown
           label='Partei'
           items={PARTIES}
@@ -73,12 +88,82 @@ export const Filters = () => {
 }
 
 export const SubmissionsOverview = ({ submissionData }) => {
-  // @Felix: it would be cool to also set a query param for the filters, then we
-  //  can open the single answer pages with the right filters, as well as share prefiltered pages
-  // @Felix mechanics for partei filter would be exactly the same
+  const router = useRouter()
+  // const {
+  //   query: { id, image },
+  // } = router
+  const urlObj = new URL(router.asPath, PUBLIC_BASE_URL)
+  const url = urlObj.toString()
 
+  const shareImageUrlObj = urlObj
+  shareImageUrlObj.searchParams.set('image', true)
+  const shareImageUrl = shareImageUrlObj.toString()
+
+  const meta = {
+    url,
+    title: 'Politikerfragebogen 2023',
+    description: 'Share Beschreibungstext',
+    image: `${ASSETS_SERVER_BASE_URL}/render?width=1200&height=1&url=${encodeURIComponent(
+      shareImageUrl,
+    )}`,
+  }
   return (
     <Frame raw>
+      <div
+        style={{
+          backgroundColor: QUESTIONNAIRE_BG_COLOR,
+          padding: '24px 0 24px',
+        }}
+      >
+        <ColorContextProvider colorSchemeKey='light'>
+          <div
+            style={{
+              paddingTop: 24,
+              textAlign: 'center',
+            }}
+          >
+            <Figure
+              size='tiny'
+              attributes={{ style: { position: 'relative' } }}
+            >
+              <FigureImage src={QUESTIONNAIRE_SQUARE_IMG_URL} />
+              <FigureCaption>
+                <FigureByline>Cristina Spanò</FigureByline>
+              </FigureCaption>
+            </Figure>
+            <NarrowContainer style={{ padding: '20px 0' }}>
+              <Interaction.Headline>
+                Politikerfragebogen 25 Fragen
+              </Interaction.Headline>
+              <Editorial.Lead>
+                Worauf können Sie nicht verzichten, obwohl Sie wissen, dass es
+                für das Klima besser wäre? Was hätten Sie gerne schon vor 10
+                Jahren über die Klimakrise gewusst? Stöbern Sie durch die
+                Vielfalt an Antworten der Republik-Leserinnen.
+              </Editorial.Lead>
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  marginTop: 20,
+                }}
+              >
+                <HeaderShare meta={meta} />
+              </div>
+              {/* {author?.profilePicture && (
+                <img
+                  src={author.profilePicture}
+                  style={{
+                    marginTop: 30,
+                    width: 120,
+                    borderRadius: 80,
+                  }}
+                />
+              )} */}
+            </NarrowContainer>
+          </div>
+        </ColorContextProvider>
+      </div>
       <div style={{ margin: '48px auto 0' }}>
         <Filters />
         {QUESTIONS.map((question, idx) => {
@@ -117,6 +202,10 @@ const QuestionFeatured = ({ questions, bgColor, questionSlug }) => {
   //     scrollIntoView(questionRef.current)
   //   }
   // }, [])
+
+  // Because we filter by NA we get undefined for certain answers, so we exclude those answers from the overview
+  if (typeof questions[0] === 'undefined') return
+  if (questions.length > 1 && typeof questions[1] === 'undefined') return
 
   const questionTypes = questions.map((q) => getTypeBySlug(q.key))
 
@@ -273,8 +362,9 @@ const styles = {
     textAlign: 'center',
   }),
   filterContainer: css({
+    marginBottom: 20,
     display: 'flex',
-    gap: '30px',
+    gap: 30,
     '& > div': {
       flexGrow: 1,
     },

@@ -27,21 +27,15 @@ export const getServerSideProps = createGetServerSideProps(
       'utf-8',
     )
 
-    const responses = csvParse(data)
+    const responses = csvParse(data).filter(
+      (response) => response.answer !== 'NA',
+    )
 
     const joinedData = leftJoin(responses, QUESTION_TYPES, 'questionSlug')
 
-    const filteredData =
-      canton && party
-        ? joinedData.filter(
-            (response) =>
-              response.canton === canton && response.party === party,
-          )
-        : party
-        ? joinedData.filter((response) => response.party === party)
-        : canton
-        ? joinedData.filter((response) => response.canton === canton)
-        : joinedData
+    const filteredData = party
+      ? joinedData.filter((response) => response.party === party)
+      : joinedData
 
     const groupedData = nest()
       .key((d) => d.questionSlug)
