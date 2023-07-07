@@ -2,7 +2,7 @@ import { createGetServerSideProps } from '../../lib/apollo/helpers'
 import Page from '../../components/PoliticsQuestionnaire/Person'
 import fs from 'node:fs/promises'
 import path from 'node:path'
-import { csvParse } from 'd3'
+import { csvParse } from 'd3-dsv'
 
 import {
   QUESTION_TYPES,

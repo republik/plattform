@@ -2,7 +2,8 @@ import { createGetServerSideProps } from '../../lib/apollo/helpers'
 import SubmissionsOverview from '../../components/PoliticsQuestionnaire/Overview'
 import fs from 'node:fs/promises'
 import path from 'node:path'
-import { csvParse, nest } from 'd3'
+import { csvParse } from 'd3-dsv'
+import { nest } from 'd3-collection'
 
 import {
   QUESTION_TYPES,
