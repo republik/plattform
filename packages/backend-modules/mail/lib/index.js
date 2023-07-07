@@ -8,7 +8,6 @@ const handlers = {
   updateMergeFields: require('./updateMergeFields'),
   updateNewsletterSubscription: require('./updateNewsletterSubscription'),
   updateNewsletterSubscriptions: require('./updateNewsletterSubscriptions'),
-  addUserToAudience: require('./updateAudience.js'),
 
   // MailChimp batch operations types
   operations: {

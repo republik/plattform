@@ -131,6 +131,37 @@ const getInterestsForUser = async ({
 
 mail.getInterestsForUser = getInterestsForUser
 
+const MailchimpInterface = require('../../mail/MailchimpInterface')
+
+const addUserToAudience = async ({ user, name, audienceId }) => {
+  const { email } = user
+
+  debug('addUserToAudience called with ' + { email, user, name, audienceId })
+
+  if (!audienceId) {
+    // throw new AudienceNotFoundError({ name }) // TODO add error
+    console.error('AudienceId is not defined')
+  }
+
+  const body = {
+    email_address: email,
+    status_if_new: MailchimpInterface.MemberStatus.Subscribed,
+  }
+
+  debug(body)
+
+  const mailchimp = MailchimpInterface({ console })
+  await mailchimp.updateMemberInAudience(email, body, audienceId)
+
+  // TODO tbd, maybe merge this with NewsletterSubscription
+  const result = {
+    user,
+    status: MailchimpInterface.MemberStatus.Subscribed,
+  }
+  debug(result)
+  return result
+}
+
 mail.enforceSubscriptions = async ({
   userId,
   email,
@@ -147,14 +178,14 @@ mail.enforceSubscriptions = async ({
     pgdb,
   })
 
-  const newsletterSubscriptions = mail.updateNewsletterSubscriptions({
+  const newsletterSubscriptions = await mail.updateNewsletterSubscriptions({
     user: user || { email },
     interests,
     ...rest,
   })
 
   if (isNew) {
-    const onboardingSubscription = mail.addUserToAudience({
+    const onboardingSubscription = await addUserToAudience({
       user: user || { email },
       audienceId: MAILCHIMP_ONBOARDING_AUDIENCE_ID,
       ...rest,

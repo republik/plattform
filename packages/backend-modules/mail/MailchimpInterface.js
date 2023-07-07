@@ -15,7 +15,7 @@ const MailchimpInterface = ({ logger }) => {
   checkEnv(['MAILCHIMP_API_KEY', 'MAILCHIMP_URL', 'MAILCHIMP_MAIN_LIST_ID'])
   return {
     buildApiUrl(audienceId, path) {
-      return `${MAILCHIMP_URL}/3.0/lists/${MAILCHIMP_MAIN_LIST_ID}${path}`
+      return `${MAILCHIMP_URL}/3.0/lists/${audienceId}${path}`
     },
     buildAudienceApiUrl(email, audienceId) {
       const hash = crypto
