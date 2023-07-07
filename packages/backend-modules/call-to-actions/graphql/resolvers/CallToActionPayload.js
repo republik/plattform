@@ -1,6 +1,6 @@
 module.exports = {
-  __resolveType: (cta, args, context) => {
-    if (cta.customComponent) {
+  __resolveType: (payload, args, context) => {
+    if (payload.customComponent) {
       return 'CallToActionComponentPayload'
     }
 
