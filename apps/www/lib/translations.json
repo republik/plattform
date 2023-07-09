@@ -1,6 +1,10 @@
 {
   "data": [
     {
+      "key": "nav/vote",
+      "value": "Urabstimmung"
+    },
+    {
       "key": "nav/events",
       "value": "Veranstaltungen"
     },
