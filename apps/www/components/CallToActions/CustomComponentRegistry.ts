@@ -1,6 +1,6 @@
 import dynamic from 'next/dynamic'
 import { isDev } from '../../lib/constants'
-import { CATComponentBaseProps } from './CustomComponentBase'
+import { CTAComponentBaseProps } from './CustomComponentBase'
 
 // This is a registry of the available custom CTA components.
 // The components are dynamically imported to avoid bloating the main bundle.
@@ -25,7 +25,7 @@ const customComponentsRegistry = {
  */
 export function getCustomComponent(
   key: string,
-): React.ComponentType<CATComponentBaseProps> | undefined {
+): React.ComponentType<CTAComponentBaseProps> | undefined {
   const customComponent = customComponentsRegistry[key]
   if (!customComponent) {
     if (isDev) {

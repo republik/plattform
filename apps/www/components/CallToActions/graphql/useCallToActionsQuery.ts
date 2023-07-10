@@ -11,12 +11,18 @@ const CALL_TO_ACTIONS_QUERY = gql`
         beginAt
         endAt
         acknowledgedAt
-        updatedAt
-        createdAt
         payload {
-          customComponent {
-            key
-            args
+          ... on CallToActionBasicPayload {
+            text
+            linkHref
+            linkLabel
+          }
+
+          ... on CallToActionComponentPayload {
+            customComponent {
+              key
+              args
+            }
           }
         }
       }

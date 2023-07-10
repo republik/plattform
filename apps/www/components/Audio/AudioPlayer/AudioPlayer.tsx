@@ -17,8 +17,8 @@ import { css } from 'glamor'
 import AudioPlaybackElement from './AudioPlaybackElement'
 import { useUserAgent } from '../../../lib/context/UserAgentContext'
 import { ZINDEX_POPOVER } from '../../constants'
+import { AUDIO_PLAYER_WRAPPER_ID } from './constants'
 const MARGIN = 15
-const AUDIO_PLAYER_WRAPPER_ID = 'audio-player-wrapper'
 
 // TODO: handle previously stored audio-player state
 // this is detectable if the stored object has an audioSource element in the top

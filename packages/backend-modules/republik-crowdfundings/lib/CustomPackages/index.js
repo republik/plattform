@@ -406,6 +406,7 @@ const getCustomOptions = async (package_) => {
   }
 
   const suggestedTotal = filteredAndSortedOptions
+    .filter((option) => option.defaultAmount > 0)
     .map((option) => option.suggestedPrice)
     .filter(Boolean)
     .find((price) => !!price)

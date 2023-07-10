@@ -69,10 +69,12 @@ const NotificationFeedMini = ({
                           )}
 
                           <Link
-                            href={getTeaserHref(
-                              path,
-                              node.object?.meta?.format?.meta.externalBaseUrl,
-                            )}
+                            href={
+                              getTeaserHref(
+                                path,
+                                node.object?.meta?.format?.meta.externalBaseUrl,
+                              ) ?? '/'
+                            }
                             passHref
                           >
                             <a

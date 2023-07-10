@@ -24,7 +24,11 @@ const Time = ({ currentTime, duration }: TimeProps) => {
   const durationString = renderTime(duration || 0)
 
   return (
-    <span {...styles.time} {...colorScheme.set('color', 'textSoft')}>
+    <span
+      role='presentation' // FIXME: should this be a <time> element? role='timer'?
+      {...styles.time}
+      {...colorScheme.set('color', 'textSoft')}
+    >
       {currentTimeString} / {durationString}
     </span>
   )
