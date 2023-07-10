@@ -17,6 +17,7 @@ export const Scrolly = () => {
   const containerRef = useRef<HTMLDivElement>()
   const chartRef = useRef<HTMLDivElement>()
   const [isFixed, setFixed] = useState<boolean>(false)
+  const [activeColor, setActiveColor] = useState<string>(undefined)
 
   const handleScroll = () => {
     const tops = CHAPTER_IDS.map((id) =>
@@ -37,9 +38,23 @@ export const Scrolly = () => {
       setFixed(false)
   }
 
+  const handleEnterColorLabel = (event) => {
+    setActiveColor(event.detail.color)
+  }
+
+  const handleLeaveColorLabel = () => {
+    setActiveColor(undefined)
+  }
+
   useEffect(() => {
     window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
+    window.addEventListener('enterColorLabel', handleEnterColorLabel)
+    window.addEventListener('leaveColorLabel', handleLeaveColorLabel)
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+      window.removeEventListener('enterColorLabel', handleEnterColorLabel)
+      window.removeEventListener('leaveColorLabel', handleLeaveColorLabel)
+    }
   }, [])
 
   return (
@@ -71,7 +86,7 @@ export const Scrolly = () => {
           </ChapterIndicator>
         </div>
 
-        <StoryGraphic highlighted={currentChapter} />
+        <StoryGraphic highlighted={currentChapter} activeColor={activeColor} />
       </div>
     </div>
   )
@@ -115,43 +130,4 @@ const styles = {
     height: '100%',
     gap: 0,
   }),
-  highlight: css({
-    whiteSpace: 'nowrap',
-    margin: '-1px 0 1px 0',
-    display: 'flex',
-    alignItems: 'center',
-    borderRadius: '0.3em',
-    padding: '0.2em',
-    lineHeight: '20px',
-  }),
-  circle: css({
-    display: 'inline-block',
-    borderRadius: '50%',
-    width: '12px',
-    height: '12px',
-    marginRight: '5px',
-  }),
-}
-
-const Highlight = ({ color, colorKey, children }) => {
-  return (
-    <span
-      style={{
-        display: 'inline-block',
-        verticalAlign: 'text-top',
-        padding: '0 5px',
-      }}
-    >
-      <span
-        {...styles.highlight}
-        style={{ backgroundColor: NEW_COLORS[colorKey].lightBackground }}
-      >
-        <span
-          {...styles.circle}
-          style={{ backgroundColor: NEW_COLORS[colorKey][color] }}
-        />
-        {children}
-      </span>
-    </span>
-  )
 }

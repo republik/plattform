@@ -108,13 +108,19 @@ const nestedInlines = [
   {
     matchMdast: matchSpanType('COLOR_LABEL'),
     props: (node) => {
-      console.log({ node })
       return {
         color: node.data.color,
       }
     },
     component: ({ color, children }) => {
-      console.log({ color })
+      const enterEvent = new CustomEvent('enterColorLabel', {
+        bubbles: true,
+        detail: { color },
+      })
+      const leaveEvent = new CustomEvent('leaveColorLabel', {
+        bubbles: true,
+        detail: { color },
+      })
       return (
         <span
           style={{
@@ -122,6 +128,8 @@ const nestedInlines = [
             verticalAlign: 'text-top',
             padding: '0 5px',
           }}
+          onMouseEnter={() => document.dispatchEvent(enterEvent)}
+          onMouseLeave={() => document.dispatchEvent(leaveEvent)}
         >
           <span
             {...styles.highlight}

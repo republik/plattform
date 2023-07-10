@@ -20,6 +20,7 @@ import {
   PADDING_LEFT,
   NEW_COLORS,
 } from './config'
+import { useEffect, useMemo, useState } from 'react'
 
 const thousandSeparator = '\u2019'
 const swissNumbers = formatLocale({
@@ -51,7 +52,7 @@ const defineVariants = (
   return v
 }
 
-const getVariant = (highlighted: number) => {
+const getVariant = (highlighted: number, activeColor?: string) => {
   switch (highlighted) {
     case 1:
       return 'step1'
@@ -109,10 +110,27 @@ const PADDING_LEFT_CHART = 100
 const WIDTH = 700
 const CENTER = WIDTH / 2
 
-export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
+export const StoryGraphic = ({
+  highlighted,
+  activeColor,
+}: {
+  highlighted: number
+  activeColor?: string
+}) => {
   const [colorScheme] = useColorContext()
+  const [activeColorKey, setActiveColorKey] = useState<number>(1)
   // const key = useResolvedColorSchemeKey()
   const key = 'light'
+
+  useEffect(() => {
+    setActiveColorKey(activeColorKey + 1)
+  }, [activeColor])
+
+  const ubsOpacity =
+    !!activeColor && activeColor !== NEW_COLORS[key].one ? 0.3 : 1
+  const csOpacity =
+    !!activeColor && activeColor !== NEW_COLORS[key].two ? 0.3 : 1
+
   return (
     <motion.svg
       viewBox='0 0 700 400'
@@ -120,7 +138,7 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
       style={{ width: '100%' }}
       {...colorScheme.set('backgroundColor', 'transparentBackground')}
       initial='step0'
-      animate={getVariant(highlighted)}
+      animate={getVariant(highlighted, activeColor)}
     >
       {/* <defs>
         <marker
@@ -514,45 +532,46 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
         ></motion.line>
         {/* circles for cost */}
         <motion.circle
+          key={`ubs-${activeColorKey}`}
           variants={defineVariants(
             {
               y: getCostPosition('UBS'),
               x: CENTER,
-              opacity: 1,
               r: RADIUS,
               fill: NEW_COLORS[key].one,
+              opacity: ubsOpacity,
             },
             {
               step1: {
                 y: getCostPosition('UBS'),
                 x: CENTER,
                 r: RADIUS,
-                opacity: 1,
                 fill: NEW_COLORS[key].one,
+                opacity: ubsOpacity,
                 transition: { duration: 0.5, delay: 0.5 },
               },
               step2: {
                 y: getCostPosition('UBS'),
                 x: CENTER,
                 r: RADIUS,
-                opacity: 1,
                 fill: NEW_COLORS[key].one,
+                opacity: ubsOpacity,
                 transition: { duration: 0.5, delay: 1 },
               },
               step3: {
                 y: getCostPosition('UBS'),
                 x: CENTER - PADDING_LEFT_CHART,
                 r: RADIUS,
-                opacity: 1,
                 fill: NEW_COLORS[key].one,
+                opacity: ubsOpacity,
                 transition: { duration: 0.5, delay: 1 },
               },
               step4: {
                 y: getCostPositionWithCS('UBS'),
                 x: CENTER - PADDING_LEFT_CHART,
                 r: RADIUS,
-                opacity: 1,
                 fill: NEW_COLORS[key].one,
+                opacity: ubsOpacity,
                 transition: { duration: 0.5, delay: 1 },
               },
             },
@@ -595,11 +614,12 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
           )}
         ></motion.circle>
         <motion.circle
+          key={`cs-${activeColorKey}`}
           variants={defineVariants(
             {
               y: getCostPosition('Credit Suisse'),
               x: CENTER,
-              opacity: 1,
+              opacity: csOpacity,
               r: RADIUS,
               fill: NEW_COLORS[key].two,
             },
@@ -608,7 +628,7 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                 y: getCostPosition('Credit Suisse'),
                 x: CENTER,
                 r: RADIUS,
-                opacity: 1,
+                opacity: csOpacity,
                 fill: NEW_COLORS[key].two,
                 transition: { duration: 0.5, delay: 1 },
               },
@@ -616,7 +636,7 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                 y: getCostPosition('Credit Suisse'),
                 x: CENTER,
                 r: RADIUS,
-                opacity: 1,
+                opacity: csOpacity,
                 fill: NEW_COLORS[key].two,
                 transition: { duration: 0.5, delay: 1 },
               },
@@ -624,7 +644,7 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                 y: getCostPosition('Credit Suisse'),
                 x: CENTER - PADDING_LEFT_CHART,
                 r: RADIUS,
-                opacity: 1,
+                opacity: csOpacity,
                 fill: NEW_COLORS[key].two,
                 transition: { duration: 0.5, delay: 1 },
               },
@@ -632,7 +652,7 @@ export const StoryGraphic = ({ highlighted }: { highlighted: number }) => {
                 y: getCostPositionWithCS('Credit Suisse'),
                 x: CENTER - PADDING_LEFT_CHART,
                 r: RADIUS,
-                opacity: 1,
+                opacity: csOpacity,
                 fill: NEW_COLORS[key].two,
                 transition: { duration: 0.5, delay: 1 },
               },
