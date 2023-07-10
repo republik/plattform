@@ -425,13 +425,8 @@ class CustomizePackage extends Component {
           )
         }),
     )
-    const payMoreSuggestions = [
-      'DONATE',
-      'ABO_GIVE',
-      'ABO_GIVE_MONTHS',
-      'YEARLY_ABO',
-      'LESHA',
-    ].includes(pkg.name)
+
+    const payMoreSuggestions = pkg.options[0].payMoreSuggestion
       ? []
       : userPrice
       ? [{ value: regularMinPrice, key: 'normal' }]
