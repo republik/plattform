@@ -20,6 +20,12 @@ module.exports = {
 
     return autoPay
   },
+  fixedPrice({ fixedPrice }) {
+    return fixedPrice
+  },
+  payMoreSuggestion({ payMoreSuggestion }) {
+    return payMoreSuggestion
+  },
   async membership({ membership, membershipId }, args, { pgdb }) {
     // no auth checks, as unauthorized users should not get Pledge.options
     if (membership) {
