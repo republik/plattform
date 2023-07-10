@@ -43,6 +43,7 @@ const forUpdate = async ({ pledgeId, fn, pgdb }) => {
 }
 
 const changeStatus = async ({ pledge, newStatus, transaction }, context) => {
+  console.log('--------------------- change status pledge')
   const { redis, t } = context
   const pgdb = transaction || context.pgdb
 

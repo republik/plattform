@@ -184,30 +184,28 @@ mail.enforceSubscriptions = async ({
     ...rest,
   })
 
-  if (isNew) {
-    const onboardingSubscription = await addUserToAudience({
-      user: user || { email },
-      audienceId: MAILCHIMP_ONBOARDING_AUDIENCE_ID,
-      ...rest,
-    })
-    return [
-      {
-        audienceId: MAILCHIMP_MAIN_LIST_ID,
-        subscriptions: newsletterSubscriptions,
-      },
-      {
-        audienceId: MAILCHIMP_ONBOARDING_AUDIENCE_ID,
-        subscriptions: onboardingSubscription,
-      },
-    ]
-  }
-
+  const onboardingSubscription = await addUserToAudience({
+    user: user || { email },
+    audienceId: MAILCHIMP_ONBOARDING_AUDIENCE_ID,
+    ...rest,
+  })
   return [
     {
       audienceId: MAILCHIMP_MAIN_LIST_ID,
       subscriptions: newsletterSubscriptions,
     },
+    {
+      audienceId: MAILCHIMP_ONBOARDING_AUDIENCE_ID,
+      subscriptions: onboardingSubscription,
+    },
   ]
+
+  // return [
+  //   {
+  //     audienceId: MAILCHIMP_MAIN_LIST_ID,
+  //     subscriptions: newsletterSubscriptions,
+  //   },
+  // ]
 }
 
 mail.sendMembershipProlongConfirmation = async ({

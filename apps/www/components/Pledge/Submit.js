@@ -550,6 +550,7 @@ class Submit extends Component {
   }
 
   payWithStripe(pledgeId) {
+    console.log('--------------------- pay with stripe')
     const { t } = this.props
     const { values } = this.state
 

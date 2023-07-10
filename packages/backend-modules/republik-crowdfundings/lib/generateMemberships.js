@@ -17,6 +17,7 @@ const UPGRADE_PKG_PATHS = [
 ]
 
 module.exports = async (pledgeId, pgdb, t, redis) => {
+  console.error('-------------------------- generate membership')
   const pledge = await pgdb.public.pledges.findOne({ id: pledgeId })
   const user = await pgdb.public.users.findOne({ id: pledge.userId })
 
@@ -253,6 +254,7 @@ module.exports = async (pledgeId, pgdb, t, redis) => {
   }
 
   try {
+    console.error('-------------------------- enforce subscriptions ')
     await mail.enforceSubscriptions({
       pgdb,
       userId: user.id,
