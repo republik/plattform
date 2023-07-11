@@ -194,7 +194,7 @@ export const JSONEditor = ({
         mode: 'application/json',
         lint: true,
         matchBrackets: true,
-        autoCloseBrackets: true,
+        // autoCloseBrackets: true,
         autofocus: true,
         readOnly,
       }}
