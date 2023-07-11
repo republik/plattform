@@ -43,7 +43,7 @@ export const ScrollyFrame = ({
   const chartRef = useRef<HTMLDivElement>()
 
   // TODO: some error handling would be good
-  // TODO: refine the logic
+  // TODO: refine the scroll/steps logic
   const handleScroll = () => {
     const chartHeight = chartRef.current.getBoundingClientRect().height
     const tops = stepIds.map((id) =>
@@ -72,6 +72,7 @@ export const ScrollyFrame = ({
     setActiveColor(undefined)
   }
 
+  // A context to keep track of hover events would also be an option.
   useEffect(() => {
     window.addEventListener('scroll', handleScroll)
     window.addEventListener('enterColorLabel', handleEnterColorLabel)
