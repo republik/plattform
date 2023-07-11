@@ -114,7 +114,7 @@ const init = async (context) => {
       context,
       runFunc: informOnboarding,
       lockTtlSecs,
-      runAtTime: '18:32',
+      runAtTime: '23:00',
       runAtDaysOfWeek: [1, 2, 3, 4, 5, 6],
       runInitially: DEV,
     }),
