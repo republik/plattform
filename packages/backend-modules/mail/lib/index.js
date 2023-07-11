@@ -24,7 +24,7 @@ module.exports = {
     if (!interestConfiguration)
       throw new errors.SubscriptionConfigurationMissingMailError()
     if (!audienceConfiguration)
-      throw new errors.AudienceConfigurationMissingMailError() // TODO add error
+      throw new errors.AudienceConfigurationMissingMailError()
     // TODO add audienceConfiguration here too?
     return Object.keys(handlers).reduce(
       (result, handlerName) => {
