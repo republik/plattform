@@ -6,7 +6,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useColorContext } from '../__styleguide/components/Colors/ColorContext'
 import * as mediaQueries from '../__styleguide/theme/mediaQueries'
 
-import { ChapterIndicator } from './ChapterIndicator'
+import { StepsMenu } from './StepsMenu'
 
 export type StoryGraphicProps = {
   step: number
@@ -86,31 +86,11 @@ export const ScrollyFrame = ({
   return (
     <div style={{ height: 3000, maxHeight: '40vh' }} ref={containerRef}>
       <div
-        {...merge(
-          styles.scrollyGraphicsContainer,
-          isFixed && styles.scrollyGraphicsContainerScrolled,
-        )}
+        {...merge(styles.container, isFixed && styles.containerScrolled)}
         {...colorScheme.set('backgroundColor', 'default')}
         ref={chartRef}
       >
-        <div
-          {...styles.scrollyGraphicsChapters}
-          {...colorScheme.set('backgroundColor', 'default')}
-          style={{ opacity: currentStep ? 1 : 0 }}
-        >
-          {stepIds.map((stepId, idx) => {
-            const step = idx + 1
-            return (
-              <ChapterIndicator
-                key={stepId}
-                mini
-                step={step}
-                currentStep={currentStep}
-              />
-            )
-          })}
-        </div>
-
+        <StepsMenu stepIds={stepIds} currentStep={currentStep} />
         <Graphic step={currentStep} activeColor={activeColor} />
       </div>
     </div>
@@ -118,7 +98,7 @@ export const ScrollyFrame = ({
 }
 
 const styles = {
-  scrollyGraphicsContainer: css({
+  container: css({
     padding: '48px',
     /* min-height: 50dvh; */
     width: '100vw',
@@ -136,23 +116,10 @@ const styles = {
       padding: '40px',
     },
   }),
-  scrollyGraphicsContainerScrolled: css({
+  containerScrolled: css({
     position: 'fixed',
     top: 80,
     left: 0,
     marginLeft: 'auto',
-  }),
-  scrollyGraphicsChapters: css({
-    position: 'absolute',
-    left: 10,
-    top: 0,
-    bottom: 0,
-    textAlign: 'center',
-    justifyContent: 'center',
-    opacity: 0,
-    display: 'flex',
-    flexDirection: 'column',
-    height: '100%',
-    gap: 0,
   }),
 }

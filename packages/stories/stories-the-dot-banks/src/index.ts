@@ -1,3 +1,3 @@
-import { Scrolly } from './Scrolly'
+import { BanksScrolly } from './BanksScrolly'
 
-export default Scrolly
+export default BanksScrolly

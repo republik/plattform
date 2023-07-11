@@ -5,7 +5,7 @@ import { fontStyles } from '../__styleguide/components/Typography'
 
 import { TRANSITION } from '../config'
 
-export const ChapterIndicator = ({
+export const StepIndicator = ({
   step,
   currentStep,
   mini,
