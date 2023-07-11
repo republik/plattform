@@ -3,8 +3,8 @@ const debug = require('debug')('crowdfundings:lib:scheduler:onboarding')
 const TYPE = 'onboarding'
 
 const inform = async (args, context) => {
-  // send right onboarding mail to right people
-  debug('this exists')
+  // get all unsubscribed from mailchimp and set to archived?
+  debug('onboarding scheduler')
 }
 
 module.exports = {
