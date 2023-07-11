@@ -17,6 +17,7 @@ const UPGRADE_PKG_PATHS = [
 ]
 
 module.exports = async (pledgeId, pgdb, t, redis) => {
+  console.log('------------- generate memberships')
   const pledge = await pgdb.public.pledges.findOne({ id: pledgeId })
   const user = await pgdb.public.users.findOne({ id: pledge.userId })
 

@@ -43,10 +43,12 @@ const forUpdate = async ({ pledgeId, fn, pgdb }) => {
 }
 
 const changeStatus = async ({ pledge, newStatus, transaction }, context) => {
+  console.log('---------------Pledge.js changeStatus')
   const { redis, t } = context
   const pgdb = transaction || context.pgdb
 
   if (newStatus === 'SUCCESSFUL') {
+    console.log('------- whhoop whoop')
     await generateMemberships(pledge.id, pgdb, t, redis)
   }
 
@@ -62,6 +64,7 @@ const changeStatus = async ({ pledge, newStatus, transaction }, context) => {
 }
 
 const afterChange = async ({ pledge }, context) => {
+  console.log('------------- Pledge.js afterChange')
   const { pgdb, t } = context
 
   let user

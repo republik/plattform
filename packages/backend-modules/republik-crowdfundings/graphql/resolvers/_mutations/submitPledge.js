@@ -27,6 +27,8 @@ module.exports = async (_, args, context) => {
   const transaction = await pgdb.transactionBegin()
   try {
     const { pledge, consents } = args
+    console.log('---------------------consents')
+    console.log(`${consents}`)
     debug('submitPledge %O', pledge)
 
     const pledgeOptions = pledge.options.filter(

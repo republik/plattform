@@ -139,6 +139,7 @@ mail.enforceSubscriptions = async ({
   pgdb,
   ...rest
 }) => {
+  console.log('------------ enforce sbs')
   const user = !!userId && (await pgdb.public.users.findOne({ id: userId }))
 
   const interests = await getInterestsForUser({
@@ -216,6 +217,7 @@ mail.sendMembershipProlongConfirmation = async ({
 }
 
 mail.sendPledgeConfirmations = async ({ userId, pgdb, t }) => {
+  console.log('----------------Mail: pledge confirmations')
   const user = await pgdb.public.users.findOne({
     id: userId,
     verified: true,

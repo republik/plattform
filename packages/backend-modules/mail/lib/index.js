@@ -22,6 +22,7 @@ const errors = require('../errors')
 module.exports = {
   ...handlers,
   createMail: (interestConfiguration, audienceConfiguration) => {
+    console.log('--------------create Mail')
     if (!interestConfiguration)
       throw new errors.SubscriptionConfigurationMissingMailError()
     if (!audienceConfiguration)

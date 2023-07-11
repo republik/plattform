@@ -130,6 +130,7 @@ module.exports = async (server, pgdb, t, redis, connectionContext) => {
     })
 
     if (updatedPledge) {
+      console.log('---------- paymentWebhook A')
       await afterChange(
         {
           pledge: updatedPledge,
@@ -196,6 +197,8 @@ module.exports = async (server, pgdb, t, redis, connectionContext) => {
         })
 
         if (updatedPledge) {
+          console.log('---------- paymentWebhook B')
+
           await afterChange(
             {
               pledge: updatedPledge,
