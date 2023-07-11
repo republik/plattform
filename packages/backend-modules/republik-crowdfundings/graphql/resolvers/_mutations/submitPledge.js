@@ -23,6 +23,7 @@ const {
 } = require('@orbiting/backend-modules-republik/lib/address')
 
 module.exports = async (_, args, context) => {
+  console.log('--------------------- submit pledge')
   const { pgdb, req, t } = context
   const transaction = await pgdb.transactionBegin()
   try {
