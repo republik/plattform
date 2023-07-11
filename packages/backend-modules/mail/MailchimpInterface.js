@@ -15,6 +15,7 @@ const MailchimpInterface = ({ logger }) => {
   checkEnv(['MAILCHIMP_API_KEY', 'MAILCHIMP_URL', 'MAILCHIMP_MAIN_LIST_ID'])
   return {
     buildApiUrl(audienceId, path) {
+      console.log('---------------------build mailchimp api url')
       return `${MAILCHIMP_URL}/3.0/lists/${audienceId}${path}`
     },
     buildAudienceApiUrl(email, audienceId) {
@@ -34,6 +35,7 @@ const MailchimpInterface = ({ logger }) => {
       return this.buildApiUrl(MAILCHIMP_MAIN_LIST_ID, `/members/${hash}`)
     },
     buildBatchesApiUrl(id) {
+      console.log('---------------------build mailchimp batches api url')
       // returns {MAILCHIMP_URL}/3.0/batches[/{id}]
       return [
         `${MAILCHIMP_URL}/3.0/batches`,
@@ -165,6 +167,7 @@ const MailchimpInterface = ({ logger }) => {
       }
     },
     async postBatch(operations) {
+      console.log('---------------------mailchimp post batch')
       const preparedOperations = operations.map((operation) => {
         const { subscriberHash, ...rest } = operation
 

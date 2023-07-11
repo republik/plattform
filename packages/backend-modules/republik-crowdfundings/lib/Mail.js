@@ -139,13 +139,14 @@ const addUserToAudience = async ({ user, name, audienceId }) => {
   debug('addUserToAudience called with ' + { email, user, name, audienceId })
 
   if (!audienceId) {
-    // throw new AudienceNotFoundError({ name }) // TODO add error
+    // throw new AudienceNotFoundMailError({ name }) // TODO add error
     console.error('AudienceId is not defined')
   }
 
   const body = {
     email_address: email,
     status_if_new: MailchimpInterface.MemberStatus.Subscribed,
+    status: MailchimpInterface.MemberStatus.Unsubscribed,
   }
 
   debug(body)
@@ -185,6 +186,7 @@ mail.enforceSubscriptions = async ({
     ...rest,
   })
 
+  console.log('------------------ before addUserToAudience')
   const onboardingSubscription = await addUserToAudience({
     user: user || { email },
     audienceId: MAILCHIMP_ONBOARDING_AUDIENCE_ID,

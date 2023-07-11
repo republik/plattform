@@ -1,5 +1,4 @@
 const MailchimpInterface = require('../MailchimpInterface')
-const { AudienceNotFoundError } = require('../errors')
 const debug = require('debug')('mail:lib:updateAudience')
 const logger = console
 
@@ -7,14 +6,17 @@ const addUserToAudience = async ({ user, name, audienceId }) => {
   const { email } = user
 
   debug('addUserToAudience called with ' + { email, user, name, audienceId })
+  console.log('---------------------- inside addusertoaudience')
 
   if (!audienceId) {
-    throw new AudienceNotFoundError({ name }) // TODO add error
+    // throw new AudienceNotFoundError({ name }) // TODO add error
+    console.error('No audience provided, cannot add user to audience')
   }
 
   const body = {
     email_address: email,
     status_if_new: MailchimpInterface.MemberStatus.Subscribed,
+    status: MailchimpInterface.MemberStatus.Unsubscribed,
   }
 
   debug(body)
@@ -39,7 +41,8 @@ const removeUserFromAudience = async ({ user, name, audienceId }) => {
   )
 
   if (!audienceId) {
-    throw new AudienceNotFoundError({ name }) // TODO add error
+    // throw new AudienceNotFoundError({ name }) // TODO add error
+    console.error('No audience provided, cannot remove user from audience')
   }
 
   const body = {

@@ -26,7 +26,6 @@ class AudienceConfigurationMissingMailError extends MailError {
     super(AUDIENCE_CONFIG_MISSING_ERROR, meta)
   }
 }
-
 class SubscriptionHandlerMissingMailError extends MailError {
   constructor(meta) {
     super(SUBSCRIPTION_HANDLER_MISSING_ERROR, meta)
