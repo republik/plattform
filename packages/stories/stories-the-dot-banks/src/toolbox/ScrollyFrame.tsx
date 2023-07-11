@@ -1,0 +1,158 @@
+// TODO: glamor?
+import { css, merge } from 'glamor'
+import React, { useEffect, useRef, useState } from 'react'
+
+// TODO: get rid of styleguide dep
+import { useColorContext } from '../__styleguide/components/Colors/ColorContext'
+import * as mediaQueries from '../__styleguide/theme/mediaQueries'
+
+import { ChapterIndicator } from './ChapterIndicator'
+
+export type StoryGraphicProps = {
+  step: number
+  activeColor?: string
+}
+
+export type StoryGraphicType = React.FC<StoryGraphicProps>
+
+/*
+  This component provides the frame around the graphical element
+  of the scrolly. It also calculates the current step, as well as
+  listens to the active color (if applicable) and passes both to
+  the graphical element.
+ */
+export const ScrollyFrame = ({
+  stepIds,
+  Graphic,
+}: {
+  stepIds: string[]
+  Graphic: StoryGraphicType
+}) => {
+  // TODO: migrate color ctxt out of styleguide
+  const [colorScheme] = useColorContext()
+
+  // TODO: migrate header height ctxt out of styleguide
+  // const [headerHeight] = useHeaderHeight()
+  const headerHeight = 80
+
+  const [currentStep, setCurrentStep] = useState<number>(1)
+  const [activeColor, setActiveColor] = useState<string>(undefined)
+  const [isFixed, setFixed] = useState<boolean>(false)
+
+  const containerRef = useRef<HTMLDivElement>()
+  const chartRef = useRef<HTMLDivElement>()
+
+  // TODO: some error handling would be good
+  // TODO: refine the logic
+  const handleScroll = () => {
+    const chartHeight = chartRef.current.getBoundingClientRect().height
+    const tops = stepIds.map((id) =>
+      Math.abs(
+        document.getElementById(id).getBoundingClientRect().top - chartHeight,
+      ),
+    )
+    const i = tops.indexOf(Math.min(...tops))
+    // steps are 1-indexed to match story steps
+    setCurrentStep(i + 1)
+
+    if (chartRef.current.getBoundingClientRect().top <= headerHeight)
+      setFixed(true)
+    if (
+      chartRef.current.getBoundingClientRect().bottom <
+      containerRef.current.getBoundingClientRect().bottom
+    )
+      setFixed(false)
+  }
+
+  const handleEnterColorLabel = (event) => {
+    setActiveColor(event.detail.color)
+  }
+
+  const handleLeaveColorLabel = () => {
+    setActiveColor(undefined)
+  }
+
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll)
+    window.addEventListener('enterColorLabel', handleEnterColorLabel)
+    window.addEventListener('leaveColorLabel', handleLeaveColorLabel)
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+      window.removeEventListener('enterColorLabel', handleEnterColorLabel)
+      window.removeEventListener('leaveColorLabel', handleLeaveColorLabel)
+    }
+  }, [])
+
+  return (
+    <div style={{ height: 3000, maxHeight: '40vh' }} ref={containerRef}>
+      <div
+        {...merge(
+          styles.scrollyGraphicsContainer,
+          isFixed && styles.scrollyGraphicsContainerScrolled,
+        )}
+        {...colorScheme.set('backgroundColor', 'default')}
+        ref={chartRef}
+      >
+        <div
+          {...styles.scrollyGraphicsChapters}
+          {...colorScheme.set('backgroundColor', 'default')}
+          style={{ opacity: currentStep ? 1 : 0 }}
+        >
+          {stepIds.map((stepId, idx) => {
+            const step = idx + 1
+            return (
+              <ChapterIndicator
+                key={stepId}
+                mini
+                step={step}
+                currentStep={currentStep}
+              />
+            )
+          })}
+        </div>
+
+        <Graphic step={currentStep} activeColor={activeColor} />
+      </div>
+    </div>
+  )
+}
+
+const styles = {
+  scrollyGraphicsContainer: css({
+    padding: '48px',
+    /* min-height: 50dvh; */
+    width: '100vw',
+    // Beautiful hack to break out to full width from whatever the container size is at the moment
+    marginLeft: 'calc(-50vw + 50%)',
+    left: 0,
+    zIndex: 1,
+    display: 'flex',
+    maxHeight:
+      '40vh' /* don't use dvh here, otherwise the layout will jump when scrolling */,
+    backdropFilter: 'blur(20px)',
+    boxShadow: '0px 5px 5px 0px rgba(0,0,0,0.05)',
+
+    [mediaQueries.mUp]: {
+      padding: '40px',
+    },
+  }),
+  scrollyGraphicsContainerScrolled: css({
+    position: 'fixed',
+    top: 80,
+    left: 0,
+    marginLeft: 'auto',
+  }),
+  scrollyGraphicsChapters: css({
+    position: 'absolute',
+    left: 10,
+    top: 0,
+    bottom: 0,
+    textAlign: 'center',
+    justifyContent: 'center',
+    opacity: 0,
+    display: 'flex',
+    flexDirection: 'column',
+    height: '100%',
+    gap: 0,
+  }),
+}

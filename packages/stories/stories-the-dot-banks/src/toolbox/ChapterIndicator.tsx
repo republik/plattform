@@ -1,21 +1,21 @@
 import { css, merge } from 'glamor'
-import { ReactNode } from 'react'
 
-import { useColorContext } from './__styleguide/components/Colors/ColorContext'
-import { fontStyles } from './__styleguide/components/Typography'
+import { useColorContext } from '../__styleguide/components/Colors/ColorContext'
+import { fontStyles } from '../__styleguide/components/Typography'
 
-import { TRANSITION } from './config'
+import { TRANSITION } from '../config'
 
 export const ChapterIndicator = ({
-  highlighted,
+  step,
+  currentStep,
   mini,
-  children,
 }: {
-  highlighted?: boolean
+  step: number
+  currentStep: number
   mini?: boolean
-  children: ReactNode
 }) => {
   const [colorScheme] = useColorContext()
+  const highlighted = currentStep === step
   const styling = merge(
     styles.chapterIndicator,
     mini && styles.chapterIndicatorMini,
@@ -37,7 +37,7 @@ export const ChapterIndicator = ({
         ? colorScheme.set('fontWeight', 'bold')
         : colorScheme.set('fontWeight', 'normal'))}
     >
-      {children}
+      {step}
     </span>
   )
 }

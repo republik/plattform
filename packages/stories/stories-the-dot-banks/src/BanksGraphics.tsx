@@ -2,6 +2,7 @@ import { formatLocale } from 'd3-format'
 import { scaleLinear } from 'd3-scale'
 import { motion, Variant } from 'framer-motion'
 import { css } from 'glamor'
+import React, { useEffect, useState } from 'react'
 
 import { fontStyles } from './__styleguide/components/Typography'
 import { useColorContext } from './__styleguide/components/Colors/ColorContext'
@@ -20,7 +21,7 @@ import {
   PADDING_LEFT,
   NEW_COLORS,
 } from './config'
-import { useEffect, useMemo, useState } from 'react'
+import { StoryGraphicProps } from './toolbox/ScrollyFrame'
 
 const thousandSeparator = '\u2019'
 const swissNumbers = formatLocale({
@@ -52,8 +53,8 @@ const defineVariants = (
   return v
 }
 
-const getVariant = (highlighted: number, activeColor?: string) => {
-  switch (highlighted) {
+const getVariant = (step: number) => {
+  switch (step) {
     case 1:
       return 'step1'
     case 2:
@@ -110,13 +111,7 @@ const PADDING_LEFT_CHART = 100
 const WIDTH = 700
 const CENTER = WIDTH / 2
 
-export const StoryGraphic = ({
-  highlighted,
-  activeColor,
-}: {
-  highlighted: number
-  activeColor?: string
-}) => {
+export const BanksGraphic = ({ step, activeColor }: StoryGraphicProps) => {
   const [colorScheme] = useColorContext()
   const [activeColorKey, setActiveColorKey] = useState<number>(1)
   // const key = useResolvedColorSchemeKey()
@@ -138,7 +133,7 @@ export const StoryGraphic = ({
       style={{ width: '100%' }}
       {...colorScheme.set('backgroundColor', 'transparentBackground')}
       initial='step0'
-      animate={getVariant(highlighted, activeColor)}
+      animate={getVariant(step)}
     >
       {/* <defs>
         <marker
@@ -236,7 +231,7 @@ export const StoryGraphic = ({
               },
             },
           )}
-        ></motion.line>
+        />
         {/* chart legend */}
         <motion.g
           variants={defineVariants(
@@ -274,7 +269,7 @@ export const StoryGraphic = ({
                 },
               },
             )}
-          ></motion.line>
+          />
           <motion.text
             {...styles.axisTick}
             style={{ textAnchor: 'middle' }}
@@ -330,7 +325,7 @@ export const StoryGraphic = ({
               },
             },
           )}
-        ></motion.line>
+        />
         <motion.text
           {...styles.axisTick}
           variants={defineVariants(
@@ -396,7 +391,7 @@ export const StoryGraphic = ({
               },
             },
           )}
-        ></motion.line>
+        />
         <motion.line
           variants={defineVariants(
             {
@@ -432,7 +427,7 @@ export const StoryGraphic = ({
               },
             },
           )}
-        ></motion.line>
+        />
         <motion.line
           variants={defineVariants(
             {
@@ -468,7 +463,7 @@ export const StoryGraphic = ({
               },
             },
           )}
-        ></motion.line>
+        />
         <motion.line
           variants={defineVariants(
             {
@@ -504,7 +499,7 @@ export const StoryGraphic = ({
               },
             },
           )}
-        ></motion.line>
+        />
         <motion.line
           variants={defineVariants(
             {
@@ -529,7 +524,7 @@ export const StoryGraphic = ({
               },
             },
           )}
-        ></motion.line>
+        />
         {/* circles for cost */}
         <motion.circle
           key={`ubs-${activeColorKey}`}
@@ -576,7 +571,7 @@ export const StoryGraphic = ({
               },
             },
           )}
-        ></motion.circle>
+        />
         <motion.circle
           variants={defineVariants(
             {
@@ -612,7 +607,7 @@ export const StoryGraphic = ({
               },
             },
           )}
-        ></motion.circle>
+        />
         <motion.circle
           key={`cs-${activeColorKey}`}
           variants={defineVariants(
@@ -658,7 +653,7 @@ export const StoryGraphic = ({
               },
             },
           )}
-        ></motion.circle>
+        />
         <motion.circle
           variants={defineVariants(
             {
@@ -694,7 +689,7 @@ export const StoryGraphic = ({
               },
             },
           )}
-        ></motion.circle>
+        />
         <motion.circle
           variants={defineVariants(
             {
@@ -730,7 +725,7 @@ export const StoryGraphic = ({
               },
             },
           )}
-        ></motion.circle>
+        />
         {/* circles for benefit */}
         <motion.circle
           variants={defineVariants(
@@ -759,7 +754,7 @@ export const StoryGraphic = ({
               },
             },
           )}
-        ></motion.circle>
+        />
         <motion.circle
           variants={defineVariants(
             {
@@ -779,7 +774,7 @@ export const StoryGraphic = ({
               },
             },
           )}
-        ></motion.circle>
+        />
         <motion.circle
           variants={defineVariants(
             {
@@ -835,7 +830,7 @@ export const StoryGraphic = ({
               },
             },
           )}
-        ></motion.circle>
+        />
         <motion.circle
           variants={defineVariants(
             {
@@ -863,7 +858,7 @@ export const StoryGraphic = ({
               },
             },
           )}
-        ></motion.circle>
+        />
         {/* labels */}
         <motion.text
           {...styles.label}

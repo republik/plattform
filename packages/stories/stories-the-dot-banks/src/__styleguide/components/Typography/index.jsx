@@ -3,13 +3,9 @@ import colors from '../../theme/colors'
 import { mUp } from '../../theme/mediaQueries'
 import { fontStyles as _fontStyles } from '../../theme/fonts'
 import * as _fontStyleSizes from './styles'
-import * as _Editorial from './Editorial'
 import { css } from 'glamor'
 import { convertStyleToRem } from './utils'
 import { useColorContext } from '../Colors/ColorContext'
-
-// Namespaced exports.
-export const Editorial = { ..._Editorial }
 
 // Direct exports.
 export const fontStyles = {

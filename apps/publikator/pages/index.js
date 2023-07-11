@@ -2,7 +2,7 @@ import { withRouter } from 'next/router'
 import compose from 'lodash/flowRight'
 import { css } from 'glamor'
 
-import { A } from '@project-r/styleguide'
+import { A, HeaderHeightProvider } from '@project-r/styleguide'
 
 import Link from 'next/link'
 import withT from '../lib/withT'
@@ -13,6 +13,7 @@ import Frame from '../components/Frame'
 import RepoTable from '../components/Repo/Table'
 import RepoAdd from '../components/Repo/Add'
 import { withDefaultSSR } from '../lib/apollo/helpers'
+import { HEADER_HEIGHT } from '../components/Frame/constants'
 
 const styles = {
   defaultContainer: css({
@@ -68,6 +69,14 @@ const Index = ({
   },
 }) => (
   <Frame>
+    <HeaderHeightProvider
+      config={[
+        {
+          minWidth: 0,
+          headerHeight: HEADER_HEIGHT,
+        },
+      ]}
+    />
     <Frame.Header>
       <Frame.Header.Section align='left'>
         <Frame.Nav>
