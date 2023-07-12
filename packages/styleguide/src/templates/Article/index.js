@@ -315,6 +315,7 @@ const createSchema = ({
           },
           blocks.cover,
           addProgressProps(dynamicComponent),
+          addProgressProps(storyComponent),
           titleBlockRule || {
             matchMdast: matchZone('TITLE'),
             component: ({
