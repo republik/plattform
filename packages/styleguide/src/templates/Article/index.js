@@ -1,29 +1,5 @@
 import React, { useEffect, useState } from 'react'
 
-import Container from './Container'
-import Center from '../../components/Center'
-import Button from '../../components/Button'
-import TitleBlock from '../../components/TitleBlock'
-import { HR } from '../../components/Typography'
-import * as Editorial from '../../components/Typography/Editorial'
-import * as Meta from '../../components/Typography/Meta'
-import * as Scribble from '../../components/Typography/Scribble'
-import { TeaserFeed } from '../../components/TeaserFeed'
-import IllustrationHtml from '../../components/IllustrationHtml'
-import CsvChart from '../../components/Chart/Csv'
-import { ChartTitle, ChartLead, ChartLegend } from '../../components/Chart'
-import ErrorBoundary from '../../components/ErrorBoundary'
-
-import { Figure, CoverTextTitleBlockHeadline } from '../../components/Figure'
-
-import { Tweet } from '../../components/Social'
-import { Video } from '../../components/Video'
-import { VideoPlayer } from '../../components/VideoPlayer'
-import { AudioPlayer } from '../../components/AudioPlayer'
-
-import { TeaserFrontLogo } from '../../components/TeaserFront'
-import { getFormatLine } from '../../components/TeaserFeed/utils'
-
 import {
   matchType,
   matchZone,
@@ -32,20 +8,39 @@ import {
   matchImage,
 } from '@republik/mdast-react-render'
 
-import {
-  matchLast,
-  globalInlines,
-  styles,
-  getDatePath,
-  matchSpanType,
-} from './utils'
+import { AudioPlayer } from '../../components/AudioPlayer'
+import Button from '../../components/Button'
+import Center from '../../components/Center'
 
+import { ChartTitle, ChartLead, ChartLegend } from '../../components/Chart'
+import CsvChart from '../../components/Chart/Csv'
+
+import ErrorBoundary from '../../components/ErrorBoundary'
+import { Figure, CoverTextTitleBlockHeadline } from '../../components/Figure'
+import IllustrationHtml from '../../components/IllustrationHtml'
+import TeaserEmbedComment from '../../components/TeaserEmbedComment'
+
+import { TeaserFeed } from '../../components/TeaserFeed'
+import { getFormatLine } from '../../components/TeaserFeed/utils'
+
+import { TeaserFrontLogo } from '../../components/TeaserFront'
+import TitleBlock from '../../components/TitleBlock'
+
+import { HR } from '../../components/Typography'
+import * as Editorial from '../../components/Typography/Editorial'
+import * as Meta from '../../components/Typography/Meta'
+import * as Scribble from '../../components/Typography/Scribble'
+import { Tweet } from '../../components/Social'
+import { Video } from '../../components/Video'
+import { VideoPlayer } from '../../components/VideoPlayer'
+
+import Container from './Container'
 import createBase from './base'
 import createBlocks from './blocks'
-import createTeasers from './teasers'
 import createDynamicComponent from './dynamicComponent'
-import TeaserEmbedComment from '../../components/TeaserEmbedComment'
-import StoryComponent from '@republik/story-loader'
+import { createStoryComponent } from './storyComponent'
+import createTeasers from './teasers'
+import { matchLast, globalInlines, styles, getDatePath } from './utils'
 
 const getProgressId = (node, index, parent, { ancestors }) => {
   if (parent.identifier === 'CENTER') {
@@ -224,44 +219,7 @@ const createSchema = ({
     type: DYNAMICCOMPONENT_TYPE,
   })
 
-  const storyComponent = {
-    matchMdast: matchZone('STORY_COMPONENT'),
-    component: ({
-      showException,
-      raw = false,
-      size,
-      attributes,
-      name,
-      ...props
-    }) => {
-      const content = (
-        <ErrorBoundary
-          showException={showException}
-          failureMessage={t('styleguide/DynamicComponent/error')}
-        >
-          <StoryComponent {...props} name={name} />
-        </ErrorBoundary>
-      )
-
-      if (raw) {
-        return content
-      }
-
-      return (
-        <Figure size={size} attributes={attributes}>
-          {content}
-        </Figure>
-      )
-    },
-    props: (node) => node.data,
-    editorModule: 'storycomponent',
-    editorOptions: {
-      type: 'STORYCOMPONENT', // why do we need this?
-      insertTypes: ['PARAGRAPH'],
-      insertButtonText: 'Story Component',
-    },
-    isVoid: true,
-  }
+  const storyComponent = createStoryComponent({ t })
 
   const TeaserEmbedCommentWithLiveData = withCommentData(TeaserEmbedComment)
   const TeaserEmbedCommentSwitch = (props) => {

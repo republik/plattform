@@ -1,10 +1,10 @@
 import React from 'react'
 
-import DynamicComponent from '../../components/DynamicComponent'
-import ErrorBoundary from '../../components/ErrorBoundary'
-import { Figure } from '../../components/Figure'
-
 import { matchZone } from '@republik/mdast-react-render'
+
+import DynamicComponent from '../../components/DynamicComponent'
+
+import { ResizableContainer } from './Container'
 
 const createDynamicComponent = ({
   t,
@@ -14,26 +14,17 @@ const createDynamicComponent = ({
   type,
 }) => ({
   matchMdast: matchZone('DYNAMIC_COMPONENT'),
-  component: ({ showException, raw = false, size, attributes, ...props }) => {
-    const content = (
-      <ErrorBoundary
-        showException={showException}
-        failureMessage={t('styleguide/DynamicComponent/error')}
-      >
-        <DynamicComponent size={size} {...props} />
-      </ErrorBoundary>
-    )
-
-    if (raw) {
-      return content
-    }
-
-    return (
-      <Figure size={size} attributes={attributes}>
-        {content}
-      </Figure>
-    )
-  },
+  component: ({ showException, raw = false, size, attributes, ...props }) => (
+    <ResizableContainer
+      attributes={attributes}
+      raw={raw}
+      size={size}
+      t={t}
+      showException={showException}
+    >
+      <DynamicComponent {...props} />
+    </ResizableContainer>
+  ),
   props: (node) => {
     const html = node.children.find(
       (c) => c.type === 'code' && c.lang === 'html',
