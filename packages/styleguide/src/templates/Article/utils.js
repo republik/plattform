@@ -1,9 +1,6 @@
-import React from 'react'
-import { css } from 'glamor'
 import { timeFormat } from 'd3-time-format'
-
-import { Sub, Sup } from '../../components/Typography'
-import { mUp } from '../../theme/mediaQueries'
+import { css } from 'glamor'
+import React from 'react'
 
 import {
   matchType,
@@ -13,14 +10,15 @@ import {
   matchImageParagraph,
 } from '@republik/mdast-react-render'
 
+import { ColorLabel } from '../../components/ColorLabel'
 import { FIGURE_SIZES } from '../../components/Figure'
-import { PULLQUOTE_IMAGE_SIZE } from '../../components/PullQuote'
 import {
   INFOBOX_IMAGE_SIZES,
   INFOBOX_DEFAULT_IMAGE_SIZE,
 } from '../../components/InfoBox'
-import { NEW_COLORS } from '@republik/stories-the-dot-banks/src/config'
-import * as mediaQueries from '@republik/stories-the-dot-banks/src/__styleguide/theme/mediaQueries'
+import { PULLQUOTE_IMAGE_SIZE } from '../../components/PullQuote'
+import { Sub, Sup } from '../../components/Typography'
+import { mUp } from '../../theme/mediaQueries'
 
 export const matchSpan = matchType('span')
 export const matchSpanType = (type) => (node) =>
@@ -112,35 +110,7 @@ const nestedInlines = [
         color: node.data.color,
       }
     },
-    component: ({ color, children }) => {
-      const enterEvent = new CustomEvent('enterColorLabel', {
-        bubbles: true,
-        detail: { color },
-      })
-      const leaveEvent = new CustomEvent('leaveColorLabel', {
-        bubbles: true,
-        detail: { color },
-      })
-      return (
-        <span
-          style={{
-            display: 'inline-block',
-            verticalAlign: 'text-top',
-            padding: '0 5px',
-          }}
-          onMouseEnter={() => document.dispatchEvent(enterEvent)}
-          onMouseLeave={() => document.dispatchEvent(leaveEvent)}
-        >
-          <span
-            {...styles.highlight}
-            style={{ backgroundColor: 'rgba(0, 0, 0, 0.05)' }}
-          >
-            <span {...styles.circle} style={{ backgroundColor: color }} />
-            {children}
-          </span>
-        </span>
-      )
-    },
+    component: ColorLabel,
     editorModule: 'colorLabel',
     editorOptions: {
       type: 'COLOR_LABEL',
@@ -176,22 +146,6 @@ export const styles = {
     [mUp]: {
       top: -80, // HEADER_HEIGHT + 20
     },
-  }),
-  highlight: css({
-    whiteSpace: 'nowrap',
-    margin: '-1px 0 1px 0',
-    display: 'flex',
-    alignItems: 'center',
-    borderRadius: '0.3em',
-    padding: '0.2em',
-    lineHeight: '20px',
-  }),
-  circle: css({
-    display: 'inline-block',
-    borderRadius: '50%',
-    width: '12px',
-    height: '12px',
-    marginRight: '5px',
   }),
 }
 

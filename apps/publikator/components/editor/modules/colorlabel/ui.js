@@ -1,10 +1,11 @@
 import { Label, Field } from '@project-r/styleguide'
-import UIForm from '../../UIForm'
-import createOnFieldChange from '../../utils/createOnFieldChange'
+import { IconLens } from '@republik/icons'
+
 import withT from '../../../../lib/withT'
 
+import UIForm from '../../UIForm'
 import { createInlineButton, matchInline, buttonStyles } from '../../utils'
-import { IconEditCircle } from '@republik/icons'
+import createOnFieldChange from '../../utils/createOnFieldChange'
 
 const createForm =
   ({ TYPE }) =>
@@ -58,7 +59,7 @@ const createColorLabel = ({ TYPE }) =>
         data-disabled={disabled}
         data-visible={visible}
       >
-        <IconEditCircle />
+        <IconLens size={14} />
       </span>
     )
   })
