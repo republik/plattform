@@ -85,7 +85,7 @@ export const ScrollyFrame = ({
   }, [])
 
   return (
-    <div style={{ height: 3000, maxHeight: '40vh' }} ref={containerRef}>
+    <div {...styles.shadowContainer} ref={containerRef}>
       <div
         {...merge(styles.container, isFixed && styles.containerScrolled)}
         {...colorScheme.set('backgroundColor', 'default')}
@@ -103,8 +103,6 @@ const styles = {
     padding: '48px',
     /* min-height: 50dvh; */
     width: '100vw',
-    // Beautiful hack to break out to full width from whatever the container size is at the moment
-    marginLeft: 'calc(-50vw + 50%)',
     left: 0,
     zIndex: 1,
     display: 'flex',
@@ -122,5 +120,9 @@ const styles = {
     top: 80,
     left: 0,
     marginLeft: 'auto',
+  }),
+  shadowContainer: css({
+    height: 3000,
+    maxHeight: '40vh',
   }),
 }
