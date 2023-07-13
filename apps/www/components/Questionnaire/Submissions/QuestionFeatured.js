@@ -106,6 +106,7 @@ export const LinkToEditQuestionnaire = ({ slug, children, newOnly }) => {
 }
 
 export const AnswersChart = ({ question, skipTitle }) => {
+  if (!question.result) return
   const totalAnswers = question.result.reduce((agg, r) => agg + r.count, 0)
   const values = question.options.map((option) => ({
     answer: option.label,
@@ -237,7 +238,7 @@ export const QuestionFeatured = ({
       ref={questionRef}
       id={questions[0].id}
       style={{
-        padding: '0 0 46px 0',
+        padding: '30px 0 46px 0',
         // flexBasis: '50%',
         backgroundColor: bgColor,
         display: 'flex',
