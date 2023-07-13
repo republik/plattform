@@ -86,6 +86,7 @@ const SubmissionsOverview = ({ slug, extract, share }) => {
             questionnairePath={EDIT_QUESTIONNAIRE_PATH}
             personPagePath={PERSON_PAGE_PATH}
           />
+          <br />
         </Center>
       )}
     </>
