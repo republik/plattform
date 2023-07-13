@@ -54,7 +54,7 @@ export const QUESTIONS: QuestionConfigType[] = [
   { ids: [25], valueLength: { min: 0, max: 100 } },
 ]
 
-export const EDIT_QUESTIONNAIRE_PATH = '/2023/03/03/fragen-zur-klimakrise'
+export const EDIT_QUESTIONNAIRE_PATH = '/2023/07/12/politikfragebogen-community'
 export const OVERVIEW_QUESTIONNAIRE_PATH =
   '/26-fragen-zur-politik-ihre-antworten'
 
