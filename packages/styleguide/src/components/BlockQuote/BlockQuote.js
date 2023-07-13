@@ -10,6 +10,12 @@ const styles = {
     [mUp]: {
       margin: '40px auto',
     },
+    ':first-child': {
+      marginTop: 0,
+    },
+    ':last-child': {
+      marginBottom: 0,
+    },
     '& figcaption': {
       marginLeft: 0,
       marginRight: 0,
