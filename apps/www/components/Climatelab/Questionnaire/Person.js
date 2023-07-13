@@ -99,6 +99,7 @@ const Page = () => {
       <ShareImageSplit
         user={!loading && author}
         img={QUESTIONNAIRE_SQUARE_IMG_URL}
+        bgColor={QUESTIONNAIRE_BG_COLOR}
       />
     )
   }
