@@ -1,7 +1,7 @@
 import { scaleOrdinal } from 'd3-scale'
 
 // TODO: use correct color palette
-export const QUESTIONNAIRE_BG_COLOR = '#ffdc5e'
+export const QUESTIONNAIRE_BG_COLOR = '#ffffff'
 const COLORS = ['#fff75b', '#ffe003']
 
 export const questionColor = scaleOrdinal(
@@ -29,35 +29,38 @@ export const QUESTIONS: QuestionConfigType[] = [
   },
   { ids: [3], valueLength: { min: 0, max: 150 } },
   { ids: [4], valueLength: { min: 0, max: 150 } },
-  { ids: [5], valueLength: { min: 0, max: 100 } },
+  { ids: [5, 6], valueLength: { min: 0, max: 100 } },
   {
-    ids: [6, 7],
+    ids: [7],
     valueLength: { min: 0, max: 200 },
   },
   { ids: [8], valueLength: { min: 0, max: 200 } },
   { ids: [9], valueLength: { min: 0, max: 200 } },
   { ids: [10] },
-  { ids: [11], valueLength: { min: 5, max: 200 } },
-  { ids: [12], valueLength: { min: 5, max: 200 } },
-  { ids: [13], valueLength: { min: 5, max: 100 } },
-  { ids: [14], valueLength: { min: 5, max: 100 } },
-  { ids: [15], valueLength: { min: 5, max: 100 } },
-  { ids: [16], valueLength: { min: 5, max: 100 } },
-  { ids: [17], valueLength: { min: 5, max: 100 } },
-  { ids: [18], valueLength: { min: 5, max: 100 } },
-  { ids: [19], valueLength: { min: 5, max: 100 } },
+  { ids: [11], valueLength: { min: 0, max: 200 } },
+  { ids: [12], valueLength: { min: 0, max: 200 } },
+  { ids: [13], valueLength: { min: 0, max: 100 } },
+  { ids: [14], valueLength: { min: 0, max: 100 } },
+  { ids: [15], valueLength: { min: 0, max: 100 } },
+  { ids: [16], valueLength: { min: 0, max: 100 } },
+  { ids: [17], valueLength: { min: 0, max: 100 } },
+  { ids: [18], valueLength: { min: 0, max: 100 } },
+  { ids: [19], valueLength: { min: 0, max: 100 } },
   { ids: [20] },
-  { ids: [21], valueLength: { min: 5, max: 100 } },
-  { ids: [22], valueLength: { min: 5, max: 100 } },
+  { ids: [21], valueLength: { min: 0, max: 100 } },
+  { ids: [22], valueLength: { min: 0, max: 100 } },
   { ids: [23] },
   { ids: [24] },
-  { ids: [25], valueLength: { min: 5, max: 100 } },
+  { ids: [25], valueLength: { min: 0, max: 100 } },
 ]
 
 export const EDIT_QUESTIONNAIRE_PATH = '/2023/03/03/fragen-zur-klimakrise'
-export const OVERVIEW_QUESTIONNAIRE_PATH = '/15-fragen-zum-klima-ihre-antworten'
+export const OVERVIEW_QUESTIONNAIRE_PATH =
+  '/26-fragen-zur-politik-ihre-antworten'
+
+export const PERSON_PAGE_PATH = 'politikfragebogen-community'
 
 export const QUESTIONNAIRE_SLUG = 'politiker-fragebogen-community'
 
 export const QUESTIONNAIRE_SQUARE_IMG_URL =
-  'https://cdn.repub.ch/s3/republik-assets/repos/republik/page-klimafragebogen-uebersicht/files/034a0eca-8aaf-4511-90aa-504cca584981/final-art_questionnaire.png'
+  'https://cdn.repub.ch/s3/republik-assets/repos/republik/page-politikfragebogen-community-uebersicht/files/5218448b-b513-4e11-9361-e460830dc7ef/waehlerinnen.png'

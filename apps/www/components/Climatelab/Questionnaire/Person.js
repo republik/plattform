@@ -42,6 +42,7 @@ import {
   QUESTIONNAIRE_BG_COLOR,
   QUESTIONNAIRE_SLUG,
   QUESTIONNAIRE_SQUARE_IMG_URL,
+  PERSON_PAGE_PATH,
 } from './config'
 import { IconChevronLeft, IconEdit, IconShare } from '@republik/icons'
 
@@ -226,7 +227,12 @@ const Page = () => {
                     )
                   },
                 )}
-                <LinkToEditQuestionnaire slug={QUESTIONNAIRE_SLUG} newOnly />
+                <LinkToEditQuestionnaire
+                  slug={QUESTIONNAIRE_SLUG}
+                  questionnairePath={EDIT_QUESTIONNAIRE_PATH}
+                  personPagePath={PERSON_PAGE_PATH}
+                  newOnly
+                />
                 <br />
               </Center>
             </>

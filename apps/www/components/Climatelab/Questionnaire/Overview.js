@@ -12,7 +12,12 @@ import {
 } from '../../Questionnaire/Submissions/QuestionFeatured'
 import QuestionView from '../../Questionnaire/Submissions/QuestionView'
 
-import { questionColor, QUESTIONS } from './config'
+import {
+  questionColor,
+  QUESTIONS,
+  EDIT_QUESTIONNAIRE_PATH,
+  PERSON_PAGE_PATH,
+} from './config'
 
 const AllQuestionsView = ({ slug, extract }) => {
   const { loading, error, data } = useQuery(QUESTIONNAIRE_QUERY, {
@@ -43,6 +48,7 @@ const AllQuestionsView = ({ slug, extract }) => {
                   slug={slug}
                   bgColor={questionColor(idx)}
                   valueLength={question.valueLength}
+                  personPagePath={PERSON_PAGE_PATH}
                 />
               )
             })}
@@ -67,6 +73,7 @@ const SubmissionsOverview = ({ slug, extract, share }) => {
             extract={extract}
             share={share}
             questionIds={questionIds}
+            personPagePath={PERSON_PAGE_PATH}
           />
         ) : (
           <AllQuestionsView slug={slug} extract={extract} />
@@ -74,7 +81,11 @@ const SubmissionsOverview = ({ slug, extract, share }) => {
       </ColorContextProvider>
       {!extract && (
         <Center attributes={{ style: { marginBottom: -48, marginTop: 20 } }}>
-          <LinkToEditQuestionnaire slug={slug} />
+          <LinkToEditQuestionnaire
+            slug={slug}
+            questionnairePath={EDIT_QUESTIONNAIRE_PATH}
+            personPagePath={PERSON_PAGE_PATH}
+          />
         </Center>
       )}
     </>

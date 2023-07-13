@@ -22,7 +22,6 @@ import { css } from 'glamor'
 import { useInfiniteScroll } from '../../../lib/hooks/useInfiniteScroll'
 import { useTranslation } from '../../../lib/withT'
 import ErrorMessage from '../../ErrorMessage'
-import PlainButton from './PlainButton'
 
 import {
   hasMoreData,
@@ -39,7 +38,6 @@ import { ShareImageSplit } from './ShareImageSplit'
 import Meta from '../../Frame/Meta'
 import { ASSETS_SERVER_BASE_URL, PUBLIC_BASE_URL } from '../../../lib/constants'
 import { replaceText } from './utils'
-import { questionColor, QUESTIONS } from '../../Climatelab/Questionnaire/config'
 import scrollIntoView from 'scroll-into-view'
 
 const QuestionViewMeta = ({ share, question }) => {
@@ -65,7 +63,15 @@ const QuestionViewMeta = ({ share, question }) => {
   )
 }
 
-const QuestionView = ({ slug, questionIds, extract, share = {} }) => {
+const QuestionView = ({
+  slug,
+  questionIds,
+  extract,
+  share = {},
+  questions,
+  questionColor,
+  personPagePath,
+}) => {
   const { t } = useTranslation()
   const router = useRouter()
   const pathname = router.asPath.split('?')[0]
@@ -106,7 +112,7 @@ const QuestionView = ({ slug, questionIds, extract, share = {} }) => {
 
   const isChoiceQuestion = mainQuestion?.__typename === 'QuestionTypeChoice'
 
-  const questionGroupIdx = QUESTIONS.findIndex(
+  const questionGroupIdx = questions.findIndex(
     (q) => allQuestions && allQuestions[q.ids[0]]?.id === questionIds[0],
   )
 
@@ -184,7 +190,11 @@ const QuestionView = ({ slug, questionIds, extract, share = {} }) => {
 
                     <div {...styles.answerCardWrapper}>
                       {targetAnswers.map(({ answers, displayAuthor, id }) => (
-                        <SubmissionLink id={id} key={id}>
+                        <SubmissionLink
+                          id={id}
+                          key={id}
+                          personPagePath={personPagePath}
+                        >
                           <a style={{ textDecoration: 'none' }}>
                             <div {...styles.answerCard}>
                               <ColorContextProvider

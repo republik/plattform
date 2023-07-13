@@ -19,22 +19,22 @@ import {
   FigureByline,
 } from '@project-r/styleguide'
 
-import { ASSETS_SERVER_BASE_URL, PUBLIC_BASE_URL } from '../../../lib/constants'
-import { useMe } from '../../../lib/context/MeContext'
-import { useTranslation } from '../../../lib/withT'
+import { ASSETS_SERVER_BASE_URL, PUBLIC_BASE_URL } from '../../lib/constants'
+import { useMe } from '../../lib/context/MeContext'
+import { useTranslation } from '../../lib/withT'
 
-import Frame from '../../Frame'
-import Meta from '../../Frame/Meta'
+import Frame from '../Frame'
+import Meta from '../Frame/Meta'
 
-import { QUESTIONNAIRE_SUBMISSIONS_QUERY } from '../../Questionnaire/Submissions/graphql'
-import { LinkToEditQuestionnaire } from '../../Questionnaire/Submissions/QuestionFeatured'
-import { ShareImageSplit } from '../../Questionnaire/Submissions/ShareImageSplit'
+import { QUESTIONNAIRE_SUBMISSIONS_QUERY } from '../Questionnaire/Submissions/graphql'
+import { LinkToEditQuestionnaire } from '../Questionnaire/Submissions/QuestionFeatured'
+import { ShareImageSplit } from '../Questionnaire/Submissions/ShareImageSplit'
 import {
   SubmissionQa,
   styles as submissionStyles,
-} from '../../Questionnaire/Submissions/Submission'
+} from '../Questionnaire/Submissions/Submission'
 
-import HeaderShare from '../shared/HeaderShare'
+import HeaderShare from '../Climatelab/shared/HeaderShare'
 
 import {
   EDIT_QUESTIONNAIRE_PATH,
@@ -42,8 +42,9 @@ import {
   QUESTIONNAIRE_BG_COLOR,
   QUESTIONNAIRE_SLUG,
   QUESTIONNAIRE_SQUARE_IMG_URL,
+  PERSON_PAGE_PATH,
 } from './config'
-import { IconChevronLeft, IconEdit, IconShare } from '@republik/icons'
+import { IconChevronLeft, IconEdit } from '@republik/icons'
 
 const USER_QUERY = gql`
   query getUserId($slug: String!) {
@@ -226,7 +227,12 @@ const Page = () => {
                     )
                   },
                 )}
-                <LinkToEditQuestionnaire slug={QUESTIONNAIRE_SLUG} newOnly />
+                <LinkToEditQuestionnaire
+                  slug={QUESTIONNAIRE_SLUG}
+                  questionnairePath={EDIT_QUESTIONNAIRE_PATH}
+                  personPagePath={PERSON_PAGE_PATH}
+                  newOnly
+                />
                 <br />
               </Center>
             </>
