@@ -187,11 +187,14 @@ mail.enforceSubscriptions = async ({
   })
 
   console.log('------------------ before addUserToAudience')
+  console.log(isNew)
+
   const onboardingSubscription = await addUserToAudience({
     user: user || { email },
     audienceId: MAILCHIMP_ONBOARDING_AUDIENCE_ID,
     ...rest,
   })
+
   return [
     {
       audienceId: MAILCHIMP_MAIN_LIST_ID,
@@ -202,13 +205,6 @@ mail.enforceSubscriptions = async ({
       subscriptions: onboardingSubscription,
     },
   ]
-
-  // return [
-  //   {
-  //     audienceId: MAILCHIMP_MAIN_LIST_ID,
-  //     subscriptions: newsletterSubscriptions,
-  //   },
-  // ]
 }
 
 mail.sendMembershipProlongConfirmation = async ({
