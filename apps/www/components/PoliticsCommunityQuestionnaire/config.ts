@@ -66,4 +66,7 @@ export const QUESTIONNAIRE_SLUG = 'politiker-fragebogen-community'
 export const QUESTIONNAIRE_SQUARE_IMG_URL =
   'https://cdn.repub.ch/s3/republik-assets/repos/republik/page-politikfragebogen-community-uebersicht/files/5218448b-b513-4e11-9361-e460830dc7ef/waehlerinnen.png'
 
+export const ILLU_NIGHT_MODE =
+  'https://cdn.repub.ch/s3/republik-assets/repos/republik/page-politikfragebogen-community-uebersicht/files/084c76ff-3212-42e1-b76d-4e9bdfa31dec/waehlerinnen_nachtmodus.png'
+
 export const ILLU_CREDIT = 'Nadine Redlich'

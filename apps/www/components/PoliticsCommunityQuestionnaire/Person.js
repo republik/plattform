@@ -25,6 +25,7 @@ import { useTranslation } from '../../lib/withT'
 
 import Frame from '../Frame'
 import Meta from '../Frame/Meta'
+import { useResolvedColorSchemeKey } from '../ColorScheme/lib'
 
 import { QUESTIONNAIRE_SUBMISSIONS_QUERY } from '../Questionnaire/Submissions/graphql'
 import { LinkToEditQuestionnaire } from '../Questionnaire/Submissions/QuestionFeatured'
@@ -45,6 +46,7 @@ import {
   PERSON_PAGE_PATH,
   PERSON_SHARE_TEXT,
   ILLU_CREDIT,
+  ILLU_NIGHT_MODE,
 } from './config'
 import { IconChevronLeft, IconEdit } from '@republik/icons'
 
@@ -60,6 +62,7 @@ const USER_QUERY = gql`
 `
 
 const Page = () => {
+  const colorSchemeKey = useResolvedColorSchemeKey()
   const { t } = useTranslation()
   const [headerHeight] = useHeaderHeight()
   const [colorScheme] = useColorContext()
@@ -145,43 +148,46 @@ const Page = () => {
               <Meta data={meta} />
               <div
                 style={{
-                  backgroundColor: QUESTIONNAIRE_BG_COLOR,
                   padding: '24px 0 24px',
                 }}
               >
-                <ColorContextProvider colorSchemeKey='light'>
-                  <div
-                    style={{
-                      paddingTop: 24,
-                      textAlign: 'center',
-                    }}
+                <div
+                  style={{
+                    paddingTop: 24,
+                    textAlign: 'center',
+                  }}
+                >
+                  <Figure
+                    size='tiny'
+                    attributes={{ style: { position: 'relative' } }}
                   >
-                    <Figure
-                      size='tiny'
-                      attributes={{ style: { position: 'relative' } }}
-                    >
-                      <FigureImage src={QUESTIONNAIRE_SQUARE_IMG_URL} />
-                      <FigureCaption>
-                        <FigureByline>{ILLU_CREDIT}</FigureByline>
-                      </FigureCaption>
-                    </Figure>
-                    <NarrowContainer style={{ padding: '20px 0' }}>
-                      <Interaction.Headline>
-                        {'Die Antworten von ' + author?.name}
-                      </Interaction.Headline>
-                      {author?.profilePicture && (
-                        <img
-                          src={author.profilePicture}
-                          style={{
-                            marginTop: 30,
-                            width: 120,
-                            borderRadius: 80,
-                          }}
-                        />
-                      )}
-                    </NarrowContainer>
-                  </div>
-                </ColorContextProvider>
+                    <FigureImage
+                      src={
+                        colorSchemeKey === 'dark'
+                          ? ILLU_NIGHT_MODE
+                          : QUESTIONNAIRE_SQUARE_IMG_URL
+                      }
+                    />
+                    <FigureCaption>
+                      <FigureByline>{ILLU_CREDIT}</FigureByline>
+                    </FigureCaption>
+                  </Figure>
+                  <NarrowContainer style={{ padding: '20px 0' }}>
+                    <Interaction.Headline>
+                      {'Die Antworten von ' + author?.name}
+                    </Interaction.Headline>
+                    {author?.profilePicture && (
+                      <img
+                        src={author.profilePicture}
+                        style={{
+                          marginTop: 30,
+                          width: 120,
+                          borderRadius: 80,
+                        }}
+                      />
+                    )}
+                  </NarrowContainer>
+                </div>
               </div>
               <Center>
                 <div
