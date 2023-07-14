@@ -47,4 +47,4 @@ export const ILLU_CREDIT = 'Cristina Spanò'
 export const QUESTIONNAIRE_SLUG = 'klima-fragebogen'
 
 export const QUESTIONNAIRE_SQUARE_IMG_URL =
-  'https://cdn.repub.ch/s3/republik-assets/repos/republik/page-klimafragebogen-uebersicht/files/034a0eca-8aaf-4511-90aa-504cca584981/final-art_questionnaire.png'
+  'https://cdn.republik.pink/s3/republik-assets-staging/repos/republik/love-page-politik-community-fragebogen-uebersicht/files/904251f8-9e8e-484b-8a68-5ce95ea3271e/waehlerinnen_share.png'
