@@ -24,7 +24,6 @@ import { useTranslation } from '../../lib/withT'
 
 import Frame from '../Frame'
 import Meta from '../Frame/Meta'
-import { useResolvedColorSchemeKey } from '../ColorScheme/lib'
 
 import { QUESTIONNAIRE_SUBMISSIONS_QUERY } from '../Questionnaire/Submissions/graphql'
 import { LinkToEditQuestionnaire } from '../Questionnaire/Submissions/QuestionFeatured'
@@ -62,8 +61,6 @@ const USER_QUERY = gql`
 `
 
 const Page = () => {
-  const colorSchemeKey = useResolvedColorSchemeKey()
-  console.log({ colorSchemeKey })
   const { t } = useTranslation()
   const [headerHeight] = useHeaderHeight()
   const [colorScheme] = useColorContext()
@@ -163,11 +160,11 @@ const Page = () => {
                     attributes={{ style: { position: 'relative' } }}
                   >
                     <FigureImage
-                      src={
-                        colorSchemeKey === 'dark'
-                          ? ILLU_NIGHT_MODE
-                          : QUESTIONNAIRE_SQUARE_IMG_URL
-                      }
+                      {...FigureImage.utils.getResizedSrcs(
+                        `${QUESTIONNAIRE_SQUARE_IMG_URL}?size=707x1340`,
+                        `${ILLU_NIGHT_MODE}?size=707x1340`,
+                        1000,
+                      )}
                     />
                     <FigureCaption>
                       <FigureByline>{ILLU_CREDIT}</FigureByline>
