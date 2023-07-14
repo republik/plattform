@@ -15,7 +15,6 @@ import {
   useColorContext,
   NarrowContainer,
   FigureCaption,
-  ColorContextProvider,
   FigureByline,
 } from '@project-r/styleguide'
 
