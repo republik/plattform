@@ -43,6 +43,7 @@ import {
   QUESTIONNAIRE_SLUG,
   QUESTIONNAIRE_SQUARE_IMG_URL,
   PERSON_PAGE_PATH,
+  PERSON_SHARE_TEXT,
 } from './config'
 import { IconChevronLeft, IconEdit, IconShare } from '@republik/icons'
 
@@ -100,6 +101,7 @@ const Page = () => {
         user={!loading && author}
         img={QUESTIONNAIRE_SQUARE_IMG_URL}
         bgColor={QUESTIONNAIRE_BG_COLOR}
+        personShareText={PERSON_SHARE_TEXT}
       />
     )
   }

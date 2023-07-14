@@ -43,6 +43,7 @@ import {
   QUESTIONNAIRE_SLUG,
   QUESTIONNAIRE_SQUARE_IMG_URL,
   PERSON_PAGE_PATH,
+  PERSON_SHARE_TEXT,
 } from './config'
 import { IconChevronLeft, IconEdit } from '@republik/icons'
 
@@ -99,6 +100,8 @@ const Page = () => {
       <ShareImageSplit
         user={!loading && author}
         img={QUESTIONNAIRE_SQUARE_IMG_URL}
+        bgColor={QUESTIONNAIRE_BG_COLOR}
+        personShareText={PERSON_SHARE_TEXT}
       />
     )
   }
@@ -129,10 +132,8 @@ const Page = () => {
 
           const meta = {
             url,
-            title: t('Climatelab/Questionnaire/title'),
-            description: t('Climatelab/Questionnaire/description', {
-              name: author?.name,
-            }),
+            title: '26 Fragen zur Politik',
+            description: 'Die Antworten von ' + author?.name,
             image: `${ASSETS_SERVER_BASE_URL}/render?width=1200&height=1&url=${encodeURIComponent(
               shareImageUrl,
             )}`,
@@ -165,9 +166,7 @@ const Page = () => {
                     </Figure>
                     <NarrowContainer style={{ padding: '20px 0' }}>
                       <Interaction.Headline>
-                        {t('Climatelab/Questionnaire/Person/title', {
-                          name: author?.name,
-                        })}
+                        {'Die Antworten von ' + author?.name}
                       </Interaction.Headline>
                       {author?.profilePicture && (
                         <img

@@ -41,6 +41,7 @@ export const EDIT_QUESTIONNAIRE_PATH = '/2023/03/03/fragen-zur-klimakrise'
 export const OVERVIEW_QUESTIONNAIRE_PATH = '/15-fragen-zum-klima-ihre-antworten'
 
 export const PERSON_PAGE_PATH = 'klimafragebogen'
+export const PERSON_SHARE_TEXT = '15 Fragen zum Klima – die Antworten von '
 
 export const QUESTIONNAIRE_SLUG = 'klima-fragebogen'
 

@@ -17,6 +17,7 @@ import {
   QUESTIONS,
   EDIT_QUESTIONNAIRE_PATH,
   PERSON_PAGE_PATH,
+  QUESTIONNAIRE_BG_COLOR,
 } from './config'
 
 const AllQuestionsView = ({ slug, extract }) => {
@@ -74,6 +75,7 @@ const SubmissionsOverview = ({ slug, extract, share }) => {
             share={share}
             questionIds={questionIds}
             personPagePath={PERSON_PAGE_PATH}
+            questionnaireBgColor={QUESTIONNAIRE_BG_COLOR}
           />
         ) : (
           <AllQuestionsView slug={slug} extract={extract} />

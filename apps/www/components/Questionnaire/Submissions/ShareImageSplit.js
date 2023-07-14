@@ -9,7 +9,13 @@ import {
 
 import { useTranslation } from '../../../lib/withT'
 
-export const ShareImageSplit = ({ question, user, img, bgColor }) => {
+export const ShareImageSplit = ({
+  question,
+  user,
+  img,
+  bgColor,
+  personShareText,
+}) => {
   const { t } = useTranslation()
   const router = useRouter()
   const { query } = router
@@ -19,9 +25,7 @@ export const ShareImageSplit = ({ question, user, img, bgColor }) => {
   const text = question
     ? question.text
     : user
-    ? t('Climatelab/Questionnaire/Person/title', {
-        name: user?.name,
-      })
+    ? personShareText + user?.name
     : undefined
 
   if (!text) return null

@@ -71,6 +71,7 @@ const QuestionView = ({
   questions,
   questionColor,
   personPagePath,
+  questionnaireBgColor,
 }) => {
   const { t } = useTranslation()
   const router = useRouter()
@@ -107,7 +108,13 @@ const QuestionView = ({
     allQuestions?.filter((q) => questionIds.includes(q.id)) ?? []
   const [mainQuestion, addQuestion] = currentQuestions
   if (extract) {
-    return <ShareImageSplit question={mainQuestion} {...share} />
+    return (
+      <ShareImageSplit
+        question={mainQuestion}
+        {...share}
+        bgColor={questionnaireBgColor}
+      />
+    )
   }
 
   const isChoiceQuestion = mainQuestion?.__typename === 'QuestionTypeChoice'
