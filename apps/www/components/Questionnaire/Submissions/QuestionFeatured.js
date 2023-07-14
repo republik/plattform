@@ -249,7 +249,7 @@ export const QuestionFeatured = ({
       ref={questionRef}
       id={questions[0].id}
       style={{
-        padding: '30px 0 46px 0',
+        padding: '46px 0',
         // flexBasis: '50%',
         backgroundColor: bgColor,
         display: 'flex',
