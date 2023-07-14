@@ -15,7 +15,6 @@ const MailchimpInterface = ({ logger }) => {
   checkEnv(['MAILCHIMP_API_KEY', 'MAILCHIMP_URL', 'MAILCHIMP_MAIN_LIST_ID'])
   return {
     buildApiUrl(audienceId, path) {
-      console.log('---------------------build mailchimp api url')
       return `${MAILCHIMP_URL}/3.0/lists/${audienceId}${path}`
     },
     buildAudienceApiUrl(email, audienceId) {
@@ -35,7 +34,6 @@ const MailchimpInterface = ({ logger }) => {
       return this.buildApiUrl(MAILCHIMP_MAIN_LIST_ID, `/members/${hash}`)
     },
     buildBatchesApiUrl(id) {
-      console.log('---------------------build mailchimp batches api url')
       // returns {MAILCHIMP_URL}/3.0/batches[/{id}]
       return [
         `${MAILCHIMP_URL}/3.0/batches`,
@@ -107,7 +105,6 @@ const MailchimpInterface = ({ logger }) => {
         // malformatted error responses from API.
         const body = {
           ...data,
-          // TODO ...(data.interests && { interests: omitBy(data.interests, isNil) }), TODO check if required or not
           merge_fields: {
             ...(data.merge_fields && omitBy(data.merge_fields, isNil)),
             EMAILB64U: base64u.encode(email),
@@ -128,6 +125,23 @@ const MailchimpInterface = ({ logger }) => {
         throw new NewsletterMemberMailError({ error, email }) // TODO different error or not?
       }
     },
+    async getMembersFromAudienceWithStatus(audienceId, status) {
+      const url = this.buildApiUrl(audienceId, `/members?status=${status}`)
+      try {
+        const response = await this.fetchAuthenticated('GET', url)
+        const json = await response.json()
+        if (response.status >= MINIMUM_HTTP_RESPONSE_STATUS_ERROR) {
+          debug(
+            `could not get members in audience: ${audienceId} ${json.detail}`,
+          )
+          return null
+        }
+        return json
+      } catch (error) {
+        logger.error(`mailchimp -> exception: ${error.message}`)
+        throw new NewsletterMemberMailError({ error })
+      }
+    },
     /* 
     MailChimp differs between archiving and permanently deleting members
     For further reference see API docs: 
@@ -139,6 +153,21 @@ const MailchimpInterface = ({ logger }) => {
     async archiveMember(email) {
       debug(`archiving ${email}`)
       const url = this.buildMembersApiUrl(email)
+      try {
+        const response = await this.fetchAuthenticated('DELETE', url)
+        if (response.status >= MINIMUM_HTTP_RESPONSE_STATUS_ERROR) {
+          debug(`could not delete member: ${email}`)
+          return null
+        }
+        return true
+      } catch (error) {
+        logger.error(`mailchimp -> exception: ${error.message}`)
+        throw new NewsletterMemberMailError({ error, email })
+      }
+    },
+    async archiveMemberInAudience(email, audienceId) {
+      debug(`archiving ${email} in audience ${audienceId}`)
+      const url = this.buildAudienceApiUrl(email, audienceId)
       try {
         const response = await this.fetchAuthenticated('DELETE', url)
         if (response.status >= MINIMUM_HTTP_RESPONSE_STATUS_ERROR) {
@@ -167,7 +196,6 @@ const MailchimpInterface = ({ logger }) => {
       }
     },
     async postBatch(operations) {
-      console.log('---------------------mailchimp post batch')
       const preparedOperations = operations.map((operation) => {
         const { subscriberHash, ...rest } = operation
 

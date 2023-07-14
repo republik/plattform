@@ -12,7 +12,6 @@ const lockTtlSecs = 60 * 5 // 5 mins
 
 const { inform: informGivers } = require('./givers')
 const { inform: informWinback } = require('./winbacks')
-const { inform: informOnboarding } = require('./onboarding')
 const { inform: informFeedback } = require('./feedback')
 const { inform: informUpgrade } = require('./upgrade')
 const { run: membershipsOwnersHandler } = require('./owners')
@@ -103,18 +102,6 @@ const init = async (context) => {
       runFunc: informWinback,
       lockTtlSecs,
       runAtTime: '16:00',
-      runAtDaysOfWeek: [1, 2, 3, 4, 5, 6],
-      runInitially: DEV,
-    }),
-  )
-
-  schedulers.push(
-    timeScheduler.init({
-      name: 'onboarding',
-      context,
-      runFunc: informOnboarding,
-      lockTtlSecs,
-      runAtTime: '23:00',
       runAtDaysOfWeek: [1, 2, 3, 4, 5, 6],
       runInitially: DEV,
     }),
