@@ -167,6 +167,7 @@ mail.enforceSubscriptions = async ({
   userId,
   email,
   isNew,
+  isFirstMembership,
   subscribeToEditorialNewsletters,
   pgdb,
   ...rest
@@ -187,22 +188,31 @@ mail.enforceSubscriptions = async ({
   })
 
   console.log('------------------ before addUserToAudience')
-  console.log(isNew)
+  console.log(isFirstMembership)
 
-  const onboardingSubscription = await addUserToAudience({
-    user: user || { email },
-    audienceId: MAILCHIMP_ONBOARDING_AUDIENCE_ID,
-    ...rest,
-  })
+  if (isFirstMembership) {
+    const onboardingSubscription = await addUserToAudience({
+      user: user || { email },
+      audienceId: MAILCHIMP_ONBOARDING_AUDIENCE_ID,
+      ...rest,
+    })
+
+    return [
+      {
+        audienceId: MAILCHIMP_MAIN_LIST_ID,
+        subscriptions: newsletterSubscriptions,
+      },
+      {
+        audienceId: MAILCHIMP_ONBOARDING_AUDIENCE_ID,
+        subscriptions: onboardingSubscription,
+      },
+    ]
+  }
 
   return [
     {
       audienceId: MAILCHIMP_MAIN_LIST_ID,
       subscriptions: newsletterSubscriptions,
-    },
-    {
-      audienceId: MAILCHIMP_ONBOARDING_AUDIENCE_ID,
-      subscriptions: onboardingSubscription,
     },
   ]
 }
