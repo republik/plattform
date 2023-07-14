@@ -44,6 +44,7 @@ import {
   QUESTIONNAIRE_SQUARE_IMG_URL,
   PERSON_PAGE_PATH,
   PERSON_SHARE_TEXT,
+  ILLU_CREDIT,
 } from './config'
 import { IconChevronLeft, IconEdit } from '@republik/icons'
 
@@ -161,7 +162,7 @@ const Page = () => {
                     >
                       <FigureImage src={QUESTIONNAIRE_SQUARE_IMG_URL} />
                       <FigureCaption>
-                        <FigureByline>Cristina Spanò</FigureByline>
+                        <FigureByline>{ILLU_CREDIT}</FigureByline>
                       </FigureCaption>
                     </Figure>
                     <NarrowContainer style={{ padding: '20px 0' }}>
