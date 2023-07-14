@@ -194,7 +194,6 @@ module.exports = async (_, args, context) => {
   })
 
   if (updatedPledge) {
-    console.log('---------- payPledge mutation')
     await afterChange(
       {
         pledge: updatedPledge,

@@ -172,7 +172,6 @@ mail.enforceSubscriptions = async ({
   pgdb,
   ...rest
 }) => {
-  console.log('------------ enforce sbs')
   const user = !!userId && (await pgdb.public.users.findOne({ id: userId }))
 
   const interests = await getInterestsForUser({
@@ -187,10 +186,8 @@ mail.enforceSubscriptions = async ({
     ...rest,
   })
 
-  console.log('------------------ before addUserToAudience')
-  console.log(isFirstMembership)
-
   if (isFirstMembership) {
+    debug('add to onboarding audience')
     const onboardingSubscription = await addUserToAudience({
       user: user || { email },
       audienceId: MAILCHIMP_ONBOARDING_AUDIENCE_ID,

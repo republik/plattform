@@ -23,13 +23,10 @@ const {
 } = require('@orbiting/backend-modules-republik/lib/address')
 
 module.exports = async (_, args, context) => {
-  console.log('--------------------- submit pledge')
   const { pgdb, req, t } = context
   const transaction = await pgdb.transactionBegin()
   try {
     const { pledge, consents } = args
-    console.log('---------------------consents')
-    console.log(`${consents}`)
     debug('submitPledge %O', pledge)
 
     const pledgeOptions = pledge.options.filter(
