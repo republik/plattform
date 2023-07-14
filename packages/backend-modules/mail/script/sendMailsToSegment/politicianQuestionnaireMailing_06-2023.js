@@ -24,8 +24,7 @@ const argv = yargs
     default: true,
   })
   .option('file', {
-    default:
-      'packages/backend-modules/mail/script/sendMailsToSegment/test_politicians.csv',
+    default: 'local/test_politicians.csv',
   })
   .help()
   .version().argv
@@ -36,8 +35,8 @@ if (argv.dryRun) {
 
 const mailInfo = {
   message: {
-    subject: 'Erinnerung: Sommerfragebogen der Republik',
-    templateName: 'questionnaire_politician_reminder',
+    subject: 'Letzte Erinnerung: Sommerfragebogen der Republik',
+    templateName: 'questionnaire_politician_reminder_2',
   },
 }
 
