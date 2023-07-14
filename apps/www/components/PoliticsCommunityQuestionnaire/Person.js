@@ -46,6 +46,7 @@ import {
   PERSON_SHARE_TEXT,
   ILLU_CREDIT,
   ILLU_NIGHT_MODE,
+  ILLU_SHARE,
 } from './config'
 import { IconChevronLeft, IconEdit } from '@republik/icons'
 
@@ -62,6 +63,7 @@ const USER_QUERY = gql`
 
 const Page = () => {
   const colorSchemeKey = useResolvedColorSchemeKey()
+  console.log({ colorSchemeKey })
   const { t } = useTranslation()
   const [headerHeight] = useHeaderHeight()
   const [colorScheme] = useColorContext()
@@ -102,7 +104,7 @@ const Page = () => {
     return (
       <ShareImageSplit
         user={!loading && author}
-        img={QUESTIONNAIRE_SQUARE_IMG_URL}
+        img={ILLU_SHARE}
         bgColor={QUESTIONNAIRE_BG_COLOR}
         personShareText={PERSON_SHARE_TEXT}
       />

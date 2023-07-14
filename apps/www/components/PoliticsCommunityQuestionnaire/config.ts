@@ -64,6 +64,9 @@ export const PERSON_SHARE_TEXT = '26 Fragen zur Politik – die Antworten von '
 export const QUESTIONNAIRE_SLUG = 'politiker-fragebogen-community'
 
 export const QUESTIONNAIRE_SQUARE_IMG_URL =
+  'https://cdn.repub.ch/s3/republik-assets/repos/republik/page-politikfragebogen-community-uebersicht/files/5218448b-b513-4e11-9361-e460830dc7ef/waehlerinnen.png'
+
+export const ILLU_SHARE =
   'https://cdn.republik.pink/s3/republik-assets-staging/repos/republik/love-page-politik-community-fragebogen-uebersicht/files/904251f8-9e8e-484b-8a68-5ce95ea3271e/waehlerinnen_share.png'
 
 export const ILLU_NIGHT_MODE =
