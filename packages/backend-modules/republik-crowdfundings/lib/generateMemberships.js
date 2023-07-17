@@ -20,11 +20,6 @@ module.exports = async (pledgeId, pgdb, t, redis) => {
   const pledge = await pgdb.public.pledges.findOne({ id: pledgeId })
   const user = await pgdb.public.users.findOne({ id: pledge.userId })
 
-  const existingMemberships = await pgdb.public.memberships.count({
-    userId: user.id,
-  })
-  const isFirstMembership = existingMemberships === 0
-
   // check if pledge really has no memberships yet
   if (await pgdb.public.memberships.count({ pledgeId: pledge.id })) {
     console.error(
@@ -262,7 +257,6 @@ module.exports = async (pledgeId, pgdb, t, redis) => {
       pgdb,
       userId: user.id,
       isNew: !user.verified,
-      isFirstMembership: isFirstMembership,
       subscribeToEditorialNewsletters,
     })
   } catch (e) {
