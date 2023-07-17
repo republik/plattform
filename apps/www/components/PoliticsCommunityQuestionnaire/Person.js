@@ -134,7 +134,7 @@ const Page = () => {
 
           const meta = {
             url,
-            title: '26 Fragen zur Politik',
+            title: '26 Sommerfragen vor der Wahl im Herbst',
             description: 'Die Antworten von ' + author?.name,
             image: `${ASSETS_SERVER_BASE_URL}/render?width=1200&height=1&url=${encodeURIComponent(
               shareImageUrl,

@@ -59,7 +59,8 @@ export const OVERVIEW_QUESTIONNAIRE_PATH =
   '/26-fragen-zur-politik-ihre-antworten'
 
 export const PERSON_PAGE_PATH = 'politikfragebogen-community'
-export const PERSON_SHARE_TEXT = '26 Fragen zur Politik – die Antworten von '
+export const PERSON_SHARE_TEXT =
+  '26 Sommerfragen vor der Wahl im Herbst – die Antworten von '
 
 export const QUESTIONNAIRE_SLUG = 'politiker-fragebogen-community'
 
