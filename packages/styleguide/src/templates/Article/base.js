@@ -37,8 +37,9 @@ import {
 import { MIN_GALLERY_IMG_WIDTH } from '../../components/Figure/Image'
 import { ExpandableLink } from '../../components/ExpandableLink'
 import { SEPARATOR as EXPANDABLE_LINK_SEPARATOR } from '../../components/ExpandableLink/ExpandableLink'
+import { ScrollySubhead } from '../../components/ScrollySubhead'
 
-const createBase = ({ metaBody, metaHeadlines }) => {
+const createBase = ({ metaBody, metaHeadlines, scrollyComponents }) => {
   const link = {
     matchMdast: matchType('link'),
     props: (node, index, parent, { ancestors }) => {
@@ -141,6 +142,15 @@ const createBase = ({ metaBody, metaHeadlines }) => {
       slug: slug(mdastToString(node)),
     }),
     component: ({ children, slug }) => {
+      if (scrollyComponents) {
+        const id = `step-${slug}`
+        return (
+          <ScrollySubhead slug={id}>
+            <a {...styles.anchor} id={id} />
+            {children}
+          </ScrollySubhead>
+        )
+      }
       const Subhead = metaHeadlines ? Meta.Subhead : Typography.Subhead
       return (
         <Subhead>

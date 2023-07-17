@@ -17,6 +17,8 @@ export default ({ rule, subModules, TYPE }) => {
     isStatic = false,
   } = rule.editorOptions || {}
 
+  const Headline = rule.component
+
   const inlineSerializer = new MarkdownSerializer({
     rules: subModules
       .reduce(
@@ -37,9 +39,6 @@ export default ({ rule, subModules, TYPE }) => {
         kind: 'block',
         type: TYPE,
         nodes: inlineSerializer.fromMdast(node.children, 0, node, rest),
-        data: {
-          id: slug(mdastToString(node)),
-        },
       }
     },
     toMdast: (object, index, parent, rest) => {
@@ -97,27 +96,12 @@ export default ({ rule, subModules, TYPE }) => {
         renderNode({ node, children, attributes }) {
           if (!title.match(node)) return
 
-          // TODO: generate id here.
-          // console.log(node.data.toJS().id)
-
           return (
-            <rule.component
-              attributes={{
-                ...attributes,
-                style: { position: 'relative' },
-              }}
-              {...node.data.toJS()}
-            >
-              <a {...styles.anchor} id={node.data.toJS().id} />
-              <span
-                style={{
-                  position: 'relative',
-                  display: 'block',
-                }}
-              >
+            <span {...attributes}>
+              <Headline {...node.data.toJS()} slug={slug(node.text)}>
                 {children}
-              </span>
-            </rule.component>
+              </Headline>
+            </span>
           )
         },
         schema: {

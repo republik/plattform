@@ -55,6 +55,12 @@ export const ScrollyFrame = ({
     // steps are 1-indexed to match story steps
     setCurrentStep(i + 1)
 
+    const stepEvent = new CustomEvent('newStep', {
+      bubbles: true,
+      detail: { stepId: stepIds[i] },
+    })
+    document.dispatchEvent(stepEvent)
+
     if (chartRef.current.getBoundingClientRect().top <= headerHeight)
       setFixed(true)
     if (

@@ -186,6 +186,7 @@ const createSchema = ({
   onAudioCoverClick,
   metaBody = false,
   metaHeadlines = false,
+  scrollyComponents = false,
   skipContainer = false,
   skipCenter = false,
   withCommentData = withData,
@@ -195,7 +196,7 @@ const createSchema = ({
   noEmpty = true,
   AudioPlayButton,
 } = {}) => {
-  const base = createBase({ metaBody, metaHeadlines })
+  const base = createBase({ metaBody, metaHeadlines, scrollyComponents })
   const blocks = createBlocks({
     COVER_TYPE,
     base,
