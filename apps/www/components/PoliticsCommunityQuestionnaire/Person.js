@@ -15,26 +15,25 @@ import {
   useColorContext,
   NarrowContainer,
   FigureCaption,
-  ColorContextProvider,
   FigureByline,
 } from '@project-r/styleguide'
 
-import { ASSETS_SERVER_BASE_URL, PUBLIC_BASE_URL } from '../../../lib/constants'
-import { useMe } from '../../../lib/context/MeContext'
-import { useTranslation } from '../../../lib/withT'
+import { ASSETS_SERVER_BASE_URL, PUBLIC_BASE_URL } from '../../lib/constants'
+import { useMe } from '../../lib/context/MeContext'
+import { useTranslation } from '../../lib/withT'
 
-import Frame from '../../Frame'
-import Meta from '../../Frame/Meta'
+import Frame from '../Frame'
+import Meta from '../Frame/Meta'
 
-import { QUESTIONNAIRE_SUBMISSIONS_QUERY } from '../../Questionnaire/Submissions/graphql'
-import { LinkToEditQuestionnaire } from '../../Questionnaire/Submissions/QuestionFeatured'
-import { ShareImageSplit } from '../../Questionnaire/Submissions/ShareImageSplit'
+import { QUESTIONNAIRE_SUBMISSIONS_QUERY } from '../Questionnaire/Submissions/graphql'
+import { LinkToEditQuestionnaire } from '../Questionnaire/Submissions/QuestionFeatured'
+import { ShareImageSplit } from '../Questionnaire/Submissions/ShareImageSplit'
 import {
   SubmissionQa,
   styles as submissionStyles,
-} from '../../Questionnaire/Submissions/Submission'
+} from '../Questionnaire/Submissions/Submission'
 
-import HeaderShare from '../shared/HeaderShare'
+import HeaderShare from '../Climatelab/shared/HeaderShare'
 
 import {
   EDIT_QUESTIONNAIRE_PATH,
@@ -45,8 +44,10 @@ import {
   PERSON_PAGE_PATH,
   PERSON_SHARE_TEXT,
   ILLU_CREDIT,
+  ILLU_NIGHT_MODE,
+  ILLU_SHARE,
 } from './config'
-import { IconChevronLeft, IconEdit, IconShare } from '@republik/icons'
+import { IconChevronLeft, IconEdit } from '@republik/icons'
 
 const USER_QUERY = gql`
   query getUserId($slug: String!) {
@@ -100,7 +101,7 @@ const Page = () => {
     return (
       <ShareImageSplit
         user={!loading && author}
-        img={QUESTIONNAIRE_SQUARE_IMG_URL}
+        img={ILLU_SHARE}
         bgColor={QUESTIONNAIRE_BG_COLOR}
         personShareText={PERSON_SHARE_TEXT}
       />
@@ -133,10 +134,8 @@ const Page = () => {
 
           const meta = {
             url,
-            title: t('Climatelab/Questionnaire/title'),
-            description: t('Climatelab/Questionnaire/description', {
-              name: author?.name,
-            }),
+            title: '26 Fragen zur Politik',
+            description: 'Die Antworten von ' + author?.name,
             image: `${ASSETS_SERVER_BASE_URL}/render?width=1200&height=1&url=${encodeURIComponent(
               shareImageUrl,
             )}`,
@@ -147,45 +146,46 @@ const Page = () => {
               <Meta data={meta} />
               <div
                 style={{
-                  backgroundColor: QUESTIONNAIRE_BG_COLOR,
                   padding: '24px 0 24px',
                 }}
               >
-                <ColorContextProvider colorSchemeKey='light'>
-                  <div
-                    style={{
-                      paddingTop: 24,
-                      textAlign: 'center',
-                    }}
+                <div
+                  style={{
+                    paddingTop: 24,
+                    textAlign: 'center',
+                  }}
+                >
+                  <Figure
+                    size='tiny'
+                    attributes={{ style: { position: 'relative' } }}
                   >
-                    <Figure
-                      size='tiny'
-                      attributes={{ style: { position: 'relative' } }}
-                    >
-                      <FigureImage src={QUESTIONNAIRE_SQUARE_IMG_URL} />
-                      <FigureCaption>
-                        <FigureByline>{ILLU_CREDIT}</FigureByline>
-                      </FigureCaption>
-                    </Figure>
-                    <NarrowContainer style={{ padding: '20px 0' }}>
-                      <Interaction.Headline>
-                        {t('Climatelab/Questionnaire/Person/title', {
-                          name: author?.name,
-                        })}
-                      </Interaction.Headline>
-                      {author?.profilePicture && (
-                        <img
-                          src={author.profilePicture}
-                          style={{
-                            marginTop: 30,
-                            width: 120,
-                            borderRadius: 80,
-                          }}
-                        />
+                    <FigureImage
+                      {...FigureImage.utils.getResizedSrcs(
+                        `${QUESTIONNAIRE_SQUARE_IMG_URL}?size=707x1340`,
+                        `${ILLU_NIGHT_MODE}?size=707x1340`,
+                        1000,
                       )}
-                    </NarrowContainer>
-                  </div>
-                </ColorContextProvider>
+                    />
+                    <FigureCaption>
+                      <FigureByline>{ILLU_CREDIT}</FigureByline>
+                    </FigureCaption>
+                  </Figure>
+                  <NarrowContainer style={{ padding: '20px 0' }}>
+                    <Interaction.Headline>
+                      {'Die Antworten von ' + author?.name}
+                    </Interaction.Headline>
+                    {author?.profilePicture && (
+                      <img
+                        src={author.profilePicture}
+                        style={{
+                          marginTop: 30,
+                          width: 120,
+                          borderRadius: 80,
+                        }}
+                      />
+                    )}
+                  </NarrowContainer>
+                </div>
               </div>
               <Center>
                 <div
