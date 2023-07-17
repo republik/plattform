@@ -139,7 +139,7 @@ const resolve = async (token, { pgdb }) => {
   if (userId && scope && expiresAt && hmac) {
     const payload = getPayload({ userId, scope, expiresAt })
     const key = await pgdb.public.users.findOneFieldOnly(
-      { id: userId },
+      { id: userId, deletedAt: null },
       'accessKey',
     )
     if (key && getHmac(payload, key) === hmac) {

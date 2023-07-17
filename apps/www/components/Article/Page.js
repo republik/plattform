@@ -83,6 +83,7 @@ import ArticleRecommendationsFeed from './ArticleRecommendationsFeed'
 import TeaserAudioPlayButton from '../Audio/shared/TeaserAudioPlayButton'
 import useAudioQueue from '../Audio/hooks/useAudioQueue'
 import { IconEdit } from '@republik/icons'
+import { ArticleAudioPlayer } from '../Audio/AudioPlayer/ArticleAudioPlayer'
 
 const LoadingComponent = () => <SmallLoader loading />
 
@@ -188,8 +189,8 @@ const ClimateLabQuestionnaire = dynamic(
   },
 )
 
-const PoliticsQuestionnaire = dynamic(
-  () => import('../PoliticsQuestionnaire/Overview'),
+const PoliticsCommunityQuestionnaire = dynamic(
+  () => import('../PoliticsCommunityQuestionnaire/Overview'),
   {
     loading: LoadingComponent,
   },
@@ -398,6 +399,8 @@ const ArticlePage = ({
     meta.audioSource.kind === 'syntheticReadAloud'
   const isReadAloud =
     hasMeta && meta.audioSource && meta.audioSource.kind === 'readAloud'
+
+  const hasAudioSource = !!meta?.audioSource
   const newsletterMeta =
     hasMeta && (meta.newsletter || meta.format?.meta?.newsletter)
 
@@ -446,7 +449,7 @@ const ArticlePage = ({
           CLIMATE_LAB_COUNTER: ClimateLabCounter,
           CLIMATE_LAB_INLINE_TEASER: ClimateLabInlineTeaser,
           CLIMATE_LAB_QUESTIONNAIRE: ClimateLabQuestionnaire,
-          POLITICS_QUESTIONNAIRE: PoliticsQuestionnaire,
+          POLITICS_COMMUNITY_QUESTIONNAIRE: PoliticsCommunityQuestionnaire,
           POSTCARD: Postcard,
           POSTCARD_GALLERY: PostcardGallery,
         },
@@ -820,6 +823,13 @@ const ArticlePage = ({
                                   {actionBar}
                                 </div>
                               )}
+
+                              {hasAudioSource && (
+                                <div style={{ marginTop: 32 }}>
+                                  <ArticleAudioPlayer document={article} />
+                                </div>
+                              )}
+
                               {isSection && !hideSectionNav && (
                                 <Breakout size='breakout'>
                                   <SectionNav

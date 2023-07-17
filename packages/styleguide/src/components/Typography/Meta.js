@@ -46,6 +46,12 @@ const subhead = css({
     ...convertStyleToRem(styles.sansSerifMedium24),
     margin: '46px 0 12px 0',
   },
+  ':first-child': {
+    marginTop: 0,
+  },
+  ':last-child': {
+    marginBottom: 0,
+  },
 })
 
 export const Subhead = ({ children, attributes, ...props }) => {

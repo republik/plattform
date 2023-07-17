@@ -246,7 +246,7 @@ const markAllAsReadMutation = gql`
   ${notificationInfo}
 `
 
-const subscribeToDocumentMutation = gql`
+export const subscribeToDocumentMutation = gql`
   mutation subToDoc($documentId: ID!, $filters: [EventObjectType!]) {
     subscribe(objectId: $documentId, type: Document, filters: $filters) {
       ...subInfo
@@ -254,7 +254,7 @@ const subscribeToDocumentMutation = gql`
   }
   ${subInfo}
 `
-const unsubscribeFromDocumentMutation = gql`
+export const unsubscribeFromDocumentMutation = gql`
   mutation unSubFromDoc($subscriptionId: ID!, $filters: [EventObjectType!]) {
     unsubscribe(subscriptionId: $subscriptionId, filters: $filters) {
       ...subInfo

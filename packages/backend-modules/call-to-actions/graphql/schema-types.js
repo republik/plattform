@@ -14,11 +14,19 @@ type CallToAction {
   acknowledgedAt: DateTime
 }
 
-type CallToActionPayload {
-  customComponent: CallToActionPayloadCustomComponent!
+union CallToActionPayload = CallToActionComponentPayload | CallToActionBasicPayload
+
+type CallToActionBasicPayload {
+  text: String!
+  linkHref: String!
+  linkLabel: String!
 }
 
-type CallToActionPayloadCustomComponent {
+type CallToActionComponentPayload {
+  customComponent: CallToActionCustomComponent!
+}
+
+type CallToActionCustomComponent {
   key: String!
   args: JSON
 }
