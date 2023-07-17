@@ -46,8 +46,8 @@ const init = async (context) => {
         await onboarding(context, dryRun)
       },
       lockTtlSecs: 60,
-      runAtTime: '14:45',
-      runAtDaysOfWeek: [1, 7], // only on Sunday
+      runAtTime: '11:00',
+      runAtDaysOfWeek: [7], // only on Sunday
       runInitially: DEV,
     }),
   )
