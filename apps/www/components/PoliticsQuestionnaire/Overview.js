@@ -38,6 +38,8 @@ import {
 
 import HeaderShare from './HeaderShare'
 
+import { ShareImageSplit } from './ShareImageSplit'
+
 // filter needs to be this text/value object
 const CANTONS = [
   { text: 'Alle', value: undefined },
@@ -57,8 +59,6 @@ const PARTIES = [
   { text: 'EVP', value: 'EVP' },
 ]
 
-// @Felix: if you prefer I guess a filter context could be a good solution, too
-// @Felix: i'd use this in the single question view too
 export const Filters = () => {
   const router = useRouter()
   const query = router.query
@@ -78,9 +78,7 @@ export const Filters = () => {
           label='Partei'
           items={PARTIES}
           value={query.party}
-          onChange={(item) =>
-            router.push({ query: { ...query, party: item.value } })
-          }
+          onChange={(item) => router.push({ query: { party: item.value } })}
         />
       </div>
     </NarrowContainer>
@@ -89,15 +87,19 @@ export const Filters = () => {
 
 export const SubmissionsOverview = ({ submissionData }) => {
   const router = useRouter()
-  // const {
-  //   query: { id, image },
-  // } = router
+  const {
+    query: { id, image },
+  } = router
   const urlObj = new URL(router.asPath, PUBLIC_BASE_URL)
   const url = urlObj.toString()
 
   const shareImageUrlObj = urlObj
   shareImageUrlObj.searchParams.set('image', true)
   const shareImageUrl = shareImageUrlObj.toString()
+
+  if (image) {
+    return <ShareImageSplit img={QUESTIONNAIRE_SQUARE_IMG_URL} />
+  }
 
   const meta = {
     url,
@@ -107,6 +109,7 @@ export const SubmissionsOverview = ({ submissionData }) => {
       shareImageUrl,
     )}`,
   }
+
   return (
     <Frame raw>
       <div
