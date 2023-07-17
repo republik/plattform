@@ -2,6 +2,9 @@
 export { default as createArticleSchema } from './templates/Article'
 export { extractImages, matchImagesParagraph } from './templates/Article/utils'
 
+// Export auf-den-punkt schema
+export { default as createAufDenPunktSchema } from './templates/AufDenPunkt'
+
 // Export comment-schema
 export { default as createCommentWebSchema } from './templates/Comment/web'
 export { default as createCommentEmailSchema } from './templates/Comment/email'

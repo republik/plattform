@@ -34,6 +34,7 @@ import {
   createNewsletterWebSchema,
   createSectionSchema,
   createPageSchema,
+  createAufDenPunktSchema,
   flyerSchema,
   createRequire,
 } from '@project-r/styleguide'
@@ -209,6 +210,7 @@ const schemaCreators = {
   editorial: createArticleSchema,
   meta: createArticleSchema,
   article: createArticleSchema,
+  aufDenPunkt: createAufDenPunktSchema,
   format: createFormatSchema,
   dossier: createDossierSchema,
   discussion: createDiscussionSchema,

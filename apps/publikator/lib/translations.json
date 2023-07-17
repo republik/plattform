@@ -153,6 +153,10 @@
       "value": "Republik Newsletter"
     },
     {
+      "key": "repo/add/template/aufDenPunkt",
+      "value": "Auf den Punkt"
+    },
+    {
       "key": "repo/add/template/neutrum",
       "value": "Neutrum"
     },

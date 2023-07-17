@@ -9,6 +9,7 @@ import {
   createSectionSchema,
   createDiscussionSchema,
   createDossierSchema,
+  createAufDenPunktSchema,
 } from '@project-r/styleguide'
 
 import { getDatePath } from '@project-r/styleguide/editor'
@@ -41,6 +42,7 @@ const schemas = {
     repoPrefix: 'flyer-',
   },
   article: createArticleSchema(articleSchemaParams),
+  aufDenPunkt: createAufDenPunktSchema(articleSchemaParams),
   front: createFrontSchema({
     Link: NoOpLink,
     CommentLink: NoOpLink,
