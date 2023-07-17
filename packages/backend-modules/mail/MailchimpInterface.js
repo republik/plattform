@@ -171,7 +171,7 @@ const MailchimpInterface = ({ logger }) => {
       try {
         const response = await this.fetchAuthenticated('DELETE', url)
         if (response.status >= MINIMUM_HTTP_RESPONSE_STATUS_ERROR) {
-          debug(`could not delete member: ${email}`)
+          debug(`could not archive member: ${email}`)
           return null
         }
         return true

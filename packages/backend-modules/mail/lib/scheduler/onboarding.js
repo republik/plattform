@@ -3,7 +3,7 @@ const checkEnv = require('check-env')
 const BluePromise = require('bluebird')
 const MailchimpInterface = require('../../MailchimpInterface.js')
 
-module.exports = async (dryRun) => {
+module.exports = async (context, dryRun = false) => {
   // get all unsubscribed from mailchimp onboarding audience and set to archived
   debug('onboarding scheduler')
   checkEnv(['MAILCHIMP_ONBOARDING_AUDIENCE_ID'])
@@ -37,5 +37,11 @@ module.exports = async (dryRun) => {
     }
     results.push(result)
   })
-  debug(results)
+  const successful = results.every((e) => e === true)
+  debug(successful)
+  if (!successful) {
+    console.error(
+      'Could not archive all unsubscribed emails from onboarding audience.',
+    )
+  }
 }
