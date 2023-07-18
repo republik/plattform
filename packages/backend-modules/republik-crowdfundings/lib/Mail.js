@@ -143,16 +143,16 @@ const addUserToAudience = async ({ user, name, audienceId }) => {
     console.error('AudienceId is not defined')
   }
 
-  const body = {
+  const data = {
     email_address: email,
     status_if_new: MailchimpInterface.MemberStatus.Subscribed,
     status: MailchimpInterface.MemberStatus.Unsubscribed,
   }
 
-  debug(body)
+  debug(data)
 
   const mailchimp = MailchimpInterface({ console })
-  await mailchimp.updateMemberInAudience(email, body, audienceId)
+  await mailchimp.updateMemberInAudience(email, data, audienceId)
 
   // TODO tbd, maybe merge this with NewsletterSubscription
   const result = {
