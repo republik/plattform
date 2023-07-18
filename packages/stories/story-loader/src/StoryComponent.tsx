@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react'
+import React, { startTransition, Suspense, useEffect, useState } from 'react'
 
 const STORY_COMPONENTS = {
   'Example Pink': React.lazy(() => import('@republik/stories-example-pink')),
@@ -14,9 +14,15 @@ const StoryComponent: React.FC<{
   name?: string
   [x: string]: unknown
 }> = ({ name, ...props }) => {
-  if (!name) return <p>Undefined story component name</p>
+  const [LoadedComponent, setLoadedComponent] = useState(STORY_COMPONENTS[name])
 
-  const LoadedComponent = STORY_COMPONENTS[name]
+  useEffect(() => {
+    // Without startTransition, the following error pops up:
+    //  "This Suspense boundary received an update before it finished hydrating."
+    startTransition(() => {
+      setLoadedComponent(STORY_COMPONENTS[name])
+    })
+  }, [name])
 
   if (!LoadedComponent) return <p>{name} story component does not exist</p>
 
