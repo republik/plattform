@@ -34,10 +34,8 @@ export const StepsMenu = ({
 
 const styles = {
   container: css({
-    position: 'absolute',
     left: 10,
-    top: 0,
-    bottom: 0,
+    alignSelf: 'center',
     textAlign: 'center',
     justifyContent: 'center',
     opacity: 0,
