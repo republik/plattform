@@ -1,5 +1,5 @@
 import { css } from 'glamor'
-import React, { ReactNode } from 'react'
+import React, { ReactNode, useEffect, useState } from 'react'
 
 // TODO: these should be out of the SG and usable by story components
 export const COLOR_LABEL_EVENTS = {
@@ -14,14 +14,17 @@ export const ColorLabel = ({
   color: string
   children: ReactNode
 }) => {
-  const enterEvent = new CustomEvent(COLOR_LABEL_EVENTS.enter, {
-    bubbles: true,
-    detail: { color },
-  })
-  const leaveEvent = new CustomEvent(COLOR_LABEL_EVENTS.leave, {
-    bubbles: true,
-    detail: { color },
-  })
+  const [enterEvent, setEnterEvent] = useState<CustomEvent>()
+  const [leaveEvent, setLeaveEvent] = useState<CustomEvent>()
+
+  useEffect(() => {
+    const eventsParams = {
+      bubbles: true,
+      detail: { color },
+    }
+    setEnterEvent(new CustomEvent(COLOR_LABEL_EVENTS.enter, eventsParams))
+    setLeaveEvent(new CustomEvent(COLOR_LABEL_EVENTS.leave, eventsParams))
+  }, [])
 
   return (
     <span
