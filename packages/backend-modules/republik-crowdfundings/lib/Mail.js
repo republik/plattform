@@ -167,6 +167,7 @@ mail.enforceSubscriptions = async ({
   userId,
   email,
   isNew,
+  isFirstMembership,
   subscribeToEditorialNewsletters,
   pgdb,
   ...rest
@@ -185,12 +186,7 @@ mail.enforceSubscriptions = async ({
     ...rest,
   })
 
-  const existingMemberships = await pgdb.public.memberships.count({
-    userId: user.id,
-  })
-  const isFirstMembership = existingMemberships === 0
-
-  if (isFirstMembership) {
+  if (isFirstMembership || isNew) {
     debug('add to onboarding audience')
     const onboardingSubscription = await addUserToAudience({
       user: user || { email },

@@ -23,6 +23,11 @@ module.exports = async (
       throw new Error(t('api/pledge/generate/missingAddress'))
     }
 
+    const existingMemberships = await pgdb.public.memberships.count({
+      userId: user.id,
+    })
+    const isFirstMembership = existingMemberships === 0
+
     const pkg = await transaction.public.packages.findFirst(
       { name: 'ABO' },
       { orderBy: { createdAt: 'desc' } },
@@ -71,7 +76,7 @@ module.exports = async (
     await transaction.transactionCommit()
 
     try {
-      await enforceSubscriptions({ pgdb, userId })
+      await enforceSubscriptions({ pgdb, userId, isFirstMembership })
     } catch (e2) {
       console.error('newsletter subscription changes failed', {
         req: req._log(),
