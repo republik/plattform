@@ -39,6 +39,7 @@ export const QUESTIONS: QuestionConfigType[] = [
 
 export const EDIT_QUESTIONNAIRE_PATH = '/2023/03/03/fragen-zur-klimakrise'
 export const OVERVIEW_QUESTIONNAIRE_PATH = '/15-fragen-zum-klima-ihre-antworten'
+export const PERSON_PAGE_PATH = 'klimafragebogen'
 
 export const QUESTIONNAIRE_SLUG = 'klima-fragebogen'
 

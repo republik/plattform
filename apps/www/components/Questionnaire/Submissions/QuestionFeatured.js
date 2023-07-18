@@ -19,8 +19,6 @@ import {
 
 import { useMe } from '../../../lib/context/MeContext'
 
-import { EDIT_QUESTIONNAIRE_PATH } from '../../Climatelab/Questionnaire/config'
-
 import {
   QUESTIONNAIRE_SUBMISSION_BOOL_QUERY,
   QUESTIONNAIRE_SUBMISSIONS_QUERY,
@@ -44,9 +42,9 @@ export const getTargetedAnswers = (questionIds, results) => {
   })
 }
 
-export const SubmissionLink = ({ id, children }) => {
+export const SubmissionLink = ({ id, children, personPagePath }) => {
   return (
-    <Link href={`/klimafragebogen/${id}`} passHref>
+    <Link href={`/${personPagePath}/${id}`} passHref>
       {children}
     </Link>
   )
@@ -71,7 +69,13 @@ export const QuestionLink = ({ questions, children }) => {
   )
 }
 
-export const LinkToEditQuestionnaire = ({ slug, children, newOnly }) => {
+export const LinkToEditQuestionnaire = ({
+  slug,
+  children,
+  newOnly,
+  questionnairePath,
+  personPagePath,
+}) => {
   const { me } = useMe()
   const { loading, data } = useQuery(QUESTIONNAIRE_SUBMISSION_BOOL_QUERY, {
     skip: !me,
@@ -84,8 +88,8 @@ export const LinkToEditQuestionnaire = ({ slug, children, newOnly }) => {
     <Editorial.P>
       {loading || !hasFilledQuestionnaire ? (
         <span>
-          Wie lauten Ihre Antworten? Füllen Sie unseren Klimafragebogen{' '}
-          <Link href={EDIT_QUESTIONNAIRE_PATH}>
+          Wie lauten Ihre Antworten? Füllen Sie unseren Fragebogen{' '}
+          <Link href={questionnairePath}>
             <Editorial.A>hier</Editorial.A>
           </Link>{' '}
           aus.
@@ -94,7 +98,7 @@ export const LinkToEditQuestionnaire = ({ slug, children, newOnly }) => {
         <span>
           Sie möchten Ihre eigenen Antworten teilen oder nochmals bearbeiten?{' '}
           <Link
-            href={`/klimafragebogen/${data.questionnaire.results.nodes[0].id}`}
+            href={`/${personPagePath}/${data.questionnaire.results.nodes[0].id}`}
           >
             <Editorial.A> Hierlang.</Editorial.A>
           </Link>
@@ -106,6 +110,7 @@ export const LinkToEditQuestionnaire = ({ slug, children, newOnly }) => {
 }
 
 export const AnswersChart = ({ question, skipTitle }) => {
+  if (!question.result) return
   const totalAnswers = question.result.reduce((agg, r) => agg + r.count, 0)
   const values = question.options.map((option) => ({
     answer: option.label,
@@ -130,7 +135,13 @@ export const AnswersChart = ({ question, skipTitle }) => {
   )
 }
 
-const AnswerGridOverview = ({ slug, question, valueLength, hint }) => {
+const AnswerGridOverview = ({
+  slug,
+  question,
+  valueLength,
+  hint,
+  personPagePath,
+}) => {
   const { loading, error, data } = useQuery(QUESTIONNAIRE_SUBMISSIONS_QUERY, {
     variables: {
       slug,
@@ -178,7 +189,7 @@ const AnswerGridOverview = ({ slug, question, valueLength, hint }) => {
                     key={id}
                     textLength={answers[0].payload.value.length}
                   >
-                    <SubmissionLink id={id}>
+                    <SubmissionLink id={id} personPagePath={personPagePath}>
                       <a style={{ textDecoration: 'none' }}>
                         <div {...styles.answerCard}>
                           <div>
@@ -217,6 +228,7 @@ export const QuestionFeatured = ({
   bgColor,
   valueLength,
   hint,
+  personPagePath,
 }) => {
   const router = useRouter()
   const { query } = router
@@ -237,7 +249,7 @@ export const QuestionFeatured = ({
       ref={questionRef}
       id={questions[0].id}
       style={{
-        padding: '0 0 46px 0',
+        padding: '46px 0',
         // flexBasis: '50%',
         backgroundColor: bgColor,
         display: 'flex',
@@ -252,6 +264,7 @@ export const QuestionFeatured = ({
               question={q}
               valueLength={valueLength}
               hint={hint}
+              personPagePath={personPagePath}
             />
           ) : q.__typename === 'QuestionTypeChoice' ? (
             <AnswersChart key={q.id} question={q} />

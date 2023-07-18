@@ -9,9 +9,13 @@ import {
 
 import { useTranslation } from '../../../lib/withT'
 
-import { QUESTIONNAIRE_BG_COLOR } from '../../Climatelab/Questionnaire/config'
-
-export const ShareImageSplit = ({ question, user, img }) => {
+export const ShareImageSplit = ({
+  question,
+  user,
+  img,
+  bgColor,
+  personShareText,
+}) => {
   const { t } = useTranslation()
   const router = useRouter()
   const { query } = router
@@ -21,9 +25,7 @@ export const ShareImageSplit = ({ question, user, img }) => {
   const text = question
     ? question.text
     : user
-    ? t('Climatelab/Questionnaire/Person/title', {
-        name: user?.name,
-      })
+    ? personShareText + user?.name
     : undefined
 
   if (!text) return null
@@ -41,7 +43,7 @@ export const ShareImageSplit = ({ question, user, img }) => {
           display: 'grid',
           gridAutoColumns: '1fr',
           gridAutoFlow: 'column',
-          backgroundColor: QUESTIONNAIRE_BG_COLOR,
+          backgroundColor: bgColor,
         }}
       >
         <div
