@@ -19,6 +19,7 @@ const StoryComponent: React.FC<{
   useEffect(() => {
     // Without startTransition, the following error pops up:
     //  "This Suspense boundary received an update before it finished hydrating."
+    // TODO: we need to check that this is ok so...
     startTransition(() => {
       setLoadedComponent(STORY_COMPONENTS[name])
     })
