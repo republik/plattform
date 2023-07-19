@@ -7,7 +7,7 @@ const STORY_COMPONENTS = {
     () => import('@republik/stories-the-dot-banks'),
   ),
   'Auf den Punkt: IVF': React.lazy(
-    () => import('../../stories-the-dot-ivf/dist'),
+    () => import('@republik/stories-the-dot-ivf'),
   ),
 }
 
