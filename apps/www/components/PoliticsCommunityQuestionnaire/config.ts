@@ -54,9 +54,10 @@ export const QUESTIONS: QuestionConfigType[] = [
   { ids: [25], valueLength: { min: 0, max: 100 } },
 ]
 
-export const EDIT_QUESTIONNAIRE_PATH = '/2023/07/12/politikfragebogen-community'
+export const EDIT_QUESTIONNAIRE_PATH =
+  '/2023/07/19/welche-politikerinnen-gehoeren-in-den-bundesrat-welcher-schweizer-politiker-muss-zuruecktreten'
 export const OVERVIEW_QUESTIONNAIRE_PATH =
-  '/26-fragen-zur-politik-ihre-antworten'
+  '/politik-in-26-fragen-ihre-antworten'
 
 export const PERSON_PAGE_PATH = 'politikfragebogen-community'
 export const PERSON_SHARE_TEXT =
