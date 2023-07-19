@@ -1,17 +1,24 @@
 import { motion, Variant } from 'framer-motion'
 
 import { css } from 'glamor'
+import { scaleThreshold } from 'd3-scale'
 
 import { fontStyles } from './__styleguide/components/Typography'
 import { useColorContext } from './__styleguide/components/Colors/ColorContext'
 import * as mediaQueries from './__styleguide/theme/mediaQueries'
 
 import {
+  useAnimatedValue,
+  useMotionValueTextContent,
+} from './toolbox/useAnimatedValue'
+
+import {
   dataSet,
   PADDING_TOP,
-  PADDING_LEFT,
   SMALL_RADIUS,
+  RADIUS,
   COLORS,
+  SIZE,
 } from './config'
 
 type StoryVariant = 'step0' | 'step1' | 'step2' | 'step3' | 'step4' | 'step5'
@@ -50,135 +57,155 @@ const getVariant = (step: number) => {
   return 'step0'
 }
 
+const CENTER = 700 / 2
+const OFFSET = 5 * SIZE
+
+const TRANSFERS = ['1', '2', '3', '4', 'Mehr als 4']
+
+const DELAY_TIMES = [0.5, 1.5, 2.5, 3.5, 4.5]
+const BELOW_34_THRESHOLDS = [40, 61, 72, 77, 82]
+const BELOW_40_THRESHOLDS = [34, 51, 60, 64, 68]
+const ABOVE_40_THRESHOLDS = [18, 27, 31, 34, 36]
+
+const below34AnimationScale = scaleThreshold()
+  .domain(BELOW_34_THRESHOLDS)
+  .range(DELAY_TIMES)
+
+const below40AnimationScale = scaleThreshold()
+  .domain(BELOW_40_THRESHOLDS)
+  .range(DELAY_TIMES)
+
+const above40AnimationScale = scaleThreshold()
+  .domain(ABOVE_40_THRESHOLDS)
+  .range(DELAY_TIMES)
+
+const transferAnimationScale = scaleThreshold()
+  .domain([1, 2, 3, 4, 5])
+  .range(DELAY_TIMES)
+
+const below34ColorScale = scaleThreshold()
+  .domain(BELOW_34_THRESHOLDS)
+  .range(['one100', 'one200', 'one300', 'one400', 'one500'])
+
+const below40ColorScale = scaleThreshold()
+  .domain(BELOW_40_THRESHOLDS)
+  .range(['two100', 'two200', 'two300', 'two400', 'two500'])
+
+const above40ColorScale = scaleThreshold()
+  .domain(ABOVE_40_THRESHOLDS)
+  .range(['three100', 'three200', 'three300', 'three400', 'three500'])
+
 export const IvfGraphic = ({ step }: { step: number }) => {
   const [colorScheme] = useColorContext()
   const key = 'light'
+
+  const count1 = useAnimatedValue({
+    initialValue: 0,
+    transition: { duration: 4.5, delay: 1 },
+    value: getVariant(step) === 'step2' ? 82 : 0,
+  })
+
+  const count2 = useAnimatedValue({
+    initialValue: 0,
+    transition: { duration: 4.5, delay: 0.5 },
+    value: getVariant(step) === 'step3' ? 68 : 0,
+  })
+
+  const count3 = useAnimatedValue({
+    initialValue: 0,
+    transition: { duration: 4.5, delay: 0.5 },
+    value: getVariant(step) === 'step4' ? 36 : 0,
+  })
+
+  const animatedValueRef1 = useMotionValueTextContent(count1)
+  const animatedValueRef2 = useMotionValueTextContent(count2)
+  const animatedValueRef3 = useMotionValueTextContent(count3)
+
   return (
     <motion.svg
-      viewBox='0 0 600 400'
+      viewBox='0 0 700 400'
       preserveAspectRatio='xMidYMid meet'
-      style={{ width: '100%' }}
+      style={{
+        width: '100%',
+      }}
       {...colorScheme.set('backgroundColor', 'transparentBackground')}
       initial='step0'
       animate={getVariant(step)}
     >
-      {/* <defs>
-        <marker
-          id='arrowhead'
-          viewBox='0 0 10 10'
-          refX='3'
-          refY='5'
-          markerWidth='6'
-          markerHeight='6'
-          orient='auto'
-        >
-          <path d='M 0 0 L 10 5 L 0 10 z' style={{ fill: 'currentcolor' }} />
-        </marker>
-      </defs> */}
-
-      {/* first age group, below 29 */}
-      <g transform={`translate(${PADDING_LEFT}, ${PADDING_TOP})`}>
+      {/* second age group, 40 plus */}
+      <motion.g
+        variants={defineVariants(
+          {
+            x: CENTER - OFFSET,
+            y: PADDING_TOP,
+          },
+          {
+            step4: {
+              x: CENTER - OFFSET,
+              y: PADDING_TOP,
+              transition: { duration: 0.5 },
+            },
+            step5: {
+              x: CENTER + 150,
+              y: PADDING_TOP,
+              transition: { duration: 0.5 },
+            },
+          },
+        )}
+      >
         {dataSet.map((d, i) => {
           return (
             <motion.circle
-              key={`ref-age-29-${i}`}
+              key={`ref-age40-${i}`}
               transition={{ duration: 0.5 }}
               variants={defineVariants(
                 {
                   y: d.cy,
                   x: d.cx,
-                  r: 0,
-                  opacity: 0,
+                  r: SMALL_RADIUS,
+                  opacity: 1,
+                  fill: COLORS[key].default,
                 },
                 {
-                  step1: {
-                    y: d.cy,
-                    x: d.cx,
-                    r: i > 40 ? SMALL_RADIUS : d.r,
-                    opacity: 1,
-                    fill: i > 40 ? COLORS[key].default : COLORS[key].oneBright,
-                  },
-                  step2: {
-                    y: d.cy,
-                    x: d.cx,
-                    r: i > 62 ? SMALL_RADIUS : d.r,
-                    opacity: 1,
-                    fill:
-                      i > 40 && i < 63
-                        ? COLORS[key].oneBright
-                        : i > 62
-                        ? COLORS[key].default
-                        : COLORS[key].one,
-                  },
-                  step3: {
-                    y: d.cy,
-                    x: d.cx,
-                    r: i > 72 ? SMALL_RADIUS : d.r,
-                    opacity: 1,
-                    fill:
-                      i > 62 && i < 73
-                        ? COLORS[key].oneBright
-                        : i >= 73
-                        ? COLORS[key].default
-                        : COLORS[key].one,
-                  },
                   step4: {
                     y: d.cy,
                     x: d.cx,
-                    r: i > 77 ? SMALL_RADIUS : d.r,
+                    r: i >= 36 ? SMALL_RADIUS : d.r,
                     opacity: 1,
                     fill:
-                      i > 72 && i < 78
-                        ? COLORS[key].oneBright
-                        : i >= 78
+                      i >= 36
                         ? COLORS[key].default
-                        : COLORS[key].one,
+                        : COLORS[key][above40ColorScale(i)],
+                    transition: {
+                      duration: 0.5,
+                      delay: above40AnimationScale(i),
+                    },
                   },
                   step5: {
                     y: d.cy,
                     x: d.cx,
-                    r: i > 82 ? SMALL_RADIUS : d.r,
+                    r: i >= 36 ? SMALL_RADIUS : d.r,
                     opacity: 1,
                     fill:
-                      i > 77 && i < 83
-                        ? COLORS[key].oneBright
-                        : i >= 83
+                      i >= 36
                         ? COLORS[key].default
-                        : COLORS[key].one,
+                        : COLORS[key][above40ColorScale(i)],
+                    transition: {
+                      duration: 0.5,
+                      delay: above40AnimationScale(i),
+                    },
                   },
                 },
               )}
             ></motion.circle>
           )
         })}
-
         <motion.text
           {...styles.label}
           {...colorScheme.set('fill', 'text')}
           variants={defineVariants(
             { x: 5, y: 225, opacity: 0 },
             {
-              step1: {
-                x: 5,
-                y: 225,
-                opacity: 1,
-                transition: { duration: 0.5 },
-              },
-              step2: {
-                x: 5,
-                y: 225,
-                opacity: 1,
-              },
-              step3: {
-                x: 5,
-                y: 225,
-                opacity: 1,
-              },
-              step4: {
-                x: 5,
-                y: 225,
-                opacity: 1,
-              },
               step5: {
                 x: 5,
                 y: 225,
@@ -186,15 +213,329 @@ export const IvfGraphic = ({ step }: { step: number }) => {
               },
             },
           )}
-          dy='.35em'
           transition={{ duration: 0.5 }}
         >
-          unter 30 Jahren
+          über 40 Jahre
+          <tspan x='0' y='30'>
+            36 von 100
+          </tspan>
         </motion.text>
-      </g>
-
-      {/* second age group, 30 to 34 */}
-      <g transform={`translate(${235}, ${PADDING_TOP})`}>
+      </motion.g>
+      <motion.g
+        variants={defineVariants(
+          {
+            x: CENTER,
+            y: PADDING_TOP,
+          },
+          {
+            step5: {
+              x: CENTER,
+              y: PADDING_TOP,
+            },
+          },
+        )}
+      >
+        <motion.text
+          {...styles.label}
+          {...colorScheme.set('fill', 'text')}
+          style={{ textAnchor: 'middle' }}
+          variants={defineVariants(
+            { x: 0, y: -30, opacity: 1 },
+            {
+              step1: {
+                x: 0,
+                y: -30,
+                opacity: 1,
+                transition: { duration: 0.5 },
+              },
+              step2: {
+                x: 0,
+                y: -30,
+                opacity: 0,
+                transition: { duration: 0.5 },
+              },
+              step3: {
+                x: 0,
+                y: -30,
+                opacity: 0,
+                transition: { duration: 0.5 },
+              },
+              step4: {
+                x: 0,
+                y: -30,
+                opacity: 0,
+                transition: { duration: 0.5 },
+              },
+              step5: {
+                x: 0,
+                y: -30,
+                opacity: 0,
+                transition: { duration: 0.5 },
+              },
+            },
+          )}
+          transition={{ duration: 0.5 }}
+        >
+          Wie wahrscheinlich ist eine Schwangerschaft per
+          In-Vitro-Fertilisation?
+        </motion.text>
+        <motion.text
+          {...styles.label}
+          style={{ textAnchor: 'middle' }}
+          variants={defineVariants(
+            {
+              x: 0,
+              y: -30,
+              opacity: 0,
+            },
+            {
+              step2: {
+                opacity: 1,
+                x: 0,
+                y: -30,
+                transition: {
+                  duration: 0.5,
+                },
+              },
+              step3: {
+                opacity: 0,
+                x: 0,
+                y: -30,
+                transition: {
+                  duration: 0.5,
+                },
+              },
+            },
+          )}
+        >
+          <tspan ref={animatedValueRef1}></tspan> von 100 Frauen im Alter von
+          30–34 Jahren sind schwanger
+        </motion.text>
+        <motion.text
+          {...styles.label}
+          style={{ textAnchor: 'middle' }}
+          variants={defineVariants(
+            {
+              x: 0,
+              y: -30,
+              opacity: 0,
+            },
+            {
+              step3: {
+                opacity: 1,
+                x: 0,
+                y: -30,
+                transition: {
+                  duration: 0.5,
+                },
+              },
+              step4: {
+                opacity: 0,
+                x: 0,
+                y: -30,
+                transition: {
+                  duration: 0.5,
+                },
+              },
+            },
+          )}
+        >
+          <tspan ref={animatedValueRef2}></tspan> von 100 Frauen im Alter von
+          35–39 Jahren sind schwanger
+        </motion.text>
+        <motion.text
+          {...styles.label}
+          style={{ textAnchor: 'middle' }}
+          variants={defineVariants(
+            {
+              x: 0,
+              y: -30,
+              opacity: 0,
+            },
+            {
+              step4: {
+                opacity: 1,
+                x: 0,
+                y: -30,
+                transition: {
+                  duration: 0.5,
+                },
+              },
+              step5: {
+                opacity: 0,
+                x: 0,
+                y: -30,
+                transition: {
+                  duration: 0.5,
+                },
+              },
+            },
+          )}
+        >
+          <tspan ref={animatedValueRef3}></tspan> von 100 Frauen über 40 Jahren
+          sind schwanger
+        </motion.text>
+        <motion.text
+          {...styles.label}
+          {...colorScheme.set('fill', 'text')}
+          style={{ textAnchor: 'middle' }}
+          variants={defineVariants(
+            { x: 0, y: -30, opacity: 0 },
+            {
+              step5: {
+                x: 1,
+                y: -60,
+                opacity: 1,
+                transition: { duration: 0.5 },
+              },
+            },
+          )}
+          transition={{ duration: 0.5 }}
+        >
+          Nach vier oder mehr Embryonentransfers sind je nach Altersgruppe
+          <tspan x='1' y='30'>
+            unterschiedlich viele Frauen schwanger
+          </tspan>
+        </motion.text>
+        {/* <motion.text
+          {...styles.label}
+          style={{ textAnchor: 'middle' }}
+          {...colorScheme.set('fill', 'text')}
+          variants={defineVariants(
+            { x: 0, y: -60, opacity: 0 },
+            {
+              step2: {
+                x: 0,
+                y: -60,
+                opacity: 1,
+                transition: { duration: 0.5 },
+              },
+              step3: {
+                x: 0,
+                y: -60,
+                opacity: 0,
+                transition: { duration: 0.5 },
+              },
+            },
+          )}
+          transition={{ duration: 0.5 }}
+        >
+          <tspan>Die Wahrscheinlichkeit auf eine Schwangerschaft</tspan>
+          <tspan x='0' dy='30'>
+            steigt bei mehreren Versuchen.
+          </tspan>
+        </motion.text> */}
+      </motion.g>
+      <motion.g
+        variants={defineVariants(
+          {
+            x: CENTER - OFFSET,
+            y: PADDING_TOP,
+          },
+          {
+            step5: {
+              x: CENTER - OFFSET,
+              y: PADDING_TOP,
+            },
+          },
+        )}
+      >
+        {dataSet.map((d, i) => {
+          return (
+            <motion.circle
+              key={`ref-age34-39-${i}`}
+              transition={{ duration: 0.5 }}
+              variants={defineVariants(
+                {
+                  y: d.cy,
+                  x: d.cx,
+                  r: SMALL_RADIUS,
+                  opacity: 0,
+                  fill: COLORS[key].default,
+                },
+                {
+                  step3: {
+                    y: d.cy,
+                    x: d.cx,
+                    r: i >= 68 ? SMALL_RADIUS : d.r,
+                    opacity: 1,
+                    fill:
+                      i >= 68
+                        ? COLORS[key].default
+                        : COLORS[key][below40ColorScale(i)],
+                    transition: {
+                      duration: 0.5,
+                      delay: below40AnimationScale(i),
+                    },
+                  },
+                  step4: {
+                    y: d.cy,
+                    x: d.cx,
+                    r: i >= 68 ? SMALL_RADIUS : d.r,
+                    opacity: 0,
+                    fill:
+                      i >= 68
+                        ? COLORS[key].default
+                        : COLORS[key][below40ColorScale(i)],
+                  },
+                  step5: {
+                    y: d.cy,
+                    x: d.cx,
+                    r: i >= 68 ? SMALL_RADIUS : d.r,
+                    opacity: 1,
+                    fill:
+                      i >= 68
+                        ? COLORS[key].default
+                        : COLORS[key][below40ColorScale(i)],
+                    transition: { duration: 0.5 },
+                  },
+                },
+              )}
+            ></motion.circle>
+          )
+        })}
+        <motion.text
+          {...styles.label}
+          {...colorScheme.set('fill', 'text')}
+          variants={defineVariants(
+            { x: 5, y: 225, opacity: 0 },
+            {
+              step5: {
+                x: 5,
+                y: 225,
+                opacity: 1,
+                transition: { duration: 0.5, delay: 0.5 },
+              },
+            },
+          )}
+          transition={{ duration: 0.5 }}
+        >
+          35–39 Jahre
+          <tspan x='0' y='30'>
+            68 von 100
+          </tspan>
+        </motion.text>
+      </motion.g>
+      <motion.g
+        variants={defineVariants(
+          {
+            x: CENTER - OFFSET,
+            y: PADDING_TOP,
+          },
+          {
+            step4: {
+              x: CENTER - OFFSET,
+              y: PADDING_TOP,
+              transition: { duration: 0.5 },
+            },
+            step5: {
+              x: 0,
+              y: PADDING_TOP,
+              transition: { duration: 0.5 },
+            },
+          },
+        )}
+      >
         {dataSet.map((d, i) => {
           return (
             <motion.circle
@@ -204,75 +545,61 @@ export const IvfGraphic = ({ step }: { step: number }) => {
                 {
                   y: d.cy,
                   x: d.cx,
+                  r: SMALL_RADIUS,
                   opacity: 0,
-                  r: 0,
+                  fill: COLORS[key].default,
                 },
                 {
-                  step1: {
-                    y: d.cy,
-                    x: d.cx,
-                    r: i > 39 ? SMALL_RADIUS : d.r,
-                    opacity: 1,
-                    fill: i > 39 ? COLORS[key].default : COLORS[key].twoBright,
-                  },
                   step2: {
                     y: d.cy,
                     x: d.cx,
-                    r: i > 60 ? SMALL_RADIUS : d.r,
-                    transition: { duration: 0.5, delay: 0.1 },
+                    r: i >= 82 ? SMALL_RADIUS : d.r,
                     opacity: 1,
                     fill:
-                      i > 39 && i < 61
-                        ? COLORS[key].twoBright
-                        : i >= 61
+                      i >= 82
                         ? COLORS[key].default
-                        : COLORS[key].two,
+                        : COLORS[key][below34ColorScale(i)],
+                    transition: {
+                      duration: 0.5,
+                      delay: 0.5 + below34AnimationScale(i),
+                    },
                   },
                   step3: {
                     y: d.cy,
                     x: d.cx,
-                    r: i > 71 ? SMALL_RADIUS : d.r,
-                    transition: { duration: 0.5, delay: 0.1 },
-                    opacity: 1,
+                    r: i >= 82 ? SMALL_RADIUS : d.r,
+                    opacity: 0,
                     fill:
-                      i > 60 && i < 72
-                        ? COLORS[key].twoBright
-                        : i >= 72
+                      i >= 82
                         ? COLORS[key].default
-                        : COLORS[key].two,
+                        : COLORS[key][below34ColorScale(i)],
                   },
                   step4: {
                     y: d.cy,
                     x: d.cx,
-                    r: i > 76 ? SMALL_RADIUS : d.r,
-                    transition: { duration: 0.5, delay: 0.1 },
-                    opacity: 1,
+                    r: i >= 82 ? SMALL_RADIUS : d.r,
+                    opacity: 0,
                     fill:
-                      i > 71 && i < 77
-                        ? COLORS[key].twoBright
-                        : i >= 77
+                      i >= 82
                         ? COLORS[key].default
-                        : COLORS[key].two,
+                        : COLORS[key][below34ColorScale(i)],
                   },
                   step5: {
                     y: d.cy,
                     x: d.cx,
-                    r: i > 81 ? SMALL_RADIUS : d.r,
-                    transition: { duration: 0.5, delay: 0.1 },
+                    r: i >= 82 ? SMALL_RADIUS : d.r,
                     opacity: 1,
                     fill:
-                      i > 76 && i < 82
-                        ? COLORS[key].twoBright
-                        : i >= 82
+                      i >= 82
                         ? COLORS[key].default
-                        : COLORS[key].two,
+                        : COLORS[key][below34ColorScale(i)],
+                    transition: { duration: 0.5 },
                   },
                 },
               )}
             ></motion.circle>
           )
         })}
-
         <motion.text
           {...styles.label}
           {...colorScheme.set('fill', 'text')}
@@ -282,279 +609,245 @@ export const IvfGraphic = ({ step }: { step: number }) => {
               step1: {
                 x: 5,
                 y: 225,
-                opacity: 1,
+                opacity: 0,
                 transition: { duration: 0.5 },
               },
               step2: {
                 x: 5,
                 y: 225,
-                opacity: 1,
+                opacity: 0,
+                transition: { duration: 0.5 },
               },
               step3: {
                 x: 5,
                 y: 225,
-                opacity: 1,
+                opacity: 0,
               },
               step4: {
                 x: 5,
                 y: 225,
-                opacity: 1,
+                opacity: 0,
               },
               step5: {
                 x: 5,
                 y: 225,
                 opacity: 1,
+
+                transition: { duration: 0.5, delay: 0.5 },
               },
             },
           )}
-          dy='.35em'
           transition={{ duration: 0.5 }}
         >
           30–34 Jahre
+          <tspan x='0' y='30'>
+            82 von 100
+          </tspan>
         </motion.text>
-      </g>
 
-      {/* third age group, 35 to 39 */}
-      <g transform={`translate(${470}, ${PADDING_TOP})`}>
-        {dataSet.map((d, i) => {
-          return (
-            <motion.circle
-              key={`ref-age35-39-${i}`}
-              transition={{ duration: 0.5 }}
-              variants={defineVariants(
-                {
-                  y: d.cy,
-                  x: d.cx,
-                  opacity: 0,
-                  r: 0,
-                },
-                {
-                  step1: {
-                    y: d.cy,
-                    x: d.cx,
-                    r: i > 33 ? SMALL_RADIUS : d.r,
-                    opacity: 1,
-                    fill:
-                      i > 33 ? COLORS[key].default : COLORS[key].threeBright,
-                  },
-                  step2: {
-                    y: d.cy,
-                    x: d.cx,
-                    r: i > 50 ? SMALL_RADIUS : d.r,
-                    transition: { duration: 0.5, delay: 0.3 },
-                    opacity: 1,
-                    fill:
-                      i >= 34 && i < 51
-                        ? COLORS[key].threeBright
-                        : i >= 50
-                        ? COLORS[key].default
-                        : COLORS[key].three,
-                  },
-                  step3: {
-                    y: d.cy,
-                    x: d.cx,
-                    r: i > 59 ? SMALL_RADIUS : d.r,
-                    transition: { duration: 0.5, delay: 0.3 },
-                    opacity: 1,
-                    fill:
-                      i >= 51 && i < 60
-                        ? COLORS[key].threeBright
-                        : i >= 59
-                        ? COLORS[key].default
-                        : COLORS[key].three,
-                  },
-                  step4: {
-                    y: d.cy,
-                    x: d.cx,
-                    r: i > 63 ? SMALL_RADIUS : d.r,
-                    transition: { duration: 0.5, delay: 0.3 },
-                    opacity: 1,
-                    fill:
-                      i >= 60 && i < 64
-                        ? COLORS[key].threeBright
-                        : i >= 64
-                        ? COLORS[key].default
-                        : COLORS[key].three,
-                  },
-                  step5: {
-                    y: d.cy,
-                    x: d.cx,
-                    r: i > 67 ? SMALL_RADIUS : d.r,
-                    transition: { duration: 0.5, delay: 0.3 },
-                    opacity: 1,
-                    fill:
-                      i >= 64 && i < 68
-                        ? COLORS[key].threeBright
-                        : i >= 68
-                        ? COLORS[key].default
-                        : COLORS[key].three,
-                  },
-                },
-              )}
-            ></motion.circle>
-          )
-        })}
-        <motion.text
-          {...styles.label}
-          {...colorScheme.set('fill', 'text')}
+        {/* labels */}
+        <motion.g
           variants={defineVariants(
-            { x: 5, y: 225, opacity: 0 },
             {
-              step1: {
-                x: 5,
-                y: 225,
-                opacity: 1,
-                transition: { duration: 0.5 },
-              },
-              step2: {
-                x: 5,
-                y: 225,
-                opacity: 1,
-              },
-              step3: {
-                x: 5,
-                y: 225,
-                opacity: 1,
-              },
-              step4: {
-                x: 5,
-                y: 225,
-                opacity: 1,
-              },
-              step5: {
-                x: 5,
-                y: 225,
-                opacity: 1,
-              },
+              x: 0,
+              y: 230,
             },
+            {},
           )}
-          dy='.35em'
-          transition={{ duration: 0.5 }}
         >
-          35–39 Jahre
-        </motion.text>
-      </g>
-
-      {/* fourth age group, greater than 40 */}
-      <g transform={`translate(${705}, ${PADDING_TOP})`}>
-        {dataSet.map((d, i) => {
-          return (
-            <motion.circle
-              key={`ref-age-40-${i}`}
-              transition={{ duration: 0.5 }}
-              variants={defineVariants(
-                {
-                  y: d.cy,
-                  x: d.cx,
-                  opacity: 0,
-                  r: 0,
-                },
-                {
-                  step1: {
-                    y: d.cy,
-                    x: d.cx,
-                    r: i > 17 ? SMALL_RADIUS : d.r,
-                    opacity: 1,
-                    fill: i > 17 ? COLORS[key].default : COLORS[key].fourBright,
-                  },
-                  step2: {
-                    y: d.cy,
-                    x: d.cx,
-                    r: i > 26 ? SMALL_RADIUS : d.r,
-                    opacity: 1,
-                    transition: { duration: 0.5, delay: 0.5 },
-                    fill:
-                      i > 17 && i < 27
-                        ? COLORS[key].fourBright
-                        : i >= 27
-                        ? COLORS[key].default
-                        : COLORS[key].four,
-                  },
-                  step3: {
-                    y: d.cy,
-                    x: d.cx,
-                    r: i > 30 ? SMALL_RADIUS : d.r,
-                    opacity: 1,
-                    transition: { duration: 0.5, delay: 0.5 },
-                    fill:
-                      i > 26 && i < 31
-                        ? COLORS[key].fourBright
-                        : i >= 31
-                        ? COLORS[key].default
-                        : COLORS[key].four,
-                  },
-                  step4: {
-                    y: d.cy,
-                    x: d.cx,
-                    r: i > 33 ? SMALL_RADIUS : d.r,
-                    transition: { duration: 0.5, delay: 0.5 },
-                    opacity: 1,
-                    fill:
-                      i > 30 && i < 34
-                        ? COLORS[key].fourBright
-                        : i >= 34
-                        ? COLORS[key].default
-                        : COLORS[key].four,
-                  },
-                  step5: {
-                    y: d.cy,
-                    x: d.cx,
-                    r: i > 35 ? SMALL_RADIUS : d.r,
-                    transition: { duration: 0.5, delay: 0.5 },
-                    opacity: 1,
-                    fill:
-                      i > 33 && i < 36
-                        ? COLORS[key].fourBright
-                        : i >= 36
-                        ? COLORS[key].default
-                        : COLORS[key].four,
+          <motion.text
+            {...styles.label}
+            style={{ textAnchor: 'middle' }}
+            {...colorScheme.set('fill', 'text')}
+            variants={defineVariants(
+              {
+                x: 95,
+                y: 0,
+                opacity: 0,
+              },
+              {
+                step2: {
+                  x: 95,
+                  y: 0,
+                  opacity: 1,
+                  transition: {
+                    duration: 0.5,
                   },
                 },
-              )}
-            ></motion.circle>
-          )
-        })}
+                step3: {
+                  x: 95,
+                  y: 0,
+                  opacity: 1,
+                  transition: {
+                    duration: 0.5,
+                  },
+                },
+                step4: {
+                  x: 95,
+                  y: 0,
+                  opacity: 1,
+                  transition: {
+                    duration: 0.5,
+                  },
+                },
+              },
+            )}
+          >
+            Embryonentransfers
+          </motion.text>
+          {TRANSFERS.map((d, i) => {
+            return (
+              <motion.g
+                key={`34-${d}`}
+                {...styles.label}
+                {...colorScheme.set('fill', 'text')}
+                variants={defineVariants(
+                  {
+                    x: -50 + 50 * i,
+                    y: 35,
+                    opacity: 0,
+                  },
+                  {
+                    step2: {
+                      x: -50 + 50 * i,
+                      y: 35,
+                      opacity: 1,
+                      transition: {
+                        duration: 0.5,
+                        delay: 0.5 + transferAnimationScale(i),
+                      },
+                    },
+                  },
+                )}
+              >
+                <motion.circle
+                  variants={defineVariants(
+                    {
+                      r: RADIUS,
+                      y: -RADIUS,
+                      x: -RADIUS,
+                      fill: COLORS[key][`one${i + 1}00`],
+                    },
+                    {},
+                  )}
+                ></motion.circle>
+                <motion.text
+                  variants={defineVariants(
+                    {
+                      y: 0,
+                      x: 10,
+                    },
+                    {},
+                  )}
+                >
+                  {d}
+                </motion.text>
+              </motion.g>
+            )
+          })}
 
-        <motion.text
-          {...styles.label}
-          {...colorScheme.set('fill', 'text')}
-          variants={defineVariants(
-            { x: 5, y: 225, opacity: 0 },
-            {
-              step1: {
-                x: 5,
-                y: 225,
-                opacity: 1,
-                transition: { duration: 0.5 },
-              },
-              step2: {
-                x: 5,
-                y: 225,
-                opacity: 1,
-              },
-              step3: {
-                x: 5,
-                y: 225,
-                opacity: 1,
-              },
-              step4: {
-                x: 5,
-                y: 225,
-                opacity: 1,
-              },
-              step5: {
-                x: 5,
-                y: 225,
-                opacity: 1,
-              },
-            },
-          )}
-          dy='.35em'
-          transition={{ duration: 0.5 }}
-        >
-          über 40 Jahre
-        </motion.text>
-      </g>
+          {TRANSFERS.map((d, i) => {
+            return (
+              <motion.g
+                key={`39-${d}`}
+                {...styles.label}
+                {...colorScheme.set('fill', 'text')}
+                variants={defineVariants(
+                  {
+                    x: -50 + 50 * i,
+                    y: 35,
+                    opacity: 0,
+                  },
+                  {
+                    step3: {
+                      x: -50 + 50 * i,
+                      y: 35,
+                      opacity: 1,
+                      transition: {
+                        duration: 0.5,
+                        delay: transferAnimationScale(i),
+                      },
+                    },
+                  },
+                )}
+              >
+                <motion.circle
+                  variants={defineVariants(
+                    {
+                      r: RADIUS,
+                      y: -RADIUS,
+                      x: -RADIUS,
+                      fill: COLORS[key][`two${i + 1}00`],
+                    },
+                    {},
+                  )}
+                ></motion.circle>
+                <motion.text
+                  variants={defineVariants(
+                    {
+                      y: 0,
+                      x: 10,
+                    },
+                    {},
+                  )}
+                >
+                  {d}
+                </motion.text>
+              </motion.g>
+            )
+          })}
+          {TRANSFERS.map((d, i) => {
+            return (
+              <motion.g
+                key={`40-${d}`}
+                {...styles.label}
+                {...colorScheme.set('fill', 'text')}
+                variants={defineVariants(
+                  {
+                    x: -50 + 50 * i,
+                    y: 35,
+                    opacity: 0,
+                  },
+                  {
+                    step4: {
+                      x: -50 + 50 * i,
+                      y: 35,
+                      opacity: 1,
+                      transition: {
+                        duration: 0.5,
+                        delay: transferAnimationScale(i),
+                      },
+                    },
+                  },
+                )}
+              >
+                <motion.circle
+                  variants={defineVariants(
+                    {
+                      r: RADIUS,
+                      y: -RADIUS,
+                      x: -RADIUS,
+                      fill: COLORS[key][`three${i + 1}00`],
+                    },
+                    {},
+                  )}
+                ></motion.circle>
+                <motion.text
+                  variants={defineVariants(
+                    {
+                      y: 0,
+                      x: 10,
+                    },
+                    {},
+                  )}
+                >
+                  {d}
+                </motion.text>
+              </motion.g>
+            )
+          })}
+        </motion.g>
+      </motion.g>
     </motion.svg>
   )
 }
@@ -562,6 +855,7 @@ export const IvfGraphic = ({ step }: { step: number }) => {
 const styles = {
   label: css({
     ...fontStyles.sansSerifRegular23,
+    fontFeatureSettings: '"tnum", "kern"',
     [mediaQueries.onlyS]: {
       fontSize: '1.7rem',
     },
