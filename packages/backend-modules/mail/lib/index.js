@@ -20,12 +20,9 @@ const errors = require('../errors')
 
 module.exports = {
   ...handlers,
-  createMail: (interestConfiguration, audienceConfiguration) => {
+  createMail: (interestConfiguration) => {
     if (!interestConfiguration)
       throw new errors.SubscriptionConfigurationMissingMailError()
-    if (!audienceConfiguration)
-      throw new errors.AudienceConfigurationMissingMailError()
-    // TODO add audienceConfiguration here too?
     return Object.keys(handlers).reduce(
       (result, handlerName) => {
         return {

@@ -37,14 +37,8 @@ module.exports = async (_, args, context) => {
       active: true,
     })
 
-    const { updatedMembership, hasActiveMembership } = await activateMembership(
-      membership,
-      req.user,
-      t,
-      transaction,
-    )
-
-    const claimedMembership = updatedMembership
+    const { updatedMembership: claimedMembership, hasActiveMembership } =
+      await activateMembership(membership, req.user, t, transaction)
 
     // commit transaction
     await transaction.transactionCommit()

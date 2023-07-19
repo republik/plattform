@@ -14,24 +14,16 @@ const MINIMUM_HTTP_RESPONSE_STATUS_ERROR = 400
 const MailchimpInterface = ({ logger }) => {
   checkEnv(['MAILCHIMP_API_KEY', 'MAILCHIMP_URL', 'MAILCHIMP_MAIN_LIST_ID'])
   return {
-    buildApiUrl(audienceId, path) {
+    buildApiUrl(path, audienceId = MAILCHIMP_MAIN_LIST_ID) {
       return `${MAILCHIMP_URL}/3.0/lists/${audienceId}${path}`
     },
-    buildAudienceApiUrl(email, audienceId) {
+    buildMembersApiUrl(email, audienceId = MAILCHIMP_MAIN_LIST_ID) {
       const hash = crypto
         .createHash('md5')
         .update(email.toLowerCase())
         .digest('hex')
 
       return this.buildApiUrl(audienceId, `/members/${hash}`)
-    },
-    buildMembersApiUrl(email) {
-      const hash = crypto
-        .createHash('md5')
-        .update(email.toLowerCase())
-        .digest('hex')
-
-      return this.buildApiUrl(MAILCHIMP_MAIN_LIST_ID, `/members/${hash}`)
     },
     buildBatchesApiUrl(id) {
       // returns {MAILCHIMP_URL}/3.0/batches[/{id}]
@@ -55,8 +47,8 @@ const MailchimpInterface = ({ logger }) => {
       }
       return fetch(url, options)
     },
-    async getMember(email) {
-      const url = this.buildMembersApiUrl(email)
+    async getMember(email, audienceId = MAILCHIMP_MAIN_LIST_ID) {
+      const url = this.buildMembersApiUrl(email, audienceId)
       try {
         const response = await this.fetchAuthenticated('GET', url)
         const json = await response.json()
@@ -70,8 +62,8 @@ const MailchimpInterface = ({ logger }) => {
         throw new NewsletterMemberMailError({ error, email })
       }
     },
-    async updateMember(email, data) {
-      const url = this.buildMembersApiUrl(email)
+    async updateMember(email, data, audienceId = MAILCHIMP_MAIN_LIST_ID) {
+      const url = this.buildMembersApiUrl(email, audienceId)
       try {
         // Build PUT request, and drop props where value is null or undefined to avoid
         // malformatted error responses from API.
@@ -98,35 +90,11 @@ const MailchimpInterface = ({ logger }) => {
         throw new NewsletterMemberMailError({ error, email })
       }
     },
-    async updateMemberInAudience(email, data, audienceId) {
-      const url = this.buildAudienceApiUrl(email, audienceId)
-      try {
-        // Build PUT request, and drop props where value is null or undefined to avoid
-        // malformatted error responses from API.
-        const body = {
-          ...data,
-          merge_fields: {
-            ...(data.merge_fields && omitBy(data.merge_fields, isNil)),
-            EMAILB64U: base64u.encode(email),
-          },
-        }
-        debug('MailchimpInterface.updateMemberInAudience PUT', { body })
-        const response = await this.fetchAuthenticated('PUT', url, {
-          body: JSON.stringify(body),
-        })
-        const json = await response.json()
-        if (response.status >= MINIMUM_HTTP_RESPONSE_STATUS_ERROR) {
-          debug(`could not update member: ${email} ${json.detail}`)
-          return null
-        }
-        return json
-      } catch (error) {
-        logger.error(`mailchimp -> exception: ${error.message}`)
-        throw new NewsletterMemberMailError({ error, email }) // TODO different error or not?
-      }
-    },
-    async getMembersFromAudienceWithStatus(audienceId, status) {
-      const url = this.buildApiUrl(audienceId, `/members?status=${status}`)
+    async getMembersFromAudienceWithStatus(
+      status,
+      audienceId = MAILCHIMP_MAIN_LIST_ID,
+    ) {
+      const url = this.buildApiUrl(`/members?status=${status}`, audienceId)
       try {
         const response = await this.fetchAuthenticated('GET', url)
         const json = await response.json()
@@ -150,24 +118,9 @@ const MailchimpInterface = ({ logger }) => {
     And more information about the differences of unsubscribe, archive and delete:
     https://www.chimpanswers.com/cleaning-your-mailchimp-audience/
     */
-    async archiveMember(email) {
+    async archiveMember(email, audienceId = MAILCHIMP_MAIN_LIST_ID) {
       debug(`archiving ${email}`)
-      const url = this.buildMembersApiUrl(email)
-      try {
-        const response = await this.fetchAuthenticated('DELETE', url)
-        if (response.status >= MINIMUM_HTTP_RESPONSE_STATUS_ERROR) {
-          debug(`could not delete member: ${email}`)
-          return null
-        }
-        return true
-      } catch (error) {
-        logger.error(`mailchimp -> exception: ${error.message}`)
-        throw new NewsletterMemberMailError({ error, email })
-      }
-    },
-    async archiveMemberInAudience(email, audienceId) {
-      debug(`archiving ${email} in audience ${audienceId}`)
-      const url = this.buildAudienceApiUrl(email, audienceId)
+      const url = this.buildMembersApiUrl(email, audienceId)
       try {
         const response = await this.fetchAuthenticated('DELETE', url)
         if (response.status >= MINIMUM_HTTP_RESPONSE_STATUS_ERROR) {
@@ -180,7 +133,7 @@ const MailchimpInterface = ({ logger }) => {
         throw new NewsletterMemberMailError({ error, email })
       }
     },
-    async deleteMember(email) {
+    async deleteMember(email, audienceId = MAILCHIMP_MAIN_LIST_ID) {
       debug(`deleting ${email}`)
       const url = this.buildMembersApiUrl(email) + '/actions/delete-permanent'
       try {

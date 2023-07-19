@@ -24,18 +24,25 @@ module.exports = async (context, dryRun = false) => {
   debug(emailsToArchive)
 
   const results = []
+
+  if (dryRun) {
+    console.log(
+      `in dry-run mode, not actually archiving any emails. Emails to archive: ${emailsToArchive.join(
+        ', ',
+      )}`,
+    )
+  }
+
   BluePromise.each(emailsToArchive, async (email) => {
-    let result
     if (dryRun) {
-      console.log('in dry-run mode, only printing emails to archive')
-      result = email
+      results.push(true)
     } else {
-      result = await mailchimp.archiveMemberInAudience(
+      const result = await mailchimp.archiveMember(
         email,
         MAILCHIMP_ONBOARDING_AUDIENCE_ID,
       )
+      results.push(result)
     }
-    results.push(result)
   })
   const successful = results.every((e) => e === true)
   debug(successful)

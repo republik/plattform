@@ -33,41 +33,29 @@ const {
   FRONTEND_BASE_URL,
 } = process.env
 
-const mail = createMail(
-  [
-    {
-      name: 'DAILY',
-      interestId: MAILCHIMP_INTEREST_NEWSLETTER_DAILY,
-    },
-    {
-      name: 'WEEKLY',
-      interestId: MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY,
-    },
-    {
-      name: 'CLIMATE',
-      interestId: MAILCHIMP_INTEREST_NEWSLETTER_CLIMATE,
-    },
-    {
-      name: 'ACCOMPLICE',
-      interestId: MAILCHIMP_INTEREST_NEWSLETTER_ACCOMPLICE,
-      visibleToRoles: ['accomplice'],
-    },
-    {
-      name: 'PROJECTR',
-      interestId: MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR,
-    },
-  ],
-  [
-    {
-      name: 'MAIN_AUDIENCE',
-      audienceId: MAILCHIMP_MAIN_LIST_ID,
-    },
-    {
-      name: 'ONBOARDING',
-      audienceId: MAILCHIMP_ONBOARDING_AUDIENCE_ID,
-    },
-  ],
-)
+const mail = createMail([
+  {
+    name: 'DAILY',
+    interestId: MAILCHIMP_INTEREST_NEWSLETTER_DAILY,
+  },
+  {
+    name: 'WEEKLY',
+    interestId: MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY,
+  },
+  {
+    name: 'CLIMATE',
+    interestId: MAILCHIMP_INTEREST_NEWSLETTER_CLIMATE,
+  },
+  {
+    name: 'ACCOMPLICE',
+    interestId: MAILCHIMP_INTEREST_NEWSLETTER_ACCOMPLICE,
+    visibleToRoles: ['accomplice'],
+  },
+  {
+    name: 'PROJECTR',
+    interestId: MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR,
+  },
+])
 
 const getInterestsForUser = async ({
   userId,
@@ -152,16 +140,19 @@ const addUserToAudience = async ({ user, name, audienceId }) => {
   debug(data)
 
   const mailchimp = MailchimpInterface({ console })
-  await mailchimp.updateMemberInAudience(email, data, audienceId)
+  await mailchimp.updateMember(email, data, audienceId)
 
   // TODO tbd, maybe merge this with NewsletterSubscription
   const result = {
     user,
-    status: MailchimpInterface.MemberStatus.Subscribed,
+    status_if_new: MailchimpInterface.MemberStatus.Subscribed,
+    status: MailchimpInterface.MemberStatus.Unsubscribed,
   }
   debug(result)
   return result
 }
+
+mail.addUserToAudience = addUserToAudience
 
 mail.enforceSubscriptions = async ({
   userId,
@@ -250,7 +241,6 @@ mail.sendMembershipProlongConfirmation = async ({
 }
 
 mail.sendPledgeConfirmations = async ({ userId, pgdb, t }) => {
-  console.log('----------------Mail: pledge confirmations')
   const user = await pgdb.public.users.findOne({
     id: userId,
     verified: true,
