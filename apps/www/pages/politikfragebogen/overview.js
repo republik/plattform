@@ -5,10 +5,9 @@ import path from 'node:path'
 import { csvParse } from 'd3-dsv'
 import { nest } from 'd3-collection'
 
-import {
-  QUESTION_TYPES,
-  leftJoin,
-} from '../../../www/components/PoliticsQuestionnaire/config'
+import { QUESTION_TYPES } from '../../../www/components/PoliticsQuestionnaire/config'
+
+import { leftJoin } from '../../../www/components/PoliticsQuestionnaire/utils'
 
 export default ({ submissionData }) => (
   <SubmissionsOverview submissionData={submissionData} />

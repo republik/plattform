@@ -38,7 +38,7 @@ import {
 
 import HeaderShare from './HeaderShare'
 
-import { ShareImageSplit } from './ShareImageSplit'
+import { ShareImageSplit } from '../Questionnaire/Submissions/ShareImageSplit'
 
 // filter needs to be this text/value object
 const CANTONS = [
@@ -216,13 +216,11 @@ const QuestionFeatured = ({ questions, bgColor, questionSlug }) => {
 
   return (
     <div
-      // ref={questionRef}
-      // id={questions[0].id}
       style={{
-        padding: '0 0 46px 0',
         // flexBasis: '50%',
         backgroundColor: bgColor,
         display: 'flex',
+        padding: '0 0 46px 0',
       }}
     >
       <Container>
@@ -251,7 +249,7 @@ const QuestionFeatured = ({ questions, bgColor, questionSlug }) => {
 const AnswerGridOverview = ({ question }) => {
   const questionSlug = question.key
   return (
-    <>
+    <div style={{ padding: '46px 0' }}>
       <NarrowContainer>
         <Editorial.Subhead style={{ textAlign: 'center' }}>
           {question.values[0].question}
@@ -300,7 +298,7 @@ const AnswerGridOverview = ({ question }) => {
             ))}
         </AnswersGrid>
       </ColorContextProvider>
-    </>
+    </div>
   )
 }
 

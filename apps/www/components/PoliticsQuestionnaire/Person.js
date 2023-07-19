@@ -27,7 +27,7 @@ import Frame from '../Frame'
 import Meta from '../Frame/Meta'
 
 // import { LinkToEditQuestionnaire } from '../../Questionnaire/Submissions/QuestionFeatured'
-import { ShareImageSplit } from './ShareImageSplit'
+import { ShareImageSplit } from '../Questionnaire/Submissions/ShareImageSplit'
 import { styles as submissionStyles } from '../Questionnaire/Submissions/Submission'
 
 import HeaderShare from './HeaderShare'
@@ -38,6 +38,7 @@ import {
   QUESTIONNAIRE_BG_COLOR,
   // QUESTIONNAIRE_SLUG,
   QUESTIONNAIRE_SQUARE_IMG_URL,
+  PERSON_SHARE_TEXT,
 } from './config'
 import { IconChevronLeft } from '@republik/icons'
 
@@ -65,6 +66,8 @@ const Page = ({ responses, authorData }) => {
       <ShareImageSplit
         user={authorData.name}
         img={QUESTIONNAIRE_SQUARE_IMG_URL}
+        bgColor={QUESTIONNAIRE_BG_COLOR}
+        personShareText={PERSON_SHARE_TEXT}
       />
     )
   }

@@ -1,11 +1,5 @@
 import { scaleOrdinal } from 'd3-scale'
 
-export const leftJoin = (objArr1, objArr2, key) =>
-  objArr1.map((anObj1) => ({
-    ...objArr2.find((anObj2) => anObj1[key] === anObj2[key]),
-    ...anObj1,
-  }))
-
 // TODO: use correct color palette
 export const QUESTIONNAIRE_BG_COLOR = '#ffffff'
 const COLORS = ['#56a9df', '#66b7ed']
@@ -255,7 +249,12 @@ export const QUESTION_TYPES: QuestionConfigType[] = [
 
 export const OVERVIEW_QUESTIONNAIRE_PATH = '/politikfragebogen/overview'
 
-export const QUESTIONNAIRE_SLUG = 'politiker-wahlen'
+export const QUESTIONNAIRE_SLUG = 'politiker-fragebogen-community'
 
 export const QUESTIONNAIRE_SQUARE_IMG_URL =
   'https://cdn.repub.ch/s3/republik-assets/repos/republik/article-community-fragebogen-politik-sommer-2023/files/36c07305-f4e0-4bdc-91a2-287c087fe89e/politiker.png'
+
+export const ILLU_CREDIT = 'Nadine Redlich'
+
+export const PERSON_SHARE_TEXT =
+  '26 Sommerfragen vor der Wahl im Herbst – die Antworten von '
