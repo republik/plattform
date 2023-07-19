@@ -61,6 +61,9 @@ export default ({ rule, subModules, TYPE }) => {
       const disabled =
         value.isBlurred ||
         !value.blocks.every((n) => insertTypes.includes(n.type))
+
+      // TODO: disable button if scrolly end already used (see liveteasers)
+
       return (
         <span
           {...buttonStyles.insert}
