@@ -6,6 +6,9 @@ const STORY_COMPONENTS = {
   'Auf den Punkt: Banken': React.lazy(
     () => import('@republik/stories-the-dot-banks'),
   ),
+  'Auf den Punkt: IVF': React.lazy(
+    () => import('../../stories-the-dot-ivf/dist'),
+  ),
 }
 
 export const STORY_NAMES = Object.keys(STORY_COMPONENTS)

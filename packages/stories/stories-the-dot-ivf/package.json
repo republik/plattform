@@ -1,7 +1,7 @@
 {
-  "name": "@republik/story-loader",
+  "name": "@republik/stories-the-dot-ivf",
   "version": "0.0.1",
-  "description": "renders a story component based on its name",
+  "description": "ivf scrolly",
   "private": true,
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -11,10 +11,7 @@
     "dev": "node_modules/.bin/tsup src/index.ts --format cjs,esm --dts --minify --clean --out-dir dist --sourcemap --watch"
   },
   "dependencies": {
-    "@republik/stories-example-pink": "*",
-    "@republik/stories-example-blue": "*",
-    "@republik/stories-the-dot-banks": "*",
-    "@republik/stories-the-dot-ivf": "*"
+    "framer-motion": "^10.12.4"
   },
   "devDependencies": {
     "@republik/tsconfig": "*",
