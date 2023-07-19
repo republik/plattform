@@ -31,6 +31,7 @@ import * as Editorial from '../../components/Typography/Editorial'
 import * as Meta from '../../components/Typography/Meta'
 import * as Scribble from '../../components/Typography/Scribble'
 import { Tweet } from '../../components/Social'
+import { ScrollyEnd } from '../../components/ScrollyEnd'
 import { Video } from '../../components/Video'
 import { VideoPlayer } from '../../components/VideoPlayer'
 
@@ -481,6 +482,17 @@ const createSchema = ({
                 editorModule: 'button',
               },
               base.list,
+              scrollyComponents && {
+                matchMdast: matchZone('SCROLLYEND'),
+                component: ScrollyEnd,
+                editorModule: 'scrollyEnd',
+                editorOptions: {
+                  insertButtonText: 'Scrolly End',
+                  insertTypes: ['PARAGRAPH'],
+                  type: 'SCROLLYEND',
+                },
+                isVoid: true,
+              },
               {
                 matchMdast: matchType('thematicBreak'),
                 component: HR,
@@ -730,7 +742,9 @@ const createSchema = ({
               },
               dynamicComponent,
               storyComponent,
-            ].map(addProgressProps),
+            ]
+              .filter(Boolean)
+              .map(addProgressProps),
           },
           addProgressProps(base.centerFigure),
           teasers.carousel,

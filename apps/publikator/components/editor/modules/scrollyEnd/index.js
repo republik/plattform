@@ -36,7 +36,9 @@ export default ({ rule, subModules, TYPE }) => {
       }
     },
     toMdast: () => ({
-      type: TYPE,
+      type: 'zone',
+      identifier: TYPE,
+      children: [],
     }),
   }
 

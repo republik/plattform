@@ -118,8 +118,7 @@ const styles = {
     /* min-height: 50dvh; */
     width: '100vw',
     left: 0,
-    // TODO: readjust z-index once headerHeight stuff is sorted
-    zIndex: 50,
+    zIndex: 9,
     display: 'flex',
     maxHeight:
       '40vh' /* don't use dvh here, otherwise the layout will jump when scrolling */,

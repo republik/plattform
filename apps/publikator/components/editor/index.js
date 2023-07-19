@@ -39,6 +39,7 @@ import createTitleModule from './modules/title'
 import createInfoBoxModule from './modules/infobox'
 import createQuoteModule from './modules/quote'
 import createHtmlModule from './modules/html'
+import createScrollyEndModule from './modules/scrollyEnd'
 import createLineModule from './modules/line'
 import createFrontDossier from './modules/dossier/front'
 import createDossierIntro from './modules/dossier/intro'
@@ -87,6 +88,7 @@ const moduleCreators = {
   teaser: createTeaserModule,
   teasergroup: createTeaserGroupModule,
   html: createHtmlModule,
+  scrollyEnd: createScrollyEndModule,
   line: createLineModule,
   articleGroup: createArticleGroup,
   frontDossier: createFrontDossier,
