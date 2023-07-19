@@ -166,7 +166,6 @@ const addUserToAudience = async ({ user, name, audienceId }) => {
 mail.enforceSubscriptions = async ({
   userId,
   email,
-  isNew,
   isFirstMembership,
   subscribeToEditorialNewsletters,
   pgdb,

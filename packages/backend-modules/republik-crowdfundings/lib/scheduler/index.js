@@ -101,8 +101,8 @@ const init = async (context) => {
       context,
       runFunc: informWinback,
       lockTtlSecs,
-      runAtTime: '16:00',
-      runAtDaysOfWeek: [1, 2, 3, 4, 5, 6],
+      runAtTime: '18:32',
+      runAtDaysOfWeek: [1, 2, 3, 4, 5],
       runInitially: DEV,
     }),
   )

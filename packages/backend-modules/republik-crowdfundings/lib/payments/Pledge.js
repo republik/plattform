@@ -62,7 +62,6 @@ const changeStatus = async ({ pledge, newStatus, transaction }, context) => {
 }
 
 const afterChange = async ({ pledge }, context) => {
-  console.log('------------- Pledge.js afterChange')
   const { pgdb, t } = context
 
   let user
