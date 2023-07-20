@@ -24,7 +24,10 @@ export const getServerSideProps = createGetServerSideProps(
       ),
       'utf-8',
     )
-    const responses = csvParse(data)
+
+    const responses = csvParse(data).filter(
+      (response) => response.answer !== 'NA',
+    )
 
     const responsesWithTypes = leftJoin(
       responses,
