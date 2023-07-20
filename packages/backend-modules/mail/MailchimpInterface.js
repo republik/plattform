@@ -23,7 +23,7 @@ const MailchimpInterface = ({ logger }) => {
         .update(email.toLowerCase())
         .digest('hex')
 
-      return this.buildApiUrl(audienceId, `/members/${hash}`)
+      return this.buildApiUrl(`/members/${hash}`, audienceId)
     },
     buildBatchesApiUrl(id) {
       // returns {MAILCHIMP_URL}/3.0/batches[/{id}]
