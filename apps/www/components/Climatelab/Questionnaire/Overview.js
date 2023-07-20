@@ -74,6 +74,8 @@ const SubmissionsOverview = ({ slug, extract, share }) => {
             extract={extract}
             share={share}
             questionIds={questionIds}
+            questionColor={questionColor}
+            questions={QUESTIONS}
             personPagePath={PERSON_PAGE_PATH}
             questionnaireBgColor={QUESTIONNAIRE_BG_COLOR}
           />

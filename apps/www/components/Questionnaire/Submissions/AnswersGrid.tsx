@@ -33,11 +33,6 @@ export const AnswersGrid = ({ children }: { children: ReactNode }) => {
   return <div {...styles.grid}>{children}</div>
 }
 
-export const AnswersGridCard = ({
-  children,
-}: {
-  textLength?: number
-  children: ReactNode
-}) => {
+export const AnswersGridCard = ({ children }: { children: ReactNode }) => {
   return <div {...styles.card}>{children}</div>
 }
