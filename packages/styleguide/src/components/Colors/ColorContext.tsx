@@ -173,60 +173,6 @@ export const ColorContextLocalExtension: React.FC<{
   )
 }
 
-const DEFAULT_COLORS_OBJECT = colors
-
-type ColorHTMLBodyColorsProps = {
-  colorSchemeKey?: 'auto' | 'light' | 'dark'
-  colorsObject?: {
-    light: {
-      default: string
-      text: string
-    }
-    dark: {
-      default: string
-      text: string
-    }
-  }
-}
-
-/**
- * ColorHTMLBodyColors allows setting the background and text colors for the body element.
- * By default, it will use the colors object.
- * @param {string} colorSchemeKey - 'auto', 'light', 'dark'
- * If a value different then 'auto' is used, the colorScheme can be forced to light or dark.
- * @param {object} colorsObject - colors object to be used for the body colors
- */
-export const ColorHtmlBodyColors = ({
-  colorSchemeKey = 'auto',
-  colorsObject = DEFAULT_COLORS_OBJECT,
-}: ColorHTMLBodyColorsProps) => {
-  return (
-    <style
-      key={colorSchemeKey}
-      dangerouslySetInnerHTML={{
-        __html:
-          colorSchemeKey === 'auto'
-            ? [
-                // default light
-                `html, body { background-color: ${colorsObject.light.default}; color: ${colorsObject.light.text}; }`,
-                // dark via user preference
-                `html[data-user-color-scheme="dark"], html[data-user-color-scheme="dark"] body { background-color: ${colorsObject.dark.default}; color: ${colors.dark.text}; }`,
-                // os dark preference
-                `@media (prefers-color-scheme: dark) {`,
-                [
-                  // auto dark via media query
-                  `html, body { background-color: ${colorsObject.dark.default}; color: ${colorsObject.dark.text}; }`,
-                  // light via user preference when os is dark
-                  `html[data-user-color-scheme="light"], html[data-user-color-scheme="light"] body { background-color: ${colorsObject.light.default}; color: ${colors.light.text}; }`,
-                ].join('\n'),
-                `}`,
-              ].join('\n')
-            : `html, body { background-color: ${colorsObject[colorSchemeKey].default}; color: ${colorsObject[colorSchemeKey].text}; }`,
-      }}
-    />
-  )
-}
-
 export const ColorContextProvider: React.FC<{
   children?: ReactNode
   colorSchemeKey: 'light' | 'dark' | 'auto'

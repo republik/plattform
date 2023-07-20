@@ -7,7 +7,6 @@ import {
   RawHtml,
   fontFamilies,
   mediaQueries,
-  ColorHtmlBodyColors,
   ColorContextProvider,
   useColorContext,
 } from '@project-r/styleguide'
@@ -157,7 +156,6 @@ const Frame = ({
   }, [hasSecondaryNav])
   return (
     <ColorContextProvider colorSchemeKey={pageColorSchemeKey}>
-      <ColorHtmlBodyColors colorSchemeKey={pageColorSchemeKey || 'auto'} />
       <noscript>
         <Box style={{ padding: 30 }}>
           <RawHtml

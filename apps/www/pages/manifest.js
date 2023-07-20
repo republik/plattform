@@ -15,7 +15,6 @@ import {
   fontFamilies,
   mediaQueries,
   useColorContext,
-  ColorHtmlBodyColors,
 } from '@project-r/styleguide'
 
 import { PUBLIC_BASE_URL, CDN_FRONTEND_BASE_URL } from '../lib/constants'
@@ -143,7 +142,6 @@ ${PUBLIC_BASE_URL}
 
   return (
     <NarrowContainer>
-      <ColorHtmlBodyColors colorSchemeKey='auto' />
       <Head>
         <title>Manifest – Republik</title>
         <meta name='description' content={meta.description} />
