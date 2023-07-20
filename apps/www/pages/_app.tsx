@@ -1,7 +1,8 @@
 import '../lib/polyfill'
+import '../globals.css'
 
 import Head from 'next/head'
-
+import { ThemeProvider } from 'next-themes'
 import { ColorContextProvider } from '@project-r/styleguide'
 import type { PagePropsWithApollo } from '@republik/nextjs-apollo-client'
 
@@ -64,22 +65,24 @@ const WebApp = ({
           <MediaProgressContext>
             <AudioProvider>
               <AppVariableContext>
-                <ColorContextProvider root colorSchemeKey='auto'>
-                  <MessageSync />
-                  <ColorSchemeSync />
-                  <Head>
-                    <meta
-                      name='viewport'
-                      content='width=device-width, initial-scale=1'
+                <ThemeProvider attribute='class' disableTransitionOnChange>
+                  <ColorContextProvider root colorSchemeKey='auto'>
+                    <MessageSync />
+                    <ColorSchemeSync />
+                    <Head>
+                      <meta
+                        name='viewport'
+                        content='width=device-width, initial-scale=1'
+                      />
+                    </Head>
+                    <Component
+                      serverContext={serverContext}
+                      {...otherPageProps}
                     />
-                  </Head>
-                  <Component
-                    serverContext={serverContext}
-                    {...otherPageProps}
-                  />
-                  <Track />
-                  <AudioPlayerOrchestrator />
-                </ColorContextProvider>
+                    <Track />
+                    <AudioPlayerOrchestrator />
+                  </ColorContextProvider>
+                </ThemeProvider>
               </AppVariableContext>
             </AudioProvider>
           </MediaProgressContext>
