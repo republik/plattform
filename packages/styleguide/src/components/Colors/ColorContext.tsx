@@ -1,12 +1,6 @@
-import React, {
-  useEffect,
-  useMemo,
-  useState,
-  useContext,
-  ReactNode,
-} from 'react'
 import { css } from 'glamor'
 import memoize from 'lodash/memoize'
+import React, { ReactNode, useContext, useMemo } from 'react'
 
 import colors, { localInvertedColors } from '../../theme/colors'
 
@@ -24,10 +18,7 @@ const createScheme = (specificColors) => {
     ...specificColors,
   }
 
-  const accessCSSColor = colorDefinitions.cssColors
-    ? (color) =>
-        colorDefinitions.cssColors[color] || colorDefinitions[color] || color
-    : (color) => colorDefinitions[color] || color
+  const accessCSSColor = (color) => colorDefinitions[color] || color
 
   const { mappings = {} } = colorDefinitions
 
@@ -121,16 +112,6 @@ export const ColorContextLocalExtension: React.FC<{
           }
         }),
       },
-      cssColors:
-        schemeKey === 'auto'
-          ? {
-              ...colorDefinitions.cssColors,
-              ...getObjectForKeys(
-                variableLocalColorKeys,
-                (key) => `var(--color-${key})`,
-              ),
-            }
-          : undefined,
     }
 
     const lightColorCSSDefs = variableLocalColorKeys.reduce((defs, key) => {
@@ -215,10 +196,6 @@ export const ColorContextProvider: React.FC<{
         schemeKey: colorSchemeKey,
         ...colors.light,
         ...getObjectForKeys(variableColorKeys, (key) => `var(--color-${key})`),
-        cssColors: getObjectForKeys(
-          variableColorKeys,
-          (key) => `var(--color-${key})`,
-        ),
       })
     }
     return createScheme({
