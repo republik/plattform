@@ -44,7 +44,6 @@ const createScheme = (specificColors) => {
 
   return {
     schemeKey: colorDefinitions.schemeKey,
-    CSSVarSupport: colorDefinitions.CSSVarSupport,
     colorDefinitions,
     ranges: {
       neutral: colorDefinitions.neutral,
@@ -99,7 +98,7 @@ export const ColorContextLocalExtension: React.FC<{
   localColors: any
   localMappings: any
 }> = ({ children, localColors = localInvertedColors, localMappings = {} }) => {
-  const [{ schemeKey, CSSVarSupport, colorDefinitions }] = useColorContext()
+  const [{ schemeKey, colorDefinitions }] = useColorContext()
 
   const [colorValue, cssVarRule] = useMemo(() => {
     const { mappings = {} } = colorDefinitions
@@ -109,12 +108,10 @@ export const ColorContextLocalExtension: React.FC<{
     const extendedColorDefinitions = {
       ...colorDefinitions,
       ...localColors[schemeKey === 'auto' ? 'light' : schemeKey],
-      ...(CSSVarSupport
-        ? getObjectForKeys(
-            variableLocalColorKeys,
-            (key) => `var(--color-${key})`,
-          )
-        : {}),
+      ...getObjectForKeys(
+        variableLocalColorKeys,
+        (key) => `var(--color-${key})`,
+      ),
       mappings: {
         ...mappings,
         ...getObjectForKeys(Object.keys(localMappings), (key) => {
@@ -128,10 +125,10 @@ export const ColorContextLocalExtension: React.FC<{
         schemeKey === 'auto'
           ? {
               ...colorDefinitions.cssColors,
-              ...getObjectForKeys(variableLocalColorKeys, (key) => [
-                localColors.light[key],
-                `var(--color-${key})`,
-              ]),
+              ...getObjectForKeys(
+                variableLocalColorKeys,
+                (key) => `var(--color-${key})`,
+              ),
             }
           : undefined,
     }
@@ -164,7 +161,7 @@ export const ColorContextLocalExtension: React.FC<{
         },
       }),
     ]
-  }, [colorDefinitions, localColors, localMappings, CSSVarSupport, schemeKey])
+  }, [colorDefinitions, localColors, localMappings, schemeKey])
 
   return (
     <ColorContext.Provider value={colorValue}>
@@ -211,45 +208,24 @@ export const ColorContextProvider: React.FC<{
   if (root) {
     throw Error(`root prop not supported anymore on ColorContextProvider`)
   }
-  // we initially assume browser support it
-  // - e.g. during server side rendering
-  const [CSSVarSupport, setCSSVarSupport] = useState(true)
-  useEffect(() => {
-    let support
-    try {
-      support =
-        window.CSS &&
-        window.CSS.supports &&
-        window.CSS.supports('color', 'var(--color-test)')
-    } catch (e) {
-      // continue regardless of error
-    }
-    if (!support) {
-      // but if can't confirm the support in the browser we turn it off
-      setCSSVarSupport(false)
-    }
-  }, [])
 
   const colorValue = useMemo(() => {
     if (colorSchemeKey === 'auto') {
       return createScheme({
         schemeKey: colorSchemeKey,
-        CSSVarSupport,
         ...colors.light,
-        ...(CSSVarSupport
-          ? getObjectForKeys(variableColorKeys, (key) => `var(--color-${key})`)
-          : {}),
-        cssColors: getObjectForKeys(variableColorKeys, (key) => [
-          colors.light[key],
-          `var(--color-${key})`,
-        ]),
+        ...getObjectForKeys(variableColorKeys, (key) => `var(--color-${key})`),
+        cssColors: getObjectForKeys(
+          variableColorKeys,
+          (key) => `var(--color-${key})`,
+        ),
       })
     }
     return createScheme({
       schemeKey: colorSchemeKey,
       ...colors[colorSchemeKey],
     })
-  }, [colorSchemeKey, CSSVarSupport])
+  }, [colorSchemeKey])
 
   return (
     <ColorContext.Provider value={colorValue}>{children}</ColorContext.Provider>

@@ -1,11 +1,5 @@
 import { forwardRef } from 'react'
-import {
-  CalloutMenu,
-  IconButton,
-  Radio,
-  Label,
-  useColorContext,
-} from '@project-r/styleguide'
+import { CalloutMenu, IconButton, Radio } from '@project-r/styleguide'
 import { useInNativeApp } from '../../lib/withInNativeApp'
 
 import { useColorSchemeKeyPreference } from '../ColorScheme/lib'
@@ -14,7 +8,6 @@ import { IconDarkMode } from '@republik/icons'
 const DarkmodeSwitch = ({ t }) => {
   const { inNativeApp, inNativeAppLegacy } = useInNativeApp()
   const [colorSchemeKey, setColorSchemeKey] = useColorSchemeKeyPreference()
-  const [colorScheme] = useColorContext()
 
   const iconLabel =
     colorSchemeKey === 'light'
@@ -44,9 +37,7 @@ const DarkmodeSwitch = ({ t }) => {
   return (
     <CalloutMenu contentPaddingMobile={calloutPaddingNativeApp} Element={Icon}>
       <div style={{ width: 180, lineHeight: '2.5rem' }}>
-        {!colorScheme.CSSVarSupport ? (
-          <Label>{t('darkmode/switch/notSupported')}</Label>
-        ) : (
+        {
           <>
             <Radio
               value='dark'
@@ -80,7 +71,7 @@ const DarkmodeSwitch = ({ t }) => {
               </Radio>
             )}
           </>
-        )}
+        }
       </div>
     </CalloutMenu>
   )
