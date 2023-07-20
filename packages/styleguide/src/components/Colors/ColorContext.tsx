@@ -154,27 +154,13 @@ export const ColorContextLocalExtension: React.FC<{
 export const RootColorVariables = () => {
   return (
     <style
-      data-key='color-theme'
-      key='color-theme'
+      id='theme-variables'
       dangerouslySetInnerHTML={{
         __html: [
           // default light
           `:root { ${generateCSSColorDefinitions(colors.light)} }`,
-          // dark via user preference
-          `:root[data-user-color-scheme="dark"] { ${generateCSSColorDefinitions(
-            colors.dark,
-          )} }`,
-          // os dark preference
-          `@media (prefers-color-scheme: dark) {`,
-          [
-            // auto dark via media query
-            `:root { ${generateCSSColorDefinitions(colors.dark)} }`,
-            // light via user preference when os is dark
-            `:root[data-user-color-scheme="light"] { ${generateCSSColorDefinitions(
-              colors.light,
-            )} }`,
-          ].join('\n'),
-          `}`,
+          // dark class applied to html element via next-themes OR manually applied on an element
+          `.dark { ${generateCSSColorDefinitions(colors.dark)} }`,
         ].join('\n'),
       }}
     />
