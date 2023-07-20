@@ -20,43 +20,43 @@ type QuestionConfigType = {
 
 // TODO: adjust min and max length
 export const QUESTIONS: QuestionConfigType[] = [
-  { ids: [0], valueLength: { min: 0, max: 50 } },
-  { ids: [1], valueLength: { min: 0, max: 150 } },
+  { ids: [10] },
+  { ids: [8], valueLength: { min: 0, max: 100 } },
   {
-    ids: [2],
-    valueLength: { min: 0, max: 150 },
+    ids: [9],
+    valueLength: { min: 100, max: 150 },
     hint: 'Tippen Sie eine Antwort an, um den ganzen Fragebogen dieser Person zu sehen.',
   },
-  { ids: [3], valueLength: { min: 0, max: 150 } },
-  { ids: [4], valueLength: { min: 0, max: 150 } },
-  { ids: [5, 6], valueLength: { min: 0, max: 100 } },
-  {
-    ids: [7],
-    valueLength: { min: 0, max: 200 },
-  },
-  { ids: [8], valueLength: { min: 0, max: 200 } },
-  { ids: [9], valueLength: { min: 0, max: 200 } },
-  { ids: [10] },
-  { ids: [11], valueLength: { min: 0, max: 200 } },
-  { ids: [12], valueLength: { min: 0, max: 200 } },
-  { ids: [13], valueLength: { min: 0, max: 100 } },
-  { ids: [14], valueLength: { min: 0, max: 100 } },
-  { ids: [15], valueLength: { min: 0, max: 100 } },
+  { ids: [3], valueLength: { min: 50, max: 100 } },
+  { ids: [12], valueLength: { min: 150, max: 200 } },
+  { ids: [4], valueLength: { min: 100, max: 150 } },
+  { ids: [20], valueLength: { min: 0, max: 200 } },
   { ids: [16], valueLength: { min: 0, max: 100 } },
   { ids: [17], valueLength: { min: 0, max: 100 } },
-  { ids: [18], valueLength: { min: 0, max: 100 } },
-  { ids: [19], valueLength: { min: 0, max: 100 } },
-  { ids: [20] },
+  { ids: [18, 19], valueLength: { min: 0, max: 100 } },
+  {
+    ids: [7],
+    valueLength: { min: 100, max: 200 },
+  },
+  { ids: [13], valueLength: { min: 0, max: 100 } },
+  { ids: [14], valueLength: { min: 0, max: 100 } },
+  { ids: [15], valueLength: { min: 150, max: 200 } },
+  { ids: [2], valueLength: { min: 100, max: 200 } },
+  { ids: [11], valueLength: { min: 100, max: 150 } },
+  { ids: [23] },
   { ids: [21], valueLength: { min: 0, max: 100 } },
   { ids: [22], valueLength: { min: 0, max: 100 } },
-  { ids: [23] },
+  { ids: [1], valueLength: { min: 50, max: 150 } },
+  { ids: [0], valueLength: { min: 0, max: 100 } },
+  { ids: [5, 6], valueLength: { min: 0, max: 100 } },
   { ids: [24] },
-  { ids: [25], valueLength: { min: 0, max: 100 } },
+  { ids: [25], valueLength: { min: 100, max: 150 } },
 ]
 
-export const EDIT_QUESTIONNAIRE_PATH = '/2023/07/12/politikfragebogen-community'
+export const EDIT_QUESTIONNAIRE_PATH =
+  '/2023/07/19/welche-politikerinnen-gehoeren-in-den-bundesrat-welcher-schweizer-politiker-muss-zuruecktreten'
 export const OVERVIEW_QUESTIONNAIRE_PATH =
-  '/26-fragen-zur-politik-ihre-antworten'
+  '/politik-in-26-fragen-ihre-antworten'
 
 export const PERSON_PAGE_PATH = 'politikfragebogen-community'
 export const PERSON_SHARE_TEXT =
