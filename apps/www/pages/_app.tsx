@@ -3,7 +3,7 @@ import '../globals.css'
 
 import Head from 'next/head'
 import { ThemeProvider } from 'next-themes'
-import { ColorContextProvider } from '@project-r/styleguide'
+import { ColorContextProvider, RootColorVariables } from '@project-r/styleguide'
 import type { PagePropsWithApollo } from '@republik/nextjs-apollo-client'
 
 import { AppProps } from 'next/app'
@@ -66,7 +66,8 @@ const WebApp = ({
             <AudioProvider>
               <AppVariableContext>
                 <ThemeProvider attribute='class' disableTransitionOnChange>
-                  <ColorContextProvider root colorSchemeKey='auto'>
+                  <RootColorVariables />
+                  <ColorContextProvider colorSchemeKey='auto'>
                     <MessageSync />
                     <ColorSchemeSync />
                     <Head>

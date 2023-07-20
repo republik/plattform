@@ -173,11 +173,44 @@ export const ColorContextLocalExtension: React.FC<{
   )
 }
 
+export const RootColorVariables = () => {
+  return (
+    <style
+      data-key='color-theme'
+      key='color-theme'
+      dangerouslySetInnerHTML={{
+        __html: [
+          // default light
+          `:root { ${generateCSSColorDefinitions(colors.light)} }`,
+          // dark via user preference
+          `:root[data-user-color-scheme="dark"] { ${generateCSSColorDefinitions(
+            colors.dark,
+          )} }`,
+          // os dark preference
+          `@media (prefers-color-scheme: dark) {`,
+          [
+            // auto dark via media query
+            `:root { ${generateCSSColorDefinitions(colors.dark)} }`,
+            // light via user preference when os is dark
+            `:root[data-user-color-scheme="light"] { ${generateCSSColorDefinitions(
+              colors.light,
+            )} }`,
+          ].join('\n'),
+          `}`,
+        ].join('\n'),
+      }}
+    />
+  )
+}
+
 export const ColorContextProvider: React.FC<{
   children?: ReactNode
   colorSchemeKey: 'light' | 'dark' | 'auto'
   root?: boolean
 }> = ({ colorSchemeKey = 'auto', root = false, children }) => {
+  if (root) {
+    throw Error(`root prop not supported anymore on ColorContextProvider`)
+  }
   // we initially assume browser support it
   // - e.g. during server side rendering
   const [CSSVarSupport, setCSSVarSupport] = useState(true)
@@ -219,35 +252,7 @@ export const ColorContextProvider: React.FC<{
   }, [colorSchemeKey, CSSVarSupport])
 
   return (
-    <ColorContext.Provider value={colorValue}>
-      {root && colorSchemeKey === 'auto' && (
-        <style
-          key={colorSchemeKey}
-          dangerouslySetInnerHTML={{
-            __html: [
-              // default light
-              `:root { ${generateCSSColorDefinitions(colors.light)} }`,
-              // dark via user preference
-              `:root[data-user-color-scheme="dark"] { ${generateCSSColorDefinitions(
-                colors.dark,
-              )} }`,
-              // os dark preference
-              `@media (prefers-color-scheme: dark) {`,
-              [
-                // auto dark via media query
-                `:root { ${generateCSSColorDefinitions(colors.dark)} }`,
-                // light via user preference when os is dark
-                `:root[data-user-color-scheme="light"] { ${generateCSSColorDefinitions(
-                  colors.light,
-                )} }`,
-              ].join('\n'),
-              `}`,
-            ].join('\n'),
-          }}
-        />
-      )}
-      {children}
-    </ColorContext.Provider>
+    <ColorContext.Provider value={colorValue}>{children}</ColorContext.Provider>
   )
 }
 

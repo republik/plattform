@@ -43,6 +43,7 @@ export {
   default as ColorContext,
   ColorContextProvider,
   ColorContextLocalExtension,
+  RootColorVariables,
 } from './components/Colors/ColorContext'
 export { useColorContext } from './components/Colors/useColorContext'
 export {
