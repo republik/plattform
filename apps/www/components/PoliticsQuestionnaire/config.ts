@@ -111,7 +111,7 @@ export const QUESTION_TYPES: QuestionConfigType[] = [
   {
     questionSlug: '1-ihre-politische-haltung-in-einem-satz',
     type: 'text',
-    answerLength: { min: 0, max: 250 },
+    answerLength: { min: 0, max: 50 },
   },
   {
     questionSlug: '2-was-ist-fur-sie-politisch-nicht-verhandelbar',

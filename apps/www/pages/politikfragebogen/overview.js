@@ -8,6 +8,7 @@ import { nest } from 'd3-collection'
 import { QUESTION_TYPES } from '../../../www/components/PoliticsQuestionnaire/config'
 
 import { leftJoin } from '../../../www/components/PoliticsQuestionnaire/utils'
+import { filter } from 'lodash'
 
 export default ({ submissionData }) => (
   <SubmissionsOverview submissionData={submissionData} />
@@ -16,7 +17,7 @@ export default ({ submissionData }) => (
 export const getServerSideProps = createGetServerSideProps(
   async ({
     ctx: {
-      query: { canton, party },
+      query: { party },
     },
   }) => {
     const data = await fs.readFile(
@@ -33,13 +34,21 @@ export const getServerSideProps = createGetServerSideProps(
 
     const joinedData = leftJoin(responses, QUESTION_TYPES, 'questionSlug')
 
-    const filteredData = party
+    const filterByLength = joinedData.filter((item) => {
+      return (
+        item.answer.length > item.answerLength?.min &&
+        item.answer.length < item.answerLength?.max
+      )
+    })
+
+    const filteredByParty = party
       ? joinedData.filter((response) => response.party === party)
-      : joinedData
+      : filterByLength
 
     const groupedData = nest()
       .key((d) => d.questionSlug)
-      .entries(filteredData.length > 0 ? filteredData : joinedData)
+      .rollup((values) => (party ? values : values.slice(0, 6)))
+      .entries(filteredByParty)
 
     return {
       props: {

@@ -26,7 +26,6 @@ import { useTranslation } from '../../lib/withT'
 import Frame from '../Frame'
 import Meta from '../Frame/Meta'
 
-// import { LinkToEditQuestionnaire } from '../../Questionnaire/Submissions/QuestionFeatured'
 import { ShareImageSplit } from '../Questionnaire/Submissions/ShareImageSplit'
 import { styles as submissionStyles } from '../Questionnaire/Submissions/Submission'
 

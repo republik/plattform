@@ -88,7 +88,7 @@ export const Filters = () => {
 export const SubmissionsOverview = ({ submissionData }) => {
   const router = useRouter()
   const {
-    query: { id, image },
+    query: { image },
   } = router
   const urlObj = new URL(router.asPath, PUBLIC_BASE_URL)
   const url = urlObj.toString()
@@ -192,20 +192,7 @@ export default SubmissionsOverview
 export const getTypeBySlug = (slug) =>
   QUESTION_TYPES.find((q) => q.questionSlug === slug).type
 
-const getAnswerLenghtBySlug = (slug) =>
-  QUESTION_TYPES.find((q) => q.questionSlug === slug).answerLength
-
-const QuestionFeatured = ({ questions, bgColor, questionSlug }) => {
-  // const router = useRouter()
-  // const { query } = router
-
-  // const questionRef = useRef()
-  // useEffect(() => {
-  //   if (query?.focus === questions[0].id) {
-  //     scrollIntoView(questionRef.current)
-  //   }
-  // }, [])
-
+const QuestionFeatured = ({ questions, bgColor }) => {
   // Because we filter by NA we get undefined for certain answers, so we exclude those answers from the overview
   if (typeof questions[0] === 'undefined') return
   if (questions.length > 1 && typeof questions[1] === 'undefined') return
@@ -247,12 +234,16 @@ const QuestionFeatured = ({ questions, bgColor, questionSlug }) => {
 }
 
 const AnswerGridOverview = ({ question }) => {
+  const router = useRouter()
+  const {
+    query: { party },
+  } = router
   const questionSlug = question.key
   return (
     <div style={{ padding: '46px 0' }}>
       <NarrowContainer>
         <Editorial.Subhead style={{ textAlign: 'center' }}>
-          {question.values[0].question}
+          {question.value[0].question}
         </Editorial.Subhead>
         {/* {hint && (
           <Interaction.P style={{ textAlign: 'center', fontSize: '1em' }}>
@@ -262,40 +253,32 @@ const AnswerGridOverview = ({ question }) => {
       </NarrowContainer>
       <ColorContextProvider localColorVariables={colors} colorSchemeKey='light'>
         <AnswersGrid>
-          {question.values
-            .filter(({ answer }) => {
-              return (
-                // @Felix: answer length this seems to be available with answerLength.min/max
-                answer.length > getAnswerLenghtBySlug(question.key)?.min &&
-                answer.length < getAnswerLenghtBySlug(question.key)?.max
-              )
-            })
-            .map(({ uuid, answer, name }) => (
-              <AnswersGridCard key={`${questionSlug}-${uuid}`}>
-                <SubmissionLink id={uuid}>
-                  <a style={{ textDecoration: 'none' }}>
-                    <div {...styles.answerCard}>
-                      <div>
-                        <Editorial.Question style={{ marginTop: 0 }}>
-                          {inQuotes(answer)}
-                        </Editorial.Question>
-                        <Editorial.Credit
-                          style={{
-                            marginTop: '0',
-                            paddingTop: '20px',
-                          }}
-                        >
-                          Von{' '}
-                          <span style={{ textDecoration: 'underline' }}>
-                            {name}
-                          </span>
-                        </Editorial.Credit>
-                      </div>
+          {question.value.map(({ uuid, answer, name }) => (
+            <AnswersGridCard key={`${questionSlug}-${uuid}`}>
+              <SubmissionLink id={uuid}>
+                <a style={{ textDecoration: 'none' }}>
+                  <div {...styles.answerCard}>
+                    <div>
+                      <Editorial.Question style={{ marginTop: 0 }}>
+                        {inQuotes(answer)}
+                      </Editorial.Question>
+                      <Editorial.Credit
+                        style={{
+                          marginTop: '0',
+                          paddingTop: '20px',
+                        }}
+                      >
+                        Von{' '}
+                        <span style={{ textDecoration: 'underline' }}>
+                          {name}
+                        </span>
+                      </Editorial.Credit>
                     </div>
-                  </a>
-                </SubmissionLink>
-              </AnswersGridCard>
-            ))}
+                  </div>
+                </a>
+              </SubmissionLink>
+            </AnswersGridCard>
+          ))}
         </AnswersGrid>
       </ColorContextProvider>
     </div>
@@ -320,9 +303,9 @@ export const SubmissionLink = ({ id, children }) => {
 }
 
 const AnswersChart = ({ question, skipTitle }) => {
-  const options = question.values[0].options
+  const options = question.value[0].options
 
-  const validAnswers = question.values.filter((item) =>
+  const validAnswers = question.value.filter((item) =>
     options.includes(item.answer),
   )
 
@@ -330,7 +313,7 @@ const AnswersChart = ({ question, skipTitle }) => {
   const values = options.map((option) => ({
     answer: option,
     value:
-      (question.values.filter((result) => result.answer === option).length ??
+      (question.value.filter((result) => result.answer === option).length ??
         0) / totalAnswers,
   }))
 
@@ -339,7 +322,7 @@ const AnswersChart = ({ question, skipTitle }) => {
       <div style={{ marginTop: 20 }}>
         {!skipTitle && (
           <Editorial.Subhead style={{ textAlign: 'center' }}>
-            {question.values[0].question}
+            {question.value[0].question}
           </Editorial.Subhead>
         )}
         <div style={{ marginTop: 20 }}>
