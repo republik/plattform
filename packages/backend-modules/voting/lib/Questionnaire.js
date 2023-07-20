@@ -5,7 +5,7 @@ const { resultForArchive } = require('./Question')
 const { resultForValues: rangeResultForValues } = require('./Question/Range')
 const finalizeLib = require('./finalize')
 const { shuffle } = require('d3-array')
-const { getCache } = require('../../lib/cache')
+const { getCache } = require('./cache')
 
 const transformQuestion = (q, questionnaire) => ({
   ...q.typePayload,
@@ -36,11 +36,10 @@ const getQuestions = async (questionnaire, args = {}, pgdb) => {
     ...questionnaire,
   }
 
-  const questions = getCache(
-    questionnaire.id,
+  const questions = getCache(questionnaire.id, {
     orderFilter,
     includeHidden,
-  ).cache(async () => {
+  }).cache(async () => {
     return pgdb.public.questions
       .find(
         {
