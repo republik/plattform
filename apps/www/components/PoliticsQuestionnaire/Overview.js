@@ -234,10 +234,6 @@ const QuestionFeatured = ({ questions, bgColor }) => {
 }
 
 const AnswerGridOverview = ({ question }) => {
-  const router = useRouter()
-  const {
-    query: { party },
-  } = router
   const questionSlug = question.key
   return (
     <div style={{ padding: '46px 0' }}>
@@ -319,7 +315,7 @@ const AnswersChart = ({ question, skipTitle }) => {
 
   return (
     <NarrowContainer>
-      <div style={{ marginTop: 20 }}>
+      <div style={{ marginTop: '46px' }}>
         {!skipTitle && (
           <Editorial.Subhead style={{ textAlign: 'center' }}>
             {question.value[0].question}

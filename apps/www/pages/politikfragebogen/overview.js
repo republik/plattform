@@ -35,6 +35,7 @@ export const getServerSideProps = createGetServerSideProps(
     const joinedData = leftJoin(responses, QUESTION_TYPES, 'questionSlug')
 
     const filterByLength = joinedData.filter((item) => {
+      if (item.type === 'choice') return item
       return (
         item.answer.length > item.answerLength?.min &&
         item.answer.length < item.answerLength?.max
@@ -47,7 +48,9 @@ export const getServerSideProps = createGetServerSideProps(
 
     const groupedData = nest()
       .key((d) => d.questionSlug)
-      .rollup((values) => (party ? values : values.slice(0, 6)))
+      .rollup((values) =>
+        values[0].type === 'choice' || party ? values : values.slice(0, 6),
+      )
       .entries(filteredByParty)
 
     return {
