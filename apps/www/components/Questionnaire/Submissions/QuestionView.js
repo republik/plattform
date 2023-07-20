@@ -26,7 +26,7 @@ import ErrorMessage from '../../ErrorMessage'
 import {
   hasMoreData,
   loadMoreSubmissions,
-  QUESTIONNAIRE_SUBMISSIONS_QUERY,
+  QUESTIONNAIRE_WITH_SUBMISSIONS_QUERY,
 } from './graphql'
 import AnswerText from './AnswerText'
 import {
@@ -77,7 +77,7 @@ const QuestionView = ({
   const router = useRouter()
   const pathname = router.asPath.split('?')[0]
   const { loading, error, data, fetchMore } = useQuery(
-    QUESTIONNAIRE_SUBMISSIONS_QUERY,
+    QUESTIONNAIRE_WITH_SUBMISSIONS_QUERY,
     {
       variables: {
         slug,
