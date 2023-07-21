@@ -8,9 +8,11 @@ import {
   QUESTION_SEPARATOR,
   QUESTION_TYPES,
 } from '../../../components/PoliticsQuestionnaire/config'
-import { getTypeBySlug } from '../../../components/PoliticsQuestionnaire/Overview'
 
-import { leftJoin } from '../../../../www/components/PoliticsQuestionnaire/utils'
+import {
+  leftJoin,
+  getTypeBySlug,
+} from '../../../../www/components/PoliticsQuestionnaire/utils'
 
 export default ({ chartAnswers, question, nestedResponses, questionTypes }) => (
   <Page

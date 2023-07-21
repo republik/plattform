@@ -254,6 +254,9 @@ export const QUESTIONNAIRE_SLUG = 'politiker-fragebogen-community'
 export const QUESTIONNAIRE_SQUARE_IMG_URL =
   'https://cdn.repub.ch/s3/republik-assets/repos/republik/article-community-fragebogen-politik-sommer-2023/files/36c07305-f4e0-4bdc-91a2-287c087fe89e/politiker.png'
 
+export const ILLU_SHARE =
+  'https://cdn.repub.ch/s3/republik-assets/repos/republik/page-politikfragebogen-community-uebersicht/files/ce8c3928-8dbd-49ec-a087-5adac8f99efa/politiker_share.png'
+
 export const ILLU_CREDIT = 'Nadine Redlich'
 
 export const PERSON_SHARE_TEXT =

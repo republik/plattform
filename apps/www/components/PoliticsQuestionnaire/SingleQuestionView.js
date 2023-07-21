@@ -17,11 +17,9 @@ import {
   Center,
 } from '@project-r/styleguide'
 
-import { AnswersGridCard } from '../Questionnaire/Submissions/AnswersGrid'
-
 import { css } from 'glamor'
 
-import { SubmissionLink } from './Overview'
+import { SubmissionLink, AnswersChart } from './shared'
 
 import Frame from '../Frame'
 import Meta from '../Frame/Meta'
@@ -33,8 +31,6 @@ import {
   OVERVIEW_QUESTIONNAIRE_PATH,
   QUESTIONNAIRE_SQUARE_IMG_URL,
 } from './config'
-
-import { AnswersChart } from './Overview'
 
 const Page = ({ question, chartAnswers, nestedResponses, questionTypes }) => {
   const router = useRouter()
@@ -74,55 +70,51 @@ const Page = ({ question, chartAnswers, nestedResponses, questionTypes }) => {
   return (
     <Frame raw>
       <Meta data={meta} />
-      <div ref={answerGridRef}>
-        <div style={{ backgroundColor: questionColor(0) }}>
-          <div
-            style={{
-              marginTop: 48,
-              marginBottom: 20,
-              paddingTop: 24,
-            }}
-            // ref={containerRef}
-          >
-            <Center>
-              <div style={{ textAlign: 'center' }}>
-                <Interaction.P>
-                  <NextLink href={OVERVIEW_QUESTIONNAIRE_PATH} passHref>
-                    <Editorial.A>Zurück zur Übersicht</Editorial.A>
-                  </NextLink>
-                </Interaction.P>
-                <Editorial.Subhead>
-                  {nestedResponses[0].values[0].question}
-                  {twoTextQuestions && (
+      <ColorContextProvider localColorVariables={colors} colorSchemeKey='light'>
+        <div ref={answerGridRef}>
+          <div style={{ backgroundColor: questionColor(0) }}>
+            <div
+              style={{
+                marginTop: 48,
+                marginBottom: 20,
+                paddingTop: 24,
+              }}
+              // ref={containerRef}
+            >
+              <Center>
+                <div style={{ textAlign: 'center' }}>
+                  <Interaction.P>
+                    <NextLink href={OVERVIEW_QUESTIONNAIRE_PATH} passHref>
+                      <Editorial.A>Zurück zur Übersicht</Editorial.A>
+                    </NextLink>
+                  </Interaction.P>
+                  <Editorial.Subhead>
+                    {nestedResponses[0].values[0].question}
+                    {twoTextQuestions && (
+                      <>
+                        <hr
+                          style={{
+                            opacity: 0.7,
+                            margin: '1.2em 33%',
+                            border: 0,
+                            borderTop: '1px solid currentColor',
+                          }}
+                        />
+                        <span>{nestedResponses[0].values[1].question}</span>
+                      </>
+                    )}
+                  </Editorial.Subhead>
+
+                  {isChoiceQuestion && (
                     <>
-                      <hr
-                        style={{
-                          opacity: 0.7,
-                          margin: '1.2em 33%',
-                          border: 0,
-                          borderTop: '1px solid currentColor',
-                        }}
-                      />
-                      <span>{nestedResponses[0].values[1].question}</span>
+                      <AnswersChart question={chartAnswers} skipTitle={true} />
+                      <br />
+                      <Editorial.Subhead style={{ textAlign: 'center' }}>
+                        {nestedResponses[0].values[1].question}
+                      </Editorial.Subhead>
                     </>
                   )}
-                </Editorial.Subhead>
-
-                {isChoiceQuestion && (
-                  <>
-                    <AnswersChart question={chartAnswers} skipTitle={true} />
-                    <br />
-                    <Editorial.Subhead style={{ textAlign: 'center' }}>
-                      {nestedResponses[0].values[1].question}
-                    </Editorial.Subhead>
-                  </>
-                )}
-              </div>
-
-              <ColorContextProvider
-                localColorVariables={colors}
-                colorSchemeKey='light'
-              >
+                </div>
                 <div {...styles.answerCardWrapper}>
                   {nestedResponses.map(({ key, values }, idx) => (
                     <SubmissionLink key={key} id={key}>
@@ -189,50 +181,12 @@ const Page = ({ question, chartAnswers, nestedResponses, questionTypes }) => {
                       </a>
                     </SubmissionLink>
                   ))}
-                  {/* {answers.map(({ uuid, answer, name }, idx) => (
-                    <AnswersGridCard key={uuid}>
-                      <SubmissionLink id={uuid}>
-                        <a style={{ textDecoration: 'none' }}>
-                          <div {...styles.answerCard}>
-                            <div>
-                              <Editorial.Question style={{ marginTop: 0 }}>
-                                {inQuotes(answer)}
-                              </Editorial.Question>
-                              {idx === 0 && twoTextQuestions && (
-                                <hr
-                                  style={{
-                                    opacity: 0.3,
-                                    margin: '1.2em 33%',
-                                    border: 0,
-                                    borderTop: '1px solid currentColor',
-                                  }}
-                                />
-                              )}
-                              {idx === 0 && (
-                                <Editorial.Credit
-                                  style={{
-                                    marginTop: '0',
-                                    paddingTop: '20px',
-                                  }}
-                                >
-                                  Von{' '}
-                                  <span style={{ textDecoration: 'underline' }}>
-                                    {name}
-                                  </span>
-                                </Editorial.Credit>
-                              )} 
-                            </div>
-                          </div>
-                        </a>
-                      </SubmissionLink>
-                    </AnswersGridCard>
-                                ))} */}
                 </div>
-              </ColorContextProvider>
-            </Center>
+              </Center>
+            </div>
           </div>
         </div>
-      </div>
+      </ColorContextProvider>
     </Frame>
   )
 }

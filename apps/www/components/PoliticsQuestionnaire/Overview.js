@@ -1,6 +1,4 @@
 import { css } from 'glamor'
-import Link from 'next/link'
-import { useState } from 'react'
 import { useRouter } from 'next/router'
 import { PUBLIC_BASE_URL, ASSETS_SERVER_BASE_URL } from '../../lib/constants'
 
@@ -24,12 +22,12 @@ import {
 import {
   questionColor,
   QUESTIONS,
-  QUESTION_TYPES,
-  QUESTION_SEPARATOR,
   QUESTIONNAIRE_BG_COLOR,
   QUESTIONNAIRE_SQUARE_IMG_URL,
+  ILLU_SHARE,
 } from './config'
-import { QuestionSummaryChart } from '../Questionnaire/Submissions/QuestionChart'
+
+import { QuestionLink, SubmissionLink, AnswersChart } from './shared'
 
 import {
   AnswersGrid,
@@ -39,14 +37,9 @@ import {
 import HeaderShare from './HeaderShare'
 
 import { ShareImageSplit } from '../Questionnaire/Submissions/ShareImageSplit'
+import { getTypeBySlug } from './utils'
 
 // filter needs to be this text/value object
-const CANTONS = [
-  { text: 'Alle', value: undefined },
-  { text: 'Bern', value: 'BE' },
-  { text: 'Wallis', value: 'VS' },
-]
-
 const PARTIES = [
   { text: 'Alle', value: undefined },
   { text: 'SVP', value: 'SVP' },
@@ -66,14 +59,6 @@ export const Filters = () => {
   return (
     <NarrowContainer>
       <div {...styles.filterContainer}>
-        {/* <Dropdown
-          label='Kanton'
-          items={CANTONS}
-          value={query.canton}
-          onChange={(item) =>
-            router.push({ query: { ...query, canton: item.value } })
-          }
-        /> */}
         <Dropdown
           label='Partei'
           items={PARTIES}
@@ -98,7 +83,7 @@ export const SubmissionsOverview = ({ submissionData }) => {
   const shareImageUrl = shareImageUrlObj.toString()
 
   if (image) {
-    return <ShareImageSplit img={QUESTIONNAIRE_SQUARE_IMG_URL} />
+    return <ShareImageSplit img={ILLU_SHARE} />
   }
 
   const meta = {
@@ -153,16 +138,6 @@ export const SubmissionsOverview = ({ submissionData }) => {
               >
                 <HeaderShare meta={meta} />
               </div>
-              {/* {author?.profilePicture && (
-                <img
-                  src={author.profilePicture}
-                  style={{
-                    marginTop: 30,
-                    width: 120,
-                    borderRadius: 80,
-                  }}
-                />
-              )} */}
             </NarrowContainer>
           </div>
 
@@ -194,9 +169,6 @@ export const SubmissionsOverview = ({ submissionData }) => {
 }
 
 export default SubmissionsOverview
-
-export const getTypeBySlug = (slug) =>
-  QUESTION_TYPES.find((q) => q.questionSlug === slug).type
 
 const QuestionFeatured = ({ questions, bgColor }) => {
   // Because we filter by NA we get undefined for certain answers, so we exclude those answers from the overview
@@ -287,54 +259,6 @@ const AnswerGridOverview = ({ question }) => {
         ))}
       </AnswersGrid>
     </div>
-  )
-}
-
-export const QuestionLink = ({ questions, children }) => {
-  const link = questions.map((q) => q.key).join(QUESTION_SEPARATOR)
-  return (
-    <Link href={`/politikfragebogen/frage/${link}`} passHref>
-      {children}
-    </Link>
-  )
-}
-
-export const SubmissionLink = ({ id, children }) => {
-  return (
-    <Link href={`/politikfragebogen/${id}`} passHref>
-      {children}
-    </Link>
-  )
-}
-
-export const AnswersChart = ({ question, skipTitle }) => {
-  const options = question.value[0].options
-
-  const validAnswers = question.value.filter((item) =>
-    options.includes(item.answer),
-  )
-
-  const totalAnswers = validAnswers.length
-  const values = options.map((option) => ({
-    answer: option,
-    value:
-      (question.value.filter((result) => result.answer === option).length ??
-        0) / totalAnswers,
-  }))
-
-  return (
-    <NarrowContainer>
-      <div style={{ marginTop: '46px' }}>
-        {!skipTitle && (
-          <Editorial.Subhead style={{ textAlign: 'center' }}>
-            {question.value[0].question}
-          </Editorial.Subhead>
-        )}
-        <div style={{ marginTop: 20 }}>
-          <QuestionSummaryChart answers={values} key='answer' />
-        </div>
-      </div>
-    </NarrowContainer>
   )
 }
 

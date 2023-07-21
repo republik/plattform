@@ -38,6 +38,7 @@ import {
   // QUESTIONNAIRE_SLUG,
   QUESTIONNAIRE_SQUARE_IMG_URL,
   PERSON_SHARE_TEXT,
+  ILLU_SHARE,
 } from './config'
 import { IconChevronLeft } from '@republik/icons'
 
@@ -64,7 +65,7 @@ const Page = ({ responses, authorData }) => {
     return (
       <ShareImageSplit
         user={authorData.name}
-        img={QUESTIONNAIRE_SQUARE_IMG_URL}
+        img={ILLU_SHARE}
         bgColor={QUESTIONNAIRE_BG_COLOR}
         personShareText={PERSON_SHARE_TEXT}
       />
