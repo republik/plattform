@@ -4,10 +4,11 @@ import React, { ReactNode, useContext, useMemo } from 'react'
 
 import colors, { localInvertedColors } from '../../theme/colors'
 
-const getVariableColorKeys = (colors) =>
-  Object.keys(colors.light).filter(
-    (color) => colors.light[color] !== colors.dark[color],
-  )
+const getVariableColorKeys = (colors) => {
+  return [
+    ...new Set([...Object.keys(colors.light), ...Object.keys(colors.dark)]),
+  ]
+}
 
 // identify all variable color keys
 const variableColorKeys = getVariableColorKeys(colors)
@@ -18,13 +19,14 @@ const createScheme = (specificColors) => {
     ...specificColors,
   }
 
-  const accessCSSColor = (color) => colorDefinitions[color] || color
-
   const { mappings = {} } = colorDefinitions
 
   const getCSSColor = (color, mappingName = undefined) => {
+    // TODO: find out how this is used
     const mapping = mappings[mappingName] || {}
-    return accessCSSColor(mapping[color] || color)
+
+    // return cssCol
+    return color in colorDefinitions ? `var(--color-${color})` : color
   }
 
   const createColorRule = (attr, color, mappingName = undefined) => {
@@ -63,14 +65,6 @@ const createScheme = (specificColors) => {
     getCSSColor,
   }
 }
-
-const ColorContext = React.createContext(createScheme(colors.light))
-
-export const useColorContext = () => {
-  const colorContext = useContext(ColorContext)
-  return [colorContext]
-}
-
 const generateCSSColorDefinitions = (colors) => {
   return variableColorKeys
     .map((key) => `--color-${key}: ${colors[key]};`)
@@ -83,6 +77,18 @@ const getObjectForKeys = (colorKeys, mapper = (key) => key) =>
     c[key] = mapper(key)
     return c
   }, {})
+
+const defaultColorContextValue = createScheme({
+  schemeKey: 'auto',
+  ...getObjectForKeys(variableColorKeys, (key) => `var(--color-${key})`),
+})
+
+const ColorContext = React.createContext(defaultColorContextValue)
+
+export const useColorContext = () => {
+  const colorContext = useContext(ColorContext)
+  return [colorContext]
+}
 
 export const ColorContextLocalExtension: React.FC<{
   children?: ReactNode
@@ -158,13 +164,19 @@ export const RootColorVariables = () => {
       dangerouslySetInnerHTML={{
         __html: [
           // default light
-          `:root { ${generateCSSColorDefinitions(colors.light)} }`,
+          `:root, .light { ${generateCSSColorDefinitions(colors.light)} }`,
           // dark class applied to html element via next-themes OR manually applied on an element
           `.dark { ${generateCSSColorDefinitions(colors.dark)} }`,
         ].join('\n'),
       }}
     />
   )
+}
+
+const colorSchemeKeyToClassName = (colorSchemeKey: string) => {
+  return colorSchemeKey === 'light' || colorSchemeKey === 'dark'
+    ? colorSchemeKey
+    : undefined
 }
 
 export const ColorContextProvider: React.FC<{
@@ -176,22 +188,12 @@ export const ColorContextProvider: React.FC<{
     throw Error(`root prop not supported anymore on ColorContextProvider`)
   }
 
-  const colorValue = useMemo(() => {
-    if (colorSchemeKey === 'auto') {
-      return createScheme({
-        schemeKey: colorSchemeKey,
-        ...colors.light,
-        ...getObjectForKeys(variableColorKeys, (key) => `var(--color-${key})`),
-      })
-    }
-    return createScheme({
-      schemeKey: colorSchemeKey,
-      ...colors[colorSchemeKey],
-    })
-  }, [colorSchemeKey])
-
   return (
-    <ColorContext.Provider value={colorValue}>{children}</ColorContext.Provider>
+    <ColorContext.Provider value={defaultColorContextValue}>
+      <div className={colorSchemeKeyToClassName(colorSchemeKey)}>
+        {children}
+      </div>
+    </ColorContext.Provider>
   )
 }
 
