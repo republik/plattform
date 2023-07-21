@@ -236,7 +236,7 @@ const QuestionFeatured = ({ questions, bgColor }) => {
 const AnswerGridOverview = ({ question }) => {
   const questionSlug = question.key
   return (
-    <div style={{ padding: '46px 0' }}>
+    <div style={{ padding: '46px 0 0 0' }}>
       <NarrowContainer>
         <Editorial.Subhead style={{ textAlign: 'center' }}>
           {question.value[0].question}

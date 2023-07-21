@@ -25,13 +25,24 @@ import { SubmissionLink } from './Overview'
 
 import Frame from '../Frame'
 import Meta from '../Frame/Meta'
+import { ShareImageSplit } from '../Questionnaire/Submissions/ShareImageSplit'
+
 import { ASSETS_SERVER_BASE_URL, PUBLIC_BASE_URL } from '../../lib/constants'
-import { questionColor, OVERVIEW_QUESTIONNAIRE_PATH } from './config'
+import {
+  questionColor,
+  OVERVIEW_QUESTIONNAIRE_PATH,
+  QUESTIONNAIRE_SQUARE_IMG_URL,
+} from './config'
 
 import { AnswersChart } from './Overview'
 
-const QuestionViewMeta = ({ question }) => {
+const Page = ({ question, chartAnswers, nestedResponses, questionTypes }) => {
   const router = useRouter()
+  const answerGridRef = useRef()
+  const {
+    query: { image },
+  } = router
+
   const urlObj = new URL(router.asPath, PUBLIC_BASE_URL)
   const url = urlObj.toString()
 
@@ -39,32 +50,31 @@ const QuestionViewMeta = ({ question }) => {
   shareImageUrlObj.searchParams.set('image', true)
   const shareImageUrl = shareImageUrlObj.toString()
 
-  return (
-    <Meta
-      data={{
-        url,
-        title: question,
-        description: 'Beschreibung',
-        image: `${ASSETS_SERVER_BASE_URL}/render?width=1200&height=1&url=${encodeURIComponent(
-          shareImageUrl,
-        )}`,
-      }}
-    />
-  )
-}
+  if (image) {
+    return (
+      <ShareImageSplit
+        img={QUESTIONNAIRE_SQUARE_IMG_URL}
+        bgColor={questionColor(0)}
+      />
+    )
+  }
 
-const Page = ({ question, chartAnswers, nestedResponses, questionTypes }) => {
   const isChoiceQuestion = questionTypes.includes('choice')
   const twoTextQuestions = !isChoiceQuestion && questionTypes.length > 1
 
-  console.log(chartAnswers)
-
-  const answerGridRef = useRef()
+  const meta = {
+    url,
+    title: question,
+    description: 'Politikfragebogen für Politiker',
+    image: `${ASSETS_SERVER_BASE_URL}/render?width=1200&height=1&url=${encodeURIComponent(
+      shareImageUrl,
+    )}`,
+  }
 
   return (
     <Frame raw>
+      <Meta data={meta} />
       <div ref={answerGridRef}>
-        <QuestionViewMeta question={question} />
         <div style={{ backgroundColor: questionColor(0) }}>
           <div
             style={{

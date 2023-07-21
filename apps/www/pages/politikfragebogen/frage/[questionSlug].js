@@ -64,7 +64,7 @@ export const getServerSideProps = createGetServerSideProps(
     return {
       props: {
         chartAnswers: questionTypes.includes('choice') ? chartAnswers[0] : '',
-        question: question,
+        question: question[0].question,
         nestedResponses: nestedResponses,
         questionTypes: questionTypes,
       },
