@@ -3,6 +3,7 @@ import { useRouter } from 'next/router'
 import { PUBLIC_BASE_URL, ASSETS_SERVER_BASE_URL } from '../../lib/constants'
 
 import Frame from '../Frame'
+import Meta from '../Frame/Meta'
 
 import {
   ColorContextProvider,
@@ -97,6 +98,7 @@ export const SubmissionsOverview = ({ submissionData }) => {
 
   return (
     <Frame raw>
+      <Meta data={meta} />
       <div
         style={{
           backgroundColor: QUESTIONNAIRE_BG_COLOR,

@@ -260,4 +260,4 @@ export const ILLU_SHARE =
 export const ILLU_CREDIT = 'Nadine Redlich'
 
 export const PERSON_SHARE_TEXT =
-  '26 Sommerfragen vor der Wahl im Herbst – die Antworten von '
+  '25 Fragen vor der Wahl im Herbst – die Antworten von '

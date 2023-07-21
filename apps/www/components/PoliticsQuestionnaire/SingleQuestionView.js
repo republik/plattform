@@ -29,7 +29,7 @@ import { ASSETS_SERVER_BASE_URL, PUBLIC_BASE_URL } from '../../lib/constants'
 import {
   questionColor,
   OVERVIEW_QUESTIONNAIRE_PATH,
-  QUESTIONNAIRE_SQUARE_IMG_URL,
+  ILLU_SHARE,
 } from './config'
 
 const Page = ({ question, chartAnswers, nestedResponses, questionTypes }) => {
@@ -46,10 +46,13 @@ const Page = ({ question, chartAnswers, nestedResponses, questionTypes }) => {
   shareImageUrlObj.searchParams.set('image', true)
   const shareImageUrl = shareImageUrlObj.toString()
 
+  const questionShare = { question: { text: question } }
+
   if (image) {
     return (
       <ShareImageSplit
-        img={QUESTIONNAIRE_SQUARE_IMG_URL}
+        question={questionShare}
+        img={ILLU_SHARE}
         bgColor={questionColor(0)}
       />
     )

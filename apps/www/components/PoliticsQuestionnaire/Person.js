@@ -49,10 +49,8 @@ const Page = ({ responses, authorData }) => {
 
   const router = useRouter()
   const {
-    query: { id, image },
+    query: { image },
   } = router
-
-  // const { me } = useMe()
 
   const urlObj = new URL(router.asPath, PUBLIC_BASE_URL)
   const url = urlObj.toString()
@@ -64,24 +62,13 @@ const Page = ({ responses, authorData }) => {
   if (image) {
     return (
       <ShareImageSplit
-        user={authorData.name}
+        user={authorData}
         img={ILLU_SHARE}
         bgColor={QUESTIONNAIRE_BG_COLOR}
         personShareText={PERSON_SHARE_TEXT}
       />
     )
   }
-
-  // const {
-  //   questionnaire: { questions, results },
-  // } = data
-  // const submission = results.nodes[0]
-  // if (!submission) {
-  //   if (process.browser) {
-  //     router.replace({ pathname: OVERVIEW_QUESTIONNAIRE_PATH })
-  //   }
-  //   return null
-  // }
 
   const meta = {
     url,
