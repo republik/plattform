@@ -28,7 +28,7 @@ import Meta from '../Frame/Meta'
 import { ASSETS_SERVER_BASE_URL, PUBLIC_BASE_URL } from '../../lib/constants'
 import { questionColor, OVERVIEW_QUESTIONNAIRE_PATH } from './config'
 
-import { getTypeBySlug, AnswersChart } from './Overview'
+import { AnswersChart } from './Overview'
 
 const QuestionViewMeta = ({ question }) => {
   const router = useRouter()
@@ -53,13 +53,11 @@ const QuestionViewMeta = ({ question }) => {
   )
 }
 
-const Page = ({ question, answers, nestedResponses }) => {
-  const questionTypes = nestedResponses.map((q) => getTypeBySlug(q.key))
-
+const Page = ({ question, chartAnswers, nestedResponses, questionTypes }) => {
   const isChoiceQuestion = questionTypes.includes('choice')
-  const twoTextQuestions = !isChoiceQuestion && nestedResponses.length > 1
+  const twoTextQuestions = !isChoiceQuestion && questionTypes.length > 1
 
-  console.log(twoTextQuestions)
+  console.log(chartAnswers)
 
   const answerGridRef = useRef()
 
@@ -95,20 +93,17 @@ const Page = ({ question, answers, nestedResponses }) => {
                           borderTop: '1px solid currentColor',
                         }}
                       />
-                      <span>{nestedResponses[1].values[0].question}</span>
+                      <span>{nestedResponses[0].values[1].question}</span>
                     </>
                   )}
                 </Editorial.Subhead>
 
                 {isChoiceQuestion && (
                   <>
-                    <AnswersChart
-                      question={nestedResponses[0]}
-                      skipTitle={true}
-                    />
+                    <AnswersChart question={chartAnswers} skipTitle={true} />
                     <br />
                     <Editorial.Subhead style={{ textAlign: 'center' }}>
-                      {nestedResponses[1].values[0].question}
+                      {nestedResponses[0].values[1].question}
                     </Editorial.Subhead>
                   </>
                 )}
@@ -119,7 +114,72 @@ const Page = ({ question, answers, nestedResponses }) => {
                 colorSchemeKey='light'
               >
                 <div {...styles.answerCardWrapper}>
-                  {answers.map(({ uuid, answer, name }) => (
+                  {nestedResponses.map(({ key, values }, idx) => (
+                    <SubmissionLink key={key} id={key}>
+                      <a style={{ textDecoration: 'none' }}>
+                        <div {...styles.answerCard}>
+                          <ColorContextProvider
+                            localColorVariables={colors}
+                            colorSchemeKey='light'
+                          >
+                            <div
+                              {...(!isChoiceQuestion &&
+                                styles.answerCardContent)}
+                            >
+                              {values.map(({ answer }, idx) => {
+                                return (
+                                  <div key={answer.id}>
+                                    {isChoiceQuestion && !idx ? (
+                                      <div {...styles.circleLabel}>
+                                        <span {...styles.circle} />
+                                        {answer}
+                                      </div>
+                                    ) : (
+                                      <div
+                                        {...(isChoiceQuestion &&
+                                          styles.answerCardContent)}
+                                      >
+                                        {inQuotes(answer)}
+
+                                        {idx === 0 && twoTextQuestions && (
+                                          <hr
+                                            style={{
+                                              opacity: 0.3,
+                                              margin: '1.2em 33%',
+                                              border: 0,
+                                              borderTop:
+                                                '1px solid currentColor',
+                                            }}
+                                          />
+                                        )}
+                                      </div>
+                                    )}
+                                  </div>
+                                )
+                              })}
+
+                              <Editorial.Credit
+                                style={{
+                                  marginTop: '0',
+                                  paddingTop: '10px',
+                                }}
+                              >
+                                Von{' '}
+                                <span
+                                  style={{
+                                    textDecoration: 'underline',
+                                  }}
+                                >
+                                  {values[0].name}
+                                </span>
+                              </Editorial.Credit>
+                            </div>
+                          </ColorContextProvider>
+                        </div>
+                      </a>
+                    </SubmissionLink>
+                  ))}
+                  {/* {answers.map(({ uuid, answer, name }, idx) => (
                     <AnswersGridCard key={uuid}>
                       <SubmissionLink id={uuid}>
                         <a style={{ textDecoration: 'none' }}>
@@ -128,23 +188,35 @@ const Page = ({ question, answers, nestedResponses }) => {
                               <Editorial.Question style={{ marginTop: 0 }}>
                                 {inQuotes(answer)}
                               </Editorial.Question>
-                              <Editorial.Credit
-                                style={{
-                                  marginTop: '0',
-                                  paddingTop: '20px',
-                                }}
-                              >
-                                Von{' '}
-                                <span style={{ textDecoration: 'underline' }}>
-                                  {name}
-                                </span>
-                              </Editorial.Credit>
+                              {idx === 0 && twoTextQuestions && (
+                                <hr
+                                  style={{
+                                    opacity: 0.3,
+                                    margin: '1.2em 33%',
+                                    border: 0,
+                                    borderTop: '1px solid currentColor',
+                                  }}
+                                />
+                              )}
+                              {idx === 0 && (
+                                <Editorial.Credit
+                                  style={{
+                                    marginTop: '0',
+                                    paddingTop: '20px',
+                                  }}
+                                >
+                                  Von{' '}
+                                  <span style={{ textDecoration: 'underline' }}>
+                                    {name}
+                                  </span>
+                                </Editorial.Credit>
+                              )} 
                             </div>
                           </div>
                         </a>
                       </SubmissionLink>
                     </AnswersGridCard>
-                  ))}
+                                ))} */}
                 </div>
               </ColorContextProvider>
             </Center>

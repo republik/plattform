@@ -298,7 +298,7 @@ export const SubmissionLink = ({ id, children }) => {
   )
 }
 
-const AnswersChart = ({ question, skipTitle }) => {
+export const AnswersChart = ({ question, skipTitle }) => {
   const options = question.value[0].options
 
   const validAnswers = question.value.filter((item) =>

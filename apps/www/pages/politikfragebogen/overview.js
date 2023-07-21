@@ -8,7 +8,6 @@ import { nest } from 'd3-collection'
 import { QUESTION_TYPES } from '../../../www/components/PoliticsQuestionnaire/config'
 
 import { leftJoin } from '../../../www/components/PoliticsQuestionnaire/utils'
-import { filter } from 'lodash'
 
 export default ({ submissionData }) => (
   <SubmissionsOverview submissionData={submissionData} />

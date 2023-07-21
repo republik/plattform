@@ -4,13 +4,20 @@ import fs from 'node:fs/promises'
 import path from 'node:path'
 import { csvParse } from 'd3-dsv'
 import { nest } from 'd3-collection'
-import { QUESTION_SEPARATOR } from '../../../components/PoliticsQuestionnaire/config'
+import {
+  QUESTION_SEPARATOR,
+  QUESTION_TYPES,
+} from '../../../components/PoliticsQuestionnaire/config'
+import { getTypeBySlug } from '../../../components/PoliticsQuestionnaire/Overview'
 
-export default ({ answers, question, nestedResponses }) => (
+import { leftJoin } from '../../../../www/components/PoliticsQuestionnaire/utils'
+
+export default ({ chartAnswers, question, nestedResponses, questionTypes }) => (
   <Page
-    answers={answers}
+    chartAnswers={chartAnswers}
     question={question}
     nestedResponses={nestedResponses}
+    questionTypes={questionTypes}
   />
 )
 
@@ -27,7 +34,9 @@ export const getServerSideProps = createGetServerSideProps(
       ),
       'utf-8',
     )
-    const responses = csvParse(data)
+    const responses = csvParse(data).filter(
+      (response) => response.answer !== 'NA',
+    )
 
     const questionSlugs = questionSlug.split(QUESTION_SEPARATOR)
 
@@ -35,15 +44,18 @@ export const getServerSideProps = createGetServerSideProps(
       questionSlugs.includes(d.questionSlug),
     )
 
+    const questionTypes = questionSlugs.map((q) => getTypeBySlug(q))
+
     const nestedResponses = nest()
-      .key((d) => d.questionSlug)
+      .key((d) => d.uuid)
       .entries(responsesBySlug)
 
-    // console.log(nestedResponses)
+    const joinedData = leftJoin(responsesBySlug, QUESTION_TYPES, 'questionSlug')
 
-    const answers = responsesBySlug.map((d) => {
-      return { answer: d.answer, name: d.name, uuid: d.uuid }
-    })
+    const chartAnswers = nest()
+      .key((d) => d.questionSlug)
+      .rollup((values) => values)
+      .entries(joinedData)
 
     const question = responsesBySlug.map((d) => {
       return { question: d.question }
@@ -51,9 +63,10 @@ export const getServerSideProps = createGetServerSideProps(
 
     return {
       props: {
-        answers: answers,
+        chartAnswers: questionTypes.includes('choice') ? chartAnswers[0] : '',
         question: question,
         nestedResponses: nestedResponses,
+        questionTypes: questionTypes,
       },
     }
   },
