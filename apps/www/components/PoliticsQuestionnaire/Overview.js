@@ -84,7 +84,7 @@ export const SubmissionsOverview = ({ submissionData }) => {
   const shareImageUrl = shareImageUrlObj.toString()
 
   if (image) {
-    return <ShareImageSplit img={ILLU_SHARE} />
+    return <ShareImageSplit img={ILLU_SHARE} bgColor={QUESTIONNAIRE_BG_COLOR} />
   }
 
   const meta = {
