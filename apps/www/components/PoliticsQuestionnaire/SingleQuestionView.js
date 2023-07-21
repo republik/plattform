@@ -46,12 +46,10 @@ const Page = ({ question, chartAnswers, nestedResponses, questionTypes }) => {
   shareImageUrlObj.searchParams.set('image', true)
   const shareImageUrl = shareImageUrlObj.toString()
 
-  const questionShare = { question: { text: question } }
-
   if (image) {
     return (
       <ShareImageSplit
-        question={questionShare}
+        question={{ text: question }}
         img={ILLU_SHARE}
         bgColor={questionColor(0)}
       />

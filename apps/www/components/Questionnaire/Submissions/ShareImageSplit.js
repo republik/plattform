@@ -19,6 +19,7 @@ export const ShareImageSplit = ({
   if (!query.image && !query.extract) {
     return null
   }
+
   const text = question
     ? question.text
     : user

@@ -84,7 +84,13 @@ export const SubmissionsOverview = ({ submissionData }) => {
   const shareImageUrl = shareImageUrlObj.toString()
 
   if (image) {
-    return <ShareImageSplit img={ILLU_SHARE} bgColor={QUESTIONNAIRE_BG_COLOR} />
+    return (
+      <ShareImageSplit
+        img={ILLU_SHARE}
+        bgColor={QUESTIONNAIRE_BG_COLOR}
+        question={{ text: 'Politikerfragebogen 2023' }}
+      />
+    )
   }
 
   const meta = {
