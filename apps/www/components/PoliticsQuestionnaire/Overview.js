@@ -165,23 +165,29 @@ export const SubmissionsOverview = ({ submissionData }) => {
               )} */}
             </NarrowContainer>
           </div>
-        </ColorContextProvider>
-      </div>
-      <div style={{ margin: '48px auto 0' }}>
-        <Filters />
-        {QUESTIONS.map((question, idx) => {
-          const groupQuestions = question.questionSlugs.map((slug) =>
-            submissionData.find((d) => d.key === slug),
-          )
 
-          return (
-            <QuestionFeatured
-              key={question.questionSlugs[0]}
-              questions={groupQuestions}
-              bgColor={questionColor(idx)}
-            />
-          )
-        })}
+          <div
+            style={{
+              margin: '48px auto 0',
+              backgroundColor: QUESTIONNAIRE_BG_COLOR,
+            }}
+          >
+            <Filters />
+            {QUESTIONS.map((question, idx) => {
+              const groupQuestions = question.questionSlugs.map((slug) =>
+                submissionData.find((d) => d.key === slug),
+              )
+
+              return (
+                <QuestionFeatured
+                  key={question.questionSlugs[0]}
+                  questions={groupQuestions}
+                  bgColor={questionColor(idx)}
+                />
+              )
+            })}
+          </div>
+        </ColorContextProvider>
       </div>
     </Frame>
   )
@@ -211,23 +217,28 @@ const QuestionFeatured = ({ questions, bgColor }) => {
       }}
     >
       <Container>
-        {questions.map((q) => {
-          return getTypeBySlug(q.key) === 'text' ? (
-            <AnswerGridOverview question={q} />
-          ) : getTypeBySlug(q.key) === 'choice' ? (
-            <AnswersChart question={q} />
-          ) : null
-        })}
+        <ColorContextProvider
+          localColorVariables={colors}
+          colorSchemeKey='light'
+        >
+          {questions.map((q) => {
+            return getTypeBySlug(q.key) === 'text' ? (
+              <AnswerGridOverview question={q} />
+            ) : getTypeBySlug(q.key) === 'choice' ? (
+              <AnswersChart question={q} />
+            ) : null
+          })}
 
-        {hasTextAnswer && (
-          <NarrowContainer>
-            <Interaction.P style={{ textAlign: 'center' }}>
-              <QuestionLink questions={questions}>
-                <Editorial.A>Alle Antworten lesen</Editorial.A>
-              </QuestionLink>
-            </Interaction.P>
-          </NarrowContainer>
-        )}
+          {hasTextAnswer && (
+            <NarrowContainer>
+              <Interaction.P style={{ textAlign: 'center' }}>
+                <QuestionLink questions={questions}>
+                  <Editorial.A>Alle Antworten lesen</Editorial.A>
+                </QuestionLink>
+              </Interaction.P>
+            </NarrowContainer>
+          )}
+        </ColorContextProvider>
       </Container>
     </div>
   )
@@ -247,36 +258,34 @@ const AnswerGridOverview = ({ question }) => {
           </Interaction.P>
         )} */}
       </NarrowContainer>
-      <ColorContextProvider localColorVariables={colors} colorSchemeKey='light'>
-        <AnswersGrid>
-          {question.value.map(({ uuid, answer, name }) => (
-            <AnswersGridCard key={`${questionSlug}-${uuid}`}>
-              <SubmissionLink id={uuid}>
-                <a style={{ textDecoration: 'none' }}>
-                  <div {...styles.answerCard}>
-                    <div>
-                      <Editorial.Question style={{ marginTop: 0 }}>
-                        {inQuotes(answer)}
-                      </Editorial.Question>
-                      <Editorial.Credit
-                        style={{
-                          marginTop: '0',
-                          paddingTop: '20px',
-                        }}
-                      >
-                        Von{' '}
-                        <span style={{ textDecoration: 'underline' }}>
-                          {name}
-                        </span>
-                      </Editorial.Credit>
-                    </div>
+      <AnswersGrid>
+        {question.value.map(({ uuid, answer, name }) => (
+          <AnswersGridCard key={`${questionSlug}-${uuid}`}>
+            <SubmissionLink id={uuid}>
+              <a style={{ textDecoration: 'none' }}>
+                <div {...styles.answerCard}>
+                  <div>
+                    <Editorial.Question style={{ marginTop: 0 }}>
+                      {inQuotes(answer)}
+                    </Editorial.Question>
+                    <Editorial.Credit
+                      style={{
+                        marginTop: '0',
+                        paddingTop: '20px',
+                      }}
+                    >
+                      Von{' '}
+                      <span style={{ textDecoration: 'underline' }}>
+                        {name}
+                      </span>
+                    </Editorial.Credit>
                   </div>
-                </a>
-              </SubmissionLink>
-            </AnswersGridCard>
-          ))}
-        </AnswersGrid>
-      </ColorContextProvider>
+                </div>
+              </a>
+            </SubmissionLink>
+          </AnswersGridCard>
+        ))}
+      </AnswersGrid>
     </div>
   )
 }
