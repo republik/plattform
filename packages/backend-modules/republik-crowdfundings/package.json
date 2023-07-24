@@ -19,7 +19,7 @@
     "dev": "tsc -w",
     "build": "tsc",
     "db:seed:crowdfundings": "seeds/script/seed.js",
-    "dev:postfinance:import": "concurrently 'tsc -w' 'sleep 3 && echo \"Starting import payments runner.\" && sleep 2 && NODE_ENV=development nodemon lib/scheduler/importPaymentsRunner.js'"
+    "dev:postfinance:import": "sleep 3 && echo \"Starting import payments runner.\" && sleep 2 && NODE_ENV=development node lib/scheduler/importPaymentsRunner.js"
   },
   "dependencies": {
     "apollo-modules-node": "*",
