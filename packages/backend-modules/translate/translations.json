@@ -330,7 +330,7 @@
     },
     {
       "key": "api/email/pledge_abo/subject",
-      "value": "Ihre Mitgliedschaft: Willkommen bei der Republik"
+      "value": "Republik: Ihre Mitgliedschaft"
     },
     {
       "key": "api/email/pledge_abo_give/subject",
@@ -342,7 +342,7 @@
     },
     {
       "key": "api/email/pledge_monthly_abo/subject",
-      "value": "Ihr Abo: Willkommen bei der Republik"
+      "value": "Republik: Ihr Monats-Abo"
     },
     {
       "key": "api/email/pledge_donate/subject",
@@ -350,7 +350,7 @@
     },
     {
       "key": "api/email/pledge_benefactor/subject",
-      "value": "Ihre Mitgliedschaft: Willkommen bei der Republik"
+      "value": "Republik: Ihre Gönner-Mitgliedschaft"
     },
     {
       "key": "api/email/pledge_prolong/subject",
