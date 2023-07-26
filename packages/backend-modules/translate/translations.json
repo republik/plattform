@@ -626,11 +626,11 @@
     },
     {
       "key": "api/email/membership_claimer_onboarding/REPUBLIK/subject",
-      "value": "Ihr Abo: Willkommen bei der Republik"
+      "value": "Republik: Ihr Abo"
     },
     {
       "key": "api/email/membership_claimer_onboarding/PROJECT_R/subject",
-      "value": "Ihre Mitgliedschaft: Willkommen bei der Republik"
+      "value": "Republik: Ihre Mitgliedschaft"
     },
     {
       "key": "api/email/membership_claimer_onboarding/subject",
