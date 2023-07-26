@@ -151,7 +151,6 @@ const Frame = ({
         </Box>
       </noscript>
       <div
-        {...styles.page}
         {...(footer || inNativeApp ? styles.bodyGrowerContainer : undefined)}
       >
         {/* body growing only needed when rendering a footer */}
@@ -185,14 +184,16 @@ const Frame = ({
             <OptionalLocalColorContext
               localColorVariables={customContentColorContext}
             >
-              <CallToActionBanner />
-              {raw ? (
-                <>{children}</>
-              ) : (
-                <MainContainer maxWidth={containerMaxWidth}>
-                  <Content>{children}</Content>
-                </MainContainer>
-              )}
+              <div {...styles.page}>
+                <CallToActionBanner />
+                {raw ? (
+                  <>{children}</>
+                ) : (
+                  <MainContainer maxWidth={containerMaxWidth}>
+                    <Content>{children}</Content>
+                  </MainContainer>
+                )}
+              </div>
             </OptionalLocalColorContext>
           </Header>
         </div>
