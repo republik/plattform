@@ -8,7 +8,6 @@ import {
   fontFamilies,
   mediaQueries,
   ColorContextProvider,
-  useColorContext,
 } from '@project-r/styleguide'
 import OptionalLocalColorContext from './OptionalLocalColorContext'
 import Meta from './Meta'
@@ -75,6 +74,10 @@ const styles = {
   bodyGrower: css({
     flexGrow: 1,
   }),
+  page: css({
+    backgroundColor: 'var(--color-default)',
+    color: 'var(--color-text)',
+  }),
   content: css({
     paddingTop: FRAME_CONTENT_PADDING_MOBILE,
     paddingBottom: FRAME_CONTENT_PADDING_MOBILE * 2,
@@ -83,24 +86,6 @@ const styles = {
       paddingBottom: FRAME_CONTENT_PADDING * 2,
     },
   }),
-}
-
-/**
- * If a page has a custom color context that is to be applied to the page content
- * a wrapping div is rendered where the default color is applied to the background.
- */
-const OptionalContentBackground = ({
-  children,
-  hasCustomColorContext = false,
-}) => {
-  const [colorScheme] = useColorContext()
-  if (hasCustomColorContext) {
-    return (
-      <div {...colorScheme.set('backgroundColor', 'default')}>{children}</div>
-    )
-  } else {
-    return <>{children}</>
-  }
 }
 
 export const MainContainer = ({ children, maxWidth = '840px' }) => (
@@ -166,6 +151,7 @@ const Frame = ({
         </Box>
       </noscript>
       <div
+        {...styles.page}
         {...(footer || inNativeApp ? styles.bodyGrowerContainer : undefined)}
       >
         {/* body growing only needed when rendering a footer */}
@@ -199,18 +185,14 @@ const Frame = ({
             <OptionalLocalColorContext
               localColorVariables={customContentColorContext}
             >
-              <OptionalContentBackground
-                hasCustomColorContext={!!customContentColorContext}
-              >
-                <CallToActionBanner />
-                {raw ? (
-                  <>{children}</>
-                ) : (
-                  <MainContainer maxWidth={containerMaxWidth}>
-                    <Content>{children}</Content>
-                  </MainContainer>
-                )}
-              </OptionalContentBackground>
+              <CallToActionBanner />
+              {raw ? (
+                <>{children}</>
+              ) : (
+                <MainContainer maxWidth={containerMaxWidth}>
+                  <Content>{children}</Content>
+                </MainContainer>
+              )}
             </OptionalLocalColorContext>
           </Header>
         </div>
