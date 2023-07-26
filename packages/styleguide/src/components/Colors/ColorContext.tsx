@@ -22,11 +22,15 @@ const createScheme = (specificColors) => {
   const { mappings = {} } = colorDefinitions
 
   const getCSSColor = (color, mappingName = undefined) => {
-    // TODO: find out how this is used
+    // For backwards compatibility, we map some colors to variable names.
+    // E.g. when mappingName is 'format', '#000' is looked up in mappings.format['#000'] and becomes 'accentColorMeta'
     const mapping = mappings[mappingName] || {}
 
-    // return cssCol
-    return color in colorDefinitions ? `var(--color-${color})` : color
+    return color in mapping
+      ? `var(--color-${mapping[color]})`
+      : color in colorDefinitions
+      ? `var(--color-${color})`
+      : color
   }
 
   const createColorRule = (attr, color, mappingName = undefined) => {
