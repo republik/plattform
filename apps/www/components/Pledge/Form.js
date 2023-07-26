@@ -431,7 +431,7 @@ class Pledge extends Component {
                       ownMembership={ownMembership}
                       customMe={customMe}
                       userPrice={userPrice}
-                      fixedPrice={pkg.options[0].fixedPrice}
+                      fixedPrice={pkg.options?.some((opt) => opt.fixedPrice)}
                       pkg={pkg}
                       packages={packages}
                       onChange={(fields) => {

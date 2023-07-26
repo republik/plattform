@@ -426,7 +426,7 @@ class CustomizePackage extends Component {
         }),
     )
 
-    const payMoreSuggestions = pkg.options[0].payMoreSuggestion
+    const payMoreSuggestions = pkg.options?.some((opt) => opt.payMoreSuggestion)
       ? []
       : userPrice
       ? [{ value: regularMinPrice, key: 'normal' }]
