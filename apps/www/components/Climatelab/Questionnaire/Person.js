@@ -46,7 +46,7 @@ import {
   PERSON_SHARE_TEXT,
   ILLU_CREDIT,
 } from './config'
-import { IconChevronLeft, IconEdit, IconShare } from '@republik/icons'
+import { IconChevronLeft, IconEdit } from '@republik/icons'
 
 const USER_QUERY = gql`
   query getUserId($slug: String!) {

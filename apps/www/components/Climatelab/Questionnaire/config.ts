@@ -40,8 +40,11 @@ export const QUESTIONS: QuestionConfigType[] = [
 export const EDIT_QUESTIONNAIRE_PATH = '/2023/03/03/fragen-zur-klimakrise'
 export const OVERVIEW_QUESTIONNAIRE_PATH = '/15-fragen-zum-klima-ihre-antworten'
 export const PERSON_PAGE_PATH = 'klimafragebogen'
+export const PERSON_SHARE_TEXT = '15 Fragen zum Klima – die Antworten von '
 
 export const QUESTIONNAIRE_SLUG = 'klima-fragebogen'
 
 export const QUESTIONNAIRE_SQUARE_IMG_URL =
   'https://cdn.repub.ch/s3/republik-assets/repos/republik/page-klimafragebogen-uebersicht/files/034a0eca-8aaf-4511-90aa-504cca584981/final-art_questionnaire.png'
+
+export const ILLU_CREDIT = 'Cristina Spanò'
