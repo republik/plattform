@@ -10,14 +10,8 @@ import {
   useStripe,
 } from '@stripe/react-stripe-js'
 
-import {
-  fontStyles,
-  colors,
-  useColorContext,
-  Interaction,
-} from '@project-r/styleguide'
+import { fontStyles, useColorContext, Interaction } from '@project-r/styleguide'
 
-import { useResolvedColorSchemeKey } from '../../ColorScheme/lib'
 import { SG_FONT_FACES } from '../../../lib/constants'
 
 import { loadStripe } from '../stripe'
@@ -51,7 +45,6 @@ const Form = forwardRef(
     },
     ref,
   ) => {
-    const colorSchemeKey = useResolvedColorSchemeKey()
     const stripe = useStripe()
     const elements = useElements()
 
@@ -59,14 +52,14 @@ const Form = forwardRef(
       base: {
         ...fontStyles.sansSerifRegular,
         fontSize: '22px',
-        color: colors[colorSchemeKey].text,
+        color: 'var(--color-text)',
         lineHeight: '40px',
         '::placeholder': {
-          color: colors[colorSchemeKey].disabled,
+          color: 'var(--color-disabled)',
         },
       },
       invalid: {
-        color: colors[colorSchemeKey].error,
+        color: 'var(--color-error)',
       },
     }
 

@@ -2,12 +2,12 @@ import { forwardRef } from 'react'
 import { CalloutMenu, IconButton, Radio } from '@project-r/styleguide'
 import { useInNativeApp } from '../../lib/withInNativeApp'
 
-import { useColorSchemeKeyPreference } from '../ColorScheme/lib'
+import { useColorSchemePreference } from '../ColorScheme/useColorScheme'
 import { IconDarkMode } from '@republik/icons'
 
 const DarkmodeSwitch = ({ t }) => {
   const { inNativeApp, inNativeAppLegacy } = useInNativeApp()
-  const [colorSchemeKey, setColorSchemeKey] = useColorSchemeKeyPreference()
+  const [colorSchemeKey, setColorSchemeKey] = useColorSchemePreference()
 
   const iconLabel =
     colorSchemeKey === 'light'
