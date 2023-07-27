@@ -44,6 +44,7 @@ export {
   ColorContextProvider,
   ColorContextLocalExtension,
   RootColorVariables,
+  InvertedColorScheme,
 } from './components/Colors/ColorContext'
 export { useColorContext } from './components/Colors/useColorContext'
 export {

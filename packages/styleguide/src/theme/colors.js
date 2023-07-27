@@ -231,11 +231,6 @@ const colors = {
   },
 }
 
-export const localInvertedColors = {
-  light: colors.dark,
-  dark: colors.light,
-}
-
 // add all deprecated colors, but only if they don't exist in new colors (no overwrites)
 Object.keys(colorsDeprecated).forEach((key) => {
   if (!colors[key]) {
