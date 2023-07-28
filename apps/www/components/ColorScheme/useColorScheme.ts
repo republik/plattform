@@ -18,7 +18,7 @@ const DEFAULT_KEY = 'auto'
 export const useColorSchemePreference = () => {
   const { inNativeApp, inNativeAppLegacy } = useInNativeApp()
   const inNewApp = inNativeApp && !inNativeAppLegacy
-  const [key, set] = usePersistedColorSchemeKey(DEFAULT_KEY)
+  const [key, set] = usePersistedColorSchemeKey<string>(DEFAULT_KEY)
   const currentKey = key || DEFAULT_KEY
 
   useEffect(() => {

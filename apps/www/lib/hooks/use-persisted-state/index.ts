@@ -18,7 +18,7 @@ const createPersistedState = <T>(
     const storage = createStorage<T>(provider)
     return (initialState) => usePersistedState<T>(initialState, key, storage)
   }
-  return useState<T>
+  return useState
 }
 
 export default createPersistedState
