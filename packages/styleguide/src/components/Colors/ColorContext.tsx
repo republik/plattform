@@ -136,13 +136,10 @@ export const ColorContextLocalExtension: React.FC<{
     return [
       createScheme(extendedColorDefinitions),
       css({
-        // light auto
-        ':root .light &, .dark .inverted &': {
-          // light user
+        ':root &, .light &': {
           ...lightColorCSSDefs,
         },
-        '.dark &, .light .inverted &': {
-          // dark user
+        '.dark &': {
           ...darkColorCSSDefs,
         },
       }),
