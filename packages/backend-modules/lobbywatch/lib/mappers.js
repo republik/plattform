@@ -73,7 +73,8 @@ const mapCompensations = (verguetungen) => {
         money,
         description:
           (money === -1 && raw.beschreibung === 'Bezahlendes Mitglied') ||
-          (money === 0 && raw.beschreibung === 'Ehrenamtlich')
+          (money === 0 && raw.beschreibung === 'Ehrenamtlich') ||
+          (money === 1 && raw.beschreibung === 'Bezahlt')
             ? null
             : raw.beschreibung || null,
       }
