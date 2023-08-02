@@ -56,12 +56,12 @@ const createScheme = (specificColors) => {
         'sequential60',
         'sequential55',
         'sequential50',
-      ].map((key) => colorDefinitions[key]),
+      ].map((key) => getCSSColor(key)),
       sequential3: ['sequential100', 'sequential80', 'sequential60'].map(
-        (key) => colorDefinitions[key],
+        (key) => getCSSColor(key),
       ),
-      opposite3: ['opposite100', 'opposite80', 'opposite60'].map(
-        (key) => colorDefinitions[key],
+      opposite3: ['opposite100', 'opposite80', 'opposite60'].map((key) =>
+        getCSSColor(key),
       ),
       discrete: colorDefinitions.discrete,
     },
@@ -108,7 +108,6 @@ export const ColorContextLocalExtension: React.FC<{
 
     const extendedColorDefinitions = {
       ...colorDefinitions,
-      ...localColors[schemeKey === 'auto' ? 'light' : schemeKey],
       ...getObjectForKeys(
         variableLocalColorKeys,
         (key) => `var(--color-${key})`,
@@ -136,12 +135,8 @@ export const ColorContextLocalExtension: React.FC<{
     return [
       createScheme(extendedColorDefinitions),
       css({
-        ':root &, .light &': {
-          ...lightColorCSSDefs,
-        },
-        '.dark &': {
-          ...darkColorCSSDefs,
-        },
+        ':root &, .light &': lightColorCSSDefs,
+        '.dark &': darkColorCSSDefs,
       }),
     ]
   }, [colorDefinitions, localColors, localMappings, schemeKey])
