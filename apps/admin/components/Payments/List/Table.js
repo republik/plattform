@@ -108,8 +108,8 @@ const Table = ({ items, sort, onSort, ...props }) => {
               <td>{getDueDate(payment.status, payment.dueDate)}</td>
               <td>{payment.method}</td>
               <td>
-                <Link href={`/users/${user.id}`}>
-                  <a {...styles.link}>{name}</a>
+                <Link href={`/users/${user.id}`} {...styles.link}>
+                  {name}
                 </Link>
               </td>
               <td>
@@ -128,11 +128,11 @@ const Table = ({ items, sort, onSort, ...props }) => {
               <td>{payment.hrid}</td>
               <td>{payment.status}</td>
             </tr>
-          )
+          );
         })}
       </tbody>
     </table>
-  )
+  );
 }
 
 export default Table
