@@ -11,7 +11,8 @@ jobs:
     env:
       API_URL: ${{ secrets.API_URL }}
       SSG_DOCUMENTS_API_KEY: ${{ secrets.SSG_DOCUMENTS_API_KEY }}
-
+      TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+      TURBO_TEAM: ${{ vars.TURBO_TEAM }}
     steps:
       - name: Cancel Previous Runs
         uses: styfle/cancel-workflow-action@0.9.1

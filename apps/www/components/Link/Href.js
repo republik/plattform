@@ -9,7 +9,7 @@ const HrefLink = ({ href, passHref, children }) => {
   const Component = passHref ? Link : AreaLink
 
   return (
-    <Component href={href} passHref={passHref} prefetch={false}>
+    <Component href={href} passHref={passHref} prefetch={false} legacyBehavior>
       {children}
     </Component>
   )
