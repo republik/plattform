@@ -2,12 +2,14 @@
 require('@orbiting/backend-modules-env').config()
 
 const yargs = require('yargs')
-const onboarding = require('../../lib/scheduler/onboarding')
+const archiveUnsubscribedOnboarding = require('../../lib/scheduler/archiveUnsubscribedOnboarding')
 
 const argv = yargs.option('dry-run', {
   default: true,
 }).argv
 
-onboarding(argv['dry-run']).catch((e) => {
+const dryRun = argv['dry-run']
+
+archiveUnsubscribedOnboarding(dryRun).catch((e) => {
   console.error(e)
 })

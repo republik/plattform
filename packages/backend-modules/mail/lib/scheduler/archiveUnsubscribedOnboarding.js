@@ -3,7 +3,7 @@ const checkEnv = require('check-env')
 const BluePromise = require('bluebird')
 const MailchimpInterface = require('../../MailchimpInterface.js')
 
-module.exports = async (context, dryRun = false) => {
+module.exports = async (dryRun = false) => {
   // get all unsubscribed from mailchimp onboarding audience and set to archived
   debug('archive unsubscribed from onboarding scheduler')
   checkEnv(['MAILCHIMP_ONBOARDING_AUDIENCE_ID'])

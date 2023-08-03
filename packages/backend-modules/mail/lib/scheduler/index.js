@@ -43,7 +43,7 @@ const init = async (context) => {
         debug(
           `starting job to archive unsubscribed users in onboarding audience on mailchimp`,
         )
-        await archiveUnsubscribedOnboarding(context, dryRun)
+        await archiveUnsubscribedOnboarding(dryRun)
       },
       lockTtlSecs: 60,
       runAtTime: '11:00',
