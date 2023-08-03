@@ -7,7 +7,8 @@
       ],
       "outputs": [
         "dist/**",
-        ".next/**"
+        ".next/**",
+        "!.next/cache/**"
       ],
       "dotEnv": [
         ".env.production.local",
@@ -65,6 +66,21 @@
     },
     "lint": {
       "outputs": []
+    },
+    "start": {
+      "persistent": true,
+      "dependsOn": [
+        "^build",
+        "build"
+      ],
+      "dotEnv": [
+        ".env.production.local",
+        ".env.development.local",
+        ".env.local",
+        ".env.production",
+        ".env.development",
+        ".env"
+      ]
     },
     "dev": {
       "cache": false,
