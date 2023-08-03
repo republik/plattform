@@ -49,7 +49,6 @@
     "@republik/mdast-react-render": "*",
     "moment": "^2.29.1",
     "next": "^13.4.12",
-    "next-transpile-modules": "^9.0.0",
     "prop-types": "^15.7.2",
     "react": "^18.2.0",
     "react-autosize-textarea": "^5.0.1",
