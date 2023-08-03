@@ -8,7 +8,6 @@ import { isSlateElement } from '../Editor/Render/helpers'
 import { fontFamilies } from '../../theme/fonts'
 import { ColorContextProvider, useColorContext } from '../Colors/ColorContext'
 import { mUp } from '../../theme/mediaQueries'
-import colors from '../../theme/colors'
 
 const styles = {
   answersContainer: css({
@@ -137,19 +136,19 @@ export const Quiz = ({ children, attributes, ...props }) => {
           ? '#EBFFE0'
           : answer
           ? '#FFE0E0'
-          : colors.light.default,
+          : 'var(--color-light)'.default,
       }}
     >
       {tree.map((answer, i) => {
         const isSelected = answerId === i
         const primaryColor =
           isSelected && answer.isCorrect
-            ? colors.light.primary
+            ? 'var(--color-light)'.primary
             : isSelected
-            ? colors.light.flyerFormatText
+            ? 'var(--color-light)'.flyerFormatText
             : undefined
         const colorRule = css({
-          color: isSelected ? '#fff' : colors.light.text,
+          color: isSelected ? '#fff' : 'var(--color-light)'.text,
           backgroundColor: primaryColor || '#fff',
           border: `1px solid ${primaryColor || '#000'}`,
           '@media (hover)': {

@@ -1,7 +1,6 @@
 import React from 'react'
 
 import * as Interaction from '../../components/Typography/Interaction'
-import colors from '../../theme/colors'
 
 import {
   matchType,
@@ -141,7 +140,7 @@ const createTeasers = ({
           ? data.formatColor
             ? data.formatColor
             : data.kind
-            ? colors[data.kind]
+            ? `var(--color-${data.kind})`
             : undefined
           : undefined,
         href: data ? data.formatUrl : undefined,
@@ -302,7 +301,7 @@ const createTeasers = ({
           return {
             title: node.title,
             href: node.url,
-            color: teaser ? teaser.data.color : colors.primary,
+            color: teaser ? teaser.data.color : 'var(--color-primary)',
             collapsedColor:
               teaser && teaser.data.feuilleton ? '#000' : undefined,
           }
@@ -587,7 +586,7 @@ const createTeasers = ({
             return (
               <div
                 style={{
-                  backgroundColor: colors.primaryBg,
+                  backgroundColor: 'var(--color-primaryBg)',
                   padding: '10px 20px',
                 }}
               >

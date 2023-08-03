@@ -1,6 +1,5 @@
 import React, { PureComponent, Fragment } from 'react'
 import { P } from '../Typography/Interaction'
-import colors from '../../theme/colors'
 
 class ErrorBoundary extends PureComponent {
   constructor(...args) {
@@ -17,11 +16,11 @@ class ErrorBoundary extends PureComponent {
     if (error) {
       return (
         <Fragment>
-          <P style={{ color: colors.error, margin: '20px 0' }}>
+          <P style={{ color: 'var(--color-error)', margin: '20px 0' }}>
             {failureMessage}
           </P>
           {showException && (
-            <P style={{ color: colors.error, margin: '20px 0' }}>
+            <P style={{ color: 'var(--color-error)', margin: '20px 0' }}>
               {error.toString()}
             </P>
           )}

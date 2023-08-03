@@ -7,7 +7,6 @@ import { useFormContext } from './Forms'
 import { CustomElement, TemplateType } from '../custom-types'
 import { config as elConfig } from '../config/elements'
 import CalloutMenu from '../../Callout/CalloutMenu'
-import colors from '../../../theme/colors'
 import { Node } from 'slate'
 import { useRenderContext } from '../Render/Context'
 import {
@@ -32,7 +31,7 @@ const styles = {
     background: 'white',
     padding: 3,
     borderRadius: 40,
-    color: colors.light.text,
+    color: 'var(--color-light)'.text,
   }),
   padded: css({
     display: 'block',
@@ -101,7 +100,7 @@ const Remove: React.FC<{
   return (
     <IconButton
       Icon={IconDeleteOutline}
-      fill={colors.error}
+      fill={'var(--color-error)'}
       onClick={(e) => {
         e.preventDefault()
         removeElement(editor, path)

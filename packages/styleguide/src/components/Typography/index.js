@@ -1,5 +1,4 @@
 import React, { useMemo } from 'react'
-import colors from '../../theme/colors'
 import { mUp } from '../../theme/mediaQueries'
 import { fontStyles as _fontStyles } from '../../theme/fonts'
 import * as _fontStyleSizes from './styles'
@@ -27,10 +26,10 @@ export const fontStyles = {
 
 export const linkStyle = {
   textDecoration: 'none',
-  color: colors.primary,
+  color: 'var(--color-primary)',
   '@media (hover)': {
     ':hover': {
-      color: colors.secondary,
+      color: 'var(--color-secondary)',
     },
   },
 }
