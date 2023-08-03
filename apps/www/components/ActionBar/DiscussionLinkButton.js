@@ -49,7 +49,7 @@ const DiscussionLinkButton = ({
       }}
       passHref
       prefetch={false}
-    >
+      legacyBehavior>
       <IconButton
         Icon={IconDiscussion}
         label={getLabel()}
@@ -65,7 +65,7 @@ const DiscussionLinkButton = ({
         }
       />
     </Link>
-  )
+  );
 }
 
 export default DiscussionLinkButton

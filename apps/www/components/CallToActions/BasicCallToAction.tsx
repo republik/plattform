@@ -25,8 +25,8 @@ const BasicCallToAction = ({
       <div {...styles.banner}>
         <div {...styles.text}>
           <p>{text}</p>
-          <Link href={linkHref}>
-            <a onClick={() => handleAcknowledge()}>{linkLabel}</a>
+          <Link href={linkHref} onClick={() => handleAcknowledge()}>
+            {linkLabel}
           </Link>
         </div>
         <IconButton
@@ -37,7 +37,7 @@ const BasicCallToAction = ({
         />
       </div>
     </CTAAnimatedBase>
-  )
+  );
 }
 
 // export default DatenschutzBanner

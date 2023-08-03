@@ -255,52 +255,50 @@ const Form = (props) => {
   )
 
   if (isComplete) {
-    return (
-      <>
-        {titleBlock}
-        <div
-          style={{
-            marginTop: narrow || minimal ? 20 : 40,
-            marginBottom: !isInSeriesNav && minimal ? 10 : undefined,
-          }}
-          {...styles.completeContainer}
-        >
-          {isInSeriesNav ? (
-            <>
-              <Interaction.P>
-                <Link href='/einrichten' passHref>
-                  <A>{t('Trial/Form/withAccess/setup/label')}</A>
-                </Link>
-              </Interaction.P>
+    return <>
+      {titleBlock}
+      <div
+        style={{
+          marginTop: narrow || minimal ? 20 : 40,
+          marginBottom: !isInSeriesNav && minimal ? 10 : undefined,
+        }}
+        {...styles.completeContainer}
+      >
+        {isInSeriesNav ? (
+          <>
+            <Interaction.P>
+              <Link href='/einrichten' passHref legacyBehavior>
+                <A>{t('Trial/Form/withAccess/setup/label')}</A>
+              </Link>
+            </Interaction.P>
 
-              <Button primary onClick={close} style={{ marginRight: 20 }}>
-                {t('Trial/Form/withAccess/close/label')}
-              </Button>
-            </>
-          ) : (
-            <>
-              <Button
-                onClick={() =>
-                  router.push({
-                    pathname: '/einrichten',
-                    query: { context },
-                  })
-                }
-              >
-                {t('Trial/Form/withAccess/setup/label')}
-              </Button>
-              <Button
-                primary
-                style={{ marginRight: 20 }}
-                onClick={() => router.push('/')}
-              >
-                {t('Trial/Form/withAccess/button/label')}
-              </Button>
-            </>
-          )}
-        </div>
-      </>
-    )
+            <Button primary onClick={close} style={{ marginRight: 20 }}>
+              {t('Trial/Form/withAccess/close/label')}
+            </Button>
+          </>
+        ) : (
+          <>
+            <Button
+              onClick={() =>
+                router.push({
+                  pathname: '/einrichten',
+                  query: { context },
+                })
+              }
+            >
+              {t('Trial/Form/withAccess/setup/label')}
+            </Button>
+            <Button
+              primary
+              style={{ marginRight: 20 }}
+              onClick={() => router.push('/')}
+            >
+              {t('Trial/Form/withAccess/button/label')}
+            </Button>
+          </>
+        )}
+      </div>
+    </>;
   }
 
   const consentErrors = getConsentsError(t, REQUIRED_CONSENTS, consents)

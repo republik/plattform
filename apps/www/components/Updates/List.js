@@ -77,12 +77,12 @@ const Overview = compose(
                 }}
               />
               <Update data={update} />
-              <Link href='/updates' passHref>
+              <Link href='/updates' passHref legacyBehavior>
                 <A>{t('updates/all')}</A>
               </Link>
             </Content>
           </NarrowContainer>
-        )
+        );
       }
 
       return (

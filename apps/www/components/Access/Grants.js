@@ -64,7 +64,7 @@ const AccessGrants = ({ accessGrants, inNativeIOSApp, t }) => {
       {!inNativeIOSApp && (
         <>
           {' '}
-          <Link href='/angebote' key='pledge' passHref>
+          <Link href='/angebote' key='pledge' passHref legacyBehavior>
             <A>
               <strong>{t('Account/Access/Grants/link/pledges')}</strong>
             </A>
@@ -82,7 +82,7 @@ const AccessGrants = ({ accessGrants, inNativeIOSApp, t }) => {
       {!inNativeIOSApp && (
         <>
           {' '}
-          <Link href='/angebote' key='pledge' passHref>
+          <Link href='/angebote' key='pledge' passHref legacyBehavior>
             <A>
               <strong>{t('Account/Access/Grants/link/pledges')}</strong>
             </A>
@@ -90,7 +90,7 @@ const AccessGrants = ({ accessGrants, inNativeIOSApp, t }) => {
         </>
       )}
     </P> /* End special */
-  ) : null
+  ) : null;
 }
 
 export default compose(

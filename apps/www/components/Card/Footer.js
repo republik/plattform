@@ -46,7 +46,7 @@ const Footer = ({ t, zIndex, imprint = true }) => {
     <div {...styles.container}>
       {imprint && (
         <div {...styles.left}>
-          <Link href='/impressum' passHref>
+          <Link href='/impressum' passHref legacyBehavior>
             <Editorial.A>{t('footer/legal/imprint')}</Editorial.A>
           </Link>
         </div>
@@ -57,7 +57,7 @@ const Footer = ({ t, zIndex, imprint = true }) => {
         </Editorial.A>
       </div>
     </div>
-  )
+  );
 }
 
 export default compose(withT)(Footer)

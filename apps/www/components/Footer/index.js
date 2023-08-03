@@ -141,7 +141,7 @@ const Footer = ({ t, me, signOut, isOnMarketingPage, hasActiveMembership }) => {
     [colorScheme],
   )
 
-  const FooterNavLink = (props) => <Link prefetch={false} {...props} />
+  const FooterNavLink = (props) => <Link prefetch={false} {...props} legacyBehavior />
 
   const router = useRouter()
 

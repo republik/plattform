@@ -69,7 +69,7 @@ const SidebarInner = (props) => {
               query: { ...pack.params, package: pack.name },
             }}
             passHref
-          >
+            legacyBehavior>
             <PackageItem
               t={t}
               crowdfundingName={crowdfunding.name}
@@ -78,7 +78,7 @@ const SidebarInner = (props) => {
               setHover={setHover}
             />
           </Link>
-        )
+        );
       })}
       <PackageBuffer />
       <div style={{ margin: '20px 0' }}>
@@ -89,7 +89,7 @@ const SidebarInner = (props) => {
               query: primaryQuery,
             }}
             passHref
-          >
+            legacyBehavior>
             <Button block primary>
               Mitmachen
             </Button>
@@ -98,7 +98,7 @@ const SidebarInner = (props) => {
       </div>
       <div {...styles.links}>
         {links.map((link, i) => (
-          <Link key={i} href={link.href} passHref>
+          <Link key={i} href={link.href} passHref legacyBehavior>
             <A>
               {link.text}
               <br />
@@ -107,7 +107,7 @@ const SidebarInner = (props) => {
         ))}
       </div>
     </div>
-  )
+  );
 }
 
 class Sidebar extends Component {

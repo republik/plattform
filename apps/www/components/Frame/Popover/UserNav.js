@@ -78,154 +78,152 @@ const UserNav = ({
   if (expanded) {
     hasExpandedRef.current = true
   }
-  return (
-    <>
-      <Center
-        {...styles.container}
-        {...colorScheme.set('color', 'text')}
-        id='nav'
-      >
-        <div ref={containerRef}>
-          {hasExpandedRef.current && (
-            <>
-              <div style={{ marginBottom: 20 }}>
-                <DarkmodeSwitch
-                  t={t}
-                  inNativeApp={inNativeApp}
-                  pageColorSchemeKey={pageColorSchemeKey}
-                />
-              </div>
-              {!me && (
-                <>
-                  <div {...styles.signInBlock}>
-                    <SignIn style={{ padding: 0 }} />
-                  </div>
-                </>
-              )}
-              {!me?.activeMembership && !inNativeIOSApp && (
-                <Link href='/angebote' passHref>
-                  <Button style={{ marginTop: 24, marginBottom: 24 }} block>
-                    {t('nav/becomemember')}
-                  </Button>
-                </Link>
-              )}
-              {me && (
-                <>
+  return <>
+    <Center
+      {...styles.container}
+      {...colorScheme.set('color', 'text')}
+      id='nav'
+    >
+      <div ref={containerRef}>
+        {hasExpandedRef.current && (
+          <>
+            <div style={{ marginBottom: 20 }}>
+              <DarkmodeSwitch
+                t={t}
+                inNativeApp={inNativeApp}
+                pageColorSchemeKey={pageColorSchemeKey}
+              />
+            </div>
+            {!me && (
+              <>
+                <div {...styles.signInBlock}>
+                  <SignIn style={{ padding: 0 }} />
+                </div>
+              </>
+            )}
+            {!me?.activeMembership && !inNativeIOSApp && (
+              <Link href='/angebote' passHref legacyBehavior>
+                <Button style={{ marginTop: 24, marginBottom: 24 }} block>
+                  {t('nav/becomemember')}
+                </Button>
+              </Link>
+            )}
+            {me && (
+              <>
+                <NavLink
+                  href='/benachrichtigungen'
+                  closeHandler={closeHandler}
+                  large
+                >
+                  {t('pages/notifications/title')}
+                </NavLink>
+                {expanded ? (
+                  <NotificationFeedMini closeHandler={closeHandler} />
+                ) : (
+                  <Loader loading />
+                )}
+                <div style={{ marginTop: 24 }}>
                   <NavLink
-                    href='/benachrichtigungen'
+                    href='/lesezeichen'
                     closeHandler={closeHandler}
                     large
                   >
-                    {t('pages/notifications/title')}
+                    {`${t('nav/bookmarks')}`}
                   </NavLink>
+                </div>
+                <div {...styles.bookmarkContainer}>
                   {expanded ? (
-                    <NotificationFeedMini closeHandler={closeHandler} />
+                    <BookmarkMiniFeed
+                      style={{
+                        marginTop: 10,
+                        paddingLeft: containerPadding - 16,
+                      }}
+                      closeHandler={closeHandler}
+                      variables={variables}
+                    />
                   ) : (
                     <Loader loading />
                   )}
-                  <div style={{ marginTop: 24 }}>
+                </div>
+                <div {...styles.navSection}>
+                  <div {...styles.navLinks}>
                     <NavLink
-                      href='/lesezeichen'
-                      closeHandler={closeHandler}
+                      href='/konto'
+                      currentPath={currentPath}
                       large
+                      closeHandler={closeHandler}
                     >
-                      {`${t('nav/bookmarks')}`}
+                      {t('Frame/Popover/myaccount')}
+                    </NavLink>
+                    <NavLink
+                      href={`/~${me.username || me.id}`}
+                      currentPath={currentPath}
+                      large
+                      closeHandler={closeHandler}
+                    >
+                      {t('Frame/Popover/myprofile')}
                     </NavLink>
                   </div>
-                  <div {...styles.bookmarkContainer}>
-                    {expanded ? (
-                      <BookmarkMiniFeed
-                        style={{
-                          marginTop: 10,
-                          paddingLeft: containerPadding - 16,
-                        }}
+                </div>
+                <hr
+                  {...styles.hr}
+                  {...colorScheme.set('color', 'divider')}
+                  {...colorScheme.set('backgroundColor', 'divider')}
+                />
+                <div {...styles.navSection}>
+                  <div {...styles.navLinks}>
+                    {me?.accessCampaigns?.length > 0 && (
+                      <NavLink
+                        href='/teilen'
+                        currentPath={currentPath}
                         closeHandler={closeHandler}
-                        variables={variables}
-                      />
-                    ) : (
-                      <Loader loading />
+                        large
+                      >
+                        {t('nav/share')}
+                      </NavLink>
                     )}
-                  </div>
-                  <div {...styles.navSection}>
-                    <div {...styles.navLinks}>
-                      <NavLink
-                        href='/konto'
-                        currentPath={currentPath}
-                        large
-                        closeHandler={closeHandler}
-                      >
-                        {t('Frame/Popover/myaccount')}
-                      </NavLink>
-                      <NavLink
-                        href={`/~${me.username || me.id}`}
-                        currentPath={currentPath}
-                        large
-                        closeHandler={closeHandler}
-                      >
-                        {t('Frame/Popover/myprofile')}
-                      </NavLink>
-                    </div>
-                  </div>
-                  <hr
-                    {...styles.hr}
-                    {...colorScheme.set('color', 'divider')}
-                    {...colorScheme.set('backgroundColor', 'divider')}
-                  />
-                  <div {...styles.navSection}>
-                    <div {...styles.navLinks}>
-                      {me?.accessCampaigns?.length > 0 && (
+                    {!inNativeIOSApp && (
+                      <>
                         <NavLink
-                          href='/teilen'
+                          href={{
+                            pathname: '/angebote',
+                            query: { group: 'GIVE' },
+                          }}
                           currentPath={currentPath}
                           closeHandler={closeHandler}
                           large
                         >
-                          {t('nav/share')}
+                          {t('nav/give')}
                         </NavLink>
-                      )}
-                      {!inNativeIOSApp && (
-                        <>
-                          <NavLink
-                            href={{
-                              pathname: '/angebote',
-                              query: { group: 'GIVE' },
-                            }}
-                            currentPath={currentPath}
-                            closeHandler={closeHandler}
-                            large
-                          >
-                            {t('nav/give')}
-                          </NavLink>
-                          <NavLink
-                            {...fontStyles.sansSerifLight16}
-                            href={{
-                              pathname: '/angebote',
-                              query: { package: 'DONATE' },
-                            }}
-                            currentPath={currentPath}
-                            closeHandler={closeHandler}
-                            large
-                          >
-                            {t('nav/donate')}
-                          </NavLink>
-                        </>
-                      )}
-                    </div>
+                        <NavLink
+                          {...fontStyles.sansSerifLight16}
+                          href={{
+                            pathname: '/angebote',
+                            query: { package: 'DONATE' },
+                          }}
+                          currentPath={currentPath}
+                          closeHandler={closeHandler}
+                          large
+                        >
+                          {t('nav/donate')}
+                        </NavLink>
+                      </>
+                    )}
                   </div>
-                  <div {...styles.navSection}>
-                    <div {...styles.navLinks} {...styles.smallLinks}>
-                      <SignOut Link={SignoutLink} />
-                    </div>
+                </div>
+                <div {...styles.navSection}>
+                  <div {...styles.navLinks} {...styles.smallLinks}>
+                    <SignOut Link={SignoutLink} />
                   </div>
-                </>
-              )}
-            </>
-          )}
-        </div>
-      </Center>
-      {inNativeApp && hasExpandedRef.current && <Footer />}
-    </>
-  )
+                </div>
+              </>
+            )}
+          </>
+        )}
+      </div>
+    </Center>
+    {inNativeApp && hasExpandedRef.current && <Footer />}
+  </>;
 }
 
 const styles = {

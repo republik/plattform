@@ -126,16 +126,16 @@ const CancelMembership = ({
                 {t('memberships/cancel/confirmation')}
               </Interaction.P>
               <Interaction.P style={{ margin: '20px 0' }}>
-                <Link href='/cockpit' passHref>
+                <Link href='/cockpit' passHref legacyBehavior>
                   <A>{t('memberships/cancel/confirmation/cockpit')}</A>
                 </Link>
                 <br />
-                <Link href='/konto' passHref>
+                <Link href='/konto' passHref legacyBehavior>
                   <A>{t('memberships/cancel/accountLink')}</A>
                 </Link>
               </Interaction.P>
             </Fragment>
-          )
+          );
         }
 
         return (
@@ -211,7 +211,7 @@ const CancelMembership = ({
                       userPrice: 1,
                     },
                   }}
-                >
+                  legacyBehavior>
                   <A>{t('memberships/cancel/userPriceLink')}</A>
                 </Link>
               </Interaction.P>
@@ -256,14 +256,14 @@ const CancelMembership = ({
             </Button>
             <br />
             <br />
-            <Link href='/konto' passHref>
+            <Link href='/konto' passHref legacyBehavior>
               <A>{t('memberships/cancel/accountLink')}</A>
             </Link>
           </Fragment>
-        )
+        );
       }}
     />
-  )
+  );
 }
 
 export default compose(

@@ -98,7 +98,7 @@ const CandidateCard = compose(
             <>
               <Contact user={d} electionBallot />
               <div style={{ marginTop: 8 }}>
-                <Link href={`/~${d.username}`} passHref>
+                <Link href={`/~${d.username}`} passHref legacyBehavior>
                   <A>Profil</A>
                 </Link>
               </div>
@@ -124,7 +124,7 @@ const CandidateCard = compose(
                   },
                 }}
                 passHref
-              >
+                legacyBehavior>
                 <A>{vt('vote/election/discussion')}</A>
               </Link>
             </div>
@@ -144,7 +144,7 @@ const CandidateCard = compose(
         )}
       </div>
     </div>
-  )
+  );
 })
 
 export default CandidateCard

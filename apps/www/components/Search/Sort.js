@@ -70,7 +70,7 @@ export const SortToggle = compose(withT)(
       [colorScheme],
     )
     return (
-      <Link
+      (<Link
         href={{
           pathname,
           query: getSearchParams({
@@ -85,27 +85,25 @@ export const SortToggle = compose(withT)(
         }}
         passHref
         shallow
-      >
-        <a
-          {...styles.link}
-          {...styles[selected ? 'linkSelected' : 'linkRegular']}
-          {...(!selected && linkHover)}
-          {...colorScheme.set('color', 'text')}
-        >
-          {label}
-          {direction && (
-            <span
-              {...styles.icon}
-              style={{ opacity: selected ? 1 : 0 }}
-              role='button'
-              title={t(`search/sort/${direction}/aria`)}
-            >
-              {createElement(SORT_DIRECTION_ICONS[direction])}
-            </span>
-          )}
-        </a>
-      </Link>
-    )
+        {...styles.link}
+        {...styles[selected ? 'linkSelected' : 'linkRegular']}
+        {...(!selected && linkHover)}
+        {...colorScheme.set('color', 'text')}>
+
+        {label}
+        {direction && (
+          <span
+            {...styles.icon}
+            style={{ opacity: selected ? 1 : 0 }}
+            role='button'
+            title={t(`search/sort/${direction}/aria`)}
+          >
+            {createElement(SORT_DIRECTION_ICONS[direction])}
+          </span>
+        )}
+
+      </Link>)
+    );
   },
 )
 

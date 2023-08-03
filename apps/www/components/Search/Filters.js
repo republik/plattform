@@ -82,7 +82,7 @@ const Filters = compose(
         return (
           <li key={key} {...styles.listItem}>
             {agg.count ? (
-              <Link
+              (<Link
                 href={{
                   pathname: '/suche',
                   query: getSearchParams({
@@ -91,23 +91,21 @@ const Filters = compose(
                   }),
                 }}
                 passHref
-              >
-                <a
-                  {...colorScheme.set('color', 'text')}
-                  {...styles[isActive ? 'linkSelected' : 'linkRegular']}
-                  {...(!isActive && hoverRule)}
-                >
-                  {text}
-                </a>
-              </Link>
+                {...colorScheme.set('color', 'text')}
+                {...styles[isActive ? 'linkSelected' : 'linkRegular']}
+                {...(!isActive && hoverRule)}>
+
+                {text}
+
+              </Link>)
             ) : (
               text
             )}
           </li>
-        )
+        );
       })}
     </ul>
-  )
+  );
 })
 
 export default Filters

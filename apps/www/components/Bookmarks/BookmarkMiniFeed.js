@@ -53,15 +53,16 @@ const BookmarkMiniFeed = ({ data, closeHandler, style }) => {
                     key={node.id}
                   >
                     <div {...styles.tileHeadlineContainer}>
-                      <Link href={href} passHref>
-                        <a
-                          onClick={() => closeHandler()}
-                          {...styles.tileHeadline}
-                          {...colorScheme.set('color', 'text')}
-                        >
-                          {title.substring(0, 42).trim()}
-                          {title.length >= 42 && <>&nbsp;…</>}
-                        </a>
+                      <Link
+                        href={href}
+                        passHref
+                        onClick={() => closeHandler()}
+                        {...styles.tileHeadline}
+                        {...colorScheme.set('color', 'text')}>
+
+                        {title.substring(0, 42).trim()}
+                        {title.length >= 42 && <>&nbsp;…</>}
+
                       </Link>
                     </div>
                     <div {...styles.iconContainer}>
@@ -81,14 +82,14 @@ const BookmarkMiniFeed = ({ data, closeHandler, style }) => {
                       )}
                     </div>
                   </div>
-                )
+                );
               })}
             <div {...styles.spacer} />
           </div>
-        )
+        );
       }}
     />
-  )
+  );
 }
 
 const styles = {

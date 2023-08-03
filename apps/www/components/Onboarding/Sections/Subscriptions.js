@@ -62,14 +62,14 @@ const Subscriptions = (props) => {
       <P {...styles.p}>
         {t.elements('Onboarding/Sections/Subscriptions/hint', {
           link: (
-            <Link key='link' href='/benachrichtigungen' passHref>
+            <Link key='link' href='/benachrichtigungen' passHref legacyBehavior>
               <A>{t('Onboarding/Sections/Subscriptions/hint/link')}</A>
             </Link>
           ),
         })}
       </P>
     </Section>
-  )
+  );
 }
 
 export default withT(Subscriptions)

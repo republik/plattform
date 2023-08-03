@@ -35,7 +35,7 @@ const ClimateLabInlineTeaser: React.FC<{ hideForMembers?: boolean }> = ({
         {isClimateLabMember ? (
           <>
             {t('ClimateInlineTeaser/Member/content/text')}{' '}
-            <Link href={CLIMATE_LAB_URL}>
+            <Link href={CLIMATE_LAB_URL} legacyBehavior>
               <Editorial.A>
                 {t('ClimateInlineTeaser/Member/content/link')}
               </Editorial.A>
@@ -45,7 +45,7 @@ const ClimateLabInlineTeaser: React.FC<{ hideForMembers?: boolean }> = ({
         ) : (
           <>
             {t('ClimateInlineTeaser/NonMember/content/text')}{' '}
-            <Link href={CLIMATE_LAB_LANDINGPAGE_URL}>
+            <Link href={CLIMATE_LAB_LANDINGPAGE_URL} legacyBehavior>
               <Editorial.A>
                 {t('ClimateInlineTeaser/NonMember/content/link')}
               </Editorial.A>
@@ -55,7 +55,7 @@ const ClimateLabInlineTeaser: React.FC<{ hideForMembers?: boolean }> = ({
         )}
       </InfoBoxText>
     </InfoBox>
-  )
+  );
 }
 
 export default ClimateLabInlineTeaser

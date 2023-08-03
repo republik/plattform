@@ -662,7 +662,7 @@ const LoadedProfile = (props) => {
                           query: { edit: true },
                         }}
                         passHref
-                      >
+                        legacyBehavior>
                         <A>Kandidatur bearbeiten</A>
                       </Link>
                     </div>
@@ -706,7 +706,7 @@ const LoadedProfile = (props) => {
         </div>
       </MainContainer>
     </Fragment>
-  )
+  );
 }
 
 const Profile = (props) => {
@@ -751,7 +751,7 @@ const Profile = (props) => {
                   <p>
                     {t.elements('pages/profile/empty/content', {
                       link: (
-                        <Link href={`/~${me.username || me.id}`} passHref>
+                        <Link href={`/~${me.username || me.id}`} passHref legacyBehavior>
                           <A>{t('pages/profile/empty/content/linktext')}</A>
                         </Link>
                       ),
@@ -759,14 +759,14 @@ const Profile = (props) => {
                   </p>
                 )}
               </StatusError>
-            )
+            );
           }
 
           return <LoadedProfile {...props} card={card} metaData={metaData} />
         }}
       />
     </Frame>
-  )
+  );
 }
 
 export default compose(

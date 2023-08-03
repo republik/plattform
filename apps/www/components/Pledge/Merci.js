@@ -128,120 +128,116 @@ class Merci extends Component {
       return <ClaimPledge t={t} me={me} id={query.claim} pkg={query.package} />
     }
     if (polling) {
-      return (
-        <>
-          <P style={{ marginBottom: 15 }}>{t('merci/postpay/lead')}</P>
-          <Poller
-            tokenType={signInResponse.tokenType}
-            email={email}
-            phrase={signInResponse.phrase}
-            alternativeFirstFactors={signInResponse.alternativeFirstFactors}
-            onSuccess={() => {
-              this.setState({
-                polling: false,
-              })
-            }}
-          />
-          <P>
-            {!!query.id && (
-              <Link
-                href={{
-                  pathname: '/konto',
-                  query: { claim: query.id, package: query.package },
-                }}
-                passHref
-              >
-                <A>
-                  <br />
-                  <br />
-                  {t('merci/postpay/reclaim')}
-                </A>
-              </Link>
-            )}
-          </P>
-        </>
-      )
+      return <>
+        <P style={{ marginBottom: 15 }}>{t('merci/postpay/lead')}</P>
+        <Poller
+          tokenType={signInResponse.tokenType}
+          email={email}
+          phrase={signInResponse.phrase}
+          alternativeFirstFactors={signInResponse.alternativeFirstFactors}
+          onSuccess={() => {
+            this.setState({
+              polling: false,
+            })
+          }}
+        />
+        <P>
+          {!!query.id && (
+            <Link
+              href={{
+                pathname: '/konto',
+                query: { claim: query.id, package: query.package },
+              }}
+              passHref
+              legacyBehavior>
+              <A>
+                <br />
+                <br />
+                {t('merci/postpay/reclaim')}
+              </A>
+            </Link>
+          )}
+        </P>
+      </>;
     }
 
     if (!me && signInError && email && query.id) {
-      return (
-        <>
-          <H1>{t('merci/postpay/signInError/title')}</H1>
-          <P>
-            <RawHtmlTranslation
-              translationKey='merci/postpay/signInError/text'
-              replacements={{
-                email: query.email,
-                contactEmailLink: (
-                  <A
-                    key='contact'
-                    href={`mailto:${EMAIL_CONTACT}?subject=${encodeURIComponent(
-                      t('merci/postpay/signInError/email/subject'),
-                    )}&body=${encodeURIComponent(
-                      t('merci/postpay/signInError/email/body', {
-                        pledgeId: query.id,
-                        email: email,
-                        error: signInError,
-                      }),
-                    )}`}
-                  >
-                    {EMAIL_CONTACT}
-                  </A>
-                ),
-              }}
-            />
-          </P>
-          {!!signInError && <ErrorMessage error={signInError} />}
-          <div style={{ margin: '20px 0' }}>
-            {signInLoading ? (
-              <InlineSpinner />
-            ) : (
-              <Button
-                block
-                disabled={signInLoading}
-                onClick={() => {
-                  if (signInLoading) {
-                    return
-                  }
-                  this.setState(() => ({
-                    signInLoading: true,
-                  }))
-                  this.props
-                    .signIn(email)
-                    .then(({ data }) => {
-                      this.setState(() => ({
-                        polling: true,
-                        signInLoading: false,
-                        signInResponse: data.signIn,
-                      }))
-                    })
-                    .catch((error) => {
-                      this.setState(() => ({
-                        signInError: error,
-                        signInLoading: false,
-                      }))
-                    })
-                }}
-              >
-                {t('merci/postpay/signInError/retry')}
-              </Button>
-            )}
-          </div>
-          <Link
-            href={{
-              pathname: '/konto',
-              query: { claim: query.id },
+      return <>
+        <H1>{t('merci/postpay/signInError/title')}</H1>
+        <P>
+          <RawHtmlTranslation
+            translationKey='merci/postpay/signInError/text'
+            replacements={{
+              email: query.email,
+              contactEmailLink: (
+                <A
+                  key='contact'
+                  href={`mailto:${EMAIL_CONTACT}?subject=${encodeURIComponent(
+                    t('merci/postpay/signInError/email/subject'),
+                  )}&body=${encodeURIComponent(
+                    t('merci/postpay/signInError/email/body', {
+                      pledgeId: query.id,
+                      email: email,
+                      error: signInError,
+                    }),
+                  )}`}
+                >
+                  {EMAIL_CONTACT}
+                </A>
+              ),
             }}
-            passHref
-          >
-            <A>
-              <br />
-              <br />
-              {t('merci/postpay/reclaim')}
-            </A>
-          </Link>
-        </>
-      )
+          />
+        </P>
+        {!!signInError && <ErrorMessage error={signInError} />}
+        <div style={{ margin: '20px 0' }}>
+          {signInLoading ? (
+            <InlineSpinner />
+          ) : (
+            <Button
+              block
+              disabled={signInLoading}
+              onClick={() => {
+                if (signInLoading) {
+                  return
+                }
+                this.setState(() => ({
+                  signInLoading: true,
+                }))
+                this.props
+                  .signIn(email)
+                  .then(({ data }) => {
+                    this.setState(() => ({
+                      polling: true,
+                      signInLoading: false,
+                      signInResponse: data.signIn,
+                    }))
+                  })
+                  .catch((error) => {
+                    this.setState(() => ({
+                      signInError: error,
+                      signInLoading: false,
+                    }))
+                  })
+              }}
+            >
+              {t('merci/postpay/signInError/retry')}
+            </Button>
+          )}
+        </div>
+        <Link
+          href={{
+            pathname: '/konto',
+            query: { claim: query.id },
+          }}
+          passHref
+          legacyBehavior>
+          <A>
+            <br />
+            <br />
+            {t('merci/postpay/reclaim')}
+          </A>
+        </Link>
+      </>;
     }
 
     if (me && ONBOARDING_PACKAGES.includes(query.package)) {

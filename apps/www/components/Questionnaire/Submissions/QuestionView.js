@@ -136,179 +136,177 @@ const QuestionView = ({
           const targetAnswers = getTargetedAnswers(questionIds, results)
           const twoTextQuestions = !isChoiceQuestion && !!addQuestion
 
-          return (
-            <>
-              <QuestionViewMeta share={share} question={mainQuestion} />
-              <div style={{ backgroundColor: questionColor(questionGroupIdx) }}>
-                <div
-                  style={{
-                    marginTop: 48,
-                    marginBottom: 20,
-                    paddingTop: 24,
-                  }}
-                  ref={containerRef}
-                >
-                  <Center>
-                    <div style={{ textAlign: 'center' }}>
-                      <Interaction.P>
-                        <NextLink
-                          href={{
-                            pathname,
-                            query: {
-                              focus: questionIds[0],
-                            },
-                          }}
-                          shallow
-                          passHref
-                        >
-                          <Editorial.A>Zurück zur Übersicht</Editorial.A>
-                        </NextLink>
-                      </Interaction.P>
-                      <Editorial.Subhead>
-                        {mainQuestion.text}
-                        {twoTextQuestions && (
-                          <>
-                            <hr
-                              style={{
-                                opacity: 0.7,
-                                margin: '1.2em 33%',
-                                border: 0,
-                                borderTop: '1px solid currentColor',
-                              }}
-                            />
-                            <span>{addQuestion.text}</span>
-                          </>
-                        )}
-                      </Editorial.Subhead>
-
-                      {isChoiceQuestion && (
+          return <>
+            <QuestionViewMeta share={share} question={mainQuestion} />
+            <div style={{ backgroundColor: questionColor(questionGroupIdx) }}>
+              <div
+                style={{
+                  marginTop: 48,
+                  marginBottom: 20,
+                  paddingTop: 24,
+                }}
+                ref={containerRef}
+              >
+                <Center>
+                  <div style={{ textAlign: 'center' }}>
+                    <Interaction.P>
+                      <NextLink
+                        href={{
+                          pathname,
+                          query: {
+                            focus: questionIds[0],
+                          },
+                        }}
+                        shallow
+                        passHref
+                        legacyBehavior>
+                        <Editorial.A>Zurück zur Übersicht</Editorial.A>
+                      </NextLink>
+                    </Interaction.P>
+                    <Editorial.Subhead>
+                      {mainQuestion.text}
+                      {twoTextQuestions && (
                         <>
-                          <AnswersChart
-                            question={mainQuestion}
-                            skipTitle={true}
+                          <hr
+                            style={{
+                              opacity: 0.7,
+                              margin: '1.2em 33%',
+                              border: 0,
+                              borderTop: '1px solid currentColor',
+                            }}
                           />
-                          <br />
-                          <Editorial.Subhead style={{ textAlign: 'center' }}>
-                            {addQuestion.text}
-                          </Editorial.Subhead>
+                          <span>{addQuestion.text}</span>
                         </>
                       )}
-                    </div>
+                    </Editorial.Subhead>
 
-                    <div {...styles.answerCardWrapper}>
-                      {targetAnswers.map(({ answers, displayAuthor, id }) => (
-                        <SubmissionLink
-                          id={id}
-                          key={id}
-                          personPagePath={personPagePath}
-                        >
-                          <a style={{ textDecoration: 'none' }}>
-                            <div {...styles.answerCard}>
-                              <ColorContextProvider
-                                localColorVariables={colors}
-                                colorSchemeKey='light'
+                    {isChoiceQuestion && (
+                      <>
+                        <AnswersChart
+                          question={mainQuestion}
+                          skipTitle={true}
+                        />
+                        <br />
+                        <Editorial.Subhead style={{ textAlign: 'center' }}>
+                          {addQuestion.text}
+                        </Editorial.Subhead>
+                      </>
+                    )}
+                  </div>
+
+                  <div {...styles.answerCardWrapper}>
+                    {targetAnswers.map(({ answers, displayAuthor, id }) => (
+                      <SubmissionLink
+                        id={id}
+                        key={id}
+                        personPagePath={personPagePath}
+                      >
+                        <a style={{ textDecoration: 'none' }}>
+                          <div {...styles.answerCard}>
+                            <ColorContextProvider
+                              localColorVariables={colors}
+                              colorSchemeKey='light'
+                            >
+                              <div
+                                {...(!isChoiceQuestion &&
+                                  styles.answerCardContent)}
                               >
-                                <div
-                                  {...(!isChoiceQuestion &&
-                                    styles.answerCardContent)}
+                                {answers.map((answer, idx) => {
+                                  return (
+                                    <div key={answer.id}>
+                                      {isChoiceQuestion && !idx ? (
+                                        <div {...styles.circleLabel}>
+                                          <span {...styles.circle} />
+                                          <AnswerText
+                                            text={answer.payload.text}
+                                            value={answer.payload.value}
+                                            question={currentQuestions[idx]}
+                                            isQuote
+                                          />
+                                        </div>
+                                      ) : (
+                                        <div
+                                          {...(isChoiceQuestion &&
+                                            styles.answerCardContent)}
+                                        >
+                                          <AnswerText
+                                            text={answer.payload.text}
+                                            value={answer.payload.value}
+                                            question={currentQuestions[idx]}
+                                            isQuote
+                                          />
+
+                                          {idx === 0 && twoTextQuestions && (
+                                            <hr
+                                              style={{
+                                                opacity: 0.3,
+                                                margin: '1.2em 33%',
+                                                border: 0,
+                                                borderTop:
+                                                  '1px solid currentColor',
+                                              }}
+                                            />
+                                          )}
+                                        </div>
+                                      )}
+                                    </div>
+                                  )
+                                })}
+
+                                <Editorial.Credit
+                                  style={{
+                                    marginTop: '0',
+                                    paddingTop: '5px',
+                                  }}
                                 >
-                                  {answers.map((answer, idx) => {
-                                    return (
-                                      <div key={answer.id}>
-                                        {isChoiceQuestion && !idx ? (
-                                          <div {...styles.circleLabel}>
-                                            <span {...styles.circle} />
-                                            <AnswerText
-                                              text={answer.payload.text}
-                                              value={answer.payload.value}
-                                              question={currentQuestions[idx]}
-                                              isQuote
-                                            />
-                                          </div>
-                                        ) : (
-                                          <div
-                                            {...(isChoiceQuestion &&
-                                              styles.answerCardContent)}
-                                          >
-                                            <AnswerText
-                                              text={answer.payload.text}
-                                              value={answer.payload.value}
-                                              question={currentQuestions[idx]}
-                                              isQuote
-                                            />
-
-                                            {idx === 0 && twoTextQuestions && (
-                                              <hr
-                                                style={{
-                                                  opacity: 0.3,
-                                                  margin: '1.2em 33%',
-                                                  border: 0,
-                                                  borderTop:
-                                                    '1px solid currentColor',
-                                                }}
-                                              />
-                                            )}
-                                          </div>
-                                        )}
-                                      </div>
-                                    )
-                                  })}
-
-                                  <Editorial.Credit
+                                  Von{' '}
+                                  <span
                                     style={{
-                                      marginTop: '0',
-                                      paddingTop: '5px',
+                                      textDecoration: 'underline',
                                     }}
                                   >
-                                    Von{' '}
-                                    <span
-                                      style={{
-                                        textDecoration: 'underline',
-                                      }}
-                                    >
-                                      {displayAuthor.name}
-                                    </span>
-                                  </Editorial.Credit>
-                                </div>
-                              </ColorContextProvider>
-                            </div>
-                          </a>
-                        </SubmissionLink>
-                      ))}
-                    </div>
+                                    {displayAuthor.name}
+                                  </span>
+                                </Editorial.Credit>
+                              </div>
+                            </ColorContextProvider>
+                          </div>
+                        </a>
+                      </SubmissionLink>
+                    ))}
+                  </div>
 
-                    <div style={{ paddingBottom: 24 }}>
-                      {loadingMoreError && (
-                        <ErrorMessage error={loadingMoreError} />
-                      )}
-                      {loadingMore && <InlineSpinner />}
-                      {!infiniteScroll && hasMore && (
-                        <Interaction.P style={{ textAlign: 'center' }}>
-                          <Editorial.A
-                            onClick={() => {
-                              setInfiniteScroll(true)
-                            }}
-                          >
-                            {t.pluralize(
-                              'questionnaire/submissions/showAnswers',
-                              {
-                                count:
-                                  results.totalCount - results.nodes.length,
-                              },
-                            )}
-                          </Editorial.A>
-                        </Interaction.P>
-                      )}
-                    </div>
-                  </Center>
-                </div>
+                  <div style={{ paddingBottom: 24 }}>
+                    {loadingMoreError && (
+                      <ErrorMessage error={loadingMoreError} />
+                    )}
+                    {loadingMore && <InlineSpinner />}
+                    {!infiniteScroll && hasMore && (
+                      <Interaction.P style={{ textAlign: 'center' }}>
+                        <Editorial.A
+                          onClick={() => {
+                            setInfiniteScroll(true)
+                          }}
+                        >
+                          {t.pluralize(
+                            'questionnaire/submissions/showAnswers',
+                            {
+                              count:
+                                results.totalCount - results.nodes.length,
+                            },
+                          )}
+                        </Editorial.A>
+                      </Interaction.P>
+                    )}
+                  </div>
+                </Center>
               </div>
-            </>
-          )
+            </div>
+          </>;
         }}
       />
     </div>
-  )
+  );
 }
 
 export default QuestionView

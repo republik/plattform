@@ -179,7 +179,10 @@ const Page = ({
     : { package: 'ABO' }
   const pledgeLink =
     inNativeIOSApp || !primaryQuery ? null : (
-      <Link href={{ pathname: '/angebote', query: primaryQuery }} passHref>
+      <Link
+        href={{ pathname: '/angebote', query: primaryQuery }}
+        passHref
+        legacyBehavior>
         <A>
           {activeMembership && !shouldBuyProlong
             ? 'Wachstum schenken'
@@ -291,7 +294,7 @@ const Page = ({
         <Box style={{ padding: 14, marginBottom: 20 }}>
           <Interaction.P>
             {t('crowdfunding2/beforeNote')}{' '}
-            <Link href='/cockpit' passHref>
+            <Link href='/cockpit' passHref legacyBehavior>
               <A>{t('crowdfunding2/beforeNote/link')}</A>
             </Link>
           </Interaction.P>
@@ -755,7 +758,7 @@ const Page = ({
               <Link
                 href={{ pathname: '/angebote', query: primaryQuery }}
                 passHref
-              >
+                legacyBehavior>
                 <Button primary style={{ minWidth: 300 }}>
                   {activeMembership && !shouldBuyProlong
                     ? 'Wachstum schenken'
@@ -791,7 +794,7 @@ const Page = ({
             </div>
           )}
 
-          <Link href='/community' passHref>
+          <Link href='/community' passHref legacyBehavior>
             <A>Alle ansehen</A>
           </Link>
 
@@ -801,7 +804,7 @@ const Page = ({
         </Content>
       </Container>
     </Frame>
-  )
+  );
 }
 
 const EnhancedPage = compose(

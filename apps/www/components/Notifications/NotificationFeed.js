@@ -130,108 +130,106 @@ export default withT(
     if (!nodes) return null
     const isEmpty = !nodes.length
 
-    return (
-      <>
-        <ReloadBanner
-          futureNotifications={futureNotifications}
-          onReload={onReload}
-        />
-        <Center {...styles.container}>
-          <div style={{ marginBottom: 40 }}>
-            <Interaction.H1 style={{ marginBottom: 20 }}>
-              {isEmpty
-                ? t('Notifications/empty/title')
-                : t.pluralize('Notifications/title', {
-                    count: unreadCount,
-                  })}
-            </Interaction.H1>
+    return <>
+      <ReloadBanner
+        futureNotifications={futureNotifications}
+        onReload={onReload}
+      />
+      <Center {...styles.container}>
+        <div style={{ marginBottom: 40 }}>
+          <Interaction.H1 style={{ marginBottom: 20 }}>
+            {isEmpty
+              ? t('Notifications/empty/title')
+              : t.pluralize('Notifications/title', {
+                  count: unreadCount,
+                })}
+          </Interaction.H1>
 
-            <Link href='/konto/benachrichtigungen' passHref>
-              <A>{t('Notifications/settings')}</A>
-            </Link>
+          <Link href='/konto/benachrichtigungen' passHref legacyBehavior>
+            <A>{t('Notifications/settings')}</A>
+          </Link>
 
-            {isEmpty && (
-              <Interaction.P style={{ marginTop: 40 }}>
-                <RawHtml
-                  dangerouslySetInnerHTML={{
-                    __html: t('Notifications/empty/paragraph'),
-                  }}
-                />
-              </Interaction.P>
-            )}
-          </div>
+          {isEmpty && (
+            <Interaction.P style={{ marginTop: 40 }}>
+              <RawHtml
+                dangerouslySetInnerHTML={{
+                  __html: t('Notifications/empty/paragraph'),
+                }}
+              />
+            </Interaction.P>
+          )}
+        </div>
 
-          <InfiniteScroll
-            hasMore={hasNextPage}
-            loadMore={loadMore}
-            totalCount={totalCount}
-            currentCount={nodes.length}
-            loadMoreStyles={styles.more}
-          >
-            {groupByDate.entries(nodes).map(({ key, values }, i, all) => {
-              return (
-                <StickySection
-                  key={i}
-                  hasSpaceAfter={i < all.length - 1}
-                  label={key}
-                >
-                  {values.map((node, j) => {
-                    if (
-                      !node.object ||
-                      (node.object.__typename === 'Comment' &&
-                        !node.object.published)
-                    ) {
-                      return (
-                        <div
-                          {...styles.unpublished}
-                          {...colorScheme.set('borderColor', 'text')}
-                          {...colorScheme.set(
-                            'backgroundColor',
-                            isNew(node) ? 'alert' : 'none',
-                          )}
-                          key={j}
-                        >
-                          {node.content && (
-                            <>
-                              <a {...styles.cleanLink} href={node.content.url}>
-                                <h3 {...styles.unpublishedTitle}>
-                                  {node.content.title}
-                                </h3>
-                                <Label>
-                                  {t('Notifications/unpublished/label')}
-                                </Label>
-                              </a>
-                            </>
-                          )}
-                          {!node.content && (
-                            <Label>
-                              {t('Notifications/unpublished/label')}
-                            </Label>
-                          )}
-                        </div>
-                      )
-                    }
-                    return node.object.__typename === 'Document' ? (
-                      <DocumentNotification
-                        isNew={isNew(node)}
-                        node={node}
-                        me={me}
+        <InfiniteScroll
+          hasMore={hasNextPage}
+          loadMore={loadMore}
+          totalCount={totalCount}
+          currentCount={nodes.length}
+          loadMoreStyles={styles.more}
+        >
+          {groupByDate.entries(nodes).map(({ key, values }, i, all) => {
+            return (
+              <StickySection
+                key={i}
+                hasSpaceAfter={i < all.length - 1}
+                label={key}
+              >
+                {values.map((node, j) => {
+                  if (
+                    !node.object ||
+                    (node.object.__typename === 'Comment' &&
+                      !node.object.published)
+                  ) {
+                    return (
+                      <div
+                        {...styles.unpublished}
+                        {...colorScheme.set('borderColor', 'text')}
+                        {...colorScheme.set(
+                          'backgroundColor',
+                          isNew(node) ? 'alert' : 'none',
+                        )}
                         key={j}
-                      />
-                    ) : (
-                      <CommentNotification
-                        isNew={isNew(node)}
-                        node={node}
-                        key={j}
-                      />
+                      >
+                        {node.content && (
+                          <>
+                            <a {...styles.cleanLink} href={node.content.url}>
+                              <h3 {...styles.unpublishedTitle}>
+                                {node.content.title}
+                              </h3>
+                              <Label>
+                                {t('Notifications/unpublished/label')}
+                              </Label>
+                            </a>
+                          </>
+                        )}
+                        {!node.content && (
+                          <Label>
+                            {t('Notifications/unpublished/label')}
+                          </Label>
+                        )}
+                      </div>
                     )
-                  })}
-                </StickySection>
-              )
-            })}
-          </InfiniteScroll>
-        </Center>
-      </>
-    )
+                  }
+                  return node.object.__typename === 'Document' ? (
+                    <DocumentNotification
+                      isNew={isNew(node)}
+                      node={node}
+                      me={me}
+                      key={j}
+                    />
+                  ) : (
+                    <CommentNotification
+                      isNew={isNew(node)}
+                      node={node}
+                      key={j}
+                    />
+                  )
+                })}
+              </StickySection>
+            )
+          })}
+        </InfiniteScroll>
+      </Center>
+    </>;
   },
 )

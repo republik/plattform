@@ -101,30 +101,30 @@ export const UserResult = ({ node }) => {
     <div>
       <div {...styles.root} {...colorScheme.set('borderColor', 'text')}>
         {portrait && (
-          <Link href={`/~${slug || id}`} passHref>
-            <a {...styles.link}>
-              <img
-                {...styles.profilePicture}
-                src={portrait}
-                alt={`${firstName} ${lastName}`}
-              />
-            </a>
-          </Link>
+          (<Link href={`/~${slug || id}`} passHref {...styles.link}>
+
+            <img
+              {...styles.profilePicture}
+              src={portrait}
+              alt={`${firstName} ${lastName}`}
+            />
+
+          </Link>)
         )}
         <div {...styles.meta}>
           <div {...styles.name} {...colorScheme.set('color', 'text')}>
-            <Link href={`/~${slug || id}`} passHref>
-              <a {...styles.link}>
-                <span
-                  {...styles.highlight}
-                  {...highlightEMRule}
-                  dangerouslySetInnerHTML={{
-                    __html: nameHighlight
-                      ? nameHighlight.fragments[0]
-                      : `${firstName} ${lastName}`,
-                  }}
-                />
-              </a>
+            <Link href={`/~${slug || id}`} passHref {...styles.link}>
+
+              <span
+                {...styles.highlight}
+                {...highlightEMRule}
+                dangerouslySetInnerHTML={{
+                  __html: nameHighlight
+                    ? nameHighlight.fragments[0]
+                    : `${firstName} ${lastName}`,
+                }}
+              />
+
             </Link>
           </div>
           {credential && (
@@ -159,7 +159,7 @@ export const UserResult = ({ node }) => {
         </Editorial.P>
       )}
     </div>
-  )
+  );
 }
 
 export default UserResult

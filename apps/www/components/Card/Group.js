@@ -698,7 +698,7 @@ const Group = ({
             query: medianSmartspiderQuery,
           }}
           passHref
-        >
+          legacyBehavior>
           <Editorial.A>
             {t(
               `components/Card/Group/switch${group.special ? '/special' : ''}`,
@@ -751,7 +751,7 @@ const Group = ({
                     },
                   }}
                   passHref
-                >
+                  legacyBehavior>
                   <Editorial.A>
                     {t('components/Card/Group/end/showList')}
                   </Editorial.A>
@@ -790,7 +790,7 @@ const Group = ({
                       },
                     }}
                     passHref
-                  >
+                    legacyBehavior>
                     <Editorial.A>
                       {t('components/Card/Group/end/showList')}
                     </Editorial.A>
@@ -1042,7 +1042,7 @@ const Group = ({
         )}
       </div>
     </Container>
-  )
+  );
 }
 
 const subscribeMutation = gql`

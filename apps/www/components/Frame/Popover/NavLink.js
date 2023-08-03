@@ -122,7 +122,11 @@ const NavLink = ({
   }, [isCurrentPath])
 
   return (
-    <Link href={href} prefetch={prefetch ? undefined : prefetch} passHref>
+    <Link
+      href={href}
+      prefetch={prefetch ? undefined : prefetch}
+      passHref
+      legacyBehavior>
       <NavA
         ref={linkRef}
         title={title}
@@ -145,7 +149,7 @@ const NavLink = ({
         {children}
       </NavA>
     </Link>
-  )
+  );
 }
 
 export default NavLink

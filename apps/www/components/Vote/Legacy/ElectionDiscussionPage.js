@@ -106,7 +106,7 @@ const DiscussionPage = ({ router, data, vt }) => {
                             }}
                             passHref
                             scroll={false}
-                          >
+                            legacyBehavior>
                             {selectedDiscussion === id ? (
                               <Strong>
                                 {vt(`${DISCUSSION_TITLES[id]}Title`)}
@@ -144,11 +144,11 @@ const DiscussionPage = ({ router, data, vt }) => {
                 </DiscussionContextProvider>
               </div>
             </Center>
-          )
+          );
         }}
       />
     </Frame>
-  )
+  );
 }
 
 const query = gql`

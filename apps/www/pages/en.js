@@ -167,7 +167,7 @@ const EnPage = ({
           We are reclaiming journalism as profession and are creating a new
           business model for media companies that want to place their readers at
           the center.{' '}
-          <Link href='/' passHref>
+          <Link href='/' passHref legacyBehavior>
             <A>Our digital magazine Republik</A>
           </Link>{' '}
           (in German) was launched in January 2018. Republik is reader owned and
@@ -259,7 +259,7 @@ const EnPage = ({
         <PureFooter en />
       </div>
     </NarrowContainer>
-  )
+  );
 }
 
 export default withDefaultSSR(withRouter(EnPage))

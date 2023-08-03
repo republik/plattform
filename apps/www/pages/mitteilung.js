@@ -176,11 +176,11 @@ const Page = ({ router: { query: rawQuery }, t, me, inNativeApp }) => {
           {logo}
         </div>
         {inNativeApp && (
-          <Link href='/' passHref>
-            <a {...styles.close}>
-              <IconClose {...colorScheme.set('fill', 'text')} size={32} />
-            </a>
-          </Link>
+          (<Link href='/' passHref {...styles.close}>
+
+            <IconClose {...colorScheme.set('fill', 'text')} size={32} />
+
+          </Link>)
         )}
         <div
           {...styles.text}
@@ -202,7 +202,7 @@ const Page = ({ router: { query: rawQuery }, t, me, inNativeApp }) => {
                     }}
                     params={link.params}
                     passHref
-                  >
+                    legacyBehavior>
                     <A>{link.label}</A>
                   </Link>
                 )),
@@ -213,7 +213,7 @@ const Page = ({ router: { query: rawQuery }, t, me, inNativeApp }) => {
         </div>
       </NarrowContainer>
     </div>
-  )
+  );
 }
 
 export default withDefaultSSR(

@@ -47,7 +47,7 @@ const Page = () => {
               query: { package: 'ABO' },
             }}
             passHref
-          >
+            legacyBehavior>
             <PackageItem
               t={t}
               crowdfundingName={CROWDFUNDING}
@@ -63,7 +63,7 @@ const Page = () => {
               query: { package: 'MONTHLY_ABO' },
             }}
             passHref
-          >
+            legacyBehavior>
             <PackageItem
               t={t}
               crowdfundingName={CROWDFUNDING}
@@ -77,7 +77,7 @@ const Page = () => {
         </div>
       )}
     </Frame>
-  )
+  );
 }
 
 export default withDefaultSSR(Page)

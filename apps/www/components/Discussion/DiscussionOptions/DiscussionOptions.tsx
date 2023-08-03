@@ -70,14 +70,14 @@ const DiscussionOptions = ({ documentMeta }: Props) => {
               prefetch={false}
               passHref
               key={item}
-            >
+              legacyBehavior>
               <TabButton
                 border={false}
                 text={t(`components/Discussion/OrderBy/${item}`)}
                 isActive={item === (resolvedOrderBy ?? orderBy)}
               />
             </Link>
-          )
+          );
         })}
       </Scroller>
       {handleReload && (
@@ -94,7 +94,7 @@ const DiscussionOptions = ({ documentMeta }: Props) => {
         </div>
       )}
     </div>
-  )
+  );
 }
 
 export default DiscussionOptions

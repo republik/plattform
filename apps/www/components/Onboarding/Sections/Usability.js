@@ -79,7 +79,7 @@ const Usability = (props) => {
               'Onboarding/Sections/Usability/paragraph3',
               {
                 linkMore: PROGRESS_EXPLAINER_PATH && (
-                  <Link key='linkMore' href={PROGRESS_EXPLAINER_PATH} passHref>
+                  <Link key='linkMore' href={PROGRESS_EXPLAINER_PATH} passHref legacyBehavior>
                     <A>{t('Onboarding/Sections/Usability/linkMore')}</A>
                   </Link>
                 ),
@@ -116,7 +116,7 @@ const Usability = (props) => {
         </Fragment>
       )}
     </Section>
-  )
+  );
 }
 
 export default withT(Usability)

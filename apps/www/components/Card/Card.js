@@ -268,7 +268,7 @@ const Card = ({
                   },
                 }}
                 passHref
-              >
+                legacyBehavior>
                 <IconButton
                   Icon={IconDiscussion}
                   label={1 + statement.comments.totalCount}
@@ -446,7 +446,7 @@ const Card = ({
         }}
       />
     </div>
-  )
+  );
 }
 
 export default withInNativeApp(Card)

@@ -43,47 +43,43 @@ const query = gql`
 
 const Campaigns = ({ t, data, grantAccess, revokeAccess }) => {
   const { inNativeIOSApp } = useInNativeApp()
-  return (
-    <>
-      <Loader
-        loading={data.loading}
-        error={data.error}
-        render={() => {
-          if (!data.me) {
-            return null
-          }
-          if (!data.me.accessCampaigns) {
-            return (
-              <>
-                <Interaction.P>
-                  {t('Account/Access/Page/noCampaign')}
-                </Interaction.P>
-                {!inNativeIOSApp && (
-                  <Link href='/angebote' passHref>
-                    <Button style={{ marginTop: 24, marginBottom: 24 }} primary>
-                      {t('Account/Access/Page/link')}
-                    </Button>
-                  </Link>
-                )}
-              </>
-            )
-          }
-          return (
-            <>
-              {data.me.accessCampaigns.map((campaign, key) => (
-                <Campaign
-                  key={`campaign-${key}`}
-                  campaign={campaign}
-                  grantAccess={grantAccess}
-                  revokeAccess={revokeAccess}
-                />
-              ))}
-            </>
-          )
-        }}
-      />
-    </>
-  )
+  return <>
+    <Loader
+      loading={data.loading}
+      error={data.error}
+      render={() => {
+        if (!data.me) {
+          return null
+        }
+        if (!data.me.accessCampaigns) {
+          return <>
+            <Interaction.P>
+              {t('Account/Access/Page/noCampaign')}
+            </Interaction.P>
+            {!inNativeIOSApp && (
+              <Link href='/angebote' passHref legacyBehavior>
+                <Button style={{ marginTop: 24, marginBottom: 24 }} primary>
+                  {t('Account/Access/Page/link')}
+                </Button>
+              </Link>
+            )}
+          </>;
+        }
+        return (
+          <>
+            {data.me.accessCampaigns.map((campaign, key) => (
+              <Campaign
+                key={`campaign-${key}`}
+                campaign={campaign}
+                grantAccess={grantAccess}
+                revokeAccess={revokeAccess}
+              />
+            ))}
+          </>
+        )
+      }}
+    />
+  </>;
 }
 
 const grantMutation = gql`

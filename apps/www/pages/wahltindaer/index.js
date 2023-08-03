@@ -179,171 +179,169 @@ const Page = ({ data, data: { cardGroups }, router, t }) => (
           }
           const AllFlag = Cantons.bundesversammlung || null
 
-          return (
-            <>
-              {data.nElected.totalCount === 200 && (
-                <Interaction.P
-                  style={{ margin: '20px auto', textAlign: 'center' }}
-                >
-                  <strong>{t('pages/cardGroups/elected')}</strong>
-                </Interaction.P>
-              )}
-
-              <div style={{ textAlign: 'center', marginTop: 20 }}>
-                <div
-                  {...styles.canton}
-                  style={{
-                    fontSize: 18,
-                    lineHeight: 1.25,
-                    height: 'auto',
-                    // backgroundColor: '#fff',
-                    padding: 10,
-                    paddingLeft: 10 + SIZE + 10,
-                    width: 10 + WIDTH + 10,
-                    margin: 0,
-                  }}
-                >
-                  <Link
-                    href={{
-                      pathname: '/wahltindaer/[group]',
-                      query: { group: 'bundesversammlung', ...partyQuery },
-                    }}
-                    passHref
-                  >
-                    <a {...styles.cardsLink}>
-                      <AllFlag
-                        size={SIZE}
-                        style={{ top: 10 + 3, left: 10 }}
-                        {...styles.flag}
-                      />
-                      <strong>{t('pages/cardGroups/elected/title')}</strong>
-                      <br />
-                      {t('pages/cardGroups/elected/nationalCouncil')}{' '}
-                      <strong>{data.nElected.totalCount}</strong>{' '}
-                      <IconCheck {...mdCheckProps} />
-                      <br />
-                      {t('pages/cardGroups/elected/councilOfStates')}{' '}
-                      <strong>{data.sElected.totalCount}</strong>{' '}
-                      <IconCheck {...mdCheckProps} />
-                    </a>
-                  </Link>
-                </div>
-              </div>
-              {(data.nElected.totalCount !== 200 ||
-                data.sElected.totalCount !== 46) && (
-                <Interaction.P
-                  style={{
-                    padding: 10,
-                    margin: '10px auto',
-                    fontSize: 16,
-                    textAlign: 'center',
-                  }}
-                >
-                  {t('pages/cardGroups/elected/open', {
-                    nationalCouncil: t.pluralize(
-                      'pages/cardGroups/elected/open/nationalCouncil',
-                      {
-                        count: 200 - (data.nElected.totalCount || 0),
-                      },
-                    ),
-                    councilOfStates: t.pluralize(
-                      'pages/cardGroups/elected/open/councilOfStates',
-                      {
-                        count: 46 - (data.sElected.totalCount || 0),
-                      },
-                    ),
-                  })}
-                </Interaction.P>
-              )}
+          return <>
+            {data.nElected.totalCount === 200 && (
               <Interaction.P
-                style={{ margin: '40px auto 20px', textAlign: 'center' }}
+                style={{ margin: '20px auto', textAlign: 'center' }}
               >
-                <strong>{t('pages/cardGroups/choose')}</strong>
+                <strong>{t('pages/cardGroups/elected')}</strong>
               </Interaction.P>
-              <div {...styles.cantons} style={{ opacity: 1 }}>
-                {groups.map((cardGroup) => {
-                  const Flag = Cantons[cardGroup.slug] || null
-                  const commentCount = cardGroup.discussion.comments.totalCount
-                  const nSeats = nSeatsPerCanton[cardGroup.slug]
-                  const sSeats = sSeatsPerCanton[cardGroup.slug]
-                  const openSeats =
-                    nSeats -
-                    cardGroup.nElected.totalCount +
-                    sSeats -
-                    cardGroup.sElected.totalCount
+            )}
 
-                  return (
-                    <div {...styles.canton} key={cardGroup.slug}>
-                      <Link
-                        href={{
-                          pathname: '/wahltindaer/[group]',
-                          query: { group: cardGroup.slug, ...partyQuery },
-                        }}
-                        passHref
-                      >
-                        <a {...styles.cardsLink}>
-                          {Flag && <Flag size={SIZE} {...styles.flag} />}
-                          <strong>{cardGroup.name}</strong>
-                          <br />
-                          <span {...styles.cardCount}>
-                            {!!(
-                              cardGroup.nElected.totalCount ||
-                              cardGroup.sElected.totalCount
-                            ) && (
-                              <>
-                                <strong>{cardGroup.nElected.totalCount}</strong>
-                                {' + '}
-                                <strong>
-                                  {cardGroup.sElected.totalCount}
-                                </strong>{' '}
-                                <IconCheck {...mdCheckProps} />
-                              </>
-                            )}
-                            {!!openSeats && (
-                              <>
-                                {' '}
-                                {openSeats > 2 ? (
-                                  <>
-                                    {nSeats - cardGroup.nElected.totalCount}
-                                    {' + '}
-                                    {sSeats - cardGroup.sElected.totalCount}
-                                  </>
-                                ) : (
-                                  openSeats
-                                )}
-                                &nbsp;{t('pages/cardGroups/openSuffix')}
-                              </>
-                            )}
-                          </span>
-                        </a>
-                      </Link>
-                      {!!commentCount && (
-                        <span {...styles.discussionLink}>
-                          <Link
-                            href={{
-                              pathname: '/wahltindaer/[group]/[suffix]',
-                              query: {
-                                group: cardGroup.slug,
-                                suffix: 'diskussion',
-                                ...partyQuery,
-                              },
-                            }}
-                            passHref
-                          >
-                            <IconButton
-                              Icon={IconDiscussion}
-                              label={commentCount}
-                              fill={colors.primary}
-                            />
-                          </Link>
-                        </span>
-                      )}
-                    </div>
-                  )
-                })}
+            <div style={{ textAlign: 'center', marginTop: 20 }}>
+              <div
+                {...styles.canton}
+                style={{
+                  fontSize: 18,
+                  lineHeight: 1.25,
+                  height: 'auto',
+                  // backgroundColor: '#fff',
+                  padding: 10,
+                  paddingLeft: 10 + SIZE + 10,
+                  width: 10 + WIDTH + 10,
+                  margin: 0,
+                }}
+              >
+                <Link
+                  href={{
+                    pathname: '/wahltindaer/[group]',
+                    query: { group: 'bundesversammlung', ...partyQuery },
+                  }}
+                  passHref
+                  {...styles.cardsLink}>
+
+                  <AllFlag
+                    size={SIZE}
+                    style={{ top: 10 + 3, left: 10 }}
+                    {...styles.flag}
+                  />
+                  <strong>{t('pages/cardGroups/elected/title')}</strong>
+                  <br />
+                  {t('pages/cardGroups/elected/nationalCouncil')}{' '}
+                  <strong>{data.nElected.totalCount}</strong>{' '}
+                  <IconCheck {...mdCheckProps} />
+                  <br />
+                  {t('pages/cardGroups/elected/councilOfStates')}{' '}
+                  <strong>{data.sElected.totalCount}</strong>{' '}
+                  <IconCheck {...mdCheckProps} />
+
+                </Link>
               </div>
-            </>
-          )
+            </div>
+            {(data.nElected.totalCount !== 200 ||
+              data.sElected.totalCount !== 46) && (
+              <Interaction.P
+                style={{
+                  padding: 10,
+                  margin: '10px auto',
+                  fontSize: 16,
+                  textAlign: 'center',
+                }}
+              >
+                {t('pages/cardGroups/elected/open', {
+                  nationalCouncil: t.pluralize(
+                    'pages/cardGroups/elected/open/nationalCouncil',
+                    {
+                      count: 200 - (data.nElected.totalCount || 0),
+                    },
+                  ),
+                  councilOfStates: t.pluralize(
+                    'pages/cardGroups/elected/open/councilOfStates',
+                    {
+                      count: 46 - (data.sElected.totalCount || 0),
+                    },
+                  ),
+                })}
+              </Interaction.P>
+            )}
+            <Interaction.P
+              style={{ margin: '40px auto 20px', textAlign: 'center' }}
+            >
+              <strong>{t('pages/cardGroups/choose')}</strong>
+            </Interaction.P>
+            <div {...styles.cantons} style={{ opacity: 1 }}>
+              {groups.map((cardGroup) => {
+                const Flag = Cantons[cardGroup.slug] || null
+                const commentCount = cardGroup.discussion.comments.totalCount
+                const nSeats = nSeatsPerCanton[cardGroup.slug]
+                const sSeats = sSeatsPerCanton[cardGroup.slug]
+                const openSeats =
+                  nSeats -
+                  cardGroup.nElected.totalCount +
+                  sSeats -
+                  cardGroup.sElected.totalCount
+
+                return (
+                  <div {...styles.canton} key={cardGroup.slug}>
+                    <Link
+                      href={{
+                        pathname: '/wahltindaer/[group]',
+                        query: { group: cardGroup.slug, ...partyQuery },
+                      }}
+                      passHref
+                      {...styles.cardsLink}>
+
+                      {Flag && <Flag size={SIZE} {...styles.flag} />}
+                      <strong>{cardGroup.name}</strong>
+                      <br />
+                      <span {...styles.cardCount}>
+                        {!!(
+                          cardGroup.nElected.totalCount ||
+                          cardGroup.sElected.totalCount
+                        ) && (
+                          <>
+                            <strong>{cardGroup.nElected.totalCount}</strong>
+                            {' + '}
+                            <strong>
+                              {cardGroup.sElected.totalCount}
+                            </strong>{' '}
+                            <IconCheck {...mdCheckProps} />
+                          </>
+                        )}
+                        {!!openSeats && (
+                          <>
+                            {' '}
+                            {openSeats > 2 ? (
+                              <>
+                                {nSeats - cardGroup.nElected.totalCount}
+                                {' + '}
+                                {sSeats - cardGroup.sElected.totalCount}
+                              </>
+                            ) : (
+                              openSeats
+                            )}
+                            &nbsp;{t('pages/cardGroups/openSuffix')}
+                          </>
+                        )}
+                      </span>
+
+                    </Link>
+                    {!!commentCount && (
+                      <span {...styles.discussionLink}>
+                        <Link
+                          href={{
+                            pathname: '/wahltindaer/[group]/[suffix]',
+                            query: {
+                              group: cardGroup.slug,
+                              suffix: 'diskussion',
+                              ...partyQuery,
+                            },
+                          }}
+                          passHref
+                          legacyBehavior>
+                          <IconButton
+                            Icon={IconDiscussion}
+                            label={commentCount}
+                            fill={colors.primary}
+                          />
+                        </Link>
+                      </span>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </>;
         }}
       />
       <br />

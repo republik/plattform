@@ -241,162 +241,160 @@ const Page = (props) => {
   const statementId = card.statement && card.statement.id
   const group = card.group
 
-  return (
-    <>
-      {!statementId && (
-        <>
-          <H1 {...formStyles.heading}>{t('components/Card/Claim/headline')}</H1>
-          <P>
-            <RawHtml
-              dangerouslySetInnerHTML={{
-                __html: t('components/Card/Claim/lead'),
-              }}
-            />
-          </P>
-        </>
-      )}
-
-      <div {...formStyles.portraitAndDetails}>
-        <div {...formStyles.portrait}>
-          <Portrait
-            user={card.user}
-            values={portrait.values}
-            errors={portrait.errors}
-            onChange={handlePortrait}
+  return <>
+    {!statementId && (
+      <>
+        <H1 {...formStyles.heading}>{t('components/Card/Claim/headline')}</H1>
+        <P>
+          <RawHtml
+            dangerouslySetInnerHTML={{
+              __html: t('components/Card/Claim/lead'),
+            }}
           />
-        </div>
-        <div {...formStyles.details}>
-          <Details card={card} user={card.user} />
-        </div>
-      </div>
+        </P>
+      </>
+    )}
 
-      <div {...formStyles.section}>
-        {statementId && group ? (
-          <P>
-            <Link
-              href={{
-                pathname: '/wahltindaer/[group]/[suffix]',
-                query: {
-                  group: group.slug,
-                  suffix: 'diskussion',
-                  focus: statementId,
-                },
-              }}
-              passHref
-            >
-              <A>Ihr Statement im «Wahltindär: {group.name}».</A>
-            </Link>
-          </P>
-        ) : (
-          <>
-            <P>{t('components/Card/Claim/statement/question')}</P>
-            <Statement
-              label={t('components/Card/Claim/statement/label')}
-              statement={statement}
-              handleStatement={(value, shouldValidate) =>
-                setStatement(getStatementState(value, shouldValidate))
-              }
-            />
-          </>
-        )}
-      </div>
-
-      {(card.statement || locale) && (
-        <Financing financing={financing} onChange={handleFinancing} />
-      )}
-
-      {!me && (
-        <div {...formStyles.section}>
-          <Field
-            label={t('Trial/Form/email/label')}
-            value={email.value}
-            error={email.dirty && email.error}
-            dirty={email.dirty}
-            onChange={(_, value, shouldValidate) =>
-              setEmail(getEmailState(value, shouldValidate))
-            }
-          />
-        </div>
-      )}
-
-      {me && (
-        <div {...formStyles.section}>
-          <P {...formStyles.paragraph}>
-            {t('components/Card/Claim/me/account')}
-            <strong> {me.email}</strong>
-          </P>
-          <P>
-            {t('components/Card/Claim/me/assignNote')}
-            <br />
-            <A
-              href='#abmelden'
-              onClick={(e) => {
-                e.preventDefault()
-                props.signOut()
-              }}
-            >
-              {t('components/Card/Claim/me/signOut')}
-            </A>
-          </P>
-        </div>
-      )}
-
-      <div {...formStyles.section}>
-        <Consents
-          required={REQUIRED_CONSENTS}
-          accepted={consents}
-          disabled={signingIn}
-          onChange={setConsents}
+    <div {...formStyles.portraitAndDetails}>
+      <div {...formStyles.portrait}>
+        <Portrait
+          user={card.user}
+          values={portrait.values}
+          errors={portrait.errors}
+          onChange={handlePortrait}
         />
       </div>
+      <div {...formStyles.details}>
+        <Details card={card} user={card.user} />
+      </div>
+    </div>
 
-      {showErrors && errorMessages.length > 0 && (
-        <div {...formStyles.errorMessages}>
-          {t('Trial/Form/error/title')}
-          <br />
-          <ul>
-            {errorMessages.map((error, i) => (
-              <li key={i}>{error}</li>
-            ))}
-          </ul>
-        </div>
-      )}
-
-      {!signingIn && (
-        <div {...formStyles.button}>
-          {loading ? (
-            <InlineSpinner />
-          ) : (
-            <Button
-              primary
-              type='submit'
-              block
-              onClick={claimCard}
-              disabled={showErrors && errorMessages.length > 0}
-            >
-              {t('components/Card/Claim/submit')}
-            </Button>
-          )}
-        </div>
-      )}
-
-      {signingIn && (
-        <div {...styles.switchBoard}>
-          <SwitchBoard
-            email={email.value}
-            tokenType={tokenType}
-            phrase={phrase}
-            alternativeFirstFactors={[]}
-            onCancel={() => {}}
-            onTokenTypeChange={() => {}}
-            onSuccess={onSuccessSwitchBoard}
+    <div {...formStyles.section}>
+      {statementId && group ? (
+        <P>
+          <Link
+            href={{
+              pathname: '/wahltindaer/[group]/[suffix]',
+              query: {
+                group: group.slug,
+                suffix: 'diskussion',
+                focus: statementId,
+              },
+            }}
+            passHref
+            legacyBehavior>
+            <A>Ihr Statement im «Wahltindär: {group.name}».</A>
+          </Link>
+        </P>
+      ) : (
+        <>
+          <P>{t('components/Card/Claim/statement/question')}</P>
+          <Statement
+            label={t('components/Card/Claim/statement/label')}
+            statement={statement}
+            handleStatement={(value, shouldValidate) =>
+              setStatement(getStatementState(value, shouldValidate))
+            }
           />
-        </div>
+        </>
       )}
+    </div>
 
-      {serverError && <ErrorMessage error={serverError} />}
-    </>
-  )
+    {(card.statement || locale) && (
+      <Financing financing={financing} onChange={handleFinancing} />
+    )}
+
+    {!me && (
+      <div {...formStyles.section}>
+        <Field
+          label={t('Trial/Form/email/label')}
+          value={email.value}
+          error={email.dirty && email.error}
+          dirty={email.dirty}
+          onChange={(_, value, shouldValidate) =>
+            setEmail(getEmailState(value, shouldValidate))
+          }
+        />
+      </div>
+    )}
+
+    {me && (
+      <div {...formStyles.section}>
+        <P {...formStyles.paragraph}>
+          {t('components/Card/Claim/me/account')}
+          <strong> {me.email}</strong>
+        </P>
+        <P>
+          {t('components/Card/Claim/me/assignNote')}
+          <br />
+          <A
+            href='#abmelden'
+            onClick={(e) => {
+              e.preventDefault()
+              props.signOut()
+            }}
+          >
+            {t('components/Card/Claim/me/signOut')}
+          </A>
+        </P>
+      </div>
+    )}
+
+    <div {...formStyles.section}>
+      <Consents
+        required={REQUIRED_CONSENTS}
+        accepted={consents}
+        disabled={signingIn}
+        onChange={setConsents}
+      />
+    </div>
+
+    {showErrors && errorMessages.length > 0 && (
+      <div {...formStyles.errorMessages}>
+        {t('Trial/Form/error/title')}
+        <br />
+        <ul>
+          {errorMessages.map((error, i) => (
+            <li key={i}>{error}</li>
+          ))}
+        </ul>
+      </div>
+    )}
+
+    {!signingIn && (
+      <div {...formStyles.button}>
+        {loading ? (
+          <InlineSpinner />
+        ) : (
+          <Button
+            primary
+            type='submit'
+            block
+            onClick={claimCard}
+            disabled={showErrors && errorMessages.length > 0}
+          >
+            {t('components/Card/Claim/submit')}
+          </Button>
+        )}
+      </div>
+    )}
+
+    {signingIn && (
+      <div {...styles.switchBoard}>
+        <SwitchBoard
+          email={email.value}
+          tokenType={tokenType}
+          phrase={phrase}
+          alternativeFirstFactors={[]}
+          onCancel={() => {}}
+          onTokenTypeChange={() => {}}
+          onSuccess={onSuccessSwitchBoard}
+        />
+      </div>
+    )}
+
+    {serverError && <ErrorMessage error={serverError} />}
+  </>;
 }
 
 const CARDS_VIA_ACCESS_TOKEN = gql`

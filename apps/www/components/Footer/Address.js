@@ -21,29 +21,27 @@ const styles = {
 
 const Address = ({ t }) => {
   const [colorScheme] = useColorContext()
-  return (
-    <>
-      <P {...styles.address}>
-        {t('footer/contact/name')}
-        <br />
-        {intersperse(t('footer/contact/address').split('\n'), (item, i) => (
-          <br key={i} />
-        ))}
-      </P>
-      <P {...styles.address}>
-        <a
-          {...colorScheme.set('color', 'text')}
-          href={`mailto:${t('footer/contact/mail')}`}
-        >
-          {t('footer/contact/mail')}
-        </a>
-        <br />
-        <Link prefetch={false} href='/impressum'>
-          <a {...colorScheme.set('color', 'text')}>{t('footer/media')}</a>
-        </Link>
-      </P>
-    </>
-  )
+  return <>
+    <P {...styles.address}>
+      {t('footer/contact/name')}
+      <br />
+      {intersperse(t('footer/contact/address').split('\n'), (item, i) => (
+        <br key={i} />
+      ))}
+    </P>
+    <P {...styles.address}>
+      <a
+        {...colorScheme.set('color', 'text')}
+        href={`mailto:${t('footer/contact/mail')}`}
+      >
+        {t('footer/contact/mail')}
+      </a>
+      <br />
+      <Link prefetch={false} href='/impressum' {...colorScheme.set('color', 'text')}>
+        {t('footer/media')}
+      </Link>
+    </P>
+  </>;
 }
 
 export default Address
