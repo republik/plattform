@@ -28,27 +28,9 @@
     "url": "https://github.com/republik/plattform/issues"
   },
   "homepage": "https://github.com/republik/plattform#readme",
-  "devDependencies": {
-    "@next/eslint-plugin-next": "^12.3.1",
-    "@republik/eslint-config-frontend": "*",
-    "@republik/tsconfig": "*",
-    "@testing-library/jest-dom": "^5.16.5",
-    "@testing-library/react": "^14.0.0",
-    "@types/jest": "^29.5.1",
-    "@types/lodash": "^4.14.194",
-    "@wojtekmaj/enzyme-adapter-react-17": "^0.6.3",
-    "cross-env": "^5.2.1",
-    "diff": "^3.5.0",
-    "enzyme": "^3.11.0",
-    "gsheets": "^3.0.0",
-    "jest": "^29.5.0",
-    "jest-environment-jsdom": "^29.5.0",
-    "nodemon": "^2.0.4",
-    "raf": "^3.4.0"
-  },
   "dependencies": {
     "@apollo/client": "~3.5.10",
-    "@next/bundle-analyzer": "^12.3.1",
+    "@next/bundle-analyzer": "^13.4.12",
     "@project-r/styleguide": "*",
     "@republik/icons": "*",
     "@republik/mdast-react-render": "*",
@@ -82,8 +64,7 @@
     "js-yaml": "^3.14.0",
     "jsonlint-mod": "^1.7.6",
     "lodash": "^4.17.21",
-    "next": "^12.3.1",
-    "next-transpile-modules": "^9.0.0",
+    "next": "^13.4.12",
     "prop-types": "^15.6.2",
     "query-string": "^7.1.1",
     "ramda": "^0.25.0",
@@ -114,5 +95,23 @@
     "unist-util-visit": "^2.0.3",
     "url": "^0.11.0",
     "validator": "^10.11.0"
+  },
+  "devDependencies": {
+    "@next/eslint-plugin-next": "^13.4.12",
+    "@republik/eslint-config-frontend": "*",
+    "@republik/tsconfig": "*",
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^14.0.0",
+    "@types/jest": "^29.5.1",
+    "@types/lodash": "^4.14.194",
+    "@wojtekmaj/enzyme-adapter-react-17": "^0.6.3",
+    "cross-env": "^5.2.1",
+    "diff": "^3.5.0",
+    "enzyme": "^3.11.0",
+    "gsheets": "^3.0.0",
+    "jest": "^29.5.0",
+    "jest-environment-jsdom": "^29.5.0",
+    "nodemon": "^2.0.4",
+    "raf": "^3.4.0"
   }
 }
