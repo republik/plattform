@@ -1,6 +1,7 @@
 Guten Tag
 
-Wir freuen uns sehr, dass Sie sich für ein Republik Monats-Abo entschieden haben.
+Wir freuen uns sehr, dass Sie sich für ein Republik Monats-Abo entschieden
+haben.
 
 Die von Ihnen angegebene Kreditkarte belasten wir monatlich mit CHF 22.–. Unter
 Konto {{link_account_goto}} finden Sie Ihre persönliche Übersicht zu Ihrem

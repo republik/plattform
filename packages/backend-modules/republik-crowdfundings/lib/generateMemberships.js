@@ -32,7 +32,7 @@ module.exports = async (pledgeId, pgdb, t, redis) => {
   const existingMemberships = await pgdb.public.memberships.count({
     userId: user.id,
   })
-  const isFirstMembership = existingMemberships === 0
+  const subscribeToOnboardingMails = existingMemberships === 0
 
   // get ingredients
   const pkg = await pgdb.public.packages.findOne({ id: pledge.packageId })
@@ -262,7 +262,7 @@ module.exports = async (pledgeId, pgdb, t, redis) => {
       pgdb,
       userId: user.id,
       isNew: !user.verified,
-      isFirstMembership,
+      subscribeToOnboardingMails,
       subscribeToEditorialNewsletters,
     })
   } catch (e) {

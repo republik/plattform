@@ -157,7 +157,7 @@ mail.addUserToAudience = addUserToAudience
 mail.enforceSubscriptions = async ({
   userId,
   email,
-  isFirstMembership,
+  subscribeToOnboardingMails,
   subscribeToEditorialNewsletters,
   pgdb,
   ...rest
@@ -176,7 +176,7 @@ mail.enforceSubscriptions = async ({
     ...rest,
   })
 
-  if (isFirstMembership) {
+  if (subscribeToOnboardingMails) {
     debug('add to onboarding audience')
     const onboardingSubscription = await addUserToAudience({
       user: user || { email },

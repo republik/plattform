@@ -73,7 +73,7 @@ module.exports = async (_, args, context) => {
         pgdb,
         userId: claimedMembership.userId,
         subscribeToEditorialNewsletters: !req.user.roles.includes('member'),
-        isFirstMembership: !hasActiveMembership,
+        subscribeToOnboardingMails: !hasActiveMembership,
       })
     } catch (e) {
       // ignore issues with newsletter subscriptions
