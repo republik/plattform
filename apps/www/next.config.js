@@ -12,7 +12,7 @@ const buildId =
 /**
  * @type {import('next').NextConfig}
  */
-module.exports = withBundleAnalyzer({
+const nextConfig = {
   generateBuildId: () => buildId,
   env: { BUILD_ID: buildId },
   transpilePackages: [
@@ -128,4 +128,6 @@ module.exports = withBundleAnalyzer({
   experimental: {
     largePageDataBytes: 512 * 1000, // 512KB
   },
-})
+}
+
+module.exports = withBundleAnalyzer(nextConfig)
