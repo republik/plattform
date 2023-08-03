@@ -33,7 +33,6 @@
   },
   "devDependencies": {
     "@orbiting/backend-modules-types": "*",
-    "@types/validator": "^13.7.4",
-    "typescript": "^4.7.3"
+    "@types/validator": "^13.7.4"
   }
 }

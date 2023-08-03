@@ -22,12 +22,11 @@ import { css } from 'glamor'
 import { useInfiniteScroll } from '../../../lib/hooks/useInfiniteScroll'
 import { useTranslation } from '../../../lib/withT'
 import ErrorMessage from '../../ErrorMessage'
-import PlainButton from './PlainButton'
 
 import {
   hasMoreData,
   loadMoreSubmissions,
-  QUESTIONNAIRE_SUBMISSIONS_QUERY,
+  QUESTIONNAIRE_WITH_SUBMISSIONS_QUERY,
 } from './graphql'
 import AnswerText from './AnswerText'
 import {
@@ -39,7 +38,6 @@ import { ShareImageSplit } from './ShareImageSplit'
 import Meta from '../../Frame/Meta'
 import { ASSETS_SERVER_BASE_URL, PUBLIC_BASE_URL } from '../../../lib/constants'
 import { replaceText } from './utils'
-import { questionColor, QUESTIONS } from '../../Climatelab/Questionnaire/config'
 import scrollIntoView from 'scroll-into-view'
 
 const QuestionViewMeta = ({ share, question }) => {
@@ -65,12 +63,21 @@ const QuestionViewMeta = ({ share, question }) => {
   )
 }
 
-const QuestionView = ({ slug, questionIds, extract, share = {} }) => {
+const QuestionView = ({
+  slug,
+  questionIds,
+  extract,
+  share = {},
+  questions,
+  questionColor,
+  personPagePath,
+  questionnaireBgColor,
+}) => {
   const { t } = useTranslation()
   const router = useRouter()
   const pathname = router.asPath.split('?')[0]
   const { loading, error, data, fetchMore } = useQuery(
-    QUESTIONNAIRE_SUBMISSIONS_QUERY,
+    QUESTIONNAIRE_WITH_SUBMISSIONS_QUERY,
     {
       variables: {
         slug,
@@ -101,12 +108,18 @@ const QuestionView = ({ slug, questionIds, extract, share = {} }) => {
     allQuestions?.filter((q) => questionIds.includes(q.id)) ?? []
   const [mainQuestion, addQuestion] = currentQuestions
   if (extract) {
-    return <ShareImageSplit question={mainQuestion} {...share} />
+    return (
+      <ShareImageSplit
+        question={mainQuestion}
+        {...share}
+        bgColor={questionnaireBgColor}
+      />
+    )
   }
 
   const isChoiceQuestion = mainQuestion?.__typename === 'QuestionTypeChoice'
 
-  const questionGroupIdx = QUESTIONS.findIndex(
+  const questionGroupIdx = questions.findIndex(
     (q) => allQuestions && allQuestions[q.ids[0]]?.id === questionIds[0],
   )
 
@@ -184,79 +197,79 @@ const QuestionView = ({ slug, questionIds, extract, share = {} }) => {
 
                     <div {...styles.answerCardWrapper}>
                       {targetAnswers.map(({ answers, displayAuthor, id }) => (
-                        <SubmissionLink id={id} key={id}>
+                        <SubmissionLink
+                          id={id}
+                          key={id}
+                          personPagePath={personPagePath}
+                        >
                           <a style={{ textDecoration: 'none' }}>
                             <div {...styles.answerCard}>
                               <ColorContextProvider
                                 localColorVariables={colors}
                                 colorSchemeKey='light'
                               >
-                                <Editorial.P
-                                  attributes={{ style: { width: '100%' } }}
+                                <div
+                                  {...(!isChoiceQuestion &&
+                                    styles.answerCardContent)}
                                 >
-                                  <div
-                                    {...(!isChoiceQuestion &&
-                                      styles.answerCardContent)}
+                                  {answers.map((answer, idx) => {
+                                    return (
+                                      <div key={answer.id}>
+                                        {isChoiceQuestion && !idx ? (
+                                          <div {...styles.circleLabel}>
+                                            <span {...styles.circle} />
+                                            <AnswerText
+                                              text={answer.payload.text}
+                                              value={answer.payload.value}
+                                              question={currentQuestions[idx]}
+                                              isQuote
+                                            />
+                                          </div>
+                                        ) : (
+                                          <div
+                                            {...(isChoiceQuestion &&
+                                              styles.answerCardContent)}
+                                          >
+                                            <AnswerText
+                                              text={answer.payload.text}
+                                              value={answer.payload.value}
+                                              question={currentQuestions[idx]}
+                                              isQuote
+                                            />
+
+                                            {idx === 0 && twoTextQuestions && (
+                                              <hr
+                                                style={{
+                                                  opacity: 0.3,
+                                                  margin: '1.2em 33%',
+                                                  border: 0,
+                                                  borderTop:
+                                                    '1px solid currentColor',
+                                                }}
+                                              />
+                                            )}
+                                          </div>
+                                        )}
+                                      </div>
+                                    )
+                                  })}
+
+                                  <Editorial.Credit
+                                    style={{
+                                      marginTop: '0',
+                                      paddingTop: '5px',
+                                    }}
                                   >
-                                    {answers.map((answer, idx) => {
-                                      return (
-                                        <div key={answer.id}>
-                                          {isChoiceQuestion && !idx ? (
-                                            <div {...styles.circleLabel}>
-                                              <span {...styles.circle} />
-                                              <AnswerText
-                                                text={answer.payload.text}
-                                                value={answer.payload.value}
-                                                question={currentQuestions[idx]}
-                                                isQuote
-                                              />
-                                            </div>
-                                          ) : (
-                                            <div
-                                              {...(isChoiceQuestion &&
-                                                styles.answerCardContent)}
-                                            >
-                                              <AnswerText
-                                                text={answer.payload.text}
-                                                value={answer.payload.value}
-                                                question={currentQuestions[idx]}
-                                                isQuote
-                                              />
-
-                                              {idx === 0 && twoTextQuestions && (
-                                                <hr
-                                                  style={{
-                                                    opacity: 0.3,
-                                                    margin: '1.2em 33%',
-                                                    border: 0,
-                                                    borderTop:
-                                                      '1px solid currentColor',
-                                                  }}
-                                                />
-                                              )}
-                                            </div>
-                                          )}
-                                        </div>
-                                      )
-                                    })}
-
-                                    <Editorial.Credit
+                                    Von{' '}
+                                    <span
                                       style={{
-                                        marginTop: '0',
-                                        paddingTop: '5px',
+                                        textDecoration: 'underline',
                                       }}
                                     >
-                                      Von{' '}
-                                      <span
-                                        style={{
-                                          textDecoration: 'underline',
-                                        }}
-                                      >
-                                        {displayAuthor.name}
-                                      </span>
-                                    </Editorial.Credit>
-                                  </div>
-                                </Editorial.P>
+                                      {displayAuthor.name}
+                                    </span>
+                                  </Editorial.Credit>
+                                </div>
                               </ColorContextProvider>
                             </div>
                           </a>
