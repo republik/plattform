@@ -31,7 +31,7 @@ const styles = {
     background: 'white',
     padding: 3,
     borderRadius: 40,
-    color: 'var(--color-light)'.text,
+    color: 'var(--color-text)',
   }),
   padded: css({
     display: 'block',

@@ -136,19 +136,19 @@ export const Quiz = ({ children, attributes, ...props }) => {
           ? '#EBFFE0'
           : answer
           ? '#FFE0E0'
-          : 'var(--color-light)'.default,
+          : 'var(--color-default)',
       }}
     >
       {tree.map((answer, i) => {
         const isSelected = answerId === i
         const primaryColor =
           isSelected && answer.isCorrect
-            ? 'var(--color-light)'.primary
+            ? 'var(--color-primary)'
             : isSelected
-            ? 'var(--color-light)'.flyerFormatText
+            ? 'var(--color-flyerFormatText)'
             : undefined
         const colorRule = css({
-          color: isSelected ? '#fff' : 'var(--color-light)'.text,
+          color: isSelected ? '#fff' : 'var(--color-text)',
           backgroundColor: primaryColor || '#fff',
           border: `1px solid ${primaryColor || '#000'}`,
           '@media (hover)': {

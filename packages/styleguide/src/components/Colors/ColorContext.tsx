@@ -134,11 +134,11 @@ export const RootColorVariables = () => {
         __html: [
           // default light
           `:root, .light, .dark .inverted { ${generateCSSColorDefinitions(
-            'var(--color-light)',
+            colors.light,
           )} }`,
           // dark class applied to html element via next-themes OR manually applied on an element
           `.dark, .light .inverted { ${generateCSSColorDefinitions(
-            'var(--color-dark)',
+            colors.dark,
           )} }`,
         ].join('\n'),
       }}
