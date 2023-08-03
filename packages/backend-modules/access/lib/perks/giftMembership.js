@@ -43,7 +43,7 @@ const give = async (
 
   const electedMembership = giftableMemberships.shift()
 
-  const membership = await activateMembership(
+  const { updatedMembership: membership } = await activateMembership(
     electedMembership,
     recipient,
     t,
