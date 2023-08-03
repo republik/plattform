@@ -151,7 +151,7 @@ class Form extends Component {
               fields={fields}
             />
             {!!this.state.showErrors && errorMessages.length > 0 && (
-              <div style={{ color: colors.error, marginBottom: 40 }}>
+              <div style={{ color: 'var(--color-error)', marginBottom: 40 }}>
                 {t('memberships/claim/error/title')}
                 <br />
                 <ul>

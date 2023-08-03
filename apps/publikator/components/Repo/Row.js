@@ -1,7 +1,4 @@
-import {
-  IconLock,
-  IconPublic
-} from '@republik/icons'
+import { IconLock, IconPublic } from '@republik/icons'
 
 import { A, Label, colors } from '@project-r/styleguide'
 
@@ -34,7 +31,7 @@ const PublicationLink =
         key={name}
         href={`${format?.meta.externalBaseUrl || FRONTEND_BASE_URL}${path}`}
       >
-        <Icon color={colors.primary} />
+        <Icon color={'var(--color-primary)'} />
       </a>
     )
 

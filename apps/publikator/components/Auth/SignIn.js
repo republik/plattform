@@ -44,16 +44,16 @@ const styles = {
   }),
   hint: css({
     marginTop: -5,
-    color: colors.lightText,
+    color: 'var(--color-lightText)',
     display: 'block',
     lineHeight: '20px',
   }),
   hintA: css({
     textDecoration: 'underline',
     textDecorationSkip: 'ink',
-    color: colors.lightText,
+    color: 'var(--color-lightText)',
     ':hover': {
-      color: colors.text,
+      color: 'var(--color-text)',
     },
   }),
 }

@@ -277,7 +277,12 @@ class UpdateMe extends Component {
                   ) : (
                     <div>
                       {!!this.state.showErrors && errorMessages.length > 0 && (
-                        <div style={{ color: colors.error, marginBottom: 40 }}>
+                        <div
+                          style={{
+                            color: 'var(--color-error)',
+                            marginBottom: 40,
+                          }}
+                        >
                           {t('pledge/submit/error/title')}
                           <br />
                           <ul>
@@ -288,7 +293,12 @@ class UpdateMe extends Component {
                         </div>
                       )}
                       {!!this.state.error && (
-                        <div style={{ color: colors.error, marginBottom: 40 }}>
+                        <div
+                          style={{
+                            color: 'var(--color-error)',
+                            marginBottom: 40,
+                          }}
+                        >
                           {this.state.error}
                         </div>
                       )}

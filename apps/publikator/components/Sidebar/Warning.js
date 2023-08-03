@@ -1,11 +1,11 @@
 import { css } from 'glamor'
 
-import { colors, plainButtonRule } from '@project-r/styleguide'
+import { plainButtonRule } from '@project-r/styleguide'
 import { IconClose } from '@republik/icons'
 
 const styles = {
   warning: css({
-    backgroundColor: colors.error,
+    backgroundColor: 'var(--color-error)',
     color: '#fff',
     marginBottom: 10,
     padding: 10,

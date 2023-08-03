@@ -421,7 +421,7 @@ class Page extends Component {
                 {!!context && (
                   <Fragment>
                     {/* this.state.hasOnceVisitedAll && (
-                      <div style={{ background: colors.primary, height: 140, marginBottom: 20 }}>
+                      <div style={{ background: 'var(--color-primary)', height: 140, marginBottom: 20 }}>
                         <P>Grafisches Element, dass alle Section durchgearbeitet wurden und es jetzt losgehen kann.</P>
                       </div>
                     ) */}

@@ -1,5 +1,5 @@
 import { css } from 'glamor'
-import { colors, fontStyles } from '@project-r/styleguide'
+import { fontStyles } from '@project-r/styleguide'
 
 const styles = {
   beta: css({
@@ -13,7 +13,7 @@ const styles = {
     ...fontStyles.sansSerifMedium,
     color: '#fff',
     pointerEvents: 'none',
-    backgroundColor: colors.secondary,
+    backgroundColor: 'var(--color-secondary)',
   }),
 }
 

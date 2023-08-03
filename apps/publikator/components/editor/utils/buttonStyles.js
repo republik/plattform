@@ -1,9 +1,8 @@
 import { css } from 'glamor'
-import { colors } from '@project-r/styleguide'
 
 const base = {
   cursor: 'pointer',
-  color: colors.secondary,
+  color: 'var(--color-secondary)',
   transition: 'color 0.1s, opacity 0.1s',
   '&[data-visible="false"]': {
     display: 'none',
@@ -13,14 +12,14 @@ const base = {
 const format = {
   ...base,
   '&[data-active="true"]': {
-    color: colors.primary,
+    color: 'var(--color-primary)',
   },
   '&[data-disabled="true"]': {
     opacity: 0.3,
-    color: colors.secondary,
+    color: 'var(--color-secondary)',
   },
   '&[data-active="false"][data-disabled="false"]:hover': {
-    color: colors.text,
+    color: 'var(--color-text)',
   },
 }
 
@@ -28,10 +27,10 @@ const action = {
   ...base,
   '&[data-disabled="true"]': {
     opacity: 0.3,
-    color: colors.secondary,
+    color: 'var(--color-secondary)',
   },
   '&[data-disabled="false"]:hover': {
-    color: colors.text,
+    color: 'var(--color-text)',
   },
 }
 

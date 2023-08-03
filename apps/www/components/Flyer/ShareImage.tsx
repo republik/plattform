@@ -7,7 +7,6 @@ import {
   ColorContextProvider,
   RenderContextProvider,
   SHARE_IMAGE_HEIGHT,
-  colors,
   Logo,
   mediaQueries,
   fontFamilies,
@@ -22,7 +21,7 @@ const styles = {
   outer: css({
     position: 'relative',
     height: SHARE_IMAGE_HEIGHT / 2,
-    background: colors.light.flyerBg,
+    background: 'var(--color-flyerBg)',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'initial',
@@ -34,8 +33,8 @@ const styles = {
     margin: '0 10px',
   }),
   branding: css({
-    background: colors.dark.default,
-    color: colors.dark.text,
+    background: 'var(--color-default)',
+    color: 'var(--color-text)',
   }),
   brandingInner: css({
     maxWidth: 700,
@@ -70,7 +69,7 @@ const Branding: React.FC = () => {
           <br />
           republik.ch/journal
         </p>
-        <Logo fill={colors.dark.text} height={isDesktop ? 36 : 30} />
+        <Logo fill={'var(--color-text)'} height={isDesktop ? 36 : 30} />
       </div>
     </div>
   )

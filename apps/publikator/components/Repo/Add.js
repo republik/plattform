@@ -186,7 +186,9 @@ const TemplatePicker = compose(
               setTemplateFilter(newFilter)
             }
           }}
-          icon={<IconSearch size={30} style={{ color: colors.lightText }} />}
+          icon={
+            <IconSearch size={30} style={{ color: 'var(--color-lightText)' }} />
+          }
         />
       )}
     />

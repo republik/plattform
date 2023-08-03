@@ -1,7 +1,5 @@
 import { css } from 'glamor'
 
-import { colors } from '@project-r/styleguide'
-
 import LoadingBar from './LoadingBar'
 import { HEADER_HEIGHT, ZINDEX_HEADER } from './constants'
 
@@ -20,7 +18,7 @@ const styles = {
     right: 0,
     backgroundColor: '#fff',
     height: HEADER_HEIGHT,
-    borderBottom: `1px solid ${colors.divider}`,
+    borderBottom: `1px solid ${'var(--color-divider)'}`,
     whiteSpace: 'nowrap',
     overflow: 'auto',
   }),
@@ -41,7 +39,7 @@ export const Header = ({ children, barStyle, isTemplate }) => (
     <div
       {...styles.bar}
       style={{
-        backgroundColor: isTemplate ? colors.secondaryBg : undefined,
+        backgroundColor: isTemplate ? 'var(--color-secondaryBg)' : undefined,
         ...barStyle,
       }}
     >

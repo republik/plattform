@@ -2,7 +2,6 @@ import { Component } from 'react'
 import Router from 'next/router'
 
 import { css } from 'glamor'
-import { colors } from '@project-r/styleguide'
 import { ZINDEX_LOADINGBAR } from '../constants'
 
 const styles = {
@@ -12,7 +11,7 @@ const styles = {
     top: 0,
     left: 0,
     height: 2,
-    backgroundColor: colors.primary,
+    backgroundColor: 'var(--color-primary)',
     transition: 'width 200ms linear, opacity 200ms linear',
   }),
 }

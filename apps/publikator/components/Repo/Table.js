@@ -137,7 +137,7 @@ export const filterAndOrderRepos = gql`
 const styles = {
   filterBar: css({
     paddingBottom: 15,
-    borderBottom: `1px solid ${colors.divider}`,
+    borderBottom: `1px solid ${'var(--color-divider)'}`,
   }),
   pageInfo: css({
     marginTop: 10,

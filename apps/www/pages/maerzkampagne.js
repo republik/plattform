@@ -94,8 +94,8 @@ const styles = {
     position: 'relative',
     zIndex: 1,
     padding: '30px 0 0',
-    backgroundColor: colors.negative.containerBg,
-    color: colors.negative.text,
+    backgroundColor: 'var(--color-negative)'.containerBg,
+    color: 'var(--color-negative)'.text,
   }),
   overviewBottomShadow: css({
     position: 'absolute',
@@ -131,7 +131,7 @@ const styles = {
   cards: css({
     position: 'relative',
     zIndex: 1,
-    background: colors.light.defaultInverted,
+    background: 'var(--color-defaultInverted)',
     margin: '30px 0',
     [mediaQueries.mUp]: {
       margin: '50px 0',
@@ -746,7 +746,11 @@ const Page = ({
           <br />
           {inNativeIOSApp ? (
             <Interaction.P
-              style={{ color: colors.error, marginBottom: 15, marginTop: 15 }}
+              style={{
+                color: 'var(--color-error)',
+                marginBottom: 15,
+                marginTop: 15,
+              }}
             >
               {t('cockpit/ios')}
             </Interaction.P>

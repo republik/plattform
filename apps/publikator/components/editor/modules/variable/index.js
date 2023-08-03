@@ -1,6 +1,5 @@
 import { matchInline } from '../../utils'
 import MarkdownSerializer from '@republik/slate-mdast-serializer'
-import { colors } from '@project-r/styleguide'
 
 import createUi from './ui'
 
@@ -48,7 +47,7 @@ export default ({ rule, subModules, TYPE }) => {
           return (
             <span
               attributes={attributes}
-              style={{ backgroundColor: colors.primaryBg }}
+              style={{ backgroundColor: 'var(--color-primaryBg)' }}
             >
               <Component {...data} fallback={`{${data.variable}}`} />
             </span>

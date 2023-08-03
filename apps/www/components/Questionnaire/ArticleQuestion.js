@@ -98,7 +98,7 @@ class ArticleQuestion extends Component {
           alignItems: 'center',
           marginTop: 20,
           paddingBottom: 15,
-          borderBottom: `1px solid ${colors.disabled}`,
+          borderBottom: `1px solid ${'var(--color-disabled)'}`,
         })}
       >
         <ArticleItem title={document.title} credits={document.credits} />

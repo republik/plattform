@@ -34,8 +34,8 @@ const styles = {
     textRendering: 'optimizeLegibility',
     WebkitFontSmoothing: 'antialiased',
     '& ::selection': {
-      color: colors.backgroundColor,
-      backgroundColor: colors.color,
+      color: 'var(--color-backgroundColor)',
+      backgroundColor: 'var(--color-color)',
     },
   }),
   logoContainer: css({
@@ -55,7 +55,7 @@ const styles = {
     padding: 10,
     marginTop: 40,
     '& a': {
-      color: colors.color,
+      color: 'var(--color-color)',
       textDecoration: 'underline',
       textDecorationSkip: 'ink',
     },
@@ -87,7 +87,7 @@ const Page = ({ router }) => {
       </Head>
       <NarrowContainer>
         <div {...styles.logoContainer}>
-          <Logo fill={colors.color} />
+          <Logo fill={'var(--color-color)'} />
         </div>
 
         <div

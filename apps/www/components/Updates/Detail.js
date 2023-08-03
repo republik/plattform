@@ -25,7 +25,7 @@ const styles = {
     },
   }),
   content: css({
-    color: colors.text,
+    color: 'var(--color-text)',
     fontFamily: fontFamilies.serifRegular,
     fontSize: 16,
     lineHeight: '25px',
@@ -35,14 +35,14 @@ const styles = {
     },
   }),
   container: css({
-    borderBottom: `1px solid ${colors.divider}`,
+    borderBottom: `1px solid ${'var(--color-divider)'}`,
     paddingBottom: 10,
     marginBottom: 60,
   }),
   hr: css({
     height: 0,
     border: 0,
-    borderTop: `1px solid ${colors.divider}`,
+    borderTop: `1px solid ${'var(--color-divider)'}`,
   }),
   label: css({
     fontFamily: fontFamilies.sansSerifMedium,

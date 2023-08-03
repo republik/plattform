@@ -6,7 +6,6 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 
 import {
-  colors,
   Editorial,
   InlineSpinner,
   Interaction,
@@ -37,12 +36,12 @@ import { IconCheckCircle } from '@republik/icons'
 
 const styles = {
   prepublicationNotice: css({
-    backgroundColor: colors.social,
+    backgroundColor: 'var(--color-social)',
     padding: 15,
   }),
   more: css({
-    backgroundColor: colors.negative.containerBg,
-    color: colors.negative.text,
+    backgroundColor: 'var(--color-negative)'.containerBg,
+    color: 'var(--color-negative)'.text,
     textAlign: 'center',
     padding: '20px 0',
   }),
@@ -238,7 +237,9 @@ const Front = ({
               {finite && (
                 <div style={{ marginBottom: 10 }}>
                   <Link href='/feed' passHref>
-                    <Editorial.A style={{ color: colors.negative.text }}>
+                    <Editorial.A
+                      style={{ color: 'var(--color-negative)'.text }}
+                    >
                       {t('front/finite/feed')}
                     </Editorial.A>
                   </Link>
@@ -250,7 +251,7 @@ const Front = ({
                 {!infiniteScroll && hasMore && (
                   <Editorial.A
                     href='#'
-                    style={{ color: colors.negative.text }}
+                    style={{ color: 'var(--color-negative)'.text }}
                     onClick={(event) => {
                       event && event.preventDefault()
                       setInfiniteScroll(true)
@@ -270,7 +271,9 @@ const Front = ({
                     years: intersperse(
                       archivedYears.map((year) => (
                         <Link key={year} href={`/${year}`} passHref>
-                          <Editorial.A style={{ color: colors.negative.text }}>
+                          <Editorial.A
+                            style={{ color: 'var(--color-negative)'.text }}
+                          >
                             {year}
                           </Editorial.A>
                         </Link>

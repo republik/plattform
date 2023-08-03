@@ -4,7 +4,7 @@ import { fontStyles, colors } from '@project-r/styleguide'
 
 import {
   IconArrowDropDown as DownIcon,
-  IconArrowDropUp as UpIcon
+  IconArrowDropUp as UpIcon,
 } from '@republik/icons'
 
 import Link from 'next/link'
@@ -19,7 +19,7 @@ const styles = {
       textAlign: 'left',
       fontWeight: 'normal',
       padding: 8,
-      borderBottom: `1px solid ${colors.divider}`,
+      borderBottom: `1px solid ${'var(--color-divider)'}`,
       ':first-child': {
         paddingLeft: 0,
       },
@@ -31,7 +31,7 @@ const styles = {
   ),
   tr: css({
     ':nth-child(even)': {
-      backgroundColor: colors.secondaryBg,
+      backgroundColor: 'var(--color-secondaryBg)',
     },
   }),
   td: css({

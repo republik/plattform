@@ -1,5 +1,4 @@
 import {
-  colors,
   Field,
   Dropdown,
   Checkbox,
@@ -85,7 +84,7 @@ const styles = {
   }),
   uiInlineRow: css({
     backgroundColor: '#fff',
-    border: `1px solid ${colors.divider}`,
+    border: `1px solid ${'var(--color-divider)'}`,
     padding: '5px',
     display: 'inline-block',
     margin: 0,

@@ -30,7 +30,7 @@ import { withDefaultSSR } from '../../../../lib/apollo/helpers'
 import Nav from '../../../../components/Edit/Nav'
 
 const styles = css({
-  background: colors.secondaryBg,
+  background: 'var(--color-secondaryBg)',
   minHeight: 'calc(100vh - 80px)',
   padding: 10,
   '& .Checkbox': {
@@ -47,10 +47,10 @@ const styles = css({
     height: 'auto',
     width: 800,
     margin: 'auto',
-    border: `1px solid ${colors.divider}`,
+    border: `1px solid ${'var(--color-divider)'}`,
     fontFamily: fontFamilies.monospaceRegular,
     fontSize: 14,
-    color: colors.text,
+    color: 'var(--color-text)',
     lineHeight: 2,
   },
   '& pre.CodeMirror-line': {
@@ -164,7 +164,11 @@ export default withDefaultSSR(
           <Frame.Header.Section align='right'>
             <div style={{ padding: '35px 25px' }}>
               <CircleIcon
-                style={{ color: validity ? colors.containerBg : colors.error }}
+                style={{
+                  color: validity
+                    ? 'var(--color-containerBg)'
+                    : 'var(--color-error)',
+                }}
               />
             </div>
           </Frame.Header.Section>

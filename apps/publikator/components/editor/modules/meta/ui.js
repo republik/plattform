@@ -28,7 +28,7 @@ import PublishPathNotice from './PublishPathNotice'
 const styles = {
   container: css({
     marginTop: 100,
-    backgroundColor: colors.secondaryBg,
+    backgroundColor: 'var(--color-secondaryBg)',
     padding: 30,
   }),
   center: css({

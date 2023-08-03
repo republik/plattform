@@ -55,8 +55,8 @@ const CommitButton = (props) => {
           minWidth: 0,
           height: 40,
           fontSize: '16px',
-          backgroundColor: readOnly ? colors.error : undefined,
-          borderColor: readOnly ? colors.error : undefined,
+          backgroundColor: readOnly ? 'var(--color-error)' : undefined,
+          borderColor: readOnly ? 'var(--color-error)' : undefined,
         }}
         primary
         block

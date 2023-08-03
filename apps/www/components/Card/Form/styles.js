@@ -1,6 +1,6 @@
 import { css } from 'glamor'
 
-import { mediaQueries, colors } from '@project-r/styleguide'
+import { mediaQueries } from '@project-r/styleguide'
 
 export const styles = {
   section: css({
@@ -35,7 +35,7 @@ export const styles = {
     },
   }),
   errorMessages: css({
-    color: colors.error,
+    color: 'var(--color-error)',
     marginTop: 40,
   }),
   button: css({

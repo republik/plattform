@@ -837,7 +837,7 @@ export class EditorPage extends Component {
           isTemplate={isTemplate}
           barStyle={{
             borderBottom: activeUsers.length
-              ? `3px solid ${readOnly ? colors.error : warningColor}`
+              ? `3px solid ${readOnly ? 'var(--color-error)' : warningColor}`
               : undefined,
           }}
         >
@@ -852,7 +852,7 @@ export class EditorPage extends Component {
                 // 1 px header border
                 paddingBottom: HEADER_HEIGHT - SIDEBAR_ICON_SIZE - 30 - 1,
                 cursor: 'pointer',
-                color: showSidebar ? colors.primary : undefined,
+                color: showSidebar ? 'var(--color-primary)' : undefined,
               }}
               onMouseDown={this.toggleSidebarHandler}
             >
@@ -973,7 +973,7 @@ export class EditorPage extends Component {
                 <button
                   onClick={() => this.goToRaw(isTemplate)}
                   {...plainButtonRule}
-                  style={{ color: colors.primary }}
+                  style={{ color: 'var(--color-primary)' }}
                 >
                   {t('pages/raw/title')}
                 </button>

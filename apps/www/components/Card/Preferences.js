@@ -172,7 +172,7 @@ const Filters = ({ t, party, onParty, forcedVariables = {} }) => {
               }}
               style={{
                 color: color(fill).darker(0.5),
-                borderColor: active ? colors.primary : undefined,
+                borderColor: active ? 'var(--color-primary)' : undefined,
               }}
             >
               <Spider

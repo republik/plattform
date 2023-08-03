@@ -7,7 +7,6 @@ import moment from 'moment'
 import withT from '../../lib/withT'
 
 import {
-  colors,
   Button,
   Interaction,
   InlineSpinner,

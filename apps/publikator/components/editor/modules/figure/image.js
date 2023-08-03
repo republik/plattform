@@ -1,5 +1,4 @@
 import { css } from 'glamor'
-import { colors } from '@project-r/styleguide'
 
 import { matchBlock } from '../../utils'
 import { gray2x1 } from '../../utils/placeholder'
@@ -13,7 +12,7 @@ const styles = {
     lineHeight: 0,
     transition: 'outline-color 0.2s',
     '&[data-active="true"]': {
-      outlineColor: colors.primary,
+      outlineColor: 'var(--color-primary)',
     },
   }),
 }

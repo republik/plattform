@@ -5,7 +5,7 @@ import { css, merge } from 'glamor'
 import debounce from 'lodash/debounce'
 import uuid from 'uuid/v4'
 
-import { colors, Interaction } from '@project-r/styleguide'
+import { Interaction } from '@project-r/styleguide'
 
 import questionStyles from './questionStyles'
 
@@ -16,12 +16,12 @@ const thumbStyle = {
   borderRadius: '50%',
   width: thumbSize,
   height: thumbSize,
-  background: colors.primary,
+  background: 'var(--color-primary)',
   outline: 'none',
 }
 
 const trackStyle = {
-  background: colors.secondaryBg,
+  background: 'var(--color-secondaryBg)',
   height: 5,
 }
 
@@ -77,13 +77,13 @@ const styles = {
   }),
   sliderEmpty: css({
     '::-webkit-slider-thumb': {
-      background: colors.disabled,
+      background: 'var(--color-disabled)',
     },
     '::-moz-range-thumb': {
-      background: colors.disabled,
+      background: 'var(--color-disabled)',
     },
     '::-ms-thumb': {
-      background: colors.disabled,
+      background: 'var(--color-disabled)',
     },
   }),
   ticks: css({

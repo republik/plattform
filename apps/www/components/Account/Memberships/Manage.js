@@ -11,7 +11,7 @@ import { Item as AccountItem, P } from '../Elements'
 
 import TokenPackageLink from '../../Link/TokenPackage'
 
-import { InlineSpinner, colors, A } from '@project-r/styleguide'
+import { InlineSpinner, A } from '@project-r/styleguide'
 import Link from 'next/link'
 
 const dayFormat = timeFormat('%d. %B %Y')
@@ -181,7 +181,9 @@ const Actions = ({
         </>
       )}
       {!!remoteError && (
-        <P style={{ color: colors.error, marginTop: 10 }}>{remoteError}</P>
+        <P style={{ color: 'var(--color-error)', marginTop: 10 }}>
+          {remoteError}
+        </P>
       )}
     </>
   )

@@ -12,7 +12,7 @@ import FieldSet from '../FieldSet'
 import PaymentForm, { query } from '../Payment/Form'
 import { P } from './Elements'
 
-import { Button, InlineSpinner, colors } from '@project-r/styleguide'
+import { Button, InlineSpinner } from '@project-r/styleguide'
 
 import { withRouter } from 'next/router'
 
@@ -122,7 +122,9 @@ class PaymentSources extends Component {
           dirty={dirty}
         />
         {!!remoteError && (
-          <P style={{ color: colors.error, marginBottom: 40 }}>{remoteError}</P>
+          <P style={{ color: 'var(--color-error)', marginBottom: 40 }}>
+            {remoteError}
+          </P>
         )}
         {loading && (
           <div>
@@ -134,7 +136,7 @@ class PaymentSources extends Component {
         {!loading && values.newSource && (
           <Fragment>
             {!!this.state.showErrors && errorMessages.length > 0 && (
-              <div style={{ color: colors.error, marginBottom: 40 }}>
+              <div style={{ color: 'var(--color-error)', marginBottom: 40 }}>
                 {t('account/paymentSource/error')}
                 <br />
                 <ul>
