@@ -2,7 +2,7 @@ const debug = require('debug')('mail:lib:scheduler')
 const { timeScheduler } = require('@orbiting/backend-modules-schedulers')
 const dayjs = require('dayjs')
 const cleanedUserMailing = require('./cleanedUserMailing')
-const onboarding = require('./onboarding')
+const archiveUnsubscribedOnboarding = require('./archiveUnsubscribedOnboarding')
 
 const DEV = process.env.NODE_ENV ? process.env.NODE_ENV !== 'production' : true
 
@@ -43,7 +43,7 @@ const init = async (context) => {
         debug(
           `starting job to archive unsubscribed users in onboarding audience on mailchimp`,
         )
-        await onboarding(context, dryRun)
+        await archiveUnsubscribedOnboarding(context, dryRun)
       },
       lockTtlSecs: 60,
       runAtTime: '11:00',
