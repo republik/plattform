@@ -67,7 +67,7 @@
     "next": "^13.4.12",
     "prop-types": "^15.6.2",
     "query-string": "^7.1.1",
-    "ramda": "^0.25.0",
+    "ramda": "^0.29.0",
     "react": "^18.2.0",
     "react-codemirror2": "^7.2.1",
     "react-color": "^2.18.1",
