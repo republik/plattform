@@ -156,7 +156,7 @@ export const ColorContextLocalExtension: React.FC<{
 export const RootColorVariables = () => {
   return (
     <style
-      id='theme-variables'
+      data-testid='theme-variables'
       dangerouslySetInnerHTML={{
         __html: [
           // default light
