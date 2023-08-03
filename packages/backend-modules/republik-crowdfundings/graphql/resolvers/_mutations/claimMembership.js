@@ -37,12 +37,8 @@ module.exports = async (_, args, context) => {
       active: true,
     })
 
-    const claimedMembership = await activateMembership(
-      membership,
-      req.user,
-      t,
-      transaction,
-    )
+    const { updatedMembership: claimedMembership, hasActiveMembership } =
+      await activateMembership(membership, req.user, t, transaction)
 
     // commit transaction
     await transaction.transactionCommit()
@@ -77,6 +73,7 @@ module.exports = async (_, args, context) => {
         pgdb,
         userId: claimedMembership.userId,
         subscribeToEditorialNewsletters: !req.user.roles.includes('member'),
+        subscribeToOnboardingMails: !hasActiveMembership,
       })
     } catch (e) {
       // ignore issues with newsletter subscriptions

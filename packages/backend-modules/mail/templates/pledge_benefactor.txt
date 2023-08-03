@@ -29,10 +29,6 @@ Sie können ab sofort das Magazin lesen {{link_signin}} , an sämtlichen Debatte
 teilnehmen {{link_dialog}} und die Republik mit Ihren Freunden oder Feinden
 teilen {{link_account_share}} .
 
-Falls Sie Fragen zur Inbetriebnahme des Magazins haben:
-Hier finden Sie die Gebrauchsanleitung {{link_manual}} , die die wichtigsten
-davon klärt.
-
 Um uns für Ihre besonders grosse Unterstützung ein kleines bisschen zu
 revanchieren, schicken wir Ihnen postwendend das Gönner-Willkommens-Paket zu.
 
