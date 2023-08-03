@@ -52,6 +52,9 @@
     "@orbiting/backend-modules-republik-crowdfundings#build": {
       "cache": false
     },
+    "@orbiting/backend-modules-utils#build": {
+      "cache": false
+    },
     "@project-r/styleguide#build": {
       "dependsOn": [
         "^build"
