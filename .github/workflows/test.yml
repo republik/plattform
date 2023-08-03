@@ -25,5 +25,4 @@ jobs:
           node-version: 18.x
           cache: 'yarn'
       - run: yarn --frozen-lockfile
-      - run: yarn turbo run build
       - run: yarn test
