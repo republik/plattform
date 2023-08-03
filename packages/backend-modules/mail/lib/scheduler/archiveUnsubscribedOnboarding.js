@@ -10,8 +10,8 @@ module.exports = async (dryRun = false) => {
   const { MAILCHIMP_ONBOARDING_AUDIENCE_ID } = process.env
   const mailchimp = MailchimpInterface({ console })
   const unsubscribedMembers = await mailchimp.getMembersFromAudienceWithStatus(
-    MAILCHIMP_ONBOARDING_AUDIENCE_ID,
     MailchimpInterface.MemberStatus.Unsubscribed,
+    MAILCHIMP_ONBOARDING_AUDIENCE_ID,
   )
   if (!unsubscribedMembers) {
     console.error(
