@@ -107,6 +107,9 @@
         ".env"
       ]
     },
+    "@orbiting/backend-modules-test#test": {
+      "cache": false
+    },
     "prepare": {
       "outputs": [
         "dist/**",
