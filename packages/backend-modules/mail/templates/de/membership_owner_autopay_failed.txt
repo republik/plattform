@@ -11,11 +11,6 @@ Wir unternehmen am {{attempt_next_at}} einen letzten Versuch und bitten Sie, bis
 dahin Ihre Kreditkartendaten hier gegebenenfalls zu aktualisieren
 {{prolong_url}} .
 
-Am Finanziellen soll es nicht scheitern: Journalismus kostet zwar, doch wir
-wollen niemanden ausschliessen. Wir haben Verständnis, wenn es für
-{{autopay_total}} nicht reicht: Sie haben die Möglichkeit, die Höhe Ihres
-Mitgliederbeitrags selbst zu bestimmen {{prolong_url_reduced}} .
-
 {{elseif `attempt_number == 4`}}
 
 Ihre Mitgliedschaft erneuerte sich am {{end_date}} um ein weiteres Jahr. Trotz
@@ -31,11 +26,11 @@ Wollen Sie dies verhindern, können Sie den ausstehenden Jahresbeitrag begleiche
 
 {{else}}
 
-Ihre Mitgliedschaft erneuerte sich am {{end_date}} um ein weiteres Jahr. Bei
-Ihrem letzten Kauf haben Sie angegeben, dass Sie uns erlauben, Ihre hinterlegte
-Kreditkarte automatisch zu belasten. Bedauerlicherweise konnten wir den
-Jahresbeitrag von {{autopay_total}} von Ihrer hinterlegten
-{{autopay_card_brand}} mit den Endziffern {{autopay_card_last4}} nicht abbuchen.
+Ihre Mitgliedschaft erneuerte sich am {{end_date}} um ein weiteres Jahr. Sie
+haben angegeben, dass Sie uns erlauben, Ihre hinterlegte Kreditkarte automatisch
+zu belasten. Bedauerlicherweise konnten wir den Jahresbeitrag von
+{{autopay_total}} von Ihrer hinterlegten {{autopay_card_brand}} mit den
+Endziffern {{autopay_card_last4}} nicht abbuchen.
 
 {{#if authentication_required}}
 
@@ -67,6 +62,9 @@ andere Zahlungsart auswählen {{prolong_url}} .
 {{/if}}
 
 Mit freundlichen Grüssen
+Thomas Angeli & Otto Hostettler
+Co-Präsidenten Lobbywatch
+
 
 Lobbywatch.ch
 3000 Bern
