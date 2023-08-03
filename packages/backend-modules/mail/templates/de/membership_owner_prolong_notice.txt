@@ -1,8 +1,7 @@
 Guten Tag
 
-Ihre Mitgliedschaft bei Lobbywatch jährt sich am {{end_date}}. Vielen Dank, dass
-Sie uns in den vergangenen 12 Monaten unterstützt haben! Mit Ihrer Hilfe können
-wir für Transparenz im Bundeshaus sorgen.
+Ihr Mitgliedschaftsbeitrag für dieses Jahr ist fällig. Vielen Dank, dass Sie uns
+unterstützen. Mit Ihrer Hilfe können wir für Transparenz im Bundeshaus sorgen.
 
 Jetzt erneuern {{prolong_url}}
 
