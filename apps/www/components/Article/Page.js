@@ -760,7 +760,7 @@ const ArticlePage = ({
                                 <Editorial.Format
                                   color={
                                     format.meta.color ||
-                                    colors[format.meta.kind]
+                                    `var(--color-${format.meta.kind})`
                                   }
                                 >
                                   <Link href={format.meta.path} passHref>

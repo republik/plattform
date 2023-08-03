@@ -5,7 +5,6 @@ import InternalOnlyTag from './InternalOnlyTag'
 import Lead from './Lead'
 import Credit from './Credit'
 import { css } from 'glamor'
-import colors from '../../theme/colors'
 import { renderMdast, matchType } from '@republik/mdast-react-render'
 import { timeFormat } from '../../lib/timeFormat'
 import { Editorial } from '../Typography'
@@ -93,9 +92,9 @@ export const TeaserFeed = ({
       ? Headlines.Flyer
       : Headlines.Editorial
   const borderColor = formatMeta.title
-    ? formatMeta.color || colors[formatMeta.kind]
+    ? formatMeta.color || `var(--color-${formatMeta.kind})`
     : template === 'format'
-    ? metaColor || colors[metaKind]
+    ? metaColor || `var(--color-${metaKind})`
     : undefined
   const titleColor = metaColor
     ? metaColor

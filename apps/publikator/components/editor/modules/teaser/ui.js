@@ -120,7 +120,7 @@ const cloneWithRepoData = (options) => (node, repoData) => {
         formatMeta.color
           ? formatMeta.color
           : formatMeta.kind
-          ? colors[formatMeta.kind]
+          ? `var(--color-${formatMeta.kind})`
           : undefined,
       )
     } else {

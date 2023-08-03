@@ -7,7 +7,6 @@ import {
 } from './SharePreviewTwitter'
 import { FACEBOOK_CARD_PREVIEW_WIDTH } from './SharePreviewFacebook'
 import { Label } from '../Typography'
-import colors from '../../theme/colors'
 import { PLACEHOLDER_TEXT } from './index'
 
 export const SHARE_IMAGE_WIDTH = 1200
@@ -95,7 +94,7 @@ const ShareImagePreview = ({
       ? format?.shareBackgroundImageInverted || format?.shareBackgroundImage
       : format?.shareBackgroundImage)
   const displayedText = !text || text === '' ? PLACEHOLDER_TEXT : text
-  const formatColor = format?.color || colors[format?.kind]
+  const formatColor = format?.color || `var(--color-${format?.kind})`
   const socialPreview = socialPreviewStyles[preview]
 
   const [reservedVerticalSpace, setReservedVerticalSpace] = useState(0)

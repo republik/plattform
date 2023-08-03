@@ -1,11 +1,6 @@
 import { css } from 'glamor'
 import Link from 'next/link'
-import {
-  fontStyles,
-  useColorContext,
-  inQuotes,
-  colors,
-} from '@project-r/styleguide'
+import { fontStyles, useColorContext, inQuotes } from '@project-r/styleguide'
 import { graphql } from '@apollo/client/react/hoc'
 import { Phase } from '../Repo/Phases'
 import EditMetaDate from '../Repo/EditMetaDate'
@@ -72,7 +67,7 @@ const RepoLabel = ({ repo, isNewsletter }) => {
   const [colorScheme] = useColorContext()
   const label = getLabel(repo)
   const format = repo.latestCommit.document.meta.format
-  const formatColor = format?.meta.color || colors[format?.meta.kind]
+  const formatColor = format?.meta.color || `var(--color${format?.meta.kind})`
   return (
     <div
       {...styles.label}

@@ -84,7 +84,7 @@ const AudioCover = ({
 }: AudioCoverProps) => {
   const formatBackgroundImage =
     format?.shareBackgroundImageInverted || format?.shareBackgroundImage
-  const formatColor = format?.color || colors[format?.kind]
+  const formatColor = format?.color || `var(--color-${format?.kind})`
 
   if (formatBackgroundImage) {
     return (

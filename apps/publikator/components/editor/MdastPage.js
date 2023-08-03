@@ -42,7 +42,6 @@ import * as fragments from '../../lib/graphql/fragments'
 
 import {
   ColorContextProvider,
-  colors,
   ErrorBoundary,
   plainButtonRule,
 } from '@project-r/styleguide'
