@@ -110,7 +110,7 @@
         ".env"
       ]
     },
-    "@orbiting/backend-modules-test#test": {
+    "@orbiting/backend-modules-testing#test": {
       "cache": false
     },
     "prepare": {
