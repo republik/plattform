@@ -170,7 +170,9 @@ const AutoPayToggle = (membership) => {
               {error && (
                 <React.Fragment>
                   <br />
-                  <span style={{ color: colors.error }}>{error.message}</span>
+                  <span style={{ color: 'var(--color-error)' }}>
+                    {error.message}
+                  </span>
                 </React.Fragment>
               )}
             </DT>

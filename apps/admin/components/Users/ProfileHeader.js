@@ -20,7 +20,7 @@ const styles = {
     position: 'sticky',
     top: -20,
     zIndex: 10,
-    borderBottom: `1px solid ${colors.disabled}`,
+    borderBottom: `1px solid ${'var(--color-disabled)'}`,
   }),
   byline: css({
     ...fontStyles.sansSerifRegular16,

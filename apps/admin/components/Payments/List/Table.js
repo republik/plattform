@@ -1,4 +1,4 @@
-import { Label, colors } from '@project-r/styleguide'
+import { Label } from '@project-r/styleguide'
 import Link from 'next/link'
 import { chfFormat } from '../../../lib/utils/formats'
 
@@ -17,7 +17,7 @@ const getDueDate = (status, dueDate) => {
     return (
       <span
         style={{
-          color: colors.error,
+          color: 'var(--color-error)',
         }}
       >
         {displayDate(dueDate)}

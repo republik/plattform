@@ -3,7 +3,7 @@ import { css } from 'glamor'
 import compose from 'lodash/flowRight'
 import { graphql } from '@apollo/client/react/hoc'
 import { gql } from '@apollo/client'
-import { Label, Interaction, colors } from '@project-r/styleguide'
+import { Label, Interaction } from '@project-r/styleguide'
 import List, { Item } from '../List'
 
 import {
@@ -44,7 +44,7 @@ const clearSessionsMutation = gql`
 const styles = {
   session: css({
     padding: 10,
-    backgroundColor: colors.secondaryBg,
+    backgroundColor: 'var(--color-secondaryBg)',
   }),
 }
 

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { css, merge } from 'glamor'
 
-import { Label, A, colors } from '@project-r/styleguide'
+import { Label, A } from '@project-r/styleguide'
 
 import { displayDateTime } from '../Display/utils'
 import { tableStyles } from '../Tables/utils'
@@ -20,10 +20,10 @@ const styles = {
     marginRight: 5,
     marginBottom: '-0.2em',
     fontSize: '1.2em',
-    color: colors.text,
+    color: 'var(--color-text)',
   }),
   error: css({
-    color: colors.error,
+    color: 'var(--color-error)',
   }),
 }
 

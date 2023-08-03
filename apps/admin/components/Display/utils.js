@@ -1,5 +1,5 @@
 import { css, merge } from 'glamor'
-import { fontStyles, colors } from '@project-r/styleguide'
+import { fontStyles } from '@project-r/styleguide'
 import { swissTime } from '../../lib/utils/formats'
 import { intervalToDuration, formatDuration } from 'date-fns'
 import { de } from 'date-fns/locale'
@@ -19,7 +19,7 @@ export const displayStyles = {
     },
     '&:focus, &:hover': {
       outline: 'none',
-      backgroundColor: colors.secondaryBg,
+      backgroundColor: 'var(--color-secondaryBg)',
       '& .show-on-focus': {
         opacity: 1,
       },
@@ -70,12 +70,12 @@ export const displayStyles = {
     padding: '0',
     transition: 'color 0.1s',
     fontSize: 'inherit',
-    color: colors.primary,
+    color: 'var(--color-primary)',
     '&:not([disabled]):focus, &:hover': {
-      color: colors.secondary,
+      color: 'var(--color-secondary)',
     },
     '&[disabled]': {
-      color: colors.disabled,
+      color: 'var(--color-disabled)',
     },
   }),
 }

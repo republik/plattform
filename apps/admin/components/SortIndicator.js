@@ -1,5 +1,4 @@
 import { css } from 'glamor'
-import { colors } from '@project-r/styleguide'
 
 const svgIcon = css({
   display: 'inline-flex',
@@ -10,7 +9,7 @@ const svgIcon = css({
   '& svg': {
     height: '1em',
     width: '1em',
-    fill: colors.secondary,
+    fill: 'var(--color-secondary)',
   },
 })
 

@@ -1,5 +1,4 @@
 import { css } from 'glamor'
-import { colors } from '@project-r/styleguide'
 import SortIndicator from '../SortIndicator'
 
 export const tableStyles = {
@@ -9,26 +8,26 @@ export const tableStyles = {
   }),
   link: css({
     textDecoration: 'none',
-    color: colors.primary,
+    color: 'var(--color-primary)',
     ':visited': {
-      color: colors.primary,
+      color: 'var(--color-primary)',
     },
     ':hover': {
-      color: colors.secondary,
+      color: 'var(--color-secondary)',
     },
     cursor: 'pointer',
   }),
   row: css({
     height: '35px',
     '&:nth-child(odd)': {
-      backgroundColor: colors.secondaryBg,
+      backgroundColor: 'var(--color-secondaryBg)',
     },
   }),
   headRow: css({
     height: '40px',
     backgroundColor: '#fff',
     '&:nth-child(1) th': {
-      borderBottom: `1px solid ${colors.divider}`,
+      borderBottom: `1px solid ${'var(--color-divider)'}`,
       background: 'white',
       position: 'sticky',
       top: -20,
@@ -38,22 +37,22 @@ export const tableStyles = {
   selectableRow: css({
     '& td': {
       transition: 'border-color 0.2s',
-      borderTop: `1px solid ${colors.secondary}00`,
-      borderBottom: `1px solid ${colors.secondary}00`,
+      borderTop: `1px solid ${'var(--color-secondary)'}00`,
+      borderBottom: `1px solid ${'var(--color-secondary)'}00`,
     },
     '&[data-active="true"] td': {
       transition: 'none',
-      borderColor: colors.secondary,
+      borderColor: 'var(--color-secondary)',
     },
     '&:hover, &[data-active="true"]': {
-      color: colors.primary,
+      color: 'var(--color-primary)',
     },
     transition: 'color 0.2s',
     cursor: 'pointer',
   }),
   emphasisedRow: css({
     '& td': {
-      borderBottom: `1px solid ${colors.text}`,
+      borderBottom: `1px solid ${'var(--color-text)'}`,
     },
   }),
   left: css({

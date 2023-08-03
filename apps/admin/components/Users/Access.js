@@ -122,7 +122,7 @@ const styles = {
   grant: css({
     width: `calc(50% - ${GUTTER}px)`,
     padding: 10,
-    backgroundColor: colors.secondaryBg,
+    backgroundColor: 'var(--color-secondaryBg)',
     marginBottom: GUTTER,
   }),
   button: css({

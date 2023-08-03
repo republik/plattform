@@ -1,4 +1,3 @@
-import { colors } from '@project-r/styleguide'
 import Input from '../../Form/Input'
 
 import withDebouncedSearch from '../../Form/withDebouncedSearch'
@@ -28,7 +27,7 @@ export default withDebouncedSearch(
   }) => (
     <div
       style={{
-        borderBottom: `1px solid ${colors.divider}`,
+        borderBottom: `1px solid ${'var(--color-divider)'}`,
       }}
     >
       <div style={formSectionStyles}>

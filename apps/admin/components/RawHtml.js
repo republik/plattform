@@ -1,18 +1,18 @@
 import { createElement } from 'react'
 import PropTypes from 'prop-types'
 import { css } from 'glamor'
-import { colors, fontFamilies } from '@project-r/styleguide'
+import { fontFamilies } from '@project-r/styleguide'
 
 const styles = {
   default: css({
     '& a': {
       textDecoration: 'none',
-      color: colors.primary,
+      color: 'var(--color-primary)',
       ':visited': {
-        color: colors.primary,
+        color: 'var(--color-primary)',
       },
       ':hover': {
-        color: colors.secondary,
+        color: 'var(--color-secondary)',
       },
     },
     '& ul, & ol': {

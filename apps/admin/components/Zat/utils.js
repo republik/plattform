@@ -1,4 +1,4 @@
-import { fontStyles, colors } from '@project-r/styleguide'
+import { fontStyles } from '@project-r/styleguide'
 
 import { css } from 'glamor'
 
@@ -32,7 +32,7 @@ export const styles = {
     paddingTop: 5,
     paddingBottom: 5,
     '&:nth-child(odd)': {
-      backgroundColor: colors.secondaryBg,
+      backgroundColor: 'var(--color-secondaryBg)',
     },
   }),
 }

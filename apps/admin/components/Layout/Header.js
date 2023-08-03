@@ -2,17 +2,17 @@ import { css } from 'glamor'
 import compose from 'lodash/flowRight'
 import { createContainer, createTile } from './Grid'
 import Me from '../Auth/Me'
-import { BrandMark, Interaction, colors } from '@project-r/styleguide'
+import { BrandMark, Interaction } from '@project-r/styleguide'
 import Link from 'next/link'
 
 const link = css({
   textDecoration: 'none',
-  color: colors.primary,
+  color: 'var(--color-primary)',
   ':visited': {
-    color: colors.primary,
+    color: 'var(--color-primary)',
   },
   ':hover': {
-    color: colors.secondary,
+    color: 'var(--color-secondary)',
   },
 })
 
@@ -23,7 +23,7 @@ const Header = compose(
     },
     {
       style: {
-        borderBottom: `1px solid ${colors.divider}`,
+        borderBottom: `1px solid ${'var(--color-divider)'}`,
       },
     },
   ),

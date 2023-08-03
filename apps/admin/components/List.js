@@ -1,6 +1,6 @@
 import { css } from 'glamor'
 
-import { colors, fontFamilies } from '@project-r/styleguide'
+import { fontFamilies } from '@project-r/styleguide'
 
 const styles = {
   list: css({
@@ -12,10 +12,10 @@ const styles = {
     padding: 0,
   }),
   item: css({
-    borderTop: `1px solid ${colors.divider}`,
+    borderTop: `1px solid ${'var(--color-divider)'}`,
     padding: '5px 0',
     ':last-child': {
-      borderBottom: `1px solid ${colors.divider}`,
+      borderBottom: `1px solid ${'var(--color-divider)'}`,
     },
   }),
   highlight: css({

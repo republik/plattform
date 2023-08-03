@@ -2,7 +2,6 @@ import { Component } from 'react'
 import { gql } from '@apollo/client'
 import { css } from 'glamor'
 import ErrorMessage from '../../ErrorMessage'
-import { colors } from '@project-r/styleguide'
 
 const companies = [
   { label: 'Project R', name: 'PROJECT_R' },
@@ -11,12 +10,12 @@ const companies = [
 
 const link = css({
   textDecoration: 'none',
-  color: colors.primary,
+  color: 'var(--color-primary)',
   ':visited': {
-    color: colors.primary,
+    color: 'var(--color-primary)',
   },
   ':hover': {
-    color: colors.secondary,
+    color: 'var(--color-secondary)',
   },
 })
 

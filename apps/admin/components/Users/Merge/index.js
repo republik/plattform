@@ -2,7 +2,7 @@ import { Component } from 'react'
 import { css } from 'glamor'
 import PropTypes from 'prop-types'
 import { gql } from '@apollo/client'
-import { colors, Interaction, Button } from '@project-r/styleguide'
+import { Interaction, Button } from '@project-r/styleguide'
 import Link from 'next/link'
 import ErrorMessage from '../../ErrorMessage'
 import SearchUser from '../../Form/SearchUser'
@@ -13,12 +13,12 @@ const interactiveStyles = {
 
 const link = css({
   textDecoration: 'none',
-  color: colors.primary,
+  color: 'var(--color-primary)',
   ':visited': {
-    color: colors.primary,
+    color: 'var(--color-primary)',
   },
   ':hover': {
-    color: colors.secondary,
+    color: 'var(--color-secondary)',
   },
 })
 
@@ -33,7 +33,12 @@ const mergeUsersMutation = gql`
 
 const CheckIcon = () => (
   <span>
-    <svg fill={colors.primary} height='24' viewBox='0 0 24 24' width='24'>
+    <svg
+      fill={'var(--color-primary)'}
+      height='24'
+      viewBox='0 0 24 24'
+      width='24'
+    >
       <path d='M0 0h24v24H0z' fill='none' />
       <path d='M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z' />
     </svg>

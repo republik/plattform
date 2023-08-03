@@ -35,7 +35,7 @@ const styles = {
     whiteSpace: 'normal',
   }),
   errornous: css({
-    color: colors.error,
+    color: 'var(--color-error)',
   }),
   contentFrame: css({
     marginTop: 10,
