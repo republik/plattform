@@ -5,8 +5,9 @@ import { useTheme } from 'next-themes'
 
 export const COLOR_SCHEME_KEY = 'republik-color-scheme'
 
-export const usePersistedColorSchemeKey =
-  createPersistedState<string>(COLOR_SCHEME_KEY)
+export const usePersistedColorSchemeKey = createPersistedState<
+  string | undefined
+>(COLOR_SCHEME_KEY)
 
 // used to persist os color scheme when running in our Android app
 // - our web view on Android currently does not support media query dark mode detection
@@ -21,6 +22,9 @@ export const useColorSchemePreference = () => {
   const { inNativeApp, inNativeAppLegacy } = useInNativeApp()
   const inNewApp = inNativeApp && !inNativeAppLegacy
   const currentKey = (theme === 'sytem' ? 'auto' : theme) || DEFAULT_KEY
+  const [legacyKey, setPersistedKey] = usePersistedColorSchemeKey<
+    string | undefined
+  >(undefined)
 
   useEffect(() => {
     if (inNewApp) {
@@ -33,7 +37,8 @@ export const useColorSchemePreference = () => {
 
   const set = (value: string) => {
     setTheme(value === 'auto' ? 'system' : value)
+    setPersistedKey(undefined)
   }
 
-  return [currentKey, set, DEFAULT_KEY] as const
+  return [legacyKey, set, DEFAULT_KEY] as const
 }

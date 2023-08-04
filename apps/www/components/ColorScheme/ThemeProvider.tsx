@@ -1,6 +1,6 @@
 import { ThemeProvider as NextThemeProvider, useTheme } from 'next-themes'
 import { ReactNode } from 'react'
-import { usePersistedColorSchemeKey } from './useColorScheme'
+import { useColorSchemePreference } from './useColorScheme'
 
 export { useTheme } from 'next-themes'
 
@@ -9,13 +9,11 @@ export { useTheme } from 'next-themes'
  * managed by next-themes.
  */
 const ColorSchemeMigration = () => {
-  const { setTheme } = useTheme()
-  const [key, setKey] = usePersistedColorSchemeKey<string>(null)
+  const [key, setKey] = useColorSchemePreference()
 
   if (typeof window !== 'undefined' && key) {
     const cleanedKey = key.replaceAll('"', '')
-    setTheme(cleanedKey === 'auto' ? 'system' : cleanedKey)
-    setKey(null)
+    setKey(cleanedKey)
   }
   return null
 }

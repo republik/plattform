@@ -2,17 +2,17 @@ import { forwardRef } from 'react'
 import { CalloutMenu, IconButton, Radio } from '@project-r/styleguide'
 import { useInNativeApp } from '../../lib/withInNativeApp'
 
-import { useColorSchemePreference } from '../ColorScheme/useColorScheme'
 import { IconDarkMode } from '@republik/icons'
+import { useTheme } from 'next-themes'
 
 const DarkmodeSwitch = ({ t }) => {
   const { inNativeApp, inNativeAppLegacy } = useInNativeApp()
-  const [colorSchemeKey, setColorSchemeKey] = useColorSchemePreference()
+  const { theme, setTheme } = useTheme()
 
   const iconLabel =
-    colorSchemeKey === 'light'
+    theme === 'light'
       ? t('darkmode/switch/off')
-      : colorSchemeKey === 'dark'
+      : theme === 'dark'
       ? t('darkmode/switch/on')
       : t('darkmode/switch/auto')
 
@@ -41,9 +41,9 @@ const DarkmodeSwitch = ({ t }) => {
           <>
             <Radio
               value='dark'
-              checked={colorSchemeKey === 'dark'}
+              checked={theme === 'dark'}
               onChange={() => {
-                setColorSchemeKey('dark')
+                setTheme('dark')
               }}
             >
               {t('darkmode/switch/on')}
@@ -51,9 +51,9 @@ const DarkmodeSwitch = ({ t }) => {
             <br />
             <Radio
               value='light'
-              checked={colorSchemeKey === 'light'}
+              checked={theme === 'light'}
               onChange={() => {
-                setColorSchemeKey(inNativeAppLegacy ? '' : 'light')
+                setTheme(inNativeAppLegacy ? '' : 'light')
               }}
             >
               {t('darkmode/switch/off')}
@@ -62,9 +62,9 @@ const DarkmodeSwitch = ({ t }) => {
             {!inNativeAppLegacy && (
               <Radio
                 value='auto'
-                checked={colorSchemeKey === 'auto'}
+                checked={theme === 'system'}
                 onChange={() => {
-                  setColorSchemeKey('auto')
+                  setTheme('system')
                 }}
               >
                 {t('darkmode/switch/auto')}
