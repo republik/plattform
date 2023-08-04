@@ -173,10 +173,10 @@ export const RootColorVariables = () => {
   )
 }
 
-const colorSchemeKeyToClassName = (colorSchemeKey: string) => {
+const colorSchemeKeyToDataTheme = (colorSchemeKey: string) => {
   return colorSchemeKey === 'light' || colorSchemeKey === 'dark'
     ? colorSchemeKey
-    : ''
+    : undefined
 }
 
 export const ColorContextProvider: React.FC<{
@@ -190,7 +190,7 @@ export const ColorContextProvider: React.FC<{
 
   return (
     <ColorContext.Provider value={defaultColorContextValue}>
-      <div className={colorSchemeKeyToClassName(colorSchemeKey)}>
+      <div data-theme={colorSchemeKeyToDataTheme(colorSchemeKey)}>
         {children}
       </div>
     </ColorContext.Provider>
