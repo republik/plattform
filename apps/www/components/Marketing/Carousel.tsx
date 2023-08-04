@@ -1,8 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
-import {
-  IconButton,
-  useColorContext,
-} from '@project-r/styleguide'
+import { IconButton, useColorContext } from '@project-r/styleguide'
 import { css } from 'glamor'
 import { getImgSrc } from '../Overview/utils'
 import { useQuery } from '@apollo/client'
@@ -10,7 +7,11 @@ import { GET_DOCUMENT_AUDIO } from './graphql/DocumentAudio.graphql'
 import { useAudioContext } from '../Audio/AudioProvider'
 import scrollIntoView from 'scroll-into-view'
 import { AudioPlayerLocations } from '../Audio/types/AudioActionTracking'
-import { IconArticle, IconPauseCircle, IconPlayCircleOutline } from '@republik/icons'
+import {
+  IconArticle,
+  IconPauseCircle,
+  IconPlayCircleOutline,
+} from '@republik/icons'
 
 export type CarouselProps = {
   carouselData: any
@@ -132,18 +133,10 @@ const Carousel: React.FC<CarouselProps> = ({
   const forwardDisabled = currentSlideIndex + 1 === items?.length
   const backwardDisabled = currentSlideIndex === 0
 
-  const clickAreaGradient = useMemo(
-    () =>
-      css({
-        background: colorScheme.getCSSColor('fadeOutGradientDefault90'),
-      }),
-    [colorScheme],
-  )
   return (
     <div {...styles.container}>
       <div
         {...styles.clickArea}
-        {...clickAreaGradient}
         style={{
           left: '-1px',
           pointerEvents: backwardDisabled ? 'none' : undefined,
@@ -162,7 +155,6 @@ const Carousel: React.FC<CarouselProps> = ({
       </div>
       <div
         {...styles.clickArea}
-        {...clickAreaGradient}
         style={{
           right: '-1px',
           pointerEvents: forwardDisabled ? 'none' : undefined,
@@ -255,7 +247,7 @@ const styles = {
     position: 'absolute',
     cursor: 'pointer',
     width: 30,
-    background: 'yellow',
+    background: 'var(--color-fadeOutGradientDefault90)',
     height: '100%',
     zIndex: 2,
     display: 'flex',
