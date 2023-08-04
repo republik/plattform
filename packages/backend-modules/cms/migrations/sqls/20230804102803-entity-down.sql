@@ -1,0 +1,3 @@
+-- migrate down here: DROP TABLE...
+DELETE TABLE "cms_data";
+DELETE TABLE "cms_entity";

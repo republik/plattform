@@ -18727,6 +18727,11 @@ v8-to-istanbul@^9.0.1:
     "@types/istanbul-lib-coverage" "^2.0.1"
     convert-source-map "^1.6.0"
 
+valibot@^0.8.0:
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/valibot/-/valibot-0.8.0.tgz#927a065ee1d01513e52f0bce9a8b6a62df018219"
+  integrity sha512-wQHXVkVFj6Z0R3297icGCp3UX8S66onuIg03ihJ8aVgMn8pMJvYSfmrKb+aIg7w/Aw08togrklaMSqDP2vKtIA==
+
 validate-commit-msg@^2.14.0:
   version "2.14.0"
   resolved "https://registry.yarnpkg.com/validate-commit-msg/-/validate-commit-msg-2.14.0.tgz#e5383691012cbb270dcc0bc2a4effebe14890eac"

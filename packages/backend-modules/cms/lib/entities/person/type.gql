@@ -1,0 +1,10 @@
+type Person implements CMSObject {
+  id: ID!
+  updatedAt: DateTime!
+  createdAt: DateTime!
+  userId: ID!
+}
+
+input PersonInput {
+  userId: ID!
+}

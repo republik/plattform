@@ -1,0 +1,27 @@
+type Event implements CMSObject {
+  id: ID!
+  updatedAt: DateTime!
+  createdAt: DateTime!
+  slug: String!
+  title: String!
+  category: String!
+  description: String!
+  type: String!
+  link: String!
+  date: Date!
+  where: String!
+  locationLink: String!
+  leader: Person!
+}
+
+input EventInput {
+  slug: String!
+  title: String!
+  category: String!
+  description: String!
+  type: String!
+  link: String!
+  date: Date!
+  where: String!
+  locationLink: String!
+}

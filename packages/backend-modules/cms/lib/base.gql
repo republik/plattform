@@ -1,0 +1,11 @@
+type CMSEntity {
+  id: ID!
+  name: String!
+  description: String!
+}
+
+interface CMSObject {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}

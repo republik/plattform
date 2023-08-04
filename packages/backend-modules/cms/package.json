@@ -1,0 +1,48 @@
+{
+  "name": "@orbiting/backend-modules-cms",
+  "version": "0.0.1",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/republik/plattform.git"
+  },
+  "author": "Patrick Recher <patrick.recher@republik.ch>",
+  "license": "AGPL-3.0",
+  "publishConfig": {
+    "access": "public"
+  },
+  "bugs": {
+    "url": "https://github.com/republik/plattform/issues"
+  },
+  "homepage": "https://github.com/republik/plattform#readme",
+  "scripts": {
+    "dev": "tsc -w",
+    "build": "tsc",
+    "db:seed:redirections": "cat ../redirections/seeds/seeds.example.json | node ../redirections/seeds/seed.js",
+    "db:seed:users": "cat ../auth/seeds/seeds.example.json | node ../auth/seeds/seed.js --truncate"
+  },
+  "dependencies": {
+    "apollo-modules-node": "*",
+    "d3-array": "^2.4.0",
+    "d3-dsv": "^1.2.0",
+    "d3-time": "^1.0.8",
+    "debug": "^4.1.1",
+    "graphql": "^15.3.0",
+    "is-uuid": "^1.0.2",
+    "lodash": "^4.17.19",
+    "moment": "^2.26.0",
+    "openpgp": "^4.10.4",
+    "remark-breaks": "^1.0.5",
+    "remark-parse": "^8.0.2",
+    "sharp": "^0.29.3",
+    "slugify": "^1.4.0",
+    "stripe": "^8.119.0",
+    "uuid": "^8.1.0",
+    "valibot": "^0.8.0",
+    "validator": "^13.7.0",
+    "yargs": "^17.0.1"
+  },
+  "devDependencies": {
+    "@orbiting/backend-modules-types": "*"
+  }
+}
