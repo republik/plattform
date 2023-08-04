@@ -12,23 +12,17 @@ const ColorSchemeMigration = () => {
   const { setTheme } = useTheme()
   const [key, setKey] = usePersistedColorSchemeKey<string>(null)
 
-  if (typeof window !== 'undefined' && key == 'auto') {
-    alert('theme')
-    setTheme('system')
+  if (typeof window !== 'undefined' && key) {
+    const cleanedKey = key.replaceAll('"', '')
+    setTheme(cleanedKey === 'auto' ? 'system' : cleanedKey)
     setKey(null)
   }
   return null
 }
 
 export const ThemeProvider = ({ children }: { children: ReactNode }) => {
-  // If set, the theme is forced on next-themes' Provider to bypass its internal localStorage-only implementation
-
   return (
-    <NextThemeProvider
-      // storageKey={COLOR_SCHEME_KEY}
-      attribute='data-theme'
-      disableTransitionOnChange
-    >
+    <NextThemeProvider attribute='data-theme' disableTransitionOnChange>
       <ColorSchemeMigration />
       {children}
     </NextThemeProvider>
