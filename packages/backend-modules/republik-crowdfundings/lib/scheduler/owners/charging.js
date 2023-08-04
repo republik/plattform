@@ -9,6 +9,8 @@ const { prolong: autoPayProlong } = require('../../AutoPay')
 
 const { SLACK_CHANNEL_AUTOPAY } = process.env
 
+const DRY_RUN = process.env.DRY_RUN === 'true'
+
 module.exports = async (user, payload, context) => {
   const { prolongBeforeDate: anchorDate, membershipId } = user
   const { pgdb, redis, mail, t } = context
@@ -81,6 +83,9 @@ module.exports = async (user, payload, context) => {
       previousAttempts.length + 1,
       membershipId,
     )
+    if (DRY_RUN) {
+      return
+    }
     const { suggestion: autoPay, chargeAttempt } = await autoPayProlong(
       membershipId,
       pgdb,

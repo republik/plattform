@@ -8,11 +8,13 @@ const {
 
 const formatDate = (date) => moment(date).format('YYYYMMDD')
 
+const DRY_RUN = process.env.DRY_RUN === 'true'
+
 module.exports = async (user, payload, context) => {
   const { id: userId, membershipGraceInterval, prolongBeforeDate } = user
-  const { templateName } = payload
+  const templateName = `${user._raw.locale}/${payload.templateName}`
 
-  debug('send mailing: %o', { templateName: payload.templateName, userId })
+  debug('send mailing: %o', { templateName, userId, prolongBeforeDate })
 
   const templatePayload = await context.mail.prepareMembershipOwnerNotice(
     {
@@ -25,6 +27,9 @@ module.exports = async (user, payload, context) => {
     context,
   )
 
+  if (DRY_RUN) {
+    return
+  }
   return sendMailTemplate(templatePayload, context, {
     onceFor: {
       type: templateName,

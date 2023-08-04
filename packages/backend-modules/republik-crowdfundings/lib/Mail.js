@@ -460,17 +460,13 @@ mail.prepareMembershipOwnerNotice = async (
       },
       {
         name: 'prolong_url',
-        content: `${FRONTEND_BASE_URL}/angebote?package=PROLONG&token=${customPledgeToken}`,
-      },
-      {
-        name: 'cockpit_url',
-        content: `${FRONTEND_BASE_URL}/angebote?goto=cockpit&token=${customPledgeToken}`,
+        content: `${FRONTEND_BASE_URL}/${user._raw.locale}/patronage?package=PROLONG&token=${customPledgeToken}`,
       },
       {
         name: 'cancel_url',
         content: membershipId
-          ? `${FRONTEND_BASE_URL}/abgang?membershipId=${membershipId}`
-          : `${FRONTEND_BASE_URL}/konto#abos`,
+          ? `${FRONTEND_BASE_URL}/${user._raw.locale}/abgang?membershipId=${membershipId}`
+          : `${FRONTEND_BASE_URL}/${user._raw.locale}/merci`,
       },
       {
         name: 'end_date',

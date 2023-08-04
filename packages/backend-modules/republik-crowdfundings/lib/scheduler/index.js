@@ -14,7 +14,7 @@ const lockTtlSecs = 60 * 5 // 5 mins
 // const { inform: informWinback } = require('./winbacks')
 // const { inform: informFeedback } = require('./feedback')
 // const { inform: informUpgrade } = require('./upgrade')
-// const { run: membershipsOwnersHandler } = require('./owners')
+const { run: membershipsOwnersHandler } = require('./owners')
 // const { deactivate } = require('./deactivate')
 const { changeover } = require('./changeover')
 const { importPayments } = require('./importPayments')
@@ -65,15 +65,15 @@ const init = async (context) => {
   //   }),
   // )
 
-  // schedulers.push(
-  //   intervalScheduler.init({
-  //     name: 'memberships-owners',
-  //     context,
-  //     runFunc: membershipsOwnersHandler,
-  //     lockTtlSecs,
-  //     runIntervalSecs: 60 * 10,
-  //   }),
-  // )
+  schedulers.push(
+    intervalScheduler.init({
+      name: 'memberships-owners',
+      context,
+      runFunc: membershipsOwnersHandler,
+      lockTtlSecs,
+      runIntervalSecs: 60 * 10,
+    }),
+  )
 
   // schedulers.push(
   //   intervalScheduler.init({
