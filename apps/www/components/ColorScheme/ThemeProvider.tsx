@@ -1,22 +1,35 @@
-import { ThemeProvider as NextThemeProvider } from 'next-themes'
+import { ThemeProvider as NextThemeProvider, useTheme } from 'next-themes'
 import { ReactNode } from 'react'
-import { useColorSchemePreference } from './useColorScheme'
+import { usePersistedColorSchemeKey } from './useColorScheme'
 
 export { useTheme } from 'next-themes'
 
-export const ThemeProvider = ({ children }: { children: ReactNode }) => {
-  // This uses our custom storage implementation which can store the preference in native apps too.
-  const [key] = useColorSchemePreference()
+/**
+ * This component is used to migrate the old color scheme key to the new one.
+ * managed by next-themes.
+ */
+const ColorSchemeMigration = () => {
+  const { setTheme } = useTheme()
+  const [key, setKey] = usePersistedColorSchemeKey<string>(null)
 
+  if (typeof window !== 'undefined' && key == 'auto') {
+    alert('theme')
+    setTheme('system')
+    setKey(null)
+  }
+  return null
+}
+
+export const ThemeProvider = ({ children }: { children: ReactNode }) => {
   // If set, the theme is forced on next-themes' Provider to bypass its internal localStorage-only implementation
-  const forcedTheme = key === 'auto' ? null : key
 
   return (
     <NextThemeProvider
-      attribute='class'
-      forcedTheme={forcedTheme}
+      // storageKey={COLOR_SCHEME_KEY}
+      attribute='data-theme'
       disableTransitionOnChange
     >
+      <ColorSchemeMigration />
       {children}
     </NextThemeProvider>
   )
