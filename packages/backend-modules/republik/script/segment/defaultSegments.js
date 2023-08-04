@@ -103,9 +103,12 @@ const handleRow = async (row) => {
     !['MONTHLY_ABO', 'YEARLY_ABO'].includes(membershipTypeName)
   ) {
     record.PRLG_SEG = 'is-associate'
+    record.CP_ATOKEN = row.accessToken
+  } else if (activeMembership && membershipTypeName === 'MONTHLY_ABO') {
+    record.PRLG_SEG = 'is-monthly-abo'
     record.CP_ATOKEN = ''
   } else if (activeMembership) {
-    record.PRLG_SEG = 'is-active' // njet
+    record.PRLG_SEG = 'is-active' // nüscht
     record.CP_ATOKEN = ''
   } else {
     // neither props is true
@@ -121,13 +124,13 @@ const handleRow = async (row) => {
     stats[key]++
   }
 
-  // if (stats[key] <= 20) {
-  console.log(
-    Object.keys(record)
-      .map((key) => record[key])
-      .join(','),
-  )
-  // }
+  if (stats[key] <= 20) {
+    console.log(
+      Object.keys(record)
+        .map((key) => record[key])
+        .join(','),
+    )
+  }
 }
 
 const handleBatch = async (rows, count, pgdb) => {

@@ -28,6 +28,8 @@ const {
   MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR,
   MAILCHIMP_INTEREST_NEWSLETTER_ACCOMPLICE,
   MAILCHIMP_INTEREST_NEWSLETTER_CLIMATE,
+  MAILCHIMP_MAIN_LIST_ID,
+  MAILCHIMP_ONBOARDING_AUDIENCE_ID,
   FRONTEND_BASE_URL,
 } = process.env
 
@@ -117,9 +119,45 @@ const getInterestsForUser = async ({
 
 mail.getInterestsForUser = getInterestsForUser
 
+const MailchimpInterface = require('../../mail/MailchimpInterface')
+
+const addUserToAudience = async ({ user, name, audienceId }) => {
+  const { email } = user
+
+  debug('addUserToAudience called with ' + { email, user, name, audienceId })
+
+  if (!audienceId) {
+    // throw new AudienceNotFoundMailError({ name }) // TODO add error
+    console.error('AudienceId is not defined')
+  }
+
+  const data = {
+    email_address: email,
+    status_if_new: MailchimpInterface.MemberStatus.Subscribed,
+    status: MailchimpInterface.MemberStatus.Unsubscribed,
+  }
+
+  debug(data)
+
+  const mailchimp = MailchimpInterface({ console })
+  await mailchimp.updateMember(email, data, audienceId)
+
+  // TODO tbd, maybe merge this with NewsletterSubscription
+  const result = {
+    user,
+    status_if_new: MailchimpInterface.MemberStatus.Subscribed,
+    status: MailchimpInterface.MemberStatus.Unsubscribed,
+  }
+  debug(result)
+  return result
+}
+
+mail.addUserToAudience = addUserToAudience
+
 mail.enforceSubscriptions = async ({
   userId,
   email,
+  subscribeToOnboardingMails,
   subscribeToEditorialNewsletters,
   pgdb,
   ...rest
@@ -132,11 +170,38 @@ mail.enforceSubscriptions = async ({
     pgdb,
   })
 
-  return mail.updateNewsletterSubscriptions({
+  const newsletterSubscriptions = await mail.updateNewsletterSubscriptions({
     user: user || { email },
     interests,
     ...rest,
   })
+
+  if (subscribeToOnboardingMails) {
+    debug('add to onboarding audience')
+    const onboardingSubscription = await addUserToAudience({
+      user: user || { email },
+      audienceId: MAILCHIMP_ONBOARDING_AUDIENCE_ID,
+      ...rest,
+    })
+
+    return [
+      {
+        audienceId: MAILCHIMP_MAIN_LIST_ID,
+        subscriptions: newsletterSubscriptions,
+      },
+      {
+        audienceId: MAILCHIMP_ONBOARDING_AUDIENCE_ID,
+        subscriptions: onboardingSubscription,
+      },
+    ]
+  }
+
+  return [
+    {
+      audienceId: MAILCHIMP_MAIN_LIST_ID,
+      subscriptions: newsletterSubscriptions,
+    },
+  ]
 }
 
 mail.sendMembershipProlongConfirmation = async ({

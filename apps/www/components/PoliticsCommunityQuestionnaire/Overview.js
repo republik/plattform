@@ -4,20 +4,19 @@ import { useQuery } from '@apollo/client'
 
 import { Loader, ColorContextProvider, Center } from '@project-r/styleguide'
 
-import { QUESTIONNAIRE_QUERY } from '../../Questionnaire/Submissions/graphql'
+import { QUESTIONNAIRE_QUERY } from '../Questionnaire/Submissions/graphql'
 import {
   QUESTION_SEPARATOR,
   LinkToEditQuestionnaire,
   QuestionFeatured,
-} from '../../Questionnaire/Submissions/QuestionFeatured'
-import QuestionView from '../../Questionnaire/Submissions/QuestionView'
+} from '../Questionnaire/Submissions/QuestionFeatured'
+import QuestionView from '../Questionnaire/Submissions/QuestionView'
 
 import {
   questionColor,
   QUESTIONS,
   EDIT_QUESTIONNAIRE_PATH,
   PERSON_PAGE_PATH,
-  QUESTIONNAIRE_BG_COLOR,
 } from './config'
 
 const AllQuestionsView = ({ slug, extract }) => {
@@ -77,7 +76,6 @@ const SubmissionsOverview = ({ slug, extract, share }) => {
             questionColor={questionColor}
             questions={QUESTIONS}
             personPagePath={PERSON_PAGE_PATH}
-            questionnaireBgColor={QUESTIONNAIRE_BG_COLOR}
           />
         ) : (
           <AllQuestionsView slug={slug} extract={extract} />

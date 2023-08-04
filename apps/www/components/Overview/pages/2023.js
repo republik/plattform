@@ -435,7 +435,80 @@ const text = {
       !
     </>
   ),
-  //Juli: (p) => <></>,
+  Juli: (p) => (
+    <>
+      Sommer, Sonne, gutes Leben?{' '}
+      <Highlight
+        {...p}
+        ids={['kITiKBY7H']}
+        series='republik/article-serie-endlich-sommer'
+      >
+        Nicht unbedingt
+      </Highlight>
+      .{' '}
+      <Highlight
+        {...p}
+        ids={['sm8PrKM91']}
+        series='republik/article-die-zukunft-des-industriefaschismus'
+      >
+        Die faschistische Maschine läuft munter
+      </Highlight>{' '}
+      – auch in{' '}
+      <Highlight {...p} ids={['2NhyFCgLQ']}>
+        Spanien
+      </Highlight>{' '}
+      und{' '}
+      <Highlight {...p} ids={['Wb0QSDW-c']}>
+        Polen
+      </Highlight>
+      . Doch{' '}
+      <Highlight
+        {...p}
+        ids={['Ounuidx7p']}
+        format='republik/format-wir-haben-die-wahl'
+      >
+        wer bestimmt die Wahlen
+      </Highlight>
+      ? Und{' '}
+      <Highlight {...p} ids={['8731CSBoR']}>
+        wer sind die, die freiwillig darauf verzichten
+      </Highlight>
+      ? Überhaupt:{' '}
+      <Highlight {...p} ids={['rUMvvNFfbL']}>
+        Wie sieht es mit Ihrer politischen Haltung aus
+      </Highlight>
+      ? Ausserdem:{' '}
+      <Highlight {...p} ids={['OZxJc8C_U']}>
+        Ungleichheit im akademischen Betrieb
+      </Highlight>{' '}
+      und{' '}
+      <Highlight {...p} ids={['NOivGOqA7']}>
+        Meteorologe Bucheli flucht
+      </Highlight>
+      .{' '}
+      <Highlight {...p} ids={['jAEOUABg7']}>
+        Vom Lochergut in die Hitparade
+      </Highlight>
+      . Ob
+      <Highlight {...p} ids={['MBzdMl2cc']}>
+        {' '}
+        die Bundesbehörden beim Xplain-Datenklau
+      </Highlight>{' '}
+      auch fluchen, während{' '}
+      <Highlight {...p} ids={['AcGl-dlmf']}>
+        bei NZZ und CH Media Stille herrscht
+      </Highlight>
+      ? Und:{' '}
+      <Highlight {...p} ids={['Awzyw7HS-']}>
+        Eine Frau ist einem Femizid entkommen
+      </Highlight>{' '}
+      – und{' '}
+      <Highlight {...p} ids={['RWLIKdOnw']}>
+        zwei andere ihren Zwangsgedanken
+      </Highlight>
+      .
+    </>
+  ),
   //August: (p) => <></>,
   //September: (p) => <></>,
   //Oktober: (p) => <></>,
