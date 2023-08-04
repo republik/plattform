@@ -3110,6 +3110,47 @@
       "key": "withMembership/unauthorized/buyText",
       "de": "Jetzt Mitglied werden",
       "fr": "Adhérer maintenant"
+    },
+    {
+      "key": "memberships/cancel/notFound",
+      "de": "Mitgliedschaft nicht gefunden"
+    },
+    {
+      "key": "memberships/cancel/title",
+      "de": "Mitgliedschaft beendigen"
+    },
+    {
+      "key": "memberships/cancel/signIn",
+      "de": "Sie müssen sich anmelden, um Ihre Mitgliedschaft zu beendigen."
+    },
+    {
+      "key": "memberships/cancel/info",
+      "de": "Warum möchten Sie Lobbywatch nicht mehr unterstützen?"
+    },
+    {
+      "key": "memberships/cancel/confirmation/title",
+      "de": "Sie haben erfolgreich gekündigt."
+    },
+    {
+      "key": "memberships/cancel/confirmation",
+      "de": "Vielen Dank für Ihre bisherige Unterstützung."
+    },
+    {
+      "key": "memberships/cancel/description",
+      "de": "Erläuterungen (Optional)",
+      "fr": "Explication (facultatif)"
+    },
+    {
+      "key": "memberships/cancel/description/empty",
+      "de": "Erläuterungen fehlt"
+    },
+    {
+      "key": "memberships/cancel/accountLink",
+      "de": "Zum Konto"
+    },
+    {
+      "key": "memberships/cancel/button",
+      "de": "Kündigung abschicken"
     }
   ]
 }

@@ -646,7 +646,11 @@
     },
     {
       "key": "api/email/membership_owner_prolong_notice/subject",
-      "value": "Bleiben Sie an Bord oder möchten Sie die Lobbywatch verlassen? Sie haben die Wahl"
+      "value": "Lobbywatch Jahresbeitrag"
+    },
+    {
+      "key": "api/email/membership_owner_autopay_notice/subject",
+      "value": "Ihre Mitgliedschaft erneuert sich automatisch"
     },
     {
       "key": "api/email/membership_owner_prolong_notice_7/subject",
@@ -667,10 +671,6 @@
     {
       "key": "api/email/membership_owner_prolong_winback_7/subject",
       "value": "Ihr Mitgliedschaftsbeitrag ist überfällig"
-    },
-    {
-      "key": "api/email/membership_owner_autopay_notice/subject",
-      "value": "Ihre Mitgliedschaft erneuert sich automatisch"
     },
     {
       "key": "api/email/membership_owner_feedback/subject",
