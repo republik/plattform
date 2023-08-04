@@ -15,9 +15,9 @@ recherches sur les mandats de lobbying. Nous serions heureux que vous nous
 aidiez cette année encore à rendre la politique suisse plus transparente.
 
 {{#if prolong_token}} Verser la cotisation annuelle de membre
-{{frontend_base_url}}/de/patronage?package=PROLONG&token={{prolong_token}}
+{{frontend_base_url}}/fr/patronage?package=PROLONG&token={{prolong_token}}
 {{else}} Faire un don maintenant
-{{frontend_base_url}}/de/patronage?package=DONATE {{/if}}
+{{frontend_base_url}}/fr/patronage?package=DONATE {{/if}}
 
 Avec nos meilleures salutations
 Deborah Wanner
