@@ -1,9 +1,35 @@
-import compose from 'lodash/flowRight'
-import withAuthorization from '../../components/Auth/withAuthorization'
-import { withDefaultSSR } from '../../lib/apollo/helpers'
+import { createGetServerSideProps } from '../../lib/apollo/helpers'
 
-const Event = () => {
-  return <div>1 Event</div>
+type Props = {
+  slug: string
 }
 
-export default withDefaultSSR(compose(withAuthorization(['editor']))(Event))
+const Event = ({ slug }) => {
+  return <div>1 Event with slug {slug}</div>
+}
+
+export const getServerSideProps = createGetServerSideProps<Props>(
+  async ({ ctx, user }) => {
+    if (!user?.roles.includes('editor')) {
+      return {
+        notFound: true,
+      }
+    }
+
+    const eventSlug = ctx.params.slug as string | undefined
+
+    if (!eventSlug) {
+      return {
+        notFound: true,
+      }
+    }
+
+    return {
+      props: {
+        slug: eventSlug,
+      },
+    }
+  },
+)
+
+export default Event
