@@ -1,7 +1,9 @@
-import React from 'react'
+import compose from 'lodash/flowRight'
+import withAuthorization from '../../components/Auth/withAuthorization'
+import { withDefaultSSR } from '../../lib/apollo/helpers'
 
 const Events = () => {
   return <div>Hello</div>
 }
 
-export default Events
+export default withDefaultSSR(compose(withAuthorization(['editor']))(Events))
