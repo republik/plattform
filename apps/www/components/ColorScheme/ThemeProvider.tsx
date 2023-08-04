@@ -1,4 +1,4 @@
-import { ThemeProvider as NextThemeProvider, useTheme } from 'next-themes'
+import { ThemeProvider as NextThemeProvider } from 'next-themes'
 import { ReactNode } from 'react'
 import { useColorSchemePreference } from './useColorScheme'
 

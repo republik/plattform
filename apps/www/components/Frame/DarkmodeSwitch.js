@@ -3,7 +3,7 @@ import { CalloutMenu, IconButton, Radio } from '@project-r/styleguide'
 import { useInNativeApp } from '../../lib/withInNativeApp'
 
 import { IconDarkMode } from '@republik/icons'
-import { useTheme } from 'next-themes'
+import { useTheme } from '../ColorScheme/ThemeProvider'
 
 const DarkmodeSwitch = ({ t }) => {
   const { inNativeApp, inNativeAppLegacy } = useInNativeApp()

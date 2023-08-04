@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import createPersistedState from '../../lib/hooks/use-persisted-state'
 import { useInNativeApp, postMessage } from '../../lib/withInNativeApp'
-import { useTheme } from 'next-themes'
+import { useTheme } from './ThemeProvider'
 
 export const COLOR_SCHEME_KEY = 'republik-color-scheme'
 
