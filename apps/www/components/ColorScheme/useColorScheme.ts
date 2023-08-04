@@ -1,10 +1,11 @@
 import { useEffect } from 'react'
 import createPersistedState from '../../lib/hooks/use-persisted-state'
 import { useInNativeApp, postMessage } from '../../lib/withInNativeApp'
+import { useTheme } from 'next-themes'
 
 export const COLOR_SCHEME_KEY = 'republik-color-scheme'
 
-const usePersistedColorSchemeKey =
+export const usePersistedColorSchemeKey =
   createPersistedState<string>(COLOR_SCHEME_KEY)
 
 // used to persist os color scheme when running in our Android app
@@ -16,10 +17,10 @@ export const usePersistedOSColorSchemeKey =
 const DEFAULT_KEY = 'auto'
 
 export const useColorSchemePreference = () => {
+  const { theme } = useTheme()
   const { inNativeApp, inNativeAppLegacy } = useInNativeApp()
   const inNewApp = inNativeApp && !inNativeAppLegacy
-  const [key, set] = usePersistedColorSchemeKey<string>(DEFAULT_KEY)
-  const currentKey = key || DEFAULT_KEY
+  const currentKey = (theme === 'sytem' ? 'auto' : theme) || DEFAULT_KEY
 
   useEffect(() => {
     if (inNewApp) {
