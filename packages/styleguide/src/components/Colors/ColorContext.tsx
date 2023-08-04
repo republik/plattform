@@ -136,10 +136,10 @@ export const ColorContextLocalExtension: React.FC<{
     return [
       createScheme(extendedColorDefinitions),
       css({
-        ':root &, .light &': {
+        ':root &, [data-theme="light"] &': {
           ...lightColorCSSDefs,
         },
-        '.dark &': {
+        '[data-theme="dark"] &': {
           ...darkColorCSSDefs,
         },
       }),
@@ -160,11 +160,11 @@ export const RootColorVariables = () => {
       dangerouslySetInnerHTML={{
         __html: [
           // default light
-          `:root, .light, .dark .inverted { ${generateCSSColorDefinitions(
+          `:root, [data-theme="light"], [data-theme="dark"] [data-theme-inverted] { ${generateCSSColorDefinitions(
             colors.light,
           )} }`,
           // dark class applied to html element via next-themes OR manually applied on an element
-          `.dark, .light .inverted { ${generateCSSColorDefinitions(
+          `[data-theme="dark"], [data-theme="light"] [data-theme-inverted] { ${generateCSSColorDefinitions(
             colors.dark,
           )} }`,
         ].join('\n'),
@@ -198,7 +198,7 @@ export const ColorContextProvider: React.FC<{
 }
 
 export const InvertedColorScheme = ({ children }: { children: ReactNode }) => {
-  return <div className='inverted'>{children}</div>
+  return <div data-theme-inverted>{children}</div>
 }
 
 export default ColorContext
