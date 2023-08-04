@@ -8,7 +8,7 @@ import { PUBLIC_BASE_URL } from '../../lib/constants'
 
 import AppSignInOverlay from './AppSignInOverlay'
 import { useMediaProgress } from '../Audio/MediaProgress'
-import { usePersistedOSColorSchemeKey } from '../ColorScheme/lib'
+import { usePersistedOSColorSchemeKey } from '../ColorScheme/useColorScheme'
 import { useMe } from '../../lib/context/MeContext'
 import AppMessageEventEmitter from '../../lib/react-native/AppMessageEventEmitter'
 
@@ -36,7 +36,7 @@ const pendingAppSignInQuery = gql`
 const NewAppMessageSync = () => {
   const [signInQuery, setSignInQuery] = useState()
   const router = useRouter()
-  const setOSColorScheme = usePersistedOSColorSchemeKey()[1]
+  const [, setOSColorScheme] = usePersistedOSColorSchemeKey()
 
   const client = useApolloClient()
   const { me } = useMe()

@@ -3,7 +3,7 @@ import React from 'react'
 import {
   FlyerTileMeta,
   Flyer,
-  ColorContextLocalExtension,
+  InvertedColorScheme,
 } from '@project-r/styleguide'
 
 import { useMe } from '../../lib/context/MeContext'
@@ -76,13 +76,13 @@ const Paynote: React.FC<{
   }
 
   return (
-    <ColorContextLocalExtension>
+    <InvertedColorScheme>
       <FlyerTileMeta>
         <Flyer.H3>{t(`flyer/paynote/${noteType}/${noteKey}/title`)}</Flyer.H3>
         <Flyer.P>{t(`flyer/paynote/${noteType}/${noteKey}/body`)}</Flyer.P>
         {cta}
       </FlyerTileMeta>
-    </ColorContextLocalExtension>
+    </InvertedColorScheme>
   )
 }
 

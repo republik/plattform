@@ -51,7 +51,6 @@ import {
 } from '../Article/utils'
 
 import createLiveTeasers from './liveTeasers'
-import { ColorContextProvider } from '../../components/Colors/ColorContext'
 import { shouldRenderPlayButton } from '../shared/audio'
 
 export const subject = {
@@ -433,21 +432,19 @@ const createFrontSchema = ({
   const frontTileTeaser = {
     matchMdast: matchTeaserType('frontTile'),
     component: ({ children, attributes, ...props }) => (
-      <ColorContextProvider colorSchemeKey='light'>
-        <Link href={props.url}>
-          <TeaserFrontTile
-            audioPlayButton={
-              !!AudioPlayButton && shouldRenderPlayButton(props) ? (
-                <AudioPlayButton documentId={props?.urlMeta.documentId} />
-              ) : undefined
-            }
-            attributes={attributes}
-            {...props}
-          >
-            {children}
-          </TeaserFrontTile>
-        </Link>
-      </ColorContextProvider>
+      <Link href={props.url}>
+        <TeaserFrontTile
+          audioPlayButton={
+            !!AudioPlayButton && shouldRenderPlayButton(props) ? (
+              <AudioPlayButton documentId={props?.urlMeta.documentId} />
+            ) : undefined
+          }
+          attributes={attributes}
+          {...props}
+        >
+          {children}
+        </TeaserFrontTile>
+      </Link>
     ),
     props: (node, index, parent, { ancestors }) => {
       const aboveTheFold = ancestors[1].children.indexOf(ancestors[0]) < 2

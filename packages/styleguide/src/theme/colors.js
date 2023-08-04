@@ -104,6 +104,7 @@ const colors = {
     dividerInverted: '#4C4D4C',
     primary: '#00AA00',
     primaryHover: '#008800',
+    primaryText: '#FFFFFF',
     text: '#282828',
     textInverted: '#F0F0F0',
     textSoft: '#757575',
@@ -165,6 +166,7 @@ const colors = {
     dividerInverted: '#DADDDC',
     primary: '#00AA00',
     primaryHover: '#008800',
+    primaryText: '#FFFFFF',
     text: '#F0F0F0',
     textInverted: '#282828',
     textSoft: '#A9A9A9',
@@ -227,11 +229,6 @@ const colors = {
       '#000000': 'chartsInverted',
     },
   },
-}
-
-export const localInvertedColors = {
-  light: colors.dark,
-  dark: colors.light,
 }
 
 // add all deprecated colors, but only if they don't exist in new colors (no overwrites)
