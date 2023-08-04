@@ -2,6 +2,8 @@ import { ThemeProvider as NextThemeProvider } from 'next-themes'
 import { ReactNode } from 'react'
 import { useColorSchemePreference } from './useColorScheme'
 
+export { useTheme } from 'next-themes'
+
 export const ThemeProvider = ({ children }: { children: ReactNode }) => {
   // This uses our custom storage implementation which can store the preference in native apps too.
   const [key] = useColorSchemePreference()

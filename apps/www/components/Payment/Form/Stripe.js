@@ -16,6 +16,7 @@ import { SG_FONT_FACES } from '../../../lib/constants'
 
 import { loadStripe } from '../stripe'
 import StripeField from './StripeField'
+import { useTheme } from '../../ColorScheme/ThemeProvider'
 
 const styles = {
   container: css({
@@ -47,19 +48,20 @@ const Form = forwardRef(
   ) => {
     const stripe = useStripe()
     const elements = useElements()
+    const { resolvedTheme: theme } = useTheme()
 
     const style = {
       base: {
         ...fontStyles.sansSerifRegular,
         fontSize: '22px',
-        color: 'var(--color-text)',
+        color: theme === 'dark' ? '#fff' : '#282828',
         lineHeight: '40px',
         '::placeholder': {
-          color: 'var(--color-disabled)',
+          color: theme === 'dark' ? '#6E6E6E' : '#949494',
         },
       },
       invalid: {
-        color: 'var(--color-error)',
+        color: theme === 'dark' ? '#F0400A' : '#9F2500',
       },
     }
 
