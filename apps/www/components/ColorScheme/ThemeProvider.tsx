@@ -1,6 +1,7 @@
 import { ThemeProvider as NextThemeProvider } from 'next-themes'
 import { ReactNode } from 'react'
 import { useColorSchemePreference } from './useColorScheme'
+import Head from 'next/head'
 
 export { useTheme } from 'next-themes'
 
@@ -22,6 +23,9 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
   return (
     <NextThemeProvider attribute='data-theme' disableTransitionOnChange>
       <ColorSchemeMigration />
+      <Head>
+        <meta name='theme-color' content='var(--color-default)' />
+      </Head>
       {children}
     </NextThemeProvider>
   )
