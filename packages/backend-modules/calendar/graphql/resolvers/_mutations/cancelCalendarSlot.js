@@ -29,10 +29,12 @@ module.exports = async (_, args, context) => {
     calendar.limitRoles?.length &&
     !Roles.userIsInRoles(user, calendar.limitRoles)
   ) {
-    t.pluralize('api/unauthorized', {
-      count: calendar.limitRoles.length,
-      role: calendar.limitRoles.map((r) => `«${r}»`).join(', '),
-    })
+    throw new Error(
+      t.pluralize('api/unauthorized', {
+        count: calendar.limitRoles.length,
+        role: calendar.limitRoles.map((r) => `«${r}»`).join(', '),
+      }),
+    )
   }
 
   const userSlots = await loaders.CalendarSlot.byKeyObj.load({
