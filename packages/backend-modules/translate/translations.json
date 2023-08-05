@@ -642,11 +642,15 @@
     },
     {
       "key": "api/email/membership_winback/fromName",
-      "value": "Philipp von Essen"
+      "value": "Thomas Angeli"
     },
     {
       "key": "api/email/membership_owner_prolong_notice/subject",
-      "value": "Lobbywatch Jahresbeitrag"
+      "value": "Jahresbeitrag fällig"
+    },
+    {
+      "key": "api/email/membership_owner_prolong_notice/fr/subject",
+      "value": "Cotisation annuelle due"
     },
     {
       "key": "api/email/membership_owner_autopay_notice/subject",

@@ -443,7 +443,11 @@ mail.prepareMembershipOwnerNotice = async (
     to: user.email,
     subject: t.first(
       [
+        `api/email/${templateName}/sequenceNumber/${!!sequenceNumber}/${
+          user._raw.locale
+        }/subject`,
         `api/email/${templateName}/sequenceNumber/${!!sequenceNumber}/subject`,
+        `api/email/${templateName}/${user._raw.locale}/subject`,
         `api/email/${templateName}/subject`,
       ],
       {
