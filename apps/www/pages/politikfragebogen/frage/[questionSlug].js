@@ -7,6 +7,7 @@ import { nest } from 'd3-collection'
 import {
   QUESTION_SEPARATOR,
   QUESTION_TYPES,
+  QUESTIONS,
 } from '../../../components/PoliticsQuestionnaire/config'
 
 import {
@@ -14,12 +15,19 @@ import {
   getTypeBySlug,
 } from '../../../../www/components/PoliticsQuestionnaire/utils'
 
-export default ({ chartAnswers, question, nestedResponses, questionTypes }) => (
+export default ({
+  chartAnswers,
+  question,
+  nestedResponses,
+  questionTypes,
+  questionIndex,
+}) => (
   <Page
     chartAnswers={chartAnswers}
     question={question}
     nestedResponses={nestedResponses}
     questionTypes={questionTypes}
+    questionIndex={questionIndex}
   />
 )
 
@@ -41,6 +49,12 @@ export const getServerSideProps = createGetServerSideProps(
     )
 
     const questionSlugs = questionSlug.split(QUESTION_SEPARATOR)
+
+    const questionIndex = QUESTIONS.map((d) => d.questionSlugs[0]).indexOf(
+      questionSlugs[0],
+    )
+
+    console.log(questionIndex)
 
     const responsesBySlug = responses.filter((d) =>
       questionSlugs.includes(d.questionSlug),
@@ -69,6 +83,7 @@ export const getServerSideProps = createGetServerSideProps(
         question: question[0].question,
         nestedResponses: nestedResponses,
         questionTypes: questionTypes,
+        questionIndex: questionIndex,
       },
     }
   },

@@ -26,6 +26,7 @@ import {
   QUESTIONNAIRE_BG_COLOR,
   QUESTIONNAIRE_SQUARE_IMG_URL,
   ILLU_SHARE,
+  ILLU_CREDIT,
 } from './config'
 
 import { QuestionLink, SubmissionLink, AnswersChart } from './shared'
@@ -124,7 +125,7 @@ export const SubmissionsOverview = ({ submissionData }) => {
             >
               <FigureImage src={QUESTIONNAIRE_SQUARE_IMG_URL} />
               <FigureCaption>
-                <FigureByline>Cristina Spanò</FigureByline>
+                <FigureByline>{ILLU_CREDIT}</FigureByline>
               </FigureCaption>
             </Figure>
             <NarrowContainer style={{ padding: '20px 0' }}>

@@ -1,9 +1,6 @@
-import { useEffect, useRef } from 'react'
 import { useRouter } from 'next/router'
 
 import NextLink from 'next/link'
-
-import scrollIntoView from 'scroll-into-view'
 
 import {
   Interaction,
@@ -32,9 +29,14 @@ import {
   ILLU_SHARE,
 } from './config'
 
-const Page = ({ question, chartAnswers, nestedResponses, questionTypes }) => {
+const Page = ({
+  question,
+  chartAnswers,
+  nestedResponses,
+  questionTypes,
+  questionIndex,
+}) => {
   const router = useRouter()
-  const answerGridRef = useRef()
   const {
     query: { image },
   } = router
@@ -46,12 +48,14 @@ const Page = ({ question, chartAnswers, nestedResponses, questionTypes }) => {
   shareImageUrlObj.searchParams.set('image', true)
   const shareImageUrl = shareImageUrlObj.toString()
 
+  console.log(questionColor(18))
+
   if (image) {
     return (
       <ShareImageSplit
         question={{ text: question }}
         img={ILLU_SHARE}
-        bgColor={questionColor(0)}
+        bgColor={questionColor(questionIndex)}
       />
     )
   }
@@ -72,8 +76,8 @@ const Page = ({ question, chartAnswers, nestedResponses, questionTypes }) => {
     <Frame raw>
       <Meta data={meta} />
       <ColorContextProvider localColorVariables={colors} colorSchemeKey='light'>
-        <div ref={answerGridRef}>
-          <div style={{ backgroundColor: questionColor(0) }}>
+        <div>
+          <div style={{ backgroundColor: questionColor(questionIndex) }}>
             <div
               style={{
                 marginTop: 48,
@@ -83,7 +87,12 @@ const Page = ({ question, chartAnswers, nestedResponses, questionTypes }) => {
               // ref={containerRef}
             >
               <Center>
-                <div style={{ textAlign: 'center' }}>
+                <div
+                  style={{
+                    paddingTop: 24,
+                    textAlign: 'center',
+                  }}
+                >
                   <Interaction.P>
                     <NextLink href={OVERVIEW_QUESTIONNAIRE_PATH} passHref>
                       <Editorial.A>Zurück zur Übersicht</Editorial.A>
