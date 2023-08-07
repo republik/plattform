@@ -1,7 +1,7 @@
 import { scaleOrdinal } from 'd3-scale'
 
 // TODO: use correct color palette
-export const QUESTIONNAIRE_BG_COLOR = '#fff'
+export const QUESTIONNAIRE_BG_COLOR = '#bde6dc'
 // const COLORS = ['#56a9df', '#66b7ed']
 
 const COLORS = [

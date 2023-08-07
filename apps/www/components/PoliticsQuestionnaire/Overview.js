@@ -108,7 +108,7 @@ export const SubmissionsOverview = ({ submissionData }) => {
       <Meta data={meta} />
       <div
         style={{
-          backgroundColor: QUESTIONNAIRE_BG_COLOR,
+          backgroundColor: '#FFFFFF',
           padding: '24px 0 24px',
         }}
       >
@@ -153,7 +153,7 @@ export const SubmissionsOverview = ({ submissionData }) => {
           <div
             style={{
               margin: '48px auto 0',
-              backgroundColor: QUESTIONNAIRE_BG_COLOR,
+              backgroundColor: '#FFFFFF',
             }}
           >
             <Filters />
