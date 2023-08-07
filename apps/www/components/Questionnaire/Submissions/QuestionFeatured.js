@@ -21,7 +21,7 @@ import { useMe } from '../../../lib/context/MeContext'
 
 import {
   QUESTIONNAIRE_SUBMISSION_BOOL_QUERY,
-  QUESTIONNAIRE_SUBMISSIONS_QUERY,
+  QUESTIONNAIRE_ONLY_SUBMISSIONS_QUERY,
 } from './graphql'
 import { AnswersGrid, AnswersGridCard } from './AnswersGrid'
 import { QuestionSummaryChart } from './QuestionChart'
@@ -142,19 +142,22 @@ const AnswerGridOverview = ({
   hint,
   personPagePath,
 }) => {
-  const { loading, error, data } = useQuery(QUESTIONNAIRE_SUBMISSIONS_QUERY, {
-    variables: {
-      slug,
-      first: 6,
-      sortBy: 'random',
-      answers: [
-        {
-          questionId: question.id,
-          valueLength,
-        },
-      ],
+  const { loading, error, data } = useQuery(
+    QUESTIONNAIRE_ONLY_SUBMISSIONS_QUERY,
+    {
+      variables: {
+        slug,
+        first: 6,
+        sortBy: 'random',
+        answers: [
+          {
+            questionId: question.id,
+            valueLength,
+          },
+        ],
+      },
     },
-  })
+  )
 
   return (
     <Loader
@@ -185,16 +188,13 @@ const AnswerGridOverview = ({
             >
               <AnswersGrid>
                 {targetedAnswers.map(({ answers, displayAuthor, id }) => (
-                  <AnswersGridCard
-                    key={id}
-                    textLength={answers[0].payload.value.length}
-                  >
+                  <AnswersGridCard key={id}>
                     <SubmissionLink id={id} personPagePath={personPagePath}>
                       <a style={{ textDecoration: 'none' }}>
                         <div {...styles.answerCard}>
                           <div>
                             <Editorial.Question style={{ marginTop: 0 }}>
-                              {inQuotes(answers[0].payload.value)}
+                              {inQuotes(answers[0]?.payload?.value ?? '')}
                             </Editorial.Question>
                             <Editorial.Credit
                               style={{

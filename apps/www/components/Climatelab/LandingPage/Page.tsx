@@ -1,10 +1,8 @@
 import {
-  colors,
   fontStyles,
   mediaQueries,
   useColorContext,
   ColorContextProvider,
-  A,
 } from '@project-r/styleguide'
 
 import { css } from 'glamor'
@@ -64,10 +62,7 @@ const LandingPage = () => {
             </div>
           </section>
           <section>
-            <ColorContextProvider
-              localColorVariables={colors}
-              colorSchemeKey='light'
-            >
+            <ColorContextProvider colorSchemeKey='light'>
               <ClimateLabTrialform />
             </ColorContextProvider>
           </section>

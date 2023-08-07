@@ -125,18 +125,18 @@ const Button = React.forwardRef<
               primary ? 'primary' : 'transparent',
             ),
             borderColor: colorScheme.getCSSColor(primary ? 'primary' : 'text'),
-            color: colorScheme.getCSSColor(primary ? '#FFF' : 'text'),
+            color: colorScheme.getCSSColor(primary ? 'primaryText' : 'text'),
             '@media (hover)': {
               ':hover': {
                 backgroundColor: colorScheme.getCSSColor('primaryHover'),
                 borderColor: colorScheme.getCSSColor('primaryHover'),
-                color: colorScheme.getCSSColor('#FFF'),
+                color: colorScheme.getCSSColor('primaryText'),
               },
             },
             ':active': {
               backgroundColor: colorScheme.getCSSColor('primaryHover'),
               borderColor: colorScheme.getCSSColor('primaryHover'),
-              color: colorScheme.getCSSColor('#FFF'),
+              color: colorScheme.getCSSColor('primaryText'),
             },
             ':disabled, [disabled]': {
               ...disabledCSSProps,

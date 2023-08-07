@@ -26,7 +26,7 @@ import { useTranslation } from '../../../lib/withT'
 import Frame from '../../Frame'
 import Meta from '../../Frame/Meta'
 
-import { QUESTIONNAIRE_SUBMISSIONS_QUERY } from '../../Questionnaire/Submissions/graphql'
+import { QUESTIONNAIRE_WITH_SUBMISSIONS_QUERY } from '../../Questionnaire/Submissions/graphql'
 import { LinkToEditQuestionnaire } from '../../Questionnaire/Submissions/QuestionFeatured'
 import { ShareImageSplit } from '../../Questionnaire/Submissions/ShareImageSplit'
 import {
@@ -46,7 +46,7 @@ import {
   PERSON_SHARE_TEXT,
   ILLU_CREDIT,
 } from './config'
-import { IconChevronLeft, IconEdit, IconShare } from '@republik/icons'
+import { IconChevronLeft, IconEdit } from '@republik/icons'
 
 const USER_QUERY = gql`
   query getUserId($slug: String!) {
@@ -78,13 +78,16 @@ const Page = () => {
   shareImageUrlObj.searchParams.set('image', true)
   const shareImageUrl = shareImageUrlObj.toString()
 
-  const { loading, error, data } = useQuery(QUESTIONNAIRE_SUBMISSIONS_QUERY, {
-    variables: {
-      slug: QUESTIONNAIRE_SLUG,
-      id,
-      sortBy: 'random',
+  const { loading, error, data } = useQuery(
+    QUESTIONNAIRE_WITH_SUBMISSIONS_QUERY,
+    {
+      variables: {
+        slug: QUESTIONNAIRE_SLUG,
+        id,
+        sortBy: 'random',
+      },
     },
-  })
+  )
 
   const author = data?.questionnaire?.results?.nodes[0]?.displayAuthor
   const slug = author?.slug
