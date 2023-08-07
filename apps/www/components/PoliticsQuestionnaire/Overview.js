@@ -109,7 +109,7 @@ export const SubmissionsOverview = ({ submissionData }) => {
       <div
         style={{
           backgroundColor: '#FFFFFF',
-          padding: '24px 0 24px',
+          padding: '24px 0 0',
         }}
       >
         <ColorContextProvider colorSchemeKey='light'>
