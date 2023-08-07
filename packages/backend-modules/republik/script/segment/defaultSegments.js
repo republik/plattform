@@ -124,13 +124,13 @@ const handleRow = async (row) => {
     stats[key]++
   }
 
-  if (stats[key] <= 20) {
-    console.log(
-      Object.keys(record)
-        .map((key) => record[key])
-        .join(','),
-    )
-  }
+  // if (stats[key] <= 20) {
+  console.log(
+    Object.keys(record)
+      .map((key) => record[key])
+      .join(','),
+  )
+  // }
 }
 
 const handleBatch = async (rows, count, pgdb) => {
