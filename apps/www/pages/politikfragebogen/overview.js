@@ -33,13 +33,15 @@ export const getServerSideProps = createGetServerSideProps(
 
     const joinedData = leftJoin(responses, QUESTION_TYPES, 'questionSlug')
 
-    const filterByLength = joinedData.filter((item) => {
-      if (item.type === 'choice') return item
-      return (
-        item.answer.length > item.answerLength?.min &&
-        item.answer.length < item.answerLength?.max
-      )
-    })
+    const filterByLength = joinedData
+      .filter((item) => {
+        if (item.type === 'choice') return item
+        return (
+          item.answer.length > item.answerLength?.min &&
+          item.answer.length < item.answerLength?.max
+        )
+      })
+      .sort(() => Math.random() - 0.5)
 
     const filteredByParty = party
       ? joinedData.filter((response) => response.party === party)
