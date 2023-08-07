@@ -44,7 +44,7 @@ const run = async () => {
                   'article',
                   'editorialNewsletter',
                   'discussion',
-                  'flyer',
+                  'flyer', // only necessary for financial year 22/23 to count in journal documents
                 ],
               },
             },
