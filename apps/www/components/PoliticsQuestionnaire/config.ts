@@ -1,15 +1,21 @@
 import { scaleOrdinal } from 'd3-scale'
 
 // TODO: use correct color palette
-export const QUESTIONNAIRE_BG_COLOR = '#faea4c'
-const COLORS = ['#56a9df', '#66b7ed']
+export const QUESTIONNAIRE_BG_COLOR = '#fff'
+// const COLORS = ['#56a9df', '#66b7ed']
+
+const COLORS = [
+  '#bde6dc',
+  '#a89bd1',
+  '#c76c65',
+  '#f9d97a',
+  '#ffd2e2',
+  '#f1abff',
+]
 
 export const QUESTION_SEPARATOR = ','
 
-export const questionColor = scaleOrdinal(
-  [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-  COLORS,
-)
+export const questionColor = scaleOrdinal([0, 1, 2, 3, 4, 5], COLORS)
 
 type QuestionConfigOrder = {
   questionSlugs: string[]
