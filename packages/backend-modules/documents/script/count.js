@@ -44,6 +44,7 @@ const run = async () => {
                   'article',
                   'editorialNewsletter',
                   'discussion',
+                  'flyer',
                 ],
               },
             },
