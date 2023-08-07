@@ -158,6 +158,11 @@ const Page = ({ responses, authorData }) => {
             />
           )} */}
         </div>
+        <Editorial.P>
+          Partei: {authorData.party}
+          <br />
+          Wohnkanton: {authorData.canton}
+        </Editorial.P>
 
         {responses.map(({ question, answer, type, options, idx }) => (
           <QuestionAnswerPair

@@ -49,7 +49,7 @@ export const getServerSideProps = createGetServerSideProps(
     })
 
     const authorData = responsesWithTypesById.map((d) => {
-      return { id: d.uuid, name: d.name }
+      return { id: d.uuid, name: d.name, party: d.party, canton: d.canton }
     })
 
     return {
