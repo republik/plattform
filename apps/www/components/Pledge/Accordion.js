@@ -124,6 +124,8 @@ const query = gql`
           minAmount
           maxAmount
           defaultAmount
+          fixedPrice
+          payMoreSuggestion
           reward {
             __typename
             ... on MembershipType {
@@ -226,116 +228,128 @@ class Accordion extends Component {
       )
     }
 
-    return <>
-      {renderIntro && renderIntro({ packages })}
-      <div style={{ marginTop: 20 }}>
-        {groups.map(({ key: group, values: pkgs }) => {
-          const links = [
-            group === 'ME' && {
-              pathname: '/angebote',
-              query: { package: 'ABO', userPrice: 1 },
-              text: t('package/ABO/userPrice/teaser'),
-            },
-          ].filter(Boolean)
-
-          const setHover = (hover) => this.setState({ hover })
-
-          let pkgItems = pkgs.map((pkg) => {
-            let price = pkg.options.reduce(
-              (amount, option) => amount + option.price * option.minAmount,
-              0,
-            )
-            if (!price && pkg.name !== 'PROLONG') {
-              price =
-                min(
-                  pkg.options
-                    .filter(
-                      (o) =>
-                        o.reward && o.reward.__typename === 'MembershipType',
-                    )
-                    .map(
-                      (option) =>
-                        option.price *
-                        (option.minAmount ||
-                          option.defaultAmount ||
-                          Math.min(1, option.maxAmount)),
-                    ),
-                ) || 0
-            }
-            return {
-              pathname: '/angebote',
-              query: { package: pkg.name },
-              name: pkg.name,
-              price,
-            }
-          })
-
-          if (group === 'ME') {
-            const benefactorIndex = pkgItems.findIndex(
-              (item) => item.name === 'BENEFACTOR',
-            )
-            // TMP Marketing Trial for Students
-            if (benefactorIndex !== -1) {
-              pkgItems.splice(benefactorIndex + 1, 0, {
+    return (
+      <>
+        {renderIntro && renderIntro({ packages })}
+        <div style={{ marginTop: 20 }}>
+          {groups.map(({ key: group, values: pkgs }) => {
+            const links = [
+              group === 'ME' && {
                 pathname: '/angebote',
-                query: {
-                  package: 'ABO',
-                  userPrice: 1,
+                query: { package: 'ABO', userPrice: 1 },
+                text: t('package/ABO/userPrice/teaser'),
+              },
+            ].filter(Boolean)
+
+            const setHover = (hover) => this.setState({ hover })
+
+            let pkgItems = pkgs.map((pkg) => {
+              let price = pkg.options.reduce(
+                (amount, option) => amount + option.price * option.minAmount,
+                0,
+              )
+              if (!price && pkg.name !== 'PROLONG') {
+                price =
+                  min(
+                    pkg.options
+                      .filter(
+                        (o) =>
+                          o.reward && o.reward.__typename === 'MembershipType',
+                      )
+                      .map(
+                        (option) =>
+                          option.price *
+                          (option.minAmount ||
+                            option.defaultAmount ||
+                            Math.min(1, option.maxAmount)),
+                      ),
+                  ) || 0
+              }
+              return {
+                pathname: '/angebote',
+                query: { package: pkg.name },
+                name: pkg.name,
+                price,
+              }
+            })
+
+            if (group === 'ME') {
+              const benefactorIndex = pkgItems.findIndex(
+                (item) => item.name === 'BENEFACTOR',
+              )
+              // TMP Marketing Trial for Students
+              if (benefactorIndex !== -1) {
+                pkgItems.splice(benefactorIndex + 1, 0, {
+                  pathname: '/angebote',
+                  query: {
+                    package: 'ABO',
+                    userPrice: 1,
+                    price: 14000,
+                    reason: t('marketing/offers/students/reasonTemplate'),
+                  },
+                  name: 'students',
+                  title: t('marketing/offers/students'),
                   price: 14000,
-                  reason: t('marketing/offers/students/reasonTemplate'),
-                },
-                name: 'students',
-                title: t('marketing/offers/students'),
-                price: 14000,
+                })
+              }
+              pkgItems.push({
+                pathname: '/abholen',
+                name: 'claim',
+                title: t('marketing/offers/claim'),
               })
             }
-            pkgItems.push({
-              pathname: '/abholen',
-              name: 'claim',
-              title: t('marketing/offers/claim'),
-            })
-          }
 
-          return (
-            <Fragment key={group}>
-              {groups.length > 1 && (
-                <div
-                  {...css(styles.groupTitle, compact && styles.packageTitle)}
-                >
-                  {t(`package/group/${group}`)}
-                </div>
-              )}
-              {pkgItems.map(({ name, title, price, pathname, query }) => (
-                <Link key={name} href={{ pathname, query }} passHref legacyBehavior>
-                  <PackageItem
-                    t={t}
-                    hover={hover}
-                    setHover={setHover}
-                    name={name}
-                    title={title}
-                    crowdfundingName={crowdfundingName}
-                    price={price}
-                  />
-                </Link>
-              ))}
-              <PackageBuffer />
-              {!!links.length && (
-                <div {...styles.links}>
-                  {links.map(({ pathname, query, text }, i) => (
-                    <Link key={i} href={{ pathname, query }} passHref legacyBehavior>
-                      <Editorial.A>
-                        {text}
-                        <br />
-                      </Editorial.A>
-                    </Link>
-                  ))}
-                </div>
-              )}
-            </Fragment>
-          );
-        })}
-      </div>
-    </>;
+            return (
+              <Fragment key={group}>
+                {groups.length > 1 && (
+                  <div
+                    {...css(styles.groupTitle, compact && styles.packageTitle)}
+                  >
+                    {t(`package/group/${group}`)}
+                  </div>
+                )}
+                {pkgItems.map(({ name, title, price, pathname, query }) => (
+                  <Link
+                    key={name}
+                    href={{ pathname, query }}
+                    passHref
+                    legacyBehavior
+                  >
+                    <PackageItem
+                      t={t}
+                      hover={hover}
+                      setHover={setHover}
+                      name={name}
+                      title={title}
+                      crowdfundingName={crowdfundingName}
+                      price={price}
+                    />
+                  </Link>
+                ))}
+                <PackageBuffer />
+                {!!links.length && (
+                  <div {...styles.links}>
+                    {links.map(({ pathname, query, text }, i) => (
+                      <Link
+                        key={i}
+                        href={{ pathname, query }}
+                        passHref
+                        legacyBehavior
+                      >
+                        <Editorial.A>
+                          {text}
+                          <br />
+                        </Editorial.A>
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </Fragment>
+            )
+          })}
+        </div>
+      </>
+    )
   }
 }
 

@@ -12,7 +12,7 @@ import {
 import { HEADER_HEIGHT, HEADER_HEIGHT_MOBILE } from '../../constants'
 
 import withT from '../../../lib/withT'
-import withInNativeApp from '../../../lib/withInNativeApp'
+import { useInNativeApp } from '../../../lib/withInNativeApp'
 import SignIn from '../../Auth/SignIn'
 import SignOut from '../../Auth/SignOut'
 import { withMembership, withTester } from '../../Auth/checkRoles'
@@ -30,17 +30,10 @@ const SignoutLink = ({ children, ...props }) => (
   </div>
 )
 
-const UserNav = ({
-  me,
-  router,
-  expanded,
-  closeHandler,
-  t,
-  inNativeApp,
-  inNativeIOSApp,
-  pageColorSchemeKey,
-}) => {
+const UserNav = ({ me, router, expanded, closeHandler, t }) => {
   const [containerPadding, setContainerPadding] = useState()
+  const { inNativeApp, inNativeIOSApp } = useInNativeApp()
+
   const containerRef = useRef(null)
   useEffect(() => {
     const measureLeftPadding = () => {
@@ -78,152 +71,150 @@ const UserNav = ({
   if (expanded) {
     hasExpandedRef.current = true
   }
-  return <>
-    <Center
-      {...styles.container}
-      {...colorScheme.set('color', 'text')}
-      id='nav'
-    >
-      <div ref={containerRef}>
-        {hasExpandedRef.current && (
-          <>
-            <div style={{ marginBottom: 20 }}>
-              <DarkmodeSwitch
-                t={t}
-                inNativeApp={inNativeApp}
-                pageColorSchemeKey={pageColorSchemeKey}
-              />
-            </div>
-            {!me && (
-              <>
-                <div {...styles.signInBlock}>
-                  <SignIn style={{ padding: 0 }} />
-                </div>
-              </>
-            )}
-            {!me?.activeMembership && !inNativeIOSApp && (
-              <Link href='/angebote' passHref legacyBehavior>
-                <Button style={{ marginTop: 24, marginBottom: 24 }} block>
-                  {t('nav/becomemember')}
-                </Button>
-              </Link>
-            )}
-            {me && (
-              <>
-                <NavLink
-                  href='/benachrichtigungen'
-                  closeHandler={closeHandler}
-                  large
-                >
-                  {t('pages/notifications/title')}
-                </NavLink>
-                {expanded ? (
-                  <NotificationFeedMini closeHandler={closeHandler} />
-                ) : (
-                  <Loader loading />
-                )}
-                <div style={{ marginTop: 24 }}>
+  return (
+    <>
+      <Center
+        {...styles.container}
+        {...colorScheme.set('color', 'text')}
+        id='nav'
+      >
+        <div ref={containerRef}>
+          {hasExpandedRef.current && (
+            <>
+              <div style={{ marginBottom: 20 }}>
+                <DarkmodeSwitch t={t} />
+              </div>
+              {!me && (
+                <>
+                  <div {...styles.signInBlock}>
+                    <SignIn style={{ padding: 0 }} />
+                  </div>
+                </>
+              )}
+              {!me?.activeMembership && !inNativeIOSApp && (
+                <Link href='/angebote' passHref>
+                  <Button style={{ marginTop: 24, marginBottom: 24 }} block>
+                    {t('nav/becomemember')}
+                  </Button>
+                </Link>
+              )}
+              {me && (
+                <>
                   <NavLink
-                    href='/lesezeichen'
+                    href='/benachrichtigungen'
                     closeHandler={closeHandler}
                     large
                   >
-                    {`${t('nav/bookmarks')}`}
+                    {t('pages/notifications/title')}
                   </NavLink>
-                </div>
-                <div {...styles.bookmarkContainer}>
                   {expanded ? (
-                    <BookmarkMiniFeed
-                      style={{
-                        marginTop: 10,
-                        paddingLeft: containerPadding - 16,
-                      }}
-                      closeHandler={closeHandler}
-                      variables={variables}
-                    />
+                    <NotificationFeedMini closeHandler={closeHandler} />
                   ) : (
                     <Loader loading />
                   )}
-                </div>
-                <div {...styles.navSection}>
-                  <div {...styles.navLinks}>
+                  <div style={{ marginTop: 24 }}>
                     <NavLink
-                      href='/konto'
-                      currentPath={currentPath}
-                      large
+                      href='/lesezeichen'
                       closeHandler={closeHandler}
-                    >
-                      {t('Frame/Popover/myaccount')}
-                    </NavLink>
-                    <NavLink
-                      href={`/~${me.username || me.id}`}
-                      currentPath={currentPath}
                       large
-                      closeHandler={closeHandler}
                     >
-                      {t('Frame/Popover/myprofile')}
+                      {`${t('nav/bookmarks')}`}
                     </NavLink>
                   </div>
-                </div>
-                <hr
-                  {...styles.hr}
-                  {...colorScheme.set('color', 'divider')}
-                  {...colorScheme.set('backgroundColor', 'divider')}
-                />
-                <div {...styles.navSection}>
-                  <div {...styles.navLinks}>
-                    {me?.accessCampaigns?.length > 0 && (
-                      <NavLink
-                        href='/teilen'
-                        currentPath={currentPath}
+                  <div {...styles.bookmarkContainer}>
+                    {expanded ? (
+                      <BookmarkMiniFeed
+                        style={{
+                          marginTop: 10,
+                          paddingLeft: containerPadding - 16,
+                        }}
                         closeHandler={closeHandler}
+                        variables={variables}
+                      />
+                    ) : (
+                      <Loader loading />
+                    )}
+                  </div>
+                  <div {...styles.navSection}>
+                    <div {...styles.navLinks}>
+                      <NavLink
+                        href='/konto'
+                        currentPath={currentPath}
                         large
+                        closeHandler={closeHandler}
                       >
-                        {t('nav/share')}
+                        {t('Frame/Popover/myaccount')}
                       </NavLink>
-                    )}
-                    {!inNativeIOSApp && (
-                      <>
+                      <NavLink
+                        href={`/~${me.username || me.id}`}
+                        currentPath={currentPath}
+                        large
+                        closeHandler={closeHandler}
+                      >
+                        {t('Frame/Popover/myprofile')}
+                      </NavLink>
+                    </div>
+                  </div>
+                  <hr
+                    {...styles.hr}
+                    {...colorScheme.set('color', 'divider')}
+                    {...colorScheme.set('backgroundColor', 'divider')}
+                  />
+                  <div {...styles.navSection}>
+                    <div {...styles.navLinks}>
+                      {me?.accessCampaigns?.length > 0 && (
                         <NavLink
-                          href={{
-                            pathname: '/angebote',
-                            query: { group: 'GIVE' },
-                          }}
+                          href='/teilen'
                           currentPath={currentPath}
                           closeHandler={closeHandler}
                           large
                         >
-                          {t('nav/give')}
+                          {t('nav/share')}
                         </NavLink>
-                        <NavLink
-                          {...fontStyles.sansSerifLight16}
-                          href={{
-                            pathname: '/angebote',
-                            query: { package: 'DONATE' },
-                          }}
-                          currentPath={currentPath}
-                          closeHandler={closeHandler}
-                          large
-                        >
-                          {t('nav/donate')}
-                        </NavLink>
-                      </>
-                    )}
+                      )}
+                      {!inNativeIOSApp && (
+                        <>
+                          <NavLink
+                            href={{
+                              pathname: '/angebote',
+                              query: { group: 'GIVE' },
+                            }}
+                            currentPath={currentPath}
+                            closeHandler={closeHandler}
+                            large
+                          >
+                            {t('nav/give')}
+                          </NavLink>
+                          <NavLink
+                            {...fontStyles.sansSerifLight16}
+                            href={{
+                              pathname: '/angebote',
+                              query: { package: 'DONATE' },
+                            }}
+                            currentPath={currentPath}
+                            closeHandler={closeHandler}
+                            large
+                          >
+                            {t('nav/donate')}
+                          </NavLink>
+                        </>
+                      )}
+                    </div>
                   </div>
-                </div>
-                <div {...styles.navSection}>
-                  <div {...styles.navLinks} {...styles.smallLinks}>
-                    <SignOut Link={SignoutLink} />
+                  <div {...styles.navSection}>
+                    <div {...styles.navLinks} {...styles.smallLinks}>
+                      <SignOut Link={SignoutLink} />
+                    </div>
                   </div>
-                </div>
-              </>
-            )}
-          </>
-        )}
-      </div>
-    </Center>
-    {inNativeApp && hasExpandedRef.current && <Footer />}
-  </>;
+                </>
+              )}
+            </>
+          )}
+        </div>
+      </Center>
+      {inNativeApp && hasExpandedRef.current && <Footer />}
+    </>
+  )
 }
 
 const styles = {
@@ -277,4 +268,4 @@ const styles = {
   }),
 }
 
-export default compose(withT, withInNativeApp, withMembership)(UserNav)
+export default compose(withT, withMembership)(UserNav)

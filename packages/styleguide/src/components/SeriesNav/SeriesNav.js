@@ -9,10 +9,9 @@ import {
   INFOBOX_IMAGE_SIZES,
 } from '../InfoBox'
 import { Figure, FigureImage } from '../Figure'
-import { ColorContextLocalExtension } from '../Colors/ColorContext'
+import { InvertedColorScheme } from '../Colors/ColorContext'
 import Center, { PADDED_MAX_WIDTH_BREAKOUT } from '../Center'
 import SeriesNavTile from './SeriesNavTile'
-import { localInvertedColors } from '../../theme/colors'
 import { Editorial } from '../Typography'
 
 const DEFAULT_PAYNOTE_INDEX = 2
@@ -161,9 +160,9 @@ function SeriesNav({
       </TeaserCarousel>
 
       {inline && PayNote && (
-        <ColorContextLocalExtension localColors={localInvertedColors}>
+        <InvertedColorScheme>
           <PayNote context={context} repoId={repoId} inline />
-        </ColorContextLocalExtension>
+        </InvertedColorScheme>
       )}
     </div>
   )

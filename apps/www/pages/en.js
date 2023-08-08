@@ -23,7 +23,6 @@ import {
   Interaction,
   VideoPlayer,
   useColorContext,
-  ColorHtmlBodyColors,
 } from '@project-r/styleguide'
 
 import { PUBLIC_BASE_URL, CDN_FRONTEND_BASE_URL } from '../lib/constants'
@@ -132,7 +131,6 @@ const EnPage = ({
 
   return (
     <NarrowContainer>
-      <ColorHtmlBodyColors colorSchemeKey='auto' />
       <Head>
         <title>Manifesto — Republik</title>
         <meta name='description' content={meta.description} />
@@ -259,7 +257,7 @@ const EnPage = ({
         <PureFooter en />
       </div>
     </NarrowContainer>
-  );
+  )
 }
 
 export default withDefaultSSR(withRouter(EnPage))

@@ -1,6 +1,7 @@
 import { AppProps } from 'next/app'
 import Head from 'next/head'
 import { withApollo } from '../lib/apollo'
+import { RootColorVariables } from '@project-r/styleguide'
 
 import Track from '../components/Track'
 
@@ -20,6 +21,7 @@ const WebApp = ({ Component, pageProps }: AppProps<WebAppProps>) => {
       <Head>
         <meta name='viewport' content='width=device-width,initial-scale=1' />
       </Head>
+      <RootColorVariables />
       <Component serverContext={serverContext} {...otherPageProps} />
       <Track />
     </>

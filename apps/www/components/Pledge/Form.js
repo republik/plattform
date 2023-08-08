@@ -431,11 +431,7 @@ class Pledge extends Component {
                       ownMembership={ownMembership}
                       customMe={customMe}
                       userPrice={userPrice}
-                      fixedPrice={[
-                        'MONTHLY_ABO',
-                        'YEARLY_ABO',
-                        'LESHA',
-                      ].includes(pkg.name)}
+                      fixedPrice={pkg.options.every((opt) => opt.fixedPrice)}
                       pkg={pkg}
                       packages={packages}
                       onChange={(fields) => {
@@ -510,6 +506,8 @@ const query = gql`
           price
           userPrice
           autoPay
+          fixedPrice
+          payMoreSuggestion
           minAmount
           maxAmount
           defaultAmount
@@ -559,6 +557,8 @@ const query = gql`
           price
           userPrice
           autoPay
+          fixedPrice
+          payMoreSuggestion
           minAmount
           maxAmount
           defaultAmount

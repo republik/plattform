@@ -89,6 +89,7 @@
     "lodash": "^4.17.21",
     "lru-cache": "^4.1.3",
     "next": "^13.4.12",
+    "next-themes": "^0.2.1",
     "photoswipe": "^4.1.3",
     "prop-types": "^15.8.1",
     "react": "^18.2.0",

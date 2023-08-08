@@ -9,7 +9,6 @@ import withT from '../lib/withT'
 import withInNativeApp from '../lib/withInNativeApp'
 import { intersperse } from '../lib/utils/helpers'
 
-
 import {
   HEADER_HEIGHT,
   HEADER_HEIGHT_MOBILE,
@@ -30,7 +29,6 @@ import {
   A,
   mediaQueries,
   useColorContext,
-  ColorHtmlBodyColors,
 } from '@project-r/styleguide'
 import Link from 'next/link'
 import { withDefaultSSR } from '../lib/apollo/helpers'
@@ -163,7 +161,6 @@ const Page = ({ router: { query: rawQuery }, t, me, inNativeApp }) => {
 
   return (
     <div>
-      <ColorHtmlBodyColors colorSchemeKey='auto' />
       <Head>
         <title>{t('notifications/pageTitle')}</title>
         <meta name='robots' content='noindex' />
@@ -176,11 +173,9 @@ const Page = ({ router: { query: rawQuery }, t, me, inNativeApp }) => {
           {logo}
         </div>
         {inNativeApp && (
-          (<Link href='/' passHref {...styles.close}>
-
+          <Link href='/' passHref {...styles.close}>
             <IconClose {...colorScheme.set('fill', 'text')} size={32} />
-
-          </Link>)
+          </Link>
         )}
         <div
           {...styles.text}
@@ -202,7 +197,8 @@ const Page = ({ router: { query: rawQuery }, t, me, inNativeApp }) => {
                     }}
                     params={link.params}
                     passHref
-                    legacyBehavior>
+                    legacyBehavior
+                  >
                     <A>{link.label}</A>
                   </Link>
                 )),
@@ -213,7 +209,7 @@ const Page = ({ router: { query: rawQuery }, t, me, inNativeApp }) => {
         </div>
       </NarrowContainer>
     </div>
-  );
+  )
 }
 
 export default withDefaultSSR(

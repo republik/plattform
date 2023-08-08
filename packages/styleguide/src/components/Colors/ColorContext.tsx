@@ -1,19 +1,14 @@
-import React, {
-  useEffect,
-  useMemo,
-  useState,
-  useContext,
-  ReactNode,
-} from 'react'
 import { css } from 'glamor'
 import memoize from 'lodash/memoize'
+import React, { ReactNode, useContext, useMemo } from 'react'
 
-import colors, { localInvertedColors } from '../../theme/colors'
+import colors from '../../theme/colors'
 
-const getVariableColorKeys = (colors) =>
-  Object.keys(colors.light).filter(
-    (color) => colors.light[color] !== colors.dark[color],
-  )
+const getVariableColorKeys = (colors) => {
+  return [
+    ...new Set([...Object.keys(colors.light), ...Object.keys(colors.dark)]),
+  ]
+}
 
 // identify all variable color keys
 const variableColorKeys = getVariableColorKeys(colors)
@@ -24,16 +19,18 @@ const createScheme = (specificColors) => {
     ...specificColors,
   }
 
-  const accessCSSColor = colorDefinitions.cssColors
-    ? (color) =>
-        colorDefinitions.cssColors[color] || colorDefinitions[color] || color
-    : (color) => colorDefinitions[color] || color
-
   const { mappings = {} } = colorDefinitions
 
   const getCSSColor = (color, mappingName = undefined) => {
+    // For backwards compatibility, we map some colors to variable names.
+    // E.g. when mappingName is 'format', '#000' is looked up in mappings.format['#000'] and becomes 'accentColorMeta'
     const mapping = mappings[mappingName] || {}
-    return accessCSSColor(mapping[color] || color)
+
+    return color in mapping
+      ? `var(--color-${mapping[color]})`
+      : color in colorDefinitions
+      ? `var(--color-${color})`
+      : color
   }
 
   const createColorRule = (attr, color, mappingName = undefined) => {
@@ -44,7 +41,6 @@ const createScheme = (specificColors) => {
 
   return {
     schemeKey: colorDefinitions.schemeKey,
-    CSSVarSupport: colorDefinitions.CSSVarSupport,
     colorDefinitions,
     ranges: {
       neutral: colorDefinitions.neutral,
@@ -73,14 +69,6 @@ const createScheme = (specificColors) => {
     getCSSColor,
   }
 }
-
-const ColorContext = React.createContext(createScheme(colors.light))
-
-export const useColorContext = () => {
-  const colorContext = useContext(ColorContext)
-  return [colorContext]
-}
-
 const generateCSSColorDefinitions = (colors) => {
   return variableColorKeys
     .map((key) => `--color-${key}: ${colors[key]};`)
@@ -94,12 +82,24 @@ const getObjectForKeys = (colorKeys, mapper = (key) => key) =>
     return c
   }, {})
 
+const defaultColorContextValue = createScheme({
+  schemeKey: 'auto',
+  ...getObjectForKeys(variableColorKeys, (key) => `var(--color-${key})`),
+})
+
+const ColorContext = React.createContext(defaultColorContextValue)
+
+export const useColorContext = () => {
+  const colorContext = useContext(ColorContext)
+  return [colorContext]
+}
+
 export const ColorContextLocalExtension: React.FC<{
   children?: ReactNode
   localColors: any
   localMappings: any
-}> = ({ children, localColors = localInvertedColors, localMappings = {} }) => {
-  const [{ schemeKey, CSSVarSupport, colorDefinitions }] = useColorContext()
+}> = ({ children, localColors = colors, localMappings = {} }) => {
+  const [{ schemeKey, colorDefinitions }] = useColorContext()
 
   const [colorValue, cssVarRule] = useMemo(() => {
     const { mappings = {} } = colorDefinitions
@@ -109,12 +109,10 @@ export const ColorContextLocalExtension: React.FC<{
     const extendedColorDefinitions = {
       ...colorDefinitions,
       ...localColors[schemeKey === 'auto' ? 'light' : schemeKey],
-      ...(CSSVarSupport
-        ? getObjectForKeys(
-            variableLocalColorKeys,
-            (key) => `var(--color-${key})`,
-          )
-        : {}),
+      ...getObjectForKeys(
+        variableLocalColorKeys,
+        (key) => `var(--color-${key})`,
+      ),
       mappings: {
         ...mappings,
         ...getObjectForKeys(Object.keys(localMappings), (key) => {
@@ -124,16 +122,6 @@ export const ColorContextLocalExtension: React.FC<{
           }
         }),
       },
-      cssColors:
-        schemeKey === 'auto'
-          ? {
-              ...colorDefinitions.cssColors,
-              ...getObjectForKeys(variableLocalColorKeys, (key) => [
-                localColors.light[key],
-                `var(--color-${key})`,
-              ]),
-            }
-          : undefined,
     }
 
     const lightColorCSSDefs = variableLocalColorKeys.reduce((defs, key) => {
@@ -148,23 +136,15 @@ export const ColorContextLocalExtension: React.FC<{
     return [
       createScheme(extendedColorDefinitions),
       css({
-        // light auto
-        ...lightColorCSSDefs,
-        '[data-user-color-scheme="dark"] &': {
-          // dark user
-          ...darkColorCSSDefs,
+        ':root &, [data-theme="light"] &': {
+          ...lightColorCSSDefs,
         },
-        '@media (prefers-color-scheme: dark)': {
-          // dark auto
+        '[data-theme="dark"] &': {
           ...darkColorCSSDefs,
-          '[data-user-color-scheme="light"] &': {
-            // light user
-            ...lightColorCSSDefs,
-          },
         },
       }),
     ]
-  }, [colorDefinitions, localColors, localMappings, CSSVarSupport, schemeKey])
+  }, [colorDefinitions, localColors, localMappings, schemeKey])
 
   return (
     <ColorContext.Provider value={colorValue}>
@@ -173,58 +153,30 @@ export const ColorContextLocalExtension: React.FC<{
   )
 }
 
-const DEFAULT_COLORS_OBJECT = colors
-
-type ColorHTMLBodyColorsProps = {
-  colorSchemeKey?: 'auto' | 'light' | 'dark'
-  colorsObject?: {
-    light: {
-      default: string
-      text: string
-    }
-    dark: {
-      default: string
-      text: string
-    }
-  }
-}
-
-/**
- * ColorHTMLBodyColors allows setting the background and text colors for the body element.
- * By default, it will use the colors object.
- * @param {string} colorSchemeKey - 'auto', 'light', 'dark'
- * If a value different then 'auto' is used, the colorScheme can be forced to light or dark.
- * @param {object} colorsObject - colors object to be used for the body colors
- */
-export const ColorHtmlBodyColors = ({
-  colorSchemeKey = 'auto',
-  colorsObject = DEFAULT_COLORS_OBJECT,
-}: ColorHTMLBodyColorsProps) => {
+export const RootColorVariables = () => {
   return (
     <style
-      key={colorSchemeKey}
+      data-testid='theme-variables'
       dangerouslySetInnerHTML={{
-        __html:
-          colorSchemeKey === 'auto'
-            ? [
-                // default light
-                `html, body { background-color: ${colorsObject.light.default}; color: ${colorsObject.light.text}; }`,
-                // dark via user preference
-                `html[data-user-color-scheme="dark"], html[data-user-color-scheme="dark"] body { background-color: ${colorsObject.dark.default}; color: ${colors.dark.text}; }`,
-                // os dark preference
-                `@media (prefers-color-scheme: dark) {`,
-                [
-                  // auto dark via media query
-                  `html, body { background-color: ${colorsObject.dark.default}; color: ${colorsObject.dark.text}; }`,
-                  // light via user preference when os is dark
-                  `html[data-user-color-scheme="light"], html[data-user-color-scheme="light"] body { background-color: ${colorsObject.light.default}; color: ${colors.light.text}; }`,
-                ].join('\n'),
-                `}`,
-              ].join('\n')
-            : `html, body { background-color: ${colorsObject[colorSchemeKey].default}; color: ${colorsObject[colorSchemeKey].text}; }`,
+        __html: [
+          // default light
+          `:root, [data-theme="light"], [data-theme="dark"] [data-theme-inverted] { ${generateCSSColorDefinitions(
+            colors.light,
+          )} }`,
+          // dark class applied to html element via next-themes OR manually applied on an element
+          `[data-theme="dark"], [data-theme="light"] [data-theme-inverted] { ${generateCSSColorDefinitions(
+            colors.dark,
+          )} }`,
+        ].join('\n'),
       }}
     />
   )
+}
+
+const colorSchemeKeyToDataTheme = (colorSchemeKey: string) => {
+  return colorSchemeKey === 'light' || colorSchemeKey === 'dark'
+    ? colorSchemeKey
+    : undefined
 }
 
 export const ColorContextProvider: React.FC<{
@@ -232,77 +184,21 @@ export const ColorContextProvider: React.FC<{
   colorSchemeKey: 'light' | 'dark' | 'auto'
   root?: boolean
 }> = ({ colorSchemeKey = 'auto', root = false, children }) => {
-  // we initially assume browser support it
-  // - e.g. during server side rendering
-  const [CSSVarSupport, setCSSVarSupport] = useState(true)
-  useEffect(() => {
-    let support
-    try {
-      support =
-        window.CSS &&
-        window.CSS.supports &&
-        window.CSS.supports('color', 'var(--color-test)')
-    } catch (e) {
-      // continue regardless of error
-    }
-    if (!support) {
-      // but if can't confirm the support in the browser we turn it off
-      setCSSVarSupport(false)
-    }
-  }, [])
-
-  const colorValue = useMemo(() => {
-    if (colorSchemeKey === 'auto') {
-      return createScheme({
-        schemeKey: colorSchemeKey,
-        CSSVarSupport,
-        ...colors.light,
-        ...(CSSVarSupport
-          ? getObjectForKeys(variableColorKeys, (key) => `var(--color-${key})`)
-          : {}),
-        cssColors: getObjectForKeys(variableColorKeys, (key) => [
-          colors.light[key],
-          `var(--color-${key})`,
-        ]),
-      })
-    }
-    return createScheme({
-      schemeKey: colorSchemeKey,
-      ...colors[colorSchemeKey],
-    })
-  }, [colorSchemeKey, CSSVarSupport])
+  if (root) {
+    throw Error(`root prop not supported anymore on ColorContextProvider`)
+  }
 
   return (
-    <ColorContext.Provider value={colorValue}>
-      {root && colorSchemeKey === 'auto' && (
-        <style
-          key={colorSchemeKey}
-          dangerouslySetInnerHTML={{
-            __html: [
-              // default light
-              `:root { ${generateCSSColorDefinitions(colors.light)} }`,
-              // dark via user preference
-              `:root[data-user-color-scheme="dark"] { ${generateCSSColorDefinitions(
-                colors.dark,
-              )} }`,
-              // os dark preference
-              `@media (prefers-color-scheme: dark) {`,
-              [
-                // auto dark via media query
-                `:root { ${generateCSSColorDefinitions(colors.dark)} }`,
-                // light via user preference when os is dark
-                `:root[data-user-color-scheme="light"] { ${generateCSSColorDefinitions(
-                  colors.light,
-                )} }`,
-              ].join('\n'),
-              `}`,
-            ].join('\n'),
-          }}
-        />
-      )}
-      {children}
+    <ColorContext.Provider value={defaultColorContextValue}>
+      <div data-theme={colorSchemeKeyToDataTheme(colorSchemeKey)}>
+        {children}
+      </div>
     </ColorContext.Provider>
   )
+}
+
+export const InvertedColorScheme = ({ children }: { children: ReactNode }) => {
+  return <div data-theme-inverted>{children}</div>
 }
 
 export default ColorContext
