@@ -28,7 +28,13 @@ const styles = {
   }),
 }
 
-const LogoSvg = ({ width, height, fill, ...props }) => {
+type LogoProps = {
+  width?: number | string
+  height?: number | string
+  fill: string
+} & React.SVGProps<SVGSVGElement>
+
+const LogoSvg = ({ width, height, fill, ...props }: LogoProps) => {
   const [colorScheme] = useColorContext()
   return (
     <svg
@@ -44,7 +50,7 @@ const LogoSvg = ({ width, height, fill, ...props }) => {
   )
 }
 
-const Logo = (props) => {
+const Logo = (props: LogoProps) => {
   let width
   let height
   if (props.width) {

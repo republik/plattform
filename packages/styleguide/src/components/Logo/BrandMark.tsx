@@ -41,7 +41,7 @@ const styles = {
   }),
 }
 
-const R = ({ fill }) => {
+const R = ({ fill }: { fill?: string }) => {
   const [colorScheme] = useColorContext()
   return (
     <div {...styles.container}>
