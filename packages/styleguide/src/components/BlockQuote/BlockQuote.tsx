@@ -1,5 +1,4 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import { css } from 'glamor'
 
 import { mUp } from '../../theme/mediaQueries'
@@ -23,17 +22,17 @@ const styles = {
   }),
 }
 
-const BlockQuote = ({ children, attributes }) => {
+type BlockQuoteProps = {
+  children: React.ReactNode
+  attributes?: React.HTMLAttributes<HTMLDivElement>
+}
+
+const BlockQuote = ({ children, attributes }: BlockQuoteProps) => {
   return (
     <div {...styles.container} {...attributes}>
       {children}
     </div>
   )
-}
-
-BlockQuote.propTypes = {
-  children: PropTypes.node.isRequired,
-  attributes: PropTypes.object,
 }
 
 export default BlockQuote

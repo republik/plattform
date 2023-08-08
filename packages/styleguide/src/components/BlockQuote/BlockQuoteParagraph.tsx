@@ -1,5 +1,4 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import { css } from 'glamor'
 
 import { mUp } from '../../theme/mediaQueries'
@@ -27,7 +26,15 @@ const styles = {
   }),
 }
 
-const BlockQuoteParagraph = ({ children, attributes }) => {
+type BlockQuoteParagraphProps = {
+  children: React.ReactNode
+  attributes?: React.HTMLAttributes<HTMLParagraphElement>
+}
+
+const BlockQuoteParagraph = ({
+  children,
+  attributes,
+}: BlockQuoteParagraphProps) => {
   const [colorScheme] = useColorContext()
   return (
     <p
@@ -40,11 +47,6 @@ const BlockQuoteParagraph = ({ children, attributes }) => {
       {children}
     </p>
   )
-}
-
-BlockQuoteParagraph.propTypes = {
-  children: PropTypes.node.isRequired,
-  attributes: PropTypes.object,
 }
 
 export default BlockQuoteParagraph
