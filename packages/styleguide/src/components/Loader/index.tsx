@@ -23,18 +23,16 @@ const styles = {
   }),
 }
 
-const SpacerPropTypes = {
-  children: PropTypes.node,
-  style: PropTypes.object,
+type SpacerProps = {
+  children?: React.ReactNode
+  style?: React.CSSProperties
 }
 
-const Spacer = ({ style, children }) => (
+const Spacer = ({ style, children }: SpacerProps) => (
   <div {...styles.spacer} style={style}>
     {children}
   </div>
 )
-
-Spacer.propTypes = SpacerPropTypes
 
 const LoaderPropTypes = {
   style: PropTypes.object,
@@ -46,6 +44,20 @@ const LoaderPropTypes = {
   ErrorContainer: PropTypes.elementType,
 }
 
+interface GraphQLError extends Error {
+  graphQLErrors?: Error[]
+}
+
+type LoaderProps = {
+  style?: React.CSSProperties
+  message?: React.ReactNode
+  loading: boolean
+  error?: GraphQLError
+  render?: () => React.ReactNode
+  delay?: number
+  ErrorContainer?: React.ComponentType<{ children: React.ReactNode }>
+}
+
 const Loader = ({
   style,
   message,
@@ -54,7 +66,7 @@ const Loader = ({
   render,
   delay,
   ErrorContainer,
-}) => {
+}: LoaderProps) => {
   const [visible, setVisible] = useState(false)
   const [colorScheme] = useColorContext()
 
