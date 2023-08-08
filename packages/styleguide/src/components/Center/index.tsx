@@ -111,7 +111,18 @@ const centerStyles = {
   }),
 }
 
-const Center = ({ children, attributes = {}, breakout, ...props }) => (
+type CenterProps = {
+  children: React.ReactNode
+  attributes?: React.HTMLAttributes<HTMLDivElement>
+  breakout?: boolean
+}
+
+const Center = ({
+  children,
+  attributes = {},
+  breakout,
+  ...props
+}: CenterProps) => (
   <div
     {...centerStyles.base}
     {...centerStyles[breakout ? 'breakout' : 'regular']}
@@ -124,7 +135,18 @@ const Center = ({ children, attributes = {}, breakout, ...props }) => (
   </div>
 )
 
-export const Breakout = ({ size, children, attributes = {}, ...props }) => (
+type BreakoutProps = {
+  children: React.ReactNode
+  size?: keyof typeof breakoutStyles
+  attributes?: React.HTMLAttributes<HTMLDivElement>
+}
+
+export const Breakout = ({
+  size,
+  children,
+  attributes = {},
+  ...props
+}: BreakoutProps) => (
   <div {...attributes} {...props} {...breakoutStyles[size]}>
     {children}
   </div>
