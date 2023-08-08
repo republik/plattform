@@ -60,7 +60,11 @@ export const Headline = ({ children, ...props }) => {
   )
 }
 
-export const H1 = ({ children, ...props }) => {
+type HeadingProps = {
+  children: React.ReactNode
+} & React.HTMLAttributes<HTMLHeadingElement>
+
+export const H1 = ({ children, ...props }: HeadingProps) => {
   const [colorScheme] = useColorContext()
   return (
     <h1 {...props} {...interactionH1} {...colorScheme.set('color', 'text')}>
@@ -69,7 +73,7 @@ export const H1 = ({ children, ...props }) => {
   )
 }
 
-export const H2 = ({ children, ...props }) => {
+export const H2 = ({ children, ...props }: HeadingProps) => {
   const [colorScheme] = useColorContext()
   return (
     <h2 {...props} {...interactionH2} {...colorScheme.set('color', 'text')}>
@@ -78,7 +82,7 @@ export const H2 = ({ children, ...props }) => {
   )
 }
 
-export const H3 = ({ children, ...props }) => {
+export const H3 = ({ children, ...props }: HeadingProps) => {
   const [colorScheme] = useColorContext()
   return (
     <h3 {...props} {...interactionH3} {...colorScheme.set('color', 'text')}>
@@ -95,7 +99,11 @@ const interactionP = css({
   },
 })
 
-export const P = ({ children, ...props }) => {
+type ParagraphProps = {
+  children: React.ReactNode
+} & React.HTMLAttributes<HTMLParagraphElement>
+
+export const P = ({ children, ...props }: ParagraphProps) => {
   const [colorScheme] = useColorContext()
   return (
     <p
@@ -110,14 +118,26 @@ export const P = ({ children, ...props }) => {
 }
 
 const emphasis = css(fontStyles.sansSerifMedium)
-export const Emphasis = ({ children, attributes, ...props }) => (
+
+type EmphasisProps = {
+  children: React.ReactNode
+  attributes: React.HTMLAttributes<HTMLElement>
+} & React.HTMLAttributes<HTMLElement>
+
+export const Emphasis = ({ children, attributes, ...props }: EmphasisProps) => (
   <strong {...props} {...attributes} {...emphasis}>
     {children}
   </strong>
 )
 
 const cursive = css(fontStyles.sansSerifItalic)
-export const Cursive = ({ children, attributes, ...props }) => (
+
+type CursiveProps = {
+  children: React.ReactNode
+  attributes: React.HTMLAttributes<HTMLElement>
+} & React.HTMLAttributes<HTMLElement>
+
+export const Cursive = ({ children, attributes, ...props }: CursiveProps) => (
   <em {...props} {...attributes} {...cursive}>
     {children}
   </em>

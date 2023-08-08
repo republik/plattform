@@ -27,7 +27,12 @@ const headline = css({
   },
 })
 
-export const Headline = ({ children, attributes, ...props }) => {
+type HeadlineProps = {
+  children: React.ReactNode
+  attributes: React.HTMLAttributes<HTMLHeadingElement>
+} & React.HTMLAttributes<HTMLHeadingElement>
+
+export const Headline = ({ children, attributes, ...props }: HeadlineProps) => {
   const [colorScheme] = useColorContext()
   return (
     <h1

@@ -97,29 +97,39 @@ const styles = {
   }),
 }
 
-export const A = React.forwardRef(({ children, ...props }, ref) => {
-  const [colorScheme] = useColorContext()
-  const linkStyleRule = useMemo(
-    () =>
-      css({
-        textDecoration: 'none',
-        color: colorScheme.getCSSColor('primary'),
-        '@media (hover)': {
-          ':hover': {
-            color: colorScheme.getCSSColor('primaryHover'),
-          },
-        },
-      }),
-    [colorScheme],
-  )
-  return (
-    <a {...props} {...linkStyleRule} ref={ref}>
-      {children}
-    </a>
-  )
-})
+type LinkProps = {
+  children: React.ReactNode
+} & React.HTMLAttributes<HTMLAnchorElement>
 
-export const H1 = ({ children, ...props }) => {
+export const A = React.forwardRef<HTMLAnchorElement, LinkProps>(
+  ({ children, ...props }, ref) => {
+    const [colorScheme] = useColorContext()
+    const linkStyleRule = useMemo(
+      () =>
+        css({
+          textDecoration: 'none',
+          color: colorScheme.getCSSColor('primary'),
+          '@media (hover)': {
+            ':hover': {
+              color: colorScheme.getCSSColor('primaryHover'),
+            },
+          },
+        }),
+      [colorScheme],
+    )
+    return (
+      <a {...props} {...linkStyleRule} ref={ref}>
+        {children}
+      </a>
+    )
+  },
+)
+
+type HeadingProps = {
+  children: React.ReactNode
+} & React.HTMLAttributes<HTMLHeadingElement>
+
+export const H1 = ({ children, ...props }: HeadingProps) => {
   const [colorScheme] = useColorContext()
   return (
     <h1 {...props} {...styles.h1} {...colorScheme.set('color', 'text')}>
@@ -128,7 +138,7 @@ export const H1 = ({ children, ...props }) => {
   )
 }
 
-export const H2 = ({ children, ...props }) => {
+export const H2 = ({ children, ...props }: HeadingProps) => {
   const [colorScheme] = useColorContext()
   return (
     <h2 {...props} {...styles.h2} {...colorScheme.set('color', 'text')}>
@@ -137,7 +147,11 @@ export const H2 = ({ children, ...props }) => {
   )
 }
 
-export const Lead = ({ children, ...props }) => {
+type LeadProps = {
+  children: React.ReactNode
+} & React.HTMLAttributes<HTMLParagraphElement>
+
+export const Lead = ({ children, ...props }: LeadProps) => {
   const [colorScheme] = useColorContext()
   return (
     <p {...props} {...styles.lead} {...colorScheme.set('color', 'text')}>
@@ -146,7 +160,11 @@ export const Lead = ({ children, ...props }) => {
   )
 }
 
-export const P = ({ children, ...props }) => {
+type ParagraphProps = {
+  children: React.ReactNode
+} & React.HTMLAttributes<HTMLParagraphElement>
+
+export const P = ({ children, ...props }: ParagraphProps) => {
   const [colorScheme] = useColorContext()
   return (
     <p {...props} {...styles.p} {...colorScheme.set('color', 'text')}>
@@ -155,7 +173,11 @@ export const P = ({ children, ...props }) => {
   )
 }
 
-export const Label = ({ children, ...props }) => {
+type LabelProps = {
+  children: React.ReactNode
+} & React.HTMLAttributes<HTMLSpanElement>
+
+export const Label = ({ children, ...props }: LabelProps) => {
   const [colorScheme] = useColorContext()
   return (
     <span {...props} {...styles.label} {...colorScheme.set('color', 'text')}>
@@ -181,19 +203,33 @@ const subSupStyles = {
   }),
 }
 
-export const Sub = ({ children, attributes }) => (
+type SubProps = {
+  children: React.ReactNode
+  attributes: React.HTMLAttributes<HTMLElement>
+}
+
+export const Sub = ({ children, attributes }: SubProps) => (
   <sub {...attributes} {...subSupStyles.base} {...subSupStyles.sub}>
     {children}
   </sub>
 )
 
-export const Sup = ({ children, attributes }) => (
+type SupProps = {
+  children: React.ReactNode
+  attributes: React.HTMLAttributes<HTMLElement>
+}
+
+export const Sup = ({ children, attributes }: SupProps) => (
   <sup {...attributes} {...subSupStyles.base} {...subSupStyles.sup}>
     {children}
   </sup>
 )
 
-export const HR = ({ attributes }) => {
+type HRProps = {
+  attributes: React.HTMLAttributes<HTMLElement>
+}
+
+export const HR = ({ attributes }: HRProps) => {
   const [colorScheme] = useColorContext()
   return (
     <hr

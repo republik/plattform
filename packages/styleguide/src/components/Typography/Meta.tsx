@@ -30,7 +30,11 @@ const metaHeadline = css({
   },
 })
 
-export const Headline = ({ children, ...props }) => {
+type HeadlineProps = {
+  children: React.ReactNode
+} & React.HTMLAttributes<HTMLHeadingElement>
+
+export const Headline = ({ children, ...props }: HeadlineProps) => {
   const [colorScheme] = useColorContext()
   return (
     <h1 {...props} {...metaHeadline} {...colorScheme.set('color', 'text')}>
@@ -54,7 +58,12 @@ const subhead = css({
   },
 })
 
-export const Subhead = ({ children, attributes, ...props }) => {
+type SubheadProps = {
+  children: React.ReactNode
+  attributes?: React.HTMLAttributes<HTMLHeadingElement>
+} & React.HTMLAttributes<HTMLHeadingElement>
+
+export const Subhead = ({ children, attributes, ...props }: SubheadProps) => {
   const [colorScheme] = useColorContext()
   return (
     <h2
@@ -86,7 +95,11 @@ const metaP = css({
   },
 })
 
-export const P = ({ children, ...props }) => {
+type ParagraphProps = {
+  children: React.ReactNode
+} & React.HTMLAttributes<HTMLParagraphElement>
+
+export const P = ({ children, ...props }: ParagraphProps) => {
   const [colorScheme] = useColorContext()
   return (
     <p
@@ -110,7 +123,12 @@ const lead = css({
   },
 })
 
-export const Lead = ({ children, attributes, ...props }) => {
+type LeadProps = {
+  children: React.ReactNode
+  attributes?: React.HTMLAttributes<HTMLParagraphElement>
+} & React.HTMLAttributes<HTMLParagraphElement>
+
+export const Lead = ({ children, attributes, ...props }: LeadProps) => {
   const [colorScheme] = useColorContext()
   return (
     <p
