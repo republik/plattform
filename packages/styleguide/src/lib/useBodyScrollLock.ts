@@ -24,10 +24,20 @@ const options = {
   },
 }
 
-export const isBodyScrollLocked = () => lockedElements.length > 0
+export function isBodyScrollLocked() {
+  return lockedElements.length > 0
+}
 
-export const useBodyScrollLock = (lock = true) => {
-  const ref = useRef()
+/**
+ * Prevent scrolling on a given element
+ *
+ * @param lock whether the body should be locked or not
+ * @returns ref that is to be assigned to the element that should be locked
+ */
+export function useBodyScrollLock<T extends HTMLElement>(
+  lock = true,
+): [React.MutableRefObject<T>] {
+  const ref = useRef<T>()
 
   const shouldLock = !!lock
   useEffect(() => {
