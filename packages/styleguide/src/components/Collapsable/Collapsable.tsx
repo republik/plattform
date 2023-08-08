@@ -49,18 +49,34 @@ const collapsedEditorPreviewStyle = (mobile, desktop) =>
     },
   })
 
+type CollapsableProps = {
+  t: any
+  children: React.ReactNode
+  height?: {
+    mobile: number
+    desktop: number
+  }
+  initialVisibility?: 'auto' | 'full' | 'preview'
+  threshold?: number
+  style?: React.CSSProperties
+  editorPreview?: boolean
+  alwaysCollapsed?: boolean
+  isOnOverlay?: boolean
+  labelPrefix?: string
+}
+
 const Collapsable = ({
   t,
   children,
-  height,
-  threshold,
-  initialVisibility,
+  height = COLLAPSED_HEIGHT,
+  threshold = 50,
+  initialVisibility = 'auto',
   style,
-  alwaysCollapsed,
+  alwaysCollapsed = false,
   editorPreview,
   isOnOverlay,
   labelPrefix,
-}) => {
+}: CollapsableProps) => {
   /**
    * Measuring the body size (height), so we can determine whether to collapse
    * the body.
@@ -100,12 +116,12 @@ const Collapsable = ({
       }`,
     )
 
-  const root = useRef()
+  const root = useRef<HTMLDivElement>()
   const onToggleCollapsed = React.useCallback(
     () =>
       setBodyVisibility((v) => {
         if (v === 'full') {
-          if (root.current.getBoundingClientRect().top < 0) {
+          if (root.current?.getBoundingClientRect().top < 0) {
             scrollIntoView(root.current, { time: 0, align: { top: 0 } })
           }
           return 'preview'
@@ -230,27 +246,6 @@ const styles = {
     height: pxToRem('32px'),
     lineHeight: pxToRem('32px'),
   }),
-}
-
-Collapsable.propTypes = {
-  t: PropTypes.func,
-  children: PropTypes.node.isRequired,
-  height: PropTypes.shape({
-    mobile: PropTypes.number,
-    desktop: PropTypes.number,
-  }),
-  initialVisibility: PropTypes.oneOf(['auto', 'full', 'preview']),
-  threshold: PropTypes.number,
-  style: PropTypes.object,
-  editorPreview: PropTypes.bool,
-  alwaysCollapsed: PropTypes.bool,
-}
-
-Collapsable.defaultProps = {
-  height: COLLAPSED_HEIGHT,
-  initialVisibility: 'auto',
-  threshold: 50,
-  alwaysCollapsed: false,
 }
 
 export default Collapsable
