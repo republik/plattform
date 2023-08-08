@@ -13,7 +13,7 @@ import {
 import {
   leftJoin,
   getTypeBySlug,
-} from '../../../../www/components/PoliticsQuestionnaire/utils'
+} from '../../../components/PoliticsQuestionnaire/utils'
 
 export default ({
   chartAnswers,
