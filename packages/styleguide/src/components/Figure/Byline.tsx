@@ -110,7 +110,7 @@ const positionStyle = {
   }),
 }
 
-type BylineProps = {
+export type BylineProps = {
   children: React.ReactNode
   attributes?: React.HTMLAttributes<HTMLSpanElement>
   style?: React.CSSProperties

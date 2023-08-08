@@ -4,17 +4,19 @@ import {
   Figure as InnerFigure,
   FigureImage as InnerFigureImage,
   FigureByline as InnerByline,
+  FigureProps,
 } from './index'
 import { css } from 'glamor'
 import { getResizedSrcs } from './utils'
 import { FLYER_CONTAINER_MAXWIDTH } from '../Flyer'
 import { useRenderContext } from '../Editor/Render/Context'
+import { BylineProps } from './Byline'
 
 export const PLACEHOLDER = '/static/placeholder.png'
 
 export const FigureByline: React.FC<{
   children?: ReactNode
-  attributes: any
+  attributes: BylineProps['attributes']
   [x: string]: unknown
 }> = ({ children, attributes, ...props }) => {
   return (
@@ -26,9 +28,10 @@ export const FigureByline: React.FC<{
 
 // TODO: get max width from render context
 export const FigureImage: React.FC<{
+  children: ReactNode
   images?: FigureImages
   alt?: string
-  attributes: any
+  attributes: React.HTMLAttributes<HTMLDivElement>
   [x: string]: unknown
 }> = ({ children, images, alt, attributes, ...props }) => {
   const { noLazy } = useRenderContext()
@@ -58,8 +61,8 @@ export const FigureImage: React.FC<{
 
 export const Figure: React.FC<{
   children?: ReactNode
-  size: string
-  attributes: any
+  size: FigureProps['size']
+  attributes: FigureProps['attributes']
   [x: string]: unknown
 }> = ({ children, size, attributes = {} }) => {
   return (

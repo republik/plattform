@@ -134,7 +134,7 @@ export const FIGURE_SIZES = {
   center: MAX_WIDTH,
 }
 
-type FigureProps = {
+export type FigureProps = {
   children: React.ReactNode
   size?: keyof typeof FIGURE_SIZES
   attributes?: React.HTMLAttributes<HTMLDivElement>
