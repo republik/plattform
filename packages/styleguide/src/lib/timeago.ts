@@ -1,3 +1,5 @@
+import { Formatter } from './translate'
+
 const specs = [
   { n: 60, key: 'timeago/justNow' },
   { n: 60, key: 'timeago/minutes' },
@@ -9,7 +11,7 @@ const specs = [
 ]
 
 // diff is in seconds, positive.
-export default (t, diff) => {
+export default function timeago(t: Formatter, diff: number): string {
   let i = 0
   for (; i < specs.length && diff >= specs[i].n; i++) {
     diff /= specs[i].n

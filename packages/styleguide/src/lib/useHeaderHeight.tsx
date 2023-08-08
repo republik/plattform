@@ -1,23 +1,29 @@
-import React from 'react'
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react'
 
 const DEFAULT_CONFIG = [{ minWidth: 0, headerHeight: 0 }]
 
-const HeaderHeightContext = React.createContext({
+const HeaderHeightContext = createContext({
   value: DEFAULT_CONFIG[0].headerHeight,
   rules: [],
 })
 
-export const useHeaderHeight = () => {
-  const headerHeightContext = React.useContext(HeaderHeightContext)
+export function useHeaderHeight() {
+  const headerHeightContext = useContext(HeaderHeightContext)
   return [headerHeightContext.value, headerHeightContext.rules]
 }
 
 export const HeaderHeightProvider = ({ children, config = DEFAULT_CONFIG }) => {
-  const [headerHeightValue, setHeaderHeightValue] = React.useState(
+  const [headerHeightValue, setHeaderHeightValue] = useState(
     config[0].headerHeight,
   )
 
-  const rules = React.useMemo(
+  const rules = useMemo(
     () =>
       config.map(({ minWidth, headerHeight }) => ({
         mediaQuery: `@media only screen and (min-width: ${minWidth}px)`,
@@ -26,7 +32,7 @@ export const HeaderHeightProvider = ({ children, config = DEFAULT_CONFIG }) => {
     [config],
   )
 
-  React.useEffect(() => {
+  useEffect(() => {
     const handleResize = () => {
       const nextHeaderHeightValue = config.reduce((acc, cur) => {
         if (window.innerWidth >= cur.minWidth) {

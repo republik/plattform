@@ -1,4 +1,4 @@
-import React from 'react'
+import { useEffect, useRef } from 'react'
 
 /**
  * Gives you access to the previous value, used during the previous rendering of
@@ -9,10 +9,10 @@ import React from 'react'
  *   return <div>{value} - {previousValue}</div>
  * }
  */
-export const usePrevious = (value) => {
-  const ref = React.useRef()
+export function usePrevious<T>(value: T) {
+  const ref = useRef<T>()
 
-  React.useEffect(() => {
+  useEffect(() => {
     ref.current = value
   }, [value])
 

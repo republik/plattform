@@ -1,3 +1,5 @@
+import { Formatter } from './translate'
+
 const specs = [
   { n: 60, key: 'timeAhead/justNow' },
   { n: 60, key: 'timeAhead/minutes' },
@@ -9,7 +11,7 @@ const specs = [
 ]
 
 // diff is in seconds.
-export default (t, diff) => {
+export default function timeahead(t: Formatter, diff: number): string {
   diff = Math.abs(diff)
   let i = 0
   for (; i < specs.length && diff >= specs[i].n; i++) {

@@ -1,9 +1,9 @@
-import React from 'react'
+import { useEffect, useState } from 'react'
 
-export const useDebounce = (fastValue, ms = 400) => {
-  const [slowValue, setSlowValue] = React.useState(fastValue)
+export function useDebounce<T>(fastValue: T, ms = 400) {
+  const [slowValue, setSlowValue] = useState<T>(fastValue)
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (slowValue === fastValue) {
       return
     }

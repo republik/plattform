@@ -1,3 +1,5 @@
+import { Formatter } from './translate'
+
 const specs = [
   { n: 60, key: 'timeduration/seconds' },
   { n: 60, key: 'timeduration/minutes' },
@@ -8,7 +10,7 @@ const specs = [
 ]
 
 // diff is in seconds, positive.
-export default (t, diff) => {
+export default function timeduration(t: Formatter, diff): string {
   let i = 0
   for (; i < specs.length && diff >= specs[i].n; i++) {
     diff /= specs[i].n
@@ -16,6 +18,6 @@ export default (t, diff) => {
 
   const spec = specs[Math.min(i, specs.length - 1)]
   return t(spec.key, {
-    count: Math[spec.fn || 'floor'](diff),
+    count: Math.floor(diff),
   })
 }

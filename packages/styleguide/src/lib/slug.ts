@@ -18,12 +18,18 @@ const diacriticsMap = diacritics.reduce((map, diacritic) => {
   return map
 }, {})
 
-export const slug = (string) =>
-  string
-    .toLowerCase()
-    // eslint-disable-next-line no-control-regex
-    .replace(/[^\u0000-\u007E]/g, (a) => diacriticsMap[a] || a)
-    .replace(/\u00ad/g, '')
-    .replace(/[^0-9a-z]+/g, ' ')
-    .trim()
-    .replace(/\s+/g, '-')
+/**
+ * Slugify a string
+ */
+export function slug(value: string): string {
+  return (
+    value
+      .toLowerCase()
+      // eslint-disable-next-line no-control-regex
+      .replace(/[^\u0000-\u007E]/g, (a) => diacriticsMap[a] || a)
+      .replace(/\u00ad/g, '')
+      .replace(/[^0-9a-z]+/g, ' ')
+      .trim()
+      .replace(/\s+/g, '-')
+  )
+}

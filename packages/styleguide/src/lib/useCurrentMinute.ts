@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 
-let setters = []
+let setters: React.Dispatch<React.SetStateAction<number>>[] = []
 
 let timeout = null
 const startTimer = () => {
@@ -17,13 +17,13 @@ const startTimer = () => {
   }, msToNextRun)
 }
 
-const addSetter = (setter) => {
+const addSetter = (setter: React.Dispatch<React.SetStateAction<number>>) => {
   setters.push(setter)
   if (timeout === null) {
     startTimer()
   }
 }
-const rmSetter = (setter) => {
+const rmSetter = (setter: React.Dispatch<React.SetStateAction<number>>) => {
   setters = setters.filter((s) => s !== setter)
   if (!setter.length) {
     clearTimeout(timeout)
