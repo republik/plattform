@@ -1,5 +1,4 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import { css } from 'glamor'
 
 export const GUTTER = 42
@@ -27,23 +26,18 @@ const styles = {
   }),
 }
 
-export const Container = ({ children, ...props }) => (
+type ContainerProps = {
+  children: React.ReactNode
+} & React.HTMLAttributes<HTMLDivElement>
+
+export const Container = ({ children, ...props }: ContainerProps) => (
   <div {...props} {...styles.container}>
     {children}
   </div>
 )
 
-Container.propTypes = {
-  children: PropTypes.node,
-  className: PropTypes.any,
-}
-
-export const NarrowContainer = ({ children, ...props }) => (
+export const NarrowContainer = ({ children, ...props }: ContainerProps) => (
   <div {...props} {...styles.narrowContainer}>
     {children}
   </div>
 )
-
-NarrowContainer.propTypes = {
-  children: PropTypes.node,
-}
