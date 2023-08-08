@@ -31,7 +31,13 @@ const styles = {
   }),
 }
 
-const FormatTag = ({ label, count, color }) => {
+type FormatTagProps = {
+  label: string
+  count?: number
+  color?: string
+}
+
+const FormatTag = ({ label, count, color }: FormatTagProps) => {
   const [colorScheme] = useColorContext()
   return (
     <div {...styles.container} {...colorScheme.set('color', color, 'format')}>
@@ -43,12 +49,6 @@ const FormatTag = ({ label, count, color }) => {
       )}
     </div>
   )
-}
-
-FormatTag.propTypes = {
-  label: PropTypes.string.isRequired,
-  count: PropTypes.number,
-  color: PropTypes.string,
 }
 
 export default FormatTag
