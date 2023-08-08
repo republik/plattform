@@ -1,7 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { css, merge } from 'glamor'
-
+import { css, merge, keyframes } from 'glamor'
 
 import { mUp } from '../../theme/mediaQueries'
 import {
@@ -135,19 +134,25 @@ export const FIGURE_SIZES = {
   center: MAX_WIDTH,
 }
 
-export const Figure = ({ children, attributes, size }) => (
+type FigureProps = {
+  children: React.ReactNode
+  size?: keyof typeof FIGURE_SIZES
+  attributes?: React.HTMLAttributes<HTMLDivElement>
+}
+
+export const Figure = ({ children, attributes, size }: FigureProps) => (
   <figure {...attributes} {...merge(styles.figure, figureBreakout[size])}>
     {children}
   </figure>
 )
 
-Figure.propTypes = {
-  children: PropTypes.node.isRequired,
-  size: PropTypes.oneOf(Object.keys(figureBreakout)),
-  attributes: PropTypes.object,
-}
-
-const textPosStyle = ({ anchor, offset }) => {
+const textPosStyle = ({
+  anchor,
+  offset,
+}: {
+  anchor: 'top' | 'middle' | 'bottom'
+  offset?: number | string
+}): React.CSSProperties => {
   if (anchor === 'middle') {
     return {
       position: 'absolute',
@@ -170,14 +175,34 @@ const textPosStyle = ({ anchor, offset }) => {
   }
 }
 
-export const CoverTextTitleBlockHeadline = ({ children, attributes }) => (
+type CoverTextTitleBlockHeadlineProps = {
+  children: React.ReactNode
+  attributes?: React.HTMLAttributes<HTMLDivElement>
+}
+
+export const CoverTextTitleBlockHeadline = ({
+  children,
+  attributes,
+}: CoverTextTitleBlockHeadlineProps) => (
   <div {...attributes} {...styles.coverTextTitleBlockHeadline}>
     {children}
   </div>
 )
 
-const AudioButton = ({ color, backgroundColor, onClick, meta }) => {
-  const pulse = css.keyframes({
+type AudioButtonProps<T = unknown> = {
+  color: string
+  backgroundColor: string
+  onClick: (_: T) => void
+  meta: T
+}
+
+const AudioButton = <T,>({
+  color,
+  backgroundColor,
+  onClick,
+  meta,
+}: AudioButtonProps<T>) => {
+  const pulse = keyframes({
     '0%': { boxShadow: `0 0 0 0 ${backgroundColor}` },
     '70%': { boxShadow: `0 0 0 10px transparent` },
     '100%': { boxShadow: `0 0 0 0 transparent` },
@@ -202,7 +227,20 @@ const AudioButton = ({ color, backgroundColor, onClick, meta }) => {
   )
 }
 
-export const FigureCover = ({ size, text, audio, ...props }) => {
+type FigureCoverProps = {
+  text: {
+    element: React.ReactNode
+    anchor: 'top' | 'middle' | 'bottom'
+  }
+  audio?: AudioButtonProps
+} & FigureProps
+
+export const FigureCover = ({
+  size,
+  text,
+  audio,
+  ...props
+}: FigureCoverProps) => {
   const sizeStyle = size
     ? size === 'breakout'
       ? styles.coverBreakout
@@ -221,7 +259,21 @@ export const FigureCover = ({ size, text, audio, ...props }) => {
   )
 }
 
-export const FigureGroup = ({ children, attributes, columns, size, data }) => {
+type FigureGroupProps = {
+  children: React.ReactNode
+  attributes?: React.HTMLAttributes<HTMLDivElement>
+  columns?: 1 | 2 | 3 | 4
+  size?: keyof typeof FIGURE_SIZES
+  data?: unknown
+}
+
+export const FigureGroup = ({
+  children,
+  attributes,
+  columns = 2,
+  size,
+  data,
+}: FigureGroupProps) => {
   return (
     <figure
       role='group'
@@ -232,15 +284,4 @@ export const FigureGroup = ({ children, attributes, columns, size, data }) => {
       {children}
     </figure>
   )
-}
-
-FigureGroup.propTypes = {
-  children: PropTypes.node.isRequired,
-  attributes: PropTypes.object,
-  size: PropTypes.oneOf(Object.keys(breakoutStyles)),
-  columns: PropTypes.oneOf([1, 2, 3, 4]).isRequired,
-}
-
-FigureGroup.defaultProps = {
-  columns: 2,
 }

@@ -1,4 +1,4 @@
-import { getResizedSrcs } from './utils'
+import { ResizedSrc, getResizedSrcs } from './utils'
 
 describe('Figure util test-suite', () => {
   test('getResizedSrcs: no size info', () => {
@@ -10,7 +10,7 @@ describe('Figure util test-suite', () => {
   })
 
   test('getResizedSrcs: undefined src', () => {
-    let props = {}
+    let props: Partial<ResizedSrc> = {}
     expect(() => {
       props = getResizedSrcs(undefined, undefined, 2000)
     }).not.toThrow()

@@ -110,7 +110,27 @@ const positionStyle = {
   }),
 }
 
-export const Byline = ({ children, attributes, style, position }) => {
+type BylineProps = {
+  children: React.ReactNode
+  attributes?: React.HTMLAttributes<HTMLSpanElement>
+  style?: React.CSSProperties
+  position?:
+    | 'belowRight'
+    | 'below'
+    | 'belowFeuilleton'
+    | 'right'
+    | 'rightCompact'
+    | 'left'
+    | 'leftInside'
+    | 'leftInsideOnlyImage'
+}
+
+export const Byline = ({
+  children,
+  attributes,
+  style = {},
+  position,
+}: BylineProps) => {
   return (
     <span
       {...attributes}
@@ -120,25 +140,6 @@ export const Byline = ({ children, attributes, style, position }) => {
       {children}
     </span>
   )
-}
-
-Byline.propTypes = {
-  children: PropTypes.node.isRequired,
-  attributes: PropTypes.object,
-  position: PropTypes.oneOf([
-    'belowRight',
-    'below',
-    'belowFeuilleton',
-    'right',
-    'rightCompact',
-    'left',
-    'leftInside',
-    'leftInsideOnlyImage',
-  ]),
-}
-
-Byline.defaultProps = {
-  style: {},
 }
 
 export default Byline

@@ -24,7 +24,17 @@ const styles = {
   }),
 }
 
-export const Caption = ({ children, attributes, groupCaption }) => {
+type CaptionProps = {
+  children: React.ReactNode
+  attributes?: React.HTMLAttributes<HTMLElement>
+  groupCaption?: boolean
+}
+
+export const Caption = ({
+  children,
+  attributes,
+  groupCaption,
+}: CaptionProps) => {
   const [colorScheme] = useColorContext()
 
   return (

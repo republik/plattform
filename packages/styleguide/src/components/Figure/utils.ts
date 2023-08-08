@@ -1,21 +1,33 @@
-import {
-  imageSizeInfo,
-  imageResizeUrl,
-} from '@republik/mdast-react-render'
+import { imageSizeInfo, imageResizeUrl } from '@republik/mdast-react-render'
 import { MAX_WIDTH_MOBILE } from '../Center'
 
-const getSrcSet = (src, widths) =>
-  widths
+function getSrcSet(src: string, widths: number[]): string {
+  return widths
     .filter(Boolean)
     .map((size) => [imageResizeUrl(src, `${size}x`), `${size}w`].join(' '))
     .join(',')
+}
+
+export type ResizedSrc = {
+  src?: string
+  srcSet?: string
+  dark?: {
+    src: string
+    srcSet?: string
+  }
+  maxWidth?: number
+  size: {
+    width: number
+    height: number
+  } | null
+}
 
 export const getResizedSrcs = (
   src,
   srcDark,
   displayWidth,
   setMaxWidth = true,
-) => {
+): ResizedSrc => {
   if (!src) {
     return {
       size: null,

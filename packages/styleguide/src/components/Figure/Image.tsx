@@ -37,7 +37,12 @@ const styles = {
   }),
 }
 
-const GalleryButton = ({ gallerySize, onClick }) => {
+type GalleryButtonProps = {
+  gallerySize: number
+  onClick: () => void
+}
+
+const GalleryButton = ({ gallerySize, onClick }: GalleryButtonProps) => {
   return (
     <div {...styles.galleryButton} onClick={onClick}>
       <span style={{ paddingRight: 10 }}>
