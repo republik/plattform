@@ -1,5 +1,5 @@
-import React from 'react'
-import { css } from 'glamor'
+import React, { CSSProperties, ReactNode } from 'react'
+import { css, keyframes } from 'glamor'
 
 const containerStyle = css({
   display: 'block',
@@ -7,7 +7,7 @@ const containerStyle = css({
   top: '50%',
   left: '50%',
 })
-const spin = css.keyframes({
+const spin = keyframes({
   '0%': { opacity: 1 },
   '100%': { opacity: 0.15 },
 })
@@ -23,10 +23,14 @@ const barStyle = css({
   left: '-10%',
 })
 
-export const Spinner = ({ size }) => {
-  let bars = []
+type SpinnerProps = {
+  size?: number
+}
+
+export const Spinner = ({ size = 50 }: SpinnerProps) => {
+  const bars: ReactNode[] = []
   for (let i = 0; i < 12; i++) {
-    let style = {}
+    const style: CSSProperties = {}
     style.WebkitAnimationDelay = style.animationDelay = (i - 12) / 10 + 's'
     style.WebkitTransform = style.transform =
       'rotate(' + i * 30 + 'deg) translate(146%)'
@@ -46,14 +50,10 @@ const inlineBlock = css({
   display: 'inline-block',
 })
 
-export const InlineSpinner = ({ size }) => (
+export const InlineSpinner = ({ size = 50 }: SpinnerProps) => (
   <span {...inlineBlock} style={{ width: size, height: size }}>
     <Spinner size={size} />
   </span>
 )
-
-Spinner.defaultProps = InlineSpinner.defaultProps = {
-  size: 50,
-}
 
 export default Spinner
