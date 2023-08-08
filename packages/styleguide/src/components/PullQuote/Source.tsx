@@ -1,5 +1,4 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import { sansSerifRegular14, sansSerifRegular15 } from '../Typography/styles'
 import { css } from 'glamor'
 import { mUp } from '../../theme/mediaQueries'
@@ -19,7 +18,12 @@ const styles = {
   }),
 }
 
-export const Source = ({ children, attributes }) => {
+type SourceProps = {
+  children: React.ReactNode
+  attributes?: React.HTMLAttributes<HTMLParagraphElement>
+}
+
+export const Source = ({ children, attributes }: SourceProps) => {
   const [colorScheme] = useColorContext()
   return (
     <cite
@@ -30,11 +34,6 @@ export const Source = ({ children, attributes }) => {
       {children}
     </cite>
   )
-}
-
-Source.propTypes = {
-  children: PropTypes.node.isRequired,
-  attributes: PropTypes.object,
 }
 
 export default Source

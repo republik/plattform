@@ -1,5 +1,4 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import { serifBold24, serifBold28, serifBold42 } from '../Typography/styles'
 import { css } from 'glamor'
 import { mUp } from '../../theme/mediaQueries'
@@ -25,7 +24,13 @@ const styles = {
   }),
 }
 
-export const Text = ({ children, attributes, size }) => {
+type TextProps = {
+  children: React.ReactNode
+  attributes?: React.HTMLAttributes<HTMLDivElement>
+  size?: keyof typeof styles
+}
+
+export const Text = ({ children, attributes, size = 'default' }: TextProps) => {
   const [colorScheme] = useColorContext()
   return (
     <div
@@ -36,16 +41,6 @@ export const Text = ({ children, attributes, size }) => {
       {children}
     </div>
   )
-}
-
-Text.propTypes = {
-  children: PropTypes.node.isRequired,
-  attributes: PropTypes.object,
-  size: PropTypes.oneOf(['default', 'large']),
-}
-
-Text.defaultProps = {
-  size: 'default',
 }
 
 export default Text

@@ -135,7 +135,7 @@ const Center = ({
   </div>
 )
 
-type BreakoutProps = {
+export type BreakoutProps = {
   children: React.ReactNode
   size?: keyof typeof breakoutStyles
   attributes?: React.HTMLAttributes<HTMLDivElement>

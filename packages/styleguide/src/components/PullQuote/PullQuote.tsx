@@ -1,8 +1,7 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import { css } from 'glamor'
 import { mUp, onlyS } from '../../theme/mediaQueries'
-import { Breakout } from '../Center'
+import { Breakout, BreakoutProps } from '../Center'
 
 export const IMAGE_SIZE = 155
 
@@ -41,7 +40,10 @@ const styles = {
   }),
 }
 
-const getBreakoutSize = (size, hasFigure) => {
+const getBreakoutSize = (
+  size: BreakoutProps['size'],
+  hasFigure: boolean,
+): BreakoutProps['size'] => {
   if (size === 'float') {
     return hasFigure ? 'float' : 'floatTiny'
   }
@@ -51,7 +53,19 @@ const getBreakoutSize = (size, hasFigure) => {
   return size
 }
 
-const PullQuote = ({ children, attributes, hasFigure, size }) => {
+type PullQuoteProps = {
+  children: React.ReactNode
+  attributes?: BreakoutProps['attributes']
+  size?: 'narrow' | 'float' | 'breakout'
+  hasFigure?: boolean
+}
+
+const PullQuote = ({
+  children,
+  attributes,
+  hasFigure,
+  size,
+}: PullQuoteProps) => {
   const textAlign = !hasFigure && size === 'narrow' ? 'center' : 'inherit'
   const containerStyle =
     size === 'float' ? styles.containerFloat : styles.container
@@ -68,12 +82,6 @@ const PullQuote = ({ children, attributes, hasFigure, size }) => {
       </blockquote>
     </Breakout>
   )
-}
-
-PullQuote.propTypes = {
-  children: PropTypes.node.isRequired,
-  attributes: PropTypes.object,
-  size: PropTypes.oneOf(['narrow', 'float', 'breakout']),
 }
 
 export default PullQuote
