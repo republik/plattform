@@ -1,6 +1,5 @@
 import React, { useMemo } from 'react'
 import { css } from 'glamor'
-import PropTypes from 'prop-types'
 import { useColorContext } from '../Colors/useColorContext'
 import { underline } from '../../lib/styleMixins'
 
@@ -12,7 +11,19 @@ const styles = {
   }),
 }
 
-const RawHtml = ({ type: Type, dangerouslySetInnerHTML, error }) => {
+type RawHtmlProps = {
+  type?: React.ElementType
+  dangerouslySetInnerHTML: {
+    __html: string
+  }
+  error?: boolean
+}
+
+const RawHtml = ({
+  type: Type = 'span',
+  dangerouslySetInnerHTML,
+  error,
+}: RawHtmlProps) => {
   const [colorScheme] = useColorContext()
   const colorRule = useMemo(
     () =>
@@ -38,14 +49,6 @@ const RawHtml = ({ type: Type, dangerouslySetInnerHTML, error }) => {
       dangerouslySetInnerHTML={dangerouslySetInnerHTML}
     />
   )
-}
-
-RawHtml.defaultProps = {
-  type: 'span',
-}
-
-RawHtml.propTypes = {
-  type: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
 }
 
 export default RawHtml
