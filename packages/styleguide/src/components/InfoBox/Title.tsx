@@ -1,5 +1,4 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import { sansSerifMedium16, sansSerifMedium19 } from '../Typography/styles'
 import { css } from 'glamor'
 import { mUp } from '../../theme/mediaQueries'
@@ -20,7 +19,12 @@ const styles = {
   }),
 }
 
-export const Title = ({ children, attributes }) => {
+type TitleProps = {
+  children: React.ReactNode
+  attributes?: React.HTMLAttributes<HTMLParagraphElement>
+}
+
+export const Title = ({ children, attributes }: TitleProps) => {
   const [colorScheme] = useColorContext()
   return (
     <p
@@ -33,11 +37,6 @@ export const Title = ({ children, attributes }) => {
       {children}
     </p>
   )
-}
-
-Title.propTypes = {
-  children: PropTypes.node.isRequired,
-  attributes: PropTypes.object,
 }
 
 export default Title

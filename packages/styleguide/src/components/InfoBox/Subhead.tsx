@@ -1,5 +1,4 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import { sansSerifMedium15, sansSerifMedium18 } from '../Typography/styles'
 import { css } from 'glamor'
 import { mUp } from '../../theme/mediaQueries'
@@ -18,7 +17,12 @@ const styles = {
   }),
 }
 
-export const Subhead = ({ children, attributes }) => {
+type SubheadProps = {
+  children: React.ReactNode
+  attributes?: React.HTMLAttributes<HTMLParagraphElement>
+}
+
+export const Subhead = ({ children, attributes }: SubheadProps) => {
   const [colorScheme] = useColorContext()
   return (
     <p
@@ -30,11 +34,6 @@ export const Subhead = ({ children, attributes }) => {
       {children}
     </p>
   )
-}
-
-Subhead.propTypes = {
-  children: PropTypes.node.isRequired,
-  attributes: PropTypes.object,
 }
 
 export default Subhead

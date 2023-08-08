@@ -1,9 +1,9 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import { css } from 'glamor'
 import { Breakout, MAX_WIDTH_MOBILE } from '../Center'
 import { Collapsable } from '../Collapsable'
 import { mUp, onlyS } from '../../theme/mediaQueries'
+import { Formatter } from '../../lib/translate'
 
 export const IMAGE_SIZES = {
   XXS: 80,
@@ -107,6 +107,18 @@ const getBreakoutSize = (size, hasFigure) => {
   return size
 }
 
+type InfoBoxProps = {
+  t: Formatter
+  children: React.ReactNode
+  attributes?: React.HTMLAttributes<HTMLDivElement>
+  size?: 'float' | 'breakout'
+  figureSize?: keyof typeof IMAGE_SIZES
+  figureFloat?: boolean
+  collapsable?: boolean
+  margin?: boolean
+  editorPreview?: boolean
+}
+
 const InfoBox = ({
   t,
   children,
@@ -114,10 +126,10 @@ const InfoBox = ({
   size,
   margin = true,
   figureSize,
-  figureFloat,
-  collapsable,
+  figureFloat = false,
+  collapsable = false,
   editorPreview,
-}) => {
+}: InfoBoxProps) => {
   let styles = {}
   const float = figureFloat || size === 'float'
   if (figureSize) {
@@ -160,21 +172,6 @@ const InfoBox = ({
       <section {...styles}>{content}</section>
     </Breakout>
   )
-}
-
-InfoBox.propTypes = {
-  t: PropTypes.func,
-  children: PropTypes.node.isRequired,
-  attributes: PropTypes.object,
-  size: PropTypes.oneOf(['float', 'breakout']),
-  figureSize: PropTypes.oneOf(Object.keys(IMAGE_SIZES)),
-  figureFloat: PropTypes.bool.isRequired,
-  collapsable: PropTypes.bool,
-}
-
-InfoBox.defaultProps = {
-  figureFloat: false,
-  collapsable: false,
 }
 
 export default InfoBox
