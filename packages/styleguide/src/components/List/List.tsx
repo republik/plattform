@@ -57,59 +57,74 @@ const styles = {
   }),
 }
 
-styles.unorderedListCompact = merge(styles.unorderedList, {
+const unorderedListCompactStyle = merge(styles.unorderedList, {
   '& li, & li p': {
     margin: 0,
   },
 })
 
-styles.orderedListCompact = merge(styles.orderedList, {
+const orderedListCompactStyle = merge(styles.orderedList, {
   '& li, & li p': {
     margin: 0,
   },
 })
 
-export const UnorderedList = ({ children, attributes, compact }) => {
+type UnorderedListProps = {
+  children: React.ReactNode
+  attributes?: React.HTMLAttributes<HTMLUListElement>
+  compact?: boolean
+}
+
+export const UnorderedList = ({
+  children,
+  attributes,
+  compact,
+}: UnorderedListProps) => {
   return (
     <ul
       {...attributes}
-      {...(compact ? styles.unorderedListCompact : styles.unorderedList)}
+      {...(compact ? unorderedListCompactStyle : styles.unorderedList)}
     >
       {children}
     </ul>
   )
 }
 
-UnorderedList.propTypes = {
-  children: PropTypes.node.isRequired,
-  attributes: PropTypes.object,
-  compact: PropTypes.bool,
+type OrderedListProps = {
+  children: React.ReactNode
+  attributes?: React.HTMLAttributes<HTMLOListElement>
+  start?: number
+  compact?: boolean
 }
 
-export const OrderedList = ({ children, attributes, start, compact }) => {
+export const OrderedList = ({
+  children,
+  attributes,
+  start = 1,
+  compact,
+}: OrderedListProps) => {
   return (
     <ol
       start={start}
       {...attributes}
-      {...(compact ? styles.orderedListCompact : styles.orderedList)}
+      {...(compact ? orderedListCompactStyle : styles.orderedList)}
     >
       {children}
     </ol>
   )
 }
 
-OrderedList.propTypes = {
-  children: PropTypes.node.isRequired,
-  attributes: PropTypes.object,
-  start: PropTypes.number,
-  compact: PropTypes.bool,
+type ListItemProps = {
+  children: React.ReactNode
+  attributes?: React.HTMLAttributes<HTMLLIElement>
+  style?: React.CSSProperties
 }
 
-OrderedList.defaultProps = {
-  start: 1,
-}
-
-export const ListItem = ({ children, attributes = {}, style = {} }) => {
+export const ListItem = ({
+  children,
+  attributes = {},
+  style = {},
+}: ListItemProps) => {
   const [colorScheme] = useColorContext()
   return (
     <li
@@ -124,13 +139,17 @@ export const ListItem = ({ children, attributes = {}, style = {} }) => {
   )
 }
 
-ListItem.propTypes = {
-  children: PropTypes.any,
-  attributes: PropTypes.object,
-  style: PropTypes.object,
+type ListProps = {
+  children: React.ReactNode
+  data: {
+    ordered?: boolean
+    start?: number
+    compact?: boolean
+  }
+  attributes?: React.HTMLAttributes<HTMLUListElement | HTMLOListElement>
 }
 
-export const List = ({ children, data, attributes = {} }) =>
+export const List = ({ children, data, attributes = {} }: ListProps) =>
   data.ordered ? (
     <OrderedList
       start={data.start}
