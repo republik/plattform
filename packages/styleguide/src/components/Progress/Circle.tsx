@@ -10,13 +10,21 @@ const styles = {
   }),
 }
 
+type CircleProps = {
+  progress?: number
+  size?: number
+  strokeColorName?: string
+  strokeWidth?: number
+  strokePlaceholder?: boolean
+}
+
 const Circle = ({
   progress = 100,
   size = 24,
   strokeColorName,
   strokeWidth = 2,
   strokePlaceholder,
-}) => {
+}: CircleProps) => {
   const circleSize = (size * 5) / 6
   const radius = circleSize / 2
   const normalizedRadius = radius - strokeWidth / 2
