@@ -1,7 +1,6 @@
-import axios from 'axios'
+import { URL } from 'url'
 import { SUBMISSIONS_DATA_URL } from './config'
 
 export async function loadPoliticQuestionnaireCSV() {
-  const res = await axios.get(SUBMISSIONS_DATA_URL)
-  return res.data
+  return fetch(new URL(SUBMISSIONS_DATA_URL)).then((res) => res.text())
 }
