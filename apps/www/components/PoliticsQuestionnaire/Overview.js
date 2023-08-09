@@ -49,10 +49,10 @@ const PARTIES = [
   { text: 'SVP', value: 'SVP' },
   { text: 'SP', value: 'SP' },
   { text: 'Grüne', value: 'Gruene' },
-  { text: 'Mitte', value: 'Mitte' },
+  { text: 'Die Mitte', value: 'Mitte' },
   { text: 'FDP', value: 'FDP' },
   { text: 'LDP', value: 'LDP' },
-  { text: 'glp', value: 'glp' },
+  { text: 'GLP', value: 'glp' },
   { text: 'EVP', value: 'EVP' },
 ]
 
