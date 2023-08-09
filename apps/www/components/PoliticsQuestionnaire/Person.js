@@ -56,37 +56,37 @@ const Page = ({ responses, authorData }) => {
     query: { image },
   } = router
 
-  const urlObj = new URL(router.asPath, PUBLIC_BASE_URL)
-  const url = urlObj.toString()
+  // const urlObj = new URL(router.asPath, PUBLIC_BASE_URL)
+  // const url = urlObj.toString()
 
-  const shareImageUrlObj = urlObj
-  shareImageUrlObj.searchParams.set('image', true)
-  const shareImageUrl = shareImageUrlObj.toString()
+  // const shareImageUrlObj = urlObj
+  // shareImageUrlObj.searchParams.set('image', true)
+  // const shareImageUrl = shareImageUrlObj.toString()
 
-  if (image) {
-    return (
-      <ShareImageSplit
-        user={authorData}
-        img={ILLU_SHARE}
-        fgColor={QUESTIONNAIRE_FG_COLOR}
-        bgColor={QUESTIONNAIRE_BG_COLOR}
-        personShareText={PERSON_SHARE_TEXT}
-      />
-    )
-  }
+  // if (image) {
+  //   return (
+  //     <ShareImageSplit
+  //       user={authorData}
+  //       img={ILLU_SHARE}
+  //       fgColor={QUESTIONNAIRE_FG_COLOR}
+  //       bgColor={QUESTIONNAIRE_BG_COLOR}
+  //       personShareText={PERSON_SHARE_TEXT}
+  //     />
+  //   )
+  // }
 
-  const meta = {
-    url,
-    title: '1 von 71 ausgefüllten Fragebögen aus dem Bundeshaus',
-    description: 'Die Antworten von ' + authorData?.name,
-    image: `${ASSETS_SERVER_BASE_URL}/render?width=1200&height=1&url=${encodeURIComponent(
-      shareImageUrl,
-    )}`,
-  }
+  // const meta = {
+  //   url,
+  //   title: '1 von 71 ausgefüllten Fragebögen aus dem Bundeshaus',
+  //   description: 'Die Antworten von ' + authorData?.name,
+  //   image: `${ASSETS_SERVER_BASE_URL}/render?width=1200&height=1&url=${encodeURIComponent(
+  //     shareImageUrl,
+  //   )}`,
+  // }
 
   return (
     <Frame raw>
-      <Meta data={meta} />
+      {/* <Meta data={meta} /> */}
       <div
         style={{
           backgroundColor: QUESTIONNAIRE_BG_COLOR,
@@ -149,7 +149,7 @@ const Page = ({ responses, authorData }) => {
               />
             </NextLink>
           </div>
-          <HeaderShare meta={meta} />
+          {/* <HeaderShare meta={meta} /> */}
         </div>
         <Editorial.P>
           Partei: {partyTranslation(authorData.party)}

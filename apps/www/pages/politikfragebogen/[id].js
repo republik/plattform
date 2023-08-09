@@ -1,4 +1,3 @@
-import { createGetStaticProps } from '../../lib/apollo/helpers'
 import PersonPage from '../../components/PoliticsQuestionnaire/Person'
 import { csvParse } from 'd3-dsv'
 
