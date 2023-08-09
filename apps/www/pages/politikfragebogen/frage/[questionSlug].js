@@ -1,7 +1,3 @@
-import {
-  createGetStaticPaths,
-  createGetStaticProps,
-} from '../../../lib/apollo/helpers'
 import SingleQuestionView from '../../../components/PoliticsQuestionnaire/SingleQuestionView'
 import { csvParse } from 'd3-dsv'
 import { nest } from 'd3-collection'
@@ -35,54 +31,52 @@ export default function Page({
   )
 }
 
-export const getStaticProps = createGetStaticProps(
-  async (_, { params: { questionSlug } }) => {
-    const data = await loadPoliticQuestionnaireCSV()
+export const getStaticProps = async ({ params: { questionSlug } }) => {
+  const data = await loadPoliticQuestionnaireCSV()
 
-    const responses = csvParse(data).filter(
-      (response) => response.answer !== 'NA',
-    )
+  const responses = csvParse(data).filter(
+    (response) => response.answer !== 'NA',
+  )
 
-    const questionSlugs = questionSlug.split(QUESTION_SEPARATOR)
+  const questionSlugs = questionSlug.split(QUESTION_SEPARATOR)
 
-    const questionIndex = QUESTIONS.map((d) => d.questionSlugs[0]).indexOf(
-      questionSlugs[0],
-    )
+  const questionIndex = QUESTIONS.map((d) => d.questionSlugs[0]).indexOf(
+    questionSlugs[0],
+  )
 
-    const responsesBySlug = responses.filter((d) =>
-      questionSlugs.includes(d.questionSlug),
-    )
+  const responsesBySlug = responses.filter((d) =>
+    questionSlugs.includes(d.questionSlug),
+  )
 
-    const questionTypes = questionSlugs.map((q) => getTypeBySlug(q))
+  const questionTypes = questionSlugs.map((q) => getTypeBySlug(q))
 
-    const nestedResponses = nest()
-      .key((d) => d.uuid)
-      .entries(responsesBySlug)
+  const nestedResponses = nest()
+    .key((d) => d.uuid)
+    .entries(responsesBySlug)
 
-    const joinedData = leftJoin(responsesBySlug, QUESTION_TYPES, 'questionSlug')
+  const joinedData = leftJoin(responsesBySlug, QUESTION_TYPES, 'questionSlug')
 
-    const chartAnswers = nest()
-      .key((d) => d.questionSlug)
-      .rollup((values) => values)
-      .entries(joinedData)
+  const chartAnswers = nest()
+    .key((d) => d.questionSlug)
+    .rollup((values) => values)
+    .entries(joinedData)
 
-    const question = responsesBySlug.map((d) => {
-      return { question: d.question }
-    })
+  const question = responsesBySlug.map((d) => {
+    return { question: d.question }
+  })
 
-    return {
-      props: {
-        chartAnswers: questionTypes.includes('choice') ? chartAnswers[0] : '',
-        question: question[0].question,
-        nestedResponses: nestedResponses,
-        questionTypes: questionTypes,
-        questionIndex: questionIndex,
-      },
-    }
-  },
-)
+  return {
+    props: {
+      chartAnswers: questionTypes.includes('choice') ? chartAnswers[0] : '',
+      question: question[0].question,
+      nestedResponses: nestedResponses,
+      questionTypes: questionTypes,
+      questionIndex: questionIndex,
+    },
+  }
+}
 
-export const getStaticPaths = createGetStaticPaths(async () => {
+export const getStaticPaths = async () => {
   const paths = QUESTIONS.filter((d) => {
     if (d.questionSlugs.length === 1) {
       const questionType = QUESTION_TYPES.find(
@@ -101,4 +95,4 @@ export const getStaticPaths = createGetStaticPaths(async () => {
     paths,
     fallback: false,
   }
-})
+}
