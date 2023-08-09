@@ -99,7 +99,9 @@ export const SubmissionsOverview = ({ submissionData, party }) => {
       <ShareImageSplit
         img={ILLU_SHARE}
         bgColor={QUESTIONNAIRE_BG_COLOR}
-        question={{ text: 'Politikerfragebogen 2023' }}
+        question={{
+          text: `Politikerfragebogen 2023${party ? ` - ${party}` : ''}`,
+        }}
       />
     )
   }
@@ -177,6 +179,7 @@ export const SubmissionsOverview = ({ submissionData, party }) => {
                   key={question.questionSlugs[0]}
                   questions={groupQuestions}
                   bgColor={questionColor(idx)}
+                  hideShowAll={!!party}
                 />
               )
             })}
@@ -189,7 +192,7 @@ export const SubmissionsOverview = ({ submissionData, party }) => {
 
 export default SubmissionsOverview
 
-const QuestionFeatured = ({ questions, bgColor }) => {
+const QuestionFeatured = ({ questions, bgColor, hideShowAll = false }) => {
   // Because we filter by NA we get undefined for certain answers, so we exclude those answers from the overview
   if (typeof questions[0] === 'undefined') return
   if (questions.length > 1 && typeof questions[1] === 'undefined') return
@@ -220,7 +223,7 @@ const QuestionFeatured = ({ questions, bgColor }) => {
             ) : null
           })}
 
-          {hasTextAnswer && (
+          {!hideShowAll && hasTextAnswer && (
             <NarrowContainer>
               <Interaction.P style={{ textAlign: 'center' }}>
                 <QuestionLink questions={questions}>
