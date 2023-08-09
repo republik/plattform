@@ -9,7 +9,7 @@ const TTL_EXP_MS = MIN_TTL_MS * 1.5
 
 type IntervalSchedulerProps = {
   name: string
-  context: unknown
+  context: { redis: any }
   runFunc: (options: { dryRun?: boolean }, context: unknown) => Promise<void>
   lockTtlSecs: number
   runIntervalSecs: number

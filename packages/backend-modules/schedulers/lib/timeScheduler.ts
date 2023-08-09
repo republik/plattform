@@ -1,4 +1,4 @@
-import Redlock from 'redlock'
+import Redlock, { LockError } from 'redlock'
 import Promise from 'bluebird'
 
 import moment from 'moment'
@@ -7,6 +7,20 @@ const LOCK_RETRY_COUNT = 3
 const LOCK_RETRY_DELAY = 600
 const LOCK_RETRY_JITTER = 200
 const MIN_TTL_MS = LOCK_RETRY_COUNT * (LOCK_RETRY_DELAY + LOCK_RETRY_JITTER)
+
+type TimeSchedulerProps = {
+  name: string
+  context: { redis: any }
+  runFunc: (
+    options: { now?: moment.Moment; dryRun?: boolean },
+    context: unknown,
+  ) => Promise<void>
+  lockTtlSecs: number
+  runAtTime: string
+  runAtDaysOfWeek: number[]
+  runInitially?: boolean
+  dryRun?: boolean
+}
 
 const init = async ({
   name,
@@ -17,7 +31,7 @@ const init = async ({
   runAtDaysOfWeek = [1, 2, 3, 4, 5, 6, 7], // 1 = Monday, 7 = Sunday
   runInitially = false,
   dryRun = false,
-}) => {
+}: TimeSchedulerProps) => {
   if (!name || !context || !runFunc || !lockTtlSecs || !runAtTime) {
     console.error(`missing input, scheduler ${name}`, {
       name,
@@ -55,22 +69,23 @@ const init = async ({
 
   if (lockTtlSecs * 1000 < MIN_TTL_MS) {
     throw new Error(
-      `lockTtlSecs must be at least ${Math.ceil(MIN_TTL_MS / 1000)})`,
-      { lockTtlSecs },
+      `lockTtlSecs must be at least ${Math.ceil(
+        MIN_TTL_MS / 1000,
+      )}) but is ${lockTtlSecs}`,
     )
   }
 
-  let timeout
+  let timeout: NodeJS.Timeout
   const scheduleNextRun = () => {
     const [runAtHour, runAtMinute] = runAtTime.split(':')
     if (!runAtHour || !runAtMinute) {
-      throw new Error('invalid runAtTime. Format: HH:MM', { runAtTime })
+      throw new Error(`invalid runAtTime=${runAtTime}. Format: HH:MM`)
     }
     const now = moment()
     const nextRunAt = now
       .clone()
-      .hour(runAtHour)
-      .minute(runAtMinute)
+      .hour(parseInt(runAtHour))
+      .minute(parseInt(runAtMinute))
       .second(0)
       .millisecond(0)
     while (
@@ -84,7 +99,9 @@ const init = async ({
       clearTimeout(timeout)
     }
     timeout = setTimeout(run, nextRunInMs).unref()
-    debug(`next run scheduled ${nextRunAt.fromNow()} at: ${nextRunAt}`)
+    debug(
+      `next run scheduled ${nextRunAt.fromNow()} at: ${nextRunAt.toISOString()}`,
+    )
   }
 
   const run = async () => {
@@ -132,7 +149,7 @@ const init = async ({
 
       debug('run completed')
     } catch (e) {
-      if (e.name === 'LockError') {
+      if (e instanceof LockError) {
         if (e.attempts && e.attempts > LOCK_RETRY_COUNT) {
           debug('give up, others are doing the work:', e.message)
         } else {
@@ -158,7 +175,7 @@ const init = async ({
     debug('run initially')
     await run()
   } else {
-    await scheduleNextRun()
+    scheduleNextRun()
   }
 
   return {
