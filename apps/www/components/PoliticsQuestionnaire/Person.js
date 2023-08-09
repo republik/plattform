@@ -43,6 +43,8 @@ import {
 } from './config'
 import { IconChevronLeft } from '@republik/icons'
 
+import { partyTranslation, cantonTranslation } from './utils'
+
 const Page = ({ responses, authorData }) => {
   const { t } = useTranslation()
   const [headerHeight] = useHeaderHeight()
@@ -148,20 +150,11 @@ const Page = ({ responses, authorData }) => {
             </NextLink>
           </div>
           <HeaderShare meta={meta} />
-          {/* {isOwnQuestionnaire && (
-            <IconButton
-              size={24}
-              label='Bearbeiten'
-              labelShort=''
-              Icon={IconEdit}
-              href={EDIT_QUESTIONNAIRE_PATH}
-            />
-          )} */}
         </div>
         <Editorial.P>
-          Partei: {authorData.party}
+          Partei: {partyTranslation(authorData.party)}
           <br />
-          Wohnkanton: {authorData.canton}
+          Wohnkanton: {cantonTranslation(authorData.canton)}
         </Editorial.P>
 
         {responses.map(({ question, answer, type, options, idx }) => (
