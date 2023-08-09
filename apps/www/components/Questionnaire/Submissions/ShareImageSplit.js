@@ -12,6 +12,7 @@ export const ShareImageSplit = ({
   user,
   img,
   bgColor,
+  fgColor,
   personShareText,
 }) => {
   const router = useRouter()
@@ -62,6 +63,7 @@ export const ShareImageSplit = ({
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
+            color: fgColor || 'inherit',
           }}
         >
           <span>{text}</span>

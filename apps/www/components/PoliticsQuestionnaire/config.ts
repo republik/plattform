@@ -3,6 +3,7 @@ import { scaleOrdinal } from 'd3-scale'
 export const SUBMISSIONS_DATA_URL =
   'https://cdn.repub.ch/s3/republik-assets/repos/republik/article-politikfragebogen-community/files/71d36af6-59dc-431a-a81d-8e6e2b028639/submissions_data.csv'
 export const QUESTIONNAIRE_BG_COLOR = '#bde6dc'
+export const QUESTIONNAIRE_FG_COLOR = '#232323'
 
 const COLORS = [
   '#bde6dc',
