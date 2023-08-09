@@ -126,7 +126,7 @@ const Page = ({
                   )}
                 </div>
                 <div {...styles.answerCardWrapper}>
-                  {nestedResponses.map(({ key, values }, idx) => (
+                  {nestedResponses.map(({ key, values }) => (
                     <SubmissionLink key={key} id={key}>
                       <a style={{ textDecoration: 'none' }}>
                         <div {...styles.answerCard}>
