@@ -1,7 +1,4 @@
-import {
-  createGetStaticPaths,
-  createGetStaticProps,
-} from '../../lib/apollo/helpers'
+import { createGetStaticProps } from '../../lib/apollo/helpers'
 import PersonPage from '../../components/PoliticsQuestionnaire/Person'
 import { csvParse } from 'd3-dsv'
 
@@ -52,7 +49,7 @@ export const getStaticProps = createGetStaticProps(
   },
 )
 
-export const getStaticPaths = createGetStaticPaths(async () => {
+export const getStaticPaths = async () => {
   const data = await loadPoliticQuestionnaireCSV()
 
   const responses = csvParse(data).filter(
@@ -61,18 +58,16 @@ export const getStaticPaths = createGetStaticPaths(async () => {
 
   const responsesWithTypes = leftJoin(responses, QUESTION_TYPES, 'questionSlug')
   const ids = responsesWithTypes.map((d) => d.uuid)
-  const paths = ids
-    .filter((d, idx) => ids.indexOf(d) == idx)
-    .map((d) => {
-      return {
-        params: {
-          id: d,
-        },
-      }
-    })
+  const paths = [...new Set(ids)].map((d) => {
+    return {
+      params: {
+        id: d,
+      },
+    }
+  })
 
   return {
     paths,
     fallback: false,
   }
-})
+}

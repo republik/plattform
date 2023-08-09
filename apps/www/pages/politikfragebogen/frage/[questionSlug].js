@@ -1,7 +1,4 @@
-import {
-  createGetStaticPaths,
-  createGetStaticProps,
-} from '../../../lib/apollo/helpers'
+import { createGetStaticProps } from '../../../lib/apollo/helpers'
 import SingleQuestionView from '../../../components/PoliticsQuestionnaire/SingleQuestionView'
 import { csvParse } from 'd3-dsv'
 import { nest } from 'd3-collection'
@@ -82,7 +79,7 @@ export const getStaticProps = createGetStaticProps(
   },
 )
 
-export const getStaticPaths = createGetStaticPaths(async () => {
+export const getStaticPaths = async () => {
   const paths = QUESTIONS.filter((d) => {
     if (d.questionSlugs.length === 1) {
       const questionType = QUESTION_TYPES.find(
@@ -101,4 +98,4 @@ export const getStaticPaths = createGetStaticPaths(async () => {
     paths,
     fallback: false,
   }
-})
+}
