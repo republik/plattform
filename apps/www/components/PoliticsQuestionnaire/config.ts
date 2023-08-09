@@ -1,8 +1,8 @@
 import { scaleOrdinal } from 'd3-scale'
 
-// TODO: use correct color palette
+export const SUBMISSIONS_DATA_URL =
+  'https://cdn.repub.ch/s3/republik-assets/repos/republik/article-politikfragebogen-community/files/71d36af6-59dc-431a-a81d-8e6e2b028639/submissions_data.csv'
 export const QUESTIONNAIRE_BG_COLOR = '#bde6dc'
-// const COLORS = ['#56a9df', '#66b7ed']
 
 const COLORS = [
   '#bde6dc',
