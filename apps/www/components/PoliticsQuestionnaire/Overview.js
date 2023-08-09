@@ -117,7 +117,7 @@ export const SubmissionsOverview = ({
   const meta = {
     url,
     title: 'Die 71 ausgefüllten Sommerfragebögen 2023',
-    description: '',
+    description: 'Hier finden Sie alle Antworten gebündelt.',
     image: `${ASSETS_SERVER_BASE_URL}/render?width=1200&height=1&url=${encodeURIComponent(
       shareImageUrl,
     )}`,
