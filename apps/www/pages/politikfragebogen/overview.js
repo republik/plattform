@@ -1,13 +1,12 @@
 import { createGetServerSideProps } from '../../lib/apollo/helpers'
 import SubmissionsOverview from '../../components/PoliticsQuestionnaire/Overview'
-import fs from 'node:fs/promises'
-import path from 'node:path'
 import { csvParse } from 'd3-dsv'
 import { nest } from 'd3-collection'
 
 import { QUESTION_TYPES } from '../../components/PoliticsQuestionnaire/config'
 
 import { leftJoin } from '../../components/PoliticsQuestionnaire/utils'
+import { PUBLIC_BASE_URL } from '../../lib/constants'
 
 export default ({ submissionData }) => (
   <SubmissionsOverview submissionData={submissionData} />
@@ -19,13 +18,10 @@ export const getServerSideProps = createGetServerSideProps(
       query: { party },
     },
   }) => {
-    const data = await fs.readFile(
-      path.join(
-        process.cwd(),
-        'public/static/politicsquestionnaire2023/submissions_data.csv',
-      ),
-      'utf-8',
-    )
+    const data = await fetch(
+      PUBLIC_BASE_URL +
+        '/static/politicsquestionnaire2023/submissions_data.csv',
+    ).then((res) => res.text())
 
     const responses = csvParse(data).filter(
       (response) => response.answer !== 'NA',

@@ -1,7 +1,5 @@
 import { createGetServerSideProps } from '../../../lib/apollo/helpers'
 import Page from '../../../components/PoliticsQuestionnaire/SingleQuestionView'
-import fs from 'node:fs/promises'
-import path from 'node:path'
 import { csvParse } from 'd3-dsv'
 import { nest } from 'd3-collection'
 import {
@@ -14,6 +12,7 @@ import {
   leftJoin,
   getTypeBySlug,
 } from '../../../components/PoliticsQuestionnaire/utils'
+import { PUBLIC_BASE_URL } from '../../../lib/constants'
 
 export default ({
   chartAnswers,
@@ -37,13 +36,11 @@ export const getServerSideProps = createGetServerSideProps(
       params: { questionSlug },
     },
   }) => {
-    const data = await fs.readFile(
-      path.join(
-        process.cwd(),
-        'public/static/politicsquestionnaire2023/submissions_data.csv',
-      ),
-      'utf-8',
-    )
+    const data = await fetch(
+      PUBLIC_BASE_URL +
+        '/static/politicsquestionnaire2023/submissions_data.csv',
+    ).then((res) => res.text())
+
     const responses = csvParse(data).filter(
       (response) => response.answer !== 'NA',
     )
