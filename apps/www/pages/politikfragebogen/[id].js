@@ -1,33 +1,21 @@
 import {
-  createGetServerSideProps,
   createGetStaticPaths,
   createGetStaticProps,
 } from '../../lib/apollo/helpers'
 import Page from '../../components/PoliticsQuestionnaire/Person'
 import { csvParse } from 'd3-dsv'
-import fs from 'node:fs/promises'
-import path from 'node:path'
 
 import { QUESTION_TYPES } from '../../components/PoliticsQuestionnaire/config'
 import { leftJoin } from '../../components/PoliticsQuestionnaire/utils'
+import { loadPoliticQuestionnaireCSV } from '../../components/PoliticsQuestionnaire/loader'
 
 export default ({ responses, authorData }) => (
   <Page responses={responses} authorData={authorData} />
 )
 
-async function fetchData() {
-  return fs.readFile(
-    path.join(
-      process.cwd(),
-      'public/static/politicsquestionnaire2023/submissions_data.csv',
-    ),
-    'utf-8',
-  )
-}
-
 export const getStaticProps = createGetStaticProps(
   async (_, { params: { id } }) => {
-    const data = await fetchData()
+    const data = await loadPoliticQuestionnaireCSV()
     const responses = csvParse(data).filter(
       (response) => response.answer !== 'NA',
     )
@@ -65,7 +53,7 @@ export const getStaticProps = createGetStaticProps(
 )
 
 export const getStaticPaths = createGetStaticPaths(async () => {
-  const data = await fetchData()
+  const data = await loadPoliticQuestionnaireCSV()
 
   const responses = csvParse(data).filter(
     (response) => response.answer !== 'NA',

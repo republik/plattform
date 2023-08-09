@@ -1,7 +1,5 @@
 import { csvParse } from 'd3-dsv'
 import { nest } from 'd3-collection'
-import fs from 'node:fs/promises'
-import path from 'node:path'
 import { leftJoin } from '../../../components/PoliticsQuestionnaire/utils'
 import { QUESTION_TYPES } from '../../../components/PoliticsQuestionnaire/config'
 import {
@@ -9,24 +7,15 @@ import {
   createGetStaticProps,
 } from '../../../lib/apollo/helpers'
 import SubmissionsOverview from '../../../components/PoliticsQuestionnaire/Overview'
+import { loadPoliticQuestionnaireCSV } from '../../../components/PoliticsQuestionnaire/loader'
 
 export default ({ submissionData, party }) => (
   <SubmissionsOverview party={party} submissionData={submissionData} />
 )
 
-async function fetchData() {
-  return fs.readFile(
-    path.join(
-      process.cwd(),
-      'public/static/politicsquestionnaire2023/submissions_data.csv',
-    ),
-    'utf-8',
-  )
-}
-
 export const getStaticProps = createGetStaticProps(
   async (_, { params: { party } }) => {
-    const data = await fetchData()
+    const data = await loadPoliticQuestionnaireCSV()
 
     const responses = csvParse(data).filter(
       (response) => response.answer !== 'NA',
@@ -67,7 +56,7 @@ export const getStaticProps = createGetStaticProps(
 )
 
 export const getStaticPaths = createGetStaticPaths(async () => {
-  const data = await fetchData()
+  const data = await loadPoliticQuestionnaireCSV()
 
   const responses = csvParse(data).filter(
     (response) => response.answer !== 'NA',

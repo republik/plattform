@@ -1,5 +1,4 @@
 import {
-  createGetServerSideProps,
   createGetStaticPaths,
   createGetStaticProps,
 } from '../../../lib/apollo/helpers'
@@ -16,9 +15,7 @@ import {
   leftJoin,
   getTypeBySlug,
 } from '../../../components/PoliticsQuestionnaire/utils'
-import { PUBLIC_BASE_URL } from '../../../lib/constants'
-import fs from 'node:fs/promises'
-import path from 'node:path'
+import { loadPoliticQuestionnaireCSV } from '../../../components/PoliticsQuestionnaire/loader'
 
 export default ({
   chartAnswers,
@@ -36,19 +33,9 @@ export default ({
   />
 )
 
-async function fetchData() {
-  return fs.readFile(
-    path.join(
-      process.cwd(),
-      'public/static/politicsquestionnaire2023/submissions_data.csv',
-    ),
-    'utf-8',
-  )
-}
-
 export const getStaticProps = createGetStaticProps(
   async (_, { params: { questionSlug } }) => {
-    const data = await fetchData()
+    const data = await loadPoliticQuestionnaireCSV()
 
     const responses = csvParse(data).filter(
       (response) => response.answer !== 'NA',

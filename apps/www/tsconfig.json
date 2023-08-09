@@ -1,5 +1,12 @@
 {
   "extends": "@republik/tsconfig/nextjs.json",
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules"]
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "components/PoliticsQuestionnaire/loader.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }
