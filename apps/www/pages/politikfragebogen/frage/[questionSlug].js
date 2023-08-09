@@ -1,4 +1,8 @@
-import { createGetServerSideProps } from '../../../lib/apollo/helpers'
+import {
+  createGetServerSideProps,
+  createGetStaticPaths,
+  createGetStaticProps,
+} from '../../../lib/apollo/helpers'
 import Page from '../../../components/PoliticsQuestionnaire/SingleQuestionView'
 import { csvParse } from 'd3-dsv'
 import { nest } from 'd3-collection'
@@ -13,6 +17,8 @@ import {
   getTypeBySlug,
 } from '../../../components/PoliticsQuestionnaire/utils'
 import { PUBLIC_BASE_URL } from '../../../lib/constants'
+import fs from 'node:fs/promises'
+import path from 'node:path'
 
 export default ({
   chartAnswers,
@@ -30,16 +36,19 @@ export default ({
   />
 )
 
-export const getServerSideProps = createGetServerSideProps(
-  async ({
-    ctx: {
-      params: { questionSlug },
-    },
-  }) => {
-    const data = await fetch(
-      PUBLIC_BASE_URL +
-        '/static/politicsquestionnaire2023/submissions_data.csv',
-    ).then((res) => res.text())
+async function fetchData() {
+  return fs.readFile(
+    path.join(
+      process.cwd(),
+      'public/static/politicsquestionnaire2023/submissions_data.csv',
+    ),
+    'utf-8',
+  )
+}
+
+export const getStaticProps = createGetStaticProps(
+  async (_, { params: { questionSlug } }) => {
+    const data = await fetchData()
 
     const responses = csvParse(data).filter(
       (response) => response.answer !== 'NA',
@@ -50,8 +59,6 @@ export const getServerSideProps = createGetServerSideProps(
     const questionIndex = QUESTIONS.map((d) => d.questionSlugs[0]).indexOf(
       questionSlugs[0],
     )
-
-    console.log(questionIndex)
 
     const responsesBySlug = responses.filter((d) =>
       questionSlugs.includes(d.questionSlug),
@@ -85,3 +92,24 @@ export const getServerSideProps = createGetServerSideProps(
     }
   },
 )
+
+export const getStaticPaths = createGetStaticPaths(async () => {
+  const paths = QUESTIONS.filter((d) => {
+    if (d.questionSlugs.length === 1) {
+      const questionType = QUESTION_TYPES.find(
+        (q) => q.questionSlug === d.questionSlugs[0],
+      )
+      return questionType?.type !== 'choice'
+    }
+    return true
+  }).map((d) => ({
+    params: {
+      questionSlug: d.questionSlugs.join(QUESTION_SEPARATOR),
+    },
+  }))
+
+  return {
+    paths,
+    fallback: false,
+  }
+})
