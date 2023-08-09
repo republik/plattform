@@ -37,7 +37,7 @@ export const HeaderShare = ({ meta, noLabel }) => {
             })
             e.target.blur()
           } else {
-            showOverlay(!overlay)
+            showOverlay(true)
           }
         }}
       />
