@@ -103,7 +103,9 @@ export const SubmissionsOverview = ({ submissionData, party }) => {
       <ShareImageSplit
         img={ILLU_SHARE}
         bgColor={QUESTIONNAIRE_BG_COLOR}
-        question={{ text: 'Politikerfragebogen 2023' }}
+        question={{
+          text: `Politikerfragebogen 2023${party ? ` - ${party}` : ''}`,
+        }}
       />
     )
   }
