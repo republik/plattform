@@ -2,13 +2,11 @@ import { csvParse } from 'd3-dsv'
 import { nest } from 'd3-collection'
 import { leftJoin } from '../../../components/PoliticsQuestionnaire/utils'
 import { QUESTION_TYPES } from '../../../components/PoliticsQuestionnaire/config'
+import { createGetStaticProps } from '../../../lib/apollo/helpers'
 import SubmissionsOverview from '../../../components/PoliticsQuestionnaire/Overview'
 import { loadPoliticQuestionnaireCSV } from '../../../components/PoliticsQuestionnaire/loader'
 
 export default function Page({ submissionData, party, availableParties }) {
-  console.log('submissionData', submissionData)
-  console.log('party', party)
-  console.log('availableParties', availableParties)
   return (
     <SubmissionsOverview
       party={party}
@@ -20,7 +18,7 @@ export default function Page({ submissionData, party, availableParties }) {
 
 export const getStaticProps = async ({ params: { party } }) => {
   const data = await loadPoliticQuestionnaireCSV()
-  console.log('data', data)
+
   const responses = csvParse(data).filter(
     (response) => response.answer !== 'NA',
   )
@@ -65,7 +63,7 @@ export const getStaticProps = async ({ params: { party } }) => {
 
 export const getStaticPaths = async () => {
   const data = await loadPoliticQuestionnaireCSV()
-  console.log('data', data)
+
   const responses = csvParse(data).filter(
     (response) => response.answer !== 'NA',
   )

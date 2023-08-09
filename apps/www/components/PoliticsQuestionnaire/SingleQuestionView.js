@@ -42,41 +42,41 @@ const Page = ({
     query: { image },
   } = router
 
-  // const urlObj = new URL(router.asPath, PUBLIC_BASE_URL)
-  // const url = urlObj.toString()
+  const urlObj = new URL(router.asPath, PUBLIC_BASE_URL)
+  const url = urlObj.toString()
 
-  // const shareImageUrlObj = urlObj
-  // shareImageUrlObj.searchParams.set('image', true)
-  // const shareImageUrl = shareImageUrlObj.toString()
+  const shareImageUrlObj = urlObj
+  shareImageUrlObj.searchParams.set('image', true)
+  const shareImageUrl = shareImageUrlObj.toString()
 
-  // console.log(questionColor(18))
+  console.log(questionColor(18))
 
-  // if (image) {
-  //   return (
-  //     <ShareImageSplit
-  //       question={{ text: question }}
-  //       img={ILLU_SHARE}
-  //       bgColor={questionColor(questionIndex)}
-  //       fgColor={QUESTIONNAIRE_FG_COLOR}
-  //     />
-  //   )
-  // }
+  if (image) {
+    return (
+      <ShareImageSplit
+        question={{ text: question }}
+        img={ILLU_SHARE}
+        bgColor={questionColor(questionIndex)}
+        fgColor={QUESTIONNAIRE_FG_COLOR}
+      />
+    )
+  }
 
   const isChoiceQuestion = questionTypes.includes('choice')
   const twoTextQuestions = !isChoiceQuestion && questionTypes.length > 1
 
-  // const meta = {
-  //   url,
-  //   title: question,
-  //   description: 'Politikfragebogen für Politiker',
-  //   image: `${ASSETS_SERVER_BASE_URL}/render?width=1200&height=1&url=${encodeURIComponent(
-  //     shareImageUrl,
-  //   )}`,
-  // }
+  const meta = {
+    url,
+    title: question,
+    description: 'Politikfragebogen für Politiker',
+    image: `${ASSETS_SERVER_BASE_URL}/render?width=1200&height=1&url=${encodeURIComponent(
+      shareImageUrl,
+    )}`,
+  }
 
   return (
     <Frame raw>
-      {/* <Meta data={meta} /> */}
+      <Meta data={meta} />
       <ColorContextProvider localColorVariables={colors} colorSchemeKey='light'>
         <div>
           <div style={{ backgroundColor: questionColor(questionIndex) }}>

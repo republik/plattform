@@ -8,9 +8,6 @@ import { leftJoin } from '../../components/PoliticsQuestionnaire/utils'
 import { loadPoliticQuestionnaireCSV } from '../../components/PoliticsQuestionnaire/loader'
 
 export default function Page({ submissionData, availableParties }) {
-  console.warn('submissionData', submissionData)
-  console.warn('availableParties', availableParties)
-
   return (
     <SubmissionsOverview
       submissionData={submissionData}
