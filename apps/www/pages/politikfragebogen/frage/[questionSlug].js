@@ -2,7 +2,7 @@ import {
   createGetStaticPaths,
   createGetStaticProps,
 } from '../../../lib/apollo/helpers'
-import Page from '../../../components/PoliticsQuestionnaire/SingleQuestionView'
+import SingleQuestionView from '../../../components/PoliticsQuestionnaire/SingleQuestionView'
 import { csvParse } from 'd3-dsv'
 import { nest } from 'd3-collection'
 import {
@@ -17,21 +17,23 @@ import {
 } from '../../../components/PoliticsQuestionnaire/utils'
 import { loadPoliticQuestionnaireCSV } from '../../../components/PoliticsQuestionnaire/loader'
 
-export default ({
+export default function Page({
   chartAnswers,
   question,
   nestedResponses,
   questionTypes,
   questionIndex,
-}) => (
-  <Page
-    chartAnswers={chartAnswers}
-    question={question}
-    nestedResponses={nestedResponses}
-    questionTypes={questionTypes}
-    questionIndex={questionIndex}
-  />
-)
+}) {
+  return (
+    <SingleQuestionView
+      chartAnswers={chartAnswers}
+      question={question}
+      nestedResponses={nestedResponses}
+      questionTypes={questionTypes}
+      questionIndex={questionIndex}
+    />
+  )
+}
 
 export const getStaticProps = createGetStaticProps(
   async (_, { params: { questionSlug } }) => {

@@ -28,6 +28,7 @@ import {
   QUESTIONNAIRE_SQUARE_IMG_URL,
   ILLU_SHARE,
   ILLU_CREDIT,
+  QUESTIONNAIRE_FG_COLOR,
 } from './config'
 
 import { QuestionLink, SubmissionLink, AnswersChart } from './shared'
@@ -47,15 +48,15 @@ const PARTIES = [
   { text: 'Alle', value: undefined },
   { text: 'SVP', value: 'SVP' },
   { text: 'SP', value: 'SP' },
-  { text: 'Grüne', value: 'GRÜNE' },
-  { text: 'Mitte', value: 'M-E' },
-  { text: 'FDP', value: 'FDP-Liberale' },
+  { text: 'Grüne', value: 'Gruene' },
+  { text: 'Mitte', value: 'Mitte' },
+  { text: 'FDP', value: 'FDP' },
   { text: 'LDP', value: 'LDP' },
   { text: 'glp', value: 'glp' },
   { text: 'EVP', value: 'EVP' },
 ]
 
-export const Filters = ({ party }) => {
+export const Filters = ({ party, availableParties }) => {
   const router = useRouter()
 
   return (
@@ -63,8 +64,10 @@ export const Filters = ({ party }) => {
       <div {...styles.filterContainer}>
         <Dropdown
           label='Partei'
-          items={PARTIES}
-          value={party}
+          items={PARTIES.filter(
+            (p) => !p.value || availableParties.includes(p.value),
+          )}
+          value={party ? PARTIES[party] || party : undefined}
           onChange={(item) => {
             if (item.value) {
               router.push(
@@ -80,7 +83,11 @@ export const Filters = ({ party }) => {
   )
 }
 
-export const SubmissionsOverview = ({ submissionData, party }) => {
+export const SubmissionsOverview = ({
+  submissionData,
+  party,
+  availableParties,
+}) => {
   const router = useRouter()
   const {
     query: { image },
@@ -98,6 +105,7 @@ export const SubmissionsOverview = ({ submissionData, party }) => {
     return (
       <ShareImageSplit
         img={ILLU_SHARE}
+        fgColor={QUESTIONNAIRE_FG_COLOR}
         bgColor={QUESTIONNAIRE_BG_COLOR}
         question={{
           text: `Politikerfragebogen 2023${party ? ` - ${party}` : ''}`,
@@ -168,7 +176,7 @@ export const SubmissionsOverview = ({ submissionData, party }) => {
               backgroundColor: '#FFFFFF',
             }}
           >
-            <Filters party={party} />
+            <Filters party={party} availableParties={availableParties} />
             {QUESTIONS.map((question, idx) => {
               const groupQuestions = question.questionSlugs.map((slug) =>
                 submissionData.find((d) => d.key === slug),

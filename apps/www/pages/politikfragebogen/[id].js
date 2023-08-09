@@ -2,16 +2,16 @@ import {
   createGetStaticPaths,
   createGetStaticProps,
 } from '../../lib/apollo/helpers'
-import Page from '../../components/PoliticsQuestionnaire/Person'
+import PersonPage from '../../components/PoliticsQuestionnaire/Person'
 import { csvParse } from 'd3-dsv'
 
 import { QUESTION_TYPES } from '../../components/PoliticsQuestionnaire/config'
 import { leftJoin } from '../../components/PoliticsQuestionnaire/utils'
 import { loadPoliticQuestionnaireCSV } from '../../components/PoliticsQuestionnaire/loader'
 
-export default ({ responses, authorData }) => (
-  <Page responses={responses} authorData={authorData} />
-)
+export default function Page({ responses, authorData }) {
+  return <PersonPage responses={responses} authorData={authorData} />
+}
 
 export const getStaticProps = createGetStaticProps(
   async (_, { params: { id } }) => {

@@ -9,9 +9,15 @@ import {
 import SubmissionsOverview from '../../../components/PoliticsQuestionnaire/Overview'
 import { loadPoliticQuestionnaireCSV } from '../../../components/PoliticsQuestionnaire/loader'
 
-export default ({ submissionData, party }) => (
-  <SubmissionsOverview party={party} submissionData={submissionData} />
-)
+export default function Page({ submissionData, party, availableParties }) {
+  return (
+    <SubmissionsOverview
+      party={party}
+      submissionData={submissionData}
+      availableParties={availableParties}
+    />
+  )
+}
 
 export const getStaticProps = createGetStaticProps(
   async (_, { params: { party } }) => {
@@ -46,10 +52,15 @@ export const getStaticProps = createGetStaticProps(
       )
       .entries(filteredByParty)
 
+    const availableParties = [
+      ...new Set(responses.map((response) => response.party)),
+    ].map((party) => encodeURIComponent(party))
+
     return {
       props: {
         submissionData: groupedData,
         party,
+        availableParties,
       },
     }
   },

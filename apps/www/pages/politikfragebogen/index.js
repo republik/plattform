@@ -8,9 +8,14 @@ import { QUESTION_TYPES } from '../../components/PoliticsQuestionnaire/config'
 import { leftJoin } from '../../components/PoliticsQuestionnaire/utils'
 import { loadPoliticQuestionnaireCSV } from '../../components/PoliticsQuestionnaire/loader'
 
-export default ({ submissionData }) => (
-  <SubmissionsOverview submissionData={submissionData} />
-)
+export default function Page({ submissionData, availableParties }) {
+  return (
+    <SubmissionsOverview
+      submissionData={submissionData}
+      availableParties={availableParties}
+    />
+  )
+}
 
 export const getStaticProps = createGetStaticProps(
   async (_, { params: { party } = {} }) => {
@@ -43,9 +48,14 @@ export const getStaticProps = createGetStaticProps(
       )
       .entries(filteredByParty)
 
+    const availableParties = [
+      ...new Set(responses.map((response) => response.party)),
+    ].map((party) => encodeURIComponent(party))
+
     return {
       props: {
         submissionData: groupedData,
+        availableParties,
       },
     }
   },
