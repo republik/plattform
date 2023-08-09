@@ -56,7 +56,7 @@ const PARTIES = [
   { text: 'EVP', value: 'EVP' },
 ]
 
-export const Filters = ({ party, availableParties }) => {
+const Filters = ({ party, availableParties }) => {
   const router = useRouter()
 
   return (
@@ -83,11 +83,7 @@ export const Filters = ({ party, availableParties }) => {
   )
 }
 
-export const SubmissionsOverview = ({
-  submissionData,
-  party,
-  availableParties,
-}) => {
+const SubmissionsOverview = ({ submissionData, party, availableParties }) => {
   const router = useRouter()
   const {
     query: { image },
@@ -196,7 +192,7 @@ export const SubmissionsOverview = ({
               <Editorial.P>
                 Wir haben den Sommerfragebogen auch für die Verlegerschaft
                 bereitgestellt.{' '}
-                <Editorial.A href='https://www.republik.ch/2023/07/19/welche-politikerinnen-gehoeren-in-den-bundesrat-welcher-schweizer-politiker-muss-zuruecktreten'>
+                <Editorial.A href='https://www.republik.ch/politik-in-26-fragen-ihre-antworten'>
                   Hier
                 </Editorial.A>{' '}
                 finden Sie alle ausgefüllten Fragebögen der Leserinnen.
