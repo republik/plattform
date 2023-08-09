@@ -55,9 +55,8 @@ const PARTIES = [
   { text: 'EVP', value: 'EVP' },
 ]
 
-export const Filters = () => {
+export const Filters = ({ party }) => {
   const router = useRouter()
-  const query = router.query
 
   return (
     <NarrowContainer>
@@ -65,15 +64,23 @@ export const Filters = () => {
         <Dropdown
           label='Partei'
           items={PARTIES}
-          value={query.party}
-          onChange={(item) => router.push({ query: { party: item.value } })}
+          value={party}
+          onChange={(item) => {
+            if (item.value) {
+              router.push(
+                `/politikfragebogen/partei/${encodeURIComponent(item.value)}`,
+              )
+            } else {
+              router.push(`/politikfragebogen`)
+            }
+          }}
         />
       </div>
     </NarrowContainer>
   )
 }
 
-export const SubmissionsOverview = ({ submissionData }) => {
+export const SubmissionsOverview = ({ submissionData, party }) => {
   const router = useRouter()
   const {
     query: { image },
@@ -163,7 +170,7 @@ export const SubmissionsOverview = ({ submissionData }) => {
               backgroundColor: '#FFFFFF',
             }}
           >
-            <Filters />
+            <Filters party={party} />
             {QUESTIONS.map((question, idx) => {
               const groupQuestions = question.questionSlugs.map((slug) =>
                 submissionData.find((d) => d.key === slug),
