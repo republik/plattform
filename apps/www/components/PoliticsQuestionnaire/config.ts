@@ -253,7 +253,7 @@ export const QUESTION_TYPES: QuestionConfigType[] = [
   },
 ]
 
-export const OVERVIEW_QUESTIONNAIRE_PATH = '/politikfragebogen/overview'
+export const OVERVIEW_QUESTIONNAIRE_PATH = '/politikfragebogen'
 
 export const QUESTIONNAIRE_SLUG = 'politiker-fragebogen-community'
 
