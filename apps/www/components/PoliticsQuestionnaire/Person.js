@@ -40,6 +40,7 @@ import {
   PERSON_SHARE_TEXT,
   ILLU_SHARE,
   ILLU_CREDIT,
+  QUESTIONNAIRE_FG_COLOR,
 } from './config'
 import { IconChevronLeft } from '@republik/icons'
 
@@ -67,6 +68,7 @@ const Page = ({ responses, authorData }) => {
       <ShareImageSplit
         user={authorData}
         img={ILLU_SHARE}
+        fgColor={QUESTIONNAIRE_FG_COLOR}
         bgColor={QUESTIONNAIRE_BG_COLOR}
         personShareText={PERSON_SHARE_TEXT}
       />

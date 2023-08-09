@@ -27,6 +27,7 @@ import {
   questionColor,
   OVERVIEW_QUESTIONNAIRE_PATH,
   ILLU_SHARE,
+  QUESTIONNAIRE_FG_COLOR,
 } from './config'
 
 const Page = ({
@@ -56,6 +57,7 @@ const Page = ({
         question={{ text: question }}
         img={ILLU_SHARE}
         bgColor={questionColor(questionIndex)}
+        fgColor={QUESTIONNAIRE_FG_COLOR}
       />
     )
   }

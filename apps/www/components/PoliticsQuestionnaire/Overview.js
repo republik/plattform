@@ -95,11 +95,9 @@ export const SubmissionsOverview = ({
   const urlObj = new URL(router.asPath, PUBLIC_BASE_URL)
   const url = urlObj.toString()
 
-  const shareImageUrl = useMemo(() => {
-    const shareImageUrlObj = urlObj
-    shareImageUrlObj.searchParams.set('image', true)
-    return shareImageUrlObj.toString()
-  }, [urlObj])
+  const shareImageUrlObj = urlObj
+  shareImageUrlObj.searchParams.set('image', true)
+  const shareImageUrl = shareImageUrlObj.toString()
 
   if (image) {
     return (
