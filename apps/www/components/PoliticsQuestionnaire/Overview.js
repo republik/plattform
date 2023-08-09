@@ -108,7 +108,9 @@ export const SubmissionsOverview = ({
         fgColor={QUESTIONNAIRE_FG_COLOR}
         bgColor={QUESTIONNAIRE_BG_COLOR}
         question={{
-          text: `Politikerfragebogen 2023${party ? ` - ${party}` : ''}`,
+          text: `Was Sie von den Schweizer Politikern schon immer wissen wollten${
+            party ? ` - ${party}` : ''
+          }`,
         }}
       />
     )
@@ -116,8 +118,8 @@ export const SubmissionsOverview = ({
 
   const meta = {
     url,
-    title: 'Politikerfragebogen 2023',
-    description: 'Share Beschreibungstext',
+    title: 'Die 71 ausgefüllten Sommerfragebögen 2023',
+    description: '',
     image: `${ASSETS_SERVER_BASE_URL}/render?width=1200&height=1&url=${encodeURIComponent(
       shareImageUrl,
     )}`,
@@ -150,13 +152,14 @@ export const SubmissionsOverview = ({
             </Figure>
             <NarrowContainer style={{ padding: '20px 0' }}>
               <Interaction.Headline>
-                Politikerfragebogen 25 Fragen
+                Wir hatten 25 Fragen – hier sind alle Antworten aus dem
+                Bundeshaus
               </Interaction.Headline>
               <Editorial.Lead>
-                Worauf können Sie nicht verzichten, obwohl Sie wissen, dass es
-                für das Klima besser wäre? Was hätten Sie gerne schon vor 10
-                Jahren über die Klimakrise gewusst? Stöbern Sie durch die
-                Vielfalt an Antworten der Republik-Leserinnen.
+                Politische Irrtümer und bevorzugte Ferienorte, sympathische
+                Gegnerinnen und die politische Haltung in einem Satz: 71
+                Politikerinnen haben unseren Sommerfragebogen ausgefüllt. Hier
+                finden Sie alle gebündelt.
               </Editorial.Lead>
               <div
                 style={{
@@ -191,6 +194,16 @@ export const SubmissionsOverview = ({
                 />
               )
             })}
+            <NarrowContainer style={{ padding: '20px 0' }}>
+              <Editorial.P>
+                Wir haben den Sommerfragebogen auch für die Verlegerschaft
+                bereitgestellt.{' '}
+                <Editorial.A href='https://www.republik.ch/2023/07/19/welche-politikerinnen-gehoeren-in-den-bundesrat-welcher-schweizer-politiker-muss-zuruecktreten'>
+                  Hier
+                </Editorial.A>{' '}
+                finden Sie alle ausgefüllten Fragebögen der Leserinnen.
+              </Editorial.P>
+            </NarrowContainer>
           </div>
         </ColorContextProvider>
       </div>

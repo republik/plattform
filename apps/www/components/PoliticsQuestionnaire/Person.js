@@ -75,10 +75,8 @@ const Page = ({ responses, authorData }) => {
 
   const meta = {
     url,
-    title: 'Politikerfragebogen 2023',
-    description: t('Climatelab/Questionnaire/description', {
-      name: authorData.name,
-    }),
+    title: '1 von 71 ausgefüllten Fragebögen aus dem Bundeshaus',
+    description: 'Die Antworten von ' + authorData?.name,
     image: `${ASSETS_SERVER_BASE_URL}/render?width=1200&height=1&url=${encodeURIComponent(
       shareImageUrl,
     )}`,
