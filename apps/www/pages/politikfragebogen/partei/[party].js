@@ -6,9 +6,6 @@ import SubmissionsOverview from '../../../components/PoliticsQuestionnaire/Overv
 import { loadPoliticQuestionnaireCSV } from '../../../components/PoliticsQuestionnaire/loader'
 
 export default function Page({ submissionData, party, availableParties }) {
-  console.log('submissionData', submissionData)
-  console.log('party', party)
-  console.log('availableParties', availableParties)
   return (
     <SubmissionsOverview
       party={party}
@@ -20,7 +17,6 @@ export default function Page({ submissionData, party, availableParties }) {
 
 export const getStaticProps = async ({ params: { party } }) => {
   const data = await loadPoliticQuestionnaireCSV()
-  console.log('data', data)
   const responses = csvParse(data).filter(
     (response) => response.answer !== 'NA',
   )
@@ -65,7 +61,6 @@ export const getStaticProps = async ({ params: { party } }) => {
 
 export const getStaticPaths = async () => {
   const data = await loadPoliticQuestionnaireCSV()
-  console.log('data', data)
   const responses = csvParse(data).filter(
     (response) => response.answer !== 'NA',
   )
