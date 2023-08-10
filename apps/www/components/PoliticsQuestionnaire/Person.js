@@ -75,8 +75,8 @@ const Page = ({ responses, authorData }) => {
 
   const meta = {
     url,
-    title: '1 von 71 ausgefüllten Fragebögen aus dem Bundeshaus',
-    description: 'Die Antworten von ' + authorData?.name,
+    title: '1 von 71 ausgefüllten Fragebogen aus dem Bundeshaus',
+    description: '',
     image: `${ASSETS_SERVER_BASE_URL}/render?width=1200&height=1&url=${encodeURIComponent(
       shareImageUrl,
     )}`,

@@ -85,7 +85,7 @@ const SubmissionsOverview = ({ submissionData, party, availableParties }) => {
 
   const meta = {
     url,
-    title: 'Die 71 ausgefüllten Sommerfragebögen 2023',
+    title: 'Die 71 ausgefüllten Sommerfragebogen 2023',
     description: 'Hier finden Sie alle Antworten gebündelt.',
     image:
       'https://cdn.repub.ch/s3/republik-assets/repos/republik/article-politikfragebogen-community/files/eba3b798-ce43-462c-a2ac-99c7f350e928/share_overview.png',
@@ -122,10 +122,8 @@ const SubmissionsOverview = ({ submissionData, party, availableParties }) => {
                 Bundeshaus
               </Interaction.Headline>
               <Editorial.Lead>
-                Politische Irrtümer und bevorzugte Ferienorte, sympathische
-                Gegnerinnen und die politische Haltung in einem Satz: 71
-                Politikerinnen haben unseren Sommerfragebogen ausgefüllt. Hier
-                finden Sie alle gebündelt.
+                Grundhaltungen und Irrtümer, Lieblingsgegner und Witze – die
+                Sommerfragebogen von 71 Politikerinnen.
               </Editorial.Lead>
               <div
                 style={{
@@ -167,7 +165,7 @@ const SubmissionsOverview = ({ submissionData, party, availableParties }) => {
                 <Editorial.A href='https://www.republik.ch/politik-in-26-fragen-ihre-antworten'>
                   Hier
                 </Editorial.A>{' '}
-                finden Sie alle ausgefüllten Fragebögen der Leserinnen.
+                finden Sie alle ausgefüllten Fragebogen der Leserinnen.
               </Editorial.P>
             </NarrowContainer>
           </div>
