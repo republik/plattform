@@ -113,7 +113,7 @@ const SubmissionsOverview = ({ submissionData, party, availableParties }) => {
     url,
     title: 'Die 71 ausgefüllten Sommerfragebögen 2023',
     description: 'Hier finden Sie alle Antworten gebündelt.',
-    image: `${ASSETS_SERVER_BASE_URL}/render?width=1200&height=1&url=${encodeURIComponent(
+    image: `${ASSETS_SERVER_BASE_URL}/render?width=1200&height=628&url=${encodeURIComponent(
       shareImageUrl,
     )}`,
   }
