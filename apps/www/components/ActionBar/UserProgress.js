@@ -80,9 +80,9 @@ const UserProgress = (
   const { percentage, updatedAt } = userProgress
   const percent = Math.round(percentage * 100)
 
-  const ReadIcon = (props, ref) => (
+  const ReadIcon = forwardRef((props, ref) => (
     <IconButton
-      Icon={IconHighlightOff}
+      Icon={IconRead}
       label={!forceShortLabel && t('article/actionbar/progress/read')}
       title={t('article/actionbar/progress/read')}
       onClick={() => {
@@ -91,7 +91,7 @@ const UserProgress = (
       ref={ref}
       {...props}
     />
-  )
+  ))
 
   const MarkAsReadIcon = forwardRef((props, ref) => (
     <IconButton
