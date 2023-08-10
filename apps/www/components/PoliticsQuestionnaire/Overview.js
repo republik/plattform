@@ -87,40 +87,40 @@ const SubmissionsOverview = ({ submissionData, party, availableParties }) => {
   const {
     query: { image },
   } = router
-  // const urlObj = new URL(router.asPath, PUBLIC_BASE_URL)
-  // const url = urlObj.toString()
+  const urlObj = new URL(router.asPath, PUBLIC_BASE_URL)
+  const url = urlObj.toString()
 
-  // const shareImageUrlObj = urlObj
-  // shareImageUrlObj.searchParams.set('image', true)
-  // const shareImageUrl = shareImageUrlObj.toString()
+  const shareImageUrlObj = urlObj
+  shareImageUrlObj.searchParams.set('image', true)
+  const shareImageUrl = shareImageUrlObj.toString()
 
-  // if (image) {
-  //   return (
-  //     <ShareImageSplit
-  //       img={ILLU_SHARE}
-  //       fgColor={QUESTIONNAIRE_FG_COLOR}
-  //       bgColor={QUESTIONNAIRE_BG_COLOR}
-  //       question={{
-  //         text: `Was Sie von den Schweizer Politikern schon immer wissen wollten${
-  //           party ? ` - ${party}` : ''
-  //         }`,
-  //       }}
-  //     />
-  //   )
-  // }
+  if (image) {
+    return (
+      <ShareImageSplit
+        img={ILLU_SHARE}
+        fgColor={QUESTIONNAIRE_FG_COLOR}
+        bgColor={QUESTIONNAIRE_BG_COLOR}
+        question={{
+          text: `Was Sie von den Schweizer Politikern schon immer wissen wollten${
+            party ? ` - ${party}` : ''
+          }`,
+        }}
+      />
+    )
+  }
 
-  // const meta = {
-  //   url,
-  //   title: 'Die 71 ausgefüllten Sommerfragebögen 2023',
-  //   description: 'Hier finden Sie alle Antworten gebündelt.',
-  //   image: `${ASSETS_SERVER_BASE_URL}/render?width=1200&height=1&url=${encodeURIComponent(
-  //     shareImageUrl,
-  //   )}`,
-  // }
+  const meta = {
+    url,
+    title: 'Die 71 ausgefüllten Sommerfragebögen 2023',
+    description: 'Hier finden Sie alle Antworten gebündelt.',
+    image: `${ASSETS_SERVER_BASE_URL}/render?width=1200&height=1&url=${encodeURIComponent(
+      shareImageUrl,
+    )}`,
+  }
 
   return (
     <Frame raw>
-      {/* <Meta data={meta} /> */}
+      <Meta data={meta} />
       <div
         style={{
           backgroundColor: '#FFFFFF',
