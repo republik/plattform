@@ -1,6 +1,6 @@
 import { css } from 'glamor'
 import { useRouter } from 'next/router'
-import { PUBLIC_BASE_URL, ASSETS_SERVER_BASE_URL } from '../../lib/constants'
+import { PUBLIC_BASE_URL } from '../../lib/constants'
 
 import Frame from '../Frame'
 import Meta from '../Frame/Meta'
@@ -23,11 +23,8 @@ import {
 import {
   questionColor,
   QUESTIONS,
-  QUESTIONNAIRE_BG_COLOR,
   QUESTIONNAIRE_SQUARE_IMG_URL,
-  ILLU_SHARE,
   ILLU_CREDIT,
-  QUESTIONNAIRE_FG_COLOR,
 } from './config'
 
 import { QuestionLink, SubmissionLink, AnswersChart } from './shared'
@@ -39,7 +36,6 @@ import {
 
 import HeaderShare from './HeaderShare'
 
-import { ShareImageSplit } from '../Questionnaire/Submissions/ShareImageSplit'
 import { getTypeBySlug } from './utils'
 
 // filter needs to be this text/value object
@@ -86,25 +82,6 @@ const SubmissionsOverview = ({ submissionData, party, availableParties }) => {
   const router = useRouter()
   const urlObj = new URL(router.asPath, PUBLIC_BASE_URL)
   const url = urlObj.toString()
-
-  // const shareImageUrlObj = urlObj
-  // shareImageUrlObj.searchParams.set('image', true)
-  // const shareImageUrl = shareImageUrlObj.toString()
-
-  // if (image) {
-  //   return (
-  //     <ShareImageSplit
-  //       img={ILLU_SHARE}
-  //       fgColor={QUESTIONNAIRE_FG_COLOR}
-  //       bgColor={QUESTIONNAIRE_BG_COLOR}
-  //       question={{
-  //         text: `Was Sie von den Schweizer Politikern schon immer wissen wollten${
-  //           party ? ` - ${party}` : ''
-  //         }`,
-  //       }}
-  //     />
-  //   )
-  // }
 
   const meta = {
     url,
