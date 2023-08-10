@@ -16,6 +16,7 @@ jobs:
       SSG_DOCUMENTS_API_KEY: ${{ secrets.SSG_DOCUMENTS_API_KEY }}
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
       TURBO_TEAM: ${{ vars.TURBO_TEAM }}
+      PUBLIC_BASE_URL: https://republik.love
     steps:
       - uses: actions/checkout@v3
       - name: Use Node.js 18.x
