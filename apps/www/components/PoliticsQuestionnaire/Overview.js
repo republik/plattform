@@ -161,7 +161,7 @@ const SubmissionsOverview = ({ submissionData, party, availableParties }) => {
                   marginTop: 20,
                 }}
               >
-                {/* <HeaderShare meta={meta} /> */}
+                <HeaderShare meta={meta} />
               </div>
             </NarrowContainer>
           </div>

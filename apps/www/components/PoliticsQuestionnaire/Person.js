@@ -32,10 +32,8 @@ import { styles as submissionStyles } from '../Questionnaire/Submissions/Submiss
 import HeaderShare from './HeaderShare'
 
 import {
-  // EDIT_QUESTIONNAIRE_PATH,
   OVERVIEW_QUESTIONNAIRE_PATH,
   QUESTIONNAIRE_BG_COLOR,
-  // QUESTIONNAIRE_SLUG,
   QUESTIONNAIRE_SQUARE_IMG_URL,
   PERSON_SHARE_TEXT,
   ILLU_SHARE,
