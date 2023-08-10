@@ -84,38 +84,34 @@ const Filters = ({ party, availableParties }) => {
 
 const SubmissionsOverview = ({ submissionData, party, availableParties }) => {
   const router = useRouter()
-  const {
-    query: { image },
-  } = router
   const urlObj = new URL(router.asPath, PUBLIC_BASE_URL)
   const url = urlObj.toString()
 
-  const shareImageUrlObj = urlObj
-  shareImageUrlObj.searchParams.set('image', true)
-  const shareImageUrl = shareImageUrlObj.toString()
+  // const shareImageUrlObj = urlObj
+  // shareImageUrlObj.searchParams.set('image', true)
+  // const shareImageUrl = shareImageUrlObj.toString()
 
-  if (image) {
-    return (
-      <ShareImageSplit
-        img={ILLU_SHARE}
-        fgColor={QUESTIONNAIRE_FG_COLOR}
-        bgColor={QUESTIONNAIRE_BG_COLOR}
-        question={{
-          text: `Was Sie von den Schweizer Politikern schon immer wissen wollten${
-            party ? ` - ${party}` : ''
-          }`,
-        }}
-      />
-    )
-  }
+  // if (image) {
+  //   return (
+  //     <ShareImageSplit
+  //       img={ILLU_SHARE}
+  //       fgColor={QUESTIONNAIRE_FG_COLOR}
+  //       bgColor={QUESTIONNAIRE_BG_COLOR}
+  //       question={{
+  //         text: `Was Sie von den Schweizer Politikern schon immer wissen wollten${
+  //           party ? ` - ${party}` : ''
+  //         }`,
+  //       }}
+  //     />
+  //   )
+  // }
 
   const meta = {
     url,
     title: 'Die 71 ausgefüllten Sommerfragebögen 2023',
     description: 'Hier finden Sie alle Antworten gebündelt.',
-    image: `${ASSETS_SERVER_BASE_URL}/render?width=1200&height=628&url=${encodeURIComponent(
-      shareImageUrl,
-    )}`,
+    image:
+      'https://cdn.repub.ch/s3/republik-assets/repos/republik/article-politikfragebogen-community/files/eba3b798-ce43-462c-a2ac-99c7f350e928/share_overview.png',
   }
 
   return (
