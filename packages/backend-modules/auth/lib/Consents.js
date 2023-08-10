@@ -6,23 +6,19 @@ const MissingConsentsError = newAuthError(
 
 const revokeHooks = []
 
-/*
-const POLICIES = [
+// except newsletters, because they are called from inside the backend and not through the mutation
+const VALID_POLICIES = [
   'PRIVACY',
   'TOS',
   'STATUTE',
-  'NEWSLETTER_PROJECTR',
-  'NEWSLETTER_DAILY',
-  'NEWSLETTER_WEEKLY',
-  'PROGRESS'
-]
-*/
-
-const REVOKABLE_POLICIES = [
   'PROGRESS',
-  '5YEAR_DONATE_MONTHS',
   'PROLITTERIS_OPT_OUT',
 ]
+
+// except newsletters, because they are called from inside the backend and not through the mutation
+const REVOKABLE_POLICIES = ['PROGRESS', 'PROLITTERIS_OPT_OUT']
+
+const ENFORCE_CONSENTS = ['PRIVACY']
 
 const getAllConsentRecords = ({ userId, pgdb }) =>
   pgdb.public.consents.find(
@@ -68,8 +64,6 @@ const statusForPolicyForUser = async (args) =>
   )
 
 const requiredConsents = async ({ userId, pgdb }) => {
-  const { ENFORCE_CONSENTS = '' } = process.env
-
   if (ENFORCE_CONSENTS) {
     const consented = userId ? await consentsOfUser({ userId, pgdb }) : []
 
@@ -132,6 +126,7 @@ const registerRevokeHook = (hook) => revokeHooks.push(hook)
 
 module.exports = {
   REVOKABLE_POLICIES,
+  VALID_POLICIES,
   lastRecordForPolicyForUser,
   statusForPolicyForUser,
   requiredConsents,
