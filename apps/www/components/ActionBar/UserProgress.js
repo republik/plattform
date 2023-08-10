@@ -55,7 +55,7 @@ const UserProgress = (
         <div {...styles.consent}>
           <IconButton
             style={{ marginBottom: 16 }}
-            Icon={ReadIcon}
+            Icon={IconRead}
             onClick={submitProgressConsent}
             label={t('article/progressprompt/button/confirm')}
             labelShort={t('article/progressprompt/button/confirm')}
@@ -80,9 +80,9 @@ const UserProgress = (
   const { percentage, updatedAt } = userProgress
   const percent = Math.round(percentage * 100)
 
-  const ReadIcon = forwardRef((props, ref) => (
+  const ReadIcon = (props, ref) => (
     <IconButton
-      Icon={IconRead}
+      Icon={IconHighlightOff}
       label={!forceShortLabel && t('article/actionbar/progress/read')}
       title={t('article/actionbar/progress/read')}
       onClick={() => {
@@ -91,7 +91,7 @@ const UserProgress = (
       ref={ref}
       {...props}
     />
-  ))
+  )
 
   const MarkAsReadIcon = forwardRef((props, ref) => (
     <IconButton
