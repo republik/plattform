@@ -7,21 +7,20 @@ import {
   SHARE_IMAGE_HEIGHT,
 } from '@project-r/styleguide'
 
-import { useTranslation } from '../../../lib/withT'
-
 export const ShareImageSplit = ({
   question,
   user,
   img,
   bgColor,
+  fgColor,
   personShareText,
 }) => {
-  const { t } = useTranslation()
   const router = useRouter()
   const { query } = router
   if (!query.image && !query.extract) {
     return null
   }
+
   const text = question
     ? question.text
     : user
@@ -64,6 +63,7 @@ export const ShareImageSplit = ({
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
+            color: fgColor || 'inherit',
           }}
         >
           <span>{text}</span>
