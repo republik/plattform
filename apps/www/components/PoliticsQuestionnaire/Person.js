@@ -45,7 +45,6 @@ import { IconChevronLeft } from '@republik/icons'
 import { partyTranslation, cantonTranslation } from './utils'
 
 const Page = ({ responses, authorData }) => {
-  const { t } = useTranslation()
   const [headerHeight] = useHeaderHeight()
   const [colorScheme] = useColorContext()
 
@@ -109,9 +108,7 @@ const Page = ({ responses, authorData }) => {
             </Figure>
             <NarrowContainer style={{ padding: '20px 0' }}>
               <Interaction.Headline>
-                {t('Climatelab/Questionnaire/Person/title', {
-                  name: authorData.name,
-                })}
+                {PERSON_SHARE_TEXT + ' ' + authorData.name}
               </Interaction.Headline>
               {/* {author?.profilePicture && (
                 <img
