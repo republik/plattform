@@ -115,7 +115,7 @@ type CenterProps = {
   children: React.ReactNode
   attributes?: React.HTMLAttributes<HTMLDivElement>
   breakout?: boolean
-}
+} & React.HTMLAttributes<HTMLDivElement>
 
 const Center = ({
   children,
@@ -139,7 +139,7 @@ export type BreakoutProps = {
   children: React.ReactNode
   size?: keyof typeof breakoutStyles
   attributes?: React.HTMLAttributes<HTMLDivElement>
-}
+} & React.HTMLAttributes<HTMLDivElement>
 
 export const Breakout = ({
   size,
@@ -151,10 +151,5 @@ export const Breakout = ({
     {children}
   </div>
 )
-
-Breakout.propTypes = {
-  size: PropTypes.oneOf(Object.keys(breakoutStyles)),
-  attributes: PropTypes.object,
-}
 
 export default Center
