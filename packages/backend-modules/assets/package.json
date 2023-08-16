@@ -26,8 +26,9 @@
     "color-string": "^1.9.0",
     "d3-array": "^2.4.0",
     "debug": "^4.1.1",
+    "false": "^0.0.4",
     "file-type-stream2": "^1.0.2",
-    "sharp": "^0.29.3",
+    "sharp": "^0.32.4",
     "stream-to-array": "^2.3.0"
   }
 }
