@@ -121,8 +121,8 @@ const SubmissionsOverview = ({ submissionData, party, availableParties }) => {
                 Irrtümer, Lieblingsgegner und Witze aus dem Bundeshaus
               </Interaction.Headline>
               <Editorial.Lead>
-                Stöbern Sie in Sommerfragebogen von 71 Politikerinnen. Sie
-                können die Antworten auch nach Parteizugehörigkeit filtern. So
+                Stöbern Sie in Sommer­fragebogen von 71 Politikerinnen. Sie
+                können die Antworten auch nach Partei­zugehörigkeit filtern. So
                 sehen Sie etwa, in welcher Partei es die meisten Füchse oder
                 Katzen gibt. Über den Namen einer Politikerin gelangen Sie zu
                 allen Antworten dieser Person. Gute Lektüre!
