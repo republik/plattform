@@ -13,12 +13,12 @@ then
   echo "⚠️ Early exit 1 because .env files were detected. The pruned out will not overwrite the root directory."
   exit 1
 fi
-
+ls -l 
+ls -l out
 rm yarn.lock
 rm -rf packages
 rm -rf apps
 rm -rf docs
-ls -l out
 mv out/yarn.lock ./
 if [ -d out/packages ]
 then
