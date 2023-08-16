@@ -5,14 +5,7 @@ export const SUBMISSIONS_DATA_URL =
 export const QUESTIONNAIRE_BG_COLOR = '#bde6dc'
 export const QUESTIONNAIRE_FG_COLOR = '#232323'
 
-const COLORS = [
-  '#bde6dc',
-  '#a89bd1',
-  '#c76c65',
-  '#f9d97a',
-  '#ffd2e2',
-  '#f1abff',
-]
+const COLORS = ['#bde6dc', '#a89bd1', '#c76c65', '#f9d97a', '#f1abff']
 
 export const QUESTION_SEPARATOR = ','
 
@@ -38,6 +31,14 @@ export const QUESTIONS: QuestionConfigOrder[] = [
   },
   { questionSlugs: ['2-was-ist-fur-sie-politisch-nicht-verhandelbar'] },
   {
+    questionSlugs: ['8-wie-viel-darf-man-in-der-politik-lugen'],
+  },
+  {
+    questionSlugs: [
+      '15-wenn-sie-als-politiker-ein-tier-sein-mussten-welches-waren-sie',
+    ],
+  },
+  {
     questionSlugs: ['3-wo-haben-sie-sich-politisch-grundlegend-geirrt'],
   },
   { questionSlugs: ['4-was-bringt-sie-politisch-zur-weissglut'] },
@@ -51,9 +52,6 @@ export const QUESTIONS: QuestionConfigOrder[] = [
   },
   {
     questionSlugs: ['7-wahlen-sie-die-gleiche-partei-wie-ihre-eltern'],
-  },
-  {
-    questionSlugs: ['8-wie-viel-darf-man-in-der-politik-lugen'],
   },
   {
     questionSlugs: ['9-was-sollte-einmal-in-ihrem-nachruf-stehen'],
@@ -72,11 +70,6 @@ export const QUESTIONS: QuestionConfigOrder[] = [
   },
   {
     questionSlugs: ['14-welches-ist-ihr-liebster-politikerinnen-witz'],
-  },
-  {
-    questionSlugs: [
-      '15-wenn-sie-als-politiker-ein-tier-sein-mussten-welches-waren-sie',
-    ],
   },
   {
     questionSlugs: ['16-wo-verbringen-sie-ihre-sommerferien'],

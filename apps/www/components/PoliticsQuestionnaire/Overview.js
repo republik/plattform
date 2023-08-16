@@ -55,10 +55,10 @@ const Filters = ({ party, availableParties }) => {
   const router = useRouter()
 
   return (
-    <NarrowContainer>
+    <NarrowContainer style={{ display: 'flex', justifyContent: 'center' }}>
       <div {...styles.filterContainer}>
         <Dropdown
-          label='Partei'
+          label='Nach Partei filtern'
           items={PARTIES.filter(
             (p) => !p.value || availableParties.includes(p.value),
           )}
@@ -118,12 +118,14 @@ const SubmissionsOverview = ({ submissionData, party, availableParties }) => {
             </Figure>
             <NarrowContainer style={{ padding: '20px 0' }}>
               <Interaction.Headline>
-                Wir hatten 25 Fragen – hier sind alle Antworten aus dem
-                Bundeshaus
+                Irrtümer, Lieblingsgegner und Witze aus dem Bundeshaus
               </Interaction.Headline>
               <Editorial.Lead>
-                Grundhaltungen und Irrtümer, Lieblingsgegner und Witze – die
-                Sommerfragebogen von 71 Politikerinnen.
+                Stöbern Sie in Sommerfragebogen von 71 Politikerinnen. Sie
+                können die Antworten auch nach Parteizugehörigkeit filtern. So
+                sehen Sie etwa, in welcher Partei es die meisten Füchse oder
+                Katzen gibt. Über den Namen einer Politikerin gelangen Sie zu
+                allen Antworten dieser Person. Gute Lektüre!
               </Editorial.Lead>
               <div
                 style={{
@@ -144,6 +146,14 @@ const SubmissionsOverview = ({ submissionData, party, availableParties }) => {
             }}
           >
             <Filters party={party} availableParties={availableParties} />
+            {/* <NarrowContainer style={{ padding: '20px 0 40px' }}>
+              <Editorial.P>
+                Sie können die Antworten nach Parteizugehörigkeit filtern. So
+                sehen Sie etwa, in welcher Partei es die meisten Füchse oder
+                Katzen gibt. Über den Namen einer Politikerin gelangen sie auf
+                alle Antworten dieser Person. Gute Lektüre!
+              </Editorial.P>
+            </NarrowContainer> */}
             {QUESTIONS.map((question, idx) => {
               const groupQuestions = question.questionSlugs.map((slug) =>
                 submissionData.find((d) => d.key === slug),
@@ -202,7 +212,10 @@ const QuestionFeatured = ({ questions, bgColor, hideShowAll = false }) => {
         >
           {questions.map((q) => {
             return getTypeBySlug(q.key) === 'text' ? (
-              <AnswerGridOverview question={q} />
+              <AnswerGridOverview
+                question={q}
+                hint='Tippen Sie eine Antwort an, um den ganzen Fragebogen dieser Person zu sehen.'
+              />
             ) : getTypeBySlug(q.key) === 'choice' ? (
               <AnswersChart question={q} />
             ) : null
@@ -223,7 +236,7 @@ const QuestionFeatured = ({ questions, bgColor, hideShowAll = false }) => {
   )
 }
 
-const AnswerGridOverview = ({ question }) => {
+const AnswerGridOverview = ({ question, hint }) => {
   const questionSlug = question.key
   return (
     <div style={{ padding: '46px 0 0 0' }}>
@@ -231,11 +244,11 @@ const AnswerGridOverview = ({ question }) => {
         <Editorial.Subhead style={{ textAlign: 'center' }}>
           {question.value[0].question}
         </Editorial.Subhead>
-        {/* {hint && (
+        {questionSlug === '2-was-ist-fur-sie-politisch-nicht-verhandelbar' && (
           <Interaction.P style={{ textAlign: 'center', fontSize: '1em' }}>
             {hint}
           </Interaction.P>
-        )} */}
+        )}
       </NarrowContainer>
       <AnswersGrid>
         {question.value.map(({ uuid, answer, name }) => (
@@ -283,10 +296,7 @@ const styles = {
   }),
   filterContainer: css({
     marginBottom: 20,
-    display: 'flex',
-    gap: 30,
-    '& > div': {
-      flexGrow: 1,
-    },
+    width: '100%',
+    maxWidth: 400,
   }),
 }
