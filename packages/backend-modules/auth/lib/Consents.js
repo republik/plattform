@@ -67,7 +67,7 @@ const requiredConsents = async ({ userId, pgdb }) => {
   if (ENFORCE_CONSENTS) {
     const consented = userId ? await consentsOfUser({ userId, pgdb }) : []
 
-    return ENFORCE_CONSENTS.split(',').filter(
+    return ENFORCE_CONSENTS.filter(
       (consent) => consented.indexOf(consent) === -1,
     )
   }
