@@ -1877,6 +1877,10 @@
       "value": "Die Einwilligung ({consent}) kann nicht zurückgezogen werden."
     },
     {
+      "key": "api/consents/notValid",
+      "value": "Die Einwilligung {consent} ist nicht gültig."
+    },
+    {
       "key": "api/auth/accessToken/scope/404",
       "value": "Der gewünschte scope ({scope}) konnte nicht gefunden werden."
     },
