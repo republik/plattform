@@ -56,7 +56,7 @@ const Filters = ({ party, availableParties }) => {
 
   return (
     <NarrowContainer style={{ display: 'flex', justifyContent: 'center' }}>
-      <div {...styles.filterContainer}>
+      <div {...styles.filterContainer} id='filter'>
         <Dropdown
           label='Nach Partei filtern'
           items={PARTIES.filter(
@@ -66,10 +66,12 @@ const Filters = ({ party, availableParties }) => {
           onChange={(item) => {
             if (item.value) {
               router.push(
-                `/politikfragebogen/partei/${encodeURIComponent(item.value)}`,
+                `/politikfragebogen/partei/${encodeURIComponent(
+                  item.value,
+                )}#filter`,
               )
             } else {
-              router.push(`/politikfragebogen`)
+              router.push(`/politikfragebogen#filter`)
             }
           }}
         />
@@ -298,5 +300,6 @@ const styles = {
     marginBottom: 20,
     width: '100%',
     maxWidth: 400,
+    scrollMarginTop: '5rem',
   }),
 }
