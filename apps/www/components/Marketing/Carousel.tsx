@@ -71,12 +71,23 @@ const Carousel: React.FC<CarouselProps> = ({
   onlyAudio = false,
   expandAudioPlayerOnPlayback = true,
 }) => {
-  const items: CarouselItem[] = carouselData?.content?.children?.map(
-    ({ data }) => ({
-      src: getImgSrc(data, '/', 1200),
-      path: data.url,
-    }),
-  )
+  const items: CarouselItem[] = carouselData?.content?.children
+    ?.map(({ identifier, children, data }) => {
+      if (identifier === 'TEASERGROUP') {
+        return children?.length > 0
+          ? {
+              src: getImgSrc(data, '/', 1200),
+              path: children[0]?.data?.url,
+            }
+          : null
+      }
+      return {
+        src: getImgSrc(data, '/', 1200),
+        path: data.url,
+      }
+    })
+    ?.filter(Boolean)
+
   const carouselRef = useRef<HTMLDivElement>()
   const [colorScheme] = useColorContext()
 
