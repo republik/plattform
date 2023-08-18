@@ -1,6 +1,6 @@
-const submitConsent = require('../../../../graphql/resolvers/_mutations/submitConsent')
+const revokeConsent = require('../../../../graphql/resolvers/_mutations/revokeConsent')
 
-describe('check submitted consent', () => {
+describe('check revoked consent', () => {
   const req = { user: true, ip: '000.000.000.000' }
   const t = jest.fn(
     (translationString, { consent: name }) => `${translationString}: ${name}`,
@@ -18,21 +18,21 @@ describe('check submitted consent', () => {
     },
   }
 
-  test('submit invalid consent', () => {
+  test('try revoking irrevokable consent', () => {
     expect(() =>
-      submitConsent(
+      revokeConsent(
         undefined,
-        { name: 'RANDOM_CONSENT' },
+        { name: 'TOS' },
         { user: me, pgdb: pgdb, req: req, t: t },
       ),
-    ).rejects.toThrowError('api/consents/notValid: RANDOM_CONSENT')
+    ).rejects.toThrowError('api/consents/notRevokable: TOS')
   })
 
-  test('submit valid consent', () => {
+  test('revoke revokable consent', () => {
     expect(
-      submitConsent(
+      revokeConsent(
         undefined,
-        { name: 'STATUTE' },
+        { name: 'PROLITTERIS_OPT_OUT' },
         { user: me, pgdb: pgdb, req: req, t: t },
       ),
     ).resolves.toBe(me)
