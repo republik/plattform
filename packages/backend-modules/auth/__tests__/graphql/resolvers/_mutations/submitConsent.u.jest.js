@@ -9,7 +9,6 @@ describe('check submitted consent', () => {
   const me = { id: '12345' }
 
   const grantedConsents = [{ record: 'GRANT', policy: 'TOS' }]
-
   const pgdb = {
     public: {
       consents: {
@@ -33,7 +32,7 @@ describe('check submitted consent', () => {
     expect(
       submitConsent(
         undefined,
-        { name: 'TOS' },
+        { name: 'STATUTE' },
         { user: me, pgdb: pgdb, req: req, t: t },
       ),
     ).resolves.toBe(me)
