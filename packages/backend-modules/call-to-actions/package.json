@@ -20,8 +20,6 @@
     "url": "https://github.com/republik/plattform/issues"
   },
   "homepage": "https://github.com/republik/plattform#readme",
-  "devDependencies": {
-  },
   "dependencies": {
     "apollo-modules-node": "*",
     "dayjs": "^1.11.7"

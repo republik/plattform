@@ -20,6 +20,7 @@
     "link": "yarn link"
   },
   "dependencies": {
+    "@republik/mdast-react-render": "*",
     "apollo-modules-node": "*",
     "check-env": "^1.3.0",
     "d3-array": "^2.4.0",
@@ -27,7 +28,6 @@
     "d3-format": "^1.4.4",
     "d3-time-format": "^2.2.3",
     "glamor": "^2.20.40",
-    "@republik/mdast-react-render": "*",
     "prop-types": "^15.6.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
