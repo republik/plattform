@@ -2,4 +2,4 @@
 . "$(dirname "$0")/_/husky.sh"
 
 # Source: https://github.com/conventional-changelog/commitlint#add-hook
-npx --no -- commitlint --edit $1
+yarn run commitlint --edit $1
