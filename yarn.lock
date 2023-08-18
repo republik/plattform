@@ -4657,7 +4657,7 @@ __metadata:
     husky: ^7.0.0
     lint-staged: ^12.3.3
     prettier: ^2.5.1
-    turbo: ^1.10.12
+    turbo: 1.10.12
     typescript: ^5.1.6
     yaproxy: ^1.0.2
   languageName: unknown
@@ -25957,7 +25957,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"turbo@npm:^1.10.12":
+"turbo@npm:1.10.12":
   version: 1.10.12
   resolution: "turbo@npm:1.10.12"
   dependencies:
