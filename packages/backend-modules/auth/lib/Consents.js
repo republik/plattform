@@ -58,8 +58,8 @@ const lastRecordForPolicyForUser = async ({ userId, policy, pgdb }) =>
     },
   )
 
-const statusForPolicyForUser = async (args) =>
-  lastRecordForPolicyForUser(args).then(
+const statusForPolicyForUser = async ({ userId, policy, pgdb }) =>
+  lastRecordForPolicyForUser({ userId, policy, pgdb }).then(
     (record) => record && record.record === 'GRANT',
   )
 
