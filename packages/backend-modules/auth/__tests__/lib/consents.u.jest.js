@@ -1,4 +1,4 @@
-const consents = require('../../lib/Consents')
+const { statusForPolicyForUser } = require('../../lib/Consents')
 
 describe('statusForPolicyForUser:', () => {
   const userId = '12345'
@@ -14,7 +14,7 @@ describe('statusForPolicyForUser:', () => {
       },
     }
     expect(
-      consents.statusForPolicyForUser({ userId, policy, pgdb }),
+      statusForPolicyForUser({ userId, policy, pgdb }),
     ).resolves.toBeTruthy()
   })
 
@@ -28,7 +28,7 @@ describe('statusForPolicyForUser:', () => {
       },
     }
     expect(
-      consents.statusForPolicyForUser({ userId, policy, pgdb }),
+      statusForPolicyForUser({ userId, policy, pgdb }),
     ).resolves.toBeFalsy()
   })
 
@@ -42,7 +42,7 @@ describe('statusForPolicyForUser:', () => {
       },
     }
     expect(
-      consents.statusForPolicyForUser({ userId, policy, pgdb }),
+      statusForPolicyForUser({ userId, policy, pgdb }),
     ).resolves.toBeFalsy()
   })
 })
