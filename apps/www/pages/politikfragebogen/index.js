@@ -46,9 +46,9 @@ export const getStaticProps = async ({ params: { party } = {} }) => {
     )
     .entries(filteredByParty)
 
-  const availableParties = [
+  const availableParties = Array.from(
     ...new Set(responses.map((response) => response.party)),
-  ].map((party) => encodeURIComponent(party))
+  ).map((party) => encodeURIComponent(party))
 
   return {
     props: {

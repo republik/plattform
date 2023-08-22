@@ -49,7 +49,7 @@ export const getStaticPaths = async () => {
 
   const responsesWithTypes = leftJoin(responses, QUESTION_TYPES, 'questionSlug')
   const ids = responsesWithTypes.map((d) => d.uuid)
-  const paths = [...new Set(ids)].map((d) => {
+  const paths = Array.from(...new Set(ids)).map((d) => {
     return {
       params: {
         id: d,
