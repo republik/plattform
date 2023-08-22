@@ -68,6 +68,14 @@ LazyImage.propTypes = {
   dark: PropTypes.shape({
     src: PropTypes.string.isRequired,
   }),
+  srcSet: PropTypes.string,
+  sizes: PropTypes.string,
+  alt: PropTypes.string,
+  aspectRatio: PropTypes.number.isRequired,
+  attributes: PropTypes.object,
+  visible: PropTypes.bool,
+  offset: PropTypes.number,
+  onClick: PropTypes.func,
 }
 
 export default LazyImage

@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { rafDebounce } from '../../lib/helpers'
 import debounce from 'lodash/debounce'
 
@@ -92,6 +93,16 @@ class LazyLoad extends Component {
       </Element>
     )
   }
+}
+
+LazyLoad.propTypes = {
+  children: PropTypes,
+  attributes: PropTypes.object,
+  style: PropTypes.object,
+  type: PropTypes.elementType,
+  visible: PropTypes.bool,
+  offset: PropTypes.number,
+  consistentPlaceholder: PropTypes.bool,
 }
 
 LazyLoad.defaultProps = {
