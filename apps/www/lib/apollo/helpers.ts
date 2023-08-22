@@ -8,7 +8,7 @@ import { MeObjectType } from '../context/MeContext'
 import { meQuery } from './withMe'
 
 // Prepare Next.js data-fetching helpers with the generated initializeApollo function
-export const { createGetStaticProps } =
+export const { createGetStaticProps, createGetStaticPaths } =
   makeSSGDataFetchingHelpers(initializeApollo)
 
 export const createGetServerSideProps =

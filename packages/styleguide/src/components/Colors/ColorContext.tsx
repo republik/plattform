@@ -43,7 +43,7 @@ const createScheme = (specificColors) => {
     schemeKey: colorDefinitions.schemeKey,
     colorDefinitions,
     ranges: {
-      neutral: colorDefinitions.neutral,
+      neutral: [colorDefinitions.neutral],
       sequential: [
         'sequential100',
         'sequential95',
@@ -63,7 +63,7 @@ const createScheme = (specificColors) => {
       opposite3: ['opposite100', 'opposite80', 'opposite60'].map(
         (key) => colorDefinitions[key],
       ),
-      discrete: colorDefinitions.discrete,
+      discrete: [colorDefinitions.discrete],
     },
     set: memoize(createColorRule, (...args) => args.join('.')),
     getCSSColor,

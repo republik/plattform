@@ -249,12 +249,6 @@ const FeaturedSections = withT(({ t }) => {
             marginBottom: 24,
           }}
         >
-          <NavLink
-            large
-            href='/sie-haben-die-wahl-bei-einer-ausserordentlichen-urabstimmung'
-          >
-            {t('nav/vote')}
-          </NavLink>
           <NavLink large href='/cockpit'>
             {t('nav/cockpit')}
           </NavLink>

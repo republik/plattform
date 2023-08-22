@@ -327,7 +327,7 @@ const subscriptionIsEligibleForNotifications = async (
     getSubject(subscription, context),
     getObject(subscription, context),
   ])
-  if (object.__typename === 'Document') {
+  if (object && object.__typename === 'Document') {
     return (
       hasFullDocumentAccess(user) ||
       includesUnrestrictedChildRepoId([object.objectId])
