@@ -5,9 +5,8 @@ import React, { ReactNode, useContext, useMemo } from 'react'
 import colors from '../../theme/colors'
 
 const getVariableColorKeys = (colors) => {
-  return [
-    ...new Set([...Object.keys(colors.light), ...Object.keys(colors.dark)]),
-  ]
+  const keys = [...Object.keys(colors.light), ...Object.keys(colors.dark)]
+  return keys.filter((item, idx) => keys.indexOf(item) === idx)
 }
 
 // identify all variable color keys
