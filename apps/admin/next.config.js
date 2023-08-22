@@ -52,6 +52,8 @@ module.exports = withSentryConfig(
 
     org: 'republik-ag',
     project: 'admin-republik',
+
+    authToken: process.env.SENTRY_AUTH_TOKEN,
   },
   {
     // For all available options, see:
