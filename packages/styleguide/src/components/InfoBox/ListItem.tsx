@@ -1,5 +1,4 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import { sansSerifRegular15, sansSerifRegular18 } from '../Typography/styles'
 import { css } from 'glamor'
 import { mUp } from '../../theme/mediaQueries'
@@ -25,7 +24,7 @@ const styles = {
 
 type ListItemProps = {
   children: React.ReactNode
-  attributes?: React.HTMLAttributes<HTMLLIElement>
+  attributes?: React.ComponentPropsWithoutRef<'li'>
   style?: React.CSSProperties
 }
 

@@ -112,7 +112,7 @@ const positionStyle = {
 
 export type BylineProps = {
   children: React.ReactNode
-  attributes?: React.HTMLAttributes<HTMLSpanElement>
+  attributes?: React.ComponentPropsWithoutRef<'span'>
   style?: React.CSSProperties
   position?:
     | 'belowRight'

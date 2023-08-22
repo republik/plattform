@@ -26,7 +26,7 @@ const styles = {
 
 type TextProps = {
   children: React.ReactNode
-  attributes?: React.HTMLAttributes<HTMLDivElement>
+  attributes?: React.ComponentPropsWithoutRef<'div'>
   size?: keyof typeof styles
 }
 

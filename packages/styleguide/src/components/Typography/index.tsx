@@ -99,7 +99,7 @@ const styles = {
 
 type LinkProps = {
   children: React.ReactNode
-} & React.HTMLAttributes<HTMLAnchorElement>
+} & React.ComponentPropsWithoutRef<'a'>
 
 export const A = React.forwardRef<HTMLAnchorElement, LinkProps>(
   ({ children, ...props }, ref) => {
@@ -127,7 +127,7 @@ export const A = React.forwardRef<HTMLAnchorElement, LinkProps>(
 
 type HeadingProps = {
   children: React.ReactNode
-} & React.HTMLAttributes<HTMLHeadingElement>
+} & React.ComponentProps<'h1'>
 
 export const H1 = ({ children, ...props }: HeadingProps) => {
   const [colorScheme] = useColorContext()
@@ -149,7 +149,7 @@ export const H2 = ({ children, ...props }: HeadingProps) => {
 
 type LeadProps = {
   children: React.ReactNode
-} & React.HTMLAttributes<HTMLParagraphElement>
+} & React.ComponentProps<'p'>
 
 export const Lead = ({ children, ...props }: LeadProps) => {
   const [colorScheme] = useColorContext()
@@ -162,7 +162,7 @@ export const Lead = ({ children, ...props }: LeadProps) => {
 
 type ParagraphProps = {
   children: React.ReactNode
-} & React.HTMLAttributes<HTMLParagraphElement>
+} & React.ComponentProps<'p'>
 
 export const P = ({ children, ...props }: ParagraphProps) => {
   const [colorScheme] = useColorContext()
@@ -175,7 +175,7 @@ export const P = ({ children, ...props }: ParagraphProps) => {
 
 type LabelProps = {
   children: React.ReactNode
-} & React.HTMLAttributes<HTMLSpanElement>
+} & React.ComponentProps<'span'>
 
 export const Label = ({ children, ...props }: LabelProps) => {
   const [colorScheme] = useColorContext()
@@ -205,7 +205,7 @@ const subSupStyles = {
 
 type SubProps = {
   children: React.ReactNode
-  attributes: React.HTMLAttributes<HTMLElement>
+  attributes: React.ComponentProps<'sub'>
 }
 
 export const Sub = ({ children, attributes }: SubProps) => (
@@ -216,7 +216,7 @@ export const Sub = ({ children, attributes }: SubProps) => (
 
 type SupProps = {
   children: React.ReactNode
-  attributes: React.HTMLAttributes<HTMLElement>
+  attributes: React.ComponentProps<'sup'>
 }
 
 export const Sup = ({ children, attributes }: SupProps) => (
@@ -226,7 +226,7 @@ export const Sup = ({ children, attributes }: SupProps) => (
 )
 
 type HRProps = {
-  attributes: React.HTMLAttributes<HTMLElement>
+  attributes: React.ComponentProps<'hr'>
 }
 
 export const HR = ({ attributes }: HRProps) => {

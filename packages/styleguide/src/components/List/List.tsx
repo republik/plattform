@@ -71,7 +71,7 @@ const orderedListCompactStyle = merge(styles.orderedList, {
 
 type UnorderedListProps = {
   children: React.ReactNode
-  attributes?: React.HTMLAttributes<HTMLUListElement>
+  attributes?: React.ComponentPropsWithoutRef<'ul'>
   compact?: boolean
 }
 
@@ -92,7 +92,7 @@ export const UnorderedList = ({
 
 type OrderedListProps = {
   children: React.ReactNode
-  attributes?: React.HTMLAttributes<HTMLOListElement>
+  attributes?: React.ComponentPropsWithoutRef<'ol'>
   start?: number
   compact?: boolean
 }
@@ -116,7 +116,7 @@ export const OrderedList = ({
 
 type ListItemProps = {
   children: React.ReactNode
-  attributes?: React.HTMLAttributes<HTMLLIElement>
+  attributes?: React.ComponentProps<'li'>
   style?: React.CSSProperties
 }
 
@@ -142,12 +142,22 @@ export const ListItem = ({
 type ListProps = {
   children: React.ReactNode
   data: {
-    ordered?: boolean
-    start?: number
     compact?: boolean
+    ordered?: boolean
   }
-  attributes?: React.HTMLAttributes<HTMLUListElement | HTMLOListElement>
-}
+} & (
+  | {
+      data: {
+        ordered: true
+        start?: number
+      }
+      attributes?: React.ComponentProps<typeof OrderedList>['attributes']
+    }
+  | {
+      data: { ordered?: false }
+      attributes?: React.ComponentProps<typeof UnorderedList>['attributes']
+    }
+)
 
 export const List = ({ children, data, attributes = {} }: ListProps) =>
   data.ordered ? (

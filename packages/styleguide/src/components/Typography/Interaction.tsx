@@ -62,7 +62,7 @@ export const Headline = ({ children, ...props }) => {
 
 type HeadingProps = {
   children: React.ReactNode
-} & React.HTMLAttributes<HTMLHeadingElement>
+} & React.ComponentProps<'h1'>
 
 export const H1 = ({ children, ...props }: HeadingProps) => {
   const [colorScheme] = useColorContext()
@@ -101,7 +101,7 @@ const interactionP = css({
 
 type ParagraphProps = {
   children: React.ReactNode
-} & React.HTMLAttributes<HTMLParagraphElement>
+} & React.ComponentProps<'p'>
 
 export const P = ({ children, ...props }: ParagraphProps) => {
   const [colorScheme] = useColorContext()
@@ -121,8 +121,8 @@ const emphasis = css(fontStyles.sansSerifMedium)
 
 type EmphasisProps = {
   children: React.ReactNode
-  attributes: React.HTMLAttributes<HTMLElement>
-} & React.HTMLAttributes<HTMLElement>
+  attributes: React.ComponentPropsWithoutRef<'strong'>
+} & React.ComponentProps<'strong'>
 
 export const Emphasis = ({ children, attributes, ...props }: EmphasisProps) => (
   <strong {...props} {...attributes} {...emphasis}>
@@ -134,8 +134,8 @@ const cursive = css(fontStyles.sansSerifItalic)
 
 type CursiveProps = {
   children: React.ReactNode
-  attributes: React.HTMLAttributes<HTMLElement>
-} & React.HTMLAttributes<HTMLElement>
+  attributes: React.ComponentPropsWithoutRef<'em'>
+} & React.ComponentProps<'em'>
 
 export const Cursive = ({ children, attributes, ...props }: CursiveProps) => (
   <em {...props} {...attributes} {...cursive}>
