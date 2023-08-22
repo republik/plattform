@@ -74,7 +74,8 @@
     "dev:scheduler": "NODE_ENV=development nodemon $NODE_DEBUG_OPTION --trace-warnings scheduler.js",
     "inspect": "NODE_DEBUG_OPTION=--inspect yarn dev",
     "start": "node index.js",
-    "start:scheduler": "node scheduler.js"
+    "start:scheduler": "node scheduler.js",
+    "gql:download:schema": "npx apollo service:download --endpoint=http://localhost:5010/graphql graphql-schema.json"
   },
   "devDependencies": {
     "@republik/eslint-config-backend": "*",
