@@ -199,7 +199,7 @@ export const ArticleAudioPlayer = ({ document }: PlayerProps) => {
               ? t('AudioPlayer/Queue/Remove')
               : t('AudioPlayer/Queue/Add')
           }
-          disabled={itemInAudioQueue}
+          disabled={!!itemInAudioQueue}
           onClick={(e) => {
             e.preventDefault()
             if (itemInAudioQueue) {
@@ -243,10 +243,14 @@ const Contributors = ({ contributors }) => {
     (_, i) => <span key={i}>, </span>,
   )
 
-  return t.pluralize.elements('article/actionbar/audio/info/voices', {
-    names,
-    count: contributors.length,
-  })
+  return (
+    <>
+      {t.pluralize.elements('article/actionbar/audio/info/voices', {
+        names,
+        count: contributors.length,
+      })}
+    </>
+  )
 }
 
 const subscribeStyles = {
