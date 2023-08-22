@@ -4,7 +4,7 @@ import React, {
   useRef,
   ReactNode,
   MouseEventHandler,
-  RefObject,
+  Ref,
 } from 'react'
 import ReactDOM from 'react-dom'
 import { css, merge } from 'glamor'
@@ -156,7 +156,7 @@ export const OverlayRenderer: React.FC<
   OverlayProps & {
     isVisible: boolean
     ssrMode?: boolean
-    scrollRef?: RefObject<HTMLDivElement>
+    scrollRef?: Ref<HTMLDivElement>
   }
 > = ({ isVisible, mUpStyle, children, onClose, mini, ssrMode, scrollRef }) => {
   const close = (e) => {
