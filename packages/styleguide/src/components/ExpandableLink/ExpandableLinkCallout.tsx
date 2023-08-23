@@ -121,7 +121,7 @@ const appearDown = keyframes({
 
 type ExpandableLinkPProps = {
   children: React.ReactNode
-} & React.HTMLAttributes<HTMLParagraphElement>
+} & React.ComponentPropsWithoutRef<'p'>
 
 const ExpandableLinkP = ({ children, ...props }: ExpandableLinkPProps) => {
   const [colorScheme] = useColorContext()

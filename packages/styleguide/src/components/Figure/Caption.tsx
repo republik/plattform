@@ -26,7 +26,7 @@ const styles = {
 
 type CaptionProps = {
   children: React.ReactNode
-  attributes?: React.HTMLAttributes<HTMLElement>
+  attributes?: React.ComponentPropsWithoutRef<'figcaption'>
   groupCaption?: boolean
 }
 

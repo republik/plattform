@@ -22,7 +22,7 @@ const styles = {
 
 type TextProps = {
   children: React.ReactNode
-  attributes?: React.HTMLAttributes<HTMLParagraphElement>
+  attributes?: React.ComponentPropsWithoutRef<'p'>
 }
 
 export const Text = ({ children, attributes }: TextProps) => {

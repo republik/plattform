@@ -19,7 +19,7 @@ const styles = {
 
 type SubheadProps = {
   children: React.ReactNode
-  attributes?: React.HTMLAttributes<HTMLParagraphElement>
+  attributes?: React.ComponentPropsWithoutRef<'p'>
 }
 
 export const Subhead = ({ children, attributes }: SubheadProps) => {

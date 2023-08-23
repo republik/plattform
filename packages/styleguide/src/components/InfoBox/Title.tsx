@@ -21,7 +21,7 @@ const styles = {
 
 type TitleProps = {
   children: React.ReactNode
-  attributes?: React.HTMLAttributes<HTMLParagraphElement>
+  attributes?: React.ComponentPropsWithoutRef<'p'>
 }
 
 export const Title = ({ children, attributes }: TitleProps) => {
