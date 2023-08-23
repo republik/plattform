@@ -98,7 +98,7 @@ const Collapsable = ({
   const { desktop, mobile } = height
   useEffect(() => {
     /* Collapse the body (switch to 'preview' visibility) when allowed and the size exceeds the threshold. */
-    if (bodyVisibility === 'auto' && bodySize.height !== undefined) {
+    if (bodyVisibility === 'auto' && bodySize?.height !== undefined) {
       const maxBodyHeight = isDesktop ? desktop : mobile
       if (bodySize.height > maxBodyHeight + threshold) {
         setBodyVisibility('preview')
