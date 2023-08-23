@@ -177,7 +177,7 @@ const textPosStyle = ({
 
 type CoverTextTitleBlockHeadlineProps = {
   children: React.ReactNode
-  attributes?: React.ComponentProps<'div'>
+  attributes?: React.ComponentPropsWithoutRef<'div'>
 }
 
 export const CoverTextTitleBlockHeadline = ({
@@ -261,7 +261,7 @@ export const FigureCover = ({
 
 type FigureGroupProps = {
   children: React.ReactNode
-  attributes?: React.ComponentProps<'figure'>
+  attributes?: React.ComponentPropsWithoutRef<'figure'>
   columns?: 1 | 2 | 3 | 4
   size?: keyof typeof FIGURE_SIZES
   data?: unknown

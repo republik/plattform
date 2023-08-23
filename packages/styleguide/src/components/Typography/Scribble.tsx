@@ -30,7 +30,7 @@ const headline = css({
 type HeadlineProps = {
   children: React.ReactNode
   attributes: React.ComponentPropsWithoutRef<'h1'>
-} & React.ComponentProps<'h1'>
+} & React.ComponentPropsWithoutRef<'h1'>
 
 export const Headline = ({ children, attributes, ...props }: HeadlineProps) => {
   const [colorScheme] = useColorContext()

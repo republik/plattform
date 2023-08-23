@@ -116,7 +116,7 @@ export const OrderedList = ({
 
 type ListItemProps = {
   children: React.ReactNode
-  attributes?: React.ComponentProps<'li'>
+  attributes?: React.ComponentPropsWithoutRef<'li'>
   style?: React.CSSProperties
 }
 

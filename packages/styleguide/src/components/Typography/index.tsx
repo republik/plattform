@@ -127,7 +127,7 @@ export const A = React.forwardRef<HTMLAnchorElement, LinkProps>(
 
 type HeadingProps = {
   children: React.ReactNode
-} & React.ComponentProps<'h1'>
+} & React.ComponentPropsWithoutRef<'h1'>
 
 export const H1 = ({ children, ...props }: HeadingProps) => {
   const [colorScheme] = useColorContext()
@@ -149,7 +149,7 @@ export const H2 = ({ children, ...props }: HeadingProps) => {
 
 type LeadProps = {
   children: React.ReactNode
-} & React.ComponentProps<'p'>
+} & React.ComponentPropsWithoutRef<'p'>
 
 export const Lead = ({ children, ...props }: LeadProps) => {
   const [colorScheme] = useColorContext()
@@ -162,7 +162,7 @@ export const Lead = ({ children, ...props }: LeadProps) => {
 
 type ParagraphProps = {
   children: React.ReactNode
-} & React.ComponentProps<'p'>
+} & React.ComponentPropsWithoutRef<'p'>
 
 export const P = ({ children, ...props }: ParagraphProps) => {
   const [colorScheme] = useColorContext()
@@ -175,7 +175,7 @@ export const P = ({ children, ...props }: ParagraphProps) => {
 
 type LabelProps = {
   children: React.ReactNode
-} & React.ComponentProps<'span'>
+} & React.ComponentPropsWithoutRef<'span'>
 
 export const Label = ({ children, ...props }: LabelProps) => {
   const [colorScheme] = useColorContext()

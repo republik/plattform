@@ -32,7 +32,7 @@ const metaHeadline = css({
 
 type HeadlineProps = {
   children: React.ReactNode
-} & React.ComponentProps<'h1'>
+} & React.ComponentPropsWithoutRef<'h1'>
 
 export const Headline = ({ children, ...props }: HeadlineProps) => {
   const [colorScheme] = useColorContext()
@@ -61,7 +61,7 @@ const subhead = css({
 type SubheadProps = {
   children: React.ReactNode
   attributes?: React.ComponentPropsWithoutRef<'h2'>
-} & React.ComponentProps<'h2'>
+} & React.ComponentPropsWithoutRef<'h2'>
 
 export const Subhead = ({ children, attributes, ...props }: SubheadProps) => {
   const [colorScheme] = useColorContext()
@@ -97,7 +97,7 @@ const metaP = css({
 
 type ParagraphProps = {
   children: React.ReactNode
-} & React.ComponentProps<'p'>
+} & React.ComponentPropsWithoutRef<'p'>
 
 export const P = ({ children, ...props }: ParagraphProps) => {
   const [colorScheme] = useColorContext()
@@ -126,7 +126,7 @@ const lead = css({
 type LeadProps = {
   children: React.ReactNode
   attributes?: React.ComponentPropsWithoutRef<'p'>
-} & React.ComponentProps<'p'>
+} & React.ComponentPropsWithoutRef<'p'>
 
 export const Lead = ({ children, attributes, ...props }: LeadProps) => {
   const [colorScheme] = useColorContext()

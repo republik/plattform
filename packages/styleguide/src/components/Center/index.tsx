@@ -115,7 +115,7 @@ type CenterProps = {
   children: React.ReactNode
   attributes?: React.ComponentPropsWithoutRef<'div'>
   breakout?: boolean
-} & React.ComponentProps<'div'>
+} & React.ComponentPropsWithoutRef<'div'>
 
 const Center = ({
   children,
