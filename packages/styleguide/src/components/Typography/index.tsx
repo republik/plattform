@@ -205,7 +205,7 @@ const subSupStyles = {
 
 type SubProps = {
   children: React.ReactNode
-  attributes: React.ComponentProps<'sub'>
+  attributes: React.ComponentPropsWithoutRef<'sub'>
 }
 
 export const Sub = ({ children, attributes }: SubProps) => (
@@ -216,7 +216,7 @@ export const Sub = ({ children, attributes }: SubProps) => (
 
 type SupProps = {
   children: React.ReactNode
-  attributes: React.ComponentProps<'sup'>
+  attributes: React.ComponentPropsWithoutRef<'sup'>
 }
 
 export const Sup = ({ children, attributes }: SupProps) => (
@@ -226,7 +226,7 @@ export const Sup = ({ children, attributes }: SupProps) => (
 )
 
 type HRProps = {
-  attributes: React.ComponentProps<'hr'>
+  attributes: React.ComponentPropsWithoutRef<'hr'>
 }
 
 export const HR = ({ attributes }: HRProps) => {

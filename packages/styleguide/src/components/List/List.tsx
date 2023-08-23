@@ -1,5 +1,4 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import {
   serifRegular14,
   serifRegular17,
@@ -144,32 +143,26 @@ type ListProps = {
   data: {
     compact?: boolean
     ordered?: boolean
+    start?: number
   }
-} & (
-  | {
-      data: {
-        ordered: true
-        start?: number
-      }
-      attributes?: React.ComponentProps<typeof OrderedList>['attributes']
-    }
-  | {
-      data: { ordered?: false }
-      attributes?: React.ComponentProps<typeof UnorderedList>['attributes']
-    }
-)
+  attributes?: React.ComponentPropsWithoutRef<'ul' | 'ol'>
+}
 
-export const List = ({ children, data, attributes = {} }: ListProps) =>
-  data.ordered ? (
-    <OrderedList
-      start={data.start}
-      compact={data.compact}
-      attributes={attributes}
-    >
-      {children}
-    </OrderedList>
-  ) : (
-    <UnorderedList compact={data.compact} attributes={attributes}>
+export const List = ({ children, data, attributes = {} }: ListProps) => {
+  if (data.ordered) {
+    return (
+      <OrderedList
+        attributes={attributes}
+        start={data.start}
+        compact={data.compact}
+      >
+        {children}
+      </OrderedList>
+    )
+  }
+  return (
+    <UnorderedList attributes={attributes} compact={data.compact}>
       {children}
     </UnorderedList>
   )
+}

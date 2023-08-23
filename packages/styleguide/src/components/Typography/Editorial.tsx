@@ -196,7 +196,7 @@ const format = css({
 type FormatProps = {
   children: React.ReactNode
   color?: string
-  attributes?: React.ComponentProps<'p'>
+  attributes?: React.ComponentPropsWithoutRef<'p'>
 } & React.ComponentPropsWithoutRef<'p'>
 
 export const Format = ({
@@ -238,7 +238,7 @@ const paragraph = css({
 
 type ParagraphProps = {
   children: React.ReactNode
-  attributes?: React.ComponentProps<'p'>
+  attributes?: React.ComponentPropsWithoutRef<'p'>
 } & React.ComponentPropsWithoutRef<'p'>
 
 export const P = ({ children, attributes, ...props }: ParagraphProps) => {
@@ -268,7 +268,7 @@ const question = css({
 
 type QuestionProps = {
   children: React.ReactNode
-  attributes?: React.ComponentProps<'p'>
+  attributes?: React.ComponentPropsWithoutRef<'p'>
 } & React.ComponentPropsWithoutRef<'p'>
 
 export const Question = ({ children, attributes, ...props }: QuestionProps) => {
@@ -292,7 +292,7 @@ const emphasis = css(fontStyles.serifBold)
 
 type EmphasisProps = {
   children: React.ReactNode
-  attributes?: React.ComponentProps<'strong'>
+  attributes?: React.ComponentPropsWithoutRef<'strong'>
 } & React.ComponentPropsWithoutRef<'strong'>
 
 export const Emphasis = ({ children, attributes, ...props }: EmphasisProps) => (
@@ -305,7 +305,7 @@ const cursive = css(fontStyles.serifItalic)
 
 type CursiveProps = {
   children: React.ReactNode
-  attributes?: React.ComponentProps<'em'>
+  attributes?: React.ComponentPropsWithoutRef<'em'>
 } & React.ComponentPropsWithoutRef<'em'>
 
 export const Cursive = ({ children, attributes, ...props }: CursiveProps) => (
@@ -320,7 +320,7 @@ const strikeThrough = css({
 
 type StrikeThroughProps = {
   children: React.ReactNode
-  attributes?: React.ComponentProps<'span'>
+  attributes?: React.ComponentPropsWithoutRef<'span'>
 } & React.ComponentPropsWithoutRef<'span'>
 
 export const StrikeThrough = ({
@@ -340,7 +340,7 @@ export const link = css({
 
 type LinkProps = {
   children: React.ReactNode
-  attributes?: React.ComponentProps<'a'>
+  attributes?: React.ComponentPropsWithoutRef<'a'>
 } & React.ComponentPropsWithoutRef<'a'>
 
 export const A = React.forwardRef<HTMLAnchorElement, LinkProps>(
@@ -383,7 +383,7 @@ const note = css({
 
 type NoteProps = {
   children: React.ReactNode
-  attributes?: React.ComponentProps<'p'>
+  attributes?: React.ComponentPropsWithoutRef<'p'>
 } & React.ComponentPropsWithoutRef<'p'>
 
 export const Note = ({ children, attributes, ...props }: NoteProps) => {
