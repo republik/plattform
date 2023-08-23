@@ -28,7 +28,7 @@ const styles = {
 
 type BlockQuoteParagraphProps = {
   children: React.ReactNode
-  attributes?: React.HTMLAttributes<HTMLParagraphElement>
+  attributes?: React.ComponentPropsWithoutRef<'p'>
 }
 
 const BlockQuoteParagraph = ({
