@@ -20,7 +20,7 @@ const styles = {
 
 type SourceProps = {
   children: React.ReactNode
-  attributes?: React.HTMLAttributes<HTMLParagraphElement>
+  attributes?: React.ComponentPropsWithoutRef<'cite'>
 }
 
 export const Source = ({ children, attributes }: SourceProps) => {

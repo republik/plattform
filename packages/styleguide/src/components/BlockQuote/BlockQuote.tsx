@@ -24,7 +24,7 @@ const styles = {
 
 type BlockQuoteProps = {
   children: React.ReactNode
-  attributes?: React.HTMLAttributes<HTMLDivElement>
+  attributes?: React.ComponentPropsWithoutRef<'div'>
 }
 
 const BlockQuote = ({ children, attributes }: BlockQuoteProps) => {

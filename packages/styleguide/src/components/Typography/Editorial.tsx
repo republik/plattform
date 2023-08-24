@@ -34,8 +34,8 @@ const headline = css({
 
 type HeadlineProps = {
   children: React.ReactNode
-  attributes?: React.HTMLAttributes<HTMLHeadingElement>
-} & React.HTMLAttributes<HTMLHeadingElement>
+  attributes?: React.ComponentPropsWithoutRef<'h1'>
+} & React.ComponentPropsWithoutRef<'h1'>
 
 export const Headline = ({ children, attributes, ...props }: HeadlineProps) => {
   const [colorScheme] = useColorContext()
@@ -68,8 +68,8 @@ const subhead = css({
 
 type SubheadProps = {
   children: React.ReactNode
-  attributes?: React.HTMLAttributes<HTMLHeadingElement>
-} & React.HTMLAttributes<HTMLHeadingElement>
+  attributes?: React.ComponentPropsWithoutRef<'h2'>
+} & React.ComponentPropsWithoutRef<'h2'>
 
 export const Subhead = ({ children, attributes, ...props }: SubheadProps) => {
   const [colorScheme] = useColorContext()
@@ -97,8 +97,8 @@ const lead = css({
 
 type LeadProps = {
   children: React.ReactNode
-  attributes?: React.HTMLAttributes<HTMLParagraphElement>
-} & React.HTMLAttributes<HTMLParagraphElement>
+  attributes?: React.ComponentPropsWithoutRef<'p'>
+} & React.ComponentPropsWithoutRef<'p'>
 
 export const Lead = ({ children, attributes, ...props }: LeadProps) => {
   const [colorScheme] = useColorContext()
@@ -140,8 +140,8 @@ const subjectWithChildren = css({
 
 type SubjectProps = {
   children: React.ReactNode
-  attributes?: React.HTMLAttributes<HTMLHeadingElement>
-} & React.HTMLAttributes<HTMLHeadingElement>
+  attributes?: React.ComponentPropsWithoutRef<'h2'>
+} & React.ComponentPropsWithoutRef<'h2'>
 
 export const Subject = ({ children, attributes, ...props }: SubjectProps) => {
   const style =
@@ -166,8 +166,8 @@ const credit = css({
 
 type CreditProps = {
   children: React.ReactNode
-  attributes?: React.HTMLAttributes<HTMLParagraphElement>
-} & React.HTMLAttributes<HTMLParagraphElement>
+  attributes?: React.ComponentPropsWithoutRef<'p'>
+} & React.ComponentPropsWithoutRef<'p'>
 
 export const Credit = ({ children, attributes, ...props }: CreditProps) => {
   const [colorScheme] = useColorContext()
@@ -196,8 +196,8 @@ const format = css({
 type FormatProps = {
   children: React.ReactNode
   color?: string
-  attributes?: React.HTMLAttributes<HTMLParagraphElement>
-} & React.HTMLAttributes<HTMLParagraphElement>
+  attributes?: React.ComponentPropsWithoutRef<'p'>
+} & React.ComponentPropsWithoutRef<'p'>
 
 export const Format = ({
   children,
@@ -238,8 +238,8 @@ const paragraph = css({
 
 type ParagraphProps = {
   children: React.ReactNode
-  attributes?: React.HTMLAttributes<HTMLParagraphElement>
-} & React.HTMLAttributes<HTMLParagraphElement>
+  attributes?: React.ComponentPropsWithoutRef<'p'>
+} & React.ComponentPropsWithoutRef<'p'>
 
 export const P = ({ children, attributes, ...props }: ParagraphProps) => {
   const [colorScheme] = useColorContext()
@@ -268,8 +268,8 @@ const question = css({
 
 type QuestionProps = {
   children: React.ReactNode
-  attributes?: React.HTMLAttributes<HTMLParagraphElement>
-} & React.HTMLAttributes<HTMLParagraphElement>
+  attributes?: React.ComponentPropsWithoutRef<'p'>
+} & React.ComponentPropsWithoutRef<'p'>
 
 export const Question = ({ children, attributes, ...props }: QuestionProps) => {
   const [colorScheme] = useColorContext()
@@ -292,8 +292,8 @@ const emphasis = css(fontStyles.serifBold)
 
 type EmphasisProps = {
   children: React.ReactNode
-  attributes?: React.HTMLAttributes<HTMLElement>
-} & React.HTMLAttributes<HTMLElement>
+  attributes?: React.ComponentPropsWithoutRef<'strong'>
+} & React.ComponentPropsWithoutRef<'strong'>
 
 export const Emphasis = ({ children, attributes, ...props }: EmphasisProps) => (
   <strong {...attributes} {...props} {...emphasis}>
@@ -305,8 +305,8 @@ const cursive = css(fontStyles.serifItalic)
 
 type CursiveProps = {
   children: React.ReactNode
-  attributes?: React.HTMLAttributes<HTMLElement>
-} & React.HTMLAttributes<HTMLElement>
+  attributes?: React.ComponentPropsWithoutRef<'em'>
+} & React.ComponentPropsWithoutRef<'em'>
 
 export const Cursive = ({ children, attributes, ...props }: CursiveProps) => (
   <em {...attributes} {...props} {...cursive}>
@@ -320,8 +320,8 @@ const strikeThrough = css({
 
 type StrikeThroughProps = {
   children: React.ReactNode
-  attributes?: React.HTMLAttributes<HTMLElement>
-} & React.HTMLAttributes<HTMLElement>
+  attributes?: React.ComponentPropsWithoutRef<'span'>
+} & React.ComponentPropsWithoutRef<'span'>
 
 export const StrikeThrough = ({
   children,
@@ -340,8 +340,8 @@ export const link = css({
 
 type LinkProps = {
   children: React.ReactNode
-  attributes?: React.HTMLAttributes<HTMLAnchorElement>
-} & React.HTMLAttributes<HTMLAnchorElement>
+  attributes?: React.ComponentPropsWithoutRef<'a'>
+} & React.ComponentPropsWithoutRef<'a'>
 
 export const A = React.forwardRef<HTMLAnchorElement, LinkProps>(
   ({ children, attributes, ...props }, ref) => {
@@ -383,8 +383,8 @@ const note = css({
 
 type NoteProps = {
   children: React.ReactNode
-  attributes?: React.HTMLAttributes<HTMLParagraphElement>
-} & React.HTMLAttributes<HTMLParagraphElement>
+  attributes?: React.ComponentPropsWithoutRef<'p'>
+} & React.ComponentPropsWithoutRef<'p'>
 
 export const Note = ({ children, attributes, ...props }: NoteProps) => {
   const [colorScheme] = useColorContext()

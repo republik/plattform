@@ -28,7 +28,7 @@ const styles = {
 
 type ContainerProps = {
   children: React.ReactNode
-} & React.HTMLAttributes<HTMLDivElement>
+} & React.ComponentPropsWithoutRef<'div'>
 
 export const Container = ({ children, ...props }: ContainerProps) => (
   <div {...props} {...styles.container}>

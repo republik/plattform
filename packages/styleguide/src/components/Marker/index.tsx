@@ -58,7 +58,7 @@ export const Marker: React.FC<{
   children?: ReactNode
   marker: MarkerType
   isSelected?: boolean
-  attributes?: React.HTMLAttributes<HTMLSpanElement>
+  attributes?: React.ComponentPropsWithoutRef<'span'>
   [x: string]: unknown
 }> = ({ marker = 'yellow', isSelected, children, attributes, ...props }) => {
   const { color, style } = markersConfig[marker]

@@ -110,7 +110,7 @@ const getBreakoutSize = (size, hasFigure) => {
 type InfoBoxProps = {
   t: Formatter
   children: React.ReactNode
-  attributes?: React.HTMLAttributes<HTMLDivElement>
+  attributes?: React.ComponentPropsWithoutRef<typeof Breakout>['attributes']
   size?: 'float' | 'breakout'
   figureSize?: keyof typeof IMAGE_SIZES
   figureFloat?: boolean
