@@ -37,8 +37,8 @@ export const tableStyles = {
   selectableRow: css({
     '& td': {
       transition: 'border-color 0.2s',
-      borderTop: `1px solid ${'var(--color-secondary)'}00`,
-      borderBottom: `1px solid ${'var(--color-secondary)'}00`,
+      borderTop: `1px solid ${'var(--color-secondary)'}`,
+      borderBottom: `1px solid ${'var(--color-secondary)'}`,
     },
     '&[data-active="true"] td': {
       transition: 'none',
