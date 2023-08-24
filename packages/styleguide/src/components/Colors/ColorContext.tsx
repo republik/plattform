@@ -26,7 +26,7 @@ const createScheme = ({ mappings = {} }) => {
   return {
     mappings,
     ranges: {
-      neutral: getCSSColor('neutral'),
+      neutral: [getCSSColor('neutral')],
       sequential: [
         'sequential100',
         'sequential95',
@@ -46,7 +46,18 @@ const createScheme = ({ mappings = {} }) => {
       opposite3: ['opposite100', 'opposite80', 'opposite60'].map((key) =>
         getCSSColor(key),
       ),
-      discrete: getCSSColor('discrete'),
+      discrete: [
+        'discrete1',
+        'discrete2',
+        'discrete3',
+        'discrete4',
+        'discrete5',
+        'discrete6',
+        'discrete7',
+        'discrete8',
+        'discrete9',
+        'discrete10',
+      ].map((key) => getCSSColor(key)),
     },
     set: memoize(createColorRule, (...args) => args.join('.')),
     getCSSColor,
@@ -114,8 +125,12 @@ export const ColorContextLocalExtension: React.FC<{
     )
 
     return css({
-      ':root &, .light &': lightColorCSSDefs,
-      '.dark &': darkColorCSSDefs,
+      ':root &, [data-theme="light"] &': {
+        ...lightColorCSSDefs,
+      },
+      '[data-theme="dark"] &': {
+        ...darkColorCSSDefs,
+      },
     })
   }, [localColors])
 
@@ -129,15 +144,15 @@ export const ColorContextLocalExtension: React.FC<{
 export const RootColorVariables = () => {
   return (
     <style
-      id='theme-variables'
+      data-testid='theme-variables'
       dangerouslySetInnerHTML={{
         __html: [
           // default light
-          `:root, .light, .dark .inverted { ${generateCSSColorDefinitions(
+          `:root, [data-theme="light"], [data-theme="dark"] [data-theme-inverted] { ${generateCSSColorDefinitions(
             colors.light,
           )} }`,
           // dark class applied to html element via next-themes OR manually applied on an element
-          `.dark, .light .inverted { ${generateCSSColorDefinitions(
+          `[data-theme="dark"], [data-theme="light"] [data-theme-inverted] { ${generateCSSColorDefinitions(
             colors.dark,
           )} }`,
         ].join('\n'),
@@ -146,10 +161,10 @@ export const RootColorVariables = () => {
   )
 }
 
-const colorSchemeKeyToClassName = (colorSchemeKey: string) => {
+const colorSchemeKeyToDataTheme = (colorSchemeKey: string) => {
   return colorSchemeKey === 'light' || colorSchemeKey === 'dark'
     ? colorSchemeKey
-    : ''
+    : undefined
 }
 
 export const ColorContextProvider: React.FC<{
@@ -163,7 +178,7 @@ export const ColorContextProvider: React.FC<{
 
   return (
     <ColorContext.Provider value={defaultColorContextValue}>
-      <div className={colorSchemeKeyToClassName(colorSchemeKey)}>
+      <div data-theme={colorSchemeKeyToDataTheme(colorSchemeKey)}>
         {children}
       </div>
     </ColorContext.Provider>
@@ -171,7 +186,7 @@ export const ColorContextProvider: React.FC<{
 }
 
 export const InvertedColorScheme = ({ children }: { children: ReactNode }) => {
-  return <div className='inverted'>{children}</div>
+  return <div data-theme-inverted>{children}</div>
 }
 
 export default ColorContext

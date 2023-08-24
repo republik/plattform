@@ -29,9 +29,6 @@ teilen {{link_account_share}} .
 
 {{/if}}
 
-Falls Sie Fragen zur Handhabung des Magazins haben: Hier finden Sie die
-Gebrauchsanleitung {{link_manual}} , die die wichtigsten davon klärt.
-
 Wir wünschen Ihnen viel Vergnügen mit der Republik.
 
 Ihre Crew der Republik

@@ -50,6 +50,7 @@ import {
 
 import createLiveTeasers from './liveTeasers'
 import { shouldRenderPlayButton } from '../shared/audio'
+import { ColorContextProvider } from '../../lib'
 
 export const subject = {
   matchMdast: matchHeading(2),
@@ -437,7 +438,7 @@ const createFrontSchema = ({
               <AudioPlayButton documentId={props?.urlMeta.documentId} />
             ) : undefined
           }
-          attributes={attributes}
+          attributes={{ ...attributes, 'data-theme': 'light' }}
           {...props}
         >
           {children}

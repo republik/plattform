@@ -124,6 +124,8 @@ const query = gql`
           minAmount
           maxAmount
           defaultAmount
+          fixedPrice
+          payMoreSuggestion
           reward {
             __typename
             ... on MembershipType {

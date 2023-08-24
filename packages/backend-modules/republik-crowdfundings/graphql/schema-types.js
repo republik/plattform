@@ -94,6 +94,8 @@ type PackageOption {
   minUserPrice: Int!
   userPrice: Boolean!
   autoPay: Boolean
+  fixedPrice: Boolean!
+  payMoreSuggestion: Boolean!
 
   createdAt: DateTime!
   updatedAt: DateTime!
