@@ -170,7 +170,6 @@ lat,lon,name,category
 ### Map with custom tooltips
 
 Supported replacements:
-
 - `formattedValue`
 - point attributes, e.g. `name`, or `Land`
 
@@ -529,9 +528,9 @@ Europe with composition. Double dose of Malta.
 ```
 npm i -g d3-composite-projections ndjson-cli
 
-# project a wgs84 geojson with geoConicConformalEurope
+# project a wgs84 geojson with geoConicConformalEurope 
 npx -p d3-geo-projection geoproject --require d3=d3-composite-projections 'd3.geoConicConformalEurope()' < nuts.json > nuts-projected.json
-# project a wgs84 geojson of the composition border with a different projection
+# project a wgs84 geojson of the composition border with a different projection 
 npx -p d3-geo-projection geoproject 'p = d3.geoConicConformal().rotate([-10, -53]).parallels([0, 60]).scale(750), _ = p.translate(), k = p.scale(), x = +_[0], y = +_[1], p.translate([x - 0.08 * k, y]).clipExtent([[x - 0.51 * k, y - 0.33 * k],[x + 0.5 * k, y + 0.33 * k]]), p' < nuts-composition-borders.json > nuts-composition-borders-projected.json
 
 # plot as svg to test?
@@ -770,8 +769,8 @@ CY,Zypern,Öffentliche Angebote dominieren
 # project to swiss grid
 gdalwarp -t_srs EPSG:2056 pixels_only.tif projected.tif -overwrite -ts 1260 0
 # color pixels
-printf "0 0 0 0 0\n1 255 190 0 255\n2 255 120 0 255" > 'var(--color-txt)'
-gdaldem color-relief -alpha -nearest_color_entry projected.tif 'var(--color-txt)' colored.png
+printf "0 0 0 0 0\n1 255 190 0 255\n2 255 120 0 255" > colors.txt
+gdaldem color-relief -alpha -nearest_color_entry projected.tif colors.txt colored.png
 # scale and trim & repage (optional, skip if its aligns untrimmt)
 convert -trim +repage colored.png solar.png
 ```
@@ -788,7 +787,7 @@ However for a `ProjectedMap` it's probably easiest to get the topojson bounds wi
 
 ## SwissMap
 
-A rotated mercator projection is used to look like CH1903 while also allowing to plot regular coordinates. `features.url` is expected to point to an topojson file with WGS84 coordinates (EPSG:4326). If no WGS84 coordinates are needed it's better to use an `ProjectedMap` with a preprojected swiss grid.
+A rotated mercator projection is used to look like CH1903 while also allowing to plot regular coordinates. `features.url` is expected to point to an topojson file with WGS84 coordinates (EPSG:4326). If no WGS84 coordinates are needed it's better to use an `ProjectedMap` with a preprojected swiss grid. 
 
 Convert a CH1903 shape file:
 
@@ -806,6 +805,7 @@ topojson \
 ```
 
 _Example assumes `topojson` v1._
+
 
 The `id` on a feature is used to match with data. And our maps assume a displayable name properties.
 
@@ -874,7 +874,6 @@ JU,0.257
 #### Without Lakes
 
 **Tooltip:** following replacements are supported:
-
 - `value`: the raw number, e.g. `0.487`
 - `formattedValue`: the formatted number, e.g. `49%`
 - data point attributes, e.g. `language`
@@ -893,11 +892,11 @@ JU,0.257
       "choropleth": true,
       "numberFormat": ".0%",
       "thresholdsLegend": [
-        {"label": "Roses are red"},
-        {minValue: 0.4, "label": "Gripens are blue"},
-        {minValue: 0.5, "label": "I want seven of them"},
+        {"label": "Roses are red"}, 
+        {minValue: 0.4, "label": "Gripens are blue"}, 
+        {minValue: 0.5, "label": "I want seven of them"}, 
         {minValue: 0.6, "label": "And so do you"}
-      ],
+      ], 
       "colorRange": ["rgb(187,21,26)", "rgb(239,69,51)", "rgb(75,151,201)", "rgb(24,100,170)"],
       "features": {
         "url": "/static/geo/ch-cantons-wo-lakes.json",
