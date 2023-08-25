@@ -12,7 +12,7 @@ const link = css({
     color: 'var(--color-primary)',
   },
   ':hover': {
-    color: 'var(--color-secondary)',
+    color: 'var(--color-primaryHover)',
   },
 })
 

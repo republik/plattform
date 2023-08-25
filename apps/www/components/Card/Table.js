@@ -161,7 +161,7 @@ export const CardRows = ({ nodes, revertCard, ignoreCard, followCard, t }) => (
               <tr
                 key={`entity${i}`}
                 style={{
-                  background: i % 2 ? 'var(--color-secondaryBg)' : undefined,
+                  background: i % 2 ? 'var(--color-hover)' : undefined,
                 }}
               >
                 <td {...styles.td}>

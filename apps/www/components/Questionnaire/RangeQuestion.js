@@ -21,7 +21,7 @@ const thumbStyle = {
 }
 
 const trackStyle = {
-  background: 'var(--color-secondaryBg)',
+  background: 'var(--color-hover)',
   height: 5,
 }
 

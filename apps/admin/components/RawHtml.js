@@ -12,7 +12,7 @@ const styles = {
         color: 'var(--color-primary)',
       },
       ':hover': {
-        color: 'var(--color-secondary)',
+        color: 'var(--color-primaryHover)',
       },
     },
     '& ul, & ol': {

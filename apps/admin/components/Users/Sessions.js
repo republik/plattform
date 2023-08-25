@@ -44,7 +44,7 @@ const clearSessionsMutation = gql`
 const styles = {
   session: css({
     padding: 10,
-    backgroundColor: 'var(--color-secondaryBg)',
+    backgroundColor: 'var(--color-hover)',
   }),
 }
 

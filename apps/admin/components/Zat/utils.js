@@ -32,7 +32,7 @@ export const styles = {
     paddingTop: 5,
     paddingBottom: 5,
     '&:nth-child(odd)': {
-      backgroundColor: 'var(--color-secondaryBg)',
+      backgroundColor: 'var(--color-hover)',
     },
   }),
 }

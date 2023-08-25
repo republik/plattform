@@ -19,7 +19,7 @@ export const displayStyles = {
     },
     '&:focus, &:hover': {
       outline: 'none',
-      backgroundColor: 'var(--color-secondaryBg)',
+      backgroundColor: 'var(--color-hover)',
       '& .show-on-focus': {
         opacity: 1,
       },
@@ -72,7 +72,7 @@ export const displayStyles = {
     fontSize: 'inherit',
     color: 'var(--color-primary)',
     '&:not([disabled]):focus, &:hover': {
-      color: 'var(--color-secondary)',
+      color: 'var(--color-primaryHover)',
     },
     '&[disabled]': {
       color: 'var(--color-disabled)',

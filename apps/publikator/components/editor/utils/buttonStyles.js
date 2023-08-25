@@ -2,7 +2,7 @@ import { css } from 'glamor'
 
 const base = {
   cursor: 'pointer',
-  color: 'var(--color-secondary)',
+  color: 'var(--color-text)',
   transition: 'color 0.1s, opacity 0.1s',
   '&[data-visible="false"]': {
     display: 'none',
@@ -16,7 +16,7 @@ const format = {
   },
   '&[data-disabled="true"]': {
     opacity: 0.3,
-    color: 'var(--color-secondary)',
+    color: 'var(--color-disabled)',
   },
   '&[data-active="false"][data-disabled="false"]:hover': {
     color: 'var(--color-text)',
@@ -27,7 +27,7 @@ const action = {
   ...base,
   '&[data-disabled="true"]': {
     opacity: 0.3,
-    color: 'var(--color-secondary)',
+    color: 'var(--color-disabled)',
   },
   '&[data-disabled="false"]:hover': {
     color: 'var(--color-text)',

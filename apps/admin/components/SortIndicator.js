@@ -9,7 +9,7 @@ const svgIcon = css({
   '& svg': {
     height: '1em',
     width: '1em',
-    fill: 'var(--color-secondary)',
+    fill: 'var(--color-dividerInverted)',
   },
 })
 

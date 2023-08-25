@@ -39,7 +39,7 @@ export const Header = ({ children, barStyle, isTemplate }) => (
     <div
       {...styles.bar}
       style={{
-        backgroundColor: isTemplate ? 'var(--color-secondaryBg)' : undefined,
+        backgroundColor: isTemplate ? 'var(--color-hover)' : undefined,
         ...barStyle,
       }}
     >

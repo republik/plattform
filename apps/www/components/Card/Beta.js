@@ -13,7 +13,7 @@ const styles = {
     ...fontStyles.sansSerifMedium,
     color: '#fff',
     pointerEvents: 'none',
-    backgroundColor: 'var(--color-secondary)',
+    backgroundColor: 'var(--color-alert)',
   }),
 }
 

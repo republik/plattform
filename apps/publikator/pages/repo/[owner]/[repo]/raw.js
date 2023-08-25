@@ -30,7 +30,7 @@ import { withDefaultSSR } from '../../../../lib/apollo/helpers'
 import Nav from '../../../../components/Edit/Nav'
 
 const styles = css({
-  background: 'var(--color-secondaryBg)',
+  background: 'var(--color-hover)',
   minHeight: 'calc(100vh - 80px)',
   padding: 10,
   '& .Checkbox': {

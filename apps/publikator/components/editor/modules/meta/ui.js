@@ -28,7 +28,7 @@ import PublishPathNotice from './PublishPathNotice'
 const styles = {
   container: css({
     marginTop: 100,
-    backgroundColor: 'var(--color-secondaryBg)',
+    backgroundColor: 'var(--color-hover)',
     padding: 30,
   }),
   center: css({

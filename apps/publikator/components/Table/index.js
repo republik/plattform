@@ -31,7 +31,7 @@ const styles = {
   ),
   tr: css({
     ':nth-child(even)': {
-      backgroundColor: 'var(--color-secondaryBg)',
+      backgroundColor: 'var(--color-hover)',
     },
   }),
   td: css({

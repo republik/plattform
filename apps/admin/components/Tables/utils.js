@@ -13,14 +13,14 @@ export const tableStyles = {
       color: 'var(--color-primary)',
     },
     ':hover': {
-      color: 'var(--color-secondary)',
+      color: 'var(--color-primaryHover)',
     },
     cursor: 'pointer',
   }),
   row: css({
     height: '35px',
     '&:nth-child(odd)': {
-      backgroundColor: 'var(--color-secondaryBg)',
+      backgroundColor: 'var(--color-hover)',
     },
   }),
   headRow: css({
@@ -37,12 +37,12 @@ export const tableStyles = {
   selectableRow: css({
     '& td': {
       transition: 'border-color 0.2s',
-      borderTop: `1px solid ${'var(--color-secondary)'}`,
-      borderBottom: `1px solid ${'var(--color-secondary)'}`,
+      borderTop: `1px solid transparent`,
+      borderBottom: `1px solid transparent`,
     },
     '&[data-active="true"] td': {
       transition: 'none',
-      borderColor: 'var(--color-secondary)',
+      borderColor: 'var(--color-primaryHover)',
     },
     '&:hover, &[data-active="true"]': {
       color: 'var(--color-primary)',
