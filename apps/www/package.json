@@ -21,10 +21,6 @@
     "translations-vote": "NODE_OPTIONS='-r dotenv/config' gsheets --key=1oBlTiPKIon4p5aek5vEXluWMn0TRwrk-JftznGjTmdQ --title=live --pretty --out components/Vote/translations-vote.json",
     "analyze": "ANALYZE=true next build"
   },
-  "cacheDirectories": [
-    "node_modules",
-    ".next/cache"
-  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/republik/plattform.git"

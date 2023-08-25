@@ -18,10 +18,6 @@
     "zat:dev": "docker compose up zat-server",
     "zat:package": "docker compose run --rm zat-package"
   },
-  "cacheDirectories": [
-    "node_modules",
-    ".next/cache"
-  ],
   "dependencies": {
     "@apollo/client": "~3.8.1",
     "@next/bundle-analyzer": "^12.3.1",
