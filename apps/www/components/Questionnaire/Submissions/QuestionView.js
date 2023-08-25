@@ -11,7 +11,6 @@ import {
   Editorial,
   fontStyles,
   ColorContextProvider,
-  colors,
   mediaQueries,
   convertStyleToRem,
   Center,

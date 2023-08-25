@@ -8,7 +8,6 @@ import uuid from 'uuid/v4'
 
 import {
   Autocomplete,
-  colors,
   fontStyles,
   Interaction,
   mediaQueries,

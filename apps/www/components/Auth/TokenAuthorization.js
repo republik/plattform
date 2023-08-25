@@ -11,7 +11,6 @@ import {
   Interaction,
   Label,
   fontFamilies,
-  colors,
   FieldSet,
 } from '@project-r/styleguide'
 

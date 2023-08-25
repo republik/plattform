@@ -9,7 +9,6 @@ import {
   mediaQueries,
   fontStyles,
   plainButtonRule,
-  colors,
 } from '@project-r/styleguide'
 
 import createPersistedState from '../../lib/hooks/use-persisted-state'

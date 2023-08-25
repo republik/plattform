@@ -26,7 +26,6 @@ import {
   Button,
   Interaction,
   InlineSpinner,
-  colors,
   fontStyles,
   mediaQueries,
 } from '@project-r/styleguide'

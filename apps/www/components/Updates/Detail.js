@@ -7,7 +7,6 @@ import {
   H1,
   P,
   RawHtml,
-  colors,
   fontFamilies,
   mediaQueries,
 } from '@project-r/styleguide'

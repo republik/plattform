@@ -10,7 +10,6 @@ import {
   Editorial,
   plainButtonRule,
   InlineSpinner,
-  colors,
 } from '@project-r/styleguide'
 
 import { countFormat } from '../../lib/utils/format'

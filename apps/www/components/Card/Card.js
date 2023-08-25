@@ -3,7 +3,6 @@ import { css } from 'glamor'
 
 import {
   Interaction,
-  colors,
   IconButton,
   shouldIgnoreClick,
 } from '@project-r/styleguide'

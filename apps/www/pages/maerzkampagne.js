@@ -42,7 +42,6 @@ import {
   A,
   P,
   H2,
-  colors,
   Interaction,
   mediaQueries,
   LazyLoad,

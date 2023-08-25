@@ -8,7 +8,6 @@ import {
   InlineSpinner,
   Interaction,
   A,
-  colors,
 } from '@project-r/styleguide'
 
 import ErrorMessage from '../../ErrorMessage'

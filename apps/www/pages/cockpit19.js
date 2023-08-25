@@ -11,7 +11,6 @@ import {
   Editorial,
   Interaction,
   Loader,
-  colors,
   VideoPlayer,
   FigureImage,
   FigureCaption,

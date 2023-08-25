@@ -8,7 +8,6 @@ import { IconChevronLeft } from '@republik/icons'
 import {
   A,
   Checkbox,
-  colors,
   Dropdown,
   Label,
   Loader,

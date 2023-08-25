@@ -18,7 +18,6 @@ import {
   Interaction,
   Label,
   Button,
-  colors,
 } from '@project-r/styleguide'
 
 import FieldSet from '../../FieldSet'

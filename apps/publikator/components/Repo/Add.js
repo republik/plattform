@@ -15,7 +15,6 @@ import {
   Dropdown,
   Autocomplete,
   mediaQueries,
-  colors,
   Loader,
   A,
 } from '@project-r/styleguide'

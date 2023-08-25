@@ -7,7 +7,6 @@ import Meta from '../Frame/Meta'
 
 import {
   ColorContextProvider,
-  colors,
   Editorial,
   inQuotes,
   Interaction,
@@ -208,10 +207,7 @@ const QuestionFeatured = ({ questions, bgColor, hideShowAll = false }) => {
       }}
     >
       <Container>
-        <ColorContextProvider
-          localColorVariables={colors}
-          colorSchemeKey='light'
-        >
+        <ColorContextProvider colorSchemeKey='light'>
           {questions.map((q) => {
             return getTypeBySlug(q.key) === 'text' ? (
               <AnswerGridOverview

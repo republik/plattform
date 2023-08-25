@@ -12,7 +12,6 @@ import {
   mediaQueries,
   TeaserSectionTitle,
   useColorContext,
-  colors,
 } from '@project-r/styleguide'
 
 const SPACE = 15

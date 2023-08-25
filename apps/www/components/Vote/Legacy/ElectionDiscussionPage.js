@@ -2,7 +2,6 @@ import Frame from '../../Frame'
 import { withRouter } from 'next/router'
 import {
   A,
-  colors,
   Interaction,
   Center,
   fontStyles,

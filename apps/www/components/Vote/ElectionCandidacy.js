@@ -6,7 +6,6 @@ import { isURL } from 'validator'
 
 import {
   A,
-  colors,
   InlineSpinner,
   Interaction,
   Button,

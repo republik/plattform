@@ -9,7 +9,6 @@ import Loader from '../Loader'
 import {
   Interaction,
   RawHtml,
-  colors,
   fontFamilies,
   mediaQueries,
 } from '@project-r/styleguide'

@@ -2,13 +2,7 @@ import { css } from 'glamor'
 import { Map, Set } from 'immutable'
 import { nest } from 'd3-collection'
 
-import {
-  Interaction,
-  Checkbox,
-  Label,
-  colors,
-  slug,
-} from '@project-r/styleguide'
+import { Interaction, Checkbox, Label, slug } from '@project-r/styleguide'
 
 import withT from '../../../../lib/withT'
 import { FRONTEND_BASE_URL } from '../../../../lib/settings'

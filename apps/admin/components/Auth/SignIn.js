@@ -17,7 +17,6 @@ import {
   Field,
   Label,
   RawHtml,
-  colors,
 } from '@project-r/styleguide'
 
 import Poller from './Poller'

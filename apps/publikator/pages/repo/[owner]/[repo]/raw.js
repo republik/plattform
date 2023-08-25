@@ -11,7 +11,6 @@ import {
   A,
   Button,
   mediaQueries,
-  colors,
   fontFamilies,
   Checkbox,
 } from '@project-r/styleguide'

@@ -7,7 +7,6 @@ import {
   Button,
   Checkbox,
   plainButtonRule,
-  colors,
   Interaction,
 } from '@project-r/styleguide'
 import { escapeRegExp } from 'lodash'

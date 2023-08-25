@@ -9,7 +9,6 @@ import {
   Overlay,
   OverlayToolbar,
   OverlayBody,
-  colors,
 } from '@project-r/styleguide'
 
 import { displayDateTime } from '../Display/utils'

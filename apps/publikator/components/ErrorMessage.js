@@ -1,6 +1,6 @@
 import { errorToString } from '../lib/utils/errors'
 
-import { Interaction, colors } from '@project-r/styleguide'
+import { Interaction } from '@project-r/styleguide'
 
 const { P } = Interaction
 
