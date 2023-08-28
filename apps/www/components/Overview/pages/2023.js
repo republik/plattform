@@ -509,7 +509,70 @@ const text = {
       .
     </>
   ),
-  //August: (p) => <></>,
+  August: (p) => (
+    <>
+      Wohnungsnot in Schweizer Städten:{' '}
+      <Highlight {...p} ids={['Y6ae1xUzj']}>
+        erklärt
+      </Highlight>
+      ,{' '}
+      <Highlight {...p} ids={['UVj57QrKK']}>
+        erlebt
+      </Highlight>{' '}
+      <Highlight {...p} ids={['42QUMz01z']}>
+        diskutiert
+      </Highlight>
+      . Ist der{' '}
+      <Highlight {...p} ids={['rPoiEiEP_']}>
+        Einsatz von Polizeihunden
+      </Highlight>{' '}
+      verhältnismässig?{' '}
+      <Highlight {...p} ids={['qMfP3V_lG']}>
+        Hinter der Kamera eines Influencers
+      </Highlight>
+      .{' '}
+      <Highlight {...p} ids={['f-XAkSlYQZ']}>
+        Politikerinnen über ihre Lieblingswitze, Feinde – und Sand
+      </Highlight>
+      . Eine{' '}
+      <Highlight {...p} ids={['kEWwJMhlZ']}>
+        linke Kritik der «Wokeness»
+      </Highlight>{' '}
+      und ein{' '}
+      <Highlight {...p} ids={['gpMG9H0ma']}>
+        Lob der Faulheit
+      </Highlight>
+      . Wenn der Abbruch einer Schwangerschaft{' '}
+      <Highlight {...p} ids={['oeMOgvQXC']}>
+        erschwert
+      </Highlight>{' '}
+      oder{' '}
+      <Highlight {...p} ids={['1O5tvytgn']}>
+        verboten
+      </Highlight>{' '}
+      wird.{' '}
+      <Highlight {...p} ids={['Sq391r1Pz']}>
+        Verfassungskrise in Israel
+      </Highlight>
+      ,{' '}
+      <Highlight {...p} ids={['ZXVUd6Wwp']}>
+        Hitze in Athen
+      </Highlight>
+      , und{' '}
+      <Highlight {...p} ids={['JAIZOT94C']}>
+        überall auf der Welt die Augen scannen lassen
+      </Highlight>
+      . Zum Schulstart:{' '}
+      <Highlight {...p} ids={['sKO5nw6o_']}>
+        Warum mangelt es an Lehrkräften
+      </Highlight>{' '}
+      und{' '}
+      <Highlight {...p} ids={['w7K4tSIDW']}>
+        wie sähe ein ideales Gymnasium aus
+      </Highlight>
+      ?
+    </>
+  ),
   //September: (p) => <></>,
   //Oktober: (p) => <></>,
   //November: (p) => <></>,
