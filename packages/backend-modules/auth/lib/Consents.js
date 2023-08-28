@@ -75,14 +75,9 @@ const statusForPolicyForUser = async ({ userId, policy, pgdb }) =>
   )
 
 const requiredConsents = async ({ userId, pgdb }) => {
-  if (ENFORCE_CONSENTS) {
-    const consented = userId ? await consentsOfUser({ userId, pgdb }) : []
+  const consented = userId ? await consentsOfUser({ userId, pgdb }) : []
 
-    return ENFORCE_CONSENTS.filter(
-      (consent) => consented.indexOf(consent) === -1,
-    )
-  }
-  return []
+  return ENFORCE_CONSENTS.filter((consent) => !consented.includes(consent))
 }
 
 const missingConsents = async ({ userId, consents = [], pgdb }) => {
