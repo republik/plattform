@@ -278,7 +278,7 @@ describe('save consents', () => {
     })
   })
 
-  test('saving fails', () => {
+  test('saving fails because of duplicate', () => {
     const req = { ip: '000.000.000.000' }
     const userId = '12345'
     const savedConsents = [
@@ -316,11 +316,11 @@ describe('revoke consents', () => {
     const context = { req: req, pgdb: pgdb }
     const hook = jest.fn((args) => Promise.resolve(args))
     registerRevokeHook(hook)
-    const revoke = await revokeConsent({ userId, consent: 'PRIVACY' }, context)
+    const revoke = await revokeConsent({ userId, consent: 'PROGRESS' }, context)
     expect(revoke).toBeUndefined()
     expect(pgdb.public.consents.insert).toHaveBeenCalledWith({
       userId,
-      policy: 'PRIVACY',
+      policy: 'PROGRESS',
       ip: req.ip,
       record: 'REVOKE',
     })
@@ -337,19 +337,20 @@ describe('revoke consents', () => {
         },
       },
     }
-    const context = { req: req, pgdb: pgdb }
+    const t = jest.fn((args) => `Translated with ${args}`)
+    const context = { req: req, pgdb: pgdb, t: t }
     const hook = jest.fn((args) => Promise.resolve(args))
     registerRevokeHook(hook)
-    const revoke = revokeConsent({ userId, consent: 'PRIVACY' }, context)
+    const revoke = revokeConsent({ userId, consent: 'PROGRESS' }, context)
     expect(revoke).rejects.toEqual({
       userId,
-      policy: 'PRIVACY',
+      policy: 'PROGRESS',
       ip: req.ip,
       record: 'REVOKE',
     })
     expect(pgdb.public.consents.insert).toHaveBeenCalledWith({
       userId,
-      policy: 'PRIVACY',
+      policy: 'PROGRESS',
       ip: req.ip,
       record: 'REVOKE',
     })

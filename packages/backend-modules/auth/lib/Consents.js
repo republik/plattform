@@ -6,17 +6,28 @@ const MissingConsentsError = newAuthError(
 
 const revokeHooks = []
 
-// except newsletters, because they are called from inside the backend and not through the mutation
 const VALID_POLICIES = [
   'PRIVACY',
   'TOS',
   'STATUTE',
   'PROGRESS',
   'PROLITTERIS_OPT_OUT',
+  'NEWSLETTER_DAILY',
+  'NEWSLETTER_WEEKLY',
+  'NEWSLETTER_CLIMATE',
+  'NEWSLETTER_ACCOMPLICE',
+  'NEWSLETTER_PROJECTR',
 ]
 
-// except newsletters, because they are called from inside the backend and not through the mutation
-const REVOKABLE_POLICIES = ['PROGRESS', 'PROLITTERIS_OPT_OUT']
+const REVOKABLE_POLICIES = [
+  'PROGRESS',
+  'PROLITTERIS_OPT_OUT',
+  'NEWSLETTER_DAILY',
+  'NEWSLETTER_WEEKLY',
+  'NEWSLETTER_CLIMATE',
+  'NEWSLETTER_ACCOMPLICE',
+  'NEWSLETTER_PROJECTR',
+]
 
 const ENFORCE_CONSENTS = ['PRIVACY']
 
@@ -92,7 +103,12 @@ const ensureAllRequiredConsents = async (args) => {
   }
 }
 
-const saveConsents = async ({ userId, consents = [], req, pgdb }) => {
+const saveConsents = async ({ userId, consents = [], req, pgdb, t }) => {
+  if (!consents.every((consent) => VALID_POLICIES.includes(consent))) {
+    throw new Error(
+      t('api/consents/notValid', { consent: consents.join(', ') }),
+    )
+  }
   // deduplicate
   const existingConsents = await consentsOfUser({ userId, pgdb })
   const insertConsents = consents.filter(
@@ -110,7 +126,10 @@ const saveConsents = async ({ userId, consents = [], req, pgdb }) => {
 }
 
 const revokeConsent = async ({ userId, consent }, context) => {
-  const { req, pgdb } = context
+  const { req, pgdb, t } = context
+  if (!REVOKABLE_POLICIES.includes(consent)) {
+    throw new Error(t('api/consents/notRevokable', { consent: consent }))
+  }
   await pgdb.public.consents.insert({
     userId,
     policy: consent,
