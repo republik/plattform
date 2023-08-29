@@ -6,9 +6,9 @@
     "node": "^18.0.0"
   },
   "scripts": {
-    "dev": "cross-env NODE_ENV=development nodemon --watch server --watch .env --watch server/constants.js server/server.js",
+    "dev": "next dev",
     "build": "next build",
-    "start": "node server/server.js",
+    "start": "next start",
     "test": "jest",
     "test:watch": "jest --watch",
     "analyze": "ANALYZE=true next build",
