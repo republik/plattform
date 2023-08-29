@@ -97,6 +97,7 @@ export const UserResult = ({ node }) => {
       }),
     [colorScheme],
   )
+
   return (
     <div>
       <div {...styles.root} {...colorScheme.set('borderColor', 'text')}>
@@ -115,15 +116,19 @@ export const UserResult = ({ node }) => {
           <div {...styles.name} {...colorScheme.set('color', 'text')}>
             <Link href={`/~${slug || id}`} passHref>
               <a {...styles.link}>
-                <span
-                  {...styles.highlight}
-                  {...highlightEMRule}
-                  dangerouslySetInnerHTML={{
-                    __html: nameHighlight
-                      ? nameHighlight.fragments[0]
-                      : `${firstName} ${lastName}`,
-                  }}
-                />
+                {nameHighlight?.fragments[0] ? (
+                  <span
+                    {...styles.highlight}
+                    {...highlightEMRule}
+                    dangerouslySetInnerHTML={{
+                      __html: nameHighlight.fragments[0],
+                    }}
+                  />
+                ) : (
+                  <span {...styles.highlight} {...highlightEMRule}>
+                    {firstName} {lastName}
+                  </span>
+                )}
               </a>
             </Link>
           </div>
