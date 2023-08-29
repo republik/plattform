@@ -50,26 +50,28 @@ const styles = {
   }),
 }
 
+type ButtonProps = {
+  children: React.ReactNode
+  onClick?: MouseEventHandler<HTMLAnchorElement & HTMLButtonElement>
+  onMouseDown?: MouseEventHandler<HTMLAnchorElement & HTMLButtonElement>
+  type?: 'button' | 'submit' | 'reset'
+  primary?: boolean
+  big?: boolean
+  block?: boolean
+  disabled?: boolean
+  href?: string
+  title?: string
+  target?: string
+  style?: React.CSSProperties
+  simulate?: string
+  attributes?: Attributes
+  naked?: boolean
+  small?: boolean
+}
+
 const Button = React.forwardRef<
   HTMLAnchorElement & HTMLButtonElement,
-  {
-    onClick?: MouseEventHandler<HTMLAnchorElement & HTMLButtonElement>
-    onMouseDown?: MouseEventHandler<HTMLAnchorElement & HTMLButtonElement>
-    type?: 'button' | 'submit' | 'reset'
-    primary?: boolean
-    big?: boolean
-    block?: boolean
-    disabled?: boolean
-    href?: string
-    title?: string
-    target?: string
-    style?: React.CSSProperties
-    simulate?: string
-    attributes?: Attributes
-    naked?: boolean
-    small?: boolean
-    children?: any
-  }
+  ButtonProps
 >(
   (
     {

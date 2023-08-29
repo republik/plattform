@@ -10,13 +10,6 @@ import { StateProps, DELAY } from './ExpandableLink'
 import { interactionFontRule } from '../Typography/fontRules'
 import { IconLink } from '@republik/icons'
 
-type Props = {
-  inNativeApp?: boolean
-  timeOutRef: React.MutableRefObject<NodeJS.Timeout>
-  expandedLink: StateProps
-  setExpandedLink: React.Dispatch<React.SetStateAction<StateProps>>
-}
-
 export const shortenLink = (url) => {
   if (!url) return
   let addr
@@ -126,7 +119,11 @@ const appearDown = keyframes({
   },
 })
 
-const ExpandableLinkP = ({ children, ...props }) => {
+type ExpandableLinkPProps = {
+  children: React.ReactNode
+} & React.ComponentPropsWithoutRef<'p'>
+
+const ExpandableLinkP = ({ children, ...props }: ExpandableLinkPProps) => {
   const [colorScheme] = useColorContext()
   return (
     <p
@@ -140,11 +137,18 @@ const ExpandableLinkP = ({ children, ...props }) => {
   )
 }
 
+type ExpandableLinkCalloutProps = {
+  inNativeApp?: boolean
+  timeOutRef: React.MutableRefObject<NodeJS.Timeout>
+  expandedLink: StateProps
+  setExpandedLink: React.Dispatch<React.SetStateAction<StateProps>>
+}
+
 const ExpandableLinkCallout = ({
   timeOutRef,
   expandedLink,
   setExpandedLink,
-}: Props) => {
+}: ExpandableLinkCalloutProps) => {
   const [colorScheme] = useColorContext()
   const [calloutHeight, setCalloutHeight] = useState(400)
 

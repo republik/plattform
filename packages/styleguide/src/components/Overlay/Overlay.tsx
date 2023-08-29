@@ -121,7 +121,7 @@ const Overlay: React.FC<OverlayProps> = ({
     }
   }, [onClose])
 
-  const [scrollRef] = useBodyScrollLock(!ssrMode)
+  const [scrollRef] = useBodyScrollLock<HTMLDivElement>(!ssrMode)
   const element = (
     <OverlayRenderer
       onClose={onClose}
