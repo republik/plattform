@@ -6,9 +6,9 @@
     "node": "^18.0.0"
   },
   "scripts": {
-    "dev": "cross-env NODE_ENV=development nodemon --watch server --watch .env --watch server/constants.js server/server.js",
+    "dev": "next dev",
     "build": "next build",
-    "start": "node server/server.js",
+    "start": "next start",
     "test": "jest",
     "test:watch": "jest --watch",
     "analyze": "ANALYZE=true next build",
@@ -18,16 +18,14 @@
     "zat:dev": "docker compose up zat-server",
     "zat:package": "docker compose run --rm zat-package"
   },
-  "cacheDirectories": [
-    "node_modules",
-    ".next/cache"
-  ],
   "dependencies": {
     "@apollo/client": "~3.5.10",
     "@next/bundle-analyzer": "^12.3.1",
     "@project-r/styleguide": "*",
     "@republik/icons": "*",
+    "@republik/mdast-react-render": "*",
     "@republik/nextjs-apollo-client": "*",
+    "@sentry/nextjs": "^7.64.0",
     "apollo-cache-inmemory": "^1.6.6",
     "d3-array": "^1.2.4",
     "d3-color": "^1.4.1",
@@ -46,7 +44,6 @@
     "helmet": "^3.23.3",
     "lodash": "^4.17.21",
     "lodash.debounce": "^4.0.8",
-    "@republik/mdast-react-render": "*",
     "moment": "^2.29.1",
     "next": "^12.3.1",
     "next-transpile-modules": "^9.0.0",
