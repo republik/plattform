@@ -25,9 +25,11 @@ export function useMediaQuery(queryInput: string) {
     const onChange = ({ matches }) => {
       setMatches(matches)
     }
-    mql.addEventListener('change', onChange)
+
+    // Use legacy event listener methods for compat with older browsers (Safari <14 etc.)
+    mql.addListener(onChange)
     return () => {
-      mql.removeEventListener('change', onChange)
+      mql.removeListener(onChange)
     }
   }, [query, setMatches])
 
