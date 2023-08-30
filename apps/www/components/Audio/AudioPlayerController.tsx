@@ -395,6 +395,7 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
         setBuffered(null)
         setHasDelayedAutoPlay(false)
         activeItemRef.current = null
+        firstTrackIsPrepared.current = false
       }, 100)
       setInitialized(false)
     } catch (error) {
@@ -653,7 +654,13 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
    * If the player is visible and the queue is not empty, set up the first item
    */
   useEffect(() => {
-    if (audioQueue && audioQueue.length > 0 && !activePlayerItem && isVisible) {
+    if (
+      audioQueue &&
+      audioQueue.length > 0 &&
+      !activePlayerItem &&
+      isVisible &&
+      !firstTrackIsPrepared?.current
+    ) {
       const nextUp = audioQueue[0]
       firstTrackIsPrepared.current = true
       setupNextAudioItem(nextUp, false).catch(handleError)
