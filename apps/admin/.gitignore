@@ -24,3 +24,6 @@ test/**/out
 /zat/tmp
 /zat/.zat
 /zat/settings.json
+
+# Sentry Auth Token
+.sentryclirc
