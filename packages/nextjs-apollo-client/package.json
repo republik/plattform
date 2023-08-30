@@ -11,8 +11,8 @@
   "private": true,
   "scripts": {
     "prebuild": "rimraf dist",
-    "build": "tsc",
-    "dev": "tsc -w",
+    "build": "tsup src/index.ts --format cjs,esm --dts --minify --clean --out-dir dist",
+    "dev": "tsup src/index.ts --format cjs,esm --dts --minify --clean --out-dir dist --sourcemap --watch",
     "generate::possibleTypes": "node scripts/generatePossibleTypes.js"
   },
   "devDependencies": {
@@ -27,6 +27,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "rimraf": "^3.0.2",
+    "tsup": "^7.2.0",
     "uuid": "^3.4.0"
   },
   "peerDependencies": {
