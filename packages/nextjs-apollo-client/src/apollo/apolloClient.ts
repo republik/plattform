@@ -20,7 +20,7 @@ export type ApolloClientOptions = {
   version?: string
   apiUrl: string
   wsUrl?: string
-  headers?: { [key: string]: string | number | boolean } | IncomingHttpHeaders
+  headers?: { [key: string]: string } | IncomingHttpHeaders
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   onResponse?: (response: any) => void
