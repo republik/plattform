@@ -8,6 +8,7 @@ const SG_ENV = {
   BRAND_MARK_VIEWBOX: process.env.SG_BRAND_MARK_VIEWBOX,
   LOGO_PATH: process.env.SG_LOGO_PATH,
   LOGO_VIEWBOX: process.env.SG_LOGO_VIEWBOX,
+  LOGO_GRADIENT: process.env.SG_LOGO_GRADIENT,
 }
 
 export default SG_ENV
