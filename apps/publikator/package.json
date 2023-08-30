@@ -8,8 +8,8 @@
   "description": "",
   "main": "server/index.js",
   "scripts": {
-    "dev": "nodemon --watch server --watch app --watch .env --watch server/index.js",
-    "start": "node server/index.js",
+    "dev": "PORT=3005 next dev",
+    "start": "next start",
     "build": "next build",
     "test": "jest",
     "cloc": "find . -name '*.js' -not -path \"./node_modules*\" -not -path \"./.next*\" | xargs wc -l",
