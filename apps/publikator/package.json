@@ -47,7 +47,7 @@
     "raf": "^3.4.0"
   },
   "dependencies": {
-    "@apollo/client": "~3.5.10",
+    "@apollo/client": "~3.8.1",
     "@next/bundle-analyzer": "^12.3.1",
     "@project-r/styleguide": "*",
     "@republik/icons": "*",
