@@ -93,8 +93,8 @@ const styles = {
     position: 'relative',
     zIndex: 1,
     padding: '30px 0 0',
-    backgroundColor: 'var(--color-negative)'.containerBg,
-    color: 'var(--color-negative)'.text,
+    backgroundColor: 'var(--color-default)',
+    color: 'var(--color-text)',
   }),
   overviewBottomShadow: css({
     position: 'absolute',

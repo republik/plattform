@@ -40,8 +40,8 @@ const styles = {
     padding: 15,
   }),
   more: css({
-    backgroundColor: 'var(--color-negative)'.containerBg,
-    color: 'var(--color-negative)'.text,
+    backgroundColor: 'var(--color-default)',
+    color: 'var(--color-text)',
     textAlign: 'center',
     padding: '20px 0',
   }),
@@ -237,9 +237,7 @@ const Front = ({
               {finite && (
                 <div style={{ marginBottom: 10 }}>
                   <Link href='/feed' passHref>
-                    <Editorial.A
-                      style={{ color: 'var(--color-negative)'.text }}
-                    >
+                    <Editorial.A style={{ color: 'var(--color-text)' }}>
                       {t('front/finite/feed')}
                     </Editorial.A>
                   </Link>
@@ -251,7 +249,7 @@ const Front = ({
                 {!infiniteScroll && hasMore && (
                   <Editorial.A
                     href='#'
-                    style={{ color: 'var(--color-negative)'.text }}
+                    style={{ color: 'var(--color-text)' }}
                     onClick={(event) => {
                       event && event.preventDefault()
                       setInfiniteScroll(true)
@@ -271,9 +269,7 @@ const Front = ({
                     years: intersperse(
                       archivedYears.map((year) => (
                         <Link key={year} href={`/${year}`} passHref>
-                          <Editorial.A
-                            style={{ color: 'var(--color-negative)'.text }}
-                          >
+                          <Editorial.A style={{ color: 'var(--color-text)' }}>
                             {year}
                           </Editorial.A>
                         </Link>

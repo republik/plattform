@@ -467,7 +467,7 @@ const Page = ({
                   shouldBuyProlong={shouldBuyProlong}
                   isReactivating={isReactivating}
                 >
-                  <Editorial.A style={{ color: 'var(--color-negative)'.text }}>
+                  <Editorial.A style={{ color: 'var(--color-text)' }}>
                     Kämpfen Sie mit.
                   </Editorial.A>
                 </PrimaryCTA>
@@ -544,7 +544,7 @@ const Page = ({
                         backgroundColor:
                           v === activeVideo
                             ? 'var(--color-primary)'
-                            : 'var(--color-negative)'.primaryBg,
+                            : 'var(--color-default)',
                       }}
                     >
                       <img src={v.thumbnail} width='100%' />
@@ -984,7 +984,7 @@ const Page = ({
                   <>
                     {'\u00a0– '}
                     <Editorial.A
-                      style={{ color: 'var(--color-negative)'.text }}
+                      style={{ color: 'var(--color-text)' }}
                       href='/einrichten'
                     >
                       Ihr Profil einrichten
