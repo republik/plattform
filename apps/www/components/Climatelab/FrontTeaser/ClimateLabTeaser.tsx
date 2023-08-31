@@ -42,12 +42,7 @@ const ClimateTeaserContent = () => {
         </h3>
         <p {...styles.text}>{t('ClimateTeaser/content/text2')}</p>
         <div style={{ maxWidth: 'max-content' }}>
-          <NextLink
-            href={
-              isClimateLabMember ? CLIMATE_LAB_URL : CLIMATE_LAB_LANDINGPAGE_URL
-            }
-            passHref
-          >
+          <NextLink href={CLIMATE_LAB_URL} passHref>
             <a
               {...colorScheme.set('backgroundColor', 'primary')}
               {...colorScheme.set('color', 'climateButtonText')}
