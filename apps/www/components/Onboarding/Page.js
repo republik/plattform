@@ -35,18 +35,6 @@ import Subscriptions, {
 import withInNativeApp from '../../lib/withInNativeApp'
 import Link from 'next/link'
 
-import Postcard, {
-  fragments as fragmentsPostcard,
-} from '../Climatelab/Onboarding/Postcard'
-import Mission from '../Climatelab/Onboarding/Mission'
-import Invitation from '../Climatelab/Onboarding/Invitation'
-import ClimateProfile from '../Climatelab/Onboarding/ClimateProfile'
-import ClimatePersonalInfo, {
-  fragments as fragmentsClimatePersonalInfo,
-} from '../Climatelab/Onboarding/ClimatePersonalInfo'
-import { CLIMATE_LAB_URL } from '../Climatelab/constants'
-import ClimateLabLogo from '../Climatelab/shared/ClimateLabLogo'
-
 const { P } = Interaction
 
 const QUERY = gql`
@@ -94,13 +82,6 @@ const QUERY = gql`
         }
       }
     }
-
-    roleStats(role: "climate") {
-      count
-    }
-
-    ...Postcard
-    ...ClimatePersonalInfo
   }
 
   ${fragmentsNewsletter.user}
@@ -109,13 +90,10 @@ const QUERY = gql`
   ${fragmentsProfile.user}
   ${fragmentsGreeting.employee}
   ${fragmentsSubscriptions.formats}
-  ${fragmentsPostcard.postcard}
-  ${fragmentsClimatePersonalInfo.climatepersonalinfo}
 `
 
 const CONTEXTS = {
   card: ['newsletter', 'notifications', 'app-login', 'usability'],
-  climate: ['climateprofile', 'climatepersonalinfo', 'invitation'],
   default: ['newsletter', 'notifications', 'app-login', 'usability', 'profile'],
 }
 
@@ -124,14 +102,6 @@ const styles = {
     ...fontStyles.sansSerifMedium58,
     textAlign: 'center',
     marginTop: 40,
-    marginBottom: 80,
-    [mediaQueries.onlyS]: {
-      ...fontStyles.sansSerifMedium40,
-      marginBottom: 50,
-    },
-  }),
-  climateTitle: css({
-    ...fontStyles.sansSerifMedium58,
     marginBottom: 80,
     [mediaQueries.onlyS]: {
       ...fontStyles.sansSerifMedium40,
@@ -210,36 +180,6 @@ class Page extends Component {
         ref: createRef(),
         visited: false,
       },
-      {
-        component: Postcard,
-        name: 'postcard',
-        ref: createRef(),
-        visited: false,
-      },
-      {
-        component: Mission,
-        name: 'mission',
-        ref: createRef(),
-        visited: false,
-      },
-      {
-        component: Invitation,
-        name: 'invitation',
-        ref: createRef(),
-        visited: false,
-      },
-      {
-        component: ClimateProfile,
-        name: 'climateprofile',
-        ref: createRef(),
-        visited: false,
-      },
-      {
-        component: ClimatePersonalInfo,
-        name: 'climatepersonalinfo',
-        ref: createRef(),
-        visited: false,
-      },
     ]
       // filter by context
       .filter((section) => selectedContext.includes(section.name))
@@ -254,7 +194,6 @@ class Page extends Component {
       expandedSection:
         (this.sections.find((s) => s.name === query.section) &&
           query.section) ||
-        (query.context === 'climate' && this.sections[0].name) ||
         null,
       hasOnceVisitedAll: false,
     }
@@ -359,17 +298,13 @@ class Page extends Component {
                 </OnboardingHeader>
 
                 <P {...styles.p}>
-                  {t.first(
-                    [
-                      `Onboarding/Page/context:${context}/packageName:${packageName}/preface`,
-                      `Onboarding/Page/context:${context}/preface`,
-                      `Onboarding/Page/${context}/preface`,
-                      'Onboarding/Page/preface',
-                    ],
-                    { climate_lab_count: roleStats.count },
-                  )}
+                  {t.first([
+                    `Onboarding/Page/context:${context}/packageName:${packageName}/preface`,
+                    `Onboarding/Page/context:${context}/preface`,
+                    `Onboarding/Page/${context}/preface`,
+                    'Onboarding/Page/preface',
+                  ])}
                 </P>
-                {context !== 'climate' && <Greeting employee={employees[0]} />}
 
                 <RawHtml
                   type={Interaction.P}
@@ -387,7 +322,7 @@ class Page extends Component {
                   }}
                 />
 
-                {!expandedSection && context !== 'climate' && (
+                {!expandedSection && (
                   <Button
                     primary={!this.state.hasOnceVisitedAll}
                     onClick={() => {
@@ -426,10 +361,7 @@ class Page extends Component {
                       </div>
                     ) */}
                     <div {...styles.buttonContainer}>
-                      <Link
-                        href={context === 'climate' ? CLIMATE_LAB_URL : '/'}
-                        passHref
-                      >
+                      <Link href={'/'} passHref>
                         <Button primary={this.state.hasOnceVisitedAll}>
                           {t.first([
                             `Onboarding/Page/context:${context}/packageName:${packageName}/button`,
@@ -468,44 +400,43 @@ class Page extends Component {
                   )}
                 </P>
 
-                {context !== 'climate' && (
-                  <P {...styles.p}>
-                    {t.first.elements(
-                      [
-                        `Onboarding/Page/context:${context}/packageName:${packageName}/more/questions`,
-                        `Onboarding/Page/context:${context}/more/questions`,
-                        `Onboarding/Page/${context}/more/questions`,
-                        'Onboarding/Page/more/questions',
-                      ],
-                      {
-                        linkManual: (
-                          <Link key='anleitung' href='/anleitung' passHref>
-                            <A>
-                              {t.first([
-                                `Onboarding/Page/context:${context}/packageName:${packageName}/more/questions/linkManual`,
-                                `Onboarding/Page/context:${context}/more/questions/linkManual`,
-                                `Onboarding/Page/${context}/more/questions/linkManual`,
-                                'Onboarding/Page/more/questions/linkManual',
-                              ])}
-                            </A>
-                          </Link>
-                        ),
-                        linkFaq: !inNativeIOSApp && (
-                          <Link key='route' href='/faq' passHref>
-                            <A>
-                              {t.first([
-                                `Onboarding/Page/context:${context}/packageName:${packageName}/more/questions/linkFaq`,
-                                `Onboarding/Page/context:${context}/more/questions/linkFaq`,
-                                `Onboarding/Page/${context}/more/questions/linkFaq`,
-                                'Onboarding/Page/more/questions/linkFaq',
-                              ])}
-                            </A>
-                          </Link>
-                        ),
-                      },
-                    )}
-                  </P>
-                )}
+                <P {...styles.p}>
+                  {t.first.elements(
+                    [
+                      `Onboarding/Page/context:${context}/packageName:${packageName}/more/questions`,
+                      `Onboarding/Page/context:${context}/more/questions`,
+                      `Onboarding/Page/${context}/more/questions`,
+                      'Onboarding/Page/more/questions',
+                    ],
+                    {
+                      linkManual: (
+                        <Link key='anleitung' href='/anleitung' passHref>
+                          <A>
+                            {t.first([
+                              `Onboarding/Page/context:${context}/packageName:${packageName}/more/questions/linkManual`,
+                              `Onboarding/Page/context:${context}/more/questions/linkManual`,
+                              `Onboarding/Page/${context}/more/questions/linkManual`,
+                              'Onboarding/Page/more/questions/linkManual',
+                            ])}
+                          </A>
+                        </Link>
+                      ),
+                      linkFaq: !inNativeIOSApp && (
+                        <Link key='route' href='/faq' passHref>
+                          <A>
+                            {t.first([
+                              `Onboarding/Page/context:${context}/packageName:${packageName}/more/questions/linkFaq`,
+                              `Onboarding/Page/context:${context}/more/questions/linkFaq`,
+                              `Onboarding/Page/${context}/more/questions/linkFaq`,
+                              'Onboarding/Page/more/questions/linkFaq',
+                            ])}
+                          </A>
+                        </Link>
+                      ),
+                    },
+                  )}
+                </P>
+
                 <P {...styles.p}>
                   {t.first.elements(
                     [
@@ -545,17 +476,7 @@ class Page extends Component {
   }
 }
 
-const OnboardingHeader = ({ children, ...props }) => {
-  if (props?.context === 'climate') {
-    return (
-      <div {...styles.imageWrapper}>
-        <div {...styles.image}>
-          <ClimateLabLogo width={150} height={150} hideFigcaption />
-        </div>
-        <div {...styles.climateTitle}>{children}</div>
-      </div>
-    )
-  }
+const OnboardingHeader = ({ children }) => {
   return <div {...styles.title}>{children}</div>
 }
 
