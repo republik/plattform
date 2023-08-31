@@ -958,11 +958,11 @@
     },
     {
       "key": "account/newsletterSubscriptions/CLIMATE/frequency",
-      "value": "Ab Januar alle 1–2 Wochen"
+      "value": "Alle 2–3 Wochen"
     },
     {
       "key": "account/newsletterSubscriptions/CLIMATE/description",
-      "value": "Wir experimentieren und wollen zusammen mit Expertinnen und Ihnen herausfinden, was das ist: Journalismus, der uns in der Klimakrise wirklich weiterbringt. Im Newsletter informieren wir über den Stand des Projekts und Möglichkeiten zur Mitwirkung."
+      "value": "Die Klimakrise ist hier. Die Lage ist ernst. Was tun? Gemeinsam mit Ihnen machen wir uns auf die Suche nach Antworten."
     },
     {
       "key": "account/newsletterSubscriptions/onlyName/subscribe",
@@ -7953,27 +7953,27 @@
     },
     {
       "key": "ClimateTeaser/content/buttonAction",
-      "value": "Zum Klimalabor"
+      "value": "Mehr erfahren"
     },
     {
       "key": "ClimateInlineTeaser/content/title",
-      "value": "Zum Klimalabor"
+      "value": "Das Klimalabor der Republik"
     },
     {
       "key": "ClimateInlineTeaser/NonMember/content/text",
-      "value": "Die Klimakrise ist hier. Die Lage ist ernst. Was tun? Im Klimalabor der Republik machen wir uns gemeinsam mit Ihnen auf die Suche nach Antworten."
+      "value": "Die Klimakrise ist hier. Die Lage ist ernst. Was tun? Das Klimalabor ist unser Ort für Austausch und Experimente."
     },
     {
       "key": "ClimateInlineTeaser/NonMember/content/link",
-      "value": "Mehr erfahren und mitmachen"
+      "value": "Mehr erfahren"
     },
     {
       "key": "ClimateInlineTeaser/Member/content/text",
-      "value": "Die Klimakrise ist hier. Die Lage ist ernst. Was tun? Das Klimalabor ist unser Ort für Austausch und Experimente. Wo wir gerade stehen und was es gerade zu tun gibt:"
+      "value": "Die Klimakrise ist hier. Die Lage ist ernst. Was tun? Das Klimalabor ist unser Ort für Austausch und Experimente."
     },
     {
       "key": "ClimateInlineTeaser/Member/content/link",
-      "value": "zum Klimalabor"
+      "value": "Mehr erfahren"
     },
     {
       "key": "CallToActions/customComponents/FutureCampaignBanner/headline",
