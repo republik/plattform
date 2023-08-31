@@ -4,9 +4,9 @@
   "files": [
     "dist"
   ],
-  "main": "dist/index.js",
-  "module": "src/index.ts",
-  "types": "dist/types/index.d.ts",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
   "license": "MIT",
   "private": true,
   "scripts": {
