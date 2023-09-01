@@ -62,6 +62,7 @@
     "validator": "^10.11.0"
   },
   "devDependencies": {
+    "@next/env": "^12.3.1",
     "@next/eslint-plugin-next": "^12.3.1",
     "@republik/eslint-config-frontend": "*",
     "@republik/tsconfig": "*",
