@@ -61,8 +61,13 @@ module.exports = withBundleAnalyzer(
     async headers() {
       return [
         {
-          key: 'Strict-Transport-Security',
-          value: 'max-age=63072000; includeSubDomains; preload',
+          source: '/(.*)',
+          headers: [
+            {
+              key: 'Strict-Transport-Security',
+              value: 'max-age=63072000; includeSubDomains; preload',
+            },
+          ],
         },
       ]
     },
