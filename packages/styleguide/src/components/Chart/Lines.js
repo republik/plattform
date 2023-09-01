@@ -45,6 +45,7 @@ const LineChart = (props) => {
     areaOpacity,
     endDy,
     strokeWidth,
+    strokeWidthHighlighted,
   } = props
 
   const [colorScheme] = useColorContext()
@@ -116,6 +117,7 @@ const LineChart = (props) => {
                 width={chartContext.innerWidth}
                 paddingRight={paddingRight}
                 strokeWidth={strokeWidth}
+                strokeWidthHighlighted={strokeWidthHighlighted}
                 xAxisElement={
                   <XAxis
                     xUnit={props.xUnit}
