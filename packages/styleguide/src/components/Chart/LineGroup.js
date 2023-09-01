@@ -81,6 +81,7 @@ const LineGroup = (props) => {
     endDy,
     xAccessor,
     xAxisElement,
+    strokeWidth,
   } = props
   const [colorScheme] = useColorContext()
 
@@ -107,6 +108,7 @@ const LineGroup = (props) => {
       // we always render at end label outside of the chart area
       // even if the line ends in the middle of the graph
       endX: width,
+      strokeWidth: strokeWidth,
     }
   })
 
@@ -150,6 +152,7 @@ const LineGroup = (props) => {
             endY,
             endLabelY,
             lineColor,
+            strokeWidth,
           },
           i,
         ) => {
@@ -195,7 +198,7 @@ const LineGroup = (props) => {
                 <path
                   fill='none'
                   {...colorScheme.set('stroke', lineColor, 'charts')}
-                  strokeWidth={highlighted ? 6 : 3}
+                  strokeWidth={highlighted ? strokeWidth[0] : strokeWidth[1]}
                   strokeDasharray={stroked ? '6 2' : 'none'}
                   d={pathGenerator(line)}
                 />

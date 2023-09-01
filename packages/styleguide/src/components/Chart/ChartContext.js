@@ -213,6 +213,7 @@ export const defaultProps = {
     columns: 1,
     height: 240,
     yNice: 3,
+    strokeWidth: [6, 3],
   },
   Slope: {
     x: 'year',
@@ -315,6 +316,7 @@ const propTypes = {
   xNormalizer: PropTypes.func.isRequired, // only used by timebar
   // line only
   columnHeight: PropTypes.number,
+  strokeWidth: PropTypes.array,
   yLayout: PropTypes.shape({
     yCut: PropTypes.string,
     yCutHeight: PropTypes.number,
