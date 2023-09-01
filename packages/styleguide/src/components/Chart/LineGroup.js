@@ -82,6 +82,7 @@ const LineGroup = (props) => {
     xAccessor,
     xAxisElement,
     strokeWidth,
+    strokeWidthHighlighted,
   } = props
   const [colorScheme] = useColorContext()
 
@@ -109,6 +110,7 @@ const LineGroup = (props) => {
       // even if the line ends in the middle of the graph
       endX: width,
       strokeWidth: strokeWidth,
+      strokeWidthHighlighted: strokeWidthHighlighted,
     }
   })
 
@@ -153,6 +155,7 @@ const LineGroup = (props) => {
             endLabelY,
             lineColor,
             strokeWidth,
+            strokeWidthHighlighted,
           },
           i,
         ) => {
@@ -198,7 +201,9 @@ const LineGroup = (props) => {
                 <path
                   fill='none'
                   {...colorScheme.set('stroke', lineColor, 'charts')}
-                  strokeWidth={highlighted ? strokeWidth[0] : strokeWidth[1]}
+                  strokeWidth={
+                    highlighted ? strokeWidthHighlighted : strokeWidth
+                  }
                   strokeDasharray={stroked ? '6 2' : 'none'}
                   d={pathGenerator(line)}
                 />
