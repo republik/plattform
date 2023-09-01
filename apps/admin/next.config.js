@@ -62,15 +62,6 @@ module.exports = withBundleAnalyzer(
               key: 'Strict-Transport-Security',
               value: 'max-age=63072000; includeSubDomains; preload',
             },
-          ],
-        },
-        {
-          source: '/(.*)',
-          headers: [
-            {
-              key: 'X-test',
-              value: 'test',
-            },
             process.env.CSP_FRAME_ANCESTORS && {
               key: 'Content-Security-Policy',
               value: `frame-ancestors 'self' ${process.env.CSP_FRAME_ANCESTORS.split(
