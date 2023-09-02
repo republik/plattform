@@ -3113,44 +3113,53 @@
     },
     {
       "key": "memberships/cancel/notFound",
-      "de": "Mitgliedschaft nicht gefunden"
+      "de": "Mitgliedschaft nicht gefunden",
+      "fr": "Adhésion non trouvée"
     },
     {
       "key": "memberships/cancel/title",
-      "de": "Mitgliedschaft beendigen"
+      "de": "Mitgliedschaft beendigen",
+      "fr": "Mettre fin à l'adhésion"
     },
     {
       "key": "memberships/cancel/signIn",
-      "de": "Sie müssen sich anmelden, um Ihre Mitgliedschaft zu beendigen."
+      "de": "Sie müssen sich anmelden, um Ihre Mitgliedschaft zu beendigen.",
+      "fr": "Vous devez vous connecter pour mettre fin à votre adhésion."
     },
     {
       "key": "memberships/cancel/info",
-      "de": "Warum möchten Sie Lobbywatch nicht mehr unterstützen?"
+      "de": "Warum möchten Sie Lobbywatch nicht mehr unterstützen?",
+      "fr": "Pourquoi ne souhaitez-vous plus soutenir Lobbywatch ?"
     },
     {
       "key": "memberships/cancel/confirmation/title",
-      "de": "Sie haben erfolgreich gekündigt."
+      "de": "Sie haben erfolgreich gekündigt.",
+      "fr": "Vous avez réussi à démissionner."
     },
     {
       "key": "memberships/cancel/confirmation",
-      "de": "Vielen Dank für Ihre bisherige Unterstützung."
+      "de": "Vielen Dank für Ihre bisherige Unterstützung.",
+      "fr": "Nous vous remercions de votre soutien à ce jour."
     },
     {
       "key": "memberships/cancel/description",
       "de": "Erläuterungen (Optional)",
-      "fr": "Explication (facultatif)"
+      "fr": "Explications (facultatif)"
     },
     {
       "key": "memberships/cancel/description/empty",
-      "de": "Erläuterungen fehlt"
+      "de": "Erläuterungen fehlt",
+      "fr": "Explications manquantes"
     },
     {
       "key": "memberships/cancel/accountLink",
-      "de": "Zum Konto"
+      "de": "Zum Konto",
+      "fr": "Vers le compte"
     },
     {
       "key": "memberships/cancel/button",
-      "de": "Kündigung abschicken"
+      "de": "Kündigung abschicken",
+      "fr": "Envoyer la résiliation"
     }
   ]
 }

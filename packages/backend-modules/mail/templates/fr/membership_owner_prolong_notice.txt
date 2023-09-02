@@ -1,0 +1,46 @@
+Bonjour
+
+Votre cotisation de membre pour cette année est due. Nous vous remercions de
+votre soutien. Grâce à votre aide, nous pouvons assurer la transparence au
+Palais fédéral.
+
+Renouveler maintenant {{prolong_url}}
+
+Au cours des dernières années, Lobbywatch est devenu un acteur établi de la vie
+politique suisse. Nous regardons de près qui représente quels intérêts au Palais
+fédéral. Nous demandons combien nos parlementaires gagnent avec leurs activités
+(de lobbying) pour des associations et des entreprises. Et nous publions toutes
+nos recherches sur notre site Internet - afin que tous les citoyens intéressés
+puissent voir à tout moment qui est aux commandes de la politique suisse.
+
+Actuellement, nous travaillons sur deux grands projets pour lesquels nous avons
+besoin de soutien : En septembre, nous publierons la liste de transparence 2023.
+Nous y énumérons les candidats qui publient leurs indemnités et se comportent de
+manière transparente. Nous pensons qu'il s'agit d'une aide importante pour les
+élections.
+
+En collaboration avec le collectif de recherche WAV, le réseau de recherche
+investigativ.ch et opendata.ch, nous lançons également le projet "L'argent et la
+politique". Sur cette plateforme, nous présentons de manière claire et
+compréhensible, quelles personnes et organisations investissent combien d'argent
+dans les campagnes électorales.
+
+Vous avez maintenant le choix :
+
+ * Vous restez avec nous et continuez à soutenir Lobbywatch : vous payez ici la
+   facture pour une année supplémentaire. {{prolong_url}}
+ * Vous ne souhaitez plus soutenir Lobbywatch ? Ici vous pouvez mettre fin à
+   votre adhésion {{cancel_url}} et, si vous le souhaitez, vous pouvez nous
+   faire
+
+Quelle que soit votre décision : Nous vous remercions de votre engagement et de
+votre confiance !
+
+Avec nos meilleures salutations
+Thomas Angeli & Otto Hostettler
+Co-présidents de Lobbywatch
+
+
+Lobbywatch.ch
+3000 Berne
+info@lobbywatch.ch

@@ -1,0 +1,23 @@
+Bonjour
+
+Nous avons pris connaissance de votre résiliation.
+
+Nous vous remercions vivement de votre intérêt et de votre soutien jusqu’à
+présent !
+
+{{#if reason_given}}
+
+Nous vous remercions également de nous avoir fait part de vos motivations. Nous
+allons essayer d'en tirer des leçons.
+
+{{/if}}
+
+Nous serions heureux de vous compter un jour à nouveau parmi les nôtres. Vous
+serez toujours les bienvenus.
+
+Avec nos meilleures salutations
+
+
+Lobbywatch.ch
+3000 Berne
+info@lobbywatch.ch

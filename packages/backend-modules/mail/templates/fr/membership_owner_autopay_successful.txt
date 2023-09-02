@@ -1,0 +1,20 @@
+Bonjour
+
+Comme nous vous l'avions annoncé il y a quelques jours, nous avons maintenant
+prolongé votre adhésion d'une année supplémentaire : pour ce faire, votre
+{{autopay_card_brand}} avec les chiffres finaux {{autopay_card_last4}} a été
+débitée de {{autopay_total}}.
+
+Nous vous remercions de votre fidélité et de votre confiance. Nous sommes très
+heureux de vous compter parmi nous pour une année de plus.
+
+Votre adhésion dure désormais jusqu'à {{prolonged_end_date}}.
+
+Avec nos meilleures salutations
+Thomas Angeli & Otto Hostettler
+Co-présidents de Lobbywatch
+
+
+Lobbywatch.ch
+3000 Berne
+info@lobbywatch.ch

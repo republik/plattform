@@ -1,0 +1,130 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="x-ua-compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <!--[if gte mso 15]>
+      <xml>
+        <o:officedocumentsettings>
+          <o:allowpng />
+          <o:pixelsperinch>96</o:pixelsperinch>
+        </o:officedocumentsettings>
+      </xml>
+    <![endif]-->
+    <style type="text/css">
+      @font-face {
+        font-family: Roboto;
+        font-style: normal;
+        font-weight: 400;
+        src: url({{frontend_base_url}}/static/fonts/roboto-v30-latin-regular.woff2)
+            format('woff2'),
+          url({{frontend_base_url}}/static/fonts/roboto-v30-latin-regular.woff)
+            format('woff');
+        font-display: swap;
+      }
+      @font-face {
+        font-family: Roboto;
+        font-style: normal;
+        font-weight: 500;
+        src: url({{frontend_base_url}}/static/fonts/roboto-v30-latin-500.woff2)
+            format('woff2'),
+          url({{frontend_base_url}}/static/fonts/roboto-v30-latin-500.woff)
+            format('woff');
+        font-display: swap;
+      }
+    </style>
+    <style type="text/css">
+      p {
+        color: #000;
+        font-size: 17px;
+        line-height: 24px;
+        font-family: Roboto, sans-serif;
+      }
+      p strong {
+        font-family: Roboto, sans-serif;
+        font-weight: 500;
+      }
+    </style>
+  </head>
+  <body style="margin: 0; padding: 0; background-color: #fff">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tbody>
+        <tr>
+          <td align="center" valign="top">
+            <table
+              align="center"
+              border="0"
+              cellpadding="0"
+              cellspacing="0"
+              width="100%"
+              style="
+                max-width: 640px;
+                color: #000;
+                font-size: 17px;
+                line-height: 24px;
+                font-family: Roboto, sans-serif;
+              "
+            >
+              <tbody>
+                <tr>
+                  <td style="padding: 20px">
+                    <p>Bonjour</p>
+                    <p>
+                      Comme nous vous l'avions annoncé il y a quelques jours,
+                      nous avons maintenant prolongé votre adhésion d'une année
+                      supplémentaire : pour ce faire, votre
+                      {{autopay_card_brand}} avec les chiffres finaux 
+                      {{autopay_card_last4}} a été débitée de {{autopay_total}}.
+                    </p>
+                    <p>
+                      Nous vous remercions de votre fidélité et de votre confiance. Nous sommes très heureux de vous compter parmi nous pour une année de plus.
+                    </p>
+                    <p>
+                      Votre adhésion dure désormais jusqu'à 
+                      {{prolonged_end_date}}.
+                    </p>
+                    <p>
+                      Avec nos meilleures salutations<br />
+                      Thomas Angeli & Otto Hostettler<br />
+                      Co-présidents de Lobbywatch
+                    </p>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding: 20px">
+                    <p
+                      style="
+                        color: #000;
+                        font-size: 14px;
+                        line-height: 20px;
+                        font-family: Roboto, sans-serif;
+                      "
+                    >
+                      <img
+                        height="32"
+                        src="{{frontend_base_url}}/static/brandmark-email.png"
+                        style="
+                          border: 0px;
+                          width: 32px !important;
+                          height: 32px !important;
+                          margin: 0px;
+                        "
+                        width="32"
+                        alt=""
+                      />
+                      <br />
+                      Lobbywatch.ch<br />
+                      3000 Berne<br />
+                      <a href="mailto:info@lobbywatch.ch">info@lobbywatch.ch</a>
+                    </p>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </body>
+</html>

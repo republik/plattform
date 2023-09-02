@@ -1,0 +1,33 @@
+Bonjour
+
+Le {{end_date}}, votre adhésion à Lobbywatch sera renouvelée. Nous vous
+remercions chaleureusement pour votre soutien. Nous sommes heureux de vous
+compter parmi nous.
+
+Vous avez indiqué que vous nous autorisiez à prélever le débit de votre carte de
+crédit enregistrée automatiquement.
+
+Cet e-mail vous informe que nous le ferons dans {{days_left}}jours : votre
+{{autopay_card_brand}} avec les chiffres finaux {{autopay_card_last4}}, sera
+débité le {{end_date}} de {{autopay_total}}.
+
+Si vous souhaitez nous faire un don supplémentaire, vous pouvez modifier le
+montant maintenant. Vous pouvez également déposer une autre carte de crédit,
+choisir un autre mode de paiement {{prolong_url}} ou résilier votre adhésion
+{{cancel_url}} .
+
+Nous vous recontacterons dès que votre adhésion aura été renouvelée avec succès.
+En attendant, si vous avez des questions, vous pouvez nous contacter à l'adresse
+info@lobbywatch.ch .
+
+Nous vous remercions de votre engagement en faveur d'une plus grande
+transparence dans la politique.
+
+Avec nos meilleures salutations
+Thomas Angeli & Otto Hostettler
+Co-présidents de Lobbywatch
+
+
+Lobbywatch.ch
+3000 Berne
+info@lobbywatch.ch

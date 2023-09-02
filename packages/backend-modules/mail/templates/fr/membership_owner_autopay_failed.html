@@ -1,0 +1,202 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="x-ua-compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <!--[if gte mso 15]>
+      <xml>
+        <o:officedocumentsettings>
+          <o:allowpng />
+          <o:pixelsperinch>96</o:pixelsperinch>
+        </o:officedocumentsettings>
+      </xml>
+    <![endif]-->
+    <style type="text/css">
+      @font-face {
+        font-family: Roboto;
+        font-style: normal;
+        font-weight: 400;
+        src: url({{frontend_base_url}}/static/fonts/roboto-v30-latin-regular.woff2)
+            format('woff2'),
+          url({{frontend_base_url}}/static/fonts/roboto-v30-latin-regular.woff)
+            format('woff');
+        font-display: swap;
+      }
+      @font-face {
+        font-family: Roboto;
+        font-style: normal;
+        font-weight: 500;
+        src: url({{frontend_base_url}}/static/fonts/roboto-v30-latin-500.woff2)
+            format('woff2'),
+          url({{frontend_base_url}}/static/fonts/roboto-v30-latin-500.woff)
+            format('woff');
+        font-display: swap;
+      }
+    </style>
+    <style type="text/css">
+      p {
+        color: #000;
+        font-size: 17px;
+        line-height: 24px;
+        font-family: Roboto, sans-serif;
+      }
+      p strong {
+        font-family: Roboto, sans-serif;
+        font-weight: 500;
+      }
+    </style>
+  </head>
+  <body style="margin: 0; padding: 0; background-color: #fff">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tbody>
+        <tr>
+          <td align="center" valign="top">
+            <table
+              align="center"
+              border="0"
+              cellpadding="0"
+              cellspacing="0"
+              width="100%"
+              style="
+                max-width: 640px;
+                color: #000;
+                font-size: 17px;
+                line-height: 24px;
+                font-family: Roboto, sans-serif;
+              "
+            >
+              <tbody>
+                <tr>
+                  <td style="padding: 20px">
+                    <p>Bonjour</p>
+                    {{#if `attempt_number == 3`}}
+                    <p>
+                      Votre adhésion a été renouvelée le {{end_date}}pour une
+                      année supplémentaire. Malheureusement, la cotisation
+                      annuelle de {{autopay_total}} de votre
+                      {{autopay_card_brand}} déposé avec les chiffres finaux
+                      {{autopay_card_last4}} n'a pas été débité.
+                    </p>
+                    <p>
+                      Nous ferons une dernière tentative le {{attempt_next_at}}
+                      et
+                      <a href="{{prolong_url}}"
+                        >vous prions de mettre à jour les données de votre carte
+                        de crédit ici, si nécessaire</a
+                      >.
+                    </p>
+                    {{elseif `attempt_number == 4`}}
+                    <p>
+                      Votre adhésion a été renouvelée le {{end_date}} pour une
+                      année supplémentaire. Malgré tentatives répétées, nous
+                      n'avons pas pu payer la cotisation annuelle de
+                      {{autopay_total}} de votre {{autopay_card_brand}} déposée
+                      avec les chiffres finaux {{autopay_card_last4}}.
+                    </p>
+                    <p>
+                      Nous nous voyons donc contraints, à notre grand regret, de
+                      désactiver votre adhésion le {{grace_end_date}}.
+                    </p>
+                    <p>
+                      Si vous souhaitez éviter cela,
+                      <a href="{{prolong_url}}"
+                        >vous pouvez encore régler la cotisation annuelle </a
+                      >, si vous le souhaitez, vous pouvez également utiliser un
+                      autre mode de paiement.
+                    </p>
+                    {{else}}
+                    <p>
+                      Votre adhésion a été renouvelée le {{end_date}} pour une
+                      année supplémentaire. Vous avez indiqué que vous nous
+                      autorisiez à prélever le débit automatiquement sur votre
+                      carte de crédit enregistrée. Malheureusement, nous n'avons
+                      pas pu prélever la cotisation annuelle de
+                      {{autopay_total}} de votre {{autopay_card_brand}} déposée
+                      avec les chiffres finaux {{autopay_card_last4}}.
+                    </p>
+                    {{#if authentication_required}}
+                    <p>
+                      Cela est du au fait que votre carte de crédit exige que
+                      les réservations soient confirmées en ligne. Nous vous
+                      demandons donc de
+                      <a href="{{prolong_url}}"
+                        >renouveler manuellement votre adhésion ici</a
+                      >.
+                    </p>
+                    {{elseif attempt_is_last}}
+                    <p>
+                      Nous nous voyons donc contraints, à notre grand regret, de
+                      résilier votre adhésion le {{grace_end_date}}.
+                    </p>
+                    {{elseif attempt_next_is_last}}
+                    <p>
+                      Nous ferons une dernière tentative le {{attempt_next_at}}
+                      et nous vous prions de bien vouloir d'ici là, mettre à
+                      jour
+                      <a href="{{prolong_url}}"
+                        >les données de votre carte de crédit ici, si
+                        nécessaire</a
+                      >.
+                    </p>
+                    {{else}}
+                    <p>
+                      Nous ferons une nouvelle tentative le {{attempt_next_at}}
+                      et vous prions de bien vouloir nous fournir
+                      <a href="{{prolong_url}}"
+                        >une nouvelle carte de crédit d'ici là</a
+                      >.
+                    </p>
+                    {{/if}}
+                    <p>
+                      Vous ne souhaitez plus payer par carte de crédit ?
+                      <a href="{{prolong_url}}"
+                        >Alors vous pouvez choisir ici un autre mode de
+                        paiement</a
+                      >.
+                    </p>
+                    {{/if}}
+                    <p>
+                      Avec nos meilleures salutations<br />
+                      Thomas Angeli & Otto Hostettler<br />
+                      Co-présidents Lobbywatch
+                    </p>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding: 20px">
+                    <p
+                      style="
+                        color: #000;
+                        font-size: 14px;
+                        line-height: 20px;
+                        font-family: Roboto, sans-serif;
+                      "
+                    >
+                      <img
+                        height="32"
+                        src="{{frontend_base_url}}/static/brandmark-email.png"
+                        style="
+                          border: 0px;
+                          width: 32px !important;
+                          height: 32px !important;
+                          margin: 0px;
+                        "
+                        width="32"
+                        alt=""
+                      />
+                      <br />
+                      Lobbywatch.ch<br />
+                      3000 Berne<br />
+                      <a href="mailto:info@lobbywatch.ch">info@lobbywatch.ch</a>
+                    </p>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </body>
+</html>
