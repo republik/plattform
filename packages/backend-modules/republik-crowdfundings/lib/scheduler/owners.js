@@ -22,7 +22,7 @@ const {
   MEMBERSHIP_SCHEDULER_CONCURRENCY = 10,
 } = process.env
 
-const DAYS_BEFORE_END_DATE = 29
+const DAYS_BEFORE_END_DATE = 1
 
 const getMinEndDate = (now, daysBeforeEndDate) =>
   moment(now)
