@@ -469,7 +469,7 @@ mail.prepareMembershipOwnerNotice = async (
       {
         name: 'cancel_url',
         content: membershipId
-          ? `${FRONTEND_BASE_URL}/${user._raw.locale}/abgang?membershipId=${membershipId}`
+          ? `${FRONTEND_BASE_URL}/${user._raw.locale}/annuler?membershipId=${membershipId}`
           : `${FRONTEND_BASE_URL}/${user._raw.locale}/merci`,
       },
       {
