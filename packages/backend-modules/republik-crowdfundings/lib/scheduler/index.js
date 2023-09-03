@@ -1,23 +1,23 @@
 // const DEV = process.env.NODE_ENV ? process.env.NODE_ENV !== 'production' : true
 
 const debug = require('debug')('crowdfundings:lib:scheduler')
-const Promise = require('bluebird')
+// const Promise = require('bluebird')
 
-const {
-  intervalScheduler,
-  timeScheduler,
-} = require('@orbiting/backend-modules-schedulers')
+// const {
+//   intervalScheduler,
+//   timeScheduler,
+// } = require('@orbiting/backend-modules-schedulers')
 
-const lockTtlSecs = 60 * 5 // 5 mins
+// const lockTtlSecs = 60 * 5 // 5 mins
 
 // const { inform: informGivers } = require('./givers')
 // const { inform: informWinback } = require('./winbacks')
 // const { inform: informFeedback } = require('./feedback')
 // const { inform: informUpgrade } = require('./upgrade')
-const { run: membershipsOwnersHandler } = require('./owners')
+// const { run: membershipsOwnersHandler } = require('./owners')
 // const { deactivate } = require('./deactivate')
-const { changeover } = require('./changeover')
-const { importPayments } = require('./importPayments')
+// const { changeover } = require('./changeover')
+// const { importPayments } = require('./importPayments')
 // const {
 //   sendPaymentReminders,
 // } = require('../../lib/payments/paymentslip/sendPaymentReminders')
@@ -31,18 +31,25 @@ const { importPayments } = require('./importPayments')
 const init = async (context) => {
   debug('init')
 
-  const schedulers = []
-
-  schedulers.push(
-    timeScheduler.init({
-      name: 'import-payments',
-      context,
-      runFunc: importPayments,
-      lockTtlSecs,
-      runAtTime: '04:00', // Postfinace exports new files at around 1 AM
-      runAtDaysOfWeek: [2, 3, 4, 5, 6], // Postfinance exports Tuesday to Saturday
-    }),
+  console.log(
+    'MEMBERSHIP_SCHEDULER is commented out, using membershipRunner.js and importPaymentRunner.js as cron instead for now.',
   )
+  return {
+    close: () => {},
+  }
+
+  // const schedulers = []
+
+  // schedulers.push(
+  //   timeScheduler.init({
+  //     name: 'import-payments',
+  //     context,
+  //     runFunc: importPayments,
+  //     lockTtlSecs,
+  //     runAtTime: '04:00', // Postfinace exports new files at around 1 AM
+  //     runAtDaysOfWeek: [2, 3, 4, 5, 6], // Postfinance exports Tuesday to Saturday
+  //   }),
+  // )
 
   // schedulers.push(
   //   timeScheduler.init({
@@ -65,15 +72,15 @@ const init = async (context) => {
   //   }),
   // )
 
-  schedulers.push(
-    intervalScheduler.init({
-      name: 'memberships-owners',
-      context,
-      runFunc: membershipsOwnersHandler,
-      lockTtlSecs,
-      runIntervalSecs: 60 * 10,
-    }),
-  )
+  // schedulers.push(
+  //   intervalScheduler.init({
+  //     name: 'memberships-owners',
+  //     context,
+  //     runFunc: membershipsOwnersHandler,
+  //     lockTtlSecs,
+  //     runIntervalSecs: 60 * 10,
+  //   }),
+  // )
 
   // schedulers.push(
   //   intervalScheduler.init({
@@ -107,18 +114,18 @@ const init = async (context) => {
   //   }),
   // )
 
-  schedulers.push(
-    intervalScheduler.init({
-      name: 'changeover-deactivate',
-      context,
-      runFunc: async (args, context) => {
-        await changeover(args, context)
-        // await deactivate(args, context)
-      },
-      lockTtlSecs,
-      runIntervalSecs: 60 * 10,
-    }),
-  )
+  // schedulers.push(
+  //   intervalScheduler.init({
+  //     name: 'changeover-deactivate',
+  //     context,
+  //     runFunc: async (args, context) => {
+  //       await changeover(args, context)
+  //       // await deactivate(args, context)
+  //     },
+  //     lockTtlSecs,
+  //     runIntervalSecs: 60 * 10,
+  //   }),
+  // )
 
   // schedulers.push(
   //   intervalScheduler.init({
@@ -143,13 +150,13 @@ const init = async (context) => {
   //   }),
   // )
 
-  const close = async () => {
-    await Promise.each(schedulers, (scheduler) => scheduler.close())
-  }
+  // const close = async () => {
+  //   await Promise.each(schedulers, (scheduler) => scheduler.close())
+  // }
 
-  return {
-    close,
-  }
+  // return {
+  //   close,
+  // }
 }
 
 module.exports = {

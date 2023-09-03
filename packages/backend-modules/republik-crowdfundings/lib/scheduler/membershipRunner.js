@@ -8,6 +8,7 @@ const mail = require('@orbiting/backend-modules-republik-crowdfundings/lib/Mail'
 const { loaderBuilders } = require('@orbiting/api-app/server')
 
 const { run: membershipsOwnersHandler } = require('./owners')
+const { changeover } = require('./changeover')
 
 const applicationName = ['backends', 'runner', process.env.DYNO, 'scheduler']
   .filter(Boolean)
@@ -31,6 +32,7 @@ ConnectionContext.create(applicationName).then(async (connectionContext) => {
 
   const context = await createGraphQLContext({ scope: 'scheduler' })
 
+  await changeover({}, context)
   await membershipsOwnersHandler({}, context)
 
   await ConnectionContext.close(context)
