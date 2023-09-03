@@ -180,6 +180,7 @@ type Membership {
 enum MembershipPeriodKind {
   REGULAR
   BONUS # Bonus period upon checkout
+  BUFFER # Bonus period to move memberships into better renewal time window
   ADMIN # A bonus period granted via admins, supporter
   CHANGEOVER # Period upon changeover from one membership to other
 }

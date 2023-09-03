@@ -69,54 +69,49 @@
               <tbody>
                 <tr>
                   <td style="padding: 20px">
-                    <p>Bonjour {{name}},</p>
+                    <p>Guten Tag</p>
                     <p>
-                      Vous pouvez déduire vos dons à Lobbywatch.ch de vos
-                      impôts. Nous vous envoyons volontiers en annexe une
-                      attestation de don pour l'année écoulée.
+                      Am {{end_date}} erneuert sich Ihre Mitgliedschaft bei
+                      Lobbywatch. Herzlichen Dank für Ihre Unterstützung. Wir
+                      freuen uns, Sie dabei zu haben.
                     </p>
-
-                    <p>Un grand merci pour votre soutien !</p>
-
                     <p>
-                      <strong>
-                        Nous soutiendrez-vous également lors des élections de
-                        2023 ?
-                      </strong>
+                      Sie haben angegeben, dass Sie uns erlauben, Ihre
+                      hinterlegte Kreditkarte automatisch zu belasten.
                     </p>
-
                     <p>
-                      Les élections fédérales du 22 octobre représentent pour
-                      nous beaucoup de travail. Pour que vous puissiez, en tant
-                      qu'électrice ou électeur, faire un choix éclairé et
-                      savoir, après les élections, qui défend les intérêts de
-                      qui au Palais fédéral, nous devons investir beaucoup de
-                      temps et d'énergie dans les recherches sur les mandats de
-                      lobbying. Nous serions heureux que vous nous aidiez cette
-                      année encore à rendre la politique suisse plus
-                      transparente.
+                      Diese E-Mail informiert Sie darüber, dass wir dies in
+                      {{days_left}} Tagen tatsächlich tun werden: Ihre
+                      {{autopay_card_brand}} mit den Endziffern
+                      {{autopay_card_last4}} belasten wir am {{end_date}} mit
+                      {{autopay_total}}.
                     </p>
-
                     <p>
-                      {{#if prolong_token}}
-                      <a
-                        href="{{frontend_base_url}}/fr/patronage?package=PROLONG&amp;token={{prolong_token}}"
+                      Wenn Sie uns zusätzlich eine Spende zukommen lassen
+                      möchten, können Sie den
+                      <a href="{{prolong_url}}"
+                        >Betrag jetzt noch anpassen. Sie können auch eine andere
+                        Kreditkarte hinterlegen, eine andere Zahlungsart
+                        wählen</a
                       >
-                        Verser la cotisation annuelle de membre
-                      </a>
-                      {{else}}
-                      <a
-                        href="{{frontend_base_url}}/fr/patronage?package=DONATE"
-                      >
-                        Faire un don maintenant
-                      </a>
-                      {{/if}}
+                      oder
+                      <a href="{{cancel_url}}">Ihre Mitgliedschaft kündigen</a>.
                     </p>
-
                     <p>
-                      Avec nos meilleures salutations<br />
-                      Deborah Wanner<br />
-                      Administratorin Lobbywatch.ch
+                      Wir melden uns erneut, sobald Ihre Mitgliedschaft
+                      erfolgreich verlängert wurde. In der Zwischenzeit können
+                      Sie sich bei Fragen unter
+                      <a href="mailto:info@lobbywatch.ch">info@lobbywatch.ch</a>
+                      melden.
+                    </p>
+                    <p>
+                      Herzlichen Dank, dass Sie sich mit Ihrer Mitgliedschaft
+                      für mehr Transparenz in der Politik engagieren.
+                    </p>
+                    <p>
+                      Mit freundlichen Grüssen<br />
+                      Thomas Angeli & Otto Hostettler<br />
+                      Co-Präsidenten Lobbywatch
                     </p>
                   </td>
                 </tr>
@@ -144,7 +139,7 @@
                       />
                       <br />
                       Lobbywatch.ch<br />
-                      3000 Berne<br />
+                      3000 Bern<br />
                       <a href="mailto:info@lobbywatch.ch">info@lobbywatch.ch</a>
                     </p>
                   </td>

@@ -13,28 +13,37 @@
       </xml>
     <![endif]-->
     <style type="text/css">
-      @font-face{
-        font-family:Roboto;
-        font-style:normal;
-        font-weight:400;
-        src:url({{frontend_base_url}}/static/fonts/roboto-v30-latin-regular.woff2) format('woff2'),url({{frontend_base_url}}/static/fonts/roboto-v30-latin-regular.woff) format('woff');
-        font-display:swap
+      @font-face {
+        font-family: Roboto;
+        font-style: normal;
+        font-weight: 400;
+        src: url({{frontend_base_url}}/static/fonts/roboto-v30-latin-regular.woff2)
+            format('woff2'),
+          url({{frontend_base_url}}/static/fonts/roboto-v30-latin-regular.woff)
+            format('woff');
+        font-display: swap;
       }
-      @font-face{
-        font-family:Roboto;
-        font-style:normal;
-        font-weight:500;
-        src:url({{frontend_base_url}}/static/fonts/roboto-v30-latin-500.woff2) format('woff2'),url({{frontend_base_url}}/static/fonts/roboto-v30-latin-500.woff) format('woff');
-        font-display:swap
+      @font-face {
+        font-family: Roboto;
+        font-style: normal;
+        font-weight: 500;
+        src: url({{frontend_base_url}}/static/fonts/roboto-v30-latin-500.woff2)
+            format('woff2'),
+          url({{frontend_base_url}}/static/fonts/roboto-v30-latin-500.woff)
+            format('woff');
+        font-display: swap;
       }
     </style>
     <style type="text/css">
       p {
-        color:#000;font-size:17px;line-height:24px;
-        font-family:Roboto, sans-serif;
+        color: #000;
+        font-size: 17px;
+        line-height: 24px;
+        font-family: Roboto, sans-serif;
       }
       p strong {
-        font-family:Roboto,sans-serif;font-weight:500;
+        font-family: Roboto, sans-serif;
+        font-weight: 500;
       }
     </style>
   </head>
@@ -49,43 +58,45 @@
               cellpadding="0"
               cellspacing="0"
               width="100%"
-              style="max-width:640px;color:#444;font-size:18px;font-family:Roboto, sans-serif;"
+              style="
+                max-width: 640px;
+                color: #444;
+                font-size: 18px;
+                font-family: Roboto, sans-serif;
+              "
             >
               <tbody>
                 <tr>
                   <td style="padding: 20px">
-                    <p>Guten Tag</p>
+                    <p>Bonjour</p>
+                    <p>Nous avons pris connaissance de votre résiliation.</p>
                     <p>
-                    {{#if membership_active}}
-                      Wir haben Ihre Kündigung erfasst. Ihr Abonnement läuft noch
-                      bis zum {{end_date}} und wird nicht erneuert.
-                    {{else}}
-                      Wir haben Ihre Kündigung erfasst und Ihr Abonnement
-                      deaktiviert.
-                    {{/if}}
-                    </p>
-                    <p>
-                      Herzlichen Dank für Ihr Interesse und Ihre Unterstützung
-                      bis hierhin!
+                      Nous vous remercions vivement de votre intérêt et de votre
+                      soutien jusqu’à présent !
                     </p>
                     {{#if reason_given}}
                     <p>
-                      Auch für Ihre Kündigungs­begründung, aus der wir lernen
-                      können.
+                      Nous vous remercions également de nous avoir fait part de
+                      vos motivations. Nous allons essayer d'en tirer des
+                      leçons.
                     </p>
                     {{/if}}
                     <p>
-                      Wir würden uns sehr freuen, wenn Sie zu einem späteren
-                      Zeitpunkt wieder bei uns vorbeischauten. Sie sind
-                      jederzeit willkommen.
+                      Nous serions heureux de vous compter un jour à nouveau
+                      parmi les nôtres. Vous serez toujours les bienvenus.
                     </p>
-                    <p>Mit freundlichen Grüssen</p>
+                    <p>Avec nos meilleures salutations</p>
                   </td>
                 </tr>
                 <tr>
                   <td style="padding: 20px">
                     <p
-                      style="color:#000;font-size:14px;line-height:20px;font-family:Roboto, sans-serif;"
+                      style="
+                        color: #000;
+                        font-size: 14px;
+                        line-height: 20px;
+                        font-family: Roboto, sans-serif;
+                      "
                     >
                       <img
                         height="32"
@@ -101,10 +112,8 @@
                       />
                       <br />
                       Lobbywatch.ch<br />
-                      3000 Bern<br />
-                      <a href="mailto:info@lobbywatch.ch"
-                        >info@lobbywatch.ch</a
-                      >
+                      3000 Berne<br />
+                      <a href="mailto:info@lobbywatch.ch">info@lobbywatch.ch</a>
                     </p>
                   </td>
                 </tr>

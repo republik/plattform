@@ -69,54 +69,49 @@
               <tbody>
                 <tr>
                   <td style="padding: 20px">
-                    <p>Bonjour {{name}},</p>
+                    <p>Bonjour</p>
                     <p>
-                      Vous pouvez déduire vos dons à Lobbywatch.ch de vos
-                      impôts. Nous vous envoyons volontiers en annexe une
-                      attestation de don pour l'année écoulée.
+                      Le {{end_date}}, votre adhésion à Lobbywatch sera
+                      renouvelée. Nous vous remercions chaleureusement pour
+                      votre soutien. Nous sommes heureux de vous compter parmi
+                      nous.
                     </p>
-
-                    <p>Un grand merci pour votre soutien !</p>
-
                     <p>
-                      <strong>
-                        Nous soutiendrez-vous également lors des élections de
-                        2023 ?
-                      </strong>
+                      Vous avez indiqué que vous nous autorisiez à prélever le
+                      débit de votre carte de crédit enregistrée
+                      automatiquement.
                     </p>
-
                     <p>
-                      Les élections fédérales du 22 octobre représentent pour
-                      nous beaucoup de travail. Pour que vous puissiez, en tant
-                      qu'électrice ou électeur, faire un choix éclairé et
-                      savoir, après les élections, qui défend les intérêts de
-                      qui au Palais fédéral, nous devons investir beaucoup de
-                      temps et d'énergie dans les recherches sur les mandats de
-                      lobbying. Nous serions heureux que vous nous aidiez cette
-                      année encore à rendre la politique suisse plus
-                      transparente.
+                      Cet e-mail vous informe que nous le ferons dans
+                      {{days_left}}jours : votre {{autopay_card_brand}} avec les
+                      chiffres finaux {{autopay_card_last4}}, sera débité le
+                      {{end_date}} de {{autopay_total}}.
                     </p>
-
                     <p>
-                      {{#if prolong_token}}
-                      <a
-                        href="{{frontend_base_url}}/fr/patronage?package=PROLONG&amp;token={{prolong_token}}"
-                      >
-                        Verser la cotisation annuelle de membre
+                      Si vous souhaitez nous faire un don supplémentaire,
+                      <a href="{{prolong_url}}"
+                        >vous pouvez modifier le montant maintenant. Vous pouvez
+                        également déposer une autre carte de crédit, choisir un
+                        autre mode de paiement
                       </a>
-                      {{else}}
-                      <a
-                        href="{{frontend_base_url}}/fr/patronage?package=DONATE"
-                      >
-                        Faire un don maintenant
-                      </a>
-                      {{/if}}
+                      ou
+                      <a href="{{cancel_url}}">résilier votre adhésion</a>.
                     </p>
-
+                    <p>
+                      Nous vous recontacterons dès que votre adhésion aura été
+                      renouvelée avec succès. En attendant, si vous avez des
+                      questions, vous pouvez nous contacter à l'adresse
+                      <a href="mailto:info@lobbywatch.ch">info@lobbywatch.ch</a>
+                      .
+                    </p>
+                    <p>
+                      Nous vous remercions de votre engagement en faveur d'une
+                      plus grande transparence dans la politique.
+                    </p>
                     <p>
                       Avec nos meilleures salutations<br />
-                      Deborah Wanner<br />
-                      Administratorin Lobbywatch.ch
+                      Thomas Angeli & Otto Hostettler<br />
+                      Co-présidents de Lobbywatch
                     </p>
                   </td>
                 </tr>

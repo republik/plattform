@@ -1,0 +1,72 @@
+Bonjour
+
+{{#if `attempt_number == 3`}}
+
+Votre adhésion a été renouvelée le {{end_date}}pour une année supplémentaire.
+Malheureusement, la cotisation annuelle de {{autopay_total}} de votre
+{{autopay_card_brand}} déposé avec les chiffres finaux {{autopay_card_last4}}
+n'a pas été débité.
+
+Nous ferons une dernière tentative le {{attempt_next_at}} et vous prions de
+mettre à jour les données de votre carte de crédit ici, si nécessaire
+{{prolong_url}} .
+
+{{elseif `attempt_number == 4`}}
+
+Votre adhésion a été renouvelée le {{end_date}} pour une année supplémentaire.
+Malgré tentatives répétées, nous n'avons pas pu payer la cotisation annuelle de
+{{autopay_total}} de votre {{autopay_card_brand}} déposée avec les chiffres
+finaux {{autopay_card_last4}}.
+
+Nous nous voyons donc contraints, à notre grand regret, de désactiver votre
+adhésion le {{grace_end_date}}.
+
+Si vous souhaitez éviter cela, vous pouvez encore régler la cotisation annuelle
+{{prolong_url}} , si vous le souhaitez, vous pouvez également utiliser un autre
+mode de paiement.
+
+{{else}}
+
+Votre adhésion a été renouvelée le {{end_date}} pour une année supplémentaire.
+Vous avez indiqué que vous nous autorisiez à prélever le débit automatiquement
+sur votre carte de crédit enregistrée. Malheureusement, nous n'avons pas pu
+prélever la cotisation annuelle de {{autopay_total}} de votre
+{{autopay_card_brand}} déposée avec les chiffres finaux {{autopay_card_last4}}.
+
+{{#if authentication_required}}
+
+Cela est du au fait que votre carte de crédit exige que les réservations soient
+confirmées en ligne. Nous vous demandons donc de renouveler manuellement votre
+adhésion ici {{prolong_url}} .
+
+{{elseif attempt_is_last}}
+
+Nous nous voyons donc contraints, à notre grand regret, de résilier votre
+adhésion le {{grace_end_date}}.
+
+{{elseif attempt_next_is_last}}
+
+Nous ferons une dernière tentative le {{attempt_next_at}} et nous vous prions de
+bien vouloir d'ici là, mettre à jour les données de votre carte de crédit ici,
+si nécessaire {{prolong_url}} .
+
+{{else}}
+
+Nous ferons une nouvelle tentative le {{attempt_next_at}} et vous prions de bien
+vouloir nous fournir une nouvelle carte de crédit d'ici là {{prolong_url}} .
+
+{{/if}}
+
+Vous ne souhaitez plus payer par carte de crédit ? Alors vous pouvez choisir ici
+un autre mode de paiement {{prolong_url}} .
+
+{{/if}}
+
+Avec nos meilleures salutations
+Thomas Angeli & Otto Hostettler
+Co-présidents Lobbywatch
+
+
+Lobbywatch.ch
+3000 Berne
+info@lobbywatch.ch

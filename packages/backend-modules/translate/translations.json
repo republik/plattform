@@ -642,11 +642,23 @@
     },
     {
       "key": "api/email/membership_winback/fromName",
-      "value": "Philipp von Essen"
+      "value": "Thomas Angeli"
     },
     {
-      "key": "api/email/membership_owner_prolong_notice/subject",
-      "value": "Bleiben Sie an Bord oder möchten Sie die Lobbywatch verlassen? Sie haben die Wahl"
+      "key": "api/email/de/membership_owner_prolong_notice/subject",
+      "value": "Jahresbeitrag fällig"
+    },
+    {
+      "key": "api/email/fr/membership_owner_prolong_notice/subject",
+      "value": "Cotisation annuelle due"
+    },
+    {
+      "key": "api/email/de/membership_owner_autopay_notice/subject",
+      "value": "Ihre Mitgliedschaft erneuert sich automatisch"
+    },
+    {
+      "key": "api/email/fr/membership_owner_autopay_notice/subject",
+      "value": "Votre adhésion se renouvelle automatiquement"
     },
     {
       "key": "api/email/membership_owner_prolong_notice_7/subject",
@@ -667,10 +679,6 @@
     {
       "key": "api/email/membership_owner_prolong_winback_7/subject",
       "value": "Ihr Mitgliedschaftsbeitrag ist überfällig"
-    },
-    {
-      "key": "api/email/membership_owner_autopay_notice/subject",
-      "value": "Ihre Mitgliedschaft erneuert sich automatisch"
     },
     {
       "key": "api/email/membership_owner_feedback/subject",
@@ -1969,28 +1977,52 @@
       "value": "Ihr Profil ist im Moment einer Wahltindär-Karte zugeordnet und kann im Moment nicht zurückgenommen werden."
     },
     {
-      "key": "api/email/membership_owner_autopay_successful/subject",
+      "key": "api/email/de/membership_owner_autopay_successful/subject",
       "value": "Ihre Mitgliedschaft wurde erfolgreich verlängert"
     },
     {
-      "key": "api/email/membership_owner_autopay_failed/subject",
+      "key": "api/email/de/membership_owner_autopay_failed/subject",
       "value": "Jahresbeitrag: Abbuchung fehlgeschlagen"
     },
     {
-      "key": "api/email/membership_owner_autopay_failed_1/subject",
+      "key": "api/email/de/membership_owner_autopay_failed_1/subject",
       "value": "Jahresbeitrag: Abbuchung fehlgeschlagen"
     },
     {
-      "key": "api/email/membership_owner_autopay_failed_2/subject",
+      "key": "api/email/de/membership_owner_autopay_failed_2/subject",
       "value": "Jahresbeitrag: Abbuchung erneut fehlgeschlagen"
     },
     {
-      "key": "api/email/membership_owner_autopay_failed_3/subject",
+      "key": "api/email/de/membership_owner_autopay_failed_3/subject",
       "value": "Jahresbeitrag: Abbuchung erneut fehlgeschlagen"
     },
     {
-      "key": "api/email/membership_owner_autopay_failed_4/subject",
+      "key": "api/email/de/membership_owner_autopay_failed_4/subject",
       "value": "Jahresbeitrag: Automatische Abbuchung nicht möglich"
+    },
+    {
+      "key": "api/email/fr/membership_owner_autopay_successful/subject",
+      "value": "Votre adhésion a été renouvelée avec succès"
+    },
+    {
+      "key": "api/email/fr/membership_owner_autopay_failed/subject",
+      "value": "Cotisation annuelle : échec du prélèvement"
+    },
+    {
+      "key": "api/email/fr/membership_owner_autopay_failed_1/subject",
+      "value": "Cotisation annuelle : échec du prélèvement"
+    },
+    {
+      "key": "api/email/fr/membership_owner_autopay_failed_2/subject",
+      "value": "Cotisation annuelle : nouvel échec du prélèvement"
+    },
+    {
+      "key": "api/email/fr/membership_owner_autopay_failed_3/subject",
+      "value": "Cotisation annuelle : nouvel échec du prélèvement"
+    },
+    {
+      "key": "api/email/fr/membership_owner_autopay_failed_4/subject",
+      "value": "Cotisation annuelle : le prélèvement automatique n'est pas possible"
     },
     {
       "key": "api/payment/invoice/item/package/DONATE_POT",

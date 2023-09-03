@@ -49,26 +49,29 @@
               cellpadding="0"
               cellspacing="0"
               width="100%"
-              style="max-width:640px;color:#000;font-size:17px;line-height:24px;font-family:Roboto, sans-serif;"
+              style="max-width:640px;color:#444;font-size:18px;font-family:Roboto, sans-serif;"
             >
               <tbody>
                 <tr>
                   <td style="padding: 20px">
                     <p>Guten Tag</p>
                     <p>
-                      Wie bereits vor einigen Tagen angekündigt, haben wir nun
-                      unverfroren Ihre Mitgliedschaft um ein weiteres Jahr
-                      verlängert: Dafür wurde Ihre {{autopay_card_brand}} mit
-                      den Endziffern {{autopay_card_last4}} mit
-                      {{autopay_total}} belastet.
+                      Wir haben Ihre Kündigung erfasst.
                     </p>
                     <p>
-                      Wir bedanken uns für Ihre Treue und Ihr Vertrauen. Wir
-                      freuen uns sehr, Sie ein weiteres Jahr an Bord zu wissen.
+                      Herzlichen Dank für Ihr Interesse und Ihre Unterstützung
+                      bis hierhin!
                     </p>
+                    {{#if reason_given}}
                     <p>
-                      Ihre Mitgliedschaft läuft neu bis zum
-                      {{prolonged_end_date}}.
+                      Auch für Ihre Kündigungs­begründung, aus der wir lernen
+                      können.
+                    </p>
+                    {{/if}}
+                    <p>
+                      Wir würden uns sehr freuen, wenn Sie zu einem späteren
+                      Zeitpunkt wieder bei uns vorbeischauten. Sie sind
+                      jederzeit willkommen.
                     </p>
                     <p>Mit freundlichen Grüssen</p>
                   </td>

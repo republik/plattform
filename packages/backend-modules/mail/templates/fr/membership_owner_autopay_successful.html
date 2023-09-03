@@ -69,54 +69,25 @@
               <tbody>
                 <tr>
                   <td style="padding: 20px">
-                    <p>Bonjour {{name}},</p>
+                    <p>Bonjour</p>
                     <p>
-                      Vous pouvez déduire vos dons à Lobbywatch.ch de vos
-                      impôts. Nous vous envoyons volontiers en annexe une
-                      attestation de don pour l'année écoulée.
+                      Comme nous vous l'avions annoncé il y a quelques jours,
+                      nous avons maintenant prolongé votre adhésion d'une année
+                      supplémentaire : pour ce faire, votre
+                      {{autopay_card_brand}} avec les chiffres finaux 
+                      {{autopay_card_last4}} a été débitée de {{autopay_total}}.
                     </p>
-
-                    <p>Un grand merci pour votre soutien !</p>
-
                     <p>
-                      <strong>
-                        Nous soutiendrez-vous également lors des élections de
-                        2023 ?
-                      </strong>
+                      Nous vous remercions de votre fidélité et de votre confiance. Nous sommes très heureux de vous compter parmi nous pour une année de plus.
                     </p>
-
                     <p>
-                      Les élections fédérales du 22 octobre représentent pour
-                      nous beaucoup de travail. Pour que vous puissiez, en tant
-                      qu'électrice ou électeur, faire un choix éclairé et
-                      savoir, après les élections, qui défend les intérêts de
-                      qui au Palais fédéral, nous devons investir beaucoup de
-                      temps et d'énergie dans les recherches sur les mandats de
-                      lobbying. Nous serions heureux que vous nous aidiez cette
-                      année encore à rendre la politique suisse plus
-                      transparente.
+                      Votre adhésion dure désormais jusqu'à 
+                      {{prolonged_end_date}}.
                     </p>
-
-                    <p>
-                      {{#if prolong_token}}
-                      <a
-                        href="{{frontend_base_url}}/fr/patronage?package=PROLONG&amp;token={{prolong_token}}"
-                      >
-                        Verser la cotisation annuelle de membre
-                      </a>
-                      {{else}}
-                      <a
-                        href="{{frontend_base_url}}/fr/patronage?package=DONATE"
-                      >
-                        Faire un don maintenant
-                      </a>
-                      {{/if}}
-                    </p>
-
                     <p>
                       Avec nos meilleures salutations<br />
-                      Deborah Wanner<br />
-                      Administratorin Lobbywatch.ch
+                      Thomas Angeli & Otto Hostettler<br />
+                      Co-présidents de Lobbywatch
                     </p>
                   </td>
                 </tr>

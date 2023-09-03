@@ -22,7 +22,7 @@ const {
   MEMBERSHIP_SCHEDULER_CONCURRENCY = 10,
 } = process.env
 
-const DAYS_BEFORE_END_DATE = 29
+const DAYS_BEFORE_END_DATE = 1
 
 const getMinEndDate = (now, daysBeforeEndDate) =>
   moment(now)
@@ -75,7 +75,8 @@ const createJobs = (now) => [
   {
     name: 'membership_owner_prolong_notice',
     prolongBefore: {
-      minDate: getMinEndDate(now, 13),
+      // ToDo: bump to min date to zero or additional reminders days after initial round
+      minDate: getMinEndDate(now, -365),
       maxDate: getMaxEndDate(now, DAYS_BEFORE_END_DATE),
     },
     payload: {
@@ -88,7 +89,7 @@ const createJobs = (now) => [
       autoPay,
     }) => {
       return (
-        ['ABO', 'BENEFACTOR_ABO'].includes(membershipType) &&
+        ['YEAR'].includes(membershipType) &&
         (membershipAutoPay === false ||
           (membershipAutoPay === true &&
             (!autoPay || (autoPay && userId !== autoPay.userId))))
@@ -96,102 +97,102 @@ const createJobs = (now) => [
     },
     handleFn: mailings,
   },
-  {
-    name: 'membership_owner_prolong_notice_7',
-    prolongBefore: {
-      minDate: getMinEndDate(now, 3),
-      maxDate: getMaxEndDate(now, 7),
-    },
-    payload: {
-      templateName: 'membership_owner_prolong_notice_7',
-    },
-    predicateFn: ({
-      id: userId,
-      membershipType,
-      membershipAutoPay,
-      autoPay,
-    }) => {
-      return (
-        ['ABO', 'BENEFACTOR_ABO'].includes(membershipType) &&
-        (membershipAutoPay === false ||
-          (membershipAutoPay === true &&
-            (!autoPay || (autoPay && userId !== autoPay.userId))))
-      )
-    },
-    handleFn: mailings,
-  },
-  {
-    name: 'membership_owner_prolong_notice_0',
-    prolongBefore: {
-      minDate: getMinEndDate(now, -3),
-      maxDate: getMaxEndDate(now, 0),
-    },
-    payload: {
-      templateName: 'membership_owner_prolong_notice_0',
-    },
-    predicateFn: ({
-      id: userId,
-      membershipType,
-      membershipAutoPay,
-      autoPay,
-    }) => {
-      return (
-        ['ABO', 'BENEFACTOR_ABO'].includes(membershipType) &&
-        (membershipAutoPay === false ||
-          (membershipAutoPay === true &&
-            (!autoPay || (autoPay && userId !== autoPay.userId))))
-      )
-    },
-    handleFn: mailings,
-  },
-  {
-    name: 'membership_owner_prolong_abo_give_months_notice_0',
-    prolongBefore: {
-      minDate: getMinEndDate(now, -3),
-      maxDate: getMaxEndDate(now, 0),
-    },
-    payload: {
-      templateName: 'membership_owner_prolong_abo_give_months_notice_0',
-    },
-    predicateFn: ({
-      id: userId,
-      membershipType,
-      membershipAutoPay,
-      autoPay,
-    }) => {
-      return (
-        membershipType === 'ABO_GIVE_MONTHS' &&
-        (membershipAutoPay === false ||
-          (membershipAutoPay === true &&
-            (!autoPay || (autoPay && userId !== autoPay.userId))))
-      )
-    },
-    handleFn: mailings,
-  },
-  {
-    name: 'membership_owner_prolong_winback_7',
-    prolongBefore: {
-      minDate: getMinEndDate(now, -10),
-      maxDate: getMaxEndDate(now, -7),
-    },
-    payload: {
-      templateName: 'membership_owner_prolong_winback_7',
-    },
-    predicateFn: ({
-      id: userId,
-      membershipType,
-      membershipAutoPay,
-      autoPay,
-    }) => {
-      return (
-        ['ABO', 'BENEFACTOR_ABO'].includes(membershipType) &&
-        (membershipAutoPay === false ||
-          (membershipAutoPay === true &&
-            (!autoPay || (autoPay && userId !== autoPay.userId))))
-      )
-    },
-    handleFn: mailings,
-  },
+  // {
+  //   name: 'membership_owner_prolong_notice_7',
+  //   prolongBefore: {
+  //     minDate: getMinEndDate(now, 3),
+  //     maxDate: getMaxEndDate(now, 7),
+  //   },
+  //   payload: {
+  //     templateName: 'membership_owner_prolong_notice_7',
+  //   },
+  //   predicateFn: ({
+  //     id: userId,
+  //     membershipType,
+  //     membershipAutoPay,
+  //     autoPay,
+  //   }) => {
+  //     return (
+  //       ['YEAR'].includes(membershipType) &&
+  //       (membershipAutoPay === false ||
+  //         (membershipAutoPay === true &&
+  //           (!autoPay || (autoPay && userId !== autoPay.userId))))
+  //     )
+  //   },
+  //   handleFn: mailings,
+  // },
+  // {
+  //   name: 'membership_owner_prolong_notice_0',
+  //   prolongBefore: {
+  //     minDate: getMinEndDate(now, -3),
+  //     maxDate: getMaxEndDate(now, 0),
+  //   },
+  //   payload: {
+  //     templateName: 'membership_owner_prolong_notice_0',
+  //   },
+  //   predicateFn: ({
+  //     id: userId,
+  //     membershipType,
+  //     membershipAutoPay,
+  //     autoPay,
+  //   }) => {
+  //     return (
+  //       ['YEAR'].includes(membershipType) &&
+  //       (membershipAutoPay === false ||
+  //         (membershipAutoPay === true &&
+  //           (!autoPay || (autoPay && userId !== autoPay.userId))))
+  //     )
+  //   },
+  //   handleFn: mailings,
+  // },
+  // {
+  //   name: 'membership_owner_prolong_abo_give_months_notice_0',
+  //   prolongBefore: {
+  //     minDate: getMinEndDate(now, -3),
+  //     maxDate: getMaxEndDate(now, 0),
+  //   },
+  //   payload: {
+  //     templateName: 'membership_owner_prolong_abo_give_months_notice_0',
+  //   },
+  //   predicateFn: ({
+  //     id: userId,
+  //     membershipType,
+  //     membershipAutoPay,
+  //     autoPay,
+  //   }) => {
+  //     return (
+  //       membershipType === 'ABO_GIVE_MONTHS' &&
+  //       (membershipAutoPay === false ||
+  //         (membershipAutoPay === true &&
+  //           (!autoPay || (autoPay && userId !== autoPay.userId))))
+  //     )
+  //   },
+  //   handleFn: mailings,
+  // },
+  // {
+  //   name: 'membership_owner_prolong_winback_7',
+  //   prolongBefore: {
+  //     minDate: getMinEndDate(now, -10),
+  //     maxDate: getMaxEndDate(now, -7),
+  //   },
+  //   payload: {
+  //     templateName: 'membership_owner_prolong_winback_7',
+  //   },
+  //   predicateFn: ({
+  //     id: userId,
+  //     membershipType,
+  //     membershipAutoPay,
+  //     autoPay,
+  //   }) => {
+  //     return (
+  //       ['YEAR'].includes(membershipType) &&
+  //       (membershipAutoPay === false ||
+  //         (membershipAutoPay === true &&
+  //           (!autoPay || (autoPay && userId !== autoPay.userId))))
+  //     )
+  //   },
+  //   handleFn: mailings,
+  // },
   {
     name: 'membership_owner_autopay_notice',
     prolongBefore: {
@@ -208,7 +209,7 @@ const createJobs = (now) => [
       autoPay,
     }) => {
       return (
-        ['ABO', 'BENEFACTOR_ABO'].includes(membershipType) &&
+        ['YEAR'].includes(membershipType) &&
         membershipAutoPay === true &&
         autoPay &&
         userId === autoPay.userId
@@ -229,7 +230,7 @@ const createJobs = (now) => [
       autoPay,
     }) => {
       return (
-        ['ABO', 'BENEFACTOR_ABO'].includes(membershipType) &&
+        ['YEAR'].includes(membershipType) &&
         membershipAutoPay === true &&
         autoPay &&
         userId === autoPay.userId
@@ -336,9 +337,9 @@ const run = async (args, context) => {
       JOIN "membershipTypes" mt
         ON m."membershipTypeId" = mt.id
       WHERE
-        m."userId" != :PARKING_USER_ID
-        AND m.active = true
-        AND m.renew = true
+        ${PARKING_USER_ID ? 'm."userId" != :PARKING_USER_ID AND' : ''}
+        m.active = true AND
+        m.renew = true
       ORDER BY RANDOM()
       ${
         MEMBERSHIP_SCHEDULER_USER_LIMIT

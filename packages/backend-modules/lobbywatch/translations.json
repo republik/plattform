@@ -3110,6 +3110,56 @@
       "key": "withMembership/unauthorized/buyText",
       "de": "Jetzt Mitglied werden",
       "fr": "Adhérer maintenant"
+    },
+    {
+      "key": "memberships/cancel/notFound",
+      "de": "Mitgliedschaft nicht gefunden",
+      "fr": "Adhésion non trouvée"
+    },
+    {
+      "key": "memberships/cancel/title",
+      "de": "Mitgliedschaft beendigen",
+      "fr": "Mettre fin à l'adhésion"
+    },
+    {
+      "key": "memberships/cancel/signIn",
+      "de": "Sie müssen sich anmelden, um Ihre Mitgliedschaft zu beendigen.",
+      "fr": "Vous devez vous connecter pour mettre fin à votre adhésion."
+    },
+    {
+      "key": "memberships/cancel/info",
+      "de": "Warum möchten Sie Lobbywatch nicht mehr unterstützen?",
+      "fr": "Pourquoi ne souhaitez-vous plus soutenir Lobbywatch ?"
+    },
+    {
+      "key": "memberships/cancel/confirmation/title",
+      "de": "Sie haben erfolgreich gekündigt.",
+      "fr": "Vous avez réussi à démissionner."
+    },
+    {
+      "key": "memberships/cancel/confirmation",
+      "de": "Vielen Dank für Ihre bisherige Unterstützung.",
+      "fr": "Nous vous remercions de votre soutien à ce jour."
+    },
+    {
+      "key": "memberships/cancel/description",
+      "de": "Erläuterungen (Optional)",
+      "fr": "Explications (facultatif)"
+    },
+    {
+      "key": "memberships/cancel/description/empty",
+      "de": "Erläuterungen fehlt",
+      "fr": "Explications manquantes"
+    },
+    {
+      "key": "memberships/cancel/accountLink",
+      "de": "Zum Konto",
+      "fr": "Vers le compte"
+    },
+    {
+      "key": "memberships/cancel/button",
+      "de": "Kündigung abschicken",
+      "fr": "Envoyer la résiliation"
     }
   ]
 }
