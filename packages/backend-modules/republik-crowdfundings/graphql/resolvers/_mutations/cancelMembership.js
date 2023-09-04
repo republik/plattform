@@ -81,6 +81,7 @@ module.exports = async (_, args, context) => {
       await mail.sendMembershipCancellation({
         email: user.email,
         name: user.name,
+        locale: user._raw.locale,
         endDate,
         active: cancelledMembership.active,
         membershipType: membership.membershipType,

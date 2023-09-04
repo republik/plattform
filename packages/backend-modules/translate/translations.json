@@ -593,7 +593,11 @@
       "value": "Ihr Abo: Willkommen bei Lobbywatch"
     },
     {
-      "key": "api/email/membership_cancel_notice/subject",
+      "key": "api/email/fr/membership_cancel_notice/subject",
+      "value": "Confirmation de votre résiliation"
+    },
+    {
+      "key": "api/email/de/membership_cancel_notice/subject",
       "value": "Bestätigung Ihrer Kündigung"
     },
     {

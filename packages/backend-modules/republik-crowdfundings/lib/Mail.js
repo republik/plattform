@@ -247,6 +247,7 @@ mail.sendPaymentSuccessful = () => {
 mail.sendMembershipCancellation = async ({
   email,
   name,
+  locale,
   endDate,
   active,
   membershipType,
@@ -257,8 +258,8 @@ mail.sendMembershipCancellation = async ({
   return sendMailTemplate(
     {
       to: email,
-      subject: t('api/email/membership_cancel_notice/subject'),
-      templateName: 'membership_cancel_notice',
+      subject: t(`api/email/${locale}/membership_cancel_notice/subject`),
+      templateName: `${locale}/membership_cancel_notice`,
       mergeLanguage: 'handlebars',
       globalMergeVars: [
         {
