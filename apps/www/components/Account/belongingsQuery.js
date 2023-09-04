@@ -50,12 +50,10 @@ export default gql`
       }
       accessGrants {
         endAt
-        beginAt
         campaign {
           id
           title
           description
-          type
         }
       }
       pledges {
