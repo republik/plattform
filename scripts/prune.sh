@@ -3,9 +3,9 @@ SERVER=${SERVER:-api}
 
 if [ "$SERVER" = "styleguide" ]
 then
-  npx turbo prune --scope="@project-r/styleguide"
+  npx turbo@1.3.4 prune --scope="@project-r/styleguide"
 else
-  npx turbo prune --scope="@orbiting/$SERVER-app"
+  npx turbo@1.3.4 prune --scope="@orbiting/$SERVER-app"
 fi
 
 if [ -f apps/www/.env ] || [ -f apps/api/.env ] || [ -f apps/assets/.env ]
