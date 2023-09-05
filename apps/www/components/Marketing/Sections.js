@@ -20,6 +20,12 @@ const sectionContent = [
     color: '#000000',
   },
   {
+    name: 'climatelab',
+    href: '/klimalabor',
+    image: '/static/marketing/climatelab.png?size=800x800',
+    color: '#000000',
+  },
+  {
     name: 'briefings',
     image: '/static/marketing/briefings.png?size=933x933',
     color: '#0A99B8',

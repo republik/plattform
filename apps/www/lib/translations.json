@@ -497,6 +497,14 @@
       "value": "Dürfen wir Sie benachrichtigen, sobald es losgeht?"
     },
     {
+      "key": "marketing/page/sections/description/climatelab",
+      "value": "Die Klimakrise ist hier. Die Lage ist ernst. Was tun? Gemeinsam mit Ihnen machen wir uns auf die Suche nach Antworten."
+    },
+    {
+      "key": "marketing/page/sections/title/climatelab",
+      "value": "Klimalabor"
+    },
+    {
       "key": "marketing/page/sections/description/briefings",
       "value": "Durch die Woche mit der Republik: das Justizbriefing «Am Gericht» am Mittwoch, das «Briefing aus Bern» am Donnerstag und «Was diese Woche wichtig war» am Freitag."
     },
