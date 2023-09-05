@@ -59,8 +59,8 @@ module.exports = withBundleAnalyzer(
           source: '/(.*)',
           headers: [
             {
-              key: 'X-test',
-              value: 'test',
+              key: 'Strict-Transport-Security',
+              value: 'max-age=63072000; includeSubDomains; preload',
             },
             process.env.CSP_FRAME_ANCESTORS && {
               key: 'Content-Security-Policy',

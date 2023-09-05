@@ -9,21 +9,13 @@ export default class MyDocument extends Document {
     return {
       ...page,
       ...styles,
-      env: require('../lib/settings'),
     }
   }
-  constructor(props) {
-    super(props)
-    const { __NEXT_DATA__, env } = props
-    if (env) {
-      __NEXT_DATA__.env = this.props.env
-    }
-  }
+
   render() {
-    const {
-      css,
-      env: { PIWIK_URL_BASE, PIWIK_SITE_ID },
-    } = this.props
+    const { css } = this.props
+    const PIWIK_URL_BASE = process.env.NEXT_PUBLIC_PIWIK_URL_BASE
+    const PIWIK_SITE_ID = process.env.NEXT_PUBLIC_PIWIK_SITE_ID
     const piwik = !!PIWIK_URL_BASE && !!PIWIK_SITE_ID
     return (
       <Html>
