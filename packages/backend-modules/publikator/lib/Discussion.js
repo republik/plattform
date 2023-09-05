@@ -40,7 +40,7 @@ const upsert = async (docMeta, context, legacyDiscussionId) => {
     ...(board !== null ? { isBoard: !!board } : {}),
     tags: tags ? tags.trim().split(',') : null,
     tagRequired: !!tagRequired,
-    // QUESTION: do we want to get rid of the allowedRoles altogether here?
+    // TODO: get rid of allowedRoles concept in another branche
     allowedRoles: DEFAULT_ROLES,
   }
 
