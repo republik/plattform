@@ -32,6 +32,7 @@
   },
   "homepage": "https://github.com/republik/plattform#readme",
   "devDependencies": {
+    "@next/env": "^12.3.1",
     "@next/eslint-plugin-next": "^12.3.1",
     "@republik/eslint-config-frontend": "*",
     "@republik/tsconfig": "*",
