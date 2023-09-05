@@ -9,6 +9,7 @@ import Body from './Body'
 import Me from './Me'
 
 import 'glamor/reset'
+import { useMe } from '../../lib/useMe'
 
 css.global('html', { boxSizing: 'border-box' })
 css.global('*, *:before, *:after', { boxSizing: 'inherit' })
@@ -17,14 +18,18 @@ css.global('body', {
   fontFamily: fontFamilies.sansSerifRegular,
 })
 
-const Frame = ({ t, children }) => (
-  <main>
-    <Head>
-      <title>{t('app/name')}</title>
-    </Head>
-    {children}
-  </main>
-)
+const Frame = ({ t, children }) => {
+  useMe()
+
+  return (
+    <main>
+      <Head>
+        <title>{t('app/name')}</title>
+      </Head>
+      {children}
+    </main>
+  )
+}
 
 const FrameWithT = withT(Frame)
 
