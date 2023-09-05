@@ -50,7 +50,6 @@ const QUERY = gql`
       accessCampaigns {
         id
         title
-        type
         description
         grants {
           id
