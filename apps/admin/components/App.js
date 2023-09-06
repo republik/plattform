@@ -2,9 +2,11 @@ import Head from 'next/head'
 import { withRouter } from 'next/router'
 import { fontFamilies } from '@project-r/styleguide'
 import { useMe } from '../lib/useMe'
+import { setUser as setSentryUser } from '@sentry/nextjs'
 
 const App = ({ router, children }) => {
-  useMe()
+  const { me } = useMe()
+  setSentryUser(me?.id ? { id: me.id } : null)
 
   return (
     <main>
