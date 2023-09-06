@@ -14,6 +14,10 @@ export const fontRule = css({
   '& strong em, & em strong, & b i, & i b': {
     textDecoration: `underline wavy ${colors.error}`,
   },
+  '& a': {
+    textDecoration: 'underline',
+    color: 'inherit',
+  },
 })
 
 const metaHeadline = css({

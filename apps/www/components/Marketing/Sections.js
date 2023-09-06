@@ -18,29 +18,68 @@ const sectionContent = [
     name: 'audio',
     image: '/static/marketing/audio.png?size=1426x1426',
     color: '#000000',
+    title: 'Alle Beiträge, auch zum Hören',
+    content: (
+      <>
+        Wenn Sie gerade keine Hand frei haben – die Republik ist Journalismus
+        fürs Ohr. Alle Beiträge erscheinen am Tag der Publikation als
+        Audioversion, vorgelesen von grossartigen Stimmen.
+      </>
+    ),
   },
   {
     name: 'climatelab',
-    href: '/klimalabor',
     image: '/static/marketing/climatelab.png?size=800x800',
     color: '#000000',
+    title: 'Klimalabor',
+    content: (
+      <>
+        Die Klimakrise ist hier. Die Lage ist ernst. Was tun? Gemeinsam mit
+        Ihnen machen wir uns auf die Suche nach Antworten. <br />
+        <Link href='/klimalabor' passHref>
+          <a>Newsletter abonnieren</a>
+        </Link>
+      </>
+    ),
   },
   {
     name: 'briefings',
     image: '/static/marketing/briefings.png?size=933x933',
     color: '#0A99B8',
+    title: 'Briefings',
+    content: (
+      <>
+        Durch die Woche mit der Republik: das Justizbriefing «Am Gericht» am
+        Mittwoch, das «Briefing aus Bern» am Donnerstag und «Was diese Woche
+        wichtig war» am Freitag.
+      </>
+    ),
   },
   {
     name: 'kolumnen',
     image: '/static/marketing/kolumnen.png?size=2000x2000',
     imageDark: '/static/marketing/kolumnen-dark.png?size=2000x2000',
     color: '#D2933C',
+    title: 'Kolumnen',
+    content: (
+      <>
+        Regelmässig eine Kolumne: am Dienstag von Daniel Strassberg oder
+        Kunsthistorikerin Kia Vahland. Jeden Samstag von Daniel Binswanger.
+      </>
+    ),
   },
   {
     name: 'serien',
     image: '/static/marketing/serien.png?size=500x500',
     imageDark: '/static/marketing/serien-dark.png?size=500x500',
     color: '#000000',
+    title: 'Serien',
+    content: (
+      <>
+        Die ganz grossen Geschichten der Republik lassen sich nicht in einem
+        Stück erzählen. Dazu brauchts Platz – und mehrere Folgen.
+      </>
+    ),
   },
 ]
 
@@ -79,17 +118,13 @@ const Sections = () => {
             >
               {section.href ? (
                 <Link href={section.href} passHref>
-                  <a {...styles.link}>
-                    {t(`marketing/page/sections/title/${section.name}`)}
-                  </a>
+                  <a {...styles.link}>{section.title}</a>
                 </Link>
               ) : (
-                <>{t(`marketing/page/sections/title/${section.name}`)}</>
+                <>{section.title}</>
               )}
             </Meta.Subhead>
-            <Meta.P>
-              {t(`marketing/page/sections/description/${section.name}`)}
-            </Meta.P>
+            <Meta.P>{section.content}</Meta.P>
             {section.after}
           </div>
         </div>
