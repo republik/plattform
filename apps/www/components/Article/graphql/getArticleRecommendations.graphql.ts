@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client'
+import { gql } from '@/generated/graphql'
 import { makeQueryHook } from '../../../lib/helpers/AbstractApolloGQLHooks.helper'
 import { documentFragment } from '../../Feed/fragments'
 
@@ -17,7 +17,8 @@ type GetArticleRecommendationsVariables = {
   path: string
 }
 
-export const GET_ARTICLE_SUGGESTIONS = gql`
+export const GET_ARTICLE_SUGGESTIONS = gql(`
+  ${documentFragment}
   query getArticleRecommendations($path: String!) {
     article: document(path: $path) {
       id
@@ -30,8 +31,7 @@ export const GET_ARTICLE_SUGGESTIONS = gql`
       }
     }
   }
-  ${documentFragment}
-`
+`)
 
 export const useArticleRecommendationsQuery = makeQueryHook<
   GetArticleRecommendationsData,

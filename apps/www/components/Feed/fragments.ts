@@ -1,7 +1,23 @@
+import { gql } from '@/generated/graphql'
 import { onDocumentFragment as bookmarkOnDocumentFragment } from '../Bookmarks/fragments'
-import { userProgressFragment } from '../Article/Progress/api'
 
-export const documentFragment = `
+const userProgressFragment = gql(`
+  fragment UserProgressOnDocument on Document {
+    userProgress {
+      id
+      percentage
+      nodeId
+      updatedAt
+      max {
+        id
+        percentage
+        updatedAt
+      }
+    }
+  }
+`)
+
+export const documentFragment = gql(`
   fragment FeedDocument on Document {
     id
     repoId
@@ -75,4 +91,4 @@ export const documentFragment = `
   }
   ${bookmarkOnDocumentFragment}
   ${userProgressFragment}
-`
+`)

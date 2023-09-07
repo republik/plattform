@@ -3,6 +3,8 @@ node_modules
 **/*.min.js
 **/*.min.css
 
+**/__generated__
+
 .vscode
 .idea
 .next

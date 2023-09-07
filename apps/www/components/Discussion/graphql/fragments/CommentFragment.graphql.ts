@@ -1,5 +1,4 @@
-import { gql } from '@apollo/client'
-import { notificationInfo } from '../../../Notifications/enhancers'
+import { gql } from '@/generated/graphql'
 import Nullable from '../../../../lib/types/Nullable'
 import { DateTime, DiscussionCredential } from '../types/SharedTypes'
 
@@ -46,7 +45,7 @@ export type CommentFragmentType = {
   mentionedDocument: unknown
 }
 
-export const COMMENT_FRAGMENT = gql`
+export const COMMENT_FRAGMENT = gql(`
   fragment Comment on Comment {
     id
     text
@@ -119,5 +118,10 @@ export const COMMENT_FRAGMENT = gql`
       fragmentId
     }
   }
-  ${notificationInfo}
-`
+
+  fragment notificationInfo on Notification {
+    id
+    readAt
+    createdAt
+  }
+`)

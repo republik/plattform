@@ -1,7 +1,8 @@
-import { gql, useLazyQuery, useQuery } from '@apollo/client'
+import { gql } from '@/generated/graphql'
+import { useLazyQuery, useQuery } from '@apollo/client'
 import { useState } from 'react'
 
-const POSTCARDS_QUESTIONNAIRE_QUERY = gql`
+const POSTCARDS_QUESTIONNAIRE_QUERY = gql(`
   query postcardsQuestionnaire {
     questionnaire(slug: "klima-postkarte") {
       id
@@ -10,41 +11,41 @@ const POSTCARDS_QUESTIONNAIRE_QUERY = gql`
       }
     }
   }
-`
+`)
 
-const POSTCARDS_STATS_QUERY = gql`
-  query postcardsStats($questionIds: [ID!]) {
+const POSTCARDS_STATS_QUERY = gql(`
+  query postcardsStats($answers: [SubmissionFilterAnswer!]!) {
     questionnaire(slug: "klima-postkarte") {
       id
       postcard_1: submissions(
-        filters: { answeredQuestionIds: $questionIds }
+        filters: { answers: $answers }
         value: "postcard_1"
       ) {
         totalCount
       }
       postcard_2: submissions(
-        filters: { answeredQuestionIds: $questionIds }
+        filters: { answers: $answers }
         value: "postcard_2"
       ) {
         totalCount
       }
       postcard_3: submissions(
-        filters: { answeredQuestionIds: $questionIds }
+        filters: { answers: $answers }
         value: "postcard_3"
       ) {
         totalCount
       }
       postcard_4: submissions(
-        filters: { answeredQuestionIds: $questionIds }
+        filters: { answers: $answers }
         value: "postcard_4"
       ) {
         totalCount
       }
     }
   }
-`
+`)
 
-const POSTCARDS_QUERY = gql`
+const POSTCARDS_QUERY = gql(`
   fragment PostcardConnection on SubmissionConnection {
     pageInfo {
       hasNextPage
@@ -68,7 +69,7 @@ const POSTCARDS_QUERY = gql`
   query publicPostcardsQuery(
     $includeHighlightedPostcardIds: [ID!]
     $ignoreNotHighlightedPostcardIds: [ID!]
-    $questionIds: [ID!]
+    $answers: [SubmissionFilterAnswer!]!
     $cursorHighlighted: String
     $cursorNotHighlighted: String
     $limit: Int
@@ -92,7 +93,7 @@ const POSTCARDS_QUERY = gql`
         after: $cursorHighlighted
         filters: {
           submissionIds: $includeHighlightedPostcardIds
-          answeredQuestionIds: $questionIds
+          answers: $answers
         }
         value: $valueHighlighted
       ) {
@@ -104,7 +105,7 @@ const POSTCARDS_QUERY = gql`
         after: $cursorNotHighlighted
         filters: {
           notSubmissionIds: $ignoreNotHighlightedPostcardIds
-          answeredQuestionIds: $questionIds
+          answers: $answers
         }
         value: $valueNotHighlighted
       ) {
@@ -112,13 +113,13 @@ const POSTCARDS_QUERY = gql`
       }
     }
   }
-`
+`)
 
 // Keep these in sync with the query!
 type QueryVars = {
   includeHighlightedPostcardIds?: string[]
   ignoreNotHighlightedPostcardIds?: string[]
-  questionIds?: string[]
+  answers?: { questionId: string }[]
   cursorHighlighted?: string
   cursorNotHighlighted?: string
   limit?: number
@@ -244,7 +245,9 @@ export const usePostcardCounts = () => {
 
   const { data, loading, error } = useQuery(POSTCARDS_STATS_QUERY, {
     variables: {
-      questionIds,
+      answers: questionIds.map((id) => ({
+        questionId: id,
+      })),
     },
     skip: questionIds === undefined,
   })
@@ -295,7 +298,9 @@ export const usePostcardsData = ({
         ignoreNotHighlightedPostcardIds: highlightedPostcardIds,
         valueHighlighted: subjectFilter,
         valueNotHighlighted: subjectFilter,
-        questionIds,
+        answers: questionIds?.map((id) => ({
+          questionId: id,
+        })),
       },
       skip: questionIds === undefined,
     },
@@ -435,7 +440,9 @@ export const useSinglePostcardData = ({
         : includeHighlightedPostcardIds,
       valueHighlighted: subjectFilter,
       valueNotHighlighted: subjectFilter,
-      questionIds,
+      answers: questionIds?.map((id) => ({
+        questionId: id,
+      })),
     },
     notifyOnNetworkStatusChange: true,
   })
