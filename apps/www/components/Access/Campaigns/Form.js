@@ -68,7 +68,7 @@ class Form extends Component {
   }
 
   render() {
-    const { campaign, givingMemberships, isRegularCampaign, t } = this.props
+    const { campaign, givingMemberships, t } = this.props
 
     const { isMutating, mutationError, values, errors, dirty } = this.state
 
@@ -106,40 +106,35 @@ class Form extends Component {
           <Label>{t('Account/Access/Campaigns/Form/freeSlots/0')}</Label>
         ) : (
           <Fragment>
-            {isRegularCampaign && (
-              <>
-                <H3 style={{ marginTop: 30 }}>
-                  {t.pluralize(
-                    `Account/Access/Campaigns/Form${
-                      givingMemberships ? '/givingMemberships' : ''
-                    }/title`,
-                    {
-                      count: campaign.slots.used,
-                    },
-                  )}
-                </H3>
-                <P>
-                  {t.elements('Account/Access/Campaigns/Form/explanation', {
-                    linkClaim: (
-                      <Link
-                        key={`campaign-form-explanation-${campaign.id}`}
-                        href={{
-                          pathname: '/abholen',
-                          query: { context: 'access' },
-                        }}
-                        passHref
-                        legacyBehavior>
-                        <A>
-                          {t(
-                            'Account/Access/Campaigns/Form/explanation/linkClaim',
-                          )}
-                        </A>
-                      </Link>
-                    ),
-                  })}
-                </P>
-              </>
-            )}
+            <H3 style={{ marginTop: 30 }}>
+              {t.pluralize(
+                `Account/Access/Campaigns/Form${
+                  givingMemberships ? '/givingMemberships' : ''
+                }/title`,
+                {
+                  count: campaign.slots.used,
+                },
+              )}
+            </H3>
+            <P>
+              {t.elements('Account/Access/Campaigns/Form/explanation', {
+                linkClaim: (
+                  <Link
+                    key={`campaign-form-explanation-${campaign.id}`}
+                    href={{
+                      pathname: '/abholen',
+                      query: { context: 'access' },
+                    }}
+                    passHref
+                    legacyBehavior
+                  >
+                    <A>
+                      {t('Account/Access/Campaigns/Form/explanation/linkClaim')}
+                    </A>
+                  </Link>
+                ),
+              })}
+            </P>
 
             <FieldSet
               values={values}
@@ -206,7 +201,7 @@ class Form extends Component {
           </Fragment>
         )}
       </form>
-    );
+    )
   }
 }
 
