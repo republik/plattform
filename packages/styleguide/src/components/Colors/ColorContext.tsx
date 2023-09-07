@@ -107,8 +107,8 @@ export const useColorContext = () => {
 
 export const ColorContextLocalExtension: React.FC<{
   children?: ReactNode
-  localColors: any
-  localMappings: any
+  localColors?: any
+  localMappings?: any
 }> = ({ children, localColors = colors, localMappings = {} }) => {
   const [{ schemeKey, colorDefinitions }] = useColorContext()
 
