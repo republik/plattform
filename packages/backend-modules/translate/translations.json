@@ -662,7 +662,7 @@
     },
     {
       "key": "api/email/membership_owner_prolong_notice/subject",
-      "value": "Bleiben Sie an Bord oder möchten Sie die Republik verlassen? Sie haben die Wahl"
+      "value": "Ihr Republik-Jubiläum!"
     },
     {
       "key": "api/email/membership_owner_prolong_yearly_abo_notice/subject",
