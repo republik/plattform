@@ -76,7 +76,7 @@ const LatestArticleItem = ({
             Icon={IconPlaylistAdd}
             title={t('AudioPlayer/Queue/Add')}
             onClick={() => handleAddToQueue(article)}
-            disabled={checkIfInQueue(article.id)}
+            disabled={!!checkIfInQueue(article.id)}
             style={{ marginRight: 0, alignSelf: 'stretch' }}
           />
         )
