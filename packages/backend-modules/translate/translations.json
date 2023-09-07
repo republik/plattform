@@ -614,7 +614,7 @@
     },
     {
       "key": "api/email/membership_giver_prolong_notice/subject",
-      "value": "Ihre verschenkten Mitgliedschaften"
+      "value": "Ihre Grosszügigkeit jährt sich"
     },
     {
       "key": "api/email/membership_giver_claim_notice/subject",
