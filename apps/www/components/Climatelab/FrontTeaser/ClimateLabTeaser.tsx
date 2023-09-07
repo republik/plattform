@@ -43,10 +43,7 @@ const ClimateTeaserContent = () => {
         <p {...styles.text}>{t('ClimateTeaser/content/text2')}</p>
         <div style={{ maxWidth: 'max-content' }}>
           <NextLink
-            href={
-              isClimateLabMember ? CLIMATE_LAB_URL : CLIMATE_LAB_LANDINGPAGE_URL
-            }
-            passHref
+            href={CLIMATE_LAB_URL}
             {...colorScheme.set('backgroundColor', 'primary')}
             {...colorScheme.set('color', 'climateButtonText')}
             {...colorScheme.set('borderColor', 'climateBorder')}
@@ -56,15 +53,14 @@ const ClimateTeaserContent = () => {
               },
             })}
             {...plainLinkRule}
-            {...styles.button}>
-
+            {...styles.button}
+          >
             {t('ClimateTeaser/content/buttonAction')}
-
           </NextLink>
         </div>
       </div>
     </div>
-  );
+  )
 }
 
 const ClimateLabTeaser = () => (

@@ -9,6 +9,22 @@ const buildId =
   process.env.SOURCE_VERSION?.substring(0, 10) ||
   new Date(Date.now()).toISOString()
 
+const unprefixedStyleguideEnvVariables = {
+  // loop over all env vars and filter out the ones that start with "NEXT_PUBLIC_SG_"
+  // then remove the prefix and return the object
+  // this is needed because the styleguide expects the variables without the prefix
+  // but we need the prefix for the nextjs config
+  ...Object.entries(process.env)
+    .filter(
+      ([key]) => key.startsWith('NEXT_PUBLIC_SG_') || key.startsWith('SG_'),
+    )
+    .map(([key, value]) => [key.replace('NEXT_PUBLIC_', ''), value])
+    .reduce((obj, [key, value]) => {
+      obj[key] = value
+      return obj
+    }, []),
+}
+
 /**
  * @type {import('next').NextConfig}
  */

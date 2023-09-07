@@ -97,34 +97,35 @@ export const UserResult = ({ node }) => {
       }),
     [colorScheme],
   )
+
   return (
     <div>
       <div {...styles.root} {...colorScheme.set('borderColor', 'text')}>
         {portrait && (
-          (<Link href={`/~${slug || id}`} passHref {...styles.link}>
-
+          <Link href={`/~${slug || id}`} passHref {...styles.link}>
             <img
               {...styles.profilePicture}
               src={portrait}
               alt={`${firstName} ${lastName}`}
             />
-
-          </Link>)
+          </Link>
         )}
         <div {...styles.meta}>
           <div {...styles.name} {...colorScheme.set('color', 'text')}>
             <Link href={`/~${slug || id}`} passHref {...styles.link}>
-
-              <span
-                {...styles.highlight}
-                {...highlightEMRule}
-                dangerouslySetInnerHTML={{
-                  __html: nameHighlight
-                    ? nameHighlight.fragments[0]
-                    : `${firstName} ${lastName}`,
-                }}
-              />
-
+              {nameHighlight?.fragments[0] ? (
+                <span
+                  {...styles.highlight}
+                  {...highlightEMRule}
+                  dangerouslySetInnerHTML={{
+                    __html: nameHighlight.fragments[0],
+                  }}
+                />
+              ) : (
+                <span {...styles.highlight} {...highlightEMRule}>
+                  {firstName} {lastName}
+                </span>
+              )}
             </Link>
           </div>
           {credential && (
@@ -159,7 +160,7 @@ export const UserResult = ({ node }) => {
         </Editorial.P>
       )}
     </div>
-  );
+  )
 }
 
 export default UserResult

@@ -5,7 +5,7 @@ import { graphql } from '@apollo/client/react/hoc'
 import { gql } from '@apollo/client'
 import withT from '../../lib/withT'
 import { errorToString } from '../../lib/utils/errors'
-import { meQuery } from '../../lib/withMe'
+import { ME_QUERY } from '../../lib/withMe'
 
 import { A, InlineSpinner } from '@project-r/styleguide'
 
@@ -80,7 +80,7 @@ export const withSignOut = compose(
         mutate({
           refetchQueries: [
             {
-              query: meQuery,
+              query: ME_QUERY,
             },
           ],
         }),
