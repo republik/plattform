@@ -670,7 +670,7 @@
     },
     {
       "key": "api/email/membership_owner_prolong_notice_7/subject",
-      "value": "Am {endDate} erneuert sich Ihre Mitgliedschaft"
+      "value": "Am {endDate} die Republik unterstützen"
     },
     {
       "key": "api/email/membership_owner_prolong_yearly_abo_notice_7/subject",
