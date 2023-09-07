@@ -9,7 +9,6 @@ import Loader from '../Loader'
 import {
   Interaction,
   RawHtml,
-  colors,
   fontFamilies,
   mediaQueries,
 } from '@project-r/styleguide'
@@ -29,7 +28,7 @@ const styles = {
   }),
   faq: css({
     padding: '10px 0',
-    borderBottom: `1px solid ${colors.divider}`,
+    borderBottom: `1px solid ${'var(--color-divider)'}`,
   }),
   faqAnchor: css({
     display: 'block',

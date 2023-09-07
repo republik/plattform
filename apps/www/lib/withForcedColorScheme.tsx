@@ -1,5 +1,5 @@
 import { ComponentType } from 'react'
-import { ColorContextProvider, colors } from '@project-r/styleguide'
+import { ColorContextProvider } from '@project-r/styleguide'
 
 /**
  * Wraps a component with a forced color-context provider
@@ -12,10 +12,7 @@ function withForcedColorScheme<P>(
   forcedColorscheme: 'light' | 'dark',
 ): ComponentType<P> {
   const ComponentWithColorScheme = (props: P) => (
-    <ColorContextProvider
-      localColorVariables={colors}
-      colorSchemeKey={forcedColorscheme}
-    >
+    <ColorContextProvider colorSchemeKey={forcedColorscheme}>
       <Component {...props} />
     </ColorContextProvider>
   )

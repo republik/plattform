@@ -70,6 +70,15 @@ const styles = {
     height: 24,
     marginRight: 6,
   }),
+  logoVisibleAlways: css({
+    display: 'block',
+  }),
+  logoVisibleLight: css({
+    display: 'var(--color-displayLight)',
+  }),
+  logoVisibleDark: css({
+    display: 'var(--color-displayDark)',
+  }),
 }
 
 const SeriesNavBar = ({ t, me, showInlinePaynote, series, router, repoId }) => {
@@ -122,17 +131,16 @@ const SeriesNavBar = ({ t, me, showInlinePaynote, series, router, repoId }) => {
             <>
               <img
                 {...styles.logo}
+                {...(series.logoDark
+                  ? styles.logoVisibleLight
+                  : styles.logoVisibleAlways)}
                 src={imageResizeUrl(series.logo, 'x48')}
-                {...colorScheme.set(
-                  'display',
-                  series.logoDark ? 'displayLight' : 'block',
-                )}
               />
               {series.logoDark && (
                 <img
                   {...styles.logo}
+                  {...styles.logoVisibleDark}
                   src={imageResizeUrl(series.logoDark, 'x48')}
-                  {...colorScheme.set('display', 'displayDark')}
                 />
               )}
             </>

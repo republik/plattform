@@ -4,31 +4,15 @@ import React, { ReactNode, useContext, useMemo } from 'react'
 
 import colors from '../../theme/colors'
 
-const getVariableColorKeys = (colors) => {
-  return [
-    ...new Set([...Object.keys(colors.light), ...Object.keys(colors.dark)]),
-  ]
-}
+const VALID_COLOR_VARIABLE_REGEX = /^[a-z][a-zA-Z0-9]+$/
 
-// identify all variable color keys
-const variableColorKeys = getVariableColorKeys(colors)
-
-const createScheme = (specificColors) => {
-  const colorDefinitions = {
-    ...colors,
-    ...specificColors,
-  }
-
-  const { mappings = {} } = colorDefinitions
-
-  const getCSSColor = (color, mappingName = undefined) => {
+const createScheme = ({ mappings = {} }) => {
+  const getCSSColor = (color: string, mappingName: string = undefined) => {
     // For backwards compatibility, we map some colors to variable names.
     // E.g. when mappingName is 'format', '#000' is looked up in mappings.format['#000'] and becomes 'accentColorMeta'
-    const mapping = mappings[mappingName] || {}
+    const mappedColor = mappings[mappingName]?.[color] ?? color
 
-    return color in mapping
-      ? `var(--color-${mapping[color]})`
-      : color in colorDefinitions
+    return VALID_COLOR_VARIABLE_REGEX.test(mappedColor)
       ? `var(--color-${color})`
       : color
   }
@@ -40,10 +24,9 @@ const createScheme = (specificColors) => {
   }
 
   return {
-    schemeKey: colorDefinitions.schemeKey,
-    colorDefinitions,
+    mappings,
     ranges: {
-      neutral: [colorDefinitions.neutral],
+      neutral: [getCSSColor('neutral')],
       sequential: [
         'sequential100',
         'sequential95',
@@ -56,12 +39,12 @@ const createScheme = (specificColors) => {
         'sequential60',
         'sequential55',
         'sequential50',
-      ].map((key) => colorDefinitions[key]),
+      ].map((key) => getCSSColor(key)),
       sequential3: ['sequential100', 'sequential80', 'sequential60'].map(
-        (key) => colorDefinitions[key],
+        (key) => getCSSColor(key),
       ),
-      opposite3: ['opposite100', 'opposite80', 'opposite60'].map(
-        (key) => colorDefinitions[key],
+      opposite3: ['opposite100', 'opposite80', 'opposite60'].map((key) =>
+        getCSSColor(key),
       ),
       discrete: [
         'discrete1',
@@ -74,16 +57,16 @@ const createScheme = (specificColors) => {
         'discrete8',
         'discrete9',
         'discrete10',
-      ].map((key) => colorDefinitions[key]),
+      ].map((key) => getCSSColor(key)),
     },
     set: memoize(createColorRule, (...args) => args.join('.')),
     getCSSColor,
   }
 }
 const generateCSSColorDefinitions = (colors) => {
-  return variableColorKeys
-    .map((key) => `--color-${key}: ${colors[key]};`)
-    .join(' ')
+  return Object.entries(colors)
+    .map(([key, value]) => `--color-${key}: ${value};`)
+    .join('\n')
 }
 
 // ensure only main colors are available via context
@@ -94,8 +77,7 @@ const getObjectForKeys = (colorKeys, mapper = (key) => key) =>
   }, {})
 
 const defaultColorContextValue = createScheme({
-  schemeKey: 'auto',
-  ...getObjectForKeys(variableColorKeys, (key) => `var(--color-${key})`),
+  // colorVariables: variableColorKeys,
 })
 
 const ColorContext = React.createContext(defaultColorContextValue)
@@ -110,20 +92,10 @@ export const ColorContextLocalExtension: React.FC<{
   localColors: any
   localMappings: any
 }> = ({ children, localColors = colors, localMappings = {} }) => {
-  const [{ schemeKey, colorDefinitions }] = useColorContext()
+  const [{ mappings }] = useColorContext()
 
-  const [colorValue, cssVarRule] = useMemo(() => {
-    const { mappings = {} } = colorDefinitions
-
-    const variableLocalColorKeys = getVariableColorKeys(localColors)
-
-    const extendedColorDefinitions = {
-      ...colorDefinitions,
-      ...localColors[schemeKey === 'auto' ? 'light' : schemeKey],
-      ...getObjectForKeys(
-        variableLocalColorKeys,
-        (key) => `var(--color-${key})`,
-      ),
+  const colorValue = useMemo(() => {
+    return createScheme({
       mappings: {
         ...mappings,
         ...getObjectForKeys(Object.keys(localMappings), (key) => {
@@ -133,29 +105,34 @@ export const ColorContextLocalExtension: React.FC<{
           }
         }),
       },
-    }
+    })
+  }, [mappings, localMappings])
 
-    const lightColorCSSDefs = variableLocalColorKeys.reduce((defs, key) => {
-      defs[`--color-${key}`] = localColors.light[key]
-      return defs
-    }, {})
-    const darkColorCSSDefs = variableLocalColorKeys.reduce((defs, key) => {
-      defs[`--color-${key}`] = localColors.dark[key]
-      return defs
-    }, {})
+  const cssVarRule = useMemo(() => {
+    const lightColorCSSDefs = Object.entries(localColors.light).reduce(
+      (defs, [key, value]) => {
+        defs[`--color-${key}`] = value
+        return defs
+      },
+      {},
+    )
+    const darkColorCSSDefs = Object.entries(localColors.dark).reduce(
+      (defs, [key, value]) => {
+        defs[`--color-${key}`] = value
+        return defs
+      },
+      {},
+    )
 
-    return [
-      createScheme(extendedColorDefinitions),
-      css({
-        ':root &, [data-theme="light"] &': {
-          ...lightColorCSSDefs,
-        },
-        '[data-theme="dark"] &': {
-          ...darkColorCSSDefs,
-        },
-      }),
-    ]
-  }, [colorDefinitions, localColors, localMappings, schemeKey])
+    return css({
+      ':root &, [data-theme="light"] &': {
+        ...lightColorCSSDefs,
+      },
+      '[data-theme="dark"] &': {
+        ...darkColorCSSDefs,
+      },
+    })
+  }, [localColors])
 
   return (
     <ColorContext.Provider value={colorValue}>

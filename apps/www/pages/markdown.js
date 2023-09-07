@@ -6,7 +6,6 @@ import withT from '../lib/withT'
 import Frame from '../components/Frame'
 
 import {
-  colors,
   CommentBodyBlockQuote,
   CommentBodyBlockQuoteParagraph,
   CommentBodyCode,
@@ -29,7 +28,7 @@ const styles = {
   table: css({
     width: '100%',
     '& th': {
-      borderBottom: `1px solid ${colors.divider}`,
+      borderBottom: `1px solid ${'var(--color-divider)'}`,
       padding: '0 40px 20px 0',
       textAlign: 'left',
     },

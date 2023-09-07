@@ -11,7 +11,6 @@ import {
   Editorial,
   fontStyles,
   ColorContextProvider,
-  colors,
   mediaQueries,
   convertStyleToRem,
   Center,
@@ -204,10 +203,7 @@ const QuestionView = ({
                         >
                           <a style={{ textDecoration: 'none' }}>
                             <div {...styles.answerCard}>
-                              <ColorContextProvider
-                                localColorVariables={colors}
-                                colorSchemeKey='light'
-                              >
+                              <ColorContextProvider colorSchemeKey='light'>
                                 <div
                                   {...(!isChoiceQuestion &&
                                     styles.answerCardContent)}

@@ -11,7 +11,6 @@ import {
   Interaction,
   Label,
   fontFamilies,
-  colors,
   FieldSet,
 } from '@project-r/styleguide'
 
@@ -225,7 +224,7 @@ class TokenAuthorization extends Component {
                         country !== echo.country
                           ? {
                               fontFamily: fontFamilies.sansSerifMedium,
-                              color: colors.error,
+                              color: 'var(--color-error)',
                             }
                           : {}
                       }
@@ -304,7 +303,7 @@ class TokenAuthorization extends Component {
               {!!authorizeError && <ErrorMessage error={authorizeError} />}
               <br />
               {!!this.state.showErrors && errorMessages.length > 0 && (
-                <div style={{ color: colors.error, marginBottom: 20 }}>
+                <div style={{ color: 'var(--color-error)', marginBottom: 20 }}>
                   <ul>
                     {errorMessages.map((error, i) => (
                       <li key={i}>{error}</li>

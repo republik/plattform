@@ -1,6 +1,5 @@
 import React from 'react'
 import { css } from 'glamor'
-import colors from '../../theme/colors'
 import { mUp } from '../TeaserFront/mediaQueries'
 import { sansSerifRegular15, sansSerifRegular21 } from '../Typography/styles'
 
@@ -14,11 +13,11 @@ const styles = {
       ...sansSerifRegular21,
     },
     '& > a': {
-      color: colors.text,
+      color: 'var(--color-text)',
     },
     '@media (hover)': {
       '& > a:hover': {
-        color: colors.lightText,
+        color: 'var(--color-lightText)',
       },
     },
   }),

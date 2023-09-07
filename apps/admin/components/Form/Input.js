@@ -1,5 +1,5 @@
 import { css } from 'glamor'
-import { Label, colors, fontFamilies } from '@project-r/styleguide'
+import { Label, fontFamilies } from '@project-r/styleguide'
 
 const styles = {
   container: {
@@ -11,13 +11,13 @@ const styles = {
   },
   input: css({
     borderWidth: '0 0 1px 0',
-    borderColor: colors.divider,
+    borderColor: 'var(--color-divider)',
     fontSize: '1em',
     width: '99%',
     height: '20px',
     fontFamily: fontFamilies.sansSerifRegular,
     ':focus': {
-      borderColor: colors.primary,
+      borderColor: 'var(--color-primary)',
       outline: 'none',
     },
     '[type="date"]': {

@@ -2,7 +2,6 @@ import { useMemo } from 'react'
 import { css } from 'glamor'
 import compose from 'lodash/flowRight'
 import {
-  colors,
   mediaQueries,
   fontStyles,
   useColorContext,
@@ -109,7 +108,7 @@ export const SecondaryNav = ({
               <NavLink
                 href='/dialog'
                 currentPath={currentPath}
-                formatColor={colors.primary}
+                formatColor={'var(--color-primary)'}
                 minifeed
                 title={t('navbar/discussion')}
               >

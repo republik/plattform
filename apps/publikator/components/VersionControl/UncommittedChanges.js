@@ -4,7 +4,6 @@ import { graphql } from '@apollo/client/react/hoc'
 import { gql } from '@apollo/client'
 import { css, merge } from 'glamor'
 import {
-  colors,
   Label,
   Overlay,
   OverlayBody,
@@ -116,7 +115,7 @@ styles.initials = merge(styles.box, {
 
 styles.emptyBox = merge(styles.box, {
   backgroundColor: '#fff',
-  border: `1px solid ${colors.divider}`,
+  border: `1px solid ${'var(--color-divider)'}`,
 })
 
 export const withUncommitedChanges =
@@ -266,7 +265,7 @@ const Initials = ({ uncommittedChanges, t }) => (
       >
         <OfflineIcon
           size={20}
-          color={colors.error}
+          color={'var(--color-error)'}
           style={{ marginBottom: 6 }}
         />
       </span>

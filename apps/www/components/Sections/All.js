@@ -12,7 +12,6 @@ import {
   mediaQueries,
   TeaserSectionTitle,
   useColorContext,
-  colors,
 } from '@project-r/styleguide'
 
 const SPACE = 15
@@ -119,7 +118,10 @@ const SectionIndex = ({ data: { loading, error, sections }, t }) => {
                       <Link href={formatMeta.path} passHref key={id}>
                         <a {...styles.link}>
                           <FormatTag
-                            color={formatMeta.color || colors[formatMeta.kind]}
+                            color={
+                              formatMeta.color ||
+                              `var(--color-${formatMeta.kind})`
+                            }
                             label={formatMeta.title}
                             count={linkedDocuments.totalCount || null}
                           />

@@ -2,13 +2,7 @@ import { css } from 'glamor'
 import { Map, Set } from 'immutable'
 import { nest } from 'd3-collection'
 
-import {
-  Interaction,
-  Checkbox,
-  Label,
-  colors,
-  slug,
-} from '@project-r/styleguide'
+import { Interaction, Checkbox, Label, slug } from '@project-r/styleguide'
 
 import withT from '../../../../lib/withT'
 import { FRONTEND_BASE_URL } from '../../../../lib/settings'
@@ -28,7 +22,7 @@ import PublishPathNotice from './PublishPathNotice'
 const styles = {
   container: css({
     marginTop: 100,
-    backgroundColor: colors.secondaryBg,
+    backgroundColor: 'var(--color-hover)',
     padding: 30,
   }),
   center: css({

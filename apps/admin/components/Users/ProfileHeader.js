@@ -1,13 +1,7 @@
 import { Query } from '@apollo/client/react/components'
 import { css } from 'glamor'
 import { gql } from '@apollo/client'
-import {
-  colors,
-  fontStyles,
-  Loader,
-  Interaction,
-  A,
-} from '@project-r/styleguide'
+import { fontStyles, Loader, Interaction, A } from '@project-r/styleguide'
 import Head from 'next/head'
 import Link from 'next/link'
 
@@ -20,7 +14,7 @@ const styles = {
     position: 'sticky',
     top: -20,
     zIndex: 10,
-    borderBottom: `1px solid ${colors.disabled}`,
+    borderBottom: `1px solid ${'var(--color-disabled)'}`,
   }),
   byline: css({
     ...fontStyles.sansSerifRegular16,

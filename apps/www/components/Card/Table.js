@@ -10,7 +10,6 @@ import {
   Editorial,
   plainButtonRule,
   InlineSpinner,
-  colors,
 } from '@project-r/styleguide'
 
 import { countFormat } from '../../lib/utils/format'
@@ -23,7 +22,7 @@ const PADDING = 10
 
 const mdCheckProps = {
   style: { marginTop: -4, marginRight: 5 },
-  fill: colors.primary,
+  fill: 'var(--color-primary)',
 }
 
 const td = css({
@@ -161,7 +160,7 @@ export const CardRows = ({ nodes, revertCard, ignoreCard, followCard, t }) => (
               <tr
                 key={`entity${i}`}
                 style={{
-                  background: i % 2 ? colors.secondaryBg : undefined,
+                  background: i % 2 ? 'var(--color-hover)' : undefined,
                 }}
               >
                 <td {...styles.td}>
@@ -240,7 +239,7 @@ export const CardRows = ({ nodes, revertCard, ignoreCard, followCard, t }) => (
                         style={{
                           backgroundColor: ignoreCard
                             ? cardColors.left
-                            : colors.disabled,
+                            : 'var(--color-disabled)',
                           cursor: ignoreCard ? 'pointer' : 'default',
                         }}
                       >
@@ -256,7 +255,7 @@ export const CardRows = ({ nodes, revertCard, ignoreCard, followCard, t }) => (
                         style={{
                           backgroundColor: followCard
                             ? cardColors.right
-                            : colors.disabled,
+                            : 'var(--color-disabled)',
                           cursor: followCard ? 'pointer' : 'default',
                         }}
                       >

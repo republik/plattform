@@ -7,7 +7,7 @@ import { Interaction, colors } from '@project-r/styleguide'
 
 const styles = {
   container: css({
-    backgroundColor: colors.social,
+    backgroundColor: 'var(--color-social)',
     padding: '12px 24px',
     marginBottom: '12px',
     width: '100%',

@@ -2,7 +2,6 @@ import Frame from '../../Frame'
 import { withRouter } from 'next/router'
 import {
   A,
-  colors,
   Interaction,
   Center,
   fontStyles,
@@ -42,7 +41,7 @@ const styles = {
   }),
   tabBar: css({
     padding: '10px 0px 20px 0px',
-    borderTop: `0.5px solid ${colors.divider}`,
+    borderTop: `0.5px solid ${'var(--color-divider)'}`,
   }),
   tab: css({
     marginRight: 20,
@@ -50,7 +49,7 @@ const styles = {
   }),
   count: css({
     marginLeft: 10,
-    color: colors.primary,
+    color: 'var(--color-primary)',
     ...fontStyles.sansSerifMedium16,
   }),
 }
@@ -113,7 +112,7 @@ const DiscussionPage = ({ router, data, vt }) => {
                                 <span {...styles.count}>
                                   <IconDiscussion
                                     size={17}
-                                    fill={colors.primary}
+                                    fill={'var(--color-primary)'}
                                   />{' '}
                                   {data[id] &&
                                     data[id].discussion.comments.totalCount}
@@ -125,7 +124,7 @@ const DiscussionPage = ({ router, data, vt }) => {
                                 <span {...styles.count}>
                                   <IconDiscussion
                                     size={17}
-                                    fill={colors.primary}
+                                    fill={'var(--color-primary)'}
                                   />{' '}
                                   {data[id] &&
                                     data[id].discussion.comments.totalCount}

@@ -5,7 +5,6 @@ import { gql } from '@apollo/client'
 import { descending } from 'd3-array'
 import { css } from 'glamor'
 
-
 import withT from '../../lib/withT'
 import { PUBLIC_BASE_URL, CDN_FRONTEND_BASE_URL } from '../../lib/constants'
 
@@ -17,12 +16,7 @@ import Cantons, {
   sSeatsPerCanton,
 } from '../../components/Card/Cantons'
 import Logo from '../../components/Card/Logo'
-import {
-  Editorial,
-  Interaction,
-  colors,
-  IconButton,
-} from '@project-r/styleguide'
+import { Editorial, Interaction, IconButton } from '@project-r/styleguide'
 import Link from 'next/link'
 import { withDefaultSSR } from '../../lib/apollo/helpers'
 import { IconCheck, IconDiscussion } from '@republik/icons'
@@ -78,7 +72,7 @@ const styles = {
     paddingLeft: SIZE + 10,
     paddingTop: 0,
     display: 'inline-block',
-    color: colors.text,
+    color: 'var(--color-text)',
     margin: MARGIN,
     textAlign: 'left',
     width: WIDTH,
@@ -90,7 +84,7 @@ const styles = {
   cardsLink: css({
     display: 'inline-block',
     minWidth: 130,
-    color: colors.text,
+    color: 'var(--color-text)',
     textDecoration: 'none',
     '@media(hover)': {
       '[href]:hover > *': {
@@ -118,7 +112,7 @@ const styles = {
 
 const mdCheckProps = {
   style: { marginTop: -4 },
-  fill: colors.primary,
+  fill: 'var(--color-primary)',
 }
 
 const Page = ({ data, data: { cardGroups }, router, t }) => (
@@ -333,7 +327,7 @@ const Page = ({ data, data: { cardGroups }, router, t }) => (
                             <IconButton
                               Icon={IconDiscussion}
                               label={commentCount}
-                              fill={colors.primary}
+                              fill={'var(--color-primary)'}
                             />
                           </Link>
                         </span>

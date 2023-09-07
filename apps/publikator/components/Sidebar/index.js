@@ -1,7 +1,7 @@
 import { Children, Component } from 'react'
 import { css } from 'glamor'
 import { HEADER_HEIGHT, ZINDEX_SIDEBAR } from '../Frame/constants'
-import { colors, Label } from '@project-r/styleguide'
+import { Label } from '@project-r/styleguide'
 
 export const SIDEBAR_WIDTH = 300
 
@@ -18,7 +18,7 @@ const styles = {
     bottom: 0,
     overflow: 'auto',
     backgroundColor: '#fff',
-    borderLeft: `1px solid ${colors.divider}`,
+    borderLeft: `1px solid ${'var(--color-divider)'}`,
     opacity: 1,
     zIndex: ZINDEX_SIDEBAR,
     // ensure 10px white space for <UIForm>s negative magins
@@ -35,7 +35,7 @@ const styles = {
     left: 0,
   }),
   tabButtonContainer: css({
-    borderBottom: `1px solid ${colors.divider}`,
+    borderBottom: `1px solid ${'var(--color-divider)'}`,
     paddingBottom: '10px',
     marginBottom: '15px',
   }),

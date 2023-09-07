@@ -2,7 +2,6 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { css } from 'glamor'
 import { mUp, tUp } from './mediaQueries'
-import colors from '../../theme/colors'
 import zIndex from '../../theme/zIndex'
 import { FigureImage, FigureByline } from '../Figure'
 import Text from './Text'
@@ -118,7 +117,7 @@ const ImageBlock = ({
             <Text
               position={isTextOnTop ? textPosition : undefined}
               color={color}
-              collapsedColor={feuilleton && colors.text}
+              collapsedColor={feuilleton && 'var(--color-text)'}
               center={center}
               feuilleton={feuilleton}
               audioPlayButton={audioPlayButton}

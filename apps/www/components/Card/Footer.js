@@ -3,12 +3,7 @@ import compose from 'lodash/flowRight'
 
 import withT from '../../lib/withT'
 
-import {
-  colors,
-  fontStyles,
-  Editorial,
-  mediaQueries,
-} from '@project-r/styleguide'
+import { fontStyles, Editorial, mediaQueries } from '@project-r/styleguide'
 import Link from 'next/link'
 
 const styles = {
@@ -20,7 +15,7 @@ const styles = {
     ...fontStyles.sansSerif,
     fontSize: 11,
     lineHeight: '16px',
-    color: colors.text,
+    color: 'var(--color-text)',
     [mediaQueries.mUp]: {
       fontSize: 14,
       lineHeight: '24px',

@@ -1,6 +1,5 @@
 import { css } from 'glamor'
 import { fontStyles } from '../../theme/fonts'
-import colors from '../../theme/colors'
 
 export const editorialFontRule = css({
   ...fontStyles.serifRegular,
@@ -14,6 +13,6 @@ export const interactionFontRule = css({
   '& em, & i': fontStyles.sansSerifItalic,
   '& strong, & b': fontStyles.sansSerifMedium,
   '& strong em, & em strong, & b i, & i b': {
-    textDecoration: `underline wavy ${colors.error}`,
+    textDecoration: `underline wavy ${'var(--color-error)'}`,
   },
 })

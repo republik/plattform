@@ -36,7 +36,7 @@ const Sidebar = ({
         marginTop: 10,
         marginBottom: 250,
         paddingTop: 20,
-        borderTop: `1px solid ${colors.divider}`,
+        borderTop: `1px solid ${'var(--color-divider)'}`,
       }}
     >
       {propertyForms.map((Form, i) => (

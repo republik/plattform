@@ -3,7 +3,6 @@ import { css } from 'glamor'
 
 import {
   Interaction,
-  colors,
   IconButton,
   shouldIgnoreClick,
 } from '@project-r/styleguide'
@@ -29,7 +28,7 @@ const PADDING = 15
 
 const mdCheckProps = {
   style: { marginTop: -4, marginLeft: 5 },
-  fill: colors.primary,
+  fill: 'var(--color-primary)',
 }
 
 export const styles = {
@@ -219,7 +218,7 @@ const Card = ({
       style={{
         height: '100%',
         backgroundColor: '#f3f3f3',
-        color: colors.text,
+        color: 'var(--color-text)',
         borderBottom: hasVotes ? undefined : `10px solid ${partyColor}`,
         position: 'relative',
         overflow: 'hidden',
@@ -272,7 +271,7 @@ const Card = ({
                 <IconButton
                   Icon={IconDiscussion}
                   label={1 + statement.comments.totalCount}
-                  fill={colors.primary}
+                  fill={'var(--color-primary)'}
                 />
               </Link>
             </>

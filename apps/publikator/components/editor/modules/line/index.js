@@ -1,5 +1,4 @@
 import { css } from 'glamor'
-import { colors } from '@project-r/styleguide'
 import { Block } from 'slate'
 
 import { matchBlock, buttonStyles } from '../../utils'
@@ -16,7 +15,7 @@ const styles = {
     transition: 'outline-color 0.2s',
     marginTop: -30,
     '&[data-active="true"]': {
-      outlineColor: colors.primary,
+      outlineColor: 'var(--color-primary)',
     },
   }),
 }

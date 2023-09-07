@@ -113,7 +113,7 @@ export const P: Typography = ({ children, attributes, ...props }) => {
         '& em, & i': fontStyles.sansSerifItalic,
         '& strong, & b': fontStyles.sansSerifMedium,
         '& strong em, & em strong, & b i, & i b': {
-          textDecoration: `underline wavy ${colors.error}`,
+          textDecoration: `underline wavy ${'var(--color-error)'}`,
         },
         fontSize: 17,
         lineHeight: 1.471,
@@ -272,7 +272,7 @@ const listItemRule = css({
   '& em, & i': fontStyles.sansSerifItalic,
   '& strong, & b': fontStyles.sansSerifBold,
   '& strong em, & em strong, & b i, & i b': {
-    textDecoration: `underline wavy ${colors.error}`,
+    textDecoration: `underline wavy ${'var(--color-error)'}`,
   },
   paddingLeft: `${LIST_PADDING}px`,
   position: 'relative',

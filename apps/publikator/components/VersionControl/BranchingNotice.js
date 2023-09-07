@@ -10,8 +10,8 @@ import compose from 'lodash/flowRight'
 import { graphql } from '@apollo/client/react/hoc'
 
 const getColors = (warning) => ({
-  backgroundColor: warning ? colors.social : 'inherit',
-  borderColor: warning ? colors.social : 'inherit',
+  backgroundColor: warning ? 'var(--color-social)' : 'inherit',
+  borderColor: warning ? 'var(--color-social)' : 'inherit',
   color: warning ? '#fff' : 'inherit',
 })
 

@@ -6,7 +6,6 @@ import { isURL } from 'validator'
 
 import {
   A,
-  colors,
   InlineSpinner,
   Interaction,
   Button,
@@ -154,7 +153,7 @@ const styles = {
     marginTop: 40,
   }),
   error: css({
-    color: colors.error,
+    color: 'var(--color-error)',
   }),
   saveButton: css({
     textAlign: 'center',

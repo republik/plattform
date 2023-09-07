@@ -1,5 +1,5 @@
 import { css } from 'glamor'
-import { colors, plainButtonRule } from '@project-r/styleguide'
+import { plainButtonRule } from '@project-r/styleguide'
 import { EDITOR_TOOLBAR_HEIGHT } from '@project-r/styleguide/editor'
 import { HEADER_HEIGHT } from '../Frame/constants'
 import { createContext, useContext, useState } from 'react'
@@ -15,7 +15,7 @@ const styles = {
     zIndex: 22,
   }),
   warning: css({
-    backgroundColor: colors.error,
+    backgroundColor: 'var(--color-error)',
     color: '#fff',
     marginBottom: 5,
     padding: '5px 25px 5px 5px',

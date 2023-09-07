@@ -1,4 +1,4 @@
-import { colors, A, Label, Field } from '@project-r/styleguide'
+import { A, Label, Field } from '@project-r/styleguide'
 
 import withDebouncedSearch from '../../Form/withDebouncedSearch'
 
@@ -10,7 +10,7 @@ export default withDebouncedSearch(({ search, onSearch }) => {
   }
 
   return (
-    <div style={{ borderBottom: `1px solid ${colors.divider}` }}>
+    <div style={{ borderBottom: `1px solid ${'var(--color-divider)'}` }}>
       <div style={{ margin: '0 0 30px 0' }}>
         <Field
           label='Suche'

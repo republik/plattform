@@ -9,7 +9,6 @@ import {
   Overlay,
   OverlayToolbar,
   OverlayBody,
-  colors,
 } from '@project-r/styleguide'
 
 import { displayDateTime } from '../Display/utils'
@@ -35,7 +34,7 @@ const styles = {
     whiteSpace: 'normal',
   }),
   errornous: css({
-    color: colors.error,
+    color: 'var(--color-error)',
   }),
   contentFrame: css({
     marginTop: 10,

@@ -64,7 +64,7 @@ const styles = {
     lineHeight: '1.3em',
   }),
   commit: css({
-    borderTop: `1px solid ${colors.divider}`,
+    borderTop: `1px solid ${'var(--color-divider)'}`,
     display: 'block',
     fontSize: '11px',
     marginTop: '3px',

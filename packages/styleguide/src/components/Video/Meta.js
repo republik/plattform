@@ -1,7 +1,6 @@
 import React from 'react'
 import { css } from 'glamor'
 import PropTypes from 'prop-types'
-import colors from '../../theme/colors'
 import { sansSerifMedium16, sansSerifRegular14 } from '../Typography/styles'
 import { ellipsize } from '../../lib/styleMixins'
 import { timeFormat } from '../../lib/timeFormat'
@@ -13,7 +12,7 @@ const profilePictureBorderSize = 5
 
 const styles = {
   root: css({
-    borderBottom: `1px solid ${colors.text}`,
+    borderBottom: `1px solid ${'var(--color-text)'}`,
     display: 'flex',
     alignItems: 'center',
     marginTop: '10px',
@@ -41,7 +40,7 @@ const styles = {
   name: css({
     ...sansSerifMedium16,
     lineHeight: '20px',
-    color: colors.text,
+    color: 'var(--color-text)',
     display: 'flex',
     alignItems: 'center',
     paddingRight: '15px',
@@ -52,7 +51,7 @@ const styles = {
   subline: css({
     ...sansSerifRegular14,
     lineHeight: '20px',
-    color: colors.text,
+    color: 'var(--color-text)',
     display: 'flex',
     alignItems: 'center',
   }),
@@ -71,10 +70,10 @@ const styles = {
   }),
   link: css({
     textDecoration: 'none',
-    color: colors.text,
+    color: 'var(--color-text)',
     '@media (hover)': {
       ':hover': {
-        color: colors.lightText,
+        color: 'var(--color-lightText)',
       },
     },
   }),

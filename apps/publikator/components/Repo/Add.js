@@ -15,7 +15,6 @@ import {
   Dropdown,
   Autocomplete,
   mediaQueries,
-  colors,
   Loader,
   A,
 } from '@project-r/styleguide'
@@ -186,7 +185,9 @@ const TemplatePicker = compose(
               setTemplateFilter(newFilter)
             }
           }}
-          icon={<IconSearch size={30} style={{ color: colors.lightText }} />}
+          icon={
+            <IconSearch size={30} style={{ color: 'var(--color-lightText)' }} />
+          }
         />
       )}
     />

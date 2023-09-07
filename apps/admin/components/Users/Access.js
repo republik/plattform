@@ -7,7 +7,6 @@ import moment from 'moment'
 import withT from '../../lib/withT'
 
 import {
-  colors,
   Button,
   Interaction,
   InlineSpinner,
@@ -122,7 +121,7 @@ const styles = {
   grant: css({
     width: `calc(50% - ${GUTTER}px)`,
     padding: 10,
-    backgroundColor: colors.secondaryBg,
+    backgroundColor: 'var(--color-hover)',
     marginBottom: GUTTER,
   }),
   button: css({

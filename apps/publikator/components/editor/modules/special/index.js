@@ -1,4 +1,3 @@
-import { colors } from '@project-r/styleguide'
 import { Block } from 'slate'
 
 import { matchBlock } from '../../utils'
@@ -66,10 +65,10 @@ export default ({ rule, subModules, TYPE }) => {
                 height: '20vh',
                 paddingTop: '8vh',
                 textAlign: 'center',
-                backgroundColor: colors.primaryBg,
+                backgroundColor: 'var(--color-primaryBg)',
                 transition: 'outline-color 0.2s',
                 outline: '4px solid transparent',
-                outlineColor: active ? colors.primary : 'transparent',
+                outlineColor: active ? 'var(--color-primary)' : 'transparent',
                 marginBottom: 10,
               }}
               {...attributes}

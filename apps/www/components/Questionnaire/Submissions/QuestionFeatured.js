@@ -8,7 +8,6 @@ import { useQuery } from '@apollo/client'
 
 import {
   ColorContextProvider,
-  colors,
   Container,
   Editorial,
   inQuotes,
@@ -182,10 +181,7 @@ const AnswerGridOverview = ({
                 </Interaction.P>
               )}
             </NarrowContainer>
-            <ColorContextProvider
-              localColorVariables={colors}
-              colorSchemeKey='light'
-            >
+            <ColorContextProvider colorSchemeKey='light'>
               <AnswersGrid>
                 {targetedAnswers.map(({ answers, displayAuthor, id }) => (
                   <AnswersGridCard key={id}>

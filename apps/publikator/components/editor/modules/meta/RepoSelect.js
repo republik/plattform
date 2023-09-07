@@ -56,7 +56,7 @@ export default ({
           <RepoLink
             value={value}
             invalid={(info) => (
-              <span style={{ color: colors.error }}>{value}</span>
+              <span style={{ color: 'var(--color-error)' }}>{value}</span>
             )}
           />
         </div>

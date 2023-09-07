@@ -1,6 +1,5 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import colors from '../../theme/colors'
 import { css } from 'glamor'
 import { mUp } from './mediaQueries'
 import {
@@ -14,7 +13,7 @@ const leadStyle = {
   ...convertStyleToRem(serifRegular19),
   lineHeight: pxToRem('27px'),
   margin: '0 0 10px 0',
-  color: colors.text,
+  color: 'var(--color-text)',
 }
 
 const lead = css({

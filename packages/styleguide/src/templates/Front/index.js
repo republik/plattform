@@ -7,8 +7,6 @@ import {
   matchHeading,
 } from '@republik/mdast-react-render'
 
-import colors from '../../theme/colors'
-
 import {
   TeaserFrontImage,
   TeaserFrontImageHeadline,
@@ -109,7 +107,7 @@ const createFrontSchema = ({
           return {
             title: node.title,
             href: node.url,
-            color: teaser ? teaser.data.color : colors.primary,
+            color: teaser ? teaser.data.color : 'var(--color-primary)',
             collapsedColor:
               teaser && teaser.data.feuilleton ? '#000' : undefined,
           }
@@ -215,7 +213,7 @@ const createFrontSchema = ({
         logo: teaser ? teaser.data.formatLogo : undefined,
         color:
           teaser && teaser.data.feuilleton
-            ? teaser.data.color || colors.feuilleton
+            ? teaser.data.color || 'var(--color-feuilleton)'
             : undefined,
         collapsedColor:
           teaser &&

@@ -1,7 +1,6 @@
 import React from 'react'
 import * as styles from './styles'
 import { css } from 'glamor'
-import colors from '../../theme/colors'
 import { mUp } from '../../theme/mediaQueries'
 import { fontStyles } from '../../theme/fonts'
 import { convertStyleToRem, pxToRem } from './utils'
@@ -12,7 +11,7 @@ export const fontRule = css({
   '& em, & i': fontStyles.sansSerifItalic,
   '& strong, & b': fontStyles.sansSerifMedium,
   '& strong em, & em strong, & b i, & i b': {
-    textDecoration: `underline wavy ${colors.error}`,
+    textDecoration: `underline wavy ${'var(--color-error)'}`,
   },
 })
 

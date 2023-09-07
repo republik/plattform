@@ -1,6 +1,5 @@
 import React from 'react'
 
-import colors from '../../theme/colors'
 import { FormatTag } from '../../components/Format'
 import TitleBlock from '../../components/TitleBlock'
 import * as Interaction from '../../components/Typography/Interaction'
@@ -100,7 +99,7 @@ const createFormatSchema = ({
           {titleBlockPrepend}
           {section && section.meta && (
             <Editorial.Format
-              color={section.meta.color || colors[section.meta.kind]}
+              color={section.meta.color || `var(--color-${section.meta.kind})`}
               contentEditable={false}
             >
               <Link href={section.meta.path} passHref>
@@ -156,7 +155,7 @@ const createFormatSchema = ({
             props.color
               ? props.color
               : props.kind
-              ? colors[props.kind]
+              ? `var(--color-${props.kind})`
               : undefined
           }
         />

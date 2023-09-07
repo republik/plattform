@@ -1,7 +1,6 @@
 import compose from 'lodash/flowRight'
 import HeaderComponent from './Header'
 import { createTile, createContainer } from './Grid'
-import { colors } from '@project-r/styleguide'
 
 export const Body = compose(
   createTile(
@@ -40,7 +39,7 @@ export const Footer = compose(
     },
     {
       style: {
-        borderTop: `1px solid ${colors.divider}`,
+        borderTop: `1px solid ${'var(--color-divider)'}`,
       },
     },
   ),

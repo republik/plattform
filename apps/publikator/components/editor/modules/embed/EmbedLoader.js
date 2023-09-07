@@ -1,6 +1,5 @@
 import * as React from 'react'
 import Loader from '../../../Loader'
-import { colors } from '@project-r/styleguide'
 import { parse } from '@republik/remark-preset'
 import { css } from 'glamor'
 // TMP: work around for missing t
@@ -14,7 +13,7 @@ const styles = {
     lineHeight: 0,
     transition: 'outline-color 0.2s',
     '&[data-active="true"]': {
-      outlineColor: colors.primary,
+      outlineColor: 'var(--color-primary)',
     },
     pointerEvents: 'none',
   }),

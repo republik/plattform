@@ -7,7 +7,6 @@ import { css } from 'glamor'
 
 import {
   Loader,
-  colors,
   FormatTag,
   fontStyles,
   mediaQueries,
@@ -107,7 +106,7 @@ const Panel = ({
           <Link href={formatMeta.path} key={id} passHref>
             <a {...styles.formatLink} onClick={() => closeHandler?.()}>
               <FormatTag
-                color={formatMeta.color || colors[formatMeta.kind]}
+                color={formatMeta.color || `var(--color-${formatMeta.kind})`}
                 label={formatMeta.title}
                 count={linkedDocuments.totalCount || null}
               />
@@ -149,7 +148,7 @@ const Sections = compose(graphql(getSectionNav))(
                   if (!path) {
                     return null
                   }
-                  const color = meta.color || colors[meta.kind]
+                  const color = meta.color || `var(--color-${meta.kind})`
                   const isActivePanel = activePanel === i
                   if (!formats.nodes.length) {
                     // Serien

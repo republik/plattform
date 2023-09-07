@@ -18,7 +18,6 @@ import { Mutation, Query, Subscription } from '@apollo/client/react/components'
 import {
   Center,
   Breakout,
-  colors,
   plainLinkRule,
   Interaction,
   TitleBlock,
@@ -537,7 +536,8 @@ const ArticlePage = ({
     (meta.template === 'format' || meta.template === 'section'
       ? meta
       : meta.format && meta.format.meta)
-  const formatColor = colorMeta && (colorMeta.color || colors[colorMeta.kind])
+  const formatColor =
+    colorMeta && (colorMeta.color || `var(--color-${colorMeta.kind})`)
   const sectionColor = meta && meta.template === 'section' && meta.color
   const MissingNode = isEditor ? undefined : ({ children }) => children
 
@@ -760,7 +760,7 @@ const ArticlePage = ({
                                 <Editorial.Format
                                   color={
                                     format.meta.color ||
-                                    colors[format.meta.kind]
+                                    `var(--color-${format.meta.kind})`
                                   }
                                 >
                                   <Link href={format.meta.path} passHref>
@@ -938,7 +938,7 @@ const ArticlePage = ({
 
 const styles = {
   prepublicationNotice: css({
-    backgroundColor: colors.social,
+    backgroundColor: 'var(--color-social)',
   }),
   titleBlock: css({
     marginBottom: 20,

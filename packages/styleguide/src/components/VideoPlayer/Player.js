@@ -1,6 +1,5 @@
 import React, { Component, Fragment } from 'react'
 import PropTypes from 'prop-types'
-import colors from '../../theme/colors'
 import zIndex from '../../theme/zIndex'
 import { css, merge } from 'glamor'
 import { breakoutStyles } from '../Center'
@@ -91,7 +90,7 @@ const styles = {
   }),
   progress: css({
     position: 'absolute',
-    backgroundColor: colors.primary,
+    backgroundColor: 'var(--color-primary)',
     bottom: -PROGRESS_HEIGHT,
     left: 0,
     height: PROGRESS_HEIGHT,

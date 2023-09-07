@@ -6,7 +6,6 @@ import * as Headlines from '../TeaserFeed/Headline'
 import { sansSerifMedium14, sansSerifMedium16 } from '../Typography/styles'
 import { TeaserSectionTitle } from '../TeaserShared'
 import { getTeaserHref, TeaserFeed } from '../TeaserFeed'
-import colors from '../../theme/colors'
 import { useColorContext } from '../Colors/useColorContext'
 import { convertStyleToRem } from '../Typography/utils'
 
@@ -73,13 +72,13 @@ const TeaserMyMagazine = ({
                 const formatColor = formatMeta?.title
                   ? colorScheme.set(
                       'color',
-                      formatMeta.color || colors[formatMeta.kind],
+                      formatMeta.color || `var(--color-${formatMeta.kind})`,
                       'format',
                     )
                   : template === 'format'
                   ? colorScheme.set(
                       'color',
-                      metaColor || colors[metaKind],
+                      metaColor || `var(--color-${metaKind})`,
                       'format',
                     )
                   : colorScheme.set('color', 'text')

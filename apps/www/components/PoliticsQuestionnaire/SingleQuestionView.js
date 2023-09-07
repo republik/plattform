@@ -8,7 +8,6 @@ import {
   Editorial,
   fontStyles,
   ColorContextProvider,
-  colors,
   mediaQueries,
   convertStyleToRem,
   Center,
@@ -77,7 +76,7 @@ const Page = ({
   return (
     <Frame raw>
       <Meta data={meta} />
-      <ColorContextProvider localColorVariables={colors} colorSchemeKey='light'>
+      <ColorContextProvider colorSchemeKey='light'>
         <div>
           <div style={{ backgroundColor: questionColor(questionIndex) }}>
             <div
@@ -132,10 +131,7 @@ const Page = ({
                     <SubmissionLink key={key} id={key}>
                       <a style={{ textDecoration: 'none' }}>
                         <div {...styles.answerCard}>
-                          <ColorContextProvider
-                            localColorVariables={colors}
-                            colorSchemeKey='light'
-                          >
+                          <ColorContextProvider colorSchemeKey='light'>
                             <div
                               {...(!isChoiceQuestion &&
                                 styles.answerCardContent)}

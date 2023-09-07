@@ -1,5 +1,13 @@
 import React from 'react'
-import { useColorContext } from '../Colors/useColorContext'
+import { css } from 'glamor'
+
+const styles = {
+  visibleAlways: css({ display: 'block' }),
+  visibleLight: css({
+    display: 'var(--color-displayLight)',
+  }),
+  visibleDark: css({ display: 'var(--color-displayDark)' }),
+}
 
 type SwitchImageProps = {
   src: string
@@ -20,8 +28,6 @@ const SwitchImage = ({
   maxWidth,
   ...props
 }: SwitchImageProps) => {
-  const [colorScheme] = useColorContext()
-
   return (
     <>
       <img
@@ -29,7 +35,7 @@ const SwitchImage = ({
         src={src}
         srcSet={srcSet}
         alt={alt}
-        {...colorScheme.set('display', dark ? 'displayLight' : 'block')}
+        {...(dark ? styles.visibleLight : styles.visibleAlways)}
       />
       {dark && (
         <img
@@ -37,7 +43,7 @@ const SwitchImage = ({
           src={dark.src}
           srcSet={dark.srcSet}
           alt={alt}
-          {...colorScheme.set('display', 'displayDark')}
+          {...styles.visibleDark}
         />
       )}
     </>

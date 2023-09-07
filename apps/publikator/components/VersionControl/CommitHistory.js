@@ -1,6 +1,6 @@
 import { Component } from 'react'
 import Link from 'next/link'
-import { colors, A, Interaction } from '@project-r/styleguide'
+import { A, Interaction } from '@project-r/styleguide'
 import { css } from 'glamor'
 import compose from 'lodash/flowRight'
 import { swissTime } from '../../lib/utils/format'
@@ -15,13 +15,13 @@ const styles = {
     marginBottom: '20px',
   }),
   commits: css({
-    borderTop: `1px solid ${colors.divider}`,
+    borderTop: `1px solid ${'var(--color-divider)'}`,
     listStyleType: 'none',
     margin: '5px 0',
     padding: 0,
   }),
   commit: css({
-    borderBottom: `1px solid ${colors.divider}`,
+    borderBottom: `1px solid ${'var(--color-divider)'}`,
     padding: '5px 0',
     position: 'relative',
   }),
