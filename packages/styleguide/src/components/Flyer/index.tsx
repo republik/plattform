@@ -54,11 +54,11 @@ const styles = {
 
 export const FlyerTile: React.FC<{
   children?: ReactNode
-  attributes: any
+  attributes?: any
   innerStyle?: object
   id?: string
   [x: string]: unknown
-}> = ({ children, attributes, innerStyle = {}, id, ...props }) => {
+}> = ({ children, attributes = {}, innerStyle = {}, id, ...props }) => {
   const [colorScheme] = useColorContext()
   const { ShareTile } = useRenderContext()
   return (
