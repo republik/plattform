@@ -12,13 +12,7 @@ const { Emphasis } = Interaction
 
 const dayFormat = timeFormat('%e. %B %Y')
 
-const Grants = ({
-  grant,
-  isRegularCampaign,
-  givingMemberships,
-  revokeAccess,
-  t,
-}) => {
+const Grants = ({ grant, givingMemberships, revokeAccess, t }) => {
   const elements = {
     recipient: grant.email && (
       <Emphasis key={`grant-recipient-${grant.id}`}>{grant.email}</Emphasis>
@@ -51,38 +45,26 @@ const Grants = ({
           <br />
         </Fragment>
       )}
-      {isRegularCampaign && (
-        <>
-          {!elements.beginAt && (
-            <Fragment>
-              {t.elements(
-                'Account/Access/Campaigns/Grants/unclaimed',
-                elements,
-              )}
+
+      {!elements.beginAt && (
+        <Fragment>
+          {t.elements('Account/Access/Campaigns/Grants/unclaimed', elements)}
+          <br />
+          {t.elements('Account/Access/Campaigns/Grants/beginBefore', elements)}
+          <br />
+          <Revoke grant={grant} revokeAccess={revokeAccess} />
+        </Fragment>
+      )}
+      {elements.beginAt && (
+        <Fragment>
+          {t.elements('Account/Access/Campaigns/Grants/beginAt', elements)}
+          {!givingMemberships && (
+            <>
               <br />
-              {t.elements(
-                'Account/Access/Campaigns/Grants/beginBefore',
-                elements,
-              )}
-              <br />
-              <Revoke grant={grant} revokeAccess={revokeAccess} />
-            </Fragment>
+              {t.elements('Account/Access/Campaigns/Grants/endAt', elements)}
+            </>
           )}
-          {elements.beginAt && (
-            <Fragment>
-              {t.elements('Account/Access/Campaigns/Grants/beginAt', elements)}
-              {!givingMemberships && (
-                <>
-                  <br />
-                  {t.elements(
-                    'Account/Access/Campaigns/Grants/endAt',
-                    elements,
-                  )}
-                </>
-              )}
-            </Fragment>
-          )}
-        </>
+        </Fragment>
       )}
     </Item>
   )

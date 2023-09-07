@@ -31,7 +31,6 @@ import { cleanAsPath } from '../../lib/utils/link'
 import { useGetFrontQuery } from './graphql/getFrontQuery.graphql'
 import useAudioQueue from '../Audio/hooks/useAudioQueue'
 import TeaserAudioPlayButton from '../Audio/shared/TeaserAudioPlayButton'
-import ClimateLabTeaser from '../Climatelab/FrontTeaser/ClimateLabTeaser'
 import * as withData from './withData'
 import { IconCheckCircle } from '@republik/icons'
 
@@ -67,7 +66,6 @@ export const RenderFront = ({ front, nodes, isFrontExtract = false }) => {
         DiscussionLink,
         ...withData,
         ActionBar,
-        ClimateLabTeaser,
         t,
       }),
     [],
