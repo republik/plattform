@@ -16,18 +16,19 @@ if (DEV || process.env.DOTENV) {
 
 const PORT = process.env.PORT || 3005
 
-const { CURTAIN_MESSAGE, PUBLIC_BASE_URL, MASTODON_BASE_URL } = process.env
+const { NEXT_PUBLIC_CURTAIN_MESSAGE, NEXT_PUBLIC_BASE_URL, MASTODON_BASE_URL } =
+  process.env
 
-if (!PUBLIC_BASE_URL) {
+if (!NEXT_PUBLIC_BASE_URL) {
   throw new Error(
-    'missing PUBLIC_BASE_URL environment variable, but is required by next-js middleware.',
+    'missing NEXT_PUBLIC_BASE_URL environment variable, but is required by next-js middleware.',
   )
 }
 
 const app = next({
   dev: DEV,
   port: PORT,
-  hostname: new URL(PUBLIC_BASE_URL).hostname,
+  hostname: new URL(NEXT_PUBLIC_BASE_URL).hostname,
 })
 
 const handler = app.getRequestHandler()
@@ -59,7 +60,7 @@ app.prepare().then(() => {
         ipfilter(denyIPs, {
           mode: 'deny',
           logLevel: 'deny',
-          trustProxy: !DEV
+          trustProxy: !DEV,
         }),
       )
     } catch (e) {
@@ -113,16 +114,17 @@ app.prepare().then(() => {
     server.enable('trust proxy')
     server.use((req, res, next) => {
       if (
-        `${req.protocol}://${req.get('Host')}` !== process.env.PUBLIC_BASE_URL
+        `${req.protocol}://${req.get('Host')}` !==
+        process.env.NEXT_PUBLIC_BASE_URL
       ) {
-        return res.redirect(process.env.PUBLIC_BASE_URL + req.url)
+        return res.redirect(process.env.NEXT_PUBLIC_BASE_URL + req.url)
       }
       return next()
     })
   }
 
   // only attach middle-ware if we're not already past it
-  if (CURTAIN_MESSAGE) {
+  if (NEXT_PUBLIC_CURTAIN_MESSAGE) {
     const ALLOWED_PATHS = [
       '/_next',
       '/_webpack/',
@@ -229,7 +231,7 @@ app.prepare().then(() => {
   }
 
   // Public static files
-  // Check .well-known assets as static files before PUBLIC_BASE_URL redirect
+  // Check .well-known assets as static files before NEXT_PUBLIC_BASE_URL redirect
   server.use(express.static('public'))
 
   server.all('*', (req, res) => {

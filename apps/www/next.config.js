@@ -30,7 +30,7 @@ const unprefixedStyleguideEnvVariables = {
  */
 const nextConfig = {
   generateBuildId: () => buildId,
-  env: { BUILD_ID: buildId },
+  env: { BUILD_ID: buildId, ...unprefixedStyleguideEnvVariables },
   transpilePackages: [
     '@project-r/styleguide',
     '@republik/nextjs-apollo-client', // Ensures ES5 compatibility to work in IE11 and older safari versions
