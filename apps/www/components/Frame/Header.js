@@ -131,7 +131,7 @@ const Header = ({
         )
       }
 
-      if (diff.current !== lastDiff.current) {
+      if (diff.current !== lastDiff.current && fixedRef.current) {
         fixedRef.current.style.top = `${diff.current}px`
         setHeaderOffset(diff.current)
       }
