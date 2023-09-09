@@ -1228,7 +1228,7 @@
     {
       "key": "Account/AddressForm/edit",
       "de": "ändern",
-      "fr": "monnaie"
+      "fr": "modifier"
     },
     {
       "key": "Account/AddressForm/editName",
@@ -1548,7 +1548,7 @@
     {
       "key": "Account/Update/edit",
       "de": "ändern",
-      "fr": "monnaie"
+      "fr": "modifier"
     },
     {
       "key": "Account/Update/email/confirm",
@@ -1558,7 +1558,7 @@
     {
       "key": "Account/Update/email/edit",
       "de": "ändern",
-      "fr": "monnaie"
+      "fr": "modifier"
     },
     {
       "key": "Account/Update/email/empty",
@@ -1960,7 +1960,7 @@
     {
       "key": "merci/claim/signIn/button",
       "de": "Ändern",
-      "fr": "Changer"
+      "fr": "Modifier"
     },
     {
       "key": "merci/empty/button",
@@ -2500,7 +2500,7 @@
     {
       "key": "pledge/claim/signIn/button",
       "de": "Ändern",
-      "fr": "Changer"
+      "fr": "Modifier"
     },
     {
       "key": "pledge/consents/error/PRIVACY_STATUTE_TOS",
@@ -2919,7 +2919,7 @@
     {
       "key": "testimonial/pickImage/update",
       "de": "Porträtfoto ändern",
-      "fr": "Changer de portrait"
+      "fr": "Modifier le portrait"
     },
     {
       "key": "testimonial/quote/tooLong",
