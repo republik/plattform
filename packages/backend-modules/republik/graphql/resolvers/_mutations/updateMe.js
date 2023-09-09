@@ -336,7 +336,7 @@ module.exports = async (_, args, context) => {
       }
     }
 
-    if (phoneNumber) {
+    if (phoneNumber !== undefined) {
       await Users.updateUserPhoneNumber({
         pgdb: transaction,
         userId: me.id,

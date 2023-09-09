@@ -839,11 +839,13 @@ const updateUserPhoneNumber = async ({ pgdb, userId, phoneNumber }) => {
     throw new SecondFactorHasToBeDisabledError({ type: TokenTypes.SMS })
   }
 
-  try {
-    const parsedPhoneNumber = parse(phoneNumber || '', 'CH') // it could be any arbitrary string
-    format(parsedPhoneNumber.phone, parsedPhoneNumber.country, 'E.164')
-  } catch (e) {
-    throw new TranslatedError(t('api/auth/sms/phone-number-not-valid'))
+  if (phoneNumber) {
+    try {
+      const parsedPhoneNumber = parse(phoneNumber || '', 'CH') // it could be any arbitrary string
+      format(parsedPhoneNumber.phone, parsedPhoneNumber.country, 'E.164')
+    } catch (e) {
+      throw new TranslatedError(t('api/auth/sms/phone-number-not-valid'))
+    }
   }
 
   return pgdb.public.users.updateAndGetOne(
