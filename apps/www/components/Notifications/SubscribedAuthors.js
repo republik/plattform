@@ -125,67 +125,73 @@ const SubscribedAuthors = ({
           filteredAuthors &&
           filteredAuthors.filter((author) => author.active).length
 
-        return <>
-          <Interaction.P style={{ marginBottom: 10 }}>
-            {t.pluralize('Notifications/settings/authors/summary', {
-              count: totalSubs,
-            })}
-          </Interaction.P>
-          <div style={{ margin: '20px 0' }}>
-            {(showAll ? filteredAuthors : visibleAuthors).map((author) => (
-              <div
-                {...styles.authorContainer}
-                {...authorContainerRule}
-                key={author.object.id}
+        return (
+          <>
+            <Interaction.P style={{ marginBottom: 10 }}>
+              {t.pluralize('Notifications/settings/authors/summary', {
+                count: totalSubs,
+              })}
+            </Interaction.P>
+            <div style={{ margin: '20px 0' }}>
+              {(showAll ? filteredAuthors : visibleAuthors).map((author) => (
+                <div
+                  {...styles.authorContainer}
+                  {...authorContainerRule}
+                  key={author.object.id}
+                >
+                  <div {...styles.author}>
+                    <Link
+                      href={`/~${author.userDetails.slug}`}
+                      passHref
+                      legacyBehavior
+                    >
+                      <Editorial.A>{author.object.name}</Editorial.A>
+                    </Link>
+                  </div>
+                  <div {...styles.checkbox}>
+                    {(author.userDetails.documents.totalCount ||
+                    (author.active && author.filters.includes('Document'))
+                      ? ['Document', 'Comment']
+                      : ['Comment']
+                    ).map((filter) => (
+                      <SubscribeCheckbox
+                        key={`${author.object.id}-${filter}`}
+                        subscription={author}
+                        filterName={filter}
+                        filterLabel
+                        callout
+                      />
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+            {filteredAuthors.length !== visibleAuthors.length && (
+              <button
+                {...plainButtonRule}
+                onClick={() => {
+                  initializeSubscribedAuthorIds(
+                    authors,
+                    myUserSubscriptions,
+                    setInitiallySubscribedAuthorIds,
+                  )
+                  setShowAll(!showAll)
+                }}
               >
-                <div {...styles.author}>
-                  <Link href={`/~${author.userDetails.slug}`} passHref legacyBehavior>
-                    <Editorial.A>{author.object.name}</Editorial.A>
-                  </Link>
-                </div>
-                <div {...styles.checkbox}>
-                  {(author.userDetails.documents.totalCount ||
-                  (author.active && author.filters.includes('Document'))
-                    ? ['Document', 'Comment']
-                    : ['Comment']
-                  ).map((filter) => (
-                    <SubscribeCheckbox
-                      key={`${author.object.id}-${filter}`}
-                      subscription={author}
-                      filterName={filter}
-                      filterLabel
-                      callout
-                    />
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-          {filteredAuthors.length !== visibleAuthors.length && (
-            <button
-              {...plainButtonRule}
-              onClick={() => {
-                initializeSubscribedAuthorIds(
-                  authors,
-                  myUserSubscriptions,
-                  setInitiallySubscribedAuthorIds,
-                )
-                setShowAll(!showAll)
-              }}
-            >
-              <A>
-                {t(
-                  `Notifications/settings/formats/${
-                    showAll ? 'hide' : 'show'
-                  }`,
-                )}
-              </A>
-            </button>
-          )}
-        </>;
+                <A>
+                  {t(
+                    `Notifications/settings/formats/${
+                      showAll ? 'hide' : 'show'
+                    }`,
+                  )}
+                </A>
+              </button>
+            )}
+          </>
+        )
       }}
     />
-  );
+  )
 }
 
 export default compose(withT, graphql(myUserSubscriptions))(SubscribedAuthors)

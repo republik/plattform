@@ -838,237 +838,240 @@ class Submit extends Component {
     // even with token or when signed in we still need name fields
     const requireContactData = contactState.fields.length > 0
 
-    return <>
-      <div {...styles.topMargin}>
-        {contactPreface && (
-          <div style={{ marginBottom: '16px' }}>
-            <P>{contactPreface}</P>
-          </div>
-        )}
-        {!customMe && (
-          <>
-            <A
-              href='#'
-              onClick={(e) => {
-                e.preventDefault()
-                this.setState(() => ({
-                  showSignIn: !showSignIn,
-                }))
-              }}
-            >
-              {t(`pledge/contact/signIn/${showSignIn ? 'hide' : 'show'}`)}
-            </A>
-            {!!showSignIn && (
-              <>
-                <br />
-                <br />
-                <SignIn context='pledge' />
-              </>
-            )}
-            <br />
-          </>
-        )}
-        {customMe && (
-          <>
-            <Label>{t('pledge/contact/email/label')}</Label>
-            <Interaction.P>{customMe.email}</Interaction.P>
-            <br />
-            {me ? (
+    return (
+      <>
+        <div {...styles.topMargin}>
+          {contactPreface && (
+            <div style={{ marginBottom: '16px' }}>
+              <P>{contactPreface}</P>
+            </div>
+          )}
+          {!customMe && (
+            <>
               <A
                 href='#'
                 onClick={(e) => {
                   e.preventDefault()
-                  this.setState({ emailVerify: false })
-                  this.props.signOut().then(() => {
-                    contactState.onChange({
-                      values: {
-                        firstName: '',
-                        lastName: '',
-                        email: '',
-                      },
-                      dirty: {
-                        firstName: false,
-                        lastName: false,
-                        email: false,
-                      },
-                    })
-                    this.setState({ showSignIn: false })
-                  })
+                  this.setState(() => ({
+                    showSignIn: !showSignIn,
+                  }))
                 }}
               >
-                {t('pledge/contact/signOut')}
+                {t(`pledge/contact/signIn/${showSignIn ? 'hide' : 'show'}`)}
               </A>
-            ) : (
-              <Link
-                href={{
-                  pathname: '/angebote',
-                  query: {
-                    package: packageName,
-                  },
-                }}
-                replace
-                passHref
-                legacyBehavior>
-                <A>{t('pledge/contact/signIn/wrongToken')}</A>
-              </Link>
-            )}
-          </>
-        )}
-      </div>
-      <div {...styles.topMargin}>
-        <PaymentForm
-          key={me && me.id}
-          ref={this.paymentRef}
-          t={t}
-          loadSources={!!me || !!query.token}
-          accessToken={query.token}
-          requireShippingAddress={requireShippingAddress}
-          payload={{
-            id: this.state.pledgeId,
-            userId: this.state.userId,
-            total: this.props.total,
-            pfAliasId: this.state.pfAliasId,
-            pfSHA: this.state.pfSHA,
-          }}
-          context={packageName}
-          allowedMethods={paymentMethods}
-          erroredMethods={setupError ? [usedWallet] : undefined}
-          userName={userName}
-          userAddress={userAddress}
-          addressState={addressState}
-          shippingAddressState={shippingAddressState}
-          syncAddresses={syncAddresses}
-          packageGroup={packageGroup}
-          setSyncAddresses={setSyncAddresses}
-          onChange={(fields) => {
-            const setPaymentMethod =
-              fields.values?.paymentMethod &&
-              fields.values.paymentMethod !== selectedPaymentMethod
-            if (setPaymentMethod) {
-              setSelectedPaymentMethod(fields.values.paymentMethod)
-            }
-            this.setState((state) => {
-              const nextState = FieldSet.utils.mergeFields(fields)(state)
-
-              if (
-                setPaymentMethod ||
-                state.values.paymentSource !== nextState.values.paymentSource
-              ) {
-                nextState.showErrors = false
-                nextState.errors = {}
-                nextState.paymentError = undefined
-              }
-
-              return nextState
-            })
-          }}
-          values={{
-            ...this.state.values,
-            paymentMethod: selectedPaymentMethod,
-          }}
-          errors={this.state.errors}
-          dirty={this.state.dirty}
-        >
-          {isStripePayment && !!setupError && (
-            <ErrorMessage error={setupError} />
-          )}
-          {
-            // Only render the browser API in case we're not using a browser payment API
-            requireContactData &&
-              this.props.selectedPaymentMethod &&
-              !this.isStripeWalletPayment() && (
-                <div {...styles.topMargin}>
-                  <Label>
-                    {t.first([
-                      `pledge/contact/title/${packageName}`,
-                      'pledge/contact/title',
-                    ])}
-                  </Label>
-                  <div style={{ marginTop: 10, marginBottom: 10 }}>
-                    {requireContactData && <FieldSet {...contactState} />}
-                  </div>
-                </div>
-              )
-          }
-        </PaymentForm>
-      </div>
-      {emailVerify && !me && (
-        <div style={{ marginBottom: 40 }}>
-          <P style={{ marginBottom: 10 }}>
-            {t('pledge/submit/emailVerify/note')}
-          </P>
-          <SignIn context='pledge' email={contactState.values.email} />
-        </div>
-      )}
-      {emailVerify && me && (
-        <div style={{ marginBottom: 40 }}>
-          <P>{t('pledge/submit/emailVerify/done')}</P>
-        </div>
-      )}
-      {!!submitError && (
-        <ErrorMessage style={{ margin: '0 0 40px' }} error={submitError} />
-      )}
-      {!!paymentError && (
-        <ErrorMessage style={{ margin: '0 0 40px' }} error={paymentError} />
-      )}
-      {!!signInError && (
-        <ErrorMessage style={{ margin: '0 0 40px' }} error={signInError} />
-      )}
-      {loading ? (
-        <div {...styles.topMargin} style={{ textAlign: 'center' }}>
-          <InlineSpinner />
-          <br />
-          {loading}
-        </div>
-      ) : (
-        <div {...styles.topMargin} {...styles.spaceBetweenChildren}>
-          {!!this.state.showErrors && errorMessages.length > 0 && (
-            <ErrorContainer style={{ marginBottom: 40 }}>
-              {errorMessages.map(({ category, messages }, i) => (
-                <Fragment key={i}>
-                  {category}
+              {!!showSignIn && (
+                <>
                   <br />
-                  <ul>
-                    {messages.map((error, i) => (
-                      <li key={i}>{error}</li>
-                    ))}
-                  </ul>
-                </Fragment>
-              ))}
-            </ErrorContainer>
+                  <br />
+                  <SignIn context='pledge' />
+                </>
+              )}
+              <br />
+            </>
           )}
-          <Consents
-            required={getRequiredConsents(this.props)}
-            accepted={this.state.consents}
-            onChange={(keys) => {
-              this.setState(() => ({
-                consents: keys,
-              }))
-            }}
-          />
-          {this.renderAutoPay()}
-          <div style={{ opacity: errorMessages.length ? 0.5 : 1 }}>
-            <Button
-              block
-              primary={!errorMessages.length}
-              onClick={() => {
-                if (!errorMessages.length && this.isStripeWalletPayment()) {
-                  this.handleWalletPayIntent()
-                } else {
-                  this.submitPledge()
-                }
-              }}
-            >
-              {t('pledge/submit/button/pay', {
-                formattedChf: this.props.total
-                  ? chfFormat(this.props.total / 100)
-                  : '',
-              })}
-            </Button>
-          </div>
+          {customMe && (
+            <>
+              <Label>{t('pledge/contact/email/label')}</Label>
+              <Interaction.P>{customMe.email}</Interaction.P>
+              <br />
+              {me ? (
+                <A
+                  href='#'
+                  onClick={(e) => {
+                    e.preventDefault()
+                    this.setState({ emailVerify: false })
+                    this.props.signOut().then(() => {
+                      contactState.onChange({
+                        values: {
+                          firstName: '',
+                          lastName: '',
+                          email: '',
+                        },
+                        dirty: {
+                          firstName: false,
+                          lastName: false,
+                          email: false,
+                        },
+                      })
+                      this.setState({ showSignIn: false })
+                    })
+                  }}
+                >
+                  {t('pledge/contact/signOut')}
+                </A>
+              ) : (
+                <Link
+                  href={{
+                    pathname: '/angebote',
+                    query: {
+                      package: packageName,
+                    },
+                  }}
+                  replace
+                  passHref
+                  legacyBehavior
+                >
+                  <A>{t('pledge/contact/signIn/wrongToken')}</A>
+                </Link>
+              )}
+            </>
+          )}
         </div>
-      )}
-    </>;
+        <div {...styles.topMargin}>
+          <PaymentForm
+            key={me && me.id}
+            ref={this.paymentRef}
+            t={t}
+            loadSources={!!me || !!query.token}
+            accessToken={query.token}
+            requireShippingAddress={requireShippingAddress}
+            payload={{
+              id: this.state.pledgeId,
+              userId: this.state.userId,
+              total: this.props.total,
+              pfAliasId: this.state.pfAliasId,
+              pfSHA: this.state.pfSHA,
+            }}
+            context={packageName}
+            allowedMethods={paymentMethods}
+            erroredMethods={setupError ? [usedWallet] : undefined}
+            userName={userName}
+            userAddress={userAddress}
+            addressState={addressState}
+            shippingAddressState={shippingAddressState}
+            syncAddresses={syncAddresses}
+            packageGroup={packageGroup}
+            setSyncAddresses={setSyncAddresses}
+            onChange={(fields) => {
+              const setPaymentMethod =
+                fields.values?.paymentMethod &&
+                fields.values.paymentMethod !== selectedPaymentMethod
+              if (setPaymentMethod) {
+                setSelectedPaymentMethod(fields.values.paymentMethod)
+              }
+              this.setState((state) => {
+                const nextState = FieldSet.utils.mergeFields(fields)(state)
+
+                if (
+                  setPaymentMethod ||
+                  state.values.paymentSource !== nextState.values.paymentSource
+                ) {
+                  nextState.showErrors = false
+                  nextState.errors = {}
+                  nextState.paymentError = undefined
+                }
+
+                return nextState
+              })
+            }}
+            values={{
+              ...this.state.values,
+              paymentMethod: selectedPaymentMethod,
+            }}
+            errors={this.state.errors}
+            dirty={this.state.dirty}
+          >
+            {isStripePayment && !!setupError && (
+              <ErrorMessage error={setupError} />
+            )}
+            {
+              // Only render the browser API in case we're not using a browser payment API
+              requireContactData &&
+                this.props.selectedPaymentMethod &&
+                !this.isStripeWalletPayment() && (
+                  <div {...styles.topMargin}>
+                    <Label>
+                      {t.first([
+                        `pledge/contact/title/${packageName}`,
+                        'pledge/contact/title',
+                      ])}
+                    </Label>
+                    <div style={{ marginTop: 10, marginBottom: 10 }}>
+                      {requireContactData && <FieldSet {...contactState} />}
+                    </div>
+                  </div>
+                )
+            }
+          </PaymentForm>
+        </div>
+        {emailVerify && !me && (
+          <div style={{ marginBottom: 40 }}>
+            <P style={{ marginBottom: 10 }}>
+              {t('pledge/submit/emailVerify/note')}
+            </P>
+            <SignIn context='pledge' email={contactState.values.email} />
+          </div>
+        )}
+        {emailVerify && me && (
+          <div style={{ marginBottom: 40 }}>
+            <P>{t('pledge/submit/emailVerify/done')}</P>
+          </div>
+        )}
+        {!!submitError && (
+          <ErrorMessage style={{ margin: '0 0 40px' }} error={submitError} />
+        )}
+        {!!paymentError && (
+          <ErrorMessage style={{ margin: '0 0 40px' }} error={paymentError} />
+        )}
+        {!!signInError && (
+          <ErrorMessage style={{ margin: '0 0 40px' }} error={signInError} />
+        )}
+        {loading ? (
+          <div {...styles.topMargin} style={{ textAlign: 'center' }}>
+            <InlineSpinner />
+            <br />
+            {loading}
+          </div>
+        ) : (
+          <div {...styles.topMargin} {...styles.spaceBetweenChildren}>
+            {!!this.state.showErrors && errorMessages.length > 0 && (
+              <ErrorContainer style={{ marginBottom: 40 }}>
+                {errorMessages.map(({ category, messages }, i) => (
+                  <Fragment key={i}>
+                    {category}
+                    <br />
+                    <ul>
+                      {messages.map((error, i) => (
+                        <li key={i}>{error}</li>
+                      ))}
+                    </ul>
+                  </Fragment>
+                ))}
+              </ErrorContainer>
+            )}
+            <Consents
+              required={getRequiredConsents(this.props)}
+              accepted={this.state.consents}
+              onChange={(keys) => {
+                this.setState(() => ({
+                  consents: keys,
+                }))
+              }}
+            />
+            {this.renderAutoPay()}
+            <div style={{ opacity: errorMessages.length ? 0.5 : 1 }}>
+              <Button
+                block
+                primary={!errorMessages.length}
+                onClick={() => {
+                  if (!errorMessages.length && this.isStripeWalletPayment()) {
+                    this.handleWalletPayIntent()
+                  } else {
+                    this.submitPledge()
+                  }
+                }}
+              >
+                {t('pledge/submit/button/pay', {
+                  formattedChf: this.props.total
+                    ? chfFormat(this.props.total / 100)
+                    : '',
+                })}
+              </Button>
+            </div>
+          </div>
+        )}
+      </>
+    )
   }
 }
 

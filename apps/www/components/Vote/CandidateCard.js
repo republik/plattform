@@ -124,7 +124,8 @@ const CandidateCard = compose(
                   },
                 }}
                 passHref
-                legacyBehavior>
+                legacyBehavior
+              >
                 <A>{vt('vote/election/discussion')}</A>
               </Link>
             </div>
@@ -144,7 +145,7 @@ const CandidateCard = compose(
         )}
       </div>
     </div>
-  );
+  )
 })
 
 export default CandidateCard

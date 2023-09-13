@@ -27,7 +27,13 @@ import ShareOverlay from '../../ActionBar/ShareOverlay'
 import { trackEvent } from '../../../lib/matomo'
 import { getSubmissionUrl } from './Share'
 import { useTranslation } from '../../../lib/withT'
-import { IconAdd, IconRadioChecked, IconRadioUnchecked, IconRemove, IconShare } from '@republik/icons'
+import {
+  IconAdd,
+  IconRadioChecked,
+  IconRadioUnchecked,
+  IconRemove,
+  IconShare,
+} from '@republik/icons'
 
 export const styles = {
   highlightContainer: css({
@@ -137,14 +143,13 @@ export const SubmissionAuthor = ({
               />
             )}
             {createdAt && !displayAuthor.credentials && (
-              (<Link
+              <Link
                 href={submissionUrl}
                 {...styles.linkUnderline}
-                title={titleDate(createdAt)}>
-
+                title={titleDate(createdAt)}
+              >
                 <RelativeTime t={t} isDesktop date={createdAt} />
-
-              </Link>)
+              </Link>
             )}
             {isUpdated && (
               <>
@@ -159,7 +164,7 @@ export const SubmissionAuthor = ({
       </div>
       {children}
     </div>
-  );
+  )
 }
 
 const ChoiceAnswerOption = ({ option, checked }) => {
@@ -283,7 +288,7 @@ const Submission = ({
         <div {...styles.headerActions}>
           <IconButton
             invert={true}
-            Icon={isExpanded ? IconRemove : IconAdd }
+            Icon={isExpanded ? IconRemove : IconAdd}
             fillColorName='textSoft'
             size={20}
             onClick={() => {

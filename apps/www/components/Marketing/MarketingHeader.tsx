@@ -11,14 +11,12 @@ const MarketingHeader = () => {
     <div {...styles.header}>
       <div style={{ paddingLeft: 16 }}>
         <Link href='/anmelden' passHref>
-
           <SignInLink isOnMarketingPage={true} />
-
         </Link>
       </div>
       <CallToAction isOnMarketingPage={true} formatColor={undefined} />
     </div>
-  );
+  )
 }
 
 const styles = {

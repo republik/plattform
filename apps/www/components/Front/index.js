@@ -267,7 +267,12 @@ const Front = ({
                   {t.elements('front/chronology', {
                     years: intersperse(
                       archivedYears.map((year) => (
-                        <Link key={year} href={`/${year}`} passHref legacyBehavior>
+                        <Link
+                          key={year}
+                          href={`/${year}`}
+                          passHref
+                          legacyBehavior
+                        >
                           <Editorial.A style={{ color: colors.negative.text }}>
                             {year}
                           </Editorial.A>
@@ -310,7 +315,7 @@ const Front = ({
       />
       {renderAfter && renderAfter(meta)}
     </Frame>
-  );
+  )
 }
 
 export default Front

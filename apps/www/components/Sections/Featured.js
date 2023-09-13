@@ -104,23 +104,22 @@ const Panel = ({
         .concat(formats.nodes)
         .sort((a, b) => ascending(a.meta.title, b.meta.title))
         .map(({ id, meta: formatMeta, linkedDocuments }) => (
-          (<Link
+          <Link
             href={formatMeta.path}
             key={id}
             passHref
             {...styles.formatLink}
-            onClick={() => closeHandler?.()}>
-
+            onClick={() => closeHandler?.()}
+          >
             <FormatTag
               color={formatMeta.color || colors[formatMeta.kind]}
               label={formatMeta.title}
               count={linkedDocuments.totalCount || null}
             />
-
-          </Link>)
+          </Link>
         ))}
     </div>
-  );
+  )
 }
 
 const Sections = compose(graphql(getSectionNav))(

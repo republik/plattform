@@ -47,7 +47,7 @@ export const SubmissionLink = ({ id, children, personPagePath }) => {
     <Link href={`/${personPagePath}/${id}`} passHref legacyBehavior>
       {children}
     </Link>
-  );
+  )
 }
 
 export const QuestionLink = ({ questions, children }) => {
@@ -63,10 +63,11 @@ export const QuestionLink = ({ questions, children }) => {
       }}
       shallow
       passHref
-      legacyBehavior>
+      legacyBehavior
+    >
       {children}
     </Link>
-  );
+  )
 }
 
 export const LinkToEditQuestionnaire = ({
@@ -99,14 +100,15 @@ export const LinkToEditQuestionnaire = ({
           Sie möchten Ihre eigenen Antworten teilen oder nochmals bearbeiten?{' '}
           <Link
             href={`/${personPagePath}/${data.questionnaire.results.nodes[0].id}`}
-            legacyBehavior>
+            legacyBehavior
+          >
             <Editorial.A> Hierlang.</Editorial.A>
           </Link>
         </span>
       )}
       {children}
     </Editorial.P>
-  );
+  )
 }
 
 export const AnswersChart = ({ question, skipTitle }) => {

@@ -82,7 +82,7 @@ const Overview = compose(
               </Link>
             </Content>
           </NarrowContainer>
-        );
+        )
       }
 
       return (

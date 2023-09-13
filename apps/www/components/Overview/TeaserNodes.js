@@ -36,15 +36,20 @@ const TeaserNodes = ({ nodes, highlight, noClick, backgroundColor }) => {
         )
         if (node.data.url && !noClick) {
           return (
-            <Link key={node.data.id} href={node.data.url} passHref legacyBehavior>
+            <Link
+              key={node.data.id}
+              href={node.data.url}
+              passHref
+              legacyBehavior
+            >
               {area}
             </Link>
-          );
+          )
         }
         return area
       })}
     </Fragment>
-  );
+  )
 }
 
 export default TeaserNodes

@@ -33,7 +33,7 @@ const Vision = () => {
         </Link>
       </Editorial.P>
     </SectionContainer>
-  );
+  )
 }
 
 export default Vision

@@ -234,140 +234,144 @@ const Update = (props) => {
     hasPayloadFinancingValues ? '/financing' : ''
   }`
 
-  return <>
-    <H1 {...formStyles.heading}>{t(`${titleBaseKey}/title`)}</H1>
-    <P {...formStyles.paragraph}>
-      <RawHtml
-        dangerouslySetInnerHTML={{
-          __html: t(`${titleBaseKey}/lead`),
-        }}
-      />
-    </P>
-
-    <P {...formStyles.paragraph}>
-      <Link href='/' passHref legacyBehavior>
-        <Button primary>{t('components/Card/Update/read')}</Button>
-      </Link>{' '}
-      <Link
-        href={{ pathname: `/einrichten`, query: { context: 'card' } }}
-        passHref
-        legacyBehavior>
-        <Button>{t('components/Card/Update/onboarding')}</Button>
-      </Link>
-    </P>
-
-    <div {...formStyles.portraitAndDetails}>
-      <div {...formStyles.portrait}>
-        <Portrait
-          user={me}
-          values={portrait.values}
-          errors={portrait.errors}
-          onChange={handlePortrait}
-        />
-      </div>
-      <div {...formStyles.details}>
-        <Details card={card} user={me} />
-      </div>
-    </div>
-
-    <div {...formStyles.section}>
-      {statementId && group ? (
-        <P>
-          <Link
-            href={{
-              pathname: '/wahltindaer/[group]/[suffix]',
-              query: {
-                group: group.slug,
-                suffix: 'diskussion',
-                focus: statementId,
-              },
-            }}
-            passHref
-            legacyBehavior>
-            <A>Ihr Statement im «Wahltindär: {group.name}».</A>
-          </Link>
-        </P>
-      ) : (
-        <>
-          <P>{t('components/Card/Claim/statement/question')}</P>
-          <Statement
-            label={t('components/Card/Claim/statement/label')}
-            statement={statement}
-            handleStatement={handleStatement}
-          />
-        </>
-      )}
-    </div>
-
-    {false && (
-      <div {...formStyles.section}>
-        <CampaignBudget
-          budget={budget}
-          handleBudget={handleBudget}
-          budgetComment={budgetComment}
-          handleBudgetComment={handleBudgetComment}
-        />
-      </div>
-    )}
-
-    {false && (
-      <div {...formStyles.section}>
-        <VestedInterests
-          vestedInterests={vestedInterests}
-          handleVestedInterests={handleVestedInterests}
-        />
-      </div>
-    )}
-
-    {financingExpanded ? (
-      <Financing collapsed financing={financing} onChange={handleFinancing} />
-    ) : (
-      <P style={{ marginTop: 40, marginBottom: 40 }}>
-        <A
-          href='#'
-          onClick={(e) => {
-            e.preventDefault()
-            setFinancingExpanded(true)
+  return (
+    <>
+      <H1 {...formStyles.heading}>{t(`${titleBaseKey}/title`)}</H1>
+      <P {...formStyles.paragraph}>
+        <RawHtml
+          dangerouslySetInnerHTML={{
+            __html: t(`${titleBaseKey}/lead`),
           }}
-        >
-          {t.first([
-            `components/Card/Form/Financing/headline/${locale}`,
-            'components/Card/Form/Financing/headline',
-          ])}
-        </A>
+        />
       </P>
-    )}
 
-    {showErrors && errorMessages.length > 0 && (
-      <div {...formStyles.errorMessages}>
-        Fehler
-        <br />
-        <ul>
-          {errorMessages.map((error, i) => (
-            <li key={i}>{error}</li>
-          ))}
-        </ul>
-      </div>
-    )}
-
-    <div {...formStyles.button}>
-      {loading ? (
-        <InlineSpinner />
-      ) : (
-        <Button
-          primary={isDirty}
-          type='submit'
-          block
-          onClick={updateCard}
-          disabled={showErrors && errorMessages.length > 0}
+      <P {...formStyles.paragraph}>
+        <Link href='/' passHref legacyBehavior>
+          <Button primary>{t('components/Card/Update/read')}</Button>
+        </Link>{' '}
+        <Link
+          href={{ pathname: `/einrichten`, query: { context: 'card' } }}
+          passHref
+          legacyBehavior
         >
-          {t('components/Card/Update/submit')}
-        </Button>
-      )}
-    </div>
+          <Button>{t('components/Card/Update/onboarding')}</Button>
+        </Link>
+      </P>
 
-    {serverError && <ErrorMessage error={serverError} />}
-  </>;
+      <div {...formStyles.portraitAndDetails}>
+        <div {...formStyles.portrait}>
+          <Portrait
+            user={me}
+            values={portrait.values}
+            errors={portrait.errors}
+            onChange={handlePortrait}
+          />
+        </div>
+        <div {...formStyles.details}>
+          <Details card={card} user={me} />
+        </div>
+      </div>
+
+      <div {...formStyles.section}>
+        {statementId && group ? (
+          <P>
+            <Link
+              href={{
+                pathname: '/wahltindaer/[group]/[suffix]',
+                query: {
+                  group: group.slug,
+                  suffix: 'diskussion',
+                  focus: statementId,
+                },
+              }}
+              passHref
+              legacyBehavior
+            >
+              <A>Ihr Statement im «Wahltindär: {group.name}».</A>
+            </Link>
+          </P>
+        ) : (
+          <>
+            <P>{t('components/Card/Claim/statement/question')}</P>
+            <Statement
+              label={t('components/Card/Claim/statement/label')}
+              statement={statement}
+              handleStatement={handleStatement}
+            />
+          </>
+        )}
+      </div>
+
+      {false && (
+        <div {...formStyles.section}>
+          <CampaignBudget
+            budget={budget}
+            handleBudget={handleBudget}
+            budgetComment={budgetComment}
+            handleBudgetComment={handleBudgetComment}
+          />
+        </div>
+      )}
+
+      {false && (
+        <div {...formStyles.section}>
+          <VestedInterests
+            vestedInterests={vestedInterests}
+            handleVestedInterests={handleVestedInterests}
+          />
+        </div>
+      )}
+
+      {financingExpanded ? (
+        <Financing collapsed financing={financing} onChange={handleFinancing} />
+      ) : (
+        <P style={{ marginTop: 40, marginBottom: 40 }}>
+          <A
+            href='#'
+            onClick={(e) => {
+              e.preventDefault()
+              setFinancingExpanded(true)
+            }}
+          >
+            {t.first([
+              `components/Card/Form/Financing/headline/${locale}`,
+              'components/Card/Form/Financing/headline',
+            ])}
+          </A>
+        </P>
+      )}
+
+      {showErrors && errorMessages.length > 0 && (
+        <div {...formStyles.errorMessages}>
+          Fehler
+          <br />
+          <ul>
+            {errorMessages.map((error, i) => (
+              <li key={i}>{error}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      <div {...formStyles.button}>
+        {loading ? (
+          <InlineSpinner />
+        ) : (
+          <Button
+            primary={isDirty}
+            type='submit'
+            block
+            onClick={updateCard}
+            disabled={showErrors && errorMessages.length > 0}
+          >
+            {t('components/Card/Update/submit')}
+          </Button>
+        )}
+      </div>
+
+      {serverError && <ErrorMessage error={serverError} />}
+    </>
+  )
 }
 
 const fragmentCard = gql`

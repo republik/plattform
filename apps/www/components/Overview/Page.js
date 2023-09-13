@@ -278,7 +278,7 @@ const FrontOverview = ({
         </Link>
       )}
     </Frame>
-  );
+  )
 }
 
 export default compose(

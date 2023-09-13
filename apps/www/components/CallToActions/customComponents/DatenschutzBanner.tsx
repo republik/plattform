@@ -43,7 +43,10 @@ const DatenschutzBanner = ({
             Urheberrechtsgesellschaft Pro Litteris anonymisierte Zugriffszahlen
             unserer Beiträge übermitteln zu können.
           </p>
-          <Link href={linkHref || DATENSCHUTZ_URL} onClick={() => handleAcknowledge()}>
+          <Link
+            href={linkHref || DATENSCHUTZ_URL}
+            onClick={() => handleAcknowledge()}
+          >
             Wie und warum wir das tun
           </Link>
         </div>
@@ -55,7 +58,7 @@ const DatenschutzBanner = ({
         />
       </div>
     </CTAAnimatedBase>
-  );
+  )
 }
 
 // export default DatenschutzBanner

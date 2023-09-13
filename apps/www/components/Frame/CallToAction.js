@@ -30,19 +30,18 @@ const CallToAction = ({ formatColor, isOnMarketingPage }) => {
   }, [colorScheme, formatColor])
 
   return showTrialButton ? (
-    (<Link
+    <Link
       href='#probelesen'
       passHref
       data-hide-if-me='true'
       {...styles.button}
       {...(formatColor ? styles.buttonFormatColor : styles.buttonGeneric)}
-      {...buttonColorRule}>
-
+      {...buttonColorRule}
+    >
       <span>{t('marketing/preview/button/label')}</span>
-
-    </Link>)
+    </Link>
   ) : (
-    (<Link
+    <Link
       href='/angebote'
       passHref
       prefetch={false}
@@ -53,15 +52,14 @@ const CallToAction = ({ formatColor, isOnMarketingPage }) => {
         : formatColor
         ? styles.buttonFormatColor
         : styles.buttonGeneric)}
-      {...buttonColorRule}>
-
+      {...buttonColorRule}
+    >
       <span {...styles.buttonTextMobile}>
         {t('marketing/page/carpet/buttonsmall')}
       </span>
       <span {...styles.buttonText}>{t('marketing/page/carpet/button')}</span>
-
-    </Link>)
-  );
+    </Link>
+  )
 }
 
 export default CallToAction

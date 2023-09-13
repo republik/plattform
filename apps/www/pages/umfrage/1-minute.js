@@ -176,7 +176,7 @@ const NoThanks = compose(withT)(({ t }) => {
         </Link>
       </div>
     </div>
-  );
+  )
 })
 
 const initState = {

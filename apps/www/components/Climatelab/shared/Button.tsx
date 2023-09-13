@@ -28,7 +28,7 @@ const Button: FC<ButtonProps> = ({
 
   if (href) {
     return (
-      (<NextLink
+      <NextLink
         href={href}
         passHref
         {...colorScheme.set('backgroundColor', 'primary')}
@@ -40,12 +40,11 @@ const Button: FC<ButtonProps> = ({
           },
         })}
         {...plainLinkRule}
-        {...styles.button}>
-
+        {...styles.button}
+      >
         {children}
-
-      </NextLink>)
-    );
+      </NextLink>
+    )
   }
 
   return (

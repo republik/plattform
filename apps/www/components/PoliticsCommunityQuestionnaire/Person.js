@@ -144,108 +144,114 @@ const Page = () => {
             )}`,
           }
 
-          return <>
-            <Meta data={meta} />
-            <div
-              style={{
-                padding: '24px 0 24px',
-              }}
-            >
+          return (
+            <>
+              <Meta data={meta} />
               <div
                 style={{
-                  paddingTop: 24,
-                  textAlign: 'center',
+                  padding: '24px 0 24px',
                 }}
               >
-                <Figure
-                  size='tiny'
-                  attributes={{ style: { position: 'relative' } }}
+                <div
+                  style={{
+                    paddingTop: 24,
+                    textAlign: 'center',
+                  }}
                 >
-                  <FigureImage
-                    {...FigureImage.utils.getResizedSrcs(
-                      `${QUESTIONNAIRE_SQUARE_IMG_URL}?size=707x1340`,
-                      `${ILLU_NIGHT_MODE}?size=707x1340`,
-                      1000,
-                    )}
-                  />
-                  <FigureCaption>
-                    <FigureByline>{ILLU_CREDIT}</FigureByline>
-                  </FigureCaption>
-                </Figure>
-                <NarrowContainer style={{ padding: '20px 0' }}>
-                  <Interaction.Headline>
-                    {'Die Antworten von ' + author?.name}
-                  </Interaction.Headline>
-                  {author?.profilePicture && (
-                    <img
-                      src={author.profilePicture}
-                      style={{
-                        marginTop: 30,
-                        width: 120,
-                        borderRadius: 80,
-                      }}
+                  <Figure
+                    size='tiny'
+                    attributes={{ style: { position: 'relative' } }}
+                  >
+                    <FigureImage
+                      {...FigureImage.utils.getResizedSrcs(
+                        `${QUESTIONNAIRE_SQUARE_IMG_URL}?size=707x1340`,
+                        `${ILLU_NIGHT_MODE}?size=707x1340`,
+                        1000,
+                      )}
                     />
-                  )}
-                </NarrowContainer>
+                    <FigureCaption>
+                      <FigureByline>{ILLU_CREDIT}</FigureByline>
+                    </FigureCaption>
+                  </Figure>
+                  <NarrowContainer style={{ padding: '20px 0' }}>
+                    <Interaction.Headline>
+                      {'Die Antworten von ' + author?.name}
+                    </Interaction.Headline>
+                    {author?.profilePicture && (
+                      <img
+                        src={author.profilePicture}
+                        style={{
+                          marginTop: 30,
+                          width: 120,
+                          borderRadius: 80,
+                        }}
+                      />
+                    )}
+                  </NarrowContainer>
+                </div>
               </div>
-            </div>
-            <Center>
-              <div
-                {...submissionStyles.header}
-                style={{
-                  top: headerHeight,
-                  padding: '10px 0',
-                  margin: '10px 0 0',
-                }}
-                {...colorScheme.set('backgroundColor', 'default')}
-              >
-                <div {...submissionStyles.headerText}>
-                  <NextLink href={OVERVIEW_QUESTIONNAIRE_PATH} passHref legacyBehavior>
+              <Center>
+                <div
+                  {...submissionStyles.header}
+                  style={{
+                    top: headerHeight,
+                    padding: '10px 0',
+                    margin: '10px 0 0',
+                  }}
+                  {...colorScheme.set('backgroundColor', 'default')}
+                >
+                  <div {...submissionStyles.headerText}>
+                    <NextLink
+                      href={OVERVIEW_QUESTIONNAIRE_PATH}
+                      passHref
+                      legacyBehavior
+                    >
+                      <IconButton
+                        size={24}
+                        label='Zur Übersicht'
+                        labelShort='Zur Übersicht'
+                        Icon={IconChevronLeft}
+                      />
+                    </NextLink>
+                  </div>
+                  <HeaderShare meta={meta} />
+                  {isOwnQuestionnaire && (
                     <IconButton
                       size={24}
-                      label='Zur Übersicht'
-                      labelShort='Zur Übersicht'
-                      Icon={IconChevronLeft}
+                      label='Bearbeiten'
+                      labelShort=''
+                      Icon={IconEdit}
+                      href={EDIT_QUESTIONNAIRE_PATH}
                     />
-                  </NextLink>
+                  )}
                 </div>
-                <HeaderShare meta={meta} />
-                {isOwnQuestionnaire && (
-                  <IconButton
-                    size={24}
-                    label='Bearbeiten'
-                    labelShort=''
-                    Icon={IconEdit}
-                    href={EDIT_QUESTIONNAIRE_PATH}
-                  />
-                )}
-              </div>
 
-              {submission?.answers?.nodes.map(
-                ({ id, question: { id: qid }, payload }) => {
-                  const question = questions.find((q) => q.id === qid)
-                  return (
-                    <SubmissionQa
-                      key={id}
-                      question={question}
-                      payload={payload}
-                    />
-                  )
-                },
-              )}
-              <LinkToEditQuestionnaire
-                slug={QUESTIONNAIRE_SLUG}
-                questionnairePath={EDIT_QUESTIONNAIRE_PATH}
-                personPagePath={PERSON_PAGE_PATH}
-                newOnly
-              />
-              <br />
-            </Center>
-          </>;
+                {submission?.answers?.nodes.map(
+                  ({ id, question: { id: qid }, payload }) => {
+                    const question = questions.find((q) => q.id === qid)
+                    return (
+                      <SubmissionQa
+                        key={id}
+                        question={question}
+                        payload={payload}
+                      />
+                    )
+                  },
+                )}
+                <LinkToEditQuestionnaire
+                  slug={QUESTIONNAIRE_SLUG}
+                  questionnairePath={EDIT_QUESTIONNAIRE_PATH}
+                  personPagePath={PERSON_PAGE_PATH}
+                  newOnly
+                />
+                <br />
+              </Center>
+            </>
+          )
         }}
       />
     </Frame>
-  );
+  )
 }
 
 export default Page

@@ -42,56 +42,57 @@ const NotificationFeedMini = ({
         if (!nodes) return
         const newNodes = nodes.filter((node) => isNew(node))
 
-        return <>
-          {newNodes &&
-            groupByDate.entries(newNodes).map(({ key, values }) => {
-              return (
-                <Fragment key={key}>
-                  {values.map((node, j) => {
-                    const { object } = node
-                    const path = parse(node.content.url).path
-                    if (
-                      !object ||
-                      (object.__typename === 'Comment' && !object.published)
-                    ) {
+        return (
+          <>
+            {newNodes &&
+              groupByDate.entries(newNodes).map(({ key, values }) => {
+                return (
+                  <Fragment key={key}>
+                    {values.map((node, j) => {
+                      const { object } = node
+                      const path = parse(node.content.url).path
+                      if (
+                        !object ||
+                        (object.__typename === 'Comment' && !object.published)
+                      ) {
+                        return (
+                          <p key={j}>{t('Notifications/unpublished/label')}</p>
+                        )
+                      }
                       return (
-                        <p key={j}>{t('Notifications/unpublished/label')}</p>
+                        <div {...styles.notificationItem} key={j}>
+                          {isNew(node) && (
+                            <div
+                              {...styles.unreadDot}
+                              {...colorScheme.set('borderColor', 'default')}
+                            />
+                          )}
+
+                          <Link
+                            href={
+                              getTeaserHref(
+                                path,
+                                node.object?.meta?.format?.meta.externalBaseUrl,
+                              ) ?? '/'
+                            }
+                            passHref
+                            {...styles.cleanLink}
+                            onClick={() => closeHandler()}
+                          >
+                            {dateFormat(new Date(node.createdAt))}{' '}
+                            {node.content.title}
+                          </Link>
+                        </div>
                       )
-                    }
-                    return (
-                      <div {...styles.notificationItem} key={j}>
-                        {isNew(node) && (
-                          <div
-                            {...styles.unreadDot}
-                            {...colorScheme.set('borderColor', 'default')}
-                          />
-                        )}
-
-                        <Link
-                          href={
-                            getTeaserHref(
-                              path,
-                              node.object?.meta?.format?.meta.externalBaseUrl,
-                            ) ?? '/'
-                          }
-                          passHref
-                          {...styles.cleanLink}
-                          onClick={() => closeHandler()}>
-
-                          {dateFormat(new Date(node.createdAt))}{' '}
-                          {node.content.title}
-
-                        </Link>
-                      </div>
-                    );
-                  })}
-                </Fragment>
-              );
-            })}
-        </>;
+                    })}
+                  </Fragment>
+                )
+              })}
+          </>
+        )
       }}
     />
-  );
+  )
 }
 
 const styles = {

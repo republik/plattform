@@ -182,7 +182,8 @@ const Page = ({
       <Link
         href={{ pathname: '/angebote', query: primaryQuery }}
         passHref
-        legacyBehavior>
+        legacyBehavior
+      >
         <A>
           {activeMembership && !shouldBuyProlong
             ? 'Wachstum schenken'
@@ -758,7 +759,8 @@ const Page = ({
               <Link
                 href={{ pathname: '/angebote', query: primaryQuery }}
                 passHref
-                legacyBehavior>
+                legacyBehavior
+              >
                 <Button primary style={{ minWidth: 300 }}>
                   {activeMembership && !shouldBuyProlong
                     ? 'Wachstum schenken'
@@ -804,7 +806,7 @@ const Page = ({
         </Content>
       </Container>
     </Frame>
-  );
+  )
 }
 
 const EnhancedPage = compose(

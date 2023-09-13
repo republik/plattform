@@ -18,7 +18,8 @@ const EmployeeLink = ({ employee, children }) => (
   <Link
     href={`/~${employee.user.slug || employee.user.id}`}
     passHref
-    {...styles.link}>
+    {...styles.link}
+  >
     {children}
   </Link>
 )
@@ -73,7 +74,7 @@ const Team = ({ loading, error, employees }) => {
         </Link>
       </Editorial.P>
     </SectionContainer>
-  );
+  )
 }
 
 const styles = {

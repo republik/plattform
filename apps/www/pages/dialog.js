@@ -104,133 +104,135 @@ const DialogContent = ({ tab, activeDiscussionId, serverContext }) => {
           image: `${CDN_FRONTEND_BASE_URL}/static/social-media/logo.png`,
         }
 
-  return <>
-    {metaData && <Meta data={metaData} />}
-    <Center>
-      <div {...styles.container}>
-        {!tab && (
-          <>
-            <Interaction.Headline>{t('feedback/title')}</Interaction.Headline>
-            <br />
-            <WithAccess
+  return (
+    <>
+      {metaData && <Meta data={metaData} />}
+      <Center>
+        <div {...styles.container}>
+          {!tab && (
+            <>
+              <Interaction.Headline>{t('feedback/title')}</Interaction.Headline>
+              <br />
+              <WithAccess
+                render={() => (
+                  <>
+                    <Interaction.P>{t('feedback/lead')}</Interaction.P>
+                    <Interaction.P style={{ marginTop: 10 }}>
+                      <Link
+                        href={{
+                          pathname: '/dialog',
+                          query: { t: 'general' },
+                        }}
+                        passHref
+                        legacyBehavior
+                      >
+                        <A>{t('feedback/link/general')}</A>
+                      </Link>
+                    </Interaction.P>
+                  </>
+                )}
+              />
+            </>
+          )}
+          {!!tab && (
+            <div style={{ marginBottom: 30 }}>
+              <Editorial.Format color='primary'>
+                <Link
+                  href='/dialog'
+                  passHref
+                  style={{ color: 'inherit', textDecoration: 'none' }}
+                >
+                  {t('feedback/title')}
+                </Link>
+              </Editorial.Format>
+              <Interaction.H1>
+                {tab === 'article' && <DiscussionTitle />}
+                {tab === 'general' && t('feedback/general/title')}
+              </Interaction.H1>
+              {tab === 'general' && (
+                <Interaction.P style={{ marginTop: 10 }}>
+                  {t('feedback/general/lead')}
+                </Interaction.P>
+              )}
+              <br />
+              <ActionBar discussion={activeDiscussionId} fontSize />
+            </div>
+          )}
+          {!discussionContext?.discussion?.userCanComment && (
+            <WithoutAccess
               render={() => (
                 <>
-                  <Interaction.P>{t('feedback/lead')}</Interaction.P>
-                  <Interaction.P style={{ marginTop: 10 }}>
-                    <Link
-                      href={{
-                        pathname: '/dialog',
-                        query: { t: 'general' },
-                      }}
-                      passHref
-                      legacyBehavior>
-                      <A>{t('feedback/link/general')}</A>
-                    </Link>
-                  </Interaction.P>
+                  <UnauthorizedMessage
+                    unauthorizedTexts={{
+                      title: ' ',
+                      description: t.elements('feedback/unauthorized', {
+                        buyLink: (
+                          <Link href='/angebote' passHref legacyBehavior>
+                            <A>{t('feedback/unauthorized/buyText')}</A>
+                          </Link>
+                        ),
+                      }),
+                    }}
+                  />
+                  <br />
+                  <br />
+                  <br />
                 </>
               )}
             />
-          </>
-        )}
-        {!!tab && (
-          <div style={{ marginBottom: 30 }}>
-            <Editorial.Format color='primary'>
-              <Link
-                href='/dialog'
-                passHref
-                style={{ color: 'inherit', textDecoration: 'none' }}>
-
-                {t('feedback/title')}
-
-              </Link>
-            </Editorial.Format>
-            <Interaction.H1>
-              {tab === 'article' && <DiscussionTitle />}
-              {tab === 'general' && t('feedback/general/title')}
-            </Interaction.H1>
-            {tab === 'general' && (
-              <Interaction.P style={{ marginTop: 10 }}>
-                {t('feedback/general/lead')}
-              </Interaction.P>
-            )}
-            <br />
-            <ActionBar discussion={activeDiscussionId} fontSize />
-          </div>
-        )}
-        {!discussionContext?.discussion?.userCanComment && (
-          <WithoutAccess
-            render={() => (
-              <>
-                <UnauthorizedMessage
-                  unauthorizedTexts={{
-                    title: ' ',
-                    description: t.elements('feedback/unauthorized', {
-                      buyLink: (
-                        <Link href='/angebote' passHref legacyBehavior>
-                          <A>{t('feedback/unauthorized/buyText')}</A>
-                        </Link>
-                      ),
-                    }),
-                  }}
-                />
-                <br />
-                <br />
-                <br />
-              </>
-            )}
-          />
-        )}
-        {!tab && (
-          <>
-            <H3>{t('marketing/community/title/plain')}</H3>
-            <TestimonialList
-              singleRow
-              minColumns={3}
-              first={5}
-              share={false}
-            />
-            <div style={{ marginTop: 10 }}>
-              <Link href='/community' passHref legacyBehavior>
-                <A>{t('marketing/community/link')}</A>
-              </Link>
-            </div>
+          )}
+          {!tab && (
+            <>
+              <H3>{t('marketing/community/title/plain')}</H3>
+              <TestimonialList
+                singleRow
+                minColumns={3}
+                first={5}
+                share={false}
+              />
+              <div style={{ marginTop: 10 }}>
+                <Link href='/community' passHref legacyBehavior>
+                  <A>{t('marketing/community/link')}</A>
+                </Link>
+              </div>
+              <WithAccess
+                render={() => (
+                  <Fragment>
+                    <H3
+                      style={{
+                        position: 'relative',
+                        paddingRight: 40,
+                      }}
+                    >
+                      {t('feedback/activeDiscussions/label')}
+                      <span style={{ position: 'absolute', right: 0, top: -1 }}>
+                        <IconDiscussion
+                          size={24}
+                          {...colorScheme.set('fill', 'primary')}
+                        />
+                      </span>
+                    </H3>
+                    <ActiveDiscussions first={5} />
+                  </Fragment>
+                )}
+              />
+            </>
+          )}
+          {activeDiscussionId && <Discussion showPayNotes={false} />}
+          {!tab && (
             <WithAccess
               render={() => (
                 <Fragment>
-                  <H3
-                    style={{
-                      position: 'relative',
-                      paddingRight: 40,
-                    }}
-                  >
-                    {t('feedback/activeDiscussions/label')}
-                    <span style={{ position: 'absolute', right: 0, top: -1 }}>
-                      <IconDiscussion
-                        size={24}
-                        {...colorScheme.set('fill', 'primary')}
-                      />
-                    </span>
-                  </H3>
-                  <ActiveDiscussions first={5} />
+                  <H3>{t('feedback/latestComments/headline')}</H3>
+                  <LatestComments />
                 </Fragment>
               )}
             />
-          </>
-        )}
-        {activeDiscussionId && <Discussion showPayNotes={false} />}
-        {!tab && (
-          <WithAccess
-            render={() => (
-              <Fragment>
-                <H3>{t('feedback/latestComments/headline')}</H3>
-                <LatestComments />
-              </Fragment>
-            )}
-          />
-        )}
-      </div>
-    </Center>
-  </>;
+          )}
+        </div>
+      </Center>
+    </>
+  )
 }
 
 const DialogPage = ({ serverContext }) => {

@@ -69,7 +69,7 @@ const Subscriptions = (props) => {
         })}
       </P>
     </Section>
-  );
+  )
 }
 
 export default withT(Subscriptions)

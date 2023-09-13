@@ -41,7 +41,12 @@ import { cardColors } from './constants'
 import Link from 'next/link'
 import DiscussionContextProvider from '../Discussion/context/DiscussionContextProvider'
 import Discussion from '../Discussion/Discussion'
-import { IconFilterList, IconFollow, IconList, IconRevert } from '@republik/icons'
+import {
+  IconFilterList,
+  IconFollow,
+  IconList,
+  IconRevert,
+} from '@republik/icons'
 
 const styles = {
   swipeIndicator: css({
@@ -698,7 +703,8 @@ const Group = ({
             query: medianSmartspiderQuery,
           }}
           passHref
-          legacyBehavior>
+          legacyBehavior
+        >
           <Editorial.A>
             {t(
               `components/Card/Group/switch${group.special ? '/special' : ''}`,
@@ -751,7 +757,8 @@ const Group = ({
                     },
                   }}
                   passHref
-                  legacyBehavior>
+                  legacyBehavior
+                >
                   <Editorial.A>
                     {t('components/Card/Group/end/showList')}
                   </Editorial.A>
@@ -790,7 +797,8 @@ const Group = ({
                       },
                     }}
                     passHref
-                    legacyBehavior>
+                    legacyBehavior
+                  >
                     <Editorial.A>
                       {t('components/Card/Group/end/showList')}
                     </Editorial.A>
@@ -1042,7 +1050,7 @@ const Group = ({
         )}
       </div>
     </Container>
-  );
+  )
 }
 
 const subscribeMutation = gql`
