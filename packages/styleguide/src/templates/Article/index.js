@@ -155,12 +155,6 @@ const createSchema = ({
       key: 'discussion',
       ref: 'repo',
     },
-    // disabled pending launch and backend support
-    // https://github.com/orbiting/backends/compare/feat-article-email
-    {
-      label: 'E-Mail-Betreff',
-      key: 'emailSubject',
-    },
   ],
   titleBlockRule,
   titleBlockPrepend = null,
