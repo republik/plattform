@@ -1,4 +1,3 @@
-import AreaLink from './Area'
 import Link from 'next/link'
 
 const HrefLink = ({ href, passHref, children }) => {
@@ -6,12 +5,10 @@ const HrefLink = ({ href, passHref, children }) => {
     return children
   }
 
-  const Component = passHref ? Link : AreaLink
-
   return (
-    <Component href={href} passHref={passHref} prefetch={false} legacyBehavior>
+    <Link href={href} passHref={passHref} prefetch={false} legacyBehavior>
       {children}
-    </Component>
+    </Link>
   )
 }
 export default HrefLink
