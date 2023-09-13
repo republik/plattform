@@ -101,8 +101,8 @@ function SeriesNav({
             )}
             <InfoBoxTitle>
               {titlePath ? (
-                <Link href={titlePath} {...styles.plainlink}>
-                  {series.title}
+                <Link href={titlePath} legacyBehavior>
+                  <a {...styles.plainlink}>{series.title}</a>
                 </Link>
               ) : (
                 series.title
