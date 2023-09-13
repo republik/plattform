@@ -101,8 +101,8 @@ function SeriesNav({
             )}
             <InfoBoxTitle>
               {titlePath ? (
-                <Link href={titlePath} passHref>
-                  <a {...styles.plainlink}>{series.title}</a>
+                <Link href={titlePath} {...styles.plainlink}>
+                  {series.title}
                 </Link>
               ) : (
                 series.title
@@ -114,7 +114,7 @@ function SeriesNav({
                 {titlePath &&
                   t.elements('styleguide/SeriesNav/seriesoverview/link', {
                     link: (
-                      <Link key='link' href={titlePath} passHref>
+                      <Link key='link' href={titlePath} passHref legacyBehavior>
                         <Editorial.A>
                           {t('styleguide/SeriesNav/seriesoverview')}
                         </Editorial.A>
