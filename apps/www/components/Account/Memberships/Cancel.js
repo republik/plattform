@@ -135,7 +135,7 @@ const CancelMembership = ({
                 </Link>
               </Interaction.P>
             </Fragment>
-          );
+          )
         }
 
         return (
@@ -211,7 +211,8 @@ const CancelMembership = ({
                       userPrice: 1,
                     },
                   }}
-                  legacyBehavior>
+                  legacyBehavior
+                >
                   <A>{t('memberships/cancel/userPriceLink')}</A>
                 </Link>
               </Interaction.P>
@@ -260,10 +261,10 @@ const CancelMembership = ({
               <A>{t('memberships/cancel/accountLink')}</A>
             </Link>
           </Fragment>
-        );
+        )
       }}
     />
-  );
+  )
 }
 
 export default compose(

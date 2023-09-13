@@ -42,7 +42,13 @@ const AccountTabs = ({ t }) => {
     <div {...styles.container}>
       <Scroller innerPadding={15} activeChildIndex={activeChildIndex}>
         {TabArray.map((n, i) => (
-          <Link href={n.path} scroll={false} passHref key={n.name} legacyBehavior>
+          <Link
+            href={n.path}
+            scroll={false}
+            passHref
+            key={n.name}
+            legacyBehavior
+          >
             <TabButton
               key={n.name}
               text={t(`account/tabs/${n.name}`)}
@@ -57,7 +63,7 @@ const AccountTabs = ({ t }) => {
         />
       </Scroller>
     </div>
-  );
+  )
 }
 
 export default withT(AccountTabs)

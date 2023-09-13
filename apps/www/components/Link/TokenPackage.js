@@ -48,10 +48,11 @@ const TokenPackageLink = compose(
           query,
         }}
         {...props}
-        legacyBehavior>
+        legacyBehavior
+      >
         {children}
       </Link>
-    );
+    )
   },
 )
 

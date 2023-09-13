@@ -62,8 +62,9 @@ const CommentLink = ({ displayAuthor, comment, discussion, ...props }) => {
           {...props}
           href={`/~${displayAuthor.slug}`}
           prefetch={false}
-          legacyBehavior />
-      );
+          legacyBehavior
+        />
+      )
     }
   } else if (discussion) {
     const focusRoute = getFocusHref(discussion, comment)
@@ -73,8 +74,9 @@ const CommentLink = ({ displayAuthor, comment, discussion, ...props }) => {
           {...props}
           href={getFocusHref(discussion, comment)}
           prefetch={false}
-          legacyBehavior />
-      );
+          legacyBehavior
+        />
+      )
     }
   }
 
