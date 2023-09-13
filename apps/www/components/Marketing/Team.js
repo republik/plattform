@@ -15,11 +15,7 @@ import Link from 'next/link'
 import { useTranslation } from '../../lib/withT'
 
 const EmployeeLink = ({ employee, children }) => (
-  <Link
-    href={`/~${employee.user.slug || employee.user.id}`}
-    passHref
-    {...styles.link}
-  >
+  <Link href={`/~${employee.user.slug || employee.user.id}`} {...styles.link}>
     {children}
   </Link>
 )

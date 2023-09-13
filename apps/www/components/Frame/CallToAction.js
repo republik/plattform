@@ -32,7 +32,6 @@ const CallToAction = ({ formatColor, isOnMarketingPage }) => {
   return showTrialButton ? (
     <Link
       href='#probelesen'
-      passHref
       data-hide-if-me='true'
       {...styles.button}
       {...(formatColor ? styles.buttonFormatColor : styles.buttonGeneric)}
@@ -43,7 +42,6 @@ const CallToAction = ({ formatColor, isOnMarketingPage }) => {
   ) : (
     <Link
       href='/angebote'
-      passHref
       prefetch={false}
       data-hide-if-me='true'
       {...styles.button}
