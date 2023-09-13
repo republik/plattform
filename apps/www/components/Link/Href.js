@@ -1,6 +1,12 @@
 import Link from 'next/link'
 
-const HrefLink = ({ href, passHref, legacyBehavior = true, children }) => {
+const HrefLink = ({
+  href,
+  passHref,
+  legacyBehavior = true,
+  children,
+  ...restProps
+}) => {
   if (!href) {
     return children
   }
@@ -11,6 +17,7 @@ const HrefLink = ({ href, passHref, legacyBehavior = true, children }) => {
       passHref={passHref}
       prefetch={false}
       legacyBehavior={legacyBehavior}
+      {...restProps}
     >
       {children}
     </Link>
