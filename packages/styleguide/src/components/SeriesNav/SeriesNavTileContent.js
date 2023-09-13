@@ -88,6 +88,7 @@ const SeriesNavTileContent = ({
         href={episode.document.meta.path}
         {...styles.plainlink}
         onClick={onEpisodeClick}
+        legacyBehavior={false}
       >
         {children}
       </Link>
