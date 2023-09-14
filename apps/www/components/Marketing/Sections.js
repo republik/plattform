@@ -36,9 +36,7 @@ const sectionContent = [
       <>
         Die Klimakrise ist hier. Die Lage ist ernst. Was tun? Gemeinsam mit
         Ihnen machen wir uns auf die Suche nach Antworten. <br />
-        <Link href='/klimalabor' passHref>
-          <a>Newsletter abonnieren</a>
-        </Link>
+        <Link href='/klimalabor'>Newsletter abonnieren</Link>
       </>
     ),
   },
