@@ -13,9 +13,9 @@ export const { getClient } = registerApolloClient(() => {
       // (this does not work if you are rendering your page with `export const dynamic = "force-static"`)
       // fetchOptions: { cache: "no-store" },
       headers: {
-        cookie: headers().get('cookie'),
-        accept: headers().get('accept'),
-        Authorization: headers().get('Authorization'),
+        cookie: headers().get('cookie') ?? '',
+        accept: headers().get('accept') ?? '',
+        Authorization: headers().get('Authorization') ?? '',
       },
     }),
   })
