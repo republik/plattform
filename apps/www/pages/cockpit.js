@@ -48,7 +48,7 @@ const statusQuery = gql`
     $accessToken: ID
   ) {
     membershipStats {
-      evolution(min: "2018-01", max: $max) {
+      evolution(min: "2020-01", max: $max) {
         updatedAt
         buckets {
           key
@@ -150,7 +150,8 @@ const Accordion = withInNativeApp(
                       query: { package: 'PROLONG', token: query.token },
                     }}
                     passHref
-                    legacyBehavior>
+                    legacyBehavior
+                  >
                     <PackageItem
                       t={t}
                       crowdfundingName={CROWDFUNDING}
@@ -171,7 +172,8 @@ const Accordion = withInNativeApp(
                       },
                     }}
                     passHref
-                    legacyBehavior>
+                    legacyBehavior
+                  >
                     <PackageItem
                       t={t}
                       crowdfundingName={CROWDFUNDING}
@@ -196,7 +198,8 @@ const Accordion = withInNativeApp(
                       },
                     }}
                     passHref
-                    legacyBehavior>
+                    legacyBehavior
+                  >
                     <PackageItem
                       t={t}
                       crowdfundingName={CROWDFUNDING}
@@ -219,7 +222,8 @@ const Accordion = withInNativeApp(
                         query: { package: 'ABO_GIVE' },
                       }}
                       passHref
-                      legacyBehavior>
+                      legacyBehavior
+                    >
                       <PackageItem
                         t={t}
                         crowdfundingName={CROWDFUNDING}
@@ -237,7 +241,8 @@ const Accordion = withInNativeApp(
                           query: { package: 'MONTHLY_ABO' },
                         }}
                         passHref
-                        legacyBehavior>
+                        legacyBehavior
+                      >
                         <PackageItem
                           t={t}
                           crowdfundingName={CROWDFUNDING}
@@ -253,7 +258,8 @@ const Accordion = withInNativeApp(
                           query: { package: 'ABO' },
                         }}
                         passHref
-                        legacyBehavior>
+                        legacyBehavior
+                      >
                         <PackageItem
                           t={t}
                           crowdfundingName={CROWDFUNDING}
@@ -269,7 +275,8 @@ const Accordion = withInNativeApp(
                           query: { package: 'BENEFACTOR' },
                         }}
                         passHref
-                        legacyBehavior>
+                        legacyBehavior
+                      >
                         <PackageItem
                           t={t}
                           crowdfundingName={CROWDFUNDING}
@@ -289,7 +296,8 @@ const Accordion = withInNativeApp(
                   query: { package: 'DONATE' },
                 }}
                 passHref
-                legacyBehavior>
+                legacyBehavior
+              >
                 <PackageItem
                   t={t}
                   crowdfundingName={CROWDFUNDING}
@@ -313,7 +321,7 @@ const Accordion = withInNativeApp(
             </Interaction.P>
           )}
         </div>
-      );
+      )
     },
   ),
 )
@@ -384,12 +392,20 @@ const Page = ({
 
           const labels = [
             { key: 'preactive', color: '#256900', label: 'Crowdfunder' },
-            { key: 'active', color: '#3CAD00', label: 'aktive' },
+            {
+              key: 'active',
+              color: '#3CAD00',
+              label: 'Aktive Mitgliedschaften oder Abos',
+            },
             { key: 'loss', color: '#9970ab', label: 'Abgänge' },
             { key: 'missing', color: '#444', label: 'fehlende' },
             { key: 'pending', color: '#444', label: 'offene' },
             { key: 'base', color: '#3CAD00', label: 'bestehende' },
-            // { key: 'gaining', color: '#2A7A00', label: 'neue' }
+            {
+              key: 'gaining',
+              color: '#2A7A00',
+              label: 'Neue Abos oder Mitgliedschaften',
+            },
           ]
           const labelMap = labels.reduce((map, d) => {
             map[d.key] = d.label
@@ -424,37 +440,38 @@ const Page = ({
                     label: labelMap.active,
                     value: active + overdue,
                   })
-                  acc.push({
-                    month: key,
-                    label: labelMap.loss,
-                    value: -ended,
-                  })
+                  // acc.push({
+                  //   month: key,
+                  //   label: labelMap.loss,
+                  //   value: -ended,
+                  // })
                   return acc
                 }, []),
             )
 
-          const pendingBuckets = buckets.slice(-7)
+          const pendingBuckets = buckets.slice(-16, -3)
           const pendingValues = pendingBuckets.reduce(
             (agg, month) => {
               // agg.gaining += month.gaining
-              const pendingYearly =
-                month.pending - month.pendingSubscriptionsOnly
+              // const pendingYearly =
+              //   month.pending - month.pendingSubscriptionsOnly
+
               agg.values = agg.values.concat([
-                {
-                  month: month.key,
-                  label: labelMap.base,
-                  value: month.active - pendingYearly, // - month.gaining
-                },
                 // {
                 //   month: month.key,
-                //   label: labelMap.gaining,
-                //   value: month.gaining
+                //   label: labelMap.base,
+                //   value: month.active - pendingYearly, // - month.gaining
                 // },
                 {
                   month: month.key,
-                  label: labelMap.pending,
-                  value: pendingYearly + month.overdue,
+                  label: labelMap.gaining,
+                  value: month.gaining,
                 },
+                // {
+                //   month: month.key,
+                //   label: labelMap.pending,
+                //   value: pendingYearly + month.overdue,
+                // },
                 {
                   month: month.key,
                   label: labelMap.loss,
@@ -563,9 +580,7 @@ const Page = ({
                   Aktuell {countFormat(activeCount)} Mitglieder
                   und&nbsp;Abonnentinnen
                 </ChartTitle>
-                <ChartLead>
-                  Entwicklung vom Crowdfunding im April 2017 bis heute
-                </ChartLead>
+                <ChartLead>Entwicklung seit Januar 2020 bis heute</ChartLead>
                 <Chart
                   config={{
                     type: 'TimeBar',
@@ -577,34 +592,30 @@ const Page = ({
                     timeFormat: '%Y',
                     xInterval: 'month',
                     padding: isMobile ? 30 : 50,
-                    xTicks: [
-                      '2018-01',
-                      '2019-01',
-                      '2020-01',
-                      '2021-01',
-                      '2022-01',
-                      '2023-01',
-                    ],
+                    xTicks: ['2020-01', '2021-01', '2022-01', '2023-01'],
                     height: 300,
-                    domain: [minValue, maxValue + 2000],
-                    yTicks: [
-                      -5000, 0, 5000, 10000, 15000, 20000, 25000, 30000, 35000,
-                    ],
+                    domain: [0, maxValue + 1000],
+                    yTicks: [0, 5000, 10000, 15000, 20000, 25000, 30000],
                     xBandPadding: 0,
                   }}
-                  values={values.map((d) => ({ ...d, value: String(d.value) }))}
+                  values={values
+                    .filter((d) => d.month > '2019-12')
+                    .map((d) => ({ ...d, value: String(d.value) }))}
                 />
               </div>
 
               <div style={{ marginTop: 20 }}>
                 <ChartTitle>
-                  {countFormat(
+                  {/* {countFormat(
                     lastBucket.pending - lastBucket.pendingSubscriptionsOnly,
                   )}{' '}
-                  anstehende Verläng&shy;erungen in den nächsten&nbsp;Monaten
+                  anstehende Verläng&shy;erungen in den nächsten&nbsp;Monaten */}
+                  {countFormat(currentBucket.gaining)} neue Mitgliedschaften
+                  oder Abos im laufenden Monat
                 </ChartTitle>
                 <ChartLead>
-                  Anzahl Mitgliedschaften und Abos per Monatsende
+                  Anzahl neue und gekündigte Mitgliedschaften und Abos per
+                  Monatsende
                 </ChartLead>
                 <Chart
                   config={{
@@ -617,18 +628,16 @@ const Page = ({
                     timeFormat: '%b %y',
                     xInterval: 'month',
                     height: 300,
-                    domain: [minValue, maxValue + 2000],
-                    yTicks: [
-                      -5000, 0, 5000, 10000, 15000, 20000, 25000, 30000, 35000,
-                    ],
-                    xAnnotations: [
-                      {
-                        x1: currentBucket.key,
-                        x2: currentBucket.key,
-                        value: activeCount,
-                        label: 'Stand jetzt',
-                      },
-                    ],
+                    // domain: [minValue, maxValue + 2000],
+                    yTicks: [-2000, 0, 1500, 3000],
+                    // xAnnotations: [
+                    //   {
+                    //     x1: currentBucket.key,
+                    //     x2: currentBucket.key,
+                    //     value: activeCount,
+                    //     label: 'Stand jetzt',
+                    //   },
+                    // ],
                   }}
                   values={pendingValues.map((d) => ({
                     ...d,
@@ -636,9 +645,7 @@ const Page = ({
                   }))}
                 />
                 <ChartLegend>
-                  Als offen gelten Jahres­mitgliedschaften ohne
-                  Verlängerungszahlung. Datenstand:{' '}
-                  {formatDateTime(new Date(updatedAt))}
+                  Datenstand: {formatDateTime(new Date(updatedAt))}
                 </ChartLegend>
               </div>
               <H2>
