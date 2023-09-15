@@ -4,7 +4,7 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    "components/PoliticsQuestionnaire/loader.ts"
+    ".next/types/**/*.ts"
   ],
   "exclude": [
     "node_modules"
