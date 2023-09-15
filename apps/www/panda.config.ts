@@ -29,6 +29,12 @@ export default defineConfig({
       },
       semanticTokens: {
         colors: {
+          text: {
+            value: {
+              base: '{colors.neutral.950}',
+              _dark: { colors: '{colors.neutral.50}' },
+            },
+          },
           challengeAccepted: {
             background: {
               value: {
@@ -42,6 +48,24 @@ export default defineConfig({
                 _dark: '{colors.challengeAccepted.yellow}',
               },
             },
+          },
+        },
+      },
+      textStyles: {
+        body: {
+          description: 'Body text',
+          value: {
+            fontFamily:
+              'GT-America-Standard-Regular, Helvetica-Neue-Regular, Arial-Regular, Roboto-Regular, sans-serif',
+          },
+        },
+        headingLarge: {
+          description: 'Large heading',
+          value: {
+            fontFamily: 'RepublikSerif-Black, Rubis-Bold, Georgia, serif',
+            fontWeight: 900,
+            fontStyle: 'normal',
+            fontSize: '4em',
           },
         },
       },

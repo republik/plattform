@@ -20,6 +20,8 @@ export default async function RootLayout({
     <html lang='de' suppressHydrationWarning>
       <body
         className={css({
+          color: 'text',
+          textStyle: 'body',
           bg: 'challengeAccepted.background',
           '& a': {
             color: 'challengeAccepted.link',
@@ -44,7 +46,14 @@ const getMe = async () => {
 
 const Frame = ({ me }) => {
   return (
-    <div className={css({ p: '4' })}>
+    <div
+      className={css({
+        p: '4',
+        borderBottomWidth: 1,
+        borderBottomStyle: 'solid',
+        borderBottomColor: '',
+      })}
+    >
       {' '}
       {me ? (
         `Hey, ${me.firstName}`
