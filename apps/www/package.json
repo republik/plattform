@@ -19,7 +19,8 @@
     "translations-raw": "NODE_OPTIONS='-r dotenv/config' gsheets --key=1a-8RESf0Yjo2Mu15Q4SGWTmnY3ifuFbCVSD7WyYRhT0 --title=live --pretty --out lib/translations.json",
     "translations": "npm run translations-raw && git add -p lib/translations.json && git checkout -- lib/translations.json",
     "translations-vote": "NODE_OPTIONS='-r dotenv/config' gsheets --key=1oBlTiPKIon4p5aek5vEXluWMn0TRwrk-JftznGjTmdQ --title=live --pretty --out components/Vote/translations-vote.json",
-    "analyze": "ANALYZE=true next build"
+    "analyze": "ANALYZE=true next build",
+    "prepare": "panda codegen"
   },
   "repository": {
     "type": "git",
@@ -34,6 +35,7 @@
   "devDependencies": {
     "@next/env": "^13.4.12",
     "@next/eslint-plugin-next": "^13.4.12",
+    "@pandacss/dev": "^0.15.0",
     "@republik/eslint-config-frontend": "*",
     "@republik/tsconfig": "*",
     "@stripe/stripe-js": "^1.22.0",

@@ -1,5 +1,9 @@
+import './globals.css'
+
 import Link from 'next/link'
 import { ReactNode } from 'react'
+import { css } from '../styled-system/css'
+import { ThemeProvider } from './components/ThemeProvider'
 import { getClient } from './utils/ApolloClient'
 import { meQuery } from './utils/graphql/meQuery'
 
@@ -13,10 +17,12 @@ export default async function RootLayout({
   const me = await getMe()
 
   return (
-    <html lang='de'>
-      <body>
-        <Frame me={me} />
-        {children}
+    <html lang='de' suppressHydrationWarning>
+      <body className={css({ bg: 'challengeAccepted.background' })}>
+        <ThemeProvider>
+          <Frame me={me} />
+          <main className={css({ p: '4' })}>{children}</main>
+        </ThemeProvider>
       </body>
     </html>
   )
@@ -30,7 +36,7 @@ const getMe = async () => {
 
 const Frame = ({ me }) => {
   return (
-    <div>
+    <div className={css({ p: '4' })}>
       {' '}
       {me ? (
         `Hey, ${me.firstName}`
