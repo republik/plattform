@@ -3,11 +3,6 @@
   "version": "0.0.1",
   "private": true,
   "main": "./lib/index.ts",
-  "workspaces": {
-    "nohoist": [
-      "next"
-    ]
-  },
   "scripts": {
     "dev": "next",
     "build": "next build",
