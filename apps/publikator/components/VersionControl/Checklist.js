@@ -163,6 +163,7 @@ class Checklist extends Component {
                           query: { commitId: commit.id },
                         }}
                         passHref
+                        legacyBehavior
                       >
                         <A>{commit.message}</A>
                       </Link>

@@ -15,8 +15,8 @@ import Link from 'next/link'
 import { useTranslation } from '../../lib/withT'
 
 const EmployeeLink = ({ employee, children }) => (
-  <Link href={`/~${employee.user.slug || employee.user.id}`} passHref>
-    <a {...styles.link}>{children}</a>
+  <Link href={`/~${employee.user.slug || employee.user.id}`} {...styles.link}>
+    {children}
   </Link>
 )
 
@@ -65,7 +65,7 @@ const Team = ({ loading, error, employees }) => {
         )}
       />
       <Editorial.P style={{ textAlign: 'center' }}>
-        <Link href='/impressum' passHref>
+        <Link href='/impressum' passHref legacyBehavior>
           <Editorial.A>Alle Teammitglieder</Editorial.A>
         </Link>
       </Editorial.P>

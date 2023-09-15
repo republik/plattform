@@ -50,14 +50,14 @@ const Newsletter = (props) => {
       <P {...styles.p}>
         {t.elements('Onboarding/Sections/Newsletter/hint', {
           link: (
-            <Link key='account' href='/konto' passHref>
+            <Link key='account' href='/konto' passHref legacyBehavior>
               <A>{t('Onboarding/Sections/Newsletter/hint/link')}</A>
             </Link>
           ),
         })}
       </P>
     </Section>
-  )
+  );
 }
 
 export default withT(Newsletter)

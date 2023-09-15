@@ -3,7 +3,7 @@ export function isObject(obj) {
 }
 
 function decode(s) {
-  return decodeURIComponent((s || '').replace(/\+/g, ' '))
+  return decodeURIComponent((s || '').replace(/\+/g, ' '));
 }
 
 export function queryParameters(queryString) {

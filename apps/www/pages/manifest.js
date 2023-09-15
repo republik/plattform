@@ -97,11 +97,9 @@ export const Back = withInNativeApp(({ inNativeApp, label }) => {
   const [colorScheme] = useColorContext()
   if (!inNativeApp) return null
   return (
-    <Link href='/' passHref>
-      <a {...styles.back} {...colorScheme.set('color', 'logo')}>
-        <IconBack size={25} style={{ marginTop: -3 }} />
-        {label}
-      </a>
+    <Link href='/' {...styles.back} {...colorScheme.set('color', 'logo')}>
+      <IconBack size={25} style={{ marginTop: -3 }} />
+      {label}
     </Link>
   )
 })

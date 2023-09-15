@@ -7,10 +7,10 @@ const Address = ({ address: _address }) => {
 
   if (user) {
     return (
-      <Link href={`/users/${user.id}`} passHref>
+      <Link href={`/users/${user.id}`} passHref legacyBehavior>
         <A>{user.name || address}</A>
       </Link>
-    )
+    );
   }
 
   const label = [!name && address, name, name && `<${address}>`]

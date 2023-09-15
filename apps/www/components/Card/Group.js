@@ -41,7 +41,12 @@ import { cardColors } from './constants'
 import Link from 'next/link'
 import DiscussionContextProvider from '../Discussion/context/DiscussionContextProvider'
 import Discussion from '../Discussion/Discussion'
-import { IconFilterList, IconFollow, IconList, IconRevert } from '@republik/icons'
+import {
+  IconFilterList,
+  IconFollow,
+  IconList,
+  IconRevert,
+} from '@republik/icons'
 
 const styles = {
   swipeIndicator: css({
@@ -698,6 +703,7 @@ const Group = ({
             query: medianSmartspiderQuery,
           }}
           passHref
+          legacyBehavior
         >
           <Editorial.A>
             {t(
@@ -751,6 +757,7 @@ const Group = ({
                     },
                   }}
                   passHref
+                  legacyBehavior
                 >
                   <Editorial.A>
                     {t('components/Card/Group/end/showList')}
@@ -790,6 +797,7 @@ const Group = ({
                       },
                     }}
                     passHref
+                    legacyBehavior
                   >
                     <Editorial.A>
                       {t('components/Card/Group/end/showList')}

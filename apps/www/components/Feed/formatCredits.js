@@ -14,5 +14,5 @@ export default function formatCredits(credits) {
     } else {
       return c
     }
-  })
+  });
 }

@@ -5,9 +5,9 @@ import React, { ReactNode, useContext, useMemo } from 'react'
 import colors from '../../theme/colors'
 
 const getVariableColorKeys = (colors) => {
-  return [
-    ...new Set([...Object.keys(colors.light), ...Object.keys(colors.dark)]),
-  ]
+  return Array.from(
+    new Set([...Object.keys(colors.light), ...Object.keys(colors.dark)]),
+  )
 }
 
 // identify all variable color keys
@@ -107,8 +107,8 @@ export const useColorContext = () => {
 
 export const ColorContextLocalExtension: React.FC<{
   children?: ReactNode
-  localColors: any
-  localMappings: any
+  localColors?: any
+  localMappings?: any
 }> = ({ children, localColors = colors, localMappings = {} }) => {
   const [{ schemeKey, colorDefinitions }] = useColorContext()
 

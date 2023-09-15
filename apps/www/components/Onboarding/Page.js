@@ -360,7 +360,7 @@ class Page extends Component {
                       </div>
                     ) */}
                     <div {...styles.buttonContainer}>
-                      <Link href={'/'} passHref>
+                      <Link href={'/'} passHref legacyBehavior>
                         <Button primary={this.state.hasOnceVisitedAll}>
                           {t.first([
                             `Onboarding/Page/context:${context}/packageName:${packageName}/button`,
@@ -384,7 +384,12 @@ class Page extends Component {
                     ],
                     {
                       link: (
-                        <Link key='account' href='/konto' passHref>
+                        <Link
+                          key='account'
+                          href='/konto'
+                          passHref
+                          legacyBehavior
+                        >
                           <A>
                             {t.first([
                               `Onboarding/Page/context:${context}/packageName:${packageName}/more/account/link`,
@@ -409,7 +414,12 @@ class Page extends Component {
                     ],
                     {
                       linkManual: (
-                        <Link key='anleitung' href='/anleitung' passHref>
+                        <Link
+                          key='anleitung'
+                          href='/anleitung'
+                          passHref
+                          legacyBehavior
+                        >
                           <A>
                             {t.first([
                               `Onboarding/Page/context:${context}/packageName:${packageName}/more/questions/linkManual`,
@@ -421,7 +431,7 @@ class Page extends Component {
                         </Link>
                       ),
                       linkFaq: !inNativeIOSApp && (
-                        <Link key='route' href='/faq' passHref>
+                        <Link key='route' href='/faq' passHref legacyBehavior>
                           <A>
                             {t.first([
                               `Onboarding/Page/context:${context}/packageName:${packageName}/more/questions/linkFaq`,

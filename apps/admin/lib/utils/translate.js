@@ -49,7 +49,7 @@ export const getFormatter = (translations) => {
     return formatter(key, undefined, emptyValue)
       .split(/(\{[^{}]+\})/g)
       .filter(Boolean)
-      .reduce(replacementReducer, [])
+      .reduce(replacementReducer, []);
   }
 
   return formatter

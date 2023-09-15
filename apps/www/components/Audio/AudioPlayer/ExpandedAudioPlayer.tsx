@@ -114,7 +114,7 @@ type ExpandedAudioPlayerProps = {
   handleMinimize: () => void
   handleClose: () => void
   handleOpenArticle: (path: string) => Promise<void>
-  bodyLockTargetRef: React.RefObject<HTMLDivElement>
+  bodyLockTargetRef: React.Ref<HTMLDivElement>
   setForceScrollLock: Dispatch<SetStateAction<boolean>>
   isAutoPlayEnabled: boolean
   setAutoPlayEnabled: Dispatch<SetStateAction<boolean>>

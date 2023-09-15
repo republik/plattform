@@ -22,7 +22,7 @@ const ClimateLabInlineTeaser: React.FC<{ hideForMembers?: boolean }> = ({
   if (isClimateLabMember && hideForMembers) return null
 
   return (
-    <InfoBox figureSize='XXS'>
+    <InfoBox t={t} figureSize='XXS'>
       <InfoBoxTitle>{t('ClimateInlineTeaser/content/title')}</InfoBoxTitle>
       <Figure>
         <ClimateLabLogo width={80} height={80} hideFigcaption />
@@ -30,7 +30,7 @@ const ClimateLabInlineTeaser: React.FC<{ hideForMembers?: boolean }> = ({
       <InfoBoxText>
         <>
           {t('ClimateInlineTeaser/Member/content/text')}{' '}
-          <Link href={CLIMATE_LAB_URL}>
+          <Link href={CLIMATE_LAB_URL} passHref legacyBehavior>
             <Editorial.A>
               {t('ClimateInlineTeaser/Member/content/link')}
             </Editorial.A>

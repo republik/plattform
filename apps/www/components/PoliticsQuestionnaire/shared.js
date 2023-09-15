@@ -9,7 +9,7 @@ import { QuestionSummaryChart } from '../Questionnaire/Submissions/QuestionChart
 export const QuestionLink = ({ questions, children }) => {
   const link = questions.map((q) => q.key).join(QUESTION_SEPARATOR)
   return (
-    <Link href={`/politikfragebogen/frage/${link}`} passHref>
+    <Link href={`/politikfragebogen/frage/${link}`} passHref legacyBehavior>
       {children}
     </Link>
   )
@@ -17,7 +17,7 @@ export const QuestionLink = ({ questions, children }) => {
 
 export const SubmissionLink = ({ id, children }) => {
   return (
-    <Link href={`/politikfragebogen/${id}`} passHref>
+    <Link href={`/politikfragebogen/${id}`} passHref legacyBehavior>
       {children}
     </Link>
   )

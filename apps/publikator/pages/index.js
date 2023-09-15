@@ -24,7 +24,7 @@ const IndexNavLink = ({ isActive, href, label }) =>
   isActive ? (
     <span>{label} </span>
   ) : (
-    <Link href={href} passHref>
+    <Link href={href} passHref legacyBehavior>
       <A>{label} </A>
     </Link>
   )

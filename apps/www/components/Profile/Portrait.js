@@ -64,7 +64,7 @@ const readFile = (file) => {
     })
 
     fileReader.readAsDataURL(file)
-  })
+  });
 }
 
 const PortraitSelector = withT(
