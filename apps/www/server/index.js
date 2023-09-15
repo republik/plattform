@@ -28,7 +28,7 @@ if (!NEXT_PUBLIC_BASE_URL) {
 const app = next({
   dev: DEV,
   port: PORT,
-  hostname: new URL(NEXT_PUBLIC_BASE_URL).hostname,
+  hostname: '0.0.0.0',
 })
 
 const handler = app.getRequestHandler()
