@@ -305,8 +305,9 @@ class Tree extends Component {
                               commitId: commit.id,
                             },
                           }}
+                          {...styles.link}
                         >
-                          <a {...styles.link}>{commit.message}</a>
+                          {commit.message}
                         </Link>
                       </Interaction.P>
                       <Label>
@@ -363,8 +364,9 @@ class Tree extends Component {
                                   commitId: commit.id,
                                 },
                               }}
+                              {...styles.link}
                             >
-                              <a {...styles.link}>{t('tree/commit/publish')}</a>
+                              {t('tree/commit/publish')}
                             </Link>
                           </Label>
                         </Interaction.P>
@@ -407,9 +409,8 @@ class Tree extends Component {
                       commitId: commit.id,
                     },
                   }}
-                >
-                  <a {...css(styles.nodeLink)} />
-                </Link>
+                  {...css(styles.nodeLink)}
+                ></Link>
               </span>
             )
           })}

@@ -4,36 +4,36 @@
   "files": [
     "dist"
   ],
-  "main": "dist/index.js",
-  "module": "src/index.ts",
-  "types": "dist/types/index.d.ts",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
   "license": "MIT",
   "private": true,
   "scripts": {
     "prebuild": "rimraf dist",
-    "build": "tsc",
-    "dev": "tsc -w",
+    "build": "tsup src/index.ts --format cjs,esm --dts --minify --clean --out-dir dist",
+    "dev": "tsup src/index.ts --format cjs,esm --dts --minify --clean --out-dir dist --sourcemap --watch",
     "generate::possibleTypes": "node scripts/generatePossibleTypes.js"
   },
   "devDependencies": {
-    "@apollo/client": "~3.5.10",
+    "@apollo/client": "~3.8.1",
     "@republik/eslint-config-frontend": "*",
     "@types/node": "^17.0.41",
     "@types/react": "^18.0.28",
     "@types/react-dom": "^18.0.11",
     "cross-fetch": "^3.1.5",
     "graphql": "^15.3.0",
-    "next": "^12.3.1",
+    "next": "^13.4.12",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "rimraf": "^3.0.2",
-    "typescript": "^4.7.2",
+    "tsup": "^7.2.0",
     "uuid": "^3.4.0"
   },
   "peerDependencies": {
-    "@apollo/client": "~3.5.10",
+    "@apollo/client": "~3.8.1",
     "graphql": "^15.3.0",
-    "next": "^12.3.1",
+    "next": "^13.4.12",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "uuid": "^3.4.0"

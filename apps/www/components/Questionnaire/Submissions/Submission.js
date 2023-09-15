@@ -27,7 +27,13 @@ import ShareOverlay from '../../ActionBar/ShareOverlay'
 import { trackEvent } from '../../../lib/matomo'
 import { getSubmissionUrl } from './Share'
 import { useTranslation } from '../../../lib/withT'
-import { IconAdd, IconRadioChecked, IconRadioUnchecked, IconRemove, IconShare } from '@republik/icons'
+import {
+  IconAdd,
+  IconRadioChecked,
+  IconRadioUnchecked,
+  IconRemove,
+  IconShare,
+} from '@republik/icons'
 
 export const styles = {
   highlightContainer: css({
@@ -120,8 +126,8 @@ export const SubmissionAuthor = ({
       <div {...styles.headerText}>
         <Interaction.H3>
           {displayAuthor.slug ? (
-            <Link href={`/~${displayAuthor.slug}`}>
-              <a {...plainLinkRule}>{displayAuthor.name}</a>
+            <Link href={`/~${displayAuthor.slug}`} {...plainLinkRule}>
+              {displayAuthor.name}
             </Link>
           ) : (
             displayAuthor.name
@@ -137,10 +143,12 @@ export const SubmissionAuthor = ({
               />
             )}
             {createdAt && !displayAuthor.credentials && (
-              <Link href={submissionUrl}>
-                <a {...styles.linkUnderline} title={titleDate(createdAt)}>
-                  <RelativeTime t={t} isDesktop date={createdAt} />
-                </a>
+              <Link
+                href={submissionUrl}
+                {...styles.linkUnderline}
+                title={titleDate(createdAt)}
+              >
+                <RelativeTime t={t} isDesktop date={createdAt} />
               </Link>
             )}
             {isUpdated && (
@@ -280,7 +288,7 @@ const Submission = ({
         <div {...styles.headerActions}>
           <IconButton
             invert={true}
-            Icon={isExpanded ? IconRemove : IconAdd }
+            Icon={isExpanded ? IconRemove : IconAdd}
             fillColorName='textSoft'
             size={20}
             onClick={() => {

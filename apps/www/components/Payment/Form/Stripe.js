@@ -10,18 +10,13 @@ import {
   useStripe,
 } from '@stripe/react-stripe-js'
 
-import {
-  fontStyles,
-  colors,
-  useColorContext,
-  Interaction,
-} from '@project-r/styleguide'
+import { fontStyles, useColorContext, Interaction } from '@project-r/styleguide'
 
-import { useResolvedColorSchemeKey } from '../../ColorScheme/lib'
 import { SG_FONT_FACES } from '../../../lib/constants'
 
 import { loadStripe } from '../stripe'
 import StripeField from './StripeField'
+import { useTheme } from '../../ColorScheme/ThemeProvider'
 
 const styles = {
   container: css({
@@ -51,22 +46,22 @@ const Form = forwardRef(
     },
     ref,
   ) => {
-    const colorSchemeKey = useResolvedColorSchemeKey()
     const stripe = useStripe()
     const elements = useElements()
+    const { resolvedTheme: theme } = useTheme()
 
     const style = {
       base: {
         ...fontStyles.sansSerifRegular,
         fontSize: '22px',
-        color: colors[colorSchemeKey].text,
+        color: theme === 'dark' ? '#fff' : '#282828',
         lineHeight: '40px',
         '::placeholder': {
-          color: colors[colorSchemeKey].disabled,
+          color: theme === 'dark' ? '#6E6E6E' : '#949494',
         },
       },
       invalid: {
-        color: colors[colorSchemeKey].error,
+        color: theme === 'dark' ? '#F0400A' : '#9F2500',
       },
     }
 

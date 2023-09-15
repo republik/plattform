@@ -32,6 +32,7 @@ import {
   AudioPlayerActions,
 } from './types/AudioActionTracking'
 import createPersistedState from '../../lib/hooks/use-persisted-state'
+import { useGlobalAudioState } from './globalAudioState'
 
 const DEFAULT_PLAYBACK_RATE = 1
 const SKIP_FORWARD_TIME = 30
@@ -118,6 +119,9 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
     isExpanded,
     setIsExpanded,
   } = useAudioContext()
+
+  const { currentTime, setCurrentTime, duration, setDuration } =
+    useGlobalAudioState()
   const {
     audioQueue,
     addAudioQueueItem,
@@ -142,8 +146,6 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
   const [isLoading, setIsLoading] = useState(true)
   const [hasError, setHasError] = useState(false)
 
-  const [currentTime, setCurrentTime] = useState(0)
-  const [duration, setDuration] = useState(0)
   const [buffered, setBuffered] = useState<TimeRanges>(null)
   const [playbackRate, setPlaybackRate] = usePlaybackRate(DEFAULT_PLAYBACK_RATE)
 
@@ -393,6 +395,7 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
         setBuffered(null)
         setHasDelayedAutoPlay(false)
         activeItemRef.current = null
+        firstTrackIsPrepared.current = false
       }, 100)
       setInitialized(false)
     } catch (error) {
@@ -651,7 +654,13 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
    * If the player is visible and the queue is not empty, set up the first item
    */
   useEffect(() => {
-    if (audioQueue && audioQueue.length > 0 && !activePlayerItem && isVisible) {
+    if (
+      audioQueue &&
+      audioQueue.length > 0 &&
+      !activePlayerItem &&
+      isVisible &&
+      !firstTrackIsPrepared?.current
+    ) {
       const nextUp = audioQueue[0]
       firstTrackIsPrepared.current = true
       setupNextAudioItem(nextUp, false).catch(handleError)

@@ -69,19 +69,18 @@ const NotificationFeedMini = ({
                           )}
 
                           <Link
-                            href={getTeaserHref(
-                              path,
-                              node.object?.meta?.format?.meta.externalBaseUrl,
-                            )}
+                            href={
+                              getTeaserHref(
+                                path,
+                                node.object?.meta?.format?.meta.externalBaseUrl,
+                              ) ?? '/'
+                            }
                             passHref
+                            {...styles.cleanLink}
+                            onClick={() => closeHandler()}
                           >
-                            <a
-                              {...styles.cleanLink}
-                              onClick={() => closeHandler()}
-                            >
-                              {dateFormat(new Date(node.createdAt))}{' '}
-                              {node.content.title}
-                            </a>
+                            {dateFormat(new Date(node.createdAt))}{' '}
+                            {node.content.title}
                           </Link>
                         </div>
                       )

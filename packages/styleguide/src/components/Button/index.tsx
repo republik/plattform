@@ -50,26 +50,28 @@ const styles = {
   }),
 }
 
+type ButtonProps = {
+  children: React.ReactNode
+  onClick?: MouseEventHandler<HTMLAnchorElement & HTMLButtonElement>
+  onMouseDown?: MouseEventHandler<HTMLAnchorElement & HTMLButtonElement>
+  type?: 'button' | 'submit' | 'reset'
+  primary?: boolean
+  big?: boolean
+  block?: boolean
+  disabled?: boolean
+  href?: string
+  title?: string
+  target?: string
+  style?: React.CSSProperties
+  simulate?: string
+  attributes?: Attributes
+  naked?: boolean
+  small?: boolean
+}
+
 const Button = React.forwardRef<
   HTMLAnchorElement & HTMLButtonElement,
-  {
-    onClick?: MouseEventHandler<HTMLAnchorElement & HTMLButtonElement>
-    onMouseDown?: MouseEventHandler<HTMLAnchorElement & HTMLButtonElement>
-    type?: 'button' | 'submit' | 'reset'
-    primary?: boolean
-    big?: boolean
-    block?: boolean
-    disabled?: boolean
-    href?: string
-    title?: string
-    target?: string
-    style?: React.CSSProperties
-    simulate?: string
-    attributes?: Attributes
-    naked?: boolean
-    small?: boolean
-    children?: any
-  }
+  ButtonProps
 >(
   (
     {
@@ -125,18 +127,18 @@ const Button = React.forwardRef<
               primary ? 'primary' : 'transparent',
             ),
             borderColor: colorScheme.getCSSColor(primary ? 'primary' : 'text'),
-            color: colorScheme.getCSSColor(primary ? '#FFF' : 'text'),
+            color: colorScheme.getCSSColor(primary ? 'primaryText' : 'text'),
             '@media (hover)': {
               ':hover': {
                 backgroundColor: colorScheme.getCSSColor('primaryHover'),
                 borderColor: colorScheme.getCSSColor('primaryHover'),
-                color: colorScheme.getCSSColor('#FFF'),
+                color: colorScheme.getCSSColor('primaryText'),
               },
             },
             ':active': {
               backgroundColor: colorScheme.getCSSColor('primaryHover'),
               borderColor: colorScheme.getCSSColor('primaryHover'),
-              color: colorScheme.getCSSColor('#FFF'),
+              color: colorScheme.getCSSColor('primaryText'),
             },
             ':disabled, [disabled]': {
               ...disabledCSSProps,

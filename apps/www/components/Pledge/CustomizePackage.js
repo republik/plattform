@@ -425,13 +425,11 @@ class CustomizePackage extends Component {
           )
         }),
     )
-    const payMoreSuggestions = [
-      'DONATE',
-      'ABO_GIVE',
-      'ABO_GIVE_MONTHS',
-      'YEARLY_ABO',
-      'LESHA',
-    ].includes(pkg.name)
+
+    const hasNoPayMoreSuggestions = pkg.options.every(
+      (opt) => !opt.payMoreSuggestion,
+    )
+    const payMoreSuggestions = hasNoPayMoreSuggestions
       ? []
       : userPrice
       ? [{ value: regularMinPrice, key: 'normal' }]
@@ -547,6 +545,7 @@ class CustomizePackage extends Component {
                     : undefined,
               }}
               passHref
+              legacyBehavior
             >
               <A>{t('package/customize/changePackage')}</A>
             </Link>

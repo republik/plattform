@@ -43,7 +43,8 @@ export {
   default as ColorContext,
   ColorContextProvider,
   ColorContextLocalExtension,
-  ColorHtmlBodyColors,
+  RootColorVariables,
+  InvertedColorScheme,
 } from './components/Colors/ColorContext'
 export { useColorContext } from './components/Colors/useColorContext'
 export {
@@ -201,6 +202,10 @@ export {
   flyerTemplate,
 } from './components/Editor/schema/flyer'
 export { RenderContextProvider } from './components/Editor/Render/Context'
+export type {
+  CustomDescendant,
+  CustomElement,
+} from './components/Editor/custom-types'
 
 export { FlyerTile, FlyerTileMeta } from './components/Flyer'
 export { FlyerDate } from './components/Flyer/Date'

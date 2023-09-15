@@ -18,7 +18,7 @@ const NavLink = ({ children, active, href, replace }) => {
   if (active) return <span {...styles.navLink}>{children}</span>
   return (
     <span {...styles.navLink}>
-      <Link href={href} passHref replace={replace}>
+      <Link href={href} passHref replace={replace} legacyBehavior>
         <A>{children}</A>
       </Link>
     </span>

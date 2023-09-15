@@ -26,7 +26,7 @@ import { useTranslation } from '../../../lib/withT'
 import Frame from '../../Frame'
 import Meta from '../../Frame/Meta'
 
-import { QUESTIONNAIRE_SUBMISSIONS_QUERY } from '../../Questionnaire/Submissions/graphql'
+import { QUESTIONNAIRE_WITH_SUBMISSIONS_QUERY } from '../../Questionnaire/Submissions/graphql'
 import { LinkToEditQuestionnaire } from '../../Questionnaire/Submissions/QuestionFeatured'
 import { ShareImageSplit } from '../../Questionnaire/Submissions/ShareImageSplit'
 import {
@@ -42,8 +42,11 @@ import {
   QUESTIONNAIRE_BG_COLOR,
   QUESTIONNAIRE_SLUG,
   QUESTIONNAIRE_SQUARE_IMG_URL,
+  PERSON_PAGE_PATH,
+  PERSON_SHARE_TEXT,
+  ILLU_CREDIT,
 } from './config'
-import { IconChevronLeft, IconEdit, IconShare } from '@republik/icons'
+import { IconChevronLeft, IconEdit } from '@republik/icons'
 
 const USER_QUERY = gql`
   query getUserId($slug: String!) {
@@ -75,13 +78,16 @@ const Page = () => {
   shareImageUrlObj.searchParams.set('image', true)
   const shareImageUrl = shareImageUrlObj.toString()
 
-  const { loading, error, data } = useQuery(QUESTIONNAIRE_SUBMISSIONS_QUERY, {
-    variables: {
-      slug: QUESTIONNAIRE_SLUG,
-      id,
-      sortBy: 'random',
+  const { loading, error, data } = useQuery(
+    QUESTIONNAIRE_WITH_SUBMISSIONS_QUERY,
+    {
+      variables: {
+        slug: QUESTIONNAIRE_SLUG,
+        id,
+        sortBy: 'random',
+      },
     },
-  })
+  )
 
   const author = data?.questionnaire?.results?.nodes[0]?.displayAuthor
   const slug = author?.slug
@@ -98,6 +104,8 @@ const Page = () => {
       <ShareImageSplit
         user={!loading && author}
         img={QUESTIONNAIRE_SQUARE_IMG_URL}
+        bgColor={QUESTIONNAIRE_BG_COLOR}
+        personShareText={PERSON_SHARE_TEXT}
       />
     )
   }
@@ -159,7 +167,7 @@ const Page = () => {
                     >
                       <FigureImage src={QUESTIONNAIRE_SQUARE_IMG_URL} />
                       <FigureCaption>
-                        <FigureByline>Cristina Spanò</FigureByline>
+                        <FigureByline>{ILLU_CREDIT}</FigureByline>
                       </FigureCaption>
                     </Figure>
                     <NarrowContainer style={{ padding: '20px 0' }}>
@@ -193,7 +201,11 @@ const Page = () => {
                   {...colorScheme.set('backgroundColor', 'default')}
                 >
                   <div {...submissionStyles.headerText}>
-                    <NextLink href={OVERVIEW_QUESTIONNAIRE_PATH} passHref>
+                    <NextLink
+                      href={OVERVIEW_QUESTIONNAIRE_PATH}
+                      passHref
+                      legacyBehavior
+                    >
                       <IconButton
                         size={24}
                         label='Zur Übersicht'
@@ -226,7 +238,12 @@ const Page = () => {
                     )
                   },
                 )}
-                <LinkToEditQuestionnaire slug={QUESTIONNAIRE_SLUG} newOnly />
+                <LinkToEditQuestionnaire
+                  slug={QUESTIONNAIRE_SLUG}
+                  questionnairePath={EDIT_QUESTIONNAIRE_PATH}
+                  personPagePath={PERSON_PAGE_PATH}
+                  newOnly
+                />
                 <br />
               </Center>
             </>

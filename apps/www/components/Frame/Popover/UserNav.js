@@ -12,7 +12,7 @@ import {
 import { HEADER_HEIGHT, HEADER_HEIGHT_MOBILE } from '../../constants'
 
 import withT from '../../../lib/withT'
-import withInNativeApp from '../../../lib/withInNativeApp'
+import { useInNativeApp } from '../../../lib/withInNativeApp'
 import SignIn from '../../Auth/SignIn'
 import SignOut from '../../Auth/SignOut'
 import { withMembership, withTester } from '../../Auth/checkRoles'
@@ -30,17 +30,10 @@ const SignoutLink = ({ children, ...props }) => (
   </div>
 )
 
-const UserNav = ({
-  me,
-  router,
-  expanded,
-  closeHandler,
-  t,
-  inNativeApp,
-  inNativeIOSApp,
-  pageColorSchemeKey,
-}) => {
+const UserNav = ({ me, router, expanded, closeHandler, t }) => {
   const [containerPadding, setContainerPadding] = useState()
+  const { inNativeApp, inNativeIOSApp } = useInNativeApp()
+
   const containerRef = useRef(null)
   useEffect(() => {
     const measureLeftPadding = () => {
@@ -89,11 +82,7 @@ const UserNav = ({
           {hasExpandedRef.current && (
             <>
               <div style={{ marginBottom: 20 }}>
-                <DarkmodeSwitch
-                  t={t}
-                  inNativeApp={inNativeApp}
-                  pageColorSchemeKey={pageColorSchemeKey}
-                />
+                <DarkmodeSwitch t={t} />
               </div>
               {!me && (
                 <>
@@ -103,7 +92,7 @@ const UserNav = ({
                 </>
               )}
               {!me?.activeMembership && !inNativeIOSApp && (
-                <Link href='/angebote' passHref>
+                <Link href='/angebote' passHref legacyBehavior>
                   <Button style={{ marginTop: 24, marginBottom: 24 }} block>
                     {t('nav/becomemember')}
                   </Button>
@@ -279,4 +268,4 @@ const styles = {
   }),
 }
 
-export default compose(withT, withInNativeApp, withMembership)(UserNav)
+export default compose(withT, withMembership)(UserNav)

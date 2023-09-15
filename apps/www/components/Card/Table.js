@@ -165,7 +165,7 @@ export const CardRows = ({ nodes, revertCard, ignoreCard, followCard, t }) => (
                 }}
               >
                 <td {...styles.td}>
-                  <Link href={`/~${card.user.slug}`} passHref>
+                  <Link href={`/~${card.user.slug}`} passHref legacyBehavior>
                     <Editorial.A>
                       {card.user.name}
                       {card.payload.party && `, ${card.payload.party}`}
@@ -266,7 +266,7 @@ export const CardRows = ({ nodes, revertCard, ignoreCard, followCard, t }) => (
                   )}
                 </td>
               </tr>
-            )
+            );
           })}
         </Fragment>
       ))}

@@ -330,7 +330,7 @@
     },
     {
       "key": "api/email/pledge_abo/subject",
-      "value": "Ihre Mitgliedschaft: Willkommen bei der Republik"
+      "value": "Republik: Ihre Mitgliedschaft"
     },
     {
       "key": "api/email/pledge_abo_give/subject",
@@ -342,7 +342,7 @@
     },
     {
       "key": "api/email/pledge_monthly_abo/subject",
-      "value": "Ihr Abo: Willkommen bei der Republik"
+      "value": "Republik: Ihr Monats-Abo"
     },
     {
       "key": "api/email/pledge_donate/subject",
@@ -350,7 +350,7 @@
     },
     {
       "key": "api/email/pledge_benefactor/subject",
-      "value": "Ihre Mitgliedschaft: Willkommen bei der Republik"
+      "value": "Republik: Ihre Gönner-Mitgliedschaft"
     },
     {
       "key": "api/email/pledge_prolong/subject",
@@ -626,11 +626,11 @@
     },
     {
       "key": "api/email/membership_claimer_onboarding/REPUBLIK/subject",
-      "value": "Ihr Abo: Willkommen bei der Republik"
+      "value": "Republik: Ihr Abo"
     },
     {
       "key": "api/email/membership_claimer_onboarding/PROJECT_R/subject",
-      "value": "Ihre Mitgliedschaft: Willkommen bei der Republik"
+      "value": "Republik: Ihre Mitgliedschaft"
     },
     {
       "key": "api/email/membership_claimer_onboarding/subject",
@@ -1225,10 +1225,6 @@
       "value": "Einladung von {granterName}"
     },
     {
-      "key": "api/access/email/recipient/invitation_klimalabor/subject",
-      "value": "Einladung zum Klimalabor der Republik"
-    },
-    {
       "key": "api/access/email/recipient/invitation_kampa202202/subject",
       "value": "Einladung von {granterName} für acht Wochen Republik"
     },
@@ -1245,10 +1241,6 @@
       "value": "Ihr Republik-Probezugang: Willkommen!"
     },
     {
-      "key": "api/access/email/recipient/onboarding_klimalabor/subject",
-      "value": "Willkommen im Klimalabor"
-    },
-    {
       "key": "api/access/email/recipient/onboarding_gifted_membership/subject",
       "value": "Willkommen an Bord"
     },
@@ -1259,10 +1251,6 @@
     {
       "key": "api/access/email/recipient/expired/subject",
       "value": "Ihre Reise ist beendet"
-    },
-    {
-      "key": "api/access/email/recipient/expired_klimalabor/subject",
-      "value": "Machen Sie es wie wir: Investieren Sie in Klimajournalismus"
     },
     {
       "key": "api/access/email/recipient/followup/subject",
@@ -2495,6 +2483,14 @@
     {
       "key": "api/calendar/slot/error/userBookedAlready",
       "value": "Kalendereintrag bereits vorhanden"
+    },
+    {
+      "key": "api/calendar/slot/error/slotIsNotInFuture",
+      "value": "Kalendereintrag liegt in Vergangenheit"
+    },
+    {
+      "key": "api/calendar/slot/error/slotIsNotOnAllowedWeekday",
+      "value": "Kalendereintrag nicht verfügbar (Wochentag nicht möglich)"
     },
     {
       "key": "api/calendar/slot/error/slotIsNotAvailable",

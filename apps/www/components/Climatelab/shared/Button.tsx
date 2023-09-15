@@ -28,21 +28,21 @@ const Button: FC<ButtonProps> = ({
 
   if (href) {
     return (
-      <NextLink href={href} passHref>
-        <a
-          {...colorScheme.set('backgroundColor', 'primary')}
-          {...colorScheme.set('color', 'climateButtonText')}
-          {...colorScheme.set('borderColor', 'climateBorder')}
-          {...css({
-            ':hover': {
-              backgroundColor: colorScheme.getCSSColor('primaryHover'),
-            },
-          })}
-          {...plainLinkRule}
-          {...styles.button}
-        >
-          {children}
-        </a>
+      <NextLink
+        href={href}
+        passHref
+        {...colorScheme.set('backgroundColor', 'primary')}
+        {...colorScheme.set('color', 'climateButtonText')}
+        {...colorScheme.set('borderColor', 'climateBorder')}
+        {...css({
+          ':hover': {
+            backgroundColor: colorScheme.getCSSColor('primaryHover'),
+          },
+        })}
+        {...plainLinkRule}
+        {...styles.button}
+      >
+        {children}
       </NextLink>
     )
   }

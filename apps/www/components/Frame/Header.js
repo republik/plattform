@@ -58,7 +58,6 @@ const Header = ({
   pullable = true,
   hasOverviewNav,
   stickySecondaryNav,
-  pageColorSchemeKey,
 }) => {
   const [colorScheme] = useColorContext()
   const [isMobile, setIsMobile] = useState()
@@ -132,7 +131,7 @@ const Header = ({
         )
       }
 
-      if (diff.current !== lastDiff.current) {
+      if (diff.current !== lastDiff.current && fixedRef.current) {
         fixedRef.current.style.top = `${diff.current}px`
         setHeaderOffset(diff.current)
       }
@@ -288,7 +287,6 @@ const Header = ({
           router={router}
           expanded={userNavExpanded || expandedNav === 'user'}
           closeHandler={closeHandler}
-          pageColorSchemeKey={pageColorSchemeKey}
         />
       </Popover>
       <LoadingBar

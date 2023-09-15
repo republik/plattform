@@ -26,30 +26,11 @@ const applicationName =
 const stats = {}
 
 const handleRow = async (row) => {
-  const { memberships, accessGrants, ...user } = row
+  const { memberships, ...user } = row
 
   const periods = memberships
     .reduce((acc, cur) => acc.concat(cur.periods), [])
     .filter(Boolean)
-
-  const now = dayjs('2023-01-20')
-
-  const daysUntilNow = periods.reduce((days, period) => {
-    const endDate = dayjs(period.endDate)
-    const anchor = endDate < now ? endDate : now
-
-    return days + anchor.diff(period.beginDate, 'day')
-  }, 0)
-
-  const daysSinceBegin = now.diff('2018-01-15', 'day')
-
-  // whether or not a user had any periods
-  const hadSomePeriods = periods.length > 0
-
-  // had a non-monthly-abo membership once
-  const hadAbo = !!memberships
-    .filter((m) => m.periods?.length)
-    .find((m) => m.membershipType.name !== 'MONTHLY_ABO')
 
   // find any currently active memberships
   const activeMembership = memberships.find((m) => m.active)
@@ -73,22 +54,6 @@ const handleRow = async (row) => {
   // return last end date of all memberships
   const lastEndDate = !!lastPeriod && dayjs(lastPeriod.endDate)
 
-  // return first period of all memberships
-  const firstPeriod = periods
-    .map((p) => p)
-    .reduce((accumulator, currentValue) => {
-      if (!accumulator) {
-        return currentValue
-      }
-
-      return currentValue.beginDate < accumulator.beginDate
-        ? currentValue
-        : accumulator
-    }, false)
-
-  // return last end date of all memberships
-  const firstBeginDate = !!firstPeriod && dayjs(firstPeriod.beginDate)
-
   // if active, package option used to pay latest period
   const mostRecentPackageOption =
     activeMembership?.latestPeriod?.pledgeOption?.packageOption
@@ -101,38 +66,12 @@ const handleRow = async (row) => {
     mostRecentPackageOption?.membershipType?.name ||
     pledgePackageOption?.membershipType?.name
 
-  // if active, last price paid
-  const price = mostRecentPackageOption?.price || pledgePackageOption?.price
-
-  // reducedPrice?!
-
-  // suggested membership type (name)
-  const suggestedMembershipTypeName = ['ABO', 'BENEFACTOR_ABO'].includes(
-    membershipTypeName,
-  )
-    ? membershipTypeName
-    : 'ABO'
-
-  // suggested price
-  const suggestedPrice = price >= 24000 ? price : 24000
-
-  // had an access grant
-  const hadGrant = !!accessGrants?.length
-
   const vars = {
     activeMembership: !!activeMembership,
     autoPay: activeMembership?.autoPay,
-    renew: activeMembership?.renew,
     hasDormantMembership,
     membershipTypeName,
-    suggestedMembershipTypeName,
-    suggestedPrice,
     lastEndDate: lastEndDate?.format?.('YYYY-MM-DD'),
-    firstBeginDate: firstBeginDate?.format?.('YYYY-MM-DD'),
-    hadSomePeriods,
-    hadAbo,
-    hadGrant,
-    daysUntilNow,
   }
 
   const record = {
@@ -142,7 +81,7 @@ const handleRow = async (row) => {
     LNAME: `"${row.lastName ?? ''}"`,
     PRLG_SEG: '',
     CP_ATOKEN: '',
-    KAMPA_GRP: '',
+    // KAMPA_GRP: '',
     // NL_LINK: getConsentLink(row.email, 'WINTER'),
 
     __vars: Object.keys(vars)
@@ -154,24 +93,28 @@ const handleRow = async (row) => {
     activeMembership &&
     !activeMembership.autoPay &&
     !hasDormantMembership &&
-    membershipTypeName !== 'MONTHLY_ABO' &&
-    lastEndDate?.isBefore('2023-04-01')
+    !['MONTHLY_ABO', 'YEARLY_ABO'].includes(membershipTypeName) &&
+    lastEndDate?.isBefore('2024-02-01')
   ) {
-    record.PRLG_SEG = 'prolong-before-2023-04'
+    record.PRLG_SEG = 'prolong-before-202402'
     record.CP_ATOKEN = row.accessToken
+  } else if (
+    activeMembership &&
+    !['MONTHLY_ABO', 'YEARLY_ABO'].includes(membershipTypeName)
+  ) {
+    record.PRLG_SEG = 'is-associate'
+    record.CP_ATOKEN = row.accessToken
+  } else if (activeMembership && membershipTypeName === 'MONTHLY_ABO') {
+    record.PRLG_SEG = 'is-monthly-abo'
+    record.CP_ATOKEN = ''
   } else if (activeMembership) {
-    record.PRLG_SEG = 'is-active'
+    record.PRLG_SEG = 'is-active' // nüscht
     record.CP_ATOKEN = ''
   } else {
     // neither props is true
     record.PRLG_SEG = 'other'
     record.CP_ATOKEN = ''
   }
-
-  record.KAMPA_GRP =
-    firstBeginDate?.isBefore?.('2018-01-16') && daysUntilNow >= daysSinceBegin
-      ? 'is-loyal'
-      : 'is-other'
 
   const key = record.PRLG_SEG // [record.PRLG_SEG, record.KAMPA_GRP].filter(Boolean).join(' - ')
 
@@ -181,7 +124,7 @@ const handleRow = async (row) => {
     stats[key]++
   }
 
-  // if (stats[key] <= 5) {
+  // if (stats[key] <= 20) {
   console.log(
     Object.keys(record)
       .map((key) => record[key])
@@ -198,16 +141,16 @@ const handleBatch = async (rows, count, pgdb) => {
     pgdb,
   })
 
-  const accessGrants = await pgdb.public.accessGrants.find({
+  /* const accessGrants = await pgdb.public.accessGrants.find({
     recipientUserId: rows.map((row) => row.id),
     'beginAt !=': null,
-  })
+  }) */
 
   await Promise.map(rows, async (row, index) => {
     rows[index].memberships = memberships.filter((m) => m.userId === row.id)
-    rows[index].accessGrants = accessGrants.filter(
+    /* rows[index].accessGrants = accessGrants.filter(
       (ag) => ag.recipientUserId === row.id,
-    )
+    ) */
     rows[index].accessToken = await AccessToken.generateForUser(
       row,
       'CUSTOM_PLEDGE_EXTENDED',
@@ -230,7 +173,7 @@ ConnectionContext.create(applicationName)
         'LNAME',
         'PRLG_SEG',
         'CP_ATOKEN',
-        'KAMPA_GRP',
+        // 'KAMPA_GRP',
         // 'NL_LINK',
 
         '__vars',

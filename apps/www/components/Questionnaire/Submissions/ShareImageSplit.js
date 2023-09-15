@@ -7,23 +7,24 @@ import {
   SHARE_IMAGE_HEIGHT,
 } from '@project-r/styleguide'
 
-import { useTranslation } from '../../../lib/withT'
-
-import { QUESTIONNAIRE_BG_COLOR } from '../../Climatelab/Questionnaire/config'
-
-export const ShareImageSplit = ({ question, user, img }) => {
-  const { t } = useTranslation()
+export const ShareImageSplit = ({
+  question,
+  user,
+  img,
+  bgColor,
+  fgColor,
+  personShareText,
+}) => {
   const router = useRouter()
   const { query } = router
   if (!query.image && !query.extract) {
     return null
   }
+
   const text = question
     ? question.text
     : user
-    ? t('Climatelab/Questionnaire/Person/title', {
-        name: user?.name,
-      })
+    ? personShareText + user?.name
     : undefined
 
   if (!text) return null
@@ -41,7 +42,7 @@ export const ShareImageSplit = ({ question, user, img }) => {
           display: 'grid',
           gridAutoColumns: '1fr',
           gridAutoFlow: 'column',
-          backgroundColor: QUESTIONNAIRE_BG_COLOR,
+          backgroundColor: bgColor,
         }}
       >
         <div
@@ -62,6 +63,7 @@ export const ShareImageSplit = ({ question, user, img }) => {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
+            color: fgColor || 'inherit',
           }}
         >
           <span>{text}</span>

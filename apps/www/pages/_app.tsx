@@ -1,8 +1,8 @@
 import '../lib/polyfill'
+import '../globals.css'
 
 import Head from 'next/head'
-
-import { ColorContextProvider } from '@project-r/styleguide'
+import { ColorContextProvider, RootColorVariables } from '@project-r/styleguide'
 import type { PagePropsWithApollo } from '@republik/nextjs-apollo-client'
 
 import { AppProps } from 'next/app'
@@ -10,7 +10,6 @@ import AppVariableContext from '../components/Article/AppVariableContext'
 import AudioPlayerOrchestrator from '../components/Audio/AudioPlayerOrchestrator'
 import AudioProvider from '../components/Audio/AudioProvider'
 import MediaProgressContext from '../components/Audio/MediaProgress'
-import ColorSchemeSync from '../components/ColorScheme/Sync'
 import MessageSync from '../components/NativeApp/MessageSync'
 import Track from '../components/Track'
 import { withApollo } from '../lib/apollo'
@@ -18,6 +17,7 @@ import MeContextProvider from '../lib/context/MeContext'
 import UserAgentProvider from '../lib/context/UserAgentContext'
 import PageErrorBoundary from '../lib/errors/PageErrorBoundary'
 import { reportError } from '../lib/errors/reportError'
+import { ThemeProvider } from '../components/ColorScheme/ThemeProvider'
 
 if (typeof window !== 'undefined') {
   window.addEventListener('error', (event: ErrorEvent) => {
@@ -64,22 +64,24 @@ const WebApp = ({
           <MediaProgressContext>
             <AudioProvider>
               <AppVariableContext>
-                <ColorContextProvider root colorSchemeKey='auto'>
-                  <MessageSync />
-                  <ColorSchemeSync />
-                  <Head>
-                    <meta
-                      name='viewport'
-                      content='width=device-width, initial-scale=1'
+                <ThemeProvider>
+                  <RootColorVariables />
+                  <ColorContextProvider colorSchemeKey='auto'>
+                    <MessageSync />
+                    <Head>
+                      <meta
+                        name='viewport'
+                        content='width=device-width, initial-scale=1'
+                      />
+                    </Head>
+                    <Component
+                      serverContext={serverContext}
+                      {...otherPageProps}
                     />
-                  </Head>
-                  <Component
-                    serverContext={serverContext}
-                    {...otherPageProps}
-                  />
-                  <Track />
-                  <AudioPlayerOrchestrator />
-                </ColorContextProvider>
+                    <Track />
+                    <AudioPlayerOrchestrator />
+                  </ColorContextProvider>
+                </ThemeProvider>
               </AppVariableContext>
             </AudioProvider>
           </MediaProgressContext>

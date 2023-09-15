@@ -86,7 +86,7 @@ export const sanitizeVoucherCode = (value) => {
     .replace(/[^a-zA-Z0-9]/g, '')
     .trim()
     .substr(0, 7)
-    .toUpperCase()
+    .toUpperCase();
 }
 
 const relocateToOnboarding = (context) => {

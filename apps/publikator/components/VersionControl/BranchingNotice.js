@@ -21,7 +21,7 @@ const BranchingIcon = ({ repoId, warning }) => (
       warning ? ': dieses Commit wird ein Baum erzeugen' : ''
     }`}
   >
-    <Link href={`/repo/${repoId}/tree`}>
+    <Link href={`/repo/${repoId}/tree`} legacyBehavior>
       <Button
         style={{
           ...getColors(warning),
@@ -40,7 +40,7 @@ const BranchingIcon = ({ repoId, warning }) => (
 )
 
 const BranchingButton = ({ repoId, warning }) => (
-  <Link href={`/repo/${repoId}/tree`}>
+  <Link href={`/repo/${repoId}/tree`} legacyBehavior>
     <Button
       style={{
         ...getColors(warning),

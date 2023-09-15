@@ -1,8 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
-import {
-  IconButton,
-  useColorContext,
-} from '@project-r/styleguide'
+import { IconButton, useColorContext } from '@project-r/styleguide'
 import { css } from 'glamor'
 import { getImgSrc } from '../Overview/utils'
 import { useQuery } from '@apollo/client'
@@ -10,7 +7,11 @@ import { GET_DOCUMENT_AUDIO } from './graphql/DocumentAudio.graphql'
 import { useAudioContext } from '../Audio/AudioProvider'
 import scrollIntoView from 'scroll-into-view'
 import { AudioPlayerLocations } from '../Audio/types/AudioActionTracking'
-import { IconArticle, IconPauseCircle, IconPlayCircleOutline } from '@republik/icons'
+import {
+  IconArticle,
+  IconPauseCircle,
+  IconPlayCircleOutline,
+} from '@republik/icons'
 
 export type CarouselProps = {
   carouselData: any
@@ -70,14 +71,24 @@ const Carousel: React.FC<CarouselProps> = ({
   onlyAudio = false,
   expandAudioPlayerOnPlayback = true,
 }) => {
-  const items: CarouselItem[] = carouselData?.content?.children?.map(
-    ({ data }) => ({
-      src: getImgSrc(data, '/', 1200),
-      path: data.url,
-    }),
-  )
+  const items: CarouselItem[] = carouselData?.content?.children
+    ?.map(({ identifier, children, data }) => {
+      if (identifier === 'TEASERGROUP') {
+        return children?.length > 0
+          ? {
+              src: getImgSrc(data, '/', 1200),
+              path: children[0]?.data?.url,
+            }
+          : null
+      }
+      return {
+        src: getImgSrc(data, '/', 1200),
+        path: data.url,
+      }
+    })
+    ?.filter(Boolean)
+
   const carouselRef = useRef<HTMLDivElement>()
-  const [colorScheme] = useColorContext()
 
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0)
   const [disableScrollIntoView, setDisableScrollIntoView] = useState(false)
@@ -132,18 +143,10 @@ const Carousel: React.FC<CarouselProps> = ({
   const forwardDisabled = currentSlideIndex + 1 === items?.length
   const backwardDisabled = currentSlideIndex === 0
 
-  const clickAreaGradient = useMemo(
-    () =>
-      css({
-        background: colorScheme.getCSSColor('fadeOutGradientDefault90'),
-      }),
-    [colorScheme],
-  )
   return (
     <div {...styles.container}>
       <div
         {...styles.clickArea}
-        {...clickAreaGradient}
         style={{
           left: '-1px',
           pointerEvents: backwardDisabled ? 'none' : undefined,
@@ -151,7 +154,7 @@ const Carousel: React.FC<CarouselProps> = ({
         onClick={() => handleClick(currentSlideIndex - 1)}
       >
         <svg
-          style={{ display: backwardDisabled && 'none' }}
+          style={{ display: backwardDisabled ? 'none' : undefined }}
           width='16'
           height='40'
           viewBox='0 0 21 80'
@@ -162,7 +165,6 @@ const Carousel: React.FC<CarouselProps> = ({
       </div>
       <div
         {...styles.clickArea}
-        {...clickAreaGradient}
         style={{
           right: '-1px',
           pointerEvents: forwardDisabled ? 'none' : undefined,
@@ -172,7 +174,7 @@ const Carousel: React.FC<CarouselProps> = ({
       >
         <svg
           style={{
-            display: forwardDisabled && 'none',
+            display: forwardDisabled ? 'none' : undefined,
           }}
           width='16'
           height='40'
@@ -184,7 +186,7 @@ const Carousel: React.FC<CarouselProps> = ({
       </div>
       <div {...styles.carousel} ref={carouselRef}>
         {items?.map((d, i) => (
-          <div {...styles.slide} onClick={() => handleClick(i)} key={i}>
+          <div {...styles.slide} onClick={() => handleClick(i)} key={d.path}>
             <img {...styles.image} src={d.src} />
             <div {...styles.actions}>
               {!onlyAudio && (
@@ -255,7 +257,7 @@ const styles = {
     position: 'absolute',
     cursor: 'pointer',
     width: 30,
-    background: 'yellow',
+    background: 'var(--color-fadeOutGradientDefault90)',
     height: '100%',
     zIndex: 2,
     display: 'flex',

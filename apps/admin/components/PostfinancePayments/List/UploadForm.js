@@ -22,7 +22,7 @@ const readFile = (file) => {
     })
 
     fileReader.readAsDataURL(file)
-  })
+  });
 }
 
 const getInitialState = () => ({

@@ -7,6 +7,25 @@
       ],
       "outputs": [
         "dist/**",
+        ".next/**",
+        "!.next/cache/**"
+      ],
+      "dotEnv": [
+        ".env.production.local",
+        ".env.development.local",
+        ".env.local",
+        ".env.production",
+        ".env.development",
+        ".env"
+      ]
+    },
+    "start": {
+      "dependsOn": [
+        "^build",
+        "build"
+      ],
+      "outputs": [
+        "dist/**",
         ".next/**"
       ],
       "dotEnv": [
@@ -51,6 +70,9 @@
     "@orbiting/backend-modules-republik-crowdfundings#build": {
       "cache": false
     },
+    "@orbiting/backend-modules-utils#build": {
+      "cache": false
+    },
     "@project-r/styleguide#build": {
       "dependsOn": [
         "^build"
@@ -65,6 +87,21 @@
     },
     "lint": {
       "outputs": []
+    },
+    "start": {
+      "persistent": true,
+      "dependsOn": [
+        "^build",
+        "build"
+      ],
+      "dotEnv": [
+        ".env.production.local",
+        ".env.development.local",
+        ".env.local",
+        ".env.production",
+        ".env.development",
+        ".env"
+      ]
     },
     "dev": {
       "cache": false,
@@ -90,6 +127,9 @@
         ".env.test",
         ".env"
       ]
+    },
+    "@orbiting/backend-modules-test#test": {
+      "cache": false
     },
     "prepare": {
       "outputs": [

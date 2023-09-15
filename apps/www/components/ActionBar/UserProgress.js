@@ -55,7 +55,7 @@ const UserProgress = (
         <div {...styles.consent}>
           <IconButton
             style={{ marginBottom: 16 }}
-            Icon={ReadIcon}
+            Icon={IconRead}
             onClick={submitProgressConsent}
             label={t('article/progressprompt/button/confirm')}
             labelShort={t('article/progressprompt/button/confirm')}

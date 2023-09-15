@@ -111,7 +111,12 @@ const PostcardsGrid = ({
                   {...gridStyles.imageFix}
                   {...colorScheme.set('boxShadow', 'imageChoiceShadow')}
                 >
-                  <AssetImage width='600' height='420' src={p.imageUrl} />
+                  <AssetImage
+                    width='600'
+                    height='420'
+                    src={p.imageUrl}
+                    alt='Postcard image'
+                  />
                 </div>
               )}
             </div>

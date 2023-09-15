@@ -3,10 +3,10 @@ import Link from 'next/link'
 
 const ProfileLink = ({ children, slug }) => {
   return (
-    <Link href={`/~${slug}`} passHref>
+    <Link href={`/~${slug}`} passHref legacyBehavior>
       {children}
     </Link>
-  )
+  );
 }
 
 const Employee = ({

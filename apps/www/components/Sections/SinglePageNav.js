@@ -41,14 +41,17 @@ const SinglePageNav = ({ color, linkedDocuments = { nodes: [] } }) => {
         .map((d) => {
           return (
             <div key={d.id} {...styles.item}>
-              <Link href={d.meta.path} key={d.meta.path} passHref>
-                <a {...styles.link} href={d.meta.path}>
-                  <FormatTag
-                    color={d.meta.color || color}
-                    label={d.meta.title}
-                    count={d.linkedDocuments.totalCount || null}
-                  />
-                </a>
+              <Link
+                href={d.meta.path}
+                key={d.meta.path}
+                passHref
+                {...styles.link}
+              >
+                <FormatTag
+                  color={d.meta.color || color}
+                  label={d.meta.title}
+                  count={d.linkedDocuments.totalCount || null}
+                />
               </Link>
             </div>
           )

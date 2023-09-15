@@ -1,25 +1,18 @@
 import { forwardRef } from 'react'
-import {
-  CalloutMenu,
-  IconButton,
-  Radio,
-  Label,
-  useColorContext,
-} from '@project-r/styleguide'
+import { CalloutMenu, IconButton, Radio } from '@project-r/styleguide'
 import { useInNativeApp } from '../../lib/withInNativeApp'
 
-import { useColorSchemeKeyPreference } from '../ColorScheme/lib'
 import { IconDarkMode } from '@republik/icons'
+import { useTheme } from '../ColorScheme/ThemeProvider'
 
 const DarkmodeSwitch = ({ t }) => {
   const { inNativeApp, inNativeAppLegacy } = useInNativeApp()
-  const [colorSchemeKey, setColorSchemeKey] = useColorSchemeKeyPreference()
-  const [colorScheme] = useColorContext()
+  const { theme, setTheme } = useTheme()
 
   const iconLabel =
-    colorSchemeKey === 'light'
+    theme === 'light'
       ? t('darkmode/switch/off')
-      : colorSchemeKey === 'dark'
+      : theme === 'dark'
       ? t('darkmode/switch/on')
       : t('darkmode/switch/auto')
 
@@ -44,15 +37,13 @@ const DarkmodeSwitch = ({ t }) => {
   return (
     <CalloutMenu contentPaddingMobile={calloutPaddingNativeApp} Element={Icon}>
       <div style={{ width: 180, lineHeight: '2.5rem' }}>
-        {!colorScheme.CSSVarSupport ? (
-          <Label>{t('darkmode/switch/notSupported')}</Label>
-        ) : (
+        {
           <>
             <Radio
               value='dark'
-              checked={colorSchemeKey === 'dark'}
+              checked={theme === 'dark'}
               onChange={() => {
-                setColorSchemeKey('dark')
+                setTheme('dark')
               }}
             >
               {t('darkmode/switch/on')}
@@ -60,9 +51,9 @@ const DarkmodeSwitch = ({ t }) => {
             <br />
             <Radio
               value='light'
-              checked={colorSchemeKey === 'light'}
+              checked={theme === 'light'}
               onChange={() => {
-                setColorSchemeKey(inNativeAppLegacy ? '' : 'light')
+                setTheme(inNativeAppLegacy ? '' : 'light')
               }}
             >
               {t('darkmode/switch/off')}
@@ -71,16 +62,16 @@ const DarkmodeSwitch = ({ t }) => {
             {!inNativeAppLegacy && (
               <Radio
                 value='auto'
-                checked={colorSchemeKey === 'auto'}
+                checked={theme === 'system'}
                 onChange={() => {
-                  setColorSchemeKey('auto')
+                  setTheme('system')
                 }}
               >
                 {t('darkmode/switch/auto')}
               </Radio>
             )}
           </>
-        )}
+        }
       </div>
     </CalloutMenu>
   )

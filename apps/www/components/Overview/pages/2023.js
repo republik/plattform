@@ -335,9 +335,244 @@ const text = {
       .
     </>
   ),
-  //Juni: (p) => <></>,
-  //Juli: (p) => <></>,
-  //August: (p) => <></>,
+  Juni: (p) => (
+    <>
+      Der{' '}
+      <Highlight
+        {...p}
+        ids={['4omWBj7HQ']}
+        series='republik/article-serienuebersicht-kurt-goger'
+      >
+        grösste Lohndumpingskandal der Schweiz
+      </Highlight>
+      .{' '}
+      <Highlight
+        {...p}
+        ids={['jzwyD6nmie']}
+        series='republik/article-feminismus-gespraeche-uebersicht'
+      >
+        Wie behalten wir die Macht über unseren Körper
+      </Highlight>
+      ?{' '}
+      <Highlight
+        {...p}
+        ids={['stJUw9QhS']}
+        series='republik/article-serienuebersicht-ich-fordere'
+      >
+        Autorinnen
+      </Highlight>{' '}
+      <Highlight
+        {...p}
+        ids={['ZtBmkO_mf']}
+        series='republik/article-serienuebersicht-ich-fordere'
+      >
+        stellen
+      </Highlight>{' '}
+      <Highlight
+        {...p}
+        ids={['amb81dwRL']}
+        series='republik/article-serienuebersicht-ich-fordere'
+      >
+        Forderungen
+      </Highlight>{' '}
+      <Highlight
+        {...p}
+        ids={['UwHOK-lXK']}
+        series='republik/article-serienuebersicht-ich-fordere'
+      >
+        zum
+      </Highlight>{' '}
+      <Highlight
+        {...p}
+        ids={['cLEhe5Q59']}
+        series='republik/article-serienuebersicht-ich-fordere'
+      >
+        feministischen
+      </Highlight>{' '}
+      <Highlight
+        {...p}
+        ids={['ZqK9S9FEE']}
+        series='republik/article-serienuebersicht-ich-fordere'
+      >
+        Streik
+      </Highlight>
+      . Übrigens: Das Problem ist nicht das{' '}
+      <Highlight {...p} ids={['A4g-pUcK4']}>
+        Gendersternchen
+      </Highlight>
+      . Willkommen,{' '}
+      <Highlight {...p} ids={['J8l1LXJkU']}>
+        Anna Rosenwasser
+      </Highlight>
+      ! Dazu:{' '}
+      <Highlight {...p} ids={['O9ZRFcg9u']}>
+        Putins Koch
+      </Highlight>
+      ,{' '}
+      <Highlight {...p} ids={['6heXWm9zw']}>
+        Libanons Zentralbankchef
+      </Highlight>{' '}
+      und{' '}
+      <Highlight {...p} ids={['1K4JZFqPb']}>
+        Schwedens Asylpolitik unter Druck
+      </Highlight>
+      . Im{' '}
+      <Highlight {...p} ids={['8t0pwwqNx']}>
+        Simmental
+      </Highlight>
+      , im{' '}
+      <Highlight {...p} ids={['lzY7Z2N-5']}>
+        Wolkenkuckucksheim
+      </Highlight>{' '}
+      und im{' '}
+      <Highlight {...p} ids={['pCA87kQl5']}>
+        Schlaraffenland der Zukunft
+      </Highlight>
+      . Und für alle Eltern:{' '}
+      <Highlight {...p} ids={['hvZv2UIQ_']}>
+        Handyzeit fertig, jetzt
+      </Highlight>
+      !
+    </>
+  ),
+  Juli: (p) => (
+    <>
+      Sommer, Sonne, gutes Leben?{' '}
+      <Highlight
+        {...p}
+        ids={['kITiKBY7H']}
+        series='republik/article-serie-endlich-sommer'
+      >
+        Nicht unbedingt
+      </Highlight>
+      .{' '}
+      <Highlight
+        {...p}
+        ids={['sm8PrKM91']}
+        series='republik/article-die-zukunft-des-industriefaschismus'
+      >
+        Die faschistische Maschine läuft munter
+      </Highlight>{' '}
+      – auch in{' '}
+      <Highlight {...p} ids={['2NhyFCgLQ']}>
+        Spanien
+      </Highlight>{' '}
+      und{' '}
+      <Highlight {...p} ids={['Wb0QSDW-c']}>
+        Polen
+      </Highlight>
+      . Doch{' '}
+      <Highlight
+        {...p}
+        ids={['Ounuidx7p']}
+        format='republik/format-wir-haben-die-wahl'
+      >
+        wer bestimmt die Wahlen
+      </Highlight>
+      ? Und{' '}
+      <Highlight {...p} ids={['8731CSBoR']}>
+        wer sind die, die freiwillig darauf verzichten
+      </Highlight>
+      ? Überhaupt:{' '}
+      <Highlight {...p} ids={['rUMvvNFfbL']}>
+        Wie sieht es mit Ihrer politischen Haltung aus
+      </Highlight>
+      ? Ausserdem:{' '}
+      <Highlight {...p} ids={['OZxJc8C_U']}>
+        Ungleichheit im akademischen Betrieb
+      </Highlight>{' '}
+      und{' '}
+      <Highlight {...p} ids={['NOivGOqA7']}>
+        Meteorologe Bucheli flucht
+      </Highlight>
+      .{' '}
+      <Highlight {...p} ids={['jAEOUABg7']}>
+        Vom Lochergut in die Hitparade
+      </Highlight>
+      . Ob
+      <Highlight {...p} ids={['MBzdMl2cc']}>
+        {' '}
+        die Bundesbehörden beim Xplain-Datenklau
+      </Highlight>{' '}
+      auch fluchen, während{' '}
+      <Highlight {...p} ids={['AcGl-dlmf']}>
+        bei NZZ und CH Media Stille herrscht
+      </Highlight>
+      ? Und:{' '}
+      <Highlight {...p} ids={['Awzyw7HS-']}>
+        Eine Frau ist einem Femizid entkommen
+      </Highlight>{' '}
+      – und{' '}
+      <Highlight {...p} ids={['RWLIKdOnw']}>
+        zwei andere ihren Zwangsgedanken
+      </Highlight>
+      .
+    </>
+  ),
+  August: (p) => (
+    <>
+      Wohnungsnot in Schweizer Städten:{' '}
+      <Highlight {...p} ids={['Y6ae1xUzj']}>
+        erklärt
+      </Highlight>
+      ,{' '}
+      <Highlight {...p} ids={['UVj57QrKK']}>
+        erlebt
+      </Highlight>{' '}
+      <Highlight {...p} ids={['42QUMz01z']}>
+        diskutiert
+      </Highlight>
+      . Ist der{' '}
+      <Highlight {...p} ids={['rPoiEiEP_']}>
+        Einsatz von Polizeihunden
+      </Highlight>{' '}
+      verhältnismässig?{' '}
+      <Highlight {...p} ids={['qMfP3V_lG']}>
+        Hinter der Kamera eines Influencers
+      </Highlight>
+      .{' '}
+      <Highlight {...p} ids={['f-XAkSlYQZ']}>
+        Politikerinnen über ihre Lieblingswitze, Feinde – und Sand
+      </Highlight>
+      . Eine{' '}
+      <Highlight {...p} ids={['kEWwJMhlZ']}>
+        linke Kritik der «Wokeness»
+      </Highlight>{' '}
+      und ein{' '}
+      <Highlight {...p} ids={['gpMG9H0ma']}>
+        Lob der Faulheit
+      </Highlight>
+      . Wenn der Abbruch einer Schwangerschaft{' '}
+      <Highlight {...p} ids={['oeMOgvQXC']}>
+        erschwert
+      </Highlight>{' '}
+      oder{' '}
+      <Highlight {...p} ids={['1O5tvytgn']}>
+        verboten
+      </Highlight>{' '}
+      wird.{' '}
+      <Highlight {...p} ids={['Sq391r1Pz']}>
+        Verfassungskrise in Israel
+      </Highlight>
+      ,{' '}
+      <Highlight {...p} ids={['ZXVUd6Wwp']}>
+        Hitze in Athen
+      </Highlight>
+      , und{' '}
+      <Highlight {...p} ids={['JAIZOT94C']}>
+        überall auf der Welt die Augen scannen lassen
+      </Highlight>
+      . Zum Schulstart:{' '}
+      <Highlight {...p} ids={['sKO5nw6o_']}>
+        Warum mangelt es an Lehrkräften
+      </Highlight>{' '}
+      und{' '}
+      <Highlight {...p} ids={['w7K4tSIDW']}>
+        wie sähe ein ideales Gymnasium aus
+      </Highlight>
+      ?
+    </>
+  ),
   //September: (p) => <></>,
   //Oktober: (p) => <></>,
   //November: (p) => <></>,
