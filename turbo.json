@@ -19,6 +19,24 @@
         ".env"
       ]
     },
+    "start": {
+      "dependsOn": [
+        "^build",
+        "build"
+      ],
+      "outputs": [
+        "dist/**",
+        ".next/**"
+      ],
+      "dotEnv": [
+        ".env.production.local",
+        ".env.development.local",
+        ".env.local",
+        ".env.production",
+        ".env.development",
+        ".env"
+      ]
+    },
     "@orbiting/backend-modules-auth#build": {
       "cache": false
     },

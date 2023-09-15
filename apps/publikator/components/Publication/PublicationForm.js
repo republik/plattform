@@ -136,7 +136,7 @@ const Form = ({
       </Label>
       <Interaction.P>
         <Label>
-          <Link href={`/repo/${repo.id}/tree`} passHref>
+          <Link href={`/repo/${repo.id}/tree`} passHref legacyBehavior>
             <A>{t('publish/commit/change')}</A>
           </Link>
         </Label>
@@ -391,7 +391,7 @@ const Form = ({
               <ul>
                 {state.unresolvedRepoIds.map((repoId) => (
                   <li key={repoId}>
-                    <Link href={`/repo/${repoId}/tree`} passHref>
+                    <Link href={`/repo/${repoId}/tree`} passHref legacyBehavior>
                       <A>{repoId.replace(`${GITHUB_ORG}/`, '')}</A>
                     </Link>
                   </li>

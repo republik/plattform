@@ -3,11 +3,6 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true',
 })
 
-const withTM = require('next-transpile-modules')([
-  '@project-r/styleguide',
-  '@republik/nextjs-apollo-client',
-])
-
 const buildId =
   process.env.SOURCE_VERSION?.substring(0, 10) ||
   new Date(Date.now()).toISOString()
@@ -31,49 +26,51 @@ const unprefixedStyleguideEnvVariables = {
 /**
  * @type {import('next').NextConfig}
  */
-module.exports = withBundleAnalyzer(
-  withTM({
-    poweredByHeader: false,
-    eslint: {
-      ignoreDuringBuilds: true,
-    },
-    generateBuildId: () => buildId,
-    env: { BUILD_ID: buildId, ...unprefixedStyleguideEnvVariables },
-    async redirects() {
-      return [
-        {
-          source: '/',
-          destination: '/users',
-          permanent: false,
-        },
-        {
-          source: '/~:userId',
-          destination: '/users/:userId',
-          permanent: false,
-        },
-      ]
-    },
-    headers: async () => {
-      return [
-        {
-          source: '/(.*)',
-          headers: [
-            {
-              key: 'Strict-Transport-Security',
-              value: 'max-age=63072000; includeSubDomains; preload',
-            },
-            process.env.CSP_FRAME_ANCESTORS && {
-              key: 'Content-Security-Policy',
-              value: `frame-ancestors 'self' ${process.env.CSP_FRAME_ANCESTORS.split(
-                ',',
-              ).join(' ')}`,
-            },
-          ].filter(Boolean),
-        },
-      ]
-    },
-  }),
-)
+module.exports = withBundleAnalyzer({
+  poweredByHeader: false,
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+  generateBuildId: () => buildId,
+  transpilePackages: [
+    '@project-r/styleguide',
+    '@republik/nextjs-apollo-client',
+  ],
+  env: { BUILD_ID: buildId, ...unprefixedStyleguideEnvVariables },
+  async redirects() {
+    return [
+      {
+        source: '/',
+        destination: '/users',
+        permanent: false,
+      },
+      {
+        source: '/~:userId',
+        destination: '/users/:userId',
+        permanent: false,
+      },
+    ]
+  },
+  headers: async () => {
+    return [
+      {
+        source: '/(.*)',
+        headers: [
+          {
+            key: 'Strict-Transport-Security',
+            value: 'max-age=63072000; includeSubDomains; preload',
+          },
+          process.env.CSP_FRAME_ANCESTORS && {
+            key: 'Content-Security-Policy',
+            value: `frame-ancestors 'self' ${process.env.CSP_FRAME_ANCESTORS.split(
+              ',',
+            ).join(' ')}`,
+          },
+        ].filter(Boolean),
+      },
+    ]
+  },
+})
 
 // Injected content via Sentry wizard below
 

@@ -1,9 +1,6 @@
 import AudioListItem from '../shared/AudioListItem'
 
-import {
-  IconButton,
-  Spinner,
-} from '@project-r/styleguide'
+import { IconButton, Spinner } from '@project-r/styleguide'
 import { AudioQueueItem } from '../../../../graphql/AudioQueueHooks'
 import { AudioPlayerItem } from '../../../../types/AudioPlayerItem'
 import useAudioQueue from '../../../../hooks/useAudioQueue'
@@ -79,7 +76,7 @@ const LatestArticleItem = ({
             Icon={IconPlaylistAdd}
             title={t('AudioPlayer/Queue/Add')}
             onClick={() => handleAddToQueue(article)}
-            disabled={checkIfInQueue(article.id)}
+            disabled={!!checkIfInQueue(article.id)}
             style={{ marginRight: 0, alignSelf: 'stretch' }}
           />
         )

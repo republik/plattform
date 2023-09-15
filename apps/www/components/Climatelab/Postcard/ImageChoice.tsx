@@ -64,7 +64,12 @@ const BackgroundImage = ({
       {...(disabled ? styles.disabledImage : undefined)}
       {...colorScheme.set('boxShadow', 'imageChoiceShadow')}
     >
-      <AssetImage width={600} height={420} src={imageUrl} />
+      <AssetImage
+        width={600}
+        height={420}
+        src={imageUrl}
+        alt='Postcard image'
+      />
     </div>
   )
 }

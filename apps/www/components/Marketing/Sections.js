@@ -36,9 +36,7 @@ const sectionContent = [
       <>
         Die Klimakrise ist hier. Die Lage ist ernst. Was tun? Gemeinsam mit
         Ihnen machen wir uns auf die Suche nach Antworten. <br />
-        <Link href='/klimalabor' passHref>
-          <a>Newsletter abonnieren</a>
-        </Link>
+        <Link href='/klimalabor'>Newsletter abonnieren</Link>
       </>
     ),
   },
@@ -117,8 +115,8 @@ const Sections = () => {
               {...colorScheme.set('color', section.color, 'format')}
             >
               {section.href ? (
-                <Link href={section.href} passHref>
-                  <a {...styles.link}>{section.title}</a>
+                <Link href={section.href} {...styles.link}>
+                  {section.title}
                 </Link>
               ) : (
                 <>{section.title}</>

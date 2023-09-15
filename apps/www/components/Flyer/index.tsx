@@ -6,6 +6,7 @@ import {
   SlateRender,
   flyerSchema,
   CustomDescendant,
+  CustomElement,
 } from '@project-r/styleguide'
 
 import { useTranslation } from '../../lib/withT'
@@ -49,7 +50,7 @@ const RenderValue: React.FC<{
 )
 
 const RenderWithPaynote: React.FC<{
-  value: CustomDescendant[]
+  value: CustomElement[]
   tileId?: string
   repoId: string
   documentId: string
@@ -74,7 +75,7 @@ const Page: React.FC<{
   documentId: string
   inNativeApp: boolean
   tileId?: string
-  value: CustomDescendant[]
+  value: CustomElement[]
   actionBar: JSX.Element
 }> = ({ meta, repoId, documentId, inNativeApp, tileId, value, actionBar }) => {
   const { t } = useTranslation()

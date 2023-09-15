@@ -126,6 +126,7 @@ class Form extends Component {
                       query: { context: 'access' },
                     }}
                     passHref
+                    legacyBehavior
                   >
                     <A>
                       {t('Account/Access/Campaigns/Form/explanation/linkClaim')}
