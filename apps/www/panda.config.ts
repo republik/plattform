@@ -36,6 +36,12 @@ export default defineConfig({
                 _dark: '{colors.challengeAccepted.darkBlue}',
               },
             },
+            link: {
+              value: {
+                base: '{colors.challengeAccepted.blue}',
+                _dark: '{colors.challengeAccepted.yellow}',
+              },
+            },
           },
         },
       },

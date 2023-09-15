@@ -18,7 +18,15 @@ export default async function RootLayout({
 
   return (
     <html lang='de' suppressHydrationWarning>
-      <body className={css({ bg: 'challengeAccepted.background' })}>
+      <body
+        className={css({
+          bg: 'challengeAccepted.background',
+          '& a': {
+            color: 'challengeAccepted.link',
+            textDecoration: 'underline',
+          },
+        })}
+      >
         <ThemeProvider>
           <Frame me={me} />
           <main className={css({ p: '4' })}>{children}</main>
