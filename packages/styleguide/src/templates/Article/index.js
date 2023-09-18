@@ -39,6 +39,9 @@ import createBlocks from './blocks'
 import createTeasers from './teasers'
 import createDynamicComponent from './dynamicComponent'
 import TeaserEmbedComment from '../../components/TeaserEmbedComment'
+import ifRule from '../shared/email/rules/ifRule'
+import elseRule from '../shared/email/rules/elseRule'
+import { If } from '../../components/Variables'
 
 const getProgressId = (node, index, parent, { ancestors }) => {
   if (parent.identifier === 'CENTER') {
@@ -464,6 +467,15 @@ const createSchema = ({
                   ],
                 }),
                 editorModule: 'button',
+              },
+              // if-else block should not render anything in the web
+              {
+                ...ifRule,
+                component: () => null,
+              },
+              {
+                ...elseRule,
+                component: () => null,
               },
               base.list,
               {

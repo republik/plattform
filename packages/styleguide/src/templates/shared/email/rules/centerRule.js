@@ -11,6 +11,8 @@ import articleCollectionRule from './articleCollectionRule'
 import listRule from './listRule'
 import pullQuoteRule from './pullQuoteRule'
 import infoBoxRule from './infoBoxRule'
+import ifRule from './ifRule'
+import elseRule from './elseRule'
 
 const centerRule = {
   matchMdast: matchZone('CENTER'),
@@ -27,6 +29,8 @@ const centerRule = {
     noteRule,
     infoBoxRule,
     articleCollectionRule,
+    ifRule,
+    elseRule,
   ],
 }
 
