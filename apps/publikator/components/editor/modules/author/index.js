@@ -2,10 +2,10 @@ import { css } from 'glamor'
 import { colors } from '@project-r/styleguide'
 import { Block } from 'slate'
 
-import { matchBlock, buttonStyles } from '../../utils'
-import injectBlock from '../../utils/injectBlock'
+import { matchBlock } from '../../utils'
 
 import MarkdownSerializer from '@republik/slate-mdast-serializer'
+import createUi from './ui'
 
 const styles = {
   border: css({
@@ -27,19 +27,20 @@ export default ({ rule, subModules, TYPE }) => {
   const schemaRule = {
     match: matchBlock(TYPE),
     matchMdast: rule.matchMdast,
-    fromMdast: () => {
+    fromMdast: (node = {}) => {
       return {
         kind: 'block',
         type: TYPE,
         isVoid: true,
+        data: node.data,
         nodes: [],
       }
     },
-    toMdast: () => ({
+    toMdast: (object = {}) => ({
       type: 'zone',
       identifier: TYPE,
       children: [],
-      data: {},
+      data: object.data,
     }),
   }
 
@@ -47,32 +48,7 @@ export default ({ rule, subModules, TYPE }) => {
     rules: [schemaRule],
   })
 
-  const { insertButtonText, insertTypes = [] } = rule.editorOptions || {}
-
-  const insertButtonClickHandler = (value, onChange) => (event) => {
-    event.preventDefault()
-
-    return onChange(
-      value.change().call(injectBlock, Block.fromJSON(schemaRule.fromMdast())),
-    )
-  }
-  const InsertButton =
-    insertButtonText &&
-    (({ value, onChange }) => {
-      const disabled =
-        value.isBlurred ||
-        !value.blocks.every((n) => insertTypes.includes(n.type))
-      return (
-        <span
-          {...buttonStyles.insert}
-          data-disabled={disabled}
-          data-visible
-          onMouseDown={insertButtonClickHandler(value, onChange)}
-        >
-          {insertButtonText}
-        </span>
-      )
-    })
+  const newBlock = Block.fromJSON(schemaRule.fromMdast())
 
   return {
     TYPE,
@@ -80,9 +56,11 @@ export default ({ rule, subModules, TYPE }) => {
       serializer,
     },
     changes: {},
-    ui: {
-      insertButtons: [InsertButton],
-    },
+    ui: createUi({
+      TYPE,
+      newBlock,
+      editorOptions: rule.editorOptions,
+    }),
     plugins: [
       {
         renderNode(props) {
@@ -93,7 +71,7 @@ export default ({ rule, subModules, TYPE }) => {
           )
           return (
             <span {...styles.border} {...attributes} data-active={active}>
-              <Component />
+              <Component {...node.data.toJS()} />
             </span>
           )
         },
