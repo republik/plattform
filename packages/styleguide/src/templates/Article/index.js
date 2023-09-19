@@ -42,6 +42,7 @@ import TeaserEmbedComment from '../../components/TeaserEmbedComment'
 import ifRule from '../shared/email/rules/ifRule'
 import elseRule from '../shared/email/rules/elseRule'
 import { If } from '../../components/Variables'
+import { FlyerAuthor } from "../../components/Flyer/Author";
 
 const getProgressId = (node, index, parent, { ancestors }) => {
   if (parent.identifier === 'CENTER') {
@@ -467,6 +468,18 @@ const createSchema = ({
                   ],
                 }),
                 editorModule: 'button',
+              },
+              {
+                matchMdast: matchZone('AUTHOR'),
+                // TODO: replace with correct component
+                component: FlyerAuthor,
+                editorModule: 'author',
+                editorOptions: {
+                  insertButtonText: 'Autorin',
+                  insertTypes: ['PARAGRAPH'],
+                  type: 'AUTHOR',
+                },
+                isVoid: true,
               },
               // if-else block should not render anything in the web
               {

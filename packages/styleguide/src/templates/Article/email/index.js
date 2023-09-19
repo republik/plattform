@@ -6,7 +6,6 @@ import {
   coverRule,
   edgeToEdgeFigureRule,
 } from '../../shared/email/rules/figureRule'
-import titleBlockRule from '../../shared/email/rules/titleBlockRule'
 
 const articleEmailSchema = {
   rules: [
