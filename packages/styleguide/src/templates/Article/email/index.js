@@ -26,7 +26,8 @@ const articleEmailSchema = {
       }),
       rules: [
         editorialParagraphRule,
-        titleBlockRule,
+        // we do not render the title block
+        // titleBlockRule,
         centerRule,
         coverRule,
         edgeToEdgeFigureRule,
