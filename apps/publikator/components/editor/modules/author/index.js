@@ -1,5 +1,5 @@
 import { css } from 'glamor'
-import { colors } from '@project-r/styleguide'
+import { colors, EmailAuthor } from '@project-r/styleguide'
 import { Block } from 'slate'
 
 import { matchBlock } from '../../utils'
@@ -22,7 +22,7 @@ const styles = {
 }
 
 export default ({ rule, subModules, TYPE }) => {
-  const Component = rule.component
+  const Component = EmailAuthor
 
   const schemaRule = {
     match: matchBlock(TYPE),

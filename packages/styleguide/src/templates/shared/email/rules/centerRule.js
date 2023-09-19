@@ -13,6 +13,7 @@ import pullQuoteRule from './pullQuoteRule'
 import infoBoxRule from './infoBoxRule'
 import ifRule from './ifRule'
 import elseRule from './elseRule'
+import authorRule from './authorRule'
 
 const centerRule = {
   matchMdast: matchZone('CENTER'),
@@ -31,6 +32,7 @@ const centerRule = {
     articleCollectionRule,
     ifRule,
     elseRule,
+    authorRule,
   ],
 }
 

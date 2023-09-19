@@ -48,6 +48,7 @@ export default ({ TYPE, newBlock, editorOptions }) => {
               name: author.value.name,
               slug: author.value.slug,
               portrait: author.value.portrait,
+              credentials: author.value.credentials,
             },
           },
         }),
