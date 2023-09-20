@@ -5,6 +5,10 @@
   ],
   "automerge": false,
   "commitMessagePrefix": "chore(deps): renovate",
+  "labels": [
+    "renovate",
+    "maintenance"
+  ],
   "packageRules": [
     {
       "enabled": false,
