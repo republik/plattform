@@ -1,20 +1,13 @@
 import { headers } from 'next/headers'
-import { revalidatePath, revalidateTag } from 'next/cache'
+import { revalidateBasedOnReqBody } from './lib/revalidate-utils'
 
 /**
  * Endpoint to trigger revalidation of a path or tag(s).
- * What is to be revalidated is defined by the X-REVALIDATION-KEY header on the request.
- * The value of the header can be either:
- * - path:/path/to/revalidate
- * - tag:tag-to-revalidate
- * - tags:tag1,tag2,tag3
- *
- * The endpoint is protected by a secret, which is set in the REVALIDATION_SECRET environment variable.
- * The secret must be sent in the X-REVALIDATION-SECRET header.
- *
+ * What is to be revalidated is defined by the request body.
+ * @param {Request} req Request object (the body should be a JSON object)
  * @returns {Response} Response object
  */
-export async function POST() {
+export async function POST(req: Request) {
   if (!process.env.REVALIDATION_SECRET) {
     console.info('REVALIDATION_SECRET is not set')
     return new Response(undefined, {
@@ -34,38 +27,18 @@ export async function POST() {
     })
   }
 
-  const revalidationKey = reqHeaders.get('X-REVALIDATION-KEY')
-  if (!revalidationKey) {
+  try {
+    const body = await req.json()
+    await revalidateBasedOnReqBody(body)
+
+    return new Response(undefined, {
+      status: 203,
+      statusText: 'revalidation triggered',
+    })
+  } catch (e) {
     return new Response(undefined, {
       status: 400,
-      statusText: 'revalidation key not set',
+      statusText: 'invalid request body',
     })
   }
-
-  if (revalidationKey.startsWith('path:/')) {
-    // revalidate path
-    revalidatePath(revalidationKey.replace('path:', ''))
-  } else if (revalidationKey.startsWith('tag:')) {
-    // revalidate tag
-    revalidateTag(revalidationKey.replace('tag:', ''))
-  } else if (revalidationKey.startsWith('tags:')) {
-    // revalidate tags
-    revalidationKey
-      .replace('tags:', '')
-      .split(',')
-      .map((tag) => tag.trim())
-      .forEach((tag) => revalidateTag(tag))
-  } else {
-    return new Response(undefined, {
-      status: 400,
-      statusText: 'revalidation key invalid',
-    })
-  }
-
-  console.info(`revalidation triggered for ${revalidationKey}`)
-
-  return new Response(undefined, {
-    status: 203,
-    statusText: 'revalidation triggered',
-  })
 }
