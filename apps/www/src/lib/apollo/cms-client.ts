@@ -12,20 +12,19 @@ export function getCMSClient() {
   if (!process.env.DATO_CMS_API_TOKEN) {
     throw new Error('Missing DatoCMS API token')
   }
+  console.debug(
+    `Creating apollo-client for url <${process.env.DATO_CMS_API_URL}>`,
+  )
 
-  const link = new HttpLink({
-    uri: process.env.DATO_CMS_API_URL,
-    headers: {
-      Authorization: `${process.env.DATO_CMS_API_TOKEN}`,
-      // forbid invalid content to allow strict type checking
-      'X-Exclude-Invalid': 'true',
-    },
-  })
-
-  const client = new ApolloClient({
-    link,
+  return new ApolloClient({
     cache: new InMemoryCache(),
+    link: new HttpLink({
+      uri: process.env.DATO_CMS_API_URL,
+      headers: {
+        Authorization: `${process.env.DATO_CMS_API_TOKEN}`,
+        // forbid invalid content to allow strict type checking
+        'X-Exclude-Invalid': 'true',
+      },
+    }),
   })
-
-  return client
 }
