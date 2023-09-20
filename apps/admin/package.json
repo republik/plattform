@@ -19,7 +19,7 @@
     "zat:package": "docker compose run --rm zat-package"
   },
   "dependencies": {
-    "@apollo/client": "~3.8.1",
+    "@apollo/client": "~3.8.4",
     "@next/bundle-analyzer": "^13.5.1",
     "@project-r/styleguide": "*",
     "@republik/icons": "*",
