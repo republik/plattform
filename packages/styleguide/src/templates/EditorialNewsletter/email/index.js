@@ -2,7 +2,7 @@ import createNewsletterSchema from '../schema'
 
 import { H2 } from './Headlines'
 import Paragraph, { A } from './Paragraph'
-import Container from './Container'
+import Container from '../../shared/email/components/Container'
 import Cover, { CoverImage } from './Cover'
 import Center from './Center'
 import Figure, { Image, Caption, Byline } from './Figure'

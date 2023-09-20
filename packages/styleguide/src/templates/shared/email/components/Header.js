@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react'
-import colors from '../../../theme/colors'
-import { getFormatLine } from '../../../components/TeaserFeed/utils'
-import { matchProjectR } from './project-r/utils'
+import colors from '../../../../theme/colors'
+import { getFormatLine } from '../../../../components/TeaserFeed/utils'
+import { matchProjectR } from '../../../EditorialNewsletter/email/project-r/utils'
 
 export default ({ meta }) => {
   const { slug, path, format } = meta

@@ -1,5 +1,5 @@
 import { matchType } from '@republik/mdast-react-render'
-import Container from '../../EditorialNewsletter/email/Container'
+import Container from '../../shared/email/components/Container'
 import { editorialParagraphRule } from '../../shared/email/rules/paragraphRule'
 import centerRule from '../../shared/email/rules/centerRule'
 import {

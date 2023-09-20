@@ -1,11 +1,14 @@
-import HR from './HR'
+import HR from '../../../EditorialNewsletter/email/HR'
 import React from 'react'
-import Center from './Center'
-import colors from '../../../theme/colors'
-import { fontFamilies } from '../../../theme/fonts'
+import Center from '../../../EditorialNewsletter/email/Center'
+import colors from '../../../../theme/colors'
+import { fontFamilies } from '../../../../theme/fonts'
 
-import { paragraphStyle, linkStyle } from './Paragraph'
-import { matchProjectR } from './project-r/utils'
+import {
+  paragraphStyle,
+  linkStyle,
+} from '../../../EditorialNewsletter/email/Paragraph'
+import { matchProjectR } from '../../../EditorialNewsletter/email/project-r/utils'
 
 const footerParagraphStyle = {
   color: colors.text,
