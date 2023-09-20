@@ -27,38 +27,48 @@ export default async function Page() {
       <h2 className={css({ textStyle: '4xl', fontWeight: 'bold' })}>
         List of all people
       </h2>
-      <ul className={css({ ml: '1rem' })}>
+      <div
+        className={css({
+          display: 'grid',
+          gridTemplateColumns: '1fr 1fr',
+          gridAutoRows: 'auto',
+        })}
+      >
         {people.map((person) => (
-          <li key={person.id}>
-            <details>
-              <summary>
-                {person.portrait && (
-                  <Image
-                    alt={person.name}
-                    src={person.portrait.url}
-                    width={100}
-                    height={100}
-                    style={{ objectFit: 'contain' }}
-                  />
-                )}
-                <h3
-                  className={css({
-                    display: 'inline-block',
-                    textStyle: '2xl',
-                    fontStyle: 'italic',
-                    fontWeight: 'bold',
-                  })}
-                >
-                  {person.name}
-                </h3>
-              </summary>
-              <pre>
-                <code>{JSON.stringify(person, null, 2)}</code>
-              </pre>
-            </details>
-          </li>
+          <div
+            key={person.id}
+            className={css({
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'flex-end',
+              gap: '0.5rem',
+              padding: '1rem',
+              margin: '1rem',
+              border: '1px solid black',
+            })}
+          >
+            {person.portrait && (
+              <Image
+                alt={person.name}
+                src={person.portrait.url}
+                width={100}
+                height={100}
+                style={{ objectFit: 'contain' }}
+              />
+            )}
+            <h3
+              className={css({
+                display: 'inline-block',
+                textStyle: '2xl',
+                fontStyle: 'italic',
+                fontWeight: 'bold',
+              })}
+            >
+              {person.name}
+            </h3>
+          </div>
         ))}
-      </ul>
+      </div>
       <p>Rendered-at: {now}</p>
     </div>
   )
