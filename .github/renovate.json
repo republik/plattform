@@ -9,6 +9,17 @@
     "renovate",
     "maintenance"
   ],
+  "assignees": [
+    "@trm217",
+    "@jstcki"
+  ],
+  "vulnerabilityAlerts": {
+    "labels": [
+      "renovate",
+      "maintenance",
+      "security"
+    ]
+  },
   "packageRules": [
     {
       "enabled": false,
