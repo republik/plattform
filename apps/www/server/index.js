@@ -132,6 +132,7 @@ app.prepare().then(() => {
       '/static/',
       '/manifest',
       '/mitteilung',
+      '/api/revalidate',
     ]
     const ALLOWED_UAS = (process.env.CURTAIN_UA_ALLOW_LIST || '')
       .split(',')
