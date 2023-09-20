@@ -29,7 +29,11 @@ const articleEmailSchema = {
         // titleBlockRule,
         centerRule,
         // we do not render the cover
-        // coverRule,
+        // we cannot just ignore this rule, otherwise, regular figure rule kicks in
+        {
+          ...coverRule,
+          component: () => null,
+        },
         edgeToEdgeFigureRule,
       ],
     },
