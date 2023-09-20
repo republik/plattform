@@ -112,23 +112,27 @@ const Carousel: React.FC<CarouselProps> = ({
     }
     carousel.addEventListener('scroll', onScroll)
     return () => {
-      carousel.removeEventListener('scroll', onScroll)
+      carousel?.removeEventListener('scroll', onScroll)
     }
   }, [currentSlideIndex, disableScrollListener])
 
   useEffect(() => {
-    if (disableScrollIntoView) {
+    const carousel = carouselRef.current
+    if (!carousel || disableScrollIntoView) {
       return
     }
-    const target = Array.from(carouselRef.current.children)[currentSlideIndex]
-    carouselRef.current.style.scrollSnapType = 'none'
+
+    const target = Array.from(carousel.children)[currentSlideIndex]
+    carousel.style.scrollSnapType = 'none'
     scrollIntoView(
       target,
       {
         time: 300,
       },
-      function () {
-        carouselRef.current.style.scrollSnapType = 'x mandatory'
+      () => {
+        if (carousel) {
+          carousel.style.scrollSnapType = 'x mandatory'
+        }
         setDisableScrollListener(false)
       },
     )
