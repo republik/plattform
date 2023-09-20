@@ -9,11 +9,13 @@
     "renovate",
     "maintenance"
   ],
-  "assignees": [
-    "@trm217",
-    "@jstcki"
+  "schedule": [
+    "every wednesday"
   ],
   "vulnerabilityAlerts": {
+    "schedule": [
+      "at any time"
+    ],
     "labels": [
       "renovate",
       "maintenance",
