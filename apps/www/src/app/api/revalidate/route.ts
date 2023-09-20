@@ -44,7 +44,7 @@ export async function POST() {
 
   if (revalidationKey.startsWith('path:/')) {
     // revalidate path
-    revalidatePath(revalidationKey.replace('path:/', ''))
+    revalidatePath(revalidationKey.replace('path:', ''))
   } else if (revalidationKey.startsWith('tag:')) {
     // revalidate tag
     revalidateTag(revalidationKey.replace('tag:', ''))
