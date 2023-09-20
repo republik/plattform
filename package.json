@@ -8,6 +8,7 @@
       "apps/*",
       "packages/*",
       "packages/mdast/*",
+      "packages/stories/*",
       "packages/backend-modules/*"
     ],
     "nohoist": [
