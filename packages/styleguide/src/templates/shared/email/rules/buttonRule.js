@@ -4,8 +4,8 @@ import {
   matchType,
   matchZone,
 } from '@republik/mdast-react-render'
-import { Button } from '../../../../lib'
 import { inlineEditorialParagraphRules } from './paragraphRule'
+import { Button } from '../components/Button'
 
 const buttonRule = {
   matchMdast: matchZone('BUTTON'),
