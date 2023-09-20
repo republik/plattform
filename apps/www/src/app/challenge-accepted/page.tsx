@@ -7,12 +7,15 @@ export default async function Page() {
   const { data } = await client
     .query({
       query: PEOPLE_QUERY,
+      context: {},
     })
     .catch((err) => {
       console.error('FETCH_ERROR' + JSON.stringify(err, null, 2))
       return { data: { people: [] } }
     })
   const { people } = data
+
+  const now = new Date(Date.now()).toISOString()
 
   return (
     <div
@@ -51,6 +54,7 @@ export default async function Page() {
           </li>
         ))}
       </ul>
+      <p>Rendered-at: {now}</p>
     </div>
   )
 }

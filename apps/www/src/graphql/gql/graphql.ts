@@ -2000,7 +2000,7 @@ export type SiteGlobalSeoArgs = {
 };
 
 export enum SiteLocale {
-  En = 'en'
+  DeCh = 'de_CH'
 }
 
 /** Specifies how to filter by status */

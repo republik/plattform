@@ -69,6 +69,7 @@
     "@dnd-kit/modifiers": "^6.0.0",
     "@dnd-kit/sortable": "^7.0.1",
     "@dnd-kit/utilities": "^3.2.0",
+    "@graphql-typed-document-node/core": "^3.2.0",
     "@juggle/resize-observer": "^3.4.0",
     "@next/bundle-analyzer": "^13.5.1",
     "@project-r/styleguide": "*",
