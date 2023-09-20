@@ -65,7 +65,7 @@ export default ({ meta }) => {
     <>
       <tr>
         <td
-          align='center'
+          align={isWdwww ? 'left' : 'center'}
           valign='top'
           style={{
             borderBottom:
@@ -74,9 +74,14 @@ export default ({ meta }) => {
                 : `1px solid ${colors.divider}`,
           }}
         >
-          {logoLink}
+          {isWdwww ? 'Was diese Woche wichtig war' : logoLink}
         </td>
       </tr>
+      {isWdwww && (
+        <tr>
+          <td align='center'>{logoLink}</td>
+        </tr>
+      )}
     </>
   )
 }
