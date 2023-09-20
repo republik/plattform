@@ -55,6 +55,9 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+  images: {
+    domains: ['www.datocms-assets.com'],
+  },
   compiler: {
     removeConsole:
       process.env.NODE_ENV === 'production'

@@ -1,18 +1,14 @@
 import { css } from '@app/styled-system/css'
 import { PEOPLE_QUERY } from '@app/graphql/cms/people.query'
 import { getCMSClient } from '@app/lib/apollo/cms-client'
+import Image from 'next/image'
 
 export default async function Page() {
   const client = getCMSClient()
-  const { data } = await client
-    .query({
-      query: PEOPLE_QUERY,
-      context: {},
-    })
-    .catch((err) => {
-      console.error('FETCH_ERROR' + JSON.stringify(err, null, 2))
-      return { data: { people: [] } }
-    })
+  const { data } = await client.query({
+    query: PEOPLE_QUERY,
+    context: {},
+  })
   const { people } = data
 
   const now = new Date(Date.now()).toISOString()
@@ -36,6 +32,15 @@ export default async function Page() {
           <li key={person.id}>
             <details>
               <summary>
+                {person.portrait && (
+                  <Image
+                    alt={person.name}
+                    src={person.portrait.url}
+                    width={100}
+                    height={100}
+                    style={{ objectFit: 'contain' }}
+                  />
+                )}
                 <h3
                   className={css({
                     display: 'inline-block',

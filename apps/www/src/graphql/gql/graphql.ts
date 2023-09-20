@@ -2439,7 +2439,7 @@ export type FocalPoint = {
 export type PeopleQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type PeopleQueryQuery = { __typename?: 'Query', people: Array<{ __typename?: 'PersonRecord', id: number, name?: string | null }> };
+export type PeopleQueryQuery = { __typename?: 'Query', people: Array<{ __typename?: 'PersonRecord', id: number, name?: string | null, portrait?: { __typename?: 'FileField', url: string, height?: number | null, width?: number | null } | null }> };
 
 
-export const PeopleQueryDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"PeopleQuery"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","alias":{"kind":"Name","value":"people"},"name":{"kind":"Name","value":"allPeople"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]} as unknown as DocumentNode<PeopleQueryQuery, PeopleQueryQueryVariables>;
+export const PeopleQueryDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"PeopleQuery"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","alias":{"kind":"Name","value":"people"},"name":{"kind":"Name","value":"allPeople"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"portrait"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"url"}},{"kind":"Field","name":{"kind":"Name","value":"height"}},{"kind":"Field","name":{"kind":"Name","value":"width"}}]}}]}}]}}]} as unknown as DocumentNode<PeopleQueryQuery, PeopleQueryQueryVariables>;
