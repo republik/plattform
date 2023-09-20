@@ -300,7 +300,7 @@ const makeLoadMore = (fetchMore, dataType, variables) => () =>
     variables,
   })
 
-const LoadedProfile = ({ t, data: { user, fetchMore }, card, metaData }) => {
+const LoadedProfile = ({ t, data: { user }, fetchMore, card, metaData }) => {
   const { me, hasAccess } = useMe()
 
   const [state, setRawState] = useState({
