@@ -25,8 +25,11 @@ const handleRow = async (row) => {
     LNAME: `"${row.lastName ?? ''}"`,
     NL_LINK_WDWWW: getConsentLink(row.email, 'WDWWW'),
   }
-  // console.log(JSON.stringify(record))
-  return record
+  console.log(
+    Object.keys(record)
+      .map((key) => record[key])
+      .join(','),
+  )
 }
 
 const handleBatch = async (rows, count, pgdb) => {
@@ -45,9 +48,9 @@ ConnectionContext.create(applicationName)
         { handleFn: handleBatch, size: 2000 },
         `
           SELECT u.*
-          FROM users u
+         FROM users u
           -- Include if only users with memberships matter
-          LEFT JOIN memberships m ON m."userId" = u.id
+          -- LEFT JOIN memberships m ON m."userId" = u.id
 
           -- Test Geschenk-Monatsabos:
           -- JOIN "membershipTypes" mt ON mt.id = m."membershipTypeId" AND mt.name IN ('ABO_GIVE_MONTHS') AND m.active = TRUE
@@ -56,7 +59,7 @@ ConnectionContext.create(applicationName)
           -- JOIN "membershipTypes" mt ON mt.id = m."membershipTypeId" AND mt.name IN ('MONTHLY_ABO') AND m.active = TRUE
 
           -- Link to temp MailChimp Audience table
-          JOIN "paeMailchimpAudience" pmc ON pmc.email = u.email
+        JOIN "paeMailchimpAudience" pmc ON pmc.email = u.email
 
           WHERE
             u.email != 'jefferson@project-r.construction'
@@ -76,7 +79,7 @@ ConnectionContext.create(applicationName)
             ) */
           GROUP BY u.id
           ORDER BY RANDOM()
-          LIMIT 100
+          -- LIMIT 100
           ;
         `,
       )
