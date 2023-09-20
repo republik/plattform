@@ -54,7 +54,7 @@
     "dayjs": "^1.11.7",
     "debug": "^4.1.1",
     "emojione_minimal": "^2.1.2",
-    "graphql": "^15.3.0",
+    "graphql": "^16.0.0",
     "graphql-fields": "^2.0.3",
     "is-uuid": "^1.0.2",
     "lodash": "^4.17.19",

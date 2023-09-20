@@ -22,7 +22,7 @@
     "@types/react": "^18.0.28",
     "@types/react-dom": "^18.0.11",
     "cross-fetch": "^3.1.5",
-    "graphql": "^15.3.0",
+    "graphql": "^16.0.0",
     "next": "^13.5.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
