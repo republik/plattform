@@ -19,10 +19,16 @@ export default ({ meta }) => {
       format.includes('format-das-neue-klimaprojekt')) ||
     format?.repoId?.includes('format-das-neue-klimaprojekt')
 
+  const isWdwww =
+    (typeof format === 'string' &&
+      format.includes('format-was-diese-woche-wichtig-war')) ||
+    format?.repoId?.includes('format-was-diese-woche-wichtig-war')
+
   const width = (isClimate && 179) || 178
   const height = (isClimate && 110) || 79
   const imageFile =
     (isClimate && 'logo_republik_newsletter_climate-1.png') ||
+    (isWdwww && 'logo_republik_newsletter-wdwww.png') ||
     'logo_republik_newsletter.png'
 
   const formatLine = useMemo(() => {
@@ -33,6 +39,27 @@ export default ({ meta }) => {
       path: meta.path,
     })
   }, [meta])
+
+  const logoLink = (
+    <a
+      href={`https://www.republik.ch${path ? path : `/${slug}`}`}
+      title='Im Web lesen'
+    >
+      <img
+        width={width}
+        height={height}
+        src={`https://www.republik.ch/static/${imageFile}`}
+        style={{
+          border: 0,
+          width: `${width}px !important`,
+          height: `${height}px !important`,
+          margin: 0,
+          maxWidth: '100% !important',
+        }}
+        alt='REPUBLIK'
+      />
+    </a>
+  )
 
   return (
     <>
@@ -47,24 +74,7 @@ export default ({ meta }) => {
                 : `1px solid ${colors.divider}`,
           }}
         >
-          <a
-            href={`https://www.republik.ch${path ? path : `/${slug}`}`}
-            title='Im Web lesen'
-          >
-            <img
-              width={width}
-              height={height}
-              src={`https://www.republik.ch/static/${imageFile}`}
-              style={{
-                border: 0,
-                width: `${width}px !important`,
-                height: `${height}px !important`,
-                margin: 0,
-                maxWidth: '100% !important',
-              }}
-              alt='REPUBLIK'
-            />
-          </a>
+          {logoLink}
         </td>
       </tr>
     </>
