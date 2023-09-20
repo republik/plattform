@@ -1,11 +1,11 @@
 import './globals.css'
 
+import { ThemeProvider } from '@app/components/ThemeProvider'
+import { getClient } from '@app/lib/ApolloClient'
+import { meQuery } from '@app/lib/graphql/meQuery'
+import { css } from '@app/styled-system/css'
 import Link from 'next/link'
 import { ReactNode } from 'react'
-import { css } from '../styled-system/css'
-import { ThemeProvider } from './components/ThemeProvider'
-import { getClient } from './utils/ApolloClient'
-import { meQuery } from './utils/graphql/meQuery'
 
 export default async function RootLayout({
   // Layouts must accept a children prop.

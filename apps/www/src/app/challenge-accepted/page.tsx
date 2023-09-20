@@ -1,4 +1,4 @@
-import { css } from '../../styled-system/css'
+import { css } from '@app/styled-system/css'
 
 export default function Page() {
   return (
