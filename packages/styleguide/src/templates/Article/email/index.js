@@ -28,7 +28,8 @@ const articleEmailSchema = {
         // we do not render the title block
         // titleBlockRule,
         centerRule,
-        coverRule,
+        // we do not render the cover
+        // coverRule,
         edgeToEdgeFigureRule,
       ],
     },
