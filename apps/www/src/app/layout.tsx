@@ -1,7 +1,7 @@
 import './globals.css'
 
 import { ThemeProvider } from '@app/components/ThemeProvider'
-import { getClient } from '@app/lib/ApolloClient'
+import { getClient } from '@app/lib/apollo/client'
 import { meQuery } from '@app/lib/graphql/meQuery'
 import { css } from '@app/styled-system/css'
 import Link from 'next/link'
