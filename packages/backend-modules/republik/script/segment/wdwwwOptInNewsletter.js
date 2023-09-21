@@ -47,7 +47,7 @@ ConnectionContext.create(applicationName)
       .queryInBatches(
         { handleFn: handleBatch, size: 2000 },
         `
-          SELECT u.*
+          SELECT u.*, pmc."Customer"
          FROM users u
           -- Include if only users with memberships matter
           -- LEFT JOIN memberships m ON m."userId" = u.id
@@ -65,6 +65,7 @@ ConnectionContext.create(applicationName)
             u.email != 'jefferson@project-r.construction'
             AND "deletedAt" IS NULL
             AND u.email NOT LIKE '%_deleted@republik.ch'
+            AND pmc."Customer" NOT like '%Member%'
             -- Benachrichten notwendig
             -- AND u.roles @> '"gen202211"'
             -- AND m.active = TRUE
@@ -77,7 +78,7 @@ ConnectionContext.create(applicationName)
               '3b0dad5c-813a-4003-b4e1-64e3dfd137d7',
               '7f7f5474-8d85-4ab4-86a0-ad48c300019e'
             ) */
-          GROUP BY u.id
+          -- GROUP BY u.id
           ORDER BY RANDOM()
           -- LIMIT 100
           ;
