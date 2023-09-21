@@ -73,6 +73,7 @@
     "@juggle/resize-observer": "^3.4.0",
     "@next/bundle-analyzer": "^13.5.1",
     "@project-r/styleguide": "*",
+    "@radix-ui/react-dialog": "^1.0.4",
     "@republik/icons": "*",
     "@republik/mdast-react-render": "*",
     "@republik/nextjs-apollo-client": "*",

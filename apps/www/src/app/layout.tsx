@@ -1,8 +1,9 @@
 import './globals.css'
 
 import { ThemeProvider } from '@app/components/ThemeProvider'
+import { UserMenu } from '@app/components/user-menu'
 import { getClient } from '@app/lib/apollo/client'
-import { meQuery } from '@app/lib/graphql/meQuery'
+import { ME_QUERY } from '@app/graphql/republik-api/me.query'
 import { css } from '@app/styled-system/css'
 import Link from 'next/link'
 import { ReactNode } from 'react'
@@ -39,7 +40,7 @@ export default async function RootLayout({
 }
 
 const getMe = async () => {
-  const { data } = await getClient().query({ query: meQuery })
+  const { data } = await getClient().query({ query: ME_QUERY })
 
   return data.me
 }
@@ -56,10 +57,11 @@ const Frame = ({ me }) => {
     >
       {' '}
       {me ? (
-        `Hey, ${me.firstName}`
+        <UserMenu me={me}></UserMenu>
       ) : (
         <Link href='/anmelden'>Anmelden</Link>
-      )} | <Link href='/'>Ab zum Magazin</Link>
+      )}{' '}
+      | <Link href='/'>Ab zum Magazin</Link>
     </div>
   )
 }

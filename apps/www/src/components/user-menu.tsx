@@ -1,0 +1,69 @@
+'use client'
+
+import { MeQueryResult } from '@app/graphql/republik-api/me.query'
+import { css } from '@app/styled-system/css'
+import * as Dialog from '@radix-ui/react-dialog'
+import UserNav from 'components/Frame/Popover/UserNav'
+
+type Props = MeQueryResult
+
+const getInitials = (me) =>
+  (me.name && me.name.trim()
+    ? me.name.split(' ').filter((n, i, all) => i === 0 || all.length - 1 === i)
+    : me.email
+        .split('@')[0]
+        .split(/\.|-|_/)
+        .slice(0, 2)
+  )
+    .slice(0, 2)
+    .filter(Boolean)
+    .map((s) => s[0])
+    .join('')
+
+const Avatar = ({ me }: Props) => {
+  const style = css({
+    position: 'relative',
+    display: 'inline-block',
+    width: 26,
+    height: 26,
+  })
+
+  return me.portrait ? (
+    <img src={me.portrait} className={style} alt='Portrait' />
+  ) : (
+    <span className={style}>{getInitials(me)}</span>
+  )
+}
+
+export const UserMenu = ({ me }: Props) => {
+  return (
+    <Dialog.Root>
+      <Dialog.Trigger asChild>
+        <button>
+          <Avatar me={me} />
+        </button>
+      </Dialog.Trigger>
+      <Dialog.Portal>
+        <Dialog.Overlay
+          className={css({
+            position: 'fixed',
+            inset: '50px 0 0 0',
+            backgroundColor: 'challengeAccepted.background',
+          })}
+        />
+        <Dialog.Content
+          className={css({
+            position: 'fixed',
+            top: 50,
+          })}
+        >
+          <UserNav />
+
+          <Dialog.Title>HALLOO</Dialog.Title>
+          <Dialog.Description />
+          <Dialog.Close />
+        </Dialog.Content>
+      </Dialog.Portal>
+    </Dialog.Root>
+  )
+}
