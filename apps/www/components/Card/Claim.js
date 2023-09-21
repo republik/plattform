@@ -283,6 +283,7 @@ const Page = (props) => {
                 },
               }}
               passHref
+              legacyBehavior
             >
               <A>Ihr Statement im «Wahltindär: {group.name}».</A>
             </Link>

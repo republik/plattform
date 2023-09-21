@@ -199,7 +199,7 @@ export const ArticleAudioPlayer = ({ document }: PlayerProps) => {
               ? t('AudioPlayer/Queue/Remove')
               : t('AudioPlayer/Queue/Add')
           }
-          disabled={itemInAudioQueue}
+          disabled={!!itemInAudioQueue}
           onClick={(e) => {
             e.preventDefault()
             if (itemInAudioQueue) {
@@ -232,7 +232,7 @@ const Contributors = ({ contributors }) => {
     contributors.map((s) => (
       <Fragment key={s.user?.slug ?? s.name}>
         {s.user?.slug ? (
-          <Link href={`/~${s.user.slug}`} passHref>
+          <Link href={`/~${s.user.slug}`} passHref legacyBehavior>
             <Editorial.A>{s?.user?.name || s.name}</Editorial.A>
           </Link>
         ) : (
@@ -243,10 +243,14 @@ const Contributors = ({ contributors }) => {
     (_, i) => <span key={i}>, </span>,
   )
 
-  return t.pluralize.elements('article/actionbar/audio/info/voices', {
-    names,
-    count: contributors.length,
-  })
+  return (
+    <>
+      {t.pluralize.elements('article/actionbar/audio/info/voices', {
+        names,
+        count: contributors.length,
+      })}
+    </>
+  )
 }
 
 const subscribeStyles = {

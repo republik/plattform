@@ -348,32 +348,6 @@ const createLiveTeasers = ({
         insertId: 'end',
       },
     },
-    // I know, I know, technically, this is not a live teaser: we pass the Component
-    // as prop to the schema in the FE and the Publikator only shows a placeholder.
-    // However, it feels a bit overkill to put Klimalab stuff
-    // (including queries/mutations) in the SG, just for the sake of showing
-    // a preview in Publikator.
-    // It also makes reusing the component for paynotes trickier and frankly,
-    // who has time for that right now?
-    {
-      matchMdast: (node) =>
-        matchZone('LIVETEASER')(node) && node.data.id === 'climatelab',
-      props: (node) => node.data,
-      component: (props) => {
-        return ClimateLabTeaser ? (
-          <ClimateLabTeaser {...props} />
-        ) : (
-          <Placeholder attributes={props.attributes}>Klimalabor</Placeholder>
-        )
-      },
-      isVoid: true,
-      editorModule: 'liveteaser',
-      editorOptions: {
-        type: 'LIVETEASERCLIMATELAB',
-        insertButtonText: 'Klimalabor Teaser',
-        insertId: 'climatelab',
-      },
-    },
   ]
 }
 

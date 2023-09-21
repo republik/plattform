@@ -37,9 +37,11 @@ export const getResizedSrcs = (
   if (!sizeInfo || (srcDark && !imageSizeInfo(srcDark))) {
     return {
       src,
-      dark: {
-        src: srcDark,
-      },
+      dark: srcDark
+        ? {
+            src: srcDark,
+          }
+        : null,
       size: null,
     }
   }
@@ -55,9 +57,11 @@ export const getResizedSrcs = (
     // no maxWidth because svgs can always be blown up
     return {
       src,
-      dark: {
-        src: srcDark,
-      },
+      dark: srcDark
+        ? {
+            src: srcDark,
+          }
+        : null,
       size,
     }
   }

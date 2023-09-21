@@ -35,7 +35,7 @@ class BaseCommit extends Component {
         {commit && (
           <div>
             <Label {...styles.commitsBehind}>
-              <Link href={`/repo/${repoId}/tree`} passHref>
+              <Link href={`/repo/${repoId}/tree`} passHref legacyBehavior>
                 <A>
                   {commitsBehind !== null && (
                     <span>

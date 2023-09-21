@@ -44,7 +44,7 @@ export const getTargetedAnswers = (questionIds, results) => {
 
 export const SubmissionLink = ({ id, children, personPagePath }) => {
   return (
-    <Link href={`/${personPagePath}/${id}`} passHref>
+    <Link href={`/${personPagePath}/${id}`} passHref legacyBehavior>
       {children}
     </Link>
   )
@@ -63,6 +63,7 @@ export const QuestionLink = ({ questions, children }) => {
       }}
       shallow
       passHref
+      legacyBehavior
     >
       {children}
     </Link>
@@ -89,7 +90,7 @@ export const LinkToEditQuestionnaire = ({
       {loading || !hasFilledQuestionnaire ? (
         <span>
           Wie lauten Ihre Antworten? Füllen Sie unseren Fragebogen{' '}
-          <Link href={questionnairePath}>
+          <Link href={questionnairePath} legacyBehavior>
             <Editorial.A>hier</Editorial.A>
           </Link>{' '}
           aus.
@@ -99,6 +100,7 @@ export const LinkToEditQuestionnaire = ({
           Sie möchten Ihre eigenen Antworten teilen oder nochmals bearbeiten?{' '}
           <Link
             href={`/${personPagePath}/${data.questionnaire.results.nodes[0].id}`}
+            legacyBehavior
           >
             <Editorial.A> Hierlang.</Editorial.A>
           </Link>

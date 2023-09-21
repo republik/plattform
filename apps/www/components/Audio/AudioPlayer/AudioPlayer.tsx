@@ -95,7 +95,9 @@ const AudioPlayer = ({
   const { isAndroid, isFirefox } = useUserAgent()
   const isDesktop = useMediaQuery(mediaQueries.mUp)
   const [forceScrollLock, setForceScrollLock] = useState(false)
-  const [ref] = useBodyScrollLock((isExpanded && !isDesktop) || forceScrollLock)
+  const [ref] = useBodyScrollLock<HTMLDivElement>(
+    (isExpanded && !isDesktop) || forceScrollLock,
+  )
   const { t } = useTranslation()
   const router = useRouter()
   const [colorScheme] = useColorContext()

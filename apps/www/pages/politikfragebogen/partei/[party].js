@@ -46,9 +46,9 @@ export const getStaticProps = async ({ params: { party } }) => {
     )
     .entries(filteredByParty)
 
-  const availableParties = [
-    ...new Set(responses.map((response) => response.party)),
-  ].map((party) => encodeURIComponent(party))
+  const availableParties = Array.from(
+    new Set(responses.map((response) => response.party)),
+  ).map((party) => encodeURIComponent(party))
 
   return {
     props: {
@@ -65,9 +65,9 @@ export const getStaticPaths = async () => {
     (response) => response.answer !== 'NA',
   )
 
-  const paths = [...new Set(responses.map((response) => response.party))].map(
-    (party) => ({ params: { party: encodeURIComponent(party) } }),
-  )
+  const paths = Array.from(
+    new Set(responses.map((response) => response.party)),
+  ).map((party) => ({ params: { party: encodeURIComponent(party) } }))
 
   return {
     paths,

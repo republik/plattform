@@ -71,7 +71,7 @@ const DiscussionComposerBarrier = ({
             'submitComment/notEligible',
             {
               pledgeLink: (
-                <Link href='/angebote' key='pledge' passHref>
+                <Link href='/angebote' key='pledge' passHref legacyBehavior>
                   {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
                   {/* @ts-ignore */}
                   <Editorial.A>
@@ -86,7 +86,7 @@ const DiscussionComposerBarrier = ({
           )}
         </Interaction.P>
       </Box>
-    )
+    );
   }
 
   const waitUntilDate =

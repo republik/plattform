@@ -96,7 +96,11 @@ const Page = ({
                   }}
                 >
                   <Interaction.P>
-                    <NextLink href={OVERVIEW_QUESTIONNAIRE_PATH} passHref>
+                    <NextLink
+                      href={OVERVIEW_QUESTIONNAIRE_PATH}
+                      passHref
+                      legacyBehavior
+                    >
                       <Editorial.A>Zurück zur Übersicht</Editorial.A>
                     </NextLink>
                   </Interaction.P>

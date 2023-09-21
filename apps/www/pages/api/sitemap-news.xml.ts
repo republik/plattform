@@ -23,7 +23,7 @@ export default withReqMethodGuard(
     }
 
     const apolloFetch = createApolloFetch({
-      uri: process.env.API_URL,
+      uri: process.env.NEXT_PUBLIC_API_URL,
     })
     const { apiKey } = req.query
 

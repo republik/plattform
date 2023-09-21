@@ -27,6 +27,7 @@ export const meQuery = gql`
     me {
       id
       username
+      slug
       portrait
       name
       firstName

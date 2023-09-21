@@ -47,7 +47,7 @@ export const RepoLink = ({
   }
   return (
     <Wrapper>
-      <Link href={`/repo/${info.id}/tree`} passHref>
+      <Link href={`/repo/${info.id}/tree`} passHref legacyBehavior>
         <A>
           {info.name}
           {info.hash ? `#${info.hash}` : ''}

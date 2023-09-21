@@ -54,6 +54,7 @@ const PhaseFilter = withRouter(
             replace
             scroll={false}
             passHref
+            legacyBehavior
           >
             <A>
               <Phase

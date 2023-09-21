@@ -100,128 +100,126 @@ const MyList = ({
     count: leftSwipes.length,
   })
 
-  return (
-    <>
-      {!withCards.length ? (
-        <Paragraph>
-          <strong>{t('components/Card/MyList/nothing')}</strong>
-        </Paragraph>
-      ) : (
-        <Table>
-          {!!activeRightSwipes.length && (
-            <>
-              <TitleRow>
-                {t.pluralize('components/Card/MyList/followTitle', {
-                  count: activeRightSwipes.length,
-                })}
-              </TitleRow>
-              <CardRows
-                t={t}
-                revertCard={revertCard}
-                ignoreCard={ignoreCard}
-                nodes={activeRightSwipes}
-              />
-            </>
-          )}
-          {!!leftSwipes.length && (
-            <>
-              <TitleRow
-                onClick={() => {
+  return <>
+    {!withCards.length ? (
+      <Paragraph>
+        <strong>{t('components/Card/MyList/nothing')}</strong>
+      </Paragraph>
+    ) : (
+      <Table>
+        {!!activeRightSwipes.length && (
+          <>
+            <TitleRow>
+              {t.pluralize('components/Card/MyList/followTitle', {
+                count: activeRightSwipes.length,
+              })}
+            </TitleRow>
+            <CardRows
+              t={t}
+              revertCard={revertCard}
+              ignoreCard={ignoreCard}
+              nodes={activeRightSwipes}
+            />
+          </>
+        )}
+        {!!leftSwipes.length && (
+          <>
+            <TitleRow
+              onClick={() => {
+                setShowIgnore(!showIgnore)
+              }}
+            >
+              <Editorial.A
+                href='#'
+                onClick={(e) => {
+                  e.preventDefault()
                   setShowIgnore(!showIgnore)
                 }}
               >
-                <Editorial.A
-                  href='#'
-                  onClick={(e) => {
-                    e.preventDefault()
-                    setShowIgnore(!showIgnore)
-                  }}
-                >
-                  {showIgnore ? ignoreTitle : ignoreTitle.replace(/:$/, '')}
-                </Editorial.A>
-              </TitleRow>
-              {showIgnore && (
-                <CardRows
-                  t={t}
-                  revertCard={revertCard}
-                  followCard={followCard}
-                  nodes={leftSwipes}
-                />
-              )}
-            </>
-          )}
-        </Table>
-      )}
-      <br />
-      {(!me || isStale) && (
-        <>
-          <Paragraph>{t('components/Card/MyList/trial')}</Paragraph>
-          <TrialForm />
-          <br />
-        </>
-      )}
-      <Paragraph>
-        <strong>{t('components/Card/MyList/data/title')}</strong>
-      </Paragraph>
-      <Paragraph>
-        {t(
-          `components/Card/MyList/data/${
-            isPersisted ? 'isPersisted' : 'notPersisted'
-          }`,
+                {showIgnore ? ignoreTitle : ignoreTitle.replace(/:$/, '')}
+              </Editorial.A>
+            </TitleRow>
+            {showIgnore && (
+              <CardRows
+                t={t}
+                revertCard={revertCard}
+                followCard={followCard}
+                nodes={leftSwipes}
+              />
+            )}
+          </>
         )}
-      </Paragraph>
+      </Table>
+    )}
+    <br />
+    {(!me || isStale) && (
+      <>
+        <Paragraph>{t('components/Card/MyList/trial')}</Paragraph>
+        <TrialForm />
+        <br />
+      </>
+    )}
+    <Paragraph>
+      <strong>{t('components/Card/MyList/data/title')}</strong>
+    </Paragraph>
+    <Paragraph>
+      {t(
+        `components/Card/MyList/data/${
+          isPersisted ? 'isPersisted' : 'notPersisted'
+        }`,
+      )}
+    </Paragraph>
+    <br />
+    <Paragraph>
+      <Editorial.A
+        download={`wahltindaer-${formatDate(new Date())}.csv`}
+        onClick={(e) => {
+          const url = (e.target.href = URL.createObjectURL(
+            new window.Blob(
+              [
+                csvFormat(
+                  withCards.map((s) => ({
+                    status: s.dir === 1 ? 'folgen' : 'ignorieren',
+                    name: s.card.user.name,
+                    partei: s.card.payload.party,
+                    jahrgang: s.card.payload.yearOfBirth,
+                    reoublikLink: `https://www.republik.ch/~${s.card.user.slug}`,
+                    smartvoteLink:
+                      s.cardCache.payload.councilOfStates.linkSmartvote ||
+                      s.cardCache.payload.nationalCouncil.linkSmartvote,
+                  })),
+                ),
+              ],
+              { type: 'text/csv' },
+            ),
+          ))
+          setTimeout(function () {
+            URL.revokeObjectURL(url)
+          }, 50)
+        }}
+      >
+        {t('components/Card/MyList/data/download')}
+      </Editorial.A>
       <br />
-      <Paragraph>
+      {isPersisted && (
         <Editorial.A
-          download={`wahltindaer-${formatDate(new Date())}.csv`}
+          href='#'
           onClick={(e) => {
-            const url = (e.target.href = URL.createObjectURL(
-              new window.Blob(
-                [
-                  csvFormat(
-                    withCards.map((s) => ({
-                      status: s.dir === 1 ? 'folgen' : 'ignorieren',
-                      name: s.card.user.name,
-                      partei: s.card.payload.party,
-                      jahrgang: s.card.payload.yearOfBirth,
-                      reoublikLink: `https://www.republik.ch/~${s.card.user.slug}`,
-                      smartvoteLink:
-                        s.cardCache.payload.councilOfStates.linkSmartvote ||
-                        s.cardCache.payload.nationalCouncil.linkSmartvote,
-                    })),
-                  ),
-                ],
-                { type: 'text/csv' },
-              ),
-            ))
-            setTimeout(function () {
-              URL.revokeObjectURL(url)
-            }, 50)
+            e.preventDefault()
+            if (
+              !window.confirm(t('components/Card/MyList/data/clear/confirm'))
+            ) {
+              return
+            }
+            onReset()
+            onClose()
           }}
         >
-          {t('components/Card/MyList/data/download')}
+          {t('components/Card/MyList/data/clear')}
         </Editorial.A>
-        <br />
-        {isPersisted && (
-          <Editorial.A
-            href='#'
-            onClick={(e) => {
-              e.preventDefault()
-              if (
-                !window.confirm(t('components/Card/MyList/data/clear/confirm'))
-              ) {
-                return
-              }
-              onReset()
-              onClose()
-            }}
-          >
-            {t('components/Card/MyList/data/clear')}
-          </Editorial.A>
-        )}
-      </Paragraph>
-    </>
-  )
+      )}
+    </Paragraph>
+  </>;
 }
 
 export default compose(graphql(query))(MyList)

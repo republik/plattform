@@ -238,7 +238,12 @@ const PostcardContent = ({ postcard, t, isDesktop }) => {
   ) : (
     <div {...styles.mobileContainer}>
       <figure {...styles.image}>
-        <AssetImage width={'600'} height={'400'} src={postcard.imageUrl} />
+        <AssetImage
+          width={'600'}
+          height={'400'}
+          src={postcard.imageUrl}
+          alt='Postcard image'
+        />
         <figcaption
           style={{
             paddingTop: '0.25rem',

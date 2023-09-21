@@ -84,10 +84,13 @@ const SeriesNavTileContent = ({
 
   const LinkContainer = ({ children }) =>
     isLink ? (
-      <Link href={episode.document.meta.path} passHref>
-        <a {...styles.plainlink} onClick={onEpisodeClick}>
-          {children}
-        </a>
+      <Link
+        href={episode.document.meta.path}
+        {...styles.plainlink}
+        onClick={onEpisodeClick}
+        legacyBehavior={false}
+      >
+        {children}
       </Link>
     ) : (
       <>{children}</>

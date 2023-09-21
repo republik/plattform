@@ -162,7 +162,7 @@ const Contact = ({
           </Fragment>
         )}
       </Fragment>
-    )
+    );
   }
 
   const customStyle = electionBallot

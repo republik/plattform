@@ -71,45 +71,49 @@ const HeaderComponent = ({ ...props }) => {
               pathname: '/users',
               query: searchParams,
             }}
-          >
-            <a className={`${link}`} style={navLinkStyles}>
+            className={`${link}`}
+            style={navLinkStyles}>
+            
               Users
-            </a>
+            
           </Link>
           <Link
             href={{
               pathname: '/mailbox',
               query: searchParams,
             }}
-          >
-            <a className={`${link}`} style={navLinkStyles}>
+            className={`${link}`}
+            style={navLinkStyles}>
+            
               E-Mails
-            </a>
+            
           </Link>
           <Link
             href={{
               pathname: '/payments',
               query: searchParams,
             }}
-          >
-            <a className={`${link}`} style={navLinkStyles}>
+            className={`${link}`}
+            style={navLinkStyles}>
+            
               Payments
-            </a>
+            
           </Link>
           <Link
             href={{
               pathname: '/postfinance-payments',
               query: searchParams,
             }}
-          >
-            <a className={`${link}`} style={navLinkStyles}>
+            className={`${link}`}
+            style={navLinkStyles}>
+            
               Postfinance Payments
-            </a>
+            
           </Link>
-          <Link href='/merge-users'>
-            <a className={`${link}`} style={navLinkStyles}>
+          <Link href='/merge-users' className={`${link}`} style={navLinkStyles}>
+            
               Users zusammenführen
-            </a>
+            
           </Link>
         </nav>
       </HeaderSection>
@@ -117,7 +121,7 @@ const HeaderComponent = ({ ...props }) => {
         <Me />
       </HeaderSection>
     </Header>
-  )
+  );
 }
 
 export default HeaderComponent

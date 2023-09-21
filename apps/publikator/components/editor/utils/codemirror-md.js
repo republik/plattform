@@ -121,7 +121,7 @@
       }
 
       function lineIsEmpty(line) {
-        return !line || !/\S/.test(line.string)
+        return !line || !/\S/.test(line.string);
       }
 
       // Blocks
