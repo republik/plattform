@@ -14,7 +14,7 @@ const MarketingNewsBox = (me) => {
   const [colorScheme] = useColorContext()
 
   return (
-    <Center breakout>
+    <div {...styles.center}>
       <div
         {...styles.container}
         {...colorScheme.set('backgroundColor', 'hover')}
@@ -48,17 +48,26 @@ const MarketingNewsBox = (me) => {
           </div>
         </div>
       </div>
-    </Center>
+    </div>
   )
 }
 
 const styles = {
+  center: css({
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    width: '100%',
+    padding: '0 15px',
+    [mediaQueries.mUp]: {
+      padding: '0 60px',
+    },
+  }),
   container: css({
     padding: '16px 16px 4px 16px',
-    marginBottom: 12,
+    marginBottom: 24,
     [mediaQueries.mUp]: {
       padding: '16px 24px 4px 16px',
-      marginBottom: 24,
     },
   }),
   content: css({
