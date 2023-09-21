@@ -1,5 +1,6 @@
 'use client'
 
+import CollectionRenderer from '@app/components/collection-render'
 import { PersonDetailQuery } from '@app/graphql/gql/graphql'
 import { css } from '@app/styled-system/css'
 import Image from 'next/image'
@@ -20,12 +21,14 @@ export function PersonDetail({ person }: PersonDetailProps) {
       })}
     >
       <Link href='/challenge-accepted'>Challenge Accepted</Link>
-      <Image
-        alt={person.name}
-        src={person.portrait.url}
-        width={500}
-        height={500}
-      />
+      {person.portrait && (
+        <Image
+          alt={person.name}
+          src={person.portrait.url}
+          width={500}
+          height={500}
+        />
+      )}
       <h1
         className={css({
           textStyle: 'headingLarge',
@@ -33,6 +36,15 @@ export function PersonDetail({ person }: PersonDetailProps) {
       >
         Hallo, ich bin {person.name}
       </h1>
+      <div>
+        <CollectionRenderer items={person.items} />
+      </div>
+      <div>
+        <details>
+          <summary>person data</summary>
+          <pre>{JSON.stringify(person, null, 2)}</pre>
+        </details>
+      </div>
     </div>
   )
 }

@@ -1,17 +1,18 @@
 import { css } from '@app/styled-system/css'
-import { PEOPLE_QUERY } from '@app/graphql/cms/people.query'
+import { CHALLENGE_ACCEPTED_HUB_QUERY } from '@app/graphql/cms/hub.query'
 import { getCMSClient } from '@app/lib/apollo/cms-client'
 import Image from 'next/image'
 import Link from 'next/link'
 import Container from '@app/components/container'
+import CollectionRenderer from '@app/components/collection-render'
 
 export default async function Page() {
   const client = getCMSClient()
   const { data } = await client.query({
-    query: PEOPLE_QUERY,
+    query: CHALLENGE_ACCEPTED_HUB_QUERY,
     context: {},
   })
-  const { people } = data
+  const { people, hub } = data
 
   const now = new Date(Date.now()).toISOString()
 
@@ -29,6 +30,14 @@ export default async function Page() {
         <h1 className={css({ textStyle: 'headingLarge' })}>
           CHALLENGE ACCEPTED
         </h1>
+        <div>
+          <CollectionRenderer items={hub.items} />
+          <h2 className={css({ textStyle: '3xl' })}>Additonal hub data</h2>
+          <details>
+            <summary>hub</summary>
+            <pre>{JSON.stringify(hub.introduction, null, 2)}</pre>
+          </details>
+        </div>
         <h2 className={css({ textStyle: '4xl', fontWeight: 'bold' })}>
           List of all people
         </h2>

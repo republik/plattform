@@ -41,6 +41,8 @@ export default function Overlay(props: { children: React.ReactNode }) {
           backgroundColor: 'challengeAccepted.yellow',
           display: 'flex',
           flexDirection: 'column',
+          maxHeight: '85dvh',
+          overflowY: 'scroll',
           gap: 4,
         })}
         onClick={(e) => e.stopPropagation()}
