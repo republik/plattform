@@ -4,6 +4,7 @@ export const PEOPLE_QUERY = gql(`
   query PeopleQuery {
     people: allPeople {
       id
+      slug
       name
       portrait {
         url
