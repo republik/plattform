@@ -1,9 +1,23 @@
 'use client'
 import { css } from '@app/styled-system/css'
 import { useRouter } from 'next/navigation'
+import { useEffect } from 'react'
 
 export default function Overlay(props: { children: React.ReactNode }) {
   const router = useRouter()
+
+  useEffect(() => {
+    // Call router.back if the user presses the ESC key
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        router.back()
+      }
+    }
+    window.addEventListener('keydown', handleEsc)
+    return () => {
+      window.removeEventListener('keydown', handleEsc)
+    }
+  }, [])
 
   return (
     <div
