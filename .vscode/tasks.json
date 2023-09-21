@@ -2,8 +2,13 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "dev:www",
+      "label": "dev:www (staging proxy)",
       "dependsOn": ["dev:www-server", "tsc:www", "proxy:staging"],
+      "problemMatcher": []
+    },
+    {
+      "label": "dev:www (prod proxy)",
+      "dependsOn": ["dev:www-server", "tsc:www", "proxy:prod"],
       "problemMatcher": []
     },
     {
@@ -22,6 +27,19 @@
       "label": "proxy:staging",
       "type": "shell",
       "command": "yarn yaproxy:staging",
+      "presentation": {
+        "group": "dev",
+        "panel": "dedicated",
+        "close": true,
+        "showReuseMessage": false
+      },
+      "isBackground": true,
+      "problemMatcher": []
+    },
+    {
+      "label": "proxy:prod",
+      "type": "shell",
+      "command": "yarn yaproxy",
       "presentation": {
         "group": "dev",
         "panel": "dedicated",
