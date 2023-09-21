@@ -1,0 +1,67 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "dev:www (staging proxy)",
+      "dependsOn": ["dev:www-server", "tsc:www", "proxy:staging"],
+      "problemMatcher": []
+    },
+    {
+      "label": "dev:www (prod proxy)",
+      "dependsOn": ["dev:www-server", "tsc:www", "proxy:prod"],
+      "problemMatcher": []
+    },
+    {
+      "label": "dev:www-server",
+      "type": "shell",
+      "command": "yarn turbo run dev --filter=@orbiting/www-app...",
+      "presentation": {
+        "group": "dev",
+        "panel": "dedicated",
+        "close": true,
+        "showReuseMessage": false
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "proxy:staging",
+      "type": "shell",
+      "command": "yarn yaproxy:staging",
+      "presentation": {
+        "group": "dev",
+        "panel": "dedicated",
+        "close": true,
+        "showReuseMessage": false
+      },
+      "isBackground": true,
+      "problemMatcher": []
+    },
+    {
+      "label": "proxy:prod",
+      "type": "shell",
+      "command": "yarn yaproxy",
+      "presentation": {
+        "group": "dev",
+        "panel": "dedicated",
+        "close": true,
+        "showReuseMessage": false
+      },
+      "isBackground": true,
+      "problemMatcher": []
+    },
+    {
+      "type": "typescript",
+      "tsconfig": "apps/www/tsconfig.json",
+      "option": "watch",
+      "problemMatcher": ["$tsc-watch"],
+      "label": "tsc:www",
+      "presentation": {
+        "group": "dev",
+        "panel": "dedicated",
+        "close": true,
+        "showReuseMessage": false
+      },
+      "isBackground": true
+    }
+  ]
+}
