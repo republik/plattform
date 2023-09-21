@@ -7,14 +7,6 @@ import { shouldIgnoreClick } from '../../lib/helpers'
 import { useMediaQuery } from '../../lib/useMediaQuery'
 import { mUp } from '../../theme/mediaQueries'
 
-type Props = {
-  children?: React.ReactNode
-  attributes: object
-  description: string
-  href: string
-  title?: string
-}
-
 export type StateProps = {
   href: string
   title?: string
@@ -45,13 +37,21 @@ const Portal: React.FC<{ children: ReactElement }> = ({ children }) => {
     : null
 }
 
+type ExpandableLinkProps = {
+  children?: React.ReactNode
+  attributes: object
+  description: string
+  href: string
+  title?: string
+}
+
 const ExpandableLink = ({
   children,
   attributes,
   description,
   href,
   title,
-}: Props) => {
+}: ExpandableLinkProps) => {
   const [colorScheme] = useColorContext()
   const [expandedLink, setExpandedLink] = useState<StateProps>(undefined)
   const timeOutRef = useRef<NodeJS.Timeout>(null)

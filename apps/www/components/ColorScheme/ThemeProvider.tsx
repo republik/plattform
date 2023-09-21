@@ -13,7 +13,7 @@ const ColorSchemeMigration = () => {
   const [key, setKey] = useColorSchemePreference()
 
   if (typeof window !== 'undefined' && key) {
-    const cleanedKey = key.replaceAll('"', '')
+    const cleanedKey = key.replace(/"/g, '')
     setKey(cleanedKey)
   }
   return null

@@ -246,12 +246,13 @@ const Update = (props) => {
       </P>
 
       <P {...formStyles.paragraph}>
-        <Link href='/' passHref>
+        <Link href='/' passHref legacyBehavior>
           <Button primary>{t('components/Card/Update/read')}</Button>
         </Link>{' '}
         <Link
           href={{ pathname: `/einrichten`, query: { context: 'card' } }}
           passHref
+          legacyBehavior
         >
           <Button>{t('components/Card/Update/onboarding')}</Button>
         </Link>
@@ -284,6 +285,7 @@ const Update = (props) => {
                 },
               }}
               passHref
+              legacyBehavior
             >
               <A>Ihr Statement im «Wahltindär: {group.name}».</A>
             </Link>

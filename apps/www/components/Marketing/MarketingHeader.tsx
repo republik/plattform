@@ -10,10 +10,8 @@ const MarketingHeader = () => {
   return (
     <div {...styles.header}>
       <div style={{ paddingLeft: 16 }}>
-        <Link href='/anmelden' passHref>
-          <a>
-            <SignInLink isOnMarketingPage={true} />
-          </a>
+        <Link href='/anmelden'>
+          <SignInLink isOnMarketingPage={true} />
         </Link>
       </div>
       <CallToAction isOnMarketingPage={true} formatColor={undefined} />

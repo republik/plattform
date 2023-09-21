@@ -31,7 +31,6 @@ import { cleanAsPath } from '../../lib/utils/link'
 import { useGetFrontQuery } from './graphql/getFrontQuery.graphql'
 import useAudioQueue from '../Audio/hooks/useAudioQueue'
 import TeaserAudioPlayButton from '../Audio/shared/TeaserAudioPlayButton'
-import ClimateLabTeaser from '../Climatelab/FrontTeaser/ClimateLabTeaser'
 import * as withData from './withData'
 import { IconCheckCircle } from '@republik/icons'
 
@@ -67,7 +66,6 @@ export const RenderFront = ({ front, nodes, isFrontExtract = false }) => {
         DiscussionLink,
         ...withData,
         ActionBar,
-        ClimateLabTeaser,
         t,
       }),
     [],
@@ -237,7 +235,7 @@ const Front = ({
               )}
               {finite && (
                 <div style={{ marginBottom: 10 }}>
-                  <Link href='/feed' passHref>
+                  <Link href='/feed' passHref legacyBehavior>
                     <Editorial.A style={{ color: colors.negative.text }}>
                       {t('front/finite/feed')}
                     </Editorial.A>
@@ -269,7 +267,12 @@ const Front = ({
                   {t.elements('front/chronology', {
                     years: intersperse(
                       archivedYears.map((year) => (
-                        <Link key={year} href={`/${year}`} passHref>
+                        <Link
+                          key={year}
+                          href={`/${year}`}
+                          passHref
+                          legacyBehavior
+                        >
                           <Editorial.A style={{ color: colors.negative.text }}>
                             {year}
                           </Editorial.A>

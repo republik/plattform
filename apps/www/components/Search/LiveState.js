@@ -29,6 +29,7 @@ const ResultCount = compose(withT)(
                 query: getSearchParams({ q: searchQuery }),
               }}
               passHref
+              legacyBehavior
             >
               <A
                 onClick={() => {

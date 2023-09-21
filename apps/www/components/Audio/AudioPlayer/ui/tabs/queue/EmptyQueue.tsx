@@ -32,7 +32,7 @@ const EmptyQueue = ({ t }: { t: any }) => {
       {me && !me.progressConsent && (
         <p {...styles.text}>
           {t('AudioPlayer/Queue/EmptyQueue/progressInfo')}{' '}
-          <Link href='/konto/einstellungen'>
+          <Link href='/konto/einstellungen' legacyBehavior>
             <A style={{ cursor: 'pointer' }}>
               {t('AudioPlayer/Queue/EmptyQueue/progressLink')}
             </A>
@@ -41,7 +41,7 @@ const EmptyQueue = ({ t }: { t: any }) => {
         </p>
       )}
     </div>
-  )
+  );
 }
 
 export default EmptyQueue

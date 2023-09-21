@@ -71,14 +71,24 @@ const Carousel: React.FC<CarouselProps> = ({
   onlyAudio = false,
   expandAudioPlayerOnPlayback = true,
 }) => {
-  const items: CarouselItem[] = carouselData?.content?.children?.map(
-    ({ data }) => ({
-      src: getImgSrc(data, '/', 1200),
-      path: data.url,
-    }),
-  )
+  const items: CarouselItem[] = carouselData?.content?.children
+    ?.map(({ identifier, children, data }) => {
+      if (identifier === 'TEASERGROUP') {
+        return children?.length > 0
+          ? {
+              src: getImgSrc(data, '/', 1200),
+              path: children[0]?.data?.url,
+            }
+          : null
+      }
+      return {
+        src: getImgSrc(data, '/', 1200),
+        path: data.url,
+      }
+    })
+    ?.filter(Boolean)
+
   const carouselRef = useRef<HTMLDivElement>()
-  const [colorScheme] = useColorContext()
 
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0)
   const [disableScrollIntoView, setDisableScrollIntoView] = useState(false)
@@ -144,7 +154,7 @@ const Carousel: React.FC<CarouselProps> = ({
         onClick={() => handleClick(currentSlideIndex - 1)}
       >
         <svg
-          style={{ display: backwardDisabled && 'none' }}
+          style={{ display: backwardDisabled ? 'none' : undefined }}
           width='16'
           height='40'
           viewBox='0 0 21 80'
@@ -164,7 +174,7 @@ const Carousel: React.FC<CarouselProps> = ({
       >
         <svg
           style={{
-            display: forwardDisabled && 'none',
+            display: forwardDisabled ? 'none' : undefined,
           }}
           width='16'
           height='40'
@@ -176,7 +186,7 @@ const Carousel: React.FC<CarouselProps> = ({
       </div>
       <div {...styles.carousel} ref={carouselRef}>
         {items?.map((d, i) => (
-          <div {...styles.slide} onClick={() => handleClick(i)} key={i}>
+          <div {...styles.slide} onClick={() => handleClick(i)} key={d.path}>
             <img {...styles.image} src={d.src} />
             <div {...styles.actions}>
               {!onlyAudio && (

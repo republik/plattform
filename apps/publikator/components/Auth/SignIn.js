@@ -8,7 +8,7 @@ import { css } from 'glamor'
 import isEmail from 'validator/lib/isEmail'
 
 import withT from '../../lib/withT'
-import { meQuery } from '../../lib/withMe'
+import { ME_QUERY } from '../../lib/withMe'
 
 import ErrorMessage from '../ErrorMessage'
 
@@ -125,7 +125,7 @@ class SignIn extends Component {
 
   componentWillUnmount() {
     if (this.state.polling) {
-      const data = this.props.client.readQuery({ query: meQuery })
+      const data = this.props.client.readQuery({ query: ME_QUERY })
       if (data.me) {
         this.reloadOnSuccess()
       }

@@ -10,7 +10,6 @@ const { H2, P } = Interaction
 
 const Campaign = ({ campaign, grantAccess, revokeAccess, t }) => {
   const givingMemberships = campaign.perks.giftableMemberships !== null
-  const isRegularCampaign = !campaign.type || campaign.type === 'REGULAR'
 
   return (
     <div style={{ marginBottom: 80 }}>
@@ -35,13 +34,11 @@ const Campaign = ({ campaign, grantAccess, revokeAccess, t }) => {
       <Grants
         campaign={campaign}
         givingMemberships={givingMemberships}
-        isRegularCampaign={isRegularCampaign}
         revokeAccess={revokeAccess}
       />
       <Form
         campaign={campaign}
         givingMemberships={givingMemberships}
-        isRegularCampaign={isRegularCampaign}
         grantAccess={grantAccess}
       />
     </div>

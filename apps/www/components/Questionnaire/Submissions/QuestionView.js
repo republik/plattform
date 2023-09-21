@@ -160,6 +160,7 @@ const QuestionView = ({
                           }}
                           shallow
                           passHref
+                          legacyBehavior
                         >
                           <Editorial.A>Zurück zur Übersicht</Editorial.A>
                         </NextLink>

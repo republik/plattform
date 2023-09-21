@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import {
   mediaQueries,
   plainButtonRule,
@@ -39,6 +39,14 @@ const Toggle = ({ expanded, closeOverlay, ...props }) => {
   } = useAudioContext()
   const audioItemsCount = audioQueue?.length
 
+  // Uhh, fix some server-client hydration mismatch thingie
+  const [lazyCount, setLazyCount] = useState()
+  useEffect(() => {
+    if (audioItemsCount !== undefined) {
+      setLazyCount(audioItemsCount)
+    }
+  }, [audioItemsCount])
+
   const onClick = () => {
     if (expanded) {
       return closeOverlay && closeOverlay()
@@ -66,13 +74,13 @@ const Toggle = ({ expanded, closeOverlay, ...props }) => {
     <button {...styles.menuToggle} onClick={onClick} {...props}>
       <div style={{ opacity: !expanded ? 1 : 0 }} {...styles.audioButton}>
         <IconMic {...colorScheme.set('fill', 'text')} size={SIZE} />
-        {!!audioItemsCount && (
+        {!!lazyCount && (
           <span
             {...colorScheme.set('background', 'default')}
             {...colorScheme.set('color', 'text')}
             {...styles.audioCount}
           >
-            {audioItemsCount}
+            {lazyCount}
           </span>
         )}
       </div>

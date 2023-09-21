@@ -66,13 +66,6 @@ export default class MyDocument extends Document {
     }
   }
 
-  constructor(props) {
-    super(props)
-    const { __NEXT_DATA__, env } = props
-    if (env) {
-      __NEXT_DATA__.env = this.props.env
-    }
-  }
   render() {
     const {
       css,

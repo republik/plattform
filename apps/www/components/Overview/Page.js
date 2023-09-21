@@ -222,7 +222,7 @@ const FrontOverview = ({
           : t.elements(`overview/lead/${me ? 'pledge' : 'signIn'}`)}
       </P>
       {!isMember && (
-        <Link key='pledgeBefore' href='/angebote' passHref>
+        <Link key='pledgeBefore' href='/angebote' passHref legacyBehavior>
           <Button white>{t('overview/lead/pledgeButton')}</Button>
         </Link>
       )}
@@ -271,7 +271,7 @@ const FrontOverview = ({
       />
 
       {!isMember && (
-        <Link key='pledgeAfter' href='/angebote' passHref>
+        <Link key='pledgeAfter' href='/angebote' passHref legacyBehavior>
           <Button white style={{ marginTop: 100 }}>
             {t('overview/after/pledgeButton')}
           </Button>

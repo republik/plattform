@@ -128,11 +128,11 @@ async function handler(request: NextApiRequest, response: NextApiResponse) {
       `/${paid}/vzm.${PROLITTERIS_MEMBER_ID}-${uidParam}`,
   )
   fetchURL.searchParams.append('c', cParam)
+  fetchURL.searchParams.append('i', maskedIP)
 
   const requestHeaders = {
     'User-Agent': PROLITTERIS_USER_AGENT,
     Referer: PUBLIC_BASE_URL + path,
-    'X-Forwarded-For': maskedIP,
   }
 
   log(LogLevel.INFO, requestID, 'Requesting', fetchURL.toString(), {

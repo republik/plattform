@@ -2,7 +2,7 @@ import { Component, Fragment } from 'react'
 import PropTypes from 'prop-types'
 import compose from 'lodash/flowRight'
 import { graphql } from '@apollo/client/react/hoc'
-import { meQuery } from '../../lib/withMe'
+import { ME_QUERY } from '../../lib/withMe'
 import { css } from 'glamor'
 
 import withT from '../../lib/withT'
@@ -214,4 +214,4 @@ Poller.defaultProps = {
   alternativeFirstFactors: [],
 }
 
-export default compose(graphql(meQuery), withT)(Poller)
+export default compose(graphql(ME_QUERY), withT)(Poller)
