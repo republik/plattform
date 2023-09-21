@@ -13,6 +13,26 @@ export const PERSON_DETAIL_QUERY = gql(`
         height
         title
       }
+      items {
+        __typename
+        ... on EventRecord {
+          id
+          title
+          description {
+            value
+          }
+          location
+          startAt
+        }
+        ... on ArticleRecord {
+          id
+          repoid
+        }
+        ... on NewsletterRecord {
+          id
+          repoid
+        }
+      }
     }
   }
 `)
