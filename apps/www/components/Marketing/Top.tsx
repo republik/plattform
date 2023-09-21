@@ -4,6 +4,7 @@ import { mediaQueries, useColorContext } from '@project-r/styleguide'
 import { css } from 'glamor'
 import { useMe } from '../../lib/context/MeContext'
 import MarketingHeader from './MarketingHeader'
+import MarketingNewsBox from './MarketingNewsBox'
 import Carousel, { CarouselProps } from './Carousel'
 import { HEADER_HEIGHT, HEADER_HEIGHT_MOBILE } from '../constants'
 
@@ -34,6 +35,7 @@ const Top: React.FC<CarouselProps> = (props) => {
           </div>
         </div>
       </div>
+      <MarketingNewsBox me={me} />
     </div>
   )
 }
@@ -64,11 +66,11 @@ const styles = {
     justifyContent: 'flex-end',
     gap: 64,
     paddingTop: HEADER_HEIGHT_MOBILE,
-    margin: '64px 0 90px 0',
+    margin: '64px 0 40px 0',
     [mediaQueries.mUp]: {
       flexDirection: 'row',
       gap: 32,
-      margin: `120px 0 ${HEADER_HEIGHT + 80}px 0`,
+      margin: `120px 0 ${HEADER_HEIGHT + 30}px 0`,
     },
     [mediaQueries.sDown]: {
       gap: 36,
