@@ -12,6 +12,19 @@
       "problemMatcher": []
     },
     {
+      "label": "Install depencencies",
+      "type": "shell",
+      "command": "yarn",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "presentation": {
+        "panel": "new",
+        "close": true
+      }
+    },
+    {
       "label": "dev:www-server",
       "type": "shell",
       "command": "yarn turbo run dev --filter=@orbiting/www-app...",
