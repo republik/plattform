@@ -55,7 +55,6 @@ const Frame = ({ me }) => {
         borderBottomColor: '',
       })}
     >
-      {' '}
       {me ? (
         <UserMenu me={me}></UserMenu>
       ) : (

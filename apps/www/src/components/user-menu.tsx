@@ -2,7 +2,10 @@
 
 import { MeQueryResult } from '@app/graphql/republik-api/me.query'
 import { css } from '@app/styled-system/css'
+import { vstack } from '@app/styled-system/patterns'
 import * as Dialog from '@radix-ui/react-dialog'
+import { IconClose } from '@republik/icons'
+import Link from 'next/link'
 // import UserNav from 'components/Frame/Popover/UserNav'
 
 type Props = MeQueryResult
@@ -57,11 +60,33 @@ export const UserMenu = ({ me }: Props) => {
             top: 'header.height',
           })}
         >
+          <div
+            className={vstack({
+              gap: '4',
+              p: '4',
+              maxWidth: 768,
+              mx: 'auto',
+              alignItems: 'flex-start',
+            })}
+          >
+            <Link href='/benachrichtigungen'>Benachrichtigungen</Link>
+            <Link href='/konto'>Konto</Link>
+            <Link href={`~${me.slug}`}>Profil</Link>
+          </div>
+
           {/* <UserNav /> */}
 
-          <Dialog.Title>HALLOO</Dialog.Title>
-          <Dialog.Description />
-          <Dialog.Close />
+          {/* <Dialog.Title className={css({ textStyle: '5xl' })}>
+            HALLOO
+          </Dialog.Title>
+          <Dialog.Description /> */}
+          <Dialog.Close asChild>
+            <button
+              className={css({ position: 'fixed', top: '4', right: '4' })}
+            >
+              <IconClose size={24} />
+            </button>
+          </Dialog.Close>
         </Dialog.Content>
       </Dialog.Portal>
     </Dialog.Root>
