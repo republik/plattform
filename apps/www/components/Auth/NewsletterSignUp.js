@@ -19,8 +19,8 @@ const SignUp = ({
   t,
   requestSubscription,
   context = 'newsletter',
-  skipTitle,
-  skipDescription,
+  showTitle,
+  showDescription,
   smallButton,
 }) => {
   const [state, setState] = useState(() => checkEmail({ value: '', t }))
@@ -28,7 +28,7 @@ const SignUp = ({
   if (me || !free) {
     return (
       <>
-        {!skipTitle && (
+        {showTitle && (
           <Interaction.P style={{ marginBottom: 16 }}>
             <strong>{t('Auth/NewsletterSignUp/settingTitle')}</strong>
           </Interaction.P>
@@ -42,16 +42,18 @@ const SignUp = ({
   }
   return (
     <>
-      {!skipTitle && (
+      {showTitle && (
         <Interaction.H3>
           {t(`account/newsletterSubscriptions/${name}/label`)}
         </Interaction.H3>
       )}
-      {!skipDescription && (
-        <Interaction.P>
-          {t(`account/newsletterSubscriptions/${name}/description`)}
-        </Interaction.P>
-      )}
+      {/* Alsways Show Description in free newsletter */}
+      {showDescription ||
+        (free && (
+          <Interaction.P>
+            {t(`account/newsletterSubscriptions/${name}/description`)}
+          </Interaction.P>
+        ))}
       <EmailForm
         {...state}
         label={buttonLabel || t('Auth/NewsletterSignUp/submit')}

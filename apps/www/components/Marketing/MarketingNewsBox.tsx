@@ -41,14 +41,7 @@ const MarketingNewsBox = (me) => {
               Das Nachrichtenbriefing der Republik als Newlsetter. Jeden Freitag
               gratis in ihrem Postfach.
             </p>
-            <NewsletterSignup
-              me={me}
-              name='WDWWW'
-              free
-              skipTitle
-              skipDescription
-              smallButton
-            />
+            <NewsletterSignup me={me} name='WDWWW' free smallButton />
           </div>
         </div>
         <span
