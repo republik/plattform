@@ -24,17 +24,23 @@ export const TeaserArticle = async ({ path }: ArticleProps) => {
     <Link href={path}>
       <div
         className={css({
-          padding: '4',
           background: 'challengeAccepted.teaserBackground',
           color: 'text.inverted',
           '&:hover': { transform: 'scale(1.02)' },
         })}
       >
-        <p className={css({ textStyle: 'xs' })}>Artikel</p>
-        <h3 className={css({ textStyle: 'xl' })}>{data.article?.meta.title}</h3>
-        <p className={css({ textStyle: 'sm' })}>
-          {data.article?.meta.shortTitle}
-        </p>
+        {data.article?.meta.image ? (
+          <img src={data.article?.meta.image}></img>
+        ) : null}
+        <div className={css({ padding: '4' })}>
+          <p className={css({ textStyle: 'xs' })}>Artikel</p>
+          <h3 className={css({ textStyle: 'xl' })}>
+            {data.article?.meta.title}
+          </h3>
+          <p className={css({ textStyle: 'sm' })}>
+            {data.article?.meta.shortTitle}
+          </p>
+        </div>
       </div>
     </Link>
   )

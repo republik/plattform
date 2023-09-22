@@ -6,6 +6,8 @@ export const ARTICLE_QUERY = gql`
       meta {
         title
         shortTitle
+        image
+        credits
       }
     }
   }
