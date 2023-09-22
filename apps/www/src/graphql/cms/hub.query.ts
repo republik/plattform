@@ -20,7 +20,7 @@ query ChallengeAcceptedHubQuery {
       }
       ... on ArticleRecord {
         id
-        repoid
+        path
       }
       ... on NewsletterRecord {
         id

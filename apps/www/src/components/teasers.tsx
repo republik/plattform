@@ -1,25 +1,50 @@
+import {
+  ARTICLE_QUERY,
+  ArticleQueryResult,
+} from '@app/graphql/republik-api/article.query'
+import { getClient } from '@app/lib/apollo/client'
 import { css } from '@app/styled-system/css'
+import Link from 'next/link'
 
-type Props = {
-  repoid: string
+type ArticleProps = {
+  path: string
 }
 
-export const TeaserArticle = ({ repoid }: Props) => {
+export const TeaserArticle = async ({ path }: ArticleProps) => {
+  const { data }: { data: ArticleQueryResult } = await getClient().query({
+    query: ARTICLE_QUERY,
+    variables: { path },
+  })
+
+  if (!data.article) {
+    return null
+  }
+
   return (
-    <div
-      className={css({
-        padding: '4',
-        background: 'challengeAccepted.teaserBackground',
-        color: 'text.inverted',
-      })}
-    >
-      <p className={css({ textStyle: 'xs' })}>Article</p>
-      <h3 className={css({ textStyle: 'xl' })}>{repoid}</h3>
-    </div>
+    <Link href={path}>
+      <div
+        className={css({
+          padding: '4',
+          background: 'challengeAccepted.teaserBackground',
+          color: 'text.inverted',
+          '&:hover': { transform: 'scale(1.02)' },
+        })}
+      >
+        <p className={css({ textStyle: 'xs' })}>Artikel</p>
+        <h3 className={css({ textStyle: 'xl' })}>{data.article?.meta.title}</h3>
+        <p className={css({ textStyle: 'sm' })}>
+          {data.article?.meta.shortTitle}
+        </p>
+      </div>
+    </Link>
   )
 }
 
-export const TeaserNewsletter = ({ repoid }: Props) => {
+type NewsletterProps = {
+  repoid: string
+}
+
+export const TeaserNewsletter = ({ repoid }: NewsletterProps) => {
   return (
     <div
       className={css({
@@ -28,7 +53,7 @@ export const TeaserNewsletter = ({ repoid }: Props) => {
         color: 'text.inverted',
       })}
     >
-      <p className={css({ textStyle: 'xs' })}>NL</p>
+      <p className={css({ textStyle: 'xs' })}>Newsletter</p>
       <h3 className={css({ textStyle: 'xl' })}>{repoid}</h3>
     </div>
   )
@@ -45,7 +70,7 @@ export const TeaserEvent = ({ title }: EventProps) => {
         color: 'text.inverted',
       })}
     >
-      <p className={css({ textStyle: 'xs' })}>Event</p>
+      <p className={css({ textStyle: 'xs' })}>Veranstaltung</p>
       <h3 className={css({ textStyle: 'xl' })}>{title}</h3>
     </div>
   )

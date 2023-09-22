@@ -26,7 +26,7 @@ export const PERSON_DETAIL_QUERY = gql(`
         }
         ... on ArticleRecord {
           id
-          repoid
+          path
         }
         ... on NewsletterRecord {
           id
