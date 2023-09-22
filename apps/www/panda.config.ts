@@ -35,9 +35,17 @@ export default defineConfig({
       semanticTokens: {
         colors: {
           text: {
-            value: {
-              base: '{colors.neutral.950}',
-              _dark: { colors: '{colors.neutral.50}' },
+            DEFAULT: {
+              value: {
+                base: '{colors.neutral.950}',
+                _dark: { colors: '{colors.neutral.50}' },
+              },
+            },
+            inverted: {
+              value: {
+                base: '{colors.neutral.50}',
+                _dark: { colors: '{colors.neutral.950}' },
+              },
             },
           },
           challengeAccepted: {
@@ -45,6 +53,12 @@ export default defineConfig({
               value: {
                 base: '{colors.challengeAccepted.yellow}',
                 _dark: '{colors.challengeAccepted.darkBlue}',
+              },
+            },
+            teaserBackground: {
+              value: {
+                base: '{colors.challengeAccepted.blue}',
+                _dark: '{colors.challengeAccepted.yellow}',
               },
             },
             link: {
