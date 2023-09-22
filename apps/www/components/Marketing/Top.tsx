@@ -34,8 +34,8 @@ const Top: React.FC<CarouselProps> = (props) => {
             <Carousel {...props} />
           </div>
         </div>
+        <MarketingNewsBox me={me} />
       </div>
-      <MarketingNewsBox me={me} />
     </div>
   )
 }
@@ -55,7 +55,7 @@ const styles = {
     alignItems: 'center',
     width: '100%',
     [mediaQueries.mUp]: {
-      padding: '0 60px',
+      padding: '0 60px 24px',
     },
   }),
   panelContainer: css({
@@ -70,7 +70,7 @@ const styles = {
     [mediaQueries.mUp]: {
       flexDirection: 'row',
       gap: 32,
-      margin: `120px 0 ${HEADER_HEIGHT + 30}px 0`,
+      margin: `90px 0 ${HEADER_HEIGHT}px 0`,
     },
     [mediaQueries.sDown]: {
       gap: 36,

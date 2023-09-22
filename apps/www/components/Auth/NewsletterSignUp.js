@@ -20,6 +20,8 @@ const SignUp = ({
   requestSubscription,
   context = 'newsletter',
   skipTitle,
+  skipDescription,
+  smallButton,
 }) => {
   const [state, setState] = useState(() => checkEmail({ value: '', t }))
   const [serverState, setServerState] = useState({})
@@ -39,39 +41,52 @@ const SignUp = ({
     return <Interaction.P>{t('Auth/NewsletterSignUp/success')}</Interaction.P>
   }
   return (
-    <EmailForm
-      {...state}
-      label={buttonLabel || t('Auth/NewsletterSignUp/submit')}
-      onChange={setState}
-      onSubmit={(e) => {
-        e.preventDefault()
-        if (state.error) {
-          setState({ ...state, dirty: true })
-          return
-        }
+    <>
+      {!skipTitle && (
+        <Interaction.H3>
+          {t(`account/newsletterSubscriptions/${name}/label`)}
+        </Interaction.H3>
+      )}
+      {!skipDescription && (
+        <Interaction.P>
+          {t(`account/newsletterSubscriptions/${name}/description`)}
+        </Interaction.P>
+      )}
+      <EmailForm
+        {...state}
+        label={buttonLabel || t('Auth/NewsletterSignUp/submit')}
+        onChange={setState}
+        onSubmit={(e) => {
+          e.preventDefault()
+          if (state.error) {
+            setState({ ...state, dirty: true })
+            return
+          }
 
-        if (state.loading) {
-          return
-        }
-        setServerState({ loading: true })
+          if (state.loading) {
+            return
+          }
+          setServerState({ loading: true })
 
-        requestSubscription({
-          variables: {
-            name,
-            email: state.email,
-            context,
-          },
-        })
-          .then(() => {
-            setServerState({ loading: false, success: true })
+          requestSubscription({
+            variables: {
+              name,
+              email: state.email,
+              context,
+            },
           })
-          .catch((error) => {
-            setServerState({ loading: false, error })
-          })
-      }}
-      loading={serverState.loading}
-      serverError={serverState.error}
-    />
+            .then(() => {
+              setServerState({ loading: false, success: true })
+            })
+            .catch((error) => {
+              setServerState({ loading: false, error })
+            })
+        }}
+        loading={serverState.loading}
+        serverError={serverState.error}
+        smallButton={smallButton}
+      />
+    </>
   )
 }
 
