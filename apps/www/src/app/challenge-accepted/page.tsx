@@ -1,10 +1,30 @@
+import type { Metadata } from 'next'
+
 import { css } from '@app/styled-system/css'
-import { CHALLENGE_ACCEPTED_HUB_QUERY } from '@app/graphql/cms/hub.query'
+import {
+  CHALLENGE_ACCEPTED_HUB_META_QUERY,
+  CHALLENGE_ACCEPTED_HUB_QUERY,
+} from '@app/graphql/cms/hub.query'
 import { getCMSClient } from '@app/lib/apollo/cms-client'
 import Image from 'next/image'
 import Link from 'next/link'
 import Container from '@app/components/container'
 import CollectionRenderer from '@app/components/collection-render'
+
+export async function generateMetadata(): Promise<Metadata> {
+  const client = getCMSClient()
+  const { data } = await client.query({
+    query: CHALLENGE_ACCEPTED_HUB_META_QUERY,
+  })
+
+  return {
+    title: data.hub?.metadata?.title,
+    description: data.hub?.metadata?.description,
+    openGraph: {
+      images: data.hub?.metadata?.image?.url,
+    },
+  }
+}
 
 export default async function Page() {
   const client = getCMSClient()

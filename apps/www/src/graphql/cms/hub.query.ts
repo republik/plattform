@@ -40,3 +40,18 @@ query ChallengeAcceptedHubQuery {
   }
 }
 `)
+
+export const CHALLENGE_ACCEPTED_HUB_META_QUERY = gql(`
+query ChallengeAcceptedHubMetaQuery {
+  hub: challengeAcceptedHub {
+    id
+    metadata {
+      title
+      description
+      image {
+        url(imgixParams: {w: "1500"})
+      }
+    }
+  }
+}
+`)
