@@ -5,6 +5,7 @@ import {
 import { getClient } from '@app/lib/apollo/client'
 import { css } from '@app/styled-system/css'
 import Link from 'next/link'
+import { isoParse, timeFormat } from 'd3-time-format'
 
 const getResizefromURL = (url, size) => {
   const imgURL = new URL(url)
@@ -50,11 +51,14 @@ export const TeaserArticle = async ({ path }: ArticleProps) => {
   }
 
   return (
-    <Link href={path}>
+    <Link
+      href={path}
+      className={css({ color: 'text.white', textDecoration: 'none' })}
+    >
       <div
         className={css({
-          background: 'challengeAccepted.teaserBackground',
-          color: 'text.inverted',
+          background: 'challengeAccepted.blue',
+          color: 'text.white',
           '&:hover': { transform: 'scale(1.02)' },
         })}
       >
@@ -65,7 +69,7 @@ export const TeaserArticle = async ({ path }: ArticleProps) => {
             className={css({ width: '100%', height: 'auto' })}
           ></img>
         ) : null}
-        <div className={css({ padding: '4' })}>
+        <div className={css({ padding: '6' })}>
           <p className={css({ textStyle: 'xs' })}>Artikel</p>
           <h3 className={css({ textStyle: 'xl' })}>
             {data.article?.meta.title}
@@ -87,9 +91,9 @@ export const TeaserNewsletter = ({ repoid }: NewsletterProps) => {
   return (
     <div
       className={css({
-        padding: '4',
-        background: 'challengeAccepted.teaserBackground',
-        color: 'text.inverted',
+        padding: '6',
+        background: 'rgba(0,0,0,0.1)',
+        // color: 'challengeAccepted.blue',
       })}
     >
       <p className={css({ textStyle: 'xs' })}>Newsletter</p>
@@ -98,19 +102,34 @@ export const TeaserNewsletter = ({ repoid }: NewsletterProps) => {
   )
 }
 
-type EventProps = { title: string }
+const formatDate = timeFormat('%d.%m.%y')
 
-export const TeaserEvent = ({ title }: EventProps) => {
+type EventProps = { title: string; startAt: string; location: string }
+
+export const TeaserEvent = ({ title, startAt, location }: EventProps) => {
   return (
     <div
       className={css({
-        padding: '4',
-        background: 'challengeAccepted.teaserBackground',
-        color: 'text.inverted',
+        padding: '6',
+        // background: 'challengeAccepted.white',
+        borderColor: 'challengeAccepted.contrast',
+        borderStyle: 'solid',
+        borderWidth: 1,
+        color: 'challengeAccepted.contrast',
       })}
     >
-      <p className={css({ textStyle: 'xs' })}>Veranstaltung</p>
-      <h3 className={css({ textStyle: 'xl' })}>{title}</h3>
+      <h3
+        className={css({
+          textStyle: '8xl',
+          textAlign: 'center',
+          fontWeight: 'bold',
+          mb: '6',
+        })}
+      >
+        {formatDate(isoParse(startAt))}
+      </h3>
+      <h4 className={css({ textStyle: 'xl', color: 'text' })}>{title}</h4>
+      <p className={css({ textStyle: 'lg', color: 'text' })}>Ort: {location}</p>
     </div>
   )
 }

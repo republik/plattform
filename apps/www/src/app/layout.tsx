@@ -24,7 +24,7 @@ export default async function RootLayout({
           color: 'text',
           textStyle: 'body',
           bg: 'challengeAccepted.background',
-          '& a': {
+          '& :where(a)': {
             color: 'challengeAccepted.link',
             textDecoration: 'underline',
           },

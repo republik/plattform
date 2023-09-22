@@ -29,6 +29,7 @@ export default defineConfig({
             yellow: { value: '#EBEA2B' },
             blue: { value: '#4033D3' },
             darkBlue: { value: '#1B1469' },
+            white: { value: '#ffffff' },
           },
         },
       },
@@ -38,14 +39,17 @@ export default defineConfig({
             DEFAULT: {
               value: {
                 base: '{colors.neutral.950}',
-                _dark: { colors: '{colors.neutral.50}' },
+                _dark: '{colors.neutral.50}',
               },
             },
             inverted: {
               value: {
                 base: '{colors.neutral.50}',
-                _dark: { colors: '{colors.neutral.950}' },
+                _dark: '{colors.neutral.950}',
               },
+            },
+            white: {
+              value: '{colors.neutral.50}',
             },
           },
           challengeAccepted: {
@@ -55,10 +59,16 @@ export default defineConfig({
                 _dark: '{colors.challengeAccepted.darkBlue}',
               },
             },
-            teaserBackground: {
+            contrast: {
               value: {
                 base: '{colors.challengeAccepted.blue}',
                 _dark: '{colors.challengeAccepted.yellow}',
+              },
+            },
+            teaserBackground: {
+              value: {
+                base: '{colors.challengeAccepted.blue}',
+                _dark: '{colors.challengeAccepted.blue}',
               },
             },
             link: {
