@@ -4,6 +4,9 @@ export const CHALLENGE_ACCEPTED_HUB_QUERY = gql(`
 query ChallengeAcceptedHubQuery {
   hub: challengeAcceptedHub {
     id
+    logo {
+      url
+    }
     introduction {
       value
     }

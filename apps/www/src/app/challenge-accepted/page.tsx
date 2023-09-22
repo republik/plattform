@@ -37,77 +37,86 @@ export default async function Page() {
   const now = new Date(Date.now()).toISOString()
 
   return (
-    <Container>
-      <div
-        className={css({
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '4',
-          maxWidth: 768,
-          marginX: 'auto',
-        })}
-      >
-        <h1 className={css({ textStyle: 'headingLarge' })}>
-          CHALLENGE ACCEPTED
-        </h1>
-        <div>
-          <CollectionRenderer items={hub.items} />
-          <h2 className={css({ textStyle: '3xl' })}>Additonal hub data</h2>
-          <details>
-            <summary>hub</summary>
-            <pre>{JSON.stringify(hub.introduction, null, 2)}</pre>
-          </details>
-        </div>
-        <h2 className={css({ textStyle: '4xl', fontWeight: 'bold' })}>
-          List of all people
-        </h2>
+    <>
+      <h1 className={css({ mb: '9', _dark: { filter: 'invert(1)' } })}>
+        <img
+          src={hub.logo?.url}
+          className={css({
+            width: '100vw',
+            height: 'auto',
+          })}
+          alt='Challenge Accepted Logo'
+        ></img>
+      </h1>
+      <Container>
         <div
           className={css({
-            display: 'grid',
-            gridTemplateColumns: '1fr 1fr',
-            gridAutoRows: 'auto',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '4',
+            maxWidth: 768,
+            marginX: 'auto',
           })}
         >
-          {people.map((person) => (
-            <div
-              key={person.id}
-              className={css({
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'flex-end',
-                gap: '0.5rem',
-                padding: '1rem',
-                margin: '1rem',
-                border: '1px solid black',
-              })}
-            >
-              {person.portrait && (
-                <Image
-                  alt={person.name}
-                  src={person.portrait.url}
-                  width={100}
-                  height={100}
-                  style={{ objectFit: 'contain' }}
-                />
-              )}
-              <h3
+          <div>
+            <CollectionRenderer items={hub.items} />
+            <h2 className={css({ textStyle: '3xl' })}>Additonal hub data</h2>
+            <details>
+              <summary>hub</summary>
+              <pre>{JSON.stringify(hub.introduction, null, 2)}</pre>
+            </details>
+          </div>
+          <h2 className={css({ textStyle: '4xl', fontWeight: 'bold' })}>
+            List of all people
+          </h2>
+          <div
+            className={css({
+              display: 'grid',
+              gridTemplateColumns: '1fr 1fr',
+              gridAutoRows: 'auto',
+            })}
+          >
+            {people.map((person) => (
+              <div
+                key={person.id}
                 className={css({
-                  display: 'inline-block',
-                  textStyle: '2xl',
-                  fontStyle: 'italic',
-                  fontWeight: 'bold',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'flex-end',
+                  gap: '0.5rem',
+                  padding: '1rem',
+                  margin: '1rem',
+                  border: '1px solid black',
                 })}
               >
-                {person.name}
-              </h3>
-              <Link href={`/challenge-accepted/person/${person.slug}`}>
-                More
-              </Link>
-            </div>
-          ))}
+                {person.portrait && (
+                  <Image
+                    alt={person.name}
+                    src={person.portrait.url}
+                    width={100}
+                    height={100}
+                    style={{ objectFit: 'contain' }}
+                  />
+                )}
+                <h3
+                  className={css({
+                    display: 'inline-block',
+                    textStyle: '2xl',
+                    fontStyle: 'italic',
+                    fontWeight: 'bold',
+                  })}
+                >
+                  {person.name}
+                </h3>
+                <Link href={`/challenge-accepted/person/${person.slug}`}>
+                  More
+                </Link>
+              </div>
+            ))}
+          </div>
+          <p>Rendered-at: {now}</p>
         </div>
-        <p>Rendered-at: {now}</p>
-      </div>
-    </Container>
+      </Container>{' '}
+    </>
   )
 }
