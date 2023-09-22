@@ -10,6 +10,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import Container from '@app/components/container'
 import CollectionRenderer from '@app/components/collection-render'
+import { vstack, wrap } from '@app/styled-system/patterns'
 
 export async function generateMetadata(): Promise<Metadata> {
   const client = getCMSClient()
@@ -49,74 +50,77 @@ export default async function Page() {
         ></img>
       </h1>
       <Container>
-        <div
-          className={css({
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '4',
-            maxWidth: 768,
-            marginX: 'auto',
-          })}
-        >
-          <div>
-            <CollectionRenderer items={hub.items} />
-            <h2 className={css({ textStyle: '3xl' })}>Additonal hub data</h2>
-            <details>
-              <summary>hub</summary>
-              <pre>{JSON.stringify(hub.introduction, null, 2)}</pre>
-            </details>
-          </div>
-          <h2 className={css({ textStyle: '4xl', fontWeight: 'bold' })}>
-            List of all people
-          </h2>
-          <div
-            className={css({
-              display: 'grid',
-              gridTemplateColumns: '1fr 1fr',
-              gridAutoRows: 'auto',
-            })}
-          >
-            {people.map((person) => (
-              <div
-                key={person.id}
-                className={css({
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'flex-end',
-                  gap: '0.5rem',
-                  padding: '1rem',
-                  margin: '1rem',
-                  border: '1px solid black',
-                })}
-              >
-                {person.portrait && (
-                  <Image
-                    alt={person.name}
-                    src={person.portrait.url}
-                    width={100}
-                    height={100}
-                    style={{ objectFit: 'contain' }}
-                  />
-                )}
+        <h2 className={css({ textStyle: '4xl', fontWeight: 'bold', mb: '6' })}>
+          Personen
+        </h2>
+        <div className={wrap({ gap: '4', mb: '6' })}>
+          {people.map((person) => (
+            <div
+              key={person.id}
+              className={css({
+                display: 'flex',
+                flexDirection: 'row',
+                // justifyContent: 'flex-end',
+                gap: '4',
+              })}
+            >
+              <Link href={`/challenge-accepted/person/${person.slug}`}>
                 <h3
                   className={css({
-                    display: 'inline-block',
+                    display: 'block',
                     textStyle: '2xl',
-                    fontStyle: 'italic',
                     fontWeight: 'bold',
+                    textAlign: 'center',
+                    py: '1',
                   })}
                 >
+                  {person.portrait ? (
+                    <Image
+                      src={person.portrait?.url}
+                      width={96 * 2}
+                      height={96 * 2}
+                      className={css({
+                        borderRadius: 'full',
+                        width: '96px',
+                        height: '96px',
+                        objectFit: 'cover',
+                      })}
+                      alt={person.name}
+                    />
+                  ) : (
+                    <div
+                      className={css({
+                        borderRadius: 'full',
+                        width: '96px',
+                        height: '96px',
+                        background: 'challengeAccepted.contrast',
+                        display: 'grid',
+                        placeItems: 'center',
+                        color: 'challengeAccepted.background',
+                        fontSize: '4xl',
+                      })}
+                    >
+                      {person.name.slice(0, 1)}
+                    </div>
+                  )}
                   {person.name}
                 </h3>
-                <Link href={`/challenge-accepted/person/${person.slug}`}>
-                  More
-                </Link>
-              </div>
-            ))}
-          </div>
-          <p>Rendered-at: {now}</p>
+              </Link>
+            </div>
+          ))}
         </div>
-      </Container>{' '}
+        <h2 className={css({ textStyle: '4xl', fontWeight: 'bold', my: '6' })}>
+          Inhalte
+        </h2>
+        <CollectionRenderer items={hub.items} />
+      </Container>
+      <h2 className={css({ textStyle: '3xl', mt: '6' })}>Additonal hub data</h2>
+      <details>
+        <summary>hub</summary>
+        <pre>{JSON.stringify(hub.introduction, null, 2)}</pre>
+      </details>
+
+      <p>Rendered-at: {now}</p>
     </>
   )
 }

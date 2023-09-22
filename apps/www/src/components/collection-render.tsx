@@ -12,6 +12,10 @@ type CollectionRendererProps = {
 }
 
 export default function CollectionRenderer({ items }: CollectionRendererProps) {
+  if (items.length === 0) {
+    return 'Leider noch nix'
+  }
+
   return (
     <div className={css({ width: '100%' })}>
       <ul

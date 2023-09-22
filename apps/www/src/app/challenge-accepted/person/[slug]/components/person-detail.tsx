@@ -2,7 +2,6 @@ import CollectionRenderer from '@app/components/collection-render'
 import type { PersonDetailQuery } from '@app/graphql/gql/graphql'
 import { css } from '@app/styled-system/css'
 import Image from 'next/image'
-import Link from 'next/link'
 
 type PersonDetailProps = {
   person: PersonDetailQuery['person']
@@ -18,7 +17,6 @@ export function PersonDetail({ person }: PersonDetailProps) {
         alignItems: 'center',
       })}
     >
-      <Link href='/challenge-accepted'>Challenge Accepted</Link>
       {person.portrait && (
         <Image
           alt={person.name}
@@ -32,11 +30,15 @@ export function PersonDetail({ person }: PersonDetailProps) {
           textStyle: 'headingLarge',
         })}
       >
-        Hallo, ich bin {person.name}
+        Sali, ich bin {person.name}
       </h1>
 
+      <h2 className={css({ textStyle: '4xl', fontWeight: 'bold', my: '6' })}>
+        Inhalte
+      </h2>
+
       <CollectionRenderer items={person.items} />
-      <div>
+      <div className={css({ mt: '6' })}>
         <details>
           <summary>person data</summary>
           <pre>{JSON.stringify(person, null, 2)}</pre>
