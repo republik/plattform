@@ -6,6 +6,35 @@ import { getClient } from '@app/lib/apollo/client'
 import { css } from '@app/styled-system/css'
 import Link from 'next/link'
 
+const getResizefromURL = (url, size) => {
+  const imgURL = new URL(url)
+  const sizeString = imgURL.searchParams.get('size')
+  if (!sizeString) {
+    return `${size}x`
+  }
+
+  const [w, h] = sizeString.split('x')
+
+  if (w >= h) {
+    return `x${size}`
+  }
+
+  return `${size}x`
+}
+
+const getResizedImageSrc = (url, width) => {
+  const imgURL = new URL(url)
+  imgURL.searchParams.set('resize', `${width}x`)
+  return imgURL.toString()
+}
+const getOriginalImageDimensions = (url) => {
+  const imgURL = new URL(url)
+  const sizeString = imgURL.searchParams.get('size')
+  const [width, height] = sizeString ? sizeString.split('x') : ['1', '1']
+
+  return { width: width ?? '1', height: height ?? '1' }
+}
+
 type ArticleProps = {
   path: string
 }
@@ -30,7 +59,11 @@ export const TeaserArticle = async ({ path }: ArticleProps) => {
         })}
       >
         {data.article?.meta.image ? (
-          <img src={data.article?.meta.image}></img>
+          <img
+            src={getResizedImageSrc(data.article?.meta.image, 1500)}
+            {...getOriginalImageDimensions(data.article?.meta.image)}
+            className={css({ width: '100%', height: 'auto' })}
+          ></img>
         ) : null}
         <div className={css({ padding: '4' })}>
           <p className={css({ textStyle: 'xs' })}>Artikel</p>
