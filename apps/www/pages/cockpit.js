@@ -48,7 +48,7 @@ const statusQuery = gql`
     $accessToken: ID
   ) {
     membershipStats {
-      evolution(min: "2020-01", max: $max) {
+      evolution(min: "2018-01", max: $max) {
         updatedAt
         buckets {
           key
@@ -404,7 +404,7 @@ const Page = ({
             {
               key: 'gaining',
               color: '#2A7A00',
-              label: 'Neue Abos oder Mitgliedschaften',
+              label: 'Zugänge',
             },
           ]
           const labelMap = labels.reduce((map, d) => {
@@ -502,6 +502,8 @@ const Page = ({
             Math[i ? 'ceil' : 'floor'](Math.round(d / 1000) * 1000),
           )
 
+          console.log(data.membershipStats.lastSeen)
+
           const lastSeenBucket =
             data.membershipStats.lastSeen.buckets.slice(-1)[0]
           const lastSeen = lastSeenBucket.users
@@ -583,7 +585,7 @@ const Page = ({
                 <ChartLead>Entwicklung seit Januar 2020 bis heute</ChartLead>
                 <Chart
                   config={{
-                    type: 'TimeBar',
+                    type: 'Line',
                     color: 'label',
                     colorMap,
                     numberFormat: 's',
@@ -591,15 +593,26 @@ const Page = ({
                     timeParse: '%Y-%m',
                     timeFormat: '%Y',
                     xInterval: 'month',
-                    padding: isMobile ? 30 : 50,
-                    xTicks: ['2020-01', '2021-01', '2022-01', '2023-01'],
+                    xTicks: [
+                      '2018-01',
+                      '2019-01',
+                      '2020-01',
+                      '2021-01',
+                      '2022-01',
+                      '2023-01',
+                    ],
                     height: 300,
-                    domain: [0, maxValue + 1000],
-                    yTicks: [0, 5000, 10000, 15000, 20000, 25000, 30000],
-                    xBandPadding: 0,
+                    domain: [0, 35000],
+                    yTicks: [0, 5000, 10000, 15000, 20000, 25000, 30000, 35000],
+                    endLabel: false,
+                    endValue: false,
+                    colorLegend: false,
+                    padding: 0,
+                    zero: true,
+                    yNice: 0,
                   }}
                   values={values
-                    .filter((d) => d.month > '2019-12')
+                    .filter((d) => d.month > '2018-01')
                     .map((d) => ({ ...d, value: String(d.value) }))}
                 />
               </div>
@@ -610,11 +623,11 @@ const Page = ({
                     lastBucket.pending - lastBucket.pendingSubscriptionsOnly,
                   )}{' '}
                   anstehende Verläng&shy;erungen in den nächsten&nbsp;Monaten */}
-                  {countFormat(currentBucket.gaining)} neue Mitgliedschaften
-                  oder Abos im laufenden Monat
+                  {countFormat(currentBucket.gaining)} Zugänge und{' '}
+                  {countFormat(currentBucket.ended)} Abgänge im laufenden Monat
                 </ChartTitle>
                 <ChartLead>
-                  Anzahl neue und gekündigte Mitgliedschaften und Abos per
+                  Anzahl neue und beendete Mitgliedschaften und Abos per
                   Monatsende
                 </ChartLead>
                 <Chart
@@ -628,8 +641,10 @@ const Page = ({
                     timeFormat: '%b %y',
                     xInterval: 'month',
                     height: 300,
-                    // domain: [minValue, maxValue + 2000],
-                    yTicks: [-2000, 0, 1500, 3000],
+                    domain: [-1500, 2500],
+                    yTicks: [
+                      -1500, -1000, -500, 0, 500, 1000, 1500, 2000, 2500,
+                    ],
                     // xAnnotations: [
                     //   {
                     //     x1: currentBucket.key,
@@ -662,7 +677,8 @@ const Page = ({
                   Wie beliebt sind Dialog, Lesezeichen und Leseposition?
                 </ChartTitle>
                 <ChartLead>
-                  Anzahl Verleger, welche pro Monat eine Funktion benutzen.
+                  Anzahl Verleger, welche pro Monat eine Funktion benutzen. HIER
+                  EINE GRAFIK ZU LAST SEEN
                 </ChartLead>
                 <Chart
                   config={{
