@@ -3,6 +3,7 @@ import { PERSON_DETAIL_QUERY } from '@app/graphql/cms/person-detail.query'
 import { getCMSClient } from '@app/lib/apollo/cms-client'
 import { notFound } from 'next/navigation'
 import Overlay from './components/overlay'
+import Container from '@app/components/container'
 
 export default async function Page({
   params: { slug },
@@ -20,7 +21,9 @@ export default async function Page({
 
   return (
     <Overlay>
-      <PersonDetail person={data.person} />
+      <Container>
+        <PersonDetail person={data.person} />
+      </Container>
     </Overlay>
   )
 }

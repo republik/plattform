@@ -1,61 +1,53 @@
 'use client'
 import { css } from '@app/styled-system/css'
 import { useRouter } from 'next/navigation'
-import { useEffect } from 'react'
+import * as Dialog from '@radix-ui/react-dialog'
+import { Root as VisuallyHidden } from '@radix-ui/react-visually-hidden'
+import { IconClose } from '@republik/icons'
 
 export default function Overlay(props: { children: React.ReactNode }) {
   const router = useRouter()
 
-  useEffect(() => {
-    // Call router.back if the user presses the ESC key
-    const handleEsc = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        router.back()
-      }
-    }
-    window.addEventListener('keydown', handleEsc)
-    return () => {
-      window.removeEventListener('keydown', handleEsc)
-    }
-  }, [])
-
   return (
-    <div
-      className={css({
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        width: '100%',
-        height: '100dvh',
-        zIndex: 10,
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        bg: 'rgba(0,0,0,0.5)',
-      })}
-      onClick={() => router.back()}
+    <Dialog.Root
+      open
+      onOpenChange={(open) => {
+        if (!open) {
+          router.back()
+        }
+      }}
     >
-      <div
-        className={css({
-          padding: 4,
-          backgroundColor: 'challengeAccepted.yellow',
-          display: 'flex',
-          flexDirection: 'column',
-          maxHeight: '85dvh',
-          overflowY: 'scroll',
-          gap: 4,
-        })}
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div
+      <Dialog.Portal>
+        <Dialog.Overlay
           className={css({
-            justifySelf: 'flex-start',
+            position: 'fixed',
+            inset: 0,
+            display: 'grid',
+            placeItems: 'stretch',
+            overflowY: 'auto',
+            background: 'rgba(0,0,0,0.05)',
           })}
         >
-          <button onClick={() => router.back()}>X</button>
-        </div>
-        {props.children}
-      </div>
-    </div>
+          <Dialog.Content
+            className={css({
+              m: '10',
+              position: 'relative',
+              background: 'white',
+            })}
+          >
+            <VisuallyHidden>
+              <Dialog.Title></Dialog.Title>
+              <Dialog.Description></Dialog.Description>
+            </VisuallyHidden>
+            {props.children}
+            <Dialog.Close
+              className={css({ position: 'absolute', top: '4', right: '4' })}
+            >
+              <IconClose size={24} />
+            </Dialog.Close>
+          </Dialog.Content>
+        </Dialog.Overlay>
+      </Dialog.Portal>
+    </Dialog.Root>
   )
 }

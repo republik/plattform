@@ -34,9 +34,8 @@ export function PersonDetail({ person }: PersonDetailProps) {
       >
         Hallo, ich bin {person.name}
       </h1>
-      <div>
-        <CollectionRenderer items={person.items} />
-      </div>
+
+      <CollectionRenderer items={person.items} />
       <div>
         <details>
           <summary>person data</summary>

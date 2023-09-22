@@ -4,6 +4,7 @@ import {
   TeaserNewsletter,
 } from '@app/components/teasers'
 import { ChallengeAcceptedHubQueryQuery } from '@app/graphql/gql/graphql'
+import { css } from '@app/styled-system/css'
 import { vstack } from '@app/styled-system/patterns'
 
 type CollectionRendererProps = {
@@ -12,7 +13,7 @@ type CollectionRendererProps = {
 
 export default function CollectionRenderer({ items }: CollectionRendererProps) {
   return (
-    <div>
+    <div className={css({ width: '100%' })}>
       <ul
         className={vstack({
           gap: '4',
