@@ -17,6 +17,11 @@ export default defineConfig({
 
   // Useful for theme customization
   theme: {
+    breakpoints: {
+      sm: '375px',
+      md: '768px',
+      lg: '1025px',
+    },
     extend: {
       tokens: {
         colors: {
@@ -48,6 +53,17 @@ export default defineConfig({
                 _dark: '{colors.challengeAccepted.yellow}',
               },
             },
+          },
+        },
+        sizes: {
+          header: {
+            height: { value: { base: '48px', md: '60px' } },
+            avatar: { value: { base: '26px', md: '36px' } },
+          },
+        },
+        spacing: {
+          header: {
+            height: { value: '{sizes.header.height}' },
           },
         },
       },

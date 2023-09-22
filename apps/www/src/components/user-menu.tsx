@@ -3,7 +3,7 @@
 import { MeQueryResult } from '@app/graphql/republik-api/me.query'
 import { css } from '@app/styled-system/css'
 import * as Dialog from '@radix-ui/react-dialog'
-import UserNav from 'components/Frame/Popover/UserNav'
+// import UserNav from 'components/Frame/Popover/UserNav'
 
 type Props = MeQueryResult
 
@@ -24,8 +24,8 @@ const Avatar = ({ me }: Props) => {
   const style = css({
     position: 'relative',
     display: 'inline-block',
-    width: 26,
-    height: 26,
+    width: 'header.avatar',
+    height: 'header.avatar',
   })
 
   return me.portrait ? (
@@ -47,17 +47,17 @@ export const UserMenu = ({ me }: Props) => {
         <Dialog.Overlay
           className={css({
             position: 'fixed',
-            inset: '50px 0 0 0',
+            inset: 'token(sizes.header.height) 0 0 0',
             backgroundColor: 'challengeAccepted.background',
           })}
         />
         <Dialog.Content
           className={css({
             position: 'fixed',
-            top: 50,
+            top: 'header.height',
           })}
         >
-          <UserNav />
+          {/* <UserNav /> */}
 
           <Dialog.Title>HALLOO</Dialog.Title>
           <Dialog.Description />
