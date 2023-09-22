@@ -1,6 +1,6 @@
 import './globals.css'
 
-import { ThemeProvider } from '@app/components/ThemeProvider'
+import { ThemeProvider } from '@app/components/theme-provider'
 import { UserMenu } from '@app/components/user-menu'
 import { getClient } from '@app/lib/apollo/client'
 import { ME_QUERY } from '@app/graphql/republik-api/me.query'
