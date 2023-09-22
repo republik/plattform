@@ -1,7 +1,5 @@
-'use client'
-
 import CollectionRenderer from '@app/components/collection-render'
-import { PersonDetailQuery } from '@app/graphql/gql/graphql'
+import type { PersonDetailQuery } from '@app/graphql/gql/graphql'
 import { css } from '@app/styled-system/css'
 import Image from 'next/image'
 import Link from 'next/link'
