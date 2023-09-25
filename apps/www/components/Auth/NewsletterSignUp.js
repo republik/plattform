@@ -25,68 +25,62 @@ const SignUp = ({
 }) => {
   const [state, setState] = useState(() => checkEmail({ value: '', t }))
   const [serverState, setServerState] = useState({})
-  if (me || !free) {
-    return (
-      <>
-        {showTitle && (
-          <Interaction.P style={{ marginBottom: 16 }}>
-            <strong>{t('Auth/NewsletterSignUp/settingTitle')}</strong>
-          </Interaction.P>
-        )}
-        <NewsletterSubscriptions free={free} onlyName={name} />
-      </>
-    )
-  }
-  if (serverState.success) {
-    return <Interaction.P>{t('Auth/NewsletterSignUp/success')}</Interaction.P>
-  }
   return (
     <>
       {showTitle && (
-        <Interaction.H3>
+        <Interaction.H3 style={{ marginBottom: 8 }}>
           {t(`account/newsletterSubscriptions/${name}/label`)}
         </Interaction.H3>
       )}
-      {/* Alsways Show Description in free newsletter */}
       {showDescription && (
-        <Interaction.P>
+        <Interaction.P style={{ marginBottom: 12 }}>
           {t(`account/newsletterSubscriptions/${name}/description`)}
         </Interaction.P>
       )}
-      <EmailForm
-        {...state}
-        label={buttonLabel || t('Auth/NewsletterSignUp/submit')}
-        onChange={setState}
-        onSubmit={(e) => {
-          e.preventDefault()
-          if (state.error) {
-            setState({ ...state, dirty: true })
-            return
-          }
+      {me || !free ? (
+        <NewsletterSubscriptions
+          free={free}
+          onlyName={name}
+          smallButton={smallButton}
+        />
+      ) : serverState.success ? (
+        <Interaction.P>{t('Auth/NewsletterSignUp/success')}</Interaction.P>
+      ) : (
+        <EmailForm
+          {...state}
+          label={buttonLabel || t('Auth/NewsletterSignUp/submit')}
+          onChange={setState}
+          onSubmit={(e) => {
+            e.preventDefault()
+            if (state.error) {
+              setState({ ...state, dirty: true })
+              return
+            }
 
-          if (state.loading) {
-            return
-          }
-          setServerState({ loading: true })
+            if (state.loading) {
+              return
+            }
+            setServerState({ loading: true })
 
-          requestSubscription({
-            variables: {
-              name,
-              email: state.email,
-              context,
-            },
-          })
-            .then(() => {
-              setServerState({ loading: false, success: true })
+            requestSubscription({
+              variables: {
+                name,
+                email: state.email,
+                context,
+              },
             })
-            .catch((error) => {
-              setServerState({ loading: false, error })
-            })
-        }}
-        loading={serverState.loading}
-        serverError={serverState.error}
-        smallButton={smallButton}
-      />
+              .then(() => {
+                setServerState({ loading: false, success: true })
+              })
+              .catch((error) => {
+                setServerState({ loading: false, error })
+              })
+          }}
+          loading={serverState.loading}
+          serverError={serverState.error}
+          smallButton={smallButton}
+        />
+      )}
     </>
   )
 }
