@@ -37,7 +37,13 @@ const MarketingNewsBox = (me) => {
             >
               <h3 {...styles.heading}>Was diese Woche wichtig war</h3>
             </Link>
-            <NewsletterSignup me={me} name='WDWWW' free smallButton />
+            <NewsletterSignup
+              me={me}
+              name='WDWWW'
+              free
+              showDescription
+              smallButton
+            />
           </div>
         </div>
         <span
@@ -58,6 +64,7 @@ const styles = {
     flexDirection: 'column',
     alignItems: 'center',
     width: '100%',
+    maxWidth: 1280,
     padding: '0 15px',
     [mediaQueries.mUp]: {
       padding: 0,
