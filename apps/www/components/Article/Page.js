@@ -708,9 +708,8 @@ const ArticlePage = ({
           const format = meta.format
 
           const isFreeNewsletter = !!newsletterMeta && newsletterMeta.free
-          const showNewsletterSignupTop = isFreeNewsletter && !me && isFormat
-          const showNewsletterSignupBottom =
-            isFreeNewsletter && !showNewsletterSignupTop
+          const showNewsletterSignupTop = isFormat && isFreeNewsletter
+          const showNewsletterSignupBottom = isFreeNewsletter && !isFormat
 
           const rawContentMeta = articleContent.meta
           const feedQueryVariables = rawContentMeta.feedQueryVariables
@@ -811,6 +810,7 @@ const ArticlePage = ({
                                   <NewsletterSignUp
                                     {...newsletterMeta}
                                     smallButton
+                                    showDescription
                                   />
                                 </div>
                               )}
@@ -871,12 +871,11 @@ const ArticlePage = ({
               )}
               {showNewsletterSignupBottom && (
                 <Center breakout={breakout}>
-                  {format && !me && (
-                    <Interaction.P>
-                      <strong>{format.meta.title}</strong>
-                    </Interaction.P>
-                  )}
-                  <NewsletterSignUp {...newsletterMeta} />
+                  <NewsletterSignUp
+                    showTitle
+                    showDescription
+                    {...newsletterMeta}
+                  />
                 </Center>
               )}
               {((hasAccess && meta.template === 'article') ||

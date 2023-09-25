@@ -48,12 +48,11 @@ const SignUp = ({
         </Interaction.H3>
       )}
       {/* Alsways Show Description in free newsletter */}
-      {showDescription ||
-        (free && (
-          <Interaction.P>
-            {t(`account/newsletterSubscriptions/${name}/description`)}
-          </Interaction.P>
-        ))}
+      {showDescription && (
+        <Interaction.P>
+          {t(`account/newsletterSubscriptions/${name}/description`)}
+        </Interaction.P>
+      )}
       <EmailForm
         {...state}
         label={buttonLabel || t('Auth/NewsletterSignUp/submit')}
