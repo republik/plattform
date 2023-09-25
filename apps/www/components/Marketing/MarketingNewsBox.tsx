@@ -37,10 +37,6 @@ const MarketingNewsBox = (me) => {
             >
               <h3 {...styles.heading}>Was diese Woche wichtig war</h3>
             </Link>
-            <p {...styles.p} {...colorScheme.set('color', 'text')}>
-              Das Nachrichtenbriefing der Republik als Newlsetter. Jeden Freitag
-              gratis in ihrem Postfach.
-            </p>
             <NewsletterSignup me={me} name='WDWWW' free smallButton />
           </div>
         </div>
