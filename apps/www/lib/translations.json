@@ -897,6 +897,18 @@
       "value": "Die aktuellsten Beiträge der Republik. Jeden Morgen in Ihrem virtuellen Briefkasten."
     },
     {
+      "key": "account/newsletterSubscriptions/WDWWW/label",
+      "value": "Was diese Woche wichtig war"
+    },
+    {
+      "key": "account/newsletterSubscriptions/WDWWW/frequency",
+      "value": "Jeden Freitag"
+    },
+    {
+      "key": "account/newsletterSubscriptions/WDWWW/description",
+      "value": "Das Nachrichtenbriefing der Republik. Jeden freitag gratis in Ihrem Posteingang. Newsletter abonnieren:"
+    },
+    {
       "key": "account/newsletterSubscriptions/PROJECTR/label",
       "value": "Project-R-Newsletter"
     },
