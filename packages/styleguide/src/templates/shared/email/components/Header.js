@@ -28,7 +28,7 @@ export default ({ meta }) => {
   const height = (isClimate && 110) || 79
   const imageFile =
     (isClimate && 'logo_republik_newsletter_climate-1.png') ||
-    (isWdwww && 'logo_republik_newsletter-wdwww.png') ||
+    (isWdwww && 'logo_republik_newsletter_wdwww.png') ||
     'logo_republik_newsletter.png'
 
   const formatLine = useMemo(() => {
