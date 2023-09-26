@@ -54,13 +54,7 @@ export const NEWSLETTER_SETTINGS = gql`
   ${newsletterFragment}
 `
 
-const NewsletterSubscriptions = ({
-  t,
-  isMember,
-  free,
-  onlyName,
-  smallButton,
-}) => (
+const NewsletterSubscriptions = ({ t, isMember, free, onlyName }) => (
   <Query query={NEWSLETTER_SETTINGS} variables={{ onlyName }}>
     {({ loading, error, data }) => {
       if (loading || error) {
@@ -109,7 +103,6 @@ const NewsletterSubscriptions = ({
                         {!loading && (
                           <Button
                             primary
-                            small={smallButton}
                             onClick={() =>
                               mutate({
                                 variables: {
@@ -149,7 +142,6 @@ const NewsletterSubscriptions = ({
                       // renders just a button
                       <Button
                         primary
-                        small={smallButton}
                         onClick={() => {
                           mutate({
                             variables: {

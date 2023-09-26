@@ -708,8 +708,9 @@ const ArticlePage = ({
           const format = meta.format
 
           const isFreeNewsletter = !!newsletterMeta && newsletterMeta.free
-          const showNewsletterSignupTop = isFormat && isFreeNewsletter
-          const showNewsletterSignupBottom = isFreeNewsletter && !isFormat
+          const showNewsletterSignupTop = isFreeNewsletter && !me && isFormat
+          const showNewsletterSignupBottom =
+            isFreeNewsletter && !showNewsletterSignupTop
 
           const rawContentMeta = articleContent.meta
           const feedQueryVariables = rawContentMeta.feedQueryVariables
@@ -805,15 +806,6 @@ const ArticlePage = ({
                           isSyntheticReadAloud ||
                           isReadAloud ? (
                             <Center breakout={breakout}>
-                              {showNewsletterSignupTop && (
-                                <div style={{ marginTop: 10 }}>
-                                  <NewsletterSignUp
-                                    {...newsletterMeta}
-                                    smallButton
-                                    showDescription
-                                  />
-                                </div>
-                              )}
                               {actionBar && (
                                 <div
                                   ref={actionBarRef}
@@ -843,6 +835,11 @@ const ArticlePage = ({
                                   />
                                 </Breakout>
                               )}
+                              {showNewsletterSignupTop && (
+                                <div style={{ marginTop: 10 }}>
+                                  <NewsletterSignUp {...newsletterMeta} />
+                                </div>
+                              )}
                             </Center>
                           ) : (
                             <div {...styles.actionBarContainer}>
@@ -871,11 +868,12 @@ const ArticlePage = ({
               )}
               {showNewsletterSignupBottom && (
                 <Center breakout={breakout}>
-                  <NewsletterSignUp
-                    showTitle
-                    showDescription
-                    {...newsletterMeta}
-                  />
+                  {format && !me && (
+                    <Interaction.P>
+                      <strong>{format.meta.title}</strong>
+                    </Interaction.P>
+                  )}
+                  <NewsletterSignUp {...newsletterMeta} />
                 </Center>
               )}
               {((hasAccess && meta.template === 'article') ||

@@ -155,7 +155,7 @@ const ThankYou = compose(withT)(({ t }) => {
             <Meta.P key={`p${i}`}>{paragraph}</Meta.P>
           ))}
       </div>
-      <NewsletterSignUp free name='ACCOMPLICE' />
+      <NewsletterSignUp free skipTitle name='ACCOMPLICE' />
       <div style={{ marginTop: 5 }}>
         <Label>{t('questionnaire/crowd/submitted/optout')}</Label>
       </div>
