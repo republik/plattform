@@ -54,21 +54,8 @@ const removeMemberRole = async (grant, user, findFn, pgdb) => {
 
   const allRecipientGrants = await findFn(user, { pgdb })
 
-  /* Reduced access campaigns are non-trial campaigns and not connected 
-  to member role, hence they should be excluded in the list of other 
-  grants a user could have */
-  const reducedCampaigns = await pgdb.public.accessCampaigns.find({
-    type: 'REDUCED',
-  })
-
-  const reducedCampaignIds = reducedCampaigns.map((campaign) => {
-    return campaign.id
-  })
-
   const allOtherRecipientGrants = allRecipientGrants.filter(
-    (otherGrant) =>
-      otherGrant.id !== grant.id &&
-      !reducedCampaignIds.includes(otherGrant.accessCampaignId),
+    (otherGrant) => otherGrant.id !== grant.id,
   )
 
   if (!hasMembership && allOtherRecipientGrants.length < 1) {
