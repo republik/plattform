@@ -8,7 +8,6 @@ const elseRule = {
   editorOptions: {
     type: 'ELSE',
   },
-  isVoid: true,
 }
 
 export default elseRule
