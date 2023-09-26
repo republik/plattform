@@ -719,218 +719,214 @@ const ArticlePage = ({
           const hideFeed = !!rawContentMeta.hideFeed
           const hideSectionNav = !!rawContentMeta.hideSectionNav
 
-          return (
-            <>
-              <FontSizeSync />
-              {meta.prepublication && (
-                <div {...styles.prepublicationNotice}>
-                  <Center breakout={breakout}>
-                    <Interaction.P>
-                      {t('article/prepublication/notice')}
-                    </Interaction.P>
-                  </Center>
-                </div>
-              )}
-              {isFlyer ? (
-                <Flyer
-                  meta={meta}
-                  documentId={documentId}
-                  inNativeApp={inNativeApp}
-                  repoId={repoId}
-                  actionBar={actionBarFlyer}
-                  value={article.content.children}
-                  tileId={share}
-                />
-              ) : (
-                <ArticleGallery
-                  article={article}
-                  show={!!router.query.gallery}
-                  ref={galleryRef}
-                >
-                  <ProgressComponent article={article}>
-                    <article style={{ display: 'block' }}>
-                      {splitContent.title && (
-                        <div {...styles.titleBlock}>
-                          {renderSchema(splitContent.title)}
-                          {isEditorialNewsletter && (
-                            <TitleBlock margin={false}>
-                              {format && format.meta && (
-                                <Editorial.Format
-                                  color={
-                                    format.meta.color ||
-                                    colors[format.meta.kind]
-                                  }
-                                >
-                                  <Link
-                                    href={format.meta.path}
-                                    passHref
-                                    {...plainLinkRule}
-                                  >
-                                    {format.meta.title}
-                                  </Link>
-                                </Editorial.Format>
-                              )}
-                              <Interaction.Headline>
-                                {meta.title}
-                              </Interaction.Headline>
-                              <Editorial.Credit>
-                                {formatDate(new Date(meta.publishDate))}
-                              </Editorial.Credit>
-                            </TitleBlock>
-                          )}
-                          {isEditor && repoId && disableActionBar ? (
-                            <Center
-                              breakout={breakout}
-                              style={{ paddingBottom: 0, paddingTop: 30 }}
-                            >
-                              <div
-                                {...(titleAlign === 'center'
-                                  ? styles.flexCenter
-                                  : {})}
+          return <>
+            <FontSizeSync />
+            {meta.prepublication && (
+              <div {...styles.prepublicationNotice}>
+                <Center breakout={breakout}>
+                  <Interaction.P>
+                    {t('article/prepublication/notice')}
+                  </Interaction.P>
+                </Center>
+              </div>
+            )}
+            {isFlyer ? (
+              <Flyer
+                meta={meta}
+                documentId={documentId}
+                inNativeApp={inNativeApp}
+                repoId={repoId}
+                actionBar={actionBarFlyer}
+                value={article.content.children}
+                tileId={share}
+              />
+            ) : (
+              <ArticleGallery
+                article={article}
+                show={!!router.query.gallery}
+                ref={galleryRef}
+              >
+                <ProgressComponent article={article}>
+                  <article style={{ display: 'block' }}>
+                    {splitContent.title && (
+                      <div {...styles.titleBlock}>
+                        {renderSchema(splitContent.title)}
+                        {isEditorialNewsletter && (
+                          <TitleBlock margin={false}>
+                            {format && format.meta && (
+                              <Editorial.Format
+                                color={
+                                  format.meta.color ||
+                                  colors[format.meta.kind]
+                                }
                               >
-                                <IconButton
-                                  Icon={IconEdit}
-                                  href={`${PUBLIKATOR_BASE_URL}/repo/${repoId}/tree`}
-                                  target='_blank'
-                                  title={t('feed/actionbar/edit')}
-                                  label={t('feed/actionbar/edit')}
-                                  labelShort={t('feed/actionbar/edit')}
-                                  fill={'#E9A733'}
-                                />
-                              </div>
-                            </Center>
-                          ) : null}
-                          {actionBar ||
-                          isSection ||
-                          showNewsletterSignupTop ||
-                          isSyntheticReadAloud ||
-                          isReadAloud ? (
-                            <Center breakout={breakout}>
-                              {actionBar && (
-                                <div
-                                  ref={actionBarRef}
-                                  {...styles.actionBarContainer}
-                                  style={{
-                                    textAlign: titleAlign,
-                                    marginBottom: isEditorialNewsletter
-                                      ? 0
-                                      : undefined,
-                                  }}
-                                >
-                                  {actionBar}
-                                </div>
-                              )}
+                                <Link href={format.meta.path} passHref {...plainLinkRule}>
 
-                              {hasAudioSource && (
-                                <div style={{ marginTop: 32 }}>
-                                  <ArticleAudioPlayer document={article} />
-                                </div>
-                              )}
+                                  {format.meta.title}
 
-                              {isSection && !hideSectionNav && (
-                                <Breakout size='breakout'>
-                                  <SectionNav
-                                    color={sectionColor}
-                                    linkedDocuments={article.linkedDocuments}
-                                  />
-                                </Breakout>
-                              )}
-                              {showNewsletterSignupTop && (
-                                <div style={{ marginTop: 10 }}>
-                                  <NewsletterSignUp {...newsletterMeta} />
-                                </div>
-                              )}
-                            </Center>
-                          ) : (
-                            <div {...styles.actionBarContainer}>
-                              {/* space before paynote */}
+                                </Link>
+                              </Editorial.Format>
+                            )}
+                            <Interaction.Headline>
+                              {meta.title}
+                            </Interaction.Headline>
+                            <Editorial.Credit>
+                              {formatDate(new Date(meta.publishDate))}
+                            </Editorial.Credit>
+                          </TitleBlock>
+                        )}
+                        {isEditor && repoId && disableActionBar ? (
+                          <Center
+                            breakout={breakout}
+                            style={{ paddingBottom: 0, paddingTop: 30 }}
+                          >
+                            <div
+                              {...(titleAlign === 'center'
+                                ? styles.flexCenter
+                                : {})}
+                            >
+                              <IconButton
+                                Icon={IconEdit}
+                                href={`${PUBLIKATOR_BASE_URL}/repo/${repoId}/tree`}
+                                target='_blank'
+                                title={t('feed/actionbar/edit')}
+                                label={t('feed/actionbar/edit')}
+                                labelShort={t('feed/actionbar/edit')}
+                                fill={'#E9A733'}
+                              />
                             </div>
-                          )}
+                          </Center>
+                        ) : null}
+                        {actionBar ||
+                        isSection ||
+                        showNewsletterSignupTop ||
+                        isSyntheticReadAloud ||
+                        isReadAloud ? (
+                          <Center breakout={breakout}>
+                            {actionBar && (
+                              <div
+                                ref={actionBarRef}
+                                {...styles.actionBarContainer}
+                                style={{
+                                  textAlign: titleAlign,
+                                  marginBottom: isEditorialNewsletter
+                                    ? 0
+                                    : undefined,
+                                }}
+                              >
+                                {actionBar}
+                              </div>
+                            )}
 
-                          {!suppressFirstPayNote && payNote}
-                        </div>
-                      )}
-                      {renderSchema(splitContent.main)}
-                    </article>
-                    <ActionBarOverlay>{actionBarOverlay}</ActionBarOverlay>
-                  </ProgressComponent>
-                </ArticleGallery>
-              )}
-              {meta.template === 'discussion' && ownDiscussion && (
-                <Center breakout={breakout}>
-                  <DiscussionContextProvider
-                    discussionId={ownDiscussion.id}
-                    isBoardRoot={ownDiscussion.isBoard}
-                  >
-                    <Discussion documentMeta={rawContentMeta} showPayNotes />
-                  </DiscussionContextProvider>
-                </Center>
-              )}
-              {showNewsletterSignupBottom && (
-                <Center breakout={breakout}>
-                  {format && !me && (
-                    <Interaction.P>
-                      <strong>{format.meta.title}</strong>
-                    </Interaction.P>
-                  )}
-                  <NewsletterSignUp {...newsletterMeta} />
-                </Center>
-              )}
-              {((hasAccess && meta.template === 'article') ||
-                (isEditorialNewsletter &&
-                  newsletterMeta &&
-                  newsletterMeta.free)) && (
-                <Center breakout={breakout}>
-                  <div ref={bottomActionBarRef}>{actionBarEnd}</div>
-                </Center>
-              )}
-              {!!podcast && meta.template !== 'article' && (
-                <Center breakout={breakout}>
-                  <Interaction.H3>{t(`PodcastButtons/title`)}</Interaction.H3>
-                  <PodcastButtons {...podcast} />
-                </Center>
-              )}
-              {episodes && !isSeriesOverview && (
-                <SeriesNav
-                  inline
-                  repoId={repoId}
-                  series={series}
-                  context='after'
-                  PayNote={showInlinePaynote ? TrialPayNoteMini : undefined}
-                  ActionBar={me && ActionBar}
-                  Link={Link}
-                  t={t}
-                  seriesDescription={false}
-                />
-              )}
-              {isSection && !hideFeed && (
-                <SectionFeed
-                  key={`sectionFeed${article?.issuedForUserId}`}
-                  formats={article.linkedDocuments.nodes.map((n) => n.id)}
-                  variables={feedQueryVariables}
-                />
-              )}
-              {isFormat && !hideFeed && (
-                <FormatFeed
-                  key={`formatFeed${article?.issuedForUserId}`}
-                  formatId={article.repoId}
-                  variables={feedQueryVariables}
-                />
-              )}
-              {me && hasActiveMembership && (
-                <ArticleRecommendationsFeed path={cleanedPath} />
-              )}
-              {hasActiveMembership &&
-                (isEditorialNewsletter ||
-                  meta.template === 'article' ||
-                  meta.template === 'page') && <div style={{ height: 60 }} />}
-              {!suppressPayNotes && payNoteAfter}
-            </>
-          )
+                            {hasAudioSource && (
+                              <div style={{ marginTop: 32 }}>
+                                <ArticleAudioPlayer document={article} />
+                              </div>
+                            )}
+
+                            {isSection && !hideSectionNav && (
+                              <Breakout size='breakout'>
+                                <SectionNav
+                                  color={sectionColor}
+                                  linkedDocuments={article.linkedDocuments}
+                                />
+                              </Breakout>
+                            )}
+                            {showNewsletterSignupTop && (
+                              <div style={{ marginTop: 10 }}>
+                                <NewsletterSignUp {...newsletterMeta} />
+                              </div>
+                            )}
+                          </Center>
+                        ) : (
+                          <div {...styles.actionBarContainer}>
+                            {/* space before paynote */}
+                          </div>
+                        )}
+
+                        {!suppressFirstPayNote && payNote}
+                      </div>
+                    )}
+                    {renderSchema(splitContent.main)}
+                  </article>
+                  <ActionBarOverlay>{actionBarOverlay}</ActionBarOverlay>
+                </ProgressComponent>
+              </ArticleGallery>
+            )}
+            {meta.template === 'discussion' && ownDiscussion && (
+              <Center breakout={breakout}>
+                <DiscussionContextProvider
+                  discussionId={ownDiscussion.id}
+                  isBoardRoot={ownDiscussion.isBoard}
+                >
+                  <Discussion documentMeta={rawContentMeta} showPayNotes />
+                </DiscussionContextProvider>
+              </Center>
+            )}
+            {showNewsletterSignupBottom && (
+              <Center breakout={breakout}>
+                {format && !me && (
+                  <Interaction.P>
+                    <strong>{format.meta.title}</strong>
+                  </Interaction.P>
+                )}
+                <NewsletterSignUp {...newsletterMeta} />
+              </Center>
+            )}
+            {((hasAccess && meta.template === 'article') ||
+              (isEditorialNewsletter &&
+                newsletterMeta &&
+                newsletterMeta.free)) && (
+              <Center breakout={breakout}>
+                <div ref={bottomActionBarRef}>{actionBarEnd}</div>
+              </Center>
+            )}
+            {!!podcast && meta.template !== 'article' && (
+              <Center breakout={breakout}>
+                <Interaction.H3>{t(`PodcastButtons/title`)}</Interaction.H3>
+                <PodcastButtons {...podcast} />
+              </Center>
+            )}
+            {episodes && !isSeriesOverview && (
+              <SeriesNav
+                inline
+                repoId={repoId}
+                series={series}
+                context='after'
+                PayNote={showInlinePaynote ? TrialPayNoteMini : undefined}
+                ActionBar={me && ActionBar}
+                Link={Link}
+                t={t}
+                seriesDescription={false}
+              />
+            )}
+            {isSection && !hideFeed && (
+              <SectionFeed
+                key={`sectionFeed${article?.issuedForUserId}`}
+                formats={article.linkedDocuments.nodes.map((n) => n.id)}
+                variables={feedQueryVariables}
+              />
+            )}
+            {isFormat && !hideFeed && (
+              <FormatFeed
+                key={`formatFeed${article?.issuedForUserId}`}
+                formatId={article.repoId}
+                variables={feedQueryVariables}
+              />
+            )}
+            {me && hasActiveMembership && (
+              <ArticleRecommendationsFeed path={cleanedPath} />
+            )}
+            {hasActiveMembership &&
+              (isEditorialNewsletter ||
+                meta.template === 'article' ||
+                meta.template === 'page') && <div style={{ height: 60 }} />}
+            {!suppressPayNotes && payNoteAfter}
+          </>;
         }}
       />
     </Frame>
-  )
+  );
 }
 
 const styles = {
