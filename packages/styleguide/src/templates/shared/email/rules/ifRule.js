@@ -23,6 +23,7 @@ const ifRule = {
       },
     ],
   },
+  isVoid: true,
 }
 
 export default ifRule
