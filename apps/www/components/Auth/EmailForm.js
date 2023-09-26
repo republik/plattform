@@ -17,7 +17,6 @@ const styles = {
     display: 'flex',
     justifyContent: 'space-between',
     flexFlow: 'row wrap',
-    alignItems: 'flex-end',
   }),
   input: css({
     marginRight: 10,
@@ -59,7 +58,6 @@ const EmailForm = (props) => {
     email,
     serverError,
     black,
-    smallButton,
   } = props
 
   const [colorScheme] = useColorContext()
@@ -92,7 +90,7 @@ const EmailForm = (props) => {
             {loading ? (
               <InlineSpinner />
             ) : (
-              <Button block black={black} type='submit' small={smallButton}>
+              <Button block black={black} type='submit'>
                 {label || t('signIn/button')}
               </Button>
             )}
