@@ -46,13 +46,6 @@ const MarketingNewsBox = (me) => {
             />
           </div>
         </div>
-        <span
-          {...colorScheme.set('color', 'textInverted')}
-          {...colorScheme.set('backgroundColor', 'text')}
-          {...styles.new}
-        >
-          Neu
-        </span>
       </div>
     </div>
   )
@@ -112,17 +105,6 @@ const styles = {
       ...fontStyles.sansSerifRegular16,
     },
   }),
-  new: css({
-    ...fontStyles.sansSerifMedium15,
-    position: 'absolute',
-    top: 15,
-    right: 15,
-    padding: '0px 6px',
-    borderRadius: 2,
-  }),
-  [mediaQueries.mUp]: {
-    top: 12,
-  },
 }
 
 export default MarketingNewsBox
