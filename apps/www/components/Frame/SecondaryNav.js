@@ -67,6 +67,7 @@ export const SecondaryNav = ({
               currentPath={currentPath === '/front' ? '/' : currentPath}
               minifeed
               title={t('navbar/front')}
+              style={{ margin: '12px 10px 0px' }}
             >
               {t('navbar/front')}
             </NavLink>
@@ -76,6 +77,7 @@ export const SecondaryNav = ({
               currentPath={currentPath}
               minifeed
               title={t('navbar/feed')}
+              style={{ margin: '12px 10px 0px' }}
             >
               {t('navbar/feed')}
             </NavLink>
@@ -85,8 +87,18 @@ export const SecondaryNav = ({
               formatColor={colors.primary}
               minifeed
               title={t('navbar/discussion')}
+              style={{ margin: '12px 10px 0px' }}
             >
               {t('navbar/discussion')}
+            </NavLink>
+            <NavLink
+              href='/dossier/welche-schweiz-wollen-wir'
+              currentPath={currentPath}
+              minifeed
+              title={'Wahlen 2023'}
+              style={{ margin: '12px 10px 0px' }}
+            >
+              {'Wahlen 2023'}
             </NavLink>
             <NavLink
               href='/suche'
@@ -94,6 +106,7 @@ export const SecondaryNav = ({
               title={t('pages/search/title')}
               noPlaceholder
               minifeed
+              style={{ margin: '12px 0px 0px' }}
             >
               {'/suche' === currentPath ? (
                 <IconSearchMenuBold
