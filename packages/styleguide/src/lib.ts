@@ -210,3 +210,5 @@ export type {
 export { FlyerTile, FlyerTileMeta } from './components/Flyer'
 export { FlyerDate } from './components/Flyer/Date'
 export { default as ErrorBoundary } from './components/ErrorBoundary'
+
+export { Author as EmailAuthor } from './templates/shared/email/components/Author'

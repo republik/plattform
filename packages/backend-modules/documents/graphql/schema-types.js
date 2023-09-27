@@ -133,6 +133,8 @@ type Meta {
   paynoteMode: PaynoteMode
   
   isRestricted: Boolean
+  
+  sendAsEmail: Boolean
 }
 
 enum DocumentType {

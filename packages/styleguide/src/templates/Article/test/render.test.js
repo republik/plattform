@@ -16,13 +16,13 @@ describe('chart utils test-suite', () => {
 
   it('templates/article: render bab as email', () => {
     expect(() => {
-      renderEmail(babStub, articleEmailSchema, { MissingNode: false })
+      renderEmail(babStub, articleEmailSchema, { MissingNode: () => null })
     }).not.toThrow()
   })
 
   it('templates/article: render article as email', () => {
     expect(() => {
-      renderEmail(articleStub, articleEmailSchema, { MissingNode: false })
+      renderEmail(articleStub, articleEmailSchema, { MissingNode: () => null })
     }).not.toThrow()
   })
 })

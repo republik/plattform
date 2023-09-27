@@ -1,12 +1,11 @@
 import { matchType } from '@republik/mdast-react-render'
-import Container from '../../EditorialNewsletter/email/Container'
+import Container from '../../shared/email/components/Container'
 import { editorialParagraphRule } from '../../shared/email/rules/paragraphRule'
 import centerRule from '../../shared/email/rules/centerRule'
 import {
   coverRule,
   edgeToEdgeFigureRule,
 } from '../../shared/email/rules/figureRule'
-import titleBlockRule from '../../shared/email/rules/titleBlockRule'
 
 const articleEmailSchema = {
   rules: [
@@ -26,9 +25,15 @@ const articleEmailSchema = {
       }),
       rules: [
         editorialParagraphRule,
-        titleBlockRule,
+        // we do not render the title block
+        // titleBlockRule,
         centerRule,
-        coverRule,
+        // we do not render the cover
+        // we cannot just ignore this rule, otherwise, regular figure rule kicks in
+        {
+          ...coverRule,
+          component: () => null,
+        },
         edgeToEdgeFigureRule,
       ],
     },

@@ -19,6 +19,7 @@ import {
   INFOBOX_IMAGE_SIZES,
   INFOBOX_DEFAULT_IMAGE_SIZE,
 } from '../../components/InfoBox'
+import variableRule from '../shared/email/rules/variableRule'
 
 export const matchSpan = matchType('span')
 export const matchSpanType = (type) => (node) =>
@@ -103,6 +104,7 @@ const nestedInlines = [
       type: 'MEMO',
     },
   },
+  variableRule,
 ]
 
 export const globalInlines = [

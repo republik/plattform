@@ -2,12 +2,12 @@ import createNewsletterSchema from '../schema'
 
 import { H2 } from './Headlines'
 import Paragraph, { A } from './Paragraph'
-import Container from './Container'
+import Container from '../../shared/email/components/Container'
 import Cover, { CoverImage } from './Cover'
 import Center from './Center'
 import Figure, { Image, Caption, Byline } from './Figure'
 import { Sub, Sup } from './SubSup'
-import { Button } from './Button'
+import { Button } from '../../shared/email/components/Button'
 import List, { ListItem } from './List'
 
 const createNewsletterEmailSchema = ({ ...args } = {}) => {
