@@ -81,7 +81,9 @@ module.exports = {
         doc._apiKey,
       )
       processNodeModifiersInContent(doc.type, doc.content, context.user)
-      processIfHasAccess(doc.type, doc.content, context.user, doc._apiKey)
+      if (doc.meta.template !== 'article') {
+        processIfHasAccess(doc.type, doc.content, context.user, doc._apiKey)
+      }
     }
     return doc.content
   },
@@ -171,7 +173,9 @@ module.exports = {
           doc._apiKey,
         )
         processNodeModifiersInContent(doc.type, node, context.user)
-        processIfHasAccess(doc.type, node, context.user, doc._apiKey)
+        if (doc.meta.template !== 'article') {
+          processIfHasAccess(doc.type, node, context.user, doc._apiKey)
+        }
 
         return extractIdsFromNode(doc.type, node, doc.meta.repoId)
       })
