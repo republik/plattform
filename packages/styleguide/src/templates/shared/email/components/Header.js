@@ -24,8 +24,12 @@ export default ({ meta }) => {
       format.includes('format-was-diese-woche-wichtig-war')) ||
     format?.repoId?.includes('format-was-diese-woche-wichtig-war')
 
-  const width = (isClimate && 179) || 178
-  const height = (isClimate && 110) || 79
+  const { width, height } = isClimate
+    ? { width: 179, height: 110 } // case of climate
+    : isWdwww
+    ? { width: 220, height: 71 } // case of wdwww
+    : { width: 178, height: 79 } // default
+
   const imageFile =
     (isClimate && 'logo_republik_newsletter_climate-1.png') ||
     (isWdwww && 'logo_republik_newsletter_wdwww.png') ||
