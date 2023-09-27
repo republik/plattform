@@ -93,10 +93,10 @@ export default async function Page() {
                         borderRadius: 'full',
                         width: '96px',
                         height: '96px',
-                        background: 'challengeAccepted.contrast',
+                        background: 'contrast',
                         display: 'grid',
                         placeItems: 'center',
-                        color: 'challengeAccepted.background',
+                        color: 'background',
                         fontSize: '4xl',
                       })}
                     >

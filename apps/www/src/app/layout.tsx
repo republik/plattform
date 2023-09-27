@@ -17,15 +17,18 @@ export default async function RootLayout({
 }) {
   const me = await getMe()
 
+  // TODO: Don't hard-code this
+  const pageTheme = 'challenge-accepted'
+
   return (
-    <html lang='de' suppressHydrationWarning>
+    <html lang='de' suppressHydrationWarning data-page-theme={pageTheme}>
       <body
         className={css({
           color: 'text',
           textStyle: 'body',
-          bg: 'challengeAccepted.background',
+          bg: 'background',
           '& :where(a)': {
-            color: 'challengeAccepted.link',
+            color: 'link',
             textDecoration: 'underline',
           },
         })}

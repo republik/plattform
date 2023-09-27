@@ -1,26 +1,26 @@
 import { definePreset } from '@pandacss/dev'
 
-export const republikPreset = definePreset({
+export const presetRepublik = definePreset({
   conditions: {
-    light: '[data-theme="light"] &',
-    dark: '[data-theme="dark"] &',
+    extend: {
+      light: '[data-theme="light"] &',
+      dark: '[data-theme="dark"] &',
+    },
   },
 
   // Useful for theme customization
   theme: {
-    breakpoints: {
-      sm: '375px',
-      md: '768px',
-      lg: '1025px',
-    },
     extend: {
+      breakpoints: {
+        sm: '375px',
+        md: '768px',
+        lg: '1025px',
+      },
       tokens: {
         colors: {
-          challengeAccepted: {
-            yellow: { value: '#EBEA2B' },
-            blue: { value: '#4033D3' },
-            darkBlue: { value: '#1B1469' },
-            white: { value: '#ffffff' },
+          neutral: {
+            '50': { value: '#fff' },
+            '950': { value: '#222' },
           },
         },
       },
@@ -43,30 +43,22 @@ export const republikPreset = definePreset({
               value: '{colors.neutral.50}',
             },
           },
-          challengeAccepted: {
-            background: {
-              value: {
-                base: '{colors.challengeAccepted.yellow}',
-                _dark: '{colors.challengeAccepted.darkBlue}',
-              },
+          contrast: {
+            value: {
+              base: 'black',
+              _dark: 'white',
             },
-            contrast: {
-              value: {
-                base: '{colors.challengeAccepted.blue}',
-                _dark: '{colors.challengeAccepted.yellow}',
-              },
+          },
+          background: {
+            value: {
+              base: 'white',
+              _dark: 'black',
             },
-            teaserBackground: {
-              value: {
-                base: '{colors.challengeAccepted.blue}',
-                _dark: '{colors.challengeAccepted.blue}',
-              },
-            },
-            link: {
-              value: {
-                base: '{colors.challengeAccepted.blue}',
-                _dark: '{colors.challengeAccepted.yellow}',
-              },
+          },
+          link: {
+            value: {
+              base: 'hotpink',
+              _dark: 'hotpink',
             },
           },
         },

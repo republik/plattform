@@ -1,12 +1,14 @@
 import { defineConfig } from '@pandacss/dev'
-import { republikPreset } from '@app/theme/preset'
+import { presetRepublik } from '@app/theme/preset'
+import { presetChallengeAccepted } from '@app/theme/preset-challenge-accepted'
 
 export default defineConfig({
   // Whether to use css reset
   preflight: true,
 
-  presets: [republikPreset],
+  presets: [presetRepublik, presetChallengeAccepted],
 
+  // conditions:
   // Where to look for your css declarations
   include: ['./src/**/*.{js,jsx,ts,tsx}'],
 
