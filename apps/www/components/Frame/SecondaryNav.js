@@ -89,6 +89,14 @@ export const SecondaryNav = ({
               {t('navbar/discussion')}
             </NavLink>
             <NavLink
+              href='/dossier/welche-schweiz-wollen-wir'
+              currentPath={currentPath}
+              minifeed
+              title={'Wahlen 2023'}
+            >
+              {'Wahlen 2023'}
+            </NavLink>
+            <NavLink
               href='/suche'
               currentPath={currentPath}
               title={t('pages/search/title')}
@@ -167,8 +175,11 @@ const styles = {
       display: 'inline-block',
       whiteSpace: 'nowrap',
       fontSize: 14,
-      margin: '12px 15px 0px 15px',
+      margin: '12px 10px 0px 10px',
       scrollMargin: '12px 15px 0px 15px',
+      [mediaQueries.mUp]: {
+        margin: '12px 15px 0px 15px',
+      },
       '::after': {
         ...fontStyles.sansSerifMedium,
         display: 'block',
