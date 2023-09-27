@@ -139,10 +139,6 @@ const processNodeModifiersInContent = (mdast, user) => {
 const processIfHasAccess = (mdast, user, apiKey) => {
   visit(mdast, 'zone', (node, index, parent) => {
     if (node.identifier === 'IF' && node.data?.present === 'hasAccess') {
-      if (!apiKey || !user) {
-        return index
-      }
-
       const elseIndex = node.children.findIndex(
         ({ identifier }) => identifier === 'ELSE',
       )
