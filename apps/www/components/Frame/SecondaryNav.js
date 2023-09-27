@@ -67,7 +67,6 @@ export const SecondaryNav = ({
               currentPath={currentPath === '/front' ? '/' : currentPath}
               minifeed
               title={t('navbar/front')}
-              style={{ margin: '12px 10px 0px' }}
             >
               {t('navbar/front')}
             </NavLink>
@@ -77,7 +76,6 @@ export const SecondaryNav = ({
               currentPath={currentPath}
               minifeed
               title={t('navbar/feed')}
-              style={{ margin: '12px 10px 0px' }}
             >
               {t('navbar/feed')}
             </NavLink>
@@ -87,7 +85,6 @@ export const SecondaryNav = ({
               formatColor={colors.primary}
               minifeed
               title={t('navbar/discussion')}
-              style={{ margin: '12px 10px 0px' }}
             >
               {t('navbar/discussion')}
             </NavLink>
@@ -96,7 +93,6 @@ export const SecondaryNav = ({
               currentPath={currentPath}
               minifeed
               title={'Wahlen 2023'}
-              style={{ margin: '12px 10px 0px' }}
             >
               {'Wahlen 2023'}
             </NavLink>
@@ -106,7 +102,6 @@ export const SecondaryNav = ({
               title={t('pages/search/title')}
               noPlaceholder
               minifeed
-              style={{ margin: '12px 0px 0px' }}
             >
               {'/suche' === currentPath ? (
                 <IconSearchMenuBold
@@ -180,8 +175,11 @@ const styles = {
       display: 'inline-block',
       whiteSpace: 'nowrap',
       fontSize: 14,
-      margin: '12px 15px 0px 15px',
+      margin: '12px 10px 0px 10px',
       scrollMargin: '12px 15px 0px 15px',
+      [mediaQueries.mUp]: {
+        margin: '12px 15px 0px 15px',
+      },
       '::after': {
         ...fontStyles.sansSerifMedium,
         display: 'block',

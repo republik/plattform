@@ -112,7 +112,6 @@ const NavLink = ({
   large,
   noPlaceholder,
   isActive,
-  style,
 }) => {
   const isCurrentPath = href === currentPath
   const linkRef = useRef()
@@ -147,7 +146,6 @@ const NavLink = ({
         activeFormatColor={minifeed}
         large={large}
         isActive={isActive || isCurrentPath}
-        style={style}
       >
         {children}
       </NavA>
