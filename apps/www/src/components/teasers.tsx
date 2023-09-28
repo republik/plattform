@@ -86,13 +86,13 @@ export const TeaserArticle = async ({ path }: ArticleProps) => {
 }
 
 type NewsletterProps = {
-  repoid: string
+  path: string
 }
 
-export const TeaserNewsletter = async ({ repoid }: NewsletterProps) => {
+export const TeaserNewsletter = async ({ path }: NewsletterProps) => {
   const { data }: { data: ArticleQueryResult } = await getClient().query({
     query: ARTICLE_QUERY,
-    variables: { path: repoid },
+    variables: { path },
   })
 
   const { article } = data
@@ -103,7 +103,7 @@ export const TeaserNewsletter = async ({ repoid }: NewsletterProps) => {
 
   return (
     <Link
-      href={repoid}
+      href={path}
       className={css({ color: 'text', textDecoration: 'none' })}
     >
       <div

@@ -27,7 +27,7 @@ query ChallengeAcceptedHubQuery {
       }
       ... on NewsletterRecord {
         id
-        repoid
+        path
       }
     }
   }

@@ -30,7 +30,7 @@ export const PERSON_DETAIL_QUERY = gql(`
         }
         ... on NewsletterRecord {
           id
-          repoid
+          path
         }
       }
     }

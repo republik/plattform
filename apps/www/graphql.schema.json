@@ -6864,7 +6864,7 @@
             "deprecationReason": null
           },
           {
-            "name": "repoid",
+            "name": "path",
             "description": null,
             "type": {
               "kind": "INPUT_OBJECT",
@@ -6997,13 +6997,13 @@
             "deprecationReason": null
           },
           {
-            "name": "repoid_ASC",
+            "name": "path_ASC",
             "description": null,
             "isDeprecated": false,
             "deprecationReason": null
           },
           {
-            "name": "repoid_DESC",
+            "name": "path_DESC",
             "description": null,
             "isDeprecated": false,
             "deprecationReason": null
@@ -7210,7 +7210,7 @@
             "deprecationReason": null
           },
           {
-            "name": "repoid",
+            "name": "path",
             "description": null,
             "args": [],
             "type": {
