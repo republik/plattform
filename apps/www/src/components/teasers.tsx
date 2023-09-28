@@ -46,6 +46,8 @@ export const TeaserArticle = async ({ path }: ArticleProps) => {
     variables: { path },
   })
 
+  const { article } = data
+
   if (!data.article) {
     return null
   }
@@ -62,19 +64,19 @@ export const TeaserArticle = async ({ path }: ArticleProps) => {
           '&:hover': { transform: 'scale(1.02)' },
         })}
       >
-        {data.article?.meta.image ? (
+        {article.meta.image ? (
           <img
-            src={getResizedImageSrc(data.article?.meta.image, 1500)}
-            {...getOriginalImageDimensions(data.article?.meta.image)}
+            src={getResizedImageSrc(article.meta.image, 1500)}
+            {...getOriginalImageDimensions(article.meta.image)}
             className={css({ width: 'full', height: 'auto' })}
           ></img>
         ) : null}
         <div className={css({ padding: '6' })}>
           <p>Artikel</p>
-          <h3 className={css({ textStyle: 'headingSansMedium' })}>
-            {data.article?.meta.title}
+          <h3 className={css({ textStyle: 'headingSansMedium', mb: '1' })}>
+            {article.meta.title}
           </h3>
-          <p>{data.article?.meta.shortTitle}</p>
+          <p>{article.meta.shortTitle}</p>
         </div>
       </div>
     </Link>
@@ -85,17 +87,36 @@ type NewsletterProps = {
   repoid: string
 }
 
-export const TeaserNewsletter = ({ repoid }: NewsletterProps) => {
+export const TeaserNewsletter = async ({ repoid }: NewsletterProps) => {
+  const { data }: { data: ArticleQueryResult } = await getClient().query({
+    query: ARTICLE_QUERY,
+    variables: { path: repoid },
+  })
+
+  const { article } = data
+
+  if (!article) {
+    return null
+  }
+
   return (
-    <div
-      className={css({
-        padding: '6',
-        background: 'overlay',
-      })}
+    <Link
+      href={repoid}
+      className={css({ color: 'text', textDecoration: 'none' })}
     >
-      <p className={css({ fontSize: 'xs' })}>Newsletter</p>
-      <h3 className={css({ textStyle: 'headingSansMedium' })}>{repoid}</h3>
-    </div>
+      <div
+        className={css({
+          padding: '6',
+          background: 'overlay',
+        })}
+      >
+        <p>Newsletter</p>
+        <h3 className={css({ textStyle: 'headingSansMedium', mb: '1' })}>
+          {article.meta.title}
+        </h3>
+        <p>{article.meta.shortTitle}</p>
+      </div>
+    </Link>
   )
 }
 
