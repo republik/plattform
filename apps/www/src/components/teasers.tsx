@@ -6,6 +6,7 @@ import { getClient } from '@app/lib/apollo/client'
 import { css } from '@app/styled-system/css'
 import Link from 'next/link'
 import { isoParse, timeFormat } from 'd3-time-format'
+import Image from 'next/image'
 
 const getResizefromURL = (url, size) => {
   const imgURL = new URL(url)
@@ -31,9 +32,9 @@ const getResizedImageSrc = (url, width) => {
 const getOriginalImageDimensions = (url) => {
   const imgURL = new URL(url)
   const sizeString = imgURL.searchParams.get('size')
-  const [width, height] = sizeString ? sizeString.split('x') : ['1', '1']
+  const [width, height] = sizeString ? sizeString.split('x') : [1, 1]
 
-  return { width: width ?? '1', height: height ?? '1' }
+  return { width: +width ?? 1, height: +height ?? 1 }
 }
 
 type ArticleProps = {
@@ -65,11 +66,12 @@ export const TeaserArticle = async ({ path }: ArticleProps) => {
         })}
       >
         {article.meta.image ? (
-          <img
+          <Image
+            alt=''
             src={getResizedImageSrc(article.meta.image, 1500)}
             {...getOriginalImageDimensions(article.meta.image)}
             className={css({ width: 'full', height: 'auto' })}
-          ></img>
+          />
         ) : null}
         <div className={css({ padding: '6' })}>
           <p>Artikel</p>
