@@ -50,8 +50,9 @@ export const UserMenu = ({ me }: Props) => {
         <Dialog.Overlay
           className={css({
             position: 'fixed',
-            inset: 'token(sizes.header.height) 0 0 0',
-            backgroundColor: 'challengeAccepted.background',
+            inset: '0',
+            top: 'header.height',
+            backgroundColor: 'pageBackground',
           })}
         />
         <Dialog.Content
@@ -64,7 +65,7 @@ export const UserMenu = ({ me }: Props) => {
             className={vstack({
               gap: '4',
               p: '4',
-              maxWidth: 768,
+              maxWidth: 'maxContentWidth',
               mx: 'auto',
               alignItems: 'flex-start',
             })}

@@ -13,7 +13,7 @@ export function PersonDetail({ person }: PersonDetailProps) {
       className={css({
         display: 'flex',
         flexDirection: 'column',
-        gap: '0.5rem',
+        gap: '2',
         alignItems: 'center',
       })}
     >
@@ -27,13 +27,13 @@ export function PersonDetail({ person }: PersonDetailProps) {
       )}
       <h1
         className={css({
-          textStyle: 'headingLarge',
+          textStyle: 'headingSansLarge',
         })}
       >
         Sali, ich bin {person.name}
       </h1>
 
-      <h2 className={css({ textStyle: '4xl', fontWeight: 'bold', my: '6' })}>
+      <h2 className={css({ textStyle: 'headingSansMedium', my: '6' })}>
         Inhalte
       </h2>
 

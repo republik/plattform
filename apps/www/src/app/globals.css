@@ -1,7 +1,7 @@
 @layer reset, base, tokens, recipes, utilities;
 
 @font-face {
-  font-family: 'Rubis-Regular';
+  font-family: 'Rubis';
   src: url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-regular.eot);
   src: url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-regular.eot?#iefix)
       format('embedded-opentype'),
@@ -13,7 +13,7 @@
       format('truetype');
 }
 @font-face {
-  font-family: 'Rubis-Regular-Italic';
+  font-family: 'Rubis-Regular';
   font-style: italic;
   src: url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-regularitalic.eot);
   src: url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-regularitalic.eot?#iefix)
@@ -26,7 +26,7 @@
       format('truetype');
 }
 @font-face {
-  font-family: 'Rubis-Bold';
+  font-family: 'Rubis';
   font-weight: 700;
   src: url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-bold.eot);
   src: url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-bold.eot?#iefix)
@@ -39,7 +39,7 @@
       format('truetype');
 }
 @font-face {
-  font-family: 'Rubis-Bold-Italic';
+  font-family: 'Rubis';
   font-weight: 700;
   font-style: italic;
   src: url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-bolditalic.eot);
@@ -53,7 +53,7 @@
       format('truetype');
 }
 @font-face {
-  font-family: 'GT-America-Standard-Regular';
+  font-family: 'GT-America-Standard';
   src: url(https://cdn.repub.ch/s3/republik-assets/fonts/gt-america-standard-regular.eot);
   src: url(https://cdn.repub.ch/s3/republik-assets/fonts/gt-america-standard-regular.eot?#iefix)
       format('embedded-opentype'),
@@ -63,7 +63,7 @@
       format('truetype');
 }
 @font-face {
-  font-family: 'GT-America-Standard-Regular-Italic';
+  font-family: 'GT-America-Standard';
   font-style: italic;
   src: url(https://cdn.repub.ch/s3/republik-assets/fonts/gt-america-standard-regular-italic.eot);
   src: url(https://cdn.repub.ch/s3/republik-assets/fonts/gt-america-standard-regular-italic.eot?#iefix)
@@ -76,7 +76,7 @@
       format('truetype');
 }
 @font-face {
-  font-family: 'GT-America-Standard-Medium';
+  font-family: 'GT-America-Standard';
   font-weight: 500;
   src: url(https://cdn.repub.ch/s3/republik-assets/fonts/gt-america-standard-medium.eot);
   src: url(https://cdn.repub.ch/s3/republik-assets/fonts/gt-america-standard-medium.eot?#iefix)
@@ -87,7 +87,7 @@
       format('truetype');
 }
 @font-face {
-  font-family: 'GT-America-Standard-Bold';
+  font-family: 'GT-America-Standard';
   font-weight: 700;
   src: url(https://cdn.repub.ch/s3/republik-assets/fonts/gt-america-standard-bold.woff2)
       format('woff2'),
@@ -97,7 +97,7 @@
       format('truetype');
 }
 @font-face {
-  font-family: 'RepublikSerif-Black';
+  font-family: 'RepublikSerif';
   font-weight: 900;
   src: url(https://cdn.repub.ch/s3/republik-assets/fonts/republik-serif-black-1013b.eot);
   src: url(https://cdn.repub.ch/s3/republik-assets/fonts/republik-serif-black-1013b.eot?#iefix)
@@ -110,7 +110,7 @@
       format('truetype');
 }
 @font-face {
-  font-family: 'Inicia-Medium-Italic';
+  font-family: 'Inicia';
   font-weight: 500;
   font-style: italic;
   src: url(https://cdn.repub.ch/s3/republik-assets/fonts/inicia-medium-italic.eot);

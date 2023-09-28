@@ -21,18 +21,18 @@ export default function Overlay(props: { children: React.ReactNode }) {
         <Dialog.Overlay
           className={css({
             position: 'fixed',
-            inset: 0,
+            inset: '0',
             display: 'grid',
             placeItems: 'stretch',
             overflowY: 'auto',
-            background: 'rgba(0,0,0,0.05)',
+            background: 'overlay',
           })}
         >
           <Dialog.Content
             className={css({
-              m: '10',
+              m: '8',
               position: 'relative',
-              background: 'white',
+              background: 'background',
             })}
           >
             <VisuallyHidden>

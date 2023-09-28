@@ -9,9 +9,9 @@ export default function Container({ children }: ContainerProps) {
     <div
       className={css({
         mx: 'auto',
-        padding: 16,
-        maxWidth: 768,
-        width: '100%',
+        padding: '2',
+        maxWidth: 'maxContentWidth',
+        width: 'full',
       })}
     >
       {children}

@@ -39,18 +39,32 @@ export default async function Page() {
 
   return (
     <>
-      <h1 className={css({ mb: '9', _dark: { filter: 'invert(1)' } })}>
+      {}
+      <h1
+        className={css({
+          mb: '8',
+          _dark: {
+            // @ts-expect-error non-token style value
+            filter: 'invert(1)',
+          },
+        })}
+      >
         <img
           src={hub.logo?.url}
           className={css({
-            width: '100vw',
+            width: 'viewportWidth',
             height: 'auto',
           })}
           alt='Challenge Accepted Logo'
         ></img>
       </h1>
       <Container>
-        <h2 className={css({ textStyle: '4xl', fontWeight: 'bold', mb: '6' })}>
+        <h2
+          className={css({
+            textStyle: 'headingSansLarge',
+            mb: '4',
+          })}
+        >
           Personen
         </h2>
         <div className={wrap({ gap: '4', mb: '6' })}>
@@ -68,8 +82,7 @@ export default async function Page() {
                 <h3
                   className={css({
                     display: 'block',
-                    textStyle: '2xl',
-                    fontWeight: 'bold',
+                    textStyle: 'headingSans',
                     textAlign: 'center',
                     py: '1',
                   })}
@@ -81,8 +94,8 @@ export default async function Page() {
                       height={96 * 2}
                       className={css({
                         borderRadius: 'full',
-                        width: '96px',
-                        height: '96px',
+                        width: '24',
+                        height: '24',
                         objectFit: 'cover',
                       })}
                       alt={person.name}
@@ -91,13 +104,13 @@ export default async function Page() {
                     <div
                       className={css({
                         borderRadius: 'full',
-                        width: '96px',
-                        height: '96px',
+                        width: '24',
+                        height: '24',
                         background: 'contrast',
                         display: 'grid',
                         placeItems: 'center',
-                        color: 'background',
-                        fontSize: '4xl',
+                        color: 'pageBackground',
+                        fontSize: '3xl',
                       })}
                     >
                       {person.name.slice(0, 1)}
@@ -109,12 +122,14 @@ export default async function Page() {
             </div>
           ))}
         </div>
-        <h2 className={css({ textStyle: '4xl', fontWeight: 'bold', my: '6' })}>
+        <h2 className={css({ textStyle: 'headingSansMedium', my: '6' })}>
           Inhalte
         </h2>
         <CollectionRenderer items={hub.items} />
       </Container>
-      <h2 className={css({ textStyle: '3xl', mt: '6' })}>Additonal hub data</h2>
+      <h2 className={css({ textStyle: 'headingSansLarge', mt: '6' })}>
+        Additonal hub data
+      </h2>
       <details>
         <summary>hub</summary>
         <pre>{JSON.stringify(hub.introduction, null, 2)}</pre>

@@ -22,7 +22,7 @@ export const presetChallengeAccepted = definePreset({
       },
       semanticTokens: {
         colors: {
-          background: {
+          pageBackground: {
             value: {
               _challengeAccepted: {
                 base: '{colors.challengeAccepted.yellow}',

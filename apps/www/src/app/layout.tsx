@@ -26,7 +26,7 @@ export default async function RootLayout({
         className={css({
           color: 'text',
           textStyle: 'body',
-          bg: 'background',
+          bg: 'pageBackground',
           '& :where(a)': {
             color: 'link',
             textDecoration: 'underline',
@@ -55,7 +55,7 @@ const Frame = ({ me }) => {
         p: '4',
         borderBottomWidth: 1,
         borderBottomStyle: 'solid',
-        borderBottomColor: '',
+        borderBottomColor: 'contrast',
       })}
     >
       {me ? (

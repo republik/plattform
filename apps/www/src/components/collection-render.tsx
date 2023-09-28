@@ -17,7 +17,7 @@ export default function CollectionRenderer({ items }: CollectionRendererProps) {
   }
 
   return (
-    <div className={css({ width: '100%' })}>
+    <div className={css({ width: 'full' })}>
       <ul
         className={vstack({
           gap: '4',

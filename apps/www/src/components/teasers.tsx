@@ -66,17 +66,15 @@ export const TeaserArticle = async ({ path }: ArticleProps) => {
           <img
             src={getResizedImageSrc(data.article?.meta.image, 1500)}
             {...getOriginalImageDimensions(data.article?.meta.image)}
-            className={css({ width: '100%', height: 'auto' })}
+            className={css({ width: 'full', height: 'auto' })}
           ></img>
         ) : null}
         <div className={css({ padding: '6' })}>
-          <p className={css({ textStyle: 'xs' })}>Artikel</p>
-          <h3 className={css({ textStyle: 'xl' })}>
+          <p>Artikel</p>
+          <h3 className={css({ textStyle: 'headingSansMedium' })}>
             {data.article?.meta.title}
           </h3>
-          <p className={css({ textStyle: 'sm' })}>
-            {data.article?.meta.shortTitle}
-          </p>
+          <p>{data.article?.meta.shortTitle}</p>
         </div>
       </div>
     </Link>
@@ -92,12 +90,11 @@ export const TeaserNewsletter = ({ repoid }: NewsletterProps) => {
     <div
       className={css({
         padding: '6',
-        background: 'rgba(0,0,0,0.1)',
-        // color: 'challengeAccepted.blue',
+        background: 'overlay',
       })}
     >
-      <p className={css({ textStyle: 'xs' })}>Newsletter</p>
-      <h3 className={css({ textStyle: 'xl' })}>{repoid}</h3>
+      <p className={css({ fontSize: 'xs' })}>Newsletter</p>
+      <h3 className={css({ textStyle: 'headingSansMedium' })}>{repoid}</h3>
     </div>
   )
 }
@@ -112,24 +109,26 @@ export const TeaserEvent = ({ title, startAt, location }: EventProps) => {
       className={css({
         padding: '6',
         // background: 'challengeAccepted.white',
-        borderColor: 'challengeAccepted.contrast',
+        borderColor: 'contrast',
         borderStyle: 'solid',
         borderWidth: 1,
-        color: 'challengeAccepted.contrast',
+        color: 'contrast',
       })}
     >
       <h3
         className={css({
-          textStyle: '8xl',
+          textStyle: 'headingSans',
           textAlign: 'center',
-          fontWeight: 'bold',
+          fontSize: '4xl',
           mb: '6',
         })}
       >
         {formatDate(isoParse(startAt))}
       </h3>
-      <h4 className={css({ textStyle: 'xl', color: 'text' })}>{title}</h4>
-      <p className={css({ textStyle: 'lg', color: 'text' })}>Ort: {location}</p>
+      <div className={css({ color: 'text' })}>
+        <h4 className={css({ textStyle: 'headingSansMedium' })}>{title}</h4>
+        <p className={css({})}>Ort: {location}</p>
+      </div>
     </div>
   )
 }
