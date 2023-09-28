@@ -71,6 +71,7 @@ export const TeaserArticle = async ({ path }: ArticleProps) => {
             src={getResizedImageSrc(article.meta.image, 1500)}
             {...getOriginalImageDimensions(article.meta.image)}
             className={css({ width: 'full', height: 'auto' })}
+            unoptimized // Don't process with /_next/image route
           />
         ) : null}
         <div className={css({ padding: '6' })}>

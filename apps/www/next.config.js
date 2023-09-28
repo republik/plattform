@@ -56,7 +56,7 @@ const nextConfig = {
     ignoreDuringBuilds: true,
   },
   images: {
-    domains: ['www.datocms-assets.com'],
+    domains: ['www.datocms-assets.com', 'cdn.republik.pink', 'cdn.repub.ch'],
   },
   compiler: {
     removeConsole:
