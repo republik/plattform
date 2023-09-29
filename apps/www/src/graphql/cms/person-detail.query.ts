@@ -5,7 +5,6 @@ export const PERSON_DETAIL_QUERY = gql(`
     person(filter: {slug: {eq: $slug}}) {
       id
       name
-      age
       portrait {
         alt
         url

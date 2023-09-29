@@ -153,6 +153,18 @@
             "deprecationReason": null
           },
           {
+            "name": "image",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "FileFilter",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "path",
             "description": null,
             "type": {
@@ -303,7 +315,7 @@
       {
         "kind": "OBJECT",
         "name": "ArticleRecord",
-        "description": "Record of type Article (article)",
+        "description": "Record of type Artikel (article)",
         "fields": [
           {
             "name": "_createdAt",
@@ -499,6 +511,18 @@
             "deprecationReason": null
           },
           {
+            "name": "image",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "OBJECT",
+              "name": "FileField",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "path",
             "description": null,
             "args": [],
@@ -673,7 +697,7 @@
       {
         "kind": "OBJECT",
         "name": "ChallengeAcceptedHubRecord",
-        "description": "Record of type Challenge Accepted Hub (challenge_accepted_hub)",
+        "description": "Record of type Challenge Accepted Startseite (challenge_accepted_hub)",
         "fields": [
           {
             "name": "_createdAt",
@@ -1593,6 +1617,18 @@
             "deprecationReason": null
           },
           {
+            "name": "endAt",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "DateTimeFilter",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "id",
             "description": null,
             "type": {
@@ -1605,11 +1641,83 @@
             "deprecationReason": null
           },
           {
+            "name": "isPublic",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "BooleanFilter",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "location",
             "description": null,
             "type": {
               "kind": "INPUT_OBJECT",
               "name": "StringFilter",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "nonMemberCta",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "StringFilter",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "nonMemberDescription",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "StructuredTextFilter",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "seo",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "SeoFilter",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "signUpLink",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "StringFilter",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "slug",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "SlugFilter",
               "ofType": null
             },
             "defaultValue": null,
@@ -1642,6 +1750,81 @@
           }
         ],
         "interfaces": null,
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "EventModelNonMemberDescriptionField",
+        "description": null,
+        "fields": [
+          {
+            "name": "blocks",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "links",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "value",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "JsonField",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "inputFields": null,
+        "interfaces": [],
         "enumValues": null,
         "possibleTypes": null
       },
@@ -1750,6 +1933,18 @@
             "deprecationReason": null
           },
           {
+            "name": "endAt_ASC",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "endAt_DESC",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "id_ASC",
             "description": null,
             "isDeprecated": false,
@@ -1762,6 +1957,18 @@
             "deprecationReason": null
           },
           {
+            "name": "isPublic_ASC",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "isPublic_DESC",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "location_ASC",
             "description": null,
             "isDeprecated": false,
@@ -1769,6 +1976,30 @@
           },
           {
             "name": "location_DESC",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "nonMemberCta_ASC",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "nonMemberCta_DESC",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "signUpLink_ASC",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "signUpLink_DESC",
             "description": null,
             "isDeprecated": false,
             "deprecationReason": null
@@ -1803,7 +2034,7 @@
       {
         "kind": "OBJECT",
         "name": "EventRecord",
-        "description": "Record of type Event (event)",
+        "description": "Record of type Veranstaltung (event)",
         "fields": [
           {
             "name": "_createdAt",
@@ -1995,6 +2226,18 @@
             "deprecationReason": null
           },
           {
+            "name": "endAt",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "DateTime",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "id",
             "description": null,
             "args": [],
@@ -2011,7 +2254,83 @@
             "deprecationReason": null
           },
           {
+            "name": "isPublic",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "BooleanType",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "location",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "nonMemberCta",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "nonMemberDescription",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "OBJECT",
+              "name": "EventModelNonMemberDescriptionField",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "seo",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "OBJECT",
+              "name": "SeoField",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "signUpLink",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "slug",
             "description": null,
             "args": [],
             "type": {
@@ -6381,101 +6700,6 @@
         "possibleTypes": null
       },
       {
-        "kind": "INPUT_OBJECT",
-        "name": "IntegerFilter",
-        "description": "Specifies how to filter Integer fields",
-        "fields": null,
-        "inputFields": [
-          {
-            "name": "eq",
-            "description": "Search for records with an exact match",
-            "type": {
-              "kind": "SCALAR",
-              "name": "IntType",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "exists",
-            "description": "Filter records with the specified field defined (i.e. with any value) or not",
-            "type": {
-              "kind": "SCALAR",
-              "name": "BooleanType",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "gt",
-            "description": "Filter records with a value that's strictly greater than the one specified",
-            "type": {
-              "kind": "SCALAR",
-              "name": "IntType",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "gte",
-            "description": "Filter records with a value that's greater than or equal to the one specified",
-            "type": {
-              "kind": "SCALAR",
-              "name": "IntType",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "lt",
-            "description": "Filter records with a value that's less than the one specified",
-            "type": {
-              "kind": "SCALAR",
-              "name": "IntType",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "lte",
-            "description": "Filter records with a value that's less or equal than the one specified",
-            "type": {
-              "kind": "SCALAR",
-              "name": "IntType",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "neq",
-            "description": "Exclude records with an exact match",
-            "type": {
-              "kind": "SCALAR",
-              "name": "IntType",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          }
-        ],
-        "interfaces": null,
-        "enumValues": null,
-        "possibleTypes": null
-      },
-      {
         "kind": "SCALAR",
         "name": "ItemId",
         "description": null,
@@ -7482,18 +7706,6 @@
             "deprecationReason": null
           },
           {
-            "name": "age",
-            "description": null,
-            "type": {
-              "kind": "INPUT_OBJECT",
-              "name": "IntegerFilter",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
             "name": "bio",
             "description": null,
             "type": {
@@ -7696,18 +7908,6 @@
           },
           {
             "name": "_updatedAt_DESC",
-            "description": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "age_ASC",
-            "description": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "age_DESC",
             "description": null,
             "isDeprecated": false,
             "deprecationReason": null
@@ -7917,18 +8117,6 @@
                 "name": "DateTime",
                 "ofType": null
               }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "age",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "IntType",
-              "ofType": null
             },
             "isDeprecated": false,
             "deprecationReason": null
@@ -9915,6 +10103,29 @@
         ],
         "inputFields": null,
         "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "SeoFilter",
+        "description": "Specifies how to filter SEO meta tags fields",
+        "fields": null,
+        "inputFields": [
+          {
+            "name": "exists",
+            "description": "Filter records with the specified field defined (i.e. with any value) or not",
+            "type": {
+              "kind": "SCALAR",
+              "name": "BooleanType",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "interfaces": null,
         "enumValues": null,
         "possibleTypes": null
       },

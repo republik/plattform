@@ -7,6 +7,8 @@ import { css } from '@app/styled-system/css'
 import Link from 'next/link'
 import { isoParse, timeFormat } from 'd3-time-format'
 import Image from 'next/image'
+import { StructuredText } from 'react-datocms'
+import { ComponentPropsWithoutRef } from 'react'
 
 const getResizefromURL = (url, size) => {
   const imgURL = new URL(url)
@@ -70,7 +72,11 @@ export const TeaserArticle = async ({ path }: ArticleProps) => {
             alt=''
             src={getResizedImageSrc(article.meta.image, 1500)}
             {...getOriginalImageDimensions(article.meta.image)}
-            className={css({ width: 'full', height: 'auto' })}
+            className={css({
+              width: 'full',
+              height: 'auto',
+              objectFit: 'contain',
+            })}
             unoptimized // Don't process with /_next/image route
           />
         ) : null}
@@ -131,10 +137,28 @@ export const TeaserNewsletter = async ({ path }: NewsletterProps) => {
 }
 
 const formatDate = timeFormat('%d.%m.%y')
+const formateTime = timeFormat('%H:%M')
 
-type EventProps = { title: string; startAt: string; location: string }
+type EventProps = {
+  event: {
+    title: string
+    description?: {
+      value: ComponentPropsWithoutRef<typeof StructuredText>['data']
+    }
+    isPublic?: boolean
+    nonMemberDescription?: {
+      value: ComponentPropsWithoutRef<typeof StructuredText>['data']
+    }
+    nonMemberCta?: string
+    location: string
+    startAt: string
+    endAt?: string
+    signUpLink?: string
+  }
+  isMember: boolean
+}
 
-export const TeaserEvent = ({ title, startAt, location }: EventProps) => {
+export const TeaserEvent = ({ event, isMember }: EventProps) => {
   return (
     <div
       className={css({
@@ -154,11 +178,50 @@ export const TeaserEvent = ({ title, startAt, location }: EventProps) => {
           mb: '6',
         })}
       >
-        {formatDate(isoParse(startAt))}
+        {formatDate(isoParse(event.startAt))}
       </h3>
-      <div className={css({ color: 'text' })}>
-        <h4 className={css({ textStyle: 'h2Sans' })}>{title}</h4>
-        <p className={css({})}>Ort: {location}</p>
+      <div
+        className={css({
+          color: 'text',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '4',
+        })}
+      >
+        <h4 className={css({ textStyle: 'h2Sans' })}>{event.title}</h4>
+        <p className={css({})}>
+          {formateTime(isoParse(event.startAt))} -{' '}
+          {event.endAt ? formateTime(isoParse(event.endAt)) : 'offen'} /{' '}
+          {event.location}
+        </p>
+        <div className={css({})}>
+          {!event.isPublic || isMember ? (
+            <StructuredText data={event.description.value} />
+          ) : (
+            <>
+              {event.nonMemberDescription?.value && (
+                <StructuredText data={event.nonMemberDescription.value} />
+              )}
+            </>
+          )}
+        </div>
+        {event.signUpLink && (
+          <>
+            {!isMember && !event.isPublic ? (
+              <p
+                className={css({
+                  display: 'block',
+                })}
+              >
+                {event.nonMemberCta || 'DEFAULT NON MEMBER CTA'}
+              </p>
+            ) : (
+              <Link target='_blank' href={event.signUpLink}>
+                Zur Anmeldung
+              </Link>
+            )}
+          </>
+        )}
       </div>
     </div>
   )

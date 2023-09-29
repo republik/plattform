@@ -41,6 +41,7 @@ export type ArticleModelFilter = {
   _unpublishingScheduledAt?: InputMaybe<PublishedAtFilter>;
   _updatedAt?: InputMaybe<UpdatedAtFilter>;
   id?: InputMaybe<ItemIdFilter>;
+  image?: InputMaybe<FileFilter>;
   path?: InputMaybe<StringFilter>;
 };
 
@@ -67,7 +68,7 @@ export enum ArticleModelOrderBy {
   PathDesc = 'path_DESC'
 }
 
-/** Record of type Article (article) */
+/** Record of type Artikel (article) */
 export type ArticleRecord = RecordInterface & {
   __typename?: 'ArticleRecord';
   _createdAt: Scalars['DateTime']['output'];
@@ -84,11 +85,12 @@ export type ArticleRecord = RecordInterface & {
   _unpublishingScheduledAt?: Maybe<Scalars['DateTime']['output']>;
   _updatedAt: Scalars['DateTime']['output'];
   id: Scalars['ItemId']['output'];
+  image?: Maybe<FileField>;
   path: Scalars['String']['output'];
 };
 
 
-/** Record of type Article (article) */
+/** Record of type Artikel (article) */
 export type ArticleRecord_SeoMetaTagsArgs = {
   locale?: InputMaybe<SiteLocale>;
 };
@@ -108,7 +110,7 @@ export type ChallengeAcceptedHubModelIntroductionField = {
 
 export type ChallengeAcceptedHubModelItemsField = ArticleRecord | EventRecord | NewsletterRecord;
 
-/** Record of type Challenge Accepted Hub (challenge_accepted_hub) */
+/** Record of type Challenge Accepted Startseite (challenge_accepted_hub) */
 export type ChallengeAcceptedHubRecord = RecordInterface & {
   __typename?: 'ChallengeAcceptedHubRecord';
   _createdAt: Scalars['DateTime']['output'];
@@ -132,7 +134,7 @@ export type ChallengeAcceptedHubRecord = RecordInterface & {
 };
 
 
-/** Record of type Challenge Accepted Hub (challenge_accepted_hub) */
+/** Record of type Challenge Accepted Startseite (challenge_accepted_hub) */
 export type ChallengeAcceptedHubRecord_SeoMetaTagsArgs = {
   locale?: InputMaybe<SiteLocale>;
 };
@@ -222,10 +224,24 @@ export type EventModelFilter = {
   _unpublishingScheduledAt?: InputMaybe<PublishedAtFilter>;
   _updatedAt?: InputMaybe<UpdatedAtFilter>;
   description?: InputMaybe<StructuredTextFilter>;
+  endAt?: InputMaybe<DateTimeFilter>;
   id?: InputMaybe<ItemIdFilter>;
+  isPublic?: InputMaybe<BooleanFilter>;
   location?: InputMaybe<StringFilter>;
+  nonMemberCta?: InputMaybe<StringFilter>;
+  nonMemberDescription?: InputMaybe<StructuredTextFilter>;
+  seo?: InputMaybe<SeoFilter>;
+  signUpLink?: InputMaybe<StringFilter>;
+  slug?: InputMaybe<SlugFilter>;
   startAt?: InputMaybe<DateTimeFilter>;
   title?: InputMaybe<StringFilter>;
+};
+
+export type EventModelNonMemberDescriptionField = {
+  __typename?: 'EventModelNonMemberDescriptionField';
+  blocks: Array<Scalars['String']['output']>;
+  links: Array<Scalars['String']['output']>;
+  value: Scalars['JsonField']['output'];
 };
 
 export enum EventModelOrderBy {
@@ -245,17 +261,25 @@ export enum EventModelOrderBy {
   UnpublishingScheduledAtDesc = '_unpublishingScheduledAt_DESC',
   UpdatedAtAsc = '_updatedAt_ASC',
   UpdatedAtDesc = '_updatedAt_DESC',
+  EndAtAsc = 'endAt_ASC',
+  EndAtDesc = 'endAt_DESC',
   IdAsc = 'id_ASC',
   IdDesc = 'id_DESC',
+  IsPublicAsc = 'isPublic_ASC',
+  IsPublicDesc = 'isPublic_DESC',
   LocationAsc = 'location_ASC',
   LocationDesc = 'location_DESC',
+  NonMemberCtaAsc = 'nonMemberCta_ASC',
+  NonMemberCtaDesc = 'nonMemberCta_DESC',
+  SignUpLinkAsc = 'signUpLink_ASC',
+  SignUpLinkDesc = 'signUpLink_DESC',
   StartAtAsc = 'startAt_ASC',
   StartAtDesc = 'startAt_DESC',
   TitleAsc = 'title_ASC',
   TitleDesc = 'title_DESC'
 }
 
-/** Record of type Event (event) */
+/** Record of type Veranstaltung (event) */
 export type EventRecord = RecordInterface & {
   __typename?: 'EventRecord';
   _createdAt: Scalars['DateTime']['output'];
@@ -272,14 +296,21 @@ export type EventRecord = RecordInterface & {
   _unpublishingScheduledAt?: Maybe<Scalars['DateTime']['output']>;
   _updatedAt: Scalars['DateTime']['output'];
   description?: Maybe<EventModelDescriptionField>;
+  endAt?: Maybe<Scalars['DateTime']['output']>;
   id: Scalars['ItemId']['output'];
+  isPublic?: Maybe<Scalars['BooleanType']['output']>;
   location: Scalars['String']['output'];
+  nonMemberCta?: Maybe<Scalars['String']['output']>;
+  nonMemberDescription?: Maybe<EventModelNonMemberDescriptionField>;
+  seo?: Maybe<SeoField>;
+  signUpLink?: Maybe<Scalars['String']['output']>;
+  slug: Scalars['String']['output'];
   startAt: Scalars['DateTime']['output'];
   title: Scalars['String']['output'];
 };
 
 
-/** Record of type Event (event) */
+/** Record of type Veranstaltung (event) */
 export type EventRecord_SeoMetaTagsArgs = {
   locale?: InputMaybe<SiteLocale>;
 };
@@ -1890,24 +1921,6 @@ export type InUseFilter = {
   eq?: InputMaybe<Scalars['BooleanType']['input']>;
 };
 
-/** Specifies how to filter Integer fields */
-export type IntegerFilter = {
-  /** Search for records with an exact match */
-  eq?: InputMaybe<Scalars['IntType']['input']>;
-  /** Filter records with the specified field defined (i.e. with any value) or not */
-  exists?: InputMaybe<Scalars['BooleanType']['input']>;
-  /** Filter records with a value that's strictly greater than the one specified */
-  gt?: InputMaybe<Scalars['IntType']['input']>;
-  /** Filter records with a value that's greater than or equal to the one specified */
-  gte?: InputMaybe<Scalars['IntType']['input']>;
-  /** Filter records with a value that's less than the one specified */
-  lt?: InputMaybe<Scalars['IntType']['input']>;
-  /** Filter records with a value that's less or equal than the one specified */
-  lte?: InputMaybe<Scalars['IntType']['input']>;
-  /** Exclude records with an exact match */
-  neq?: InputMaybe<Scalars['IntType']['input']>;
-};
-
 /** Specifies how to filter by ID */
 export type ItemIdFilter = {
   /** Search the record with the specified ID */
@@ -2036,7 +2049,6 @@ export type PersonModelFilter = {
   _status?: InputMaybe<StatusFilter>;
   _unpublishingScheduledAt?: InputMaybe<PublishedAtFilter>;
   _updatedAt?: InputMaybe<UpdatedAtFilter>;
-  age?: InputMaybe<IntegerFilter>;
   bio?: InputMaybe<StructuredTextFilter>;
   id?: InputMaybe<ItemIdFilter>;
   items?: InputMaybe<LinksFilter>;
@@ -2064,8 +2076,6 @@ export enum PersonModelOrderBy {
   UnpublishingScheduledAtDesc = '_unpublishingScheduledAt_DESC',
   UpdatedAtAsc = '_updatedAt_ASC',
   UpdatedAtDesc = '_updatedAt_DESC',
-  AgeAsc = 'age_ASC',
-  AgeDesc = 'age_DESC',
   IdAsc = 'id_ASC',
   IdDesc = 'id_DESC',
   NameAsc = 'name_ASC',
@@ -2088,7 +2098,6 @@ export type PersonRecord = RecordInterface & {
   _status: ItemStatus;
   _unpublishingScheduledAt?: Maybe<Scalars['DateTime']['output']>;
   _updatedAt: Scalars['DateTime']['output'];
-  age?: Maybe<Scalars['IntType']['output']>;
   bio?: Maybe<PersonModelBioField>;
   id: Scalars['ItemId']['output'];
   items: Array<PersonModelItemsField>;
@@ -2371,6 +2380,12 @@ export type SeoField = {
   image?: Maybe<FileField>;
   title?: Maybe<Scalars['String']['output']>;
   twitterCard?: Maybe<Scalars['String']['output']>;
+};
+
+/** Specifies how to filter SEO meta tags fields */
+export type SeoFilter = {
+  /** Filter records with the specified field defined (i.e. with any value) or not */
+  exists?: InputMaybe<Scalars['BooleanType']['input']>;
 };
 
 export type Site = {
@@ -2844,7 +2859,7 @@ export type FocalPoint = {
 export type ChallengeAcceptedHubQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ChallengeAcceptedHubQueryQuery = { __typename?: 'Query', hub?: { __typename?: 'ChallengeAcceptedHubRecord', id: number, logo?: { __typename?: 'FileField', url: string } | null, introduction: { __typename?: 'ChallengeAcceptedHubModelIntroductionField', value: any }, items: Array<{ __typename: 'ArticleRecord', id: number, path: string } | { __typename: 'EventRecord', id: number, title: string, location: string, startAt: string, description?: { __typename?: 'EventModelDescriptionField', value: any } | null } | { __typename: 'NewsletterRecord', id: number, path: string }> } | null, people: Array<{ __typename?: 'PersonRecord', id: number, slug: string, name: string, portrait?: { __typename?: 'FileField', url: string, height?: number | null, width?: number | null } | null }> };
+export type ChallengeAcceptedHubQueryQuery = { __typename?: 'Query', hub?: { __typename?: 'ChallengeAcceptedHubRecord', id: number, logo?: { __typename?: 'FileField', url: string } | null, introduction: { __typename?: 'ChallengeAcceptedHubModelIntroductionField', value: any }, items: Array<{ __typename: 'ArticleRecord', id: number, path: string, image?: { __typename?: 'FileField', url: string } | null } | { __typename: 'EventRecord', id: number, title: string, isPublic?: any | null, nonMemberCta?: string | null, location: string, startAt: string, endAt?: string | null, signUpLink?: string | null, description?: { __typename?: 'EventModelDescriptionField', value: any } | null, nonMemberDescription?: { __typename?: 'EventModelNonMemberDescriptionField', value: any } | null } | { __typename: 'NewsletterRecord', id: number, path: string }> } | null, people: Array<{ __typename?: 'PersonRecord', id: number, slug: string, name: string, portrait?: { __typename?: 'FileField', url: string, height?: number | null, width?: number | null } | null }> };
 
 export type ChallengeAcceptedHubMetaQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -2856,9 +2871,9 @@ export type PersonDetailQueryVariables = Exact<{
 }>;
 
 
-export type PersonDetailQuery = { __typename?: 'Query', person?: { __typename?: 'PersonRecord', id: number, name: string, age?: number | null, portrait?: { __typename?: 'FileField', alt?: string | null, url: string, width?: number | null, height?: number | null, title?: string | null } | null, items: Array<{ __typename: 'ArticleRecord', id: number, path: string } | { __typename: 'EventRecord', id: number, title: string, location: string, startAt: string, description?: { __typename?: 'EventModelDescriptionField', value: any } | null } | { __typename: 'NewsletterRecord', id: number, path: string }> } | null };
+export type PersonDetailQuery = { __typename?: 'Query', person?: { __typename?: 'PersonRecord', id: number, name: string, portrait?: { __typename?: 'FileField', alt?: string | null, url: string, width?: number | null, height?: number | null, title?: string | null } | null, items: Array<{ __typename: 'ArticleRecord', id: number, path: string } | { __typename: 'EventRecord', id: number, title: string, location: string, startAt: string, description?: { __typename?: 'EventModelDescriptionField', value: any } | null } | { __typename: 'NewsletterRecord', id: number, path: string }> } | null };
 
 
-export const ChallengeAcceptedHubQueryDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"ChallengeAcceptedHubQuery"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","alias":{"kind":"Name","value":"hub"},"name":{"kind":"Name","value":"challengeAcceptedHub"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"logo"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"url"}}]}},{"kind":"Field","name":{"kind":"Name","value":"introduction"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}},{"kind":"Field","name":{"kind":"Name","value":"items"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"EventRecord"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"description"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}},{"kind":"Field","name":{"kind":"Name","value":"location"}},{"kind":"Field","name":{"kind":"Name","value":"startAt"}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"ArticleRecord"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"path"}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"NewsletterRecord"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"path"}}]}}]}}]}},{"kind":"Field","alias":{"kind":"Name","value":"people"},"name":{"kind":"Name","value":"allPeople"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"portrait"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"url"}},{"kind":"Field","name":{"kind":"Name","value":"height"}},{"kind":"Field","name":{"kind":"Name","value":"width"}}]}}]}}]}}]} as unknown as DocumentNode<ChallengeAcceptedHubQueryQuery, ChallengeAcceptedHubQueryQueryVariables>;
+export const ChallengeAcceptedHubQueryDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"ChallengeAcceptedHubQuery"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","alias":{"kind":"Name","value":"hub"},"name":{"kind":"Name","value":"challengeAcceptedHub"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"logo"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"url"}}]}},{"kind":"Field","name":{"kind":"Name","value":"introduction"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}},{"kind":"Field","name":{"kind":"Name","value":"items"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"EventRecord"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"isPublic"}},{"kind":"Field","name":{"kind":"Name","value":"description"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}},{"kind":"Field","name":{"kind":"Name","value":"nonMemberDescription"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}},{"kind":"Field","name":{"kind":"Name","value":"nonMemberCta"}},{"kind":"Field","name":{"kind":"Name","value":"location"}},{"kind":"Field","name":{"kind":"Name","value":"startAt"}},{"kind":"Field","name":{"kind":"Name","value":"endAt"}},{"kind":"Field","name":{"kind":"Name","value":"signUpLink"}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"ArticleRecord"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"path"}},{"kind":"Field","name":{"kind":"Name","value":"image"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"url"}}]}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"NewsletterRecord"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"path"}}]}}]}}]}},{"kind":"Field","alias":{"kind":"Name","value":"people"},"name":{"kind":"Name","value":"allPeople"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"portrait"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"url"}},{"kind":"Field","name":{"kind":"Name","value":"height"}},{"kind":"Field","name":{"kind":"Name","value":"width"}}]}}]}}]}}]} as unknown as DocumentNode<ChallengeAcceptedHubQueryQuery, ChallengeAcceptedHubQueryQueryVariables>;
 export const ChallengeAcceptedHubMetaQueryDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"ChallengeAcceptedHubMetaQuery"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","alias":{"kind":"Name","value":"hub"},"name":{"kind":"Name","value":"challengeAcceptedHub"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"metadata"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"image"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"url"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"imgixParams"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"w"},"value":{"kind":"StringValue","value":"1500","block":false}}]}}]}]}}]}}]}}]}}]} as unknown as DocumentNode<ChallengeAcceptedHubMetaQueryQuery, ChallengeAcceptedHubMetaQueryQueryVariables>;
-export const PersonDetailDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"PersonDetail"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"slug"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"person"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"filter"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"slug"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"eq"},"value":{"kind":"Variable","name":{"kind":"Name","value":"slug"}}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"age"}},{"kind":"Field","name":{"kind":"Name","value":"portrait"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"alt"}},{"kind":"Field","name":{"kind":"Name","value":"url"}},{"kind":"Field","name":{"kind":"Name","value":"width"}},{"kind":"Field","name":{"kind":"Name","value":"height"}},{"kind":"Field","name":{"kind":"Name","value":"title"}}]}},{"kind":"Field","name":{"kind":"Name","value":"items"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"EventRecord"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"description"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}},{"kind":"Field","name":{"kind":"Name","value":"location"}},{"kind":"Field","name":{"kind":"Name","value":"startAt"}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"ArticleRecord"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"path"}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"NewsletterRecord"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"path"}}]}}]}}]}}]}}]} as unknown as DocumentNode<PersonDetailQuery, PersonDetailQueryVariables>;
+export const PersonDetailDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"PersonDetail"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"slug"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"person"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"filter"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"slug"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"eq"},"value":{"kind":"Variable","name":{"kind":"Name","value":"slug"}}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"portrait"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"alt"}},{"kind":"Field","name":{"kind":"Name","value":"url"}},{"kind":"Field","name":{"kind":"Name","value":"width"}},{"kind":"Field","name":{"kind":"Name","value":"height"}},{"kind":"Field","name":{"kind":"Name","value":"title"}}]}},{"kind":"Field","name":{"kind":"Name","value":"items"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"EventRecord"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"description"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}},{"kind":"Field","name":{"kind":"Name","value":"location"}},{"kind":"Field","name":{"kind":"Name","value":"startAt"}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"ArticleRecord"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"path"}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"NewsletterRecord"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"path"}}]}}]}}]}}]}}]} as unknown as DocumentNode<PersonDetailQuery, PersonDetailQueryVariables>;

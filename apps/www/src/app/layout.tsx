@@ -2,11 +2,10 @@ import './globals.css'
 
 import { ThemeProvider } from '@app/components/theme-provider'
 import { UserMenu } from '@app/components/user-menu'
-import { getClient } from '@app/lib/apollo/client'
-import { ME_QUERY } from '@app/graphql/republik-api/me.query'
 import { css } from '@app/styled-system/css'
 import Link from 'next/link'
 import { ReactNode } from 'react'
+import { getMe } from '@app/lib/auth/me'
 
 export default async function RootLayout({
   // Layouts must accept a children prop.
@@ -40,12 +39,6 @@ export default async function RootLayout({
       </body>
     </html>
   )
-}
-
-const getMe = async () => {
-  const { data } = await getClient().query({ query: ME_QUERY })
-
-  return data.me
 }
 
 const Frame = ({ me }) => {

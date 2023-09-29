@@ -2,6 +2,11 @@
 # yarn lockfile v1
 
 
+"@0no-co/graphql.web@^1.0.1":
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/@0no-co/graphql.web/-/graphql.web-1.0.4.tgz#9606eb651955499525d068ce0ad8bea596286ce2"
+  integrity sha512-W3ezhHGfO0MS1PtGloaTpg0PbaT8aZSmmaerL7idtU5F7oCI+uu25k+MsMS31BVFlp4aMkHSrNRxiD72IlK8TA==
+
 "@adobe/css-tools@^4.0.1":
   version "4.2.0"
   resolved "https://registry.yarnpkg.com/@adobe/css-tools/-/css-tools-4.2.0.tgz#e1a84fca468f4b337816fcb7f0964beb620ba855"
@@ -7221,6 +7226,11 @@ array-flatten@1.1.1:
   resolved "https://registry.yarnpkg.com/array-flatten/-/array-flatten-1.1.1.tgz#9a5f699051b1e7073328f2a008968b64ea2955d2"
   integrity sha512-PCVAQswWemu6UdxsDFFX/+gVeYqKAod3D3UVm91jHwynguOwAvYPhx8nNlM++NqRcK6CxxpUafjmhIdKiHibqg==
 
+array-flatten@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/array-flatten/-/array-flatten-3.0.0.tgz#6428ca2ee52c7b823192ec600fa3ed2f157cd541"
+  integrity sha512-zPMVc3ZYlGLNk4mpK1NzP2wg0ml9t7fUgDsayR5Y5rSzxQilzR9FGu/EH2jQOcKSAeAfWeylyW8juy3OkWRvNA==
+
 array-ify@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/array-ify/-/array-ify-1.0.0.tgz#9e528762b4a9066ad163a6962a364418e9626ece"
@@ -9818,6 +9828,27 @@ dateformat@^3.0.0:
   resolved "https://registry.yarnpkg.com/dateformat/-/dateformat-3.0.3.tgz#a6e37499a4d9a9cf85ef5872044d62901c9889ae"
   integrity sha512-jyCETtSl3VMZMWeRo7iY1FL19ges1t55hMo5yaam4Jrsm5EPL89UQkoQRyiI+Yf4k8r2ZpdngkV8hr1lIdjb3Q==
 
+datocms-listen@^0.1.9:
+  version "0.1.15"
+  resolved "https://registry.yarnpkg.com/datocms-listen/-/datocms-listen-0.1.15.tgz#fc9d970ac9754f6f21b7f9e7a31ec7db1b0247f1"
+  integrity sha512-0LcdKYW/ilWdyrRzQ+YbkAk4r2dge63vzHtfv19L8pfbfYurQgXP9/ck703QZL//YqBoc0OKBS4BP4WUQ6JDKA==
+  dependencies:
+    "@0no-co/graphql.web" "^1.0.1"
+
+datocms-structured-text-generic-html-renderer@^2.0.1:
+  version "2.0.4"
+  resolved "https://registry.yarnpkg.com/datocms-structured-text-generic-html-renderer/-/datocms-structured-text-generic-html-renderer-2.0.4.tgz#df50488b486a20f45583c2e685998873c843c1dc"
+  integrity sha512-Rv5Y1eC9NZXNSz3FHvHGFvGnKEEbvG1kQWlylpCSoeDBZPBwSWAFD/ixIAOfa8Yk1EVpmoQd3KQd725WKYJwRQ==
+  dependencies:
+    datocms-structured-text-utils "^2.0.4"
+
+datocms-structured-text-utils@^2.0.1, datocms-structured-text-utils@^2.0.4:
+  version "2.0.4"
+  resolved "https://registry.yarnpkg.com/datocms-structured-text-utils/-/datocms-structured-text-utils-2.0.4.tgz#c429e6b74b90fbac228e1d28b8919f9af2c4bfff"
+  integrity sha512-JxDdJaipm3FePOli9s82MRrBDnlPP9GYhqajQJaYEu4V1jwUSZzbVkYVKMfVHUfP0Gh0VSCxPHjAGGAN1nWMJg==
+  dependencies:
+    array-flatten "^3.0.0"
+
 dayjs@^1.11.7:
   version "1.11.7"
   resolved "https://registry.yarnpkg.com/dayjs/-/dayjs-1.11.7.tgz#4b296922642f70999544d1144a2c25730fce63e2"
@@ -10089,7 +10120,7 @@ deprecation@^2.0.0, deprecation@^2.3.1:
   resolved "https://registry.yarnpkg.com/deprecation/-/deprecation-2.3.1.tgz#6368cbdb40abf3373b525ac87e4a260c3a700919"
   integrity sha512-xmHIy4F3scKVwMsQ4WnVaS8bHOx0DmVwRywosKhaILI0ywMDWPtBSku2HNxRvF7jtwDRsoEwYQSfbxj8b7RlJQ==
 
-dequal@^2.0.0:
+dequal@^2.0.0, dequal@^2.0.2:
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/dequal/-/dequal-2.0.3.tgz#2644214f1997d39ed0ee0ece72335490a7ac67be"
   integrity sha512-0je+qPKHEMohvfRTCEo3CrPG6cAzAYgmzKyxRiYSSDkS6eGJdyVJm7WaYA5ECaAD9wLB2T4EEeymA5aFVcYXCA==
@@ -19225,6 +19256,19 @@ react-color@^2.18.1:
     reactcss "^1.2.0"
     tinycolor2 "^1.4.1"
 
+react-datocms@^4.1.3:
+  version "4.1.3"
+  resolved "https://registry.yarnpkg.com/react-datocms/-/react-datocms-4.1.3.tgz#666e8330c83d638708c53a78da8c14bf472aa8b2"
+  integrity sha512-60LfzlPbud7M9cDXzTaZy6sgCBHGWM/WEN4pZxlvnRRW74tOAAKjSgcGIJ5WIC/I+iiXvHp//75TQg0Y7+ozZQ==
+  dependencies:
+    datocms-listen "^0.1.9"
+    datocms-structured-text-generic-html-renderer "^2.0.1"
+    datocms-structured-text-utils "^2.0.1"
+    react-intersection-observer "^9.4.3"
+    react-string-replace "^1.1.0"
+    universal-base64 "^2.1.0"
+    use-deep-compare-effect "^1.6.1"
+
 react-diff-viewer@^3.1.1:
   version "3.1.1"
   resolved "https://registry.yarnpkg.com/react-diff-viewer/-/react-diff-viewer-3.1.1.tgz#21ac9c891193d05a3734bfd6bd54b107ee6d46cc"
@@ -19309,6 +19353,11 @@ react-infinite-scroller@^1.2.4:
   dependencies:
     prop-types "^15.5.8"
 
+react-intersection-observer@^9.4.3:
+  version "9.5.2"
+  resolved "https://registry.yarnpkg.com/react-intersection-observer/-/react-intersection-observer-9.5.2.tgz#f68363a1ff292323c0808201b58134307a1626d0"
+  integrity sha512-EmoV66/yvksJcGa1rdW0nDNc4I1RifDWkT50gXSFnPLYQ4xUptuDD4V7k+Rj1OgVAlww628KLGcxPXFlOkkU/Q==
+
 "react-is@^16.12.0 || ^17.0.0 || ^18.0.0", react-is@^18.0.0:
   version "18.2.0"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-18.2.0.tgz#199431eeaaa2e09f86427efbb4f1473edb47609b"
@@ -19385,6 +19434,11 @@ react-spring@^8.0.27:
   dependencies:
     "@babel/runtime" "^7.3.1"
     prop-types "^15.5.8"
+
+react-string-replace@^1.1.0:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/react-string-replace/-/react-string-replace-1.1.1.tgz#8413a598c60e397fe77df3464f2889f00ba25989"
+  integrity sha512-26TUbLzLfHQ5jO5N7y3Mx88eeKo0Ml0UjCQuX4BMfOd/JX+enQqlKpL1CZnmjeBRvQE8TR+ds9j1rqx9CxhKHQ==
 
 react-style-singleton@^2.2.1:
   version "2.2.1"
@@ -23057,6 +23111,11 @@ unist-util-visit@^4.0.0, unist-util-visit@^4.1.0, unist-util-visit@^4.1.1, unist
     unist-util-is "^5.0.0"
     unist-util-visit-parents "^5.1.1"
 
+universal-base64@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/universal-base64/-/universal-base64-2.1.0.tgz#511af92b3a07340fc2647036045aadb3bedcc320"
+  integrity sha512-WeOkACVnIXJZr/qlv7++Rl1zuZOHN96v2yS5oleUuv8eJOs5j9M5U3xQEIoWqn1OzIuIcgw0fswxWnUVGDfW6g==
+
 universal-user-agent@^6.0.0:
   version "6.0.0"
   resolved "https://registry.yarnpkg.com/universal-user-agent/-/universal-user-agent-6.0.0.tgz#3381f8503b251c0d9cd21bc1de939ec9df5480ee"
@@ -23198,6 +23257,14 @@ use-composed-ref@^1.3.0:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/use-composed-ref/-/use-composed-ref-1.3.0.tgz#3d8104db34b7b264030a9d916c5e94fbe280dbda"
   integrity sha512-GLMG0Jc/jiKov/3Ulid1wbv3r54K9HlMW29IWcDFPEqFkSO2nS0MuefWgMJpeHQ9YJeXDL3ZUF+P3jdXlZX/cQ==
+
+use-deep-compare-effect@^1.6.1:
+  version "1.8.1"
+  resolved "https://registry.yarnpkg.com/use-deep-compare-effect/-/use-deep-compare-effect-1.8.1.tgz#ef0ce3b3271edb801da1ec23bf0754ef4189d0c6"
+  integrity sha512-kbeNVZ9Zkc0RFGpfMN3MNfaKNvcLNyxOAAd9O4CBZ+kCBXXscn9s/4I+8ytUER4RDpEYs5+O6Rs4PqiZ+rHr5Q==
+  dependencies:
+    "@babel/runtime" "^7.12.5"
+    dequal "^2.0.2"
 
 use-isomorphic-layout-effect@^1.1.1:
   version "1.1.2"

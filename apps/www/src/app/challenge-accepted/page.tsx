@@ -11,6 +11,7 @@ import Link from 'next/link'
 import Container from '@app/components/container'
 import CollectionRenderer from '@app/components/collection-render'
 import { wrap } from '@app/styled-system/patterns'
+import { getMe } from '@app/lib/auth/me'
 
 export async function generateMetadata(): Promise<Metadata> {
   const client = getCMSClient()
@@ -36,6 +37,8 @@ export default async function Page() {
   const { people, hub } = data
 
   const now = new Date(Date.now()).toISOString()
+
+  const me = await getMe()
 
   return (
     <>
@@ -123,7 +126,12 @@ export default async function Page() {
           ))}
         </div>
         <h2 className={css({ textStyle: 'h2Sans', my: '6' })}>Inhalte</h2>
-        <CollectionRenderer items={hub.items} />
+        <CollectionRenderer
+          items={hub.items}
+          isMember={
+            me?.roles && Array.isArray(me.roles) && me.roles.includes('member')
+          }
+        />
       </Container>
       <h2 className={css({ textStyle: 'h1Sans', mt: '6' })}>
         Additonal hub data
