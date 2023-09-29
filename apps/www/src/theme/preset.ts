@@ -23,6 +23,7 @@ export const presetRepublik = definePreset({
             '950': { value: '#222' },
           },
           white: { value: '#fff' },
+          transparent: { value: 'transparent' },
         },
         sizes: {
           full: { value: '100%' },
@@ -78,6 +79,9 @@ export const presetRepublik = definePreset({
           '2xl': { value: '1.5rem' },
           '3xl': { value: '2rem' },
           '4xl': { value: '4rem' },
+        },
+        lineHeights: {
+          1: { value: 1 },
         },
       },
       semanticTokens: {

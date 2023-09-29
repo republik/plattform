@@ -12,6 +12,7 @@ import Container from '@app/components/container'
 import CollectionRenderer from '@app/components/collection-render'
 import { wrap } from '@app/styled-system/patterns'
 import { getMe } from '@app/lib/auth/me'
+import { CollectionFilter } from '@app/components/collection-filter'
 
 export async function generateMetadata(): Promise<Metadata> {
   const client = getCMSClient()
@@ -28,7 +29,7 @@ export async function generateMetadata(): Promise<Metadata> {
   }
 }
 
-export default async function Page() {
+export default async function Page({ searchParams }) {
   const client = getCMSClient()
   const { data } = await client.query({
     query: CHALLENGE_ACCEPTED_HUB_QUERY,
@@ -126,8 +127,12 @@ export default async function Page() {
           ))}
         </div>
         <h2 className={css({ textStyle: 'h2Sans', my: '6' })}>Inhalte</h2>
+        <div className={css({ mb: '6' })}>
+          <CollectionFilter filter={searchParams.filter} />
+        </div>
         <CollectionRenderer
           items={hub.items}
+          filter={searchParams.filter}
           isMember={
             me?.roles && Array.isArray(me.roles) && me.roles.includes('member')
           }
