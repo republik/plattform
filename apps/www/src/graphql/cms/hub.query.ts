@@ -15,15 +15,25 @@ query ChallengeAcceptedHubQuery {
       ... on EventRecord {
         id
         title
+        isPublic
         description {
           value
         }
+        nonMemberDescription {
+          value
+        }
+        nonMemberCta
         location
         startAt
+        endAt
+        signUpLink
       }
       ... on ArticleRecord {
         id
         path
+        image {
+          url
+        }
       }
       ... on NewsletterRecord {
         id

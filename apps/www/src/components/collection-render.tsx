@@ -9,9 +9,13 @@ import { vstack } from '@app/styled-system/patterns'
 
 type CollectionRendererProps = {
   items: ChallengeAcceptedHubQueryQuery['hub']['items']
+  isMember?: boolean
 }
 
-export default function CollectionRenderer({ items }: CollectionRendererProps) {
+export default function CollectionRenderer({
+  items,
+  isMember = false,
+}: CollectionRendererProps) {
   if (items.length === 0) {
     return 'Leider noch nix'
   }
@@ -41,7 +45,7 @@ export default function CollectionRenderer({ items }: CollectionRendererProps) {
           } else if (item.__typename === 'EventRecord') {
             return (
               <li key={item.id}>
-                <TeaserEvent {...item} />
+                <TeaserEvent event={item} isMember={isMember} />
               </li>
             )
           }
