@@ -1,7 +1,4 @@
-import {
-  ARTICLE_QUERY,
-  ArticleQueryResult,
-} from '@app/graphql/republik-api/article.query'
+import { ARTICLE_TEASER_QUERY } from '@app/graphql/republik-api/article.query'
 import { getClient } from '@app/lib/apollo/client'
 import { css } from '@app/styled-system/css'
 import Link from 'next/link'
@@ -9,6 +6,7 @@ import { isoParse, timeFormat } from 'd3-time-format'
 import Image from 'next/image'
 import { StructuredText } from 'react-datocms'
 import { ComponentPropsWithoutRef } from 'react'
+import { ArticleTeaserQuery } from '@app/graphql/republik-api/gql/graphql'
 
 const getResizefromURL = (url, size) => {
   const imgURL = new URL(url)
@@ -44,8 +42,8 @@ type ArticleProps = {
 }
 
 export const TeaserArticle = async ({ path }: ArticleProps) => {
-  const { data }: { data: ArticleQueryResult } = await getClient().query({
-    query: ARTICLE_QUERY,
+  const { data } = await getClient().query<ArticleTeaserQuery>({
+    query: ARTICLE_TEASER_QUERY,
     variables: { path },
   })
 
@@ -104,8 +102,8 @@ type NewsletterProps = {
 }
 
 export const TeaserNewsletter = async ({ path }: NewsletterProps) => {
-  const { data }: { data: ArticleQueryResult } = await getClient().query({
-    query: ARTICLE_QUERY,
+  const { data }: { data } = await getClient().query<ArticleTeaserQuery>({
+    query: ARTICLE_TEASER_QUERY,
     variables: { path },
   })
 

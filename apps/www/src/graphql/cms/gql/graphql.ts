@@ -294,7 +294,7 @@ export type EventRecord = RecordInterface & {
   location: Scalars['String']['output'];
   nonMemberCta?: Maybe<Scalars['String']['output']>;
   seo?: Maybe<SeoField>;
-  signUpLink?: Maybe<Scalars['String']['output']>;
+  signUpLink: Scalars['String']['output'];
   slug: Scalars['String']['output'];
   startAt: Scalars['DateTime']['output'];
   title: Scalars['String']['output'];
@@ -2850,7 +2850,7 @@ export type FocalPoint = {
 export type ChallengeAcceptedHubQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ChallengeAcceptedHubQueryQuery = { __typename?: 'Query', hub?: { __typename?: 'ChallengeAcceptedHubRecord', id: number, logo?: { __typename?: 'FileField', url: string } | null, introduction: { __typename?: 'ChallengeAcceptedHubModelIntroductionField', value: any }, items: Array<{ __typename: 'ArticleRecord', id: number, path: string, image?: { __typename?: 'FileField', url: string } | null } | { __typename: 'EventRecord', id: number, title: string, isPublic?: any | null, nonMemberCta?: string | null, location: string, startAt: string, endAt?: string | null, signUpLink?: string | null, description?: { __typename?: 'EventModelDescriptionField', value: any } | null } | { __typename: 'NewsletterRecord', id: number, path: string }> } | null, people: Array<{ __typename?: 'PersonRecord', id: number, slug: string, name: string, portrait?: { __typename?: 'FileField', url: string, height?: number | null, width?: number | null } | null }> };
+export type ChallengeAcceptedHubQueryQuery = { __typename?: 'Query', hub?: { __typename?: 'ChallengeAcceptedHubRecord', id: number, logo?: { __typename?: 'FileField', url: string } | null, introduction: { __typename?: 'ChallengeAcceptedHubModelIntroductionField', value: any }, items: Array<{ __typename: 'ArticleRecord', id: number, path: string, image?: { __typename?: 'FileField', url: string } | null } | { __typename: 'EventRecord', id: number, title: string, isPublic?: any | null, nonMemberCta?: string | null, location: string, startAt: string, endAt?: string | null, signUpLink: string, description?: { __typename?: 'EventModelDescriptionField', value: any } | null } | { __typename: 'NewsletterRecord', id: number, path: string }> } | null, people: Array<{ __typename?: 'PersonRecord', id: number, slug: string, name: string, portrait?: { __typename?: 'FileField', url: string, height?: number | null, width?: number | null } | null }> };
 
 export type ChallengeAcceptedHubMetaQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
