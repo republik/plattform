@@ -3,7 +3,7 @@ import {
   TeaserEvent,
   TeaserNewsletter,
 } from '@app/components/teasers'
-import { ChallengeAcceptedHubQueryQuery } from '@app/graphql/gql/graphql'
+import { ChallengeAcceptedHubQueryQuery } from '@app/graphql/cms/gql/graphql'
 import { css } from '@app/styled-system/css'
 import { vstack } from '@app/styled-system/patterns'
 

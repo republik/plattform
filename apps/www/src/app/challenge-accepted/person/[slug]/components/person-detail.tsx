@@ -1,5 +1,5 @@
 import CollectionRenderer from '@app/components/collection-render'
-import type { PersonDetailQuery } from '@app/graphql/gql/graphql'
+import { PersonDetailQuery } from '@app/graphql/cms/gql/graphql'
 import { css } from '@app/styled-system/css'
 import Image from 'next/image'
 
