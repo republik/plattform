@@ -5,9 +5,10 @@ import Image from 'next/image'
 
 type PersonDetailProps = {
   person: PersonDetailQuery['person']
+  isMember?: boolean
 }
 
-export function PersonDetail({ person }: PersonDetailProps) {
+export function PersonDetail({ person, isMember = false }: PersonDetailProps) {
   return (
     <div
       className={css({
@@ -35,7 +36,7 @@ export function PersonDetail({ person }: PersonDetailProps) {
 
       <h2 className={css({ textStyle: 'h2Sans', my: '6' })}>Inhalte</h2>
 
-      <CollectionRenderer items={person.items} />
+      <CollectionRenderer items={person.items} isMember={isMember} />
       <div className={css({ mt: '6' })}>
         <details>
           <summary>person data</summary>
