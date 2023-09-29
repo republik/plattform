@@ -172,7 +172,7 @@ type Document {
   ): DocumentConnection!
 }
 
-type DocumentNode {
+type LegacyDocumentNode {
   id: ID!
   body: JSON!
 }
