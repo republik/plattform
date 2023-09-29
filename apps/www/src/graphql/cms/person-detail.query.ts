@@ -13,25 +13,32 @@ export const PERSON_DETAIL_QUERY = gql(`
         title
       }
       items {
-        __typename
-        ... on EventRecord {
-          id
-          title
-          description {
-            value
-          }
-          location
-          startAt
+      __typename
+      ... on EventRecord {
+        id
+        title
+        isPublic
+        description {
+          value
         }
-        ... on ArticleRecord {
-          id
-          path
-        }
-        ... on NewsletterRecord {
-          id
-          path
+        nonMemberCta
+        location
+        startAt
+        endAt
+        signUpLink
+      }
+      ... on ArticleRecord {
+        id
+        path
+        image {
+          url
         }
       }
+      ... on NewsletterRecord {
+        id
+        path
+      }
+    }
     }
   }
 `)
