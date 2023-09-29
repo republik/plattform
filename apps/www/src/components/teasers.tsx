@@ -146,9 +146,6 @@ type EventProps = {
       value: ComponentPropsWithoutRef<typeof StructuredText>['data']
     }
     isPublic?: boolean
-    nonMemberDescription?: {
-      value: ComponentPropsWithoutRef<typeof StructuredText>['data']
-    }
     nonMemberCta?: string
     location: string
     startAt: string
@@ -194,33 +191,19 @@ export const TeaserEvent = ({ event, isMember }: EventProps) => {
           {event.endAt ? formateTime(isoParse(event.endAt)) : 'offen'} /{' '}
           {event.location}
         </p>
-        <div className={css({})}>
-          {!event.isPublic || isMember ? (
-            <StructuredText data={event.description.value} />
-          ) : (
-            <>
-              {event.nonMemberDescription?.value && (
-                <StructuredText data={event.nonMemberDescription.value} />
-              )}
-            </>
-          )}
-        </div>
-        {event.signUpLink && (
-          <>
-            {!isMember && !event.isPublic ? (
-              <p
-                className={css({
-                  display: 'block',
-                })}
-              >
-                {event.nonMemberCta || 'DEFAULT NON MEMBER CTA'}
-              </p>
-            ) : (
-              <Link target='_blank' href={event.signUpLink}>
-                Zur Anmeldung
-              </Link>
-            )}
-          </>
+        <StructuredText data={event.description.value} />
+        {!isMember && !event.isPublic ? (
+          <p
+            className={css({
+              display: 'block',
+            })}
+          >
+            {event.nonMemberCta || 'DEFAULT NON MEMBER CTA'}
+          </p>
+        ) : (
+          <Link target='_blank' href={event.signUpLink}>
+            Zur Anmeldung
+          </Link>
         )}
       </div>
     </div>

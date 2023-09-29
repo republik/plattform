@@ -19,9 +19,6 @@ query ChallengeAcceptedHubQuery {
         description {
           value
         }
-        nonMemberDescription {
-          value
-        }
         nonMemberCta
         location
         startAt
