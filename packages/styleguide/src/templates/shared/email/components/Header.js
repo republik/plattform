@@ -24,11 +24,15 @@ export default ({ meta }) => {
       format.includes('format-was-diese-woche-wichtig-war')) ||
     format?.repoId?.includes('format-was-diese-woche-wichtig-war')
 
-  const width = (isClimate && 179) || 178
-  const height = (isClimate && 110) || 79
+  const { width, height } = isClimate
+    ? { width: 179, height: 110 } // case of climate
+    : isWdwww
+    ? { width: 220, height: 71 } // case of wdwww
+    : { width: 178, height: 79 } // default
+
   const imageFile =
     (isClimate && 'logo_republik_newsletter_climate-1.png') ||
-    (isWdwww && 'logo_republik_newsletter-wdwww.png') ||
+    (isWdwww && 'logo_republik_newsletter_wdwww.png') ||
     'logo_republik_newsletter.png'
 
   const formatLine = useMemo(() => {
@@ -65,7 +69,7 @@ export default ({ meta }) => {
     <>
       <tr>
         <td
-          align={isWdwww ? 'left' : 'center'}
+          align={'center'}
           valign='top'
           style={{
             borderBottom:
@@ -74,14 +78,9 @@ export default ({ meta }) => {
                 : `1px solid ${colors.divider}`,
           }}
         >
-          {isWdwww ? 'Was diese Woche wichtig war' : logoLink}
+          {logoLink}
         </td>
       </tr>
-      {isWdwww && (
-        <tr>
-          <td align='center'>{logoLink}</td>
-        </tr>
-      )}
     </>
   )
 }
