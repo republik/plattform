@@ -27,15 +27,13 @@ export function PersonDetail({ person }: PersonDetailProps) {
       )}
       <h1
         className={css({
-          textStyle: 'headingSansLarge',
+          textStyle: 'h1Sans',
         })}
       >
         Sali, ich bin {person.name}
       </h1>
 
-      <h2 className={css({ textStyle: 'headingSansMedium', my: '6' })}>
-        Inhalte
-      </h2>
+      <h2 className={css({ textStyle: 'h2Sans', my: '6' })}>Inhalte</h2>
 
       <CollectionRenderer items={person.items} />
       <div className={css({ mt: '6' })}>

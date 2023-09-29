@@ -74,12 +74,19 @@ export const TeaserArticle = async ({ path }: ArticleProps) => {
             unoptimized // Don't process with /_next/image route
           />
         ) : null}
-        <div className={css({ padding: '6' })}>
-          <p>Artikel</p>
-          <h3 className={css({ textStyle: 'headingSansMedium', mb: '1' })}>
+        <div
+          className={css({
+            p: '12',
+            textAlign: 'center',
+            textStyle: 'serif',
+          })}
+        >
+          <h3 className={css({ textStyle: 'teaserTitle', mb: '4' })}>
             {article.meta.title}
           </h3>
-          <p>{article.meta.shortTitle}</p>
+          <p className={css({ textStyle: 'teaserLead' })}>
+            {article.meta.shortTitle}
+          </p>
         </div>
       </div>
     </Link>
@@ -114,7 +121,7 @@ export const TeaserNewsletter = async ({ path }: NewsletterProps) => {
         })}
       >
         <p>Newsletter</p>
-        <h3 className={css({ textStyle: 'headingSansMedium', mb: '1' })}>
+        <h3 className={css({ textStyle: 'h2Sans', mb: '1' })}>
           {article.meta.title}
         </h3>
         <p>{article.meta.shortTitle}</p>
@@ -141,7 +148,7 @@ export const TeaserEvent = ({ title, startAt, location }: EventProps) => {
     >
       <h3
         className={css({
-          textStyle: 'headingSans',
+          textStyle: 'h3Sans',
           textAlign: 'center',
           fontSize: '4xl',
           mb: '6',
@@ -150,7 +157,7 @@ export const TeaserEvent = ({ title, startAt, location }: EventProps) => {
         {formatDate(isoParse(startAt))}
       </h3>
       <div className={css({ color: 'text' })}>
-        <h4 className={css({ textStyle: 'headingSansMedium' })}>{title}</h4>
+        <h4 className={css({ textStyle: 'h2Sans' })}>{title}</h4>
         <p className={css({})}>Ort: {location}</p>
       </div>
     </div>

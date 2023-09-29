@@ -18,7 +18,7 @@ export default function Error({
     <div>
       <h2
         className={css({
-          textStyle: 'headingSansLarge',
+          textStyle: 'h1Sans',
         })}
       >
         So en chäs! Ds geit nöd!

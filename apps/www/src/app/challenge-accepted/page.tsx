@@ -10,7 +10,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import Container from '@app/components/container'
 import CollectionRenderer from '@app/components/collection-render'
-import { vstack, wrap } from '@app/styled-system/patterns'
+import { wrap } from '@app/styled-system/patterns'
 
 export async function generateMetadata(): Promise<Metadata> {
   const client = getCMSClient()
@@ -61,7 +61,7 @@ export default async function Page() {
       <Container>
         <h2
           className={css({
-            textStyle: 'headingSansLarge',
+            textStyle: 'h1Sans',
             mb: '4',
           })}
         >
@@ -82,7 +82,7 @@ export default async function Page() {
                 <h3
                   className={css({
                     display: 'block',
-                    textStyle: 'headingSans',
+                    textStyle: 'h3Sans',
                     textAlign: 'center',
                     py: '1',
                   })}
@@ -122,12 +122,10 @@ export default async function Page() {
             </div>
           ))}
         </div>
-        <h2 className={css({ textStyle: 'headingSansMedium', my: '6' })}>
-          Inhalte
-        </h2>
+        <h2 className={css({ textStyle: 'h2Sans', my: '6' })}>Inhalte</h2>
         <CollectionRenderer items={hub.items} />
       </Container>
-      <h2 className={css({ textStyle: 'headingSansLarge', mt: '6' })}>
+      <h2 className={css({ textStyle: 'h1Sans', mt: '6' })}>
         Additonal hub data
       </h2>
       <details>

@@ -137,7 +137,16 @@ export const presetRepublik = definePreset({
             height: { value: '{sizes.header.height}' },
           },
         },
+        fontSizes: {
+          'l-xl': {
+            value: {
+              base: '{fontSizes.l}',
+              md: '{fontSizes.xl}',
+            },
+          },
+        },
       },
+
       textStyles: {
         body: {
           description: 'Body text',
@@ -154,7 +163,43 @@ export const presetRepublik = definePreset({
             fontSize: '4em',
           },
         },
-        headingSansLarge: {
+        teaserTitle: {
+          value: {
+            fontFamily: 'republikSerif',
+            fontWeight: 'black',
+            fontStyle: 'normal',
+            fontSize: { base: '3xl', md: '3rem' },
+            lineHeight: 1.125,
+          },
+        },
+        teaserLead: {
+          value: {
+            fontFamily: 'rubis',
+            fontWeight: 'regular',
+            fontStyle: 'normal',
+            fontSize: 'xl',
+            lineHeight: 1.375,
+          },
+        },
+        sans: {
+          value: {
+            fontFamily: 'gtAmericaStandard',
+            fontWeight: 'regular',
+            fontStyle: 'normal',
+            fontSize: 'responsiveText',
+            lineHeight: 1.5,
+          },
+        },
+        serif: {
+          value: {
+            fontFamily: 'rubis',
+            fontWeight: 'regular',
+            fontStyle: 'normal',
+            fontSize: 'responsiveText',
+            lineHeight: 1.5,
+          },
+        },
+        h1Sans: {
           value: {
             fontFamily: 'gtAmericaStandard',
             fontWeight: 'medium',
@@ -163,7 +208,7 @@ export const presetRepublik = definePreset({
             lineHeight: 1.16667,
           },
         },
-        headingSansMedium: {
+        h2Sans: {
           value: {
             fontFamily: 'gtAmericaStandard',
             fontWeight: 'medium',
@@ -172,12 +217,39 @@ export const presetRepublik = definePreset({
             lineHeight: 1.16667,
           },
         },
-        headingSans: {
+        h3Sans: {
           value: {
             fontFamily: 'gtAmericaStandard',
             fontWeight: 'medium',
             fontStyle: 'normal',
-            fontSize: '1.2em',
+            fontSize: 'xl',
+            lineHeight: 1.16667,
+          },
+        },
+        h1Serif: {
+          value: {
+            fontFamily: 'rubis',
+            fontWeight: 'bold',
+            fontStyle: 'normal',
+            fontSize: '3xl',
+            lineHeight: 1.16667,
+          },
+        },
+        h2Serif: {
+          value: {
+            fontFamily: 'rubis',
+            fontWeight: 'bold',
+            fontStyle: 'normal',
+            fontSize: '2xl',
+            lineHeight: 1.16667,
+          },
+        },
+        h3Serif: {
+          value: {
+            fontFamily: 'rubis',
+            fontWeight: 'bold',
+            fontStyle: 'normal',
+            fontSize: 'xl',
             lineHeight: 1.16667,
           },
         },
