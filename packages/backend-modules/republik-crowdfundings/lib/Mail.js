@@ -31,6 +31,7 @@ const {
   MAILCHIMP_INTEREST_NEWSLETTER_WDWWW,
   MAILCHIMP_MAIN_LIST_ID,
   MAILCHIMP_ONBOARDING_AUDIENCE_ID,
+  MAILCHIMP_MARKETING_AUDIENCE_ID,
   FRONTEND_BASE_URL,
 } = process.env
 
@@ -126,10 +127,19 @@ mail.getInterestsForUser = getInterestsForUser
 
 const MailchimpInterface = require('../../mail/MailchimpInterface')
 
-const addUserToAudience = async ({ user, name, audienceId }) => {
+const addUserToAudience = async ({
+  user,
+  name,
+  audienceId,
+  statusIfNew = MailchimpInterface.MemberStatus.Subscribed,
+  defaultStatus = MailchimpInterface.MemberStatus.Unsubscribed,
+}) => {
   const { email } = user
 
-  debug('addUserToAudience called with ' + { email, user, name, audienceId })
+  debug(
+    'addUserToAudience called with ' +
+      { email, user, name, audienceId, statusIfNew, defaultStatus },
+  )
 
   if (!audienceId) {
     // throw new AudienceNotFoundMailError({ name }) // TODO add error
@@ -138,8 +148,8 @@ const addUserToAudience = async ({ user, name, audienceId }) => {
 
   const data = {
     email_address: email,
-    status_if_new: MailchimpInterface.MemberStatus.Subscribed,
-    status: MailchimpInterface.MemberStatus.Unsubscribed,
+    status_if_new: statusIfNew,
+    status: defaultStatus,
   }
 
   debug(data)
@@ -150,8 +160,8 @@ const addUserToAudience = async ({ user, name, audienceId }) => {
   // TODO tbd, maybe merge this with NewsletterSubscription
   const result = {
     user,
-    status_if_new: MailchimpInterface.MemberStatus.Subscribed,
-    status: MailchimpInterface.MemberStatus.Unsubscribed,
+    status_if_new: statusIfNew,
+    status: defaultStatus,
   }
   debug(result)
   return result
@@ -181,6 +191,45 @@ mail.enforceSubscriptions = async ({
     ...rest,
   })
 
+  const allSubscriptions = [
+    {
+      audienceId: MAILCHIMP_MAIN_LIST_ID,
+      subscriptions: newsletterSubscriptions,
+    },
+  ]
+
+  // always add to marketing audience when newsletter settings are updated, except if MEMBER or BENEFACTOR are true
+  if (
+    !(
+      interests[MAILCHIMP_INTEREST_MEMBER] ||
+      interests[MAILCHIMP_INTEREST_MEMBER_BENEFACTOR]
+    )
+  ) {
+    debug('add to marketing audience')
+    const marketingSubscription = await addUserToAudience({
+      user: user || { email },
+      audienceId: MAILCHIMP_MARKETING_AUDIENCE_ID,
+      statusIfNew: MailchimpInterface.MemberStatus.Subscribed,
+      status: MailchimpInterface.MemberStatus.Subscribed,
+    })
+    allSubscriptions.push({
+      audienceId: MAILCHIMP_MARKETING_AUDIENCE_ID,
+      subscriptions: marketingSubscription,
+    })
+  } else {
+    debug('remove from marketing audience')
+    const marketingSubscription = await addUserToAudience({
+      user: user || { email },
+      audienceId: MAILCHIMP_MARKETING_AUDIENCE_ID,
+      statusIfNew: MailchimpInterface.MemberStatus.Unsubscribed,
+      status: MailchimpInterface.MemberStatus.Unsubscribed,
+    })
+    allSubscriptions.push({
+      audienceId: MAILCHIMP_MARKETING_AUDIENCE_ID,
+      subscriptions: marketingSubscription,
+    })
+  }
+
   if (subscribeToOnboardingMails) {
     debug('add to onboarding audience')
     const onboardingSubscription = await addUserToAudience({
@@ -189,24 +238,13 @@ mail.enforceSubscriptions = async ({
       ...rest,
     })
 
-    return [
-      {
-        audienceId: MAILCHIMP_MAIN_LIST_ID,
-        subscriptions: newsletterSubscriptions,
-      },
-      {
-        audienceId: MAILCHIMP_ONBOARDING_AUDIENCE_ID,
-        subscriptions: onboardingSubscription,
-      },
-    ]
+    allSubscriptions.push({
+      audienceId: MAILCHIMP_ONBOARDING_AUDIENCE_ID,
+      subscriptions: onboardingSubscription,
+    })
   }
 
-  return [
-    {
-      audienceId: MAILCHIMP_MAIN_LIST_ID,
-      subscriptions: newsletterSubscriptions,
-    },
-  ]
+  return allSubscriptions
 }
 
 mail.sendMembershipProlongConfirmation = async ({
