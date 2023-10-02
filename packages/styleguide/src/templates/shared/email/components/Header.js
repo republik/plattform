@@ -27,7 +27,7 @@ export default ({ meta }) => {
   const { width, height } = isClimate
     ? { width: 179, height: 110 } // case of climate
     : isWdwww
-    ? { width: 220, height: 71 } // case of wdwww
+    ? { width: 245, height: 79 } // case of wdwww
     : { width: 178, height: 79 } // default
 
   const imageFile =
