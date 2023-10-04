@@ -36,9 +36,25 @@ export default async function Page({ searchParams }) {
     query: CHALLENGE_ACCEPTED_HUB_QUERY,
     context: {},
   })
-  const { people, hub } = data
 
   const me = await getMe()
+
+  const isMember =
+    me?.roles && Array.isArray(me.roles) && me.roles.includes('member')
+
+  const hub: typeof data['hub'] = {
+    ...data.hub,
+    items: data.hub.items.map((item) => {
+      if (item.__typename !== 'EventRecord') {
+        return item
+      }
+      return {
+        ...item,
+        signUpLink: isMember || item.isPublic ? item.signUpLink : undefined,
+      }
+    }),
+  }
+  const { people } = data
 
   return (
     <>

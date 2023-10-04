@@ -5,6 +5,7 @@ import { PERSON_DETAIL_QUERY } from '@app/graphql/cms/person-detail.query'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { getMe } from '@app/lib/auth/me'
+import { PersonDetailQuery } from '@app/graphql/gql/graphql'
 
 export default async function Page({
   params: { slug },
@@ -21,17 +22,27 @@ export default async function Page({
   }
 
   const me = await getMe()
+  const isMember =
+    me?.roles && Array.isArray(me.roles) && me.roles.includes('member')
+
+  const personData: typeof data['person'] = {
+    ...data.person,
+    items: data.person.items.map((item) => {
+      if (item.__typename !== 'EventRecord') {
+        return item
+      }
+      return {
+        ...item,
+        signUpLink: isMember || item.isPublic ? item.signUpLink : undefined,
+      }
+    }),
+  }
 
   return (
     <>
       <Link href='/challenge-accepted'>Challenge Accepted Übersicht</Link>
       <Container>
-        <PersonDetail
-          person={data.person}
-          isMember={
-            me?.roles && Array.isArray(me.roles) && me.roles.includes('member')
-          }
-        />
+        <PersonDetail person={personData} isMember={isMember} />
       </Container>
     </>
   )
