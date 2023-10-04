@@ -197,16 +197,20 @@ export const TeaserEvent = ({ event, isMember }: EventProps) => {
           {event.location}
         </p>
         <StructuredText data={event.description.value} />
-        {!isMember && !event.isPublic ? (
-          <p>
-            {event.nonMemberCta && (
-              <StructuredText data={event.nonMemberCta.value} />
+        {!event.fullyBooked && (
+          <>
+            {!isMember && !event.isPublic ? (
+              <p>
+                {event.nonMemberCta && (
+                  <StructuredText data={event.nonMemberCta.value} />
+                )}
+              </p>
+            ) : (
+              <Link target='_blank' href={event.signUpLink}>
+                Zur Anmeldung
+              </Link>
             )}
-          </p>
-        ) : (
-          <Link target='_blank' href={event.signUpLink}>
-            Zur Anmeldung
-          </Link>
+          </>
         )}
       </div>
     </div>
