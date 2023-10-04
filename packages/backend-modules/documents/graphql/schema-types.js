@@ -172,7 +172,7 @@ type Document {
   ): DocumentConnection!
 }
 
-type LegacyDocumentNode {
+type InternalDocumentNode {
   id: ID!
   body: JSON!
 }
@@ -185,7 +185,7 @@ type DocumentNodePageInfo {
 }
 
 type DocumentNodeConnection {
-  nodes: [DocumentNode!]!
+  nodes: [InternalDocumentNode!]!
   pageInfo: DocumentNodePageInfo!
   totalCount: Int!
 }
