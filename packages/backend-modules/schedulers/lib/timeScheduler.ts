@@ -1,39 +1,49 @@
-const Redlock = require('redlock')
-const Promise = require('bluebird')
+import Redlock, { LockError } from 'redlock'
+import Promise from 'bluebird'
+
+import moment from 'moment'
 
 const LOCK_RETRY_COUNT = 3
 const LOCK_RETRY_DELAY = 600
 const LOCK_RETRY_JITTER = 200
 const MIN_TTL_MS = LOCK_RETRY_COUNT * (LOCK_RETRY_DELAY + LOCK_RETRY_JITTER)
-const TTL_EXP_MS = MIN_TTL_MS * 1.5
+
+type TimeSchedulerProps = {
+  name: string
+  context: { redis: any }
+  runFunc: (
+    options: { now?: moment.Moment; dryRun?: boolean },
+    context: unknown,
+  ) => Promise<void>
+  lockTtlSecs: number
+  runAtTime: string
+  runAtDaysOfWeek: number[]
+  runInitially?: boolean
+  dryRun?: boolean
+}
 
 const init = async ({
   name,
   context,
   runFunc,
   lockTtlSecs,
-  runIntervalSecs,
-  runInitially = true,
+  runAtTime,
+  runAtDaysOfWeek = [1, 2, 3, 4, 5, 6, 7], // 1 = Monday, 7 = Sunday
+  runInitially = false,
   dryRun = false,
-}) => {
-  if (!name || !context || !runFunc || !lockTtlSecs || !runIntervalSecs) {
+}: TimeSchedulerProps) => {
+  if (!name || !context || !runFunc || !lockTtlSecs || !runAtTime) {
     console.error(`missing input, scheduler ${name}`, {
       name,
       context,
       runFunc,
       lockTtlSecs,
-      runIntervalSecs,
+      runAtTime,
     })
     throw new Error(`missing input, scheduler ${name}`)
   }
-  if (runIntervalSecs < lockTtlSecs) {
-    console.error('lockTtlSecs bigger than runIntervalSecs', {
-      runIntervalSecs,
-      lockTtlSecs,
-    })
-    throw new Error(
-      `lockTtlSecs bigger than runIntervalSecs, scheduler ${name}`,
-    )
+  if (runAtDaysOfWeek.length < 1) {
+    throw new Error('runAtDaysOfWeek must at least have one entry')
   }
   if (dryRun) {
     console.warn(`WARNING: dryRun flag enabled, scheduler "${name}"`)
@@ -48,15 +58,6 @@ const init = async ({
   const debug = require('debug')(`scheduler:${name}`)
   debug('init')
 
-  let timeout
-  const scheduleNextRun = () => {
-    // Set timeout slightly off to usual interval
-    if (timeout) {
-      clearTimeout(timeout)
-    }
-    timeout = setTimeout(run, 1000 * (runIntervalSecs + 1)).unref()
-  }
-
   const redlock = () => {
     return new Redlock([redis], {
       driftFactor: 0.01, // time in ms
@@ -68,15 +69,44 @@ const init = async ({
 
   if (lockTtlSecs * 1000 < MIN_TTL_MS) {
     throw new Error(
-      `lockTtlSecs must be at least ${Math.ceil(MIN_TTL_MS / 1000)})`,
-      { lockTtlSecs },
+      `lockTtlSecs must be at least ${Math.ceil(
+        MIN_TTL_MS / 1000,
+      )}) but is ${lockTtlSecs}`,
+    )
+  }
+
+  let timeout: NodeJS.Timeout
+  const scheduleNextRun = () => {
+    const [runAtHour, runAtMinute] = runAtTime.split(':')
+    if (!runAtHour || !runAtMinute) {
+      throw new Error(`invalid runAtTime=${runAtTime}. Format: HH:MM`)
+    }
+    const now = moment()
+    const nextRunAt = now
+      .clone()
+      .hour(parseInt(runAtHour))
+      .minute(parseInt(runAtMinute))
+      .second(0)
+      .millisecond(0)
+    while (
+      now.isAfter(nextRunAt) ||
+      !runAtDaysOfWeek.includes(nextRunAt.isoWeekday())
+    ) {
+      nextRunAt.add(24, 'hours')
+    }
+    const nextRunInMs = nextRunAt.diff(now) // ms
+    if (timeout) {
+      clearTimeout(timeout)
+    }
+    timeout = setTimeout(run, nextRunInMs).unref()
+    debug(
+      `next run scheduled ${nextRunAt.fromNow()} at: ${nextRunAt.toISOString()}`,
     )
   }
 
   const run = async () => {
     try {
       const lock = await redlock().lock(lockKey, 1000 * lockTtlSecs)
-      const beginTime = process.hrtime.bigint()
 
       const extendLockInterval = setInterval(
         () =>
@@ -94,7 +124,8 @@ const init = async ({
       debug('run started')
 
       try {
-        await runFunc({ dryRun }, context)
+        const now = moment()
+        await runFunc({ now, dryRun }, context)
       } catch (e) {
         console.error('scheduled run failed', e)
       } finally {
@@ -105,9 +136,7 @@ const init = async ({
 
       // wait until other processes exceeded waiting time
       // then give up lock
-      const blockLockMs =
-        BigInt(TTL_EXP_MS) * BigInt(1000) - process.hrtime.bigint() - beginTime
-      await Promise.delay(blockLockMs > 0 ? blockLockMs : 0).then(() =>
+      await Promise.delay(MIN_TTL_MS * 1.5).then(() =>
         lock
           .unlock()
           .then(() => {
@@ -120,7 +149,7 @@ const init = async ({
 
       debug('run completed')
     } catch (e) {
-      if (e.name === 'LockError') {
+      if (e instanceof LockError) {
         if (e.attempts && e.attempts > LOCK_RETRY_COUNT) {
           debug('give up, others are doing the work:', e.message)
         } else {
@@ -146,7 +175,7 @@ const init = async ({
     debug('run initially')
     await run()
   } else {
-    await scheduleNextRun()
+    scheduleNextRun()
   }
 
   return {
@@ -155,6 +184,6 @@ const init = async ({
   }
 }
 
-module.exports = {
+export default {
   init,
 }

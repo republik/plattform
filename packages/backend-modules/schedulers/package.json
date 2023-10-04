@@ -17,10 +17,16 @@
   },
   "homepage": "https://github.com/republik/plattform#readme",
   "scripts": {
+    "dev": "tsc -w",
+    "build": "tsc",
     "link": "yarn link"
   },
   "dependencies": {
     "moment": "^2.26.0",
     "redlock": "^4.1.0"
+  },
+  "devDependencies": {
+    "@types/bluebird": "^3.5.38",
+    "@types/redlock": "^4.0.4"
   }
 }
