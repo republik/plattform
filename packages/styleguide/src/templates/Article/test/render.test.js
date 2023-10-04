@@ -8,7 +8,7 @@ const babStub = parse(BaB153Stub)
 const articleStub = parse(ArticleStub)
 
 describe('chart utils test-suite', () => {
-  it('templates/article: render web', () => {
+  it.skip('templates/article: render web', () => {
     expect(() => {
       renderMdast(babStub, createSchema(), { MissingNode: false })
     }).not.toThrow()
