@@ -53,6 +53,7 @@ export const SubmissionLink = ({ id, children, personPagePath }) => {
 export const QuestionLink = ({ questions, children }) => {
   const router = useRouter()
   const pathname = router.asPath.split('?')[0].split('#')[0]
+
   return (
     <Link
       href={{
@@ -61,7 +62,6 @@ export const QuestionLink = ({ questions, children }) => {
           share: questions.map((q) => q.id).join(QUESTION_SEPARATOR),
         },
       }}
-      shallow
       passHref
       legacyBehavior
     >
