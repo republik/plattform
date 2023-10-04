@@ -12,6 +12,9 @@ export const PERSON_DETAIL_QUERY = gql(`
         height
         title
       }
+      bio {
+        value
+      }
       items {
       __typename
       ... on EventRecord {
@@ -21,11 +24,14 @@ export const PERSON_DETAIL_QUERY = gql(`
         description {
           value
         }
-        nonMemberCta
+        nonMemberCta {
+          value
+        }
+        fullyBooked
+        signUpLink
         location
         startAt
         endAt
-        signUpLink
       }
       ... on ArticleRecord {
         id

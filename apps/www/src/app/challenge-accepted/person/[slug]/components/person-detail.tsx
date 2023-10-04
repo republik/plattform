@@ -2,6 +2,7 @@ import CollectionRenderer from '@app/components/collection-render'
 import type { PersonDetailQuery } from '@app/graphql/gql/graphql'
 import { css } from '@app/styled-system/css'
 import Image from 'next/image'
+import { StructuredText } from 'react-datocms'
 
 type PersonDetailProps = {
   person: PersonDetailQuery['person']
@@ -15,6 +16,7 @@ export function PersonDetail({ person, isMember = false }: PersonDetailProps) {
         display: 'flex',
         flexDirection: 'column',
         gap: '2',
+        mb: '16',
         alignItems: 'center',
       })}
     >
@@ -33,16 +35,9 @@ export function PersonDetail({ person, isMember = false }: PersonDetailProps) {
       >
         Sali, ich bin {person.name}
       </h1>
-
+      <StructuredText data={person.bio.value} />
       <h2 className={css({ textStyle: 'h2Sans', my: '6' })}>Inhalte</h2>
-
       <CollectionRenderer items={person.items} isMember={isMember} />
-      <div className={css({ mt: '6' })}>
-        <details>
-          <summary>person data</summary>
-          <pre>{JSON.stringify(person, null, 2)}</pre>
-        </details>
-      </div>
     </div>
   )
 }

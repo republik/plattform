@@ -13,6 +13,7 @@ import CollectionRenderer from '@app/components/collection-render'
 import { wrap } from '@app/styled-system/patterns'
 import { getMe } from '@app/lib/auth/me'
 import { CollectionFilter } from '@app/components/collection-filter'
+import { StructuredText } from 'react-datocms'
 
 export async function generateMetadata(): Promise<Metadata> {
   const client = getCMSClient()
@@ -36,8 +37,6 @@ export default async function Page({ searchParams }) {
     context: {},
   })
   const { people, hub } = data
-
-  const now = new Date(Date.now()).toISOString()
 
   const me = await getMe()
 
@@ -63,6 +62,7 @@ export default async function Page({ searchParams }) {
         ></img>
       </h1>
       <Container>
+        <StructuredText data={hub.introduction.value} />
         <h2
           className={css({
             textStyle: 'h1Sans',
@@ -137,16 +137,10 @@ export default async function Page({ searchParams }) {
             me?.roles && Array.isArray(me.roles) && me.roles.includes('member')
           }
         />
+        <div className={css({ marginTop: '8' })}>
+          <StructuredText data={hub.outro.value} />
+        </div>
       </Container>
-      <h2 className={css({ textStyle: 'h1Sans', mt: '6' })}>
-        Additonal hub data
-      </h2>
-      <details>
-        <summary>hub</summary>
-        <pre>{JSON.stringify(hub.introduction, null, 2)}</pre>
-      </details>
-
-      <p>Rendered-at: {now}</p>
     </>
   )
 }

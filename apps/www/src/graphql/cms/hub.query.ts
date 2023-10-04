@@ -10,6 +10,9 @@ query ChallengeAcceptedHubQuery {
     introduction {
       value
     }
+    outro {
+      value
+    }
     items {
       __typename
       ... on EventRecord {
@@ -19,11 +22,14 @@ query ChallengeAcceptedHubQuery {
         description {
           value
         }
-        nonMemberCta
+        nonMemberCta {
+          value
+        }
+        fullyBooked
+        signUpLink
         location
         startAt
         endAt
-        signUpLink
       }
       ... on ArticleRecord {
         id

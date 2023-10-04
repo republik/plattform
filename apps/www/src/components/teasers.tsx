@@ -146,11 +146,14 @@ type EventProps = {
       value: ComponentPropsWithoutRef<typeof StructuredText>['data']
     }
     isPublic?: boolean
-    nonMemberCta?: string
+    nonMemberCta?: {
+      value: ComponentPropsWithoutRef<typeof StructuredText>['data']
+    }
     location: string
     startAt: string
     endAt?: string
     signUpLink?: string
+    fullyBooked?: boolean
   }
   isMember: boolean
 }
@@ -185,7 +188,9 @@ export const TeaserEvent = ({ event, isMember }: EventProps) => {
           gap: '4',
         })}
       >
-        <h4 className={css({ textStyle: 'h2Sans' })}>{event.title}</h4>
+        <h4 className={css({ textStyle: 'h2Sans' })}>
+          {event.title} {event.fullyBooked && '(ausgebucht)'}
+        </h4>
         <p className={css({})}>
           {formateTime(isoParse(event.startAt))} -{' '}
           {event.endAt ? formateTime(isoParse(event.endAt)) : 'offen'} /{' '}
@@ -193,12 +198,10 @@ export const TeaserEvent = ({ event, isMember }: EventProps) => {
         </p>
         <StructuredText data={event.description.value} />
         {!isMember && !event.isPublic ? (
-          <p
-            className={css({
-              display: 'block',
-            })}
-          >
-            {event.nonMemberCta || 'DEFAULT NON MEMBER CTA'}
+          <p>
+            {event.nonMemberCta && (
+              <StructuredText data={event.nonMemberCta.value} />
+            )}
           </p>
         ) : (
           <Link target='_blank' href={event.signUpLink}>
