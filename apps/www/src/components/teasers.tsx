@@ -206,9 +206,13 @@ export const TeaserEvent = ({ event, isMember }: EventProps) => {
                 )}
               </p>
             ) : (
-              <Link target='_blank' href={event.signUpLink}>
-                Zur Anmeldung
-              </Link>
+              <>
+                {event.signUpLink && (
+                  <Link target='_blank' href={event.signUpLink}>
+                    Zur Anmeldung
+                  </Link>
+                )}
+              </>
             )}
           </>
         )}
