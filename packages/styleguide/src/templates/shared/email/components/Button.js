@@ -1,6 +1,6 @@
 import React from 'react'
-import colors from '../../../theme/colors'
-import { fontFamilies } from '../../../theme/fonts'
+import colors from '../../../../theme/colors'
+import { fontFamilies } from '../../../../theme/fonts'
 
 export const Button = ({
   href,

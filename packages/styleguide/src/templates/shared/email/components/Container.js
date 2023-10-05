@@ -2,9 +2,9 @@ import React from 'react'
 import { cssFor } from 'glamor'
 import { Mso } from '@republik/mdast-react-render'
 import Header from './Header'
-import SG from '../../../theme/env'
-import { Editorial, Interaction } from '../../../components/Typography'
-import { VariableContext } from '../../../components/Variables'
+import SG from '../../../../theme/env'
+import { Editorial, Interaction } from '../../../../components/Typography'
+import { VariableContext } from '../../../../components/Variables'
 import Footer from './Footer'
 
 export default ({ children, attributes = {}, meta, variableContext }) => (

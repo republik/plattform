@@ -3,7 +3,7 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true',
 })
 
-const { NODE_ENV, CDN_FRONTEND_BASE_URL } = process.env
+const { NODE_ENV, NEXT_PUBLIC_CDN_FRONTEND_BASE_URL } = process.env
 
 const buildId =
   process.env.SOURCE_VERSION?.substring(0, 10) ||
@@ -44,8 +44,8 @@ const nextConfig = {
   },
   poweredByHeader: false,
   assetPrefix:
-    NODE_ENV === 'production' && CDN_FRONTEND_BASE_URL
-      ? CDN_FRONTEND_BASE_URL
+    NODE_ENV === 'production' && NEXT_PUBLIC_CDN_FRONTEND_BASE_URL
+      ? NEXT_PUBLIC_CDN_FRONTEND_BASE_URL
       : undefined,
   useFileSystemPublicRoutes: true,
   // , onDemandEntries: {

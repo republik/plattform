@@ -26,7 +26,7 @@ module.exports = (server) => {
     )
 
     const frontendUrl = `${FRONTEND_BASE_URL}/${sanitizedPath}`
-    const result = await fetch(frontendUrl, {
+    const result = await fetch(encodeURI(frontendUrl), {
       method: 'GET',
       headers: {
         Authorization:
@@ -41,6 +41,7 @@ module.exports = (server) => {
       return res.status(404).end()
     })
     if (!result.ok) {
+      console.log(result)
       console.error('frontend fetch failed', result.url, result.status)
       return res.status(result.status).end()
     }
