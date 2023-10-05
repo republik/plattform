@@ -45,7 +45,7 @@ export default function Error({
           Erneut versuchen
         </button>
         <p>oder</p>
-        <Link href='/challenge-accepted'>Zum Challenge Accepted Hub</Link>
+        <Link href='/'>Zum Magazin</Link>
       </div>
     </Container>
   )

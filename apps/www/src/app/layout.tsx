@@ -16,11 +16,8 @@ export default async function RootLayout({
 }) {
   const me = await getMe()
 
-  // TODO: Don't hard-code this
-  const pageTheme = 'challenge-accepted'
-
   return (
-    <html lang='de' suppressHydrationWarning data-page-theme={pageTheme}>
+    <html lang='de' suppressHydrationWarning>
       <body
         className={css({
           color: 'text',
@@ -31,10 +28,13 @@ export default async function RootLayout({
             textDecoration: 'underline',
           },
         })}
+        style={{
+          height: '100dvh',
+        }}
       >
         <ThemeProvider>
           <Frame me={me} />
-          <main className={css({ p: '4' })}>{children}</main>
+          <div>{children}</div>
         </ThemeProvider>
       </body>
     </html>
