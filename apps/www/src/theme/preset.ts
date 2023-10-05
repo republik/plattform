@@ -63,6 +63,9 @@ export const presetRepublik = definePreset({
           inicia: {
             value: 'Inicia-Medium, Helvetica-Neue, Arial, Roboto, sans-serif',
           },
+          druk: {
+            value: 'Druk, Helvetica-Neue, Arial, Roboto, sans-serif',
+          },
         },
         fontWeights: {
           regular: { value: '400' },
@@ -79,6 +82,7 @@ export const presetRepublik = definePreset({
           '2xl': { value: '1.5rem' },
           '3xl': { value: '2rem' },
           '4xl': { value: '4rem' },
+          '8xl': { value: '8rem' },
         },
         lineHeights: {
           1: { value: 1 },
@@ -257,6 +261,7 @@ export const presetRepublik = definePreset({
             lineHeight: 1.16667,
           },
         },
+
         // LEGACY
         serifTitle: {
           value: {

@@ -143,7 +143,7 @@ export default async function Page({ searchParams }) {
           ))}
         </div>
         <h2 className={css({ textStyle: 'h2Sans', my: '6' })}>Inhalte</h2>
-        <div className={css({ mb: '6' })}>
+        <div className={css({ mb: '6', overflowY: 'auto', maxWidth: 'full' })}>
           <CollectionFilter filter={searchParams.filter} />
         </div>
         <CollectionRenderer

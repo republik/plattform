@@ -57,5 +57,16 @@ export const presetChallengeAccepted = definePreset({
         },
       },
     },
+    textStyles: {
+      eventTeaserTitle: {
+        value: {
+          fontFamily: 'druk',
+          fontWeight: 'medium',
+          fontStyle: 'normal',
+          fontSize: 'clamp(4rem, 3rem + 15vw ,16rem)',
+          lineHeight: 1.16667,
+        },
+      },
+    },
   },
 })

@@ -172,9 +172,8 @@ export const TeaserEvent = ({ event, isMember }: EventProps) => {
     >
       <h3
         className={css({
-          textStyle: 'h3Sans',
+          textStyle: 'eventTeaserTitle',
           textAlign: 'center',
-          fontSize: '4xl',
           mb: '6',
         })}
       >
