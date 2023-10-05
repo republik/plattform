@@ -33,7 +33,7 @@ export default function CollectionRenderer({
       >
         {items.map((item) => {
           if (
-            item.__typename === 'NewsletterRecord' &&
+            item.__typename === 'ChallengeAcceptedNewsletterRecord' &&
             (!filter || filter === 'all' || filter === 'newsletter')
           ) {
             return (
@@ -42,7 +42,7 @@ export default function CollectionRenderer({
               </li>
             )
           } else if (
-            item.__typename === 'ArticleRecord' &&
+            item.__typename === 'ChallengeAcceptedArticleRecord' &&
             (!filter || filter === 'all' || filter === 'article')
           ) {
             return (

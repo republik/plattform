@@ -1,8 +1,8 @@
 import { gql } from '../gql'
 
 export const PERSON_DETAIL_QUERY = gql(`
-  query PersonDetail($slug: String!) {
-    person(filter: {slug: {eq: $slug}}) {
+ query PersonDetail($slug: String!) {
+    person: challengeAcceptedPerson(filter: {slug: {eq: $slug}}) {
       id
       name
       portrait {
@@ -33,14 +33,14 @@ export const PERSON_DETAIL_QUERY = gql(`
         startAt
         endAt
       }
-      ... on ArticleRecord {
+      ... on ChallengeAcceptedArticleRecord {
         id
         path
         image {
           url
         }
       }
-      ... on NewsletterRecord {
+      ... on ChallengeAcceptedNewsletterRecord {
         id
         path
       }

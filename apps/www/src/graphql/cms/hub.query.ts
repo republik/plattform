@@ -31,20 +31,20 @@ query ChallengeAcceptedHubQuery {
         startAt
         endAt
       }
-      ... on ArticleRecord {
+      ... on ChallengeAcceptedArticleRecord {
         id
         path
         image {
           url
         }
       }
-      ... on NewsletterRecord {
+      ... on ChallengeAcceptedNewsletterRecord {
         id
         path
       }
     }
   }
-  people: allPeople {
+  people: allChallengeAcceptedPeople {
     id
     slug
     name
