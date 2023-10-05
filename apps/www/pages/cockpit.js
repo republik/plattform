@@ -516,20 +516,20 @@ const Page = ({
                 date: bucket.key,
                 value: String(bucket.users),
               })),
-            data.collectionsStats.progress.buckets
-              .slice(0, -1)
-              .map((bucket) => ({
-                type: 'Lesepositionen',
-                date: bucket.key,
-                value: String(bucket.users),
-              })),
-            data.collectionsStats.bookmarks.buckets
-              .slice(0, -1)
-              .map((bucket) => ({
-                type: 'Lesezeichen',
-                date: bucket.key,
-                value: String(bucket.users),
-              })),
+            // data.collectionsStats.progress.buckets
+            //   .slice(0, -1)
+            //   .map((bucket) => ({
+            //     type: 'Lesepositionen',
+            //     date: bucket.key,
+            //     value: String(bucket.users),
+            //   })),
+            // data.collectionsStats.bookmarks.buckets
+            //   .slice(0, -1)
+            //   .map((bucket) => ({
+            //     type: 'Lesezeichen',
+            //     date: bucket.key,
+            //     value: String(bucket.users),
+            //   })),
           )
 
           return (
@@ -678,7 +678,7 @@ const Page = ({
                 </ChartTitle>
                 <ChartLead>
                   Anzahl Verleger, welche pro Monat eine Funktion benutzen. HIER
-                  EINE GRAFIK ZU LAST SEEN
+                  TITEL ETC ANPASSEN
                 </ChartLead>
                 <Chart
                   config={{
@@ -701,7 +701,7 @@ const Page = ({
                           '2023-01',
                         ], // lastSeenBucket.key
                     yNice: 0,
-                    yTicks: [0, 3000, 6000, 9000, 12000, 15000],
+                    yTicks: [0, 1000, 2000, 3000, 4000, 5000],
                     colorMap: {
                       Lesepositionen: '#9467bd',
                       Lesezeichen: '#e377c2',
@@ -712,8 +712,7 @@ const Page = ({
                 />
                 <ChartLegend>
                   Beim Dialog werden Schreibende und Reagierende (Up- und
-                  Downvotes) gezählt. Lesezeichen wurden Mitte Januar 2019
-                  eingeführt, die Leseposition Ende März&nbsp;2019.
+                  Downvotes) gezählt.
                 </ChartLegend>
               </div>
 
