@@ -44,9 +44,13 @@ type ArticleProps = {
 }
 
 export const TeaserArticle = async ({ path }: ArticleProps) => {
+  // To support path with query params, we use the URL API
+  // and extract the pathname from it.
+  const url = new URL(path, process.env.NEXT_PUBLIC_BASE_URL)
+
   const { data }: { data: ArticleQueryResult } = await getClient().query({
     query: ARTICLE_QUERY,
-    variables: { path },
+    variables: { path: url.pathname },
   })
 
   const { article } = data
@@ -67,6 +71,10 @@ export const TeaserArticle = async ({ path }: ArticleProps) => {
           '&:hover': { transform: 'scale(1.02)' },
         })}
       >
+        <p>Path: {path}</p>
+        <p>
+          Url: {url.toString()} ({url.pathname})
+        </p>
         {article.meta.image ? (
           <Image
             alt=''
