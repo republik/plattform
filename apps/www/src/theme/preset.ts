@@ -150,8 +150,8 @@ export const presetRepublik = definePreset({
         spacing: {
           header: {
             height: { value: '{sizes.header.height}' },
-            avatarPadding: { value: '0.6875rem  1rem' },
-            logoPadding: { value: { base: '12px 0', md: '15px 0' } },
+            avatarMargin: { value: '0.6875rem  1rem' },
+            logoMargin: { value: { base: '12px 0', md: '15px 0' } },
           },
         },
         fontSizes: {

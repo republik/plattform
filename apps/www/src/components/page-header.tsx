@@ -40,14 +40,14 @@ export const PageHeader = async () => {
           borderBottomColor: 'overlay',
         })}
       >
-        <div className={css({ p: 'header.avatarPadding' })}>
+        <div className={css({ m: 'header.avatarMargin' })}>
           {me ? (
             <UserMenu me={me}></UserMenu>
           ) : (
             <Link href='/anmelden'>Anmelden</Link>
           )}
         </div>
-        <div className={css({ p: 'header.logoPadding' })}>
+        <div className={css({ m: 'header.logoMargin' })}>
           <Link href='/'>
             <Logo />
           </Link>
@@ -56,7 +56,7 @@ export const PageHeader = async () => {
           className={css({
             width: 'header.avatar',
             height: 'header.avatar',
-            p: 'header.avatarPadding',
+            m: 'header.avatarMargin',
           })}
         ></div>
       </div>
