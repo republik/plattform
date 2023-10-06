@@ -39,9 +39,7 @@ export default async function Page({
 
   return (
     <Overlay>
-      <Container>
-        <PersonDetail person={personData} isMember={isMember} />
-      </Container>
+      <PersonDetail person={personData} isMember={isMember} />
     </Overlay>
   )
 }

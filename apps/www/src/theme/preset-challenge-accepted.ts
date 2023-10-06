@@ -61,6 +61,15 @@ export const presetChallengeAccepted = definePreset({
           lineHeight: 1.16667,
         },
       },
+      personTitle: {
+        value: {
+          fontFamily: 'druk',
+          fontWeight: 'medium',
+          fontStyle: 'italic',
+          fontSize: 100,
+          textTransform: 'uppercase',
+        },
+      },
     },
   },
 })
