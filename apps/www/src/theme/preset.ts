@@ -24,6 +24,7 @@ export const presetRepublik = definePreset({
           },
           white: { value: '#fff' },
           transparent: { value: 'transparent' },
+          current: { value: 'currentColor' },
         },
         sizes: {
           full: { value: '100%' },
@@ -139,7 +140,8 @@ export const presetRepublik = definePreset({
           maxContentWidth: { value: '48rem' },
           header: {
             height: { value: { base: '48px', md: '60px' } },
-            avatar: { value: { base: '26px', md: '36px' } },
+            avatar: { value: { base: '26px', md: '32px' } },
+            logoHeight: { value: { base: '23px', md: '28px' } },
           },
         },
         lineHeights: {
@@ -148,6 +150,8 @@ export const presetRepublik = definePreset({
         spacing: {
           header: {
             height: { value: '{sizes.header.height}' },
+            avatarPadding: { value: '0.6875rem  1rem' },
+            logoPadding: { value: { base: '12px 0', md: '15px 0' } },
           },
         },
         fontSizes: {
