@@ -4,6 +4,8 @@ export const presetChallengeAccepted = definePreset({
   conditions: {
     extend: {
       challengeAccepted: '[data-page-theme="challenge-accepted"] &',
+      challengeAcceptedDark:
+        '[data-theme="dark"] [data-page-theme="challenge-accepted"] &',
     },
   },
 
@@ -24,34 +26,26 @@ export const presetChallengeAccepted = definePreset({
         colors: {
           pageBackground: {
             value: {
-              _challengeAccepted: {
-                base: '{colors.challengeAccepted.yellow}',
-                _dark: '{colors.challengeAccepted.darkBlue}',
-              },
+              _challengeAccepted: '{colors.challengeAccepted.yellow}',
+              _challengeAcceptedDark: '{colors.challengeAccepted.darkBlue}',
             },
           },
           contrast: {
             value: {
-              _challengeAccepted: {
-                base: '{colors.challengeAccepted.blue}',
-                _dark: '{colors.challengeAccepted.yellow}',
-              },
+              _challengeAccepted: '{colors.challengeAccepted.blue}',
+              _challengeAcceptedDark: '{colors.challengeAccepted.yellow}',
             },
           },
           teaserBackground: {
             value: {
-              _challengeAccepted: {
-                base: '{colors.challengeAccepted.blue}',
-                _dark: '{colors.challengeAccepted.blue}',
-              },
+              _challengeAccepted: '{colors.challengeAccepted.blue}',
+              _challengeAcceptedDark: '{colors.challengeAccepted.blue}',
             },
           },
           link: {
             value: {
-              _challengeAccepted: {
-                base: '{colors.challengeAccepted.blue}',
-                _dark: '{colors.challengeAccepted.yellow}',
-              },
+              _challengeAccepted: '{colors.challengeAccepted.blue}',
+              _challengeAcceptedDark: '{colors.challengeAccepted.yellow}',
             },
           },
         },

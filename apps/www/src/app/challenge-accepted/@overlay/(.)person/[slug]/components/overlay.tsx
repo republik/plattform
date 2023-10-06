@@ -19,6 +19,7 @@ export default function Overlay(props: { children: React.ReactNode }) {
     >
       <Dialog.Portal>
         <Dialog.Overlay
+          data-page-theme='challenge-accepted'
           className={css({
             position: 'fixed',
             inset: '0',
