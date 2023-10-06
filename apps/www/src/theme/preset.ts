@@ -37,7 +37,9 @@ export const presetRepublik = definePreset({
           1: { value: '0.25rem' },
           1.5: { value: '0.375rem' },
           2: { value: '0.5rem' },
+          2.5: { value: '0.625rem' },
           3: { value: '0.75rem' },
+          3.5: { value: '0.9375rem' },
           4: { value: '1rem' },
           5: { value: '1.25rem' },
           6: { value: '1.5rem' },
@@ -139,6 +141,9 @@ export const presetRepublik = definePreset({
             height: { value: { base: '48px', md: '60px' } },
             avatar: { value: { base: '26px', md: '36px' } },
           },
+        },
+        lineHeights: {
+          pageNav: { value: '2.5rem' },
         },
         spacing: {
           header: {
