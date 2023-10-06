@@ -134,7 +134,9 @@ export const presetRepublik = definePreset({
               _dark: 'hotpink',
             },
           },
-          overlay: { value: 'rgba(0,0,0,0.1)' },
+          overlay: {
+            value: { base: 'rgba(0,0,0,0.1)', _dark: 'rgba(0,0,0,0.4)' },
+          },
         },
         sizes: {
           maxContentWidth: { value: '48rem' },
