@@ -403,7 +403,7 @@ const Page = ({
             { key: 'base', color: '#3CAD00', label: 'bestehende' },
             {
               key: 'gaining',
-              color: '#2A7A00',
+              color: '#3CAD00',
               label: 'Zugänge',
             },
           ]
@@ -673,11 +673,10 @@ const Page = ({
 
               <div style={{ marginTop: 20 }}>
                 <ChartTitle>
-                  Wie beliebt sind Dialog, Lesezeichen und Leseposition?
+                  Wie viele Verlegerinnen beteiligen sich am Dialog
                 </ChartTitle>
                 <ChartLead>
-                  Anzahl Verleger, welche pro Monat eine Funktion benutzen. HIER
-                  TITEL ETC ANPASSEN
+                  Anzahl Schreibende und Reagierende (Up- und Downvotes)
                 </ChartLead>
                 <Chart
                   config={{
@@ -689,6 +688,8 @@ const Page = ({
                     x: 'date',
                     timeParse: '%Y-%m',
                     timeFormat: '%Y',
+                    endLabel: false,
+                    colorLegend: false,
                     xTicks: isMobile
                       ? ['2018-01', '2020-01', '2022-01']
                       : [
@@ -704,15 +705,11 @@ const Page = ({
                     colorMap: {
                       Lesepositionen: '#9467bd',
                       Lesezeichen: '#e377c2',
-                      Dialog: '#bcbd22',
+                      Dialog: '#3CAD00',
                     },
                   }}
                   values={engagedUsers}
                 />
-                <ChartLegend>
-                  Beim Dialog werden Schreibende und Reagierende (Up- und
-                  Downvotes) gezählt.
-                </ChartLegend>
               </div>
 
               <br />
