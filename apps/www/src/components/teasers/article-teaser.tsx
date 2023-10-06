@@ -8,6 +8,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import formatCredits from 'components/Feed/formatCredits'
 import { matchType, renderMdast } from '@republik/mdast-react-render'
+import { vstack } from '@app/styled-system/patterns'
 
 const getResizefromURL = (url, size) => {
   const imgURL = new URL(url)
@@ -48,8 +49,8 @@ const creditsSchema = {
         title: node.title,
         href: node.url,
       }),
-      component: ({ children, href }) => {
-        if (href) return <Link href={href}>{children}</Link>
+      component: ({ children }) => {
+        // Don't render as links because <a> cannot be nested (article teaser is already one)
         return <span>{children}</span>
       },
     },
@@ -127,13 +128,14 @@ export const ArticleTeaser = async ({ path, image }: ArticleProps) => {
           </>
         )}
         <div
-          className={css({
-            p: '12',
+          className={vstack({
+            gap: '4',
+            p: { base: '8', md: '12' },
             textAlign: 'center',
             textStyle: 'serif',
           })}
         >
-          <h3 className={css({ textStyle: 'teaserTitle', mb: '4' })}>
+          <h3 className={css({ textStyle: 'teaserTitle' })}>
             {article.meta.title}
           </h3>
           <p className={css({ textStyle: 'teaserLead' })}>
@@ -141,7 +143,7 @@ export const ArticleTeaser = async ({ path, image }: ArticleProps) => {
           </p>
           <p
             className={css({
-              mt: '4',
+              textStyle: 'teaserCredits',
               '& > a': {
                 color: 'text.white',
                 textDecoration: 'underline',

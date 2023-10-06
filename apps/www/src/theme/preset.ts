@@ -196,7 +196,16 @@ export const presetRepublik = definePreset({
             fontFamily: 'rubis',
             fontWeight: 'regular',
             fontStyle: 'normal',
-            fontSize: 'xl',
+            fontSize: { base: 'l', md: 'xl' },
+            lineHeight: 1.375,
+          },
+        },
+        teaserCredits: {
+          value: {
+            fontFamily: 'gtAmericaStandard',
+            fontWeight: 'regular',
+            fontStyle: 'normal',
+            fontSize: 's',
             lineHeight: 1.375,
           },
         },
