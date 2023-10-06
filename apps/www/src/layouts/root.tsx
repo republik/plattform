@@ -1,4 +1,4 @@
-import './globals.css'
+import './root.css'
 
 import { ThemeProvider } from '@app/components/theme-provider'
 import { UserMenu } from '@app/components/user-menu'
@@ -7,17 +7,19 @@ import Link from 'next/link'
 import { ReactNode } from 'react'
 import { getMe } from '@app/lib/auth/me'
 
-export default async function RootLayout({
+export async function RootLayout({
   // Layouts must accept a children prop.
   // This will be populated with nested layouts or pages
   children,
+  pageTheme,
 }: {
   children: ReactNode
+  pageTheme?: string
 }) {
   const me = await getMe()
 
   return (
-    <html lang='de' suppressHydrationWarning>
+    <html lang='de' suppressHydrationWarning data-page-theme={pageTheme}>
       <body
         className={css({
           color: 'text',

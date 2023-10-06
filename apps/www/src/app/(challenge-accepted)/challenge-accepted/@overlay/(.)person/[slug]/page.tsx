@@ -1,4 +1,4 @@
-import { PersonDetail } from '@app/app/challenge-accepted/person/[slug]/components/person-detail'
+import { PersonDetail } from '../../../person/[slug]/components/person-detail'
 import { PERSON_DETAIL_QUERY } from '@app/graphql/cms/person-detail.query'
 import { getCMSClient } from '@app/lib/apollo/cms-client'
 import { notFound } from 'next/navigation'

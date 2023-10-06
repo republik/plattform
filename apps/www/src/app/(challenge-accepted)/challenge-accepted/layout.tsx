@@ -6,11 +6,9 @@ export default function Layout(props: {
 }) {
   return (
     <div
-      data-page-theme='challenge-accepted'
       className={css({
         p: '4',
         color: 'text',
-        bg: 'pageBackground',
       })}
       style={{
         minHeight: 'calc(100dvh - 69px)',
