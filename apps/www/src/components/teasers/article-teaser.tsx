@@ -65,9 +65,10 @@ const creditsSchema = {
 
 type ArticleProps = {
   path: string
+  image?: { url: string; height?: number; width?: number }
 }
 
-export const ArticleTeaser = async ({ path }: ArticleProps) => {
+export const ArticleTeaser = async ({ path, image }: ArticleProps) => {
   // To support path with query params, we use the URL API
   // and extract the pathname from it.
   const url = new URL(path, process.env.NEXT_PUBLIC_BASE_URL)
@@ -83,6 +84,8 @@ export const ArticleTeaser = async ({ path }: ArticleProps) => {
     return null
   }
 
+  const overrideImage = !!image
+
   return (
     <Link
       href={path}
@@ -94,19 +97,35 @@ export const ArticleTeaser = async ({ path }: ArticleProps) => {
           color: 'text.white',
         })}
       >
-        {article.meta.image ? (
+        {overrideImage ? (
           <Image
             alt=''
-            src={getResizedImageSrc(article.meta.image, 1500)}
-            {...getOriginalImageDimensions(article.meta.image)}
+            src={image.url}
+            width={image.width}
+            height={image.height}
             className={css({
               width: 'full',
               height: 'auto',
               objectFit: 'contain',
             })}
-            unoptimized // Don't process with /_next/image route
           />
-        ) : null}
+        ) : (
+          <>
+            {article.meta.image && (
+              <Image
+                alt=''
+                src={getResizedImageSrc(article.meta.image, 1500)}
+                {...getOriginalImageDimensions(article.meta.image)}
+                className={css({
+                  width: 'full',
+                  height: 'auto',
+                  objectFit: 'contain',
+                })}
+                unoptimized
+              />
+            )}
+          </>
+        )}
         <div
           className={css({
             p: '12',

@@ -36,6 +36,8 @@ query ChallengeAcceptedHubQuery {
         path
         image {
           url
+          width
+          height
         }
       }
       ... on ChallengeAcceptedNewsletterRecord {

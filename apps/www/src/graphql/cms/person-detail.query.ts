@@ -38,6 +38,8 @@ export const PERSON_DETAIL_QUERY = gql(`
         path
         image {
           url
+          width
+          height
         }
       }
       ... on ChallengeAcceptedNewsletterRecord {
