@@ -582,7 +582,7 @@ const Page = ({
                   Aktuell {countFormat(activeCount)} Mitglieder
                   und&nbsp;Abonnentinnen
                 </ChartTitle>
-                <ChartLead>Entwicklung seit Januar 2020 bis heute</ChartLead>
+                <ChartLead>Entwicklung seit Januar 2018 bis heute</ChartLead>
                 <Chart
                   config={{
                     type: 'Line',
@@ -627,8 +627,7 @@ const Page = ({
                   {countFormat(currentBucket.ended)} Abgänge im laufenden Monat
                 </ChartTitle>
                 <ChartLead>
-                  Anzahl neue und beendete Mitgliedschaften und Abos per
-                  Monatsende
+                  Anzahl neue und beendete Mitgliedschaften und Abos pro Monat
                 </ChartLead>
                 <Chart
                   config={{
