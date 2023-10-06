@@ -1,11 +1,9 @@
-import {
-  TeaserArticle,
-  TeaserEvent,
-  TeaserNewsletter,
-} from '@app/components/teasers'
 import { ChallengeAcceptedHubQueryQuery } from '@app/graphql/gql/graphql'
 import { css } from '@app/styled-system/css'
 import { vstack } from '@app/styled-system/patterns'
+import { EventTeaser } from './teasers/event-teaser'
+import { NewsletterTeaser } from './teasers/newsletter-teaser'
+import { ArticleTeaser } from './teasers/article-teaser'
 
 type CollectionRendererProps = {
   items: ChallengeAcceptedHubQueryQuery['hub']['items']
@@ -38,7 +36,7 @@ export default function CollectionRenderer({
           ) {
             return (
               <li key={item.id}>
-                <TeaserNewsletter {...item} />
+                <NewsletterTeaser {...item} />
               </li>
             )
           } else if (
@@ -47,7 +45,7 @@ export default function CollectionRenderer({
           ) {
             return (
               <li key={item.id}>
-                <TeaserArticle {...item} />
+                <ArticleTeaser {...item} />
               </li>
             )
           } else if (
@@ -56,7 +54,7 @@ export default function CollectionRenderer({
           ) {
             return (
               <li key={item.id}>
-                <TeaserEvent event={item} isMember={isMember} />
+                <EventTeaser event={item} isMember={isMember} />
               </li>
             )
           }
