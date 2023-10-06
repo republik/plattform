@@ -4,6 +4,7 @@ import { getMe } from '@app/lib/auth/me'
 import { css } from '@app/styled-system/css'
 import { hstack } from '@app/styled-system/patterns'
 import Link from 'next/link'
+import { IconMic } from '@republik/icons'
 
 const Logo = () => {
   return (
@@ -57,8 +58,14 @@ export const PageHeader = async () => {
             width: 'header.avatar',
             height: 'header.avatar',
             m: 'header.avatarMargin',
+            display: 'flex',
+            placeContent: 'center center',
           })}
-        ></div>
+        >
+          <button disabled className={css({ p: '0' })}>
+            <IconMic size={28} />
+          </button>
+        </div>
       </div>
 
       <PageNav />
