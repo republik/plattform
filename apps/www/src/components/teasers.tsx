@@ -71,10 +71,6 @@ export const TeaserArticle = async ({ path }: ArticleProps) => {
           '&:hover': { transform: 'scale(1.02)' },
         })}
       >
-        <p>Path: {path}</p>
-        <p>
-          Url: {url.toString()} ({url.pathname})
-        </p>
         {article.meta.image ? (
           <Image
             alt=''
