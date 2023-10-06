@@ -5,7 +5,6 @@ import { css } from '@app/styled-system/css'
 import Link from 'next/link'
 import Container from '@app/components/container'
 import { stack } from '@app/styled-system/patterns'
-import { PageHeader } from '@app/components/page-header'
 
 export default function Error({
   error,
@@ -20,7 +19,11 @@ export default function Error({
   }, [error])
   return (
     <>
-      <PageHeader />
+      {/* 
+        TODO: PageHeader is a server-component and therefor can't be rendered here.
+        Move it to a layout.
+       */}
+      {/* <PageHeader /> */}
       <Container>
         <div className={stack({ gap: '4', mt: '16' })}>
           <h1
