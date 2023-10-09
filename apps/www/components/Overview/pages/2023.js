@@ -618,7 +618,7 @@ const text = {
       und{' '}
       <Highlight {...p} ids={['TFcU8PNiH']}>
         warum sich die Meere erhitzen
-      </Highlight>{' '}
+      </Highlight>
       . Dazu:{' '}
       <Highlight {...p} ids={['g6cOdxTkY']}>
         Im Restaurant mit zwei Zuckerforscherinnen
