@@ -573,7 +573,59 @@ const text = {
       ?
     </>
   ),
-  //September: (p) => <></>,
+  September: (p) => (
+    <>
+      Stellen Sie sich vor,{' '}
+      <Highlight {...p} ids={['E33Uu4xIT']}>
+        Sie wären steinreich und wollten in die Politik eingreifen
+      </Highlight>
+      . Ein{' '}
+      <Highlight {...p} ids={['Y4FLQHVHT']}>
+        Beschaffungsskandal
+      </Highlight>
+      ,{' '}
+      <Highlight {...p} ids={['Q0utOXDpy']}>
+        junges Theater
+      </Highlight>
+      ,{' '}
+      <Highlight {...p} ids={['VWa8Wo1rL']}>
+        junge Täter
+      </Highlight>
+      ,{' '}
+      <Highlight {...p} ids={['IV8haI_oi']}>
+        Gesundheitskosten
+      </Highlight>
+      .{' '}
+      <Highlight {...p} ids={['mTRw55AhgC']}>
+        Was die Schweiz zum Einwanderungsland macht
+      </Highlight>{' '}
+      und{' '}
+      <Highlight {...p} ids={['fd_sIUOka']}>
+        was uns die Staatsstreiche in Afrika über die neue Weltordnung sagen
+      </Highlight>
+      .{' '}
+      <Highlight {...p} ids={['rUj_uTUGR']}>
+        10 Vorschläge für eine bessere Verfassung
+      </Highlight>{' '}
+      und{' '}
+      <Highlight {...p} ids={['oEm6pdrxV']}>
+        33 Bücher gegen die Repression
+      </Highlight>
+      .{' '}
+      <Highlight {...p} ids={['f28gw-LEW']}>
+        Wie die Schweizer Medien nach rechts rücken
+      </Highlight>{' '}
+      und{' '}
+      <Highlight {...p} ids={['TFcU8PNiH']}>
+        warum sich die Meere erhitzen
+      </Highlight>{' '}
+      . Dazu:{' '}
+      <Highlight {...p} ids={['g6cOdxTkY']}>
+        Im Restaurant mit zwei Zuckerforscherinnen
+      </Highlight>
+      .
+    </>
+  ),
   //Oktober: (p) => <></>,
   //November: (p) => <></>,
   //Dezember: (p) => <></>,
