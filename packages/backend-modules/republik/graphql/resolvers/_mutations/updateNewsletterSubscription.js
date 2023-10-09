@@ -29,7 +29,7 @@ module.exports = async (_, args, context) => {
     pgdb,
     req,
     t,
-    mail: { updateNewsletterSubscription, errors },
+    mail: { updateNewsletterSubscriptions, errors },
   } = context
 
   // if userId is null, the logged in user's subscription is changed
@@ -82,11 +82,16 @@ module.exports = async (_, args, context) => {
   }
 
   try {
-    return updateNewsletterSubscription(
+    const { NewsletterSubscription } = context
+    const interestId = NewsletterSubscription.interestIdByName(name)
+    const interest = {}
+    interest[interestId] = true
+    console.log('-----------' + JSON.stringify(interest))
+
+    return updateNewsletterSubscriptions(
       {
         user,
-        name,
-        subscribed,
+        interests: [interest],
       },
       context,
     )
