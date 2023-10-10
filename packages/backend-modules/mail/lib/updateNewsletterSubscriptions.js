@@ -8,6 +8,7 @@ module.exports = async (
 ) => {
   if (!NewsletterSubscription) throw new SubscriptionHandlerMissingMailError()
 
+  // single subscription update
   if (!Object.keys(interests).length && !!name) {
     const interestId = NewsletterSubscription.interestIdByName(name)
     interests[interestId] = subscribed
