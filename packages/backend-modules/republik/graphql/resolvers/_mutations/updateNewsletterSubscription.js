@@ -82,19 +82,16 @@ module.exports = async (_, args, context) => {
   }
 
   try {
-    const { NewsletterSubscription } = context
-    const interestId = NewsletterSubscription.interestIdByName(name)
-    const interest = {}
-    interest[interestId] = true
-    console.log('-----------' + JSON.stringify(interest))
-
-    return updateNewsletterSubscriptions(
+    const subscriptions = await updateNewsletterSubscriptions(
       {
         user,
-        interests: [interest],
+        interests: {},
+        name,
+        subscribed,
       },
       context,
     )
+    return subscriptions[0]
   } catch (error) {
     if (error instanceof errors.InterestIdNotFoundMailError) {
       console.error(
