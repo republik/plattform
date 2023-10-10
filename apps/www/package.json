@@ -16,7 +16,7 @@
     "test:watch": "jest --watch",
     "cloc": "find . -name '*.js' -not -path \"./node_modules*\" -not -path \"./.next*\" | xargs wc -l",
     "lint": "next lint",
-    "translations-raw": "NODE_OPTIONS='-r dotenv/config' gsheets --key=1a-8RESf0Yjo2Mu15Q4SGWTmnY3ifuFbCVSD7WyYRhT0 --title=live --pretty --out lib/translations.json",
+    "translations-raw": "NODE_OPTIONS='-r dotenv/config' gsheets --key=1uZUiI5mlQmR72N5I58bhZ8dIZTd4UB_ZRUnfX8q0h_s --title=live --pretty --out lib/translations.json",
     "translations": "npm run translations-raw && git add -p lib/translations.json && git checkout -- lib/translations.json",
     "translations-vote": "NODE_OPTIONS='-r dotenv/config' gsheets --key=1oBlTiPKIon4p5aek5vEXluWMn0TRwrk-JftznGjTmdQ --title=live --pretty --out components/Vote/translations-vote.json",
     "analyze": "ANALYZE=true next build"
