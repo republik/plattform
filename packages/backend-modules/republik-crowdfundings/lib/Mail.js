@@ -127,6 +127,15 @@ mail.getInterestsForUser = getInterestsForUser
 
 const MailchimpInterface = require('../../mail/MailchimpInterface')
 
+const addUserToMarketingAudience = async ({ user, email }) => {
+  return addUserToAudience({
+    user: user || { email },
+    audienceId: MAILCHIMP_MARKETING_AUDIENCE_ID,
+    statusIfNew: MailchimpInterface.MemberStatus.Subscribed,
+    status: MailchimpInterface.MemberStatus.Subscribed,
+  })
+}
+
 const addUserToAudience = async ({
   user,
   name,
@@ -206,12 +215,7 @@ mail.enforceSubscriptions = async ({
     )
   ) {
     debug('add to marketing audience')
-    const marketingSubscription = await addUserToAudience({
-      user: user || { email },
-      audienceId: MAILCHIMP_MARKETING_AUDIENCE_ID,
-      statusIfNew: MailchimpInterface.MemberStatus.Subscribed,
-      status: MailchimpInterface.MemberStatus.Subscribed,
-    })
+    const marketingSubscription = await addUserToMarketingAudience(user)
     allSubscriptions.push({
       audienceId: MAILCHIMP_MARKETING_AUDIENCE_ID,
       subscriptions: marketingSubscription,

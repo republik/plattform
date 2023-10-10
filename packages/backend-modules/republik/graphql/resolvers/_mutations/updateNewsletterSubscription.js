@@ -29,7 +29,7 @@ module.exports = async (_, args, context) => {
     pgdb,
     req,
     t,
-    mail: { updateNewsletterSubscriptions, errors },
+    mail: { updateNewsletterSubscriptions, addUserToMarketingAudience, errors },
   } = context
 
   // if userId is null, the logged in user's subscription is changed
@@ -78,6 +78,20 @@ module.exports = async (_, args, context) => {
         consent: consentName,
       },
       context,
+    )
+  }
+
+  try {
+    const isMember = Roles.userHasRole(user, 'member')
+    if (subscribed && !isMember) {
+      await addUserToMarketingAudience({
+        user,
+      })
+    }
+  } catch (error) {
+    console.error(
+      `Adding user ${user.email} to marketing audience failed.`,
+      error.meta,
     )
   }
 
