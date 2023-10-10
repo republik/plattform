@@ -81,6 +81,7 @@ module.exports = async (_, args, context) => {
     )
   }
 
+  // add user to marketing audience if not a member
   try {
     const isMember = Roles.userHasRole(user, 'member')
     if (subscribed && !isMember) {
