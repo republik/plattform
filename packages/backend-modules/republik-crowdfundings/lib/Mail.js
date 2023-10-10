@@ -217,9 +217,9 @@ mail.enforceSubscriptions = async ({
     )
   ) {
     debug('add to marketing audience')
-    const marketingSubscription = await addUserToMarketingAudience(
-      user || { email },
-    )
+    const marketingSubscription = await addUserToMarketingAudience({
+      user: user || { email },
+    })
     allSubscriptions.push({
       audienceId: MAILCHIMP_MARKETING_AUDIENCE_ID,
       subscriptions: marketingSubscription,
