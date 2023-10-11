@@ -106,7 +106,11 @@ module.exports = async (_, args, context) => {
       },
       context,
     )
-    return subscriptions[0]
+    if (subscriptions.length) {
+      return subscriptions[0]
+    } else {
+      throw new Error()
+    }
   } catch (error) {
     if (error instanceof errors.InterestIdNotFoundMailError) {
       console.error(
