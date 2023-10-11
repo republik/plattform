@@ -12,7 +12,8 @@
     ],
     "nohoist": [
       "styleguide/slate",
-      "styleguide/slate-*"
+      "styleguide/slate-*",
+      "**/zod"
     ]
   },
   "scripts": {
