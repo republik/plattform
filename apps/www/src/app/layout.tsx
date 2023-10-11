@@ -1,6 +1,7 @@
 import './root.css'
 
 import { ThemeProvider } from '@app/components/theme-provider'
+import { ApolloWrapper } from '@app/lib/apollo/provider'
 import { css } from '@app/styled-system/css'
 import { ReactNode } from 'react'
 
@@ -27,7 +28,9 @@ export default async function RootLayout({
           height: '100dvh',
         }}
       >
-        <ThemeProvider>{children}</ThemeProvider>
+        <ThemeProvider>
+          <ApolloWrapper>{children}</ApolloWrapper>
+        </ThemeProvider>
       </body>
     </html>
   )
