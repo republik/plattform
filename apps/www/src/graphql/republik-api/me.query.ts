@@ -36,7 +36,7 @@ export const ME_QUERY = gql`
 `
 
 export type MeQueryResult = {
-  me: {
+  me: null | {
     id: string
     username: string
     slug: string

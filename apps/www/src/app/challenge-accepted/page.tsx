@@ -14,6 +14,9 @@ import { wrap } from '@app/styled-system/patterns'
 import { getMe } from '@app/lib/auth/me'
 import { CollectionFilter } from '@app/components/collection-filter'
 import { StructuredText } from 'react-datocms'
+import { CANewsletterSignUp } from '@app/components/ca-newsletter-sign-up'
+import { getClient } from '@app/lib/apollo/client'
+import { getClimateLabNewsletterSubscriptionStatus } from '@app/graphql/republik-api/newsletter.query'
 
 export async function generateMetadata(): Promise<Metadata> {
   const client = getCMSClient()
@@ -31,13 +34,15 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function Page({ searchParams }) {
-  const client = getCMSClient()
-  const { data } = await client.query({
+  const cmsClient = getCMSClient()
+  const { data } = await cmsClient.query({
     query: CHALLENGE_ACCEPTED_HUB_QUERY,
     context: {},
   })
 
   const me = await getMe()
+  const isSubscribedToCANewsletter =
+    await getClimateLabNewsletterSubscriptionStatus()
 
   const isMember =
     me?.roles && Array.isArray(me.roles) && me.roles.includes('member')
@@ -63,7 +68,6 @@ export default async function Page({ searchParams }) {
         className={css({
           mb: '8',
           _dark: {
-            // @ts-expect-error non-token style value
             filter: 'invert(1)',
           },
         })}
@@ -153,6 +157,9 @@ export default async function Page({ searchParams }) {
             me?.roles && Array.isArray(me.roles) && me.roles.includes('member')
           }
         />
+        {!isSubscribedToCANewsletter && (
+          <CANewsletterSignUp defaultEmail={me ? me.email : undefined} />
+        )}
         <div className={css({ marginTop: '8' })}>
           <StructuredText data={hub.outro.value} />
         </div>
