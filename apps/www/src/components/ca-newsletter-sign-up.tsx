@@ -18,7 +18,13 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>
 
-export function CANewsletterSignUp() {
+type CANewsletterSignUpProps = {
+  defaultEmail?: string
+}
+
+export function CANewsletterSignUp({
+  defaultEmail = '',
+}: CANewsletterSignUpProps) {
   const [signUpForNewsletter] = useMutation<
     SignUpForNewsletterResult,
     SignUpForNewsletterVariables
@@ -28,7 +34,7 @@ export function CANewsletterSignUp() {
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: '',
+      email: defaultEmail,
     },
   })
 
@@ -37,7 +43,7 @@ export function CANewsletterSignUp() {
     try {
       const { data } = await signUpForNewsletter({
         variables: {
-          name: 'CLIMATE',
+          name: 'CLIMATE', // TODO: check if correct newsletter
           email: email,
           context: '',
         },
@@ -59,7 +65,6 @@ export function CANewsletterSignUp() {
     } finally {
       setIsLoading(false)
     }
-    // alert('email: ' + email)
   }
 
   return (
@@ -169,7 +174,8 @@ export function CANewsletterSignUp() {
             fontSize: 'xl',
           })}
         >
-          Sie sind nun für den Newsletter angemeldet. ✅
+          Sie sollten eine E-Mail erhalten haben, um die Anmeldung für den
+          Newsletter zu bestätigen. ✅
         </p>
       )}
     </div>
