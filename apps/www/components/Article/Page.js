@@ -171,6 +171,14 @@ const ClimateLabInlineTeaser = dynamic(
   },
 )
 
+const ChallengeAcceptedInlineTeaser = dynamic(
+  () => import('../ChallengeAccepted/ChallengeAcceptedInlineTeaser'),
+  {
+    loading: LoadingComponent,
+    ssr: false,
+  },
+)
+
 const QuestionnaireSubmissions = dynamic(
   () => import('../Questionnaire/Submissions'),
   {
@@ -451,6 +459,7 @@ const ArticlePage = ({
           POLITICS_COMMUNITY_QUESTIONNAIRE: PoliticsCommunityQuestionnaire,
           POSTCARD: Postcard,
           POSTCARD_GALLERY: PostcardGallery,
+          CHALLENGE_ACCEPTED_INLINE_TEASER: ChallengeAcceptedInlineTeaser,
         },
         titleMargin: false,
         titleBreakout,
