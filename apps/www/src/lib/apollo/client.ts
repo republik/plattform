@@ -17,6 +17,13 @@ export const { getClient } = registerApolloClient(() => {
         accept: headers().get('accept') ?? '',
         Authorization: headers().get('Authorization') ?? '',
       },
+      fetchOptions: {
+        next: {
+          // By default we disable Next.js 13 fetch caching
+          // since the requests are user based
+          cache: 'no-store',
+        },
+      },
     }),
   })
 })
