@@ -45,6 +45,7 @@ export const presetRepublik = definePreset({
           5: { value: '1.25rem' },
           6: { value: '1.5rem' },
           8: { value: '2rem' },
+          10: { value: '2.5rem' },
           12: { value: '3rem' },
           16: { value: '4rem' },
           32: { value: '8rem' },
@@ -136,6 +137,9 @@ export const presetRepublik = definePreset({
           },
           overlay: {
             value: { base: 'rgba(0,0,0,0.1)', _dark: 'rgba(0,0,0,0.4)' },
+          },
+          error: {
+            value: { base: '#dc2626', _dark: '#dc2626' },
           },
         },
         sizes: {
