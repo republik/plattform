@@ -232,7 +232,7 @@ mail.enforceSubscriptions = async ({
       subscriptions: marketingSubscription,
     })
   } else {
-    debug('remove from marketing audience')
+    debug('update status in marketing audience to not receive marketing mails')
     const interest = {}
     interest[MAILCHIMP_MARKETING_INTEREST_FREE_OFFERS_ONLY] = false
     const marketingSubscription = await addUserToAudience({
