@@ -6,7 +6,6 @@ const handlers = {
   sendMailTemplate: require('./sendMailTemplate'),
   unsubscribeEmail: require('./unsubscribeEmail'),
   updateMergeFields: require('./updateMergeFields'),
-  updateNewsletterSubscription: require('./updateNewsletterSubscription'),
   updateNewsletterSubscriptions: require('./updateNewsletterSubscriptions'),
 
   // MailChimp batch operations types
