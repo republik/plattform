@@ -32,6 +32,7 @@ const {
   MAILCHIMP_MAIN_LIST_ID,
   MAILCHIMP_ONBOARDING_AUDIENCE_ID,
   MAILCHIMP_MARKETING_AUDIENCE_ID,
+  MAILCHIMP_MARKETING_INTEREST_FREE_OFFERS_ONLY,
   FRONTEND_BASE_URL,
 } = process.env
 
@@ -128,9 +129,12 @@ mail.getInterestsForUser = getInterestsForUser
 const MailchimpInterface = require('../../mail/MailchimpInterface')
 
 const addUserToMarketingAudience = async ({ user }) => {
+  const interest = {}
+  interest[MAILCHIMP_MARKETING_INTEREST_FREE_OFFERS_ONLY] = true
   return addUserToAudience({
     user: user,
     audienceId: MAILCHIMP_MARKETING_AUDIENCE_ID,
+    interests: interest,
     statusIfNew: MailchimpInterface.MemberStatus.Subscribed,
     defaultStatus: MailchimpInterface.MemberStatus.Subscribed,
   })
@@ -142,6 +146,7 @@ const addUserToAudience = async ({
   user,
   name,
   audienceId,
+  interests,
   statusIfNew = MailchimpInterface.MemberStatus.Subscribed,
   defaultStatus = MailchimpInterface.MemberStatus.Unsubscribed,
 }) => {
@@ -149,7 +154,7 @@ const addUserToAudience = async ({
 
   debug(
     'addUserToAudience called with ' +
-      { email, user, name, audienceId, statusIfNew, defaultStatus },
+      { email, user, name, audienceId, interests, statusIfNew, defaultStatus },
   )
 
   if (!audienceId) {
@@ -161,6 +166,7 @@ const addUserToAudience = async ({
     email_address: email,
     status_if_new: statusIfNew,
     status: defaultStatus,
+    interests,
   }
 
   debug(data)
@@ -171,6 +177,7 @@ const addUserToAudience = async ({
   // TODO tbd, maybe merge this with NewsletterSubscription
   const result = {
     user,
+    interests,
     status_if_new: statusIfNew,
     status: defaultStatus,
   }
@@ -226,11 +233,14 @@ mail.enforceSubscriptions = async ({
     })
   } else {
     debug('remove from marketing audience')
+    const interest = {}
+    interest[MAILCHIMP_MARKETING_INTEREST_FREE_OFFERS_ONLY] = false
     const marketingSubscription = await addUserToAudience({
       user: user || { email },
       audienceId: MAILCHIMP_MARKETING_AUDIENCE_ID,
-      statusIfNew: MailchimpInterface.MemberStatus.Unsubscribed,
-      defaultStatus: MailchimpInterface.MemberStatus.Unsubscribed,
+      interests: interest,
+      statusIfNew: MailchimpInterface.MemberStatus.Subscribed,
+      defaultStatus: MailchimpInterface.MemberStatus.Subscribed,
     })
     allSubscriptions.push({
       audienceId: MAILCHIMP_MARKETING_AUDIENCE_ID,
