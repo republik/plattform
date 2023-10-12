@@ -14,7 +14,9 @@ import NewsletterSignUp from 'components/Auth/NewsletterSignUp'
 import Link from 'next/link'
 import Image from 'next/image'
 import ChallengeAcceptedSVG from '../../public/static/challenge-accepted/challenge-accepted.svg'
+import ChallengeAcceptedSVGDark from '../../public/static/challenge-accepted/challenge-accepted_dark.svg'
 import { useRouter } from 'next/router'
+import { useTheme } from 'next-themes'
 
 const styles = {
   p: css({
@@ -157,6 +159,7 @@ function CABottomInlineTeaser({
 
 function ChallengeAcceptedInlineTeaser(props: { position?: 'top' | 'bottom' }) {
   const { hasActiveMembership, meLoading } = useMe()
+  const { resolvedTheme } = useTheme()
 
   const { data: challengeAcceptedNLData, loading: challengeAcceptedNLLoading } =
     useQuery<CANewsterQueryResult, CANewsletterQueryVariables>(
@@ -196,7 +199,11 @@ function ChallengeAcceptedInlineTeaser(props: { position?: 'top' | 'bottom' }) {
           }}
         >
           <Image
-            src={ChallengeAcceptedSVG}
+            src={
+              resolvedTheme === 'dark'
+                ? ChallengeAcceptedSVGDark
+                : ChallengeAcceptedSVG
+            }
             alt='Challenge Accepted'
             width={200}
           />
