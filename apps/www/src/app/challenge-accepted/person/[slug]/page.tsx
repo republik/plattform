@@ -5,7 +5,6 @@ import { PERSON_DETAIL_QUERY } from '@app/graphql/cms/person-detail.query'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { getMe } from '@app/lib/auth/me'
-import { PersonDetailQuery } from '@app/graphql/gql/graphql'
 
 export default async function Page({
   params: { slug },
