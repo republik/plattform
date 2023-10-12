@@ -132,7 +132,7 @@ const addUserToMarketingAudience = async ({ user }) => {
     user: user,
     audienceId: MAILCHIMP_MARKETING_AUDIENCE_ID,
     statusIfNew: MailchimpInterface.MemberStatus.Subscribed,
-    status: MailchimpInterface.MemberStatus.Subscribed,
+    defaultStatus: MailchimpInterface.MemberStatus.Subscribed,
   })
 }
 
@@ -230,7 +230,7 @@ mail.enforceSubscriptions = async ({
       user: user || { email },
       audienceId: MAILCHIMP_MARKETING_AUDIENCE_ID,
       statusIfNew: MailchimpInterface.MemberStatus.Unsubscribed,
-      status: MailchimpInterface.MemberStatus.Unsubscribed,
+      defaultStatus: MailchimpInterface.MemberStatus.Unsubscribed,
     })
     allSubscriptions.push({
       audienceId: MAILCHIMP_MARKETING_AUDIENCE_ID,
