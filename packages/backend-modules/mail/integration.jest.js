@@ -1,4 +1,3 @@
-const path = require('path')
 require('@orbiting/backend-modules-env').config('.test.env')
 
 const cleanup = async () => {
@@ -46,7 +45,7 @@ const user = () => ({
 test('get some member data without configuring mail first', async () => {
   const getNewsletterSettings = require('./lib/getNewsletterSettings')
   expect(
-    // updateNewsletterSubscription returns a promise
+    // updateNewsletterSubscriptions returns a promise
     getNewsletterSettings({ user: user('member') }),
   ).rejects.toThrow()
 })
@@ -63,8 +62,8 @@ test('member user settings which does not exist on mailchimp', async () => {
 })
 
 test('single-subscription: change interest settings of user which is not subscribed', async () => {
-  const { updateNewsletterSubscription, getNewsletterSettings } = createMail()
-  const settings = await updateNewsletterSubscription({
+  const { updateNewsletterSubscriptions, getNewsletterSettings } = createMail()
+  const settings = await updateNewsletterSubscriptions({
     user: user('member'),
     name: 'DAILY',
     subscribed: true,
@@ -97,8 +96,8 @@ test('multi-subscription: subscribe email to 1 more interest', async () => {
 })
 
 test('single-subscribe: unsubscribe from 1 interest', async () => {
-  const { updateNewsletterSubscription, getNewsletterSettings } = createMail()
-  const settings = await updateNewsletterSubscription({
+  const { updateNewsletterSubscriptions, getNewsletterSettings } = createMail()
+  const settings = await updateNewsletterSubscriptions({
     user: user(),
     name: 'PROJECTR',
     subscribed: false,
@@ -121,8 +120,8 @@ test('unsubscripe from mailchimp completely (opt-out)', async () => {
 })
 
 test('resubscribe after unsubscription', async () => {
-  const { updateNewsletterSubscription, getNewsletterSettings } = createMail()
-  const settings = await updateNewsletterSubscription({
+  const { updateNewsletterSubscriptions, getNewsletterSettings } = createMail()
+  const settings = await updateNewsletterSubscriptions({
     user: user(),
     name: 'PROJECTR',
     subscribed: true,
