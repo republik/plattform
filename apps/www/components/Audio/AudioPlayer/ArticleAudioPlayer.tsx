@@ -129,7 +129,7 @@ export const ArticleAudioPlayer = ({ document }: PlayerProps) => {
   const showReadAloudSubscribe =
     meta.willBeReadAloud &&
     readAloudSubscription &&
-    (playerKind === 'syntheticReadAloud' || 'other')
+    (playerKind === 'syntheticReadAloud' || playerKind === 'other')
       ? true
       : false
 
