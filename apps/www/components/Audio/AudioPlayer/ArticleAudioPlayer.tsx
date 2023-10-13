@@ -183,6 +183,8 @@ export const ArticleAudioPlayer = ({ document }: PlayerProps) => {
             />
           ) : playerKind === 'syntheticReadAloud' ? (
             t('article/actionbar/audio/info/synthetic')
+          ) : !audioSource ? (
+            'Dieser Beitrag wird im Verlauf des Tages eingelesen.'
           ) : (
             meta.title
           )}
