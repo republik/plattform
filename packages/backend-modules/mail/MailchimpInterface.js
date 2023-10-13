@@ -203,4 +203,6 @@ MailchimpInterface.MemberStatus = {
   Unsubscribed: 'unsubscribed',
 }
 
+MailchimpInterface.audiences = audiences
+
 module.exports = MailchimpInterface
