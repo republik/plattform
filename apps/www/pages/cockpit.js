@@ -394,16 +394,16 @@ const Page = ({
             { key: 'preactive', color: '#256900', label: 'Crowdfunder' },
             {
               key: 'active',
-              color: '#3CAD00',
+              color: '#2ca02c',
               label: 'Aktive Mitgliedschaften oder Abos',
             },
-            { key: 'loss', color: '#9970ab', label: 'Abgänge' },
+            { key: 'loss', color: '#9467bd', label: 'Abgänge' },
             { key: 'missing', color: '#444', label: 'fehlende' },
             { key: 'pending', color: '#444', label: 'offene' },
-            { key: 'base', color: '#3CAD00', label: 'bestehende' },
+            { key: 'base', color: '#2ca02c', label: 'bestehende' },
             {
               key: 'gaining',
-              color: '#3CAD00',
+              color: '#2ca02c',
               label: 'Zugänge',
             },
           ]
@@ -705,7 +705,7 @@ const Page = ({
                     colorMap: {
                       Lesepositionen: '#9467bd',
                       Lesezeichen: '#e377c2',
-                      Dialog: '#3CAD00',
+                      Dialog: '#2ca02c',
                     },
                   }}
                   values={engagedUsers}
