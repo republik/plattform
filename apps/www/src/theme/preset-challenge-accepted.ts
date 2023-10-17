@@ -60,6 +60,9 @@ export const presetChallengeAccepted = definePreset({
           fontSize: 'clamp(1.5rem, 1rem + 2vw, 2.75rem)',
           lineHeight: 1.4,
           letterSpacing: -0.25,
+          '& b, & strong': {
+            fontWeight: 500,
+          },
         },
       },
       eventTeaserTitle: {
