@@ -2,9 +2,10 @@ import { Fragment } from 'react'
 import { createBlockButton, buttonStyles, matchBlock } from '../../utils'
 import injectBlock from '../../utils/injectBlock'
 
-import { Label, Checkbox } from '@project-r/styleguide'
+import { Label, Checkbox, Field } from '@project-r/styleguide'
 import { AuthorSearch } from '@project-r/styleguide/editor'
 import { Text } from 'slate'
+import createOnFieldChange from '../../utils/createOnFieldChange'
 
 export default ({ TYPE, newBlock, editorOptions }) => {
   const InsertButton = createBlockButton({
@@ -33,6 +34,7 @@ export default ({ TYPE, newBlock, editorOptions }) => {
     if (!value.blocks.some(matchBlock(TYPE))) {
       return null
     }
+    const handlerFactory = createOnFieldChange(onChange, value)
 
     const authors = value.blocks.filter(matchBlock(TYPE))
 
@@ -51,6 +53,7 @@ export default ({ TYPE, newBlock, editorOptions }) => {
               credentials: author.value.credentials,
             },
             isLarge: author.value.isLarge,
+            greeting: author.value.greeting,
           },
         }),
       )
@@ -60,6 +63,7 @@ export default ({ TYPE, newBlock, editorOptions }) => {
       <div>
         <Label>Autorin</Label>
         {authors.map((node, i) => {
+          const onInputChange = handlerFactory(node)
           const checked = node.data.get('isLarge') === true
           return (
             <Fragment key={i}>
@@ -75,6 +79,13 @@ export default ({ TYPE, newBlock, editorOptions }) => {
               >
                 Gross
               </Checkbox>
+              {checked && (
+                <Field
+                  label={'Begrüssung'}
+                  value={node.data.get('greeting')}
+                  onChange={onInputChange('greeting')}
+                />
+              )}
             </Fragment>
           )
         })}
