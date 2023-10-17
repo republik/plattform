@@ -236,26 +236,32 @@ mail.enforceSubscriptions = async ({
     })
   } else {
     debug('update status in marketing audience to not receive marketing mails')
-    const interest = {}
-    interest[MAILCHIMP_MARKETING_INTEREST_FREE_OFFERS_ONLY] = false
-    const marketingSubscription = await addUserToAudience({
-      user: user || { email },
-      audienceId: MAILCHIMP_MARKETING_AUDIENCE_ID,
-      interests: interest,
-      statusIfNew: MailchimpInterface.MemberStatus.Subscribed,
-      defaultStatus: MailchimpInterface.MemberStatus.Subscribed,
-    })
-    allSubscriptions.push({
-      audienceId: MAILCHIMP_MARKETING_AUDIENCE_ID,
-      subscriptions: marketingSubscription,
-    })
+    const marketingMember = await mailchimp.getMember(
+      email,
+      MAILCHIMP_MARKETING_AUDIENCE_ID,
+    )
+    if (marketingMember) {
+      const interest = {}
+      interest[MAILCHIMP_MARKETING_INTEREST_FREE_OFFERS_ONLY] = false
+      const marketingSubscription = await addUserToAudience({
+        user: user || { email },
+        audienceId: MAILCHIMP_MARKETING_AUDIENCE_ID,
+        interests: interest,
+        statusIfNew: MailchimpInterface.MemberStatus.Subscribed,
+        defaultStatus: MailchimpInterface.MemberStatus.Subscribed,
+      })
+      allSubscriptions.push({
+        audienceId: MAILCHIMP_MARKETING_AUDIENCE_ID,
+        subscriptions: marketingSubscription,
+      })
+    }
 
     debug('unsubscribe from Probelesen audience if subscribed')
-    const member = await mailchimp.getMember(
+    const probelesenMember = await mailchimp.getMember(
       email,
       MAILCHIMP_PROBELESEN_AUDIENCE_ID,
     )
-    if (member) {
+    if (probelesenMember) {
       const probelesenSubscription = await addUserToAudience({
         user: user || { email },
         audienceId: MAILCHIMP_PROBELESEN_AUDIENCE_ID,
