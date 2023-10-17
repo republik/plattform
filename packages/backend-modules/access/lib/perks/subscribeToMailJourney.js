@@ -14,7 +14,7 @@ const give = async (
 ) => {
   const audienceId = MAILCHIMP_PROBELESEN_AUDIENCE_ID
 
-  await mail.adduserToAudience({
+  await mail.addUserToAudience({
     user: recipient,
     audienceId: audienceId,
   })
