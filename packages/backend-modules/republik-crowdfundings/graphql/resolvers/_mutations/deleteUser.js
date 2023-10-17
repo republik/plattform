@@ -205,8 +205,10 @@ module.exports = async (_, args, context) => {
     const mailchimpResult = await deleteFromMailchimp({
       email: user.email,
     })
-    if (!mailchimpResult) {
-      console.warn(`deleteUser: could not delete ${user.email} from mailchimp.`)
+    if (!mailchimpResult.every((result) => result === true)) {
+      console.warn(
+        `deleteUser: could not delete ${user.email} from all mailchimp audiences. This might be because they were not added to all currently used audiences.`,
+      )
     }
 
     await deleteRelatedData(
