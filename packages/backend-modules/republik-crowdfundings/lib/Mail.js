@@ -33,6 +33,7 @@ const {
   MAILCHIMP_ONBOARDING_AUDIENCE_ID,
   MAILCHIMP_MARKETING_AUDIENCE_ID,
   MAILCHIMP_MARKETING_INTEREST_FREE_OFFERS_ONLY,
+  MAILCHIMP_PROBELESEN_AUDIENCE_ID,
   FRONTEND_BASE_URL,
 } = process.env
 
@@ -216,6 +217,8 @@ mail.enforceSubscriptions = async ({
     },
   ]
 
+  const mailchimp = MailchimpInterface({ console })
+
   // always add to marketing audience when newsletter settings are updated, except if MEMBER or BENEFACTOR are true
   if (
     !(
@@ -246,6 +249,25 @@ mail.enforceSubscriptions = async ({
       audienceId: MAILCHIMP_MARKETING_AUDIENCE_ID,
       subscriptions: marketingSubscription,
     })
+
+    debug('unsubscribe from Probelesen audience if subscribed')
+    const member = await mailchimp.getMember(
+      email,
+      MAILCHIMP_PROBELESEN_AUDIENCE_ID,
+    )
+    if (member) {
+      const probelesenSubscription = await addUserToAudience({
+        user: user || { email },
+        audienceId: MAILCHIMP_PROBELESEN_AUDIENCE_ID,
+        statusIfNew: MailchimpInterface.MemberStatus.Unsubscribed,
+        defaultStatus: MailchimpInterface.MemberStatus.Unsubscribed,
+        ...rest,
+      })
+      allSubscriptions.push({
+        audienceId: MAILCHIMP_PROBELESEN_AUDIENCE_ID,
+        subscriptions: probelesenSubscription,
+      })
+    }
   }
 
   if (subscribeToOnboardingMails) {
