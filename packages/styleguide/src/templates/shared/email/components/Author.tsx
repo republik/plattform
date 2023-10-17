@@ -36,7 +36,7 @@ export const Author = ({
 
   return (
     <>
-      {!isLarge ? (
+      {isLarge ? (
         <table
           border={0}
           cellPadding='0'
@@ -70,7 +70,12 @@ export const Author = ({
           </tr>
         </table>
       ) : (
-        <table id='sender' style={{ marginTop: 48, marginBottom: 24 }}>
+        <table
+          id='sender'
+          cellPadding='0'
+          cellSpacing='0'
+          style={{ marginTop: 48, marginBottom: 24 }}
+        >
           <tr>
             <td>
               <img
@@ -86,7 +91,7 @@ export const Author = ({
                 }}
               />
             </td>
-            <td id='sender' style={{ paddingLeft: 12, lineHeight: '160%' }}>
+            <td id='sender' style={{ paddingLeft: 16, lineHeight: '160%' }}>
               <strong>{author.name}</strong>
               <br />
               {credential?.description}
