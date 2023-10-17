@@ -2,7 +2,7 @@ import { Fragment } from 'react'
 import { createBlockButton, buttonStyles, matchBlock } from '../../utils'
 import injectBlock from '../../utils/injectBlock'
 
-import { Label } from '@project-r/styleguide'
+import { Label, Checkbox } from '@project-r/styleguide'
 import { AuthorSearch } from '@project-r/styleguide/editor'
 import { Text } from 'slate'
 
@@ -50,6 +50,7 @@ export default ({ TYPE, newBlock, editorOptions }) => {
               portrait: author.value.portrait,
               credentials: author.value.credentials,
             },
+            isLarge: author.value.isLarge,
           },
         }),
       )
@@ -58,11 +59,25 @@ export default ({ TYPE, newBlock, editorOptions }) => {
     return (
       <div>
         <Label>Autorin</Label>
-        {authors.map((node, i) => (
-          <Fragment key={i}>
-            <AuthorSearch onChange={authorChange(onChange, value, node)} />
-          </Fragment>
-        ))}
+        {authors.map((node, i) => {
+          const checked = node.data.get('isLarge') === true
+          return (
+            <Fragment key={i}>
+              <AuthorSearch onChange={authorChange(onChange, value, node)} />
+              <Checkbox
+                checked={checked}
+                onChange={(_) => {
+                  let change = value.change().setNodeByKey(node.key, {
+                    data: node.data.merge({ ['isLarge']: !checked }),
+                  })
+                  onChange(change)
+                }}
+              >
+                Gross
+              </Checkbox>
+            </Fragment>
+          )
+        })}
       </div>
     )
   }
