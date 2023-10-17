@@ -67,11 +67,11 @@ export const EventTeaser = ({ event, isMember }: EventProps) => {
         {!event.fullyBooked && (
           <>
             {!isMember && !event.isPublic ? (
-              <p>
+              <>
                 {event.nonMemberCta && (
                   <StructuredText data={event.nonMemberCta.value} />
                 )}
-              </p>
+              </>
             ) : (
               <>
                 {event.signUpLink && (
