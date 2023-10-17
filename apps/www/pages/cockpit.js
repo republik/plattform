@@ -128,7 +128,7 @@ const Accordion = withInNativeApp(
           </Interaction.P>
           {me && me.activeMembership && (
             <>
-              <Link href='/komplizin' passHref>
+              <Link href='/komplizin' passHref legacyBehavior>
                 <PackageItem
                   t={t}
                   crowdfundingName={CROWDFUNDING}
@@ -150,7 +150,7 @@ const Accordion = withInNativeApp(
                       query: { package: 'PROLONG', token: query.token },
                     }}
                     passHref
-                  >
+                    legacyBehavior>
                     <PackageItem
                       t={t}
                       crowdfundingName={CROWDFUNDING}
@@ -171,7 +171,7 @@ const Accordion = withInNativeApp(
                       },
                     }}
                     passHref
-                  >
+                    legacyBehavior>
                     <PackageItem
                       t={t}
                       crowdfundingName={CROWDFUNDING}
@@ -196,7 +196,7 @@ const Accordion = withInNativeApp(
                       },
                     }}
                     passHref
-                  >
+                    legacyBehavior>
                     <PackageItem
                       t={t}
                       crowdfundingName={CROWDFUNDING}
@@ -219,7 +219,7 @@ const Accordion = withInNativeApp(
                         query: { package: 'ABO_GIVE' },
                       }}
                       passHref
-                    >
+                      legacyBehavior>
                       <PackageItem
                         t={t}
                         crowdfundingName={CROWDFUNDING}
@@ -237,7 +237,7 @@ const Accordion = withInNativeApp(
                           query: { package: 'MONTHLY_ABO' },
                         }}
                         passHref
-                      >
+                        legacyBehavior>
                         <PackageItem
                           t={t}
                           crowdfundingName={CROWDFUNDING}
@@ -253,7 +253,7 @@ const Accordion = withInNativeApp(
                           query: { package: 'ABO' },
                         }}
                         passHref
-                      >
+                        legacyBehavior>
                         <PackageItem
                           t={t}
                           crowdfundingName={CROWDFUNDING}
@@ -269,7 +269,7 @@ const Accordion = withInNativeApp(
                           query: { package: 'BENEFACTOR' },
                         }}
                         passHref
-                      >
+                        legacyBehavior>
                         <PackageItem
                           t={t}
                           crowdfundingName={CROWDFUNDING}
@@ -289,7 +289,7 @@ const Accordion = withInNativeApp(
                   query: { package: 'DONATE' },
                 }}
                 passHref
-              >
+                legacyBehavior>
                 <PackageItem
                   t={t}
                   crowdfundingName={CROWDFUNDING}
@@ -313,7 +313,7 @@ const Accordion = withInNativeApp(
             </Interaction.P>
           )}
         </div>
-      )
+      );
     },
   ),
 )

@@ -7,7 +7,19 @@ const base64u = require('@orbiting/backend-modules-base64u')
 
 const { NewsletterMemberMailError } = require('./errors')
 
-const { MAILCHIMP_API_KEY, MAILCHIMP_URL, MAILCHIMP_MAIN_LIST_ID } = process.env
+const {
+  MAILCHIMP_API_KEY,
+  MAILCHIMP_URL,
+  MAILCHIMP_MAIN_LIST_ID,
+  MAILCHIMP_ONBOARDING_AUDIENCE_ID,
+  MAILCHIMP_MARKETING_AUDIENCE_ID,
+} = process.env
+
+const audiences = [
+  MAILCHIMP_MAIN_LIST_ID,
+  MAILCHIMP_ONBOARDING_AUDIENCE_ID,
+  MAILCHIMP_MARKETING_AUDIENCE_ID,
+]
 
 const MINIMUM_HTTP_RESPONSE_STATUS_ERROR = 400
 
@@ -135,12 +147,13 @@ const MailchimpInterface = ({ logger }) => {
     },
     async deleteMember(email, audienceId = MAILCHIMP_MAIN_LIST_ID) {
       debug(`deleting ${email}`)
-      const url = this.buildMembersApiUrl(email) + '/actions/delete-permanent'
+      const url =
+        this.buildMembersApiUrl(email, audienceId) + '/actions/delete-permanent'
       try {
         const response = await this.fetchAuthenticated('POST', url)
         if (response.status >= MINIMUM_HTTP_RESPONSE_STATUS_ERROR) {
-          debug(`could not delete member: ${email}`)
-          return null
+          debug(`could not delete member from audience ${audienceId}: ${email}`)
+          return false
         }
         return true
       } catch (error) {
@@ -182,5 +195,7 @@ MailchimpInterface.MemberStatus = {
   Pending: 'pending',
   Unsubscribed: 'unsubscribed',
 }
+
+MailchimpInterface.audiences = audiences
 
 module.exports = MailchimpInterface

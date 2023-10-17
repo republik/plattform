@@ -111,10 +111,10 @@ class UpdateRole extends Component {
                 </span>
               </p>
             </form>
-          )
+          );
         }}
       </Mutation>
-    )
+    );
   }
 }
 

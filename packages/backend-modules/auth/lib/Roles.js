@@ -14,7 +14,6 @@ const exposableRoles = [
   'producer',
   'supporter',
   'tester',
-  'climate',
 ]
 
 const userHasRole = (user, role) => {

@@ -6,7 +6,7 @@ import { createApolloFetch } from 'apollo-fetch'
 export default withReqMethodGuard(
   async function (req: NextApiRequest, res: NextApiResponse) {
     const apolloFetch = createApolloFetch({
-      uri: process.env.API_URL,
+      uri: process.env.NEXT_PUBLIC_API_URL,
     })
     let { userSlug: userSlugWithSuffix } = req.query
     if (Array.isArray(userSlugWithSuffix)) {

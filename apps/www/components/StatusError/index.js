@@ -33,9 +33,9 @@ const getRedirect = gql`
 
 const getURLLabel = (url) => {
   try {
-    return new URL(url).hostname?.replace(/^www\./, '')
+    return new URL(url).hostname?.replace(/^www\./, '');
   } catch (e) {
-    return url?.replace(/^https?:\/\/www\./, '')
+    return url?.replace(/^https?:\/\/www\./, '');
   }
 }
 const appendQueryString = (target, queryString) => {

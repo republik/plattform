@@ -102,34 +102,30 @@ export const UserResult = ({ node }) => {
     <div>
       <div {...styles.root} {...colorScheme.set('borderColor', 'text')}>
         {portrait && (
-          <Link href={`/~${slug || id}`} passHref>
-            <a {...styles.link}>
-              <img
-                {...styles.profilePicture}
-                src={portrait}
-                alt={`${firstName} ${lastName}`}
-              />
-            </a>
+          <Link href={`/~${slug || id}`} passHref {...styles.link}>
+            <img
+              {...styles.profilePicture}
+              src={portrait}
+              alt={`${firstName} ${lastName}`}
+            />
           </Link>
         )}
         <div {...styles.meta}>
           <div {...styles.name} {...colorScheme.set('color', 'text')}>
-            <Link href={`/~${slug || id}`} passHref>
-              <a {...styles.link}>
-                {nameHighlight?.fragments[0] ? (
-                  <span
-                    {...styles.highlight}
-                    {...highlightEMRule}
-                    dangerouslySetInnerHTML={{
-                      __html: nameHighlight.fragments[0],
-                    }}
-                  />
-                ) : (
-                  <span {...styles.highlight} {...highlightEMRule}>
-                    {firstName} {lastName}
-                  </span>
-                )}
-              </a>
+            <Link href={`/~${slug || id}`} passHref {...styles.link}>
+              {nameHighlight?.fragments[0] ? (
+                <span
+                  {...styles.highlight}
+                  {...highlightEMRule}
+                  dangerouslySetInnerHTML={{
+                    __html: nameHighlight.fragments[0],
+                  }}
+                />
+              ) : (
+                <span {...styles.highlight} {...highlightEMRule}>
+                  {firstName} {lastName}
+                </span>
+              )}
             </Link>
           </div>
           {credential && (

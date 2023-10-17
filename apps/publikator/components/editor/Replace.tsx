@@ -279,7 +279,7 @@ const Replace: React.FC<{ value: any; onSave: (e: any) => undefined }> = ({
                 label='Suchen'
                 value={displaySearchTerm}
                 disabled={step === 2}
-                onChange={(_, value) => setDisplaySearchTerm(value)}
+                onChange={(_, value) => setDisplaySearchTerm(value as string)}
               />
               <Checkbox
                 checked={includeMeta}
@@ -331,7 +331,9 @@ const Replace: React.FC<{ value: any; onSave: (e: any) => undefined }> = ({
                     ref={replaceRef}
                     label='Ersetzen'
                     value={displayReplaceTerm}
-                    onChange={(_, value) => setDisplayReplaceTerm(value)}
+                    onChange={(_, value) =>
+                      setDisplayReplaceTerm(value as string)
+                    }
                   />
 
                   <small>{t('editor/replace/searchReplaceHint')}</small>

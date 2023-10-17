@@ -318,7 +318,6 @@ const ArticlePage = ({
   const articleContent = article?.content
   const articleUnreadNotifications = article?.unreadNotifications
   const routerQuery = router.query
-  const isClimate = !!article?.content?.meta?.climate
 
   useProlitterisTracking(repoId, cleanedPath)
 
@@ -629,7 +628,6 @@ const ArticlePage = ({
       hasOverviewNav={hasOverviewNav}
       stickySecondaryNav={hasStickySecondaryNav}
       pageColorSchemeKey={colorSchemeKey}
-      isClimate={isClimate}
     >
       <PageLoader
         loading={articleLoading && !articleData}
@@ -710,9 +708,8 @@ const ArticlePage = ({
           const format = meta.format
 
           const isFreeNewsletter = !!newsletterMeta && newsletterMeta.free
-          const showNewsletterSignupTop = isFreeNewsletter && !me && isFormat
-          const showNewsletterSignupBottom =
-            isFreeNewsletter && !showNewsletterSignupTop
+          const showNewsletterSignupTop = isFormat && isFreeNewsletter
+          const showNewsletterSignupBottom = isFreeNewsletter && !isFormat
 
           const rawContentMeta = articleContent.meta
           const feedQueryVariables = rawContentMeta.feedQueryVariables
@@ -763,13 +760,12 @@ const ArticlePage = ({
                                     colors[format.meta.kind]
                                   }
                                 >
-                                  <Link href={format.meta.path} passHref>
-                                    <a
-                                      {...plainLinkRule}
-                                      href={format.meta.path}
-                                    >
-                                      {format.meta.title}
-                                    </a>
+                                  <Link
+                                    href={format.meta.path}
+                                    passHref
+                                    {...plainLinkRule}
+                                  >
+                                    {format.meta.title}
                                   </Link>
                                 </Editorial.Format>
                               )}
@@ -809,6 +805,15 @@ const ArticlePage = ({
                           isSyntheticReadAloud ||
                           isReadAloud ? (
                             <Center breakout={breakout}>
+                              {showNewsletterSignupTop && (
+                                <div style={{ marginTop: 10 }}>
+                                  <NewsletterSignUp
+                                    {...newsletterMeta}
+                                    smallButton
+                                    showDescription
+                                  />
+                                </div>
+                              )}
                               {actionBar && (
                                 <div
                                   ref={actionBarRef}
@@ -824,7 +829,8 @@ const ArticlePage = ({
                                 </div>
                               )}
 
-                              {hasAudioSource && (
+                              {(hasAudioSource ||
+                                article?.meta?.willBeReadAloud) && (
                                 <div style={{ marginTop: 32 }}>
                                   <ArticleAudioPlayer document={article} />
                                 </div>
@@ -837,11 +843,6 @@ const ArticlePage = ({
                                     linkedDocuments={article.linkedDocuments}
                                   />
                                 </Breakout>
-                              )}
-                              {showNewsletterSignupTop && (
-                                <div style={{ marginTop: 10 }}>
-                                  <NewsletterSignUp {...newsletterMeta} />
-                                </div>
                               )}
                             </Center>
                           ) : (
@@ -871,12 +872,11 @@ const ArticlePage = ({
               )}
               {showNewsletterSignupBottom && (
                 <Center breakout={breakout}>
-                  {format && !me && (
-                    <Interaction.P>
-                      <strong>{format.meta.title}</strong>
-                    </Interaction.P>
-                  )}
-                  <NewsletterSignUp {...newsletterMeta} />
+                  <NewsletterSignUp
+                    showTitle
+                    showDescription
+                    {...newsletterMeta}
+                  />
                 </Center>
               )}
               {((hasAccess && meta.template === 'article') ||

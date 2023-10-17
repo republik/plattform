@@ -1,5 +1,6 @@
 // Export article-schema
 export { default as createArticleSchema } from './templates/Article'
+export { default as articleEmailSchema } from './templates/Article/email'
 export { extractImages, matchImagesParagraph } from './templates/Article/utils'
 
 // Export comment-schema

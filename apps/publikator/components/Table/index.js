@@ -4,7 +4,7 @@ import { fontStyles, colors } from '@project-r/styleguide'
 
 import {
   IconArrowDropDown as DownIcon,
-  IconArrowDropUp as UpIcon
+  IconArrowDropUp as UpIcon,
 } from '@republik/icons'
 
 import Link from 'next/link'
@@ -95,16 +95,14 @@ export const ThOrder = ({
 }) => (
   <Th style={style}>
     <span {...styles.order}>
-      <Link href={href} replace>
-        <a {...styles.orderLink}>
-          {children}
-          {activeField === field &&
-            (activeDirection === 'DESC' ? (
-              <DownIcon size={20} {...styles.orderLinkIcon} />
-            ) : (
-              <UpIcon size={20} {...styles.orderLinkIcon} />
-            ))}
-        </a>
+      <Link href={href} replace {...styles.orderLink}>
+        {children}
+        {activeField === field &&
+          (activeDirection === 'DESC' ? (
+            <DownIcon size={20} {...styles.orderLinkIcon} />
+          ) : (
+            <UpIcon size={20} {...styles.orderLinkIcon} />
+          ))}
       </Link>
     </span>
   </Th>

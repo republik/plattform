@@ -9,9 +9,7 @@ import {
   colors,
   slug,
 } from '@project-r/styleguide'
-
 import withT from '../../../../lib/withT'
-import { FRONTEND_BASE_URL } from '../../../../lib/settings'
 
 import MetaForm from '../../utils/MetaForm'
 import SlugField from '../../utils/SlugField'
@@ -60,14 +58,23 @@ const MetaData = ({
 }) => {
   const node = value.document
 
-  const genericKeys = Set([
-    'feed',
-    ...additionalFields,
-    'title',
-    'shortTitle',
-    'image',
-    'description',
-  ])
+  const titleNode = value.document.findDescendant(
+    (node) => node.type === 'TITLE',
+  )
+  const titleData = titleNode ? titleNode.data.toJS() : {}
+  const formatData = titleData?.format?.meta
+
+  const genericKeys = Set(
+    [
+      'feed',
+      ...additionalFields,
+      formatData?.sendAsEmail && 'emailSubject',
+      'title',
+      'shortTitle',
+      'image',
+      'description',
+    ].filter(Boolean),
+  )
   const genericDefaultValues = Map(
     genericKeys.map((key) => [key, key === 'feed' ? false : '']),
   )
@@ -103,6 +110,8 @@ const MetaData = ({
       change.setNodeByKey(node.key, {
         data: item
           ? node.data.set(key, `https://github.com/${item.value.id}`)
+          : key === 'format'
+          ? node.data.remove(key).remove('emailSubject')
           : node.data.remove(key),
       })
       let data = item ? item.value.latestCommit.document : undefined
@@ -138,10 +147,6 @@ const MetaData = ({
       }
     })
   }
-  const titleNode = value.document.findDescendant(
-    (node) => node.type === 'TITLE',
-  )
-  const titleData = titleNode ? titleNode.data.toJS() : {}
 
   const dataAsJs = node.data.toJS()
   const customFieldsByRef = nest()
@@ -217,10 +222,6 @@ const MetaData = ({
             key: 'darkMode',
             label: t('metaData/darkMode'),
           },
-          darkMode && {
-            key: 'climate',
-            label: t('metaData/climateLab'),
-          },
           { key: 'isRestricted', label: t('metaData/isRestricted') },
         ]
           .filter(Boolean)
@@ -272,29 +273,6 @@ const MetaData = ({
           black
           getWidth={() => '50%'}
         />
-        {!node.data.get('discussion') &&
-          ['article', 'discussion'].includes(titleData.meta?.template) && (
-            <Checkbox
-              checked={node.data
-                .get('discussionAllowedRoles')
-                ?.includes('climate')}
-              onChange={(_, checked) => {
-                let newData = node.data
-                editor.change((change) => {
-                  change.setNodeByKey(node.key, {
-                    data: checked
-                      ? newData.set('discussionAllowedRoles', ['climate'])
-                      : newData.remove('discussionAllowedRoles'),
-                  })
-                })
-              }}
-              black
-            >
-              {t('metaData/discussionAllowedRoles')}
-            </Checkbox>
-          )}
-        <br />
-        <br />
         {!!series && (
           <SeriesForm
             repoId={titleData.repoId}
@@ -322,7 +300,7 @@ const MetaData = ({
         <br />
         <ShareImageForm
           onInputChange={onInputChange}
-          format={titleData?.format?.meta}
+          format={formatData}
           editor={editor}
           node={node}
         />

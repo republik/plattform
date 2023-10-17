@@ -41,7 +41,7 @@ const init = async (context) => {
       runFunc: async (_args, context) => {
         const { dryRun } = _args
         debug(
-          `starting job to archive unsubscribed users in onboarding audience on mailchimp`,
+          `starting job to archive unsubscribed users in audiences on mailchimp`,
         )
         await archiveUnsubscribed(dryRun)
       },

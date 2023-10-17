@@ -124,6 +124,8 @@ const QuestionScroll: React.FC<{
   const schema = useMemo(
     () =>
       createArticleSchema({
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
         t,
         Link: HrefLink,
       }),

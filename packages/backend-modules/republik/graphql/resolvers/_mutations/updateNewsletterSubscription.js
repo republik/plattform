@@ -29,7 +29,7 @@ module.exports = async (_, args, context) => {
     pgdb,
     req,
     t,
-    mail: { updateNewsletterSubscription, errors },
+    mail: { updateNewsletterSubscriptions, addUserToMarketingAudience, errors },
   } = context
 
   // if userId is null, the logged in user's subscription is changed
@@ -81,15 +81,36 @@ module.exports = async (_, args, context) => {
     )
   }
 
+  // add user to marketing audience if not a member
   try {
-    return updateNewsletterSubscription(
+    const isMember = Roles.userHasRole(user, 'member')
+    if (subscribed && !isMember) {
+      await addUserToMarketingAudience({
+        user,
+      })
+    }
+  } catch (error) {
+    console.error(
+      `Adding user ${user.email} to marketing audience failed.`,
+      error.meta,
+    )
+  }
+
+  try {
+    const subscriptions = await updateNewsletterSubscriptions(
       {
         user,
+        interests: {},
         name,
         subscribed,
       },
       context,
     )
+    if (subscriptions.length) {
+      return subscriptions[0]
+    } else {
+      throw new Error()
+    }
   } catch (error) {
     if (error instanceof errors.InterestIdNotFoundMailError) {
       console.error(
