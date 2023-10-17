@@ -18,9 +18,13 @@ type ResolvedAuthor = {
 export const Author = ({
   authorId,
   resolvedAuthor,
+  greeting = 'Herzlichst',
+  isLarge = false,
 }: {
   authorId: string
   resolvedAuthor: ResolvedAuthor
+  isLarge: boolean
+  greeting: string
 }) => {
   const author = resolvedAuthor || {
     slug: undefined,
@@ -30,7 +34,40 @@ export const Author = ({
   }
   const credential = author.credentials?.find((c) => c.isListed)
 
-  return (
+  !isLarge ? (
+    <table
+      border={0}
+      cellPadding='0'
+      cellSpacing='0'
+      width='100%'
+      style={{ marginTop: 48, marginBottom: 24 }}
+    >
+      <tr>
+        <td align='center'>
+          <img
+            width='80'
+            height='80'
+            src={author.portrait}
+            style={{
+              border: 0,
+              width: '80px !important',
+              height: '80px !important',
+              margin: 0,
+            }}
+          />
+          <div id='sender_bottom'>
+            {greeting}
+            <br />
+            <br />
+            <strong>{author.name}</strong>
+            <br />
+            <br />
+            {credential?.description}
+          </div>
+        </td>
+      </tr>
+    </table>
+  ) : (
     <table id='sender' style={{ marginTop: 48, marginBottom: 24 }}>
       <tr>
         <td>
