@@ -7,8 +7,6 @@ const base64u = require('@orbiting/backend-modules-base64u')
 
 const { NewsletterMemberMailError } = require('./errors')
 
-const BluePromise = require('bluebird')
-
 const {
   MAILCHIMP_API_KEY,
   MAILCHIMP_URL,
@@ -147,26 +145,21 @@ const MailchimpInterface = ({ logger }) => {
         throw new NewsletterMemberMailError({ error, email })
       }
     },
-    async deleteMember(email) {
-      debug(`deleting ${email} from audiences ${audiences}`)
-      return BluePromise.map(audiences, async (audienceId) => {
-        try {
-          const url =
-            this.buildMembersApiUrl(email, audienceId) +
-            '/actions/delete-permanent'
-          const response = await this.fetchAuthenticated('POST', url)
-          if (response.status >= MINIMUM_HTTP_RESPONSE_STATUS_ERROR) {
-            debug(
-              `could not delete member from audience ${audienceId}: ${email}`,
-            )
-            return false
-          }
-          return true
-        } catch (error) {
-          logger.error(`mailchimp -> exception: ${error.message}`)
-          throw new NewsletterMemberMailError({ error, email })
+    async deleteMember(email, audienceId = MAILCHIMP_MAIN_LIST_ID) {
+      debug(`deleting ${email}`)
+      const url =
+        this.buildMembersApiUrl(email, audienceId) + '/actions/delete-permanent'
+      try {
+        const response = await this.fetchAuthenticated('POST', url)
+        if (response.status >= MINIMUM_HTTP_RESPONSE_STATUS_ERROR) {
+          debug(`could not delete member from audience ${audienceId}: ${email}`)
+          return false
         }
-      })
+        return true
+      } catch (error) {
+        logger.error(`mailchimp -> exception: ${error.message}`)
+        throw new NewsletterMemberMailError({ error, email })
+      }
     },
     async postBatch(operations) {
       const preparedOperations = operations.map((operation) => {
