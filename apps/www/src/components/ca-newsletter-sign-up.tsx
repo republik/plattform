@@ -11,6 +11,7 @@ import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { css } from '@app/styled-system/css'
 import { useState } from 'react'
+import { wrap } from '@app/styled-system/patterns'
 
 const formSchema = z.object({
   email: z.string().email('Bitte geben Sie eine gültige E-Mail Adresse ein.'),
@@ -87,10 +88,7 @@ export function CANewsletterSignUp({
       </h2>
       {!signUpSuccessful ? (
         <form
-          className={css({
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'space-between',
+          className={wrap({
             gap: '2',
             position: 'relative',
             pb: '8',
