@@ -15,7 +15,6 @@ import { getMe } from '@app/lib/auth/me'
 import { CollectionFilter } from '@app/components/collection-filter'
 import { StructuredText } from 'react-datocms'
 import { CANewsletterSignUp } from '@app/components/ca-newsletter-sign-up'
-import { getClient } from '@app/lib/apollo/client'
 import { getClimateLabNewsletterSubscriptionStatus } from '@app/graphql/republik-api/newsletter.query'
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -82,7 +81,9 @@ export default async function Page({ searchParams }) {
         ></img>
       </h1>
       <Container>
-        <StructuredText data={hub.introduction.value} />
+        <div className={css({ textStyle: 'pageIntro' })}>
+          <StructuredText data={hub.introduction.value} />
+        </div>
         <h2
           className={css({
             textStyle: 'h1Sans',
