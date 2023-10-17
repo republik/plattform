@@ -75,7 +75,7 @@
     "@juggle/resize-observer": "^3.4.0",
     "@next/bundle-analyzer": "^13.5.1",
     "@project-r/styleguide": "*",
-    "@radix-ui/react-dialog": "^1.0.4",
+    "@radix-ui/react-dialog": "^1.0.5",
     "@radix-ui/react-toggle-group": "^1.0.4",
     "@radix-ui/react-visually-hidden": "^1.0.3",
     "@republik/icons": "*",
