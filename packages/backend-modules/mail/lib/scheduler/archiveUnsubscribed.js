@@ -9,13 +9,18 @@ module.exports = async (dryRun = false) => {
   checkEnv([
     'MAILCHIMP_ONBOARDING_AUDIENCE_ID',
     'MAILCHIMP_MARKETING_AUDIENCE_ID',
+    'MAILCHIMP_PROBELESEN_AUDIENCE_ID',
   ])
-  const { MAILCHIMP_ONBOARDING_AUDIENCE_ID, MAILCHIMP_MARKETING_AUDIENCE_ID } =
-    process.env
+  const {
+    MAILCHIMP_ONBOARDING_AUDIENCE_ID,
+    MAILCHIMP_MARKETING_AUDIENCE_ID,
+    MAILCHIMP_PROBELESEN_AUDIENCE_ID,
+  } = process.env
 
   const audiencesToArchiveUnsubscribed = [
     MAILCHIMP_ONBOARDING_AUDIENCE_ID,
     MAILCHIMP_MARKETING_AUDIENCE_ID,
+    MAILCHIMP_PROBELESEN_AUDIENCE_ID,
   ]
 
   audiencesToArchiveUnsubscribed.forEach((audienceId) => {
@@ -23,7 +28,7 @@ module.exports = async (dryRun = false) => {
   })
 }
 
-const archiveUnsubscribed = async (dryRun = false, audienceId) => {
+const archiveUnsubscribed = async (dryRun, audienceId) => {
   const mailchimp = MailchimpInterface({ console })
   const unsubscribedMembers = await mailchimp.getMembersFromAudienceWithStatus(
     MailchimpInterface.MemberStatus.Unsubscribed,
@@ -58,39 +63,4 @@ const archiveUnsubscribed = async (dryRun = false, audienceId) => {
     }
   })
   return results
-}
-
-module.exports = async (dryRun = false) => {
-  // get all unsubscribed from mailchimp onboarding audience and set to archived
-  debug(
-    'archive unsubscribed from onboarding and probelesen audience scheduler',
-  )
-  checkEnv([
-    'MAILCHIMP_ONBOARDING_AUDIENCE_ID',
-    'MAILCHIMP_PROBELESEN_AUDIENCE_ID',
-  ])
-  const { MAILCHIMP_ONBOARDING_AUDIENCE_ID, MAILCHIMP_PROBELESEN_AUDIENCE_ID } =
-    process.env
-  const mailchimp = MailchimpInterface({ console })
-
-  const onboardingResults = await archiveUnsubscribed({
-    audienceId: MAILCHIMP_ONBOARDING_AUDIENCE_ID,
-    mailchimp: mailchimp,
-    dryRun: dryRun,
-  })
-
-  const probelesenResults = await archiveUnsubscribed({
-    audienceId: MAILCHIMP_PROBELESEN_AUDIENCE_ID,
-    mailchimp: mailchimp,
-    dryRun: dryRun,
-  })
-
-  const onboardingSuccess = onboardingResults.every((e) => e === true)
-  const probelesenSuccess = probelesenResults.every((e) => e === true)
-  debug(onboardingSuccess, probelesenSuccess)
-  if (!(onboardingSuccess && probelesenSuccess)) {
-    console.error(
-      'Could not archive all unsubscribed emails from audience ' + audienceId,
-    )
-  }
 }
