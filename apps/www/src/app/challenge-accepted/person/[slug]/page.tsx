@@ -5,12 +5,15 @@ import { PERSON_DETAIL_QUERY } from '@app/graphql/cms/person-detail.query'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { getMe } from '@app/lib/auth/me'
+import { Metadata, ResolvingMetadata } from 'next'
 
-export default async function Page({
-  params: { slug },
-}: {
-  params: { slug: string }
-}) {
+type PageProps = {
+  params: {
+    slug: string
+  }
+}
+
+export default async function Page({ params: { slug } }: PageProps) {
   const { data } = await getCMSClient().query({
     query: PERSON_DETAIL_QUERY,
     variables: { slug },
@@ -45,4 +48,55 @@ export default async function Page({
       </Container>
     </>
   )
+}
+
+export async function generateMetadata(
+  { params }: PageProps,
+  parent: ResolvingMetadata,
+): Promise<Metadata> {
+  // read route params
+
+  const res = await fetch(process.env.DATO_CMS_API_URL, {
+    method: 'POST',
+    headers: {
+      Authorization: `${process.env.DATO_CMS_API_TOKEN}`,
+      // forbid invalid content to allow strict type checking
+      'X-Exclude-Invalid': 'true',
+    },
+    body: JSON.stringify({
+      query: `
+        query PersonImage($slug: String!) {
+          person: challengeAcceptedPerson(filter: {slug: {eq: $slug}}) {
+            name
+          }
+        }
+      `,
+      variables: { slug: params.slug },
+    }),
+  }).then((res) => res.json())
+
+  const parentMetadata = await parent
+
+  if (!res.data.person) {
+    return parentMetadata
+  }
+
+  const previousImages = parentMetadata.openGraph?.images || []
+
+  return {
+    metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL),
+    title: `${res.data.person.name} - Challenge Accepted | Republik`,
+    openGraph: {
+      images: [
+        `/challenge-accepted/person/${params.slug}/api/og`,
+        ...previousImages,
+      ],
+    },
+    twitter: {
+      images: [
+        `/challenge-accepted/person/${params.slug}/api/og`,
+        ...previousImages,
+      ],
+    },
+  }
 }

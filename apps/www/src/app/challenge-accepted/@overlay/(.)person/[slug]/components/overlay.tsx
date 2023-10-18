@@ -26,14 +26,14 @@ export default function Overlay(props: { children: React.ReactNode }) {
             display: 'grid',
             placeItems: 'stretch',
             overflowY: 'auto',
-            background: 'overlay',
+            bg: 'overlay',
           })}
         >
           <Dialog.Content
             className={css({
               m: '8',
               position: 'relative',
-              background: 'background',
+              bg: 'pageBackground',
             })}
           >
             <VisuallyHidden>

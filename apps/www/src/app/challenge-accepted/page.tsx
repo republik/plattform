@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+import type { Metadata, MetadataRoute, ResolvingMetadata } from 'next'
 
 import { css } from '@app/styled-system/css'
 import {
@@ -15,20 +15,26 @@ import { getMe } from '@app/lib/auth/me'
 import { CollectionFilter } from '@app/components/collection-filter'
 import { StructuredText } from 'react-datocms'
 import { CANewsletterSignUp } from '@app/components/ca-newsletter-sign-up'
-import { getClient } from '@app/lib/apollo/client'
 import { getClimateLabNewsletterSubscriptionStatus } from '@app/graphql/republik-api/newsletter.query'
 
-export async function generateMetadata(): Promise<Metadata> {
+export async function generateMetadata(
+  _, // params
+  parent: ResolvingMetadata,
+): Promise<Metadata> {
   const client = getCMSClient()
   const { data } = await client.query({
     query: CHALLENGE_ACCEPTED_HUB_META_QUERY,
   })
 
+  const parentMetadata = await parent
+  const parentMetaImages = parentMetadata?.openGraph?.images || []
+
   return {
-    title: data.hub?.metadata?.title,
+    metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL),
+    title: data.hub?.metadata?.title || 'Challenge Accepted',
     description: data.hub?.metadata?.description,
     openGraph: {
-      images: data.hub?.metadata?.image?.url,
+      images: [data.hub?.metadata?.image?.url, ...parentMetaImages],
     },
   }
 }
