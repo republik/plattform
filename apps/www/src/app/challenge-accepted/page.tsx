@@ -91,6 +91,9 @@ export default async function Page({ searchParams }) {
         <div className={css({ textStyle: 'pageIntro' })}>
           <StructuredText data={hub.introduction.value} />
         </div>
+        {!isSubscribedToCANewsletter && (
+          <CANewsletterSignUp defaultEmail={me ? me.email : undefined} />
+        )}
         <h2
           className={css({
             textStyle: 'h1Sans',
