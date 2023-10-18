@@ -83,6 +83,7 @@
     "@republik/nextjs-apollo-client": "*",
     "@stripe/react-stripe-js": "^1.7.0",
     "@use-it/event-listener": "^0.1.7",
+    "@vercel/og": "^0.5.18",
     "apollo-fetch": "^0.7.0",
     "auto-text-size": "0.2.1",
     "body-parser": "^1.19.1",

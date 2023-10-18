@@ -136,7 +136,7 @@ export const presetRepublik = definePreset({
             },
           },
           overlay: {
-            value: { base: 'rgba(0,0,0,0.1)', _dark: 'rgba(0,0,0,0.4)' },
+            value: { base: 'rgba(0,0,0,0.2)', _dark: 'rgba(0,0,0,0.4)' },
           },
           error: {
             value: { base: '#dc2626', _dark: '#dc2626' },
