@@ -262,13 +262,11 @@ mail.enforceSubscriptions = async ({
       })
     }
 
-    console.log('unsubscribe from probelesen')
     debug('unsubscribe from Probelesen audience if subscribed')
     const probelesenMember = await isUserInAudience({
       user: user || { email },
       MAILCHIMP_PROBELESEN_AUDIENCE_ID,
     })
-    console.log('------ probelesen member' + !!probelesenMember)
     if (probelesenMember) {
       const probelesenSubscription = await addUserToAudience({
         user: user || { email },
@@ -277,7 +275,6 @@ mail.enforceSubscriptions = async ({
         defaultStatus: MailchimpInterface.MemberStatus.Unsubscribed,
         ...rest,
       })
-      console.log('-----probelesen subscription ' + probelesenSubscription)
       allSubscriptions.push({
         audienceId: MAILCHIMP_PROBELESEN_AUDIENCE_ID,
         subscriptions: probelesenSubscription,
