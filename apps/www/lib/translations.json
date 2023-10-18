@@ -370,7 +370,7 @@
     },
     {
       "key": "marketing/trynote/cta",
-      "value": "21 Tage kostenlos und unverbindlich Zugang zu allen Artikeln und Podcasts der Republik."
+      "value": "14 Tage kostenlos und unverbindlich Zugang zu allen Artikeln und Podcasts der Republik."
     },
     {
       "key": "marketing/community/title/plain",
@@ -5881,7 +5881,7 @@
     },
     {
       "key": "Trial/Form/series/initial/title",
-      "value": "Kostenlos Probe&shy;lesen für 21&nbsp;Tage."
+      "value": "Kostenlos Probe&shy;lesen für 14&nbsp;Tage."
     },
     {
       "key": "Trial/Form/series/initial/beforeSignIn",
@@ -7225,19 +7225,19 @@
     },
     {
       "key": "article/tryNote/220404-v1/before",
-      "value": "Journalismus, der Ihnen hilft, Entscheidungen zu treffen. Und der das Gemeinsame stärkt: die Freiheit, den Rechtsstaat, die Demokratie. Lernen Sie uns jetzt 21 Tage lang kostenlos und unverbindlich kennen:"
+      "value": "Journalismus, der Ihnen hilft, Entscheidungen zu treffen. Und der das Gemeinsame stärkt: die Freiheit, den Rechtsstaat, die Demokratie. Lernen Sie uns jetzt 14 Tage lang kostenlos und unverbindlich kennen:"
     },
     {
       "key": "article/tryNote/220404-v1/after",
-      "value": "Rund 29’000 Menschen machen die Republik heute schon möglich. Lernen Sie uns jetzt auch kennen – 21 Tage lang, kostenlos und unverbindlich:"
+      "value": "Rund 29’000 Menschen machen die Republik heute schon möglich. Lernen Sie uns jetzt auch kennen – 14 Tage lang, kostenlos und unverbindlich:"
     },
     {
       "key": "article/tryNote/220404-v2/before",
-      "value": "Die Republik ist ein digitales Magazin für Politik, Wirtschaft, Gesellschaft und Kultur – finanziert von seinen Leserinnen. Es ist komplett werbefrei und unabhängig. Überzeugen Sie sich selber: Lesen Sie 21 Tage lang kostenlos und unverbindlich Probe:"
+      "value": "Die Republik ist ein digitales Magazin für Politik, Wirtschaft, Gesellschaft und Kultur – finanziert von seinen Leserinnen. Es ist komplett werbefrei und unabhängig. Überzeugen Sie sich selber: Lesen Sie 14 Tage lang kostenlos und unverbindlich Probe:"
     },
     {
       "key": "article/tryNote/220404-v2/after",
-      "value": "Sie sind sich immer noch nicht sicher, ob die Republik etwas für Sie ist? Dann testen Sie uns! Für 21 Tage, kostenlos und unverbindlich:"
+      "value": "Sie sind sich immer noch nicht sicher, ob die Republik etwas für Sie ist? Dann testen Sie uns! Für 14 Tage, kostenlos und unverbindlich:"
     },
     {
       "key": "flyer/paynote/buy/221206-v1/title",
@@ -7261,7 +7261,7 @@
     },
     {
       "key": "flyer/paynote/trial/221206-v1/body",
-      "value": "Dann möchten Sie die Republik vielleicht besser kennenlernen. Das Angebot: Testen Sie uns. Für 21 Tage, kostenlos und unverbindlich."
+      "value": "Dann möchten Sie die Republik vielleicht besser kennenlernen. Das Angebot: Testen Sie uns. Für 14 Tage, kostenlos und unverbindlich."
     },
     {
       "key": "flyer/paynote/trial/221206-v2/title",
@@ -7269,7 +7269,7 @@
     },
     {
       "key": "flyer/paynote/trial/221206-v2/body",
-      "value": "Ohne Journalismus keine Demokratie. Wenn Sie das auch so sehen: Die Republik ist werbefrei und wird finanziert von ihren Leserinnen. Testen Sie uns. Für 21 Tage, kostenlos und unverbindlich."
+      "value": "Ohne Journalismus keine Demokratie. Wenn Sie das auch so sehen: Die Republik ist werbefrei und wird finanziert von ihren Leserinnen. Testen Sie uns. Für 14 Tage, kostenlos und unverbindlich."
     },
     {
       "key": "flyer/paynote/ios/221212-v1/title",
@@ -7281,7 +7281,7 @@
     },
     {
       "key": "profile/tryNote/content",
-      "value": "Um die Beiträge von {name} zu lesen, benötigen Sie eine Mitgliedschaft oder ein Monatsabonnement. Sie wollen uns erst kennenlernen? Dann lesen Sie die Republik jetzt unverbindlich und kostenlos 21 Tage Probe."
+      "value": "Um die Beiträge von {name} zu lesen, benötigen Sie eine Mitgliedschaft oder ein Monatsabonnement. Sie wollen uns erst kennenlernen? Dann lesen Sie die Republik jetzt unverbindlich und kostenlos 14 Tage Probe."
     },
     {
       "key": "option/ABO/accessGranted/label/other",
@@ -7357,7 +7357,7 @@
     },
     {
       "key": "pages/access/description",
-      "value": "Laden Sie Ihre Freunde und Feinde ein, die Republik zu testen. Ermöglicht den Empfangenden einen 21-tägigen Probezugriff zur Republik."
+      "value": "Laden Sie Ihre Freunde und Feinde ein, die Republik zu testen. Ermöglicht den Empfangenden einen 14-tägigen Probezugriff zur Republik."
     },
     {
       "key": "nav/crowdfunding2",
