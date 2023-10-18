@@ -18,6 +18,8 @@ const { getLastEndDate, getMembershipCompany } = require('./utils')
 
 const dateFormat = timeFormat('%x')
 
+const MailchimpInterface = require('../../mail/MailchimpInterface')
+
 const {
   MAILCHIMP_INTEREST_PLEDGE,
   MAILCHIMP_INTEREST_MEMBER,
@@ -127,7 +129,13 @@ const getInterestsForUser = async ({
 
 mail.getInterestsForUser = getInterestsForUser
 
-const MailchimpInterface = require('../../mail/MailchimpInterface')
+const isUserInAudience = async ({ user, audienceId }) => {
+  const mailchimp = MailchimpInterface({ console })
+  const member = await mailchimp.getMember(user.email, audienceId)
+  return !!member
+}
+
+mail.isUserInAudience = isUserInAudience
 
 const addUserToMarketingAudience = async ({ user }) => {
   const interest = {}
@@ -217,8 +225,6 @@ mail.enforceSubscriptions = async ({
     },
   ]
 
-  const mailchimp = MailchimpInterface({ console })
-
   // always add to marketing audience when newsletter settings are updated, except if MEMBER or BENEFACTOR are true
   if (
     !(
@@ -236,10 +242,10 @@ mail.enforceSubscriptions = async ({
     })
   } else {
     debug('update status in marketing audience to not receive marketing mails')
-    const marketingMember = await mailchimp.getMember(
-      email,
+    const marketingMember = await isUserInAudience({
+      user: user || { email },
       MAILCHIMP_MARKETING_AUDIENCE_ID,
-    )
+    })
     if (marketingMember) {
       const interest = {}
       interest[MAILCHIMP_MARKETING_INTEREST_FREE_OFFERS_ONLY] = false
@@ -256,11 +262,13 @@ mail.enforceSubscriptions = async ({
       })
     }
 
+    console.log('unsubscribe from probelesen')
     debug('unsubscribe from Probelesen audience if subscribed')
-    const probelesenMember = await mailchimp.getMember(
-      email,
+    const probelesenMember = await isUserInAudience({
+      user: user || { email },
       MAILCHIMP_PROBELESEN_AUDIENCE_ID,
-    )
+    })
+    console.log('------ probelesen member' + !!probelesenMember)
     if (probelesenMember) {
       const probelesenSubscription = await addUserToAudience({
         user: user || { email },
@@ -269,6 +277,7 @@ mail.enforceSubscriptions = async ({
         defaultStatus: MailchimpInterface.MemberStatus.Unsubscribed,
         ...rest,
       })
+      console.log('-----probelesen subscription ' + probelesenSubscription)
       allSubscriptions.push({
         audienceId: MAILCHIMP_PROBELESEN_AUDIENCE_ID,
         subscriptions: probelesenSubscription,
