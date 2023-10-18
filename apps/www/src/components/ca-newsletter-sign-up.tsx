@@ -128,6 +128,10 @@ export function CANewsletterSignUp({
               fontSize: 'xl',
               cursor: 'pointer',
               color: 'text',
+              width: '100%',
+              md: {
+                width: 'auto',
+              },
             })}
             type='submit'
           >
