@@ -60,9 +60,8 @@ export const presetChallengeAccepted = definePreset({
           // Fluid font size https://utopia.fyi/clamp/calculator?a=320,832,24—44
           fontSize: 'clamp(1.5rem, 0.7188rem + 3.9063vw, 2.75rem)',
           lineHeight: 1.4,
-          letterSpacing: -0.25,
           '& b, & strong': {
-            fontWeight: 500,
+            fontWeight: 700,
           },
         },
       },

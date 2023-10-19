@@ -196,8 +196,7 @@ export const presetRepublik = definePreset({
         body: {
           description: 'Body text',
           value: {
-            fontFamily:
-              'GT-America-Standard-Regular, Helvetica-Neue-Regular, Arial-Regular, Roboto-Regular, sans-serif',
+            fontFamily: 'gtAmericaStandard',
           },
         },
         title: {
