@@ -8,10 +8,8 @@ import {
   useColorContext,
   getTeaserHref,
 } from '@project-r/styleguide'
-
 import BookmarkButton from '../ActionBar/BookmarkButton'
 import UserProgress from '../ActionBar/UserProgress'
-
 import { getCollectionItems } from './queries'
 import Link from 'next/link'
 
@@ -30,11 +28,7 @@ const BookmarkMiniFeed = ({ data, closeHandler, style }) => {
         }
         const { nodes } = data.me.collectionItems
         return (
-          <div
-            {...styles.tilesContainer}
-            data-body-scroll-lock-ignore
-            style={style}
-          >
+          <div {...styles.tilesContainer} style={style}>
             {nodes
               .filter((node) => node.document)
               .slice(0, 3)
@@ -95,7 +89,9 @@ const styles = {
   tilesContainer: css({
     width: '100%',
     display: 'flex',
+    gap: '16px',
     flexDirection: 'row',
+    overflow: 'visible',
     overflowX: 'scroll',
     WebkitOverflowScrolling: 'touch',
     scrollbarWidth: 'none' /* Firefox */,
@@ -108,7 +104,6 @@ const styles = {
     width: 150,
     height: 150,
     flex: '0 0 150px',
-    marginRight: 16,
     padding: '16px 8px 12px 8px',
     borderWidth: 1,
     borderStyle: 'solid',
@@ -116,9 +111,6 @@ const styles = {
     flexDirection: 'column',
     justifyContent: 'space-between',
     alignItems: 'center',
-    ':first-child': {
-      marginLeft: 16,
-    },
     [mediaQueries.mUp]: {
       padding: '12px 8px',
       height: 120,
@@ -159,7 +151,6 @@ const styles = {
 export default compose(
   graphql(getCollectionItems, {
     options: (props) => ({
-      fetchPolicy: 'cache-and-network',
       variables: props.variables,
     }),
   }),

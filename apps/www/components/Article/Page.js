@@ -838,7 +838,8 @@ const ArticlePage = ({
                                 </div>
                               )}
 
-                              {hasAudioSource && (
+                              {(hasAudioSource ||
+                                article?.meta?.willBeReadAloud) && (
                                 <div style={{ marginTop: 32 }}>
                                   <ArticleAudioPlayer document={article} />
                                 </div>
