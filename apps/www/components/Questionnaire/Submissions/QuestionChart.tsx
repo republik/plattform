@@ -25,7 +25,7 @@ const styles = {
     gridAutoFlow: 'column',
   }),
   chartMobile: css({
-    flexWrap: 'wrap',
+    borderLeft: '1px solid currentColor',
   }),
   barMobile: css({
     height: 40,
@@ -42,10 +42,12 @@ const styles = {
     marginBottom: 2,
   }),
   labelMobile: css({
+    paddingLeft: 12,
     paddingTop: 10,
     position: 'absolute',
   }),
   answerMobile: css({
+    paddingLeft: 12,
     marginBottom: 24,
     '&:last-of-type': { marginBottom: 0 },
   }),
@@ -79,7 +81,7 @@ export const QuestionSummaryChart = ({ answers }: Props) => {
   const isMobile = useMediaQuery(mediaQueries.onlyS)
 
   return isMobile && answers.length >= 5 ? (
-    <div {...colorScheme.set('color', 'text')}>
+    <div {...styles.chartMobile} {...colorScheme.set('color', 'text')}>
       {answers.map((d) => {
         return (
           <Fragment key={d.answer}>
@@ -87,7 +89,7 @@ export const QuestionSummaryChart = ({ answers }: Props) => {
               <div
                 {...styles.labelMobile}
                 style={{
-                  left: d.value === 0 ? 0 : x(d.value) + 2 + '%',
+                  left: d.value === 0 ? 0 : x(d.value) + '%',
                 }}
               >
                 {pct(d.value)}
