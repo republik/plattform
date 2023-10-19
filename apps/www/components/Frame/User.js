@@ -10,7 +10,7 @@ import {
   HEADER_HEIGHT_MOBILE,
   HEADER_HORIZONTAL_PADDING,
 } from '../constants'
-import withT, { useTranslation } from '../../lib/withT'
+import { useTranslation } from '../../lib/withT'
 import { ME_PORTRAIT_STORAGE_KEY } from '../../lib/context/MeContext'
 import { IconAccountBox } from '@republik/icons'
 
@@ -203,4 +203,4 @@ const styles = {
   }),
 }
 
-export default withT(User)
+export default User
