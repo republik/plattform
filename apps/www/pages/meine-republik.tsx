@@ -16,7 +16,7 @@ function MeineRepublikPage() {
   }, [me?.id])
 
   return (
-    <Frame raw>
+    <Frame raw pullable={false}>
       <UserNav me={me} router={router} />
     </Frame>
   )
