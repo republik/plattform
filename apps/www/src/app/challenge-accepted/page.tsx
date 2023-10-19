@@ -10,7 +10,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import Container from '@app/components/container'
 import CollectionRenderer from '@app/components/collection-render'
-import { wrap } from '@app/styled-system/patterns'
+import { vstack, wrap } from '@app/styled-system/patterns'
 import { getMe } from '@app/lib/auth/me'
 import { CollectionFilter } from '@app/components/collection-filter'
 import { StructuredText } from 'react-datocms'
@@ -88,91 +88,91 @@ export default async function Page({ searchParams }) {
         ></img>
       </h1>
       <Container>
-        <div className={css({ textStyle: 'pageIntro' })}>
-          <StructuredText data={hub.introduction.value} />
-        </div>
-        {!isSubscribedToCANewsletter && (
-          <CANewsletterSignUp defaultEmail={me ? me.email : undefined} />
-        )}
-        <h2
-          className={css({
-            textStyle: 'h1Sans',
-            mb: '4',
-          })}
-        >
-          Personen
-        </h2>
-        <div className={wrap({ gap: '4', mb: '6' })}>
-          {people.map((person) => (
+        <div className={vstack({ gap: '16', alignItems: 'stretch' })}>
+          <section className={wrap({ gap: '4', mb: '6' })}>
+            {people.map((person) => (
+              <div
+                key={person.id}
+                className={css({
+                  display: 'flex',
+                  flexDirection: 'row',
+                  // justifyContent: 'flex-end',
+                  gap: '4',
+                })}
+              >
+                <Link href={`/challenge-accepted/person/${person.slug}`}>
+                  <h3
+                    className={css({
+                      display: 'block',
+                      textStyle: 'h3Sans',
+                      textAlign: 'center',
+                      py: '1',
+                    })}
+                  >
+                    {person.portrait ? (
+                      <Image
+                        src={person.portrait?.url}
+                        width={96 * 2}
+                        height={96 * 2}
+                        className={css({
+                          borderRadius: 'full',
+                          width: '24',
+                          height: '24',
+                          objectFit: 'cover',
+                        })}
+                        alt={person.name}
+                      />
+                    ) : (
+                      <div
+                        className={css({
+                          borderRadius: 'full',
+                          width: '24',
+                          height: '24',
+                          background: 'contrast',
+                          display: 'grid',
+                          placeItems: 'center',
+                          color: 'pageBackground',
+                          fontSize: '3xl',
+                        })}
+                      >
+                        {person.name.slice(0, 1)}
+                      </div>
+                    )}
+                    {person.name}
+                  </h3>
+                </Link>
+              </div>
+            ))}
+          </section>
+
+          <section className={css({ textStyle: 'pageIntro' })}>
+            <StructuredText data={hub.introduction.value} />
+          </section>
+          {!isSubscribedToCANewsletter && (
+            <CANewsletterSignUp defaultEmail={me ? me.email : undefined} />
+          )}
+          <section>
             <div
-              key={person.id}
-              className={css({
-                display: 'flex',
-                flexDirection: 'row',
-                // justifyContent: 'flex-end',
-                gap: '4',
-              })}
+              className={css({ mb: '6', overflowY: 'auto', maxWidth: 'full' })}
             >
-              <Link href={`/challenge-accepted/person/${person.slug}`}>
-                <h3
-                  className={css({
-                    display: 'block',
-                    textStyle: 'h3Sans',
-                    textAlign: 'center',
-                    py: '1',
-                  })}
-                >
-                  {person.portrait ? (
-                    <Image
-                      src={person.portrait?.url}
-                      width={96 * 2}
-                      height={96 * 2}
-                      className={css({
-                        borderRadius: 'full',
-                        width: '24',
-                        height: '24',
-                        objectFit: 'cover',
-                      })}
-                      alt={person.name}
-                    />
-                  ) : (
-                    <div
-                      className={css({
-                        borderRadius: 'full',
-                        width: '24',
-                        height: '24',
-                        background: 'contrast',
-                        display: 'grid',
-                        placeItems: 'center',
-                        color: 'pageBackground',
-                        fontSize: '3xl',
-                      })}
-                    >
-                      {person.name.slice(0, 1)}
-                    </div>
-                  )}
-                  {person.name}
-                </h3>
-              </Link>
+              <CollectionFilter filter={searchParams.filter} />
             </div>
-          ))}
-        </div>
-        <h2 className={css({ textStyle: 'h2Sans', my: '6' })}>Inhalte</h2>
-        <div className={css({ mb: '6', overflowY: 'auto', maxWidth: 'full' })}>
-          <CollectionFilter filter={searchParams.filter} />
-        </div>
-        <CollectionRenderer
-          items={hub.items}
-          filter={searchParams.filter}
-          isMember={
-            me?.roles && Array.isArray(me.roles) && me.roles.includes('member')
-          }
-        />
-        {!isSubscribedToCANewsletter && (
-          <CANewsletterSignUp defaultEmail={me ? me.email : undefined} />
-        )}
-        <div className={css({ marginTop: '8', textStyle: 'teaserLeadSans' })}>
-          <StructuredText data={hub.outro.value} />
+            <CollectionRenderer
+              items={hub.items}
+              filter={searchParams.filter}
+              isMember={
+                me?.roles &&
+                Array.isArray(me.roles) &&
+                me.roles.includes('member')
+              }
+            />
+          </section>
+          {!isSubscribedToCANewsletter && (
+            <CANewsletterSignUp defaultEmail={me ? me.email : undefined} />
+          )}
+          <div className={css({ textStyle: 'teaserLeadSans' })}>
+            <StructuredText data={hub.outro.value} />
+          </div>
         </div>
       </Container>
     </>
