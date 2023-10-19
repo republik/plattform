@@ -73,6 +73,15 @@ export const presetChallengeAccepted = definePreset({
           fontStyle: 'normal',
           // Fluid font size https://utopia.fyi/clamp/calculator?a=320,832,90—270
           fontSize: 'clamp(5.625rem, -1.4062rem + 35.1563vw, 16.875rem)',
+        },
+      },
+      newsletterTeaserTitle: {
+        value: {
+          fontFamily: 'druk',
+          fontWeight: 'medium',
+          fontStyle: 'normal',
+          // Fluid font size https://utopia.fyi/clamp/calculator?a=320,832,90—270
+          fontSize: 'clamp(2.25rem, 1.7813rem + 2.3438vw, 3rem)',
           lineHeight: 1.16667,
         },
       },

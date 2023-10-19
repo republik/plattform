@@ -34,10 +34,12 @@ export const NewsletterTeaser = async ({ path }: NewsletterProps) => {
         })}
       >
         <p>Newsletter</p>
-        <h3 className={css({ textStyle: 'h2Sans', mb: '1' })}>
+        <h3 className={css({ textStyle: 'newsletterTeaserTitle', mb: '4' })}>
           {article.meta.title}
         </h3>
-        <p>{article.meta.shortTitle}</p>
+        <p className={css({ textStyle: 'teaserLeadSans' })}>
+          {article.meta.shortTitle}
+        </p>
       </div>
     </Link>
   )

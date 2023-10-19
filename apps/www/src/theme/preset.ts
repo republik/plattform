@@ -226,6 +226,15 @@ export const presetRepublik = definePreset({
             lineHeight: 1.375,
           },
         },
+        teaserLeadSans: {
+          value: {
+            fontFamily: 'gtAmericaStandard',
+            fontWeight: 'regular',
+            fontStyle: 'normal',
+            fontSize: { base: 'l', md: 'xl' },
+            lineHeight: 1.375,
+          },
+        },
         teaserCredits: {
           value: {
             fontFamily: 'gtAmericaStandard',

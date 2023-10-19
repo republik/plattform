@@ -36,33 +36,56 @@ export const EventTeaser = ({ event, isMember }: EventProps) => {
         borderStyle: 'solid',
         borderWidth: 1,
         color: 'contrast',
+        '& ul > li': {
+          listStyleType: 'none',
+          pl: '6',
+          position: 'relative',
+          '&::before': { content: '"–"', position: 'absolute', left: '0' },
+        },
+        '& ol': { listStyleType: 'decimal', pl: '6' },
+        '& h2, & h3, & h4, & h5, & h6': {
+          fontWeight: 'bold',
+        },
       })}
     >
-      <h3
+      <div
         className={css({
-          textStyle: 'eventTeaserTitle',
-          textAlign: 'center',
-          mb: '6',
+          pt: '10',
+          pb: '16',
         })}
       >
-        {formatDate(isoParse(event.startAt))}
-      </h3>
+        <p
+          className={css({
+            textStyle: 'eventTeaserTitle',
+            textAlign: 'center',
+            // Cap height of font is roughly 1.4 x-height (ex unit)
+            lineHeight: '1.2ex',
+            // Fix leading
+            mb: '0.2ex',
+          })}
+        >
+          {formatDate(isoParse(event.startAt))}
+        </p>
+      </div>
       <div
         className={css({
           color: 'text',
           display: 'flex',
           flexDirection: 'column',
           gap: '4',
+
+          textStyle: 'teaserLeadSans',
         })}
       >
-        <h4 className={css({ textStyle: 'h2Sans' })}>
+        <h2 className={css({ textStyle: 'h2Sans', fontWeight: 'bold' })}>
           {event.title} {event.fullyBooked && '(ausgebucht)'}
-        </h4>
-        <p className={css({})}>
-          {formateTime(isoParse(event.startAt))} -{' '}
+        </h2>
+        <p className={css({ fontWeight: 700 })}>
+          {formateTime(isoParse(event.startAt))} –{' '}
           {event.endAt ? formateTime(isoParse(event.endAt)) : 'offen'} /{' '}
           {event.location}
         </p>
+
         <StructuredText data={event.description.value} />
         {!event.fullyBooked && (
           <>

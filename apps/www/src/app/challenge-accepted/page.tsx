@@ -171,7 +171,7 @@ export default async function Page({ searchParams }) {
         {!isSubscribedToCANewsletter && (
           <CANewsletterSignUp defaultEmail={me ? me.email : undefined} />
         )}
-        <div className={css({ marginTop: '8' })}>
+        <div className={css({ marginTop: '8', textStyle: 'teaserLeadSans' })}>
           <StructuredText data={hub.outro.value} />
         </div>
       </Container>
