@@ -2,7 +2,7 @@
 import { useRouter } from 'next/navigation'
 
 import { css } from '@app/styled-system/css'
-import { hstack } from '@app/styled-system/patterns'
+import { hstack, wrap } from '@app/styled-system/patterns'
 import * as ToggleGroup from '@radix-ui/react-toggle-group'
 
 const itemStyle = css({
@@ -10,17 +10,22 @@ const itemStyle = css({
   p: '3',
   textStyle: 'sans',
   lineHeight: '1',
+  borderColor: 'contrast',
+  borderStyle: 'solid',
+  borderWidth: 1,
+  color: 'contrast',
+  cursor: 'pointer',
+  whiteSpace: 'nowrap',
 
   _hover: {
-    background: 'overlay',
+    background: 'contrast',
+    color: 'text.inverted',
   },
 
   '&[data-state="on"]': {
     background: 'contrast',
     color: 'text.inverted',
-    _hover: {
-      background: 'contrast',
-    },
+    cursor: 'default',
   },
 })
 
@@ -39,7 +44,7 @@ export const CollectionFilter = ({
         router.replace(`?filter=${value}`, { scroll: false })
       }}
       aria-label='Inhalte anzeigen'
-      className={hstack({ gap: '2' })}
+      className={wrap({ gap: '2' })}
     >
       <ToggleGroup.Item className={itemStyle} value='all'>
         Alle Inhalte
