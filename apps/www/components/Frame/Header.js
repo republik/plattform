@@ -1,27 +1,18 @@
 import { useMemo, useState, useRef, useEffect } from 'react'
 import { css } from 'glamor'
-import compose from 'lodash/flowRight'
-import { useRouter, withRouter } from 'next/router'
+import { useRouter } from 'next/router'
 import {
   Logo,
   mediaQueries,
   HeaderHeightProvider,
   useColorContext,
-  shouldIgnoreClick,
 } from '@project-r/styleguide'
-import { withMembership } from '../Auth/checkRoles'
-import withT, { useTranslation } from '../../lib/withT'
-import withInNativeApp, {
-  postMessage,
-  useInNativeApp,
-} from '../../lib/withInNativeApp'
-import { cleanAsPath, scrollTop } from '../../lib/utils/link'
+import { useTranslation } from '../../lib/withT'
+import { postMessage, useInNativeApp } from '../../lib/withInNativeApp'
 import NotificationIcon from '../Notifications/NotificationIcon'
 import HLine from '../Frame/HLine'
 
 import User from './User'
-import Popover from './Popover'
-import UserNavPopover from './Popover/UserNav'
 import LoadingBar from './LoadingBar'
 import Pullable from './Pullable'
 import Toggle from './Toggle'
@@ -37,7 +28,6 @@ import {
   LOGO_PADDING,
   LOGO_WIDTH_MOBILE,
   LOGO_PADDING_MOBILE,
-  TRANSITION_MS,
 } from '../constants'
 import { IconBack } from '@republik/icons'
 import Link from 'next/link'
