@@ -3,7 +3,11 @@ import { format } from 'd3-format'
 import { scaleLinear } from 'd3-scale'
 import { css } from 'glamor'
 import { Fragment } from 'react'
-import { useColorContext } from '@project-r/styleguide'
+import {
+  useColorContext,
+  mediaQueries,
+  useMediaQuery,
+} from '@project-r/styleguide'
 
 type Props = {
   answers: { answer: string; value: number }[]
@@ -20,6 +24,32 @@ const styles = {
     gridAutoColumns: '1fr',
     gridAutoFlow: 'column',
   }),
+  chartMobile: css({
+    flexWrap: 'wrap',
+  }),
+  barMobile: css({
+    height: 40,
+    backgroundColor: `currentColor`,
+    opacity: 0.7,
+    marginTop: 12,
+    borderRadius: '0 7px 0 0',
+  }),
+  barAndLabelMobile: css({
+    position: 'relative',
+    // display: "flex",
+    // flexDirection: ""
+    alignSelf: 'end',
+    borderBottom: '1px solid currentColor',
+    marginBottom: 2,
+  }),
+  labelMobile: css({
+    paddingTop: 10,
+    position: 'absolute',
+  }),
+  answerMobile: css({
+    marginBottom: 24,
+    '&:last-of-type': { marginBottom: 0 },
+  }),
   label: css({
     textAlign: 'center',
     alignSelf: 'center',
@@ -34,7 +64,6 @@ const styles = {
   barAndLabel: css({
     // display: "flex",
     // flexDirection: ""
-
     alignSelf: 'end',
     borderBottom: '1px solid currentColor',
     padding: '0 10%',
@@ -47,8 +76,37 @@ const pct = format('.0%') // rounded
 export const QuestionSummaryChart = ({ answers }: Props) => {
   const [colorScheme] = useColorContext()
   const y = scaleLinear([0, max(answers, (d) => d.value)], [0, 100])
+  const x = scaleLinear([0, max(answers, (d) => d.value)], [0, 90])
+  const isMobile = useMediaQuery(mediaQueries.onlyS)
 
-  return (
+  return isMobile && answers.length >= 5 ? (
+    <div {...colorScheme.set('color', 'text')}>
+      {answers.map((d) => {
+        return (
+          <Fragment key={d.answer}>
+            <div {...styles.barAndLabelMobile}>
+              <div
+                {...styles.labelMobile}
+                style={{
+                  left: d.value === 0 ? 0 : x(d.value) + 2 + '%',
+                }}
+              >
+                {pct(d.value)}
+              </div>
+
+              <div
+                {...styles.barMobile}
+                style={{
+                  width: x(d.value) + '%',
+                }}
+              ></div>
+            </div>
+            <div {...styles.answerMobile}>{d.answer}</div>
+          </Fragment>
+        )
+      })}
+    </div>
+  ) : (
     <div {...styles.chart} {...colorScheme.set('color', 'text')}>
       {answers.map((d) => {
         return (
