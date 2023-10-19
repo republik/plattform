@@ -1,3 +1,4 @@
+import Footer from '@app/components/layout/footer'
 import { PageHeader } from '@app/components/page-header'
 import { css } from '@app/styled-system/css'
 
@@ -21,6 +22,7 @@ export default function Layout(props: {
         {props.children}
         {props.overlay}
       </div>
+      <Footer />
     </div>
   )
 }
