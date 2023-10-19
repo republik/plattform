@@ -1,4 +1,5 @@
 import { getMe } from '@app/lib/auth/me'
+import { getUserAgentPlatformInfo } from '@app/lib/util/useragent/user-agent-plattform-information'
 import { css } from '@app/styled-system/css'
 import { vstack } from '@app/styled-system/patterns'
 import {
@@ -9,7 +10,7 @@ import {
   IconOpensource,
 } from '@republik/icons'
 import Link, { LinkProps } from 'next/link'
-import { ComponentType, ReactElement, ReactNode, isValidElement } from 'react'
+import { ComponentType, ReactElement, isValidElement } from 'react'
 import { UrlObject } from 'url'
 
 /**
@@ -55,38 +56,42 @@ function IconButton({ Icon, href }: IconButtonProps) {
 type FooterNavigationGroup = {
   name: string
   links: {
-    [name: string]: LinkProps['href']
+    [name: string]: LinkProps['href'] | ReactElement<unknown>
   }
 }
 
 const CONTACT_EMAIL = 'kontakt@republik.ch'
 
+/**
+ * Footer server-component
+ * @returns Server-Side rendered Footer component per request
+ */
 export default async function Footer() {
-  const me = await getMe().catch(() => null)
+  const me = await getMe()
 
   const hasActiveMembership = !!me?.activeMembership?.id
 
-  const inIOSApp = true
+  const { isIOSApp } = getUserAgentPlatformInfo()
 
   const navs: FooterNavigationGroup[] = [
     {
       name: me ? 'Meine Republik' : 'Mitglied werden',
       links: {
-        Konto: me && '/konto',
-        Profil: me && `/~${me.slug || me.id}`, // user specific
-        Angebote: !inIOSApp && !hasActiveMembership ? '/angebote' : null,
+        Konto: me ? '/konto' : null,
+        Profil: me ? `/~${me.slug || me.id}` : null,
+        Angebote: !isIOSApp && !hasActiveMembership ? '/angebote' : null,
         Verschenken:
-          !inIOSApp && hasActiveMembership
+          !isIOSApp && hasActiveMembership
             ? { pathname: '/verschenken', query: { group: 'GIVE' } }
             : null,
-        'Gutschein einlösen': !inIOSApp ? '/abholen' : null,
+        'Gutschein einlösen': !isIOSApp ? '/abholen' : null,
         'Republik teilen':
+          me &&
           me.accessCampaigns?.length &&
           me.accessCampaigns.length > 0 &&
           hasActiveMembership
             ? '/teilen'
             : null,
-        Abmelden: me ? '/abmelden' : null,
         Anmelden: !me ? '/anmelden' : null,
       },
     },
@@ -119,7 +124,7 @@ export default async function Footer() {
         Impressum: '/impressum',
       },
     },
-  ].filter(Boolean)
+  ]
 
   return (
     <div
@@ -141,6 +146,8 @@ export default async function Footer() {
           padding: '40px 15px',
           md: {
             padding: '80px 40px',
+            maxWidth: 1230,
+            margin: '0 auto',
           },
           display: 'flex',
           flexDirection: 'column',
@@ -179,6 +186,7 @@ export default async function Footer() {
                 display: 'none',
                 color: 'textSoft',
                 fontSize: 's',
+                alignSelf: 'flex-end',
                 md: {
                   display: 'inline-block',
                 },
@@ -277,6 +285,11 @@ export default async function Footer() {
                       if (!link) {
                         return null
                       }
+
+                      if (isValidElement(link)) {
+                        return <li key={name}>{link}</li>
+                      }
+
                       const baseURL = process.env.NEXT_PUBLIC_BASE_URL
 
                       const isExternalLink = isLinkOfSameHost(link, baseURL)
