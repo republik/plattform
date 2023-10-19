@@ -57,11 +57,24 @@ export const Author = ({
                   margin: 0,
                 }}
               />
-              <p id='sender_bottom'>
+              <p
+                style={{
+                  fontFamily:
+                    'GT-America-Standard-Regular, "Helvetica Neue", Helvetica, sans-serif',
+                }}
+              >
                 {greeting}
                 <br />
                 <br />
-                <strong>{author.name}</strong>
+                <strong
+                  style={{
+                    fontFamily:
+                      'GT-America-Standard-Medium, "Helvetica Neue", Helvetica, sans-serif',
+                    fontWeight: 500,
+                  }}
+                >
+                  {author.name}
+                </strong>
                 <br />
                 <br />
                 {credential?.description}
@@ -71,7 +84,6 @@ export const Author = ({
         </table>
       ) : (
         <table
-          id='sender'
           cellPadding='0'
           cellSpacing='0'
           style={{ marginTop: 48, marginBottom: 24 }}
@@ -91,8 +103,24 @@ export const Author = ({
                 }}
               />
             </td>
-            <td id='sender' style={{ paddingLeft: 16, lineHeight: '160%' }}>
-              <strong>{author.name}</strong>
+            <td
+              id='sender'
+              style={{
+                paddingLeft: 16,
+                lineHeight: '160%',
+                fontFamily:
+                  'GT-America-Standard-Regular, "Helvetica Neue", Helvetica, sans-serif',
+              }}
+            >
+              <strong
+                style={{
+                  fontFamily:
+                    'GT-America-Standard-Medium, "Helvetica Neue", Helvetica, sans-serif',
+                  fontWeight: 500,
+                }}
+              >
+                {author.name}
+              </strong>
               <br />
               {credential?.description}
             </td>
