@@ -1,7 +1,7 @@
 import { useMemo, useState, useRef, useEffect } from 'react'
 import { css } from 'glamor'
 import compose from 'lodash/flowRight'
-import { withRouter } from 'next/router'
+import { useRouter, withRouter } from 'next/router'
 import {
   Logo,
   mediaQueries,
@@ -10,8 +10,11 @@ import {
   shouldIgnoreClick,
 } from '@project-r/styleguide'
 import { withMembership } from '../Auth/checkRoles'
-import withT from '../../lib/withT'
-import withInNativeApp, { postMessage } from '../../lib/withInNativeApp'
+import withT, { useTranslation } from '../../lib/withT'
+import withInNativeApp, {
+  postMessage,
+  useInNativeApp,
+} from '../../lib/withInNativeApp'
 import { cleanAsPath, scrollTop } from '../../lib/utils/link'
 import NotificationIcon from '../Notifications/NotificationIcon'
 import HLine from '../Frame/HLine'
@@ -37,6 +40,7 @@ import {
   TRANSITION_MS,
 } from '../constants'
 import { IconBack } from '@republik/icons'
+import Link from 'next/link'
 
 const BACK_BUTTON_SIZE = 24
 
@@ -48,72 +52,41 @@ const Header = ({
   headerOffset,
   setHeaderOffset,
   hasSecondaryNav,
-  inNativeApp,
-  inNativeIOSApp,
   me,
-  t,
   secondaryNav,
-  router,
   formatColor,
   pullable = true,
   hasOverviewNav,
   stickySecondaryNav,
 }) => {
+  const { t } = useTranslation()
+  const { inNativeIOSApp, inNativeApp } = useInNativeApp()
   const [colorScheme] = useColorContext()
   const [isMobile, setIsMobile] = useState()
   const [scrollableHeaderHeight, setScrollableHeaderHeight] =
     useState(HEADER_HEIGHT_MOBILE)
   const [expandedNav, setExpandedNav] = useState(null)
-  const [userNavExpanded, setUserNavExpanded] = useState(false)
+  const router = useRouter()
+
+  useEffect(() => {
+    if (router.pathname === '/meine-republik') {
+      setExpandedNav('user')
+    }
+  }, [router.pathname, setExpandedNav])
 
   const fixedRef = useRef()
   const diff = useRef(0)
   const lastY = useRef()
   const lastDiff = useRef()
 
-  const topLevelPaths = ['/', '/feed', '/dialog', '/suche']
+  const topLevelPaths = ['/', '/feed', '/dialog', '/suche', '/meine-republik']
   const isOnTopLevelPage =
     topLevelPaths.includes(router.asPath) || router.asPath.endsWith('/journal')
   const backButton = inNativeIOSApp && me && !isOnTopLevelPage
 
-  const toggleExpanded = (target) => {
-    if (target === expandedNav) {
-      setIsAnyNavExpanded(false)
-      setExpandedNav(null)
-    } else if (isAnyNavExpanded) {
-      setExpandedNav(target)
-    } else {
-      setIsAnyNavExpanded(!isAnyNavExpanded)
-      setExpandedNav(target)
-    }
-  }
-
-  const openUserNavOverMainNav = () => {
-    setUserNavExpanded(true)
-    setTimeout(() => {
-      setExpandedNav('user')
-    }, TRANSITION_MS)
-  }
-
   const closeHandler = () => {
-    if (isAnyNavExpanded) {
-      setIsAnyNavExpanded(false)
-      setExpandedNav(null)
-      setUserNavExpanded(false)
-    }
-  }
-
-  const goTo = (href) => (e) => {
-    if (shouldIgnoreClick(e)) {
-      return
-    }
-    e.preventDefault()
-    if (cleanAsPath(router.asPath) === href) {
-      scrollTop()
-      closeHandler()
-    } else {
-      router.push(href)
-    }
+    // check if we can pop the navigation stack
+    window.history.length > 1 ? window.history.back() : router.push('/')
   }
 
   useEffect(() => {
@@ -217,26 +190,25 @@ const Header = ({
                   }/aria`,
                 )}
                 inNativeIOSApp={inNativeIOSApp}
-                onClick={() =>
-                  !isAnyNavExpanded
-                    ? toggleExpanded('user')
-                    : expandedNav !== 'user'
-                    ? openUserNavOverMainNav()
-                    : closeHandler()
-                }
+                onClick={() => {
+                  if (router.asPath === '/meine-republik') {
+                    closeHandler()
+                  } else {
+                    router.push('/meine-republik')
+                  }
+                }}
               />
               {me && <NotificationIcon />}
             </div>
           </div>
           <div {...styles.navBarItem}>
-            <a
+            <Link
               {...styles.logo}
               aria-label={t('header/logo/magazine/aria')}
               href={'/'}
-              onClick={goTo('/', 'index')}
             >
               <Logo />
-            </a>
+            </Link>
           </div>
           <div {...styles.navBarItem}>
             <div {...styles.rightBarItem}>
@@ -260,7 +232,6 @@ const Header = ({
                       expandedNav === 'main' ? 'close' : 'open'
                     }/aria`,
                   )}
-                  id='main'
                   closeOverlay={closeHandler}
                 />
               ) : (
@@ -278,17 +249,6 @@ const Header = ({
         />
         <HLine formatColor={formatColor} />
       </div>
-      <Popover
-        formatColor={formatColor}
-        expanded={userNavExpanded || expandedNav === 'user'}
-      >
-        <UserNavPopover
-          me={me}
-          router={router}
-          expanded={userNavExpanded || expandedNav === 'user'}
-          closeHandler={closeHandler}
-        />
-      </Popover>
       <LoadingBar
         onRouteChangeStart={() => {
           routeChangeStarted = true
@@ -362,12 +322,7 @@ const HeaderWithContext = (props) => {
   )
 }
 
-export default compose(
-  withT,
-  withMembership,
-  withRouter,
-  withInNativeApp,
-)(HeaderWithContext)
+export default HeaderWithContext
 
 const styles = {
   navBar: css({
