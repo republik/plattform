@@ -19,12 +19,16 @@ export const presetRepublik = definePreset({
       tokens: {
         colors: {
           neutral: {
-            '50': { value: '#fff' },
-            '950': { value: '#222' },
+            '50': { value: '#ffffff' },
+            '950': { value: '#020202' },
           },
           white: { value: '#fff' },
           transparent: { value: 'transparent' },
           current: { value: 'currentColor' },
+          divider: { value: '#DBDCDD' },
+          dividerDark: { value: '#4C4C4C' },
+          diabled: { value: '#B8BDC1' },
+          disabledDark: { value: '#949494' },
         },
         sizes: {
           full: { value: '100%' },
@@ -140,6 +144,24 @@ export const presetRepublik = definePreset({
           },
           error: {
             value: { base: '#dc2626', _dark: '#dc2626' },
+          },
+          disabled: {
+            value: {
+              base: '{colors.disabled}',
+              _dark: '{colors.disabledDark}',
+            },
+          },
+          divider: {
+            value: {
+              base: '{colors.divider}',
+              _dark: '{colors.dividerDark}',
+            },
+          },
+          textSoft: {
+            value: {
+              base: '#757575',
+              _dark: '#A9A9A9',
+            },
           },
         },
         sizes: {

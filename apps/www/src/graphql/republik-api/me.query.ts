@@ -49,5 +49,22 @@ export type MeQueryResult = {
     roles: string[]
     isListed: boolean
     hasPublicProfile: boolean
+    hasDormantMembership: boolean
+    prolongBeforeDate: string
+    activeMembership: null | {
+      id: string
+      type: {
+        name: string
+      }
+      renew: boolean
+      endDate: string | null
+      graceEndDate: string | null
+      canProlong: boolean
+    }
+    accessCampaigns:
+      | null
+      | {
+          id: string
+        }[]
   }
 }
