@@ -36,6 +36,8 @@ const BACK_BUTTON_SIZE = 24
 
 let routeChangeStarted
 
+const USER_MENU_URL = '/meine-republik'
+
 const Header = ({
   isAnyNavExpanded,
   setIsAnyNavExpanded,
@@ -59,7 +61,7 @@ const Header = ({
   const router = useRouter()
 
   useEffect(() => {
-    if (router.pathname === '/meine-republik') {
+    if (router.pathname === USER_MENU_URL) {
       setExpandedNav('user')
     }
   }, [router.pathname, setExpandedNav])
@@ -69,15 +71,19 @@ const Header = ({
   const lastY = useRef()
   const lastDiff = useRef()
 
-  const topLevelPaths = ['/', '/feed', '/dialog', '/suche', '/meine-republik']
+  const topLevelPaths = ['/', '/feed', '/dialog', '/suche', USER_MENU_URL]
   const isOnTopLevelPage =
     topLevelPaths.includes(router.asPath) || router.asPath.endsWith('/journal')
   const backButton = inNativeIOSApp && me && !isOnTopLevelPage
 
   const closeHandler = () => {
     // check if we can pop the navigation stack
-    window.history.length > 1 ? window.history.back() : router.push('/')
+    window.history.length > 1 ? router.back() : router.push('/')
   }
+
+  useEffect(() => {
+    router.prefetch('/meine-republik')
+  }, [])
 
   useEffect(() => {
     const onScroll = () => {
@@ -131,6 +137,7 @@ const Header = ({
   }, [isMobile, hasSecondaryNav, hasStickySecondary, formatColor])
 
   const showToggle = me || inNativeApp || router.pathname === '/angebote'
+  const showClose = router.pathname === USER_MENU_URL
 
   return (
     <>
@@ -205,7 +212,7 @@ const Header = ({
               {!showToggle && (
                 <div data-show-if-me='true'>
                   <Toggle
-                    expanded={isAnyNavExpanded}
+                    expanded={showClose}
                     title={t(
                       `header/nav/${
                         expandedNav === 'main' ? 'close' : 'open'
@@ -216,7 +223,7 @@ const Header = ({
               )}
               {showToggle ? (
                 <Toggle
-                  expanded={isAnyNavExpanded}
+                  expanded={showClose}
                   title={t(
                     `header/nav/${
                       expandedNav === 'main' ? 'close' : 'open'
