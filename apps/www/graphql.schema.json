@@ -458,7 +458,7 @@
           },
           {
             "name": "_seoMetaTags",
-            "description": "SEO meta tags",
+            "description": "Generates SEO and Social card meta tags to be used in your frontend",
             "args": [
               {
                 "name": "locale",
@@ -872,7 +872,7 @@
           },
           {
             "name": "_seoMetaTags",
-            "description": "SEO meta tags",
+            "description": "Generates SEO and Social card meta tags to be used in your frontend",
             "args": [
               {
                 "name": "locale",
@@ -1456,7 +1456,7 @@
           },
           {
             "name": "_seoMetaTags",
-            "description": "SEO meta tags",
+            "description": "Generates SEO and Social card meta tags to be used in your frontend",
             "args": [
               {
                 "name": "locale",
@@ -2125,7 +2125,7 @@
           },
           {
             "name": "_seoMetaTags",
-            "description": "SEO meta tags",
+            "description": "Generates SEO and Social card meta tags to be used in your frontend",
             "args": [
               {
                 "name": "locale",
@@ -3478,7 +3478,7 @@
           },
           {
             "name": "_seoMetaTags",
-            "description": "SEO meta tags",
+            "description": "Generates SEO and Social card meta tags to be used in your frontend",
             "args": [
               {
                 "name": "locale",
@@ -9738,7 +9738,7 @@
           },
           {
             "name": "_seoMetaTags",
-            "description": "SEO meta tags",
+            "description": "Generates SEO and Social card meta tags to be used in your frontend",
             "args": [
               {
                 "name": "locale",

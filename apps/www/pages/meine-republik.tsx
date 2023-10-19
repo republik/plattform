@@ -17,7 +17,9 @@ function MeineRepublikPage() {
 
   return (
     <Frame raw>
-      <UserNav me={me} router={router} />
+      {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
+      {/* @ts-ignore */}
+      <UserNav me={me} />
     </Frame>
   )
 }
