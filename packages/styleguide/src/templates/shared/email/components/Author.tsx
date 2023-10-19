@@ -66,7 +66,15 @@ export const Author = ({
                 {greeting}
                 <br />
                 <br />
-                <strong>{author.name}</strong>
+                <strong
+                  style={{
+                    fontFamily:
+                      'GT-America-Standard-Medium, "Helvetica Neue", Helvetica, sans-serif',
+                    fontWeight: 500,
+                  }}
+                >
+                  {author.name}
+                </strong>
                 <br />
                 <br />
                 {credential?.description}
@@ -104,7 +112,15 @@ export const Author = ({
                   'GT-America-Standard-Regular, "Helvetica Neue", Helvetica, sans-serif',
               }}
             >
-              <strong>{author.name}</strong>
+              <strong
+                style={{
+                  fontFamily:
+                    'GT-America-Standard-Medium, "Helvetica Neue", Helvetica, sans-serif',
+                  fontWeight: 500,
+                }}
+              >
+                {author.name}
+              </strong>
               <br />
               {credential?.description}
             </td>
