@@ -32,14 +32,13 @@ const styles = {
     backgroundColor: `currentColor`,
     opacity: 0.7,
     marginTop: 12,
-    borderRadius: '0 7px 0 0',
+    borderRadius: '0 7px 7px 0',
   }),
   barAndLabelMobile: css({
     position: 'relative',
     // display: "flex",
     // flexDirection: ""
     alignSelf: 'end',
-    borderBottom: '1px solid currentColor',
     marginBottom: 2,
   }),
   labelMobile: css({
