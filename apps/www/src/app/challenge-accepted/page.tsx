@@ -16,6 +16,7 @@ import { CollectionFilter } from '@app/components/collection-filter'
 import { StructuredText } from 'react-datocms'
 import { CANewsletterSignUp } from '@app/components/ca-newsletter-sign-up'
 import { getClimateLabNewsletterSubscriptionStatus } from '@app/graphql/republik-api/newsletter.query'
+import { PersonList } from '@app/app/challenge-accepted/person/[slug]/components/person-list'
 
 export async function generateMetadata(
   _, // params
@@ -151,6 +152,14 @@ export default async function Page({ searchParams }) {
           {!isSubscribedToCANewsletter && (
             <CANewsletterSignUp defaultEmail={me ? me.email : undefined} />
           )}
+
+          <section>
+            <h2 className={css({ textStyle: 'h2Sans', mb: '4' })}>
+              Wer bei Challenge Accepted dabei ist
+            </h2>
+            <PersonList />
+          </section>
+
           <section>
             <div
               className={css({ mb: '6', overflowY: 'auto', maxWidth: 'full' })}

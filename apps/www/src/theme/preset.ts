@@ -403,5 +403,15 @@ export const presetRepublik = definePreset({
         },
       },
     },
+    keyframes: {
+      radixCollapsibleSlideDown: {
+        from: { height: 0 },
+        to: { height: 'var(--radix-collapsible-content-height)' },
+      },
+      radixCollapsibleSlideUp: {
+        from: { height: 'var(--radix-collapsible-content-height)' },
+        to: { height: 0 },
+      },
+    },
   },
 })
