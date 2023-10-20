@@ -89,7 +89,7 @@ export default async function Page({ searchParams }) {
         ></img>
       </h1>
       <Container>
-        <div className={vstack({ gap: '16', alignItems: 'stretch' })}>
+        <div className={vstack({ gap: '32', alignItems: 'stretch' })}>
           <section className={wrap({ gap: '4', mb: '6' })}>
             {people.map((person) => (
               <div
@@ -154,7 +154,13 @@ export default async function Page({ searchParams }) {
           )}
 
           <section>
-            <h2 className={css({ textStyle: 'h2Sans', mb: '4' })}>
+            <h2
+              className={css({
+                textStyle: 'h1Sans',
+                fontWeight: 'bold',
+                mb: '6',
+              })}
+            >
               Wer bei Challenge Accepted dabei ist
             </h2>
             <PersonList />

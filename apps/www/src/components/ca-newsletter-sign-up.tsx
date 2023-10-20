@@ -69,15 +69,11 @@ export function CANewsletterSignUp({
   }
 
   return (
-    <div
-      className={css({
-        pt: '12',
-      })}
-    >
+    <div>
       <h2
         className={css({
           mb: '4',
-          fontSize: '3xl',
+          textStyle: 'h1Sans',
           fontWeight: 'bold',
         })}
         style={{
