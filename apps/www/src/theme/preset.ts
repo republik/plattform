@@ -27,7 +27,7 @@ export const presetRepublik = definePreset({
           current: { value: 'currentColor' },
           divider: { value: '#DBDCDD' },
           dividerDark: { value: '#4C4C4C' },
-          diabled: { value: '#B8BDC1' },
+          disabled: { value: '#B8BDC1' },
           disabledDark: { value: '#949494' },
         },
         sizes: {

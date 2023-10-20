@@ -11,7 +11,7 @@ import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { css } from '@app/styled-system/css'
 import { useState } from 'react'
-import { wrap } from '@app/styled-system/patterns'
+import { stack, wrap } from '@app/styled-system/patterns'
 
 const formSchema = z.object({
   email: z.string().email('Bitte geben Sie eine gültige E-Mail Adresse ein.'),
@@ -95,27 +95,54 @@ export function CANewsletterSignUp({
           })}
           onSubmit={form.handleSubmit(handleSubmit)}
         >
-          <input
+          <div
             className={css({
-              fontSize: 'xl',
               flexGrow: 1,
-              background: 'transparent',
-              borderBottomWidth: 1,
-              borderBottomStyle: 'solid',
-              borderBottomColor: 'text',
-              color: 'text',
-              '&:focus': {
-                borderBottomColor: 'contrast',
-                outlineWidth: 0,
-              },
-              '&::placeholder': {
-                color: 'text',
-              },
+              position: 'relative',
+              display: 'flex',
+              flexDirection: 'row',
             })}
-            {...form.register('email')}
-            type='email'
-            placeholder='Email'
-          />
+          >
+            <div
+              className={stack({
+                gap: '2',
+                width: 'full',
+              })}
+            >
+              <label
+                htmlFor='email-field'
+                className={css({
+                  display: 'flex',
+                  flexDirection: 'row',
+                  color: 'disabled',
+                  fontSize: 'sm',
+                })}
+              >
+                Email
+              </label>
+              <input
+                id='email-field'
+                className={css({
+                  alignSelf: 'flex-end',
+                  width: 'full',
+                  fontSize: 'xl',
+                  background: 'transparent',
+                  borderBottomWidth: 1,
+                  borderBottomStyle: 'solid',
+                  borderBottomColor: 'text',
+                  color: 'text',
+                  '&:focus': {
+                    borderBottomColor: 'contrast',
+                    outlineWidth: 0,
+                  },
+                  '&::placeholder': {
+                    color: 'text',
+                  },
+                })}
+                {...form.register('email')}
+              />
+            </div>
+          </div>
           <button
             className={css({
               position: 'relative',
