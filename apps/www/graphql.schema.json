@@ -458,7 +458,7 @@
           },
           {
             "name": "_seoMetaTags",
-            "description": "SEO meta tags",
+            "description": "Generates SEO and Social card meta tags to be used in your frontend",
             "args": [
               {
                 "name": "locale",
@@ -872,7 +872,7 @@
           },
           {
             "name": "_seoMetaTags",
-            "description": "SEO meta tags",
+            "description": "Generates SEO and Social card meta tags to be used in your frontend",
             "args": [
               {
                 "name": "locale",
@@ -1456,7 +1456,7 @@
           },
           {
             "name": "_seoMetaTags",
-            "description": "SEO meta tags",
+            "description": "Generates SEO and Social card meta tags to be used in your frontend",
             "args": [
               {
                 "name": "locale",
@@ -1849,6 +1849,18 @@
             "deprecationReason": null
           },
           {
+            "name": "size",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "StringFilter",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "slug",
             "description": null,
             "type": {
@@ -2018,6 +2030,18 @@
             "description": null,
             "isDeprecated": false,
             "deprecationReason": null
+          },
+          {
+            "name": "size_ASC",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "size_DESC",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
           }
         ],
         "possibleTypes": null
@@ -2125,7 +2149,7 @@
           },
           {
             "name": "_seoMetaTags",
-            "description": "SEO meta tags",
+            "description": "Generates SEO and Social card meta tags to be used in your frontend",
             "args": [
               {
                 "name": "locale",
@@ -2279,6 +2303,18 @@
             "type": {
               "kind": "OBJECT",
               "name": "FileField",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "size",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
               "ofType": null
             },
             "isDeprecated": false,
@@ -3478,7 +3514,7 @@
           },
           {
             "name": "_seoMetaTags",
-            "description": "SEO meta tags",
+            "description": "Generates SEO and Social card meta tags to be used in your frontend",
             "args": [
               {
                 "name": "locale",
@@ -3785,7 +3821,7 @@
           },
           {
             "name": "_editingUrl",
-            "description": "Editing URL",
+            "description": "The DatoCMS URL where you can edit this entity. To use this field, you need to set a X-Base-Editing-Url header in the request",
             "args": [],
             "type": {
               "kind": "SCALAR",
@@ -4497,7 +4533,7 @@
           },
           {
             "name": "_editingUrl",
-            "description": "Editing URL",
+            "description": "The DatoCMS URL where you can edit this entity. To use this field, you need to set a X-Base-Editing-Url header in the request",
             "args": [],
             "type": {
               "kind": "SCALAR",
@@ -9738,7 +9774,7 @@
           },
           {
             "name": "_seoMetaTags",
-            "description": "SEO meta tags",
+            "description": "Generates SEO and Social card meta tags to be used in your frontend",
             "args": [
               {
                 "name": "locale",

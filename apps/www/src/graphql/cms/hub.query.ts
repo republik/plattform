@@ -46,7 +46,7 @@ query ChallengeAcceptedHubQuery {
       }
     }
   }
-  people: allChallengeAcceptedPeople {
+  people: allChallengeAcceptedPeople(first: 50) {
     id
     slug
     name
