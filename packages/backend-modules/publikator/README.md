@@ -6,8 +6,8 @@ Here you find the code responsible for the CMS tasks.
 You can add our own open beacon to newsletters by setting following environment variables:
 
 ```
-MATOMO_URL_BASE=https://matomo.example.com
-MATOMO_SITE_ID=1
+PIWIK_URL_BASE=https://piwik.example.com
+PIWIK_SITE_ID=1
 ```
 
 _MailChimp tracking is automatically disabled when creating a new campaign._

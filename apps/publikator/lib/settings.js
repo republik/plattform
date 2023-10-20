@@ -10,6 +10,9 @@ export const API_AUTHORIZATION_HEADER =
   process.env.NEXT_PUBLIC_API_AUTHORIZATION_HEADER
 export const FRONTEND_BASE_URL = process.env.NEXT_PUBLIC_FRONTEND_BASE_URL
 
+export const PIWIK_URL_BASE = process.env.NEXT_PUBLIC_PIWIK_URL_BASE
+export const PIWIK_SITE_ID = process.env.NEXT_PUBLIC_PIWIK_SITE_ID
+
 export const TEMPLATES = process.env.NEXT_PUBLIC_TEMPLATES
 export const REPO_PREFIX = process.env.NEXT_PUBLIC_REPO_PREFIX
 export const TEMPLATE_PREFIX = 'template-'

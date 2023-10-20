@@ -28,13 +28,13 @@ cp .env.example .env
 
 Make sure to adapt `GITHUB_ORG` to the `GITHUB_LOGIN` used in the backend env.
 
-### MATOMO
+### Piwik
 
 You can enable tracking by setting a base url and site id:
 
 ```
-MATOMO_URL_BASE=https://matomo.example.com
-MATOMO_SITE_ID=1
+PIWIK_URL_BASE=https://piwik.example.com
+PIWIK_SITE_ID=1
 ```
 
 ### Theming
