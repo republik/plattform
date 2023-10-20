@@ -1,5 +1,5 @@
 import Container from '@app/components/container'
-import { PageHeader } from '@app/components/page-header'
+import { PageHeader } from '@app/components/layout/header'
 import { css } from '@app/styled-system/css'
 import { stack } from '@app/styled-system/patterns'
 import Link from 'next/link'

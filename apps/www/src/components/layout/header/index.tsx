@@ -1,11 +1,11 @@
-import { PageNav } from '@app/components/page-nav'
 import { getMe } from '@app/lib/auth/me'
 import { css } from '@app/styled-system/css'
 import { hstack } from '@app/styled-system/patterns'
 import Link from 'next/link'
-import { IconMic } from '@republik/icons'
+import { IconMic, IconSearchMenu } from '@republik/icons'
 import { MeQueryResult } from '@app/graphql/republik-api/me.query'
 import Image from 'next/image'
+import { NavLink } from './nav-link'
 
 const Logo = () => {
   return (
@@ -59,6 +59,13 @@ const Avatar = ({ me }: { me: MeQueryResult['me'] }) => {
 export const PageHeader = async () => {
   const me = await getMe()
 
+  const navLinks = [
+    { href: '/', label: 'Magazin' },
+    { href: '/feed', label: 'Feed' },
+    { href: '/dialog', label: 'Dialog' },
+    { href: '/suche', label: 'Suche', icon: <IconSearchMenu size={18} /> },
+  ]
+
   return (
     <div
       className={css({
@@ -105,7 +112,20 @@ export const PageHeader = async () => {
         </div>
       </div>
 
-      <PageNav />
+      {me?.activeMembership?.id ? (
+        <div
+          className={hstack({
+            gap: '0',
+            justifyContent: 'center',
+          })}
+        >
+          {navLinks.map(({ href, label, icon }) => (
+            <NavLink key={href} href={href}>
+              {icon || label}
+            </NavLink>
+          ))}
+        </div>
+      ) : null}
     </div>
   )
 }

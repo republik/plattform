@@ -1,5 +1,5 @@
 import Footer from '@app/components/layout/footer'
-import { PageHeader } from '@app/components/page-header'
+import { PageHeader } from '@app/components/layout/header'
 import { css } from '@app/styled-system/css'
 
 export default function Layout(props: {
