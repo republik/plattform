@@ -48,7 +48,7 @@ const {
 const { notifyPublish } = require('../../../lib/Notifications')
 const { document: getDocument } = require('../Commit')
 
-const { FRONTEND_BASE_URL, PIWIK_URL_BASE, PIWIK_SITE_ID, DISABLE_PUBLISH } =
+const { FRONTEND_BASE_URL, MATOMO_URL_BASE, MATOMO_SITE_ID, DISABLE_PUBLISH } =
   process.env
 
 module.exports = async (_, args, context) => {
@@ -371,9 +371,9 @@ module.exports = async (_, args, context) => {
     // Update campaign content (HTML)
     let html = getHTML(resolvedDoc)
 
-    if (PIWIK_URL_BASE && PIWIK_SITE_ID) {
-      const openBeacon = `${PIWIK_URL_BASE}/piwik.php?${querystring.stringify({
-        idsite: PIWIK_SITE_ID,
+    if (MATOMO_URL_BASE && MATOMO_SITE_ID) {
+      const openBeacon = `${MATOMO_URL_BASE}/piwik.php?${querystring.stringify({
+        idsite: MATOMO_SITE_ID,
         url: FRONTEND_BASE_URL + path,
         rec: 1,
         bots: 1,
