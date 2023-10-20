@@ -10,6 +10,8 @@ Accept-Encoding: gzip
 grant_type=client_credentials
 */
 
+// Twitter API-Keys are deleted from env, so this will always throw a warning.
+// TODO remove TwitterEmbeds completely
 const { TWITTER_APP_KEY, TWITTER_APP_SECRET } = process.env
 
 if (!TWITTER_APP_KEY) {
