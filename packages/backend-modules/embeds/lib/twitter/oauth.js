@@ -15,10 +15,10 @@ grant_type=client_credentials
 const { TWITTER_APP_KEY, TWITTER_APP_SECRET } = process.env
 
 if (!TWITTER_APP_KEY) {
-  console.warn("missing TWITTER_APP_KEY. Twitter Embeds won't work.")
+  console.warn('Twitter-Embeds are no longer supported.')
 }
 if (!TWITTER_APP_SECRET) {
-  console.warn("missing TWITTER_APP_SECRET. Twitter Embeds won't work.")
+  console.warn('Twitter-Embeds are no longer supported.')
 }
 
 module.exports = async () => {
