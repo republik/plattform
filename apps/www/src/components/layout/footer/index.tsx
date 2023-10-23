@@ -26,7 +26,7 @@ function isLinkOfSameHost(link: string | UrlObject, host: string) {
     }
     return new URL(link).hostname === new URL(host).hostname
   } catch (e) {
-    console.error(e)
+    // console.error(e)
     return false
   }
 }
