@@ -9,7 +9,7 @@ type NavLinkProps = {
   children: React.ReactNode
 }
 
-export async function NavLink({ href, children }: NavLinkProps) {
+export function NavLink({ href, children }: NavLinkProps) {
   const pathname = usePathname()
 
   return (
