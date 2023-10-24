@@ -2,7 +2,7 @@ import { getMe } from '@app/lib/auth/me'
 import { css } from '@app/styled-system/css'
 import { hstack } from '@app/styled-system/patterns'
 import Link from 'next/link'
-import { IconMic, IconSearchMenu } from '@republik/icons'
+import { IconAccountBox, IconMic, IconSearchMenu } from '@republik/icons'
 import { MeQueryResult } from '@app/graphql/republik-api/me.query'
 import Image from 'next/image'
 import { NavLink } from './nav-link'
@@ -41,6 +41,7 @@ const Avatar = ({ me }: { me: MeQueryResult['me'] }) => {
     display: 'inline-block',
     width: 'header.avatar',
     height: 'header.avatar',
+    objectFit: 'cover',
   })
 
   return me?.portrait ? (
@@ -76,39 +77,117 @@ export const PageHeader = async () => {
       })}
     >
       <div
-        className={hstack({
+        className={css({
+          display: 'flex',
+          alignItems: 'center',
           justifyContent: 'space-between',
           borderBottomWidth: 1,
           borderBottomStyle: 'solid',
           borderBottomColor: 'overlay',
         })}
       >
-        <div className={css({ m: 'header.avatarMargin' })}>
+        <div
+          className={css({ m: 'header.avatarMargin', md: { width: '100%' } })}
+        >
           {me ? (
             <Link href='/meine-republik'>
               <Avatar me={me} />
             </Link>
           ) : (
-            <Link href='/anmelden'>Anmelden</Link>
+            <Link
+              href='/anmelden'
+              className={css({
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'center',
+                textDecoration: 'none',
+                gap: '5px',
+                color: 'text',
+              })}
+            >
+              <IconAccountBox aria-label='Anmelden' size={32} />
+              <span
+                className={css({
+                  display: 'none',
+                  md: {
+                    display: 'inline-block',
+                  },
+                })}
+              >
+                Anmelden
+              </span>
+            </Link>
           )}
         </div>
-        <div className={css({ m: 'header.logoMargin' })}>
+        <div className={css({ m: 'header.logoMargin', md: { width: '100%' } })}>
           <Link href='/'>
             <Logo />
           </Link>
         </div>
         <div
           className={css({
-            width: 'header.avatar',
-            height: 'header.avatar',
-            m: 'header.avatarMargin',
+            alignSelf: 'stretch',
+            md: { width: '100%' },
             display: 'flex',
-            placeContent: 'center center',
+            flexDirection: 'row',
+            justifyContent: 'flex-end',
           })}
         >
-          <button disabled className={css({ p: '0' })}>
-            <IconMic size={28} />
-          </button>
+          {me?.activeMembership?.id ? (
+            <div
+              className={css({
+                width: 'header.avatar',
+                height: 'header.avatar',
+                m: 'header.avatarMargin',
+                display: 'flex',
+                placeContent: 'center center',
+              })}
+            >
+              <button disabled className={css({ p: '0' })}>
+                <IconMic size={28} />
+              </button>
+            </div>
+          ) : (
+            <Link
+              href='/angebote'
+              className={css({
+                textDecoration: 'none',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexDirection: 'row',
+                alignSelf: 'stretch',
+                background: 'text',
+                color: 'text.inverted',
+                padding: '10px 20px',
+                fontSize: '16px',
+                height: '100%',
+                md: {
+                  padding: '10px 80px',
+                  fontSize: '22px',
+                },
+              })}
+            >
+              <span
+                className={css({
+                  display: 'none',
+                  md: { display: 'inline-block' },
+                })}
+              >
+                Jetzt abonnieren
+              </span>
+              <span
+                className={css({
+                  display: 'inline-block',
+                  md: {
+                    display: 'none',
+                  },
+                })}
+              >
+                Abo
+              </span>
+            </Link>
+          )}
         </div>
       </div>
 
