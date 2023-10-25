@@ -1,4 +1,5 @@
 import Container from '@app/components/container'
+import Footer from '@app/components/layout/footer'
 import { PageHeader } from '@app/components/layout/header'
 import { css } from '@app/styled-system/css'
 import { stack } from '@app/styled-system/patterns'
@@ -7,32 +8,58 @@ import React from 'react'
 
 function NotFound() {
   return (
-    <>
+    <div
+      className={css({
+        minHeight: '100dvh',
+        display: 'flex',
+        flexDirection: 'column',
+      })}
+    >
       <PageHeader />
-      <Container>
-        <div className={stack({ gap: '4', mt: '16' })}>
-          <h1
-            className={css({
-              textStyle: 'h1Sans',
-              mt: '8',
-            })}
-          >
-            404 - Seite nicht gefunden
-          </h1>
-          <p
-            className={css({
-              textStyle: 'sans',
-            })}
-          >
-            Die Seite, die du suchst, existiert nicht.
-          </p>
-          <p>Root 404-Seite</p>
-          <Link href='/' className={css({ textStyle: 'serifItalic' })}>
-            Zum Magazin
-          </Link>
-        </div>
-      </Container>
-    </>
+      <div
+        className={css({
+          flexGrow: 1,
+        })}
+      >
+        <Container>
+          <div className={stack({ gap: '4', mt: '16' })}>
+            <h1
+              className={css({
+                textStyle: 'h1Sans',
+                mt: '8',
+                fontSize: 300,
+                textAlign: 'center',
+                marginY: '60px',
+              })}
+            >
+              404
+            </h1>
+            <p
+              className={css({
+                textStyle: 'sans',
+                fontSize: '1.3125rem',
+                lineHeight: '2rem',
+              })}
+            >
+              Seite nicht gefunden
+            </p>
+            <Link
+              href='/'
+              className={css({
+                color: 'primary',
+                textDecoration: 'none',
+                _hover: {
+                  color: 'primaryHover',
+                },
+              })}
+            >
+              Zum Magazin
+            </Link>
+          </div>
+        </Container>
+      </div>
+      <Footer />
+    </div>
   )
 }
 

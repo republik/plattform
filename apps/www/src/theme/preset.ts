@@ -124,19 +124,31 @@ export const presetRepublik = definePreset({
           background: {
             value: {
               base: 'white',
-              _dark: 'black',
+              _dark: '#191919',
             },
           },
           pageBackground: {
             value: {
               base: 'white',
-              _dark: 'black',
+              _dark: '#191919',
             },
           },
           link: {
             value: {
               base: 'hotpink',
               _dark: 'hotpink',
+            },
+          },
+          primary: {
+            value: {
+              base: '#00AA00',
+              _dark: '#00AA00',
+            },
+          },
+          primaryHover: {
+            value: {
+              base: '#008800',
+              _dark: '#008800',
             },
           },
           overlay: {
