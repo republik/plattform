@@ -60,11 +60,9 @@ export function PersonDetail({ person, isMember = false }: PersonDetailProps) {
         />
       )}
 
-      <Container>
-        <StructuredText data={person.bio.value} />
-        <h2 className={css({ textStyle: 'h2Sans', my: '6' })}>Inhalte</h2>
-        <CollectionRenderer items={person.items} isMember={isMember} />
-      </Container>
+      <StructuredText data={person.bio.value} />
+      <h2 className={css({ textStyle: 'h2Sans', my: '6' })}>Inhalte</h2>
+      <CollectionRenderer items={person.items} isMember={isMember} />
     </div>
   )
 }
