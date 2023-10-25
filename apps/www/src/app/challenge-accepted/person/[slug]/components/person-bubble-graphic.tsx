@@ -16,6 +16,7 @@ import {
 } from 'd3-force'
 import { select } from 'd3-selection'
 import d3ForceLimit from 'd3-force-limit'
+import { useRouter } from 'next/navigation'
 
 const RADIUS_LARGE = 110
 const RADIUS_MEDIUM = 75
@@ -74,15 +75,22 @@ const PersonBubbleItem = ({
   width: number
   height: number
 }) => {
+  const router = useRouter()
+
   return (
-    <Link
+    <div
       data-person={person.slug}
-      href={`/challenge-accepted/person/${person.slug}`}
+      // Yes, we don't use a proper <Link> intentionally here, so long-press doesn't open a context menu/link preview on mobile
+      // Accessible access to people is done in the list outside of this graphic
+      onClick={() => {
+        router.push(`/challenge-accepted/person/${person.slug}`)
+      }}
       className={css({
         color: 'text',
         textDecoration: 'none',
         position: 'absolute',
         display: 'block',
+        cursor: 'pointer',
         // background: 'hotpink',
         borderRadius: 'full',
         touchAction: 'manipulation',
@@ -151,7 +159,7 @@ const PersonBubbleItem = ({
           {person.name}
         </span>
       </div>
-    </Link>
+    </div>
   )
 }
 
