@@ -68,29 +68,34 @@ export default async function Page({ searchParams }) {
 
   return (
     <>
-      {}
       <h1
         className={css({
+          mt: '8',
           mb: '8',
+          position: 'absolute',
+          width: 'full',
+          height: '63vw',
+          left: 0,
           _dark: {
             filter: 'invert(1)',
           },
         })}
-      ></h1>
+      >
+        <Image
+          src={hub.logo?.url}
+          priority
+          fill
+          className={css({ objectFit: 'contain' })}
+          alt='Challenge Accepted Logo'
+        />
+      </h1>
       <section
         className={css({
-          backgroundSize: '100%',
-          backgroundRepeat: 'no-repeat',
-          backgroundPosition: 'top center',
           pt: '20vh',
           md: {
             pt: '30vh',
           },
         })}
-        style={{
-          // For some reason this URL doesn't work with Panda CSS :/
-          backgroundImage: `url("${hub.logo?.url}")`,
-        }}
       >
         <PersonBubble />
       </section>
