@@ -86,7 +86,7 @@ const PersonBubbleItem = ({
         textDecoration: 'none',
         position: 'absolute',
         display: 'block',
-        background: 'hotpink',
+        // background: 'hotpink',
         borderRadius: 'full',
         touchAction: 'manipulation',
         userSelect: 'none',
