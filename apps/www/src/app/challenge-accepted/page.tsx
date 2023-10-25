@@ -1,21 +1,22 @@
 import type { Metadata, ResolvingMetadata } from 'next'
 
-import { css } from '@app/styled-system/css'
+import { PersonBubble } from '@app/app/challenge-accepted/person/[slug]/components/person-bubble'
+import { PersonList } from '@app/app/challenge-accepted/person/[slug]/components/person-list'
+import { CANewsletterSignUp } from '@app/components/ca-newsletter-sign-up'
+import { CollectionFilter } from '@app/components/collection-filter'
+import CollectionRenderer from '@app/components/collection-render'
+import Container from '@app/components/container'
 import {
   CHALLENGE_ACCEPTED_HUB_META_QUERY,
   CHALLENGE_ACCEPTED_HUB_QUERY,
 } from '@app/graphql/cms/hub.query'
-import { getCMSClient } from '@app/lib/apollo/cms-client'
-import Container from '@app/components/container'
-import CollectionRenderer from '@app/components/collection-render'
-import { vstack } from '@app/styled-system/patterns'
-import { getMe } from '@app/lib/auth/me'
-import { CollectionFilter } from '@app/components/collection-filter'
-import { StructuredText } from 'react-datocms'
-import { CANewsletterSignUp } from '@app/components/ca-newsletter-sign-up'
 import { getClimateLabNewsletterSubscriptionStatus } from '@app/graphql/republik-api/newsletter.query'
-import { PersonList } from '@app/app/challenge-accepted/person/[slug]/components/person-list'
-import { PersonBubble } from '@app/app/challenge-accepted/person/[slug]/components/person-bubble'
+import { getCMSClient } from '@app/lib/apollo/cms-client'
+import { getMe } from '@app/lib/auth/me'
+import { css } from '@app/styled-system/css'
+import { vstack } from '@app/styled-system/patterns'
+import Image from 'next/image'
+import { StructuredText } from 'react-datocms'
 
 export async function generateMetadata(
   _, // params
