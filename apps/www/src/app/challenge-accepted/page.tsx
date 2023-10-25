@@ -17,6 +17,7 @@ import { StructuredText } from 'react-datocms'
 import { CANewsletterSignUp } from '@app/components/ca-newsletter-sign-up'
 import { getClimateLabNewsletterSubscriptionStatus } from '@app/graphql/republik-api/newsletter.query'
 import { PersonList } from '@app/app/challenge-accepted/person/[slug]/components/person-list'
+import { PersonBubble } from '@app/app/challenge-accepted/person/[slug]/components/person-bubble'
 
 export async function generateMetadata(
   _, // params
@@ -78,74 +79,24 @@ export default async function Page({ searchParams }) {
             filter: 'invert(1)',
           },
         })}
+      ></h1>
+      <section
+        className={css({
+          backgroundSize: '100%',
+          backgroundRepeat: 'no-repeat',
+          overflow: 'hidden',
+          height: '80vw',
+          pt: '40vw',
+        })}
+        style={{
+          // For some reason this URL doesn't work with Panda CSS :/
+          backgroundImage: `url("${hub.logo?.url}")`,
+        }}
       >
-        <img
-          src={hub.logo?.url}
-          className={css({
-            width: 'viewportWidth',
-            height: 'auto',
-          })}
-          alt='Challenge Accepted Logo'
-        ></img>
-      </h1>
+        <PersonBubble />
+      </section>
       <Container>
         <div className={vstack({ gap: '32', alignItems: 'stretch' })}>
-          <section className={wrap({ gap: '4', mb: '6' })}>
-            {people.map((person) => (
-              <div
-                key={person.id}
-                className={css({
-                  display: 'flex',
-                  flexDirection: 'row',
-                  // justifyContent: 'flex-end',
-                  gap: '4',
-                })}
-              >
-                <Link href={`/challenge-accepted/person/${person.slug}`}>
-                  <h3
-                    className={css({
-                      display: 'block',
-                      textStyle: 'h3Sans',
-                      textAlign: 'center',
-                      py: '1',
-                    })}
-                  >
-                    {person.portrait ? (
-                      <Image
-                        src={person.portrait?.url}
-                        width={96 * 2}
-                        height={96 * 2}
-                        className={css({
-                          borderRadius: 'full',
-                          width: '24',
-                          height: '24',
-                          objectFit: 'cover',
-                        })}
-                        alt={person.name}
-                      />
-                    ) : (
-                      <div
-                        className={css({
-                          borderRadius: 'full',
-                          width: '24',
-                          height: '24',
-                          background: 'contrast',
-                          display: 'grid',
-                          placeItems: 'center',
-                          color: 'pageBackground',
-                          fontSize: '3xl',
-                        })}
-                      >
-                        {person.name.slice(0, 1)}
-                      </div>
-                    )}
-                    {person.name}
-                  </h3>
-                </Link>
-              </div>
-            ))}
-          </section>
-
           <section className={css({ textStyle: 'pageIntro' })}>
             <StructuredText data={hub.introduction.value} />
           </section>
