@@ -229,7 +229,10 @@ export const PersonBubbleForce = ({ people }: { people: People }) => {
       className={css({
         position: 'relative',
         width: 'full',
-        minHeight: '50vh',
+        height: '300vw',
+        md: {
+          height: '70vw',
+        },
       })}
     >
       <div ref={forceRef}>

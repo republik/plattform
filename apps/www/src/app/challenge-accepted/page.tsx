@@ -84,9 +84,11 @@ export default async function Page({ searchParams }) {
         className={css({
           backgroundSize: '100%',
           backgroundRepeat: 'no-repeat',
-          overflow: 'hidden',
-          height: '80vw',
-          pt: '40vw',
+          backgroundPosition: 'top center',
+          pt: '20vh',
+          md: {
+            pt: '30vh',
+          },
         })}
         style={{
           // For some reason this URL doesn't work with Panda CSS :/
