@@ -105,9 +105,7 @@ export default async function Page({ searchParams }) {
           <section className={css({ textStyle: 'pageIntro' })}>
             <StructuredText data={hub.introduction.value} />
           </section>
-          {!isSubscribedToCANewsletter && (
-            <CANewsletterSignUp defaultEmail={me ? me.email : undefined} />
-          )}
+          {!isSubscribedToCANewsletter && <CANewsletterSignUp me={me} />}
 
           <section>
             <h2
@@ -138,9 +136,7 @@ export default async function Page({ searchParams }) {
               }
             />
           </section>
-          {!isSubscribedToCANewsletter && (
-            <CANewsletterSignUp defaultEmail={me ? me.email : undefined} />
-          )}
+          {!isSubscribedToCANewsletter && <CANewsletterSignUp me={me} />}
           <div className={css({ textStyle: 'teaserLeadSans' })}>
             <StructuredText data={hub.outro.value} />
           </div>

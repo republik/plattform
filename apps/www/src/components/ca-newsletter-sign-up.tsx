@@ -12,6 +12,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { css } from '@app/styled-system/css'
 import { useState } from 'react'
 import { stack, wrap } from '@app/styled-system/patterns'
+import { MeQueryResult } from '@app/graphql/republik-api/me.query'
 
 const formSchema = z.object({
   email: z.string().email('Bitte geben Sie eine gültige E-Mail Adresse ein.'),
@@ -20,12 +21,10 @@ const formSchema = z.object({
 type FormValues = z.infer<typeof formSchema>
 
 type CANewsletterSignUpProps = {
-  defaultEmail?: string
+  me?: MeQueryResult['me']
 }
 
-export function CANewsletterSignUp({
-  defaultEmail = '',
-}: CANewsletterSignUpProps) {
+export function CANewsletterSignUp({ me }: CANewsletterSignUpProps) {
   const [signUpForNewsletter] = useMutation<
     SignUpForNewsletterResult,
     SignUpForNewsletterVariables
@@ -35,7 +34,7 @@ export function CANewsletterSignUp({
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: defaultEmail,
+      email: me?.email,
     },
   })
 
@@ -83,116 +82,165 @@ export function CANewsletterSignUp({
         Für den Newsletter anmelden
       </h2>
       {!signUpSuccessful ? (
-        <form
-          className={wrap({
-            gap: '2',
-            position: 'relative',
-            pb: '8',
-          })}
-          onSubmit={form.handleSubmit(handleSubmit)}
-        >
-          <div
-            className={css({
-              flexGrow: 1,
-              position: 'relative',
-              display: 'flex',
-              flexDirection: 'row',
-            })}
-          >
-            <div
-              className={stack({
-                gap: '2',
-                width: 'full',
+        <>
+          {me ? (
+            <button
+              className={css({
+                position: 'relative',
+                px: '8',
+                py: '2',
+                borderWidth: 2,
+                borderStyle: 'solid',
+                borderColor: 'contrast',
+                fontWeight: 'bold',
+                fontSize: 'xl',
+                cursor: 'pointer',
+                color: 'text',
+                width: '100%',
+                md: {
+                  width: 'auto',
+                },
               })}
+              onClick={() => {
+                handleSubmit({ email: me.email })
+              }}
             >
-              <label
-                htmlFor='email-field'
+              <span
                 className={css({
-                  display: 'flex',
-                  flexDirection: 'row',
-                  color: 'disabled',
-                  fontSize: 'sm',
+                  visibility: isLoading ? 'hidden' : 'visible',
                 })}
               >
-                Email
-              </label>
-              <input
-                id='email-field'
-                className={css({
-                  alignSelf: 'flex-end',
-                  width: 'full',
-                  fontSize: 'xl',
-                  background: 'transparent',
-                  borderBottomWidth: 1,
-                  borderBottomStyle: 'solid',
-                  borderBottomColor: 'text',
-                  color: 'text',
-                  '&:focus': {
-                    borderBottomColor: 'contrast',
-                    outlineWidth: 0,
-                  },
-                  '&::placeholder': {
+                Abonnieren
+              </span>
+              {isLoading && (
+                <div
+                  className={css({
+                    position: 'absolute',
+                    inset: 0,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  })}
+                >
+                  Lädt...
+                </div>
+              )}
+            </button>
+          ) : (
+            <>
+              <form
+                className={wrap({
+                  gap: '2',
+                  position: 'relative',
+                  pb: '8',
+                })}
+                onSubmit={form.handleSubmit(handleSubmit)}
+              >
+                <div
+                  className={css({
+                    flexGrow: 1,
+                    position: 'relative',
+                    display: 'flex',
+                    flexDirection: 'row',
+                  })}
+                >
+                  <div
+                    className={stack({
+                      gap: '2',
+                      width: 'full',
+                    })}
+                  >
+                    <label
+                      htmlFor='email-field'
+                      className={css({
+                        display: 'flex',
+                        flexDirection: 'row',
+                        color: 'disabled',
+                        fontSize: 'sm',
+                      })}
+                    >
+                      Email
+                    </label>
+                    <input
+                      id='email-field'
+                      className={css({
+                        alignSelf: 'flex-end',
+                        width: 'full',
+                        fontSize: 'xl',
+                        background: 'transparent',
+                        borderBottomWidth: 1,
+                        borderBottomStyle: 'solid',
+                        borderBottomColor: 'text',
+                        color: 'text',
+                        '&:focus': {
+                          borderBottomColor: 'contrast',
+                          outlineWidth: 0,
+                        },
+                        '&::placeholder': {
+                          color: 'text',
+                        },
+                      })}
+                      {...form.register('email')}
+                    />
+                  </div>
+                </div>
+                <button
+                  className={css({
+                    position: 'relative',
+                    px: '8',
+                    py: '2',
+                    borderWidth: 2,
+                    borderStyle: 'solid',
+                    borderColor: 'contrast',
+                    fontWeight: 'bold',
+                    fontSize: 'xl',
+                    cursor: 'pointer',
                     color: 'text',
-                  },
-                })}
-                {...form.register('email')}
-              />
-            </div>
-          </div>
-          <button
-            className={css({
-              position: 'relative',
-              px: '8',
-              py: '2',
-              borderWidth: 2,
-              borderStyle: 'solid',
-              borderColor: 'contrast',
-              fontWeight: 'bold',
-              fontSize: 'xl',
-              cursor: 'pointer',
-              color: 'text',
-              width: '100%',
-              md: {
-                width: 'auto',
-              },
-            })}
-            type='submit'
-          >
-            <span
-              className={css({
-                visibility: isLoading ? 'hidden' : 'visible',
-              })}
-            >
-              Abonnieren
-            </span>
-            {isLoading && (
-              <div
-                className={css({
-                  position: 'absolute',
-                  inset: 0,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                })}
-              >
-                Lädt...
-              </div>
-            )}
-          </button>
-          {form.formState.errors.email && (
-            <p
-              className={css({
-                position: 'absolute',
-                bottom: 0,
-                left: 0,
-                fontSize: 'sm',
-                color: 'error',
-              })}
-            >
-              {form.formState.errors.email.message}
-            </p>
+                    width: '100%',
+                    md: {
+                      width: 'auto',
+                    },
+                  })}
+                  type='submit'
+                >
+                  <span
+                    className={css({
+                      visibility: isLoading ? 'hidden' : 'visible',
+                    })}
+                  >
+                    Abonnieren
+                  </span>
+                  {isLoading && (
+                    <div
+                      className={css({
+                        position: 'absolute',
+                        inset: 0,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      })}
+                    >
+                      Lädt...
+                    </div>
+                  )}
+                </button>
+                {form.formState.errors.email && (
+                  <p
+                    className={css({
+                      position: 'absolute',
+                      bottom: 0,
+                      left: 0,
+                      fontSize: 'sm',
+                      color: 'error',
+                    })}
+                  >
+                    {form.formState.errors.email.message}
+                  </p>
+                )}
+              </form>
+            </>
           )}
-        </form>
+        </>
       ) : (
         <p
           className={css({

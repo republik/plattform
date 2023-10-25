@@ -63,9 +63,7 @@ export default async function Page({ params: { slug } }: PageProps) {
       </Link>
       <PersonDetail person={personData} isMember={isMember} />
       <Container>
-        {!isSubscribedToCANewsletter && (
-          <CANewsletterSignUp defaultEmail={me ? me.email : undefined} />
-        )}
+        {!isSubscribedToCANewsletter && <CANewsletterSignUp me={me} />}
         <p>TODO: Navigation zur Übersicht + andere Personen</p>
       </Container>
     </>
