@@ -75,7 +75,7 @@ export default async function Page({ searchParams }) {
           mb: '8',
           position: 'absolute',
           width: 'full',
-          height: '63vw',
+          height: 'min(63vw, 1000px)',
           left: 0,
           _dark: {
             filter: 'invert(1)',
@@ -92,10 +92,9 @@ export default async function Page({ searchParams }) {
       </h1>
       <section
         className={css({
-          pt: '20vh',
-          md: {
-            pt: '30vh',
-          },
+          pt: 'min(50vw, 800px)',
+          mx: '-4',
+          overflow: 'hidden',
         })}
       >
         <PersonBubble />

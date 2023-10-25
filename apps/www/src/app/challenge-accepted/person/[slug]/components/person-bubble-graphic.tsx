@@ -257,16 +257,22 @@ export const PersonBubbleForce = ({ people }: { people: People }) => {
   return (
     <div
       ref={ref}
+      role='presentation'
       className={css({
         position: 'relative',
         width: 'full',
-        height: '300vw',
-        md: {
-          height: '70vw',
-        },
+        // Make sure there's enough space at the bottom for scaled bubbles
+        pb: '128px',
       })}
     >
-      <div ref={forceRef}>
+      <div
+        ref={forceRef}
+        style={{
+          // Height should be inversely proportional to width (narrow = higher), so bubbles have enough space
+          // Unfortunately, no pure CSS way to do this
+          height: Math.max(800, 512000 / (width ?? 1)),
+        }}
+      >
         {people.map((p) => (
           <PersonBubbleItem
             key={p.id}
