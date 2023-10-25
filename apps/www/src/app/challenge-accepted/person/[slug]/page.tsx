@@ -6,6 +6,8 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { getMe } from '@app/lib/auth/me'
 import { Metadata, ResolvingMetadata } from 'next'
+import { CANewsletterSignUp } from '@app/components/ca-newsletter-sign-up'
+import { getClimateLabNewsletterSubscriptionStatus } from '@app/graphql/republik-api/newsletter.query'
 
 type PageProps = {
   params: {
@@ -26,6 +28,8 @@ export default async function Page({ params: { slug } }: PageProps) {
   const me = await getMe()
   const isMember =
     me?.roles && Array.isArray(me.roles) && me.roles.includes('member')
+  const isSubscribedToCANewsletter =
+    await getClimateLabNewsletterSubscriptionStatus()
 
   const personData: typeof data['person'] = {
     ...data.person,
@@ -45,6 +49,10 @@ export default async function Page({ params: { slug } }: PageProps) {
       <Link href='/challenge-accepted'>Challenge Accepted Übersicht</Link>
       <Container>
         <PersonDetail person={personData} isMember={isMember} />
+        {!isSubscribedToCANewsletter && (
+          <CANewsletterSignUp defaultEmail={me ? me.email : undefined} />
+        )}
+        <p>TODO: Navigation zur Übersicht + andere Personen</p>
       </Container>
     </>
   )
