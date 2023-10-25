@@ -12,6 +12,7 @@ export const PERSON_DETAIL_QUERY = gql(`
         height
         title
       }
+      catchPhrase
       bio {
         value
       }

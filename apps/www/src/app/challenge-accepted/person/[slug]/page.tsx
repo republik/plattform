@@ -8,6 +8,7 @@ import { getMe } from '@app/lib/auth/me'
 import { Metadata, ResolvingMetadata } from 'next'
 import { CANewsletterSignUp } from '@app/components/ca-newsletter-sign-up'
 import { getClimateLabNewsletterSubscriptionStatus } from '@app/graphql/republik-api/newsletter.query'
+import { css } from '@app/styled-system/css'
 
 type PageProps = {
   params: {
@@ -46,9 +47,22 @@ export default async function Page({ params: { slug } }: PageProps) {
 
   return (
     <>
-      <Link href='/challenge-accepted'>Challenge Accepted Übersicht</Link>
+      <Link
+        href='/challenge-accepted'
+        className={css({
+          display: 'flex',
+          flexDirection: 'row',
+          alignItems: 'center',
+          textDecoration: 'none',
+          gap: '1',
+          color: 'text',
+          fontSize: 'sm',
+        })}
+      >
+        Challenge Accepted
+      </Link>
+      <PersonDetail person={personData} isMember={isMember} />
       <Container>
-        <PersonDetail person={personData} isMember={isMember} />
         {!isSubscribedToCANewsletter && (
           <CANewsletterSignUp defaultEmail={me ? me.email : undefined} />
         )}

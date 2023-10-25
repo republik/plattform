@@ -26,43 +26,73 @@ export function PersonDetail({ person, isMember = false }: PersonDetailProps) {
         alignItems: 'center',
       })}
     >
-      {/* It's impossible to fit text size to container width (without measuring in the DOM), therefore we use some funky calculations based on the name to approximate a viewbox that fits relatively close to the rendered text. Then the SVG is simply scaled with CSS to 100% of its parent's width */}
-      <svg
+      <div
         className={css({
-          display: 'block',
+          position: 'relative',
           width: 'full',
-          mt: '8',
-          fill: 'text',
         })}
-        viewBox={`0 0 ${funkyCalculatedViewboxWidth} ${funkyCalculatedViewboxHeight}`}
       >
-        <text
-          x={0}
-          y={0}
-          transform={`translate(${funkyCalculatedViewboxWidth / 2}, ${
-            funkyCalculatedViewboxHeight / 2
-          }) rotate(-9)`}
+        {/* It's impossible to fit text size to container width (without measuring in the DOM), therefore we use some funky calculations based on the name to approximate a viewbox that fits relatively close to the rendered text. Then the SVG is simply scaled with CSS to 100% of its parent's width */}
+        <svg
           className={css({
-            textStyle: 'personTitle',
+            display: 'block',
+            width: 'full',
+            mt: '8',
+            mb: '32',
+            fill: 'text',
           })}
-          textAnchor='middle'
-          dy='.35em'
+          viewBox={`0 0 ${funkyCalculatedViewboxWidth} ${funkyCalculatedViewboxHeight}`}
         >
-          {person.name}
-        </text>
-      </svg>
-      {person.portrait && (
-        <Image
-          alt={person.name}
-          src={person.portrait.url}
-          width={500}
-          height={500}
-        />
-      )}
-
-      <StructuredText data={person.bio.value} />
-      <h2 className={css({ textStyle: 'h2Sans', my: '6' })}>Inhalte</h2>
-      <CollectionRenderer items={person.items} isMember={isMember} />
+          <text
+            x={0}
+            y={0}
+            transform={`translate(${funkyCalculatedViewboxWidth / 2}, ${
+              funkyCalculatedViewboxHeight / 2
+            }) rotate(-9)`}
+            className={css({
+              textStyle: 'personTitle',
+            })}
+            textAnchor='middle'
+            dy='.35em'
+          >
+            {person.name}
+          </text>
+        </svg>
+        {person.portrait && (
+          <div
+            className={css({
+              position: 'absolute',
+              bottom: 0,
+              left: '50%',
+              transform: 'translatex(-50%)',
+            })}
+          >
+            <Image
+              alt={person.name}
+              src={person.portrait.url}
+              width={400}
+              height={400}
+            />
+          </div>
+        )}
+      </div>
+      <Container>
+        {person?.catchPhrase && (
+          <h2
+            className={css({
+              fontWeight: 'bold',
+              fontSize: '37px',
+              lineHeight: '44px',
+              marginBottom: '18px',
+            })}
+          >
+            «{person.catchPhrase}»
+          </h2>
+        )}
+        <StructuredText data={person.bio.value} />
+        <h2 className={css({ textStyle: 'h2Sans', my: '6' })}>Inhalte</h2>
+        <CollectionRenderer items={person.items} isMember={isMember} />
+      </Container>
     </div>
   )
 }
