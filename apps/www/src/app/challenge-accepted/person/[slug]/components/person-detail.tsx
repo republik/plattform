@@ -32,7 +32,7 @@ export function PersonDetail({ person, isMember = false }: PersonDetailProps) {
           display: 'block',
           width: 'full',
           mt: '8',
-          color: 'text',
+          fill: 'text',
         })}
         viewBox={`0 0 ${funkyCalculatedViewboxWidth} ${funkyCalculatedViewboxHeight}`}
       >
