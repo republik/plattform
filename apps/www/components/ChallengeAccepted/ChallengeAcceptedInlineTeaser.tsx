@@ -60,6 +60,9 @@ const CAOverViewLink = () => (
 
 const CANewsLetterSignUp = () => (
   <div {...css({ width: '100%' })}>
+    <h2 {...css({ ...fontStyles.sansSerifBold, fontSize: 19 })}>
+      Für den Newsletter anmelden
+    </h2>
     <NewsletterSignUp name={NEWSLETTER_NAME} free />
   </div>
 )
@@ -78,11 +81,12 @@ function CATopInlineTeaser({ isMember, isNLSubscribed }: CAInlineTeaserProps) {
     return (
       <>
         <CAP>
-          Die Klimakrise ist hier. Die Lage ist ernst. Challenge accepted. Wir
-          richten den Blick auf Menschen, die in der Klimakrise einen
-          Unterschied machen wollen. Und gehen gemeinsam der Frage nach: Wie
-          kommen wir aus dieser Krise wieder raus? Neugierig, kritisch,
-          konstruktiv. Mit Artikeln, Debatten, Veranstaltungen. Sind Sie dabei?
+          Die Klimakrise ist hier. Die Lage ist ernst.{' '}
+          <em>Challenge accepted</em>. Wir richten den Blick auf Menschen, die
+          in der Klimakrise einen Unterschied machen wollen. Und gehen gemeinsam
+          der Frage nach: Wie kommen wir aus dieser Krise wieder raus?
+          Neugierig, kritisch, konstruktiv. Mit Artikeln, Debatten,
+          Veranstaltungen. Sind Sie dabei?
         </CAP>
         <div {...styles.actionWrapper}>
           <CANewsLetterSignUp />
@@ -95,11 +99,11 @@ function CATopInlineTeaser({ isMember, isNLSubscribed }: CAInlineTeaserProps) {
   return (
     <>
       <CAP>
-        Die Klimakrise ist hier. Die Lage ist ernst. Challenge accepted. Wir
-        richten den Blick auf Menschen, die in der Klimakrise einen Unterschied
-        machen wollen. Und gehen gemeinsam der Frage nach: Wie kommen wir aus
-        dieser Krise wieder raus? Neugierig, kritisch, konstruktiv. Mit
-        Artikeln, Debatten, Veranstaltungen. Sind Sie dabei?
+        Die Klimakrise ist hier. Die Lage ist ernst. <em>Challenge accepted</em>
+        . Wir richten den Blick auf Menschen, die in der Klimakrise einen
+        Unterschied machen wollen. Und gehen gemeinsam der Frage nach: Wie
+        kommen wir aus dieser Krise wieder raus? Neugierig, kritisch,
+        konstruktiv. Mit Artikeln, Debatten, Veranstaltungen. Sind Sie dabei?
       </CAP>
       <div {...styles.actionWrapper}>
         <CANewsLetterSignUp />
@@ -118,11 +122,10 @@ function CABottomInlineTeaser({
     return (
       <>
         <CAP>
-          Wem würde ein frischer Blick auf die Klimakrise gut tun? Teilen Sie
-          diesen Link mit Freunden, auf Social Media, im Gruppenchat.
+          Die Klimakrise ist hier. Die Lage ist ernst. Wir richten den Blick auf
+          Menschen, die in der Klimakrise einen Unterschied machen wollen.
         </CAP>
         <div {...styles.actionWrapper}>
-          <p>TBD: Share Link</p>
           <CAOverViewLink />
         </div>
       </>
@@ -133,6 +136,11 @@ function CABottomInlineTeaser({
     return (
       <>
         <div {...styles.actionWrapper}>
+          <CAP>
+            Die Klimakrise ist hier. Die Lage ist ernst.{' '}
+            <em>Challenge accepted</em>. Wir richten den Blick auf Menschen, die
+            in der Klimakrise einen Unterschied machen wollen.
+          </CAP>
           <CANewsLetterSignUp />
           <CAOverViewLink />
         </div>
@@ -198,15 +206,21 @@ function ChallengeAcceptedInlineTeaser(props: { position?: 'top' | 'bottom' }) {
             margin: '1rem 0',
           }}
         >
-          <Image
-            src={
-              resolvedTheme === 'dark'
-                ? ChallengeAcceptedSVGDark
-                : ChallengeAcceptedSVG
-            }
-            alt='Challenge Accepted'
-            width={200}
-          />
+          {!(
+            props.position === 'bottom' &&
+            hasActiveMembership &&
+            !isSubscribedToNL
+          ) && (
+            <Image
+              src={
+                resolvedTheme === 'dark'
+                  ? ChallengeAcceptedSVGDark
+                  : ChallengeAcceptedSVG
+              }
+              alt='Challenge Accepted'
+              width={150}
+            />
+          )}
           {props.position === 'top' && (
             <CATopInlineTeaser
               isMember={hasActiveMembership}
