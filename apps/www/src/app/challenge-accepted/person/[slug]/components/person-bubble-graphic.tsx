@@ -53,9 +53,6 @@ const getRadius = (datum: PersonNode, width: number): number => {
 }
 
 const getScaleFactor = (datum: PersonNode): number => {
-  if (!datum.hovered) {
-    return 1
-  }
   switch (datum.size) {
     case 'large':
       return 1.3
@@ -92,7 +89,18 @@ const PersonBubbleItem = ({
         userSelect: 'none',
         // @ts-expect-error for prefixed value
         WebkitUserSelect: 'none',
+
+        '&:hover': {
+          zIndex: 1,
+        },
       })}
+      style={{
+        // @ts-expect-error because of custom property
+        '--diameter': `${getRadius(person, width) * 2}px`,
+        '--hover-scale-factor': getScaleFactor(person),
+        '--hover-name-shift': `${30 * getScaleFactor(person)}px`,
+        '--name-opacity': person.size === 'large' ? 1 : 0,
+      }}
     >
       <div
         data-person-portrait
@@ -100,11 +108,13 @@ const PersonBubbleItem = ({
           transform: 'scale(1)',
           transformOrigin: 'center',
           transition: 'transform 300ms ease-out',
-          backgroundSize: '95%',
+          backgroundSize: '100%',
           backgroundPosition: 'center center',
           backgroundRepeat: 'no-repeat',
-          borderRadius: 'full',
           pointerEvents: 'none',
+          '[data-person]:hover &': {
+            transform: 'scale(var(--hover-scale-factor))',
+          },
         })}
         style={{
           backgroundImage: `url('${person.portrait.url}')`,
@@ -116,11 +126,30 @@ const PersonBubbleItem = ({
         className={css({
           textStyle: 'h2Sans',
           position: 'absolute',
+          transition: 'all 300ms ease-out',
+          transform: 'translate(-50%, 0px)',
+          left: '50%',
+          top: 'var(--diameter)',
+          textAlign: 'center',
+          whiteSpace: 'nowrap',
           pointerEvents: 'none',
+          opacity: 'var(--name-opacity)',
+          '[data-person]:hover &': {
+            transform: 'translate(-50%, var(--hover-name-shift))',
+            opacity: 1,
+          },
         })}
-        style={{ display: person.size === 'large' ? 'inline' : 'none' }}
       >
-        {person.name}
+        <span
+          className={css({
+            background: 'pageBackground',
+            px: '4',
+            py: '1',
+            borderRadius: 'full',
+          })}
+        >
+          {person.name}
+        </span>
       </div>
     </Link>
   )
@@ -177,33 +206,26 @@ export const PersonBubbleForce = ({ people }: { people: People }) => {
       )
 
     simulation.on('tick', () => {
-      heroChartNodes
-        .style(
-          'transform',
-          (d) =>
-            `translate(${d.x - getRadius(d, width)}px,${
-              d.y - getRadius(d, width)
-            }px)`,
-        )
-        .style('z-index', (d) => {
-          return d.hovered ? 1 : 0
-        })
-        .select('[data-person-portrait]')
-        .style('transform', (d) => `scale(${getScaleFactor(d)})`)
+      heroChartNodes.style(
+        'transform',
+        (d) =>
+          `translate(${d.x - getRadius(d, width)}px,${
+            d.y - getRadius(d, width)
+          }px)`,
+      )
     })
 
     heroChartNodes.on('pointerenter', (event, d) => {
       d.fx = d.x
       d.fy = d.y
       d.hovered = true
+
       simulation.force(
-        'collide2',
+        'hovercollide',
         forceCollide<PersonNode>((d) => {
-          const r =
-            d.size === 'large'
-              ? getRadius(d, width) * getScaleFactor(d) + 25
-              : getRadius(d, width) * getScaleFactor(d) + 10
-          return r
+          return d.hovered
+            ? getRadius(d, width) * getScaleFactor(d) + 10
+            : getRadius(d, width)
         }).strength(0.5),
       )
     })
@@ -212,7 +234,8 @@ export const PersonBubbleForce = ({ people }: { people: People }) => {
       d.fx = null
       d.fy = null
       d.hovered = false
-      simulation.force('collide2', null)
+
+      simulation.force('hovercollide', null)
     })
 
     simulation.alpha(1).restart()
