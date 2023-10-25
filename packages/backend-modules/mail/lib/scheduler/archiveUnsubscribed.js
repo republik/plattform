@@ -24,11 +24,11 @@ module.exports = async (dryRun = false) => {
   ]
 
   audiencesToArchiveUnsubscribed.forEach((audienceId) => {
-    archiveUnsubscribed(dryRun, audienceId)
+    archiveUnsubscribed({ dryRun, audienceId })
   })
 }
 
-const archiveUnsubscribed = async (dryRun, audienceId) => {
+const archiveUnsubscribed = async ({ dryRun, audienceId }) => {
   const mailchimp = MailchimpInterface({ console })
   const unsubscribedMembers = await mailchimp.getMembersFromAudienceWithStatus(
     MailchimpInterface.MemberStatus.Unsubscribed,
