@@ -30,7 +30,7 @@ const DiscussionOptions = ({ documentMeta }: Props) => {
   const board = discussion?.isBoard
 
   const availableOrderBy = useMemo(() => {
-    let items
+    let items: string[]
 
     if (discussionType === 'statements') {
       items = ['DATE', 'VOTES']
