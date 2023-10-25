@@ -8,8 +8,6 @@ import { useState } from 'react'
 export const Collapsible = ({ shownItems, collapsedItems }) => {
   const [open, setOpen] = useState(false)
 
-  console.log('open', open)
-
   return (
     <RadixCollapsible.Root open={open} onOpenChange={setOpen}>
       <div
