@@ -1,4 +1,4 @@
-import type { Metadata, MetadataRoute, ResolvingMetadata } from 'next'
+import type { Metadata, ResolvingMetadata } from 'next'
 
 import { css } from '@app/styled-system/css'
 import {
@@ -6,11 +6,9 @@ import {
   CHALLENGE_ACCEPTED_HUB_QUERY,
 } from '@app/graphql/cms/hub.query'
 import { getCMSClient } from '@app/lib/apollo/cms-client'
-import Image from 'next/image'
-import Link from 'next/link'
 import Container from '@app/components/container'
 import CollectionRenderer from '@app/components/collection-render'
-import { vstack, wrap } from '@app/styled-system/patterns'
+import { vstack } from '@app/styled-system/patterns'
 import { getMe } from '@app/lib/auth/me'
 import { CollectionFilter } from '@app/components/collection-filter'
 import { StructuredText } from 'react-datocms'
@@ -67,7 +65,6 @@ export default async function Page({ searchParams }) {
       }
     }),
   }
-  const { people } = data
 
   return (
     <>

@@ -87,7 +87,7 @@ export const PageHeader = async () => {
         })}
       >
         <div
-          className={css({ m: 'header.avatarMargin', md: { width: '100%' } })}
+          className={css({ p: 'header.avatarMargin', md: { width: '100%' } })}
         >
           {me ? (
             <Link href='/meine-republik'>
