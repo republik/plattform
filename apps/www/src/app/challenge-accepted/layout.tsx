@@ -4,10 +4,7 @@ import { getMe } from '@app/lib/auth/me'
 import { css } from '@app/styled-system/css'
 import { notFound } from 'next/navigation'
 
-export default async function Layout(props: {
-  children: React.ReactNode
-  overlay: React.ReactNode
-}) {
+export default async function Layout(props: { children: React.ReactNode }) {
   const me = await getMe()
 
   // TODO: temporary until the relase of «challenge accepted»
@@ -32,7 +29,6 @@ export default async function Layout(props: {
         }}
       >
         {props.children}
-        {props.overlay}
       </div>
       <Footer />
     </div>
