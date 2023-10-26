@@ -2,7 +2,7 @@
 import { useRouter } from 'next/navigation'
 
 import { css } from '@app/styled-system/css'
-import { hstack, wrap } from '@app/styled-system/patterns'
+import { wrap } from '@app/styled-system/patterns'
 import * as ToggleGroup from '@radix-ui/react-toggle-group'
 
 const itemStyle = css({

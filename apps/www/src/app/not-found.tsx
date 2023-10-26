@@ -22,14 +22,18 @@ function NotFound() {
         })}
       >
         <Container>
-          <div className={stack({ gap: '4', mt: '16' })}>
+          <div className={stack({ gap: '4', mt: '4', mb: '16' })}>
             <h1
               className={css({
                 textStyle: 'h1Sans',
                 mt: '8',
-                fontSize: 300,
+                fontSize: '8xl',
+                marginY: '16',
                 textAlign: 'center',
-                marginY: '60px',
+                md: {
+                  fontSize: '300px',
+                  marginY: '60px',
+                },
               })}
             >
               404
