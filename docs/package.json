@@ -12,7 +12,7 @@
     "@project-r/styleguide": "*",
     "@republik/icons": "*",
     "@republik/ui-docs-demo": "*",
-    "next": "^13.5.6",
+    "next": "13.5.3",
     "nextra": "^2.13.2",
     "nextra-theme-docs": "^2.13.2",
     "react": "^18.2.0",
@@ -23,7 +23,7 @@
     "unist-util-visit": "^4.1.2"
   },
   "devDependencies": {
-    "@next/eslint-plugin-next": "^13.5.6",
+    "@next/eslint-plugin-next": "13.5.3",
     "@republik/eslint-config-frontend": "*",
     "@republik/tsconfig": "*",
     "@types/node": "16"
