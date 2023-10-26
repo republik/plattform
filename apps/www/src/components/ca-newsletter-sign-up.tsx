@@ -171,6 +171,7 @@ export function CANewsletterSignUp({ me }: CANewsletterSignUpProps) {
                         borderBottomWidth: 1,
                         borderBottomStyle: 'solid',
                         borderBottomColor: 'text',
+                        borderRadius: 0,
                         color: 'text',
                         '&:focus': {
                           borderBottomColor: 'contrast',
