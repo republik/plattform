@@ -17,7 +17,7 @@ export default function CollectionRenderer({
   filter,
 }: CollectionRendererProps) {
   if (items.length === 0) {
-    return 'Leider noch nix'
+    return null
   }
 
   return (

@@ -11,9 +11,10 @@ export default function Layout(props: {
       <PageHeader />
       <div
         className={css({
-          p: '4',
           color: 'text',
           bg: 'pageBackground',
+          pb: '32',
+          pt: '4',
         })}
         style={{
           minHeight: 'calc(100dvh - 69px)',

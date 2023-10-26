@@ -22,7 +22,6 @@ export function PersonDetail({ person, isMember = false }: PersonDetailProps) {
         display: 'flex',
         flexDirection: 'column',
         gap: '2',
-        mb: '16',
         alignItems: 'center',
       })}
     >
@@ -30,6 +29,7 @@ export function PersonDetail({ person, isMember = false }: PersonDetailProps) {
         className={css({
           position: 'relative',
           width: 'full',
+          mb: '32',
         })}
       >
         {/* It's impossible to fit text size to container width (without measuring in the DOM), therefore we use some funky calculations based on the name to approximate a viewbox that fits relatively close to the rendered text. Then the SVG is simply scaled with CSS to 100% of its parent's width */}
@@ -37,7 +37,6 @@ export function PersonDetail({ person, isMember = false }: PersonDetailProps) {
           className={css({
             display: 'block',
             width: 'full',
-            mt: '8',
             mb: '32',
             fill: 'text',
           })}
@@ -76,6 +75,7 @@ export function PersonDetail({ person, isMember = false }: PersonDetailProps) {
           </div>
         )}
       </div>
+
       <Container>
         {person?.catchPhrase && (
           <h2
@@ -89,9 +89,32 @@ export function PersonDetail({ person, isMember = false }: PersonDetailProps) {
             «{person.catchPhrase}»
           </h2>
         )}
-        <StructuredText data={person.bio.value} />
-        <h2 className={css({ textStyle: 'h2Sans', my: '6' })}>Inhalte</h2>
-        <CollectionRenderer items={person.items} isMember={isMember} />
+        <div
+          className={css({
+            color: 'text',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '4',
+
+            textStyle: 'teaserLeadSans',
+
+            '& ul > li': {
+              listStyleType: 'none',
+              pl: '6',
+              position: 'relative',
+              '&::before': { content: '"–"', position: 'absolute', left: '0' },
+            },
+            '& ol': { listStyleType: 'decimal', pl: '6' },
+            '& h2, & h3, & h4, & h5, & h6': {
+              fontWeight: 'bold',
+            },
+          })}
+        >
+          <StructuredText data={person.bio.value} />
+        </div>
+        <section className={css({ my: '32' })}>
+          <CollectionRenderer items={person.items} isMember={isMember} />
+        </section>
       </Container>
     </div>
   )

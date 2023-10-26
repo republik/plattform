@@ -93,7 +93,7 @@ export default async function Page({ searchParams }) {
       <section
         className={css({
           pt: 'min(50vw, 800px)',
-          mx: '-4',
+          // mx: '-4',
           overflow: 'hidden',
         })}
       >

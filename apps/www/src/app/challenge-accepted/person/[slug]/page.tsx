@@ -10,6 +10,10 @@ import { CANewsletterSignUp } from '@app/components/ca-newsletter-sign-up'
 import { getClimateLabNewsletterSubscriptionStatus } from '@app/graphql/republik-api/newsletter.query'
 import { css } from '@app/styled-system/css'
 
+import { IconChevronLeft } from '@republik/icons'
+import { PersonList } from '@app/app/challenge-accepted/person/[slug]/components/person-list'
+import { vstack } from '@app/styled-system/patterns'
+
 type PageProps = {
   params: {
     slug: string
@@ -47,24 +51,39 @@ export default async function Page({ params: { slug } }: PageProps) {
 
   return (
     <>
-      <Link
-        href='/challenge-accepted'
-        className={css({
-          display: 'flex',
-          flexDirection: 'row',
-          alignItems: 'center',
-          textDecoration: 'none',
-          gap: '1',
-          color: 'text',
-          fontSize: 'sm',
-        })}
-      >
-        Challenge Accepted
-      </Link>
+      <div className={css({ mx: '4', mb: '8' })}>
+        <Link
+          href='/challenge-accepted'
+          className={css({
+            display: 'inline-flex',
+            flexDirection: 'row',
+            alignItems: 'center',
+            textDecoration: 'none',
+            gap: '0.5',
+            color: 'contrast',
+            fontSize: 'sm',
+          })}
+        >
+          <IconChevronLeft size={20} /> Challenge Accepted Übersicht
+        </Link>
+      </div>
       <PersonDetail person={personData} isMember={isMember} />
       <Container>
-        {!isSubscribedToCANewsletter && <CANewsletterSignUp me={me} />}
-        <p>TODO: Navigation zur Übersicht + andere Personen</p>
+        <div className={vstack({ gap: '32', alignItems: 'stretch' })}>
+          {!isSubscribedToCANewsletter && <CANewsletterSignUp me={me} />}
+          <section>
+            <h2
+              className={css({
+                textStyle: 'h1Sans',
+                fontWeight: 'bold',
+                mb: '6',
+              })}
+            >
+              Wer bei Challenge Accepted dabei ist
+            </h2>
+            <PersonList />
+          </section>
+        </div>
       </Container>
     </>
   )
