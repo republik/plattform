@@ -173,7 +173,6 @@ export default async function Footer() {
               <svg
                 viewBox={process.env.NEXT_PUBLIC_SG_LOGO_VIEWBOX}
                 className={css({
-                  width: 'full',
                   fill: 'text',
                   height: '20px',
                 })}
