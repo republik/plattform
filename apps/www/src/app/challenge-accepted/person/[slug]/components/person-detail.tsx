@@ -39,6 +39,7 @@ export function PersonDetail({ person, isMember = false }: PersonDetailProps) {
             width: 'full',
             mb: '32',
             fill: 'text',
+            userSelect: 'none',
           })}
           viewBox={`0 0 ${funkyCalculatedViewboxWidth} ${funkyCalculatedViewboxHeight}`}
         >
