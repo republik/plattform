@@ -135,8 +135,8 @@ export const presetRepublik = definePreset({
           },
           link: {
             value: {
-              base: 'hotpink',
-              _dark: 'hotpink',
+              base: '#00AA00',
+              _dark: '#00AA00',
             },
           },
           primary: {
