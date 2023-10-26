@@ -6,7 +6,7 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { getMe } from '@app/lib/auth/me'
 import { Metadata, ResolvingMetadata } from 'next'
-import { CANewsletterSignUp } from '@app/components/ca-newsletter-sign-up'
+import { CANewsletterSignUp } from '@app/app/challenge-accepted/components/ca-newsletter-sign-up'
 import { getClimateLabNewsletterSubscriptionStatus } from '@app/graphql/republik-api/newsletter.query'
 import { css } from '@app/styled-system/css'
 

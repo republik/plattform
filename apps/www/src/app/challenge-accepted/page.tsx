@@ -2,9 +2,9 @@ import type { Metadata, ResolvingMetadata } from 'next'
 
 import { PersonBubble } from '@app/app/challenge-accepted/person/[slug]/components/person-bubble'
 import { PersonList } from '@app/app/challenge-accepted/person/[slug]/components/person-list'
-import { CANewsletterSignUp } from '@app/components/ca-newsletter-sign-up'
-import { CollectionFilter } from '@app/components/collection-filter'
-import CollectionRenderer from '@app/components/collection-render'
+import { CANewsletterSignUp } from '@app/app/challenge-accepted/components/ca-newsletter-sign-up'
+import { CollectionFilter } from '@app/app/challenge-accepted/components/collection-filter'
+import CollectionRenderer from '@app/app/challenge-accepted/components/collection-render'
 import Container from '@app/components/container'
 import {
   CHALLENGE_ACCEPTED_HUB_META_QUERY,

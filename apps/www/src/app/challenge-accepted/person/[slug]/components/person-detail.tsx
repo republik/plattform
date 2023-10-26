@@ -1,4 +1,4 @@
-import CollectionRenderer from '@app/components/collection-render'
+import CollectionRenderer from '@app/app/challenge-accepted/components/collection-render'
 import Container from '@app/components/container'
 import type { PersonDetailQuery } from '@app/graphql/gql/graphql'
 import { css } from '@app/styled-system/css'
