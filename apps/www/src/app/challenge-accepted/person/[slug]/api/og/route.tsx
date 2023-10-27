@@ -1,5 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
-import { ImageResponse, NextRequest } from 'next/server'
+import { NextRequest } from 'next/server'
+import { ImageResponse } from 'next/og'
 
 const CHALLENGE_ACCEPTED_SVG_URL =
   'https://www.datocms-assets.com/104239/1695397092-501_challenge-accepted.svg'
