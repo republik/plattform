@@ -107,6 +107,13 @@ export async function generateMetadata(
         query PersonImage($slug: String!) {
           person: challengeAcceptedPerson(filter: {slug: {eq: $slug}}) {
             name
+            seo {
+              title
+              description
+              image {
+                url
+              }
+            }
           }
         }
       `,
@@ -126,15 +133,27 @@ export async function generateMetadata(
     description: `Die Klimakrise ist hier. Die Lage ist ernst. 25 Menschen, die die Herausforderung annehmen. Kurzporträt und Inhalte zu ${res.data.person.name}.`,
   }
 
+  const previousImages = parentMetadata?.openGraph?.images || []
+
   return {
     ...metadata,
     openGraph: {
       title: metadata.title,
       description: metadata.description,
+      images: [
+        res.data.person?.seo?.image?.url,
+        `/challenge-accepted/person/${params.slug}/api/og`,
+        ...previousImages,
+      ].filter(Boolean),
     },
     twitter: {
       title: metadata.title,
       description: metadata.description,
+      images: [
+        res.data.person?.seo?.image?.url,
+        `/challenge-accepted/person/${params.slug}/api/og`,
+        ...previousImages,
+      ].filter(Boolean),
     },
   }
 }

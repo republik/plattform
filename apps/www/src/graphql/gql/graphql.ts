@@ -235,6 +235,7 @@ export type ChallengeAcceptedPersonModelFilter = {
   items?: InputMaybe<LinksFilter>;
   name?: InputMaybe<StringFilter>;
   portrait?: InputMaybe<FileFilter>;
+  seo?: InputMaybe<SeoFilter>;
   size?: InputMaybe<StringFilter>;
   slug?: InputMaybe<SlugFilter>;
 };
@@ -290,6 +291,7 @@ export type ChallengeAcceptedPersonRecord = RecordInterface & {
   items: Array<ChallengeAcceptedPersonModelItemsField>;
   name: Scalars['String']['output'];
   portrait?: Maybe<FileField>;
+  seo?: Maybe<SeoField>;
   size?: Maybe<Scalars['String']['output']>;
   slug: Scalars['String']['output'];
 };
