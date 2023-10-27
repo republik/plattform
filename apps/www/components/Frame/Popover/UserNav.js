@@ -20,6 +20,7 @@ import BookmarkMiniFeed from '../../Bookmarks/BookmarkMiniFeed'
 import { registerQueryVariables } from '../../Bookmarks/queries'
 import DarkmodeSwitch from '../DarkmodeSwitch'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 
 const SignoutLink = ({ children, ...props }) => (
   <div {...styles.signout}>
@@ -27,9 +28,10 @@ const SignoutLink = ({ children, ...props }) => (
   </div>
 )
 
-const UserNav = ({ me, router }) => {
+const UserNav = ({ me }) => {
   const { t } = useTranslation()
   const { inNativeApp, inNativeIOSApp } = useInNativeApp()
+  const router = useRouter()
 
   const [colorScheme] = useColorContext()
   const currentPath = router.asPath
