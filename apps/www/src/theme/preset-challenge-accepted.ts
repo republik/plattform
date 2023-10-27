@@ -48,6 +48,12 @@ export const presetChallengeAccepted = definePreset({
               _challengeAcceptedDark: '{colors.challengeAccepted.yellow}',
             },
           },
+          divider: {
+            value: {
+              _challengeAccepted: 'rgba(0,0,0,0.2)',
+              _challengeAcceptedDark: 'rgba(255,255,255,0.4)',
+            },
+          },
         },
       },
     },
