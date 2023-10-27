@@ -5,7 +5,7 @@ import { ComponentPropsWithoutRef } from 'react'
 import { StructuredText } from 'react-datocms'
 
 const formatDate = timeFormat('%d.%m.%y')
-const formateTime = timeFormat('%H:%M')
+const formateTime = timeFormat('%H.%M')
 
 type EventProps = {
   event: {
@@ -81,9 +81,11 @@ export const EventTeaser = ({ event, isMember }: EventProps) => {
           {event.title} {event.fullyBooked && '(ausgebucht)'}
         </h2>
         <p className={css({ fontWeight: 700 })}>
-          {formateTime(isoParse(event.startAt))} –{' '}
-          {event.endAt ? formateTime(isoParse(event.endAt)) : 'offen'} /{' '}
-          {event.location}
+          {formateTime(isoParse(event.startAt))}
+          {event.endAt
+            ? ` – ${formateTime(isoParse(event.endAt))} Uhr `
+            : ' Uhr – offen '}
+          / {event.location}
         </p>
 
         <StructuredText data={event.description.value} />
