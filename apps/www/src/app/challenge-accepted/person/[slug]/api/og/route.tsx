@@ -5,10 +5,9 @@ const CHALLENGE_ACCEPTED_SVG_URL =
   'https://www.datocms-assets.com/104239/1695397092-501_challenge-accepted.svg'
 
 export const runtime = 'edge'
-export const contentType = 'image/png'
 
 // Image generation
-export default async function Image(
+export async function GET(
   _: NextRequest,
   { params }: { params: { slug: string } },
 ) {
