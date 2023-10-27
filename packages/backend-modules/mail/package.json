@@ -32,6 +32,5 @@
     "moment": "^2.26.0",
     "nodemailer": "^6.6.1",
     "recursive-readdir": "^2.2.2"
-  },
-  "devDependencies": {}
+  }
 }

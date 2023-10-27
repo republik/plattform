@@ -18,8 +18,6 @@
   "scripts": {
     "link": "yarn link"
   },
-  "dependencies": {},
-  "devDependencies": {},
   "files": [
     "tsconfig-backend.json"
   ]

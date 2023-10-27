@@ -19,9 +19,5 @@
   "bugs": {
     "url": "https://github.com/republik/plattform/issues"
   },
-  "homepage": "https://github.com/republik/plattform#readme",
-  "devDependencies": {
-  },
-  "dependencies": {
-  }
+  "homepage": "https://github.com/republik/plattform#readme"
 }
