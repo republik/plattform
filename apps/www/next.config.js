@@ -142,6 +142,12 @@ const nextConfig = {
         destination: '/5-jahre-republik',
         permanent: true,
       },
+      // Override default Format page for Challenge Accepted
+      {
+        source: '/format/challenge-accepted',
+        destination: '/challenge-accepted',
+        permanent: false,
+      },
     ]
   },
   experimental: {
