@@ -52,13 +52,13 @@ const CAP = ({ children, ...props }) => (
   </p>
 )
 
-const CAOverViewLink = () => (
+export const CAOverViewLink = () => (
   <Link {...plainLinkRule} {...styles.a} href='/challenge-accepted'>
     Zur Übersicht →
   </Link>
 )
 
-const CANewsLetterSignUp = () => (
+export const CANewsLetterSignUp = () => (
   <div {...css({ width: '100%' })}>
     <h2 {...css({ ...fontStyles.sansSerifBold, fontSize: 19 })}>
       Für den Newsletter anmelden
