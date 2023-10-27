@@ -30,11 +30,21 @@ export async function generateMetadata(
   const parentMetadata = await parent
   const parentMetaImages = parentMetadata?.openGraph?.images || []
 
+  const { title, description } = data.hub?.metadata || {}
+
   return {
     metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL),
-    title: data.hub?.metadata?.title || 'Challenge Accepted',
-    description: data.hub?.metadata?.description,
+    title: title || 'Challenge Accepted',
+    description: description,
     openGraph: {
+      title: title || 'Challenge Accepted',
+      description: description,
+      images: [data.hub?.metadata?.image?.url, ...parentMetaImages],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: title || 'Challenge Accepted',
+      description: description,
       images: [data.hub?.metadata?.image?.url, ...parentMetaImages],
     },
   }

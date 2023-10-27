@@ -120,23 +120,21 @@ export async function generateMetadata(
     return parentMetadata
   }
 
-  const previousImages = parentMetadata.openGraph?.images || []
-
-  return {
+  const metadata: Metadata = {
     metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL),
     title: `Challenge Accepted: ${res.data.person.name} | Republik`,
     description: `Die Klimakrise ist hier. Die Lage ist ernst. 25 Menschen, die die Herausforderung annehmen. Kurzporträt und Inhalte zu ${res.data.person.name}.`,
+  }
+
+  return {
+    ...metadata,
     openGraph: {
-      images: [
-        `/challenge-accepted/person/${params.slug}/api/og`,
-        ...previousImages,
-      ],
+      title: metadata.title,
+      description: metadata.description,
     },
     twitter: {
-      images: [
-        `/challenge-accepted/person/${params.slug}/api/og`,
-        ...previousImages,
-      ],
+      title: metadata.title,
+      description: metadata.description,
     },
   }
 }

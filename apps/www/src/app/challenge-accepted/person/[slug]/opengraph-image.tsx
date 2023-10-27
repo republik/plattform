@@ -1,14 +1,14 @@
-import { ImageResponse, NextRequest } from 'next/server'
+/* eslint-disable @next/next/no-img-element */
+import { ImageResponse } from 'next/server'
 
 const CHALLENGE_ACCEPTED_SVG_URL =
   'https://www.datocms-assets.com/104239/1695397092-501_challenge-accepted.svg'
 
 export const runtime = 'edge'
+export const contentType = 'image/png'
 
-export async function GET(
-  req: NextRequest,
-  { params }: { params: { slug: string } },
-) {
+// Image generation
+export default async function Image({ params }: { params: { slug: string } }) {
   const res = await fetch(process.env.DATO_CMS_API_URL, {
     method: 'POST',
     headers: {
