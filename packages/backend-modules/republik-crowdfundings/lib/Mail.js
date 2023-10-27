@@ -244,7 +244,7 @@ mail.enforceSubscriptions = async ({
     debug('update status in marketing audience to not receive marketing mails')
     const marketingMember = await isUserInAudience({
       user: user || { email },
-      MAILCHIMP_MARKETING_AUDIENCE_ID,
+      audienceId: MAILCHIMP_MARKETING_AUDIENCE_ID,
     })
     if (marketingMember) {
       const interest = {}
@@ -265,7 +265,7 @@ mail.enforceSubscriptions = async ({
     debug('unsubscribe from Probelesen audience if subscribed')
     const probelesenMember = await isUserInAudience({
       user: user || { email },
-      MAILCHIMP_PROBELESEN_AUDIENCE_ID,
+      audienceId: MAILCHIMP_PROBELESEN_AUDIENCE_ID,
     })
     if (probelesenMember) {
       const probelesenSubscription = await addUserToAudience({
