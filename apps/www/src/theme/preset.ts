@@ -25,10 +25,6 @@ export const presetRepublik = definePreset({
           white: { value: '#fff' },
           transparent: { value: 'transparent' },
           current: { value: 'currentColor' },
-          divider: { value: '#DBDCDD' },
-          dividerDark: { value: '#4C4C4C' },
-          disabled: { value: '#B8BDC1' },
-          disabledDark: { value: '#949494' },
         },
         sizes: {
           full: { value: '100%' },
@@ -157,16 +153,16 @@ export const presetRepublik = definePreset({
           error: {
             value: { base: '#dc2626', _dark: '#dc2626' },
           },
-          disabled: {
-            value: {
-              base: '{colors.disabled}',
-              _dark: '{colors.disabledDark}',
-            },
-          },
           divider: {
             value: {
-              base: '{colors.divider}',
-              _dark: '{colors.dividerDark}',
+              base: '#DBDCDD',
+              _dark: '#4C4C4C',
+            },
+          },
+          disabled: {
+            value: {
+              base: '#B8BDC1',
+              _dark: '#949494',
             },
           },
           textSoft: {

@@ -73,7 +73,7 @@ export const PageHeader = async () => {
         bg: 'pageBackground',
         borderBottomWidth: 1,
         borderBottomStyle: 'solid',
-        borderBottomColor: 'overlay',
+        borderBottomColor: 'divider',
       })}
     >
       <div
@@ -81,9 +81,6 @@ export const PageHeader = async () => {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          borderBottomWidth: 1,
-          borderBottomStyle: 'solid',
-          borderBottomColor: 'overlay',
         })}
       >
         <div
@@ -163,7 +160,7 @@ export const PageHeader = async () => {
                 fontSize: '16px',
                 height: '100%',
                 md: {
-                  padding: '10px 80px',
+                  padding: '10px 30px',
                   fontSize: '22px',
                 },
               })}
@@ -196,6 +193,8 @@ export const PageHeader = async () => {
           className={hstack({
             gap: '0',
             justifyContent: 'center',
+            borderTop: '1px solid',
+            borderTopColor: 'divider',
           })}
         >
           {navLinks.map(({ href, label, icon }) => (
