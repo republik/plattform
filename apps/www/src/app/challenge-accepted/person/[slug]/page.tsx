@@ -79,7 +79,7 @@ export default async function Page({ params: { slug } }: PageProps) {
                 mb: '6',
               })}
             >
-              Wer bei Challenge Accepted dabei ist
+              Direkt weiter zu …
             </h2>
             <PersonList />
           </section>

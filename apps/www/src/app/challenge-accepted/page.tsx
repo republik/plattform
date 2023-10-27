@@ -124,7 +124,7 @@ export default async function Page({ searchParams }) {
                 mb: '6',
               })}
             >
-              Wer bei Challenge Accepted dabei ist
+              Mehr erfahren zu …
             </h2>
             <PersonList />
           </section>
