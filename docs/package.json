@@ -12,9 +12,9 @@
     "@project-r/styleguide": "*",
     "@republik/icons": "*",
     "@republik/ui-docs-demo": "*",
-    "next": "^13.5.1",
-    "nextra": "^2.3.0",
-    "nextra-theme-docs": "^2.3.0",
+    "next": "^14.0.0",
+    "nextra": "^2.13.2",
+    "nextra-theme-docs": "^2.13.2",
     "react": "^18.2.0",
     "react-docgen": "^6.0.0-beta.6",
     "react-dom": "^18.2.0",
@@ -23,7 +23,7 @@
     "unist-util-visit": "^4.1.2"
   },
   "devDependencies": {
-    "@next/eslint-plugin-next": "^13.5.1",
+    "@next/eslint-plugin-next": "^14.0.0",
     "@republik/eslint-config-frontend": "*",
     "@republik/tsconfig": "*",
     "@types/node": "16"

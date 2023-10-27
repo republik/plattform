@@ -1,6 +1,5 @@
 import { useMemo } from 'react'
 import { css } from 'glamor'
-import compose from 'lodash/flowRight'
 import {
   colors,
   mediaQueries,
@@ -9,7 +8,6 @@ import {
   Scroller,
 } from '@project-r/styleguide'
 
-import withT from '../../lib/withT'
 import NavLink from './Popover/NavLink'
 
 import {
@@ -20,13 +18,14 @@ import {
 import { useRouter } from 'next/router'
 import { useMe } from '../../lib/context/MeContext'
 import { IconSearchMenu, IconSearchMenuBold } from '@republik/icons'
+import { useTranslation } from 'lib/withT'
 
 export const SecondaryNav = ({
   secondaryNav,
   hasOverviewNav,
   isSecondarySticky,
-  t,
 }) => {
+  const { t } = useTranslation()
   const [colorScheme] = useColorContext()
   const router = useRouter()
   const currentPath = router.asPath
@@ -205,4 +204,4 @@ const styles = {
   }),
 }
 
-export default compose(withT)(SecondaryNav)
+export default SecondaryNav
