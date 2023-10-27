@@ -1,16 +1,9 @@
 import Router from 'next/router'
 import { parseJSONObject } from './safeJSON'
 import { matchIOSUserAgent, useUserAgent } from './context/UserAgentContext'
+import { getNativeAppBuildId, getNativeAppVersion } from './parse-useragent'
 
-export const getNativeAppVersion = (value) => {
-  const matches = value?.match(/RepublikApp\/([.0-9]+)/)
-  return matches ? matches[1] : undefined
-}
-
-export const getNativeAppBuildId = (value) => {
-  const matches = value?.match(/RepublikApp\/([.0-9]+)\/([0-9]+)/)
-  return matches ? matches[2] : undefined
-}
+export { getNativeAppVersion, getNativeAppBuildId }
 
 export const inNativeAppBrowserAppVersion = process.browser
   ? getNativeAppVersion(navigator.userAgent)
@@ -42,7 +35,8 @@ export const inNativeIOSAppBrowser =
 
 const runInNativeAppBrowser = inNativeAppBrowser
   ? (callback) => callback()
-  : () => {}
+  : // eslint-disable-next-line @typescript-eslint/no-empty-function
+    () => {}
 
 runInNativeAppBrowser(() => {
   if (!inNativeAppBrowserLegacy) {
@@ -107,7 +101,8 @@ runInNativeAppBrowser(() => {
 })
 
 export const postMessage = !inNativeAppBrowser
-  ? () => {} // does nothing outside of app, e.g. gallery full screen message
+  ? // eslint-disable-next-line @typescript-eslint/no-empty-function
+    () => {} // does nothing outside of app, e.g. gallery full screen message
   : inNativeAppBrowserLegacy
   ? (msg) =>
       window.postMessage(
