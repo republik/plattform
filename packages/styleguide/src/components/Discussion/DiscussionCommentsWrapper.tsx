@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { FC, PropsWithChildren } from 'react'
 import PropTypes, { InferProps } from 'prop-types'
 import { css } from 'glamor'
 import { LoadMore } from './Tree/LoadMore'
@@ -15,10 +15,6 @@ const styles = {
 }
 
 const propTypes = {
-  children: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.node),
-    PropTypes.node,
-  ]),
   t: PropTypes.func.isRequired,
   loadMore: PropTypes.func.isRequired,
   moreAvailableCount: PropTypes.number,
@@ -34,7 +30,9 @@ const propTypes = {
   ),
 }
 
-const DiscussionCommentsWrapper: FC<InferProps<typeof propTypes>> = ({
+const DiscussionCommentsWrapper: FC<
+  PropsWithChildren<InferProps<typeof propTypes>>
+> = ({
   children,
   t,
   loadMore,

@@ -18,3 +18,5 @@ yarn-error.log*
 .idea
 
 dump.rdb
+
+styled-system
