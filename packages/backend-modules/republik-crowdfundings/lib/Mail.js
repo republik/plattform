@@ -18,6 +18,8 @@ const { getLastEndDate, getMembershipCompany } = require('./utils')
 
 const dateFormat = timeFormat('%x')
 
+const MailchimpInterface = require('../../mail/MailchimpInterface')
+
 const {
   MAILCHIMP_INTEREST_PLEDGE,
   MAILCHIMP_INTEREST_MEMBER,
@@ -33,6 +35,7 @@ const {
   MAILCHIMP_ONBOARDING_AUDIENCE_ID,
   MAILCHIMP_MARKETING_AUDIENCE_ID,
   MAILCHIMP_MARKETING_INTEREST_FREE_OFFERS_ONLY,
+  MAILCHIMP_PROBELESEN_AUDIENCE_ID,
   FRONTEND_BASE_URL,
 } = process.env
 
@@ -126,7 +129,13 @@ const getInterestsForUser = async ({
 
 mail.getInterestsForUser = getInterestsForUser
 
-const MailchimpInterface = require('../../mail/MailchimpInterface')
+const isUserInAudience = async ({ user, audienceId }) => {
+  const mailchimp = MailchimpInterface({ console })
+  const member = await mailchimp.getMember(user.email, audienceId)
+  return !!member
+}
+
+mail.isUserInAudience = isUserInAudience
 
 const addUserToMarketingAudience = async ({ user }) => {
   const interest = {}
@@ -233,19 +242,44 @@ mail.enforceSubscriptions = async ({
     })
   } else {
     debug('update status in marketing audience to not receive marketing mails')
-    const interest = {}
-    interest[MAILCHIMP_MARKETING_INTEREST_FREE_OFFERS_ONLY] = false
-    const marketingSubscription = await addUserToAudience({
+    const marketingMember = await isUserInAudience({
       user: user || { email },
-      audienceId: MAILCHIMP_MARKETING_AUDIENCE_ID,
-      interests: interest,
-      statusIfNew: MailchimpInterface.MemberStatus.Subscribed,
-      defaultStatus: MailchimpInterface.MemberStatus.Subscribed,
+      MAILCHIMP_MARKETING_AUDIENCE_ID,
     })
-    allSubscriptions.push({
-      audienceId: MAILCHIMP_MARKETING_AUDIENCE_ID,
-      subscriptions: marketingSubscription,
+    if (marketingMember) {
+      const interest = {}
+      interest[MAILCHIMP_MARKETING_INTEREST_FREE_OFFERS_ONLY] = false
+      const marketingSubscription = await addUserToAudience({
+        user: user || { email },
+        audienceId: MAILCHIMP_MARKETING_AUDIENCE_ID,
+        interests: interest,
+        statusIfNew: MailchimpInterface.MemberStatus.Subscribed,
+        defaultStatus: MailchimpInterface.MemberStatus.Subscribed,
+      })
+      allSubscriptions.push({
+        audienceId: MAILCHIMP_MARKETING_AUDIENCE_ID,
+        subscriptions: marketingSubscription,
+      })
+    }
+
+    debug('unsubscribe from Probelesen audience if subscribed')
+    const probelesenMember = await isUserInAudience({
+      user: user || { email },
+      MAILCHIMP_PROBELESEN_AUDIENCE_ID,
     })
+    if (probelesenMember) {
+      const probelesenSubscription = await addUserToAudience({
+        user: user || { email },
+        audienceId: MAILCHIMP_PROBELESEN_AUDIENCE_ID,
+        statusIfNew: MailchimpInterface.MemberStatus.Unsubscribed,
+        defaultStatus: MailchimpInterface.MemberStatus.Unsubscribed,
+        ...rest,
+      })
+      allSubscriptions.push({
+        audienceId: MAILCHIMP_PROBELESEN_AUDIENCE_ID,
+        subscriptions: probelesenSubscription,
+      })
+    }
   }
 
   if (subscribeToOnboardingMails) {
