@@ -22,12 +22,15 @@ type FormValues = z.infer<typeof formSchema>
 
 type CANewsletterSignUpProps = {
   me?: MeQueryResult['me']
+  // Override the default heading
+  title?: string
   // Text that is shown between the heading & the form
   description?: ReactNode
 }
 
 export function CANewsletterSignUp({
   me,
+  title,
   description,
 }: CANewsletterSignUpProps) {
   const [signUpForNewsletter] = useMutation<
@@ -84,7 +87,7 @@ export function CANewsletterSignUp({
           letterSpacing: '-1px',
         }}
       >
-        Für den Newsletter anmelden
+        {title || 'Für den Newsletter anmelden'}
       </h2>
       {description}
       {!signUpSuccessful ? (
