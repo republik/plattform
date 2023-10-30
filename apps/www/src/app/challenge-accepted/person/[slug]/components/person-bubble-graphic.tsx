@@ -126,6 +126,7 @@ const PersonBubbleItem = ({
         })}
         style={{
           backgroundImage: `url('${person.portrait.url}')`,
+          backgroundSize: 'contain',
           width: getRadius(person, width) * 2,
           height: getRadius(person, width) * 2,
         }}
