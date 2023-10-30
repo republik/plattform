@@ -28,19 +28,6 @@ const sectionContent = [
     ),
   },
   {
-    name: 'climatelab',
-    image: '/static/marketing/climatelab.png?size=800x800',
-    color: '#000000',
-    title: 'Klimalabor',
-    content: (
-      <>
-        Die Klimakrise ist hier. Die Lage ist ernst. Was tun? Gemeinsam mit
-        Ihnen machen wir uns auf die Suche nach Antworten. <br />
-        <Link href='/klimalabor'>Newsletter abonnieren</Link>
-      </>
-    ),
-  },
-  {
     name: 'briefings',
     image: '/static/marketing/briefings.png?size=933x933',
     color: '#0A99B8',
