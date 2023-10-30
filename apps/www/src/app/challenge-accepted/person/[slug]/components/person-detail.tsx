@@ -97,7 +97,7 @@ export function PersonDetail({ person, isMember = false }: PersonDetailProps) {
             flexDirection: 'column',
             gap: '4',
 
-            textStyle: 'teaserLeadSans',
+            textStyle: 'paragraph',
 
             '& ul > li': {
               listStyleType: 'none',

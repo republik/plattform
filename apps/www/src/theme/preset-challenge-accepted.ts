@@ -71,6 +71,18 @@ export const presetChallengeAccepted = definePreset({
           },
         },
       },
+      paragraph: {
+        value: {
+          fontFamily: 'gtAmericaStandard',
+          fontWeight: 'regular',
+          fontStyle: 'normal',
+          fontSize: '1.5rem',
+          lineHeight: 1.4,
+          '& b, & strong': {
+            fontWeight: 700,
+          },
+        },
+      },
       eventTeaserTitle: {
         value: {
           fontFamily: 'druk',

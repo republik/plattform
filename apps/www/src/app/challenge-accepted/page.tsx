@@ -161,7 +161,7 @@ export default async function Page({ searchParams }) {
               }
             />
           )}
-          <div className={css({ textStyle: 'teaserLeadSans' })}>
+          <div className={css({ textStyle: 'paragraph' })}>
             <StructuredText data={hub.outro.value} />
           </div>
         </div>
