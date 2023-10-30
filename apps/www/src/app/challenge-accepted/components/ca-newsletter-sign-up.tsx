@@ -10,7 +10,7 @@ import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { css } from '@app/styled-system/css'
-import { useState } from 'react'
+import { ReactNode, useState } from 'react'
 import { stack, wrap } from '@app/styled-system/patterns'
 import { MeQueryResult } from '@app/graphql/republik-api/me.query'
 
@@ -22,9 +22,14 @@ type FormValues = z.infer<typeof formSchema>
 
 type CANewsletterSignUpProps = {
   me?: MeQueryResult['me']
+  // Text that is shown between the heading & the form
+  description?: ReactNode
 }
 
-export function CANewsletterSignUp({ me }: CANewsletterSignUpProps) {
+export function CANewsletterSignUp({
+  me,
+  description,
+}: CANewsletterSignUpProps) {
   const [signUpForNewsletter] = useMutation<
     SignUpForNewsletterResult,
     SignUpForNewsletterVariables
@@ -81,6 +86,7 @@ export function CANewsletterSignUp({ me }: CANewsletterSignUpProps) {
       >
         Für den Newsletter anmelden
       </h2>
+      {description}
       {!signUpSuccessful ? (
         <>
           {me ? (

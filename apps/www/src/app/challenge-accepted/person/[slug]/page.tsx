@@ -70,7 +70,25 @@ export default async function Page({ params: { slug } }: PageProps) {
       <PersonDetail person={personData} isMember={isMember} />
       <Container>
         <div className={vstack({ gap: '32', alignItems: 'stretch' })}>
-          {!isSubscribedToCANewsletter && <CANewsletterSignUp me={me} />}
+          {!isSubscribedToCANewsletter && (
+            <CANewsletterSignUp
+              me={me}
+              description={
+                <p
+                  className={css({
+                    textStyle: 'paragraph',
+                    mb: '4',
+                  })}
+                >
+                  Die Klimakrise ist hier. Die Lage ist ernst. Wir richten den
+                  Blick auf Menschen, die die Herausforderung annehmen.
+                  Gemeinsam gehen wir der Frage nach: Wie kommen wir aus dieser
+                  Krise wieder raus? Neugierig, kritisch, konstruktiv. Mit
+                  Artikeln, Debatten, Veranstaltungen. Sind Sie dabei?
+                </p>
+              }
+            />
+          )}
           <section>
             <h2
               className={css({

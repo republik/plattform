@@ -145,7 +145,22 @@ export default async function Page({ searchParams }) {
               }
             />
           </section>
-          {!isSubscribedToCANewsletter && <CANewsletterSignUp me={me} />}
+          {!isSubscribedToCANewsletter && (
+            <CANewsletterSignUp
+              me={me}
+              description={
+                <p
+                  className={css({
+                    textStyle: 'paragraph',
+                    mb: '4',
+                  })}
+                >
+                  Keine neuen Beiträge und Verstaltungen verpassen: für den
+                  Newsletter anmelden.
+                </p>
+              }
+            />
+          )}
           <div className={css({ textStyle: 'teaserLeadSans' })}>
             <StructuredText data={hub.outro.value} />
           </div>
