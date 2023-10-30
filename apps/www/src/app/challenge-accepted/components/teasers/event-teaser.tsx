@@ -83,7 +83,7 @@ export const EventTeaser = ({ event, isMember }: EventProps) => {
         <p className={css({ fontWeight: 700 })}>
           {formateTime(isoParse(event.startAt))}
           {event.endAt
-            ? ` – ${formateTime(isoParse(event.endAt))} Uhr `
+            ? `–${formateTime(isoParse(event.endAt))} Uhr `
             : ' Uhr – offen '}
           / {event.location}
         </p>
