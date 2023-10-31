@@ -51,10 +51,15 @@ export async function generateMetadata(
 }
 
 export default async function Page({ searchParams }) {
-  const cmsClient = getCMSClient()
-  const { data } = await cmsClient.query({
+  const { data } = await getCMSClient().query({
     query: CHALLENGE_ACCEPTED_HUB_QUERY,
-    context: {},
+    context: {
+      fetchOptions: {
+        next: {
+          tags: ['challenge-accepted'],
+        },
+      },
+    },
   })
 
   const me = await getMe()

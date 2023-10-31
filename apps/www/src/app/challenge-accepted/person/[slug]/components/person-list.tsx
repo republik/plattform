@@ -51,6 +51,13 @@ const PersonListItem = ({ person }: { person: Person }) => {
 export async function PersonList() {
   const { data } = await getCMSClient().query({
     query: CHALLENGE_ACCEPTED_PERSON_LIST_QUERY,
+    context: {
+      fetchOptions: {
+        next: {
+          tags: ['challenge-accepted'],
+        },
+      },
+    },
   })
 
   return (

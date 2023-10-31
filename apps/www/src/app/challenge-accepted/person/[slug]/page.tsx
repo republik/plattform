@@ -26,6 +26,13 @@ export default async function Page({ params: { slug } }: PageProps) {
   const { data } = await getCMSClient().query({
     query: PERSON_DETAIL_QUERY,
     variables: { slug },
+    context: {
+      fetchOptions: {
+        next: {
+          tags: ['challenge-accepted'],
+        },
+      },
+    },
   })
 
   if (!data.person) {
