@@ -82,8 +82,10 @@ const Header = ({
   }
 
   useEffect(() => {
-    router.prefetch('/meine-republik')
-  }, [])
+    router.prefetch(me ? '/meine-republik' : '/anmelden')
+  }, [me?.id])
+
+  const userButtonLink = me ? '/meine-republik' : '/anmelden'
 
   useEffect(() => {
     const onScroll = () => {
@@ -188,10 +190,10 @@ const Header = ({
                 )}
                 inNativeIOSApp={inNativeIOSApp}
                 onClick={() => {
-                  if (router.asPath === '/meine-republik') {
+                  if (router.asPath === userButtonLink) {
                     closeHandler()
                   } else {
-                    router.push('/meine-republik')
+                    router.push(userButtonLink)
                   }
                 }}
               />
