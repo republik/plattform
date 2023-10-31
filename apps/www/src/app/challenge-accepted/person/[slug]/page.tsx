@@ -20,6 +20,8 @@ type PageProps = {
   }
 }
 
+export const revalidate = 60 // revalidate at most every minute
+
 export default async function Page({ params: { slug } }: PageProps) {
   const { data } = await getCMSClient().query({
     query: PERSON_DETAIL_QUERY,
