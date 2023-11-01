@@ -257,8 +257,7 @@ export function CANewsletterSignUp({
             fontSize: 'xl',
           })}
         >
-          Sie sollten eine E-Mail erhalten haben, um die Anmeldung für den
-          Newsletter zu bestätigen. ✅
+          Sie haben sich für den Newsletter angemeldet. ✅
         </p>
       )}
     </div>
