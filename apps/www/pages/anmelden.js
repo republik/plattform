@@ -20,10 +20,10 @@ const SigninPage = () => {
       // check if a successful login should redirect to a specific page
       const redirectTarget = decodeURIComponent(query.redirect)
       if (redirectTarget.startsWith('/')) {
-        router.push(redirectTarget)
+        router.replace(redirectTarget)
       }
     } else if (me) {
-      window.location = '/'
+      router.replace('/')
     }
   }, [me])
 
@@ -34,7 +34,7 @@ const SigninPage = () => {
   return (
     <Frame meta={meta}>
       <PageCenter>
-        {me ? <Loader loading /> : <SignIn email={query.email} noReload />}
+        {me ? <Loader loading /> : <SignIn email={query.email} />}
       </PageCenter>
     </Frame>
   )

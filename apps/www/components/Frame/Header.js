@@ -190,25 +190,25 @@ const Header = ({
                 )}
                 inNativeIOSApp={inNativeIOSApp}
                 onClick={() => {
-                  if (router.asPath === userButtonLink) {
-                    closeHandler()
+                  if (router.asPath.startsWith(userButtonLink)) {
+                    return closeHandler()
                   } else {
-                    try {
-                      const url = new URL(
-                        userButtonLink,
-                        window.location.origin,
-                      )
-                      if (userButtonLink === '/anmelden') {
+                    if (userButtonLink === '/anmelden') {
+                      try {
+                        const url = new URL(
+                          userButtonLink,
+                          window.location.origin,
+                        )
                         url.searchParams.set(
                           'redirect',
                           encodeURIComponent(router.asPath),
                         )
+                        return router.push(url)
+                      } catch (e) {
+                        console.error(e)
                       }
-                      router.push(url)
-                    } catch (e) {
-                      console.error(e)
-                      router.push(userButtonLink)
                     }
+                    router.push(userButtonLink)
                   }
                 }}
               />
