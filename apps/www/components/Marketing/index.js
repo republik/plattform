@@ -49,10 +49,10 @@ const Marketing = ({
       <Carpet loading={loading} front={data.carpet} />
       <Reasons inNativeApp={inNativeApp} />
       {inNativeApp && <MarketingTrialForm />}
-      <Sections />
       <SectionContainer maxWidth={'100%'} padding='0'>
         <ChallengeAcceptedMarketingTeaser />
       </SectionContainer>
+      <Sections />
       <Team loading={loading} error={error} employees={data.team} />
       <Community
         loading={loading}
