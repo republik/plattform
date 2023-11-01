@@ -157,7 +157,20 @@ function CABottomInlineTeaser({
         Herzen?
       </CAP>
       <div {...styles.actionWrapper}>
-        <Button primary onClick={() => router.push('/angebote')}>
+        <Button
+          primary
+          onClick={() =>
+            router.push({
+              href: '/angebote',
+              query: {
+                utm_medium: 'website',
+                utm_campaign: 'challenge-accepted',
+                utm_source: 'republik',
+                utm_content: 'artikel-bottom',
+              },
+            })
+          }
+        >
           Werden Sie jetzt Mitglied
         </Button>
       </div>
