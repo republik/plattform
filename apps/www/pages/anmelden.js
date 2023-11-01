@@ -17,10 +17,20 @@ const SigninPage = () => {
   const { t } = useTranslation()
   useEffect(() => {
     if (me && query?.redirect) {
-      // check if a successful login should redirect to a specific page
-      const redirectTarget = decodeURIComponent(query.redirect)
-      if (redirectTarget.startsWith('/')) {
-        router.replace(redirectTarget)
+      try {
+        const redirectTarget = decodeURIComponent(query.redirect)
+        const redirectUrl = new URL(redirectTarget, window.location.origin)
+        // ensure that the redirect target can only be a relative path
+        if (
+          redirectUrl.hostname === window.location.hostname &&
+          redirectTarget.startsWith('/')
+        ) {
+          router.replace(redirectUrl)
+        } else {
+          router.replace('/')
+        }
+      } catch (e) {
+        console.error(e)
       }
     } else if (me) {
       router.replace('/')
