@@ -11,11 +11,18 @@ import { withDefaultSSR } from '../lib/apollo/helpers'
 import { useMe } from '../lib/context/MeContext'
 
 const SigninPage = () => {
-  const { query } = useRouter()
+  const router = useRouter()
+  const { query } = router
   const { me } = useMe()
   const { t } = useTranslation()
   useEffect(() => {
-    if (me) {
+    if (me && query?.redirect) {
+      // check if a successful login should redirect to a specific page
+      const redirectTarget = decodeURIComponent(query.redirect)
+      if (redirectTarget.startsWith('/')) {
+        router.push(redirectTarget)
+      }
+    } else if (me) {
       window.location = '/'
     }
   }, [me])

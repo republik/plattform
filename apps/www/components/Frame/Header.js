@@ -193,7 +193,22 @@ const Header = ({
                   if (router.asPath === userButtonLink) {
                     closeHandler()
                   } else {
-                    router.push(userButtonLink)
+                    try {
+                      const url = new URL(
+                        userButtonLink,
+                        window.location.origin,
+                      )
+                      if (userButtonLink === '/anmelden') {
+                        url.searchParams.set(
+                          'redirect',
+                          encodeURIComponent(router.asPath),
+                        )
+                      }
+                      router.push(url)
+                    } catch (e) {
+                      console.error(e)
+                      router.push(userButtonLink)
+                    }
                   }
                 }}
               />
