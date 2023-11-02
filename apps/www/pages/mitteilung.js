@@ -2,7 +2,7 @@ import { css } from 'glamor'
 import Head from 'next/head'
 
 import compose from 'lodash/flowRight'
-import { withRouter } from 'next/router'
+import { useRouter, withRouter } from 'next/router'
 
 import withMe from '../lib/apollo/withMe'
 import withT from '../lib/withT'
@@ -109,6 +109,7 @@ const fixAmpsInQuery = (rawQuery) => {
 }
 
 const Page = ({ router: { query: rawQuery }, t, me, inNativeApp }) => {
+  const router = useRouter()
   const [colorScheme] = useColorContext()
   const query = fixAmpsInQuery(rawQuery)
   const { context, type } = query
@@ -159,6 +160,8 @@ const Page = ({ router: { query: rawQuery }, t, me, inNativeApp }) => {
 
   const stickyBar = !isProjectR
 
+  const hasRedirect = router.query.redirect
+
   return (
     <div>
       <Head>
@@ -172,7 +175,7 @@ const Page = ({ router: { query: rawQuery }, t, me, inNativeApp }) => {
         >
           {logo}
         </div>
-        {inNativeApp && (
+        {inNativeApp && !hasRedirect && (
           <Link href='/' passHref {...styles.close}>
             <IconClose {...colorScheme.set('fill', 'text')} size={32} />
           </Link>
@@ -213,5 +216,5 @@ const Page = ({ router: { query: rawQuery }, t, me, inNativeApp }) => {
 }
 
 export default withDefaultSSR(
-  compose(withMe, withT, withRouter, withInNativeApp)(Page),
+  compose(withT, withRouter, withMe, withInNativeApp)(Page),
 )
