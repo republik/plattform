@@ -48,6 +48,6 @@ export const PERSON_SHARE_TEXT =
 export const QUESTIONNAIRE_SLUG = 'klima-fragebogen-v2'
 
 export const QUESTIONNAIRE_SQUARE_IMG_URL =
-  'https://cdn.repub.ch/s3/republik-assets/repos/republik/article-klimafragebogen-v2-fragen/files/eeb6c58c-12a7-47ad-8f68-2c3f9faf0538/final-art_questionnaire_new-colour.png'
+  'https://cdn.repub.ch/s3/republik-assets/repos/republik/article-klimafragebogen-version-2-uebersichtsseite/images/df9fec323575229d1578831affe5c79c02275cd3.png?resize=800x'
 
 export const ILLU_CREDIT = 'Cristina Spanò'
