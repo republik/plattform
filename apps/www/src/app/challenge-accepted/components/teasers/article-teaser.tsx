@@ -7,8 +7,9 @@ import { css } from '@app/styled-system/css'
 import Link from 'next/link'
 import Image from 'next/image'
 import formatCredits from 'components/Feed/formatCredits'
-import { matchType, renderMdast } from '@republik/mdast-react-render'
 import { vstack } from '@app/styled-system/patterns'
+
+import { renderMdast } from '@app/lib/mdast/render'
 
 const getResizefromURL = (url, size) => {
   const imgURL = new URL(url)
@@ -40,7 +41,7 @@ const getOriginalImageDimensions = (url) => {
 }
 
 // Start: Copied from styleguide TeaserFeed component with slight adaptations
-
+const matchType = (type) => (node) => node.type === type
 const creditsSchema = {
   rules: [
     {

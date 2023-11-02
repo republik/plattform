@@ -88,14 +88,6 @@ export const SecondaryNav = ({
               {t('navbar/discussion')}
             </NavLink>
             <NavLink
-              href='/dossier/welche-schweiz-wollen-wir'
-              currentPath={currentPath}
-              minifeed
-              title={'Wahlen 2023'}
-            >
-              {'Wahlen 2023'}
-            </NavLink>
-            <NavLink
               href='/suche'
               currentPath={currentPath}
               title={t('pages/search/title')}
