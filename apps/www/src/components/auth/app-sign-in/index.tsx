@@ -2,13 +2,9 @@ import {
   PENDING_APP_SIGN_IN_QUERY,
   PendingAppSignInResult,
   SignInTokenType,
-  UNAUTHORIZED_SESSION_QUERY,
-  UnauthorizedSessionResult,
-  unauthorizedSessionVariables,
 } from '@app/graphql/republik-api/app-sign-in'
 import { getClient } from '@app/lib/apollo/client'
-import { css } from '@app/styled-system/css'
-import { AppSignInView } from './app-sign-in-view'
+import { AppSignInRedirect } from './app-sign-in-redirect'
 import { getUserAgentPlatformInfo } from '@app/lib/util/useragent/user-agent-plattform-information'
 
 type VerificationURLParts = {
@@ -65,41 +61,11 @@ export async function AppSignIn() {
 
   const url = parseVerificationURL(pendingAppSignIn.verificationUrl)
 
-  if (!url.email || !url.token || !url.tokenType) {
+  if (!url.tokenType || (url.tokenType as SignInTokenType) !== 'APP') {
     return null
   }
-
-  if ((url.tokenType as SignInTokenType) !== 'APP') {
-    return null
-  }
-
-  const { data: unauthorizedSession } = await client.query<
-    UnauthorizedSessionResult,
-    unauthorizedSessionVariables
-  >({
-    query: UNAUTHORIZED_SESSION_QUERY,
-    variables: {
-      email: url?.email,
-      token: url?.token,
-      tokenType: url?.tokenType as SignInTokenType,
-    },
-  })
 
   return (
-    <AppSignInView
-      email={url.email}
-      token={url.token}
-      tokenType={url.tokenType as SignInTokenType}
-    >
-      <pre style={{ overflow: 'scroll' }}>
-        <code>
-          {JSON.stringify(
-            { pendingAppSignIn, url, unauthorizedSession },
-            null,
-            2,
-          )}
-        </code>
-      </pre>
-    </AppSignInView>
+    <AppSignInRedirect verificationURL={pendingAppSignIn.verificationUrl} />
   )
 }
