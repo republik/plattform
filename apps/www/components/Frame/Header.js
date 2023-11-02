@@ -190,10 +190,21 @@ const Header = ({
                 )}
                 inNativeIOSApp={inNativeIOSApp}
                 onClick={() => {
-                  if (router.asPath === userButtonLink) {
-                    closeHandler()
+                  if (router.asPath.startsWith(userButtonLink)) {
+                    return closeHandler()
                   } else {
-                    router.push(userButtonLink)
+                    if (
+                      userButtonLink === '/anmelden' &&
+                      !router.asPath.startsWith('/anmelden')
+                    ) {
+                      router.push(
+                        `${userButtonLink}?redirect=${encodeURIComponent(
+                          router.asPath,
+                        )}`,
+                      )
+                    } else {
+                      router.push(userButtonLink)
+                    }
                   }
                 }}
               />

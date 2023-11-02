@@ -11,12 +11,28 @@ import { withDefaultSSR } from '../lib/apollo/helpers'
 import { useMe } from '../lib/context/MeContext'
 
 const SigninPage = () => {
-  const { query } = useRouter()
+  const router = useRouter()
+  const { query } = router
   const { me } = useMe()
   const { t } = useTranslation()
   useEffect(() => {
-    if (me) {
-      window.location = '/'
+    if (me && query?.redirect) {
+      try {
+        const redirectTarget = decodeURIComponent(query.redirect)
+        const redirectUrl = new URL(redirectTarget, window.location.origin)
+        // ensure that the redirect target can only be a relative path
+        if (
+          redirectUrl.hostname !== window.location.hostname ||
+          !redirectTarget.startsWith('/')
+        ) {
+          throw new Error('Invalid redirect URL')
+        }
+        router.replace(redirectUrl)
+      } catch (e) {
+        router.replace('/')
+      }
+    } else if (me) {
+      router.replace('/')
     }
   }, [me])
 
@@ -27,7 +43,7 @@ const SigninPage = () => {
   return (
     <Frame meta={meta}>
       <PageCenter>
-        {me ? <Loader loading /> : <SignIn email={query.email} noReload />}
+        {me ? <Loader loading /> : <SignIn email={query.email} />}
       </PageCenter>
     </Frame>
   )
