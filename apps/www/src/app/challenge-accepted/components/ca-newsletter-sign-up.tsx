@@ -164,11 +164,11 @@ export function CANewsletterSignUp({
                       className={css({
                         display: 'flex',
                         flexDirection: 'row',
-                        color: 'disabled',
+                        color: 'contrast',
                         fontSize: 'sm',
                       })}
                     >
-                      Email
+                      E-Mail-Adresse
                     </label>
                     <input
                       id='email-field'
