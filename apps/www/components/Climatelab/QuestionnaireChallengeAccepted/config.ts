@@ -33,10 +33,17 @@ export const QUESTIONS: QuestionConfigType[] = [
 ]
 
 // TODO: correct urls and share texts
-export const EDIT_QUESTIONNAIRE_PATH = '/2023/03/03/fragen-zur-klimakrise'
-export const OVERVIEW_QUESTIONNAIRE_PATH = '/15-fragen-zum-klima-ihre-antworten'
-export const PERSON_PAGE_PATH = 'klimafragebogen-v2'
-export const PERSON_SHARE_TEXT = '15 Fragen zum Klima – die Antworten von '
+export const EDIT_QUESTIONNAIRE_PATH =
+  '/2023/11/07/wie-blicken-sie-zurzeit-auf-die-klimakrise'
+export const OVERVIEW_QUESTIONNAIRE_PATH = '/so-blicken-sie-auf-die-klimakrise'
+export const PERSON_PAGE_PATH = 'fragebogen-klimakrise'
+export const PERSON_PAGE_TITLE =
+  'Wie blicken Sie zurzeit auf die Klimakrise? Die Antworten von {name}'
+export const PERSON_META_TITLE = 'Wie blicken Sie zurzeit auf die Klimakrise?'
+export const PERSON_META_DESCRIPTION =
+  'Das sind die Antworten von {name}. Was sind Ihre?'
+export const PERSON_SHARE_TEXT =
+  'Wie blicken Sie zurzeit auf die Klimakrise? Die Antworten von {name}'
 
 export const QUESTIONNAIRE_SLUG = 'klima-fragebogen-v2'
 

@@ -21,7 +21,6 @@ import {
 
 import { ASSETS_SERVER_BASE_URL, PUBLIC_BASE_URL } from '../../../lib/constants'
 import { useMe } from '../../../lib/context/MeContext'
-import { useTranslation } from '../../../lib/withT'
 
 import Frame from '../../Frame'
 import Meta from '../../Frame/Meta'
@@ -45,6 +44,9 @@ import {
   PERSON_PAGE_PATH,
   PERSON_SHARE_TEXT,
   ILLU_CREDIT,
+  PERSON_META_TITLE,
+  PERSON_META_DESCRIPTION,
+  PERSON_PAGE_TITLE,
 } from './config'
 import { IconChevronLeft, IconEdit } from '@republik/icons'
 
@@ -60,7 +62,6 @@ const USER_QUERY = gql`
 `
 
 const Page = () => {
-  const { t } = useTranslation()
   const [headerHeight] = useHeaderHeight()
   const [colorScheme] = useColorContext()
 
@@ -105,7 +106,7 @@ const Page = () => {
         user={!loading && author}
         img={QUESTIONNAIRE_SQUARE_IMG_URL}
         bgColor={QUESTIONNAIRE_BG_COLOR}
-        personShareText={PERSON_SHARE_TEXT}
+        personShareText={PERSON_SHARE_TEXT.replace('{name}', author?.name)}
       />
     )
   }
@@ -136,10 +137,11 @@ const Page = () => {
 
           const meta = {
             url,
-            title: t('Climatelab/Questionnaire/title'),
-            description: t('Climatelab/Questionnaire/description', {
-              name: author?.name,
-            }),
+            title: PERSON_META_TITLE,
+            description: PERSON_META_DESCRIPTION.replace(
+              '{name}',
+              author?.name,
+            ),
             image: `${ASSETS_SERVER_BASE_URL}/render?width=1200&height=1&url=${encodeURIComponent(
               shareImageUrl,
             )}`,
@@ -172,9 +174,7 @@ const Page = () => {
                     </Figure>
                     <NarrowContainer style={{ padding: '20px 0' }}>
                       <Interaction.Headline>
-                        {t('Climatelab/Questionnaire/Person/title', {
-                          name: author?.name,
-                        })}
+                        {PERSON_PAGE_TITLE.replace('{name}', author?.name)}
                       </Interaction.Headline>
                       {author?.profilePicture && (
                         <img
