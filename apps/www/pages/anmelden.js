@@ -27,7 +27,7 @@ const SigninPage = () => {
         ) {
           throw new Error('Invalid redirect URL')
         }
-        router.replace(redirectTarget)
+        router.replace(redirectUrl)
       } catch (e) {
         router.replace('/')
       }
