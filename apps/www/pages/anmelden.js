@@ -22,15 +22,14 @@ const SigninPage = () => {
         const redirectUrl = new URL(redirectTarget, window.location.origin)
         // ensure that the redirect target can only be a relative path
         if (
-          redirectUrl.hostname === window.location.hostname &&
-          redirectTarget.startsWith('/')
+          redirectUrl.hostname !== window.location.hostname ||
+          !redirectTarget.startsWith('/')
         ) {
-          router.replace(redirectUrl)
-        } else {
-          router.replace('/')
+          throw new Error('Invalid redirect URL')
         }
+        router.replace(redirectTarget)
       } catch (e) {
-        console.error(e)
+        router.replace('/')
       }
     } else if (me) {
       router.replace('/')
