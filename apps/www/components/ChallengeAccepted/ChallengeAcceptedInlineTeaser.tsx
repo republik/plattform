@@ -161,7 +161,7 @@ function CABottomInlineTeaser({
           primary
           onClick={() =>
             router.push({
-              href: '/angebote',
+              pathname: '/angebote',
               query: {
                 utm_medium: 'website',
                 utm_campaign: 'challenge-accepted',
