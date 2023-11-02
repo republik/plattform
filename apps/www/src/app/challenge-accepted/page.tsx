@@ -10,7 +10,6 @@ import {
   CHALLENGE_ACCEPTED_HUB_META_QUERY,
   CHALLENGE_ACCEPTED_HUB_QUERY,
 } from '@app/graphql/cms/hub.query'
-import { getClimateLabNewsletterSubscriptionStatus } from '@app/graphql/republik-api/newsletter.query'
 import { getCMSClient } from '@app/lib/apollo/cms-client'
 import { getMe } from '@app/lib/auth/me'
 import { css } from '@app/styled-system/css'
@@ -63,8 +62,6 @@ export default async function Page({ searchParams }) {
   })
 
   const me = await getMe()
-  const isSubscribedToCANewsletter =
-    await getClimateLabNewsletterSubscriptionStatus()
 
   const isMember =
     me?.roles && Array.isArray(me.roles) && me.roles.includes('member')
@@ -119,7 +116,7 @@ export default async function Page({ searchParams }) {
           <section className={css({ textStyle: 'pageIntro' })}>
             <StructuredText data={hub.introduction.value} />
           </section>
-          {!isSubscribedToCANewsletter && <CANewsletterSignUp me={me} />}
+          <CANewsletterSignUp me={me} />
 
           <section>
             <h2
@@ -150,13 +147,11 @@ export default async function Page({ searchParams }) {
               }
             />
           </section>
-          {!isSubscribedToCANewsletter && (
-            <CANewsletterSignUp
-              title='Keine neuen Beiträge und Verstaltungen verpassen: für den
+          <CANewsletterSignUp
+            title='Keine neuen Beiträge und Verstaltungen verpassen: für den
                   Newsletter anmelden.'
-              me={me}
-            />
-          )}
+            me={me}
+          />
           <div className={css({ textStyle: 'paragraph' })}>
             <StructuredText data={hub.outro.value} />
           </div>

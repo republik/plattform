@@ -7,7 +7,6 @@ import Link from 'next/link'
 import { getMe } from '@app/lib/auth/me'
 import { Metadata, ResolvingMetadata } from 'next'
 import { CANewsletterSignUp } from '@app/app/challenge-accepted/components/ca-newsletter-sign-up'
-import { getClimateLabNewsletterSubscriptionStatus } from '@app/graphql/republik-api/newsletter.query'
 import { css } from '@app/styled-system/css'
 
 import { IconChevronLeft } from '@republik/icons'
@@ -42,8 +41,6 @@ export default async function Page({ params: { slug } }: PageProps) {
   const me = await getMe()
   const isMember =
     me?.roles && Array.isArray(me.roles) && me.roles.includes('member')
-  const isSubscribedToCANewsletter =
-    await getClimateLabNewsletterSubscriptionStatus()
 
   const personData: typeof data['person'] = {
     ...data.person,
@@ -79,25 +76,23 @@ export default async function Page({ params: { slug } }: PageProps) {
       <PersonDetail person={personData} isMember={isMember} />
       <Container>
         <div className={vstack({ gap: '32', alignItems: 'stretch' })}>
-          {!isSubscribedToCANewsletter && (
-            <CANewsletterSignUp
-              me={me}
-              description={
-                <p
-                  className={css({
-                    textStyle: 'paragraph',
-                    mb: '4',
-                  })}
-                >
-                  Die Klimakrise ist hier. Die Lage ist ernst. Wir richten den
-                  Blick auf Menschen, die die Herausforderung annehmen.
-                  Gemeinsam gehen wir der Frage nach: Wie kommen wir aus dieser
-                  Krise wieder raus? Neugierig, kritisch, konstruktiv. Mit
-                  Artikeln, Debatten, Veranstaltungen. Sind Sie dabei?
-                </p>
-              }
-            />
-          )}
+          <CANewsletterSignUp
+            me={me}
+            description={
+              <p
+                className={css({
+                  textStyle: 'paragraph',
+                  mb: '4',
+                })}
+              >
+                Die Klimakrise ist hier. Die Lage ist ernst. Wir richten den
+                Blick auf Menschen, die die Herausforderung annehmen. Gemeinsam
+                gehen wir der Frage nach: Wie kommen wir aus dieser Krise wieder
+                raus? Neugierig, kritisch, konstruktiv. Mit Artikeln, Debatten,
+                Veranstaltungen. Sind Sie dabei?
+              </p>
+            }
+          />
           <section>
             <h2
               className={css({
