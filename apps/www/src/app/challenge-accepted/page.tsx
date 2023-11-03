@@ -98,7 +98,7 @@ export default async function Page({ searchParams }) {
           src={hub.logo?.url}
           priority
           fill
-          objectFit='contain'
+          className={css({ objectFit: 'contain' })}
           alt='Challenge Accepted Logo'
         />
       </h1>

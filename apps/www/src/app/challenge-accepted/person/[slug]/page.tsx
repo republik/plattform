@@ -89,7 +89,7 @@ export default async function Page({ params: { slug } }: PageProps) {
             priority
             width={156}
             height={100}
-            objectFit='contain'
+            className={css({ objectFit: 'contain' })}
             alt='Challenge Accepted Logo'
           />
         </Link>
