@@ -8,6 +8,14 @@ import {
 import useNativeAppEvent from '@app/lib/hooks/useInNativeApp'
 import { useRouter } from 'next/navigation'
 import { useEffect, useRef } from 'react'
+import { z } from 'zod'
+
+const AppStateMessageDataSchema = z.object({
+  current: z.string(),
+  type: z.string(),
+})
+
+type AppStateMessageData = z.infer<typeof AppStateMessageDataSchema>
 
 /**
  * Component to redirect the user to the app sign in page with the current URL as the redirect URL.
@@ -35,6 +43,15 @@ export function AppSignInHandler() {
   // when the native app sends an authorization event.
   useNativeAppEvent('authorization', async () => {
     refetch()
+  })
+
+  useNativeAppEvent<AppStateMessageData | null>('appState', async (data) => {
+    if (
+      AppStateMessageDataSchema.safeParse(data).success &&
+      data?.current === 'active'
+    ) {
+      refetch()
+    }
   })
 
   useEffect(() => {
