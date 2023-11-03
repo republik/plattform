@@ -2,6 +2,12 @@ import { gql } from '../gql'
 
 export const PERSON_DETAIL_QUERY = gql(`
  query PersonDetail($slug: String!) {
+    hub: challengeAcceptedHub {
+      id
+      logo {
+        url
+      }
+    }
     person: challengeAcceptedPerson(filter: {slug: {eq: $slug}}) {
       id
       name
