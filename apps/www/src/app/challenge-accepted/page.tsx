@@ -116,7 +116,10 @@ export default async function Page({ searchParams }) {
           <section className={css({ textStyle: 'pageIntro' })}>
             <StructuredText data={hub.introduction.value} />
           </section>
-          <CANewsletterSignUp me={me} />
+
+          <section id='newsletter'>
+            <CANewsletterSignUp me={me} />
+          </section>
 
           <section>
             <h2
