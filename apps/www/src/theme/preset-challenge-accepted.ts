@@ -63,8 +63,7 @@ export const presetChallengeAccepted = definePreset({
           fontFamily: 'gtAmericaStandard',
           fontWeight: 'regular',
           fontStyle: 'normal',
-          // Fluid font size https://utopia.fyi/clamp/calculator?a=320,832,24—44
-          fontSize: 'clamp(1.5rem, 0.7188rem + 3.9063vw, 2.75rem)',
+          fontSize: { base: '2xl', md: '3xl' },
           lineHeight: 1.4,
           '& b, & strong': {
             fontWeight: 700,
@@ -76,7 +75,7 @@ export const presetChallengeAccepted = definePreset({
           fontFamily: 'gtAmericaStandard',
           fontWeight: 'regular',
           fontStyle: 'normal',
-          fontSize: '1.5rem',
+          fontSize: { base: 'xl', md: '2xl' },
           lineHeight: 1.4,
           '& b, & strong': {
             fontWeight: 700,
@@ -97,8 +96,7 @@ export const presetChallengeAccepted = definePreset({
           fontFamily: 'druk',
           fontWeight: 'medium',
           fontStyle: 'normal',
-          // Fluid font size https://utopia.fyi/clamp/calculator?a=320,832,90—270
-          fontSize: 'clamp(2.25rem, 1.7813rem + 2.3438vw, 3rem)',
+          fontSize: { base: '3xl', md: '4xl' },
           lineHeight: 1.16667,
         },
       },
