@@ -114,6 +114,15 @@ export function PersonDetail({ person, isMember = false }: PersonDetailProps) {
           <StructuredText data={person.bio.value} />
         </div>
         <section className={css({ my: '32' })}>
+          <h2
+            className={css({
+              textStyle: 'h1Sans',
+              fontWeight: 'bold',
+              mb: '6',
+            })}
+          >
+            Von und mit {person.name}
+          </h2>
           <CollectionRenderer items={person.items} isMember={isMember} />
         </section>
       </Container>

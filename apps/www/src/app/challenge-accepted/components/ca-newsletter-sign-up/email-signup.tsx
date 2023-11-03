@@ -120,7 +120,7 @@ export function EmailSignUp({
     <div>
       <h2
         className={css({
-          mb: '4',
+          mb: '6',
           textStyle: 'h1Sans',
           fontWeight: 'bold',
         })}
