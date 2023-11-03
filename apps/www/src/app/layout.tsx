@@ -1,3 +1,4 @@
+import { AppSignIn } from '@app/components/auth/app-sign-in'
 import './root.css'
 
 import { ThemeProvider } from '@app/components/theme-provider'
@@ -29,7 +30,10 @@ export default async function RootLayout({
         }}
       >
         <ThemeProvider>
-          <ApolloWrapper>{children}</ApolloWrapper>
+          <ApolloWrapper>
+            {children}
+            <AppSignIn />
+          </ApolloWrapper>
         </ThemeProvider>
       </body>
     </html>
