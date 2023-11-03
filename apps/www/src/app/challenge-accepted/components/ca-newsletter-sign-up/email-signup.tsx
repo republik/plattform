@@ -33,6 +33,7 @@ type EmailSignUpProps = {
   description?: React.ReactNode
   newsletterName: string
   newsletterSetting?: { id: string; name: string; subscribed: boolean }
+  id?: string
 }
 
 export function EmailSignUp({
@@ -41,6 +42,7 @@ export function EmailSignUp({
   description,
   newsletterName,
   newsletterSetting,
+  id,
 }: EmailSignUpProps) {
   const [signUpForNewsletter] = useMutation<
     SignUpForNewsletterResult,
@@ -117,7 +119,7 @@ export function EmailSignUp({
   }
 
   return (
-    <div>
+    <div id={id}>
       <h2
         className={css({
           mb: '6',

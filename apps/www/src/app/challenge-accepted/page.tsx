@@ -117,9 +117,7 @@ export default async function Page({ searchParams }) {
             <StructuredText data={hub.introduction.value} />
           </section>
 
-          <section id='newsletter'>
-            <CANewsletterSignUp me={me} />
-          </section>
+          <CANewsletterSignUp me={me} id='newsletter' />
 
           <section>
             <h2

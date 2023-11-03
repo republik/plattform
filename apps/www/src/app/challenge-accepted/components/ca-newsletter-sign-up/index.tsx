@@ -14,6 +14,7 @@ type CANewsletterSignUpProps = {
   title?: string
   // Text that is shown between the heading & the form
   description?: ReactNode
+  id?: string
 }
 
 const NEWSLETTER_NAME = 'CLIMATE'
@@ -22,6 +23,7 @@ export async function CANewsletterSignUp({
   me,
   title,
   description,
+  id,
 }: CANewsletterSignUpProps) {
   const { data } = await getClient().query<
     CANewsletterQueryResult,
@@ -48,6 +50,7 @@ export async function CANewsletterSignUp({
       title={title}
       description={description}
       newsletterName={NEWSLETTER_NAME}
+      id={id}
     />
   )
 }
