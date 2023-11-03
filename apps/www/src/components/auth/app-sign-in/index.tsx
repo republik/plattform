@@ -13,7 +13,7 @@ export async function AppSignIn() {
   }
 
   const me = await getMe()
-  if (me) {
+  if (!me) {
     return null
   }
 
