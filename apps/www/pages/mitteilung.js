@@ -2,7 +2,7 @@ import { css } from 'glamor'
 import Head from 'next/head'
 
 import compose from 'lodash/flowRight'
-import { useRouter } from 'next/router'
+import { useRouter, withRouter } from 'next/router'
 
 import withMe from '../lib/apollo/withMe'
 import { useTranslation } from '../lib/withT'
@@ -108,10 +108,9 @@ const fixAmpsInQuery = (rawQuery) => {
   return query
 }
 
-const Page = ({ me, inNativeApp }) => {
+const Page = ({ router: { query: rawQuery }, me, inNativeApp }) => {
   const { t } = useTranslation()
   const router = useRouter()
-  const { rawQuery } = router.query
   const [colorScheme] = useColorContext()
   const query = fixAmpsInQuery(rawQuery)
   const { context, type } = query
@@ -217,4 +216,6 @@ const Page = ({ me, inNativeApp }) => {
   )
 }
 
-export default withDefaultSSR(compose(withMe, withInNativeApp)(Page))
+export default withDefaultSSR(
+  compose(withRouter, withMe, withInNativeApp)(Page),
+)
