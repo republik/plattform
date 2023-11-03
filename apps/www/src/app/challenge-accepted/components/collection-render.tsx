@@ -19,6 +19,7 @@ export default function CollectionRenderer({
   if (items.length === 0) {
     return null
   }
+  console.log(items)
 
   return (
     <div className={css({ width: 'full' })}>

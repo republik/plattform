@@ -127,8 +127,8 @@ const PersonBubbleItem = ({
         style={{
           backgroundImage: `url('${person.portrait.url}')`,
           backgroundSize: 'contain',
-          width: getRadius(person, width) * 2,
-          height: getRadius(person, width) * 2,
+          width: getRadius(person, width) * 2 || 0,
+          height: getRadius(person, width) * 2 || 0,
         }}
       ></div>
       <div
@@ -278,8 +278,8 @@ export const PersonBubbleForce = ({ people }: { people: People }) => {
           <PersonBubbleItem
             key={p.id}
             person={p}
-            width={width}
-            height={height}
+            width={width ?? 0}
+            height={height ?? 0}
           />
         ))}
       </div>
