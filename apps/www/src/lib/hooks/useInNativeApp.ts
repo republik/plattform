@@ -29,9 +29,9 @@ function useNativeAppEvent<E = Event>(
   useEffect(() => {
     const handler = (event: MessageEvent) => {
       if (MessageSchema.safeParse(event?.data).success) {
-        const { type, payload } = event.data as z.infer<typeof MessageSchema>
+        const { type } = event.data as z.infer<typeof MessageSchema>
         if (type === eventName) {
-          savedCallback?.current(payload as E)
+          savedCallback?.current(event.data)
         }
       }
     }

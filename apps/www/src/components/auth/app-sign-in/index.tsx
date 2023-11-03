@@ -1,3 +1,4 @@
+import { getMe } from '@app/lib/auth/me'
 import { AppSignInHandler } from './app-sign-in-handler'
 import { getUserAgentPlatformInfo } from '@app/lib/util/useragent/user-agent-plattform-information'
 
@@ -7,8 +8,12 @@ import { getUserAgentPlatformInfo } from '@app/lib/util/useragent/user-agent-pla
  */
 export async function AppSignIn() {
   const { isNativeApp } = getUserAgentPlatformInfo()
-
   if (!isNativeApp) {
+    return null
+  }
+
+  const me = await getMe()
+  if (me) {
     return null
   }
 
