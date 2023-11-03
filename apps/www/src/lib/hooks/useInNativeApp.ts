@@ -4,9 +4,11 @@ import { z } from 'zod'
 type EventHandler<E> = (_: E) => Promise<void> | void
 
 const MessageSchema = z.object({
-  id: z.string(),
-  type: z.string(),
-  payload: z.any(),
+  content: z.object({
+    id: z.string(),
+    type: z.string(),
+    payload: z.any(),
+  }),
 })
 
 /**
@@ -29,9 +31,9 @@ function useNativeAppEvent<E = Event>(
   useEffect(() => {
     const handler = (event: MessageEvent) => {
       if (MessageSchema.safeParse(event?.data).success) {
-        const { type } = event.data as z.infer<typeof MessageSchema>
-        if (type === eventName) {
-          savedCallback?.current(event.data)
+        const { content } = event.data as z.infer<typeof MessageSchema>
+        if (content?.type === eventName) {
+          savedCallback?.current(event.data.content)
         }
       }
     }
