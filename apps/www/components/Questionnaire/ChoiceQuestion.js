@@ -28,19 +28,19 @@ const styles = {
     marginBottom: 15,
   }),
   optionList: css({
-    columnCount: 1,
+    display: 'grid',
+    gridTemplateColumns: '1fr',
+    gridAutoRows: 'auto',
     [mediaQueries.mUp]: {
-      columnCount: 2,
+      gridTemplateColumns: '1fr 1fr',
     },
     [mediaQueries.lUp]: {
-      columnCount: 3,
+      gridTemplateColumns: '1fr 1fr 1fr',
     },
   }),
   option: css({
     marginTop: 0,
     marginBottom: 5,
-    display: 'table',
-    breakInside: 'avoid-column',
   }),
 }
 
