@@ -124,7 +124,7 @@ export default async function Page({ params: { slug } }: PageProps) {
             >
               Direkt weiter zu …
             </h2>
-            <PersonList />
+            <PersonList linkToOverview />
           </section>
         </div>
       </Container>

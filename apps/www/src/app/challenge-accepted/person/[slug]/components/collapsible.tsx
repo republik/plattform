@@ -18,7 +18,9 @@ export const Collapsible = ({ shownItems, collapsedItems }) => {
           borderBottomWidth: 1,
         })}
       >
-        <div className={vstack({ alignItems: 'start' })}>{shownItems}</div>
+        <div className={vstack({ alignItems: 'start', gap: '0' })}>
+          {shownItems}
+        </div>
         <RadixCollapsible.Content
           className={vstack({
             alignItems: 'start',

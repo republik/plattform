@@ -29,12 +29,16 @@ const PersonListItem = ({ person }: { person: Person }) => {
             color: 'text.inverted',
           },
           width: 'full',
-          py: '1',
+          p: '2',
         })}
       >
         {person.portrait && (
           <Image
-            className={css({ height: '60px', width: 'auto' })}
+            className={css({
+              height: '60px',
+              width: '60px',
+              objectFit: 'contain',
+            })}
             unoptimized
             src={person.portrait.url}
             width={person.portrait.width}
@@ -48,7 +52,11 @@ const PersonListItem = ({ person }: { person: Person }) => {
   )
 }
 
-export async function PersonList() {
+export async function PersonList({
+  linkToOverview,
+}: {
+  linkToOverview?: boolean
+}) {
   const { data } = await getCMSClient().query({
     query: CHALLENGE_ACCEPTED_PERSON_LIST_QUERY,
     context: {
@@ -60,20 +68,68 @@ export async function PersonList() {
     },
   })
 
+  const collapsedItems = data.people
+    ?.filter((p) => p.size !== 'large')
+    .map((p) => <PersonListItem person={p} key={p.id} />)
+  const shownItems =
+    data.people
+      ?.filter((p) => p.size === 'large')
+      .map((p) => <PersonListItem person={p} key={p.id} />) ?? []
+
+  if (linkToOverview) {
+    shownItems.unshift(
+      <li
+        key='home'
+        className={css({
+          listStyle: 'none',
+          display: 'block',
+          width: 'full',
+        })}
+      >
+        <Link
+          href={`/challenge-accepted`}
+          className={hstack({
+            gap: '4',
+            color: 'text',
+            textDecoration: 'none',
+            _hover: {
+              bg: 'contrast',
+              color: 'text.inverted',
+              '& img': { filter: 'invert(1)' },
+            },
+            _dark: {
+              '& img': { filter: 'invert(1)' },
+              _hover: {
+                '& img': { filter: 'none' },
+              },
+            },
+            width: 'full',
+            p: '2',
+          })}
+        >
+          {data.hub?.logo && (
+            <Image
+              className={css({
+                height: '60px',
+                width: '60px',
+                objectFit: 'contain',
+              })}
+              unoptimized
+              src={data.hub?.logo?.url}
+              width={200}
+              height={200}
+              alt={`Challenge Accepted Logo`}
+            />
+          )}
+          <span className={css({ textStyle: 'h2Sans' })}>Übersicht</span>
+        </Link>
+      </li>,
+    )
+  }
+
   return (
     <div>
-      <Collapsible
-        shownItems={data.people
-          ?.filter((p) => p.size === 'large')
-          .map((p) => (
-            <PersonListItem person={p} key={p.id} />
-          ))}
-        collapsedItems={data.people
-          ?.filter((p) => p.size !== 'large')
-          .map((p) => (
-            <PersonListItem person={p} key={p.id} />
-          ))}
-      />
+      <Collapsible shownItems={shownItems} collapsedItems={collapsedItems} />
     </div>
   )
 }
