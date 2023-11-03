@@ -180,10 +180,12 @@ export const presetRepublik = definePreset({
             logoHeight: { value: { base: '23px', md: '28px' } },
           },
         },
+
         lineHeights: {
           pageNav: { value: '2.5rem' },
         },
         spacing: {
+          '16-32': { value: { base: '4rem', md: '8rem' } },
           header: {
             height: { value: '{sizes.header.height}' },
             avatarMargin: { value: '0.6875rem  1rem' },

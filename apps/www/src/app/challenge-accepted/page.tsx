@@ -112,7 +112,7 @@ export default async function Page({ searchParams }) {
         <PersonBubble />
       </section>
       <Container>
-        <div className={vstack({ gap: '32', alignItems: 'stretch' })}>
+        <div className={vstack({ gap: '16-32', alignItems: 'stretch' })}>
           <section className={css({ textStyle: 'pageIntro' })}>
             <StructuredText data={hub.introduction.value} />
           </section>

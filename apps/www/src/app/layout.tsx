@@ -16,7 +16,7 @@ export default async function RootLayout({
     <html
       lang='de'
       suppressHydrationWarning
-      className={css({ scrollPaddingTop: '32' })}
+      className={css({ scrollPaddingTop: '16-32' })}
     >
       <body
         className={css({

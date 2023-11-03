@@ -62,13 +62,13 @@ export default async function Page({ params: { slug } }: PageProps) {
           display: 'flex',
           justifyContent: 'center',
           mx: '4',
-          mt: '8',
-          // mb: '-8',
+          mt: { base: '4', md: '8' },
         })}
       >
         <Link
           href='/challenge-accepted'
           className={css({
+            position: 'relative',
             display: 'flex',
             flexDirection: 'row',
             alignItems: 'center',
@@ -80,6 +80,7 @@ export default async function Page({ params: { slug } }: PageProps) {
             _dark: {
               filter: 'invert(1)',
             },
+            width: { base: 80, md: 156 },
           })}
           title='Zur Übersicht'
         >
@@ -95,7 +96,7 @@ export default async function Page({ params: { slug } }: PageProps) {
       </div>
       <PersonDetail person={personData} isMember={isMember} />
       <Container>
-        <div className={vstack({ gap: '32', alignItems: 'stretch' })}>
+        <div className={vstack({ gap: '16-32', alignItems: 'stretch' })}>
           <CANewsletterSignUp
             me={me}
             description={

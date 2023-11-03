@@ -10,7 +10,7 @@ export default async function Layout(props: { children: React.ReactNode }) {
         className={css({
           color: 'text',
           bg: 'pageBackground',
-          pb: '32',
+          pb: '16-32',
           pt: '4',
         })}
         style={{

@@ -29,7 +29,7 @@ export function PersonDetail({ person, isMember = false }: PersonDetailProps) {
         className={css({
           position: 'relative',
           width: 'full',
-          mb: '32',
+          mb: '16-32',
         })}
       >
         {/* It's impossible to fit text size to container width (without measuring in the DOM), therefore we use some funky calculations based on the name to approximate a viewbox that fits relatively close to the rendered text. Then the SVG is simply scaled with CSS to 100% of its parent's width */}
@@ -113,7 +113,7 @@ export function PersonDetail({ person, isMember = false }: PersonDetailProps) {
         >
           <StructuredText data={person.bio.value} />
         </div>
-        <section className={css({ my: '32' })}>
+        <section className={css({ my: '16-32' })}>
           <h2
             className={css({
               textStyle: 'h1Sans',
