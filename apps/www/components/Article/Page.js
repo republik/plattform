@@ -171,6 +171,14 @@ const ClimateLabInlineTeaser = dynamic(
   },
 )
 
+const ChallengeAcceptedInlineTeaser = dynamic(
+  () => import('../ChallengeAccepted/ChallengeAcceptedInlineTeaser'),
+  {
+    loading: LoadingComponent,
+    ssr: false,
+  },
+)
+
 const QuestionnaireSubmissions = dynamic(
   () => import('../Questionnaire/Submissions'),
   {
@@ -184,6 +192,13 @@ const EdgeQuestion = dynamic(() => import('../Climatelab/EdgeQuestion/index'), {
 
 const ClimateLabQuestionnaire = dynamic(
   () => import('../Climatelab/Questionnaire/Overview'),
+  {
+    loading: LoadingComponent,
+  },
+)
+
+const ClimateLabQuestionnaireV2 = dynamic(
+  () => import('../Climatelab/QuestionnaireChallengeAccepted/Overview'),
   {
     loading: LoadingComponent,
   },
@@ -449,8 +464,10 @@ const ArticlePage = ({
           CLIMATE_LAB_INLINE_TEASER: ClimateLabInlineTeaser,
           CLIMATE_LAB_QUESTIONNAIRE: ClimateLabQuestionnaire,
           POLITICS_COMMUNITY_QUESTIONNAIRE: PoliticsCommunityQuestionnaire,
+          CLIMATE_LAB_QUESTIONNAIRE_V2: ClimateLabQuestionnaireV2,
           POSTCARD: Postcard,
           POSTCARD_GALLERY: PostcardGallery,
+          CHALLENGE_ACCEPTED_INLINE_TEASER: ChallengeAcceptedInlineTeaser,
         },
         titleMargin: false,
         titleBreakout,
@@ -829,7 +846,8 @@ const ArticlePage = ({
                                 </div>
                               )}
 
-                              {hasAudioSource && (
+                              {(hasAudioSource ||
+                                article?.meta?.willBeReadAloud) && (
                                 <div style={{ marginTop: 32 }}>
                                   <ArticleAudioPlayer document={article} />
                                 </div>

@@ -61,12 +61,12 @@ export const CommentActions = ({
   const now = useCurrentMinute()
   const [colorScheme] = useColorContext()
 
-  const replyBlockedMessage: string | null = useMemo(() => {
+  const replyBlockedMessage = useMemo<string | null>(() => {
     const waitUntilDate = userWaitUntil && new Date(userWaitUntil)
     if (waitUntilDate && waitUntilDate.getTime() > now) {
       return t('styleguide/CommentComposer/wait', {
         time: formatTimeRelative(waitUntilDate, { isDesktop, t, now }),
-      })
+      }) as string
     }
     return null
   }, [userWaitUntil, now, isDesktop, t])

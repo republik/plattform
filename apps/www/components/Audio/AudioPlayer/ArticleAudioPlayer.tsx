@@ -117,9 +117,9 @@ export const ArticleAudioPlayer = ({ document }: PlayerProps) => {
 
   const currentDisplayTime =
     isActiveAudioItem && currentTime > 0 ? currentTime : mediaProgress
-  const duration = audioSource.durationMs / 1000
+  const duration = (audioSource?.durationMs || 0) / 1000
 
-  const playerKind: PlayerKind = audioSource.kind ?? 'other'
+  const playerKind: PlayerKind = audioSource?.kind ?? 'other'
 
   const readAloudSubscription = document.subscribedBy?.nodes.find(
     ({ isEligibleForNotifications, object: { id } }) =>
@@ -129,11 +129,15 @@ export const ArticleAudioPlayer = ({ document }: PlayerProps) => {
   const showReadAloudSubscribe =
     meta.willBeReadAloud &&
     readAloudSubscription &&
-    playerKind === 'syntheticReadAloud'
+    (playerKind === 'syntheticReadAloud' || playerKind === 'other')
       ? true
       : false
 
   useEffect(() => {
+    if (!audioSource) {
+      return
+    }
+
     const updateMediaProgress = async () => {
       const mp = await getMediaProgress({
         mediaId: audioSource.mediaId,
@@ -166,6 +170,7 @@ export const ArticleAudioPlayer = ({ document }: PlayerProps) => {
             play()
           }
         }}
+        disabled={!audioSource}
         style={{ marginRight: 0 }}
       />
       <div {...styles.labels}>
@@ -178,11 +183,15 @@ export const ArticleAudioPlayer = ({ document }: PlayerProps) => {
             />
           ) : playerKind === 'syntheticReadAloud' ? (
             t('article/actionbar/audio/info/synthetic')
+          ) : !audioSource ? (
+            'Dieser Beitrag wird im Verlauf des Tages eingelesen.'
           ) : (
             meta.title
           )}
         </div>
-        <Time currentTime={currentDisplayTime} duration={duration} />
+        {audioSource && (
+          <Time currentTime={currentDisplayTime} duration={duration} />
+        )}
         {showReadAloudSubscribe && (
           <SubscribeReadAloud
             meta={meta}
@@ -199,7 +208,7 @@ export const ArticleAudioPlayer = ({ document }: PlayerProps) => {
               ? t('AudioPlayer/Queue/Remove')
               : t('AudioPlayer/Queue/Add')
           }
-          disabled={!!itemInAudioQueue}
+          disabled={!!itemInAudioQueue || !meta.audioSource}
           onClick={(e) => {
             e.preventDefault()
             if (itemInAudioQueue) {

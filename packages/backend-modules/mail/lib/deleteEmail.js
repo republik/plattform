@@ -8,5 +8,8 @@ module.exports = async ({ email }) => {
   }
 
   const mailchimp = MailchimpInterface({ logger })
-  return mailchimp.deleteMember(email)
+  const deleted = MailchimpInterface.audiences.map((audienceId) => {
+    return mailchimp.deleteMember(email, audienceId)
+  })
+  return deleted
 }
