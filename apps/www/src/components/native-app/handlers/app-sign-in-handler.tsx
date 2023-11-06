@@ -5,7 +5,7 @@ import {
   PENDING_APP_SIGN_IN_QUERY,
   PendingAppSignInResult,
 } from '@app/graphql/republik-api/app-sign-in'
-import useNativeAppEvent from '@app/lib/hooks/useInNativeApp'
+import useNativeAppEvent from '@app/lib/hooks/useNativeAppEvent'
 import { useRouter } from 'next/navigation'
 import { useEffect, useRef } from 'react'
 import { z } from 'zod'

@@ -1,6 +1,6 @@
 'use client'
 
-import useNativeAppEvent from '@app/lib/hooks/useInNativeApp'
+import useNativeAppEvent from '@app/lib/hooks/useNativeAppEvent'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useRef, useState } from 'react'
 
