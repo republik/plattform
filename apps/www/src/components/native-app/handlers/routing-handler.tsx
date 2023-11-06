@@ -1,9 +1,11 @@
 'use client'
 
 import useNativeAppEvent from '@app/lib/hooks/useNativeAppEvent'
+import { usePostMessage } from '@app/lib/hooks/usePostMessage'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useRef, useState } from 'react'
 
+// eslint-disable-next-line no-unused-vars
 type RouteChangeCallback = (url: string) => void
 
 function useOnRouteChange(callBack: RouteChangeCallback) {
@@ -40,13 +42,13 @@ function useOnRouteChange(callBack: RouteChangeCallback) {
 
 export function NARoutingHandler() {
   const router = useRouter()
+  const postMessage = usePostMessage()
 
   useOnRouteChange((url) => {
-    // TODO: send post message to native app
-    // postMessage({
-    //   type: 'routeChange',
-    //   payload: { url },
-    // })
+    postMessage({
+      type: 'routeChange',
+      payload: { url },
+    })
   })
 
   useNativeAppEvent<Record<string, unknown>>('push-route', async (content) => {
