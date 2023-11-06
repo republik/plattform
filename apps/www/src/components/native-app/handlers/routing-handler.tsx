@@ -54,6 +54,8 @@ export function NARoutingHandler() {
       return
     }
     const targetUrl = content.url.replace(process.env.NEXT_PUBLIC_BASE_URL, '')
+
+    // Check for and ignore recurring attempts to navigate to the same URL
     if (previousPushUrl.current !== targetUrl) {
       previousPushUrl.current = targetUrl
       router.push(targetUrl)
