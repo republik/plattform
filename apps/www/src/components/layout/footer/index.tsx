@@ -1,5 +1,5 @@
 import { getMe } from '@app/lib/auth/me'
-import { getUserAgentPlatformInfo } from '@app/lib/util/useragent/user-agent-plattform-information'
+import { getDeviceInformation } from '@app/lib/util/useragent/useragent-information'
 import { css } from '@app/styled-system/css'
 import { vstack } from '@app/styled-system/patterns'
 import {
@@ -71,7 +71,7 @@ export default async function Footer() {
 
   const hasActiveMembership = !!me?.activeMembership?.id
 
-  const { isIOSApp } = getUserAgentPlatformInfo()
+  const { isIOSApp } = getDeviceInformation()
 
   const navs: FooterNavigationGroup[] = [
     {

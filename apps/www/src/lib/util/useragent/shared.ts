@@ -5,9 +5,8 @@ import {
   matchFirefoxUserAgent,
   matchIOSUserAgent,
 } from 'lib/parse-useragent'
-import { headers } from 'next/headers'
 
-type PlatformInformation = {
+type UseragentPlatform = {
   userAgent: string
   // Plattform info
   isIOS: boolean
@@ -21,14 +20,7 @@ type PlatformInformation = {
   isAndroidApp: boolean
 }
 
-/**
- * This method allows to get the useragent information from the request headers
- * to be used in a server-component.
- * @returns {@type PlatformInformation}
- */
-export function getUserAgentPlatformInfo(): PlatformInformation {
-  // get useragent header from headers
-  const userAgent = headers().get('user-agent')
+export function getUserAgentPlatform(userAgent: string): UseragentPlatform {
   // parse useragent header
   const isIOS = matchIOSUserAgent(userAgent)
   const isAndroid = matchAndroidUserAgent(userAgent)
