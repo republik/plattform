@@ -1,15 +1,6 @@
 import { useEffect, useRef } from 'react'
-import { z } from 'zod'
 // eslint-disable-next-line no-unused-vars
 type EventHandler<E> = (_: E) => Promise<void> | void
-
-const MessageSchema = z.object({
-  content: z.object({
-    id: z.string(),
-    type: z.string(),
-    payload: z.any(),
-  }),
-})
 
 /**
  * useNativeAppEvent is a hook that allows you to subscribe to events emitted by the native app.
@@ -30,13 +21,11 @@ function useNativeAppEvent<E = Event>(
 
   useEffect(() => {
     const handler = (event: MessageEvent) => {
-      if (MessageSchema.safeParse(event?.data).success) {
-        const { content } = event.data as z.infer<typeof MessageSchema>
-        if (content?.type === eventName) {
-          savedCallback?.current(event.data.content)
-        }
+      if (event?.data?.content?.type === eventName) {
+        savedCallback?.current(event.data.content)
       }
     }
+
     document.addEventListener('message', handler)
 
     return () => document.removeEventListener('message', handler)
