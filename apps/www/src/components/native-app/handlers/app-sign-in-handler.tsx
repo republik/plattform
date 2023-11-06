@@ -28,7 +28,7 @@ const AppStateMessageDataSchema = z.object({
  * - the native app sends an appState event === 'active':
  *  - the peding-app-sign-in query is refetched
  */
-export function AppSignInHandler() {
+export function NAAppSignInHandler() {
   const router = useRouter()
   const lastHandledVerificationUrlRef = useRef<string | null>(null)
   const { data, loading, refetch } = useQuery<PendingAppSignInResult>(
