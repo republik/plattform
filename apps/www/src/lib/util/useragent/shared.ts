@@ -20,6 +20,11 @@ type PlatformInformation = {
   isAndroidApp: boolean
 }
 
+/**
+ * Parse the user-agent string and return platform information.
+ * @param userAgent
+ * @returns {@type PlatformInformation}
+ */
 export function parsePlatformInformation(
   userAgent: string,
 ): PlatformInformation {
