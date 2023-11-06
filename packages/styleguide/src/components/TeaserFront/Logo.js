@@ -7,9 +7,9 @@ import { mUp } from './mediaQueries'
 import { FigureImage } from '../Figure'
 
 export const LOGO_SIZES = {
-  small: 24,
-  medium: 36,
-  large: 52,
+  small: 48,
+  medium: 64,
+  large: 64,
 }
 
 const sizeSmall = {
@@ -34,11 +34,11 @@ const styles = {
     ...sizeSmall,
     [mUp]: {
       ...sizeMedium,
-      marginBottom: LOGO_SIZES.small / 4,
+      marginBottom: LOGO_SIZES.medium / 4,
     },
     [breakoutUp]: {
       ...sizeLarge,
-      marginBottom: LOGO_SIZES.small / 4,
+      marginBottom: LOGO_SIZES.large / 4,
     },
   }),
 }
