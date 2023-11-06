@@ -16,6 +16,7 @@ import { css } from '@app/styled-system/css'
 import { vstack } from '@app/styled-system/patterns'
 import Image from 'next/image'
 import { StructuredText } from 'react-datocms'
+import { Share } from '@app/components/share/share'
 
 export async function generateMetadata(
   _, // params
@@ -113,6 +114,12 @@ export default async function Page({ searchParams }) {
       </section>
       <Container>
         <div className={vstack({ gap: '16-32', alignItems: 'stretch' })}>
+          <Share
+            title='Challenge Accepted'
+            url={`${process.env.NEXT_PUBLIC_BASE_URL}/challenge-accepted`}
+            emailSubject='Republik: Challenge Accepted'
+          />
+
           <section className={css({ textStyle: 'pageIntro' })}>
             <StructuredText data={hub.introduction.value} />
           </section>
@@ -153,9 +160,40 @@ export default async function Page({ searchParams }) {
                   Newsletter anmelden.'
             me={me}
           />
-          <div className={css({ textStyle: 'paragraph' })}>
+
+          <section
+            className={css({
+              color: 'text',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '4',
+
+              textStyle: 'paragraph',
+
+              '& ul > li': {
+                listStyleType: 'none',
+                pl: '6',
+                position: 'relative',
+                '&::before': {
+                  content: '"–"',
+                  position: 'absolute',
+                  left: '0',
+                },
+              },
+              '& ol': { listStyleType: 'decimal', pl: '6' },
+              '& h2, & h3, & h4, & h5, & h6': {
+                fontWeight: 'bold',
+              },
+            })}
+          >
             <StructuredText data={hub.outro.value} />
-          </div>
+          </section>
+
+          <Share
+            title='Challenge Accepted'
+            url={`${process.env.NEXT_PUBLIC_BASE_URL}/challenge-accepted`}
+            emailSubject='Republik: Challenge Accepted'
+          />
         </div>
       </Container>
     </>

@@ -96,7 +96,13 @@ export default async function Page({ params: { slug } }: PageProps) {
       </div>
       <PersonDetail person={personData} isMember={isMember} />
       <Container>
-        <div className={vstack({ gap: '16-32', alignItems: 'stretch' })}>
+        <div
+          className={vstack({
+            pt: '16-32',
+            gap: '16-32',
+            alignItems: 'stretch',
+          })}
+        >
           <CANewsletterSignUp
             me={me}
             description={

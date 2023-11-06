@@ -11,6 +11,7 @@ export const PERSON_DETAIL_QUERY = gql(`
     person: challengeAcceptedPerson(filter: {slug: {eq: $slug}}) {
       id
       name
+      slug
       portrait {
         alt
         url
