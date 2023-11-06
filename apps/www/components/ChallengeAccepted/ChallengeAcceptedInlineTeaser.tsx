@@ -21,6 +21,9 @@ import { useTheme } from 'next-themes'
 const styles = {
   p: css({
     ...fontStyles.sansSerifRegular18,
+    '& em': {
+      ...fontStyles.sansSerifItalic,
+    },
   }),
   a: css({
     color: 'var(--color-primary)',
@@ -224,15 +227,17 @@ function ChallengeAcceptedInlineTeaser(props: { position?: 'top' | 'bottom' }) {
             hasActiveMembership &&
             !isSubscribedToNL
           ) && (
-            <Image
-              src={
-                resolvedTheme === 'dark'
-                  ? ChallengeAcceptedSVGDark
-                  : ChallengeAcceptedSVG
-              }
-              alt='Challenge Accepted'
-              width={150}
-            />
+            <Link {...plainLinkRule} href='/challenge-accepted'>
+              <Image
+                src={
+                  resolvedTheme === 'dark'
+                    ? ChallengeAcceptedSVGDark
+                    : ChallengeAcceptedSVG
+                }
+                alt='Challenge Accepted'
+                width={150}
+              />
+            </Link>
           )}
           {props.position === 'top' && (
             <CATopInlineTeaser

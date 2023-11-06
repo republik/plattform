@@ -2,6 +2,7 @@ import {
   mediaQueries,
   useColorContext,
   fontStyles,
+  plainLinkRule,
 } from '@project-r/styleguide'
 import withLocalColorScheme from './withColorScheme'
 import { challengeAcceptedColors } from './colors'
@@ -14,6 +15,7 @@ import ChallengeAcceptedSVG from '../../public/static/challenge-accepted/challen
 import ChallengeAcceptedSVGDark from '../../public/static/challenge-accepted/challenge-accepted_dark.svg'
 import { useTheme } from 'next-themes'
 import Image from 'next/image'
+import Link from 'next/link'
 
 function ChallengeAcceptedMarketingTeaser() {
   const [colorScheme] = useColorContext()
@@ -27,26 +29,28 @@ function ChallengeAcceptedMarketingTeaser() {
       {...styles.container}
     >
       <div {...styles.imageWrapper}>
-        <Image
-          src={
-            resolvedTheme === 'dark'
-              ? ChallengeAcceptedSVGDark
-              : ChallengeAcceptedSVG
-          }
-          alt='Challenge Accepted'
-          width={400}
-          objectFit='contain'
-          style={{
-            maxWidth: '100%',
-          }}
-        />
+        <Link {...plainLinkRule} href='/challenge-accepted'>
+          <Image
+            src={
+              resolvedTheme === 'dark'
+                ? ChallengeAcceptedSVGDark
+                : ChallengeAcceptedSVG
+            }
+            alt='Challenge Accepted'
+            width={400}
+            objectFit='contain'
+            style={{
+              maxWidth: '100%',
+            }}
+          />{' '}
+        </Link>
       </div>
       <div>
         <h2 {...styles.title}>
           Die Klimakrise ist hier.
           <br />
           Die Lage ist ernst. <br />
-          <em>Challenge accepted.</em>
+          Challenge accepted.
         </h2>
         <p {...styles.text}>
           Wir richten den Blick auf Menschen, die die Herausforderung annehmen.
