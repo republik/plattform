@@ -1,3 +1,5 @@
+'use client'
+
 import useNativeAppEvent from '@app/lib/hooks/useNativeAppEvent'
 
 export function NAColorSchemeSyncHandler() {
