@@ -1,6 +1,5 @@
 'use client'
 
-import { useMutation } from '@apollo/client'
 import useNativeAppEvent from '@app/lib/hooks/useNativeAppEvent'
 
 export function NARegisterDevicePushNotificationHandler() {

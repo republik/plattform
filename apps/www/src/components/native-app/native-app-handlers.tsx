@@ -2,6 +2,8 @@ import { MeQueryResult } from '@app/graphql/republik-api/me.query'
 import { NAAppSignInHandler } from './handlers/app-sign-in-handler'
 import { NARoutingHandler } from './handlers/routing-handler'
 import { NARegisterDevicePushNotificationHandler } from './handlers/register-device-push-notification-handler'
+import { Suspense } from 'react'
+import { NAColorSchemeSyncHandler } from './handlers/color-scheme-handler'
 
 type NativeAppHandlersProps = {
   me: MeQueryResult['me']
@@ -15,9 +17,16 @@ type NativeAppHandlersProps = {
 export function NativeAppHandlers({ me }: NativeAppHandlersProps) {
   return (
     <>
-      <NARoutingHandler />
+      {/*
+      Why is this wrapped in Suspense? check out this documentation:
+       src: https://nextjs.org/docs/app/api-reference/functions/use-router#router-events
+      */}
+      <Suspense fallback={null}>
+        <NARoutingHandler />
+      </Suspense>
       {me && <NAAppSignInHandler />}
       <NARegisterDevicePushNotificationHandler />
+      <NAColorSchemeSyncHandler />
     </>
   )
 }

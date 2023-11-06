@@ -3,7 +3,7 @@
 import useNativeAppEvent from '@app/lib/hooks/useNativeAppEvent'
 import { usePostMessage } from '@app/lib/hooks/usePostMessage'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 
 // eslint-disable-next-line no-unused-vars
 type RouteChangeCallback = (url: string) => void
@@ -13,15 +13,6 @@ function useOnRouteChange(callBack: RouteChangeCallback) {
   const searchParams = useSearchParams()
   const callbackRef = useRef<RouteChangeCallback>(callBack)
   const lastUrlRef = useRef<string>(null)
-  const [initialized, setInitialized] = useState(false)
-
-  useEffect(() => {
-    if (initialized) {
-      return
-    }
-    setInitialized(true)
-    lastUrlRef.current = window.location.href
-  }, [])
 
   useEffect(() => {
     try {
@@ -62,9 +53,6 @@ export function NARoutingHandler() {
     }
     const targetUrl = content.url.replace(process.env.NEXT_PUBLIC_BASE_URL, '')
     await router.push(targetUrl)
-    if (targetUrl.indexOf('#') === -1) {
-      window.scrollTo(0, 0)
-    }
   })
 
   useNativeAppEvent('back', () => {
