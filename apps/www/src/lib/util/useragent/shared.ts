@@ -18,6 +18,7 @@ type PlatformInformation = {
   isNativeApp: boolean
   isIOSApp: boolean
   isAndroidApp: boolean
+  isLegacyNativeApp: boolean
 }
 
 /**
@@ -45,5 +46,7 @@ export function parsePlatformInformation(
     isNativeApp: !!nativeAppVersion,
     isIOSApp: isIOS && !!nativeAppVersion,
     isAndroidApp: isAndroid && !!nativeAppVersion,
+    // version lower than v2
+    isLegacyNativeApp: !!nativeAppVersion && Number(nativeAppVersion) < 2,
   }
 }

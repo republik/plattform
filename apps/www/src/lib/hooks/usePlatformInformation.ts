@@ -27,6 +27,7 @@ export function usePlatformInformation(
           isNativeApp: false,
           isIOSApp: false,
           isAndroidApp: false,
+          isLegacyNativeApp: false,
         },
   )
 
