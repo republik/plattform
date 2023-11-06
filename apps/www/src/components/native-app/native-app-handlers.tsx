@@ -1,6 +1,7 @@
 import { MeQueryResult } from '@app/graphql/republik-api/me.query'
 import { NAAppSignInHandler } from './handlers/app-sign-in-handler'
 import { NARoutingHandler } from './handlers/routing-handler'
+import { NARegisterDevicePushNotificationHandler } from './handlers/register-device-push-notification-handler'
 
 type NativeAppHandlersProps = {
   me: MeQueryResult['me']
@@ -16,6 +17,7 @@ export function NativeAppHandlers({ me }: NativeAppHandlersProps) {
     <>
       <NARoutingHandler />
       {me && <NAAppSignInHandler />}
+      <NARegisterDevicePushNotificationHandler />
     </>
   )
 }
