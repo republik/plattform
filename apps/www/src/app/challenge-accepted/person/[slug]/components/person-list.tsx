@@ -54,8 +54,10 @@ const PersonListItem = ({ person }: { person: Person }) => {
 
 export async function PersonList({
   linkToOverview,
+  hidePersonId,
 }: {
   linkToOverview?: boolean
+  hidePersonId?: number
 }) {
   const { data } = await getCMSClient().query({
     query: CHALLENGE_ACCEPTED_PERSON_LIST_QUERY,
@@ -69,11 +71,11 @@ export async function PersonList({
   })
 
   const collapsedItems = data.people
-    ?.filter((p) => p.size !== 'large')
+    ?.filter((p) => p.size !== 'large' && p.id !== hidePersonId)
     .map((p) => <PersonListItem person={p} key={p.id} />)
   const shownItems =
     data.people
-      ?.filter((p) => p.size === 'large')
+      ?.filter((p) => p.size === 'large' && p.id !== hidePersonId)
       .map((p) => <PersonListItem person={p} key={p.id} />) ?? []
 
   if (linkToOverview) {
