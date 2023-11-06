@@ -3,7 +3,7 @@ const { SubscriptionHandlerMissingMailError } = require('../errors')
 const logger = console
 
 module.exports = async (
-  { user, interests, name, subscribed },
+  { user, interests = {}, name, subscribed },
   NewsletterSubscription,
 ) => {
   if (!NewsletterSubscription) throw new SubscriptionHandlerMissingMailError()
