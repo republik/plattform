@@ -45,10 +45,10 @@ export function AppSignInHandler() {
     refetch()
   })
 
-  useNativeAppEvent<AppStateMessageData | null>('appState', async (data) => {
+  useNativeAppEvent<AppStateMessageData | null>('appState', async (content) => {
     if (
-      AppStateMessageDataSchema.safeParse(data).success &&
-      data?.current === 'active'
+      AppStateMessageDataSchema.safeParse(content).success &&
+      content?.current === 'active'
     ) {
       refetch()
     }
