@@ -64,6 +64,20 @@ class TokenAuthorization extends Component {
 
   goTo = (type, email, context) => {
     const { router } = this.props
+    // Handle redirect used by app-dir app login
+    if (router.query.redirect) {
+      const redirect = decodeURIComponent(router.query.redirect)
+      // Validate redirect points to current origin
+      try {
+        const redirectUrl = new URL(redirect, window.location.url)
+        if (redirectUrl.origin !== window.location.origin) {
+          throw new Error('Invalid redirect')
+        }
+        return router.replace(redirectUrl)
+      } catch {
+        // ignore
+      }
+    }
     if (this.props.goTo) {
       this.props.goTo(type, email, context)
       return
