@@ -3,6 +3,7 @@ import {
   ARTICLE_QUERY,
 } from '@app/graphql/republik-api/article.query'
 import { getClient } from '@app/lib/apollo/client'
+import { getMe } from '@app/lib/auth/me'
 import { css } from '@app/styled-system/css'
 import Link from 'next/link'
 
@@ -19,6 +20,25 @@ export const NewsletterTeaser = async ({ path }: NewsletterProps) => {
   const { article } = data
 
   if (!article) {
+    const me = await getMe()
+
+    // Show warning to editors
+    if (
+      me?.roles.some((role) => ['editor', 'moderator', 'admin'].includes(role))
+    ) {
+      return (
+        <div
+          className={css({
+            background: 'hotpink',
+            textStyle: 'h1Sans',
+            fontWeight: 'bold',
+            p: '4',
+          })}
+        >
+          Beitrag nicht gefunden: {path}
+        </div>
+      )
+    }
     return null
   }
 

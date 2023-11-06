@@ -1,18 +1,23 @@
 'use client'
 
 import { useMutation } from '@apollo/client'
+import { MeQueryResult } from '@app/graphql/republik-api/me.query'
 import {
   SIGN_UP_FOR_NEWSLETTER_MUTATION,
   SignUpForNewsletterResult,
   SignUpForNewsletterVariables,
 } from '@app/graphql/republik-api/newsletter.mutation'
+import {
+  UPDATE_NEWSLETTER_SUBSCRIPTION_MUTATION,
+  UpdateNewsletterSubscriptionMutationResult,
+  UpdateNewsletterSubscriptionMutationVariables,
+} from '@app/graphql/republik-api/update-newsletter-subscription.mutation'
+import { css } from '@app/styled-system/css'
+import { stack, wrap } from '@app/styled-system/patterns'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { css } from '@app/styled-system/css'
-import { useState } from 'react'
-import { stack, wrap } from '@app/styled-system/patterns'
-import { MeQueryResult } from '@app/graphql/republik-api/me.query'
 
 const formSchema = z.object({
   email: z.string().email('Bitte geben Sie eine gültige E-Mail Adresse ein.'),
@@ -20,17 +25,38 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>
 
-type CANewsletterSignUpProps = {
-  me?: MeQueryResult['me']
+type EmailSignUpProps = {
+  me: MeQueryResult['me']
+  // Override the default heading
+  title?: string
+  // Text that is shown between the heading & the form
+  description?: React.ReactNode
+  newsletterName: string
+  newsletterSetting?: { id: string; name: string; subscribed: boolean }
+  id?: string
 }
 
-export function CANewsletterSignUp({ me }: CANewsletterSignUpProps) {
+export function EmailSignUp({
+  me,
+  title,
+  description,
+  newsletterName,
+  newsletterSetting,
+  id,
+}: EmailSignUpProps) {
   const [signUpForNewsletter] = useMutation<
     SignUpForNewsletterResult,
     SignUpForNewsletterVariables
   >(SIGN_UP_FOR_NEWSLETTER_MUTATION)
+  const [updateNewsletterSubscription] = useMutation<
+    UpdateNewsletterSubscriptionMutationResult,
+    UpdateNewsletterSubscriptionMutationVariables
+  >(UPDATE_NEWSLETTER_SUBSCRIPTION_MUTATION)
+
   const [isLoading, setIsLoading] = useState(false)
-  const [signUpSuccessful, setSignUpSuccessful] = useState(false)
+  const [signUpSuccessfulText, setSignUpSuccessfulText] = useState<
+    string | null
+  >()
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -38,12 +64,35 @@ export function CANewsletterSignUp({ me }: CANewsletterSignUpProps) {
     },
   })
 
+  // enable subscription if user is logged in and not subscribed
+  async function enableSubscription() {
+    try {
+      setIsLoading(true)
+      await updateNewsletterSubscription({
+        variables: {
+          name: newsletterName,
+          subscribed: true,
+        },
+      })
+      setSignUpSuccessfulText(
+        'Sie haben sich für den Newsletter angemeldet. ✅',
+      )
+    } catch (e) {
+      console.error(e)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  /**
+   * handle subscribing to a given email address
+   */
   async function handleSubmit({ email }: FormValues) {
     setIsLoading(true)
     try {
       const { data } = await signUpForNewsletter({
         variables: {
-          name: 'CLIMATE', // TODO: check if correct newsletter
+          name: newsletterName,
           email: email,
           context: '',
         },
@@ -51,7 +100,9 @@ export function CANewsletterSignUp({ me }: CANewsletterSignUpProps) {
       if (!data.requestNewsletterSubscription) {
         throw new Error('Error signing up for newsletter')
       }
-      setSignUpSuccessful(true)
+      setSignUpSuccessfulText(
+        'Wir haben Ihnen eine E-Mail geschickt, um die Anmeldung für den Newsletter zu bestätigen. ✅',
+      )
     } catch (error) {
       console.error(error)
       form.setError(
@@ -68,10 +119,10 @@ export function CANewsletterSignUp({ me }: CANewsletterSignUpProps) {
   }
 
   return (
-    <div>
+    <div id={id}>
       <h2
         className={css({
-          mb: '4',
+          mb: '6',
           textStyle: 'h1Sans',
           fontWeight: 'bold',
         })}
@@ -79,11 +130,12 @@ export function CANewsletterSignUp({ me }: CANewsletterSignUpProps) {
           letterSpacing: '-1px',
         }}
       >
-        Für den Newsletter anmelden
+        {title || 'Für den Newsletter anmelden'}
       </h2>
-      {!signUpSuccessful ? (
+      {description}
+      {!signUpSuccessfulText ? (
         <>
-          {me ? (
+          {me && newsletterSetting?.subscribed === false ? (
             <button
               className={css({
                 position: 'relative',
@@ -101,9 +153,7 @@ export function CANewsletterSignUp({ me }: CANewsletterSignUpProps) {
                   width: 'auto',
                 },
               })}
-              onClick={() => {
-                handleSubmit({ email: me.email })
-              }}
+              onClick={() => enableSubscription()}
             >
               <span
                 className={css({
@@ -155,11 +205,11 @@ export function CANewsletterSignUp({ me }: CANewsletterSignUpProps) {
                       className={css({
                         display: 'flex',
                         flexDirection: 'row',
-                        color: 'disabled',
+                        color: 'contrast',
                         fontSize: 'sm',
                       })}
                     >
-                      Email
+                      E-Mail-Adresse
                     </label>
                     <input
                       id='email-field'
@@ -248,8 +298,7 @@ export function CANewsletterSignUp({ me }: CANewsletterSignUpProps) {
             fontSize: 'xl',
           })}
         >
-          Sie sollten eine E-Mail erhalten haben, um die Anmeldung für den
-          Newsletter zu bestätigen. ✅
+          {signUpSuccessfulText}
         </p>
       )}
     </div>

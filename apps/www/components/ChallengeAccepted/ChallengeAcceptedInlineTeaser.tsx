@@ -21,6 +21,9 @@ import { useTheme } from 'next-themes'
 const styles = {
   p: css({
     ...fontStyles.sansSerifRegular18,
+    '& em': {
+      ...fontStyles.sansSerifItalic,
+    },
   }),
   a: css({
     color: 'var(--color-primary)',
@@ -52,13 +55,13 @@ const CAP = ({ children, ...props }) => (
   </p>
 )
 
-const CAOverViewLink = () => (
+export const CAOverViewLink = () => (
   <Link {...plainLinkRule} {...styles.a} href='/challenge-accepted'>
     Zur Übersicht →
   </Link>
 )
 
-const CANewsLetterSignUp = () => (
+export const CANewsLetterSignUp = () => (
   <div {...css({ width: '100%' })}>
     <h2 {...css({ ...fontStyles.sansSerifBold, fontSize: 19 })}>
       Für den Newsletter anmelden
@@ -157,7 +160,20 @@ function CABottomInlineTeaser({
         Herzen?
       </CAP>
       <div {...styles.actionWrapper}>
-        <Button primary onClick={() => router.push('/angebote')}>
+        <Button
+          primary
+          onClick={() =>
+            router.push({
+              pathname: '/angebote',
+              query: {
+                utm_medium: 'website',
+                utm_campaign: 'challenge-accepted',
+                utm_source: 'republik',
+                utm_content: 'artikel-bottom',
+              },
+            })
+          }
+        >
           Werden Sie jetzt Mitglied
         </Button>
       </div>
@@ -211,15 +227,17 @@ function ChallengeAcceptedInlineTeaser(props: { position?: 'top' | 'bottom' }) {
             hasActiveMembership &&
             !isSubscribedToNL
           ) && (
-            <Image
-              src={
-                resolvedTheme === 'dark'
-                  ? ChallengeAcceptedSVGDark
-                  : ChallengeAcceptedSVG
-              }
-              alt='Challenge Accepted'
-              width={150}
-            />
+            <Link {...plainLinkRule} href='/challenge-accepted'>
+              <Image
+                src={
+                  resolvedTheme === 'dark'
+                    ? ChallengeAcceptedSVGDark
+                    : ChallengeAcceptedSVG
+                }
+                alt='Challenge Accepted'
+                width={150}
+              />
+            </Link>
           )}
           {props.position === 'top' && (
             <CATopInlineTeaser

@@ -10,6 +10,7 @@ import formatCredits from 'components/Feed/formatCredits'
 import { vstack } from '@app/styled-system/patterns'
 
 import { renderMdast } from '@app/lib/mdast/render'
+import { getMe } from '@app/lib/auth/me'
 
 const getResizefromURL = (url, size) => {
   const imgURL = new URL(url)
@@ -83,6 +84,25 @@ export const ArticleTeaser = async ({ path, image }: ArticleProps) => {
   const { article } = data
 
   if (!data.article) {
+    const me = await getMe()
+
+    // Show warning to editors
+    if (
+      me?.roles.some((role) => ['editor', 'moderator', 'admin'].includes(role))
+    ) {
+      return (
+        <div
+          className={css({
+            background: 'hotpink',
+            textStyle: 'h1Sans',
+            fontWeight: 'bold',
+            p: '4',
+          })}
+        >
+          Beitrag nicht gefunden: {path}
+        </div>
+      )
+    }
     return null
   }
 

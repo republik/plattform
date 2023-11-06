@@ -14,7 +14,11 @@ export default async function RootLayout({
   children: ReactNode
 }) {
   return (
-    <html lang='de' suppressHydrationWarning>
+    <html
+      lang='de'
+      suppressHydrationWarning
+      className={css({ scrollPaddingTop: '16-32' })}
+    >
       <body
         className={css({
           color: 'text',

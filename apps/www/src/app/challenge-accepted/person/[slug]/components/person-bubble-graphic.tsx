@@ -3,7 +3,6 @@ import type { ChallengeAcceptedPersonListQueryQuery } from '@app/graphql/gql/gra
 import { css } from '@app/styled-system/css'
 import useResizeObserver from 'use-resize-observer'
 
-import Link from 'next/link'
 import { useMemo, useEffect, useRef } from 'react'
 
 import {
@@ -20,7 +19,7 @@ import { useRouter } from 'next/navigation'
 
 const RADIUS_LARGE = 110
 const RADIUS_MEDIUM = 75
-const RADIUS_SMALL = 40
+const RADIUS_SMALL = 55
 
 const RADIUS_LARGE_MAX = 150
 const RADIUS_MEDIUM_MAX = 100
@@ -31,15 +30,7 @@ type Person = People[number]
 type PersonNode = Person & SimulationNodeDatum & { hovered?: boolean }
 
 const getRadius = (datum: PersonNode, width: number): number => {
-  let scaleFactor
-
-  if (width > 768) {
-    // Linear scaling for big screens
-    scaleFactor = width / 1000
-  } else {
-    // Exponential scaling for small screens
-    scaleFactor = Math.pow(0.9, width / 1000)
-  }
+  const scaleFactor = Math.max(0.7, width / 800)
 
   switch (datum.size) {
     case 'large':
@@ -98,16 +89,27 @@ const PersonBubbleItem = ({
         // @ts-expect-error for prefixed value
         WebkitUserSelect: 'none',
 
-        '&:hover': {
+        // Initial opacity
+        transition: 'opacity 0.3s ease-in-out',
+        opacity: 0,
+
+        '&[data-hover]': {
           zIndex: 1,
         },
       })}
       style={{
+        transitionDelay:
+          person.size === 'large'
+            ? '0s'
+            : person.size === 'medium'
+            ? '0.2s'
+            : '0.4s',
         // @ts-expect-error because of custom property
         '--diameter': `${getRadius(person, width) * 2}px`,
         '--hover-scale-factor': getScaleFactor(person),
         '--hover-name-shift': `${30 * getScaleFactor(person)}px`,
-        '--name-opacity': person.size === 'large' ? 1 : 0,
+        // '--name-opacity': person.size === 'large' ? 1 : 0,
+        '--name-opacity': 0,
       }}
     >
       <div
@@ -116,18 +118,18 @@ const PersonBubbleItem = ({
           transform: 'scale(1)',
           transformOrigin: 'center',
           transition: 'transform 300ms ease-out',
-          backgroundSize: '100%',
+          backgroundSize: '95%',
           backgroundPosition: 'center center',
           backgroundRepeat: 'no-repeat',
           pointerEvents: 'none',
-          '[data-person]:hover &': {
+          '[data-person][data-hover] &': {
             transform: 'scale(var(--hover-scale-factor))',
           },
         })}
         style={{
           backgroundImage: `url('${person.portrait.url}')`,
-          width: getRadius(person, width) * 2,
-          height: getRadius(person, width) * 2,
+          width: getRadius(person, width) * 2 || 0,
+          height: getRadius(person, width) * 2 || 0,
         }}
       ></div>
       <div
@@ -142,7 +144,7 @@ const PersonBubbleItem = ({
           whiteSpace: 'nowrap',
           pointerEvents: 'none',
           opacity: 'var(--name-opacity)',
-          '[data-person]:hover &': {
+          '[data-person][data-hover] &': {
             transform: 'translate(-50%, var(--hover-name-shift))',
             opacity: 1,
           },
@@ -163,12 +165,16 @@ const PersonBubbleItem = ({
   )
 }
 
-export const PersonBubbleForce = ({ people }: { people: People }) => {
+export const PersonBubbleForce = ({ people }: { people: PersonNode[] }) => {
   const { ref, width, height } = useResizeObserver()
   const forceRef = useRef()
+  const initialized = useRef(false)
 
   const simulation = useMemo(() => {
-    return forceSimulation<PersonNode>([...people])
+    if (isNaN(people[0]?.x)) {
+      initialized.current = false
+    }
+    return forceSimulation<PersonNode>(people)
   }, [people])
 
   useEffect(() => {
@@ -178,6 +184,16 @@ export const PersonBubbleForce = ({ people }: { people: People }) => {
 
     const center = [width / 2, height / 2]
 
+    // Initial x/y of nodes, once they're arranged by the force layout (see https://observablehq.com/@d3/force-layout-phyllotaxis?collection=@d3/d3-force)
+    if (initialized.current === false) {
+      for (const node of simulation.nodes()) {
+        node.x = node.x * 5 + width / 2
+        node.y = node.y * 5 + height / 2
+      }
+      initialized.current = true
+    }
+
+    // Select existing nodes rendered by React
     const heroChartNodes = select(forceRef.current)
       .selectAll<HTMLElement, PersonNode>('[data-person]')
       .data(simulation.nodes(), function (d) {
@@ -185,7 +201,21 @@ export const PersonBubbleForce = ({ people }: { people: People }) => {
         return d ? d.slug : (this as HTMLElement).dataset?.person
       })
 
+    // Apply styles on each simulation tick
+    const tick = () => {
+      heroChartNodes
+        .style(
+          'transform',
+          (d) =>
+            `translate(${d.x - getRadius(d, width)}px,${
+              d.y - getRadius(d, width)
+            }px)`,
+        )
+        .style('opacity', 1)
+    }
+
     simulation
+      .on('tick', tick)
       .alphaTarget(0.2) // stay hot
       .velocityDecay(0.9) // low friction
       .force('x', forceX(width / 2).strength(0.05 / (width / height)))
@@ -213,20 +243,15 @@ export const PersonBubbleForce = ({ people }: { people: People }) => {
           .cushionStrength(0.2),
       )
 
-    simulation.on('tick', () => {
-      heroChartNodes.style(
-        'transform',
-        (d) =>
-          `translate(${d.x - getRadius(d, width)}px,${
-            d.y - getRadius(d, width)
-          }px)`,
-      )
-    })
-
     heroChartNodes.on('pointerenter', (event, d) => {
+      if (event.pointerType !== 'mouse') {
+        return
+      }
       d.fx = d.x
       d.fy = d.y
       d.hovered = true
+
+      select(event.currentTarget).attr('data-hover', true)
 
       simulation.force(
         'hovercollide',
@@ -243,10 +268,13 @@ export const PersonBubbleForce = ({ people }: { people: People }) => {
       d.fy = null
       d.hovered = false
 
+      select(event.currentTarget).attr('data-hover', undefined)
+
       simulation.force('hovercollide', null)
     })
 
-    simulation.alpha(1).restart()
+    // Run layout a few times to make the start more calm
+    simulation.alpha(1).tick(20).restart()
 
     return () => {
       simulation.stop()
@@ -262,7 +290,7 @@ export const PersonBubbleForce = ({ people }: { people: People }) => {
         position: 'relative',
         width: 'full',
         // Make sure there's enough space at the bottom for scaled bubbles
-        pb: '128px',
+        pb: { base: '8', md: '32' },
       })}
     >
       <div
@@ -270,15 +298,15 @@ export const PersonBubbleForce = ({ people }: { people: People }) => {
         style={{
           // Height should be inversely proportional to width (narrow = higher), so bubbles have enough space
           // Unfortunately, no pure CSS way to do this
-          height: Math.max(800, 512000 / (width ?? 1)),
+          height: Math.max(960, 360000 / (width ?? 800)),
         }}
       >
         {people.map((p) => (
           <PersonBubbleItem
             key={p.id}
             person={p}
-            width={width}
-            height={height}
+            width={width ?? 0}
+            height={height ?? 0}
           />
         ))}
       </div>

@@ -20,6 +20,8 @@ import Logo from './Logo'
 import Community from './Community'
 import Pledge from './Pledge'
 import { useMarketingPageQuery } from './graphql/MarketingPageQuery.graphql'
+import SectionContainer from './Common/SectionContainer'
+import ChallengeAcceptedMarketingTeaser from '../ChallengeAccepted/ChallengeAcceptedMarketingTeaser'
 
 const Marketing = ({
   data: { loading: meLoading, error: meError, meGuidance },
@@ -47,6 +49,9 @@ const Marketing = ({
       <Carpet loading={loading} front={data.carpet} />
       <Reasons inNativeApp={inNativeApp} />
       {inNativeApp && <MarketingTrialForm />}
+      {/* <SectionContainer maxWidth={'100%'} padding='0'>
+        <ChallengeAcceptedMarketingTeaser />
+      </SectionContainer> */}
       <Sections />
       <Team loading={loading} error={error} employees={data.team} />
       <Community
