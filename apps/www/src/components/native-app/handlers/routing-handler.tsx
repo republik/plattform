@@ -48,7 +48,8 @@ export function NARoutingHandler() {
   })
 
   useNativeAppEvent<Record<string, unknown>>('push-route', async (content) => {
-    if (!content.url || !(content.url instanceof String)) {
+    if (!content.url || typeof content.url !== 'string') {
+      console.error('push-route: invalid url', content)
       return
     }
     const targetUrl = content.url.replace(process.env.NEXT_PUBLIC_BASE_URL, '')
