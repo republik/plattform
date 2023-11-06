@@ -93,7 +93,7 @@ const PersonBubbleItem = ({
         transition: 'opacity 0.3s ease-in-out',
         opacity: 0,
 
-        '&:hover': {
+        '&[data-hover]': {
           zIndex: 1,
         },
       })}
@@ -122,7 +122,7 @@ const PersonBubbleItem = ({
           backgroundPosition: 'center center',
           backgroundRepeat: 'no-repeat',
           pointerEvents: 'none',
-          '[data-person]:hover &': {
+          '[data-person][data-hover] &': {
             transform: 'scale(var(--hover-scale-factor))',
           },
         })}
@@ -144,7 +144,7 @@ const PersonBubbleItem = ({
           whiteSpace: 'nowrap',
           pointerEvents: 'none',
           opacity: 'var(--name-opacity)',
-          '[data-person]:hover &': {
+          '[data-person][data-hover] &': {
             transform: 'translate(-50%, var(--hover-name-shift))',
             opacity: 1,
           },
@@ -244,9 +244,14 @@ export const PersonBubbleForce = ({ people }: { people: PersonNode[] }) => {
       )
 
     heroChartNodes.on('pointerenter', (event, d) => {
+      if (event.pointerType !== 'mouse') {
+        return
+      }
       d.fx = d.x
       d.fy = d.y
       d.hovered = true
+
+      select(event.currentTarget).attr('data-hover', true)
 
       simulation.force(
         'hovercollide',
@@ -262,6 +267,8 @@ export const PersonBubbleForce = ({ people }: { people: PersonNode[] }) => {
       d.fx = null
       d.fy = null
       d.hovered = false
+
+      select(event.currentTarget).attr('data-hover', undefined)
 
       simulation.force('hovercollide', null)
     })
