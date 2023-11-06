@@ -1,4 +1,4 @@
-import { getDeviceInformation } from '@app/lib/util/useragent/useragent-information'
+import { getPlatformInformation } from '@app/lib/util/useragent/platform-information'
 import { NativeAppHandlers } from './native-app-handlers'
 import { getMe } from '@app/lib/auth/me'
 
@@ -8,7 +8,7 @@ import { getMe } from '@app/lib/auth/me'
  * Only required for native apps.
  */
 export async function NativeAppMessageSync() {
-  const { isNativeApp } = getDeviceInformation()
+  const { isNativeApp } = getPlatformInformation()
   if (!isNativeApp) {
     return null
   }

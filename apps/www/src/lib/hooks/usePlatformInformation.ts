@@ -1,16 +1,16 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { getUserAgentPlatform } from '../util/useragent/shared'
+import { parsePlatformInformation } from '../util/useragent/shared'
 
-export function useUserAgentPlatform(
+export function usePlatformInformation(
   initialUserAgent?: string,
-): ReturnType<typeof getUserAgentPlatform> {
+): ReturnType<typeof parsePlatformInformation> {
   const [platformData, setPlatformData] = useState<
-    ReturnType<typeof getUserAgentPlatform>
+    ReturnType<typeof parsePlatformInformation>
   >(
     initialUserAgent // to be used for initial render on server
-      ? getUserAgentPlatform(initialUserAgent)
+      ? parsePlatformInformation(initialUserAgent)
       : {
           userAgent: '',
           isIOS: false,
@@ -27,7 +27,7 @@ export function useUserAgentPlatform(
   // on client, get useragent from navigator
   useEffect(() => {
     const userAgent = navigator.userAgent
-    const data = getUserAgentPlatform(userAgent)
+    const data = parsePlatformInformation(userAgent)
     setPlatformData(data)
   }, [])
 

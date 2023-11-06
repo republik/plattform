@@ -6,7 +6,7 @@ import {
   matchIOSUserAgent,
 } from 'lib/parse-useragent'
 
-type UseragentPlatform = {
+type PlatformInformation = {
   userAgent: string
   // Plattform info
   isIOS: boolean
@@ -20,7 +20,9 @@ type UseragentPlatform = {
   isAndroidApp: boolean
 }
 
-export function getUserAgentPlatform(userAgent: string): UseragentPlatform {
+export function parsePlatformInformation(
+  userAgent: string,
+): PlatformInformation {
   // parse useragent header
   const isIOS = matchIOSUserAgent(userAgent)
   const isAndroid = matchAndroidUserAgent(userAgent)
