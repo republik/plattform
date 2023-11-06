@@ -19,7 +19,7 @@ import { useRouter } from 'next/navigation'
 
 const RADIUS_LARGE = 110
 const RADIUS_MEDIUM = 75
-const RADIUS_SMALL = 40
+const RADIUS_SMALL = 55
 
 const RADIUS_LARGE_MAX = 150
 const RADIUS_MEDIUM_MAX = 100
@@ -30,15 +30,7 @@ type Person = People[number]
 type PersonNode = Person & SimulationNodeDatum & { hovered?: boolean }
 
 const getRadius = (datum: PersonNode, width: number): number => {
-  let scaleFactor
-
-  if (width > 768) {
-    // Linear scaling for big screens
-    scaleFactor = width / 1000
-  } else {
-    // Exponential scaling for small screens
-    scaleFactor = Math.pow(0.9, width / 1000)
-  }
+  const scaleFactor = Math.max(0.7, width / 1000)
 
   switch (datum.size) {
     case 'large':
@@ -290,7 +282,7 @@ export const PersonBubbleForce = ({ people }: { people: PersonNode[] }) => {
         position: 'relative',
         width: 'full',
         // Make sure there's enough space at the bottom for scaled bubbles
-        pb: '128px',
+        pb: '16-32',
       })}
     >
       <div
@@ -298,7 +290,7 @@ export const PersonBubbleForce = ({ people }: { people: PersonNode[] }) => {
         style={{
           // Height should be inversely proportional to width (narrow = higher), so bubbles have enough space
           // Unfortunately, no pure CSS way to do this
-          height: Math.max(800, 512000 / (width ?? 800)),
+          height: Math.max(800, 360000 / (width ?? 800)),
         }}
       >
         {people.map((p) => (
