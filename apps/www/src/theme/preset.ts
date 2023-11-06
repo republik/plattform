@@ -186,6 +186,7 @@ export const presetRepublik = definePreset({
         },
         spacing: {
           '16-32': { value: { base: '4rem', md: '8rem' } },
+          '32-64': { value: { base: '8rem', md: '16rem' } },
           header: {
             height: { value: '{sizes.header.height}' },
             avatarMargin: { value: '0.6875rem  1rem' },

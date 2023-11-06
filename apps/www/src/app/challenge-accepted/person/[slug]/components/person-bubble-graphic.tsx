@@ -30,7 +30,7 @@ type Person = People[number]
 type PersonNode = Person & SimulationNodeDatum & { hovered?: boolean }
 
 const getRadius = (datum: PersonNode, width: number): number => {
-  const scaleFactor = Math.max(0.7, width / 1000)
+  const scaleFactor = Math.max(0.7, width / 800)
 
   switch (datum.size) {
     case 'large':
@@ -108,7 +108,8 @@ const PersonBubbleItem = ({
         '--diameter': `${getRadius(person, width) * 2}px`,
         '--hover-scale-factor': getScaleFactor(person),
         '--hover-name-shift': `${30 * getScaleFactor(person)}px`,
-        '--name-opacity': person.size === 'large' ? 1 : 0,
+        // '--name-opacity': person.size === 'large' ? 1 : 0,
+        '--name-opacity': 0,
       }}
     >
       <div
@@ -282,7 +283,7 @@ export const PersonBubbleForce = ({ people }: { people: PersonNode[] }) => {
         position: 'relative',
         width: 'full',
         // Make sure there's enough space at the bottom for scaled bubbles
-        pb: '16-32',
+        pb: { base: '8', md: '32' },
       })}
     >
       <div
@@ -290,7 +291,7 @@ export const PersonBubbleForce = ({ people }: { people: PersonNode[] }) => {
         style={{
           // Height should be inversely proportional to width (narrow = higher), so bubbles have enough space
           // Unfortunately, no pure CSS way to do this
-          height: Math.max(800, 360000 / (width ?? 800)),
+          height: Math.max(960, 360000 / (width ?? 800)),
         }}
       >
         {people.map((p) => (
