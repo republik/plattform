@@ -104,7 +104,7 @@ export default async function Page({ searchParams }) {
       </h1>
       <section
         className={css({
-          pt: 'min(50vw, 800px)',
+          pt: 'min(50vw, 500px)',
           // mx: '-4',
           overflow: 'hidden',
         })}
