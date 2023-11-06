@@ -49,9 +49,9 @@ const Marketing = ({
       <Carpet loading={loading} front={data.carpet} />
       <Reasons inNativeApp={inNativeApp} />
       {inNativeApp && <MarketingTrialForm />}
-      <SectionContainer maxWidth={'100%'} padding='0'>
+      {/* <SectionContainer maxWidth={'100%'} padding='0'>
         <ChallengeAcceptedMarketingTeaser />
-      </SectionContainer>
+      </SectionContainer> */}
       <Sections />
       <Team loading={loading} error={error} employees={data.team} />
       <Community
