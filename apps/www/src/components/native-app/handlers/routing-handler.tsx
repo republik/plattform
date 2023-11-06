@@ -24,15 +24,20 @@ function useOnRouteChange(callBack: RouteChangeCallback) {
   }, [])
 
   useEffect(() => {
-    const url = new URL(pathname, window.location.origin)
-    url.search = searchParams.toString()
-    const urlStr = url.toString()
-    if (lastUrlRef.current === urlStr) {
-      return
+    try {
+      const url = new URL(pathname, window.location.origin)
+      url.search = searchParams.toString()
+      const urlStr = url.toString()
+
+      if (lastUrlRef.current === urlStr) {
+        return
+      }
+
+      lastUrlRef.current = urlStr
+      callbackRef.current(urlStr)
+    } catch (e) {
+      console.error(e)
     }
-    console.log('urlStr', urlStr, lastUrlRef.current)
-    lastUrlRef.current = urlStr
-    callbackRef.current(urlStr)
   }, [pathname, searchParams])
 
   useEffect(() => {

@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback } from 'react'
+import { useMemo } from 'react'
 import { usePlatformInformation } from './usePlatformInformation'
 
 // extent window types for this file to avoid typescript errors
@@ -17,13 +17,13 @@ declare global {
 type PostMessageCallback = (msg: string | Record<string, unknown>) => void
 
 /**
- * React-hook to get a postMessage function that can be used to send messages to the native app.
+ * React-hook to get the postMessage function that can be used to send messages to the native app.
  * @returns {@type PostMessageCallback}
  */
 export function usePostMessage() {
   const { isNativeApp, isLegacyNativeApp } = usePlatformInformation()
 
-  const postMessage: PostMessageCallback = useCallback(() => {
+  const postMessage: PostMessageCallback = useMemo(() => {
     return !isNativeApp
       ? // eslint-disable-next-line @typescript-eslint/no-empty-function
         () => {} // does nothing outside of app, e.g. gallery full screen message
