@@ -8,7 +8,7 @@ type EventHandler<E> = (_: E) => Promise<void> | void
  * @param eventName The name of the event to subscribe to.
  * @param callback The callback to call when the event is emitted.
  */
-function useNativeAppEvent<E = Event>(
+function useNativeAppEvent<E = unknown>(
   eventName: string,
   callback: EventHandler<E>,
   callbackDependencies: ReadonlyArray<unknown> = [],
