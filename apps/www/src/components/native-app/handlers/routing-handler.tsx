@@ -39,6 +39,7 @@ function useOnRouteChange(callBack: RouteChangeCallback) {
 export function NARoutingHandler() {
   const router = useRouter()
   const postMessage = usePostMessage()
+  const previousPushUrl = useRef<string>()
 
   useOnRouteChange((url) => {
     postMessage({
@@ -53,7 +54,10 @@ export function NARoutingHandler() {
       return
     }
     const targetUrl = content.url.replace(process.env.NEXT_PUBLIC_BASE_URL, '')
-    await router.push(targetUrl)
+    if (previousPushUrl.current !== targetUrl) {
+      previousPushUrl.current = targetUrl
+      router.push(targetUrl)
+    }
   })
 
   useNativeAppEvent('back', () => {
