@@ -15,12 +15,18 @@ const AppStateMessageDataSchema = z.object({
   type: z.string(),
 })
 
-type AppStateMessageData = z.infer<typeof AppStateMessageDataSchema>
-
 /**
- * Component to redirect the user to the app sign in page with the current URL as the redirect URL.
- * The redirect URL is used to redirect the user back to the page he was on before the
- * app sign in was accepted/denied.
+ * Component that registers the native app handlers
+ * for the app sign in flow.
+ * When a pending app sign in is detected, the user is redirected to
+ * the '/mitteilung?…' where the user can confirm/reject the sign in.
+ * After the user has confirmed/rejected the sign in, the native app
+ *
+ * Handled native app events:
+ * - the native app sends an authorization event:
+ *  - the peding-app-sign-in query is refetched
+ * - the native app sends an appState event === 'active':
+ *  - the peding-app-sign-in query is refetched
  */
 export function AppSignInHandler() {
   const router = useRouter()
@@ -39,20 +45,21 @@ export function AppSignInHandler() {
     router.replace(url.toString().replace(url.origin, ''))
   }
 
-  // Recheck for a pending app sign in
-  // when the native app sends an authorization event.
-  useNativeAppEvent('authorization', async () => {
+  useNativeAppEvent<unknown>('authorization', async () => {
     refetch()
   })
 
-  useNativeAppEvent<AppStateMessageData | null>('appState', async (content) => {
-    if (
-      AppStateMessageDataSchema.safeParse(content).success &&
-      content?.current === 'active'
-    ) {
-      refetch()
-    }
-  })
+  useNativeAppEvent<Record<string, unknown> | null>(
+    'appState',
+    async (content) => {
+      if (
+        AppStateMessageDataSchema.safeParse(content).success &&
+        content?.current === 'active'
+      ) {
+        refetch()
+      }
+    },
+  )
 
   useEffect(() => {
     if (

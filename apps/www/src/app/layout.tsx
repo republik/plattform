@@ -1,4 +1,4 @@
-import { AppSignIn } from '@app/components/auth/app-sign-in'
+import { NativeAppMessageSync } from '@app/components/native-app'
 import './root.css'
 
 import { ThemeProvider } from '@app/components/theme-provider'
@@ -32,7 +32,7 @@ export default async function RootLayout({
         <ThemeProvider>
           <ApolloWrapper>
             {children}
-            <AppSignIn />
+            <NativeAppMessageSync />
           </ApolloWrapper>
         </ThemeProvider>
       </body>
