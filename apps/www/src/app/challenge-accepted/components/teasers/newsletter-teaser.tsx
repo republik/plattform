@@ -41,7 +41,6 @@ export const NewsletterTeaser = async ({ path }: NewsletterProps) => {
     }
     return null
   }
-
   return (
     <Link
       href={path}
@@ -57,8 +56,16 @@ export const NewsletterTeaser = async ({ path }: NewsletterProps) => {
         <h3 className={css({ textStyle: 'newsletterTeaserTitle', mb: '4' })}>
           {article.meta.title}
         </h3>
-        <p className={css({ textStyle: 'teaserLeadSans' })}>
-          {article.meta.shortTitle}
+        <p className={css({ textStyle: 'teaserLeadSans', mb: '4' })}>
+          {article.meta.description}
+        </p>
+        <p
+          className={css({
+            // textStyle: 'teaserLeadSans',
+            textDecoration: 'underline',
+          })}
+        >
+          Weiterlesen
         </p>
       </div>
     </Link>
