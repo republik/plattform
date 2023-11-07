@@ -48,8 +48,8 @@ const sectionContent = [
     title: 'Kolumnen',
     content: (
       <>
-        Regelmässig eine Kolumne: am Dienstag von Daniel Strassberg oder
-        Kunsthistorikerin Kia Vahland. Jeden Samstag von Daniel Binswanger.
+        Regelmässig eine Kolumne: am Dienstag von Daniel Strassberg, Kia Vahland
+        oder Anna Rosenwasser. Jeden Samstag von Daniel Binswanger.
       </>
     ),
   },
