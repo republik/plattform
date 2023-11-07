@@ -160,7 +160,7 @@ export const ArticleTeaser = async ({ path, image }: ArticleProps) => {
             {article.meta.title}
           </h3>
           <p className={css({ textStyle: 'teaserLead' })}>
-            {article.meta.shortTitle}
+            {article.meta.shortTitle}.
           </p>
           <p
             className={css({
