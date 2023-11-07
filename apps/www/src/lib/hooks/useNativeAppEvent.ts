@@ -1,15 +1,7 @@
+import { usePostMessage } from './usePostMessage'
 import { useEffect, useRef } from 'react'
-import { z } from 'zod'
 // eslint-disable-next-line no-unused-vars
 type EventHandler<E> = (_: E) => Promise<void> | void
-
-const MessageSchema = z.object({
-  content: z.object({
-    id: z.string(),
-    type: z.string(),
-    payload: z.any(),
-  }),
-})
 
 /**
  * useNativeAppEvent is a hook that allows you to subscribe to events emitted by the native app.
@@ -17,12 +9,13 @@ const MessageSchema = z.object({
  * @param eventName The name of the event to subscribe to.
  * @param callback The callback to call when the event is emitted.
  */
-function useNativeAppEvent<E = Event>(
+function useNativeAppEvent<E = unknown>(
   eventName: string,
   callback: EventHandler<E>,
   callbackDependencies: ReadonlyArray<unknown> = [],
 ) {
   const savedCallback = useRef<EventHandler<E>>(callback)
+  const postMessage = usePostMessage()
 
   useEffect(() => {
     savedCallback.current = callback
@@ -30,17 +23,20 @@ function useNativeAppEvent<E = Event>(
 
   useEffect(() => {
     const handler = (event: MessageEvent) => {
-      if (MessageSchema.safeParse(event?.data).success) {
-        const { content } = event.data as z.infer<typeof MessageSchema>
-        if (content?.type === eventName) {
-          savedCallback?.current(event.data.content)
-        }
+      if (event?.data?.content?.type === eventName) {
+        savedCallback?.current(event.data.content)
+        // Acknowledge to app that message has been handled. Otherwise the app will continue to send it ...
+        postMessage({
+          type: 'ackMessage',
+          id: event?.data?.id,
+        })
       }
     }
+
     document.addEventListener('message', handler)
 
     return () => document.removeEventListener('message', handler)
-  }, [eventName, ...callbackDependencies])
+  }, [eventName, postMessage, ...callbackDependencies])
 }
 
 export default useNativeAppEvent

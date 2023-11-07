@@ -1,18 +1,17 @@
-import Container from '@app/components/container'
-import { PersonDetail } from './components/person-detail'
-import { getCMSClient } from '@app/lib/apollo/cms-client'
-import { PERSON_DETAIL_QUERY } from '@app/graphql/cms/person-detail.query'
-import { notFound } from 'next/navigation'
-import Link from 'next/link'
-import { getMe } from '@app/lib/auth/me'
-import { Metadata, ResolvingMetadata } from 'next'
 import { CANewsletterSignUp } from '@app/app/challenge-accepted/components/ca-newsletter-sign-up'
-import { getClimateLabNewsletterSubscriptionStatus } from '@app/graphql/republik-api/newsletter.query'
+import Container from '@app/components/container'
+import { PERSON_DETAIL_QUERY } from '@app/graphql/cms/person-detail.query'
+import { getCMSClient } from '@app/lib/apollo/cms-client'
+import { getMe } from '@app/lib/auth/me'
 import { css } from '@app/styled-system/css'
+import { Metadata, ResolvingMetadata } from 'next'
+import Link from 'next/link'
+import { notFound } from 'next/navigation'
+import { PersonDetail } from './components/person-detail'
 
-import { IconChevronLeft } from '@republik/icons'
 import { PersonList } from '@app/app/challenge-accepted/person/[slug]/components/person-list'
 import { vstack } from '@app/styled-system/patterns'
+import Image from 'next/image'
 
 type PageProps = {
   params: {
@@ -20,10 +19,19 @@ type PageProps = {
   }
 }
 
+export const revalidate = 60 // revalidate at most every minute
+
 export default async function Page({ params: { slug } }: PageProps) {
   const { data } = await getCMSClient().query({
     query: PERSON_DETAIL_QUERY,
     variables: { slug },
+    context: {
+      fetchOptions: {
+        next: {
+          tags: ['challenge-accepted'],
+        },
+      },
+    },
   })
 
   if (!data.person) {
@@ -33,8 +41,6 @@ export default async function Page({ params: { slug } }: PageProps) {
   const me = await getMe()
   const isMember =
     me?.roles && Array.isArray(me.roles) && me.roles.includes('member')
-  const isSubscribedToCANewsletter =
-    await getClimateLabNewsletterSubscriptionStatus()
 
   const personData: typeof data['person'] = {
     ...data.person,
@@ -51,26 +57,69 @@ export default async function Page({ params: { slug } }: PageProps) {
 
   return (
     <>
-      <div className={css({ mx: '4', mb: '8' })}>
+      <div
+        className={css({
+          display: 'flex',
+          justifyContent: 'center',
+          mx: '4',
+          mt: { base: '4', md: '8' },
+        })}
+      >
         <Link
           href='/challenge-accepted'
           className={css({
-            display: 'inline-flex',
+            position: 'relative',
+            display: 'flex',
             flexDirection: 'row',
             alignItems: 'center',
             textDecoration: 'none',
             gap: '0.5',
             color: 'contrast',
             fontSize: 'sm',
+            justifyContent: 'center',
+            _dark: {
+              filter: 'invert(1)',
+            },
+            width: { base: 80, md: 156 },
           })}
+          title='Zur Übersicht'
         >
-          <IconChevronLeft size={20} /> Challenge Accepted Übersicht
+          <Image
+            src={data.hub.logo?.url}
+            priority
+            width={156}
+            height={100}
+            className={css({ objectFit: 'contain' })}
+            alt='Challenge Accepted Logo'
+          />
         </Link>
       </div>
       <PersonDetail person={personData} isMember={isMember} />
       <Container>
-        <div className={vstack({ gap: '32', alignItems: 'stretch' })}>
-          {!isSubscribedToCANewsletter && <CANewsletterSignUp me={me} />}
+        <div
+          className={vstack({
+            pt: '16-32',
+            gap: '16-32',
+            alignItems: 'stretch',
+          })}
+        >
+          <CANewsletterSignUp
+            me={me}
+            description={
+              <p
+                className={css({
+                  textStyle: 'paragraph',
+                  mb: '4',
+                })}
+              >
+                Die Klimakrise ist hier. Die Lage ist ernst. Wir richten den
+                Blick auf Menschen, die die Herausforderung annehmen. Gemeinsam
+                gehen wir der Frage nach: Wie kommen wir aus dieser Krise wieder
+                raus? Neugierig, kritisch, konstruktiv. Mit Artikeln, Debatten,
+                Veranstaltungen. Sind Sie dabei?
+              </p>
+            }
+          />
           <section>
             <h2
               className={css({
@@ -79,9 +128,9 @@ export default async function Page({ params: { slug } }: PageProps) {
                 mb: '6',
               })}
             >
-              Wer bei Challenge Accepted dabei ist
+              Direkt weiter zu …
             </h2>
-            <PersonList />
+            <PersonList linkToOverview hidePersonId={personData.id} />
           </section>
         </div>
       </Container>

@@ -1,5 +1,4 @@
 import { gql } from '@apollo/client'
-import { getClient } from '@app/lib/apollo/client'
 
 export const CA_NEWSLETTER_QUERY = gql(`
   query CANewsletterQuery(
@@ -19,7 +18,7 @@ export const CA_NEWSLETTER_QUERY = gql(`
   }
 `)
 
-export type CANewsterQueryResult = {
+export type CANewsletterQueryResult = {
   me: null | {
     newsletterSettings: {
       id: string
@@ -37,17 +36,4 @@ export type CANewsterQueryResult = {
 
 export type CANewsletterQueryVariables = {
   name: string
-}
-
-export async function getClimateLabNewsletterSubscriptionStatus() {
-  const { data } = await getClient().query<
-    CANewsterQueryResult,
-    CANewsletterQueryVariables
-  >({
-    query: CA_NEWSLETTER_QUERY,
-    variables: {
-      name: 'CLIMATE', // TODO: check if this is the correct name
-    },
-  })
-  return data.me?.newsletterSettings.subscriptions?.[0]?.subscribed || false
 }

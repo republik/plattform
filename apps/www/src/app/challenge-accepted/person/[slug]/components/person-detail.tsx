@@ -1,7 +1,9 @@
 import CollectionRenderer from '@app/app/challenge-accepted/components/collection-render'
 import Container from '@app/components/container'
+import { Share } from '@app/components/share/share'
 import type { PersonDetailQuery } from '@app/graphql/gql/graphql'
 import { css } from '@app/styled-system/css'
+import { vstack } from '@app/styled-system/patterns'
 import Image from 'next/image'
 import { StructuredText } from 'react-datocms'
 
@@ -18,10 +20,8 @@ export function PersonDetail({ person, isMember = false }: PersonDetailProps) {
 
   return (
     <div
-      className={css({
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '2',
+      className={vstack({
+        gap: '16-32',
         alignItems: 'center',
       })}
     >
@@ -29,7 +29,6 @@ export function PersonDetail({ person, isMember = false }: PersonDetailProps) {
         className={css({
           position: 'relative',
           width: 'full',
-          mb: '32',
         })}
       >
         {/* It's impossible to fit text size to container width (without measuring in the DOM), therefore we use some funky calculations based on the name to approximate a viewbox that fits relatively close to the rendered text. Then the SVG is simply scaled with CSS to 100% of its parent's width */}
@@ -78,44 +77,68 @@ export function PersonDetail({ person, isMember = false }: PersonDetailProps) {
       </div>
 
       <Container>
-        {person?.catchPhrase && (
-          <h2
+        <div className={vstack({ gap: '16-32' })}>
+          {person?.catchPhrase && (
+            <h2
+              className={css({
+                fontWeight: 'bold',
+                fontSize: '37px',
+                lineHeight: '44px',
+                marginBottom: '18px',
+              })}
+            >
+              «{person.catchPhrase}»
+            </h2>
+          )}
+          <div
             className={css({
-              fontWeight: 'bold',
-              fontSize: '37px',
-              lineHeight: '44px',
-              marginBottom: '18px',
+              color: 'text',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '4',
+
+              textStyle: 'paragraph',
+
+              '& ul > li': {
+                listStyleType: 'none',
+                pl: '6',
+                position: 'relative',
+                '&::before': {
+                  content: '"–"',
+                  position: 'absolute',
+                  left: '0',
+                },
+              },
+              '& ol': { listStyleType: 'decimal', pl: '6' },
+              '& h2, & h3, & h4, & h5, & h6': {
+                fontWeight: 'bold',
+              },
             })}
           >
-            «{person.catchPhrase}»
-          </h2>
-        )}
-        <div
-          className={css({
-            color: 'text',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '4',
-
-            textStyle: 'teaserLeadSans',
-
-            '& ul > li': {
-              listStyleType: 'none',
-              pl: '6',
-              position: 'relative',
-              '&::before': { content: '"–"', position: 'absolute', left: '0' },
-            },
-            '& ol': { listStyleType: 'decimal', pl: '6' },
-            '& h2, & h3, & h4, & h5, & h6': {
-              fontWeight: 'bold',
-            },
-          })}
-        >
-          <StructuredText data={person.bio.value} />
+            <StructuredText data={person.bio.value} />
+          </div>
+          <Share
+            title={`Challenge Accepted: ${person.name} | Republik`}
+            url={`${process.env.NEXT_PUBLIC_BASE_URL}/challenge-accepted/person/${person.slug}`}
+            emailSubject={`Challenge Accepted: ${person.name} | Republik`}
+          />
+          {person.items.length > 0 ? (
+            <section>
+              <h2
+                className={css({
+                  textStyle: 'h1Sans',
+                  fontWeight: 'bold',
+                  mb: '6',
+                })}
+              >
+                Von und mit {person.name}
+              </h2>
+              <CollectionRenderer items={person.items} isMember={isMember} />
+            </section>
+          ) : (
+            <div className={css({ mb: '16-32' })}></div>
+          )}
         </div>
-        <section className={css({ my: '32' })}>
-          <CollectionRenderer items={person.items} isMember={isMember} />
-        </section>
       </Container>
     </div>
   )
