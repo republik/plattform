@@ -1,10 +1,12 @@
 import { NativeAppMessageSync } from '@app/components/native-app'
 import './root.css'
 
+import { MatomoTracking } from '@app/components/matomo-tracking'
 import { ThemeProvider } from '@app/components/theme-provider'
 import { ApolloWrapper } from '@app/lib/apollo/provider'
 import { css } from '@app/styled-system/css'
-import { ReactNode } from 'react'
+import Script from 'next/script'
+import { ReactNode, Suspense } from 'react'
 
 export default async function RootLayout({
   // Layouts must accept a children prop.
@@ -37,14 +39,24 @@ export default async function RootLayout({
           <ApolloWrapper>
             {children}
             <NativeAppMessageSync />
+            <Suspense fallback={null}>
+              <MatomoTracking />
+            </Suspense>
           </ApolloWrapper>
         </ThemeProvider>
         {process.env.NEXT_PUBLIC_MATOMO_URL_BASE &&
           process.env.NEXT_PUBLIC_MATOMO_SITE_ID && (
-            <script
-              dangerouslySetInnerHTML={{
-                __html: `
-            var _paq = _paq || [];
+            <>
+              <script
+                dangerouslySetInnerHTML={{
+                  __html: `
+          var _paq = _paq || [];`,
+                }}
+              />
+              <Script
+                id='matomo'
+                dangerouslySetInnerHTML={{
+                  __html: `
             _paq.push(['enableLinkTracking']);
             ${
               process.env.NEXT_PUBLIC_BASE_URL.indexOf('https') === 0
@@ -63,8 +75,9 @@ export default async function RootLayout({
                 process.env.NEXT_PUBLIC_MATOMO_URL_BASE
               }/matomo.js'; s.parentNode.insertBefore(g,s);
             })();`,
-              }}
-            />
+                }}
+              />
+            </>
           )}
       </body>
     </html>
