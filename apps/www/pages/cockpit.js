@@ -569,12 +569,9 @@ const Page = ({
               </P>
               <P>
                 Die Grundlage dafür ist ein Geschäftsmodell für werbefreien,
-                unabhängigen, leserfinanzierten Journalismus. Damit die Republik
-                einen entscheidenden Unterschied im Mediensystem machen kann,
-                muss sie mittelfristig selbsttragend sein. Um am Markt zu
-                bestehen und durch Einfluss auf die gesellschaftliche Debatte
-                nachhaltige Relevanz zu erreichen, muss sie jedoch auch weiter
-                wachsen.
+                unabhängigen, leserfinanzierten Journalismus. Um am Markt zu
+                bestehen und einen entscheidenden Unterschied im Mediensystem zu
+                machen, braucht die Republik eine starke Community.
               </P>
 
               <div style={{ marginTop: 20 }}>
@@ -616,7 +613,15 @@ const Page = ({
                     .map((d) => ({ ...d, value: String(d.value) }))}
                 />
               </div>
-
+              <P>
+                Der strategische{' '}
+                <Editorial.A href='/2023/11/10/der-fokus-liegt-auf-stabilitaet'>
+                  Fokus für das 7. Geschäftsjahr
+                </Editorial.A>{' '}
+                (Juli 2023 bis Juni 2024) liegt auf Stabilität: Zu- und Abgänge
+                bei Mitgliedschaften und Abonnements müssen sich dafür über das
+                Jahr die Waage halten.
+              </P>
               <div style={{ marginTop: 20 }}>
                 <ChartTitle>
                   {/* {countFormat(
