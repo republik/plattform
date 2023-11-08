@@ -8,7 +8,6 @@ import {
   IconLogoFacebook,
   IconLogoTelegram,
   IconLogoThreema,
-  IconLogoTwitter,
   IconLogoWhatsApp,
   IconMail,
 } from '@republik/icons'
@@ -43,6 +42,7 @@ function ShareButton({
       target='_blank'
       href={href}
       onClick={onClick}
+      rel='noopener noreferrer'
     >
       <Icon size={24} />
       <span>{label}</span>
@@ -53,14 +53,12 @@ function ShareButton({
 export function ShareOverlay({
   triggerLabel,
   title,
-  tweet,
   url,
   emailSubject,
-  emailBody,
-  emailAttachURL = false,
+  emailBody = 'Ich wollte diese Seite mit dir teilen',
+  emailAttachURL = true,
 }: {
   triggerLabel: React.ReactNode
-  tweet?: string
   emailBody?: string
   emailAttachURL?: boolean
 } & ShareProps) {
@@ -77,16 +75,16 @@ export function ShareOverlay({
       title: 'Auf Facebook teilen',
       label: 'Facebook',
     },
-    {
-      name: 'twitter',
-      target: '_blank',
-      href: `https://twitter.com/intent/tweet?text=${encodeURIComponent(
-        tweet || title,
-      )}&url=${encodeURIComponent(url)}`,
-      icon: IconLogoTwitter,
-      title: 'Auf Twitter teilen',
-      label: 'Twitter',
-    },
+    // {
+    //   name: 'twitter',
+    //   target: '_blank',
+    //   href: `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+    //     tweet || title,
+    //   )}&url=${encodeURIComponent(url)}`,
+    //   icon: IconLogoTwitter,
+    //   title: 'Auf Twitter teilen',
+    //   label: 'Twitter',
+    // },
     {
       name: 'whatsapp',
       target: '_blank',
