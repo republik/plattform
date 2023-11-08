@@ -24,7 +24,7 @@ export default function CollectionRenderer({
     <div className={css({ width: 'full' })}>
       <ul
         className={vstack({
-          gap: '4',
+          gap: '6',
           listStyle: 'none',
           alignItems: 'stretch',
         })}

@@ -5,7 +5,7 @@ export const ARTICLE_QUERY = gql`
     article: document(path: $path) {
       meta {
         title
-        shortTitle
+        description
         image
         credits
       }
@@ -15,6 +15,11 @@ export const ARTICLE_QUERY = gql`
 
 export type ArticleQueryResult = {
   article?: {
-    meta: { title?: string; shortTitle?: string; image?: string; credits?: any }
+    meta: {
+      title?: string
+      description?: string
+      image?: string
+      credits?: any
+    }
   }
 }

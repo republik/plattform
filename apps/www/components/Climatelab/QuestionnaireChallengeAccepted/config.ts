@@ -35,7 +35,8 @@ export const QUESTIONS: QuestionConfigType[] = [
 // TODO: correct urls and share texts
 export const EDIT_QUESTIONNAIRE_PATH =
   '/2023/11/07/wie-blicken-sie-zurzeit-auf-die-klimakrise'
-export const OVERVIEW_QUESTIONNAIRE_PATH = '/so-blicken-sie-auf-die-klimakrise'
+export const OVERVIEW_QUESTIONNAIRE_PATH =
+  '/2023/11/07/so-blicken-sie-auf-die-klimakrise'
 export const PERSON_PAGE_PATH = 'fragebogen-klimakrise'
 export const PERSON_PAGE_TITLE =
   'Wie blicken Sie zurzeit auf die Klimakrise? Die Antworten von {name}'
