@@ -27,9 +27,6 @@ export function Share({ title, url, emailSubject }: ShareProps) {
     </div>
   )
 
-  // TODO: implement share overlay
-  //<ShareOverlay triggerLabel={label}>huh</ShareOverlay>
-
   return isNativeApp ? (
     <div
       className={css({
@@ -45,5 +42,12 @@ export function Share({ title, url, emailSubject }: ShareProps) {
         triggerLabel={label}
       />
     </div>
-  ) : null
+  ) : (
+    <ShareOverlay
+      title={title}
+      url={url}
+      emailSubject={emailSubject}
+      triggerLabel={label}
+    />
+  )
 }
