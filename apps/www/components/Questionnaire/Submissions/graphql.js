@@ -51,6 +51,9 @@ const questionnaireData = gql`
       __typename
       id
       text
+      turnout {
+        submitted
+      }
       ... on QuestionTypeChoice {
         options {
           label
