@@ -626,7 +626,70 @@ const text = {
       .
     </>
   ),
-  //Oktober: (p) => <></>,
+  Oktober: (p) => (
+    <>
+      Krieg im Nahen Osten:{' '}
+      <Highlight {...p} ids={['qq67AcMXh']}>
+        Zwischen Empathie und Vernunft
+      </Highlight>
+      ,{' '}
+      <Highlight {...p} ids={['N-mGwhHp5']}>
+        das Trauma der jüdischen Gemeinschaft
+      </Highlight>
+      ,{' '}
+      <Highlight {...p} ids={['nyBWq1qmN']}>
+        Angst in Gaza-Stadt
+      </Highlight>{' '}
+      – und{' '}
+      <Highlight {...p} ids={['e4DoTct2l']}>
+        der Umgang mit Falschinformationen
+      </Highlight>
+      . Vor den eidgenössischen Wahlen:{' '}
+      <Highlight {...p} ids={['ASZiy2LOJ']}>
+        Sie kämpfen
+      </Highlight>{' '}
+      <Highlight {...p} ids={['Jdg6qjqxh']}>
+        um jede Stimme
+      </Highlight>
+      ,{' '}
+      <Highlight {...p} ids={['5G9Pqoyal']}>
+        er prognostiziert das Resultat
+      </Highlight>
+      . Und danach:{' '}
+      <Highlight {...p} ids={['n-zB_TmBP']}>
+        Ein Porträt zweier Parteipräsidenten
+      </Highlight>
+      ,{' '}
+      <Highlight {...p} ids={['MwIFXp7TA']}>
+        der Rechtsrutsch
+      </Highlight>{' '}
+      und{' '}
+      <Highlight {...p} ids={['Yi7zTn7Gu']}>
+        seine Bedeutung
+      </Highlight>
+      , dazu{' '}
+      <Highlight {...p} ids={['c5AZ6EWhq']}>
+        düstere Zeiten für die Digitalisierung
+      </Highlight>
+      . Ausserdem:{' '}
+      <Highlight {...p} ids={['siG4zty8E']}>
+        Ab wann erhält man ein Verfallsdatum
+      </Highlight>
+      ?{' '}
+      <Highlight {...p} ids={['n8P4yWAbf']}>
+        Die Reportage aus Kosovo
+      </Highlight>
+      ,{' '}
+      <Highlight {...p} ids={['eikZejRsQ']}>
+        Strategien für eine Energiewende
+      </Highlight>{' '}
+      und{' '}
+      <Highlight {...p} ids={['gcd2uy_fs']}>
+        ein neuer Republik-Podcast
+      </Highlight>
+      .
+    </>
+  ),
   //November: (p) => <></>,
   //Dezember: (p) => <></>,
 }
