@@ -44,7 +44,7 @@ export const PERSON_META_TITLE = 'Wie blicken Sie zurzeit auf die Klimakrise?'
 export const PERSON_META_DESCRIPTION =
   'Das sind die Antworten von {name}. Was sind Ihre?'
 export const PERSON_SHARE_TEXT =
-  'Wie blicken Sie zurzeit auf die Klimakrise? Die Antworten von {name}'
+  'Wie blicken Sie zurzeit auf die Klimakrise? Die Antworten von '
 
 export const QUESTIONNAIRE_SLUG = 'klima-fragebogen-v2'
 
