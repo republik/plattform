@@ -1,3 +1,4 @@
+'use client'
 import { ReactNode, useEffect, useRef, useState } from 'react'
 import { useIntersectionObserver } from '../../lib/hooks/useIntersectionObserver'
 import { motion } from 'framer-motion'
