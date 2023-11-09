@@ -114,11 +114,13 @@ export default async function Page({ searchParams }) {
       </section>
       <Container>
         <div className={vstack({ gap: '16-32', alignItems: 'stretch' })}>
-          <Share
-            title='Challenge Accepted'
-            url={`${process.env.NEXT_PUBLIC_BASE_URL}/challenge-accepted`}
-            emailSubject='Republik: Challenge Accepted'
-          />
+          <div className={css({ margin: '0 auto' })}>
+            <Share
+              title='Challenge Accepted'
+              url={`${process.env.NEXT_PUBLIC_BASE_URL}/challenge-accepted`}
+              emailSubject='Republik: Challenge Accepted'
+            />
+          </div>
 
           <section className={css({ textStyle: 'pageIntro' })}>
             <StructuredText data={hub.introduction.value} />
@@ -188,12 +190,13 @@ export default async function Page({ searchParams }) {
           >
             <StructuredText data={hub.outro.value} />
           </section>
-
-          <Share
-            title='Challenge Accepted'
-            url={`${process.env.NEXT_PUBLIC_BASE_URL}/challenge-accepted`}
-            emailSubject='Republik: Challenge Accepted'
-          />
+          <div className={css({ margin: '0 auto' })}>
+            <Share
+              title='Challenge Accepted'
+              url={`${process.env.NEXT_PUBLIC_BASE_URL}/challenge-accepted`}
+              emailSubject='Republik: Challenge Accepted'
+            />
+          </div>
         </div>
       </Container>
     </>
