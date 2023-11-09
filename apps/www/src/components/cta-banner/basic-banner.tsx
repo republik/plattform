@@ -23,8 +23,8 @@ export function CTABasicBanner({
   return (
     <div
       className={css({
-        backgroundColor: 'pageBackground',
-        color: 'text',
+        backgroundColor: 'text',
+        color: 'pageBackground',
       })}
     >
       <div
@@ -46,7 +46,7 @@ export function CTABasicBanner({
               marginBottom: '0.5em',
             },
             '& > a': {
-              color: 'text',
+              color: 'pageBackground',
               textDecoration: 'underline',
             },
           })}
@@ -64,7 +64,10 @@ export function CTABasicBanner({
           })}
           onClick={() => handleAcknowledge(id)}
         >
-          <IconClose size='1.5rem' className={css({ fill: 'text' })} />
+          <IconClose
+            size='1.5rem'
+            className={css({ fill: 'pageBackground' })}
+          />
         </button>
       </div>
     </div>
