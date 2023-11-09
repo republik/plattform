@@ -103,9 +103,7 @@ export function ShareOverlay({
       name: 'mail',
       href: `mailto:?subject=${encodeURIComponent(
         emailSubject,
-      )}&body=${encodeURIComponent(
-        emailBody + (emailAttachURL ? '\n\n' + url : ''),
-      )}`,
+      )}&body=${encodeURIComponent(url)}`,
       icon: IconMail,
       title: 'Per E-Mail verschicken',
       label: 'E-Mail',
