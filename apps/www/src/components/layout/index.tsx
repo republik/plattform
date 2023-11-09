@@ -2,6 +2,7 @@ import { PageHeader } from '@app/components/layout/header'
 import Footer from './footer'
 import { css } from '@app/styled-system/css'
 import { getPlatformInformation } from '@app/lib/util/useragent/platform-information'
+import { CTABanner } from '../cta-banner'
 
 type LayoutProps = {
   children: React.ReactNode
@@ -23,6 +24,7 @@ export async function PageLayout({ children }: LayoutProps) {
       })}
     >
       <PageHeader />
+      <CTABanner />
       <div
         className={css({ flexGrow: '1', backgroundColor: 'pageBackground' })}
       >
