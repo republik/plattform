@@ -62,8 +62,9 @@ export function CTABasicBanner({
             width: '2rem',
             cursor: 'pointer',
           })}
+          onClick={() => handleAcknowledge(id)}
         >
-          <IconClose size='1.5rem' onClick={() => handleAcknowledge(id)} />
+          <IconClose size='1.5rem' className={css({ fill: 'text' })} />
         </button>
       </div>
     </div>

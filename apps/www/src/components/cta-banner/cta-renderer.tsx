@@ -45,5 +45,7 @@ export function CTARenderer({ cta }: CTARendererProps) {
     )
   }
 
+  console.log("Can't render CTA of type ", cta.payload.__typename)
+
   return null
 }
