@@ -55,7 +55,7 @@ export function ShareOverlay({
   title,
   url,
   emailSubject,
-  emailBody = 'Ich wollte diese Seite mit dir teilen',
+  emailBody,
   emailAttachURL = true,
 }: {
   triggerLabel: React.ReactNode
@@ -75,16 +75,6 @@ export function ShareOverlay({
       title: 'Auf Facebook teilen',
       label: 'Facebook',
     },
-    // {
-    //   name: 'twitter',
-    //   target: '_blank',
-    //   href: `https://twitter.com/intent/tweet?text=${encodeURIComponent(
-    //     tweet || title,
-    //   )}&url=${encodeURIComponent(url)}`,
-    //   icon: IconLogoTwitter,
-    //   title: 'Auf Twitter teilen',
-    //   label: 'Twitter',
-    // },
     {
       name: 'whatsapp',
       target: '_blank',
