@@ -12,25 +12,16 @@ const init = async ({
   name,
   context,
   runFunc,
-  lockTtlSecs,
   runAtTime,
   runAtDayOfMonth,
   runInitially = false,
   dryRun = false,
 }) => {
-  if (
-    !name ||
-    !context ||
-    !runFunc ||
-    !lockTtlSecs ||
-    !runAtTime ||
-    !runAtDayOfMonth
-  ) {
+  if (!name || !context || !runFunc || !runAtTime || !runAtDayOfMonth) {
     console.error(`missing input, scheduler ${name}`, {
       name,
       context,
       runFunc,
-      lockTtlSecs,
       runAtTime,
     })
     throw new Error(`missing input, scheduler ${name}`)
@@ -55,13 +46,6 @@ const init = async ({
       retryDelay: LOCK_RETRY_DELAY,
       retryJitter: LOCK_RETRY_JITTER,
     })
-  }
-
-  if (lockTtlSecs * 1000 < MIN_TTL_MS) {
-    throw new Error(
-      `lockTtlSecs must be at least ${Math.ceil(MIN_TTL_MS / 1000)})`,
-      { lockTtlSecs },
-    )
   }
 
   let timeout
@@ -90,19 +74,19 @@ const init = async ({
 
   const run = async () => {
     try {
-      const lock = await redlock().lock(lockKey, 1000 * lockTtlSecs)
+      const lock = await redlock().lock(lockKey, MIN_TTL_MS)
 
       const extendLockInterval = setInterval(
         () =>
           lock
-            .extend(1000 * lockTtlSecs)
+            .extend(MIN_TTL_MS)
             .then(() => {
               debug('extending lock')
             })
             .catch((e) => {
               console.warn('extending lock failed', e)
             }),
-        1000 * lockTtlSecs * 0.9,
+        MIN_TTL_MS * 0.9,
       )
 
       debug('run started')
@@ -148,7 +132,7 @@ const init = async ({
   }
 
   const close = async () => {
-    const lock = await redlock().lock(lockKey, 1000 * lockTtlSecs * 2)
+    const lock = await redlock().lock(lockKey, MIN_TTL_MS * 2)
     clearTimeout(timeout)
     await lock.unlock().catch((err) => {
       console.error(err)
