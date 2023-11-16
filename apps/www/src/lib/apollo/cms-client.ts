@@ -25,7 +25,7 @@ export function getCMSClient(): NextSSRApolloClient<NormalizedCacheObject> {
         Authorization: `${process.env.DATO_CMS_API_TOKEN}`,
         // forbid invalid content to allow strict type checking
         'X-Exclude-Invalid': 'true',
-        'X-Environment': process.env.DATO_CMS_ENVIRONMENT,
+        'X-Environment': process.env.DATO_CMS_ENVIRONMENT || 'main',
       },
     }),
   })
