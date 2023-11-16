@@ -96,7 +96,7 @@ class LazyLoad extends Component {
 }
 
 LazyLoad.propTypes = {
-  children: PropTypes,
+  children: PropTypes.node,
   attributes: PropTypes.object,
   style: PropTypes.object,
   type: PropTypes.elementType,

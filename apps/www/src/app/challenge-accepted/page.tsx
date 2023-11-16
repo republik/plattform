@@ -10,13 +10,13 @@ import {
   CHALLENGE_ACCEPTED_HUB_META_QUERY,
   CHALLENGE_ACCEPTED_HUB_QUERY,
 } from '@app/graphql/cms/hub.query'
-import { getClimateLabNewsletterSubscriptionStatus } from '@app/graphql/republik-api/newsletter.query'
 import { getCMSClient } from '@app/lib/apollo/cms-client'
 import { getMe } from '@app/lib/auth/me'
 import { css } from '@app/styled-system/css'
 import { vstack } from '@app/styled-system/patterns'
 import Image from 'next/image'
 import { StructuredText } from 'react-datocms'
+import { Share } from '@app/components/share/share'
 
 export async function generateMetadata(
   _, // params
@@ -51,15 +51,18 @@ export async function generateMetadata(
 }
 
 export default async function Page({ searchParams }) {
-  const cmsClient = getCMSClient()
-  const { data } = await cmsClient.query({
+  const { data } = await getCMSClient().query({
     query: CHALLENGE_ACCEPTED_HUB_QUERY,
-    context: {},
+    context: {
+      fetchOptions: {
+        next: {
+          tags: ['challenge-accepted'],
+        },
+      },
+    },
   })
 
   const me = await getMe()
-  const isSubscribedToCANewsletter =
-    await getClimateLabNewsletterSubscriptionStatus()
 
   const isMember =
     me?.roles && Array.isArray(me.roles) && me.roles.includes('member')
@@ -96,13 +99,13 @@ export default async function Page({ searchParams }) {
           src={hub.logo?.url}
           priority
           fill
-          objectFit='contain'
+          className={css({ objectFit: 'contain' })}
           alt='Challenge Accepted Logo'
         />
       </h1>
       <section
         className={css({
-          pt: 'min(50vw, 800px)',
+          pt: 'min(40vw, 500px)',
           // mx: '-4',
           overflow: 'hidden',
         })}
@@ -110,11 +113,20 @@ export default async function Page({ searchParams }) {
         <PersonBubble />
       </section>
       <Container>
-        <div className={vstack({ gap: '32', alignItems: 'stretch' })}>
+        <div className={vstack({ gap: '16-32', alignItems: 'stretch' })}>
+          <div className={css({ margin: '0 auto' })}>
+            <Share
+              title='Challenge Accepted'
+              url={`${process.env.NEXT_PUBLIC_BASE_URL}/challenge-accepted`}
+              emailSubject='Republik: Challenge Accepted'
+            />
+          </div>
+
           <section className={css({ textStyle: 'pageIntro' })}>
             <StructuredText data={hub.introduction.value} />
           </section>
-          {!isSubscribedToCANewsletter && <CANewsletterSignUp me={me} />}
+
+          <CANewsletterSignUp me={me} id='newsletter' />
 
           <section>
             <h2
@@ -124,7 +136,7 @@ export default async function Page({ searchParams }) {
                 mb: '6',
               })}
             >
-              Wer bei Challenge Accepted dabei ist
+              Mehr erfahren zu …
             </h2>
             <PersonList />
           </section>
@@ -145,9 +157,45 @@ export default async function Page({ searchParams }) {
               }
             />
           </section>
-          {!isSubscribedToCANewsletter && <CANewsletterSignUp me={me} />}
-          <div className={css({ textStyle: 'teaserLeadSans' })}>
+          <CANewsletterSignUp
+            title='Keine neuen Beiträge und Verstaltungen verpassen: für den
+                  Newsletter anmelden.'
+            me={me}
+          />
+
+          <section
+            className={css({
+              color: 'text',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '4',
+
+              textStyle: 'paragraph',
+
+              '& ul > li': {
+                listStyleType: 'none',
+                pl: '6',
+                position: 'relative',
+                '&::before': {
+                  content: '"–"',
+                  position: 'absolute',
+                  left: '0',
+                },
+              },
+              '& ol': { listStyleType: 'decimal', pl: '6' },
+              '& h2, & h3, & h4, & h5, & h6': {
+                fontWeight: 'bold',
+              },
+            })}
+          >
             <StructuredText data={hub.outro.value} />
+          </section>
+          <div className={css({ margin: '0 auto' })}>
+            <Share
+              title='Challenge Accepted'
+              url={`${process.env.NEXT_PUBLIC_BASE_URL}/challenge-accepted`}
+              emailSubject='Republik: Challenge Accepted'
+            />
           </div>
         </div>
       </Container>

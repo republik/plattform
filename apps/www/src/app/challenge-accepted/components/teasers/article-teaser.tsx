@@ -7,8 +7,10 @@ import { css } from '@app/styled-system/css'
 import Link from 'next/link'
 import Image from 'next/image'
 import formatCredits from 'components/Feed/formatCredits'
-import { matchType, renderMdast } from '@republik/mdast-react-render'
 import { vstack } from '@app/styled-system/patterns'
+
+import { renderMdast } from '@app/lib/mdast/render'
+import { getMe } from '@app/lib/auth/me'
 
 const getResizefromURL = (url, size) => {
   const imgURL = new URL(url)
@@ -40,7 +42,7 @@ const getOriginalImageDimensions = (url) => {
 }
 
 // Start: Copied from styleguide TeaserFeed component with slight adaptations
-
+const matchType = (type) => (node) => node.type === type
 const creditsSchema = {
   rules: [
     {
@@ -82,6 +84,25 @@ export const ArticleTeaser = async ({ path, image }: ArticleProps) => {
   const { article } = data
 
   if (!data.article) {
+    const me = await getMe()
+
+    // Show warning to editors
+    if (
+      me?.roles.some((role) => ['editor', 'moderator', 'admin'].includes(role))
+    ) {
+      return (
+        <div
+          className={css({
+            background: 'hotpink',
+            textStyle: 'h1Sans',
+            fontWeight: 'bold',
+            p: '4',
+          })}
+        >
+          Beitrag nicht gefunden: {path}
+        </div>
+      )
+    }
     return null
   }
 
@@ -139,7 +160,7 @@ export const ArticleTeaser = async ({ path, image }: ArticleProps) => {
             {article.meta.title}
           </h3>
           <p className={css({ textStyle: 'teaserLead' })}>
-            {article.meta.shortTitle}
+            {article.meta.description}
           </p>
           <p
             className={css({

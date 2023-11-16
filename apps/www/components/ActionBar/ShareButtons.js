@@ -83,7 +83,7 @@ const ShareButtons = ({
         url,
       )}`,
       icon: IconLogoFacebook,
-      title: t('article/actionbar/facebook/title'),
+      title: t(''),
       label: t('article/actionbar/facebook/label'),
     },
     {
