@@ -25,7 +25,7 @@ export default ({ meta }) => {
     format?.repoId?.includes('format-was-diese-woche-wichtig-war')
 
   const { width, height } = isClimate
-    ? { width: 157, height: 100 } // case of climate (= Challenge Accepted)
+    ? { width: 157, height: 140 } // case of climate (= Challenge Accepted)
     : isWdwww
     ? { width: 220, height: 71 } // case of wdwww
     : { width: 178, height: 79 } // default
