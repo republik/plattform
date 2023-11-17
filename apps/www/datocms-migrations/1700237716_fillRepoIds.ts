@@ -17,9 +17,10 @@ export default async function (client: Client): Promise<void> {
   // Create an Article model:
   // https://www.datocms.com/docs/content-management-api/resources/item-type/create
   const articles = await client.items.list({ filter: { type: '2314038' } })
+  const newsletters = await client.items.list({ filter: { type: '2314039' } })
 
-  for (const article of articles) {
-    const url = new URL(article.path as string, 'https://www.republik.ch')
+  for (const item of [...articles, ...newsletters]) {
+    const url = new URL(item.path as string, 'https://www.republik.ch')
 
     const { data, error } = await apolloClient.query({
       query: gql`
@@ -43,11 +44,18 @@ export default async function (client: Client): Promise<void> {
     // console.log('query:', url.search)
     // console.log('repo:', data.document?.repoId)
 
-    const item = await client.items.update(article.id, {
-      repo_id: data.document.repoId,
-      query_string: url.search,
-    })
+    const updatedItem = await client.items.update(
+      item.id,
+      item.item_type.id === '2314038'
+        ? {
+            repo_id: data.document.repoId,
+            query_string: url.search,
+          }
+        : {
+            repo_id: data.document.repoId,
+          },
+    )
 
-    console.log('Updated item with repo ID', item.repo_id)
+    console.log('Updated item with repo ID', updatedItem.repo_id)
   }
 }
