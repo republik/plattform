@@ -1,0 +1,13 @@
+{
+  "*": {
+    "type": "page"
+  },
+  "index": {
+    "type": "page",
+    "title": "Features"
+  },
+  "website": {
+    "type": "page",
+    "title": "Website"
+  }
+}
