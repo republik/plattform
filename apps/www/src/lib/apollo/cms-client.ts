@@ -4,6 +4,14 @@ import {
 } from '@apollo/experimental-nextjs-app-support/ssr'
 import { HttpLink, NormalizedCacheObject } from '@apollo/client'
 
+import { loadErrorMessages, loadDevMessages } from '@apollo/client/dev'
+
+if (process.env.NODE_ENV === 'development') {
+  // Adds messages only in a dev environment
+  loadDevMessages()
+  loadErrorMessages()
+}
+
 /**
  * Get a apollo client to interact with DatoCMS on the server.
  *

@@ -8,16 +8,16 @@ import { css } from '@app/styled-system/css'
 import Link from 'next/link'
 
 type NewsletterProps = {
-  path: string
+  repoId?: string // TODO: make required, once it's required in Dato CMS
 }
 
-export const NewsletterTeaser = async ({ path }: NewsletterProps) => {
+export const NewsletterTeaser = async ({ repoId }: NewsletterProps) => {
   const { data }: { data: ArticleQueryResult } = await getClient().query({
     query: ARTICLE_QUERY,
-    variables: { path },
+    variables: { repoId },
   })
 
-  const { article } = data
+  const article = data.article.nodes[0]
 
   if (!article) {
     const me = await getMe()
@@ -35,7 +35,7 @@ export const NewsletterTeaser = async ({ path }: NewsletterProps) => {
             p: '4',
           })}
         >
-          Beitrag nicht gefunden: {path}
+          Newsletter nicht gefunden: {repoId}
         </div>
       )
     }
@@ -43,7 +43,7 @@ export const NewsletterTeaser = async ({ path }: NewsletterProps) => {
   }
   return (
     <Link
-      href={path}
+      href={article.meta.path}
       className={css({ color: 'text', textDecoration: 'none' })}
     >
       <div
