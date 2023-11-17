@@ -19,6 +19,7 @@ const config: CodegenConfig = {
         headers: {
           Authorization: process.env.DATO_CMS_API_TOKEN,
           'X-Exclude-Invalid': 'true',
+          'X-Environment': process.env.DATO_CMS_ENVIRONMENT ?? 'main',
         },
       },
     },
