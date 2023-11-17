@@ -4,7 +4,8 @@
       "logLevel": "NONE",
       "migrations": {
         "directory": "./datocms-migrations",
-        "modelApiKey": "schema_migration"
+        "modelApiKey": "schema_migration",
+        "tsconfig": "./datocms-migrations/tsconfig.json"
       }
     }
   }
