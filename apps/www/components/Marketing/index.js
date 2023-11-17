@@ -1,5 +1,3 @@
-import compose from 'lodash/flowRight'
-import { graphql } from '@apollo/client/react/hoc'
 import { gql, useQuery } from '@apollo/client'
 import { ColorContextProvider } from '@project-r/styleguide'
 
@@ -14,7 +12,7 @@ import Top from './Top'
 import Carpet from './Carpet'
 import Team from './Team'
 import Reasons from './Reasons'
-import Sections from './Sections'
+import Formats from './Formats'
 import Vision from './Vision'
 import Logo from './Logo'
 import Community from './Community'
@@ -64,13 +62,21 @@ const Marketing = ({ data }) => {
         <Top carouselData={data.carousel} />
       </ColorContextProvider>
       <Carpet front={data.carpet} />
-      <Reasons inNativeApp={inNativeApp} reasons={data.pitches} />
+      <Reasons inNativeApp={inNativeApp} reasons={data.reasons} />
       {inNativeApp && <MarketingTrialForm />}
       <SectionContainer maxWidth={'100%'} padding='0'>
         <ChallengeAcceptedMarketingTeaser />
       </SectionContainer>
-      <Sections />
-      <Team employees={data.team} />
+      <Formats
+        formats={data.formats}
+        title={data.sectionFormatsTitle}
+        description={data.sectionFormatsDescription}
+      />
+      <Team
+        employees={data.team}
+        title={data.sectionTeamTitle}
+        description={data.sectionTeamDescription}
+      />
       <Community featuredComments={data.featuredComments} />
       <Vision />
       {inNativeApp ? <MarketingTrialForm /> : <Pledge />}

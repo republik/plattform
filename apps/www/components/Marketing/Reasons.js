@@ -20,7 +20,7 @@ const Reasons = ({ inNativeApp, reasons }) => {
           return (
             <TeaserFrontTile align='top' key={reason.title}>
               <h2 {...styles.title}>{reason.title}</h2>
-              <Editorial.P>{reason.text}</Editorial.P>
+              <Editorial.P>{reason.description}</Editorial.P>
             </TeaserFrontTile>
           )
         })}

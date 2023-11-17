@@ -58,7 +58,7 @@ export const getStaticProps = createGetStaticProps(async (client) => {
     props: {
       data: {
         ...apiData.data,
-        ...datoData.data.marketingStartseite,
+        ...datoData.data.marketingLandingPage,
       },
     },
     revalidate: MARKETING_PAGE_SSG_REVALIDATE,
