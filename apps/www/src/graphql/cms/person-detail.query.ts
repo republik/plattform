@@ -44,6 +44,7 @@ export const PERSON_DETAIL_QUERY = gql(`
       ... on ChallengeAcceptedArticleRecord {
         id
         repoId
+        queryString
         path
         image {
           url

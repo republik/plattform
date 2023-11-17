@@ -35,6 +35,7 @@ query ChallengeAcceptedHubQuery {
         id
         path
         repoId
+        queryString
         image {
           url
           width

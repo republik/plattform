@@ -68,14 +68,15 @@ const creditsSchema = {
 
 type ArticleProps = {
   repoId?: string // TODO: make required, once it's required in Dato CMS
+  queryString?: string
   image?: { url: string; height?: number; width?: number }
 }
 
-export const ArticleTeaser = async ({ repoId, image }: ArticleProps) => {
-  // To support path with query params, we use the URL API
-  // and extract the pathname from it.
-  const url = new URL(repoId, process.env.NEXT_PUBLIC_BASE_URL)
-
+export const ArticleTeaser = async ({
+  repoId,
+  queryString,
+  image,
+}: ArticleProps) => {
   const { data } = await getClient().query<ArticleQueryResult>({
     query: ARTICLE_QUERY,
     variables: { repoId },
@@ -110,7 +111,7 @@ export const ArticleTeaser = async ({ repoId, image }: ArticleProps) => {
 
   return (
     <Link
-      href={article.meta.path}
+      href={article.meta.path + (queryString ?? '')}
       className={css({ color: 'text.white', textDecoration: 'none' })}
     >
       <div
