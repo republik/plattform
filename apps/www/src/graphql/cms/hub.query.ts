@@ -34,6 +34,8 @@ query ChallengeAcceptedHubQuery {
       ... on ChallengeAcceptedArticleRecord {
         id
         path
+        repoId
+        queryString
         image {
           url
           width
@@ -43,6 +45,7 @@ query ChallengeAcceptedHubQuery {
       ... on ChallengeAcceptedNewsletterRecord {
         id
         path
+        repoId
       }
     }
   }

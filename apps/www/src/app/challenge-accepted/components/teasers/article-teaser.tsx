@@ -67,23 +67,24 @@ const creditsSchema = {
 // End: Copied from styleguide TeaserFeed component with slight adaptations
 
 type ArticleProps = {
-  path: string
+  repoId?: string // TODO: make required, once it's required in Dato CMS
+  queryString?: string
   image?: { url: string; height?: number; width?: number }
 }
 
-export const ArticleTeaser = async ({ path, image }: ArticleProps) => {
-  // To support path with query params, we use the URL API
-  // and extract the pathname from it.
-  const url = new URL(path, process.env.NEXT_PUBLIC_BASE_URL)
-
-  const { data }: { data: ArticleQueryResult } = await getClient().query({
+export const ArticleTeaser = async ({
+  repoId,
+  queryString,
+  image,
+}: ArticleProps) => {
+  const { data } = await getClient().query<ArticleQueryResult>({
     query: ARTICLE_QUERY,
-    variables: { path: url.pathname },
+    variables: { repoId },
   })
 
-  const { article } = data
+  const article = data.article.nodes[0]
 
-  if (!data.article) {
+  if (!article) {
     const me = await getMe()
 
     // Show warning to editors
@@ -99,7 +100,7 @@ export const ArticleTeaser = async ({ path, image }: ArticleProps) => {
             p: '4',
           })}
         >
-          Beitrag nicht gefunden: {path}
+          Artikel nicht gefunden: {repoId}
         </div>
       )
     }
@@ -110,7 +111,7 @@ export const ArticleTeaser = async ({ path, image }: ArticleProps) => {
 
   return (
     <Link
-      href={path}
+      href={article.meta.path + (queryString ?? '')}
       className={css({ color: 'text.white', textDecoration: 'none' })}
     >
       <div

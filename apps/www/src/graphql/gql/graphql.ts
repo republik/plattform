@@ -49,6 +49,8 @@ export type ChallengeAcceptedArticleModelFilter = {
   id?: InputMaybe<ItemIdFilter>;
   image?: InputMaybe<FileFilter>;
   path?: InputMaybe<StringFilter>;
+  queryString?: InputMaybe<StringFilter>;
+  repoId?: InputMaybe<StringFilter>;
 };
 
 export enum ChallengeAcceptedArticleModelOrderBy {
@@ -71,7 +73,11 @@ export enum ChallengeAcceptedArticleModelOrderBy {
   IdAsc = 'id_ASC',
   IdDesc = 'id_DESC',
   PathAsc = 'path_ASC',
-  PathDesc = 'path_DESC'
+  PathDesc = 'path_DESC',
+  QueryStringAsc = 'queryString_ASC',
+  QueryStringDesc = 'queryString_DESC',
+  RepoIdAsc = 'repoId_ASC',
+  RepoIdDesc = 'repoId_DESC'
 }
 
 /** Record of type Artikel (challenge_accepted_article) */
@@ -92,7 +98,9 @@ export type ChallengeAcceptedArticleRecord = RecordInterface & {
   _updatedAt: Scalars['DateTime']['output'];
   id: Scalars['ItemId']['output'];
   image?: Maybe<FileField>;
-  path: Scalars['String']['output'];
+  path?: Maybe<Scalars['String']['output']>;
+  queryString?: Maybe<Scalars['String']['output']>;
+  repoId?: Maybe<Scalars['String']['output']>;
 };
 
 
@@ -160,6 +168,7 @@ export type ChallengeAcceptedNewsletterModelFilter = {
   _updatedAt?: InputMaybe<UpdatedAtFilter>;
   id?: InputMaybe<ItemIdFilter>;
   path?: InputMaybe<StringFilter>;
+  repoId?: InputMaybe<StringFilter>;
 };
 
 export enum ChallengeAcceptedNewsletterModelOrderBy {
@@ -182,7 +191,9 @@ export enum ChallengeAcceptedNewsletterModelOrderBy {
   IdAsc = 'id_ASC',
   IdDesc = 'id_DESC',
   PathAsc = 'path_ASC',
-  PathDesc = 'path_DESC'
+  PathDesc = 'path_DESC',
+  RepoIdAsc = 'repoId_ASC',
+  RepoIdDesc = 'repoId_DESC'
 }
 
 /** Record of type Newsletter (challenge_accepted_newsletter) */
@@ -202,7 +213,8 @@ export type ChallengeAcceptedNewsletterRecord = RecordInterface & {
   _unpublishingScheduledAt?: Maybe<Scalars['DateTime']['output']>;
   _updatedAt: Scalars['DateTime']['output'];
   id: Scalars['ItemId']['output'];
-  path: Scalars['String']['output'];
+  path?: Maybe<Scalars['String']['output']>;
+  repoId?: Maybe<Scalars['String']['output']>;
 };
 
 
@@ -2116,6 +2128,125 @@ export type LinksFilter = {
   notIn?: InputMaybe<Array<InputMaybe<Scalars['ItemId']['input']>>>;
 };
 
+/** Block of type Marketing Format (marketing_format) */
+export type MarketingFormatRecord = RecordInterface & {
+  __typename?: 'MarketingFormatRecord';
+  _createdAt: Scalars['DateTime']['output'];
+  /** Editing URL */
+  _editingUrl?: Maybe<Scalars['String']['output']>;
+  _firstPublishedAt?: Maybe<Scalars['DateTime']['output']>;
+  _isValid: Scalars['BooleanType']['output'];
+  _modelApiKey: Scalars['String']['output'];
+  _publicationScheduledAt?: Maybe<Scalars['DateTime']['output']>;
+  _publishedAt?: Maybe<Scalars['DateTime']['output']>;
+  /** Generates SEO and Social card meta tags to be used in your frontend */
+  _seoMetaTags: Array<Tag>;
+  _status: ItemStatus;
+  _unpublishingScheduledAt?: Maybe<Scalars['DateTime']['output']>;
+  _updatedAt: Scalars['DateTime']['output'];
+  description: Scalars['String']['output'];
+  id: Scalars['ItemId']['output'];
+  imageBright: FileField;
+  imageDark: FileField;
+  titel: Scalars['String']['output'];
+};
+
+
+/** Block of type Marketing Format (marketing_format) */
+export type MarketingFormatRecord_SeoMetaTagsArgs = {
+  locale?: InputMaybe<SiteLocale>;
+};
+
+
+/** Block of type Marketing Format (marketing_format) */
+export type MarketingFormatRecordDescriptionArgs = {
+  markdown?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+/** Record of type Marketing Startseite (marketing_landing_page) */
+export type MarketingLandingPageRecord = RecordInterface & {
+  __typename?: 'MarketingLandingPageRecord';
+  _createdAt: Scalars['DateTime']['output'];
+  /** Editing URL */
+  _editingUrl?: Maybe<Scalars['String']['output']>;
+  _firstPublishedAt?: Maybe<Scalars['DateTime']['output']>;
+  _isValid: Scalars['BooleanType']['output'];
+  _modelApiKey: Scalars['String']['output'];
+  _publicationScheduledAt?: Maybe<Scalars['DateTime']['output']>;
+  _publishedAt?: Maybe<Scalars['DateTime']['output']>;
+  /** Generates SEO and Social card meta tags to be used in your frontend */
+  _seoMetaTags: Array<Tag>;
+  _status: ItemStatus;
+  _unpublishingScheduledAt?: Maybe<Scalars['DateTime']['output']>;
+  _updatedAt: Scalars['DateTime']['output'];
+  formate: Array<MarketingFormatRecord>;
+  id: Scalars['ItemId']['output'];
+  reasons: Array<MarketingReasonRecord>;
+  sectionDialogDescription: Scalars['String']['output'];
+  sectionDialogTitle: Scalars['String']['output'];
+  sectionNuetzlichDescription: Scalars['String']['output'];
+  sectionNuetzlichTitle: Scalars['String']['output'];
+  sectionTeamDescription: Scalars['String']['output'];
+  sectionTeamTitle: Scalars['String']['output'];
+};
+
+
+/** Record of type Marketing Startseite (marketing_landing_page) */
+export type MarketingLandingPageRecord_SeoMetaTagsArgs = {
+  locale?: InputMaybe<SiteLocale>;
+};
+
+
+/** Record of type Marketing Startseite (marketing_landing_page) */
+export type MarketingLandingPageRecordSectionDialogDescriptionArgs = {
+  markdown?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+
+/** Record of type Marketing Startseite (marketing_landing_page) */
+export type MarketingLandingPageRecordSectionNuetzlichDescriptionArgs = {
+  markdown?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+
+/** Record of type Marketing Startseite (marketing_landing_page) */
+export type MarketingLandingPageRecordSectionTeamDescriptionArgs = {
+  markdown?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+/** Block of type Marketing Reason (marketing_reason) */
+export type MarketingReasonRecord = RecordInterface & {
+  __typename?: 'MarketingReasonRecord';
+  _createdAt: Scalars['DateTime']['output'];
+  /** Editing URL */
+  _editingUrl?: Maybe<Scalars['String']['output']>;
+  _firstPublishedAt?: Maybe<Scalars['DateTime']['output']>;
+  _isValid: Scalars['BooleanType']['output'];
+  _modelApiKey: Scalars['String']['output'];
+  _publicationScheduledAt?: Maybe<Scalars['DateTime']['output']>;
+  _publishedAt?: Maybe<Scalars['DateTime']['output']>;
+  /** Generates SEO and Social card meta tags to be used in your frontend */
+  _seoMetaTags: Array<Tag>;
+  _status: ItemStatus;
+  _unpublishingScheduledAt?: Maybe<Scalars['DateTime']['output']>;
+  _updatedAt: Scalars['DateTime']['output'];
+  description: Scalars['String']['output'];
+  id: Scalars['ItemId']['output'];
+  title: Scalars['String']['output'];
+};
+
+
+/** Block of type Marketing Reason (marketing_reason) */
+export type MarketingReasonRecord_SeoMetaTagsArgs = {
+  locale?: InputMaybe<SiteLocale>;
+};
+
+
+/** Block of type Marketing Reason (marketing_reason) */
+export type MarketingReasonRecordDescriptionArgs = {
+  markdown?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
 export enum MuxThumbnailFormatType {
   Gif = 'gif',
   Jpg = 'jpg',
@@ -2183,6 +2314,8 @@ export type Query = {
   challengeAcceptedPerson?: Maybe<ChallengeAcceptedPersonRecord>;
   /** Returns a specific record */
   event?: Maybe<EventRecord>;
+  /** Returns the single instance record */
+  marketingLandingPage?: Maybe<MarketingLandingPageRecord>;
   /** Returns a specific asset */
   upload?: Maybe<FileField>;
 };
@@ -2325,6 +2458,13 @@ export type QueryEventArgs = {
   filter?: InputMaybe<EventModelFilter>;
   locale?: InputMaybe<SiteLocale>;
   orderBy?: InputMaybe<Array<InputMaybe<EventModelOrderBy>>>;
+};
+
+
+/** The query root for this schema */
+export type QueryMarketingLandingPageArgs = {
+  fallbackLocales?: InputMaybe<Array<SiteLocale>>;
+  locale?: InputMaybe<SiteLocale>;
 };
 
 
@@ -2877,7 +3017,7 @@ export type FocalPoint = {
 export type ChallengeAcceptedHubQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ChallengeAcceptedHubQueryQuery = { __typename?: 'Query', hub?: { __typename?: 'ChallengeAcceptedHubRecord', id: number, logo?: { __typename?: 'FileField', url: string } | null, introduction: { __typename?: 'ChallengeAcceptedHubModelIntroductionField', value: any }, outro: { __typename?: 'ChallengeAcceptedHubModelOutroField', value: any }, items: Array<{ __typename: 'ChallengeAcceptedArticleRecord', id: number, path: string, image?: { __typename?: 'FileField', url: string, width?: number | null, height?: number | null } | null } | { __typename: 'ChallengeAcceptedNewsletterRecord', id: number, path: string } | { __typename: 'EventRecord', id: number, title: string, isPublic?: any | null, fullyBooked?: any | null, signUpLink?: string | null, location: string, startAt: string, endAt?: string | null, description?: { __typename?: 'EventModelDescriptionField', value: any } | null, nonMemberCta?: { __typename?: 'EventModelNonMemberCtaField', value: any } | null }> } | null, people: Array<{ __typename?: 'ChallengeAcceptedPersonRecord', id: number, slug: string, name: string, portrait?: { __typename?: 'FileField', url: string, height?: number | null, width?: number | null } | null }> };
+export type ChallengeAcceptedHubQueryQuery = { __typename?: 'Query', hub?: { __typename?: 'ChallengeAcceptedHubRecord', id: number, logo?: { __typename?: 'FileField', url: string } | null, introduction: { __typename?: 'ChallengeAcceptedHubModelIntroductionField', value: any }, outro: { __typename?: 'ChallengeAcceptedHubModelOutroField', value: any }, items: Array<{ __typename: 'ChallengeAcceptedArticleRecord', id: number, path?: string | null, repoId?: string | null, queryString?: string | null, image?: { __typename?: 'FileField', url: string, width?: number | null, height?: number | null } | null } | { __typename: 'ChallengeAcceptedNewsletterRecord', id: number, path?: string | null, repoId?: string | null } | { __typename: 'EventRecord', id: number, title: string, isPublic?: any | null, fullyBooked?: any | null, signUpLink?: string | null, location: string, startAt: string, endAt?: string | null, description?: { __typename?: 'EventModelDescriptionField', value: any } | null, nonMemberCta?: { __typename?: 'EventModelNonMemberCtaField', value: any } | null }> } | null, people: Array<{ __typename?: 'ChallengeAcceptedPersonRecord', id: number, slug: string, name: string, portrait?: { __typename?: 'FileField', url: string, height?: number | null, width?: number | null } | null }> };
 
 export type ChallengeAcceptedHubMetaQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -2889,7 +3029,7 @@ export type PersonDetailQueryVariables = Exact<{
 }>;
 
 
-export type PersonDetailQuery = { __typename?: 'Query', hub?: { __typename?: 'ChallengeAcceptedHubRecord', id: number, logo?: { __typename?: 'FileField', url: string } | null } | null, person?: { __typename?: 'ChallengeAcceptedPersonRecord', id: number, name: string, slug: string, catchPhrase?: string | null, portrait?: { __typename?: 'FileField', alt?: string | null, url: string, width?: number | null, height?: number | null, title?: string | null } | null, bio?: { __typename?: 'ChallengeAcceptedPersonModelBioField', value: any } | null, items: Array<{ __typename: 'ChallengeAcceptedArticleRecord', id: number, path: string, image?: { __typename?: 'FileField', url: string, width?: number | null, height?: number | null } | null } | { __typename: 'ChallengeAcceptedNewsletterRecord', id: number, path: string } | { __typename: 'EventRecord', id: number, title: string, isPublic?: any | null, fullyBooked?: any | null, signUpLink?: string | null, location: string, startAt: string, endAt?: string | null, description?: { __typename?: 'EventModelDescriptionField', value: any } | null, nonMemberCta?: { __typename?: 'EventModelNonMemberCtaField', value: any } | null }> } | null };
+export type PersonDetailQuery = { __typename?: 'Query', hub?: { __typename?: 'ChallengeAcceptedHubRecord', id: number, logo?: { __typename?: 'FileField', url: string } | null } | null, person?: { __typename?: 'ChallengeAcceptedPersonRecord', id: number, name: string, slug: string, catchPhrase?: string | null, portrait?: { __typename?: 'FileField', alt?: string | null, url: string, width?: number | null, height?: number | null, title?: string | null } | null, bio?: { __typename?: 'ChallengeAcceptedPersonModelBioField', value: any } | null, items: Array<{ __typename: 'ChallengeAcceptedArticleRecord', id: number, repoId?: string | null, queryString?: string | null, path?: string | null, image?: { __typename?: 'FileField', url: string, width?: number | null, height?: number | null } | null } | { __typename: 'ChallengeAcceptedNewsletterRecord', id: number, repoId?: string | null, path?: string | null } | { __typename: 'EventRecord', id: number, title: string, isPublic?: any | null, fullyBooked?: any | null, signUpLink?: string | null, location: string, startAt: string, endAt?: string | null, description?: { __typename?: 'EventModelDescriptionField', value: any } | null, nonMemberCta?: { __typename?: 'EventModelNonMemberCtaField', value: any } | null }> } | null };
 
 export type ChallengeAcceptedPersonListQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -2897,7 +3037,7 @@ export type ChallengeAcceptedPersonListQueryQueryVariables = Exact<{ [key: strin
 export type ChallengeAcceptedPersonListQueryQuery = { __typename?: 'Query', hub?: { __typename?: 'ChallengeAcceptedHubRecord', id: number, logo?: { __typename?: 'FileField', url: string } | null } | null, people: Array<{ __typename?: 'ChallengeAcceptedPersonRecord', id: number, slug: string, name: string, size?: string | null, portrait?: { __typename?: 'FileField', url: string, height?: number | null, width?: number | null } | null }> };
 
 
-export const ChallengeAcceptedHubQueryDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"ChallengeAcceptedHubQuery"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","alias":{"kind":"Name","value":"hub"},"name":{"kind":"Name","value":"challengeAcceptedHub"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"logo"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"url"}}]}},{"kind":"Field","name":{"kind":"Name","value":"introduction"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}},{"kind":"Field","name":{"kind":"Name","value":"outro"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}},{"kind":"Field","name":{"kind":"Name","value":"items"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"EventRecord"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"isPublic"}},{"kind":"Field","name":{"kind":"Name","value":"description"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}},{"kind":"Field","name":{"kind":"Name","value":"nonMemberCta"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}},{"kind":"Field","name":{"kind":"Name","value":"fullyBooked"}},{"kind":"Field","name":{"kind":"Name","value":"signUpLink"}},{"kind":"Field","name":{"kind":"Name","value":"location"}},{"kind":"Field","name":{"kind":"Name","value":"startAt"}},{"kind":"Field","name":{"kind":"Name","value":"endAt"}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"ChallengeAcceptedArticleRecord"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"path"}},{"kind":"Field","name":{"kind":"Name","value":"image"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"url"}},{"kind":"Field","name":{"kind":"Name","value":"width"}},{"kind":"Field","name":{"kind":"Name","value":"height"}}]}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"ChallengeAcceptedNewsletterRecord"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"path"}}]}}]}}]}},{"kind":"Field","alias":{"kind":"Name","value":"people"},"name":{"kind":"Name","value":"allChallengeAcceptedPeople"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"first"},"value":{"kind":"IntValue","value":"50"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"portrait"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"url"}},{"kind":"Field","name":{"kind":"Name","value":"height"}},{"kind":"Field","name":{"kind":"Name","value":"width"}}]}}]}}]}}]} as unknown as DocumentNode<ChallengeAcceptedHubQueryQuery, ChallengeAcceptedHubQueryQueryVariables>;
+export const ChallengeAcceptedHubQueryDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"ChallengeAcceptedHubQuery"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","alias":{"kind":"Name","value":"hub"},"name":{"kind":"Name","value":"challengeAcceptedHub"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"logo"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"url"}}]}},{"kind":"Field","name":{"kind":"Name","value":"introduction"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}},{"kind":"Field","name":{"kind":"Name","value":"outro"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}},{"kind":"Field","name":{"kind":"Name","value":"items"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"EventRecord"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"isPublic"}},{"kind":"Field","name":{"kind":"Name","value":"description"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}},{"kind":"Field","name":{"kind":"Name","value":"nonMemberCta"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}},{"kind":"Field","name":{"kind":"Name","value":"fullyBooked"}},{"kind":"Field","name":{"kind":"Name","value":"signUpLink"}},{"kind":"Field","name":{"kind":"Name","value":"location"}},{"kind":"Field","name":{"kind":"Name","value":"startAt"}},{"kind":"Field","name":{"kind":"Name","value":"endAt"}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"ChallengeAcceptedArticleRecord"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"path"}},{"kind":"Field","name":{"kind":"Name","value":"repoId"}},{"kind":"Field","name":{"kind":"Name","value":"queryString"}},{"kind":"Field","name":{"kind":"Name","value":"image"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"url"}},{"kind":"Field","name":{"kind":"Name","value":"width"}},{"kind":"Field","name":{"kind":"Name","value":"height"}}]}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"ChallengeAcceptedNewsletterRecord"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"path"}},{"kind":"Field","name":{"kind":"Name","value":"repoId"}}]}}]}}]}},{"kind":"Field","alias":{"kind":"Name","value":"people"},"name":{"kind":"Name","value":"allChallengeAcceptedPeople"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"first"},"value":{"kind":"IntValue","value":"50"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"portrait"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"url"}},{"kind":"Field","name":{"kind":"Name","value":"height"}},{"kind":"Field","name":{"kind":"Name","value":"width"}}]}}]}}]}}]} as unknown as DocumentNode<ChallengeAcceptedHubQueryQuery, ChallengeAcceptedHubQueryQueryVariables>;
 export const ChallengeAcceptedHubMetaQueryDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"ChallengeAcceptedHubMetaQuery"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","alias":{"kind":"Name","value":"hub"},"name":{"kind":"Name","value":"challengeAcceptedHub"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"metadata"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"image"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"url"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"imgixParams"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"w"},"value":{"kind":"StringValue","value":"1500","block":false}}]}}]}]}}]}}]}}]}}]} as unknown as DocumentNode<ChallengeAcceptedHubMetaQueryQuery, ChallengeAcceptedHubMetaQueryQueryVariables>;
-export const PersonDetailDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"PersonDetail"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"slug"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","alias":{"kind":"Name","value":"hub"},"name":{"kind":"Name","value":"challengeAcceptedHub"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"logo"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"url"}}]}}]}},{"kind":"Field","alias":{"kind":"Name","value":"person"},"name":{"kind":"Name","value":"challengeAcceptedPerson"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"filter"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"slug"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"eq"},"value":{"kind":"Variable","name":{"kind":"Name","value":"slug"}}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"portrait"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"alt"}},{"kind":"Field","name":{"kind":"Name","value":"url"}},{"kind":"Field","name":{"kind":"Name","value":"width"}},{"kind":"Field","name":{"kind":"Name","value":"height"}},{"kind":"Field","name":{"kind":"Name","value":"title"}}]}},{"kind":"Field","name":{"kind":"Name","value":"catchPhrase"}},{"kind":"Field","name":{"kind":"Name","value":"bio"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}},{"kind":"Field","name":{"kind":"Name","value":"items"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"EventRecord"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"isPublic"}},{"kind":"Field","name":{"kind":"Name","value":"description"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}},{"kind":"Field","name":{"kind":"Name","value":"nonMemberCta"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}},{"kind":"Field","name":{"kind":"Name","value":"fullyBooked"}},{"kind":"Field","name":{"kind":"Name","value":"signUpLink"}},{"kind":"Field","name":{"kind":"Name","value":"location"}},{"kind":"Field","name":{"kind":"Name","value":"startAt"}},{"kind":"Field","name":{"kind":"Name","value":"endAt"}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"ChallengeAcceptedArticleRecord"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"path"}},{"kind":"Field","name":{"kind":"Name","value":"image"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"url"}},{"kind":"Field","name":{"kind":"Name","value":"width"}},{"kind":"Field","name":{"kind":"Name","value":"height"}}]}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"ChallengeAcceptedNewsletterRecord"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"path"}}]}}]}}]}}]}}]} as unknown as DocumentNode<PersonDetailQuery, PersonDetailQueryVariables>;
+export const PersonDetailDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"PersonDetail"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"slug"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","alias":{"kind":"Name","value":"hub"},"name":{"kind":"Name","value":"challengeAcceptedHub"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"logo"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"url"}}]}}]}},{"kind":"Field","alias":{"kind":"Name","value":"person"},"name":{"kind":"Name","value":"challengeAcceptedPerson"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"filter"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"slug"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"eq"},"value":{"kind":"Variable","name":{"kind":"Name","value":"slug"}}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"portrait"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"alt"}},{"kind":"Field","name":{"kind":"Name","value":"url"}},{"kind":"Field","name":{"kind":"Name","value":"width"}},{"kind":"Field","name":{"kind":"Name","value":"height"}},{"kind":"Field","name":{"kind":"Name","value":"title"}}]}},{"kind":"Field","name":{"kind":"Name","value":"catchPhrase"}},{"kind":"Field","name":{"kind":"Name","value":"bio"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}},{"kind":"Field","name":{"kind":"Name","value":"items"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"EventRecord"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"isPublic"}},{"kind":"Field","name":{"kind":"Name","value":"description"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}},{"kind":"Field","name":{"kind":"Name","value":"nonMemberCta"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}},{"kind":"Field","name":{"kind":"Name","value":"fullyBooked"}},{"kind":"Field","name":{"kind":"Name","value":"signUpLink"}},{"kind":"Field","name":{"kind":"Name","value":"location"}},{"kind":"Field","name":{"kind":"Name","value":"startAt"}},{"kind":"Field","name":{"kind":"Name","value":"endAt"}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"ChallengeAcceptedArticleRecord"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"repoId"}},{"kind":"Field","name":{"kind":"Name","value":"queryString"}},{"kind":"Field","name":{"kind":"Name","value":"path"}},{"kind":"Field","name":{"kind":"Name","value":"image"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"url"}},{"kind":"Field","name":{"kind":"Name","value":"width"}},{"kind":"Field","name":{"kind":"Name","value":"height"}}]}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"ChallengeAcceptedNewsletterRecord"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"repoId"}},{"kind":"Field","name":{"kind":"Name","value":"path"}}]}}]}}]}}]}}]} as unknown as DocumentNode<PersonDetailQuery, PersonDetailQueryVariables>;
 export const ChallengeAcceptedPersonListQueryDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"ChallengeAcceptedPersonListQuery"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","alias":{"kind":"Name","value":"hub"},"name":{"kind":"Name","value":"challengeAcceptedHub"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"logo"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"url"}}]}}]}},{"kind":"Field","alias":{"kind":"Name","value":"people"},"name":{"kind":"Name","value":"allChallengeAcceptedPeople"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"first"},"value":{"kind":"IntValue","value":"50"}},{"kind":"Argument","name":{"kind":"Name","value":"orderBy"},"value":{"kind":"EnumValue","value":"size_ASC"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"size"}},{"kind":"Field","name":{"kind":"Name","value":"portrait"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"url"}},{"kind":"Field","name":{"kind":"Name","value":"height"}},{"kind":"Field","name":{"kind":"Name","value":"width"}}]}}]}}]}}]} as unknown as DocumentNode<ChallengeAcceptedPersonListQueryQuery, ChallengeAcceptedPersonListQueryQueryVariables>;
