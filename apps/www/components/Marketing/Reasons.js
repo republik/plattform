@@ -11,23 +11,19 @@ import {
 import Link from 'next/link'
 import { useTranslation } from '../../lib/withT'
 
-const Reasons = ({ inNativeApp }) => {
+const Reasons = ({ inNativeApp, reasons }) => {
   const { t } = useTranslation()
   return (
     <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 15px' }}>
       <TeaserFrontTileRow columns={3}>
-        <TeaserFrontTile align='top'>
-          <h2 {...styles.title}>{t('marketing/page/reasons/1/title')}</h2>
-          <Editorial.P>{t('marketing/page/reasons/1/text')}</Editorial.P>
-        </TeaserFrontTile>
-        <TeaserFrontTile align='top'>
-          <h2 {...styles.title}>{t('marketing/page/reasons/2/title')}</h2>
-          <Editorial.P>{t('marketing/page/reasons/2/text')}</Editorial.P>
-        </TeaserFrontTile>
-        <TeaserFrontTile align='top'>
-          <h2 {...styles.title}>{t('marketing/page/reasons/3/title')}</h2>
-          <Editorial.P>{t('marketing/page/reasons/3/text')}</Editorial.P>
-        </TeaserFrontTile>
+        {reasons.map((reason) => {
+          return (
+            <TeaserFrontTile align='top' key={reason.title}>
+              <h2 {...styles.title}>{reason.title}</h2>
+              <Editorial.P>{reason.text}</Editorial.P>
+            </TeaserFrontTile>
+          )
+        })}
       </TeaserFrontTileRow>
       {!inNativeApp && (
         <div {...styles.buttons}>
