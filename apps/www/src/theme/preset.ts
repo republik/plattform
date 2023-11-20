@@ -7,7 +7,12 @@ export const presetRepublik = definePreset({
       dark: '[data-theme="dark"] &',
     },
   },
-
+  globalCss: {
+    html: {
+      WebkitFontSmoothing: 'auto',
+      MozOsxFontSmoothing: 'auto',
+    },
+  },
   // Useful for theme customization
   theme: {
     extend: {
