@@ -6,8 +6,8 @@
     "title": "Introduction",
     "display": "hidden"
   },
-  "features": {
-    "title": "Features"
+  "architecture": {
+    "title": "Architecture"
   },
   "ux": {
     "title": "UX Guidelines"
