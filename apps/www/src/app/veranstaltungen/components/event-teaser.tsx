@@ -37,10 +37,10 @@ export const EventTeaser = ({ event, isPage, isMember }: EventProps) => {
   return (
     <div
       className={css({
-        py: '6',
+        py: '12',
         // background: 'challengeAccepted.white',
         borderColor: 'divider',
-        borderTopWidth: 1,
+        borderBottomWidth: 1,
         color: 'text',
         '& ul > li': {
           listStyleType: 'none',
@@ -72,6 +72,7 @@ export const EventTeaser = ({ event, isPage, isMember }: EventProps) => {
             className={css({
               textStyle: 'h1Sans',
               fontSize: { base: '3xl', md: '4xl' },
+              mt: '-0.2lh',
             })}
           >
             {event.title}
@@ -81,6 +82,7 @@ export const EventTeaser = ({ event, isPage, isMember }: EventProps) => {
             className={css({
               textStyle: 'h1Sans',
               fontSize: { base: '3xl', md: '4xl' },
+              mt: '-0.2lh',
               '& a': { textDecoration: 'none' },
             })}
           >
@@ -115,7 +117,15 @@ export const EventTeaser = ({ event, isPage, isMember }: EventProps) => {
           </div>
           <div>
             <dt>Wo</dt>
-            <dd>{event.location}</dd>
+            <dd>
+              {event.locationLink ? (
+                <Link href={event.locationLink} rel='noopener noreferrer'>
+                  {event.location}
+                </Link>
+              ) : (
+                event.location
+              )}
+            </dd>
           </div>
         </dl>
         {/* <p className={css({ fontSize: 'xl', fontWeight: 'medium' })}>
