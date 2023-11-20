@@ -23,10 +23,10 @@ export const EventFragment = gql(`
 
 export const EVENTS_QUERY = gql(`
   query EventsQuery($today: DateTime!) {
-    events: allEvents(filter: {startAt: {gte: $today}}) {
+    events: allEvents(filter: {OR: [{startAt: {gte: $today}}, {endAt: {gte: $today}}]}) {
       ...Event
     }
-    pastEvents: allEvents(filter: {startAt: {lt: $today}}) {
+    pastEvents: allEvents(filter: {AND: [{startAt: {lt: $today}}, {endAt: {lt: $today}}]}) {
       ...Event
     }
   }
