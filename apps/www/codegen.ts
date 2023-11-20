@@ -33,7 +33,7 @@ const config: CodegenConfig = {
       },
       config: {
         scalars: {
-          ItemId: 'number',
+          ItemId: 'string',
           IntType: 'number',
           Date: 'string',
           DateTime: 'string',
