@@ -75,7 +75,7 @@ export default async function Page({ searchParams }) {
       }
       return {
         ...item,
-        signUpLink: isMember || item.isPublic ? item.signUpLink : undefined,
+        signUpLink: item.membersOnly && isMember ? item.signUpLink : undefined,
       }
     }),
   }

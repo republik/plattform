@@ -3093,11 +3093,11 @@
             "deprecationReason": null
           },
           {
-            "name": "isPublic",
+            "name": "location",
             "description": null,
             "type": {
               "kind": "INPUT_OBJECT",
-              "name": "BooleanFilter",
+              "name": "StringFilter",
               "ofType": null
             },
             "defaultValue": null,
@@ -3105,11 +3105,23 @@
             "deprecationReason": null
           },
           {
-            "name": "location",
+            "name": "locationLink",
             "description": null,
             "type": {
               "kind": "INPUT_OBJECT",
               "name": "StringFilter",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "membersOnly",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "BooleanFilter",
               "ofType": null
             },
             "defaultValue": null,
@@ -3409,13 +3421,13 @@
             "deprecationReason": null
           },
           {
-            "name": "isPublic_ASC",
+            "name": "locationLink_ASC",
             "description": null,
             "isDeprecated": false,
             "deprecationReason": null
           },
           {
-            "name": "isPublic_DESC",
+            "name": "locationLink_DESC",
             "description": null,
             "isDeprecated": false,
             "deprecationReason": null
@@ -3428,6 +3440,18 @@
           },
           {
             "name": "location_DESC",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "membersOnly_ASC",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "membersOnly_DESC",
             "description": null,
             "isDeprecated": false,
             "deprecationReason": null
@@ -3658,9 +3682,13 @@
             "description": null,
             "args": [],
             "type": {
-              "kind": "OBJECT",
-              "name": "EventModelDescriptionField",
-              "ofType": null
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "EventModelDescriptionField",
+                "ofType": null
+              }
             },
             "isDeprecated": false,
             "deprecationReason": null
@@ -3706,18 +3734,6 @@
             "deprecationReason": null
           },
           {
-            "name": "isPublic",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "BooleanType",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
             "name": "location",
             "description": null,
             "args": [],
@@ -3729,6 +3745,30 @@
                 "name": "String",
                 "ofType": null
               }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "locationLink",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "membersOnly",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "BooleanType",
+              "ofType": null
             },
             "isDeprecated": false,
             "deprecationReason": null
