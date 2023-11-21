@@ -8,7 +8,7 @@ import { StructuredText } from 'react-datocms'
 
 // export const swissTime = timeFormatLocale(timeDefinition)
 
-const formatDate = swissTime.format('%A, %d.%m.%y')
+const formatDate = swissTime.format('%A, %d.%m.%Y')
 const formateTime = swissTime.format('%H.%M')
 
 type EventProps = {
