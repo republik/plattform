@@ -8,7 +8,7 @@ import { StructuredText } from 'react-datocms'
 
 // export const swissTime = timeFormatLocale(timeDefinition)
 
-const formatDate = swissTime.format('%A, %d.%m.%Y')
+const formatDateTime = swissTime.format('%A, %d.%m.%Y, %H.%M')
 const formateTime = swissTime.format('%H.%M')
 
 type EventProps = {
@@ -94,7 +94,7 @@ export const EventTeaser = ({ event, isPage, isMember }: EventProps) => {
           className={css({
             display: 'grid',
             gap: '2',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(18rem, 1fr))',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(20rem, 1fr))',
 
             '& dt': {
               fontSize: 's',
@@ -108,8 +108,7 @@ export const EventTeaser = ({ event, isPage, isMember }: EventProps) => {
           <div>
             <dt>Wann</dt>
             <dd>
-              {formatDate(isoParse(event.startAt))}{' '}
-              {formateTime(isoParse(event.startAt))}
+              {formatDateTime(isoParse(event.startAt))}
               {event.endAt
                 ? `–${formateTime(isoParse(event.endAt))} Uhr`
                 : ' Uhr'}
