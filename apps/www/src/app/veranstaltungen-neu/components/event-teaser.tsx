@@ -129,12 +129,6 @@ export const EventTeaser = ({ event, isPage, isMember }: EventProps) => {
             </dd>
           </div>
         </dl>
-        {/* <p className={css({ fontSize: 'xl', fontWeight: 'medium' })}>
-          
-        </p>
-        <p className={css({ fontSize: 'xl', fontWeight: 'medium' })}>
-          {event.location}
-        </p> */}
 
         <StructuredText data={event.description.value} />
         {event.fullyBooked ? (

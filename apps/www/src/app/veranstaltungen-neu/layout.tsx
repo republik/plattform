@@ -9,13 +9,9 @@ export default async function Layout(props: { children: React.ReactNode }) {
         <div
           className={css({
             color: 'text',
-            bg: 'pageBackground',
             pb: '16-32',
             pt: '4',
           })}
-          style={{
-            minHeight: 'calc(100dvh - 69px)',
-          }}
         >
           <Container>{props.children}</Container>
         </div>
