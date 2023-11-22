@@ -2163,6 +2163,8 @@ export type Query = {
   _allChallengeAcceptedPeopleMeta: CollectionMetadata;
   /** Returns meta information regarding a record collection */
   _allEventsMeta: CollectionMetadata;
+  /** Returns meta information regarding a record collection */
+  _allSchemaMigrationsMeta: CollectionMetadata;
   /** Returns meta information regarding an assets collection */
   _allUploadsMeta: CollectionMetadata;
   /** Returns the single instance record */
@@ -2175,6 +2177,8 @@ export type Query = {
   allChallengeAcceptedPeople: Array<ChallengeAcceptedPersonRecord>;
   /** Returns a collection of records */
   allEvents: Array<EventRecord>;
+  /** Returns a collection of records */
+  allSchemaMigrations: Array<SchemaMigrationRecord>;
   /** Returns a collection of assets */
   allUploads: Array<FileField>;
   /** Returns a specific record */
@@ -2187,6 +2191,8 @@ export type Query = {
   challengeAcceptedPerson?: Maybe<ChallengeAcceptedPersonRecord>;
   /** Returns a specific record */
   event?: Maybe<EventRecord>;
+  /** Returns a specific record */
+  schemaMigration?: Maybe<SchemaMigrationRecord>;
   /** Returns a specific asset */
   upload?: Maybe<FileField>;
 };
@@ -2216,6 +2222,13 @@ export type Query_AllChallengeAcceptedPeopleMetaArgs = {
 /** The query root for this schema */
 export type Query_AllEventsMetaArgs = {
   filter?: InputMaybe<EventModelFilter>;
+  locale?: InputMaybe<SiteLocale>;
+};
+
+
+/** The query root for this schema */
+export type Query_AllSchemaMigrationsMetaArgs = {
+  filter?: InputMaybe<SchemaMigrationModelFilter>;
   locale?: InputMaybe<SiteLocale>;
 };
 
@@ -2279,6 +2292,17 @@ export type QueryAllEventsArgs = {
 
 
 /** The query root for this schema */
+export type QueryAllSchemaMigrationsArgs = {
+  fallbackLocales?: InputMaybe<Array<SiteLocale>>;
+  filter?: InputMaybe<SchemaMigrationModelFilter>;
+  first?: InputMaybe<Scalars['IntType']['input']>;
+  locale?: InputMaybe<SiteLocale>;
+  orderBy?: InputMaybe<Array<InputMaybe<SchemaMigrationModelOrderBy>>>;
+  skip?: InputMaybe<Scalars['IntType']['input']>;
+};
+
+
+/** The query root for this schema */
 export type QueryAllUploadsArgs = {
   fallbackLocales?: InputMaybe<Array<SiteLocale>>;
   filter?: InputMaybe<UploadFilter>;
@@ -2329,6 +2353,15 @@ export type QueryEventArgs = {
   filter?: InputMaybe<EventModelFilter>;
   locale?: InputMaybe<SiteLocale>;
   orderBy?: InputMaybe<Array<InputMaybe<EventModelOrderBy>>>;
+};
+
+
+/** The query root for this schema */
+export type QuerySchemaMigrationArgs = {
+  fallbackLocales?: InputMaybe<Array<SiteLocale>>;
+  filter?: InputMaybe<SchemaMigrationModelFilter>;
+  locale?: InputMaybe<SiteLocale>;
+  orderBy?: InputMaybe<Array<InputMaybe<SchemaMigrationModelOrderBy>>>;
 };
 
 
@@ -2394,6 +2427,70 @@ export type ResponsiveImage = {
   title?: Maybe<Scalars['String']['output']>;
   webpSrcSet: Scalars['String']['output'];
   width: Scalars['IntType']['output'];
+};
+
+export type SchemaMigrationModelFilter = {
+  AND?: InputMaybe<Array<InputMaybe<SchemaMigrationModelFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<SchemaMigrationModelFilter>>>;
+  _createdAt?: InputMaybe<CreatedAtFilter>;
+  _firstPublishedAt?: InputMaybe<PublishedAtFilter>;
+  _isValid?: InputMaybe<BooleanFilter>;
+  _publicationScheduledAt?: InputMaybe<PublishedAtFilter>;
+  _publishedAt?: InputMaybe<PublishedAtFilter>;
+  _status?: InputMaybe<StatusFilter>;
+  _unpublishingScheduledAt?: InputMaybe<PublishedAtFilter>;
+  _updatedAt?: InputMaybe<UpdatedAtFilter>;
+  id?: InputMaybe<ItemIdFilter>;
+  name?: InputMaybe<StringFilter>;
+};
+
+export enum SchemaMigrationModelOrderBy {
+  CreatedAtAsc = '_createdAt_ASC',
+  CreatedAtDesc = '_createdAt_DESC',
+  FirstPublishedAtAsc = '_firstPublishedAt_ASC',
+  FirstPublishedAtDesc = '_firstPublishedAt_DESC',
+  IsValidAsc = '_isValid_ASC',
+  IsValidDesc = '_isValid_DESC',
+  PublicationScheduledAtAsc = '_publicationScheduledAt_ASC',
+  PublicationScheduledAtDesc = '_publicationScheduledAt_DESC',
+  PublishedAtAsc = '_publishedAt_ASC',
+  PublishedAtDesc = '_publishedAt_DESC',
+  StatusAsc = '_status_ASC',
+  StatusDesc = '_status_DESC',
+  UnpublishingScheduledAtAsc = '_unpublishingScheduledAt_ASC',
+  UnpublishingScheduledAtDesc = '_unpublishingScheduledAt_DESC',
+  UpdatedAtAsc = '_updatedAt_ASC',
+  UpdatedAtDesc = '_updatedAt_DESC',
+  IdAsc = 'id_ASC',
+  IdDesc = 'id_DESC',
+  NameAsc = 'name_ASC',
+  NameDesc = 'name_DESC'
+}
+
+/** Record of type Schema migration (schema_migration) */
+export type SchemaMigrationRecord = RecordInterface & {
+  __typename?: 'SchemaMigrationRecord';
+  _createdAt: Scalars['DateTime']['output'];
+  /** Editing URL */
+  _editingUrl?: Maybe<Scalars['String']['output']>;
+  _firstPublishedAt?: Maybe<Scalars['DateTime']['output']>;
+  _isValid: Scalars['BooleanType']['output'];
+  _modelApiKey: Scalars['String']['output'];
+  _publicationScheduledAt?: Maybe<Scalars['DateTime']['output']>;
+  _publishedAt?: Maybe<Scalars['DateTime']['output']>;
+  /** Generates SEO and Social card meta tags to be used in your frontend */
+  _seoMetaTags: Array<Tag>;
+  _status: ItemStatus;
+  _unpublishingScheduledAt?: Maybe<Scalars['DateTime']['output']>;
+  _updatedAt: Scalars['DateTime']['output'];
+  id: Scalars['ItemId']['output'];
+  name: Scalars['String']['output'];
+};
+
+
+/** Record of type Schema migration (schema_migration) */
+export type SchemaMigrationRecord_SeoMetaTagsArgs = {
+  locale?: InputMaybe<SiteLocale>;
 };
 
 export type SeoField = {
