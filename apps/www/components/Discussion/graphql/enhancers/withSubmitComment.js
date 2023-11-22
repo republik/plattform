@@ -1,6 +1,6 @@
 import compose from 'lodash/flowRight'
 import { graphql, withApollo } from '@apollo/client/react/hoc'
-import uuid from 'uuid/v4'
+import { v4 as uuid } from 'uuid'
 
 import produce from '../../../../lib/immer'
 import withT from '../../../../lib/withT'
