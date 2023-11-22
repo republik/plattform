@@ -31,7 +31,7 @@ export default async function Page({ params: { slug } }) {
         }
       />
       <p className={css({ mt: '6' })}>
-        <Link href='/veranstaltungen'>Alle Veranstaltungen</Link>
+        <Link href='/veranstaltungen-neu'>Alle Veranstaltungen</Link>
       </p>
     </div>
   )
