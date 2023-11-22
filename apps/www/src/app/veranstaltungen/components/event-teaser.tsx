@@ -1,7 +1,7 @@
 import { Share } from '@app/components/share/share'
 import { css } from '@app/styled-system/css'
 import { hstack, vstack } from '@app/styled-system/patterns'
-import { IconShare } from '@republik/icons'
+import { IconDownload, IconShare } from '@republik/icons'
 import { isoParse } from 'd3-time-format'
 import { swissTime } from 'lib/utils/format'
 import Link from 'next/link'
@@ -165,7 +165,7 @@ export const EventTeaser = ({ isPage, isMember, event }: EventProps) => {
             )}
           </>
         )}
-        <div>
+        <div className={hstack({ gap: '4', mt: '2' })}>
           <Share
             title={event.title}
             url={`${process.env.NEXT_PUBLIC_BASE_URL}/veranstaltungen/${event.slug}`}
@@ -178,6 +178,7 @@ export const EventTeaser = ({ isPage, isMember, event }: EventProps) => {
                 cursor: 'pointer',
                 fontWeight: 'medium',
                 fontSize: 's',
+                textDecoration: 'none',
                 _hover: {
                   color: 'textSoft',
                 },
@@ -186,6 +187,23 @@ export const EventTeaser = ({ isPage, isMember, event }: EventProps) => {
               <IconShare size={20} /> Veranstaltung Teilen
             </div>
           </Share>
+
+          <Link
+            className={hstack({
+              gap: '2',
+              color: 'text',
+              cursor: 'pointer',
+              fontWeight: 'medium',
+              fontSize: 's',
+              textDecoration: 'none',
+              _hover: {
+                color: 'textSoft',
+              },
+            })}
+            href={`/veranstaltungen/${event.slug}/ics`}
+          >
+            <IconDownload size={20} /> Zum Kalender hinzufügen
+          </Link>
         </div>
       </div>
     </div>
