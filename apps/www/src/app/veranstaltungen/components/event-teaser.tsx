@@ -1,5 +1,7 @@
+import { Share } from '@app/components/share/share'
 import { css } from '@app/styled-system/css'
-import { vstack } from '@app/styled-system/patterns'
+import { hstack, vstack } from '@app/styled-system/patterns'
+import { IconShare } from '@republik/icons'
 import { isoParse } from 'd3-time-format'
 import { swissTime } from 'lib/utils/format'
 import Link from 'next/link'
@@ -52,6 +54,7 @@ export const EventTeaser = ({ isPage, isMember, event }: EventProps) => {
         },
         '& a': {
           color: 'text',
+          _hover: { color: 'textSoft' },
         },
       })}
     >
@@ -162,6 +165,28 @@ export const EventTeaser = ({ isPage, isMember, event }: EventProps) => {
             )}
           </>
         )}
+        <div>
+          <Share
+            title={event.title}
+            url={`${process.env.NEXT_PUBLIC_BASE_URL}/veranstaltungen/${event.slug}`}
+            emailSubject={`Republik: ${event.title}`}
+          >
+            <div
+              className={hstack({
+                gap: '2',
+                color: 'text',
+                cursor: 'pointer',
+                fontWeight: 'medium',
+                fontSize: 's',
+                _hover: {
+                  color: 'textSoft',
+                },
+              })}
+            >
+              <IconShare size={20} /> Veranstaltung Teilen
+            </div>
+          </Share>
+        </div>
       </div>
     </div>
   )
