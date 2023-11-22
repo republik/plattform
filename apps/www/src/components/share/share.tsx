@@ -1,31 +1,18 @@
 'use client'
 import { usePlatformInformation } from '@app/lib/hooks/usePlatformInformation'
-import { IconShare } from '@republik/icons'
+import { css } from '@app/styled-system/css'
+import { ReactNode } from 'react'
 import { ShareNative } from './share-native'
 import { ShareOverlay } from './share-overlay'
 import { ShareProps } from './types'
-import { hstack } from '@app/styled-system/patterns'
-import { css } from '@app/styled-system/css'
 
-export function Share({ title, url, emailSubject }: ShareProps) {
+export function Share({
+  title,
+  url,
+  emailSubject,
+  children,
+}: ShareProps & { children: ReactNode }) {
   const { isNativeApp } = usePlatformInformation()
-
-  const label = (
-    <div
-      className={hstack({
-        gap: '2',
-        color: 'text',
-        textStyle: 'sansSerifBold',
-        fontSize: 'm',
-        cursor: 'pointer',
-        _hover: {
-          color: 'contrast',
-        },
-      })}
-    >
-      <IconShare size={20} /> Teilen
-    </div>
-  )
 
   return isNativeApp ? (
     <div
@@ -39,7 +26,7 @@ export function Share({ title, url, emailSubject }: ShareProps) {
         title={title}
         url={url}
         emailSubject={emailSubject}
-        triggerLabel={label}
+        triggerLabel={children}
       />
     </div>
   ) : (
@@ -47,7 +34,7 @@ export function Share({ title, url, emailSubject }: ShareProps) {
       title={title}
       url={url}
       emailSubject={emailSubject}
-      triggerLabel={label}
+      triggerLabel={children}
     />
   )
 }
