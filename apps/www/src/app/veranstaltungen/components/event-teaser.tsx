@@ -6,8 +6,6 @@ import Link from 'next/link'
 import { ComponentPropsWithoutRef } from 'react'
 import { StructuredText } from 'react-datocms'
 
-// export const swissTime = timeFormatLocale(timeDefinition)
-
 const formatDateTime = swissTime.format('%A, %d.%m.%Y, %H.%M')
 const formateTime = swissTime.format('%H.%M')
 
@@ -33,7 +31,7 @@ type EventProps = {
   isMember: boolean
 }
 
-export const EventTeaser = ({ event, isPage, isMember }: EventProps) => {
+export const EventTeaser = ({ isPage, isMember, event }: EventProps) => {
   return (
     <div
       className={css({

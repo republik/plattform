@@ -1,4 +1,4 @@
-import { EVENT_QUERY, EventFragment } from '@app/graphql/cms/events.query'
+import { EVENT_QUERY, EventRecordFields } from '@app/graphql/cms/events.query'
 import { useFragment } from '@app/graphql/gql'
 import { getCMSClient } from '@app/lib/apollo/cms-client'
 import { getMe } from '@app/lib/auth/me'
@@ -13,7 +13,7 @@ export default async function Page({ params: { slug } }) {
     query: EVENT_QUERY,
     variables: { slug },
   })
-  const event = useFragment(EventFragment, data.event)
+  const event = useFragment(EventRecordFields, data.event)
   const me = await getMe()
 
   if (!event) {

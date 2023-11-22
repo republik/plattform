@@ -1,4 +1,4 @@
-import { EVENTS_QUERY, EventFragment } from '@app/graphql/cms/events.query'
+import { EVENTS_QUERY, EventRecordFields } from '@app/graphql/cms/events.query'
 import { getCMSClient } from '@app/lib/apollo/cms-client'
 import { getMe } from '@app/lib/auth/me'
 import { EventTeaser } from './components/event-teaser'
@@ -13,8 +13,8 @@ export default async function Page() {
       today: new Date(Date.now()).toISOString(),
     },
   })
-  const currentEvents = useFragment(EventFragment, data.events)
-  const pastEvents = useFragment(EventFragment, data.pastEvents)
+  const currentEvents = useFragment(EventRecordFields, data.events)
+  const pastEvents = useFragment(EventRecordFields, data.pastEvents)
 
   const me = await getMe()
   const isMember =
