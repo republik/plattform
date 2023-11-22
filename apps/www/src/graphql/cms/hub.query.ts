@@ -18,16 +18,17 @@ query ChallengeAcceptedHubQuery {
       ... on EventRecord {
         id
         title
-        isPublic
         description {
           value
         }
+        membersOnly
         nonMemberCta {
           value
         }
         fullyBooked
         signUpLink
         location
+        locationLink
         startAt
         endAt
       }

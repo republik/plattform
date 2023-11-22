@@ -50,7 +50,7 @@ export default async function Page({ params: { slug } }: PageProps) {
       }
       return {
         ...item,
-        signUpLink: isMember || item.isPublic ? item.signUpLink : undefined,
+        signUpLink: item.membersOnly && isMember ? item.signUpLink : undefined,
       }
     }),
   }
