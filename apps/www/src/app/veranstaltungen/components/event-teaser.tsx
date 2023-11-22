@@ -86,9 +86,7 @@ export const EventTeaser = ({ event, isPage, isMember }: EventProps) => {
               '& a': { textDecoration: 'none' },
             })}
           >
-            <Link href={`/veranstaltungen-neu/${event.slug}`}>
-              {event.title}
-            </Link>
+            <Link href={`/veranstaltungen/${event.slug}`}>{event.title}</Link>
           </h2>
         )}
 
