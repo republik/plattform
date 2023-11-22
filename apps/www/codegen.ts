@@ -11,16 +11,21 @@ if (!process.env.DATO_CMS_API_TOKEN) {
   throw new Error('Please set DATOCMS_API_TOKEN in your .env file')
 }
 
+const headers = {
+  Authorization: process.env.DATO_CMS_API_TOKEN,
+  'X-Exclude-Invalid': 'true',
+}
+
+if (process.env.DATO_CMS_ENVIRONMENT) {
+  headers['X-Environment'] = process.env.DATO_CMS_ENVIRONMENT
+}
+
 const config: CodegenConfig = {
   overwrite: true,
   schema: [
     {
       [process.env.DATO_CMS_API_URL]: {
-        headers: {
-          Authorization: process.env.DATO_CMS_API_TOKEN,
-          'X-Exclude-Invalid': 'true',
-          'X-Environment': process.env.DATO_CMS_ENVIRONMENT ?? 'main',
-        },
+        headers,
       },
     },
   ],
