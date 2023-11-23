@@ -7,6 +7,11 @@ import { ApolloWrapper } from '@app/lib/apollo/provider'
 import { css } from '@app/styled-system/css'
 import Script from 'next/script'
 import { ReactNode, Suspense } from 'react'
+import { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL),
+}
 
 export default async function RootLayout({
   // Layouts must accept a children prop.

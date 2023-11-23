@@ -34,7 +34,6 @@ export async function generateMetadata(
   const { title, description, image } = data.hub?.metadata || {}
 
   return {
-    metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL),
     title: title || 'Challenge Accepted',
     description: description,
     openGraph: {

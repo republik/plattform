@@ -177,7 +177,6 @@ export async function generateMetadata(
   }
 
   const metadata: Metadata = {
-    metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL),
     title: `Challenge Accepted: ${res.data.person.name} | Republik`,
     description: `Die Klimakrise ist hier. Die Lage ist ernst. 25 Menschen, die die Herausforderung annehmen. Kurzporträt und Inhalte zu ${res.data.person.name}.`,
   }
