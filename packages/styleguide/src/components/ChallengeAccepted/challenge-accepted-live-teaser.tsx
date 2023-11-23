@@ -80,7 +80,10 @@ const styles = {
     },
   }),
   text: css({
-    ...fontStyles.sansSerifRegular23,
+    ...fontStyles.sansSerifRegular18,
+    [mediaQueries.mUp]: {
+      ...fontStyles.sansSerifRegular23,
+    },
   }),
   textWrapper: css({
     display: 'flex',
