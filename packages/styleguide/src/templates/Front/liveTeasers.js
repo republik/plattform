@@ -276,11 +276,11 @@ const createLiveTeasers = ({
       },
       isVoid: true,
       editorModule: 'liveteaser',
-      editorOptions: {
-        type: 'LIVETEASERFLYER',
-        insertButtonText: 'Guten Tag',
-        insertId: 'flyer',
-      },
+      // editorOptions: {
+      //   type: 'LIVETEASERFLYER',
+      //   insertButtonText: 'Guten Tag',
+      //   insertId: 'flyer',
+      // },
     },
     {
       matchMdast: (node) =>
