@@ -6,8 +6,7 @@ import { css } from '@app/styled-system/css'
 import { useFragment } from '@app/graphql/gql'
 
 export default async function Page() {
-  const client = getCMSClient()
-  const { data } = await client.query({
+  const { data } = await getCMSClient().query({
     query: EVENTS_QUERY,
     variables: {
       today: new Date(Date.now()).toISOString(),

@@ -39,3 +39,19 @@ export const EVENT_QUERY = gql(`
     }
   }
 `)
+
+export const EVENT_META_QUERY = gql(`
+query EventMetaQuery($slug: String) {
+  event(filter: { slug: { eq: $slug }}) {
+    id
+    title
+    seo {
+      title
+      description
+      image {
+        url(imgixParams: {w: "1500"})
+      }
+    }
+  }
+}
+`)
