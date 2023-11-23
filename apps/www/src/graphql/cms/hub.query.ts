@@ -18,6 +18,7 @@ query ChallengeAcceptedHubQuery {
       ... on EventRecord {
         id
         title
+        slug
         description {
           value
         }

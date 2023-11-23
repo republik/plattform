@@ -13,10 +13,11 @@ import {
 import { getCMSClient } from '@app/lib/apollo/cms-client'
 import { getMe } from '@app/lib/auth/me'
 import { css } from '@app/styled-system/css'
-import { vstack } from '@app/styled-system/patterns'
+import { hstack, vstack } from '@app/styled-system/patterns'
 import Image from 'next/image'
 import { StructuredText } from 'react-datocms'
 import { Share } from '@app/components/share/share'
+import { IconShare } from '@republik/icons'
 
 export async function generateMetadata(
   _, // params
@@ -33,7 +34,6 @@ export async function generateMetadata(
   const { title, description, image } = data.hub?.metadata || {}
 
   return {
-    metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL),
     title: title || 'Challenge Accepted',
     description: description,
     openGraph: {
@@ -80,6 +80,29 @@ export default async function Page({ searchParams }) {
     }),
   }
 
+  const share = (
+    <Share
+      title='Challenge Accepted'
+      url={`${process.env.NEXT_PUBLIC_BASE_URL}/challenge-accepted`}
+      emailSubject='Republik: Challenge Accepted'
+    >
+      <div
+        className={hstack({
+          gap: '2',
+          color: 'text',
+          textStyle: 'sansSerifBold',
+          fontSize: 'm',
+          cursor: 'pointer',
+          _hover: {
+            color: 'contrast',
+          },
+        })}
+      >
+        <IconShare size={20} /> Teilen
+      </div>
+    </Share>
+  )
+
   return (
     <>
       <h1
@@ -114,13 +137,7 @@ export default async function Page({ searchParams }) {
       </section>
       <Container>
         <div className={vstack({ gap: '16-32', alignItems: 'stretch' })}>
-          <div className={css({ margin: '0 auto' })}>
-            <Share
-              title='Challenge Accepted'
-              url={`${process.env.NEXT_PUBLIC_BASE_URL}/challenge-accepted`}
-              emailSubject='Republik: Challenge Accepted'
-            />
-          </div>
+          <div className={css({ margin: '0 auto' })}>{share}</div>
 
           <section className={css({ textStyle: 'pageIntro' })}>
             <StructuredText data={hub.introduction.value} />
@@ -190,13 +207,7 @@ export default async function Page({ searchParams }) {
           >
             <StructuredText data={hub.outro.value} />
           </section>
-          <div className={css({ margin: '0 auto' })}>
-            <Share
-              title='Challenge Accepted'
-              url={`${process.env.NEXT_PUBLIC_BASE_URL}/challenge-accepted`}
-              emailSubject='Republik: Challenge Accepted'
-            />
-          </div>
+          <div className={css({ margin: '0 auto' })}>{share}</div>
         </div>
       </Container>
     </>

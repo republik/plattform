@@ -1,12 +1,12 @@
+import { Share } from '@app/components/share/share'
 import { css } from '@app/styled-system/css'
-import { vstack } from '@app/styled-system/patterns'
+import { hstack, vstack } from '@app/styled-system/patterns'
+import { IconCalendar, IconShare } from '@republik/icons'
 import { isoParse } from 'd3-time-format'
 import { swissTime } from 'lib/utils/format'
 import Link from 'next/link'
 import { ComponentPropsWithoutRef } from 'react'
 import { StructuredText } from 'react-datocms'
-
-// export const swissTime = timeFormatLocale(timeDefinition)
 
 const formatDateTime = swissTime.format('%A, %d.%m.%Y, %H.%M')
 const formateTime = swissTime.format('%H.%M')
@@ -33,12 +33,11 @@ type EventProps = {
   isMember: boolean
 }
 
-export const EventTeaser = ({ event, isPage, isMember }: EventProps) => {
+export const EventTeaser = ({ isPage, isMember, event }: EventProps) => {
   return (
     <div
       className={css({
-        py: '12',
-        // background: 'challengeAccepted.white',
+        py: '6',
         borderColor: 'divider',
         borderBottomWidth: 1,
         color: 'text',
@@ -54,6 +53,7 @@ export const EventTeaser = ({ event, isPage, isMember }: EventProps) => {
         },
         '& a': {
           color: 'text',
+          _hover: { color: 'textSoft' },
         },
       })}
     >
@@ -72,7 +72,7 @@ export const EventTeaser = ({ event, isPage, isMember }: EventProps) => {
             className={css({
               textStyle: 'h1Sans',
               fontSize: { base: '3xl', md: '4xl' },
-              mt: '-0.2lh',
+              mt: '-0.1lh',
             })}
           >
             {event.title}
@@ -82,13 +82,11 @@ export const EventTeaser = ({ event, isPage, isMember }: EventProps) => {
             className={css({
               textStyle: 'h1Sans',
               fontSize: { base: '3xl', md: '4xl' },
-              mt: '-0.2lh',
+              mt: '-0.1lh',
               '& a': { textDecoration: 'none' },
             })}
           >
-            <Link href={`/veranstaltungen-neu/${event.slug}`}>
-              {event.title}
-            </Link>
+            <Link href={`/veranstaltungen/${event.slug}`}>{event.title}</Link>
           </h2>
         )}
 
@@ -166,6 +164,46 @@ export const EventTeaser = ({ event, isPage, isMember }: EventProps) => {
             )}
           </>
         )}
+        <div className={hstack({ gap: '4', mt: '2' })}>
+          <Share
+            title={event.title}
+            url={`${process.env.NEXT_PUBLIC_BASE_URL}/veranstaltungen/${event.slug}`}
+            emailSubject={`Republik: ${event.title}`}
+          >
+            <div
+              className={hstack({
+                gap: '2',
+                color: 'text',
+                cursor: 'pointer',
+                fontWeight: 'medium',
+                fontSize: 's',
+                textDecoration: 'none',
+                _hover: {
+                  color: 'textSoft',
+                },
+              })}
+            >
+              <IconShare size={20} /> Teilen
+            </div>
+          </Share>
+
+          <Link
+            className={hstack({
+              gap: '2',
+              color: 'text',
+              cursor: 'pointer',
+              fontWeight: 'medium',
+              fontSize: 's',
+              textDecoration: 'none',
+              _hover: {
+                color: 'textSoft',
+              },
+            })}
+            href={`/veranstaltungen/${event.slug}/ics`}
+          >
+            <IconCalendar size={20} /> Zum Kalender hinzufügen
+          </Link>
+        </div>
       </div>
     </div>
   )

@@ -1,4 +1,4 @@
-import { EVENTS_QUERY, EventFragment } from '@app/graphql/cms/events.query'
+import { EVENTS_QUERY, EventRecordFields } from '@app/graphql/cms/events.query'
 import { getCMSClient } from '@app/lib/apollo/cms-client'
 import { getMe } from '@app/lib/auth/me'
 import { EventTeaser } from './components/event-teaser'
@@ -6,15 +6,21 @@ import { css } from '@app/styled-system/css'
 import { useFragment } from '@app/graphql/gql'
 
 export default async function Page() {
-  const client = getCMSClient()
-  const { data } = await client.query({
+  const { data } = await getCMSClient().query({
     query: EVENTS_QUERY,
     variables: {
       today: new Date(Date.now()).toISOString(),
     },
+    context: {
+      fetchOptions: {
+        next: {
+          tags: ['event'],
+        },
+      },
+    },
   })
-  const currentEvents = useFragment(EventFragment, data.events)
-  const pastEvents = useFragment(EventFragment, data.pastEvents)
+  const currentEvents = useFragment(EventRecordFields, data.events)
+  const pastEvents = useFragment(EventRecordFields, data.pastEvents)
 
   const me = await getMe()
   const isMember =
@@ -24,7 +30,7 @@ export default async function Page() {
     <div>
       <h1
         className={css({
-          textStyle: 'h1Sans',
+          textStyle: 'h2Sans',
           py: '6',
           borderColor: 'divider',
           borderBottomWidth: 1,

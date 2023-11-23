@@ -28,10 +28,11 @@ export const PERSON_DETAIL_QUERY = gql(`
       ... on EventRecord {
         id
         title
-        membersOnly
+        slug
         description {
           value
         }
+        membersOnly
         nonMemberCta {
           value
         }
