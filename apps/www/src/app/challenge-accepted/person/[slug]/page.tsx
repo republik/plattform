@@ -183,25 +183,23 @@ export async function generateMetadata(
 
   const previousImages = parentMetadata?.openGraph?.images || []
 
+  const images = [
+    res.data.person?.seo?.image?.url,
+    `/challenge-accepted/person/${params.slug}/api/og`,
+    ...previousImages,
+  ].filter(Boolean)
+
   return {
     ...metadata,
     openGraph: {
       title: metadata.title,
       description: metadata.description,
-      images: [
-        res.data.person?.seo?.image?.url,
-        `/challenge-accepted/person/${params.slug}/api/og`,
-        ...previousImages,
-      ].filter(Boolean),
+      images,
     },
     twitter: {
       title: metadata.title,
       description: metadata.description,
-      images: [
-        res.data.person?.seo?.image?.url,
-        `/challenge-accepted/person/${params.slug}/api/og`,
-        ...previousImages,
-      ].filter(Boolean),
+      images,
     },
   }
 }
