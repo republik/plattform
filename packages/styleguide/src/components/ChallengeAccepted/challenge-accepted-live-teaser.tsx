@@ -191,7 +191,8 @@ const styles = {
     justifyContent: 'center',
     alignItems: 'center',
     placeSelf: 'center',
-    maxHeight: 300,
+    maxHeight: 150,
+    maxWidth: '60%',
     [mediaQueries.mUp]: {
       maxHeight: 400,
       maxWidth: 500,
@@ -205,6 +206,10 @@ const styles = {
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'flex-start',
-    maxWidth: 550,
+    width: '100%',
+    [mediaQueries.mUp]: {
+      width: '60%',
+      maxWidth: 550,
+    },
   }),
 }
