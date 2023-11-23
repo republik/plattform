@@ -1,7 +1,7 @@
 import { Share } from '@app/components/share/share'
 import { css } from '@app/styled-system/css'
 import { hstack, vstack } from '@app/styled-system/patterns'
-import { IconDownload, IconShare } from '@republik/icons'
+import { IconCalendar, IconShare } from '@republik/icons'
 import { isoParse } from 'd3-time-format'
 import { swissTime } from 'lib/utils/format'
 import Link from 'next/link'
@@ -40,7 +40,7 @@ export const EventTeaser = ({ isPage, isMember, event }: EventProps) => {
         py: '12',
         // background: 'challengeAccepted.white',
         borderColor: 'divider',
-        borderBottomWidth: 1,
+        // borderBottomWidth: 1,
         color: 'text',
         '& ul > li': {
           listStyleType: 'none',
@@ -184,7 +184,7 @@ export const EventTeaser = ({ isPage, isMember, event }: EventProps) => {
                 },
               })}
             >
-              <IconShare size={20} /> Veranstaltung Teilen
+              <IconShare size={20} /> Teilen
             </div>
           </Share>
 
@@ -202,7 +202,7 @@ export const EventTeaser = ({ isPage, isMember, event }: EventProps) => {
             })}
             href={`/veranstaltungen/${event.slug}/ics`}
           >
-            <IconDownload size={20} /> Zum Kalender hinzufügen
+            <IconCalendar size={20} /> Zum Kalender hinzufügen
           </Link>
         </div>
       </div>
