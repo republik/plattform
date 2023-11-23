@@ -24,7 +24,7 @@ export default async function Page() {
     <div>
       <h1
         className={css({
-          textStyle: 'h1Sans',
+          textStyle: 'h2Sans',
           py: '6',
           borderColor: 'divider',
           borderBottomWidth: 1,

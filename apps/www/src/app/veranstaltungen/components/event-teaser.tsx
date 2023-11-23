@@ -37,10 +37,9 @@ export const EventTeaser = ({ isPage, isMember, event }: EventProps) => {
   return (
     <div
       className={css({
-        py: '12',
-        // background: 'challengeAccepted.white',
+        py: '6',
         borderColor: 'divider',
-        // borderBottomWidth: 1,
+        borderBottomWidth: 1,
         color: 'text',
         '& ul > li': {
           listStyleType: 'none',
@@ -73,7 +72,7 @@ export const EventTeaser = ({ isPage, isMember, event }: EventProps) => {
             className={css({
               textStyle: 'h1Sans',
               fontSize: { base: '3xl', md: '4xl' },
-              mt: '-0.2lh',
+              mt: '-0.1lh',
             })}
           >
             {event.title}
@@ -83,7 +82,7 @@ export const EventTeaser = ({ isPage, isMember, event }: EventProps) => {
             className={css({
               textStyle: 'h1Sans',
               fontSize: { base: '3xl', md: '4xl' },
-              mt: '-0.2lh',
+              mt: '-0.1lh',
               '& a': { textDecoration: 'none' },
             })}
           >
