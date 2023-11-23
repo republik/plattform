@@ -17,6 +17,7 @@ import ChallengeAcceptedSVG from '../../public/static/challenge-accepted/challen
 import ChallengeAcceptedSVGDark from '../../public/static/challenge-accepted/challenge-accepted_dark.svg'
 import { useRouter } from 'next/router'
 import { useTheme } from 'next-themes'
+import { IconArrowRight } from '@republik/icons'
 
 const styles = {
   p: css({
@@ -28,6 +29,9 @@ const styles = {
   a: css({
     color: 'var(--color-primary)',
     ...fontStyles.sansSerifRegular23,
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.5rem',
   }),
   actionWrapper: css({
     display: 'flex',
@@ -57,7 +61,7 @@ const CAP = ({ children, ...props }) => (
 
 export const CAOverViewLink = () => (
   <Link {...plainLinkRule} {...styles.a} href='/challenge-accepted'>
-    Zur Übersicht →
+    Zur Übersicht <IconArrowRight />
   </Link>
 )
 
