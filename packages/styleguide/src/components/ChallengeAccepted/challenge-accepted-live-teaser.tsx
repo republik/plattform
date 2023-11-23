@@ -163,9 +163,8 @@ export function ChallengeAcceptedLiveTeaser({
         <div {...styles.textWrapper}>
           <p {...styles.text}>
             25 Menschen, die in der Klimakrise einen Unterschied machen.
-            Gemeinsam gehen wir in den kommenden Monaten der Frage nach: Wie
-            kommen wir aus dieser Krise wieder raus? Mit laufend neuen Artikeln,
-            Debatten, Veranstaltungen.
+            Gemeinsam gehen wir der Frage nach: Wie kommen wir aus dieser Krise
+            wieder raus? Mit laufend neuen Artikeln, Debatten, Veranstaltungen.
           </p>
         </div>
       </a>
@@ -200,13 +199,6 @@ const styles = {
   }),
   text: css({
     ...fontStyles.sansSerifRegular23,
-  }),
-  a: css({
-    ...fontStyles.sansSerifRegular23,
-    display: 'flex',
-    alignItems: 'center',
-    gap: '0.5rem',
-    color: '#4033D3',
   }),
   textWrapper: css({
     display: 'flex',
