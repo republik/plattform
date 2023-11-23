@@ -11,6 +11,13 @@ export default async function Page() {
     variables: {
       today: new Date(Date.now()).toISOString(),
     },
+    context: {
+      fetchOptions: {
+        next: {
+          tags: ['event'],
+        },
+      },
+    },
   })
   const currentEvents = useFragment(EventRecordFields, data.events)
   const pastEvents = useFragment(EventRecordFields, data.pastEvents)

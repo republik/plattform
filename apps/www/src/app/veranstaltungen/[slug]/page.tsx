@@ -23,6 +23,13 @@ export async function generateMetadata(
   const { data } = await getCMSClient().query({
     query: EVENT_META_QUERY,
     variables: { slug },
+    context: {
+      fetchOptions: {
+        next: {
+          tags: ['event'],
+        },
+      },
+    },
   })
   const parentMetadata = await parent
 
@@ -51,6 +58,13 @@ export default async function Page({ params: { slug } }: PageProps) {
   const { data } = await client.query({
     query: EVENT_QUERY,
     variables: { slug },
+    context: {
+      fetchOptions: {
+        next: {
+          tags: ['event'],
+        },
+      },
+    },
   })
   const event = useFragment(EventRecordFields, data.event)
   const me = await getMe()
