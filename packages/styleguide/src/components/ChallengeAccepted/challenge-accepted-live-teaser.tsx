@@ -164,7 +164,11 @@ export function ChallengeAcceptedLiveTeaser({
           <p {...styles.text}>
             25 Menschen, die in der Klimakrise einen Unterschied machen.
             Gemeinsam gehen wir der Frage nach: Wie kommen wir aus dieser Krise
-            wieder raus? Mit laufend neuen Artikeln, Debatten, Veranstaltungen.
+            wieder raus? Mit laufend neuen{' '}
+            <span {...styles.underline}>
+              Artikeln, Debatten, Veranstaltungen
+            </span>
+            .
           </p>
         </div>
       </a>
@@ -211,5 +215,8 @@ const styles = {
       width: '60%',
       maxWidth: 550,
     },
+  }),
+  underline: css({
+    textDecoration: 'underline',
   }),
 }
