@@ -15,6 +15,7 @@ import Center from '../../components/Center'
 import Loader from '../../components/Loader'
 import LazyLoad from '../../components/LazyLoad'
 import { mUp } from '../../theme/mediaQueries'
+import { ChallengeAcceptedLiveTeaser } from '../../components/ChallengeAccepted/challenge-accepted-live-teaser'
 
 const styles = {
   feedContainer: css({
@@ -279,6 +280,21 @@ const createLiveTeasers = ({
         type: 'LIVETEASERFLYER',
         insertButtonText: 'Guten Tag',
         insertId: 'flyer',
+      },
+    },
+    {
+      matchMdast: (node) =>
+        matchZone('LIVETEASER')(node) && node.data.id === 'challengeAccepted',
+      props: (node) => node.data,
+      component: () => {
+        return <ChallengeAcceptedLiveTeaser Link={Link} />
+      },
+      isVoid: true,
+      editorModule: 'liveteaser',
+      editorOptions: {
+        type: 'LIVETEASERCHALLENGEACCEPTED',
+        insertButtonText: 'Challenge Accepted',
+        insertId: 'challengeAccepted',
       },
     },
     {
