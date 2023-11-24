@@ -23,10 +23,10 @@ export const EventRecordFields = gql(`
 
 export const EVENTS_QUERY = gql(`
   query EventsQuery($today: DateTime!) {
-    events: allEvents(filter: {OR: [{startAt: {gte: $today}}, {endAt: {gte: $today}}]}) {
+    events: allEvents(filter: {OR: [{startAt: {gte: $today}}, {endAt: {gte: $today}}]}, orderBy: startAt_DESC) {
       ...EventRecordFields
     }
-    pastEvents: allEvents(filter: {AND: [{startAt: {lt: $today}}, {endAt: {lt: $today}}]}) {
+    pastEvents: allEvents(filter: {AND: [{startAt: {lt: $today}}, {endAt: {lt: $today}}]}, orderBy: startAt_DESC) {
       ...EventRecordFields
     }
   }
