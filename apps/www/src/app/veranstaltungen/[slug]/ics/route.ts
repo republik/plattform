@@ -43,7 +43,7 @@ export async function GET(
   return new Response(calendar.toString(), {
     headers: {
       'Content-Type': 'text/calendar; charset=utf-8',
-      'Content-Disposition': `attachment; filename="${event.title}.ics"`,
+      'Content-Disposition': `attachment; filename="${event.slug}.ics"`,
     },
   })
 }
