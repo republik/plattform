@@ -9,6 +9,7 @@ const styles = {
   container: css({
     margin: 0,
     overflow: 'hidden',
+    position: 'relative',
     [mUp]: {
       display: 'flex',
       alignItems: 'center',
@@ -153,6 +154,7 @@ const Split = ({
         )}
       >
         <Text
+          position={'splitcenterright'}
           color={color}
           center={center}
           feuilleton={feuilleton}

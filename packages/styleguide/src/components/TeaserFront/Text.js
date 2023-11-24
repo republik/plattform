@@ -82,6 +82,17 @@ const styles = {
       justifyContent: 'flex-end',
     },
   }),
+  splitcenterright: css({
+    position: 'static',
+    [tUp]: {
+      position: 'absolute',
+      inset: 0,
+      padding: `${TEXT_PADDING}px 5% ${TEXT_PADDING}px calc(50% + 5%)`,
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+    },
+  }),
   top: css({
     position: 'static',
     [tUp]: {
@@ -160,7 +171,7 @@ const Text = ({
   return (
     <div {...rootStyles} {...middleStyles}>
       <div
-        data-position={position}
+        data-position={position ?? 'none'}
         {...attributes}
         {...colorRule}
         {...textAlignStyle}
