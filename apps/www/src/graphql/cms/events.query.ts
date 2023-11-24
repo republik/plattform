@@ -18,6 +18,7 @@ export const EventRecordFields = gql(`
     locationLink
     startAt
     endAt
+    _updatedAt
   }
 `)
 

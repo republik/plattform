@@ -13,7 +13,7 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Therefore it is highly recommended to use the babel or swc plugin for production.
  */
 const documents = {
-    "\n  fragment EventRecordFields on EventRecord {\n    id\n    title\n    slug\n    description {\n      value\n    }\n    membersOnly\n    nonMemberCta {\n      value\n    }\n    fullyBooked\n    signUpLink\n    location\n    locationLink\n    startAt\n    endAt\n  }\n": types.EventRecordFieldsFragmentDoc,
+    "\n  fragment EventRecordFields on EventRecord {\n    id\n    title\n    slug\n    description {\n      value\n    }\n    membersOnly\n    nonMemberCta {\n      value\n    }\n    fullyBooked\n    signUpLink\n    location\n    locationLink\n    startAt\n    endAt\n    _updatedAt\n  }\n": types.EventRecordFieldsFragmentDoc,
     "\n  query EventsQuery($today: DateTime!) {\n    events: allEvents(filter: {OR: [{startAt: {gte: $today}}, {endAt: {gte: $today}}]}, orderBy: startAt_DESC) {\n      ...EventRecordFields\n    }\n    pastEvents: allEvents(filter: {AND: [{startAt: {lt: $today}}, {endAt: {lt: $today}}]}, orderBy: startAt_DESC) {\n      ...EventRecordFields\n    }\n  }\n": types.EventsQueryDocument,
     "\n  query EventQuery($slug: String) {\n    event(filter: { slug: { eq: $slug }}) {\n      ...EventRecordFields\n    }\n  }\n": types.EventQueryDocument,
     "\nquery EventMetaQuery($slug: String) {\n  event(filter: { slug: { eq: $slug }}) {\n    id\n    title\n    seo {\n      title\n      description\n      image {\n        url(imgixParams: {w: \"1500\"})\n      }\n    }\n  }\n}\n": types.EventMetaQueryDocument,
@@ -40,7 +40,7 @@ export function gql(source: string): unknown;
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\n  fragment EventRecordFields on EventRecord {\n    id\n    title\n    slug\n    description {\n      value\n    }\n    membersOnly\n    nonMemberCta {\n      value\n    }\n    fullyBooked\n    signUpLink\n    location\n    locationLink\n    startAt\n    endAt\n  }\n"): (typeof documents)["\n  fragment EventRecordFields on EventRecord {\n    id\n    title\n    slug\n    description {\n      value\n    }\n    membersOnly\n    nonMemberCta {\n      value\n    }\n    fullyBooked\n    signUpLink\n    location\n    locationLink\n    startAt\n    endAt\n  }\n"];
+export function gql(source: "\n  fragment EventRecordFields on EventRecord {\n    id\n    title\n    slug\n    description {\n      value\n    }\n    membersOnly\n    nonMemberCta {\n      value\n    }\n    fullyBooked\n    signUpLink\n    location\n    locationLink\n    startAt\n    endAt\n    _updatedAt\n  }\n"): (typeof documents)["\n  fragment EventRecordFields on EventRecord {\n    id\n    title\n    slug\n    description {\n      value\n    }\n    membersOnly\n    nonMemberCta {\n      value\n    }\n    fullyBooked\n    signUpLink\n    location\n    locationLink\n    startAt\n    endAt\n    _updatedAt\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
