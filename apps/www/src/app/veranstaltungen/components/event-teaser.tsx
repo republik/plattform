@@ -30,6 +30,7 @@ type EventProps = {
     endAt?: string
     signUpLink?: string
     fullyBooked?: boolean
+    _updatedAt: string
   }
   isPage?: boolean
   isMember: boolean
@@ -191,24 +192,27 @@ export const EventTeaser = ({ isPage, isMember, event }: EventProps) => {
             </div>
           </Share>
 
-          {!isNativeApp && (
-            <Link
-              className={hstack({
-                gap: '2',
-                color: 'text',
-                cursor: 'pointer',
-                fontWeight: 'medium',
-                fontSize: 's',
-                textDecoration: 'none',
-                _hover: {
-                  color: 'textSoft',
-                },
-              })}
-              href={`/veranstaltungen/${event.slug}/ics`}
-            >
-              <IconCalendar size={20} /> Zum Kalender hinzufügen
-            </Link>
-          )}
+          <Link
+            className={hstack({
+              gap: '2',
+              color: 'text',
+              cursor: 'pointer',
+              fontWeight: 'medium',
+              fontSize: 's',
+              textDecoration: 'none',
+              _hover: {
+                color: 'textSoft',
+              },
+            })}
+            // Link to the calendar file via CDN because the app can't handle downloads. This way, the file will be opened in the OS browser.
+            href={`${
+              process.env.NEXT_PUBLIC_CDN_FRONTEND_BASE_URL
+            }/veranstaltungen/${event.slug}/ics?v=${encodeURIComponent(
+              event._updatedAt,
+            )}`}
+          >
+            <IconCalendar size={20} /> Zum Kalender hinzufügen
+          </Link>
         </div>
       </div>
     </div>
