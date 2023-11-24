@@ -7,7 +7,12 @@ export const presetRepublik = definePreset({
       dark: '[data-theme="dark"] &',
     },
   },
-
+  globalCss: {
+    html: {
+      WebkitFontSmoothing: 'auto',
+      MozOsxFontSmoothing: 'auto',
+    },
+  },
   // Useful for theme customization
   theme: {
     extend: {
@@ -85,8 +90,8 @@ export const presetRepublik = definePreset({
           xl: { value: '1.25rem' },
           '2xl': { value: '1.5rem' },
           '3xl': { value: '2rem' },
-          '4xl': { value: '4rem' },
-          '8xl': { value: '8rem' },
+          '4xl': { value: '3rem' },
+          '8xl': { value: '6rem' },
         },
         lineHeights: {
           1: { value: 1 },

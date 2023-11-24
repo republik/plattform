@@ -3,7 +3,8 @@ import Container from '@app/components/container'
 import { Share } from '@app/components/share/share'
 import type { PersonDetailQuery } from '@app/graphql/gql/graphql'
 import { css } from '@app/styled-system/css'
-import { vstack } from '@app/styled-system/patterns'
+import { hstack, vstack } from '@app/styled-system/patterns'
+import { IconShare } from '@republik/icons'
 import Image from 'next/image'
 import { StructuredText } from 'react-datocms'
 
@@ -121,7 +122,22 @@ export function PersonDetail({ person, isMember = false }: PersonDetailProps) {
             title={`Challenge Accepted: ${person.name} | Republik`}
             url={`${process.env.NEXT_PUBLIC_BASE_URL}/challenge-accepted/person/${person.slug}`}
             emailSubject={`Challenge Accepted: ${person.name} | Republik`}
-          />
+          >
+            <div
+              className={hstack({
+                gap: '2',
+                color: 'text',
+                textStyle: 'sansSerifBold',
+                fontSize: 'm',
+                cursor: 'pointer',
+                _hover: {
+                  color: 'contrast',
+                },
+              })}
+            >
+              <IconShare size={20} /> Teilen
+            </div>
+          </Share>
           {person.items.length > 0 ? (
             <section>
               <h2

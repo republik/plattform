@@ -50,7 +50,7 @@ export default async function Page({ params: { slug } }: PageProps) {
       }
       return {
         ...item,
-        signUpLink: isMember || item.isPublic ? item.signUpLink : undefined,
+        signUpLink: item.membersOnly && isMember ? item.signUpLink : undefined,
       }
     }),
   }
@@ -177,32 +177,29 @@ export async function generateMetadata(
   }
 
   const metadata: Metadata = {
-    metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL),
     title: `Challenge Accepted: ${res.data.person.name} | Republik`,
     description: `Die Klimakrise ist hier. Die Lage ist ernst. 25 Menschen, die die Herausforderung annehmen. Kurzporträt und Inhalte zu ${res.data.person.name}.`,
   }
 
   const previousImages = parentMetadata?.openGraph?.images || []
 
+  const images = [
+    res.data.person?.seo?.image?.url,
+    `/challenge-accepted/person/${params.slug}/api/og`,
+    ...previousImages,
+  ].filter(Boolean)
+
   return {
     ...metadata,
     openGraph: {
       title: metadata.title,
       description: metadata.description,
-      images: [
-        res.data.person?.seo?.image?.url,
-        `/challenge-accepted/person/${params.slug}/api/og`,
-        ...previousImages,
-      ].filter(Boolean),
+      images,
     },
     twitter: {
       title: metadata.title,
       description: metadata.description,
-      images: [
-        res.data.person?.seo?.image?.url,
-        `/challenge-accepted/person/${params.slug}/api/og`,
-        ...previousImages,
-      ].filter(Boolean),
+      images,
     },
   }
 }
