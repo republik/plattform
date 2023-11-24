@@ -205,6 +205,7 @@ export const EventTeaser = ({ isPage, isMember, event }: EventProps) => {
               },
             })}
             // Link to the calendar file via CDN because the app can't handle downloads. This way, the file will be opened in the OS browser.
+            // To bust the CDN cache, ?v= is added with the timestamp when the event record was updated.
             href={`${
               process.env.NEXT_PUBLIC_CDN_FRONTEND_BASE_URL
             }/veranstaltungen/${event.slug}/ics?v=${encodeURIComponent(
