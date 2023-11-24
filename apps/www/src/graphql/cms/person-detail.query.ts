@@ -28,16 +28,18 @@ export const PERSON_DETAIL_QUERY = gql(`
       ... on EventRecord {
         id
         title
-        isPublic
+        slug
         description {
           value
         }
+        membersOnly
         nonMemberCta {
           value
         }
         fullyBooked
         signUpLink
         location
+        locationLink
         startAt
         endAt
       }

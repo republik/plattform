@@ -1,9 +1,9 @@
 import { ChallengeAcceptedHubQueryQuery } from '@app/graphql/gql/graphql'
 import { css } from '@app/styled-system/css'
 import { vstack } from '@app/styled-system/patterns'
+import { ArticleTeaser } from './teasers/article-teaser'
 import { EventTeaser } from './teasers/event-teaser'
 import { NewsletterTeaser } from './teasers/newsletter-teaser'
-import { ArticleTeaser } from './teasers/article-teaser'
 
 type CollectionRendererProps = {
   items: ChallengeAcceptedHubQueryQuery['hub']['items']

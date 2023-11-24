@@ -106,7 +106,7 @@ const Page = () => {
         user={!loading && author}
         img={QUESTIONNAIRE_SQUARE_IMG_URL}
         bgColor={QUESTIONNAIRE_BG_COLOR}
-        personShareText={PERSON_SHARE_TEXT.replace('{name}', author?.name)}
+        personShareText={PERSON_SHARE_TEXT}
       />
     )
   }

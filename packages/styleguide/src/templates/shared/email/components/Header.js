@@ -25,13 +25,13 @@ export default ({ meta }) => {
     format?.repoId?.includes('format-was-diese-woche-wichtig-war')
 
   const { width, height } = isClimate
-    ? { width: 179, height: 110 } // case of climate
+    ? { width: 157, height: 140 } // case of climate (= Challenge Accepted)
     : isWdwww
     ? { width: 220, height: 71 } // case of wdwww
     : { width: 178, height: 79 } // default
 
   const imageFile =
-    (isClimate && 'logo_republik_newsletter_climate-1.png') ||
+    (isClimate && 'logo_republik_newsletter_challenge_accepted.png') ||
     (isWdwww && 'logo_republik_newsletter_wdwww.png') ||
     'logo_republik_newsletter.png'
 

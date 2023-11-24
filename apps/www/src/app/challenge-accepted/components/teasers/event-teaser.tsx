@@ -1,32 +1,37 @@
 import { css } from '@app/styled-system/css'
-import { timeFormat, isoParse } from 'd3-time-format'
+import { isoParse } from 'd3-time-format'
+import { swissTime } from 'lib/utils/format'
 import Link from 'next/link'
 import { ComponentPropsWithoutRef } from 'react'
 import { StructuredText } from 'react-datocms'
 
-const formatDate = timeFormat('%d.%m.%y')
-const formateTime = timeFormat('%H.%M')
+const formatDate = swissTime.format('%d.%m.%y')
+const formatDateTime = swissTime.format('%A, %d.%m.%Y, %H.%M')
+const formateTime = swissTime.format('%H.%M')
 
 type EventProps = {
   event: {
     title: string
+    slug: string
     description?: {
       value: ComponentPropsWithoutRef<typeof StructuredText>['data']
     }
-    isPublic?: boolean
+    membersOnly?: boolean
     nonMemberCta?: {
       value: ComponentPropsWithoutRef<typeof StructuredText>['data']
     }
     location: string
+    locationLink?: string
     startAt: string
     endAt?: string
     signUpLink?: string
     fullyBooked?: boolean
   }
+
+  isPage?: boolean
   isMember: boolean
 }
-
-export const EventTeaser = ({ event, isMember }: EventProps) => {
+export const EventTeaser = ({ isMember, event }: EventProps) => {
   return (
     <div
       className={css({
@@ -78,20 +83,36 @@ export const EventTeaser = ({ event, isMember }: EventProps) => {
         })}
       >
         <h2 className={css({ textStyle: 'h2Sans', fontWeight: 'bold' })}>
-          {event.title} {event.fullyBooked && '(ausgebucht)'}
+          <Link
+            className={css({
+              color: 'text',
+              textDecoration: 'none',
+            })}
+            href={`/veranstaltungen/${event.slug}`}
+          >
+            {event.title}
+          </Link>
         </h2>
         <p className={css({ fontWeight: 700 })}>
-          {formateTime(isoParse(event.startAt))}
+          {formatDateTime(isoParse(event.startAt))}
           {event.endAt
             ? `–${formateTime(isoParse(event.endAt))} Uhr `
-            : ' Uhr – offen '}
+            : ' Uhr '}
           / {event.location}
         </p>
 
         <StructuredText data={event.description.value} />
-        {!event.fullyBooked && (
+        {event.fullyBooked ? (
+          <p
+            className={css({
+              fontStyle: 'italic',
+            })}
+          >
+            Die Veranstaltung ist ausgebucht.
+          </p>
+        ) : (
           <>
-            {!isMember && !event.isPublic ? (
+            {event.membersOnly && !isMember ? (
               <>
                 {event.nonMemberCta && (
                   <StructuredText data={event.nonMemberCta.value} />

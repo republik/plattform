@@ -4,7 +4,7 @@ import compose from 'lodash/flowRight'
 import { withApollo } from '@apollo/client/react/hoc'
 import { css } from 'glamor'
 import debounce from 'lodash/debounce'
-import uuid from 'uuid/v4'
+import { v4 as uuid } from 'uuid'
 
 import {
   Autocomplete,
