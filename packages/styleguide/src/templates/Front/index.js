@@ -116,7 +116,13 @@ const createFrontSchema = ({
         },
         component: ({ children, data, ...props }) => (
           <Link href={props.href} passHref>
-            <TeaserFrontCreditLink {...props}>{children}</TeaserFrontCreditLink>
+            <TeaserFrontCreditLink
+              data-link='credit'
+              {...props}
+              style={{ zIndex: 1, position: 'relative' }}
+            >
+              {children}
+            </TeaserFrontCreditLink>
           </Link>
         ),
         editorModule: 'link',
@@ -131,7 +137,12 @@ const createFrontSchema = ({
     matchMdast: matchHeading(1),
     component: ({ children, href, ...props }) => (
       <Link href={href} passHref>
-        <a {...styles.link} href={href}>
+        <a
+          data-link='headline'
+          {...styles.link}
+          {...styles.areaLink}
+          href={href}
+        >
           <Headline {...props}>{children}</Headline>
         </a>
       </Link>
@@ -243,19 +254,17 @@ const createFrontSchema = ({
       ...node.data,
     }),
     component: ({ children, attributes, ...props }) => (
-      <Link href={props.url}>
-        <TeaserFrontImage
-          audioPlayButton={
-            !!AudioPlayButton && shouldRenderPlayButton(props) ? (
-              <AudioPlayButton documentId={props?.urlMeta.documentId} />
-            ) : undefined
-          }
-          attributes={attributes}
-          {...props}
-        >
-          {children}
-        </TeaserFrontImage>
-      </Link>
+      <TeaserFrontImage
+        audioPlayButton={
+          !!AudioPlayButton && shouldRenderPlayButton(props) ? (
+            <AudioPlayButton documentId={props?.urlMeta.documentId} />
+          ) : undefined
+        }
+        attributes={attributes}
+        {...props}
+      >
+        {children}
+      </TeaserFrontImage>
     ),
     editorModule: 'teaser',
     editorOptions: {
@@ -306,19 +315,17 @@ const createFrontSchema = ({
   const frontSplitTeaser = {
     matchMdast: matchTeaserType('frontSplit'),
     component: ({ children, attributes, ...props }) => (
-      <Link href={props.url}>
-        <TeaserFrontSplit
-          audioPlayButton={
-            !!AudioPlayButton && shouldRenderPlayButton(props) ? (
-              <AudioPlayButton documentId={props?.urlMeta.documentId} />
-            ) : undefined
-          }
-          attributes={attributes}
-          {...props}
-        >
-          {children}
-        </TeaserFrontSplit>
-      </Link>
+      <TeaserFrontSplit
+        audioPlayButton={
+          !!AudioPlayButton && shouldRenderPlayButton(props) ? (
+            <AudioPlayButton documentId={props?.urlMeta.documentId} />
+          ) : undefined
+        }
+        attributes={attributes}
+        {...props}
+      >
+        {children}
+      </TeaserFrontSplit>
     ),
     props: (node, i) => ({
       image: extractImage(node.children[0]),
@@ -373,19 +380,17 @@ const createFrontSchema = ({
   const frontTypoTeaser = {
     matchMdast: matchTeaserType('frontTypo'),
     component: ({ children, attributes, ...props }) => (
-      <Link href={props.url}>
-        <TeaserFrontTypo
-          audioPlayButton={
-            !!AudioPlayButton && shouldRenderPlayButton(props) ? (
-              <AudioPlayButton documentId={props?.urlMeta.documentId} />
-            ) : undefined
-          }
-          attributes={attributes}
-          {...props}
-        >
-          {children}
-        </TeaserFrontTypo>
-      </Link>
+      <TeaserFrontTypo
+        audioPlayButton={
+          !!AudioPlayButton && shouldRenderPlayButton(props) ? (
+            <AudioPlayButton documentId={props?.urlMeta.documentId} />
+          ) : undefined
+        }
+        attributes={attributes}
+        {...props}
+      >
+        {children}
+      </TeaserFrontTypo>
     ),
     props(node) {
       return node.data
@@ -433,19 +438,17 @@ const createFrontSchema = ({
   const frontTileTeaser = {
     matchMdast: matchTeaserType('frontTile'),
     component: ({ children, attributes, ...props }) => (
-      <Link href={props.url}>
-        <TeaserFrontTile
-          audioPlayButton={
-            !!AudioPlayButton && shouldRenderPlayButton(props) ? (
-              <AudioPlayButton documentId={props?.urlMeta.documentId} />
-            ) : undefined
-          }
-          attributes={{ ...attributes, 'data-theme': 'light' }}
-          {...props}
-        >
-          {children}
-        </TeaserFrontTile>
-      </Link>
+      <TeaserFrontTile
+        audioPlayButton={
+          !!AudioPlayButton && shouldRenderPlayButton(props) ? (
+            <AudioPlayButton documentId={props?.urlMeta.documentId} />
+          ) : undefined
+        }
+        attributes={{ ...attributes, 'data-theme': 'light' }}
+        {...props}
+      >
+        {children}
+      </TeaserFrontTile>
     ),
     props: (node, index, parent, { ancestors }) => {
       const aboveTheFold = ancestors[1].children.indexOf(ancestors[0]) < 2
@@ -574,19 +577,17 @@ const createFrontSchema = ({
     matchMdast: matchTeaserType('articleTile'),
     component: ({ children, attributes, ...props }) => {
       return (
-        <Link href={props.url}>
-          <TeaserCarouselTile
-            audioPlayButton={
-              !!AudioPlayButton && shouldRenderPlayButton(props) ? (
-                <AudioPlayButton documentId={props?.urlMeta.documentId} />
-              ) : undefined
-            }
-            attributes={attributes}
-            {...props}
-          >
-            {children}
-          </TeaserCarouselTile>
-        </Link>
+        <TeaserCarouselTile
+          audioPlayButton={
+            !!AudioPlayButton && shouldRenderPlayButton(props) ? (
+              <AudioPlayButton documentId={props?.urlMeta.documentId} />
+            ) : undefined
+          }
+          attributes={attributes}
+          {...props}
+        >
+          {children}
+        </TeaserCarouselTile>
       )
     },
     props: (node) => ({

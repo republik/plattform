@@ -127,6 +127,16 @@ export const styles = {
     color: 'inherit',
     textDecoration: 'none',
   }),
+  areaLink: css({
+    position: 'static',
+    '&::before': {
+      position: 'absolute',
+      inset: 0,
+      content: '""',
+      background: 'rgba(255,0,127,0.3)', // TODO: Remove
+      zIndex: 0,
+    },
+  }),
   anchor: css({
     display: 'block',
     visibility: 'hidden',

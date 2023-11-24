@@ -39,37 +39,58 @@ const styles = {
     position: 'relative',
   }),
   topleft: css({
+    position: 'static',
     [tUp]: {
-      ...positionHalfWidth,
-      left: `${TEXT_PADDING}px`,
-      top: `${TEXT_PADDING}px`,
+      position: 'absolute',
+      inset: 0,
+      padding: `${TEXT_PADDING}px 50% ${TEXT_PADDING}px ${TEXT_PADDING}px`,
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'flex-start',
     },
   }),
   topright: css({
+    position: 'static',
     [tUp]: {
-      ...positionHalfWidth,
-      left: '50%',
-      top: `${TEXT_PADDING}px`,
+      position: 'absolute',
+      inset: 0,
+      padding: `${TEXT_PADDING}px ${TEXT_PADDING}px ${TEXT_PADDING}px 50%`,
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'flex-start',
     },
   }),
   bottomleft: css({
+    position: 'static',
     [tUp]: {
-      ...positionHalfWidth,
-      bottom: `${TEXT_PADDING}px`,
-      left: `${TEXT_PADDING}px`,
+      position: 'absolute',
+      inset: 0,
+      padding: `${TEXT_PADDING}px 50% ${TEXT_PADDING}px ${TEXT_PADDING}px`,
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'flex-end',
     },
   }),
   bottomright: css({
+    position: 'static',
     [tUp]: {
-      ...positionHalfWidth,
-      bottom: `${TEXT_PADDING}px`,
-      left: '50%',
+      position: 'absolute',
+      inset: 0,
+      padding: `${TEXT_PADDING}px ${TEXT_PADDING}px ${TEXT_PADDING}px 50%`,
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'flex-end',
     },
   }),
   top: css({
+    position: 'static',
     [tUp]: {
-      ...positionFullWidth,
-      top: `${TEXT_PADDING}px`,
+      position: 'absolute',
+      inset: 0,
+      padding: `${TEXT_PADDING}px`,
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'flex-start',
     },
   }),
   middle: css({
@@ -78,9 +99,14 @@ const styles = {
     },
   }),
   bottom: css({
+    position: 'static',
     [tUp]: {
-      ...positionFullWidth,
-      bottom: `${TEXT_PADDING}px`,
+      position: 'absolute',
+      inset: 0,
+      padding: `${TEXT_PADDING}px`,
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'flex-end',
     },
   }),
   center: css({
@@ -134,16 +160,20 @@ const Text = ({
   return (
     <div {...rootStyles} {...middleStyles}>
       <div
+        data-position={position}
         {...attributes}
         {...colorRule}
         {...textAlignStyle}
         {...css(styles.positioned, position ? styles[position] : {})}
         style={{ maxWidth, margin }}
       >
-        {children}
-        {audioPlayButton && (
-          <div style={{ marginTop: 20 }}>{audioPlayButton}</div>
-        )}
+        {' '}
+        <div>
+          {children}
+          {audioPlayButton && (
+            <div style={{ marginTop: 20 }}>{audioPlayButton}</div>
+          )}
+        </div>
       </div>
     </div>
   )
