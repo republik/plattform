@@ -1,4 +1,6 @@
+'use client'
 import { Share } from '@app/components/share/share'
+import { usePlatformInformation } from '@app/lib/hooks/usePlatformInformation'
 import { css } from '@app/styled-system/css'
 import { hstack, vstack } from '@app/styled-system/patterns'
 import { IconCalendar, IconShare } from '@republik/icons'
@@ -34,6 +36,8 @@ type EventProps = {
 }
 
 export const EventTeaser = ({ isPage, isMember, event }: EventProps) => {
+  const { isNativeApp } = usePlatformInformation()
+
   return (
     <div
       className={css({
@@ -187,22 +191,24 @@ export const EventTeaser = ({ isPage, isMember, event }: EventProps) => {
             </div>
           </Share>
 
-          <Link
-            className={hstack({
-              gap: '2',
-              color: 'text',
-              cursor: 'pointer',
-              fontWeight: 'medium',
-              fontSize: 's',
-              textDecoration: 'none',
-              _hover: {
-                color: 'textSoft',
-              },
-            })}
-            href={`/veranstaltungen/${event.slug}/ics`}
-          >
-            <IconCalendar size={20} /> Zum Kalender hinzufügen
-          </Link>
+          {!isNativeApp && (
+            <Link
+              className={hstack({
+                gap: '2',
+                color: 'text',
+                cursor: 'pointer',
+                fontWeight: 'medium',
+                fontSize: 's',
+                textDecoration: 'none',
+                _hover: {
+                  color: 'textSoft',
+                },
+              })}
+              href={`/veranstaltungen/${event.slug}/ics`}
+            >
+              <IconCalendar size={20} /> Zum Kalender hinzufügen
+            </Link>
+          )}
         </div>
       </div>
     </div>
