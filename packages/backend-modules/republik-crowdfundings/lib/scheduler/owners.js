@@ -14,7 +14,7 @@ const {
 const { suggest: autoPaySuggest } = require('../AutoPay')
 
 const mailings = require('./owners/mailings')
-// const charging = require('./owners/charging')
+const charging = require('./owners/charging')
 
 const {
   PARKING_USER_ID,
@@ -216,28 +216,27 @@ const createJobs = (now) => [
     },
     handleFn: mailings,
   },
-  // // Re-enable after due notice
-  // {
-  //   name: 'membership_owner_autopay',
-  //   prolongBefore: {
-  //     minDate: moment(now).add(-14, 'days'),
-  //     maxDate: moment(now).add(0, 'days'),
-  //   },
-  //   predicateFn: ({
-  //     id: userId,
-  //     membershipType,
-  //     membershipAutoPay,
-  //     autoPay,
-  //   }) => {
-  //     return (
-  //       ['YEAR'].includes(membershipType) &&
-  //       membershipAutoPay === true &&
-  //       autoPay &&
-  //       userId === autoPay.userId
-  //     )
-  //   },
-  //   handleFn: charging,
-  // },
+  {
+    name: 'membership_owner_autopay',
+    prolongBefore: {
+      minDate: moment(now).add(-14, 'days'),
+      maxDate: moment(now).add(0, 'days'),
+    },
+    predicateFn: ({
+      id: userId,
+      membershipType,
+      membershipAutoPay,
+      autoPay,
+    }) => {
+      return (
+        ['YEAR'].includes(membershipType) &&
+        membershipAutoPay === true &&
+        autoPay &&
+        userId === autoPay.userId
+      )
+    },
+    handleFn: charging,
+  },
 ]
 
 const pickAdditionals = (user) => ({
