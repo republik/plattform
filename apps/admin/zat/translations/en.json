@@ -4,7 +4,7 @@
     "parameters": {
       "endpoint": {
         "label": "URL zum Admin-Tool",
-        "helpText": "beispielsweise \"https://admin.republik.ch\""
+        "helpText": "beispielsweise \"https://admin.example.com\""
       }
     }
   }

@@ -161,7 +161,7 @@ module.exports = async (user, payload, context) => {
             `Betrag: ${formatPrice(
               autoPay.total,
             )}, membershipId: ${membershipId}`,
-            `https://admin.republik.ch/users/${autoPay.userId}`,
+            `https://admin.lobbywatch.ch/users/${autoPay.userId}`,
           ].join('\n'),
         )
       } else {
@@ -179,7 +179,7 @@ module.exports = async (user, payload, context) => {
             `Betrag: ${formatPrice(
               autoPay.total,
             )}, membershipId: ${membershipId}`,
-            `https://admin.republik.ch/users/${autoPay.userId}`,
+            `https://admin.lobbywatch.ch/users/${autoPay.userId}`,
           ].join('\n'),
         )
       }

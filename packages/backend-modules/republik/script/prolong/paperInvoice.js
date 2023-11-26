@@ -111,7 +111,7 @@ const mapToCsv = (d) => ({
   membershipSequenceNumber: d.membershipSequenceNumber,
   hrid: d.payment.hrid,
   prolongBeforeDate: moment(d.prolongBeforeDate).format('DD.MM.YYYY'),
-  admin: `https://admin.republik.ch/users/${d.user.id}`,
+  admin: `https://admin.lobbywatch.ch/users/${d.user.id}`,
 })
 
 PgDb.connect()

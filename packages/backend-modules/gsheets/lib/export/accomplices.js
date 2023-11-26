@@ -84,7 +84,7 @@ const getRows = async (pgdb) => {
         contactAnswer && contactAnswer.choices.includes('per Post')
 
       return {
-        admin: `https://admin.republik.ch/users/${user.id}`,
+        admin: `https://admin.lobbywatch.ch/users/${user.id}`,
         mitarbeiter:
           user.roles &&
           (user.roles.includes('editor') || user.roles.includes('support'))
