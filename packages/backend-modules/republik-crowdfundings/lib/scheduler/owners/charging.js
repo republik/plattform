@@ -6,10 +6,15 @@ const { publish: slackPublish } = require('@orbiting/backend-modules-slack')
 const { formatPrice } = require('@orbiting/backend-modules-formats')
 
 const { prolong: autoPayProlong } = require('../../AutoPay')
+const {
+  getOnceForConditions,
+} = require('@orbiting/backend-modules-mail/lib/mailLog')
 
 const { SLACK_CHANNEL_AUTOPAY } = process.env
 
 const DRY_RUN = process.env.DRY_RUN === 'true'
+
+const formatDate = (date) => moment(date).format('YYYYMMDD')
 
 module.exports = async (user, payload, context) => {
   const { prolongBeforeDate: anchorDate, membershipId } = user
@@ -37,6 +42,31 @@ module.exports = async (user, payload, context) => {
     debug(
       'backing off, allowed attempts exhausted, membershipId: %s',
       membershipId,
+    )
+    return
+  }
+
+  // Ensure was notified at least one week before
+  const noticeLog = await pgdb.public.mailLog.find({
+    ...getOnceForConditions({
+      type: 'membership_owner_autopay_notice',
+      userId: user.id,
+      keys: [`endDate:${formatDate(anchorDate)}`],
+    }),
+    status: ['SENT', 'SCHEDULED'],
+  })
+  if (!noticeLog.length) {
+    debug(`backing off, no notice mail found, user id: ${user.id}`)
+    return
+  }
+  const backOffAfterNoticeDays = 7
+  const waitUntilAfterNotice = moment(noticeLog[0].createdAt).add(
+    backOffAfterNoticeDays,
+    'days',
+  )
+  if (waitUntilAfterNotice > moment()) {
+    debug(
+      `backing off, notice mail less than ${backOffAfterNoticeDays} days, user id: ${user.id}`,
     )
     return
   }
@@ -79,9 +109,10 @@ module.exports = async (user, payload, context) => {
 
   if (doAttemptCharge) {
     debug(
-      'attempt to charge #%i, membershipId: %s',
+      'attempt to charge #%i, membershipId: %s, userId: %s',
       previousAttempts.length + 1,
       membershipId,
+      user.id,
     )
     if (DRY_RUN) {
       return

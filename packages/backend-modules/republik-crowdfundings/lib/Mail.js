@@ -433,7 +433,7 @@ mail.prepareMembershipOwnerNotice = async (
   const formattedGraceEndDate = dateFormat(graceEndDate)
 
   const timeLeft = moment(endDate).startOf('day').diff(moment().startOf('day'))
-  const daysLeft = Math.max(1, Math.ceil(moment.duration(timeLeft).as('days')))
+  const daysLeft = Math.max(7, Math.ceil(moment.duration(timeLeft).as('days')))
 
   const membershipId = user.membershipId || false
   const sequenceNumber = user.membershipSequenceNumber || false

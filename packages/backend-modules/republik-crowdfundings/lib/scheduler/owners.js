@@ -195,7 +195,7 @@ const createJobs = (now) => [
   {
     name: 'membership_owner_autopay_notice',
     prolongBefore: {
-      minDate: moment(now).add(1, 'days'),
+      minDate: moment(now).add(-60, 'days'),
       maxDate: moment(now).add(10, 'days'),
     },
     payload: {
@@ -219,7 +219,7 @@ const createJobs = (now) => [
   {
     name: 'membership_owner_autopay',
     prolongBefore: {
-      minDate: moment(now).add(-14, 'days'),
+      minDate: moment(now).add(-50, 'days'),
       maxDate: moment(now).add(0, 'days'),
     },
     predicateFn: ({

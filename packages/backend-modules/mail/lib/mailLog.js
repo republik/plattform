@@ -1,8 +1,8 @@
 const debug = require('debug')('crowdfundings:lib:mailLog')
 const moment = require('moment')
 
-const wasSent = async (onceFor, { pgdb }) => {
-  const conditions = Object.keys(onceFor)
+const getOnceForConditions = (onceFor) =>
+  Object.keys(onceFor)
     .filter((key) => ['type', 'userId', 'email', 'keys'].includes(key))
     // if a onceFor value is an array, change the key to `${key} &&`
     // to ensure that if a mail was sent for one array member,
@@ -21,6 +21,9 @@ const wasSent = async (onceFor, { pgdb }) => {
       return condition
     })
     .reduce((agg, cur) => Object.assign(agg, cur), {})
+
+const wasSent = async (onceFor, { pgdb }) => {
+  const conditions = getOnceForConditions(onceFor)
 
   const wasSentSuccessfully = await pgdb.public.mailLog
     .count({
@@ -112,4 +115,5 @@ const send = async ({
 
 module.exports = {
   send,
+  getOnceForConditions,
 }
