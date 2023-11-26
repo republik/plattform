@@ -6,9 +6,6 @@ const { publish: slackPublish } = require('@orbiting/backend-modules-slack')
 const { formatPrice } = require('@orbiting/backend-modules-formats')
 
 const { prolong: autoPayProlong } = require('../../AutoPay')
-const {
-  getOnceForConditions,
-} = require('@orbiting/backend-modules-mail/lib/mailLog')
 
 const { SLACK_CHANNEL_AUTOPAY } = process.env
 
@@ -48,11 +45,9 @@ module.exports = async (user, payload, context) => {
 
   // Ensure was notified at least one week before
   const noticeLog = await pgdb.public.mailLog.find({
-    ...getOnceForConditions({
-      type: 'membership_owner_autopay_notice',
-      userId: user.id,
-      keys: [`endDate:${formatDate(anchorDate)}`],
-    }),
+    'type ~~': '%/membership_owner_autopay_notice',
+    userId: user.id,
+    'keys &&': [`endDate:${formatDate(anchorDate)}`],
     status: ['SENT', 'SCHEDULED'],
   })
   if (!noticeLog.length) {
