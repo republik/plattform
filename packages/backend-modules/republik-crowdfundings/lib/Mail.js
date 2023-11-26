@@ -550,10 +550,10 @@ mail.sendMembershipOwnerAutoPay = async ({ autoPay, payload, pgdb, t }) => {
   const customPledgeToken = AccessToken.generateForUser(user, 'CUSTOM_PLEDGE')
   const version =
     payload.chargeAttemptStatus === 'SUCCESS' ? 'successful' : 'failed'
-  const templateName = `membership_owner_autopay_${version}`
+  const templateName = `${user.locale}/membership_owner_autopay_${version}`
   const subject = t.first([
-    `api/email/${templateName}_${payload.attemptNumber}/subject`,
-    `api/email/${templateName}/subject`,
+    `api/email/${user.locale}/${templateName}_${payload.attemptNumber}/subject`,
+    `api/email/${user.locale}/${templateName}/subject`,
   ])
 
   return sendMailTemplate(
