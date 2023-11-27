@@ -552,8 +552,8 @@ mail.sendMembershipOwnerAutoPay = async ({ autoPay, payload, pgdb, t }) => {
     payload.chargeAttemptStatus === 'SUCCESS' ? 'successful' : 'failed'
   const templateName = `${user.locale}/membership_owner_autopay_${version}`
   const subject = t.first([
-    `api/email/${user.locale}/${templateName}_${payload.attemptNumber}/subject`,
-    `api/email/${user.locale}/${templateName}/subject`,
+    `api/email/${templateName}_${payload.attemptNumber}/subject`,
+    `api/email/${templateName}/subject`,
   ])
 
   return sendMailTemplate(
