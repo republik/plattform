@@ -82,12 +82,23 @@ const styles = {
       justifyContent: 'flex-end',
     },
   }),
-  splitcenterright: css({
+  split: css({
     position: 'static',
     [tUp]: {
       position: 'absolute',
       inset: 0,
       padding: `${TEXT_PADDING}px 5% ${TEXT_PADDING}px calc(50% + 5%)`,
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+    },
+  }),
+  splitreverse: css({
+    position: 'static',
+    [tUp]: {
+      position: 'absolute',
+      inset: 0,
+      padding: `${TEXT_PADDING}px calc(50% + 5%) ${TEXT_PADDING}px 5%`,
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'center',

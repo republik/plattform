@@ -154,7 +154,7 @@ const Split = ({
         )}
       >
         <Text
-          position={'splitcenterright'}
+          position={reverse ? 'splitreverse' : 'split'}
           color={color}
           center={center}
           feuilleton={feuilleton}
