@@ -116,8 +116,14 @@ const styles = {
     },
   }),
   middle: css({
+    position: 'static',
     [tUp]: {
-      ...positionFullWidth,
+      position: 'absolute',
+      inset: 0,
+      padding: `${TEXT_PADDING}px`,
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
     },
   }),
   bottom: css({

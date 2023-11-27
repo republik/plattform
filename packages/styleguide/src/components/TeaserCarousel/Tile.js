@@ -31,6 +31,7 @@ const styles = {
     width: '33%',
     minWidth: 290,
     maxWidth: TILE_MAX_WIDTH,
+    position: 'relative',
     display: 'flex',
     justifyContent: 'center',
     ':last-of-type': { margin: 0 },

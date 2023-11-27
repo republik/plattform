@@ -133,7 +133,9 @@ export const styles = {
       position: 'absolute',
       inset: 0,
       content: '""',
-      background: 'rgba(255,0,127,0.3)', // TODO: Remove
+      background:
+        'repeating-linear-gradient(45deg, transparent, transparent 32px, rgba(0,255,255,.5) 32px, rgba(0,255,255,.5) 64px);', // TODO: Remove
+      mixBlendMode: 'difference',
       zIndex: 0,
     },
   }),
