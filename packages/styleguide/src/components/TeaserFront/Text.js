@@ -36,7 +36,7 @@ const styles = {
     },
   }),
   positioned: css({
-    position: 'relative',
+    position: 'static',
   }),
   topleft: css({
     position: 'static',

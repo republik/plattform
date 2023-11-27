@@ -21,6 +21,7 @@ const styles = {
       textAlign: 'center',
       padding: '30px 15px 40px 15px',
       width: '100%',
+      position: 'relative',
       [mUp]: {
         display: 'flex',
         flexDirection: 'column',
