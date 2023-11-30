@@ -146,6 +146,9 @@ const nextConfig = {
   },
   experimental: {
     largePageDataBytes: 512 * 1000, // 512KB
+    // Don't scroll to top on Browser back/forward
+    // Note: This only applies to Pages Router, the App Router automatically does this: https://nextjs.org/docs/app/building-your-application/routing/linking-and-navigating#5-back-and-forward-navigation
+    scrollRestoration: true,
   },
 }
 
