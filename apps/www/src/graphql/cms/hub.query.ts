@@ -32,6 +32,7 @@ query ChallengeAcceptedHubQuery {
         locationLink
         startAt
         endAt
+        _updatedAt
       }
       ... on ChallengeAcceptedArticleRecord {
         id
