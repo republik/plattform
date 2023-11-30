@@ -151,9 +151,7 @@ export function PersonDetail({ person, isMember = false }: PersonDetailProps) {
               </h2>
               <CollectionRenderer items={person.items} isMember={isMember} />
             </section>
-          ) : (
-            <div className={css({ mb: '16-32' })}></div>
-          )}
+          ) : null}
         </div>
       </Container>
     </div>
