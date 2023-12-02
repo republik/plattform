@@ -2397,6 +2397,38 @@
       "value": "Visa-Kreditkarte"
     },
     {
+      "key": "api/email/card/fr",
+      "value": "carte de crédit"
+    },
+    {
+      "key": "api/email/card/fr/amex",
+      "value": "carte de crédit American Express"
+    },
+    {
+      "key": "api/email/card/fr/diners",
+      "value": "carte de crédit Diners Club"
+    },
+    {
+      "key": "api/email/card/fr/discover",
+      "value": "carte de crédit Discover"
+    },
+    {
+      "key": "api/email/card/fr/jcb",
+      "value": "carte de crédit JCB"
+    },
+    {
+      "key": "api/email/card/fr/mastercard",
+      "value": "carte de crédit MasterCard"
+    },
+    {
+      "key": "api/email/card/fr/unionpay",
+      "value": "carte de crédit UnionPay"
+    },
+    {
+      "key": "api/email/card/fr/visa",
+      "value": "carte de crédit Visa"
+    },
+    {
       "key": "api/offer/status/label",
       "value": "{type} {since}"
     },

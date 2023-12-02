@@ -7,9 +7,9 @@ compter parmi nous.
 Vous avez indiqué que vous nous autorisiez à prélever le débit de votre carte de
 crédit enregistrée automatiquement.
 
-Cet e-mail vous informe que nous le ferons dans {{days_left}}jours : votre
+Cet e-mail vous informe que nous le ferons dans {{days_left}} jours : votre
 {{autopay_card_brand}} avec les chiffres finaux {{autopay_card_last4}}, sera
-débité le {{end_date}} de {{autopay_total}}.
+débité le {{days_left_end_date}} de {{autopay_total}}.
 
 Si vous souhaitez nous faire un don supplémentaire, vous pouvez modifier le
 montant maintenant. Vous pouvez également déposer une autre carte de crédit,

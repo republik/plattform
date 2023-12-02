@@ -8,7 +8,8 @@ automatisch zu belasten.
 
 Diese E-Mail informiert Sie darüber, dass wir dies in {{days_left}} Tagen
 tatsächlich tun werden: Ihre {{autopay_card_brand}} mit den Endziffern
-{{autopay_card_last4}} belasten wir am {{end_date}} mit {{autopay_total}}.
+{{autopay_card_last4}} belasten wir am {{days_left_end_date}} mit
+{{autopay_total}}.
 
 Wenn Sie uns zusätzlich eine Spende zukommen lassen möchten, können Sie den
 Betrag jetzt noch anpassen. Sie können auch eine andere Kreditkarte hinterlegen,

@@ -54,6 +54,7 @@ module.exports = async (user, payload, context) => {
     debug(`backing off, no notice mail found, user id: ${user.id}`)
     return
   }
+  // keep in synch with lib/Mail.js prepareMembershipOwnerNotice
   const backOffAfterNoticeDays = 7
   const waitUntilAfterNotice = moment(noticeLog[0].createdAt).add(
     backOffAfterNoticeDays,

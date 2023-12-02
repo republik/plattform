@@ -433,6 +433,7 @@ mail.prepareMembershipOwnerNotice = async (
   const formattedGraceEndDate = dateFormat(graceEndDate)
 
   const timeLeft = moment(endDate).startOf('day').diff(moment().startOf('day'))
+  // 7 is in synch with scheduler/owners/charging.js
   const daysLeft = Math.max(7, Math.ceil(moment.duration(timeLeft).as('days')))
 
   const membershipId = user.membershipId || false
@@ -486,6 +487,10 @@ mail.prepareMembershipOwnerNotice = async (
         content: daysLeft,
       },
       {
+        name: 'days_left_end_date',
+        content: dateFormat(moment().add(daysLeft, 'days')),
+      },
+      {
         name: 'cancel_until_date',
         content: dateFormat(cancelUntilDate),
       },
@@ -522,6 +527,8 @@ mail.prepareMembershipOwnerNotice = async (
         autoPay.card && {
           name: 'autopay_card_brand',
           content: t.first([
+            `api/email/card/${user._raw.locale}/${autoPay.card.brand}`,
+            `api/email/card/${user._raw.locale}`,
             `api/email/card/${autoPay.card.brand}`,
             `api/email/card`,
           ]),
