@@ -13,13 +13,19 @@ fédéral. Nous demandons combien nos parlementaires gagnent avec leurs activit�
 nos recherches sur notre site Internet - afin que tous les citoyens intéressés
 puissent voir à tout moment qui est aux commandes de la politique suisse.
 
+En collaboration avec le collectif de recherche WAV, le réseau de recherche
+investigativ.ch et OpenData Suisse, nous venons de lancer le projet “L’argent et
+la politique”. Sur cette plateforme moneyinpolitics.ch, nous présentons de
+manière compréhensible et claire quelles personnes et organisations investissent
+combien d’argent dans les campagnes électorales.
+
 Vous avez maintenant le choix :
 
  * Vous restez avec nous et continuez à soutenir Lobbywatch : vous payez ici la
    facture pour une année supplémentaire. {{prolong_url}}
  * Vous ne souhaitez plus soutenir Lobbywatch ? Ici vous pouvez mettre fin à
-   votre adhésion {{cancel_url}} et, si vous le souhaitez, vous pouvez nous
-   faire
+   votre adhésion {{cancel_url}} et, si vous le souhaitez, nous le faire savoir
+   pourquoi.
 
 Quelle que soit votre décision : Nous vous remercions de votre engagement et de
 votre confiance !

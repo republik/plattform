@@ -1,0 +1,41 @@
+Guten Tag
+
+Ihre Mitgliedschaft bei Lobbywatch ist am {{end_date}} ausgelaufen. Vielen Dank,
+dass Sie uns bisher unterstützt haben! Dürfen wir weitere 12 Monate auf Sie
+zählen?
+
+Mitglied bleiben {{prolong_url}}
+
+Lobbywatch hat sich in den vergangenen Jahren zu einer anerkannten Grösse im
+Schweizer Politleben entwickelt. Wir schauen genau hin, wer im Bundeshaus wessen
+Interessen vertritt. Wir fragen nach, wie viel unsere Parlamentarier:innen mit
+ihren (Lobby-)Tätigkeiten für Verbände und Unternehmen verdienen. Und wir
+publizieren alle unsere Recherchen auf unserer Website – damit alle
+interessierten Bürger:innen jederzeit nachschauen können, wer in der Schweizer
+Politik die Fäden zieht.
+
+Gemeinsam mit dem Recherchekollektiv WAV, dem Recherchenetzwerk investigativ.ch
+und OpenData Schweiz haben wir zudem gerade das Projekt «Das Geld und die
+Politik» lanciert. Auf dieser Plattform moneyinpolitics.ch präsentieren wir in
+verständlicher und übersichtlicher Form, welche Personen und Organisationen wie
+viel Geld in die Wahlkämpfe stecken.
+
+Sie haben nun die Wahl:
+
+ * Sie bleiben dabei und unterstützen Lobbywatch weiterhin: Hier bezahlen Sie
+   die Rechnung für ein weiteres Jahr. {{prolong_url}}
+ * Sie möchten Lobbywatch nicht mehr unterstützen? Hier können Sie Ihre
+   Mitgliedschaft beendigen {{cancel_url}} und, wenn Sie möchten, uns mitteilen,
+   warum.
+
+Wie auch immer Sie entscheiden: Vielen Dank für Ihr Engagement und Ihr
+Vertrauen!
+
+Mit freundlichen Grüssen
+Thomas Angeli & Otto Hostettler
+Co-Präsidenten Lobbywatch
+
+
+Lobbywatch.ch
+3000 Bern
+info@lobbywatch.ch

@@ -1,0 +1,41 @@
+Bonjour
+
+Votre adhésion à Lobbywatch a expiré le {{end_date}}. Nous vous remercions de
+nous avoir soutenus jusqu’à présent ! Pouvons-nous compter sur vous pour 12 mois
+supplémentaires ?
+
+Rester membre {{prolong_url}}
+
+Au cours des dernières années, Lobbywatch est devenu un acteur reconnu de la vie
+politique suisse. Nous regardons de près qui défend les intérêts de qui au
+Palais fédéral. Nous cherchons à savoir combien nos parlementaires gagnent avec
+leurs activités (de lobbying) pour des associations et des entreprises. Et nous
+publions toutes nos recherches sur notre site Internet - afin que tous les
+citoyens intéressés puissent vérifier à tout moment qui tire les ficelles de la
+politique suisse.
+
+En collaboration avec le collectif de recherche WAV, le réseau de recherche
+investigativ.ch et OpenData Suisse, nous venons de lancer le projet “L’argent et
+la politique”. Sur cette plateforme moneyinpolitics.ch, nous présentons de
+manière compréhensible et claire quelles personnes et organisations investissent
+combien d’argent dans les campagnes électorales.
+
+Vous avez maintenant le choix :
+
+ * Vous restez avec nous et continuez à soutenir Lobbywatch : Vous payez ici la
+   facture pour une année supplémentaire. {{prolong_url}}
+ * Vous ne souhaitez plus soutenir Lobbywatch ? Vous pouvez annuler votre
+   adhésion ici {{cancel_url}} et, si vous le souhaitez, nous le faire savoir
+   pourquoi.
+
+Quelle que soit votre décision : Nous vous remercions de votre engagement et de
+votre confiance !
+
+Avec nos meilleures salutations
+Thomas Angeli & Otto Hostettler
+Co-présidents de Lobbywatch
+
+
+Lobbywatch.ch
+3000 Berne
+info@lobbywatch.ch

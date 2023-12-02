@@ -168,30 +168,30 @@ const createJobs = (now) => [
   //   },
   //   handleFn: mailings,
   // },
-  // {
-  //   name: 'membership_owner_prolong_winback_7',
-  //   prolongBefore: {
-  //     minDate: getMinEndDate(now, -10),
-  //     maxDate: getMaxEndDate(now, -7),
-  //   },
-  //   payload: {
-  //     templateName: 'membership_owner_prolong_winback_7',
-  //   },
-  //   predicateFn: ({
-  //     id: userId,
-  //     membershipType,
-  //     membershipAutoPay,
-  //     autoPay,
-  //   }) => {
-  //     return (
-  //       ['YEAR'].includes(membershipType) &&
-  //       (membershipAutoPay === false ||
-  //         (membershipAutoPay === true &&
-  //           (!autoPay || (autoPay && userId !== autoPay.userId))))
-  //     )
-  //   },
-  //   handleFn: mailings,
-  // },
+  {
+    name: 'membership_owner_prolong_overdue',
+    prolongBefore: {
+      minDate: getMinEndDate(now, -120),
+      maxDate: getMaxEndDate(now, -1),
+    },
+    payload: {
+      templateName: 'membership_owner_prolong_overdue',
+    },
+    predicateFn: ({
+      id: userId,
+      membershipType,
+      membershipAutoPay,
+      autoPay,
+    }) => {
+      return (
+        ['YEAR'].includes(membershipType) &&
+        (membershipAutoPay === false ||
+          (membershipAutoPay === true &&
+            (!autoPay || (autoPay && userId !== autoPay.userId))))
+      )
+    },
+    handleFn: mailings,
+  },
   {
     name: 'membership_owner_autopay_notice',
     prolongBefore: {
