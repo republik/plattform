@@ -657,6 +657,14 @@
       "value": "Cotisation annuelle due"
     },
     {
+      "key": "api/email/de/membership_owner_prolong_overdue/subject",
+      "value": "Jahresbeitrag überfällig"
+    },
+    {
+      "key": "api/email/fr/membership_owner_prolong_overdue/subject",
+      "value": "Cotisation annuelle en retard"
+    },
+    {
       "key": "api/email/de/membership_owner_autopay_notice/subject",
       "value": "Ihre Mitgliedschaft erneuert sich automatisch"
     },
