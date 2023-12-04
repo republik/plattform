@@ -469,6 +469,14 @@
       "value": "Bücher «We Stay»"
     },
     {
+      "key": "api/email/option/goodie/cookie/1",
+      "value": "Republik-Guetsliform"
+    },
+    {
+      "key": "api/email/option/goodie/cookie/other",
+      "value": "Republik-Guetsliformen"
+    },
+    {
       "key": "api/email/option/membershiptype/abo/1",
       "value": "Jahresmitgliedschaft"
     },
@@ -2317,6 +2325,14 @@
       "value": "Bücher «We Stay»"
     },
     {
+      "key": "api/invoices/option/Goodie/COOKIE/1",
+      "value": "Republik-Guetsliform"
+    },
+    {
+      "key": "api/invoices/option/Goodie/COOKIE/other",
+      "value": "Republik-Guetsliformen"
+    },
+    {
       "key": "api/invoices/option/MembershipType/ABO/1",
       "value": "Jahresmitgliedschaft"
     },
@@ -2439,6 +2455,142 @@
     {
       "key": "api/email/card/visa",
       "value": "Visa-Kreditkarte"
+    },
+    {
+      "key": "api/offer/status/label",
+      "value": "{type} {since}"
+    },
+    {
+      "key": "api/offer/status/label/type",
+      "value": "Zugang"
+    },
+    {
+      "key": "api/offer/status/label/type/ABO",
+      "value": "Mitglied"
+    },
+    {
+      "key": "api/offer/status/label/type/BENEFACTOR_ABO",
+      "value": "Mitglied"
+    },
+    {
+      "key": "api/offer/status/label/type/MONTHLY_ABO",
+      "value": "Abo"
+    },
+    {
+      "key": "api/offer/status/label/type/ABO_GIVE_MONTHS",
+      "value": "Abo"
+    },
+    {
+      "key": "api/offer/status/label/since",
+      "value": "seit {firstDay}"
+    },
+    {
+      "key": "api/offer/status/description",
+      "value": "{due}"
+    },
+    {
+      "key": "api/offer/status/description/type",
+      "value": "Ihr Zugriff"
+    },
+    {
+      "key": "api/offer/status/description/type/ABO",
+      "value": "Ihre Jahresmitgliedschaft"
+    },
+    {
+      "key": "api/offer/status/description/type/BENEFACTOR_ABO",
+      "value": "Ihre Gönner-Mitgliedschaft"
+    },
+    {
+      "key": "api/offer/status/description/type/MONTHLY_ABO",
+      "value": "Ihr Monats-Abo"
+    },
+    {
+      "key": "api/offer/status/description/type/ABO_GIVE_MONTHS",
+      "value": "Ihr Monats-Abo"
+    },
+    {
+      "key": "api/offer/status/description/due/active:false/renew:false",
+      "value": "{type} endete am {endDate}."
+    },
+    {
+      "key": "api/offer/status/description/due/active:true/renew:false",
+      "value": "{type} läuft noch bis zum {endDate}."
+    },
+    {
+      "key": "api/offer/status/description/due/active:false/renew:true",
+      "value": "{type} lief am {endDate} aus."
+    },
+    {
+      "key": "api/offer/status/description/due/active:true/renew:true",
+      "value": "Ihr nächster Beitrag ist am {endDate} fällig."
+    },
+    {
+      "key": "api/offer/status/description/due/active:true/renew:true/ABO",
+      "value": "Ihr nächster Mitgliederbeitrag ist am {endDate} fällig."
+    },
+    {
+      "key": "api/offer/status/description/due/active:true/renew:true/BENEFACTOR_ABO",
+      "value": "Ihr nächster Mitgliederbeitrag ist am {endDate} fällig."
+    },
+    {
+      "key": "api/offer/status/description/due/active:true/renew:true/MONTHLY_ABO",
+      "value": "Ihr Monats-Abo wird am {endDate} verlängert."
+    },
+    {
+      "key": "api/offer/status/description/due/active:true/renew:true/ABO_GIVE_MONTHS",
+      "value": "Ihr Monats-Abo als Geschenk wird am {endDate} verlängert."
+    },
+    {
+      "key": "api/package/option/reward:MembershipType:ABO",
+      "value": "Regulär"
+    },
+    {
+      "key": "api/package/option/reward:MembershipType:BENEFACTOR_ABO",
+      "value": "Gönner"
+    },
+    {
+      "key": "api/package/option/reward:MembershipType:MONTHLY_ABO",
+      "value": "Regulär"
+    },
+    {
+      "key": "api/package/option/reward:MembershipType:ABO_GIVE_MONTHS",
+      "value": "Regulär"
+    },
+    {
+      "key": "api/package/option/reward:Goodie:NOTEBOOK",
+      "value": "Notizbuch"
+    },
+    {
+      "key": "api/package/option/reward:Goodie:TOTEBAG",
+      "value": "Tasche"
+    },
+    {
+      "key": "api/package/option/reward:Goodie:TABLEBOOK",
+      "value": "Buch «Republik bei Stromausfall»"
+    },
+    {
+      "key": "api/package/option/reward:Goodie:MASK",
+      "value": "Republik-Maske"
+    },
+    {
+      "key": "api/package/option/reward:Goodie:FONDUE",
+      "value": "Republik-Fondue"
+    },
+    {
+      "key": "api/package/option/reward:Goodie:MUG",
+      "value": "Tasse"
+    },
+    {
+      "key": "api/package/option/reward:Goodie:LESHA",
+      "value": "Buch «We Stay»"
+    },
+    {
+      "key": "api/package/option/reward:Goodie:COOKIE",
+      "value": "Republik-Guetsliform"
+    },
+    {
+      "key": "api/package:DONATE/option/order:100",
+      "value": "Spende"
     },
     {
       "key": "api/publikator/editMemo/error/404",
