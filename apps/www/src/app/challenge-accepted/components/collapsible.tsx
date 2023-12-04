@@ -1,7 +1,6 @@
 'use client'
 
 import { css } from '@app/styled-system/css'
-import { vstack } from '@app/styled-system/patterns'
 import * as RadixCollapsible from '@radix-ui/react-collapsible'
 import { useState } from 'react'
 
@@ -10,21 +9,11 @@ export const Collapsible = ({ shownItems, collapsedItems }) => {
 
   return (
     <RadixCollapsible.Root open={open} onOpenChange={setOpen}>
-      <div
-        className={css({
-          borderColor: 'contrast',
-          borderStyle: 'solid',
-          borderTopWidth: 1,
-          borderBottomWidth: 1,
-        })}
-      >
-        <div className={vstack({ alignItems: 'start', gap: '0' })}>
-          {shownItems}
-        </div>
+      <div data-collapsible>
+        <div data-collapsible-shown-items>{shownItems}</div>
         <RadixCollapsible.Content
-          className={vstack({
-            alignItems: 'start',
-            gap: '0',
+          data-collapsible-collapsed-items
+          className={css({
             overflow: 'hidden',
             animationTimingFunction: 'ease-out',
             animationDuration: '300ms',
@@ -40,15 +29,7 @@ export const Collapsible = ({ shownItems, collapsedItems }) => {
         </RadixCollapsible.Content>
       </div>
       <RadixCollapsible.Trigger asChild>
-        <button
-          className={css({
-            color: 'contrast',
-            cursor: 'pointer',
-            textAlign: 'center',
-            width: 'full',
-            mt: '4',
-          })}
-        >
+        <button data-collapsible-trigger>
           {open ? 'Weniger zeigen' : 'Alle zeigen'}
         </button>
       </RadixCollapsible.Trigger>
