@@ -227,6 +227,34 @@ class PledgeReceivePayment extends Component {
         }
       }
     }
+    // Datatrans
+    if (query.refno) {
+      if (query.status === 'success') {
+        state.processing = true
+        state.action = {
+          method: 'pay',
+          argument: {
+            method: 'DATATRANS',
+            pspPayload: query,
+          },
+        }
+      } else if (query.status === 'cancel') {
+        // Do something
+        state.receiveError = (
+          <RawHtmlTranslation
+            error
+            translationKey='pledge/recievePayment/datatrans/cancel'
+          />
+        )
+      } else if (query.status === 'error') {
+        state.receiveError = (
+          <RawHtmlTranslation
+            error
+            translationKey='pledge/recievePayment/datatrans/error'
+          />
+        )
+      }
+    }
 
     this.queryFromPledge = () => {
       const { pledge } = this.props

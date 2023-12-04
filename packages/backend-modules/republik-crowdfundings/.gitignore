@@ -1,3 +1,4 @@
+lib/payments/datatrans/*.js
 lib/payments/paymentslip/helpers.js
 lib/payments/paymentslip/sendPaymentReminders.js
 lib/scheduler/importPayments.js

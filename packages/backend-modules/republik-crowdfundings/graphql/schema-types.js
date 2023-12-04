@@ -251,6 +251,7 @@ input PledgeInput {
   messageToClaimers: String
   accessToken: ID
   payload: JSON
+  paymentMethod: PaymentMethod
 }
 
 type PledgeResponse {
@@ -259,6 +260,7 @@ type PledgeResponse {
   emailVerify: Boolean
   pfAliasId: String
   pfSHA: String
+  dtTransactionId: String
   # returned by payPledge if confirmCardPayment is expected
   stripeClientSecret: String
   stripePublishableKey: String
@@ -294,6 +296,7 @@ type AddPaymentMethodResponse {
 
 enum PaymentMethod {
   STRIPE
+  DATATRANS
   POSTFINANCECARD
   PAYPAL
   PAYMENTSLIP

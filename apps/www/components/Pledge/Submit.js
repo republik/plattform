@@ -158,16 +158,19 @@ const SubmitWithHooks = ({ paymentMethods, ...props }) => {
   // In case STRIPE is an accepted payment method,
   // add additional payment methods such as Apple or Google Pay if available
   const enhancedPaymentMethods = useMemo(() => {
-    if (!paymentMethods.includes('STRIPE')) {
-      return paymentMethods
-    }
+    return paymentMethods
+      .flatMap((method) => {
+        if (method === 'STRIPE') {
+          return [
+            'STRIPE',
+            isApplePayAvailable ? WalletPaymentMethod.APPLE_PAY : null,
+            isGooglePayAvailable ? WalletPaymentMethod.GOOGLE_PAY : null,
+          ]
+        }
 
-    return [
-      'STRIPE', // the first option is sometimes auto selected and should not be a wallet
-      isApplePayAvailable ? WalletPaymentMethod.APPLE_PAY : null,
-      isGooglePayAvailable ? WalletPaymentMethod.GOOGLE_PAY : null,
-      ...paymentMethods.filter((pm) => pm !== 'STRIPE'),
-    ].filter(Boolean)
+        return [method]
+      })
+      .filter(Boolean)
   }, [paymentMethods, isApplePayAvailable, isGooglePayAvailable])
 
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState()
@@ -352,15 +355,18 @@ class Submit extends Component {
 
     const hash = simpleHash(variables)
 
+    // Special Case: DATATRANS and POSTFINANCECARD
+    // - we need a pledgeResponse with pfAliasId and pfSHA
+    // - this can be missing if returning from a PSP redirect
+    // - in those cases we create a new pledge
+    const requiresRefetch = !['DATATRANS', 'POSTFINANCECARD'].includes(
+      this.props.selectedPaymentMethod,
+    )
+
     if (
       !this.state.submitError &&
       this.state.pledgeHash === hash &&
-      // Special Case: POSTFINANCECARD
-      // - we need a pledgeResponse with pfAliasId and pfSHA
-      // - this can be missing if returning from a PSP redirect
-      // - in those cases we create a new pledge
-      (this.props.selectedPaymentMethod !== 'POSTFINANCECARD' ||
-        this.state.pledgeResponse)
+      (requiresRefetch || this.state.pledgeResponse)
     ) {
       return this.payPledge(
         this.state.pledgeId,
@@ -378,6 +384,7 @@ class Submit extends Component {
         ...variables,
         payload: getConversionPayload(query),
         consents: getRequiredConsents(this.props),
+        paymentMethod: this.props.selectedPaymentMethod,
       })
       .then(({ data }) => {
         if (data.submitPledge.emailVerify) {
@@ -435,6 +442,8 @@ class Submit extends Component {
       this.payWithPostFinance(pledgeId, pledgeResponse)
     } else if (selectedPaymentMethod === 'STRIPE') {
       this.payWithStripe(pledgeId)
+    } else if (selectedPaymentMethod === 'DATATRANS') {
+      this.payWithDatatrans(pledgeId, pledgeResponse)
     } else if (this.isStripeWalletPayment()) {
       return this.payWithWallet(pledgeId, stripePaymentMethod)
     } else if (selectedPaymentMethod === 'PAYPAL') {
@@ -469,6 +478,25 @@ class Submit extends Component {
       }),
       () => {
         this.payment.postFinanceForm.submit()
+      },
+    )
+  }
+
+  payWithDatatrans(pledgeId, pledgeResponse) {
+    const { t } = this.props
+
+    this.setState(
+      () => ({
+        loading: t('pledge/submit/loading/datatrans'),
+        pledgeId: pledgeId,
+        userId: pledgeResponse.userId,
+        dtTransactionId: pledgeResponse.dtTransactionId,
+      }),
+      () => {
+        this.payment.datatransForm.action =
+          'https://pay.sandbox.datatrans.com/v1/start/' +
+          this.state.dtTransactionId
+        this.payment.datatransForm.submit()
       },
     )
   }
@@ -1098,6 +1126,7 @@ const submitPledge = gql`
     $payload: JSON
     $address: AddressInput
     $shippingAddress: AddressInput
+    $paymentMethod: PaymentMethod
   ) {
     submitPledge(
       pledge: {
@@ -1109,6 +1138,7 @@ const submitPledge = gql`
         reason: $reason
         accessToken: $accessToken
         payload: $payload
+        paymentMethod: $paymentMethod
       }
       consents: $consents
     ) {
@@ -1117,6 +1147,7 @@ const submitPledge = gql`
       emailVerify
       pfAliasId
       pfSHA
+      dtTransactionId
     }
   }
 `

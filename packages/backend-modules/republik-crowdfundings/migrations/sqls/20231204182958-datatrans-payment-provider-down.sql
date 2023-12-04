@@ -1,0 +1,1 @@
+-- @TODO: Remove ENUM requires to create new type

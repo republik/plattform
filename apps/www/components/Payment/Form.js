@@ -40,6 +40,10 @@ const pad2 = format('02')
 const PAYMENT_METHODS = [
   {
     disabled: false,
+    key: 'DATATRANS',
+  },
+  {
+    disabled: false,
     key: 'STRIPE',
     Icon: ({ values }) => {
       return (
@@ -192,12 +196,15 @@ const PaymentMethodLabel = ({
   )
 }
 
-const { H2, P, H3 } = Interaction
+const { P, H3 } = Interaction
 
 class PaymentForm extends Component {
   constructor(...args) {
     super(...args)
     this.state = {}
+    this.datatransFormRef = (ref) => {
+      this.datatransForm = ref
+    }
     this.stripeRef = (ref) => {
       this.stripe = ref
     }
@@ -522,6 +529,12 @@ class PaymentForm extends Component {
               </Radio>
             </div> */}
           </div>
+        )}
+        {paymentMethodForm === 'DATATRANS' && (
+          <>
+            {children}
+            <form ref={this.datatransFormRef} method='GET' />
+          </>
         )}
         {paymentMethodForm === 'STRIPE' && (
           <>

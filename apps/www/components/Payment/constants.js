@@ -7,4 +7,6 @@ export const PSP_PLEDGE_ID_QUERY_KEYS = [
   'item_name',
   // strip 3d secure
   STRIPE_PLEDGE_ID_QUERY_KEY,
+  // datatrans
+  'refno',
 ]

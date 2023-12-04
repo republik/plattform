@@ -6,6 +6,7 @@ const payPledgePaymentslip = require('../../../lib/payments/paymentslip/payPledg
 const payPledgePaypal = require('../../../lib/payments/paypal/payPledge')
 const payPledgePostfinance = require('../../../lib/payments/postfinance/payPledge')
 const payPledgeStripe = require('../../../lib/payments/stripe/payPledge')
+const payPledgeDatatrans = require('../../../lib/payments/datatrans/payPledge')
 const {
   forUpdate,
   changeStatus,
@@ -132,6 +133,21 @@ module.exports = async (_, args, context) => {
           total: pledge.total,
           pspPayload: pledgePayment.pspPayload,
           transaction,
+          t,
+          logger,
+        })
+      } else if (pledgePayment.method === 'DATATRANS') {
+        // @TODO too many props, check again
+        pledgeStatus = await payPledgeDatatrans({
+          pledgeId: pledge.id,
+          total: pledge.total,
+          sourceId: pledgePayment.sourceId,
+          pspPayload: pledgePayment.pspPayload,
+          makeDefault: pledgePayment.makeDefault,
+          userId: user.id,
+          pkg,
+          transaction,
+          pgdb,
           t,
           logger,
         })
