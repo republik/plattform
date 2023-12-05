@@ -229,7 +229,7 @@ class PledgeReceivePayment extends Component {
     }
     // Datatrans
     if (query.refno) {
-      if (query.status === 'success') {
+      if (query.status === 'authorized') {
         state.processing = true
         state.action = {
           method: 'pay',
@@ -251,6 +251,34 @@ class PledgeReceivePayment extends Component {
           <RawHtmlTranslation
             error
             translationKey='pledge/recievePayment/datatrans/error'
+          />
+        )
+      } else {
+        const errorVariables = {
+          mailto: (
+            <A
+              key='mailto'
+              href={`mailto:${EMAIL_PAYMENT}?subject=${encodeURIComponent(
+                t('pledge/recievePayment/datatrans/mailto/subject', {
+                  status: query.status || '',
+                }),
+              )}&body=${encodeURIComponent(
+                t('pledge/recievePayment/datatrans/mailto/body', {
+                  pledgeId: query.refno,
+                  payload: JSON.stringify(query, null, 2),
+                }),
+              )}`}
+            >
+              {EMAIL_PAYMENT}
+            </A>
+          ),
+        }
+
+        state.receiveError = (
+          <RawHtmlTranslation
+            error
+            translationKey='pledge/recievePayment/error'
+            replacements={errorVariables}
           />
         )
       }

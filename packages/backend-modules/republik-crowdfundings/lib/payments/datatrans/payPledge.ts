@@ -1,21 +1,21 @@
 const { ascending } = require('d3-array')
 
 type PayPledgeProps = {
-  pledgeId: string,
-  total: number,
-  pspPayload: any,
-  userId: string,
+  pledgeId: string
+  total: number
+  pspPayload: any
+  userId: string
 
   // @TODO typescript this nice
-  transaction: any,
-  t: any,
-  logger: any,
+  transaction: any
+  t: any
+  logger: any
 }
 
 module.exports = async (props: PayPledgeProps) => {
   const {
     pledgeId,
-    // total,
+    total,
     pspPayload,
     // userId,
     transaction,
@@ -32,8 +32,43 @@ module.exports = async (props: PayPledgeProps) => {
 
   // check for replay attacks
   if (await transaction.public.payments.findFirst({ pspId: datatransTrxId })) {
-    logger.error('this datatransTrxId was used already 😲😒😢', { pledgeId, pspPayload })
+    logger.error('this datatransTrxId was used already 😲😒😢', {
+      pledgeId,
+      pspPayload,
+    })
     throw new Error(t('api/pay/paymentIdUsedAlready', { id: pledgeId }))
+  }
+
+  const transactionSettleRes = await fetch(
+    `https://api.sandbox.datatrans.com/v1/transactions/${datatransTrxId}/settle`,
+    {
+      method: 'POST',
+      headers: {
+        Authorization:
+          'Basic ' +
+          Buffer.from(
+            process.env.DATATRANS_MERCHANT_ID +
+              ':' +
+              process.env.DATATRANS_MERCHANT_PASSWORD,
+          ).toString('base64'),
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        amount: total,
+        currency: 'CHF',
+        refno: pledgeId,
+      }),
+    },
+  )
+
+  if (!transactionSettleRes.ok) {
+    throw new Error(
+      'Error' +
+        JSON.stringify({
+          status: transactionSettleRes.status,
+          statusText: await transactionSettleRes.text(),
+        }),
+    )
   }
 
   const transactionRes = await fetch(
@@ -41,25 +76,26 @@ module.exports = async (props: PayPledgeProps) => {
     {
       headers: {
         Authorization:
-          "Basic " +
-          Buffer
-            .from(process.env.DATATRANS_MERCHANT_ID + ":" + process.env.DATATRANS_MERCHANT_PASSWORD)
-            .toString('base64'),
-        "Content-Type": "application/json",
+          'Basic ' +
+          Buffer.from(
+            process.env.DATATRANS_MERCHANT_ID +
+              ':' +
+              process.env.DATATRANS_MERCHANT_PASSWORD,
+          ).toString('base64'),
       },
-    }
-  );
+    },
+  )
 
   if (!transactionRes.ok) {
     throw new Error(
-      "Error" +
+      'Error' +
         JSON.stringify({
           status: transactionRes.status,
           statusText: await transactionRes.text(),
-        })
-    );
+        }),
+    )
   }
-  
+
   const transactionStatus = await transactionRes.json()
 
   if (transactionStatus.status !== 'settled') {
@@ -99,7 +135,7 @@ module.exports = async (props: PayPledgeProps) => {
   }
   */
 
-  let pledgeStatus = 'SUCCESSFUL'
+  const pledgeStatus = 'SUCCESSFUL'
 
   // check if amount is correct
   // PF amount is suddendly in franken
