@@ -22,7 +22,7 @@ const {
   MEMBERSHIP_SCHEDULER_CONCURRENCY = 10,
 } = process.env
 
-const DAYS_BEFORE_END_DATE = 29
+const DAYS_BEFORE_END_DATE = 0
 
 const getMinEndDate = (now, daysBeforeEndDate) =>
   moment(now)
@@ -75,7 +75,7 @@ const createJobs = (now) => [
   {
     name: 'membership_owner_prolong_notice',
     prolongBefore: {
-      minDate: getMinEndDate(now, 0), // bump to additional reminder days if introduced
+      minDate: getMinEndDate(now, -5), // bump to additional reminder days if introduced
       maxDate: getMaxEndDate(now, DAYS_BEFORE_END_DATE),
     },
     payload: {
@@ -172,7 +172,7 @@ const createJobs = (now) => [
     name: 'membership_owner_prolong_overdue',
     prolongBefore: {
       minDate: getMinEndDate(now, -120),
-      maxDate: getMaxEndDate(now, -1),
+      maxDate: getMaxEndDate(now, -30),
     },
     payload: {
       templateName: 'membership_owner_prolong_overdue',
