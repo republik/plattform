@@ -315,7 +315,7 @@ mail.sendMembershipDeactivated = async ({ membership, pgdb, t }) => {
       globalMergeVars: [
         {
           name: 'prolong_url',
-          content: `${FRONTEND_BASE_URL}/angebote?package=PROLONG&token=${customPledgeToken}`,
+          content: `${FRONTEND_BASE_URL}/${user.locale}/patronage?package=PROLONG&token=${customPledgeToken}`,
         },
         {
           name: 'sequence_number',
@@ -361,7 +361,9 @@ mail.prepareMembershipGiversProlongNotice = async (
       },
       {
         name: 'prolong_url',
-        content: `${FRONTEND_BASE_URL}/angebote?package=PROLONG&membershipIds=${membershipIds.join(
+        content: `${FRONTEND_BASE_URL}/${
+          user._raw.locale
+        }/patronage?package=PROLONG&membershipIds=${membershipIds.join(
           '~',
         )}&token=${customPledgeToken}`,
       },
@@ -409,11 +411,11 @@ mail.prepareMembershipWinback = async (
       },
       {
         name: 'prolong_url',
-        content: `${FRONTEND_BASE_URL}/angebote?package=PROLONG&token=${customPledgeToken}`,
+        content: `${FRONTEND_BASE_URL}/${user._raw.locale}/patronage?package=PROLONG&token=${customPledgeToken}`,
       },
       {
         name: 'prolong_url_reduced',
-        content: `${FRONTEND_BASE_URL}/angebote?package=PROLONG&token=${customPledgeToken}&userPrice=1`,
+        content: `${FRONTEND_BASE_URL}/${user._raw.locale}/patronage?package=PROLONG&token=${customPledgeToken}&userPrice=1`,
       },
       {
         name: 'cancelled_at',
@@ -573,11 +575,11 @@ mail.sendMembershipOwnerAutoPay = async ({ autoPay, payload, pgdb, t }) => {
       globalMergeVars: [
         {
           name: 'prolong_url',
-          content: `${FRONTEND_BASE_URL}/angebote?package=PROLONG&token=${customPledgeToken}`,
+          content: `${FRONTEND_BASE_URL}/${user.locale}/patronage?package=PROLONG&token=${customPledgeToken}`,
         },
         {
           name: 'prolong_url_reduced',
-          content: `${FRONTEND_BASE_URL}/angebote?package=PROLONG&token=${customPledgeToken}&userPrice=1`,
+          content: `${FRONTEND_BASE_URL}/${user.locale}/patronage?package=PROLONG&token=${customPledgeToken}&userPrice=1`,
         },
         {
           name: 'end_date',
