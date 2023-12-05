@@ -468,6 +468,7 @@ module.exports = async (_, args, context) => {
         ? await initTransaction({
             refno: newPledge.id,
             amount: newPledge.total,
+            preAuthorize: pledgeOptions.some((po) => !!po.autoPay),
           })
         : null
 

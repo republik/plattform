@@ -1,4 +1,9 @@
-const { ascending } = require('d3-array')
+import {
+  authorizeAndSettleTransaction,
+  getTransaction,
+  isPreAuthorized,
+  settleTransaction,
+} from './helpers'
 
 type PayPledgeProps = {
   pledgeId: string
@@ -39,68 +44,21 @@ module.exports = async (props: PayPledgeProps) => {
     throw new Error(t('api/pay/paymentIdUsedAlready', { id: pledgeId }))
   }
 
-  const transactionSettleRes = await fetch(
-    `https://api.sandbox.datatrans.com/v1/transactions/${datatransTrxId}/settle`,
-    {
-      method: 'POST',
-      headers: {
-        Authorization:
-          'Basic ' +
-          Buffer.from(
-            process.env.DATATRANS_MERCHANT_ID +
-              ':' +
-              process.env.DATATRANS_MERCHANT_PASSWORD,
-          ).toString('base64'),
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        amount: total,
-        currency: 'CHF',
-        refno: pledgeId,
-      }),
-    },
-  )
+  let datatransTrx = await getTransaction(datatransTrxId)
 
-  if (!transactionSettleRes.ok) {
-    throw new Error(
-      'Error' +
-        JSON.stringify({
-          status: transactionSettleRes.status,
-          statusText: await transactionSettleRes.text(),
-        }),
-    )
+  if (await isPreAuthorized(datatransTrx)) {
+    // authorize + settle
+    datatransTrx = await authorizeAndSettleTransaction({
+      amount: total,
+      refno: pledgeId,
+      alias: datatransTrx,
+    })
+  } else {
+    // settle
+    await settleTransaction({ datatransTrxId, amount: total, refno: pledgeId })
   }
 
-  const transactionRes = await fetch(
-    `https://api.sandbox.datatrans.com/v1/transactions/${datatransTrxId}`,
-    {
-      headers: {
-        Authorization:
-          'Basic ' +
-          Buffer.from(
-            process.env.DATATRANS_MERCHANT_ID +
-              ':' +
-              process.env.DATATRANS_MERCHANT_PASSWORD,
-          ).toString('base64'),
-      },
-    },
-  )
-
-  if (!transactionRes.ok) {
-    throw new Error(
-      'Error' +
-        JSON.stringify({
-          status: transactionRes.status,
-          statusText: await transactionRes.text(),
-        }),
-    )
-  }
-
-  const transactionStatus = await transactionRes.json()
-
-  if (transactionStatus.status !== 'settled') {
-    throw new Error(t('api/datatrans/statusError'))
-  }
+  const transactionStatus = await getTransaction(datatransTrx.transactionId)
 
   if (transactionStatus.detail?.settle?.amount === undefined) {
     throw new Error(t('api/datatrans/settleAmountError'))
