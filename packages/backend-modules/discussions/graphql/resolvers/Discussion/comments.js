@@ -263,14 +263,14 @@ module.exports = async (discussion, args, context, info) => {
     `SELECT c.* FROM comments c`,
     tag && `LEFT JOIN comments cr ON cr.id = (c."parentIds"->>0)::uuid`,
     `WHERE c."discussionId" = :discussionId`,
-    tag && `AND (c.tags @> ':tag'::jsonb OR cr.tags @> ':tag'::jsonb)`,
+    tag && `AND (c.tags ? :tag OR cr.tags ? :tag)`,
   ]
     .filter(Boolean)
     .join(' ')
 
   // get comments
   const comments = await pgdb
-    .query(commentsQuery, { discussionId: discussion.id, tag })
+    .query(commentsQuery, { discussionId: discussion.id, tag: tag })
     .then((comments) =>
       comments.map((c) => ({
         // precompute
