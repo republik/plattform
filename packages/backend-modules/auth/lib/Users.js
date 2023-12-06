@@ -724,7 +724,7 @@ const upsertUserAndConsents = async ({
   }
 }
 
-const resolveUser = async ({ slug, pgdb, userId }) => {
+const resolveUser = async ({ slug, userId, pgdb }) => {
   const slugOrId = slug || userId
   const where = isUUID.v4(slugOrId) ? { id: slugOrId } : { username: slugOrId }
 
