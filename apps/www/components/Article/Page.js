@@ -84,6 +84,7 @@ import TeaserAudioPlayButton from '../Audio/shared/TeaserAudioPlayButton'
 import useAudioQueue from '../Audio/hooks/useAudioQueue'
 import { IconEdit } from '@republik/icons'
 import { ArticleAudioPlayer } from '../Audio/AudioPlayer/ArticleAudioPlayer'
+import { reportError } from 'lib/errors/reportError'
 
 const LoadingComponent = () => <SmallLoader loading />
 
@@ -322,7 +323,15 @@ const ArticlePage = ({
       path: cleanedPath,
     },
     skip: clientRedirection,
+    // When graphQLErrors happen, we still want to get partial data to render the page
+    errorPolicy: 'all',
   })
+
+  useEffect(() => {
+    if (articleError) {
+      reportError('Article Page getDocument Query', articleError)
+    }
+  }, [reportError, articleError])
 
   const article = articleData?.article
   const documentId = article?.id
@@ -562,7 +571,6 @@ const ArticlePage = ({
     return (
       <PageLoader
         loading={articleLoading && !articleData}
-        error={articleError}
         render={() => {
           if (!article) {
             return (
@@ -648,7 +656,6 @@ const ArticlePage = ({
     >
       <PageLoader
         loading={articleLoading && !articleData}
-        error={articleError}
         render={() => {
           if (!article || !schema) {
             return (

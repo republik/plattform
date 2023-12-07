@@ -36,6 +36,8 @@ export const getStaticProps = createGetStaticProps<Props, Params>(
       variables: {
         path,
       },
+      // Ignore graphQLErrors and let the client handle/report them.
+      errorPolicy: 'ignore',
     })
 
     if (article && !article.meta.format?.meta.externalBaseUrl) {

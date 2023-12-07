@@ -21,6 +21,8 @@ import createPersistedState from '../../../lib/hooks/use-persisted-state'
 import { AudioPlayerItem } from '../types/AudioPlayerItem'
 import { ApolloError, FetchResult } from '@apollo/client'
 import OptimisticQueueResponseHelper from '../helpers/OptimisticQueueResponseHelper'
+import { reportError } from 'lib/errors/reportError'
+import { useEffect } from 'react'
 
 const usePersistedAudioState = createPersistedState<AudioQueueItem>(
   'audio-player-local-state',
@@ -68,11 +70,18 @@ const useAudioQueue = (): {
     refetch: refetchAudioQueue,
   } = useAudioQueueQuery({
     skip: meLoading || !hasAccess,
+    errorPolicy: 'all',
   })
   const isLoading = meLoading || audioQueueIsLoading
 
   const [localAudioItem, setLocalAudioItem] =
     usePersistedAudioState<AudioQueueItem>(null)
+
+  useEffect(() => {
+    if (audioQueueHasError) {
+      reportError('useAudioQueue', audioQueueHasError)
+    }
+  }, [reportError, audioQueueHasError])
 
   /**
    *
@@ -254,17 +263,17 @@ const useAudioQueue = (): {
     if (!hasAccess && localAudioItem?.document?.id === documentId) {
       return localAudioItem
     }
-    return meWithAudioQueue?.me?.audioQueue.find(
-      (audioQueueItem) => audioQueueItem.document.id === documentId,
+    return meWithAudioQueue?.me?.audioQueue?.find(
+      (audioQueueItem) => audioQueueItem.document?.id === documentId,
     )
   }
 
   function getAudioQueueItemIndex(documentId: string): number {
-    if (!hasAccess && localAudioItem?.document.id === documentId) {
+    if (!hasAccess && localAudioItem?.document?.id === documentId) {
       return 0
     }
-    return meWithAudioQueue?.me?.audioQueue.findIndex(
-      (item) => item.document.id === documentId,
+    return meWithAudioQueue?.me?.audioQueue?.findIndex(
+      (item) => item.document?.id === documentId,
     )
   }
 
