@@ -254,27 +254,6 @@ export type AnswerInput = {
   questionId: Scalars['ID']['input'];
 };
 
-export type ArticleNode = {
-  __typename?: 'ArticleNode';
-  body: Scalars['JSON']['output'];
-  id: Scalars['ID']['output'];
-};
-
-export type ArticleNodeConnection = {
-  __typename?: 'ArticleNodeConnection';
-  nodes: Array<ArticleNode>;
-  pageInfo: ArticleNodePageInfo;
-  totalCount: Scalars['Int']['output'];
-};
-
-export type ArticleNodePageInfo = {
-  __typename?: 'ArticleNodePageInfo';
-  endCursor?: Maybe<Scalars['String']['output']>;
-  hasNextPage: Scalars['Boolean']['output'];
-  hasPreviousPage: Scalars['Boolean']['output'];
-  startCursor?: Maybe<Scalars['String']['output']>;
-};
-
 /** Provide an entitiy type (e. g. `Document`) and its ID */
 export type AudioQueueEntityInput = {
   id: Scalars['ID']['input'];
@@ -1048,7 +1027,7 @@ export enum DocumenSchemaType {
 
 export type Document = {
   __typename?: 'Document';
-  children: ArticleNodeConnection;
+  children: DocumentBlockConnection;
   content: Scalars['JSON']['output'];
   id: Scalars['ID']['output'];
   issuedForUserId?: Maybe<Scalars['ID']['output']>;
@@ -1104,6 +1083,27 @@ export type DocumentSubscribedByMeArgs = {
 
 export type DocumentUserCollectionItemArgs = {
   collectionName: Scalars['String']['input'];
+};
+
+export type DocumentBlock = {
+  __typename?: 'DocumentBlock';
+  body: Scalars['JSON']['output'];
+  id: Scalars['ID']['output'];
+};
+
+export type DocumentBlockConnection = {
+  __typename?: 'DocumentBlockConnection';
+  nodes: Array<DocumentBlock>;
+  pageInfo: DocumentBlockPageInfo;
+  totalCount: Scalars['Int']['output'];
+};
+
+export type DocumentBlockPageInfo = {
+  __typename?: 'DocumentBlockPageInfo';
+  endCursor?: Maybe<Scalars['String']['output']>;
+  hasNextPage: Scalars['Boolean']['output'];
+  hasPreviousPage: Scalars['Boolean']['output'];
+  startCursor?: Maybe<Scalars['String']['output']>;
 };
 
 export type DocumentConnection = {
