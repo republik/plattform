@@ -260,7 +260,7 @@ const useAudioQueue = (): {
     if (!hasAccess && localAudioItem?.document?.id === documentId) {
       return localAudioItem
     }
-    return meWithAudioQueue?.me?.audioQueue.find(
+    return meWithAudioQueue?.me?.audioQueue?.find(
       (audioQueueItem) => audioQueueItem.document.id === documentId,
     )
   }
@@ -269,7 +269,7 @@ const useAudioQueue = (): {
     if (!hasAccess && localAudioItem?.document.id === documentId) {
       return 0
     }
-    return meWithAudioQueue?.me?.audioQueue.findIndex(
+    return meWithAudioQueue?.me?.audioQueue?.findIndex(
       (item) => item.document.id === documentId,
     )
   }
