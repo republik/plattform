@@ -59,7 +59,7 @@ const config: CodegenConfig = {
       ...datoCMSConfig,
       plugins: ['introspection'],
     },
-    'src/graphql/republik-api/gql': {
+    'src/graphql/republik-api/gql/': {
       ...republikAPIConfig,
       preset: 'client',
       presetConfig: {

@@ -2,24 +2,17 @@
 
 import { useMutation } from '@apollo/client'
 import { CTABasicBanner } from './basic-banner'
-import { CallToActionsQueryResult } from '@app/graphql/republik-api/cta-banner.query'
-import {
-  ACKNOWLEDGE_CTA_MUTATION,
-  AcknowledgeCTAMutationResult,
-  AcknowledgeCTAMutationVariables,
-} from '@app/graphql/republik-api/cta-banner.mutation'
+import { ACKNOWLEDGE_CTA_MUTATION } from '@app/graphql/republik-api/cta-banner.mutation'
 import { useState } from 'react'
+import { MyCallToActionsQuery } from '@app/graphql/republik-api/gql/graphql'
 
 type CTARendererProps = {
-  cta: CallToActionsQueryResult['me']['callToActions'][0]
+  cta: MyCallToActionsQuery['me']['callToActions'][0]
 }
 
 export function CTARenderer({ cta }: CTARendererProps) {
   const [acknowledged, setAcknowledged] = useState(false)
-  const [acknowledge] = useMutation<
-    AcknowledgeCTAMutationResult,
-    AcknowledgeCTAMutationVariables
-  >(ACKNOWLEDGE_CTA_MUTATION)
+  const [acknowledge] = useMutation(ACKNOWLEDGE_CTA_MUTATION)
 
   async function acknowledgeCTA() {
     setAcknowledged(true)

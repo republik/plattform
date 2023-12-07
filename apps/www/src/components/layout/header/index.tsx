@@ -3,9 +3,9 @@ import { css } from '@app/styled-system/css'
 import { hstack } from '@app/styled-system/patterns'
 import Link from 'next/link'
 import { IconAccountBox, IconMic, IconSearchMenu } from '@republik/icons'
-import { MeQueryResult } from '@app/graphql/republik-api/me.query'
 import Image from 'next/image'
 import { NavLink } from './nav-link'
+import { MeQuery } from '@app/graphql/republik-api/gql/graphql'
 
 const Logo = () => {
   return (
@@ -35,7 +35,7 @@ const getInitials = (me) =>
     .map((s) => s[0])
     .join('')
 
-const Avatar = ({ me }: { me: MeQueryResult['me'] }) => {
+const Avatar = ({ me }: { me: MeQuery['me'] }) => {
   const style = css({
     position: 'relative',
     display: 'inline-block',
