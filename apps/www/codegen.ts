@@ -20,7 +20,7 @@ if (process.env.DATO_CMS_ENVIRONMENT) {
   headers['X-Environment'] = process.env.DATO_CMS_ENVIRONMENT
 }
 
-const datoGQLCodegen = {
+const datoCMSConfig = {
   schema: [
     {
       [process.env.DATO_CMS_API_URL]: {
@@ -31,7 +31,7 @@ const datoGQLCodegen = {
   documents: ['src/graphql/cms/**/*.{ts,tsx}'],
 }
 
-const republikGQLCodegen = {
+const republikAPIConfig = {
   schema: process.env.NEXT_PUBLIC_API_URL,
   documents: ['src/graphql/republik-api/**/*.{ts,tsx}'],
 }
@@ -40,7 +40,7 @@ const config: CodegenConfig = {
   overwrite: true,
   generates: {
     'src/graphql/gql/cms/': {
-      ...datoGQLCodegen,
+      ...datoCMSConfig,
       preset: 'client',
       presetConfig: {
         gqlTagName: 'gql',
@@ -56,11 +56,11 @@ const config: CodegenConfig = {
       plugins: [],
     },
     './graphql-cms.schema.json': {
-      ...datoGQLCodegen,
+      ...datoCMSConfig,
       plugins: ['introspection'],
     },
     'src/graphql/gql/republik-api/': {
-      ...republikGQLCodegen,
+      ...republikAPIConfig,
       preset: 'client',
       presetConfig: {
         gqlTagName: 'gql',
@@ -76,7 +76,7 @@ const config: CodegenConfig = {
       plugins: [],
     },
     './graphql-republik.schema.json': {
-      ...republikGQLCodegen,
+      ...republikAPIConfig,
       plugins: ['introspection'],
     },
   },
