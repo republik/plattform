@@ -162,7 +162,7 @@ type Document {
     before: ID
     after: ID
     only: ID
-  ): DocumentNodeConnection!
+  ): ArticleNodeConnection!
   linkedDocuments(
     first: Int
     last: Int
@@ -172,21 +172,21 @@ type Document {
   ): DocumentConnection!
 }
 
-type DocumentNode {
+type ArticleNode {
   id: ID!
   body: JSON!
 }
 
-type DocumentNodePageInfo {
+type ArticleNodePageInfo {
   endCursor: String
   hasNextPage: Boolean!
   hasPreviousPage: Boolean!
   startCursor: String
 }
 
-type DocumentNodeConnection {
-  nodes: [DocumentNode!]!
-  pageInfo: DocumentNodePageInfo!
+type ArticleNodeConnection {
+  nodes: [ArticleNode!]!
+  pageInfo: ArticleNodePageInfo!
   totalCount: Int!
 }
 
