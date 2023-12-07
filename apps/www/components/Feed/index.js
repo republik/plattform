@@ -70,9 +70,11 @@ const Feed = ({ meta }) => {
     errorPolicy: 'all',
   })
 
-  if (error) {
-    reportError('Feed getFeed Query', error)
-  }
+  useEffect(() => {
+    if (error) {
+      reportError('Feed getFeed Query', error)
+    }
+  }, [reportError, error])
 
   const connection = data?.documents
   const greeting = data?.greeting

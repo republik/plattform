@@ -327,9 +327,11 @@ const ArticlePage = ({
     errorPolicy: 'all',
   })
 
-  if (articleError) {
-    reportError('Article Page getDocument Query', articleError)
-  }
+  useEffect(() => {
+    if (articleError) {
+      reportError('Article Page getDocument Query', articleError)
+    }
+  }, [reportError, articleError])
 
   const article = articleData?.article
   const documentId = article?.id

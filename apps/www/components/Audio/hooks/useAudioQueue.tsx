@@ -22,6 +22,7 @@ import { AudioPlayerItem } from '../types/AudioPlayerItem'
 import { ApolloError, FetchResult } from '@apollo/client'
 import OptimisticQueueResponseHelper from '../helpers/OptimisticQueueResponseHelper'
 import { reportError } from 'lib/errors/reportError'
+import { useEffect } from 'react'
 
 const usePersistedAudioState = createPersistedState<AudioQueueItem>(
   'audio-player-local-state',
@@ -76,9 +77,11 @@ const useAudioQueue = (): {
   const [localAudioItem, setLocalAudioItem] =
     usePersistedAudioState<AudioQueueItem>(null)
 
-  if (audioQueueHasError) {
-    reportError('useAudioQueue', audioQueueHasError)
-  }
+  useEffect(() => {
+    if (audioQueueHasError) {
+      reportError('useAudioQueue', audioQueueHasError)
+    }
+  }, [reportError, audioQueueHasError])
 
   /**
    *
