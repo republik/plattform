@@ -1,5 +1,5 @@
 'use client'
-import type { ChallengeAcceptedPersonListQueryQuery } from '@app/graphql/gql/graphql'
+import type { ChallengeAcceptedPersonListQueryQuery } from '@app/graphql/cms/gql/graphql'
 import { css } from '@app/styled-system/css'
 import useResizeObserver from 'use-resize-observer'
 

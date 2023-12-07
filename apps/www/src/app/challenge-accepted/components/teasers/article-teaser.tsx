@@ -1,7 +1,4 @@
-import {
-  ARTICLE_QUERY,
-  ArticleQueryResult,
-} from '@app/graphql/republik-api/article.query'
+import { ARTICLE_QUERY } from '@app/graphql/republik-api/article.query'
 import { getClient } from '@app/lib/apollo/client'
 import { css } from '@app/styled-system/css'
 import Link from 'next/link'
@@ -11,6 +8,7 @@ import { vstack } from '@app/styled-system/patterns'
 
 import { renderMdast } from '@app/lib/mdast/render'
 import { getMe } from '@app/lib/auth/me'
+import { ArticleTeaserQuery } from '@app/graphql/republik-api/gql/graphql'
 
 const getResizefromURL = (url, size) => {
   const imgURL = new URL(url)
@@ -76,7 +74,7 @@ export const ArticleTeaser = async ({ path, image }: ArticleProps) => {
   // and extract the pathname from it.
   const url = new URL(path, process.env.NEXT_PUBLIC_BASE_URL)
 
-  const { data }: { data: ArticleQueryResult } = await getClient().query({
+  const { data } = await getClient().query<ArticleTeaserQuery>({
     query: ARTICLE_QUERY,
     variables: { path: url.pathname },
   })

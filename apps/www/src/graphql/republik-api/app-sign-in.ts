@@ -1,6 +1,6 @@
-import { gql } from '@apollo/client'
+import { gql } from './gql'
 
-export const PENDING_APP_SIGN_IN_QUERY = gql`
+export const PENDING_APP_SIGN_IN_QUERY = gql(`
   query PendingAppSignIn {
     pendingAppSignIn {
       title
@@ -9,15 +9,7 @@ export const PENDING_APP_SIGN_IN_QUERY = gql`
       expiresAt
     }
   }
-`
-export type PendingAppSignInResult = {
-  pendingAppSignIn: null | {
-    title: string
-    body: string
-    verificationUrl: string
-    expiresAt: string // ISO date
-  }
-}
+`)
 
 export type SignInTokenType =
   | 'EMAIL_TOKEN'

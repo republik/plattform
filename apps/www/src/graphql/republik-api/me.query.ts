@@ -1,6 +1,6 @@
-import { gql } from '@apollo/client'
+import { gql } from './gql'
 
-export const ME_QUERY = gql`
+export const ME_QUERY = gql(`
   query me {
     me {
       id
@@ -33,38 +33,4 @@ export const ME_QUERY = gql`
       }
     }
   }
-`
-
-export type MeQueryResult = {
-  me: null | {
-    id: string
-    username: string
-    slug: string
-    portrait: string
-    name: string
-    firstName: string
-    lastName: string
-    email: string
-    initials: string
-    roles: string[]
-    isListed: boolean
-    hasPublicProfile: boolean
-    hasDormantMembership: boolean
-    prolongBeforeDate: string
-    activeMembership: null | {
-      id: string
-      type: {
-        name: string
-      }
-      renew: boolean
-      endDate: string | null
-      graceEndDate: string | null
-      canProlong: boolean
-    }
-    accessCampaigns:
-      | null
-      | {
-          id: string
-        }[]
-  }
-}
+`)
