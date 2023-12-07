@@ -261,16 +261,16 @@ const useAudioQueue = (): {
       return localAudioItem
     }
     return meWithAudioQueue?.me?.audioQueue?.find(
-      (audioQueueItem) => audioQueueItem.document.id === documentId,
+      (audioQueueItem) => audioQueueItem.document?.id === documentId,
     )
   }
 
   function getAudioQueueItemIndex(documentId: string): number {
-    if (!hasAccess && localAudioItem?.document.id === documentId) {
+    if (!hasAccess && localAudioItem?.document?.id === documentId) {
       return 0
     }
     return meWithAudioQueue?.me?.audioQueue?.findIndex(
-      (item) => item.document.id === documentId,
+      (item) => item.document?.id === documentId,
     )
   }
 
