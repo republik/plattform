@@ -39,7 +39,7 @@ const republikAPIConfig = {
 const config: CodegenConfig = {
   overwrite: true,
   generates: {
-    'src/graphql/gql/cms/': {
+    'src/graphql/cms/gql/': {
       ...datoCMSConfig,
       preset: 'client',
       presetConfig: {
@@ -59,7 +59,7 @@ const config: CodegenConfig = {
       ...datoCMSConfig,
       plugins: ['introspection'],
     },
-    'src/graphql/gql/republik-api/': {
+    'src/graphql/republik-api/gql': {
       ...republikAPIConfig,
       preset: 'client',
       presetConfig: {

@@ -1,4 +1,4 @@
-import { gql } from '../gql/cms'
+import { gql } from './gql'
 
 export const PERSON_DETAIL_QUERY = gql(`
  query PersonDetail($slug: String!) {

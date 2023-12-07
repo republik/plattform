@@ -8,7 +8,7 @@ import { vstack } from '@app/styled-system/patterns'
 
 import { renderMdast } from '@app/lib/mdast/render'
 import { getMe } from '@app/lib/auth/me'
-import { ArticleTeaserQuery } from '@app/graphql/gql/republik-api/graphql'
+import { ArticleTeaserQuery } from '@app/graphql/republik-api/gql/graphql'
 
 const getResizefromURL = (url, size) => {
   const imgURL = new URL(url)
