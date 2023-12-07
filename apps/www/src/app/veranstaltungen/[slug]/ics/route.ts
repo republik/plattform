@@ -1,5 +1,5 @@
 import { EVENT_QUERY, EventRecordFields } from '@app/graphql/cms/events.query'
-import { useFragment } from '@app/graphql/gql'
+import { useFragment } from '@app/graphql/gql/cms'
 import { getCMSClient } from '@app/lib/apollo/cms-client'
 import dayjs from 'dayjs'
 import ical, { ICalCalendarMethod } from 'ical-generator'

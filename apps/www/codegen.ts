@@ -39,7 +39,7 @@ const republikGQLCodegen = {
 const config: CodegenConfig = {
   overwrite: true,
   generates: {
-    'src/graphql/gql/': {
+    'src/graphql/gql/cms/': {
       ...datoGQLCodegen,
       preset: 'client',
       presetConfig: {
@@ -55,11 +55,11 @@ const config: CodegenConfig = {
       },
       plugins: [],
     },
-    './graphql.schema.json': {
+    './graphql-cms.schema.json': {
       ...datoGQLCodegen,
       plugins: ['introspection'],
     },
-    'src/graphql/republik-gql/': {
+    'src/graphql/gql/republik-api/': {
       ...republikGQLCodegen,
       preset: 'client',
       presetConfig: {

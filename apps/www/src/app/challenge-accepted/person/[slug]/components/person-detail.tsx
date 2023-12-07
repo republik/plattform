@@ -1,7 +1,7 @@
 import CollectionRenderer from '@app/app/challenge-accepted/components/collection-render'
 import Container from '@app/components/container'
 import { Share } from '@app/components/share/share'
-import type { PersonDetailQuery } from '@app/graphql/gql/graphql'
+import type { PersonDetailQuery } from '@app/graphql/gql/cms/graphql'
 import { css } from '@app/styled-system/css'
 import { hstack, vstack } from '@app/styled-system/patterns'
 import { IconShare } from '@republik/icons'

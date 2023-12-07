@@ -3,7 +3,7 @@ import {
   EVENT_QUERY,
   EventRecordFields,
 } from '@app/graphql/cms/events.query'
-import { useFragment } from '@app/graphql/gql'
+import { useFragment } from '@app/graphql/gql/cms'
 import { getCMSClient } from '@app/lib/apollo/cms-client'
 import { getMe } from '@app/lib/auth/me'
 import { css } from '@app/styled-system/css'

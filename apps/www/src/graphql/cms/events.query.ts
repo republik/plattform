@@ -1,4 +1,4 @@
-import { gql } from '../gql'
+import { gql } from '../gql/cms'
 
 export const EventRecordFields = gql(`
   fragment EventRecordFields on EventRecord {

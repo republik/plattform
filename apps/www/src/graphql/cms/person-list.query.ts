@@ -1,4 +1,4 @@
-import { gql } from '../gql'
+import { gql } from '../gql/cms'
 
 export const CHALLENGE_ACCEPTED_PERSON_LIST_QUERY = gql(`
 query ChallengeAcceptedPersonListQuery {
