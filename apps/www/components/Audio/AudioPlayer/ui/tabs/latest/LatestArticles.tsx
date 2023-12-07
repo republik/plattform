@@ -45,6 +45,7 @@ const LatestArticlesTab = ({
     variables: {
       count: 20,
     },
+    errorPolicy: 'all',
   })
   const [isLoadingMore, setLoadingMore] = useState(false)
   const loadMore = () => {

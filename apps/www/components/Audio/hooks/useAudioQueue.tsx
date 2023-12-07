@@ -21,6 +21,7 @@ import createPersistedState from '../../../lib/hooks/use-persisted-state'
 import { AudioPlayerItem } from '../types/AudioPlayerItem'
 import { ApolloError, FetchResult } from '@apollo/client'
 import OptimisticQueueResponseHelper from '../helpers/OptimisticQueueResponseHelper'
+import { reportError } from 'lib/errors/reportError'
 
 const usePersistedAudioState = createPersistedState<AudioQueueItem>(
   'audio-player-local-state',
@@ -68,11 +69,16 @@ const useAudioQueue = (): {
     refetch: refetchAudioQueue,
   } = useAudioQueueQuery({
     skip: meLoading || !hasAccess,
+    errorPolicy: 'all',
   })
   const isLoading = meLoading || audioQueueIsLoading
 
   const [localAudioItem, setLocalAudioItem] =
     usePersistedAudioState<AudioQueueItem>(null)
+
+  if (audioQueueHasError) {
+    reportError('useAudioQueue', audioQueueHasError)
+  }
 
   /**
    *
