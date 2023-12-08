@@ -8,7 +8,7 @@ import { SOCIAL_MEDIA } from '../editor/modules/meta/ShareImageForm'
 import { Editorial, renderSlateAsText } from '@project-r/styleguide'
 
 // Used to check for relative urls
-const FAKE_BASE_URL = `http://${uuid()}.com`
+const FAKE_BASE_URL = `http://${uuid()}.local`
 
 const useValidation = ({ meta, content, t, updateMailchimp }) => {
   const links = useMemo(() => {
