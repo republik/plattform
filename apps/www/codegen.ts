@@ -80,6 +80,10 @@ const config: CodegenConfig = {
       plugins: ['introspection'],
     },
   },
+  // Ensure that the generated files are formatted directly to not cause diffs if there are no changes
+  hooks: {
+    afterOneFileWrite: ['prettier --write'],
+  },
 }
 
 export default config
