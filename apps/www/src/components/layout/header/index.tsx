@@ -7,8 +7,8 @@ import { IconAccountBox, IconMic, IconSearchMenu } from '@republik/icons'
 import Image from 'next/image'
 import { NavLink } from './nav-link'
 import { MeQuery } from '@app/graphql/republik-api/gql/graphql'
-import PageHeaderWrapper from '@app/components/layout/header/page-header-wrapper'
-import { useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { useScrollDirection } from '@app/lib/hooks/useScrollDirection'
 
 const Logo = () => {
   return (
@@ -66,6 +66,11 @@ type PageHeaderProps = {
 
 export function PageHeader({ me }: PageHeaderProps) {
   const headerRef = useRef<HTMLDivElement>(null)
+  const scrollDirection = useScrollDirection({
+    upThreshold: 25,
+    downThreshold: headerRef.current?.clientHeight || 100,
+  })
+
   const navLinks = [
     { href: '/', label: 'Magazin' },
     { href: '/feed', label: 'Feed' },
@@ -74,148 +79,154 @@ export function PageHeader({ me }: PageHeaderProps) {
   ]
 
   return (
-    <PageHeaderWrapper elementRef={headerRef}>
+    <div
+      ref={headerRef}
+      className={css({
+        bg: 'pageBackground',
+        borderBottomWidth: 1,
+        borderBottomStyle: 'solid',
+        borderBottomColor: 'divider',
+        position: 'sticky',
+        top: 0,
+        transition: 'transform 0.3s ease-out',
+        zIndex: 100,
+      })}
+      style={{
+        transform: `translateY(${
+          scrollDirection === 'down'
+            ? -((headerRef.current?.clientHeight || 0) + 1)
+            : 0
+        }px)`,
+      }}
+    >
       <div
-        ref={headerRef}
         className={css({
-          bg: 'pageBackground',
-          borderBottomWidth: 1,
-          borderBottomStyle: 'solid',
-          borderBottomColor: 'divider',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
         })}
-        id='layout-page-header'
       >
         <div
-          className={css({
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-          })}
+          className={css({ p: 'header.avatarMargin', md: { width: '100%' } })}
         >
-          <div
-            className={css({ p: 'header.avatarMargin', md: { width: '100%' } })}
-          >
-            {me ? (
-              <Link href='/meine-republik'>
-                <Avatar me={me} />
-              </Link>
-            ) : (
-              <Link
-                href='/anmelden'
-                className={css({
-                  display: 'flex',
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  textDecoration: 'none',
-                  gap: '5px',
-                  color: 'text',
-                })}
-              >
-                <IconAccountBox aria-label='Anmelden' size={32} />
-                <span
-                  className={css({
-                    display: 'none',
-                    md: {
-                      display: 'inline-block',
-                    },
-                  })}
-                >
-                  Anmelden
-                </span>
-              </Link>
-            )}
-          </div>
-          <div
-            className={css({ m: 'header.logoMargin', md: { width: '100%' } })}
-          >
-            <Link href='/'>
-              <Logo />
+          {me ? (
+            <Link href='/meine-republik'>
+              <Avatar me={me} />
             </Link>
-          </div>
-          <div
-            className={css({
-              alignSelf: 'stretch',
-              md: { width: '100%' },
-              display: 'flex',
-              flexDirection: 'row',
-              justifyContent: 'flex-end',
-            })}
-          >
-            {me?.activeMembership?.id ? (
-              <div
+          ) : (
+            <Link
+              href='/anmelden'
+              className={css({
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'center',
+                textDecoration: 'none',
+                gap: '5px',
+                color: 'text',
+              })}
+            >
+              <IconAccountBox aria-label='Anmelden' size={32} />
+              <span
                 className={css({
-                  width: 'header.avatar',
-                  height: 'header.avatar',
-                  m: 'header.avatarMargin',
-                  display: 'flex',
-                  placeContent: 'center center',
-                })}
-              >
-                <button disabled className={css({ p: '0' })}>
-                  <IconMic size={28} />
-                </button>
-              </div>
-            ) : (
-              <Link
-                href='/angebote'
-                className={css({
-                  textDecoration: 'none',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  flexDirection: 'row',
-                  alignSelf: 'stretch',
-                  background: 'text',
-                  color: 'text.inverted',
-                  padding: '10px 20px',
-                  fontSize: '16px',
-                  height: '100%',
+                  display: 'none',
                   md: {
-                    padding: '10px 30px',
-                    fontSize: '22px',
+                    display: 'inline-block',
                   },
                 })}
               >
-                <span
-                  className={css({
-                    display: 'none',
-                    md: { display: 'inline-block' },
-                  })}
-                >
-                  Jetzt abonnieren
-                </span>
-                <span
-                  className={css({
-                    display: 'inline-block',
-                    md: {
-                      display: 'none',
-                    },
-                  })}
-                >
-                  Abo
-                </span>
-              </Link>
-            )}
-          </div>
+                Anmelden
+              </span>
+            </Link>
+          )}
         </div>
-
-        {me?.activeMembership?.id ? (
-          <div
-            className={hstack({
-              gap: '0',
-              justifyContent: 'center',
-              borderTop: '1px solid',
-              borderTopColor: 'divider',
-            })}
-          >
-            {navLinks.map(({ href, label, icon }) => (
-              <NavLink key={href} href={href}>
-                {icon || label}
-              </NavLink>
-            ))}
-          </div>
-        ) : null}
+        <div className={css({ m: 'header.logoMargin', md: { width: '100%' } })}>
+          <Link href='/'>
+            <Logo />
+          </Link>
+        </div>
+        <div
+          className={css({
+            alignSelf: 'stretch',
+            md: { width: '100%' },
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'flex-end',
+          })}
+        >
+          {me?.activeMembership?.id ? (
+            <div
+              className={css({
+                width: 'header.avatar',
+                height: 'header.avatar',
+                m: 'header.avatarMargin',
+                display: 'flex',
+                placeContent: 'center center',
+              })}
+            >
+              <button disabled className={css({ p: '0' })}>
+                <IconMic size={28} />
+              </button>
+            </div>
+          ) : (
+            <Link
+              href='/angebote'
+              className={css({
+                textDecoration: 'none',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexDirection: 'row',
+                alignSelf: 'stretch',
+                background: 'text',
+                color: 'text.inverted',
+                padding: '10px 20px',
+                fontSize: '16px',
+                height: '100%',
+                md: {
+                  padding: '10px 30px',
+                  fontSize: '22px',
+                },
+              })}
+            >
+              <span
+                className={css({
+                  display: 'none',
+                  md: { display: 'inline-block' },
+                })}
+              >
+                Jetzt abonnieren
+              </span>
+              <span
+                className={css({
+                  display: 'inline-block',
+                  md: {
+                    display: 'none',
+                  },
+                })}
+              >
+                Abo
+              </span>
+            </Link>
+          )}
+        </div>
       </div>
-    </PageHeaderWrapper>
+
+      {me?.activeMembership?.id ? (
+        <div
+          className={hstack({
+            gap: '0',
+            justifyContent: 'center',
+            borderTop: '1px solid',
+            borderTopColor: 'divider',
+          })}
+        >
+          {navLinks.map(({ href, label, icon }) => (
+            <NavLink key={href} href={href}>
+              {icon || label}
+            </NavLink>
+          ))}
+        </div>
+      ) : null}
+    </div>
   )
 }
