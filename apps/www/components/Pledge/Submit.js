@@ -49,6 +49,11 @@ import usePaymentRequest, {
 } from '../Payment/PaymentRequest/usePaymentRequest'
 import { getPayerInformationFromEvent } from '../Payment/PaymentRequest/PaymentRequestEventHelper'
 import { css } from 'glamor'
+import {
+  DatatransPaymentMethod,
+  DatatransPaymentMethodPrefix,
+  getDatatransService,
+} from '../Payment/datatrans/types'
 
 const { P } = Interaction
 
@@ -168,6 +173,17 @@ const SubmitWithHooks = ({ paymentMethods, ...props }) => {
           ]
         }
 
+        if (method === DatatransPaymentMethodPrefix) {
+          return [
+            DatatransPaymentMethod.CREDITCARD,
+            DatatransPaymentMethod.APPLEPAY,
+            DatatransPaymentMethod.GOOGLEPAY,
+            DatatransPaymentMethod.POSTFINANCE,
+            DatatransPaymentMethod.PAYPAL,
+            DatatransPaymentMethod.TWINT,
+          ]
+        }
+
         return [method]
       })
       .filter(Boolean)
@@ -249,6 +265,12 @@ class Submit extends Component {
 
   isStripeWalletPayment() {
     return this.props.selectedPaymentMethod?.startsWith('STRIPE-WALLET')
+  }
+
+  isDatatransPayment() {
+    return this.props.selectedPaymentMethod?.startsWith(
+      DatatransPaymentMethodPrefix,
+    )
   }
 
   submitVariables(props) {
@@ -356,12 +378,13 @@ class Submit extends Component {
     const hash = simpleHash(variables)
 
     // Special Case: DATATRANS and POSTFINANCECARD
-    // - we need a pledgeResponse with pfAliasId and pfSHA
+    // - we need a pledgeResponse with pfAliasId and pfSHA, or datatransTrxId
     // - this can be missing if returning from a PSP redirect
     // - in those cases we create a new pledge
-    const requiresRefetch = !['DATATRANS', 'POSTFINANCECARD'].includes(
-      this.props.selectedPaymentMethod,
-    )
+    const requiresRefetch = ![
+      DatatransPaymentMethodPrefix,
+      'POSTFINANCECARD',
+    ].includes(this.props.selectedPaymentMethod)
 
     if (
       !this.state.submitError &&
@@ -384,7 +407,10 @@ class Submit extends Component {
         ...variables,
         payload: getConversionPayload(query),
         consents: getRequiredConsents(this.props),
-        paymentMethod: this.props.selectedPaymentMethod,
+        datatransService:
+          (this.isDatatransPayment() &&
+            getDatatransService(this.props.selectedPaymentMethod)) ||
+          undefined,
       })
       .then(({ data }) => {
         if (data.submitPledge.emailVerify) {
@@ -442,7 +468,7 @@ class Submit extends Component {
       this.payWithPostFinance(pledgeId, pledgeResponse)
     } else if (selectedPaymentMethod === 'STRIPE') {
       this.payWithStripe(pledgeId)
-    } else if (selectedPaymentMethod === 'DATATRANS') {
+    } else if (selectedPaymentMethod.startsWith('DATATRANS')) {
       this.payWithDatatrans(pledgeId, pledgeResponse)
     } else if (this.isStripeWalletPayment()) {
       return this.payWithWallet(pledgeId, stripePaymentMethod)
@@ -490,12 +516,12 @@ class Submit extends Component {
         loading: t('pledge/submit/loading/datatrans'),
         pledgeId: pledgeId,
         userId: pledgeResponse.userId,
-        dtTransactionId: pledgeResponse.dtTransactionId,
+        datatransTrxId: pledgeResponse.datatransTrxId,
       }),
       () => {
         this.payment.datatransForm.action =
           'https://pay.sandbox.datatrans.com/v1/start/' +
-          this.state.dtTransactionId
+          this.state.datatransTrxId
         this.payment.datatransForm.submit()
       },
     )
@@ -754,7 +780,7 @@ class Submit extends Component {
 
     if (
       !selectedPaymentMethod?.startsWith('STRIPE') &&
-      selectedPaymentMethod !== 'DATATRANS'
+      !selectedPaymentMethod?.startsWith('DATATRANS')
     ) {
       return undefined
     }
@@ -774,7 +800,7 @@ class Submit extends Component {
     const { selectedPaymentMethod } = this.props
     if (
       !selectedPaymentMethod?.startsWith('STRIPE') &&
-      selectedPaymentMethod !== 'DATATRANS'
+      !selectedPaymentMethod?.startsWith('DATATRANS')
     ) {
       return null
     }
@@ -1132,7 +1158,7 @@ const submitPledge = gql`
     $payload: JSON
     $address: AddressInput
     $shippingAddress: AddressInput
-    $paymentMethod: PaymentMethod
+    $datatransService: DatatransService
   ) {
     submitPledge(
       pledge: {
@@ -1144,7 +1170,7 @@ const submitPledge = gql`
         reason: $reason
         accessToken: $accessToken
         payload: $payload
-        paymentMethod: $paymentMethod
+        datatransService: $datatransService
       }
       consents: $consents
     ) {
@@ -1153,7 +1179,7 @@ const submitPledge = gql`
       emailVerify
       pfAliasId
       pfSHA
-      dtTransactionId
+      datatransTrxId
     }
   }
 `

@@ -1,13 +1,63 @@
 type InitTransactionProps = {
   refno: number
   amount: number
-  preAuthorize?: boolean
+  service: 'CREDITCARD' | 'POSTFINANCE' | 'PAYPAL' | 'TWINT'
+  createAlias: boolean
 }
+
+type DatatransBody = {
+  paymentMethods: string[]
+  option: {
+    createAlias: boolean
+  }
+}
+
+const SERVICE_INIT_BODY: Record<
+  InitTransactionProps['service'],
+  (props: InitTransactionProps) => DatatransBody
+> = {
+  CREDITCARD: (props) => ({
+    amount: props.amount,
+    paymentMethods: ['ECA', 'VIS', 'AMX'],
+    option: {
+      createAlias: true,
+    },
+  }),
+  POSTFINANCE: (props) => ({
+    amount: props.amount,
+    paymentMethods: ['PFC'],
+    option: {
+      createAlias: true,
+    },
+  }),
+  PAYPAL: (props) => ({
+    amount: props.createAlias ? 0 : props.amount,
+    paymentMethods: ['PAP'],
+    option: {
+      createAlias: !!props.createAlias,
+    },
+  }),
+  TWINT: (props) => ({
+    amount: props.createAlias ? 0 : props.amount,
+    paymentMethods: ['TWI'],
+    option: {
+      createAlias: !!props.createAlias,
+    },
+  }),
+}
+
+const Authorization =
+  'Basic ' +
+  Buffer.from(
+    process.env.DATATRANS_MERCHANT_ID +
+      ':' +
+      process.env.DATATRANS_MERCHANT_PASSWORD,
+  ).toString('base64')
 
 export const initTransaction = async (
   props: InitTransactionProps,
 ): Promise<string> => {
-  const { refno, amount, preAuthorize } = props
+  const { refno, amount, service } = props
 
   const successUrl = new URL('/angebote', process.env.FRONTEND_BASE_URL)
   successUrl.searchParams.append('refno', `${refno}`)
@@ -23,32 +73,25 @@ export const initTransaction = async (
   cancelUrl.searchParams.append('amount', `${amount}`)
   cancelUrl.searchParams.append('status', 'cancel')
 
+  const body = JSON.stringify({
+    ...SERVICE_INIT_BODY[service](props),
+    currency: 'CHF',
+    autoSettle: false,
+    refno,
+    redirect: {
+      successUrl: successUrl.toString(),
+      errorUrl: errorUrl.toString(),
+      cancelUrl: cancelUrl.toString(),
+    },
+  })
+
   const res = await fetch('https://api.sandbox.datatrans.com/v1/transactions', {
     method: 'POST',
     headers: {
-      Authorization:
-        'Basic ' +
-        Buffer.from(
-          process.env.DATATRANS_MERCHANT_ID +
-            ':' +
-            process.env.DATATRANS_MERCHANT_PASSWORD,
-        ).toString('base64'),
+      Authorization,
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({
-      currency: 'CHF',
-      refno,
-      amount: preAuthorize ? 0 : amount,
-      autoSettle: false,
-      option: {
-        createAlias: !!preAuthorize, // @TODO: creatAlias would always work but PayPal & Twint
-      },
-      redirect: {
-        successUrl: successUrl.toString(),
-        errorUrl: errorUrl.toString(),
-        cancelUrl: cancelUrl.toString(),
-      },
-    }),
+    body,
   })
 
   if (!res.ok) {
@@ -71,13 +114,7 @@ export const getTransaction = async (datatransTrxId: string) => {
     `https://api.sandbox.datatrans.com/v1/transactions/${datatransTrxId}`,
     {
       headers: {
-        Authorization:
-          'Basic ' +
-          Buffer.from(
-            process.env.DATATRANS_MERCHANT_ID +
-              ':' +
-              process.env.DATATRANS_MERCHANT_PASSWORD,
-          ).toString('base64'),
+        Authorization,
       },
     },
   )
@@ -112,13 +149,7 @@ export const settleTransaction = async (props: SettleTransactionProps) => {
     {
       method: 'POST',
       headers: {
-        Authorization:
-          'Basic ' +
-          Buffer.from(
-            process.env.DATATRANS_MERCHANT_ID +
-              ':' +
-              process.env.DATATRANS_MERCHANT_PASSWORD,
-          ).toString('base64'),
+        Authorization,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
@@ -191,13 +222,7 @@ export const authorizeAndSettleTransaction = async (
     {
       method: 'POST',
       headers: {
-        Authorization:
-          'Basic ' +
-          Buffer.from(
-            process.env.DATATRANS_MERCHANT_ID +
-              ':' +
-              process.env.DATATRANS_MERCHANT_PASSWORD,
-          ).toString('base64'),
+        Authorization,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({

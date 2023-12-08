@@ -17,6 +17,10 @@ import { EMAIL_PAYMENT } from '../../lib/constants'
 import RawHtmlTranslation from '../RawHtmlTranslation'
 
 import { A } from '@project-r/styleguide'
+import {
+  DatatransPaymentMethodPrefix,
+  DatatransRefnoQueryParam,
+} from '../Payment/datatrans/types'
 
 // ToDo: query autoPay
 const pledgeQuery = gql`
@@ -228,13 +232,13 @@ class PledgeReceivePayment extends Component {
       }
     }
     // Datatrans
-    if (query.refno) {
+    if (query[DatatransRefnoQueryParam]) {
       if (query.status === 'authorized') {
         state.processing = true
         state.action = {
           method: 'pay',
           argument: {
-            method: 'DATATRANS',
+            method: DatatransPaymentMethodPrefix,
             pspPayload: query,
           },
         }
@@ -264,7 +268,7 @@ class PledgeReceivePayment extends Component {
                 }),
               )}&body=${encodeURIComponent(
                 t('pledge/recievePayment/datatrans/mailto/body', {
-                  pledgeId: query.refno,
+                  pledgeId: query[DatatransRefnoQueryParam],
                   payload: JSON.stringify(query, null, 2),
                 }),
               )}`}

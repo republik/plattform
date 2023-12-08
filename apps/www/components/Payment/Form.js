@@ -33,6 +33,10 @@ import StripeForm from './Form/Stripe'
 import ApplePayMark from './Form/ApplePayMark'
 import GooglePayMark from './Form/GooglePayMark'
 import { WalletPaymentMethod } from './PaymentRequest/usePaymentRequest'
+import {
+  DatatransPaymentMethod,
+  DatatransPaymentMethodPrefix,
+} from './datatrans/types'
 import { IconLock } from '@republik/icons'
 
 const pad2 = format('02')
@@ -40,7 +44,54 @@ const pad2 = format('02')
 const PAYMENT_METHODS = [
   {
     disabled: false,
-    key: 'DATATRANS',
+    key: DatatransPaymentMethod.CREDITCARD,
+    Icon: ({ values }) => {
+      return (
+        <span>
+          <span
+            style={{
+              opacity: !values.cardType || values.cardType === 'visa' ? 1 : 0.4,
+            }}
+          >
+            <PSPIcons.Visa />
+          </span>
+          <span
+            style={{
+              display: values.cardType === 'amex' ? 'none' : 'inline',
+              opacity:
+                !values.cardType || values.cardType === 'mastercard' ? 1 : 0.4,
+            }}
+          >
+            <PSPIcons.Mastercard />
+          </span>
+          <span
+            style={{
+              display: values.cardType === 'amex' ? 'inline' : 'none',
+              opacity: !values.cardType || values.cardType === 'amex' ? 1 : 0.4,
+            }}
+          >
+            <PSPIcons.Amex />
+          </span>
+        </span>
+      )
+    },
+  },
+  {
+    disabled: false,
+    key: DatatransPaymentMethod.POSTFINANCE,
+    bgColor: '#FCCC12',
+    Icon: PSPIcons.Postcard,
+  },
+  {
+    disabled: false,
+    key: DatatransPaymentMethod.PAYPAL,
+    Icon: PSPIcons.PayPal,
+  },
+  {
+    disabled: false,
+    key: DatatransPaymentMethod.TWINT,
+    bgColor: '#000',
+    Icon: PSPIcons.Twint,
   },
   {
     disabled: false,
@@ -530,7 +581,7 @@ class PaymentForm extends Component {
             </div> */}
           </div>
         )}
-        {paymentMethodForm === 'DATATRANS' && (
+        {paymentMethodForm?.startsWith(DatatransPaymentMethodPrefix) && (
           <>
             {children}
             <form ref={this.datatransFormRef} method='GET' />

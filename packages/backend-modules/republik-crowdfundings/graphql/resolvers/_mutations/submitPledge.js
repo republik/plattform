@@ -463,12 +463,13 @@ module.exports = async (_, args, context) => {
       userId: user.id,
     })
 
-    const dtTransactionId =
-      pledge.paymentMethod === 'DATATRANS'
+    const datatransTrxId =
+      pledge.datatransService !== undefined
         ? await initTransaction({
             refno: newPledge.id,
             amount: newPledge.total,
-            preAuthorize: pledgeOptions.some((po) => !!po.autoPay),
+            service: pledge.datatransService,
+            createAlias: pledgeOptions.some((po) => !!po.autoPay),
           })
         : null
 
@@ -477,7 +478,7 @@ module.exports = async (_, args, context) => {
       userId: user.id,
       pfSHA,
       pfAliasId,
-      dtTransactionId,
+      datatransTrxId,
     }
   } catch (e) {
     await transaction.transactionRollback()
