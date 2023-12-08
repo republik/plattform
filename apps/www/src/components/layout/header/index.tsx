@@ -7,7 +7,7 @@ import { IconAccountBox, IconMic, IconSearchMenu } from '@republik/icons'
 import Image from 'next/image'
 import { NavLink } from './nav-link'
 import { MeQuery } from '@app/graphql/republik-api/gql/graphql'
-import { useEffect, useRef, useState } from 'react'
+import { ComponentPropsWithoutRef, useEffect, useRef, useState } from 'react'
 import { useScrollDirection } from '@app/lib/hooks/useScrollDirection'
 
 const Logo = () => {
@@ -25,10 +25,10 @@ const Logo = () => {
   )
 }
 
-const getInitials = (me) =>
-  (me.name && me.name.trim()
-    ? me.name.split(' ').filter((n, i, all) => i === 0 || all.length - 1 === i)
-    : me.email
+const getInitials = (name, email) =>
+  (name && name.trim()
+    ? name.split(' ').filter((n, i, all) => i === 0 || all.length - 1 === i)
+    : email
         .split('@')[0]
         .split(/\.|-|_/)
         .slice(0, 2)
@@ -38,7 +38,11 @@ const getInitials = (me) =>
     .map((s) => s[0])
     .join('')
 
-const Avatar = ({ me }: { me: MeQuery['me'] }) => {
+const Avatar = ({
+  portrait,
+  name,
+  email,
+}: Pick<MeQuery['me'], 'portrait' | 'email' | 'name'>) => {
   const style = css({
     position: 'relative',
     display: 'inline-block',
@@ -47,28 +51,36 @@ const Avatar = ({ me }: { me: MeQuery['me'] }) => {
     objectFit: 'cover',
   })
 
-  return me?.portrait ? (
+  return portrait ? (
     <Image
-      src={me.portrait}
+      src={portrait}
       height={32}
       width={32}
       className={style}
       alt='Portrait'
     />
   ) : (
-    <span className={style}>{getInitials(me)}</span>
+    <span className={style}>{getInitials(name, email)}</span>
   )
 }
 
+const MAX_HEADER_HEIGHT = 100
+
 type PageHeaderProps = {
-  me: MeQuery['me']
+  isLoggedIn: boolean
+  hasActiveMembership: boolean
+  portrait?: ComponentPropsWithoutRef<typeof Avatar>
 }
 
-export function PageHeader({ me }: PageHeaderProps) {
+export function PageHeader({
+  isLoggedIn,
+  hasActiveMembership,
+  portrait,
+}: PageHeaderProps) {
   const headerRef = useRef<HTMLDivElement>(null)
   const scrollDirection = useScrollDirection({
     upThreshold: 25,
-    downThreshold: headerRef.current?.clientHeight || 100,
+    downThreshold: MAX_HEADER_HEIGHT,
   })
 
   const navLinks = [
@@ -93,9 +105,7 @@ export function PageHeader({ me }: PageHeaderProps) {
       })}
       style={{
         transform: `translateY(${
-          scrollDirection === 'down'
-            ? -((headerRef.current?.clientHeight || 0) + 1)
-            : 0
+          scrollDirection === 'down' ? -(MAX_HEADER_HEIGHT + 1) : 0
         }px)`,
       }}
     >
@@ -109,9 +119,9 @@ export function PageHeader({ me }: PageHeaderProps) {
         <div
           className={css({ p: 'header.avatarMargin', md: { width: '100%' } })}
         >
-          {me ? (
+          {isLoggedIn ? (
             <Link href='/meine-republik'>
-              <Avatar me={me} />
+              <Avatar {...portrait} />
             </Link>
           ) : (
             <Link
@@ -153,7 +163,7 @@ export function PageHeader({ me }: PageHeaderProps) {
             justifyContent: 'flex-end',
           })}
         >
-          {me?.activeMembership?.id ? (
+          {hasActiveMembership ? (
             <div
               className={css({
                 width: 'header.avatar',
@@ -211,7 +221,7 @@ export function PageHeader({ me }: PageHeaderProps) {
         </div>
       </div>
 
-      {me?.activeMembership?.id ? (
+      {hasActiveMembership ? (
         <div
           className={hstack({
             gap: '0',

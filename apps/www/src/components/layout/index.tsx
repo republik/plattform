@@ -26,7 +26,15 @@ export async function PageLayout({ children }: LayoutProps) {
         flexDirection: 'column',
       })}
     >
-      <PageHeader me={me} />
+      <PageHeader
+        isLoggedIn={!!me}
+        hasActiveMembership={!!me?.activeMembership?.id}
+        portrait={{
+          portrait: me?.portrait,
+          name: me?.name,
+          email: me?.email,
+        }}
+      />
       <CTABanner />
       <div
         className={css({ flexGrow: '1', backgroundColor: 'pageBackground' })}
