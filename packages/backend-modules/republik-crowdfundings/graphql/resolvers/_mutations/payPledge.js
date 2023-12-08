@@ -6,7 +6,8 @@ const payPledgePaymentslip = require('../../../lib/payments/paymentslip/payPledg
 const payPledgePaypal = require('../../../lib/payments/paypal/payPledge')
 const payPledgePostfinance = require('../../../lib/payments/postfinance/payPledge')
 const payPledgeStripe = require('../../../lib/payments/stripe/payPledge')
-const payPledgeDatatrans = require('../../../lib/payments/datatrans/payPledge')
+const payPledgeDatatrans = require('@orbiting/backend-modules-datatrans/lib/payPledge')
+
 const {
   forUpdate,
   changeStatus,

@@ -54,6 +54,7 @@ import {
   DatatransPaymentMethodPrefix,
   getDatatransService,
 } from '../Payment/datatrans/types'
+import { withDatatransInit } from '../Payment/datatrans/withDatatransInit'
 
 const { P } = Interaction
 
@@ -377,14 +378,11 @@ class Submit extends Component {
 
     const hash = simpleHash(variables)
 
-    // Special Case: DATATRANS and POSTFINANCECARD
-    // - we need a pledgeResponse with pfAliasId and pfSHA, or datatransTrxId
+    // Special Case: POSTFINANCECARD
+    // - we need a pledgeResponse with pfAliasId and pfSHA
     // - this can be missing if returning from a PSP redirect
     // - in those cases we create a new pledge
-    const requiresRefetch = ![
-      DatatransPaymentMethodPrefix,
-      'POSTFINANCECARD',
-    ].includes(this.props.selectedPaymentMethod)
+    const requiresRefetch = this.props.selectedPaymentMethod !== 'POSTFINANCE'
 
     if (
       !this.state.submitError &&
@@ -407,10 +405,6 @@ class Submit extends Component {
         ...variables,
         payload: getConversionPayload(query),
         consents: getRequiredConsents(this.props),
-        datatransService:
-          (this.isDatatransPayment() &&
-            getDatatransService(this.props.selectedPaymentMethod)) ||
-          undefined,
       })
       .then(({ data }) => {
         if (data.submitPledge.emailVerify) {
@@ -469,7 +463,7 @@ class Submit extends Component {
     } else if (selectedPaymentMethod === 'STRIPE') {
       this.payWithStripe(pledgeId)
     } else if (selectedPaymentMethod.startsWith('DATATRANS')) {
-      this.payWithDatatrans(pledgeId, pledgeResponse)
+      this.payWithDatatrans(pledgeId)
     } else if (this.isStripeWalletPayment()) {
       return this.payWithWallet(pledgeId, stripePaymentMethod)
     } else if (selectedPaymentMethod === 'PAYPAL') {
@@ -508,21 +502,34 @@ class Submit extends Component {
     )
   }
 
-  payWithDatatrans(pledgeId, pledgeResponse) {
+  payWithDatatrans(pledgeId) {
     const { t } = this.props
 
     this.setState(
       () => ({
         loading: t('pledge/submit/loading/datatrans'),
         pledgeId: pledgeId,
-        userId: pledgeResponse.userId,
-        datatransTrxId: pledgeResponse.datatransTrxId,
       }),
       () => {
-        this.payment.datatransForm.action =
-          'https://pay.sandbox.datatrans.com/v1/start/' +
-          this.state.datatransTrxId
-        this.payment.datatransForm.submit()
+        this.props
+          .datatransInit({
+            pledgeId,
+            service: getDatatransService(this.props.selectedPaymentMethod),
+          })
+          .then(({ data }) => {
+            this.payment.datatransForm.action = data.datatransInit.authorizeUrl
+            this.payment.datatransForm.submit()
+          })
+          .catch((error) => {
+            const submitError = errorToString(error)
+
+            this.setState(() => ({
+              loading: false,
+              pledgeId: undefined,
+              pledgeHash: undefined,
+              submitError,
+            }))
+          })
       },
     )
   }
@@ -1158,7 +1165,6 @@ const submitPledge = gql`
     $payload: JSON
     $address: AddressInput
     $shippingAddress: AddressInput
-    $datatransService: DatatransService
   ) {
     submitPledge(
       pledge: {
@@ -1170,7 +1176,6 @@ const submitPledge = gql`
         reason: $reason
         accessToken: $accessToken
         payload: $payload
-        datatransService: $datatransService
       }
       consents: $consents
     ) {
@@ -1179,7 +1184,6 @@ const submitPledge = gql`
       emailVerify
       pfAliasId
       pfSHA
-      datatransTrxId
     }
   }
 `
@@ -1318,6 +1322,7 @@ const SubmitWithMutations = compose(
       },
     }),
   }),
+  withDatatransInit,
   withSignOut,
   withPay,
   withMe,

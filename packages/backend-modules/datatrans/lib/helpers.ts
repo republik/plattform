@@ -1,15 +1,38 @@
-type InitTransactionProps = {
-  refno: number
-  amount: number
-  service: 'CREDITCARD' | 'POSTFINANCE' | 'PAYPAL' | 'TWINT'
-  createAlias: boolean
-}
-
 type DatatransBody = {
   paymentMethods: string[]
   option: {
     createAlias: boolean
   }
+}
+
+/**
+ * Payment methods provided by Datatrans
+ *
+ * @see https://docs.datatrans.ch/docs/payment-methods
+ */
+enum DatatransPaymentMethod {
+  MasterCard = 'ECA',
+  Visa = 'VIS',
+  AmericanExpress = 'AMX',
+  ApplePay = 'APL',
+  GooglePay = 'PAY',
+  PostfinanceCard = 'PFC',
+  PayPal = 'PAP',
+  Twint = 'TWI',
+}
+
+export enum DatatransService {
+  CREDITCARD = 'CREDITCARD',
+  POSTFINANCE = 'POSTFINANCE',
+  PAYPAL = 'PAYPAL',
+  TWINT = 'TWINT',
+}
+
+type InitTransactionProps = {
+  refno: number
+  amount: number
+  service: DatatransService
+  createAlias: boolean
 }
 
 const SERVICE_INIT_BODY: Record<
@@ -18,28 +41,34 @@ const SERVICE_INIT_BODY: Record<
 > = {
   CREDITCARD: (props) => ({
     amount: props.amount,
-    paymentMethods: ['ECA', 'VIS', 'AMX'],
+    paymentMethods: [
+      DatatransPaymentMethod.MasterCard,
+      DatatransPaymentMethod.Visa,
+      DatatransPaymentMethod.AmericanExpress,
+      DatatransPaymentMethod.ApplePay,
+      DatatransPaymentMethod.GooglePay,
+    ],
     option: {
       createAlias: true,
     },
   }),
   POSTFINANCE: (props) => ({
     amount: props.amount,
-    paymentMethods: ['PFC'],
+    paymentMethods: [DatatransPaymentMethod.PostfinanceCard],
     option: {
       createAlias: true,
     },
   }),
   PAYPAL: (props) => ({
     amount: props.createAlias ? 0 : props.amount,
-    paymentMethods: ['PAP'],
+    paymentMethods: [DatatransPaymentMethod.PayPal],
     option: {
       createAlias: !!props.createAlias,
     },
   }),
   TWINT: (props) => ({
     amount: props.createAlias ? 0 : props.amount,
-    paymentMethods: ['TWI'],
+    paymentMethods: [DatatransPaymentMethod.Twint],
     option: {
       createAlias: !!props.createAlias,
     },
@@ -56,7 +85,7 @@ const Authorization =
 
 export const initTransaction = async (
   props: InitTransactionProps,
-): Promise<string> => {
+): Promise<{ authorizeUrl: string }> => {
   const { refno, amount, service } = props
 
   const successUrl = new URL('/angebote', process.env.FRONTEND_BASE_URL)
@@ -106,7 +135,16 @@ export const initTransaction = async (
 
   const transaction = await res.json()
 
-  return transaction.transactionId
+  const authorizeUrl = new URL(
+    '/v1/start/' + transaction.transactionId,
+    'https://pay.sandbox.datatrans.com',
+  )
+
+  console.log({ authorizeUrl })
+
+  return {
+    authorizeUrl: authorizeUrl.toString(),
+  }
 }
 
 export const getTransaction = async (datatransTrxId: string) => {

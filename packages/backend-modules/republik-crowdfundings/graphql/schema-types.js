@@ -251,14 +251,6 @@ input PledgeInput {
   messageToClaimers: String
   accessToken: ID
   payload: JSON
-  datatransService: DatatransService
-}
-
-enum DatatransService {
-  CREDITCARD
-  POSTFINANCE
-  PAYPAL
-  TWINT
 }
 
 type PledgeResponse {
@@ -267,7 +259,6 @@ type PledgeResponse {
   emailVerify: Boolean
   pfAliasId: String
   pfSHA: String
-  datatransTrxId: String
   # returned by payPledge if confirmCardPayment is expected
   stripeClientSecret: String
   stripePublishableKey: String

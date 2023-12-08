@@ -21,7 +21,6 @@ const {
   insertAddress,
   upsertAddress,
 } = require('@orbiting/backend-modules-republik/lib/address')
-const { initTransaction } = require('../../../lib/payments/datatrans/helpers')
 
 module.exports = async (_, args, context) => {
   const { pgdb, req, t } = context
@@ -463,22 +462,11 @@ module.exports = async (_, args, context) => {
       userId: user.id,
     })
 
-    const datatransTrxId =
-      pledge.datatransService !== undefined
-        ? await initTransaction({
-            refno: newPledge.id,
-            amount: newPledge.total,
-            service: pledge.datatransService,
-            createAlias: pledgeOptions.some((po) => !!po.autoPay),
-          })
-        : null
-
     return {
       pledgeId: newPledge.id,
       userId: user.id,
       pfSHA,
       pfAliasId,
-      datatransTrxId,
     }
   } catch (e) {
     await transaction.transactionRollback()
