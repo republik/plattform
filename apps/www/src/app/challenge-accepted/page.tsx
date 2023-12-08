@@ -143,7 +143,11 @@ export default async function Page({ searchParams }) {
             <StructuredText data={hub.introduction.value} />
           </section>
 
-          <CANewsletterSignUp me={me} id='newsletter' />
+          <CANewsletterSignUp
+            me={me}
+            id='newsletter-top'
+            tagline={hub.newsletterSignupTagline}
+          />
 
           <section>
             <h2
@@ -178,6 +182,7 @@ export default async function Page({ searchParams }) {
             title='Keine neuen Beiträge und Verstaltungen verpassen: für den
                   Newsletter anmelden.'
             me={me}
+            tagline={hub.newsletterSignupTagline}
           />
 
           <section

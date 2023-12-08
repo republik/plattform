@@ -7,12 +7,12 @@ import { UPDATE_NEWSLETTER_SUBSCRIPTION_MUTATION } from '@app/graphql/republik-a
 import { css } from '@app/styled-system/css'
 import { stack, wrap } from '@app/styled-system/patterns'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useState } from 'react'
+import { useId, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
 const formSchema = z.object({
-  email: z.string().email('Bitte geben Sie eine gültige E-Mail Adresse ein.'),
+  email: z.string().email('Bitte geben Sie eine gültige E-Mail-Adresse ein.'),
 })
 
 type FormValues = z.infer<typeof formSchema>
@@ -23,6 +23,8 @@ type EmailSignUpProps = {
   title?: string
   // Text that is shown between the heading & the form
   description?: React.ReactNode
+  // Tagline below the form
+  tagline?: string
   newsletterName: NewsletterName
   newsletterSetting?: { id: string; name: string; subscribed: boolean }
   id?: string
@@ -32,10 +34,12 @@ export function EmailSignUp({
   me,
   title,
   description,
+  tagline,
   newsletterName,
   newsletterSetting,
   id,
 }: EmailSignUpProps) {
+  const fieldId = useId()
   const [signUpForNewsletter] = useMutation(SIGN_UP_FOR_NEWSLETTER_MUTATION)
   const [updateNewsletterSubscription] = useMutation(
     UPDATE_NEWSLETTER_SUBSCRIPTION_MUTATION,
@@ -128,7 +132,7 @@ export function EmailSignUp({
               className={css({
                 position: 'relative',
                 px: '8',
-                py: '2',
+                py: '3',
                 borderWidth: 2,
                 borderStyle: 'solid',
                 borderColor: 'contrast',
@@ -170,64 +174,54 @@ export function EmailSignUp({
                 className={wrap({
                   gap: '2',
                   position: 'relative',
-                  pb: '8',
                 })}
                 onSubmit={form.handleSubmit(handleSubmit)}
               >
                 <div
-                  className={css({
+                  className={stack({
+                    gap: '2',
                     flexGrow: 1,
-                    position: 'relative',
-                    display: 'flex',
-                    flexDirection: 'row',
                   })}
                 >
-                  <div
-                    className={stack({
-                      gap: '2',
-                      width: 'full',
+                  <label
+                    htmlFor={fieldId}
+                    className={css({
+                      display: 'flex',
+                      flexDirection: 'row',
+                      color: 'contrast',
+                      fontSize: 'sm',
                     })}
                   >
-                    <label
-                      htmlFor='email-field'
-                      className={css({
-                        display: 'flex',
-                        flexDirection: 'row',
-                        color: 'contrast',
-                        fontSize: 'sm',
-                      })}
-                    >
-                      E-Mail-Adresse
-                    </label>
-                    <input
-                      id='email-field'
-                      className={css({
-                        alignSelf: 'flex-end',
-                        width: 'full',
-                        fontSize: 'xl',
-                        background: 'transparent',
-                        borderBottomWidth: 1,
-                        borderBottomStyle: 'solid',
-                        borderBottomColor: 'text',
-                        borderRadius: 0,
+                    E-Mail-Adresse
+                  </label>
+                  <input
+                    id={fieldId}
+                    className={css({
+                      alignSelf: 'flex-end',
+                      width: 'full',
+                      fontSize: 'xl',
+                      background: 'transparent',
+                      borderBottomWidth: 1,
+                      borderBottomStyle: 'solid',
+                      borderBottomColor: 'text',
+                      borderRadius: 0,
+                      color: 'text',
+                      '&:focus': {
+                        borderBottomColor: 'contrast',
+                        outlineWidth: 0,
+                      },
+                      '&::placeholder': {
                         color: 'text',
-                        '&:focus': {
-                          borderBottomColor: 'contrast',
-                          outlineWidth: 0,
-                        },
-                        '&::placeholder': {
-                          color: 'text',
-                        },
-                      })}
-                      {...form.register('email')}
-                    />
-                  </div>
+                      },
+                    })}
+                    {...form.register('email')}
+                  />
                 </div>
                 <button
                   className={css({
                     position: 'relative',
                     px: '8',
-                    py: '2',
+                    py: '3',
                     borderWidth: 2,
                     borderStyle: 'solid',
                     borderColor: 'contrast',
@@ -266,9 +260,7 @@ export function EmailSignUp({
                 {form.formState.errors.email && (
                   <p
                     className={css({
-                      position: 'absolute',
-                      bottom: 0,
-                      left: 0,
+                      width: 'full',
                       fontSize: 'sm',
                       color: 'error',
                     })}
@@ -278,6 +270,9 @@ export function EmailSignUp({
                 )}
               </form>
             </>
+          )}
+          {tagline && (
+            <p className={css({ fontSize: 'xl', mt: '4' })}>{tagline}</p>
           )}
         </>
       ) : (
