@@ -428,6 +428,21 @@ export const presetRepublik = definePreset({
         from: { height: 'var(--radix-collapsible-content-height)' },
         to: { height: 0 },
       },
+      fadeInElementFromTop: {
+        from: { transform: 'translateY(calc(-1 * var(--element-height)))' },
+        to: { transform: 'translateY(0px)' },
+      },
+      fadeOutElementToTop: {
+        '0%': { position: 'sticky', transform: 'translateY(0px)' },
+        '99%': {
+          position: 'sticky',
+          transform: 'translateY(calc(-1 * var(--element-height)))',
+        },
+        '100%': {
+          position: 'static',
+          transform: '',
+        },
+      },
     },
   },
 })

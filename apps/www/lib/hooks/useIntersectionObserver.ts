@@ -19,7 +19,8 @@ export function useIntersectionObserver(
     callback?: (isIntersecting: boolean) => void
   },
 ): [boolean, Pick<IntersectionObserver, 'root' | 'rootMargin' | 'thresholds'>] {
-  const { root, rootMargin, threshold } = options.intersectionObserverOptions
+  const { root, rootMargin, threshold } =
+    options?.intersectionObserverOptions || {}
   const [isVisible, setIsVisible] = useState(false)
   const [observer, setObserver] = useState<IntersectionObserver>()
   const callbackRef = useRef<(val: boolean) => void>()

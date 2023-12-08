@@ -3,6 +3,7 @@ import Footer from './footer'
 import { css } from '@app/styled-system/css'
 import { getPlatformInformation } from '@app/lib/util/useragent/platform-information'
 import { CTABanner } from '../cta-banner'
+import { getMe } from '@app/lib/auth/me'
 
 type LayoutProps = {
   children: React.ReactNode
@@ -14,16 +15,18 @@ type LayoutProps = {
  */
 export async function PageLayout({ children }: LayoutProps) {
   const { isNativeApp } = getPlatformInformation()
+  const me = await getMe()
 
   return (
     <div
       className={css({
+        backgroundColor: 'pageBackground',
         minHeight: '100dvh',
         display: 'flex',
         flexDirection: 'column',
       })}
     >
-      <PageHeader />
+      <PageHeader me={me} />
       <CTABanner />
       <div
         className={css({ flexGrow: '1', backgroundColor: 'pageBackground' })}
