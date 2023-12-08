@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client'
+import { gql } from './gql'
 
 export const CA_NEWSLETTER_QUERY = gql(`
   query CANewsletterQuery(
@@ -17,23 +17,3 @@ export const CA_NEWSLETTER_QUERY = gql(`
     }
   }
 `)
-
-export type CANewsletterQueryResult = {
-  me: null | {
-    newsletterSettings: {
-      id: string
-      status: string
-      subscriptions:
-        | null
-        | ({
-            id: string
-            name: string
-            subscribed: boolean
-          } | null)[]
-    }
-  }
-}
-
-export type CANewsletterQueryVariables = {
-  name: string
-}

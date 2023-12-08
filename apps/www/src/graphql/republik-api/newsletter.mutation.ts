@@ -1,6 +1,6 @@
-import { gql } from '@apollo/client'
+import { gql } from './gql'
 
-export const SIGN_UP_FOR_NEWSLETTER_MUTATION = gql`
+export const SIGN_UP_FOR_NEWSLETTER_MUTATION = gql(`
   mutation SignUpForNewsletter(
     $email: String!
     $name: NewsletterName!
@@ -8,14 +8,4 @@ export const SIGN_UP_FOR_NEWSLETTER_MUTATION = gql`
   ) {
     requestNewsletterSubscription(email: $email, name: $name, context: $context)
   }
-`
-
-export type SignUpForNewsletterResult = {
-  requestNewsletterSubscription: boolean
-}
-
-export type SignUpForNewsletterVariables = {
-  email: string
-  name: string
-  context: string
-}
+`)

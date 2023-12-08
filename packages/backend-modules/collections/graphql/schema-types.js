@@ -112,7 +112,7 @@ type AudioQueueItem implements CollectionItemInterface {
   createdAt: DateTime!
   updatedAt: DateTime!
   collection: Collection!
-  document: Document!
+  document: Document
 }
 
 enum AudioQueueEntityType {

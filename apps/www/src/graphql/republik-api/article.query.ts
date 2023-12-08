@@ -1,6 +1,6 @@
-import { gql } from '@apollo/client'
+import { gql } from './gql'
 
-export const ARTICLE_QUERY = gql`
+export const ARTICLE_QUERY = gql(`
   query articleTeaser($path: String!) {
     article: document(path: $path) {
       meta {
@@ -11,15 +11,4 @@ export const ARTICLE_QUERY = gql`
       }
     }
   }
-`
-
-export type ArticleQueryResult = {
-  article?: {
-    meta: {
-      title?: string
-      description?: string
-      image?: string
-      credits?: any
-    }
-  }
-}
+`)

@@ -1,6 +1,6 @@
 import { Collapsible } from '@app/app/challenge-accepted/components/collapsible'
 import { CHALLENGE_ACCEPTED_PERSON_LIST_QUERY } from '@app/graphql/cms/person-list.query'
-import type { ChallengeAcceptedPersonListQueryQuery } from '@app/graphql/gql/graphql'
+import type { ChallengeAcceptedPersonListQueryQuery } from '@app/graphql/cms/gql/graphql'
 import { getCMSClient } from '@app/lib/apollo/cms-client'
 import { css } from '@app/styled-system/css'
 import { hstack } from '@app/styled-system/patterns'

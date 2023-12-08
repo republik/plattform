@@ -1,6 +1,6 @@
-import { gql } from '@apollo/client'
+import { gql } from './gql'
 
-export const UPDATE_NEWSLETTER_SUBSCRIPTION_MUTATION = gql`
+export const UPDATE_NEWSLETTER_SUBSCRIPTION_MUTATION = gql(`
   mutation updateNewsletterSubscription(
     $name: NewsletterName!
     $subscribed: Boolean!
@@ -11,17 +11,4 @@ export const UPDATE_NEWSLETTER_SUBSCRIPTION_MUTATION = gql`
       subscribed
     }
   }
-`
-
-export type UpdateNewsletterSubscriptionMutationResult = {
-  updateNewsletterSubscription: {
-    id: string
-    name: string
-    subscribed: boolean
-  }
-}
-
-export type UpdateNewsletterSubscriptionMutationVariables = {
-  name: string
-  subscribed: boolean
-}
+`)

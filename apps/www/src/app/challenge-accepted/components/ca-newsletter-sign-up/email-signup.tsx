@@ -1,17 +1,9 @@
 'use client'
 
 import { useMutation } from '@apollo/client'
-import { MeQueryResult } from '@app/graphql/republik-api/me.query'
-import {
-  SIGN_UP_FOR_NEWSLETTER_MUTATION,
-  SignUpForNewsletterResult,
-  SignUpForNewsletterVariables,
-} from '@app/graphql/republik-api/newsletter.mutation'
-import {
-  UPDATE_NEWSLETTER_SUBSCRIPTION_MUTATION,
-  UpdateNewsletterSubscriptionMutationResult,
-  UpdateNewsletterSubscriptionMutationVariables,
-} from '@app/graphql/republik-api/update-newsletter-subscription.mutation'
+import { MeQuery, NewsletterName } from '@app/graphql/republik-api/gql/graphql'
+import { SIGN_UP_FOR_NEWSLETTER_MUTATION } from '@app/graphql/republik-api/newsletter.mutation'
+import { UPDATE_NEWSLETTER_SUBSCRIPTION_MUTATION } from '@app/graphql/republik-api/update-newsletter-subscription.mutation'
 import { css } from '@app/styled-system/css'
 import { stack, wrap } from '@app/styled-system/patterns'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -26,12 +18,12 @@ const formSchema = z.object({
 type FormValues = z.infer<typeof formSchema>
 
 type EmailSignUpProps = {
-  me: MeQueryResult['me']
+  me: MeQuery['me']
   // Override the default heading
   title?: string
   // Text that is shown between the heading & the form
   description?: React.ReactNode
-  newsletterName: string
+  newsletterName: NewsletterName
   newsletterSetting?: { id: string; name: string; subscribed: boolean }
   id?: string
 }
@@ -44,14 +36,10 @@ export function EmailSignUp({
   newsletterSetting,
   id,
 }: EmailSignUpProps) {
-  const [signUpForNewsletter] = useMutation<
-    SignUpForNewsletterResult,
-    SignUpForNewsletterVariables
-  >(SIGN_UP_FOR_NEWSLETTER_MUTATION)
-  const [updateNewsletterSubscription] = useMutation<
-    UpdateNewsletterSubscriptionMutationResult,
-    UpdateNewsletterSubscriptionMutationVariables
-  >(UPDATE_NEWSLETTER_SUBSCRIPTION_MUTATION)
+  const [signUpForNewsletter] = useMutation(SIGN_UP_FOR_NEWSLETTER_MUTATION)
+  const [updateNewsletterSubscription] = useMutation(
+    UPDATE_NEWSLETTER_SUBSCRIPTION_MUTATION,
+  )
 
   const [isLoading, setIsLoading] = useState(false)
   const [signUpSuccessfulText, setSignUpSuccessfulText] = useState<
