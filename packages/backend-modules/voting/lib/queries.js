@@ -197,8 +197,6 @@ const buildQueries = (tableName) => {
       SELECT COUNT("userId") FROM "userIds"
     `
 
-    console.log(submittedQuery)
-
     debug('numSubmittedByGroup', submittedQuery)
 
     return pgdb.queryOneField(submittedQuery, params)
