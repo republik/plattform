@@ -41,7 +41,7 @@ const useValidation = ({ meta, content, t, updateMailchimp }) => {
             }
           }
           // WebP?
-          if (urlObject.pathname?.endsWith('.webp')) {
+          if (urlObject.pathname.endsWith('.webp')) {
             warnings.push('webp')
           }
           // Uhhhh really?
