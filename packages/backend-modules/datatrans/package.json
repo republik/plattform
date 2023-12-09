@@ -19,7 +19,8 @@
   },
   "dependencies": {
     "@orbiting/backend-modules-scalars": "*",
-    "apollo-modules-node": "*"
+    "apollo-modules-node": "*",
+    "debug": "^4.1.1"
   },
   "devDependencies": {
     "@orbiting/backend-modules-types": "*"

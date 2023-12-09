@@ -1,3 +1,7 @@
+import debug from 'debug'
+
+const log = debug('datatrans:lib:helpers')
+
 type DatatransBody = {
   paymentMethods: string[]
   option: {
@@ -86,6 +90,9 @@ const Authorization =
 export const initTransaction = async (
   props: InitTransactionProps,
 ): Promise<{ authorizeUrl: string }> => {
+  const l = log.extend('initTransaction')
+  l('args %o', props)
+
   const { refno, amount, service } = props
 
   const successUrl = new URL('/angebote', process.env.FRONTEND_BASE_URL)
@@ -114,6 +121,8 @@ export const initTransaction = async (
     },
   })
 
+  l('request body %o', body)
+
   const res = await fetch('https://api.sandbox.datatrans.com/v1/transactions', {
     method: 'POST',
     headers: {
@@ -138,16 +147,16 @@ export const initTransaction = async (
   const authorizeUrl = new URL(
     '/v1/start/' + transaction.transactionId,
     'https://pay.sandbox.datatrans.com',
-  )
+  ).toString()
+  l('return %o', { authorizeUrl })
 
-  console.log({ authorizeUrl })
-
-  return {
-    authorizeUrl: authorizeUrl.toString(),
-  }
+  return { authorizeUrl }
 }
 
 export const getTransaction = async (datatransTrxId: string) => {
+  const l = log.extend('getTransaction')
+  l('args %o', { datatransTrxId })
+
   const res = await fetch(
     `https://api.sandbox.datatrans.com/v1/transactions/${datatransTrxId}`,
     {
@@ -167,11 +176,23 @@ export const getTransaction = async (datatransTrxId: string) => {
     )
   }
 
-  return await res.json()
+  const transaction = await res.json()
+  l('return %o', transaction)
+
+  return transaction
 }
 
-export const isPreAuthorized = (datatransTrx: any) =>
-  datatransTrx.type === 'card_check' && datatransTrx.status === 'authorized'
+export const isPreAuthorized = (datatransTrx: any) => {
+  const l = log.extend('isPreAuthorized')
+  l('args %o', { datatransTrx })
+
+  const isPreAuthorized =
+    datatransTrx.type === 'card_check' && datatransTrx.status === 'authorized'
+
+  l('return %o', { isPreAuthorized })
+
+  return isPreAuthorized
+}
 
 type SettleTransactionProps = {
   datatransTrxId: string
@@ -180,7 +201,18 @@ type SettleTransactionProps = {
 }
 
 export const settleTransaction = async (props: SettleTransactionProps) => {
+  const l = log.extend('settleTransaction')
+  l('args %o', props)
+
   const { datatransTrxId, refno, amount } = props
+
+  const body = JSON.stringify({
+    amount,
+    currency: 'CHF',
+    refno,
+  })
+
+  l('request body %o', body)
 
   const res = await fetch(
     `https://api.sandbox.datatrans.com/v1/transactions/${datatransTrxId}/settle`,
@@ -190,11 +222,7 @@ export const settleTransaction = async (props: SettleTransactionProps) => {
         Authorization,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        amount,
-        currency: 'CHF',
-        refno,
-      }),
+      body,
     },
   )
 
@@ -207,6 +235,8 @@ export const settleTransaction = async (props: SettleTransactionProps) => {
         }),
     )
   }
+
+  l('return true')
 
   return true
 }
@@ -224,27 +254,38 @@ type AuthorizeAndSettleTransactionProps = {
 }
 
 const pickAliasProps = (paymentMethodProps: TransactionPaymentMethodProps) => {
+  const l = log.extend('pickAliasProps')
+  l('args %o', paymentMethodProps)
+
   if ('card' in paymentMethodProps) {
     const { card } = paymentMethodProps
-    return {
+    const value = {
       card: {
         alias: card.alias,
         expiryMonth: card.expiryMonth,
         expiryYear: card.expiryYear,
       },
     }
+    l('%s: %o', DatatransService.CREDITCARD, value)
+    return value
   }
 
-  if ('PFC' in paymentMethodProps) {
-    return { PFC: { alias: paymentMethodProps.PFC.alias } }
+  if (DatatransPaymentMethod.PostfinanceCard in paymentMethodProps) {
+    const value = { PFC: { alias: paymentMethodProps.PFC.alias } }
+    l('%s: %o', DatatransService.POSTFINANCE, value)
+    return value
   }
 
-  if ('PAP' in paymentMethodProps) {
-    return { PAP: { alias: paymentMethodProps.PAP.alias } }
+  if (DatatransPaymentMethod.PayPal in paymentMethodProps) {
+    const value = { PFC: { alias: paymentMethodProps.PAP.alias } }
+    l('%s: %o', DatatransService.PAYPAL, value)
+    return value
   }
 
-  if ('TWI' in paymentMethodProps) {
-    return { TWI: { alias: paymentMethodProps.TWI.alias } }
+  if (DatatransPaymentMethod.Twint in paymentMethodProps) {
+    const value = { PFC: { alias: paymentMethodProps.TWI.alias } }
+    l('%s: %o', DatatransService.TWINT, value)
+    return value
   }
 
   throw new Error('Unable to pick alias props')
@@ -253,7 +294,20 @@ const pickAliasProps = (paymentMethodProps: TransactionPaymentMethodProps) => {
 export const authorizeAndSettleTransaction = async (
   props: AuthorizeAndSettleTransactionProps,
 ) => {
+  const l = log.extend('authorizeAndSettleTransaction')
+  l('args %o', props)
+
   const { refno, amount, alias } = props
+
+  const body = JSON.stringify({
+    amount,
+    currency: 'CHF',
+    refno,
+    autoSettle: true,
+    ...pickAliasProps(alias),
+  })
+
+  l('request body %o', body)
 
   const res = await fetch(
     `https://api.sandbox.datatrans.com/v1/transactions/authorize`,
@@ -263,13 +317,7 @@ export const authorizeAndSettleTransaction = async (
         Authorization,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        amount,
-        currency: 'CHF',
-        refno,
-        autoSettle: true,
-        ...pickAliasProps(alias),
-      }),
+      body,
     },
   )
 
@@ -283,5 +331,8 @@ export const authorizeAndSettleTransaction = async (
     )
   }
 
-  return await res.json()
+  const transaction = await res.json()
+  l('return %o', transaction)
+
+  return transaction
 }
