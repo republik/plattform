@@ -1,15 +1,22 @@
+import debug from 'debug'
 import {
   authorizeAndSettleTransaction,
+  getAliasString,
   getTransaction,
   isPreAuthorized,
   settleTransaction,
 } from './helpers'
+
+const l = debug('datatrans:lib:payPledge')
 
 type PayPledgeProps = {
   pledgeId: string
   total: number
   pspPayload: any
   userId: string
+  pkg: {
+    companyId: string
+  }
 
   // @TODO typescript this nice
   transaction: any
@@ -22,11 +29,13 @@ module.exports = async (props: PayPledgeProps) => {
     pledgeId,
     total,
     pspPayload,
-    // userId,
+    userId,
+    pkg,
     transaction,
     t,
     logger = console,
   } = props
+  l('%o', { pledgeId, total, pspPayload })
 
   if (!pspPayload) {
     logger.error('pspPayload required', { pledgeId, pspPayload })
@@ -46,7 +55,7 @@ module.exports = async (props: PayPledgeProps) => {
 
   let datatransTrx = await getTransaction(datatransTrxId)
 
-  if (await isPreAuthorized(datatransTrx)) {
+  if (isPreAuthorized(datatransTrx)) {
     // authorize + settle
     datatransTrx = await authorizeAndSettleTransaction({
       amount: total,
@@ -73,50 +82,7 @@ module.exports = async (props: PayPledgeProps) => {
     pspPayload: transactionStatus,
   })
 
-  /*
-  if (pspPayload.ALIAS) {
-    const paymentSourceExists =
-      !!(await transaction.public.paymentSources.findFirst({
-        userId,
-        pspId: pspPayload.ALIAS,
-        method: 'POSTFINANCECARD',
-      }))
-    if (!paymentSourceExists) {
-      // save alias to user
-      await transaction.public.paymentSources.insert({
-        userId,
-        method: 'POSTFINANCECARD',
-        pspId: pspPayload.ALIAS,
-        pspPayload,
-      })
-    }
-  }
-  */
-
   const pledgeStatus = 'SUCCESSFUL'
-
-  // check if amount is correct
-  // PF amount is suddendly in franken
-  /*
-  if (pspPayload.amount * 100 !== total) {
-    logger.info('payed amount doesnt match with pledge total', {
-      pledgeId,
-      pspPayload,
-    })
-    pledgeStatus = 'PAID_INVESTIGATE'
-  }
-  */
-
-  // save alias to user
-  /*
-  if (pspPayload.ALIAS) {
-    await transaction.public.paymentSources.insert({
-      userId,
-      method: 'POSTFINANCECARD',
-      pspId: pspPayload.ALIAS,
-    })
-  }
-  */
 
   // insert pledgePayment
   await transaction.public.pledgePayments.insert({
@@ -124,6 +90,17 @@ module.exports = async (props: PayPledgeProps) => {
     paymentId: payment.id,
     paymentType: 'PLEDGE',
   })
+
+  const aliasString = getAliasString(transactionStatus)
+  if (aliasString !== undefined) {
+    await transaction.public.paymentSources.insert({
+      userId,
+      method: 'DATATRANS',
+      pspId: aliasString,
+      pspPayload: transactionStatus,
+      companyId: pkg.companyId,
+    })
+  }
 
   return pledgeStatus
 }
