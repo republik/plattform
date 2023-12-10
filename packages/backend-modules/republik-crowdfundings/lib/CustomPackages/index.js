@@ -12,15 +12,20 @@ const { getPeriodEndingLast, getLastEndDate } = require('../utils')
 const rules = require('./rules')
 
 // membershipTypes and packages which are prolongable
-const EXTENDABLE_MEMBERSHIP_TYPES = ['ABO', 'BENEFACTOR_ABO', 'ABO_GIVE_MONTHS']
-const EXTENDABLE_PACKAGE_NAMES = ['ABO', 'BENEFACTOR']
+const EXTENDABLE_MEMBERSHIP_TYPES = [
+  'ABO',
+  'BENEFACTOR_ABO',
+  'ABO_GIVE_MONTHS',
+  'RECURRING_ABO',
+]
+const EXTENDABLE_PACKAGE_NAMES = ['ABO', 'BENEFACTOR', 'RECURRING_PKG']
 
 // membershipTypes which are can be dormant but are not
 // prolongabl by themselves
 const DORMANT_ONLY_MEMBERSHIP_TYPES = ['YEARLY_ABO']
 
 // Which options require you to own a membership?
-const OPTIONS_REQUIRE_CLAIMER = ['BENEFACTOR_ABO']
+const OPTIONS_REQUIRE_CLAIMER = ['BENEFACTOR_ABO', 'RECURRING_PKG']
 
 // for a user to prolong
 const findEligableMemberships = ({
