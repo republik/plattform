@@ -12,6 +12,7 @@ const l = debug('datatrans:lib:payPledge')
 type PayPledgeProps = {
   pledgeId: string
   total: number
+  sourceId: string
   pspPayload: any
   userId: string
   pkg: {
@@ -28,6 +29,7 @@ module.exports = async (props: PayPledgeProps) => {
   const {
     pledgeId,
     total,
+    sourceId,
     pspPayload,
     userId,
     pkg,
@@ -35,36 +37,61 @@ module.exports = async (props: PayPledgeProps) => {
     t,
     logger = console,
   } = props
-  l('%o', { pledgeId, total, pspPayload })
+  l('%o', { pledgeId, total, sourceId, pspPayload })
 
   if (!pspPayload) {
     logger.error('pspPayload required', { pledgeId, pspPayload })
     throw new Error(t('api/pay/parseFailed', { id: pledgeId }))
   }
 
-  const { datatransTrxId } = pspPayload
+  let datatransTrx
 
-  // check for replay attacks
-  if (await transaction.public.payments.findFirst({ pspId: datatransTrxId })) {
-    logger.error('this datatransTrxId was used already 😲😒😢', {
-      pledgeId,
-      pspPayload,
+  if (sourceId) {
+    const paymentSource = await transaction.public.paymentSources.findOne({
+      id: sourceId,
+      userId,
     })
-    throw new Error(t('api/pay/paymentIdUsedAlready', { id: pledgeId }))
-  }
 
-  let datatransTrx = await getTransaction(datatransTrxId)
+    if (!paymentSource) {
+      throw new Error('noting found')
+    }
 
-  if (isPreAuthorized(datatransTrx)) {
-    // authorize + settle
     datatransTrx = await authorizeAndSettleTransaction({
       amount: total,
       refno: pledgeId,
-      alias: datatransTrx,
+      alias: paymentSource.pspPayload,
     })
   } else {
-    // settle
-    await settleTransaction({ datatransTrxId, amount: total, refno: pledgeId })
+    const { datatransTrxId } = pspPayload
+
+    // check for replay attacks
+    if (
+      await transaction.public.payments.findFirst({ pspId: datatransTrxId })
+    ) {
+      logger.error('this datatransTrxId was used already 😲😒😢', {
+        pledgeId,
+        pspPayload,
+      })
+      throw new Error(t('api/pay/paymentIdUsedAlready', { id: pledgeId }))
+    }
+
+    datatransTrx = await getTransaction(datatransTrxId)
+
+    if (isPreAuthorized(datatransTrx)) {
+      // authorize + settle
+      datatransTrx = await authorizeAndSettleTransaction({
+        amount: total,
+        refno: pledgeId,
+        alias: datatransTrx,
+      })
+    } else {
+      // settle
+      await settleTransaction({
+        datatransTrxId,
+        amount: total,
+        refno: pledgeId,
+      })
+    }
   }
 
   const transactionStatus = await getTransaction(datatransTrx.transactionId)
@@ -78,7 +105,7 @@ module.exports = async (props: PayPledgeProps) => {
     method: 'DATATRANS',
     total: transactionStatus.detail.settle.amount,
     status: 'PAID',
-    pspId: datatransTrxId,
+    pspId: datatransTrx.transactionId,
     pspPayload: transactionStatus,
   })
 
@@ -93,13 +120,21 @@ module.exports = async (props: PayPledgeProps) => {
 
   const aliasString = getAliasString(transactionStatus)
   if (aliasString !== undefined) {
-    await transaction.public.paymentSources.insert({
-      userId,
-      method: 'DATATRANS',
-      pspId: aliasString,
-      pspPayload: transactionStatus,
-      companyId: pkg.companyId,
-    })
+    const hasPaymentSource =
+      (await transaction.public.paymentSources.count({
+        pspId: aliasString,
+        userId,
+      })) > 0
+
+    if (!hasPaymentSource) {
+      await transaction.public.paymentSources.insert({
+        userId,
+        method: 'DATATRANS',
+        pspId: aliasString,
+        pspPayload: transactionStatus,
+        companyId: pkg.companyId,
+      })
+    }
   }
 
   return pledgeStatus

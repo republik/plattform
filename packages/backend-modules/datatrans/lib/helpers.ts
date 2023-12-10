@@ -8,13 +8,6 @@ import {
 
 const log = debug('datatrans:lib:helpers')
 
-type InitTransactionProps = {
-  refno: number
-  amount: number
-  service: DatatransService
-  createAlias: boolean
-}
-
 export enum DatatransService {
   CREDITCARD = 'CREDITCARD',
   POSTFINANCE = 'POSTFINANCE',
@@ -23,11 +16,10 @@ export enum DatatransService {
 }
 
 const SERVICE_INIT_BODY: Record<
-  InitTransactionProps['service'],
-  (props: InitTransactionProps) => Partial<DatatransBody>
+  InitTransactionWithServiceProps['service'],
+  (props: InitTransactionWithServiceProps) => Partial<DatatransBody>
 > = {
-  CREDITCARD: (props) => ({
-    amount: props.amount,
+  CREDITCARD: () => ({
     paymentMethods: [
       DatatransPaymentMethod.MasterCard,
       DatatransPaymentMethod.Visa,
@@ -40,7 +32,6 @@ const SERVICE_INIT_BODY: Record<
     },
   }),
   POSTFINANCE: (props) => ({
-    amount: props.amount,
     paymentMethods: [DatatransPaymentMethod.PostfinanceCard],
     option: {
       createAlias: !!props.createAlias,
@@ -70,13 +61,41 @@ const Authorization =
       process.env.DATATRANS_MERCHANT_PASSWORD,
   ).toString('base64')
 
-export const initTransaction = async (
-  props: InitTransactionProps,
-): Promise<{ authorizeUrl: string }> => {
+type InitTransactionWithServiceProps = {
+  refno: string
+  amount: number
+  service: DatatransService
+  createAlias?: boolean
+}
+
+type InitTransactionWithAliasProps = {
+  refno: string
+  amount: number
+  useAlias: DatatransAlias
+}
+
+type InitTransactionReturn = {
+  authorizeUrl: string
+}
+
+type InitTransaction = {
+  ({
+    refno,
+    amount,
+    service,
+  }: InitTransactionWithServiceProps): Promise<InitTransactionReturn>
+  ({
+    refno,
+    amount,
+    useAlias,
+  }: InitTransactionWithAliasProps): Promise<InitTransactionReturn>
+}
+
+export const initTransaction: InitTransaction = async (props) => {
   const l = log.extend('initTransaction')
   l('args %o', props)
 
-  const { refno, amount, service } = props
+  const { refno, amount } = props
 
   const successUrl = new URL('/angebote', process.env.FRONTEND_BASE_URL)
   successUrl.searchParams.append('refno', `${refno}`)
@@ -93,10 +112,12 @@ export const initTransaction = async (
   cancelUrl.searchParams.append('status', 'cancel')
 
   const body = JSON.stringify({
-    ...SERVICE_INIT_BODY[service](props),
+    refno,
+    amount,
+    ...('service' in props ? SERVICE_INIT_BODY[props.service](props) : {}),
+    ...('useAlias' in props ? { ...pickAliasProps(props.useAlias) } : {}),
     currency: 'CHF',
     autoSettle: false,
-    refno,
     redirect: {
       successUrl: successUrl.toString(),
       errorUrl: errorUrl.toString(),
@@ -232,7 +253,7 @@ type AuthorizeAndSettleTransactionProps = {
 
 export const getAliasString = (
   transaction: DatatransTransactionWithMethod,
-): boolean | undefined => {
+): string | undefined => {
   const aliasString =
     ('card' in transaction && transaction.card.alias) ||
     (DatatransPaymentMethod.PostfinanceCard in transaction &&

@@ -354,14 +354,15 @@ enum PaymentSourceStatus {
 # pm_: PaymentMethod
 type PaymentSource {
   id: String!
+  method: PaymentMethod!
   isDefault: Boolean!
   # is always CHARGEABLE for PaymentSources
   status: PaymentSourceStatus!
   brand: String!
   wallet: PaymentSourceWallet
-  last4: String!
-  expMonth: Int!
-  expYear: Int!
+  last4: String
+  expMonth: Int
+  expYear: Int
   # is card expired now
   isExpired: Boolean!
 }

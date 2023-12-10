@@ -19,14 +19,14 @@ const {
 const { suggest: autoPaySuggest } = require('../../lib/AutoPay')
 const createCache = require('../../lib/cache')
 const { getLastEndDate } = require('../../lib/utils')
-const {
+/* const {
   getDefaultPaymentSource,
 } = require('../../lib/payments/stripe/paymentSource')
 const {
   getDefaultPaymentMethod,
 } = require('../../lib/payments/stripe/paymentMethod')
 
-const normalizePaymentSource = require('../../lib/payments/stripe/normalizePaymentSource')
+const normalizePaymentSource = require('../../lib/payments/stripe/normalizePaymentSource') */
 
 const { DISABLE_RESOLVER_USER_CACHE } = process.env
 const QUERY_CACHE_TTL_SECONDS = 60 * 60 * 24 // 1 day
@@ -43,6 +43,36 @@ const createMembershipCache = (user, prop, context) =>
   )
 
 const defaultPaymentSource = async (user, args, { pgdb }) => {
+  const [paymentSource] = await pgdb.public.paymentSources.find(
+    { userId: user.id },
+    { orderBy: { createdAt: 'desc' }, limit: 1 },
+  )
+
+  if (paymentSource) {
+    const { id } = paymentSource
+
+    const details =
+      paymentSource.pspPayload?.[paymentSource.pspPayload?.paymentMethod] ||
+      paymentSource.pspPayload?.card
+
+    return {
+      id,
+      method: 'DATATRANS',
+      isDefault: true,
+      status: 'CHARGEABLE',
+      brand:
+        details?.info?.brand ||
+        paymentSource.pspPayload?.paymentMethod ||
+        'n/a',
+      wallet: null,
+      last4: details?.masked?.slice(-4),
+      expMonth: details?.expiryMonth,
+      expYear: details?.expiryYear,
+      isExpired: false,
+    }
+  }
+
+  /*
   let source = await getDefaultPaymentMethod({
     userId: user.id,
     pgdb,
@@ -56,7 +86,7 @@ const defaultPaymentSource = async (user, args, { pgdb }) => {
   )
   if (source && !source.isExpired) {
     return source
-  }
+  } */
 }
 
 module.exports = {

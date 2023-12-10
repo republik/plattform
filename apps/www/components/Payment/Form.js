@@ -286,16 +286,18 @@ class PaymentForm extends Component {
         allowedMethods &&
         allowedMethods.indexOf(values.paymentMethod) === -1)
     ) {
-      const stripeAllowed = allowedMethods
-        ? allowedMethods.indexOf('STRIPE') !== -1
-        : true
-      if (paymentSource && stripeAllowed) {
-        onChange({
-          values: {
-            paymentMethod: 'STRIPE',
-            paymentSource: paymentSource.id,
-          },
-        })
+      if (paymentSource) {
+        if (
+          values.paymentMethod !== paymentSource.method ||
+          values.paymentSource !== paymentSource.id
+        ) {
+          onChange({
+            values: {
+              paymentMethod: paymentSource.method,
+              paymentSource: paymentSource.id,
+            },
+          })
+        }
       } else {
         onChange({
           values: {
@@ -400,12 +402,11 @@ class PaymentForm extends Component {
                         disabled={paymentSourceDisabled}
                         onChange={(event) => {
                           event.preventDefault()
-                          const value = event.target.value
                           onChange({
                             values: {
+                              paymentMethod: paymentSource.method,
+                              paymentSource: paymentSource.id,
                               newSource: false,
-                              paymentMethod: 'STRIPE',
-                              paymentSource: value,
                             },
                           })
                         }}
@@ -442,8 +443,8 @@ class PaymentForm extends Component {
                         e.preventDefault()
                         onChange({
                           values: {
-                            newSource: true,
                             paymentSource: null,
+                            newSource: true,
                           },
                         })
                       }}
@@ -581,12 +582,13 @@ class PaymentForm extends Component {
             </div> */}
           </div>
         )}
-        {paymentMethodForm?.startsWith(DatatransPaymentMethodPrefix) && (
-          <>
-            {children}
-            <form ref={this.datatransFormRef} method='GET' />
-          </>
-        )}
+        {paymentMethodForm &&
+          paymentMethodForm?.startsWith(DatatransPaymentMethodPrefix) && (
+            <>
+              {children}
+              <form ref={this.datatransFormRef} method='GET' />
+            </>
+          )}
         {paymentMethodForm === 'STRIPE' && (
           <>
             {stripeNote && <Label>{stripeNote}</Label>}
@@ -727,6 +729,7 @@ export const query = gql`
       id
       defaultPaymentSource {
         id
+        method
         status
         brand
         last4

@@ -504,6 +504,26 @@ class Submit extends Component {
 
   payWithDatatrans(pledgeId) {
     const { t } = this.props
+    const { values } = this.state
+
+    if (values.paymentSource) {
+      this.setState(
+        () => ({
+          loading: t('pledge/submit/loading/datatrans'),
+          pledgeId: pledgeId,
+        }),
+        () => {
+          this.pay({
+            pledgeId,
+            method: values.paymentMethod,
+            sourceId: values.paymentSource,
+            pspPayload: values,
+          })
+        },
+      )
+
+      return
+    }
 
     this.setState(
       () => ({
