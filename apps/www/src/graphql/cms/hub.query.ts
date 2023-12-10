@@ -1,4 +1,4 @@
-import { gql } from '../gql'
+import { gql } from './gql'
 
 export const CHALLENGE_ACCEPTED_HUB_QUERY = gql(`
 query ChallengeAcceptedHubQuery {
