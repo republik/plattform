@@ -21,6 +21,7 @@ const createCache = require('../../lib/cache')
 const { getLastEndDate } = require('../../lib/utils')
 const {
   getDefaultPaymentSource: getDefaultDatatransPaymentSource,
+  toPaymentSource,
 } = require('../../../datatrans/lib/paymentSources')
 const {
   getDefaultPaymentSource: getDefaultStripePaymentSource,
@@ -47,7 +48,9 @@ const createMembershipCache = (user, prop, context) =>
 
 const defaultPaymentSource = async (user, args, { pgdb }) => {
   // Checking Datatrans first…
-  let source = await getDefaultDatatransPaymentSource(user.id, pgdb)
+  let source = await getDefaultDatatransPaymentSource(user.id, pgdb).then(
+    toPaymentSource,
+  )
   if (source !== undefined) {
     return source
   }

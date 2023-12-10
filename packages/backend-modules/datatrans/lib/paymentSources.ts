@@ -10,26 +10,26 @@ export const getDefaultPaymentSource = async (
   )
 
   if (paymentSource) {
-    const { id } = paymentSource
+    return paymentSource
+  }
+}
 
-    const details =
-      paymentSource.pspPayload?.[paymentSource.pspPayload?.paymentMethod] ||
-      paymentSource.pspPayload?.card
+export const toPaymentSource = (row: any) => {
+  const { id } = row
 
-    return {
-      id,
-      method: 'DATATRANS',
-      isDefault: true,
-      status: 'CHARGEABLE',
-      brand:
-        details?.info?.brand ||
-        paymentSource.pspPayload?.paymentMethod ||
-        'n/a',
-      wallet: null,
-      last4: details?.masked?.slice(-4),
-      expMonth: details?.expiryMonth,
-      expYear: details?.expiryYear,
-      isExpired: false,
-    }
+  const details =
+    row.pspPayload?.[row.pspPayload?.paymentMethod] || row.pspPayload?.card
+
+  return {
+    id,
+    method: 'DATATRANS',
+    isDefault: true,
+    status: 'CHARGEABLE',
+    brand: details?.info?.brand || row.pspPayload?.paymentMethod || 'n/a',
+    wallet: null,
+    last4: details?.masked?.slice(-4),
+    expMonth: details?.expiryMonth,
+    expYear: details?.expiryYear,
+    isExpired: false,
   }
 }
