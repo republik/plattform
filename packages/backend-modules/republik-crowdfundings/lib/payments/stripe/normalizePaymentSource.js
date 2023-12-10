@@ -13,5 +13,6 @@ module.exports = (source) =>
   source && {
     ...source,
     ...source.card,
+    method: 'STRIPE',
     isExpired: getIsExpired(source.card || source),
   }
