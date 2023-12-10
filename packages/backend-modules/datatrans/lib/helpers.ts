@@ -16,8 +16,8 @@ export enum DatatransService {
 }
 
 const SERVICE_INIT_BODY: Record<
-  InitTransactionWithServiceProps['service'],
-  (props: InitTransactionWithServiceProps) => Partial<DatatransBody>
+  InitTransactionProps['service'],
+  (props: InitTransactionProps) => Partial<DatatransBody>
 > = {
   CREDITCARD: () => ({
     paymentMethods: [
@@ -61,35 +61,22 @@ const Authorization =
       process.env.DATATRANS_MERCHANT_PASSWORD,
   ).toString('base64')
 
-type InitTransactionWithServiceProps = {
+type InitTransactionProps = {
   refno: string
   amount: number
   service: DatatransService
   createAlias?: boolean
 }
 
-type InitTransactionWithAliasProps = {
-  refno: string
-  amount: number
-  useAlias: DatatransAlias
-}
-
 type InitTransactionReturn = {
   authorizeUrl: string
 }
 
-type InitTransaction = {
-  ({
-    refno,
-    amount,
-    service,
-  }: InitTransactionWithServiceProps): Promise<InitTransactionReturn>
-  ({
-    refno,
-    amount,
-    useAlias,
-  }: InitTransactionWithAliasProps): Promise<InitTransactionReturn>
-}
+type InitTransaction = ({
+  refno,
+  amount,
+  service,
+}: InitTransactionProps) => Promise<InitTransactionReturn>
 
 export const initTransaction: InitTransaction = async (props) => {
   const l = log.extend('initTransaction')
@@ -114,8 +101,7 @@ export const initTransaction: InitTransaction = async (props) => {
   const body = JSON.stringify({
     refno,
     amount,
-    ...('service' in props ? SERVICE_INIT_BODY[props.service](props) : {}),
-    ...('useAlias' in props ? { ...pickAliasProps(props.useAlias) } : {}),
+    ...SERVICE_INIT_BODY[props.service](props),
     currency: 'CHF',
     autoSettle: false,
     redirect: {
