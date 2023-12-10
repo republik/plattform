@@ -286,7 +286,10 @@ class PaymentForm extends Component {
         allowedMethods &&
         allowedMethods.indexOf(values.paymentMethod) === -1)
     ) {
-      if (paymentSource) {
+      if (
+        paymentSource &&
+        allowedMethods.some((m) => m.startsWith(paymentSource.method))
+      ) {
         if (
           values.paymentMethod !== paymentSource.method ||
           values.paymentSource !== paymentSource.id
@@ -368,7 +371,9 @@ class PaymentForm extends Component {
           style={{ minHeight: PAYMENT_METHOD_HEIGHT * 2 }}
           loading={loadingPaymentSource || false}
           render={() => {
-            const hasPaymentSource = !!paymentSource
+            const hasPaymentSource =
+              !!paymentSource &&
+              allowedMethods.some((m) => m.startsWith(paymentSource.method))
             const PaymentSourceIcon =
               hasPaymentSource &&
               ((paymentSource.brand.toLowerCase() === 'visa' && (
