@@ -105,16 +105,4 @@ type CardGroupConnection {
   nodes: [CardGroup!]!
 }
 
-extend type User {
-  cards(
-    focus: [ID!]
-    sort: CardSortInput
-    filters: CardFiltersInput
-    first: Int
-    last: Int
-    before: String
-    after: String
-  ): CardConnection!
-}
-
 `
