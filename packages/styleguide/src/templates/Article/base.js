@@ -92,7 +92,9 @@ const createBase = ({ metaBody, metaHeadlines, Link = DefaultLink }) => {
       }
       return (
         <Link {...restProps} href={href} legacyBehavior passHref>
-          <LinkComponent>{children}</LinkComponent>
+          <LinkComponent {...restProps} description={description} href={href}>
+            {children}
+          </LinkComponent>
         </Link>
       )
     },
