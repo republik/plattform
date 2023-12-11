@@ -1,12 +1,26 @@
 import { ConnectionContext } from '@orbiting/backend-modules-types'
+import { DatatransTransactionWithMethod } from './types'
+
+type PaymentSourceRow = {
+  id: string
+  method: 'DATATRANS'
+  userId: string
+  pspId: string
+  pspPayload: DatatransTransactionWithMethod
+  createdAt: Date
+  updatedAt: Date
+  companyId: string
+}
 
 export const getDefaultPaymentSource = async (
   userId: string,
   pgdb: ConnectionContext['pgdb'],
 ) => {
-  const [paymentSource] = await pgdb.public.paymentSources.find(
-    { userId },
-    { orderBy: { createdAt: 'desc' }, limit: 1 },
+  const [paymentSource] = <PaymentSourceRow[]>(
+    await pgdb.public.paymentSources.find(
+      { userId },
+      { orderBy: { createdAt: 'desc' }, limit: 1 },
+    )
   )
 
   if (paymentSource) {
@@ -14,7 +28,7 @@ export const getDefaultPaymentSource = async (
   }
 }
 
-export const toPaymentSource = (row: any) => {
+export const normalizePaymentSource = (row: any) => {
   const { id } = row
 
   const details =

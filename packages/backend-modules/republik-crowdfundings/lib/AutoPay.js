@@ -202,8 +202,6 @@ const prolong = async (membershipId, pgdb, redis, t) => {
     if (suggestion.defaultDatatransPaymentSource) {
       const { defaultDatatransPaymentSource, total, pledgeId } = suggestion
 
-      console.log({ defaultDatatransPaymentSource })
-
       const datatransTrx = await authorizeAndSettleTransaction({
         amount: total,
         refno: pledgeId,

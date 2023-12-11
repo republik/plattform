@@ -21,7 +21,7 @@ const createCache = require('../../lib/cache')
 const { getLastEndDate } = require('../../lib/utils')
 const {
   getDefaultPaymentSource: getDefaultDatatransPaymentSource,
-  toPaymentSource,
+  normalizePaymentSource: normalizeDatatransPaymentSource,
 } = require('../../../datatrans/lib/paymentSources')
 const {
   getDefaultPaymentSource: getDefaultStripePaymentSource,
@@ -30,7 +30,7 @@ const {
   getDefaultPaymentMethod: getDefaultStripePaymentMethod,
 } = require('../../lib/payments/stripe/paymentMethod')
 
-const normalizePaymentSource = require('../../lib/payments/stripe/normalizePaymentSource')
+const normalizeStripePaymentSource = require('../../lib/payments/stripe/normalizePaymentSource')
 
 const { DISABLE_RESOLVER_USER_CACHE } = process.env
 const QUERY_CACHE_TTL_SECONDS = 60 * 60 * 24 // 1 day
@@ -49,7 +49,7 @@ const createMembershipCache = (user, prop, context) =>
 const defaultPaymentSource = async (user, args, { pgdb }) => {
   // Checking Datatrans first…
   let source = await getDefaultDatatransPaymentSource(user.id, pgdb).then(
-    toPaymentSource,
+    normalizeDatatransPaymentSource,
   )
   if (source !== undefined) {
     return source
@@ -59,14 +59,14 @@ const defaultPaymentSource = async (user, args, { pgdb }) => {
   source = await getDefaultStripePaymentMethod({
     userId: user.id,
     pgdb,
-  }).then(normalizePaymentSource)
+  }).then(normalizeStripePaymentSource)
   if (source && !source.isExpired) {
     return source
   }
 
   // … then legacy Stripe
   source = await getDefaultStripePaymentSource(user.id, pgdb).then(
-    normalizePaymentSource,
+    normalizeStripePaymentSource,
   )
   if (source && !source.isExpired) {
     return source
