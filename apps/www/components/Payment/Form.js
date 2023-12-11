@@ -45,36 +45,12 @@ const PAYMENT_METHODS = [
   {
     disabled: false,
     key: DatatransPaymentMethod.CREDITCARD,
-    Icon: ({ values }) => {
-      return (
-        <span>
-          <span
-            style={{
-              opacity: !values.cardType || values.cardType === 'visa' ? 1 : 0.4,
-            }}
-          >
-            <PSPIcons.Visa />
-          </span>
-          <span
-            style={{
-              display: values.cardType === 'amex' ? 'none' : 'inline',
-              opacity:
-                !values.cardType || values.cardType === 'mastercard' ? 1 : 0.4,
-            }}
-          >
-            <PSPIcons.Mastercard />
-          </span>
-          <span
-            style={{
-              display: values.cardType === 'amex' ? 'inline' : 'none',
-              opacity: !values.cardType || values.cardType === 'amex' ? 1 : 0.4,
-            }}
-          >
-            <PSPIcons.Amex />
-          </span>
-        </span>
-      )
-    },
+    Icon: () => (
+      <>
+        <PSPIcons.Visa />
+        <PSPIcons.Mastercard />
+      </>
+    ),
   },
   {
     disabled: false,
