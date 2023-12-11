@@ -38,7 +38,9 @@ import { MIN_GALLERY_IMG_WIDTH } from '../../components/Figure/Image'
 import { ExpandableLink } from '../../components/ExpandableLink'
 import { SEPARATOR as EXPANDABLE_LINK_SEPARATOR } from '../../components/ExpandableLink/ExpandableLink'
 
-const createBase = ({ metaBody, metaHeadlines }) => {
+const DefaultLink = ({ children }) => children
+
+const createBase = ({ metaBody, metaHeadlines, Link = DefaultLink }) => {
   const link = {
     matchMdast: matchType('link'),
     props: (node, index, parent, { ancestors }) => {
@@ -51,39 +53,48 @@ const createBase = ({ metaBody, metaHeadlines }) => {
         href: node.url,
       }
     },
-    component: (props) => {
-      const { href, description } = props
+    component: ({ href, description, children, ...restProps }) => {
       const LinkComponent = description ? ExpandableLink : Editorial.A
       // workaround app issues with hash url by handling them ourselves and preventing the default behaviour
       if (href && href.slice(0, 3) === '#t=') {
         return (
-          <Editorial.A
-            {...props}
-            onClick={(e) => {
-              const time = parseTimeHash(href)
-              if (time !== false) {
-                e.preventDefault()
-                globalMediaState.setTime(time)
-              }
-            }}
-          />
+          <Link {...restProps} href={href} legacyBehavior passHref>
+            <Editorial.A
+              onClick={(e) => {
+                const time = parseTimeHash(href)
+                if (time !== false) {
+                  e.preventDefault()
+                  globalMediaState.setTime(time)
+                }
+              }}
+            >
+              {children}
+            </Editorial.A>
+          </Link>
         )
       }
       if (href && href[0] === '#') {
         return (
-          <Editorial.A
-            {...props}
-            onClick={(e) => {
-              const ele = document.getElementById(href.substr(1))
-              if (ele) {
-                e.preventDefault()
-                scrollIntoView(ele, { time: 0, align: { top: 0 } })
-              }
-            }}
-          />
+          <Link {...restProps} href={href} legacyBehavior passHref>
+            <Editorial.A
+              onClick={(e) => {
+                const ele = document.getElementById(href.substr(1))
+                if (ele) {
+                  e.preventDefault()
+                  scrollIntoView(ele, { time: 0, align: { top: 0 } })
+                }
+              }}
+            >
+              {children}
+            </Editorial.A>
+          </Link>
         )
       }
-      return <LinkComponent {...props} />
+      return (
+        <Link {...restProps} href={href} legacyBehavior passHref>
+          <LinkComponent>{children}</LinkComponent>
+        </Link>
+      )
     },
     editorModule: 'link',
     rules: globalInlines,
