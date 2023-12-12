@@ -6,6 +6,7 @@ import {
   isPreAuthorized,
   settleTransaction,
 } from './helpers'
+import { GraphqlContext } from '@orbiting/backend-modules-types'
 
 const l = debug('datatrans:lib:payPledge')
 
@@ -21,6 +22,7 @@ type PayPledgeProps = {
 
   // @TODO typescript this nice
   transaction: any
+  pgdb: GraphqlContext['pgdb']
   t: any
   logger: any
 }
@@ -34,6 +36,7 @@ module.exports = async (props: PayPledgeProps) => {
     userId,
     pkg,
     transaction,
+    pgdb,
     t,
     logger = console,
   } = props
@@ -58,11 +61,11 @@ module.exports = async (props: PayPledgeProps) => {
 
     datatransTrx = await authorizeAndSettleTransaction({
       amount: total,
-      refno: pledgeId,
+      refno: pledgeId, // @TODO should be payment hrid, but we haven't created a payment yet
       alias: paymentSource.pspPayload,
     })
   } else {
-    const { datatransTrxId } = pspPayload
+    const { paymentId, datatransTrxId } = pspPayload
 
     // check for replay attacks
     if (
@@ -77,11 +80,23 @@ module.exports = async (props: PayPledgeProps) => {
 
     datatransTrx = await getTransaction(datatransTrxId)
 
+    const pledgePayment = await transaction.public.pledgePayments.findOne({
+      pledgeId,
+      paymentId,
+    })
+    if (!pledgePayment) {
+      throw Error('...')
+    }
+
+    const payment = await transaction.public.payments.findOne({
+      id: pledgePayment.paymentId,
+    })
+
     if (isPreAuthorized(datatransTrx)) {
       // authorize + settle
       datatransTrx = await authorizeAndSettleTransaction({
         amount: total,
-        refno: pledgeId,
+        refno: payment.hrid,
         alias: datatransTrx,
       })
     } else {
@@ -89,7 +104,7 @@ module.exports = async (props: PayPledgeProps) => {
       await settleTransaction({
         datatransTrxId,
         amount: total,
-        refno: pledgeId,
+        refno: payment.hrid,
       })
     }
   }
@@ -100,23 +115,17 @@ module.exports = async (props: PayPledgeProps) => {
     throw new Error(t('api/datatrans/settleAmountError'))
   }
 
-  const payment = await transaction.public.payments.insertAndGet({
-    type: 'PLEDGE',
-    method: 'DATATRANS',
-    total: transactionStatus.detail.settle.amount,
-    status: 'PAID',
-    pspId: datatransTrx.transactionId,
-    pspPayload: transactionStatus,
-  })
+  await transaction.public.payments.updateOne(
+    { hrid: datatransTrx.refno },
+    {
+      total: transactionStatus.detail.settle.amount,
+      status: 'PAID',
+      pspId: datatransTrx.transactionId,
+      pspPayload: transactionStatus,
+    },
+  )
 
   const pledgeStatus = 'SUCCESSFUL'
-
-  // insert pledgePayment
-  await transaction.public.pledgePayments.insert({
-    pledgeId,
-    paymentId: payment.id,
-    paymentType: 'PLEDGE',
-  })
 
   const aliasString = getAliasString(transactionStatus)
   if (aliasString !== undefined) {

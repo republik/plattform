@@ -19,7 +19,7 @@ import RawHtmlTranslation from '../RawHtmlTranslation'
 import { A } from '@project-r/styleguide'
 import {
   DatatransPaymentMethodPrefix,
-  DatatransRefnoQueryParam,
+  DatatransPledgeIdQueryParam,
 } from '../Payment/datatrans/types'
 
 // ToDo: query autoPay
@@ -61,6 +61,7 @@ class PledgeReceivePayment extends Component {
     super(props, context)
 
     const { query, t } = props
+    console.log(query)
 
     const state = (this.state = {})
     if (query.orderID) {
@@ -232,7 +233,7 @@ class PledgeReceivePayment extends Component {
       }
     }
     // Datatrans
-    if (query[DatatransRefnoQueryParam]) {
+    if (query[DatatransPledgeIdQueryParam]) {
       if (query.status === 'authorized') {
         state.processing = true
         state.action = {
@@ -268,7 +269,7 @@ class PledgeReceivePayment extends Component {
                 }),
               )}&body=${encodeURIComponent(
                 t('pledge/recievePayment/datatrans/mailto/body', {
-                  pledgeId: query[DatatransRefnoQueryParam],
+                  pledgeId: query[DatatransPledgeIdQueryParam],
                   payload: JSON.stringify(query, null, 2),
                 }),
               )}`}

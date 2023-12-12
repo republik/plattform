@@ -48,11 +48,10 @@ const createMembershipCache = (user, prop, context) =>
 
 const defaultPaymentSource = async (user, args, { pgdb }) => {
   // Checking Datatrans first…
-  let source = await getDefaultDatatransPaymentSource(user.id, pgdb).then(
-    normalizeDatatransPaymentSource,
-  )
+  let source = await getDefaultDatatransPaymentSource(user.id, pgdb)
+
   if (source !== undefined) {
-    return source
+    return normalizeDatatransPaymentSource(source)
   }
 
   // … then Stripe…

@@ -15,12 +15,34 @@ module.exports = async (_, args, context) => {
     autoPay: true,
   })
 
-  const { authorizeUrl } = await initTransaction({
-    refno: pledge.id,
-    amount: pledge.total,
-    service,
-    createAlias: pledgeOptionsWithAutoPay > 0,
-  })
+  const tx = await pgdb.transactionBegin()
 
-  return { authorizeUrl }
+  try {
+    const payment = await tx.public.payments.insertAndGet({
+      type: 'PLEDGE',
+      method: 'DATATRANS',
+      total: pledge.total,
+      status: 'WAITING',
+    })
+    // insert pledgePayment
+    await tx.public.pledgePayments.insert({
+      pledgeId,
+      paymentId: payment.id,
+      paymentType: 'PLEDGE',
+    })
+
+    const { authorizeUrl } = await initTransaction({
+      refno: payment.hrid,
+      amount: pledge.total,
+      service,
+      createAlias: pledgeOptionsWithAutoPay > 0,
+      pledgeId: pledge.id,
+      paymentId: payment.id,
+    })
+    await tx.transactionCommit()
+    return { authorizeUrl }
+  } catch (e) {
+    await tx.transactionRollback()
+    throw e
+  }
 }

@@ -66,37 +66,40 @@ type InitTransactionProps = {
   amount: number
   service: DatatransService
   createAlias?: boolean
+  pledgeId: string
+  paymentId: string
 }
 
 type InitTransactionReturn = {
   authorizeUrl: string
 }
 
-type InitTransaction = ({
-  refno,
-  amount,
-  service,
-}: InitTransactionProps) => Promise<InitTransactionReturn>
+type InitTransaction = (
+  props: InitTransactionProps,
+) => Promise<InitTransactionReturn>
 
 export const initTransaction: InitTransaction = async (props) => {
   const l = log.extend('initTransaction')
   l('args %o', props)
 
-  const { refno, amount } = props
+  const { refno, amount, pledgeId, paymentId } = props
 
   const successUrl = new URL('/angebote', process.env.FRONTEND_BASE_URL)
-  successUrl.searchParams.append('refno', `${refno}`)
   successUrl.searchParams.append('status', 'authorized')
+  successUrl.searchParams.append('pledgeId', `${pledgeId}`)
+  successUrl.searchParams.append('paymentId', `${paymentId}`)
 
   const errorUrl = new URL('/angebote', process.env.FRONTEND_BASE_URL)
-  errorUrl.searchParams.append('refno', `${refno}`)
   errorUrl.searchParams.append('amount', `${amount}`)
   errorUrl.searchParams.append('status', 'error')
+  errorUrl.searchParams.append('pledgeId', `${pledgeId}`)
+  errorUrl.searchParams.append('paymentId', `${paymentId}`)
 
   const cancelUrl = new URL('/angebote', process.env.FRONTEND_BASE_URL)
-  cancelUrl.searchParams.append('refno', `${refno}`)
   cancelUrl.searchParams.append('amount', `${amount}`)
   cancelUrl.searchParams.append('status', 'cancel')
+  cancelUrl.searchParams.append('pledgeId', `${pledgeId}`)
+  cancelUrl.searchParams.append('paymentId', `${paymentId}`)
 
   const body = JSON.stringify({
     refno,

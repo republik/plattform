@@ -24,4 +24,4 @@ export const getDatatransService = (
   }
 }
 
-export const DatatransRefnoQueryParam = 'refno'
+export const DatatransPledgeIdQueryParam = 'pledgeId'

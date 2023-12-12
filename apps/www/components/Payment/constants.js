@@ -1,4 +1,4 @@
-import { DatatransRefnoQueryParam } from './datatrans/types'
+import { DatatransPledgeIdQueryParam } from './datatrans/types'
 
 export const STRIPE_PLEDGE_ID_QUERY_KEY = 'pledgeId'
 
@@ -10,5 +10,5 @@ export const PSP_PLEDGE_ID_QUERY_KEYS = [
   // strip 3d secure
   STRIPE_PLEDGE_ID_QUERY_KEY,
   // datatrans
-  DatatransRefnoQueryParam,
+  DatatransPledgeIdQueryParam,
 ]
