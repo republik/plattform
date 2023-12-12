@@ -17,6 +17,7 @@
     "@orbiting/backend-modules-cards": "*",
     "@orbiting/backend-modules-collections": "*",
     "@orbiting/backend-modules-databroom": "*",
+    "@orbiting/backend-modules-datatrans": "*",
     "@orbiting/backend-modules-dataloader": "*",
     "@orbiting/backend-modules-discussions": "*",
     "@orbiting/backend-modules-documents": "*",
