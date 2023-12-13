@@ -4,6 +4,7 @@ import { css } from '@app/styled-system/css'
 import { getPlatformInformation } from '@app/lib/util/useragent/platform-information'
 import { CTABanner } from '../cta-banner'
 import { getMe } from '@app/lib/auth/me'
+import { PullToRefresh } from './page-wrapper'
 
 type LayoutProps = {
   children: React.ReactNode
@@ -36,11 +37,24 @@ export async function PageLayout({ children }: LayoutProps) {
         }}
       />
       <CTABanner />
-      <div
-        className={css({ flexGrow: '1', backgroundColor: 'pageBackground' })}
-      >
-        {children}
-      </div>
+      {isNativeApp ? (
+        <PullToRefresh
+          className={css({
+            position: 'relative',
+            flexGrow: '1',
+            backgroundColor: 'pageBackground',
+          })}
+        >
+          {children}
+        </PullToRefresh>
+      ) : (
+        <div
+          className={css({ flexGrow: '1', backgroundColor: 'pageBackground' })}
+        >
+          {children}
+        </div>
+      )}
+
       {!isNativeApp && <Footer />}
     </div>
   )
