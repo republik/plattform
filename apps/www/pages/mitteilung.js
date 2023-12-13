@@ -140,7 +140,7 @@ const Page = ({ router: { query: rawQuery }, me, inNativeApp }) => {
   const logo = isProjectR ? (
     <a
       href='https://project-r.construction/'
-      rel='noopener'
+      rel='noreferrer'
       target='_blank'
       {...styles.logoProjectR}
     >

@@ -271,7 +271,7 @@ const Footer = ({ t, me, signOut, isOnMarketingPage, hasActiveMembership }) => {
                 <a
                   {...navLinkStyle}
                   href='https://project-r.construction/'
-                  rel='noopener'
+                  rel='noreferrer'
                   target='_blank'
                 >
                   {t('footer/about/projecR')}
@@ -348,7 +348,7 @@ const Footer = ({ t, me, signOut, isOnMarketingPage, hasActiveMembership }) => {
               {...navLinkStyle}
               style={{ ...fontStyles.sansSerifRegular14 }}
               href='https://github.com/republik/plattform'
-              rel='noopener'
+              rel='noreferrer'
               target='_blank'
             >
               {t('footer/opensource')}
