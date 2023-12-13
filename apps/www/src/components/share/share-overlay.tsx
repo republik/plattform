@@ -42,7 +42,7 @@ function ShareButton({
       target='_blank'
       href={href}
       onClick={onClick}
-      rel='noopener noreferrer'
+      rel='noreferrer'
     >
       <Icon size={24} />
       <span>{label}</span>

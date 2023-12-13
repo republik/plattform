@@ -123,7 +123,7 @@ export const EventTeaser = ({ isPage, isMember, event }: EventProps) => {
             <dt>Wo</dt>
             <dd>
               {event.locationLink ? (
-                <Link href={event.locationLink} rel='noopener noreferrer'>
+                <Link href={event.locationLink} rel='noreferrer'>
                   {event.location}
                 </Link>
               ) : (
