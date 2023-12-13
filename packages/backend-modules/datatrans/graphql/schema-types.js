@@ -11,4 +11,8 @@ type DatatransInitResponse {
   authorizeUrl: String!
 }
 
+type DatatransAuthorizeResponse {
+  paymentId: ID!
+}
+
 `

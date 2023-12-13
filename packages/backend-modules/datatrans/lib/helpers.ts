@@ -71,6 +71,7 @@ type InitTransactionProps = {
 }
 
 type InitTransactionReturn = {
+  transactionId: string
   authorizeUrl: string
 }
 
@@ -93,13 +94,11 @@ export const initTransaction: InitTransaction = async (props) => {
   errorUrl.searchParams.append('amount', `${amount}`)
   errorUrl.searchParams.append('status', 'error')
   errorUrl.searchParams.append('pledgeId', `${pledgeId}`)
-  errorUrl.searchParams.append('paymentId', `${paymentId}`)
 
   const cancelUrl = new URL('/angebote', process.env.FRONTEND_BASE_URL)
   cancelUrl.searchParams.append('amount', `${amount}`)
   cancelUrl.searchParams.append('status', 'cancel')
   cancelUrl.searchParams.append('pledgeId', `${pledgeId}`)
-  cancelUrl.searchParams.append('paymentId', `${paymentId}`)
 
   const body = JSON.stringify({
     refno,
@@ -136,14 +135,15 @@ export const initTransaction: InitTransaction = async (props) => {
   }
 
   const transaction = await res.json()
+  const { transactionId } = transaction
 
   const authorizeUrl = new URL(
-    '/v1/start/' + transaction.transactionId,
+    '/v1/start/' + transactionId,
     'https://pay.sandbox.datatrans.com',
   ).toString()
   l('return %o', { authorizeUrl })
 
-  return { authorizeUrl }
+  return { transactionId, authorizeUrl }
 }
 
 export const getTransaction = async (datatransTrxId: string) => {
@@ -234,7 +234,7 @@ export const settleTransaction = async (props: SettleTransactionProps) => {
   return true
 }
 
-type AuthorizeAndSettleTransactionProps = {
+type AuthorizeTransactionProps = {
   refno: string
   amount: number
   alias: DatatransAlias
@@ -310,8 +310,18 @@ export const pickAliasProps = (alias: DatatransAlias) => {
   throw new Error('Unable to pick alias props')
 }
 
+type AuthorizeTransactionReturn = {
+  transactionId: string
+  acquirerAuthorizationCode: string
+  card: {
+    alias: string
+    masked: string
+  }
+  accertify?: any
+}
+
 export const authorizeAndSettleTransaction = async (
-  props: AuthorizeAndSettleTransactionProps,
+  props: AuthorizeTransactionProps,
 ) => {
   const l = log.extend('authorizeAndSettleTransaction')
   l('args %o', props)
@@ -350,7 +360,53 @@ export const authorizeAndSettleTransaction = async (
     )
   }
 
-  const transaction: DatatransTransactionWithMethod = await res.json()
+  const transaction: AuthorizeTransactionReturn = await res.json()
+  l('return %o', transaction)
+
+  return transaction
+}
+
+export const authorizeTransaction = async (
+  props: AuthorizeTransactionProps,
+) => {
+  const l = log.extend('authorizeTransaction')
+  l('args %o', props)
+
+  const { refno, amount, alias } = props
+
+  const body = JSON.stringify({
+    amount,
+    currency: 'CHF',
+    refno,
+    autoSettle: false,
+    ...pickAliasProps(alias),
+  })
+
+  l('request body %o', body)
+
+  const res = await fetch(
+    `https://api.sandbox.datatrans.com/v1/transactions/authorize`,
+    {
+      method: 'POST',
+      headers: {
+        Authorization,
+        'Content-Type': 'application/json',
+      },
+      body,
+    },
+  )
+
+  if (!res.ok) {
+    throw new Error(
+      'Error' +
+        JSON.stringify({
+          status: res.status,
+          statusText: await res.json(),
+        }),
+    )
+  }
+
+  const transaction: AuthorizeTransactionReturn = await res.json()
   l('return %o', transaction)
 
   return transaction

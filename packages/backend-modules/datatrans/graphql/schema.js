@@ -6,9 +6,13 @@ schema {
 
 type mutations {
   datatransInit(
-    pledgeId: String!
+    pledgeId: ID!
     service: DatatransService
   ): DatatransInitResponse!
+  datatransAuthorize(
+    pledgeId: ID!
+    sourceId: ID!
+  ): DatatransAuthorizeResponse!
 }
 
 `

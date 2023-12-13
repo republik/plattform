@@ -55,6 +55,7 @@ import {
   getDatatransService,
 } from '../Payment/datatrans/types'
 import { withDatatransInit } from '../Payment/datatrans/withDatatransInit'
+import { withDatatransAuthorize } from '../Payment/datatrans/withDatatransAuthorize'
 
 const { P } = Interaction
 
@@ -513,15 +514,31 @@ class Submit extends Component {
           pledgeId: pledgeId,
         }),
         () => {
-          this.pay({
-            pledgeId,
-            method: values.paymentMethod,
-            sourceId: values.paymentSource,
-            pspPayload: values,
-          })
+          this.props
+            .datatransAuthorize({
+              pledgeId: '481e6844-477d-4c60-a453-fc19bffae3c3',
+              sourceId: values.paymentSource,
+            })
+            .then(({ data }) => {
+              this.pay({
+                pledgeId,
+                method: values.paymentMethod,
+                sourceId: values.paymentSource,
+                pspPayload: data.datatransAuthorize,
+              })
+            })
+            .catch((error) => {
+              const submitError = errorToString(error)
+
+              this.setState(() => ({
+                loading: false,
+                pledgeId: undefined,
+                pledgeHash: undefined,
+                submitError,
+              }))
+            })
         },
       )
-
       return
     }
 
@@ -1343,6 +1360,7 @@ const SubmitWithMutations = compose(
     }),
   }),
   withDatatransInit,
+  withDatatransAuthorize,
   withSignOut,
   withPay,
   withMe,

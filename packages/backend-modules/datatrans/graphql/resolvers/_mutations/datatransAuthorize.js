@@ -1,21 +1,25 @@
-const { initTransaction } = require('../../../lib/helpers')
+const { authorizeTransaction } = require('../../../lib/helpers')
 
 module.exports = async (_, args, context) => {
-  const { pledgeId, service } = args
-  const { loaders, pgdb } = context
+  const { pledgeId, sourceId } = args
+  const { loaders, pgdb, user: me } = context
 
   const pledge = await loaders.Pledge.byId.load(pledgeId)
   if (!pledge) {
     throw new Error('pledge not found')
   }
+
   if (pledge.status !== 'DRAFT') {
     throw new Error('pledge status not DRAFT')
   }
 
-  const pledgeOptionsWithAutoPay = await pgdb.public.pledgeOptions.count({
-    pledgeId,
-    autoPay: true,
+  const paymentSource = await pgdb.public.paymentSources.findOne({
+    id: sourceId,
+    userId: me.id,
   })
+  if (!paymentSource) {
+    throw new Error('noting found')
+  }
 
   const tx = await pgdb.transactionBegin()
 
@@ -35,13 +39,10 @@ module.exports = async (_, args, context) => {
       paymentType: 'PLEDGE',
     })
 
-    const { transactionId, authorizeUrl } = await initTransaction({
-      pledgeId: pledge.id,
-      paymentId: payment.id,
+    const { transactionId } = await authorizeTransaction({
       refno: payment.hrid,
       amount: pledge.total,
-      service,
-      createAlias: pledgeOptionsWithAutoPay > 0,
+      alias: paymentSource.pspPayload,
     })
 
     await tx.public.payments.updateOne(
@@ -50,7 +51,7 @@ module.exports = async (_, args, context) => {
     )
 
     await tx.transactionCommit()
-    return { authorizeUrl }
+    return { paymentId: payment.id }
   } catch (e) {
     await tx.transactionRollback()
     throw e

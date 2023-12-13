@@ -19,10 +19,10 @@ type PayPledgeProps = {
   pkg: {
     companyId: string
   }
+  pgdb: GraphqlContext['pgdb']
 
   // @TODO typescript this nice
   transaction: any
-  pgdb: GraphqlContext['pgdb']
   t: any
   logger: any
 }
@@ -36,7 +36,6 @@ module.exports = async (props: PayPledgeProps) => {
     userId,
     pkg,
     transaction,
-    pgdb,
     t,
     logger = console,
   } = props
@@ -47,66 +46,44 @@ module.exports = async (props: PayPledgeProps) => {
     throw new Error(t('api/pay/parseFailed', { id: pledgeId }))
   }
 
-  let datatransTrx
+  const { paymentId } = pspPayload
 
-  if (sourceId) {
-    const paymentSource = await transaction.public.paymentSources.findOne({
-      id: sourceId,
-      userId,
-    })
+  // check if paymentId is linked to pledgeId
+  const pledgePayment = await transaction.public.pledgePayments.findOne({
+    pledgeId,
+    paymentId,
+  })
+  if (!pledgePayment) {
+    throw Error('...')
+  }
 
-    if (!paymentSource) {
-      throw new Error('noting found')
-    }
+  // find payment
+  const payment = await transaction.public.payments.findOne({
+    id: pledgePayment.paymentId,
+  })
+  if (payment.status !== 'WAITING') {
+    throw new Error('payment not in status WAITING')
+  }
 
-    datatransTrx = await authorizeAndSettleTransaction({
+  // check status
+  let datatransTrx = await getTransaction(payment.pspId)
+
+  if (isPreAuthorized(datatransTrx)) {
+    // authorize + settle
+    const { transactionId } = await authorizeAndSettleTransaction({
       amount: total,
-      refno: pledgeId, // @TODO should be payment hrid, but we haven't created a payment yet
-      alias: paymentSource.pspPayload,
+      refno: payment.hrid,
+      alias: datatransTrx,
     })
+
+    datatransTrx = await getTransaction(transactionId)
   } else {
-    const { paymentId, datatransTrxId } = pspPayload
-
-    // check for replay attacks
-    if (
-      await transaction.public.payments.findFirst({ pspId: datatransTrxId })
-    ) {
-      logger.error('this datatransTrxId was used already 😲😒😢', {
-        pledgeId,
-        pspPayload,
-      })
-      throw new Error(t('api/pay/paymentIdUsedAlready', { id: pledgeId }))
-    }
-
-    datatransTrx = await getTransaction(datatransTrxId)
-
-    const pledgePayment = await transaction.public.pledgePayments.findOne({
-      pledgeId,
-      paymentId,
+    // settle
+    await settleTransaction({
+      amount: total,
+      datatransTrxId: payment.pspId,
+      refno: payment.hrid,
     })
-    if (!pledgePayment) {
-      throw Error('...')
-    }
-
-    const payment = await transaction.public.payments.findOne({
-      id: pledgePayment.paymentId,
-    })
-
-    if (isPreAuthorized(datatransTrx)) {
-      // authorize + settle
-      datatransTrx = await authorizeAndSettleTransaction({
-        amount: total,
-        refno: payment.hrid,
-        alias: datatransTrx,
-      })
-    } else {
-      // settle
-      await settleTransaction({
-        datatransTrxId,
-        amount: total,
-        refno: payment.hrid,
-      })
-    }
   }
 
   const transactionStatus = await getTransaction(datatransTrx.transactionId)
