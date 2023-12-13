@@ -1,28 +1,36 @@
 'use client'
 
-import { usePlatformInformation } from '@app/lib/hooks/usePlatformInformation'
 import { css } from '@app/styled-system/css'
+import { IconArrowDownward } from '@republik/icons'
 import throttle from 'lodash/throttle'
 import { useRouter } from 'next/navigation'
 import React, { useCallback, useEffect, useRef } from 'react'
 
-const MAX = 200
+const MAX = 240
 const k = 0.6
 
 function appr(x: number) {
   return MAX * (1 - Math.exp((-k * x) / MAX))
 }
 
-const TRIGGER_THRESHOLD = 160
+const TRIGGER_THRESHOLD = MAX / 0.5
 
-type PageWrapperProps = {
+enum IndicatorState {
+  HIDDEN,
+  PULLING,
+  PULLED,
+  SPINNER,
+}
+
+type PullToRefreshProps = {
   children: React.ReactNode
 } & React.HTMLAttributes<HTMLDivElement>
 
-export function PullToRefresh({ children, ...props }: PageWrapperProps) {
+export function PullToRefresh({ children, ...props }: PullToRefreshProps) {
   const ref = useRef<HTMLDivElement>(null)
-  const [showIndicator, setShowIndicator] = React.useState(false)
-  const [flipIndicator, setFlipIndicator] = React.useState(false)
+  const [indicatorState, setIndicatorState] = React.useState<IndicatorState>(
+    IndicatorState.HIDDEN,
+  )
   const { refresh } = useRouter()
 
   const pullToRefresh = useCallback(
@@ -42,7 +50,6 @@ export function PullToRefresh({ children, ...props }: PageWrapperProps) {
     function handleTouchStart(startEvent: TouchEvent) {
       const el = ref.current
       if (!el || window.scrollY !== 0) return
-      true
       console.log('handleTouchStart')
 
       // get the initial Y position
@@ -62,19 +69,20 @@ export function PullToRefresh({ children, ...props }: PageWrapperProps) {
         const dy = currentY - initialY
 
         if (dy < 0) {
-          setShowIndicator(false)
+          setIndicatorState(IndicatorState.HIDDEN)
           return
         }
 
         if (dy > TRIGGER_THRESHOLD / 0.3) {
-          setShowIndicator(true)
+          setIndicatorState(IndicatorState.PULLING)
         }
 
         if (dy > TRIGGER_THRESHOLD / 0.8) {
-          setFlipIndicator(true)
+          setIndicatorState(IndicatorState.PULLED)
         }
 
         if (dy > TRIGGER_THRESHOLD) {
+          setIndicatorState(IndicatorState.SPINNER)
           pullToRefresh()
         }
 
@@ -103,8 +111,7 @@ export function PullToRefresh({ children, ...props }: PageWrapperProps) {
       function onTransitionEnd() {
         const el = ref.current
         if (!el) return
-        setShowIndicator(false)
-        setFlipIndicator(false)
+        setIndicatorState(IndicatorState.HIDDEN)
 
         // remove transition
         el.style.transition = ''
@@ -138,38 +145,23 @@ export function PullToRefresh({ children, ...props }: PageWrapperProps) {
           zIndex: 10,
         })}
         style={{
-          transform: showIndicator ? 'translateY(0)' : 'translateY(-300%)',
+          transform:
+            indicatorState == IndicatorState.SPINNER
+              ? 'translateY(-150%)'
+              : indicatorState >= IndicatorState.PULLING
+              ? 'translateY(0)'
+              : 'translateY(-300%)',
         }}
       >
-        <svg
-          className={css({
-            transition: 'transform 0.2s ease-in-out',
-          })}
-          width='24'
-          height='
-          24'
-          viewBox='0 0 24 24'
-          fill='none'
-          xmlns='http://www.w3.org/2000/svg'
+        <IconArrowDownward
+          size='3rem'
           style={{
-            transform: flipIndicator ? 'rotate(180deg)' : 'rotate(0deg)',
+            transform:
+              indicatorState >= IndicatorState.PULLED
+                ? 'rotate(180deg)'
+                : 'rotate(0deg)',
           }}
-        >
-          <path
-            d='M12 5V19'
-            stroke='currentColor'
-            strokeWidth='2'
-            strokeLinecap='round'
-            strokeLinejoin='round'
-          />
-          <path
-            d='M19 12L12 19L5 12'
-            stroke='currentColor'
-            strokeWidth='2'
-            strokeLinecap='round'
-            strokeLinejoin='round'
-          />
-        </svg>
+        />
         {/* <span style={{ marginLeft: '8px' }}>Pull to refresh</span> */}
       </div>
       {children}

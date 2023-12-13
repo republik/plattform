@@ -189,7 +189,7 @@ const createSchema = ({
   noEmpty = true,
   AudioPlayButton,
 } = {}) => {
-  const base = createBase({ metaBody, metaHeadlines })
+  const base = createBase({ metaBody, metaHeadlines, Link })
   const blocks = createBlocks({
     COVER_TYPE,
     base,
