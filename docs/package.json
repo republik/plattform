@@ -26,6 +26,6 @@
     "@next/eslint-plugin-next": "^14.0.4",
     "@republik/eslint-config-frontend": "*",
     "@republik/tsconfig": "*",
-    "@types/node": "18"
+    "@types/node": "^20.0.0"
   }
 }
