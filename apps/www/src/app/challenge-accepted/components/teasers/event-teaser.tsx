@@ -1,4 +1,7 @@
+import { Share } from '@app/components/share/share'
 import { css } from '@app/styled-system/css'
+import { hstack } from '@app/styled-system/patterns'
+import { IconCalendar, IconShare } from '@republik/icons'
 import { isoParse } from 'd3-time-format'
 import { swissTime } from 'lib/utils/format'
 import Link from 'next/link'
@@ -26,6 +29,7 @@ type EventProps = {
     endAt?: string
     signUpLink?: string
     fullyBooked?: boolean
+    _updatedAt: string
   }
 
   isPage?: boolean
@@ -129,6 +133,46 @@ export const EventTeaser = ({ isMember, event }: EventProps) => {
             )}
           </>
         )}
+        <div className={hstack({ gap: '4', mt: '2' })}>
+          <Share
+            title={event.title}
+            url={`${process.env.NEXT_PUBLIC_BASE_URL}/veranstaltungen/${event.slug}`}
+            emailSubject={`Republik: ${event.title}`}
+          >
+            <div
+              className={hstack({
+                gap: '2',
+                color: 'contrast',
+                cursor: 'pointer',
+                fontWeight: 'medium',
+                fontSize: 's',
+                textDecoration: 'none',
+              })}
+            >
+              <IconShare size={20} /> Teilen
+            </div>
+          </Share>
+
+          <Link
+            className={hstack({
+              gap: '2',
+              color: 'contrast',
+              cursor: 'pointer',
+              fontWeight: 'medium',
+              fontSize: 's',
+              textDecoration: 'none',
+            })}
+            // Link to the calendar file via CDN because the app can't handle downloads. This way, the file will be opened in the OS browser.
+            // To bust the CDN cache, ?v= is added with the timestamp when the event record was updated.
+            href={`${
+              process.env.NEXT_PUBLIC_CDN_FRONTEND_BASE_URL
+            }/veranstaltungen/${event.slug}/ics?v=${encodeURIComponent(
+              event._updatedAt,
+            )}`}
+          >
+            <IconCalendar size={20} /> Zum Kalender hinzufügen
+          </Link>
+        </div>
       </div>
     </div>
   )

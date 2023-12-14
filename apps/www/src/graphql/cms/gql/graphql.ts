@@ -3039,6 +3039,7 @@ export type ChallengeAcceptedHubQueryQuery = {
   hub?: {
     __typename?: 'ChallengeAcceptedHubRecord'
     id: string
+    newsletterSignupTagline?: string | null
     logo?: { __typename?: 'FileField'; url: string } | null
     introduction: {
       __typename?: 'ChallengeAcceptedHubModelIntroductionField'
@@ -3074,6 +3075,7 @@ export type ChallengeAcceptedHubQueryQuery = {
           locationLink?: string | null
           startAt: string
           endAt?: string | null
+          _updatedAt: string
           description: { __typename?: 'EventModelDescriptionField'; value: any }
           nonMemberCta?: {
             __typename?: 'EventModelNonMemberCtaField'
@@ -3123,6 +3125,7 @@ export type PersonDetailQuery = {
   hub?: {
     __typename?: 'ChallengeAcceptedHubRecord'
     id: string
+    newsletterSignupTagline?: string | null
     logo?: { __typename?: 'FileField'; url: string } | null
   } | null
   person?: {
@@ -3172,6 +3175,7 @@ export type PersonDetailQuery = {
           locationLink?: string | null
           startAt: string
           endAt?: string | null
+          _updatedAt: string
           description: { __typename?: 'EventModelDescriptionField'; value: any }
           nonMemberCta?: {
             __typename?: 'EventModelNonMemberCtaField'
@@ -3763,6 +3767,10 @@ export const ChallengeAcceptedHubQueryDocument = {
                 },
                 {
                   kind: 'Field',
+                  name: { kind: 'Name', value: 'newsletterSignupTagline' },
+                },
+                {
+                  kind: 'Field',
                   name: { kind: 'Name', value: 'items' },
                   selectionSet: {
                     kind: 'SelectionSet',
@@ -3845,6 +3853,10 @@ export const ChallengeAcceptedHubQueryDocument = {
                             {
                               kind: 'Field',
                               name: { kind: 'Name', value: 'endAt' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: '_updatedAt' },
                             },
                           ],
                         },
@@ -4082,6 +4094,10 @@ export const PersonDetailDocument = {
                     ],
                   },
                 },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'newsletterSignupTagline' },
+                },
               ],
             },
           },
@@ -4235,6 +4251,10 @@ export const PersonDetailDocument = {
                             {
                               kind: 'Field',
                               name: { kind: 'Name', value: 'endAt' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: '_updatedAt' },
                             },
                           ],
                         },

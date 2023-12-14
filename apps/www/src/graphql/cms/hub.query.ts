@@ -13,6 +13,7 @@ query ChallengeAcceptedHubQuery {
     outro {
       value
     }
+    newsletterSignupTagline
     items {
       __typename
       ... on EventRecord {
@@ -32,6 +33,7 @@ query ChallengeAcceptedHubQuery {
         locationLink
         startAt
         endAt
+        _updatedAt
       }
       ... on ChallengeAcceptedArticleRecord {
         id
