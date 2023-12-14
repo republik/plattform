@@ -29,12 +29,16 @@ export async function GET(
   const start = dayjs(event.startAt)
   const end = event.endAt ? dayjs(event.endAt) : start.add(1, 'hour')
 
+  // We assume that multi-day events are all-day.
+  const allDay = !start.isSame(end, 'day')
+
   const calendar = ical({ method: ICalCalendarMethod.PUBLISH })
 
   calendar.createEvent({
     id,
     start: start.toDate(),
     end: end.toDate(),
+    allDay,
     location: event.location,
     url,
     summary: event.title,
