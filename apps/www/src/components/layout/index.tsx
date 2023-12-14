@@ -4,7 +4,7 @@ import { css } from '@app/styled-system/css'
 import { getPlatformInformation } from '@app/lib/util/useragent/platform-information'
 import { CTABanner } from '../cta-banner'
 import { getMe } from '@app/lib/auth/me'
-import { PullToRefresh } from './page-wrapper'
+import { PullToRefresh } from './pull-to-refresh'
 
 type LayoutProps = {
   children: React.ReactNode
