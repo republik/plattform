@@ -1,16 +1,11 @@
 import { Share } from '@app/components/share/share'
+import { formatDate, formatEventDateRange } from '@app/lib/util/time-format'
 import { css } from '@app/styled-system/css'
 import { hstack } from '@app/styled-system/patterns'
 import { IconCalendar, IconShare } from '@republik/icons'
-import { isoParse } from 'd3-time-format'
-import { swissTime } from 'lib/utils/format'
 import Link from 'next/link'
 import { ComponentPropsWithoutRef } from 'react'
 import { StructuredText } from 'react-datocms'
-
-const formatDate = swissTime.format('%d.%m.%y')
-const formatDateTime = swissTime.format('%A, %d.%m.%Y, %H.%M')
-const formateTime = swissTime.format('%H.%M')
 
 type EventProps = {
   event: {
@@ -73,7 +68,7 @@ export const EventTeaser = ({ isMember, event }: EventProps) => {
             mb: '0.2ex',
           })}
         >
-          {formatDate(isoParse(event.startAt))}
+          {formatDate(event.startAt)}
         </p>
       </div>
       <div
@@ -98,11 +93,7 @@ export const EventTeaser = ({ isMember, event }: EventProps) => {
           </Link>
         </h2>
         <p className={css({ fontWeight: 700 })}>
-          {formatDateTime(isoParse(event.startAt))}
-          {event.endAt
-            ? `–${formateTime(isoParse(event.endAt))} Uhr `
-            : ' Uhr '}
-          / {event.location}
+          {formatEventDateRange(event.startAt, event.endAt)} / {event.location}
         </p>
 
         <StructuredText data={event.description.value} />

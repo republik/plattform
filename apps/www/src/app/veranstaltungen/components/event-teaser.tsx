@@ -1,17 +1,11 @@
-'use client'
 import { Share } from '@app/components/share/share'
-import { usePlatformInformation } from '@app/lib/hooks/usePlatformInformation'
+import { formatEventDateRange } from '@app/lib/util/time-format'
 import { css } from '@app/styled-system/css'
 import { hstack, vstack } from '@app/styled-system/patterns'
 import { IconCalendar, IconShare } from '@republik/icons'
-import { isoParse } from 'd3-time-format'
-import { swissTime } from 'lib/utils/format'
 import Link from 'next/link'
 import { ComponentPropsWithoutRef } from 'react'
 import { StructuredText } from 'react-datocms'
-
-const formatDateTime = swissTime.format('%A, %d.%m.%Y, %H.%M')
-const formateTime = swissTime.format('%H.%M')
 
 type EventProps = {
   event: {
@@ -37,8 +31,6 @@ type EventProps = {
 }
 
 export const EventTeaser = ({ isPage, isMember, event }: EventProps) => {
-  const { isNativeApp } = usePlatformInformation()
-
   return (
     <div
       className={css({
@@ -112,12 +104,7 @@ export const EventTeaser = ({ isPage, isMember, event }: EventProps) => {
         >
           <div>
             <dt>Wann</dt>
-            <dd>
-              {formatDateTime(isoParse(event.startAt))}
-              {event.endAt
-                ? `–${formateTime(isoParse(event.endAt))} Uhr`
-                : ' Uhr'}
-            </dd>
+            <dd>{formatEventDateRange(event.startAt, event.endAt)}</dd>
           </div>
           <div>
             <dt>Wo</dt>
