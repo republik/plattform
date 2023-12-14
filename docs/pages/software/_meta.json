@@ -1,20 +1,11 @@
 {
   "index": {
-    "title": "Overview"
+    "title": "Software documentation"
   },
-  "www": {
-    "title": "Magazin"
+  "architecture": {
+    "title": "Architecture"
   },
-  "app": {
-    "title": "App"
-  },
-  "api": {
-    "title": "Backend"
-  },
-  "publikator": {
-    "title": "Publikator"
-  },
-  "admin": {
-    "title": "Admin"
+  "applications": {
+    "title": "Applications"
   }
 }
