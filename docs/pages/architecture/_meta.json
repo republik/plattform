@@ -2,10 +2,19 @@
   "index": {
     "title": "Overview"
   },
+  "api": {
+    "title": "API"
+  },
   "www": {
-    "title": "Website"
+    "title": "Magazin"
   },
   "app": {
     "title": "App"
+  },
+  "admin": {
+    "title": "Admin"
+  },
+  "publikator": {
+    "title": "Publikator"
   }
 }
