@@ -415,6 +415,7 @@ export type EventModelFilter = {
   slug?: InputMaybe<SlugFilter>
   startAt?: InputMaybe<DateTimeFilter>
   title?: InputMaybe<StringFilter>
+  unlisted?: InputMaybe<BooleanFilter>
 }
 
 export type EventModelNonMemberCtaField = {
@@ -459,6 +460,8 @@ export enum EventModelOrderBy {
   StartAtDesc = 'startAt_DESC',
   TitleAsc = 'title_ASC',
   TitleDesc = 'title_DESC',
+  UnlistedAsc = 'unlisted_ASC',
+  UnlistedDesc = 'unlisted_DESC',
 }
 
 /** Record of type Veranstaltung (event) */
@@ -490,6 +493,7 @@ export type EventRecord = RecordInterface & {
   slug: Scalars['String']['output']
   startAt: Scalars['DateTime']['output']
   title: Scalars['String']['output']
+  unlisted?: Maybe<Scalars['BooleanType']['output']>
 }
 
 /** Record of type Veranstaltung (event) */
@@ -3304,7 +3308,7 @@ export const EventsQueryDocument = {
                   fields: [
                     {
                       kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'OR' },
+                      name: { kind: 'Name', value: 'AND' },
                       value: {
                         kind: 'ListValue',
                         values: [
@@ -3313,16 +3317,16 @@ export const EventsQueryDocument = {
                             fields: [
                               {
                                 kind: 'ObjectField',
-                                name: { kind: 'Name', value: 'startAt' },
+                                name: { kind: 'Name', value: 'unlisted' },
                                 value: {
                                   kind: 'ObjectValue',
                                   fields: [
                                     {
                                       kind: 'ObjectField',
-                                      name: { kind: 'Name', value: 'gte' },
+                                      name: { kind: 'Name', value: 'eq' },
                                       value: {
-                                        kind: 'Variable',
-                                        name: { kind: 'Name', value: 'today' },
+                                        kind: 'BooleanValue',
+                                        value: false,
                                       },
                                     },
                                   ],
@@ -3335,17 +3339,71 @@ export const EventsQueryDocument = {
                             fields: [
                               {
                                 kind: 'ObjectField',
-                                name: { kind: 'Name', value: 'endAt' },
+                                name: { kind: 'Name', value: 'OR' },
                                 value: {
-                                  kind: 'ObjectValue',
-                                  fields: [
+                                  kind: 'ListValue',
+                                  values: [
                                     {
-                                      kind: 'ObjectField',
-                                      name: { kind: 'Name', value: 'gte' },
-                                      value: {
-                                        kind: 'Variable',
-                                        name: { kind: 'Name', value: 'today' },
-                                      },
+                                      kind: 'ObjectValue',
+                                      fields: [
+                                        {
+                                          kind: 'ObjectField',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'startAt',
+                                          },
+                                          value: {
+                                            kind: 'ObjectValue',
+                                            fields: [
+                                              {
+                                                kind: 'ObjectField',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'gte',
+                                                },
+                                                value: {
+                                                  kind: 'Variable',
+                                                  name: {
+                                                    kind: 'Name',
+                                                    value: 'today',
+                                                  },
+                                                },
+                                              },
+                                            ],
+                                          },
+                                        },
+                                      ],
+                                    },
+                                    {
+                                      kind: 'ObjectValue',
+                                      fields: [
+                                        {
+                                          kind: 'ObjectField',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'endAt',
+                                          },
+                                          value: {
+                                            kind: 'ObjectValue',
+                                            fields: [
+                                              {
+                                                kind: 'ObjectField',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'gte',
+                                                },
+                                                value: {
+                                                  kind: 'Variable',
+                                                  name: {
+                                                    kind: 'Name',
+                                                    value: 'today',
+                                                  },
+                                                },
+                                              },
+                                            ],
+                                          },
+                                        },
+                                      ],
                                     },
                                   ],
                                 },
