@@ -29,6 +29,15 @@ export const formatDate = (d: DateLike) => {
 }
 
 /**
+ * Get the formatted short date in the correct time zone
+ * @param d string | number | Date
+ * @returns string
+ */
+export const formatDateShort = (d: DateLike) => {
+  return dayjs(d).tz().format('DD.MM.YY')
+}
+
+/**
  * Get the formatted time in the correct time zone
  * @param d string | number | Date
  * @returns string

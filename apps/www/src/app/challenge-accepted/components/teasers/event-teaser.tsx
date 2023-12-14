@@ -1,6 +1,9 @@
 import { CmsItemStatus } from '@app/components/cms/item-status'
 import { Share } from '@app/components/share/share'
-import { formatDate, formatEventDateRange } from '@app/lib/util/time-format'
+import {
+  formatDateShort,
+  formatEventDateRange,
+} from '@app/lib/util/time-format'
 import { css } from '@app/styled-system/css'
 import { hstack } from '@app/styled-system/patterns'
 import { IconCalendar, IconShare } from '@republik/icons'
@@ -70,7 +73,7 @@ export const EventTeaser = ({ isMember, event }: EventProps) => {
             mb: '0.2ex',
           })}
         >
-          {formatDate(event.startAt)}
+          {formatDateShort(event.startAt)}
         </p>
       </div>
       <div
