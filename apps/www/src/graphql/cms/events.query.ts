@@ -19,6 +19,7 @@ export const EventRecordFields = gql(`
     startAt
     endAt
     _updatedAt
+    _status
   }
 `)
 

@@ -2967,6 +2967,7 @@ export type EventRecordFieldsFragment = {
   startAt: string
   endAt?: string | null
   _updatedAt: string
+  _status: ItemStatus
   description: { __typename?: 'EventModelDescriptionField'; value: any }
   nonMemberCta?: {
     __typename?: 'EventModelNonMemberCtaField'
@@ -3076,6 +3077,7 @@ export type ChallengeAcceptedHubQueryQuery = {
           startAt: string
           endAt?: string | null
           _updatedAt: string
+          _status: ItemStatus
           description: { __typename?: 'EventModelDescriptionField'; value: any }
           nonMemberCta?: {
             __typename?: 'EventModelNonMemberCtaField'
@@ -3176,6 +3178,7 @@ export type PersonDetailQuery = {
           startAt: string
           endAt?: string | null
           _updatedAt: string
+          _status: ItemStatus
           description: { __typename?: 'EventModelDescriptionField'; value: any }
           nonMemberCta?: {
             __typename?: 'EventModelNonMemberCtaField'
@@ -3256,6 +3259,7 @@ export const EventRecordFieldsFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'startAt' } },
           { kind: 'Field', name: { kind: 'Name', value: 'endAt' } },
           { kind: 'Field', name: { kind: 'Name', value: '_updatedAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: '_status' } },
         ],
       },
     },
@@ -3497,6 +3501,7 @@ export const EventsQueryDocument = {
           { kind: 'Field', name: { kind: 'Name', value: 'startAt' } },
           { kind: 'Field', name: { kind: 'Name', value: 'endAt' } },
           { kind: 'Field', name: { kind: 'Name', value: '_updatedAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: '_status' } },
         ],
       },
     },
@@ -3604,6 +3609,7 @@ export const EventQueryDocument = {
           { kind: 'Field', name: { kind: 'Name', value: 'startAt' } },
           { kind: 'Field', name: { kind: 'Name', value: 'endAt' } },
           { kind: 'Field', name: { kind: 'Name', value: '_updatedAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: '_status' } },
         ],
       },
     },
@@ -3857,6 +3863,10 @@ export const ChallengeAcceptedHubQueryDocument = {
                             {
                               kind: 'Field',
                               name: { kind: 'Name', value: '_updatedAt' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: '_status' },
                             },
                           ],
                         },
@@ -4255,6 +4265,10 @@ export const PersonDetailDocument = {
                             {
                               kind: 'Field',
                               name: { kind: 'Name', value: '_updatedAt' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: '_status' },
                             },
                           ],
                         },

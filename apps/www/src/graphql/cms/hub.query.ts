@@ -34,6 +34,7 @@ query ChallengeAcceptedHubQuery {
         startAt
         endAt
         _updatedAt
+        _status
       }
       ... on ChallengeAcceptedArticleRecord {
         id

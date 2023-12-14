@@ -1,3 +1,4 @@
+import { CmsItemStatus } from '@app/components/cms/item-status'
 import { Share } from '@app/components/share/share'
 import { formatDate, formatEventDateRange } from '@app/lib/util/time-format'
 import { css } from '@app/styled-system/css'
@@ -25,6 +26,7 @@ type EventProps = {
     signUpLink?: string
     fullyBooked?: boolean
     _updatedAt: string
+    _status: string
   }
 
   isPage?: boolean
@@ -89,7 +91,7 @@ export const EventTeaser = ({ isMember, event }: EventProps) => {
             })}
             href={`/veranstaltungen/${event.slug}`}
           >
-            {event.title}
+            {event.title} <CmsItemStatus status={event._status} />
           </Link>
         </h2>
         <p className={css({ fontWeight: 700 })}>
