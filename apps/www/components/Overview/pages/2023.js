@@ -573,8 +573,123 @@ const text = {
       ?
     </>
   ),
-  //September: (p) => <></>,
-  //Oktober: (p) => <></>,
+  September: (p) => (
+    <>
+      Stellen Sie sich vor,{' '}
+      <Highlight {...p} ids={['E33Uu4xIT']}>
+        Sie wären steinreich und wollten in die Politik eingreifen
+      </Highlight>
+      . Ein{' '}
+      <Highlight {...p} ids={['Y4FLQHVHT']}>
+        Beschaffungsskandal
+      </Highlight>
+      ,{' '}
+      <Highlight {...p} ids={['Q0utOXDpy']}>
+        junges Theater
+      </Highlight>
+      ,{' '}
+      <Highlight {...p} ids={['VWa8Wo1rL']}>
+        junge Täter
+      </Highlight>
+      ,{' '}
+      <Highlight {...p} ids={['IV8haI_oi']}>
+        Gesundheitskosten
+      </Highlight>
+      .{' '}
+      <Highlight {...p} ids={['mTRw55AhgC']}>
+        Was die Schweiz zum Einwanderungsland macht
+      </Highlight>{' '}
+      und{' '}
+      <Highlight {...p} ids={['fd_sIUOka']}>
+        was uns die Staatsstreiche in Afrika über die neue Weltordnung sagen
+      </Highlight>
+      .{' '}
+      <Highlight {...p} ids={['rUj_uTUGR']}>
+        10 Vorschläge für eine bessere Verfassung
+      </Highlight>{' '}
+      und{' '}
+      <Highlight {...p} ids={['oEm6pdrxV']}>
+        33 Bücher gegen die Repression
+      </Highlight>
+      .{' '}
+      <Highlight {...p} ids={['f28gw-LEW']}>
+        Wie die Schweizer Medien nach rechts rücken
+      </Highlight>{' '}
+      und{' '}
+      <Highlight {...p} ids={['TFcU8PNiH']}>
+        warum sich die Meere erhitzen
+      </Highlight>
+      . Dazu:{' '}
+      <Highlight {...p} ids={['g6cOdxTkY']}>
+        Im Restaurant mit zwei Zuckerforscherinnen
+      </Highlight>
+      .
+    </>
+  ),
+  Oktober: (p) => (
+    <>
+      Krieg im Nahen Osten:{' '}
+      <Highlight {...p} ids={['qq67AcMXh']}>
+        Zwischen Empathie und Vernunft
+      </Highlight>
+      ,{' '}
+      <Highlight {...p} ids={['N-mGwhHp5']}>
+        das Trauma der jüdischen Gemeinschaft
+      </Highlight>
+      ,{' '}
+      <Highlight {...p} ids={['nyBWq1qmN']}>
+        Angst in Gaza-Stadt
+      </Highlight>{' '}
+      – und{' '}
+      <Highlight {...p} ids={['e4DoTct2l']}>
+        der Umgang mit Falschinformationen
+      </Highlight>
+      . Vor den eidgenössischen Wahlen:{' '}
+      <Highlight {...p} ids={['ASZiy2LOJ']}>
+        Sie kämpfen
+      </Highlight>{' '}
+      <Highlight {...p} ids={['Jdg6qjqxh']}>
+        um jede Stimme
+      </Highlight>
+      ,{' '}
+      <Highlight {...p} ids={['5G9Pqoyal']}>
+        er prognostiziert das Resultat
+      </Highlight>
+      . Und danach:{' '}
+      <Highlight {...p} ids={['n-zB_TmBP']}>
+        Ein Porträt zweier Parteipräsidenten
+      </Highlight>
+      ,{' '}
+      <Highlight {...p} ids={['MwIFXp7TA']}>
+        der Rechtsrutsch
+      </Highlight>{' '}
+      und{' '}
+      <Highlight {...p} ids={['Yi7zTn7Gu']}>
+        seine Bedeutung
+      </Highlight>
+      , dazu{' '}
+      <Highlight {...p} ids={['c5AZ6EWhq']}>
+        düstere Zeiten für die Digitalisierung
+      </Highlight>
+      . Ausserdem:{' '}
+      <Highlight {...p} ids={['siG4zty8E']}>
+        Ab wann erhält man ein Verfallsdatum
+      </Highlight>
+      ?{' '}
+      <Highlight {...p} ids={['n8P4yWAbf']}>
+        Die Reportage aus Kosovo
+      </Highlight>
+      ,{' '}
+      <Highlight {...p} ids={['eikZejRsQ']}>
+        Strategien für eine Energiewende
+      </Highlight>{' '}
+      und{' '}
+      <Highlight {...p} ids={['gcd2uy_fs']}>
+        ein neuer Republik-Podcast
+      </Highlight>
+      .
+    </>
+  ),
   //November: (p) => <></>,
   //Dezember: (p) => <></>,
 }

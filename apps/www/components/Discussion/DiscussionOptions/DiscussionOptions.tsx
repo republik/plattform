@@ -30,7 +30,7 @@ const DiscussionOptions = ({ documentMeta }: Props) => {
   const board = discussion?.isBoard
 
   const availableOrderBy = useMemo(() => {
-    let items
+    let items: string[]
 
     if (discussionType === 'statements') {
       items = ['DATE', 'VOTES']
@@ -70,6 +70,7 @@ const DiscussionOptions = ({ documentMeta }: Props) => {
               prefetch={false}
               passHref
               key={item}
+              legacyBehavior
             >
               <TabButton
                 border={false}

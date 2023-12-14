@@ -53,7 +53,7 @@ type LoaderProps = {
   message?: React.ReactNode
   loading: boolean
   error?: GraphQLError
-  render?: () => React.ReactNode
+  render?: () => React.ReactElement
   delay?: number
   ErrorContainer?: React.ComponentType<{ children: React.ReactNode }>
 }

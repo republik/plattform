@@ -12,10 +12,7 @@ function withForcedColorScheme<P>(
   forcedColorscheme: 'light' | 'dark',
 ): ComponentType<P> {
   const ComponentWithColorScheme = (props: P) => (
-    <ColorContextProvider
-      localColorVariables={colors}
-      colorSchemeKey={forcedColorscheme}
-    >
+    <ColorContextProvider colorSchemeKey={forcedColorscheme}>
       <Component {...props} />
     </ColorContextProvider>
   )

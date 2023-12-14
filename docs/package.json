@@ -3,34 +3,29 @@
   "version": "0.0.1",
   "private": true,
   "main": "./lib/index.ts",
-  "workspaces": {
-    "nohoist": [
-      "next"
-    ]
-  },
   "scripts": {
     "dev": "next",
     "build": "next build",
     "start": "next start"
   },
   "dependencies": {
-    "next": "^13.2.4",
-    "nextra": "^2.3.0",
-    "nextra-theme-docs": "^2.3.0",
-    "react": "^18.2.0",
-    "react-docgen": "^6.0.0-beta.6",
-    "react-dom": "^18.2.0",
-    "react-error-boundary": "^3.1.4",
-    "unist-util-visit": "^4.1.2",
-    "unist-builder": "^3.0.1",
     "@project-r/styleguide": "*",
     "@republik/icons": "*",
-    "@republik/ui-docs-demo": "*"
+    "@republik/ui-docs-demo": "*",
+    "next": "^14.0.3",
+    "nextra": "^2.13.2",
+    "nextra-theme-docs": "^2.13.2",
+    "react": "^18.2.0",
+    "react-docgen": "^7.0.1",
+    "react-dom": "^18.2.0",
+    "react-error-boundary": "^3.1.4",
+    "unist-builder": "^4.0.0",
+    "unist-util-visit": "^5.0.0"
   },
   "devDependencies": {
-    "@next/eslint-plugin-next": "^13.2.4",
+    "@next/eslint-plugin-next": "^14.0.3",
     "@republik/eslint-config-frontend": "*",
     "@republik/tsconfig": "*",
-    "@types/node": "16"
+    "@types/node": "18"
   }
 }

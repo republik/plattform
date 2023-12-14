@@ -17,7 +17,6 @@ const upsert = async (docMeta, context, legacyDiscussionId) => {
     board = null,
     tags,
     tagRequired,
-    discussionAllowedRoles,
     template,
   } = docMeta
 
@@ -41,9 +40,8 @@ const upsert = async (docMeta, context, legacyDiscussionId) => {
     ...(board !== null ? { isBoard: !!board } : {}),
     tags: tags ? tags.trim().split(',') : null,
     tagRequired: !!tagRequired,
-    allowedRoles: discussionAllowedRoles
-      ? discussionAllowedRoles.concat(DEFAULT_ROLES)
-      : DEFAULT_ROLES,
+    // TODO: get rid of allowedRoles concept in another branche
+    allowedRoles: DEFAULT_ROLES,
   }
 
   return upsertDiscussion(repoId, settings, context, legacyDiscussionId)

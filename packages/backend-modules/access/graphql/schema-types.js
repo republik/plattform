@@ -19,7 +19,6 @@ type AccessCampaign {
   id: ID!
   title: String!
   description: String
-  type: String!
   defaultMessage: String
   grants(
     "Include grants with were revoked (admin only)"

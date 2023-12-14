@@ -46,7 +46,6 @@ const ShareButton: React.FC<{
                 dialogTitle: 'Link teilen',
               },
             })
-            e.target.blur()
           } else {
             showOverlay(!overlay)
           }

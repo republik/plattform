@@ -1,9 +1,27 @@
 {
-  "*": { "type": "page" },
-  "index": { "title": "Introduction", "display": "hidden" },
-  "ux": { "title": "UX Guidelines" },
-  "design-system": { "title": "Design System" },
-  "components": { "title": "Components" },
-  "about": { "display": "hidden" },
-  "playground": { "display": "hidden" }
+  "*": {
+    "type": "page"
+  },
+  "index": {
+    "title": "Introduction",
+    "display": "hidden"
+  },
+  "architecture": {
+    "title": "Architecture"
+  },
+  "ux": {
+    "title": "UX Guidelines"
+  },
+  "design-system": {
+    "title": "Design System"
+  },
+  "components": {
+    "title": "Components"
+  },
+  "about": {
+    "display": "hidden"
+  },
+  "playground": {
+    "display": "hidden"
+  }
 }

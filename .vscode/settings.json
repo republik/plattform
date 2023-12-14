@@ -1,3 +1,5 @@
 {
-  "mdx.experimentalLanguageServer": true
+  "mdx.experimentalLanguageServer": true,
+  "jest.jestCommandLine": "yarn test",
+  "jest.rootPath": "packages/backend-modules/testing"
 }

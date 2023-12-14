@@ -119,6 +119,7 @@ const Frame = ({
    * (This will not be applied to the header, footer and body of the page)
    */
   customContentColorContext,
+  hideCTA = false,
 }) => {
   const { inNativeApp, inNativeAppLegacy } = useInNativeApp()
   const { t } = useTranslation()
@@ -157,6 +158,7 @@ const Frame = ({
         <div
           {...(footer || inNativeApp ? styles.bodyGrower : undefined)}
           {...(!isOnMarketingPage && padHeaderRule)}
+          {...styles.page}
         >
           {!!meta && <Meta data={meta} />}
           <Header
@@ -185,7 +187,7 @@ const Frame = ({
               localColorVariables={customContentColorContext}
             >
               <div {...styles.page}>
-                <CallToActionBanner />
+                {!hideCTA && <CallToActionBanner />}
                 {raw ? (
                   <>{children}</>
                 ) : (
@@ -221,6 +223,7 @@ Frame.propTypes = {
   pageColorSchemeKey: PropTypes.string,
   containerMaxWidth: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   customContentColorContext: PropTypes.object,
+  hideCTA: PropTypes.bool,
 }
 
 export default Frame

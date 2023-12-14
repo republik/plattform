@@ -9,13 +9,7 @@ import withT from '../../../lib/withT'
 
 const { H3 } = Interaction
 
-const Grants = ({
-  campaign,
-  givingMemberships,
-  isRegularCampaign,
-  revokeAccess,
-  t,
-}) => {
+const Grants = ({ campaign, givingMemberships, revokeAccess, t }) => {
   if (campaign.grants.length === 0) {
     return null
   }
@@ -26,11 +20,7 @@ const Grants = ({
         <H3 style={{ marginTop: 30 }}>
           {t.pluralize(
             `Account/Access/Campaigns/Grants${
-              givingMemberships
-                ? '/givingMemberships'
-                : !isRegularCampaign
-                ? '/reducedCampaign'
-                : ''
+              givingMemberships ? '/givingMemberships' : ''
             }/title`,
             {
               count: campaign.slots.used,
@@ -44,7 +34,6 @@ const Grants = ({
             givingMemberships={givingMemberships}
             key={`grant-${key}`}
             grant={grant}
-            isRegularCampaign={isRegularCampaign}
             revokeAccess={revokeAccess}
           />
         ))}

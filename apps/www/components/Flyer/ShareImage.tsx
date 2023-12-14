@@ -14,6 +14,7 @@ import {
   useMediaQuery,
   CustomDescendant,
   flyerSchema,
+  CustomElement,
 } from '@project-r/styleguide'
 
 import { useTranslation } from '../../lib/withT'
@@ -78,7 +79,7 @@ const Branding: React.FC = () => {
 
 const ShareImage: React.FC<{
   tileId: string
-  value: CustomDescendant[]
+  value: CustomElement[]
   showAll?: boolean
 }> = ({ tileId, value, showAll }) => {
   return (

@@ -2,13 +2,13 @@
   "name": "@republik/icons",
   "version": "0.0.0",
   "private": true,
-  "types": "dist/types/index.d.ts",
-  "main": "dist/icons.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/icons.js",
-      "require": "./dist/icons.cjs",
-      "types": "./dist/types/index.d.ts"
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "types": "./dist/index.d.ts"
     }
   },
   "files": [
@@ -16,15 +16,13 @@
   ],
   "type": "module",
   "scripts": {
-    "generate:icons": "svgr --out-dir ./lib/components ./lib/svg",
+    "generate:icons": "svgr --out-dir ./lib/components ./lib/svg --silent",
     "dev": "nodemon --watch lib/svg --exec 'yarn build'",
-    "build": "yarn generate:icons && tsc && vite build"
+    "build": "yarn generate:icons && tsup lib/components/index.ts --format cjs,esm --dts --minify --clean --out-dir dist"
   },
   "devDependencies": {
     "@svgr/cli": "^6.1.2",
-    "@vitejs/plugin-react": "^3.1.0",
-    "vite": "^4.1.0",
-    "vite-plugin-dts": "^1.7.3"
+    "tsup": "^7.2.0"
   },
   "peerDependencies": {
     "react": ">=17.0.0"

@@ -1,0 +1,92 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "dev:www (staging proxy)",
+      "dependsOn": ["dev:www-server", "tsc:www", "proxy:staging"],
+      "problemMatcher": []
+    },
+    {
+      "label": "dev:www (prod proxy)",
+      "dependsOn": ["dev:www-server", "tsc:www", "proxy:prod"],
+      "problemMatcher": []
+    },
+    {
+      "label": "Install depencencies",
+      "type": "shell",
+      "command": "yarn",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "presentation": {
+        "panel": "new",
+        "close": true
+      }
+    },
+    {
+      "label": "dev:www-server",
+      "type": "shell",
+      "command": "yarn turbo run dev --filter=@orbiting/www-app...",
+      "presentation": {
+        "group": "dev",
+        "panel": "dedicated",
+        "close": true,
+        "showReuseMessage": false
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "dev:docs",
+      "type": "shell",
+      "command": "yarn turbo run dev --filter=@republik/docs...",
+      "presentation": {
+        "group": "dev",
+        "panel": "dedicated",
+        "close": true,
+        "showReuseMessage": false
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "proxy:staging",
+      "type": "shell",
+      "command": "yarn yaproxy:staging",
+      "presentation": {
+        "group": "dev",
+        "panel": "dedicated",
+        "close": true,
+        "showReuseMessage": false
+      },
+      "isBackground": true,
+      "problemMatcher": []
+    },
+    {
+      "label": "proxy:prod",
+      "type": "shell",
+      "command": "yarn yaproxy",
+      "presentation": {
+        "group": "dev",
+        "panel": "dedicated",
+        "close": true,
+        "showReuseMessage": false
+      },
+      "isBackground": true,
+      "problemMatcher": []
+    },
+    {
+      "type": "typescript",
+      "tsconfig": "apps/www/tsconfig.json",
+      "option": "watch",
+      "problemMatcher": [{ "base": "$tsc-watch", "applyTo": "allDocuments" }],
+      "label": "tsc:www",
+      "presentation": {
+        "group": "dev",
+        "panel": "dedicated",
+        "close": true,
+        "showReuseMessage": false
+      },
+      "isBackground": true
+    }
+  ]
+}

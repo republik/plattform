@@ -20,36 +20,26 @@ import Logo from './Logo'
 import Community from './Community'
 import Pledge from './Pledge'
 import { useMarketingPageQuery } from './graphql/MarketingPageQuery.graphql'
-import ClimateLabTeaser from '../Climatelab/FrontTeaser/ClimateLabTeaser'
 import SectionContainer from './Common/SectionContainer'
+import ChallengeAcceptedMarketingTeaser from '../ChallengeAccepted/ChallengeAcceptedMarketingTeaser'
 
 const Marketing = ({
   data: { loading: meLoading, error: meError, meGuidance },
 }) => {
   const hasActiveMembership = meGuidance && !!meGuidance.activeMembership
-  const hasSpecialAccessGrants = meGuidance?.accessGrants?.filter(
-    (grant) => grant.campaign.type === 'REDUCED',
-  ).length
   const { inNativeApp, inNativeIOSApp } = useInNativeApp()
 
   const { data, loading, error } = useMarketingPageQuery()
 
   return (
     <>
-      {/* TODO: as soon as we do not have member role for climate users only
-      should we display another box for climate users or should we just not 
-      display it like it's done here */}
-      {!meLoading &&
-        meGuidance &&
-        !hasActiveMembership &&
-        !hasSpecialAccessGrants &&
-        !inNativeIOSApp && (
-          <Box>
-            <MainContainer>
-              <UserGuidance />
-            </MainContainer>
-          </Box>
-        )}
+      {!meLoading && meGuidance && !hasActiveMembership && !inNativeIOSApp && (
+        <Box>
+          <MainContainer>
+            <UserGuidance />
+          </MainContainer>
+        </Box>
+      )}
       {meError && (
         <ErrorMessage error={meError} style={{ textAlign: 'center' }} />
       )}
@@ -59,10 +49,10 @@ const Marketing = ({
       <Carpet loading={loading} front={data.carpet} />
       <Reasons inNativeApp={inNativeApp} />
       {inNativeApp && <MarketingTrialForm />}
-      <Sections />
       <SectionContainer maxWidth={'100%'} padding='0'>
-        <ClimateLabTeaser />
+        <ChallengeAcceptedMarketingTeaser />
       </SectionContainer>
+      <Sections />
       <Team loading={loading} error={error} employees={data.team} />
       <Community
         loading={loading}
@@ -85,9 +75,6 @@ const query = gql`
       }
       accessGrants {
         id
-        campaign {
-          type
-        }
       }
     }
   }

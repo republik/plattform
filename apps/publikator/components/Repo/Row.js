@@ -1,7 +1,4 @@
-import {
-  IconLock,
-  IconPublic
-} from '@republik/icons'
+import { IconLock, IconPublic } from '@republik/icons'
 
 import { A, Label, colors } from '@project-r/styleguide'
 
@@ -60,7 +57,7 @@ const RepoRow = ({ repo, showPhases }) => {
             <br />
           </>
         )}
-        <Link href={`repo/${id}/tree`} passHref>
+        <Link href={`repo/${id}/tree`} passHref legacyBehavior>
           <A title={id}>{getTitle(repo)}</A>
         </Link>
       </Td>

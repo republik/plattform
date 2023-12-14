@@ -38,7 +38,7 @@
     "dev": "tsc -w --project tsconfig.dist.json",
     "test": "jest",
     "test:dev": "jest --watch",
-    "translations-raw": "NODE_OPTIONS='-r dotenv/config' gsheets --key=1sMS5u4SIFY2loAmx8jftDXqTbq2RheJLY7FBeXSm1Tc --title=live --pretty --out src/lib/translations.json",
+    "translations-raw": "NODE_OPTIONS='-r dotenv/config' gsheets --key=1MAYxcThiYZ8L2wTrFITxmjSYnoxBPmv2QFFQtfWtwDc --title=live --pretty --out src/lib/translations.json",
     "translations": "yarn translations-raw && git add -p src/lib/translations.json && git checkout -- src/lib/translations.json"
   },
   "dependencies": {
@@ -51,7 +51,7 @@
     "use-memo-one": "^1.1.2"
   },
   "devDependencies": {
-    "@apollo/client": "~3.8.1",
+    "@apollo/client": "~3.8.4",
     "@babel/standalone": "^7.15.8",
     "@republik/eslint-config-frontend": "*",
     "@republik/icons": "*",
@@ -64,8 +64,8 @@
     "@types/jest": "^29.5.1",
     "@types/node": "^16.11.6",
     "@types/prop-types": "^15.7.4",
-    "@types/react": "^18.0.28",
-    "@types/react-dom": "^18.0.11",
+    "@types/react": "^18.2.22",
+    "@types/react-dom": "^18.2.7",
     "babel-jest": "^29.5.0",
     "clipboard-copy": "^4.0.1",
     "d3-array": "^1.2.1",
@@ -101,7 +101,7 @@
     "validate-commit-msg": "^2.14.0"
   },
   "peerDependencies": {
-    "@apollo/client": "~3.8.1",
+    "@apollo/client": "~3.8.4",
     "@republik/icons": "*",
     "d3-array": "1.x",
     "d3-color": "1.x",

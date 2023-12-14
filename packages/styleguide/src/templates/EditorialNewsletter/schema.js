@@ -14,7 +14,7 @@ import {
 } from '@republik/mdast-react-render'
 
 import { FigureImage } from '../../components/Figure'
-import { If, Else, Variable } from '../../components/Variables'
+import { Variable } from '../../components/Variables'
 
 import {
   extractImages,
@@ -23,6 +23,8 @@ import {
   matchImagesParagraph,
   matchSpanType,
 } from '../Article/utils'
+import ifRule from '../shared/email/rules/ifRule'
+import elseRule from '../shared/email/rules/elseRule'
 
 const matchLast = (node, index, parent) => index === parent.children.length - 1
 
@@ -305,37 +307,8 @@ const createNewsletterSchema = ({
                   formatButtonText: 'Zwischentitel',
                 },
               },
-              {
-                matchMdast: matchZone('IF'),
-                component: If,
-                props: (node) => ({
-                  present: node.data.present,
-                }),
-                editorModule: 'variableCondition',
-                editorOptions: {
-                  type: 'IF',
-                  insertBlocks: ['greeting', 'hasAccess'],
-                  insertTypes: ['PARAGRAPH'],
-                  fields: [
-                    {
-                      key: 'present',
-                      items: [
-                        { value: 'firstName', text: 'Vorname' },
-                        { value: 'lastName', text: 'Nachname' },
-                        { value: 'hasAccess', text: 'Magazin-Zugriff' },
-                      ],
-                    },
-                  ],
-                },
-              },
-              {
-                matchMdast: matchZone('ELSE'),
-                component: Else,
-                editorModule: 'variableCondition',
-                editorOptions: {
-                  type: 'ELSE',
-                },
-              },
+              ifRule,
+              elseRule,
               {
                 matchMdast: matchZone('BUTTON'),
                 component: Button,

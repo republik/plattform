@@ -1,0 +1,66 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:base"],
+  "automerge": false,
+  "commitMessagePrefix": "chore(renovate): ",
+  "labels": ["renovate", "maintenance"],
+  "schedule": ["every wednesday"],
+  "vulnerabilityAlerts": {
+    "schedule": ["at any time"],
+    "labels": ["renovate", "maintenance", "security"]
+  },
+  "packageRules": [
+    {
+      "enabled": false,
+      "packagePatterns": ["*"]
+    },
+    {
+      "enabled": true,
+      "description": "All Next.js dependencies are updated to the latest minor or patch version.",
+      "matchDepPatterns": ["next", "@next/*"],
+      "matchUpdateTypes": ["major", "minor", "patch", "pin"]
+    },
+    {
+      "enabled": true,
+      "description": "All React dependencies are updated to the latest minor or patch version.",
+      "matchDepPatterns": [
+        "react",
+        "react-dom",
+        "@types/react",
+        "@types/react-dom"
+      ],
+      "matchUpdateTypes": ["major", "minor", "patch", "pin"]
+    },
+    {
+      "enabled": true,
+      "description": "All Apollo dependencies are updated to the latest minor or patch version.",
+      "matchDepPatterns": [
+        "@apollo/*",
+        "apollo-*",
+        "apollo",
+        "graphql",
+        "graphql-tag",
+        "graphql-tools",
+        "graphql-type-json",
+        "graphql-upload",
+        "graphql-ws",
+        "subscriptions-transport-ws"
+      ]
+    },
+    {
+      "enabled": true,
+      "description": "All testing dependencies are updated to the latest minor or patch version.",
+      "matchDepPatterns": [
+        "@testing-library/*",
+        "@types/jest",
+        "@types/testing-library__jest-dom",
+        "@types/testing-library__react",
+        "jest",
+        "jest-dom",
+        "react-test-renderer",
+        "ts-jest"
+      ],
+      "matchUpdateTypes": ["major", "minor", "patch"]
+    }
+  ]
+}

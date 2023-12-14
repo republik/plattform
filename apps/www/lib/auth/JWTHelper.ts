@@ -8,13 +8,13 @@ export type JWTPayload = jose.JWTPayload & {
 }
 
 export function getSessionCookieValue(req: NextRequest): string {
-  const { value } = req.cookies.getWithOptions(COOKIE_NAME)
-  return value
+  const cookie = req.cookies.get(COOKIE_NAME)
+  return cookie?.value
 }
 
 export function getJWTCookieValue(req: NextRequest) {
-  const { value } = req.cookies.getWithOptions(JWT_COOKIE_NAME)
-  return value
+  const cookie = req.cookies.get(JWT_COOKIE_NAME)
+  return cookie?.value
 }
 
 /**

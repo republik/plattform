@@ -70,7 +70,7 @@ export const VIDEOS = {
 export const Page = ({ router, t, inNativeIOSApp }) => {
   const [colorScheme] = useColorContext()
   const pledgeLink = inNativeIOSApp ? null : (
-    <Link href='/angebote' passHref>
+    <Link href='/angebote' passHref legacyBehavior>
       <A>Jetzt mitmachen!</A>
     </Link>
   )
@@ -140,7 +140,7 @@ export const Page = ({ router, t, inNativeIOSApp }) => {
         <Box style={{ padding: 14, marginBottom: 20 }}>
           <Interaction.P>
             {t('crowdfunding/beforeNote')}{' '}
-            <Link href='/cockpit' passHref>
+            <Link href='/cockpit' passHref legacyBehavior>
               <A>{t('crowdfunding/beforeNote/link')}</A>
             </Link>
           </Interaction.P>
@@ -296,7 +296,7 @@ export const Page = ({ router, t, inNativeIOSApp }) => {
 
         <P>
           Die Kurzporträts der Crew finden Sie{' '}
-          <Link href='/impressum' passHref>
+          <Link href='/impressum' passHref legacyBehavior>
             <A>hier</A>
           </Link>
           . Und dazu im Video die Lesung unseres{' '}
@@ -619,7 +619,7 @@ export const Page = ({ router, t, inNativeIOSApp }) => {
         <P>Willkommen an Bord!</P>
         <br />
         {!inNativeIOSApp && (
-          <Link href='/angebote' key='pledge' passHref>
+          <Link href='/angebote' key='pledge' passHref legacyBehavior>
             <Button primary style={{ minWidth: 300 }}>
               Jetzt mitmachen!
             </Button>
@@ -651,7 +651,7 @@ export const Page = ({ router, t, inNativeIOSApp }) => {
           />
         </div>
 
-        <Link href='/community' passHref>
+        <Link href='/community' passHref legacyBehavior>
           <A>Alle ansehen</A>
         </Link>
 
@@ -660,7 +660,7 @@ export const Page = ({ router, t, inNativeIOSApp }) => {
         <br />
       </ContainerWithSidebar>
     </Frame>
-  )
+  );
 }
 
 export default withDefaultSSR(withRouter(withT(withInNativeApp(Page))))

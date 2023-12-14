@@ -31,6 +31,7 @@ type PlainText = {
 export type CustomText = CustomMarks & PlainText
 
 type SharedElement = {
+  id?: string
   children: (CustomElement | CustomText)[]
   template?: NodeTemplate
 }

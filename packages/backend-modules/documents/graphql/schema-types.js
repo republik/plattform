@@ -133,15 +133,17 @@ type Meta {
   paynoteMode: PaynoteMode
   
   isRestricted: Boolean
+  
+  sendAsEmail: Boolean
 }
 
-enum DocumentType {
+enum DocumenSchemaType {
   mdast
   slate
 }
 
 input DocumentInput {
-  type: DocumentType
+  type: DocumenSchemaType
   content: JSON!
 }
 
@@ -150,7 +152,7 @@ type Document {
   repoId: ID!
   issuedForUserId: ID
 
-  type: DocumentType!
+  type: DocumenSchemaType!
   content: JSON!
 
   meta: Meta!
@@ -194,7 +196,7 @@ type DocumentZone {
   identifier: String!
   data: JSON!
   text: String
-  type: DocumentType!
+  type: DocumenSchemaType!
   node: JSON!
   document: Document
 }
