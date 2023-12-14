@@ -3357,7 +3357,7 @@ export const EventsQueryDocument = {
               {
                 kind: 'Argument',
                 name: { kind: 'Name', value: 'orderBy' },
-                value: { kind: 'EnumValue', value: 'startAt_DESC' },
+                value: { kind: 'EnumValue', value: 'startAt_ASC' },
               },
             ],
             selectionSet: {

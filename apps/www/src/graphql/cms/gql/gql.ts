@@ -15,7 +15,7 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
 const documents = {
   '\n  fragment EventRecordFields on EventRecord {\n    id\n    title\n    slug\n    description {\n      value\n    }\n    membersOnly\n    nonMemberCta {\n      value\n    }\n    fullyBooked\n    signUpLink\n    location\n    locationLink\n    startAt\n    endAt\n    _updatedAt\n  }\n':
     types.EventRecordFieldsFragmentDoc,
-  '\n  query EventsQuery($today: DateTime!) {\n    events: allEvents(filter: {OR: [{startAt: {gte: $today}}, {endAt: {gte: $today}}]}, orderBy: startAt_DESC) {\n      ...EventRecordFields\n    }\n    pastEvents: allEvents(filter: {AND: [{startAt: {lt: $today}}, {endAt: {lt: $today}}]}, orderBy: startAt_DESC) {\n      ...EventRecordFields\n    }\n  }\n':
+  '\n  query EventsQuery($today: DateTime!) {\n    events: allEvents(filter: {OR: [{startAt: {gte: $today}}, {endAt: {gte: $today}}]}, orderBy: startAt_ASC) {\n      ...EventRecordFields\n    }\n    pastEvents: allEvents(filter: {AND: [{startAt: {lt: $today}}, {endAt: {lt: $today}}]}, orderBy: startAt_DESC) {\n      ...EventRecordFields\n    }\n  }\n':
     types.EventsQueryDocument,
   '\n  query EventQuery($slug: String) {\n    event(filter: { slug: { eq: $slug }}) {\n      ...EventRecordFields\n    }\n  }\n':
     types.EventQueryDocument,
@@ -55,8 +55,8 @@ export function gql(
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(
-  source: '\n  query EventsQuery($today: DateTime!) {\n    events: allEvents(filter: {OR: [{startAt: {gte: $today}}, {endAt: {gte: $today}}]}, orderBy: startAt_DESC) {\n      ...EventRecordFields\n    }\n    pastEvents: allEvents(filter: {AND: [{startAt: {lt: $today}}, {endAt: {lt: $today}}]}, orderBy: startAt_DESC) {\n      ...EventRecordFields\n    }\n  }\n',
-): typeof documents['\n  query EventsQuery($today: DateTime!) {\n    events: allEvents(filter: {OR: [{startAt: {gte: $today}}, {endAt: {gte: $today}}]}, orderBy: startAt_DESC) {\n      ...EventRecordFields\n    }\n    pastEvents: allEvents(filter: {AND: [{startAt: {lt: $today}}, {endAt: {lt: $today}}]}, orderBy: startAt_DESC) {\n      ...EventRecordFields\n    }\n  }\n']
+  source: '\n  query EventsQuery($today: DateTime!) {\n    events: allEvents(filter: {OR: [{startAt: {gte: $today}}, {endAt: {gte: $today}}]}, orderBy: startAt_ASC) {\n      ...EventRecordFields\n    }\n    pastEvents: allEvents(filter: {AND: [{startAt: {lt: $today}}, {endAt: {lt: $today}}]}, orderBy: startAt_DESC) {\n      ...EventRecordFields\n    }\n  }\n',
+): typeof documents['\n  query EventsQuery($today: DateTime!) {\n    events: allEvents(filter: {OR: [{startAt: {gte: $today}}, {endAt: {gte: $today}}]}, orderBy: startAt_ASC) {\n      ...EventRecordFields\n    }\n    pastEvents: allEvents(filter: {AND: [{startAt: {lt: $today}}, {endAt: {lt: $today}}]}, orderBy: startAt_DESC) {\n      ...EventRecordFields\n    }\n  }\n']
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
