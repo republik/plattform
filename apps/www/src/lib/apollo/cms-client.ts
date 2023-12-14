@@ -19,12 +19,15 @@ export function getCMSClient(): NextSSRApolloClient<NormalizedCacheObject> {
 
   const headers = {
     Authorization: process.env.DATO_CMS_API_TOKEN,
-    'X-Include-Drafts': process.env.DATO_CMS_INCLUDE_DRAFTS,
     'X-Exclude-Invalid': 'true',
   }
 
   if (process.env.DATO_CMS_ENVIRONMENT) {
     headers['X-Environment'] = process.env.DATO_CMS_ENVIRONMENT
+  }
+
+  if (process.env.DATO_CMS_INCLUDE_DRAFTS === 'true') {
+    headers['X-Include-Drafts'] = 'true'
   }
 
   return new NextSSRApolloClient({
