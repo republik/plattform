@@ -65,7 +65,7 @@ export function usePullToRefresh(
       // get the initial Y position
       const initialY = startEvent.touches[0].clientY
 
-      el.addEventListener('touchmove', handleTouchMove)
+      el.addEventListener('touchmove', handleTouchMove, { passive: true })
       el.addEventListener('touchend', handleTouchEnd)
       document.documentElement.style.overscrollBehaviorY = 'none'
 
@@ -124,7 +124,7 @@ export function usePullToRefresh(
       }
     }
 
-    window.addEventListener('touchstart', handleTouchStart)
+    window.addEventListener('touchstart', handleTouchStart, { passive: true })
 
     return () => {
       window.removeEventListener('touchstart', handleTouchStart)
