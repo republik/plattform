@@ -1,6 +1,6 @@
 import { css } from '@app/styled-system/css'
 
-export const CmsItemStatus = ({ status }: { status: string }) => {
+export const CMSItemStatus = ({ status }: { status: string }) => {
   if (status === 'published') {
     return null
   }

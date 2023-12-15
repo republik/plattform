@@ -1,4 +1,4 @@
-import { CmsItemStatus } from '@app/components/cms/item-status'
+import { CMSItemStatus } from '@app/components/cms/item-status'
 import { Share } from '@app/components/share/share'
 import { formatEventDateRange } from '@app/lib/util/time-format'
 import { css } from '@app/styled-system/css'
@@ -74,7 +74,7 @@ export const EventTeaser = ({ isPage, isMember, event }: EventProps) => {
               mt: '-0.1lh',
             })}
           >
-            {event.title} <CmsItemStatus status={event._status} />
+            {event.title} <CMSItemStatus status={event._status} />
           </h1>
         ) : (
           <h2
@@ -86,7 +86,7 @@ export const EventTeaser = ({ isPage, isMember, event }: EventProps) => {
             })}
           >
             <Link href={`/veranstaltungen/${event.slug}`}>
-              {event.title} <CmsItemStatus status={event._status} />
+              {event.title} <CMSItemStatus status={event._status} />
             </Link>
           </h2>
         )}

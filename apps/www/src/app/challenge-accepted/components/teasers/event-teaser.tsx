@@ -1,4 +1,4 @@
-import { CmsItemStatus } from '@app/components/cms/item-status'
+import { CMSItemStatus } from '@app/components/cms/item-status'
 import { Share } from '@app/components/share/share'
 import {
   formatDateShort,
@@ -94,7 +94,7 @@ export const EventTeaser = ({ isMember, event }: EventProps) => {
             })}
             href={`/veranstaltungen/${event.slug}`}
           >
-            {event.title} <CmsItemStatus status={event._status} />
+            {event.title} <CMSItemStatus status={event._status} />
           </Link>
         </h2>
         <p className={css({ fontWeight: 700 })}>
