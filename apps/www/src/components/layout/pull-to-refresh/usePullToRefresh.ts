@@ -67,6 +67,7 @@ export function usePullToRefresh(
 
       el.addEventListener('touchmove', handleTouchMove)
       el.addEventListener('touchend', handleTouchEnd)
+      document.documentElement.style.overscrollBehaviorY = 'none'
 
       function handleTouchMove(moveEvent: TouchEvent) {
         const el = ref.current
@@ -110,13 +111,14 @@ export function usePullToRefresh(
         // cleanup
         el.removeEventListener('touchmove', handleTouchMove)
         el.removeEventListener('touchend', handleTouchEnd)
+        document.documentElement.style.overscrollBehaviorY = null
       }
 
       function onTransitionEnd() {
         const el = ref.current
         if (!el) return
         setIndicatorState(IndicatorState.HIDDEN)
-        el.style.transition = ''
+        el.style.transition = null
         // cleanup
         el.removeEventListener('transitionend', onTransitionEnd)
       }
