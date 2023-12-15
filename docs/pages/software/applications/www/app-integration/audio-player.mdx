@@ -50,19 +50,22 @@ In order to receive events from the native app, the react-hook `useNativeAppEven
 
 ```ts
 useNativeAppEvent<string>(
-    AudioEvent.QUEUE_ADVANCE,
-    async (itemId) => {
-      const isHeadOfQueue =
-        audioQueue && audioQueue.length > 0 && audioQueue[0].id === itemId
-      const isActiveItem = activePlayerItem && activePlayerItem.id === itemId
-      if (isHeadOfQueue || isActiveItem) {
-        // HasOptedOutFromAutoPlay might be null, which should then result in 'true'
-        await onQueueAdvance(isAutoPlayEnabled)
-      }
-    },
-    [initialized, activePlayerItem, isAutoPlayEnabled],
-  )
+  AudioEvent.QUEUE_ADVANCE,
+  async (itemId) => {
+    const isHeadOfQueue =
+      audioQueue && audioQueue.length > 0 && audioQueue[0].id === itemId
+    const isActiveItem = activePlayerItem && activePlayerItem.id === itemId
+    if (isHeadOfQueue || isActiveItem) {
+      // HasOptedOutFromAutoPlay might be null, which should then result in 'true'
+      await onQueueAdvance(isAutoPlayEnabled)
+    }
+  },
+  [initialized, activePlayerItem, isAutoPlayEnabled],
+)
 ```
+
+Most of the communication received by the web-view is handled in the [AudioPlayerController](https://github.com/republik/plattform/blob/main/apps/www/components/Audio/AudioPlayerController.tsx) component.
+
 ### Events
 
 | Event name | Description |
@@ -104,3 +107,12 @@ sequenceDiagram
   end
   
 ```
+
+## References
+
+- [react-native-track-player](https://rntp.dev/)
+
+- [postMessage docs](https://github.com/react-native-webview/react-native-webview/blob/master/docs/Reference.md#postmessagestr)
+
+- [react-native onMessage](https://github.com/react-native-webview/react-native-webview/blob/master/docs/Reference.md#onmessage)
+

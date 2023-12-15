@@ -7,6 +7,7 @@ export const PERSON_DETAIL_QUERY = gql(`
       logo {
         url
       }
+      newsletterSignupTagline
     }
     person: challengeAcceptedPerson(filter: {slug: {eq: $slug}}) {
       id
@@ -42,6 +43,8 @@ export const PERSON_DETAIL_QUERY = gql(`
         locationLink
         startAt
         endAt
+        _updatedAt
+        _status
       }
       ... on ChallengeAcceptedArticleRecord {
         id
