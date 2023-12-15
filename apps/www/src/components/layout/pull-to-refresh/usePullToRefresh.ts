@@ -26,7 +26,7 @@ export function usePullToRefresh(
     pullResistance?: number
   } = {
     maxPullDistance: 240,
-    triggerThreshold: 240 * 0.5,
+    triggerThreshold: 240,
     pullResistance: 0.6,
   },
 ): IndicatorState {
@@ -58,6 +58,8 @@ export function usePullToRefresh(
     }
     element.style.transition = 'transform 0.2s ease-in-out'
 
+    console.log(indicatorState)
+
     function handleTouchStart(startEvent: TouchEvent) {
       const el = ref.current
       if (!el || window.scrollY !== 0) return
@@ -68,6 +70,10 @@ export function usePullToRefresh(
       el.addEventListener('touchmove', handleTouchMove, { passive: true })
       el.addEventListener('touchend', handleTouchEnd)
       document.documentElement.style.overscrollBehaviorY = 'none'
+      document.documentElement.style.setProperty(
+        '--pull-to-refresh-progress',
+        '0',
+      )
 
       function handleTouchMove(moveEvent: TouchEvent) {
         const el = ref.current
@@ -82,29 +88,40 @@ export function usePullToRefresh(
           return
         }
 
-        if (dy > triggerThreshold / 0.3) {
+        const progress = Math.min(1, dy / triggerThreshold)
+        document.documentElement.style.setProperty(
+          '--pull-to-refresh-progress',
+          progress.toString(),
+        )
+
+        if (dy > triggerThreshold * 0.3) {
+          console.log('pulling')
           setIndicatorState(IndicatorState.PULLING)
         }
 
-        if (dy > triggerThreshold / 0.8) {
+        if (dy > triggerThreshold) {
+          console.log('triggered')
           setIndicatorState(IndicatorState.TRIGGERED)
         }
+
+        el.style.transform = `translateY(${appr(dy)}px)`
+      }
+
+      function handleTouchEnd(endEvent: TouchEvent) {
+        const el = ref.current
+        if (!el) return
+
+        const currentY = endEvent.changedTouches[0].clientY
+        const dy = currentY - initialY
 
         if (dy > triggerThreshold) {
           setIndicatorState(IndicatorState.LOADING)
           callbackRef?.current()
         }
 
-        el.style.transform = `translateY(${appr(dy)}px)`
-      }
-
-      function handleTouchEnd() {
-        const el = ref.current
-        if (!el) return
-
         // return the element to its initial position
         el.style.transform = 'translateY(0)'
-        el.style.transition = 'transform 0.2s'
+        el.style.transition = 'transform 0.2s ease-in-out'
 
         el.addEventListener('transitionend', onTransitionEnd)
 
@@ -112,11 +129,16 @@ export function usePullToRefresh(
         el.removeEventListener('touchmove', handleTouchMove)
         el.removeEventListener('touchend', handleTouchEnd)
         document.documentElement.style.overscrollBehaviorY = null
+        document.documentElement.style.setProperty(
+          '--pull-to-refresh-progress',
+          '',
+        )
       }
 
       function onTransitionEnd() {
         const el = ref.current
         if (!el) return
+
         setIndicatorState(IndicatorState.HIDDEN)
         el.style.transition = null
         // cleanup
