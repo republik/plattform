@@ -26,6 +26,10 @@ export function getCMSClient(): NextSSRApolloClient<NormalizedCacheObject> {
     headers['X-Environment'] = process.env.DATO_CMS_ENVIRONMENT
   }
 
+  if (process.env.DATO_CMS_INCLUDE_DRAFTS === 'true') {
+    headers['X-Include-Drafts'] = 'true'
+  }
+
   return new NextSSRApolloClient({
     cache: new NextSSRInMemoryCache(),
     link: new HttpLink({

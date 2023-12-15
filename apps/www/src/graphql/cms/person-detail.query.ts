@@ -44,6 +44,7 @@ export const PERSON_DETAIL_QUERY = gql(`
         startAt
         endAt
         _updatedAt
+        _status
       }
       ... on ChallengeAcceptedArticleRecord {
         id
