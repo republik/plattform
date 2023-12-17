@@ -59,10 +59,7 @@ const pledgeQuery = gql`
 class PledgeReceivePayment extends Component {
   constructor(props, context) {
     super(props, context)
-
     const { query, t } = props
-    console.log(query)
-
     const state = (this.state = {})
     if (query.orderID) {
       if (query.STATUS === '9' || query.STATUS === '91') {
