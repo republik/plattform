@@ -1,4 +1,5 @@
 export type DatatransBody = {
+  amount: number
   paymentMethods: string[]
   option: {
     createAlias: boolean

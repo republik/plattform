@@ -1,5 +1,6 @@
 import { ConnectionContext } from '@orbiting/backend-modules-types'
 import { DatatransTransactionWithMethod } from './types'
+import { getAliasString, getTransaction, isPreAuthorized } from './helpers'
 
 type PaymentSourceRow = {
   id: string
@@ -18,7 +19,7 @@ export const getDefaultPaymentSource = async (
 ) => {
   const [paymentSource] = <PaymentSourceRow[]>(
     await pgdb.public.paymentSources.find(
-      { userId },
+      { userId, 'pspId !=': null },
       { orderBy: { createdAt: 'desc' }, limit: 1 },
     )
   )
@@ -46,4 +47,43 @@ export const normalizePaymentSource = (row: any) => {
     expYear: details?.expiryYear,
     isExpired: false,
   }
+}
+
+export const addPaymentSource = async (
+  sourceId: string,
+  userId: string,
+  pgdb: ConnectionContext['pgdb'],
+) => {
+  const paymentSource = await pgdb.public.paymentSources.findOne({
+    id: sourceId,
+    userId,
+    method: 'DATATRANS',
+  })
+
+  if (!paymentSource) {
+    throw new Error('sourceId not found')
+  }
+
+  if (paymentSource.pspId) {
+    throw new Error('unable to add paymentSource (added already)')
+  }
+
+  const transactionId = paymentSource.pspPayload.transactionId
+  if (!transactionId) {
+    throw new Error('transactionId not available')
+  }
+
+  const transaction = await getTransaction(transactionId)
+  if (!isPreAuthorized(transaction)) {
+    throw new Error('transaction did not succeed')
+  }
+
+  await pgdb.public.paymentSources.updateOne(
+    { id: sourceId },
+    {
+      pspId: getAliasString(transaction),
+      pspPayload: transaction,
+      updatedAt: new Date(),
+    },
+  )
 }

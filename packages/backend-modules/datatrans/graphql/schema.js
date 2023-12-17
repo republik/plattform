@@ -5,14 +5,18 @@ schema {
 }
 
 type mutations {
-  datatransInit(
-    pledgeId: ID!
-    service: DatatransService
-  ): DatatransInitResponse!
   datatransAuthorize(
     pledgeId: ID!
     sourceId: ID!
   ): DatatransAuthorizeResponse!
+  datatransInit(
+    pledgeId: ID!
+    service: DatatransService!
+  ): DatatransInitResponse!
+  datatransRegistration(
+    service: DatatransService!
+    companyId: ID!
+  ): DatatansRegistrationResponse!
 }
 
 `

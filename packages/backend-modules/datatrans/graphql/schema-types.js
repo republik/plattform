@@ -7,12 +7,16 @@ enum DatatransService {
   TWINT
 }
 
+type DatatransAuthorizeResponse {
+  paymentId: ID!
+}
+
 type DatatransInitResponse {
   authorizeUrl: String!
 }
 
-type DatatransAuthorizeResponse {
-  paymentId: ID!
+type DatatansRegistrationResponse {
+  registrationUrl: String!
 }
 
 `

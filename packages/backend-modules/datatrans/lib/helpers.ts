@@ -15,42 +15,58 @@ export enum DatatransService {
   TWINT = 'TWINT',
 }
 
-const SERVICE_INIT_BODY: Record<
-  InitTransactionProps['service'],
-  (props: InitTransactionProps) => Partial<DatatransBody>
-> = {
-  CREDITCARD: () => ({
-    paymentMethods: [
-      DatatransPaymentMethod.MasterCard,
-      DatatransPaymentMethod.Visa,
-      DatatransPaymentMethod.AmericanExpress,
-      DatatransPaymentMethod.ApplePay,
-      DatatransPaymentMethod.GooglePay,
-    ],
-    option: {
-      createAlias: true,
-    },
-  }),
-  POSTFINANCE: (props) => ({
-    paymentMethods: [DatatransPaymentMethod.PostfinanceCard],
-    option: {
-      createAlias: !!props.createAlias,
-    },
-  }),
-  PAYPAL: (props) => ({
-    amount: props.createAlias ? 0 : props.amount,
-    paymentMethods: [DatatransPaymentMethod.PayPal],
-    option: {
-      createAlias: !!props.createAlias,
-    },
-  }),
-  TWINT: (props) => ({
-    amount: props.createAlias ? 0 : props.amount,
-    paymentMethods: [DatatransPaymentMethod.Twint],
-    option: {
-      createAlias: !!props.createAlias,
-    },
-  }),
+const getServiceBody = (
+  props: InitTransactionProps | RegistrationTransactionProps,
+): Partial<DatatransBody> => {
+  if (props.service === 'CREDITCARD') {
+    return {
+      paymentMethods: [
+        DatatransPaymentMethod.MasterCard,
+        DatatransPaymentMethod.Visa,
+        DatatransPaymentMethod.AmericanExpress,
+        DatatransPaymentMethod.ApplePay,
+        DatatransPaymentMethod.GooglePay,
+      ],
+      option: {
+        createAlias: true,
+      },
+    }
+  }
+
+  if (props.service === 'POSTFINANCE') {
+    return {
+      paymentMethods: [DatatransPaymentMethod.PostfinanceCard],
+      option: {
+        createAlias: 'createAlias' in props ? !!props.createAlias : true,
+      },
+    }
+  }
+
+  if (props.service === 'PAYPAL') {
+    const amount = 'amount' in props ? props.amount : undefined
+
+    return {
+      amount: 'createAlias' in props && props.createAlias ? 0 : amount,
+      paymentMethods: [DatatransPaymentMethod.PayPal],
+      option: {
+        createAlias: 'createAlias' in props ? !!props.createAlias : true,
+      },
+    }
+  }
+
+  if (props.service === 'TWINT') {
+    const amount = 'amount' in props ? props.amount : undefined
+
+    return {
+      amount: 'createAlias' in props && props.createAlias ? 0 : amount,
+      paymentMethods: [DatatransPaymentMethod.Twint],
+      option: {
+        createAlias: 'createAlias' in props ? !!props.createAlias : true,
+      },
+    }
+  }
+
+  throw new Error('service not found')
 }
 
 const Authorization =
@@ -103,7 +119,7 @@ export const initTransaction: InitTransaction = async (props) => {
   const body = JSON.stringify({
     refno,
     amount,
-    ...SERVICE_INIT_BODY[props.service](props),
+    ...getServiceBody(props),
     currency: 'CHF',
     autoSettle: false,
     redirect: {
@@ -144,6 +160,85 @@ export const initTransaction: InitTransaction = async (props) => {
   l('return %o', { authorizeUrl })
 
   return { transactionId, authorizeUrl }
+}
+
+type RegistrationTransactionProps = {
+  service: DatatransService
+  paymentSourceId: string
+}
+
+type RegistrationTransactionReturn = {
+  transactionId: string
+  registrationUrl: string
+}
+
+type RegistrationTransaction = (
+  props: RegistrationTransactionProps,
+) => Promise<RegistrationTransactionReturn>
+
+export const registrationTransaction: RegistrationTransaction = async (
+  props,
+) => {
+  const l = log.extend('registrationTransaction')
+  l('args %o', props)
+
+  const { paymentSourceId } = props
+
+  const successUrl = new URL('/konto', process.env.FRONTEND_BASE_URL)
+  successUrl.searchParams.append('status', 'authorized')
+  successUrl.searchParams.append('paymentSourceId', `${paymentSourceId}`)
+
+  const errorUrl = new URL('/konto', process.env.FRONTEND_BASE_URL)
+  errorUrl.searchParams.append('status', 'error')
+  errorUrl.searchParams.append('paymentSourceId', `${paymentSourceId}`)
+
+  const cancelUrl = new URL('/konto', process.env.FRONTEND_BASE_URL)
+  cancelUrl.searchParams.append('status', 'cancel')
+  cancelUrl.searchParams.append('paymentSourceId', `${paymentSourceId}`)
+
+  const body = JSON.stringify({
+    refno: paymentSourceId,
+    ...getServiceBody(props),
+    currency: 'CHF',
+    autoSettle: false,
+    redirect: {
+      successUrl: successUrl.toString(),
+      errorUrl: errorUrl.toString(),
+      cancelUrl: cancelUrl.toString(),
+    },
+  })
+
+  l('request body %o', body)
+
+  const res = await fetch('https://api.sandbox.datatrans.com/v1/transactions', {
+    method: 'POST',
+    headers: {
+      Authorization,
+      'Content-Type': 'application/json',
+    },
+    body,
+  })
+
+  if (!res.ok) {
+    throw new Error(
+      'Error' +
+        JSON.stringify({
+          status: res.status,
+          statusText: await res.json(),
+        }),
+    )
+  }
+
+  const transaction = await res.json()
+  const { transactionId } = transaction
+
+  const registrationUrl = new URL(
+    '/v1/start/' + transactionId,
+    'https://pay.sandbox.datatrans.com',
+  ).toString()
+  l('return %o', { registrationUrl })
+
+  return { transactionId, registrationUrl }
 }
 
 export const getTransaction = async (datatransTrxId: string) => {
