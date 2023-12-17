@@ -2,8 +2,8 @@ import { graphql } from '@apollo/client/react/hoc'
 import { gql } from '@apollo/client'
 
 const datatransRegistration = gql`
-  mutation datatransRegistration($service: DatatransService!, $companyId: ID!) {
-    datatransRegistration(service: $service, companyId: $companyId) {
+  mutation datatransRegistration($method: PaymentMethod!, $companyId: ID!) {
+    datatransRegistration(method: $method, companyId: $companyId) {
       registrationUrl
     }
   }

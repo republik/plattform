@@ -7,11 +7,29 @@ export type DatatransBody = {
 }
 
 /**
- * Payment methods provided by Datatrans
+ * Payment methods available.
+ *
+ */
+export enum DatatransPaymentMethod {
+  CreditCard = 'DATATRANS_CREDITCARD',
+  PostfinanceCard = 'DATATRANS_POSTFINANCECARD',
+  PayPal = 'DATATRANS_PAYPAL',
+  Twint = 'DATATRANS_TWINT',
+}
+
+export const DatatransPaymentMethods = [
+  DatatransPaymentMethod.CreditCard,
+  DatatransPaymentMethod.PostfinanceCard,
+  DatatransPaymentMethod.PayPal,
+  DatatransPaymentMethod.Twint,
+]
+
+/**
+ * Payment method codes provided by Datatrans
  *
  * @see https://docs.datatrans.ch/docs/payment-methods
  */
-export enum DatatransPaymentMethod {
+export enum DatatransPaymentMethodCode {
   MasterCard = 'ECA',
   Visa = 'VIS',
   AmericanExpress = 'AMX',
@@ -44,7 +62,7 @@ export type DatatransTransaction = {
   currency: 'CHF'
   refno: string
   refno2?: string
-  paymentMethod: DatatransPaymentMethod
+  paymentMethod: DatatransPaymentMethodCode
   detail: {
     init?: { expires: string }
     authorize?: {
@@ -151,8 +169,8 @@ type DatatransTransactionCard = {
     issuer: string
   }
   walletIndicator?:
-    | DatatransPaymentMethod.ApplePay
-    | DatatransPaymentMethod.GooglePay
+    | DatatransPaymentMethodCode.ApplePay
+    | DatatransPaymentMethodCode.GooglePay
     | 'SAM'
     | 'VPS'
     | 'MBP'
@@ -184,28 +202,28 @@ type DatatransTransactionTwint = {
 
 export type DatatransTransactionWithMethod =
   | (DatatransTransaction & {
-      paymentMethod: DatatransPaymentMethod.MasterCard
+      paymentMethod: DatatransPaymentMethodCode.MasterCard
       card: DatatransTransactionCard
     })
   | (DatatransTransaction & {
-      paymentMethod: DatatransPaymentMethod.Visa
+      paymentMethod: DatatransPaymentMethodCode.Visa
       card: DatatransTransactionCard
     })
   | (DatatransTransaction & {
-      paymentMethod: DatatransPaymentMethod.AmericanExpress
+      paymentMethod: DatatransPaymentMethodCode.AmericanExpress
       card: DatatransTransactionCard
     })
   | (DatatransTransaction & {
-      paymentMethod: DatatransPaymentMethod.PostfinanceCard
-      [DatatransPaymentMethod.PostfinanceCard]: DatatransTransactionPostfinanceCard
+      paymentMethod: DatatransPaymentMethodCode.PostfinanceCard
+      [DatatransPaymentMethodCode.PostfinanceCard]: DatatransTransactionPostfinanceCard
     })
   | (DatatransTransaction & {
-      paymentMethod: DatatransPaymentMethod.PayPal
-      [DatatransPaymentMethod.PayPal]: DatatransTransactionPayPal
+      paymentMethod: DatatransPaymentMethodCode.PayPal
+      [DatatransPaymentMethodCode.PayPal]: DatatransTransactionPayPal
     })
   | (DatatransTransaction & {
-      paymentMethod: DatatransPaymentMethod.Twint
-      [DatatransPaymentMethod.Twint]: DatatransTransactionTwint
+      paymentMethod: DatatransPaymentMethodCode.Twint
+      [DatatransPaymentMethodCode.Twint]: DatatransTransactionTwint
     })
 
 type DatatransAliasCard = {
@@ -213,18 +231,18 @@ type DatatransAliasCard = {
 }
 
 type DatatransAliasPostfinanceCard = {
-  [DatatransPaymentMethod.PostfinanceCard]: Pick<
+  [DatatransPaymentMethodCode.PostfinanceCard]: Pick<
     DatatransTransactionPostfinanceCard,
     'alias'
   >
 }
 
 type DatatransAliasPayPal = {
-  [DatatransPaymentMethod.PayPal]: Pick<DatatransTransactionPayPal, 'alias'>
+  [DatatransPaymentMethodCode.PayPal]: Pick<DatatransTransactionPayPal, 'alias'>
 }
 
 type DatatransAliasTwint = {
-  [DatatransPaymentMethod.Twint]: Pick<DatatransTransactionTwint, 'alias'>
+  [DatatransPaymentMethodCode.Twint]: Pick<DatatransTransactionTwint, 'alias'>
 }
 
 export type DatatransAlias =

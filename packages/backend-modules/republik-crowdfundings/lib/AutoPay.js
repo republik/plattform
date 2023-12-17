@@ -211,7 +211,7 @@ const prolong = async (membershipId, pgdb, redis, t) => {
       charge = {
         ...datatransTrx,
         amount: total,
-        method: 'DATATRANS',
+        method: defaultDatatransPaymentSource.method,
         id: defaultDatatransPaymentSource.id,
       }
     } else if (suggestion.defaultPaymentMethod) {

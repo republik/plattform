@@ -1,12 +1,5 @@
 module.exports = `
 
-enum DatatransService {
-  CREDITCARD
-  POSTFINANCE
-  PAYPAL
-  TWINT
-}
-
 type DatatransAuthorizeResponse {
   paymentId: ID!
 }

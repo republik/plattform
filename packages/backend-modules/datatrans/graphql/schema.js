@@ -11,10 +11,10 @@ type mutations {
   ): DatatransAuthorizeResponse!
   datatransInit(
     pledgeId: ID!
-    service: DatatransService!
+    method: PaymentMethod!
   ): DatatransInitResponse!
   datatransRegistration(
-    service: DatatransService!
+    method: PaymentMethod!
     companyId: ID!
   ): DatatansRegistrationResponse!
 }

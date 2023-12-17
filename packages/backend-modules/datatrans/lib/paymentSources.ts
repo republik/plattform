@@ -1,10 +1,10 @@
 import { ConnectionContext } from '@orbiting/backend-modules-types'
-import { DatatransTransactionWithMethod } from './types'
+import { DatatransPaymentMethod, DatatransTransactionWithMethod } from './types'
 import { getAliasString, getTransaction, isPreAuthorized } from './helpers'
 
 type PaymentSourceRow = {
   id: string
-  method: 'DATATRANS'
+  method: DatatransPaymentMethod
   userId: string
   pspId: string
   pspPayload: DatatransTransactionWithMethod
@@ -37,7 +37,7 @@ export const normalizePaymentSource = (row: any) => {
 
   return {
     id,
-    method: 'DATATRANS',
+    method: row.method,
     isDefault: true,
     status: 'CHARGEABLE',
     brand: details?.info?.brand || row.pspPayload?.paymentMethod || 'n/a',
@@ -57,7 +57,6 @@ export const addPaymentSource = async (
   const paymentSource = await pgdb.public.paymentSources.findOne({
     id: sourceId,
     userId,
-    method: 'DATATRANS',
   })
 
   if (!paymentSource) {

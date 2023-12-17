@@ -27,7 +27,7 @@ module.exports = async (_, args, context) => {
     // insert payment
     const payment = await tx.public.payments.insertAndGet({
       type: 'PLEDGE',
-      method: 'DATATRANS',
+      method: paymentSource.method,
       total: pledge.total,
       status: 'WAITING',
     })

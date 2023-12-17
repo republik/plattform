@@ -17,10 +17,7 @@ import { EMAIL_PAYMENT } from '../../lib/constants'
 import RawHtmlTranslation from '../RawHtmlTranslation'
 
 import { A } from '@project-r/styleguide'
-import {
-  DatatransPaymentMethodPrefix,
-  DatatransPledgeIdQueryParam,
-} from '../Payment/datatrans/types'
+import { DatatransPledgeIdQueryParam } from '../Payment/datatrans/types'
 
 // ToDo: query autoPay
 const pledgeQuery = gql`
@@ -236,7 +233,7 @@ class PledgeReceivePayment extends Component {
         state.action = {
           method: 'pay',
           argument: {
-            method: DatatransPaymentMethodPrefix,
+            method: query.method,
             pspPayload: query,
           },
         }

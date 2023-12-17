@@ -1,7 +1,7 @@
 const { registrationTransaction } = require('../../../lib/helpers')
 
 module.exports = async (_, args, context) => {
-  const { service, companyId } = args
+  const { method, companyId } = args
   const { pgdb, user: me } = context
 
   const company = await pgdb.public.companies.findOne({ id: companyId })
@@ -13,13 +13,13 @@ module.exports = async (_, args, context) => {
 
   try {
     const paymentSource = await tx.public.paymentSources.insertAndGet({
-      method: 'DATATRANS',
+      method,
       userId: me.id,
       companyId: company.id,
     })
 
     const { transactionId, registrationUrl } = await registrationTransaction({
-      service,
+      method,
       paymentSourceId: paymentSource.id,
     })
 

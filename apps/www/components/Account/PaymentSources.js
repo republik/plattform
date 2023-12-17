@@ -7,6 +7,7 @@ import withT from '../../lib/withT'
 import withMe from '../../lib/apollo/withMe'
 import { withDatatransRegistration } from '../Payment/datatrans/withDatatransRegistration'
 import { withAddDatatransSource } from '../Payment/datatrans/withAddDatatransSource'
+import { isDatatransPaymentMethod } from '../Payment/datatrans/helpers'
 
 import { errorToString } from '../../lib/utils/errors'
 
@@ -19,7 +20,7 @@ import { Button, InlineSpinner, Loader, colors } from '@project-r/styleguide'
 import { withRouter } from 'next/router'
 
 import { loadStripe } from '../Payment/stripe'
-import { getDatatransService } from '../Payment/datatrans/types'
+import { DatatransPaymentMethods } from '../Payment/datatrans/types'
 
 const objectValues = (object) => Object.keys(object).map((key) => object[key])
 
@@ -112,7 +113,7 @@ class PaymentSources extends Component {
 
     this.props
       .datatransRegistration({
-        service: getDatatransService(this.state.values.paymentMethod),
+        method: this.state.values.paymentMethod,
         companyId: company.id,
       })
       .then(({ data }) => {
@@ -170,7 +171,8 @@ class PaymentSources extends Component {
             id: me.id,
           }}
           context='DEFAULT_SOURCE'
-          allowedMethods={['DATATRANS']}
+          allowedMethods={DatatransPaymentMethods}
+          keepPaymentSource={true}
           onChange={(fields) => {
             this.setState((state) => {
               const nextState = FieldSet.utils.mergeFields(fields)(state)
@@ -234,7 +236,7 @@ class PaymentSources extends Component {
 
                 if (values.paymentMethod.startsWith('STRIPE')) {
                   this.addPaymentMethod()
-                } else if (values.paymentMethod.startsWith('DATATRANS')) {
+                } else if (isDatatransPaymentMethod(values.paymentMethod)) {
                   this.registerDatatransPaymentSource()
                 }
               }}

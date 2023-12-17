@@ -1,7 +1,7 @@
 const { initTransaction } = require('../../../lib/helpers')
 
 module.exports = async (_, args, context) => {
-  const { pledgeId, service } = args
+  const { pledgeId, method } = args
   const { loaders, pgdb } = context
 
   const pledge = await loaders.Pledge.byId.load(pledgeId)
@@ -23,7 +23,7 @@ module.exports = async (_, args, context) => {
     // insert payment
     const payment = await tx.public.payments.insertAndGet({
       type: 'PLEDGE',
-      method: 'DATATRANS',
+      method,
       total: pledge.total,
       status: 'WAITING',
     })
@@ -40,7 +40,7 @@ module.exports = async (_, args, context) => {
       paymentId: payment.id,
       refno: payment.hrid,
       amount: pledge.total,
-      service,
+      method,
       createAlias: pledgeOptionsWithAutoPay > 0,
     })
 

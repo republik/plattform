@@ -45,13 +45,9 @@ import usePaymentRequest, {
 } from '../Payment/PaymentRequest/usePaymentRequest'
 import { getPayerInformationFromEvent } from '../Payment/PaymentRequest/PaymentRequestEventHelper'
 import { css } from 'glamor'
-import {
-  DatatransPaymentMethod,
-  DatatransPaymentMethodPrefix,
-  getDatatransService,
-} from '../Payment/datatrans/types'
 import { withDatatransInit } from '../Payment/datatrans/withDatatransInit'
 import { withDatatransAuthorize } from '../Payment/datatrans/withDatatransAuthorize'
+import { isDatatransPaymentMethod } from '../Payment/datatrans/helpers'
 
 const { P } = Interaction
 
@@ -166,15 +162,6 @@ const SubmitWithHooks = ({ paymentMethods, ...props }) => {
             'STRIPE',
             WalletPaymentMethod.APPLE_PAY,
             WalletPaymentMethod.GOOGLE_PAY,
-          ]
-        }
-
-        if (method === DatatransPaymentMethodPrefix) {
-          return [
-            DatatransPaymentMethod.CREDITCARD,
-            DatatransPaymentMethod.POSTFINANCE,
-            DatatransPaymentMethod.PAYPAL,
-            DatatransPaymentMethod.TWINT,
           ]
         }
 
@@ -449,7 +436,7 @@ class Submit extends Component {
       this.payWithPostFinance(pledgeId, pledgeResponse)
     } else if (selectedPaymentMethod === 'STRIPE') {
       this.payWithStripe(pledgeId)
-    } else if (selectedPaymentMethod.startsWith('DATATRANS')) {
+    } else if (isDatatransPaymentMethod(selectedPaymentMethod)) {
       this.payWithDatatrans(pledgeId)
     } else if (this.isStripeWalletPayment()) {
       return this.payWithWallet(pledgeId, stripePaymentMethod)
@@ -502,7 +489,7 @@ class Submit extends Component {
         () => {
           this.props
             .datatransAuthorize({
-              pledgeId: '481e6844-477d-4c60-a453-fc19bffae3c3',
+              pledgeId,
               sourceId: values.paymentSource,
             })
             .then(({ data }) => {
@@ -537,7 +524,7 @@ class Submit extends Component {
         this.props
           .datatransInit({
             pledgeId,
-            service: getDatatransService(this.props.selectedPaymentMethod),
+            method: this.props.selectedPaymentMethod,
           })
           .then(({ data }) => {
             this.payment.datatransForm.action = data.datatransInit.authorizeUrl
@@ -810,7 +797,7 @@ class Submit extends Component {
 
     if (
       !selectedPaymentMethod?.startsWith('STRIPE') &&
-      !selectedPaymentMethod?.startsWith('DATATRANS')
+      !isDatatransPaymentMethod(selectedPaymentMethod)
     ) {
       return undefined
     }
@@ -830,7 +817,7 @@ class Submit extends Component {
     const { selectedPaymentMethod } = this.props
     if (
       !selectedPaymentMethod?.startsWith('STRIPE') &&
-      !selectedPaymentMethod?.startsWith('DATATRANS')
+      !isDatatransPaymentMethod(selectedPaymentMethod)
     ) {
       return null
     }

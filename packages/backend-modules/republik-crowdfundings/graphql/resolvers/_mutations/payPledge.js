@@ -13,6 +13,9 @@ const {
   changeStatus,
   afterChange,
 } = require('../../../lib/payments/Pledge')
+const {
+  DatatransPaymentMethods,
+} = require('@orbiting/backend-modules-datatrans/lib/types')
 
 const logger = console
 
@@ -137,7 +140,7 @@ module.exports = async (_, args, context) => {
           t,
           logger,
         })
-      } else if (pledgePayment.method === 'DATATRANS') {
+      } else if (DatatransPaymentMethods.includes(pledgePayment.method)) {
         // @TODO too many props, check again
         pledgeStatus = await payPledgeDatatrans({
           pledgeId: pledge.id,

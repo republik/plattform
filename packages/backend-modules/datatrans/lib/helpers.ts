@@ -3,29 +3,23 @@ import {
   DatatransAlias,
   DatatransBody,
   DatatransPaymentMethod,
+  DatatransPaymentMethodCode,
   DatatransTransactionWithMethod,
 } from './types'
 
 const log = debug('datatrans:lib:helpers')
 
-export enum DatatransService {
-  CREDITCARD = 'CREDITCARD',
-  POSTFINANCE = 'POSTFINANCE',
-  PAYPAL = 'PAYPAL',
-  TWINT = 'TWINT',
-}
-
 const getServiceBody = (
   props: InitTransactionProps | RegistrationTransactionProps,
 ): Partial<DatatransBody> => {
-  if (props.service === 'CREDITCARD') {
+  if (props.method === DatatransPaymentMethod.CreditCard) {
     return {
       paymentMethods: [
-        DatatransPaymentMethod.MasterCard,
-        DatatransPaymentMethod.Visa,
-        DatatransPaymentMethod.AmericanExpress,
-        DatatransPaymentMethod.ApplePay,
-        DatatransPaymentMethod.GooglePay,
+        DatatransPaymentMethodCode.MasterCard,
+        DatatransPaymentMethodCode.Visa,
+        DatatransPaymentMethodCode.AmericanExpress,
+        DatatransPaymentMethodCode.ApplePay,
+        DatatransPaymentMethodCode.GooglePay,
       ],
       option: {
         createAlias: true,
@@ -33,33 +27,33 @@ const getServiceBody = (
     }
   }
 
-  if (props.service === 'POSTFINANCE') {
+  if (props.method === DatatransPaymentMethod.PostfinanceCard) {
     return {
-      paymentMethods: [DatatransPaymentMethod.PostfinanceCard],
+      paymentMethods: [DatatransPaymentMethodCode.PostfinanceCard],
       option: {
         createAlias: 'createAlias' in props ? !!props.createAlias : true,
       },
     }
   }
 
-  if (props.service === 'PAYPAL') {
+  if (props.method === DatatransPaymentMethod.PayPal) {
     const amount = 'amount' in props ? props.amount : undefined
 
     return {
       amount: 'createAlias' in props && props.createAlias ? 0 : amount,
-      paymentMethods: [DatatransPaymentMethod.PayPal],
+      paymentMethods: [DatatransPaymentMethodCode.PayPal],
       option: {
         createAlias: 'createAlias' in props ? !!props.createAlias : true,
       },
     }
   }
 
-  if (props.service === 'TWINT') {
+  if (props.method === DatatransPaymentMethod.Twint) {
     const amount = 'amount' in props ? props.amount : undefined
 
     return {
       amount: 'createAlias' in props && props.createAlias ? 0 : amount,
-      paymentMethods: [DatatransPaymentMethod.Twint],
+      paymentMethods: [DatatransPaymentMethodCode.Twint],
       option: {
         createAlias: 'createAlias' in props ? !!props.createAlias : true,
       },
@@ -80,7 +74,7 @@ const Authorization =
 type InitTransactionProps = {
   refno: string
   amount: number
-  service: DatatransService
+  method: DatatransPaymentMethod
   createAlias?: boolean
   pledgeId: string
   paymentId: string
@@ -99,10 +93,11 @@ export const initTransaction: InitTransaction = async (props) => {
   const l = log.extend('initTransaction')
   l('args %o', props)
 
-  const { refno, amount, pledgeId, paymentId } = props
+  const { refno, amount, method, pledgeId, paymentId } = props
 
   const successUrl = new URL('/angebote', process.env.FRONTEND_BASE_URL)
   successUrl.searchParams.append('status', 'authorized')
+  successUrl.searchParams.append('method', `${method}`)
   successUrl.searchParams.append('pledgeId', `${pledgeId}`)
   successUrl.searchParams.append('paymentId', `${paymentId}`)
 
@@ -163,7 +158,7 @@ export const initTransaction: InitTransaction = async (props) => {
 }
 
 type RegistrationTransactionProps = {
-  service: DatatransService
+  method: DatatransPaymentMethod
   paymentSourceId: string
 }
 
@@ -340,12 +335,12 @@ export const getAliasString = (
 ): string | undefined => {
   const aliasString =
     ('card' in transaction && transaction.card.alias) ||
-    (DatatransPaymentMethod.PostfinanceCard in transaction &&
-      transaction[DatatransPaymentMethod.PostfinanceCard].alias) ||
-    (DatatransPaymentMethod.PayPal in transaction &&
-      transaction[DatatransPaymentMethod.PayPal].alias) ||
-    (DatatransPaymentMethod.Twint in transaction &&
-      transaction[DatatransPaymentMethod.Twint].alias)
+    (DatatransPaymentMethodCode.PostfinanceCard in transaction &&
+      transaction[DatatransPaymentMethodCode.PostfinanceCard].alias) ||
+    (DatatransPaymentMethodCode.PayPal in transaction &&
+      transaction[DatatransPaymentMethodCode.PayPal].alias) ||
+    (DatatransPaymentMethodCode.Twint in transaction &&
+      transaction[DatatransPaymentMethodCode.Twint].alias)
 
   if (!aliasString) {
     return undefined
@@ -354,7 +349,7 @@ export const getAliasString = (
   return aliasString
 }
 
-export const pickAliasProps = (alias: DatatransAlias) => {
+const pickAliasProps = (alias: DatatransAlias) => {
   const l = log.extend('pickAliasProps')
   l('args %o', alias)
 
@@ -367,38 +362,40 @@ export const pickAliasProps = (alias: DatatransAlias) => {
         expiryYear: card.expiryYear,
       },
     }
-    l('%s: %o', DatatransService.CREDITCARD, value)
+    l('%s: %o', DatatransPaymentMethod.CreditCard, value)
     return value
   }
 
   if (
-    DatatransPaymentMethod.PostfinanceCard in alias &&
-    alias[DatatransPaymentMethod.PostfinanceCard].alias
+    DatatransPaymentMethodCode.PostfinanceCard in alias &&
+    alias[DatatransPaymentMethodCode.PostfinanceCard].alias
   ) {
     const value = {
-      [DatatransPaymentMethod.PostfinanceCard]: { alias: alias.PFC.alias },
+      [DatatransPaymentMethodCode.PostfinanceCard]: { alias: alias.PFC.alias },
     }
-    l('%s: %o', DatatransService.POSTFINANCE, value)
+    l('%s: %o', DatatransPaymentMethod.PostfinanceCard, value)
     return value
   }
 
   if (
-    DatatransPaymentMethod.PayPal in alias &&
-    alias[DatatransPaymentMethod.PayPal].alias
+    DatatransPaymentMethodCode.PayPal in alias &&
+    alias[DatatransPaymentMethodCode.PayPal].alias
   ) {
     const value = {
-      [DatatransPaymentMethod.PayPal]: { alias: alias.PAP.alias },
+      [DatatransPaymentMethodCode.PayPal]: { alias: alias.PAP.alias },
     }
-    l('%s: %o', DatatransService.PAYPAL, value)
+    l('%s: %o', DatatransPaymentMethod.PayPal, value)
     return value
   }
 
   if (
-    DatatransPaymentMethod.Twint in alias &&
-    alias[DatatransPaymentMethod.Twint].alias
+    DatatransPaymentMethodCode.Twint in alias &&
+    alias[DatatransPaymentMethodCode.Twint].alias
   ) {
-    const value = { [DatatransPaymentMethod.Twint]: { alias: alias.TWI.alias } }
-    l('%s: %o', DatatransService.TWINT, value)
+    const value = {
+      [DatatransPaymentMethodCode.Twint]: { alias: alias.TWI.alias },
+    }
+    l('%s: %o', DatatransPaymentMethod.Twint, value)
     return value
   }
 

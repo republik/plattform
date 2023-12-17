@@ -115,7 +115,7 @@ module.exports = async (props: PayPledgeProps) => {
     if (!hasPaymentSource) {
       await transaction.public.paymentSources.insert({
         userId,
-        method: 'DATATRANS',
+        method: payment.method,
         pspId: aliasString,
         pspPayload: transactionStatus,
         companyId: pkg.companyId,

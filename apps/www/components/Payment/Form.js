@@ -33,10 +33,8 @@ import StripeForm from './Form/Stripe'
 import ApplePayMark from './Form/ApplePayMark'
 import GooglePayMark from './Form/GooglePayMark'
 import { WalletPaymentMethod } from './PaymentRequest/usePaymentRequest'
-import {
-  DatatransPaymentMethod,
-  DatatransPaymentMethodPrefix,
-} from './datatrans/types'
+import { DatatransPaymentMethod } from './datatrans/types'
+import { isDatatransPaymentMethod } from './datatrans/helpers'
 import { IconLock } from '@republik/icons'
 import {
   isApplePayAvailable,
@@ -47,12 +45,8 @@ const pad2 = format('02')
 
 const PAYMENT_METHODS = [
   {
-    disabled: true,
-    key: 'DATATRANS',
-  },
-  {
     disabled: false,
-    key: DatatransPaymentMethod.CREDITCARD,
+    key: DatatransPaymentMethod.CreditCard,
     Icon: () => (
       <>
         <PSPIcons.Visa />
@@ -62,18 +56,18 @@ const PAYMENT_METHODS = [
   },
   {
     disabled: false,
-    key: DatatransPaymentMethod.POSTFINANCE,
+    key: DatatransPaymentMethod.PostfinanceCard,
     bgColor: '#FCCC12',
     Icon: PSPIcons.Postcard,
   },
   {
     disabled: false,
-    key: DatatransPaymentMethod.PAYPAL,
+    key: DatatransPaymentMethod.PayPal,
     Icon: PSPIcons.PayPal,
   },
   {
     disabled: false,
-    key: DatatransPaymentMethod.TWINT,
+    key: DatatransPaymentMethod.Twint,
     bgColor: '#000',
     Icon: PSPIcons.Twint,
   },
@@ -300,6 +294,7 @@ class PaymentForm extends Component {
       children,
       t,
       allowedMethods,
+      keepPaymentSource,
       erroredMethods = [],
       payload,
       values,
@@ -361,9 +356,14 @@ class PaymentForm extends Component {
           render={() => {
             const hasPaymentSource =
               !!paymentSource &&
-              PAYMENT_METHODS.some((m) =>
-                m.key.startsWith(paymentSource.method),
-              )
+              ((!keepPaymentSource &&
+                visibleMethods.some((m) =>
+                  m.startsWith(paymentSource.method),
+                )) ||
+                (keepPaymentSource &&
+                  PAYMENT_METHODS.some((m) =>
+                    m.key.startsWith(paymentSource.method),
+                  )))
             const PaymentSourceIcon =
               hasPaymentSource &&
               ((paymentSource.brand.toLowerCase() === 'visa' && (
@@ -579,13 +579,12 @@ class PaymentForm extends Component {
             </div> */}
           </div>
         )}
-        {paymentMethodForm &&
-          paymentMethodForm?.startsWith(DatatransPaymentMethodPrefix) && (
-            <>
-              {children}
-              <form ref={this.datatransFormRef} method='GET' />
-            </>
-          )}
+        {paymentMethodForm && isDatatransPaymentMethod(paymentMethodForm) && (
+          <>
+            {children}
+            <form ref={this.datatransFormRef} method='GET' />
+          </>
+        )}
         {paymentMethodForm === 'STRIPE' && (
           <>
             {stripeNote && <Label>{stripeNote}</Label>}
@@ -695,6 +694,7 @@ PaymentForm.propTypes = {
   allowedMethods: PropTypes.arrayOf(
     PropTypes.oneOf(PAYMENT_METHODS.map((method) => method.key)),
   ),
+  keepPaymentSource: PropTypes.bool,
   payload: PropTypes.shape({
     id: PropTypes.string,
     userId: PropTypes.string,
