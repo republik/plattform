@@ -38,10 +38,18 @@ import {
   DatatransPaymentMethodPrefix,
 } from './datatrans/types'
 import { IconLock } from '@republik/icons'
+import {
+  isApplePayAvailable,
+  isGooglePayAvailable,
+} from './Form/StripeWalletHelpers'
 
 const pad2 = format('02')
 
 const PAYMENT_METHODS = [
+  {
+    disabled: true,
+    key: 'DATATRANS',
+  },
   {
     disabled: false,
     key: DatatransPaymentMethod.CREDITCARD,
@@ -104,12 +112,12 @@ const PAYMENT_METHODS = [
     },
   },
   {
-    disabled: inNativeAppBrowser,
+    disabled: inNativeAppBrowser || !isApplePayAvailable(),
     key: WalletPaymentMethod.APPLE_PAY,
     Icon: ApplePayMark,
   },
   {
-    disabled: inNativeAppBrowser,
+    disabled: inNativeAppBrowser || !isGooglePayAvailable(),
     key: WalletPaymentMethod.GOOGLE_PAY,
     Icon: GooglePayMark,
   },
@@ -259,12 +267,11 @@ class PaymentForm extends Component {
     if (
       (!loadingPaymentSource && values.paymentSource === undefined) ||
       (values.paymentMethod &&
-        allowedMethods &&
-        allowedMethods.indexOf(values.paymentMethod) === -1)
+        !PAYMENT_METHODS?.some((m) => values.paymentMethod.startsWith(m.key)))
     ) {
       if (
         paymentSource &&
-        allowedMethods.some((m) => m.startsWith(paymentSource.method))
+        PAYMENT_METHODS.some((m) => m.key.startsWith(paymentSource.method))
       ) {
         if (
           values.paymentMethod !== paymentSource.method ||
@@ -312,7 +319,12 @@ class PaymentForm extends Component {
       setSyncAddresses,
     } = this.props
     const { paymentMethod } = values
-    const visibleMethods = allowedMethods || PAYMENT_METHODS.map((pm) => pm.key)
+    const visibleMethods = PAYMENT_METHODS.filter((pm) => !pm.disabled)
+      .map((pm) => pm.key)
+      .filter(
+        (key) =>
+          !allowedMethods || allowedMethods.some((m) => key.startsWith(m)),
+      )
 
     const hasChoice = visibleMethods.length > 1
     const onlyStripe = !hasChoice && visibleMethods[0] === 'STRIPE'
@@ -349,7 +361,9 @@ class PaymentForm extends Component {
           render={() => {
             const hasPaymentSource =
               !!paymentSource &&
-              allowedMethods.some((m) => m.startsWith(paymentSource.method))
+              PAYMENT_METHODS.some((m) =>
+                m.key.startsWith(paymentSource.method),
+              )
             const PaymentSourceIcon =
               hasPaymentSource &&
               ((paymentSource.brand.toLowerCase() === 'visa' && (
@@ -424,6 +438,7 @@ class PaymentForm extends Component {
                         e.preventDefault()
                         onChange({
                           values: {
+                            paymentMethod: visibleMethods[0],
                             paymentSource: null,
                             newSource: true,
                           },
@@ -443,7 +458,8 @@ class PaymentForm extends Component {
                 {showMethods &&
                   PAYMENT_METHODS.filter(
                     (pm) =>
-                      !pm.disabled && visibleMethods.indexOf(pm.key) !== -1,
+                      !pm.disabled &&
+                      visibleMethods.some((m) => pm.key.startsWith(m)),
                   ).map((pm) => (
                     <PaymentMethodLabel
                       key={pm.key}

@@ -40,10 +40,6 @@ import { loadStripe } from '../Payment/stripe'
 import { useFieldSetState } from './utils'
 
 import ErrorMessage, { ErrorContainer } from '../ErrorMessage'
-import {
-  useIsApplePayAvailable,
-  useIsGooglePayAvailable,
-} from '../Payment/Form/StripeWalletHelpers'
 import usePaymentRequest, {
   WalletPaymentMethod,
 } from '../Payment/PaymentRequest/usePaymentRequest'
@@ -159,8 +155,6 @@ const SubmitWithHooks = ({ paymentMethods, ...props }) => {
   )
 
   const [syncAddresses, setSyncAddresses] = useState(true)
-  const [isApplePayAvailable] = useIsApplePayAvailable()
-  const [isGooglePayAvailable] = useIsGooglePayAvailable()
 
   // In case STRIPE is an accepted payment method,
   // add additional payment methods such as Apple or Google Pay if available
@@ -170,16 +164,14 @@ const SubmitWithHooks = ({ paymentMethods, ...props }) => {
         if (method === 'STRIPE') {
           return [
             'STRIPE',
-            isApplePayAvailable ? WalletPaymentMethod.APPLE_PAY : null,
-            isGooglePayAvailable ? WalletPaymentMethod.GOOGLE_PAY : null,
+            WalletPaymentMethod.APPLE_PAY,
+            WalletPaymentMethod.GOOGLE_PAY,
           ]
         }
 
         if (method === DatatransPaymentMethodPrefix) {
           return [
             DatatransPaymentMethod.CREDITCARD,
-            DatatransPaymentMethod.APPLEPAY,
-            DatatransPaymentMethod.GOOGLEPAY,
             DatatransPaymentMethod.POSTFINANCE,
             DatatransPaymentMethod.PAYPAL,
             DatatransPaymentMethod.TWINT,
@@ -189,7 +181,7 @@ const SubmitWithHooks = ({ paymentMethods, ...props }) => {
         return [method]
       })
       .filter(Boolean)
-  }, [paymentMethods, isApplePayAvailable, isGooglePayAvailable])
+  }, [paymentMethods])
 
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState()
   const paymentRequest = usePaymentRequest({
@@ -267,12 +259,6 @@ class Submit extends Component {
 
   isStripeWalletPayment() {
     return this.props.selectedPaymentMethod?.startsWith('STRIPE-WALLET')
-  }
-
-  isDatatransPayment() {
-    return this.props.selectedPaymentMethod?.startsWith(
-      DatatransPaymentMethodPrefix,
-    )
   }
 
   submitVariables(props) {
