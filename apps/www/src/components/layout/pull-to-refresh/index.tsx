@@ -1,7 +1,7 @@
 'use client'
 
 import { css } from '@app/styled-system/css'
-import { IconArrowDownward, IconArrowUpward } from '@republik/icons'
+import { IconRefresh } from '@republik/icons'
 import throttle from 'lodash/throttle'
 import { useRouter } from 'next/navigation'
 import React, { useCallback, useRef } from 'react'
@@ -42,11 +42,11 @@ export function PullToRefresh({ children, ...props }: PullToRefreshProps) {
           zIndex: 10,
         })}
       >
-        <IconArrowUpward
-          size='3rem'
+        <IconRefresh
+          size='2rem'
           className={css({
             transition: 'all 0.2s ease-out',
-            transform: `translateY(calc(calc(var(--pull-to-refresh-progress, 0) * 30px) - 30px)) rotate(calc(var(--pull-to-refresh-progress, 0) * 360deg))`,
+            transform: `translateY(calc(calc(var(--pull-to-refresh-progress, 0) * 10px) - 10px)) rotate(calc(var(--pull-to-refresh-progress, 0) * 360deg))`,
             opacity: `calc(var(--pull-to-refresh-progress, 0) * 100%)`,
           })}
         />
