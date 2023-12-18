@@ -380,9 +380,10 @@ class PaymentForm extends Component {
                   ({ key }) => key === paymentSource.method,
                 )?.Icon())
 
-            const paymentSourceBgColor = PAYMENT_METHODS.find(
-              ({ key }) => key === paymentSource.method,
-            )?.bgColor
+            const paymentSourceBgColor =
+              hasPaymentSource &&
+              PAYMENT_METHODS.find(({ key }) => key === paymentSource.method)
+                ?.bgColor
 
             const paymentSourceDisabled =
               paymentSource && paymentSource.status !== 'CHARGEABLE'
