@@ -2,10 +2,9 @@
 
 import { css } from '@app/styled-system/css'
 import { IconRefresh } from '@republik/icons'
-import throttle from 'lodash/throttle'
 import { useRouter } from 'next/navigation'
 import React, { useCallback, useRef } from 'react'
-import { IndicatorState, usePullToRefresh } from './usePullToRefresh'
+import { usePullToRefresh } from './usePullToRefresh'
 
 type PullToRefreshProps = {
   children: React.ReactNode
@@ -18,9 +17,10 @@ export function PullToRefresh({ children, ...props }: PullToRefreshProps) {
 
   const pullToRefresh = useCallback(() => {
     refresh()
+    console.log('refresh')
   }, [refresh])
 
-  const indicatorState = usePullToRefresh(ref, pullToRefresh)
+  usePullToRefresh(ref, pullToRefresh)
 
   return (
     <div className={css({ position: 'relative' })}>
@@ -37,7 +37,6 @@ export function PullToRefresh({ children, ...props }: PullToRefreshProps) {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          color: 'var(--color-text-lighter)',
           transition: 'opacity 0.2s ease-in-out',
           zIndex: 10,
         })}
@@ -45,12 +44,19 @@ export function PullToRefresh({ children, ...props }: PullToRefreshProps) {
         <IconRefresh
           size='2rem'
           className={css({
-            transition: 'all 0.2s ease-out',
-            transform: `translateY(calc(calc(var(--pull-to-refresh-progress, 0) * 10px) - 10px)) rotate(calc(var(--pull-to-refresh-progress, 0) * 360deg))`,
-            opacity: `calc(var(--pull-to-refresh-progress, 0) * 100%)`,
+            transform: 'scale(0.5) rotate(0deg)',
+            opacity: 0,
+            '[data-pull-to-refresh-state="pulling"] &': {
+              opacity: `calc(var(--pull-to-refresh-progress, 0) * 100%)`,
+              transform: `scale(calc(0.5 + calc(var(--pull-to-refresh-progress, 0) * 0.5))) rotate(calc(var(--pull-to-refresh-progress, 0) * 360deg))`,
+              transition: 'transform 0.1s ease-out',
+            },
+            '[data-pull-to-refresh-state="loading"] &': {
+              animation: 'spin',
+              opacity: 1,
+            },
           })}
         />
-        {/* <span style={{ marginLeft: '8px' }}>Pull to refresh</span> */}
       </div>
       <div ref={ref} {...props}>
         {children}

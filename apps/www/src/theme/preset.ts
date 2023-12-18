@@ -96,6 +96,9 @@ export const presetRepublik = definePreset({
         lineHeights: {
           1: { value: 1 },
         },
+        animations: {
+          spin: { value: 'spin 1s linear infinite' },
+        },
       },
       semanticTokens: {
         colors: {
@@ -427,6 +430,10 @@ export const presetRepublik = definePreset({
       radixCollapsibleSlideUp: {
         from: { height: 'var(--radix-collapsible-content-height)' },
         to: { height: 0 },
+      },
+      spin: {
+        from: { transform: 'rotate(0deg)' },
+        to: { transform: 'rotate(360deg)' },
       },
     },
   },

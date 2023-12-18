@@ -27,14 +27,11 @@ export function usePullToRefresh(
   } = {
     maxPullDistance: 240,
     triggerThreshold: 240,
-    pullResistance: 0.6,
+    pullResistance: 0.4,
   },
-): IndicatorState {
+) {
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   const callbackRef = useRef<typeof callback>(() => {})
-  const [indicatorState, setIndicatorState] = useState<IndicatorState>(
-    IndicatorState.HIDDEN,
-  )
   const { maxPullDistance, triggerThreshold, pullResistance } = options
 
   const appr = useMemo<(_: number) => number>(
@@ -56,9 +53,6 @@ export function usePullToRefresh(
     if (!element) {
       return
     }
-    element.style.transition = 'transform 0.2s ease-in-out'
-
-    console.log(indicatorState)
 
     function handleTouchStart(startEvent: TouchEvent) {
       const el = ref.current
@@ -67,6 +61,7 @@ export function usePullToRefresh(
       // get the initial Y position
       const initialY = startEvent.touches[0].clientY
 
+      el.style.transition = null
       el.addEventListener('touchmove', handleTouchMove, { passive: true })
       el.addEventListener('touchend', handleTouchEnd)
       document.documentElement.style.overscrollBehaviorY = 'none'
@@ -84,7 +79,6 @@ export function usePullToRefresh(
         const dy = currentY - initialY
 
         if (dy < 0) {
-          setIndicatorState(IndicatorState.HIDDEN)
           return
         }
 
@@ -94,17 +88,32 @@ export function usePullToRefresh(
           progress.toString(),
         )
 
-        if (dy > triggerThreshold * 0.3) {
-          console.log('pulling')
-          setIndicatorState(IndicatorState.PULLING)
+        if (dy > triggerThreshold * 0.1) {
+          document.documentElement.setAttribute(
+            'data-pull-to-refresh-state',
+            'pulling',
+          )
         }
-
-        if (dy > triggerThreshold) {
-          console.log('triggered')
-          setIndicatorState(IndicatorState.TRIGGERED)
+        if (dy <= triggerThreshold) {
+          el.style.transform = `translateY(${appr(dy)}px)`
         }
+      }
 
-        el.style.transform = `translateY(${appr(dy)}px)`
+      function resetState() {
+        const el = ref.current
+        if (!el) return
+
+        // Return pulled element to original position
+        el.style.transform = 'translateY(0)'
+        el.style.transition = 'transform 0.2s ease-in-out'
+
+        // Clean up attributes on <html> element
+        document.documentElement.removeAttribute('data-pull-to-refresh-state')
+        document.documentElement.style.overscrollBehaviorY = null
+        document.documentElement.style.setProperty(
+          '--pull-to-refresh-progress',
+          '',
+        )
       }
 
       function handleTouchEnd(endEvent: TouchEvent) {
@@ -115,34 +124,21 @@ export function usePullToRefresh(
         const dy = currentY - initialY
 
         if (dy > triggerThreshold) {
-          setIndicatorState(IndicatorState.LOADING)
+          document.documentElement.setAttribute(
+            'data-pull-to-refresh-state',
+            'loading',
+          )
+
+          // Trigger refresh
           callbackRef?.current()
+          // Let animation run for 1s
+          setTimeout(resetState, 1000)
+        } else {
+          resetState()
         }
-
-        // return the element to its initial position
-        el.style.transform = 'translateY(0)'
-        el.style.transition = 'transform 0.2s ease-in-out'
-
-        el.addEventListener('transitionend', onTransitionEnd)
-
         // cleanup
         el.removeEventListener('touchmove', handleTouchMove)
         el.removeEventListener('touchend', handleTouchEnd)
-        document.documentElement.style.overscrollBehaviorY = null
-        document.documentElement.style.setProperty(
-          '--pull-to-refresh-progress',
-          '',
-        )
-      }
-
-      function onTransitionEnd() {
-        const el = ref.current
-        if (!el) return
-
-        setIndicatorState(IndicatorState.HIDDEN)
-        el.style.transition = null
-        // cleanup
-        el.removeEventListener('transitionend', onTransitionEnd)
       }
     }
 
@@ -152,6 +148,4 @@ export function usePullToRefresh(
       window.removeEventListener('touchstart', handleTouchStart)
     }
   }, [ref.current, callbackRef, appr, triggerThreshold])
-
-  return indicatorState
 }
