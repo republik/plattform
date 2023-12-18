@@ -242,7 +242,7 @@
     },
     {
       "key": "api/email/subscription/reactivated/subject",
-      "value": "Ihr Republik-Abo: Sie sind wieder da!"
+      "value": "Republik: Willkommen zurück!"
     },
     {
       "key": "api/users/merge/sourceAndTargetIdentical",
@@ -686,7 +686,7 @@
     },
     {
       "key": "api/email/membership_owner_prolong_abo_give_months_notice_0/subject",
-      "value": "Ihr letzter Tag an Bord"
+      "value": "Ihr letzter Tag an Bord?"
     },
     {
       "key": "api/email/membership_owner_prolong_yearly_abo_notice_0/subject",
@@ -714,7 +714,7 @@
     },
     {
       "key": "api/email/membership_deactivated_abo_uncancelled/sequenceNumber/true/subject",
-      "value": "Ihre Mitgliedschaft Nr. {sequenceNumber} wurde deaktiviert"
+      "value": "Das Ende – oder ein fulminanter Neustart?"
     },
     {
       "key": "api/email/membership_deactivated_benefactor_abo_uncancelled/sequenceNumber/true/subject",
@@ -722,7 +722,7 @@
     },
     {
       "key": "api/email/membership_deactivated_abo_give_months_uncancelled/subject",
-      "value": "Ihr Republik-Abonnement wurde deaktiviert"
+      "value": "Das Ende – oder ein fulminanter Neustart?"
     },
     {
       "key": "api/email/membership_deactivated_yearly_abo_uncancelled/subject",
