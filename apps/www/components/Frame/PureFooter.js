@@ -68,7 +68,7 @@ const Footer = ({ en }) => (
         <A
           href='https://project-r.construction/'
           target='_blank'
-          rel='noopener'
+          rel='noreferrer'
         >
           Project R
         </A>
@@ -76,7 +76,11 @@ const Footer = ({ en }) => (
     </div>
 
     <address {...styles.address} style={{ marginBottom: 20 }}>
-      <A href='https://goo.gl/maps/j1F8cXQhrmo' target='_blank' rel='noopener'>
+      <A
+        href='https://goo.gl/maps/j1F8cXQhrmo'
+        target='_blank'
+        rel='noreferrer'
+      >
         Republik AG
         <br />
         Sihlhallenstrasse 1<br />

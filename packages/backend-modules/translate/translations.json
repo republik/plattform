@@ -469,6 +469,14 @@
       "value": "Bücher «We Stay»"
     },
     {
+      "key": "api/email/option/goodie/cookie/1",
+      "value": "Republik-Guetsliform"
+    },
+    {
+      "key": "api/email/option/goodie/cookie/other",
+      "value": "Republik-Guetsliformen"
+    },
+    {
       "key": "api/email/option/membershiptype/abo/1",
       "value": "Jahresmitgliedschaft"
     },
@@ -2315,6 +2323,14 @@
     {
       "key": "api/invoices/option/Goodie/LESHA/other",
       "value": "Bücher «We Stay»"
+    },
+    {
+      "key": "api/invoices/option/Goodie/COOKIE/1",
+      "value": "Republik-Guetsliform"
+    },
+    {
+      "key": "api/invoices/option/Goodie/COOKIE/other",
+      "value": "Republik-Guetsliformen"
     },
     {
       "key": "api/invoices/option/MembershipType/ABO/1",

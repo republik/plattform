@@ -1,4 +1,4 @@
-import { gql } from '../gql'
+import { gql } from './gql'
 
 export const CHALLENGE_ACCEPTED_HUB_QUERY = gql(`
 query ChallengeAcceptedHubQuery {
@@ -13,6 +13,7 @@ query ChallengeAcceptedHubQuery {
     outro {
       value
     }
+    newsletterSignupTagline
     items {
       __typename
       ... on EventRecord {
@@ -32,6 +33,8 @@ query ChallengeAcceptedHubQuery {
         locationLink
         startAt
         endAt
+        _updatedAt
+        _status
       }
       ... on ChallengeAcceptedArticleRecord {
         id

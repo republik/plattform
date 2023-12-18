@@ -690,7 +690,39 @@ const text = {
       .
     </>
   ),
-  //November: (p) => <></>,
+  November: (p) => (
+    <>
+      Ein{' '}
+      <Highlight {...p} ids={['hVezg8QiQ']}>
+        erschütterndes Tagebuch aus Gaza
+      </Highlight>{' '}
+      und ein{' '}
+      <Highlight {...p} ids={['HaI0eURLC']}>
+        Gespräch über die existenzielle Angst auf beiden Seiten des Krieges
+      </Highlight>
+      . Der wohl bekannteste Gefangene der Schweiz{' '}
+      <Highlight {...p} ids={['T2QdrTvQD']}>
+        kommt frei
+      </Highlight>{' '}
+      – und der frühere Amtschef{' '}
+      <Highlight {...p} ids={['GT6WE_Dp_']}>
+        entschuldigt sich bei ihm.
+      </Highlight>{' '}
+      Warum das mit dem{' '}
+      <Highlight {...p} ids={['dYmCb6FLH']}>
+        Winterschlaf
+      </Highlight>{' '}
+      nichts wird.{' '}
+      <Highlight {...p} ids={['CrFWwKs-W']}>
+        Diese vier Curler
+      </Highlight>{' '}
+      müssen Sie kennenlernen. Und: Wir richten den Blick auf{' '}
+      <Highlight {...p} ids={['']} format='republik/format-challenge-accepted'>
+        25 Menschen, die in der Klimakrise einen Unterschied machen
+      </Highlight>
+      .
+    </>
+  ),
   //Dezember: (p) => <></>,
 }
 

@@ -82,7 +82,7 @@ const Event = withT(
       !!where && intersperse(where.split('\n'), (d, i) => <br key={i} />)
     if (locationLink && location) {
       location = (
-        <A href={locationLink} target='_blank' rel='noopener'>
+        <A href={locationLink} target='_blank' rel='noreferrer'>
           {location}
         </A>
       )
@@ -111,7 +111,7 @@ const Event = withT(
           />
           {!!link && (
             <P>
-              <A href={link} target='_blank' rel='noopener'>
+              <A href={link} target='_blank' rel='noreferrer'>
                 {link}
               </A>
             </P>
