@@ -33,9 +33,9 @@ const getRedirect = gql`
 
 const getURLLabel = (url) => {
   try {
-    return new URL(url).hostname?.replace(/^www\./, '')
+    return new URL(url).hostname?.replace(/^www\./, '');
   } catch (e) {
-    return url?.replace(/^https?:\/\/www\./, '')
+    return url?.replace(/^https?:\/\/www\./, '');
   }
 }
 const appendQueryString = (target, queryString) => {
@@ -163,12 +163,13 @@ export default compose(
       if (redirection) {
         const { target, status } = redirection
         const targetIsExternal = isExternal(target)
-        const restrictedPath = inNativeApp && target.match(/^\/angebote(\?|$)/)
+        const restrictedIOSPath =
+          inNativeIOSApp && target.match(/^\/angebote(\?|$)/)
 
         loading = true
 
         if (serverContext) {
-          if (!inNativeApp || (!targetIsExternal && !restrictedPath)) {
+          if (!inNativeApp || (!targetIsExternal && !restrictedIOSPath)) {
             serverContext.res.redirect(status || 302, target)
             throw new Error('redirect')
           }
