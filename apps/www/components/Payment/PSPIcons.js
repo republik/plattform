@@ -75,9 +75,9 @@ export const Amex = () => (
 export const Postcard = () => (
   <svg
     style={{ verticalAlign: 'middle' }}
-    width='79'
+    width='83'
     height='40'
-    viewBox='0 -6 79 28'
+    viewBox='-2 -6 83 28'
     aria-hidden='true'
     focusable='false'
   >
@@ -93,7 +93,7 @@ export const PayPal = () => (
     style={{ verticalAlign: 'middle' }}
     width='77'
     height='40'
-    viewBox='0 -9 77 31'
+    viewBox='0 -9 77 35'
     aria-hidden='true'
     focusable='false'
   >

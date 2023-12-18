@@ -375,7 +375,15 @@ class PaymentForm extends Component {
                 ((paymentSource.brand.toLowerCase() === 'american express' ||
                   paymentSource.brand.toLowerCase() === 'amex') && (
                   <PSPIcons.Amex />
-                )))
+                )) ||
+                PAYMENT_METHODS.find(
+                  ({ key }) => key === paymentSource.method,
+                )?.Icon())
+
+            const paymentSourceBgColor = PAYMENT_METHODS.find(
+              ({ key }) => key === paymentSource.method,
+            )?.bgColor
+
             const paymentSourceDisabled =
               paymentSource && paymentSource.status !== 'CHARGEABLE'
 
@@ -390,6 +398,7 @@ class PaymentForm extends Component {
                     <PaymentMethodLabel
                       active={values.paymentSource === paymentSource.id}
                       error={paymentSourceDisabled}
+                      backgroundColor={paymentSourceBgColor}
                     >
                       <input
                         type='radio'
@@ -415,13 +424,19 @@ class PaymentForm extends Component {
                             {paymentSource.brand}
                           </span>
                         )}
-                        <span {...styles.paymentMethodSourceText}>
-                          {!PaymentSourceIcon && paymentSource.brand}
-                          {'**** '}
-                          {paymentSource.last4}
-                          <br />
-                          {pad2(paymentSource.expMonth)}/{paymentSource.expYear}
-                        </span>
+                        {(!PaymentSourceIcon ||
+                          paymentSource.last4 ||
+                          paymentSource.expMonth ||
+                          paymentSource.expYear) && (
+                          <span {...styles.paymentMethodSourceText}>
+                            {!PaymentSourceIcon && paymentSource.brand}
+                            {'**** '}
+                            {paymentSource.last4}
+                            <br />
+                            {pad2(paymentSource.expMonth)}/
+                            {paymentSource.expYear}
+                          </span>
+                        )}
                       </span>
                     </PaymentMethodLabel>
                     <br />
