@@ -1,0 +1,16 @@
+Guten Tag
+
+Ihre E-Mail-Adresse wurde geändert und lautet nun: {{EMAIL}}
+
+Falls dies nicht in Ihrem Sinn ist, melden Sie sich bitte umgehend bei uns:
+kontakt@republik.ch
+
+Herzlich
+
+Ihre Crew der Republik
+
+
+Republik AG
+Sihlhallenstrasse 1, CH-8004 Zürich
+{{frontend_base_url}}
+kontakt@republik.ch
