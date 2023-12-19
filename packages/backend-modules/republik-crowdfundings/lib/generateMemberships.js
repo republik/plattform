@@ -38,7 +38,7 @@ module.exports = async (pledgeId, pgdb, t, redis) => {
 
   const subscribeToOnboardingMails =
     existingMemberships === 0 &&
-    pkg.name in ['ABO', 'MONTHLY_ABO', 'BENEFACTOR', 'YEARLY_ABO'] // should not subscribe buyers of gift memberships to onbaording mails
+    ['ABO', 'MONTHLY_ABO', 'BENEFACTOR', 'YEARLY_ABO'].includes(pkg.name) // should not subscribe buyers of gift memberships to onbaording mails
 
   let hasRewards = false
 
