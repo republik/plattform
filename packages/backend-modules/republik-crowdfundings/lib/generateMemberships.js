@@ -32,12 +32,16 @@ module.exports = async (pledgeId, pgdb, t, redis) => {
   const existingMemberships = await pgdb.public.memberships.count({
     userId: user.id,
   })
-  const subscribeToOnboardingMails = existingMemberships === 0
 
   // get ingredients
   const pkg = await pgdb.public.packages.findOne({ id: pledge.packageId })
 
+  const subscribeToOnboardingMails =
+    existingMemberships === 0 &&
+    pkg.name in ['ABO', 'MONTHLY_ABO', 'BENEFACTOR', 'YEARLY_ABO'] // should not subscribe buyers of gift memberships to onbaording mails
+
   let hasRewards = false
+
   const pledgeOptions = await getPledgeOptionsTree(
     await pgdb.public.pledgeOptions.find({ pledgeId: pledge.id }),
     pgdb,
