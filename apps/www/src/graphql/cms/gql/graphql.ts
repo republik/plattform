@@ -415,6 +415,7 @@ export type EventModelFilter = {
   slug?: InputMaybe<SlugFilter>
   startAt?: InputMaybe<DateTimeFilter>
   title?: InputMaybe<StringFilter>
+  unlisted?: InputMaybe<BooleanFilter>
 }
 
 export type EventModelNonMemberCtaField = {
@@ -459,6 +460,8 @@ export enum EventModelOrderBy {
   StartAtDesc = 'startAt_DESC',
   TitleAsc = 'title_ASC',
   TitleDesc = 'title_DESC',
+  UnlistedAsc = 'unlisted_ASC',
+  UnlistedDesc = 'unlisted_DESC',
 }
 
 /** Record of type Veranstaltung (event) */
@@ -490,6 +493,7 @@ export type EventRecord = RecordInterface & {
   slug: Scalars['String']['output']
   startAt: Scalars['DateTime']['output']
   title: Scalars['String']['output']
+  unlisted?: Maybe<Scalars['BooleanType']['output']>
 }
 
 /** Record of type Veranstaltung (event) */
@@ -2967,6 +2971,7 @@ export type EventRecordFieldsFragment = {
   startAt: string
   endAt?: string | null
   _updatedAt: string
+  _status: ItemStatus
   description: { __typename?: 'EventModelDescriptionField'; value: any }
   nonMemberCta?: {
     __typename?: 'EventModelNonMemberCtaField'
@@ -3039,6 +3044,7 @@ export type ChallengeAcceptedHubQueryQuery = {
   hub?: {
     __typename?: 'ChallengeAcceptedHubRecord'
     id: string
+    newsletterSignupTagline?: string | null
     logo?: { __typename?: 'FileField'; url: string } | null
     introduction: {
       __typename?: 'ChallengeAcceptedHubModelIntroductionField'
@@ -3074,6 +3080,8 @@ export type ChallengeAcceptedHubQueryQuery = {
           locationLink?: string | null
           startAt: string
           endAt?: string | null
+          _updatedAt: string
+          _status: ItemStatus
           description: { __typename?: 'EventModelDescriptionField'; value: any }
           nonMemberCta?: {
             __typename?: 'EventModelNonMemberCtaField'
@@ -3123,6 +3131,7 @@ export type PersonDetailQuery = {
   hub?: {
     __typename?: 'ChallengeAcceptedHubRecord'
     id: string
+    newsletterSignupTagline?: string | null
     logo?: { __typename?: 'FileField'; url: string } | null
   } | null
   person?: {
@@ -3172,6 +3181,8 @@ export type PersonDetailQuery = {
           locationLink?: string | null
           startAt: string
           endAt?: string | null
+          _updatedAt: string
+          _status: ItemStatus
           description: { __typename?: 'EventModelDescriptionField'; value: any }
           nonMemberCta?: {
             __typename?: 'EventModelNonMemberCtaField'
@@ -3252,6 +3263,7 @@ export const EventRecordFieldsFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'startAt' } },
           { kind: 'Field', name: { kind: 'Name', value: 'endAt' } },
           { kind: 'Field', name: { kind: 'Name', value: '_updatedAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: '_status' } },
         ],
       },
     },
@@ -3296,7 +3308,7 @@ export const EventsQueryDocument = {
                   fields: [
                     {
                       kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'OR' },
+                      name: { kind: 'Name', value: 'AND' },
                       value: {
                         kind: 'ListValue',
                         values: [
@@ -3305,16 +3317,16 @@ export const EventsQueryDocument = {
                             fields: [
                               {
                                 kind: 'ObjectField',
-                                name: { kind: 'Name', value: 'startAt' },
+                                name: { kind: 'Name', value: 'unlisted' },
                                 value: {
                                   kind: 'ObjectValue',
                                   fields: [
                                     {
                                       kind: 'ObjectField',
-                                      name: { kind: 'Name', value: 'gte' },
+                                      name: { kind: 'Name', value: 'eq' },
                                       value: {
-                                        kind: 'Variable',
-                                        name: { kind: 'Name', value: 'today' },
+                                        kind: 'BooleanValue',
+                                        value: false,
                                       },
                                     },
                                   ],
@@ -3327,17 +3339,71 @@ export const EventsQueryDocument = {
                             fields: [
                               {
                                 kind: 'ObjectField',
-                                name: { kind: 'Name', value: 'endAt' },
+                                name: { kind: 'Name', value: 'OR' },
                                 value: {
-                                  kind: 'ObjectValue',
-                                  fields: [
+                                  kind: 'ListValue',
+                                  values: [
                                     {
-                                      kind: 'ObjectField',
-                                      name: { kind: 'Name', value: 'gte' },
-                                      value: {
-                                        kind: 'Variable',
-                                        name: { kind: 'Name', value: 'today' },
-                                      },
+                                      kind: 'ObjectValue',
+                                      fields: [
+                                        {
+                                          kind: 'ObjectField',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'startAt',
+                                          },
+                                          value: {
+                                            kind: 'ObjectValue',
+                                            fields: [
+                                              {
+                                                kind: 'ObjectField',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'gte',
+                                                },
+                                                value: {
+                                                  kind: 'Variable',
+                                                  name: {
+                                                    kind: 'Name',
+                                                    value: 'today',
+                                                  },
+                                                },
+                                              },
+                                            ],
+                                          },
+                                        },
+                                      ],
+                                    },
+                                    {
+                                      kind: 'ObjectValue',
+                                      fields: [
+                                        {
+                                          kind: 'ObjectField',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'endAt',
+                                          },
+                                          value: {
+                                            kind: 'ObjectValue',
+                                            fields: [
+                                              {
+                                                kind: 'ObjectField',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'gte',
+                                                },
+                                                value: {
+                                                  kind: 'Variable',
+                                                  name: {
+                                                    kind: 'Name',
+                                                    value: 'today',
+                                                  },
+                                                },
+                                              },
+                                            ],
+                                          },
+                                        },
+                                      ],
                                     },
                                   ],
                                 },
@@ -3353,7 +3419,7 @@ export const EventsQueryDocument = {
               {
                 kind: 'Argument',
                 name: { kind: 'Name', value: 'orderBy' },
-                value: { kind: 'EnumValue', value: 'startAt_DESC' },
+                value: { kind: 'EnumValue', value: 'startAt_ASC' },
               },
             ],
             selectionSet: {
@@ -3493,6 +3559,7 @@ export const EventsQueryDocument = {
           { kind: 'Field', name: { kind: 'Name', value: 'startAt' } },
           { kind: 'Field', name: { kind: 'Name', value: 'endAt' } },
           { kind: 'Field', name: { kind: 'Name', value: '_updatedAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: '_status' } },
         ],
       },
     },
@@ -3600,6 +3667,7 @@ export const EventQueryDocument = {
           { kind: 'Field', name: { kind: 'Name', value: 'startAt' } },
           { kind: 'Field', name: { kind: 'Name', value: 'endAt' } },
           { kind: 'Field', name: { kind: 'Name', value: '_updatedAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: '_status' } },
         ],
       },
     },
@@ -3763,6 +3831,10 @@ export const ChallengeAcceptedHubQueryDocument = {
                 },
                 {
                   kind: 'Field',
+                  name: { kind: 'Name', value: 'newsletterSignupTagline' },
+                },
+                {
+                  kind: 'Field',
                   name: { kind: 'Name', value: 'items' },
                   selectionSet: {
                     kind: 'SelectionSet',
@@ -3845,6 +3917,14 @@ export const ChallengeAcceptedHubQueryDocument = {
                             {
                               kind: 'Field',
                               name: { kind: 'Name', value: 'endAt' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: '_updatedAt' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: '_status' },
                             },
                           ],
                         },
@@ -4082,6 +4162,10 @@ export const PersonDetailDocument = {
                     ],
                   },
                 },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'newsletterSignupTagline' },
+                },
               ],
             },
           },
@@ -4235,6 +4319,14 @@ export const PersonDetailDocument = {
                             {
                               kind: 'Field',
                               name: { kind: 'Name', value: 'endAt' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: '_updatedAt' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: '_status' },
                             },
                           ],
                         },
