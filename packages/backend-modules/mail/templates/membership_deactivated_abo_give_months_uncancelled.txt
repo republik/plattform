@@ -11,7 +11,7 @@ Und wir fragen uns: Wie sind wir bloss an diesem Punkt gelandet?
 
 Falls es ein Missverständnis war, dann können Sie es hier sofort ungeschehen machen:
 
-Jetzt eine Jahresmitgliedschaft lösen {{prolong_url}}
+Jetzt eine Jahresmitgliedschaft lösen: {{prolong_url}}
 
 In nur zwei Minuten wird so aus einem abrupten Ende ein fulminanter Neustart! 
 

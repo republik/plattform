@@ -11,7 +11,7 @@ Und wir fragen uns: Wie sind wir bloss an diesem Punkt gelandet?
 
 Falls es ein Missverständnis war, dann können Sie es hier sofort ungeschehen machen:
 
-Jetzt meine Mitgliedschaft reaktivieren {{prolong_url}}
+Jetzt meine Mitgliedschaft reaktivieren: {{prolong_url}}
 
 In nur zwei Minuten wird so aus einem abrupten Ende ein fulminanter Neustart. 
 Und Sie stellen sicher, dass unser Journalismus eine Zukunft hat.
