@@ -104,6 +104,7 @@ export default async function Page({ params: { slug } }: PageProps) {
           })}
         >
           <CANewsletterSignUp
+            tagline={data.hub?.newsletterSignupTagline}
             me={me}
             description={
               <p

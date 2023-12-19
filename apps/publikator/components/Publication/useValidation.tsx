@@ -1,15 +1,14 @@
 import { useMemo } from 'react'
 import visit from 'unist-util-visit'
-import isUUID from 'is-uuid'
-import { parse } from 'url'
-import { FRONTEND_BASE_URL } from '../../lib/settings'
+import { v4 as uuid, validate as validateUUID } from 'uuid'
 import { mdastToString } from '../../lib/utils/helpers'
 
 import { SOCIAL_MEDIA } from '../editor/modules/meta/ShareImageForm'
 
 import { Editorial, renderSlateAsText } from '@project-r/styleguide'
 
-const FRONTEND_HOSTNAME = FRONTEND_BASE_URL && parse(FRONTEND_BASE_URL).hostname
+// Used to check for relative urls
+const FAKE_BASE_URL = `http://${uuid()}.local`
 
 const useValidation = ({ meta, content, t, updateMailchimp }) => {
   const links = useMemo(() => {
@@ -23,39 +22,37 @@ const useValidation = ({ meta, content, t, updateMailchimp }) => {
       const warnings = []
       const errors = []
 
-      if (!node || !node[urlKey] || !node[urlKey].trim()) {
+      if (!node?.[urlKey]?.trim()) {
         errors.push('empty')
       } else {
-        const urlObject = parse(node[urlKey])
-        if (urlObject.path) {
-          if (
-            !urlObject.protocol &&
-            urlObject.path[0] !== '/' &&
-            urlObject.path[0] !== '#' &&
-            urlObject.path[0] !== '?'
-          ) {
-            errors.push('relative')
+        try {
+          const urlObject = new URL(node[urlKey], FAKE_BASE_URL)
+
+          // Is it a relative url?
+          if (urlObject.origin === FAKE_BASE_URL) {
+            // Profile urls are ok when relative, but only if they're a UUID
+            if (urlObject.pathname.startsWith('/~')) {
+              const slug = urlObject.pathname.split('~')[1]
+              if (!validateUUID(slug)) {
+                warnings.push('profiles')
+              }
+            } else {
+              errors.push('relative')
+            }
           }
+          // WebP?
           if (urlObject.pathname.endsWith('.webp')) {
             warnings.push('webp')
           }
-          if (
-            (!urlObject.protocol || FRONTEND_HOSTNAME === urlObject.hostname) &&
-            urlObject.path.startsWith('/~')
-          ) {
-            const slug = urlObject.pathname.split('~')[1]
-            if (!isUUID.v4(slug)) {
-              warnings.push('profiles')
-            }
-          }
-        }
-        if (urlObject.hostname) {
+          // Uhhhh really?
           if (
             urlObject.hostname.startsWith('ww.') ||
             urlObject.hostname.startsWith('wwww.')
           ) {
             warnings.push('wwwws')
           }
+        } catch (e) {
+          console.log('Error validating URL', e)
         }
       }
 

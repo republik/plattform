@@ -1,30 +1,6 @@
-import { gql } from '@apollo/client'
+import { gql } from './gql'
 
-export type CallToAction = {
-  id: string
-  beginAt: string
-  endAt?: string
-  acknowledgedAt?: string
-  updatedAt: string
-  createdAt: string
-  payload:
-    | {
-        __typename: 'CallToActionBasicPayload'
-        text: string
-        linkHref: string
-        linkLabel: string
-      }
-    | {
-        __typename: 'CallToActionComponentPayload'
-        customComponent: {
-          key: string
-          args?: Record<string, unknown>
-        }
-      }
-  response?: unknown
-}
-
-export const CALL_TO_ACTIONS_QUERY = gql`
+export const CALL_TO_ACTIONS_QUERY = gql(`
   query myCallToActions {
     me {
       id
@@ -50,11 +26,4 @@ export const CALL_TO_ACTIONS_QUERY = gql`
       }
     }
   }
-`
-
-export type CallToActionsQueryResult = {
-  me: {
-    id: string
-    callToActions: CallToAction[]
-  }
-}
+`)

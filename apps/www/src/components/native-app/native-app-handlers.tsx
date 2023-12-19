@@ -1,12 +1,12 @@
-import { MeQueryResult } from '@app/graphql/republik-api/me.query'
 import { NAAppSignInHandler } from './handlers/app-sign-in-handler'
 import { NARoutingHandler } from './handlers/routing-handler'
 import { NARegisterDevicePushNotificationHandler } from './handlers/register-device-push-notification-handler'
 import { Suspense } from 'react'
 import { NAColorSchemeSyncHandler } from './handlers/color-scheme-handler'
+import { MeQuery } from '@app/graphql/republik-api/gql/graphql'
 
 type NativeAppHandlersProps = {
-  me: MeQueryResult['me']
+  me: MeQuery['me']
 }
 
 /**
