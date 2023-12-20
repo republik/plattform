@@ -11100,18 +11100,6 @@
             "deprecationReason": null
           },
           {
-            "name": "noIndex",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "BooleanType",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
             "name": "title",
             "description": null,
             "args": [],
@@ -11287,18 +11275,6 @@
                   }
                 }
               }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "noIndex",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "BooleanType",
-              "ofType": null
             },
             "isDeprecated": false,
             "deprecationReason": null
