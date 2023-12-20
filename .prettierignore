@@ -10,4 +10,4 @@ node_modules
 dist
 build
 
-/apps/www/src/graphql/gql/**/*.ts
+/apps/www/src/graphql/*/gql/**/*.ts

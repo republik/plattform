@@ -39,50 +39,14 @@ const republikAPIConfig = {
 const config: CodegenConfig = {
   overwrite: true,
   generates: {
-    'src/graphql/cms/gql/': {
+    './graphql/dato-cms.schema.graphql': {
       ...datoCMSConfig,
-      preset: 'client',
-      presetConfig: {
-        gqlTagName: 'gql',
-      },
-      config: {
-        scalars: {
-          ItemId: 'string',
-          IntType: 'number',
-          Date: 'string',
-          DateTime: 'string',
-        },
-      },
-      plugins: [],
+      plugins: ['schema-ast'],
     },
-    './graphql-cms.schema.json': {
-      ...datoCMSConfig,
-      plugins: ['introspection'],
-    },
-    'src/graphql/republik-api/gql/': {
+    './graphql/republik-api.schema.graphql': {
       ...republikAPIConfig,
-      preset: 'client',
-      presetConfig: {
-        gqlTagName: 'gql',
-      },
-      config: {
-        scalars: {
-          ItemId: 'string',
-          IntType: 'number',
-          Date: 'string',
-          DateTime: 'string',
-        },
-      },
-      plugins: [],
+      plugins: ['schema-ast'],
     },
-    './graphql-republik.schema.json': {
-      ...republikAPIConfig,
-      plugins: ['introspection'],
-    },
-  },
-  // Ensure that the generated files are formatted directly to not cause diffs if there are no changes
-  hooks: {
-    afterOneFileWrite: ['prettier --write'],
   },
 }
 
