@@ -439,6 +439,132 @@ export type Candidacy = {
   yearOfBirth?: Maybe<Scalars['Int']['output']>
 }
 
+export type Card = {
+  __typename?: 'Card'
+  documents: DocumentConnection
+  group: CardGroup
+  id: Scalars['ID']['output']
+  payload: Scalars['JSON']['output']
+  statement?: Maybe<Comment>
+  user: User
+}
+
+export type CardPayloadArgs = {
+  paths?: InputMaybe<Array<Scalars['String']['input']>>
+}
+
+export type CardUserArgs = {
+  accessToken?: InputMaybe<Scalars['ID']['input']>
+}
+
+export type CardAggregation = {
+  __typename?: 'CardAggregation'
+  buckets: Array<CardAggregationBucket>
+  key: Scalars['String']['output']
+}
+
+export type CardAggregationBucket = {
+  __typename?: 'CardAggregationBucket'
+  cards: CardConnection
+  value: Scalars['String']['output']
+}
+
+export type CardAggregationBucketCardsArgs = {
+  after?: InputMaybe<Scalars['String']['input']>
+  before?: InputMaybe<Scalars['String']['input']>
+  first?: InputMaybe<Scalars['Int']['input']>
+  last?: InputMaybe<Scalars['Int']['input']>
+}
+
+export enum CardAggregationKeys {
+  CouncilOfStatesElection = 'councilOfStatesElection',
+  Election = 'election',
+  Fraction = 'fraction',
+  NationalCouncilElection = 'nationalCouncilElection',
+  Party = 'party',
+}
+
+export type CardConnection = {
+  __typename?: 'CardConnection'
+  aggregations: Array<CardAggregation>
+  medians: CardMedians
+  nodes: Array<Card>
+  pageInfo: CardPageInfo
+  totalCount: Scalars['Int']['output']
+}
+
+export type CardConnectionAggregationsArgs = {
+  keys?: InputMaybe<Array<CardAggregationKeys>>
+}
+
+export type CardFiltersInput = {
+  candidacies?: InputMaybe<Array<Scalars['String']['input']>>
+  elected?: InputMaybe<Scalars['Boolean']['input']>
+  elects?: InputMaybe<Array<Scalars['String']['input']>>
+  fractions?: InputMaybe<Array<Scalars['String']['input']>>
+  mustHave?: InputMaybe<Array<CardFiltersMustHaveInput>>
+  parties?: InputMaybe<Array<Scalars['String']['input']>>
+  subscribedByMe?: InputMaybe<Scalars['Boolean']['input']>
+}
+
+export enum CardFiltersMustHaveInput {
+  Financing = 'financing',
+  Portrait = 'portrait',
+  Smartspider = 'smartspider',
+  Statement = 'statement',
+}
+
+export type CardGroup = {
+  __typename?: 'CardGroup'
+  cards: CardConnection
+  discussion?: Maybe<Discussion>
+  id: Scalars['ID']['output']
+  name: Scalars['String']['output']
+  slug: Scalars['String']['output']
+}
+
+export type CardGroupCardsArgs = {
+  after?: InputMaybe<Scalars['String']['input']>
+  before?: InputMaybe<Scalars['String']['input']>
+  filters?: InputMaybe<CardFiltersInput>
+  first?: InputMaybe<Scalars['Int']['input']>
+  focus?: InputMaybe<Array<Scalars['ID']['input']>>
+  last?: InputMaybe<Scalars['Int']['input']>
+  sort?: InputMaybe<CardSortInput>
+}
+
+export type CardGroupConnection = {
+  __typename?: 'CardGroupConnection'
+  nodes: Array<CardGroup>
+  pageInfo: CardGroupPageInfo
+  totalCount: Scalars['Int']['output']
+}
+
+export type CardGroupPageInfo = {
+  __typename?: 'CardGroupPageInfo'
+  endCursor?: Maybe<Scalars['String']['output']>
+  hasNextPage: Scalars['Boolean']['output']
+  hasPreviousPage: Scalars['Boolean']['output']
+  startCursor?: Maybe<Scalars['String']['output']>
+}
+
+export type CardMedians = {
+  __typename?: 'CardMedians'
+  smartspider?: Maybe<Array<Scalars['Float']['output']>>
+}
+
+export type CardPageInfo = {
+  __typename?: 'CardPageInfo'
+  endCursor?: Maybe<Scalars['String']['output']>
+  hasNextPage: Scalars['Boolean']['output']
+  hasPreviousPage: Scalars['Boolean']['output']
+  startCursor?: Maybe<Scalars['String']['output']>
+}
+
+export type CardSortInput = {
+  smartspider?: InputMaybe<Array<InputMaybe<Scalars['Float']['input']>>>
+}
+
 export type Collection = {
   __typename?: 'Collection'
   id: Scalars['ID']['output']
@@ -2897,6 +3023,7 @@ export type User = {
    */
   callToActions: Array<CallToAction>
   candidacies: Array<Candidacy>
+  cards: CardConnection
   checkMembershipSubscriptions: Scalars['Boolean']['output']
   collection?: Maybe<Collection>
   collectionItems: CollectionItemConnection
@@ -2979,6 +3106,16 @@ export type UserAccessTokenArgs = {
 
 export type UserCalendarArgs = {
   slug: Scalars['String']['input']
+}
+
+export type UserCardsArgs = {
+  after?: InputMaybe<Scalars['String']['input']>
+  before?: InputMaybe<Scalars['String']['input']>
+  filters?: InputMaybe<CardFiltersInput>
+  first?: InputMaybe<Scalars['Int']['input']>
+  focus?: InputMaybe<Array<Scalars['ID']['input']>>
+  last?: InputMaybe<Scalars['Int']['input']>
+  sort?: InputMaybe<CardSortInput>
 }
 
 export type UserCollectionArgs = {
@@ -3271,6 +3408,7 @@ export type Mutations = {
   cancelPledge?: Maybe<Pledge>
   /** Claim a granted membership with a voucher code */
   claimAccess: AccessGrant
+  claimCard: Card
   claimMembership: Scalars['Boolean']['output']
   /** Clear all items in `User.audioQueue`. */
   clearAudioQueue: Array<AudioQueueItem>
@@ -3396,6 +3534,7 @@ export type Mutations = {
   unvoteComment: Comment
   updateAddress: Address
   updateAdminNotes: User
+  updateCard: Card
   updateDiscussion: Discussion
   updateEmail: User
   updateMe: User
@@ -3506,6 +3645,14 @@ export type MutationsCancelPledgeArgs = {
 export type MutationsClaimAccessArgs = {
   payload?: InputMaybe<Scalars['JSON']['input']>
   voucherCode: Scalars['String']['input']
+}
+
+export type MutationsClaimCardArgs = {
+  accessToken: Scalars['ID']['input']
+  id: Scalars['ID']['input']
+  payload?: InputMaybe<Scalars['JSON']['input']>
+  portrait?: InputMaybe<Scalars['String']['input']>
+  statement: Scalars['String']['input']
 }
 
 export type MutationsClaimMembershipArgs = {
@@ -3986,6 +4133,13 @@ export type MutationsUpdateAdminNotesArgs = {
   userId: Scalars['ID']['input']
 }
 
+export type MutationsUpdateCardArgs = {
+  id: Scalars['ID']['input']
+  payload?: InputMaybe<Scalars['JSON']['input']>
+  portrait?: InputMaybe<Scalars['String']['input']>
+  statement: Scalars['String']['input']
+}
+
 export type MutationsUpdateDiscussionArgs = {
   closed?: InputMaybe<Scalars['Boolean']['input']>
   id: Scalars['ID']['input']
@@ -4114,6 +4268,10 @@ export type Queries = {
   activeDiscussions: Array<CommentAggregation>
   adminUsers: Users
   cancellationCategories: Array<CancellationCategory>
+  card?: Maybe<Card>
+  cardGroup?: Maybe<CardGroup>
+  cardGroups: CardGroupConnection
+  cards: CardConnection
   checkUsername?: Maybe<Scalars['Boolean']['output']>
   collectionsStats: CollectionsStats
   comment: Comment
@@ -4189,6 +4347,35 @@ export type QueriesAdminUsersArgs = {
 
 export type QueriesCancellationCategoriesArgs = {
   showMore?: InputMaybe<Scalars['Boolean']['input']>
+}
+
+export type QueriesCardArgs = {
+  accessToken?: InputMaybe<Scalars['ID']['input']>
+  id?: InputMaybe<Scalars['ID']['input']>
+}
+
+export type QueriesCardGroupArgs = {
+  id?: InputMaybe<Scalars['ID']['input']>
+  slug?: InputMaybe<Scalars['String']['input']>
+}
+
+export type QueriesCardGroupsArgs = {
+  after?: InputMaybe<Scalars['String']['input']>
+  before?: InputMaybe<Scalars['String']['input']>
+  first?: InputMaybe<Scalars['Int']['input']>
+  last?: InputMaybe<Scalars['Int']['input']>
+}
+
+export type QueriesCardsArgs = {
+  accessToken?: InputMaybe<Scalars['ID']['input']>
+  after?: InputMaybe<Scalars['String']['input']>
+  before?: InputMaybe<Scalars['String']['input']>
+  filters?: InputMaybe<CardFiltersInput>
+  first?: InputMaybe<Scalars['Int']['input']>
+  focus?: InputMaybe<Array<Scalars['ID']['input']>>
+  id?: InputMaybe<Scalars['ID']['input']>
+  last?: InputMaybe<Scalars['Int']['input']>
+  sort?: InputMaybe<CardSortInput>
 }
 
 export type QueriesCheckUsernameArgs = {

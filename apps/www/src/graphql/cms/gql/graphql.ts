@@ -2484,6 +2484,7 @@ export type SeoField = {
   __typename?: 'SeoField'
   description?: Maybe<Scalars['String']['output']>
   image?: Maybe<FileField>
+  noIndex?: Maybe<Scalars['BooleanType']['output']>
   title?: Maybe<Scalars['String']['output']>
   twitterCard?: Maybe<Scalars['String']['output']>
 }
@@ -2500,6 +2501,7 @@ export type Site = {
   faviconMetaTags: Array<Tag>
   globalSeo?: Maybe<GlobalSeoField>
   locales: Array<SiteLocale>
+  noIndex?: Maybe<Scalars['BooleanType']['output']>
 }
 
 export type SiteFaviconMetaTagsArgs = {
