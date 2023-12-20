@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation'
 import React, { useCallback, useEffect, useMemo, useRef } from 'react'
 
 // eslint-disable-next-line no-unused-vars
-export enum IndicatorState {
+enum IndicatorState {
   HIDDEN,
   PULLING,
   TRIGGERED,
@@ -22,7 +22,7 @@ export enum IndicatorState {
  * This hooks is based on the following article:
  * https://www.strictmode.io/articles/react-pull-to-refresh
  */
-export function usePullToRefresh(
+function usePullToRefresh(
   ref: React.RefObject<HTMLDivElement>,
   callback: () => void,
   options: {
