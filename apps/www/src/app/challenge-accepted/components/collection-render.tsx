@@ -1,12 +1,12 @@
-import { ChallengeAcceptedHubQueryQuery } from '@app/graphql/cms/gql/graphql'
 import { css } from '@app/styled-system/css'
 import { Collapsible } from './collapsible'
 import { ArticleTeaser } from './teasers/article-teaser'
 import { EventTeaser } from './teasers/event-teaser'
 import { NewsletterTeaser } from './teasers/newsletter-teaser'
+import { ChallengeAcceptedHubQuery } from '@app/graphql/cms/gql/graphql'
 
 type CollectionRendererProps = {
-  items: ChallengeAcceptedHubQueryQuery['hub']['items']
+  items: ChallengeAcceptedHubQuery['hub']['items']
   isMember?: boolean
   filter?: string
 }

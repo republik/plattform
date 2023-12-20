@@ -1,5 +1,4 @@
 'use client'
-import type { ChallengeAcceptedPersonListQueryQuery } from '@app/graphql/cms/gql/graphql'
 import { css } from '@app/styled-system/css'
 import useResizeObserver from 'use-resize-observer'
 
@@ -16,6 +15,7 @@ import {
 import { select } from 'd3-selection'
 import d3ForceLimit from 'd3-force-limit'
 import { useRouter } from 'next/navigation'
+import { ChallengeAcceptedPersonListQuery } from '@app/graphql/cms/gql/graphql'
 
 const RADIUS_LARGE = 110
 const RADIUS_MEDIUM = 75
@@ -25,7 +25,7 @@ const RADIUS_LARGE_MAX = 150
 const RADIUS_MEDIUM_MAX = 100
 const RADIUS_SMALL_MAX = 75
 
-type People = ChallengeAcceptedPersonListQueryQuery['people']
+type People = ChallengeAcceptedPersonListQuery['people']
 type Person = People[number]
 type PersonNode = SimulationNodeDatum & {
   hovered?: boolean

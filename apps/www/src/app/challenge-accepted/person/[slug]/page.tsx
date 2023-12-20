@@ -1,6 +1,5 @@
 import { CANewsletterSignUp } from '@app/app/challenge-accepted/components/ca-newsletter-sign-up'
 import Container from '@app/components/container'
-import { PERSON_DETAIL_QUERY } from '@app/graphql/cms/person-detail.query'
 import { getCMSClient } from '@app/lib/apollo/cms-client'
 import { getMe } from '@app/lib/auth/me'
 import { css } from '@app/styled-system/css'
@@ -12,6 +11,7 @@ import { PersonDetail } from './components/person-detail'
 import { PersonList } from '@app/app/challenge-accepted/person/[slug]/components/person-list'
 import { vstack } from '@app/styled-system/patterns'
 import Image from 'next/image'
+import { PersonDetailDocument } from '@app/graphql/cms/gql/graphql'
 
 type PageProps = {
   params: {
@@ -23,7 +23,7 @@ export const revalidate = 60 // revalidate at most every minute
 
 export default async function Page({ params: { slug } }: PageProps) {
   const { data } = await getCMSClient().query({
-    query: PERSON_DETAIL_QUERY,
+    query: PersonDetailDocument,
     variables: { slug },
     context: {
       fetchOptions: {
