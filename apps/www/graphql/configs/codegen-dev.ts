@@ -9,7 +9,7 @@ const config: CodegenConfig = {
   generates: {
     './src/graphql/cms/gql/': {
       schema: './graphql/dato-cms.schema.graphql',
-      documents: ['./src/graphql/cms/**/*.{ts,tsx}'],
+      documents: ['./src/graphql/cms/**/*.{ts,tsx,gql,graphql}'],
       preset: 'client',
       presetConfig: {
         gqlTagName: 'gql',
@@ -26,7 +26,7 @@ const config: CodegenConfig = {
     },
     './src/graphql/republik-api/gql/': {
       schema: './graphql/republik-api.schema.graphql',
-      documents: ['./src/graphql/republik-api/**/*.{ts,tsx}'],
+      documents: ['./src/graphql/republik-api/**/*.{ts,tsx,gql,graphql}'],
       preset: 'client',
       presetConfig: {
         gqlTagName: 'gql',

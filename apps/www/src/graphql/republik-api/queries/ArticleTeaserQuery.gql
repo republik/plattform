@@ -1,0 +1,10 @@
+query ArticleTeaser($path: String!) {
+  article: document(path: $path) {
+    meta {
+      title
+      description
+      image
+      credits
+    }
+  }
+}

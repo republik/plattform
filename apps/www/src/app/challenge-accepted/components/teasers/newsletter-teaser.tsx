@@ -1,4 +1,4 @@
-import { ARTICLE_QUERY } from '@app/graphql/republik-api/article.query'
+import { ArticleTeaserDocument } from '@app/graphql/republik-api/gql/graphql'
 import { getClient } from '@app/lib/apollo/client'
 import { getMe } from '@app/lib/auth/me'
 import { css } from '@app/styled-system/css'
@@ -10,7 +10,7 @@ type NewsletterProps = {
 
 export const NewsletterTeaser = async ({ path }: NewsletterProps) => {
   const { data } = await getClient().query({
-    query: ARTICLE_QUERY,
+    query: ArticleTeaserDocument,
     variables: { path },
   })
 
