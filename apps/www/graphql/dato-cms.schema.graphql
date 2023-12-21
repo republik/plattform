@@ -2343,6 +2343,105 @@ input LinksFilter {
   notIn: [ItemId]
 }
 
+"""Block of type Marketing Format (marketing_format)"""
+type MarketingFormatRecord implements RecordInterface {
+  _createdAt: DateTime!
+
+  """Editing URL"""
+  _editingUrl: String
+  _firstPublishedAt: DateTime
+  _isValid: BooleanType!
+  _modelApiKey: String!
+  _publicationScheduledAt: DateTime
+  _publishedAt: DateTime
+
+  """Generates SEO and Social card meta tags to be used in your frontend"""
+  _seoMetaTags(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+  ): [Tag!]!
+  _status: ItemStatus!
+  _unpublishingScheduledAt: DateTime
+  _updatedAt: DateTime!
+  color: ColorField!
+  description(
+    """Process content as markdown"""
+    markdown: Boolean
+  ): String!
+  id: ItemId!
+  imageBright: FileField!
+  imageDark: FileField!
+  title: String!
+}
+
+"""Record of type Marketing Startseite (marketing_landing_page)"""
+type MarketingLandingPageRecord implements RecordInterface {
+  _createdAt: DateTime!
+
+  """Editing URL"""
+  _editingUrl: String
+  _firstPublishedAt: DateTime
+  _isValid: BooleanType!
+  _modelApiKey: String!
+  _publicationScheduledAt: DateTime
+  _publishedAt: DateTime
+
+  """Generates SEO and Social card meta tags to be used in your frontend"""
+  _seoMetaTags(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+  ): [Tag!]!
+  _status: ItemStatus!
+  _unpublishingScheduledAt: DateTime
+  _updatedAt: DateTime!
+  formats: [MarketingFormatRecord!]!
+  id: ItemId!
+  reasons: [MarketingReasonRecord!]!
+  sectionDialogDescription(
+    """Process content as markdown"""
+    markdown: Boolean
+  ): String!
+  sectionDialogTitle: String!
+  sectionFormatsDescription(
+    """Process content as markdown"""
+    markdown: Boolean
+  ): String!
+  sectionFormatsTitle: String!
+  sectionTeamDescription(
+    """Process content as markdown"""
+    markdown: Boolean
+  ): String!
+  sectionTeamTitle: String!
+}
+
+"""Block of type Marketing Reason (marketing_reason)"""
+type MarketingReasonRecord implements RecordInterface {
+  _createdAt: DateTime!
+
+  """Editing URL"""
+  _editingUrl: String
+  _firstPublishedAt: DateTime
+  _isValid: BooleanType!
+  _modelApiKey: String!
+  _publicationScheduledAt: DateTime
+  _publishedAt: DateTime
+
+  """Generates SEO and Social card meta tags to be used in your frontend"""
+  _seoMetaTags(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+  ): [Tag!]!
+  _status: ItemStatus!
+  _unpublishingScheduledAt: DateTime
+  _updatedAt: DateTime!
+  description(
+    """Process content as markdown"""
+    markdown: Boolean
+  ): String!
+  id: ItemId!
+  title: String!
+}
+
 scalar MetaTagAttributes
 
 enum MuxThumbnailFormatType {
@@ -2636,6 +2735,17 @@ type Query {
     orderBy: [EventModelOrderBy] = [_updatedAt_DESC]
   ): EventRecord
 
+  """Returns the single instance record"""
+  marketingLandingPage(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+  ): MarketingLandingPageRecord
+
   """Returns a specific record"""
   schemaMigration(
     """
@@ -2786,6 +2896,7 @@ type SchemaMigrationRecord implements RecordInterface {
 type SeoField {
   description: String
   image: FileField
+  noIndex: BooleanType
   title: String
   twitterCard: String
 }
@@ -2814,6 +2925,7 @@ type Site {
     locale: SiteLocale
   ): GlobalSeoField
   locales: [SiteLocale!]!
+  noIndex: BooleanType
 }
 
 enum SiteLocale {

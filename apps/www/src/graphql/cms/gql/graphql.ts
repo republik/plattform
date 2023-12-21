@@ -2125,6 +2125,126 @@ export type LinksFilter = {
   notIn?: InputMaybe<Array<InputMaybe<Scalars['ItemId']['input']>>>;
 };
 
+/** Block of type Marketing Format (marketing_format) */
+export type MarketingFormatRecord = RecordInterface & {
+  __typename?: 'MarketingFormatRecord';
+  _createdAt: Scalars['DateTime']['output'];
+  /** Editing URL */
+  _editingUrl?: Maybe<Scalars['String']['output']>;
+  _firstPublishedAt?: Maybe<Scalars['DateTime']['output']>;
+  _isValid: Scalars['BooleanType']['output'];
+  _modelApiKey: Scalars['String']['output'];
+  _publicationScheduledAt?: Maybe<Scalars['DateTime']['output']>;
+  _publishedAt?: Maybe<Scalars['DateTime']['output']>;
+  /** Generates SEO and Social card meta tags to be used in your frontend */
+  _seoMetaTags: Array<Tag>;
+  _status: ItemStatus;
+  _unpublishingScheduledAt?: Maybe<Scalars['DateTime']['output']>;
+  _updatedAt: Scalars['DateTime']['output'];
+  color: ColorField;
+  description: Scalars['String']['output'];
+  id: Scalars['ItemId']['output'];
+  imageBright: FileField;
+  imageDark: FileField;
+  title: Scalars['String']['output'];
+};
+
+
+/** Block of type Marketing Format (marketing_format) */
+export type MarketingFormatRecord_SeoMetaTagsArgs = {
+  locale?: InputMaybe<SiteLocale>;
+};
+
+
+/** Block of type Marketing Format (marketing_format) */
+export type MarketingFormatRecordDescriptionArgs = {
+  markdown?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+/** Record of type Marketing Startseite (marketing_landing_page) */
+export type MarketingLandingPageRecord = RecordInterface & {
+  __typename?: 'MarketingLandingPageRecord';
+  _createdAt: Scalars['DateTime']['output'];
+  /** Editing URL */
+  _editingUrl?: Maybe<Scalars['String']['output']>;
+  _firstPublishedAt?: Maybe<Scalars['DateTime']['output']>;
+  _isValid: Scalars['BooleanType']['output'];
+  _modelApiKey: Scalars['String']['output'];
+  _publicationScheduledAt?: Maybe<Scalars['DateTime']['output']>;
+  _publishedAt?: Maybe<Scalars['DateTime']['output']>;
+  /** Generates SEO and Social card meta tags to be used in your frontend */
+  _seoMetaTags: Array<Tag>;
+  _status: ItemStatus;
+  _unpublishingScheduledAt?: Maybe<Scalars['DateTime']['output']>;
+  _updatedAt: Scalars['DateTime']['output'];
+  formats: Array<MarketingFormatRecord>;
+  id: Scalars['ItemId']['output'];
+  reasons: Array<MarketingReasonRecord>;
+  sectionDialogDescription: Scalars['String']['output'];
+  sectionDialogTitle: Scalars['String']['output'];
+  sectionFormatsDescription: Scalars['String']['output'];
+  sectionFormatsTitle: Scalars['String']['output'];
+  sectionTeamDescription: Scalars['String']['output'];
+  sectionTeamTitle: Scalars['String']['output'];
+};
+
+
+/** Record of type Marketing Startseite (marketing_landing_page) */
+export type MarketingLandingPageRecord_SeoMetaTagsArgs = {
+  locale?: InputMaybe<SiteLocale>;
+};
+
+
+/** Record of type Marketing Startseite (marketing_landing_page) */
+export type MarketingLandingPageRecordSectionDialogDescriptionArgs = {
+  markdown?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+
+/** Record of type Marketing Startseite (marketing_landing_page) */
+export type MarketingLandingPageRecordSectionFormatsDescriptionArgs = {
+  markdown?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+
+/** Record of type Marketing Startseite (marketing_landing_page) */
+export type MarketingLandingPageRecordSectionTeamDescriptionArgs = {
+  markdown?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+/** Block of type Marketing Reason (marketing_reason) */
+export type MarketingReasonRecord = RecordInterface & {
+  __typename?: 'MarketingReasonRecord';
+  _createdAt: Scalars['DateTime']['output'];
+  /** Editing URL */
+  _editingUrl?: Maybe<Scalars['String']['output']>;
+  _firstPublishedAt?: Maybe<Scalars['DateTime']['output']>;
+  _isValid: Scalars['BooleanType']['output'];
+  _modelApiKey: Scalars['String']['output'];
+  _publicationScheduledAt?: Maybe<Scalars['DateTime']['output']>;
+  _publishedAt?: Maybe<Scalars['DateTime']['output']>;
+  /** Generates SEO and Social card meta tags to be used in your frontend */
+  _seoMetaTags: Array<Tag>;
+  _status: ItemStatus;
+  _unpublishingScheduledAt?: Maybe<Scalars['DateTime']['output']>;
+  _updatedAt: Scalars['DateTime']['output'];
+  description: Scalars['String']['output'];
+  id: Scalars['ItemId']['output'];
+  title: Scalars['String']['output'];
+};
+
+
+/** Block of type Marketing Reason (marketing_reason) */
+export type MarketingReasonRecord_SeoMetaTagsArgs = {
+  locale?: InputMaybe<SiteLocale>;
+};
+
+
+/** Block of type Marketing Reason (marketing_reason) */
+export type MarketingReasonRecordDescriptionArgs = {
+  markdown?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
 export enum MuxThumbnailFormatType {
   Gif = 'gif',
   Jpg = 'jpg',
@@ -2196,6 +2316,8 @@ export type Query = {
   challengeAcceptedPerson?: Maybe<ChallengeAcceptedPersonRecord>;
   /** Returns a specific record */
   event?: Maybe<EventRecord>;
+  /** Returns the single instance record */
+  marketingLandingPage?: Maybe<MarketingLandingPageRecord>;
   /** Returns a specific record */
   schemaMigration?: Maybe<SchemaMigrationRecord>;
   /** Returns a specific asset */
@@ -2362,6 +2484,13 @@ export type QueryEventArgs = {
 
 
 /** The query root for this schema */
+export type QueryMarketingLandingPageArgs = {
+  fallbackLocales?: InputMaybe<Array<SiteLocale>>;
+  locale?: InputMaybe<SiteLocale>;
+};
+
+
+/** The query root for this schema */
 export type QuerySchemaMigrationArgs = {
   fallbackLocales?: InputMaybe<Array<SiteLocale>>;
   filter?: InputMaybe<SchemaMigrationModelFilter>;
@@ -2502,6 +2631,7 @@ export type SeoField = {
   __typename?: 'SeoField';
   description?: Maybe<Scalars['String']['output']>;
   image?: Maybe<FileField>;
+  noIndex?: Maybe<Scalars['BooleanType']['output']>;
   title?: Maybe<Scalars['String']['output']>;
   twitterCard?: Maybe<Scalars['String']['output']>;
 };
@@ -2518,6 +2648,7 @@ export type Site = {
   faviconMetaTags: Array<Tag>;
   globalSeo?: Maybe<GlobalSeoField>;
   locales: Array<SiteLocale>;
+  noIndex?: Maybe<Scalars['BooleanType']['output']>;
 };
 
 
