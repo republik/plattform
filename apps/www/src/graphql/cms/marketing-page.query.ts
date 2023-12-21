@@ -19,7 +19,7 @@ query marketingLandingPageQuery {
           src
         }
       }
-      titel
+      title
       description
       color {
         hex
