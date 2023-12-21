@@ -1,9 +1,10 @@
 import CollectionRenderer from '@app/app/challenge-accepted/components/collection-render'
 import Container from '@app/components/container'
 import { Share } from '@app/components/share/share'
-import type { PersonDetailQuery } from '@app/graphql/gql/graphql'
+import type { PersonDetailQuery } from '@app/graphql/cms/gql/graphql'
 import { css } from '@app/styled-system/css'
-import { vstack } from '@app/styled-system/patterns'
+import { hstack, vstack } from '@app/styled-system/patterns'
+import { IconShare } from '@republik/icons'
 import Image from 'next/image'
 import { StructuredText } from 'react-datocms'
 
@@ -13,10 +14,20 @@ type PersonDetailProps = {
 }
 
 export function PersonDetail({ person, isMember = false }: PersonDetailProps) {
+  const lines = person.name.split(' und ')
+  const maxLineLength = Math.max(...lines.map((l) => l.length))
+
   // Approximate the ratio of character width to a height of 100
-  const funkyCalculatedViewboxWidth = person.name.length * 32
+  const funkyCalculatedViewboxWidth = maxLineLength * 35
   // Approximate the space the rotated text needs
-  const funkyCalculatedViewboxHeight = person.name.length * 4.5 + 100
+  const funkyCalculatedLineHeight = maxLineLength * 4.5 + 20
+  const funkyCalculatedViewboxHeight = Math.max(
+    funkyCalculatedLineHeight * lines.length + 100,
+    funkyCalculatedViewboxWidth * 0.5,
+  )
+  const verticalPadding =
+    (funkyCalculatedViewboxHeight - lines.length * funkyCalculatedLineHeight) /
+    2
 
   return (
     <div
@@ -42,20 +53,27 @@ export function PersonDetail({ person, isMember = false }: PersonDetailProps) {
           })}
           viewBox={`0 0 ${funkyCalculatedViewboxWidth} ${funkyCalculatedViewboxHeight}`}
         >
-          <text
-            x={0}
-            y={0}
-            transform={`translate(${funkyCalculatedViewboxWidth / 2}, ${
-              funkyCalculatedViewboxHeight / 2
-            }) rotate(-9)`}
-            className={css({
-              textStyle: 'personTitle',
-            })}
-            textAnchor='middle'
-            dy='.35em'
-          >
-            {person.name}
-          </text>
+          {lines.map((line, i) => {
+            return (
+              <text
+                key={line}
+                x={0}
+                y={0}
+                transform={`translate(${funkyCalculatedViewboxWidth / 2}, ${
+                  i * funkyCalculatedLineHeight +
+                  funkyCalculatedLineHeight / 2 +
+                  verticalPadding
+                }) rotate(-9)`}
+                className={css({
+                  textStyle: 'personTitle',
+                })}
+                textAnchor='middle'
+                dy='.35em'
+              >
+                {line}
+              </text>
+            )
+          })}
         </svg>
         {person.portrait && (
           <div
@@ -121,7 +139,22 @@ export function PersonDetail({ person, isMember = false }: PersonDetailProps) {
             title={`Challenge Accepted: ${person.name} | Republik`}
             url={`${process.env.NEXT_PUBLIC_BASE_URL}/challenge-accepted/person/${person.slug}`}
             emailSubject={`Challenge Accepted: ${person.name} | Republik`}
-          />
+          >
+            <div
+              className={hstack({
+                gap: '2',
+                color: 'text',
+                textStyle: 'sansSerifBold',
+                fontSize: 'm',
+                cursor: 'pointer',
+                _hover: {
+                  color: 'contrast',
+                },
+              })}
+            >
+              <IconShare size={20} /> Teilen
+            </div>
+          </Share>
           {person.items.length > 0 ? (
             <section>
               <h2
@@ -135,9 +168,7 @@ export function PersonDetail({ person, isMember = false }: PersonDetailProps) {
               </h2>
               <CollectionRenderer items={person.items} isMember={isMember} />
             </section>
-          ) : (
-            <div className={css({ mb: '16-32' })}></div>
-          )}
+          ) : null}
         </div>
       </Container>
     </div>

@@ -7004,6 +7004,14 @@
       "value": "Lesha Berezovskiys Bildkolumne «Leben in Trümmern» als Buch. Lieferung innerhalb von 7 Werktagen."
     },
     {
+      "key": "Goodie/label/COOKIE",
+      "value": "Republik-Guetsliform"
+    },
+    {
+      "key": "Goodie/description/COOKIE",
+      "value": "Buchstaben zum Naschen, limitiertes Sonderangebot. Versand bis 22.12., nur innerhalb der Schweiz möglich."
+    },
+    {
       "key": "option/TABLEBOOK/label/other",
       "value": "Republik bei Stromausfall"
     },
@@ -7046,6 +7054,14 @@
     {
       "key": "option/LESHA/label/other",
       "value": "Bücher «We Stay»"
+    },
+    {
+      "key": "option/COOKIE/label/1",
+      "value": "Republik-Guetsliform"
+    },
+    {
+      "key": "option/COOKIE/label/other",
+      "value": "Republik-Guetsliformen"
     },
     {
       "key": "package/customize/price/payMore/userPrice",

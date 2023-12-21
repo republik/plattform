@@ -1,6 +1,5 @@
 import { CANewsletterSignUp } from '@app/app/challenge-accepted/components/ca-newsletter-sign-up'
 import Container from '@app/components/container'
-import { PERSON_DETAIL_QUERY } from '@app/graphql/cms/person-detail.query'
 import { getCMSClient } from '@app/lib/apollo/cms-client'
 import { getMe } from '@app/lib/auth/me'
 import { css } from '@app/styled-system/css'
@@ -12,6 +11,7 @@ import { PersonDetail } from './components/person-detail'
 import { PersonList } from '@app/app/challenge-accepted/person/[slug]/components/person-list'
 import { vstack } from '@app/styled-system/patterns'
 import Image from 'next/image'
+import { PersonDetailDocument } from '@app/graphql/cms/gql/graphql'
 
 type PageProps = {
   params: {
@@ -23,7 +23,7 @@ export const revalidate = 60 // revalidate at most every minute
 
 export default async function Page({ params: { slug } }: PageProps) {
   const { data } = await getCMSClient().query({
-    query: PERSON_DETAIL_QUERY,
+    query: PersonDetailDocument,
     variables: { slug },
     context: {
       fetchOptions: {
@@ -50,7 +50,7 @@ export default async function Page({ params: { slug } }: PageProps) {
       }
       return {
         ...item,
-        signUpLink: isMember || item.isPublic ? item.signUpLink : undefined,
+        signUpLink: item.membersOnly && isMember ? item.signUpLink : undefined,
       }
     }),
   }
@@ -104,6 +104,7 @@ export default async function Page({ params: { slug } }: PageProps) {
           })}
         >
           <CANewsletterSignUp
+            tagline={data.hub?.newsletterSignupTagline}
             me={me}
             description={
               <p
@@ -177,32 +178,29 @@ export async function generateMetadata(
   }
 
   const metadata: Metadata = {
-    metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL),
     title: `Challenge Accepted: ${res.data.person.name} | Republik`,
     description: `Die Klimakrise ist hier. Die Lage ist ernst. 25 Menschen, die die Herausforderung annehmen. Kurzporträt und Inhalte zu ${res.data.person.name}.`,
   }
 
   const previousImages = parentMetadata?.openGraph?.images || []
 
+  const images = [
+    res.data.person?.seo?.image?.url,
+    `/challenge-accepted/person/${params.slug}/api/og`,
+    ...previousImages,
+  ].filter(Boolean)
+
   return {
     ...metadata,
     openGraph: {
       title: metadata.title,
       description: metadata.description,
-      images: [
-        res.data.person?.seo?.image?.url,
-        `/challenge-accepted/person/${params.slug}/api/og`,
-        ...previousImages,
-      ].filter(Boolean),
+      images,
     },
     twitter: {
       title: metadata.title,
       description: metadata.description,
-      images: [
-        res.data.person?.seo?.image?.url,
-        `/challenge-accepted/person/${params.slug}/api/og`,
-        ...previousImages,
-      ].filter(Boolean),
+      images,
     },
   }
 }

@@ -75,7 +75,7 @@ const IconButton = React.forwardRef<
         onMouseDown={onMouseDown}
         href={href}
         target={target}
-        rel={target === '_blank' ? 'noopener' : ''}
+        rel={target === '_blank' ? 'noreferrer' : ''}
         ref={ref}
         title={title}
         disabled={disabled}

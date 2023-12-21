@@ -1,0 +1,13 @@
+query CANewsletter($name: NewsletterName!) {
+  me {
+    newsletterSettings {
+      id
+      status
+      subscriptions(name: $name) {
+        id
+        name
+        subscribed
+      }
+    }
+  }
+}

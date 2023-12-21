@@ -1,32 +1,41 @@
+import { CMSItemStatus } from '@app/components/cms/item-status'
+import { Share } from '@app/components/share/share'
+import {
+  formatDateShort,
+  formatEventDateRange,
+} from '@app/lib/util/time-format'
 import { css } from '@app/styled-system/css'
-import { timeFormat, isoParse } from 'd3-time-format'
+import { hstack } from '@app/styled-system/patterns'
+import { IconCalendar, IconShare } from '@republik/icons'
 import Link from 'next/link'
 import { ComponentPropsWithoutRef } from 'react'
 import { StructuredText } from 'react-datocms'
 
-const formatDate = timeFormat('%d.%m.%y')
-const formateTime = timeFormat('%H.%M')
-
 type EventProps = {
   event: {
     title: string
+    slug: string
     description?: {
       value: ComponentPropsWithoutRef<typeof StructuredText>['data']
     }
-    isPublic?: boolean
+    membersOnly?: boolean
     nonMemberCta?: {
       value: ComponentPropsWithoutRef<typeof StructuredText>['data']
     }
     location: string
+    locationLink?: string
     startAt: string
     endAt?: string
     signUpLink?: string
     fullyBooked?: boolean
+    _updatedAt: string
+    _status: string
   }
+
+  isPage?: boolean
   isMember: boolean
 }
-
-export const EventTeaser = ({ event, isMember }: EventProps) => {
+export const EventTeaser = ({ isMember, event }: EventProps) => {
   return (
     <div
       className={css({
@@ -64,7 +73,7 @@ export const EventTeaser = ({ event, isMember }: EventProps) => {
             mb: '0.2ex',
           })}
         >
-          {formatDate(isoParse(event.startAt))}
+          {formatDateShort(event.startAt)}
         </p>
       </div>
       <div
@@ -78,20 +87,32 @@ export const EventTeaser = ({ event, isMember }: EventProps) => {
         })}
       >
         <h2 className={css({ textStyle: 'h2Sans', fontWeight: 'bold' })}>
-          {event.title} {event.fullyBooked && '(ausgebucht)'}
+          <Link
+            className={css({
+              color: 'text',
+              textDecoration: 'none',
+            })}
+            href={`/veranstaltungen/${event.slug}`}
+          >
+            {event.title} <CMSItemStatus status={event._status} />
+          </Link>
         </h2>
         <p className={css({ fontWeight: 700 })}>
-          {formateTime(isoParse(event.startAt))}
-          {event.endAt
-            ? `–${formateTime(isoParse(event.endAt))} Uhr `
-            : ' Uhr – offen '}
-          / {event.location}
+          {formatEventDateRange(event.startAt, event.endAt)} / {event.location}
         </p>
 
         <StructuredText data={event.description.value} />
-        {!event.fullyBooked && (
+        {event.fullyBooked ? (
+          <p
+            className={css({
+              fontStyle: 'italic',
+            })}
+          >
+            Die Veranstaltung ist ausgebucht.
+          </p>
+        ) : (
           <>
-            {!isMember && !event.isPublic ? (
+            {event.membersOnly && !isMember ? (
               <>
                 {event.nonMemberCta && (
                   <StructuredText data={event.nonMemberCta.value} />
@@ -108,6 +129,46 @@ export const EventTeaser = ({ event, isMember }: EventProps) => {
             )}
           </>
         )}
+        <div className={hstack({ gap: '4', mt: '2' })}>
+          <Share
+            title={event.title}
+            url={`${process.env.NEXT_PUBLIC_BASE_URL}/veranstaltungen/${event.slug}`}
+            emailSubject={`Republik: ${event.title}`}
+          >
+            <div
+              className={hstack({
+                gap: '2',
+                color: 'contrast',
+                cursor: 'pointer',
+                fontWeight: 'medium',
+                fontSize: 's',
+                textDecoration: 'none',
+              })}
+            >
+              <IconShare size={20} /> Teilen
+            </div>
+          </Share>
+
+          <Link
+            className={hstack({
+              gap: '2',
+              color: 'contrast',
+              cursor: 'pointer',
+              fontWeight: 'medium',
+              fontSize: 's',
+              textDecoration: 'none',
+            })}
+            // Link to the calendar file via CDN because the app can't handle downloads. This way, the file will be opened in the OS browser.
+            // To bust the CDN cache, ?v= is added with the timestamp when the event record was updated.
+            href={`${
+              process.env.NEXT_PUBLIC_CDN_FRONTEND_BASE_URL
+            }/veranstaltungen/${event.slug}/ics?v=${encodeURIComponent(
+              event._updatedAt,
+            )}`}
+          >
+            <IconCalendar size={20} /> Zum Kalender hinzufügen
+          </Link>
+        </div>
       </div>
     </div>
   )

@@ -6,17 +6,18 @@ import { CANewsletterSignUp } from '@app/app/challenge-accepted/components/ca-ne
 import { CollectionFilter } from '@app/app/challenge-accepted/components/collection-filter'
 import CollectionRenderer from '@app/app/challenge-accepted/components/collection-render'
 import Container from '@app/components/container'
-import {
-  CHALLENGE_ACCEPTED_HUB_META_QUERY,
-  CHALLENGE_ACCEPTED_HUB_QUERY,
-} from '@app/graphql/cms/hub.query'
 import { getCMSClient } from '@app/lib/apollo/cms-client'
 import { getMe } from '@app/lib/auth/me'
 import { css } from '@app/styled-system/css'
-import { vstack } from '@app/styled-system/patterns'
+import { hstack, vstack } from '@app/styled-system/patterns'
 import Image from 'next/image'
 import { StructuredText } from 'react-datocms'
 import { Share } from '@app/components/share/share'
+import { IconShare } from '@republik/icons'
+import {
+  ChallengeAcceptedHubDocument,
+  ChallengeAcceptedHubMetaDocument,
+} from '@app/graphql/cms/gql/graphql'
 
 export async function generateMetadata(
   _, // params
@@ -24,7 +25,7 @@ export async function generateMetadata(
 ): Promise<Metadata> {
   const client = getCMSClient()
   const { data } = await client.query({
-    query: CHALLENGE_ACCEPTED_HUB_META_QUERY,
+    query: ChallengeAcceptedHubMetaDocument,
   })
 
   const parentMetadata = await parent
@@ -33,7 +34,6 @@ export async function generateMetadata(
   const { title, description, image } = data.hub?.metadata || {}
 
   return {
-    metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL),
     title: title || 'Challenge Accepted',
     description: description,
     openGraph: {
@@ -52,7 +52,7 @@ export async function generateMetadata(
 
 export default async function Page({ searchParams }) {
   const { data } = await getCMSClient().query({
-    query: CHALLENGE_ACCEPTED_HUB_QUERY,
+    query: ChallengeAcceptedHubDocument,
     context: {
       fetchOptions: {
         next: {
@@ -75,10 +75,33 @@ export default async function Page({ searchParams }) {
       }
       return {
         ...item,
-        signUpLink: isMember || item.isPublic ? item.signUpLink : undefined,
+        signUpLink: item.membersOnly && isMember ? item.signUpLink : undefined,
       }
     }),
   }
+
+  const share = (
+    <Share
+      title='Challenge Accepted'
+      url={`${process.env.NEXT_PUBLIC_BASE_URL}/challenge-accepted`}
+      emailSubject='Republik: Challenge Accepted'
+    >
+      <div
+        className={hstack({
+          gap: '2',
+          color: 'text',
+          textStyle: 'sansSerifBold',
+          fontSize: 'm',
+          cursor: 'pointer',
+          _hover: {
+            color: 'contrast',
+          },
+        })}
+      >
+        <IconShare size={20} /> Teilen
+      </div>
+    </Share>
+  )
 
   return (
     <>
@@ -114,19 +137,17 @@ export default async function Page({ searchParams }) {
       </section>
       <Container>
         <div className={vstack({ gap: '16-32', alignItems: 'stretch' })}>
-          <div className={css({ margin: '0 auto' })}>
-            <Share
-              title='Challenge Accepted'
-              url={`${process.env.NEXT_PUBLIC_BASE_URL}/challenge-accepted`}
-              emailSubject='Republik: Challenge Accepted'
-            />
-          </div>
+          <div className={css({ margin: '0 auto' })}>{share}</div>
 
           <section className={css({ textStyle: 'pageIntro' })}>
             <StructuredText data={hub.introduction.value} />
           </section>
 
-          <CANewsletterSignUp me={me} id='newsletter' />
+          <CANewsletterSignUp
+            me={me}
+            id='newsletter-top'
+            tagline={hub.newsletterSignupTagline}
+          />
 
           <section>
             <h2
@@ -161,6 +182,7 @@ export default async function Page({ searchParams }) {
             title='Keine neuen Beiträge und Verstaltungen verpassen: für den
                   Newsletter anmelden.'
             me={me}
+            tagline={hub.newsletterSignupTagline}
           />
 
           <section
@@ -190,13 +212,7 @@ export default async function Page({ searchParams }) {
           >
             <StructuredText data={hub.outro.value} />
           </section>
-          <div className={css({ margin: '0 auto' })}>
-            <Share
-              title='Challenge Accepted'
-              url={`${process.env.NEXT_PUBLIC_BASE_URL}/challenge-accepted`}
-              emailSubject='Republik: Challenge Accepted'
-            />
-          </div>
+          <div className={css({ margin: '0 auto' })}>{share}</div>
         </div>
       </Container>
     </>

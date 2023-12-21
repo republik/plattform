@@ -7,8 +7,6 @@ import { useTranslation } from '../../lib/withT'
 import Loader from '../Loader'
 import Frame, { MainContainer } from '../Frame'
 import Box from '../Frame/Box'
-import { cardFragment } from '../Card/fragments'
-import CardDetails from '../Card/Details'
 import SubscribeMenu from '../Notifications/SubscribeMenu'
 import ActionBar from '../ActionBar'
 import { TESTIMONIAL_IMAGE_SIZE } from '../constants'
@@ -238,42 +236,9 @@ const getPublicUser = gql`
           createdAt
         }
       }
-      cards(first: 1) {
-        nodes {
-          id
-          ...Card
-          group {
-            id
-            name
-            slug
-          }
-        }
-      }
-      # # uncomment to show candidacies during elections
-      # # and filter in backend to only return currently active elections
-      # candidacies {
-      #   election {
-      #     slug
-      #     description
-      #     beginDate
-      #     endDate
-      #     candidacyEndDate
-      #     discussion {
-      #       id
-      #     }
-      #   }
-      #   id
-      #   yearOfBirth
-      #   city
-      #   recommendation
-      #   comment {
-      #     id
-      #   }
-      # }
     }
   }
   ${documentListQueryFragment}
-  ${cardFragment}
 `
 
 const makeLoadMore = (fetchMore, dataType, variables) => () =>
@@ -300,7 +265,7 @@ const makeLoadMore = (fetchMore, dataType, variables) => () =>
     variables,
   })
 
-const LoadedProfile = ({ t, data: { user }, fetchMore, card, metaData }) => {
+const LoadedProfile = ({ t, data: { user }, fetchMore, metaData }) => {
   const { me, hasAccess } = useMe()
 
   const [state, setRawState] = useState({
@@ -610,15 +575,6 @@ const LoadedProfile = ({ t, data: { user }, fetchMore, card, metaData }) => {
               errors={errors}
               dirty={dirty}
             />
-            {card && (
-              <div style={{ marginBottom: 40 }}>
-                <CardDetails
-                  card={card}
-                  postElection
-                  skipSpider={!card.user.portrait}
-                />
-              </div>
-            )}
             {layout.isMobile && isEditing && (
               <div style={{ marginBottom: 40 }}>
                 <Edit

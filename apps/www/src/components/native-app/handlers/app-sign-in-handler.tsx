@@ -1,10 +1,7 @@
 'use client'
 
 import { useQuery } from '@apollo/client'
-import {
-  PENDING_APP_SIGN_IN_QUERY,
-  PendingAppSignInResult,
-} from '@app/graphql/republik-api/app-sign-in'
+import { PendingAppSignInDocument } from '@app/graphql/republik-api/gql/graphql'
 import useNativeAppEvent from '@app/lib/hooks/useNativeAppEvent'
 import { useRouter } from 'next/navigation'
 import { useEffect, useRef } from 'react'
@@ -31,12 +28,9 @@ const AppStateMessageDataSchema = z.object({
 export function NAAppSignInHandler() {
   const router = useRouter()
   const lastHandledVerificationUrlRef = useRef<string | null>(null)
-  const { data, loading, refetch } = useQuery<PendingAppSignInResult>(
-    PENDING_APP_SIGN_IN_QUERY,
-    {
-      fetchPolicy: 'network-only',
-    },
-  )
+  const { data, loading, refetch } = useQuery(PendingAppSignInDocument, {
+    fetchPolicy: 'network-only',
+  })
 
   function redirect(verificationUrl: string) {
     const url = new URL(verificationUrl)

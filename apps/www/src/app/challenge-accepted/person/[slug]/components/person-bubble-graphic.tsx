@@ -1,5 +1,4 @@
 'use client'
-import type { ChallengeAcceptedPersonListQueryQuery } from '@app/graphql/gql/graphql'
 import { css } from '@app/styled-system/css'
 import useResizeObserver from 'use-resize-observer'
 
@@ -16,6 +15,7 @@ import {
 import { select } from 'd3-selection'
 import d3ForceLimit from 'd3-force-limit'
 import { useRouter } from 'next/navigation'
+import { ChallengeAcceptedPersonListQuery } from '@app/graphql/cms/gql/graphql'
 
 const RADIUS_LARGE = 110
 const RADIUS_MEDIUM = 75
@@ -25,14 +25,18 @@ const RADIUS_LARGE_MAX = 150
 const RADIUS_MEDIUM_MAX = 100
 const RADIUS_SMALL_MAX = 75
 
-type People = ChallengeAcceptedPersonListQueryQuery['people']
+type People = ChallengeAcceptedPersonListQuery['people']
 type Person = People[number]
-type PersonNode = Person & SimulationNodeDatum & { hovered?: boolean }
+type PersonNode = SimulationNodeDatum & {
+  hovered?: boolean
+  initialized?: boolean
+  person: Person
+}
 
-const getRadius = (datum: PersonNode, width: number): number => {
+const getRadius = (p: Person, width: number): number => {
   const scaleFactor = Math.max(0.7, width / 800)
 
-  switch (datum.size) {
+  switch (p.size) {
     case 'large':
       return Math.min(RADIUS_LARGE_MAX, RADIUS_LARGE * scaleFactor)
     case 'medium':
@@ -44,8 +48,8 @@ const getRadius = (datum: PersonNode, width: number): number => {
   }
 }
 
-const getScaleFactor = (datum: PersonNode): number => {
-  switch (datum.size) {
+const getScaleFactor = (p: Person): number => {
+  switch (p.size) {
     case 'large':
       return 1.3
     case 'medium':
@@ -165,16 +169,16 @@ const PersonBubbleItem = ({
   )
 }
 
-export const PersonBubbleForce = ({ people }: { people: PersonNode[] }) => {
+export const PersonBubbleForce = ({ people }: { people: People }) => {
   const { ref, width, height } = useResizeObserver()
   const forceRef = useRef()
-  const initialized = useRef(false)
 
   const simulation = useMemo(() => {
-    if (isNaN(people[0]?.x)) {
-      initialized.current = false
-    }
-    return forceSimulation<PersonNode>(people)
+    return forceSimulation<PersonNode>(
+      people.map((person) => {
+        return { initialized: false, person }
+      }),
+    )
   }, [people])
 
   useEffect(() => {
@@ -185,12 +189,12 @@ export const PersonBubbleForce = ({ people }: { people: PersonNode[] }) => {
     const center = [width / 2, height / 2]
 
     // Initial x/y of nodes, once they're arranged by the force layout (see https://observablehq.com/@d3/force-layout-phyllotaxis?collection=@d3/d3-force)
-    if (initialized.current === false) {
+    if (!simulation.nodes()[0].initialized) {
       for (const node of simulation.nodes()) {
         node.x = node.x * 5 + width / 2
         node.y = node.y * 5 + height / 2
+        node.initialized = true
       }
-      initialized.current = true
     }
 
     // Select existing nodes rendered by React
@@ -198,7 +202,7 @@ export const PersonBubbleForce = ({ people }: { people: PersonNode[] }) => {
       .selectAll<HTMLElement, PersonNode>('[data-person]')
       .data(simulation.nodes(), function (d) {
         // Either the data is already joined, then we return d.slug or we read the slug from [data-person]
-        return d ? d.slug : (this as HTMLElement).dataset?.person
+        return d ? d.person.slug : (this as HTMLElement).dataset?.person
       })
 
     // Apply styles on each simulation tick
@@ -207,8 +211,8 @@ export const PersonBubbleForce = ({ people }: { people: PersonNode[] }) => {
         .style(
           'transform',
           (d) =>
-            `translate(${d.x - getRadius(d, width)}px,${
-              d.y - getRadius(d, width)
+            `translate(${d.x - getRadius(d.person, width)}px,${
+              d.y - getRadius(d.person, width)
             }px)`,
         )
         .style('opacity', 1)
@@ -224,9 +228,9 @@ export const PersonBubbleForce = ({ people }: { people: PersonNode[] }) => {
         'collide',
         forceCollide<PersonNode>((d) => {
           const r =
-            d.size === 'large'
-              ? getRadius(d, width) + 15
-              : getRadius(d, width) + 5
+            d.person.size === 'large'
+              ? getRadius(d.person, width) + 15
+              : getRadius(d.person, width) + 5
           return r
         }),
       )
@@ -257,8 +261,8 @@ export const PersonBubbleForce = ({ people }: { people: PersonNode[] }) => {
         'hovercollide',
         forceCollide<PersonNode>((d) => {
           return d.hovered
-            ? getRadius(d, width) * getScaleFactor(d) + 10
-            : getRadius(d, width)
+            ? getRadius(d.person, width) * getScaleFactor(d.person) + 10
+            : getRadius(d.person, width)
         }).strength(0.5),
       )
     })

@@ -1,10 +1,10 @@
-import { useEffect, useRef } from 'react'
+import { useEffect } from 'react'
 import compose from 'lodash/flowRight'
-import { graphql } from '@apollo/client/react/hoc'
 import { css } from 'glamor'
-import { gql } from '@apollo/client'
+import { gql, useQuery } from '@apollo/client'
 import Frame from '../Frame'
 import withT from '../../lib/withT'
+import { reportError } from '../../lib/errors/reportError'
 import withInNativeApp from '../../lib/withInNativeApp'
 import Loader from '../Loader'
 
@@ -64,17 +64,21 @@ const greetingSubscription = gql`
   }
 `
 
-const Feed = ({
-  meta,
-  data: {
-    error,
-    loading,
-    greeting,
-    documents: connection,
-    fetchMore,
-    subscribeToMore,
-  },
-}) => {
+const Feed = ({ meta }) => {
+  const { error, loading, data, fetchMore, subscribeToMore } = useQuery(query, {
+    // When graphQLErrors happen, we still want to get partial data to render the feed
+    errorPolicy: 'all',
+  })
+
+  useEffect(() => {
+    if (error) {
+      reportError('Feed getFeed Query', error)
+    }
+  }, [reportError, error])
+
+  const connection = data?.documents
+  const greeting = data?.greeting
+
   const mapNodes = (node) => node.entity
 
   useEffect(() => {
@@ -109,7 +113,6 @@ const Feed = ({
     <Frame hasOverviewNav stickySecondaryNav raw meta={meta}>
       <Center {...styles.container}>
         <Loader
-          error={error}
           loading={loading}
           render={() => {
             return (
@@ -139,4 +142,4 @@ const Feed = ({
   )
 }
 
-export default compose(graphql(query), withT, withInNativeApp)(Feed)
+export default compose(withT, withInNativeApp)(Feed)

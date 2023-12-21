@@ -42,7 +42,7 @@ function ShareButton({
       target='_blank'
       href={href}
       onClick={onClick}
-      rel='noopener noreferrer'
+      rel='noreferrer'
     >
       <Icon size={24} />
       <span>{label}</span>
@@ -124,7 +124,7 @@ export function ShareOverlay({
   return (
     <Dialog.Root>
       <Dialog.Trigger asChild>
-        <button>{triggerLabel}</button>
+        <button className={css({ textAlign: 'left' })}>{triggerLabel}</button>
       </Dialog.Trigger>
       <Dialog.Portal>
         <Dialog.Overlay

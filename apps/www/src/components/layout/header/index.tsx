@@ -1,11 +1,14 @@
-import { getMe } from '@app/lib/auth/me'
+'use client'
+
 import { css } from '@app/styled-system/css'
 import { hstack } from '@app/styled-system/patterns'
 import Link from 'next/link'
 import { IconAccountBox, IconMic, IconSearchMenu } from '@republik/icons'
-import { MeQueryResult } from '@app/graphql/republik-api/me.query'
 import Image from 'next/image'
 import { NavLink } from './nav-link'
+import { MeQuery } from '@app/graphql/republik-api/gql/graphql'
+import { ComponentPropsWithoutRef, useRef } from 'react'
+import { useScrollDirection } from '@app/lib/hooks/useScrollDirection'
 
 const Logo = () => {
   return (
@@ -22,10 +25,10 @@ const Logo = () => {
   )
 }
 
-const getInitials = (me) =>
-  (me.name && me.name.trim()
-    ? me.name.split(' ').filter((n, i, all) => i === 0 || all.length - 1 === i)
-    : me.email
+const getInitials = (name, email) =>
+  (name && name.trim()
+    ? name.split(' ').filter((n, i, all) => i === 0 || all.length - 1 === i)
+    : email
         .split('@')[0]
         .split(/\.|-|_/)
         .slice(0, 2)
@@ -35,7 +38,11 @@ const getInitials = (me) =>
     .map((s) => s[0])
     .join('')
 
-const Avatar = ({ me }: { me: MeQueryResult['me'] }) => {
+const Avatar = ({
+  portrait,
+  name,
+  email,
+}: Pick<MeQuery['me'], 'portrait' | 'email' | 'name'>) => {
   const style = css({
     position: 'relative',
     display: 'inline-block',
@@ -44,21 +51,37 @@ const Avatar = ({ me }: { me: MeQueryResult['me'] }) => {
     objectFit: 'cover',
   })
 
-  return me?.portrait ? (
+  return portrait ? (
     <Image
-      src={me.portrait}
+      src={portrait}
       height={32}
       width={32}
       className={style}
       alt='Portrait'
     />
   ) : (
-    <span className={style}>{getInitials(me)}</span>
+    <span className={style}>{getInitials(name, email)}</span>
   )
 }
 
-export const PageHeader = async () => {
-  const me = await getMe()
+const MAX_HEADER_HEIGHT = 100
+
+type PageHeaderProps = {
+  isLoggedIn: boolean
+  hasActiveMembership: boolean
+  portrait?: ComponentPropsWithoutRef<typeof Avatar>
+}
+
+export function PageHeader({
+  isLoggedIn,
+  hasActiveMembership,
+  portrait,
+}: PageHeaderProps) {
+  const headerRef = useRef<HTMLDivElement>(null)
+  const scrollDirection = useScrollDirection({
+    upThreshold: 25,
+    downThreshold: MAX_HEADER_HEIGHT,
+  })
 
   const navLinks = [
     { href: '/', label: 'Magazin' },
@@ -69,12 +92,22 @@ export const PageHeader = async () => {
 
   return (
     <div
+      ref={headerRef}
       className={css({
         bg: 'pageBackground',
         borderBottomWidth: 1,
         borderBottomStyle: 'solid',
         borderBottomColor: 'divider',
+        position: 'sticky',
+        top: 0,
+        transition: 'transform 0.3s ease-out',
+        zIndex: 100,
       })}
+      style={{
+        transform: `translateY(${
+          scrollDirection === 'down' ? -(MAX_HEADER_HEIGHT + 1) : 0
+        }px)`,
+      }}
     >
       <div
         className={css({
@@ -86,9 +119,9 @@ export const PageHeader = async () => {
         <div
           className={css({ p: 'header.avatarMargin', md: { width: '100%' } })}
         >
-          {me ? (
+          {isLoggedIn ? (
             <Link href='/meine-republik'>
-              <Avatar me={me} />
+              <Avatar {...portrait} />
             </Link>
           ) : (
             <Link
@@ -130,7 +163,7 @@ export const PageHeader = async () => {
             justifyContent: 'flex-end',
           })}
         >
-          {me?.activeMembership?.id ? (
+          {hasActiveMembership ? (
             <div
               className={css({
                 width: 'header.avatar',
@@ -188,7 +221,7 @@ export const PageHeader = async () => {
         </div>
       </div>
 
-      {me?.activeMembership?.id ? (
+      {hasActiveMembership ? (
         <div
           className={hstack({
             gap: '0',

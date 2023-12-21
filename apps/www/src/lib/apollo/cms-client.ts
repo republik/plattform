@@ -17,16 +17,24 @@ export function getCMSClient(): NextSSRApolloClient<NormalizedCacheObject> {
     throw new Error('Missing DatoCMS API token')
   }
 
+  const headers = {
+    Authorization: process.env.DATO_CMS_API_TOKEN,
+    'X-Exclude-Invalid': 'true',
+  }
+
+  if (process.env.DATO_CMS_ENVIRONMENT) {
+    headers['X-Environment'] = process.env.DATO_CMS_ENVIRONMENT
+  }
+
+  if (process.env.DATO_CMS_INCLUDE_DRAFTS === 'true') {
+    headers['X-Include-Drafts'] = 'true'
+  }
+
   return new NextSSRApolloClient({
     cache: new NextSSRInMemoryCache(),
     link: new HttpLink({
       uri: process.env.DATO_CMS_API_URL,
-      headers: {
-        Authorization: `${process.env.DATO_CMS_API_TOKEN}`,
-        // forbid invalid content to allow strict type checking
-        'X-Exclude-Invalid': 'true',
-        'X-Environment': process.env.DATO_CMS_ENVIRONMENT ?? 'main',
-      },
+      headers,
     }),
   })
 }
