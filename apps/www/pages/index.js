@@ -7,10 +7,10 @@ import { useTranslation } from '../lib/withT'
 import { createGetStaticProps } from '../lib/apollo/helpers'
 import { getCMSClient } from '@app/lib/apollo/cms-client'
 import { PUBLIC_BASE_URL, CDN_FRONTEND_BASE_URL } from '../lib/constants'
-import { MARKETING_PAGE_CMS_QUERY } from '@app/graphql/cms/marketing-page.query'
 
 import { MARKETING_PAGE_QUERY } from '../components/Marketing/graphql/MarketingPageQuery.graphql'
 import { useMe } from '../lib/context/MeContext'
+import { MarketingLandingPageCmsDocument } from '../src/graphql/cms/gql/graphql'
 
 const MARKETING_PAGE_SSG_REVALIDATE = 60 // revalidate every minute
 
@@ -52,7 +52,7 @@ export const getStaticProps = createGetStaticProps(async (client) => {
     query: MARKETING_PAGE_QUERY,
   })
   const datoData = await getCMSClient().query({
-    query: MARKETING_PAGE_CMS_QUERY,
+    query: MarketingLandingPageCmsDocument,
   })
   return {
     props: {

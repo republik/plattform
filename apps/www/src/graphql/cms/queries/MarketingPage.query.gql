@@ -1,7 +1,4 @@
-import { gql } from '../gql'
-
-export const MARKETING_PAGE_CMS_QUERY = gql(`
-query marketingLandingPageQuery {
+query MarketingLandingPageCMS {
   marketingLandingPage {
     id
     reasons {
@@ -10,12 +7,12 @@ query marketingLandingPageQuery {
     }
     formats {
       imageDark {
-        responsiveImage(imgixParams: {w: 160}) {
+        responsiveImage(imgixParams: { w: 160 }) {
           src
         }
       }
       imageBright {
-        responsiveImage(imgixParams: {w: 160}) {
+        responsiveImage(imgixParams: { w: 160 }) {
           src
         }
       }
@@ -33,4 +30,3 @@ query marketingLandingPageQuery {
     sectionFormatsDescription
   }
 }
-`)
