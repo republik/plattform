@@ -160,17 +160,23 @@ const Tile = ({
 }
 
 Tile.propTypes = {
-  children: PropTypes.node.isRequired,
+  children: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.node),
+    PropTypes.node,
+  ]).isRequired,
   attributes: PropTypes.object,
   image: PropTypes.string,
+  imageDark: PropTypes.string,
   byline: PropTypes.string,
   alt: PropTypes.string,
   onClick: PropTypes.func,
   color: PropTypes.string,
   bgColor: PropTypes.string,
   align: PropTypes.oneOf(['top', 'middle', 'bottom']),
+  textLeft: PropTypes.bool,
   aboveTheFold: PropTypes.bool,
   onlyImage: PropTypes.bool,
+  singleColumn: PropTypes.bool,
   audioPlayButton: PropTypes.node,
 }
 

@@ -203,12 +203,16 @@ export const TeaserFrontTileRow = ({
 }
 
 TeaserFrontTileRow.propTypes = {
-  children: PropTypes.node.isRequired,
+  children: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.node),
+    PropTypes.node,
+  ]).isRequired,
   attributes: PropTypes.object,
   mobileReverse: PropTypes.bool,
   autoColumns: PropTypes.bool,
   columns: PropTypes.oneOf([1, 2, 3]).isRequired,
   mobileColumns: PropTypes.oneOf([1, 2]).isRequired,
+  singleColumn: PropTypes.bool,
 }
 
 TeaserFrontTileRow.defaultProps = {
