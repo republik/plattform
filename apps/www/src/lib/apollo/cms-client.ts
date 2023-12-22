@@ -3,6 +3,7 @@ import {
   NextSSRApolloClient,
 } from '@apollo/experimental-nextjs-app-support/ssr'
 import { HttpLink, NormalizedCacheObject } from '@apollo/client'
+import { draftMode } from 'next/headers'
 
 /**
  * Get a apollo client to interact with DatoCMS on the server.
@@ -26,7 +27,7 @@ export function getCMSClient(): NextSSRApolloClient<NormalizedCacheObject> {
     headers['X-Environment'] = process.env.DATO_CMS_ENVIRONMENT
   }
 
-  if (process.env.DATO_CMS_INCLUDE_DRAFTS === 'true') {
+  if (process.env.DATO_CMS_INCLUDE_DRAFTS === 'true' || draftMode().isEnabled) {
     headers['X-Include-Drafts'] = 'true'
   }
 
