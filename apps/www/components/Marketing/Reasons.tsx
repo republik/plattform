@@ -22,15 +22,14 @@ const Reasons = ({ inNativeApp, reasons }: ReasonsProps) => {
   return (
     <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 15px' }}>
       <TeaserFrontTileRow columns={3}>
-        {reasons.map((reason) => {
-          return (
-            <TeaserFrontTile align='top' key={reason.title}>
-              <h2 {...styles.title}>{reason.title}</h2>
-              <Editorial.P>{reason.description}</Editorial.P>
-            </TeaserFrontTile>
-          )
-        })}
+        {reasons.map((reason) => (
+          <TeaserFrontTile align='top' key={reason.id}>
+            <h2 {...styles.title}>{reason.title}</h2>
+            <Editorial.P>{reason.description}</Editorial.P>
+          </TeaserFrontTile>
+        ))}
       </TeaserFrontTileRow>
+
       {!inNativeApp && (
         <div {...styles.buttons}>
           <Link

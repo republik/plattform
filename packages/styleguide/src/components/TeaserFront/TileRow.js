@@ -204,8 +204,8 @@ export const TeaserFrontTileRow = ({
 
 TeaserFrontTileRow.propTypes = {
   children: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.node),
-    PropTypes.node,
+    PropTypes.arrayOf(PropTypes.any),
+    PropTypes.any,
   ]).isRequired,
   attributes: PropTypes.object,
   mobileReverse: PropTypes.bool,

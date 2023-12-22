@@ -1,13 +1,13 @@
 import { nest } from 'd3-collection'
 import FAQEntry from './faq-entry'
-import { FaqEntryRecord, FaqRecord } from '@app/graphql/cms/gql/graphql'
+import { FaqEntryRecord, FaqQuery } from '@app/graphql/cms/gql/graphql'
 import { css } from '@app/styled-system/css'
 import { StructuredText } from 'react-datocms'
 
 type FAQListProps = {
-  entries: FaqEntryRecord[]
-  title: FaqRecord['title']
-  introduction: FaqRecord['introduction']
+  entries: FaqQuery['faq']['entries']
+  title: FaqQuery['faq']['title']
+  introduction: FaqQuery['faq']['introduction']
 }
 
 export default function FAQList({

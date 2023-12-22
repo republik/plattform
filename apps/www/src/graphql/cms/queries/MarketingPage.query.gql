@@ -2,6 +2,7 @@ query MarketingLandingPageCMS {
   marketingLandingPage {
     id
     reasons {
+      id
       title
       description
     }

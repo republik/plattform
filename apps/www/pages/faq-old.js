@@ -1,6 +1,6 @@
 import Frame from '../components/Frame'
 
-import FaqList, { H2 } from '../components/Faq/List'
+// import FaqList, { H2 } from '../components/Faq/List'
 
 import withT from '../lib/withT'
 
@@ -19,7 +19,7 @@ const Page = ({ t }) => (
       image: `${CDN_FRONTEND_BASE_URL}/static/social-media/faq.png`,
     }}
   >
-    <H2>{t('faq/before/title')}</H2>
+    {/* <H2>{t('faq/before/title')}</H2> */}
     <Interaction.H3>{t('faq/before/support/title')}</Interaction.H3>
     <RawHtml
       type={Interaction.P}
@@ -28,7 +28,7 @@ const Page = ({ t }) => (
       }}
     />
     <br />
-    <FaqList />
+    {/* <FaqList /> */}
   </Frame>
 )
 
