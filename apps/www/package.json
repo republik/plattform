@@ -43,7 +43,7 @@
     "@graphql-codegen/schema-ast": "^4.0.0",
     "@next/env": "^14.0.4",
     "@next/eslint-plugin-next": "^14.0.4",
-    "@pandacss/dev": "^0.19.0",
+    "@pandacss/dev": "^0.22.1",
     "@parcel/watcher": "^2.3.0",
     "@republik/eslint-config-frontend": "*",
     "@republik/tsconfig": "*",
