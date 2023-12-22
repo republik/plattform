@@ -1,7 +1,7 @@
 import { getMe } from '@app/lib/auth/me'
 import { getPlatformInformation } from '@app/lib/util/useragent/platform-information'
-import { css } from '@app/styled-system/css'
-import { vstack } from '@app/styled-system/patterns'
+import { css } from '#styled-system/css'
+import { vstack } from '#styled-system/patterns'
 import {
   IconInstagram,
   IconLogoFacebook,

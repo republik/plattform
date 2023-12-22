@@ -2,7 +2,7 @@ import { EVENTS_QUERY, EventRecordFields } from '@app/graphql/cms/events.query'
 import { getCMSClient } from '@app/lib/apollo/cms-client'
 import { getMe } from '@app/lib/auth/me'
 import { EventTeaser } from './components/event-teaser'
-import { css } from '@app/styled-system/css'
+import { css } from '#styled-system/css'
 import { useFragment } from '@app/graphql/cms/gql'
 
 export default async function Page() {

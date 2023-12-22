@@ -1,4 +1,4 @@
-import { css } from '@app/styled-system/css'
+import { css } from '#styled-system/css'
 
 type ContainerProps = {
   children: React.ReactNode

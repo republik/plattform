@@ -1,5 +1,5 @@
 import { ChallengeAcceptedHubQueryQuery } from '@app/graphql/cms/gql/graphql'
-import { css } from '@app/styled-system/css'
+import { css } from '#styled-system/css'
 import { Collapsible } from './collapsible'
 import { ArticleTeaser } from './teasers/article-teaser'
 import { EventTeaser } from './teasers/event-teaser'

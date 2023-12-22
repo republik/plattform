@@ -1,6 +1,6 @@
 import { PageHeader } from '@app/components/layout/header'
 import Footer from './footer'
-import { css } from '@app/styled-system/css'
+import { css } from '#styled-system/css'
 import { getPlatformInformation } from '@app/lib/util/useragent/platform-information'
 import { CTABanner } from '../cta-banner'
 import { getMe } from '@app/lib/auth/me'

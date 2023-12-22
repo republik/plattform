@@ -1,6 +1,6 @@
 import Container from '@app/components/container'
 import { PageLayout } from '@app/components/layout'
-import { css } from '@app/styled-system/css'
+import { css } from '#styled-system/css'
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {

@@ -3,14 +3,14 @@ import Container from '@app/components/container'
 import { PERSON_DETAIL_QUERY } from '@app/graphql/cms/person-detail.query'
 import { getCMSClient } from '@app/lib/apollo/cms-client'
 import { getMe } from '@app/lib/auth/me'
-import { css } from '@app/styled-system/css'
+import { css } from '#styled-system/css'
 import { Metadata, ResolvingMetadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { PersonDetail } from './components/person-detail'
 
 import { PersonList } from '@app/app/challenge-accepted/person/[slug]/components/person-list'
-import { vstack } from '@app/styled-system/patterns'
+import { vstack } from '#styled-system/patterns'
 import Image from 'next/image'
 
 type PageProps = {

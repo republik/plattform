@@ -1,6 +1,6 @@
 'use client'
 
-import { css } from '@app/styled-system/css'
+import { css } from '#styled-system/css'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 

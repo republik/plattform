@@ -1,5 +1,5 @@
 import { PageLayout } from '@app/components/layout'
-import { css } from '@app/styled-system/css'
+import { css } from '#styled-system/css'
 
 export default async function Layout(props: { children: React.ReactNode }) {
   return (

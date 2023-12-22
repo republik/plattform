@@ -1,6 +1,6 @@
 'use client'
 
-import { css } from '@app/styled-system/css'
+import { css } from '#styled-system/css'
 import { IconRefresh } from '@republik/icons'
 import { useRouter } from 'next/navigation'
 import React, { useCallback, useEffect, useMemo, useRef } from 'react'

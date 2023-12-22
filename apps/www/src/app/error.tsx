@@ -1,10 +1,10 @@
 'use client' // Error components must be Client Components
 
 import { useEffect } from 'react'
-import { css } from '@app/styled-system/css'
+import { css } from '#styled-system/css'
 import Link from 'next/link'
 import Container from '@app/components/container'
-import { stack } from '@app/styled-system/patterns'
+import { stack } from '#styled-system/patterns'
 
 const linkClass = css({
   color: 'primary',

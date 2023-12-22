@@ -12,12 +12,13 @@ import {
 } from '@app/graphql/cms/hub.query'
 import { getCMSClient } from '@app/lib/apollo/cms-client'
 import { getMe } from '@app/lib/auth/me'
-import { css } from '@app/styled-system/css'
-import { hstack, vstack } from '@app/styled-system/patterns'
+import { css } from '#styled-system/css'
+import { hstack, vstack } from '#styled-system/patterns'
 import Image from 'next/image'
 import { StructuredText } from 'react-datocms'
 import { Share } from '@app/components/share/share'
 import { IconShare } from '@republik/icons'
+import { TestComponent } from '@republik/ui'
 
 export async function generateMetadata(
   _, // params
@@ -142,6 +143,8 @@ export default async function Page({ searchParams }) {
           <section className={css({ textStyle: 'pageIntro' })}>
             <StructuredText data={hub.introduction.value} />
           </section>
+
+          <TestComponent />
 
           <CANewsletterSignUp
             me={me}

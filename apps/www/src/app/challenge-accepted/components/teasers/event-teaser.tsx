@@ -4,8 +4,8 @@ import {
   formatDateShort,
   formatEventDateRange,
 } from '@app/lib/util/time-format'
-import { css } from '@app/styled-system/css'
-import { hstack } from '@app/styled-system/patterns'
+import { css } from '#styled-system/css'
+import { hstack } from '#styled-system/patterns'
 import { IconCalendar, IconShare } from '@republik/icons'
 import Link from 'next/link'
 import { ComponentPropsWithoutRef } from 'react'

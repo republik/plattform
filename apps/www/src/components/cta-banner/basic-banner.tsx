@@ -1,6 +1,6 @@
 'use client'
 
-import { css } from '@app/styled-system/css'
+import { css } from '#styled-system/css'
 import { IconClose } from '@republik/icons'
 import Link from 'next/link'
 

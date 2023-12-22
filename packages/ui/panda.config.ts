@@ -1,5 +1,6 @@
 import { defineConfig } from '@pandacss/dev'
-import { presetRepublik, presetChallengeAccepted } from '@republik/ui'
+import { presetRepublik } from './theme/preset'
+import { presetChallengeAccepted } from './theme/preset-challenge-accepted'
 
 export default defineConfig({
   // Whether to use css reset
@@ -9,16 +10,12 @@ export default defineConfig({
 
   // conditions:
   // Where to look for your css declarations
-  include: [
-    './src/**/*.{js,jsx,ts,tsx}',
-    '../../packages/ui/**/*.{mjs,js,jsx,ts,tsx}',
-  ],
+  include: ['./src/**/*.{mjs,js,jsx,ts,tsx}'],
 
   // Files to exclude
   exclude: [],
 
   // The output directory for your css system
-  // emitPackage: true,
-  outdir: 'src/styled-system',
+  outdir: 'styled-system',
   // strictTokens: true,
 })

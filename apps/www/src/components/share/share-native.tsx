@@ -3,7 +3,7 @@
 import { usePostMessage } from '@app/lib/hooks/usePostMessage'
 import { ReactNode } from 'react'
 import type { ShareProps } from './types'
-import { css } from '@app/styled-system/css'
+import { css } from '#styled-system/css'
 
 export function ShareNative({
   title,
