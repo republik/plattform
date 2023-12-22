@@ -10,8 +10,14 @@ import {
 } from '@project-r/styleguide'
 import Link from 'next/link'
 import { useTranslation } from '../../lib/withT'
+import { MarketingLandingPageCmsQuery } from '@app/graphql/cms/gql/graphql'
 
-const Reasons = ({ inNativeApp, reasons }) => {
+type ReasonsProps = {
+  inNativeApp: boolean
+  reasons: MarketingLandingPageCmsQuery['marketingLandingPage']['reasons']
+}
+
+const Reasons = ({ inNativeApp, reasons }: ReasonsProps) => {
   const { t } = useTranslation()
   return (
     <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 15px' }}>
