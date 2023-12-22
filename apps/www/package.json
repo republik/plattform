@@ -56,7 +56,7 @@
     "@types/events": "^3.0.0",
     "@types/jest": "^29.5.1",
     "@types/node": "^16.11.21",
-    "@types/react": "^18.2.45",
+    "@types/react": "^18.2.22",
     "@types/react-dom": "^18.2.7",
     "@types/useragent": "2.3.1",
     "@wojtekmaj/enzyme-adapter-react-17": "^0.6.6",
