@@ -204,7 +204,7 @@ const prolong = async (membershipId, pgdb, redis, t) => {
 
       const datatransTrx = await authorizeAndSettleTransaction({
         amount: total,
-        refno: pledgeId,
+        refno: pledgeId, // @TODO change this
         alias: defaultDatatransPaymentSource.pspPayload,
       })
 

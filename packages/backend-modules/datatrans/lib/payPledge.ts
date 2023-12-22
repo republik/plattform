@@ -1,6 +1,7 @@
 import debug from 'debug'
 import {
   authorizeAndSettleTransaction,
+  formatHridAsRefno,
   getAliasString,
   getMerchant,
   getTransaction,
@@ -76,7 +77,7 @@ module.exports = async (props: PayPledgeProps) => {
     const { transactionId } = await authorizeAndSettleTransaction({
       merchant,
       amount: total,
-      refno: payment.hrid,
+      refno: formatHridAsRefno(payment.hrid),
       alias: datatransTrx,
     })
 
@@ -87,7 +88,7 @@ module.exports = async (props: PayPledgeProps) => {
       merchant,
       amount: total,
       datatransTrxId: payment.pspId,
-      refno: payment.hrid,
+      refno: formatHridAsRefno(payment.hrid),
     })
   }
 
@@ -101,7 +102,7 @@ module.exports = async (props: PayPledgeProps) => {
   }
 
   await transaction.public.payments.updateOne(
-    { hrid: datatransTrx.refno },
+    { id: payment.id },
     {
       total: transactionStatus.detail.settle.amount,
       status: 'PAID',

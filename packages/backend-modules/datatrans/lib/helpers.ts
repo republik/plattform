@@ -98,6 +98,13 @@ export const getMerchant = (companyId: string): DatatransMerchant => {
   }
 }
 
+export const formatHridAsRefno = (string: string) =>
+  `HRID${string}`
+    .trim()
+    .toUpperCase()
+    .match(/.{1,4}/g) // split in 4-char-groups
+    ?.join(' ') || string
+
 type InitTransactionProps = {
   merchant: DatatransMerchant
   refno: string

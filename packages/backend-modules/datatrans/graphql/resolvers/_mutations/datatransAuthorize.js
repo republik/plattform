@@ -1,4 +1,8 @@
-const { authorizeTransaction, getMerchant } = require('../../../lib/helpers')
+const {
+  authorizeTransaction,
+  getMerchant,
+  formatHridAsRefno,
+} = require('../../../lib/helpers')
 
 module.exports = async (_, args, context) => {
   const { pledgeId, sourceId } = args
@@ -46,7 +50,7 @@ module.exports = async (_, args, context) => {
 
     const { transactionId } = await authorizeTransaction({
       merchant: getMerchant(pkg.companyId),
-      refno: payment.hrid,
+      refno: formatHridAsRefno(payment.hrid),
       amount: pledge.total,
       alias: paymentSource.pspPayload,
     })

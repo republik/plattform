@@ -1,4 +1,8 @@
-const { initTransaction, getMerchant } = require('../../../lib/helpers')
+const {
+  initTransaction,
+  getMerchant,
+  formatHridAsRefno,
+} = require('../../../lib/helpers')
 
 module.exports = async (_, args, context) => {
   const { pledgeId, method } = args
@@ -44,7 +48,7 @@ module.exports = async (_, args, context) => {
       merchant: getMerchant(pkg.companyId),
       pledgeId: pledge.id,
       paymentId: payment.id,
-      refno: payment.hrid,
+      refno: formatHridAsRefno(payment.hrid),
       amount: pledge.total,
       method,
       createAlias: pledgeOptionsWithAutoPay > 0,
