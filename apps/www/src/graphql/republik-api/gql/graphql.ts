@@ -804,21 +804,6 @@ export type CrowdfundingStatus = {
   people: Scalars['Int']['output'];
 };
 
-export type DatatansRegistrationResponse = {
-  __typename?: 'DatatansRegistrationResponse';
-  registrationUrl: Scalars['String']['output'];
-};
-
-export type DatatransAuthorizeResponse = {
-  __typename?: 'DatatransAuthorizeResponse';
-  paymentId: Scalars['ID']['output'];
-};
-
-export type DatatransInitResponse = {
-  __typename?: 'DatatransInitResponse';
-  authorizeUrl: Scalars['String']['output'];
-};
-
 export type DateRangeFilter = {
   field: Field;
   from: Scalars['DateTime']['input'];
@@ -1970,10 +1955,6 @@ export type PageInfo = {
 };
 
 export enum PaymentMethod {
-  DatatransCreditcard = 'DATATRANS_CREDITCARD',
-  DatatransPaypal = 'DATATRANS_PAYPAL',
-  DatatransPostfinancecard = 'DATATRANS_POSTFINANCECARD',
-  DatatransTwint = 'DATATRANS_TWINT',
   Paymentslip = 'PAYMENTSLIP',
   Paypal = 'PAYPAL',
   Postfinancecard = 'POSTFINANCECARD',
@@ -1983,13 +1964,12 @@ export enum PaymentMethod {
 export type PaymentSource = {
   __typename?: 'PaymentSource';
   brand: Scalars['String']['output'];
-  expMonth?: Maybe<Scalars['Int']['output']>;
-  expYear?: Maybe<Scalars['Int']['output']>;
+  expMonth: Scalars['Int']['output'];
+  expYear: Scalars['Int']['output'];
   id: Scalars['String']['output'];
   isDefault: Scalars['Boolean']['output'];
   isExpired: Scalars['Boolean']['output'];
-  last4?: Maybe<Scalars['String']['output']>;
-  method: PaymentMethod;
+  last4: Scalars['String']['output'];
   status: PaymentSourceStatus;
   wallet?: Maybe<PaymentSourceWallet>;
 };
@@ -3483,9 +3463,6 @@ export type Mutations = {
   createDiscussion: Scalars['ID']['output'];
   createElection: Election;
   createVoting: Voting;
-  datatransAuthorize: DatatransAuthorizeResponse;
-  datatransInit: DatatransInitResponse;
-  datatransRegistration: DatatansRegistrationResponse;
   deleteRedirection: Scalars['Boolean']['output'];
   deleteUser?: Maybe<User>;
   denySession: Scalars['Boolean']['output'];
@@ -3788,24 +3765,6 @@ export type MutationsCreateElectionArgs = {
 
 export type MutationsCreateVotingArgs = {
   votingInput: VotingInput;
-};
-
-
-export type MutationsDatatransAuthorizeArgs = {
-  pledgeId: Scalars['ID']['input'];
-  sourceId: Scalars['ID']['input'];
-};
-
-
-export type MutationsDatatransInitArgs = {
-  method: PaymentMethod;
-  pledgeId: Scalars['ID']['input'];
-};
-
-
-export type MutationsDatatransRegistrationArgs = {
-  companyId: Scalars['ID']['input'];
-  method: PaymentMethod;
 };
 
 

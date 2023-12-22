@@ -696,18 +696,6 @@ type CrowdfundingStatus {
   people: Int!
 }
 
-type DatatansRegistrationResponse {
-  registrationUrl: String!
-}
-
-type DatatransAuthorizeResponse {
-  paymentId: ID!
-}
-
-type DatatransInitResponse {
-  authorizeUrl: String!
-}
-
 """Date (format %d.%m.%Y)"""
 scalar Date
 
@@ -1738,10 +1726,6 @@ type PageInfo {
 }
 
 enum PaymentMethod {
-  DATATRANS_CREDITCARD
-  DATATRANS_PAYPAL
-  DATATRANS_POSTFINANCECARD
-  DATATRANS_TWINT
   PAYMENTSLIP
   PAYPAL
   POSTFINANCECARD
@@ -1750,13 +1734,12 @@ enum PaymentMethod {
 
 type PaymentSource {
   brand: String!
-  expMonth: Int
-  expYear: Int
+  expMonth: Int!
+  expYear: Int!
   id: String!
   isDefault: Boolean!
   isExpired: Boolean!
-  last4: String
-  method: PaymentMethod!
+  last4: String!
   status: PaymentSourceStatus!
   wallet: PaymentSourceWallet
 }
@@ -3015,9 +2998,6 @@ type mutations {
   createDiscussion(anonymity: Permission!, maxLength: Int, minInterval: Int, tagRequired: Boolean!, tags: [String!], title: String): ID!
   createElection(electionInput: ElectionInput!): Election!
   createVoting(votingInput: VotingInput!): Voting!
-  datatransAuthorize(pledgeId: ID!, sourceId: ID!): DatatransAuthorizeResponse!
-  datatransInit(method: PaymentMethod!, pledgeId: ID!): DatatransInitResponse!
-  datatransRegistration(companyId: ID!, method: PaymentMethod!): DatatansRegistrationResponse!
   deleteRedirection(id: ID!): Boolean!
   deleteUser(unpublishComments: Boolean, userId: ID!): User
   denySession(email: String!, token: SignInToken!): Boolean!
