@@ -8,8 +8,15 @@ import {
 } from '@project-r/styleguide'
 import SectionTitle from './Common/SectionTitle'
 import SectionContainer from './Common/SectionContainer'
+import { MarketingLandingPageCmsQuery } from '@app/graphql/cms/gql/graphql'
 
-const Formats = ({ formats, title, description }) => {
+type FormatsProps = {
+  formats: MarketingLandingPageCmsQuery['marketingLandingPage']['formats']
+  title: MarketingLandingPageCmsQuery['marketingLandingPage']['sectionFormatsTitle']
+  description: MarketingLandingPageCmsQuery['marketingLandingPage']['sectionFormatsDescription']
+}
+
+const Formats = ({ formats, title, description }: FormatsProps) => {
   const [colorScheme] = useColorContext()
   return (
     <SectionContainer maxWidth={720}>
