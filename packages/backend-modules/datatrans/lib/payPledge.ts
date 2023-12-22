@@ -2,6 +2,7 @@ import debug from 'debug'
 import {
   authorizeAndSettleTransaction,
   getAliasString,
+  getMerchant,
   getTransaction,
   isPreAuthorized,
   settleTransaction,
@@ -65,28 +66,35 @@ module.exports = async (props: PayPledgeProps) => {
     throw new Error('payment not in status WAITING')
   }
 
+  const merchant = getMerchant(pkg.companyId)
+
   // check status
-  let datatransTrx = await getTransaction(payment.pspId)
+  let datatransTrx = await getTransaction(merchant, payment.pspId)
 
   if (isPreAuthorized(datatransTrx)) {
     // authorize + settle
     const { transactionId } = await authorizeAndSettleTransaction({
+      merchant,
       amount: total,
       refno: payment.hrid,
       alias: datatransTrx,
     })
 
-    datatransTrx = await getTransaction(transactionId)
+    datatransTrx = await getTransaction(merchant, transactionId)
   } else {
     // settle
     await settleTransaction({
+      merchant,
       amount: total,
       datatransTrxId: payment.pspId,
       refno: payment.hrid,
     })
   }
 
-  const transactionStatus = await getTransaction(datatransTrx.transactionId)
+  const transactionStatus = await getTransaction(
+    merchant,
+    datatransTrx.transactionId,
+  )
 
   if (transactionStatus.detail?.settle?.amount === undefined) {
     throw new Error(t('api/datatrans/settleAmountError'))

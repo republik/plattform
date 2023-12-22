@@ -2,6 +2,7 @@ import debug from 'debug'
 import {
   DatatransAlias,
   DatatransBody,
+  DatatransMerchant,
   DatatransPaymentMethod,
   DatatransPaymentMethodCode,
   DatatransTransactionWithMethod,
@@ -63,15 +64,42 @@ const getServiceBody = (
   throw new Error('service not found')
 }
 
-const Authorization =
-  'Basic ' +
-  Buffer.from(
-    process.env.DATATRANS_MERCHANT_ID +
-      ':' +
-      process.env.DATATRANS_MERCHANT_PASSWORD,
-  ).toString('base64')
+const getAuthorization = ([username, password]: DatatransMerchant) =>
+  'Basic ' + Buffer.from(username + ':' + password).toString('base64')
+
+export const getMerchant = (companyId: string): DatatransMerchant => {
+  try {
+    if (!process.env.DATATRANS_MERCHANTS) {
+      throw new Error('DATATRANS_MERCHANTS missing')
+    }
+
+    const merchants = JSON.parse(process.env.DATATRANS_MERCHANTS) as Record<
+      string,
+      DatatransMerchant
+    >
+
+    if (!(companyId in merchants)) {
+      throw new Error('companyId missing in DATATRANS_MERCHANTS')
+    }
+
+    const [username, password] = merchants[companyId]
+
+    if (!username) {
+      throw new Error('DATATRANS_MERCHANTS, username missing')
+    }
+    if (!password) {
+      throw new Error('DATATRANS_MERCHANTS, password missing')
+    }
+
+    return [username, password]
+  } catch (e) {
+    console.warn(e)
+    throw Error('Unable to get merchant')
+  }
+}
 
 type InitTransactionProps = {
+  merchant: DatatransMerchant
   refno: string
   amount: number
   method: DatatransPaymentMethod
@@ -93,7 +121,7 @@ export const initTransaction: InitTransaction = async (props) => {
   const l = log.extend('initTransaction')
   l('args %o', props)
 
-  const { refno, amount, method, pledgeId, paymentId } = props
+  const { refno, amount, method, pledgeId, paymentId, merchant } = props
 
   const successUrl = new URL('/angebote', process.env.FRONTEND_BASE_URL)
   successUrl.searchParams.append('status', 'authorized')
@@ -129,7 +157,7 @@ export const initTransaction: InitTransaction = async (props) => {
   const res = await fetch('https://api.sandbox.datatrans.com/v1/transactions', {
     method: 'POST',
     headers: {
-      Authorization,
+      Authorization: getAuthorization(merchant),
       'Content-Type': 'application/json',
     },
     body,
@@ -158,6 +186,7 @@ export const initTransaction: InitTransaction = async (props) => {
 }
 
 type RegistrationTransactionProps = {
+  merchant: DatatransMerchant
   method: DatatransPaymentMethod
   paymentSourceId: string
 }
@@ -177,7 +206,7 @@ export const registrationTransaction: RegistrationTransaction = async (
   const l = log.extend('registrationTransaction')
   l('args %o', props)
 
-  const { paymentSourceId } = props
+  const { paymentSourceId, merchant } = props
 
   const successUrl = new URL('/konto', process.env.FRONTEND_BASE_URL)
   successUrl.searchParams.append('status', 'authorized')
@@ -208,7 +237,7 @@ export const registrationTransaction: RegistrationTransaction = async (
   const res = await fetch('https://api.sandbox.datatrans.com/v1/transactions', {
     method: 'POST',
     headers: {
-      Authorization,
+      Authorization: getAuthorization(merchant),
       'Content-Type': 'application/json',
     },
     body,
@@ -236,7 +265,10 @@ export const registrationTransaction: RegistrationTransaction = async (
   return { transactionId, registrationUrl }
 }
 
-export const getTransaction = async (datatransTrxId: string) => {
+export const getTransaction = async (
+  merchant: DatatransMerchant,
+  datatransTrxId: string,
+) => {
   const l = log.extend('getTransaction')
   l('args %o', { datatransTrxId })
 
@@ -244,7 +276,7 @@ export const getTransaction = async (datatransTrxId: string) => {
     `https://api.sandbox.datatrans.com/v1/transactions/${datatransTrxId}`,
     {
       headers: {
-        Authorization,
+        Authorization: getAuthorization(merchant),
       },
     },
   )
@@ -278,6 +310,7 @@ export const isPreAuthorized = (datatransTrx: any) => {
 }
 
 type SettleTransactionProps = {
+  merchant: DatatransMerchant
   datatransTrxId: string
   refno: string
   amount: number
@@ -287,7 +320,7 @@ export const settleTransaction = async (props: SettleTransactionProps) => {
   const l = log.extend('settleTransaction')
   l('args %o', props)
 
-  const { datatransTrxId, refno, amount } = props
+  const { datatransTrxId, refno, amount, merchant } = props
 
   const body = JSON.stringify({
     amount,
@@ -302,7 +335,7 @@ export const settleTransaction = async (props: SettleTransactionProps) => {
     {
       method: 'POST',
       headers: {
-        Authorization,
+        Authorization: getAuthorization(merchant),
         'Content-Type': 'application/json',
       },
       body,
@@ -322,12 +355,6 @@ export const settleTransaction = async (props: SettleTransactionProps) => {
   l('return true')
 
   return true
-}
-
-type AuthorizeTransactionProps = {
-  refno: string
-  amount: number
-  alias: DatatransAlias
 }
 
 export const getAliasString = (
@@ -402,6 +429,13 @@ const pickAliasProps = (alias: DatatransAlias) => {
   throw new Error('Unable to pick alias props')
 }
 
+type AuthorizeTransactionProps = {
+  merchant: DatatransMerchant
+  refno: string
+  amount: number
+  alias: DatatransAlias
+}
+
 type AuthorizeTransactionReturn = {
   transactionId: string
   acquirerAuthorizationCode: string
@@ -418,7 +452,7 @@ export const authorizeAndSettleTransaction = async (
   const l = log.extend('authorizeAndSettleTransaction')
   l('args %o', props)
 
-  const { refno, amount, alias } = props
+  const { refno, amount, alias, merchant } = props
 
   const body = JSON.stringify({
     amount,
@@ -435,7 +469,7 @@ export const authorizeAndSettleTransaction = async (
     {
       method: 'POST',
       headers: {
-        Authorization,
+        Authorization: getAuthorization(merchant),
         'Content-Type': 'application/json',
       },
       body,
@@ -464,7 +498,7 @@ export const authorizeTransaction = async (
   const l = log.extend('authorizeTransaction')
   l('args %o', props)
 
-  const { refno, amount, alias } = props
+  const { refno, amount, alias, merchant } = props
 
   const body = JSON.stringify({
     amount,
@@ -481,7 +515,7 @@ export const authorizeTransaction = async (
     {
       method: 'POST',
       headers: {
-        Authorization,
+        Authorization: getAuthorization(merchant),
         'Content-Type': 'application/json',
       },
       body,

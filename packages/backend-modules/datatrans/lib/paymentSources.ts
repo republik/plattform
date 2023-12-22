@@ -1,6 +1,11 @@
 import { ConnectionContext } from '@orbiting/backend-modules-types'
 import { DatatransPaymentMethod, DatatransTransactionWithMethod } from './types'
-import { getAliasString, getTransaction, isPreAuthorized } from './helpers'
+import {
+  getAliasString,
+  getMerchant,
+  getTransaction,
+  isPreAuthorized,
+} from './helpers'
 
 type PaymentSourceRow = {
   id: string
@@ -72,7 +77,10 @@ export const addPaymentSource = async (
     throw new Error('transactionId not available')
   }
 
-  const transaction = await getTransaction(transactionId)
+  const transaction = await getTransaction(
+    getMerchant(paymentSource.companyId),
+    transactionId,
+  )
   if (!isPreAuthorized(transaction)) {
     throw new Error('transaction did not succeed')
   }

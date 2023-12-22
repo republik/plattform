@@ -1,4 +1,4 @@
-const { registrationTransaction } = require('../../../lib/helpers')
+const { registrationTransaction, getMerchant } = require('../../../lib/helpers')
 
 module.exports = async (_, args, context) => {
   const { method, companyId } = args
@@ -19,6 +19,7 @@ module.exports = async (_, args, context) => {
     })
 
     const { transactionId, registrationUrl } = await registrationTransaction({
+      merchant: getMerchant(company.id),
       method,
       paymentSourceId: paymentSource.id,
     })

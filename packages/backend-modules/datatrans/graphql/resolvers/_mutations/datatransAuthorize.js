@@ -1,4 +1,4 @@
-const { authorizeTransaction } = require('../../../lib/helpers')
+const { authorizeTransaction, getMerchant } = require('../../../lib/helpers')
 
 module.exports = async (_, args, context) => {
   const { pledgeId, sourceId } = args
@@ -11,6 +11,11 @@ module.exports = async (_, args, context) => {
 
   if (pledge.status !== 'DRAFT') {
     throw new Error('pledge status not DRAFT')
+  }
+
+  const pkg = await pgdb.public.packages.findOne({ id: pledge.packageId })
+  if (!pkg) {
+    throw new Error('package not found')
   }
 
   const paymentSource = await pgdb.public.paymentSources.findOne({
@@ -40,6 +45,7 @@ module.exports = async (_, args, context) => {
     })
 
     const { transactionId } = await authorizeTransaction({
+      merchant: getMerchant(pkg.companyId),
       refno: payment.hrid,
       amount: pledge.total,
       alias: paymentSource.pspPayload,

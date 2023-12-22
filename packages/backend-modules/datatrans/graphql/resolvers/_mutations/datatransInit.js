@@ -1,4 +1,4 @@
-const { initTransaction } = require('../../../lib/helpers')
+const { initTransaction, getMerchant } = require('../../../lib/helpers')
 
 module.exports = async (_, args, context) => {
   const { pledgeId, method } = args
@@ -10,6 +10,11 @@ module.exports = async (_, args, context) => {
   }
   if (pledge.status !== 'DRAFT') {
     throw new Error('pledge status not DRAFT')
+  }
+
+  const pkg = await pgdb.public.packages.findOne({ id: pledge.packageId })
+  if (!pkg) {
+    throw new Error('package not found')
   }
 
   const pledgeOptionsWithAutoPay = await pgdb.public.pledgeOptions.count({
@@ -36,6 +41,7 @@ module.exports = async (_, args, context) => {
     })
 
     const { transactionId, authorizeUrl } = await initTransaction({
+      merchant: getMerchant(pkg.companyId),
       pledgeId: pledge.id,
       paymentId: payment.id,
       refno: payment.hrid,

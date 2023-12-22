@@ -1,3 +1,9 @@
+/**
+ * Datatrans Merchant with username and password
+ *
+ */
+export type DatatransMerchant = [username: string, password: string]
+
 export type DatatransBody = {
   amount: number
   paymentMethods: string[]
