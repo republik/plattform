@@ -23,6 +23,8 @@ const {
 } = require('@orbiting/backend-modules-datatrans/lib/paymentSources')
 const {
   authorizeAndSettleTransaction,
+  getMerchant,
+  formatHridAsRefno,
 } = require('@orbiting/backend-modules-datatrans/lib/helpers')
 
 const suggest = async (membershipId, pgdb) => {
@@ -161,7 +163,8 @@ const suggest = async (membershipId, pgdb) => {
     return {
       userId: pledge.userId,
       pledgeId: pledge.id,
-      companyId: prolongPackage.companyId,
+      companyId: membershipTypes.find((mt) => mt.rewardId === rewardId)
+        .companyId,
       membershipId: membership.id,
       membershipType: membershipTypes.find((mt) => mt.rewardId === rewardId)
         .name,
@@ -191,7 +194,22 @@ const prolong = async (membershipId, pgdb, redis, t) => {
     return
   }
 
+  // Insert payment to get hrid
+  const payment = await pgdb.public.payments.insertAndGet({
+    type: 'PLEDGE',
+    method: suggestion.defaultDatatransPaymentSource?.method || 'STRIPE',
+    total: suggestion.total,
+  })
+
+  // Insert link between payment and pledge
+  await pgdb.public.pledgePayments.insert({
+    pledgeId: suggestion.pledgeId,
+    paymentId: payment.id,
+    paymentType: 'PLEDGE',
+  })
+
   const transaction = await pgdb.transactionBegin()
+
   try {
     if (!suggestion) {
       throw new Error('suggestion missing')
@@ -200,11 +218,12 @@ const prolong = async (membershipId, pgdb, redis, t) => {
     let charge
 
     if (suggestion.defaultDatatransPaymentSource) {
-      const { defaultDatatransPaymentSource, total, pledgeId } = suggestion
+      const { companyId, total, defaultDatatransPaymentSource } = suggestion
 
       const datatransTrx = await authorizeAndSettleTransaction({
+        merchant: getMerchant(companyId),
         amount: total,
-        refno: pledgeId, // @TODO change this
+        refno: formatHridAsRefno(payment.hrid),
         alias: defaultDatatransPaymentSource.pspPayload,
       })
 
@@ -212,7 +231,7 @@ const prolong = async (membershipId, pgdb, redis, t) => {
         ...datatransTrx,
         amount: total,
         method: defaultDatatransPaymentSource.method,
-        id: defaultDatatransPaymentSource.id,
+        id: datatransTrx.transactionId,
       }
     } else if (suggestion.defaultPaymentMethod) {
       // paymentMethod takes precedence over source
@@ -251,22 +270,16 @@ const prolong = async (membershipId, pgdb, redis, t) => {
       })
     }
 
-    // Insert payment
-    const payment = await transaction.public.payments.insertAndGet({
-      type: 'PLEDGE',
-      method: charge.method || 'STRIPE',
-      total: charge.amount,
-      status: 'PAID',
-      pspId: charge.id,
-      pspPayload: charge,
-    })
-
-    // Insert link between payment and pledge
-    await transaction.public.pledgePayments.insert({
-      pledgeId: suggestion.pledgeId,
-      paymentId: payment.id,
-      paymentType: 'PLEDGE',
-    })
+    // Update payment
+    await transaction.public.payments.updateOne(
+      { id: payment.id },
+      {
+        total: charge.amount,
+        status: 'PAID',
+        pspId: charge.id,
+        pspPayload: charge,
+      },
+    )
 
     // Insert membership periods
     await transaction.public.membershipPeriods.insert(
@@ -327,8 +340,17 @@ const prolong = async (membershipId, pgdb, redis, t) => {
       status: 'ERROR',
       error,
       createdAt: new Date(),
+      paymentId: payment.id,
       sourceId: suggestion.sourceId,
     })
+
+    await transaction.public.payments.updateOne(
+      { id: payment.id },
+      {
+        status: 'CANCELLED',
+        pspPayload: { chargeAttempt },
+      },
+    )
 
     return { suggestion, chargeAttempt }
   }

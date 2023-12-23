@@ -74,14 +74,12 @@ module.exports = async (props: PayPledgeProps) => {
 
   if (isPreAuthorized(datatransTrx)) {
     // authorize + settle
-    const { transactionId } = await authorizeAndSettleTransaction({
+    datatransTrx = await authorizeAndSettleTransaction({
       merchant,
       amount: total,
       refno: formatHridAsRefno(payment.hrid),
       alias: datatransTrx,
     })
-
-    datatransTrx = await getTransaction(merchant, transactionId)
   } else {
     // settle
     await settleTransaction({

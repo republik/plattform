@@ -493,7 +493,13 @@ export const authorizeAndSettleTransaction = async (
     )
   }
 
-  const transaction: AuthorizeTransactionReturn = await res.json()
+  const authorizeReturn: AuthorizeTransactionReturn = await res.json()
+  l('authorizeReturn %o', authorizeReturn)
+
+  const transaction = await getTransaction(
+    merchant,
+    authorizeReturn.transactionId,
+  )
   l('return %o', transaction)
 
   return transaction
@@ -539,7 +545,13 @@ export const authorizeTransaction = async (
     )
   }
 
-  const transaction: AuthorizeTransactionReturn = await res.json()
+  const authorizeReturn: AuthorizeTransactionReturn = await res.json()
+  l('authorizeReturn %o', authorizeReturn)
+
+  const transaction = await getTransaction(
+    merchant,
+    authorizeReturn.transactionId,
+  )
   l('return %o', transaction)
 
   return transaction
