@@ -5,15 +5,16 @@ import Frame from '../components/Frame'
 import Marketing from '../components/Marketing'
 import { useTranslation } from '../lib/withT'
 import { createGetStaticProps } from '../lib/apollo/helpers'
-
+import { getCMSClient } from '@app/lib/apollo/cms-client'
 import { PUBLIC_BASE_URL, CDN_FRONTEND_BASE_URL } from '../lib/constants'
 
 import { MARKETING_PAGE_QUERY } from '../components/Marketing/graphql/MarketingPageQuery.graphql'
 import { useMe } from '../lib/context/MeContext'
+import { MarketingLandingPageCmsDocument } from '../src/graphql/cms/gql/graphql'
 
 const MARKETING_PAGE_SSG_REVALIDATE = 60 // revalidate every minute
 
-const MarketingPage = () => {
+const MarketingPage = ({ data }) => {
   const { t } = useTranslation()
   const router = useRouter()
   const { meLoading, hasAccess } = useMe()
@@ -39,7 +40,7 @@ const MarketingPage = () => {
 
   return (
     <Frame raw meta={meta} isOnMarketingPage={true} hasOverviewNav>
-      <Marketing />
+      <Marketing data={data} />
     </Frame>
   )
 }
@@ -47,12 +48,21 @@ const MarketingPage = () => {
 export default MarketingPage
 
 export const getStaticProps = createGetStaticProps(async (client) => {
-  const data = await client.query({
-    query: MARKETING_PAGE_QUERY,
-  })
+  const [apiData, datoCMSData] = await Promise.all([
+    client.query({
+      query: MARKETING_PAGE_QUERY,
+    }),
+    getCMSClient().query({
+      query: MarketingLandingPageCmsDocument,
+    }),
+  ])
+
   return {
     props: {
-      data,
+      data: {
+        ...apiData.data,
+        ...datoCMSData.data.marketingLandingPage,
+      },
     },
     revalidate: MARKETING_PAGE_SSG_REVALIDATE,
   }

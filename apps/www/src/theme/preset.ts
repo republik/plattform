@@ -193,6 +193,8 @@ export const presetRepublik = definePreset({
           pageNav: { value: '2.5rem' },
         },
         spacing: {
+          '4-8': { value: { base: '1rem', md: '2rem' } },
+          '8-16': { value: { base: '2rem', md: '4rem' } },
           '16-32': { value: { base: '4rem', md: '8rem' } },
           '32-64': { value: { base: '8rem', md: '16rem' } },
           header: {
