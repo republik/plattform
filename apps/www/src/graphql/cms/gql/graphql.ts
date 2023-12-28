@@ -1,68 +1,55 @@
 /* eslint-disable */
-import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core'
-export type Maybe<T> = T | null
-export type InputMaybe<T> = Maybe<T>
-export type Exact<T extends { [key: string]: unknown }> = {
-  [K in keyof T]: T[K]
-}
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
-  [SubKey in K]?: Maybe<T[SubKey]>
-}
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
-  [SubKey in K]: Maybe<T[SubKey]>
-}
-export type MakeEmpty<
-  T extends { [key: string]: unknown },
-  K extends keyof T,
-> = { [_ in K]?: never }
-export type Incremental<T> =
-  | T
-  | {
-      [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never
-    }
+import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
+export type Maybe<T> = T | null;
+export type InputMaybe<T> = Maybe<T>;
+export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
+export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: { input: string; output: string }
-  String: { input: string; output: string }
-  Boolean: { input: boolean; output: boolean }
-  Int: { input: number; output: number }
-  Float: { input: number; output: number }
+  ID: { input: string; output: string; }
+  String: { input: string; output: string; }
+  Boolean: { input: boolean; output: boolean; }
+  Int: { input: number; output: number; }
+  Float: { input: number; output: number; }
   /** Represents `true` or `false` values. */
-  BooleanType: { input: any; output: any }
-  CustomData: { input: any; output: any }
+  BooleanType: { input: any; output: any; }
+  CustomData: { input: any; output: any; }
   /** A ISO 8601 compliant datetime value */
-  DateTime: { input: string; output: string }
+  DateTime: { input: string; output: string; }
   /** Represents signed double-precision fractional values as specified by [IEEE 754](http://en.wikipedia.org/wiki/IEEE_floating_point). */
-  FloatType: { input: any; output: any }
+  FloatType: { input: any; output: any; }
   /** Represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1. */
-  IntType: { input: number; output: number }
-  ItemId: { input: string; output: string }
-  JsonField: { input: any; output: any }
-  MetaTagAttributes: { input: any; output: any }
-  UploadId: { input: any; output: any }
-}
+  IntType: { input: number; output: number; }
+  ItemId: { input: string; output: string; }
+  JsonField: { input: any; output: any; }
+  MetaTagAttributes: { input: any; output: any; }
+  UploadId: { input: any; output: any; }
+};
 
 /** Specifies how to filter Boolean fields */
 export type BooleanFilter = {
   /** Search for records with an exact match */
-  eq?: InputMaybe<Scalars['BooleanType']['input']>
-}
+  eq?: InputMaybe<Scalars['BooleanType']['input']>;
+};
 
 export type ChallengeAcceptedArticleModelFilter = {
-  AND?: InputMaybe<Array<InputMaybe<ChallengeAcceptedArticleModelFilter>>>
-  OR?: InputMaybe<Array<InputMaybe<ChallengeAcceptedArticleModelFilter>>>
-  _createdAt?: InputMaybe<CreatedAtFilter>
-  _firstPublishedAt?: InputMaybe<PublishedAtFilter>
-  _isValid?: InputMaybe<BooleanFilter>
-  _publicationScheduledAt?: InputMaybe<PublishedAtFilter>
-  _publishedAt?: InputMaybe<PublishedAtFilter>
-  _status?: InputMaybe<StatusFilter>
-  _unpublishingScheduledAt?: InputMaybe<PublishedAtFilter>
-  _updatedAt?: InputMaybe<UpdatedAtFilter>
-  id?: InputMaybe<ItemIdFilter>
-  image?: InputMaybe<FileFilter>
-  path?: InputMaybe<StringFilter>
-}
+  AND?: InputMaybe<Array<InputMaybe<ChallengeAcceptedArticleModelFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<ChallengeAcceptedArticleModelFilter>>>;
+  _createdAt?: InputMaybe<CreatedAtFilter>;
+  _firstPublishedAt?: InputMaybe<PublishedAtFilter>;
+  _isValid?: InputMaybe<BooleanFilter>;
+  _publicationScheduledAt?: InputMaybe<PublishedAtFilter>;
+  _publishedAt?: InputMaybe<PublishedAtFilter>;
+  _status?: InputMaybe<StatusFilter>;
+  _unpublishingScheduledAt?: InputMaybe<PublishedAtFilter>;
+  _updatedAt?: InputMaybe<UpdatedAtFilter>;
+  id?: InputMaybe<ItemIdFilter>;
+  image?: InputMaybe<FileFilter>;
+  path?: InputMaybe<StringFilter>;
+};
 
 export enum ChallengeAcceptedArticleModelOrderBy {
   CreatedAtAsc = '_createdAt_ASC',
@@ -84,98 +71,97 @@ export enum ChallengeAcceptedArticleModelOrderBy {
   IdAsc = 'id_ASC',
   IdDesc = 'id_DESC',
   PathAsc = 'path_ASC',
-  PathDesc = 'path_DESC',
+  PathDesc = 'path_DESC'
 }
 
 /** Record of type Artikel (challenge_accepted_article) */
 export type ChallengeAcceptedArticleRecord = RecordInterface & {
-  __typename?: 'ChallengeAcceptedArticleRecord'
-  _createdAt: Scalars['DateTime']['output']
+  __typename?: 'ChallengeAcceptedArticleRecord';
+  _createdAt: Scalars['DateTime']['output'];
   /** Editing URL */
-  _editingUrl?: Maybe<Scalars['String']['output']>
-  _firstPublishedAt?: Maybe<Scalars['DateTime']['output']>
-  _isValid: Scalars['BooleanType']['output']
-  _modelApiKey: Scalars['String']['output']
-  _publicationScheduledAt?: Maybe<Scalars['DateTime']['output']>
-  _publishedAt?: Maybe<Scalars['DateTime']['output']>
+  _editingUrl?: Maybe<Scalars['String']['output']>;
+  _firstPublishedAt?: Maybe<Scalars['DateTime']['output']>;
+  _isValid: Scalars['BooleanType']['output'];
+  _modelApiKey: Scalars['String']['output'];
+  _publicationScheduledAt?: Maybe<Scalars['DateTime']['output']>;
+  _publishedAt?: Maybe<Scalars['DateTime']['output']>;
   /** Generates SEO and Social card meta tags to be used in your frontend */
-  _seoMetaTags: Array<Tag>
-  _status: ItemStatus
-  _unpublishingScheduledAt?: Maybe<Scalars['DateTime']['output']>
-  _updatedAt: Scalars['DateTime']['output']
-  id: Scalars['ItemId']['output']
-  image?: Maybe<FileField>
-  path: Scalars['String']['output']
-}
+  _seoMetaTags: Array<Tag>;
+  _status: ItemStatus;
+  _unpublishingScheduledAt?: Maybe<Scalars['DateTime']['output']>;
+  _updatedAt: Scalars['DateTime']['output'];
+  id: Scalars['ItemId']['output'];
+  image?: Maybe<FileField>;
+  path: Scalars['String']['output'];
+};
+
 
 /** Record of type Artikel (challenge_accepted_article) */
 export type ChallengeAcceptedArticleRecord_SeoMetaTagsArgs = {
-  locale?: InputMaybe<SiteLocale>
-}
+  locale?: InputMaybe<SiteLocale>;
+};
 
 export type ChallengeAcceptedHubModelIntroductionField = {
-  __typename?: 'ChallengeAcceptedHubModelIntroductionField'
-  blocks: Array<Scalars['String']['output']>
-  links: Array<Scalars['String']['output']>
-  value: Scalars['JsonField']['output']
-}
+  __typename?: 'ChallengeAcceptedHubModelIntroductionField';
+  blocks: Array<Scalars['String']['output']>;
+  links: Array<Scalars['String']['output']>;
+  value: Scalars['JsonField']['output'];
+};
 
-export type ChallengeAcceptedHubModelItemsField =
-  | ChallengeAcceptedArticleRecord
-  | ChallengeAcceptedNewsletterRecord
-  | EventRecord
+export type ChallengeAcceptedHubModelItemsField = ChallengeAcceptedArticleRecord | ChallengeAcceptedNewsletterRecord | EventRecord;
 
 export type ChallengeAcceptedHubModelOutroField = {
-  __typename?: 'ChallengeAcceptedHubModelOutroField'
-  blocks: Array<Scalars['String']['output']>
-  links: Array<Scalars['String']['output']>
-  value: Scalars['JsonField']['output']
-}
+  __typename?: 'ChallengeAcceptedHubModelOutroField';
+  blocks: Array<Scalars['String']['output']>;
+  links: Array<Scalars['String']['output']>;
+  value: Scalars['JsonField']['output'];
+};
 
 /** Record of type Challenge Accepted Startseite (challenge_accepted_hub) */
 export type ChallengeAcceptedHubRecord = RecordInterface & {
-  __typename?: 'ChallengeAcceptedHubRecord'
-  _createdAt: Scalars['DateTime']['output']
+  __typename?: 'ChallengeAcceptedHubRecord';
+  _createdAt: Scalars['DateTime']['output'];
   /** Editing URL */
-  _editingUrl?: Maybe<Scalars['String']['output']>
-  _firstPublishedAt?: Maybe<Scalars['DateTime']['output']>
-  _isValid: Scalars['BooleanType']['output']
-  _modelApiKey: Scalars['String']['output']
-  _publicationScheduledAt?: Maybe<Scalars['DateTime']['output']>
-  _publishedAt?: Maybe<Scalars['DateTime']['output']>
+  _editingUrl?: Maybe<Scalars['String']['output']>;
+  _firstPublishedAt?: Maybe<Scalars['DateTime']['output']>;
+  _isValid: Scalars['BooleanType']['output'];
+  _modelApiKey: Scalars['String']['output'];
+  _publicationScheduledAt?: Maybe<Scalars['DateTime']['output']>;
+  _publishedAt?: Maybe<Scalars['DateTime']['output']>;
   /** Generates SEO and Social card meta tags to be used in your frontend */
-  _seoMetaTags: Array<Tag>
-  _status: ItemStatus
-  _unpublishingScheduledAt?: Maybe<Scalars['DateTime']['output']>
-  _updatedAt: Scalars['DateTime']['output']
-  id: Scalars['ItemId']['output']
-  introduction: ChallengeAcceptedHubModelIntroductionField
-  items: Array<ChallengeAcceptedHubModelItemsField>
-  logo?: Maybe<FileField>
-  metadata?: Maybe<SeoField>
-  newsletterSignupTagline?: Maybe<Scalars['String']['output']>
-  outro: ChallengeAcceptedHubModelOutroField
-}
+  _seoMetaTags: Array<Tag>;
+  _status: ItemStatus;
+  _unpublishingScheduledAt?: Maybe<Scalars['DateTime']['output']>;
+  _updatedAt: Scalars['DateTime']['output'];
+  id: Scalars['ItemId']['output'];
+  introduction: ChallengeAcceptedHubModelIntroductionField;
+  items: Array<ChallengeAcceptedHubModelItemsField>;
+  logo?: Maybe<FileField>;
+  metadata?: Maybe<SeoField>;
+  newsletterSignupTagline?: Maybe<Scalars['String']['output']>;
+  outro: ChallengeAcceptedHubModelOutroField;
+};
+
 
 /** Record of type Challenge Accepted Startseite (challenge_accepted_hub) */
 export type ChallengeAcceptedHubRecord_SeoMetaTagsArgs = {
-  locale?: InputMaybe<SiteLocale>
-}
+  locale?: InputMaybe<SiteLocale>;
+};
 
 export type ChallengeAcceptedNewsletterModelFilter = {
-  AND?: InputMaybe<Array<InputMaybe<ChallengeAcceptedNewsletterModelFilter>>>
-  OR?: InputMaybe<Array<InputMaybe<ChallengeAcceptedNewsletterModelFilter>>>
-  _createdAt?: InputMaybe<CreatedAtFilter>
-  _firstPublishedAt?: InputMaybe<PublishedAtFilter>
-  _isValid?: InputMaybe<BooleanFilter>
-  _publicationScheduledAt?: InputMaybe<PublishedAtFilter>
-  _publishedAt?: InputMaybe<PublishedAtFilter>
-  _status?: InputMaybe<StatusFilter>
-  _unpublishingScheduledAt?: InputMaybe<PublishedAtFilter>
-  _updatedAt?: InputMaybe<UpdatedAtFilter>
-  id?: InputMaybe<ItemIdFilter>
-  path?: InputMaybe<StringFilter>
-}
+  AND?: InputMaybe<Array<InputMaybe<ChallengeAcceptedNewsletterModelFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<ChallengeAcceptedNewsletterModelFilter>>>;
+  _createdAt?: InputMaybe<CreatedAtFilter>;
+  _firstPublishedAt?: InputMaybe<PublishedAtFilter>;
+  _isValid?: InputMaybe<BooleanFilter>;
+  _publicationScheduledAt?: InputMaybe<PublishedAtFilter>;
+  _publishedAt?: InputMaybe<PublishedAtFilter>;
+  _status?: InputMaybe<StatusFilter>;
+  _unpublishingScheduledAt?: InputMaybe<PublishedAtFilter>;
+  _updatedAt?: InputMaybe<UpdatedAtFilter>;
+  id?: InputMaybe<ItemIdFilter>;
+  path?: InputMaybe<StringFilter>;
+};
 
 export enum ChallengeAcceptedNewsletterModelOrderBy {
   CreatedAtAsc = '_createdAt_ASC',
@@ -197,67 +183,65 @@ export enum ChallengeAcceptedNewsletterModelOrderBy {
   IdAsc = 'id_ASC',
   IdDesc = 'id_DESC',
   PathAsc = 'path_ASC',
-  PathDesc = 'path_DESC',
+  PathDesc = 'path_DESC'
 }
 
 /** Record of type Newsletter (challenge_accepted_newsletter) */
 export type ChallengeAcceptedNewsletterRecord = RecordInterface & {
-  __typename?: 'ChallengeAcceptedNewsletterRecord'
-  _createdAt: Scalars['DateTime']['output']
+  __typename?: 'ChallengeAcceptedNewsletterRecord';
+  _createdAt: Scalars['DateTime']['output'];
   /** Editing URL */
-  _editingUrl?: Maybe<Scalars['String']['output']>
-  _firstPublishedAt?: Maybe<Scalars['DateTime']['output']>
-  _isValid: Scalars['BooleanType']['output']
-  _modelApiKey: Scalars['String']['output']
-  _publicationScheduledAt?: Maybe<Scalars['DateTime']['output']>
-  _publishedAt?: Maybe<Scalars['DateTime']['output']>
+  _editingUrl?: Maybe<Scalars['String']['output']>;
+  _firstPublishedAt?: Maybe<Scalars['DateTime']['output']>;
+  _isValid: Scalars['BooleanType']['output'];
+  _modelApiKey: Scalars['String']['output'];
+  _publicationScheduledAt?: Maybe<Scalars['DateTime']['output']>;
+  _publishedAt?: Maybe<Scalars['DateTime']['output']>;
   /** Generates SEO and Social card meta tags to be used in your frontend */
-  _seoMetaTags: Array<Tag>
-  _status: ItemStatus
-  _unpublishingScheduledAt?: Maybe<Scalars['DateTime']['output']>
-  _updatedAt: Scalars['DateTime']['output']
-  id: Scalars['ItemId']['output']
-  path: Scalars['String']['output']
-}
+  _seoMetaTags: Array<Tag>;
+  _status: ItemStatus;
+  _unpublishingScheduledAt?: Maybe<Scalars['DateTime']['output']>;
+  _updatedAt: Scalars['DateTime']['output'];
+  id: Scalars['ItemId']['output'];
+  path: Scalars['String']['output'];
+};
+
 
 /** Record of type Newsletter (challenge_accepted_newsletter) */
 export type ChallengeAcceptedNewsletterRecord_SeoMetaTagsArgs = {
-  locale?: InputMaybe<SiteLocale>
-}
+  locale?: InputMaybe<SiteLocale>;
+};
 
 export type ChallengeAcceptedPersonModelBioField = {
-  __typename?: 'ChallengeAcceptedPersonModelBioField'
-  blocks: Array<Scalars['String']['output']>
-  links: Array<Scalars['String']['output']>
-  value: Scalars['JsonField']['output']
-}
+  __typename?: 'ChallengeAcceptedPersonModelBioField';
+  blocks: Array<Scalars['String']['output']>;
+  links: Array<Scalars['String']['output']>;
+  value: Scalars['JsonField']['output'];
+};
 
 export type ChallengeAcceptedPersonModelFilter = {
-  AND?: InputMaybe<Array<InputMaybe<ChallengeAcceptedPersonModelFilter>>>
-  OR?: InputMaybe<Array<InputMaybe<ChallengeAcceptedPersonModelFilter>>>
-  _createdAt?: InputMaybe<CreatedAtFilter>
-  _firstPublishedAt?: InputMaybe<PublishedAtFilter>
-  _isValid?: InputMaybe<BooleanFilter>
-  _publicationScheduledAt?: InputMaybe<PublishedAtFilter>
-  _publishedAt?: InputMaybe<PublishedAtFilter>
-  _status?: InputMaybe<StatusFilter>
-  _unpublishingScheduledAt?: InputMaybe<PublishedAtFilter>
-  _updatedAt?: InputMaybe<UpdatedAtFilter>
-  bio?: InputMaybe<StructuredTextFilter>
-  catchPhrase?: InputMaybe<StringFilter>
-  id?: InputMaybe<ItemIdFilter>
-  items?: InputMaybe<LinksFilter>
-  name?: InputMaybe<StringFilter>
-  portrait?: InputMaybe<FileFilter>
-  seo?: InputMaybe<SeoFilter>
-  size?: InputMaybe<StringFilter>
-  slug?: InputMaybe<SlugFilter>
-}
+  AND?: InputMaybe<Array<InputMaybe<ChallengeAcceptedPersonModelFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<ChallengeAcceptedPersonModelFilter>>>;
+  _createdAt?: InputMaybe<CreatedAtFilter>;
+  _firstPublishedAt?: InputMaybe<PublishedAtFilter>;
+  _isValid?: InputMaybe<BooleanFilter>;
+  _publicationScheduledAt?: InputMaybe<PublishedAtFilter>;
+  _publishedAt?: InputMaybe<PublishedAtFilter>;
+  _status?: InputMaybe<StatusFilter>;
+  _unpublishingScheduledAt?: InputMaybe<PublishedAtFilter>;
+  _updatedAt?: InputMaybe<UpdatedAtFilter>;
+  bio?: InputMaybe<StructuredTextFilter>;
+  catchPhrase?: InputMaybe<StringFilter>;
+  id?: InputMaybe<ItemIdFilter>;
+  items?: InputMaybe<LinksFilter>;
+  name?: InputMaybe<StringFilter>;
+  portrait?: InputMaybe<FileFilter>;
+  seo?: InputMaybe<SeoFilter>;
+  size?: InputMaybe<StringFilter>;
+  slug?: InputMaybe<SlugFilter>;
+};
 
-export type ChallengeAcceptedPersonModelItemsField =
-  | ChallengeAcceptedArticleRecord
-  | ChallengeAcceptedNewsletterRecord
-  | EventRecord
+export type ChallengeAcceptedPersonModelItemsField = ChallengeAcceptedArticleRecord | ChallengeAcceptedNewsletterRecord | EventRecord;
 
 export enum ChallengeAcceptedPersonModelOrderBy {
   CreatedAtAsc = '_createdAt_ASC',
@@ -283,45 +267,46 @@ export enum ChallengeAcceptedPersonModelOrderBy {
   NameAsc = 'name_ASC',
   NameDesc = 'name_DESC',
   SizeAsc = 'size_ASC',
-  SizeDesc = 'size_DESC',
+  SizeDesc = 'size_DESC'
 }
 
 /** Record of type Person (challenge_accepted_person) */
 export type ChallengeAcceptedPersonRecord = RecordInterface & {
-  __typename?: 'ChallengeAcceptedPersonRecord'
-  _createdAt: Scalars['DateTime']['output']
+  __typename?: 'ChallengeAcceptedPersonRecord';
+  _createdAt: Scalars['DateTime']['output'];
   /** Editing URL */
-  _editingUrl?: Maybe<Scalars['String']['output']>
-  _firstPublishedAt?: Maybe<Scalars['DateTime']['output']>
-  _isValid: Scalars['BooleanType']['output']
-  _modelApiKey: Scalars['String']['output']
-  _publicationScheduledAt?: Maybe<Scalars['DateTime']['output']>
-  _publishedAt?: Maybe<Scalars['DateTime']['output']>
+  _editingUrl?: Maybe<Scalars['String']['output']>;
+  _firstPublishedAt?: Maybe<Scalars['DateTime']['output']>;
+  _isValid: Scalars['BooleanType']['output'];
+  _modelApiKey: Scalars['String']['output'];
+  _publicationScheduledAt?: Maybe<Scalars['DateTime']['output']>;
+  _publishedAt?: Maybe<Scalars['DateTime']['output']>;
   /** Generates SEO and Social card meta tags to be used in your frontend */
-  _seoMetaTags: Array<Tag>
-  _status: ItemStatus
-  _unpublishingScheduledAt?: Maybe<Scalars['DateTime']['output']>
-  _updatedAt: Scalars['DateTime']['output']
-  bio?: Maybe<ChallengeAcceptedPersonModelBioField>
-  catchPhrase?: Maybe<Scalars['String']['output']>
-  id: Scalars['ItemId']['output']
-  items: Array<ChallengeAcceptedPersonModelItemsField>
-  name: Scalars['String']['output']
-  portrait?: Maybe<FileField>
-  seo?: Maybe<SeoField>
-  size?: Maybe<Scalars['String']['output']>
-  slug: Scalars['String']['output']
-}
+  _seoMetaTags: Array<Tag>;
+  _status: ItemStatus;
+  _unpublishingScheduledAt?: Maybe<Scalars['DateTime']['output']>;
+  _updatedAt: Scalars['DateTime']['output'];
+  bio?: Maybe<ChallengeAcceptedPersonModelBioField>;
+  catchPhrase?: Maybe<Scalars['String']['output']>;
+  id: Scalars['ItemId']['output'];
+  items: Array<ChallengeAcceptedPersonModelItemsField>;
+  name: Scalars['String']['output'];
+  portrait?: Maybe<FileField>;
+  seo?: Maybe<SeoField>;
+  size?: Maybe<Scalars['String']['output']>;
+  slug: Scalars['String']['output'];
+};
+
 
 /** Record of type Person (challenge_accepted_person) */
 export type ChallengeAcceptedPersonRecord_SeoMetaTagsArgs = {
-  locale?: InputMaybe<SiteLocale>
-}
+  locale?: InputMaybe<SiteLocale>;
+};
 
 export type CollectionMetadata = {
-  __typename?: 'CollectionMetadata'
-  count: Scalars['IntType']['output']
-}
+  __typename?: 'CollectionMetadata';
+  count: Scalars['IntType']['output'];
+};
 
 export enum ColorBucketType {
   Black = 'black',
@@ -335,95 +320,95 @@ export enum ColorBucketType {
   Purple = 'purple',
   Red = 'red',
   White = 'white',
-  Yellow = 'yellow',
+  Yellow = 'yellow'
 }
 
 export type ColorField = {
-  __typename?: 'ColorField'
-  alpha: Scalars['IntType']['output']
-  blue: Scalars['IntType']['output']
-  cssRgb: Scalars['String']['output']
-  green: Scalars['IntType']['output']
-  hex: Scalars['String']['output']
-  red: Scalars['IntType']['output']
-}
+  __typename?: 'ColorField';
+  alpha: Scalars['IntType']['output'];
+  blue: Scalars['IntType']['output'];
+  cssRgb: Scalars['String']['output'];
+  green: Scalars['IntType']['output'];
+  hex: Scalars['String']['output'];
+  red: Scalars['IntType']['output'];
+};
 
 /** Specifies how to filter by creation datetime */
 export type CreatedAtFilter = {
   /** Filter records with a value that's within the specified minute range. Seconds and milliseconds are truncated from the argument. */
-  eq?: InputMaybe<Scalars['DateTime']['input']>
+  eq?: InputMaybe<Scalars['DateTime']['input']>;
   /** Filter records with the specified field defined (i.e. with any value) or not */
-  exists?: InputMaybe<Scalars['BooleanType']['input']>
+  exists?: InputMaybe<Scalars['BooleanType']['input']>;
   /** Filter records with a value that's strictly greater than the one specified. Seconds and milliseconds are truncated from the argument. */
-  gt?: InputMaybe<Scalars['DateTime']['input']>
+  gt?: InputMaybe<Scalars['DateTime']['input']>;
   /** Filter records with a value that's greater than or equal to than the one specified. Seconds and milliseconds are truncated from the argument. */
-  gte?: InputMaybe<Scalars['DateTime']['input']>
+  gte?: InputMaybe<Scalars['DateTime']['input']>;
   /** Filter records with a value that's less than the one specified. Seconds and milliseconds are truncated from the argument. */
-  lt?: InputMaybe<Scalars['DateTime']['input']>
+  lt?: InputMaybe<Scalars['DateTime']['input']>;
   /** Filter records with a value that's less or equal than the one specified. Seconds and milliseconds are truncated from the argument. */
-  lte?: InputMaybe<Scalars['DateTime']['input']>
+  lte?: InputMaybe<Scalars['DateTime']['input']>;
   /** Filter records with a value that's outside the specified minute range. Seconds and milliseconds are truncated from the argument. */
-  neq?: InputMaybe<Scalars['DateTime']['input']>
-}
+  neq?: InputMaybe<Scalars['DateTime']['input']>;
+};
 
 /** Specifies how to filter DateTime fields */
 export type DateTimeFilter = {
   /** Filter records with a value that's within the specified minute range. Seconds and milliseconds are truncated from the argument. */
-  eq?: InputMaybe<Scalars['DateTime']['input']>
+  eq?: InputMaybe<Scalars['DateTime']['input']>;
   /** Filter records with the specified field defined (i.e. with any value) or not */
-  exists?: InputMaybe<Scalars['BooleanType']['input']>
+  exists?: InputMaybe<Scalars['BooleanType']['input']>;
   /** Filter records with a value that's strictly greater than the one specified. Seconds and milliseconds are truncated from the argument. */
-  gt?: InputMaybe<Scalars['DateTime']['input']>
+  gt?: InputMaybe<Scalars['DateTime']['input']>;
   /** Filter records with a value that's greater than or equal to than the one specified. Seconds and milliseconds are truncated from the argument. */
-  gte?: InputMaybe<Scalars['DateTime']['input']>
+  gte?: InputMaybe<Scalars['DateTime']['input']>;
   /** Filter records with a value that's less than the one specified. Seconds and milliseconds are truncated from the argument. */
-  lt?: InputMaybe<Scalars['DateTime']['input']>
+  lt?: InputMaybe<Scalars['DateTime']['input']>;
   /** Filter records with a value that's less or equal than the one specified. Seconds and milliseconds are truncated from the argument. */
-  lte?: InputMaybe<Scalars['DateTime']['input']>
+  lte?: InputMaybe<Scalars['DateTime']['input']>;
   /** Filter records with a value that's outside the specified minute range. Seconds and milliseconds are truncated from the argument. */
-  neq?: InputMaybe<Scalars['DateTime']['input']>
-}
+  neq?: InputMaybe<Scalars['DateTime']['input']>;
+};
 
 export type EventModelDescriptionField = {
-  __typename?: 'EventModelDescriptionField'
-  blocks: Array<Scalars['String']['output']>
-  links: Array<Scalars['String']['output']>
-  value: Scalars['JsonField']['output']
-}
+  __typename?: 'EventModelDescriptionField';
+  blocks: Array<Scalars['String']['output']>;
+  links: Array<Scalars['String']['output']>;
+  value: Scalars['JsonField']['output'];
+};
 
 export type EventModelFilter = {
-  AND?: InputMaybe<Array<InputMaybe<EventModelFilter>>>
-  OR?: InputMaybe<Array<InputMaybe<EventModelFilter>>>
-  _createdAt?: InputMaybe<CreatedAtFilter>
-  _firstPublishedAt?: InputMaybe<PublishedAtFilter>
-  _isValid?: InputMaybe<BooleanFilter>
-  _publicationScheduledAt?: InputMaybe<PublishedAtFilter>
-  _publishedAt?: InputMaybe<PublishedAtFilter>
-  _status?: InputMaybe<StatusFilter>
-  _unpublishingScheduledAt?: InputMaybe<PublishedAtFilter>
-  _updatedAt?: InputMaybe<UpdatedAtFilter>
-  description?: InputMaybe<StructuredTextFilter>
-  endAt?: InputMaybe<DateTimeFilter>
-  fullyBooked?: InputMaybe<BooleanFilter>
-  id?: InputMaybe<ItemIdFilter>
-  location?: InputMaybe<StringFilter>
-  locationLink?: InputMaybe<StringFilter>
-  membersOnly?: InputMaybe<BooleanFilter>
-  nonMemberCta?: InputMaybe<StructuredTextFilter>
-  seo?: InputMaybe<SeoFilter>
-  signUpLink?: InputMaybe<StringFilter>
-  slug?: InputMaybe<SlugFilter>
-  startAt?: InputMaybe<DateTimeFilter>
-  title?: InputMaybe<StringFilter>
-  unlisted?: InputMaybe<BooleanFilter>
-}
+  AND?: InputMaybe<Array<InputMaybe<EventModelFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<EventModelFilter>>>;
+  _createdAt?: InputMaybe<CreatedAtFilter>;
+  _firstPublishedAt?: InputMaybe<PublishedAtFilter>;
+  _isValid?: InputMaybe<BooleanFilter>;
+  _publicationScheduledAt?: InputMaybe<PublishedAtFilter>;
+  _publishedAt?: InputMaybe<PublishedAtFilter>;
+  _status?: InputMaybe<StatusFilter>;
+  _unpublishingScheduledAt?: InputMaybe<PublishedAtFilter>;
+  _updatedAt?: InputMaybe<UpdatedAtFilter>;
+  description?: InputMaybe<StructuredTextFilter>;
+  endAt?: InputMaybe<DateTimeFilter>;
+  fullyBooked?: InputMaybe<BooleanFilter>;
+  id?: InputMaybe<ItemIdFilter>;
+  location?: InputMaybe<StringFilter>;
+  locationLink?: InputMaybe<StringFilter>;
+  membersOnly?: InputMaybe<BooleanFilter>;
+  nonMemberCta?: InputMaybe<StructuredTextFilter>;
+  seo?: InputMaybe<SeoFilter>;
+  signUpLink?: InputMaybe<StringFilter>;
+  slug?: InputMaybe<SlugFilter>;
+  startAt?: InputMaybe<DateTimeFilter>;
+  title?: InputMaybe<StringFilter>;
+  unlisted?: InputMaybe<BooleanFilter>;
+};
 
 export type EventModelNonMemberCtaField = {
-  __typename?: 'EventModelNonMemberCtaField'
-  blocks: Array<Scalars['String']['output']>
-  links: Array<Scalars['String']['output']>
-  value: Scalars['JsonField']['output']
-}
+  __typename?: 'EventModelNonMemberCtaField';
+  blocks: Array<Scalars['String']['output']>;
+  links: Array<Scalars['String']['output']>;
+  value: Scalars['JsonField']['output'];
+};
 
 export enum EventModelOrderBy {
   CreatedAtAsc = '_createdAt_ASC',
@@ -461,217 +446,232 @@ export enum EventModelOrderBy {
   TitleAsc = 'title_ASC',
   TitleDesc = 'title_DESC',
   UnlistedAsc = 'unlisted_ASC',
-  UnlistedDesc = 'unlisted_DESC',
+  UnlistedDesc = 'unlisted_DESC'
 }
 
 /** Record of type Veranstaltung (event) */
 export type EventRecord = RecordInterface & {
-  __typename?: 'EventRecord'
-  _createdAt: Scalars['DateTime']['output']
+  __typename?: 'EventRecord';
+  _createdAt: Scalars['DateTime']['output'];
   /** Editing URL */
-  _editingUrl?: Maybe<Scalars['String']['output']>
-  _firstPublishedAt?: Maybe<Scalars['DateTime']['output']>
-  _isValid: Scalars['BooleanType']['output']
-  _modelApiKey: Scalars['String']['output']
-  _publicationScheduledAt?: Maybe<Scalars['DateTime']['output']>
-  _publishedAt?: Maybe<Scalars['DateTime']['output']>
+  _editingUrl?: Maybe<Scalars['String']['output']>;
+  _firstPublishedAt?: Maybe<Scalars['DateTime']['output']>;
+  _isValid: Scalars['BooleanType']['output'];
+  _modelApiKey: Scalars['String']['output'];
+  _publicationScheduledAt?: Maybe<Scalars['DateTime']['output']>;
+  _publishedAt?: Maybe<Scalars['DateTime']['output']>;
   /** Generates SEO and Social card meta tags to be used in your frontend */
-  _seoMetaTags: Array<Tag>
-  _status: ItemStatus
-  _unpublishingScheduledAt?: Maybe<Scalars['DateTime']['output']>
-  _updatedAt: Scalars['DateTime']['output']
-  description: EventModelDescriptionField
-  endAt?: Maybe<Scalars['DateTime']['output']>
-  fullyBooked?: Maybe<Scalars['BooleanType']['output']>
-  id: Scalars['ItemId']['output']
-  location: Scalars['String']['output']
-  locationLink?: Maybe<Scalars['String']['output']>
-  membersOnly?: Maybe<Scalars['BooleanType']['output']>
-  nonMemberCta?: Maybe<EventModelNonMemberCtaField>
-  seo?: Maybe<SeoField>
-  signUpLink?: Maybe<Scalars['String']['output']>
-  slug: Scalars['String']['output']
-  startAt: Scalars['DateTime']['output']
-  title: Scalars['String']['output']
-  unlisted?: Maybe<Scalars['BooleanType']['output']>
-}
+  _seoMetaTags: Array<Tag>;
+  _status: ItemStatus;
+  _unpublishingScheduledAt?: Maybe<Scalars['DateTime']['output']>;
+  _updatedAt: Scalars['DateTime']['output'];
+  description: EventModelDescriptionField;
+  endAt?: Maybe<Scalars['DateTime']['output']>;
+  fullyBooked?: Maybe<Scalars['BooleanType']['output']>;
+  id: Scalars['ItemId']['output'];
+  location: Scalars['String']['output'];
+  locationLink?: Maybe<Scalars['String']['output']>;
+  membersOnly?: Maybe<Scalars['BooleanType']['output']>;
+  nonMemberCta?: Maybe<EventModelNonMemberCtaField>;
+  seo?: Maybe<SeoField>;
+  signUpLink?: Maybe<Scalars['String']['output']>;
+  slug: Scalars['String']['output'];
+  startAt: Scalars['DateTime']['output'];
+  title: Scalars['String']['output'];
+  unlisted?: Maybe<Scalars['BooleanType']['output']>;
+};
+
 
 /** Record of type Veranstaltung (event) */
 export type EventRecord_SeoMetaTagsArgs = {
-  locale?: InputMaybe<SiteLocale>
-}
+  locale?: InputMaybe<SiteLocale>;
+};
 
 export enum FaviconType {
   AppleTouchIcon = 'appleTouchIcon',
   Icon = 'icon',
-  MsApplication = 'msApplication',
+  MsApplication = 'msApplication'
 }
 
 export type FileField = FileFieldInterface & {
-  __typename?: 'FileField'
-  _createdAt: Scalars['DateTime']['output']
+  __typename?: 'FileField';
+  _createdAt: Scalars['DateTime']['output'];
   /** The DatoCMS URL where you can edit this entity. To use this field, you need to set a X-Base-Editing-Url header in the request */
-  _editingUrl?: Maybe<Scalars['String']['output']>
-  _updatedAt: Scalars['DateTime']['output']
-  alt?: Maybe<Scalars['String']['output']>
-  author?: Maybe<Scalars['String']['output']>
-  basename: Scalars['String']['output']
-  blurUpThumb?: Maybe<Scalars['String']['output']>
-  blurhash?: Maybe<Scalars['String']['output']>
-  colors: Array<ColorField>
-  copyright?: Maybe<Scalars['String']['output']>
-  customData: Scalars['CustomData']['output']
-  exifInfo: Scalars['CustomData']['output']
-  filename: Scalars['String']['output']
-  focalPoint?: Maybe<FocalPoint>
-  format: Scalars['String']['output']
-  height?: Maybe<Scalars['IntType']['output']>
-  id: Scalars['UploadId']['output']
-  md5: Scalars['String']['output']
-  mimeType: Scalars['String']['output']
-  notes?: Maybe<Scalars['String']['output']>
-  responsiveImage?: Maybe<ResponsiveImage>
-  size: Scalars['IntType']['output']
-  smartTags: Array<Scalars['String']['output']>
-  tags: Array<Scalars['String']['output']>
-  thumbhash?: Maybe<Scalars['String']['output']>
-  title?: Maybe<Scalars['String']['output']>
-  url: Scalars['String']['output']
-  video?: Maybe<UploadVideoField>
-  width?: Maybe<Scalars['IntType']['output']>
-}
+  _editingUrl?: Maybe<Scalars['String']['output']>;
+  _updatedAt: Scalars['DateTime']['output'];
+  alt?: Maybe<Scalars['String']['output']>;
+  author?: Maybe<Scalars['String']['output']>;
+  basename: Scalars['String']['output'];
+  blurUpThumb?: Maybe<Scalars['String']['output']>;
+  blurhash?: Maybe<Scalars['String']['output']>;
+  colors: Array<ColorField>;
+  copyright?: Maybe<Scalars['String']['output']>;
+  customData: Scalars['CustomData']['output'];
+  exifInfo: Scalars['CustomData']['output'];
+  filename: Scalars['String']['output'];
+  focalPoint?: Maybe<FocalPoint>;
+  format: Scalars['String']['output'];
+  height?: Maybe<Scalars['IntType']['output']>;
+  id: Scalars['UploadId']['output'];
+  md5: Scalars['String']['output'];
+  mimeType: Scalars['String']['output'];
+  notes?: Maybe<Scalars['String']['output']>;
+  responsiveImage?: Maybe<ResponsiveImage>;
+  size: Scalars['IntType']['output'];
+  smartTags: Array<Scalars['String']['output']>;
+  tags: Array<Scalars['String']['output']>;
+  thumbhash?: Maybe<Scalars['String']['output']>;
+  title?: Maybe<Scalars['String']['output']>;
+  url: Scalars['String']['output'];
+  video?: Maybe<UploadVideoField>;
+  width?: Maybe<Scalars['IntType']['output']>;
+};
+
 
 export type FileFieldAltArgs = {
-  fallbackLocales?: InputMaybe<Array<SiteLocale>>
-  locale?: InputMaybe<SiteLocale>
-}
+  fallbackLocales?: InputMaybe<Array<SiteLocale>>;
+  locale?: InputMaybe<SiteLocale>;
+};
+
 
 export type FileFieldBlurUpThumbArgs = {
-  imgixParams?: InputMaybe<ImgixParams>
-  punch?: Scalars['Float']['input']
-  quality?: Scalars['Int']['input']
-  size?: Scalars['Int']['input']
-}
+  imgixParams?: InputMaybe<ImgixParams>;
+  punch?: Scalars['Float']['input'];
+  quality?: Scalars['Int']['input'];
+  size?: Scalars['Int']['input'];
+};
+
 
 export type FileFieldCustomDataArgs = {
-  fallbackLocales?: InputMaybe<Array<SiteLocale>>
-  locale?: InputMaybe<SiteLocale>
-}
+  fallbackLocales?: InputMaybe<Array<SiteLocale>>;
+  locale?: InputMaybe<SiteLocale>;
+};
+
 
 export type FileFieldFocalPointArgs = {
-  fallbackLocales?: InputMaybe<Array<SiteLocale>>
-  locale?: InputMaybe<SiteLocale>
-}
+  fallbackLocales?: InputMaybe<Array<SiteLocale>>;
+  locale?: InputMaybe<SiteLocale>;
+};
+
 
 export type FileFieldResponsiveImageArgs = {
-  fallbackLocales?: InputMaybe<Array<SiteLocale>>
-  imgixParams?: InputMaybe<ImgixParams>
-  locale?: InputMaybe<SiteLocale>
-  sizes?: InputMaybe<Scalars['String']['input']>
-}
+  fallbackLocales?: InputMaybe<Array<SiteLocale>>;
+  imgixParams?: InputMaybe<ImgixParams>;
+  locale?: InputMaybe<SiteLocale>;
+  sizes?: InputMaybe<Scalars['String']['input']>;
+};
+
 
 export type FileFieldTitleArgs = {
-  fallbackLocales?: InputMaybe<Array<SiteLocale>>
-  locale?: InputMaybe<SiteLocale>
-}
+  fallbackLocales?: InputMaybe<Array<SiteLocale>>;
+  locale?: InputMaybe<SiteLocale>;
+};
+
 
 export type FileFieldUrlArgs = {
-  imgixParams?: InputMaybe<ImgixParams>
-}
+  imgixParams?: InputMaybe<ImgixParams>;
+};
 
 export type FileFieldInterface = {
-  _createdAt: Scalars['DateTime']['output']
+  _createdAt: Scalars['DateTime']['output'];
   /** The DatoCMS URL where you can edit this entity. To use this field, you need to set a X-Base-Editing-Url header in the request */
-  _editingUrl?: Maybe<Scalars['String']['output']>
-  _updatedAt: Scalars['DateTime']['output']
-  alt?: Maybe<Scalars['String']['output']>
-  author?: Maybe<Scalars['String']['output']>
-  basename: Scalars['String']['output']
-  blurUpThumb?: Maybe<Scalars['String']['output']>
-  blurhash?: Maybe<Scalars['String']['output']>
-  colors: Array<ColorField>
-  copyright?: Maybe<Scalars['String']['output']>
-  customData: Scalars['CustomData']['output']
-  exifInfo: Scalars['CustomData']['output']
-  filename: Scalars['String']['output']
-  focalPoint?: Maybe<FocalPoint>
-  format: Scalars['String']['output']
-  height?: Maybe<Scalars['IntType']['output']>
-  id: Scalars['UploadId']['output']
-  md5: Scalars['String']['output']
-  mimeType: Scalars['String']['output']
-  notes?: Maybe<Scalars['String']['output']>
-  responsiveImage?: Maybe<ResponsiveImage>
-  size: Scalars['IntType']['output']
-  smartTags: Array<Scalars['String']['output']>
-  tags: Array<Scalars['String']['output']>
-  thumbhash?: Maybe<Scalars['String']['output']>
-  title?: Maybe<Scalars['String']['output']>
-  url: Scalars['String']['output']
-  video?: Maybe<UploadVideoField>
-  width?: Maybe<Scalars['IntType']['output']>
-}
+  _editingUrl?: Maybe<Scalars['String']['output']>;
+  _updatedAt: Scalars['DateTime']['output'];
+  alt?: Maybe<Scalars['String']['output']>;
+  author?: Maybe<Scalars['String']['output']>;
+  basename: Scalars['String']['output'];
+  blurUpThumb?: Maybe<Scalars['String']['output']>;
+  blurhash?: Maybe<Scalars['String']['output']>;
+  colors: Array<ColorField>;
+  copyright?: Maybe<Scalars['String']['output']>;
+  customData: Scalars['CustomData']['output'];
+  exifInfo: Scalars['CustomData']['output'];
+  filename: Scalars['String']['output'];
+  focalPoint?: Maybe<FocalPoint>;
+  format: Scalars['String']['output'];
+  height?: Maybe<Scalars['IntType']['output']>;
+  id: Scalars['UploadId']['output'];
+  md5: Scalars['String']['output'];
+  mimeType: Scalars['String']['output'];
+  notes?: Maybe<Scalars['String']['output']>;
+  responsiveImage?: Maybe<ResponsiveImage>;
+  size: Scalars['IntType']['output'];
+  smartTags: Array<Scalars['String']['output']>;
+  tags: Array<Scalars['String']['output']>;
+  thumbhash?: Maybe<Scalars['String']['output']>;
+  title?: Maybe<Scalars['String']['output']>;
+  url: Scalars['String']['output'];
+  video?: Maybe<UploadVideoField>;
+  width?: Maybe<Scalars['IntType']['output']>;
+};
+
 
 export type FileFieldInterfaceAltArgs = {
-  fallbackLocales?: InputMaybe<Array<SiteLocale>>
-  locale?: InputMaybe<SiteLocale>
-}
+  fallbackLocales?: InputMaybe<Array<SiteLocale>>;
+  locale?: InputMaybe<SiteLocale>;
+};
+
 
 export type FileFieldInterfaceBlurUpThumbArgs = {
-  imgixParams?: InputMaybe<ImgixParams>
-  punch?: Scalars['Float']['input']
-  quality?: Scalars['Int']['input']
-  size?: Scalars['Int']['input']
-}
+  imgixParams?: InputMaybe<ImgixParams>;
+  punch?: Scalars['Float']['input'];
+  quality?: Scalars['Int']['input'];
+  size?: Scalars['Int']['input'];
+};
+
 
 export type FileFieldInterfaceCustomDataArgs = {
-  fallbackLocales?: InputMaybe<Array<SiteLocale>>
-  locale?: InputMaybe<SiteLocale>
-}
+  fallbackLocales?: InputMaybe<Array<SiteLocale>>;
+  locale?: InputMaybe<SiteLocale>;
+};
+
 
 export type FileFieldInterfaceFocalPointArgs = {
-  fallbackLocales?: InputMaybe<Array<SiteLocale>>
-  locale?: InputMaybe<SiteLocale>
-}
+  fallbackLocales?: InputMaybe<Array<SiteLocale>>;
+  locale?: InputMaybe<SiteLocale>;
+};
+
 
 export type FileFieldInterfaceResponsiveImageArgs = {
-  fallbackLocales?: InputMaybe<Array<SiteLocale>>
-  imgixParams?: InputMaybe<ImgixParams>
-  locale?: InputMaybe<SiteLocale>
-  sizes?: InputMaybe<Scalars['String']['input']>
-}
+  fallbackLocales?: InputMaybe<Array<SiteLocale>>;
+  imgixParams?: InputMaybe<ImgixParams>;
+  locale?: InputMaybe<SiteLocale>;
+  sizes?: InputMaybe<Scalars['String']['input']>;
+};
+
 
 export type FileFieldInterfaceTitleArgs = {
-  fallbackLocales?: InputMaybe<Array<SiteLocale>>
-  locale?: InputMaybe<SiteLocale>
-}
+  fallbackLocales?: InputMaybe<Array<SiteLocale>>;
+  locale?: InputMaybe<SiteLocale>;
+};
+
 
 export type FileFieldInterfaceUrlArgs = {
-  imgixParams?: InputMaybe<ImgixParams>
-}
+  imgixParams?: InputMaybe<ImgixParams>;
+};
 
 /** Specifies how to filter Single-file/image fields */
 export type FileFilter = {
   /** Search for records with an exact match. The specified value must be an Upload ID */
-  eq?: InputMaybe<Scalars['UploadId']['input']>
+  eq?: InputMaybe<Scalars['UploadId']['input']>;
   /** Filter records with the specified field defined (i.e. with any value) or not */
-  exists?: InputMaybe<Scalars['BooleanType']['input']>
+  exists?: InputMaybe<Scalars['BooleanType']['input']>;
   /** Filter records that have one of the specified uploads */
-  in?: InputMaybe<Array<InputMaybe<Scalars['UploadId']['input']>>>
+  in?: InputMaybe<Array<InputMaybe<Scalars['UploadId']['input']>>>;
   /** Exclude records with an exact match. The specified value must be an Upload ID */
-  neq?: InputMaybe<Scalars['UploadId']['input']>
+  neq?: InputMaybe<Scalars['UploadId']['input']>;
   /** Filter records that do not have one of the specified uploads */
-  notIn?: InputMaybe<Array<InputMaybe<Scalars['UploadId']['input']>>>
-}
+  notIn?: InputMaybe<Array<InputMaybe<Scalars['UploadId']['input']>>>;
+};
 
 export type GlobalSeoField = {
-  __typename?: 'GlobalSeoField'
-  facebookPageUrl?: Maybe<Scalars['String']['output']>
-  fallbackSeo?: Maybe<SeoField>
-  siteName?: Maybe<Scalars['String']['output']>
-  titleSuffix?: Maybe<Scalars['String']['output']>
-  twitterAccount?: Maybe<Scalars['String']['output']>
-}
+  __typename?: 'GlobalSeoField';
+  facebookPageUrl?: Maybe<Scalars['String']['output']>;
+  fallbackSeo?: Maybe<SeoField>;
+  siteName?: Maybe<Scalars['String']['output']>;
+  titleSuffix?: Maybe<Scalars['String']['output']>;
+  twitterAccount?: Maybe<Scalars['String']['output']>;
+};
 
 export type ImgixParams = {
   /**
@@ -683,7 +683,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/size/ar)
    */
-  ar?: InputMaybe<Scalars['String']['input']>
+  ar?: InputMaybe<Scalars['String']['input']>;
   /**
    * Automatic
    *
@@ -691,7 +691,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/auto)
    */
-  auto?: InputMaybe<Array<ImgixParamsAuto>>
+  auto?: InputMaybe<Array<ImgixParamsAuto>>;
   /**
    * Background Color
    *
@@ -699,7 +699,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/bg)
    */
-  bg?: InputMaybe<Scalars['String']['input']>
+  bg?: InputMaybe<Scalars['String']['input']>;
   /**
    * Background Removal
    *
@@ -707,7 +707,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/rendering/background-removal/bg-remove)
    */
-  bgRemove?: InputMaybe<Scalars['BooleanType']['input']>
+  bgRemove?: InputMaybe<Scalars['BooleanType']['input']>;
   /**
    * Blend
    *
@@ -715,7 +715,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/blending/blend)
    */
-  blend?: InputMaybe<Scalars['String']['input']>
+  blend?: InputMaybe<Scalars['String']['input']>;
   /**
    * Blend Align
    *
@@ -725,7 +725,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/blending/blend-align)
    */
-  blendAlign?: InputMaybe<Array<ImgixParamsBlendAlign>>
+  blendAlign?: InputMaybe<Array<ImgixParamsBlendAlign>>;
   /**
    * Blend Alpha
    *
@@ -735,7 +735,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/blending/blend-alpha)
    */
-  blendAlpha?: InputMaybe<Scalars['IntType']['input']>
+  blendAlpha?: InputMaybe<Scalars['IntType']['input']>;
   /**
    * Blend Color
    *
@@ -743,7 +743,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/blending/blend-color)
    */
-  blendColor?: InputMaybe<Scalars['String']['input']>
+  blendColor?: InputMaybe<Scalars['String']['input']>;
   /**
    * Blend Crop
    *
@@ -753,7 +753,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/blending/blend-crop)
    */
-  blendCrop?: InputMaybe<Array<ImgixParamsBlendCrop>>
+  blendCrop?: InputMaybe<Array<ImgixParamsBlendCrop>>;
   /**
    * Blend Fit
    *
@@ -763,7 +763,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/blending/blend-fit)
    */
-  blendFit?: InputMaybe<ImgixParamsBlendFit>
+  blendFit?: InputMaybe<ImgixParamsBlendFit>;
   /**
    * Blend Height
    *
@@ -773,7 +773,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/blending/blend-h)
    */
-  blendH?: InputMaybe<Scalars['FloatType']['input']>
+  blendH?: InputMaybe<Scalars['FloatType']['input']>;
   /**
    * Blend Mode
    *
@@ -783,7 +783,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/blending/blend-mode)
    */
-  blendMode?: InputMaybe<ImgixParamsBlendMode>
+  blendMode?: InputMaybe<ImgixParamsBlendMode>;
   /**
    * Blend Padding
    *
@@ -793,7 +793,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/blending/blend-pad)
    */
-  blendPad?: InputMaybe<Scalars['IntType']['input']>
+  blendPad?: InputMaybe<Scalars['IntType']['input']>;
   /**
    * Blend Size
    *
@@ -803,7 +803,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/blending/blend-size)
    */
-  blendSize?: InputMaybe<ImgixParamsBlendSize>
+  blendSize?: InputMaybe<ImgixParamsBlendSize>;
   /**
    * Blend Width
    *
@@ -813,7 +813,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/blending/blend-w)
    */
-  blendW?: InputMaybe<Scalars['FloatType']['input']>
+  blendW?: InputMaybe<Scalars['FloatType']['input']>;
   /**
    * Blend X Position
    *
@@ -823,7 +823,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/blending/blend-x)
    */
-  blendX?: InputMaybe<Scalars['IntType']['input']>
+  blendX?: InputMaybe<Scalars['IntType']['input']>;
   /**
    * Blend Y Position
    *
@@ -833,7 +833,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/blending/blend-y)
    */
-  blendY?: InputMaybe<Scalars['IntType']['input']>
+  blendY?: InputMaybe<Scalars['IntType']['input']>;
   /**
    * Gaussian Blur
    *
@@ -841,7 +841,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/stylize/blur)
    */
-  blur?: InputMaybe<Scalars['IntType']['input']>
+  blur?: InputMaybe<Scalars['IntType']['input']>;
   /**
    * Border Size & Color
    *
@@ -849,7 +849,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/border-and-padding/border)
    */
-  border?: InputMaybe<Scalars['String']['input']>
+  border?: InputMaybe<Scalars['String']['input']>;
   /**
    * Border Bottom
    *
@@ -859,7 +859,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/border-and-padding/border-bottom)
    */
-  borderBottom?: InputMaybe<Scalars['IntType']['input']>
+  borderBottom?: InputMaybe<Scalars['IntType']['input']>;
   /**
    * Border Left
    *
@@ -869,7 +869,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/border-and-padding/border-left)
    */
-  borderLeft?: InputMaybe<Scalars['IntType']['input']>
+  borderLeft?: InputMaybe<Scalars['IntType']['input']>;
   /**
    * Outer Border Radius
    *
@@ -879,7 +879,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/border-and-padding/border-radius)
    */
-  borderRadius?: InputMaybe<Scalars['String']['input']>
+  borderRadius?: InputMaybe<Scalars['String']['input']>;
   /**
    * Inner Border Radius
    *
@@ -889,7 +889,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/border-and-padding/border-radius-inner)
    */
-  borderRadiusInner?: InputMaybe<Scalars['String']['input']>
+  borderRadiusInner?: InputMaybe<Scalars['String']['input']>;
   /**
    * Border Right
    *
@@ -899,7 +899,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/border-and-padding/border-right)
    */
-  borderRight?: InputMaybe<Scalars['IntType']['input']>
+  borderRight?: InputMaybe<Scalars['IntType']['input']>;
   /**
    * Border Top
    *
@@ -909,7 +909,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/border-and-padding/border-top)
    */
-  borderTop?: InputMaybe<Scalars['IntType']['input']>
+  borderTop?: InputMaybe<Scalars['IntType']['input']>;
   /**
    * Brightness
    *
@@ -917,7 +917,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/adjustment/bri)
    */
-  bri?: InputMaybe<Scalars['IntType']['input']>
+  bri?: InputMaybe<Scalars['IntType']['input']>;
   /**
    * Client Hints
    *
@@ -925,7 +925,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/format/ch)
    */
-  ch?: InputMaybe<Array<ImgixParamsCh>>
+  ch?: InputMaybe<Array<ImgixParamsCh>>;
   /**
    * Chroma Subsampling
    *
@@ -933,7 +933,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/format/chromasub)
    */
-  chromasub?: InputMaybe<Scalars['IntType']['input']>
+  chromasub?: InputMaybe<Scalars['IntType']['input']>;
   /**
    * Color Quantization
    *
@@ -941,7 +941,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/format/colorquant)
    */
-  colorquant?: InputMaybe<Scalars['IntType']['input']>
+  colorquant?: InputMaybe<Scalars['IntType']['input']>;
   /**
    * Palette Color Count
    *
@@ -951,7 +951,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/color-palette/colors)
    */
-  colors?: InputMaybe<Scalars['IntType']['input']>
+  colors?: InputMaybe<Scalars['IntType']['input']>;
   /**
    * Contrast
    *
@@ -959,7 +959,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/adjustment/con)
    */
-  con?: InputMaybe<Scalars['IntType']['input']>
+  con?: InputMaybe<Scalars['IntType']['input']>;
   /**
    * Mask Corner Radius
    *
@@ -969,7 +969,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/mask/corner-radius)
    */
-  cornerRadius?: InputMaybe<Scalars['String']['input']>
+  cornerRadius?: InputMaybe<Scalars['String']['input']>;
   /**
    * Crop Mode
    *
@@ -979,7 +979,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/size/crop)
    */
-  crop?: InputMaybe<Array<ImgixParamsCrop>>
+  crop?: InputMaybe<Array<ImgixParamsCrop>>;
   /**
    * Color Space
    *
@@ -987,7 +987,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/format/cs)
    */
-  cs?: InputMaybe<ImgixParamsCs>
+  cs?: InputMaybe<ImgixParamsCs>;
   /**
    * Download
    *
@@ -995,7 +995,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/format/dl)
    */
-  dl?: InputMaybe<Scalars['String']['input']>
+  dl?: InputMaybe<Scalars['String']['input']>;
   /**
    * Dots Per Inch
    *
@@ -1003,7 +1003,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/format/dpi)
    */
-  dpi?: InputMaybe<Scalars['IntType']['input']>
+  dpi?: InputMaybe<Scalars['IntType']['input']>;
   /**
    * Device Pixel Ratio
    *
@@ -1011,7 +1011,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/dpr)
    */
-  dpr?: InputMaybe<Scalars['FloatType']['input']>
+  dpr?: InputMaybe<Scalars['FloatType']['input']>;
   /**
    * Duotone
    *
@@ -1019,7 +1019,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/stylize/duotone)
    */
-  duotone?: InputMaybe<Scalars['String']['input']>
+  duotone?: InputMaybe<Scalars['String']['input']>;
   /**
    * Duotone Alpha
    *
@@ -1029,7 +1029,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/stylize/duotone-alpha)
    */
-  duotoneAlpha?: InputMaybe<Scalars['IntType']['input']>
+  duotoneAlpha?: InputMaybe<Scalars['IntType']['input']>;
   /**
    * Exposure
    *
@@ -1037,7 +1037,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/adjustment/exp)
    */
-  exp?: InputMaybe<Scalars['IntType']['input']>
+  exp?: InputMaybe<Scalars['IntType']['input']>;
   /**
    * Url Expiration Timestamp
    *
@@ -1045,7 +1045,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/expires)
    */
-  expires?: InputMaybe<Scalars['IntType']['input']>
+  expires?: InputMaybe<Scalars['IntType']['input']>;
   /**
    * Face Index
    *
@@ -1055,7 +1055,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/face-detection/faceindex)
    */
-  faceindex?: InputMaybe<Scalars['IntType']['input']>
+  faceindex?: InputMaybe<Scalars['IntType']['input']>;
   /**
    * Face Padding
    *
@@ -1065,7 +1065,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/face-detection/facepad)
    */
-  facepad?: InputMaybe<Scalars['FloatType']['input']>
+  facepad?: InputMaybe<Scalars['FloatType']['input']>;
   /**
    * Json Face Data
    *
@@ -1075,7 +1075,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/face-detection/faces)
    */
-  faces?: InputMaybe<Scalars['IntType']['input']>
+  faces?: InputMaybe<Scalars['IntType']['input']>;
   /**
    * Fill Mode
    *
@@ -1085,7 +1085,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/fill/fill)
    */
-  fill?: InputMaybe<ImgixParamsFill>
+  fill?: InputMaybe<ImgixParamsFill>;
   /**
    * Fill Color
    *
@@ -1095,7 +1095,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/fill/fill-color)
    */
-  fillColor?: InputMaybe<Scalars['String']['input']>
+  fillColor?: InputMaybe<Scalars['String']['input']>;
   /**
    * Resize Fit Mode
    *
@@ -1103,7 +1103,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/size/fit)
    */
-  fit?: InputMaybe<ImgixParamsFit>
+  fit?: InputMaybe<ImgixParamsFit>;
   /**
    * Flip Axis
    *
@@ -1111,7 +1111,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/rotation/flip)
    */
-  flip?: InputMaybe<ImgixParamsFlip>
+  flip?: InputMaybe<ImgixParamsFlip>;
   /**
    * Output Format
    *
@@ -1119,7 +1119,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/format/fm)
    */
-  fm?: InputMaybe<ImgixParamsFm>
+  fm?: InputMaybe<ImgixParamsFm>;
   /**
    * Focal Point Debug
    *
@@ -1129,7 +1129,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/focalpoint-crop/fp-debug)
    */
-  fpDebug?: InputMaybe<Scalars['BooleanType']['input']>
+  fpDebug?: InputMaybe<Scalars['BooleanType']['input']>;
   /**
    * Focal Point X Position
    *
@@ -1139,7 +1139,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/focalpoint-crop/fp-x)
    */
-  fpX?: InputMaybe<Scalars['FloatType']['input']>
+  fpX?: InputMaybe<Scalars['FloatType']['input']>;
   /**
    * Focal Point Y Position
    *
@@ -1149,7 +1149,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/focalpoint-crop/fp-y)
    */
-  fpY?: InputMaybe<Scalars['FloatType']['input']>
+  fpY?: InputMaybe<Scalars['FloatType']['input']>;
   /**
    * Focal Point Zoom
    *
@@ -1159,19 +1159,19 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/focalpoint-crop/fp-z)
    */
-  fpZ?: InputMaybe<Scalars['FloatType']['input']>
+  fpZ?: InputMaybe<Scalars['FloatType']['input']>;
   /**
    * Frames Per Second
    *
    * Specifies the framerate of the generated image.
    */
-  fps?: InputMaybe<Scalars['IntType']['input']>
+  fps?: InputMaybe<Scalars['IntType']['input']>;
   /**
    * Frame Selection
    *
    * Specifies the frame of an animated image to use.
    */
-  frame?: InputMaybe<Scalars['String']['input']>
+  frame?: InputMaybe<Scalars['String']['input']>;
   /**
    * Gamma
    *
@@ -1179,13 +1179,13 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/adjustment/gam)
    */
-  gam?: InputMaybe<Scalars['IntType']['input']>
+  gam?: InputMaybe<Scalars['IntType']['input']>;
   /**
    * Animated Gif Quality
    *
    * Depends on: `fm=gif`
    */
-  gifQ?: InputMaybe<Scalars['IntType']['input']>
+  gifQ?: InputMaybe<Scalars['IntType']['input']>;
   /**
    * Grid Colors
    *
@@ -1193,7 +1193,7 @@ export type ImgixParams = {
    *
    * Depends on: `transparency`
    */
-  gridColors?: InputMaybe<Scalars['String']['input']>
+  gridColors?: InputMaybe<Scalars['String']['input']>;
   /**
    * Grid Size
    *
@@ -1201,7 +1201,7 @@ export type ImgixParams = {
    *
    * Depends on: `transparency`
    */
-  gridSize?: InputMaybe<Scalars['IntType']['input']>
+  gridSize?: InputMaybe<Scalars['IntType']['input']>;
   /**
    * Image Height
    *
@@ -1209,7 +1209,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/size/h)
    */
-  h?: InputMaybe<Scalars['FloatType']['input']>
+  h?: InputMaybe<Scalars['FloatType']['input']>;
   /**
    * Highlight
    *
@@ -1217,7 +1217,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/adjustment/high)
    */
-  high?: InputMaybe<Scalars['IntType']['input']>
+  high?: InputMaybe<Scalars['IntType']['input']>;
   /**
    * Halftone
    *
@@ -1225,7 +1225,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/stylize/htn)
    */
-  htn?: InputMaybe<Scalars['IntType']['input']>
+  htn?: InputMaybe<Scalars['IntType']['input']>;
   /**
    * Hue Shift
    *
@@ -1233,13 +1233,13 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/adjustment/hue)
    */
-  hue?: InputMaybe<Scalars['IntType']['input']>
+  hue?: InputMaybe<Scalars['IntType']['input']>;
   /**
    * Frame Interval
    *
    * Displays every Nth frame starting with the first frame.
    */
-  interval?: InputMaybe<Scalars['IntType']['input']>
+  interval?: InputMaybe<Scalars['IntType']['input']>;
   /**
    * Invert
    *
@@ -1247,19 +1247,19 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/adjustment/invert)
    */
-  invert?: InputMaybe<Scalars['BooleanType']['input']>
+  invert?: InputMaybe<Scalars['BooleanType']['input']>;
   /**
    * Iptc Passthrough
    *
    * Determine if IPTC data should be passed for JPEG images.
    */
-  iptc?: InputMaybe<ImgixParamsIptc>
+  iptc?: InputMaybe<ImgixParamsIptc>;
   /**
    * Animation Loop Count
    *
    * Specifies the number of times an animated image should repeat. A value of 0 means infinite looping.
    */
-  loop?: InputMaybe<Scalars['IntType']['input']>
+  loop?: InputMaybe<Scalars['IntType']['input']>;
   /**
    * Lossless Compression
    *
@@ -1269,7 +1269,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/format/lossless)
    */
-  lossless?: InputMaybe<Scalars['BooleanType']['input']>
+  lossless?: InputMaybe<Scalars['BooleanType']['input']>;
   /**
    * Watermark Image Url
    *
@@ -1277,7 +1277,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/watermark/mark)
    */
-  mark?: InputMaybe<Scalars['String']['input']>
+  mark?: InputMaybe<Scalars['String']['input']>;
   /**
    * Watermark Alignment Mode
    *
@@ -1287,7 +1287,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/watermark/mark-align)
    */
-  markAlign?: InputMaybe<Array<ImgixParamsMarkAlign>>
+  markAlign?: InputMaybe<Array<ImgixParamsMarkAlign>>;
   /**
    * Watermark Alpha
    *
@@ -1297,7 +1297,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/watermark/mark-alpha)
    */
-  markAlpha?: InputMaybe<Scalars['IntType']['input']>
+  markAlpha?: InputMaybe<Scalars['IntType']['input']>;
   /**
    * Watermark Base Url
    *
@@ -1307,7 +1307,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/watermark/mark-base)
    */
-  markBase?: InputMaybe<Scalars['String']['input']>
+  markBase?: InputMaybe<Scalars['String']['input']>;
   /**
    * Watermark Fit Mode
    *
@@ -1317,7 +1317,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/watermark/mark-fit)
    */
-  markFit?: InputMaybe<ImgixParamsMarkFit>
+  markFit?: InputMaybe<ImgixParamsMarkFit>;
   /**
    * Watermark Height
    *
@@ -1327,7 +1327,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/watermark/mark-h)
    */
-  markH?: InputMaybe<Scalars['FloatType']['input']>
+  markH?: InputMaybe<Scalars['FloatType']['input']>;
   /**
    * Watermark Padding
    *
@@ -1337,7 +1337,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/watermark/mark-pad)
    */
-  markPad?: InputMaybe<Scalars['IntType']['input']>
+  markPad?: InputMaybe<Scalars['IntType']['input']>;
   /**
    * Watermark Rotation
    *
@@ -1345,7 +1345,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/watermark/mark-rot)
    */
-  markRot?: InputMaybe<Scalars['FloatType']['input']>
+  markRot?: InputMaybe<Scalars['FloatType']['input']>;
   /**
    * Watermark Scale
    *
@@ -1355,7 +1355,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/watermark/mark-scale)
    */
-  markScale?: InputMaybe<Scalars['IntType']['input']>
+  markScale?: InputMaybe<Scalars['IntType']['input']>;
   /**
    * Watermark Tile
    *
@@ -1365,7 +1365,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/watermark/mark-tile)
    */
-  markTile?: InputMaybe<ImgixParamsMarkTile>
+  markTile?: InputMaybe<ImgixParamsMarkTile>;
   /**
    * Watermark Width
    *
@@ -1375,7 +1375,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/watermark/mark-w)
    */
-  markW?: InputMaybe<Scalars['FloatType']['input']>
+  markW?: InputMaybe<Scalars['FloatType']['input']>;
   /**
    * Watermark X Position
    *
@@ -1385,7 +1385,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/watermark/mark-x)
    */
-  markX?: InputMaybe<Scalars['IntType']['input']>
+  markX?: InputMaybe<Scalars['IntType']['input']>;
   /**
    * Watermark Y Position
    *
@@ -1395,7 +1395,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/watermark/mark-y)
    */
-  markY?: InputMaybe<Scalars['IntType']['input']>
+  markY?: InputMaybe<Scalars['IntType']['input']>;
   /**
    * Mask Type
    *
@@ -1403,7 +1403,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/mask)
    */
-  mask?: InputMaybe<Scalars['String']['input']>
+  mask?: InputMaybe<Scalars['String']['input']>;
   /**
    * Mask Background Color
    *
@@ -1413,7 +1413,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/mask/mask-bg)
    */
-  maskBg?: InputMaybe<Scalars['String']['input']>
+  maskBg?: InputMaybe<Scalars['String']['input']>;
   /**
    * Maximum Height
    *
@@ -1423,7 +1423,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/size/max-height)
    */
-  maxH?: InputMaybe<Scalars['IntType']['input']>
+  maxH?: InputMaybe<Scalars['IntType']['input']>;
   /**
    * Maximum Width
    *
@@ -1433,7 +1433,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/size/max-width)
    */
-  maxW?: InputMaybe<Scalars['IntType']['input']>
+  maxW?: InputMaybe<Scalars['IntType']['input']>;
   /**
    * Minimum Height
    *
@@ -1443,7 +1443,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/size/min-height)
    */
-  minH?: InputMaybe<Scalars['IntType']['input']>
+  minH?: InputMaybe<Scalars['IntType']['input']>;
   /**
    * Minimum Width
    *
@@ -1453,7 +1453,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/size/min-width)
    */
-  minW?: InputMaybe<Scalars['IntType']['input']>
+  minW?: InputMaybe<Scalars['IntType']['input']>;
   /**
    * Monochrome
    *
@@ -1461,7 +1461,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/stylize/monochrome)
    */
-  monochrome?: InputMaybe<Scalars['String']['input']>
+  monochrome?: InputMaybe<Scalars['String']['input']>;
   /**
    * Noise Reduction Bound
    *
@@ -1469,7 +1469,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/noise-reduction/nr)
    */
-  nr?: InputMaybe<Scalars['IntType']['input']>
+  nr?: InputMaybe<Scalars['IntType']['input']>;
   /**
    * Noise Reduction Sharpen
    *
@@ -1477,7 +1477,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/noise-reduction/nrs)
    */
-  nrs?: InputMaybe<Scalars['IntType']['input']>
+  nrs?: InputMaybe<Scalars['IntType']['input']>;
   /**
    * Orientation
    *
@@ -1485,7 +1485,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/rotation/orient)
    */
-  orient?: InputMaybe<Scalars['IntType']['input']>
+  orient?: InputMaybe<Scalars['IntType']['input']>;
   /**
    * Padding
    *
@@ -1493,7 +1493,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/border-and-padding/pad)
    */
-  pad?: InputMaybe<Scalars['IntType']['input']>
+  pad?: InputMaybe<Scalars['IntType']['input']>;
   /**
    * Padding Bottom
    *
@@ -1501,7 +1501,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/border-and-padding/pad-bottom)
    */
-  padBottom?: InputMaybe<Scalars['IntType']['input']>
+  padBottom?: InputMaybe<Scalars['IntType']['input']>;
   /**
    * Padding Left
    *
@@ -1509,7 +1509,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/border-and-padding/pad-left)
    */
-  padLeft?: InputMaybe<Scalars['IntType']['input']>
+  padLeft?: InputMaybe<Scalars['IntType']['input']>;
   /**
    * Padding Right
    *
@@ -1517,7 +1517,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/border-and-padding/pad-right)
    */
-  padRight?: InputMaybe<Scalars['IntType']['input']>
+  padRight?: InputMaybe<Scalars['IntType']['input']>;
   /**
    * Padding Top
    *
@@ -1525,7 +1525,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/border-and-padding/pad-top)
    */
-  padTop?: InputMaybe<Scalars['IntType']['input']>
+  padTop?: InputMaybe<Scalars['IntType']['input']>;
   /**
    * Pdf Page Number
    *
@@ -1533,7 +1533,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/pdf/page)
    */
-  page?: InputMaybe<Scalars['IntType']['input']>
+  page?: InputMaybe<Scalars['IntType']['input']>;
   /**
    * Color Palette Extraction
    *
@@ -1541,7 +1541,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/color-palette/palette)
    */
-  palette?: InputMaybe<ImgixParamsPalette>
+  palette?: InputMaybe<ImgixParamsPalette>;
   /**
    * Pdf Annotation
    *
@@ -1549,7 +1549,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/pdf/pdf-annotation)
    */
-  pdfAnnotation?: InputMaybe<Scalars['BooleanType']['input']>
+  pdfAnnotation?: InputMaybe<Scalars['BooleanType']['input']>;
   /**
    * Css Prefix
    *
@@ -1559,7 +1559,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/color-palette/prefix)
    */
-  prefix?: InputMaybe<Scalars['String']['input']>
+  prefix?: InputMaybe<Scalars['String']['input']>;
   /**
    * Pixellate
    *
@@ -1567,7 +1567,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/stylize/px)
    */
-  px?: InputMaybe<Scalars['IntType']['input']>
+  px?: InputMaybe<Scalars['IntType']['input']>;
   /**
    * Output Quality
    *
@@ -1577,7 +1577,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/format/q)
    */
-  q?: InputMaybe<Scalars['IntType']['input']>
+  q?: InputMaybe<Scalars['IntType']['input']>;
   /**
    * Source Rectangle Region
    *
@@ -1585,13 +1585,13 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/size/rect)
    */
-  rect?: InputMaybe<Scalars['String']['input']>
+  rect?: InputMaybe<Scalars['String']['input']>;
   /**
    * Reverse
    *
    * Reverses the frame order on the source animation.
    */
-  reverse?: InputMaybe<Scalars['BooleanType']['input']>
+  reverse?: InputMaybe<Scalars['BooleanType']['input']>;
   /**
    * Rotation
    *
@@ -1599,7 +1599,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/rotation/rot)
    */
-  rot?: InputMaybe<Scalars['FloatType']['input']>
+  rot?: InputMaybe<Scalars['FloatType']['input']>;
   /**
    * Saturation
    *
@@ -1607,7 +1607,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/adjustment/sat)
    */
-  sat?: InputMaybe<Scalars['IntType']['input']>
+  sat?: InputMaybe<Scalars['IntType']['input']>;
   /**
    * Sepia Tone
    *
@@ -1615,7 +1615,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/stylize/sepia)
    */
-  sepia?: InputMaybe<Scalars['IntType']['input']>
+  sepia?: InputMaybe<Scalars['IntType']['input']>;
   /**
    * Shadow
    *
@@ -1623,7 +1623,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/adjustment/shad)
    */
-  shad?: InputMaybe<Scalars['FloatType']['input']>
+  shad?: InputMaybe<Scalars['FloatType']['input']>;
   /**
    * Sharpen
    *
@@ -1631,13 +1631,13 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/adjustment/sharp)
    */
-  sharp?: InputMaybe<Scalars['FloatType']['input']>
+  sharp?: InputMaybe<Scalars['FloatType']['input']>;
   /**
    * Frame Skip
    *
    * Skips every Nth frame starting with the first frame.
    */
-  skip?: InputMaybe<Scalars['IntType']['input']>
+  skip?: InputMaybe<Scalars['IntType']['input']>;
   /**
    * Transparency
    *
@@ -1645,7 +1645,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/fill/transparency)
    */
-  transparency?: InputMaybe<ImgixParamsTransparency>
+  transparency?: InputMaybe<ImgixParamsTransparency>;
   /**
    * Trim Image
    *
@@ -1653,7 +1653,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/trim/trim)
    */
-  trim?: InputMaybe<ImgixParamsTrim>
+  trim?: InputMaybe<ImgixParamsTrim>;
   /**
    * Trim Color
    *
@@ -1663,7 +1663,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/trim/trim-color)
    */
-  trimColor?: InputMaybe<Scalars['String']['input']>
+  trimColor?: InputMaybe<Scalars['String']['input']>;
   /**
    * Trim Mean Difference
    *
@@ -1673,7 +1673,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/trim/trim-md)
    */
-  trimMd?: InputMaybe<Scalars['FloatType']['input']>
+  trimMd?: InputMaybe<Scalars['FloatType']['input']>;
   /**
    * Trim Padding
    *
@@ -1683,7 +1683,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/trim/trim-pad)
    */
-  trimPad?: InputMaybe<Scalars['IntType']['input']>
+  trimPad?: InputMaybe<Scalars['IntType']['input']>;
   /**
    * Trim Standard Deviation
    *
@@ -1693,7 +1693,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/trim/trim-sd)
    */
-  trimSd?: InputMaybe<Scalars['FloatType']['input']>
+  trimSd?: InputMaybe<Scalars['FloatType']['input']>;
   /**
    * Trim Tolerance
    *
@@ -1703,7 +1703,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/trim/trim-tol)
    */
-  trimTol?: InputMaybe<Scalars['FloatType']['input']>
+  trimTol?: InputMaybe<Scalars['FloatType']['input']>;
   /**
    * Text String
    *
@@ -1711,7 +1711,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/text/txt)
    */
-  txt?: InputMaybe<Scalars['String']['input']>
+  txt?: InputMaybe<Scalars['String']['input']>;
   /**
    * Text Align
    *
@@ -1721,7 +1721,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/text/txt-align)
    */
-  txtAlign?: InputMaybe<Array<ImgixParamsTxtAlign>>
+  txtAlign?: InputMaybe<Array<ImgixParamsTxtAlign>>;
   /**
    * Text Clipping Mode
    *
@@ -1731,7 +1731,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/text/txt-clip)
    */
-  txtClip?: InputMaybe<Array<ImgixParamsTxtClip>>
+  txtClip?: InputMaybe<Array<ImgixParamsTxtClip>>;
   /**
    * Text Color
    *
@@ -1741,7 +1741,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/text/txt-color)
    */
-  txtColor?: InputMaybe<Scalars['String']['input']>
+  txtColor?: InputMaybe<Scalars['String']['input']>;
   /**
    * Text Fit Mode
    *
@@ -1751,7 +1751,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/text/txt-fit)
    */
-  txtFit?: InputMaybe<ImgixParamsTxtFit>
+  txtFit?: InputMaybe<ImgixParamsTxtFit>;
   /**
    * Text Font
    *
@@ -1761,7 +1761,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/text/txt-font)
    */
-  txtFont?: InputMaybe<Scalars['String']['input']>
+  txtFont?: InputMaybe<Scalars['String']['input']>;
   /**
    * Text Leading
    *
@@ -1771,7 +1771,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/typesetting/txt-lead)
    */
-  txtLead?: InputMaybe<Scalars['IntType']['input']>
+  txtLead?: InputMaybe<Scalars['IntType']['input']>;
   /**
    * Text Ligatures
    *
@@ -1781,7 +1781,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/text/txt-lig)
    */
-  txtLig?: InputMaybe<Scalars['IntType']['input']>
+  txtLig?: InputMaybe<Scalars['IntType']['input']>;
   /**
    * Text Outline
    *
@@ -1791,7 +1791,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/text/txt-line)
    */
-  txtLine?: InputMaybe<Scalars['IntType']['input']>
+  txtLine?: InputMaybe<Scalars['IntType']['input']>;
   /**
    * Text Outline Color
    *
@@ -1801,7 +1801,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/text/txt-line-color)
    */
-  txtLineColor?: InputMaybe<Scalars['String']['input']>
+  txtLineColor?: InputMaybe<Scalars['String']['input']>;
   /**
    * Text Padding
    *
@@ -1811,7 +1811,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/text/txt-pad)
    */
-  txtPad?: InputMaybe<Scalars['IntType']['input']>
+  txtPad?: InputMaybe<Scalars['IntType']['input']>;
   /**
    * Text Shadow
    *
@@ -1821,7 +1821,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/text/txt-shad)
    */
-  txtShad?: InputMaybe<Scalars['FloatType']['input']>
+  txtShad?: InputMaybe<Scalars['FloatType']['input']>;
   /**
    * Text Font Size
    *
@@ -1831,7 +1831,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/text/txt-size)
    */
-  txtSize?: InputMaybe<Scalars['IntType']['input']>
+  txtSize?: InputMaybe<Scalars['IntType']['input']>;
   /**
    * Text Tracking
    *
@@ -1841,7 +1841,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/typesetting/txt-track)
    */
-  txtTrack?: InputMaybe<Scalars['IntType']['input']>
+  txtTrack?: InputMaybe<Scalars['IntType']['input']>;
   /**
    * Text Width
    *
@@ -1851,7 +1851,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/text/txt-width)
    */
-  txtWidth?: InputMaybe<Scalars['IntType']['input']>
+  txtWidth?: InputMaybe<Scalars['IntType']['input']>;
   /**
    * Text X Position
    *
@@ -1861,7 +1861,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/text/txt-x)
    */
-  txtX?: InputMaybe<Scalars['IntType']['input']>
+  txtX?: InputMaybe<Scalars['IntType']['input']>;
   /**
    * Text Y Position
    *
@@ -1871,7 +1871,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/text/txt-y)
    */
-  txtY?: InputMaybe<Scalars['IntType']['input']>
+  txtY?: InputMaybe<Scalars['IntType']['input']>;
   /**
    * Unsharp Mask
    *
@@ -1879,7 +1879,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/adjustment/usm)
    */
-  usm?: InputMaybe<Scalars['IntType']['input']>
+  usm?: InputMaybe<Scalars['IntType']['input']>;
   /**
    * Unsharp Mask Radius
    *
@@ -1889,7 +1889,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/adjustment/usmrad)
    */
-  usmrad?: InputMaybe<Scalars['FloatType']['input']>
+  usmrad?: InputMaybe<Scalars['FloatType']['input']>;
   /**
    * Vibrance
    *
@@ -1897,7 +1897,7 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/adjustment/vib)
    */
-  vib?: InputMaybe<Scalars['IntType']['input']>
+  vib?: InputMaybe<Scalars['IntType']['input']>;
   /**
    * Image Width
    *
@@ -1905,14 +1905,14 @@ export type ImgixParams = {
    *
    * [Open Imgix reference »](https://docs.imgix.com/apis/url/size/w)
    */
-  w?: InputMaybe<Scalars['FloatType']['input']>
-}
+  w?: InputMaybe<Scalars['FloatType']['input']>;
+};
 
 export enum ImgixParamsAuto {
   Compress = 'compress',
   Enhance = 'enhance',
   Format = 'format',
-  Redeye = 'redeye',
+  Redeye = 'redeye'
 }
 
 export enum ImgixParamsBlendAlign {
@@ -1921,7 +1921,7 @@ export enum ImgixParamsBlendAlign {
   Left = 'left',
   Middle = 'middle',
   Right = 'right',
-  Top = 'top',
+  Top = 'top'
 }
 
 export enum ImgixParamsBlendCrop {
@@ -1929,7 +1929,7 @@ export enum ImgixParamsBlendCrop {
   Faces = 'faces',
   Left = 'left',
   Right = 'right',
-  Top = 'top',
+  Top = 'top'
 }
 
 export enum ImgixParamsBlendFit {
@@ -1937,7 +1937,7 @@ export enum ImgixParamsBlendFit {
   Clip = 'clip',
   Crop = 'crop',
   Max = 'max',
-  Scale = 'scale',
+  Scale = 'scale'
 }
 
 export enum ImgixParamsBlendMode {
@@ -1956,17 +1956,17 @@ export enum ImgixParamsBlendMode {
   Overlay = 'overlay',
   Saturation = 'saturation',
   Screen = 'screen',
-  Softlight = 'softlight',
+  Softlight = 'softlight'
 }
 
 export enum ImgixParamsBlendSize {
-  Inherit = 'inherit',
+  Inherit = 'inherit'
 }
 
 export enum ImgixParamsCh {
   Dpr = 'dpr',
   SaveData = 'saveData',
-  Width = 'width',
+  Width = 'width'
 }
 
 export enum ImgixParamsCrop {
@@ -1977,19 +1977,19 @@ export enum ImgixParamsCrop {
   Focalpoint = 'focalpoint',
   Left = 'left',
   Right = 'right',
-  Top = 'top',
+  Top = 'top'
 }
 
 export enum ImgixParamsCs {
   Adobergb1998 = 'adobergb1998',
   Srgb = 'srgb',
   Strip = 'strip',
-  Tinysrgb = 'tinysrgb',
+  Tinysrgb = 'tinysrgb'
 }
 
 export enum ImgixParamsFill {
   Blur = 'blur',
-  Solid = 'solid',
+  Solid = 'solid'
 }
 
 export enum ImgixParamsFit {
@@ -2001,13 +2001,13 @@ export enum ImgixParamsFit {
   Fillmax = 'fillmax',
   Max = 'max',
   Min = 'min',
-  Scale = 'scale',
+  Scale = 'scale'
 }
 
 export enum ImgixParamsFlip {
   H = 'h',
   Hv = 'hv',
-  V = 'v',
+  V = 'v'
 }
 
 export enum ImgixParamsFm {
@@ -2024,12 +2024,12 @@ export enum ImgixParamsFm {
   Png8 = 'png8',
   Png32 = 'png32',
   Webm = 'webm',
-  Webp = 'webp',
+  Webp = 'webp'
 }
 
 export enum ImgixParamsIptc {
   Allow = 'allow',
-  Block = 'block',
+  Block = 'block'
 }
 
 export enum ImgixParamsMarkAlign {
@@ -2038,7 +2038,7 @@ export enum ImgixParamsMarkAlign {
   Left = 'left',
   Middle = 'middle',
   Right = 'right',
-  Top = 'top',
+  Top = 'top'
 }
 
 export enum ImgixParamsMarkFit {
@@ -2046,25 +2046,25 @@ export enum ImgixParamsMarkFit {
   Crop = 'crop',
   Fill = 'fill',
   Max = 'max',
-  Scale = 'scale',
+  Scale = 'scale'
 }
 
 export enum ImgixParamsMarkTile {
-  Grid = 'grid',
+  Grid = 'grid'
 }
 
 export enum ImgixParamsPalette {
   Css = 'css',
-  Json = 'json',
+  Json = 'json'
 }
 
 export enum ImgixParamsTransparency {
-  Grid = 'grid',
+  Grid = 'grid'
 }
 
 export enum ImgixParamsTrim {
   Auto = 'auto',
-  Color = 'color',
+  Color = 'color'
 }
 
 export enum ImgixParamsTxtAlign {
@@ -2073,364 +2073,510 @@ export enum ImgixParamsTxtAlign {
   Left = 'left',
   Middle = 'middle',
   Right = 'right',
-  Top = 'top',
+  Top = 'top'
 }
 
 export enum ImgixParamsTxtClip {
   Ellipsis = 'ellipsis',
   End = 'end',
   Middle = 'middle',
-  Start = 'start',
+  Start = 'start'
 }
 
 export enum ImgixParamsTxtFit {
-  Max = 'max',
+  Max = 'max'
 }
 
 /** Specifies how to filter by usage */
 export type InUseFilter = {
   /** Search uploads that are currently used by some record or not */
-  eq?: InputMaybe<Scalars['BooleanType']['input']>
-}
+  eq?: InputMaybe<Scalars['BooleanType']['input']>;
+};
 
 /** Specifies how to filter by ID */
 export type ItemIdFilter = {
   /** Search the record with the specified ID */
-  eq?: InputMaybe<Scalars['ItemId']['input']>
+  eq?: InputMaybe<Scalars['ItemId']['input']>;
   /** Search records with the specified IDs */
-  in?: InputMaybe<Array<InputMaybe<Scalars['ItemId']['input']>>>
+  in?: InputMaybe<Array<InputMaybe<Scalars['ItemId']['input']>>>;
   /** Exclude the record with the specified ID */
-  neq?: InputMaybe<Scalars['ItemId']['input']>
+  neq?: InputMaybe<Scalars['ItemId']['input']>;
   /** Search records that do not have the specified IDs */
-  notIn?: InputMaybe<Array<InputMaybe<Scalars['ItemId']['input']>>>
-}
+  notIn?: InputMaybe<Array<InputMaybe<Scalars['ItemId']['input']>>>;
+};
 
 export enum ItemStatus {
   Draft = 'draft',
   Published = 'published',
-  Updated = 'updated',
+  Updated = 'updated'
 }
 
 /** Specifies how to filter Multiple-links fields */
 export type LinksFilter = {
   /** Filter records linked to all of the specified records. The specified values must be Record IDs */
-  allIn?: InputMaybe<Array<InputMaybe<Scalars['ItemId']['input']>>>
+  allIn?: InputMaybe<Array<InputMaybe<Scalars['ItemId']['input']>>>;
   /** Filter records linked to at least one of the specified records. The specified values must be Record IDs */
-  anyIn?: InputMaybe<Array<InputMaybe<Scalars['ItemId']['input']>>>
+  anyIn?: InputMaybe<Array<InputMaybe<Scalars['ItemId']['input']>>>;
   /** Search for records with an exact match. The specified values must be Record IDs */
-  eq?: InputMaybe<Array<InputMaybe<Scalars['ItemId']['input']>>>
+  eq?: InputMaybe<Array<InputMaybe<Scalars['ItemId']['input']>>>;
   /** Filter records with the specified field defined (i.e. with any value) or not */
-  exists?: InputMaybe<Scalars['BooleanType']['input']>
+  exists?: InputMaybe<Scalars['BooleanType']['input']>;
   /** Filter records not linked to any of the specified records. The specified values must be Record IDs */
-  notIn?: InputMaybe<Array<InputMaybe<Scalars['ItemId']['input']>>>
-}
+  notIn?: InputMaybe<Array<InputMaybe<Scalars['ItemId']['input']>>>;
+};
+
+/** Block of type Marketing Format (marketing_format) */
+export type MarketingFormatRecord = RecordInterface & {
+  __typename?: 'MarketingFormatRecord';
+  _createdAt: Scalars['DateTime']['output'];
+  /** Editing URL */
+  _editingUrl?: Maybe<Scalars['String']['output']>;
+  _firstPublishedAt?: Maybe<Scalars['DateTime']['output']>;
+  _isValid: Scalars['BooleanType']['output'];
+  _modelApiKey: Scalars['String']['output'];
+  _publicationScheduledAt?: Maybe<Scalars['DateTime']['output']>;
+  _publishedAt?: Maybe<Scalars['DateTime']['output']>;
+  /** Generates SEO and Social card meta tags to be used in your frontend */
+  _seoMetaTags: Array<Tag>;
+  _status: ItemStatus;
+  _unpublishingScheduledAt?: Maybe<Scalars['DateTime']['output']>;
+  _updatedAt: Scalars['DateTime']['output'];
+  color: ColorField;
+  description: Scalars['String']['output'];
+  id: Scalars['ItemId']['output'];
+  imageBright: FileField;
+  imageDark: FileField;
+  title: Scalars['String']['output'];
+};
+
+
+/** Block of type Marketing Format (marketing_format) */
+export type MarketingFormatRecord_SeoMetaTagsArgs = {
+  locale?: InputMaybe<SiteLocale>;
+};
+
+
+/** Block of type Marketing Format (marketing_format) */
+export type MarketingFormatRecordDescriptionArgs = {
+  markdown?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+/** Record of type Marketing Startseite (marketing_landing_page) */
+export type MarketingLandingPageRecord = RecordInterface & {
+  __typename?: 'MarketingLandingPageRecord';
+  _createdAt: Scalars['DateTime']['output'];
+  /** Editing URL */
+  _editingUrl?: Maybe<Scalars['String']['output']>;
+  _firstPublishedAt?: Maybe<Scalars['DateTime']['output']>;
+  _isValid: Scalars['BooleanType']['output'];
+  _modelApiKey: Scalars['String']['output'];
+  _publicationScheduledAt?: Maybe<Scalars['DateTime']['output']>;
+  _publishedAt?: Maybe<Scalars['DateTime']['output']>;
+  /** Generates SEO and Social card meta tags to be used in your frontend */
+  _seoMetaTags: Array<Tag>;
+  _status: ItemStatus;
+  _unpublishingScheduledAt?: Maybe<Scalars['DateTime']['output']>;
+  _updatedAt: Scalars['DateTime']['output'];
+  formats: Array<MarketingFormatRecord>;
+  id: Scalars['ItemId']['output'];
+  reasons: Array<MarketingReasonRecord>;
+  sectionDialogDescription: Scalars['String']['output'];
+  sectionDialogTitle: Scalars['String']['output'];
+  sectionFormatsDescription: Scalars['String']['output'];
+  sectionFormatsTitle: Scalars['String']['output'];
+  sectionTeamDescription: Scalars['String']['output'];
+  sectionTeamTitle: Scalars['String']['output'];
+};
+
+
+/** Record of type Marketing Startseite (marketing_landing_page) */
+export type MarketingLandingPageRecord_SeoMetaTagsArgs = {
+  locale?: InputMaybe<SiteLocale>;
+};
+
+
+/** Record of type Marketing Startseite (marketing_landing_page) */
+export type MarketingLandingPageRecordSectionDialogDescriptionArgs = {
+  markdown?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+
+/** Record of type Marketing Startseite (marketing_landing_page) */
+export type MarketingLandingPageRecordSectionFormatsDescriptionArgs = {
+  markdown?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+
+/** Record of type Marketing Startseite (marketing_landing_page) */
+export type MarketingLandingPageRecordSectionTeamDescriptionArgs = {
+  markdown?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+/** Block of type Marketing Reason (marketing_reason) */
+export type MarketingReasonRecord = RecordInterface & {
+  __typename?: 'MarketingReasonRecord';
+  _createdAt: Scalars['DateTime']['output'];
+  /** Editing URL */
+  _editingUrl?: Maybe<Scalars['String']['output']>;
+  _firstPublishedAt?: Maybe<Scalars['DateTime']['output']>;
+  _isValid: Scalars['BooleanType']['output'];
+  _modelApiKey: Scalars['String']['output'];
+  _publicationScheduledAt?: Maybe<Scalars['DateTime']['output']>;
+  _publishedAt?: Maybe<Scalars['DateTime']['output']>;
+  /** Generates SEO and Social card meta tags to be used in your frontend */
+  _seoMetaTags: Array<Tag>;
+  _status: ItemStatus;
+  _unpublishingScheduledAt?: Maybe<Scalars['DateTime']['output']>;
+  _updatedAt: Scalars['DateTime']['output'];
+  description: Scalars['String']['output'];
+  id: Scalars['ItemId']['output'];
+  title: Scalars['String']['output'];
+};
+
+
+/** Block of type Marketing Reason (marketing_reason) */
+export type MarketingReasonRecord_SeoMetaTagsArgs = {
+  locale?: InputMaybe<SiteLocale>;
+};
+
+
+/** Block of type Marketing Reason (marketing_reason) */
+export type MarketingReasonRecordDescriptionArgs = {
+  markdown?: InputMaybe<Scalars['Boolean']['input']>;
+};
 
 export enum MuxThumbnailFormatType {
   Gif = 'gif',
   Jpg = 'jpg',
-  Png = 'png',
+  Png = 'png'
 }
 
 /** Specifies how to filter by image orientation */
 export type OrientationFilter = {
   /** Search uploads with the specified orientation */
-  eq?: InputMaybe<UploadOrientation>
+  eq?: InputMaybe<UploadOrientation>;
   /** Exclude uploads with the specified orientation */
-  neq?: InputMaybe<UploadOrientation>
-}
+  neq?: InputMaybe<UploadOrientation>;
+};
 
 /** Specifies how to filter by publication datetime */
 export type PublishedAtFilter = {
   /** Filter records with a value that's within the specified minute range. Seconds and milliseconds are truncated from the argument. */
-  eq?: InputMaybe<Scalars['DateTime']['input']>
+  eq?: InputMaybe<Scalars['DateTime']['input']>;
   /** Filter records with the specified field defined (i.e. with any value) or not */
-  exists?: InputMaybe<Scalars['BooleanType']['input']>
+  exists?: InputMaybe<Scalars['BooleanType']['input']>;
   /** Filter records with a value that's strictly greater than the one specified. Seconds and milliseconds are truncated from the argument. */
-  gt?: InputMaybe<Scalars['DateTime']['input']>
+  gt?: InputMaybe<Scalars['DateTime']['input']>;
   /** Filter records with a value that's greater than or equal to than the one specified. Seconds and milliseconds are truncated from the argument. */
-  gte?: InputMaybe<Scalars['DateTime']['input']>
+  gte?: InputMaybe<Scalars['DateTime']['input']>;
   /** Filter records with a value that's less than the one specified. Seconds and milliseconds are truncated from the argument. */
-  lt?: InputMaybe<Scalars['DateTime']['input']>
+  lt?: InputMaybe<Scalars['DateTime']['input']>;
   /** Filter records with a value that's less or equal than the one specified. Seconds and milliseconds are truncated from the argument. */
-  lte?: InputMaybe<Scalars['DateTime']['input']>
+  lte?: InputMaybe<Scalars['DateTime']['input']>;
   /** Filter records with a value that's outside the specified minute range. Seconds and milliseconds are truncated from the argument. */
-  neq?: InputMaybe<Scalars['DateTime']['input']>
-}
+  neq?: InputMaybe<Scalars['DateTime']['input']>;
+};
 
 /** The query root for this schema */
 export type Query = {
-  __typename?: 'Query'
+  __typename?: 'Query';
   /** Returns meta information regarding a record collection */
-  _allChallengeAcceptedArticlesMeta: CollectionMetadata
+  _allChallengeAcceptedArticlesMeta: CollectionMetadata;
   /** Returns meta information regarding a record collection */
-  _allChallengeAcceptedNewslettersMeta: CollectionMetadata
+  _allChallengeAcceptedNewslettersMeta: CollectionMetadata;
   /** Returns meta information regarding a record collection */
-  _allChallengeAcceptedPeopleMeta: CollectionMetadata
+  _allChallengeAcceptedPeopleMeta: CollectionMetadata;
   /** Returns meta information regarding a record collection */
-  _allEventsMeta: CollectionMetadata
+  _allEventsMeta: CollectionMetadata;
   /** Returns meta information regarding a record collection */
-  _allSchemaMigrationsMeta: CollectionMetadata
+  _allSchemaMigrationsMeta: CollectionMetadata;
   /** Returns meta information regarding an assets collection */
-  _allUploadsMeta: CollectionMetadata
+  _allUploadsMeta: CollectionMetadata;
   /** Returns the single instance record */
-  _site: Site
+  _site: Site;
   /** Returns a collection of records */
-  allChallengeAcceptedArticles: Array<ChallengeAcceptedArticleRecord>
+  allChallengeAcceptedArticles: Array<ChallengeAcceptedArticleRecord>;
   /** Returns a collection of records */
-  allChallengeAcceptedNewsletters: Array<ChallengeAcceptedNewsletterRecord>
+  allChallengeAcceptedNewsletters: Array<ChallengeAcceptedNewsletterRecord>;
   /** Returns a collection of records */
-  allChallengeAcceptedPeople: Array<ChallengeAcceptedPersonRecord>
+  allChallengeAcceptedPeople: Array<ChallengeAcceptedPersonRecord>;
   /** Returns a collection of records */
-  allEvents: Array<EventRecord>
+  allEvents: Array<EventRecord>;
   /** Returns a collection of records */
-  allSchemaMigrations: Array<SchemaMigrationRecord>
+  allSchemaMigrations: Array<SchemaMigrationRecord>;
   /** Returns a collection of assets */
-  allUploads: Array<FileField>
+  allUploads: Array<FileField>;
   /** Returns a specific record */
-  challengeAcceptedArticle?: Maybe<ChallengeAcceptedArticleRecord>
+  challengeAcceptedArticle?: Maybe<ChallengeAcceptedArticleRecord>;
   /** Returns the single instance record */
-  challengeAcceptedHub?: Maybe<ChallengeAcceptedHubRecord>
+  challengeAcceptedHub?: Maybe<ChallengeAcceptedHubRecord>;
   /** Returns a specific record */
-  challengeAcceptedNewsletter?: Maybe<ChallengeAcceptedNewsletterRecord>
+  challengeAcceptedNewsletter?: Maybe<ChallengeAcceptedNewsletterRecord>;
   /** Returns a specific record */
-  challengeAcceptedPerson?: Maybe<ChallengeAcceptedPersonRecord>
+  challengeAcceptedPerson?: Maybe<ChallengeAcceptedPersonRecord>;
   /** Returns a specific record */
-  event?: Maybe<EventRecord>
+  event?: Maybe<EventRecord>;
+  /** Returns the single instance record */
+  marketingLandingPage?: Maybe<MarketingLandingPageRecord>;
   /** Returns a specific record */
-  schemaMigration?: Maybe<SchemaMigrationRecord>
+  schemaMigration?: Maybe<SchemaMigrationRecord>;
   /** Returns a specific asset */
-  upload?: Maybe<FileField>
-}
+  upload?: Maybe<FileField>;
+};
+
 
 /** The query root for this schema */
 export type Query_AllChallengeAcceptedArticlesMetaArgs = {
-  filter?: InputMaybe<ChallengeAcceptedArticleModelFilter>
-  locale?: InputMaybe<SiteLocale>
-}
+  filter?: InputMaybe<ChallengeAcceptedArticleModelFilter>;
+  locale?: InputMaybe<SiteLocale>;
+};
+
 
 /** The query root for this schema */
 export type Query_AllChallengeAcceptedNewslettersMetaArgs = {
-  filter?: InputMaybe<ChallengeAcceptedNewsletterModelFilter>
-  locale?: InputMaybe<SiteLocale>
-}
+  filter?: InputMaybe<ChallengeAcceptedNewsletterModelFilter>;
+  locale?: InputMaybe<SiteLocale>;
+};
+
 
 /** The query root for this schema */
 export type Query_AllChallengeAcceptedPeopleMetaArgs = {
-  filter?: InputMaybe<ChallengeAcceptedPersonModelFilter>
-  locale?: InputMaybe<SiteLocale>
-}
+  filter?: InputMaybe<ChallengeAcceptedPersonModelFilter>;
+  locale?: InputMaybe<SiteLocale>;
+};
+
 
 /** The query root for this schema */
 export type Query_AllEventsMetaArgs = {
-  filter?: InputMaybe<EventModelFilter>
-  locale?: InputMaybe<SiteLocale>
-}
+  filter?: InputMaybe<EventModelFilter>;
+  locale?: InputMaybe<SiteLocale>;
+};
+
 
 /** The query root for this schema */
 export type Query_AllSchemaMigrationsMetaArgs = {
-  filter?: InputMaybe<SchemaMigrationModelFilter>
-  locale?: InputMaybe<SiteLocale>
-}
+  filter?: InputMaybe<SchemaMigrationModelFilter>;
+  locale?: InputMaybe<SiteLocale>;
+};
+
 
 /** The query root for this schema */
 export type Query_AllUploadsMetaArgs = {
-  filter?: InputMaybe<UploadFilter>
-  locale?: InputMaybe<SiteLocale>
-}
+  filter?: InputMaybe<UploadFilter>;
+  locale?: InputMaybe<SiteLocale>;
+};
+
 
 /** The query root for this schema */
 export type Query_SiteArgs = {
-  fallbackLocales?: InputMaybe<Array<SiteLocale>>
-  locale?: InputMaybe<SiteLocale>
-}
+  fallbackLocales?: InputMaybe<Array<SiteLocale>>;
+  locale?: InputMaybe<SiteLocale>;
+};
+
 
 /** The query root for this schema */
 export type QueryAllChallengeAcceptedArticlesArgs = {
-  fallbackLocales?: InputMaybe<Array<SiteLocale>>
-  filter?: InputMaybe<ChallengeAcceptedArticleModelFilter>
-  first?: InputMaybe<Scalars['IntType']['input']>
-  locale?: InputMaybe<SiteLocale>
-  orderBy?: InputMaybe<Array<InputMaybe<ChallengeAcceptedArticleModelOrderBy>>>
-  skip?: InputMaybe<Scalars['IntType']['input']>
-}
+  fallbackLocales?: InputMaybe<Array<SiteLocale>>;
+  filter?: InputMaybe<ChallengeAcceptedArticleModelFilter>;
+  first?: InputMaybe<Scalars['IntType']['input']>;
+  locale?: InputMaybe<SiteLocale>;
+  orderBy?: InputMaybe<Array<InputMaybe<ChallengeAcceptedArticleModelOrderBy>>>;
+  skip?: InputMaybe<Scalars['IntType']['input']>;
+};
+
 
 /** The query root for this schema */
 export type QueryAllChallengeAcceptedNewslettersArgs = {
-  fallbackLocales?: InputMaybe<Array<SiteLocale>>
-  filter?: InputMaybe<ChallengeAcceptedNewsletterModelFilter>
-  first?: InputMaybe<Scalars['IntType']['input']>
-  locale?: InputMaybe<SiteLocale>
-  orderBy?: InputMaybe<
-    Array<InputMaybe<ChallengeAcceptedNewsletterModelOrderBy>>
-  >
-  skip?: InputMaybe<Scalars['IntType']['input']>
-}
+  fallbackLocales?: InputMaybe<Array<SiteLocale>>;
+  filter?: InputMaybe<ChallengeAcceptedNewsletterModelFilter>;
+  first?: InputMaybe<Scalars['IntType']['input']>;
+  locale?: InputMaybe<SiteLocale>;
+  orderBy?: InputMaybe<Array<InputMaybe<ChallengeAcceptedNewsletterModelOrderBy>>>;
+  skip?: InputMaybe<Scalars['IntType']['input']>;
+};
+
 
 /** The query root for this schema */
 export type QueryAllChallengeAcceptedPeopleArgs = {
-  fallbackLocales?: InputMaybe<Array<SiteLocale>>
-  filter?: InputMaybe<ChallengeAcceptedPersonModelFilter>
-  first?: InputMaybe<Scalars['IntType']['input']>
-  locale?: InputMaybe<SiteLocale>
-  orderBy?: InputMaybe<Array<InputMaybe<ChallengeAcceptedPersonModelOrderBy>>>
-  skip?: InputMaybe<Scalars['IntType']['input']>
-}
+  fallbackLocales?: InputMaybe<Array<SiteLocale>>;
+  filter?: InputMaybe<ChallengeAcceptedPersonModelFilter>;
+  first?: InputMaybe<Scalars['IntType']['input']>;
+  locale?: InputMaybe<SiteLocale>;
+  orderBy?: InputMaybe<Array<InputMaybe<ChallengeAcceptedPersonModelOrderBy>>>;
+  skip?: InputMaybe<Scalars['IntType']['input']>;
+};
+
 
 /** The query root for this schema */
 export type QueryAllEventsArgs = {
-  fallbackLocales?: InputMaybe<Array<SiteLocale>>
-  filter?: InputMaybe<EventModelFilter>
-  first?: InputMaybe<Scalars['IntType']['input']>
-  locale?: InputMaybe<SiteLocale>
-  orderBy?: InputMaybe<Array<InputMaybe<EventModelOrderBy>>>
-  skip?: InputMaybe<Scalars['IntType']['input']>
-}
+  fallbackLocales?: InputMaybe<Array<SiteLocale>>;
+  filter?: InputMaybe<EventModelFilter>;
+  first?: InputMaybe<Scalars['IntType']['input']>;
+  locale?: InputMaybe<SiteLocale>;
+  orderBy?: InputMaybe<Array<InputMaybe<EventModelOrderBy>>>;
+  skip?: InputMaybe<Scalars['IntType']['input']>;
+};
+
 
 /** The query root for this schema */
 export type QueryAllSchemaMigrationsArgs = {
-  fallbackLocales?: InputMaybe<Array<SiteLocale>>
-  filter?: InputMaybe<SchemaMigrationModelFilter>
-  first?: InputMaybe<Scalars['IntType']['input']>
-  locale?: InputMaybe<SiteLocale>
-  orderBy?: InputMaybe<Array<InputMaybe<SchemaMigrationModelOrderBy>>>
-  skip?: InputMaybe<Scalars['IntType']['input']>
-}
+  fallbackLocales?: InputMaybe<Array<SiteLocale>>;
+  filter?: InputMaybe<SchemaMigrationModelFilter>;
+  first?: InputMaybe<Scalars['IntType']['input']>;
+  locale?: InputMaybe<SiteLocale>;
+  orderBy?: InputMaybe<Array<InputMaybe<SchemaMigrationModelOrderBy>>>;
+  skip?: InputMaybe<Scalars['IntType']['input']>;
+};
+
 
 /** The query root for this schema */
 export type QueryAllUploadsArgs = {
-  fallbackLocales?: InputMaybe<Array<SiteLocale>>
-  filter?: InputMaybe<UploadFilter>
-  first?: InputMaybe<Scalars['IntType']['input']>
-  locale?: InputMaybe<SiteLocale>
-  orderBy?: InputMaybe<Array<InputMaybe<UploadOrderBy>>>
-  skip?: InputMaybe<Scalars['IntType']['input']>
-}
+  fallbackLocales?: InputMaybe<Array<SiteLocale>>;
+  filter?: InputMaybe<UploadFilter>;
+  first?: InputMaybe<Scalars['IntType']['input']>;
+  locale?: InputMaybe<SiteLocale>;
+  orderBy?: InputMaybe<Array<InputMaybe<UploadOrderBy>>>;
+  skip?: InputMaybe<Scalars['IntType']['input']>;
+};
+
 
 /** The query root for this schema */
 export type QueryChallengeAcceptedArticleArgs = {
-  fallbackLocales?: InputMaybe<Array<SiteLocale>>
-  filter?: InputMaybe<ChallengeAcceptedArticleModelFilter>
-  locale?: InputMaybe<SiteLocale>
-  orderBy?: InputMaybe<Array<InputMaybe<ChallengeAcceptedArticleModelOrderBy>>>
-}
+  fallbackLocales?: InputMaybe<Array<SiteLocale>>;
+  filter?: InputMaybe<ChallengeAcceptedArticleModelFilter>;
+  locale?: InputMaybe<SiteLocale>;
+  orderBy?: InputMaybe<Array<InputMaybe<ChallengeAcceptedArticleModelOrderBy>>>;
+};
+
 
 /** The query root for this schema */
 export type QueryChallengeAcceptedHubArgs = {
-  fallbackLocales?: InputMaybe<Array<SiteLocale>>
-  locale?: InputMaybe<SiteLocale>
-}
+  fallbackLocales?: InputMaybe<Array<SiteLocale>>;
+  locale?: InputMaybe<SiteLocale>;
+};
+
 
 /** The query root for this schema */
 export type QueryChallengeAcceptedNewsletterArgs = {
-  fallbackLocales?: InputMaybe<Array<SiteLocale>>
-  filter?: InputMaybe<ChallengeAcceptedNewsletterModelFilter>
-  locale?: InputMaybe<SiteLocale>
-  orderBy?: InputMaybe<
-    Array<InputMaybe<ChallengeAcceptedNewsletterModelOrderBy>>
-  >
-}
+  fallbackLocales?: InputMaybe<Array<SiteLocale>>;
+  filter?: InputMaybe<ChallengeAcceptedNewsletterModelFilter>;
+  locale?: InputMaybe<SiteLocale>;
+  orderBy?: InputMaybe<Array<InputMaybe<ChallengeAcceptedNewsletterModelOrderBy>>>;
+};
+
 
 /** The query root for this schema */
 export type QueryChallengeAcceptedPersonArgs = {
-  fallbackLocales?: InputMaybe<Array<SiteLocale>>
-  filter?: InputMaybe<ChallengeAcceptedPersonModelFilter>
-  locale?: InputMaybe<SiteLocale>
-  orderBy?: InputMaybe<Array<InputMaybe<ChallengeAcceptedPersonModelOrderBy>>>
-}
+  fallbackLocales?: InputMaybe<Array<SiteLocale>>;
+  filter?: InputMaybe<ChallengeAcceptedPersonModelFilter>;
+  locale?: InputMaybe<SiteLocale>;
+  orderBy?: InputMaybe<Array<InputMaybe<ChallengeAcceptedPersonModelOrderBy>>>;
+};
+
 
 /** The query root for this schema */
 export type QueryEventArgs = {
-  fallbackLocales?: InputMaybe<Array<SiteLocale>>
-  filter?: InputMaybe<EventModelFilter>
-  locale?: InputMaybe<SiteLocale>
-  orderBy?: InputMaybe<Array<InputMaybe<EventModelOrderBy>>>
-}
+  fallbackLocales?: InputMaybe<Array<SiteLocale>>;
+  filter?: InputMaybe<EventModelFilter>;
+  locale?: InputMaybe<SiteLocale>;
+  orderBy?: InputMaybe<Array<InputMaybe<EventModelOrderBy>>>;
+};
+
+
+/** The query root for this schema */
+export type QueryMarketingLandingPageArgs = {
+  fallbackLocales?: InputMaybe<Array<SiteLocale>>;
+  locale?: InputMaybe<SiteLocale>;
+};
+
 
 /** The query root for this schema */
 export type QuerySchemaMigrationArgs = {
-  fallbackLocales?: InputMaybe<Array<SiteLocale>>
-  filter?: InputMaybe<SchemaMigrationModelFilter>
-  locale?: InputMaybe<SiteLocale>
-  orderBy?: InputMaybe<Array<InputMaybe<SchemaMigrationModelOrderBy>>>
-}
+  fallbackLocales?: InputMaybe<Array<SiteLocale>>;
+  filter?: InputMaybe<SchemaMigrationModelFilter>;
+  locale?: InputMaybe<SiteLocale>;
+  orderBy?: InputMaybe<Array<InputMaybe<SchemaMigrationModelOrderBy>>>;
+};
+
 
 /** The query root for this schema */
 export type QueryUploadArgs = {
-  fallbackLocales?: InputMaybe<Array<SiteLocale>>
-  filter?: InputMaybe<UploadFilter>
-  locale?: InputMaybe<SiteLocale>
-  orderBy?: InputMaybe<Array<InputMaybe<UploadOrderBy>>>
-}
+  fallbackLocales?: InputMaybe<Array<SiteLocale>>;
+  filter?: InputMaybe<UploadFilter>;
+  locale?: InputMaybe<SiteLocale>;
+  orderBy?: InputMaybe<Array<InputMaybe<UploadOrderBy>>>;
+};
 
 export type RecordInterface = {
-  _createdAt: Scalars['DateTime']['output']
+  _createdAt: Scalars['DateTime']['output'];
   /** Editing URL */
-  _editingUrl?: Maybe<Scalars['String']['output']>
-  _firstPublishedAt?: Maybe<Scalars['DateTime']['output']>
-  _isValid: Scalars['BooleanType']['output']
-  _modelApiKey: Scalars['String']['output']
-  _publicationScheduledAt?: Maybe<Scalars['DateTime']['output']>
-  _publishedAt?: Maybe<Scalars['DateTime']['output']>
+  _editingUrl?: Maybe<Scalars['String']['output']>;
+  _firstPublishedAt?: Maybe<Scalars['DateTime']['output']>;
+  _isValid: Scalars['BooleanType']['output'];
+  _modelApiKey: Scalars['String']['output'];
+  _publicationScheduledAt?: Maybe<Scalars['DateTime']['output']>;
+  _publishedAt?: Maybe<Scalars['DateTime']['output']>;
   /** Generates SEO and Social card meta tags to be used in your frontend */
-  _seoMetaTags: Array<Tag>
-  _status: ItemStatus
-  _unpublishingScheduledAt?: Maybe<Scalars['DateTime']['output']>
-  _updatedAt: Scalars['DateTime']['output']
-  id: Scalars['ItemId']['output']
-}
+  _seoMetaTags: Array<Tag>;
+  _status: ItemStatus;
+  _unpublishingScheduledAt?: Maybe<Scalars['DateTime']['output']>;
+  _updatedAt: Scalars['DateTime']['output'];
+  id: Scalars['ItemId']['output'];
+};
+
 
 export type RecordInterface_SeoMetaTagsArgs = {
-  locale?: InputMaybe<SiteLocale>
-}
+  locale?: InputMaybe<SiteLocale>;
+};
 
 /** Specifies how to filter by upload type */
 export type ResolutionFilter = {
   /** Search uploads with the specified resolution */
-  eq?: InputMaybe<ResolutionType>
+  eq?: InputMaybe<ResolutionType>;
   /** Search uploads with the specified resolutions */
-  in?: InputMaybe<Array<InputMaybe<ResolutionType>>>
+  in?: InputMaybe<Array<InputMaybe<ResolutionType>>>;
   /** Exclude uploads with the specified resolution */
-  neq?: InputMaybe<ResolutionType>
+  neq?: InputMaybe<ResolutionType>;
   /** Search uploads without the specified resolutions */
-  notIn?: InputMaybe<Array<InputMaybe<ResolutionType>>>
-}
+  notIn?: InputMaybe<Array<InputMaybe<ResolutionType>>>;
+};
 
 export enum ResolutionType {
   Icon = 'icon',
   Large = 'large',
   Medium = 'medium',
-  Small = 'small',
+  Small = 'small'
 }
 
 export type ResponsiveImage = {
-  __typename?: 'ResponsiveImage'
-  alt?: Maybe<Scalars['String']['output']>
-  aspectRatio: Scalars['FloatType']['output']
-  base64?: Maybe<Scalars['String']['output']>
-  bgColor?: Maybe<Scalars['String']['output']>
-  height: Scalars['IntType']['output']
-  sizes: Scalars['String']['output']
-  src: Scalars['String']['output']
-  srcSet: Scalars['String']['output']
-  title?: Maybe<Scalars['String']['output']>
-  webpSrcSet: Scalars['String']['output']
-  width: Scalars['IntType']['output']
-}
+  __typename?: 'ResponsiveImage';
+  alt?: Maybe<Scalars['String']['output']>;
+  aspectRatio: Scalars['FloatType']['output'];
+  base64?: Maybe<Scalars['String']['output']>;
+  bgColor?: Maybe<Scalars['String']['output']>;
+  height: Scalars['IntType']['output'];
+  sizes: Scalars['String']['output'];
+  src: Scalars['String']['output'];
+  srcSet: Scalars['String']['output'];
+  title?: Maybe<Scalars['String']['output']>;
+  webpSrcSet: Scalars['String']['output'];
+  width: Scalars['IntType']['output'];
+};
 
 export type SchemaMigrationModelFilter = {
-  AND?: InputMaybe<Array<InputMaybe<SchemaMigrationModelFilter>>>
-  OR?: InputMaybe<Array<InputMaybe<SchemaMigrationModelFilter>>>
-  _createdAt?: InputMaybe<CreatedAtFilter>
-  _firstPublishedAt?: InputMaybe<PublishedAtFilter>
-  _isValid?: InputMaybe<BooleanFilter>
-  _publicationScheduledAt?: InputMaybe<PublishedAtFilter>
-  _publishedAt?: InputMaybe<PublishedAtFilter>
-  _status?: InputMaybe<StatusFilter>
-  _unpublishingScheduledAt?: InputMaybe<PublishedAtFilter>
-  _updatedAt?: InputMaybe<UpdatedAtFilter>
-  id?: InputMaybe<ItemIdFilter>
-  name?: InputMaybe<StringFilter>
-}
+  AND?: InputMaybe<Array<InputMaybe<SchemaMigrationModelFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<SchemaMigrationModelFilter>>>;
+  _createdAt?: InputMaybe<CreatedAtFilter>;
+  _firstPublishedAt?: InputMaybe<PublishedAtFilter>;
+  _isValid?: InputMaybe<BooleanFilter>;
+  _publicationScheduledAt?: InputMaybe<PublishedAtFilter>;
+  _publishedAt?: InputMaybe<PublishedAtFilter>;
+  _status?: InputMaybe<StatusFilter>;
+  _unpublishingScheduledAt?: InputMaybe<PublishedAtFilter>;
+  _updatedAt?: InputMaybe<UpdatedAtFilter>;
+  id?: InputMaybe<ItemIdFilter>;
+  name?: InputMaybe<StringFilter>;
+};
 
 export enum SchemaMigrationModelOrderBy {
   CreatedAtAsc = '_createdAt_ASC',
@@ -2452,361 +2598,366 @@ export enum SchemaMigrationModelOrderBy {
   IdAsc = 'id_ASC',
   IdDesc = 'id_DESC',
   NameAsc = 'name_ASC',
-  NameDesc = 'name_DESC',
+  NameDesc = 'name_DESC'
 }
 
 /** Record of type Schema migration (schema_migration) */
 export type SchemaMigrationRecord = RecordInterface & {
-  __typename?: 'SchemaMigrationRecord'
-  _createdAt: Scalars['DateTime']['output']
+  __typename?: 'SchemaMigrationRecord';
+  _createdAt: Scalars['DateTime']['output'];
   /** Editing URL */
-  _editingUrl?: Maybe<Scalars['String']['output']>
-  _firstPublishedAt?: Maybe<Scalars['DateTime']['output']>
-  _isValid: Scalars['BooleanType']['output']
-  _modelApiKey: Scalars['String']['output']
-  _publicationScheduledAt?: Maybe<Scalars['DateTime']['output']>
-  _publishedAt?: Maybe<Scalars['DateTime']['output']>
+  _editingUrl?: Maybe<Scalars['String']['output']>;
+  _firstPublishedAt?: Maybe<Scalars['DateTime']['output']>;
+  _isValid: Scalars['BooleanType']['output'];
+  _modelApiKey: Scalars['String']['output'];
+  _publicationScheduledAt?: Maybe<Scalars['DateTime']['output']>;
+  _publishedAt?: Maybe<Scalars['DateTime']['output']>;
   /** Generates SEO and Social card meta tags to be used in your frontend */
-  _seoMetaTags: Array<Tag>
-  _status: ItemStatus
-  _unpublishingScheduledAt?: Maybe<Scalars['DateTime']['output']>
-  _updatedAt: Scalars['DateTime']['output']
-  id: Scalars['ItemId']['output']
-  name: Scalars['String']['output']
-}
+  _seoMetaTags: Array<Tag>;
+  _status: ItemStatus;
+  _unpublishingScheduledAt?: Maybe<Scalars['DateTime']['output']>;
+  _updatedAt: Scalars['DateTime']['output'];
+  id: Scalars['ItemId']['output'];
+  name: Scalars['String']['output'];
+};
+
 
 /** Record of type Schema migration (schema_migration) */
 export type SchemaMigrationRecord_SeoMetaTagsArgs = {
-  locale?: InputMaybe<SiteLocale>
-}
+  locale?: InputMaybe<SiteLocale>;
+};
 
 export type SeoField = {
-  __typename?: 'SeoField'
-  description?: Maybe<Scalars['String']['output']>
-  image?: Maybe<FileField>
-  title?: Maybe<Scalars['String']['output']>
-  twitterCard?: Maybe<Scalars['String']['output']>
-}
+  __typename?: 'SeoField';
+  description?: Maybe<Scalars['String']['output']>;
+  image?: Maybe<FileField>;
+  noIndex?: Maybe<Scalars['BooleanType']['output']>;
+  title?: Maybe<Scalars['String']['output']>;
+  twitterCard?: Maybe<Scalars['String']['output']>;
+};
 
 /** Specifies how to filter SEO meta tags fields */
 export type SeoFilter = {
   /** Filter records with the specified field defined (i.e. with any value) or not */
-  exists?: InputMaybe<Scalars['BooleanType']['input']>
-}
+  exists?: InputMaybe<Scalars['BooleanType']['input']>;
+};
 
 export type Site = {
-  __typename?: 'Site'
-  favicon?: Maybe<FileField>
-  faviconMetaTags: Array<Tag>
-  globalSeo?: Maybe<GlobalSeoField>
-  locales: Array<SiteLocale>
-}
+  __typename?: 'Site';
+  favicon?: Maybe<FileField>;
+  faviconMetaTags: Array<Tag>;
+  globalSeo?: Maybe<GlobalSeoField>;
+  locales: Array<SiteLocale>;
+  noIndex?: Maybe<Scalars['BooleanType']['output']>;
+};
+
 
 export type SiteFaviconMetaTagsArgs = {
-  variants?: InputMaybe<Array<InputMaybe<FaviconType>>>
-}
+  variants?: InputMaybe<Array<InputMaybe<FaviconType>>>;
+};
+
 
 export type SiteGlobalSeoArgs = {
-  fallbackLocales?: InputMaybe<Array<SiteLocale>>
-  locale?: InputMaybe<SiteLocale>
-}
+  fallbackLocales?: InputMaybe<Array<SiteLocale>>;
+  locale?: InputMaybe<SiteLocale>;
+};
 
 export enum SiteLocale {
-  DeCh = 'de_CH',
+  DeCh = 'de_CH'
 }
 
 /** Specifies how to filter Slug fields */
 export type SlugFilter = {
   /** Search for records with an exact match */
-  eq?: InputMaybe<Scalars['String']['input']>
+  eq?: InputMaybe<Scalars['String']['input']>;
   /** Filter records that have one of the specified slugs */
-  in?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>
+  in?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   /** Exclude records with an exact match */
-  neq?: InputMaybe<Scalars['String']['input']>
+  neq?: InputMaybe<Scalars['String']['input']>;
   /** Filter records that do have one of the specified slugs */
-  notIn?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>
-}
+  notIn?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
 
 /** Specifies how to filter by status */
 export type StatusFilter = {
   /** Search the record with the specified status */
-  eq?: InputMaybe<ItemStatus>
+  eq?: InputMaybe<ItemStatus>;
   /** Search records with the specified statuses */
-  in?: InputMaybe<Array<InputMaybe<ItemStatus>>>
+  in?: InputMaybe<Array<InputMaybe<ItemStatus>>>;
   /** Exclude the record with the specified status */
-  neq?: InputMaybe<ItemStatus>
+  neq?: InputMaybe<ItemStatus>;
   /** Search records without the specified statuses */
-  notIn?: InputMaybe<Array<InputMaybe<ItemStatus>>>
-}
+  notIn?: InputMaybe<Array<InputMaybe<ItemStatus>>>;
+};
 
 /** Specifies how to filter Single-line string fields */
 export type StringFilter = {
   /** Search for records with an exact match */
-  eq?: InputMaybe<Scalars['String']['input']>
+  eq?: InputMaybe<Scalars['String']['input']>;
   /** Filter records with the specified field defined (i.e. with any value) or not [DEPRECATED] */
-  exists?: InputMaybe<Scalars['BooleanType']['input']>
+  exists?: InputMaybe<Scalars['BooleanType']['input']>;
   /** Filter records that equal one of the specified values */
-  in?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>
+  in?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   /** Filter records with the specified field set as blank (null or empty string) */
-  isBlank?: InputMaybe<Scalars['BooleanType']['input']>
+  isBlank?: InputMaybe<Scalars['BooleanType']['input']>;
   /** Filter records with the specified field present (neither null, nor empty string) */
-  isPresent?: InputMaybe<Scalars['BooleanType']['input']>
+  isPresent?: InputMaybe<Scalars['BooleanType']['input']>;
   /** Filter records based on a regular expression */
-  matches?: InputMaybe<StringMatchesFilter>
+  matches?: InputMaybe<StringMatchesFilter>;
   /** Exclude records with an exact match */
-  neq?: InputMaybe<Scalars['String']['input']>
+  neq?: InputMaybe<Scalars['String']['input']>;
   /** Filter records that do not equal one of the specified values */
-  notIn?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>
+  notIn?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   /** Exclude records based on a regular expression */
-  notMatches?: InputMaybe<StringMatchesFilter>
-}
+  notMatches?: InputMaybe<StringMatchesFilter>;
+};
 
 export type StringMatchesFilter = {
-  caseSensitive?: InputMaybe<Scalars['BooleanType']['input']>
-  pattern: Scalars['String']['input']
-  regexp?: InputMaybe<Scalars['BooleanType']['input']>
-}
+  caseSensitive?: InputMaybe<Scalars['BooleanType']['input']>;
+  pattern: Scalars['String']['input'];
+  regexp?: InputMaybe<Scalars['BooleanType']['input']>;
+};
 
 /** Specifies how to filter Structured Text fields values */
 export type StructuredTextFilter = {
   /** Filter records with the specified field defined (i.e. with any value) or not [DEPRECATED] */
-  exists?: InputMaybe<Scalars['BooleanType']['input']>
+  exists?: InputMaybe<Scalars['BooleanType']['input']>;
   /** Filter records with the specified field set as blank (null or single empty paragraph) */
-  isBlank?: InputMaybe<Scalars['BooleanType']['input']>
+  isBlank?: InputMaybe<Scalars['BooleanType']['input']>;
   /** Filter records with the specified field present (neither null, nor empty string) */
-  isPresent?: InputMaybe<Scalars['BooleanType']['input']>
+  isPresent?: InputMaybe<Scalars['BooleanType']['input']>;
   /** Filter records based on a regular expression */
-  matches?: InputMaybe<StringMatchesFilter>
+  matches?: InputMaybe<StringMatchesFilter>;
   /** Exclude records based on a regular expression */
-  notMatches?: InputMaybe<StringMatchesFilter>
-}
+  notMatches?: InputMaybe<StringMatchesFilter>;
+};
 
 export type Tag = {
-  __typename?: 'Tag'
-  attributes?: Maybe<Scalars['MetaTagAttributes']['output']>
-  content?: Maybe<Scalars['String']['output']>
-  tag: Scalars['String']['output']
-}
+  __typename?: 'Tag';
+  attributes?: Maybe<Scalars['MetaTagAttributes']['output']>;
+  content?: Maybe<Scalars['String']['output']>;
+  tag: Scalars['String']['output'];
+};
 
 /** Specifies how to filter by upload type */
 export type TypeFilter = {
   /** Search uploads with the specified type */
-  eq?: InputMaybe<UploadType>
+  eq?: InputMaybe<UploadType>;
   /** Search uploads with the specified types */
-  in?: InputMaybe<Array<InputMaybe<UploadType>>>
+  in?: InputMaybe<Array<InputMaybe<UploadType>>>;
   /** Exclude uploads with the specified type */
-  neq?: InputMaybe<UploadType>
+  neq?: InputMaybe<UploadType>;
   /** Search uploads without the specified types */
-  notIn?: InputMaybe<Array<InputMaybe<UploadType>>>
-}
+  notIn?: InputMaybe<Array<InputMaybe<UploadType>>>;
+};
 
 /** Specifies how to filter by update datetime */
 export type UpdatedAtFilter = {
   /** Filter records with a value that's within the specified minute range. Seconds and milliseconds are truncated from the argument. */
-  eq?: InputMaybe<Scalars['DateTime']['input']>
+  eq?: InputMaybe<Scalars['DateTime']['input']>;
   /** Filter records with the specified field defined (i.e. with any value) or not */
-  exists?: InputMaybe<Scalars['BooleanType']['input']>
+  exists?: InputMaybe<Scalars['BooleanType']['input']>;
   /** Filter records with a value that's strictly greater than the one specified. Seconds and milliseconds are truncated from the argument. */
-  gt?: InputMaybe<Scalars['DateTime']['input']>
+  gt?: InputMaybe<Scalars['DateTime']['input']>;
   /** Filter records with a value that's greater than or equal to than the one specified. Seconds and milliseconds are truncated from the argument. */
-  gte?: InputMaybe<Scalars['DateTime']['input']>
+  gte?: InputMaybe<Scalars['DateTime']['input']>;
   /** Filter records with a value that's less than the one specified. Seconds and milliseconds are truncated from the argument. */
-  lt?: InputMaybe<Scalars['DateTime']['input']>
+  lt?: InputMaybe<Scalars['DateTime']['input']>;
   /** Filter records with a value that's less or equal than the one specified. Seconds and milliseconds are truncated from the argument. */
-  lte?: InputMaybe<Scalars['DateTime']['input']>
+  lte?: InputMaybe<Scalars['DateTime']['input']>;
   /** Filter records with a value that's outside the specified minute range. Seconds and milliseconds are truncated from the argument. */
-  neq?: InputMaybe<Scalars['DateTime']['input']>
-}
+  neq?: InputMaybe<Scalars['DateTime']['input']>;
+};
 
 /** Specifies how to filter by default alt */
 export type UploadAltFilter = {
   /** Search the uploads with the specified alt */
-  eq?: InputMaybe<Scalars['String']['input']>
+  eq?: InputMaybe<Scalars['String']['input']>;
   /** Filter uploads with the specified field defined (i.e. with any value) or not */
-  exists?: InputMaybe<Scalars['BooleanType']['input']>
+  exists?: InputMaybe<Scalars['BooleanType']['input']>;
   /** Search uploads with the specified values as default alt */
-  in?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>
+  in?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   /** Filter uploads based on a regular expression */
-  matches?: InputMaybe<StringMatchesFilter>
+  matches?: InputMaybe<StringMatchesFilter>;
   /** Exclude the uploads with the specified alt */
-  neq?: InputMaybe<Scalars['String']['input']>
+  neq?: InputMaybe<Scalars['String']['input']>;
   /** Search uploads that do not have the specified values as default alt */
-  notIn?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>
+  notIn?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   /** Exclude uploads based on a regular expression */
-  notMatches?: InputMaybe<StringMatchesFilter>
-}
+  notMatches?: InputMaybe<StringMatchesFilter>;
+};
 
 /** Specifies how to filter by auhtor */
 export type UploadAuthorFilter = {
   /** Filter uploads with the specified field defined (i.e. with any value) or not */
-  exists?: InputMaybe<Scalars['BooleanType']['input']>
+  exists?: InputMaybe<Scalars['BooleanType']['input']>;
   /** Filter uploads based on a regular expression */
-  matches?: InputMaybe<StringMatchesFilter>
+  matches?: InputMaybe<StringMatchesFilter>;
   /** Exclude uploads based on a regular expression */
-  notMatches?: InputMaybe<StringMatchesFilter>
-}
+  notMatches?: InputMaybe<StringMatchesFilter>;
+};
 
 /** Specifies how to filter by basename */
 export type UploadBasenameFilter = {
   /** Filter uploads based on a regular expression */
-  matches?: InputMaybe<StringMatchesFilter>
+  matches?: InputMaybe<StringMatchesFilter>;
   /** Exclude uploads based on a regular expression */
-  notMatches?: InputMaybe<StringMatchesFilter>
-}
+  notMatches?: InputMaybe<StringMatchesFilter>;
+};
 
 /** Specifies how to filter by colors */
 export type UploadColorsFilter = {
   /** Filter uploads that have all of the specified colors */
-  allIn?: InputMaybe<Array<InputMaybe<ColorBucketType>>>
+  allIn?: InputMaybe<Array<InputMaybe<ColorBucketType>>>;
   /** Filter uploads that have at least one of the specified colors */
-  anyIn?: InputMaybe<Array<InputMaybe<ColorBucketType>>>
+  anyIn?: InputMaybe<Array<InputMaybe<ColorBucketType>>>;
   /** Filter uploads that have the specified colors */
-  contains?: InputMaybe<ColorBucketType>
+  contains?: InputMaybe<ColorBucketType>;
   /** Search for uploads with an exact match */
-  eq?: InputMaybe<Array<InputMaybe<ColorBucketType>>>
+  eq?: InputMaybe<Array<InputMaybe<ColorBucketType>>>;
   /** Filter uploads that do not have any of the specified colors */
-  notIn?: InputMaybe<Array<InputMaybe<ColorBucketType>>>
-}
+  notIn?: InputMaybe<Array<InputMaybe<ColorBucketType>>>;
+};
 
 /** Specifies how to filter by copyright */
 export type UploadCopyrightFilter = {
   /** Filter records with the specified field defined (i.e. with any value) or not */
-  exists?: InputMaybe<Scalars['BooleanType']['input']>
+  exists?: InputMaybe<Scalars['BooleanType']['input']>;
   /** Filter uploads based on a regular expression */
-  matches?: InputMaybe<StringMatchesFilter>
+  matches?: InputMaybe<StringMatchesFilter>;
   /** Exclude uploads based on a regular expression */
-  notMatches?: InputMaybe<StringMatchesFilter>
-}
+  notMatches?: InputMaybe<StringMatchesFilter>;
+};
 
 /** Specifies how to filter by creation datetime */
 export type UploadCreatedAtFilter = {
   /** Search for uploads with an exact match */
-  eq?: InputMaybe<Scalars['DateTime']['input']>
+  eq?: InputMaybe<Scalars['DateTime']['input']>;
   /** Filter uploads with a value that's strictly greater than the one specified */
-  gt?: InputMaybe<Scalars['DateTime']['input']>
+  gt?: InputMaybe<Scalars['DateTime']['input']>;
   /** Filter uploads with a value that's greater than or equal to the one specified */
-  gte?: InputMaybe<Scalars['DateTime']['input']>
+  gte?: InputMaybe<Scalars['DateTime']['input']>;
   /** Filter uploads with a value that's less than the one specified */
-  lt?: InputMaybe<Scalars['DateTime']['input']>
+  lt?: InputMaybe<Scalars['DateTime']['input']>;
   /** Filter uploads with a value that's less or equal than the one specified */
-  lte?: InputMaybe<Scalars['DateTime']['input']>
+  lte?: InputMaybe<Scalars['DateTime']['input']>;
   /** Exclude uploads with an exact match */
-  neq?: InputMaybe<Scalars['DateTime']['input']>
-}
+  neq?: InputMaybe<Scalars['DateTime']['input']>;
+};
 
 /** Specifies how to filter by filename */
 export type UploadFilenameFilter = {
   /** Filter uploads based on a regular expression */
-  matches?: InputMaybe<StringMatchesFilter>
+  matches?: InputMaybe<StringMatchesFilter>;
   /** Exclude uploads based on a regular expression */
-  notMatches?: InputMaybe<StringMatchesFilter>
-}
+  notMatches?: InputMaybe<StringMatchesFilter>;
+};
 
 export type UploadFilter = {
-  AND?: InputMaybe<Array<InputMaybe<UploadFilter>>>
-  OR?: InputMaybe<Array<InputMaybe<UploadFilter>>>
-  _createdAt?: InputMaybe<UploadCreatedAtFilter>
-  _updatedAt?: InputMaybe<UploadUpdatedAtFilter>
-  alt?: InputMaybe<UploadAltFilter>
-  author?: InputMaybe<UploadAuthorFilter>
-  basename?: InputMaybe<UploadBasenameFilter>
-  colors?: InputMaybe<UploadColorsFilter>
-  copyright?: InputMaybe<UploadCopyrightFilter>
-  filename?: InputMaybe<UploadFilenameFilter>
-  format?: InputMaybe<UploadFormatFilter>
-  height?: InputMaybe<UploadHeightFilter>
-  id?: InputMaybe<UploadIdFilter>
-  inUse?: InputMaybe<InUseFilter>
-  md5?: InputMaybe<UploadMd5Filter>
-  mimeType?: InputMaybe<UploadMimeTypeFilter>
-  notes?: InputMaybe<UploadNotesFilter>
-  orientation?: InputMaybe<OrientationFilter>
-  resolution?: InputMaybe<ResolutionFilter>
-  size?: InputMaybe<UploadSizeFilter>
-  smartTags?: InputMaybe<UploadTagsFilter>
-  tags?: InputMaybe<UploadTagsFilter>
-  title?: InputMaybe<UploadTitleFilter>
-  type?: InputMaybe<TypeFilter>
-  width?: InputMaybe<UploadWidthFilter>
-}
+  AND?: InputMaybe<Array<InputMaybe<UploadFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<UploadFilter>>>;
+  _createdAt?: InputMaybe<UploadCreatedAtFilter>;
+  _updatedAt?: InputMaybe<UploadUpdatedAtFilter>;
+  alt?: InputMaybe<UploadAltFilter>;
+  author?: InputMaybe<UploadAuthorFilter>;
+  basename?: InputMaybe<UploadBasenameFilter>;
+  colors?: InputMaybe<UploadColorsFilter>;
+  copyright?: InputMaybe<UploadCopyrightFilter>;
+  filename?: InputMaybe<UploadFilenameFilter>;
+  format?: InputMaybe<UploadFormatFilter>;
+  height?: InputMaybe<UploadHeightFilter>;
+  id?: InputMaybe<UploadIdFilter>;
+  inUse?: InputMaybe<InUseFilter>;
+  md5?: InputMaybe<UploadMd5Filter>;
+  mimeType?: InputMaybe<UploadMimeTypeFilter>;
+  notes?: InputMaybe<UploadNotesFilter>;
+  orientation?: InputMaybe<OrientationFilter>;
+  resolution?: InputMaybe<ResolutionFilter>;
+  size?: InputMaybe<UploadSizeFilter>;
+  smartTags?: InputMaybe<UploadTagsFilter>;
+  tags?: InputMaybe<UploadTagsFilter>;
+  title?: InputMaybe<UploadTitleFilter>;
+  type?: InputMaybe<TypeFilter>;
+  width?: InputMaybe<UploadWidthFilter>;
+};
 
 /** Specifies how to filter by format */
 export type UploadFormatFilter = {
   /** Search the asset with the specified format */
-  eq?: InputMaybe<Scalars['String']['input']>
+  eq?: InputMaybe<Scalars['String']['input']>;
   /** Search assets with the specified formats */
-  in?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>
+  in?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   /** Exclude the asset with the specified format */
-  neq?: InputMaybe<Scalars['String']['input']>
+  neq?: InputMaybe<Scalars['String']['input']>;
   /** Search assets that do not have the specified formats */
-  notIn?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>
-}
+  notIn?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
 
 /** Specifies how to filter by height */
 export type UploadHeightFilter = {
   /** Search assets with the specified height */
-  eq?: InputMaybe<Scalars['IntType']['input']>
+  eq?: InputMaybe<Scalars['IntType']['input']>;
   /** Search all assets larger than the specified height */
-  gt?: InputMaybe<Scalars['IntType']['input']>
+  gt?: InputMaybe<Scalars['IntType']['input']>;
   /** Search all assets larger or equal to the specified height */
-  gte?: InputMaybe<Scalars['IntType']['input']>
+  gte?: InputMaybe<Scalars['IntType']['input']>;
   /** Search all assets smaller than the specified height */
-  lt?: InputMaybe<Scalars['IntType']['input']>
+  lt?: InputMaybe<Scalars['IntType']['input']>;
   /** Search all assets larger or equal to the specified height */
-  lte?: InputMaybe<Scalars['IntType']['input']>
+  lte?: InputMaybe<Scalars['IntType']['input']>;
   /** Search assets that do not have the specified height */
-  neq?: InputMaybe<Scalars['IntType']['input']>
-}
+  neq?: InputMaybe<Scalars['IntType']['input']>;
+};
 
 /** Specifies how to filter by ID */
 export type UploadIdFilter = {
   /** Search the asset with the specified ID */
-  eq?: InputMaybe<Scalars['UploadId']['input']>
+  eq?: InputMaybe<Scalars['UploadId']['input']>;
   /** Search assets with the specified IDs */
-  in?: InputMaybe<Array<InputMaybe<Scalars['UploadId']['input']>>>
+  in?: InputMaybe<Array<InputMaybe<Scalars['UploadId']['input']>>>;
   /** Exclude the asset with the specified ID */
-  neq?: InputMaybe<Scalars['UploadId']['input']>
+  neq?: InputMaybe<Scalars['UploadId']['input']>;
   /** Search assets that do not have the specified IDs */
-  notIn?: InputMaybe<Array<InputMaybe<Scalars['UploadId']['input']>>>
-}
+  notIn?: InputMaybe<Array<InputMaybe<Scalars['UploadId']['input']>>>;
+};
 
 /** Specifies how to filter by MD5 */
 export type UploadMd5Filter = {
   /** Search the asset with the specified MD5 */
-  eq?: InputMaybe<Scalars['String']['input']>
+  eq?: InputMaybe<Scalars['String']['input']>;
   /** Search assets with the specified MD5s */
-  in?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>
+  in?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   /** Exclude the asset with the specified MD5 */
-  neq?: InputMaybe<Scalars['String']['input']>
+  neq?: InputMaybe<Scalars['String']['input']>;
   /** Search assets that do not have the specified MD5s */
-  notIn?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>
-}
+  notIn?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
 
 /** Specifies how to filter by mime type */
 export type UploadMimeTypeFilter = {
   /** Search the asset with the specified mime type */
-  eq?: InputMaybe<Scalars['String']['input']>
+  eq?: InputMaybe<Scalars['String']['input']>;
   /** Search assets with the specified mime types */
-  in?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>
+  in?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   /** Filter uploads based on a regular expression */
-  matches?: InputMaybe<StringMatchesFilter>
+  matches?: InputMaybe<StringMatchesFilter>;
   /** Exclude the asset with the specified mime type */
-  neq?: InputMaybe<Scalars['String']['input']>
+  neq?: InputMaybe<Scalars['String']['input']>;
   /** Search assets that do not have the specified mime types */
-  notIn?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>
+  notIn?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   /** Exclude uploads based on a regular expression */
-  notMatches?: InputMaybe<StringMatchesFilter>
-}
+  notMatches?: InputMaybe<StringMatchesFilter>;
+};
 
 /** Specifies how to filter by notes */
 export type UploadNotesFilter = {
   /** Filter records with the specified field defined (i.e. with any value) or not */
-  exists?: InputMaybe<Scalars['BooleanType']['input']>
+  exists?: InputMaybe<Scalars['BooleanType']['input']>;
   /** Filter uploads based on a regular expression */
-  matches?: InputMaybe<StringMatchesFilter>
+  matches?: InputMaybe<StringMatchesFilter>;
   /** Exclude uploads based on a regular expression */
-  notMatches?: InputMaybe<StringMatchesFilter>
-}
+  notMatches?: InputMaybe<StringMatchesFilter>;
+};
 
 export enum UploadOrderBy {
   CreatedAtAsc = '_createdAt_ASC',
@@ -2826,62 +2977,62 @@ export enum UploadOrderBy {
   ResolutionAsc = 'resolution_ASC',
   ResolutionDesc = 'resolution_DESC',
   SizeAsc = 'size_ASC',
-  SizeDesc = 'size_DESC',
+  SizeDesc = 'size_DESC'
 }
 
 export enum UploadOrientation {
   Landscape = 'landscape',
   Portrait = 'portrait',
-  Square = 'square',
+  Square = 'square'
 }
 
 /** Specifies how to filter by size */
 export type UploadSizeFilter = {
   /** Search assets with the specified size (in bytes) */
-  eq?: InputMaybe<Scalars['IntType']['input']>
+  eq?: InputMaybe<Scalars['IntType']['input']>;
   /** Search all assets larger than the specified size (in bytes) */
-  gt?: InputMaybe<Scalars['IntType']['input']>
+  gt?: InputMaybe<Scalars['IntType']['input']>;
   /** Search all assets larger or equal to the specified size (in bytes) */
-  gte?: InputMaybe<Scalars['IntType']['input']>
+  gte?: InputMaybe<Scalars['IntType']['input']>;
   /** Search all assets smaller than the specified size (in bytes) */
-  lt?: InputMaybe<Scalars['IntType']['input']>
+  lt?: InputMaybe<Scalars['IntType']['input']>;
   /** Search all assets larger or equal to the specified size (in bytes) */
-  lte?: InputMaybe<Scalars['IntType']['input']>
+  lte?: InputMaybe<Scalars['IntType']['input']>;
   /** Search assets that do not have the specified size (in bytes) */
-  neq?: InputMaybe<Scalars['IntType']['input']>
-}
+  neq?: InputMaybe<Scalars['IntType']['input']>;
+};
 
 /** Specifies how to filter by tags */
 export type UploadTagsFilter = {
   /** Filter uploads linked to all of the specified tags */
-  allIn?: InputMaybe<Array<Scalars['String']['input']>>
+  allIn?: InputMaybe<Array<Scalars['String']['input']>>;
   /** Filter uploads linked to at least one of the specified tags */
-  anyIn?: InputMaybe<Array<Scalars['String']['input']>>
+  anyIn?: InputMaybe<Array<Scalars['String']['input']>>;
   /** Filter uploads linked to the specified tag */
-  contains?: InputMaybe<Scalars['String']['input']>
+  contains?: InputMaybe<Scalars['String']['input']>;
   /** Search for uploads with an exact match */
-  eq?: InputMaybe<Array<Scalars['String']['input']>>
+  eq?: InputMaybe<Array<Scalars['String']['input']>>;
   /** Filter uploads not linked to any of the specified tags */
-  notIn?: InputMaybe<Array<Scalars['String']['input']>>
-}
+  notIn?: InputMaybe<Array<Scalars['String']['input']>>;
+};
 
 /** Specifies how to filter by default title */
 export type UploadTitleFilter = {
   /** Search the asset with the specified title */
-  eq?: InputMaybe<Scalars['String']['input']>
+  eq?: InputMaybe<Scalars['String']['input']>;
   /** Filter assets with the specified field defined (i.e. with any value) or not */
-  exists?: InputMaybe<Scalars['BooleanType']['input']>
+  exists?: InputMaybe<Scalars['BooleanType']['input']>;
   /** Search assets with the specified as default title */
-  in?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>
+  in?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   /** Filter uploads based on a regular expression */
-  matches?: InputMaybe<StringMatchesFilter>
+  matches?: InputMaybe<StringMatchesFilter>;
   /** Exclude the asset with the specified title */
-  neq?: InputMaybe<Scalars['String']['input']>
+  neq?: InputMaybe<Scalars['String']['input']>;
   /** Search assets that do not have the specified as default title */
-  notIn?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>
+  notIn?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   /** Exclude uploads based on a regular expression */
-  notMatches?: InputMaybe<StringMatchesFilter>
-}
+  notMatches?: InputMaybe<StringMatchesFilter>;
+};
 
 export enum UploadType {
   Archive = 'archive',
@@ -2891,1601 +3042,134 @@ export enum UploadType {
   Presentation = 'presentation',
   Richtext = 'richtext',
   Spreadsheet = 'spreadsheet',
-  Video = 'video',
+  Video = 'video'
 }
 
 /** Specifies how to filter by update datetime */
 export type UploadUpdatedAtFilter = {
   /** Search for uploads with an exact match */
-  eq?: InputMaybe<Scalars['DateTime']['input']>
+  eq?: InputMaybe<Scalars['DateTime']['input']>;
   /** Filter uploads with a value that's strictly greater than the one specified */
-  gt?: InputMaybe<Scalars['DateTime']['input']>
+  gt?: InputMaybe<Scalars['DateTime']['input']>;
   /** Filter uploads with a value that's greater than or equal to the one specified */
-  gte?: InputMaybe<Scalars['DateTime']['input']>
+  gte?: InputMaybe<Scalars['DateTime']['input']>;
   /** Filter uploads with a value that's less than the one specified */
-  lt?: InputMaybe<Scalars['DateTime']['input']>
+  lt?: InputMaybe<Scalars['DateTime']['input']>;
   /** Filter uploads with a value that's less or equal than the one specified */
-  lte?: InputMaybe<Scalars['DateTime']['input']>
+  lte?: InputMaybe<Scalars['DateTime']['input']>;
   /** Exclude uploads with an exact match */
-  neq?: InputMaybe<Scalars['DateTime']['input']>
-}
+  neq?: InputMaybe<Scalars['DateTime']['input']>;
+};
 
 export type UploadVideoField = {
-  __typename?: 'UploadVideoField'
-  duration?: Maybe<Scalars['Int']['output']>
-  framerate?: Maybe<Scalars['Int']['output']>
-  mp4Url?: Maybe<Scalars['String']['output']>
-  muxAssetId: Scalars['String']['output']
-  muxPlaybackId: Scalars['String']['output']
-  streamingUrl: Scalars['String']['output']
-  thumbnailUrl: Scalars['String']['output']
-}
+  __typename?: 'UploadVideoField';
+  duration?: Maybe<Scalars['Int']['output']>;
+  framerate?: Maybe<Scalars['Int']['output']>;
+  mp4Url?: Maybe<Scalars['String']['output']>;
+  muxAssetId: Scalars['String']['output'];
+  muxPlaybackId: Scalars['String']['output'];
+  streamingUrl: Scalars['String']['output'];
+  thumbnailUrl: Scalars['String']['output'];
+};
+
 
 export type UploadVideoFieldMp4UrlArgs = {
-  exactRes?: InputMaybe<VideoMp4Res>
-  res?: InputMaybe<VideoMp4Res>
-}
+  exactRes?: InputMaybe<VideoMp4Res>;
+  res?: InputMaybe<VideoMp4Res>;
+};
+
 
 export type UploadVideoFieldThumbnailUrlArgs = {
-  format?: InputMaybe<MuxThumbnailFormatType>
-}
+  format?: InputMaybe<MuxThumbnailFormatType>;
+};
 
 /** Specifies how to filter by width */
 export type UploadWidthFilter = {
   /** Search assets with the specified width */
-  eq?: InputMaybe<Scalars['IntType']['input']>
+  eq?: InputMaybe<Scalars['IntType']['input']>;
   /** Search all assets larger than the specified width */
-  gt?: InputMaybe<Scalars['IntType']['input']>
+  gt?: InputMaybe<Scalars['IntType']['input']>;
   /** Search all assets larger or equal to the specified width */
-  gte?: InputMaybe<Scalars['IntType']['input']>
+  gte?: InputMaybe<Scalars['IntType']['input']>;
   /** Search all assets smaller than the specified width */
-  lt?: InputMaybe<Scalars['IntType']['input']>
+  lt?: InputMaybe<Scalars['IntType']['input']>;
   /** Search all assets larger or equal to the specified width */
-  lte?: InputMaybe<Scalars['IntType']['input']>
+  lte?: InputMaybe<Scalars['IntType']['input']>;
   /** Search assets that do not have the specified width */
-  neq?: InputMaybe<Scalars['IntType']['input']>
-}
+  neq?: InputMaybe<Scalars['IntType']['input']>;
+};
 
 export enum VideoMp4Res {
   High = 'high',
   Low = 'low',
-  Medium = 'medium',
+  Medium = 'medium'
 }
 
 export type FocalPoint = {
-  __typename?: 'focalPoint'
-  x: Scalars['FloatType']['output']
-  y: Scalars['FloatType']['output']
-}
+  __typename?: 'focalPoint';
+  x: Scalars['FloatType']['output'];
+  y: Scalars['FloatType']['output'];
+};
 
-export type EventRecordFieldsFragment = {
-  __typename?: 'EventRecord'
-  id: string
-  title: string
-  slug: string
-  membersOnly?: any | null
-  fullyBooked?: any | null
-  signUpLink?: string | null
-  location: string
-  locationLink?: string | null
-  startAt: string
-  endAt?: string | null
-  _updatedAt: string
-  _status: ItemStatus
-  description: { __typename?: 'EventModelDescriptionField'; value: any }
-  nonMemberCta?: {
-    __typename?: 'EventModelNonMemberCtaField'
-    value: any
-  } | null
-} & { ' $fragmentName'?: 'EventRecordFieldsFragment' }
+export type EventRecordFieldsFragment = { __typename?: 'EventRecord', id: string, title: string, slug: string, membersOnly?: any | null, fullyBooked?: any | null, signUpLink?: string | null, location: string, locationLink?: string | null, startAt: string, endAt?: string | null, _updatedAt: string, _status: ItemStatus, description: { __typename?: 'EventModelDescriptionField', value: any }, nonMemberCta?: { __typename?: 'EventModelNonMemberCtaField', value: any } | null } & { ' $fragmentName'?: 'EventRecordFieldsFragment' };
 
-export type EventsQueryQueryVariables = Exact<{
-  today: Scalars['DateTime']['input']
-}>
+export type ChallengeAcceptedHubMetaQueryVariables = Exact<{ [key: string]: never; }>;
 
-export type EventsQueryQuery = {
-  __typename?: 'Query'
-  events: Array<
-    { __typename?: 'EventRecord' } & {
-      ' $fragmentRefs'?: {
-        EventRecordFieldsFragment: EventRecordFieldsFragment
-      }
-    }
-  >
-  pastEvents: Array<
-    { __typename?: 'EventRecord' } & {
-      ' $fragmentRefs'?: {
-        EventRecordFieldsFragment: EventRecordFieldsFragment
-      }
-    }
-  >
-}
 
-export type EventQueryQueryVariables = Exact<{
-  slug?: InputMaybe<Scalars['String']['input']>
-}>
+export type ChallengeAcceptedHubMetaQuery = { __typename?: 'Query', hub?: { __typename?: 'ChallengeAcceptedHubRecord', id: string, metadata?: { __typename?: 'SeoField', title?: string | null, description?: string | null, image?: { __typename?: 'FileField', url: string } | null } | null } | null };
 
-export type EventQueryQuery = {
-  __typename?: 'Query'
-  event?:
-    | ({ __typename?: 'EventRecord' } & {
-        ' $fragmentRefs'?: {
-          EventRecordFieldsFragment: EventRecordFieldsFragment
-        }
-      })
-    | null
-}
+export type ChallengeAcceptedHubQueryVariables = Exact<{ [key: string]: never; }>;
 
-export type EventMetaQueryQueryVariables = Exact<{
-  slug?: InputMaybe<Scalars['String']['input']>
-}>
 
-export type EventMetaQueryQuery = {
-  __typename?: 'Query'
-  event?: {
-    __typename?: 'EventRecord'
-    id: string
-    title: string
-    seo?: {
-      __typename?: 'SeoField'
-      title?: string | null
-      description?: string | null
-      image?: { __typename?: 'FileField'; url: string } | null
-    } | null
-  } | null
-}
+export type ChallengeAcceptedHubQuery = { __typename?: 'Query', hub?: { __typename?: 'ChallengeAcceptedHubRecord', id: string, newsletterSignupTagline?: string | null, logo?: { __typename?: 'FileField', url: string } | null, introduction: { __typename?: 'ChallengeAcceptedHubModelIntroductionField', value: any }, outro: { __typename?: 'ChallengeAcceptedHubModelOutroField', value: any }, items: Array<{ __typename: 'ChallengeAcceptedArticleRecord', id: string, path: string, image?: { __typename?: 'FileField', url: string, width?: number | null, height?: number | null } | null } | { __typename: 'ChallengeAcceptedNewsletterRecord', id: string, path: string } | { __typename: 'EventRecord', id: string, title: string, slug: string, membersOnly?: any | null, fullyBooked?: any | null, signUpLink?: string | null, location: string, locationLink?: string | null, startAt: string, endAt?: string | null, _updatedAt: string, _status: ItemStatus, description: { __typename?: 'EventModelDescriptionField', value: any }, nonMemberCta?: { __typename?: 'EventModelNonMemberCtaField', value: any } | null }> } | null, people: Array<{ __typename?: 'ChallengeAcceptedPersonRecord', id: string, slug: string, name: string, portrait?: { __typename?: 'FileField', url: string, height?: number | null, width?: number | null } | null }> };
 
-export type ChallengeAcceptedHubQueryQueryVariables = Exact<{
-  [key: string]: never
-}>
+export type ChallengeAcceptedPersonListQueryVariables = Exact<{ [key: string]: never; }>;
 
-export type ChallengeAcceptedHubQueryQuery = {
-  __typename?: 'Query'
-  hub?: {
-    __typename?: 'ChallengeAcceptedHubRecord'
-    id: string
-    newsletterSignupTagline?: string | null
-    logo?: { __typename?: 'FileField'; url: string } | null
-    introduction: {
-      __typename?: 'ChallengeAcceptedHubModelIntroductionField'
-      value: any
-    }
-    outro: { __typename?: 'ChallengeAcceptedHubModelOutroField'; value: any }
-    items: Array<
-      | {
-          __typename: 'ChallengeAcceptedArticleRecord'
-          id: string
-          path: string
-          image?: {
-            __typename?: 'FileField'
-            url: string
-            width?: number | null
-            height?: number | null
-          } | null
-        }
-      | {
-          __typename: 'ChallengeAcceptedNewsletterRecord'
-          id: string
-          path: string
-        }
-      | {
-          __typename: 'EventRecord'
-          id: string
-          title: string
-          slug: string
-          membersOnly?: any | null
-          fullyBooked?: any | null
-          signUpLink?: string | null
-          location: string
-          locationLink?: string | null
-          startAt: string
-          endAt?: string | null
-          _updatedAt: string
-          _status: ItemStatus
-          description: { __typename?: 'EventModelDescriptionField'; value: any }
-          nonMemberCta?: {
-            __typename?: 'EventModelNonMemberCtaField'
-            value: any
-          } | null
-        }
-    >
-  } | null
-  people: Array<{
-    __typename?: 'ChallengeAcceptedPersonRecord'
-    id: string
-    slug: string
-    name: string
-    portrait?: {
-      __typename?: 'FileField'
-      url: string
-      height?: number | null
-      width?: number | null
-    } | null
-  }>
-}
 
-export type ChallengeAcceptedHubMetaQueryQueryVariables = Exact<{
-  [key: string]: never
-}>
+export type ChallengeAcceptedPersonListQuery = { __typename?: 'Query', hub?: { __typename?: 'ChallengeAcceptedHubRecord', id: string, logo?: { __typename?: 'FileField', url: string } | null } | null, people: Array<{ __typename?: 'ChallengeAcceptedPersonRecord', id: string, slug: string, name: string, size?: string | null, portrait?: { __typename?: 'FileField', url: string, height?: number | null, width?: number | null } | null }> };
 
-export type ChallengeAcceptedHubMetaQueryQuery = {
-  __typename?: 'Query'
-  hub?: {
-    __typename?: 'ChallengeAcceptedHubRecord'
-    id: string
-    metadata?: {
-      __typename?: 'SeoField'
-      title?: string | null
-      description?: string | null
-      image?: { __typename?: 'FileField'; url: string } | null
-    } | null
-  } | null
-}
+export type EventMetaQueryVariables = Exact<{
+  slug?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type EventMetaQuery = { __typename?: 'Query', event?: { __typename?: 'EventRecord', id: string, title: string, seo?: { __typename?: 'SeoField', title?: string | null, description?: string | null, image?: { __typename?: 'FileField', url: string } | null } | null } | null };
+
+export type EventQueryVariables = Exact<{
+  slug?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type EventQuery = { __typename?: 'Query', event?: (
+    { __typename?: 'EventRecord' }
+    & { ' $fragmentRefs'?: { 'EventRecordFieldsFragment': EventRecordFieldsFragment } }
+  ) | null };
+
+export type EventsQueryVariables = Exact<{
+  today: Scalars['DateTime']['input'];
+}>;
+
+
+export type EventsQuery = { __typename?: 'Query', events: Array<(
+    { __typename?: 'EventRecord' }
+    & { ' $fragmentRefs'?: { 'EventRecordFieldsFragment': EventRecordFieldsFragment } }
+  )>, pastEvents: Array<(
+    { __typename?: 'EventRecord' }
+    & { ' $fragmentRefs'?: { 'EventRecordFieldsFragment': EventRecordFieldsFragment } }
+  )> };
 
 export type PersonDetailQueryVariables = Exact<{
-  slug: Scalars['String']['input']
-}>
+  slug: Scalars['String']['input'];
+}>;
 
-export type PersonDetailQuery = {
-  __typename?: 'Query'
-  hub?: {
-    __typename?: 'ChallengeAcceptedHubRecord'
-    id: string
-    newsletterSignupTagline?: string | null
-    logo?: { __typename?: 'FileField'; url: string } | null
-  } | null
-  person?: {
-    __typename?: 'ChallengeAcceptedPersonRecord'
-    id: string
-    name: string
-    slug: string
-    catchPhrase?: string | null
-    portrait?: {
-      __typename?: 'FileField'
-      alt?: string | null
-      url: string
-      width?: number | null
-      height?: number | null
-      title?: string | null
-    } | null
-    bio?: {
-      __typename?: 'ChallengeAcceptedPersonModelBioField'
-      value: any
-    } | null
-    items: Array<
-      | {
-          __typename: 'ChallengeAcceptedArticleRecord'
-          id: string
-          path: string
-          image?: {
-            __typename?: 'FileField'
-            url: string
-            width?: number | null
-            height?: number | null
-          } | null
-        }
-      | {
-          __typename: 'ChallengeAcceptedNewsletterRecord'
-          id: string
-          path: string
-        }
-      | {
-          __typename: 'EventRecord'
-          id: string
-          title: string
-          slug: string
-          membersOnly?: any | null
-          fullyBooked?: any | null
-          signUpLink?: string | null
-          location: string
-          locationLink?: string | null
-          startAt: string
-          endAt?: string | null
-          _updatedAt: string
-          _status: ItemStatus
-          description: { __typename?: 'EventModelDescriptionField'; value: any }
-          nonMemberCta?: {
-            __typename?: 'EventModelNonMemberCtaField'
-            value: any
-          } | null
-        }
-    >
-  } | null
-}
 
-export type ChallengeAcceptedPersonListQueryQueryVariables = Exact<{
-  [key: string]: never
-}>
+export type PersonDetailQuery = { __typename?: 'Query', hub?: { __typename?: 'ChallengeAcceptedHubRecord', id: string, newsletterSignupTagline?: string | null, logo?: { __typename?: 'FileField', url: string } | null } | null, person?: { __typename?: 'ChallengeAcceptedPersonRecord', id: string, name: string, slug: string, catchPhrase?: string | null, portrait?: { __typename?: 'FileField', alt?: string | null, url: string, width?: number | null, height?: number | null, title?: string | null } | null, bio?: { __typename?: 'ChallengeAcceptedPersonModelBioField', value: any } | null, items: Array<{ __typename: 'ChallengeAcceptedArticleRecord', id: string, path: string, image?: { __typename?: 'FileField', url: string, width?: number | null, height?: number | null } | null } | { __typename: 'ChallengeAcceptedNewsletterRecord', id: string, path: string } | { __typename: 'EventRecord', id: string, title: string, slug: string, membersOnly?: any | null, fullyBooked?: any | null, signUpLink?: string | null, location: string, locationLink?: string | null, startAt: string, endAt?: string | null, _updatedAt: string, _status: ItemStatus, description: { __typename?: 'EventModelDescriptionField', value: any }, nonMemberCta?: { __typename?: 'EventModelNonMemberCtaField', value: any } | null }> } | null };
 
-export type ChallengeAcceptedPersonListQueryQuery = {
-  __typename?: 'Query'
-  hub?: {
-    __typename?: 'ChallengeAcceptedHubRecord'
-    id: string
-    logo?: { __typename?: 'FileField'; url: string } | null
-  } | null
-  people: Array<{
-    __typename?: 'ChallengeAcceptedPersonRecord'
-    id: string
-    slug: string
-    name: string
-    size?: string | null
-    portrait?: {
-      __typename?: 'FileField'
-      url: string
-      height?: number | null
-      width?: number | null
-    } | null
-  }>
-}
-
-export const EventRecordFieldsFragmentDoc = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'EventRecordFields' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'EventRecord' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'title' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'description' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'value' } },
-              ],
-            },
-          },
-          { kind: 'Field', name: { kind: 'Name', value: 'membersOnly' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'nonMemberCta' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'value' } },
-              ],
-            },
-          },
-          { kind: 'Field', name: { kind: 'Name', value: 'fullyBooked' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'signUpLink' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'location' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'locationLink' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'startAt' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'endAt' } },
-          { kind: 'Field', name: { kind: 'Name', value: '_updatedAt' } },
-          { kind: 'Field', name: { kind: 'Name', value: '_status' } },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<EventRecordFieldsFragment, unknown>
-export const EventsQueryDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'query',
-      name: { kind: 'Name', value: 'EventsQuery' },
-      variableDefinitions: [
-        {
-          kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
-            name: { kind: 'Name', value: 'today' },
-          },
-          type: {
-            kind: 'NonNullType',
-            type: {
-              kind: 'NamedType',
-              name: { kind: 'Name', value: 'DateTime' },
-            },
-          },
-        },
-      ],
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'events' },
-            name: { kind: 'Name', value: 'allEvents' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'filter' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'AND' },
-                      value: {
-                        kind: 'ListValue',
-                        values: [
-                          {
-                            kind: 'ObjectValue',
-                            fields: [
-                              {
-                                kind: 'ObjectField',
-                                name: { kind: 'Name', value: 'unlisted' },
-                                value: {
-                                  kind: 'ObjectValue',
-                                  fields: [
-                                    {
-                                      kind: 'ObjectField',
-                                      name: { kind: 'Name', value: 'eq' },
-                                      value: {
-                                        kind: 'BooleanValue',
-                                        value: false,
-                                      },
-                                    },
-                                  ],
-                                },
-                              },
-                            ],
-                          },
-                          {
-                            kind: 'ObjectValue',
-                            fields: [
-                              {
-                                kind: 'ObjectField',
-                                name: { kind: 'Name', value: 'OR' },
-                                value: {
-                                  kind: 'ListValue',
-                                  values: [
-                                    {
-                                      kind: 'ObjectValue',
-                                      fields: [
-                                        {
-                                          kind: 'ObjectField',
-                                          name: {
-                                            kind: 'Name',
-                                            value: 'startAt',
-                                          },
-                                          value: {
-                                            kind: 'ObjectValue',
-                                            fields: [
-                                              {
-                                                kind: 'ObjectField',
-                                                name: {
-                                                  kind: 'Name',
-                                                  value: 'gte',
-                                                },
-                                                value: {
-                                                  kind: 'Variable',
-                                                  name: {
-                                                    kind: 'Name',
-                                                    value: 'today',
-                                                  },
-                                                },
-                                              },
-                                            ],
-                                          },
-                                        },
-                                      ],
-                                    },
-                                    {
-                                      kind: 'ObjectValue',
-                                      fields: [
-                                        {
-                                          kind: 'ObjectField',
-                                          name: {
-                                            kind: 'Name',
-                                            value: 'endAt',
-                                          },
-                                          value: {
-                                            kind: 'ObjectValue',
-                                            fields: [
-                                              {
-                                                kind: 'ObjectField',
-                                                name: {
-                                                  kind: 'Name',
-                                                  value: 'gte',
-                                                },
-                                                value: {
-                                                  kind: 'Variable',
-                                                  name: {
-                                                    kind: 'Name',
-                                                    value: 'today',
-                                                  },
-                                                },
-                                              },
-                                            ],
-                                          },
-                                        },
-                                      ],
-                                    },
-                                  ],
-                                },
-                              },
-                            ],
-                          },
-                        ],
-                      },
-                    },
-                  ],
-                },
-              },
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'orderBy' },
-                value: { kind: 'EnumValue', value: 'startAt_ASC' },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'EventRecordFields' },
-                },
-              ],
-            },
-          },
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'pastEvents' },
-            name: { kind: 'Name', value: 'allEvents' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'filter' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'AND' },
-                      value: {
-                        kind: 'ListValue',
-                        values: [
-                          {
-                            kind: 'ObjectValue',
-                            fields: [
-                              {
-                                kind: 'ObjectField',
-                                name: { kind: 'Name', value: 'startAt' },
-                                value: {
-                                  kind: 'ObjectValue',
-                                  fields: [
-                                    {
-                                      kind: 'ObjectField',
-                                      name: { kind: 'Name', value: 'lt' },
-                                      value: {
-                                        kind: 'Variable',
-                                        name: { kind: 'Name', value: 'today' },
-                                      },
-                                    },
-                                  ],
-                                },
-                              },
-                            ],
-                          },
-                          {
-                            kind: 'ObjectValue',
-                            fields: [
-                              {
-                                kind: 'ObjectField',
-                                name: { kind: 'Name', value: 'endAt' },
-                                value: {
-                                  kind: 'ObjectValue',
-                                  fields: [
-                                    {
-                                      kind: 'ObjectField',
-                                      name: { kind: 'Name', value: 'lt' },
-                                      value: {
-                                        kind: 'Variable',
-                                        name: { kind: 'Name', value: 'today' },
-                                      },
-                                    },
-                                  ],
-                                },
-                              },
-                            ],
-                          },
-                        ],
-                      },
-                    },
-                  ],
-                },
-              },
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'orderBy' },
-                value: { kind: 'EnumValue', value: 'startAt_DESC' },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'EventRecordFields' },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'EventRecordFields' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'EventRecord' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'title' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'description' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'value' } },
-              ],
-            },
-          },
-          { kind: 'Field', name: { kind: 'Name', value: 'membersOnly' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'nonMemberCta' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'value' } },
-              ],
-            },
-          },
-          { kind: 'Field', name: { kind: 'Name', value: 'fullyBooked' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'signUpLink' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'location' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'locationLink' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'startAt' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'endAt' } },
-          { kind: 'Field', name: { kind: 'Name', value: '_updatedAt' } },
-          { kind: 'Field', name: { kind: 'Name', value: '_status' } },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<EventsQueryQuery, EventsQueryQueryVariables>
-export const EventQueryDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'query',
-      name: { kind: 'Name', value: 'EventQuery' },
-      variableDefinitions: [
-        {
-          kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'slug' } },
-          type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
-        },
-      ],
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'event' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'filter' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'slug' },
-                      value: {
-                        kind: 'ObjectValue',
-                        fields: [
-                          {
-                            kind: 'ObjectField',
-                            name: { kind: 'Name', value: 'eq' },
-                            value: {
-                              kind: 'Variable',
-                              name: { kind: 'Name', value: 'slug' },
-                            },
-                          },
-                        ],
-                      },
-                    },
-                  ],
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'EventRecordFields' },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'EventRecordFields' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'EventRecord' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'title' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'description' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'value' } },
-              ],
-            },
-          },
-          { kind: 'Field', name: { kind: 'Name', value: 'membersOnly' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'nonMemberCta' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'value' } },
-              ],
-            },
-          },
-          { kind: 'Field', name: { kind: 'Name', value: 'fullyBooked' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'signUpLink' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'location' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'locationLink' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'startAt' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'endAt' } },
-          { kind: 'Field', name: { kind: 'Name', value: '_updatedAt' } },
-          { kind: 'Field', name: { kind: 'Name', value: '_status' } },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<EventQueryQuery, EventQueryQueryVariables>
-export const EventMetaQueryDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'query',
-      name: { kind: 'Name', value: 'EventMetaQuery' },
-      variableDefinitions: [
-        {
-          kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'slug' } },
-          type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
-        },
-      ],
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'event' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'filter' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'slug' },
-                      value: {
-                        kind: 'ObjectValue',
-                        fields: [
-                          {
-                            kind: 'ObjectField',
-                            name: { kind: 'Name', value: 'eq' },
-                            value: {
-                              kind: 'Variable',
-                              name: { kind: 'Name', value: 'slug' },
-                            },
-                          },
-                        ],
-                      },
-                    },
-                  ],
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'title' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'seo' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'description' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'image' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'url' },
-                              arguments: [
-                                {
-                                  kind: 'Argument',
-                                  name: { kind: 'Name', value: 'imgixParams' },
-                                  value: {
-                                    kind: 'ObjectValue',
-                                    fields: [
-                                      {
-                                        kind: 'ObjectField',
-                                        name: { kind: 'Name', value: 'w' },
-                                        value: {
-                                          kind: 'StringValue',
-                                          value: '1500',
-                                          block: false,
-                                        },
-                                      },
-                                    ],
-                                  },
-                                },
-                              ],
-                            },
-                          ],
-                        },
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<EventMetaQueryQuery, EventMetaQueryQueryVariables>
-export const ChallengeAcceptedHubQueryDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'query',
-      name: { kind: 'Name', value: 'ChallengeAcceptedHubQuery' },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'hub' },
-            name: { kind: 'Name', value: 'challengeAcceptedHub' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'logo' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'url' } },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'introduction' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'value' } },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'outro' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'value' } },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'newsletterSignupTagline' },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'items' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: '__typename' },
-                      },
-                      {
-                        kind: 'InlineFragment',
-                        typeCondition: {
-                          kind: 'NamedType',
-                          name: { kind: 'Name', value: 'EventRecord' },
-                        },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'id' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'title' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'slug' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'description' },
-                              selectionSet: {
-                                kind: 'SelectionSet',
-                                selections: [
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'value' },
-                                  },
-                                ],
-                              },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'membersOnly' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'nonMemberCta' },
-                              selectionSet: {
-                                kind: 'SelectionSet',
-                                selections: [
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'value' },
-                                  },
-                                ],
-                              },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'fullyBooked' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'signUpLink' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'location' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'locationLink' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'startAt' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'endAt' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: '_updatedAt' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: '_status' },
-                            },
-                          ],
-                        },
-                      },
-                      {
-                        kind: 'InlineFragment',
-                        typeCondition: {
-                          kind: 'NamedType',
-                          name: {
-                            kind: 'Name',
-                            value: 'ChallengeAcceptedArticleRecord',
-                          },
-                        },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'id' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'path' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'image' },
-                              selectionSet: {
-                                kind: 'SelectionSet',
-                                selections: [
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'url' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'width' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'height' },
-                                  },
-                                ],
-                              },
-                            },
-                          ],
-                        },
-                      },
-                      {
-                        kind: 'InlineFragment',
-                        typeCondition: {
-                          kind: 'NamedType',
-                          name: {
-                            kind: 'Name',
-                            value: 'ChallengeAcceptedNewsletterRecord',
-                          },
-                        },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'id' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'path' },
-                            },
-                          ],
-                        },
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'people' },
-            name: { kind: 'Name', value: 'allChallengeAcceptedPeople' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'first' },
-                value: { kind: 'IntValue', value: '50' },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'portrait' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'url' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'height' },
-                      },
-                      { kind: 'Field', name: { kind: 'Name', value: 'width' } },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<
-  ChallengeAcceptedHubQueryQuery,
-  ChallengeAcceptedHubQueryQueryVariables
->
-export const ChallengeAcceptedHubMetaQueryDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'query',
-      name: { kind: 'Name', value: 'ChallengeAcceptedHubMetaQuery' },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'hub' },
-            name: { kind: 'Name', value: 'challengeAcceptedHub' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'metadata' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'description' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'image' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'url' },
-                              arguments: [
-                                {
-                                  kind: 'Argument',
-                                  name: { kind: 'Name', value: 'imgixParams' },
-                                  value: {
-                                    kind: 'ObjectValue',
-                                    fields: [
-                                      {
-                                        kind: 'ObjectField',
-                                        name: { kind: 'Name', value: 'w' },
-                                        value: {
-                                          kind: 'StringValue',
-                                          value: '1500',
-                                          block: false,
-                                        },
-                                      },
-                                    ],
-                                  },
-                                },
-                              ],
-                            },
-                          ],
-                        },
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<
-  ChallengeAcceptedHubMetaQueryQuery,
-  ChallengeAcceptedHubMetaQueryQueryVariables
->
-export const PersonDetailDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'query',
-      name: { kind: 'Name', value: 'PersonDetail' },
-      variableDefinitions: [
-        {
-          kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'slug' } },
-          type: {
-            kind: 'NonNullType',
-            type: {
-              kind: 'NamedType',
-              name: { kind: 'Name', value: 'String' },
-            },
-          },
-        },
-      ],
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'hub' },
-            name: { kind: 'Name', value: 'challengeAcceptedHub' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'logo' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'url' } },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'newsletterSignupTagline' },
-                },
-              ],
-            },
-          },
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'person' },
-            name: { kind: 'Name', value: 'challengeAcceptedPerson' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'filter' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'slug' },
-                      value: {
-                        kind: 'ObjectValue',
-                        fields: [
-                          {
-                            kind: 'ObjectField',
-                            name: { kind: 'Name', value: 'eq' },
-                            value: {
-                              kind: 'Variable',
-                              name: { kind: 'Name', value: 'slug' },
-                            },
-                          },
-                        ],
-                      },
-                    },
-                  ],
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'portrait' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'alt' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'url' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'width' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'height' },
-                      },
-                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
-                    ],
-                  },
-                },
-                { kind: 'Field', name: { kind: 'Name', value: 'catchPhrase' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'bio' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'value' } },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'items' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: '__typename' },
-                      },
-                      {
-                        kind: 'InlineFragment',
-                        typeCondition: {
-                          kind: 'NamedType',
-                          name: { kind: 'Name', value: 'EventRecord' },
-                        },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'id' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'title' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'slug' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'description' },
-                              selectionSet: {
-                                kind: 'SelectionSet',
-                                selections: [
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'value' },
-                                  },
-                                ],
-                              },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'membersOnly' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'nonMemberCta' },
-                              selectionSet: {
-                                kind: 'SelectionSet',
-                                selections: [
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'value' },
-                                  },
-                                ],
-                              },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'fullyBooked' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'signUpLink' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'location' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'locationLink' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'startAt' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'endAt' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: '_updatedAt' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: '_status' },
-                            },
-                          ],
-                        },
-                      },
-                      {
-                        kind: 'InlineFragment',
-                        typeCondition: {
-                          kind: 'NamedType',
-                          name: {
-                            kind: 'Name',
-                            value: 'ChallengeAcceptedArticleRecord',
-                          },
-                        },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'id' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'path' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'image' },
-                              selectionSet: {
-                                kind: 'SelectionSet',
-                                selections: [
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'url' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'width' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'height' },
-                                  },
-                                ],
-                              },
-                            },
-                          ],
-                        },
-                      },
-                      {
-                        kind: 'InlineFragment',
-                        typeCondition: {
-                          kind: 'NamedType',
-                          name: {
-                            kind: 'Name',
-                            value: 'ChallengeAcceptedNewsletterRecord',
-                          },
-                        },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'id' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'path' },
-                            },
-                          ],
-                        },
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<PersonDetailQuery, PersonDetailQueryVariables>
-export const ChallengeAcceptedPersonListQueryDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'query',
-      name: { kind: 'Name', value: 'ChallengeAcceptedPersonListQuery' },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'hub' },
-            name: { kind: 'Name', value: 'challengeAcceptedHub' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'logo' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'url' } },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-          {
-            kind: 'Field',
-            alias: { kind: 'Name', value: 'people' },
-            name: { kind: 'Name', value: 'allChallengeAcceptedPeople' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'first' },
-                value: { kind: 'IntValue', value: '50' },
-              },
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'orderBy' },
-                value: { kind: 'EnumValue', value: 'size_ASC' },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'size' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'portrait' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'url' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'height' },
-                      },
-                      { kind: 'Field', name: { kind: 'Name', value: 'width' } },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<
-  ChallengeAcceptedPersonListQueryQuery,
-  ChallengeAcceptedPersonListQueryQueryVariables
->
+export const EventRecordFieldsFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"EventRecordFields"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"EventRecord"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"description"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}},{"kind":"Field","name":{"kind":"Name","value":"membersOnly"}},{"kind":"Field","name":{"kind":"Name","value":"nonMemberCta"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}},{"kind":"Field","name":{"kind":"Name","value":"fullyBooked"}},{"kind":"Field","name":{"kind":"Name","value":"signUpLink"}},{"kind":"Field","name":{"kind":"Name","value":"location"}},{"kind":"Field","name":{"kind":"Name","value":"locationLink"}},{"kind":"Field","name":{"kind":"Name","value":"startAt"}},{"kind":"Field","name":{"kind":"Name","value":"endAt"}},{"kind":"Field","name":{"kind":"Name","value":"_updatedAt"}},{"kind":"Field","name":{"kind":"Name","value":"_status"}}]}}]} as unknown as DocumentNode<EventRecordFieldsFragment, unknown>;
+export const ChallengeAcceptedHubMetaDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"ChallengeAcceptedHubMeta"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","alias":{"kind":"Name","value":"hub"},"name":{"kind":"Name","value":"challengeAcceptedHub"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"metadata"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"image"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"url"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"imgixParams"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"w"},"value":{"kind":"StringValue","value":"1500","block":false}}]}}]}]}}]}}]}}]}}]} as unknown as DocumentNode<ChallengeAcceptedHubMetaQuery, ChallengeAcceptedHubMetaQueryVariables>;
+export const ChallengeAcceptedHubDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"ChallengeAcceptedHub"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","alias":{"kind":"Name","value":"hub"},"name":{"kind":"Name","value":"challengeAcceptedHub"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"logo"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"url"}}]}},{"kind":"Field","name":{"kind":"Name","value":"introduction"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}},{"kind":"Field","name":{"kind":"Name","value":"outro"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}},{"kind":"Field","name":{"kind":"Name","value":"newsletterSignupTagline"}},{"kind":"Field","name":{"kind":"Name","value":"items"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"EventRecord"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"description"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}},{"kind":"Field","name":{"kind":"Name","value":"membersOnly"}},{"kind":"Field","name":{"kind":"Name","value":"nonMemberCta"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}},{"kind":"Field","name":{"kind":"Name","value":"fullyBooked"}},{"kind":"Field","name":{"kind":"Name","value":"signUpLink"}},{"kind":"Field","name":{"kind":"Name","value":"location"}},{"kind":"Field","name":{"kind":"Name","value":"locationLink"}},{"kind":"Field","name":{"kind":"Name","value":"startAt"}},{"kind":"Field","name":{"kind":"Name","value":"endAt"}},{"kind":"Field","name":{"kind":"Name","value":"_updatedAt"}},{"kind":"Field","name":{"kind":"Name","value":"_status"}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"ChallengeAcceptedArticleRecord"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"path"}},{"kind":"Field","name":{"kind":"Name","value":"image"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"url"}},{"kind":"Field","name":{"kind":"Name","value":"width"}},{"kind":"Field","name":{"kind":"Name","value":"height"}}]}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"ChallengeAcceptedNewsletterRecord"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"path"}}]}}]}}]}},{"kind":"Field","alias":{"kind":"Name","value":"people"},"name":{"kind":"Name","value":"allChallengeAcceptedPeople"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"first"},"value":{"kind":"IntValue","value":"50"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"portrait"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"url"}},{"kind":"Field","name":{"kind":"Name","value":"height"}},{"kind":"Field","name":{"kind":"Name","value":"width"}}]}}]}}]}}]} as unknown as DocumentNode<ChallengeAcceptedHubQuery, ChallengeAcceptedHubQueryVariables>;
+export const ChallengeAcceptedPersonListDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"ChallengeAcceptedPersonList"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","alias":{"kind":"Name","value":"hub"},"name":{"kind":"Name","value":"challengeAcceptedHub"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"logo"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"url"}}]}}]}},{"kind":"Field","alias":{"kind":"Name","value":"people"},"name":{"kind":"Name","value":"allChallengeAcceptedPeople"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"first"},"value":{"kind":"IntValue","value":"50"}},{"kind":"Argument","name":{"kind":"Name","value":"orderBy"},"value":{"kind":"EnumValue","value":"size_ASC"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"size"}},{"kind":"Field","name":{"kind":"Name","value":"portrait"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"url"}},{"kind":"Field","name":{"kind":"Name","value":"height"}},{"kind":"Field","name":{"kind":"Name","value":"width"}}]}}]}}]}}]} as unknown as DocumentNode<ChallengeAcceptedPersonListQuery, ChallengeAcceptedPersonListQueryVariables>;
+export const EventMetaDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"EventMeta"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"slug"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"event"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"filter"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"slug"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"eq"},"value":{"kind":"Variable","name":{"kind":"Name","value":"slug"}}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"seo"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"image"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"url"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"imgixParams"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"w"},"value":{"kind":"StringValue","value":"1500","block":false}}]}}]}]}}]}}]}}]}}]} as unknown as DocumentNode<EventMetaQuery, EventMetaQueryVariables>;
+export const EventDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Event"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"slug"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"event"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"filter"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"slug"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"eq"},"value":{"kind":"Variable","name":{"kind":"Name","value":"slug"}}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"EventRecordFields"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"EventRecordFields"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"EventRecord"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"description"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}},{"kind":"Field","name":{"kind":"Name","value":"membersOnly"}},{"kind":"Field","name":{"kind":"Name","value":"nonMemberCta"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}},{"kind":"Field","name":{"kind":"Name","value":"fullyBooked"}},{"kind":"Field","name":{"kind":"Name","value":"signUpLink"}},{"kind":"Field","name":{"kind":"Name","value":"location"}},{"kind":"Field","name":{"kind":"Name","value":"locationLink"}},{"kind":"Field","name":{"kind":"Name","value":"startAt"}},{"kind":"Field","name":{"kind":"Name","value":"endAt"}},{"kind":"Field","name":{"kind":"Name","value":"_updatedAt"}},{"kind":"Field","name":{"kind":"Name","value":"_status"}}]}}]} as unknown as DocumentNode<EventQuery, EventQueryVariables>;
+export const EventsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Events"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"today"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"DateTime"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","alias":{"kind":"Name","value":"events"},"name":{"kind":"Name","value":"allEvents"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"filter"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"AND"},"value":{"kind":"ListValue","values":[{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"unlisted"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"eq"},"value":{"kind":"BooleanValue","value":false}}]}}]},{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"OR"},"value":{"kind":"ListValue","values":[{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"startAt"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"gte"},"value":{"kind":"Variable","name":{"kind":"Name","value":"today"}}}]}}]},{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"endAt"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"gte"},"value":{"kind":"Variable","name":{"kind":"Name","value":"today"}}}]}}]}]}}]}]}}]}},{"kind":"Argument","name":{"kind":"Name","value":"orderBy"},"value":{"kind":"EnumValue","value":"startAt_ASC"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"EventRecordFields"}}]}},{"kind":"Field","alias":{"kind":"Name","value":"pastEvents"},"name":{"kind":"Name","value":"allEvents"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"filter"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"AND"},"value":{"kind":"ListValue","values":[{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"startAt"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"lt"},"value":{"kind":"Variable","name":{"kind":"Name","value":"today"}}}]}}]},{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"endAt"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"lt"},"value":{"kind":"Variable","name":{"kind":"Name","value":"today"}}}]}}]}]}}]}},{"kind":"Argument","name":{"kind":"Name","value":"orderBy"},"value":{"kind":"EnumValue","value":"startAt_DESC"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"EventRecordFields"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"EventRecordFields"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"EventRecord"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"description"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}},{"kind":"Field","name":{"kind":"Name","value":"membersOnly"}},{"kind":"Field","name":{"kind":"Name","value":"nonMemberCta"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}},{"kind":"Field","name":{"kind":"Name","value":"fullyBooked"}},{"kind":"Field","name":{"kind":"Name","value":"signUpLink"}},{"kind":"Field","name":{"kind":"Name","value":"location"}},{"kind":"Field","name":{"kind":"Name","value":"locationLink"}},{"kind":"Field","name":{"kind":"Name","value":"startAt"}},{"kind":"Field","name":{"kind":"Name","value":"endAt"}},{"kind":"Field","name":{"kind":"Name","value":"_updatedAt"}},{"kind":"Field","name":{"kind":"Name","value":"_status"}}]}}]} as unknown as DocumentNode<EventsQuery, EventsQueryVariables>;
+export const PersonDetailDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"PersonDetail"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"slug"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","alias":{"kind":"Name","value":"hub"},"name":{"kind":"Name","value":"challengeAcceptedHub"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"logo"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"url"}}]}},{"kind":"Field","name":{"kind":"Name","value":"newsletterSignupTagline"}}]}},{"kind":"Field","alias":{"kind":"Name","value":"person"},"name":{"kind":"Name","value":"challengeAcceptedPerson"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"filter"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"slug"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"eq"},"value":{"kind":"Variable","name":{"kind":"Name","value":"slug"}}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"portrait"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"alt"}},{"kind":"Field","name":{"kind":"Name","value":"url"}},{"kind":"Field","name":{"kind":"Name","value":"width"}},{"kind":"Field","name":{"kind":"Name","value":"height"}},{"kind":"Field","name":{"kind":"Name","value":"title"}}]}},{"kind":"Field","name":{"kind":"Name","value":"catchPhrase"}},{"kind":"Field","name":{"kind":"Name","value":"bio"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}},{"kind":"Field","name":{"kind":"Name","value":"items"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"EventRecord"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"description"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}},{"kind":"Field","name":{"kind":"Name","value":"membersOnly"}},{"kind":"Field","name":{"kind":"Name","value":"nonMemberCta"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}},{"kind":"Field","name":{"kind":"Name","value":"fullyBooked"}},{"kind":"Field","name":{"kind":"Name","value":"signUpLink"}},{"kind":"Field","name":{"kind":"Name","value":"location"}},{"kind":"Field","name":{"kind":"Name","value":"locationLink"}},{"kind":"Field","name":{"kind":"Name","value":"startAt"}},{"kind":"Field","name":{"kind":"Name","value":"endAt"}},{"kind":"Field","name":{"kind":"Name","value":"_updatedAt"}},{"kind":"Field","name":{"kind":"Name","value":"_status"}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"ChallengeAcceptedArticleRecord"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"path"}},{"kind":"Field","name":{"kind":"Name","value":"image"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"url"}},{"kind":"Field","name":{"kind":"Name","value":"width"}},{"kind":"Field","name":{"kind":"Name","value":"height"}}]}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"ChallengeAcceptedNewsletterRecord"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"path"}}]}}]}}]}}]}}]} as unknown as DocumentNode<PersonDetailQuery, PersonDetailQueryVariables>;

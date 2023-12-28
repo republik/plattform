@@ -1,30 +1,17 @@
-import { gql } from './gql'
-
-export const PERSON_DETAIL_QUERY = gql(`
- query PersonDetail($slug: String!) {
-    hub: challengeAcceptedHub {
-      id
-      logo {
-        url
-      }
-      newsletterSignupTagline
+query ChallengeAcceptedHub {
+  hub: challengeAcceptedHub {
+    id
+    logo {
+      url
     }
-    person: challengeAcceptedPerson(filter: {slug: {eq: $slug}}) {
-      id
-      name
-      slug
-      portrait {
-        alt
-        url
-        width
-        height
-        title
-      }
-      catchPhrase
-      bio {
-        value
-      }
-      items {
+    introduction {
+      value
+    }
+    outro {
+      value
+    }
+    newsletterSignupTagline
+    items {
       __typename
       ... on EventRecord {
         id
@@ -60,6 +47,15 @@ export const PERSON_DETAIL_QUERY = gql(`
         path
       }
     }
+  }
+  people: allChallengeAcceptedPeople(first: 50) {
+    id
+    slug
+    name
+    portrait {
+      url
+      height
+      width
     }
   }
-`)
+}

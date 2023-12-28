@@ -1,8 +1,3 @@
-import {
-  EVENT_META_QUERY,
-  EVENT_QUERY,
-  EventRecordFields,
-} from '@app/graphql/cms/events.query'
 import { useFragment } from '@app/graphql/cms/gql'
 import { getCMSClient } from '@app/lib/apollo/cms-client'
 import { getMe } from '@app/lib/auth/me'
@@ -11,6 +6,11 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { EventTeaser } from '../components/event-teaser'
 import { Metadata, ResolvingMetadata } from 'next'
+import {
+  EventMetaDocument,
+  EventDocument,
+  EventRecordFieldsFragmentDoc,
+} from '@app/graphql/cms/gql/graphql'
 
 type PageProps = {
   params: { slug: string }
@@ -21,7 +21,7 @@ export async function generateMetadata(
   parent: ResolvingMetadata,
 ): Promise<Metadata> {
   const { data } = await getCMSClient().query({
-    query: EVENT_META_QUERY,
+    query: EventMetaDocument,
     variables: { slug },
     context: {
       fetchOptions: {
@@ -56,7 +56,7 @@ export async function generateMetadata(
 export default async function Page({ params: { slug } }: PageProps) {
   const client = getCMSClient()
   const { data } = await client.query({
-    query: EVENT_QUERY,
+    query: EventDocument,
     variables: { slug },
     context: {
       fetchOptions: {
@@ -66,7 +66,7 @@ export default async function Page({ params: { slug } }: PageProps) {
       },
     },
   })
-  const event = useFragment(EventRecordFields, data.event)
+  const event = useFragment(EventRecordFieldsFragmentDoc, data.event)
   const me = await getMe()
 
   if (!event) {

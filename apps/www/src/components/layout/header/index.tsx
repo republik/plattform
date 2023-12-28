@@ -7,7 +7,7 @@ import { IconAccountBox, IconMic, IconSearchMenu } from '@republik/icons'
 import Image from 'next/image'
 import { NavLink } from './nav-link'
 import { MeQuery } from '@app/graphql/republik-api/gql/graphql'
-import { ComponentPropsWithoutRef, useEffect, useRef, useState } from 'react'
+import { ComponentPropsWithoutRef, useRef } from 'react'
 import { useScrollDirection } from '@app/lib/hooks/useScrollDirection'
 
 const Logo = () => {

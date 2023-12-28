@@ -1,7 +1,4 @@
-import { gql } from './gql'
-
-export const CHALLENGE_ACCEPTED_PERSON_LIST_QUERY = gql(`
-query ChallengeAcceptedPersonListQuery {
+query ChallengeAcceptedPersonList {
   hub: challengeAcceptedHub {
     id
     logo {
@@ -20,4 +17,3 @@ query ChallengeAcceptedPersonListQuery {
     }
   }
 }
-`)
