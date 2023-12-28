@@ -1,4 +1,4 @@
-import { redirect } from 'next/navigation'
+import Goto from 'app/goto'
 
 /**
  * [Page] searchParams returns a plain JavaScript object and not a URLSearchParams instance.
@@ -55,6 +55,5 @@ export default function Page({ params, searchParams }: PageProps) {
   // Apply searchParams to url
   applySearchParams(url, searchParams)
 
-  // Haha, there is not page! Just a redirect.
-  redirect(url.toString())
+  return <Goto url={url.toString()} />
 }
