@@ -36,19 +36,7 @@ export default function Page({ params, searchParams }: PageProps) {
   }
 
   // Parse a fully qualified URL from params.path elements, using FRONTEND_BASE_URL
-  const url = new URL(params.path.join('/'), process.env.FRONTEND_BASE_URL)
-
-  // Ensure, FRONTEND_BASE_URL protocol and hostname are set
-  const baseUrl = new URL(process.env.FRONTEND_BASE_URL)
-  if (url.hostname !== baseUrl.hostname) {
-    url.hostname = baseUrl.hostname
-  }
-  if (url.protocol !== url.protocol) {
-    url.protocol = baseUrl.protocol
-  }
-
-  // Apply searchParams to url
-  applySearchParams(url, searchParams)
+  const url = new URL(process.env.FRONTEND_BASE_URL)
 
   // Haha, there is not page! Just a redirect.
   redirect(url.toString())
