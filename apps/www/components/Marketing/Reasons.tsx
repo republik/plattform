@@ -10,25 +10,26 @@ import {
 } from '@project-r/styleguide'
 import Link from 'next/link'
 import { useTranslation } from '../../lib/withT'
+import { MarketingLandingPageCmsQuery } from '@app/graphql/cms/gql/graphql'
 
-const Reasons = ({ inNativeApp }) => {
+type ReasonsProps = {
+  inNativeApp: boolean
+  reasons: MarketingLandingPageCmsQuery['marketingLandingPage']['reasons']
+}
+
+const Reasons = ({ inNativeApp, reasons }: ReasonsProps) => {
   const { t } = useTranslation()
   return (
     <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 15px' }}>
       <TeaserFrontTileRow columns={3}>
-        <TeaserFrontTile align='top'>
-          <h2 {...styles.title}>{t('marketing/page/reasons/1/title')}</h2>
-          <Editorial.P>{t('marketing/page/reasons/1/text')}</Editorial.P>
-        </TeaserFrontTile>
-        <TeaserFrontTile align='top'>
-          <h2 {...styles.title}>{t('marketing/page/reasons/2/title')}</h2>
-          <Editorial.P>{t('marketing/page/reasons/2/text')}</Editorial.P>
-        </TeaserFrontTile>
-        <TeaserFrontTile align='top'>
-          <h2 {...styles.title}>{t('marketing/page/reasons/3/title')}</h2>
-          <Editorial.P>{t('marketing/page/reasons/3/text')}</Editorial.P>
-        </TeaserFrontTile>
+        {reasons.map((reason) => (
+          <TeaserFrontTile align='top' key={reason.id}>
+            <h2 {...styles.title}>{reason.title}</h2>
+            <Editorial.P>{reason.description}</Editorial.P>
+          </TeaserFrontTile>
+        ))}
       </TeaserFrontTileRow>
+
       {!inNativeApp && (
         <div {...styles.buttons}>
           <Link

@@ -487,6 +487,73 @@ type EventRecord implements RecordInterface {
   unlisted: BooleanType
 }
 
+type FaqEntryModelAnswerField {
+  blocks: [String!]!
+  links: [String!]!
+  value: JsonField!
+}
+
+"""Block of type FAQ Entry (faq_entry)"""
+type FaqEntryRecord implements RecordInterface {
+  _createdAt: DateTime!
+
+  """Editing URL"""
+  _editingUrl: String
+  _firstPublishedAt: DateTime
+  _isValid: BooleanType!
+  _modelApiKey: String!
+  _publicationScheduledAt: DateTime
+  _publishedAt: DateTime
+
+  """Generates SEO and Social card meta tags to be used in your frontend"""
+  _seoMetaTags(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+  ): [Tag!]!
+  _status: ItemStatus!
+  _unpublishingScheduledAt: DateTime
+  _updatedAt: DateTime!
+  answer: FaqEntryModelAnswerField!
+  category: String!
+  id: ItemId!
+  question(
+    """Process content as markdown"""
+    markdown: Boolean
+  ): String!
+}
+
+type FaqModelIntroductionField {
+  blocks: [String!]!
+  links: [String!]!
+  value: JsonField!
+}
+
+"""Record of type FAQ (faq)"""
+type FaqRecord implements RecordInterface {
+  _createdAt: DateTime!
+
+  """Editing URL"""
+  _editingUrl: String
+  _firstPublishedAt: DateTime
+  _isValid: BooleanType!
+  _modelApiKey: String!
+  _publicationScheduledAt: DateTime
+  _publishedAt: DateTime
+
+  """Generates SEO and Social card meta tags to be used in your frontend"""
+  _seoMetaTags(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+  ): [Tag!]!
+  _status: ItemStatus!
+  _unpublishingScheduledAt: DateTime
+  _updatedAt: DateTime!
+  entries: [FaqEntryRecord!]!
+  id: ItemId!
+  introduction: FaqModelIntroductionField!
+  title: String
+}
+
 enum FaviconType {
   appleTouchIcon
   icon
@@ -2734,6 +2801,17 @@ type Query {
     locale: SiteLocale
     orderBy: [EventModelOrderBy] = [_updatedAt_DESC]
   ): EventRecord
+
+  """Returns the single instance record"""
+  faq(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+  ): FaqRecord
 
   """Returns the single instance record"""
   marketingLandingPage(
