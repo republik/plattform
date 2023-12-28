@@ -1,4 +1,4 @@
-import { notFound, redirect } from 'next/navigation'
+import { redirect } from 'next/navigation'
 
 /**
  * [Page] searchParams returns a plain JavaScript object and not a URLSearchParams instance.
