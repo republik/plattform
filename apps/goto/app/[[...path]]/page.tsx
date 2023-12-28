@@ -1,11 +1,13 @@
 import { redirect } from 'next/navigation'
 
+export const runtime = 'edge'
+
 /**
  * [Page] searchParams returns a plain JavaScript object and not a URLSearchParams instance.
  * @see https://nextjs.org/docs/app/api-reference/file-conventions/page#searchparams-optional
  */
 type PageProps = {
-  params: { path: string[] }
+  params: { path?: string[] }
   searchParams: { [key: string]: string | string[] | undefined }
 }
 
@@ -32,11 +34,14 @@ const applySearchParams = (
 
 export default function Page({ params, searchParams }: PageProps) {
   if (!process.env.FRONTEND_BASE_URL) {
-    throw new Error('nope')
+    throw new Error('FRONTEND_BASE_URL not set')
   }
 
   // Parse a fully qualified URL from params.path elements, using FRONTEND_BASE_URL
-  const url = new URL(params.path.join('/'), process.env.FRONTEND_BASE_URL)
+  const url = new URL(
+    params.path?.join('/') || '/',
+    process.env.FRONTEND_BASE_URL,
+  )
 
   // Ensure, FRONTEND_BASE_URL protocol and hostname are set
   const baseUrl = new URL(process.env.FRONTEND_BASE_URL)
