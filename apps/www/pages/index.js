@@ -48,17 +48,20 @@ const MarketingPage = ({ data }) => {
 export default MarketingPage
 
 export const getStaticProps = createGetStaticProps(async (client) => {
-  const apiData = await client.query({
-    query: MARKETING_PAGE_QUERY,
-  })
-  const datoData = await getCMSClient().query({
-    query: MarketingLandingPageCmsDocument,
-  })
+  const [apiData, datoCMSData] = await Promise.all([
+    client.query({
+      query: MARKETING_PAGE_QUERY,
+    }),
+    getCMSClient().query({
+      query: MarketingLandingPageCmsDocument,
+    }),
+  ])
+
   return {
     props: {
       data: {
         ...apiData.data,
-        ...datoData.data.marketingLandingPage,
+        ...datoCMSData.data.marketingLandingPage,
       },
     },
     revalidate: MARKETING_PAGE_SSG_REVALIDATE,
