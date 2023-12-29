@@ -723,7 +723,43 @@ const text = {
       .
     </>
   ),
-  //Dezember: (p) => <></>,
+  Dezember: (p) => (
+    <>
+      Gibt es eine{' '}
+      <Highlight {...p} ids={['BDLKnVqc8']}>
+        friedliche Lösung für den Nahostkonflikt
+      </Highlight>
+      ? Die Würdigung des{' '}
+      <Highlight {...p} ids={['yxo5cF_JY']}>
+        Schweizer Mafiajägers
+      </Highlight>{' '}
+      Dick Marty. Wie der{' '}
+      <Highlight {...p} ids={['rFaW2Hyhc']}>
+        Bauernverband erfolgreich Interessenpolitik macht
+      </Highlight>{' '}
+      und wie Bundesrat Albert Rösti sein Departement{' '}
+      <Highlight {...p} ids={['zQrb2S6oP']}>
+        auf SVP-Kurs trimmt
+      </Highlight>
+      . Der{' '}
+      <Highlight {...p} ids={['1XEJrq8lU']}>
+        Zustand des Planeten
+      </Highlight>{' '}
+      in Zahlen.{' '}
+      <Highlight {...p} ids={['Tb6FX3tPR']}>
+        Tanzen in Kyjiw
+      </Highlight>
+      .{' '}
+      <Highlight {...p} ids={['QfhlLuzMA']}>
+        Weihnachten im Gefängnis
+      </Highlight>{' '}
+      und ein{' '}
+      <Highlight {...p} ids={['']}>
+        satirischer Jahresrückblick
+      </Highlight>
+      {/*http://www.republik.ch/2023/12/30/2023-ein-austauschjahr-jahresrueckblick-patti-basler). */}
+    </>
+  ),
 }
 
 const Overview2023 = (props) => <Page {...props} year={2023} text={text} />
