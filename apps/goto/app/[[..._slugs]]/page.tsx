@@ -43,13 +43,16 @@ export default function Page({ params, searchParams }: PageProps) {
     process.env.FRONTEND_BASE_URL,
   )
 
-  // Ensure, FRONTEND_BASE_URL protocol and hostname are set
+  // Ensure, FRONTEND_BASE_URL protocol hostname and port are set
   const baseUrl = new URL(process.env.FRONTEND_BASE_URL)
+  if (url.protocol !== baseUrl.protocol) {
+    url.protocol = baseUrl.protocol
+  }
   if (url.hostname !== baseUrl.hostname) {
     url.hostname = baseUrl.hostname
   }
-  if (url.protocol !== url.protocol) {
-    url.protocol = baseUrl.protocol
+  if (url.port !== baseUrl.port) {
+    url.port = baseUrl.port
   }
 
   // Apply searchParams to url
