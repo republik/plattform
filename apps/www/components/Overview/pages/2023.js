@@ -754,10 +754,10 @@ const text = {
         Weihnachten im Gefängnis
       </Highlight>{' '}
       und ein{' '}
-      <Highlight {...p} ids={['']}>
+      <Highlight {...p} ids={['V6hTDanbb']}>
         satirischer Jahresrückblick
       </Highlight>
-      {/*http://www.republik.ch/2023/12/30/2023-ein-austauschjahr-jahresrueckblick-patti-basler). */}
+      .
     </>
   ),
 }
