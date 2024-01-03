@@ -11,7 +11,7 @@
     "dev": "concurrently \"yarn dev:express\" \"yarn gql:types --watch\"",
     "dev:express": "cross-env NODE_ENV=development nodemon --watch server --watch .env --watch next.config.js server/index.js",
     "start": "node server/index.js",
-    "build": "panda codegen && next build",
+    "build": "panda codegen && yarn gql:types && next build",
     "heroku-postbuild": "npm run build",
     "test": "jest",
     "test:watch": "jest --watch",
