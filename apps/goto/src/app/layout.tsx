@@ -1,5 +1,7 @@
 import { Metadata } from 'next'
 
+import './globals.css'
+
 export const metadata: Metadata = {
   robots: {
     index: false,
@@ -15,7 +17,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html>
+    <html suppressHydrationWarning>
       <body>{children}</body>
     </html>
   )

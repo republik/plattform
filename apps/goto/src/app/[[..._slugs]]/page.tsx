@@ -1,4 +1,4 @@
-import Goto from 'app/goto'
+import Goto from 'src/app/goto'
 
 /**
  * [Page] searchParams returns a plain JavaScript object and not a URLSearchParams instance.
