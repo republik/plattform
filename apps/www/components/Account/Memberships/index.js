@@ -13,14 +13,12 @@ import AccessGrants from '../../Access/Grants'
 import withMembership from '../../Auth/withMembership'
 import Box from '../../Frame/Box'
 
-import { Interaction } from '@project-r/styleguide'
-
 import belongingsQuery from '../belongingsQuery'
 import MembershipList from '../Memberships/List'
 import PaymentSources from '../PaymentSources'
 import AccountSection from '../AccountSection'
-
-const { P } = Interaction
+import Blocker from '../../NativeApp/Blocker'
+import { Interaction } from '@project-r/styleguide'
 
 const AccountBox = ({ children }) => {
   return <Box style={{ padding: 14, marginBottom: 20 }}>{children}</Box>
@@ -53,6 +51,10 @@ const Memberships = ({
       loading={loading}
       error={error}
       render={() => {
+        const BlockerMessage = (
+          <Interaction.P>{t('account/ios/box')}</Interaction.P>
+        )
+
         return (
           <>
             {hasAccessGrants && !hasActiveMemberships && (
@@ -65,22 +67,20 @@ const Memberships = ({
                 <UserGuidance />
               </AccountBox>
             )}
-            {inNativeIOSApp && (
-              <AccountBox>
-                <P>{t('account/ios/box')}</P>
-              </AccountBox>
-            )}
-
-            {!inNativeIOSApp && <MembershipList highlightId={query.id} />}
-
-            {!inNativeIOSApp && paymentMethodCompany && (
-              <AccountSection
-                id='payment'
-                title={t('memberships/title/payment')}
-              >
-                <PaymentSources company={paymentMethodCompany} query={query} />
-              </AccountSection>
-            )}
+            <Blocker message={BlockerMessage}>
+              {!inNativeIOSApp && <MembershipList highlightId={query.id} />}
+              {!inNativeIOSApp && paymentMethodCompany && (
+                <AccountSection
+                  id='payment'
+                  title={t('memberships/title/payment')}
+                >
+                  <PaymentSources
+                    company={paymentMethodCompany}
+                    query={query}
+                  />
+                </AccountSection>
+              )}
+            </Blocker>
           </>
         )
       }}
