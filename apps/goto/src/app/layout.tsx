@@ -1,5 +1,8 @@
 import { Metadata } from 'next'
 
+import { ApolloWrapper } from 'src/lib/apollo/provider'
+import Auth from './auth'
+
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -11,14 +14,20 @@ export const metadata: Metadata = {
   },
 }
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+type RootLayoutProps = { children: React.ReactNode }
+
+function RootLayout(props: RootLayoutProps) {
+  const { children } = props
+
   return (
     <html suppressHydrationWarning>
-      <body>{children}</body>
+      <body>
+        <ApolloWrapper>
+          <Auth>{children}</Auth>
+        </ApolloWrapper>
+      </body>
     </html>
   )
 }
+
+export default RootLayout

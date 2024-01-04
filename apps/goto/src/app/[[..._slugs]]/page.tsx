@@ -18,7 +18,7 @@ const applySearchParams = (
   searchParams: PageProps['searchParams'],
 ) => {
   Object.keys(searchParams)
-    .filter((key) => key !== '_slugs')
+    .filter((key) => !['_slug', '_goto_token'].includes(key))
     .forEach((key) => {
       const value = searchParams[key]
 
