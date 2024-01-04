@@ -1,4 +1,6 @@
-import Goto from 'src/app/goto'
+import Splash from '../splash'
+import Authorize from '../authorize'
+import Goto from '../goto'
 
 /**
  * [Page] searchParams returns a plain JavaScript object and not a URLSearchParams instance.
@@ -58,5 +60,11 @@ export default function Page({ params, searchParams }: PageProps) {
   // Apply searchParams to url
   applySearchParams(url, searchParams)
 
-  return <Goto url={url.toString()} />
+  return (
+    <Splash>
+      <Authorize>
+        <Goto url={url.toString()} />
+      </Authorize>
+    </Splash>
+  )
 }
