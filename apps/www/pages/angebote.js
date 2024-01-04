@@ -1,7 +1,7 @@
 import { Component } from 'react'
 import { withRouter } from 'next/router'
 
-import { Interaction, NarrowContainer } from '@project-r/styleguide'
+import { NarrowContainer } from '@project-r/styleguide'
 
 import { CROWDFUNDING_PLEDGE } from '../lib/constants'
 
