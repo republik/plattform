@@ -5,9 +5,9 @@ import PropTypes from 'prop-types'
 import { GOTO_BASE_URL } from '../../lib/constants'
 import { useInNativeApp } from '../../lib/withInNativeApp'
 import Box from '../Frame/Box'
-import { useMe } from '../../../admin/lib/useMe'
 import { useEffect, useState } from 'react'
 import { gql, useLazyQuery } from '@apollo/client'
+import { useMe } from '../../lib/context/MeContext'
 
 const query = gql`
   query NativeAppBlockerToken {
