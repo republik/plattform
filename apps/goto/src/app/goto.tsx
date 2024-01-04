@@ -46,7 +46,9 @@ export default function Goto(props: GotoProps) {
         <h1 className='text-2xl md:text-3xl font-bold'>
           Sie werden weitergeleitet…
         </h1>
-        <p className='text-xs font-mono italic text-gray-600'>{props.url}</p>
+        <p className='text-xs font-mono italic text-gray-600 break-all'>
+          {props.url}
+        </p>
         <div className='w-full h-2 bg-gray-200 rounded-full'>
           <div
             className='h-full bg-gray-700 rounded-full'
