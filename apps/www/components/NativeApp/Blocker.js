@@ -5,12 +5,43 @@ import PropTypes from 'prop-types'
 import { GOTO_BASE_URL } from '../../lib/constants'
 import { useInNativeApp } from '../../lib/withInNativeApp'
 import Box from '../Frame/Box'
+import { useMe } from '../../../admin/lib/useMe'
+import { useEffect, useState } from 'react'
+import { gql, useLazyQuery } from '@apollo/client'
+
+const query = gql`
+  query NativeAppBlockerToken {
+    me {
+      id
+      token: accessToken(scope: AUTHORIZE_SESSION_GOTO)
+    }
+  }
+`
 
 export const Blocker = ({ message, children }) => {
+  const { me } = useMe()
   const { asPath } = useRouter()
   const { inNativeApp } = useInNativeApp()
+  const [getBlockerToken] = useLazyQuery(query)
+  const [href, setHref] = useState(new URL(asPath, GOTO_BASE_URL).toString())
 
-  const href = new URL(asPath, GOTO_BASE_URL).toString()
+  useEffect(() => {
+    if (inNativeApp && me) {
+      getBlockerToken()
+        .then(({ data }) => {
+          const token = data?.me?.token
+
+          if (token) {
+            const url = new URL(asPath, GOTO_BASE_URL)
+
+            url.searchParams.set('_goto_token', token)
+
+            setHref(url.toString())
+          }
+        })
+        .catch((e) => console.warn('query NativeAppBlockerToken failed', e))
+    }
+  }, [inNativeApp, me])
 
   if (inNativeApp) {
     return (
@@ -21,7 +52,9 @@ export const Blocker = ({ message, children }) => {
           Im Browser fortfahren
         </Button>
         <HR />
-        <Interaction.P>href: {href}</Interaction.P>
+        <Interaction.P style={{ overflowWrap: 'break-word' }}>
+          href: {href}
+        </Interaction.P>
       </Box>
     )
   }
