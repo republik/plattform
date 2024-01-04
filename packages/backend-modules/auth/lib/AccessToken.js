@@ -56,6 +56,12 @@ const scopeConfigs = {
     ttlDays: 5,
     expireAtFormat: 'YYYY-MM-DDTHH:mm:ss.SSSZZ',
   },
+  AUTHORIZE_SESSION_GOTO: {
+    exposeFields: ['email'],
+    authorizeSession: true,
+    ttlDays: 1,
+    expireAtFormat: 'YYYY-MM-DDTHH:mm:ss.SSSZZ',
+  },
   INVOICE: {
     allowedReqPaths: [
       /^\/invoices\/(.{6})\.pdf?$/,
