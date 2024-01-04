@@ -22,24 +22,27 @@ export const Blocker = ({ message, children }) => {
   const { me } = useMe()
   const { asPath } = useRouter()
   const { inNativeApp } = useInNativeApp()
-  const [getBlockerToken] = useLazyQuery(query)
+  const [getBlockerToken] = useLazyQuery(query, { fetchPolicy: 'network-only' })
   const [href, setHref] = useState(new URL(asPath, GOTO_BASE_URL).toString())
+
+  const handleBlockerToken = () =>
+    getBlockerToken()
+      .then(({ data }) => {
+        const token = data?.me?.token
+
+        if (token) {
+          const url = new URL(asPath, GOTO_BASE_URL)
+
+          url.searchParams.set('_goto_token', token)
+
+          setHref(url.toString())
+        }
+      })
+      .catch((e) => console.warn('query NativeAppBlockerToken failed', e))
 
   useEffect(() => {
     if (inNativeApp && me) {
-      getBlockerToken()
-        .then(({ data }) => {
-          const token = data?.me?.token
-
-          if (token) {
-            const url = new URL(asPath, GOTO_BASE_URL)
-
-            url.searchParams.set('_goto_token', token)
-
-            setHref(url.toString())
-          }
-        })
-        .catch((e) => console.warn('query NativeAppBlockerToken failed', e))
+      handleBlockerToken()
     }
   }, [inNativeApp, me])
 
@@ -48,7 +51,12 @@ export const Blocker = ({ message, children }) => {
       <Box style={{ padding: 14, marginBottom: 20 }}>
         {message}
         {!!message && <HR />}
-        <Button href={href} primary target='_blank'>
+        <Button
+          primary
+          href={href}
+          target='_blank'
+          onClick={() => handleBlockerToken()}
+        >
           Im Browser fortfahren
         </Button>
         <HR />
