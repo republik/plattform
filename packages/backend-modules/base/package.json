@@ -43,7 +43,8 @@
     "graphql-subscriptions": "^2.0.0",
     "helmet": "^3.22.0",
     "pogi": "^2.11.1",
-    "redis": "^3.0.2"
+    "redis": "^3.0.2",
+    "subscriptions-transport-ws": "^0.9.16"
   },
   "devDependencies": {
     "@orbiting/backend-modules-types": "*",

@@ -1,5 +1,7 @@
 const { ApolloServer } = require('apollo-server-express')
 const { makeExecutableSchema } = require('@graphql-tools/schema')
+const { SubscriptionServer } = require('subscriptions-transport-ws')
+const { execute, subscribe } = require('graphql')
 
 const cookie = require('cookie')
 const cookieParser = require('cookie-parser')
@@ -127,6 +129,20 @@ module.exports = async (
       return response
     },
   })
+
+  // setup websocket server
+  SubscriptionServer.create(
+    {
+      execute: execute,
+      subscribe: subscribe,
+      onConnect: apolloServer.onConnect,
+      onDisconnect: apolloServer.onDisconnect,
+    },
+    {
+      server: httpServer,
+      path: apolloServer.graphqlPath,
+    },
+  )
 
   await apolloServer.start()
 
