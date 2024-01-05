@@ -13,7 +13,7 @@ const { NODE_ENV, WS_KEEPALIVE_INTERVAL } = process.env
 
 const documentApiKeyScheme = 'DocumentApiKey'
 
-module.exports = (
+module.exports = async (
   server,
   httpServer,
   pgdb,
@@ -128,6 +128,8 @@ module.exports = (
     },
   })
 
+  await apolloServer.start()
+
   apolloServer.applyMiddleware({
     app: server,
     cors: false,
@@ -135,5 +137,7 @@ module.exports = (
       limit: '128mb',
     },
   })
-  apolloServer.installSubscriptionHandlers(httpServer)
+
+  // TODO: setup subscriptions
+  // apolloServer.installSubscriptionHandlers(httpServer)
 }
