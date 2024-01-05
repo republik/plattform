@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "@elastic/elasticsearch": "7.13.0",
-    "@graphql-tools/schema": "^10.0.0",
+    "@graphql-tools/schema": "^10.0.2",
     "apollo-modules-node": "*",
     "apollo-server": "^3.13.0",
     "apollo-server-core": "^3.13.0",

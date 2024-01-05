@@ -133,6 +133,7 @@ module.exports = async (
   // setup websocket server
   SubscriptionServer.create(
     {
+      schema: executableSchema,
       execute: execute,
       subscribe: subscribe,
       onConnect: apolloServer.onConnect,
