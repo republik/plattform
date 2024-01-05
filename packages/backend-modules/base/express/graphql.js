@@ -54,6 +54,44 @@ module.exports = async (
     return context
   }
 
+  const webSocketOnConnect = async (connectionParams, websocket) => {
+    try {
+      // apollo-fetch used in tests sends cookie on the connectionParams
+      const cookiesRaw =
+        NODE_ENV === 'development' && connectionParams.cookies
+          ? connectionParams.cookies
+          : websocket.upgradeReq.headers.cookie
+      if (!cookiesRaw) {
+        return createContext({ scope: 'socket' })
+      }
+      const cookies = cookie.parse(cookiesRaw)
+      const authCookie = cookies[COOKIE_NAME]
+      const sid =
+        authCookie &&
+        cookieParser.signedCookie(authCookie, process.env.SESSION_SECRET)
+      const session = sid && (await pgdb.public.sessions.findOne({ sid }))
+      if (
+        session &&
+        session.sess &&
+        session.sess.passport &&
+        session.sess.passport.user
+      ) {
+        const user = await pgdb.public.users.findOne({
+          id: session.sess.passport.user,
+        })
+        return createContext({
+          scope: 'socket',
+          user: transformUser(user),
+        })
+      }
+      return createContext({ scope: 'socket' })
+    } catch (e) {
+      console.error('error in subscriptions.onConnect', e)
+      // throwing inside onConnect disconnects the client
+      throw new Error('error in subscriptions.onConnect')
+    }
+  }
+
   const apolloServer = new ApolloServer({
     schema: executableSchema,
     context: ({ req, res, connection }) =>
@@ -65,43 +103,7 @@ module.exports = async (
     playground: false, // see ./graphiql.js
     tracing: NODE_ENV === 'development',
     subscriptions: {
-      onConnect: async (connectionParams, websocket) => {
-        try {
-          // apollo-fetch used in tests sends cookie on the connectionParams
-          const cookiesRaw =
-            NODE_ENV === 'development' && connectionParams.cookies
-              ? connectionParams.cookies
-              : websocket.upgradeReq.headers.cookie
-          if (!cookiesRaw) {
-            return createContext({ scope: 'socket' })
-          }
-          const cookies = cookie.parse(cookiesRaw)
-          const authCookie = cookies[COOKIE_NAME]
-          const sid =
-            authCookie &&
-            cookieParser.signedCookie(authCookie, process.env.SESSION_SECRET)
-          const session = sid && (await pgdb.public.sessions.findOne({ sid }))
-          if (
-            session &&
-            session.sess &&
-            session.sess.passport &&
-            session.sess.passport.user
-          ) {
-            const user = await pgdb.public.users.findOne({
-              id: session.sess.passport.user,
-            })
-            return createContext({
-              scope: 'socket',
-              user: transformUser(user),
-            })
-          }
-          return createContext({ scope: 'socket' })
-        } catch (e) {
-          console.error('error in subscriptions.onConnect', e)
-          // throwing inside onConnect disconnects the client
-          throw new Error('error in subscriptions.onConnect')
-        }
-      },
+      onConnect: webSocketOnConnect,
       keepAlive: WS_KEEPALIVE_INTERVAL || 40000,
     },
     formatError: (error) => {
@@ -136,8 +138,7 @@ module.exports = async (
       schema: executableSchema,
       execute: execute,
       subscribe: subscribe,
-      onConnect: apolloServer.onConnect,
-      onDisconnect: apolloServer.onDisconnect,
+      onConnect: webSocketOnConnect,
     },
     {
       server: httpServer,
