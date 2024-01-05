@@ -40,7 +40,7 @@
     "express": "^4.16.3",
     "graphql": "^15.3.0",
     "graphql-redis-subscriptions": "^2.2.1",
-    "graphql-subscriptions": "^1.0.0",
+    "graphql-subscriptions": "^2.0.0",
     "helmet": "^3.22.0",
     "pogi": "^2.11.1",
     "redis": "^3.0.2"
