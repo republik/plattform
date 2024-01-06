@@ -151,7 +151,7 @@ class PaymentSources extends Component {
   }
 
   render() {
-    const { t, me } = this.props
+    const { t, me, methods } = this.props
     const { values, errors, dirty, loading, addingSource, remoteError } =
       this.state
 
@@ -171,7 +171,7 @@ class PaymentSources extends Component {
             id: me.id,
           }}
           context='DEFAULT_SOURCE'
-          allowedMethods={DatatransPaymentMethods}
+          allowedMethods={methods}
           keepPaymentSource={true}
           onChange={(fields) => {
             this.setState((state) => {

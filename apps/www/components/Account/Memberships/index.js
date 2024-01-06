@@ -32,6 +32,7 @@ const Memberships = ({
   hasActiveMemberships,
   hasAccessGrants,
   paymentMethodCompany,
+  paymentMethods,
 }) => {
   const { query } = useRouter()
   const { inNativeIOSApp } = useInNativeApp()
@@ -69,13 +70,14 @@ const Memberships = ({
             )}
             <Blocker message={BlockerMessage}>
               {!inNativeIOSApp && <MembershipList highlightId={query.id} />}
-              {!inNativeIOSApp && paymentMethodCompany && (
+              {!inNativeIOSApp && paymentMethods && (
                 <AccountSection
                   id='payment'
                   title={t('memberships/title/payment')}
                 >
                   <PaymentSources
                     company={paymentMethodCompany}
+                    methods={paymentMethods}
                     query={query}
                   />
                 </AccountSection>
@@ -116,6 +118,9 @@ export default compose(
 
       const paymentMethodCompany =
         autoPayMembership && autoPayMembership.pledge.package.company
+      const paymentMethods =
+        autoPayMembership && autoPayMembership.pledge.package.paymentMethods
+
       return {
         loading: data.loading,
         error: data.error,
@@ -123,6 +128,7 @@ export default compose(
         hasActiveMemberships,
         hasAccessGrants,
         paymentMethodCompany,
+        paymentMethods,
       }
     },
   }),
