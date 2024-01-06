@@ -50,7 +50,7 @@ export const Blocker = ({ message, children }) => {
     return (
       <Box style={{ padding: 14, marginBottom: 20 }}>
         {message}
-        {!!message && <HR />}
+        {!!message && <br />}
         <Button
           primary
           href={href}
@@ -59,10 +59,6 @@ export const Blocker = ({ message, children }) => {
         >
           Im Browser fortfahren
         </Button>
-        <HR />
-        <Interaction.P style={{ overflowWrap: 'break-word' }}>
-          href: {href}
-        </Interaction.P>
       </Box>
     )
   }

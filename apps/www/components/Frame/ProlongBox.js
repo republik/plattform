@@ -13,7 +13,6 @@ import {
 
 import { css } from 'glamor'
 
-import TokenPackageLink from '../Link/TokenPackage'
 import { useInNativeApp } from '../../lib/withInNativeApp'
 import { timeFormat } from '../../lib/utils/format'
 import Link from 'next/link'
@@ -113,16 +112,13 @@ const ProlongBox = ({ t, prolongBeforeDate, membership }) => {
       '',
     )
 
-    const link = (membership.canProlong && (
-      <TokenPackageLink key='link' params={{ package: 'PROLONG' }}>
-        <Editorial.A {...styleTextColor}>
-          {t.first(prefixTranslationKeys.map((k) => `${k}/linkText`))}
-        </Editorial.A>
-      </TokenPackageLink>
-    )) || (
+    const link = (
       <Link
         key='link'
-        href={{ pathname: `/angebote`, query: { package: 'ABO' } }}
+        href={{
+          pathname: `/angebote`,
+          query: { package: membership.canProlong ? 'PROLONG' : 'ABO' },
+        }}
         passHref
         prefetch={false}
         legacyBehavior
@@ -142,16 +138,12 @@ const ProlongBox = ({ t, prolongBeforeDate, membership }) => {
         <Wrapper>
           <Title>{t.first.elements(prefixTranslationKeys, { link })}</Title>
           {buttonText && membership.canProlong && (
-            <TokenPackageLink key='link' params={{ package: 'PROLONG' }}>
-              <Button style={{ marginTop: 10 }} primary>
-                {buttonText}
-              </Button>
-            </TokenPackageLink>
-          )}
-          {buttonText && !membership.canProlong && (
             <Link
               key='link'
-              href={{ pathname: `/angebote`, query: { package: 'ABO' } }}
+              href={{
+                pathname: `/angebote`,
+                query: { package: membership.canProlong ? 'PROLONG' : 'ABO' },
+              }}
               passHref
               prefetch={false}
               legacyBehavior
