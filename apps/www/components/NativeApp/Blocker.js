@@ -71,8 +71,8 @@ export const Blocker = ({ message, children }) => {
 }
 
 Blocker.propTypes = {
-  message: PropTypes.element,
-  children: PropTypes.element.isRequired,
+  message: PropTypes.node,
+  children: PropTypes.node,
 }
 
 export default Blocker
