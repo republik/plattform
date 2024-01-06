@@ -71,7 +71,7 @@ class PledgePage extends Component {
       <Frame raw>
         <NarrowContainer>
           <Content>
-            <Blocker>
+            <Blocker adhereIOSGuidlines={false}>
               {pledgeId ? (
                 <PledgeReceivePayment
                   crowdfundingName={CROWDFUNDING_PLEDGE}

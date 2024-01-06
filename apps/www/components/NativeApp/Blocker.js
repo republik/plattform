@@ -1,4 +1,4 @@
-import { Button, HR, Interaction } from '@project-r/styleguide'
+import { Button } from '@project-r/styleguide'
 import { useRouter } from 'next/router'
 import PropTypes from 'prop-types'
 
@@ -18,12 +18,24 @@ const query = gql`
   }
 `
 
-export const Blocker = ({ message, children }) => {
+export const Blocker = ({ message, adhereIOSGuidlines = true, children }) => {
   const { me } = useMe()
   const { asPath } = useRouter()
-  const { inNativeApp } = useInNativeApp()
+  const { inNativeApp, inNativeIOSApp } = useInNativeApp()
   const [getBlockerToken] = useLazyQuery(query, { fetchPolicy: 'network-only' })
   const [href, setHref] = useState(new URL(asPath, GOTO_BASE_URL).toString())
+
+  /**
+   * Apps in Apple eco-system may not offer links to external websites for payment, unless
+   * it is a "reader" app and an "External Link Account Entitlement" was requested and
+   * approved. (January 2024)
+   *
+   * To adhere to guidlines, link to external webseite is hidden by default.
+   *
+   * @see https://developer.apple.com/app-store/review/guidelines/
+   * @see https://developer.apple.com/support/reader-apps/
+   */
+  const hideLink = adhereIOSGuidlines && inNativeIOSApp
 
   const handleBlockerToken = () =>
     getBlockerToken()
@@ -41,24 +53,26 @@ export const Blocker = ({ message, children }) => {
       .catch((e) => console.warn('query NativeAppBlockerToken failed', e))
 
   useEffect(() => {
-    if (inNativeApp && me) {
+    if (inNativeApp && !hideLink && me) {
       handleBlockerToken()
     }
-  }, [inNativeApp, me])
+  }, [inNativeApp, hideLink, me])
 
   if (inNativeApp) {
     return (
       <Box style={{ padding: 14, marginBottom: 20 }}>
         {message}
-        {!!message && <br />}
-        <Button
-          primary
-          href={href}
-          target='_blank'
-          onClick={() => handleBlockerToken()}
-        >
-          Im Browser fortfahren
-        </Button>
+        {!!message && !hideLink && <br />}
+        {!hideLink && (
+          <Button
+            primary
+            href={href}
+            target='_blank'
+            onClick={() => handleBlockerToken()}
+          >
+            Im Browser fortfahren
+          </Button>
+        )}
       </Box>
     )
   }
@@ -68,6 +82,7 @@ export const Blocker = ({ message, children }) => {
 
 Blocker.propTypes = {
   message: PropTypes.node,
+  adhereIOSGuidlines: PropTypes.bool,
   children: PropTypes.node,
 }
 
