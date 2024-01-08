@@ -1,0 +1,3 @@
+-- migrate up here: CREATE TABLE...
+CREATE INDEX "postfinancePayments_payment_key" ON "public"."postfinancePayments"("buchungsdatum","valuta","avisierungstext","gutschrift");
+DROP INDEX IF EXISTS "postfinancePayments_buchungsdatum_valuta_avisierungstext_gu_key";
