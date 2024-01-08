@@ -27,6 +27,7 @@ export default function LightSwitch() {
         color: colorScheme.getCSSColor('textSoft'),
         transition: 'all 0.2s ease',
         backgroundColor: 'transparent',
+        maxWidth: 'max-content',
         '&:hover': {
           color: colorScheme.getCSSColor('text'),
           borderRadius: '9999px',

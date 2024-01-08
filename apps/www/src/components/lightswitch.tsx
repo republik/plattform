@@ -22,6 +22,7 @@ export default function LightSwitch() {
         color: 'textSoft',
         transition: 'all 0.2s ease',
         backgroundColor: 'transparent',
+        maxWidth: 'max-content',
         '&:hover': {
           borderRadius: '9999px',
           backgroundColor: 'rgba(255,255,255,0.05)',
