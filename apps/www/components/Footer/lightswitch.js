@@ -75,7 +75,7 @@ export default function LightSwitch() {
           role='radio'
           aria-checked={currentTheme === theme}
         >
-          <Icon />
+          <Icon aria-description={`Theme: ${currentTheme}`} />
         </button>
       ))}
     </div>
