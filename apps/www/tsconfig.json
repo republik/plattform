@@ -19,8 +19,7 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    ".next/types/**/*.ts",
-    "components/Footer/lightswitch.js"
+    ".next/types/**/*.ts"
   ],
   "exclude": [
     "node_modules"
