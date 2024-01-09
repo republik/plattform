@@ -1,0 +1,6 @@
+mutation AcknowledgeCTA($id: ID!, $response: JSON) {
+  acknowledgeCallToAction(id: $id, response: $response) {
+    id
+    acknowledgedAt
+  }
+}

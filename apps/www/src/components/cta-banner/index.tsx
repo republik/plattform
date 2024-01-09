@@ -1,11 +1,11 @@
-import { CALL_TO_ACTIONS_QUERY } from '@app/graphql/republik-api/cta-banner.query'
 import { getClient } from '@app/lib/apollo/client'
 import { CTARenderer } from './cta-renderer'
+import { MyCallToActionsDocument } from '@app/graphql/republik-api/gql/graphql'
 
 export async function CTABanner() {
   const client = await getClient()
   const { data } = await client.query({
-    query: CALL_TO_ACTIONS_QUERY,
+    query: MyCallToActionsDocument,
   })
 
   const ctas =

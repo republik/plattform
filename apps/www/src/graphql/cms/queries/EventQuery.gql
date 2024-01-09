@@ -1,0 +1,5 @@
+query Event($slug: String) {
+  event(filter: { slug: { eq: $slug } }) {
+    ...EventRecordFields
+  }
+}

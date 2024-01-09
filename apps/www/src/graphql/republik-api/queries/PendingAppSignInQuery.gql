@@ -1,0 +1,8 @@
+query PendingAppSignIn {
+  pendingAppSignIn {
+    title
+    body
+    verificationUrl
+    expiresAt
+  }
+}

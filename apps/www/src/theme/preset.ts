@@ -96,6 +96,9 @@ export const presetRepublik = definePreset({
         lineHeights: {
           1: { value: 1 },
         },
+        animations: {
+          spin: { value: 'spin 1s linear infinite' },
+        },
       },
       semanticTokens: {
         colors: {
@@ -190,6 +193,8 @@ export const presetRepublik = definePreset({
           pageNav: { value: '2.5rem' },
         },
         spacing: {
+          '4-8': { value: { base: '1rem', md: '2rem' } },
+          '8-16': { value: { base: '2rem', md: '4rem' } },
           '16-32': { value: { base: '4rem', md: '8rem' } },
           '32-64': { value: { base: '8rem', md: '16rem' } },
           header: {
@@ -427,6 +432,10 @@ export const presetRepublik = definePreset({
       radixCollapsibleSlideUp: {
         from: { height: 'var(--radix-collapsible-content-height)' },
         to: { height: 0 },
+      },
+      spin: {
+        from: { transform: 'rotate(0deg)' },
+        to: { transform: 'rotate(360deg)' },
       },
     },
   },
