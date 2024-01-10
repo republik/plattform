@@ -40,6 +40,7 @@ const pledgeQuery = gql`
         firstName
         lastName
         email
+        verified
       }
       shippingAddress {
         name
@@ -305,45 +306,48 @@ class PledgeReceivePayment extends Component {
         pspPayload,
       })
       .then(() => {
-        if (!pledge || (!pledge.user && !me)) {
-          gotoMerci({
-            id: pledgeId,
-          })
+        // pledge might be empty if not in draft-mode anymore (e.g. paied)
+        // just goto merci
+        if (!me && !pledge?.user) {
+          gotoMerci({ id: pledgeId })
           return
         }
+
         const baseQuery = {
+          package: pledge.package.name,
           id: pledgeId,
         }
-        if (pledge.package) {
-          baseQuery.package = pledge.package.name
+
+        // if user logged in, goto merci at once
+        if (me) {
+          gotoMerci(baseQuery)
+          return
         }
-        if (!me) {
-          if (baseQuery.package === 'PROLONG') {
+
+        // if pledge user is verified, goto merci at once
+        if (pledge.user.verified) {
+          gotoMerci({ ...baseQuery, email: pledge.user.email })
+          return
+        }
+
+        // if user is not verified (and not logged in)
+        // call signIn mutation and then forward to merci with SignInResponse
+        this.props
+          .signIn(pledge.user.email, 'pledge')
+          .then(({ data: { signIn } }) =>
             gotoMerci({
               ...baseQuery,
               email: pledge.user.email,
-            })
-            return
-          }
-          this.props
-            .signIn(pledge.user.email, 'pledge')
-            .then(({ data: { signIn } }) =>
-              gotoMerci({
-                ...baseQuery,
-                email: pledge.user.email,
-                ...encodeSignInResponseQuery(signIn),
-              }),
-            )
-            .catch((error) =>
-              gotoMerci({
-                ...baseQuery,
-                email: pledge.user.email,
-                signInError: errorToString(error),
-              }),
-            )
-        } else {
-          gotoMerci(baseQuery)
-        }
+              ...encodeSignInResponseQuery(signIn),
+            }),
+          )
+          .catch((error) =>
+            gotoMerci({
+              ...baseQuery,
+              email: pledge.user.email,
+              signInError: errorToString(error),
+            }),
+          )
       })
       .catch((error) => {
         this.setState(() => ({

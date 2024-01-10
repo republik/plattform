@@ -577,33 +577,36 @@ class Submit extends Component {
         if (customMe && customMe.isListed) {
           baseQuery.statement = customMe.id
         }
-        if (!me) {
-          if (customMe || packageName === 'PROLONG') {
+
+        if (me) {
+          gotoMerci(baseQuery)
+          return
+        }
+
+        if (customMe) {
+          gotoMerci({
+            ...baseQuery,
+            email,
+          })
+          return
+        }
+
+        this.props
+          .signIn(email, 'pledge')
+          .then(({ data: { signIn } }) =>
             gotoMerci({
               ...baseQuery,
               email,
-            })
-            return
-          }
-          this.props
-            .signIn(email, 'pledge')
-            .then(({ data: { signIn } }) =>
-              gotoMerci({
-                ...baseQuery,
-                email: email,
-                ...encodeSignInResponseQuery(signIn),
-              }),
-            )
-            .catch((error) =>
-              gotoMerci({
-                ...baseQuery,
-                email: email,
-                signInError: errorToString(error),
-              }),
-            )
-        } else {
-          gotoMerci(baseQuery)
-        }
+              ...encodeSignInResponseQuery(signIn),
+            }),
+          )
+          .catch((error) =>
+            gotoMerci({
+              ...baseQuery,
+              email,
+              signInError: errorToString(error),
+            }),
+          )
       })
       .catch((error) => {
         this.setState(() => ({
