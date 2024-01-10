@@ -17,8 +17,8 @@ import belongingsQuery from '../belongingsQuery'
 import MembershipList from '../Memberships/List'
 import PaymentSources from '../PaymentSources'
 import AccountSection from '../AccountSection'
-import Blocker from '../../NativeApp/Blocker'
 import { Interaction } from '@project-r/styleguide'
+import GotoLinkBlocker from '../../NativeApp/GotoLinkBlocker'
 
 const AccountBox = ({ children }) => {
   return <Box style={{ padding: 14, marginBottom: 20 }}>{children}</Box>
@@ -35,7 +35,6 @@ const Memberships = ({
   paymentMethods,
 }) => {
   const { query } = useRouter()
-  const { inNativeIOSApp } = useInNativeApp()
 
   useEffect(() => {
     if (window.location.hash.substr(1).length > 0) {
@@ -52,8 +51,10 @@ const Memberships = ({
       loading={loading}
       error={error}
       render={() => {
-        const BlockerMessage = (
-          <Interaction.P>{t('account/ios/box')}</Interaction.P>
+        const GotoMessage = (
+          <Interaction.P>
+            Ihre Zahlungsart können Sie in der App nicht verwalten.
+          </Interaction.P>
         )
 
         return (
@@ -68,21 +69,21 @@ const Memberships = ({
                 <UserGuidance />
               </AccountBox>
             )}
-            <Blocker message={BlockerMessage}>
-              {!inNativeIOSApp && <MembershipList highlightId={query.id} />}
-              {!inNativeIOSApp && paymentMethods && (
-                <AccountSection
-                  id='payment'
-                  title={t('memberships/title/payment')}
-                >
+            <MembershipList highlightId={query.id} />
+            {paymentMethods && (
+              <AccountSection
+                id='payment'
+                title={t('memberships/title/payment')}
+              >
+                <GotoLinkBlocker message={GotoMessage}>
                   <PaymentSources
                     company={paymentMethodCompany}
                     methods={paymentMethods}
                     query={query}
                   />
-                </AccountSection>
-              )}
-            </Blocker>
+                </GotoLinkBlocker>
+              </AccountSection>
+            )}
           </>
         )
       }}

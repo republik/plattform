@@ -11,7 +11,6 @@ import PledgeReceivePayment from '../components/Pledge/ReceivePayment'
 
 import { PSP_PLEDGE_ID_QUERY_KEYS } from '../components/Payment/constants'
 import { withDefaultSSR } from '../lib/apollo/helpers'
-import Blocker from '../components/NativeApp/Blocker'
 
 class PledgePage extends Component {
   render() {
@@ -71,20 +70,18 @@ class PledgePage extends Component {
       <Frame raw>
         <NarrowContainer>
           <Content>
-            <Blocker adhereIOSGuidlines={false}>
-              {pledgeId ? (
-                <PledgeReceivePayment
-                  crowdfundingName={CROWDFUNDING_PLEDGE}
-                  pledgeId={pledgeId}
-                  query={query}
-                />
-              ) : (
-                <PledgeForm
-                  crowdfundingName={CROWDFUNDING_PLEDGE}
-                  query={query}
-                />
-              )}
-            </Blocker>
+            {pledgeId ? (
+              <PledgeReceivePayment
+                crowdfundingName={CROWDFUNDING_PLEDGE}
+                pledgeId={pledgeId}
+                query={query}
+              />
+            ) : (
+              <PledgeForm
+                crowdfundingName={CROWDFUNDING_PLEDGE}
+                query={query}
+              />
+            )}
           </Content>
         </NarrowContainer>
       </Frame>

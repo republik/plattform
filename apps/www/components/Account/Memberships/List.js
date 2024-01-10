@@ -10,6 +10,7 @@ import query from '../belongingsQuery'
 import Manage from './Manage'
 import Box from '../../Frame/Box'
 import AccountSection from '../AccountSection'
+import GotoLinkBlocker from '../../NativeApp/GotoLinkBlocker'
 
 const MembershipsList = ({
   memberships,
@@ -29,6 +30,13 @@ const MembershipsList = ({
           return null
         }
 
+        const GotoMessage = (
+          <Interaction.P>
+            Ihre Mitgliedschaften und Abonnements können Sie in der App nicht
+            verwalten.
+          </Interaction.P>
+        )
+
         return (
           <>
             <AccountSection
@@ -37,20 +45,22 @@ const MembershipsList = ({
                 count: memberships.length,
               })}
             >
-              {!activeMembership && (
-                <Box style={{ padding: '15px 20px', margin: '1em 0em' }}>
-                  <Interaction.P>{t('memberships/noActive')}</Interaction.P>
-                </Box>
-              )}
-              {memberships.map((membership) => (
-                <Manage
-                  key={membership.id}
-                  membership={membership}
-                  highlighted={highlightId === membership.pledge.id}
-                  activeMembership={activeMembership}
-                  hasWaitingMemberships={hasWaitingMemberships}
-                />
-              ))}
+              <GotoLinkBlocker message={GotoMessage}>
+                {!activeMembership && (
+                  <Box style={{ padding: '15px 20px', margin: '1em 0em' }}>
+                    <Interaction.P>{t('memberships/noActive')}</Interaction.P>
+                  </Box>
+                )}
+                {memberships.map((membership) => (
+                  <Manage
+                    key={membership.id}
+                    membership={membership}
+                    highlighted={highlightId === membership.pledge.id}
+                    activeMembership={activeMembership}
+                    hasWaitingMemberships={hasWaitingMemberships}
+                  />
+                ))}
+              </GotoLinkBlocker>
             </AccountSection>
           </>
         )

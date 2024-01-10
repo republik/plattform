@@ -30,6 +30,7 @@ import CustomizePackage, {
 import Link from 'next/link'
 
 import ErrorMessage from '../ErrorMessage'
+import withInNativeApp from '../../lib/withInNativeApp'
 
 const { H1, P } = Interaction
 
@@ -279,6 +280,7 @@ class Pledge extends Component {
       statement,
       query,
       packages,
+      inNativeApp,
     } = this.props
 
     const queryGroup = query.group
@@ -449,7 +451,7 @@ class Pledge extends Component {
                     />
                   )}
                 </div>
-                {pkg && (
+                {pkg && !inNativeApp && (
                   <Submit
                     query={query}
                     customMe={customMe}
@@ -666,6 +668,7 @@ const PledgeWithQueries = compose(
   withT,
   withMe,
   withRouter,
+  withInNativeApp,
 )(Pledge)
 
 export default PledgeWithQueries
