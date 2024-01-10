@@ -112,6 +112,8 @@ enum AccessTokenScope {
   CUSTOM_PLEDGE
   "A token to access me.customPackages (TTL: 120 days)"
   CUSTOM_PLEDGE_EXTENDED
+  "A token to submit any pledge (TTL: 90 days)"
+  SUBMIT_PLEDGE
   "A token to use mutation claimCard (TTL: 90 days)"
   CLAIM_CARD
   "A token to authorize a session (TTL: 5 days)"

@@ -46,6 +46,19 @@ const scopeConfigs = {
     pledgePackages: ['PROLONG'],
     ttlDays: 120,
   },
+  SUBMIT_PLEDGE: {
+    exposeFields: [
+      'email',
+      'firstName',
+      'lastName',
+      'address',
+      'hasAddress',
+      'paymentSources',
+      'customPackages',
+    ],
+    pledgePackages: ['*'],
+    ttlDays: 90,
+  },
   CLAIM_CARD: {
     exposeFields: ['email', 'cards'],
     ttlDays: 90,
@@ -187,12 +200,8 @@ const isFieldExposed = (user, field) =>
 
 const ensureCanPledgePackage = (user, packageName) => {
   if (
-    !(
-      user &&
-      user._scopeConfig &&
-      user._scopeConfig.pledgePackages &&
-      user._scopeConfig.pledgePackages.includes(packageName)
-    )
+    !user?._scopeConfig?.pledgePackages?.includes(packageName) &&
+    !user?._scopeConfig?.pledgePackages?.includes('*')
   ) {
     throw new MissingPackageGrant(null, { package: packageName })
   }
@@ -209,6 +218,7 @@ const isReqPathAllowed = (user, req) =>
 module.exports = {
   generateForUser,
   generateForUserByUser,
+  getValidResolvedToken,
   getUserByAccessToken,
   isFieldExposed,
   ensureCanPledgePackage,
