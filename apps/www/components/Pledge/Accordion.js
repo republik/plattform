@@ -5,6 +5,7 @@ import { graphql } from '@apollo/client/react/hoc'
 import { gql } from '@apollo/client'
 import { nest } from 'd3-collection'
 import { min, ascending } from 'd3-array'
+import compose from 'lodash/flowRight'
 
 import withT from '../../lib/withT'
 
@@ -17,6 +18,7 @@ import {
 } from '@project-r/styleguide'
 import Link from 'next/link'
 import { IconChevronRight } from '@republik/icons'
+import { withRouter } from 'next/router'
 
 const styles = {
   packageHeader: css({
@@ -199,7 +201,7 @@ class Accordion extends Component {
     }
   }
   render() {
-    const { loading, error, compact } = this.props
+    const { loading, error, compact, router } = this.props
     if (loading || error) {
       return (
         <Loader loading={loading} error={error} style={{ minHeight: 400 }} />
@@ -236,7 +238,10 @@ class Accordion extends Component {
             const links = [
               group === 'ME' && {
                 pathname: '/angebote',
-                query: { package: 'ABO', userPrice: 1 },
+                query: Object.assign(
+                  { package: 'ABO', userPrice: 1 },
+                  router.query.token && { token: router.query.token },
+                ),
                 text: t('package/ABO/userPrice/teaser'),
               },
             ].filter(Boolean)
@@ -267,7 +272,10 @@ class Accordion extends Component {
               }
               return {
                 pathname: '/angebote',
-                query: { package: pkg.name },
+                query: Object.assign(
+                  { package: pkg.name },
+                  router.query.token && { token: router.query.token },
+                ),
                 name: pkg.name,
                 price,
               }
@@ -281,12 +289,15 @@ class Accordion extends Component {
               if (benefactorIndex !== -1) {
                 pkgItems.splice(benefactorIndex + 1, 0, {
                   pathname: '/angebote',
-                  query: {
-                    package: 'ABO',
-                    userPrice: 1,
-                    price: 14000,
-                    reason: t('marketing/offers/students/reasonTemplate'),
-                  },
+                  query: Object.assign(
+                    {
+                      package: 'ABO',
+                      userPrice: 1,
+                      price: 14000,
+                      reason: t('marketing/offers/students/reasonTemplate'),
+                    },
+                    router.query.token && { token: router.query.token },
+                  ),
                   name: 'students',
                   title: t('marketing/offers/students'),
                   price: 14000,
@@ -368,4 +379,4 @@ const AccordionWithQuery = graphql(query, {
   },
 })(Accordion)
 
-export default withT(AccordionWithQuery)
+export default compose(withRouter, withT)(AccordionWithQuery)

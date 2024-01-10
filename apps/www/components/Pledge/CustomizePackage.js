@@ -539,10 +539,11 @@ class CustomizePackage extends Component {
             <Link
               href={{
                 pathname: '/angebote',
-                query:
-                  pkg.group && pkg.group !== 'ME'
-                    ? { group: pkg.group }
-                    : undefined,
+                query: Object.assign(
+                  {},
+                  pkg.group && pkg.group !== 'ME' && { group: pkg.group },
+                  query.token && { token: query.token },
+                ),
               }}
               passHref
               legacyBehavior

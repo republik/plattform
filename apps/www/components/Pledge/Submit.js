@@ -477,7 +477,7 @@ class Submit extends Component {
   }
 
   payWithDatatrans(pledgeId) {
-    const { t } = this.props
+    const { t, customMe, accessToken } = this.props
     const { values } = this.state
 
     if (values.paymentSource) {
@@ -491,6 +491,10 @@ class Submit extends Component {
             .datatransAuthorize({
               pledgeId,
               sourceId: values.paymentSource,
+              accessToken:
+                customMe && customMe.isUserOfCurrentSession
+                  ? undefined
+                  : accessToken,
             })
             .then(({ data }) => {
               this.pay({
@@ -525,6 +529,10 @@ class Submit extends Component {
           .datatransInit({
             pledgeId,
             method: this.props.selectedPaymentMethod,
+            accessToken:
+              customMe && customMe.isUserOfCurrentSession
+                ? undefined
+                : accessToken,
           })
           .then(({ data }) => {
             this.payment.datatransForm.action = data.datatransInit.authorizeUrl
