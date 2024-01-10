@@ -166,6 +166,15 @@ module.exports = {
     }
     return null
   },
+  verified: (user, args, { user: me }) => {
+    if (
+      Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter']) ||
+      isFieldExposed(user, 'verified')
+    ) {
+      return user._raw.verified
+    }
+    return null
+  },
   phoneNumber: exposeAccessField('phoneNumberAccessRole', 'phoneNumber'),
   phoneNumberNote: exposeAccessField(
     'phoneNumberAccessRole',
