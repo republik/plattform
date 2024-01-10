@@ -49,7 +49,11 @@ const parsePostfinanceExport = async (inputFile, pgdb) => {
   const delimitedFile = inputFile.split(/\r\n/)
 
   const iban = delimitedFile.slice(0, 5).reduce((acc, row) => {
+    console.log('acc', acc)
+    console.log('row', row)
     const parsedRow = row.match(/^Konto:;([A-Z0-9]{5,34})/)
+
+    console.log('parsedRwo', parsedRow)
 
     if (!parsedRow) {
       return acc
@@ -156,9 +160,26 @@ module.exports = async (_, args, { pgdb, req, t, redis }) => {
     return 'input empty. done nothing.'
   }
 
+  const duplicates = []
+
+  paymentsInput.forEach(function (value, index, array) {
+    if (
+      array.indexOf(value, index + 1) !== -1 &&
+      duplicates.indexOf(value) === -1
+    ) {
+      duplicates.push(value)
+    }
+  })
+
+  const existingPayments = await pgdb.public.postfinancePayments.count({
+    or: [
+      { 'avisierungstext in': paymentsInput.flatMap((p) => p.avisierungstext) },
+    ],
+  })
+
+  const possibleDuplicateCount = duplicates.length + existingPayments
+
   // insert into db
-  // this is done outside of transaction because it's
-  // ment to throw on duplicate rows and doesn't change other records
   const numPaymentsBefore = await insertPayments(
     paymentsInput,
     'postfinancePayments',
@@ -177,7 +198,8 @@ importPostfinanceCSV result:
 num new payments: ${numPaymentsAfter - numPaymentsBefore}
 num matched payments: ${numMatchedPayments}
 num updated pledges: ${numUpdatedPledges}
-num payments successfull: ${numPaymentsSuccessful}
+num payments successful: ${numPaymentsSuccessful}
+num possible duplicate payments: ${possibleDuplicateCount}
     `
     console.log(result)
     return result
