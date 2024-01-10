@@ -113,6 +113,7 @@ type InitTransactionProps = {
   createAlias?: boolean
   pledgeId: string
   paymentId: string
+  accessToken?: string
 }
 
 type InitTransactionReturn = {
@@ -128,7 +129,8 @@ export const initTransaction: InitTransaction = async (props) => {
   const l = log.extend('initTransaction')
   l('args %o', props)
 
-  const { refno, amount, method, pledgeId, paymentId, merchant } = props
+  const { refno, amount, method, pledgeId, paymentId, accessToken, merchant } =
+    props
 
   const successUrl = new URL('/angebote', process.env.FRONTEND_BASE_URL)
   successUrl.searchParams.append('status', 'authorized')
@@ -140,11 +142,17 @@ export const initTransaction: InitTransaction = async (props) => {
   errorUrl.searchParams.append('amount', `${amount}`)
   errorUrl.searchParams.append('status', 'error')
   errorUrl.searchParams.append('pledgeId', `${pledgeId}`)
+  if (accessToken) {
+    errorUrl.searchParams.append('token', `${accessToken}`)
+  }
 
   const cancelUrl = new URL('/angebote', process.env.FRONTEND_BASE_URL)
   cancelUrl.searchParams.append('amount', `${amount}`)
   cancelUrl.searchParams.append('status', 'cancel')
   cancelUrl.searchParams.append('pledgeId', `${pledgeId}`)
+  if (accessToken) {
+    cancelUrl.searchParams.append('token', `${accessToken}`)
+  }
 
   const body = JSON.stringify({
     refno,

@@ -1,16 +1,30 @@
 const {
+  getUserByAccessToken,
+} = require('@orbiting/backend-modules-auth/lib/AccessToken')
+const {
   authorizeTransaction,
   getMerchant,
   formatHridAsRefno,
 } = require('../../../lib/helpers')
 
 module.exports = async (_, args, context) => {
-  const { pledgeId, sourceId } = args
-  const { loaders, pgdb, user: me } = context
+  const { pledgeId, sourceId, accessToken } = args
+  const { loaders, pgdb, user } = context
+
+  const me =
+    user ||
+    (accessToken ? await getUserByAccessToken(accessToken, context) : null)
+  if (!me) {
+    throw new Error('user not found')
+  }
 
   const pledge = await loaders.Pledge.byId.load(pledgeId)
   if (!pledge) {
     throw new Error('pledge not found')
+  }
+
+  if (pledge.userId !== me.id) {
+    throw new Error('pledge does not belong to you')
   }
 
   if (pledge.status !== 'DRAFT') {
