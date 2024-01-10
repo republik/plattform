@@ -51,7 +51,9 @@ export async function generateMetadata(
 }
 
 export default async function Page({ searchParams }) {
-  const { data } = await getCMSClient().query({
+  const {
+    data: { hub },
+  } = await getCMSClient().query({
     query: ChallengeAcceptedHubDocument,
     context: {
       fetchOptions: {
@@ -63,22 +65,6 @@ export default async function Page({ searchParams }) {
   })
 
   const me = await getMe()
-
-  const isMember =
-    me?.roles && Array.isArray(me.roles) && me.roles.includes('member')
-
-  const hub: typeof data['hub'] = {
-    ...data.hub,
-    items: data.hub.items.map((item) => {
-      if (item.__typename !== 'EventRecord') {
-        return item
-      }
-      return {
-        ...item,
-        signUpLink: item.membersOnly && isMember ? item.signUpLink : undefined,
-      }
-    }),
-  }
 
   const share = (
     <Share
