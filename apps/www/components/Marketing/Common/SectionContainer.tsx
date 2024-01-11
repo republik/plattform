@@ -1,7 +1,18 @@
 import { css } from 'glamor'
 import { mediaQueries } from '@project-r/styleguide'
+import { ReactNode } from 'react'
 
-export default function SectionContainer({ children, maxWidth, padding }) {
+type SectionContainerProps = {
+  children: ReactNode
+  maxWidth: number
+  padding?: number
+}
+
+export default function SectionContainer({
+  children,
+  maxWidth,
+  padding,
+}: SectionContainerProps) {
   return (
     <div
       {...sectionContainerStyle}

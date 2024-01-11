@@ -1,6 +1,4 @@
-import compose from 'lodash/flowRight'
-import { graphql } from '@apollo/client/react/hoc'
-import { gql } from '@apollo/client'
+import { gql, useQuery } from '@apollo/client'
 import { ColorContextProvider } from '@project-r/styleguide'
 
 import { useInNativeApp } from '../../lib/withInNativeApp'
@@ -14,59 +12,15 @@ import Top from './Top'
 import Carpet from './Carpet'
 import Team from './Team'
 import Reasons from './Reasons'
-import Sections from './Sections'
+import Formats from './Formats'
 import Vision from './Vision'
 import Logo from './Logo'
 import Community from './Community'
 import Pledge from './Pledge'
-import { useMarketingPageQuery } from './graphql/MarketingPageQuery.graphql'
 import SectionContainer from './Common/SectionContainer'
 import ChallengeAcceptedMarketingTeaser from '../ChallengeAccepted/ChallengeAcceptedMarketingTeaser'
 
-const Marketing = ({
-  data: { loading: meLoading, error: meError, meGuidance },
-}) => {
-  const hasActiveMembership = meGuidance && !!meGuidance.activeMembership
-  const { inNativeApp, inNativeIOSApp } = useInNativeApp()
-
-  const { data, loading, error } = useMarketingPageQuery()
-
-  return (
-    <>
-      {!meLoading && meGuidance && !hasActiveMembership && !inNativeIOSApp && (
-        <Box>
-          <MainContainer>
-            <UserGuidance />
-          </MainContainer>
-        </Box>
-      )}
-      {meError && (
-        <ErrorMessage error={meError} style={{ textAlign: 'center' }} />
-      )}
-      <ColorContextProvider colorSchemeKey='dark'>
-        <Top carouselData={data.carousel} />
-      </ColorContextProvider>
-      <Carpet loading={loading} front={data.carpet} />
-      <Reasons inNativeApp={inNativeApp} />
-      {inNativeApp && <MarketingTrialForm />}
-      <SectionContainer maxWidth={'100%'} padding='0'>
-        <ChallengeAcceptedMarketingTeaser />
-      </SectionContainer>
-      <Sections />
-      <Team loading={loading} error={error} employees={data.team} />
-      <Community
-        loading={loading}
-        error={error}
-        featuredComments={data.featuredComments}
-      />
-      <Vision />
-      {inNativeApp ? <MarketingTrialForm /> : <Pledge />}
-      <Logo />
-    </>
-  )
-}
-
-const query = gql`
+const meGuidanceQuery = gql`
   query Marketing {
     meGuidance: me {
       id
@@ -80,4 +34,55 @@ const query = gql`
   }
 `
 
-export default compose(graphql(query))(Marketing)
+const Marketing = ({ data }) => {
+  const {
+    loading: meLoading,
+    error: meError,
+    data: meData,
+  } = useQuery(meGuidanceQuery)
+  const hasActiveMembership = !!meData?.meGuidance?.activeMembership
+  const { inNativeApp, inNativeIOSApp } = useInNativeApp()
+
+  return (
+    <>
+      {!meLoading &&
+        meData?.meGuidance &&
+        !hasActiveMembership &&
+        !inNativeIOSApp && (
+          <Box>
+            <MainContainer>
+              <UserGuidance />
+            </MainContainer>
+          </Box>
+        )}
+      {meError && (
+        <ErrorMessage error={meError} style={{ textAlign: 'center' }} />
+      )}
+      <ColorContextProvider colorSchemeKey='dark'>
+        <Top carouselData={data.carousel} />
+      </ColorContextProvider>
+      <Carpet front={data.carpet} />
+      <Reasons inNativeApp={inNativeApp} reasons={data.reasons} />
+      {inNativeApp && <MarketingTrialForm />}
+      <SectionContainer maxWidth={'100%'} padding='0'>
+        <ChallengeAcceptedMarketingTeaser />
+      </SectionContainer>
+      <Formats
+        formats={data.formats}
+        title={data.sectionFormatsTitle}
+        description={data.sectionFormatsDescription}
+      />
+      <Team
+        employees={data.team}
+        title={data.sectionTeamTitle}
+        description={data.sectionTeamDescription}
+      />
+      <Community featuredComments={data.featuredComments} />
+      <Vision />
+      {inNativeApp ? <MarketingTrialForm /> : <Pledge />}
+      <Logo />
+    </>
+  )
+}
+
+export default Marketing
