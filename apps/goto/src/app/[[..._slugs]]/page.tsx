@@ -20,7 +20,7 @@ const applySearchParams = (
   searchParams: PageProps['searchParams'],
 ) => {
   Object.keys(searchParams)
-    .filter((key) => !['_slug', '_goto_token'].includes(key))
+    .filter((key) => key !== '_slug')
     .forEach((key) => {
       const value = searchParams[key]
 
@@ -62,9 +62,7 @@ export default function Page({ params, searchParams }: PageProps) {
 
   return (
     <Splash>
-      <Authorize>
-        <Goto url={url.toString()} />
-      </Authorize>
+      <Goto url={url.toString()} />
     </Splash>
   )
 }
