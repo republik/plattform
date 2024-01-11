@@ -9,13 +9,23 @@ import { Callout } from 'nextra-theme-docs'
 
 ## Overview
 
-"goto" helps us to force a link in an [App](./app.mdx) to open in a browser.
+"goto" is a simple redirecting service.
+
+It helps us to force a link in an [App](./app.mdx) to open in a browser.
 
 ```mermaid
-graph TD
-    linkClick["User clicks goto.republik.ch/[path + query]"] --> openBrowser("opens in Browser")
-    openBrowser --> parsePathQuery("parses [path + query]")
-    parsePathQuery --> foward("fowards to republik.ch/[path + query]")
+sequenceDiagram
+    autonumber
+
+    participant Browser
+    participant goto
+    participant Magazin
+
+    Browser->>goto:calls goto.republik.ch
+    goto->>goto:builds redirect URL
+    Note right of goto: uses current URL and<br>replaces hostname<br>to point to Magazin
+    goto->>Browser:asks to go to redirect URL
+    Browser->>Magazin:calls redirect URL
 ```
 
 Some destination hostnames maybe registered to open in app (see [Linking](../architecture/linking.md)). To prevent this from happening, we use [`window.location.replace`](https://developer.mozilla.org/en-US/docs/Web/API/Location/replace). A server-side redirect aka. `Location` HTTP header may cause OS to open app.
