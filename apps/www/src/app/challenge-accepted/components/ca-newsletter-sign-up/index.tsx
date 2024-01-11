@@ -1,8 +1,11 @@
 import { ReactNode } from 'react'
 import { getClient } from '@app/lib/apollo/client'
 import { EmailSignUp } from './email-signup'
-import { CA_NEWSLETTER_QUERY } from '@app/graphql/republik-api/newsletter.query'
-import { MeQuery, NewsletterName } from '@app/graphql/republik-api/gql/graphql'
+import {
+  CaNewsletterDocument,
+  MeQuery,
+  NewsletterName,
+} from '@app/graphql/republik-api/gql/graphql'
 
 type CANewsletterSignUpProps = {
   me?: MeQuery['me']
@@ -25,7 +28,7 @@ export async function CANewsletterSignUp({
   id,
 }: CANewsletterSignUpProps) {
   const { data } = await getClient().query({
-    query: CA_NEWSLETTER_QUERY,
+    query: CaNewsletterDocument,
     variables: {
       name: 'CLIMATE',
     },

@@ -18,7 +18,7 @@ To add a new icon, add a `.svg` file into the `lib/svg` folder.
 
 Get the SVG file for the icon you need from [Material Symbols](https://fonts.google.com/icons?icon.set=Material+Symbols).
 
-**Make sure to set the Weight to 300 in the Filters panel before you download it**
+**Make sure to set the Weight to 300 and Optical Size to 48 in the Filters panel before you download it**
 
 ### How to import
 

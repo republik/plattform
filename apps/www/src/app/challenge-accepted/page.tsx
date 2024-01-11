@@ -6,10 +6,6 @@ import { CANewsletterSignUp } from '@app/app/challenge-accepted/components/ca-ne
 import { CollectionFilter } from '@app/app/challenge-accepted/components/collection-filter'
 import CollectionRenderer from '@app/app/challenge-accepted/components/collection-render'
 import Container from '@app/components/container'
-import {
-  CHALLENGE_ACCEPTED_HUB_META_QUERY,
-  CHALLENGE_ACCEPTED_HUB_QUERY,
-} from '@app/graphql/cms/hub.query'
 import { getCMSClient } from '@app/lib/apollo/cms-client'
 import { getMe } from '@app/lib/auth/me'
 import { css } from '@app/styled-system/css'
@@ -18,6 +14,10 @@ import Image from 'next/image'
 import { StructuredText } from 'react-datocms'
 import { Share } from '@app/components/share/share'
 import { IconShare } from '@republik/icons'
+import {
+  ChallengeAcceptedHubDocument,
+  ChallengeAcceptedHubMetaDocument,
+} from '@app/graphql/cms/gql/graphql'
 
 export async function generateMetadata(
   _, // params
@@ -25,7 +25,7 @@ export async function generateMetadata(
 ): Promise<Metadata> {
   const client = getCMSClient()
   const { data } = await client.query({
-    query: CHALLENGE_ACCEPTED_HUB_META_QUERY,
+    query: ChallengeAcceptedHubMetaDocument,
   })
 
   const parentMetadata = await parent
@@ -51,8 +51,10 @@ export async function generateMetadata(
 }
 
 export default async function Page({ searchParams }) {
-  const { data } = await getCMSClient().query({
-    query: CHALLENGE_ACCEPTED_HUB_QUERY,
+  const {
+    data: { hub },
+  } = await getCMSClient().query({
+    query: ChallengeAcceptedHubDocument,
     context: {
       fetchOptions: {
         next: {
@@ -63,22 +65,6 @@ export default async function Page({ searchParams }) {
   })
 
   const me = await getMe()
-
-  const isMember =
-    me?.roles && Array.isArray(me.roles) && me.roles.includes('member')
-
-  const hub: typeof data['hub'] = {
-    ...data.hub,
-    items: data.hub.items.map((item) => {
-      if (item.__typename !== 'EventRecord') {
-        return item
-      }
-      return {
-        ...item,
-        signUpLink: item.membersOnly && isMember ? item.signUpLink : undefined,
-      }
-    }),
-  }
 
   const share = (
     <Share

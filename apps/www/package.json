@@ -8,7 +8,7 @@
   "description": "",
   "main": "server/index.js",
   "scripts": {
-    "dev": "concurrently \"yarn dev:express\" \"yarn codegen --watch\"",
+    "dev": "concurrently \"yarn dev:express\" \"yarn gql:types --watch\"",
     "dev:express": "cross-env NODE_ENV=development nodemon --watch server --watch .env --watch next.config.js server/index.js",
     "start": "node server/index.js",
     "build": "panda codegen && next build",
@@ -22,7 +22,8 @@
     "translations-vote": "NODE_OPTIONS='-r dotenv/config' gsheets --key=1oBlTiPKIon4p5aek5vEXluWMn0TRwrk-JftznGjTmdQ --title=live --pretty --out components/Vote/translations-vote.json",
     "analyze": "ANALYZE=true next build",
     "prepare": "panda codegen",
-    "codegen": "graphql-codegen --config codegen.ts"
+    "gql:types": "graphql-codegen --config graphql/configs/codegen-dev.ts",
+    "gql:schema": "graphql-codegen --config graphql/configs/codegen-schema.ts"
   },
   "repository": {
     "type": "git",
@@ -39,9 +40,10 @@
     "@graphql-codegen/cli": "5.0.0",
     "@graphql-codegen/client-preset": "4.1.0",
     "@graphql-codegen/introspection": "4.0.0",
+    "@graphql-codegen/schema-ast": "^4.0.0",
     "@next/env": "^14.0.4",
     "@next/eslint-plugin-next": "^14.0.4",
-    "@pandacss/dev": "^0.19.0",
+    "@pandacss/dev": "^0.22.1",
     "@parcel/watcher": "^2.3.0",
     "@republik/eslint-config-frontend": "*",
     "@republik/tsconfig": "*",

@@ -1,0 +1,25 @@
+query MyCallToActions {
+  me {
+    id
+    callToActions {
+      id
+      beginAt
+      endAt
+      acknowledgedAt
+      payload {
+        ... on CallToActionBasicPayload {
+          text
+          linkHref
+          linkLabel
+        }
+
+        ... on CallToActionComponentPayload {
+          customComponent {
+            key
+            args
+          }
+        }
+      }
+    }
+  }
+}

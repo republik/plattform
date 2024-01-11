@@ -20,6 +20,7 @@ import { ZINDEX_FOOTER } from '../constants'
 import SocialLinks from './SocialLinks'
 import Address from './Address'
 import { IconOpensource } from '@republik/icons'
+import LightSwitch from './lightswitch'
 
 const styles = {
   bg: css({
@@ -110,10 +111,20 @@ const styles = {
       },
     },
   }),
+  meta: css({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '0.5rem',
+    [mediaQueries.mUp]: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+    },
+  }),
   devInfo: css({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'end',
+    alignSelf: 'flex-end',
   }),
 }
 
@@ -334,35 +345,40 @@ const Footer = ({ t, me, signOut, isOnMarketingPage, hasActiveMembership }) => {
             <Address t={t} />
           </div>
         </div>
-        <div {...styles.devInfo}>
-          <span
-            style={{ ...fontStyles.sansSerifRegular14 }}
-            {...colorScheme.set('color', 'text')}
-          >
-            <IconOpensource
-              style={{ margin: '0 6px 5px 0', verticalAlign: 'middle' }}
-              size={20}
-              {...colorScheme.set('fill', 'text')}
-            />
-            <a
-              {...navLinkStyle}
-              style={{ ...fontStyles.sansSerifRegular14 }}
-              href='https://github.com/republik/plattform'
-              rel='noreferrer'
-              target='_blank'
-            >
-              {t('footer/opensource')}
-            </a>
-          </span>
-          {inNativeApp && (
+        <div {...styles.meta}>
+          <div>
+            <LightSwitch />
+          </div>
+          <div {...styles.devInfo}>
             <span
-              {...navLinkStyle}
               style={{ ...fontStyles.sansSerifRegular14 }}
+              {...colorScheme.set('color', 'text')}
             >
-              v{inNativeAppVersion}
-              {inNativeAppBuildId && ` / ${inNativeAppBuildId}`}
+              <IconOpensource
+                style={{ margin: '0 6px 5px 0', verticalAlign: 'middle' }}
+                size={20}
+                {...colorScheme.set('fill', 'text')}
+              />
+              <a
+                {...navLinkStyle}
+                style={{ ...fontStyles.sansSerifRegular14 }}
+                href='https://github.com/republik/plattform'
+                rel='noreferrer'
+                target='_blank'
+              >
+                {t('footer/opensource')}
+              </a>
             </span>
-          )}
+            {inNativeApp && (
+              <span
+                {...navLinkStyle}
+                style={{ ...fontStyles.sansSerifRegular14 }}
+              >
+                v{inNativeAppVersion}
+                {inNativeAppBuildId && ` / ${inNativeAppBuildId}`}
+              </span>
+            )}
+          </div>
         </div>
       </div>
     </div>

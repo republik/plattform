@@ -1,9 +1,12 @@
 'use client'
 
 import { useMutation } from '@apollo/client'
-import { MeQuery, NewsletterName } from '@app/graphql/republik-api/gql/graphql'
-import { SIGN_UP_FOR_NEWSLETTER_MUTATION } from '@app/graphql/republik-api/newsletter.mutation'
-import { UPDATE_NEWSLETTER_SUBSCRIPTION_MUTATION } from '@app/graphql/republik-api/update-newsletter-subscription.mutation'
+import {
+  MeQuery,
+  NewsletterName,
+  SignUpForNewsletterDocument,
+  UpdateNewsletterSubscriptionDocument,
+} from '@app/graphql/republik-api/gql/graphql'
 import { css } from '@app/styled-system/css'
 import { stack, wrap } from '@app/styled-system/patterns'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -40,9 +43,9 @@ export function EmailSignUp({
   id,
 }: EmailSignUpProps) {
   const fieldId = useId()
-  const [signUpForNewsletter] = useMutation(SIGN_UP_FOR_NEWSLETTER_MUTATION)
+  const [signUpForNewsletter] = useMutation(SignUpForNewsletterDocument)
   const [updateNewsletterSubscription] = useMutation(
-    UPDATE_NEWSLETTER_SUBSCRIPTION_MUTATION,
+    UpdateNewsletterSubscriptionDocument,
   )
 
   const [isLoading, setIsLoading] = useState(false)

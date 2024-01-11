@@ -1,0 +1,15 @@
+query FAQ {
+  faq {
+    title
+    introduction {
+      value
+    }
+    entries {
+      answer {
+        value
+      }
+      question(markdown: false)
+      category
+    }
+  }
+}

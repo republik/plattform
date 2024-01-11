@@ -1,19 +1,26 @@
-import { gql } from './gql'
-
-export const CHALLENGE_ACCEPTED_HUB_QUERY = gql(`
-query ChallengeAcceptedHubQuery {
+query PersonDetail($slug: String!) {
   hub: challengeAcceptedHub {
     id
     logo {
       url
     }
-    introduction {
-      value
-    }
-    outro {
-      value
-    }
     newsletterSignupTagline
+  }
+  person: challengeAcceptedPerson(filter: { slug: { eq: $slug } }) {
+    id
+    name
+    slug
+    portrait {
+      alt
+      url
+      width
+      height
+      title
+    }
+    catchPhrase
+    bio {
+      value
+    }
     items {
       __typename
       ... on EventRecord {
@@ -51,30 +58,4 @@ query ChallengeAcceptedHubQuery {
       }
     }
   }
-  people: allChallengeAcceptedPeople(first: 50) {
-    id
-    slug
-    name
-    portrait {
-      url
-      height
-      width
-    }
-  }
 }
-`)
-
-export const CHALLENGE_ACCEPTED_HUB_META_QUERY = gql(`
-query ChallengeAcceptedHubMetaQuery {
-  hub: challengeAcceptedHub {
-    id
-    metadata {
-      title
-      description
-      image {
-        url(imgixParams: {w: "1500"})
-      }
-    }
-  }
-}
-`)
