@@ -1,0 +1,23 @@
+# goto documentation
+
+import { Callout } from 'nextra-theme-docs'
+
+<Callout type='warning' emoji='⚠️'>
+  This is the documentation for our forwarding service "[goto](https://goto.republik.ch)".
+  The documentation is still under construction.
+</Callout>
+
+## Overview
+
+"goto" helps us to force a link in an [App](./app.mdx) to open in a browser.
+
+```mermaid
+graph TD
+    linkClick["User clicks goto.republik.ch/[path + query]"] --> openBrowser("opens in Browser")
+    openBrowser --> parsePathQuery("parses [path + query]")
+    parsePathQuery --> foward("fowards to republik.ch/[path + query]")
+```
+
+## References
+
+- [Linking](../architecture/linking.md)
