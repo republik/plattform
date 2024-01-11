@@ -18,6 +18,10 @@ graph TD
     parsePathQuery --> foward("fowards to republik.ch/[path + query]")
 ```
 
+Some destination hostnames maybe registered to open in app (see [Linking](../architecture/linking.md)). To prevent this from happening, we use [`window.location.replace`](https://developer.mozilla.org/en-US/docs/Web/API/Location/replace). A server-side redirect aka. `Location` HTTP header may cause OS to open app.
+
+It won't save goto-link in browser session history.
+
 ## References
 
 - [Linking](../architecture/linking.md)
