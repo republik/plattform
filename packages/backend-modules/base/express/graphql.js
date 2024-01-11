@@ -156,6 +156,4 @@ module.exports = async (
     },
   })
 
-  // TODO: setup subscriptions
-  // apolloServer.installSubscriptionHandlers(httpServer)
 }
