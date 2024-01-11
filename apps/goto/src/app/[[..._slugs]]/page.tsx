@@ -1,5 +1,4 @@
 import Splash from '../splash'
-import Authorize from '../authorize'
 import Goto from '../goto'
 
 /**
