@@ -49,8 +49,6 @@ const parsePostfinanceExport = async (inputFile, pgdb) => {
   const delimitedFile = inputFile.split(/\r\n/)
 
   const iban = delimitedFile.slice(0, 5).reduce((acc, row) => {
-    console.log('acc', acc)
-    console.log('row', row)
     const parsedRow = row.match(/^Konto:;([A-Z0-9]{5,34})/)
 
     console.log('parsedRwo', parsedRow)
