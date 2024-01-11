@@ -1,3 +1,4 @@
+import LightSwitch from '@app/components/lightswitch'
 import { getMe } from '@app/lib/auth/me'
 import { getPlatformInformation } from '@app/lib/util/useragent/platform-information'
 import { css } from '@app/styled-system/css'
@@ -338,14 +339,23 @@ export default async function Footer() {
         <div
           className={css({
             display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'flex-end',
+            flexDirection: 'column',
+            gap: '2',
+            md: {
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+            },
           })}
         >
+          <div>
+            <LightSwitch />
+          </div>
+
           <div
             className={css({
               display: 'flex',
               flexDirection: 'row',
+              alignSelf: 'flex-end',
               alignItems: 'center',
               fontSize: 's',
             })}
