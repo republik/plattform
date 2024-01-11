@@ -7,6 +7,10 @@ export async function GET(request: Request) {
   const secret = searchParams.get('secret')
   const path = searchParams.get('path')
 
+  if (!process.env.DRAFT_MODE_SECRET) {
+    return new Response('Draft Mode not configured', { status: 500 })
+  }
+
   // Check the secret and next parameters
   // This secret should only be known to this route handler and the CMS
   if (secret !== process.env.DRAFT_MODE_SECRET) {
