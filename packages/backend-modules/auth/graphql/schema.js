@@ -16,6 +16,7 @@ type queries {
   # Get a user by slug, username or an access token.
   # If slug is provieded, accessToken is ignored.
   user(
+    id: ID
     slug: String
     accessToken: ID
   ): User
