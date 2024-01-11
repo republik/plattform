@@ -98,7 +98,8 @@ async function notifyAccountants({
     `📄 ${filesImported} file${filesImported === 1 ? '' : 's'} imported.`,
     `💵 ${paymentsImported} payment${
       paymentsImported === 1 ? '' : 's'
-    } imported. ${possibleDuplicatePaymentsAmount} possible duplicate payments found.`,
+    } imported.
+    ${possibleDuplicatePaymentsAmount} possible duplicate payments found.`,
     '',
   ]
 
