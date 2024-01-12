@@ -191,7 +191,7 @@ const Frame = ({
               <div {...styles.page}>
                 {!hideCTA && <CallToActionBanner />}
 
-                <DraftModeIndicator />
+                {draftMode && <DraftModeIndicator />}
 
                 {raw ? (
                   <>{children}</>
