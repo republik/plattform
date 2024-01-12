@@ -4,8 +4,30 @@
     "details": [
       {
         "appID": "7MQXM58QM7.app.republik",
-        "paths": [ "NOT /", "NOT /angebote", "NOT /konto", "*" ]
+        "paths": [ "NOT /", "NOT /angebote", "NOT /konto", "*" ],
+        "components": [
+          {
+            "/": "/",
+            "exclude": true,
+            "comment": "Matches homepage URL."
+          },
+          {
+            "/": "/angebote",
+            "exclude": true,
+            "comment": "Matches /angebote URLs and instructs the system not to open it as a universal link."
+          },
+          {
+            "/": "/konto",
+            "exclude": true,
+            "comment": "Matches /konto URLs and instructs the system not to open it as a universal link."
+          },
+          {
+            "/": "*",
+            "comment": "Matches any URL and instructs the system not to open it as a universal link."
+          }
+        ]
       }
-    ]
+    ],
+    "defaults": { "caseSensitive": false }
   }
 }
