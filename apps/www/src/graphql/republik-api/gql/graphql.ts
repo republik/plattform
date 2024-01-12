@@ -176,18 +176,26 @@ export enum AccessRole {
 
 /** Scope of an access token */
 export enum AccessTokenScope {
-  /** A token authorize a session (TTL: 5 days) */
+  /** A token to authorize a session (TTL: 5 days) */
   AuthorizeSession = 'AUTHORIZE_SESSION',
   /** A token to use mutation claimCard (TTL: 90 days) */
   ClaimCard = 'CLAIM_CARD',
-  /** A token to access me.customPackages (TTL: 90 days) */
+  /**
+   * A token to access me.customPackages (TTL: 90 days)
+   * @deprecated Use SUBMIT_PLEDGE instead.
+   */
   CustomPledge = 'CUSTOM_PLEDGE',
-  /** A token to access me.customPackages (TTL: 120 days) */
+  /**
+   * A token to access me.customPackages (TTL: 120 days)
+   * @deprecated Use SUBMIT_PLEDGE instead.
+   */
   CustomPledgeExtended = 'CUSTOM_PLEDGE_EXTENDED',
   /** A token access a invoices (TTL: 5 days) */
   Invoice = 'INVOICE',
   /** A token to access a users name and portrait (TTL: 30 days) */
-  NowYouSeeMe = 'NOW_YOU_SEE_ME'
+  NowYouSeeMe = 'NOW_YOU_SEE_ME',
+  /** A token to submit any pledge (TTL: 90 days) */
+  SubmitPledge = 'SUBMIT_PLEDGE'
 }
 
 export enum Action {
@@ -802,6 +810,21 @@ export type CrowdfundingStatus = {
   memberships: Scalars['Int']['output'];
   money: Scalars['Int']['output'];
   people: Scalars['Int']['output'];
+};
+
+export type DatatansRegistrationResponse = {
+  __typename?: 'DatatansRegistrationResponse';
+  registrationUrl: Scalars['String']['output'];
+};
+
+export type DatatransAuthorizeResponse = {
+  __typename?: 'DatatransAuthorizeResponse';
+  paymentId: Scalars['ID']['output'];
+};
+
+export type DatatransInitResponse = {
+  __typename?: 'DatatransInitResponse';
+  authorizeUrl: Scalars['String']['output'];
 };
 
 export type DateRangeFilter = {
@@ -1955,6 +1978,10 @@ export type PageInfo = {
 };
 
 export enum PaymentMethod {
+  DatatransCreditcard = 'DATATRANS_CREDITCARD',
+  DatatransPaypal = 'DATATRANS_PAYPAL',
+  DatatransPostfinancecard = 'DATATRANS_POSTFINANCECARD',
+  DatatransTwint = 'DATATRANS_TWINT',
   Paymentslip = 'PAYMENTSLIP',
   Paypal = 'PAYPAL',
   Postfinancecard = 'POSTFINANCECARD',
@@ -1964,12 +1991,13 @@ export enum PaymentMethod {
 export type PaymentSource = {
   __typename?: 'PaymentSource';
   brand: Scalars['String']['output'];
-  expMonth: Scalars['Int']['output'];
-  expYear: Scalars['Int']['output'];
+  expMonth?: Maybe<Scalars['Int']['output']>;
+  expYear?: Maybe<Scalars['Int']['output']>;
   id: Scalars['String']['output'];
   isDefault: Scalars['Boolean']['output'];
   isExpired: Scalars['Boolean']['output'];
-  last4: Scalars['String']['output'];
+  last4?: Maybe<Scalars['String']['output']>;
+  method: PaymentMethod;
   status: PaymentSourceStatus;
   wallet?: Maybe<PaymentSourceWallet>;
 };
@@ -3117,6 +3145,7 @@ export type User = {
   twitterHandle?: Maybe<Scalars['String']['output']>;
   updatedAt: Scalars['DateTime']['output'];
   username?: Maybe<Scalars['String']['output']>;
+  verified?: Maybe<Scalars['Boolean']['output']>;
 };
 
 
@@ -3463,6 +3492,9 @@ export type Mutations = {
   createDiscussion: Scalars['ID']['output'];
   createElection: Election;
   createVoting: Voting;
+  datatransAuthorize: DatatransAuthorizeResponse;
+  datatransInit: DatatransInitResponse;
+  datatransRegistration: DatatansRegistrationResponse;
   deleteRedirection: Scalars['Boolean']['output'];
   deleteUser?: Maybe<User>;
   denySession: Scalars['Boolean']['output'];
@@ -3765,6 +3797,26 @@ export type MutationsCreateElectionArgs = {
 
 export type MutationsCreateVotingArgs = {
   votingInput: VotingInput;
+};
+
+
+export type MutationsDatatransAuthorizeArgs = {
+  accessToken?: InputMaybe<Scalars['ID']['input']>;
+  pledgeId: Scalars['ID']['input'];
+  sourceId: Scalars['ID']['input'];
+};
+
+
+export type MutationsDatatransInitArgs = {
+  accessToken?: InputMaybe<Scalars['ID']['input']>;
+  method: PaymentMethod;
+  pledgeId: Scalars['ID']['input'];
+};
+
+
+export type MutationsDatatransRegistrationArgs = {
+  companyId: Scalars['ID']['input'];
+  method: PaymentMethod;
 };
 
 
@@ -4804,6 +4856,7 @@ export type QueriesUnauthorizedSessionArgs = {
 
 export type QueriesUserArgs = {
   accessToken?: InputMaybe<Scalars['ID']['input']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
   slug?: InputMaybe<Scalars['String']['input']>;
 };
 
