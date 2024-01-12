@@ -29,7 +29,13 @@ export const SenderProfile = ({
             position: 'relative',
           }}
         >
-          <AssetImage src={portrait} width={96} height={96} unoptimized />
+          <AssetImage
+            alt='Portrait'
+            src={portrait}
+            width={96}
+            height={96}
+            unoptimized
+          />
         </div>
       )}
       <div style={{ flex: '0 1 auto' }}>

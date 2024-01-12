@@ -24,7 +24,12 @@ const SelectYourPriceStep = ({
     <>
       <div {...styles.container}>
         <div {...styles.content}>
-          <AssetImage src={sliderStep.iconSrc} width={100} height={100} />
+          <AssetImage
+            alt=''
+            src={sliderStep.iconSrc}
+            width={100}
+            height={100}
+          />
           <div {...styles.priceSection}>
             <div {...styles.text}>
               Ihr Preis:{' '}
@@ -40,6 +45,7 @@ const SelectYourPriceStep = ({
                 style={{ opacity: sliderStep.goodie ? 1 : 0.5 }}
               >
                 <AssetImage
+                  alt='Totebag'
                   src={`/static/5-jahre-republik/receiver/visualisierung-5jahr-totebag-traeger-gefaltet.png`}
                   width={60}
                   height={60}

@@ -11,6 +11,7 @@ const FutureCampaignHeader = () => {
         <Link href='/'>
           <div {...styles.logo}>
             <AssetImage
+              alt='Logo'
               src={'/static/5-jahre-republik/logo/combo-logo_white.svg'}
               height={48}
               width={240}
