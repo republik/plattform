@@ -1,7 +1,7 @@
 import { plainButtonRule } from '@project-r/styleguide'
 import { useReducedMotion } from 'framer-motion'
 import { useState } from 'react'
-import ReactConfetti from 'react-confetti'
+// import ReactConfetti from 'react-confetti'
 import useTimeout from '../../../lib/hooks/useTimeout'
 
 const Confetti = ({ renderOverlay = true }: { renderOverlay?: boolean }) => {
@@ -54,16 +54,15 @@ const Confetti = ({ renderOverlay = true }: { renderOverlay?: boolean }) => {
     )
   }
 
-  return (
-    <ReactConfetti
-      run={isRunning}
-      recycle={false}
-      numberOfPieces={800}
-      tweenDuration={10000}
-      onConfettiComplete={() => setRunning(false)}
-      style={{ overflow: 'hidden', width: '100%' }}
-    />
-  )
+  return null
+  // <ReactConfetti
+  //   run={isRunning}
+  //   recycle={false}
+  //   numberOfPieces={800}
+  //   tweenDuration={10000}
+  //   onConfettiComplete={() => setRunning(false)}
+  //   style={{ overflow: 'hidden', width: '100%' }}
+  // />
 }
 
 export default Confetti

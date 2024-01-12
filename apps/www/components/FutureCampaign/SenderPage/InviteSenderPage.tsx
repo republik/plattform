@@ -7,11 +7,11 @@ import RewardProgress from './RewardProgress'
 import { enforceMembership } from '../../Auth/withMembership'
 import { MeObjectType } from '../../../lib/context/MeContext'
 import { useNumOfRedeemedInvitesQuery } from '../graphql/useNumOfRedeemedInvitesQuery'
-import dynamic from 'next/dynamic'
+// import dynamic from 'next/dynamic'
 
-const Confetti = dynamic(() => import('./Confetti'), {
-  ssr: false,
-})
+// const Confetti = dynamic(() => import('./Confetti'), {
+//   ssr: false,
+// })
 
 export const FUTURE_CAMPAIGN_MAX_REDEEMED_INVITES = 5
 export const FUTURE_CAMPAIGN_TOTAL_PARTICIPANTS = 1364
@@ -35,7 +35,7 @@ const InviteSenderPage = ({ me }: { me: MeObjectType }) => {
       }}
     >
       <main>
-        <Confetti renderOverlay={userInviteData?.me?.hasAddress} />
+        {/* <Confetti renderOverlay={userInviteData?.me?.hasAddress} /> */}
         <div {...styles.headingWrapper}>
           <h1 {...styles.heading}>
             Unabhängiger Journalismus hat eine Zukunft, weil Sie es wollen!
