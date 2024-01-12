@@ -1,15 +1,8 @@
-# goto documentation
-
-import { Callout } from 'nextra-theme-docs'
-
-<Callout type='warning' emoji='⚠️'>
-  This is the documentation for our forwarding service "[goto](https://goto.republik.ch)".
-  The documentation is still under construction.
-</Callout>
+# Goto documentation
 
 ## Overview
 
-"goto" is a forwarding service.
+"goto" will forward a visitor to [Magazin](../applications/www.mdx), preserving path and query parameters.
 
 ```mermaid
 sequenceDiagram
@@ -32,7 +25,6 @@ This services helps us to leave [App](./app.mdx) when clicking on a [Magazin](..
 
 If link is "goto-ified" – hostname is goto.republik.ch instead of www.republik.ch –, it will open in browser and forward to [Magazin](../applications/www.mdx).
 
-
 ### Examples
 
 **Republik-Link within App**
@@ -45,7 +37,7 @@ If link is "goto-ified" – hostname is goto.republik.ch instead of www.republik
 
 On click will open /angebot inside app.
 
-**Goto-Link withing App**
+**Goto-Link within App**
 
 ```html
 <a href="https://goto.republik.ch/angebote" target="_blank">
@@ -55,9 +47,17 @@ On click will open /angebot inside app.
 
 On click will open browser and forward user to https://www.republik.ch/angebote.
 
-### Redirecting in Browser instead of server
+## Caveats
 
-Some hostnames maybe registered to open in app (see [Linking](../architecture/linking.md)). A server-side redirect aka. `Location` HTTP header may indicated to OS to open app.
+### iOS Behaviour
+
+If link is clicked in iOS outside of [App](./app.mdx) or browser – e.g. mail client –, and hostname is registered to open in app (see [Linking](../architecture/linking.md)), it will instantly open app hereafter.
+
+To prevent this from happening, you might want to exclude path in [.well-known/apple-app-site-association](https://github.com/republik/plattform/blob/main/apps/www/public/.well-known/apple-app-site-association).
+
+### Android Behaviour using `Location` HTTP Header
+
+Some hostnames maybe registered to open in app (see [Linking](../architecture/linking.md)). A server-side redirect aka. `Location` HTTP header may indicated to Android to open app.
 
 To prevent this from happening, we use [`window.location.replace`](https://developer.mozilla.org/en-US/docs/Web/API/Location/replace). 
 
