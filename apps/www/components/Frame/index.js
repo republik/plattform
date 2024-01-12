@@ -229,6 +229,7 @@ Frame.propTypes = {
   containerMaxWidth: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   customContentColorContext: PropTypes.object,
   hideCTA: PropTypes.bool,
+  draftMode: PropTypes.bool,
 }
 
 export default Frame
