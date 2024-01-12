@@ -20,3 +20,6 @@ yarn-error.log*
 dump.rdb
 
 styled-system
+
+# Generated GQL types
+src/graphql/*/gql
