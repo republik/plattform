@@ -75,7 +75,7 @@ const InviteSenderPage = ({ me }: { me: MeObjectType }) => {
             {!userInviteData?.me?.hasAddress && (
               <span>
                 Vergessen Sie nicht,{' '}
-                <Link href='/konto' passHref>
+                <Link href='/konto' passHref legacyBehavior>
                   <a {...styles.inlineLink}>
                     im Konto Ihre Adresse zu hinterlegen
                   </a>

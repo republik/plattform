@@ -1,15 +1,12 @@
-import {
-  ExpandLessIcon,
-  ExpandMoreIcon,
-  fontStyles,
-  mediaQueries,
-} from '@project-r/styleguide'
+import { fontStyles, mediaQueries } from '@project-r/styleguide'
 import { css } from 'glamor'
 import AssetImage from '../../../../lib/images/AssetImage'
 import { StepProps } from '../../../Stepper/Stepper'
 import { InviteSenderProfileQueryData } from '../../graphql/useSenderProfileQuery'
 import { Details } from '../Details'
 import BottomPanel from './BottomPanel'
+
+import { IconExpandLess, IconExpandMore } from '@republik/icons'
 
 type IntroductionaryStepProps = StepProps & {
   senderProfile: InviteSenderProfileQueryData['sender']
@@ -97,8 +94,8 @@ const IntroductoryStep = ({
                 summary={
                   <h2 {...styles.detailsHeading}>5 Gründe für die Republik</h2>
                 }
-                iconClose={<ExpandLessIcon size={24} />}
-                iconOpen={<ExpandMoreIcon size={24} />}
+                iconClose={<IconExpandLess size={24} />}
+                iconOpen={<IconExpandMore size={24} />}
               >
                 <h3 {...styles.headingReasons}>1. Unabhängig</h3>
                 <p {...styles.text}>
