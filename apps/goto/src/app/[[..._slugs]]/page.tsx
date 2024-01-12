@@ -1,5 +1,6 @@
 import Splash from '../splash'
 import Goto from '../goto'
+import { redirect } from 'next/navigation'
 
 /**
  * [Page] searchParams returns a plain JavaScript object and not a URLSearchParams instance.
@@ -19,7 +20,7 @@ const applySearchParams = (
   searchParams: PageProps['searchParams'],
 ) => {
   Object.keys(searchParams)
-    .filter((key) => key !== '_slug')
+    .filter((key) => !['_slug', '_sc'].includes(key))
     .forEach((key) => {
       const value = searchParams[key]
 
@@ -59,9 +60,14 @@ export default function Page({ params, searchParams }: PageProps) {
   // Apply searchParams to url
   applySearchParams(url, searchParams)
 
-  return (
-    <Splash>
-      <Goto url={url.toString()} />
-    </Splash>
-  )
+  if ('_sc' in searchParams) {
+    console.log('redirect via Server Component')
+    redirect(url.toString())
+  } else {
+    return (
+      <Splash>
+        <Goto url={url.toString()} />
+      </Splash>
+    )
+  }
 }
