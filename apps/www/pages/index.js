@@ -5,7 +5,7 @@ import Frame from '../components/Frame'
 import Marketing from '../components/Marketing'
 import { useTranslation } from '../lib/withT'
 import { createGetStaticProps } from '../lib/apollo/helpers'
-import { getCMSClient } from '@app/lib/apollo/cms-client'
+import { getCMSClientBase } from '@app/lib/apollo/cms-client-base'
 import { PUBLIC_BASE_URL, CDN_FRONTEND_BASE_URL } from '../lib/constants'
 
 import { MARKETING_PAGE_QUERY } from '../components/Marketing/graphql/MarketingPageQuery.graphql'
@@ -47,23 +47,25 @@ const MarketingPage = ({ data }) => {
 
 export default MarketingPage
 
-export const getStaticProps = createGetStaticProps(async (client) => {
-  const [apiData, datoCMSData] = await Promise.all([
-    client.query({
-      query: MARKETING_PAGE_QUERY,
-    }),
-    getCMSClient().query({
-      query: MarketingLandingPageCmsDocument,
-    }),
-  ])
+export const getStaticProps = createGetStaticProps(
+  async (client, { draftMode }) => {
+    const [apiData, datoCMSData] = await Promise.all([
+      client.query({
+        query: MARKETING_PAGE_QUERY,
+      }),
+      getCMSClientBase({ draftMode }).query({
+        query: MarketingLandingPageCmsDocument,
+      }),
+    ])
 
-  return {
-    props: {
-      data: {
-        ...apiData.data,
-        ...datoCMSData.data.marketingLandingPage,
+    return {
+      props: {
+        data: {
+          ...apiData.data,
+          ...datoCMSData.data.marketingLandingPage,
+        },
       },
-    },
-    revalidate: MARKETING_PAGE_SSG_REVALIDATE,
-  }
-})
+      revalidate: MARKETING_PAGE_SSG_REVALIDATE,
+    }
+  },
+)

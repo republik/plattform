@@ -131,7 +131,7 @@ const start = async (
     pgdb,
   })
 
-  graphql(server, httpServer, pgdb, graphqlSchema, createGraphqlContext)
+  await graphql(server, httpServer, pgdb, graphqlSchema, createGraphqlContext)
 
   graphiql(server)
 
