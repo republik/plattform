@@ -5,10 +5,10 @@ import { loadEnvConfig } from '@next/env'
 loadEnvConfig(process.cwd())
 
 if (!process.env.DATO_CMS_API_URL) {
-  throw new Error('Please set DATOCMS_API_URL in your .env file')
+  throw new Error('Please set DATO_CMS_API_URL in your .env file')
 }
 if (!process.env.DATO_CMS_API_TOKEN) {
-  throw new Error('Please set DATOCMS_API_TOKEN in your .env file')
+  throw new Error('Please set DATO_CMS_API_URL in your .env file')
 }
 
 const headers = {
