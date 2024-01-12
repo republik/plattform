@@ -153,7 +153,7 @@ const handleBatch = async (rows, count, pgdb) => {
     ) */
     rows[index].accessToken = await AccessToken.generateForUser(
       row,
-      'CUSTOM_PLEDGE_EXTENDED',
+      'SUBMIT_PLEDGE',
     )
   })
 

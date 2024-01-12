@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * This script adds to mailchimp members:
- * - a CUSTOM_PLEDGE if they need to prolong before 2019-01-16
+ * - a SUBMIT_PLEDGE if they need to prolong before 2019-01-16
  * - the BONUS tag for who is eligable
  *
  *
@@ -150,7 +150,7 @@ PgDb.connect()
         const email = user.email.toLowerCase()
         const accessToken = await AccessToken.generateForUser(
           user,
-          'CUSTOM_PLEDGE',
+          'SUBMIT_PLEDGE',
         )
         stats.numOperations += 1
         return {

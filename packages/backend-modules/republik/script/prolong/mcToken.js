@@ -117,7 +117,7 @@ PgDb.connect()
         const email = user.email.toLowerCase()
         const accessToken = await AccessToken.generateForUser(
           user,
-          'CUSTOM_PLEDGE',
+          'SUBMIT_PLEDGE',
         )
         stats.numOperations += 1
         return {
