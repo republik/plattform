@@ -37,6 +37,7 @@ const {
   MAILCHIMP_MARKETING_INTEREST_FREE_OFFERS_ONLY,
   MAILCHIMP_PROBELESEN_AUDIENCE_ID,
   FRONTEND_BASE_URL,
+  GOTO_BASE_URL,
 } = process.env
 
 const mail = createMail([
@@ -489,7 +490,7 @@ mail.sendMembershipDeactivated = async ({ membership, pgdb, t }) => {
       globalMergeVars: [
         {
           name: 'prolong_url',
-          content: `${FRONTEND_BASE_URL}/angebote?package=PROLONG&token=${submitPledgeToken}`,
+          content: `${GOTO_BASE_URL}/angebote?package=PROLONG&token=${submitPledgeToken}`,
         },
         {
           name: 'sequence_number',
@@ -535,7 +536,7 @@ mail.prepareMembershipGiversProlongNotice = async (
       },
       {
         name: 'prolong_url',
-        content: `${FRONTEND_BASE_URL}/angebote?package=PROLONG&membershipIds=${membershipIds.join(
+        content: `${GOTO_BASE_URL}/angebote?package=PROLONG&membershipIds=${membershipIds.join(
           '~',
         )}&token=${submitPledgeToken}`,
       },
@@ -591,11 +592,11 @@ mail.prepareMembershipWinback = async (
       },
       {
         name: 'prolong_url',
-        content: `${FRONTEND_BASE_URL}/angebote?package=PROLONG&token=${submitPledgeToken}`,
+        content: `${GOTO_BASE_URL}/angebote?package=PROLONG&token=${submitPledgeToken}`,
       },
       {
         name: 'prolong_url_reduced',
-        content: `${FRONTEND_BASE_URL}/angebote?package=PROLONG&token=${submitPledgeToken}&userPrice=1`,
+        content: `${GOTO_BASE_URL}/angebote?package=PROLONG&token=${submitPledgeToken}&userPrice=1`,
       },
       {
         name: 'cancelled_at',
@@ -643,11 +644,11 @@ mail.prepareMembershipOwnerNotice = async (
       },
       {
         name: 'prolong_url',
-        content: `${FRONTEND_BASE_URL}/angebote?package=PROLONG&token=${submitPledgeToken}`,
+        content: `${GOTO_BASE_URL}/angebote?package=PROLONG&token=${submitPledgeToken}`,
       },
       {
         name: 'cockpit_url',
-        content: `${FRONTEND_BASE_URL}/angebote?goto=cockpit&token=${submitPledgeToken}`,
+        content: `${GOTO_BASE_URL}/angebote?goto=cockpit&token=${submitPledgeToken}`,
       },
       {
         name: 'cancel_url',
@@ -753,11 +754,11 @@ mail.sendMembershipOwnerAutoPay = async ({ autoPay, payload, pgdb, t }) => {
       globalMergeVars: [
         {
           name: 'prolong_url',
-          content: `${FRONTEND_BASE_URL}/angebote?package=PROLONG&token=${submitPledgeToken}`,
+          content: `${GOTO_BASE_URL}/angebote?package=PROLONG&token=${submitPledgeToken}`,
         },
         {
           name: 'prolong_url_reduced',
-          content: `${FRONTEND_BASE_URL}/angebote?package=PROLONG&token=${submitPledgeToken}&userPrice=1`,
+          content: `${GOTO_BASE_URL}/angebote?package=PROLONG&userPrice=1&token=${submitPledgeToken}`,
         },
         {
           name: 'end_date',
