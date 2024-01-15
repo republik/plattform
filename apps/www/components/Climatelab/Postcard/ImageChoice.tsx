@@ -7,7 +7,7 @@ import { climateColors } from '../config'
 
 const styles = {
   '& img': css({ display: 'block' }),
-  image: css({
+  imageWrapper: css({
     cursor: 'pointer',
     borderWidth: '3px',
     borderStyle: 'solid',
@@ -18,7 +18,11 @@ const styles = {
       cursor: 'pointer',
       outline: 'none',
     },
-    '> span': { display: 'block !important' },
+  }),
+  image: css({
+    maxWidth: '100%',
+    height: 'auto',
+    display: 'block',
   }),
   input: css({
     cursor: 'pointer',
@@ -55,7 +59,7 @@ const BackgroundImage = ({
   )
   return (
     <div
-      {...styles.image}
+      {...styles.imageWrapper}
       {...hoverRule}
       {...colorScheme.set(
         'borderColor',
@@ -65,6 +69,7 @@ const BackgroundImage = ({
       {...colorScheme.set('boxShadow', 'imageChoiceShadow')}
     >
       <AssetImage
+        {...styles.image}
         width={600}
         height={420}
         src={imageUrl}
