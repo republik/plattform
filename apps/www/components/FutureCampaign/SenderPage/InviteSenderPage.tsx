@@ -124,7 +124,7 @@ const InviteSenderPage = ({ me }: { me: MeObjectType }) => {
       return null
     }
     const { accessToken } = userInviteData.me
-    return `${PUBLIC_BASE_URL}/5-jahre-republik/${accessToken}`
+    return `${PUBLIC_BASE_URL}/mitmachen/${accessToken}`
   }, [userInviteData])
 
   const longestPersonaString = useMemo(
@@ -132,6 +132,26 @@ const InviteSenderPage = ({ me }: { me: MeObjectType }) => {
       personasForTypeWriter.reduce((a, b) => (a.length > b.length ? a : b), ''),
     [personasForTypeWriter],
   )
+
+  const handleNativeShare = async () => {
+    const f = await fetch('/static/avatar310.png')
+    const blob = await f.blob()
+    const fname = 'avatar310.png'
+    const files = [
+      new File([blob], fname, { type: 'image/png', lastModified: Date.now() }),
+    ]
+
+    const shareData = {
+      title: fname,
+      files,
+    }
+
+    if (navigator.canShare?.(shareData)) {
+      await navigator.share(shareData)
+    } else {
+      console.log("can't share")
+    }
+  }
 
   const handleDonateMonthsChange = async (value: boolean) => {
     try {
@@ -278,6 +298,15 @@ const InviteSenderPage = ({ me }: { me: MeObjectType }) => {
                         style={{ height: 45 }}
                       >
                         Link teilen
+                      </Button>
+                      <Button
+                        onClick={(e) => {
+                          handleNativeShare()
+                        }}
+                        block
+                        style={{ height: 45 }}
+                      >
+                        Link NATVE
                       </Button>
                     </div>
                   </div>
