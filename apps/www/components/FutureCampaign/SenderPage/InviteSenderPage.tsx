@@ -142,7 +142,7 @@ const InviteSenderPage = ({ me }: { me: MeObjectType }) => {
     ]
 
     const shareData = {
-      title: fname,
+      // title: fname,
       files,
     }
 
