@@ -52,12 +52,14 @@ const gridStyles = {
       transform: 'scale(1.03) !important',
     },
   }),
-  image: css({
+  imageWrapper: css({
     borderRadius: '2px',
     overflow: 'hidden',
   }),
-  imageFix: css({
-    '> span': { display: 'block !important' },
+  image: css({
+    maxWidth: '100%',
+    height: 'auto',
+    display: 'block',
   }),
 }
 
@@ -107,11 +109,11 @@ const PostcardsGrid = ({
                 <PostcardPreview postcard={p} />
               ) : (
                 <div
-                  {...gridStyles.image}
-                  {...gridStyles.imageFix}
+                  {...gridStyles.imageWrapper}
                   {...colorScheme.set('boxShadow', 'imageChoiceShadow')}
                 >
                   <AssetImage
+                    {...gridStyles.image}
                     width='600'
                     height='420'
                     src={p.imageUrl}
