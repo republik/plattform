@@ -20,7 +20,6 @@ import { Button, InlineSpinner, Loader, colors } from '@project-r/styleguide'
 import { withRouter } from 'next/router'
 
 import { loadStripe } from '../Payment/stripe'
-import { DatatransPaymentMethods } from '../Payment/datatrans/types'
 
 const objectValues = (object) => Object.keys(object).map((key) => object[key])
 
