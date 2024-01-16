@@ -31,13 +31,13 @@ graph TD;
 
   subgraph Services [Services]
     MAILCHIMP[Mailchimp];
-    MANDRIL[Mandril];
+    MANDRILL[Mandrill];
     MATOMO[Matomo];
     ULTRA[Ultra dashboard];
     SENTRY[Sentry];
 
     BACKEND_MODULES --> MAILCHIMP;
-    BACKEND_MODULES --> MANDRIL;
+    BACKEND_MODULES --> MANDRILL;
 
     MAGAZIN --> MATOMO;
     PUBLIKATOR --> SENTRY;
@@ -52,7 +52,7 @@ graph TD;
 | Service | Description | Self hosted |
 | --- | --- | --- |
 | [Mailchimp](https://mailchimp.com/) | Newsletters |  |
-| [Mandril](https://mandrillapp.com/) | Transactional emails |  |
+| [Mandrill](https://mandrillapp.com/) | Transactional emails |  |
 | [Matomo](https://matomo.org/) | analytics tool | ✅ |
 | [Ultra dashboard](https://ultra-dashboard.com/) | data analysis tool | ✅ |
 | [Sentry](https://sentry.io/) | Error tracking (only in internal tools) |  |
