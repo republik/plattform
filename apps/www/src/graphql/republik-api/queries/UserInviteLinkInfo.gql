@@ -1,0 +1,8 @@
+query UserInviteLinkInfo {
+  me {
+    id
+    accessToken(scope: NOW_YOU_SEE_ME)
+    hasPublicProfile
+    hasAddress
+  }
+}

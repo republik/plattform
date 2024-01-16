@@ -1,0 +1,9 @@
+query UserInviterProfileInfo($accessToken: ID) {
+  sender: user(accessToken: $accessToken) {
+    id
+    firstName
+    lastName
+    portrait
+    futureCampaignAboCount
+  }
+}
