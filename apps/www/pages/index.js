@@ -14,7 +14,7 @@ import { MarketingLandingPageCmsDocument } from '../src/graphql/cms/gql/graphql'
 
 const MARKETING_PAGE_SSG_REVALIDATE = 60 // revalidate every minute
 
-const MarketingPage = ({ data }) => {
+const MarketingPage = ({ data, draftMode }) => {
   const { t } = useTranslation()
   const router = useRouter()
   const { meLoading, hasAccess } = useMe()
@@ -39,7 +39,13 @@ const MarketingPage = ({ data }) => {
   }
 
   return (
-    <Frame raw meta={meta} isOnMarketingPage={true} hasOverviewNav>
+    <Frame
+      raw
+      meta={meta}
+      isOnMarketingPage={true}
+      hasOverviewNav
+      draftMode={draftMode}
+    >
       <Marketing data={data} />
     </Frame>
   )
@@ -64,6 +70,7 @@ export const getStaticProps = createGetStaticProps(
           ...apiData.data,
           ...datoCMSData.data.marketingLandingPage,
         },
+        draftMode: draftMode ?? false,
       },
       revalidate: MARKETING_PAGE_SSG_REVALIDATE,
     }

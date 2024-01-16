@@ -28,6 +28,7 @@ import LegacyAppNoticeBox from './LegacyAppNoticeBox'
 import { useMe } from '../../lib/context/MeContext'
 import { checkRoles } from '../../lib/apollo/withMe'
 import CallToActionBanner from '../CallToActions/CallToActionBanner'
+import { DraftModeIndicator } from 'components/DraftModeIndicator'
 
 css.global('html', { boxSizing: 'border-box' })
 css.global('*, *:before, *:after', { boxSizing: 'inherit' })
@@ -113,6 +114,7 @@ const Frame = ({
   isOnMarketingPage,
   pageColorSchemeKey,
   containerMaxWidth,
+  draftMode,
   /**
    * customContentColorContext are the colors passed to the color-context
    * that only wraps the content of the page.
@@ -157,7 +159,7 @@ const Frame = ({
         {/* body growing only needed when rendering a footer */}
         <div
           {...(footer || inNativeApp ? styles.bodyGrower : undefined)}
-          {...(!isOnMarketingPage && padHeaderRule)}
+          {...padHeaderRule}
           {...styles.page}
         >
           {!!meta && <Meta data={meta} />}
@@ -188,6 +190,9 @@ const Frame = ({
             >
               <div {...styles.page}>
                 {!hideCTA && <CallToActionBanner />}
+
+                {draftMode && <DraftModeIndicator />}
+
                 {raw ? (
                   <>{children}</>
                 ) : (
@@ -224,6 +229,7 @@ Frame.propTypes = {
   containerMaxWidth: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   customContentColorContext: PropTypes.object,
   hideCTA: PropTypes.bool,
+  draftMode: PropTypes.bool,
 }
 
 export default Frame
