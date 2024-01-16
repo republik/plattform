@@ -5,11 +5,13 @@
 ```mermaid
 graph TD;
   subgraph Clients [Clients]
-  APP[Mobile app];
-  MAGAZIN[Magazin];
-  PUBLIKATOR[Publikator CMS];
-  ADMIN[Admin tool];
-  APP --> MAGAZIN;
+    APP[Mobile app];
+    MAGAZIN[Magazin];
+    PUBLIKATOR[Publikator CMS];
+    ADMIN[Admin tool];
+    GOTO[Goto];
+    APP --> MAGAZIN;
+    GOTO --> MAGAZIN;
   end
 
   subgraph Backend [Backend]
