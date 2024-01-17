@@ -1,0 +1,92 @@
+
+
+## Concept
+
+The campaign features allows us to track the referrals of
+a user within a campaign.
+A campaign can have a set of rewards that can be claimed
+by the user when they have reached a certain amount of referrals.
+(eg. 1 referrals = 1 bonus month)
+
+## Implementation
+
+Referrals are created when a user creates a new pledge based on 
+an invite link from another user.
+
+## Data model
+
+The data model for the campaign feature
+is setup as follows:
+
+```mermaid
+erDiagram
+    users {
+      uuid id
+    }
+
+    goodies {
+      uuid id
+    }
+
+    pledges {
+      uuid id
+      uuid user_id
+    }
+
+    campaigns {
+        uuid id
+        string name
+        string custNumber
+        string sector
+    }
+
+    referrals {
+      uuid pledge_id
+      uuid pledge_id
+      uuid campaign_id
+    }
+
+    campaign_rewards {
+      uuid id
+      uuid campaign_id
+      string name
+      string description
+      enum type
+      int amount
+      uuid goodie_id
+    }
+
+    user_campaign_rewards {
+      uuid id
+      uuid user_id
+      uuid campaign_reward_id
+      date claimed_at
+    }
+
+    users ||--|{ pledges : "has"
+    users  ||--|{ referrals : "has referred"
+    pledges ||--|{ referrals : "pledge has been referred"
+    campaigns ||--|{ referrals : "referral for campaign"
+    campaign_rewards ||--|{ campaigns : "campaign has rewards"
+    campaign_rewards ||--|{ goodies : "reward has goodie"
+    users ||--|{ user_campaign_rewards : "user has received reward"
+    campaign_rewards ||--|{ user_campaign_rewards : "reward has been claimed"
+    
+```
+
+## Flow
+
+```mermaid
+flowchart TD
+    A[Create a pledge for a new user] --> B{Has referral code}
+    B -- Yes --> C[Create a referral for the pledge]
+    B -- No --> Z[End]
+    C --> D[Record referral]
+    D --> E{Are there campaign rewards?}
+    E -- Yes --> F{Check if the user has opted out of the reward}
+    E -- No --> Z
+    F -- Yes --> G{Reached reward threshold?}
+    G -- Yes --> H[Claim the reward for the referrer]
+    G -- No --> Z
+    H --> Z
+```
