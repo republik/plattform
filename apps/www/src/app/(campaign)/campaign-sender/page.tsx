@@ -1,3 +1,4 @@
+import Container from '@app/components/container'
 import { UserInviteLinkInfoDocument } from '@app/graphql/republik-api/gql/graphql'
 import { getClient } from '@app/lib/apollo/client'
 import Link from 'next/link'
@@ -11,11 +12,16 @@ export default async function Page() {
 
   return (
     <div>
-      Hey, du kannst jemanden einladen mit diesem Link:{' '}
-      <Link href={url}>
-        {process.env.NEXT_PUBLIC_BASE_URL}
-        {url}
-      </Link>
+      <Container>
+        Hey, du kannst jemanden einladen mit diesem Link:{' '}
+        <Link href={url}>
+          {process.env.NEXT_PUBLIC_BASE_URL}
+          {url}
+        </Link>
+        <p>
+          Du hast schon {data.me.futureCampaignAboCount} Leute eingeladen 🎉
+        </p>
+      </Container>
     </div>
   )
 }
