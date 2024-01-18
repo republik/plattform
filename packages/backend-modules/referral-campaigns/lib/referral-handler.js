@@ -1,5 +1,5 @@
 const debug = require('debug')
-const { validate: validateUUID, v4: uuidv4 } = require('uuid')
+const { validate: validateUUID } = require('uuid')
 
 /**
  * Attempt to resolve a user-id based on a possible referrer reference.
@@ -34,11 +34,11 @@ async function getUserIdForReferrerReference(referrerReference, pgdb) {
   }
 
   // check if user-slug exists
-  const userSlug = await pgdb.public.users.findOne({
+  const user = await pgdb.public.users.findOne({
     username: referrerReference,
   })
-  if (userSlug) {
-    return userSlug?.id || null
+  if (user) {
+    return user?.id || null
   }
 
   // check if user-alias exists
@@ -61,6 +61,7 @@ async function getUserIdForReferrerReference(referrerReference, pgdb) {
 async function handleReferral(pledge, { pgdb }) {
   if (!pledge) return
   const { payload } = pledge
+
   const referrerId = await getUserIdForReferrerReference(
     payload?.utm_content,
     pgdb,
@@ -79,7 +80,6 @@ async function handleReferral(pledge, { pgdb }) {
 
   try {
     await pgdb.public.referrals.insertAndGet({
-      id: uuidv4(),
       pledgeId: pledge.id,
       referrerId: referrerId,
       campaignId: campaign?.id || null,
