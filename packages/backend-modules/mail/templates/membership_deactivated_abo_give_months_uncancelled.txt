@@ -3,32 +3,37 @@ Abonnement jetzt reaktivieren {{prolong_url}}
 
 --------------------------------------------------------------------------------
 
-Guten Tag, {name}
+Guten Tag
 
-Aus, finito, das wars. Ihr Abonnement wurde deaktiviert.
+Schade, sind Sie nicht mehr Teil der Republik und der Idee hinter unserem
+Projekt!
 
-Und wir fragen uns: Wie sind wir bloss an diesem Punkt gelandet? 
+Wir haben Ihnen eine E-Mail zur Verlängerung Ihres Abonnements geschickt, aber
+darauf keine Antwort erhalten. Einen Zahlungseingang für die Verlängerung Ihres
+Abonnements können wir bis heute auch nicht verzeichnen.
 
-Falls es ein Missverständnis war, dann können Sie es hier sofort ungeschehen machen:
+Deshalb verlieren Ihre Zugangsdaten ab sofort leider ihre Gültigkeit.
 
-Jetzt eine Jahresmitgliedschaft lösen: {{prolong_url}}
+Wenn Sie schlicht unsere E-Mails übersehen haben – lösen Sie jetzt eine
+Jahresmitgliedschaft. Das dauert nicht einmal drei Minuten.
 
-In nur zwei Minuten wird so aus einem abrupten Ende ein fulminanter Neustart! 
+Jahresmitgliedschaft kaufen {{link_offer_abo}}
+
+Falls Sie uns lieber kurzfristiger unterstützen wollen, gibt es die Möglichkeit,
+ein Monatsabo {{link_offer_monthly_abo}} zu kaufen. Das kostet nur CHF 22 im
+Monat, wird Ihrer Kreditkarte belastet und verlängert sich automatisch – kann
+dabei aber jederzeit und ohne Frist gekündigt werden.
+
+Und wenn Sie einen finanziellen Engpass haben, schreiben Sie uns auf
+kontakt@republik.ch – Journalismus kostet zwar, doch wir wollen niemanden
+ausschliessen: Wir finden eine Lösung.
+
+Sollte uns hingegen ein Fehler unterlaufen sein, nehmen Sie bitte ebenfalls so
+schnell wie möglich Kontakt mit uns auf: kontakt@republik.ch .
+
+Herzlich
 
 Ihre Crew der Republik
-
-PS: Journalismus kostet zwar, doch wir wollen niemanden ausschliessen. 
-Wenn Sie einen begründeten finanziellen Engpass haben sollten, können Sie 
-Ihren Mitgliedschaftsbeitrag selbst bestimmen {{prolong_url}}. 
-
-PPS: Halt, stopp, Sie haben bereits eine neue Mitgliedschaft oder ein Abo gelöst? Dann 
-muss uns ein Fehler unterlaufen sein. Nehmen Sie bitte so schnell wie möglich Kontakt 
-mit uns auf: kontakt@republik.ch.
-
-PPPS: Falls Sie sich bewusst gegen das Bleiben entschieden haben, dann haben wir 
-eine letzte Bitte: Nennen Sie uns zum Abschied Ihre Gründe? Sie kennen uns 
-mittlerweile so gut, dass Ihnen womöglich etwas aufgefallen ist, was wir übersehen.
-
 
 
 Republik AG

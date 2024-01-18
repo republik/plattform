@@ -43,74 +43,34 @@
                   <td style="padding: 20px">
                     <p>Guten Tag</p>
                     <p>
-                      Wie Sie wissen, erneuert sich Ihre Mitgliedschaft schon am
-                      {{end_date}} um ein weiteres Jahr.
+                      Ihre Zahlung ist erfolgreich bei uns eingegangen. Vielen
+                      Dank!
                     </p>
-                    <p>
-                      Wir würden uns freuen, Sie weiterhin an Bord der Republik
-                      zu wissen:
-                    </p>
-                    <table
-                      width="100%"
-                      border="0"
-                      cellspacing="0"
-                      cellpadding="0"
-                    >
-                      <tr>
-                        <td>
-                          <table border="0" cellspacing="0" cellpadding="0">
-                            <tr>
-                              <td align="center" bgcolor="#3CAD00">
-                                <a
-                                  href="{{prolong_url}}"
-                                  style="font-size:20px;{{sg_font_style_sans_serif_regular}}color:#ffffff;text-decoration:none;border-radius:0;padding:15px 30px 15px 30px;border:1px solid #3CAD00;display:inline-block;"
-                                  >Jetzt erneuern</a
-                                >
-                              </td>
-                            </tr>
-                          </table>
-                        </td>
-                      </tr>
-                    </table>
-                    <p>
-                      Wie Sie wissen, finanziert sich die Republik über ihre
-                      Leserinnen und Leser: Mit Ihrem Beitrag stärken Sie den
-                      unabhängigen Journalismus, die vierte Gewalt und die
-                      Demokratie.
-                    </p>
-                    <p>Nun müssen Sie sich entscheiden:</p>
+
                     <ul
                       style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}"
                     >
+                      {{#options}}
                       <li>
-                        Sie bleiben an Bord und investieren weiter in die
-                        Republik und ihre Idee.
-                        <a href="{{prolong_url}}"
-                          >Hier können Sie die Rechnung für ein weiteres Jahr
-                          bezahlen.</a
-                        >
+                        {{#if this.hasMultipleOAmounts}} {{this.oamount}}
+                        {{this.olabel}} à {{this.oprice_formatted}}:
+                        {{this.ototal_formatted}} {{else}} {{this.oamount}}
+                        {{this.olabel}}: {{this.ototal_formatted}} {{/if}}
                       </li>
+                      {{/options}} {{#if discount}}
                       <li>
-                        Sie möchten die Republik nicht mehr unterstützen?
-                        <a href="{{cancel_url}}"
-                          >Hier können Sie Ihre Mitgliedschaft kündigen</a
-                        >
-                        und uns sagen, warum. Wir sind stets um
-                        Weiterentwicklung bemüht, und Ihre Rückmeldung hilft uns
-                        dabei.
+                        Gewünschte Preisreduktion: –{{discount_formatted}}
+                      </li>
+                      {{/if}} {{#if donation}}
+                      <li>Spende: {{donation_formatted}}</li>
+                      {{/if}}
+                      <li>
+                        <strong>Total: {{total_formatted}}</strong>
                       </li>
                     </ul>
-                    <p>
-                      Wie auch immer Sie entscheiden: Wir bedanken uns für Ihr
-                      Engagement und Ihr Vertrauen bis hierhin.
-                    </p>
-                    <p>
-                      Falls Sie Fragen haben, beantworten wir diese sehr gerne
-                      unter
-                      <a href="mailto:kontakt@republik.ch"
-                        >kontakt@republik.ch</a
-                      >.
-                    </p>
+
+                    <p>Der Versand erfolgt innerhalb von 7 Tagen.</p>
+                    <p>Wir wünschen anregende Momente mit «We Stay».</p>
                     <p>Herzlich</p>
                     <p>Ihre Crew der Republik</p>
                   </td>

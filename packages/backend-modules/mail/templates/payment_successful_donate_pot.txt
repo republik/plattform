@@ -1,0 +1,19 @@
+Guten Tag
+
+Herzlichen Dank für Ihre Wachstums-Spende von {{total_formatted}}.
+Die Zahlung ist erfolgreich bei uns eingegangen.
+
+Pro 240 Franken, die so zusammenkommen, schenken wir einer ausgewählten Person
+eine Mitgliedschaft.
+
+Mit Ihrem Geld fördern Sie das Wachstum der Republik – und damit auch eine
+unabhängige vierte Gewalt als zentrale Institution unserer Demokratie.
+
+Herzlich
+Ihre Crew der Republik
+
+
+Republik AG
+Sihlhallenstrasse 1, CH-8004 Zürich
+{{frontend_base_url}}
+kontakt@republik.ch

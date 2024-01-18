@@ -1,7 +1,6 @@
 Guten Tag
 
-Ihre Zahlung in Höhe von {{total_formatted}} ist erfolgreich bei uns
-eingegangen.
+Ihre Zahlung ist erfolgreich bei uns eingegangen. Vielen Dank!
 
    {{#options}}
  * {{#if this.hasMultipleOAmounts}} {{this.oamount}} {{this.olabel}} à
@@ -14,7 +13,12 @@ eingegangen.
    {{/if}}
  * Total: {{total_formatted}}
 
-Herzlichen Dank für Ihre Unterstützung!
+Der Versand erfolgt innerhalb von 7 Tagen.
+
+Wir wünschen anregende Momente mit «We Stay».
+
+Herzlich
+
 Ihre Crew der Republik
 
 
