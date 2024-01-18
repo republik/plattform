@@ -69,7 +69,14 @@ export const formatEventDateRange = (start: DateLike, end?: DateLike) => {
   return `${formatDate(start)}–${formatDate(end)}`
 }
 
+/**
+ * Check if the event with the provided start/end dates is still in the future (or ongoing)
+ *
+ * @param start string | number | Date
+ * @param end string | number | Date
+ * @returns boolean
+ */
 export const isFutureEvent = (start: DateLike, end?: DateLike) => {
   const now = dayjs()
-  return now.isBefore(start) || now.isBefore(end)
+  return end ? now.isBefore(end) : now.isBefore(start)
 }
