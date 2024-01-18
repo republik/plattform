@@ -1,4 +1,4 @@
 module.exports = {
   graphql: require('./graphql'),
-  handleReferral: require('./lib/referrerHandler'),
+  handleReferral: require('./lib/referral-handler'),
 }
