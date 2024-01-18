@@ -43,13 +43,23 @@
                   <td style="padding: 20px">
                     <p>Guten Tag, {name}</p>
                     <p>
-                      Vor knapp einem Jahr haben Sie eine Eigenschaft an den Tag gelegt, von der viele Menschen nur träumen können: Grosszügigkeit. 
+                      Vor knapp einem Jahr haben Sie eine Eigenschaft an den Tag gelegt, von der viele Menschen nur 
+                      träumen können: Grosszügigkeit. 
                     </p>
                     <p>
                       Sie haben {{#if hasOneGiftedMembership}}eine
                       Mitgliedschaft{{else if hasMultipleGiftedMemberships}}
-                      mehrere Mitgliedschaften{{/if}} verschenkt: 365 Tage Zugang zum Republik-Magazin, zu Recherchen, Analysen, Kolumnen, Briefings, Newslettern, dem wohl höflichsten Debattenraum und vielem mehr.
+                      mehrere Mitgliedschaften{{/if}} verschenkt: 365 Tage Zugang zum Republik-Magazin, zu Recherchen, 
+                      Analysen, Kolumnen, Briefings, Newslettern, dem wohl höflichsten Debattenraum und vielem mehr.
                     </p>
+                    <p>
+                      Folgende{{#if hasOneGiftedMembership}} Mitgliedschaft steht{{else if hasMultipleGiftedMemberships}} 
+                      Mitgliedschaften stehen{{/if}} zur Verlängerung an:
+                      {{#options}}
+                      {{this.olabel}}
+                      {{/options}}
+                    </p> 
+
                     {{#if hasOneGiftedMembership}}
                     <p>Bevor diese Mitgliedschaft endet, erlauben wir uns die Frage:</p>
                     {{else if hasMultipleGiftedMemberships}}
@@ -74,12 +84,6 @@
                       <li>{{this.olabel}}</li>
                       {{/options}}
                     </ul> -->
-                    <p>
-                      Klicken Sie hier, um {{#if hasOneGiftedMembership}}die
-                      Geschenkmitgliedschaft{{else if
-                      hasMultipleGiftedMemberships}}die
-                      Geschenkmitgliedschaften{{/if}} zu verlängern.
-                    </p>
                     <table
                       width="100%"
                       border="0"
