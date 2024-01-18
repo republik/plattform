@@ -3,6 +3,7 @@ const { findAllUserSessions } = require('../../lib/Sessions')
 const { enabledFirstFactors } = require('../../lib/Users')
 const AccessToken = require('../../lib/AccessToken')
 const Consents = require('../../lib/Consents')
+const { generateUserAlias } = require('../../lib/alias')
 
 const DEFAULT_USER_ACCESS_ROLES = ['admin', 'supporter']
 const BASICS_USER_ACCESS_ROLES = [...DEFAULT_USER_ACCESS_ROLES, 'editor']
@@ -82,5 +83,8 @@ module.exports = {
         pgdb,
       })
     }
+  },
+  alias: async (user, _, { pgdb }) => {
+    return user.alias || (await generateUserAlias(user, pgdb))
   },
 }
