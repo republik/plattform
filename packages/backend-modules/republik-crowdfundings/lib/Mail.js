@@ -724,6 +724,14 @@ mail.prepareMembershipOwnerNotice = async (
 }
 
 mail.sendMembershipOwnerAutoPay = async ({ autoPay, payload, pgdb, t }) => {
+  // don't send emails if charge was successful and membership type interval is month
+  if (
+    payload.chargeAttemptStatus === 'SUCCESS' &&
+    autoPay.membershipTypeInterval === 'month'
+  ) {
+    return
+  }
+
   // Ditch sending email if it's not a card_error
   if (
     payload.chargeAttemptStatus !== 'SUCCESS' &&
@@ -738,7 +746,7 @@ mail.sendMembershipOwnerAutoPay = async ({ autoPay, payload, pgdb, t }) => {
   const submitPledgeToken = AccessToken.generateForUser(user, 'SUBMIT_PLEDGE')
   const version =
     payload.chargeAttemptStatus === 'SUCCESS' ? 'successful' : 'failed'
-  const templateName = `membership_owner_autopay_${version}`
+  const templateName = `membership_owner_autopay_${autoPay.membershipType}_${version}`
   const subject = t.first([
     `api/email/${templateName}_${payload.attemptNumber}/subject`,
     `api/email/${templateName}/subject`,
