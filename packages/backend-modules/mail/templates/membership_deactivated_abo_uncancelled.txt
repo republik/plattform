@@ -3,34 +3,33 @@ Mitgliedschaft jetzt reaktivieren {{prolong_url}}
 
 --------------------------------------------------------------------------------
 
-Guten Tag
+Guten Tag, {{name}}
 
-Wir haben Ihnen in den letzten Wochen mehrere E-Mails zur Verlängerung Ihrer
-Mitgliedschaft geschickt, aber darauf keine Antwort erhalten. Auch einen
-Zahlungseingang für die Verlängerung Ihrer Mitgliedschaft können wir bis anhin
-nicht verzeichnen.
+Aus, finito, das wars. Ihre Mitgliedschaft wurde deaktiviert.
 
-Deshalb verlieren Ihre Zugangsdaten ab sofort leider ihre Gültigkeit.
+Und wir fragen uns: Wie sind wir bloss an diesem Punkt gelandet? 
 
-Wenn Sie schlicht alle E-Mails übersehen haben – reaktivieren Sie jetzt Ihre
-Mitgliedschaft.
+Falls es ein Missverständnis war, dann können Sie es hier sofort ungeschehen machen:
 
-Jetzt erneuern {{prolong_url}}
+Jetzt meine Mitgliedschaft reaktivieren: {{prolong_url}}
 
-Journalismus kostet zwar, doch wir wollen niemanden ausschliessen: Wenn Sie
-einen finanziellen Engpass haben sollten, können Sie Ihre Mitgliedschaft zu
-einem tieferen Preis verlängern {{prolong_url}} .
-
-Sollte uns hingegen ein Fehler unterlaufen sein, nehmen Sie bitte ebenfalls so
-schnell wie möglich Kontakt mit uns auf: kontakt@republik.ch .
-
-Wir würden uns freuen, Sie ein weiteres Jahr an Bord zu wissen. Und wenn Sie
-sich dagegen entscheiden, würden wir uns freuen, wenn Sie zu einem späteren
-Zeitpunkt wieder vorbeischauten {{prolong_url}} .
-
-Herzlich
+In nur zwei Minuten wird so aus einem abrupten Ende ein fulminanter Neustart. 
+Und Sie stellen sicher, dass unser Journalismus eine Zukunft hat.
 
 Ihre Crew der Republik
+
+PS: Journalismus kostet zwar, doch wir wollen niemanden ausschliessen. 
+Wenn Sie einen begründeten finanziellen Engpass haben sollten, können Sie 
+Ihren Mitgliedschaftsbeitrag selbst bestimmen {{prolong_url}}. 
+
+PPS: Halt, stopp, Sie haben Ihre Mitgliedschaft bereits bezahlt? 
+Dann muss uns ein Fehler unterlaufen sein. Nehmen Sie bitte so schnell 
+wie möglich Kontakt mit uns auf: kontakt@republik.ch.
+
+PPPS: Falls Sie sich bewusst gegen das Bleiben entschieden haben, dann 
+haben wir eine letzte Bitte: Nennen Sie uns zum Abschied Ihre Gründe? 
+Sie kennen uns mittlerweile so gut, dass Ihnen womöglich etwas aufgefallen 
+ist, was wir übersehen haben.
 
 
 Republik AG

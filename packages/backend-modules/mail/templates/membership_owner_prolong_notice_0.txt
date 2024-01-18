@@ -1,28 +1,24 @@
-Guten Tag
+Guten Tag, {{name}}
 
-Heute erneuern sich Ihre Mitgliedschaft und Ihr Engagement für die
-Medienvielfalt, die Informationsfreiheit und die Demokratie.
+Dank der Unterstützung unserer Verlegerinnen haben wir im vergangenen Jahr
+Politiker in die Pflicht genommen, Expertinnen interviewt, Menschen mit
+speziellen Geschichten zu Wort kommen lassen, unsere App verbessert und den wohl
+höflichsten virtuellen Gesprächsraum der Schweizer Medienlandschaft gepflegt.
 
-Ihr Mitgliedschaftsbeitrag ist fällig. Damit Sie weiter Teil der Republik sind,
-müssen Sie nur die Rechnung für das nächste Jahr begleichen, was mit zwei Klicks
-erledigt ist:
+Mit nur zwei Klicks sorgen Sie dafür, dass das so bleibt:
 
-Jetzt bezahlen {{prolong_url}}
+Ich unterstütze die Republik {{prolong_url}}
 
-Sie wollen die Republik nicht mehr unterstützen? Bitte kündigen Sie Ihre
-Mitgliedschaft {{cancel_url}} und teilen Sie uns mit, warum. Es wäre wertvoll
-für uns, Ihre Gründe zu kennen.
+Ihr Einsatz macht einen Unterschied, denn die Republik finanziert sich über ihre
+Leserinnen und Leser: Es kommt also wirklich auf jede einzelne Person an.
 
-Sollte uns ein Fehler unterlaufen sein, schreiben Sie uns via
-kontakt@republik.ch , und wir gehen dem Problem auf die Spur.
-
-Und wenn Sie einen finanziellen Engpass haben sollten, schreiben Sie uns ebenso
-auf kontakt@republik.ch – Journalismus kostet zwar, doch wir wollen niemanden
-ausschliessen: Wir finden eine Lösung.
-
-Mit herzlichem Dank für das letzte Jahr und in Vorfreude auf ein neues!
+Gemeinsam machen wir einen Unterschied.
 
 Ihre Crew der Republik
+
+PS: Sie haben Ihre Mitgliedschaft bereits erneuert? Dann muss uns ein Fehler
+unterlaufen sein. Schreiben Sie uns an kontakt@republik.ch und wir gehen dem
+Problem auf die Spur.
 
 
 Republik AG
