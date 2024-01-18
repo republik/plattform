@@ -1,4 +1,5 @@
 const { getTemplates, envMergeVars } = require('../lib/sendMailTemplate')
+const handlebars = require('handlebars')
 
 function convertValToBoolean(val) {
   const lcVal = val.toLowerCase()
@@ -39,11 +40,14 @@ module.exports = async (server) => {
       },
     )
 
-    const mail = variables.reduce((template, variable) => {
-      const { name, content } = variable
-      return template.replace(new RegExp(`{{?${name}?}}`, 'ig'), content)
-    }, template)
+    const getHTML = handlebars.compile(template)
+    const html = getHTML(variables)
 
-    return res.send(mail)
+    // const mail = variables.reduce((template, variable) => {
+    //   const { name, content } = variable
+    //   return template.replace(new RegExp(`{{?${name}?}}`, 'ig'), content)
+    // }, template)
+
+    return res.send(html)
   })
 }
