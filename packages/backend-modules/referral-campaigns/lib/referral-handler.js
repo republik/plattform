@@ -34,7 +34,7 @@ async function getUserIdForReferrerReference(referrerReference, pgdb) {
   }
 
   // check if user-slug exists
-  const user = await pgdb.public.users.findOne({
+  let user = await pgdb.public.users.findOne({
     username: referrerReference,
   })
   if (user) {
@@ -42,9 +42,11 @@ async function getUserIdForReferrerReference(referrerReference, pgdb) {
   }
 
   // check if user-alias exists
-  // TODO
+  user = await pgdb.public.users.findOne({
+    alias: referrerReference,
+  })
 
-  return null
+  return user?.id || null
 }
 
 /**
