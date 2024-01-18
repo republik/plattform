@@ -1,11 +1,11 @@
 Guten Tag
 
-Wie bereits vor einigen Tagen angekündigt, haben wir nun unverfroren Ihre
+Wie bereits vor einigen Tagen angekündigt, haben wir nun Ihre
 Mitgliedschaft um ein weiteres Jahr verlängert: Dafür wurde Ihre
 {{autopay_card_brand}} mit den Endziffern {{autopay_card_last4}} mit
 {{autopay_total}} belastet.
 
-Wir bedanken uns für Ihre Treue und Ihr Vertrauen. Wir freuen uns sehr, Sie ein
+Wir bedanken uns für Ihre Treue und Ihr Vertrauen. Es ist uns eine Ehre, Sie ein
 weiteres Jahr an Bord zu wissen.
 
 Ihre Mitgliedschaft läuft neu bis zum {{prolonged_end_date}}.

@@ -242,7 +242,7 @@ const submitComment = async (comment, discussion, context, testUsers) => {
                   'api/comment/notification/answer/email/subject',
                   subjectParams,
                 ),
-            templateName: 'cf_comment_notification_new',
+            templateName: 'comment_notification_new',
             globalMergeVars: [
               {
                 name: 'NAME',
