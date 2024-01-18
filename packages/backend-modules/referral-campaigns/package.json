@@ -13,17 +13,12 @@
     "url": "https://github.com/republik/plattform/issues"
   },
   "homepage": "https://github.com/republik/plattform#readme",
-  "scripts": {
-    "dev": "tsc -w",
-    "build": "tsc"
-  },
+  "scripts": {},
   "dependencies": {
     "@orbiting/backend-modules-scalars": "*",
     "apollo-modules-node": "*",
     "debug": "^4.1.1",
     "zod": "^3.22.4"
   },
-  "devDependencies": {
-    "@orbiting/backend-modules-types": "*"
-  }
+  "devDependencies": {}
 }
