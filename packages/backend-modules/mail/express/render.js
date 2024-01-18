@@ -50,11 +50,6 @@ module.exports = async (server) => {
     const getHTML = handlebars.compile(template)
     const html = getHTML(variablesObject)
 
-    // const mail = variables.reduce((template, variable) => {
-    //   const { name, content } = variable
-    //   return template.replace(new RegExp(`{{?${name}?}}`, 'ig'), content)
-    // }, template)
-
     return res.send(html)
   })
 }
