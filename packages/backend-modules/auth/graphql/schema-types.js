@@ -47,6 +47,7 @@ type User {
   # true: consented
   # false: consent revoked
   hasConsentedTo(name: String!): Boolean
+  alias: String!
 }
 
 type SignInResponse {
