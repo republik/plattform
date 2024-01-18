@@ -79,7 +79,7 @@ const afterChange = async ({ pledge }, context) => {
     pledge.status === 'SUCCESSFUL' && refreshPotForPledgeId(pledge.id, context),
     pledge.status === 'PAID_INVESTIGATE' &&
       slack.publishPledge(user, pledge, 'PAID_INVESTIGATE'),
-    handleReferral(pledge, context.pgdb),
+    handleReferral(pledge, { pgdb: context.pgdb }),
     // rewardSender(pledge, context),
   ]).catch((e) => {
     console.error('error in afterChange', e)
