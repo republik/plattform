@@ -31,6 +31,7 @@ export interface UserRow {
   portraitUrl: string
   roles: string[]
   email: string
+  alias: string | null
 }
 
 export interface User {
