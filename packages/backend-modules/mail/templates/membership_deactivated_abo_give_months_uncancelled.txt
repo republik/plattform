@@ -3,7 +3,7 @@ Abonnement jetzt reaktivieren {{prolong_url}}
 
 --------------------------------------------------------------------------------
 
-Guten Tag, {name}
+Guten Tag, {{name}}
 
 Aus, finito, das wars. Ihr Abonnement wurde deaktiviert.
 
