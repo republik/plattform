@@ -30,7 +30,7 @@ export default async function Page() {
             gap: '8',
           })}
         >
-          <div className={css({ overflow: 'hidden', width: 200 })}>
+          <div className={css({ overflow: 'hidden', maxWidth: '1/3' })}>
             <Link href={url}>
               {process.env.NEXT_PUBLIC_BASE_URL}
               {url}
@@ -38,12 +38,22 @@ export default async function Page() {
             <Image
               alt='sharebildli'
               src={`${url}/share-image`}
+              className={css({
+                width: '100%',
+              })}
               width={200}
               height={400}
               unoptimized
             />
           </div>
-          <div className={vstack({ gap: '4', alignItems: 'flex-start' })}>
+          <div
+            className={vstack({
+              gap: '4',
+              alignItems: 'flex-start',
+              minWidth: 300,
+              flexGrow: 1,
+            })}
+          >
             <Share
               url={`${process.env.NEXT_PUBLIC_BASE_URL}${url}`}
               title='Link teilen'
