@@ -1,7 +1,13 @@
 'use client'
-import { useEffect, useState } from 'react'
+import { ReactNode, useEffect, useState } from 'react'
 
-export const ImageShareButton = ({ imageSrc }: { imageSrc: string }) => {
+export const ShareImage = ({
+  imageSrc,
+  children,
+}: {
+  imageSrc: string
+  children: ReactNode
+}) => {
   const [canShare, setCanShare] = useState(false)
 
   useEffect(() => {
@@ -23,7 +29,12 @@ export const ImageShareButton = ({ imageSrc }: { imageSrc: string }) => {
     }
 
     if (navigator.canShare?.(shareData)) {
-      await navigator.share(shareData)
+      try {
+        await navigator.share(shareData)
+      } catch (e) {
+        // An exception is thrown when share is cancelled, already in progress etc. We don't want to bother users with those
+        // console.error(e.message)
+      }
     } else {
       console.log("can't share")
     }
@@ -35,7 +46,7 @@ export const ImageShareButton = ({ imageSrc }: { imageSrc: string }) => {
         handleNativeShare()
       }}
     >
-      Teile dieses Bildli ⤴️
+      {children}
     </button>
   ) : null
 }
