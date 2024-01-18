@@ -1,4 +1,4 @@
-Guten Tag, {name}
+Guten Tag, {{name}}
 
 Vor knapp einem Jahr haben Sie eine Eigenschaft an den Tag gelegt, von der viele
 Menschen nur träumen können: Grosszügigkeit.

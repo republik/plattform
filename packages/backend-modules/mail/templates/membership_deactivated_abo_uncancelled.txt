@@ -3,7 +3,7 @@ Mitgliedschaft jetzt reaktivieren {{prolong_url}}
 
 --------------------------------------------------------------------------------
 
-Guten Tag, {name}
+Guten Tag, {{name}}
 
 Aus, finito, das wars. Ihre Mitgliedschaft wurde deaktiviert.
 
