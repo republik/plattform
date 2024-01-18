@@ -1,7 +1,6 @@
 Guten Tag
 
-Ihre Zahlung in Höhe von {{total_formatted}} ist erfolgreich bei uns
-eingegangen.
+Vielen Dank für Ihre Bestellung.
 
    {{#options}}
  * {{#if this.hasMultipleOAmounts}} {{this.oamount}} {{this.olabel}} à
@@ -14,7 +13,27 @@ eingegangen.
    {{/if}}
  * Total: {{total_formatted}}
 
-Herzlichen Dank für Ihre Unterstützung!
+Bücher liefern wir bis Ende Mai. {{#if waiting_for_payment}}Der Versand erfolgt
+erst nach Zahlungseingang.{{/if}}
+
+{{#if paymentslip}}
+
+Zahlungsinformationen:
+
+ * IBAN: {{iban}}
+ * Referenz: {{reference}}
+ * Betrag: {{total_formatted}}
+ * Zahlbar bis: {{due_date}}
+
+Anbei finden Sie eine QR-Rechnung.
+
+Die QR-Rechnung ersetzt den Einzahlungsschein. Sie können damit die Zahlung via
+Mobile Banking, E-Banking oder am Schalter bei Bank und Post auslösen.
+
+{{/if}}
+
+Herzlich
+
 Ihre Crew der Republik
 
 

@@ -794,7 +794,7 @@ const updateUserEmail = async ({ pgdb, user, email }) => {
       to: user.email,
       fromEmail: process.env.DEFAULT_MAIL_FROM_ADDRESS,
       subject: t('api/email/change/confirmation/subject'),
-      templateName: 'email_change_old_address',
+      templateName: 'cf_email_change_old_address',
       globalMergeVars: [
         {
           name: 'EMAIL',
@@ -810,7 +810,7 @@ const updateUserEmail = async ({ pgdb, user, email }) => {
       to: email,
       fromEmail: process.env.DEFAULT_MAIL_FROM_ADDRESS,
       subject: t('api/email/change/confirmation/subject'),
-      templateName: 'email_change_new_address',
+      templateName: 'cf_email_change_new_address',
       globalMergeVars: [
         {
           name: 'LOGIN_LINK',

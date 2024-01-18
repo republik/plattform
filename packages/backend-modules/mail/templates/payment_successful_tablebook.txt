@@ -1,7 +1,7 @@
-Guten Tag
+Sehr geehrte Dame
+Sehr geehrter Herr
 
-Ihre Zahlung in Höhe von {{total_formatted}} ist erfolgreich bei uns
-eingegangen.
+Ihre Zahlung ist erfolgreich bei uns eingegangen. Vielen Dank!
 
    {{#options}}
  * {{#if this.hasMultipleOAmounts}} {{this.oamount}} {{this.olabel}} à
@@ -14,7 +14,12 @@ eingegangen.
    {{/if}}
  * Total: {{total_formatted}}
 
-Herzlichen Dank für Ihre Unterstützung!
+Bücher liefern wir bis Ende Mai.
+
+Wir wünschen Ihnen anregende Lektüre mit der «Republik bei Stromausfall».
+
+Herzlich
+
 Ihre Crew der Republik
 
 

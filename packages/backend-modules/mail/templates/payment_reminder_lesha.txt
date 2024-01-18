@@ -1,12 +1,13 @@
 Guten Tag
 
-Schön, dass Sie die Republik unterstützen wollen.
+Schön, dass Sie das Buch «We Stay» von Lesha Berezovskiy bestellt haben.
 
-Falls sich unsere Buchhaltung nicht irrt, ist Ihr Mitgliedschafts- oder
-Unterstützungsbeitrag in der Höhe von CHF {{total}} aber weiterhin ausstehend.
+Falls sich unsere Buchhaltung nicht irrt, ist allerdings Ihre Zahlung in Höhe
+von CHF {{total}} noch ausstehend.
 
 Dürfen wir Sie freundlich bitten, den Betrag in den nächsten Tagen zu
-überweisen? Unser Projekt ist auf Ihren Beitrag angewiesen.
+überweisen? Leider können wir Ihre Bestellung erst versenden, wenn die Zahlung
+bei uns eingegangen ist.
 
 Zahlungsinformationen:
 
@@ -19,13 +20,9 @@ Anbei finden Sie eine QR-Rechnung.
 Die QR-Rechnung ersetzt den Einzahlungsschein. Sie können damit die Zahlung via
 Mobile Banking, E-Banking oder am Schalter bei Bank und Post auslösen.
 
-Sollte sich Ihre Zahlung mit dieser Zahlungserinnerung kreuzen, erachten Sie
+Sollte sich Ihre Überweisung mit dieser Zahlungserinnerung kreuzen, erachten Sie
 unsere E-Mail als gegenstandslos. Haben Sie sonst Fragen, melden Sie sich
 jederzeit unter kontakt@republik.ch .
-
-Wenn wir Ihre Zahlung in den nächsten 30 Tagen nicht erhalten, gehen wir davon
-aus, dass Sie die Republik nicht mehr lesen möchten, und deaktivieren Ihr Abo
-und Ihre Mitgliedschaft.
 
 Herzlich
 Ihre Crew der Republik
