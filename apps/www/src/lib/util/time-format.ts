@@ -68,3 +68,8 @@ export const formatEventDateRange = (start: DateLike, end?: DateLike) => {
   // Assume that when days are different, we don't want to display time
   return `${formatDate(start)}–${formatDate(end)}`
 }
+
+export const isFutureEvent = (start: DateLike, end?: DateLike) => {
+  const now = dayjs()
+  return now.isBefore(start) || now.isBefore(end)
+}

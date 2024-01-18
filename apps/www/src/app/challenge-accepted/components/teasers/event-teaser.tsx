@@ -3,6 +3,7 @@ import { Share } from '@app/components/share/share'
 import {
   formatDateShort,
   formatEventDateRange,
+  isFutureEvent,
 } from '@app/lib/util/time-format'
 import { css } from '@app/styled-system/css'
 import { hstack } from '@app/styled-system/patterns'
@@ -36,6 +37,8 @@ type EventProps = {
   isMember: boolean
 }
 export const EventTeaser = ({ isMember, event }: EventProps) => {
+  const isActive = isFutureEvent(event.startAt, event.endAt)
+
   return (
     <div
       className={css({
@@ -102,33 +105,34 @@ export const EventTeaser = ({ isMember, event }: EventProps) => {
         </p>
 
         <StructuredText data={event.description.value} />
-        {event.fullyBooked ? (
-          <p
-            className={css({
-              fontStyle: 'italic',
-            })}
-          >
-            Die Veranstaltung ist ausgebucht.
-          </p>
-        ) : (
-          <>
-            {event.membersOnly && !isMember ? (
-              <>
-                {event.nonMemberCta && (
-                  <StructuredText data={event.nonMemberCta.value} />
-                )}
-              </>
-            ) : (
-              <>
-                {event.signUpLink && (
-                  <Link target='_blank' href={event.signUpLink}>
-                    Zur Anmeldung
-                  </Link>
-                )}
-              </>
-            )}
-          </>
-        )}
+        {isActive &&
+          (event.fullyBooked ? (
+            <p
+              className={css({
+                fontStyle: 'italic',
+              })}
+            >
+              Die Veranstaltung ist ausgebucht.
+            </p>
+          ) : (
+            <>
+              {event.membersOnly && !isMember ? (
+                <>
+                  {event.nonMemberCta && (
+                    <StructuredText data={event.nonMemberCta.value} />
+                  )}
+                </>
+              ) : (
+                <>
+                  {event.signUpLink && (
+                    <Link target='_blank' href={event.signUpLink}>
+                      Zur Anmeldung
+                    </Link>
+                  )}
+                </>
+              )}
+            </>
+          ))}
         <div className={hstack({ gap: '4', mt: '2' })}>
           <Share
             title={event.title}
