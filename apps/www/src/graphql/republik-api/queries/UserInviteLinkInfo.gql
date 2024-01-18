@@ -4,5 +4,6 @@ query UserInviteLinkInfo {
     accessToken(scope: NOW_YOU_SEE_ME)
     hasPublicProfile
     hasAddress
+    futureCampaignAboCount
   }
 }

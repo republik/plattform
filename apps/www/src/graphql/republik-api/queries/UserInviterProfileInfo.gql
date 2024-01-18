@@ -1,4 +1,13 @@
 query UserInviterProfileInfo($accessToken: ID) {
+  me {
+    id
+    activeMembership {
+      type {
+        id
+        name
+      }
+    }
+  }
   sender: user(accessToken: $accessToken) {
     id
     firstName
