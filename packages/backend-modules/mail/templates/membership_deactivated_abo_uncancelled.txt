@@ -3,33 +3,34 @@ Mitgliedschaft jetzt reaktivieren {{prolong_url}}
 
 --------------------------------------------------------------------------------
 
-Guten Tag, {{name}}
+Guten Tag, {name}
 
 Aus, finito, das wars. Ihre Mitgliedschaft wurde deaktiviert.
 
-Und wir fragen uns: Wie sind wir bloss an diesem Punkt gelandet? 
+Und wir fragen uns: Wie sind wir bloss an diesem Punkt gelandet?
 
-Falls es ein Missverständnis war, dann können Sie es hier sofort ungeschehen machen:
+Falls es ein Missverständnis war, dann können Sie es hier sofort ungeschehen
+machen:
 
-Jetzt meine Mitgliedschaft reaktivieren: {{prolong_url}}
+Jetzt meine Mitgliedschaft reaktivieren {{prolong_url}}
 
-In nur zwei Minuten wird so aus einem abrupten Ende ein fulminanter Neustart. 
+In nur zwei Minuten wird so aus einem abrupten Ende ein fulminanter Neustart.
 Und Sie stellen sicher, dass unser Journalismus eine Zukunft hat.
 
 Ihre Crew der Republik
 
-PS: Journalismus kostet zwar, doch wir wollen niemanden ausschliessen. 
-Wenn Sie einen begründeten finanziellen Engpass haben sollten, können Sie 
-Ihren Mitgliedschaftsbeitrag selbst bestimmen {{prolong_url}}. 
+PS: Journalismus kostet zwar, doch wir wollen niemanden ausschliessen. Wenn Sie
+einen begründeten finanziellen Engpass haben sollten, können Sie Ihren
+Mitgliedschaftsbeitrag selbst bestimmen {{prolong_url}} .
 
-PPS: Halt, stopp, Sie haben Ihre Mitgliedschaft bereits bezahlt? 
-Dann muss uns ein Fehler unterlaufen sein. Nehmen Sie bitte so schnell 
-wie möglich Kontakt mit uns auf: kontakt@republik.ch.
+PPS: Halt, stopp, Sie haben Ihre Mitgliedschaft bereits bezahlt? Dann muss uns
+ein Fehler unterlaufen sein. Nehmen Sie bitte so schnell wie möglich Kontakt mit
+uns auf: kontakt@republik.ch .
 
-PPPS: Falls Sie sich bewusst gegen das Bleiben entschieden haben, dann 
-haben wir eine letzte Bitte: Nennen Sie uns zum Abschied Ihre Gründe? 
-Sie kennen uns mittlerweile so gut, dass Ihnen womöglich etwas aufgefallen 
-ist, was wir übersehen haben.
+PPPS: Falls Sie sich bewusst gegen das Bleiben entschieden haben, dann haben wir
+eine letzte Bitte: Nennen Sie uns zum Abschied Ihre Gründe? Sie kennen uns
+mittlerweile so gut, dass Ihnen womöglich etwas aufgefallen ist, was wir
+übersehen haben.
 
 
 Republik AG

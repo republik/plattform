@@ -8,6 +8,10 @@ hasMultipleGiftedMemberships}} mehrere Mitgliedschaften{{/if}} verschenkt: 365
 Tage Zugang zum Republik-Magazin, zu Recherchen, Analysen, Kolumnen, Briefings,
 Newslettern, dem wohl höflichsten Debattenraum und vielem mehr.
 
+Folgende{{#if hasOneGiftedMembership}} Mitgliedschaft steht{{else if
+hasMultipleGiftedMemberships}} Mitgliedschaften stehen{{/if}} zur Verlängerung
+an: {{#options}} {{this.olabel}} {{/options}}
+
 {{#if hasOneGiftedMembership}}
 
 Bevor diese Mitgliedschaft endet, erlauben wir uns die Frage:
@@ -24,10 +28,6 @@ Es ist, wie wir ganz unvoreingenommen finden, ein äusserst vielseitiges und in
 mehrfacher Hinsicht nützliches Geschenk: Die glücklichen Beschenkten erhalten
 ein hochwertiges Magazin und gleichzeitig unterstützen Sie unabhängigen
 Journalismus in der Schweiz.
-
-Klicken Sie hier, um {{#if hasOneGiftedMembership}}die
-Geschenkmitgliedschaft{{else if hasMultipleGiftedMemberships}}die
-Geschenkmitgliedschaften{{/if}} zu verlängern.
 
 Jetzt die Republik verschenken {{prolong_url}}
 

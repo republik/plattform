@@ -2,45 +2,44 @@ Guten Tag
 
 {{#if thirdAttempt}}
 
-Wir brauchen Ihre Hilfe: Seit dem {{end_date}} ist Ihr Jahresbeitrag von 
-{{autopay_total}} fällig, aber wir konnten die von Ihnen hinterlegte Kreditkarte 
+Wir brauchen Ihre Hilfe: Seit dem {{end_date}} ist Ihr Jahresbeitrag von
+{{autopay_total}} fällig, aber wir konnten die von Ihnen hinterlegte Kreditkarte
 {{autopay_card_brand}} mit den Endziffern {{autopay_card_last4}} nicht belasten.
 
-Bitte aktualisieren Sie Ihre Kreditkartendaten oder wählen Sie bis zum {{attempt_next_at}} 
-eine andere Zahlungsart – sonst endet Ihre Mitgliedschaft und Sie verlieren 
-Ihren Zugang zur Republik. 
+Bitte aktualisieren Sie Ihre Kreditkartendaten {{prolong_url}} oder wählen Sie
+bis zum {{attempt_next_at}} eine andere Zahlungsart – sonst endet Ihre
+Mitgliedschaft und Sie verlieren Ihren Zugang zur Republik.
 
-Jetzt Zahlungsart aktualisieren: {{prolong_url}}
+Jetzt Zahlungsart aktualisieren! {{prolong_url}}
 
-Als leserinnenfinanziertes Magazin zählt für uns jeder Beitrag, egal wie hoch 
+Als leserinnenfinanziertes Magazin zählt für uns jeder Beitrag, egal wie hoch
 die Summe ist.
 
-
-Falls Sie gerade einen finanziellen Engpass haben: Journalismus kostet zwar, 
-doch wir wollen niemanden ausschliessen. Wir haben Verständnis, wenn es für 
-{{autopay_total}} nicht reicht. Wir bieten Ihnen deshalb die Möglichkeit, 
-die Höhe Ihres Mitgliedsbeitrages selbst zu bestimmen: {{prolong_url_reduced}}
+Falls Sie gerade einen finanziellen Engpass haben: Journalismus kostet zwar,
+doch wir wollen niemanden ausschliessen. Wir haben Verständnis, wenn es für
+{{autopay_total}} nicht reicht. Wir bieten Ihnen deshalb die Möglichkeit, die
+Höhe Ihres Mitgliederbeitrags selbst zu bestimmen {{prolong_url_reduced}} .
 
 {{else if fourthAttempt}}
 
-Am {{end_date}} ist Ihr Jahresbeitrag von {{autopay_total}} fällig geworden. Trotz
-mehrfachen Versuchen konnten wir den Betrag von Ihrer hinterlegten {{autopay_card_brand}} 
-mit den Endziffern {{autopay_card_last4}} nicht abbuchen.
+Am {{end_date}} ist Ihr Jahresbeitrag von {{autopay_total}} fällig geworden.
+Trotz mehrfachen Versuchen konnten wir den Betrag von Ihrer hinterlegten
+{{autopay_card_brand}} mit den Endziffern {{autopay_card_last4}} nicht abbuchen.
 
 Wir sehen uns daher zu unserem grossen Bedauern gezwungen, Ihre Mitgliedschaft
 am {{grace_end_date}} zu deaktivieren.
 
-So weit muss es nicht kommen: Begleichen Sie den ausstehenden Jahresbeitrag, 
-wenn Sie möchten, auch mit einer anderen Zahlungsart.
+So weit muss es nicht kommen: Begleichen Sie den ausstehenden Jahresbeitrag
+{{prolong_url}} , wenn Sie möchten, auch mit einer anderen Zahlungsart.
 
-Jetzt bezahlen: {{prolong_url}} 
+Jetzt bezahlen! {{prolong_url}}
 
 {{else}}
 
 Bei Ihrem letzten Kauf haben Sie uns die Erlaubnis gegeben, Ihre hinterlegte
-Kreditkarte für zukünftige Käufe automatisch zu belasten. Bedauerlicherweise 
-konnten wir den Jahresbeitrag von {{autopay_total}} am {{end_date}} aber nicht 
-von Ihrer hinterlegten {{autopay_card_brand}} mit den Endziffern 
+Kreditkarte für zukünftige Käufe automatisch zu belasten. Bedauerlicherweise
+konnten wir den Jahresbeitrag von {{autopay_total}} am {{end_date}} aber nicht
+von Ihrer hinterlegten {{autopay_card_brand}} mit den Endziffern
 {{autopay_card_last4}} abbuchen.
 
 {{#if authentication_required}}
