@@ -1,34 +1,32 @@
 -- migrate up here: CREATE TABLE...
 
 CREATE TABLE campaigns (
-  id uuid NOT NULL,
-  name text NOT NULL UNIQUE,
-  description text NULL,
-  beginDate timestamp with time zone NOT NULL,
-  endDate timestamp with time zone NOT NULL,
-  createdAt timestamp with time zone NOT NULL,
-  updatedAt timestamp with time zone NOT NULL,
-  PRIMARY KEY (id)
+  "id" uuid PRIMARY KEY NOT NULL DEFAULT uuid_generate_v4(),
+  "name" text NOT NULL UNIQUE,
+  "description" text NULL,
+  "beginDate" timestamptz NOT NULL,
+  "endDate" timestamptz NOT NULL,
+  "createdAt"   timestamptz DEFAULT now(),
+  "updatedAt"   timestamptz DEFAULT now()
 );
 
 CREATE TABLE referrals (
-  id uuid NOT NULL,
-  campaignId uuid NULL,
-  referrerId uuid NOT NULL,
-  pledgeId uuid NOT NULL,
-  createdAt timestamp with time zone NOT NULL,
-  updatedAt timestamp with time zone NOT NULL,
-  PRIMARY KEY (id),
+  "id" uuid PRIMARY KEY NOT NULL DEFAULT uuid_generate_v4(),
+  "campaignId" uuid NULL,
+  "referrerId" uuid NOT NULL,
+  "pledgeId" uuid NOT NULL UNIQUE,
+  "createdAt"   timestamptz DEFAULT now(),
+  "updatedAt"   timestamptz DEFAULT now(),
   FOREIGN KEY 
-    (campaignId) REFERENCES campaigns (id)
+    ("campaignId") REFERENCES campaigns (id)
     ON UPDATE CASCADE
     ON DELETE CASCADE,
   FOREIGN KEY 
-    (referrerId) REFERENCES users (id)
+    ("referrerId") REFERENCES users (id)
     ON UPDATE CASCADE
     ON DELETE CASCADE,
   FOREIGN KEY 
-    (pledgeId) REFERENCES pledges (id)
+    ("pledgeId") REFERENCES pledges (id)
     ON UPDATE CASCADE
     ON DELETE CASCADE
 );
