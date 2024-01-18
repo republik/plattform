@@ -3,8 +3,11 @@ const handlebars = require('handlebars')
 
 function convertValToBoolean(val) {
   const lcVal = val.toLowerCase()
-  if (lcVal === 'true' || lcVal === 'false') {
-    return Boolean(lcVal.toLowerCase())
+  if (lcVal === 'true') {
+    return true
+  }
+  if (lcVal === 'false') {
+    return false
   }
   return val
 }
