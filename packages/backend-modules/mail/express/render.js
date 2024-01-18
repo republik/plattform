@@ -39,9 +39,16 @@ module.exports = async (server) => {
         return self.indexOf(value) === index
       },
     )
+    const variablesObject = variables.reduce(
+      (acc, cur) => ({
+        ...acc,
+        [cur.name]: cur.content,
+      }),
+      {},
+    )
 
     const getHTML = handlebars.compile(template)
-    const html = getHTML(variables)
+    const html = getHTML(variablesObject)
 
     // const mail = variables.reduce((template, variable) => {
     //   const { name, content } = variable
