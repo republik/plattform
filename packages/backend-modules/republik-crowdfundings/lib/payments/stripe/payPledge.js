@@ -44,7 +44,8 @@ const payWithSource = async ({
   pgdb,
   t,
 }) => {
-  const isSubscription = pkg.name === 'MONTHLY_ABO'
+  // const isSubscription = pkg.name === 'MONTHLY_ABO' // will not work anymore with new monthly abo, but should not be a problem if we deactivate stripe
+  const isSubscription = false
 
   // old charge threeDSecure
   const threeDSecure = pspPayload && pspPayload.type === 'three_d_secure'
@@ -180,7 +181,8 @@ const payWithPaymentMethod = async ({
     )
   }
 
-  const isSubscription = pkg.name === 'MONTHLY_ABO'
+  // const isSubscription = pkg.name === 'MONTHLY_ABO' // will not work anymore with new monthly abo, but should not be a problem if we deactivate stripe
+  const isSubscription = false
   let paymentIntent
   if (isSubscription) {
     const subscription = await createSubscription({

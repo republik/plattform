@@ -325,7 +325,9 @@ const createJobs = (now) => [
       autoPay,
     }) => {
       return (
-        ['ABO', 'BENEFACTOR_ABO', 'RECURRING_ABO'].includes(membershipType) &&
+        ['ABO', 'BENEFACTOR_ABO', 'MONTHLY_ABO_AUTOPAY'].includes(
+          membershipType,
+        ) &&
         membershipAutoPay === true &&
         autoPay &&
         userId === autoPay.userId

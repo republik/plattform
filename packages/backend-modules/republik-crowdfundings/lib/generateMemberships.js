@@ -11,7 +11,7 @@ const omit = require('lodash/omit')
 const UPGRADE_PKG_PATHS = [
   {
     fromMembershipType: 'MONTHLY_ABO',
-    toPackageNames: ['ABO', 'BENEFACTOR', 'YEARLY_ABO'],
+    toPackageNames: ['ABO', 'BENEFACTOR', 'YEARLY_ABO', 'MONTHLY_ABO'],
   },
   { fromMembershipType: 'YEARLY_ABO', toPackageNames: ['ABO', 'BENEFACTOR'] },
 ]
