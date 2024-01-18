@@ -139,7 +139,7 @@ const suggest = async (membershipId, pgdb) => {
     defaultPaymentMethod?.id ||
     defaultPaymentSource?.id
 
-  // Pick package and options which may be used to submit and autopayment
+  // Pick package and options which may be used to submit an autopayment
   const user = await pgdb.public.users.findOne({ id: membership.userId })
   const prolongPackage = (await getCustomPackages({ user, pgdb })).find(
     (p) => p.name === 'PROLONG',
@@ -160,14 +160,16 @@ const suggest = async (membershipId, pgdb) => {
   const endDate = getLastEndDate(membershipPeriods)
 
   if (prolongOption) {
+    const membershipType = membershipTypes.find(
+      (mt) => mt.rewardId === rewardId,
+    )
     return {
       userId: pledge.userId,
       pledgeId: pledge.id,
-      companyId: membershipTypes.find((mt) => mt.rewardId === rewardId)
-        .companyId,
+      companyId: membershipType.companyId,
       membershipId: membership.id,
-      membershipType: membershipTypes.find((mt) => mt.rewardId === rewardId)
-        .name,
+      membershipType: membershipType.name,
+      membershipTypeInterval: membershipType.interval,
       currentPeriods: membershipPeriods,
       endDate,
       graceEndDate: addInterval(endDate, membership.graceInterval),
