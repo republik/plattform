@@ -19,7 +19,7 @@ export default async function Page() {
           {url}
         </Link>
         <p>
-          Du hast schon {data.me.futureCampaignAboCount} Leute eingeladen 🎉
+          Du hast schon {data.me?.futureCampaignAboCount} Leute eingeladen 🎉
         </p>
       </Container>
     </div>
