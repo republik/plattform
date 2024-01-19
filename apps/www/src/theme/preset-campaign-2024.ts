@@ -4,6 +4,8 @@ export const presetCampaign2024 = definePreset({
   conditions: {
     extend: {
       campaign2024: '[data-page-theme="campaign-2024"] &',
+      campaign2024Inverted:
+        '[data-page-theme="campaign-2024"]:where([data-theme-inverted]) &',
       campaign2024Dark:
         '[data-theme="dark"] [data-page-theme="campaign-2024"] &',
     },
@@ -17,6 +19,7 @@ export const presetCampaign2024 = definePreset({
           campaign2024: {
             yellow: { value: '#FFFDF0' },
             red: { value: '#F50000' },
+            darkRed: { value: '#610000' },
           },
         },
       },
@@ -37,12 +40,14 @@ export const presetCampaign2024 = definePreset({
           pageBackground: {
             value: {
               _campaign2024: '{colors.campaign2024.yellow}',
-              _campaign2024Dark: '{colors.campaign2024.red}',
+              _campaign2024Inverted: '{colors.campaign2024.red}',
+              _campaign2024Dark: '{colors.campaign2024.darkRed}',
             },
           },
           contrast: {
             value: {
               _campaign2024: '{colors.campaign2024.red}',
+              _campaign2024Inverted: '{colors.campaign2024.yellow}',
               _campaign2024Dark: '{colors.campaign2024.yellow}',
             },
           },
@@ -50,14 +55,16 @@ export const presetCampaign2024 = definePreset({
             DEFAULT: {
               value: {
                 _campaign2024: '{colors.campaign2024.red}',
+                _campaign2024Inverted: '{colors.campaign2024.yellow}',
                 _campaign2024Dark: '{colors.campaign2024.yellow}',
               },
             },
-          },
-          teaserBackground: {
-            value: {
-              _campaign2024: '{colors.campaign2024.red}',
-              _campaign2024Dark: '{colors.campaign2024.red}',
+            inverted: {
+              value: {
+                _campaign2024: '{colors.campaign2024.yellow}',
+                _campaign2024Inverted: '{colors.campaign2024.red}',
+                _campaign2024Dark: '{colors.campaign2024.red}',
+              },
             },
           },
           link: {
