@@ -1,5 +1,5 @@
 -- migrate down here: DROP TABLE...
 
-DROP TABLE refferals;
+DROP TABLE referrals;
 
 DROP TABLE campaigns;
