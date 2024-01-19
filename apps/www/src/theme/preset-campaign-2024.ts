@@ -22,6 +22,18 @@ export const presetCampaign2024 = definePreset({
       },
       semanticTokens: {
         colors: {
+          overlay: {
+            value: {
+              _campaign2024: 'rgba(245,0,0, 0.05)',
+              _campaign2024Dark: 'rgba(255,255,255, 0.05)',
+            },
+          },
+          divider: {
+            value: {
+              _campaign2024: 'rgba(245,0,0, 0.15)',
+              _campaign2024Dark: 'rgba(255,255,255, 0.15)',
+            },
+          },
           pageBackground: {
             value: {
               _campaign2024: '{colors.campaign2024.yellow}',
@@ -54,11 +66,16 @@ export const presetCampaign2024 = definePreset({
               _campaign2024Dark: '{colors.campaign2024.yellow}',
             },
           },
-          divider: {
-            value: {
-              _campaign2024: 'rgba(0,0,0,0.2)',
-              _campaign2024Dark: 'rgba(255,255,255,0.4)',
-            },
+        },
+      },
+      textStyles: {
+        campaignHeading: {
+          value: {
+            fontFamily: 'druk',
+            fontWeight: 500,
+            fontStyle: 'normal',
+            fontSize: '4xl',
+            lineHeight: 1.16667,
           },
         },
       },
