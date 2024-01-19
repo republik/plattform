@@ -20,45 +20,47 @@ const MIN_HASH_LENGTH = 6
 const MAX_ATTMEPTS = 25
 
 /**
- * Generates and stores a unique alias for a user and updates the user with the alias.
+ * Generates and stores a unique code for a user and sets the referral-code for the user.
  * @param {object} user
  * @param {object} pgdb
  * @returns {Promise<string>} generated alias for the user
  */
-async function generateUserAlias(user, pgdb) {
-  if (user.alias) {
-    return user.alias
+async function generateReferralCode(user, pgdb) {
+  if (user.referralCode) {
+    return user.referralCode
   }
 
   // create sha256 hash of user.id + timestamp
-  let alias
+  let referralCode
   let length = MIN_HASH_LENGTH
   let attempts = 0
   let totalAttempts = 0
 
-  while (!alias) {
-    alias = randomString(length)
+  while (!referralCode) {
+    referralCode = randomString(length)
     console.log(
-      `User.alias | Attempting to assign alias ${alias} to user ${user.id}`,
+      `User.referralCode | Attempting to assign referralCode ${referralCode} to user ${user.id}`,
     )
 
     await pgdb.public.users
-      .updateAndGetOne({ id: user.id }, { alias })
+      .updateAndGetOne({ id: user.id }, { referralCode: referralCode })
       .then((user) => {
-        alias = user.alias
-        console.log(`User.alias | Assigned alias ${alias} to user ${user.id}`)
+        referralCode = user.referralCode
+        console.log(
+          `User.referralCode | Assigned referralCode ${referralCode} to user ${user.id}`,
+        )
       })
       // in case of collision, try again
       .catch((err) => {
         console.error(
-          `User.alias | Could not assign alias ${alias} to user ${user.id}, trying again...`,
+          `User.referralCode | Could not assign referralCode ${referralCode} to user ${user.id}, trying again...`,
         )
         console.error(err)
-        alias = null
+        referralCode = null
         attempts++
       })
 
-    if (alias) {
+    if (referralCode) {
       break
     }
 
@@ -71,13 +73,13 @@ async function generateUserAlias(user, pgdb) {
     totalAttempts++
 
     if (totalAttempts > MAX_ATTMEPTS) {
-      throw new Error('Could not generate alias')
+      throw new Error('Could not generate referralCode')
     }
   }
 
-  return alias
+  return referralCode
 }
 
 module.exports = {
-  generateUserAlias,
+  generateReferralCode,
 }

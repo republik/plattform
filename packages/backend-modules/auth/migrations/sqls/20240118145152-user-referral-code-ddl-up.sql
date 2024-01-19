@@ -1,3 +1,3 @@
 -- migrate up here: CREATE TABLE...
 -- add a alias column to the users table
-ALTER TABLE "users" ADD COLUMN "alias" VARCHAR(255) UNIQUE;
+ALTER TABLE "users" ADD COLUMN "referralCode" VARCHAR(255) UNIQUE;
