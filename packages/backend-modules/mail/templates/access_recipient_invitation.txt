@@ -25,18 +25,7 @@ Falls dieser Button nicht funktioniert: Öffnen Sie bitte
 und den folgenden Gutscheincode ein: {{GRANT_VOUCHER_CODE}}. Der Gutscheincode
 ist gültig bis zum {{GRANT_BEGIN_BEFORE}}.
 
-Die Republik erscheint von Montag bis Samstag mit täglich ein bis drei neuen
-Beiträgen. In der Republik-App {{link_manual}} , auf der Website {{link_signin}}
-und als Newsletter.
-
-Neben hintergründigen Recherchen und Reportagen finden Sie bei uns kurze
-Nachrichtenbriefings, meinungsstarke Kolumnen sowie Audio- und Bildbeiträge.
-
-{{/unless}} {{#if RECIPIENT_HAS_MEMBERSHIPS}}
-
-Sie erhalten diese E-Mail im Rahmen unserer Aktion «{{CAMPAIGN_TITLE}}».
-
-{{#if recipientIsNotGranter}}
+{{/unless}} {{#if RECIPIENT_HAS_MEMBERSHIPS}} {{#if recipientIsNotGranter}}
 
 {{GRANTER_NAME}} geht davon aus, dass Sie noch kein Republik-Abo besitzen. Dabei
 befinden Sie sich bereits an Bord – vielen Dank dafür!
