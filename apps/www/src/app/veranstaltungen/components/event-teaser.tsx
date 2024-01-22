@@ -1,6 +1,6 @@
 import { CMSItemStatus } from '@app/components/cms/item-status'
 import { Share } from '@app/components/share/share'
-import { formatEventDateRange } from '@app/lib/util/time-format'
+import { formatEventDateRange, isFutureEvent } from '@app/lib/util/time-format'
 import { css } from '@app/styled-system/css'
 import { hstack, vstack } from '@app/styled-system/patterns'
 import { IconCalendar, IconShare } from '@republik/icons'
@@ -33,6 +33,8 @@ type EventProps = {
 }
 
 export const EventTeaser = ({ isPage, isMember, event }: EventProps) => {
+  const isActive = isFutureEvent(event.startAt, event.endAt)
+
   return (
     <div
       className={css({
@@ -125,41 +127,44 @@ export const EventTeaser = ({ isPage, isMember, event }: EventProps) => {
         </dl>
 
         <StructuredText data={event.description.value} />
-        {event.fullyBooked ? (
-          <p
-            className={css({
-              fontStyle: 'italic',
-            })}
-          >
-            Die Veranstaltung ist ausgebucht.
-          </p>
-        ) : (
-          <>
-            {event.membersOnly && !isMember ? (
-              <>
-                {event.nonMemberCta && (
-                  <div
-                    className={vstack({
-                      gap: '4',
-                      alignItems: 'flex-start',
-                      fontStyle: 'italic',
-                    })}
-                  >
-                    <StructuredText data={event.nonMemberCta.value} />
-                  </div>
-                )}
-              </>
-            ) : (
-              <>
-                {event.signUpLink && (
-                  <Link target='_blank' href={event.signUpLink}>
-                    Zur Anmeldung
-                  </Link>
-                )}
-              </>
-            )}
-          </>
-        )}
+
+        {isActive &&
+          (event.fullyBooked ? (
+            <p
+              className={css({
+                fontStyle: 'italic',
+              })}
+            >
+              Die Veranstaltung ist ausgebucht.
+            </p>
+          ) : (
+            <>
+              {event.membersOnly && !isMember ? (
+                <>
+                  {event.nonMemberCta && (
+                    <div
+                      className={vstack({
+                        gap: '4',
+                        alignItems: 'flex-start',
+                        fontStyle: 'italic',
+                      })}
+                    >
+                      <StructuredText data={event.nonMemberCta.value} />
+                    </div>
+                  )}
+                </>
+              ) : (
+                <>
+                  {event.signUpLink && (
+                    <Link target='_blank' href={event.signUpLink}>
+                      Zur Anmeldung
+                    </Link>
+                  )}
+                </>
+              )}
+            </>
+          ))}
+
         <div className={hstack({ gap: '4', mt: '2' })}>
           <Share
             title={event.title}
