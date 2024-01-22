@@ -24,7 +24,7 @@ const argv = yargs
   .option('scope', {
     description: 'Access Token scope',
     alias: 's',
-    default: 'CUSTOM_PLEDGE',
+    default: 'SUBMIT_PLEDGE',
   }).argv
 
 PgDb.connect().then(async (pgdb) => {

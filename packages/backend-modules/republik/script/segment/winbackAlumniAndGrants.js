@@ -131,7 +131,7 @@ const handleBatch = async (rows, count, pgdb) => {
     rows[index].memberships = memberships.filter((m) => m.userId === row.id)
     rows[index].accessToken = await AccessToken.generateForUser(
       row,
-      'CUSTOM_PLEDGE_EXTENDED',
+      'SUBMIT_PLEDGE',
     )
   })
 

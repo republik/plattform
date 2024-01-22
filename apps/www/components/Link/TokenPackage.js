@@ -6,10 +6,10 @@ import withInNativeApp from '../../lib/withInNativeApp'
 import Link from 'next/link'
 
 const tokenQuery = gql`
-  query accessTokenCustomPledge {
+  query LinkTokenPackage {
     me {
       id
-      accessToken(scope: CUSTOM_PLEDGE)
+      submitPledge: accessToken(scope: SUBMIT_PLEDGE)
     }
   }
 `
@@ -20,13 +20,13 @@ const TokenPackageLink = compose(
     skip: (props) => !props.inNativeApp,
     props: ({ data }) => ({
       loading: data.loading,
-      accessToken: data.me && data.me.accessToken,
+      submitPledge: data.me?.submitPledge,
     }),
   }),
 )(
   ({
     loading,
-    accessToken,
+    submitPledge,
     children,
     params,
     inNativeApp,
@@ -38,8 +38,8 @@ const TokenPackageLink = compose(
       return '...'
     }
     const query = { ...params }
-    if (accessToken) {
-      query.token = accessToken
+    if (submitPledge) {
+      query.token = submitPledge
     }
     return (
       <Link

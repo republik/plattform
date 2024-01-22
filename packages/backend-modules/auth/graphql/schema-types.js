@@ -108,12 +108,14 @@ type SignInNotification {
 "Scope of an access token"
 enum AccessTokenScope {
   "A token to access me.customPackages (TTL: 90 days)"
-  CUSTOM_PLEDGE
+  CUSTOM_PLEDGE @deprecated(reason: "Use SUBMIT_PLEDGE instead.")
   "A token to access me.customPackages (TTL: 120 days)"
-  CUSTOM_PLEDGE_EXTENDED
+  CUSTOM_PLEDGE_EXTENDED @deprecated(reason: "Use SUBMIT_PLEDGE instead.")
+  "A token to submit any pledge (TTL: 90 days)"
+  SUBMIT_PLEDGE
   "A token to use mutation claimCard (TTL: 90 days)"
   CLAIM_CARD
-  "A token authorize a session (TTL: 5 days)"
+  "A token to authorize a session (TTL: 5 days)"
   AUTHORIZE_SESSION
   "A token access a invoices (TTL: 5 days)"
   INVOICE
