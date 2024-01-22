@@ -2,7 +2,12 @@ const Promise = require('bluebird')
 
 const { resolvePackages, getCustomOptions } = require('./CustomPackages')
 
-const getCustomPackages = async ({ user, crowdfundingName, pgdb }) => {
+const getCustomPackages = async ({
+  user,
+  crowdfundingName,
+  strict = true,
+  pgdb,
+}) => {
   const now = new Date()
 
   const crowdfundings = crowdfundingName
@@ -26,7 +31,7 @@ const getCustomPackages = async ({ user, crowdfundingName, pgdb }) => {
   }
 
   return Promise.map(
-    await resolvePackages({ packages, pledger: user, strict: true, pgdb }),
+    await resolvePackages({ packages, pledger: user, strict, pgdb }),
     getCustomOptions,
   ).filter(Boolean)
 }

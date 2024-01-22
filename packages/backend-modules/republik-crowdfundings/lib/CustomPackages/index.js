@@ -12,13 +12,8 @@ const { getPeriodEndingLast, getLastEndDate } = require('../utils')
 const rules = require('./rules')
 
 // membershipTypes and packages which are prolongable
-const EXTENDABLE_MEMBERSHIP_TYPES = [
-  'ABO',
-  'BENEFACTOR_ABO',
-  'ABO_GIVE_MONTHS',
-  'MONTHLY_ABO_AUTOPAY',
-]
-const EXTENDABLE_PACKAGE_NAMES = ['ABO', 'BENEFACTOR', 'MONTHLY_ABO']
+const EXTENDABLE_MEMBERSHIP_TYPES = ['ABO', 'BENEFACTOR_ABO', 'ABO_GIVE_MONTHS']
+const EXTENDABLE_PACKAGE_NAMES = ['ABO', 'BENEFACTOR']
 
 // membershipTypes which are can be dormant but are not
 // prolongabl by themselves
@@ -163,9 +158,13 @@ const evaluate = async ({
       return false
     }
 
-    // Can membership.membershipType be extended?
-    // Not all membershipTypes can be extended
-    if (!EXTENDABLE_MEMBERSHIP_TYPES.includes(membershipType.name)) {
+    // Can membership.membershipType not be extended?
+    // MembershipType can be extended if it's in the list or the same membershipType as in the packageOption
+    // example: MONTHLY_ABO_AUTOPAY is not an option in PROLONG package, but can be extended using AUTOPAY_PKG package
+    if (
+      !EXTENDABLE_MEMBERSHIP_TYPES.includes(membershipType.name) &&
+      membershipType.name !== packageOptionMembershipType.name
+    ) {
       debug('not extendable membershipType "%s"', membershipType.name)
       return false
     }
