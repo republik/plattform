@@ -41,8 +41,11 @@ const styles = {
     top: 0,
     left: '50%',
     height: '100%',
-    width: 10,
-    marginLeft: '-5px',
+    width: 14,
+    marginLeft: '-7px',
+    background: 'pageBackground',
+    borderWidth: 3,
+    borderColor: 'primary',
   }),
   trackFill: css({
     position: 'absolute',
@@ -50,9 +53,10 @@ const styles = {
     left: '50%',
     width: 10,
     marginLeft: '-5px',
+    background: 'primary',
   }),
   tick: css({
-    fontWeight: 'medium',
+    fontWeight: 'bold',
     cursor: 'pointer',
     width: 36,
     height: 36,
@@ -64,12 +68,12 @@ const styles = {
     left: '50%',
     marginLeft: -18,
     borderRadius: '100vw',
-    color: 'white',
-    fontSize: 12,
+    color: 'pageBackground',
+    fontSize: 14,
     userSelect: 'none',
   }),
   tickDefault: css({
-    color: 'black',
+    color: 'pageBackground',
     height: 28,
     marginTop: -14,
   }),
@@ -80,7 +84,7 @@ const styles = {
     left: '50%',
     width: 42,
     height: 42,
-    background: 'white',
+    background: 'pageBackground',
     borderWidth: 4,
     borderStyle: 'solid',
     borderRadius: '100vw',
@@ -91,6 +95,7 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+    boxShadow: 'sm',
   }),
 }
 
@@ -157,7 +162,7 @@ const Tick = ({
 
     return sliderYValue > tickY
       ? 'var(--colors-primary)'
-      : 'var(--colors-disabled)'
+      : 'var(--colors-primary)'
   })
 
   const color = useTransform(sliderY, (sliderYValue) => {
@@ -172,7 +177,7 @@ const Tick = ({
       return 'black'
     }
 
-    return 'white'
+    return 'var(--colors-page-background)'
   })
 
   return (
@@ -275,7 +280,7 @@ export const PriceSlider = ({
       >
         <div
           className={styles.track}
-          style={{ background: 'var(--colors-disabled)' }}
+          // style={{ background: 'var(--colors-disabled)' }}
         ></div>
 
         <motion.div
@@ -360,38 +365,17 @@ export const PriceSlider = ({
             }
           }}
         >
-          <div className={styles.thumb} style={{ borderColor: sliderColor }}>
+          <div className={styles.thumb}>
             <svg
               width='18'
               height='16'
               viewBox='0 0 18 16'
-              fill='none'
+              fill='white'
               xmlns='http://www.w3.org/2000/svg'
             >
-              <rect
-                y='0.84375'
-                width='18'
-                height='3'
-                rx='1.5'
-                fill='black'
-                fillOpacity='0.2'
-              />
-              <rect
-                y='6.84375'
-                width='18'
-                height='3'
-                rx='1.5'
-                fill='black'
-                fillOpacity='0.2'
-              />
-              <rect
-                y='12.8438'
-                width='18'
-                height='3'
-                rx='1.5'
-                fill='black'
-                fillOpacity='0.2'
-              />
+              <rect y='0.84375' width='18' height='3' rx='1.5' />
+              <rect y='6.84375' width='18' height='3' rx='1.5' />
+              <rect y='12.8438' width='18' height='3' rx='1.5' />
             </svg>
           </div>
         </motion.div>
