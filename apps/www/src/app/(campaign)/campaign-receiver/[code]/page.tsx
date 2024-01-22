@@ -4,6 +4,7 @@ import { UserInviterProfileInfoDocument } from '@app/graphql/republik-api/gql/gr
 import { getClient } from '@app/lib/apollo/client'
 import { css } from '@app/styled-system/css'
 import Image from 'next/image'
+import Link from 'next/link'
 
 const SenderProfile = ({
   portrait,
@@ -68,23 +69,15 @@ export default async function Page({ params }) {
   }
 
   return (
-    <Container>
+    <>
       <div
-        data-theme-inverted
         className={css({
+          flexGrow: 1,
           display: 'flex',
           flexDirection: 'column',
-          background: 'pageBackground',
-          color: 'text',
           gap: '8',
-          py: '8-16',
-          fontSize: 'xl',
         })}
       >
-        <h1 className={css({ textStyle: 'campaignHeading' })}>
-          <TypewriterContent />
-        </h1>
-
         {sender ? (
           <div>
             <SenderProfile
@@ -100,8 +93,18 @@ export default async function Page({ params }) {
           Hier sollte noch ein mega inspiriender Text stehen, wo auch gesagt
           wird, dass man seinen eigenen Preis wählen kann und so.
         </p>
+      </div>
 
-        <button
+      <div
+        className={css({
+          position: 'sticky',
+          bottom: 0,
+          width: 'full',
+          py: '8',
+          background: 'pageBackground',
+        })}
+      >
+        <Link
           className={css({
             background: 'contrast',
             color: 'text.inverted',
@@ -109,12 +112,17 @@ export default async function Page({ params }) {
             borderRadius: '5px',
             fontWeight: 'medium',
             cursor: 'pointer',
+            textDecoration: 'none',
+            textAlign: 'center',
+            display: 'block',
+            width: 'full',
             _hover: {},
           })}
+          href={`${params.code}/angebot?price=240`}
         >
           Angebot wählen
-        </button>
+        </Link>
       </div>
-    </Container>
+    </>
   )
 }

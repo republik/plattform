@@ -25,6 +25,13 @@ export const presetCampaign2024 = definePreset({
       },
       semanticTokens: {
         colors: {
+          primary: {
+            value: {
+              _campaign2024: '{colors.campaign2024.red}',
+              _campaign2024Inverted: '{colors.campaign2024.yellow}',
+              _campaign2024Dark: '{colors.campaign2024.yellow}',
+            },
+          },
           overlay: {
             value: {
               _campaign2024: 'rgba(245,0,0, 0.05)',
