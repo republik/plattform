@@ -241,7 +241,7 @@ class PaymentSources extends Component {
               }}
             >
               {isDatatransPaymentMethod(values.paymentMethod)
-                ? t('account/paymentSource/add')
+                ? t('account/paymentSource/register')
                 : t('account/paymentSource/save')}
             </Button>
           </Fragment>

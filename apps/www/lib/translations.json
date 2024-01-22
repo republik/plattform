@@ -7874,6 +7874,34 @@
     {
       "key": "CallToActions/customComponents/FutureCampaignBanner/button/0",
       "value": "Noch heute Verstärkung holen und Gratismonate sichern"
+    },
+    {
+      "key": "pledge/recievePayment/datatrans/cancel",
+      "value": "Zahlung abgebrochen. Wählen Sie bitte ein anderes Zahlungsmittel, um Ihre Bestellung abzuschliessen."
+    },
+    {
+      "key": "pledge/recievePayment/datatrans/error",
+      "value": "Zahlung fehlgeschlagen.<br />\n<br />\nWählen Sie bitte ein anderes Zahlungsmittel, um Ihre Bestellung abzuschliessen."
+    },
+    {
+      "key": "account/paymentSource/setup",
+      "value": "registrieren"
+    },
+    {
+      "key": "account/paymentSource/adding",
+      "value": "Hinterlege Zahlungsmittel…"
+    },
+    {
+      "key": "pledge/recievePayment/datatrans/mailto/subject",
+      "value": "Datatrans {status}"
+    },
+    {
+      "key": "pledge/recievePayment/datatrans/mailto/body",
+      "value": "Liebe Republik\n\nLasst uns über Geld sprechen.\n\nBuchungsreferenz:\n{pledgeId}\n\nDatatrans:\n{payload}"
+    },
+    {
+      "key": "pledge/submit/loading/datatrans",
+      "value": "weiterleiten"
     }
   ]
 }
