@@ -488,6 +488,10 @@ mail.sendMembershipDeactivated = async ({ membership, pgdb, t }) => {
       mergeLanguage: 'handlebars',
       globalMergeVars: [
         {
+          name: 'name',
+          content: user.name,
+        },
+        {
           name: 'prolong_url',
           content: `${FRONTEND_BASE_URL}/angebote?package=PROLONG&token=${submitPledgeToken}`,
         },

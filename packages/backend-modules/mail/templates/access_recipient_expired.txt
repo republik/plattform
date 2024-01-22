@@ -4,50 +4,10 @@ Guten Tag
 Empfehlung von {{GRANTER_NAME}} zu Gast an Bord der Republik.{{else}}Seit dem
 {{GRANT_BEGIN}} waren Sie zu Gast an Bord der Republik.{{/if}}
 
-Hat Ihnen unser Magazin gefallen?
+Ihre Probefahrt ist beendet – aber wir würden uns sehr freuen, Sie bald wieder
+bei uns begrüssen zu dürfen!
 
-Ganz gleich, wie oft Sie uns gelesen haben: Wir hoffen, dass wir Sie immer
-wieder erfolgreich überzeugen, herausfordern, informieren, erfreuen und
-vielleicht das ein oder andere Mal ärgern konnten.
-
-Wie Sie wissen, ist die Republik werbefrei und wird von ihren Leserinnen und
-Lesern finanziert. Es kommt also auf jede einzelne Person an. Deshalb würden wir
-uns sehr freuen, Sie als Teil unserer Verlagsetage und Mitglied der
-Republik-Community willkommen zu heissen.
-
-Sie haben hierfür verschiedene Möglichkeiten:
-
- 1. Die Jahresmitgliedschaft {{link_offer_abo}} für CHF 240.–/Jahr
-    
-    Mit dieser Mitgliedschaft erhalten Sie unabhängigen und werbefreien
-    Qualitätsjournalismus und sind Teil der Republik-Community. Gleichzeitig
-    sind Sie Mitglied der Project R Genossenschaft – und damit Mitbesitzerin der
-    Republik.
-
- 2. Das Monatsabonnement {{link_offer_monthly_abo}} für CHF 22.–/Monat
-    
-    Mit diesem Abo erhalten Sie Zugang zum Magazin und zum Dialog – ohne dass
-    Sie Teil unserer Genossenschaft werden. Das Abonnement verlängert sich
-    automatisch, kann aber jederzeit und ohne Frist gekündigt werden.
-
- 3. Die Gönnermitgliedschaft {{link_offer_benefactor}} ab CHF 1000.–/Jahr
-    
-    Mit der Gönnermitgliedschaft erhalten Sie Zugang zum vollständigen
-    Republik-Angebot, ein Extra-Dankeschön und die Gewissheit, einen sehr
-    wichtigen Beitrag zur Erhaltung einer freien, demokratischen Öffentlichkeit
-    geleistet zu haben – denn Ihre Grosszügigkeit ermöglicht es, die Republik
-    auch Personen zugänglich zu machen, die sich eine volle Mitgliedschaft nicht
-    leisten könnten. Zudem sind Sie Teil der Republik-Community und Mitglied der
-    Project R Genossenschaft.
-
- 4. Die Ausbildungsmitgliedschaft {{link_offer_reduced_ausbildung}} für CHF
-    140.–/Jahr
-    
-    Mit dieser Mitgliedschaft erhalten alle Auszubildenden und Studierenden
-    Zugang zum vollständigen Republik-Angebot inklusive
-    Genossenschafts-Mitgliedschaft – zu einem vergünstigten Preis.
-
-Sehen wir uns?
+Zu den Angeboten {{link_offers_overview}}
 
 Bei Fragen oder wenn Sie Unterstützung brauchen, helfen wir Ihnen unter
 kontakt@republik.ch gerne weiter.
