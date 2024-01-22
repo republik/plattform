@@ -7902,6 +7902,38 @@
     {
       "key": "pledge/submit/loading/datatrans",
       "value": "weiterleiten"
+    },
+    {
+      "key": "account/pledges/payment/method/DATATRANS_CREDITCARD",
+      "value": "Kreditkarte"
+    },
+    {
+      "key": "account/pledges/payment/method/DATATRANS_PAYPAL",
+      "value": "PayPal"
+    },
+    {
+      "key": "account/pledges/payment/method/DATATRANS_POSTFINANCECARD",
+      "value": "PostFinance Card"
+    },
+    {
+      "key": "account/pledges/payment/method/DATATRANS_TWINT",
+      "value": "Twint"
+    },
+    {
+      "key": "payment/method/DATATRANS_CREDITCARD",
+      "value": "Kreditkarte"
+    },
+    {
+      "key": "payment/method/DATATRANS_PAYPAL",
+      "value": "PayPal"
+    },
+    {
+      "key": "payment/method/DATATRANS_POSTFINANCECARD",
+      "value": "PostFinance Card"
+    },
+    {
+      "key": "payment/method/DATATRANS_TWINT",
+      "value": "Twint"
     }
   ]
 }
