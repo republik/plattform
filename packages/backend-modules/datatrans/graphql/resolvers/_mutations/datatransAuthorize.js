@@ -9,31 +9,31 @@ const {
 
 module.exports = async (_, args, context) => {
   const { pledgeId, sourceId, accessToken } = args
-  const { loaders, pgdb, user } = context
+  const { loaders, pgdb, user, t } = context
 
   const me =
     user ||
     (accessToken ? await getUserByAccessToken(accessToken, context) : null)
   if (!me) {
-    throw new Error('user not found')
+    throw new Error(t('api/users/404'))
   }
 
   const pledge = await loaders.Pledge.byId.load(pledgeId)
   if (!pledge) {
-    throw new Error('pledge not found')
+    throw new Error(t('api/pledge/404'))
   }
 
   if (pledge.userId !== me.id) {
-    throw new Error('pledge does not belong to you')
+    throw new Error(t('api/pledge/notYours'))
   }
 
   if (pledge.status !== 'DRAFT') {
-    throw new Error('pledge status not DRAFT')
+    throw new Error(t('api/pledge/expectedDraftStatus'))
   }
 
   const pkg = await pgdb.public.packages.findOne({ id: pledge.packageId })
   if (!pkg) {
-    throw new Error('package not found')
+    throw new Error(t('api/package/404'))
   }
 
   const paymentSource = await pgdb.public.paymentSources.findOne({
@@ -41,7 +41,7 @@ module.exports = async (_, args, context) => {
     userId: me.id,
   })
   if (!paymentSource) {
-    throw new Error('noting found')
+    throw new Error(`api/payment/paymentSource/404`)
   }
 
   const tx = await pgdb.transactionBegin()

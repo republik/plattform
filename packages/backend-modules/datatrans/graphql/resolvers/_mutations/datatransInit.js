@@ -9,20 +9,20 @@ const {
 
 module.exports = async (_, args, context) => {
   const { pledgeId, method, accessToken } = args
-  const { loaders, pgdb } = context
+  const { loaders, pgdb, t } = context
 
   const pledge = await loaders.Pledge.byId.load(pledgeId)
   if (!pledge) {
-    throw new Error('pledge not found')
+    throw new Error(t('api/pledge/404'))
   }
 
   if (pledge.status !== 'DRAFT') {
-    throw new Error('pledge status not DRAFT')
+    throw new Error(t('api/pledge/expectedDraftStatus'))
   }
 
   const pkg = await pgdb.public.packages.findOne({ id: pledge.packageId })
   if (!pkg) {
-    throw new Error('package not found')
+    throw new Error(t('api/package/404'))
   }
 
   const pledgeOptionsWithAutoPay = await pgdb.public.pledgeOptions.count({

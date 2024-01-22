@@ -2,11 +2,11 @@ const { registrationTransaction, getMerchant } = require('../../../lib/helpers')
 
 module.exports = async (_, args, context) => {
   const { method, companyId } = args
-  const { pgdb, user: me } = context
+  const { pgdb, user: me, t } = context
 
   const company = await pgdb.public.companies.findOne({ id: companyId })
   if (!company) {
-    throw new Error('company not found')
+    throw new Error(t('api/company/404'))
   }
 
   const tx = await pgdb.transactionBegin()
