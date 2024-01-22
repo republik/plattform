@@ -1,7 +1,5 @@
 import { Metadata } from 'next'
 
-import { ApolloWrapper } from 'src/lib/apollo/provider'
-
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -20,9 +18,7 @@ function RootLayout(props: RootLayoutProps) {
 
   return (
     <html suppressHydrationWarning>
-      <body>
-        <ApolloWrapper>{children}</ApolloWrapper>
-      </body>
+      <body>{children}</body>
     </html>
   )
 }

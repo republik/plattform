@@ -1,35 +1,42 @@
 'use client'
 
 import { useState } from 'react'
+import { usePathname, useSearchParams } from 'next/navigation'
+
 import useTimeout from 'src/lib/useTimeout'
 
-type GotoProps = {
-  url: string
-}
+const REDIRECT_TIMEOUT = 200 // ms
+const SHOWLINK_TIMEOUT = 3000 // ms
 
-const REDIRECT_TIMEOUT = 200
-const SHOWLINK_TIMEOUT = REDIRECT_TIMEOUT * 10
-
-export default function Goto(props: GotoProps) {
+export default function Goto() {
+  const gotoPathname = usePathname()
+  const gotoSearchParams = useSearchParams()
   const [showLink, setShowLink] = useState(false)
 
-  useTimeout(
-    () => {
-      window.location.replace(props.url)
-    },
-    props.url ? REDIRECT_TIMEOUT : null,
+  // Parse gotoPathname into a fully qualified URL, using NEXT_PUBLIC_FRONTEND_BASE_URL
+  const targetUrl = new URL(
+    gotoPathname,
+    process.env.NEXT_PUBLIC_FRONTEND_BASE_URL,
   )
 
+  // Copy searchParams into target URL
+  targetUrl.search = gotoSearchParams.toString()
+
+  // Forward user to targetUrl after REDIRECT_TIMEOUT ms
   useTimeout(
-    () => {
-      setShowLink(true)
-    },
-    props.url ? SHOWLINK_TIMEOUT : null,
+    () => window.location.replace(targetUrl.toString()),
+    REDIRECT_TIMEOUT,
   )
+
+  // Show a link to user SHOWLINK_TIMEOUT ms
+  useTimeout(() => setShowLink(true), SHOWLINK_TIMEOUT)
 
   if (showLink) {
     return (
-      <a href={props.url} className='text-primary hover:text-primary-hover'>
+      <a
+        href={targetUrl.toString()}
+        className='text-primary hover:text-primary-hover'
+      >
         Klicken Sie hier um fortzufahren
       </a>
     )
