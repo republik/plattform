@@ -371,42 +371,6 @@ Promise.props({ pgdb: PgDb.connect(), elastic: Elasticsearch.connect() })
     )
 
     /**
-     * cards
-     */
-    const cards = await pgdb.public.cards.find({ userId: user.id })
-
-    if (cards.length > 0) {
-      const cardGroups = await pgdb.public.cardGroups.find({
-        id: cards.map(({ cardGroupId }) => cardGroupId),
-      })
-
-      const comments = await pgdb.public.comments.find({
-        id: cards.map(({ commentId }) => commentId),
-      })
-
-      await save(
-        destination,
-        'cards',
-        'Karten bei Produkte wie Wahltindär',
-        cards.map((card) => {
-          const cardGroup = cardGroups.find(
-            (cardGroup) => cardGroup.id === card.cardGroupId,
-          )
-          const comment = comments.find(
-            (comment) => comment.id === card.commentId,
-          )
-
-          return {
-            ...pick(card, ['createdAt', 'updatedAt']),
-            cardGroup_name: cardGroup.name,
-            cardGroup_slug: cardGroup.slug,
-            comment_content: comment && comment.content,
-          }
-        }),
-      )
-    }
-
-    /**
      * collectionDocumentItems
      */
     const collectionDocumentItems =

@@ -10,7 +10,6 @@ const {
   isInCandidacy,
   isInCandidacyInCandidacyPhase,
   isInCandidacyInElectionPhase,
-  hasCards,
 } = require('../../../lib/profile')
 const { upsertAddress } = require('../../../lib/address')
 const {
@@ -221,12 +220,6 @@ module.exports = async (_, args, context) => {
       ) {
         throw new Error(t('profile/candidacy/electionPhase'))
       }
-    }
-  }
-
-  if (await hasCards(me._raw, pgdb)) {
-    if (args.hasPublicProfile === false) {
-      throw new Error(t('profile/cards/needed'))
     }
   }
 
