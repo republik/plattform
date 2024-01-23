@@ -82,7 +82,7 @@ export const addPaymentSource = async (
     transactionId,
   )
   if (!isPreAuthorized(transaction)) {
-    throw new Error('transaction did not succeed')
+    throw new Error('transaction seems not pre-authorized')
   }
 
   await pgdb.public.paymentSources.updateOne(

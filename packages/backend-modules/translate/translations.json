@@ -2577,24 +2577,8 @@
       "value": "Die Begründung ist zu lange. (Maximal {max} Zeichen)"
     },
     {
-      "key": "api/pledge/expectedDraftStatus",
-      "value": "Der Pledge ist nicht mehr im Entwurfszustand."
-    },
-    {
-      "key": "api/package/404",
-      "value": "Package nicht gefunden"
-    },
-    {
-      "key": "api/pledge/notYours",
-      "value": "Sie können diesen Pledge nicht bearbeiten."
-    },
-    {
-      "key": "api/payment/paymentSource/404",
-      "value": "Die ausgewählte Zahlart steht nicht zur Verfügung."
-    },
-    {
-      "key": "api/company/404",
-      "value": "Unternehmen nicht gefunden"
+      "key": "api/pay/parseFailed",
+      "value": "Es kam zu einem Fehler, weil etwas mit den Daten nicht stimmt. Wählen Sie bitte ein anderes Zahlungsmittel, um Ihre Bestellung abzuschliessen oder melden Sie sich bei uns mit dieser Pledge-ID: {id}."
     }
   ]
 }

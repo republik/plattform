@@ -56,7 +56,7 @@ module.exports = async (props: PayPledgeProps) => {
     paymentId,
   })
   if (!pledgePayment) {
-    throw Error('...')
+    throw Error('pledgePayment missing')
   }
 
   // find payment
@@ -96,7 +96,7 @@ module.exports = async (props: PayPledgeProps) => {
   )
 
   if (transactionStatus.detail?.settle?.amount === undefined) {
-    throw new Error(t('api/datatrans/settleAmountError'))
+    throw new Error('transaction settle amount undefined')
   }
 
   await transaction.public.payments.updateOne(

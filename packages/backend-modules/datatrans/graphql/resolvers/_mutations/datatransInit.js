@@ -9,30 +9,30 @@ const {
 
 module.exports = async (_, args, context) => {
   const { pledgeId, method, accessToken } = args
-  const { loaders, pgdb, t } = context
-
-  const pledge = await loaders.Pledge.byId.load(pledgeId)
-  if (!pledge) {
-    throw new Error(t('api/pledge/404'))
-  }
-
-  if (pledge.status !== 'DRAFT') {
-    throw new Error(t('api/pledge/expectedDraftStatus'))
-  }
-
-  const pkg = await pgdb.public.packages.findOne({ id: pledge.packageId })
-  if (!pkg) {
-    throw new Error(t('api/package/404'))
-  }
-
-  const pledgeOptionsWithAutoPay = await pgdb.public.pledgeOptions.count({
-    pledgeId,
-    autoPay: true,
-  })
+  const { loaders, pgdb, req, t } = context
 
   const tx = await pgdb.transactionBegin()
 
   try {
+    const pledge = await loaders.Pledge.byId.load(pledgeId)
+    if (!pledge) {
+      throw new Error('pledgeId not found')
+    }
+
+    if (pledge.status !== 'DRAFT') {
+      throw new Error('pledge not in status "DRAFT"')
+    }
+
+    const pkg = await pgdb.public.packages.findOne({ id: pledge.packageId })
+    if (!pkg) {
+      throw new Error('package not found')
+    }
+
+    const pledgeOptionsWithAutoPay = await pgdb.public.pledgeOptions.count({
+      pledgeId,
+      autoPay: true,
+    })
+
     // insert payment
     const payment = await tx.public.payments.insertAndGet({
       type: 'PLEDGE',
@@ -71,6 +71,7 @@ module.exports = async (_, args, context) => {
     return { authorizeUrl }
   } catch (e) {
     await tx.transactionRollback()
-    throw e
+    console.info('transaction rollback', { req: req._log(), args, error: e })
+    throw new Error(t('api/unexpected'))
   }
 }

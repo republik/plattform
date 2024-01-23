@@ -9,44 +9,44 @@ const {
 
 module.exports = async (_, args, context) => {
   const { pledgeId, sourceId, accessToken } = args
-  const { loaders, pgdb, user, t } = context
-
-  const me =
-    user ||
-    (accessToken ? await getUserByAccessToken(accessToken, context) : null)
-  if (!me) {
-    throw new Error(t('api/users/404'))
-  }
-
-  const pledge = await loaders.Pledge.byId.load(pledgeId)
-  if (!pledge) {
-    throw new Error(t('api/pledge/404'))
-  }
-
-  if (pledge.userId !== me.id) {
-    throw new Error(t('api/pledge/notYours'))
-  }
-
-  if (pledge.status !== 'DRAFT') {
-    throw new Error(t('api/pledge/expectedDraftStatus'))
-  }
-
-  const pkg = await pgdb.public.packages.findOne({ id: pledge.packageId })
-  if (!pkg) {
-    throw new Error(t('api/package/404'))
-  }
-
-  const paymentSource = await pgdb.public.paymentSources.findOne({
-    id: sourceId,
-    userId: me.id,
-  })
-  if (!paymentSource) {
-    throw new Error(`api/payment/paymentSource/404`)
-  }
+  const { loaders, pgdb, user, req, t } = context
 
   const tx = await pgdb.transactionBegin()
 
   try {
+    const me =
+      user ||
+      (accessToken ? await getUserByAccessToken(accessToken, context) : null)
+    if (!me) {
+      throw new Error(t('user missing or accessToken invalid'))
+    }
+
+    const pledge = await loaders.Pledge.byId.load(pledgeId)
+    if (!pledge) {
+      throw new Error('pledgeId not found')
+    }
+
+    if (pledge.userId !== me.id) {
+      throw new Error('pledge does not belong to user')
+    }
+
+    if (pledge.status !== 'DRAFT') {
+      throw new Error('pledge not in status "DRAFT"')
+    }
+
+    const pkg = await pgdb.public.packages.findOne({ id: pledge.packageId })
+    if (!pkg) {
+      throw new Error('package not found')
+    }
+
+    const paymentSource = await pgdb.public.paymentSources.findOne({
+      id: sourceId,
+      userId: me.id,
+    })
+    if (!paymentSource) {
+      throw new Error('paymentSource not found')
+    }
+
     // insert payment
     const payment = await tx.public.payments.insertAndGet({
       type: 'PLEDGE',
@@ -78,6 +78,7 @@ module.exports = async (_, args, context) => {
     return { paymentId: payment.id }
   } catch (e) {
     await tx.transactionRollback()
-    throw e
+    console.info('transaction rollback', { req: req._log(), args, error: e })
+    throw new Error(t('api/unexpected'))
   }
 }
