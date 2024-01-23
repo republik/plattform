@@ -7884,7 +7884,7 @@
       "value": "Zahlung fehlgeschlagen.<br />\n<br />\nWählen Sie bitte ein anderes Zahlungsmittel, um Ihre Bestellung abzuschliessen."
     },
     {
-      "key": "account/paymentSource/setup",
+      "key": "account/paymentSource/register",
       "value": "registrieren"
     },
     {
