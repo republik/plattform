@@ -54,8 +54,8 @@ async function getUserIdForReferrerReference(referrerReference, pgdb) {
  * @param {{
  *  id: string,
  *  payload: {
- *    utm_content: string | null | undefined
- *    utm_campaign: string | null | undefined
+ *    ref_content: string | null | undefined
+ *    ref_campaign: string | null | undefined
  *  }
  * }} pledge for which to handle a possible referral
  * @param {{ pgdb: object }}  ctx object containing the pgdb instance
@@ -65,7 +65,7 @@ async function handleReferral(pledge, { pgdb }) {
   const { payload } = pledge
 
   const referrerId = await getUserIdForReferrerReference(
-    payload?.utm_content,
+    payload?.ref_content,
     pgdb,
   )
 
@@ -75,7 +75,7 @@ async function handleReferral(pledge, { pgdb }) {
   }
 
   const campaign = await pgdb.public.campaigns.findOne({
-    id: payload?.utm_campaign,
+    id: payload?.ref_campaign,
   })
 
   await pgdb.transactionBegin()
