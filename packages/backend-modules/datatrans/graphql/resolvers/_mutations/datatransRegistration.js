@@ -1,8 +1,10 @@
+const { ensureSignedIn } = require('@orbiting/backend-modules-auth')
 const { registrationTransaction, getMerchant } = require('../../../lib/helpers')
 
 module.exports = async (_, args, context) => {
   const { method, companyId } = args
   const { pgdb, user: me, req, t } = context
+  ensureSignedIn(req, t)
 
   const tx = await pgdb.transactionBegin()
 
