@@ -73,7 +73,11 @@ async function generateReferralCode(user, pgdb) {
     totalAttempts++
 
     if (totalAttempts > MAX_ATTMEPTS) {
-      throw new Error('Could not generate referralCode')
+      console.error(
+        `Could not generate referral code for user ${user.id}, exceeded max attempts`,
+      )
+      referralCode = null
+      break
     }
   }
 
