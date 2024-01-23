@@ -41,6 +41,13 @@ module.exports = async (_, args, context) => {
   } catch (e) {
     await tx.transactionRollback()
     console.info('transaction rollback', { req: req._log(), args, error: e })
+    pgdb.public.paymentErrors.insert({
+      method,
+      step: 'registration',
+      error: e,
+      payload: req._log(),
+      args: args,
+    })
     throw new Error(t('api/unexpected'))
   }
 }
