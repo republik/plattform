@@ -23,6 +23,14 @@ import { loadStripe } from '../Payment/stripe'
 
 const objectValues = (object) => Object.keys(object).map((key) => object[key])
 
+/**
+ * Picks payment methods which can be stored as an alias/token. An alias or token
+ * is an user authorization to allow charging future payments without their
+ * interaction.
+ *
+ */
+const pickTokenizableMethods = (method) =>
+  method.startsWith('DATATRANS') || method.startsWith('STRIPE')
 class PaymentSources extends Component {
   constructor(...args) {
     super(...args)
@@ -170,7 +178,7 @@ class PaymentSources extends Component {
             id: me.id,
           }}
           context='DEFAULT_SOURCE'
-          allowedMethods={methods}
+          allowedMethods={methods.filter(pickTokenizableMethods)}
           keepPaymentSource={true}
           onChange={(fields) => {
             this.setState((state) => {
