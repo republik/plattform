@@ -1,13 +1,15 @@
-import { Collapsible } from './collapsible'
-import { CHALLENGE_ACCEPTED_PERSON_LIST_QUERY } from '@app/graphql/cms/person-list.query'
-import type { ChallengeAcceptedPersonListQueryQuery } from '@app/graphql/cms/gql/graphql'
+import { Collapsible } from '@app/app/challenge-accepted/components/collapsible'
+import {
+  ChallengeAcceptedPersonListDocument,
+  type ChallengeAcceptedPersonListQuery,
+} from '@app/graphql/cms/gql/graphql'
 import { getCMSClient } from '@app/lib/apollo/cms-client'
 import { css } from '@app/styled-system/css'
 import { hstack } from '@app/styled-system/patterns'
 import Image from 'next/image'
 import Link from 'next/link'
 
-type Person = ChallengeAcceptedPersonListQueryQuery['people'][number]
+type Person = ChallengeAcceptedPersonListQuery['people'][number]
 
 const PersonListItem = ({ person }: { person: Person }) => {
   return (
@@ -60,7 +62,7 @@ export async function PersonList({
   hidePersonId?: string
 }) {
   const { data } = await getCMSClient().query({
-    query: CHALLENGE_ACCEPTED_PERSON_LIST_QUERY,
+    query: ChallengeAcceptedPersonListDocument,
     context: {
       fetchOptions: {
         next: {
@@ -130,7 +132,23 @@ export async function PersonList({
   }
 
   return (
-    <div>
+    <div
+      className={css({
+        '& [data-collapsible]': {
+          borderColor: 'contrast',
+          borderStyle: 'solid',
+          borderTopWidth: 1,
+          borderBottomWidth: 1,
+        },
+        '& [data-collapsible-trigger]': {
+          color: 'contrast',
+          cursor: 'pointer',
+          textAlign: 'center',
+          width: 'full',
+          mt: '4',
+        },
+      })}
+    >
       <Collapsible shownItems={shownItems} collapsedItems={collapsedItems} />
     </div>
   )

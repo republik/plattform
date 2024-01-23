@@ -1,3 +1,4 @@
+import LightSwitch from '@app/components/lightswitch'
 import { getMe } from '@app/lib/auth/me'
 import { getPlatformInformation } from '@app/lib/util/useragent/platform-information'
 import { css } from '@app/styled-system/css'
@@ -26,8 +27,8 @@ function isLinkOfSameHost(link: string | UrlObject, host: string) {
     }
     return new URL(link).hostname === new URL(host).hostname
   } catch (e) {
-    // console.error(e)
-    return false
+    // Relative links fail to parse with new URL(), so we assume they are in fact relative
+    return true
   }
 }
 
@@ -291,14 +292,14 @@ export default async function Footer() {
 
                       const baseURL = process.env.NEXT_PUBLIC_BASE_URL
 
-                      const isExternalLink = isLinkOfSameHost(link, baseURL)
+                      const isExternalLink = !isLinkOfSameHost(link, baseURL)
 
                       return (
                         <li key={name}>
                           <Link
                             href={link}
                             target={isExternalLink ? '_blank' : undefined}
-                            rel={isExternalLink ? 'noopener' : undefined}
+                            rel={isExternalLink ? 'noreferrer' : undefined}
                           >
                             {name}
                           </Link>
@@ -338,14 +339,23 @@ export default async function Footer() {
         <div
           className={css({
             display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'flex-end',
+            flexDirection: 'column',
+            gap: '2',
+            md: {
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+            },
           })}
         >
+          <div>
+            <LightSwitch />
+          </div>
+
           <div
             className={css({
               display: 'flex',
               flexDirection: 'row',
+              alignSelf: 'flex-end',
               alignItems: 'center',
               fontSize: 's',
             })}
@@ -359,7 +369,7 @@ export default async function Footer() {
             />
             <a
               href='https://github.com/republik/plattform'
-              rel='noopener'
+              rel='noreferrer'
               target='_blank'
             >
               Der Republik Code ist Open Source

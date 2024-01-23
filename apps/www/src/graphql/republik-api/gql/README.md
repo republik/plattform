@@ -1,1 +1,1 @@
-> This folder is auto-generated, don't update the files manually!
+This folder is auto-generated, don't update the files manually!

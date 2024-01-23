@@ -1,5 +1,8 @@
-import { EVENT_QUERY, EventRecordFields } from '@app/graphql/cms/events.query'
 import { useFragment } from '@app/graphql/cms/gql'
+import {
+  EventDocument,
+  EventRecordFieldsFragmentDoc,
+} from '@app/graphql/cms/gql/graphql'
 import { getCMSClient } from '@app/lib/apollo/cms-client'
 import dayjs from 'dayjs'
 import ical, { ICalCalendarMethod } from 'ical-generator'
@@ -12,10 +15,10 @@ export async function GET(
 ) {
   const client = getCMSClient()
   const { data } = await client.query({
-    query: EVENT_QUERY,
+    query: EventDocument,
     variables: { slug },
   })
-  const event = useFragment(EventRecordFields, data.event)
+  const event = useFragment(EventRecordFieldsFragmentDoc, data.event)
 
   if (!event) {
     return notFound()
@@ -29,12 +32,16 @@ export async function GET(
   const start = dayjs(event.startAt)
   const end = event.endAt ? dayjs(event.endAt) : start.add(1, 'hour')
 
+  // We assume that multi-day events are all-day.
+  const allDay = !start.isSame(end, 'day')
+
   const calendar = ical({ method: ICalCalendarMethod.PUBLISH })
 
   calendar.createEvent({
     id,
     start: start.toDate(),
     end: end.toDate(),
+    allDay,
     location: event.location,
     url,
     summary: event.title,

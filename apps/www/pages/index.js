@@ -5,15 +5,16 @@ import Frame from '../components/Frame'
 import Marketing from '../components/Marketing'
 import { useTranslation } from '../lib/withT'
 import { createGetStaticProps } from '../lib/apollo/helpers'
-
+import { getCMSClientBase } from '@app/lib/apollo/cms-client-base'
 import { PUBLIC_BASE_URL, CDN_FRONTEND_BASE_URL } from '../lib/constants'
 
 import { MARKETING_PAGE_QUERY } from '../components/Marketing/graphql/MarketingPageQuery.graphql'
 import { useMe } from '../lib/context/MeContext'
+import { MarketingLandingPageCmsDocument } from '../src/graphql/cms/gql/graphql'
 
 const MARKETING_PAGE_SSG_REVALIDATE = 60 // revalidate every minute
 
-const MarketingPage = () => {
+const MarketingPage = ({ data, draftMode }) => {
   const { t } = useTranslation()
   const router = useRouter()
   const { meLoading, hasAccess } = useMe()
@@ -38,22 +39,40 @@ const MarketingPage = () => {
   }
 
   return (
-    <Frame raw meta={meta} isOnMarketingPage={true} hasOverviewNav>
-      <Marketing />
+    <Frame
+      raw
+      meta={meta}
+      isOnMarketingPage={true}
+      hasOverviewNav
+      draftMode={draftMode}
+    >
+      <Marketing data={data} />
     </Frame>
   )
 }
 
 export default MarketingPage
 
-export const getStaticProps = createGetStaticProps(async (client) => {
-  const data = await client.query({
-    query: MARKETING_PAGE_QUERY,
-  })
-  return {
-    props: {
-      data,
-    },
-    revalidate: MARKETING_PAGE_SSG_REVALIDATE,
-  }
-})
+export const getStaticProps = createGetStaticProps(
+  async (client, { draftMode }) => {
+    const [apiData, datoCMSData] = await Promise.all([
+      client.query({
+        query: MARKETING_PAGE_QUERY,
+      }),
+      getCMSClientBase({ draftMode }).query({
+        query: MarketingLandingPageCmsDocument,
+      }),
+    ])
+
+    return {
+      props: {
+        data: {
+          ...apiData.data,
+          ...datoCMSData.data.marketingLandingPage,
+        },
+        draftMode: draftMode ?? false,
+      },
+      revalidate: MARKETING_PAGE_SSG_REVALIDATE,
+    }
+  },
+)

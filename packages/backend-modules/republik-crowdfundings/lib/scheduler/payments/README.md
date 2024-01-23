@@ -40,7 +40,7 @@ DRY_RUN_SEND_PAYMENT_REMINDERS=true
 On development, you can run the postfinance import task as follows:
 
 ```
-cd packages/republik-crowdfundings && yarn dev:postfinance:import
+cd packages/backend-modules/republik-crowdfundings && yarn dev:postfinance:import
 ```
 
 If you prefere to work without a local Sftp server, you can get

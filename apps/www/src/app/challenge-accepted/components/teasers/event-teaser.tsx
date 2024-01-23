@@ -1,13 +1,16 @@
+import { CMSItemStatus } from '@app/components/cms/item-status'
+import { Share } from '@app/components/share/share'
+import {
+  formatDateShort,
+  formatEventDateRange,
+  isFutureEvent,
+} from '@app/lib/util/time-format'
 import { css } from '@app/styled-system/css'
-import { isoParse } from 'd3-time-format'
-import { swissTime } from 'lib/utils/format'
+import { hstack } from '@app/styled-system/patterns'
+import { IconCalendar, IconShare } from '@republik/icons'
 import Link from 'next/link'
 import { ComponentPropsWithoutRef } from 'react'
 import { StructuredText } from 'react-datocms'
-
-const formatDate = swissTime.format('%d.%m.%y')
-const formatDateTime = swissTime.format('%A, %d.%m.%Y, %H.%M')
-const formateTime = swissTime.format('%H.%M')
 
 type EventProps = {
   event: {
@@ -26,12 +29,16 @@ type EventProps = {
     endAt?: string
     signUpLink?: string
     fullyBooked?: boolean
+    _updatedAt: string
+    _status: string
   }
 
   isPage?: boolean
   isMember: boolean
 }
 export const EventTeaser = ({ isMember, event }: EventProps) => {
+  const isActive = isFutureEvent(event.startAt, event.endAt)
+
   return (
     <div
       className={css({
@@ -69,7 +76,7 @@ export const EventTeaser = ({ isMember, event }: EventProps) => {
             mb: '0.2ex',
           })}
         >
-          {formatDate(isoParse(event.startAt))}
+          {formatDateShort(event.startAt)}
         </p>
       </div>
       <div
@@ -90,45 +97,82 @@ export const EventTeaser = ({ isMember, event }: EventProps) => {
             })}
             href={`/veranstaltungen/${event.slug}`}
           >
-            {event.title}
+            {event.title} <CMSItemStatus status={event._status} />
           </Link>
         </h2>
         <p className={css({ fontWeight: 700 })}>
-          {formatDateTime(isoParse(event.startAt))}
-          {event.endAt
-            ? `–${formateTime(isoParse(event.endAt))} Uhr `
-            : ' Uhr '}
-          / {event.location}
+          {formatEventDateRange(event.startAt, event.endAt)} / {event.location}
         </p>
 
         <StructuredText data={event.description.value} />
-        {event.fullyBooked ? (
-          <p
-            className={css({
-              fontStyle: 'italic',
-            })}
+        {isActive &&
+          (event.fullyBooked ? (
+            <p
+              className={css({
+                fontStyle: 'italic',
+              })}
+            >
+              Die Veranstaltung ist ausgebucht.
+            </p>
+          ) : (
+            <>
+              {event.membersOnly && !isMember ? (
+                <>
+                  {event.nonMemberCta && (
+                    <StructuredText data={event.nonMemberCta.value} />
+                  )}
+                </>
+              ) : (
+                <>
+                  {event.signUpLink && (
+                    <Link target='_blank' href={event.signUpLink}>
+                      Zur Anmeldung
+                    </Link>
+                  )}
+                </>
+              )}
+            </>
+          ))}
+        <div className={hstack({ gap: '4', mt: '2' })}>
+          <Share
+            title={event.title}
+            url={`${process.env.NEXT_PUBLIC_BASE_URL}/veranstaltungen/${event.slug}`}
+            emailSubject={`Republik: ${event.title}`}
           >
-            Die Veranstaltung ist ausgebucht.
-          </p>
-        ) : (
-          <>
-            {event.membersOnly && !isMember ? (
-              <>
-                {event.nonMemberCta && (
-                  <StructuredText data={event.nonMemberCta.value} />
-                )}
-              </>
-            ) : (
-              <>
-                {event.signUpLink && (
-                  <Link target='_blank' href={event.signUpLink}>
-                    Zur Anmeldung
-                  </Link>
-                )}
-              </>
-            )}
-          </>
-        )}
+            <div
+              className={hstack({
+                gap: '2',
+                color: 'contrast',
+                cursor: 'pointer',
+                fontWeight: 'medium',
+                fontSize: 's',
+                textDecoration: 'none',
+              })}
+            >
+              <IconShare size={20} /> Teilen
+            </div>
+          </Share>
+
+          <Link
+            className={hstack({
+              gap: '2',
+              color: 'contrast',
+              cursor: 'pointer',
+              fontWeight: 'medium',
+              fontSize: 's',
+              textDecoration: 'none',
+            })}
+            // Link to the calendar file via CDN because the app can't handle downloads. This way, the file will be opened in the OS browser.
+            // To bust the CDN cache, ?v= is added with the timestamp when the event record was updated.
+            href={`${
+              process.env.NEXT_PUBLIC_CDN_FRONTEND_BASE_URL
+            }/veranstaltungen/${event.slug}/ics?v=${encodeURIComponent(
+              event._updatedAt,
+            )}`}
+          >
+            <IconCalendar size={20} /> Zum Kalender hinzufügen
+          </Link>
+        </div>
       </div>
     </div>
   )

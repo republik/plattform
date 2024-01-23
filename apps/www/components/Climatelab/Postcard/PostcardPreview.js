@@ -49,11 +49,15 @@ const styles = {
     borderLeft: 'solid 1px #DADDDC',
     justifyContent: 'sprace-between',
   }),
-  image: css({
+  imageWrapper: css({
     borderImage: 'url(/static/climatelab/border-image.png) 32 round',
     borderWidth: '8px',
     borderStyle: 'solid',
-    '> span': { display: 'block !important' },
+  }),
+  image: css({
+    maxWidth: '100%',
+    height: 'auto',
+    display: 'block',
   }),
   adressBlock: css({
     height: '15px',
@@ -118,12 +122,17 @@ export const PostcardPreview = (props) => {
 
 const PoststampComponent = ({ imageUrl }) => {
   return imageUrl ? (
-    <div {...styles.image}>
-      <AssetImage width={'200'} height={'133'} src={imageUrl} />
+    <div {...styles.imageWrapper}>
+      <AssetImage
+        {...styles.image}
+        width={'200'}
+        height={'133'}
+        src={imageUrl}
+      />
     </div>
   ) : (
     <div
-      {...styles.image}
+      {...styles.imageWrapper}
       style={{ height: '4rem', aspectRatio: '4 / 3' }}
     ></div>
   )
