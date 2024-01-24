@@ -108,26 +108,11 @@ const SLIDER_STEPS: Record<SliderStepKey, SliderStep> = {
   }, // selected = 1000 CHF}
 } as const
 
-export const SLIDER_VALUE_MINIMUM = 5
-export const SLIDER_VALUE_AVERAGE = 120
+export const SLIDER_VALUE_MINIMUM = 120
+export const SLIDER_VALUE_AVERAGE = 240
 
 export const SLIDER_VALUES: SliderValue[] = [
-  { step: SLIDER_STEPS.minimum, value: SLIDER_VALUE_MINIMUM, tick: true },
-
-  { step: SLIDER_STEPS.belowStandard, value: 10 },
-  { step: SLIDER_STEPS.belowStandard, value: 20 },
-  { step: SLIDER_STEPS.belowStandard, value: 30 },
-  { step: SLIDER_STEPS.belowStandard, value: 40 },
-  { step: SLIDER_STEPS.belowStandard, value: 50 },
-  { step: SLIDER_STEPS.belowStandard, value: 60 },
-  { step: SLIDER_STEPS.belowStandard, value: 70 },
-  { step: SLIDER_STEPS.belowStandard, value: 80 },
-  { step: SLIDER_STEPS.belowStandard, value: 90 },
-  { step: SLIDER_STEPS.belowStandard, value: 100 },
-  { step: SLIDER_STEPS.belowStandard, value: 110 },
-  { step: SLIDER_STEPS.belowStandard, value: 110 },
-
-  { step: SLIDER_STEPS.average, value: SLIDER_VALUE_AVERAGE, tick: true },
+  { step: SLIDER_STEPS.average, value: SLIDER_VALUE_MINIMUM, tick: true },
 
   { step: SLIDER_STEPS.aboveAverage, value: 130 },
   { step: SLIDER_STEPS.aboveAverage, value: 140 },
@@ -139,7 +124,6 @@ export const SLIDER_VALUES: SliderValue[] = [
   { step: SLIDER_STEPS.aboveAverage, value: 200 },
   { step: SLIDER_STEPS.aboveAverage, value: 210 },
   { step: SLIDER_STEPS.aboveAverage, value: 220 },
-  { step: SLIDER_STEPS.aboveAverage, value: 230 },
   { step: SLIDER_STEPS.aboveAverage, value: 230 },
 
   { step: SLIDER_STEPS.standard, value: 240, tick: true, isDefault: true },
@@ -155,24 +139,8 @@ export const SLIDER_VALUES: SliderValue[] = [
   { step: SLIDER_STEPS.investmentLow, value: 420 },
   { step: SLIDER_STEPS.investmentLow, value: 440 },
   { step: SLIDER_STEPS.investmentLow, value: 460 },
-  { step: SLIDER_STEPS.investmentLow, value: 480 },
 
-  { step: SLIDER_STEPS.investmentHigh, value: 500, tick: true },
-
-  { step: SLIDER_STEPS.investmentHigh, value: 550 },
-  { step: SLIDER_STEPS.investmentHigh, value: 600 },
-  { step: SLIDER_STEPS.investmentHigh, value: 650 },
-  { step: SLIDER_STEPS.investmentHigh, value: 700 },
-  { step: SLIDER_STEPS.investmentHigh, value: 750 },
-  { step: SLIDER_STEPS.investmentHigh, value: 800 },
-  { step: SLIDER_STEPS.investmentHigh, value: 850 },
-  { step: SLIDER_STEPS.investmentHigh, value: 850 },
-  { step: SLIDER_STEPS.investmentHigh, value: 900 },
-  { step: SLIDER_STEPS.investmentHigh, value: 900 },
-  { step: SLIDER_STEPS.investmentHigh, value: 950 },
-  { step: SLIDER_STEPS.investmentHigh, value: 950 },
-
-  { step: SLIDER_STEPS.maximum, value: 1000, tick: true },
+  { step: SLIDER_STEPS.investmentHigh, value: 480, tick: true },
 ]
   .reverse()
   .map((value, position) => {
