@@ -5,7 +5,6 @@ const {
 } = require('@orbiting/backend-modules-utils')
 
 const createCharge = require('./payments/stripe/createCharge')
-const { getCustomPackages } = require('./User')
 const { getLastEndDate } = require('./utils')
 const createCache = require('./cache')
 
@@ -26,6 +25,28 @@ const {
   getMerchant,
   formatHridAsRefno,
 } = require('@orbiting/backend-modules-datatrans/lib/helpers')
+const { resolvePackages, getCustomOptions } = require('./CustomPackages')
+
+const getAutoPayPackage = async ({ user, pgdb }) => {
+  /**
+   * This is a bit funky, maybe add prop to packages like "system" or "internal",
+   * then fetch here and ignore explictily in getCustomPackages. It would then evaluate
+   * less packages.
+   *
+   * Could then keep packageOptions for AUTOPAY_PKG visible (hiddenAt: null).
+   *
+   */
+  const packages = await pgdb.public.packages.find({
+    custom: true,
+    name: 'AUTOPAY_PKG',
+  })
+
+  const resolvedPackages = await Promise.map(
+    await resolvePackages({ packages, pledger: user, strict: false, pgdb }),
+    getCustomOptions,
+  )
+  return resolvedPackages.shift()
+}
 
 const suggest = async (membershipId, pgdb) => {
   // Find membership
@@ -141,9 +162,7 @@ const suggest = async (membershipId, pgdb) => {
 
   // Get package AUTOPAY_PKG with custom options which may be used to submit an autopayment
   const user = await pgdb.public.users.findOne({ id: membership.userId })
-  const autoPayPackage = (
-    await getCustomPackages({ user, strict: false, pgdb })
-  ).find((p) => p.name === 'AUTOPAY_PKG')
+  const autoPayPackage = await getAutoPayPackage({ user, pgdb })
 
   const autoPayPackageOption =
     autoPayPackage &&
