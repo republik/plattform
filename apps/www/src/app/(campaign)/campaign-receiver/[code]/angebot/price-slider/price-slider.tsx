@@ -49,7 +49,7 @@ const styles = {
   }),
   trackFill: css({
     position: 'absolute',
-    top: 0,
+    bottom: 0,
     left: '50%',
     width: 10,
     marginLeft: '-5px',
@@ -58,19 +58,21 @@ const styles = {
   tick: css({
     fontWeight: 'bold',
     cursor: 'pointer',
-    width: 36,
-    height: 36,
+    width: 48,
+    height: 48,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     position: 'absolute',
-    marginTop: -18,
+    marginTop: -24,
     left: '50%',
-    marginLeft: -18,
+    marginLeft: -24,
     borderRadius: '100vw',
     color: 'pageBackground',
     fontSize: 14,
     userSelect: 'none',
+    borderColor: 'primary',
+    borderWidth: 3,
   }),
   tickDefault: css({
     color: 'pageBackground',
@@ -82,16 +84,16 @@ const styles = {
     position: 'absolute',
     top: 0,
     left: '50%',
-    width: 42,
-    height: 42,
+    width: 50,
+    height: 50,
     background: 'pageBackground',
     borderWidth: 4,
     borderStyle: 'solid',
     borderRadius: '100vw',
     // transform: `translate(0, -1.5rem)`,
     // marginLeft: "-1.5rem",
-    marginTop: -21,
-    marginLeft: -21,
+    marginTop: -25,
+    marginLeft: -25,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -149,43 +151,46 @@ const Tick = ({
   onClick: MouseEventHandler<HTMLDivElement>
 }) => {
   const background = useTransform(sliderY, (sliderYValue) => {
-    if (tick.value === SLIDER_VALUE_AVERAGE) {
-      return '#F0DC28'
-    }
+    // if (tick.value === SLIDER_VALUE_AVERAGE) {
+    //   return '#F0DC28'
+    // }
 
-    if (
-      sliderValue <= SLIDER_VALUE_AVERAGE &&
-      tick.value <= SLIDER_VALUE_AVERAGE
-    ) {
-      return '#F0DC28'
-    }
+    // if (
+    //   sliderValue <= SLIDER_VALUE_AVERAGE &&
+    //   tick.value <= SLIDER_VALUE_AVERAGE
+    // ) {
+    //   return '#F0DC28'
+    // }
 
     return sliderYValue > tickY
-      ? 'var(--colors-primary)'
+      ? 'var(--colors-page-background)'
       : 'var(--colors-primary)'
   })
 
   const color = useTransform(sliderY, (sliderYValue) => {
-    if (tick.value === SLIDER_VALUE_AVERAGE) {
-      return 'black'
-    }
+    // if (tick.value === SLIDER_VALUE_AVERAGE) {
+    //   return 'black'
+    // }
 
-    if (
-      sliderValue <= SLIDER_VALUE_AVERAGE &&
-      tick.value <= SLIDER_VALUE_AVERAGE
-    ) {
-      return 'black'
-    }
+    // if (
+    //   sliderValue <= SLIDER_VALUE_AVERAGE &&
+    //   tick.value <= SLIDER_VALUE_AVERAGE
+    // ) {
+    //   return 'black'
+    // }
 
-    return 'var(--colors-page-background)'
+    return sliderYValue > tickY
+      ? 'var(--colors-primary)'
+      : 'var(--colors-page-background)'
   })
 
   return (
     <motion.div
       className={
-        tick.value === SLIDER_VALUE_AVERAGE
-          ? [styles.tick, styles.tickDefault].join(' ')
-          : styles.tick
+        // tick.value === SLIDER_VALUE_AVERAGE
+        //   ? [styles.tick, styles.tickDefault].join(' ')
+        //   : styles.tick
+        styles.tick
       }
       style={{
         y: tickY,
@@ -210,14 +215,15 @@ export const PriceSlider = ({
 
   const trackRef = useRef<HTMLDivElement>(null)
   const animationControls = useAnimationControls()
-  const y = useMotionValue(0)
+  const y = useMotionValue(height)
+  const fillHeight = useTransform(y, (yValue) => height - yValue)
 
-  const sliderColor =
-    currentStep.value === SLIDER_VALUE_MINIMUM
-      ? '#D0913C'
-      : currentStep.value <= SLIDER_VALUE_AVERAGE
-      ? '#F0DC28'
-      : 'var(--colors-primary)'
+  // const sliderColor =
+  //   currentStep.value === SLIDER_VALUE_MINIMUM
+  //     ? '#D0913C'
+  //     : currentStep.value <= SLIDER_VALUE_AVERAGE
+  //     ? '#F0DC28'
+  //     : 'var(--colors-primary)'
 
   useEffect(() => {
     animationControls.start({
@@ -286,7 +292,7 @@ export const PriceSlider = ({
         <motion.div
           className={styles.trackFill}
           // {...colorScheme.set('background', 'primary')}
-          style={{ height: y, background: sliderColor }}
+          style={{ height: fillHeight }}
         ></motion.div>
 
         {ticks.map((tick) => {
