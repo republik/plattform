@@ -121,20 +121,18 @@ const Contact = ({
             },
           ]}
         />
-        {!!user.documents.totalCount && (
-          <FieldSet
-            values={values}
-            errors={errors}
-            dirty={dirty}
-            onChange={onChange}
-            fields={[
-              {
-                label: t('profile/contact/prolitterisId/label'),
-                name: 'prolitterisId',
-              },
-            ]}
-          />
-        )}
+        <FieldSet
+          values={values}
+          errors={errors}
+          dirty={dirty}
+          onChange={onChange}
+          fields={[
+            {
+              label: t('profile/contact/prolitterisId/label'),
+              name: 'prolitterisId',
+            },
+          ]}
+        />
 
         {!!user.phoneNumber && (
           <Fragment>
