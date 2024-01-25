@@ -141,11 +141,9 @@ export const SLIDER_VALUES: SliderValue[] = [
   { step: SLIDER_STEPS.investmentLow, value: 460 },
 
   { step: SLIDER_STEPS.investmentHigh, value: 480, tick: true },
-]
-  .reverse()
-  .map((value, position) => {
-    return { position, ...value }
-  })
+].map((value, position) => {
+  return { position, ...value }
+})
 
 export const SLIDER_TRANSITION = {
   type: 'spring',

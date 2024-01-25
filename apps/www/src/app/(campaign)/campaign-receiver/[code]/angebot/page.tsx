@@ -35,21 +35,27 @@ export default async function Page({ params, searchParams }) {
 
   return (
     <>
-      <div className={css({ flexGrow: 1, pr: '16' })}>
+      <div
+        className={css({
+          flexGrow: 1,
+        })}
+      >
         <Suspense>
           <PriceRewards />
         </Suspense>
       </div>
       <div
         className={css({
-          position: 'fixed',
-          display: 'flex',
-          top: '50%',
-          transform: 'translateY(-50%)',
-          right: `max(1rem, calc(50vw - 26rem + 1rem))`,
-          height: ['calc(100vh - 320px)', 'calc(100dvh - 320px)'],
-          minHeight: 200,
-          maxHeight: 680,
+          // position: 'fixed',
+          // display: 'flex',
+          // top: '50%',
+          // transform: 'translateY(-50%)',
+          // right: `max(1rem, calc(50vw - 26rem + 1rem))`,
+          // height: ['calc(100vh - 320px)', 'calc(100dvh - 320px)'],
+          // minHeight: 200,
+          // maxHeight: 680,
+          height: 100,
+          px: '4',
         })}
       >
         <Suspense>

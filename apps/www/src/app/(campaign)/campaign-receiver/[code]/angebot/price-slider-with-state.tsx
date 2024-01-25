@@ -2,7 +2,7 @@
 
 import { css } from '@app/styled-system/css'
 import { SliderValue, getDefaultSliderStep } from './price-slider/helpers'
-import { PriceSlider } from './price-slider/price-slider'
+import { PriceSlider } from './price-slider/price-slider-horizontal'
 import { usePathname, useRouter } from 'next/navigation'
 import { Ref, RefObject, useMemo, useState } from 'react'
 import useResizeObserver from 'use-resize-observer'
@@ -13,11 +13,11 @@ export const PriceSliderWithState = () => {
   const sliderStep = sliderValue.step
   const router = useRouter()
   const pathname = usePathname()
-  const { ref, height } = useResizeObserver()
+  const { ref, height, width } = useResizeObserver()
 
   return (
-    <div ref={ref} className={css({ height: '100%' })}>
-      {height && (
+    <div ref={ref} className={css({ width: '100%' })}>
+      {width && (
         <PriceSlider
           initialStep={initialSliderStep}
           onChange={(sliderStep) => {
@@ -26,7 +26,7 @@ export const PriceSliderWithState = () => {
             router.replace(`${pathname}?price=${sliderStep.value}`)
           }}
           step={sliderValue}
-          height={height}
+          width={width}
         />
       )}
     </div>
