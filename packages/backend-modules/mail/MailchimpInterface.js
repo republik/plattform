@@ -108,7 +108,11 @@ const MailchimpInterface = ({ logger }) => {
       status,
       audienceId = MAILCHIMP_MAIN_LIST_ID,
     ) {
-      const url = this.buildApiUrl(`/members?status=${status}`, audienceId)
+      const count = 1000
+      const url = this.buildApiUrl(
+        `/members?status=${status}&count=${count}`,
+        audienceId,
+      )
       try {
         const response = await this.fetchAuthenticated('GET', url)
         const json = await response.json()

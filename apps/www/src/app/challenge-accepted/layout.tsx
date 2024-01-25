@@ -1,6 +1,8 @@
 import { PageLayout } from '@app/components/layout'
 import { css } from '@app/styled-system/css'
 
+export const revalidate = 60 // revalidate all pages every minute
+
 export default async function Layout(props: { children: React.ReactNode }) {
   return (
     <div data-page-theme='challenge-accepted'>

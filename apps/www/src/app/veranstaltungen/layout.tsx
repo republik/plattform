@@ -10,6 +10,8 @@ export const metadata: Metadata = {
   },
 }
 
+export const revalidate = 60 // revalidate all event pages every minute
+
 export default async function Layout(props: { children: React.ReactNode }) {
   return (
     <div>

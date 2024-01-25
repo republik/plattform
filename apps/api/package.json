@@ -14,7 +14,6 @@
     "@orbiting/backend-modules-base64u": "*",
     "@orbiting/backend-modules-calendar": "*",
     "@orbiting/backend-modules-call-to-actions": "*",
-    "@orbiting/backend-modules-cards": "*",
     "@orbiting/backend-modules-collections": "*",
     "@orbiting/backend-modules-databroom": "*",
     "@orbiting/backend-modules-dataloader": "*",
