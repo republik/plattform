@@ -53,24 +53,6 @@ export default async function Page({ params, searchParams }) {
           <PriceRewards />
         </Suspense>
       </div>
-      <div
-        className={css({
-          // position: 'fixed',
-          // display: 'flex',
-          // top: '50%',
-          // transform: 'translateY(-50%)',
-          // right: `max(1rem, calc(50vw - 26rem + 1rem))`,
-          // height: ['calc(100vh - 320px)', 'calc(100dvh - 320px)'],
-          // minHeight: 200,
-          // maxHeight: 680,
-          height: 100,
-          px: '4',
-        })}
-      >
-        <Suspense>
-          <PriceSliderWithState />
-        </Suspense>
-      </div>
 
       <div
         className={css({
@@ -81,6 +63,9 @@ export default async function Page({ params, searchParams }) {
           background: 'pageBackground',
         })}
       >
+        <Suspense>
+          <PriceSliderWithState />
+        </Suspense>
         <button
           className={css({
             background: 'contrast',
