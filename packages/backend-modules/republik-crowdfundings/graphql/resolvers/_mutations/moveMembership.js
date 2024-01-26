@@ -24,7 +24,7 @@ module.exports = async (
     const membershipType = await transaction.public.membershipTypes.findOne({
       id: membership.membershipTypeId,
     })
-    if (membershipType.name === 'MONTHLY_ABO') {
+    if (['MONTHLY_ABO', 'MONTHLY_ABO_AUTOPAY'].includes(membershipType.name)) {
       throw new Error(t('api/membership/move/monthlyDenied'))
     }
 
