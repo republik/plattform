@@ -6,6 +6,10 @@ export const getSliderStepAtPosition = (pos: number): SliderValue => {
   return SLIDER_VALUES[pos] ?? SLIDER_VALUES[0]
 }
 
+export const getSliderStepForValue = (value: number): SliderValue => {
+  return SLIDER_VALUES.find((v) => v.value === value) ?? SLIDER_VALUES[0]
+}
+
 export const getSliderStep = (key: SliderStepKey): SliderValue => {
   return SLIDER_VALUES.find((v) => v.step.key === key) ?? SLIDER_VALUES[0]
 }

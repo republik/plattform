@@ -5,6 +5,7 @@ import {
   useEffect,
   useMemo,
   useRef,
+  useState,
 } from 'react'
 import {
   SLIDER_TRANSITION,
@@ -18,6 +19,7 @@ import {
   MotionValue,
   useAnimationControls,
   useMotionValue,
+  useMotionValueEvent,
   useSpring,
   useTransform,
 } from 'framer-motion'
@@ -134,7 +136,7 @@ const useSliderStuff = (sliderWidth = 400, padding = 14) => {
         ? 0
         : Math.min(
             SLIDER_VALUES.length - 1,
-            Math.max(0, Math.round(d / sliderScale.step())),
+            Math.max(0, Math.round((d - padding) / sliderScale.step())),
           )
       return getSliderStepAtPosition(i)
     }
@@ -148,7 +150,6 @@ const useSliderStuff = (sliderWidth = 400, padding = 14) => {
 }
 
 type PriceSliderProps = {
-  initialStep: SliderValue
   step: SliderValue
   width: number
   onChange: (step: SliderValue) => void
@@ -156,7 +157,6 @@ type PriceSliderProps = {
 
 const Tick = ({
   sliderCoord,
-  sliderValue,
   tickCoord,
   tick,
   onClick,
@@ -167,35 +167,7 @@ const Tick = ({
   tick: SliderValue
   onClick: MouseEventHandler<HTMLDivElement>
 }) => {
-  const background = useTransform(sliderCoord, (sliderCoord) => {
-    // if (tick.value === SLIDER_VALUE_AVERAGE) {
-    //   return '#F0DC28'
-    // }
-
-    // if (
-    //   sliderValue <= SLIDER_VALUE_AVERAGE &&
-    //   tick.value <= SLIDER_VALUE_AVERAGE
-    // ) {
-    //   return '#F0DC28'
-    // }
-
-    return sliderCoord > tickCoord
-      ? 'var(--colors-page-background)'
-      : 'var(--colors-primary)'
-  })
-
   const color = useTransform(sliderCoord, (sliderCoordValue) => {
-    // if (tick.value === SLIDER_VALUE_AVERAGE) {
-    //   return 'black'
-    // }
-
-    // if (
-    //   sliderValue <= SLIDER_VALUE_AVERAGE &&
-    //   tick.value <= SLIDER_VALUE_AVERAGE
-    // ) {
-    //   return 'black'
-    // }
-
     return sliderCoordValue > tickCoord
       ? 'var(--colors-page-background)'
       : 'var(--colors-primary)'
@@ -203,15 +175,9 @@ const Tick = ({
 
   return (
     <motion.div
-      className={
-        // tick.value === SLIDER_VALUE_AVERAGE
-        //   ? [styles.tick, styles.tickDefault].join(' ')
-        //   : styles.tick
-        styles.tick
-      }
+      className={styles.tick}
       style={{
         x: tickCoord,
-        // background,
         color,
       }}
       whileHover={{ scale: 1.1 }}
@@ -223,14 +189,15 @@ const Tick = ({
 }
 
 export const PriceSlider = ({
-  initialStep,
+  // initialStep,
   step: currentStep,
   width,
   onChange,
 }: PriceSliderProps) => {
   const padding = 24
   const { sliderScale, getStepAtCoord, ticks } = useSliderStuff(width, padding)
-
+  const [initialized, setInitialized] = useState(false)
+  const [dragging, setDragging] = useState(false)
   const trackRef = useRef<HTMLDivElement>(null)
   const animationControls = useAnimationControls()
   const coord = useMotionValue(sliderScale.range()[0])
@@ -238,37 +205,35 @@ export const PriceSlider = ({
     stiffness: 5000,
     damping: 100,
   })
-  const valueIndicatorText = useTransform(
-    coord,
-    (yValue) => getStepAtCoord(yValue - padding).value,
-  )
-  const fillSize = useTransform(coord, (yValue) =>
-    Math.min(width, padding + yValue),
-  )
-
-  // const sliderColor =
-  //   currentStep.value === SLIDER_VALUE_MINIMUM
-  //     ? '#D0913C'
-  //     : currentStep.value <= SLIDER_VALUE_AVERAGE
-  //     ? '#F0DC28'
-  //     : 'var(--colors-primary)'
+  useMotionValueEvent(coord, 'change', (v) => {
+    if (dragging) {
+      const step = getStepAtCoord(v)
+      if (step !== currentStep) {
+        onChange(step)
+      }
+    }
+  })
+  const valueIndicatorText = useTransform(coord, (v) => getStepAtCoord(v).value)
+  const fillSize = useTransform(coord, (v) => Math.min(width, padding + v))
 
   useEffect(() => {
-    animationControls.start({
-      x: sliderScale(initialStep.position),
-      transition: { ...SLIDER_TRANSITION, duration: 1 },
-    })
-  }, [initialStep])
+    if (!initialized) {
+      animationControls.start({
+        x: sliderScale(currentStep.position),
+        transition: { ...SLIDER_TRANSITION, duration: 1 },
+      })
+      setInitialized(true)
+    }
+  }, [initialized, currentStep])
 
-  // useEffect(() => {
-  //   if (!coord.isAnimating()) {
-  //     coord.set(sliderScale(currentStep.position))
-  //   }
-  // }, [width, currentStep])
+  useEffect(() => {
+    if (!coord.isAnimating() && !dragging) {
+      coord.set(sliderScale(currentStep.position))
+    }
+  }, [width, currentStep, coord, dragging])
 
   const gotoPos = (pos: number) => {
     if (currentStep !== getSliderStepAtPosition(pos)) {
-      animationControls.stop()
       animationControls.start({
         x: sliderScale(pos),
         transition: { ...SLIDER_TRANSITION, duration: 0.3 },
@@ -313,14 +278,10 @@ export const PriceSlider = ({
         data-id='price-slider'
         key={`h-${width}`} // rerender content when slider resizes to re-initialize drag behavior
       >
-        <div
-          className={styles.track}
-          // style={{ background: 'var(--colors-disabled)' }}
-        ></div>
+        <div className={styles.track}></div>
 
         <motion.div
           className={styles.trackFill}
-          // {...colorScheme.set('background', 'primary')}
           style={{ width: fillSize }}
         ></motion.div>
 
@@ -377,56 +338,13 @@ export const PriceSlider = ({
           }}
           dragElastic={false}
           dragMomentum={false}
-          onDrag={(e, info) => {
-            if (trackRef.current) {
-              const x =
-                info.point.x -
-                trackRef.current.getBoundingClientRect().x -
-                window.scrollX -
-                padding
-
-              const step = getStepAtCoord(x)
-              if (step.position !== currentStep.position) {
-                // setCurrentStep(step)
-                onChange(step)
-              }
-            }
+          onDragStart={() => {
+            setDragging(true)
           }}
-          onDragEnd={(e, info) => {
-            if (trackRef.current) {
-              const x =
-                info.point.x -
-                trackRef.current.getBoundingClientRect().x -
-                window.scrollX -
-                padding
-              // console.log(y);
-
-              const step = getStepAtCoord(x)
-              // setCurrentStep(step)
-              onChange(step)
-
-              animationControls.start({
-                x: sliderScale(step.position),
-                scale: 1,
-                transition: {
-                  delay: 0.01, // add slight delay, otherwise it interferes with drag
-                },
-              })
-            }
+          onDragEnd={() => {
+            setDragging(false)
           }}
         >
-          {/* <svg
-            width='18'
-            height='16'
-            viewBox='0 0 18 16'
-            fill='currentColor'
-            xmlns='http://www.w3.org/2000/svg'
-          >
-            <rect y='0.84375' width='18' height='3' rx='1.5' />
-            <rect y='6.84375' width='18' height='3' rx='1.5' />
-            <rect y='12.8438' width='18' height='3' rx='1.5' />
-          </svg> */}
-
           <svg
             width='26'
             height='16'
