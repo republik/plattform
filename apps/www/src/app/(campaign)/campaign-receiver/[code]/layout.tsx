@@ -26,21 +26,11 @@ export default async function Layout(props: { children: React.ReactNode }) {
                 fontSize: 'xl',
                 position: 'relative',
                 height: '100dvh',
-                maxHeight: 1000,
-                justifyContent: 'center',
-                margin: 'auto',
+                maxHeight: 800,
+                justifyContent: 'stretch',
+                // margin: 'auto',
               })}
             >
-              <h1
-                className={css({
-                  textStyle: 'campaignHeading',
-                  mt: '8-16',
-                  pr: '16',
-                })}
-              >
-                <TypewriterContent />
-              </h1>
-
               {props.children}
             </div>
           </div>

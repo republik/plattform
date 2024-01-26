@@ -1,4 +1,15 @@
+import { css } from '@app/styled-system/css'
 import { scalePoint } from 'd3-scale'
+import {
+  MotionValue,
+  motion,
+  useAnimationControls,
+  useMotionValue,
+  useMotionValueEvent,
+  useSpring,
+  useTransform,
+  useVelocity,
+} from 'framer-motion'
 import {
   MouseEventHandler,
   useCallback,
@@ -7,30 +18,15 @@ import {
   useRef,
   useState,
 } from 'react'
+import { SLIDER_TRANSITION, SLIDER_VALUES } from './config'
 import {
-  SLIDER_TRANSITION,
-  SLIDER_VALUE_AVERAGE,
-  SLIDER_VALUE_MINIMUM,
-  SLIDER_VALUES,
-} from './config'
-import { css } from '@app/styled-system/css'
-import {
-  motion,
-  MotionValue,
-  useAnimationControls,
-  useMotionValue,
-  useMotionValueEvent,
-  useSpring,
-  useTransform,
-} from 'framer-motion'
-import {
+  SliderValue,
   getFirstSliderStep,
   getLastSliderStep,
   getNextSliderStep,
   getPreviousSliderStep,
   getSliderStep,
   getSliderStepAtPosition,
-  SliderValue,
 } from './helpers'
 
 const styles = {
@@ -203,8 +199,18 @@ export const PriceSlider = ({
   const coord = useMotionValue(sliderScale.range()[0])
   const valueIndicatorCoord = useSpring(coord, {
     stiffness: 5000,
-    damping: 100,
+    damping: 200,
   })
+  const valueIndicatorText = useTransform(coord, (v) => getStepAtCoord(v).value)
+  const valueIndicatorVelocity = useVelocity(valueIndicatorCoord)
+  const valueIndicatorTilt = useTransform(
+    valueIndicatorVelocity,
+    [-3000, 0, 3000],
+    [10, 0, -10],
+  )
+  const fillSize = useTransform(coord, (v) => Math.min(width, padding + v))
+
+  // Update step based on the main motion value
   useMotionValueEvent(coord, 'change', (v) => {
     if (dragging) {
       const step = getStepAtCoord(v)
@@ -213,8 +219,6 @@ export const PriceSlider = ({
       }
     }
   })
-  const valueIndicatorText = useTransform(coord, (v) => getStepAtCoord(v).value)
-  const fillSize = useTransform(coord, (v) => Math.min(width, padding + v))
 
   useEffect(() => {
     if (!initialized) {
@@ -304,7 +308,10 @@ export const PriceSlider = ({
 
         <motion.div
           className={styles.valueIndicator}
-          style={{ x: valueIndicatorCoord }}
+          style={{
+            x: valueIndicatorCoord,
+            rotate: valueIndicatorTilt,
+          }}
         >
           {valueIndicatorText}
         </motion.div>
@@ -323,9 +330,9 @@ export const PriceSlider = ({
             scale: 1,
           }}
           whileHover={{ scale: 1.2 }}
-          whileFocus={{ scale: 1.5 }}
-          whileTap={{ scale: 1.5 }}
-          whileDrag={{ scale: 1.5 }}
+          whileFocus={{ scale: 1.2 }}
+          whileTap={{ scale: 1.4 }}
+          whileDrag={{ scale: 1.3 }}
           onKeyDown={onKeyDown}
           animate={animationControls}
           transition={SLIDER_TRANSITION}

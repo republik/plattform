@@ -147,6 +147,6 @@ export const SLIDER_VALUES: SliderValue[] = [
 
 export const SLIDER_TRANSITION = {
   type: 'spring',
-  bounce: 0.3,
-  duration: 0.3,
+  bounce: 0.4,
+  duration: 0.5,
 }

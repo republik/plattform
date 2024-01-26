@@ -70,6 +70,15 @@ export default async function Page({ params }) {
 
   return (
     <>
+      <h1
+        className={css({
+          textStyle: 'campaignHeading',
+          mt: '8-16',
+          pr: '16',
+        })}
+      >
+        <TypewriterContent />
+      </h1>
       <div
         className={css({
           flexGrow: 1,

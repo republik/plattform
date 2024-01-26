@@ -35,6 +35,15 @@ export default async function Page({ params, searchParams }) {
 
   return (
     <>
+      <h1
+        className={css({
+          textStyle: 'campaignHeading',
+          mt: '8-16',
+          pr: '16',
+        })}
+      >
+        Wählen Sie Ihren Preis
+      </h1>
       <div
         className={css({
           flexGrow: 1,
