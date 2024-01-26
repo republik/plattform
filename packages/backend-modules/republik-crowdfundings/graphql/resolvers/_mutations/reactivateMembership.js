@@ -1,12 +1,8 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
-const { sendMailTemplate } = require('@orbiting/backend-modules-mail')
 const slack = require('@orbiting/backend-modules-republik/lib/slack')
 
 const { throwError } = require('../../../lib/payments/stripe/Errors')
 const createCache = require('../../../lib/cache')
-const createSubscription = require('../../../lib/payments/stripe/createSubscription')
-const getSubscription = require('../../../lib/payments/stripe/getSubscription')
-const reactivateSubscription = require('../../../lib/payments/stripe/reactivateSubscription')
 
 module.exports = async (_, args, context) => {
   const {
@@ -59,73 +55,7 @@ module.exports = async (_, args, context) => {
 
     let newMembership
     if (membershipType.name === 'MONTHLY_ABO') {
-      if (!membership.subscriptionId) {
-        throw new Error(t('api/membership/pleaseWait'))
-      }
-
-      const subscription = await getSubscription({
-        id: membership.subscriptionId,
-        companyId: membershipType.companyId,
-        pgdb: transaction,
-      })
-
-      let newSubscription
-      if (subscription.status === 'active') {
-        newSubscription = await reactivateSubscription({
-          id: membership.subscriptionId,
-          item_id: subscription.items.data[0].id,
-          companyId: membershipType.companyId,
-          pgdb: transaction,
-        })
-      } else {
-        newSubscription = await createSubscription({
-          plan: membershipType.name,
-          userId: membership.userId,
-          companyId: membershipType.companyId,
-          metadata: {
-            pledgeId: membership.pledgeId,
-            membershipId,
-          },
-          errIfIncomplete: true,
-          pgdb: transaction,
-        })
-
-        // this could go to the webhookHandler if we would not preactivate
-        // the membership below
-        try {
-          await sendMailTemplate(
-            {
-              to: user.email,
-              subject: t('api/email/subscription/reactivated/subject'),
-              templateName: 'subscription_reactivate',
-              globalMergeVars: [
-                {
-                  name: 'NAME',
-                  content: [user.firstName, user.lastName]
-                    .filter(Boolean)
-                    .join(' '),
-                },
-              ],
-            },
-            context,
-          )
-        } catch (e2) {
-          console.warn(e2)
-        }
-      }
-
-      // don't wait for stripe's webhook
-      newMembership = await transaction.public.memberships.updateAndGetOne(
-        {
-          id: membershipId,
-        },
-        {
-          active: true,
-          renew: true,
-          subscriptionId: newSubscription.id,
-          updatedAt: now,
-        },
-      )
+      throw new Error(t('api/membership/reactivateNotPossible'))
     } else if (
       ['ABO', 'ABO_GIVE_MONTHS', 'BENEFACTOR_ABO', 'YEARLY_ABO'].includes(
         membershipType.name,
