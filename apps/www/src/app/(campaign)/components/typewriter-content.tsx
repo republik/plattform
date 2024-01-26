@@ -30,7 +30,7 @@ export const TypewriterContent = () => {
           visibility: 'hidden',
         })}
       >
-        {longestWord} gibt es, weil Sie etwas dafür tun
+        {longestWord}&nbsp; gibt es, weil Sie etwas dafür tun
       </div>
     </div>
   )
