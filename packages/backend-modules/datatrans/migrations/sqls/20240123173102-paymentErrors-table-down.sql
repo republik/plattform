@@ -1,3 +1,0 @@
--- migrate down here: DROP TABLE...
-
-DROP TABLE IF EXISTS "paymentErrors";
