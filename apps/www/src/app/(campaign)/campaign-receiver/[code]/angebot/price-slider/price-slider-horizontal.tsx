@@ -18,6 +18,7 @@ import {
   MotionValue,
   useAnimationControls,
   useMotionValue,
+  useSpring,
   useTransform,
 } from 'framer-motion'
 import {
@@ -33,7 +34,7 @@ import {
 const styles = {
   container: css({
     position: 'relative',
-    height: 100,
+    height: 130,
     width: '100%',
   }),
   track: css({
@@ -105,6 +106,15 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'center',
     boxShadow: 'sm',
+  }),
+  valueIndicator: css({
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    width: 50,
+    marginLeft: -25,
+    textAlign: 'center',
+    fontWeight: 'bold',
   }),
 }
 
@@ -224,6 +234,14 @@ export const PriceSlider = ({
   const trackRef = useRef<HTMLDivElement>(null)
   const animationControls = useAnimationControls()
   const coord = useMotionValue(sliderScale.range()[0])
+  const valueIndicatorCoord = useSpring(coord, {
+    stiffness: 5000,
+    damping: 100,
+  })
+  const valueIndicatorText = useTransform(
+    coord,
+    (yValue) => getStepAtCoord(yValue - padding).value,
+  )
   const fillSize = useTransform(coord, (yValue) =>
     Math.min(width, padding + yValue),
   )
@@ -322,6 +340,13 @@ export const PriceSlider = ({
             )
           })}
         </div>
+
+        <motion.div
+          className={styles.valueIndicator}
+          style={{ x: valueIndicatorCoord }}
+        >
+          {valueIndicatorText}
+        </motion.div>
 
         <motion.div
           className={styles.thumb}
