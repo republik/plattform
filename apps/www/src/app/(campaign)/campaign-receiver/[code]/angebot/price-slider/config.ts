@@ -34,7 +34,7 @@ const SLIDER_STEPS: Record<SliderStepKey, SliderStep> = {
     text: 'Zahlen Sie den Preis, der Ihnen fair erscheint. Aber für ein Jahr unabhängigen Journalismus liegt vielleicht etwas mehr drin?',
     goodie: false,
     goodieText:
-      'Die Jubiläumstasche gibts dazu, wenn Sie mehr als CHF 120 bezahlen.',
+      'Die Jubiläumstasche gibts dazu, wenn Sie mehr als CHF 240 bezahlen.',
     bonusHint: '',
   }, //  5 = Selected
   belowStandard: {
@@ -44,7 +44,7 @@ const SLIDER_STEPS: Record<SliderStepKey, SliderStep> = {
     text: 'Sie sind knapp bei Kasse? Das kann passieren. Jeder zusätzliche Beitrag stärkt die Republik und ihren unabhängigen Journalismus.',
     goodie: false,
     goodieText:
-      'Die Jubiläumstasche gibts dazu, wenn Sie mehr als CHF 120 bezahlen.',
+      'Die Jubiläumstasche gibts dazu, wenn Sie mehr als CHF 240 bezahlen.',
     bonusHint: '',
   }, //  5 <= Selected < average CHF}
   average: {
@@ -54,7 +54,7 @@ const SLIDER_STEPS: Record<SliderStepKey, SliderStep> = {
     text: 'Wer sich den Normalpreis nicht leisten kann, zahlt in der Regel die Hälfte. Sie auch?',
     goodie: false,
     goodieText:
-      'Die Jubiläumstasche gibts dazu, wenn Sie mehr als CHF 120 bezahlen.',
+      'Die Jubiläumstasche gibts dazu, wenn Sie mehr als CHF 240 bezahlen.',
     bonusHint: '',
   }, // average <= selected < 240 CHF}
   aboveAverage: {
@@ -112,19 +112,19 @@ export const SLIDER_VALUE_MINIMUM = 120
 export const SLIDER_VALUE_AVERAGE = 240
 
 export const SLIDER_VALUES: SliderValue[] = [
-  { step: SLIDER_STEPS.average, value: SLIDER_VALUE_MINIMUM, tick: true },
+  { step: SLIDER_STEPS.minimum, value: SLIDER_VALUE_MINIMUM, tick: true },
 
-  { step: SLIDER_STEPS.aboveAverage, value: 130 },
-  { step: SLIDER_STEPS.aboveAverage, value: 140 },
-  { step: SLIDER_STEPS.aboveAverage, value: 150 },
-  { step: SLIDER_STEPS.aboveAverage, value: 160 },
-  { step: SLIDER_STEPS.aboveAverage, value: 170 },
-  { step: SLIDER_STEPS.aboveAverage, value: 180 },
-  { step: SLIDER_STEPS.aboveAverage, value: 190 },
-  { step: SLIDER_STEPS.aboveAverage, value: 200 },
-  { step: SLIDER_STEPS.aboveAverage, value: 210 },
-  { step: SLIDER_STEPS.aboveAverage, value: 220 },
-  { step: SLIDER_STEPS.aboveAverage, value: 230 },
+  { step: SLIDER_STEPS.belowStandard, value: 130 },
+  { step: SLIDER_STEPS.belowStandard, value: 140 },
+  { step: SLIDER_STEPS.belowStandard, value: 150 },
+  { step: SLIDER_STEPS.belowStandard, value: 160 },
+  { step: SLIDER_STEPS.belowStandard, value: 170 },
+  { step: SLIDER_STEPS.belowStandard, value: 180 },
+  { step: SLIDER_STEPS.belowStandard, value: 190 },
+  { step: SLIDER_STEPS.belowStandard, value: 200 },
+  { step: SLIDER_STEPS.belowStandard, value: 210 },
+  { step: SLIDER_STEPS.belowStandard, value: 220 },
+  { step: SLIDER_STEPS.belowStandard, value: 230 },
 
   { step: SLIDER_STEPS.standard, value: 240, tick: true, isDefault: true },
 
@@ -140,7 +140,7 @@ export const SLIDER_VALUES: SliderValue[] = [
   { step: SLIDER_STEPS.investmentLow, value: 440 },
   { step: SLIDER_STEPS.investmentLow, value: 460 },
 
-  { step: SLIDER_STEPS.investmentHigh, value: 480, tick: true },
+  { step: SLIDER_STEPS.maximum, value: 480, tick: true },
 ].map((value, position) => {
   return { position, ...value }
 })

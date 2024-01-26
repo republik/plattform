@@ -47,6 +47,9 @@ export default async function Page({ params, searchParams }) {
       <div
         className={css({
           flexGrow: 1,
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '4',
         })}
       >
         <Suspense>
@@ -79,7 +82,7 @@ export default async function Page({ params, searchParams }) {
             _hover: {},
           })}
         >
-          Jetz kaufen
+          Für CHF {searchParams.price} abonnieren
         </button>
       </div>
     </>

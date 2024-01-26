@@ -3,15 +3,15 @@ import { SLIDER_VALUES, SliderValue, SliderStepKey } from './config'
 export type { SliderValue } from './config'
 
 export const getSliderStepAtPosition = (pos: number): SliderValue => {
-  return SLIDER_VALUES[pos] ?? SLIDER_VALUES[0]
+  return SLIDER_VALUES[pos] ?? getDefaultSliderStep()
 }
 
 export const getSliderStepForValue = (value: number): SliderValue => {
-  return SLIDER_VALUES.find((v) => v.value === value) ?? SLIDER_VALUES[0]
+  return SLIDER_VALUES.find((v) => v.value === value) ?? getDefaultSliderStep()
 }
 
 export const getSliderStep = (key: SliderStepKey): SliderValue => {
-  return SLIDER_VALUES.find((v) => v.step.key === key) ?? SLIDER_VALUES[0]
+  return SLIDER_VALUES.find((v) => v.step.key === key) ?? getDefaultSliderStep()
 }
 
 export const getFirstSliderStep = (): SliderValue => {

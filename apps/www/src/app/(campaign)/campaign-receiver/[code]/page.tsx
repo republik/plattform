@@ -127,9 +127,9 @@ export default async function Page({ params }) {
             width: 'full',
             _hover: {},
           })}
-          href={`${params.code}/angebot?price=240`}
+          href={`${params.code}/angebot`}
         >
-          Angebot wählen
+          Wählen Sie Ihren Preis
         </Link>
       </div>
     </>
