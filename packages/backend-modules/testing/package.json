@@ -27,7 +27,6 @@
     "@orbiting/backend-modules-auth": "*",
     "@orbiting/backend-modules-base": "*",
     "@orbiting/backend-modules-base64u": "*",
-    "@orbiting/backend-modules-cards": "*",
     "@orbiting/backend-modules-collections": "*",
     "@orbiting/backend-modules-databroom": "*",
     "@orbiting/backend-modules-dataloader": "*",

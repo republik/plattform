@@ -1,5 +1,6 @@
 const path = require('path')
 const express = require('express')
+const qs = require('qs')
 const basicAuth = require('express-basic-auth')
 const dotenv = require('dotenv')
 const next = require('next')
@@ -141,9 +142,16 @@ app.prepare().then(() => {
     server.use((req, res, next) => {
       const BACKDOOR_URL = process.env.CURTAIN_BACKDOOR_URL || ''
       const cookieOptions = { maxAge: 1000 * 60 * 60 * 24 * 3, httpOnly: true }
-      if (req.url === BACKDOOR_URL) {
+      const { open_sesame, ...restQuery } = req.query
+
+      if (
+        req.url === BACKDOOR_URL ||
+        open_sesame === BACKDOOR_URL.replace(/^\//, '')
+      ) {
         res.cookie('OpenSesame', BACKDOOR_URL, cookieOptions)
-        return res.redirect('/')
+        return open_sesame
+          ? res.redirect(`${req.path}?${qs.stringify(restQuery)}`)
+          : res.redirect('/')
       }
 
       const cookies =
