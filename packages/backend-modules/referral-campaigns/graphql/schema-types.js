@@ -11,7 +11,8 @@ extend type User {
 type Campaign {
   id: ID!
   name: String!
-  from: Date!
-  to: Date!
+  description: String
+  beginDate: Date!
+  endDate: Date!
 }
 `
