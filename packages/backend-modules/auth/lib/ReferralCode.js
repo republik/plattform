@@ -23,7 +23,7 @@ const MAX_ATTMEPTS = 25
  * Generates and stores a unique code for a user and sets the referral-code for the user.
  * @param {object} user
  * @param {object} pgdb
- * @returns {Promise<string>} generated alias for the user
+ * @returns {Promise<string>} generated referral code for the user
  */
 async function generateReferralCode(user, pgdb) {
   if (user.referralCode) {
