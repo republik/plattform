@@ -1,3 +1,3 @@
 -- migrate up here: CREATE TABLE...
 ALTER TABLE "public"."membershipTypes" ADD COLUMN "autoPayMutable" boolean NOT NULL DEFAULT false;
-UPDATE "public"."membershipTypes" SET "autoPayMutable" = TRUE WHERE "name" = 'ABO';
+UPDATE "public"."membershipTypes" SET "autoPayMutable" = TRUE WHERE "name" = 'ABO' OR "name"='BENEFACTOR_ABO';
