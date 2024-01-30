@@ -10,7 +10,19 @@ const omit = require('lodash/omit')
 
 module.exports = async (pledgeId, pgdb, t, redis) => {
   const pledge = await pgdb.public.pledges.findOne({ id: pledgeId })
+  if (!pledge) {
+    console.error('pledge could not be found', { pledgeId })
+    throw new Error(t('api/unexpected'))
+  }
+
   const user = await pgdb.public.users.findOne({ id: pledge.userId })
+  if (!user) {
+    console.error('user could not be found', {
+      userId: pledge.userId,
+      pledgeId,
+    })
+    throw new Error(t('api/unexpected'))
+  }
 
   // check if pledge really has no memberships yet
   if (await pgdb.public.memberships.count({ pledgeId: pledge.id })) {
