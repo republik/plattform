@@ -12,9 +12,6 @@ const { validate: validateUUID } = require('uuid')
  * @returns {Promise<string|null>} user-id or null
  */
 async function getUserIdForReferrerReference(referrerReference, pgdb) {
-  // TODO: 1. if uuid-v4, query users table for user with id
-  // TODO: 2. check if a user-slug exists with that value
-  // TODO: 3. check if a user-alias exists with that value
   debug('referral-handler')(
     'no referrer found for referrerReference',
     referrerReference,
@@ -43,7 +40,7 @@ async function getUserIdForReferrerReference(referrerReference, pgdb) {
 
   // check if user-alias exists
   user = await pgdb.public.users.findOne({
-    alias: referrerReference,
+    referralCode: referrerReference,
   })
 
   return user?.id || null
@@ -78,18 +75,18 @@ async function handleReferral(pledge, { pgdb }) {
     id: payload?.ref_campaign,
   })
 
-  await pgdb.transactionBegin()
+  const tx = await pgdb.transactionBegin()
 
   try {
-    await pgdb.public.referrals.insertAndGet({
+    await tx.public.referrals.insertAndGet({
       pledgeId: pledge.id,
       referrerId: referrerId,
       campaignId: campaign?.id || null,
     })
 
-    await pgdb.transactionCommit()
+    await tx.transactionCommit()
   } catch (e) {
-    await pgdb.transactionRollback()
+    await tx.transactionRollback()
     console.error(e)
   }
 
