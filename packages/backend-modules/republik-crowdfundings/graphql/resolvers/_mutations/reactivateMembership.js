@@ -1,10 +1,8 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
-const { sendMailTemplate } = require('@orbiting/backend-modules-mail')
 const slack = require('@orbiting/backend-modules-republik/lib/slack')
 
 const { throwError } = require('../../../lib/payments/stripe/Errors')
 const createCache = require('../../../lib/cache')
-const createSubscription = require('../../../lib/payments/stripe/createSubscription')
 const getSubscription = require('../../../lib/payments/stripe/getSubscription')
 const reactivateSubscription = require('../../../lib/payments/stripe/reactivateSubscription')
 
@@ -78,40 +76,9 @@ module.exports = async (_, args, context) => {
           pgdb: transaction,
         })
       } else {
-        newSubscription = await createSubscription({
-          plan: membershipType.name,
-          userId: membership.userId,
-          companyId: membershipType.companyId,
-          metadata: {
-            pledgeId: membership.pledgeId,
-            membershipId,
-          },
-          errIfIncomplete: true,
-          pgdb: transaction,
-        })
-
-        // this could go to the webhookHandler if we would not preactivate
-        // the membership below
-        try {
-          await sendMailTemplate(
-            {
-              to: user.email,
-              subject: t('api/email/subscription/reactivated/subject'),
-              templateName: 'subscription_reactivate',
-              globalMergeVars: [
-                {
-                  name: 'NAME',
-                  content: [user.firstName, user.lastName]
-                    .filter(Boolean)
-                    .join(' '),
-                },
-              ],
-            },
-            context,
-          )
-        } catch (e2) {
-          console.warn(e2)
-        }
+        // If a subscription is no longer active, reactivating is not possible.
+        console.error(`reactivateMembership: unable to reactivate subscription`)
+        throw new Error(t('api/unexpected'))
       }
 
       // don't wait for stripe's webhook
