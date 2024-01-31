@@ -45,4 +45,15 @@ describe('check if autopay is mutable on membership', () => {
 
     expect(result).resolves.toBe(false)
   })
+
+  test('check autopay is not mutable when membership is not active and not set to renew', () => {
+    const membershipType = { autoPayMutable: true }
+    membershipResolver.type = jest.fn(() => Promise.resolve(membershipType))
+
+    const membership = { active: false, renew: false }
+
+    const result = autoPayIsMutable(membership, null, null)
+
+    expect(result).resolves.toBe(false)
+  })
 })
