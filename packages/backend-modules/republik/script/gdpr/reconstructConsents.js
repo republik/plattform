@@ -3,6 +3,7 @@
  * and inserts consents.
  *
  */
+// altes script, nicht mehr gebraucht
 require('@orbiting/backend-modules-env').config()
 const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
 

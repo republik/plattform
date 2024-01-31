@@ -5,6 +5,8 @@
 // usage
 // node seeds/launch/add_launch_data.js
 //
+
+// altes script, nicht mehr gebraucht
 require('@orbiting/backend-modules-env').config()
 process.on('unhandledRejection', (up) => {
   throw up
@@ -48,7 +50,7 @@ PgDb.connect()
       const presalePackages = await transaction.public.packages.find({
         crowdfundingId: presale.id,
       })
-      for (let presalePackage of presalePackages) {
+      for (const presalePackage of presalePackages) {
         const presalePackageOptions =
           await transaction.public.packageOptions.find({
             packageId: presalePackage.id,
@@ -60,7 +62,7 @@ PgDb.connect()
           createdAt: now,
           updatedAt: now,
         })
-        for (let presalePackageOption of presalePackageOptions) {
+        for (const presalePackageOption of presalePackageOptions) {
           delete presalePackageOption.id
           await transaction.public.packageOptions.insert({
             ...presalePackageOption,
