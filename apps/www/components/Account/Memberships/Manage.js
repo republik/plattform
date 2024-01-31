@@ -89,7 +89,9 @@ const Actions = ({
       {membership.active && (
         <>
           {membership.renew &&
-            ['MONTHLY_ABO', 'YEARLY_ABO'].includes(membership.type.name) && (
+            ['MONTHLY_ABO', 'MONTHLY_ABO_AUTOPAY', 'YEARLY_ABO'].includes(
+              membership.type.name,
+            ) && (
               <P>
                 {t.elements(
                   `memberships/${membership.type.name}/manage/upgrade/link`,
