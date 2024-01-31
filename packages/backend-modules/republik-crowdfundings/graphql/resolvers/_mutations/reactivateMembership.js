@@ -127,9 +127,13 @@ module.exports = async (_, args, context) => {
         },
       )
     } else if (
-      ['ABO', 'ABO_GIVE_MONTHS', 'BENEFACTOR_ABO', 'YEARLY_ABO'].includes(
-        membershipType.name,
-      )
+      [
+        'ABO',
+        'ABO_GIVE_MONTHS',
+        'BENEFACTOR_ABO',
+        'YEARLY_ABO',
+        'MONTHLY_ABO_AUTOPAY',
+      ].includes(membershipType.name)
     ) {
       if (membership.renew) {
         console.info('reactivateMembership: membership is already renew===true')
