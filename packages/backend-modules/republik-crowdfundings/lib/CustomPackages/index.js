@@ -11,62 +11,68 @@ const {
 const { getPeriodEndingLast, getLastEndDate } = require('../utils')
 const rules = require('./rules')
 
-// membershipTypes and packages which are prolongable
-const EXTENDABLE_MEMBERSHIP_TYPES = ['ABO', 'BENEFACTOR_ABO', 'ABO_GIVE_MONTHS']
-const EXTENDABLE_PACKAGE_NAMES = ['ABO', 'BENEFACTOR']
+// @TODO This should wander into database
+// e.g. membershipTypes.extentableAsOwner, .extentableAsGifter
+//
+// It describes what membershipType may be extended with which membershipType,
+// considering whether you own the membership or if you gifted a membership.
+//
+const EXTENTABLE_MEMBERSHIP_TYPES_MAP = {
+  ABO: { asOwner: ['ABO', 'BENEFACTOR_ABO'], asGifter: ['ABO'] },
+  BENEFACTOR_ABO: {
+    asOwner: ['ABO', 'BENEFACTOR_ABO'],
+    asGifter: ['BENEFACTOR_ABO'],
+  },
+  ABO_GIVE_MONTHS: { asOwner: ['ABO', 'BENEFACTOR_ABO'], asGifter: ['ABO'] },
+  MONTHLY_ABO: { asOwner: ['MONTHLY_ABO'], asGifter: [] },
+  YEARLY_ABO: { asOwner: ['YEARLY_ABO'], asGifter: [] },
+  MONTHLY_ABO_AUTOPAY: { asOwner: ['MONTHLY_ABO_AUTOPAY'], asGifter: [] },
+}
 
-// membershipTypes which are can be dormant but are not
-// prolongabl by themselves
-const DORMANT_ONLY_MEMBERSHIP_TYPES = ['YEARLY_ABO']
-
-// Which options require you to own a membership?
-const OPTIONS_REQUIRE_CLAIMER = ['BENEFACTOR_ABO']
-
-// for a user to prolong
-const findEligableMemberships = ({
-  memberships,
-  user,
-  ignoreClaimedMemberships = false,
-}) =>
+/**
+ * Finds in an array of memberships (use resolveMemberships first) all
+ * memberships which are usable for a provided user.
+ *
+ * A user might be current owner of memberships which are not for intended for
+ * user itself, namely giftable memberships. These are considered "unclaimed".
+ *
+ */
+const findEligableMemberships = ({ memberships, user }) =>
   memberships.filter((m) => {
-    const isCurrentClaimer = m.userId === user.id
+    // User is current owner of a membership
+    const isOwner = m.userId === user.id
 
-    const isExtendable =
-      EXTENDABLE_MEMBERSHIP_TYPES.includes(m.membershipType.name) &&
-      EXTENDABLE_PACKAGE_NAMES.includes(m.pledge.package.name)
+    // Membership is likely giftable, but has not yet been claimed.
+    //
+    // "isAutoActivateUserMembership" indicates a giftable membership, because
+    // its not activated immediatly after paying a pledge.
+    //
+    // "voucherCode" is not empty if membership has not been used.
+    //
+    const isUnclaimed =
+      !m.pledge.package.isAutoActivateUserMembership && !!m.voucherCode
 
-    const isDormantOnly = DORMANT_ONLY_MEMBERSHIP_TYPES.includes(
-      m.membershipType.name,
-    )
-
-    // A membership that was not bought by user itself.
-    const isClaimedMembership = m.pledge.userId !== m.userId
-
-    // Self-claimed ABO_GIVE, ABO_GIVE_MONTHS
-    const isSelfClaimed =
-      m.pledge.userId === m.userId &&
-      ['ABO_GIVE', 'ABO_GIVE_MONTHS'].includes(m.pledge.package.name) &&
-      !m.voucherCode
-
-    debug({
-      id: m.id,
+    debug('findEligableMemberships', {
+      membershipId: m.id,
       membershipTypeName: m.membershipType.name,
-      packageName: m.pledge.package.name,
       membershipUserId: m.userId,
-      pledgeUserId: m.pledge.userId,
-      isCurrentClaimer,
-      isExtendable,
-      isClaimedMembership,
-      isSelfClaimed,
+      isAutoActivateUserMembership:
+        m.pledge.package.isAutoActivateUserMembership,
+      voucerCode: !!m.voucherCode,
+      userId: user.id,
+      isOwner,
+      isUnclaimed,
     })
 
-    return (
-      isCurrentClaimer &&
-      (isExtendable || isDormantOnly || isClaimedMembership || isSelfClaimed) &&
-      (!ignoreClaimedMemberships || !isClaimedMembership)
-    )
+    return isOwner && !isUnclaimed
   })
 
+/**
+ * Find in an array of memberships (use resolveMemberships first) all memberships
+ * currently owner by user which are dormant. A dormant membership is inactive
+ * and has not been used (aka. has no periods).
+ *
+ */
 const findDormantMemberships = ({ memberships, user }) =>
   findEligableMemberships({ memberships, user }).filter(
     (m) =>
@@ -76,9 +82,14 @@ const findDormantMemberships = ({ memberships, user }) =>
       m.periods.length === 0,
   )
 
-// Checks if user has at least one active and one inactive membership,
-// considering latter as "dormant"
-const hasDormantMembership = ({ user, memberships }) => {
+/**
+ * Checks in an array of memberships (use resolveMemberships first) if there is
+ * an active membership, and next to it are dormant ones, a user owns.
+ *
+ * Will return false if no active membership is found or lacks any dormant
+ * memberships.
+ */
+const hasDormantMembership = ({ memberships, user }) => {
   const activeMembership = memberships.filter(
     (m) => m.userId === user.id && m.active === true,
   )
@@ -86,14 +97,19 @@ const hasDormantMembership = ({ user, memberships }) => {
   const dormantMemberships = findDormantMemberships({ memberships, user })
 
   dormantMemberships.forEach((m) => {
-    debug('hasDormantMembership.dormantMemberships.membership', {
-      id: m.id,
+    debug('hasDormantMembership (dormant)', {
+      membershipId: m.id,
       membershipType: m.membershipType.name,
       package: m.pledge.package.name,
     })
   })
 
-  return activeMembership && !!dormantMemberships.length > 0
+  const hasDormantMembership =
+    activeMembership && !!dormantMemberships.length > 0
+
+  debug('hasDormantMembership', hasDormantMembership)
+
+  return hasDormantMembership
 }
 
 /**
@@ -139,13 +155,16 @@ const evaluate = async ({
 
   const now = moment()
 
+  const isOwner = package_.user.id === membership.user.id
+  const isGifter = package_.user.id !== membership.user.id
+
   if (packageOption.reward?.type === 'MembershipType') {
     // Is user membership next to another active user membership?
     // If there is an active membership, user should only be able to extend
     // the active membership
     if (
       !membership.active &&
-      membership.user.id === package_.user.id &&
+      isOwner &&
       package_.user.memberships.find((m) => m.active)
     ) {
       debug('membership next to an active membership')
@@ -153,27 +172,41 @@ const evaluate = async ({
     }
 
     // Gifted memberships can not be extended if their no longer active
-    if (!membership.active && membership.user.id !== package_.user.id) {
+    if (isGifter && !membership.active) {
       debug('only owner can extend inactive membership')
       return false
     }
 
-    // Can membership.membershipType be extended?
-    // Not all membershipTypes can be extended
-    if (!EXTENDABLE_MEMBERSHIP_TYPES.includes(membershipType.name)) {
-      debug('not extendable membershipType "%s"', membershipType.name)
+    // Is owner prohibited from extending membership with packageOptionMembershipType?
+    if (
+      isOwner &&
+      // @TODO Once map wandered in database:
+      // !membershipType.extentableAsGifer.includes(packageOptionMembershipType.name)
+      !EXTENTABLE_MEMBERSHIP_TYPES_MAP?.[
+        membershipType.name
+      ]?.asOwner?.includes(packageOptionMembershipType.name)
+    ) {
+      debug(
+        'as owner, membershipType "%s" not extentable with membershipType "%s"',
+        membershipType.name,
+        packageOptionMembershipType.name,
+      )
       return false
     }
 
-    // Check whether option requires user to be current claimer of membership.
+    // Is gifter prohibited from extending membership with packageOptionMembershipType?
     if (
-      packageOption.membershipType &&
-      OPTIONS_REQUIRE_CLAIMER.includes(packageOption.membershipType.name) &&
-      membership.userId !== package_.user.id
+      isGifter &&
+      // @TODO Once map wandered in database:
+      // !membershipType.extentableAsGifer.includes(packageOptionMembershipType.name)
+      !EXTENTABLE_MEMBERSHIP_TYPES_MAP?.[
+        membershipType.name
+      ]?.asGifter?.includes(packageOptionMembershipType.name)
     ) {
       debug(
-        'only owner can extend membership w/ membershipType "%s"',
-        packageOption.membershipType.name,
+        'as gifter, membershipType "%s" not extentable with membershipType "%s"',
+        membershipType.name,
+        packageOptionMembershipType.name,
       )
       return false
     }
@@ -248,17 +281,13 @@ const evaluate = async ({
       payload.suggestedPrice = suggestedPrice
     }
 
-    const isOwnMembership = membership.userId === package_.user.id
     // If membership stems from ABO_GIVE_MONTHS package, default ABO option
-    if (
-      isOwnMembership &&
-      membership.pledge.package.name === 'ABO_GIVE_MONTHS'
-    ) {
+    if (isOwner && membership.pledge.package.name === 'ABO_GIVE_MONTHS') {
       if (packageOption.membershipType.name === 'ABO') {
         payload.defaultAmount = 1
       }
     } else {
-      if (isOwnMembership) {
+      if (isOwner) {
         // If options is to extend membership, set defaultAmount to 1 if reward
         // of current packageOption evaluated is same as in evaluated
         // membership.
