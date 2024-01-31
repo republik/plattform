@@ -128,6 +128,7 @@ module.exports = async (_, args, context) => {
       }
     }
 
+    // TODO adapt to MONTHLY_ABO_AUTOPAY membership (probably not needed anymore)
     const cancelImmediately = pkg.name === 'MONTHLY_ABO'
 
     const evaluatePledges = await evaluatePledge(

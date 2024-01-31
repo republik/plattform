@@ -54,6 +54,7 @@ module.exports = async (_, args, context) => {
     })
 
     let newMembership
+    // TODO should be possible to reactivate if the membership has not ended yet
     if (membershipType.name === 'MONTHLY_ABO') {
       throw new Error(t('api/membership/reactivateNotPossible'))
     } else if (
