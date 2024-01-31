@@ -1086,7 +1086,7 @@ mail.getPledgeMergeVars = async (
     JOIN "membershipTypes" t
       ON m."membershipTypeId" = t.id
     WHERE m."userId" = '${user.id}'
-      AND t.name = 'MONTHLY_ABO'
+      AND t.name in ('MONTHLY_ABO', 'MONTHLY_ABO_AUTOPAY')
       AND m.active = TRUE
   `)
 

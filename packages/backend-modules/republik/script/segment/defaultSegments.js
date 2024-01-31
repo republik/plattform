@@ -92,18 +92,25 @@ const handleRow = async (row) => {
     activeMembership &&
     !activeMembership.autoPay &&
     !hasDormantMembership &&
-    !['MONTHLY_ABO', 'YEARLY_ABO'].includes(membershipTypeName) &&
+    !['MONTHLY_ABO', 'YEARLY_ABO', 'MONTHLY_ABO_AUTOPAY'].includes(
+      membershipTypeName,
+    ) &&
     lastEndDate?.isBefore('2024-02-01')
   ) {
     record.PRLG_SEG = 'prolong-before-202402'
     record.CP_ATOKEN = row.accessToken
   } else if (
     activeMembership &&
-    !['MONTHLY_ABO', 'YEARLY_ABO'].includes(membershipTypeName)
+    !['MONTHLY_ABO', 'YEARLY_ABO', 'MONTHLY_ABO_AUTOPAY'].includes(
+      membershipTypeName,
+    )
   ) {
     record.PRLG_SEG = 'is-associate'
     record.CP_ATOKEN = row.accessToken
-  } else if (activeMembership && membershipTypeName === 'MONTHLY_ABO') {
+  } else if (
+    activeMembership &&
+    ['MONTHLY_ABO', 'MONTHLY_ABO_AUTOPAY'].includes(membershipTypeName)
+  ) {
     record.PRLG_SEG = 'is-monthly-abo'
     record.CP_ATOKEN = ''
   } else if (activeMembership) {
