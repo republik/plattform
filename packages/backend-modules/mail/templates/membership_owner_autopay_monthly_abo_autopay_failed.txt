@@ -1,0 +1,70 @@
+Guten Tag
+
+{{#if thirdAttempt}}
+
+Ihr Monatsabo erneuerte sich am {{end_date}}. Bedauerlicherweise konnten wir
+erneut den Beitrag von {{autopay_total}} Ihrer hinterlegten
+{{autopay_card_brand}} mit den Endziffern {{autopay_card_last4}} nicht belasten.
+
+Wir unternehmen am {{attempt_next_at}} einen letzten Versuch und bitten Sie, bis
+dahin Ihre Kreditkartendaten hier gegebenenfalls zu aktualisieren
+{{link_account_abos}} .
+
+{{else if fourthAttempt}}
+
+Ihr Monatsabo erneuerte sich am {{end_date}}. Trotz mehrfachen Versuchen konnten
+wir den Beitrag von {{autopay_total}} Ihrer hinterlegten {{autopay_card_brand}}
+mit den Endziffern {{autopay_card_last4}} nicht belasten.
+
+Wir sehen uns daher zu unserem grossen Bedauern gezwungen, Ihr Monatsabo am
+{{grace_end_date}} zu deaktivieren.
+
+Wollen Sie dies verhindern, können Sie den ausstehenden Beitrag begleichen
+{{link_account_abos}} , wenn Sie möchten, auch mit einer anderen Zahlungsart.
+
+{{else}}
+
+Ihr Monatsabo erneuerte sich am {{end_date}}. Bei Ihrem letzten Kauf haben Sie
+angegeben, dass Sie uns erlauben, Ihre hinterlegte Kreditkarte automatisch zu
+belasten. Bedauerlicherweise konnten wir den Beitrag von {{autopay_total}} von
+Ihrer hinterlegten {{autopay_card_brand}} mit den Endziffern
+{{autopay_card_last4}} nicht abbuchen.
+
+{{#if authentication_required}}
+
+Dies, weil Ihre Kreditkarte verlangt, dass Buchungen von Ihnen online bestätigt
+werden. Wir bitten Sie daher, Ihr Zahlungsmittel hier zu ändern
+{{link_account_abos}} .
+
+{{else if attempt_is_last}}
+
+Wir sehen uns daher zu unserem grossen Bedauern gezwungen, Ihr Monatsabo am
+{{grace_end_date}} zu deaktivieren.
+
+{{else if attempt_next_is_last}}
+
+Wir unternehmen am {{attempt_next_at}} einen letzten Versuch und bitten Sie, bis
+dahin Ihre Kreditkartendaten hier gegebenenfalls zu aktualisieren
+{{link_account_abos}} .
+
+{{else}}
+
+Wir unternehmen am {{attempt_next_at}} erneut einen Versuch und bitten Sie, bis
+dahin nötigenfalls eine neue Kreditkarte zu erfassen {{link_account_abos}} .
+
+{{/if}}
+
+Sie möchten nicht mehr per Kreditkarte bezahlen? Dann können Sie hier eine
+andere Zahlungsart auswählen {{link_account_abos}} .
+
+{{/if}}
+
+Herzlich
+
+Ihre Crew der Republik
+
+
+Republik AG
+Sihlhallenstrasse 1, CH-8004 Zürich
+{{frontend_base_url}}
+kontakt@republik.ch
