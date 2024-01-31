@@ -39,7 +39,6 @@ const handleRow = async (row) => {
   const eligableMemberships = findEligableMemberships({
     memberships,
     user,
-    ignoreClaimedMemberships: true,
   })
 
   // check if there is a dormant membership

@@ -115,11 +115,7 @@ module.exports = {
       return hasDormantMembership({ user, memberships })
     })
   },
-  async prolongBeforeDate(
-    user,
-    { ignoreClaimedMemberships = false, ignoreAutoPayFlag = false },
-    context,
-  ) {
+  async prolongBeforeDate(user, { ignoreAutoPayFlag = false }, context) {
     const { pgdb, user: me } = context
     debug('prolongBeforeDate')
 
@@ -127,7 +123,7 @@ module.exports = {
 
     const cache = createMembershipCache(
       user,
-      `prolongBeforeDate-${ignoreClaimedMemberships}-${ignoreAutoPayFlag}`,
+      `prolongBeforeDate-${ignoreAutoPayFlag}`,
       context,
     )
 
@@ -148,7 +144,6 @@ module.exports = {
       const eligableMemberships = findEligableMemberships({
         memberships,
         user,
-        ignoreClaimedMemberships,
       })
 
       if (hasDormantMembership({ user, memberships: eligableMemberships })) {

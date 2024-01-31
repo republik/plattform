@@ -108,7 +108,7 @@ PgDb.connect()
       async (user) => {
         const prolongBeforeDate = await getProlongBeforeDate(
           user,
-          { ignoreClaimedMemberships: true },
+          {},
           { pgdb, user: me },
         )
         stats.numNeedProlongProgress += 1
