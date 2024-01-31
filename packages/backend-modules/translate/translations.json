@@ -2575,6 +2575,10 @@
     {
       "key": "api/reportUser/reasonTooLong",
       "value": "Die Begründung ist zu lange. (Maximal {max} Zeichen)"
+    },
+    {
+      "key": "api/pay/parseFailed",
+      "value": "Es kam zu einem Fehler, weil etwas mit den Daten nicht stimmt. Wählen Sie bitte ein anderes Zahlungsmittel, um Ihre Bestellung abzuschliessen oder melden Sie sich bei uns mit dieser Pledge-ID: {id}."
     }
   ]
 }
