@@ -1,5 +1,9 @@
 -- migrate down here: DROP TABLE...
 
-DROP TABLE referrals;
+DROP TABLE IF EXISTS referrals;
 
-DROP TABLE campaigns;
+DROP TABLE IF EXISTS campaigns;
+
+DROP TABLE IF EXISTS "public"."campaignRewards";
+
+DROP TABLE IF EXISTS "public"."userCampaignRewards";
