@@ -1,10 +1,10 @@
 import { TypewriterContent } from '@app/app/(campaign)/components/typewriter-content'
-import Container from '@app/components/container'
 import { UserInviterProfileInfoDocument } from '@app/graphql/republik-api/gql/graphql'
 import { getClient } from '@app/lib/apollo/client'
 import { css } from '@app/styled-system/css'
 import Image from 'next/image'
 import Link from 'next/link'
+import { redirect } from 'next/navigation'
 
 const SenderProfile = ({
   portrait,
@@ -57,7 +57,7 @@ export default async function Page({ params }) {
   )
 
   if (!isEligible) {
-    return <div>Noin, du hast schon ein Abo :P</div>
+    return redirect('/campaign-sender')
   }
 
   // if (!sender) {
@@ -65,7 +65,7 @@ export default async function Page({ params }) {
   // }
 
   if (sender && data.me && sender?.id === data.me?.id) {
-    return <div>das bin ja iiich</div>
+    return redirect('/campaign-sender')
   }
 
   return (

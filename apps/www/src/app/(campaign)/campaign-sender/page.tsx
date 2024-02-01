@@ -10,6 +10,7 @@ import { hstack, vstack } from '@app/styled-system/patterns'
 import { IconDownload, IconShare } from '@republik/icons'
 import Image from 'next/image'
 import Link from 'next/link'
+import { redirect } from 'next/navigation'
 
 export default async function Page() {
   const { data } = await getClient().query({
@@ -19,7 +20,7 @@ export default async function Page() {
   const url = `/campaign-receiver/${data.me?.accessToken}`
 
   if (!data.me) {
-    return <div>Eh, bitte anmelden</div>
+    return redirect('/anmelden')
   }
 
   return (
