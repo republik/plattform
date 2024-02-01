@@ -1311,74 +1311,59 @@ mail.getPledgeMergeVars = async (
   ]
 }
 
-mail.sendFutureCampaignSenderRewardMail = async (
+mail.sendReferralCampaignMail = async (
   {
-    senderUserId,
+    referrerUserId,
     pledgeUserId,
-    count,
-    hasSenderConsentedToDonate,
-    membershipPeriodEndDate,
+    referralCount,
+    withReward,
+    newEndDate,
+    totalCampaignReferrals,
   },
   { pgdb, t },
 ) => {
-  const sender = await pgdb.public.users.findOne({ id: senderUserId })
-  const safeSender = transformUser(sender)
+  const referrer = await pgdb.public.users.findOne({ id: referrerUserId })
+  const safeReferrer = transformUser(referrer)
 
   const pledger = await pgdb.public.users.findOne({ id: pledgeUserId })
   const safePledger = transformUser(pledger)
 
-  const countNumber = parseInt(count, 10)
+  const countNumber = parseInt(referralCount, 10)
 
-  const templateName = 'future_campaign_sender_reward'
+  const rewardTemplateName = withReward ? 'with_reward' : 'no_reward'
+  const templateName = `referral_campaign_referral_${rewardTemplateName}`
 
   return sendMailTemplate(
     {
-      to: safeSender.email,
+      to: safeReferrer.email,
       fromEmail: process.env.DEFAULT_MAIL_FROM_ADDRESS,
-      subject: t(`api/email/${templateName}/${count}/subject`),
+      subject: t(`api/email/${templateName}/subject`),
       templateName,
       mergeLanguage: 'handlebars',
       globalMergeVars: [
         {
-          name: 'has_one_slot_filled',
-          content: countNumber === 1,
-        },
-        {
-          name: 'has_two_slots_filled',
-          content: countNumber === 2,
-        },
-        {
-          name: 'has_three_slots_filled',
-          content: countNumber === 3,
-        },
-        {
-          name: 'has_four_slots_filled',
-          content: countNumber === 4,
-        },
-        {
-          name: 'has_five_slots_filled',
-          content: countNumber === 5,
-        },
-        {
-          name: 'count_open_slots',
-          content: 5 - countNumber,
+          name: 'referral_count',
+          content: countNumber,
         },
         {
           name: 'receiver',
           content: safePledger.name ? safePledger.name : safePledger.email,
         },
         {
-          name: 'is_donating',
-          content: hasSenderConsentedToDonate,
+          name: 'link_sender_page',
+          content: `${FRONTEND_BASE_URL}/verstaerkung-holen`, // TODO
         },
         {
-          name: 'link_sender_page',
-          content: `${FRONTEND_BASE_URL}/verstaerkung-holen`,
+          name: 'with_reward',
+          content: withReward,
         },
         {
           name: 'membership_period_end_date',
-          content:
-            membershipPeriodEndDate && dateFormat(membershipPeriodEndDate),
+          content: newEndDate && dateFormat(newEndDate),
+        },
+        {
+          name: 'total_campaign_referrals',
+          content: totalCampaignReferrals,
         },
       ],
     },
