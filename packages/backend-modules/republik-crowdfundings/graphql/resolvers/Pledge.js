@@ -58,7 +58,7 @@ module.exports = {
       return {
         ...user,
         _scopeConfig: {
-          exposeFields: ['firstName', 'lastName', 'email'],
+          exposeFields: ['firstName', 'lastName', 'email', 'verified'],
         },
       }
     }
