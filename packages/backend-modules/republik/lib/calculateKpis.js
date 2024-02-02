@@ -3,30 +3,8 @@ const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
 const dayjs = require('dayjs')
 const duration = require('dayjs/plugin/duration')
 const _ = require('lodash')
-const yargs = require('yargs')
 
 dayjs.extend(duration)
-
-const argv = yargs
-  .option('company', {
-    alias: 'c',
-    string: true,
-    default: 'PROJECT_R',
-  })
-  .option('begin', {
-    alias: 'b',
-    describe: '(day in) first month e.g. 2019-02-01',
-    coerce: dayjs,
-    default: dayjs().subtract(1, 'month'),
-  })
-  .option('end', {
-    alias: 'e',
-    describe: '(day in) last month e.g. 2019-03-01',
-    coerce: dayjs,
-    default: dayjs().subtract(1, 'month'),
-  })
-  .help()
-  .version().argv
 
 const METHODS = ['PAYMENTSLIP', 'STRIPE', 'POSTFINANCECARD', 'PAYPAL']
 
@@ -36,6 +14,7 @@ const currency = new Intl.NumberFormat('de-CH', {
 })
 
 const evaluateCompanyMonth = async (
+  titles,
   company,
   begin,
   end,
@@ -470,45 +449,72 @@ const evaluateCompanyMonth = async (
   })
 
   // console.log(data)
+  const kpiData = []
+  kpiData.push(titles)
 
   Object.keys(data).forEach((method) => {
     Object.keys(data[method]).forEach((aggregation) => {
       const Anzahl = data[method][aggregation].Anzahl || ''
       const Betrag = currency.format(data[method][aggregation].Betrag || 0)
-      console.log(
-        `${company}\t${begin.format(
-          'YYYY-MM',
-        )}\t${method}\t${aggregation}\t${Anzahl}\t${Betrag}`,
-      )
+      const record = {}
+      record.entity = company
+      record.month = begin.format('YYYY-MM')
+      record.paymentMethod = method
+      record.aggregation = aggregation
+      record.count = Anzahl
+      record.amount = Betrag
+      kpiData.push(record)
     })
   })
+  return kpiData
 }
 
-PgDb.connect()
-  .then(async (pgdb) => {
-    console.log(
-      'Entität\tMonat\tZahlungsart\tAggregation\tAnzahl\tBetrag in CHF',
-    )
+const calculateKpis = async ({ beginDate, endDate, company }) => {
+  PgDb.connect()
+    .then(async (pgdb) => {
+      const titles = {
+        entity: 'Entität',
+        month: 'Monat',
+        paymentMethod: 'Zahlungsart',
+        aggregation: 'Aggregation',
+        count: 'Anzahl',
+        amount: 'Betrag in CHF',
+      }
 
-    for (
-      let begin = argv.begin.startOf('month');
-      begin <= argv.end;
-      begin = begin.add(1, 'month')
-    ) {
-      const end = begin.add(1, 'month')
+      let kpiData = []
 
-      const month = begin.get('month')
-      const year = begin.get('year')
-      const endFiscalYear = begin
-        .set('year', month <= 5 ? year : year + 1)
-        .endOf('month')
-        .set('month', 5)
+      for (
+        let begin = beginDate.startOf('month');
+        begin <= endDate;
+        begin = begin.add(1, 'month')
+      ) {
+        const end = begin.add(1, 'month')
 
-      await evaluateCompanyMonth(argv.company, begin, end, endFiscalYear, pgdb)
-    }
+        const month = begin.get('month')
+        const year = begin.get('year')
+        const endFiscalYear = begin
+          .set('year', month <= 5 ? year : year + 1)
+          .endOf('month')
+          .set('month', 5)
 
-    await pgdb.close()
-  })
-  .catch((e) => {
-    console.error(e)
-  })
+        kpiData = await evaluateCompanyMonth(
+          titles,
+          company,
+          begin,
+          end,
+          endFiscalYear,
+          pgdb,
+        )
+      }
+
+      await pgdb.close()
+      return kpiData
+    })
+    .catch((e) => {
+      console.error(e)
+    })
+}
+
+module.exports = {
+  calculateKpis,
+}
