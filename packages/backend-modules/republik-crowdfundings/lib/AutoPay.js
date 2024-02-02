@@ -9,11 +9,23 @@ const { getCustomPackages } = require('./User')
 const { getLastEndDate } = require('./utils')
 const createCache = require('./cache')
 
-const { getDefaultPaymentSource } = require('./payments/stripe/paymentSource')
+const {
+  getDefaultPaymentSource: getDefaultStripePaymentSource,
+} = require('./payments/stripe/paymentSource')
 
-const { getDefaultPaymentMethod } = require('./payments/stripe/paymentMethod')
+const {
+  getDefaultPaymentMethod: getDefaultStripePaymentMethod,
+} = require('./payments/stripe/paymentMethod')
 const createPaymentIntent = require('./payments/stripe/createPaymentIntent')
 const Promise = require('bluebird')
+const {
+  getDefaultPaymentSource: getDefaultDatatransPaymentSource,
+} = require('@orbiting/backend-modules-datatrans/lib/paymentSources')
+const {
+  authorizeAndSettleTransaction,
+  getMerchant,
+  formatHridAsRefno,
+} = require('@orbiting/backend-modules-datatrans/lib/helpers')
 
 const suggest = async (membershipId, pgdb) => {
   // Find membership
@@ -90,7 +102,12 @@ const suggest = async (membershipId, pgdb) => {
 
   const rewardId = membershipPledgeOption.packageOption.rewardId
 
-  const defaultPaymentMethod = await getDefaultPaymentMethod({
+  const defaultDatatransPaymentSource = await getDefaultDatatransPaymentSource(
+    membership.userId,
+    pgdb,
+  )
+
+  const defaultPaymentMethod = await getDefaultStripePaymentMethod({
     userId: membership.userId,
     pgdb,
     acceptCachedData: true,
@@ -98,14 +115,18 @@ const suggest = async (membershipId, pgdb) => {
 
   let defaultPaymentSource
   if (!defaultPaymentMethod) {
-    defaultPaymentSource = await getDefaultPaymentSource(
+    defaultPaymentSource = await getDefaultStripePaymentSource(
       membership.userId,
       pgdb,
       true,
     )
   }
 
-  if (!defaultPaymentMethod && !defaultPaymentSource) {
+  if (
+    !defaultDatatransPaymentSource &&
+    !defaultPaymentMethod &&
+    !defaultPaymentSource
+  ) {
     return false
   }
 
@@ -113,7 +134,10 @@ const suggest = async (membershipId, pgdb) => {
   // func prolong below expects this order
   // sourceId is used by scheduler/owners/charging to determine
   // if the source changed between suggests
-  const sourceId = defaultPaymentMethod?.id || defaultPaymentSource?.id
+  const sourceId =
+    defaultDatatransPaymentSource?.id ||
+    defaultPaymentMethod?.id ||
+    defaultPaymentSource?.id
 
   // Pick package and options which may be used to submit and autopayment
   const user = await pgdb.public.users.findOne({ id: membership.userId })
@@ -139,7 +163,8 @@ const suggest = async (membershipId, pgdb) => {
     return {
       userId: pledge.userId,
       pledgeId: pledge.id,
-      companyId: prolongPackage.companyId,
+      companyId: membershipTypes.find((mt) => mt.rewardId === rewardId)
+        .companyId,
       membershipId: membership.id,
       membershipType: membershipTypes.find((mt) => mt.rewardId === rewardId)
         .name,
@@ -152,6 +177,7 @@ const suggest = async (membershipId, pgdb) => {
       defaultPrice: prolongOption.price,
       withDiscount: pledge.donation < 0,
       withDonation: pledge.donation > 0,
+      defaultDatatransPaymentSource,
       defaultPaymentSource,
       defaultPaymentMethod,
       sourceId,
@@ -168,16 +194,48 @@ const prolong = async (membershipId, pgdb, redis, t) => {
     return
   }
 
+  // Insert payment to get hrid
+  const payment = await pgdb.public.payments.insertAndGet({
+    type: 'PLEDGE',
+    method: suggestion.defaultDatatransPaymentSource?.method || 'STRIPE',
+    total: suggestion.total,
+  })
+
+  // Insert link between payment and pledge
+  await pgdb.public.pledgePayments.insert({
+    pledgeId: suggestion.pledgeId,
+    paymentId: payment.id,
+    paymentType: 'PLEDGE',
+  })
+
   const transaction = await pgdb.transactionBegin()
+
   try {
     if (!suggestion) {
       throw new Error('suggestion missing')
     }
 
     let charge
-    // paymentMethod takes precedence over source
-    // func suggest above expects this order
-    if (suggestion.defaultPaymentMethod) {
+
+    if (suggestion.defaultDatatransPaymentSource) {
+      const { companyId, total, defaultDatatransPaymentSource } = suggestion
+
+      const datatransTrx = await authorizeAndSettleTransaction({
+        merchant: getMerchant(companyId),
+        amount: total,
+        refno: formatHridAsRefno(payment.hrid),
+        alias: defaultDatatransPaymentSource.pspPayload,
+      })
+
+      charge = {
+        ...datatransTrx,
+        amount: total,
+        method: defaultDatatransPaymentSource.method,
+        id: datatransTrx.transactionId,
+      }
+    } else if (suggestion.defaultPaymentMethod) {
+      // paymentMethod takes precedence over source
+      // func suggest above expects this order
       const { userId, companyId, defaultPaymentMethod, total, pledgeId } =
         suggestion
       const paymentIntent = await createPaymentIntent({
@@ -212,22 +270,16 @@ const prolong = async (membershipId, pgdb, redis, t) => {
       })
     }
 
-    // Insert payment
-    const payment = await transaction.public.payments.insertAndGet({
-      type: 'PLEDGE',
-      method: 'STRIPE',
-      total: charge.amount,
-      status: 'PAID',
-      pspId: charge.id,
-      pspPayload: charge,
-    })
-
-    // Insert link between payment and pledge
-    await transaction.public.pledgePayments.insert({
-      pledgeId: suggestion.pledgeId,
-      paymentId: payment.id,
-      paymentType: 'PLEDGE',
-    })
+    // Update payment
+    await transaction.public.payments.updateOne(
+      { id: payment.id },
+      {
+        total: charge.amount,
+        status: 'PAID',
+        pspId: charge.id,
+        pspPayload: charge,
+      },
+    )
 
     // Insert membership periods
     await transaction.public.membershipPeriods.insert(
@@ -288,8 +340,17 @@ const prolong = async (membershipId, pgdb, redis, t) => {
       status: 'ERROR',
       error,
       createdAt: new Date(),
+      paymentId: payment.id,
       sourceId: suggestion.sourceId,
     })
+
+    await transaction.public.payments.updateOne(
+      { id: payment.id },
+      {
+        status: 'CANCELLED',
+        pspPayload: { chargeAttempt },
+      },
+    )
 
     return { suggestion, chargeAttempt }
   }

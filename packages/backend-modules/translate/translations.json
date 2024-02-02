@@ -2233,6 +2233,22 @@
       "value": "Rechnung"
     },
     {
+      "key": "api/invoices/paymentMethod/DATATRANS_CREDITCARD",
+      "value": "Kreditkarte"
+    },
+    {
+      "key": "api/invoices/paymentMethod/DATATRANS_PAYPAL",
+      "value": "PayPal"
+    },
+    {
+      "key": "api/invoices/paymentMethod/DATATRANS_POSTFINANCECARD",
+      "value": "PostFinance Card"
+    },
+    {
+      "key": "api/invoices/paymentMethod/DATATRANS_TWINT",
+      "value": "Twint"
+    },
+    {
       "key": "api/invoices/table/option",
       "value": "Artikel"
     },
