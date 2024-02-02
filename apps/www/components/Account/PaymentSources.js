@@ -2,9 +2,13 @@ import { Component, Fragment } from 'react'
 import compose from 'lodash/flowRight'
 import { graphql } from '@apollo/client/react/hoc'
 import { gql } from '@apollo/client'
+import { Button, InlineSpinner, Loader, colors } from '@project-r/styleguide'
 
 import withT from '../../lib/withT'
 import withMe from '../../lib/apollo/withMe'
+import { withDatatransRegistration } from '../Payment/datatrans/withDatatransRegistration'
+import { withAddDatatransSource } from '../Payment/datatrans/withAddDatatransSource'
+import { isDatatransPaymentMethod } from '../Payment/datatrans/helpers'
 
 import { errorToString } from '../../lib/utils/errors'
 
@@ -12,14 +16,20 @@ import FieldSet from '../FieldSet'
 import PaymentForm, { query } from '../Payment/Form'
 import { P } from './Elements'
 
-import { Button, InlineSpinner, colors } from '@project-r/styleguide'
-
 import { withRouter } from 'next/router'
 
 import { loadStripe } from '../Payment/stripe'
 
 const objectValues = (object) => Object.keys(object).map((key) => object[key])
 
+/**
+ * Picks payment methods which can be stored as an alias/token. An alias or token
+ * is an user authorization to allow charging future payments without their
+ * interaction.
+ *
+ */
+const pickTokenizableMethods = (method) =>
+  method.startsWith('DATATRANS') || method.startsWith('STRIPE')
 class PaymentSources extends Component {
   constructor(...args) {
     super(...args)
@@ -27,12 +37,24 @@ class PaymentSources extends Component {
       values: {},
       dirty: {},
       errors: {},
+      addingSource: false,
     }
     this.paymentRef = (ref) => {
       this.payment =
         ref && ref.getWrappedInstance ? ref.getWrappedInstance() : ref
     }
+
+    if (this.props.query.paymentSourceId) {
+      this.state.addingSource = true
+    }
   }
+
+  componentDidMount() {
+    if (this.state.addingSource) {
+      this.addDatatransSource(this.props.query.paymentSourceId)
+    }
+  }
+
   addPaymentMethod() {
     const { t, company } = this.props
     this.setState({
@@ -85,11 +107,65 @@ class PaymentSources extends Component {
         })
       })
   }
+
+  registerDatatransPaymentSource() {
+    console.log('registerDatatransPaymentSource')
+    const { t, company } = this.props
+
+    this.setState({
+      loading: t('account/paymentSource/saving'),
+      remoteError: undefined,
+    })
+
+    this.props
+      .datatransRegistration({
+        method: this.state.values.paymentMethod,
+        companyId: company.id,
+      })
+      .then(({ data }) => {
+        this.payment.datatransForm.action =
+          data.datatransRegistration.registrationUrl
+        this.payment.datatransForm.submit()
+      })
+      .catch((error) => {
+        this.setState({
+          loading: false,
+          remoteError: errorToString(error),
+        })
+      })
+  }
+
+  addDatatransSource(paymentSourceId) {
+    this.props
+      .addDatatransSource({ paymentSourceId })
+      /* .then(({ data }) => {
+        console.log('addDatatransPaymentMethod.then(data)', data)
+      }) */
+      .catch((error) => {
+        this.setState({
+          remoteError: errorToString(error),
+        })
+      })
+      .finally(() => {
+        this.props.router.replace({
+          query: {},
+        })
+        this.setState({
+          addingSource: false,
+        })
+      })
+  }
+
   render() {
-    const { t, me } = this.props
-    const { values, errors, dirty, loading, remoteError } = this.state
+    const { t, me, methods } = this.props
+    const { values, errors, dirty, loading, addingSource, remoteError } =
+      this.state
 
     const errorMessages = objectValues(errors).filter(Boolean)
+
+    if (addingSource) {
+      return <Loader loading message={t('account/paymentSource/adding')} />
+    }
 
     return (
       <Fragment>
@@ -101,7 +177,8 @@ class PaymentSources extends Component {
             id: me.id,
           }}
           context='DEFAULT_SOURCE'
-          allowedMethods={['STRIPE']}
+          allowedMethods={methods.filter(pickTokenizableMethods)}
+          keepPaymentSource={true}
           onChange={(fields) => {
             this.setState((state) => {
               const nextState = FieldSet.utils.mergeFields(fields)(state)
@@ -162,10 +239,17 @@ class PaymentSources extends Component {
                   })
                   return
                 }
-                this.addPaymentMethod()
+
+                if (values.paymentMethod.startsWith('STRIPE')) {
+                  this.addPaymentMethod()
+                } else if (isDatatransPaymentMethod(values.paymentMethod)) {
+                  this.registerDatatransPaymentSource()
+                }
               }}
             >
-              {t('account/paymentSource/save')}
+              {isDatatransPaymentMethod(values.paymentMethod)
+                ? t('account/paymentSource/register')
+                : t('account/paymentSource/save')}
             </Button>
           </Fragment>
         )}
@@ -232,4 +316,6 @@ export default compose(
       },
     }),
   }),
+  withDatatransRegistration,
+  withAddDatatransSource,
 )(PaymentSources)

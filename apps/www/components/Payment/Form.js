@@ -33,11 +33,44 @@ import StripeForm from './Form/Stripe'
 import ApplePayMark from './Form/ApplePayMark'
 import GooglePayMark from './Form/GooglePayMark'
 import { WalletPaymentMethod } from './PaymentRequest/usePaymentRequest'
+import { DatatransPaymentMethod } from './datatrans/types'
+import { isDatatransPaymentMethod } from './datatrans/helpers'
 import { IconLock } from '@republik/icons'
+import {
+  isApplePayAvailable,
+  isGooglePayAvailable,
+} from './Form/StripeWalletHelpers'
 
 const pad2 = format('02')
 
 const PAYMENT_METHODS = [
+  {
+    disabled: false,
+    key: DatatransPaymentMethod.CreditCard,
+    Icon: () => (
+      <>
+        <PSPIcons.Visa />
+        <PSPIcons.Mastercard />
+      </>
+    ),
+  },
+  {
+    disabled: false,
+    key: DatatransPaymentMethod.PostfinanceCard,
+    bgColor: '#FCCC12',
+    Icon: PSPIcons.Postcard,
+  },
+  {
+    disabled: false,
+    key: DatatransPaymentMethod.PayPal,
+    Icon: PSPIcons.PayPal,
+  },
+  {
+    disabled: false,
+    key: DatatransPaymentMethod.Twint,
+    bgColor: '#000',
+    Icon: PSPIcons.Twint,
+  },
   {
     disabled: false,
     key: 'STRIPE',
@@ -73,12 +106,12 @@ const PAYMENT_METHODS = [
     },
   },
   {
-    disabled: inNativeAppBrowser,
+    disabled: inNativeAppBrowser || !isApplePayAvailable(),
     key: WalletPaymentMethod.APPLE_PAY,
     Icon: ApplePayMark,
   },
   {
-    disabled: inNativeAppBrowser,
+    disabled: inNativeAppBrowser || !isGooglePayAvailable(),
     key: WalletPaymentMethod.GOOGLE_PAY,
     Icon: GooglePayMark,
   },
@@ -192,12 +225,15 @@ const PaymentMethodLabel = ({
   )
 }
 
-const { H2, P, H3 } = Interaction
+const { P, H3 } = Interaction
 
 class PaymentForm extends Component {
   constructor(...args) {
     super(...args)
     this.state = {}
+    this.datatransFormRef = (ref) => {
+      this.datatransForm = ref
+    }
     this.stripeRef = (ref) => {
       this.stripe = ref
     }
@@ -225,19 +261,23 @@ class PaymentForm extends Component {
     if (
       (!loadingPaymentSource && values.paymentSource === undefined) ||
       (values.paymentMethod &&
-        allowedMethods &&
-        allowedMethods.indexOf(values.paymentMethod) === -1)
+        !PAYMENT_METHODS?.some((m) => values.paymentMethod.startsWith(m.key)))
     ) {
-      const stripeAllowed = allowedMethods
-        ? allowedMethods.indexOf('STRIPE') !== -1
-        : true
-      if (paymentSource && stripeAllowed) {
-        onChange({
-          values: {
-            paymentMethod: 'STRIPE',
-            paymentSource: paymentSource.id,
-          },
-        })
+      if (
+        paymentSource &&
+        PAYMENT_METHODS.some((m) => m.key.startsWith(paymentSource.method))
+      ) {
+        if (
+          values.paymentMethod !== paymentSource.method ||
+          values.paymentSource !== paymentSource.id
+        ) {
+          onChange({
+            values: {
+              paymentMethod: paymentSource.method,
+              paymentSource: paymentSource.id,
+            },
+          })
+        }
       } else {
         onChange({
           values: {
@@ -254,6 +294,7 @@ class PaymentForm extends Component {
       children,
       t,
       allowedMethods,
+      keepPaymentSource,
       erroredMethods = [],
       payload,
       values,
@@ -273,7 +314,12 @@ class PaymentForm extends Component {
       setSyncAddresses,
     } = this.props
     const { paymentMethod } = values
-    const visibleMethods = allowedMethods || PAYMENT_METHODS.map((pm) => pm.key)
+    const visibleMethods = PAYMENT_METHODS.filter((pm) => !pm.disabled)
+      .map((pm) => pm.key)
+      .filter(
+        (key) =>
+          !allowedMethods || allowedMethods.some((m) => key.startsWith(m)),
+      )
 
     const hasChoice = visibleMethods.length > 1
     const onlyStripe = !hasChoice && visibleMethods[0] === 'STRIPE'
@@ -308,7 +354,16 @@ class PaymentForm extends Component {
           style={{ minHeight: PAYMENT_METHOD_HEIGHT * 2 }}
           loading={loadingPaymentSource || false}
           render={() => {
-            const hasPaymentSource = !!paymentSource
+            const hasPaymentSource =
+              !!paymentSource &&
+              ((!keepPaymentSource &&
+                visibleMethods.some((m) =>
+                  m.startsWith(paymentSource.method),
+                )) ||
+                (keepPaymentSource &&
+                  PAYMENT_METHODS.some((m) =>
+                    m.key.startsWith(paymentSource.method),
+                  )))
             const PaymentSourceIcon =
               hasPaymentSource &&
               ((paymentSource.brand.toLowerCase() === 'visa' && (
@@ -320,7 +375,16 @@ class PaymentForm extends Component {
                 ((paymentSource.brand.toLowerCase() === 'american express' ||
                   paymentSource.brand.toLowerCase() === 'amex') && (
                   <PSPIcons.Amex />
-                )))
+                )) ||
+                PAYMENT_METHODS.find(
+                  ({ key }) => key === paymentSource.method,
+                )?.Icon())
+
+            const paymentSourceBgColor =
+              hasPaymentSource &&
+              PAYMENT_METHODS.find(({ key }) => key === paymentSource.method)
+                ?.bgColor
+
             const paymentSourceDisabled =
               paymentSource && paymentSource.status !== 'CHARGEABLE'
 
@@ -335,6 +399,7 @@ class PaymentForm extends Component {
                     <PaymentMethodLabel
                       active={values.paymentSource === paymentSource.id}
                       error={paymentSourceDisabled}
+                      backgroundColor={paymentSourceBgColor}
                     >
                       <input
                         type='radio'
@@ -342,12 +407,11 @@ class PaymentForm extends Component {
                         disabled={paymentSourceDisabled}
                         onChange={(event) => {
                           event.preventDefault()
-                          const value = event.target.value
                           onChange({
                             values: {
+                              paymentMethod: paymentSource.method,
+                              paymentSource: paymentSource.id,
                               newSource: false,
-                              paymentMethod: 'STRIPE',
-                              paymentSource: value,
                             },
                           })
                         }}
@@ -361,13 +425,19 @@ class PaymentForm extends Component {
                             {paymentSource.brand}
                           </span>
                         )}
-                        <span {...styles.paymentMethodSourceText}>
-                          {!PaymentSourceIcon && paymentSource.brand}
-                          {'**** '}
-                          {paymentSource.last4}
-                          <br />
-                          {pad2(paymentSource.expMonth)}/{paymentSource.expYear}
-                        </span>
+                        {(!PaymentSourceIcon ||
+                          paymentSource.last4 ||
+                          paymentSource.expMonth ||
+                          paymentSource.expYear) && (
+                          <span {...styles.paymentMethodSourceText}>
+                            {!PaymentSourceIcon && paymentSource.brand}
+                            {'**** '}
+                            {paymentSource.last4}
+                            <br />
+                            {pad2(paymentSource.expMonth)}/
+                            {paymentSource.expYear}
+                          </span>
+                        )}
                       </span>
                     </PaymentMethodLabel>
                     <br />
@@ -384,8 +454,9 @@ class PaymentForm extends Component {
                         e.preventDefault()
                         onChange({
                           values: {
-                            newSource: true,
+                            paymentMethod: visibleMethods[0],
                             paymentSource: null,
+                            newSource: true,
                           },
                         })
                       }}
@@ -403,7 +474,8 @@ class PaymentForm extends Component {
                 {showMethods &&
                   PAYMENT_METHODS.filter(
                     (pm) =>
-                      !pm.disabled && visibleMethods.indexOf(pm.key) !== -1,
+                      !pm.disabled &&
+                      visibleMethods.some((m) => pm.key.startsWith(m)),
                   ).map((pm) => (
                     <PaymentMethodLabel
                       key={pm.key}
@@ -523,6 +595,12 @@ class PaymentForm extends Component {
             </div> */}
           </div>
         )}
+        {paymentMethodForm && isDatatransPaymentMethod(paymentMethodForm) && (
+          <>
+            {children}
+            <form ref={this.datatransFormRef} method='GET' />
+          </>
+        )}
         {paymentMethodForm === 'STRIPE' && (
           <>
             {stripeNote && <Label>{stripeNote}</Label>}
@@ -632,6 +710,7 @@ PaymentForm.propTypes = {
   allowedMethods: PropTypes.arrayOf(
     PropTypes.oneOf(PAYMENT_METHODS.map((method) => method.key)),
   ),
+  keepPaymentSource: PropTypes.bool,
   payload: PropTypes.shape({
     id: PropTypes.string,
     userId: PropTypes.string,
@@ -663,6 +742,7 @@ export const query = gql`
       id
       defaultPaymentSource {
         id
+        method
         status
         brand
         last4

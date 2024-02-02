@@ -3,16 +3,13 @@ import PropTypes from 'prop-types'
 import compose from 'lodash/flowRight'
 import { graphql } from '@apollo/client/react/hoc'
 import { gql } from '@apollo/client'
+import { InlineSpinner, colors, A } from '@project-r/styleguide'
+import Link from 'next/link'
 
 import withT from '../../../lib/withT'
 import { errorToString } from '../../../lib/utils/errors'
 import { timeFormat } from '../../../lib/utils/format'
 import { Item as AccountItem, P } from '../Elements'
-
-import TokenPackageLink from '../../Link/TokenPackage'
-
-import { InlineSpinner, colors, A } from '@project-r/styleguide'
-import Link from 'next/link'
 
 const dayFormat = timeFormat('%d. %B %Y')
 
@@ -34,11 +31,15 @@ const Actions = ({
     <>
       {!hasWaitingMemberships && membership.canProlong && (
         <P>
-          <TokenPackageLink
-            params={{
-              package: 'PROLONG',
+          <Link
+            key='link'
+            href={{
+              pathname: `/angebote`,
+              query: { package: 'PROLONG' },
             }}
             passHref
+            prefetch={false}
+            legacyBehavior
           >
             <A>
               {t.first([
@@ -46,7 +47,7 @@ const Actions = ({
                 'memberships/manage/prolong/link',
               ])}
             </A>
-          </TokenPackageLink>
+          </Link>
         </P>
       )}
       {!hasWaitingMemberships &&

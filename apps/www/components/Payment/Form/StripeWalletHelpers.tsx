@@ -14,7 +14,7 @@ declare global {
   }
 }
 
-function isApplePayAvailable(): boolean {
+export function isApplePayAvailable(): boolean {
   if (!isInSecureWindow() || !window.ApplePaySession) {
     return false
   }
@@ -37,7 +37,7 @@ export function useIsApplePayAvailable(): [
 
 // ---- Google Pay ----
 
-function isGooglePayAvailable(): boolean {
+export function isGooglePayAvailable(): boolean {
   if (!isInSecureWindow()) {
     return false
   }
