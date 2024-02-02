@@ -1,5 +1,9 @@
 const crypto = require('crypto')
 
+/** @typedef {import("@orbiting/backend-modules-types").UserRow} UserRow */
+/** @typedef {import("@orbiting/backend-modules-types").User} User */
+/** @typedef {import("@orbiting/backend-modules-types").ConnectionContext} ConnectionContext */
+
 const NON_URL_SAFE_BASE64_CHARS = ['+', '/', '=']
 
 /**
@@ -21,8 +25,8 @@ const MAX_ATTMEPTS = 25
 
 /**
  * Generates and stores a unique code for a user and sets the referral-code for the user.
- * @param {object} user
- * @param {object} pgdb
+ * @param {User} user
+ * @param {ConnectionContext} pgdb
  * @returns {Promise<string>} generated referral code for the user
  */
 async function generateReferralCode(user, pgdb) {
@@ -84,6 +88,29 @@ async function generateReferralCode(user, pgdb) {
   return referralCode
 }
 
+/**
+ * Resolves a user based on the referralCode or public username.
+ *
+ * @param {string} referralCode
+ * @param {ConnectionContext} pgdb
+ * @returns {Promise<UserRow?>} generated referral code for the user
+ */
+async function resolveUserByReferralCode(referralCode, pgdb) {
+  try {
+    const user = await pgdb.public.users.findOne({
+      or: [{ referralCode: referralCode }, { username: referralCode }],
+    })
+    return user
+  } catch (e) {
+    console.error(
+      'Collision between referralCode and username, found more than one user:',
+      referralCode,
+    )
+    return null
+  }
+}
+
 module.exports = {
   generateReferralCode,
+  resolveUserByReferralCode,
 }
