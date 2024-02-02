@@ -1,6 +1,6 @@
 -- migrate up here: CREATE TABLE...
 
-CREATE TABLE campaigns (
+CREATE TABLE IF NOT EXISTS campaigns (
   "id" uuid PRIMARY KEY NOT NULL DEFAULT uuid_generate_v4(),
   "name" text NOT NULL UNIQUE,
   "description" text NULL,
@@ -10,7 +10,7 @@ CREATE TABLE campaigns (
   "updatedAt"   timestamptz DEFAULT now()
 );
 
-CREATE TABLE referrals (
+CREATE TABLE IF NOT EXISTS referrals (
   "id" uuid PRIMARY KEY NOT NULL DEFAULT uuid_generate_v4(),
   "campaignId" uuid NULL,
   "referrerId" uuid NOT NULL,
@@ -31,20 +31,20 @@ CREATE TABLE referrals (
     ON DELETE RESTRICT
 );
 
-CREATE TABLE "public"."campaignRewards" (
+CREATE TABLE IF NOT EXISTS "public"."campaignRewards" (
     "id" uuid PRIMARY KEY NOT NULL DEFAULT uuid_generate_v4(),
     "campaignId" uuid,
     "referralCountThreshold" int NOT NULL DEFAULT '1',
     "name" text,
     "description" text,
-    "type" string NOT NULL DEFAULT 'bonus_month',
+    "type" text NOT NULL DEFAULT 'bonus_month',
     "amount" int NOT NULL DEFAULT '1',
     "createdAt"   timestamptz DEFAULT now(),
     "updatedAt"   timestamptz DEFAULT now(),
     FOREIGN KEY ("campaignId") REFERENCES "public"."campaigns"("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
-CREATE TABLE "public"."userCampaignRewards" (
+CREATE TABLE IF NOT EXISTS "public"."userCampaignRewards" (
     "id" uuid PRIMARY KEY NOT NULL DEFAULT uuid_generate_v4(),
     "userId" uuid,
     "campaignRewardId" uuid,
