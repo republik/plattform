@@ -19,6 +19,13 @@ const SenderProfile = ({
         display: 'flex',
         flexDirection: 'row',
         gap: '4',
+        alignItems: 'center',
+        // background: 'overlay',
+        // color: 'pageBackground',
+        p: '2',
+        pr: '4',
+        borderRadius: '5px',
+        maxW: 400,
       })}
     >
       {portrait && (
@@ -29,6 +36,15 @@ const SenderProfile = ({
           }}
         >
           <Image
+            className={css({
+              borderRadius: '4px',
+              // borderWidth: '2px',
+              // borderColor: 'primary',
+              // borderStyle: 'solid',
+              boxShadow: 'sm',
+              width: { base: '4.5rem', md: '6rem' },
+              height: { base: '4.5rem', md: '6rem' },
+            })}
             alt='Portrait'
             src={portrait}
             width={96}
@@ -37,9 +53,55 @@ const SenderProfile = ({
           />
         </div>
       )}
-      <div className={css({ flex: '0 1 auto' })}>
+      <div
+        className={css({
+          flex: '0 1 auto',
+          textStyle: 'sansSerifMedium',
+          fontSize: 'xl',
+        })}
+      >
         <p>{text}</p>
       </div>
+    </div>
+  )
+}
+
+const CTA = ({ href }: { href: string }) => {
+  return (
+    <div
+      className={css({
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        gap: '2',
+        position: 'sticky',
+        bottom: '0',
+        pb: '4',
+        pt: '16',
+        backgroundGradient: 'stickyBottomPanelBackground',
+        width: 'full',
+      })}
+    >
+      <Link
+        className={css({
+          background: 'contrast',
+          color: 'text.inverted',
+          px: '6',
+          py: '3',
+          borderRadius: '3px',
+          fontWeight: 'medium',
+          cursor: 'pointer',
+          textDecoration: 'none',
+          textAlign: 'center',
+          display: 'block',
+          // width: 'full',
+          _hover: {},
+        })}
+        href={href}
+      >
+        Wählen Sie Ihren Einstiegspreis
+      </Link>
+      <p className={css({ fontSize: 'base' })}> ab CHF 120 für ein Jahr</p>
     </div>
   )
 }
@@ -84,6 +146,7 @@ export default async function Page({ params }) {
           flexGrow: 1,
           display: 'flex',
           flexDirection: 'column',
+          alignItems: 'center',
           gap: '8',
         })}
       >
@@ -91,46 +154,42 @@ export default async function Page({ params }) {
           <div>
             <SenderProfile
               portrait={sender.portrait}
-              text={`${sender.firstName} ${sender.lastName} hat Sie eingeladen, Teil Republik zu werden.`}
+              text={`${sender.firstName} ${sender.lastName} hat Sie eingeladen, die Republik zu unterstützen.`}
             />
           </div>
         ) : (
           <p>Machen Sie mit bei der Republik, denn das ist super cool!</p>
         )}
 
-        <p>
-          Hier sollte noch ein mega inspiriender Text stehen, wo auch gesagt
-          wird, dass man seinen eigenen Preis wählen kann und so.
+        {/* <p>
+          Die Republik ist ein unabhängiges, Leserinnen finanziertes
+          Onlinemagazin.
         </p>
-      </div>
+        <p>
+          Mit Ihrer Unterstützung decken wir staatliche Überwachung auf, ordnen
+          das aktuelle Geschehen ein, fragen nach und führen den höflichsten
+          Debattenraum der Schweiz – und vieles mehr.
+        </p> */}
 
-      <div
-        className={css({
-          position: 'sticky',
-          bottom: 0,
-          width: 'full',
-          py: '8',
-          background: 'pageBackground',
-        })}
-      >
-        <Link
-          className={css({
-            background: 'contrast',
-            color: 'text.inverted',
-            p: '4',
-            borderRadius: '5px',
-            fontWeight: 'medium',
-            cursor: 'pointer',
-            textDecoration: 'none',
-            textAlign: 'center',
-            display: 'block',
-            width: 'full',
-            _hover: {},
-          })}
-          href={`${params.code}/angebot`}
-        >
-          Wählen Sie Ihren Preis
-        </Link>
+        <p>
+          Die Republik ist ein digitales Magazin für Politik, Wirtschaft,
+          Gesellschaft und Kultur. Unabhängig und werbefrei – finanziert von
+          seinen Leserinnen und Lesern.
+        </p>
+        <p>
+          In der Republik erwarten Sie von Montag bis Samstag Beiträge zum Lesen
+          und Hören - von professionellen Sprecherinnen vorgelesen. Wir nehmen
+          uns die nötige Zeit, um aktuelle Themen und Fragen für Sie angemessen
+          und sorgfältig zu recherchieren, zu erzählen – und alle Fakten zu
+          überprüfen.
+        </p>
+        <p>
+          Damit Sie einen klaren Kopf behalten, mutig handeln und klug
+          entscheiden können.
+        </p>
+        <CTA href={`${params.code}/angebot`} />
+
+        {/* <CTA href={`${params.code}/angebot`} /> */}
       </div>
     </>
   )

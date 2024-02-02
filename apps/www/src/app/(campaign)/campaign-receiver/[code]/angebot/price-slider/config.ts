@@ -1,11 +1,11 @@
 export type SliderStepKey =
   | 'minimum'
   | 'belowStandard'
-  | 'average'
-  | 'aboveAverage'
+  // | 'average'
+  // | 'aboveAverage'
   | 'standard'
   | 'investmentLow'
-  | 'investmentHigh'
+  // | 'investmentHigh'
   | 'maximum'
 
 type SliderStep = {
@@ -30,8 +30,8 @@ const SLIDER_STEPS: Record<SliderStepKey, SliderStep> = {
   minimum: {
     key: 'minimum',
     iconSrc: '/static/5-jahre-republik/receiver/slider-step-0.svg',
-    label: 'Das Minimum',
-    text: 'Zahlen Sie den Preis, der Ihnen fair erscheint. Aber für ein Jahr unabhängigen Journalismus liegt vielleicht etwas mehr drin?',
+    label: 'Der minimale Einstieg',
+    text: 'Jeden Monat für den Wert von zwei Kaffees eine ganze Republik erhalten. Nicht schlecht!',
     goodie: false,
     goodieText:
       'Die Jubiläumstasche gibts dazu, wenn Sie mehr als CHF 240 bezahlen.',
@@ -40,71 +40,71 @@ const SLIDER_STEPS: Record<SliderStepKey, SliderStep> = {
   belowStandard: {
     key: 'belowStandard',
     iconSrc: '/static/5-jahre-republik/receiver/slider-step-0.svg',
-    label: 'Dabei sein ist alles',
-    text: 'Sie sind knapp bei Kasse? Das kann passieren. Jeder zusätzliche Beitrag stärkt die Republik und ihren unabhängigen Journalismus.',
+    label: 'Der erleichterte Einstieg',
+    text: 'Wählen Sie den Preis, der für Sie passt. Wir freuen uns über jede zusätzliche Unterstützung! ',
     goodie: false,
     goodieText:
       'Die Jubiläumstasche gibts dazu, wenn Sie mehr als CHF 240 bezahlen.',
     bonusHint: '',
   }, //  5 <= Selected < average CHF}
-  average: {
-    key: 'average',
-    iconSrc: '/static/5-jahre-republik/receiver/slider-step-1.svg',
-    label: 'Mit dem Schwarm schwimmen',
-    text: 'Wer sich den Normalpreis nicht leisten kann, zahlt in der Regel die Hälfte. Sie auch?',
-    goodie: false,
-    goodieText:
-      'Die Jubiläumstasche gibts dazu, wenn Sie mehr als CHF 240 bezahlen.',
-    bonusHint: '',
-  }, // average <= selected < 240 CHF}
-  aboveAverage: {
-    key: 'aboveAverage',
-    iconSrc: '/static/5-jahre-republik/receiver/slider-step-2.svg',
-    label: 'Mehr als die Hälfte',
-    text: 'Sie gehen Ihren eigenen Weg, aber es ist kein Alleingang. Schön, sind Sie dabei!',
-    goodie: true,
-    goodieText: 'Zum Abo-Kauf schenken wir Ihnen eine Jubiläumstasche dazu.',
-    bonusHint: '',
-  }, // average <= selected < 240 CHF}
+  // average: {
+  //   key: 'average',
+  //   iconSrc: '/static/5-jahre-republik/receiver/slider-step-1.svg',
+  //   label: 'Mit dem Schwarm schwimmen',
+  //   text: 'Wer sich den Normalpreis nicht leisten kann, zahlt in der Regel die Hälfte. Sie auch?',
+  //   goodie: false,
+  //   goodieText:
+  //     'Die Jubiläumstasche gibts dazu, wenn Sie mehr als CHF 240 bezahlen.',
+  //   bonusHint: '',
+  // }, // average <= selected < 240 CHF}
+  // aboveAverage: {
+  //   key: 'aboveAverage',
+  //   iconSrc: '/static/5-jahre-republik/receiver/slider-step-2.svg',
+  //   label: 'Mehr als die Hälfte',
+  //   text: 'Sie gehen Ihren eigenen Weg, aber es ist kein Alleingang. Schön, sind Sie dabei!',
+  //   goodie: true,
+  //   goodieText: 'Zum Abo-Kauf schenken wir Ihnen eine Jubiläumstasche dazu.',
+  //   bonusHint: '',
+  // }, // average <= selected < 240 CHF}
   standard: {
     key: 'standard',
     iconSrc: '/static/5-jahre-republik/receiver/slider-step-3.svg',
-    label: 'Der zuverlässige Standard',
-    text: 'Sie befinden sich im regulären Bereich und zahlen unseren Normalpreis. Es freut uns, wenn das für Sie passt!',
+    label: 'Der souveräne Einstieg',
+    text: 'So viel bezahlt die überwiegende Mehrheit unserer Unterstützer. Wir werden Ihnen in den kommenden 12 Monaten beweisen, dass sich jeder Franken gelohnt hat.',
     goodie: true,
-    goodieText: 'Zum Abo-Kauf schenken wir Ihnen eine Jubiläumstasche dazu.',
-    bonusHint:
-      'Hinweis: Ab einem Preis von CHF 240 werden Sie Mitglied der Project R Genossenschaft.',
+    goodieText:
+      'Zum Dank gibts beim Abo-Kauf eine Republik-Tasche gratis dazu!',
+    bonusHint: 'Sie werden zudem Mitglied der Project R Genossenschaft',
   }, // selected = 240 CHF}
   investmentLow: {
     key: 'investmentLow',
     iconSrc: '/static/5-jahre-republik/receiver/slider-step-4.svg',
-    label: 'Die vertrauens\u00ADvolle Investition',
-    text: 'Sie gehen Ihren eigenen Weg, aber es ist kein Alleingang. Schön, sind Sie dabei!',
+    label: 'Der grosszügige Einstieg',
+    text: 'Sie können sich mehr als den Normalpreis leisten und tun dies auch. Wir bedanken uns für Ihre Grosszügigkeit!',
     goodie: true,
-    goodieText: 'Zum Abo-Kauf schenken wir Ihnen eine Jubiläumstasche dazu.',
-    bonusHint:
-      'Hinweis: Ab einem Preis von CHF 240 werden Sie Mitglied der Project R Genossenschaft.',
+    goodieText:
+      'Zum Dank gibts beim Abo-Kauf eine Republik-Tasche gratis dazu!',
+    bonusHint: 'Sie werden zudem Mitglied der Project R Genossenschaft',
   }, // 240 < selected < 500 CHF}
-  investmentHigh: {
-    key: 'investmentHigh',
-    iconSrc: '/static/5-jahre-republik/receiver/slider-step-5.svg',
-    label: 'Die kühne Investition',
-    text: 'Hiermit investieren Sie entschlossen in die Zukunft der Republik. Mögen sich Ihre kühnen Hoffnungen erfüllen!',
-    goodie: true,
-    goodieText: 'Zum Abo-Kauf schenken wir Ihnen eine Jubiläumstasche dazu.',
-    bonusHint:
-      'Hinweis: Ab einem Preis von CHF 240 werden Sie Mitglied der Project R Genossenschaft.',
-  }, // >= 500 CHF}
+  // investmentHigh: {
+  //   key: 'investmentHigh',
+  //   iconSrc: '/static/5-jahre-republik/receiver/slider-step-5.svg',
+  //   label: 'Die kühne Investition',
+  //   text: 'Hiermit investieren Sie entschlossen in die Zukunft der Republik. Mögen sich Ihre kühnen Hoffnungen erfüllen!',
+  //   goodie: true,
+  //   goodieText: 'Zum Abo-Kauf schenken wir Ihnen eine Jubiläumstasche dazu.',
+  //   bonusHint:
+  //     'Sie werden zudem Mitglied der Project R Genossenschaft',
+  // }, // >= 500 CHF}
   maximum: {
     key: 'maximum',
     iconSrc: '/static/5-jahre-republik/receiver/slider-step-6.svg',
-    label: 'Das Maximum',
-    text: 'Respekt – Sie geben alles. (Und wir arbeiten hart daran, es Ihnen gleichzutun.)',
+    label: 'Der fulminante Einstieg',
+    text: 'Was für ein Start! Mit Ihrer Unterstützung erhalten wir längerfristig Sicherheit. Ihr Vertrauen ehrt uns.',
     goodie: true,
-    goodieText: 'Zum Abo-Kauf schenken wir Ihnen eine Jubiläumstasche dazu.',
-    bonusHint:
-      'Hinweis: Ab einem Preis von CHF 1000 werden Sie Gönnerin und Mitglied der Project R Genossenschaft.',
+    goodieText:
+      'Zum Dank laden wir Sie zu einem persönlichen Besuch bei uns ins Rothaus ein und zeigen Ihnen bei Kaffee und Kuchen die Redaktion.',
+    bonusHint: 'Sie werden zudem Mitglied der Project R Genossenschaft',
   }, // selected = 1000 CHF}
 } as const
 

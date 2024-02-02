@@ -109,8 +109,8 @@ const styles = {
     position: 'absolute',
     left: 0,
     top: 0,
-    width: 50,
-    marginLeft: -25,
+    width: 100,
+    marginLeft: -50,
     textAlign: 'center',
     fontWeight: 'bold',
   }),
@@ -201,7 +201,10 @@ export const PriceSlider = ({
     stiffness: 5000,
     damping: 200,
   })
-  const valueIndicatorText = useTransform(coord, (v) => getStepAtCoord(v).value)
+  const valueIndicatorText = useTransform(
+    coord,
+    (v) => `CHF ${getStepAtCoord(v).value}`,
+  )
   const valueIndicatorVelocity = useVelocity(valueIndicatorCoord)
   const valueIndicatorTilt = useTransform(
     valueIndicatorVelocity,

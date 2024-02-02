@@ -24,6 +24,16 @@ export const presetCampaign2024 = definePreset({
         },
       },
       semanticTokens: {
+        gradients: {
+          stickyBottomPanelBackground: {
+            value: {
+              _campaign2024: '{colors.campaign2024.red}',
+              _campaign2024Inverted:
+                'linear-gradient(180deg, transparent 0%, {colors.campaign2024.red} 4rem, {colors.campaign2024.red} 100%)',
+              _campaign2024Dark: '{colors.campaign2024.yellow}',
+            },
+          },
+        },
         colors: {
           primary: {
             value: {
@@ -35,6 +45,7 @@ export const presetCampaign2024 = definePreset({
           overlay: {
             value: {
               _campaign2024: 'rgba(245,0,0, 0.05)',
+              _campaign2024Inverted: 'rgba(255,255,255, 0.5)',
               _campaign2024Dark: 'rgba(255,255,255, 0.05)',
             },
           },

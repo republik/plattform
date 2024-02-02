@@ -20,7 +20,10 @@ export const PriceRewards = () => {
         {step.step.label}
       </h2>
       <p>{step.step.text}</p>
-      <p className={css({ fontSize: 'base' })}>{step.step.goodieText}</p>
+      {step.step.goodie && (
+        <p className={css({ fontSize: 'base' })}>{step.step.goodieText}</p>
+      )}
+      <p className={css({ fontSize: 'base' })}>{step.step.bonusHint}</p>
     </>
   )
 }

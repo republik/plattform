@@ -35,21 +35,22 @@ export default async function Page({ params, searchParams }) {
 
   return (
     <>
-      <h1
+      {/* <h1
         className={css({
           textStyle: 'campaignHeading',
           mt: '8-16',
           pr: '16',
         })}
       >
-        Wählen Sie Ihren Preis
-      </h1>
+        Wählen Sie Ihren Einstiegspreis
+      </h1> */}
       <div
         className={css({
           flexGrow: 1,
           display: 'flex',
           flexDirection: 'column',
           gap: '4',
+          mt: '8-16',
         })}
       >
         <Suspense>
@@ -61,9 +62,14 @@ export default async function Page({ params, searchParams }) {
         className={css({
           position: 'sticky',
           bottom: 0,
-          width: 'full',
-          py: '8',
-          background: 'pageBackground',
+          // width: '100dvw',
+          pb: '8',
+          px: '8',
+          mx: '-4',
+          backgroundGradient: 'stickyBottomPanelBackground',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
         })}
       >
         <Suspense>
@@ -73,12 +79,15 @@ export default async function Page({ params, searchParams }) {
           className={css({
             background: 'contrast',
             color: 'text.inverted',
-            p: '4',
-            borderRadius: '5px',
+            px: '6',
+            py: '3',
+            borderRadius: '3px',
             fontWeight: 'medium',
             cursor: 'pointer',
+            textDecoration: 'none',
+            textAlign: 'center',
             display: 'block',
-            width: 'full',
+            // width: 'full',
             _hover: {},
           })}
         >

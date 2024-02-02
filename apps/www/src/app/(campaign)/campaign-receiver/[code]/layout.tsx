@@ -12,22 +12,22 @@ export default async function Layout(props: { children: React.ReactNode }) {
             className={css({
               minHeight: '100dvh',
               display: 'flex',
-              flexDirection: 'column',
+              background: 'pageBackground',
+              color: 'text',
             })}
           >
             <div
               className={css({
                 display: 'flex',
                 flexDirection: 'column',
-                background: 'pageBackground',
-                color: 'text',
                 gap: '8',
                 // py: '8-16',
                 fontSize: 'xl',
                 position: 'relative',
-                height: '100dvh',
-                maxHeight: 800,
+                minHeight: { md: '50rem', base: '100dvh' },
+                // maxHeight: 800,
                 justifyContent: 'stretch',
+                margin: 'auto',
                 // margin: 'auto',
               })}
             >
