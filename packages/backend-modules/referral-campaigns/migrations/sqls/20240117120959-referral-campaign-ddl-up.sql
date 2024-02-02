@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS referrals (
   FOREIGN KEY 
     ("referrerId") REFERENCES users (id)
     ON UPDATE CASCADE
-    ON DELETE RESTRICT,
+    ON DELETE CASCADE,
   FOREIGN KEY 
     ("pledgeId") REFERENCES pledges (id)
     ON UPDATE CASCADE
@@ -51,7 +51,7 @@ CREATE TABLE IF NOT EXISTS "public"."userCampaignRewards" (
     "claimedAt" timestamptz DEFAULT now(),
     "createdAt"   timestamptz DEFAULT now(),
     "updatedAt"   timestamptz DEFAULT now(),
-    FOREIGN KEY ("userId") REFERENCES "public"."users"("id") ON DELETE RESTRICT ON UPDATE CASCADE,
+    FOREIGN KEY ("userId") REFERENCES "public"."users"("id") ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY ("campaignRewardId") REFERENCES "public"."rewards"("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
