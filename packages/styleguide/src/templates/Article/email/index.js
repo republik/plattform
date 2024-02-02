@@ -18,7 +18,7 @@ const articleEmailSchema = {
           firstName: 'FNAME',
           lastName: 'LNAME',
           groups: {
-            hasAccess: 'Customer:Member,Geteilter Zugriff',
+            hasAccess: 'Customer:Member',
           },
           _mergeTags: true,
         },
