@@ -1,12 +1,10 @@
-const { ensureSignedIn, Consents } = require('../../../lib')
+const ensureSignedIn = require('../../../lib/ensureSignedIn')
+const Consents = require('../../../lib/Consents')
 
 module.exports = async (_, { name }, context) => {
-  const { req, user: me, t } = context
+  const { req, user: me } = context
   ensureSignedIn(req)
 
-  if (!Consents.REVOKABLE_POLICIES.includes(name)) {
-    throw new Error(t('api/consents/notRevokable', { consent: name }))
-  }
   await Consents.revokeConsent(
     {
       userId: me.id,
