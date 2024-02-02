@@ -11,7 +11,17 @@ query Events($today: DateTime!) {
     ...EventRecordFields
   }
   pastEvents: allEvents(
-    filter: { AND: [{ startAt: { lt: $today } }, { endAt: { lt: $today } }] }
+    filter: {
+      AND: [
+        { unlisted: { eq: false } }
+        {
+          AND: [
+            { startAt: { lt: $today } }
+            { OR: [{ endAt: { lt: $today } }, { endAt: { exists: false } }] }
+          ]
+        }
+      ]
+    }
     orderBy: startAt_DESC
   ) {
     ...EventRecordFields
