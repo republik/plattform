@@ -28,6 +28,7 @@ type User {
   firstName: String
   lastName: String
   email: String
+  verified: Boolean
   hasPublicProfile: Boolean
   roles: [String!]!
   createdAt: DateTime!

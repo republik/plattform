@@ -40,15 +40,14 @@ import { loadStripe } from '../Payment/stripe'
 import { useFieldSetState } from './utils'
 
 import ErrorMessage, { ErrorContainer } from '../ErrorMessage'
-import {
-  useIsApplePayAvailable,
-  useIsGooglePayAvailable,
-} from '../Payment/Form/StripeWalletHelpers'
 import usePaymentRequest, {
   WalletPaymentMethod,
 } from '../Payment/PaymentRequest/usePaymentRequest'
 import { getPayerInformationFromEvent } from '../Payment/PaymentRequest/PaymentRequestEventHelper'
 import { css } from 'glamor'
+import { withDatatransInit } from '../Payment/datatrans/withDatatransInit'
+import { withDatatransAuthorize } from '../Payment/datatrans/withDatatransAuthorize'
+import { isDatatransPaymentMethod } from '../Payment/datatrans/helpers'
 
 const { P } = Interaction
 
@@ -152,23 +151,24 @@ const SubmitWithHooks = ({ paymentMethods, ...props }) => {
   )
 
   const [syncAddresses, setSyncAddresses] = useState(true)
-  const [isApplePayAvailable] = useIsApplePayAvailable()
-  const [isGooglePayAvailable] = useIsGooglePayAvailable()
 
   // In case STRIPE is an accepted payment method,
   // add additional payment methods such as Apple or Google Pay if available
   const enhancedPaymentMethods = useMemo(() => {
-    if (!paymentMethods.includes('STRIPE')) {
-      return paymentMethods
-    }
+    return paymentMethods
+      .flatMap((method) => {
+        if (method === 'STRIPE') {
+          return [
+            'STRIPE',
+            WalletPaymentMethod.APPLE_PAY,
+            WalletPaymentMethod.GOOGLE_PAY,
+          ]
+        }
 
-    return [
-      'STRIPE', // the first option is sometimes auto selected and should not be a wallet
-      isApplePayAvailable ? WalletPaymentMethod.APPLE_PAY : null,
-      isGooglePayAvailable ? WalletPaymentMethod.GOOGLE_PAY : null,
-      ...paymentMethods.filter((pm) => pm !== 'STRIPE'),
-    ].filter(Boolean)
-  }, [paymentMethods, isApplePayAvailable, isGooglePayAvailable])
+        return [method]
+      })
+      .filter(Boolean)
+  }, [paymentMethods])
 
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState()
   const paymentRequest = usePaymentRequest({
@@ -352,15 +352,16 @@ class Submit extends Component {
 
     const hash = simpleHash(variables)
 
+    // Special Case: POSTFINANCECARD
+    // - we need a pledgeResponse with pfAliasId and pfSHA
+    // - this can be missing if returning from a PSP redirect
+    // - in those cases we create a new pledge
+    const requiresRefetch = this.props.selectedPaymentMethod !== 'POSTFINANCE'
+
     if (
       !this.state.submitError &&
       this.state.pledgeHash === hash &&
-      // Special Case: POSTFINANCECARD
-      // - we need a pledgeResponse with pfAliasId and pfSHA
-      // - this can be missing if returning from a PSP redirect
-      // - in those cases we create a new pledge
-      (this.props.selectedPaymentMethod !== 'POSTFINANCECARD' ||
-        this.state.pledgeResponse)
+      (requiresRefetch || this.state.pledgeResponse)
     ) {
       return this.payPledge(
         this.state.pledgeId,
@@ -435,6 +436,8 @@ class Submit extends Component {
       this.payWithPostFinance(pledgeId, pledgeResponse)
     } else if (selectedPaymentMethod === 'STRIPE') {
       this.payWithStripe(pledgeId)
+    } else if (isDatatransPaymentMethod(selectedPaymentMethod)) {
+      this.payWithDatatrans(pledgeId)
     } else if (this.isStripeWalletPayment()) {
       return this.payWithWallet(pledgeId, stripePaymentMethod)
     } else if (selectedPaymentMethod === 'PAYPAL') {
@@ -473,6 +476,82 @@ class Submit extends Component {
     )
   }
 
+  payWithDatatrans(pledgeId) {
+    const { t, customMe, accessToken } = this.props
+    const { values } = this.state
+
+    if (values.paymentSource) {
+      this.setState(
+        () => ({
+          loading: t('pledge/submit/loading/datatrans'),
+          pledgeId: pledgeId,
+        }),
+        () => {
+          this.props
+            .datatransAuthorize({
+              pledgeId,
+              sourceId: values.paymentSource,
+              accessToken:
+                customMe && customMe.isUserOfCurrentSession
+                  ? undefined
+                  : accessToken,
+            })
+            .then(({ data }) => {
+              this.pay({
+                pledgeId,
+                method: values.paymentMethod,
+                sourceId: values.paymentSource,
+                pspPayload: data.datatransAuthorize,
+              })
+            })
+            .catch((error) => {
+              const submitError = errorToString(error)
+
+              this.setState(() => ({
+                loading: false,
+                pledgeId: undefined,
+                pledgeHash: undefined,
+                submitError,
+              }))
+            })
+        },
+      )
+      return
+    }
+
+    this.setState(
+      () => ({
+        loading: t('pledge/submit/loading/datatrans'),
+        pledgeId: pledgeId,
+      }),
+      () => {
+        this.props
+          .datatransInit({
+            pledgeId,
+            method: this.props.selectedPaymentMethod,
+            accessToken:
+              customMe && customMe.isUserOfCurrentSession
+                ? undefined
+                : accessToken,
+          })
+          .then(({ data }) => {
+            this.payment.datatransForm.action = data.datatransInit.authorizeUrl
+            this.payment.datatransForm.submit()
+          })
+          .catch((error) => {
+            const submitError = errorToString(error)
+
+            this.setState(() => ({
+              loading: false,
+              pledgeId: undefined,
+              pledgeHash: undefined,
+              submitError,
+            }))
+          })
+      },
+    )
+  }
+
   payWithPaymentSlip(pledgeId) {
     const { values } = this.state
     const { addressState, shippingAddressState, syncAddresses } = this.props
@@ -506,33 +585,36 @@ class Submit extends Component {
         if (customMe && customMe.isListed) {
           baseQuery.statement = customMe.id
         }
-        if (!me) {
-          if (customMe || packageName === 'PROLONG') {
+
+        if (me) {
+          gotoMerci(baseQuery)
+          return
+        }
+
+        if (customMe) {
+          gotoMerci({
+            ...baseQuery,
+            email,
+          })
+          return
+        }
+
+        this.props
+          .signIn(email, 'pledge')
+          .then(({ data: { signIn } }) =>
             gotoMerci({
               ...baseQuery,
               email,
-            })
-            return
-          }
-          this.props
-            .signIn(email, 'pledge')
-            .then(({ data: { signIn } }) =>
-              gotoMerci({
-                ...baseQuery,
-                email: email,
-                ...encodeSignInResponseQuery(signIn),
-              }),
-            )
-            .catch((error) =>
-              gotoMerci({
-                ...baseQuery,
-                email: email,
-                signInError: errorToString(error),
-              }),
-            )
-        } else {
-          gotoMerci(baseQuery)
-        }
+              ...encodeSignInResponseQuery(signIn),
+            }),
+          )
+          .catch((error) =>
+            gotoMerci({
+              ...baseQuery,
+              email,
+              signInError: errorToString(error),
+            }),
+          )
       })
       .catch((error) => {
         this.setState(() => ({
@@ -724,7 +806,10 @@ class Submit extends Component {
     const { forceAutoPay, options, selectedPaymentMethod } = this.props
     const { autoPay } = this.state
 
-    if (!selectedPaymentMethod || !selectedPaymentMethod.startsWith('STRIPE')) {
+    if (
+      !selectedPaymentMethod?.startsWith('STRIPE') &&
+      !isDatatransPaymentMethod(selectedPaymentMethod)
+    ) {
       return undefined
     }
     if (forceAutoPay) {
@@ -741,7 +826,10 @@ class Submit extends Component {
 
   renderAutoPay() {
     const { selectedPaymentMethod } = this.props
-    if (!selectedPaymentMethod || !selectedPaymentMethod.startsWith('STRIPE')) {
+    if (
+      !selectedPaymentMethod?.startsWith('STRIPE') &&
+      !isDatatransPaymentMethod(selectedPaymentMethod)
+    ) {
       return null
     }
     const { t, packageName, forceAutoPay, options } = this.props
@@ -1255,6 +1343,8 @@ const SubmitWithMutations = compose(
       },
     }),
   }),
+  withDatatransInit,
+  withDatatransAuthorize,
   withSignOut,
   withPay,
   withMe,

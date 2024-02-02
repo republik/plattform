@@ -31,6 +31,7 @@ export interface UserRow {
   portraitUrl: string
   roles: string[]
   email: string
+  verified: boolean
 }
 
 export interface User {
@@ -45,6 +46,7 @@ export interface User {
   // api read access protected by a resolver functions
   roles: string[]
   email: string
+  verified: boolean
   // use resolver functions to access _raw
   // and expose more fields according to custom logic
   _raw: UserRow

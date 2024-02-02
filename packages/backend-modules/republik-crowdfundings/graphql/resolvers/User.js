@@ -20,13 +20,17 @@ const { suggest: autoPaySuggest } = require('../../lib/AutoPay')
 const createCache = require('../../lib/cache')
 const { getLastEndDate } = require('../../lib/utils')
 const {
-  getDefaultPaymentSource,
+  getDefaultPaymentSource: getDefaultDatatransPaymentSource,
+  normalizePaymentSource: normalizeDatatransPaymentSource,
+} = require('../../../datatrans/lib/paymentSources')
+const {
+  getDefaultPaymentSource: getDefaultStripePaymentSource,
 } = require('../../lib/payments/stripe/paymentSource')
 const {
-  getDefaultPaymentMethod,
+  getDefaultPaymentMethod: getDefaultStripePaymentMethod,
 } = require('../../lib/payments/stripe/paymentMethod')
 
-const normalizePaymentSource = require('../../lib/payments/stripe/normalizePaymentSource')
+const normalizeStripePaymentSource = require('../../lib/payments/stripe/normalizePaymentSource')
 
 const { DISABLE_RESOLVER_USER_CACHE } = process.env
 const QUERY_CACHE_TTL_SECONDS = 60 * 60 * 24 // 1 day
@@ -43,16 +47,25 @@ const createMembershipCache = (user, prop, context) =>
   )
 
 const defaultPaymentSource = async (user, args, { pgdb }) => {
-  let source = await getDefaultPaymentMethod({
+  // Checking Datatrans first…
+  let source = await getDefaultDatatransPaymentSource(user.id, pgdb)
+
+  if (source !== undefined) {
+    return normalizeDatatransPaymentSource(source)
+  }
+
+  // … then Stripe…
+  source = await getDefaultStripePaymentMethod({
     userId: user.id,
     pgdb,
-  }).then(normalizePaymentSource)
+  }).then(normalizeStripePaymentSource)
   if (source && !source.isExpired) {
     return source
   }
 
-  source = await getDefaultPaymentSource(user.id, pgdb).then(
-    normalizePaymentSource,
+  // … then legacy Stripe
+  source = await getDefaultStripePaymentSource(user.id, pgdb).then(
+    normalizeStripePaymentSource,
   )
   if (source && !source.isExpired) {
     return source

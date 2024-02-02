@@ -26,6 +26,7 @@ export default gql`
           package {
             name
             group
+            paymentMethods
             company {
               id
               name

@@ -3,16 +3,13 @@ import PropTypes from 'prop-types'
 import compose from 'lodash/flowRight'
 import { graphql } from '@apollo/client/react/hoc'
 import { gql } from '@apollo/client'
+import { InlineSpinner, colors, A } from '@project-r/styleguide'
+import Link from 'next/link'
 
 import withT from '../../../lib/withT'
 import { errorToString } from '../../../lib/utils/errors'
 import { timeFormat } from '../../../lib/utils/format'
 import { Item as AccountItem, P } from '../Elements'
-
-import TokenPackageLink from '../../Link/TokenPackage'
-
-import { InlineSpinner, colors, A } from '@project-r/styleguide'
-import Link from 'next/link'
 
 const dayFormat = timeFormat('%d. %B %Y')
 
@@ -30,159 +27,167 @@ const Actions = ({
     return <InlineSpinner />
   }
 
-  return <>
-    {!hasWaitingMemberships && membership.canProlong && (
-      <P>
-        <TokenPackageLink
-          params={{
-            package: 'PROLONG',
-          }}
-          passHref
-        >
-          <A>
-            {t.first([
-              `memberships/${membership.type.name}/manage/prolong/link`,
-              'memberships/manage/prolong/link',
-            ])}
-          </A>
-        </TokenPackageLink>
-      </P>
-    )}
-    {!hasWaitingMemberships &&
-      !membership.renew &&
-      !!membership.periods.length &&
-      (membership.active ||
-        (membership.type.name === 'MONTHLY_ABO' && !activeMembership)) && (
+  return (
+    <>
+      {!hasWaitingMemberships && membership.canProlong && (
         <P>
-          <A
-            href='#reactivate'
-            onClick={(e) => {
-              e.preventDefault()
-              setState({
-                updating: true,
-              })
-              reactivate({
-                id: membership.id,
-              })
-                .then(() => {
-                  setState({
-                    updating: false,
-                    remoteError: undefined,
-                  })
-                })
-                .catch((error) => {
-                  setState({
-                    updating: false,
-                    remoteError: errorToString(error),
-                  })
-                })
+          <Link
+            key='link'
+            href={{
+              pathname: `/angebote`,
+              query: { package: 'PROLONG' },
             }}
+            passHref
+            prefetch={false}
+            legacyBehavior
           >
-            {t.first([
-              `memberships/${membership.type.name}/manage/reactivate`,
-              'memberships/manage/reactivate',
-            ])}
-          </A>
+            <A>
+              {t.first([
+                `memberships/${membership.type.name}/manage/prolong/link`,
+                'memberships/manage/prolong/link',
+              ])}
+            </A>
+          </Link>
         </P>
       )}
-    {membership.active && (
-      <>
-        {membership.renew &&
-          ['MONTHLY_ABO', 'YEARLY_ABO'].includes(membership.type.name) && (
-            <P>
-              {t.elements(
-                `memberships/${membership.type.name}/manage/upgrade/link`,
-                {
-                  buyLink: (
+      {!hasWaitingMemberships &&
+        !membership.renew &&
+        !!membership.periods.length &&
+        (membership.active ||
+          (membership.type.name === 'MONTHLY_ABO' && !activeMembership)) && (
+          <P>
+            <A
+              href='#reactivate'
+              onClick={(e) => {
+                e.preventDefault()
+                setState({
+                  updating: true,
+                })
+                reactivate({
+                  id: membership.id,
+                })
+                  .then(() => {
+                    setState({
+                      updating: false,
+                      remoteError: undefined,
+                    })
+                  })
+                  .catch((error) => {
+                    setState({
+                      updating: false,
+                      remoteError: errorToString(error),
+                    })
+                  })
+              }}
+            >
+              {t.first([
+                `memberships/${membership.type.name}/manage/reactivate`,
+                'memberships/manage/reactivate',
+              ])}
+            </A>
+          </P>
+        )}
+      {membership.active && (
+        <>
+          {membership.renew &&
+            ['MONTHLY_ABO', 'YEARLY_ABO'].includes(membership.type.name) && (
+              <P>
+                {t.elements(
+                  `memberships/${membership.type.name}/manage/upgrade/link`,
+                  {
+                    buyLink: (
+                      <Link
+                        href={{
+                          pathname: '/angebote',
+                          query: { package: 'ABO' },
+                        }}
+                        passHref
+                        legacyBehavior
+                      >
+                        <A>
+                          {t(
+                            `memberships/${membership.type.name}/manage/upgrade/link/buyText`,
+                          )}
+                        </A>
+                      </Link>
+                    ),
+                  },
+                )}
+              </P>
+            )}
+          {!hasWaitingMemberships && (
+            <>
+              {membership.renew && (
+                <>
+                  {membership.autoPayIsMutable && (
+                    <P>
+                      <A
+                        href='#autoPay'
+                        onClick={(e) => {
+                          e.preventDefault()
+                          setState({
+                            updating: true,
+                          })
+                          setAutoPay({
+                            id: membership.id,
+                            autoPay: !membership.autoPay,
+                          })
+                            .then(() => {
+                              setState({
+                                updating: false,
+                                remoteError: undefined,
+                              })
+                            })
+                            .catch((error) => {
+                              setState({
+                                updating: false,
+                                remoteError: errorToString(error),
+                              })
+                            })
+                        }}
+                      >
+                        {t.first([
+                          `memberships/${membership.type.name}/manage/autoPay/${
+                            membership.autoPay ? 'disable' : 'enable'
+                          }`,
+                          `memberships/manage/autoPay/${
+                            membership.autoPay ? 'disable' : 'enable'
+                          }`,
+                        ])}
+                      </A>
+                    </P>
+                  )}
+                  <P>
                     <Link
                       href={{
-                        pathname: '/angebote',
-                        query: { package: 'ABO' },
+                        pathname: '/abgang',
+                        query: { membershipId: membership.id },
                       }}
                       passHref
-                      legacyBehavior>
+                      legacyBehavior
+                    >
                       <A>
-                        {t(
-                          `memberships/${membership.type.name}/manage/upgrade/link/buyText`,
-                        )}
+                        {t.first([
+                          `memberships/${membership.type.name}/manage/cancel/link`,
+                          'memberships/manage/cancel/link',
+                        ])}
                       </A>
                     </Link>
-                  ),
-                },
-              )}
-            </P>
-          )}
-        {!hasWaitingMemberships && (
-          <>
-            {membership.renew && (
-              <>
-                {membership.autoPayIsMutable && (
-                  <P>
-                    <A
-                      href='#autoPay'
-                      onClick={(e) => {
-                        e.preventDefault()
-                        setState({
-                          updating: true,
-                        })
-                        setAutoPay({
-                          id: membership.id,
-                          autoPay: !membership.autoPay,
-                        })
-                          .then(() => {
-                            setState({
-                              updating: false,
-                              remoteError: undefined,
-                            })
-                          })
-                          .catch((error) => {
-                            setState({
-                              updating: false,
-                              remoteError: errorToString(error),
-                            })
-                          })
-                      }}
-                    >
-                      {t.first([
-                        `memberships/${membership.type.name}/manage/autoPay/${
-                          membership.autoPay ? 'disable' : 'enable'
-                        }`,
-                        `memberships/manage/autoPay/${
-                          membership.autoPay ? 'disable' : 'enable'
-                        }`,
-                      ])}
-                    </A>
                   </P>
-                )}
-                <P>
-                  <Link
-                    href={{
-                      pathname: '/abgang',
-                      query: { membershipId: membership.id },
-                    }}
-                    passHref
-                    legacyBehavior>
-                    <A>
-                      {t.first([
-                        `memberships/${membership.type.name}/manage/cancel/link`,
-                        'memberships/manage/cancel/link',
-                      ])}
-                    </A>
-                  </Link>
-                </P>
-              </>
-            )}
-          </>
-        )}
-        {hasWaitingMemberships && !membership.canProlong && (
-          <P>{t('memberships/manage/prolong/awaiting')}</P>
-        )}
-      </>
-    )}
-    {!!remoteError && (
-      <P style={{ color: colors.error, marginTop: 10 }}>{remoteError}</P>
-    )}
-  </>;
+                </>
+              )}
+            </>
+          )}
+          {hasWaitingMemberships && !membership.canProlong && (
+            <P>{t('memberships/manage/prolong/awaiting')}</P>
+          )}
+        </>
+      )}
+      {!!remoteError && (
+        <P style={{ color: colors.error, marginTop: 10 }}>{remoteError}</P>
+      )}
+    </>
+  )
 }
 
 const cancelMembership = gql`

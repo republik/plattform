@@ -55,6 +55,9 @@
     "@orbiting/backend-modules-dataloader#build": {
       "cache": false
     },
+    "@orbiting/backend-modules-datatrans#build": {
+      "cache": false
+    },
     "@orbiting/backend-modules-discussions#build": {
       "cache": false
     },

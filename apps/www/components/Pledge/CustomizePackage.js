@@ -10,6 +10,8 @@ import omit from 'lodash/omit'
 import { withRouter } from 'next/router'
 import { format } from 'url'
 import GoodieOptions from './PledgeOptions/GoodieOptions'
+import ManageMembership from '../Account/Memberships/Manage'
+import GotoLinkBlocker from '../NativeApp/GotoLinkBlocker'
 
 import withT from '../../lib/withT'
 import { chfFormat, timeFormat } from '../../lib/utils/format'
@@ -31,7 +33,6 @@ import {
   shouldIgnoreClick,
 } from '@project-r/styleguide'
 
-import ManageMembership from '../Account/Memberships/Manage'
 import Link from 'next/link'
 
 const dayFormat = timeFormat('%d. %B %Y')
@@ -564,776 +565,785 @@ class CustomizePackage extends Component {
           ))}
         </div>
 
-        {optionGroups.map(
-          (
-            {
-              group,
-              groupKey,
-              checkboxGroup,
-              fields,
-              options,
-              selectedGroupOption,
-              membership,
-              isAboGive,
-              additionalPeriods,
-            },
-            gi,
-          ) => {
-            const reset = group &&
-              optionGroups.length > 1 &&
-              !checkboxGroup && (
-                <Fragment>
-                  <span
-                    style={{
-                      display: 'inline-block',
-                      whiteSpace: 'nowrap',
-                    }}
-                  >
-                    <Radio
-                      value='0'
-                      checked={!selectedGroupOption}
-                      onChange={() => {
-                        if (userPrice) {
-                          this.resetUserPrice()
-                        }
-                        onChange(
-                          this.calculateNextPrice(
-                            options.reduce((fields, option) => {
-                              return FieldSet.utils.mergeField({
-                                field: getOptionFieldKey(option),
-                                value: 0,
-                                error: undefined,
-                                dirty: false,
-                              })(fields)
-                            }, {}),
-                          ),
-                        )
+        <GotoLinkBlocker appendSubmitPledgeToken adhereIOSGuidlines={false}>
+          {optionGroups.map(
+            (
+              {
+                group,
+                groupKey,
+                checkboxGroup,
+                fields,
+                options,
+                selectedGroupOption,
+                membership,
+                isAboGive,
+                additionalPeriods,
+              },
+              gi,
+            ) => {
+              const reset = group &&
+                optionGroups.length > 1 &&
+                !checkboxGroup && (
+                  <Fragment>
+                    <span
+                      style={{
+                        display: 'inline-block',
+                        whiteSpace: 'nowrap',
                       }}
                     >
-                      <span
-                        style={{
-                          display: 'inline-block',
-                          verticalAlign: 'top',
-                          marginRight: 20,
-                          whiteSpace: 'nowrap',
+                      <Radio
+                        value='0'
+                        checked={!selectedGroupOption}
+                        onChange={() => {
+                          if (userPrice) {
+                            this.resetUserPrice()
+                          }
+                          onChange(
+                            this.calculateNextPrice(
+                              options.reduce((fields, option) => {
+                                return FieldSet.utils.mergeField({
+                                  field: getOptionFieldKey(option),
+                                  value: 0,
+                                  error: undefined,
+                                  dirty: false,
+                                })(fields)
+                              }, {}),
+                            ),
+                          )
                         }}
                       >
-                        {t(`option/${pkg.name}/resetGroup`, {}, null)}
-                      </span>
-                    </Radio>
-                  </span>
-                </Fragment>
-              )
+                        <span
+                          style={{
+                            display: 'inline-block',
+                            verticalAlign: 'top',
+                            marginRight: 20,
+                            whiteSpace: 'nowrap',
+                          }}
+                        >
+                          {t(`option/${pkg.name}/resetGroup`, {}, null)}
+                        </span>
+                      </Radio>
+                    </span>
+                  </Fragment>
+                )
 
-            const nextGroup = optionGroups[gi + 1]
-            const prevGroup = optionGroups[gi - 1]
+              const nextGroup = optionGroups[gi + 1]
+              const prevGroup = optionGroups[gi - 1]
 
-            const firstField = fields[0]
-            const firstKey = firstField.key
-            const firstValue =
-              values[firstKey] === undefined
-                ? firstField.default
-                : values[firstKey]
-            // this is false for PROLONG with userPrice=1
-            const isActuallyConfigurable = pkg.options.length > 1 || !firstValue
+              const firstField = fields[0]
+              const firstKey = firstField.key
+              const firstValue =
+                values[firstKey] === undefined
+                  ? firstField.default
+                  : values[firstKey]
+              // this is false for PROLONG with userPrice=1
+              const isActuallyConfigurable =
+                pkg.options.length > 1 || !firstValue
 
-            return (
-              <Fragment key={groupKey}>
-                {isAboGive && (!prevGroup || !prevGroup.isAboGive) && (
-                  <P style={{ marginTop: 30 }}>
-                    {t('package/customize/group/aboGive')}
-                  </P>
-                )}
-                {membership && (
-                  <ManageMembership
-                    title={
-                      isAboGive
-                        ? t(`memberships/title/${membership.type.name}/give`, {
-                            name: membership.claimerName,
-                            sequenceNumber: membership.sequenceNumber,
-                          })
-                        : undefined
-                    }
-                    membership={membership}
-                    actions={false}
-                    compact
-                  />
-                )}
-                {isActuallyConfigurable && (
-                  <div {...styles[group ? 'group' : 'grid']}>
-                    {fields.map((field, i) => {
-                      const option = field.option
-                      const fieldKey = field.key
-                      const elementKey = [option.id, fieldKey].join('-')
-                      const value =
-                        values[fieldKey] === undefined
-                          ? field.default
-                          : values[fieldKey]
-
-                      const isBooleanOption = field.min === 0 && field.max === 1
-                      const isCheckboxOption = checkboxGroup
-
-                      // always use singular for checkbox
-                      const labelValue = isCheckboxOption ? 1 : value
-                      const label = t.first(
-                        [
-                          ...(isAboGive
-                            ? [
-                                `option/${pkg.name}/${option.reward.name}/label/give`,
-                                `option/${option.reward.name}/label/give`,
-                              ]
-                            : []),
-                          ...(field.interval
-                            ? [
-                                `option/${pkg.name}/${option.reward.name}/interval/${field.interval}/label/${labelValue}`,
-                                `option/${pkg.name}/${option.reward.name}/interval/${field.interval}/label/other`,
-                                `option/${pkg.name}/${option.reward.name}/interval/${field.interval}/label`,
-                                `option/${option.reward.name}/interval/${field.interval}/label/${labelValue}`,
-                                `option/${option.reward.name}/interval/${field.interval}/label/other`,
-                                `option/${option.reward.name}/interval/${field.interval}/label`,
-                              ]
-                            : []),
-                          `option/${pkg.name}/${option.reward.name}/label/${labelValue}`,
-                          `option/${pkg.name}/${option.reward.name}/label/other`,
-                          `option/${pkg.name}/${option.reward.name}/label`,
-                          `option/${option.reward.name}/label/${labelValue}`,
-                          `option/${option.reward.name}/label/other`,
-                          `option/${option.reward.name}/label`,
-                        ],
-                        {
-                          count: value,
-                        },
-                      )
-
-                      const onFieldChange = (_, value, shouldValidate) => {
-                        let error
-                        const parsedValue = String(value).length
-                          ? parseInt(value, 10) || 0
-                          : ''
-
-                        if (parsedValue > field.max) {
-                          error = t('package/customize/option/error/max', {
-                            label,
-                            maxAmount: field.max,
-                          })
-                        }
-                        if (parsedValue < field.min) {
-                          error = t('package/customize/option/error/min', {
-                            label,
-                            minAmount: field.min,
-                          })
-                        }
-
-                        let fields = FieldSet.utils.fieldsState({
-                          field: fieldKey,
-                          value: parsedValue,
-                          error,
-                          dirty: shouldValidate,
-                        })
-                        if (group) {
-                          // unselect all other options from group
-                          options
-                            .filter((other) => other !== option)
-                            .forEach((other) => {
-                              fields = FieldSet.utils.mergeField({
-                                field: getOptionFieldKey(other),
-                                value: 0,
-                                error: undefined,
-                                dirty: false,
-                              })(fields)
-                            })
-                        }
-                        if (parsedValue && userPrice && !option.userPrice) {
-                          this.resetUserPrice()
-                        }
-                        onChange(this.calculateNextPrice(fields))
-                      }
-
-                      if (isBooleanOption && (group || isCheckboxOption)) {
-                        const children = (
-                          <span
-                            style={{
-                              display: 'inline-block',
-                              verticalAlign: 'top',
-                              marginRight: 20,
-                              marginTop: isCheckboxOption ? -2 : 0,
-                            }}
-                          >
-                            <Interaction.Emphasis>{label}</Interaction.Emphasis>
-                            <br />
-                            {t.first(
-                              [
-                                option.price === 0 && 'package/price/free',
-                                isAboGive && `package/${pkg.name}/price/give`,
-                                `package/${pkg.name}/price`,
-                                'package/price',
-                              ].filter(Boolean),
+              return (
+                <Fragment key={groupKey}>
+                  {isAboGive && (!prevGroup || !prevGroup.isAboGive) && (
+                    <P style={{ marginTop: 30 }}>
+                      {t('package/customize/group/aboGive')}
+                    </P>
+                  )}
+                  {membership && (
+                    <ManageMembership
+                      title={
+                        isAboGive
+                          ? t(
+                              `memberships/title/${membership.type.name}/give`,
                               {
-                                formattedCHF: chfFormat(option.price / 100),
+                                name: membership.claimerName,
+                                sequenceNumber: membership.sequenceNumber,
                               },
-                            )}
-                          </span>
-                        )
-                        if (isCheckboxOption) {
-                          const checkboxElement = (
-                            <Checkbox
-                              key={elementKey}
-                              checked={!!value}
-                              onChange={(_, checked) => {
-                                onFieldChange(
-                                  undefined,
-                                  +checked,
-                                  dirty[fieldKey],
-                                )
-                              }}
-                            >
-                              {children}
-                            </Checkbox>
-                          )
-
-                          if (!group) {
-                            return (
-                              <div
-                                key={elementKey}
-                                {...styles.span}
-                                {...styles.group}
-                                style={{
-                                  width: '100%',
-                                }}
-                              >
-                                {checkboxElement}
-                              </div>
                             )
+                          : undefined
+                      }
+                      membership={membership}
+                      actions={false}
+                      compact
+                    />
+                  )}
+                  {isActuallyConfigurable && (
+                    <div {...styles[group ? 'group' : 'grid']}>
+                      {fields.map((field, i) => {
+                        const option = field.option
+                        const fieldKey = field.key
+                        const elementKey = [option.id, fieldKey].join('-')
+                        const value =
+                          values[fieldKey] === undefined
+                            ? field.default
+                            : values[fieldKey]
+
+                        const isBooleanOption =
+                          field.min === 0 && field.max === 1
+                        const isCheckboxOption = checkboxGroup
+
+                        // always use singular for checkbox
+                        const labelValue = isCheckboxOption ? 1 : value
+                        const label = t.first(
+                          [
+                            ...(isAboGive
+                              ? [
+                                  `option/${pkg.name}/${option.reward.name}/label/give`,
+                                  `option/${option.reward.name}/label/give`,
+                                ]
+                              : []),
+                            ...(field.interval
+                              ? [
+                                  `option/${pkg.name}/${option.reward.name}/interval/${field.interval}/label/${labelValue}`,
+                                  `option/${pkg.name}/${option.reward.name}/interval/${field.interval}/label/other`,
+                                  `option/${pkg.name}/${option.reward.name}/interval/${field.interval}/label`,
+                                  `option/${option.reward.name}/interval/${field.interval}/label/${labelValue}`,
+                                  `option/${option.reward.name}/interval/${field.interval}/label/other`,
+                                  `option/${option.reward.name}/interval/${field.interval}/label`,
+                                ]
+                              : []),
+                            `option/${pkg.name}/${option.reward.name}/label/${labelValue}`,
+                            `option/${pkg.name}/${option.reward.name}/label/other`,
+                            `option/${pkg.name}/${option.reward.name}/label`,
+                            `option/${option.reward.name}/label/${labelValue}`,
+                            `option/${option.reward.name}/label/other`,
+                            `option/${option.reward.name}/label`,
+                          ],
+                          {
+                            count: value,
+                          },
+                        )
+
+                        const onFieldChange = (_, value, shouldValidate) => {
+                          let error
+                          const parsedValue = String(value).length
+                            ? parseInt(value, 10) || 0
+                            : ''
+
+                          if (parsedValue > field.max) {
+                            error = t('package/customize/option/error/max', {
+                              label,
+                              maxAmount: field.max,
+                            })
+                          }
+                          if (parsedValue < field.min) {
+                            error = t('package/customize/option/error/min', {
+                              label,
+                              minAmount: field.min,
+                            })
                           }
 
-                          return checkboxElement
+                          let fields = FieldSet.utils.fieldsState({
+                            field: fieldKey,
+                            value: parsedValue,
+                            error,
+                            dirty: shouldValidate,
+                          })
+                          if (group) {
+                            // unselect all other options from group
+                            options
+                              .filter((other) => other !== option)
+                              .forEach((other) => {
+                                fields = FieldSet.utils.mergeField({
+                                  field: getOptionFieldKey(other),
+                                  value: 0,
+                                  error: undefined,
+                                  dirty: false,
+                                })(fields)
+                              })
+                          }
+                          if (parsedValue && userPrice && !option.userPrice) {
+                            this.resetUserPrice()
+                          }
+                          onChange(this.calculateNextPrice(fields))
                         }
-                        return (
-                          <Fragment key={elementKey}>
+
+                        if (isBooleanOption && (group || isCheckboxOption)) {
+                          const children = (
                             <span
                               style={{
                                 display: 'inline-block',
-                                whiteSpace: 'nowrap',
-                                marginBottom: 10,
+                                verticalAlign: 'top',
+                                marginRight: 20,
+                                marginTop: isCheckboxOption ? -2 : 0,
                               }}
                             >
-                              <Radio
-                                value='1'
+                              <Interaction.Emphasis>
+                                {label}
+                              </Interaction.Emphasis>
+                              <br />
+                              {t.first(
+                                [
+                                  option.price === 0 && 'package/price/free',
+                                  isAboGive && `package/${pkg.name}/price/give`,
+                                  `package/${pkg.name}/price`,
+                                  'package/price',
+                                ].filter(Boolean),
+                                {
+                                  formattedCHF: chfFormat(option.price / 100),
+                                },
+                              )}
+                            </span>
+                          )
+                          if (isCheckboxOption) {
+                            const checkboxElement = (
+                              <Checkbox
+                                key={elementKey}
                                 checked={!!value}
-                                onChange={() => {
-                                  onFieldChange(undefined, 1, dirty[fieldKey])
+                                onChange={(_, checked) => {
+                                  onFieldChange(
+                                    undefined,
+                                    +checked,
+                                    dirty[fieldKey],
+                                  )
                                 }}
                               >
                                 {children}
-                              </Radio>
-                            </span>{' '}
-                          </Fragment>
-                        )
-                      }
-
-                      return (
-                        <div
-                          key={elementKey}
-                          {...styles.span}
-                          style={{
-                            width:
-                              fields.length === 1 ||
-                              (fields.length === 3 && i === 0)
-                                ? '100%'
-                                : '50%',
-                          }}
-                        >
-                          <div>
-                            <Field
-                              ref={
-                                i === 0 && !group && gi === 0
-                                  ? this.focusRefSetter
-                                  : undefined
-                              }
-                              label={label}
-                              error={dirty[fieldKey] && errors[fieldKey]}
-                              value={value || ''}
-                              renderInput={(props) => (
-                                <input inputMode='numeric' {...props} />
-                              )}
-                              onInc={
-                                value < field.max &&
-                                (() => {
-                                  onFieldChange(
-                                    undefined,
-                                    value + 1,
-                                    dirty[fieldKey],
-                                  )
-                                })
-                              }
-                              onDec={
-                                value > field.min &&
-                                (() => {
-                                  onFieldChange(
-                                    undefined,
-                                    value - 1,
-                                    dirty[fieldKey],
-                                  )
-                                })
-                              }
-                              onChange={onFieldChange}
-                            />
-                          </div>
-                        </div>
-                      )
-                    })}
-                    {reset}
-                  </div>
-                )}
-                {additionalPeriods &&
-                  !!additionalPeriods.length &&
-                  !!selectedGroupOption && (
-                    <div style={{ marginBottom: 20 }}>
-                      {additionalPeriods
-                        .filter(
-                          (period, i) => period.kind !== 'REGULAR' || i > 0,
-                        )
-                        .map((period) => {
-                          const beginDate = new Date(period.beginDate)
-                          const endDate = new Date(period.endDate)
-                          const formattedEndDate = dayFormat(endDate)
-                          const days = timeDay.count(beginDate, endDate)
-
-                          const title = t.first(
-                            [
-                              `option/${pkg.name}/additionalPeriods/${period.kind}/title`,
-                              `option/${pkg.name}/additionalPeriods/title`,
-                            ],
-                            {
-                              formattedEndDate,
-                              days,
-                            },
-                          )
-                          const explanation = t.first(
-                            [
-                              `option/${pkg.name}/additionalPeriods/${period.kind}/explanation`,
-                              `option/${pkg.name}/additionalPeriods/explanation`,
-                            ],
-                            {
-                              formattedEndDate,
-                              days,
-                            },
-                            '',
-                          )
-
-                          return (
-                            <SmallP key={formattedEndDate}>
-                              {title}
-                              {explanation && (
-                                <Fragment>
-                                  <Label style={{ display: 'block' }}>
-                                    {explanation}
-                                  </Label>
-                                </Fragment>
-                              )}
-                            </SmallP>
-                          )
-                        })}
-                      <SmallP>
-                        <Interaction.Emphasis>
-                          {t(`option/${pkg.name}/additionalPeriods/endDate`, {
-                            formattedEndDate: dayFormat(
-                              new Date(
-                                additionalPeriods[
-                                  additionalPeriods.length - 1
-                                ].endDate,
-                              ),
-                            ),
-                          })}
-                        </Interaction.Emphasis>
-                      </SmallP>
-                      {isAboGive && (
-                        <SmallP>
-                          {t(`option/${pkg.name}/additionalPeriods/give`, {
-                            name: membership.claimerName,
-                          })}
-                        </SmallP>
-                      )}
-                    </div>
-                  )}
-                {isAboGive && (!nextGroup || !nextGroup.isAboGive) && (
-                  <div style={{ height: 30 }} />
-                )}
-              </Fragment>
-            )
-          },
-        )}
-        <GoodieOptions
-          t={t}
-          values={values}
-          onChange={(fields) => {
-            onChange(this.calculateNextPrice(fields))
-          }}
-          fields={configurableGoodieFields}
-          showGoodiesTitle={!goodiesOnly}
-        />
-        {!!userPrice && !fixedPrice && (
-          <div>
-            <P>
-              {t.first([
-                `package/customize/userPrice/${pkg.name}/beforeReason`,
-                'package/customize/userPrice/beforeReason',
-              ])}
-            </P>
-            <div style={{ marginBottom: 20 }}>
-              <Field
-                label={t('package/customize/userPrice/reason/label')}
-                ref={this.focusRefSetter}
-                error={dirty.reason && errors.reason}
-                value={values.reason}
-                renderInput={({ ref, ...inputProps }) => (
-                  <AutosizeInput
-                    {...inputProps}
-                    {...fieldSetStyles.autoSize}
-                    inputRef={ref}
-                  />
-                )}
-                onChange={(_, value, shouldValidate) => {
-                  onChange(
-                    FieldSet.utils.fieldsState({
-                      field: 'reason',
-                      value,
-                      error: reasonError(value, t),
-                      dirty: shouldValidate,
-                    }),
-                  )
-                }}
-              />
-            </div>
-            <P>
-              {t.first([
-                `package/customize/userPrice/${pkg.name}/beforePrice`,
-                'package/customize/userPrice/beforePrice',
-              ])}
-            </P>
-          </div>
-        )}
-        <div style={{ marginBottom: 20 }}>
-          {fixedPrice ? (
-            <Interaction.P>
-              <Label>{t('package/customize/price/label')}</Label>
-              <br />
-              {price / 100}
-            </Interaction.P>
-          ) : (
-            <Field
-              label={t(
-                `package/customize/price/label${
-                  multipleThings ? '/total' : ''
-                }`,
-              )}
-              ref={
-                configurableFields.length || userPrice
-                  ? undefined
-                  : this.focusRefSetter
-              }
-              error={dirty.price && errors.price}
-              value={price ? price / 100 : ''}
-              renderInput={(props) => <input inputMode='numeric' {...props} />}
-              onDec={
-                price - 1000 >= minPrice &&
-                (() => {
-                  onPriceChange(undefined, (price - 1000) / 100, dirty.price)
-                })
-              }
-              onInc={() => {
-                onPriceChange(undefined, (price + 1000) / 100, dirty.price)
-              }}
-              onChange={onPriceChange}
-            />
-          )}
-          {!fixedPrice && (
-            <div {...styles.smallP}>
-              {payMoreSuggestions.length > 0 && (
-                <Fragment>
-                  <Interaction.Emphasis>
-                    {t.first(
-                      [
-                        userPrice &&
-                          'package/customize/price/payMore/userPrice',
-                        `package/customize/price/payMore/${pkg.name}`,
-                        'package/customize/price/payMore',
-                      ].filter(Boolean),
-                    )}
-                  </Interaction.Emphasis>
-                  <ul {...styles.ul}>
-                    {payMoreSuggestions.map(({ value, key }) => {
-                      const label = t.elements(
-                        `package/customize/price/payMore/${key}`,
-                        {
-                          formattedCHF: chfFormat(value / 100),
-                        },
-                      )
-                      if (price >= value) {
-                        return <li key={key}>{label}</li>
-                      }
-                      return (
-                        <li key={key}>
-                          <Editorial.A
-                            href='#'
-                            onClick={(e) => {
-                              e.preventDefault()
-                              onPriceChange(undefined, value / 100, true)
-                              if (userPrice) {
-                                this.resetUserPrice()
-                              }
-                            }}
-                          >
-                            {label}
-                          </Editorial.A>
-                        </li>
-                      )
-                    })}
-                  </ul>
-                  {!!payMoreReached && (
-                    <div {...styles.ulNote}>
-                      <Interaction.Emphasis>
-                        {t.first([
-                          `package/customize/price/payMore/thx/${payMoreReached.key}`,
-                          'package/customize/price/payMore/thx',
-                        ])}
-                      </Interaction.Emphasis>
-                    </div>
-                  )}
-                </Fragment>
-              )}
-              {pkg.name === 'ABO_GIVE_MONTHS' && (
-                <Fragment>
-                  <Interaction.Emphasis>
-                    {t.first([
-                      `package/customize/price/payMore/${pkg.name}`,
-                      'package/customize/price/payMore',
-                    ])}
-                  </Interaction.Emphasis>
-                  <ul {...styles.ul}>
-                    <li>
-                      <Editorial.A
-                        href={format({
-                          pathname: '/angebote',
-                          query: Object.assign(
-                            {},
-                            { package: 'ABO_GIVE' },
-                            query.token && { token: query.token },
-                          ),
-                        })}
-                        onClick={(e) => {
-                          if (shouldIgnoreClick(e)) {
-                            return
-                          }
-                          e.preventDefault()
-
-                          const aboGive = this.props.packages.find(
-                            (p) => p.name === 'ABO_GIVE',
-                          )
-                          if (aboGive) {
-                            const numMembershipMonths = pkg.options.find(
-                              (o) =>
-                                o.reward &&
-                                o.reward.__typename === 'MembershipType',
+                              </Checkbox>
                             )
-                            const numMembershipYears = aboGive.options.find(
-                              (o) =>
-                                o.reward &&
-                                o.reward.__typename === 'MembershipType',
-                            )
-                            if (numMembershipMonths && numMembershipYears) {
-                              onChange(
-                                FieldSet.utils.fieldsState({
-                                  field: getOptionFieldKey(numMembershipYears),
-                                  value: Math.min(
-                                    Math.max(
-                                      getOptionValue(
-                                        numMembershipMonths,
-                                        values,
-                                      ),
-                                      numMembershipYears.minAmount,
-                                    ),
-                                    numMembershipYears.maxAmount,
-                                  ),
-                                  error: undefined,
-                                  dirty: true,
-                                }),
+
+                            if (!group) {
+                              return (
+                                <div
+                                  key={elementKey}
+                                  {...styles.span}
+                                  {...styles.group}
+                                  style={{
+                                    width: '100%',
+                                  }}
+                                >
+                                  {checkboxElement}
+                                </div>
                               )
                             }
 
-                            aboGive.options
-                              .filter(
-                                (o) =>
-                                  o.reward && o.reward.__typename === 'Goodie',
-                              )
-                              .forEach((oYears) => {
-                                const oMonths = pkg.options.find(
-                                  (d) =>
-                                    d.reward &&
-                                    d.reward.__typename ===
-                                      oYears.reward.__typename &&
-                                    d.reward.name === oYears.reward.name,
-                                )
-                                if (!oMonths) {
-                                  return
+                            return checkboxElement
+                          }
+                          return (
+                            <Fragment key={elementKey}>
+                              <span
+                                style={{
+                                  display: 'inline-block',
+                                  whiteSpace: 'nowrap',
+                                  marginBottom: 10,
+                                }}
+                              >
+                                <Radio
+                                  value='1'
+                                  checked={!!value}
+                                  onChange={() => {
+                                    onFieldChange(undefined, 1, dirty[fieldKey])
+                                  }}
+                                >
+                                  {children}
+                                </Radio>
+                              </span>{' '}
+                            </Fragment>
+                          )
+                        }
+
+                        return (
+                          <div
+                            key={elementKey}
+                            {...styles.span}
+                            style={{
+                              width:
+                                fields.length === 1 ||
+                                (fields.length === 3 && i === 0)
+                                  ? '100%'
+                                  : '50%',
+                            }}
+                          >
+                            <div>
+                              <Field
+                                ref={
+                                  i === 0 && !group && gi === 0
+                                    ? this.focusRefSetter
+                                    : undefined
                                 }
+                                label={label}
+                                error={dirty[fieldKey] && errors[fieldKey]}
+                                value={value || ''}
+                                renderInput={(props) => (
+                                  <input inputMode='numeric' {...props} />
+                                )}
+                                onInc={
+                                  value < field.max &&
+                                  (() => {
+                                    onFieldChange(
+                                      undefined,
+                                      value + 1,
+                                      dirty[fieldKey],
+                                    )
+                                  })
+                                }
+                                onDec={
+                                  value > field.min &&
+                                  (() => {
+                                    onFieldChange(
+                                      undefined,
+                                      value - 1,
+                                      dirty[fieldKey],
+                                    )
+                                  })
+                                }
+                                onChange={onFieldChange}
+                              />
+                            </div>
+                          </div>
+                        )
+                      })}
+                      {reset}
+                    </div>
+                  )}
+                  {additionalPeriods &&
+                    !!additionalPeriods.length &&
+                    !!selectedGroupOption && (
+                      <div style={{ marginBottom: 20 }}>
+                        {additionalPeriods
+                          .filter(
+                            (period, i) => period.kind !== 'REGULAR' || i > 0,
+                          )
+                          .map((period) => {
+                            const beginDate = new Date(period.beginDate)
+                            const endDate = new Date(period.endDate)
+                            const formattedEndDate = dayFormat(endDate)
+                            const days = timeDay.count(beginDate, endDate)
+
+                            const title = t.first(
+                              [
+                                `option/${pkg.name}/additionalPeriods/${period.kind}/title`,
+                                `option/${pkg.name}/additionalPeriods/title`,
+                              ],
+                              {
+                                formattedEndDate,
+                                days,
+                              },
+                            )
+                            const explanation = t.first(
+                              [
+                                `option/${pkg.name}/additionalPeriods/${period.kind}/explanation`,
+                                `option/${pkg.name}/additionalPeriods/explanation`,
+                              ],
+                              {
+                                formattedEndDate,
+                                days,
+                              },
+                              '',
+                            )
+
+                            return (
+                              <SmallP key={formattedEndDate}>
+                                {title}
+                                {explanation && (
+                                  <Fragment>
+                                    <Label style={{ display: 'block' }}>
+                                      {explanation}
+                                    </Label>
+                                  </Fragment>
+                                )}
+                              </SmallP>
+                            )
+                          })}
+                        <SmallP>
+                          <Interaction.Emphasis>
+                            {t(`option/${pkg.name}/additionalPeriods/endDate`, {
+                              formattedEndDate: dayFormat(
+                                new Date(
+                                  additionalPeriods[
+                                    additionalPeriods.length - 1
+                                  ].endDate,
+                                ),
+                              ),
+                            })}
+                          </Interaction.Emphasis>
+                        </SmallP>
+                        {isAboGive && (
+                          <SmallP>
+                            {t(`option/${pkg.name}/additionalPeriods/give`, {
+                              name: membership.claimerName,
+                            })}
+                          </SmallP>
+                        )}
+                      </div>
+                    )}
+                  {isAboGive && (!nextGroup || !nextGroup.isAboGive) && (
+                    <div style={{ height: 30 }} />
+                  )}
+                </Fragment>
+              )
+            },
+          )}
+          <GoodieOptions
+            t={t}
+            values={values}
+            onChange={(fields) => {
+              onChange(this.calculateNextPrice(fields))
+            }}
+            fields={configurableGoodieFields}
+            showGoodiesTitle={!goodiesOnly}
+          />
+          {!!userPrice && !fixedPrice && (
+            <div>
+              <P>
+                {t.first([
+                  `package/customize/userPrice/${pkg.name}/beforeReason`,
+                  'package/customize/userPrice/beforeReason',
+                ])}
+              </P>
+              <div style={{ marginBottom: 20 }}>
+                <Field
+                  label={t('package/customize/userPrice/reason/label')}
+                  ref={this.focusRefSetter}
+                  error={dirty.reason && errors.reason}
+                  value={values.reason}
+                  renderInput={({ ref, ...inputProps }) => (
+                    <AutosizeInput
+                      {...inputProps}
+                      {...fieldSetStyles.autoSize}
+                      inputRef={ref}
+                    />
+                  )}
+                  onChange={(_, value, shouldValidate) => {
+                    onChange(
+                      FieldSet.utils.fieldsState({
+                        field: 'reason',
+                        value,
+                        error: reasonError(value, t),
+                        dirty: shouldValidate,
+                      }),
+                    )
+                  }}
+                />
+              </div>
+              <P>
+                {t.first([
+                  `package/customize/userPrice/${pkg.name}/beforePrice`,
+                  'package/customize/userPrice/beforePrice',
+                ])}
+              </P>
+            </div>
+          )}
+          <div style={{ marginBottom: 20 }}>
+            {fixedPrice ? (
+              <Interaction.P>
+                <Label>{t('package/customize/price/label')}</Label>
+                <br />
+                {price / 100}
+              </Interaction.P>
+            ) : (
+              <Field
+                label={t(
+                  `package/customize/price/label${
+                    multipleThings ? '/total' : ''
+                  }`,
+                )}
+                ref={
+                  configurableFields.length || userPrice
+                    ? undefined
+                    : this.focusRefSetter
+                }
+                error={dirty.price && errors.price}
+                value={price ? price / 100 : ''}
+                renderInput={(props) => (
+                  <input inputMode='numeric' {...props} />
+                )}
+                onDec={
+                  price - 1000 >= minPrice &&
+                  (() => {
+                    onPriceChange(undefined, (price - 1000) / 100, dirty.price)
+                  })
+                }
+                onInc={() => {
+                  onPriceChange(undefined, (price + 1000) / 100, dirty.price)
+                }}
+                onChange={onPriceChange}
+              />
+            )}
+            {!fixedPrice && (
+              <div {...styles.smallP}>
+                {payMoreSuggestions.length > 0 && (
+                  <Fragment>
+                    <Interaction.Emphasis>
+                      {t.first(
+                        [
+                          userPrice &&
+                            'package/customize/price/payMore/userPrice',
+                          `package/customize/price/payMore/${pkg.name}`,
+                          'package/customize/price/payMore',
+                        ].filter(Boolean),
+                      )}
+                    </Interaction.Emphasis>
+                    <ul {...styles.ul}>
+                      {payMoreSuggestions.map(({ value, key }) => {
+                        const label = t.elements(
+                          `package/customize/price/payMore/${key}`,
+                          {
+                            formattedCHF: chfFormat(value / 100),
+                          },
+                        )
+                        if (price >= value) {
+                          return <li key={key}>{label}</li>
+                        }
+                        return (
+                          <li key={key}>
+                            <Editorial.A
+                              href='#'
+                              onClick={(e) => {
+                                e.preventDefault()
+                                onPriceChange(undefined, value / 100, true)
+                                if (userPrice) {
+                                  this.resetUserPrice()
+                                }
+                              }}
+                            >
+                              {label}
+                            </Editorial.A>
+                          </li>
+                        )
+                      })}
+                    </ul>
+                    {!!payMoreReached && (
+                      <div {...styles.ulNote}>
+                        <Interaction.Emphasis>
+                          {t.first([
+                            `package/customize/price/payMore/thx/${payMoreReached.key}`,
+                            'package/customize/price/payMore/thx',
+                          ])}
+                        </Interaction.Emphasis>
+                      </div>
+                    )}
+                  </Fragment>
+                )}
+                {pkg.name === 'ABO_GIVE_MONTHS' && (
+                  <Fragment>
+                    <Interaction.Emphasis>
+                      {t.first([
+                        `package/customize/price/payMore/${pkg.name}`,
+                        'package/customize/price/payMore',
+                      ])}
+                    </Interaction.Emphasis>
+                    <ul {...styles.ul}>
+                      <li>
+                        <Editorial.A
+                          href={format({
+                            pathname: '/angebote',
+                            query: { package: 'ABO_GIVE' },
+                          })}
+                          onClick={(e) => {
+                            if (shouldIgnoreClick(e)) {
+                              return
+                            }
+                            e.preventDefault()
+
+                            const aboGive = this.props.packages.find(
+                              (p) => p.name === 'ABO_GIVE',
+                            )
+                            if (aboGive) {
+                              const numMembershipMonths = pkg.options.find(
+                                (o) =>
+                                  o.reward &&
+                                  o.reward.__typename === 'MembershipType',
+                              )
+                              const numMembershipYears = aboGive.options.find(
+                                (o) =>
+                                  o.reward &&
+                                  o.reward.__typename === 'MembershipType',
+                              )
+                              if (numMembershipMonths && numMembershipYears) {
                                 onChange(
                                   FieldSet.utils.fieldsState({
-                                    field: getOptionFieldKey(oYears),
+                                    field:
+                                      getOptionFieldKey(numMembershipYears),
                                     value: Math.min(
                                       Math.max(
-                                        getOptionValue(oMonths, values),
-                                        oYears.minAmount,
+                                        getOptionValue(
+                                          numMembershipMonths,
+                                          values,
+                                        ),
+                                        numMembershipYears.minAmount,
                                       ),
-                                      oYears.maxAmount,
+                                      numMembershipYears.maxAmount,
                                     ),
                                     error: undefined,
                                     dirty: true,
                                   }),
                                 )
+                              }
+
+                              aboGive.options
+                                .filter(
+                                  (o) =>
+                                    o.reward &&
+                                    o.reward.__typename === 'Goodie',
+                                )
+                                .forEach((oYears) => {
+                                  const oMonths = pkg.options.find(
+                                    (d) =>
+                                      d.reward &&
+                                      d.reward.__typename ===
+                                        oYears.reward.__typename &&
+                                      d.reward.name === oYears.reward.name,
+                                  )
+                                  if (!oMonths) {
+                                    return
+                                  }
+                                  onChange(
+                                    FieldSet.utils.fieldsState({
+                                      field: getOptionFieldKey(oYears),
+                                      value: Math.min(
+                                        Math.max(
+                                          getOptionValue(oMonths, values),
+                                          oYears.minAmount,
+                                        ),
+                                        oYears.maxAmount,
+                                      ),
+                                      error: undefined,
+                                      dirty: true,
+                                    }),
+                                  )
+                                })
+                            }
+
+                            router
+                              .push(
+                                {
+                                  pathname: '/angebote',
+                                  query: { package: 'ABO_GIVE' },
+                                },
+                                undefined,
+                                { shallow: router.pathname === '/angebote' },
+                              )
+                              .then(() => {
+                                this.resetPrice()
                               })
-                          }
-
-                          router
-                            .push(
-                              {
-                                pathname: '/angebote',
-                                query: Object.assign(
-                                  {},
-                                  { package: 'ABO_GIVE' },
-                                  query.token && { token: query.token },
+                          }}
+                        >
+                          {t.pluralize(
+                            'package/customize/ABO_GIVE_MONTHS/years',
+                            {
+                              count: getOptionValue(
+                                pkg.options.find(
+                                  (option) =>
+                                    option.reward &&
+                                    option.reward.__typename ===
+                                      'MembershipType',
                                 ),
-                              },
-                              undefined,
-                              { shallow: router.pathname === '/angebote' },
-                            )
-                            .then(() => {
-                              this.resetPrice()
-                            })
-                        }}
-                      >
-                        {t.pluralize(
-                          'package/customize/ABO_GIVE_MONTHS/years',
-                          {
-                            count: getOptionValue(
-                              pkg.options.find(
-                                (option) =>
-                                  option.reward &&
-                                  option.reward.__typename === 'MembershipType',
+                                values,
                               ),
-                              values,
-                            ),
-                          },
-                        )}
-                      </Editorial.A>
-                    </li>
-                  </ul>
-                </Fragment>
-              )}
-              {payingMoreThanRegular && (
-                <Fragment>
-                  <Editorial.A
-                    href={format({
-                      pathname: '/angebote',
-                      query: omit(query, ['price', 'userPrice']),
-                    })}
-                    onClick={(e) => {
-                      if (shouldIgnoreClick(e)) {
-                        return
-                      }
-                      e.preventDefault()
-                      this.setState({ customPrice: false })
-                      onChange(
-                        FieldSet.utils.fieldsState({
-                          field: 'price',
-                          value: regularMinPrice,
-                          error: undefined,
-                          dirty: true,
-                        }),
-                      )
-
-                      router.replace(
-                        {
-                          pathname: '/angebote',
-                          query: omit(query, ['price', 'userPrice']),
-                        },
-                        undefined,
-                        { shallow: router.pathname === '/angebote' },
-                      )
-                    }}
-                  >
-                    {t.first(
-                      [
-                        `package/customize/price/payRegular/${pkg.name}`,
-                        'package/customize/price/payRegular',
-                      ],
-                      {
-                        formattedCHF: chfFormat(regularMinPrice / 100),
-                      },
-                    )}
-                  </Editorial.A>
-                  <br />
-                </Fragment>
-              )}
-              {offerUserPrice && (
-                <Fragment>
-                  <Editorial.A
-                    href={format({
-                      pathname: '/angebote',
-                      query: { ...omit(query, ['price']), userPrice: 1 },
-                    })}
-                    onClick={(e) => {
-                      if (shouldIgnoreClick(e)) {
-                        return
-                      }
-                      e.preventDefault()
-
-                      const selectedUserPriceOption = pkg.options.find(
-                        (option) => {
-                          return (
-                            getOptionValue(option, values) && option.userPrice
-                          )
-                        },
-                      )
-                      if (!selectedUserPriceOption) {
-                        const firstUserPriceOption = pkg.options.find(
-                          (option) => {
-                            return option.userPrice
-                          },
-                        )
+                            },
+                          )}
+                        </Editorial.A>
+                      </li>
+                    </ul>
+                  </Fragment>
+                )}
+                {payingMoreThanRegular && (
+                  <Fragment>
+                    <Editorial.A
+                      href={format({
+                        pathname: '/angebote',
+                        query: omit(query, ['price', 'userPrice']),
+                      })}
+                      onClick={(e) => {
+                        if (shouldIgnoreClick(e)) {
+                          return
+                        }
+                        e.preventDefault()
+                        this.setState({ customPrice: false })
                         onChange(
                           FieldSet.utils.fieldsState({
-                            field: getOptionFieldKey(firstUserPriceOption),
-                            value: firstUserPriceOption.maxAmount,
+                            field: 'price',
+                            value: regularMinPrice,
+                            error: undefined,
+                            dirty: true,
                           }),
                         )
-                      }
 
-                      router
-                        .replace(
+                        router.replace(
                           {
                             pathname: '/angebote',
-                            query: { ...omit(query, ['price']), userPrice: 1 },
+                            query: omit(query, ['price', 'userPrice']),
                           },
                           undefined,
                           { shallow: router.pathname === '/angebote' },
                         )
-                        .then(() => {
-                          this.resetPrice()
-                          if (this.focusRef && this.focusRef.input) {
-                            this.focusRef.focus()
-                          }
-                        })
-                    }}
-                  >
-                    {t('package/customize/price/payLess')}
-                  </Editorial.A>
-                  <br />
-                </Fragment>
-              )}
-            </div>
-          )}
-        </div>
+                      }}
+                    >
+                      {t.first(
+                        [
+                          `package/customize/price/payRegular/${pkg.name}`,
+                          'package/customize/price/payRegular',
+                        ],
+                        {
+                          formattedCHF: chfFormat(regularMinPrice / 100),
+                        },
+                      )}
+                    </Editorial.A>
+                    <br />
+                  </Fragment>
+                )}
+                {offerUserPrice && (
+                  <Fragment>
+                    <Editorial.A
+                      href={format({
+                        pathname: '/angebote',
+                        query: { ...omit(query, ['price']), userPrice: 1 },
+                      })}
+                      onClick={(e) => {
+                        if (shouldIgnoreClick(e)) {
+                          return
+                        }
+                        e.preventDefault()
+
+                        const selectedUserPriceOption = pkg.options.find(
+                          (option) => {
+                            return (
+                              getOptionValue(option, values) && option.userPrice
+                            )
+                          },
+                        )
+                        if (!selectedUserPriceOption) {
+                          const firstUserPriceOption = pkg.options.find(
+                            (option) => {
+                              return option.userPrice
+                            },
+                          )
+                          onChange(
+                            FieldSet.utils.fieldsState({
+                              field: getOptionFieldKey(firstUserPriceOption),
+                              value: firstUserPriceOption.maxAmount,
+                            }),
+                          )
+                        }
+
+                        router
+                          .replace(
+                            {
+                              pathname: '/angebote',
+                              query: {
+                                ...omit(query, ['price']),
+                                userPrice: 1,
+                              },
+                            },
+                            undefined,
+                            { shallow: router.pathname === '/angebote' },
+                          )
+                          .then(() => {
+                            this.resetPrice()
+                            if (this.focusRef && this.focusRef.input) {
+                              this.focusRef.focus()
+                            }
+                          })
+                      }}
+                    >
+                      {t('package/customize/price/payLess')}
+                    </Editorial.A>
+                    <br />
+                  </Fragment>
+                )}
+              </div>
+            )}
+          </div>
+        </GotoLinkBlocker>
       </div>
     )
   }

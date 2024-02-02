@@ -9,9 +9,7 @@ graph TD;
     MAGAZIN[Magazin];
     PUBLIKATOR[Publikator CMS];
     ADMIN[Admin tool];
-    GOTO[Goto];
     APP --> MAGAZIN;
-    GOTO --> MAGAZIN;
   end
 
   subgraph Backend [Backend]
@@ -44,6 +42,17 @@ graph TD;
     ADMIN --> SENTRY;
 
     ULTRA --> DB;
+
+    subgraph Payment [Payment]
+      DATATRANS[Datatrans];
+      STRIPE[Stripe];
+
+      BACKEND_MODULES --> DATATRANS;
+      BACKEND_MODULES <--> STRIPE;
+
+      MAGAZIN --> DATATRANS;
+      MAGAZIN --> STRIPE;
+    end
   end
 ```
 
@@ -52,9 +61,11 @@ graph TD;
 | Service | Description | Self hosted |
 | --- | --- | --- |
 | [Mailchimp](https://mailchimp.com/) | Newsletters |  |
-| [Mandrill](https://mandrillapp.com/) | Transactional emails |  |
+| [Mandril](https://mandrillapp.com/) | Transactional emails |  |
 | [Matomo](https://matomo.org/) | analytics tool | ✅ |
 | [Ultra dashboard](https://ultra-dashboard.com/) | data analysis tool | ✅ |
 | [Sentry](https://sentry.io/) | Error tracking (only in internal tools) |  |
 | [DatoCMS](https://www.datocms.com/) | Headless CMS for the website |  |
+| [Datatrans](https://www.datatrans.ch/) | Payment provider |  |
+| [Stripe](https://www.stripe.com/) | Payment provider (legacy) |  |
 

@@ -7874,6 +7874,66 @@
     {
       "key": "CallToActions/customComponents/FutureCampaignBanner/button/0",
       "value": "Noch heute Verstärkung holen und Gratismonate sichern"
+    },
+    {
+      "key": "pledge/recievePayment/datatrans/cancel",
+      "value": "Zahlung abgebrochen. Wählen Sie bitte ein anderes Zahlungsmittel, um Ihre Bestellung abzuschliessen."
+    },
+    {
+      "key": "pledge/recievePayment/datatrans/error",
+      "value": "Zahlung fehlgeschlagen.<br />\n<br />\nWählen Sie bitte ein anderes Zahlungsmittel, um Ihre Bestellung abzuschliessen."
+    },
+    {
+      "key": "account/paymentSource/register",
+      "value": "registrieren"
+    },
+    {
+      "key": "account/paymentSource/adding",
+      "value": "Hinterlege Zahlungsmittel…"
+    },
+    {
+      "key": "pledge/recievePayment/datatrans/mailto/subject",
+      "value": "Datatrans {status}"
+    },
+    {
+      "key": "pledge/recievePayment/datatrans/mailto/body",
+      "value": "Liebe Republik\n\nLasst uns über Geld sprechen.\n\nBuchungsreferenz:\n{pledgeId}\n\nDatatrans:\n{payload}"
+    },
+    {
+      "key": "pledge/submit/loading/datatrans",
+      "value": "weiterleiten"
+    },
+    {
+      "key": "account/pledges/payment/method/DATATRANS_CREDITCARD",
+      "value": "Kreditkarte"
+    },
+    {
+      "key": "account/pledges/payment/method/DATATRANS_PAYPAL",
+      "value": "PayPal"
+    },
+    {
+      "key": "account/pledges/payment/method/DATATRANS_POSTFINANCECARD",
+      "value": "PostFinance Card"
+    },
+    {
+      "key": "account/pledges/payment/method/DATATRANS_TWINT",
+      "value": "Twint"
+    },
+    {
+      "key": "payment/method/DATATRANS_CREDITCARD",
+      "value": "Kreditkarte"
+    },
+    {
+      "key": "payment/method/DATATRANS_PAYPAL",
+      "value": "PayPal"
+    },
+    {
+      "key": "payment/method/DATATRANS_POSTFINANCECARD",
+      "value": "PostFinance Card"
+    },
+    {
+      "key": "payment/method/DATATRANS_TWINT",
+      "value": "Twint"
     }
   ]
 }

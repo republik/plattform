@@ -294,6 +294,10 @@ type AddPaymentMethodResponse {
 
 enum PaymentMethod {
   STRIPE
+  DATATRANS_CREDITCARD
+  DATATRANS_POSTFINANCECARD
+  DATATRANS_PAYPAL
+  DATATRANS_TWINT
   POSTFINANCECARD
   PAYPAL
   PAYMENTSLIP
@@ -353,14 +357,15 @@ enum PaymentSourceStatus {
 # pm_: PaymentMethod
 type PaymentSource {
   id: String!
+  method: PaymentMethod!
   isDefault: Boolean!
   # is always CHARGEABLE for PaymentSources
   status: PaymentSourceStatus!
   brand: String!
   wallet: PaymentSourceWallet
-  last4: String!
-  expMonth: Int!
-  expYear: Int!
+  last4: String
+  expMonth: Int
+  expYear: Int
   # is card expired now
   isExpired: Boolean!
 }

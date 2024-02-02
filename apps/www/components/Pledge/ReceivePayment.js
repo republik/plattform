@@ -17,6 +17,7 @@ import { EMAIL_PAYMENT } from '../../lib/constants'
 import RawHtmlTranslation from '../RawHtmlTranslation'
 
 import { A } from '@project-r/styleguide'
+import { DatatransPledgeIdQueryParam } from '../Payment/datatrans/types'
 
 // ToDo: query autoPay
 const pledgeQuery = gql`
@@ -39,6 +40,7 @@ const pledgeQuery = gql`
         firstName
         lastName
         email
+        verified
       }
       shippingAddress {
         name
@@ -55,9 +57,7 @@ const pledgeQuery = gql`
 class PledgeReceivePayment extends Component {
   constructor(props, context) {
     super(props, context)
-
     const { query, t } = props
-
     const state = (this.state = {})
     if (query.orderID) {
       if (query.STATUS === '9' || query.STATUS === '91') {
@@ -227,6 +227,62 @@ class PledgeReceivePayment extends Component {
         }
       }
     }
+    // Datatrans
+    if (query[DatatransPledgeIdQueryParam]) {
+      if (query.status === 'authorized') {
+        state.processing = true
+        state.action = {
+          method: 'pay',
+          argument: {
+            method: query.method,
+            pspPayload: query,
+          },
+        }
+      } else if (query.status === 'cancel') {
+        // Do something
+        state.receiveError = (
+          <RawHtmlTranslation
+            error
+            translationKey='pledge/recievePayment/datatrans/cancel'
+          />
+        )
+      } else if (query.status === 'error') {
+        state.receiveError = (
+          <RawHtmlTranslation
+            error
+            translationKey='pledge/recievePayment/datatrans/error'
+          />
+        )
+      } else {
+        const errorVariables = {
+          mailto: (
+            <A
+              key='mailto'
+              href={`mailto:${EMAIL_PAYMENT}?subject=${encodeURIComponent(
+                t('pledge/recievePayment/datatrans/mailto/subject', {
+                  status: query.status || '',
+                }),
+              )}&body=${encodeURIComponent(
+                t('pledge/recievePayment/datatrans/mailto/body', {
+                  pledgeId: query[DatatransPledgeIdQueryParam],
+                  payload: JSON.stringify(query, null, 2),
+                }),
+              )}`}
+            >
+              {EMAIL_PAYMENT}
+            </A>
+          ),
+        }
+
+        state.receiveError = (
+          <RawHtmlTranslation
+            error
+            translationKey='pledge/recievePayment/error'
+            replacements={errorVariables}
+          />
+        )
+      }
+    }
 
     this.queryFromPledge = () => {
       const { pledge } = this.props
@@ -250,45 +306,48 @@ class PledgeReceivePayment extends Component {
         pspPayload,
       })
       .then(() => {
-        if (!pledge || (!pledge.user && !me)) {
-          gotoMerci({
-            id: pledgeId,
-          })
+        // pledge might be empty if not in draft-mode anymore (e.g. paied)
+        // just goto merci
+        if (!me && !pledge?.user) {
+          gotoMerci({ id: pledgeId })
           return
         }
+
         const baseQuery = {
+          package: pledge.package.name,
           id: pledgeId,
         }
-        if (pledge.package) {
-          baseQuery.package = pledge.package.name
+
+        // if user logged in, goto merci at once
+        if (me) {
+          gotoMerci(baseQuery)
+          return
         }
-        if (!me) {
-          if (baseQuery.package === 'PROLONG') {
+
+        // if pledge user is verified, goto merci at once
+        if (pledge.user.verified) {
+          gotoMerci({ ...baseQuery, email: pledge.user.email })
+          return
+        }
+
+        // if user is not verified (and not logged in)
+        // call signIn mutation and then forward to merci with SignInResponse
+        this.props
+          .signIn(pledge.user.email, 'pledge')
+          .then(({ data: { signIn } }) =>
             gotoMerci({
               ...baseQuery,
               email: pledge.user.email,
-            })
-            return
-          }
-          this.props
-            .signIn(pledge.user.email, 'pledge')
-            .then(({ data: { signIn } }) =>
-              gotoMerci({
-                ...baseQuery,
-                email: pledge.user.email,
-                ...encodeSignInResponseQuery(signIn),
-              }),
-            )
-            .catch((error) =>
-              gotoMerci({
-                ...baseQuery,
-                email: pledge.user.email,
-                signInError: errorToString(error),
-              }),
-            )
-        } else {
-          gotoMerci(baseQuery)
-        }
+              ...encodeSignInResponseQuery(signIn),
+            }),
+          )
+          .catch((error) =>
+            gotoMerci({
+              ...baseQuery,
+              email: pledge.user.email,
+              signInError: errorToString(error),
+            }),
+          )
       })
       .catch((error) => {
         this.setState(() => ({
