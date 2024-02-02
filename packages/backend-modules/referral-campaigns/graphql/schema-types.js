@@ -1,11 +1,11 @@
 module.exports = `
 
-type UserReferrals {
+type Referrals {
   count: Int!
 }
 
 extend type User {
-  referrals(campaign: ID): UserReferrals
+  referrals(campaign: ID): Referrals
 }
 
 type Campaign {
@@ -14,5 +14,6 @@ type Campaign {
   description: String
   beginDate: Date!
   endDate: Date!
+  referrals: Referrals!
 }
 `
