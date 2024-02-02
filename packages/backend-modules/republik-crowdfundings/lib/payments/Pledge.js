@@ -6,7 +6,7 @@ const { refreshPotForPledgeId } = require('../membershipPot')
 const getClients = require('./stripe/clients')
 const {
   handleReferral,
-} = require('@orbiting/backend-modules-referral-campaigns')
+} = require('@orbiting/backend-modules-referral-campaigns/lib/referralHandler')
 
 const forUpdate = async ({ pledgeId, fn, pgdb }) => {
   const transaction = await pgdb.transactionBegin()
@@ -79,7 +79,7 @@ const afterChange = async ({ pledge }, context) => {
     pledge.status === 'SUCCESSFUL' && refreshPotForPledgeId(pledge.id, context),
     pledge.status === 'PAID_INVESTIGATE' &&
       slack.publishPledge(user, pledge, 'PAID_INVESTIGATE'),
-    handleReferral(pledge, { pgdb: context.pgdb }),
+    handleReferral(pledge, context),
   ]).catch((e) => {
     console.error('error in afterChange', e)
   })
