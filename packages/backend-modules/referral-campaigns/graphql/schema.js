@@ -5,6 +5,6 @@ schema {
 
 
 type queries {
-  campaigns: [Campaign!]!
+  campaign(id: ID!): Campaign
 }
 `

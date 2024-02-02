@@ -134,7 +134,7 @@ async function handleReferral(pledge, { pgdb, mail, t }) {
 
   const newEndDate = getPeriodEndingLast(claimedPeriods)
 
-  const totalCampaignReferrals = await campaignReferralCount({ campaign }, pgdb)
+  const totalCampaignReferrals = await campaignReferralCount(campaign.id, pgdb)
 
   // send transactional mail to referrer
   const referralMailData = {
@@ -173,16 +173,16 @@ async function userReferralCount({ userId, campaign }, pgdb) {
  * Referral count for a campaign
  * @param {} campaign
  * @param pgdb db instance
- * @returns {Promise<number>|null} referral count
+ * @returns {Promise<number>} referral count
  */
-async function campaignReferralCount({ campaign }, pgdb) {
-  if (!campaign) {
-    console.error('Missing campaign, cannot get referral count')
-    return
+async function campaignReferralCount(campaignId, pgdb) {
+  if (!campaignId) {
+    console.error('Missing campaign id, cannot get referral count')
+    return 0
   }
   return await pgdb.public.referrals.count({
-    campaignId: campaign.id,
+    campaignId: campaignId,
   })
 }
 
-module.exports = { handleReferral, userReferralCount }
+module.exports = { handleReferral, userReferralCount, campaignReferralCount }
