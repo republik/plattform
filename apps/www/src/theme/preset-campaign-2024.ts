@@ -18,7 +18,7 @@ export const presetCampaign2024 = definePreset({
         colors: {
           campaign2024: {
             yellow: { value: '#FFFDF0' },
-            red: { value: '#F50000' },
+            red: { value: '#E50146' },
             darkRed: { value: '#610000' },
           },
         },
