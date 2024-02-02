@@ -216,6 +216,7 @@ const isReqPathAllowed = (user, req) =>
 module.exports = {
   generateForUser,
   generateForUserByUser,
+  getValidResolvedToken,
   getUserByAccessToken,
   isFieldExposed,
   ensureCanPledgePackage,
