@@ -4,10 +4,10 @@ SERVER=${SERVER:-api}
 if [ "$SERVER" = "styleguide" ]
 then
   echo "Running prune for styleguide"
-  npx turbo@1.10 prune --scope="@project-r/styleguide"
+  npx turbo@1.10.12 prune --scope="@project-r/styleguide" -v
 else
   echo "Running prune for $SERVER-app"
-  npx turbo@1.10 prune --scope="@orbiting/$SERVER-app" -vv
+  npx turbo@1.10.12 prune --scope="@orbiting/$SERVER-app" -v
 fi
 
 if [ ! -f out/yarn.lock ]
