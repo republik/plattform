@@ -6,13 +6,14 @@ import { css } from '@app/styled-system/css'
 import Image from 'next/image'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
+import { ReactNode } from 'react'
 
 const SenderProfile = ({
   portrait,
-  text,
+  children,
 }: {
   portrait?: string
-  text: string
+  children: ReactNode
 }) => {
   return (
     <div
@@ -21,12 +22,13 @@ const SenderProfile = ({
         flexDirection: 'row',
         gap: '4',
         alignItems: 'center',
-        // background: 'overlay',
+        // background: 'primary',
         // color: 'pageBackground',
-        p: '2',
-        pr: '4',
-        borderRadius: '5px',
-        maxW: 400,
+        // borderBottom: '2px solid token(colors.primary)',
+        // borderTop: '2px solid token(colors.primary)',
+        // p: '2',
+        // borderRadius: '5px',
+        maxW: 600,
       })}
     >
       {portrait && (
@@ -43,8 +45,10 @@ const SenderProfile = ({
               // borderColor: 'primary',
               // borderStyle: 'solid',
               boxShadow: 'sm',
-              width: { base: '4.5rem', md: '6rem' },
-              height: { base: '4.5rem', md: '6rem' },
+              height: '4rem',
+              width: '4rem',
+              // width: { base: '4.5rem', md: '4rem' },
+              // height: { base: '4.5rem', md: '4rem' },
             })}
             alt='Portrait'
             src={portrait}
@@ -57,11 +61,14 @@ const SenderProfile = ({
       <div
         className={css({
           flex: '0 1 auto',
-          textStyle: 'sansSerifMedium',
-          fontSize: 'xl',
+          fontSize: { base: 'xl', md: '2xl' },
+          textWrap: 'balance',
+          '& em': {
+            textStyle: 'sansSerifBold',
+          },
         })}
       >
-        <p>{text}</p>
+        <p>{children}</p>
       </div>
     </div>
   )
@@ -147,16 +154,20 @@ export default async function Page({ params }) {
           flexGrow: 1,
           display: 'flex',
           flexDirection: 'column',
-          alignItems: 'center',
+          alignItems: 'stretch',
           gap: '8',
         })}
       >
         {sender ? (
           <div>
-            <SenderProfile
-              portrait={sender.portrait}
-              text={`${sender.firstName} ${sender.lastName} hat Sie eingeladen, die Republik zu unterstützen.`}
-            />
+            <SenderProfile portrait={sender.portrait}>
+              <>
+                <em>
+                  {sender.firstName} {sender.lastName}
+                </em>{' '}
+                hat Sie eingeladen, die Republik zu unterstützen.
+              </>
+            </SenderProfile>
           </div>
         ) : (
           <p>Machen Sie mit bei der Republik, denn das ist super cool!</p>

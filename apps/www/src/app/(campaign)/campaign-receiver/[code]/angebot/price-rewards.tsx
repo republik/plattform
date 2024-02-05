@@ -11,14 +11,13 @@ export const PriceRewards = () => {
 
   return (
     <>
-      <h2
+      <h1
         className={css({
-          fontWeight: 'bold',
-          fontSize: '2xl',
+          textStyle: 'campaignHeading',
         })}
       >
         {step.step.label}
-      </h2>
+      </h1>
       <p>{step.step.text}</p>
       {step.step.goodie && (
         <p className={css({ fontSize: 'base' })}>{step.step.goodieText}</p>
