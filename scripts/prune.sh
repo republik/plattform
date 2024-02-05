@@ -7,7 +7,7 @@ then
   npx turbo prune --scope="@project-r/styleguide"
 else
   echo "Running prune for $SERVER-app"
-  npx turbo prune --scope="@orbiting/$SERVER-app"
+  npx turbo prune --scope="@orbiting/$SERVER-app" -vvv
 fi
 
 if [ ! -f out/yarn.lock ]
