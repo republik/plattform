@@ -18,7 +18,7 @@ export const presetCampaign2024 = definePreset({
         colors: {
           campaign2024: {
             yellow: { value: '#FFFDF0' },
-            red: { value: '#E50146' },
+            red: { value: 'rgb(229,1,70)' },
             darkRed: { value: '#610000' },
           },
         },
@@ -44,14 +44,14 @@ export const presetCampaign2024 = definePreset({
           },
           overlay: {
             value: {
-              _campaign2024: 'rgba(245,0,0, 0.05)',
+              _campaign2024: 'rgba(229,1,70, 0.05)',
               _campaign2024Inverted: 'rgba(255,255,255, 0.5)',
               _campaign2024Dark: 'rgba(255,255,255, 0.05)',
             },
           },
           divider: {
             value: {
-              _campaign2024: 'rgba(245,0,0, 0.15)',
+              _campaign2024: 'rgba(229,1,70,0.15)',
               _campaign2024Dark: 'rgba(255,255,255, 0.15)',
             },
           },

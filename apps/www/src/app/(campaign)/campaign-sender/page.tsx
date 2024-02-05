@@ -12,6 +12,28 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 
+const shareButtonStyle = hstack({
+  gap: '2',
+  // color: 'text',
+  textStyle: 'sansSerifBold',
+  fontSize: 'm',
+  width: 'full',
+  justifyContent: 'center',
+
+  background: 'primary',
+  color: 'pageBackground',
+  px: '4',
+  py: '3',
+  borderRadius: '4px',
+  border: '2px solid token(colors.primary)',
+
+  cursor: 'pointer',
+  _hover: {
+    background: 'pageBackground',
+    color: 'primary',
+  },
+})
+
 export default async function Page() {
   const { data } = await getClient().query({
     query: UserInviteLinkInfoDocument,
@@ -37,6 +59,14 @@ export default async function Page() {
         <h1 className={css({ textStyle: 'campaignHeading' })}>
           <TypewriterContent />
         </h1>
+
+        {/* <p>
+          {' '}
+          <strong>
+            Nice! Sie haben schon {data.me?.futureCampaignAboCount} Leute
+            eingeladen 🎉
+          </strong>
+        </p> */}
         <p>
           Wenn eine von 20 Verleger*innen einen neuen Mistreiter von der
           Republik überzeugt, ist unser unabhängiger Journalismus finanziert.
@@ -46,18 +76,10 @@ export default async function Page() {
           Helfen Sie mit!
         </h2>
         <p>
-          Wenn Sie jemanden an Bord holen, schenken wir Ihnen einen Gratismonat
-          Republik{' '}
-          <strong>
-            Nice! Sie haben schon {data.me?.futureCampaignAboCount} Leute
-            eingeladen 🎉
-          </strong>
-        </p>
-
-        <p>
-          Teilen Sie Ihren persönlichen Link oder das Bild, mit dem eine neue
-          Verlegerin die Republik für ein Jahr zu einem Preis, der für Sie fair
-          erscheint abonnieren kann (ab CHF 120).
+          Teilen Sie Ihren persönlichen Link, damit Ihre Bekannten den Weg in
+          die Verlagsetage finden. Das lohnt sich doppelt: Wenn jemand über
+          Ihren Link ein neues Abo abschliesst, verlängern wir Ihres um einen
+          Monat.
         </p>
 
         <div
@@ -67,73 +89,79 @@ export default async function Page() {
             gridTemplateColumns: `repeat(auto-fit, minmax(300px, auto))`,
           })}
         >
-          <div className={css({ maxWidth: 300 })}>
+          <div
+            className={css({
+              background: 'overlay',
+              borderRadius: '4px',
+              py: '3',
+              px: '4',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+              fontWeight: 'medium',
+              fontSize: 'xl',
+              border: '2px solid token(colors.divider)',
+              // maxWidth: 300,
+            })}
+          >
+            {`${process.env.NEXT_PUBLIC_BASE_URL}${url}`}
+          </div>
+          <Share
+            url={`${process.env.NEXT_PUBLIC_BASE_URL}${url}`}
+            title='Link teilen'
+            emailSubject=''
+          >
+            <div className={shareButtonStyle}>
+              <IconShare size={20} />
+              Link teilen
+            </div>
+          </Share>
+        </div>
+
+        <p>
+          Oder teilen Sie Ihren persönliches Kampagnen-Bild auf Social Media.
+          Denn das ist super und blah blah blah, so machen Sie das nämlich:
+          Lalalala.
+        </p>
+
+        <div
+          className={css({
+            display: 'grid',
+            gap: '8',
+            gridTemplateColumns: `repeat(auto-fit, minmax(300px, auto))`,
+          })}
+        >
+          <div
+            className={css({
+              background: 'overlay',
+              borderRadius: '4px',
+              p: '4',
+              border: '2px solid token(colors.divider)',
+              width: 'full',
+            })}
+          >
             <Image
-              alt='sharebildli'
+              alt='Kampagnenbild'
               src={`${url}/share-image`}
               className={css({
                 width: '100%',
-                maxWidth: 300,
+                borderRadius: '2px',
+                // maxWidth: 300,
               })}
-              width={200}
-              height={400}
+              width={1080}
+              height={1920}
               unoptimized
             />
           </div>
           <div
             className={vstack({
               gap: '4',
-              alignItems: 'flex-start',
+              alignItems: 'stretch',
             })}
           >
-            <div
-              className={css({
-                background: 'overlay',
-                borderRadius: '3px',
-                p: '2',
-                w: 'full',
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                whiteSpace: 'nowrap',
-                fontWeight: 'medium',
-              })}
-            >
-              {`${process.env.NEXT_PUBLIC_BASE_URL}${url}`}
-            </div>
-            <Share
-              url={`${process.env.NEXT_PUBLIC_BASE_URL}${url}`}
-              title='Link teilen'
-              emailSubject=''
-            >
-              <div
-                className={hstack({
-                  gap: '2',
-                  color: 'text',
-                  textStyle: 'sansSerifBold',
-                  fontSize: 'm',
-                  cursor: 'pointer',
-                  _hover: {
-                    color: 'contrast',
-                  },
-                })}
-              >
-                <IconShare size={20} /> Link teilen
-              </div>
-            </Share>
             <ShareImage imageSrc={`${url}/share-image`}>
-              <div
-                className={hstack({
-                  gap: '2',
-                  color: 'text',
-                  textStyle: 'sansSerifBold',
-                  fontSize: 'm',
-                  cursor: 'pointer',
-                  _hover: {
-                    color: 'contrast',
-                  },
-                })}
-              >
-                <IconShare size={20} /> Bild teilen
+              <div className={shareButtonStyle}>
+                {/* <IconShare size={20} />  */}Bild teilen
               </div>
             </ShareImage>
             <Link
@@ -141,20 +169,9 @@ export default async function Page() {
               href={`${url}/share-image`}
               download={'share-image.png'}
             >
-              <div
-                className={hstack({
-                  gap: '2',
-                  color: 'text',
-                  textStyle: 'sansSerifBold',
-                  fontSize: 'm',
-
-                  cursor: 'pointer',
-                  _hover: {
-                    color: 'contrast',
-                  },
-                })}
-              >
-                <IconDownload size={20} /> Bild herunterladen
+              <div className={shareButtonStyle}>
+                <IconDownload size={20} />
+                Bild herunterladen
               </div>
             </Link>
           </div>
