@@ -47,9 +47,6 @@ type User {
   # true: consented
   # false: consent revoked
   hasConsentedTo(name: String!): Boolean
-  # A user specific referral code
-  # the code is generated the first time that the referral code is resolved
-  referralCode: String
 }
 
 type SignInResponse {

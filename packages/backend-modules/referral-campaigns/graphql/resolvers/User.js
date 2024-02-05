@@ -1,4 +1,5 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
+const { generateReferralCode } = require('../../lib/referralCode')
 
 module.exports = {
   /**
@@ -23,5 +24,8 @@ module.exports = {
     return {
       count: referralsCount || 0,
     }
+  },
+  referralCode: async (user, _, { pgdb }) => {
+    return user.referralCode || (await generateReferralCode(user, pgdb))
   },
 }

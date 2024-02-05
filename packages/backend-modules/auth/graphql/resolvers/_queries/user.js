@@ -1,6 +1,8 @@
 const { getUserByAccessToken } = require('../../../lib/AccessToken')
 const { resolveUser } = require('../../../lib/Users')
-const { resolveUserByReferralCode } = require('../../../lib/ReferralCode')
+const {
+  resolveUserByReferralCode,
+} = require('@orbiting/backend-modules-referral-campaigns/lib/referralCode')
 const Roles = require('../../../lib/Roles')
 const transformUser = require('../../../lib/transformUser')
 
