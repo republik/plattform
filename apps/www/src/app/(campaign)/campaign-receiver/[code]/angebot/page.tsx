@@ -1,8 +1,10 @@
 import { PriceRewards } from '@app/app/(campaign)/campaign-receiver/[code]/angebot/price-rewards'
 import { PriceSliderWithState } from '@app/app/(campaign)/campaign-receiver/[code]/angebot/price-slider-with-state'
+import { ELIGIBLE_RECEIVER_MEMBERSHIPS } from '@app/app/(campaign)/config'
 import { UserInviterProfileInfoDocument } from '@app/graphql/republik-api/gql/graphql'
 import { getClient } from '@app/lib/apollo/client'
 import { css } from '@app/styled-system/css'
+import { redirect } from 'next/navigation'
 import { Suspense } from 'react'
 
 // Ensure that search params are available during SSR
@@ -17,12 +19,12 @@ export default async function Page({ params, searchParams }) {
 
   const { sender } = data
 
-  const isEligible = !['ABO', 'YEARLY_ABO', 'BENEFACTOR_ABO'].includes(
+  const isEligible = !ELIGIBLE_RECEIVER_MEMBERSHIPS.includes(
     data.me?.activeMembership.type.name,
   )
 
   if (!isEligible) {
-    return <div>Noin, du hast schon ein Abo :P</div>
+    return redirect('/campaign-sender')
   }
 
   // if (!sender) {
@@ -30,7 +32,7 @@ export default async function Page({ params, searchParams }) {
   // }
 
   if (sender && data.me && sender?.id === data.me?.id) {
-    return <div>das bin ja iiich</div>
+    return redirect('/campaign-sender')
   }
 
   return (

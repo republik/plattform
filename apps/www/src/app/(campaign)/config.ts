@@ -1,0 +1,6 @@
+// TODO: add MONTHLY_ABO here?
+export const ELIGIBLE_RECEIVER_MEMBERSHIPS = [
+  'ABO',
+  'YEARLY_ABO',
+  'BENEFACTOR_ABO',
+]

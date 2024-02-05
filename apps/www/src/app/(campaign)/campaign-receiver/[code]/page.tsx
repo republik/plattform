@@ -1,4 +1,5 @@
 import { TypewriterContent } from '@app/app/(campaign)/components/typewriter-content'
+import { ELIGIBLE_RECEIVER_MEMBERSHIPS } from '@app/app/(campaign)/config'
 import { UserInviterProfileInfoDocument } from '@app/graphql/republik-api/gql/graphql'
 import { getClient } from '@app/lib/apollo/client'
 import { css } from '@app/styled-system/css'
@@ -114,7 +115,7 @@ export default async function Page({ params }) {
 
   const { sender } = data
 
-  const isEligible = !['ABO', 'YEARLY_ABO', 'BENEFACTOR_ABO'].includes(
+  const isEligible = !ELIGIBLE_RECEIVER_MEMBERSHIPS.includes(
     data.me?.activeMembership.type.name,
   )
 
@@ -168,7 +169,7 @@ export default async function Page({ params }) {
         <p>
           Mit Ihrer Unterstützung decken wir staatliche Überwachung auf, ordnen
           das aktuelle Geschehen ein, fragen nach und führen den höflichsten
-          Debattenraum der Schweiz – und vieles mehr.
+          Debattenraum der Schweiz – und vieles mehr.
         </p> */}
 
         <p>
