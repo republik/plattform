@@ -1,3 +1,4 @@
+import { CampaignProgress } from '@app/app/(campaign)/components/campaign-progress'
 import { Typewriter } from '@app/app/(campaign)/components/typewriter'
 import { TypewriterContent } from '@app/app/(campaign)/components/typewriter-content'
 import Container from '@app/components/container'
@@ -68,9 +69,14 @@ export default async function Page() {
           </strong>
         </p> */}
         <p>
-          Wenn eine von 20 Verleger*innen einen neuen Mistreiter von der
-          Republik überzeugt, ist unser unabhängiger Journalismus finanziert.
+          Lassen Sie uns diese Verantwortung auf mehrere Schultern verteilen:
+          Bis zum 31. März suchen wir 1’000 neue Unterstützer. Gemeinsam haben
+          wir es schon soweit geschafft:
         </p>
+
+        <div>
+          <CampaignProgress />
+        </div>
 
         <h2 className={css({ textStyle: 'campaignHeading' })}>
           Helfen Sie mit!

@@ -440,6 +440,10 @@ export const presetRepublik = definePreset({
         from: { height: 'var(--radix-collapsible-content-height)' },
         to: { height: 0 },
       },
+      progressGrow: {
+        from: { width: 0 },
+        to: { width: 'var(--progress-width)' },
+      },
       spin: {
         from: { transform: 'rotate(0deg)' },
         to: { transform: 'rotate(360deg)' },
