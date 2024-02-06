@@ -1,52 +1,10 @@
 const debug = require('debug')('referralCampaigns:lib:referralHandler')
 const dayjs = require('dayjs')
-const { validate: validateUUID } = require('uuid')
 const { findClaimableRewards, claimRewards } = require('./rewardsHandler')
+const { resolveUserByReferralCode } = require('./referralCode')
 const {
   getPeriodEndingLast,
 } = require('@orbiting/backend-modules-republik-crowdfundings/lib/utils')
-
-/**
- * Attempt to resolve a user-id based on a possible referrer reference.
- * The ordr of resolution is:
- * 1. if uuid-v4, query users table for user with id
- * 2. check if a user-slug (username field in the users table) exists with that value
- * 3. check if a user-alias exists with that value
- * @param {string|null|undefined}referrerReference user-id, user-slug or user-alias
- * @param pgdb db instance
- * @returns {Promise<string|null>} user-id or null
- */
-async function getUserIdForReferrerReference(referrerReference, pgdb) {
-  debug('no referrer found for referrerReference', referrerReference)
-  if (!referrerReference) {
-    return null
-  }
-
-  // check is uuid-v4
-  if (validateUUID(referrerReference)) {
-    // validate user with id exists
-    const user = await pgdb.public.users.findOne({
-      id: referrerReference,
-    })
-
-    return user?.id || null
-  }
-
-  // check if user-slug exists
-  let user = await pgdb.public.users.findOne({
-    username: referrerReference,
-  })
-  if (user) {
-    return user?.id || null
-  }
-
-  // check if user-alias exists
-  user = await pgdb.public.users.findOne({
-    referralCode: referrerReference,
-  })
-
-  return user?.id || null
-}
 
 /**
  * Handle a referral for a pledge.
@@ -60,26 +18,31 @@ async function getUserIdForReferrerReference(referrerReference, pgdb) {
  * @param {{ pgdb: object, mail: object, t: object }}  ctx object containing the pgdb, mail and translations instance
  */
 async function handleReferral(pledge, { pgdb, mail, t }) {
-  if (!pledge) return
   const { payload } = pledge
-
-  const referrerId = await getUserIdForReferrerReference(
-    payload?.ref_content,
-    pgdb,
-  )
-
-  if (!referrerId) {
-    debug('no referrer found for pledge', pledge?.id)
+  debug('payload', payload)
+  if (!payload?.ref_content || !payload?.ref_campaign) {
+    debug('no content found for referred pledge', pledge?.id)
     return
   }
+
+  const referrerId = (
+    await resolveUserByReferralCode(payload?.ref_content, pgdb)
+  )?.id
+  if (!referrerId) {
+    debug('no referrer found for pledge', pledge?.id)
+    throw new Error('referrer not found')
+  }
+  debug('referrer:', referrerId)
 
   const campaign = await pgdb.public.campaigns.findOne({
     id: payload?.ref_campaign,
   })
 
+  debug('campaign', campaign)
+
   if (!campaign) {
     debug('no campaign found in payload', payload?.ref_campaign)
-    return
+    throw new Error('campaign not found')
   }
 
   if (
@@ -91,31 +54,37 @@ async function handleReferral(pledge, { pgdb, mail, t }) {
       campaign.beginDate,
       campaign.endDate,
     )
-    return
+    throw new Error('campaign is not active')
   }
 
   const tx = await pgdb.transactionBegin()
 
   try {
-    await tx.public.referrals.insertAndGet({
+    const newReferral = await tx.public.referrals.insertAndGet({
       pledgeId: pledge.id,
       referrerId: referrerId,
       campaignId: campaign?.id || null,
     })
 
     await tx.transactionCommit()
+    debug('saved referral: ', newReferral)
   } catch (e) {
     await tx.transactionRollback()
     console.error(e)
     return
   }
 
-  const referralCount = await userReferralCount({ referrerId, campaign }, pgdb)
-
-  const rewardsToClaim = await findClaimableRewards(
-    { referrerId, campaign, referralCount },
+  const referralCount = await userReferralCount(
+    { userId: referrerId, campaign },
     pgdb,
   )
+  debug('user referral count: ', referralCount)
+
+  const rewardsToClaim = await findClaimableRewards(
+    { userId: referrerId, campaign, referralCount },
+    pgdb,
+  )
+  debug('rewards to claim', rewardsToClaim)
   if (!rewardsToClaim || !rewardsToClaim.length) {
     debug(
       'No claimable rewards found for user and campaign',
@@ -128,7 +97,7 @@ async function handleReferral(pledge, { pgdb, mail, t }) {
   // claim rewards
   // TODO could also be in a scheduler? (if we don't need the info for the mail)
   const claimedPeriods = await claimRewards(
-    { referrerId, rewardsToClaim },
+    { userId: referrerId, rewards: rewardsToClaim },
     pgdb,
   )
 

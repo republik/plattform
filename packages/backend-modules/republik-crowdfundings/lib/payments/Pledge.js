@@ -2,7 +2,6 @@ const generateMemberships = require('../generateMemberships')
 const { sendPledgeConfirmations } = require('../Mail')
 const slack = require('@orbiting/backend-modules-republik/lib/slack')
 const { refreshPotForPledgeId } = require('../membershipPot')
-// const { rewardSender } = require('../futureCampaignSenderReward')
 const getClients = require('./stripe/clients')
 const {
   handleReferral,
@@ -79,7 +78,7 @@ const afterChange = async ({ pledge }, context) => {
     pledge.status === 'SUCCESSFUL' && refreshPotForPledgeId(pledge.id, context),
     pledge.status === 'PAID_INVESTIGATE' &&
       slack.publishPledge(user, pledge, 'PAID_INVESTIGATE'),
-    handleReferral(pledge, context),
+    handleReferral(pledge, context).catch((e) => console.log(e)),
   ]).catch((e) => {
     console.error('error in afterChange', e)
   })
