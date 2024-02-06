@@ -1,11 +1,14 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
-const { generateReferralCode } = require('../../lib/referralCode')
+const {
+  generateReferralCode,
+  formatAsDashSeperated,
+} = require('../../lib/referralCode')
 
 module.exports = {
   /**
    * Load the user's referrals count in total or for a specific campaign.
    * @param {object} user
-   * @param {{ campaignId: string | undefined | null}} args
+   * @param {{ campaign: string | undefined | null}} args
    * @param {{ pgdb: object, user: object}} ctx
    * @returns {Promise<{count: number}>}
    */
@@ -26,6 +29,9 @@ module.exports = {
     }
   },
   referralCode: async (user, _, { pgdb }) => {
-    return user.referralCode || (await generateReferralCode(user, pgdb))
+    const referralCode =
+      user.referralCode || (await generateReferralCode(user, pgdb))
+
+    return formatAsDashSeperated(referralCode, 3)
   },
 }

@@ -5392,6 +5392,11 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-10.17.60.tgz#35f3d6213daed95da7f0f73e75bcc6980e90597b"
   integrity sha512-F0KIgDJfy2nA3zMLmWGKxcH2ZVEtCZXHHdOQs2gSaQ27+lNeEfGxzkIw90aXswATX7AZ33tahPbzy6KAfUreVw==
 
+"@types/node@^14.17.29":
+  version "14.18.63"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.18.63.tgz#1788fa8da838dbb5f9ea994b834278205db6ca2b"
+  integrity sha512-fAtCfv4jJg+ExtXhvCkCqUKZ+4ok/JQk01qDKhL5BDDoS3AxKXhV5/MAVUZyQnSEd2GT92fkgZl0pz0Q0AzcIQ==
+
 "@types/node@^16.11.21", "@types/node@^16.11.6":
   version "16.11.47"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-16.11.47.tgz#efa9e3e0f72e7aa6a138055dace7437a83d9f91c"
@@ -8572,6 +8577,13 @@ create-require@^1.1.0:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/create-require/-/create-require-1.1.1.tgz#c1d7e8f1e5f6cfc9ff65f9cd352d37348756c333"
   integrity sha512-dcKFX3jn0MpIaXjisoRvexIJVEKzaq7z2rZKxf+MSr9TkdmHmsU4m2lcLojrj/FHl8mk5VxMmYA+ftRkP/3oKQ==
+
+crockford-base32@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/crockford-base32/-/crockford-base32-2.0.0.tgz#5c58b7ed6abdbcdacd5ac52860cd4f9ec45c72a2"
+  integrity sha512-qRLBMo1MfpajCVi4Ks+MKPk3aRtl+41BMBt2HC3roG81Ip948EIKmfbZO4R3L5Y12/8sDjfCdTmrJ4Cw9IpNfA==
+  dependencies:
+    "@types/node" "^14.17.29"
 
 cross-env@^5.2.1:
   version "5.2.1"

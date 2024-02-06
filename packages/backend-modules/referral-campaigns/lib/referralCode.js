@@ -1,47 +1,32 @@
 const crypto = require('crypto')
+const CrockfordBase32 = require('crockford-base32').CrockfordBase32
 
 /** @typedef {import("@orbiting/backend-modules-types").UserRow} UserRow */
 /** @typedef {import("@orbiting/backend-modules-types").User} User */
-/** @typedef {import("@orbiting/backend-modules-types").ConnectionContext} ConnectionContext */
-
-const NON_URL_SAFE_BASE64_CHARS = ['+', '/', '=']
-
-/**
- * Create a random string of letters of a given length.
- * @param {number} length
- * @returns {string} base64 encoded sha256 hash
- */
-function randomString(length) {
-  // const randId = uuidv4()
-  return crypto
-    .randomBytes(length)
-    .toString('base64')
-    .replace(new RegExp(`[${NON_URL_SAFE_BASE64_CHARS.join('')}]`, 'g'), '')
-}
+/** @typedef {import("pogi").PgDb} PgDb */
 
 const HASH_LENGTH_ATTEMPTS = 10
-const MIN_HASH_LENGTH = 6
+const MIN_HASH_LENGTH_IN_BYTES = 5
 const MAX_ATTMEPTS = 25
 
 /**
  * Generates and stores a unique code for a user and sets the referral-code for the user.
  * @param {User} user
- * @param {ConnectionContext} pgdb
- * @returns {Promise<string>} generated referral code for the user
+ * @param {PgDb} pgdb
+ * @returns {Promise<string|null>} generated referral code for the user
  */
 async function generateReferralCode(user, pgdb) {
   if (user.referralCode) {
     return user.referralCode
   }
 
-  // create sha256 hash of user.id + timestamp
   let referralCode
-  let length = MIN_HASH_LENGTH
+  let length = MIN_HASH_LENGTH_IN_BYTES
   let attempts = 0
   let totalAttempts = 0
 
   while (!referralCode) {
-    referralCode = randomString(length)
+    referralCode = randomBase32String(length)
     console.log(
       `User.referralCode | Attempting to assign referralCode ${referralCode} to user ${user.id}`,
     )
@@ -92,13 +77,15 @@ async function generateReferralCode(user, pgdb) {
  * Resolves a user based on the referralCode or public username.
  *
  * @param {string} referralCode
- * @param {ConnectionContext} pgdb
+ * @param {PgDb} pgdb
  * @returns {Promise<UserRow?>} generated referral code for the user
  */
 async function resolveUserByReferralCode(referralCode, pgdb) {
+  const normalizedCode = normalizeReferralCode(referralCode)
+
   try {
     const user = await pgdb.public.users.findOne({
-      or: [{ referralCode: referralCode }, { username: referralCode }],
+      or: [{ referralCode: normalizedCode }, { username: referralCode }],
     })
     return user
   } catch (e) {
@@ -110,7 +97,47 @@ async function resolveUserByReferralCode(referralCode, pgdb) {
   }
 }
 
+/**
+ * Create a random string of letters of a given length.
+ * @param {number} length
+ * @returns {string} crockford base32 encoded string
+ */
+function randomBase32String(length) {
+  return CrockfordBase32.encode(crypto.randomBytes(MIN_HASH_LENGTH_IN_BYTES))
+}
+
+/**
+ * Normalize Base32 representation
+ * @param {string} code
+ * @returns {string} crockford base32 encoded string
+ */
+function normalizeReferralCode(code) {
+  // Reencode the referral code with Corockford-Base32 to get rid of "- O U L I U"
+  return CrockfordBase32.encode(CrockfordBase32.decode(code))
+}
+
+/**
+ * Returns a new dash-separated string based on input string and partition size.
+ *
+ * `formatAsDashSeperated("AAAABBBB", 4) // AAAA-BBBB`
+ *
+ * @param {string} inputString String to be formated
+ * @param {number} partitionSize Size of each dash separated block
+ * @returns {String}
+ */
+function formatAsDashSeperated(inputString, partitionSize) {
+  let formatted = ''
+  for (let i = 0; i < inputString.length; i++) {
+    formatted += inputString[i]
+    if ((i + 1) % partitionSize === 0 && i !== inputString.length - 1) {
+      formatted += '-'
+    }
+  }
+  return formatted
+}
+
 module.exports = {
   generateReferralCode,
   resolveUserByReferralCode,
+  formatAsDashSeperated,
 }

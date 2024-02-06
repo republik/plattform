@@ -18,7 +18,8 @@
     "@orbiting/backend-modules-scalars": "*",
     "apollo-modules-node": "*",
     "debug": "^4.1.1",
-    "zod": "^3.22.4"
+    "zod": "^3.22.4",
+    "crockford-base32": "^2.0.0"
   },
   "devDependencies": {}
 }
