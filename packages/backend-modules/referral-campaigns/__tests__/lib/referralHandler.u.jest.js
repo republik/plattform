@@ -13,14 +13,14 @@ describe('test referral handling', () => {
     expect(handleReferral(pledge, context)).resolves.toBeUndefined()
     expect(context.pgdb).not.toBeCalled()
   })
-  test('ref_content is not defined', () => {
+  test('referral_code is not defined', () => {
     const context = {
       pgdb: jest.fn(() => {}),
       mail: jest.fn(() => {}),
       t: jest.fn(() => {}),
     }
     const pledge = {
-      payload: { ref_content: undefined, ref_campaign: '0000-0001' },
+      payload: { referral_code: undefined, referral_campaign: '0000-0001' },
     }
     expect(handleReferral(pledge, context)).resolves.toBeUndefined()
     expect(context.pgdb).not.toBeCalled()
@@ -32,12 +32,12 @@ describe('test referral handling', () => {
       t: jest.fn(() => {}),
     }
     const pledge = {
-      payload: { ref_content: '1111-0001', ref_campaign: undefined },
+      payload: { referral_code: '1111-0001', referral_campaign: undefined },
     }
     expect(handleReferral(pledge, context)).resolves.toBeUndefined()
     expect(context.pgdb).not.toBeCalled()
   })
-  test('ref_content is invalid', () => {
+  test('referral_code is invalid', () => {
     const referralCode = '1234'
     const context = {
       pgdb: {
@@ -50,14 +50,14 @@ describe('test referral handling', () => {
       t: jest.fn(() => {}),
     }
     const pledge = {
-      payload: { ref_content: referralCode, ref_campaign: '0000-0001' },
+      payload: { referral_code: referralCode, referral_campaign: '0000-0001' },
     }
     expect(handleReferral(pledge, context)).rejects.toThrowError(
       'referrer not found',
     )
     expect(context.pgdb.public.users.findOne).toBeCalledTimes(1)
   })
-  test('ref_content is valid and returns user, campaign is invalid', () => {
+  test('referral_code is valid and returns user, campaign is invalid', () => {
     const referrerId = 'abcd-1234'
     const context = {
       pgdb: {
@@ -74,7 +74,7 @@ describe('test referral handling', () => {
       t: jest.fn(() => {}),
     }
     const pledge = {
-      payload: { ref_content: '1234-5678', ref_campaign: '0000-0001' },
+      payload: { referral_code: '1234-5678', referral_campaign: '0000-0001' },
     }
     expect(handleReferral(pledge, context)).rejects.toThrowError(
       'campaign not found',
@@ -107,13 +107,13 @@ describe('test referral handling', () => {
       t: jest.fn(() => {}),
     }
     const pledge1 = {
-      payload: { ref_content: '1234-5678', ref_campaign: '0000-0001' },
+      payload: { referral_code: '1234-5678', referral_campaign: '0000-0001' },
     }
     expect(handleReferral(pledge1, context)).rejects.toThrowError(
       'campaign is not active',
     )
     const pledge2 = {
-      payload: { ref_content: '1234-5678', ref_campaign: '0000-0002' },
+      payload: { referral_code: '1234-5678', referral_campaign: '0000-0002' },
     }
     expect(handleReferral(pledge2, context)).rejects.toThrowError(
       'campaign is not active',

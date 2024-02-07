@@ -11,8 +11,8 @@ const {
  * @param {{
  *  id: string,
  *  payload: {
- *    ref_content: string | null | undefined
- *    ref_campaign: string | null | undefined
+ *    referral_code: string | null | undefined
+ *    referral_campaign: string | null | undefined
  *  }
  * }} pledge for which to handle a possible referral
  * @param {{ pgdb: object, mail: object, t: object }}  ctx object containing the pgdb, mail and translations instance
@@ -20,13 +20,13 @@ const {
 async function handleReferral(pledge, { pgdb, mail, t }) {
   const { payload } = pledge
   debug('payload', payload)
-  if (!payload?.ref_content || !payload?.ref_campaign) {
+  if (!payload?.referral_code || !payload?.referral_campaign) {
     debug('no content found for referred pledge', pledge?.id)
     return
   }
 
   const referrerId = (
-    await resolveUserByReferralCode(payload?.ref_content, pgdb)
+    await resolveUserByReferralCode(payload?.referral_code, pgdb)
   )?.id
   if (!referrerId) {
     debug('no referrer found for pledge', pledge?.id)
@@ -35,13 +35,13 @@ async function handleReferral(pledge, { pgdb, mail, t }) {
   debug('referrer:', referrerId)
 
   const campaign = await pgdb.public.campaigns.findOne({
-    id: payload?.ref_campaign,
+    id: payload?.referral_campaign,
   })
 
   debug('campaign', campaign)
 
   if (!campaign) {
-    debug('no campaign found in payload', payload?.ref_campaign)
+    debug('no campaign found in payload', payload?.referral_campaign)
     throw new Error('campaign not found')
   }
 
