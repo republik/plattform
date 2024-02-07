@@ -82,6 +82,10 @@ export async function GET(
     variables: { accessToken: params.code },
   })
 
+  const searchParams = request.nextUrl.searchParams
+  const showPortrait =
+    searchParams.get('show_portrait') === 'true' ? true : false
+
   const sender = data?.sender
 
   // Font
@@ -144,7 +148,7 @@ export async function GET(
           ich die Republik.`,
             `Du auch?`,
           ]}
-          portrait={sender?.portrait}
+          portrait={showPortrait ? sender?.portrait : null}
         />
 
         <div

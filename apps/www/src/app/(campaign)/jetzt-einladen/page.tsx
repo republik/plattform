@@ -1,46 +1,22 @@
 import { CampaignProgress } from '@app/app/(campaign)/components/campaign-progress'
-import { Typewriter } from '@app/app/(campaign)/components/typewriter'
 import { TypewriterContent } from '@app/app/(campaign)/components/typewriter-content'
+import {
+  ShareImageConfigurator,
+  ShareLink,
+} from '@app/app/(campaign)/jetzt-einladen/share-components'
 import Container from '@app/components/container'
-import { Share } from '@app/components/share/share'
-import { ShareImage } from '@app/components/share/share-image'
 import { UserInviteLinkInfoDocument } from '@app/graphql/republik-api/gql/graphql'
 import { getClient } from '@app/lib/apollo/client'
 import { css } from '@app/styled-system/css'
-import { hstack, vstack } from '@app/styled-system/patterns'
-import { IconDownload, IconShare } from '@republik/icons'
-import Image from 'next/image'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
-
-const shareButtonStyle = hstack({
-  gap: '2',
-  // color: 'text',
-  textStyle: 'sansSerifBold',
-  fontSize: 'm',
-  width: 'full',
-  justifyContent: 'center',
-
-  background: 'primary',
-  color: 'pageBackground',
-  px: '4',
-  py: '3',
-  borderRadius: '4px',
-  border: '2px solid token(colors.primary)',
-
-  cursor: 'pointer',
-  _hover: {
-    background: 'pageBackground',
-    color: 'primary',
-  },
-})
 
 export default async function Page() {
   const { data } = await getClient().query({
     query: UserInviteLinkInfoDocument,
   })
 
-  const url = `/jetzt/${data.me?.accessToken}`
+  const url = `${process.env.NEXT_PUBLIC_BASE_URL}/jetzt/${data.me?.accessToken}`
 
   if (!data.me) {
     return redirect('/anmelden')
@@ -96,99 +72,14 @@ export default async function Page() {
           wir Ihr eigenes um einen Monat.
         </p>
 
-        <div
-          className={css({
-            display: 'grid',
-            gap: '8',
-            gridTemplateColumns: `repeat(auto-fit, minmax(300px, auto))`,
-          })}
-        >
-          <div
-            className={css({
-              background: 'overlay',
-              borderRadius: '4px',
-              py: '3',
-              px: '4',
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              whiteSpace: 'nowrap',
-              fontWeight: 'medium',
-              fontSize: 'xl',
-              border: '2px solid token(colors.divider)',
-              // maxWidth: 300,
-            })}
-          >
-            {`${process.env.NEXT_PUBLIC_BASE_URL}${url}`}
-          </div>
-          <Share
-            url={`${process.env.NEXT_PUBLIC_BASE_URL}${url}`}
-            title='Link teilen'
-            emailSubject=''
-          >
-            <div className={shareButtonStyle}>
-              <IconShare size={20} />
-              Link teilen
-            </div>
-          </Share>
-        </div>
+        <ShareLink url={url} />
 
         <p>
           Ein Link ist Ihnen zu unpersönlich? Dann teilen Sie Ihr Kampagnen-Bild
           auf Social Media.
         </p>
 
-        <div
-          className={css({
-            display: 'grid',
-            gap: '8',
-            gridTemplateColumns: `repeat(auto-fit, minmax(300px, auto))`,
-          })}
-        >
-          <div
-            className={css({
-              background: 'overlay',
-              borderRadius: '4px',
-              p: '4',
-              border: '2px solid token(colors.divider)',
-              width: 'full',
-            })}
-          >
-            <Image
-              alt='Kampagnenbild'
-              src={`${url}/share-image`}
-              className={css({
-                width: '100%',
-                borderRadius: '2px',
-                // maxWidth: 300,
-              })}
-              width={1080}
-              height={1920}
-              unoptimized
-            />
-          </div>
-          <div
-            className={vstack({
-              gap: '4',
-              alignItems: 'stretch',
-            })}
-          >
-            <ShareImage imageSrc={`${url}/share-image`}>
-              <div className={shareButtonStyle}>
-                {/* <IconShare size={20} />  */}Bild teilen
-              </div>
-            </ShareImage>
-            <Link
-              className={css({ textDecoration: 'none' })}
-              href={`${url}/share-image`}
-              download={'share-image.png'}
-            >
-              <div className={shareButtonStyle}>
-                <IconDownload size={20} />
-                Bild herunterladen
-              </div>
-            </Link>
-          </div>
-        </div>
+        <ShareImageConfigurator url={url} />
       </div>
     </Container>
   )
