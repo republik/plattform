@@ -1,6 +1,6 @@
 import { PriceRewards } from '@app/app/(campaign)/campaign-receiver/[code]/angebot/price-rewards'
 import { PriceSliderWithState } from '@app/app/(campaign)/campaign-receiver/[code]/angebot/price-slider-with-state'
-import { ELIGIBLE_RECEIVER_MEMBERSHIPS } from '@app/app/(campaign)/config'
+import { UNELIGIBLE_RECEIVER_MEMBERSHIPS } from '@app/app/(campaign)/campaign-receiver/receiver-config'
 import { UserInviterProfileInfoDocument } from '@app/graphql/republik-api/gql/graphql'
 import { getClient } from '@app/lib/apollo/client'
 import { css } from '@app/styled-system/css'
@@ -19,7 +19,7 @@ export default async function Page({ params, searchParams }) {
 
   const { sender } = data
 
-  const isEligible = !ELIGIBLE_RECEIVER_MEMBERSHIPS.includes(
+  const isEligible = !UNELIGIBLE_RECEIVER_MEMBERSHIPS.includes(
     data.me?.activeMembership.type.name,
   )
 
