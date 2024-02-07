@@ -76,22 +76,31 @@ async function generateReferralCode(user, pgdb) {
 /**
  * Resolves a user based on the referralCode or public username.
  *
- * @param {string} referralCode
+ * @param {string} referralOrUsername
  * @param {PgDb} pgdb
  * @returns {Promise<UserRow?>} generated referral code for the user
  */
-async function resolveUserByReferralCode(referralCode, pgdb) {
-  const normalizedCode = normalizeReferralCode(referralCode)
+async function resolveUserByReferralCode(referralOrUsername, pgdb) {
+  let query
+  try {
+    const normalizedCode = normalizeReferralCode(referralOrUsername)
+    query = {
+      or: [{ referralCode: normalizedCode }, { username: referralOrUsername }],
+    }
+  } catch (e) {
+    console.log(
+      `REFERRAL_CODE invalid Base32 code ${referralOrUsername} checking only username`,
+    )
+    query = { username: referralOrUsername }
+  }
 
   try {
-    const user = await pgdb.public.users.findOne({
-      or: [{ referralCode: normalizedCode }, { username: referralCode }],
-    })
+    const user = await pgdb.public.users.findOne(query)
     return user
   } catch (e) {
     console.error(
       'Collision between referralCode and username, found more than one user:',
-      referralCode,
+      referralOrUsername,
     )
     return null
   }
@@ -112,7 +121,7 @@ function randomBase32String(length) {
  * @returns {string} crockford base32 encoded string
  */
 function normalizeReferralCode(code) {
-  // Reencode the referral code with Corockford-Base32 to get rid of "- O U L I U"
+  // Reencode the referral code with Corockford-Base32 to get rid of "- O U L I"
   return CrockfordBase32.encode(CrockfordBase32.decode(code))
 }
 

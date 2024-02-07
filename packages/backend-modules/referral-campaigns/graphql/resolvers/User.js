@@ -32,6 +32,6 @@ module.exports = {
     const referralCode =
       user.referralCode || (await generateReferralCode(user, pgdb))
 
-    return formatAsDashSeperated(referralCode, 3)
+    return formatAsDashSeperated(referralCode, 4)
   },
 }
