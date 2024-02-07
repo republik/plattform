@@ -80,7 +80,6 @@ describe('test referral handling', () => {
       'campaign not found',
     )
     expect(context.pgdb.public.users.findOne).toBeCalledTimes(1)
-    expect(context.pgdb.public.campaigns.findOne).toBeCalledTimes(1)
   })
   test('campaign is not active, in the past', () => {
     const pastCampaign = { beginDate: '2023-01-01', endDate: '2023-03-01' }

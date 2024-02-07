@@ -1,6 +1,6 @@
 const debug = require('debug')('referralCampaigns:lib:rewardsHandler')
 const dayjs = require('dayjs')
-const Promise = require('bluebird')
+const bluebird = require('bluebird')
 
 const {
   getPeriodEndingLast,
@@ -8,13 +8,15 @@ const {
 // TODO get from graphql enum type
 const REWARD_TYPES = ['bonus_month']
 
+/** @typedef {import("pogi").PgDb} PgDb */
+/** @typedef {{ userId: string, campaign: object, referralCount?: number }} FindRewardsInput */
+/** @typedef {{ userId: string, rewards: Array<any> }} ClaimRewardsInput */
+
 /**
  * Find rewards available to claim for a user and campaign, returns any rewards to claim or null.
- * @param {string} userId
- * @param {} campaign
- * @param {} referralCount
- * @param pgdb db instance
- * @returns {Promise<>} list of available rewards to claim
+ * @param {FindRewardsInput} input
+ * @param {PgDb} pgdb db instance
+ * @returns {Promise<any>} list of available rewards to claim
  */
 async function findClaimableRewards({ userId, campaign, referralCount }, pgdb) {
   if (!referralCount) {
@@ -51,13 +53,12 @@ async function findClaimableRewards({ userId, campaign, referralCount }, pgdb) {
 
 /**
  * Claim passed rewards for user
- * @param {string} userId
- * @param {} rewards
+ * @param {ClaimRewardsInput} claimRewardsInput
  * @param pgdb db instance
  * @returns {Promise<>}
  */
 async function claimRewards({ userId, rewards }, pgdb) {
-  return Promise.each(rewards, async (reward) => {
+  return bluebird.each(rewards, async (reward) => {
     // consent check would go here
 
     // check reward type
