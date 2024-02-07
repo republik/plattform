@@ -40,7 +40,7 @@ export default async function Page() {
     query: UserInviteLinkInfoDocument,
   })
 
-  const url = `/campaign-receiver/${data.me?.accessToken}`
+  const url = `/jetzt/${data.me?.accessToken}`
 
   if (!data.me) {
     return redirect('/anmelden')

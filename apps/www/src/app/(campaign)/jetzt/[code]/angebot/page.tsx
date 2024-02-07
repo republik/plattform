@@ -1,6 +1,6 @@
-import { PriceRewards } from '@app/app/(campaign)/campaign-receiver/[code]/angebot/price-rewards'
-import { PriceSliderWithState } from '@app/app/(campaign)/campaign-receiver/[code]/angebot/price-slider-with-state'
-import { UNELIGIBLE_RECEIVER_MEMBERSHIPS } from '@app/app/(campaign)/campaign-receiver/receiver-config'
+import { PriceRewards } from '@app/app/(campaign)/jetzt/[code]/angebot/price-rewards'
+import { PriceSliderWithState } from '@app/app/(campaign)/jetzt/[code]/angebot/price-slider-with-state'
+import { UNELIGIBLE_RECEIVER_MEMBERSHIPS } from '@app/app/(campaign)/jetzt/receiver-config'
 import { UserInviterProfileInfoDocument } from '@app/graphql/republik-api/gql/graphql'
 import { getClient } from '@app/lib/apollo/client'
 import { css } from '@app/styled-system/css'
@@ -24,7 +24,7 @@ export default async function Page({ params, searchParams }) {
   )
 
   if (!isEligible) {
-    return redirect('/campaign-sender')
+    return redirect('/jetzt-einladen')
   }
 
   // if (!sender) {
@@ -32,7 +32,7 @@ export default async function Page({ params, searchParams }) {
   // }
 
   if (sender && data.me && sender?.id === data.me?.id) {
-    return redirect('/campaign-sender')
+    return redirect('/jetzt-einladen')
   }
 
   return (

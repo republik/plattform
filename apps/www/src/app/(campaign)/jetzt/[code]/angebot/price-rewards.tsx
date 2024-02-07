@@ -1,6 +1,6 @@
 'use client'
 
-import { getSliderStepForValue } from '@app/app/(campaign)/campaign-receiver/[code]/angebot/price-slider/helpers'
+import { getSliderStepForValue } from '@app/app/(campaign)/jetzt/[code]/angebot/price-slider/helpers'
 import { css } from '@app/styled-system/css'
 import { useSearchParams } from 'next/navigation'
 

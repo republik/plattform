@@ -1,5 +1,5 @@
 import { TypewriterContent } from '@app/app/(campaign)/components/typewriter-content'
-import { UNELIGIBLE_RECEIVER_MEMBERSHIPS } from '@app/app/(campaign)/campaign-receiver/receiver-config'
+import { UNELIGIBLE_RECEIVER_MEMBERSHIPS } from '../receiver-config'
 import { UserInviterProfileInfoDocument } from '@app/graphql/republik-api/gql/graphql'
 import { getClient } from '@app/lib/apollo/client'
 import { css } from '@app/styled-system/css'
@@ -127,7 +127,7 @@ export default async function Page({ params }) {
   )
 
   if (!isEligible) {
-    return redirect('/campaign-sender')
+    return redirect('/jetzt-einladen')
   }
 
   // if (!sender) {
@@ -135,7 +135,7 @@ export default async function Page({ params }) {
   // }
 
   if (sender && data.me && sender?.id === data.me?.id) {
-    return redirect('/campaign-sender')
+    return redirect('/jetzt-einladen')
   }
 
   return (
