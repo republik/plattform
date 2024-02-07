@@ -41,9 +41,9 @@ export const CampaignProgress = async ({ goal = 1000 }: { goal?: number }) => {
         ></div>
       </div>
 
-      <span>
-        {reached}/{goal}
-      </span>
+      <div>
+        {reached} von {goal}
+      </div>
     </div>
   )
 }

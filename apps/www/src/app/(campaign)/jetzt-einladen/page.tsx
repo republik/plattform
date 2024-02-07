@@ -57,10 +57,6 @@ export default async function Page() {
           fontSize: 'xl',
         })}
       >
-        <h1 className={css({ textStyle: 'campaignHeading' })}>
-          <TypewriterContent />
-        </h1>
-
         {/* <p>
           {' '}
           <strong>
@@ -68,11 +64,21 @@ export default async function Page() {
             eingeladen 🎉
           </strong>
         </p> */}
+
+        <h1 className={css({ textStyle: 'campaignHeading' })}>
+          <TypewriterContent />
+        </h1>
+
         <p>
-          Lassen Sie uns diese Verantwortung auf mehrere Schultern verteilen:
-          Bis zum 31. März suchen wir 1’000 neue Unterstützer. Gemeinsam haben
-          wir es schon soweit geschafft:
+          Lassen Sie uns diese Verantwortung auf mehrere Schultern verteilen:{' '}
+          <Link href='#'>
+            Bis zum 31. März suchen wir 1’000 neue Unterstützer
+          </Link>
+          . Je mehr Menschen sich einsetzen, umso grösser ist die Grundlage für
+          das, weshalb wir alle hier sind: Unabhängiger Journalismus.
         </p>
+
+        <p>Der aktuelle Zwischenstand:</p>
 
         <div>
           <CampaignProgress />
@@ -81,11 +87,13 @@ export default async function Page() {
         <h2 className={css({ textStyle: 'campaignHeading' })}>
           Helfen Sie mit!
         </h2>
+
         <p>
-          Teilen Sie Ihren persönlichen Link, damit Ihre Bekannten den Weg in
-          die Verlagsetage finden. Das lohnt sich doppelt: Wenn jemand über
-          Ihren Link ein neues Abo abschliesst, verlängern wir Ihres um einen
-          Monat.
+          Teilen Sie Ihren Kampagnen-Link und erzählen Sie Ihren Bekannten,
+          warum Sie die Republik unterstützen. Wir bieten Neugierigen,
+          Interessierten und Unentschlossenen ein spezielles Einstiegsangebot.
+          Und wenn jemand über Ihren Link ein neues Abo abschliesst, verlängern
+          wir Ihr eigenes um einen Monat.
         </p>
 
         <div
@@ -125,9 +133,8 @@ export default async function Page() {
         </div>
 
         <p>
-          Oder teilen Sie Ihren persönliches Kampagnen-Bild auf Social Media.
-          Denn das ist super und blah blah blah, so machen Sie das nämlich:
-          Lalalala.
+          Ein Link ist Ihnen zu unpersönlich? Dann teilen Sie Ihr Kampagnen-Bild
+          auf Social Media.
         </p>
 
         <div
