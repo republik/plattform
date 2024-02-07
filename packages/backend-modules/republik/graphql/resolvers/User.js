@@ -90,7 +90,7 @@ module.exports = {
     }
     return null
   },
-  isEligibleForProfile: (user, args, { user: me, pgdb }) => {
+  isEligibleForProfile(user, args, { user: me, pgdb }) {
     if (Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter', 'author'])) {
       return Roles.userHasRole(user, 'author') || isEligible(user.id, pgdb)
     }
