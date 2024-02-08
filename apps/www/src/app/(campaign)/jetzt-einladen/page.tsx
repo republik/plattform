@@ -81,7 +81,10 @@ export default async function Page() {
           auf Social Media.
         </p>
 
-        <ShareImageConfigurator url={url} />
+        <ShareImageConfigurator
+          url={url}
+          userHasPublicProfile={data.me?.hasPublicProfile}
+        />
       </div>
     </Container>
   )

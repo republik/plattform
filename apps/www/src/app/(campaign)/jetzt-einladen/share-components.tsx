@@ -45,12 +45,19 @@ const ShareSection = ({ children }: { children: ReactNode }) => {
   )
 }
 
-export const ShareImageConfigurator = ({ url }: { url: string }) => {
+export const ShareImageConfigurator = ({
+  url,
+  userHasPublicProfile,
+}: {
+  url: string
+  userHasPublicProfile: boolean
+}) => {
   const [showPortrait, setShowPortrait] = useState(true)
 
-  const imageUrl = showPortrait
-    ? `${url}/share-image?show_portrait=true`
-    : `${url}/share-image`
+  const imageUrl =
+    showPortrait && userHasPublicProfile
+      ? `${url}/share-image?show_portrait=true`
+      : `${url}/share-image`
 
   return (
     <ShareSection>
@@ -97,15 +104,17 @@ export const ShareImageConfigurator = ({ url }: { url: string }) => {
           </div>
         </Link>
 
-        <label>
-          <input
-            type='checkbox'
-            value='show_portrait'
-            checked={showPortrait}
-            onChange={(e) => setShowPortrait(e.currentTarget.checked)}
-          ></input>
-          &nbsp;Profilbild anzeigen
-        </label>
+        {userHasPublicProfile && (
+          <label>
+            <input
+              type='checkbox'
+              value='show_portrait'
+              checked={showPortrait}
+              onChange={(e) => setShowPortrait(e.currentTarget.checked)}
+            ></input>
+            &nbsp;Profilbild anzeigen
+          </label>
+        )}
       </div>
     </ShareSection>
   )
