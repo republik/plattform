@@ -1,4 +1,4 @@
-query CampaignReferrals($id: ID) {
+query CampaignReferrals($id: ID!) {
   campaign(id: $id) {
     id
     referrals {
