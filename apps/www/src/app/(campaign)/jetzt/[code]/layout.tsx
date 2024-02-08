@@ -20,10 +20,9 @@ export default async function Layout({
   const { sender, me } = data
 
   // There is neither a sender nor is the referral code valid
-  const referralCodeIsValid = false // TODO: validate via query
+  const referralCodeIsValid = true // TODO: validate via query
   let pageContent = children
   if (!sender && !referralCodeIsValid) {
-    console.log('upsi')
     pageContent = (
       <>
         <p>Dieser Link ist leider ungültig.</p>

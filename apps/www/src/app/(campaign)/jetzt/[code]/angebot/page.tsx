@@ -3,15 +3,47 @@ import { css } from '@app/styled-system/css'
 import { Suspense } from 'react'
 import { PriceRewards } from './price-rewards'
 import { PriceSliderWithState } from './price-slider-with-state'
+import Link from 'next/link'
+import { getSliderStepForValue } from '@app/app/(campaign)/jetzt/[code]/angebot/price-slider/helpers'
 
 // Ensure that search params are available during SSR
 // https://nextjs.org/docs/app/api-reference/functions/use-search-params#dynamic-rendering
 export const dynamic = 'force-dynamic'
 
+const getCheckoutUrl = ({
+  price,
+  referralCode,
+}: {
+  price: number
+  referralCode: string
+}): string => {
+  const url = new URL('/angebote', process.env.NEXT_PUBLIC_BASE_URL)
+
+  url.searchParams.set('price', `${price * 100}`)
+  url.searchParams.set('referral_campaign', 'TODO')
+  url.searchParams.set('referral_code', referralCode)
+  // TODO: UTM params?
+
+  if (price >= 1000) {
+    url.searchParams.set('package', 'BENEFACTOR')
+  } else if (price >= 240) {
+    url.searchParams.set('package', 'ABO')
+  } else {
+    url.searchParams.set('package', 'YEARLY_ABO')
+    url.searchParams.set('userPrice', '1')
+  }
+
+  return url.pathname + url.search
+}
+
 export default async function Page({ params, searchParams }) {
   const data = await getInviteeData(params)
 
   const { sender } = data
+
+  const referralCode = sender?.referralCode ?? params.code
+
+  const price = getSliderStepForValue(+searchParams.price).value
 
   return (
     <>
@@ -55,7 +87,8 @@ export default async function Page({ params, searchParams }) {
         <Suspense>
           <PriceSliderWithState />
         </Suspense>
-        <button
+        <Link
+          href={getCheckoutUrl({ price, referralCode })}
           className={css({
             background: 'contrast',
             color: 'text.inverted',
@@ -71,8 +104,8 @@ export default async function Page({ params, searchParams }) {
             _hover: {},
           })}
         >
-          Für CHF {searchParams.price} abonnieren
-        </button>
+          Für CHF {price} abonnieren
+        </Link>
       </div>
     </>
   )
