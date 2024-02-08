@@ -31,6 +31,18 @@ export const getUtmParams = (query) => {
   return params
 }
 
+export const getCampaignReferralParams = (query) => {
+  let params = {}
+  Object.keys(query)
+    .filter((key) => key.startsWith('referral_'))
+    .sort((a, b) => ascending(a, b))
+    .forEach((key) => {
+      params[key] = query[key]
+    })
+
+  return params
+}
+
 const createPayloadStore = (storeKey, limit = 15) => {
   let payload = {}
   let isEnabled = true
@@ -98,5 +110,6 @@ export const getConversionPayload = (query = {}) => {
       : undefined,
     ...payload.get(),
     ...getUtmParams(query),
+    ...getCampaignReferralParams(query),
   }
 }
