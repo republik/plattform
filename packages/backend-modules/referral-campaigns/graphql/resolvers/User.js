@@ -4,29 +4,48 @@ const {
   formatAsDashSeperated,
 } = require('../../lib/referralCode')
 
+/** @typedef {{count: number}} ReferralCount */
+/** @typedef {import('@orbiting/backend-modules-types').GraphqlContext} GraphqlContext */
+
 module.exports = {
   /**
    * Load the user's referrals count in total or for a specific campaign.
    * @param {object} user
-   * @param {{ campaign: string | undefined | null}} args
-   * @param {{ pgdb: object, user: object}} ctx
-   * @returns {Promise<{count: number}>}
+   * @param {{ campaignSlug: string | undefined | null}} args
+   * @param {GraphqlContext} ctx
+   * @returns {Promise<ReferralCount?>}
    */
-  async referrals(user, args, ctx) {
+  async referrals(user, { campaignSlug = null }, ctx) {
     const { pgdb, user: me } = ctx
-    const { campaign: campaignId = null } = args
-
     Roles.ensureUserIsMeOrInRoles(user, me, ['admin', 'supporter'])
 
-    const referralsCount = await pgdb.public.referrals.count(
-      campaignId
-        ? { campaignId, referrerId: user.id }
-        : { referrerId: user.id },
-    )
+    try {
+      if (!campaignSlug) {
+        // if slug is missing query all user referrals
+        const referralsCount = await fetchReferralCountByReferrerId(
+          user.id,
+          ctx.pgdb,
+        )
 
-    return {
-      count: referralsCount || 0,
+        return {
+          count: referralsCount,
+        }
+      }
+
+      const campaign = await fetchCampaignBySlug(campaignSlug, pgdb)
+      if (!campaign) {
+        return null
+      }
+
+      const referralsCount = await pgdb.public.referrals.count({
+        campaignId: campaign.id,
+        referrerId: user.id,
+      })
+      return { count: referralsCount }
+    } catch (error) {
+      console.log(error)
     }
+    return null
   },
   referralCode: async (user, _, { pgdb }) => {
     const referralCode =
@@ -34,4 +53,16 @@ module.exports = {
 
     return formatAsDashSeperated(referralCode, 4)
   },
+}
+
+function fetchReferralCountByReferrerId(referrerId, pgdb) {
+  return pgdb.public.referrals.count({
+    referrerId: referrerId,
+  })
+}
+
+function fetchCampaignBySlug(slug, pgdb) {
+  return pgdb.public.campaigns.findOne({
+    slug: slug,
+  })
 }

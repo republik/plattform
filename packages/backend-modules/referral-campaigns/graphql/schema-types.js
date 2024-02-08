@@ -5,7 +5,7 @@ type Referrals {
 }
 
 extend type User {
-  referrals(campaign: ID): Referrals
+  referrals(campaignSlug: String): Referrals
   # A user specific referral code
   # the code is generated the first time that the referral code is resolved
   referralCode: String
@@ -13,6 +13,7 @@ extend type User {
 
 type Campaign {
   id: ID!
+  slug: String!
   name: String!
   description: String
   beginDate: Date!

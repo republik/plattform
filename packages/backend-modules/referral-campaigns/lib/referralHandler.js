@@ -123,14 +123,14 @@ async function handleReferral(pledge, { pgdb, mail, t }) {
  * @param {} user
  * @param {} campaign
  * @param pgdb db instance
- * @returns {Promise<number>|null} referral count
+ * @returns {Promise<number|null>} referral count
  */
 async function userReferralCount({ userId, campaign }, pgdb) {
   if (!userId || !campaign) {
     console.error(
       'Both user and campaign are necessary to find user referral count',
     )
-    return
+    return null
   }
   return await pgdb.public.referrals.count({
     referrerId: userId,
@@ -140,14 +140,14 @@ async function userReferralCount({ userId, campaign }, pgdb) {
 
 /**
  * Referral count for a campaign
- * @param {} campaign
+ * @param {string} campaignId
  * @param pgdb db instance
- * @returns {Promise<number>} referral count
+ * @returns {Promise<number|null>} referral count
  */
 async function campaignReferralCount(campaignId, pgdb) {
   if (!campaignId) {
     console.error('Missing campaign id, cannot get referral count')
-    return 0
+    return null
   }
   return await pgdb.public.referrals.count({
     campaignId: campaignId,
