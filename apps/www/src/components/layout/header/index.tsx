@@ -9,21 +9,7 @@ import { NavLink } from './nav-link'
 import { MeQuery } from '@app/graphql/republik-api/gql/graphql'
 import { ComponentPropsWithoutRef, useRef } from 'react'
 import { useScrollDirection } from '@app/lib/hooks/useScrollDirection'
-
-const Logo = () => {
-  return (
-    <svg
-      viewBox={process.env.NEXT_PUBLIC_SG_LOGO_VIEWBOX}
-      className={css({
-        width: 'full',
-        fill: 'text',
-        height: 'header.logoHeight',
-      })}
-    >
-      <path d={process.env.NEXT_PUBLIC_SG_LOGO_PATH}></path>
-    </svg>
-  )
-}
+import { Logo } from './logo'
 
 const getInitials = (name, email) =>
   (name && name.trim()

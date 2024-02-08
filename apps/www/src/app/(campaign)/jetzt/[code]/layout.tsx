@@ -1,5 +1,6 @@
 import Container from '@app/components/container'
 import { PageLayout } from '@app/components/layout'
+import { Logo } from '@app/components/layout/header/logo'
 import { CampaignInviteeDocument } from '@app/graphql/republik-api/gql/graphql'
 import { getClient } from '@app/lib/apollo/client'
 import { css } from '@app/styled-system/css'
@@ -48,10 +49,14 @@ export default async function Layout({
             className={css({
               minHeight: '100dvh',
               display: 'flex',
+              flexDirection: 'column',
               background: 'pageBackground',
               color: 'text',
             })}
           >
+            <div className={css({ py: '4' })}>
+              <Logo />
+            </div>
             <div
               className={css({
                 display: 'flex',
