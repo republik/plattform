@@ -1,7 +1,10 @@
 const t = require('./t')
 
+// roles
 const roles = ['editor']
+// SpecialRoles give permissions in Admin and Publikator
 const specialRoles = ['accountant', 'admin', 'editor', 'supporter']
+// Exposes all possible roles. The exact usecase has been lost to time :(.
 const exposableRoles = [
   'accomplice',
   'accountant',
@@ -14,6 +17,7 @@ const exposableRoles = [
   'producer',
   'supporter',
   'tester',
+  'author',
 ]
 
 const userHasRole = (user, role) => {
