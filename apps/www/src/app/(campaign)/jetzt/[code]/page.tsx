@@ -1,6 +1,5 @@
+import { getInviteeData } from '@app/app/(campaign)/campaign-data'
 import { TypewriterContent } from '@app/app/(campaign)/components/typewriter-content'
-import { CampaignInviteeDocument } from '@app/graphql/republik-api/gql/graphql'
-import { getClient } from '@app/lib/apollo/client'
 import { css } from '@app/styled-system/css'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -113,11 +112,7 @@ const CTA = ({ href }: { href: string }) => {
 }
 
 export default async function Page({ params }) {
-  const { data } = await getClient().query({
-    query: CampaignInviteeDocument,
-    variables: { referralCode: params.code },
-    errorPolicy: 'all',
-  })
+  const data = await getInviteeData(params)
 
   const { sender } = data
 

@@ -1,4 +1,7 @@
-query CampaignInvitee($referralCode: String!) {
+query CampaignInvitee(
+  # Either a username or referral code
+  $inviteCode: String! # TODO: add $referralCode: String!
+) {
   me {
     id
     activeMembership {
@@ -8,11 +11,17 @@ query CampaignInvitee($referralCode: String!) {
       }
     }
   }
-  sender: user(referralCode: $referralCode) {
+
+  # TODO
+  # validateReferralCode(code: $inviteCode)
+
+  # The sender is a user who will be resolved if they have a public profile and the invite code is their username
+  sender: user(slug: $inviteCode) {
     id
     firstName
     lastName
     portrait
     username
+    referralCode
   }
 }

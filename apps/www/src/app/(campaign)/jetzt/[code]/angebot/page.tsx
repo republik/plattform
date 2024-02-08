@@ -1,20 +1,15 @@
-import { PriceRewards } from '@app/app/(campaign)/jetzt/[code]/angebot/price-rewards'
-import { PriceSliderWithState } from '@app/app/(campaign)/jetzt/[code]/angebot/price-slider-with-state'
-import { CampaignInviteeDocument } from '@app/graphql/republik-api/gql/graphql'
-import { getClient } from '@app/lib/apollo/client'
+import { getInviteeData } from '@app/app/(campaign)/campaign-data'
 import { css } from '@app/styled-system/css'
 import { Suspense } from 'react'
+import { PriceRewards } from './price-rewards'
+import { PriceSliderWithState } from './price-slider-with-state'
 
 // Ensure that search params are available during SSR
 // https://nextjs.org/docs/app/api-reference/functions/use-search-params#dynamic-rendering
 export const dynamic = 'force-dynamic'
 
 export default async function Page({ params, searchParams }) {
-  const { data } = await getClient().query({
-    query: CampaignInviteeDocument,
-    variables: { referralCode: params.code },
-    errorPolicy: 'all',
-  })
+  const data = await getInviteeData(params)
 
   const { sender } = data
 

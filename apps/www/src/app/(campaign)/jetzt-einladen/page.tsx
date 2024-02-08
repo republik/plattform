@@ -1,3 +1,4 @@
+import { getSenderData } from '@app/app/(campaign)/campaign-data'
 import { CampaignProgress } from '@app/app/(campaign)/components/campaign-progress'
 import { TypewriterContent } from '@app/app/(campaign)/components/typewriter-content'
 import {
@@ -5,16 +6,12 @@ import {
   ShareLink,
 } from '@app/app/(campaign)/jetzt-einladen/share-components'
 import Container from '@app/components/container'
-import { CampaignSenderDocument } from '@app/graphql/republik-api/gql/graphql'
-import { getClient } from '@app/lib/apollo/client'
 import { css } from '@app/styled-system/css'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 
 export default async function Page() {
-  const { data } = await getClient().query({
-    query: CampaignSenderDocument,
-  })
+  const data = await getSenderData()
 
   const url = `${process.env.NEXT_PUBLIC_BASE_URL}/jetzt/${
     data.me?.hasPublicProfile ? data.me.username : data.me?.referralCode

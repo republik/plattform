@@ -1,7 +1,5 @@
-import { CampaignInviteeDocument } from '@app/graphql/republik-api/gql/graphql'
-import { getClient } from '@app/lib/apollo/client'
+import { getInviteeData } from '@app/app/(campaign)/campaign-data'
 import { ImageResponse } from 'next/og'
-import illu from './illu.png'
 
 const colors = {
   red: '#E50146',
@@ -77,11 +75,7 @@ export async function GET(
     params: { code: string }
   },
 ) {
-  const { data } = await getClient().query({
-    query: CampaignInviteeDocument,
-    variables: { referralCode: params.code },
-    errorPolicy: 'all',
-  })
+  const data = await getInviteeData(params)
 
   const searchParams = request.nextUrl.searchParams
   const showPortrait =
