@@ -3,6 +3,10 @@ const {
   generateReferralCode,
   formatAsDashSeperated,
 } = require('../../lib/referralCode')
+const {
+  fetchReferralCountByReferrerId,
+  fetchCampaignBySlug,
+} = require('../../lib/db-queries')
 
 /** @typedef {{count: number}} ReferralCount */
 /** @typedef {import('@orbiting/backend-modules-types').GraphqlContext} GraphqlContext */
@@ -53,16 +57,4 @@ module.exports = {
 
     return formatAsDashSeperated(referralCode, 4)
   },
-}
-
-function fetchReferralCountByReferrerId(referrerId, pgdb) {
-  return pgdb.public.referrals.count({
-    referrerId: referrerId,
-  })
-}
-
-function fetchCampaignBySlug(slug, pgdb) {
-  return pgdb.public.campaigns.findOne({
-    slug: slug,
-  })
 }

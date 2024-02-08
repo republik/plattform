@@ -5,12 +5,13 @@ const { resolveUserByReferralCode } = require('./referralCode')
 const {
   getPeriodEndingLast,
 } = require('@orbiting/backend-modules-republik-crowdfundings/lib/utils')
+const { fetchCampaignBySlug } = require('./db-queries')
 
 /**
  * Handle a referral for a pledge.
  * @param {{
  *  id: string,
- *  payload: {
+ *  payload?: {
  *    referral_code: string | null | undefined
  *    referral_campaign: string | null | undefined
  *  }
@@ -34,9 +35,7 @@ async function handleReferral(pledge, { pgdb, mail, t }) {
   }
   debug('referrer:', referrerId)
 
-  const campaign = await pgdb.public.campaigns.findOne({
-    id: payload?.referral_campaign,
-  })
+  const campaign = await fetchCampaignBySlug(payload.referral_campaign, pgdb)
 
   debug('campaign', campaign)
 
@@ -74,10 +73,11 @@ async function handleReferral(pledge, { pgdb, mail, t }) {
     return
   }
 
-  const referralCount = await userReferralCount(
-    { userId: referrerId, campaign },
-    pgdb,
-  )
+  const referralCount =
+    (await userReferralCount(
+      { userId: referrerId, campaignId: campaign.id },
+      pgdb,
+    )) || 0
   debug('user referral count: ', referralCount)
 
   const rewardsToClaim = await findClaimableRewards(
@@ -103,7 +103,8 @@ async function handleReferral(pledge, { pgdb, mail, t }) {
 
   const newEndDate = getPeriodEndingLast(claimedPeriods)
 
-  const totalCampaignReferrals = await campaignReferralCount(campaign.id, pgdb)
+  const totalCampaignReferrals =
+    (await campaignReferralCount(campaign.id, pgdb)) || 0
 
   // send transactional mail to referrer
   const referralMailData = {
@@ -120,21 +121,20 @@ async function handleReferral(pledge, { pgdb, mail, t }) {
 
 /**
  * Referral count for a specific user and campaign
- * @param {} user
- * @param {} campaign
+ * @param {{userId: string, campaignId: string}} input
  * @param pgdb db instance
  * @returns {Promise<number|null>} referral count
  */
-async function userReferralCount({ userId, campaign }, pgdb) {
-  if (!userId || !campaign) {
+async function userReferralCount({ userId, campaignId }, pgdb) {
+  if (!userId || !campaignId) {
     console.error(
-      'Both user and campaign are necessary to find user referral count',
+      'Both userId and campaignId are necessary to find user referral count',
     )
     return null
   }
   return await pgdb.public.referrals.count({
     referrerId: userId,
-    campaignId: campaign.id,
+    campaignId: campaignId,
   })
 }
 
