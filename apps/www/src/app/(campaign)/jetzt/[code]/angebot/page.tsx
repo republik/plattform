@@ -1,10 +1,8 @@
 import { PriceRewards } from '@app/app/(campaign)/jetzt/[code]/angebot/price-rewards'
 import { PriceSliderWithState } from '@app/app/(campaign)/jetzt/[code]/angebot/price-slider-with-state'
-import { UNELIGIBLE_RECEIVER_MEMBERSHIPS } from '@app/app/(campaign)/jetzt/receiver-config'
-import { UserInviterProfileInfoDocument } from '@app/graphql/republik-api/gql/graphql'
+import { CampaignInviteeDocument } from '@app/graphql/republik-api/gql/graphql'
 import { getClient } from '@app/lib/apollo/client'
 import { css } from '@app/styled-system/css'
-import { redirect } from 'next/navigation'
 import { Suspense } from 'react'
 
 // Ensure that search params are available during SSR
@@ -13,27 +11,12 @@ export const dynamic = 'force-dynamic'
 
 export default async function Page({ params, searchParams }) {
   const { data } = await getClient().query({
-    query: UserInviterProfileInfoDocument,
-    variables: { accessToken: params.code },
+    query: CampaignInviteeDocument,
+    variables: { referralCode: params.code },
+    errorPolicy: 'all',
   })
 
   const { sender } = data
-
-  const isEligible = !UNELIGIBLE_RECEIVER_MEMBERSHIPS.includes(
-    data.me?.activeMembership.type.name,
-  )
-
-  if (!isEligible) {
-    return redirect('/jetzt-einladen')
-  }
-
-  // if (!sender) {
-  //   return <div>code hat nicht gefunzt</div>
-  // }
-
-  if (sender && data.me && sender?.id === data.me?.id) {
-    return redirect('/jetzt-einladen')
-  }
 
   return (
     <>

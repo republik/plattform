@@ -1,4 +1,4 @@
-query UserInviterProfileInfo($accessToken: ID) {
+query CampaignInvitee($referralCode: String!) {
   me {
     id
     activeMembership {
@@ -8,12 +8,11 @@ query UserInviterProfileInfo($accessToken: ID) {
       }
     }
   }
-  sender: user(accessToken: $accessToken) {
+  sender: user(referralCode: $referralCode) {
     id
     firstName
     lastName
     portrait
     username
-    futureCampaignAboCount
   }
 }

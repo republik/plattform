@@ -1,11 +1,9 @@
 import { TypewriterContent } from '@app/app/(campaign)/components/typewriter-content'
-import { UNELIGIBLE_RECEIVER_MEMBERSHIPS } from '../receiver-config'
-import { UserInviterProfileInfoDocument } from '@app/graphql/republik-api/gql/graphql'
+import { CampaignInviteeDocument } from '@app/graphql/republik-api/gql/graphql'
 import { getClient } from '@app/lib/apollo/client'
 import { css } from '@app/styled-system/css'
 import Image from 'next/image'
 import Link from 'next/link'
-import { redirect } from 'next/navigation'
 import { ReactNode } from 'react'
 
 const SenderProfile = ({
@@ -116,27 +114,12 @@ const CTA = ({ href }: { href: string }) => {
 
 export default async function Page({ params }) {
   const { data } = await getClient().query({
-    query: UserInviterProfileInfoDocument,
-    variables: { accessToken: params.code },
+    query: CampaignInviteeDocument,
+    variables: { referralCode: params.code },
+    errorPolicy: 'all',
   })
 
   const { sender } = data
-
-  const isEligible = !UNELIGIBLE_RECEIVER_MEMBERSHIPS.includes(
-    data.me?.activeMembership.type.name,
-  )
-
-  if (!isEligible) {
-    return redirect('/jetzt-einladen')
-  }
-
-  // if (!sender) {
-  //   return <div>code hat nicht gefunzt</div>
-  // }
-
-  if (sender && data.me && sender?.id === data.me?.id) {
-    return redirect('/jetzt-einladen')
-  }
 
   return (
     <>
@@ -158,7 +141,7 @@ export default async function Page({ params }) {
           gap: '8',
         })}
       >
-        {sender ? (
+        {sender && (
           <div>
             <SenderProfile portrait={sender.portrait}>
               <>
@@ -169,19 +152,7 @@ export default async function Page({ params }) {
               </>
             </SenderProfile>
           </div>
-        ) : (
-          <p>Machen Sie mit bei der Republik, denn das ist super cool!</p>
         )}
-
-        {/* <p>
-          Die Republik ist ein unabhängiges, Leserinnen finanziertes
-          Onlinemagazin.
-        </p>
-        <p>
-          Mit Ihrer Unterstützung decken wir staatliche Überwachung auf, ordnen
-          das aktuelle Geschehen ein, fragen nach und führen den höflichsten
-          Debattenraum der Schweiz – und vieles mehr.
-        </p> */}
 
         <p>
           Die Republik ist ein digitales Magazin für Politik, Wirtschaft,

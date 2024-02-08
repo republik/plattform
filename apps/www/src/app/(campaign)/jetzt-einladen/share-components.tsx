@@ -37,7 +37,7 @@ const ShareSection = ({ children }: { children: ReactNode }) => {
       className={css({
         display: 'grid',
         gap: '8',
-        gridTemplateColumns: `repeat(auto-fit, minmax(300px, auto))`,
+        gridTemplateColumns: `repeat(auto-fit, minmax(300px, 1fr))`,
       })}
     >
       {children}

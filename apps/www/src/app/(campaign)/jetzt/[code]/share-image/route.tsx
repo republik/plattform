@@ -1,4 +1,4 @@
-import { UserInviterProfileInfoDocument } from '@app/graphql/republik-api/gql/graphql'
+import { CampaignInviteeDocument } from '@app/graphql/republik-api/gql/graphql'
 import { getClient } from '@app/lib/apollo/client'
 import { ImageResponse } from 'next/og'
 import illu from './illu.png'
@@ -78,8 +78,9 @@ export async function GET(
   },
 ) {
   const { data } = await getClient().query({
-    query: UserInviterProfileInfoDocument,
-    variables: { accessToken: params.code },
+    query: CampaignInviteeDocument,
+    variables: { referralCode: params.code },
+    errorPolicy: 'all',
   })
 
   const searchParams = request.nextUrl.searchParams

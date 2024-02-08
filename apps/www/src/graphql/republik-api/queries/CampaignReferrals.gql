@@ -1,0 +1,8 @@
+query CampaignReferrals($id: ID) {
+  campaign(id: $id) {
+    id
+    referrals {
+      count
+    }
+  }
+}

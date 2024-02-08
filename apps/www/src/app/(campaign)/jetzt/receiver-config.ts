@@ -1,5 +1,0 @@
-export const UNELIGIBLE_RECEIVER_MEMBERSHIPS = [
-  'ABO',
-  'YEARLY_ABO',
-  'BENEFACTOR_ABO',
-]

@@ -1,0 +1,11 @@
+query CampaignSender {
+  me {
+    id
+    hasPublicProfile
+    username
+    referralCode
+    referrals {
+      count
+    }
+  }
+}
