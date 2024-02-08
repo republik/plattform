@@ -15,8 +15,6 @@ export default async function Layout({
   children: React.ReactNode
   params: { code: string }
 }) {
-  let pageContent = children
-
   const { data } = await getClient().query({
     query: CampaignInviteeDocument,
     variables: { referralCode: params.code },
@@ -31,10 +29,6 @@ export default async function Layout({
 
   if (!isEligible) {
     return redirect('/jetzt-einladen')
-  }
-
-  if (!sender) {
-    pageContent = <div>Upsi! Dieser Link ist ungültig</div>
   }
 
   if (sender && data.me && sender?.id === data.me?.id) {
@@ -72,7 +66,7 @@ export default async function Layout({
                 // margin: 'auto',
               })}
             >
-              {pageContent}
+              {children}
             </div>
           </div>
         </Container>
