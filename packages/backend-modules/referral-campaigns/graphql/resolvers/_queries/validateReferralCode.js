@@ -9,8 +9,8 @@ const { resolveUserByReferralCode } = require('../../../lib/referralCode')
  * @param {GraphqlContext} ctx
  * @returns {Promise<Object?>}
  */
-module.exports = async (_, { code: referralOrUsername }, ctx) => {
-  const user = await resolveUserByReferralCode(referralOrUsername, ctx.pgdb)
+module.exports = async (_, { code }, ctx) => {
+  const user = await resolveUserByReferralCode(code, ctx.pgdb)
   if (user) {
     return true
   }
