@@ -76,34 +76,20 @@ async function generateReferralCode(user, pgdb) {
 /**
  * Resolves a user based on the referralCode or public username.
  *
- * @param {string} referralOrUsername
+ * @param {string} referral
  * @param {PgDb} pgdb
  * @returns {Promise<UserRow?>} generated referral code for the user
  */
-async function resolveUserByReferralCode(referralOrUsername, pgdb) {
-  let query
+async function resolveUserByReferralCode(referral, pgdb) {
   try {
-    const normalizedCode = normalizeReferralCode(referralOrUsername)
-    query = {
-      or: [{ referralCode: normalizedCode }, { username: referralOrUsername }],
-    }
+    const normalizedCode = normalizeReferralCode(referral)
+    return await pgdb.public.users.findOne({
+      referralCode: normalizedCode,
+    })
   } catch (e) {
-    console.log(
-      `REFERRAL_CODE invalid Base32 code ${referralOrUsername} checking only username`,
-    )
-    query = { username: referralOrUsername }
+    console.log(`REFERRAL_CODE invalid Base32 code ${referral}`)
   }
-
-  try {
-    const user = await pgdb.public.users.findOne(query)
-    return user
-  } catch (e) {
-    console.error(
-      'Collision between referralCode and username, found more than one user:',
-      referralOrUsername,
-    )
-    return null
-  }
+  return null
 }
 
 /**

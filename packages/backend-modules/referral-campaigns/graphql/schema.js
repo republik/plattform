@@ -5,6 +5,7 @@ schema {
 
 
 type queries {
-  campaign(id: ID!): Campaign
+  campaign(slug: String!): Campaign
+  validateReferralCode(code: String!): Boolean
 }
 `
