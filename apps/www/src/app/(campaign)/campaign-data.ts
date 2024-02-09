@@ -26,6 +26,8 @@ export async function getSenderData() {
   return data
 }
 
+export const CAMPAIGN_REFERRALS_GOAL = 1000
+
 export async function getCampaignReferralsData() {
   const { data } = await getClient().query({
     query: CampaignReferralsDocument,

@@ -1,12 +1,15 @@
-import { getCampaignReferralsData } from '@app/app/(campaign)/campaign-data'
+import {
+  CAMPAIGN_REFERRALS_GOAL,
+  getCampaignReferralsData,
+} from '@app/app/(campaign)/campaign-data'
 import { css } from '@app/styled-system/css'
 
-export const CampaignProgress = async ({ goal = 1000 }: { goal?: number }) => {
+export const CampaignProgress = async () => {
   const data = await getCampaignReferralsData()
 
   const reached = data.campaign?.referrals.count ?? 0
 
-  const goalReachedRatio = Math.min(1, reached / goal)
+  const goalReachedRatio = Math.min(1, reached / CAMPAIGN_REFERRALS_GOAL)
 
   return (
     <div
@@ -45,7 +48,7 @@ export const CampaignProgress = async ({ goal = 1000 }: { goal?: number }) => {
       </div>
 
       <div>
-        {reached} von {goal}
+        {reached} von {CAMPAIGN_REFERRALS_GOAL}
       </div>
     </div>
   )

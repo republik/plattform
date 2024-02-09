@@ -1,4 +1,7 @@
-import { getSenderData } from '@app/app/(campaign)/campaign-data'
+import {
+  CAMPAIGN_REFERRALS_GOAL,
+  getSenderData,
+} from '@app/app/(campaign)/campaign-data'
 import { CampaignProgress } from '@app/app/(campaign)/components/campaign-progress'
 import { TypewriterContent } from '@app/app/(campaign)/components/typewriter-content'
 import {
@@ -47,7 +50,8 @@ export default async function Page() {
         <p>
           Lassen Sie uns diese Verantwortung auf mehrere Schultern verteilen:{' '}
           <Link href='#'>
-            Bis zum 31. März suchen wir 1’000 neue Unterstützer
+            Bis zum 31. März suchen wir {CAMPAIGN_REFERRALS_GOAL} neue
+            Unterstützer
           </Link>
           . Je mehr Menschen sich einsetzen, umso grösser ist die Grundlage für
           das, weshalb wir alle hier sind: Unabhängiger Journalismus.
