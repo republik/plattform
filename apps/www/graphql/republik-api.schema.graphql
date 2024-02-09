@@ -347,6 +347,7 @@ type Campaign {
   id: ID!
   name: String!
   referrals: Referrals!
+  slug: String!
 }
 
 type Cancellation {
@@ -2683,7 +2684,7 @@ type User {
   prolongBeforeDate: DateTime
   publicUrl: String
   referralCode: String
-  referrals(campaign: ID): Referrals
+  referrals(campaignSlug: String): Referrals
   roles: [String!]!
   sequenceNumber: Int
   sessions: [Session!]
@@ -3090,7 +3091,7 @@ type queries {
   accessGrantStats: AccessGrantStats!
   activeDiscussions(first: Int, lastDays: Int!): [CommentAggregation!]!
   adminUsers(limit: Int!, offset: Int, search: String): Users!
-  campaign(id: ID!): Campaign
+  campaign(slug: String!): Campaign
   cancellationCategories(showMore: Boolean): [CancellationCategory!]!
   checkUsername(username: String): Boolean
   collectionsStats: CollectionsStats!
@@ -3169,8 +3170,9 @@ type queries {
   ): StatementUserConnection!
   unauthorizedSession(email: String!, token: SignInToken!): UnauthorizedSession
   updates: [Update!]!
-  user(accessToken: ID, id: ID, referralCode: String, slug: String): User
+  user(accessToken: ID, id: ID, slug: String): User
   users(hasPublicProfile: Boolean, isListed: Boolean, role: String, search: String!): [User]!
+  validateReferralCode(code: String!): Boolean
   voting(slug: String!): Voting
   votings: [Voting!]!
 }

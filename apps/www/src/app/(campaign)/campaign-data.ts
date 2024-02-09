@@ -1,13 +1,16 @@
 import {
-  CampaignInviteeDocument,
+  CampaignInviteDocument,
+  CampaignReferralsDocument,
   CampaignSenderDocument,
 } from '@app/graphql/republik-api/gql/graphql'
 import { getClient } from '@app/lib/apollo/client'
 
+export const CAMPAIGN_SLUG = 'spring-2024'
+
 export async function getInviteeData({ code }: { code: string }) {
   const { data } = await getClient().query({
-    query: CampaignInviteeDocument,
-    variables: { inviteCode: code },
+    query: CampaignInviteDocument,
+    variables: { code },
     errorPolicy: 'all',
   })
 
@@ -17,11 +20,17 @@ export async function getInviteeData({ code }: { code: string }) {
 export async function getSenderData() {
   const { data } = await getClient().query({
     query: CampaignSenderDocument,
+    variables: { campaignSlug: CAMPAIGN_SLUG },
   })
 
   return data
 }
 
-// TODO
-// export async function getCampaignReferralsData() {
-// }
+export async function getCampaignReferralsData() {
+  const { data } = await getClient().query({
+    query: CampaignReferralsDocument,
+    variables: { campaignSlug: CAMPAIGN_SLUG },
+  })
+
+  return data
+}

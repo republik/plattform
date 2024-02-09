@@ -1,10 +1,10 @@
-query CampaignSender {
+query CampaignSender($campaignSlug: String!) {
   me {
     id
     hasPublicProfile
     username
     referralCode
-    referrals {
+    referrals(campaignSlug: $campaignSlug) {
       count
     }
   }

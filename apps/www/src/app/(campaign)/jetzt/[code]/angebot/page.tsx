@@ -1,10 +1,13 @@
-import { getInviteeData } from '@app/app/(campaign)/campaign-data'
+import {
+  CAMPAIGN_SLUG,
+  getInviteeData,
+} from '@app/app/(campaign)/campaign-data'
+import { getSliderStepForValue } from '@app/app/(campaign)/jetzt/[code]/angebot/price-slider/helpers'
 import { css } from '@app/styled-system/css'
+import Link from 'next/link'
 import { Suspense } from 'react'
 import { PriceRewards } from './price-rewards'
 import { PriceSliderWithState } from './price-slider-with-state'
-import Link from 'next/link'
-import { getSliderStepForValue } from '@app/app/(campaign)/jetzt/[code]/angebot/price-slider/helpers'
 
 // Ensure that search params are available during SSR
 // https://nextjs.org/docs/app/api-reference/functions/use-search-params#dynamic-rendering
@@ -20,7 +23,7 @@ const getCheckoutUrl = ({
   const url = new URL('/angebote', process.env.NEXT_PUBLIC_BASE_URL)
 
   url.searchParams.set('price', `${price * 100}`)
-  url.searchParams.set('referral_campaign', 'TODO')
+  url.searchParams.set('referral_campaign', CAMPAIGN_SLUG)
   url.searchParams.set('referral_code', referralCode)
   // TODO: UTM params?
 

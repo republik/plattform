@@ -17,12 +17,11 @@ export default async function Layout({
 }) {
   const data = await getInviteeData(params)
 
-  const { sender, me } = data
+  const { sender, me, validateReferralCode } = data
 
   // There is neither a sender nor is the referral code valid
-  const referralCodeIsValid = true // TODO: validate via query
   let pageContent = children
-  if (!sender && !referralCodeIsValid) {
+  if (!sender && !validateReferralCode) {
     pageContent = (
       <>
         <p>Dieser Link ist leider ungültig.</p>

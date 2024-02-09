@@ -1,5 +1,5 @@
-query CampaignReferrals($id: ID!) {
-  campaign(id: $id) {
+query CampaignReferrals($campaignSlug: String!) {
+  campaign(slug: $campaignSlug) {
     id
     referrals {
       count
