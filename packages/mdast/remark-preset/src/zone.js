@@ -72,12 +72,13 @@ export const expand =
         return parent
       }
 
-      parent.children.forEach((child) => {
-        const expanded = expandZone(child)
-        return test(child) ? mutate(expanded) : expanded
-      })
-
-      return parent
+      return {
+        ...parent,
+        children: parent.children.reduce((children, child) => {
+          const expanded = expandZone(child)
+          return children.concat(test(child) ? mutate(expanded) : expanded)
+        }, []),
+      }
     }
     return expandZone
   }
