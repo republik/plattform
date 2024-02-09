@@ -19,7 +19,6 @@ type queries {
     id: ID
     slug: String
     accessToken: ID
-    referralCode: String
   ): User
 
   # search for users
