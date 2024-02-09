@@ -1,7 +1,14 @@
 import { Typewriter } from './typewriter'
 import { css } from '@app/styled-system/css'
 
-const words = ['Die Republik', 'Unabhängigen Journalismus', 'Gute Witze']
+const words = [
+  'Die Republik',
+  'Unabhängigen Journalismus',
+  'Eine höfliche Streitkultur',
+  'Vertrauenswürdige Nachrichten',
+  'Kritische Fragen',
+  'Die vierte Gewalt',
+]
 
 const longestWord = words.reduce((longest, word) => {
   return word.length > longest.length ? word : longest
