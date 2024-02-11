@@ -1,18 +1,21 @@
-Bonjour {{name}},
+Bonjour {{name}}
 
-Vous pouvez déduire vos dons à Lobbywatch.ch de vos impôts. Nous vous envoyons
-volontiers en annexe une attestation de don pour l'année écoulée.
+Vous avez soutenu Lobbywatch l'année dernière - un grand merci !
 
-Un grand merci pour votre soutien !
+Vous pouvez déduire vos dons de vos impôts. Veuillez trouvez ci-joint une
+attestation de don pour l'année écoulée.
 
-Nous soutiendrez-vous également lors des élections de 2023 ?
+Nous soutiendrez-vous également en 2024 ?
 
-Les élections fédérales du 22 octobre représentent pour nous beaucoup de
-travail. Pour que vous puissiez, en tant qu'électrice ou électeur, faire un
-choix éclairé et savoir, après les élections, qui défend les intérêts de qui au
-Palais fédéral, nous devons investir beaucoup de temps et d'énergie dans les
-recherches sur les mandats de lobbying. Nous serions heureux que vous nous
-aidiez cette année encore à rendre la politique suisse plus transparente.
+Après les élections nationales, l'équipe de Lobbywatch aura du pain sur la
+planche. Nous avons déjà analysé la plupart des nouveaux parlementaires et leurs
+liens avec des organisations, des associations et des entreprises. Notre
+expérience montre qu'une fois que les nouveaux parlementaires sont bien
+acclimaté au parlement,les organisations de lobbying commencent à les recruter
+pour des postes dans les comités et les conseils d'administration. Nous ne
+manquerons donc pas de travail cette année non plus. Nous vous remercions donc
+de bien vouloir nous aider cette année encore à rendre la politique suisse plus
+transparente.
 
 {{#if prolong_token}} Verser la cotisation annuelle de membre
 {{frontend_base_url}}/fr/patronage?package=PROLONG&token={{prolong_token}}
@@ -20,8 +23,8 @@ aidiez cette année encore à rendre la politique suisse plus transparente.
 {{frontend_base_url}}/fr/patronage?package=DONATE {{/if}}
 
 Avec nos meilleures salutations
-Deborah Wanner
-Administratorin Lobbywatch.ch
+Thomas Angeli et Otto Hostettler
+Co-présidents
 
 
 Lobbywatch.ch
