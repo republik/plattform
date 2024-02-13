@@ -6069,6 +6069,14 @@
   dependencies:
     tslib "^2.3.0"
 
+"@xstate/react@^4.0.3":
+  version "4.0.3"
+  resolved "https://registry.yarnpkg.com/@xstate/react/-/react-4.0.3.tgz#038382f28ae050c6e6611cf4d072e542608f6a0c"
+  integrity sha512-yGxW6WljN04tyKxHrmejVdnKeRt26rzqNmJFYXtMZSUTDI98xFToI18eSoW2tSoyGRH/3Bmb8kUsa3l9Mr2E4Q==
+  dependencies:
+    use-isomorphic-layout-effect "^1.1.2"
+    use-sync-external-store "^1.0.0"
+
 "@zeit/fetch-retry@^5.0.0":
   version "5.0.1"
   resolved "https://registry.yarnpkg.com/@zeit/fetch-retry/-/fetch-retry-5.0.1.tgz#5d9d486d5c523fda6622050d6e054a0b5562ce60"
@@ -22655,7 +22663,7 @@ use-deep-compare-effect@^1.6.1:
     "@babel/runtime" "^7.12.5"
     dequal "^2.0.2"
 
-use-isomorphic-layout-effect@^1.1.1:
+use-isomorphic-layout-effect@^1.1.1, use-isomorphic-layout-effect@^1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/use-isomorphic-layout-effect/-/use-isomorphic-layout-effect-1.1.2.tgz#497cefb13d863d687b08477d9e5a164ad8c1a6fb"
   integrity sha512-49L8yCO3iGT/ZF9QttjwLF/ZD9Iwto5LnH5LmEdk/6cFmXddqi2ulF0edxTwjj+7mqvpVVGQWvbXZdn32wRSHA==
@@ -22686,6 +22694,11 @@ use-sidecar@^1.1.2:
   dependencies:
     detect-node-es "^1.1.0"
     tslib "^2.0.0"
+
+use-sync-external-store@^1.0.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/use-sync-external-store/-/use-sync-external-store-1.2.0.tgz#7dbefd6ef3fe4e767a0cf5d7287aacfb5846928a"
+  integrity sha512-eEgnFxGQ1Ife9bzYs6VLi8/4X6CObHMw9Qr9tPY43iKwsPw8xE8+EFsf/2cFZ5S3esXgpWgtSCtLNS41F+sKPA==
 
 useragent@^2.3.0:
   version "2.3.0"
@@ -23410,6 +23423,11 @@ xss@^1.0.8:
   dependencies:
     commander "^2.20.3"
     cssfilter "0.0.10"
+
+xstate@^5.6.2:
+  version "5.6.2"
+  resolved "https://registry.yarnpkg.com/xstate/-/xstate-5.6.2.tgz#a0662e7543867449f5c4571ee5feedd42679581a"
+  integrity sha512-cXYrnP5vrlY4PFkS1l8uP+LY9XAX/7rdVQlWfqfi/gQJEJgCX5AYk5UI/QQfewQ2mrPREBVTmy4QeMlSubepxw==
 
 xtend@^4.0.0, xtend@^4.0.1, xtend@~4.0.1:
   version "4.0.2"

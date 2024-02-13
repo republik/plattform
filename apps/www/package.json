@@ -91,6 +91,7 @@
     "@stripe/react-stripe-js": "^1.7.0",
     "@use-it/event-listener": "^0.1.7",
     "@vercel/og": "^0.5.18",
+    "@xstate/react": "^4.0.3",
     "apollo-fetch": "^0.7.0",
     "auto-text-size": "0.2.1",
     "autoprefixer": "^10.4.16",
@@ -156,6 +157,7 @@
     "useragent": "^2.3.0",
     "uuid": "^9.0.1",
     "validator": "^13.7.0",
+    "xstate": "^5.6.2",
     "zod": "3.22.2"
   }
 }
