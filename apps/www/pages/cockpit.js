@@ -534,6 +534,21 @@ const Page = ({
 
           return (
             <>
+              <Interaction.Headline style={{ marginBottom: 20 }}>
+                Das Cockpit zum Stand unseres Unternehmens
+              </Interaction.Headline>
+              <P>
+                Die Aufgabe der Republik ist, brauchbaren Journalismus zu
+                machen. Einen, der die Köpfe klarer, das Handeln mutiger, die
+                Entscheidungen klüger macht. Und der das Gemeinsame stärkt: die
+                Freiheit, den Rechtsstaat, die Demokratie.
+              </P>
+              <P>
+                Die Grundlage dafür ist ein Geschäftsmodell für werbefreien,
+                unabhängigen, leserfinanzierten Journalismus. Um am Markt zu
+                bestehen und einen entscheidenden Unterschied im Mediensystem zu
+                machen, braucht die Republik eine starke Community.
+              </P>
               <div style={{ marginBottom: 60 }}>
                 <RawStatus
                   t={t}
@@ -558,22 +573,21 @@ const Page = ({
                   }
                 />
               </div>
-              <Interaction.Headline style={{ marginBottom: 20 }}>
-                Das Cockpit zum Stand unseres Unternehmens
-              </Interaction.Headline>
               <P>
-                Die Aufgabe der Republik ist, brauchbaren Journalismus zu
-                machen. Einen, der die Köpfe klarer, das Handeln mutiger, die
-                Entscheidungen klüger macht. Und der das Gemeinsame stärkt: die
-                Freiheit, den Rechtsstaat, die Demokratie.
+                TODO: An dieser Stelle machen wir, anders als in unserer
+                finanziellen Planung, keinen Unterschied zwischen weniger und
+                mehr zahlenden Verlegerinnen. Jeder Verleger, egal wie viel er
+                zahlen kann, unterstützt uns und leistet einen Beitrag. Es gibt
+                Menschen in unserer Community, die sich eine
+                Jahresmitgliedschaft nicht leisten können und deshalb einen
+                vergünstigten Preis zahlen; es gibt aber auch Mitglieder, die
+                als Gönner mehr bezahlen. Im Frühjahr 2023 kamen zudem Menschen
+                an Bord, die zum 5-Jahres-Jubiläum ein 12-Monats-Abo zu einem
+                frei wählbaren Preis abschliessen konnten. Zwischen Mitte
+                Februar und Anfang April 2024 laufen diese Abonnements aus, was
+                wir hier ebenfalls abbilden. Hier erfahren Sie mehr über unsere
+                Kampagnen. (LINK META)
               </P>
-              <P>
-                Die Grundlage dafür ist ein Geschäftsmodell für werbefreien,
-                unabhängigen, leserfinanzierten Journalismus. Um am Markt zu
-                bestehen und einen entscheidenden Unterschied im Mediensystem zu
-                machen, braucht die Republik eine starke Community.
-              </P>
-
               <div style={{ marginTop: 20 }}>
                 <ChartTitle>
                   Aktuell {countFormat(activeCount)} Mitglieder
@@ -668,6 +682,11 @@ const Page = ({
                   Datenstand: {formatDateTime(new Date(updatedAt))}
                 </ChartLegend>
               </div>
+              <P>
+                TODO: Bei der Zahl der Abgänge ist zu berücksichtigen, dass die
+                12-Monats-Abos aus der 5-Jahres-Jubiläums-Kampagne das Bild
+                verzerren. Diese vergünstigten Abos laufen im Frühjahr 2024 aus.
+              </P>
               <H2>
                 {countFormat(lastSeen)} Verlegerinnen sind monatlich&nbsp;aktiv
               </H2>
