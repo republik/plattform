@@ -26,7 +26,7 @@ async function findClaimableRewards({ userId, campaign, referralCount }, pgdb) {
   // get relevant campaign rewards
   const rewards = await pgdb.public.campaignRewards.find({
     campaignId: campaign.id,
-    '"referralCountThreshhold"<=': referralCount,
+    '"referralCountThreshold"<=': referralCount,
   })
 
   if (!rewards || !rewards.length) {
