@@ -7,13 +7,17 @@ const { resolveUserByReferralCode } = require('../../../lib/referralCode')
  * @param {object} _
  * @param {{ code: string }} args
  * @param {GraphqlContext} ctx
- * @returns {Promise<Object?>}
+ * @returns {Promise<"OK" | "NOT_FOUND" | "IS_OWN">}
  */
-module.exports = async (_, { code }, ctx) => {
-  const user = await resolveUserByReferralCode(code, ctx.pgdb)
-  if (user) {
-    return true
+module.exports = async (_, { code }, { user: me, pgdb }) => {
+  const user = await resolveUserByReferralCode(code, pgdb)
+  if (!user) {
+    return 'NOT_FOUND'
   }
 
-  return false
+  if (me && me.id === user.id) {
+    return 'IS_OWN'
+  }
+
+  return 'OK'
 }

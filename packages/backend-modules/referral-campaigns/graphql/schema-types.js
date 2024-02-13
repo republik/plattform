@@ -20,4 +20,11 @@ type Campaign {
   endDate: Date!
   referrals: Referrals!
 }
+
+enum ReferralCodeValidationResult {
+  OK
+  NOT_FOUND
+  IS_OWN
+}
+
 `

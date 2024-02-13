@@ -6,6 +6,6 @@ schema {
 
 type queries {
   campaign(slug: String!): Campaign
-  validateReferralCode(code: String!): Boolean
+  validateReferralCode(code: String!): ReferralCodeValidationResult
 }
 `
