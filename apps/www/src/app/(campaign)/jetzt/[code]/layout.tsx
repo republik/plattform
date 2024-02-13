@@ -2,6 +2,7 @@ import { getInviteeData } from '@app/app/(campaign)/campaign-data'
 import Container from '@app/components/container'
 import { PageLayout } from '@app/components/layout'
 import { Logo } from '@app/components/layout/header/logo'
+import { ReferralCodeValidationResult } from '@app/graphql/republik-api/gql/graphql'
 import { css } from '@app/styled-system/css'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
@@ -21,7 +22,10 @@ export default async function Layout({
 
   // There is neither a sender nor is the referral code valid
   let pageContent = children
-  if (!sender && !validateReferralCode) {
+  if (
+    !sender &&
+    validateReferralCode === ReferralCodeValidationResult.NotFound
+  ) {
     pageContent = (
       <>
         <p>Dieser Link ist leider ungültig.</p>
@@ -54,7 +58,10 @@ export default async function Layout({
   }
 
   // Sender and user are the same person
-  if (sender && me && sender.id === me.id) {
+  if (
+    validateReferralCode === ReferralCodeValidationResult.IsOwn ||
+    params.code === me?.slug
+  ) {
     return redirect('/jetzt-einladen')
   }
 

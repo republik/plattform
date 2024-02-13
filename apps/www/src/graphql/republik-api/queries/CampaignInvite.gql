@@ -4,6 +4,7 @@ query CampaignInvite(
 ) {
   me {
     id
+    slug
     activeMembership {
       type {
         id

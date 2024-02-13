@@ -2095,6 +2095,12 @@ type RedirectionPageInfo {
   startCursor: String
 }
 
+enum ReferralCodeValidationResult {
+  IS_OWN
+  NOT_FOUND
+  OK
+}
+
 type Referrals {
   count: Int!
 }
@@ -3172,7 +3178,7 @@ type queries {
   updates: [Update!]!
   user(accessToken: ID, id: ID, slug: String): User
   users(hasPublicProfile: Boolean, isListed: Boolean, role: String, search: String!): [User]!
-  validateReferralCode(code: String!): Boolean
+  validateReferralCode(code: String!): ReferralCodeValidationResult
   voting(slug: String!): Voting
   votings: [Voting!]!
 }
