@@ -1,136 +1,41 @@
 Guten Tag
 
-{{#if has_one_slot_filled}}
+Vor kurzem hat {{receiver}} über Ihren persönlichen Link ein Abo bei der
+Republik gekauft. Unser Journalismus wird also neu von einer zusätzlichen Person
+unterstützt.
 
-Vor kurzem hat {{receiver}} ein Abo bei der Republik gekauft, zu einem selbst
-gewählten Preis. Damit ist die Republik-Verlagsetage um ein (sicherlich
-hervorragendes) Mitglied gewachsen.
+Möglich gemacht haben das: Sie. Vielen Dank, dass Sie sich für die Republik
+einsetzen.
 
-Möglich gemacht haben das: Sie. Vielen Dank, dass Sie Verstärkung geholt haben!
+{{#if no_active_membership}}
 
-Zwar sagt Ambrose Bierce in seinem «Wörterbuch des Teufels»: «Einmal: oft
-genug.» Doch wir halten es diesen Frühling lieber mit Cicero, der schrieb: «Aus
-kleinem Anfang entspringen alle Dinge.»
+Zum Dank würden wir Ihnen gerne einen Monat Republik schenken. Leider ist in der
+Zwischenzeit aber Ihre Mitgliedschaft ausgelaufen. Kommen Sie wieder an Bord und
+melden Sie sich via kontakt@republik.ch bei uns!
 
-Sie haben noch {{count_open_slots}} Zugänge zu Mitstreiterinnen-Abos zu
-vergeben. Für ein Magazin, das sich über seine Leserinnen finanziert, kommt es
-auf jedes neue Mitglied an Bord an.
+{{else if has_monthly_abo}}
 
-Deshalb: Laden Sie gerne auch Ihre Nachbarin, Ihren Kindergartenfreund, Ihre
-Arbeits- oder Vereinskollegen ein. Den persönlichen Link finden Sie auf dieser
-Seite {{link_sender_page}} .
+Zum Dank schreiben wir Ihnen nach Ende der Kampagne CHF 20 gut auf einen
+künftigen Republik-Monat. Für ein Magazin, das sich über seine Leserinnen
+finanziert, kommt es auf jede einzelne Person an. Deshalb: Teilen Sie Ihren Link
+gerne auch mit weiteren Bekannten. Sie finden ihn auf Ihrer persönlichen
+Übersichtsseite {{link_sender_page}} .
 
-Merci für Ihre Zeit, Ihre Hilfe, Ihre Überzeugungskraft.
+{{else}}
 
-Und als Hinweis für alle, die Köpfe und Dinge sammeln: Sobald Sie alle 5
-möglichen Mitstreiterinnen an Bord geholt haben, schicken wir Ihnen als
-tragbaren Orden die dafür höchst praktische Republik-Jubiläums-Tasche zu.
-
-Herzlich
-
-{{else if has_two_slots_filled}}
-
-Und schon wieder hat jemand über Ihren Angebotslink ein Mitstreiter-Abo bei der
-Republik gekauft, nämlich {{receiver}}!
-
-Zwei ist nicht nur die kleinste und einzig gerade Primzahl – sondern auch die
-Zahl der Arme, der Arche, der Liebe.
-
-Wobei, manchmal ist zwei auch zu wenig. Im Fall der Arme etwa bei den
-Tintenfischen, im Fall der Liebe im französischen Film, und im Fall der Arche
-sang Tom Combo einmal zu Recht: «Bakterien waren auf der Arche Noah – und es
-waren mehr als zwei.»
-
-Was im Fall der Republik heisst: Sie haben noch {{count_open_slots}} Zugänge zu
-vergeben.
-
-Vielleicht wäre das etwas für Ihren Coiffeur, Ihre Skilehrerin, Ihre Yoga- oder
-Pokerrunde, Ihren Hausarzt?
-
-Finden Sie es heraus {{link_sender_page}} , indem Sie ihnen einen Link zum
-Angebot schicken.
-
-Unabhängiger Journalismus hat eine Zukunft, dank Ihnen.
-
-Mit herzlichen Grüssen
-
-{{else if has_three_slots_filled}}
-
-Danke! Schon drei Mitstreitende!
-
-Vor kurzem hat nämlich {{receiver}} ein Abo bei der Republik gekauft.
-
-Zum Dank für Ihren Einsatz hier ein sehr brauchbarer Trick, wie Sie sich zum
-Beispiel in Redaktionskonferenzen etwas Platz verschaffen. Beginnen Sie Ihr
-Statement – egal ob Sie schon eine Idee haben oder nicht – damit, dass Sie
-sagen: «Dazu fallen mir drei Dinge ein …»
-
-Dann haben Sie den Raum, sich um Kopf und Kragen zu reden.
-
-Nun, Sie scheinen solche Tipps nicht nötig zu haben. Offensichtlich hören
-mindestens drei Leute auf Sie.
-
-Falls Sie den Ehrgeiz haben, aus drei gleich fünf zu machen: Sie haben noch
-{{count_open_slots}} Zugänge zu Mitstreiterinnen-Abos zu vergeben. Hier finden
-Sie Ihren persönlichen Link zum Weitergeben: {{link_sender_page}} .
-
-Danke für Ihre Überzeugungskraft und herzliche Grüsse
-
-{{else if has_four_slots_filled}}
-
-Respekt!
-
-Seit Anfang haben Sie die Republik-Community schon vierfach verstärkt. Zuletzt
-stiess {{receiver}} dazu. Damit haben Sie so gut wie alle Ihre Zugänge vergeben.
-
-Fast.
-
-Ein letzter ist noch übrig.
-
-Der letzte Schritt vor den perfekten 5.
-
-Und wir fragen uns: Wer ist der Kandidat, die Kandidatin für Ihr letztes
-Mitstreiterinnen-Abo? Zur Erinnerung: Hier finden Sie Ihren persönlichen Link
-zum Weitergeben: {{link_sender_page}} Die Vollendung Ihrer Mission würde uns
-umso mehr freuen, da wir Ihnen dann endlich – als tragbaren Orden – das perfekte
-Sammler- und Sammlerinnenstück zuschicken könnten: die
-Republik-Jubiläums-Tasche.
-
-Mit Verbeugung
-
-{{else if has_five_slots_filled}}
-
-Herzliche Gratulation: Sie haben 5 Mitstreiterinnen an Bord geholt!
-{{link_sender_page}}
-
-{{receiver}} hat Ihr letztes Mitstreiter-Abo ergattert.
-
-Und Sie: als meisterhafter Sammler das Sammlerinnen-Stück – die
-Republik-Jubiläums-Tasche.
-
-Dank dem Engagement von Menschen wie Ihnen hat unabhängiger Journalismus eine
-Zukunft. Wir freuen uns darauf und werden hart daran arbeiten, die fünf neuen
-Verlegerinnen im kommenden Jahr von der Klugheit ihrer Entscheidung zu
-überzeugen.
-
-Mit herzlicher Gratulation und herzlichen Grüssen
+Zum Dank verlängern wir Ihr eigenes Abo um einen Monat. Für ein Magazin, das
+sich über seine Leserinnen finanziert, kommt es auf jede einzelne Person an.
+Deshalb: Teilen Sie Ihren Link gerne auch mit weiteren Bekannten. Sie finden ihn
+auf Ihrer persönlichen Übersichtsseite {{link_sender_page}} .
 
 {{/if}}
 
+Die Republik gibt es, weil Menschen wie Sie etwas dafür tun. Merci für Ihre
+Zeit, Ihre Hilfe, Ihre Überzeugungskraft.
+
+Herzlich
+
 Ihre Crew der Republik
-
-{{#unless is_donating}}
-
-PS: Wie abgemacht, haben wir Ihnen einen Monat auf Ihre aktuelle Mitgliedschaft
-gutgeschrieben, sie läuft neu bis {{membership_period_end_date}}.
-
-{{#unless has_five_slots_filled}}
-
-Möchten Sie zusätzliche Monate künftig lieber der Republik spenden? Grossartig,
-vielen Dank! Hier {{link_sender_page}} können Sie die entsprechende Einstellung
-jederzeit anpassen.
-
-{{/unless}} {{/unless}}
 
 
 Republik AG

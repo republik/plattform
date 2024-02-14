@@ -721,6 +721,14 @@
       "value": "Wechseln Sie zur Jahresmitgliedschaft!"
     },
     {
+      "key": "api/email/referral_campaign_referral_first/subject",
+      "value": "Sie haben Unterstützung geholt – weiter so!"
+    },
+    {
+      "key": "api/email/referral_campaign_referral_all/subject",
+      "value": "Ihr Handeln wirkt! Danke."
+    },
+    {
       "key": "api/email/membership_deactivated_abo_uncancelled/sequenceNumber/true/subject",
       "value": "Das Ende – oder ein fulminanter Neustart?"
     },
@@ -739,26 +747,6 @@
     {
       "key": "api/email/membership_deactivated/subject",
       "value": "Ihre Mitgliedschaft wurde deaktiviert"
-    },
-    {
-      "key": "api/email/future_campaign_sender_reward/1/subject",
-      "value": "Sie haben Verstärkung geholt! Danke."
-    },
-    {
-      "key": "api/email/future_campaign_sender_reward/2/subject",
-      "value": "Doppelte Verstärkung! Grossartig."
-    },
-    {
-      "key": "api/email/future_campaign_sender_reward/3/subject",
-      "value": "Sie haben drei Mal Verstärkung geholt. Mit Ihnen beginnt die Zukunft schon heute!"
-    },
-    {
-      "key": "api/email/future_campaign_sender_reward/4/subject",
-      "value": "Wer verdient Ihr letztes Mitstreiterinnen-Abo? "
-    },
-    {
-      "key": "api/email/future_campaign_sender_reward/5/subject",
-      "value": "Mission erfüllt! 5 neue Verlegerinnen für die Republik."
     },
     {
       "key": "api/discussion/404",

@@ -42,173 +42,21 @@
                 <tr>
                   <td style="padding: 20px">
                     <p>Guten Tag</p>
-
-                    {{#if has_one_slot_filled}}
                     <p>
-                      Vor kurzem hat {{receiver}} ein Abo bei der Republik
-                      gekauft, zu einem selbst gewählten Preis. Damit ist die
-                      Republik-Verlagsetage um ein (sicherlich hervorragendes)
-                      Mitglied gewachsen.
+                      Und schon wieder hat jemand über Ihren Link ein Jahresabo bei der Republik gekauft, nämlich {{receiver}}!
                     </p>
                     <p>
-                      Möglich gemacht haben das: Sie. Vielen Dank, dass Sie
-                      Verstärkung geholt haben!
+                      Damit haben Sie insgesamt {{referral_count}} Personen gefunden, die neu die Republik unterstützen. Sie haben Talent!
                     </p>
                     <p>
-                      Zwar sagt Ambrose Bierce in seinem «Wörterbuch des
-                      Teufels»: «Einmal: oft genug.» Doch wir halten es diesen
-                      Frühling lieber mit Cicero, der schrieb: «Aus kleinem
-                      Anfang entspringen alle Dinge.»
+                      Auf <a href="{{link_sender_page}}">Ihrer persönlichen Übersichtsseite</a> sehen Sie, wo wir aktuell auf dem Weg zu unserem Ziel stehen. 
+                      Dort finden Sie auch Ihren persönlichen Link. Sie können ihn noch bis zum 31. März an alle Ihre Bekannten weitergeben! 
+                      Vielleicht findet noch jemand darüber den Weg in unsere Verlagsetage? Wir drücken die Daumen und fiebern mit. 
                     </p>
-                    <p>
-                      Sie haben noch {{count_open_slots}} Zugänge zu
-                      Mitstreiterinnen-Abos zu vergeben. Für ein Magazin, das
-                      sich über seine Leserinnen finanziert, kommt es auf jedes
-                      neue Mitglied an Bord an.
-                    </p>
-                    <p>
-                      Deshalb: Laden Sie gerne auch Ihre Nachbarin, Ihren
-                      Kindergartenfreund, Ihre Arbeits- oder Vereinskollegen
-                      ein. Den persönlichen Link finden Sie
-                      <a href="{{link_sender_page}}">auf dieser Seite</a>.
-                    </p>
-                    <p>
-                      Merci für Ihre Zeit, Ihre Hilfe, Ihre Überzeugungskraft.
-                    </p>
-                    <p>
-                      Und als Hinweis für alle, die Köpfe und Dinge sammeln:
-                      Sobald Sie alle 5 möglichen Mitstreiterinnen an Bord
-                      geholt haben, schicken wir Ihnen als tragbaren Orden die
-                      dafür höchst praktische Republik-Jubiläums-Tasche zu.
-                    </p>
-                    <p>Herzlich</p>
-
-                    {{else if has_two_slots_filled}}
-                    <p>
-                      Und schon wieder hat jemand über Ihren Angebotslink ein
-                      Mitstreiter-Abo bei der Republik gekauft, nämlich
-                      {{receiver}}!
-                    </p>
-                    <p>
-                      Zwei ist nicht nur die kleinste und einzig gerade Primzahl
-                      – sondern auch die Zahl der Arme, der Arche, der Liebe.
-                    </p>
-                    <p>
-                      Wobei, manchmal ist zwei auch zu wenig. Im Fall der Arme
-                      etwa bei den Tintenfischen, im Fall der Liebe im
-                      französischen Film, und im Fall der Arche sang Tom Combo
-                      einmal zu Recht: «Bakterien waren auf der Arche Noah – und
-                      es waren mehr als zwei.»
-                    </p>
-                    <p>
-                      Was im Fall der Republik heisst: Sie haben noch
-                      {{count_open_slots}} Zugänge zu vergeben.
-                    </p>
-                    <p>
-                      Vielleicht wäre das etwas für Ihren Coiffeur, Ihre
-                      Skilehrerin, Ihre Yoga- oder Pokerrunde, Ihren Hausarzt?
-                    </p>
-                    <p>
-                      <a href="{{link_sender_page}}">Finden Sie es heraus</a>,
-                      indem Sie ihnen einen Link zum Angebot schicken.
-                    </p>
-                    <p>
-                      Unabhängiger Journalismus hat eine Zukunft, dank Ihnen.
-                    </p>
-                    <p>Mit herzlichen Grüssen</p>
-
-                    {{else if has_three_slots_filled}}
-                    <p>Danke! Schon drei Mitstreitende!</p>
-                    <p>
-                      Vor kurzem hat nämlich {{receiver}} ein Abo bei der
-                      Republik gekauft.
-                    </p>
-                    <p>
-                      Zum Dank für Ihren Einsatz hier ein sehr brauchbarer
-                      Trick, wie Sie sich zum Beispiel in Redaktionskonferenzen
-                      etwas Platz verschaffen. Beginnen Sie Ihr Statement – egal
-                      ob Sie schon eine Idee haben oder nicht – damit, dass Sie
-                      sagen: «Dazu fallen mir drei Dinge ein …»
-                    </p>
-                    <p>
-                      Dann haben Sie den Raum, sich um Kopf und Kragen zu reden.
-                    </p>
-                    <p>
-                      Nun, Sie scheinen solche Tipps nicht nötig zu haben.
-                      Offensichtlich hören mindestens drei Leute auf Sie.
-                    </p>
-                    <p>
-                      Falls Sie den Ehrgeiz haben, aus drei gleich fünf zu
-                      machen: Sie haben noch {{count_open_slots}} Zugänge zu
-                      Mitstreiterinnen-Abos zu vergeben. Hier finden Sie Ihren
-                      persönlichen Link zum Weitergeben:
-                      <a href="{{link_sender_page}}">{{link_sender_page}}</a>
-                      .
-                    </p>
-                    <p>Danke für Ihre Überzeugungskraft und herzliche Grüsse</p>
-
-                    {{else if has_four_slots_filled}}
-                    <p>Respekt!</p>
-                    <p>
-                      Seit Anfang haben Sie die Republik-Community schon
-                      vierfach verstärkt. Zuletzt stiess {{receiver}} dazu.
-                      Damit haben Sie so gut wie alle Ihre Zugänge vergeben.
-                    </p>
-                    <p>Fast.</p>
-                    <p>Ein letzter ist noch übrig.</p>
-                    <p>Der letzte Schritt vor den perfekten 5.</p>
-                    <p>
-                      Und wir fragen uns: Wer ist der Kandidat, die Kandidatin
-                      für Ihr letztes Mitstreiterinnen-Abo? Zur Erinnerung: Hier
-                      finden Sie Ihren persönlichen Link zum Weitergeben:
-                      <a href="{{link_sender_page}}">{{link_sender_page}}</a>
-                      Die Vollendung Ihrer Mission würde uns umso mehr freuen,
-                      da wir Ihnen dann endlich – als tragbaren Orden – das
-                      perfekte Sammler- und Sammlerinnenstück zuschicken
-                      könnten: die Republik-Jubiläums-Tasche.
-                    </p>
-                    <p>Mit Verbeugung</p>
-
-                    {{else if has_five_slots_filled}}
-                    <p>
-                      Herzliche Gratulation:
-                      <a href="{{link_sender_page}}"
-                        >Sie haben 5 Mitstreiterinnen an Bord geholt!</a
-                      >
-                    </p>
-                    <p>
-                      {{receiver}} hat Ihr letztes Mitstreiter-Abo ergattert.
-                    </p>
-                    <p>
-                      Und Sie: als meisterhafter Sammler das Sammlerinnen-Stück
-                      – die Republik-Jubiläums-Tasche.
-                    </p>
-                    <p>
-                      Dank dem Engagement von Menschen wie Ihnen hat
-                      unabhängiger Journalismus eine Zukunft. Wir freuen uns
-                      darauf und werden hart daran arbeiten, die fünf neuen
-                      Verlegerinnen im kommenden Jahr von der Klugheit ihrer
-                      Entscheidung zu überzeugen.
-                    </p>
-                    <p>Mit herzlicher Gratulation und herzlichen Grüssen</p>
-                    {{/if}}
+                    
+                    <p>Mit besten Grüssen und Dank für Ihren Einsatz</p>
 
                     <p>Ihre Crew der Republik</p>
-
-                    {{#unless is_donating}}
-                    <p>
-                      PS: Wie abgemacht, haben wir Ihnen einen Monat auf Ihre
-                      aktuelle Mitgliedschaft gutgeschrieben, sie läuft neu bis
-                      {{membership_period_end_date}}.
-                    </p>
-                    {{#unless has_five_slots_filled}}
-                    <p>
-                      Möchten Sie zusätzliche Monate künftig lieber der Republik
-                      spenden? Grossartig, vielen Dank!
-                      <a href="{{link_sender_page}}">Hier</a> können Sie die
-                      entsprechende Einstellung jederzeit anpassen.
-                    </p>
-                    {{/unless}} {{/unless}}
                   </td>
                 </tr>
                 <tr>
