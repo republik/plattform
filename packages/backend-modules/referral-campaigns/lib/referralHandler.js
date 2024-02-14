@@ -2,9 +2,6 @@ const debug = require('debug')('referralCampaigns:lib:referralHandler')
 const dayjs = require('dayjs')
 const { findClaimableRewards, claimRewards } = require('./rewardsHandler')
 const { resolveUserByReferralCode } = require('./referralCode')
-const {
-  getPeriodEndingLast,
-} = require('@orbiting/backend-modules-republik-crowdfundings/lib/utils')
 const { fetchCampaignBySlug } = require('./db-queries')
 
 /**
@@ -56,22 +53,26 @@ async function handleReferral(pledge, { pgdb, mail, t }) {
     throw new Error('campaign is not active')
   }
 
-  const tx = await pgdb.transactionBegin()
+  await saveReferral(
+    { pledgeId: pledge.id, referrerId: referrerId, campaignId: campaign?.id },
+    pgdb,
+  )
 
-  try {
-    const newReferral = await tx.public.referrals.insertAndGet({
-      pledgeId: pledge.id,
-      referrerId: referrerId,
-      campaignId: campaign?.id || null,
-    })
+  const activeMembership = await pgdb.public.memberships.findOne({
+    userId: referrerId,
+    active: true,
+  })
 
-    await tx.transactionCommit()
-    debug('saved referral: ', newReferral)
-  } catch (e) {
-    await tx.transactionRollback()
-    console.error(e)
+  if (!activeMembership) {
+    debug('sender has no more active membership')
+    // should send email?
     return
   }
+
+  const membershipType = await pgdb.public.membershipTypes.findOne({
+    id: activeMembership.membershipTypeId,
+  })
+  const hasMonthlyAbo = membershipType?.name === 'MONTHLY_ABO'
 
   const referralCount =
     (await userReferralCount(
@@ -80,43 +81,60 @@ async function handleReferral(pledge, { pgdb, mail, t }) {
     )) || 0
   debug('user referral count: ', referralCount)
 
-  const rewardsToClaim = await findClaimableRewards(
-    { userId: referrerId, campaign, referralCount },
-    pgdb,
-  )
-  debug('rewards to claim', rewardsToClaim)
-  if (!rewardsToClaim || !rewardsToClaim.length) {
-    debug(
-      'No claimable rewards found for user and campaign',
-      referrerId,
-      campaign,
-    )
-    return
-  }
-
-  // claim rewards
-  // TODO could also be in a scheduler? (if we don't need the info for the mail)
-  const claimedPeriods = await claimRewards(
-    { userId: referrerId, rewards: rewardsToClaim },
-    pgdb,
-  )
-
-  const newEndDate = getPeriodEndingLast(claimedPeriods)
-
-  const totalCampaignReferrals =
-    (await campaignReferralCount(campaign.id, pgdb)) || 0
-
   // send transactional mail to referrer
   const referralMailData = {
     referrerUserId: referrerId,
     pledgeUserId: pledge.user.id,
     referralCount: referralCount,
-    withReward: !!claimedPeriods && !!claimedPeriods.length,
-    newEndDate: newEndDate,
-    totalCampaignReferrals: totalCampaignReferrals,
+    hasMonthlyAbo: hasMonthlyAbo,
   }
 
   await mail.sendReferralCampaignMail({ ...referralMailData }, { pgdb, t })
+
+  // rewards can only be claimed if the abo type is not MONTHLY_ABO
+  // TODO maybe rewards should still be recorded with a different reward type, tbd
+  // TODO this could also move to a scheduler
+  if (!hasMonthlyAbo) {
+    const rewardsToClaim = await findClaimableRewards(
+      { userId: referrerId, campaign, referralCount },
+      pgdb,
+    )
+    debug('rewards to claim', rewardsToClaim)
+    if (!rewardsToClaim || !rewardsToClaim.length) {
+      debug(
+        'No claimable rewards found for user and campaign',
+        referrerId,
+        campaign,
+      )
+      return
+    }
+    // claim rewards
+    await claimRewards(
+      {
+        activeMembership: activeMembership,
+        userId: referrerId,
+        rewards: rewardsToClaim,
+      },
+      pgdb,
+    )
+  }
+}
+
+async function saveReferral({ pledgeId, referrerId, campaignId }, pgdb) {
+  const tx = await pgdb.transactionBegin()
+  try {
+    const newReferral = await tx.public.referrals.insertAndGet({
+      pledgeId: pledgeId,
+      referrerId: referrerId,
+      campaignId: campaignId || null,
+    })
+
+    await tx.transactionCommit()
+    debug('saved referral: ', newReferral)
+  } catch (e) {
+    await tx.transactionRollback()
+    console.error(e)
+  }
 }
 
 /**

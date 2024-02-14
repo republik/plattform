@@ -57,7 +57,7 @@ async function findClaimableRewards({ userId, campaign, referralCount }, pgdb) {
  * @param pgdb db instance
  * @returns {Promise<>}
  */
-async function claimRewards({ userId, rewards }, pgdb) {
+async function claimRewards({ activeMembership, userId, rewards }, pgdb) {
   return bluebird.each(rewards, async (reward) => {
     // consent check would go here
 
@@ -71,32 +71,15 @@ async function claimRewards({ userId, rewards }, pgdb) {
 
     // generate bonus month
     if (reward.type === 'bonus_month') {
-      return await claimBonusMonths({ userId, reward }, pgdb)
+      return await claimBonusMonths({ activeMembership, userId, reward }, pgdb)
     }
   })
 }
 
-async function claimBonusMonths({ userId, reward }, pgdb) {
+async function claimBonusMonths({ activeMembership, userId, reward }, pgdb) {
   const tx = pgdb.openTransaction()
 
   try {
-    const activeMembership = await tx.public.memberships.findOne({
-      userId: userId,
-      active: true,
-    })
-
-    if (!activeMembership) {
-      debug('sender has no more active membership')
-      return
-    }
-
-    const membershipType = await tx.public.membershipTypes.findOne({
-      id: activeMembership.membershipTypeId,
-    })
-    if (membershipType?.name === 'MONTHLY_ABO') {
-      debug('sender has an activeMembership type which can not be extended')
-      return
-    }
     await tx.public.userCampaignRewards.insert({
       userId: userId,
       campaignRewardId: reward.id,
@@ -116,6 +99,7 @@ async function claimBonusMonths({ userId, reward }, pgdb) {
       kind: 'BONUS',
     })
     await tx.commitTransaction()
+    debug(newMembershipPeriod)
 
     return newMembershipPeriod
   } catch (e) {

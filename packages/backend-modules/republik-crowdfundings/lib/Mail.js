@@ -1312,14 +1312,7 @@ mail.getPledgeMergeVars = async (
 }
 
 mail.sendReferralCampaignMail = async (
-  {
-    referrerUserId,
-    pledgeUserId,
-    referralCount,
-    withReward,
-    newEndDate,
-    totalCampaignReferrals,
-  },
+  { referrerUserId, pledgeUserId, referralCount, hasMonthlyAbo },
   { pgdb, t },
 ) => {
   const referrer = await pgdb.public.users.findOne({ id: referrerUserId })
@@ -1330,8 +1323,9 @@ mail.sendReferralCampaignMail = async (
 
   const countNumber = parseInt(referralCount, 10)
 
-  const rewardTemplateName = withReward ? 'with_reward' : 'no_reward'
-  const templateName = `referral_campaign_referral_${rewardTemplateName}`
+  // TODO should not be hardcoded
+  const campaignTemplate = countNumber === 1 ? '1' : 'rest'
+  const templateName = `referral_campaign_referral_${campaignTemplate}`
 
   return sendMailTemplate(
     {
@@ -1351,19 +1345,11 @@ mail.sendReferralCampaignMail = async (
         },
         {
           name: 'link_sender_page',
-          content: `${FRONTEND_BASE_URL}/verstaerkung-holen`, // TODO
+          content: `${FRONTEND_BASE_URL}/jetzt-einladen`,
         },
         {
-          name: 'with_reward',
-          content: withReward,
-        },
-        {
-          name: 'membership_period_end_date',
-          content: newEndDate && dateFormat(newEndDate),
-        },
-        {
-          name: 'total_campaign_referrals',
-          content: totalCampaignReferrals,
+          name: 'has_monthly_abo',
+          content: hasMonthlyAbo,
         },
       ],
     },
