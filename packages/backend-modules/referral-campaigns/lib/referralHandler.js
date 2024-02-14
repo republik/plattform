@@ -86,7 +86,7 @@ async function handleReferral(pledge, { pgdb, mail, t }) {
   // rewards can only be claimed if the abo type is not MONTHLY_ABO
   // TODO maybe rewards should still be recorded with a different reward type, tbd
   // TODO this could also move to a scheduler
-  if (!hasMonthlyAbo) {
+  if (!hasMonthlyAbo && activeMembership) {
     const rewardsToClaim = await findClaimableRewards(
       { userId: referrerId, campaign, referralCount },
       pgdb,

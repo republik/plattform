@@ -77,7 +77,7 @@ async function claimRewards({ activeMembership, userId, rewards }, pgdb) {
 }
 
 async function claimBonusMonths({ activeMembership, userId, reward }, pgdb) {
-  const tx = pgdb.openTransaction()
+  const tx = await pgdb.transactionBegin()
 
   try {
     await tx.public.userCampaignRewards.insert({
@@ -98,13 +98,13 @@ async function claimBonusMonths({ activeMembership, userId, reward }, pgdb) {
       endDate: endDate.add(reward.amount, 'month'),
       kind: 'BONUS',
     })
-    await tx.commitTransaction()
+    await tx.transactionCommit()
     debug(newMembershipPeriod)
 
     return newMembershipPeriod
   } catch (e) {
-    await tx.transactionRollback()
     console.error('transaction rollback, not claiming bonus month', e)
+    await tx.transactionRollback()
   }
 }
 
