@@ -1312,7 +1312,13 @@ mail.getPledgeMergeVars = async (
 }
 
 mail.sendReferralCampaignMail = async (
-  { referrerUserId, pledgeUserId, referralCount, hasMonthlyAbo },
+  {
+    referrerUserId,
+    pledgeUserId,
+    referralCount,
+    hasMonthlyAbo,
+    noActiveMembership,
+  },
   { pgdb, t },
 ) => {
   const referrer = await pgdb.public.users.findOne({ id: referrerUserId })
@@ -1350,6 +1356,10 @@ mail.sendReferralCampaignMail = async (
         {
           name: 'has_monthly_abo',
           content: hasMonthlyAbo,
+        },
+        {
+          name: 'no_active_membership',
+          content: noActiveMembership,
         },
       ],
     },

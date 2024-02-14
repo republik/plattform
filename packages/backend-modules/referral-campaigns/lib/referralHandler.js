@@ -62,17 +62,8 @@ async function handleReferral(pledge, { pgdb, mail, t }) {
     userId: referrerId,
     active: true,
   })
-
-  if (!activeMembership) {
-    debug('sender has no more active membership')
-    // should send email?
-    return
-  }
-
-  const membershipType = await pgdb.public.membershipTypes.findOne({
-    id: activeMembership.membershipTypeId,
-  })
-  const hasMonthlyAbo = membershipType?.name === 'MONTHLY_ABO'
+  // if subscriptionId is not null it is a MONTHLY_ABO
+  const hasMonthlyAbo = !!activeMembership?.subscriptionId
 
   const referralCount =
     (await userReferralCount(
@@ -87,6 +78,7 @@ async function handleReferral(pledge, { pgdb, mail, t }) {
     pledgeUserId: pledge.user.id,
     referralCount: referralCount,
     hasMonthlyAbo: hasMonthlyAbo,
+    noActiveMembership: !activeMembership,
   }
 
   await mail.sendReferralCampaignMail({ ...referralMailData }, { pgdb, t })
