@@ -502,8 +502,6 @@ const Page = ({
             Math[i ? 'ceil' : 'floor'](Math.round(d / 1000) * 1000),
           )
 
-          console.log(data.membershipStats.lastSeen)
-
           const lastSeenBucket =
             data.membershipStats.lastSeen.buckets.slice(-1)[0]
           const lastSeen = lastSeenBucket.users
@@ -549,7 +547,7 @@ const Page = ({
                 bestehen und einen entscheidenden Unterschied im Mediensystem zu
                 machen, braucht die Republik eine starke Community.
               </P>
-              <div style={{ marginBottom: 60 }}>
+              <div style={{ margin: '60px 0' }}>
                 <RawStatus
                   t={t}
                   color='#fff'
@@ -574,19 +572,19 @@ const Page = ({
                 />
               </div>
               <P>
-                TODO: An dieser Stelle machen wir, anders als in unserer
-                finanziellen Planung, keinen Unterschied zwischen weniger und
-                mehr zahlenden Verlegerinnen. Jeder Verleger, egal wie viel er
-                zahlen kann, unterstützt uns und leistet einen Beitrag. Es gibt
-                Menschen in unserer Community, die sich eine
-                Jahresmitgliedschaft nicht leisten können und deshalb einen
-                vergünstigten Preis zahlen; es gibt aber auch Mitglieder, die
-                als Gönner mehr bezahlen. Im Frühjahr 2023 kamen zudem Menschen
-                an Bord, die zum 5-Jahres-Jubiläum ein 12-Monats-Abo zu einem
-                frei wählbaren Preis abschliessen konnten. Zwischen Mitte
-                Februar und Anfang April 2024 laufen diese Abonnements aus, was
-                wir hier ebenfalls abbilden. Hier erfahren Sie mehr über unsere
-                Kampagnen. (LINK META)
+                An dieser Stelle machen wir, anders als in unserer finanziellen
+                Planung, keinen Unterschied zwischen weniger und mehr zahlenden
+                Verlegerinnen. Jeder Verleger, egal wie viel er zahlen kann,
+                unterstützt uns und leistet einen Beitrag. Es gibt Menschen in
+                unserer Community, die sich eine Jahresmitgliedschaft nicht
+                leisten können und deshalb einen vergünstigten Preis zahlen; es
+                gibt aber auch Mitglieder, die als Gönner mehr bezahlen. Im
+                Frühjahr 2023 kamen zudem Menschen an Bord, die zum
+                5-Jahres-Jubiläum ein 12-Monats-Abo zu einem frei wählbaren
+                Preis abschliessen konnten. Zwischen Mitte Februar und Anfang
+                April 2024 laufen diese Abonnements aus, was wir hier ebenfalls
+                abbilden. <Editorial.A href='#'>Hier</Editorial.A> erfahren Sie
+                mehr über unsere Kampagnen.
               </P>
               <div style={{ marginTop: 20 }}>
                 <ChartTitle>
@@ -683,7 +681,7 @@ const Page = ({
                 </ChartLegend>
               </div>
               <P>
-                TODO: Bei der Zahl der Abgänge ist zu berücksichtigen, dass die
+                Bei der Zahl der Abgänge ist zu berücksichtigen, dass die
                 12-Monats-Abos aus der 5-Jahres-Jubiläums-Kampagne das Bild
                 verzerren. Diese vergünstigten Abos laufen im Frühjahr 2024 aus.
               </P>
