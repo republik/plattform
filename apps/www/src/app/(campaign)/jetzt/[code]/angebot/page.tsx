@@ -1,13 +1,11 @@
-import {
-  CAMPAIGN_SLUG,
-  getInviteeData,
-} from '@app/app/(campaign)/campaign-data'
+import { getInviteeData } from '@app/app/(campaign)/campaign-data'
 import { getSliderStepForValue } from '@app/app/(campaign)/jetzt/[code]/angebot/price-slider/helpers'
 import { css } from '@app/styled-system/css'
 import Link from 'next/link'
 import { Suspense } from 'react'
 import { PriceRewards } from './price-rewards'
 import { PriceSliderWithState } from './price-slider-with-state'
+import { CAMPAIGN_SLUG } from '@app/app/(campaign)/constants'
 
 // Ensure that search params are available during SSR
 // https://nextjs.org/docs/app/api-reference/functions/use-search-params#dynamic-rendering

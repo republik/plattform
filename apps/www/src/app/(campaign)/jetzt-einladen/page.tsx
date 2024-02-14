@@ -1,7 +1,4 @@
-import {
-  CAMPAIGN_REFERRALS_GOAL,
-  getSenderData,
-} from '@app/app/(campaign)/campaign-data'
+import { getSenderData } from '@app/app/(campaign)/campaign-data'
 import { CampaignProgress } from '@app/app/(campaign)/components/campaign-progress'
 import { TypewriterContent } from '@app/app/(campaign)/components/typewriter-content'
 import {
@@ -12,6 +9,7 @@ import Container from '@app/components/container'
 import { css } from '@app/styled-system/css'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
+import { CAMPAIGN_REFERRALS_GOAL } from '../constants'
 
 export default async function Page() {
   const data = await getSenderData()

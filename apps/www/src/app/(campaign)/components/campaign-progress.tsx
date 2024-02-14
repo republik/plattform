@@ -1,8 +1,6 @@
-import {
-  CAMPAIGN_REFERRALS_GOAL,
-  getCampaignReferralsData,
-} from '@app/app/(campaign)/campaign-data'
+import { getCampaignReferralsData } from '@app/app/(campaign)/campaign-data'
 import { css } from '@app/styled-system/css'
+import { CAMPAIGN_REFERRALS_GOAL } from '../constants'
 
 export const CampaignProgress = async () => {
   const data = await getCampaignReferralsData()

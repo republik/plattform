@@ -29,6 +29,7 @@ import { useMe } from '../../lib/context/MeContext'
 import { checkRoles } from '../../lib/apollo/withMe'
 import CallToActionBanner from '../CallToActions/CallToActionBanner'
 import { DraftModeIndicator } from 'components/DraftModeIndicator'
+import { VerlegerKampagneBannerTop } from 'VerlegerKampagne/VerlegerKampagneBanner'
 
 css.global('html', { boxSizing: 'border-box' })
 css.global('*, *:before, *:after', { boxSizing: 'inherit' })
@@ -122,6 +123,8 @@ const Frame = ({
    */
   customContentColorContext,
   hideCTA = false,
+  // TODO: REMOVE AFTER CAMPAIGN
+  location,
 }) => {
   const { inNativeApp, inNativeAppLegacy } = useInNativeApp()
   const { t } = useTranslation()
@@ -192,6 +195,9 @@ const Frame = ({
                 {!hideCTA && <CallToActionBanner />}
 
                 {draftMode && <DraftModeIndicator />}
+                {/* TODO: REMOVE AFTER CAMPAIGN */}
+                {!['article', 'user-nav'].includes(location) &&
+                  (!me || me.activeMembership) && <VerlegerKampagneBannerTop />}
 
                 {raw ? (
                   <>{children}</>
@@ -230,6 +236,8 @@ Frame.propTypes = {
   customContentColorContext: PropTypes.object,
   hideCTA: PropTypes.bool,
   draftMode: PropTypes.bool,
+  // TODO: REMOVE AFTER CAMPAIGN
+  location: PropTypes.string,
 }
 
 export default Frame
