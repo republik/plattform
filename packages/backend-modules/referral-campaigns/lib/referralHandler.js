@@ -75,7 +75,7 @@ async function handleReferral(pledge, { pgdb, mail, t }) {
   // send transactional mail to referrer
   const referralMailData = {
     referrerUserId: referrerId,
-    pledgeUserId: pledge.user.id,
+    pledgeUserId: pledge.userId,
     referralCount: referralCount,
     hasMonthlyAbo: hasMonthlyAbo,
     noActiveMembership: !activeMembership,
