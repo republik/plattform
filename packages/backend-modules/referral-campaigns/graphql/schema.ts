@@ -1,4 +1,4 @@
-module.exports = `
+export = `
 schema {
   query: queries
 }

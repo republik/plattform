@@ -2,7 +2,7 @@
   "name": "@orbiting/backend-modules-referral-campaigns",
   "version": "1.0.0",
   "description": "Library for yearly referral campaigns",
-  "main": "index.js",
+  "main": "build/index.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/republik/plattform.git"
@@ -13,9 +13,15 @@
     "url": "https://github.com/republik/plattform/issues"
   },
   "homepage": "https://github.com/republik/plattform#readme",
-  "scripts": {},
+  "scripts": {
+    "dev": "tsc -w",
+    "build": "tsc --build"
+  },
+  "types": "build/@types",
   "dependencies": {
     "@orbiting/backend-modules-scalars": "*",
+    "@orbiting/backend-modules-types": "*",
+    "pogi": "^2.11.1",
     "apollo-modules-node": "*",
     "debug": "^4.1.1",
     "zod": "^3.22.4",

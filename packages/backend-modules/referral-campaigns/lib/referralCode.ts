@@ -1,9 +1,8 @@
-const crypto = require('crypto')
-const CrockfordBase32 = require('crockford-base32').CrockfordBase32
+import type { User, UserRow } from '@orbiting/backend-modules-types'
+import type { PgDb } from 'pogi'
+import { CrockfordBase32 } from 'crockford-base32'
 
-/** @typedef {import("@orbiting/backend-modules-types").UserRow} UserRow */
-/** @typedef {import("@orbiting/backend-modules-types").User} User */
-/** @typedef {import("pogi").PgDb} PgDb */
+const crypto = require('crypto')
 
 const HASH_LENGTH_ATTEMPTS = 10
 const MIN_HASH_LENGTH_IN_BYTES = 5
@@ -15,12 +14,12 @@ const MAX_ATTMEPTS = 25
  * @param {PgDb} pgdb
  * @returns {Promise<string|null>} generated referral code for the user
  */
-async function generateReferralCode(user, pgdb) {
+export async function generateReferralCode(user: User, pgdb: PgDb) {
   if (user.referralCode) {
     return user.referralCode
   }
 
-  let referralCode
+  let referralCode: string | null | undefined
   let length = MIN_HASH_LENGTH_IN_BYTES
   let attempts = 0
   let totalAttempts = 0
@@ -33,14 +32,14 @@ async function generateReferralCode(user, pgdb) {
 
     await pgdb.public.users
       .updateAndGetOne({ id: user.id }, { referralCode: referralCode })
-      .then((user) => {
+      .then((user: UserRow) => {
         referralCode = user.referralCode
         console.log(
           `User.referralCode | Assigned referralCode ${referralCode} to user ${user.id}`,
         )
       })
       // in case of collision, try again
-      .catch((err) => {
+      .catch((err: Error) => {
         console.error(
           `User.referralCode | Could not assign referralCode ${referralCode} to user ${user.id}, trying again...`,
         )
@@ -80,7 +79,7 @@ async function generateReferralCode(user, pgdb) {
  * @param {PgDb} pgdb
  * @returns {Promise<UserRow?>} generated referral code for the user
  */
-async function resolveUserByReferralCode(referral, pgdb) {
+export async function resolveUserByReferralCode(referral: string, pgdb: PgDb) {
   try {
     const normalizedCode = normalizeReferralCode(referral)
     return await pgdb.public.users.findOne({
@@ -97,8 +96,8 @@ async function resolveUserByReferralCode(referral, pgdb) {
  * @param {number} length
  * @returns {string} crockford base32 encoded string
  */
-function randomBase32String(length) {
-  return CrockfordBase32.encode(crypto.randomBytes(MIN_HASH_LENGTH_IN_BYTES))
+function randomBase32String(length: number) {
+  return CrockfordBase32.encode(crypto.randomBytes(length))
 }
 
 /**
@@ -106,7 +105,7 @@ function randomBase32String(length) {
  * @param {string} code
  * @returns {string} crockford base32 encoded string
  */
-function normalizeReferralCode(code) {
+function normalizeReferralCode(code: string) {
   // Reencode the referral code with Corockford-Base32 to get rid of "- O U L I"
   return CrockfordBase32.encode(CrockfordBase32.decode(code))
 }
@@ -120,7 +119,10 @@ function normalizeReferralCode(code) {
  * @param {number} partitionSize Size of each dash separated block
  * @returns {String}
  */
-function formatAsDashSeperated(inputString, partitionSize) {
+export function formatAsDashSeperated(
+  inputString: string,
+  partitionSize: number,
+) {
   let formatted = ''
   for (let i = 0; i < inputString.length; i++) {
     formatted += inputString[i]
@@ -129,10 +131,4 @@ function formatAsDashSeperated(inputString, partitionSize) {
     }
   }
   return formatted
-}
-
-module.exports = {
-  generateReferralCode,
-  resolveUserByReferralCode,
-  formatAsDashSeperated,
 }

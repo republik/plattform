@@ -1,25 +1,26 @@
-const { Roles } = require('@orbiting/backend-modules-auth')
-const {
+import type { GraphqlContext, User } from '@orbiting/backend-modules-types'
+import type { PgDb } from 'pogi'
+import type { ReferralCount } from '../types'
+import {
   generateReferralCode,
   formatAsDashSeperated,
-} = require('../../lib/referralCode')
-const {
   fetchReferralCountByReferrerId,
   fetchCampaignBySlug,
-} = require('../../lib/db-queries')
+} from '../../lib'
 
-/** @typedef {{count: number}} ReferralCount */
-/** @typedef {import('@orbiting/backend-modules-types').GraphqlContext} GraphqlContext */
+const { Roles } = require('@orbiting/backend-modules-auth')
 
-module.exports = {
+type UserReferralArgs = { campaignSlug: string | undefined | null }
+
+export = {
   /**
    * Load the user's referrals count in total or for a specific campaign.
-   * @param {object} user
-   * @param {{ campaignSlug: string | undefined | null}} args
-   * @param {GraphqlContext} ctx
-   * @returns {Promise<ReferralCount?>}
    */
-  async referrals(user, { campaignSlug = null }, ctx) {
+  async referrals(
+    user: User,
+    { campaignSlug = null }: UserReferralArgs,
+    ctx: GraphqlContext,
+  ): Promise<ReferralCount | null> {
     const { pgdb, user: me } = ctx
     Roles.ensureUserIsMeOrInRoles(user, me, ['admin', 'supporter'])
 
@@ -51,7 +52,11 @@ module.exports = {
     }
     return null
   },
-  referralCode: async (user, _, { pgdb }) => {
+  async referralCode(
+    user: User,
+    _: object,
+    { pgdb }: { pgdb: PgDb },
+  ): Promise<string> {
     const referralCode =
       user.referralCode || (await generateReferralCode(user, pgdb))
 

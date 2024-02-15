@@ -1,4 +1,4 @@
-module.exports = `
+export = `
 
 type Referrals {
   count: Int!

@@ -1,30 +1,37 @@
+import type { PgDb } from 'pogi'
+import type { CampaignRewardRow, UserCampaignRewardsRow } from './types'
+
 const debug = require('debug')('referralCampaigns:lib:rewardsHandler')
 const dayjs = require('dayjs')
 const bluebird = require('bluebird')
 
-const {
-  getPeriodEndingLast,
-} = require('../../republik-crowdfundings/lib/utils')
 // TODO get from graphql enum type
 const REWARD_TYPES = ['bonus_month']
 
-/** @typedef {import("pogi").PgDb} PgDb */
-/** @typedef {{ userId: string, campaign: object, referralCount?: number }} FindRewardsInput */
-/** @typedef {{ userId: string, rewards: Array<any> }} ClaimRewardsInput */
+type FindRewardsInput = {
+  userId: string
+  campaign: {
+    id: string
+  }
+  referralCount?: number
+}
 
 /**
  * Find rewards available to claim for a user and campaign, returns any rewards to claim or null.
- * @param {FindRewardsInput} input
- * @param {PgDb} pgdb db instance
- * @returns {Promise<any>} list of available rewards to claim
+ * @param input
+ * @param db instance
+ * @returns list of available rewards to claim
  */
-async function findClaimableRewards({ userId, campaign, referralCount }, pgdb) {
+export async function findClaimableRewards(
+  { userId, campaign, referralCount }: FindRewardsInput,
+  pgdb: PgDb,
+): Promise<CampaignRewardRow[] | undefined> {
   if (!referralCount) {
     // no referrals
     return
   }
   // get relevant campaign rewards
-  const rewards = await pgdb.public.campaignRewards.find({
+  const rewards: CampaignRewardRow[] = await pgdb.public.campaignRewards.find({
     campaignId: campaign.id,
     '"referralCountThreshold"<=': referralCount,
   })
@@ -38,10 +45,11 @@ async function findClaimableRewards({ userId, campaign, referralCount }, pgdb) {
 
   // check if reward has already been claimed
   const rewardIds = rewards.map((reward) => reward.id)
-  const claimedRewards = await pgdb.public.userCampaignRewards.find({
-    userId: userId,
-    campaignRewardId: rewardIds,
-  })
+  const claimedRewards: UserCampaignRewardsRow[] =
+    await pgdb.public.userCampaignRewards.find({
+      userId: userId,
+      campaignRewardId: rewardIds,
+    })
 
   const claimedRewardIds = claimedRewards.map((cr) => cr.id)
   const rewardsToClaim = rewards.filter(
@@ -51,14 +59,21 @@ async function findClaimableRewards({ userId, campaign, referralCount }, pgdb) {
   return rewardsToClaim
 }
 
+type ClaimRewardsInput = {
+  activeMembership: any
+  userId: string
+  rewards: CampaignRewardRow[]
+}
 /**
  * Claim passed rewards for user
- * @param {ClaimRewardsInput} claimRewardsInput
+ * @param claimRewardsInput
  * @param pgdb db instance
- * @returns {Promise<>}
  */
-async function claimRewards({ activeMembership, userId, rewards }, pgdb) {
-  return bluebird.each(rewards, async (reward) => {
+export async function claimRewards(
+  { activeMembership, userId, rewards }: ClaimRewardsInput,
+  pgdb: PgDb,
+): Promise<any> {
+  return bluebird.each(rewards, async (reward: CampaignRewardRow) => {
     // consent check would go here
 
     // check reward type
@@ -76,7 +91,16 @@ async function claimRewards({ activeMembership, userId, rewards }, pgdb) {
   })
 }
 
-async function claimBonusMonths({ activeMembership, userId, reward }, pgdb) {
+type ClaimBonusMonthsInput = {
+  activeMembership: any
+  userId: string
+  reward: CampaignRewardRow
+}
+
+async function claimBonusMonths(
+  { activeMembership, userId, reward }: ClaimBonusMonthsInput,
+  pgdb: PgDb,
+): Promise<any> {
   const tx = await pgdb.transactionBegin()
 
   try {
@@ -108,4 +132,19 @@ async function claimBonusMonths({ activeMembership, userId, reward }, pgdb) {
   }
 }
 
-module.exports = { findClaimableRewards, claimRewards }
+// vendord from republik-crowdfundings/lib/utils because it is not exported
+// correctly and would cause circular dependencies
+// Finds latest period in a series of membershipPeriods
+export function getPeriodEndingLast(periods: any[]) {
+  return periods
+    .map((p) => p)
+    .reduce((accumulator, currentValue) => {
+      if (!accumulator) {
+        return currentValue
+      }
+
+      return currentValue.endDate > accumulator.endDate
+        ? currentValue
+        : accumulator
+    }, false)
+}

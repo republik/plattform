@@ -1,4 +1,6 @@
-const { handleReferral } = require('../../lib/referralHandler')
+const {
+  handleReferral,
+} = require('@orbiting/backend-modules-referral-campaigns/lib')
 
 jest.mock('pogi')
 
@@ -9,7 +11,11 @@ describe('test referral handling', () => {
       mail: jest.fn(() => {}),
       t: jest.fn(() => {}),
     }
-    const pledge = { id: '123', payload: undefined }
+    const pledge = {
+      id: '123',
+      userId: '0000-0000-0000-0001',
+      payload: undefined,
+    }
     expect(handleReferral(pledge, context)).resolves.toBeUndefined()
     expect(context.pgdb).not.toBeCalled()
   })
@@ -21,6 +27,7 @@ describe('test referral handling', () => {
     }
     const pledge = {
       id: '123',
+      userId: '0000-0000-0000-0001',
       payload: {
         referral_code: undefined,
         referral_campaign: 'campaign-2024-q1',

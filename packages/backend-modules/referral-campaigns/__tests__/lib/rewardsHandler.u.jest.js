@@ -1,4 +1,6 @@
-const { findClaimableRewards } = require('../../lib/rewardsHandler')
+const {
+  findClaimableRewards,
+} = require('@orbiting/backend-modules-referral-campaigns')
 
 const mockUserUUID = '0000-0000-0000-0001'
 const mockCampaignUUID = '1000-0000-0000-0001'

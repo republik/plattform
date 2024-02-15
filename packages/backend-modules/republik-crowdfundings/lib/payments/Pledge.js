@@ -5,7 +5,7 @@ const { refreshPotForPledgeId } = require('../membershipPot')
 const getClients = require('./stripe/clients')
 const {
   handleReferral,
-} = require('@orbiting/backend-modules-referral-campaigns/lib/referralHandler')
+} = require('@orbiting/backend-modules-referral-campaigns')
 
 const forUpdate = async ({ pledgeId, fn, pgdb }) => {
   const transaction = await pgdb.transactionBegin()

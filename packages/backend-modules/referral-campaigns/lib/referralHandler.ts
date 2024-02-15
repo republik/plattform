@@ -1,21 +1,32 @@
+import type { PgDb } from 'pogi'
+import type { GraphqlContext } from '@orbiting/backend-modules-types'
+import { findClaimableRewards, claimRewards } from './rewardsHandler'
+import { resolveUserByReferralCode } from './referralCode'
+import { fetchCampaignBySlug } from './db-queries'
+import dayjs = require('dayjs')
+
 const debug = require('debug')('referralCampaigns:lib:referralHandler')
-const dayjs = require('dayjs')
-const { findClaimableRewards, claimRewards } = require('./rewardsHandler')
-const { resolveUserByReferralCode } = require('./referralCode')
-const { fetchCampaignBySlug } = require('./db-queries')
+
+type Pledge = {
+  id: string
+  userId: string
+  payload?: PledgePayload
+}
+
+type PledgePayload = {
+  referral_code: string | null | undefined
+  referral_campaign: string | null | undefined
+}
 
 /**
  * Handle a referral for a pledge.
- * @param {{
- *  id: string,
- *  payload?: {
- *    referral_code: string | null | undefined
- *    referral_campaign: string | null | undefined
- *  }
- * }} pledge for which to handle a possible referral
- * @param {{ pgdb: object, mail: object, t: object }}  ctx object containing the pgdb, mail and translations instance
+ * @param pledge pledge for which to handle a possible referral
+ * @param ctx containing the pgdb, mail and translations instance
  */
-async function handleReferral(pledge, { pgdb, mail, t }) {
+export async function handleReferral(
+  pledge: Pledge,
+  { pgdb, mail, t }: GraphqlContext,
+) {
   const { payload } = pledge
   debug('payload', payload)
   if (!payload?.referral_code || !payload?.referral_campaign) {
@@ -112,7 +123,16 @@ async function handleReferral(pledge, { pgdb, mail, t }) {
   }
 }
 
-async function saveReferral({ pledgeId, referrerId, campaignId }, pgdb) {
+type SaveReferralInput = {
+  pledgeId: string
+  referrerId: string
+  campaignId: string
+}
+
+export async function saveReferral(
+  { pledgeId, referrerId, campaignId }: SaveReferralInput,
+  pgdb: PgDb,
+) {
   const tx = await pgdb.transactionBegin()
   try {
     const newReferral = await tx.public.referrals.insertAndGet({
@@ -131,11 +151,11 @@ async function saveReferral({ pledgeId, referrerId, campaignId }, pgdb) {
 
 /**
  * Referral count for a specific user and campaign
- * @param {{userId: string, campaignId: string}} input
- * @param pgdb db instance
- * @returns {Promise<number|null>} referral count
  */
-async function userReferralCount({ userId, campaignId }, pgdb) {
+export async function userReferralCount(
+  { userId, campaignId }: { userId: string; campaignId: string },
+  pgdb: PgDb,
+): Promise<number | null> {
   if (!userId || !campaignId) {
     console.error(
       'Both userId and campaignId are necessary to find user referral count',
@@ -150,11 +170,11 @@ async function userReferralCount({ userId, campaignId }, pgdb) {
 
 /**
  * Referral count for a campaign
- * @param {string} campaignId
- * @param pgdb db instance
- * @returns {Promise<number|null>} referral count
  */
-async function campaignReferralCount(campaignId, pgdb) {
+export async function campaignReferralCount(
+  campaignId: string,
+  pgdb: PgDb,
+): Promise<number | null> {
   if (!campaignId) {
     console.error('Missing campaign id, cannot get referral count')
     return null
@@ -163,5 +183,3 @@ async function campaignReferralCount(campaignId, pgdb) {
     campaignId: campaignId,
   })
 }
-
-module.exports = { handleReferral, userReferralCount, campaignReferralCount }
