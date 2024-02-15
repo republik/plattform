@@ -61,50 +61,49 @@ function useCampaignData() {
   })
 }
 
+const topBannerStyles = {
+  container: css({
+    padding: '10px 15px 15px 15px',
+    [mediaQueries.mUp]: {
+      padding: '10px 40px 15px 40px',
+    },
+  }),
+  wrapper: css({
+    display: 'flex',
+    flexDirection: 'row',
+    gap: 16,
+    alignItems: 'center',
+  }),
+  p: css({
+    flexGrow: 1,
+    fontSize: 12,
+    [mediaQueries.mUp]: {
+      fontSize: 14,
+    },
+  }),
+  desktopOnly: css({
+    display: 'none',
+    [mediaQueries.mUp]: {
+      display: 'block',
+    },
+  }),
+}
+
 export function VerlegerKampagneBannerTop() {
   const { data, loading } = useCampaignData()
 
   return (
-    <Center
-      {...css({
-        padding: '10px 15px 15px 15px',
-        [mediaQueries.mUp]: {
-          padding: '10px 40px 15px 40px',
-        },
-      })}
-    >
-      <div
-        {...css({
-          display: 'flex',
-          flexDirection: 'row',
-          gap: 16,
-          alignItems: 'center',
-        })}
-      >
+    <Center {...topBannerStyles.container}>
+      <div {...topBannerStyles.wrapper}>
         <div>
           <Icon height={27} width='auto' />
         </div>
-        <p
-          {...css({
-            flexGrow: 1,
-            fontSize: 12,
-            [mediaQueries.mUp]: {
-              fontSize: 14,
-            },
-          })}
-        >
+        <p {...topBannerStyles.p}>
           Bis zum 31. März suchen wir mit Ihnen zusammen{' '}
           {CAMPAIGN_REFERRALS_GOAL} neue Unterstützer.
-          <span
-            {...css({
-              display: 'none',
-              [mediaQueries.mUp]: {
-                display: 'block',
-              },
-            })}
-          >
+          <span {...topBannerStyles.desktopOnly}>
             Gemeinsam haben wir schon {data?.campaign?.referrals?.count || '-'}{' '}
-            neue Verlegerinnen übrzeugt.
+            neue Verlegerinnen überzeugt.
           </span>
         </p>
         <Button small href='/jetzt-einladen'>
@@ -113,13 +112,9 @@ export function VerlegerKampagneBannerTop() {
       </div>
       <div>
         <div
-          {...css({
-            fontSize: 'l',
-            display: 'flex',
-            gap: '4',
+          style={{
             width: '100%',
-            alignItems: 'center',
-          })}
+          }}
         >
           <ProgressBar
             from={data?.campaign.referrals.count || 0}
@@ -131,68 +126,66 @@ export function VerlegerKampagneBannerTop() {
   )
 }
 
+const bottomBannerStyles = {
+  container: css({
+    padding: '40px 15px',
+    [mediaQueries.mUp]: {
+      padding: '40px',
+    },
+    marginTop: 15,
+  }),
+  wrapper: css({
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    gap: 16,
+  }),
+  header: css({
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 14,
+    [mediaQueries.mUp]: {
+      gap: 32,
+    },
+  }),
+  heading: css({
+    margin: 0,
+    fontFamily: 'Druk',
+    fontSize: 32,
+    fontStyle: 'normal',
+    fontWeight: 500,
+    [mediaQueries.mUp]: {
+      fontSize: 44,
+    },
+  }),
+  p: css({
+    flexGrow: 1,
+    fontSize: 14,
+    [mediaQueries.mUp]: {
+      fontSize: 17,
+    },
+  }),
+}
+
 export function VerlegerKampagneBannerBottom() {
   const { data, loading } = useCampaignData()
 
   return (
-    <Center
-      {...css({
-        padding: '40px 15px',
-        [mediaQueries.mUp]: {
-          padding: '40px',
-        },
-        marginTop: 15,
-      })}
-    >
-      <div
-        {...css({
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'flex-start',
-          gap: 16,
-        })}
-      >
-        <div
-          {...css({
-            display: 'flex',
-            flexDirection: 'row',
-            alignItems: 'center',
-            gap: 14,
-            [mediaQueries.mUp]: {
-              gap: 32,
-            },
-          })}
-        >
+    <Center {...bottomBannerStyles.container}>
+      <div {...bottomBannerStyles.wrapper}>
+        <div {...bottomBannerStyles.header}>
           <Icon height={36} width={44} />
-          <h2
-            {...css({
-              margin: 0,
-              fontFamily: 'Druk',
-              fontSize: 32,
-              fontStyle: 'normal',
-              fontWeight: 500,
-              [mediaQueries.mUp]: {
-                fontSize: 44,
-              },
-            })}
-          >
+          <h2 {...bottomBannerStyles.heading}>
             Die Republik gibt es, weil wir etwas dafür tun.
           </h2>
         </div>
         <div>
-          <p
-            {...css({
-              flexGrow: 1,
-              fontSize: 14,
-              [mediaQueries.mUp]: {
-                fontSize: 17,
-              },
-            })}
-          >
+          <p {...bottomBannerStyles.p}>
             Bis zum 31. März suchen wir mit Ihnen zusammen{' '}
             {CAMPAIGN_REFERRALS_GOAL} neue Verlegerinnen. Mitmachen ist einfach:
             Teilen Sie Ihren persönlichen Link an so viele Bekannte wie möglich.
-            Den Rest der Arbeit übernehmen wir. Alle Infos und Tipps zu dieser
+            Den Rest der Arbeit übernehmen wir. Alle Infos und Tipps zu dieser{' '}
             {/* TODO: ADD PROPER LINK */}
             Kampagne finden Sie{' '}
             <Link
@@ -206,28 +199,15 @@ export function VerlegerKampagneBannerBottom() {
             </Link>{' '}
             in der Übersicht.
           </p>
-          <p
-            {...css({
-              flexGrow: 1,
-              fontSize: 14,
-              [mediaQueries.mUp]: {
-                fontSize: 17,
-              },
-            })}
-          >
+          <p {...bottomBannerStyles.p}>
             Gemeinsam haben wir schon {data?.campaign?.referrals?.count || '-'}{' '}
-            neue Verlegerinnen übrzeugt.
+            neue Verlegerinnen überzeugt.
           </p>
         </div>
         <div
-          {...css({
-            textStyle: 'sansSerifMedium',
-            fontSize: 'l',
-            display: 'flex',
-            gap: '4',
+          style={{
             width: '100%',
-            alignItems: 'center',
-          })}
+          }}
         >
           <ProgressBar
             from={data?.campaign.referrals.count || 0}

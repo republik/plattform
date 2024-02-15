@@ -85,7 +85,7 @@ import useAudioQueue from '../Audio/hooks/useAudioQueue'
 import { IconEdit } from '@republik/icons'
 import { ArticleAudioPlayer } from '../Audio/AudioPlayer/ArticleAudioPlayer'
 import { reportError } from 'lib/errors/reportError'
-import { VerlegerKampagneBannerBottom } from 'VerlegerKampagne/VerlegerKampagneBanner'
+import { VerlegerKampagneBannerBottom } from 'components/VerlegerKampagne/VerlegerKampagneBanner'
 
 const LoadingComponent = () => <SmallLoader loading />
 

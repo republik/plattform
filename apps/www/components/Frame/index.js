@@ -29,7 +29,7 @@ import { useMe } from '../../lib/context/MeContext'
 import { checkRoles } from '../../lib/apollo/withMe'
 import CallToActionBanner from '../CallToActions/CallToActionBanner'
 import { DraftModeIndicator } from 'components/DraftModeIndicator'
-import { VerlegerKampagneBannerTop } from 'VerlegerKampagne/VerlegerKampagneBanner'
+import { VerlegerKampagneBannerTop } from 'components/VerlegerKampagne/VerlegerKampagneBanner'
 
 css.global('html', { boxSizing: 'border-box' })
 css.global('*, *:before, *:after', { boxSizing: 'inherit' })
