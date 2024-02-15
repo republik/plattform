@@ -29,12 +29,7 @@ export default function ProgressBar({
   return (
     <div
       {...css({
-        textStyle: 'sansSerifMedium',
-        fontSize: 'l',
-        display: 'flex',
-        gap: '4',
         width: '100%',
-        alignItems: 'center',
       })}
     >
       <div
