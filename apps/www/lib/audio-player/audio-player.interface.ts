@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 export interface IAudioTrack {
   // unique identifier for the track
   id: string
@@ -5,7 +6,28 @@ export interface IAudioTrack {
   duration?: number
   // URL of the audio file
   src: string
+  // initial position to start playing the track
+  initialPosition?: number
 }
+
+export interface AudioPlayerEventMap {
+  updatePosition: {
+    type: 'updatePosition'
+    position: number
+  }
+  loaded: {
+    type: 'loaded'
+    duration: number
+  }
+  buffering: {
+    type: 'buffering'
+    percent: number
+  }
+  error: { type: 'error'; error: unknown }
+  ended: { type: 'ended' }
+}
+
+export type AudioPlayerEventTypes = keyof AudioPlayerEventMap
 
 export interface IAudioPlayer<
   T extends IAudioTrack = IAudioTrack,
@@ -14,8 +36,10 @@ export interface IAudioPlayer<
   /**
    * Prepare playing a track
    * @param track
+   * @param initialPosition
+   * @param startPlayback
    */
-  setupTrack(track: T): void
+  setupTrack(track: T, initialPosition?: number, startPlayback?: boolean): void
   getCurrentTrack(): T | null
 
   /**
@@ -32,9 +56,17 @@ export interface IAudioPlayer<
   getPlaybackRate(): number
   setPlaybackRate(playbackRate: number): void
 
+  getAutoPlay(): boolean
+  setAutoPlay(autoPlay: boolean): void
+
   getError(): E
   // reset the player to allow recovering from errors
   reset(): void
 
-  // TODO: observer for events
+  addEventListener<E extends keyof AudioPlayerEventMap>(
+    eventType: E,
+    handler: (event: AudioPlayerEventMap[E]) => void,
+  ): string
+
+  removeEventListener(id: string): void
 }

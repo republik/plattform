@@ -2,7 +2,7 @@ import { assign, createMachine } from 'xstate'
 import { IAudioPlayer, IAudioTrack } from './audio-player.interface'
 
 type AudioPlayerContext<T extends IAudioTrack = IAudioTrack> = {
-  audioController: IAudioPlayer<T> | null
+  player: IAudioPlayer<T> | null
   queue: T[]
   currentTrack: T | null
   previousTrack: T | null
@@ -19,6 +19,12 @@ export function getAudioPlayerStateMachine<
       id: 'audioplayer',
       types: {
         events: {} as
+          | {
+              type: 'SETUP'
+              queue?: T[]
+              initialPosition?: number
+              startPlayback?: boolean
+            }
           | { type: 'PLAY'; initialPosition?: number }
           | { type: 'PAUSE' }
           | { type: 'STOP' }
@@ -29,17 +35,18 @@ export function getAudioPlayerStateMachine<
           | ({ type: 'SEEK' } & Pick<AudioPlayerContext<T>, 'currentPosition'>)
           | ({
               type: 'PREPARE'
-              initalPosition?: number
               autoPlay?: boolean
               playbackRate?: number
-            } & Pick<AudioPlayerContext<T>, 'queue' | 'audioController'>)
+            } & Pick<AudioPlayerContext<T>, 'queue' | 'player'>)
           | { type: 'UPDATE_POSITION'; position: number }
-          | { type: 'TOGGLE_AUTOPLAY'; autoPlay?: boolean }
-          | { type: 'SET_PLAYBACKRATE'; playbackRate: number },
+          | { type: 'SET_AUTOPLAY'; autoPlay?: boolean }
+          | { type: 'SET_PLAYBACKRATE'; playbackRate: number }
+          | { type: 'SET_DURATION'; duration: number }
+          | { type: 'UPDATE_QUEUE'; queue: T[] },
         context: {} as AudioPlayerContext<T>,
       },
       context: {
-        audioController: null,
+        player: null,
         queue: [],
         currentTrack: null,
         previousTrack: null,
@@ -49,9 +56,26 @@ export function getAudioPlayerStateMachine<
       },
       initial: 'Idle',
       on: {
-        TOGGLE_AUTOPLAY: {
+        SET_AUTOPLAY: {
           actions: assign({
-            autoPlay: ({ event }) => Boolean(event?.autoPlay),
+            autoPlay: ({ event, context }) => {
+              const value = Boolean(event?.autoPlay)
+              context.player?.setAutoPlay(value)
+              return value
+            },
+          }),
+        },
+        SET_DURATION: {
+          actions: assign({
+            currentTrack: ({ event, context }) => {
+              if (event.type === 'SET_DURATION') {
+                return {
+                  ...context.currentTrack,
+                  duration: event.duration,
+                }
+              }
+              return context.currentTrack
+            },
           }),
         },
         SET_PLAYBACKRATE: {
@@ -59,8 +83,31 @@ export function getAudioPlayerStateMachine<
             playbackRate: ({ event, context }) => {
               const playbackRate =
                 Number(event.playbackRate) > 0 ? Number(event.playbackRate) : 1
-              context.audioController?.setPlaybackRate(playbackRate)
+              context.player?.setPlaybackRate(playbackRate)
               return playbackRate
+            },
+          }),
+        },
+        SEEK: {
+          actions: {
+            type: 'seekTo',
+          },
+        },
+        FORWARD: {
+          actions: {
+            type: 'forwardTrack',
+          },
+        },
+        BACKWARD: {
+          actions: {
+            type: 'backwardTrack',
+          },
+        },
+        UPDATE_QUEUE: {
+          actions: assign({
+            queue: ({ event }) => {
+              console.log('UPDATE_QUEUE', event.queue)
+              return event.queue
             },
           }),
         },
@@ -71,26 +118,26 @@ export function getAudioPlayerStateMachine<
           on: {
             PREPARE: {
               description: 'Populate the data in the state-machine',
-              target: 'Stopped',
+              target: 'Ready',
               actions: assign(({ event }) => {
-                const [firstTrack, ...queue] = event.queue
                 return {
-                  audioController: event.audioController,
-                  currentTrack: firstTrack,
-                  queue,
-                  currentPosition: event?.initalPosition || 0,
+                  player: event.player,
+                  currentTrack: null,
+                  queue: event.queue || [],
                   autoPlay: Boolean(event.autoPlay),
                 }
               }),
             },
           },
         },
-        Stopped: {
+        Ready: {
           description:
             "The audio player is not playing any track. It's ready to start playing when the user hits play.",
-          entry: {
-            type: 'stopPlayback',
-          },
+          // When ever the Ready state is entered and no current track is set
+          // we attempt to set the current track to the next track in the queue
+          // entry: {
+          //   type: 'stopPlayback',
+          // },
           on: {
             PLAY: {
               target: 'Playing',
@@ -102,6 +149,11 @@ export function getAudioPlayerStateMachine<
             },
             SKIP: {
               target: 'Ended',
+            },
+            SETUP: {
+              actions: {
+                type: 'setupPlayback',
+              },
             },
           },
         },
@@ -115,7 +167,8 @@ export function getAudioPlayerStateMachine<
               target: 'Paused',
             },
             STOP: {
-              target: 'Stopped',
+              target: 'Ready',
+              actions: 'stopPlayback',
             },
             SKIP: {
               target: 'Ended',
@@ -123,24 +176,15 @@ export function getAudioPlayerStateMachine<
             END: {
               target: 'Ended',
             },
-            FORWARD: {
-              actions: {
-                type: 'forwardTrack',
-              },
-            },
-            BACKWARD: {
-              actions: {
-                type: 'backwardTrack',
-              },
-            },
             UPDATE_POSITION: {
               actions: {
                 type: 'updateTime',
               },
             },
-            SEEK: {
+            SETUP: {
               actions: {
-                type: 'seekTo',
+                type: 'setupPlayback',
+                // TODO: MIGHT need to call 'resumePlayback' here
               },
             },
           },
@@ -153,7 +197,8 @@ export function getAudioPlayerStateMachine<
               target: 'Playing',
             },
             STOP: {
-              target: 'Stopped',
+              target: 'Ready',
+              actions: 'stopPlayback',
             },
             SKIP: {
               target: 'Ended',
@@ -161,24 +206,19 @@ export function getAudioPlayerStateMachine<
             END: {
               target: 'Ended',
             },
-            SEEK: {
-              actions: {
-                type: 'seekTo',
-              },
-            },
-            FORWARD: {
-              actions: {
-                type: 'forwardTrack',
-              },
-            },
-            BACKWARD: {
-              actions: {
-                type: 'backwardTrack',
-              },
+            SETUP: {
+              target: 'Ready',
+              actions: 'setupPlayback',
             },
           },
         },
+        /**
+         * State that is reached when the current track has ended
+         * If 'autoPlay' is enabled, a transition to 'Playing' is triggered
+         * Else the state updated to 'Ready'
+         */
         Ended: {
+          // Cleanup the current track
           entry: 'endTrack',
           on: {
             '*': [
@@ -188,7 +228,7 @@ export function getAudioPlayerStateMachine<
                 target: 'Playing',
               },
               {
-                target: 'Stopped',
+                target: 'Ready',
               },
             ],
           },
@@ -197,28 +237,102 @@ export function getAudioPlayerStateMachine<
     },
     {
       actions: {
-        setupPlayback: assign(({ context }) => {
-          if (!context.currentTrack) {
-            return {}
+        /**
+         * Setup the current track (or if not available the next track in the queue)
+         * on the audio controller
+         */
+        setupPlayback: assign(({ context, event }) => {
+          console.log(
+            'setupPlayback',
+            event.type,
+            context.currentTrack,
+            event,
+            context,
+          )
+          const next = context
+          const newQueue = event.type === 'SETUP' ? event.queue : context.queue
+          const initialPosition =
+            event.type === 'SETUP'
+              ? event.initialPosition
+              : context.currentPosition
+
+          // When playback has ended and auto-play is one
+          // a transition from 'Playing' to 'Ended' to 'Playing' is triggered
+          // and the current track is null
+          const currentQueue = context.queue
+          const queueHasChanged =
+            currentQueue.map((t) => t.id).join() !==
+            newQueue.map((t) => t.id).join()
+          const headOfQueueHasChanged =
+            queueHasChanged && newQueue[0]?.id !== context.currentTrack?.id
+
+          // In case the head of the queue has changed or the current track is not set
+          if (
+            // Check if the current track is not set
+            !context.currentTrack ||
+            // Check if the head of the queue has changed
+            headOfQueueHasChanged
+          ) {
+            const [current, ...queue] = newQueue
+            next.currentTrack = current
+            next.queue = queue
+            next.currentPosition = initialPosition
+            console.log('setupPlayback1', next.currentTrack)
+            context?.player?.setupTrack(
+              next.currentTrack,
+              initialPosition,
+              event.type === 'SETUP' ? event.startPlayback : false,
+            )
+            return { ...next }
           }
-          context?.audioController?.setupTrack(context.currentTrack)
+
+          if (queueHasChanged) {
+            console.log('updaing queue', newQueue)
+            next.queue = newQueue.slice(1)
+          }
+
           return {
-            currentPosition: 0,
+            ...next,
           }
         }),
-        stopPlayback: assign(({ context }) => {
-          context.audioController?.pause()
-          context.audioController?.seekTo(0)
+        stopPlayback: assign(({ context, event }) => {
+          console.log('stopPlayback', event.type, context.currentTrack)
+          if (context.player) {
+            context.player.pause()
+          }
+          // In case the previous state was not 'Ended',
+          // meaning the user closed the player before the track ended.
+          // No state change is needed in this case to allow playing
+          // the same track again from the same position
+          if (context.currentTrack) {
+            return {}
+          }
+
+          const [nextUp, ...queue] = context.queue || []
           return {
-            currentPosition: 0,
+            queue: queue,
+            currentTrack: nextUp,
           }
         }),
         pausePlayback: ({ context }) => {
-          context.audioController?.pause()
+          context.player?.pause()
         },
         resumePlayback: ({ context }) => {
-          context.audioController?.play()
+          context.player?.play()
         },
+        /**
+         * Set the current track to null
+         */
+        endTrack: assign(({ context, event }) => {
+          console.log('endTrack', event.type, context.currentTrack)
+          if (event.type !== 'END') return
+
+          return {
+            currentTrack: null,
+            currentPosition: 0,
+            previousTrack: context.currentTrack,
+          }
+        }),
         updateTime: assign({
           currentPosition: ({ event, context }) =>
             event.type === 'UPDATE_POSITION'
@@ -227,50 +341,37 @@ export function getAudioPlayerStateMachine<
         }),
         forwardTrack: assign({
           currentPosition: ({ context, event }) => {
+            console.log('forwardTrack', event.type, context.currentTrack)
             if (event.type !== 'FORWARD') return
             const positon = Math.min(
               (context.currentPosition += event.secs || 0),
               ((context?.currentTrack?.duration || 0) / 1000,
               Number.MAX_SAFE_INTEGER),
             )
-            context.audioController?.seekTo(positon)
+            context.player?.seekTo(positon)
             return positon
           },
         }),
         backwardTrack: assign({
           currentPosition: ({ context, event }) => {
+            console.log('backwardTrack', event.type, context.currentTrack)
             if (event.type !== 'BACKWARD') return
             const positon = Math.max(
               (context.currentPosition -= event.secs || 0),
               0,
             )
-            if (context.audioController) context.audioController.seekTo(positon)
+            context.player?.seekTo(positon)
             return positon
           },
         }),
-        endTrack: assign(({ context }) => {
-          const [nextUp, ...queue] = context.queue
-          console.log('Ended', {
-            nextUp,
-            queue,
-            currentTrack: context.currentTrack,
-          })
-
-          context.audioController?.reset()
-
-          return {
-            queue: queue,
-            currentTrack: nextUp,
-            previousTrack: context.currentTrack,
-          }
-        }),
         seekTo: assign({
           currentPosition: ({ event, context }) => {
+            console.log('seekTo', event.type, context.currentTrack)
             if (event.type !== 'SEEK') {
               return context.currentPosition
             }
 
-            context.audioController?.seekTo(event.currentPosition)
+            context.player?.seekTo(event.currentPosition)
             return event.currentPosition
           },
         }),
