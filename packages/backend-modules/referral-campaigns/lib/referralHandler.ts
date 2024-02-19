@@ -29,19 +29,10 @@ export async function handleReferral(
 ) {
   const { payload } = pledge
   debug('payload', payload)
-  if (!payload?.referral_code || !payload?.referral_campaign) {
-    debug('no content found for referred pledge', pledge?.id)
+  if (!payload?.referral_campaign) {
+    debug('no referral campaign found for referred pledge', pledge?.id)
     return
   }
-
-  const referrerId = (
-    await resolveUserByReferralCode(payload?.referral_code, pgdb)
-  )?.id
-  if (!referrerId) {
-    debug('no referrer found for pledge', pledge?.id)
-    throw new Error('referrer not found')
-  }
-  debug('referrer:', referrerId)
 
   const campaign = await fetchCampaignBySlug(payload.referral_campaign, pgdb)
 
@@ -63,6 +54,24 @@ export async function handleReferral(
     )
     throw new Error('campaign is not active')
   }
+
+  if (!payload?.referral_code) {
+    // save campaign only referral (phase 2)
+    await saveCampaignOnlyReferral(
+      { pledgeId: pledge.id, campaignId: campaign?.id },
+      pgdb,
+    )
+    return
+  }
+
+  const referrerId = (
+    await resolveUserByReferralCode(payload?.referral_code, pgdb)
+  )?.id
+  if (!referrerId) {
+    debug('no referrer found for pledge', pledge?.id)
+    throw new Error('referrer not found')
+  }
+  debug('referrer:', referrerId)
 
   await saveReferral(
     { pledgeId: pledge.id, referrerId: referrerId, campaignId: campaign?.id },
@@ -138,7 +147,26 @@ export async function saveReferral(
     const newReferral = await tx.public.referrals.insertAndGet({
       pledgeId: pledgeId,
       referrerId: referrerId,
-      campaignId: campaignId || null,
+      campaignId: campaignId,
+    })
+
+    await tx.transactionCommit()
+    debug('saved referral: ', newReferral)
+  } catch (e) {
+    await tx.transactionRollback()
+    console.error(e)
+  }
+}
+
+export async function saveCampaignOnlyReferral(
+  { pledgeId, campaignId }: { pledgeId: string; campaignId: string },
+  pgdb: PgDb,
+) {
+  const tx = await pgdb.transactionBegin()
+  try {
+    const newReferral = await tx.public.referrals.insertAndGet({
+      pledgeId: pledgeId,
+      campaignId: campaignId,
     })
 
     await tx.transactionCommit()
