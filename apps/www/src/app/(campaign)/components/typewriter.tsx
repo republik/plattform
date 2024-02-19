@@ -1,4 +1,5 @@
 'use client'
+import { css } from '@app/styled-system/css'
 import { Cursor, useTypewriter } from 'react-simple-typewriter'
 
 export const Typewriter = ({ words }: { words: string[] }) => {
@@ -12,7 +13,16 @@ export const Typewriter = ({ words }: { words: string[] }) => {
   return (
     <>
       {text}
-      <Cursor />
+      <span
+        className={css({
+          '& > span': {
+            // Override default cursor position
+            position: 'static',
+          },
+        })}
+      >
+        <Cursor />
+      </span>
     </>
   )
 }
