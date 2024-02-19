@@ -35,10 +35,6 @@ export default async function RootLayout({
           color: 'text',
           textStyle: 'body',
           bg: 'pageBackground',
-          '& :where(a)': {
-            color: 'link',
-            textDecoration: 'underline',
-          },
         })}
         style={{
           height: '100dvh',
