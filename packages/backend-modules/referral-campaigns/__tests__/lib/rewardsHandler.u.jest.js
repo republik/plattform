@@ -1,3 +1,4 @@
+jest.mock('check-env')
 const {
   findClaimableRewards,
 } = require('@orbiting/backend-modules-referral-campaigns')
