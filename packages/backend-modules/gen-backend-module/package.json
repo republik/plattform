@@ -1,0 +1,12 @@
+{
+  "name": "@orbiting/gen-backend-module",
+  "description": "description",
+  "author": "Henning Dahlheim <henning.dahlheim@republik.ch>",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "index.js",
+  "dependencies": {
+    "handlebars": "^4.7.7",
+    "yargs": "^17.7.2"
+  }
+}

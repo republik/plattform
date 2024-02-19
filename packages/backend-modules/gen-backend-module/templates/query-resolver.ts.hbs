@@ -1,0 +1,13 @@
+import type { GraphqlContext } from '@orbiting/backend-modules-types'
+
+type {{resolverName}}Args = {
+  slug: string
+}
+
+export = async function {{resolverName}}(
+  _root: any,
+  args: {{resolverName}}Args,
+  ctx: GraphqlContext,
+): Promise<any> {
+  // todo
+}
