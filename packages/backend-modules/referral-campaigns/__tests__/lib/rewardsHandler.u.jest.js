@@ -1,7 +1,7 @@
 jest.mock('check-env')
 const {
   findClaimableRewards,
-} = require('@orbiting/backend-modules-referral-campaigns')
+} = require('@orbiting/backend-modules-referral-campaigns/lib')
 
 const mockUserUUID = '0000-0000-0000-0001'
 const mockCampaignUUID = '1000-0000-0000-0001'
