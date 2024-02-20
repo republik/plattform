@@ -1,8 +1,9 @@
+jest.mock('check-env')
+jest.mock('pogi')
+
 const {
   handleReferral,
-} = require('@orbiting/backend-modules-referral-campaigns/lib')
-
-jest.mock('pogi')
+} = require('@orbiting/backend-modules-referral-campaigns')
 
 describe('test referral handling', () => {
   test('pledge.payload is undefined', () => {
