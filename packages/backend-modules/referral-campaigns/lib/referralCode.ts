@@ -1,5 +1,5 @@
-import type { User, UserRow } from '@orbiting/backend-modules-types'
-import type { PgDb } from 'pogi'
+import type { User } from '@orbiting/backend-modules-types'
+import type { ReferralCodeRepo } from './repo'
 import { CrockfordBase32 } from 'crockford-base32'
 
 const crypto = require('crypto')
@@ -11,14 +11,10 @@ const MAX_ATTMEPTS = 25
 /**
  * Generates and stores a unique code for a user and sets the referral-code for the user.
  * @param {User} user
- * @param {PgDb} pgdb
+ * @param {ReferralCodeRepo} repo
  * @returns {Promise<string|null>} generated referral code for the user
  */
-export async function generateReferralCode(user: User, pgdb: PgDb) {
-  if (user.referralCode) {
-    return user.referralCode
-  }
-
+export async function generateReferralCode(user: User, repo: ReferralCodeRepo) {
   let referralCode: string | null | undefined
   let length = MIN_HASH_LENGTH_IN_BYTES
   let attempts = 0
@@ -30,23 +26,20 @@ export async function generateReferralCode(user: User, pgdb: PgDb) {
       `User.referralCode | Attempting to assign referralCode ${referralCode} to user ${user.id}`,
     )
 
-    await pgdb.public.users
-      .updateAndGetOne({ id: user.id }, { referralCode: referralCode })
-      .then((user: UserRow) => {
-        referralCode = user.referralCode
-        console.log(
-          `User.referralCode | Assigned referralCode ${referralCode} to user ${user.id}`,
-        )
-      })
-      // in case of collision, try again
-      .catch((err: Error) => {
-        console.error(
-          `User.referralCode | Could not assign referralCode ${referralCode} to user ${user.id}, trying again...`,
-        )
-        console.error(err)
-        referralCode = null
-        attempts++
-      })
+    try {
+      const newUser = await repo.updateUserReferralCode(user.id, referralCode)
+      referralCode = newUser?.referralCode
+      console.log(
+        `User.referralCode | Assigned referralCode ${referralCode} to user ${user.id}`,
+      )
+    } catch (err) {
+      console.error(
+        `User.referralCode | Could not assign referralCode ${referralCode} to user ${user.id}, trying again...`,
+      )
+      console.error(err)
+      referralCode = null
+      attempts++
+    }
 
     if (referralCode) {
       break
@@ -75,18 +68,19 @@ export async function generateReferralCode(user: User, pgdb: PgDb) {
 /**
  * Resolves a user based on the referralCode or public username.
  *
- * @param {string} referral
- * @param {PgDb} pgdb
+ * @param {string} referralCode
+ * @param {ReferralCodeRepo} repo
  * @returns {Promise<UserRow?>} generated referral code for the user
  */
-export async function resolveUserByReferralCode(referral: string, pgdb: PgDb) {
+export async function resolveUserByReferralCode(
+  referralCode: string,
+  repo: ReferralCodeRepo,
+) {
   try {
-    const normalizedCode = normalizeReferralCode(referral)
-    return await pgdb.public.users.findOne({
-      referralCode: normalizedCode,
-    })
+    const normalizedCode = normalizeReferralCode(referralCode)
+    return await repo.getUserByReferralCode(normalizedCode)
   } catch (e) {
-    console.log(`REFERRAL_CODE invalid Base32 code ${referral}`)
+    console.log(`REFERRAL_CODE invalid Base32 code ${referralCode}`)
   }
   return null
 }

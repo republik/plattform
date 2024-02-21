@@ -1,5 +1,6 @@
 import type { GraphqlContext } from '@orbiting/backend-modules-types'
 import { resolveUserByReferralCode } from '../../../lib/referralCode'
+import { PGReferralsRepo } from '../../../lib/repo'
 
 type ValidateReferralArgs = { code: string }
 
@@ -13,7 +14,7 @@ export = async function validateReferralCode(
   { code }: ValidateReferralArgs,
   { user: me, pgdb }: GraphqlContext,
 ): Promise<ValidationResult> {
-  const user = await resolveUserByReferralCode(code, pgdb)
+  const user = await resolveUserByReferralCode(code, new PGReferralsRepo(pgdb))
   if (!user) {
     return 'NOT_FOUND'
   }

@@ -1,4 +1,5 @@
 import type { GraphqlContext } from '@orbiting/backend-modules-types'
+import { PGReferralsRepo } from '../../../lib/repo'
 import { Campaign } from '../../types'
 
 type CampgainArgs = {
@@ -13,7 +14,7 @@ export = async function campaigns(
   { slug }: CampgainArgs,
   ctx: GraphqlContext,
 ): Promise<Campaign | null> {
-  const campaign = await ctx.pgdb.public.campaigns.findOne({ slug: slug })
+  const campaign = await new PGReferralsRepo(ctx.pgdb).getCampaignBySlug(slug)
 
   return campaign
 }
