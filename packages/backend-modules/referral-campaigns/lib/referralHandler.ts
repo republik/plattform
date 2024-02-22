@@ -9,6 +9,7 @@ type Pledge = {
   id: string
   userId: string
   payload?: PledgePayload
+  total?: number
 }
 
 type PledgePayload = {
@@ -65,6 +66,12 @@ export async function handleReferral(
     throw new Error('referrer not found')
   }
   debug('referrer:', referrerId)
+
+  if (!pledge.total || pledge.total < 12000) {
+    throw new Error(
+      'Pledge total is below 120 CHF, no referral saved: ' + pledge.id,
+    )
+  }
 
   await repo.saveCampaignReferral(campaign.id, pledge.id, referrerId)
 
