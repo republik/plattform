@@ -1,5 +1,4 @@
 import type { GraphqlContext } from '@orbiting/backend-modules-types'
-import { claimRewards } from './rewardsHandler'
 import { resolveUserByReferralCode } from './referralCode'
 import dayjs = require('dayjs')
 import { PGReferralsRepo } from './repo'
@@ -94,29 +93,4 @@ export async function handleReferral(
   // rewards can only be claimed if the abo type is not MONTHLY_ABO
   // TODO maybe rewards should still be recorded with a different reward type, tbd
   // TODO this could also move to a scheduler
-  if (!hasMonthlyAbo && activeMembership) {
-    const rewardsToClaim = await repo.getClaimableRewards(
-      campaign.id,
-      referrerId,
-      referralCount,
-    )
-    debug('rewards to claim', rewardsToClaim)
-    if (!rewardsToClaim || !rewardsToClaim.length) {
-      debug(
-        'No claimable rewards found for user and campaign',
-        referrerId,
-        campaign,
-      )
-      return
-    }
-    // claim rewards
-    await claimRewards(
-      {
-        activeMembership: activeMembership,
-        userId: referrerId,
-        rewards: rewardsToClaim,
-      },
-      pgdb,
-    )
-  }
 }

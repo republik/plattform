@@ -18,3 +18,9 @@ export type UserCampaignRewardsRow = {
   createdAt: string
   updatedAt: string
 }
+
+export type ReferrersWithCountRow = {
+  referrerId: string
+  campaignId: string
+  referralCount: number
+}

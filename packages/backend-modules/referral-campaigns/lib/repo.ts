@@ -1,7 +1,11 @@
 import type { UserRow } from '@orbiting/backend-modules-types'
 import type { PgDb } from 'pogi'
 import type { Campaign } from '../graphql/types'
-import type { CampaignRewardRow, UserCampaignRewardsRow } from './types'
+import type {
+  CampaignRewardRow,
+  UserCampaignRewardsRow,
+  ReferrersWithCountRow,
+} from './types'
 
 export interface ReferralCampaignRepo {
   getCampaignBySlug(slug: string): Promise<Campaign | null>
@@ -20,6 +24,7 @@ export interface ReferralCampaignRepo {
     pledgeId: string,
     referrerId?: string,
   ): Promise<any>
+  getReferrersWithUnclaimedRewards(): Promise<ReferrersWithCountRow[]>
 }
 
 export interface ReferralCodeRepo {
@@ -112,6 +117,15 @@ export class PGReferralsRepo implements ReferralCampaignRepo, ReferralCodeRepo {
       console.error(e)
       return null
     }
+  }
+
+  async getReferrersWithUnclaimedRewards(): Promise<ReferrersWithCountRow[]> {
+    return await this.#pgdb
+      .query(`SELECT r."referrerId", r."campaignId", COUNT(*) "referralCount"
+      FROM referrals r
+      LEFT JOIN "userCampaignRewards" ucr ON r."referrerId" = ucr."userId"
+      WHERE ucr."userId" IS NULL
+      GROUP BY r."referrerId", r."campaignId"`)
   }
 
   async getReferralCountByReferrerId(id: string): Promise<number> {

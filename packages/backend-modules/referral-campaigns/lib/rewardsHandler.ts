@@ -1,5 +1,6 @@
 import type { PgDb } from 'pogi'
-import type { CampaignRewardRow } from './types'
+import type { CampaignRewardRow, ReferrersWithCountRow } from './types'
+import { PGReferralsRepo } from './repo'
 
 const debug = require('debug')('referralCampaigns:lib:rewardsHandler')
 const dayjs = require('dayjs')
@@ -7,6 +8,68 @@ const bluebird = require('bluebird')
 
 // TODO get from graphql enum type
 const REWARD_TYPES = ['bonus_month']
+
+type RewardReferrersInput = {
+  dryRun: boolean
+}
+
+/**
+ * Check rewards to claim for referrers in scheduler, claim rewards
+ * @param args scheduler arguments, contains dryRun
+ * @param pgdb db instance
+ */
+export async function rewardReferrers(args: RewardReferrersInput, pgdb: PgDb) {
+  const repo = new PGReferralsRepo(pgdb)
+
+  const referrersWithCounts = await repo.getReferrersWithUnclaimedRewards()
+
+  bluebird.each(
+    referrersWithCounts,
+    async (referrerWithCount: ReferrersWithCountRow) => {
+      const { referrerId, campaignId, referralCount } = referrerWithCount
+
+      const activeMembership = await pgdb.public.memberships.findOne({
+        userId: referrerId,
+        active: true,
+      })
+
+      if (activeMembership) {
+        const rewardsToClaim = await repo.getClaimableRewards(
+          campaignId,
+          referrerId,
+          referralCount,
+        )
+        debug('rewards to claim', rewardsToClaim)
+        if (!rewardsToClaim || !rewardsToClaim.length) {
+          debug(
+            'No claimable rewards found for user and campaign',
+            referrerId,
+            campaignId,
+          )
+          return
+        }
+
+        // only claim rewards if not in dryRun
+        if (args.dryRun) {
+          console.log(
+            'Dry run, not claiming rewards, rewards to claim: ' +
+              JSON.stringify(rewardsToClaim),
+          )
+        } else {
+          // claim rewards
+          await claimRewards(
+            {
+              activeMembership: activeMembership,
+              userId: referrerId,
+              rewards: rewardsToClaim,
+            },
+            pgdb,
+          )
+        }
+      }
+    },
+  )
+}
 
 type ClaimRewardsInput = {
   activeMembership: any

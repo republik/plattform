@@ -22,6 +22,10 @@ const {
   sendPaymentReminders,
 } = require('../../lib/payments/paymentslip/sendPaymentReminders')
 
+const {
+  rewardReferrers,
+} = require('@orbiting/backend-modules-referral-campaigns/lib')
+
 const surplus = require('@orbiting/backend-modules-republik/graphql/resolvers/RevenueStats/surplus')
 const {
   populate: populateMembershipStatsEvolution,
@@ -114,6 +118,19 @@ const init = async (context) => {
       runFunc: async (args, context) => {
         await changeover(args, context)
         await deactivate(args, context)
+      },
+      lockTtlSecs,
+      runIntervalSecs: 60 * 10,
+    }),
+  )
+
+  schedulers.push(
+    intervalScheduler.init({
+      name: 'referral-rewards',
+      context,
+      runFunc: async (args, context) => {
+        const { pgdb } = context
+        await rewardReferrers(args, pgdb)
       },
       lockTtlSecs,
       runIntervalSecs: 60 * 10,
