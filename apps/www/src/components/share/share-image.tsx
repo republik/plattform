@@ -1,4 +1,5 @@
 'use client'
+import { useTrackEvent } from '@app/lib/matomo/event-tracking'
 import { ReactNode, useEffect, useState } from 'react'
 
 export const ShareImage = ({
@@ -9,6 +10,7 @@ export const ShareImage = ({
   children: ReactNode
 }) => {
   const [canShare, setCanShare] = useState(false)
+  const trackEvent = useTrackEvent()
 
   useEffect(() => {
     if (navigator.canShare) {
@@ -43,6 +45,7 @@ export const ShareImage = ({
   return canShare ? (
     <button
       onClick={() => {
+        trackEvent({ action: 'shareImageNative' })
         handleNativeShare()
       }}
     >

@@ -5,13 +5,13 @@ import { usePathname, useSearchParams } from 'next/navigation'
 
 declare global {
   interface Window {
-    _paq?: string[][]
+    _paq?: (string | number | Record<`dimension${number}`, string>)[][]
   }
 }
 
 // See https://nextjs.org/docs/app/api-reference/functions/use-router#router-events
 
-export function MatomoTracking() {
+export function MatomoPageViewTracking() {
   const pathname = usePathname()
   const searchParams = useSearchParams()
 

@@ -3,6 +3,7 @@ import Container from '@app/components/container'
 import { PageLayout } from '@app/components/layout'
 import { Logo } from '@app/components/layout/header/logo'
 import { ReferralCodeValidationResult } from '@app/graphql/republik-api/gql/graphql'
+import { EventTrackingContext } from '@app/lib/matomo/event-tracking'
 import { css } from '@app/styled-system/css'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
@@ -68,38 +69,40 @@ export default async function Layout({
   return (
     <div data-page-theme='campaign-2024' data-theme-inverted>
       <PageLayout showHeader={false} showFooter={false}>
-        <Container>
-          <div
-            className={css({
-              minHeight: '100dvh',
-              display: 'flex',
-              flexDirection: 'column',
-              background: 'pageBackground',
-              color: 'text',
-            })}
-          >
-            <div className={css({ py: '4' })}>
-              <Logo />
-            </div>
+        <EventTrackingContext category='CampaignReceiverPage'>
+          <Container>
             <div
               className={css({
+                minHeight: '100dvh',
                 display: 'flex',
                 flexDirection: 'column',
-                gap: '8',
-                // py: '8-16',
-                fontSize: 'xl',
-                position: 'relative',
-                minHeight: { md: '50rem', base: '100dvh' },
-                // maxHeight: 800,
-                justifyContent: 'stretch',
-                margin: 'auto',
-                // margin: 'auto',
+                background: 'pageBackground',
+                color: 'text',
               })}
             >
-              {pageContent}
+              <div className={css({ py: '4' })}>
+                <Logo />
+              </div>
+              <div
+                className={css({
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '8',
+                  // py: '8-16',
+                  fontSize: 'xl',
+                  position: 'relative',
+                  minHeight: { md: '50rem', base: '100dvh' },
+                  // maxHeight: 800,
+                  justifyContent: 'stretch',
+                  margin: 'auto',
+                  // margin: 'auto',
+                })}
+              >
+                {pageContent}
+              </div>
             </div>
-          </div>
-        </Container>
+          </Container>
+        </EventTrackingContext>
       </PageLayout>
     </div>
   )

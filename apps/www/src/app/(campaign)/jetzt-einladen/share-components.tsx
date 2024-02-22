@@ -2,6 +2,7 @@
 
 import { Share } from '@app/components/share/share'
 import { ShareImage } from '@app/components/share/share-image'
+import { useTrackEvent } from '@app/lib/matomo/event-tracking'
 import { css } from '@app/styled-system/css'
 import { hstack, vstack } from '@app/styled-system/patterns'
 import { IconDownload, IconShare } from '@republik/icons'
@@ -53,6 +54,7 @@ export const ShareImageConfigurator = ({
   userHasPublicProfile: boolean
 }) => {
   const [showPortrait, setShowPortrait] = useState(true)
+  const trackEvent = useTrackEvent()
 
   const imageUrl =
     showPortrait && userHasPublicProfile
@@ -97,6 +99,14 @@ export const ShareImageConfigurator = ({
           className={css({ textDecoration: 'none' })}
           href={imageUrl}
           download={'share-image.png'}
+          onClick={() => {
+            trackEvent({
+              action: 'shareImageDownload',
+              name: showPortrait
+                ? 'withProfilePicture'
+                : 'withoutProfilePicture',
+            })
+          }}
         >
           <div className={shareButtonStyle}>
             <IconDownload size={20} />
