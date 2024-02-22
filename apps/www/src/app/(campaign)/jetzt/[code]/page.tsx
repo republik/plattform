@@ -143,7 +143,7 @@ export default async function Page({ params }) {
                 <em>
                   {sender.firstName} {sender.lastName}
                 </em>{' '}
-                hat Sie eingeladen, die Republik zu unterstützen.
+                hat Sie eingeladen, die Republik mit einem Abo zu unterstützen.
               </>
             </SenderProfile>
           </div>
@@ -155,16 +155,41 @@ export default async function Page({ params }) {
           seinen Leserinnen und Lesern.
         </p>
         <p>
-          In der Republik erwarten Sie von Montag bis Samstag Beiträge zum Lesen
-          und Hören - von professionellen Sprecherinnen vorgelesen. Wir nehmen
-          uns die nötige Zeit, um aktuelle Themen und Fragen für Sie angemessen
-          und sorgfältig zu recherchieren, zu erzählen – und alle Fakten zu
-          überprüfen.
+          In der Republik erwarten Sie täglich 1 bis 3 Beiträge zum Lesen und
+          Hören. Wir nehmen uns die nötige Zeit, um aktuelle Themen und Fragen
+          für Sie angemessen und sorgfältig zu recherchieren, zu erzählen – und
+          alle Fakten zu überprüfen.
         </p>
         <p>
           Damit Sie einen klaren Kopf behalten, mutig handeln und klug
           entscheiden können.
         </p>
+        <p>Warum andere die Republik unterstützen:</p>
+        <ol
+          className={css({
+            listStyleType: 'decimal',
+            marginLeft: '1em',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '2',
+          })}
+          type='1'
+        >
+          <li>
+            Die Beiträge helfen mir immer wieder, das chaotische Weltgeschehen
+            besser einzuordnen, und unterstützen mich bei der Meinungsbildung.
+          </li>
+          <li>
+            Unabhängiger Journalismus ist unter Druck. Es braucht Gegensteuer.
+          </li>
+          <li>
+            Super Mischung aus Reportagen mit grossem Aktualitätsbezug, tolle
+            Qualität und mutige neue Projekte wie das Klimalabor.
+          </li>
+          <li>
+            Journalismus kostet. Und guten Journalismus will ich unterstützen.
+          </li>
+        </ol>
         <CTA href={`${params.code}/angebot`} />
 
         {/* <CTA href={`${params.code}/angebot`} /> */}

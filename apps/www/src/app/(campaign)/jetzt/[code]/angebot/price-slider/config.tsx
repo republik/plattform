@@ -1,3 +1,5 @@
+import { ReactNode } from 'react'
+
 export type SliderStepKey =
   | 'minimum'
   | 'belowStandard'
@@ -14,7 +16,7 @@ type SliderStep = {
   label: string
   text: string
   goodie: boolean
-  goodieText: string
+  goodieText: ReactNode
   bonusHint: string
 }
 
@@ -42,9 +44,9 @@ const SLIDER_STEPS: Record<SliderStepKey, SliderStep> = {
     iconSrc: '/static/5-jahre-republik/receiver/slider-step-0.svg',
     label: 'Der erleichterte Einstieg',
     text: 'Wählen Sie den Preis, der für Sie passt. Wir freuen uns über jede zusätzliche Unterstützung! ',
-    goodie: false,
+    goodie: true,
     goodieText:
-      'Die Jubiläumstasche gibts dazu, wenn Sie mehr als CHF 240 bezahlen.',
+      'Zum Dank schenken wir Ihnen beim Abo-Kauf eine Republik-Tasche',
     bonusHint: '',
   }, //  5 <= Selected < average CHF}
   // average: {
@@ -73,8 +75,9 @@ const SLIDER_STEPS: Record<SliderStepKey, SliderStep> = {
     text: 'So viel bezahlt die überwiegende Mehrheit unserer Unterstützer. Wir werden Ihnen in den kommenden 12 Monaten beweisen, dass sich jeder Franken gelohnt hat.',
     goodie: true,
     goodieText:
-      'Zum Dank gibts beim Abo-Kauf eine Republik-Tasche gratis dazu!',
-    bonusHint: 'Sie werden zudem Mitglied der Project R Genossenschaft',
+      'Zum Dank schenken wir Ihnen beim Abo-Kauf eine Republik-Tasche!',
+    bonusHint:
+      'Sie werden zudem Mitglied der Project R Genossenschaft, die hinter der Republik steht. Als Mitglied haben Sie keine Verpflichtungen, können aber bei ausgewählten Fragen mitentscheiden.',
   }, // selected = 240 CHF}
   investmentLow: {
     key: 'investmentLow',
@@ -83,8 +86,9 @@ const SLIDER_STEPS: Record<SliderStepKey, SliderStep> = {
     text: 'Sie können sich mehr als den Normalpreis leisten und tun dies auch. Wir bedanken uns für Ihre Grosszügigkeit!',
     goodie: true,
     goodieText:
-      'Zum Dank gibts beim Abo-Kauf eine Republik-Tasche gratis dazu!',
-    bonusHint: 'Sie werden zudem Mitglied der Project R Genossenschaft',
+      'Zum Dank schenken wir Ihnen beim Abo-Kauf eine Republik-Tasche!',
+    bonusHint:
+      'Sie werden zudem Mitglied der Project R Genossenschaft, die hinter der Republik steht. Als Mitglied haben Sie keine Verpflichtungen, können aber bei ausgewählten Fragen mitentscheiden.',
   }, // 240 < selected < 500 CHF}
   // investmentHigh: {
   //   key: 'investmentHigh',
@@ -102,9 +106,16 @@ const SLIDER_STEPS: Record<SliderStepKey, SliderStep> = {
     label: 'Der fulminante Einstieg',
     text: 'Was für ein Start! Mit Ihrer Unterstützung erhalten wir längerfristig Sicherheit. Ihr Vertrauen ehrt uns.',
     goodie: true,
-    goodieText:
-      'Zum Dank laden wir Sie zu einem persönlichen Besuch bei uns ins Rothaus ein und zeigen Ihnen bei Kaffee und Kuchen die Redaktion.',
-    bonusHint: 'Sie werden zudem Mitglied der Project R Genossenschaft',
+    goodieText: (
+      <>
+        Zum Dank schenken wir Ihnen beim Abo-Kauf eine Republik-Tasche!
+        <br />
+        Und wir laden Sie zu einem persönlichen Besuch bei uns ins Rothaus ein
+        und zeigen Ihnen bei Kaffee und Kuchen die Redaktion.
+      </>
+    ),
+    bonusHint:
+      'Sie werden zudem Mitglied der Project R Genossenschaft, die hinter der Republik steht. Als Mitglied haben Sie keine Verpflichtungen, können aber bei ausgewählten Fragen mitentscheiden.',
   }, // selected = 1000 CHF}
 } as const
 
