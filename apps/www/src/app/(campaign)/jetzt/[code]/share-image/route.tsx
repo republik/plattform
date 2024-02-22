@@ -12,6 +12,8 @@ export async function GET(
   const searchParams = request.nextUrl.searchParams
   const showPortrait =
     searchParams.get('show_portrait') === 'true' ? true : false
+  const orientation =
+    searchParams.get('orientation') === 'landscape' ? 'landscape' : 'portrait'
 
-  return generateShareImage({ code: params.code, showPortrait })
+  return generateShareImage({ code: params.code, orientation, showPortrait })
 }
