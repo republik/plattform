@@ -22,6 +22,12 @@ export default async function Page() {
     return redirect('/anmelden')
   }
 
+  const hasMonthlyAbo = me?.activeMembership?.type.name === 'MONTHLY_ABO'
+  const hasRegularAbo = ['ABO', 'BENEFACTOR_ABO'].includes(
+    me?.activeMembership?.type.name,
+  )
+
+  const referred = me.referrals?.count || 0
   return (
     <Container>
       <div
@@ -33,13 +39,70 @@ export default async function Page() {
           fontSize: 'xl',
         })}
       >
-        {/* <p>
-          {' '}
-          <strong>
-            Nice! Sie haben schon {data.me?.futureCampaignAboCount} Leute
-            eingeladen 🎉
-          </strong>
-        </p> */}
+        {referred > 0 && (
+          <div
+            className={css({
+              borderRadius: 1,
+              background: 'text',
+              color: 'pageBackground',
+              display: 'flex',
+              flexDirection: 'row',
+              alignItems: 'center',
+              px: '4',
+              py: '2',
+              gap: '6',
+              alignSelf: 'stretch',
+            })}
+          >
+            <div
+              className={css({
+                fontSize: '36px',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                height: '100%',
+              })}
+            >
+              🎉
+            </div>
+            <div>
+              <p>
+                {referred === 1 && (
+                  <>
+                    Herzlichen Dank! Über Ihren persönlichen Link hat jemand ein
+                    Abo abgeschlossen.
+                    {hasRegularAbo && (
+                      <> Zum Dank schenken wir Ihnen einen Monat Republik.</>
+                    )}
+                    {hasMonthlyAbo && (
+                      <>
+                        {' '}
+                        Zum Dank schreiben wir Ihnen CHF 20 auf einen künftigen
+                        Republik-Monat gut.
+                      </>
+                    )}
+                  </>
+                )}
+                {referred == 2 && (
+                  <>
+                    Wahnsinn! Schon zwei Personen haben über Ihren Link den Weg
+                    zur Republik gefunden und ein Abo abgeschlossen. Finden Sie
+                    noch eine dritte?
+                  </>
+                )}
+                {referred > 2 && (
+                  <>
+                    Grossartig! {referred} Personen haben über Ihren Link ein
+                    Republik-Abo abgeschlossen. Sie haben offensichtlich Talent.
+                    Teilen Sie Ihre Tipps mit uns!
+                    {/*TODO: (Link zum Meta-Beitrag mit
+                    Dialog)*/}
+                  </>
+                )}
+              </p>
+            </div>
+          </div>
+        )}
 
         <h1 className={css({ textStyle: 'campaignHeading' })}>
           <TypewriterContent />
@@ -71,10 +134,8 @@ export default async function Page() {
           Empfängerinnen ein zeitlich limitiertes Einstiegsangebot: ein Jahr
           Republik ab CHF 120. Wenn das erste Mal jemand über Ihren Link ein
           neues Abo abschliesst,{' '}
-          {['ABO', 'BENEFACTOR_ABO'].includes(
-            me?.activeMembership?.type.name,
-          ) && <>verlängern wir Ihr eigenes um einen Monat.</>}
-          {me?.activeMembership?.type.name === 'MONTHLY_ABO' && (
+          {hasRegularAbo && <>verlängern wir Ihr eigenes um einen Monat.</>}
+          {hasMonthlyAbo && (
             <>
               schreiben wir Ihnen auf einen schreiben wir Ihnen auf einen
               zukünftigen Republik-Monat CHF 20 gut.
