@@ -43,7 +43,7 @@ const SLIDER_STEPS: Record<SliderStepKey, SliderStep> = {
     key: 'belowStandard',
     iconSrc: '/static/5-jahre-republik/receiver/slider-step-0.svg',
     label: 'Der erleichterte Einstieg',
-    text: 'Wählen Sie den Preis, der für Sie passt. Wir freuen uns über jede zusätzliche Unterstützung! ',
+    text: 'Wählen Sie den Preis, der für Sie passt. Wir freuen uns über jede zusätzliche Unterstützung!',
     goodie: true,
     goodieText:
       'Zum Dank schenken wir Ihnen beim Abo-Kauf eine Republik-Tasche',
@@ -72,7 +72,7 @@ const SLIDER_STEPS: Record<SliderStepKey, SliderStep> = {
     key: 'standard',
     iconSrc: '/static/5-jahre-republik/receiver/slider-step-3.svg',
     label: 'Der souveräne Einstieg',
-    text: 'So viel bezahlt die überwiegende Mehrheit unserer Unterstützer. Wir werden Ihnen in den kommenden 12 Monaten beweisen, dass sich jeder Franken gelohnt hat.',
+    text: 'So viel bezahlt die grosse Mehrheit unserer Unterstützer. Wir werden Ihnen in den kommenden 12 Monaten beweisen, dass sich jeder Franken gelohnt hat.',
     goodie: true,
     goodieText:
       'Zum Dank schenken wir Ihnen beim Abo-Kauf eine Republik-Tasche!',

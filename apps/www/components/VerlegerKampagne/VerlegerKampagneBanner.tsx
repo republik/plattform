@@ -182,22 +182,10 @@ export function VerlegerKampagneBannerBottom() {
         </div>
         <div>
           <p {...bottomBannerStyles.p}>
-            Bis zum 31. März suchen wir mit Ihnen zusammen{' '}
-            {CAMPAIGN_REFERRALS_GOAL} neue Verlegerinnen. Mitmachen ist einfach:
-            Teilen Sie Ihren persönlichen Link an so viele Bekannte wie möglich.
-            Den Rest der Arbeit übernehmen wir. Alle Infos und Tipps zu dieser{' '}
-            {/* TODO: ADD PROPER LINK */}
-            Kampagne finden Sie{' '}
-            <Link
-              href='#'
-              {...css({
-                color: verlegerKampagneColors.yellow,
-                textDecoration: 'underline',
-              })}
-            >
-              hier
-            </Link>{' '}
-            in der Übersicht.
+            Bis zum 31. März suchen wir mit Ihnen zusammen 1000 zusätzliche
+            Verlegerinnen (Link zum Metaartikel). Mitmachen ist einfach: Teilen
+            Sie Ihren persönlichen Link mit so vielen Bekannten wie möglich und
+            erzählen Sie ihnen, warum Sie die Republik unterstützen.
           </p>
           <p {...bottomBannerStyles.p}>
             Gemeinsam haben wir schon {data?.campaign?.referrals?.count || '-'}{' '}
