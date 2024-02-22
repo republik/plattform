@@ -4,6 +4,11 @@ query CampaignSender($campaignSlug: String!) {
     hasPublicProfile
     username
     referralCode
+    activeMembership {
+      type {
+        name
+      }
+    }
     referrals(campaignSlug: $campaignSlug) {
       count
     }

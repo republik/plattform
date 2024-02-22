@@ -12,13 +12,13 @@ import { redirect } from 'next/navigation'
 import { CAMPAIGN_REFERRALS_GOAL } from '../constants'
 
 export default async function Page() {
-  const data = await getSenderData()
+  const { me } = await getSenderData()
 
   const url = `${process.env.NEXT_PUBLIC_BASE_URL}/jetzt/${
-    data.me?.hasPublicProfile ? data.me.username : data.me?.referralCode
+    me?.hasPublicProfile ? me.username : me?.referralCode
   }`
 
-  if (!data.me) {
+  if (!me) {
     return redirect('/anmelden')
   }
 
@@ -46,16 +46,17 @@ export default async function Page() {
         </h1>
 
         <p>
-          Lassen Sie uns diese Verantwortung auf mehrere Schultern verteilen:{' '}
+          Lassen Sie uns diese Verantwortung auf mehr Schultern verteilen:{' '}
           <Link href='#'>
-            Bis zum 31. März suchen wir {CAMPAIGN_REFERRALS_GOAL} neue
-            Unterstützer
+            Bis zum 31. März suchen wir {CAMPAIGN_REFERRALS_GOAL} zusätzliche
+            Verlegerinnen.
           </Link>
-          . Je mehr Menschen sich einsetzen, umso grösser ist die Grundlage für
-          das, weshalb wir alle hier sind: Unabhängiger Journalismus.
+          . Denn je mehr Menschen sich einsetzen, desto breiter ist die
+          Grundlage für das, weshalb wir alle hier sind: unabhängiger
+          Journalismus.
         </p>
 
-        <p>Der aktuelle Zwischenstand:</p>
+        <p>Aktueller Zwischenstand:</p>
 
         <div>
           <CampaignProgress />
@@ -66,23 +67,31 @@ export default async function Page() {
         </h2>
 
         <p>
-          Teilen Sie Ihren Kampagnen-Link und erzählen Sie Ihren Bekannten,
-          warum Sie die Republik unterstützen. Wir bieten Neugierigen,
-          Interessierten und Unentschlossenen ein spezielles Einstiegsangebot.
-          Und wenn jemand über Ihren Link ein neues Abo abschliesst, verlängern
-          wir Ihr eigenes um einen Monat.
+          Teilen Sie Ihren Kampagnen-Link. Über diesen erhalten die
+          Empfängerinnen ein zeitlich limitiertes Einstiegsangebot: ein Jahr
+          Republik ab CHF 120. Wenn das erste Mal jemand über Ihren Link ein
+          neues Abo abschliesst,{' '}
+          {['ABO', 'BENEFACTOR_ABO'].includes(
+            me?.activeMembership?.type.name,
+          ) && <>verlängern wir Ihr eigenes um einen Monat.</>}
+          {me?.activeMembership?.type.name === 'MONTHLY_ABO' && (
+            <>
+              schreiben wir Ihnen auf einen schreiben wir Ihnen auf einen
+              zukünftigen Republik-Monat CHF 20 gut.
+            </>
+          )}
         </p>
 
         <ShareLink url={url} />
 
         <p>
-          Ein Link ist Ihnen zu unpersönlich? Dann teilen Sie Ihr Kampagnen-Bild
-          auf Social Media.
+          Ein Link ist Ihnen zu unpersönlich? Dann teilen Sie Ihr
+          Kampagnen-Bild.
         </p>
 
         <ShareImageConfigurator
           url={url}
-          userHasPublicProfile={data.me?.hasPublicProfile}
+          userHasPublicProfile={me?.hasPublicProfile}
         />
       </div>
     </Container>
