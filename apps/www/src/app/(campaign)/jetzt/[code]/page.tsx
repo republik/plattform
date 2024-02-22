@@ -164,32 +164,49 @@ export default async function Page({ params }) {
           Damit Sie einen klaren Kopf behalten, mutig handeln und klug
           entscheiden können.
         </p>
-        <p>Warum andere die Republik unterstützen:</p>
-        <ol
+        <div
           className={css({
-            listStyleType: 'decimal',
-            marginLeft: '1em',
             display: 'flex',
             flexDirection: 'column',
-            gap: '2',
+            gap: '4',
           })}
-          type='1'
         >
-          <li>
-            Die Beiträge helfen mir immer wieder, das chaotische Weltgeschehen
-            besser einzuordnen, und unterstützen mich bei der Meinungsbildung.
-          </li>
-          <li>
-            Unabhängiger Journalismus ist unter Druck. Es braucht Gegensteuer.
-          </li>
-          <li>
-            Super Mischung aus Reportagen mit grossem Aktualitätsbezug, tolle
-            Qualität und mutige neue Projekte wie das Klimalabor.
-          </li>
-          <li>
-            Journalismus kostet. Und guten Journalismus will ich unterstützen.
-          </li>
-        </ol>
+          <h2
+            className={css({
+              fontWeight: 'bold',
+            })}
+          >
+            Warum andere die Republik unterstützen:
+          </h2>
+          <ul
+            className={css({
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '2',
+              '&> li::before': {
+                content: '"«"',
+              },
+              '&> li::after': {
+                content: '"»"',
+              },
+            })}
+          >
+            <li>
+              Die Beiträge helfen mir immer wieder, das chaotische Weltgeschehen
+              besser einzuordnen, und unterstützen mich bei der Meinungsbildung.
+            </li>
+            <li>
+              Unabhängiger Journalismus ist unter Druck. Es braucht Gegensteuer.
+            </li>
+            <li>
+              Super Mischung aus Reportagen mit grossem Aktualitätsbezug, tolle
+              Qualität und mutige neue Projekte wie das Klimalabor.
+            </li>
+            <li>
+              Journalismus kostet. Und guten Journalismus will ich unterstützen.
+            </li>
+          </ul>
+        </div>
         <CTA href={`${params.code}/angebot`} />
 
         {/* <CTA href={`${params.code}/angebot`} /> */}
