@@ -25,7 +25,8 @@
     "apollo-modules-node": "*",
     "debug": "^4.1.1",
     "zod": "^3.22.4",
-    "crockford-base32": "^2.0.0"
+    "crockford-base32": "^2.0.0",
+    "stripe": "^8.119.0"
   },
   "devDependencies": {}
 }

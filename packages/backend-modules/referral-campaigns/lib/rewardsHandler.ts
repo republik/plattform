@@ -1,5 +1,9 @@
 import type { PgDb } from 'pogi'
 import type { CampaignRewardRow, ReferrersWithCountRow } from './types'
+import {
+  applyStripeCampaignCoupon,
+  ensureActiveMonthlySubscription,
+} from './stripeCoupon'
 import { PGReferralsRepo } from './repo'
 
 const debug = require('debug')('referralCampaigns:lib:rewardsHandler')
@@ -96,6 +100,13 @@ export async function claimRewards(
       return
     }
 
+    // handle stripe bonus month by appling discount coupon
+    if (reward.type === 'bonus_month' && activeMembership?.subscriptionId) {
+      return await claimStripeBonusMonth(
+        { activeMembership, userId, reward },
+        pgdb,
+      )
+    }
     // generate bonus month
     if (reward.type === 'bonus_month') {
       return await claimBonusMonths({ activeMembership, userId, reward }, pgdb)
@@ -138,6 +149,30 @@ async function claimBonusMonths(
     debug(newMembershipPeriod)
 
     return newMembershipPeriod
+  } catch (e) {
+    console.error('transaction rollback, not claiming bonus month', e)
+    await tx.transactionRollback()
+  }
+}
+
+async function claimStripeBonusMonth(
+  rewardHandlerInput: RewardHandlerInput,
+  pgdb: PgDb,
+) {
+  const tx = await pgdb.transactionBegin()
+
+  try {
+    await tx.public.userCampaignRewards.insert({
+      userId: rewardHandlerInput.userId,
+      campaignRewardId: rewardHandlerInput.reward.id,
+    })
+
+    ensureActiveMonthlySubscription(rewardHandlerInput.activeMembership)
+    await applyStripeCampaignCoupon(rewardHandlerInput.activeMembership)
+
+    await tx.transactionCommit()
+
+    return 'success'
   } catch (e) {
     console.error('transaction rollback, not claiming bonus month', e)
     await tx.transactionRollback()
