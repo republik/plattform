@@ -8,6 +8,8 @@ export const presetCampaign2024 = definePreset({
         '[data-page-theme="campaign-2024"]:where([data-theme-inverted]) &',
       campaign2024Dark:
         '[data-theme="dark"] [data-page-theme="campaign-2024"] &',
+      campaign2024DarkInverted:
+        '[data-theme="dark"] [data-page-theme="campaign-2024"]:where([data-theme-inverted]) &',
     },
   },
 
