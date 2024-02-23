@@ -30,46 +30,55 @@ export async function rewardReferrers(args: RewardReferrersInput, pgdb: PgDb) {
   bluebird.each(
     referrersWithCounts,
     async (referrerWithCount: ReferrersWithCountRow) => {
-      const { referrerId, campaignId, referralCount } = referrerWithCount
+      try {
+        const { referrerId, campaignId, referralCount } = referrerWithCount
 
-      const activeMembership = await pgdb.public.memberships.findOne({
-        userId: referrerId,
-        active: true,
-      })
+        const activeMembership = await pgdb.public.memberships.findOne({
+          userId: referrerId,
+          active: true,
+        })
 
-      if (activeMembership) {
-        const rewardsToClaim = await repo.getClaimableRewards(
-          campaignId,
-          referrerId,
-          referralCount,
-        )
-        debug('rewards to claim', rewardsToClaim)
-        if (!rewardsToClaim || !rewardsToClaim.length) {
-          debug(
-            'No claimable rewards found for user and campaign',
-            referrerId,
+        if (activeMembership) {
+          const rewardsToClaim = await repo.getClaimableRewards(
             campaignId,
+            referrerId,
+            referralCount,
           )
-          return
-        }
+          debug('rewards to claim', rewardsToClaim)
+          if (!rewardsToClaim || !rewardsToClaim.length) {
+            debug(
+              'No claimable rewards found for user and campaign',
+              referrerId,
+              campaignId,
+            )
+            return
+          }
 
-        // only claim rewards if not in dryRun
-        if (args.dryRun) {
-          console.log(
-            'Dry run, not claiming rewards, rewards to claim: ' +
-              JSON.stringify(rewardsToClaim),
-          )
-        } else {
-          // claim rewards
-          await claimRewards(
-            {
-              activeMembership: activeMembership,
-              userId: referrerId,
-              rewards: rewardsToClaim,
-            },
-            pgdb,
-          )
+          // only claim rewards if not in dryRun
+          if (args.dryRun) {
+            console.log(
+              'Dry run, not claiming rewards, rewards to claim: ' +
+                JSON.stringify(rewardsToClaim),
+            )
+          } else {
+            // claim rewards
+            await claimRewards(
+              {
+                activeMembership: activeMembership,
+                userId: referrerId,
+                rewards: rewardsToClaim,
+              },
+              pgdb,
+            )
+          }
         }
+      } catch (e) {
+        console.error(
+          `Error while trying to claim referral camapign reward for ${JSON.stringify(
+            referrerWithCount,
+          )}`,
+          e,
+        )
       }
     },
   )
