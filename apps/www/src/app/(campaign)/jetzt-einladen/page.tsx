@@ -10,6 +10,9 @@ import { css } from '@app/styled-system/css'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { CAMPAIGN_REFERRALS_GOAL } from '../constants'
+import Image from 'next/image'
+
+import illu from '@app/app/(campaign)/assets/campaign-illustration.svg'
 
 export default async function Page() {
   const { me } = await getSenderData()
@@ -39,6 +42,27 @@ export default async function Page() {
           fontSize: 'xl',
         })}
       >
+        <Image
+          className={css({
+            width: '240px',
+            maxWidth: 'full',
+            height: 'auto',
+            margin: '0 auto',
+          })}
+          alt='Kampagnen-Logo'
+          src={illu}
+        />
+        <h1
+          className={css({
+            textStyle: 'campaignHeading',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8',
+          })}
+        >
+          <TypewriterContent />
+        </h1>
+
         {referred > 0 && (
           <div
             className={css({
@@ -48,8 +72,8 @@ export default async function Page() {
               display: 'flex',
               flexDirection: 'row',
               alignItems: 'center',
-              px: '4',
-              py: '2',
+              px: '8',
+              py: '4',
               gap: '6',
               alignSelf: 'stretch',
             })}
@@ -103,10 +127,6 @@ export default async function Page() {
             </div>
           </div>
         )}
-
-        <h1 className={css({ textStyle: 'campaignHeading' })}>
-          <TypewriterContent />
-        </h1>
 
         <p>
           Lassen Sie uns diese Verantwortung auf mehr Schultern verteilen:{' '}
