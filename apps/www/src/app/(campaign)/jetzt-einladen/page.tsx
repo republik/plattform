@@ -54,7 +54,7 @@ export default async function Page() {
               alignSelf: 'stretch',
             })}
           >
-            <div
+            {/* <div
               className={css({
                 fontSize: '36px',
                 display: 'flex',
@@ -64,13 +64,13 @@ export default async function Page() {
               })}
             >
               🎉
-            </div>
+            </div> */}
             <div>
               <p>
                 {referred === 1 && (
                   <>
-                    Herzlichen Dank! Über Ihren persönlichen Link hat jemand ein
-                    Abo abgeschlossen.
+                    🎉 Herzlichen Dank! Über Ihren persönlichen Link hat jemand
+                    ein Abo abgeschlossen.
                     {hasRegularAbo && (
                       <> Zum Dank schenken wir Ihnen einen Monat Republik.</>
                     )}
