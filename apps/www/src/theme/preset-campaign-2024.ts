@@ -32,6 +32,8 @@ export const presetCampaign2024 = definePreset({
               _campaign2024Inverted:
                 'linear-gradient(180deg, transparent 0%, {colors.campaign2024.red} 4rem, {colors.campaign2024.red} 100%)',
               _campaign2024Dark: '{colors.campaign2024.yellow}',
+              _campaign2024DarkInverted:
+                'linear-gradient(180deg, transparent 0%, {colors.campaign2024.darkRed} 4rem, {colors.campaign2024.darkRed} 100%)',
             },
           },
         },
@@ -83,6 +85,7 @@ export const presetCampaign2024 = definePreset({
                 _campaign2024: '{colors.campaign2024.yellow}',
                 _campaign2024Inverted: '{colors.campaign2024.red}',
                 _campaign2024Dark: '{colors.campaign2024.red}',
+                _campaign2024DarkInverted: '{colors.campaign2024.darkRed}',
               },
             },
           },

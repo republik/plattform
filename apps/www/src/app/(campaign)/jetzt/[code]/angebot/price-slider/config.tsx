@@ -44,9 +44,9 @@ const SLIDER_STEPS: Record<SliderStepKey, SliderStep> = {
     iconSrc: '/static/5-jahre-republik/receiver/slider-step-0.svg',
     label: 'Der erleichterte Einstieg',
     text: 'Wählen Sie den Preis, der für Sie passt. Wir freuen uns über jede zusätzliche Unterstützung!',
-    goodie: true,
+    goodie: false,
     goodieText:
-      'Zum Dank schenken wir Ihnen beim Abo-Kauf eine Republik-Tasche',
+      'Die Jubiläumstasche gibts dazu, wenn Sie mehr als CHF 240 bezahlen.',
     bonusHint: '',
   }, //  5 <= Selected < average CHF}
   // average: {
