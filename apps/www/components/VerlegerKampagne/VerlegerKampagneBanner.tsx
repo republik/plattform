@@ -100,14 +100,10 @@ export function VerlegerKampagneBannerTop() {
         </div>
         <p {...topBannerStyles.p}>
           Bis zum 31. März suchen wir mit Ihnen zusammen{' '}
-          {CAMPAIGN_REFERRALS_GOAL} neue Unterstützer.
-          <span {...topBannerStyles.desktopOnly}>
-            Gemeinsam haben wir schon {data?.campaign?.referrals?.count || '-'}{' '}
-            neue Verlegerinnen überzeugt.
-          </span>
+          {CAMPAIGN_REFERRALS_GOAL} zusätzliche Verleger.
         </p>
         <Button small href='/jetzt-einladen'>
-          Helfen Sie mit
+          Jetzt mithelfen
         </Button>
       </div>
       <div>
@@ -187,10 +183,10 @@ export function VerlegerKampagneBannerBottom() {
             Sie Ihren persönlichen Link mit so vielen Bekannten wie möglich und
             erzählen Sie ihnen, warum Sie die Republik unterstützen.
           </p>
-          <p {...bottomBannerStyles.p}>
+          {/* <p {...bottomBannerStyles.p}>
             Gemeinsam haben wir schon {data?.campaign?.referrals?.count || '-'}{' '}
             neue Verlegerinnen überzeugt.
-          </p>
+          </p> */}
         </div>
         <div
           style={{
@@ -203,9 +199,7 @@ export function VerlegerKampagneBannerBottom() {
           />
         </div>
         <div>
-          <Button href='/jetzt-einladen'>
-            Jetzt persöhnlichen Link teilen
-          </Button>
+          <Button href='/jetzt-einladen'>Jetzt mithelfen</Button>
         </div>
       </div>
     </Center>
