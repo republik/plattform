@@ -62,7 +62,7 @@ const SLIDER_STEPS: Record<SliderStep, Reward> = {
   [SliderStep.minimum]: {
     key: SliderStep.minimum,
     label: 'Der minimale Einstieg',
-    text: 'Jeden Monat für den Wert von zwei Kaffees eine ganze Republik erhalten. Nicht schlecht!',
+    text: 'Für den Wert von zwei Kaffees pro Monat eine ganze Republik erhalten. Ein Jahr lang. Nicht schlecht!',
     goodies: (
       <Goodie iconSrc={iconBag} disabled>
         Die Jubiläumstasche gibts dazu, wenn Sie mehr als CHF 240 bezahlen.
@@ -72,7 +72,7 @@ const SLIDER_STEPS: Record<SliderStep, Reward> = {
   [SliderStep.belowStandard]: {
     key: SliderStep.belowStandard,
     label: 'Der erleichterte Einstieg',
-    text: 'Wählen Sie den Preis, der für Sie passt. Wir freuen uns über jede zusätzliche Unterstützung!',
+    text: 'Wählen Sie den Preis, der für Sie passt. Wir freuen uns über jede zusätzliche Unterstützung – und Sie erhalten ein Jahr lang die Republik.',
     goodies: (
       <Goodie iconSrc={iconBag} disabled>
         Die Jubiläumstasche gibts dazu, wenn Sie mehr als CHF 240 bezahlen.
