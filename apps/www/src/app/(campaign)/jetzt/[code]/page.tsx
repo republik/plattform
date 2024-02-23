@@ -1,4 +1,5 @@
 import { getInviteeData } from '@app/app/(campaign)/campaign-data'
+import { CampaignLogo } from '@app/app/(campaign)/components/campaign-logo'
 import { TypewriterContent } from '@app/app/(campaign)/components/typewriter-content'
 import { css } from '@app/styled-system/css'
 import { Metadata } from 'next'
@@ -135,10 +136,19 @@ export default async function Page({ params }) {
 
   return (
     <>
+      <CampaignLogo
+        inverted
+        className={css({
+          width: { base: '120px', md: '240px' },
+          maxWidth: 'full',
+          height: 'auto',
+          mx: 'auto',
+          mt: '4',
+        })}
+      />
       <h1
         className={css({
           textStyle: 'campaignHeading',
-          mt: '8-16',
           pr: '16',
         })}
       >

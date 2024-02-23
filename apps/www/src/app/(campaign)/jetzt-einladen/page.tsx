@@ -1,4 +1,5 @@
 import { getSenderData } from '@app/app/(campaign)/campaign-data'
+import { CampaignLogo } from '@app/app/(campaign)/components/campaign-logo'
 import { CampaignProgress } from '@app/app/(campaign)/components/campaign-progress'
 import { TypewriterContent } from '@app/app/(campaign)/components/typewriter-content'
 import {
@@ -10,9 +11,6 @@ import { css } from '@app/styled-system/css'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { CAMPAIGN_REFERRALS_GOAL } from '../constants'
-import Image from 'next/image'
-
-import illu from '@app/app/(campaign)/assets/campaign-illustration.svg'
 
 export default async function Page() {
   const { me } = await getSenderData()
@@ -42,15 +40,14 @@ export default async function Page() {
           fontSize: 'xl',
         })}
       >
-        <Image
+        <CampaignLogo
           className={css({
-            width: '240px',
+            width: { base: '120px', md: '240px' },
+
             maxWidth: 'full',
             height: 'auto',
-            margin: '0 auto',
+            mx: 'auto',
           })}
-          alt='Kampagnen-Logo'
-          src={illu}
         />
         <h1
           className={css({

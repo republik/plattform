@@ -6,6 +6,7 @@ import { Suspense } from 'react'
 import { PriceRewards } from './price-rewards'
 import { PriceSliderWithState } from './price-slider-with-state'
 import { CAMPAIGN_SLUG } from '@app/app/(campaign)/constants'
+import { CampaignLogo } from '@app/app/(campaign)/components/campaign-logo'
 
 // Ensure that search params are available during SSR
 // https://nextjs.org/docs/app/api-reference/functions/use-search-params#dynamic-rendering
@@ -57,13 +58,23 @@ export default async function Page({ params, searchParams }) {
       >
         Wählen Sie Ihren Einstiegspreis
       </h1> */}
+      <CampaignLogo
+        inverted
+        className={css({
+          width: { base: '120px', md: '240px' },
+          maxWidth: 'full',
+          height: 'auto',
+          mx: 'auto',
+          mt: '4',
+        })}
+      />
+
       <div
         className={css({
           flexGrow: 1,
           display: 'flex',
           flexDirection: 'column',
           gap: '4',
-          mt: '8-16',
         })}
       >
         <Suspense>
