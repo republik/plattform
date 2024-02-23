@@ -1,0 +1,23 @@
+query AudioFeed {
+  feed: documents(feed: true, first: 100) {
+    nodes {
+      meta {
+        title
+        description
+        path
+        publishDate
+        audioCover
+        audioSource {
+          durationMs
+          mediaId
+          kind
+          mp3
+        }
+        contributors {
+          kind
+          name
+        }
+      }
+    }
+  }
+}
