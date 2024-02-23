@@ -12,7 +12,9 @@ const {
 } = require('@orbiting/backend-modules-base')
 
 const { maybeDelcareMilestonePublished } = require('../lib/postgres')
-const { maybeApplyAudioSourceDuration } = require('../lib/audioSource')
+const {
+  maybeApplyAudioSourceDurationAndByteSize,
+} = require('../lib/audioSource')
 
 const debug = Debug('publikator:script:migrateAudioSources')
 
@@ -102,7 +104,7 @@ const handleBatch = async (rows: any[], count: number, pgdb: any) => {
       return
     }
 
-    await maybeApplyAudioSourceDuration(meta)
+    await maybeApplyAudioSourceDurationAndByteSize(meta)
 
     const tx = await pgdb.transactionBegin()
     debug('transaction begin')

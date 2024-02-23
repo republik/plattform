@@ -28,6 +28,7 @@ type AudioSource implements PlayableMedia {
   aac: String
   ogg: String
   durationMs: Int!
+  byteSize: Int
 }
 
 enum AudioSourceKind {
