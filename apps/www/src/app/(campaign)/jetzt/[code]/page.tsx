@@ -1,6 +1,7 @@
 import { getInviteeData } from '@app/app/(campaign)/campaign-data'
 import { TypewriterContent } from '@app/app/(campaign)/components/typewriter-content'
 import { css } from '@app/styled-system/css'
+import { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import { ReactNode } from 'react'
@@ -109,6 +110,22 @@ const CTA = ({ href }: { href: string }) => {
       <p className={css({ fontSize: 'base' })}> ab CHF 120 für ein Jahr</p>
     </div>
   )
+}
+
+export async function generateMetadata({ params }): Promise<Metadata> {
+  const data = await getInviteeData(params)
+
+  const senderName = data.sender?.firstName
+    ? `${data.sender.firstName}${
+        data.sender.lastName ? ' ' + data.sender.lastName : ''
+      }`
+    : 'Jemand'
+
+  return {
+    title: `${senderName} lädt Sie ein, die Republik zu unterstützen`,
+    description: 'TBD',
+    robots: 'noindex',
+  }
 }
 
 export default async function Page({ params }) {
