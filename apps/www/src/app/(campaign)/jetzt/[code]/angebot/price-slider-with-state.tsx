@@ -24,7 +24,7 @@ export const PriceSliderWithState = () => {
   )
 
   return (
-    <div ref={ref} className={css({ width: '100%' })}>
+    <div ref={ref} className={css({ width: '100%', minHeight: 110 })}>
       {width && (
         <PriceSlider
           onChange={(sliderStep) => {

@@ -22,7 +22,7 @@ export const presetCampaign2024 = definePreset({
             yellow: { value: '#FFFDF0' },
             yellowLight: { value: '#FFFDF080' },
             red: { value: 'rgb(229,1,70)' },
-            darkRed: { value: '#610000' },
+            darkRed: { value: '#3B0012' },
           },
         },
       },

@@ -1,5 +1,5 @@
 import { getInviteeData } from '@app/app/(campaign)/campaign-data'
-import { CampaignLogo } from '@app/app/(campaign)/components/campaign-logo'
+import { Logo } from '@app/app/(campaign)/components/logo'
 import { TypewriterContent } from '@app/app/(campaign)/components/typewriter-content'
 import { css } from '@app/styled-system/css'
 import { Metadata } from 'next'
@@ -95,7 +95,7 @@ const CTA = ({ href }: { href: string }) => {
           color: 'text.inverted',
           px: '6',
           py: '3',
-          borderRadius: '3px',
+          borderRadius: '4px',
           fontWeight: 'medium',
           cursor: 'pointer',
           textDecoration: 'none',
@@ -109,6 +109,9 @@ const CTA = ({ href }: { href: string }) => {
         Wählen Sie Ihren Einstiegspreis
       </Link>
       <p className={css({ fontSize: 'base' })}> ab CHF 120 für ein Jahr</p>
+      <div className={css({ pt: '2' })}>
+        <Logo />
+      </div>
     </div>
   )
 }
@@ -136,16 +139,6 @@ export default async function Page({ params }) {
 
   return (
     <>
-      <CampaignLogo
-        inverted
-        className={css({
-          width: { base: '120px', md: '240px' },
-          maxWidth: 'full',
-          height: 'auto',
-          mx: 'auto',
-          mt: '4',
-        })}
-      />
       <h1
         className={css({
           textStyle: 'campaignHeading',

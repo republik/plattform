@@ -1,7 +1,7 @@
 import { getInviteeData } from '@app/app/(campaign)/campaign-data'
+import { CampaignLogo } from '@app/app/(campaign)/components/campaign-logo'
 import Container from '@app/components/container'
 import { PageLayout } from '@app/components/layout'
-import { Logo } from '@app/components/layout/header/logo'
 import { ReferralCodeValidationResult } from '@app/graphql/republik-api/gql/graphql'
 import { EventTrackingContext } from '@app/lib/matomo/event-tracking'
 import { css } from '@app/styled-system/css'
@@ -78,11 +78,19 @@ export default async function Layout({
                 flexDirection: 'column',
                 background: 'pageBackground',
                 color: 'text',
+                // justifyContent: 'center',
               })}
             >
-              <div className={css({ py: '4' })}>
-                <Logo />
-              </div>
+              <CampaignLogo
+                inverted
+                className={css({
+                  width: { base: '120px', md: '240px' },
+                  maxWidth: 'full',
+                  height: 'auto',
+                  mx: 'auto',
+                  my: '8-16',
+                })}
+              />
               <div
                 className={css({
                   display: 'flex',
@@ -91,11 +99,9 @@ export default async function Layout({
                   // py: '8-16',
                   fontSize: 'xl',
                   position: 'relative',
-                  minHeight: { md: '50rem', base: '100dvh' },
+                  minHeight: { md: '40rem', base: '100dvh' },
                   // maxHeight: 800,
                   justifyContent: 'stretch',
-                  margin: 'auto',
-                  // margin: 'auto',
                 })}
               >
                 {pageContent}

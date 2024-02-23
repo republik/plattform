@@ -1,12 +1,12 @@
 import { getInviteeData } from '@app/app/(campaign)/campaign-data'
+import { CAMPAIGN_SLUG } from '@app/app/(campaign)/constants'
 import { getSliderStepForValue } from '@app/app/(campaign)/jetzt/[code]/angebot/price-slider/helpers'
 import { css } from '@app/styled-system/css'
 import Link from 'next/link'
 import { Suspense } from 'react'
 import { PriceRewards } from './price-rewards'
 import { PriceSliderWithState } from './price-slider-with-state'
-import { CAMPAIGN_SLUG } from '@app/app/(campaign)/constants'
-import { CampaignLogo } from '@app/app/(campaign)/components/campaign-logo'
+import { Logo } from '@app/app/(campaign)/components/logo'
 
 // Ensure that search params are available during SSR
 // https://nextjs.org/docs/app/api-reference/functions/use-search-params#dynamic-rendering
@@ -58,16 +58,6 @@ export default async function Page({ params, searchParams }) {
       >
         Wählen Sie Ihren Einstiegspreis
       </h1> */}
-      <CampaignLogo
-        inverted
-        className={css({
-          width: { base: '120px', md: '240px' },
-          maxWidth: 'full',
-          height: 'auto',
-          mx: 'auto',
-          mt: '4',
-        })}
-      />
 
       <div
         className={css({
@@ -87,7 +77,7 @@ export default async function Page({ params, searchParams }) {
           position: 'sticky',
           bottom: 0,
           // width: '100dvw',
-          pb: '8',
+          py: '8',
           px: '8',
           mx: '-4',
           backgroundGradient: 'stickyBottomPanelBackground',
@@ -106,7 +96,7 @@ export default async function Page({ params, searchParams }) {
             color: 'text.inverted',
             px: '6',
             py: '3',
-            borderRadius: '3px',
+            borderRadius: '4px',
             fontWeight: 'medium',
             cursor: 'pointer',
             textDecoration: 'none',
@@ -118,6 +108,9 @@ export default async function Page({ params, searchParams }) {
         >
           Für CHF {price} abonnieren
         </Link>
+        <div className={css({ pt: '4' })}>
+          <Logo />
+        </div>
       </div>
     </>
   )
