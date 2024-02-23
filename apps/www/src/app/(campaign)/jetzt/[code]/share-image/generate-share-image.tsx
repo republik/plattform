@@ -1,5 +1,10 @@
+/* eslint-disable @next/next/no-img-element */
+
 import { getInviteeData } from '@app/app/(campaign)/campaign-data'
 import { ImageResponse } from 'next/og'
+import illustration from '@app/app/(campaign)/assets/campaign-illustration-inverted.svg'
+
+const ILLUSTRATION_ASPECT_RATIO = illustration.width / illustration.height
 
 const colors = {
   red: '#E50146',
@@ -26,23 +31,22 @@ const sizes = {
 const Message = ({
   lines,
   portrait,
-  gap = sizes['8'],
+  orientation,
 }: {
   lines: string[]
   portrait?: string
-  gap?: number
+  orientation: 'landscape' | 'portrait'
 }) => {
   return (
     <div
       style={{
         display: 'flex',
         flexDirection: 'column',
-        gap,
+        gap: orientation === 'landscape' ? 0 : sizes['6'],
 
         fontFamily: 'GTAmerica',
-        fontSize: sizes['7'],
+        fontSize: orientation === 'landscape' ? sizes['6'] : sizes['7'],
         fontWeight: 700,
-        letterSpacing: 2,
 
         alignItems: 'center',
         textAlign: 'center',
@@ -55,7 +59,6 @@ const Message = ({
         <div key={i}>{line}</div>
       ))}
       {portrait && (
-        // eslint-disable-next-line @next/next/no-img-element
         <img
           alt=''
           src={portrait}
@@ -68,6 +71,20 @@ const Message = ({
         ></img>
       )}
     </div>
+  )
+}
+
+const Illustration = ({ size }: { size: number }) => {
+  return (
+    <img
+      style={{
+        height: size,
+        width: size * ILLUSTRATION_ASPECT_RATIO,
+        // marginBottom: sizes['4'],
+      }}
+      src={process.env.NEXT_PUBLIC_BASE_URL + illustration.src}
+      alt=''
+    />
   )
 }
 
@@ -133,65 +150,60 @@ export async function generateShareImage({
           flexDirection: 'column',
           justifyContent: 'space-between',
           alignItems: 'center',
-          padding: sizes['12'],
+          padding: sizes['8'],
         }}
       >
-        {/* <img
-          style={{
-            height: sizes['32'] * 0.8,
-            width: sizes['32'] * 0.8 * 0.68,
-          }}
-          src={process.env.NEXT_PUBLIC_BASE_URL + illu.src}
-          alt=''
-        /> */}
+        <Illustration size={orientation === 'landscape' ? 200 : 240} />
 
         <Message
           lines={[
-            `Unabhängiger Journalismus lebt vom Einsatz vieler. Darum unterstütze
-          ich die Republik.`,
+            // eslint-disable-next-line no-irregular-whitespace
+            `Unabhängiger Journalismus lebt vom Einsatz vieler. Darum unterstütze ich die Republik.`,
             `Du auch?`,
           ]}
           portrait={showPortrait ? sender?.portrait : null}
-          gap={orientation === 'landscape' ? 0 : sizes['8']}
+          orientation={orientation}
         />
 
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: sizes['4'],
-            alignItems: 'center',
-            textAlign: 'center',
-          }}
-        >
+        <div style={{ display: 'flex', gap: sizes['4'] }}>
           <div
             style={{
-              fontFamily: 'GTAmerica',
-              fontSize: sizes['4'],
-              fontWeight: 500,
+              display: 'flex',
+              flexDirection: 'column',
+              gap: sizes['4'],
+              alignItems: 'center',
+              textAlign: 'center',
             }}
           >
-            Jetzt zum Einstiegspreis
-            ab&nbsp;CHF&nbsp;120&nbsp;für&nbsp;ein&nbsp;Jahr
-          </div>
-          <div style={{ display: 'flex' }}>
             <div
               style={{
                 fontFamily: 'GTAmerica',
                 fontSize: sizes['4'],
-                color: colors.red,
-                background: colors.yellow,
-                padding: sizes['2'],
-                paddingLeft: sizes['3'],
-                paddingRight: sizes['3'],
-                borderRadius: sizes['1'],
+                fontWeight: 500,
               }}
             >
-              {`republik.ch/jetzt/${sender?.username ?? code}`}
+              Jetzt zum Einstiegspreis
+              ab&nbsp;CHF&nbsp;120&nbsp;für&nbsp;ein&nbsp;Jahr
             </div>
-          </div>
+            <div style={{ display: 'flex' }}>
+              <div
+                style={{
+                  fontFamily: 'GTAmerica',
+                  fontSize: sizes['4'],
+                  color: colors.red,
+                  background: colors.yellow,
+                  padding: sizes['2'],
+                  paddingLeft: sizes['3'],
+                  paddingRight: sizes['3'],
+                  borderRadius: sizes['1'],
+                }}
+              >
+                {`republik.ch/jetzt/${sender?.username ?? code}`}
+              </div>
+            </div>
 
-          <Logo />
+            <Logo />
+          </div>
         </div>
       </div>
     ),
