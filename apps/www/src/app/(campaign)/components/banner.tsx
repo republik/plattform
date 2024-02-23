@@ -70,9 +70,9 @@ export function CampaignBanner({
               },
             })}
           >
-            Bis zum 31. März suchen wir mit Ihnen zusammen {referralsGoal} neue
-            Unterstützer.
-            <span
+            Bis zum 31. März suchen wir mit Ihnen zusammen {referralsGoal}{' '}
+            zusätzliche Verleger.
+            {/* <span
               className={css({
                 display: 'none',
                 md: {
@@ -82,7 +82,7 @@ export function CampaignBanner({
             >
               Gemeinsam haben wir schon {currentReferrals || '-'} neue
               Verlegerinnen überzeugt.
-            </span>
+            </span> */}
           </p>
           <Link
             href='/jetzt-einladen'
@@ -105,7 +105,7 @@ export function CampaignBanner({
               },
             })}
           >
-            Helfen Sie mit
+            Jetzt mithelfen
           </Link>
         </div>
         <div>
