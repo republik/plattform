@@ -24,7 +24,7 @@ const {
 
 const {
   rewardReferrers,
-} = require('@orbiting/backend-modules-referral-campaigns/lib')
+} = require('@orbiting/backend-modules-referral-campaigns')
 
 const surplus = require('@orbiting/backend-modules-republik/graphql/resolvers/RevenueStats/surplus')
 const {
