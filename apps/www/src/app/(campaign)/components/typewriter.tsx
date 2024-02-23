@@ -6,8 +6,9 @@ export const Typewriter = ({ words }: { words: string[] }) => {
   const [text] = useTypewriter({
     words,
     loop: true,
-    typeSpeed: 80,
-    delaySpeed: 5000,
+    typeSpeed: 60,
+    deleteSpeed: 40,
+    delaySpeed: 2000,
   })
 
   return (

@@ -2,6 +2,7 @@ import { Typewriter } from './typewriter'
 import { css } from '@app/styled-system/css'
 
 const words = [
+  'Die Republik',
   'Unabhängigen Journalismus',
   'Eine höfliche Streitkultur',
   'Vertrauenswürdige Berichterstattung',
