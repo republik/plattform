@@ -2,12 +2,20 @@ import { Typewriter } from './typewriter'
 import { css } from '@app/styled-system/css'
 
 const words = [
-  'Die Republik',
   'Unabhängigen Journalismus',
   'Eine höfliche Streitkultur',
-  'Vertrauenswürdige Nachrichten',
-  'Kritische Fragen',
+  'Vertrauenswürdige Berichterstattung',
+  'Kritische Nachfragen',
   'Die vierte Gewalt',
+  'Kritik der Macht',
+  'Werbefreiheit',
+  'Innovativen Klimajournalismus',
+  'Meinungsvielfalt',
+  'Sorgfältige Recherchen',
+  'Transparenz in der Medienbranche',
+  'Vorgelesene Beiträge',
+  'Ein wöchentliches Nachrichtenbriefing',
+  'Texte mit einer Lesedauer von über 15 Minuten',
 ]
 
 const longestWord = words.reduce((longest, word) => {
