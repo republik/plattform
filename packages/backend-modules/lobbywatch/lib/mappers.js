@@ -321,6 +321,15 @@ const orgIdPrefix = (exports.orgIdPrefix = 'Organisation-')
 const mapOrganisation = (exports.mapOrganisation = (raw, t) => {
   const connections = () => {
     const direct = raw.parlamentarier.map((directConnection) => {
+      // filter out simple memberships of parlamentarian groups
+      // https://lobbywatch.slack.com/archives/C1CJCPEJ0/p1708325513974089?thread_ts=1708011103.864789
+      if (
+        (raw.rechtsform === 'Parlamentarische Gruppe' ||
+          raw.rechtsform === 'Parlamentarische Freundschaftsgruppe') &&
+        directConnection.art === 'mitglied'
+      ) {
+        return null
+      }
       const parliamentarian = mapParliamentarian(directConnection, t)
       return {
         from: org,
@@ -378,7 +387,7 @@ const mapOrganisation = (exports.mapOrganisation = (raw, t) => {
       group: t(`connections/groups/${connection.art}`),
       description: connection.beschreibung,
     }))
-    return [...direct, ...indirect].concat(relations)
+    return [...direct, ...indirect].concat(relations).filter(Boolean)
   }
 
   const org = {
