@@ -510,11 +510,11 @@
     },
     {
       "key": "api/email/option/membershiptype/yearly_abo/1",
-      "value": "Mitstreiterinnen-Abo"
+      "value": "Jahresabo"
     },
     {
       "key": "api/email/option/membershiptype/yearly_abo/other",
-      "value": "Mitstreiterinnen-Abos"
+      "value": "Jahresabos"
     },
     {
       "key": "api/email/option/other/gifted_membership",
@@ -725,8 +725,12 @@
       "value": "Sie haben Unterstützung geholt – weiter so!"
     },
     {
-      "key": "api/email/referral_campaign_referral_all/subject",
+      "key": "api/email/referral_campaign_referral_second/subject",
       "value": "Ihr Handeln wirkt! Danke."
+    },
+    {
+      "key": "api/email/referral_campaign_referral_all/subject",
+      "value": "Sie haben Talent"
     },
     {
       "key": "api/email/membership_deactivated_abo_uncancelled/sequenceNumber/true/subject",
@@ -2150,7 +2154,7 @@
     },
     {
       "key": "api/email/payment/reminder/isLast:true/packageName:YEARLY_ABO/subject",
-      "value": "Der von Ihnen festgelegte Betrag für Ihr neues Republik-Abo ist noch nicht bezahlt"
+      "value": "LETZTE MAHNUNG: Republik-Abo"
     },
     {
       "key": "api/email/payment/reminder/isLast:true/packageName:LESHA/subject",
