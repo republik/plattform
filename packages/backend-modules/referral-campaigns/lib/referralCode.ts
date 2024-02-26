@@ -75,7 +75,7 @@ export async function generateReferralCode(user: User, repo: ReferralCodeRepo) {
 export async function resolveUserByReferralCode(
   referralCode: string,
   repo: ReferralCodeRepo,
-) {
+): Promise<UserRow | null> {
   try {
     const normalizedCode = normalizeReferralCode(referralCode)
     return await repo.getUserByReferralCode(normalizedCode)

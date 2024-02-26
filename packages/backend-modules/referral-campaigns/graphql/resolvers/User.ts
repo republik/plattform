@@ -53,7 +53,9 @@ export = {
 
     const referralCode =
       user.referralCode || (await generateReferralCode(user, repo))
-
+    if (!referralCode) {
+      throw Error('unable to generate referral code')
+    }
     return formatAsDashSeperated(referralCode, 4)
   },
 }
