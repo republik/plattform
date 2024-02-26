@@ -65,7 +65,8 @@
     "yaproxy:android-kufo": "COOKIE_DOMAIN_REWRITE=*:10.0.2.2 CORS_ORIGIN=http://10.0.2.2:3010 PORT=5010 TARGET=https://api.kufo.republik.love yaproxy",
     "ngrok:start": "ngrok start republik-frontend republik-backend --region=eu",
     "stripe:forward-webhooks": "stripe listen --latest --forward-to localhost:5010/payments/stripe",
-    "geoip:download": "scripts/download-geoip-data.sh"
+    "geoip:download": "scripts/download-geoip-data.sh",
+    "gen:module": "packages/backend-modules/gen-backend-module/index.js new backend-module"
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^16.0.0",
