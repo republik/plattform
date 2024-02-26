@@ -33,7 +33,7 @@ describe('generateReferralCode', () => {
 
     expect(code1).not.toBe(code2)
   })
-  it('generates new random codes on collision', async () => {
+  it('generates a new random code on db error', async () => {
     const user = mockUserRow()
     const generatedCodes: string[] = []
     const repo: ReferralCodeRepo = {
