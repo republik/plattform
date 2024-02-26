@@ -583,8 +583,9 @@ const Page = ({
                 5-Jahres-Jubiläum ein 12-Monats-Abo zu einem frei wählbaren
                 Preis abschliessen konnten. Zwischen Mitte Februar und Anfang
                 April 2024 laufen diese Abonnements aus, was wir hier ebenfalls
-                abbilden. <Editorial.A href='#'>Hier</Editorial.A> erfahren Sie
-                mehr über unsere Kampagnen.
+                abbilden.
+                {/*<Editorial.A href='#'>Hier</Editorial.A> erfahren Sie
+                mehr über unsere Kampagnen. */}
               </P>
               <div style={{ marginTop: 20 }}>
                 <ChartTitle>
