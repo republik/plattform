@@ -94,6 +94,7 @@ export const presetCampaign2024 = definePreset({
           link: {
             value: {
               _campaign2024: '{colors.campaign2024.red}',
+              _campaign2024Inverted: '{colors.campaign2024.yellow}',
               _campaign2024Dark: '{colors.campaign2024.yellow}',
             },
           },

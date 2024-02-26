@@ -29,6 +29,7 @@ export default async function Page() {
   )
 
   const referred = me.referrals?.count || 0
+
   return (
     <Container>
       <div
@@ -62,17 +63,19 @@ export default async function Page() {
 
         {referred > 0 && (
           <div
+            data-theme-inverted
             className={css({
-              borderRadius: 1,
+              borderRadius: '4px',
               background: 'text',
               color: 'pageBackground',
               display: 'flex',
               flexDirection: 'row',
               alignItems: 'center',
               px: '8',
-              py: '4',
+              py: '6',
               gap: '6',
               alignSelf: 'stretch',
+              '& a': { color: 'pageBackground' },
             })}
           >
             {/* <div
@@ -90,8 +93,8 @@ export default async function Page() {
               <p>
                 {referred === 1 && (
                   <>
-                    🎉 Herzlichen Dank! Über Ihren persönlichen Link hat jemand
-                    ein Abo abgeschlossen.
+                    Herzlichen Dank! Über Ihren persönlichen Link hat jemand ein
+                    Abo abgeschlossen.
                     {hasRegularAbo && (
                       <> Zum Dank schenken wir Ihnen einen Monat Republik.</>
                     )}
@@ -106,16 +109,17 @@ export default async function Page() {
                 )}
                 {referred == 2 && (
                   <>
-                    Wahnsinn! Schon zwei Personen haben über Ihren Link den Weg
-                    zur Republik gefunden und ein Abo abgeschlossen. Finden Sie
-                    noch eine dritte?
+                    Wahnsinn! Schon <strong>zwei Personen</strong> haben über
+                    Ihren Link den Weg zur Republik gefunden und ein Abo
+                    abgeschlossen. Finden Sie noch eine dritte?
                   </>
                 )}
                 {referred > 2 && (
                   <>
-                    Grossartig! {referred} Personen haben über Ihren Link ein
-                    Republik-Abo abgeschlossen. Sie haben offensichtlich Talent.
-                    Teilen Sie Ihre Tipps mit uns!
+                    Grossartig! <strong>{referred} Personen</strong> haben über
+                    Ihren Link ein Republik-Abo abgeschlossen. Sie haben
+                    offensichtlich Talent.{' '}
+                    <Link href='#TODO'>Teilen Sie Ihre Tipps mit uns!</Link>
                     {/*TODO: (Link zum Meta-Beitrag mit
                     Dialog)*/}
                   </>
