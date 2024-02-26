@@ -1,14 +1,18 @@
+import { Faker, de_CH, de } from '@faker-js/faker'
+import { User, UserRow } from '@orbiting/backend-modules-types'
 import { ReferralCodeRepo } from '../lib'
 import { generateReferralCode } from '../lib/referralCode'
 
+const faker = new Faker({
+  locale: [de_CH, de],
+})
 const DB: Record<string, any[]> = {
-  users: [],
+  users: faker.helpers.multiple(mockUserRow, { count: 3 }),
 }
 
 describe('generateReferralCode', () => {
   it('generates a random code on each invocation', async () => {
-    const user = mockUserRow()
-    DB.users.push(user)
+    const user = DB.users.at(0)
 
     const repo = {
       getReferralCountByReferrerId: jest.fn(() => Promise.resolve(0)),
@@ -40,10 +44,10 @@ describe('generateReferralCode', () => {
         throw Error('referral code collision')
       }),
     }
-    const res = await generateReferralCode(user, repo)
+    const res = await generateReferralCode(user, repo, 5)
 
     expect(res).toBe(null)
-    expect(repo.updateUserReferralCode).toHaveBeenCalledTimes(25)
+    expect(repo.updateUserReferralCode).toHaveBeenCalledTimes(5)
     expect(generatedCodes.length).toBe(new Set(generatedCodes).size)
   })
   it('max attempts is configurebal', async () => {
@@ -67,32 +71,37 @@ describe('generateReferralCode', () => {
   })
 })
 
-function mockUserRow() {
-  return {
-    id: 'foo-bar-baz',
+function mockUserRow(): User {
+  const firstName = faker.person.firstName()
+  const lastName = faker.person.firstName()
+
+  const userRow: UserRow = {
+    id: faker.string.uuid(),
     name: '',
-    firstName: 'Max',
-    lastName: 'Musterfrau',
-    email: 'max-musterman@example.com',
+    firstName: firstName,
+    lastName: lastName,
+    email: faker.internet.email({ firstName, lastName }),
     roles: [],
-    username: '',
-    initials: 'MM',
-    hasPublicProfile: false,
+    username: faker.internet.userName({ firstName, lastName }),
+    initials: `${firstName.charAt(0)}${lastName.charAt(0)}`,
+    hasPublicProfile: faker.helpers.arrayElement([true, false]),
+    referralCode: null,
+    portraitUrl: '',
+  }
+
+  return {
+    id: userRow.id,
+    name: '',
+    firstName: userRow.firstName,
+    lastName: userRow.lastName,
+    email: userRow.email,
+    roles: [],
+    username: userRow.username,
+    initials: userRow.initials,
+    hasPublicProfile: userRow.hasPublicProfile,
     referralCode: null,
     portraitUrl: '',
     slug: '',
-    _raw: {
-      id: 'foo-bar-baz',
-      name: '',
-      firstName: 'Max',
-      lastName: 'Musterfrau',
-      email: 'max-musterman@example.com',
-      roles: [],
-      username: '',
-      initials: 'MM',
-      hasPublicProfile: false,
-      referralCode: null,
-      portraitUrl: '',
-    },
+    _raw: userRow,
   }
 }

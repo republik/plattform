@@ -22,15 +22,15 @@
   "dependencies": {
     "@orbiting/backend-modules-scalars": "*",
     "@orbiting/backend-modules-types": "*",
-    "pogi": "^2.11.1",
     "apollo-modules-node": "*",
-    "debug": "^4.1.1",
-    "zod": "^3.22.4",
     "crockford-base32": "^2.0.0",
+    "debug": "^4.1.1",
+    "pogi": "^2.11.1",
     "stripe": "^8.119.0"
   },
   "devDependencies": {
-    "ts-jest": "^29.1.2",
-    "@types/jest": "^29.5.12"
+    "@faker-js/faker": "^8.4.1",
+    "@types/jest": "^29.5.12",
+    "ts-jest": "^29.1.2"
   }
 }
