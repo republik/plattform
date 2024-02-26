@@ -1330,7 +1330,14 @@ mail.sendReferralCampaignMail = async (
   const countNumber = parseInt(referralCount, 10)
 
   // TODO should not be hardcoded
-  const campaignTemplate = countNumber === 1 ? 'first' : 'all'
+  let campaignTemplate
+  if (countNumber === 1) {
+    campaignTemplate = 'first'
+  } else if (campaignTemplate === 2) {
+    campaignTemplate = 'second'
+  } else {
+    campaignTemplate = 'all'
+  }
   const templateName = `referral_campaign_referral_${campaignTemplate}`
 
   return sendMailTemplate(
