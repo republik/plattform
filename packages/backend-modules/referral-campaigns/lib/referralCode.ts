@@ -1,39 +1,42 @@
-import type { User } from '@orbiting/backend-modules-types'
+import type { User, UserRow } from '@orbiting/backend-modules-types'
 import type { ReferralCodeRepo } from './repo'
 import { CrockfordBase32 } from 'crockford-base32'
 
 const crypto = require('crypto')
 
-const HASH_LENGTH_ATTEMPTS = 10
 const MIN_HASH_LENGTH_IN_BYTES = 5
-const MAX_ATTMEPTS = 25
+const MAX_ATTEMPTS_FOR_LENGTH = 10
+const MAX_ATTEMPTS = 25
 
 /**
  * Generates and stores a unique code for a user and sets the referral-code for the user.
- * @param {User} user
- * @param {ReferralCodeRepo} repo
- * @returns {Promise<string|null>} generated referral code for the user
+ * This function will try 25 times to find a new code.
+ * @param user
+ * @param repo
+ * @returns referralCode generated referral code for the user
  */
-export async function generateReferralCode(user: User, repo: ReferralCodeRepo) {
-  let referralCode: string | null | undefined
+export async function generateReferralCode(
+  user: User,
+  repo: ReferralCodeRepo,
+  maxAttempts: number = MAX_ATTEMPTS,
+): Promise<string | null> {
   let length = MIN_HASH_LENGTH_IN_BYTES
   let attempts = 0
-  let totalAttempts = 0
 
-  while (!referralCode) {
-    referralCode = randomBase32String(length)
+  for (let totalAttempts = 0; totalAttempts < maxAttempts; totalAttempts++) {
+    let referralCode: string | null | undefined = randomBase32String(length)
     console.log(
       `User.referralCode | Attempting to assign referralCode ${referralCode} to user ${user.id}`,
     )
 
     try {
-      const newUser = await repo.updateUserReferralCode(user.id, referralCode)
-      referralCode = newUser?.referralCode
-      console.log(
-        `User.referralCode | Assigned referralCode ${referralCode} to user ${user.id}`,
+      const updatedUser = await repo.updateUserReferralCode(
+        user.id,
+        referralCode,
       )
+      referralCode = updatedUser?.referralCode
     } catch (err) {
-      console.error(
+      console.warn(
         `User.referralCode | Could not assign referralCode ${referralCode} to user ${user.id}, trying again...`,
       )
       console.error(err)
@@ -42,27 +45,25 @@ export async function generateReferralCode(user: User, repo: ReferralCodeRepo) {
     }
 
     if (referralCode) {
-      break
+      console.log(
+        `User.referralCode | Assigned referralCode ${referralCode} to user ${user.id}`,
+      )
+      return referralCode
     }
 
-    if (attempts < HASH_LENGTH_ATTEMPTS) {
+    if (attempts < MAX_ATTEMPTS_FOR_LENGTH) {
       attempts++
     } else {
       length++
       attempts = 0
     }
-    totalAttempts++
-
-    if (totalAttempts > MAX_ATTMEPTS) {
-      console.error(
-        `Could not generate referral code for user ${user.id}, exceeded max attempts`,
-      )
-      referralCode = null
-      break
-    }
   }
 
-  return referralCode
+  console.error(
+    `Could not generate referral code for user ${user.id}, exceeded max attempts`,
+  )
+
+  return null
 }
 
 /**
