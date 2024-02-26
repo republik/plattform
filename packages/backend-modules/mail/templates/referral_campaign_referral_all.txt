@@ -7,7 +7,8 @@ Damit haben Sie insgesamt {{referral_count}} Personen gefunden, die neu die
 Republik unterstützen. Sie haben Talent oder Ausdauer oder beides. Jedenfalls:
 vielen Dank für Ihre Unterstützung.
 
-Bis zum 31. März 2024 können Sie Ihren Link noch mit weiteren Bekannten teilen.
+Bis zum 31. März 2024 können Sie Ihren Link {{link_sender_page}} noch mit
+weiteren Bekannten teilen.
 
 Mit besten Grüssen und Dank für Ihren Einsatz
 
