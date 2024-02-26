@@ -15,7 +15,8 @@
   "homepage": "https://github.com/republik/plattform#readme",
   "scripts": {
     "dev": "tsc -w",
-    "build": "tsc --build"
+    "build": "tsc",
+    "test": "jest"
   },
   "types": "build/@types",
   "dependencies": {
@@ -28,5 +29,8 @@
     "crockford-base32": "^2.0.0",
     "stripe": "^8.119.0"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "ts-jest": "^29.1.2",
+    "@types/jest": "^29.5.12"
+  }
 }
