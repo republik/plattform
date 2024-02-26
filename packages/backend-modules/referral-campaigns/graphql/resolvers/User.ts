@@ -48,13 +48,13 @@ export = {
     user: User,
     _: object,
     { pgdb }: { pgdb: PgDb },
-  ): Promise<string> {
+  ): Promise<string | null> {
     const repo = new PGReferralsRepo(pgdb)
 
     const referralCode =
       user.referralCode || (await generateReferralCode(user, repo))
     if (!referralCode) {
-      throw Error('unable to generate referral code')
+      return null
     }
     return formatAsDashSeperated(referralCode, 4)
   },
