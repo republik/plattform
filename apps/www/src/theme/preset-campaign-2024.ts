@@ -44,7 +44,8 @@ export const presetCampaign2024 = definePreset({
             value: {
               _campaign2024: '{colors.campaign2024.red}',
               _campaign2024Inverted: '{colors.campaign2024.yellow}',
-              _campaign2024Dark: '{colors.campaign2024.yellow}',
+              _campaign2024Dark: '{colors.campaign2024.red}',
+              _campaign2024DarkInverted: '{colors.campaign2024.yellow}',
             },
           },
           overlay: {
@@ -65,6 +66,7 @@ export const presetCampaign2024 = definePreset({
               _campaign2024: '{colors.campaign2024.yellow}',
               _campaign2024Inverted: '{colors.campaign2024.red}',
               _campaign2024Dark: '{colors.campaign2024.darkRed}',
+              _campaign2024DarkInverted: '{colors.campaign2024.darkRed}',
             },
           },
           contrast: {
@@ -72,6 +74,7 @@ export const presetCampaign2024 = definePreset({
               _campaign2024: '{colors.campaign2024.red}',
               _campaign2024Inverted: '{colors.campaign2024.yellow}',
               _campaign2024Dark: '{colors.campaign2024.yellow}',
+              _campaign2024DarkInverted: '{colors.campaign2024.red}',
             },
           },
           text: {
@@ -88,6 +91,14 @@ export const presetCampaign2024 = definePreset({
                 _campaign2024Inverted: '{colors.campaign2024.red}',
                 _campaign2024Dark: '{colors.campaign2024.red}',
                 _campaign2024DarkInverted: '{colors.campaign2024.darkRed}',
+              },
+            },
+            primary: {
+              value: {
+                _campaign2024: '{colors.campaign2024.yellow}',
+                _campaign2024Inverted: '{colors.campaign2024.red}',
+                _campaign2024Dark: '{colors.campaign2024.yellow}',
+                _campaign2024DarkInverted: '{colors.campaign2024.red}',
               },
             },
           },

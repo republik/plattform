@@ -19,7 +19,7 @@ const shareButtonStyle = hstack({
   justifyContent: 'center',
 
   background: 'primary',
-  color: 'pageBackground',
+  color: 'text.primary',
   px: '4',
   py: '3',
   borderRadius: '4px',

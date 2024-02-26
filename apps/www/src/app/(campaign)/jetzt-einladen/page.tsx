@@ -11,6 +11,7 @@ import { css } from '@app/styled-system/css'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { CAMPAIGN_REFERRALS_GOAL } from '../constants'
+import { Success } from '@app/app/(campaign)/jetzt-einladen/success'
 
 export default async function Page() {
   const { me } = await getSenderData()
@@ -23,12 +24,11 @@ export default async function Page() {
     return redirect('/anmelden')
   }
 
-  const hasMonthlyAbo = me?.activeMembership?.type.name === 'MONTHLY_ABO'
-  const hasRegularAbo = ['ABO', 'BENEFACTOR_ABO'].includes(
-    me?.activeMembership?.type.name,
-  )
-
   const referred = me.referrals?.count || 0
+
+  const aboType = me.activeMembership?.type.name
+  const hasMonthlyAbo = aboType === 'MONTHLY_ABO'
+  const hasRegularAbo = ['ABO', 'BENEFACTOR_ABO'].includes(aboType)
 
   return (
     <Container>
@@ -61,73 +61,11 @@ export default async function Page() {
           <TypewriterContent />
         </h1>
 
-        {referred > 0 && (
-          <div
-            data-theme-inverted
-            className={css({
-              borderRadius: '4px',
-              background: 'text',
-              color: 'pageBackground',
-              display: 'flex',
-              flexDirection: 'row',
-              alignItems: 'center',
-              px: '8',
-              py: '6',
-              gap: '6',
-              alignSelf: 'stretch',
-              '& a': { color: 'pageBackground' },
-            })}
-          >
-            {/* <div
-              className={css({
-                fontSize: '36px',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                height: '100%',
-              })}
-            >
-              🎉
-            </div> */}
-            <div>
-              <p>
-                {referred === 1 && (
-                  <>
-                    Herzlichen Dank! Über Ihren persönlichen Link hat jemand ein
-                    Abo abgeschlossen.
-                    {hasRegularAbo && (
-                      <> Zum Dank schenken wir Ihnen einen Monat Republik.</>
-                    )}
-                    {hasMonthlyAbo && (
-                      <>
-                        {' '}
-                        Zum Dank schreiben wir Ihnen CHF 20 auf einen künftigen
-                        Republik-Monat gut.
-                      </>
-                    )}
-                  </>
-                )}
-                {referred == 2 && (
-                  <>
-                    Wahnsinn! Schon <strong>zwei Personen</strong> haben über
-                    Ihren Link den Weg zur Republik gefunden und ein Abo
-                    abgeschlossen. Finden Sie noch eine dritte?
-                  </>
-                )}
-                {referred > 2 && (
-                  <>
-                    Grossartig! <strong>{referred} Personen</strong> haben über
-                    Ihren Link ein Republik-Abo abgeschlossen. Sie haben
-                    offensichtlich Talent.{' '}
-                    <Link href='#TODO'>Teilen Sie Ihre Tipps mit uns!</Link>
-                    {/*TODO: (Link zum Meta-Beitrag mit
-                    Dialog)*/}
-                  </>
-                )}
-              </p>
-            </div>
-          </div>
-        )}
+        <Success
+          referred={referred}
+          hasMonthlyAbo={hasMonthlyAbo}
+          hasRegularAbo={hasRegularAbo}
+        />
 
         <p>
           Lassen Sie uns diese Verantwortung auf mehr Schultern verteilen:{' '}
