@@ -477,6 +477,14 @@
       "value": "Republik-Guetsliformen"
     },
     {
+      "key": "api/email/option/goodie/totebag_black/1",
+      "value": "Republik-Tasche, schwarz"
+    },
+    {
+      "key": "api/email/option/goodie/totebag_black/other",
+      "value": "Republik-Taschen, schwarz"
+    },
+    {
       "key": "api/email/option/membershiptype/abo/1",
       "value": "Jahresmitgliedschaft"
     },
