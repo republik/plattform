@@ -88,6 +88,7 @@
     "@republik/icons": "*",
     "@republik/mdast-react-render": "*",
     "@republik/nextjs-apollo-client": "*",
+    "@sentry/nextjs": "^7.102.1",
     "@stripe/react-stripe-js": "^1.7.0",
     "@use-it/event-listener": "^0.1.7",
     "@vercel/og": "^0.5.18",

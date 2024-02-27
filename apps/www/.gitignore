@@ -23,3 +23,6 @@ styled-system
 
 # Generated GQL types
 src/graphql/*/gql
+
+# Sentry Config File
+.sentryclirc
