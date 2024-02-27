@@ -196,7 +196,7 @@ export default async function Page({ params }) {
               fontWeight: 'bold',
             })}
           >
-            Warum andere die Republik unterstützen:
+            Warum bestehende Abonnenten die Republik unterstützen:
           </h2>
           <ul
             className={css({
