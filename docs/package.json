@@ -9,9 +9,9 @@
     "start": "next start"
   },
   "dependencies": {
-    "@project-r/styleguide": "*",
-    "@republik/icons": "*",
-    "@republik/ui-docs-demo": "*",
+    "@project-r/styleguide": "workspace:*",
+    "@republik/icons": "workspace:*",
+    "@republik/ui-docs-demo": "workspace:*",
     "next": "^14.1.0",
     "nextra": "^2.13.2",
     "nextra-theme-docs": "^2.13.2",
@@ -24,8 +24,8 @@
   },
   "devDependencies": {
     "@next/eslint-plugin-next": "^14.1.0",
-    "@republik/eslint-config-frontend": "*",
-    "@republik/tsconfig": "*",
+    "@republik/eslint-config-frontend": "workspace:*",
+    "@republik/tsconfig": "workspace:*",
     "@types/node": "18"
   }
 }

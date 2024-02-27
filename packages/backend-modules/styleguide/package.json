@@ -16,12 +16,9 @@
     "url": "https://github.com/republik/plattform/issues"
   },
   "homepage": "https://github.com/republik/plattform#readme",
-  "scripts": {
-    "link": "yarn link"
-  },
   "dependencies": {
-    "@project-r/styleguide": "*",
-    "@republik/icons": "*",
+    "@project-r/styleguide": "workspace:*",
+    "@republik/icons": "workspace:*",
     "d3-array": "1.x",
     "d3-color": "1.x",
     "d3-dsv": "1.x",
@@ -34,7 +31,7 @@
     "downshift": "^2.2.2",
     "glamor": "^2.20.40",
     "lodash": "4.x",
-    "@republik/mdast-react-render": "*",
+    "@republik/mdast-react-render": "workspace:*",
     "prop-types": ">=15.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

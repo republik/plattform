@@ -16,9 +16,6 @@
     "url": "https://github.com/republik/plattform/issues"
   },
   "homepage": "https://github.com/republik/plattform#readme",
-  "scripts": {
-    "link": "yarn link"
-  },
   "dependencies": {
     "@zeit/fetch-retry": "^5.0.0",
     "bluebird": "^3.7.2",

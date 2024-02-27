@@ -42,6 +42,6 @@
     "yargs": "^17.0.1"
   },
   "devDependencies": {
-    "@orbiting/backend-modules-types": "*"
+    "@orbiting/backend-modules-types": "workspace:*"
   }
 }

@@ -53,10 +53,10 @@
   "devDependencies": {
     "@apollo/client": "~3.8.4",
     "@babel/standalone": "^7.15.8",
-    "@republik/eslint-config-frontend": "*",
-    "@republik/icons": "*",
-    "@republik/mdast-react-render": "*",
-    "@republik/remark-preset": "*",
+    "@republik/eslint-config-frontend": "workspace:*",
+    "@republik/icons": "workspace:*",
+    "@republik/mdast-react-render": "workspace:*",
+    "@republik/remark-preset": "workspace:*",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^14.0.0",
     "@types/body-scroll-lock": "^3.1.0",
@@ -102,7 +102,7 @@
   },
   "peerDependencies": {
     "@apollo/client": "~3.8.4",
-    "@republik/icons": "*",
+    "@republik/icons": "workspace:*",
     "d3-array": "1.x",
     "d3-color": "1.x",
     "d3-dsv": "1.x",

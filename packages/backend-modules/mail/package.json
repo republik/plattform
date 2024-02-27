@@ -16,9 +16,6 @@
     "url": "https://github.com/republik/plattform/issues"
   },
   "homepage": "https://github.com/republik/plattform#readme",
-  "scripts": {
-    "link": "yarn link"
-  },
   "dependencies": {
     "await-sleep": "^0.0.1",
     "bluebird": "^3.7.2",

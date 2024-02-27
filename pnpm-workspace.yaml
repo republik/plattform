@@ -1,0 +1,6 @@
+packages:
+  - 'packages/*'
+  - 'packages/mdast/*'
+  - 'packages/backend-modules/*'
+  - 'apps/*'
+  - 'docs'

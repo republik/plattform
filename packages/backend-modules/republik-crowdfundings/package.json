@@ -41,7 +41,7 @@
     "validator": "^13.7.0"
   },
   "devDependencies": {
-    "@orbiting/backend-modules-types": "*",
+    "@orbiting/backend-modules-types": "workspace:*",
     "@types/jest": "^27.4.0",
     "@types/lodash": "^4.14.162",
     "@types/sharp": "^0.25.1",

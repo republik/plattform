@@ -3,9 +3,6 @@
   "version": "1.0.1",
   "description": "send notifications to apps",
   "main": "index.js",
-  "scripts": {
-    "link": "yarn link"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/republik/plattform.git"

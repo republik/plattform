@@ -21,7 +21,7 @@
   },
   "dependencies": {
     "@orbiting/graphql-list-fields": "^2.0.2",
-    "@republik/remark-preset": "*",
+    "@republik/remark-preset": "workspace:*",
     "@rocka/mp3-duration": "^2.0.0",
     "@types/bluebird": "^3.5.33",
     "apollo-fetch": "^0.7.0",
@@ -51,7 +51,7 @@
     "yargs": "^17.0.1"
   },
   "devDependencies": {
-    "@orbiting/backend-modules-types": "*",
+    "@orbiting/backend-modules-types": "workspace:*",
     "@types/debug": "^4.1.5",
     "gsheets": "^3.0.0",
     "nodemon": "^2.0.4",
