@@ -28,5 +28,8 @@
     "moment": "^2.26.0",
     "ts-tokenizr": "^1.1.1",
     "yargs": "^17.0.1"
+  },
+  "devDependencies": {
+    "@types/yargs": "^17.0.32"
   }
 }

@@ -77,6 +77,7 @@
   },
   "devDependencies": {
     "@republik/eslint-config-backend": "workspace:*",
+    "@types/yargs": "^17.0.32",
     "apollo-fetch": "^0.7.0",
     "istanbul": "^1.1.0-alpha.1",
     "nodemon": "^2.0.4",

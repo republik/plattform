@@ -21,6 +21,7 @@
     "migrate:create": "script/create.js"
   },
   "devDependencies": {
+    "@types/yargs": "^17.0.32",
     "moment": "^2.26.0",
     "yargs": "^13.2.2"
   },

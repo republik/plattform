@@ -25,6 +25,7 @@
     "graphql-fields": "^2.0.3"
   },
   "devDependencies": {
-    "@orbiting/backend-modules-types": "workspace:*"
+    "@orbiting/backend-modules-types": "workspace:*",
+    "@orbiting/backend-modules-utils": "workspace:*"
   }
 }
