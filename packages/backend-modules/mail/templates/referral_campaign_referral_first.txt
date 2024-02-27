@@ -4,29 +4,33 @@ Vor kurzem hat {{receiver}} über Ihren persönlichen Link ein Abo bei der
 Republik gekauft. Unser Journalismus wird also neu von einer zusätzlichen Person
 unterstützt.
 
-Möglich gemacht haben das: Sie. Vielen Dank, dass Sie sich für die Republik
-einsetzen.
-
 {{#if no_active_membership}}
 
-Zum Dank würden wir Ihnen gerne einen Monat Republik schenken. Leider ist in der
-Zwischenzeit aber Ihre Mitgliedschaft ausgelaufen. Kommen Sie wieder an Bord und
-melden Sie sich via kontakt@republik.ch bei uns!
+Möglich gemacht haben das: Sie. Vielen Dank, dass Sie sich für die Republik
+einsetzen. Zum Dank würden wir Ihnen gerne einen Monat Republik schenken. Leider
+ist in der Zwischenzeit aber Ihre Mitgliedschaft ausgelaufen. Kommen Sie wieder
+an Bord und melden Sie sich via kontakt@republik.ch bei uns!
 
 {{else if has_monthly_abo}}
 
-Zum Dank schreiben wir Ihnen nach Ende der Kampagne CHF 20 gut auf einen
-künftigen Republik-Monat. Für ein Magazin, das sich über seine Leserinnen
-finanziert, kommt es auf jede einzelne Person an. Deshalb: Teilen Sie Ihren Link
-gerne auch mit weiteren Bekannten. Sie finden ihn auf Ihrer persönlichen
-Übersichtsseite {{link_sender_page}} .
+Möglich gemacht haben das: Sie. Vielen Dank, dass Sie sich für die Republik
+einsetzen. Zum Dank schreiben wir Ihnen nach Ende der Kampagne CHF 20 gut auf
+einen künftigen Republik-Monat.
+
+Für ein Magazin, das sich über seine Leserinnen finanziert, kommt es auf jede
+einzelne Person an. Deshalb: Teilen Sie Ihren Link gerne auch mit weiteren
+Bekannten. Sie finden ihn auf Ihrer persönlichen Übersichtsseite
+{{link_sender_page}} .
 
 {{else}}
 
-Zum Dank verlängern wir Ihr eigenes Abo um einen Monat. Für ein Magazin, das
-sich über seine Leserinnen finanziert, kommt es auf jede einzelne Person an.
-Deshalb: Teilen Sie Ihren Link gerne auch mit weiteren Bekannten. Sie finden ihn
-auf Ihrer persönlichen Übersichtsseite {{link_sender_page}} .
+Möglich gemacht haben das: Sie. Vielen Dank, dass Sie sich für die Republik
+einsetzen. Zum Dank verlängern wir Ihr eigenes Abo um einen Monat.
+
+Für ein Magazin, das sich über seine Leserinnen finanziert, kommt es auf jede
+einzelne Person an. Deshalb: Teilen Sie Ihren Link gerne auch mit weiteren
+Bekannten. Sie finden ihn auf Ihrer persönlichen Übersichtsseite
+{{link_sender_page}} .
 
 {{/if}}
 
