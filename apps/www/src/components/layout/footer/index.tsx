@@ -111,6 +111,7 @@ export default async function Footer() {
       links: {
         Veranstaltungen: '/veranstaltungen',
         Community: '/community',
+        Genossenschaftsrat: '/format/genossenschaftsrat',
         Komplizin: '/komplizin',
         Etikette: '/etikette',
       },

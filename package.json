@@ -96,5 +96,8 @@
   "engines": {
     "node": "^18.0.0"
   },
-  "packageManager": "yarn@1.22.10"
+  "packageManager": "yarn@1.22.10",
+  "resolutions": {
+    "typescript": "^5.2.2"
+  }
 }

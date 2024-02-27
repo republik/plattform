@@ -12,6 +12,10 @@ export const presetRepublik = definePreset({
       WebkitFontSmoothing: 'auto',
       MozOsxFontSmoothing: 'auto',
     },
+    ':where(a)': {
+      color: '{colors.link}',
+      textDecoration: 'underline',
+    },
   },
   // Useful for theme customization
   theme: {

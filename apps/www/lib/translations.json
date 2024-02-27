@@ -13,6 +13,10 @@
       "value": "Community"
     },
     {
+      "key": "nav/genossenschaftsrat",
+      "value": "Genossenschaftsrat"
+    },
+    {
       "key": "nav/team",
       "value": "Team"
     },
@@ -2206,7 +2210,7 @@
     },
     {
       "key": "styleguide/comment/header/unpublishedByAdmin",
-      "value": "(von der Redaktion verborgen)"
+      "value": "(von der Moderation verborgen)"
     },
     {
       "key": "styleguide/comment/header/unavailable",
