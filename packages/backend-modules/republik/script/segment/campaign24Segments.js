@@ -2,9 +2,7 @@
 require('@orbiting/backend-modules-env').config()
 
 const Promise = require('bluebird')
-const debug = require('debug')(
-  'republik:script:prolong:segmentUsersForMailchimp',
-)
+const debug = require('debug')('republik:script:prolong:campaign24Segments')
 const dayjs = require('dayjs')
 
 const {
@@ -79,11 +77,7 @@ const handleRow = async (row) => {
     EMAIL: row.email,
     FNAME: `"${row.firstName ?? ''}"`,
     LNAME: `"${row.lastName ?? ''}"`,
-    // PRLG_SEG: '',
-    // CP_ATOKEN: '',
     KAMPA_SEG: '',
-    // KAMPA_GRP: '',
-    // NL_LINK: getConsentLink(row.email, 'WINTER'),
 
     __vars: Object.keys(vars)
       .map((key) => `${key}:${vars[key]}`)
@@ -99,6 +93,8 @@ const handleRow = async (row) => {
     record.KAMPA_SEG = 'is-associate'
   } else if (activeMembership && membershipTypeName === 'YEARLY_ABO') {
     record.KAMPA_SEG = 'is-yearly-abo'
+  } else if (activeMembership && membershipTypeName === 'MONTHLY_ABO') {
+    record.KAMPA_SEG = 'is-monthly-abo'
   } else if (activeMembership) {
     record.KAMPA_SEG = 'is-active'
   } else {
@@ -156,18 +152,7 @@ ConnectionContext.create(applicationName)
     const { pgdb } = context
 
     console.log(
-      [
-        'id',
-        'EMAIL',
-        'FNAME',
-        'LNAME',
-        // 'PRLG_SEG',
-        // 'CP_ATOKEN',
-        'KAMPA_SEG',
-        // 'NL_LINK',
-
-        '__vars',
-      ].join(','),
+      ['id', 'EMAIL', 'FNAME', 'LNAME', 'KAMPA_SEG', '__vars'].join(','),
     )
 
     await pgdb
