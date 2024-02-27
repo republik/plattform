@@ -145,7 +145,7 @@ export default async function Page({ params }) {
           pr: '16',
         })}
       >
-        <TypewriterContent />
+        <TypewriterContent external />
       </h1>
       <div
         className={css({

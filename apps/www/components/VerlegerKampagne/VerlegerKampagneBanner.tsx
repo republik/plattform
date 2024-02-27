@@ -165,7 +165,7 @@ export function VerlegerKampagneBannerBottom() {
       <div {...bottomBannerStyles.wrapper}>
         <CampaignLogo inverted className={`${bottomBannerStyles.logo}`} />
         <h2 {...bottomBannerStyles.heading}>
-          Die Republik gibt es, weil wir etwas dafür tun.
+          Die Republik gibt es, weil Sie etwas dafür tun.
         </h2>
         <div>
           <p {...bottomBannerStyles.p}>

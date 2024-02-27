@@ -23,7 +23,16 @@ const longestWord = words.reduce((longest, word) => {
   return word.length > longest.length ? word : longest
 }, '')
 
-export const TypewriterContent = () => {
+type TypewriterContentProps = {
+  /**
+   * If true the typewriter is to be shown to users that don't have an account yet
+   */
+  external?: boolean
+}
+
+export const TypewriterContent = ({
+  external = false,
+}: TypewriterContentProps) => {
   return (
     <div className={css({ display: 'grid' })}>
       <div
@@ -34,7 +43,8 @@ export const TypewriterContent = () => {
           gridRowEnd: 1,
         })}
       >
-        <Typewriter words={words} /> gibt es, weil Sie etwas dafür tun
+        <Typewriter words={words} /> gibt es,{' '}
+        {external ? 'wenn genügend Leute' : 'weil Sie'} etwas dafür tun
       </div>
       <div
         aria-hidden

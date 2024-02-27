@@ -65,7 +65,7 @@ const SLIDER_STEPS: Record<SliderStep, Reward> = {
     text: 'Für den Wert von zwei Kaffees pro Monat eine ganze Republik erhalten. Ein Jahr lang. Nicht schlecht!',
     goodies: (
       <Goodie iconSrc={iconBag} disabled>
-        Die Jubiläumstasche gibts dazu, wenn Sie mehr als CHF 240 bezahlen.
+        Die Republik-Tasche gibts dazu, wenn Sie mehr als CHF 240 bezahlen.
       </Goodie>
     ),
   }, //  5 = Selected
@@ -75,7 +75,7 @@ const SLIDER_STEPS: Record<SliderStep, Reward> = {
     text: 'Wählen Sie den Preis, der für Sie passt. Wir freuen uns über jede zusätzliche Unterstützung – und Sie erhalten ein Jahr lang die Republik.',
     goodies: (
       <Goodie iconSrc={iconBag} disabled>
-        Die Jubiläumstasche gibts dazu, wenn Sie mehr als CHF 240 bezahlen.
+        Die Republik-Tasche gibts dazu, wenn Sie mehr als CHF 240 bezahlen.
       </Goodie>
     ),
   },
