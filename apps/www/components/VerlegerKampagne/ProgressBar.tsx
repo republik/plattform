@@ -37,7 +37,7 @@ export default function ProgressBar({
           overflow: 'hidden',
           background: verlegerKampagneColors.yellowLight,
           borderRadius: '2px',
-          height: '6px',
+          height: '5px',
           display: 'flex',
           flexGrow: 1,
         })}
