@@ -3,18 +3,26 @@
   "tasks": [
     {
       "label": "dev:www (staging proxy)",
-      "dependsOn": ["dev:www-server", "tsc:www", "proxy:staging"],
+      "dependsOn": [
+        "dev:www-server",
+        "tsc:www",
+        "proxy:staging"
+      ],
       "problemMatcher": []
     },
     {
       "label": "dev:www (prod proxy)",
-      "dependsOn": ["dev:www-server", "tsc:www", "proxy:prod"],
+      "dependsOn": [
+        "dev:www-server",
+        "tsc:www",
+        "proxy:prod"
+      ],
       "problemMatcher": []
     },
     {
       "label": "Install depencencies",
       "type": "shell",
-      "command": "yarn",
+      "command": "pnpm install",
       "group": {
         "kind": "build",
         "isDefault": true
@@ -27,7 +35,7 @@
     {
       "label": "dev:www-server",
       "type": "shell",
-      "command": "yarn turbo run dev --filter=@orbiting/www-app...",
+      "command": "pnpm run turbo run dev --filter=@orbiting/www-app...",
       "presentation": {
         "group": "dev",
         "panel": "dedicated",
@@ -39,7 +47,7 @@
     {
       "label": "dev:docs",
       "type": "shell",
-      "command": "yarn turbo run dev --filter=@republik/docs...",
+      "command": "pnpm run turbo run dev --filter=@republik/docs...",
       "presentation": {
         "group": "dev",
         "panel": "dedicated",
@@ -51,7 +59,7 @@
     {
       "label": "proxy:staging",
       "type": "shell",
-      "command": "yarn yaproxy:staging",
+      "command": "pnpm yaproxy:staging",
       "presentation": {
         "group": "dev",
         "panel": "dedicated",
@@ -64,7 +72,7 @@
     {
       "label": "proxy:prod",
       "type": "shell",
-      "command": "yarn yaproxy",
+      "command": "pnpm yaproxy",
       "presentation": {
         "group": "dev",
         "panel": "dedicated",
@@ -78,7 +86,12 @@
       "type": "typescript",
       "tsconfig": "apps/www/tsconfig.json",
       "option": "watch",
-      "problemMatcher": [{ "base": "$tsc-watch", "applyTo": "allDocuments" }],
+      "problemMatcher": [
+        {
+          "base": "$tsc-watch",
+          "applyTo": "allDocuments"
+        }
+      ],
       "label": "tsc:www",
       "presentation": {
         "group": "dev",

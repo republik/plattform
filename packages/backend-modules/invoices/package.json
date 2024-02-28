@@ -21,6 +21,7 @@
     "build": "tsc"
   },
   "dependencies": {
+    "@orbiting/backend-modules-formats": "workspace:*",
     "node-iso11649": "^2.1.2",
     "swissqrbill": "^3.2.1"
   },

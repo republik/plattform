@@ -1305,6 +1305,9 @@ importers:
 
   packages/backend-modules/auth:
     dependencies:
+      '@orbiting/backend-modules-dataloader':
+        specifier: workspace:*
+        version: link:../dataloader
       '@types/is-uuid':
         specifier: ^1.0.0
         version: 1.0.2
@@ -1463,7 +1466,21 @@ importers:
 
   packages/backend-modules/base64u: {}
 
-  packages/backend-modules/calendar: {}
+  packages/backend-modules/calendar:
+    dependencies:
+      '@orbiting/backend-modules-base64u':
+        specifier: workspace:*
+        version: link:../base64u
+      '@orbiting/backend-modules-dataloader':
+        specifier: workspace:*
+        version: link:../dataloader
+      dayjs:
+        specifier: ^1.11.7
+        version: 1.11.10
+    devDependencies:
+      '@orbiting/backend-modules-types':
+        specifier: workspace:*
+        version: link:../types
 
   packages/backend-modules/call-to-actions:
     dependencies:
@@ -1482,6 +1499,15 @@ importers:
 
   packages/backend-modules/databroom:
     dependencies:
+      '@orbiting/backend-modules-base':
+        specifier: workspace:*
+        version: link:../base
+      '@orbiting/backend-modules-env':
+        specifier: workspace:*
+        version: link:../env
+      '@orbiting/backend-modules-schedulers':
+        specifier: workspace:*
+        version: link:../schedulers
       '@types/bluebird':
         specifier: ^3.5.33
         version: 3.5.42
@@ -1491,10 +1517,16 @@ importers:
       fast-glob:
         specifier: ^3.2.4
         version: 3.3.2
+      yargs:
+        specifier: ^17.0.1
+        version: 17.7.2
     devDependencies:
       '@orbiting/backend-modules-types':
         specifier: workspace:*
         version: link:../types
+      '@types/node':
+        specifier: ^17.0.32
+        version: 17.0.45
 
   packages/backend-modules/dataloader:
     dependencies:
@@ -1508,12 +1540,18 @@ importers:
 
   packages/backend-modules/discussions:
     dependencies:
+      '@orbiting/backend-modules-dataloader':
+        specifier: workspace:*
+        version: link:../dataloader
       dataloader:
         specifier: ^2.0.0
         version: 2.2.2
       graphql-fields:
         specifier: ^2.0.3
         version: 2.0.3
+      is-uuid:
+        specifier: ^1.0.2
+        version: 1.0.2
     devDependencies:
       '@orbiting/backend-modules-types':
         specifier: workspace:*
@@ -1521,6 +1559,9 @@ importers:
       '@orbiting/backend-modules-utils':
         specifier: workspace:*
         version: link:../utils
+      '@types/is-uuid':
+        specifier: ^1.0.2
+        version: 1.0.2
 
   packages/backend-modules/documents:
     dependencies:
@@ -1614,6 +1655,9 @@ importers:
 
   packages/backend-modules/invoices:
     dependencies:
+      '@orbiting/backend-modules-formats':
+        specifier: workspace:*
+        version: link:../formats
       node-iso11649:
         specifier: ^2.1.2
         version: 2.1.2
@@ -1729,6 +1773,15 @@ importers:
 
   packages/backend-modules/publikator:
     dependencies:
+      '@orbiting/backend-modules-auth':
+        specifier: workspace:*
+        version: link:../auth
+      '@orbiting/backend-modules-dataloader':
+        specifier: workspace:*
+        version: link:../dataloader
+      '@orbiting/backend-modules-search':
+        specifier: workspace:*
+        version: link:../search
       '@orbiting/graphql-list-fields':
         specifier: ^2.0.2
         version: 2.0.2
@@ -1823,6 +1876,9 @@ importers:
       '@types/debug':
         specifier: ^4.1.5
         version: 4.1.12
+      '@types/is-uuid':
+        specifier: ^1.0.2
+        version: 1.0.2
       '@types/yargs':
         specifier: ^17.0.32
         version: 17.0.32
@@ -1940,6 +1996,15 @@ importers:
 
   packages/backend-modules/republik-crowdfundings:
     dependencies:
+      '@orbiting/backend-modules-formats':
+        specifier: workspace:*
+        version: link:../formats
+      '@orbiting/backend-modules-invoices':
+        specifier: workspace:*
+        version: link:../invoices
+      '@orbiting/backend-modules-republik':
+        specifier: workspace:*
+        version: link:../republik
       apollo-modules-node:
         specifier: '*'
         version: link:../apollo-modules-node
@@ -8575,7 +8640,6 @@ packages:
 
   /@types/is-uuid@1.0.2:
     resolution: {integrity: sha512-S+gWwUEApOjGCCO5LQrft4kciGWatvB0LyiyWTXSlDkclZBr6glSgstET573GsC5QPFdw2NeOw2PHOOMuTDFSQ==}
-    dev: false
 
   /@types/istanbul-lib-coverage@2.0.6:
     resolution: {integrity: sha512-2QF/t/auWm0lsy8XtKVPG19v3sSOQlJe/YHZgfjb/KBBHOGSV+J2q/S671rcq9uTBrLAXmZpqJiaQbMT+zNU1w==}
