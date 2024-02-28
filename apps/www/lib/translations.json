@@ -7016,6 +7016,14 @@
       "value": "Buchstaben zum Naschen, limitiertes Sonderangebot. Versand bis 22.12., nur innerhalb der Schweiz möglich."
     },
     {
+      "key": "Goodie/label/TOTEBAG_BLACK",
+      "value": "Republik-Tasche, schwarz"
+    },
+    {
+      "key": "Goodie/description/TOTEBAG_BLACK",
+      "value": "Mit Logo auf der Vorderseite und Manifest auf der Rückseite. Versand im April, nur in die Schweiz und nach Liechtenstein."
+    },
+    {
       "key": "option/TABLEBOOK/label/other",
       "value": "Republik bei Stromausfall"
     },
