@@ -14,6 +14,7 @@ import Button from './Button'
 import ProgressBar from './ProgressBar'
 import './VerlegerKampagneBanner.css'
 import { verlegerKampagneColors } from './config'
+import { EventTrackingContext } from '@app/lib/matomo/event-tracking'
 
 const Center = ({
   children,
@@ -91,25 +92,27 @@ export function VerlegerKampagneBannerTop() {
   const { data, loading } = useCampaignData()
 
   return (
-    <Center {...topBannerStyles.container}>
-      <div {...topBannerStyles.wrapper}>
-        <CampaignLogo inverted className={`${topBannerStyles.logo}`} />
-        <div {...topBannerStyles.content}>
-          <div>
-            Bis zum 31. März suchen wir mit Ihnen zusammen{' '}
-            {CAMPAIGN_REFERRALS_GOAL} zusätzliche Verleger.
+    <EventTrackingContext category='CampaignBannerTop'>
+      <Center {...topBannerStyles.container}>
+        <div {...topBannerStyles.wrapper}>
+          <CampaignLogo inverted className={`${topBannerStyles.logo}`} />
+          <div {...topBannerStyles.content}>
+            <div>
+              Bis zum 31. März suchen wir mit Ihnen zusammen{' '}
+              {CAMPAIGN_REFERRALS_GOAL} zusätzliche Verleger.
+            </div>
+            <ProgressBar
+              inverted
+              from={data?.campaign.referrals.count || 0}
+              to={CAMPAIGN_REFERRALS_GOAL}
+            />
           </div>
-          <ProgressBar
-            inverted
-            from={data?.campaign.referrals.count || 0}
-            to={CAMPAIGN_REFERRALS_GOAL}
-          />
+          <Button small inverted href='/jetzt-einladen'>
+            Jetzt mithelfen
+          </Button>
         </div>
-        <Button small inverted href='/jetzt-einladen'>
-          Jetzt mithelfen
-        </Button>
-      </div>
-    </Center>
+      </Center>
+    </EventTrackingContext>
   )
 }
 
@@ -164,47 +167,49 @@ export function VerlegerKampagneBannerBottom() {
   const { data, loading } = useCampaignData()
 
   return (
-    <Center
-      {...bottomBannerStyles.container}
-      wrapperStyle={css({
-        background: verlegerKampagneColors.yellow,
-        color: verlegerKampagneColors.red,
-      })}
-    >
-      <div {...bottomBannerStyles.wrapper}>
-        <CampaignLogo className={`${bottomBannerStyles.logo}`} />
-        <h2 {...bottomBannerStyles.heading}>
-          Die Republik gibt es, weil Sie etwas dafür tun.
-        </h2>
-        <div>
-          <p {...bottomBannerStyles.p}>
-            <Link href={CAMPAIGN_META_ARTICLE_URL}>
-              Bis zum 31. März suchen wir mit Ihnen zusammen 1000 zusätzliche
-              Verlegerinnen
-            </Link>
-            . Mitmachen ist einfach: Teilen Sie Ihren persönlichen Link mit so
-            vielen Bekannten wie möglich und erzählen Sie ihnen, warum Sie die
-            Republik unterstützen.
-          </p>
-          {/* <p {...bottomBannerStyles.p}>
+    <EventTrackingContext category='CampaignBannerBottom'>
+      <Center
+        {...bottomBannerStyles.container}
+        wrapperStyle={css({
+          background: verlegerKampagneColors.yellow,
+          color: verlegerKampagneColors.red,
+        })}
+      >
+        <div {...bottomBannerStyles.wrapper}>
+          <CampaignLogo className={`${bottomBannerStyles.logo}`} />
+          <h2 {...bottomBannerStyles.heading}>
+            Die Republik gibt es, weil Sie etwas dafür tun.
+          </h2>
+          <div>
+            <p {...bottomBannerStyles.p}>
+              <Link href={CAMPAIGN_META_ARTICLE_URL}>
+                Bis zum 31. März suchen wir mit Ihnen zusammen 1000 zusätzliche
+                Verlegerinnen
+              </Link>
+              . Mitmachen ist einfach: Teilen Sie Ihren persönlichen Link mit so
+              vielen Bekannten wie möglich und erzählen Sie ihnen, warum Sie die
+              Republik unterstützen.
+            </p>
+            {/* <p {...bottomBannerStyles.p}>
             Gemeinsam haben wir schon {data?.campaign?.referrals?.count || '-'}{' '}
             neue Verlegerinnen überzeugt.
           </p> */}
+          </div>
+          <div
+            style={{
+              width: '100%',
+            }}
+          >
+            <ProgressBar
+              from={data?.campaign.referrals.count || 0}
+              to={CAMPAIGN_REFERRALS_GOAL}
+            />
+          </div>
+          <div>
+            <Button href='/jetzt-einladen'>Jetzt mithelfen</Button>
+          </div>
         </div>
-        <div
-          style={{
-            width: '100%',
-          }}
-        >
-          <ProgressBar
-            from={data?.campaign.referrals.count || 0}
-            to={CAMPAIGN_REFERRALS_GOAL}
-          />
-        </div>
-        <div>
-          <Button href='/jetzt-einladen'>Jetzt mithelfen</Button>
-        </div>
-      </div>
-    </Center>
+      </Center>
+    </EventTrackingContext>
   )
 }

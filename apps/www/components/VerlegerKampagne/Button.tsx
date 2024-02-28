@@ -2,6 +2,7 @@ import { mediaQueries, plainLinkRule, fontStyles } from '@project-r/styleguide'
 import { verlegerKampagneColors } from './config'
 import { css } from 'glamor'
 import NextLink from 'next/link'
+import { useTrackEvent } from '@app/lib/matomo/event-tracking'
 
 const styles = {
   base: css({
@@ -49,6 +50,7 @@ export default function Button({
   small?: boolean
   inverted?: boolean
 }) {
+  const trackEvent = useTrackEvent()
   return (
     <NextLink
       {...plainLinkRule}
@@ -56,6 +58,9 @@ export default function Button({
       {...(inverted ? styles.inverted : {})}
       {...(small ? styles.small : styles.normal)}
       {...props}
+      onClick={() =>
+        trackEvent({ action: 'linkClicked', name: props.href?.toString() })
+      }
     >
       {children}
     </NextLink>
