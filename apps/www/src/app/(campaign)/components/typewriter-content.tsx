@@ -44,7 +44,7 @@ export const TypewriterContent = ({
         })}
       >
         <Typewriter words={words} /> gibt es,{' '}
-        {external ? 'wenn genügend Leute' : 'weil Sie'} etwas dafür tun
+        {external ? 'wenn genügend Menschen' : 'weil Sie'} etwas dafür tun
       </div>
       <div
         aria-hidden

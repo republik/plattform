@@ -13,7 +13,7 @@ import iconCup from '@app/app/(campaign)/assets/icon-cup-inverted.svg'
 type Reward = {
   key: SliderStep
   label: string
-  text: string
+  text: ReactNode
   goodies: ReactNode
 }
 
@@ -116,7 +116,12 @@ const SLIDER_STEPS: Record<SliderStep, Reward> = {
   [SliderStep.maximum]: {
     key: SliderStep.maximum,
     label: 'Der fulminante Einstieg',
-    text: 'Was für ein Start! Mit Ihrer Unterstützung erhalten wir längerfristig Sicherheit. Ihr Vertrauen ehrt uns.',
+    text: (
+      <>
+        Was für ein Start! Mit Ihrer Unterstützung erhalten wir längerfristig
+        Sicherheit. Ihr&nbsp;Vertrauen ehrt uns.
+      </>
+    ),
     goodies: (
       <>
         <Goodie iconSrc={iconBag}>
