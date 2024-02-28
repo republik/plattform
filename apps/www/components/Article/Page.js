@@ -85,6 +85,7 @@ import useAudioQueue from '../Audio/hooks/useAudioQueue'
 import { IconEdit } from '@republik/icons'
 import { ArticleAudioPlayer } from '../Audio/AudioPlayer/ArticleAudioPlayer'
 import { reportError } from 'lib/errors/reportError'
+import { VerlegerKampagneBannerBottom } from 'components/VerlegerKampagne/VerlegerKampagneBanner'
 
 const LoadingComponent = () => <SmallLoader loading />
 
@@ -653,6 +654,7 @@ const ArticlePage = ({
       hasOverviewNav={hasOverviewNav}
       stickySecondaryNav={hasStickySecondaryNav}
       pageColorSchemeKey={colorSchemeKey}
+      location={meta.template === 'article' ? 'article' : undefined}
     >
       <PageLoader
         loading={articleLoading && !articleData}
@@ -943,6 +945,10 @@ const ArticlePage = ({
                   formatId={article.repoId}
                   variables={feedQueryVariables}
                 />
+              )}
+              {/* TODO: REMOVE AFTER CAMPAIGN */}
+              {meta.template === 'article' && me && hasActiveMembership && (
+                <VerlegerKampagneBannerBottom />
               )}
               {me && hasActiveMembership && (
                 <ArticleRecommendationsFeed path={cleanedPath} />

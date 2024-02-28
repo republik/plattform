@@ -16,7 +16,7 @@ function MeineRepublikPage() {
   }, [me?.id])
 
   return (
-    <Frame raw pullable={false} hideCTA>
+    <Frame raw pullable={false} hideCTA location='user-nav'>
       {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
       {/* @ts-ignore */}
       <UserNav me={me} />

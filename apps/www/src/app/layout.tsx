@@ -1,7 +1,7 @@
 import { NativeAppMessageSync } from '@app/components/native-app'
 import './root.css'
 
-import { MatomoTracking } from '@app/components/matomo-tracking'
+import { MatomoPageViewTracking } from '@app/lib/matomo/pageview-tracking'
 import { ThemeProvider } from '@app/components/theme-provider'
 import { ApolloWrapper } from '@app/lib/apollo/provider'
 import { css } from '@app/styled-system/css'
@@ -45,7 +45,7 @@ export default async function RootLayout({
             {children}
             <NativeAppMessageSync />
             <Suspense fallback={null}>
-              <MatomoTracking />
+              <MatomoPageViewTracking />
             </Suspense>
           </ApolloWrapper>
         </ThemeProvider>
