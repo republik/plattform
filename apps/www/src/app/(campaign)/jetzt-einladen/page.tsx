@@ -23,6 +23,10 @@ export default async function Page() {
     me?.hasPublicProfile ? me.username : me?.referralCode
   }`
 
+  const imageUrl = `${process.env.NEXT_PUBLIC_CDN_FRONTEND_BASE_URL}/jetzt/${
+    me?.hasPublicProfile ? me.username : me?.referralCode
+  }`
+
   if (!me) {
     return redirect('/anmelden')
   }
@@ -113,7 +117,7 @@ export default async function Page() {
         </p>
 
         <ShareImageConfigurator
-          url={url}
+          url={imageUrl}
           userHasPublicProfile={me?.hasPublicProfile}
         />
       </div>
