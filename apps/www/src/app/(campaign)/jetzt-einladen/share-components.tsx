@@ -58,7 +58,7 @@ export const ShareImageConfigurator = ({
 
   const imageUrl =
     showPortrait && userHasPublicProfile
-      ? `${url}/share-image?show_portrait=true`
+      ? `${url}/share-image-portrait`
       : `${url}/share-image`
 
   return (

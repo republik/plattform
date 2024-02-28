@@ -1,4 +1,4 @@
-import { generateShareImage } from './share-image/generate-share-image'
+import { generateShareImage } from './generate-share-image'
 
 export const contentType = 'image/png'
 

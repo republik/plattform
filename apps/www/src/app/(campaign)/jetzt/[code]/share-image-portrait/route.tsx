@@ -9,5 +9,5 @@ export async function GET(
     params: { code: string }
   },
 ) {
-  return generateShareImage({ code: params.code, showPortrait: false })
+  return generateShareImage({ code: params.code, showPortrait: true })
 }
