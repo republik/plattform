@@ -1,0 +1,14 @@
+query DocumentDiscussionId($path: String!) {
+  document(path: $path) {
+    id
+    meta {
+      template
+      ownDiscussion {
+        id
+      }
+      linkedDiscussion {
+        id
+      }
+    }
+  }
+}
