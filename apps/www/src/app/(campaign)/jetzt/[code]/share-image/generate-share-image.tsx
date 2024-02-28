@@ -75,6 +75,8 @@ const Message = ({
 }
 
 const Illustration = ({ size }: { size: number }) => {
+  const src = new URL(illustration.src, process.env.NEXT_PUBLIC_BASE_URL)
+
   return (
     <img
       style={{
@@ -82,7 +84,7 @@ const Illustration = ({ size }: { size: number }) => {
         width: size * ILLUSTRATION_ASPECT_RATIO,
         // marginBottom: sizes['4'],
       }}
-      src={process.env.NEXT_PUBLIC_BASE_URL + illustration.src}
+      src={src.toString()}
       alt=''
     />
   )
