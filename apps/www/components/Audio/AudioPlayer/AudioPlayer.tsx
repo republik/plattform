@@ -14,7 +14,6 @@ import {
 } from '@project-r/styleguide'
 import { AnimatePresence, motion } from 'framer-motion'
 import { css } from 'glamor'
-import AudioPlaybackElement from './AudioPlaybackElement'
 import { useUserAgent } from '../../../lib/context/UserAgentContext'
 import { ZINDEX_POPOVER } from '../../constants'
 import { AUDIO_PLAYER_WRAPPER_ID } from './constants'
@@ -254,13 +253,6 @@ const AudioPlayer = ({
           </>
         )}
       </AnimatePresence>
-      {!inNativeApp && (
-        <AudioPlaybackElement
-          setWebHandlers={setWebHandlers}
-          playbackRate={playbackRate}
-          actions={actions}
-        />
-      )}
     </>
   )
 }
