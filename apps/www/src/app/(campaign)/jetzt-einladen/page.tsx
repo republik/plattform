@@ -15,6 +15,11 @@ import {
   CAMPAIGN_REFERRALS_GOAL,
 } from '../constants'
 import { Success } from '@app/app/(campaign)/jetzt-einladen/success'
+import { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Laden Sie jemanden ein',
+}
 
 export default async function Page() {
   const { me } = await getSenderData()
