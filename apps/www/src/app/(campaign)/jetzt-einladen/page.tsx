@@ -10,7 +10,10 @@ import Container from '@app/components/container'
 import { css } from '@app/styled-system/css'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
-import { CAMPAIGN_REFERRALS_GOAL } from '../constants'
+import {
+  CAMPAIGN_META_ARTICLE_URL,
+  CAMPAIGN_REFERRALS_GOAL,
+} from '../constants'
 import { Success } from '@app/app/(campaign)/jetzt-einladen/success'
 
 export default async function Page() {
@@ -69,7 +72,7 @@ export default async function Page() {
 
         <p>
           Lassen Sie uns diese Verantwortung auf mehr Schultern verteilen:{' '}
-          <Link href='#'>
+          <Link href={CAMPAIGN_META_ARTICLE_URL}>
             Bis zum 31. März suchen wir {CAMPAIGN_REFERRALS_GOAL} zusätzliche
             Verlegerinnen
           </Link>

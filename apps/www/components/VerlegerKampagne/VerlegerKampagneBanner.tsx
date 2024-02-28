@@ -1,27 +1,29 @@
 import { useQuery } from '@apollo/client'
 import { CampaignLogo } from '@app/app/(campaign)/components/campaign-logo'
 import {
+  CAMPAIGN_META_ARTICLE_URL,
   CAMPAIGN_REFERRALS_GOAL,
   CAMPAIGN_SLUG,
 } from '@app/app/(campaign)/constants'
 import { CampaignReferralsDocument } from '@app/graphql/republik-api/gql/graphql'
 import { mediaQueries } from '@project-r/styleguide'
-import { css } from 'glamor'
+import { StyleAttribute, css } from 'glamor'
+import Link from 'next/link'
 import { ComponentPropsWithoutRef } from 'react'
 import Button from './Button'
 import ProgressBar from './ProgressBar'
 import './VerlegerKampagneBanner.css'
 import { verlegerKampagneColors } from './config'
-import Link from 'next/link'
 
-const Center = ({ children, ...props }: ComponentPropsWithoutRef<'div'>) => (
-  <div
-    {...css({
-      backgroundColor: verlegerKampagneColors.red,
-      color: verlegerKampagneColors.yellow,
-    })}
-    data-show-if-active-membership
-  >
+const Center = ({
+  children,
+  wrapperStyle = css({
+    backgroundColor: verlegerKampagneColors.red,
+    color: verlegerKampagneColors.yellow,
+  }),
+  ...props
+}: ComponentPropsWithoutRef<'div'> & { wrapperStyle?: StyleAttribute }) => (
+  <div {...wrapperStyle} data-show-if-active-membership>
     <div
       {...css({
         margin: '0 auto',
@@ -98,11 +100,12 @@ export function VerlegerKampagneBannerTop() {
             {CAMPAIGN_REFERRALS_GOAL} zusätzliche Verleger.
           </div>
           <ProgressBar
+            inverted
             from={data?.campaign.referrals.count || 0}
             to={CAMPAIGN_REFERRALS_GOAL}
           />
         </div>
-        <Button small href='/jetzt-einladen'>
+        <Button small inverted href='/jetzt-einladen'>
           Jetzt mithelfen
         </Button>
       </div>
@@ -161,15 +164,21 @@ export function VerlegerKampagneBannerBottom() {
   const { data, loading } = useCampaignData()
 
   return (
-    <Center {...bottomBannerStyles.container}>
+    <Center
+      {...bottomBannerStyles.container}
+      wrapperStyle={css({
+        background: verlegerKampagneColors.yellow,
+        color: verlegerKampagneColors.red,
+      })}
+    >
       <div {...bottomBannerStyles.wrapper}>
-        <CampaignLogo inverted className={`${bottomBannerStyles.logo}`} />
+        <CampaignLogo className={`${bottomBannerStyles.logo}`} />
         <h2 {...bottomBannerStyles.heading}>
           Die Republik gibt es, weil Sie etwas dafür tun.
         </h2>
         <div>
           <p {...bottomBannerStyles.p}>
-            <Link href='#TODO'>
+            <Link href={CAMPAIGN_META_ARTICLE_URL}>
               Bis zum 31. März suchen wir mit Ihnen zusammen 1000 zusätzliche
               Verlegerinnen
             </Link>

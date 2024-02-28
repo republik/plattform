@@ -21,9 +21,11 @@ const growKeyFrame = keyframes({
 export default function ProgressBar({
   from = 0,
   to,
+  inverted,
 }: {
   from?: number
   to: number
+  inverted?: boolean
 }) {
   const goalReachedRatio = from / to
   return (
@@ -35,7 +37,9 @@ export default function ProgressBar({
       <div
         {...css({
           overflow: 'hidden',
-          background: verlegerKampagneColors.yellowLight,
+          background: inverted
+            ? verlegerKampagneColors.yellowLight
+            : verlegerKampagneColors.redLight,
           borderRadius: '2px',
           height: '5px',
           display: 'flex',
@@ -44,7 +48,9 @@ export default function ProgressBar({
       >
         <div
           {...css({
-            background: verlegerKampagneColors.yellow,
+            background: inverted
+              ? verlegerKampagneColors.yellow
+              : verlegerKampagneColors.red,
             animationName: growKeyFrame,
             animationTimingFunction: 'ease-in-out',
             animationDuration: '1000ms',

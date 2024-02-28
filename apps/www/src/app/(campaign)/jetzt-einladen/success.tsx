@@ -98,7 +98,8 @@ export const Success = ({
             <>
               Grossartig! <strong>{referred} Personen</strong> haben über Ihren
               Link ein Republik-Abo abgeschlossen. Sie haben offensichtlich
-              Talent. <Link href='#TODO'>Teilen Sie Ihre Tipps mit uns!</Link>
+              Talent.
+              {/* <Link href='#TODO'>Teilen Sie Ihre Tipps mit uns!</Link> */}
               {/*TODO: (Link zum Meta-Beitrag mit
                     Dialog)*/}
             </>

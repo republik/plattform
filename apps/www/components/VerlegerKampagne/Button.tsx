@@ -7,21 +7,32 @@ const styles = {
   base: css({
     ...fontStyles.sansSerifBold,
     cursor: 'pointer',
+    backgroundColor: verlegerKampagneColors.red,
+    color: verlegerKampagneColors.yellow,
+    borderRadius: 4,
+    border: `1px solid ${verlegerKampagneColors.red}`,
+    lineHeight: 1.2,
+    '&:hover': {
+      backgroundColor: verlegerKampagneColors.yellow,
+      color: verlegerKampagneColors.red,
+    },
+    display: 'block',
+    minWidth: 'max-content',
+  }),
+  inverted: css({
     backgroundColor: verlegerKampagneColors.yellow,
     color: verlegerKampagneColors.red,
-    borderRadius: 4,
-    border: `1px solid ${verlegerKampagneColors.yellow}`,
+    borderColor: verlegerKampagneColors.yellow,
     lineHeight: 1.2,
     '&:hover': {
       backgroundColor: verlegerKampagneColors.red,
       color: verlegerKampagneColors.yellow,
     },
-    display: 'block',
-    minWidth: 'max-content',
   }),
   normal: css({
     padding: '0.5rem 0.75rem',
     fontSize: 19,
+    borderWidth: 2,
   }),
   small: css({
     padding: '0.5rem 0.75rem',
@@ -32,12 +43,17 @@ const styles = {
 export default function Button({
   children,
   small,
+  inverted,
   ...props
-}: React.ComponentProps<typeof NextLink> & { small?: boolean }) {
+}: React.ComponentProps<typeof NextLink> & {
+  small?: boolean
+  inverted?: boolean
+}) {
   return (
     <NextLink
       {...plainLinkRule}
       {...styles.base}
+      {...(inverted ? styles.inverted : {})}
       {...(small ? styles.small : styles.normal)}
       {...props}
     >
