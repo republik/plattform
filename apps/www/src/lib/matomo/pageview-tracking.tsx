@@ -20,7 +20,7 @@ export function MatomoPageViewTracking() {
       const url = new URL(pathname, window.location.origin)
       url.search = searchParams.toString()
 
-      if (Array.isArray(window._paq)) {
+      if (window?._paq) {
         window._paq.push(['setCustomUrl', url.toString()])
         window._paq.push(['setDocumentTitle', document.title])
         window._paq.push(['trackPageView'])

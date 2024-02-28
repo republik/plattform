@@ -17,7 +17,7 @@ export const trackEvent = (params: TrackEventParams) => {
     console.log('trackEvent', params)
   }
 
-  if (Array.isArray(window?._paq)) {
+  if (window?._paq) {
     window._paq.push([
       'trackEvent',
       params.category,
