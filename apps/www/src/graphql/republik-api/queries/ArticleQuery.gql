@@ -1,0 +1,18 @@
+query Article($path: String!) {
+  article: document(path: $path) {
+    id
+    type
+    repoId
+    content
+
+    meta {
+      publishDate
+      lastPublishedAt
+      template
+      path
+      title
+      kind
+      description
+    }
+  }
+}
