@@ -4,7 +4,6 @@ import { SliderStep } from '@app/app/(campaign)/jetzt/[code]/angebot/price-slide
 import { getSliderStepForValue } from '@app/app/(campaign)/jetzt/[code]/angebot/price-slider/helpers'
 import { css } from '@app/styled-system/css'
 import Image from 'next/image'
-import { useSearchParams } from 'next/navigation'
 import { ReactNode } from 'react'
 
 import iconBag from '@app/app/(campaign)/assets/icon-bag-inverted.svg'
@@ -141,12 +140,10 @@ const SLIDER_STEPS: Record<SliderStep, Reward> = {
   },
 } as const
 
-export const PriceRewards = () => {
-  const searchParams = useSearchParams()
+export const PriceRewards = ({ price }: { price: number }) => {
+  const stepKey = getSliderStepForValue(price)
 
-  const stepKey = getSliderStepForValue(+searchParams.get('price')).step
-
-  const step = SLIDER_STEPS[stepKey]
+  const step = SLIDER_STEPS[stepKey.step]
 
   return (
     <>
