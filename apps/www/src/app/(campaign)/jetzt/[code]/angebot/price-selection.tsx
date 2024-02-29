@@ -3,7 +3,6 @@
 import { css } from '@app/styled-system/css'
 import { PriceRewards } from './price-rewards'
 import { PriceSliderWithState } from './price-slider-with-state'
-import Link from 'next/link'
 import { CAMPAIGN_SLUG } from '@app/app/(campaign)/constants'
 import { Logo } from '@app/app/(campaign)/components/logo'
 import { useState } from 'react'
@@ -35,15 +34,11 @@ const getCheckoutUrl = ({
 }
 
 type PriceSelectionProps = {
-  initialPrice?: number
   referralCode: string
 }
 
-export default function PriceSelection({
-  initialPrice = 240,
-  referralCode,
-}: PriceSelectionProps) {
-  const [price, setPrice] = useState(initialPrice)
+export default function PriceSelection({ referralCode }: PriceSelectionProps) {
+  const [price, setPrice] = useState(240)
 
   return (
     <>
@@ -73,7 +68,7 @@ export default function PriceSelection({
         })}
       >
         <PriceSliderWithState price={price} setPrice={setPrice} />
-        <Link
+        <a
           href={getCheckoutUrl({ price, referralCode })}
           className={css({
             background: 'contrast',
@@ -91,7 +86,7 @@ export default function PriceSelection({
           })}
         >
           Für CHF {price} abonnieren
-        </Link>
+        </a>
         <div className={css({ pt: '4' })}>
           <Logo />
         </div>
