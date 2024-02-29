@@ -83,7 +83,7 @@ export default async function Page() {
           Lassen Sie uns diese Verantwortung auf mehr Schultern verteilen:{' '}
           <Link href={CAMPAIGN_META_ARTICLE_URL}>
             Bis zum 31. März suchen wir {CAMPAIGN_REFERRALS_GOAL} zusätzliche
-            Verlegerinnen
+            Verleger und Verlegerinnen
           </Link>
           . Denn je mehr Menschen sich einsetzen, desto breiter ist die
           Grundlage für das, weshalb wir alle hier sind: unabhängiger

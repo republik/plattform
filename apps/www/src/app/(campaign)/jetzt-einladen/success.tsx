@@ -1,4 +1,5 @@
 'use client'
+import { CAMPAIGN_META_ARTICLE_DIALOG_URL } from '@app/app/(campaign)/constants'
 import { css } from '@app/styled-system/css'
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
@@ -98,10 +99,10 @@ export const Success = ({
             <>
               Grossartig! <strong>{referred} Personen</strong> haben über Ihren
               Link ein Republik-Abo abgeschlossen. Sie haben offensichtlich
-              Talent.
-              {/* <Link href='#TODO'>Teilen Sie Ihre Tipps mit uns!</Link> */}
-              {/*TODO: (Link zum Meta-Beitrag mit
-                    Dialog)*/}
+              Talent.{' '}
+              <Link href={CAMPAIGN_META_ARTICLE_DIALOG_URL}>
+                Teilen Sie Ihre Tipps mit uns!
+              </Link>
             </>
           )}
         </p>

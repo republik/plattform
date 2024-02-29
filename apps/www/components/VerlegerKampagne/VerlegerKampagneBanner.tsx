@@ -99,7 +99,7 @@ export function VerlegerKampagneBannerTop() {
           <div {...topBannerStyles.content}>
             <div>
               Bis zum 31. März suchen wir mit Ihnen zusammen{' '}
-              {CAMPAIGN_REFERRALS_GOAL} zusätzliche Verleger.
+              {CAMPAIGN_REFERRALS_GOAL} zusätzliche Verleger und Verlegerinnen.
             </div>
             <ProgressBar
               inverted
@@ -183,8 +183,8 @@ export function VerlegerKampagneBannerBottom() {
           <div>
             <p {...bottomBannerStyles.p}>
               <Link href={CAMPAIGN_META_ARTICLE_URL}>
-                Bis zum 31. März suchen wir mit Ihnen zusammen 1000 zusätzliche
-                Verlegerinnen
+                Bis zum 31. März suchen wir mit Ihnen zusammen{' '}
+                {CAMPAIGN_REFERRALS_GOAL} zusätzliche Verleger und Verlegerinnen
               </Link>
               . Mitmachen ist einfach: Teilen Sie Ihren persönlichen Link mit so
               vielen Bekannten wie möglich und erzählen Sie ihnen, warum Sie die
