@@ -10,5 +10,5 @@
     "declarationMap": true
   },
   "include": ["."],
-  "exclude": ["node_modules", "__test__", "build"]
+  "exclude": ["node_modules", "__test__", "*/__tests__/**", "build"]
 }
