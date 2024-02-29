@@ -654,7 +654,7 @@ const ArticlePage = ({
       hasOverviewNav={hasOverviewNav}
       stickySecondaryNav={hasStickySecondaryNav}
       pageColorSchemeKey={colorSchemeKey}
-      location={meta.template === 'article' ? 'article' : undefined}
+      location={meta?.template === 'article' ? 'article' : undefined}
     >
       <PageLoader
         loading={articleLoading && !articleData}
