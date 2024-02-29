@@ -160,7 +160,7 @@ export function CampaignBanner({
             >
               <div>
                 Bis zum 31. März suchen wir mit Ihnen zusammen {referralsGoal}{' '}
-                zusätzliche Verleger.
+                zusätzliche Verleger und Verlegerinnen.
                 {/* <span
               className={css({
                 display: 'none',
