@@ -1,0 +1,21 @@
+{
+  "name": "@orbiting/backend-module-prolitteris",
+  "description": "ProLitteris API wrapper",
+  "author": "Henning Dahlheim <henning.dahlheim@republik.ch>",
+  "version": "1.0.0",
+  "license": "AGPL-3.0",
+  "main": "build/index.js",
+  "scripts": {
+    "dev": "tsc -w",
+    "build": "tsc",
+    "test": "jest"
+  },
+  "dependencies": {
+    "@orbiting/backend-modules-types": "*"
+  },
+  "devDependencies": {
+    "ts-jest": "^29.1.2",
+    "@faker-js/faker": "^8.4.1",
+    "@types/jest": "^29.5.12"
+  }
+}
