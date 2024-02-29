@@ -1,7 +1,7 @@
 const run = require('../run.js')
 
-const dir = 'packages/cards/migrations/sqls'
-const file = '20210520083239-drop-card-documents'
+const dir = 'packages/backend-modules/referral-campaigns/migrations/sqls'
+const file = '20240208131918-add-campaign-slug'
 
 exports.up = (db) => run(db, dir, `${file}-up.sql`)
 

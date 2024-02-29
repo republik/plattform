@@ -27,6 +27,7 @@
     "dev:docs": "turbo run dev --filter=@republik/docs...",
     "dev:www": "turbo run dev --filter=@orbiting/www-app...",
     "dev:www-api": "turbo run dev --filter=@orbiting/www-app --filter=@orbiting/api-app --concurrency=100",
+    "dev:api": "turbo run dev --filter=@orbiting/api-app... --concurrency=100",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "heroku-prebuild": "scripts/prune.sh",
@@ -95,5 +96,8 @@
   "engines": {
     "node": "^18.0.0"
   },
-  "packageManager": "yarn@1.22.10"
+  "packageManager": "yarn@1.22.10",
+  "resolutions": {
+    "typescript": "^5.2.2"
+  }
 }

@@ -3,6 +3,10 @@ const { sendPledgeConfirmations } = require('../Mail')
 const slack = require('@orbiting/backend-modules-republik/lib/slack')
 const { refreshPotForPledgeId } = require('../membershipPot')
 const getClients = require('./stripe/clients')
+const {
+  handleReferral,
+} = require('@orbiting/backend-modules-referral-campaigns')
+
 const forUpdate = async ({ pledgeId, fn, pgdb }) => {
   const transaction = await pgdb.transactionBegin()
   try {
@@ -74,6 +78,7 @@ const afterChange = async ({ pledge }, context) => {
     pledge.status === 'SUCCESSFUL' && refreshPotForPledgeId(pledge.id, context),
     pledge.status === 'PAID_INVESTIGATE' &&
       slack.publishPledge(user, pledge, 'PAID_INVESTIGATE'),
+    handleReferral(pledge, context).catch((e) => console.log(e)),
   ]).catch((e) => {
     console.error('error in afterChange', e)
   })
