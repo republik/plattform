@@ -99,8 +99,10 @@ export function CampaignBanner({
   referralsGoal: number
 }) {
   const pathname = usePathname()
-
-  if (pathname === '/jetzt-einladen') {
+  if (
+    pathname === '/jetzt-einladen' || // prevent rendering on sender page
+    !!pathname.match(/^\/jetzt(\/[A-Za-z0-9-]*(\/angebot)?)?$/) // prevent rendering on receiver page
+  ) {
     return null
   }
 
