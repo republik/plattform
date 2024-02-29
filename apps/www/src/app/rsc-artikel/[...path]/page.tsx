@@ -1,7 +1,8 @@
 import { ArticleDocument } from '@app/graphql/republik-api/gql/graphql'
 import { getClient } from '@app/lib/apollo/client'
-import { renderMdast } from '@app/lib/mdast/render'
+// import { renderMdast } from '@app/lib/mdast/render'
 import {
+  renderMdast,
   matchType,
   matchZone,
   matchHeading,
@@ -9,7 +10,14 @@ import {
 } from '@republik/mdast-react-render'
 import { notFound } from 'next/navigation'
 
-const schema = { rules: [] }
+const schema = {
+  rules: [
+    {
+      matchMdast: matchType('root'),
+      component: ({ children }) => children,
+    },
+  ],
+}
 const renderSchema = (content) => renderMdast({ ...content }, schema)
 
 export default async function ArticlePage({
