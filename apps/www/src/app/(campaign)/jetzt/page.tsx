@@ -1,11 +1,19 @@
 import { CampaignLogo } from '@app/app/(campaign)/components/campaign-logo'
 import Container from '@app/components/container'
 import { PageLayout } from '@app/components/layout'
+import { getMe } from '@app/lib/auth/me'
 import { EventTrackingContext } from '@app/lib/matomo/event-tracking'
 import { css } from '@app/styled-system/css'
 import Link from 'next/link'
+import { redirect } from 'next/navigation'
 
-export default function Page() {
+export default async function Page() {
+  const me = await getMe()
+
+  if (me) {
+    return redirect('/jetzt-einladen')
+  }
+
   return (
     <div data-page-theme='campaign-2024' data-theme-inverted>
       <PageLayout showHeader={false} showFooter={false}>
