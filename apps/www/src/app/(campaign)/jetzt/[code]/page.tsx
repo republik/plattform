@@ -93,7 +93,7 @@ const CTA = ({ href }: { href: string }) => {
         className={css({
           background: 'contrast',
           color: 'text.inverted',
-          px: '6',
+          px: '4',
           py: '3',
           borderRadius: '4px',
           fontWeight: 'medium',
@@ -101,8 +101,12 @@ const CTA = ({ href }: { href: string }) => {
           textDecoration: 'none',
           textAlign: 'center',
           display: 'block',
+          border: '2px solid token(colors.contrast)',
           // width: 'full',
-          _hover: {},
+          _hover: {
+            background: 'text.inverted',
+            color: 'contrast',
+          },
         })}
         href={href}
       >
