@@ -26,6 +26,8 @@
   "dependencies": {
     "@orbiting/backend-modules-dataloader": "workspace:*",
     "@orbiting/backend-modules-base64u": "workspace:*",
+    "@orbiting/backend-modules-auth": "workspace:*",
+    "pogi": "^2.11.1",
     "dayjs": "^1.11.7"
   }
 }
