@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "apollo-modules-node": "*",
+    "bluebird": "^3.7.2",
     "d3-array": "^2.4.0",
     "d3-dsv": "^1.2.0",
     "d3-time": "^1.0.8",
@@ -43,6 +44,8 @@
   },
   "devDependencies": {
     "@orbiting/backend-modules-types": "workspace:*",
+    "@types/bluebird": "^3.5.42",
+    "@types/debug": "^4.1.12",
     "@types/yargs": "^17.0.32"
   }
 }

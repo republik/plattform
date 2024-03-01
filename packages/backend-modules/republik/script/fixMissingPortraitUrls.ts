@@ -92,7 +92,7 @@ ConnectionContext.create(applicationName)
         }
       },
       { concurrency: 25 },
-    ).catch((e) => {
+    ).catch((e: any) => {
       console.error(e.message)
     })
 
