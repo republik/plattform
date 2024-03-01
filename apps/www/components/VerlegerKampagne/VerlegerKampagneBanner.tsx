@@ -220,7 +220,11 @@ export function VerlegerKampagneBannerBottom() {
   )
 }
 
-export function VerlegerKampagnePayNoteTop() {
+export function VerlegerKampagnePayNoteTop({
+  inNavigation,
+}: {
+  inNavigation?: boolean
+}) {
   return (
     <EventTrackingContext category='CampaignPayNoteTop'>
       <Center
@@ -229,6 +233,7 @@ export function VerlegerKampagnePayNoteTop() {
           background: verlegerKampagneColors.red,
           color: verlegerKampagneColors.yellow,
         })}
+        style={{ padding: inNavigation ? 30 : undefined }}
         data-hide-if-active-membership='true'
       >
         <div {...bottomBannerStyles.wrapper}>

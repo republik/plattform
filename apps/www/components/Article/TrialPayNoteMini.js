@@ -6,7 +6,10 @@ import { useColorContext, Center } from '@project-r/styleguide'
 import BrowserOnly from './BrowserOnly'
 
 // TODO: REMOVE AFTER CAMPAIGN
-import { VerlegerKampagnePayNoteTop } from 'components/VerlegerKampagne/VerlegerKampagneBanner'
+import {
+  VerlegerKampagnePayNoteTop,
+  VerlegerKampagnePayNoteBottom,
+} from 'components/VerlegerKampagne/VerlegerKampagneBanner'
 
 const styles = {
   container: css({
@@ -23,7 +26,12 @@ const InlineWrapper = ({ inline, children }) => {
 }
 
 // TODO: REMOVE AFTER CAMPAIGN
-const TrialPayNoteMini = VerlegerKampagnePayNoteTop
+const TrialPayNoteMini = ({ context }) =>
+  context === 'after' ? (
+    <VerlegerKampagnePayNoteBottom />
+  ) : (
+    <VerlegerKampagnePayNoteTop inNavigation={context === 'navigation'} />
+  )
 
 // const TrialPayNoteMini = ({ repoId, inline, context, index }) => {
 //   const [colorScheme] = useColorContext()
