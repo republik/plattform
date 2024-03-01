@@ -89,7 +89,7 @@ const topBannerStyles = {
 }
 
 export function VerlegerKampagneBannerTop() {
-  const { data, loading } = useCampaignData()
+  const { data } = useCampaignData()
 
   return (
     <EventTrackingContext category='CampaignBannerTop'>
@@ -164,7 +164,7 @@ const bottomBannerStyles = {
 }
 
 export function VerlegerKampagneBannerBottom() {
-  const { data, loading } = useCampaignData()
+  const { data } = useCampaignData()
 
   return (
     <EventTrackingContext category='CampaignBannerBottom'>

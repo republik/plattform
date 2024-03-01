@@ -946,10 +946,7 @@ const ArticlePage = ({
                   variables={feedQueryVariables}
                 />
               )}
-              {/* TODO: REMOVE AFTER CAMPAIGN */}
-              {meta.template === 'article' && me && hasActiveMembership && (
-                <VerlegerKampagneBannerBottom />
-              )}
+              <VerlegerKampagneBannerBottom />
               {me && hasActiveMembership && (
                 <ArticleRecommendationsFeed path={cleanedPath} />
               )}
