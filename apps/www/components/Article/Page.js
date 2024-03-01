@@ -698,8 +698,14 @@ const ArticlePage = ({
           // const suppressSecondPayNote = climatePaynote
 
           // TODO: REMOVE AFTER CAMPAIGN
-          const payNote = <VerlegerKampagnePayNoteTop />
-          const payNoteAfter = <VerlegerKampagnePayNoteBottom />
+          const payNote =
+            meta.paynoteMode === 'noPaynote' ? null : (
+              <VerlegerKampagnePayNoteTop />
+            )
+          const payNoteAfter =
+            meta.paynoteMode === 'noPaynote' ? null : (
+              <VerlegerKampagnePayNoteBottom />
+            )
 
           // const payNote = (
           //   <PayNote
