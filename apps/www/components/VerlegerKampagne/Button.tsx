@@ -18,7 +18,8 @@ const styles = {
       color: verlegerKampagneColors.red,
     },
     display: 'block',
-    minWidth: 'max-content',
+    minWidth: 0,
+    textAlign: 'center',
   }),
   inverted: css({
     backgroundColor: verlegerKampagneColors.yellow,
@@ -53,10 +54,12 @@ export default function Button({
   const trackEvent = useTrackEvent()
   return (
     <NextLink
-      {...plainLinkRule}
-      {...styles.base}
-      {...(inverted ? styles.inverted : {})}
-      {...(small ? styles.small : styles.normal)}
+      {...css(
+        plainLinkRule,
+        styles.base,
+        inverted ? styles.inverted : {},
+        small ? styles.small : styles.normal,
+      )}
       {...props}
       onClick={() =>
         trackEvent({ action: 'linkClicked', name: props.href?.toString() })

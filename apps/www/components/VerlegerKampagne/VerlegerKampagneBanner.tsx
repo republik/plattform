@@ -24,7 +24,7 @@ const Center = ({
   }),
   ...props
 }: ComponentPropsWithoutRef<'div'> & { wrapperStyle?: StyleAttribute }) => (
-  <div {...wrapperStyle} data-show-if-active-membership>
+  <div {...wrapperStyle}>
     <div
       {...css({
         margin: '0 auto',
@@ -86,6 +86,9 @@ const topBannerStyles = {
       display: 'block',
     },
   }),
+  button: css({
+    flexShrink: 0,
+  }),
 }
 
 export function VerlegerKampagneBannerTop() {
@@ -93,7 +96,7 @@ export function VerlegerKampagneBannerTop() {
 
   return (
     <EventTrackingContext category='CampaignBannerTop'>
-      <Center {...topBannerStyles.container}>
+      <Center {...topBannerStyles.container} data-show-if-active-membership>
         <div {...topBannerStyles.wrapper}>
           <CampaignLogo inverted className={`${topBannerStyles.logo}`} />
           <div {...topBannerStyles.content}>
@@ -107,9 +110,11 @@ export function VerlegerKampagneBannerTop() {
               to={CAMPAIGN_REFERRALS_GOAL}
             />
           </div>
-          <Button small inverted href='/jetzt-einladen'>
-            Jetzt mithelfen
-          </Button>
+          <div {...topBannerStyles.button}>
+            <Button small inverted href='/jetzt-einladen'>
+              Jetzt mithelfen
+            </Button>
+          </div>
         </div>
       </Center>
     </EventTrackingContext>
@@ -174,6 +179,7 @@ export function VerlegerKampagneBannerBottom() {
           background: verlegerKampagneColors.yellow,
           color: verlegerKampagneColors.red,
         })}
+        data-show-if-active-membership
       >
         <div {...bottomBannerStyles.wrapper}>
           <CampaignLogo className={`${bottomBannerStyles.logo}`} />
@@ -207,6 +213,73 @@ export function VerlegerKampagneBannerBottom() {
           </div>
           <div>
             <Button href='/jetzt-einladen'>Jetzt mithelfen</Button>
+          </div>
+        </div>
+      </Center>
+    </EventTrackingContext>
+  )
+}
+
+export function VerlegerKampagnePayNoteTop() {
+  return (
+    <EventTrackingContext category='CampaignPayNoteTop'>
+      <Center
+        {...bottomBannerStyles.container}
+        wrapperStyle={css({
+          background: verlegerKampagneColors.red,
+          color: verlegerKampagneColors.yellow,
+        })}
+        data-hide-if-active-membership='true'
+      >
+        <div {...bottomBannerStyles.wrapper}>
+          <CampaignLogo inverted className={`${bottomBannerStyles.logo}`} />
+          <h2 {...bottomBannerStyles.heading}>
+            Unabhängiger Journalismus lebt vom Einsatz vieler
+          </h2>
+          <div>
+            <p {...bottomBannerStyles.p}>
+              Unterstützen auch Sie die Republik mit einem Abo: bis 31. März
+              2024 zum vergünstigten Einstiegspreis.
+            </p>
+          </div>
+          <div>
+            <Button inverted href='/jetzt/angebot'>
+              Ab CHF 120 für ein Jahr
+            </Button>
+          </div>
+        </div>
+      </Center>
+    </EventTrackingContext>
+  )
+}
+
+export function VerlegerKampagnePayNoteBottom() {
+  return (
+    <EventTrackingContext category='CampaignPayNoteBottom'>
+      <Center
+        {...bottomBannerStyles.container}
+        wrapperStyle={css({
+          background: verlegerKampagneColors.red,
+          color: verlegerKampagneColors.yellow,
+        })}
+        data-hide-if-active-membership='true'
+      >
+        <div {...bottomBannerStyles.wrapper}>
+          <CampaignLogo inverted className={`${bottomBannerStyles.logo}`} />
+          <h2 {...bottomBannerStyles.heading}>
+            Unabhängiger Journalismus lebt vom Einsatz vieler
+          </h2>
+          <div>
+            <p {...bottomBannerStyles.p}>
+              Artikel wie diesen gibt es nur, wenn genügend Menschen die
+              Republik mit einem Abo unterstützen. Kommen Sie an Bord!
+            </p>
+          </div>
+          <div>
+            <Button inverted href='/jetzt/angebot'>
+              Jetzt für kurze Zeit
+              ab&nbsp;CHF&nbsp;120&nbsp;für&nbsp;ein&nbsp;Jahr
+            </Button>
           </div>
         </div>
       </Center>
