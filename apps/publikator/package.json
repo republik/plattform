@@ -57,7 +57,7 @@
     "@republik/nextjs-apollo-client": "workspace:*",
     "@republik/remark-preset": "workspace:*",
     "@republik/slate-mdast-serializer": "workspace:*",
-    "@sentry/nextjs": "^7.70.0",
+    "@sentry/nextjs": "^7.102.1",
     "@types/uuid": "^8.3.4",
     "axios": "^1.0.0",
     "clipboard-copy": "^3.1.0",

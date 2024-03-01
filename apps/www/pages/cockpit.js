@@ -1,45 +1,47 @@
-import { useEffect, useState } from 'react'
-import compose from 'lodash/flowRight'
-import { graphql } from '@apollo/client/react/hoc'
-import Router, { withRouter } from 'next/router'
-import { extent } from 'd3-array'
 import { gql } from '@apollo/client'
+import { graphql } from '@apollo/client/react/hoc'
+import { extent } from 'd3-array'
 import { timeMonth } from 'd3-time'
+import compose from 'lodash/flowRight'
+import Router, { withRouter } from 'next/router'
+import { useEffect, useState } from 'react'
 
 import {
-  P,
-  H2,
-  Editorial,
-  Interaction,
-  Loader,
-  LazyLoad,
-  ChartTitle,
+  Chart,
   ChartLead,
   ChartLegend,
-  Chart,
+  ChartTitle,
+  Editorial,
+  H2,
+  Interaction,
+  LazyLoad,
+  Loader,
+  P,
   mediaQueries,
 } from '@project-r/styleguide'
 
 import Frame from '../components/Frame'
 import { countFormat } from '../lib/utils/format'
 
-import { PackageItem, PackageBuffer } from '../components/Pledge/Accordion'
+import { PackageBuffer, PackageItem } from '../components/Pledge/Accordion'
 
+import { RawStatus } from '../components/Crowdfunding/Status'
 import {
   mapActionData,
   userSurviveActionsFragment,
 } from '../components/Crowdfunding/withSurviveStatus'
-import { RawStatus } from '../components/Crowdfunding/Status'
 import withT from '../lib/withT'
 
 import { ListWithQuery as TestimonialList } from '../components/Testimonial/List'
 
-import { CROWDFUNDING, CDN_FRONTEND_BASE_URL } from '../lib/constants'
-import withMe from '../lib/apollo/withMe'
-import { swissTime } from '../lib/utils/format'
-import withInNativeApp from '../lib/withInNativeApp'
 import Link from 'next/link'
 import { withDefaultSSR } from '../lib/apollo/helpers'
+import withMe from '../lib/apollo/withMe'
+import { CDN_FRONTEND_BASE_URL, CROWDFUNDING } from '../lib/constants'
+import { swissTime } from '../lib/utils/format'
+import withInNativeApp from '../lib/withInNativeApp'
+
+import { CAMPAIGN_META_ARTICLE_URL } from '@app/app/(campaign)/constants'
 
 const statusQuery = gql`
   query CockpitStatus(
@@ -584,8 +586,10 @@ const Page = ({
                 Preis abschliessen konnten. Zwischen Mitte Februar und Anfang
                 April 2024 laufen diese Abonnements aus, was wir hier ebenfalls
                 abbilden.
-                {/*<Editorial.A href='#'>Hier</Editorial.A> erfahren Sie
-                mehr über unsere Kampagnen. */}
+                <Editorial.A href={CAMPAIGN_META_ARTICLE_URL}>
+                  Hier
+                </Editorial.A>{' '}
+                erfahren Sie mehr über unsere Kampagnen.
               </P>
               <div style={{ marginTop: 20 }}>
                 <ChartTitle>

@@ -1,0 +1,28 @@
+query CampaignInvite(
+  # Either a username or referral code
+  $code: String!
+) {
+  me {
+    id
+    slug
+    activeMembership {
+      type {
+        id
+        name
+      }
+    }
+  }
+
+  # Is the invite code a valid referral code (usernames don't work here)
+  validateReferralCode(code: $code)
+
+  # The sender is a user who will be resolved if they have a public profile and the invite code is their username
+  sender: user(slug: $code) {
+    id
+    firstName
+    lastName
+    portrait
+    username
+    referralCode
+  }
+}

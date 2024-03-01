@@ -1311,4 +1311,67 @@ mail.getPledgeMergeVars = async (
   ]
 }
 
+mail.sendReferralCampaignMail = async (
+  {
+    referrerUserId,
+    pledgeUserId,
+    referralCount,
+    hasMonthlyAbo,
+    noActiveMembership,
+  },
+  { pgdb, t },
+) => {
+  const referrer = await pgdb.public.users.findOne({ id: referrerUserId })
+  const safeReferrer = transformUser(referrer)
+
+  const pledger = await pgdb.public.users.findOne({ id: pledgeUserId })
+  const safePledger = transformUser(pledger)
+
+  const countNumber = parseInt(referralCount, 10)
+
+  // TODO should not be hardcoded
+  let campaignTemplate
+  if (countNumber === 1) {
+    campaignTemplate = 'first'
+  } else if (campaignTemplate === 2) {
+    campaignTemplate = 'second'
+  } else {
+    campaignTemplate = 'all'
+  }
+  const templateName = `referral_campaign_referral_${campaignTemplate}`
+
+  return sendMailTemplate(
+    {
+      to: safeReferrer.email,
+      fromEmail: process.env.DEFAULT_MAIL_FROM_ADDRESS,
+      subject: t(`api/email/${templateName}/subject`),
+      templateName,
+      mergeLanguage: 'handlebars',
+      globalMergeVars: [
+        {
+          name: 'referral_count',
+          content: countNumber,
+        },
+        {
+          name: 'receiver',
+          content: safePledger.name ? safePledger.name : safePledger.email,
+        },
+        {
+          name: 'link_sender_page',
+          content: `${FRONTEND_BASE_URL}/jetzt-einladen`,
+        },
+        {
+          name: 'has_monthly_abo',
+          content: hasMonthlyAbo,
+        },
+        {
+          name: 'no_active_membership',
+          content: noActiveMembership,
+        },
+      ],
+    },
+    { pgdb },
+  )
+}
+
 module.exports = mail

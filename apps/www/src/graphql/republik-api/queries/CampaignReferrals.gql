@@ -1,0 +1,8 @@
+query CampaignReferrals($campaignSlug: String!) {
+  campaign(slug: $campaignSlug) {
+    id
+    referrals {
+      count
+    }
+  }
+}

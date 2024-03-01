@@ -32,6 +32,7 @@
     "@orbiting/backend-modules-publikator": "workspace:*",
     "@orbiting/backend-modules-push-notifications": "workspace:*",
     "@orbiting/backend-modules-redirections": "workspace:*",
+    "@orbiting/backend-modules-referral-campaigns": "workspace:*",
     "@orbiting/backend-modules-republik": "workspace:*",
     "@orbiting/backend-modules-republik-crowdfundings": "workspace:*",
     "@orbiting/backend-modules-scalars": "workspace:*",

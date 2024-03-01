@@ -477,6 +477,14 @@
       "value": "Republik-Guetsliformen"
     },
     {
+      "key": "api/email/option/goodie/totebag_black/1",
+      "value": "Republik-Tasche, schwarz"
+    },
+    {
+      "key": "api/email/option/goodie/totebag_black/other",
+      "value": "Republik-Taschen, schwarz"
+    },
+    {
       "key": "api/email/option/membershiptype/abo/1",
       "value": "Jahresmitgliedschaft"
     },
@@ -510,11 +518,11 @@
     },
     {
       "key": "api/email/option/membershiptype/yearly_abo/1",
-      "value": "Mitstreiterinnen-Abo"
+      "value": "Jahresabo"
     },
     {
       "key": "api/email/option/membershiptype/yearly_abo/other",
-      "value": "Mitstreiterinnen-Abos"
+      "value": "Jahresabos"
     },
     {
       "key": "api/email/option/other/gifted_membership",
@@ -719,6 +727,18 @@
     {
       "key": "api/email/membership_owner_upgrade_monthly/subject",
       "value": "Wechseln Sie zur Jahresmitgliedschaft!"
+    },
+    {
+      "key": "api/email/referral_campaign_referral_first/subject",
+      "value": "Sie haben Unterstützung geholt – weiter so!"
+    },
+    {
+      "key": "api/email/referral_campaign_referral_second/subject",
+      "value": "Ihr Handeln wirkt! Danke."
+    },
+    {
+      "key": "api/email/referral_campaign_referral_all/subject",
+      "value": "Sie haben Talent"
     },
     {
       "key": "api/email/membership_deactivated_abo_uncancelled/sequenceNumber/true/subject",
@@ -2142,7 +2162,7 @@
     },
     {
       "key": "api/email/payment/reminder/isLast:true/packageName:YEARLY_ABO/subject",
-      "value": "Der von Ihnen festgelegte Betrag für Ihr neues Republik-Abo ist noch nicht bezahlt"
+      "value": "LETZTE MAHNUNG: Republik-Abo"
     },
     {
       "key": "api/email/payment/reminder/isLast:true/packageName:LESHA/subject",
