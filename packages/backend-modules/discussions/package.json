@@ -24,7 +24,8 @@
     "@orbiting/backend-modules-dataloader": "workspace:*",
     "dataloader": "^2.0.0",
     "graphql-fields": "^2.0.3",
-    "is-uuid": "^1.0.2"
+    "is-uuid": "^1.0.2",
+    "pogi": "^2.11.1"
   },
   "devDependencies": {
     "@orbiting/backend-modules-types": "workspace:*",
