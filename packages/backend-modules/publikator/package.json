@@ -20,11 +20,11 @@
     "build": "tsc"
   },
   "dependencies": {
-    "@orbiting/backend-modules-dataloader": "workspace:*",
     "@orbiting/backend-modules-auth": "workspace:*",
+    "@orbiting/backend-modules-dataloader": "workspace:*",
     "@orbiting/backend-modules-search": "workspace:*",
-    "@republik/remark-preset": "workspace:*",
     "@orbiting/graphql-list-fields": "^2.0.2",
+    "@republik/remark-preset": "workspace:*",
     "@rocka/mp3-duration": "^2.0.0",
     "@types/bluebird": "^3.5.33",
     "apollo-fetch": "^0.7.0",
@@ -44,6 +44,7 @@
     "jsonwebtoken": "^8.2.1",
     "lodash": "^4.17.19",
     "mdast-util-to-string": "^1.1.0",
+    "moment": "^2.30.1",
     "pogi": "^2.11.1",
     "redis": "^3.0.2",
     "redlock": "^4.1.0",
@@ -51,12 +52,14 @@
     "sharp": "^0.29.3",
     "throng": "^4.0.0",
     "unist-util-visit": "^2.0.2",
+    "uuid": "^9.0.1",
     "yargs": "^17.0.1"
   },
   "devDependencies": {
     "@orbiting/backend-modules-types": "workspace:*",
     "@types/debug": "^4.1.5",
     "@types/is-uuid": "^1.0.2",
+    "@types/uuid": "^9.0.8",
     "@types/yargs": "^17.0.32",
     "gsheets": "^3.0.0",
     "nodemon": "^2.0.4",
