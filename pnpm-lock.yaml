@@ -1972,17 +1972,20 @@ importers:
   packages/backend-modules/referral-campaigns:
     dependencies:
       '@orbiting/backend-modules-scalars':
-        specifier: '*'
+        specifier: workspace:*
         version: link:../scalars
       '@orbiting/backend-modules-types':
-        specifier: '*'
+        specifier: workspace:*
         version: link:../types
       apollo-modules-node:
-        specifier: '*'
+        specifier: workspace:*
         version: link:../apollo-modules-node
       crockford-base32:
         specifier: ^2.0.0
         version: 2.0.0
+      dayjs:
+        specifier: ^1.11.10
+        version: 1.11.10
       debug:
         specifier: ^4.1.1
         version: 4.3.4(supports-color@8.1.1)

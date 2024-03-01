@@ -20,10 +20,11 @@
   },
   "types": "build/@types",
   "dependencies": {
-    "@orbiting/backend-modules-scalars": "*",
-    "@orbiting/backend-modules-types": "*",
-    "apollo-modules-node": "*",
+    "@orbiting/backend-modules-scalars": "workspace:*",
+    "@orbiting/backend-modules-types": "workspace:*",
+    "apollo-modules-node": "workspace:*",
     "crockford-base32": "^2.0.0",
+    "dayjs": "^1.11.10",
     "debug": "^4.1.1",
     "pogi": "^2.11.1",
     "stripe": "^8.119.0"
