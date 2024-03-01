@@ -41,7 +41,8 @@
     "stripe": "^8.119.0",
     "tar": "^6.1.9",
     "uuid": "^8.3.1",
-    "validator": "^13.7.0"
+    "validator": "^13.7.0",
+    "pogi": "^2.11.1"
   },
   "devDependencies": {
     "@orbiting/backend-modules-types": "workspace:*",
