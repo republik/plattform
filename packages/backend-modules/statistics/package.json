@@ -21,6 +21,7 @@
     "build": "tsc"
   },
   "dependencies": {
+    "@orbiting/backend-modules-types": "workspace:*",
     "bluebird": "^3.7.2",
     "d3-array": "^2.4.0",
     "debug": "^4.1.1",
