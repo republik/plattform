@@ -28,8 +28,8 @@ const Center = ({
     <div
       {...css({
         margin: '0 auto',
-        width: 775,
-        maxWidth: '100%',
+        maxWidth: 775,
+        width: '100%',
         display: 'flex',
         flexDirection: 'column',
         gap: 8,
