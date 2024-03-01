@@ -244,7 +244,7 @@ export function VerlegerKampagnePayNoteTop() {
           </div>
           <div>
             <Button inverted href='/jetzt/angebot'>
-              Ab CHF 120 für ein Jahr
+              Ab CHF 120 für&nbsp;ein&nbsp;Jahr
             </Button>
           </div>
         </div>
