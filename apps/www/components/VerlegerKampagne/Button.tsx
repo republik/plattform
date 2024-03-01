@@ -1,12 +1,12 @@
-import { mediaQueries, plainLinkRule, fontStyles } from '@project-r/styleguide'
-import { verlegerKampagneColors } from './config'
+import { useTrackEvent } from '@app/lib/matomo/event-tracking'
+import { fontStyles, plainLinkRule } from '@project-r/styleguide'
 import { css } from 'glamor'
 import NextLink from 'next/link'
-import { useTrackEvent } from '@app/lib/matomo/event-tracking'
+import { verlegerKampagneColors } from './config'
 
 const styles = {
   base: css({
-    ...fontStyles.sansSerifBold,
+    ...fontStyles.sansSerifMedium,
     cursor: 'pointer',
     backgroundColor: verlegerKampagneColors.red,
     color: verlegerKampagneColors.yellow,
@@ -32,12 +32,12 @@ const styles = {
     },
   }),
   normal: css({
-    padding: '0.5rem 0.75rem',
-    fontSize: 19,
+    padding: '0.75rem 1rem',
+    fontSize: 20,
     borderWidth: 2,
   }),
   small: css({
-    padding: '0.5rem 0.75rem',
+    padding: '0.75rem 1rem',
     fontSize: 14,
   }),
 }

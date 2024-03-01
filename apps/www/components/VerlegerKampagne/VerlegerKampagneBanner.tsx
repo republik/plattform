@@ -160,11 +160,20 @@ const bottomBannerStyles = {
     lineHeight: 1.5,
     margin: 0,
     [mediaQueries.mUp]: {
-      fontSize: 19,
+      fontSize: 20,
     },
     '& a': {
       color: 'currentColor',
     },
+  }),
+  buttonGroup: css({
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    gap: 8,
+  }),
+  buttonSubLine: css({
+    fontSize: '1rem',
   }),
 }
 
@@ -243,14 +252,17 @@ export function VerlegerKampagnePayNoteTop({
           </h2>
           <div>
             <p {...bottomBannerStyles.p}>
-              Unterstützen auch Sie die Republik mit einem Abo: bis 31. März
-              2024 zum vergünstigten Einstiegspreis.
+              Unterstützen auch Sie die Republik mit einem Abo: Einstiegsangebot
+              nur bis 31. März 2024.
             </p>
           </div>
-          <div>
+          <div {...bottomBannerStyles.buttonGroup}>
             <Button inverted href='/jetzt/angebot'>
-              Ab CHF 120 für&nbsp;ein&nbsp;Jahr
+              Wählen Sie Ihren Einstiegspreis
             </Button>
+            <div {...bottomBannerStyles.buttonSubLine}>
+              Ab CHF 120 für&nbsp;ein&nbsp;Jahr
+            </div>
           </div>
         </div>
       </Center>
@@ -277,14 +289,17 @@ export function VerlegerKampagnePayNoteBottom() {
           <div>
             <p {...bottomBannerStyles.p}>
               Artikel wie diesen gibt es nur, wenn genügend Menschen die
-              Republik mit einem Abo unterstützen. Kommen Sie an Bord!
+              Republik mit einem Abo unterstützen. Kommen Sie bis zum 31. März
+              an Bord!
             </p>
           </div>
-          <div>
+          <div {...bottomBannerStyles.buttonGroup}>
             <Button inverted href='/jetzt/angebot'>
-              Jetzt für kurze Zeit
-              ab&nbsp;CHF&nbsp;120&nbsp;für&nbsp;ein&nbsp;Jahr
+              Wählen Sie Ihren Einstiegspreis
             </Button>
+            <div {...bottomBannerStyles.buttonSubLine}>
+              Ab CHF 120 für&nbsp;ein&nbsp;Jahr
+            </div>
           </div>
         </div>
       </Center>
