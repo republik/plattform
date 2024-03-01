@@ -28,10 +28,15 @@
     "moment": "^2.26.0",
     "unified": "^9.0.0",
     "unist-util-visit": "^2.0.2",
-    "validator": "^13.7.0"
+    "validator": "^13.7.0",
+    "remark-parse": "^11.0.0",
+    "remark-breaks": "^4.0.0",
+    "yargs": "^17.7.2"
   },
   "devDependencies": {
     "@orbiting/backend-modules-types": "workspace:*",
-    "@types/validator": "^13.7.4"
+    "@types/validator": "^13.7.4",
+    "@types/bluebird": "^3.5.42",
+    "@types/yargs": "^17.0.32"
   }
 }
