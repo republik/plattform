@@ -28,7 +28,7 @@ const Center = ({
     <div
       {...css({
         margin: '0 auto',
-        width: 780,
+        width: 775,
         maxWidth: '100%',
         display: 'flex',
         flexDirection: 'column',
@@ -123,9 +123,9 @@ export function VerlegerKampagneBannerTop() {
 
 const bottomBannerStyles = {
   container: css({
-    padding: '40px 15px',
+    padding: '30px 15px',
     [mediaQueries.mUp]: {
-      padding: '40px',
+      padding: '30px 55px',
     },
     marginTop: 15,
   }),
@@ -146,21 +146,21 @@ const bottomBannerStyles = {
   heading: css({
     margin: 0,
     fontFamily: 'Druk',
-    fontSize: 48,
+    fontSize: 42,
     fontStyle: 'normal',
     fontWeight: 500,
     width: '100%',
     [mediaQueries.mUp]: {
-      fontSize: 48,
+      fontSize: 42,
     },
   }),
   p: css({
     flexGrow: 1,
-    fontSize: 16,
-    lineHeight: 1.4,
+    fontSize: 17,
+    lineHeight: 1.5,
     margin: 0,
     [mediaQueries.mUp]: {
-      fontSize: 17,
+      fontSize: 19,
     },
     '& a': {
       color: 'currentColor',

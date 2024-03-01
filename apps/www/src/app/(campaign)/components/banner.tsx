@@ -119,7 +119,7 @@ export function CampaignBanner({
         <div
           className={css({
             margin: '0 auto',
-            width: '780px',
+            width: '775px',
             maxWidth: '100%',
             display: 'flex',
             flexDirection: 'column',
