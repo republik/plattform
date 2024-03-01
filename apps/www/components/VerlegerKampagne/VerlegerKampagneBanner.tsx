@@ -253,7 +253,7 @@ export function VerlegerKampagnePayNoteTop({
           <div>
             <p {...bottomBannerStyles.p}>
               Unterstützen auch Sie die Republik mit einem Abo: Einstiegsangebot
-              nur bis 31. März 2024.
+              nur bis 31.&nbsp;März&nbsp;2024.
             </p>
           </div>
           <div {...bottomBannerStyles.buttonGroup}>
@@ -289,8 +289,8 @@ export function VerlegerKampagnePayNoteBottom() {
           <div>
             <p {...bottomBannerStyles.p}>
               Artikel wie diesen gibt es nur, wenn genügend Menschen die
-              Republik mit einem Abo unterstützen. Kommen Sie bis zum 31. März
-              an Bord!
+              Republik mit einem Abo unterstützen. Kommen Sie bis zum
+              31.&nbsp;März&nbsp;an&nbsp;Bord!
             </p>
           </div>
           <div {...bottomBannerStyles.buttonGroup}>
