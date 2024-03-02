@@ -33,6 +33,9 @@ type TypewriterContentProps = {
 export const TypewriterContent = ({
   external = false,
 }: TypewriterContentProps) => {
+  const suffix = `gibt es, ${
+    external ? 'wenn genügend Menschen' : 'weil Sie'
+  } etwas dafür tun`
   return (
     <div className={css({ display: 'grid' })}>
       <div
@@ -43,8 +46,7 @@ export const TypewriterContent = ({
           gridRowEnd: 1,
         })}
       >
-        <Typewriter words={words} /> gibt es,{' '}
-        {external ? 'wenn genügend Menschen' : 'weil Sie'} etwas dafür tun
+        <Typewriter words={words} /> {suffix}
       </div>
       <div
         aria-hidden
@@ -56,7 +58,7 @@ export const TypewriterContent = ({
           visibility: 'hidden',
         })}
       >
-        {longestWord}&nbsp; gibt es, weil Sie etwas dafür tun
+        {longestWord}&nbsp; {suffix}
       </div>
     </div>
   )
