@@ -1499,6 +1499,9 @@ importers:
 
   packages/backend-modules/call-to-actions:
     dependencies:
+      '@orbiting/backend-modules-republik-crowdfundings':
+        specifier: workspace:*
+        version: link:../republik-crowdfundings
       '@orbiting/backend-modules-types':
         specifier: workspace:*
         version: link:../types

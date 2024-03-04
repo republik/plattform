@@ -24,6 +24,7 @@
   "dependencies": {
     "apollo-modules-node": "workspace:*",
     "@orbiting/backend-modules-types": "workspace:*",
+    "@orbiting/backend-modules-republik-crowdfundings": "workspace:*",
     "dayjs": "^1.11.7"
   }
 }
