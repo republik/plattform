@@ -1721,6 +1721,18 @@ importers:
 
   packages/backend-modules/gsheets:
     dependencies:
+      '@orbiting/backend-modules-auth':
+        specifier: workspace:*
+        version: link:../auth
+      '@orbiting/backend-modules-scalars':
+        specifier: workspace:*
+        version: link:../scalars
+      '@orbiting/backend-modules-voting':
+        specifier: workspace:*
+        version: link:../voting
+      apollo-modules-node:
+        specifier: workspace:*
+        version: link:../apollo-modules-node
       d3-array:
         specifier: ^2.4.0
         version: 2.12.1
