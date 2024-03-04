@@ -1613,6 +1613,18 @@ importers:
 
   packages/backend-modules/documents:
     dependencies:
+      '@orbiting/backend-modules-base':
+        specifier: workspace:^
+        version: link:../base
+      '@orbiting/backend-modules-dataloader':
+        specifier: workspace:^
+        version: link:../dataloader
+      '@orbiting/backend-modules-env':
+        specifier: workspace:^
+        version: link:../env
+      '@orbiting/backend-modules-search':
+        specifier: workspace:^
+        version: link:../search
       '@republik/mdast-react-render':
         specifier: workspace:*
         version: link:../../mdast/mdast-react-render
@@ -1647,8 +1659,11 @@ importers:
         specifier: ^18.2.0
         version: 18.2.0(react@18.2.0)
       unist-util-visit:
-        specifier: ^2.0.2
+        specifier: ^2.0.3
         version: 2.0.3
+      yargs:
+        specifier: ^17.7.2
+        version: 17.7.2
 
   packages/backend-modules/embeds:
     dependencies:
