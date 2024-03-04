@@ -1511,9 +1511,30 @@ importers:
 
   packages/backend-modules/collections:
     dependencies:
+      '@orbiting/backend-modules-auth':
+        specifier: workspace:*
+        version: link:../auth
+      '@orbiting/backend-modules-utils':
+        specifier: workspace:*
+        version: link:../utils
+      apollo-modules-node:
+        specifier: workspace:*
+        version: link:../apollo-modules-node
+      bluebird:
+        specifier: ^3.7.2
+        version: 3.7.2
+      d3-array:
+        specifier: ^3.2.4
+        version: 3.2.4
       dataloader:
         specifier: ^2.0.0
         version: 2.2.2
+      moment:
+        specifier: ^2.30.1
+        version: 2.30.1
+      uuid:
+        specifier: ^9.0.1
+        version: 9.0.1
 
   packages/backend-modules/databroom:
     dependencies:

@@ -17,6 +17,13 @@
   },
   "homepage": "https://github.com/republik/plattform#readme",
   "dependencies": {
-    "dataloader": "^2.0.0"
+    "@orbiting/backend-modules-auth": "workspace:*",
+    "@orbiting/backend-modules-utils": "workspace:*",
+    "apollo-modules-node": "workspace:*",
+    "bluebird": "^3.7.2",
+    "d3-array": "^3.2.4",
+    "dataloader": "^2.0.0",
+    "moment": "^2.30.1",
+    "uuid": "^9.0.1"
   }
 }
