@@ -18,6 +18,7 @@
   "homepage": "https://github.com/republik/plattform#readme",
   "dependencies": {
     "apollo-modules-node": "*",
+    "d3-format": "^3.1.0",
     "d3-time-format": "^2.2.3"
   }
 }

@@ -1668,16 +1668,16 @@ importers:
   packages/backend-modules/embeds:
     dependencies:
       '@orbiting/backend-modules-auth':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../auth
       '@orbiting/backend-modules-dataloader':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../dataloader
       '@orbiting/backend-modules-scalars':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../scalars
       '@orbiting/backend-modules-utils':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../utils
       apollo-modules-node:
         specifier: '*'
@@ -1712,6 +1712,9 @@ importers:
       apollo-modules-node:
         specifier: '*'
         version: link:../apollo-modules-node
+      d3-format:
+        specifier: ^3.1.0
+        version: 3.1.0
       d3-time-format:
         specifier: ^2.2.3
         version: 2.3.0
