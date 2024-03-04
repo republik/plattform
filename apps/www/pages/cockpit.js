@@ -585,7 +585,8 @@ const Page = ({
                 5-Jahres-Jubiläum ein 12-Monats-Abo zu einem frei wählbaren
                 Preis abschliessen konnten. Zwischen Mitte Februar und Anfang
                 April 2024 laufen diese Abonnements aus, was wir hier ebenfalls
-                abbilden.
+                // eslint-disable-next-line prettier/prettier
+                abbilden. 
                 <Editorial.A href={CAMPAIGN_META_ARTICLE_URL}>
                   Hier
                 </Editorial.A>{' '}
@@ -614,6 +615,7 @@ const Page = ({
                       '2021-01',
                       '2022-01',
                       '2023-01',
+                      '2024-01',
                     ],
                     height: 300,
                     domain: [0, 35000],
