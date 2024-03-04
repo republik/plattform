@@ -1780,22 +1780,22 @@ importers:
   packages/backend-modules/mail:
     dependencies:
       '@orbiting/backend-modules-base':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../base
       '@orbiting/backend-modules-base64u':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../base64u
       '@orbiting/backend-modules-env':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../env
       '@orbiting/backend-modules-formats':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../formats
       '@orbiting/backend-modules-republik-crowdfundings':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../republik-crowdfundings
       '@orbiting/backend-modules-schedulers':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../schedulers
       await-sleep:
         specifier: ^0.0.1
@@ -1845,6 +1845,15 @@ importers:
 
   packages/backend-modules/mailbox:
     dependencies:
+      '@orbiting/backend-modules-base':
+        specifier: workspace:^
+        version: link:../base
+      '@orbiting/backend-modules-env':
+        specifier: workspace:^
+        version: link:../env
+      '@orbiting/backend-modules-search':
+        specifier: workspace:^
+        version: link:../search
       bluebird:
         specifier: ^3.7.2
         version: 3.7.2
