@@ -85,6 +85,11 @@ import useAudioQueue from '../Audio/hooks/useAudioQueue'
 import { IconEdit } from '@republik/icons'
 import { ArticleAudioPlayer } from '../Audio/AudioPlayer/ArticleAudioPlayer'
 import { reportError } from 'lib/errors/reportError'
+import {
+  VerlegerKampagneBannerBottom,
+  VerlegerKampagnePayNoteBottom,
+  VerlegerKampagnePayNoteTop,
+} from 'components/VerlegerKampagne/VerlegerKampagneBanner'
 
 const LoadingComponent = () => <SmallLoader loading />
 
@@ -653,6 +658,7 @@ const ArticlePage = ({
       hasOverviewNav={hasOverviewNav}
       stickySecondaryNav={hasStickySecondaryNav}
       pageColorSchemeKey={colorSchemeKey}
+      location={meta?.template === 'article' ? 'article' : undefined}
     >
       <PageLoader
         loading={articleLoading && !articleData}
@@ -691,22 +697,31 @@ const ArticlePage = ({
           // and the text would be the same twice.
           // const suppressSecondPayNote = climatePaynote
 
-          const payNote = (
-            <PayNote
-              seed={payNoteSeed}
-              tryOrBuy={payNoteTryOrBuy}
-              documentId={documentId}
-              repoId={repoId}
-              customPayNotes={meta.paynotes ?? []}
-              customMode={meta.paynoteMode}
-              customOnly={isPage || isFormat}
-              position='before'
-            />
-          )
-
+          // TODO: REMOVE AFTER CAMPAIGN
+          const payNote =
+            meta.paynoteMode === 'noPaynote' ? null : (
+              <VerlegerKampagnePayNoteTop />
+            )
           const payNoteAfter =
-            // !suppressSecondPayNote &&
-            payNote && cloneElement(payNote, { position: 'after' })
+            meta.paynoteMode === 'noPaynote' ? null : (
+              <VerlegerKampagnePayNoteBottom />
+            )
+
+          // const payNote = (
+          //   <PayNote
+          //     seed={payNoteSeed}
+          //     tryOrBuy={payNoteTryOrBuy}
+          //     documentId={documentId}
+          //     repoId={repoId}
+          //     customPayNotes={meta.paynotes ?? []}
+          //     customMode={meta.paynoteMode}
+          //     customOnly={isPage || isFormat}
+          //     position='before'
+          //   />
+          // )
+          // const payNoteAfter =
+          //   // !suppressSecondPayNote &&
+          //   payNote && cloneElement(payNote, { position: 'after' })
 
           const ownDiscussion = meta.ownDiscussion
 
@@ -944,6 +959,7 @@ const ArticlePage = ({
                   variables={feedQueryVariables}
                 />
               )}
+
               {me && hasActiveMembership && (
                 <ArticleRecommendationsFeed path={cleanedPath} />
               )}
@@ -952,6 +968,11 @@ const ArticlePage = ({
                   meta.template === 'article' ||
                   meta.template === 'page') && <div style={{ height: 60 }} />}
               {!suppressPayNotes && payNoteAfter}
+
+              {/* TODO: REMOVE AFTER CAMPAIGN */}
+              {meta.template === 'article' && me && hasActiveMembership && (
+                <VerlegerKampagneBannerBottom />
+              )}
             </>
           )
         }}

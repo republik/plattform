@@ -1,0 +1,27 @@
+@font-face {
+  font-family: 'Druk-Wide';
+  font-weight: 500;
+  font-style: normal;
+  src: url(https://cdn.repub.ch/s3/republik-assets/fonts/druk-wide-medium.woff2)
+      format('woff2'),
+    url(https://cdn.repub.ch/s3/republik-assets/fonts/druk-wide-medium.woff)
+      format('woff');
+}
+@font-face {
+  font-family: 'Druk';
+  font-weight: 500;
+  font-style: normal;
+  src: url(https://cdn.repub.ch/s3/republik-assets/fonts/Druk-Medium-Web.woff2)
+      format('woff2'),
+    url(https://cdn.repub.ch/s3/republik-assets/fonts/Druk-Medium-Web.woff)
+      format('woff');
+}
+@font-face {
+  font-family: 'Druk';
+  font-weight: 500;
+  font-style: italic;
+  src: url(https://cdn.repub.ch/s3/republik-assets/fonts/Druk-MediumItalic-Web.woff2)
+      format('woff2'),
+    url(https://cdn.repub.ch/s3/republik-assets/fonts/Druk-MediumItalic-Web.woff)
+      format('woff');
+}

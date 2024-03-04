@@ -35,6 +35,9 @@ export const presetRepublik = definePreset({
           transparent: { value: 'transparent' },
           current: { value: 'currentColor' },
         },
+        shadows: {
+          sm: { value: '0 0 6px 0 rgba(0, 0, 0, 0.35)' },
+        },
         sizes: {
           full: { value: '100%' },
           viewportWidth: { value: '100vw' },
@@ -436,6 +439,10 @@ export const presetRepublik = definePreset({
       radixCollapsibleSlideUp: {
         from: { height: 'var(--radix-collapsible-content-height)' },
         to: { height: 0 },
+      },
+      progressGrow: {
+        from: { width: 0 },
+        to: { width: 'var(--progress-width)' },
       },
       spin: {
         from: { transform: 'rotate(0deg)' },

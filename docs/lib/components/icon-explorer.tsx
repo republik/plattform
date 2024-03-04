@@ -1,4 +1,4 @@
-import { ComponentType, SVGProps, useDeferredValue, useState } from 'react'
+import { useDeferredValue, useState } from 'react'
 import styles from './icon-explorer.module.css'
 
 export const IconExplorer = ({

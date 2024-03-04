@@ -340,6 +340,16 @@ type CallToActionCustomComponent {
 
 union CallToActionPayload = CallToActionBasicPayload | CallToActionComponentPayload
 
+type Campaign {
+  beginDate: Date!
+  description: String
+  endDate: Date!
+  id: ID!
+  name: String!
+  referrals: Referrals!
+  slug: String!
+}
+
 type Cancellation {
   cancelledViaSupport: Boolean!
   category: CancellationCategory!
@@ -395,94 +405,6 @@ type Candidacy {
   recommendation: String
   user: User!
   yearOfBirth: Int
-}
-
-type Card {
-  documents: DocumentConnection!
-  group: CardGroup!
-  id: ID!
-  payload(paths: [String!]): JSON!
-  statement: Comment
-  user(accessToken: ID): User!
-}
-
-type CardAggregation {
-  buckets: [CardAggregationBucket!]!
-  key: String!
-}
-
-type CardAggregationBucket {
-  cards(after: String, before: String, first: Int, last: Int): CardConnection!
-  value: String!
-}
-
-enum CardAggregationKeys {
-  councilOfStatesElection
-  election
-  fraction
-  nationalCouncilElection
-  party
-}
-
-type CardConnection {
-  aggregations(keys: [CardAggregationKeys!]): [CardAggregation!]!
-  medians: CardMedians!
-  nodes: [Card!]!
-  pageInfo: CardPageInfo!
-  totalCount: Int!
-}
-
-input CardFiltersInput {
-  candidacies: [String!]
-  elected: Boolean
-  elects: [String!]
-  fractions: [String!]
-  mustHave: [CardFiltersMustHaveInput!]
-  parties: [String!]
-  subscribedByMe: Boolean
-}
-
-enum CardFiltersMustHaveInput {
-  financing
-  portrait
-  smartspider
-  statement
-}
-
-type CardGroup {
-  cards(after: String, before: String, filters: CardFiltersInput, first: Int, focus: [ID!], last: Int, sort: CardSortInput): CardConnection!
-  discussion: Discussion
-  id: ID!
-  name: String!
-  slug: String!
-}
-
-type CardGroupConnection {
-  nodes: [CardGroup!]!
-  pageInfo: CardGroupPageInfo!
-  totalCount: Int!
-}
-
-type CardGroupPageInfo {
-  endCursor: String
-  hasNextPage: Boolean!
-  hasPreviousPage: Boolean!
-  startCursor: String
-}
-
-type CardMedians {
-  smartspider: [Float!]
-}
-
-type CardPageInfo {
-  endCursor: String
-  hasNextPage: Boolean!
-  hasPreviousPage: Boolean!
-  startCursor: String
-}
-
-input CardSortInput {
-  smartspider: [Float]
 }
 
 type Collection {
@@ -2173,6 +2095,16 @@ type RedirectionPageInfo {
   startCursor: String
 }
 
+enum ReferralCodeValidationResult {
+  IS_OWN
+  NOT_FOUND
+  OK
+}
+
+type Referrals {
+  count: Int!
+}
+
 type Repo {
   commit(id: ID!): Commit
   commits(after: String, before: String, first: Int): CommitConnection!
@@ -2705,7 +2637,6 @@ type User {
   """
   callToActions: [CallToAction!]!
   candidacies: [Candidacy!]!
-  cards(after: String, before: String, filters: CardFiltersInput, first: Int, focus: [ID!], last: Int, sort: CardSortInput): CardConnection!
   checkMembershipSubscriptions: Boolean!
   collection(name: String!): Collection
   collectionItems(after: String, before: String, first: Int, last: Int, lastDays: Int, names: [String!]!, progress: ProgressState, uniqueDocuments: Boolean): CollectionItemConnection!
@@ -2758,6 +2689,8 @@ type User {
   prolitterisId: String
   prolongBeforeDate: DateTime
   publicUrl: String
+  referralCode: String
+  referrals(campaignSlug: String): Referrals
   roles: [String!]!
   sequenceNumber: Int
   sessions: [Session!]
@@ -2985,7 +2918,6 @@ type mutations {
 
   """Claim a granted membership with a voucher code"""
   claimAccess(payload: JSON, voucherCode: String!): AccessGrant!
-  claimCard(accessToken: ID!, id: ID!, payload: JSON, portrait: String, statement: String!): Card!
   claimMembership(voucherCode: String!): Boolean!
 
   """Clear all items in `User.audioQueue`."""
@@ -3140,7 +3072,6 @@ type mutations {
   unvoteComment(id: ID!): Comment!
   updateAddress(address: AddressInput!, id: ID!): Address!
   updateAdminNotes(notes: String, userId: ID!): User!
-  updateCard(id: ID!, payload: JSON, portrait: String, statement: String!): Card!
   updateDiscussion(closed: Boolean, id: ID!): Discussion!
   updateEmail(email: String!, userId: ID): User!
   updateMe(address: AddressInput, ageAccessRole: AccessRole, biography: String, birthday: Date, disclosures: String, emailAccessRole: AccessRole, facebookId: String, firstName: String, gender: String, hasPublicProfile: Boolean, isListed: Boolean, lastName: String, pgpPublicKey: String, phoneNumber: String, phoneNumberAccessRole: AccessRole, phoneNumberNote: String, portrait: String, prolitterisId: String, publicUrl: String, statement: String, twitterHandle: String, username: String): User!
@@ -3166,11 +3097,8 @@ type queries {
   accessGrantStats: AccessGrantStats!
   activeDiscussions(first: Int, lastDays: Int!): [CommentAggregation!]!
   adminUsers(limit: Int!, offset: Int, search: String): Users!
+  campaign(slug: String!): Campaign
   cancellationCategories(showMore: Boolean): [CancellationCategory!]!
-  card(accessToken: ID, id: ID): Card
-  cardGroup(id: ID, slug: String): CardGroup
-  cardGroups(after: String, before: String, first: Int, last: Int): CardGroupConnection!
-  cards(accessToken: ID, after: String, before: String, filters: CardFiltersInput, first: Int, focus: [ID!], id: ID, last: Int, sort: CardSortInput): CardConnection!
   checkUsername(username: String): Boolean
   collectionsStats: CollectionsStats!
   comment(id: ID!): Comment!
@@ -3248,8 +3176,9 @@ type queries {
   ): StatementUserConnection!
   unauthorizedSession(email: String!, token: SignInToken!): UnauthorizedSession
   updates: [Update!]!
-  user(accessToken: ID, slug: String): User
+  user(accessToken: ID, id: ID, slug: String): User
   users(hasPublicProfile: Boolean, isListed: Boolean, role: String, search: String!): [User]!
+  validateReferralCode(code: String!): ReferralCodeValidationResult
   voting(slug: String!): Voting
   votings: [Voting!]!
 }
