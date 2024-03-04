@@ -1614,16 +1614,16 @@ importers:
   packages/backend-modules/documents:
     dependencies:
       '@orbiting/backend-modules-base':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../base
       '@orbiting/backend-modules-dataloader':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../dataloader
       '@orbiting/backend-modules-env':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../env
       '@orbiting/backend-modules-search':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../search
       '@republik/mdast-react-render':
         specifier: workspace:*
@@ -1667,6 +1667,18 @@ importers:
 
   packages/backend-modules/embeds:
     dependencies:
+      '@orbiting/backend-modules-auth':
+        specifier: workspace:^
+        version: link:../auth
+      '@orbiting/backend-modules-dataloader':
+        specifier: workspace:^
+        version: link:../dataloader
+      '@orbiting/backend-modules-scalars':
+        specifier: workspace:^
+        version: link:../scalars
+      '@orbiting/backend-modules-utils':
+        specifier: workspace:^
+        version: link:../utils
       apollo-modules-node:
         specifier: '*'
         version: link:../apollo-modules-node
@@ -1679,9 +1691,15 @@ importers:
       d3-array:
         specifier: ^2.4.0
         version: 2.12.1
+      debug:
+        specifier: ^4.3.4
+        version: 4.3.4(supports-color@8.1.1)
       moment:
         specifier: ^2.26.0
         version: 2.30.1
+      redlock:
+        specifier: ^4.1.0
+        version: 4.2.0
 
   packages/backend-modules/env:
     dependencies:
