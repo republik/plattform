@@ -1779,6 +1779,24 @@ importers:
 
   packages/backend-modules/mail:
     dependencies:
+      '@orbiting/backend-modules-base':
+        specifier: workspace:^
+        version: link:../base
+      '@orbiting/backend-modules-base64u':
+        specifier: workspace:^
+        version: link:../base64u
+      '@orbiting/backend-modules-env':
+        specifier: workspace:^
+        version: link:../env
+      '@orbiting/backend-modules-formats':
+        specifier: workspace:^
+        version: link:../formats
+      '@orbiting/backend-modules-republik-crowdfundings':
+        specifier: workspace:^
+        version: link:../republik-crowdfundings
+      '@orbiting/backend-modules-schedulers':
+        specifier: workspace:^
+        version: link:../schedulers
       await-sleep:
         specifier: ^0.0.1
         version: 0.0.1
@@ -1795,7 +1813,7 @@ importers:
         specifier: ^1.11.7
         version: 1.11.10
       debug:
-        specifier: ^4.1.1
+        specifier: ^4.3.4
         version: 4.3.4(supports-color@8.1.1)
       handlebars:
         specifier: ^4.7.7
@@ -1806,6 +1824,12 @@ importers:
       html-to-text:
         specifier: ^7.1.1
         version: 7.1.3
+      is-uuid:
+        specifier: ^1.0.2
+        version: 1.0.2
+      lodash:
+        specifier: ^4.17.21
+        version: 4.17.21
       moment:
         specifier: ^2.26.0
         version: 2.30.1
@@ -1815,6 +1839,9 @@ importers:
       recursive-readdir:
         specifier: ^2.2.2
         version: 2.2.3
+      yargs:
+        specifier: ^17.7.2
+        version: 17.7.2
 
   packages/backend-modules/mailbox:
     dependencies:
