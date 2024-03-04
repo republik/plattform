@@ -155,7 +155,7 @@ const init = async (context) => {
             context,
           ),
         ]),
-      lockTtlSecs: 10,
+      lockTtlSecs,
       runIntervalSecs: 60 * 60,
     }),
   )
