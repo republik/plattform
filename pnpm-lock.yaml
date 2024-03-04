@@ -1846,13 +1846,13 @@ importers:
   packages/backend-modules/mailbox:
     dependencies:
       '@orbiting/backend-modules-base':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../base
       '@orbiting/backend-modules-env':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../env
       '@orbiting/backend-modules-search':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../search
       bluebird:
         specifier: ^3.7.2
@@ -1881,18 +1881,48 @@ importers:
 
   packages/backend-modules/matomo:
     dependencies:
+      '@orbiting/backend-modules-base':
+        specifier: workspace:^
+        version: link:../base
+      '@orbiting/backend-modules-discussions':
+        specifier: workspace:^
+        version: link:../discussions
+      '@orbiting/backend-modules-documents':
+        specifier: workspace:^
+        version: link:../documents
+      '@orbiting/backend-modules-env':
+        specifier: workspace:^
+        version: link:../env
+      '@orbiting/backend-modules-search':
+        specifier: workspace:^
+        version: link:../search
+      '@orbiting/backend-modules-translate':
+        specifier: workspace:^
+        version: link:../translate
       '@zeit/fetch-retry':
         specifier: ^5.0.0
         version: 5.0.1(node-fetch@3.3.2)
       bluebird:
         specifier: ^3.7.2
         version: 3.7.2
+      d3-array:
+        specifier: ^3.2.4
+        version: 3.2.4
+      d3-time-format:
+        specifier: ^4.1.0
+        version: 4.1.0
       debug:
         specifier: ^4.1.1
         version: 4.3.4(supports-color@8.1.1)
       mysql2:
         specifier: ^2.2.5
         version: 2.3.3
+      uuid:
+        specifier: ^9.0.1
+        version: 9.0.1
+      yargs:
+        specifier: ^17.7.2
+        version: 17.7.2
 
   packages/backend-modules/migrations:
     dependencies:

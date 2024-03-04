@@ -17,9 +17,19 @@
   },
   "homepage": "https://github.com/republik/plattform#readme",
   "dependencies": {
+    "@orbiting/backend-modules-base": "workspace:*",
+    "@orbiting/backend-modules-discussions": "workspace:*",
+    "@orbiting/backend-modules-documents": "workspace:*",
+    "@orbiting/backend-modules-env": "workspace:*",
+    "@orbiting/backend-modules-search": "workspace:*",
+    "@orbiting/backend-modules-translate": "workspace:*",
     "@zeit/fetch-retry": "^5.0.0",
     "bluebird": "^3.7.2",
+    "d3-array": "^3.2.4",
+    "d3-time-format": "^4.1.0",
     "debug": "^4.1.1",
-    "mysql2": "^2.2.5"
+    "mysql2": "^2.2.5",
+    "uuid": "^9.0.1",
+    "yargs": "^17.7.2"
   }
 }
