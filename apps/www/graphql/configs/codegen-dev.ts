@@ -7,9 +7,9 @@ loadEnvConfig(process.cwd())
 const config: CodegenConfig = {
   overwrite: true,
   generates: {
-    './src/graphql/cms/gql/': {
+    './graphql/cms/gql/': {
       schema: './graphql/dato-cms.schema.graphql',
-      documents: ['./src/graphql/cms/**/*.{ts,tsx,gql,graphql}'],
+      documents: ['./graphql/cms/**/*.{ts,tsx,gql,graphql}'],
       preset: 'client',
       presetConfig: {
         gqlTagName: 'gql',
@@ -24,9 +24,9 @@ const config: CodegenConfig = {
       },
       plugins: [],
     },
-    './src/graphql/republik-api/gql/': {
+    './graphql/republik-api/gql/': {
       schema: './graphql/republik-api.schema.graphql',
-      documents: ['./src/graphql/republik-api/**/*.{ts,tsx,gql,graphql}'],
+      documents: ['./graphql/republik-api/**/*.{ts,tsx,gql,graphql}'],
       preset: 'client',
       presetConfig: {
         gqlTagName: 'gql',
