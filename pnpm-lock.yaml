@@ -2407,6 +2407,9 @@ importers:
 
   packages/backend-modules/schedulers:
     dependencies:
+      bluebird:
+        specifier: ^3.7.2
+        version: 3.7.2
       moment:
         specifier: ^2.26.0
         version: 2.30.1

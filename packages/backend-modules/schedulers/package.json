@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/republik/plattform#readme",
   "dependencies": {
+    "bluebird": "^3.7.2",
     "moment": "^2.26.0",
     "redlock": "^4.1.0"
   }
