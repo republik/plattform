@@ -1,5 +1,5 @@
 import { PersonBubbleForce } from '@app/app/challenge-accepted/person/[slug]/components/person-bubble-graphic'
-import { ChallengeAcceptedPersonListDocument } from '@app/graphql/cms/gql/graphql'
+import { ChallengeAcceptedPersonListDocument } from '@graphql/cms/gql/graphql'
 import { getCMSClient } from '@app/lib/apollo/cms-client'
 
 export async function PersonBubble() {

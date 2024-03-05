@@ -11,7 +11,7 @@ import { PersonDetail } from './components/person-detail'
 import { PersonList } from '@app/app/challenge-accepted/person/[slug]/components/person-list'
 import { vstack } from '@app/styled-system/patterns'
 import Image from 'next/image'
-import { PersonDetailDocument } from '@app/graphql/cms/gql/graphql'
+import { PersonDetailDocument } from '@graphql/cms/gql/graphql'
 
 type PageProps = {
   params: {
@@ -40,7 +40,7 @@ export default async function Page({ params: { slug } }: PageProps) {
   const isMember =
     me?.roles && Array.isArray(me.roles) && me.roles.includes('member')
 
-  const personData: typeof data['person'] = {
+  const personData: (typeof data)['person'] = {
     ...data.person,
     items: data.person.items.map((item) => {
       if (item.__typename !== 'EventRecord') {

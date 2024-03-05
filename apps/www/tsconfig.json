@@ -12,7 +12,10 @@
     "paths": {
       "@app/*": [
         "./src/*"
-      ]
+      ],
+      "@graphql/*": [
+        "./graphql/*"
+      ],
     }
   },
   "include": [

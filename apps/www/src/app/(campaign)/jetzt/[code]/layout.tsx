@@ -1,6 +1,6 @@
 import { getInviteeData } from '@app/app/(campaign)/campaign-data'
 import { InvalidCodeMessage } from '@app/app/(campaign)/components/invalid-code-message'
-import { ReferralCodeValidationResult } from '@app/graphql/republik-api/gql/graphql'
+import { ReferralCodeValidationResult } from '@graphql/republik-api/gql/graphql'
 import { redirect } from 'next/navigation'
 
 const UNELIGIBLE_RECEIVER_MEMBERSHIPS = ['ABO', 'YEARLY_ABO', 'BENEFACTOR_ABO']

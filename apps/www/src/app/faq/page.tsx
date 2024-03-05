@@ -1,4 +1,4 @@
-import { FaqDocument } from '@app/graphql/cms/gql/graphql'
+import { FaqDocument } from '@graphql/cms/gql/graphql'
 import { getCMSClient } from '@app/lib/apollo/cms-client'
 import Container from '@app/components/container'
 import { PageLayout } from '@app/components/layout'

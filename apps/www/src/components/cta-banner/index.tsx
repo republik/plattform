@@ -1,6 +1,6 @@
 import { getClient } from '@app/lib/apollo/client'
 import { CTARenderer } from './cta-renderer'
-import { MyCallToActionsDocument } from '@app/graphql/republik-api/gql/graphql'
+import { MyCallToActionsDocument } from '@graphql/republik-api/gql/graphql'
 
 export async function CTABanner() {
   const client = await getClient()

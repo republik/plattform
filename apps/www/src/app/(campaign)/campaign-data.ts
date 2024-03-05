@@ -2,7 +2,7 @@ import {
   CampaignInviteDocument,
   CampaignReferralsDocument,
   CampaignSenderDocument,
-} from '@app/graphql/republik-api/gql/graphql'
+} from '@graphql/republik-api/gql/graphql'
 import { getClient } from '@app/lib/apollo/client'
 import { CAMPAIGN_SLUG } from './constants'
 

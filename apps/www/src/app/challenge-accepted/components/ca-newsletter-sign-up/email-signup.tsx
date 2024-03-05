@@ -6,7 +6,7 @@ import {
   NewsletterName,
   SignUpForNewsletterDocument,
   UpdateNewsletterSubscriptionDocument,
-} from '@app/graphql/republik-api/gql/graphql'
+} from '@graphql/republik-api/gql/graphql'
 import { css } from '@app/styled-system/css'
 import { stack, wrap } from '@app/styled-system/patterns'
 import { zodResolver } from '@hookform/resolvers/zod'

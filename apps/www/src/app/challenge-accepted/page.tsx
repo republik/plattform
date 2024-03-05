@@ -17,7 +17,7 @@ import { IconShare } from '@republik/icons'
 import {
   ChallengeAcceptedHubDocument,
   ChallengeAcceptedHubMetaDocument,
-} from '@app/graphql/cms/gql/graphql'
+} from '@graphql/cms/gql/graphql'
 
 export async function generateMetadata(
   _, // params

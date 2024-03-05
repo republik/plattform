@@ -1,7 +1,7 @@
 'use client'
 
 import { useQuery } from '@apollo/client'
-import { PendingAppSignInDocument } from '@app/graphql/republik-api/gql/graphql'
+import { PendingAppSignInDocument } from '@graphql/republik-api/gql/graphql'
 import useNativeAppEvent from '@app/lib/hooks/useNativeAppEvent'
 import { useRouter } from 'next/navigation'
 import { useEffect, useRef } from 'react'
