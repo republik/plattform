@@ -289,54 +289,6 @@ const createJobs = (now) => [
     handleFn: mailings,
   },
   {
-    name: 'membership_owner_prolong_yearly_abo_winback_14',
-    prolongBefore: {
-      minDate: getMinEndDate(now, -17),
-      maxDate: getMaxEndDate(now, -14),
-    },
-    payload: {
-      templateName: 'membership_owner_prolong_yearly_abo_winback_14',
-    },
-    predicateFn: ({
-      id: userId,
-      membershipType,
-      membershipAutoPay,
-      autoPay,
-    }) => {
-      return (
-        membershipType === 'YEARLY_ABO' &&
-        (membershipAutoPay === false ||
-          (membershipAutoPay === true &&
-            (!autoPay || (autoPay && userId !== autoPay.userId))))
-      )
-    },
-    handleFn: mailings,
-  },
-  {
-    name: 'membership_owner_prolong_yearly_abo_winback_21',
-    prolongBefore: {
-      minDate: getMinEndDate(now, -24),
-      maxDate: getMaxEndDate(now, -21),
-    },
-    payload: {
-      templateName: 'membership_owner_prolong_yearly_abo_winback_21',
-    },
-    predicateFn: ({
-      id: userId,
-      membershipType,
-      membershipAutoPay,
-      autoPay,
-    }) => {
-      return (
-        membershipType === 'YEARLY_ABO' &&
-        (membershipAutoPay === false ||
-          (membershipAutoPay === true &&
-            (!autoPay || (autoPay && userId !== autoPay.userId))))
-      )
-    },
-    handleFn: mailings,
-  },
-  {
     name: 'membership_owner_autopay_notice',
     prolongBefore: {
       minDate: moment(now).add(1, 'days'),
