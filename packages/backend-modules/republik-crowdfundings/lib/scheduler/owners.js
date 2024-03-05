@@ -291,8 +291,8 @@ const createJobs = (now) => [
   {
     name: 'membership_owner_prolong_yearly_abo_winback_14',
     prolongBefore: {
-      minDate: getMinEndDate(now, -17),
-      maxDate: getMaxEndDate(now, -14),
+      minDate: getMinEndDate(now, -22),
+      maxDate: getMaxEndDate(now, -16),
     },
     payload: {
       templateName: 'membership_owner_prolong_yearly_abo_winback_14',
@@ -315,8 +315,8 @@ const createJobs = (now) => [
   {
     name: 'membership_owner_prolong_yearly_abo_winback_21',
     prolongBefore: {
-      minDate: getMinEndDate(now, -24),
-      maxDate: getMaxEndDate(now, -21),
+      minDate: getMinEndDate(now, -28),
+      maxDate: getMaxEndDate(now, -24),
     },
     payload: {
       templateName: 'membership_owner_prolong_yearly_abo_winback_21',
