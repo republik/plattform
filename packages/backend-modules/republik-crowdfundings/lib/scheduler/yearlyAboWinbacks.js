@@ -1,4 +1,4 @@
-const debug = require('debug')('crowdfundings:lib:scheduler:owners')
+const debug = require('debug')('crowdfundings:lib:scheduler:yearlyAboWinbacks')
 const moment = require('moment')
 const Promise = require('bluebird')
 
@@ -94,14 +94,15 @@ const createJobs = (now) => [
   },
 ]
 
-const createMaybeAppendProlongBeforeDate = (context) => async (user) => ({
+const createMaybeAppendLastEndDate = (context) => async (user) => ({
   ...user,
-  prolongBeforeDate: await getYearlyAboEndDate(user, { ...context, user }).then(
-    (date) => date && moment(date),
-  ),
+  prolongBeforeDate: await getLastEndDateOfYearlyAboUserMemberships(user, {
+    ...context,
+    user,
+  }).then((date) => date && moment(date)),
 })
 
-const getYearlyAboEndDate = async (user, context) => {
+const getLastEndDateOfYearlyAboUserMemberships = async (user, context) => {
   const { pgdb, user: me } = context
   Roles.ensureUserIsMeOrInRoles(user, me, ['admin', 'supporter'])
 
@@ -115,16 +116,11 @@ const getYearlyAboEndDate = async (user, context) => {
       })
     : []
 
-  console.log(membershipPeriods)
-
   if (membershipPeriods.length === 0) {
-    console.error('no valid membership periods found')
     return null
   }
 
-  const endDate = moment(getLastEndDate(membershipPeriods))
-  console.log('--------------------- endDate: ' + endDate)
-  return endDate
+  return moment(getLastEndDate(membershipPeriods))
 }
 
 const hasProlongBeforeDate = (user) => user.prolongBeforeDate
@@ -141,7 +137,6 @@ const createUserJobs = (jobs, context) => async (user) =>
         )
       ) {
         if (predicateFn(user)) {
-          console.log('----handleFn')
           await handleFn(user, payload, context)
         }
       }
@@ -157,11 +152,11 @@ const createUserJobs = (jobs, context) => async (user) =>
 const createHandleFn = (jobs, context) => async (rows, count) => {
   const users = await Promise.map(
     rows.map(transformUser).map(pickAdditionals),
-    createMaybeAppendProlongBeforeDate(context),
+    createMaybeAppendLastEndDate(context),
     { concurrency: 10 },
   ).filter(hasProlongBeforeDate)
 
-  console.log({ count, rows: rows.length, withProlongBeforeDate: users.length })
+  debug({ count, rows: rows.length, withProlongBeforeDate: users.length })
 
   await Promise.map(users, createUserJobs(jobs, context), {
     concurrency: Number(MEMBERSHIP_SCHEDULER_CONCURRENCY),
@@ -179,8 +174,6 @@ const run = async (args, context) => {
   const { pgdb } = context
 
   const jobs = createJobs(now)
-
-  console.log(jobs)
 
   await pgdb.queryInBatches(
     { handleFn: createHandleFn(jobs, context), size: 1000 },
