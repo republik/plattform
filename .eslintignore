@@ -1,4 +1,4 @@
 **/node_modules
 **/*.min.js
 **/*.min.css
-/apps/www/src/graphql/*/gql/**/*.ts
+/apps/*/graphql/*/gql/**/*.ts

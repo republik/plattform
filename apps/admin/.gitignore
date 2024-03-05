@@ -27,3 +27,6 @@ test/**/out
 
 # Sentry Auth Token
 .sentryclirc
+
+# Generated GQL types
+graphql/*/gql
