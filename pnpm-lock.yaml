@@ -1882,22 +1882,22 @@ importers:
   packages/backend-modules/matomo:
     dependencies:
       '@orbiting/backend-modules-base':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../base
       '@orbiting/backend-modules-discussions':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../discussions
       '@orbiting/backend-modules-documents':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../documents
       '@orbiting/backend-modules-env':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../env
       '@orbiting/backend-modules-search':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../search
       '@orbiting/backend-modules-translate':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../translate
       '@zeit/fetch-retry':
         specifier: ^5.0.0
@@ -2084,12 +2084,27 @@ importers:
       '@firebase/util':
         specifier: 0.3.4
         version: 0.3.4
+      '@orbiting/backend-modules-auth':
+        specifier: workspace:*
+        version: link:../auth
+      '@orbiting/backend-modules-base':
+        specifier: workspace:*
+        version: link:../base
+      '@orbiting/backend-modules-env':
+        specifier: workspace:*
+        version: link:../env
       apn:
         specifier: ^2.2.0
         version: 2.2.0
+      apollo-modules-node:
+        specifier: workspace:*
+        version: link:../apollo-modules-node
       bluebird:
         specifier: ^3.7.2
         version: 3.7.2
+      debug:
+        specifier: ^4.3.4
+        version: 4.3.4(supports-color@8.1.1)
       firebase-admin:
         specifier: ^8.12.1
         version: 8.13.0(@firebase/app-types@0.6.1)

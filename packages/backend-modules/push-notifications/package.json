@@ -23,8 +23,13 @@
     "@firebase/app-types": "0.6.1",
     "@firebase/auth-interop-types": "0.1.5",
     "@firebase/util": "0.3.4",
+    "@orbiting/backend-modules-auth": "workspace:*",
+    "@orbiting/backend-modules-base": "workspace:*",
+    "@orbiting/backend-modules-env": "workspace:*",
     "apn": "^2.2.0",
+    "apollo-modules-node": "workspace:*",
     "bluebird": "^3.7.2",
+    "debug": "^4.3.4",
     "firebase-admin": "^8.12.1",
     "lodash": "^4.17.19"
   }
