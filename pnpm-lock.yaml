@@ -2118,9 +2118,27 @@ importers:
 
   packages/backend-modules/redirections:
     dependencies:
+      '@orbiting/backend-modules-auth':
+        specifier: workspace:*
+        version: link:../auth
+      '@orbiting/backend-modules-base':
+        specifier: workspace:*
+        version: link:../base
+      '@orbiting/backend-modules-documents':
+        specifier: workspace:*
+        version: link:../documents
+      '@orbiting/backend-modules-env':
+        specifier: workspace:*
+        version: link:../env
+      '@orbiting/backend-modules-search':
+        specifier: workspace:*
+        version: link:../search
       apollo-modules-node:
         specifier: '*'
         version: link:../apollo-modules-node
+      debug:
+        specifier: ^4.3.4
+        version: 4.3.4(supports-color@8.1.1)
     devDependencies:
       dotenv:
         specifier: ^8.2.0

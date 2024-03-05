@@ -20,6 +20,12 @@
     "dotenv": "^8.2.0"
   },
   "dependencies": {
-    "apollo-modules-node": "*"
+    "@orbiting/backend-modules-auth": "workspace:*",
+    "@orbiting/backend-modules-base": "workspace:*",
+    "@orbiting/backend-modules-documents": "workspace:*",
+    "@orbiting/backend-modules-env": "workspace:*",
+    "@orbiting/backend-modules-search": "workspace:*",
+    "apollo-modules-node": "*",
+    "debug": "^4.3.4"
   }
 }
