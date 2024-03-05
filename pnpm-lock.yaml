@@ -2353,8 +2353,11 @@ importers:
 
   packages/backend-modules/scalars:
     dependencies:
+      '@orbiting/backend-modules-formats':
+        specifier: workspace:*
+        version: link:../formats
       apollo-modules-node:
-        specifier: '*'
+        specifier: workspace:*
         version: link:../apollo-modules-node
       graphql:
         specifier: ^15.3.0
