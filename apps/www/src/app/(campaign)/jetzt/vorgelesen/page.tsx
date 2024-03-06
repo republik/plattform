@@ -30,15 +30,20 @@ export default async function Page() {
         })}
       >
         <p>
-          Die Republik ist ein digitales Magazin für Politik, Wirtschaft,
-          Gesellschaft und Kultur. Unabhängig und werbefrei – finanziert von
-          seinen Leserinnen und Lesern.
+          Hören Sie für ein ganzes Jahr von Montag bis Samstag alle Beiträge der
+          Republik – eingesprochen von professionellen Sprecherinnen.
         </p>
+
         <p>
-          In der Republik erwarten Sie täglich 1 bis 3 Beiträge zum Lesen und
-          Hören. Wir nehmen uns die nötige Zeit, um aktuelle Themen und Fragen
-          für Sie angemessen und sorgfältig zu recherchieren, zu erzählen – und
-          alle Fakten zu überprüfen.
+          Die Republik ist ein digitales Magazin für Politik, Wirtschaft,
+          Gesellschaft und Kultur. Unabhängig und werbefrei – finanziert von den
+          Leserinnen und Hörern.
+        </p>
+
+        <p>
+          Wir nehmen uns die nötige Zeit, um aktuelle Themen und Fragen für Sie
+          angemessen und sorgfältig zu recherchieren, zu erzählen – und alle
+          Fakten zu überprüfen.
         </p>
         <p>
           Damit Sie einen klaren Kopf behalten, mutig handeln und klug
