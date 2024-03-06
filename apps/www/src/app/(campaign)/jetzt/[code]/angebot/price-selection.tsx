@@ -12,13 +12,15 @@ const getCheckoutUrl = ({
   referralCode,
 }: {
   price: number
-  referralCode: string
+  referralCode?: string
 }): string => {
   const url = new URL('/angebote', process.env.NEXT_PUBLIC_BASE_URL)
 
   url.searchParams.set('price', `${price * 100}`)
   url.searchParams.set('referral_campaign', CAMPAIGN_SLUG)
-  url.searchParams.set('referral_code', referralCode)
+  if (referralCode) {
+    url.searchParams.set('referral_code', referralCode)
+  }
   // TODO: UTM params?
 
   if (price >= 1000) {
@@ -34,7 +36,7 @@ const getCheckoutUrl = ({
 }
 
 type PriceSelectionProps = {
-  referralCode: string
+  referralCode?: string
 }
 
 export default function PriceSelection({ referralCode }: PriceSelectionProps) {
@@ -73,7 +75,7 @@ export default function PriceSelection({ referralCode }: PriceSelectionProps) {
           className={css({
             background: 'contrast',
             color: 'text.inverted',
-            px: '6',
+            px: '4',
             py: '3',
             borderRadius: '4px',
             fontWeight: 'medium',
@@ -81,8 +83,12 @@ export default function PriceSelection({ referralCode }: PriceSelectionProps) {
             textDecoration: 'none',
             textAlign: 'center',
             display: 'block',
+            border: '2px solid token(colors.contrast)',
             // width: 'full',
-            _hover: {},
+            _hover: {
+              background: 'text.inverted',
+              color: 'contrast',
+            },
           })}
         >
           Für CHF {price} abonnieren

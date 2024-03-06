@@ -128,17 +128,17 @@ export async function generateShareImage({
   const sender = data?.sender
 
   // Font
-  const druk = fetch(
-    'https://cdn.repub.ch/s3/republik-assets/fonts/Druk-Medium-Web.woff',
-  ).then((res) => res.arrayBuffer())
-
-  const gtAmerica = fetch(
-    'https://cdn.repub.ch/s3/republik-assets/fonts/gt-america-standard-medium.woff',
-  ).then((res) => res.arrayBuffer())
-
-  const gtAmericaBold = fetch(
-    'https://cdn.repub.ch/s3/republik-assets/fonts/gt-america-standard-bold.woff',
-  ).then((res) => res.arrayBuffer())
+  const [druk, gtAmerica, gtAmericaBold] = await Promise.all([
+    fetch(
+      'https://cdn.repub.ch/s3/republik-assets/fonts/Druk-Medium-Web.woff',
+    ).then((res) => res.arrayBuffer()),
+    fetch(
+      'https://cdn.repub.ch/s3/republik-assets/fonts/gt-america-standard-medium.woff',
+    ).then((res) => res.arrayBuffer()),
+    fetch(
+      'https://cdn.repub.ch/s3/republik-assets/fonts/gt-america-standard-bold.woff',
+    ).then((res) => res.arrayBuffer()),
+  ])
 
   return new ImageResponse(
     (
@@ -216,19 +216,19 @@ export async function generateShareImage({
       fonts: [
         {
           name: 'Druk',
-          data: await druk,
+          data: druk,
           style: 'normal',
           weight: 500,
         },
         {
           name: 'GTAmerica',
-          data: await gtAmerica,
+          data: gtAmerica,
           style: 'normal',
           weight: 500,
         },
         {
           name: 'GTAmerica',
-          data: await gtAmericaBold,
+          data: gtAmericaBold,
           style: 'normal',
           weight: 700,
         },
