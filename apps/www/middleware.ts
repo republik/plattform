@@ -12,6 +12,11 @@ import fetchMyRoles from './lib/helpers/middleware/FetchMeObject'
  * @param req
  */
 export async function middleware(req: NextRequest) {
+  const basicAuthRes = checkBasicAuth(req)
+  if (basicAuthRes) {
+    return basicAuthRes
+  }
+
   const resUrl = req.nextUrl.clone()
   // Rewrite if someone tries to directly access the front or the front-preview url
   if (
@@ -102,4 +107,33 @@ export async function middleware(req: NextRequest) {
   }
 
   return NextResponse.next()
+}
+
+function passedBasicAuth(req: NextRequest): boolean {
+  const authHeader = req.headers.get('Authorization')
+  if (!authHeader) {
+    return false
+  }
+  const [type, credentials] = authHeader.split(' ')
+  if (type.toLowerCase() !== 'basic') {
+    return false
+  }
+  const [username, password] = atob(credentials).split(':')
+  console.log('username', username)
+  console.log('password', password)
+  return password === process.env.STAGING_PASSPHRASE
+}
+
+function checkBasicAuth(req: NextRequest): Response | null {
+  if (process.env.STAGING_PASSPHRASE && !passedBasicAuth(req)) {
+    // return 401 and prompt password if curtain message is set
+    return new Response(null, {
+      status: 401,
+      statusText: 'Unauthorized',
+      headers: {
+        'WWW-Authenticate': 'Basic realm="Passphrase"',
+      },
+    })
+  }
+  return null
 }
