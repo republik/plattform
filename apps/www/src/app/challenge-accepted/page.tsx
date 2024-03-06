@@ -18,6 +18,7 @@ import {
   ChallengeAcceptedHubDocument,
   ChallengeAcceptedHubMetaDocument,
 } from '@app/graphql/cms/gql/graphql'
+import { EventTrackingContext } from '@app/lib/matomo/event-tracking'
 
 export async function generateMetadata(
   _, // params
@@ -90,7 +91,7 @@ export default async function Page({ searchParams }) {
   )
 
   return (
-    <>
+    <EventTrackingContext category='ChallengeAcceptedLandingPage'>
       <h1
         className={css({
           mt: '8',
@@ -201,6 +202,6 @@ export default async function Page({ searchParams }) {
           <div className={css({ margin: '0 auto' })}>{share}</div>
         </div>
       </Container>
-    </>
+    </EventTrackingContext>
   )
 }
