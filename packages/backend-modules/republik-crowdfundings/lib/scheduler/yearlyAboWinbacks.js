@@ -110,6 +110,12 @@ const getLastEndDateOfYearlyAboUserMemberships = async (user, context) => {
     userId: user.id,
   })
 
+  const hasActiveMembership = memberships.some((m) => m.active === true)
+  if (hasActiveMembership) {
+    debug('already has active membership, no winback')
+    return null
+  }
+
   const membershipPeriods = memberships.length
     ? await pgdb.public.membershipPeriods.find({
         membershipId: memberships.map((membership) => membership.id),
@@ -117,6 +123,7 @@ const getLastEndDateOfYearlyAboUserMemberships = async (user, context) => {
     : []
 
   if (membershipPeriods.length === 0) {
+    debug('no membershipPeriods found, no winback')
     return null
   }
 
