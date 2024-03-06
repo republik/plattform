@@ -717,6 +717,14 @@
       "value": "Da war doch noch etwas: Ihr Mitstreiter-Abonnement"
     },
     {
+      "key": "api/email/membership_owner_prolong_yearly_abo_winback_16/subject",
+      "value": "Ein Zurück-zur-Republik-Angebot für Sie"
+    },
+    {
+      "key": "api/email/membership_owner_prolong_yearly_abo_winback_24/subject",
+      "value": "Jetzt zurück zur Republik"
+    },
+    {
       "key": "api/email/membership_owner_autopay_notice/subject",
       "value": "Ihre Mitgliedschaft erneuert sich automatisch"
     },
