@@ -13,10 +13,10 @@
       "@app/*": [
         "./src/*"
       ],
-      "@graphql/*": [
+      "#graphql/*": [
         "./graphql/*"
       ],
-    }
+    },
   },
   "include": [
     "next-env.d.ts",

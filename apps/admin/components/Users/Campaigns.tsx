@@ -4,7 +4,7 @@ import { REPUBLIK_FRONTEND_URL } from '../../server/constants'
 import { IconContentCopy } from '../../../../packages/icons/dist/index.cjs'
 import { css } from 'glamor'
 import { useQuery } from '@apollo/client'
-import { UserCampaignDetailsDocument } from '@graphql/republik-api/__generated__/gql/graphql'
+import { UserCampaignDetailsDocument } from '#graphql/republik-api/__generated__/gql/graphql'
 
 export default function Campaigns({ userId }: { userId: string }) {
   const { data, loading } = useQuery(UserCampaignDetailsDocument, {

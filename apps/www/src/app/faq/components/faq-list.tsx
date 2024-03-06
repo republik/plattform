@@ -3,7 +3,7 @@ import FAQEntry from './faq-entry'
 import {
   FaqEntryRecord,
   FaqQuery,
-} from '@graphql/cms/__generated__/gql/graphql'
+} from '#graphql/cms/__generated__/gql/graphql'
 import { css } from '@app/styled-system/css'
 import { StructuredText } from 'react-datocms'
 

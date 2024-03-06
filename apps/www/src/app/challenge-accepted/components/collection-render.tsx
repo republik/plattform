@@ -3,7 +3,7 @@ import { Collapsible } from './collapsible'
 import { ArticleTeaser } from './teasers/article-teaser'
 import { EventTeaser } from './teasers/event-teaser'
 import { NewsletterTeaser } from './teasers/newsletter-teaser'
-import { ChallengeAcceptedHubQuery } from '@graphql/cms/__generated__/gql/graphql'
+import { ChallengeAcceptedHubQuery } from '#graphql/cms/__generated__/gql/graphql'
 
 type CollectionRendererProps = {
   items: ChallengeAcceptedHubQuery['hub']['items']

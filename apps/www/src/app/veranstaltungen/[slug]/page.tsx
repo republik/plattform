@@ -1,4 +1,4 @@
-import { useFragment } from '@graphql/cms/gql'
+import { useFragment } from '#graphql/cms/__generated__/gql'
 import { getCMSClient } from '@app/lib/apollo/cms-client'
 import { getMe } from '@app/lib/auth/me'
 import { css } from '@app/styled-system/css'
@@ -10,7 +10,7 @@ import {
   EventMetaDocument,
   EventDocument,
   EventRecordFieldsFragmentDoc,
-} from '@graphql/cms/__generated__/gql/graphql'
+} from '#graphql/cms/__generated__/gql/graphql'
 
 type PageProps = {
   params: { slug: string }

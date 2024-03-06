@@ -6,7 +6,7 @@ import { useState } from 'react'
 import {
   AcknowledgeCtaDocument,
   MyCallToActionsQuery,
-} from '@graphql/republik-api/__generated__/gql/graphql'
+} from '#graphql/republik-api/__generated__/gql/graphql'
 
 type CTARendererProps = {
   cta: MyCallToActionsQuery['me']['callToActions'][0]
