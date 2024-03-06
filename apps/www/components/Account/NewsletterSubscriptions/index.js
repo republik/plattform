@@ -165,7 +165,7 @@ const NewsletterSubscriptions = ({
                                 subscribed: true,
                               },
                               onCompleted: () => {
-                                onSubscribe({ name })
+                                onSubscribe?.({ name })
                               },
                             })
                           }}
