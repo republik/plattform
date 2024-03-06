@@ -15,6 +15,7 @@ import ProgressBar from './ProgressBar'
 import './VerlegerKampagneBanner.css'
 import { verlegerKampagneColors } from './config'
 import { EventTrackingContext } from '@app/lib/matomo/event-tracking'
+import { useRouter } from 'next/router'
 
 const Center = ({
   children,
@@ -93,9 +94,10 @@ const topBannerStyles = {
 
 export function VerlegerKampagneBannerTop() {
   const { data } = useCampaignData()
+  const { asPath } = useRouter()
 
   return (
-    <EventTrackingContext category='CampaignBannerTop'>
+    <EventTrackingContext category='CampaignBannerTop' name={asPath}>
       <Center {...topBannerStyles.container} data-show-if-active-membership>
         <div {...topBannerStyles.wrapper}>
           <CampaignLogo inverted className={`${topBannerStyles.logo}`} />
@@ -179,9 +181,10 @@ const bottomBannerStyles = {
 
 export function VerlegerKampagneBannerBottom() {
   const { data } = useCampaignData()
+  const { asPath } = useRouter()
 
   return (
-    <EventTrackingContext category='CampaignBannerBottom'>
+    <EventTrackingContext category='CampaignBannerBottom' name={asPath}>
       <Center
         {...bottomBannerStyles.container}
         wrapperStyle={css({
@@ -234,8 +237,10 @@ export function VerlegerKampagnePayNoteTop({
 }: {
   inNavigation?: boolean
 }) {
+  const { asPath } = useRouter()
+
   return (
-    <EventTrackingContext category='CampaignPayNoteTop'>
+    <EventTrackingContext category='CampaignPayNoteTop' name={asPath}>
       <Center
         {...bottomBannerStyles.container}
         wrapperStyle={css({
@@ -271,8 +276,10 @@ export function VerlegerKampagnePayNoteTop({
 }
 
 export function VerlegerKampagnePayNoteBottom() {
+  const { asPath } = useRouter()
+
   return (
-    <EventTrackingContext category='CampaignPayNoteBottom'>
+    <EventTrackingContext category='CampaignPayNoteBottom' name={asPath}>
       <Center
         {...bottomBannerStyles.container}
         wrapperStyle={css({
