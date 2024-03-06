@@ -6,7 +6,7 @@ import {
   NewsletterName,
   SignUpForNewsletterDocument,
   UpdateNewsletterSubscriptionDocument,
-} from '@app/graphql/republik-api/gql/graphql'
+} from '#graphql/republik-api/__generated__/gql/graphql'
 import { useTrackEvent } from '@app/lib/matomo/event-tracking'
 import { css } from '@app/styled-system/css'
 import { stack, wrap } from '@app/styled-system/patterns'

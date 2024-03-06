@@ -3,7 +3,7 @@ import { NARoutingHandler } from './handlers/routing-handler'
 import { NARegisterDevicePushNotificationHandler } from './handlers/register-device-push-notification-handler'
 import { Suspense } from 'react'
 import { NAColorSchemeSyncHandler } from './handlers/color-scheme-handler'
-import { MeQuery } from '@app/graphql/republik-api/gql/graphql'
+import { MeQuery } from '#graphql/republik-api/__generated__/gql/graphql'
 
 type NativeAppHandlersProps = {
   me: MeQuery['me']

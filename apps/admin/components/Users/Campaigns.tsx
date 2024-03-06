@@ -3,35 +3,16 @@ import { DD, DL, Section, SectionTitle } from '../Display/utils'
 import { REPUBLIK_FRONTEND_URL } from '../../server/constants'
 import { IconContentCopy } from '../../../../packages/icons/dist/index.cjs'
 import { css } from 'glamor'
-import { gql, useQuery } from '@apollo/client'
-
-const USER_CAMPAIGN_DETAILS = gql`
-  query UserCampaignDetails($id: ID!) {
-    user(id: $id) {
-      username
-      referralCode
-      hasPublicProfile
-    }
-  }
-`
-
-type UserCampaignDetailsData = {
-  user?: {
-    username?: string
-    referralCode: string
-    hasPublicProfile?: boolean
-  }
-}
+import { useQuery } from '@apollo/client'
+import { UserCampaignDetailsDocument } from '#graphql/republik-api/__generated__/gql/graphql'
 
 export default function Campaigns({ userId }: { userId: string }) {
-  const { data, loading } = useQuery<UserCampaignDetailsData>(
-    USER_CAMPAIGN_DETAILS,
-    {
-      variables: {
-        id: userId,
-      },
+  const { data, loading } = useQuery(UserCampaignDetailsDocument, {
+    variables: {
+      id: userId,
     },
-  )
+  })
+
   const userCode = data?.user?.hasPublicProfile
     ? data?.user.username
     : data?.user.referralCode
