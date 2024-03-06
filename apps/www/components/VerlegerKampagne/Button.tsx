@@ -61,9 +61,7 @@ export default function Button({
         small ? styles.small : styles.normal,
       )}
       {...props}
-      onClick={() =>
-        trackEvent({ action: 'linkClicked', name: props.href?.toString() })
-      }
+      onClick={() => trackEvent({ action: 'linkClicked' })}
     >
       {children}
     </NextLink>
