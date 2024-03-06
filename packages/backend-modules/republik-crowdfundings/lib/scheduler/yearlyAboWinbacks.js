@@ -65,13 +65,13 @@ const createJobs = (now) => [
   },
   */
   {
-    name: 'membership_owner_prolong_yearly_abo_winback_14',
+    name: 'membership_owner_prolong_yearly_abo_winback_16',
     prolongBefore: {
       minDate: getMinEndDate(now, -21),
       maxDate: getMaxEndDate(now, -16),
     },
     payload: {
-      templateName: 'membership_owner_prolong_yearly_abo_winback_14',
+      templateName: 'membership_owner_prolong_yearly_abo_winback_16',
     },
     predicateFn: () => {
       return true
@@ -79,13 +79,13 @@ const createJobs = (now) => [
     handleFn: mailings,
   },
   {
-    name: 'membership_owner_prolong_yearly_abo_winback_21',
+    name: 'membership_owner_prolong_yearly_abo_winback_24',
     prolongBefore: {
       minDate: getMinEndDate(now, -28),
       maxDate: getMaxEndDate(now, -24),
     },
     payload: {
-      templateName: 'membership_owner_prolong_yearly_abo_winback_21',
+      templateName: 'membership_owner_prolong_yearly_abo_winback_24',
     },
     predicateFn: () => {
       return true
