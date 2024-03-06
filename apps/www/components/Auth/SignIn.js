@@ -142,7 +142,9 @@ class SignIn extends Component {
                 nameOrEmail: me.name || me.email,
               }),
             }))
-            this.props?.onSuccess(me)
+            if (this.props.onSuccess) {
+              this.props.onSuccess(me)
+            }
             this.reloadOnSuccess()
           }}
         />
