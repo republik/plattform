@@ -12,6 +12,7 @@ import { PersonList } from '@app/app/challenge-accepted/person/[slug]/components
 import { vstack } from '@app/styled-system/patterns'
 import Image from 'next/image'
 import { PersonDetailDocument } from '#graphql/cms/__generated__/gql/graphql'
+import { EventTrackingContext } from '@app/lib/matomo/event-tracking'
 
 type PageProps = {
   params: {
@@ -54,7 +55,7 @@ export default async function Page({ params: { slug } }: PageProps) {
   }
 
   return (
-    <>
+    <EventTrackingContext category='ChallengeAcceptedPersonPage' name={slug}>
       <div
         className={css({
           display: 'flex',
@@ -133,7 +134,7 @@ export default async function Page({ params: { slug } }: PageProps) {
           </section>
         </div>
       </Container>
-    </>
+    </EventTrackingContext>
   )
 }
 
