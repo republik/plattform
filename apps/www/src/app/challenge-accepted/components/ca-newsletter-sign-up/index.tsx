@@ -5,7 +5,7 @@ import {
   CaNewsletterDocument,
   MeQuery,
   NewsletterName,
-} from '@graphql/republik-api/gql/graphql'
+} from '@graphql/republik-api/__generated__/gql/graphql'
 
 type CANewsletterSignUpProps = {
   me?: MeQuery['me']

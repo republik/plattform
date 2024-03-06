@@ -22,4 +22,5 @@ dump.rdb
 styled-system
 
 # Generated GQL types
-graphql/*/gql
+!graphql/*/__generated__/gql/README.md
+graphql/*/__generated__/gql

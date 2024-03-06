@@ -5,7 +5,7 @@ import {
   CAMPAIGN_REFERRALS_GOAL,
   CAMPAIGN_SLUG,
 } from '@app/app/(campaign)/constants'
-import { CampaignReferralsDocument } from '@graphql/republik-api/gql/graphql'
+import { CampaignReferralsDocument } from '@graphql/republik-api/__generated__/gql/graphql'
 import { mediaQueries } from '@project-r/styleguide'
 import { StyleAttribute, css } from 'glamor'
 import Link from 'next/link'

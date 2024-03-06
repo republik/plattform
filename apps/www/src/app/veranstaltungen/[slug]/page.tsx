@@ -10,7 +10,7 @@ import {
   EventMetaDocument,
   EventDocument,
   EventRecordFieldsFragmentDoc,
-} from '@graphql/cms/gql/graphql'
+} from '@graphql/cms/__generated__/gql/graphql'
 
 type PageProps = {
   params: { slug: string }

@@ -2,7 +2,7 @@ import { useFragment } from '@graphql/cms/gql'
 import {
   EventDocument,
   EventRecordFieldsFragmentDoc,
-} from '@graphql/cms/gql/graphql'
+} from '@graphql/cms/__generated__/gql/graphql'
 import { getCMSClient } from '@app/lib/apollo/cms-client'
 import dayjs from 'dayjs'
 import ical, { ICalCalendarMethod } from 'ical-generator'

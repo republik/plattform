@@ -11,7 +11,7 @@ import { PersonDetail } from './components/person-detail'
 import { PersonList } from '@app/app/challenge-accepted/person/[slug]/components/person-list'
 import { vstack } from '@app/styled-system/patterns'
 import Image from 'next/image'
-import { PersonDetailDocument } from '@graphql/cms/gql/graphql'
+import { PersonDetailDocument } from '@graphql/cms/__generated__/gql/graphql'
 
 type PageProps = {
   params: {

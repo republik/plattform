@@ -7,7 +7,7 @@ loadEnvConfig(process.cwd())
 const config: CodegenConfig = {
   overwrite: true,
   generates: {
-    './graphql/republik-api/gql/': {
+    './graphql/republik-api/__generated__/gql/': {
       schema: './graphql/republik-api.schema.graphql',
       documents: ['./graphql/republik-api/**/*.{ts,tsx,gql,graphql}'],
       preset: 'client',

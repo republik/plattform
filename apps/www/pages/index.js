@@ -10,7 +10,7 @@ import { PUBLIC_BASE_URL, CDN_FRONTEND_BASE_URL } from '../lib/constants'
 
 import { MARKETING_PAGE_QUERY } from '../components/Marketing/graphql/MarketingPageQuery.graphql'
 import { useMe } from '../lib/context/MeContext'
-import { MarketingLandingPageCmsDocument } from '@graphql/cms/gql/graphql'
+import { MarketingLandingPageCmsDocument } from '@graphql/cms/__generated__/gql/graphql'
 
 const MARKETING_PAGE_SSG_REVALIDATE = 60 // revalidate every minute
 

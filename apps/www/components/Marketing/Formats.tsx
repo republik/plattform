@@ -8,7 +8,7 @@ import {
 } from '@project-r/styleguide'
 import SectionTitle from './Common/SectionTitle'
 import SectionContainer from './Common/SectionContainer'
-import { MarketingLandingPageCmsQuery } from '@graphql/cms/gql/graphql'
+import { MarketingLandingPageCmsQuery } from '@graphql/cms/__generated__/gql/graphql'
 
 type FormatsProps = {
   formats: MarketingLandingPageCmsQuery['marketingLandingPage']['formats']

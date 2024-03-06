@@ -6,7 +6,7 @@ import { useFragment } from '@graphql/cms/gql'
 import {
   EventRecordFieldsFragmentDoc,
   EventsDocument,
-} from '@graphql/cms/gql/graphql'
+} from '@graphql/cms/__generated__/gql/graphql'
 
 export default async function Page() {
   const { data } = await getCMSClient().query({

@@ -2,7 +2,7 @@ import { Collapsible } from '@app/app/challenge-accepted/components/collapsible'
 import {
   ChallengeAcceptedPersonListDocument,
   type ChallengeAcceptedPersonListQuery,
-} from '@graphql/cms/gql/graphql'
+} from '@graphql/cms/__generated__/gql/graphql'
 import { getCMSClient } from '@app/lib/apollo/cms-client'
 import { css } from '@app/styled-system/css'
 import { hstack } from '@app/styled-system/patterns'
