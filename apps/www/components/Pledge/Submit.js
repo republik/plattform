@@ -863,7 +863,19 @@ class Submit extends Component {
                 <>
                   <br />
                   <br />
-                  <SignIn context='pledge' />
+                  <SignIn
+                    context='pledge'
+                    onSuccess={(me) => {
+                      contactState.onChange({
+                        values: {
+                          email: me.email,
+                        },
+                        dirty: {
+                          email: true,
+                        },
+                      })
+                    }}
+                  />
                 </>
               )}
               <br />
