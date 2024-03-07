@@ -6,6 +6,18 @@ import {
 } from './lib/auth/JWTHelper'
 import fetchMyRoles from './lib/helpers/middleware/FetchMeObject'
 
+export const config = {
+  matcher: [
+    /*
+     * Match all request paths except for the ones starting with:
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     */
+    '/((?!_next/static|_next/image|favicon.ico).*)',
+  ],
+}
+
 /**
  * Middleware used to conditionally redirect between the marketing and front page
  * depending on the user authentication status and roles.
@@ -15,6 +27,18 @@ export async function middleware(req: NextRequest) {
   const basicAuthRes = checkBasicAuth(req)
   if (basicAuthRes) {
     return basicAuthRes
+  }
+
+  if (
+    process.env.RELAY_PATH &&
+    process.env.RELAY_TARGET &&
+    req.nextUrl.pathname.startsWith(process.env.RELAY_PATH)
+  ) {
+    return NextResponse.next({
+      headers: {
+        Authorization: `Bearer ${process.env.RELAY_TOKEN}`,
+      },
+    })
   }
 
   const resUrl = req.nextUrl.clone()

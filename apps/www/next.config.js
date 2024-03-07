@@ -110,7 +110,13 @@ const nextConfig = {
           source: '/pgp/:userSlug',
           destination: '/api/pgp/:userSlug',
         },
-      ],
+        process.env.RELAY_PATH && process.env.RELAY_TOKEN
+          ? {
+              source: process.env.RELAY_PATH + '/:path*',
+              destination: process.env.RELAY_TARGET + '/:path*',
+            }
+          : null,
+      ].filter(Boolean),
     }
   },
   async redirects() {
