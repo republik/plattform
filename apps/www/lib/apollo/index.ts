@@ -15,4 +15,9 @@ export const { initializeApollo, withApollo } = createApolloClientUtilities({
     isInMobileApp: inNativeAppBrowser && inNativeAppBrowserLegacy,
     createAppWorkerLink,
   },
+  headers: process.env.NEXT_PUBLIC_API_AUTHORIZATION_TOKEN
+    ? {
+        authorization: `Bearer ${process.env.NEXT_PUBLIC_API_AUTHORIZATION_TOKEN}`,
+      }
+    : {},
 })

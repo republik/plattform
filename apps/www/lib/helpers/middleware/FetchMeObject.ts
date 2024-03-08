@@ -16,6 +16,11 @@ async function fetchMeObject(
         'Content-Type': 'application/json',
         // Attach headers to the request to ensure `me` is returned
         Cookie: req.headers.get('cookie'),
+        ...(process.env.NEXT_PUBLIC_API_AUTHORIZATION_TOKEN
+          ? {
+              Authorization: `Bearer ${process.env.NEXT_PUBLIC_API_AUTHORIZATION_TOKEN}`,
+            }
+          : {}),
       },
     },
   )

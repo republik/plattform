@@ -12,7 +12,7 @@ import makeWithApollo from './helpers/withApollo'
  */
 type CreateApolloClientUtilitiesOptions = Pick<
   ApolloClientOptions,
-  'apiUrl' | 'wsUrl' | 'mobileConfigOptions' | 'name' | 'version'
+  'apiUrl' | 'wsUrl' | 'mobileConfigOptions' | 'name' | 'version' | 'headers'
 >
 
 /**
@@ -38,7 +38,10 @@ export function createApolloClientUtilities(
   ) =>
     initializeApolloFunc(initialCacheObject, {
       ...options,
-      headers,
+      headers: {
+        ...options.headers,
+        ...headers,
+      },
       onResponse,
     })
 
