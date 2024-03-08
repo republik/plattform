@@ -8,7 +8,7 @@ const compression = require('compression')
 const helmet = require('helmet')
 const rateLimit = require('express-rate-limit')
 const ipfilter = require('express-ipfilter').IpFilter
-const { COOKIE_NAME } = require('../lib/auth/constants')
+const { COOKIE_NAME, PUBLIC_BASE_URL } = require('../lib/auth/constants')
 
 const DEV = process.env.NODE_ENV ? process.env.NODE_ENV !== 'production' : true
 if (DEV || process.env.DOTENV) {
@@ -114,11 +114,8 @@ app.prepare().then(() => {
   if (!DEV) {
     server.enable('trust proxy')
     server.use((req, res, next) => {
-      if (
-        `${req.protocol}://${req.get('Host')}` !==
-        process.env.NEXT_PUBLIC_BASE_URL
-      ) {
-        return res.redirect(process.env.NEXT_PUBLIC_BASE_URL + req.url)
+      if (`${req.protocol}://${req.get('Host')}` !== PUBLIC_BASE_URL) {
+        return res.redirect(PUBLIC_BASE_URL + req.url)
       }
       return next()
     })
