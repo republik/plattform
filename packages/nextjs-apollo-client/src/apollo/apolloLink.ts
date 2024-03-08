@@ -52,9 +52,7 @@ export const createLink = ({
     uri: rewriteAPIHost(apiUrl),
     credentials: 'include',
     headers: {
-      cookie: headers.cookie,
-      accept: headers.accept,
-      Authorization: headers.authorization,
+      ...(headers as Record<string, string>),
     },
   })
 
