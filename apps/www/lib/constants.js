@@ -13,6 +13,7 @@ export const APP_OPTIONS =
 
 export const PUBLIC_BASE_URL =
   process.env.NEXT_PUBLIC_BASE_URL ||
+  process.env.VERCEL_BRANCH_URL ||
   process.env.VERCEL_URL ||
   process.env.NEXT_PUBLIC_VERCEL_URL
 export const CDN_FRONTEND_BASE_URL =

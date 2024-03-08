@@ -6,6 +6,7 @@ import { PriceSliderWithState } from './price-slider-with-state'
 import { CAMPAIGN_SLUG } from '@app/app/(campaign)/constants'
 import { Logo } from '@app/app/(campaign)/components/logo'
 import { useState } from 'react'
+import { PUBLIC_BASE_URL } from 'lib/constants'
 
 const getCheckoutUrl = ({
   price,
@@ -14,7 +15,7 @@ const getCheckoutUrl = ({
   price: number
   referralCode?: string
 }): string => {
-  const url = new URL('/angebote', process.env.NEXT_PUBLIC_BASE_URL)
+  const url = new URL('/angebote', PUBLIC_BASE_URL)
 
   url.searchParams.set('price', `${price * 100}`)
   url.searchParams.set('referral_campaign', CAMPAIGN_SLUG)
