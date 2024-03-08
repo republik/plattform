@@ -18,7 +18,7 @@ async function fetchMeObject(
         Cookie: req.headers.get('cookie'),
         ...(process.env.NEXT_PUBLIC_API_AUTHORIZATION_TOKEN
           ? {
-              Authorization: `Bearer ${process.env.NEXT_PUBLIC_API_AUTHORIZATION_TOKEN}`,
+              'x-api-key': process.env.NEXT_PUBLIC_API_AUTHORIZATION_TOKEN,
             }
           : {}),
       },

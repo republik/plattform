@@ -29,18 +29,6 @@ export async function middleware(req: NextRequest) {
     return basicAuthRes
   }
 
-  if (
-    process.env.RELAY_PATH &&
-    process.env.RELAY_TARGET &&
-    req.nextUrl.pathname.startsWith(process.env.RELAY_PATH)
-  ) {
-    return NextResponse.next({
-      headers: {
-        Authorization: `Bearer ${process.env.RELAY_TOKEN}`,
-      },
-    })
-  }
-
   const resUrl = req.nextUrl.clone()
   // Rewrite if someone tries to directly access the front or the front-preview url
   if (

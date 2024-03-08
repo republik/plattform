@@ -17,7 +17,7 @@ export const { initializeApollo, withApollo } = createApolloClientUtilities({
   },
   headers: process.env.NEXT_PUBLIC_API_AUTHORIZATION_TOKEN
     ? {
-        authorization: `Bearer ${process.env.NEXT_PUBLIC_API_AUTHORIZATION_TOKEN}`,
+        'x-api-key': process.env.NEXT_PUBLIC_API_AUTHORIZATION_TOKEN,
       }
     : {},
 })

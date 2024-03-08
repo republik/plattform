@@ -16,6 +16,11 @@ export const { getClient } = registerApolloClient(() => {
         cookie: headers().get('cookie') ?? '',
         accept: headers().get('accept') ?? '',
         Authorization: headers().get('Authorization') ?? '',
+        ...(process.env.NEXT_PUBLIC_API_AUTHORIZATION_TOKEN
+          ? {
+              'x-api-key': process.env.NEXT_PUBLIC_API_AUTHORIZATION_TOKEN,
+            }
+          : {}),
       },
       fetchOptions: {
         next: {

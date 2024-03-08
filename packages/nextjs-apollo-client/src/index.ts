@@ -35,15 +35,16 @@ export function createApolloClientUtilities(
   const initializeApollo: InitializeApolloFunc = (
     initialCacheObject = null,
     { headers, onResponse },
-  ) =>
-    initializeApolloFunc(initialCacheObject, {
+  ) => {
+    return initializeApolloFunc(initialCacheObject, {
       ...options,
       headers: {
-        ...options.headers,
-        ...headers,
+        ...(options.headers || {}),
+        ...(headers || {}),
       },
       onResponse,
     })
+  }
 
   const withApollo = makeWithApollo(useApollo)
 
