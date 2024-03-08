@@ -4,6 +4,13 @@ import { PageLayout } from '@app/components/layout'
 import { EventTrackingContext } from '@app/lib/matomo/event-tracking'
 import { css } from '@app/styled-system/css'
 import { ReactNode } from 'react'
+import { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: `Unterstützen Sie die Republik mit einem Abo!`,
+  description: 'Bis zum 31. März 2024 ab CHF 120 für ein Jahr.',
+  robots: { index: false, follow: false },
+}
 
 export default async function CampaignLayout({
   children,

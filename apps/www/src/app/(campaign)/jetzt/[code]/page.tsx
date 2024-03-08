@@ -83,8 +83,6 @@ export async function generateMetadata({ params }): Promise<Metadata> {
 
   return {
     title: `${senderName} lädt Sie ein, die Republik mit einem Abo zu unterstützen.`,
-    description: 'Bis zum 31. März 2024 ab CHF 120 für ein Jahr.',
-    robots: 'noindex',
   }
 }
 

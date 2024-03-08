@@ -2,13 +2,8 @@ import { generateShareImage } from '@app/app/(campaign)/jetzt/[code]/generate-sh
 
 export const contentType = 'image/png'
 
-export default async function OpenGraphImage({
-  params,
-}: {
-  params: { code: string }
-}) {
+export default async function OpenGraphImage() {
   return generateShareImage({
-    code: params.code,
     showPortrait: false,
     orientation: 'landscape',
   })
