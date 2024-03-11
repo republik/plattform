@@ -85,7 +85,7 @@ export default async function Page() {
             </li>
           </ul>
         </div>
-        <CTA href='/jetzt/angebot' />
+        <CTA href='/jetzt/angebot?utm_campaign=audio-vorgelesen' />
       </div>
     </>
   )
