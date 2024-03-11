@@ -103,8 +103,9 @@ export function VerlegerKampagneBannerTop() {
           <CampaignLogo inverted className={`${topBannerStyles.logo}`} />
           <div {...topBannerStyles.content}>
             <div>
-              Bis zum 31. März suchen wir mit Ihnen zusammen{' '}
-              {CAMPAIGN_REFERRALS_GOAL} zusätzliche Verleger und Verlegerinnen.
+              Mit wenig Aufwand viel bewirken: Teilen Sie Ihren Link mit
+              Freunden und Bekannten und erzählen Sie ihnen, was Sie an der
+              Republik überzeugt.
             </div>
             <ProgressBar
               inverted
