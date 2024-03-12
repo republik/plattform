@@ -80,7 +80,7 @@ const handleRow = async (row) => {
     FNAME: `"${row.firstName ?? ''}"`,
     LNAME: `"${row.lastName ?? ''}"`,
     PRLG_SEG: '',
-    CP_ATOKEN: '',
+    // CP_ATOKEN: '',
     // KAMPA_GRP: '',
     // NL_LINK: getConsentLink(row.email, 'WINTER'),
 
@@ -91,29 +91,16 @@ const handleRow = async (row) => {
 
   if (
     activeMembership &&
-    !activeMembership.autoPay &&
-    !hasDormantMembership &&
-    !['MONTHLY_ABO', 'YEARLY_ABO'].includes(membershipTypeName) &&
-    lastEndDate?.isBefore('2024-02-01')
-  ) {
-    record.PRLG_SEG = 'prolong-before-202402'
-    record.CP_ATOKEN = row.accessToken
-  } else if (
-    activeMembership &&
-    !['MONTHLY_ABO', 'YEARLY_ABO'].includes(membershipTypeName)
+    !['MONTHLY_ABO', 'YEARLY_ABO', 'ABO_GIVE_MONTHS'].includes(
+      membershipTypeName,
+    )
   ) {
     record.PRLG_SEG = 'is-associate'
-    record.CP_ATOKEN = row.accessToken
-  } else if (activeMembership && membershipTypeName === 'MONTHLY_ABO') {
-    record.PRLG_SEG = 'is-monthly-abo'
-    record.CP_ATOKEN = ''
   } else if (activeMembership) {
     record.PRLG_SEG = 'is-active' // nüscht
-    record.CP_ATOKEN = ''
   } else {
     // neither props is true
     record.PRLG_SEG = 'other'
-    record.CP_ATOKEN = ''
   }
 
   const key = record.PRLG_SEG // [record.PRLG_SEG, record.KAMPA_GRP].filter(Boolean).join(' - ')
@@ -172,7 +159,7 @@ ConnectionContext.create(applicationName)
         'FNAME',
         'LNAME',
         'PRLG_SEG',
-        'CP_ATOKEN',
+        // 'CP_ATOKEN',
         // 'KAMPA_GRP',
         // 'NL_LINK',
 
