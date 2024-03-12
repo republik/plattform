@@ -3,7 +3,7 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true',
 })
 
-const { NODE_ENV, NEXT_PUBLIC_CDN_FRONTEND_BASE_URL, VERCEL_URL } = process.env
+const { NODE_ENV, NEXT_PUBLIC_CDN_FRONTEND_BASE_URL } = process.env
 
 const buildId =
   process.env.SOURCE_VERSION?.substring(0, 10) ||
@@ -25,6 +25,24 @@ const unprefixedStyleguideEnvVariables = {
     }, []),
 }
 
+function appendProtocol(href) {
+  if (href && !href.startsWith('http')) {
+    return `${NODE_ENV === 'production' ? 'https' : 'http'}://${href}`
+  }
+  return href
+}
+
+const PUBLIC_CDN_URL = appendProtocol(
+  NEXT_PUBLIC_CDN_FRONTEND_BASE_URL ||
+    process.env.NEXT_PUBLIC_BASE_URL ||
+    process.env.VERCEL_BRANCH_URL ||
+    process.env.VERCEL_URL ||
+    process.env.NEXT_PUBLIC_VERCEL_URL,
+)
+
+// console.log('Frontend base url', constants.PUBLIC_BASE_URL)
+console.log('CDN URL', PUBLIC_CDN_URL)
+
 /**
  * @type {import('next').NextConfig}
  */
@@ -43,11 +61,7 @@ const nextConfig = {
     return config
   },
   poweredByHeader: false,
-  assetPrefix:
-    NODE_ENV === 'production' &&
-    (NEXT_PUBLIC_CDN_FRONTEND_BASE_URL || VERCEL_URL)
-      ? NEXT_PUBLIC_CDN_FRONTEND_BASE_URL || VERCEL_URL
-      : undefined,
+  assetPrefix: NODE_ENV === 'production' ? PUBLIC_CDN_URL : undefined,
   useFileSystemPublicRoutes: true,
   // , onDemandEntries: {
   //   // wait 5 minutes before disposing entries
