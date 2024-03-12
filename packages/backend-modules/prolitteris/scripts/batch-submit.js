@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
-/** @typedef {import('../lib/proliterris').MessageRequest} MessageRequest */
-/** @typedef {import('../lib/proliterris').Participant} Participant */
-/** @typedef {import('../lib/proliterris').PixelUid} PixelUid */
+/** @typedef {import('@orbiting/backend-modules-prolitteris').MessageRequest} MessageRequest */
+/** @typedef {import('@orbiting/backend-modules-prolitteris').Participant} Participant */
+/** @typedef {import('@orbiting/backend-modules-prolitteris').PixelUid} PixelUid */
 
 const fs = require('fs')
 const fsp = require('fs/promises')
@@ -14,8 +14,9 @@ const { string, object, array, parse, optional } = require('valibot')
 const { Client } = require('@elastic/elasticsearch')
 const {
   assertValidMessageText,
+  ProLitterisAPI,
 } = require('@orbiting/backend-modules-prolitteris')
-const yargs = require('yargs')
+const yargs = require('yargs/yargs')
 
 const ESDocumentSchema = object({
   meta: object({
@@ -32,19 +33,8 @@ const ESDocumentSchema = object({
   contentString: string(),
 })
 
-async function main(args) {
+async function prepareHandler(args) {
   const dbAuthorsFile = await fsp.readFile(path.resolve(args.authors), 'utf8')
-
-  let pathFileStream
-  if (args?.pathFile) {
-    pathFileStream = fs.createReadStream(args?.pathFile)
-  } else if (!process.stdin.isTTY) {
-    pathFileStream = process.stdin
-  } else {
-    console.error('no path file was provided')
-    process.exit(1)
-  }
-
   const dbAuthors = JSON.parse(dbAuthorsFile)
   const dbAuthorsById = {}
   const dbAuthorsByName = {}
@@ -53,10 +43,16 @@ async function main(args) {
     dbAuthorsByName[`${author.firstName} ${author.lastName}`] = author
   }
 
+  const pathFileStream = readFileOrStdin(args?.pathFile)
+  if (!pathFileStream) {
+    console.error('no path file was provided')
+    process.exit(1)
+  }
+
   const ELASTIC_NODE =
     process.env.ELASTIC_URL || 'http://elastic:elastic@localhost:9200'
 
-  const PROLITERIS_MEMBER_ID = Number('0')
+  const PROLITTERIS_MEMBER_ID = Number('0')
 
   const esClient = new Client({
     node: ELASTIC_NODE,
@@ -97,10 +93,10 @@ async function main(args) {
     },
   })
 
-  const prolitterisMessages = []
-  for (const res of results.hits.hits) {
+  const outputFileStream = fs.createWriteStream('prolitteris_input.jsonl')
+  for (const hit of results.hits.hits) {
     try {
-      const doc = parse(ESDocumentSchema, res._source)
+      const doc = parse(ESDocumentSchema, hit._source)
 
       const messageText = {
         plainText: Buffer.from(doc.contentString, 'utf-8').toString('base64'),
@@ -112,7 +108,7 @@ async function main(args) {
        * @type {MessageRequest}
        */
       const article = {
-        pixelUid: repoIdToPixelUid(doc.meta.repoId, PROLITERIS_MEMBER_ID),
+        pixelUid: repoIdToPixelUid(doc.meta.repoId, PROLITTERIS_MEMBER_ID),
         participants: [],
         messageText: messageText,
         title: doc.meta.title,
@@ -120,20 +116,17 @@ async function main(args) {
 
       for (const author of doc.meta.contributors) {
         if (author.kind.toLowerCase() === 'text') {
-          // const [firstName, lastName] = author.name.split(' ', 2)
+          const dbData =
+            dbAuthorsById[author.userId] || dbAuthorsByName[author.name]
 
-          const dbData = dbAuthorsById[author.userId]
-
-          if (dbData) {
-            console.log(`found db data ${JSON.stringify(dbData)}`)
-          } else {
-            console.warn(`no db data found for ${author.name} skipping work`)
+          if (!dbData) {
+            console.error('no db data found for %s skipping work', author.name)
             continue
           }
 
           const memberId = getProLitterisId(dbData)
           if (memberId) {
-            console.log('MemberID found: ' + memberId)
+            console.error('MemberID found: %s', memberId)
           }
 
           /**
@@ -151,14 +144,135 @@ async function main(args) {
         }
       }
 
-      prolitterisMessages.push(article)
+      // Append data in JSONL format
+      const data = JSON.stringify(article) + '\n'
+      outputFileStream.write(data)
     } catch (error) {
       console.error(error)
       continue
     }
   }
 
-  // console.log(prolitterisMessages)
+  outputFileStream.end(() => {
+    console.error('output written')
+  })
+}
+
+async function runBatchSubmission(args) {
+  const CHECKPOINT_FILE = 'prolitteris.checkpoint'
+  const PROLITTERIS_USER_NAME = ''
+  if (!PROLITTERIS_USER_NAME) {
+    console.error('ProLitteris Username not provied')
+    process.exit(1)
+  }
+  const PROLITTERIS_PW = ''
+  if (!PROLITTERIS_PW) {
+    console.error('ProLitteris Username not provied')
+    process.exit(1)
+  }
+  const PROLITTERIS_MEMBER_NR = ''
+  if (!PROLITTERIS_MEMBER_NR) {
+    console.error('ProLitteris MemberNr not provied')
+    process.exit(1)
+  }
+
+  // check for checkpoint file, create it if it does not exist
+  await fsp.access(CHECKPOINT_FILE, fs.constants.F_OK).catch((_err) => {
+    console.log('creating checkpoint file')
+    fs.writeFileSync(CHECKPOINT_FILE, '')
+  })
+  const checkPointFile = fs.createReadStream(CHECKPOINT_FILE)
+
+  const jobFile = readFileOrStdin(args.jobfile)
+  if (!jobFile) {
+    console.error('no job file provided')
+    process.exit(1)
+  }
+
+  const checkPoints = []
+  for await (const checkPoint of readline.createInterface({
+    input: checkPointFile,
+  })) {
+    checkPoints.push(checkPoint)
+  }
+
+  // capture Ctrl+C to save checkpoint file before exit
+  process.on('SIGINT', () => {
+    console.error('\nCtrl+C pressed. Writing checkpoint file...')
+    fs.writeFileSync(CHECKPOINT_FILE, checkPoints.join('\n'))
+    process.exit(0)
+  })
+
+  const proLitterisClient = new ProLitterisAPI(
+    PROLITTERIS_MEMBER_NR,
+    PROLITTERIS_USER_NAME,
+    PROLITTERIS_PW,
+  )
+
+  for await (const line of readline.createInterface({
+    input: jobFile,
+  })) {
+    try {
+      /**
+       * @type {MessageRequest}
+       */
+      const data = JSON.parse(line) // maybe validate the data body
+
+      if (checkPoints.includes(data.pixelUid)) {
+        console.error('skipping %s: already processed', data.pixelUid)
+        continue
+      }
+
+      console.error('submitting %s', data.pixelUid)
+      const res = await processData(proLitterisClient, data)
+      console.error(
+        'Submitted %s successfully;\nCreated at %s',
+        res.pixelUid,
+        res.createdAt,
+      )
+      checkPoints.push(data.pixelUid)
+    } catch (error) {
+      console.error('Error submitting data: %s', error)
+    }
+  }
+
+  await fsp.writeFile(CHECKPOINT_FILE, checkPoints.join('\n'))
+}
+
+function readFileOrStdin(filepath) {
+  if (filepath) {
+    return fs.createReadStream(filepath)
+  } else if (!process.stdin.isTTY) {
+    return process.stdin
+  }
+  return null
+}
+
+/**
+ *
+ * @param {ProLitterisAPI} client
+ * @param {MessageRequest} data
+ */
+async function processData(client, data) {
+  const res = await client.makeMessage(data)
+  if (!res) {
+    throw Error('Network error')
+  }
+
+  // check if res is of type APIError
+  if ('code' in res) {
+    const fieldErrors = res.fieldErrors
+      ?.map((f) => `field: ${f.field}; ${f.message}`)
+      .join('\n')
+    // throw error so that it can be logged to stderr
+    throw Error(
+      `API Error: ${res.code}; ${res.message}` + fieldErrors
+        ? `\n${fieldErrors}`
+        : '',
+    )
+  }
+
+  return res
 }
 
 /**
@@ -180,16 +294,39 @@ function getProLitterisId(dbData) {
   return null
 }
 
-const argv = yargs
-  .option('authors', {
-    alias: 'a',
-    type: 'string',
-    demandOption: true,
-  })
-  .option('pathsFile', {
-    alias: 'p',
-    type: 'string',
-  })
-  .help().argv
-
-main(argv)
+yargs(process.argv.slice(2))
+  .command(
+    'prepare',
+    'prepare ProLitteris submission',
+    (yargs) => {
+      yargs.options({
+        authors: {
+          alias: 'a',
+          type: 'string',
+          demandOption: true,
+        },
+        pathsFile: {
+          alias: 'p',
+          type: 'string',
+        },
+      })
+    },
+    prepareHandler,
+  )
+  .command(
+    'run',
+    'run ProLitteris submission',
+    (yargs) => {
+      yargs.options({
+        jobfile: {
+          alias: 'f',
+          type: 'string',
+          demandOption: true,
+        },
+      })
+    },
+    runBatchSubmission,
+  )
+  .demandCommand(1)
+  .help()
+  .parse()
