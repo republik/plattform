@@ -1,9 +1,9 @@
 module.exports = {
-  plugins: ['react', 'react-hooks', '@typescript-eslint'],
+  plugins: ['@typescript-eslint'],
   extends: [
     'eslint:recommended',
-    'plugin:react/recommended',
     'plugin:@typescript-eslint/recommended',
+    'next',
     'prettier',
   ],
   parser: '@typescript-eslint/parser',
