@@ -8,7 +8,6 @@ const dayjs = require('dayjs')
 const {
   lib: { ConnectionContext },
 } = require('@orbiting/backend-modules-base')
-// const { AccessToken } = require('@orbiting/backend-modules-auth')
 const {
   findEligableMemberships,
   hasDormantMembership: hasDormantMembership_,
@@ -142,20 +141,8 @@ const handleBatch = async (rows, count, pgdb) => {
     pgdb,
   })
 
-  /* const accessGrants = await pgdb.public.accessGrants.find({
-    recipientUserId: rows.map((row) => row.id),
-    'beginAt !=': null,
-  }) */
-
   await Promise.map(rows, async (row, index) => {
     rows[index].memberships = memberships.filter((m) => m.userId === row.id)
-    /* rows[index].accessGrants = accessGrants.filter(
-      (ag) => ag.recipientUserId === row.id,
-    ) */
-    // rows[index].accessToken = await AccessToken.generateForUser(
-    //   row,
-    //   'CUSTOM_PLEDGE_EXTENDED',
-    // )
   })
   const referralCodeRepo = new PGReferralsRepo(pgdb)
 
