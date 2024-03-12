@@ -8,7 +8,7 @@ const dayjs = require('dayjs')
 const {
   lib: { ConnectionContext },
 } = require('@orbiting/backend-modules-base')
-const { AccessToken } = require('@orbiting/backend-modules-auth')
+// const { AccessToken } = require('@orbiting/backend-modules-auth')
 const {
   findEligableMemberships,
   hasDormantMembership: hasDormantMembership_,
@@ -17,13 +17,18 @@ const {
 const {
   getPeriodEndingLast,
 } = require('@orbiting/backend-modules-republik-crowdfundings/lib/utils')
+const {
+  PGReferralsRepo,
+  generateReferralCode,
+  formatAsDashSeperated,
+} = require('@orbiting/backend-modules-referral-campaigns')
 
 const applicationName =
   'backends republik script prolong segmentUsersForMailchimp'
 
 const stats = {}
 
-const handleRow = async (row) => {
+const handleRow = async (row, referralCodeRepo) => {
   const { memberships, ...user } = row
 
   const periods = memberships
@@ -78,11 +83,21 @@ const handleRow = async (row) => {
     FNAME: `"${row.firstName ?? ''}"`,
     LNAME: `"${row.lastName ?? ''}"`,
     KAMPA_SEG: '',
+    KAMPA_LINK: '',
 
     __vars: Object.keys(vars)
       .map((key) => `${key}:${vars[key]}`)
       .join(' / '),
   }
+
+  let userCode = user?.hasPublicProfile ? user.username : user.referralCode
+
+  if (activeMembership && !userCode) {
+    const referralCode = await generateReferralCode(user, referralCodeRepo)
+    userCode = formatAsDashSeperated(referralCode, 4)
+  }
+
+  record.KAMPA_LINK = `https://www.republik.ch/jetzt/${userCode}`
 
   if (
     activeMembership &&
@@ -137,13 +152,16 @@ const handleBatch = async (rows, count, pgdb) => {
     /* rows[index].accessGrants = accessGrants.filter(
       (ag) => ag.recipientUserId === row.id,
     ) */
-    rows[index].accessToken = await AccessToken.generateForUser(
-      row,
-      'CUSTOM_PLEDGE_EXTENDED',
-    )
+    // rows[index].accessToken = await AccessToken.generateForUser(
+    //   row,
+    //   'CUSTOM_PLEDGE_EXTENDED',
+    // )
   })
+  const referralCodeRepo = new PGReferralsRepo(pgdb)
 
-  await Promise.map(rows, handleRow, { concurrency: 1 })
+  await Promise.map(rows, (row) => handleRow(row, referralCodeRepo), {
+    concurrency: 1,
+  })
   debug('%i rows processed', count)
 }
 
