@@ -1,6 +1,7 @@
 import { useQuery } from '@apollo/client'
 import { CampaignLogo } from '@app/app/(campaign)/components/campaign-logo'
 import {
+  CAMPAIGN_MEMBER_BANNER_TEXT,
   CAMPAIGN_META_ARTICLE_URL,
   CAMPAIGN_REFERRALS_GOAL,
   CAMPAIGN_SLUG,
@@ -102,11 +103,7 @@ export function VerlegerKampagneBannerTop() {
         <div {...topBannerStyles.wrapper}>
           <CampaignLogo inverted className={`${topBannerStyles.logo}`} />
           <div {...topBannerStyles.content}>
-            <div>
-              Mit wenig Aufwand viel bewirken: Teilen Sie Ihren Link mit
-              Freunden und Bekannten und erzählen Sie ihnen, was Sie an der
-              Republik überzeugt.
-            </div>
+            <div>{CAMPAIGN_MEMBER_BANNER_TEXT}</div>
             <ProgressBar
               inverted
               from={data?.campaign.referrals.count || 0}
