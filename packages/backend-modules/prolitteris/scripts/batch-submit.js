@@ -34,6 +34,8 @@ const ESDocumentSchema = object({
 })
 
 async function prepareHandler(args) {
+  const PROLITTERIS_MEMBER_NR = Number('0')
+
   const dbAuthorsFile = await fsp.readFile(path.resolve(args.authors), 'utf8')
   const dbAuthors = JSON.parse(dbAuthorsFile)
   const dbAuthorsById = {}
@@ -51,8 +53,6 @@ async function prepareHandler(args) {
 
   const ELASTIC_NODE =
     process.env.ELASTIC_URL || 'http://elastic:elastic@localhost:9200'
-
-  const PROLITTERIS_MEMBER_ID = Number('0')
 
   const esClient = new Client({
     node: ELASTIC_NODE,
@@ -78,7 +78,7 @@ async function prepareHandler(args) {
         must: [
           {
             terms: {
-              'meta.path.keyword': [...articles],
+              'meta.path.keyword': articles,
             },
           },
           {
@@ -108,7 +108,7 @@ async function prepareHandler(args) {
        * @type {MessageRequest}
        */
       const article = {
-        pixelUid: repoIdToPixelUid(doc.meta.repoId, PROLITTERIS_MEMBER_ID),
+        pixelUid: repoIdToPixelUid(doc.meta.repoId, PROLITTERIS_MEMBER_NR),
         participants: [],
         messageText: messageText,
         title: doc.meta.title,
@@ -120,7 +120,7 @@ async function prepareHandler(args) {
             dbAuthorsById[author.userId] || dbAuthorsByName[author.name]
 
           if (!dbData) {
-            console.error('no db data found for %s skipping work', author.name)
+            console.error('no db data found for %s', author.name)
             continue
           }
 
@@ -176,18 +176,18 @@ async function runBatchSubmission(args) {
     process.exit(1)
   }
 
-  // check for checkpoint file, create it if it does not exist
-  await fsp.access(CHECKPOINT_FILE, fs.constants.F_OK).catch((_err) => {
-    console.log('creating checkpoint file')
-    fs.writeFileSync(CHECKPOINT_FILE, '')
-  })
-  const checkPointFile = fs.createReadStream(CHECKPOINT_FILE)
-
   const jobFile = readFileOrStdin(args.jobfile)
   if (!jobFile) {
     console.error('no job file provided')
     process.exit(1)
   }
+
+  // create checkpoint file if it does not exist
+  await fsp.access(CHECKPOINT_FILE, fs.constants.F_OK).catch((_err) => {
+    console.log('creating checkpoint file')
+    fs.writeFileSync(CHECKPOINT_FILE, '')
+  })
+  const checkPointFile = fs.createReadStream(CHECKPOINT_FILE)
 
   const checkPoints = []
   for await (const checkPoint of readline.createInterface({
@@ -216,10 +216,10 @@ async function runBatchSubmission(args) {
       /**
        * @type {MessageRequest}
        */
-      const data = JSON.parse(line) // maybe validate the data body
+      const data = JSON.parse(line) // maybe we should validate the body
 
       if (checkPoints.includes(data.pixelUid)) {
-        console.error('skipping %s: already processed', data.pixelUid)
+        console.error('Skipping %s: already processed', data.pixelUid)
         continue
       }
 
