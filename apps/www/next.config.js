@@ -67,6 +67,33 @@ const nextConfig = {
           }
         : false,
   },
+  async headers() {
+    return [
+      // Migrated from custom express server
+      {
+        source: '/:path*',
+        headers: [
+          // Disable FLoC
+          // @see https://twitter.com/natfriedman/status/1387159870667849731
+          {
+            key: 'Permissions-Policy',
+            value: 'interest-cohort=()',
+          },
+          // Previously handled by helmet
+          {
+            key: 'Referrer-Policy',
+            value: 'no-referrer',
+          },
+          // Previously handled by helmet
+          {
+            key: 'Strict-Transport-Security',
+            // Preload approval for 1 year
+            value: `max-age=${60 * 60 * 24 * 365}; includeSubDomains; preload`,
+          },
+        ],
+      },
+    ]
+  },
   async rewrites() {
     return {
       beforeFiles: [
@@ -143,7 +170,34 @@ const nextConfig = {
         destination: '/5-jahre-republik',
         permanent: true,
       },
-    ]
+      /**
+       * Migrated from custom express server
+       * WebFinger
+       * @see https://www.rfc-editor.org/rfc/rfc7033
+       *
+       * in use for Mastodon WebFinger redirect
+       * "Translate `user@domain` mentions to actor profile URIs."
+       * @see https://docs.joinmastodon.org/spec/webfinger/
+       *
+       */
+      process.env.MASTODON_BASE_URL && {
+        source: '/.well-known/webfinger',
+        destination: process.env.MASTODON_BASE_URL + '/.well-known/webfinger',
+        permanent: false,
+      },
+      // Migrated from custom express server
+      {
+        source: '/vote',
+        destination: '/503',
+        permanent: false,
+      },
+      // Migrated from custom express server
+      {
+        source: '/updates/wer-sind-sie',
+        destination: '/503',
+        permanent: false,
+      },
+    ].filter(Boolean)
   },
   experimental: {
     largePageDataBytes: 512 * 1000, // 512KB
