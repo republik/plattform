@@ -5,6 +5,6 @@ module.exports = {
   ],
   rules: {
     'no-control-regex': 'off',
-    'no-html-link-for-pages': 'off',
+    '@next/next/no-html-link-for-pages': 'off',
   },
 }

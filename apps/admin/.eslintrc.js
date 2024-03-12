@@ -4,6 +4,6 @@ module.exports = {
     'plugin:@next/next/recommended',
   ],
   rules: {
-    'no-html-link-for-pages': 'off',
+    '@next/next/no-html-link-for-pages': 'off',
   },
 }
