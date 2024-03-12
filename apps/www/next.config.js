@@ -40,9 +40,6 @@ const PUBLIC_CDN_URL = appendProtocol(
     process.env.NEXT_PUBLIC_VERCEL_URL,
 )
 
-// console.log('Frontend base url', constants.PUBLIC_BASE_URL)
-console.log('CDN URL', PUBLIC_CDN_URL)
-
 /**
  * @type {import('next').NextConfig}
  */
