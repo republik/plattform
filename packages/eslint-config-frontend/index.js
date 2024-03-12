@@ -14,8 +14,6 @@ module.exports = {
     jest: true,
   },
   rules: {
-    'react-hooks/rules-of-hooks': 'error',
-    'react-hooks/exhaustive-deps': 'off',
     'react/jsx-no-target-blank': 'off',
     'react/display-name': 'off',
     'react/prop-types': 'off',
