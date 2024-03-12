@@ -49,13 +49,14 @@ export const EventTeaser = ({ isPage, isMember, event }: EventProps) => {
           '&::before': { content: '"–"', position: 'absolute', left: '0' },
         },
         '& ol': { listStyleType: 'decimal', pl: '6' },
-        '& h3, & h4, & h5, & h6': {
+        '& h3, & h4, & h5, & h6, & p > strong': {
           fontWeight: 'medium',
         },
         '& a': {
           color: 'text',
           _hover: { color: 'textSoft' },
         },
+        '& em': { fontStyle: 'italic' },
       })}
     >
       <div

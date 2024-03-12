@@ -1333,7 +1333,7 @@ mail.sendReferralCampaignMail = async (
   let campaignTemplate
   if (countNumber === 1) {
     campaignTemplate = 'first'
-  } else if (campaignTemplate === 2) {
+  } else if (countNumber === 2) {
     campaignTemplate = 'second'
   } else {
     campaignTemplate = 'all'

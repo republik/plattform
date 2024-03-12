@@ -116,29 +116,29 @@ export async function generateShareImage({
   showPortrait,
   orientation = 'portrait',
 }: {
-  code: string
+  code?: string
   showPortrait?: boolean
   orientation?: 'portrait' | 'landscape'
 }) {
   const [width, height] =
     orientation === 'portrait' ? [1080, 1920] : [1920, 1080]
 
-  const data = await getInviteeData({ code })
+  const data = code ? await getInviteeData({ code }) : {}
 
   const sender = data?.sender
 
   // Font
-  const druk = fetch(
-    'https://cdn.repub.ch/s3/republik-assets/fonts/Druk-Medium-Web.woff',
-  ).then((res) => res.arrayBuffer())
-
-  const gtAmerica = fetch(
-    'https://cdn.repub.ch/s3/republik-assets/fonts/gt-america-standard-medium.woff',
-  ).then((res) => res.arrayBuffer())
-
-  const gtAmericaBold = fetch(
-    'https://cdn.repub.ch/s3/republik-assets/fonts/gt-america-standard-bold.woff',
-  ).then((res) => res.arrayBuffer())
+  const [druk, gtAmerica, gtAmericaBold] = await Promise.all([
+    fetch(
+      'https://cdn.repub.ch/s3/republik-assets/fonts/Druk-Medium-Web.woff',
+    ).then((res) => res.arrayBuffer()),
+    fetch(
+      'https://cdn.repub.ch/s3/republik-assets/fonts/gt-america-standard-medium.woff',
+    ).then((res) => res.arrayBuffer()),
+    fetch(
+      'https://cdn.repub.ch/s3/republik-assets/fonts/gt-america-standard-bold.woff',
+    ).then((res) => res.arrayBuffer()),
+  ])
 
   return new ImageResponse(
     (
@@ -158,11 +158,18 @@ export async function generateShareImage({
         <Illustration size={orientation === 'landscape' ? 200 : 240} />
 
         <Message
-          lines={[
-            // eslint-disable-next-line no-irregular-whitespace
-            `Unabhängiger Journalismus lebt vom Einsatz vieler. Darum unterstütze ich die Republik.`,
-            `Du auch?`,
-          ]}
+          lines={
+            code
+              ? [
+                  // eslint-disable-next-line no-irregular-whitespace
+                  `Unabhängiger Journalismus lebt vom Einsatz vieler. Darum unterstütze ich die Republik.`,
+                  `Du auch?`,
+                ]
+              : [
+                  // eslint-disable-next-line no-irregular-whitespace
+                  `Unabhängiger Journalismus lebt vom Einsatz vieler. Unterstützen Sie die Republik mit einem Abo!`,
+                ]
+          }
           portrait={showPortrait ? sender?.portrait : null}
           orientation={orientation}
         />
@@ -184,8 +191,8 @@ export async function generateShareImage({
                 fontWeight: 500,
               }}
             >
-              Jetzt zum Einstiegspreis
-              ab&nbsp;CHF&nbsp;120&nbsp;für&nbsp;ein&nbsp;Jahr
+              {/* eslint-disable-next-line no-irregular-whitespace */}
+              {`Bis 31. März 2024 ab CHF 120 für ein Jahr`}
             </div>
             <div style={{ display: 'flex' }}>
               <div
@@ -200,7 +207,9 @@ export async function generateShareImage({
                   borderRadius: sizes['1'],
                 }}
               >
-                {`republik.ch/jetzt/${sender?.username ?? code}`}
+                {code
+                  ? `republik.ch/jetzt/${sender?.username ?? code}`
+                  : `republik.ch/jetzt`}
               </div>
             </div>
 
@@ -216,19 +225,19 @@ export async function generateShareImage({
       fonts: [
         {
           name: 'Druk',
-          data: await druk,
+          data: druk,
           style: 'normal',
           weight: 500,
         },
         {
           name: 'GTAmerica',
-          data: await gtAmerica,
+          data: gtAmerica,
           style: 'normal',
           weight: 500,
         },
         {
           name: 'GTAmerica',
-          data: await gtAmericaBold,
+          data: gtAmericaBold,
           style: 'normal',
           weight: 700,
         },

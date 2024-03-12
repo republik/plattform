@@ -1,6 +1,5 @@
+import { ReferralCodeValidationResult } from '#graphql/republik-api/__generated__/gql/graphql'
 import { getInviteeData } from '@app/app/(campaign)/campaign-data'
-import { InvalidCodeMessage } from '@app/app/(campaign)/components/invalid-code-message'
-import { ReferralCodeValidationResult } from '@app/graphql/republik-api/gql/graphql'
 import { redirect } from 'next/navigation'
 
 const UNELIGIBLE_RECEIVER_MEMBERSHIPS = ['ABO', 'YEARLY_ABO', 'BENEFACTOR_ABO']
@@ -21,7 +20,7 @@ export default async function Layout({
     !sender &&
     validateReferralCode === ReferralCodeValidationResult.NotFound
   ) {
-    return <InvalidCodeMessage />
+    return redirect('/jetzt')
   }
 
   // User is logged in but has some kind of yearly subscription
@@ -38,6 +37,14 @@ export default async function Layout({
     params.code === me?.slug
   ) {
     return redirect('/jetzt-einladen')
+  }
+
+  // There is neither a sender nor is the referral code valid
+  if (
+    !sender &&
+    validateReferralCode === ReferralCodeValidationResult.NotFound
+  ) {
+    return redirect('/jetzt')
   }
 
   return <>{children}</>
