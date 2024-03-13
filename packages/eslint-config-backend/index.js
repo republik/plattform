@@ -32,7 +32,7 @@ module.exports = {
     },
     {
       files: ['**/*.js'],
-      extends: ['standard', 'prettier', 'plugin:prettier/recommended'],
+      extends: ['standard', 'prettier'],
       rules: {
         camelcase: 'off',
       },
