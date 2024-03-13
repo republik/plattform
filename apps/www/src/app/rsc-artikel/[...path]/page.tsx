@@ -1,4 +1,4 @@
-import { ArticleDocument } from '@app/graphql/republik-api/gql/graphql'
+import { ArticleDocument } from '#graphql/republik-api/__generated__/gql/graphql'
 import { getClient } from '@app/lib/apollo/client'
 // import { renderMdast } from '@app/lib/mdast/render'
 import {
