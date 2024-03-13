@@ -41,13 +41,18 @@ const { Provider } = ctx
 export const EventTrackingContext = ({
   category,
   action,
+  name,
   children,
 }: {
   category: string
   action?: string
+  name?: string
   children: ReactNode
 }) => {
-  const value = useMemo(() => ({ category, action }), [category, action])
+  const value = useMemo(
+    () => ({ category, action, name }),
+    [category, action, name],
+  )
 
   return <Provider value={value}>{children}</Provider>
 }

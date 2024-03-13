@@ -1,6 +1,6 @@
 import React from 'react'
 import { fontFamilies } from '../../../theme/fonts'
-import { Mso } from '@republik/mdast-react-render'
+import { Mso } from '@republik/mdast-react-render/email'
 
 export default ({ children }) => {
   return (

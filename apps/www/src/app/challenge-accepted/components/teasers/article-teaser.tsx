@@ -10,7 +10,7 @@ import { getMe } from '@app/lib/auth/me'
 import {
   ArticleTeaserDocument,
   ArticleTeaserQuery,
-} from '@app/graphql/republik-api/gql/graphql'
+} from '#graphql/republik-api/__generated__/gql/graphql'
 
 const getResizefromURL = (url, size) => {
   const imgURL = new URL(url)

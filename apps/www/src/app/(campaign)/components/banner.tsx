@@ -1,5 +1,6 @@
 'use client'
 import { CampaignLogo } from '@app/app/(campaign)/components/campaign-logo'
+import { CAMPAIGN_MEMBER_BANNER_TEXT } from '@app/app/(campaign)/constants'
 import {
   EventTrackingContext,
   useTrackEvent,
@@ -99,8 +100,10 @@ export function CampaignBanner({
   referralsGoal: number
 }) {
   const pathname = usePathname()
-
-  if (pathname === '/jetzt-einladen') {
+  if (
+    pathname === '/jetzt-einladen' || // prevent rendering on sender page
+    !!pathname.match(/^\/jetzt(\/[A-Za-z0-9-]*(\/angebot)?)?$/) // prevent rendering on receiver page
+  ) {
     return null
   }
 
@@ -117,7 +120,7 @@ export function CampaignBanner({
         <div
           className={css({
             margin: '0 auto',
-            width: '780px',
+            width: '775px',
             maxWidth: '100%',
             display: 'flex',
             flexDirection: 'column',
@@ -158,21 +161,7 @@ export function CampaignBanner({
                 gap: '3',
               })}
             >
-              <div>
-                Bis zum 31. März suchen wir mit Ihnen zusammen {referralsGoal}{' '}
-                zusätzliche Verleger und Verlegerinnen.
-                {/* <span
-              className={css({
-                display: 'none',
-                md: {
-                  display: 'block',
-                },
-              })}
-              >
-              Gemeinsam haben wir schon {currentReferrals || '-'} neue
-              Verlegerinnen überzeugt.
-            </span> */}
-              </div>
+              <div>{CAMPAIGN_MEMBER_BANNER_TEXT}</div>
 
               <ProgressBar
                 currentReferrals={currentReferrals}

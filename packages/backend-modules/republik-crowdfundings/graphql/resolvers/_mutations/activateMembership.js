@@ -42,12 +42,15 @@ module.exports = async (
       throw new Error(t('api/membership/activate/userMissing'))
     }
 
-    const { updatedMembership: activatedMembership } = await activateMembership(
+    const { updatedMembership } = await activateMembership(
       membership,
       user,
       t,
       transaction,
     )
+
+    activatedMembership = updatedMembership
+
     if (!activatedMembership) {
       throw new Error(t('api/membership/activate/missingActivatedMembership'))
     }

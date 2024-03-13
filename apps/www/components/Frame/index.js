@@ -197,7 +197,7 @@ const Frame = ({
                 {draftMode && <DraftModeIndicator />}
                 {/* TODO: REMOVE AFTER CAMPAIGN */}
                 {!['article', 'user-nav'].includes(location) &&
-                  (!me || me.activeMembership) && <VerlegerKampagneBannerTop />}
+                  me?.activeMembership && <VerlegerKampagneBannerTop />}
 
                 {raw ? (
                   <>{children}</>

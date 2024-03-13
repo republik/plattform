@@ -117,8 +117,8 @@ export default async function Page() {
         <ShareLink url={url} />
 
         <p>
-          Ein Link ist Ihnen zu unpersönlich? Dann teilen Sie Ihr
-          Kampagnen-Bild.
+          Ein Link ist Ihnen zu unpersönlich? Dann teilen Sie Ihr Kampagnen-Bild
+          - und vergessen Sie nicht, Ihren Link manuell mitzusenden.
         </p>
 
         <ShareImageConfigurator

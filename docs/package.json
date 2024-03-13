@@ -23,7 +23,6 @@
     "unist-util-visit": "^5.0.0"
   },
   "devDependencies": {
-    "@next/eslint-plugin-next": "^14.1.0",
     "@republik/eslint-config-frontend": "*",
     "@republik/tsconfig": "*",
     "@types/node": "18"
