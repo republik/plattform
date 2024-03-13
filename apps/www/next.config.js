@@ -45,7 +45,16 @@ const PUBLIC_CDN_URL = appendProtocol(
  */
 const nextConfig = {
   generateBuildId: () => buildId,
-  env: { BUILD_ID: buildId, ...unprefixedStyleguideEnvVariables },
+  env: {
+    BUILD_ID: buildId,
+    PUBLIC_BASE_URL: appendProtocol(
+      process.env.NEXT_PUBLIC_BASE_URL ||
+        process.env.VERCEL_BRANCH_URL ||
+        process.env.VERCEL_URL ||
+        process.env.NEXT_PUBLIC_VERCEL_URL,
+    ),
+    ...unprefixedStyleguideEnvVariables,
+  },
   transpilePackages: [
     '@project-r/styleguide',
     '@republik/nextjs-apollo-client', // Ensures ES5 compatibility to work in IE11 and older safari versions

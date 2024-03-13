@@ -11,24 +11,7 @@ export const APP_OPTIONS =
   process.env.NEXT_PUBLIC_APP_OPTIONS !== 'false' &&
   process.env.NEXT_PUBLIC_APP_OPTIONS !== '0'
 
-/**
- * VERCEL*_URL has no protocol, so we need to append it ourselves
- * @param {string | null | undefined} url
- * @returns {string | null | undefined}
- */
-function appendProtocol(href) {
-  if (href && !href.startsWith('http')) {
-    return `${isDev ? 'http' : 'https'}://${href}`
-  }
-  return href
-}
-
-export const PUBLIC_BASE_URL = appendProtocol(
-  process.env.NEXT_PUBLIC_BASE_URL ||
-    process.env.VERCEL_BRANCH_URL ||
-    process.env.VERCEL_URL ||
-    process.env.NEXT_PUBLIC_VERCEL_URL,
-)
+export const PUBLIC_BASE_URL = process.env.PUBLIC_BASE_URL
 export const CDN_FRONTEND_BASE_URL =
   process.env.NEXT_PUBLIC_CDN_FRONTEND_BASE_URL || PUBLIC_BASE_URL
 export const RENDER_FRONTEND_BASE_URL =
