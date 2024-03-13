@@ -18,7 +18,7 @@ type Middleware = (req: NextRequest) => Promise<NextResponse>
  * @param middleware The middleware to wrap
  * @returns The wrapped middleware
  */
-function curatinHOC(middleware: Middleware): Middleware {
+function curtainHOC(middleware: Middleware): Middleware {
   const BACKDOOR_URL = process.env.CURTAIN_BACKDOOR_URL
   if (!BACKDOOR_URL) {
     return middleware
@@ -174,7 +174,7 @@ async function middlewareFunc(req: NextRequest): Promise<NextResponse> {
   return NextResponse.next()
 }
 
-export const middleware = curatinHOC(middlewareFunc)
+export const middleware = curtainHOC(middlewareFunc)
 
 export const config = {
   matcher: [
