@@ -96,9 +96,8 @@ const handleRow = async (row, referralCodeRepo) => {
   }
   if (userCode) {
     userCode = formatAsDashSeperated(userCode, 4)
+    record.KAMPA_LINK = `https://www.republik.ch/jetzt/${userCode}`
   }
-
-  record.KAMPA_LINK = `https://www.republik.ch/jetzt/${userCode}`
 
   if (
     activeMembership &&
@@ -198,7 +197,7 @@ ConnectionContext.create(applicationName)
             ) */
           GROUP BY u.id
           ORDER BY RANDOM()
-          LIMIT 100
+          -- LIMIT 100
           ;
         `,
       )
