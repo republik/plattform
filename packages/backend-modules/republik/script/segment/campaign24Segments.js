@@ -116,7 +116,7 @@ const handleRow = async (row, referralCodeRepo) => {
     record.KAMPA_SEG = 'other'
   }
 
-  const key = record.PRLG_SEG // [record.PRLG_SEG, record.KAMPA_GRP].filter(Boolean).join(' - ')
+  const key = record.KAMPA_SEG // [record.PRLG_SEG, record.KAMPA_GRP].filter(Boolean).join(' - ')
 
   if (!stats[key]) {
     stats[key] = 1
