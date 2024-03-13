@@ -51,9 +51,7 @@ export const createLink = ({
   const http = new HttpLink({
     uri: rewriteAPIHost(apiUrl),
     credentials: 'include',
-    headers: {
-      ...(headers as Record<string, string>),
-    },
+    headers: headers as Record<string, string>,
   })
 
   if (isClient && wsUrl) {
