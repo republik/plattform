@@ -1,5 +1,30 @@
 #!/usr/bin/env node
 
+/**
+ * This script allows you to submit multiple articles to ProLitteris.
+ * The script is split into two commands: `prepare` and `run`.
+ *
+ * The `prepare` command takes a list of URL paths and a JSON file of authors.
+ * It fetches the corresponding document from Elasticsearch and maps data into a ProLitteris message.
+ * Paths can be provided using the `-p` flag or using stdin.
+ * The authors JSON file should be an array of objects in the shape of
+ * `{"id": "<id>", "firstName": "<name>", "lastName": "<name>"}`.
+ * The result of the prepare command is a `prolitteris_input.jsonl` file.
+ *
+ * The `run` command takes a JSONL file of ProLitteris messages and submits them to ProLitteris.
+ * Each successful request to ProLitteris is logged to a `prolitteris.checkpoint` file using the pixelUID.
+ *
+ * The JSONL input can be provided using the `-f` flag or using stdin.
+ *
+ * # Usage examples:
+ *
+ * ## prepare the prolitteris_input.jsonl
+ * `./batch-submit.js -a ./authors.json < paths.txt
+ *
+ * ## submit the prepared input file
+ * ./batch-submit.js -f prolitteris_input.jsonl
+ */
+
 /** @typedef {import('@orbiting/backend-modules-prolitteris').MessageRequest} MessageRequest */
 /** @typedef {import('@orbiting/backend-modules-prolitteris').Participant} Participant */
 /** @typedef {import('@orbiting/backend-modules-prolitteris').PixelUid} PixelUid */
@@ -321,7 +346,7 @@ yargs(process.argv.slice(2))
         jobfile: {
           alias: 'f',
           type: 'string',
-          demandOption: true,
+          demandOption: false,
         },
       })
     },
