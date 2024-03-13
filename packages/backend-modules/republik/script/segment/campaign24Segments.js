@@ -92,8 +92,10 @@ const handleRow = async (row, referralCodeRepo) => {
   let userCode = user?.hasPublicProfile ? user.username : user.referralCode
 
   if (activeMembership && !userCode) {
-    const referralCode = await generateReferralCode(user, referralCodeRepo)
-    userCode = formatAsDashSeperated(referralCode, 4)
+    userCode = await generateReferralCode(user, referralCodeRepo)
+  }
+  if (userCode) {
+    userCode = formatAsDashSeperated(userCode, 4)
   }
 
   record.KAMPA_LINK = `https://www.republik.ch/jetzt/${userCode}`
