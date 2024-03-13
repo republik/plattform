@@ -105,12 +105,6 @@ const nextConfig = {
             key,
             value,
           })),
-          // Disable FLoC
-          // @see https://twitter.com/natfriedman/status/1387159870667849731
-          {
-            key: 'Permissions-Policy',
-            value: 'interest-cohort=()',
-          },
         ],
       },
     ]
