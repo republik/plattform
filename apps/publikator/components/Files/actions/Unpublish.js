@@ -27,7 +27,7 @@ const Publish = ({ file }) => {
   }
 
   return (
-    <Button onClick={onClick} disabled={loading} primary small>
+    <Button onClick={onClick} disabled={loading} small>
       Nicht mehr veröffentlichen
     </Button>
   )
