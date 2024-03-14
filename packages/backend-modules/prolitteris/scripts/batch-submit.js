@@ -145,10 +145,15 @@ async function prepareHandler(args) {
 
       for (const author of doc.meta.contributors) {
         if (author.kind.toLowerCase() === 'text') {
+          let [firstName, lastName] = author.name.split(' ', 2)
+
           const dbData =
             dbAuthorsById[author.userId] || dbAuthorsByName[author.name]
 
-          const [firstName, lastName] = author.name.split(' ', 2)
+          if (dbData) {
+            firstName = dbData.firstName
+            lastName = dbData.lastName
+          }
 
           const memberId = getProLitterisId(dbData)
           if (memberId) {
