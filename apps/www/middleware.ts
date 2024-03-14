@@ -69,6 +69,12 @@ function curtainHOC(middleware: Middleware): Middleware {
       return applyCurtainCookie(NextResponse.redirect(url.toString()))
     }
 
+    if (hasBypassQueryparam) {
+      const url = req.nextUrl.clone()
+      url.searchParams.delete('open_sesame')
+      return applyCurtainCookie(NextResponse.redirect(url.toString()))
+    }
+
     const res = await middleware(req)
 
     return applyCurtainCookie(res)
