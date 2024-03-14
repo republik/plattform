@@ -2565,8 +2565,16 @@
       "value": "Datei bereits veröffentlicht"
     },
     {
+      "key": "api/publikator/file/error/privateAlready",
+      "value": "Datei bereits nicht veröffentlicht"
+    },
+    {
       "key": "api/publikator/file/error/notPrivate",
       "value": "Datei nicht als «privat» markiert"
+    },
+    {
+      "key": "api/publikator/file/error/notPublic",
+      "value": "Datei nicht veröffentlicht"
     },
     {
       "key": "api/publikator/file/error/notPending",
