@@ -11,8 +11,13 @@ export const APP_OPTIONS =
   process.env.NEXT_PUBLIC_APP_OPTIONS !== 'false' &&
   process.env.NEXT_PUBLIC_APP_OPTIONS !== '0'
 
-export const PUBLIC_BASE_URL = process.env.PUBLIC_BASE_URL
-export const CDN_FRONTEND_BASE_URL = process.env.PUBLIC_CDN_URL
+export const PUBLIC_BASE_URL =
+  process.env.NEXT_PUBLIC_BASE_URL ||
+  process.env.VERCEL_URL ||
+  process.env.NEXT_PUBLIC_VERCEL_URL
+export const CDN_FRONTEND_BASE_URL =
+  process.env.NEXT_PUBLIC_CDN_FRONTEND_BASE_URL ||
+  process.env.NEXT_PUBLIC_BASE_URL
 export const RENDER_FRONTEND_BASE_URL =
   process.env.NEXT_PUBLIC_RENDER_FRONTEND_BASE_URL || PUBLIC_BASE_URL
 

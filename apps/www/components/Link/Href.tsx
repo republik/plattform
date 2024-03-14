@@ -1,4 +1,3 @@
-import { PUBLIC_BASE_URL } from 'lib/constants'
 import Link from 'next/link'
 import { cloneElement } from 'react'
 
@@ -30,7 +29,10 @@ const HrefLink = ({
     return children
   }
 
-  const isExternalLink = !isLinkOfSameHost(href, PUBLIC_BASE_URL)
+  const isExternalLink = !isLinkOfSameHost(
+    href,
+    process.env.NEXT_PUBLIC_BASE_URL,
+  )
 
   return (
     <Link

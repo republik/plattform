@@ -19,7 +19,6 @@ import {
   ChallengeAcceptedHubMetaDocument,
 } from '#graphql/cms/__generated__/gql/graphql'
 import { EventTrackingContext } from '@app/lib/matomo/event-tracking'
-import { PUBLIC_BASE_URL } from 'lib/constants'
 
 export async function generateMetadata(
   _, // params
@@ -71,7 +70,7 @@ export default async function Page({ searchParams }) {
   const share = (
     <Share
       title='Challenge Accepted'
-      url={`${PUBLIC_BASE_URL}/challenge-accepted`}
+      url={`${process.env.NEXT_PUBLIC_BASE_URL}/challenge-accepted`}
       emailSubject='Republik: Challenge Accepted'
     >
       <div
