@@ -1,13 +1,8 @@
 import { ArticleDocument } from '#graphql/republik-api/__generated__/gql/graphql'
+import { MdastRender } from './mdast-render'
 import { getClient } from '@app/lib/apollo/client'
 // import { renderMdast } from '@app/lib/mdast/render'
-import {
-  renderMdast,
-  matchType,
-  matchZone,
-  matchHeading,
-  matchParagraph,
-} from '@republik/mdast-react-render'
+import { matchType, renderMdast } from '@republik/mdast-react-render'
 import { notFound } from 'next/navigation'
 
 const schema = {
@@ -43,9 +38,9 @@ export default async function ArticlePage({
     <div>
       <h1>{meta.title}</h1>
 
-      {renderSchema(content)}
+      <MdastRender mdast={content} />
 
-      <pre>{JSON.stringify(content, null, 2)}</pre>
+      {/* <pre>{JSON.stringify(content, null, 2)}</pre> */}
     </div>
   )
 }
