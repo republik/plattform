@@ -3,7 +3,7 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true',
 })
 
-const { NODE_ENV, NEXT_PUBLIC_CDN_FRONTEND_BASE_URL } = process.env
+const isProduction = process.env.NODE_ENV === 'production'
 
 const buildId =
   process.env.SOURCE_VERSION?.substring(0, 10) ||
@@ -27,18 +27,21 @@ const unprefixedStyleguideEnvVariables = {
 
 function appendProtocol(href) {
   if (href && !href.startsWith('http')) {
-    return `${NODE_ENV === 'production' ? 'https' : 'http'}://${href}`
+    return `${isProduction ? 'https' : 'http'}://${href}`
   }
   return href
 }
 
-const PUBLIC_CDN_URL = appendProtocol(
-  NEXT_PUBLIC_CDN_FRONTEND_BASE_URL ||
-    process.env.NEXT_PUBLIC_BASE_URL ||
+const PUBLIC_BASE_URL = appendProtocol(
+  process.env.NEXT_PUBLIC_BASE_URL ||
     process.env.VERCEL_BRANCH_URL ||
     process.env.VERCEL_URL ||
     process.env.NEXT_PUBLIC_VERCEL_URL,
 )
+
+const PUBLIC_CDN_URL =
+  appendProtocol(process.env.NEXT_PUBLIC_CDN_FRONTEND_BASE_URL) ||
+  PUBLIC_BASE_URL
 
 /**
  * @type {import('next').NextConfig}
@@ -47,12 +50,8 @@ const nextConfig = {
   generateBuildId: () => buildId,
   env: {
     BUILD_ID: buildId,
-    PUBLIC_BASE_URL: appendProtocol(
-      process.env.NEXT_PUBLIC_BASE_URL ||
-        process.env.VERCEL_BRANCH_URL ||
-        process.env.VERCEL_URL ||
-        process.env.NEXT_PUBLIC_VERCEL_URL,
-    ),
+    PUBLIC_BASE_URL,
+    PUBLIC_CDN_URL,
     ...unprefixedStyleguideEnvVariables,
   },
   transpilePackages: [
@@ -67,7 +66,7 @@ const nextConfig = {
     return config
   },
   poweredByHeader: false,
-  assetPrefix: NODE_ENV === 'production' ? PUBLIC_CDN_URL : undefined,
+  assetPrefix: isProduction ? PUBLIC_CDN_URL : undefined,
   useFileSystemPublicRoutes: true,
   // , onDemandEntries: {
   //   // wait 5 minutes before disposing entries
