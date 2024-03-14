@@ -1,52 +1,49 @@
-import { unified } from 'unified'
-import remarkRehype from 'remark-rehype'
-import { toJsxRuntime } from 'hast-util-to-jsx-runtime'
+import { css } from '@app/styled-system/css'
 import { Fragment, jsx, jsxs } from 'react/jsx-runtime'
-import { visit } from 'unist-util-visit'
+import rehypeReact, { Options as RehypeReactOptions } from 'rehype-react'
+import remarkRehype, { Options as RemarkRehypeOptions } from 'remark-rehype'
+import { unified } from 'unified'
 
-const r = unified()
-  // .use(() => (tree) => {
-  //   visit(tree, 'zone', (node) => {
-  //     console.log(node.type)
-  //   })
-  // })
-  .use(remarkRehype, {
-    // unknownHandler: (state, node, parent) => {
-    //   console.log(node.type)
-    //   if (node.type === 'zone') {
-    //     return { ...node, type: 'div' }
-    //   }
-    // },
-    // passThrough: ['zone'],
-    handlers: {
-      zone(state, node, parent) {
-        console.log(node.type)
-        return {
-          type: 'element',
-          tagName: 'section',
-          properties: {},
-          children: state.all(node),
-        }
-      },
+const remarkRehypeOptions: RemarkRehypeOptions = {
+  handlers: {
+    // @ts-expect-error zone is not a default mdast node
+    zone(state, node) {
+      return {
+        type: 'element',
+        tagName: node.identifier,
+        properties: { ...node.data },
+        children: state.all(node),
+      }
     },
-  })
-  .use(
-    () => (tree) =>
-      toJsxRuntime(tree, {
-        Fragment,
-        jsx,
-        jsxs,
-        // components: {
-        //   div: (props) => {
-        //     console.log(props)
-        //     return <div {...props} />
-        //   },
-        // },
-      }),
-  )
+  },
+}
+
+const rehypeReactOptions: RehypeReactOptions = {
+  Fragment,
+  jsx,
+  jsxs,
+  components: {
+    // @ts-expect-error zones are converted to custom components
+    FIGURE: (props) => {
+      return <figure {...props} />
+    },
+    CENTER: (props) => {
+      return (
+        <div className={css({ maxWidth: 900, margin: 'auto' })} {...props} />
+      )
+    },
+    TITLE: (props) => {
+      return <div className={css({ fontSize: '4xl' })} {...props} />
+    },
+  },
+}
+
+const processor = unified()
+  .use(remarkRehype, remarkRehypeOptions)
+  .use(rehypeReact, rehypeReactOptions)
 
 export const MdastRender = async ({ mdast }: { mdast: any }) => {
-  const nodes = await r.run(mdast)
+  const nodes = await processor.run(mdast)
   return (
     <>
       {nodes}
