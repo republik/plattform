@@ -8,10 +8,9 @@ import { css } from '@app/styled-system/css'
 import Script from 'next/script'
 import { ReactNode, Suspense } from 'react'
 import { Metadata } from 'next'
-import { PUBLIC_BASE_URL } from 'lib/constants'
 
 export const metadata: Metadata = {
-  metadataBase: new URL(PUBLIC_BASE_URL),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL),
   title: {
     default: 'Republik',
     template: '%s – Republik',
@@ -65,7 +64,7 @@ export default async function RootLayout({
                   __html: `
             _paq.push(['enableLinkTracking']);
             ${
-              PUBLIC_BASE_URL.indexOf('https') === 0
+              process.env.NEXT_PUBLIC_BASE_URL.indexOf('https') === 0
                 ? "_paq.push(['setSecureCookie', true]);"
                 : ''
             }

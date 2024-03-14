@@ -2,7 +2,6 @@
 
 import useNativeAppEvent from '@app/lib/hooks/useNativeAppEvent'
 import { usePostMessage } from '@app/lib/hooks/usePostMessage'
-import { PUBLIC_BASE_URL } from 'lib/constants'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useRef } from 'react'
 
@@ -54,7 +53,7 @@ export function NARoutingHandler() {
       console.error('push-route: invalid url', content)
       return
     }
-    const targetUrl = content.url.replace(PUBLIC_BASE_URL, '')
+    const targetUrl = content.url.replace(process.env.NEXT_PUBLIC_BASE_URL, '')
 
     // Check for and ignore recurring attempts to navigate to the same URL
     if (previousPushUrl.current !== targetUrl) {

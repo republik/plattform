@@ -3,7 +3,6 @@
 import { getInviteeData } from '@app/app/(campaign)/campaign-data'
 import { ImageResponse } from 'next/og'
 import illustration from '@app/app/(campaign)/assets/campaign-illustration-inverted.svg'
-import { PUBLIC_BASE_URL } from 'lib/constants'
 
 const ILLUSTRATION_ASPECT_RATIO = illustration.width / illustration.height
 
@@ -76,7 +75,7 @@ const Message = ({
 }
 
 const Illustration = ({ size }: { size: number }) => {
-  const src = new URL(illustration.src, PUBLIC_BASE_URL)
+  const src = new URL(illustration.src, process.env.NEXT_PUBLIC_BASE_URL)
 
   return (
     <img
