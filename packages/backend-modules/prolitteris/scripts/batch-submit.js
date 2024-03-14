@@ -59,7 +59,11 @@ const ESDocumentSchema = object({
 })
 
 async function prepareHandler(args) {
-  const PROLITTERIS_MEMBER_NR = Number('0')
+  const PROLITTERIS_MEMBER_ID = Number(process.env?.PROLITTERIS_MEMBER_ID)
+  if (!PROLITTERIS_MEMBER_ID || isNaN(PROLITTERIS_MEMBER_ID)) {
+    console.error('PROLITTERIS_MEMBER_ID is missing')
+    process.exit(1)
+  }
 
   const dbAuthorsFile = await fsp.readFile(path.resolve(args.authors), 'utf8')
   const dbAuthors = JSON.parse(dbAuthorsFile)
@@ -133,7 +137,7 @@ async function prepareHandler(args) {
        * @type {MessageRequest}
        */
       const article = {
-        pixelUid: repoIdToPixelUid(doc.meta.repoId, PROLITTERIS_MEMBER_NR),
+        pixelUid: repoIdToPixelUid(doc.meta.repoId, PROLITTERIS_MEMBER_ID),
         participants: [],
         messageText: messageText,
         title: doc.meta.title,
@@ -144,10 +148,7 @@ async function prepareHandler(args) {
           const dbData =
             dbAuthorsById[author.userId] || dbAuthorsByName[author.name]
 
-          if (!dbData) {
-            console.error('no db data found for %s', author.name)
-            continue
-          }
+          const [firstName, lastName] = author.name.split(' ', 2)
 
           const memberId = getProLitterisId(dbData)
           if (memberId) {
@@ -158,8 +159,8 @@ async function prepareHandler(args) {
            * @type {Participant}
            */
           const participant = {
-            firstName: dbData.firstName,
-            surName: dbData.lastName,
+            firstName: firstName,
+            surName: lastName,
             participation: 'AUTHOR',
             internalIdentification: author?.userId,
             memberId: memberId ? memberId.toString() : undefined,
@@ -185,19 +186,19 @@ async function prepareHandler(args) {
 
 async function runBatchSubmission(args) {
   const CHECKPOINT_FILE = 'prolitteris.checkpoint'
-  const PROLITTERIS_USER_NAME = ''
+  const PROLITTERIS_USER_NAME = process.env?.PROLITTERIS_USER_NAME
   if (!PROLITTERIS_USER_NAME) {
     console.error('ProLitteris Username not provied')
     process.exit(1)
   }
-  const PROLITTERIS_PW = ''
+  const PROLITTERIS_PW = process.env?.PROLITTERIS_PW
   if (!PROLITTERIS_PW) {
-    console.error('ProLitteris Username not provied')
+    console.error('ProLitteris password is missing')
     process.exit(1)
   }
-  const PROLITTERIS_MEMBER_NR = ''
-  if (!PROLITTERIS_MEMBER_NR) {
-    console.error('ProLitteris MemberNr not provied')
+  const PROLITTERIS_MEMBER_ID = Number(process.env?.PROLITTERIS_MEMBER_ID)
+  if (!PROLITTERIS_MEMBER_ID || isNaN(PROLITTERIS_MEMBER_ID)) {
+    console.error('PROLITTERIS_MEMBER_ID is missing')
     process.exit(1)
   }
 
@@ -229,7 +230,7 @@ async function runBatchSubmission(args) {
   })
 
   const proLitterisClient = new ProLitterisAPI(
-    PROLITTERIS_MEMBER_NR,
+    PROLITTERIS_MEMBER_ID,
     PROLITTERIS_USER_NAME,
     PROLITTERIS_PW,
   )

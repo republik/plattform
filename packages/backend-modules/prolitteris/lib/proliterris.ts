@@ -65,7 +65,7 @@ export class ProLitterisAPI implements ProLitterisMessageService {
   ): Promise<MessageResponse | APIError | null> {
     const res = await this.#doRequest('/rest/api/1/message', 'POST', msg)
 
-    if (res && res.status === 200) {
+    if (res && res.ok) {
       const json = await res.json()
       return {
         createdAt: json.createdAt,
@@ -81,6 +81,12 @@ export class ProLitterisAPI implements ProLitterisMessageService {
         message: error.message,
         fieldErrors: error?.fieldErrors,
       }
+    } else {
+      console.error(
+        'Unknown API error occurred status: %d, message: %s',
+        res?.status,
+        res?.statusText,
+      )
     }
 
     return null
