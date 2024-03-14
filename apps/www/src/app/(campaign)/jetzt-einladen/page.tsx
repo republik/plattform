@@ -16,6 +16,7 @@ import {
 } from '../constants'
 import { Success } from '@app/app/(campaign)/jetzt-einladen/success'
 import { Metadata } from 'next'
+import { PUBLIC_BASE_URL } from 'lib/constants'
 
 export const metadata: Metadata = {
   title: 'Laden Sie jemanden ein',
@@ -24,7 +25,7 @@ export const metadata: Metadata = {
 export default async function Page() {
   const { me } = await getSenderData()
 
-  const url = `${process.env.NEXT_PUBLIC_BASE_URL}/jetzt/${
+  const url = `${PUBLIC_BASE_URL}/jetzt/${
     me?.hasPublicProfile ? me.username : me?.referralCode
   }`
 
