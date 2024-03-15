@@ -43,7 +43,9 @@ export const CTA = ({ href }: { href: string }) => {
       </Link>
       <p className={css({ fontSize: 'base' })}> ab CHF 120 für ein Jahr</p>
       <div className={css({ pt: '2' })}>
-        <Logo />
+        <Link href='/' className={css({ textDecoration: 'none' })}>
+          <Logo />
+        </Link>
       </div>
     </div>
   )

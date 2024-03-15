@@ -7,6 +7,7 @@ import { CAMPAIGN_SLUG } from '@app/app/(campaign)/constants'
 import { Logo } from '@app/app/(campaign)/components/logo'
 import { useState } from 'react'
 import { useSearchParams } from 'next/navigation'
+import Link from 'next/link'
 
 const useCheckoutUrl = ({
   price,
@@ -104,7 +105,9 @@ export default function PriceSelection({ referralCode }: PriceSelectionProps) {
           Für CHF {price} abonnieren
         </a>
         <div className={css({ pt: '4' })}>
-          <Logo />
+          <Link href='/' className={css({ textDecoration: 'none' })}>
+            <Logo />
+          </Link>
         </div>
       </div>
     </>

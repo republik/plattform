@@ -1,8 +1,7 @@
 import { ReferralCodeValidationResult } from '#graphql/republik-api/__generated__/gql/graphql'
 import { getInviteeData } from '@app/app/(campaign)/campaign-data'
+import { UNELIGIBLE_RECEIVER_MEMBERSHIPS } from '@app/app/(campaign)/constants'
 import { redirect } from 'next/navigation'
-
-const UNELIGIBLE_RECEIVER_MEMBERSHIPS = ['ABO', 'YEARLY_ABO', 'BENEFACTOR_ABO']
 
 export default async function Layout({
   children,
