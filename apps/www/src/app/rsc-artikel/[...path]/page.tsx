@@ -1,20 +1,24 @@
 import { ArticleDocument } from '#graphql/republik-api/__generated__/gql/graphql'
-import { MdastRender } from './mdast-render'
 import { getClient } from '@app/lib/apollo/client'
+import { MdastRender } from './mdast-render'
 // import { renderMdast } from '@app/lib/mdast/render'
-import { matchType, renderMdast } from '@republik/mdast-react-render'
+import { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
-const schema = {
-  rules: [
-    {
-      matchMdast: matchType('root'),
-      component: ({ children }) => children,
-    },
-  ],
+export async function generateMetadata({
+  params: { path },
+}): Promise<Metadata> {
+  const client = await getClient()
+  const { data } = await client.query({
+    query: ArticleDocument,
+    variables: { path: `/${path.join('/')}` },
+  })
+
+  return {
+    title: data?.article?.meta.title,
+  }
 }
-const renderSchema = (content) => renderMdast({ ...content }, schema)
 
 export default async function ArticlePage({
   params: { path },
