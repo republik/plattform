@@ -107,7 +107,7 @@ async function prepareHandler(args) {
         must: [
           {
             terms: {
-              'meta.path.keyword': articles,
+              'meta.repoId': articles,
             },
           },
           {
@@ -124,6 +124,7 @@ async function prepareHandler(args) {
 
   const outputFileStream = fs.createWriteStream('prolitteris_input.jsonl')
   for (const hit of results.hits.hits) {
+    console.error('processing article %s', hit._source?.meta?.repoId)
     try {
       const doc = parse(ESDocumentSchema, hit._source)
 
@@ -145,7 +146,8 @@ async function prepareHandler(args) {
 
       for (const author of doc.meta.contributors) {
         if (author.kind.toLowerCase() === 'text') {
-          let [firstName, lastName] = author.name.split(' ', 2)
+          let [firstName, ...lastNameParts] = author.name.split(' ')
+          let lastName = lastNameParts.join(' ')
 
           const dbData =
             dbAuthorsById[author.userId] || dbAuthorsByName[author.name]
@@ -167,7 +169,7 @@ async function prepareHandler(args) {
             firstName: firstName,
             surName: lastName,
             participation: 'AUTHOR',
-            internalIdentification: author?.userId,
+            internalIdentification: dbData?.id,
             memberId: memberId ? memberId.toString() : undefined,
           }
 
@@ -191,6 +193,7 @@ async function prepareHandler(args) {
 
 async function runBatchSubmission(args) {
   const CHECKPOINT_FILE = 'prolitteris.checkpoint'
+  const NO_AUTHORS_FILE = 'prolitteris.no_authors'
   const PROLITTERIS_USER_NAME = process.env?.PROLITTERIS_USER_NAME
   if (!PROLITTERIS_USER_NAME) {
     console.error('ProLitteris Username not provied')
@@ -219,6 +222,7 @@ async function runBatchSubmission(args) {
     fs.writeFileSync(CHECKPOINT_FILE, '')
   })
   const checkPointFile = fs.createReadStream(CHECKPOINT_FILE)
+  const noAuthorsFile = fs.createWriteStream(NO_AUTHORS_FILE)
 
   const checkPoints = []
   for await (const checkPoint of readline.createInterface({
@@ -251,6 +255,12 @@ async function runBatchSubmission(args) {
 
       if (checkPoints.includes(data.pixelUid)) {
         console.error('Skipping %s: already processed', data.pixelUid)
+        continue
+      }
+
+      if (data.participants.length === 0) {
+        noAuthorsFile.write(data.pixelUid + '\n')
+        console.error('Skipping %s: no authors', data.pixelUid)
         continue
       }
 
