@@ -32,14 +32,17 @@ const rehypeReactOptions: RehypeReactOptions = {
   components,
 }
 
-const processor = unified()
-  .use(remarkRehype, remarkRehypeOptions)
-  .use(rehypeReact, rehypeReactOptions)
-
 export const MdastRender = async ({ mdast }: { mdast: any }) => {
-  const nodes = await processor.process(mdast)
-
-  console.log(nodes)
+  console.time('mdast->rehype')
+  const rehypeTree = await unified()
+    .use(remarkRehype, remarkRehypeOptions)
+    .run(mdast)
+  console.timeEnd('mdast->rehype')
+  console.time('rehype->jsx')
+  const nodes = unified()
+    .use(rehypeReact, rehypeReactOptions)
+    .stringify(rehypeTree)
+  console.timeEnd('rehype->jsx')
 
   return (
     <>
