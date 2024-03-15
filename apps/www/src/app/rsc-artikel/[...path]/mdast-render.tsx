@@ -28,7 +28,6 @@ const rehypeReactOptions: RehypeReactOptions = {
   Fragment,
   jsx,
   jsxs,
-  // @ts-expect-error zones are converted to custom components
   components,
 }
 
