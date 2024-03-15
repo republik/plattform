@@ -3,6 +3,7 @@ import { MdastRender } from './mdast-render'
 import { getClient } from '@app/lib/apollo/client'
 // import { renderMdast } from '@app/lib/mdast/render'
 import { matchType, renderMdast } from '@republik/mdast-react-render'
+import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
 const schema = {
@@ -36,6 +37,7 @@ export default async function ArticlePage({
 
   return (
     <div>
+      <Link href={`/${path.join('/')}`}>Back to legacy article view</Link>
       <h1>{meta.title}</h1>
 
       <MdastRender mdast={content} />

@@ -772,6 +772,7 @@ const ArticlePage = ({
                   </Center>
                 </div>
               )}
+
               {isFlyer ? (
                 <Flyer
                   meta={meta}
@@ -868,6 +869,21 @@ const ArticlePage = ({
                                   }}
                                 >
                                   {actionBar}
+                                </div>
+                              )}
+
+                              {isEditor && (
+                                <div style={{ marginTop: 16 }}>
+                                  <Link
+                                    href={`/rsc-artikel${cleanedPath}`}
+                                    style={{
+                                      background: '#E9A733',
+                                      color: '#fff',
+                                      padding: 4,
+                                    }}
+                                  >
+                                    RSC (Beta)
+                                  </Link>
                                 </div>
                               )}
 
