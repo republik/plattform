@@ -1,8 +1,20 @@
+'use client'
 import { Logo } from '@app/app/(campaign)/components/logo'
 import { css } from '@app/styled-system/css'
 import Link from 'next/link'
+import { useSearchParams } from 'next/navigation'
 
 export const CTA = ({ href }: { href: string }) => {
+  const pageSearchParams = useSearchParams()
+  const url = new URL(href, process.env.NEXT_PUBLIC_BASE_URL)
+  // Pass utm_* params to /angebote page
+  for (const [k, v] of pageSearchParams) {
+    if (k.startsWith('utm_')) {
+      url.searchParams.set(k, v)
+    }
+  }
+  const linkHref = url.pathname + url.search
+
   return (
     <div
       className={css({
@@ -37,7 +49,7 @@ export const CTA = ({ href }: { href: string }) => {
             color: 'contrast',
           },
         })}
-        href={href}
+        href={linkHref}
       >
         Wählen Sie Ihren Einstiegspreis
       </Link>
