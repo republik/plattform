@@ -7,6 +7,13 @@ import {
 import fetchMyRoles from './lib/helpers/middleware/FetchMeObject'
 
 const CURTAIN_COOKIE_NAME = 'OpenSesame'
+const CURTAIN_PASSTHROUGH_PATHS = [
+  '/api/',
+  '/_next/',
+  '/static/',
+  '/favicon.ico',
+  '/mitteilung',
+]
 
 type Middleware = (req: NextRequest) => Promise<NextResponse>
 
@@ -28,6 +35,14 @@ function curtainHOC(middleware: Middleware): Middleware {
     const cookieValue = req.cookies.get(CURTAIN_COOKIE_NAME)?.value || ''
     const cookieValueDecoded = Buffer.from(cookieValue, 'base64').toString()
     const userAgent = req.headers.get('user-agent')
+
+    if (
+      CURTAIN_PASSTHROUGH_PATHS.some((path) =>
+        req.nextUrl.pathname.startsWith(path),
+      )
+    ) {
+      return middleware(req)
+    }
 
     const hasBackdoorCookie = cookieValueDecoded === BACKDOOR_URL
     const hasBypassQueryparam =
