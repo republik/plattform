@@ -43,6 +43,25 @@ import withInNativeApp from '../lib/withInNativeApp'
 
 import { CAMPAIGN_META_ARTICLE_URL } from '@app/app/(campaign)/constants'
 
+/**
+ *
+ * @param {number} from
+ * @param {number} to
+ * @param {number} step
+ */
+function getRangeArray(from, to, step = 100) {
+  // round from to the previous / next step
+  const fromRounded = Math.floor(from / step) * step
+  const toRounded = Math.ceil(to / step) * step
+
+  const range = []
+  for (let i = fromRounded; i <= toRounded; i += step) {
+    range.push(i)
+  }
+
+  return range
+}
+
 const statusQuery = gql`
   query CockpitStatus(
     $prev: YearMonthDate!
@@ -508,6 +527,22 @@ const Page = ({
             data.membershipStats.lastSeen.buckets.slice(-1)[0]
           const lastSeen = lastSeenBucket.users
 
+          const pendingValuesMinMax = pendingValues
+            .map((d) => d.value)
+            .reduce(
+              (acc, value) => {
+                if (value < acc.min) {
+                  acc.min = value
+                }
+                if (value > acc.max) {
+                  acc.max = value
+                }
+                return acc
+              },
+              { min: 0, max: 0 },
+            )
+          // get a range in rounded to the next 250 base on the min and max pending values
+
           const engagedUsers = [].concat(
             data.discussionsStats.evolution.buckets
               .slice(0, -1)
@@ -661,11 +696,20 @@ const Page = ({
                     timeFormat: '%b %y',
                     xInterval: 'month',
                     height: 300,
-                    domain: [-1250, 2100],
-                    yTicks: [
-                      -1250, -1000, -750, -500, -250, 0, 250, 500, 750, 1000,
-                      1250, 1500, 1750, 2000,
+                    domain: [
+                      pendingValuesMinMax.min - 100,
+                      pendingValuesMinMax.max + 100,
                     ],
+                    // domain: [-1250, 2100],
+                    // yTicks: [
+                    //   -2000, -1750, -1500, -1250, -1000, -750, -500, -250, 0,
+                    //   250, 500, 750, 1000, 1250, 1500, 1750, 2000,
+                    // ],
+                    yTicks: getRangeArray(
+                      pendingValuesMinMax.min,
+                      pendingValuesMinMax.max,
+                      250,
+                    ),
                     // xAnnotations: [
                     //   {
                     //     x1: currentBucket.key,
