@@ -5,7 +5,6 @@ const {
 } = require('@orbiting/backend-modules-utils')
 
 const createCharge = require('./payments/stripe/createCharge')
-const { getCustomPackages } = require('./User')
 const { getLastEndDate } = require('./utils')
 const createCache = require('./cache')
 
@@ -14,6 +13,20 @@ const { getDefaultPaymentSource } = require('./payments/stripe/paymentSource')
 const { getDefaultPaymentMethod } = require('./payments/stripe/paymentMethod')
 const createPaymentIntent = require('./payments/stripe/createPaymentIntent')
 const Promise = require('bluebird')
+const { resolvePackages, getCustomOptions } = require('./CustomPackages')
+
+const getAutoPayPackage = async ({ user, pgdb }) => {
+  const packages = await pgdb.public.packages.find({
+    custom: true,
+    name: 'AUTOPAY_PKG',
+  })
+
+  const resolvedPackages = await Promise.map(
+    await resolvePackages({ packages, pledger: user, strict: false, pgdb }),
+    getCustomOptions,
+  )
+  return resolvedPackages.shift()
+}
 
 const suggest = async (membershipId, pgdb) => {
   // Find membership
@@ -115,15 +128,13 @@ const suggest = async (membershipId, pgdb) => {
   // if the source changed between suggests
   const sourceId = defaultPaymentMethod?.id || defaultPaymentSource?.id
 
-  // Pick package and options which may be used to submit and autopayment
+  // Get package AUTOPAY_PKG with custom options which may be used to submit an autopayment
   const user = await pgdb.public.users.findOne({ id: membership.userId })
-  const prolongPackage = (await getCustomPackages({ user, pgdb })).find(
-    (p) => p.name === 'PROLONG',
-  )
+  const autoPayPackage = await getAutoPayPackage({ user, pgdb })
 
-  const prolongOption =
-    prolongPackage &&
-    prolongPackage.options
+  const autoPayPackageOption =
+    autoPayPackage &&
+    autoPayPackage.options
       .filter(
         (option) => option.membership && option.membership.id === membershipId,
       )
@@ -135,21 +146,26 @@ const suggest = async (membershipId, pgdb) => {
 
   const endDate = getLastEndDate(membershipPeriods)
 
-  if (prolongOption) {
+  if (autoPayPackageOption) {
+    const membershipType = membershipTypes.find(
+      (mt) => mt.rewardId === rewardId,
+    )
+
     return {
       userId: pledge.userId,
       pledgeId: pledge.id,
-      companyId: prolongPackage.companyId,
+      companyId: membershipType.companyId,
       membershipId: membership.id,
-      membershipType: membershipTypes.find((mt) => mt.rewardId === rewardId)
-        .name,
+      membershipType: membershipType.name,
+      membershipTypeInterval: membershipType.interval,
       currentPeriods: membershipPeriods,
       endDate,
       graceEndDate: addInterval(endDate, membership.graceInterval),
-      prolongedEndDate: getLastEndDate(prolongOption.additionalPeriods),
-      additionalPeriods: prolongOption.additionalPeriods,
-      total: pledgeOptions.length > 1 ? prolongOption.price : pledge.total,
-      defaultPrice: prolongOption.price,
+      prolongedEndDate: getLastEndDate(autoPayPackageOption.additionalPeriods),
+      additionalPeriods: autoPayPackageOption.additionalPeriods,
+      total:
+        pledgeOptions.length > 1 ? autoPayPackageOption.price : pledge.total,
+      defaultPrice: autoPayPackageOption.price,
       withDiscount: pledge.donation < 0,
       withDonation: pledge.donation > 0,
       defaultPaymentSource,

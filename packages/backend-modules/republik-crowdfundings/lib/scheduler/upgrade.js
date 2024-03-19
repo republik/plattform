@@ -25,7 +25,7 @@ const getOptions = async (context) => {
 const findRecipients = (context) => {
   /**
    * Recipients must meet these criteria:
-   * - membership of type MONTHLY_ABO
+   * - membership of type MONTHLY_ABO or MONTHLY_ABO_AUTOPAY
    * - membership active
    * - membership not cancelled
    * - "days behind" between 42 and 48 days
@@ -71,9 +71,9 @@ const findRecipients = (context) => {
         -- … and not cancelled
         AND m.renew = TRUE
 
-      -- membership type "MONTHLY_ABO"
+      -- membership type "MONTHLY_ABO" or "MONTHLY_ABO_AUTOPAY"
       JOIN "membershipTypes" mt ON mt.id = m."membershipTypeId"
-        AND mt.name = 'MONTHLY_ABO'
+        AND mt.name IN ('MONTHLY_ABO', 'MONTHLY_ABO_AUTOPAY')
 
       -- memberships periods
       JOIN "membershipPeriods" mp ON mp."membershipId" = m.id

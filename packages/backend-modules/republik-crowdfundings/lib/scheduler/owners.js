@@ -325,7 +325,9 @@ const createJobs = (now) => [
       autoPay,
     }) => {
       return (
-        ['ABO', 'BENEFACTOR_ABO'].includes(membershipType) &&
+        ['ABO', 'BENEFACTOR_ABO', 'MONTHLY_ABO_AUTOPAY'].includes(
+          membershipType,
+        ) &&
         membershipAutoPay === true &&
         autoPay &&
         userId === autoPay.userId
@@ -344,14 +346,26 @@ const pickAdditionals = (user) => ({
   membershipType: user._raw.membershipType,
 })
 
-const createMaybeAppendProlongBeforeDate = (context) => async (user) => ({
-  ...user,
-  prolongBeforeDate: await getProlongBeforeDate(
-    user,
-    { ignoreAutoPayFlag: true },
-    { ...context, user },
-  ).then((date) => date && moment(date)),
-})
+const createMaybeAppendProlongBeforeDate = (context) => async (user) => {
+  const { pgdb } = context
+
+  const autoPay =
+    user.membershipAutoPay && (await autoPaySuggest(user.membershipId, pgdb))
+
+  const prolongBeforeDate =
+    (autoPay?.endDate && moment(autoPay.endDate)) ||
+    (await getProlongBeforeDate(
+      user,
+      { ignoreAutoPayFlag: true },
+      { ...context, user },
+    ).then((date) => date && moment(date)))
+
+  return {
+    ...user,
+    prolongBeforeDate,
+    autoPay,
+  }
+}
 
 const hasProlongBeforeDate = (user) => user.prolongBeforeDate
 
@@ -367,16 +381,12 @@ const createUserJobs = (jobs, context) => async (user) =>
           prolongBefore.maxDate,
         )
       ) {
-        if (user.membershipAutoPay) {
-          user.autoPay = await autoPaySuggest(user.membershipId, pgdb)
-
-          if (!user.autoPay) {
-            await setAutoPayToFalse({
-              user,
-              membershipId: user.membershipId,
-              pgdb,
-            })
-          }
+        if (user.membershipAutoPay && !user.autoPay) {
+          await setAutoPayToFalse({
+            user,
+            membershipId: user.membershipId,
+            pgdb,
+          })
         }
 
         if (predicateFn(user)) {

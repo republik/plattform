@@ -1,0 +1,163 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="x-ua-compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <!--[if gte mso 15]>
+      <xml>
+        <o:officedocumentsettings>
+          <o:allowpng />
+          <o:pixelsperinch>96</o:pixelsperinch>
+        </o:officedocumentsettings>
+      </xml>
+    <![endif]-->
+    <style type="text/css">
+      {{sg_font_faces}}
+    </style>
+    <style type="text/css">
+      p {
+        color:#282828;font-size:17px;line-height:24px;
+        {{sg_font_style_sans_serif_regular}}
+      }
+      p strong {
+        {{sg_font_style_sans_serif_medium}}
+      }
+    </style>
+  </head>
+  <body style="margin: 0; padding: 0; background-color: #fff">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tbody>
+        <tr>
+          <td align="center" valign="top">
+            <table
+              align="center"
+              border="0"
+              cellpadding="0"
+              cellspacing="0"
+              width="100%"
+              style="max-width:640px;color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}"
+            >
+              <tbody>
+                <tr>
+                  <td style="padding: 20px">
+                    <p>Guten Tag</p>
+                    {{#if thirdAttempt}}
+                    <p>
+                      Ihr Monatsabo erneuerte sich am {{end_date}}. Bedauerlicherweise konnten wir erneut den
+                      Beitrag von {{autopay_total}} Ihrer hinterlegten
+                      {{autopay_card_brand}} mit den Endziffern
+                      {{autopay_card_last4}} nicht belasten.
+                    </p>
+                    <p>
+                      Wir unternehmen am {{attempt_next_at}} einen letzten
+                      Versuch und bitten Sie, bis dahin
+                      <a href="{{link_account_abos}}"
+                        >Ihre Kreditkartendaten hier gegebenenfalls zu
+                        aktualisieren</a
+                      >.
+                    </p>
+                    {{else if fourthAttempt}}
+                    <p>
+                      Ihr Monatsabo erneuerte sich am {{end_date}}. Trotz mehrfachen Versuchen konnten wir den
+                      Beitrag von {{autopay_total}} Ihrer hinterlegten
+                      {{autopay_card_brand}} mit den Endziffern
+                      {{autopay_card_last4}} nicht belasten.
+                    </p>
+                    <p>
+                      Wir sehen uns daher zu unserem grossen Bedauern gezwungen,
+                      Ihr Monatsabo am {{grace_end_date}} zu deaktivieren.
+                    </p>
+                    <p>
+                      Wollen Sie dies verhindern, können Sie
+                      <a href="{{link_account_abos}}"
+                        >den ausstehenden Beitrag begleichen</a
+                      >, wenn Sie möchten, auch mit einer anderen Zahlungsart.
+                    </p>
+                    {{else}}
+                    <p>
+                      Ihr Monatsabo erneuerte sich am {{end_date}}. Bei Ihrem letzten Kauf haben Sie angegeben,
+                      dass Sie uns erlauben, Ihre hinterlegte Kreditkarte
+                      automatisch zu belasten. Bedauerlicherweise konnten wir
+                      den Beitrag von {{autopay_total}} von Ihrer
+                      hinterlegten {{autopay_card_brand}} mit den Endziffern
+                      {{autopay_card_last4}} nicht abbuchen.
+                    </p>
+                    {{#if authentication_required}}
+                    <p>
+                      Dies, weil Ihre Kreditkarte verlangt, dass Buchungen von
+                      Ihnen online bestätigt werden. Wir bitten Sie daher,
+                      <a href="{{link_account_abos}}"
+                        >Ihr Zahlungsmittel hier zu ändern</a
+                      >.
+                    </p>
+                    {{else if attempt_is_last}}
+                    <p>
+                      Wir sehen uns daher zu unserem grossen Bedauern gezwungen,
+                      Ihr Monatsabo am {{grace_end_date}} zu deaktivieren.
+                    </p>
+                    {{else if attempt_next_is_last}}
+                    <p>
+                      Wir unternehmen am {{attempt_next_at}} einen letzten
+                      Versuch und bitten Sie, bis dahin
+                      <a href="{{link_account_abos}}"
+                        >Ihre Kreditkartendaten hier gegebenenfalls zu
+                        aktualisieren</a
+                      >.
+                    </p>
+                    {{else}}
+                    <p>
+                      Wir unternehmen am {{attempt_next_at}} erneut einen
+                      Versuch und bitten Sie, bis dahin nötigenfalls
+                      <a href="{{link_account_abos}}"
+                        >eine neue Kreditkarte zu erfassen</a
+                      >.
+                    </p>
+                    {{/if}}
+                    <p>
+                      Sie möchten nicht mehr per Kreditkarte bezahlen?
+                      <a href="{{link_account_abos}}"
+                        >Dann können Sie hier eine andere Zahlungsart
+                        auswählen</a
+                      >.
+                    </p>
+                    {{/if}}
+                    <p>Herzlich</p>
+                    <p>Ihre Crew der Republik</p>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding: 20px">
+                    <p
+                      style="color:#282828;font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}"
+                    >
+                      <img
+                        height="79"
+                        src="{{frontend_base_url}}/static/logo_republik_newsletter.png"
+                        style="
+                          border: 0px;
+                          width: 180px !important;
+                          height: 79px !important;
+                          margin: 0px;
+                        "
+                        width="180"
+                        alt=""
+                      />
+                      <br />
+                      Republik AG<br />
+                      Sihlhallenstrasse 1, CH-8004 Zürich<br />
+                      <a href="{{frontend_base_url}}">www.republik.ch</a><br />
+                      <a href="mailto:kontakt@republik.ch"
+                        >kontakt@republik.ch</a
+                      >
+                    </p>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </body>
+</html>

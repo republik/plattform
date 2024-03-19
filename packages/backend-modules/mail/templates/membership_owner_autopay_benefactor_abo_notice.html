@@ -1,0 +1,171 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="x-ua-compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <!--[if gte mso 15]>
+      <xml>
+        <o:officedocumentsettings>
+          <o:allowpng />
+          <o:pixelsperinch>96</o:pixelsperinch>
+        </o:officedocumentsettings>
+      </xml>
+    <![endif]-->
+    <style type="text/css">
+      {{sg_font_faces}}
+    </style>
+    <style type="text/css">
+      p {
+        color:#282828;font-size:17px;line-height:24px;
+        {{sg_font_style_sans_serif_regular}}
+      }
+      p strong {
+        {{sg_font_style_sans_serif_medium}}
+      }
+    </style>
+  </head>
+  <body style="margin: 0; padding: 0; background-color: #fff">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tbody>
+        <tr>
+          <td align="center" valign="top">
+            <table
+              align="center"
+              border="0"
+              cellpadding="0"
+              cellspacing="0"
+              width="100%"
+              style="max-width:640px;color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}"
+            >
+              <tbody>
+                <tr>
+                  <td style="padding: 20px">
+                    <p>Guten Tag</p>
+                    <p>
+                      Am {{end_date}} erneuert sich Ihre Mitgliedschaft um ein
+                      weiteres Jahr. Herzlichen Dank für Ihre Unterstützung. Wir
+                      freuen uns, Sie an Bord zu wissen.
+                    </p>
+                    <p>
+                      Bei Ihrem letzten Kauf haben Sie angegeben, dass Sie uns
+                      erlauben, Ihre hinterlegte Kreditkarte automatisch zu
+                      belasten.
+                    </p>
+                    <p>
+                      Diese E-Mail informiert Sie darüber, dass wir dies in
+                      {{days_left}} Tagen tatsächlich und unverfroren tun
+                      werden: Ihre {{autopay_card_brand}} mit den Endziffern
+                      {{autopay_card_last4}} belasten wir am {{end_date}} mit
+                      {{autopay_total}}.
+                    </p>
+                    {{#if autopay_membership_type_benefactor}}
+                    <p>
+                      Dieser Beitrag kommt zustande, weil Sie die Republik im
+                      letzten Jahr grosszügigerweise mit einer
+                      Gönner-Mitgliedschaft {{#if autopay_with_donation}} und
+                      einer zusätzlichen Spende{{/if}} unterstützt haben. Durch
+                      Sie ist unsere Unabhängigkeit, unsere Werbefreiheit, ja
+                      unsere Existenz erst möglich. Wir bedanken uns von ganzem
+                      Herzen und hoffen, dass Sie sich und uns treu bleiben und
+                      weiterhin in kompromisslosen Journalismus investieren.
+                      Sollten Sie es sich anders überlegen, können Sie
+                      <a href="{{prolong_url}}"
+                        >Ihre Mitgliedschaft {{#if autopay_with_donation}}
+                        beziehungsweise die Höhe Ihres Spendenbeitrags{{/if}}
+                        vor der Abbuchung noch anpassen</a
+                      >.
+                    </p>
+                    {{else if autopay_with_discount}}
+                    <p>
+                      Sie haben im letzten Jahr die vergünstigte Mitgliedschaft
+                      gewählt. Da unsere Unabhängigkeit, ja unsere Existenz von
+                      der Unterstützung unserer Verlegerinnen abhängt, würde es
+                      uns freuen, wenn Sie – falls es Ihre finanzielle Situation
+                      erlaubt –
+                      <a href="{{prolong_url}}"
+                        >Ihren Mitgliedschaftsbeitrag erhöhen könnten</a
+                      >. Jede zusätzliche Summe macht einen Unterschied.
+                    </p>
+                    {{else if autopay_with_donation}}
+                    <p>
+                      Dieser Beitrag kommt zustande, weil Sie die Republik im
+                      letzten Jahr grosszügigerweise mit einer zusätzlichen
+                      Spende unterstützt haben. Durch Sie ist unsere
+                      Unabhängigkeit, unsere Werbefreiheit, ja unsere Existenz
+                      erst möglich. Wir bedanken uns von ganzem Herzen und
+                      hoffen, dass Sie sich und uns treu bleiben und weiterhin
+                      in kompromisslosen Journalismus investieren. Sollten Sie
+                      es sich anders überlegen, können Sie die
+                      <a href="{{prolong_url}}"
+                        >Höhe Ihres Spendenbeitrags vor der Abbuchung noch
+                        anpassen</a
+                      >.
+                    </p>
+                    {{else}}
+                    <p>
+                      Sie haben sich im letzten Jahr für eine reguläre
+                      Mitgliedschaft entschieden. Sollten Sie dieses Mal noch
+                      mehr in unseren Journalismus investieren wollen und
+                      können, würde es uns freuen, wenn Sie
+                      <a href="{{prolong_url}}">Ihren Beitrag erhöhen</a>: Jede
+                      zusätzliche Summe macht einen Unterschied.
+                    </p>
+                    {{/if}}
+                    <p>
+                      Ausserdem können Sie bis zur Abbuchung falls gewünscht
+                      <a href="{{prolong_url}}"
+                        >eine andere Kreditkarte hinterlegen, eine andere
+                        Zahlungsart wählen</a
+                      >
+                      oder
+                      <a href="{{cancel_url}}">Ihre Mitgliedschaft kündigen</a>.
+                    </p>
+                    <p>
+                      Wir melden uns erneut, sobald Ihre Mitgliedschaft
+                      erfolgreich verlängert wurde. In der Zwischenzeit können
+                      Sie sich bei Fragen unter
+                      <a href="mailto:kontakt@republik.ch"
+                        >kontakt@republik.ch</a
+                      >
+                      melden.
+                    </p>
+                    <p>Herzlich</p>
+                    <p>Ihre Crew der Republik</p>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding: 20px">
+                    <p
+                      style="color:#282828;font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}"
+                    >
+                      <img
+                        height="79"
+                        src="{{frontend_base_url}}/static/logo_republik_newsletter.png"
+                        style="
+                          border: 0px;
+                          width: 180px !important;
+                          height: 79px !important;
+                          margin: 0px;
+                        "
+                        width="180"
+                        alt=""
+                      />
+                      <br />
+                      Republik AG<br />
+                      Sihlhallenstrasse 1, CH-8004 Zürich<br />
+                      <a href="{{frontend_base_url}}">www.republik.ch</a><br />
+                      <a href="mailto:kontakt@republik.ch"
+                        >kontakt@republik.ch</a
+                      >
+                    </p>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </body>
+</html>

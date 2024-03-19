@@ -8,17 +8,21 @@ const mail = require('./Mail')
 const Promise = require('bluebird')
 const omit = require('lodash/omit')
 
-const UPGRADE_PKG_PATHS = [
-  {
-    fromMembershipType: 'MONTHLY_ABO',
-    toPackageNames: ['ABO', 'BENEFACTOR', 'YEARLY_ABO'],
-  },
-  { fromMembershipType: 'YEARLY_ABO', toPackageNames: ['ABO', 'BENEFACTOR'] },
-]
-
 module.exports = async (pledgeId, pgdb, t, redis) => {
   const pledge = await pgdb.public.pledges.findOne({ id: pledgeId })
+  if (!pledge) {
+    console.error('pledge could not be found', { pledgeId })
+    throw new Error(t('api/unexpected'))
+  }
+
   const user = await pgdb.public.users.findOne({ id: pledge.userId })
+  if (!user) {
+    console.error('user could not be found', {
+      userId: pledge.userId,
+      pledgeId,
+    })
+    throw new Error(t('api/unexpected'))
+  }
 
   // check if pledge really has no memberships yet
   if (await pgdb.public.memberships.count({ pledgeId: pledge.id })) {
@@ -198,18 +202,17 @@ module.exports = async (pledgeId, pgdb, t, redis) => {
               membership,
             }
           } else {
-            // Cancel active membership(s) if there is an upgrade path available
-            const membershipTypes = UPGRADE_PKG_PATHS.filter(
-              ({ toPackageNames }) => toPackageNames.includes(pkg.name),
-            ).map(({ fromMembershipType }) => fromMembershipType)
-
-            if (membershipTypes.length) {
+            // Add active and uncancelled memberships to list of cancellable
+            // memberships if package has truthy isAutoActivateUserMembership
+            // flag set (indicating, it's not a giftable membership and should
+            // be activated once an active membership ends via changeover).
+            if (pkg.isAutoActivateUserMembership) {
               cancelableMemberships = activeMemberships.filter(
-                (m) => membershipTypes.includes(m.name) && m.renew === true,
+                (m) => m.renew === true,
               )
             }
 
-            debug({ membershipTypes, activeMemberships, cancelableMemberships })
+            debug({ activeMemberships, cancelableMemberships })
 
             memberships.push(membership)
           }
