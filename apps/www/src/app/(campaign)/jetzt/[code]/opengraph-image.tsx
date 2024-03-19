@@ -1,4 +1,4 @@
-import { generateShareImage } from './generate-share-image'
+import { generateShareImage } from '@app/app/(campaign)/jetzt/[code]/generate-share-image'
 
 export const contentType = 'image/png'
 

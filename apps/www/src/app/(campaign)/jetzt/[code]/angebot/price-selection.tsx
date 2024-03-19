@@ -6,20 +6,32 @@ import { PriceSliderWithState } from './price-slider-with-state'
 import { CAMPAIGN_SLUG } from '@app/app/(campaign)/constants'
 import { Logo } from '@app/app/(campaign)/components/logo'
 import { useState } from 'react'
+import { useSearchParams } from 'next/navigation'
+import Link from 'next/link'
 
-const getCheckoutUrl = ({
+const useCheckoutUrl = ({
   price,
   referralCode,
 }: {
   price: number
-  referralCode: string
+  referralCode?: string
 }): string => {
+  const pageSearchParams = useSearchParams()
+
   const url = new URL('/angebote', process.env.NEXT_PUBLIC_BASE_URL)
+
+  // Pass utm_* params to /angebote page
+  for (const [k, v] of pageSearchParams) {
+    if (k.startsWith('utm_')) {
+      url.searchParams.set(k, v)
+    }
+  }
 
   url.searchParams.set('price', `${price * 100}`)
   url.searchParams.set('referral_campaign', CAMPAIGN_SLUG)
-  url.searchParams.set('referral_code', referralCode)
-  // TODO: UTM params?
+  if (referralCode) {
+    url.searchParams.set('referral_code', referralCode)
+  }
 
   if (price >= 1000) {
     url.searchParams.set('package', 'BENEFACTOR')
@@ -34,11 +46,12 @@ const getCheckoutUrl = ({
 }
 
 type PriceSelectionProps = {
-  referralCode: string
+  referralCode?: string
 }
 
 export default function PriceSelection({ referralCode }: PriceSelectionProps) {
   const [price, setPrice] = useState(240)
+  const checkoutUrl = useCheckoutUrl({ price, referralCode })
 
   return (
     <>
@@ -69,11 +82,11 @@ export default function PriceSelection({ referralCode }: PriceSelectionProps) {
       >
         <PriceSliderWithState price={price} setPrice={setPrice} />
         <a
-          href={getCheckoutUrl({ price, referralCode })}
+          href={checkoutUrl}
           className={css({
             background: 'contrast',
             color: 'text.inverted',
-            px: '6',
+            px: '4',
             py: '3',
             borderRadius: '4px',
             fontWeight: 'medium',
@@ -81,14 +94,20 @@ export default function PriceSelection({ referralCode }: PriceSelectionProps) {
             textDecoration: 'none',
             textAlign: 'center',
             display: 'block',
+            border: '2px solid token(colors.contrast)',
             // width: 'full',
-            _hover: {},
+            _hover: {
+              background: 'text.inverted',
+              color: 'contrast',
+            },
           })}
         >
           Für CHF {price} abonnieren
         </a>
         <div className={css({ pt: '4' })}>
-          <Logo />
+          <Link href='/' className={css({ textDecoration: 'none' })}>
+            <Logo />
+          </Link>
         </div>
       </div>
     </>

@@ -15,6 +15,7 @@ const { inform: informWinback } = require('./winbacks')
 const { inform: informFeedback } = require('./feedback')
 const { inform: informUpgrade } = require('./upgrade')
 const { run: membershipsOwnersHandler } = require('./owners')
+const { run: yearlyAboWinbacksHandler } = require('./yearlyAboWinbacks')
 const { deactivate } = require('./deactivate')
 const { changeover } = require('./changeover')
 const { importPayments } = require('./importPayments')
@@ -74,6 +75,16 @@ const init = async (context) => {
       name: 'memberships-owners',
       context,
       runFunc: membershipsOwnersHandler,
+      lockTtlSecs,
+      runIntervalSecs: 60 * 10,
+    }),
+  )
+
+  schedulers.push(
+    intervalScheduler.init({
+      name: 'memberships-yearly-abo-winbacks',
+      context,
+      runFunc: yearlyAboWinbacksHandler,
       lockTtlSecs,
       runIntervalSecs: 60 * 10,
     }),
@@ -155,8 +166,8 @@ const init = async (context) => {
             context,
           ),
         ]),
-      lockTtlSecs: 10,
-      runIntervalSecs: 60,
+      lockTtlSecs,
+      runIntervalSecs: 60 * 60,
     }),
   )
 

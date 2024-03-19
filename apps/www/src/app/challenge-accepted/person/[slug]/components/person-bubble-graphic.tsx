@@ -15,7 +15,7 @@ import {
 import { select } from 'd3-selection'
 import d3ForceLimit from 'd3-force-limit'
 import { useRouter } from 'next/navigation'
-import { ChallengeAcceptedPersonListQuery } from '@app/graphql/cms/gql/graphql'
+import { ChallengeAcceptedPersonListQuery } from '#graphql/cms/__generated__/gql/graphql'
 
 const RADIUS_LARGE = 110
 const RADIUS_MEDIUM = 75

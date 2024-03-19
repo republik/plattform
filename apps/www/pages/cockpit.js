@@ -585,10 +585,8 @@ const Page = ({
                 5-Jahres-Jubiläum ein 12-Monats-Abo zu einem frei wählbaren
                 Preis abschliessen konnten. Zwischen Mitte Februar und Anfang
                 April 2024 laufen diese Abonnements aus, was wir hier ebenfalls
-                abbilden.
-                <Editorial.A href={CAMPAIGN_META_ARTICLE_URL}>
-                  Hier
-                </Editorial.A>{' '}
+                abbilden.{' '}
+                <Editorial.A href={CAMPAIGN_META_ARTICLE_URL}>Hier</Editorial.A>{' '}
                 erfahren Sie mehr über unsere Kampagnen.
               </P>
               <div style={{ marginTop: 20 }}>
@@ -614,6 +612,7 @@ const Page = ({
                       '2021-01',
                       '2022-01',
                       '2023-01',
+                      '2024-01',
                     ],
                     height: 300,
                     domain: [0, 35000],
@@ -727,6 +726,7 @@ const Page = ({
                           '2021-01',
                           '2022-01',
                           '2023-01',
+                          '2024-01',
                         ], // lastSeenBucket.key
                     yNice: 0,
                     yTicks: [0, 1000, 2000, 3000, 4000, 5000],
