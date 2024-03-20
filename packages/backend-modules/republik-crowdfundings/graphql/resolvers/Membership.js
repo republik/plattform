@@ -2,7 +2,10 @@ const moment = require('moment')
 const _ = require('lodash')
 const resolverDebug = require('debug')('crowdfundings:resolver:Membership')
 
-const { transformUser, Roles } = require('@orbiting/backend-modules-auth')
+const { Roles } = require('@orbiting/backend-modules-auth/lib/Roles')
+const {
+  transformUser,
+} = require('@orbiting/backend-modules-auth/lib/transformUser')
 const {
   applyPgInterval: { add: addInterval },
 } = require('@orbiting/backend-modules-utils')
@@ -186,12 +189,7 @@ const membershipResolver = {
     }
 
     const type = await membershipResolver.type(membership, null, context)
-
-    if (type.name === 'YEARLY_ABO') {
-      return false
-    }
-
-    return type.interval === 'year'
+    return type.autoPayMutable
   },
 
   async canAppendPeriod({ subscriptionId: stripeSubscriptionId, active }) {
