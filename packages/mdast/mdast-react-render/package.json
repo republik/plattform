@@ -26,7 +26,8 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "@republik/tsconfig": "*",
+    "@republik/eslint-config-frontend": "workspace:*",
+    "@republik/tsconfig": "workspace:*",
     "@swc/core": "^1.3.57",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^14.0.0",

@@ -24,6 +24,6 @@
     "dataloader": "^2.0.0"
   },
   "devDependencies": {
-    "@orbiting/backend-modules-types": "*"
+    "@orbiting/backend-modules-types": "workspace:*"
   }
 }

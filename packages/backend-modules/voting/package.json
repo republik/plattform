@@ -3,9 +3,6 @@
   "version": "0.0.0",
   "description": "store votings and query them from graphql",
   "main": "index.js",
-  "scripts": {
-    "link": "yarn link"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/republik/plattform.git"

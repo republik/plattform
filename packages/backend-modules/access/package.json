@@ -16,9 +16,6 @@
     "url": "https://github.com/republik/plattform/issues"
   },
   "homepage": "https://github.com/republik/plattform#readme",
-  "scripts": {
-    "link": "yarn link"
-  },
   "dependencies": {
     "debug": "^4.1.1",
     "escape-html": "^1.0.3",
@@ -26,5 +23,8 @@
     "redlock": "^4.1.0",
     "validator": "^13.7.0",
     "yargs": "^17.0.1"
+  },
+  "devDependencies": {
+    "@types/yargs": "^17.0.32"
   }
 }

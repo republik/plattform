@@ -2,10 +2,8 @@ import { v4 as isUuid } from 'is-uuid'
 import { PgTable } from 'pogi'
 
 import createDataLoader from '@orbiting/backend-modules-dataloader'
-import auth from '@orbiting/backend-modules-auth'
 import { UserRow } from '@orbiting/backend-modules-types'
-
-const transformUser = auth.transformUser
+import transformUser = require('../lib/transformUser')
 
 function nonNullable<T>(value: T): value is NonNullable<T> {
   return value !== null && value !== undefined

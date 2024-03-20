@@ -3,9 +3,6 @@
   "version": "1.0.1",
   "description": "store redirections and query them from graphql",
   "main": "index.js",
-  "scripts": {
-    "link": "yarn link"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/republik/plattform.git"
@@ -23,6 +20,12 @@
     "dotenv": "^8.2.0"
   },
   "dependencies": {
-    "apollo-modules-node": "*"
+    "@orbiting/backend-modules-auth": "workspace:*",
+    "@orbiting/backend-modules-base": "workspace:*",
+    "@orbiting/backend-modules-documents": "workspace:*",
+    "@orbiting/backend-modules-env": "workspace:*",
+    "@orbiting/backend-modules-search": "workspace:*",
+    "apollo-modules-node": "*",
+    "debug": "^4.3.4"
   }
 }

@@ -18,6 +18,10 @@
   },
   "homepage": "https://github.com/republik/plattform#readme",
   "dependencies": {
+    "@orbiting/backend-modules-auth": "workspace:*",
+    "@orbiting/backend-modules-scalars": "workspace:*",
+    "@orbiting/backend-modules-voting": "workspace:*",
+    "apollo-modules-node": "workspace:*",
     "d3-array": "^2.4.0",
     "express": "^4.17.1",
     "google-spreadsheet": "^3.0.11",

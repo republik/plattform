@@ -4,7 +4,7 @@ The platform that powers republik.ch. A tailored solution for a membership based
 
 ## What's inside?
 
-This turborepo uses [Yarn](https://classic.yarnpkg.com/lang/en/) as a package manager. It includes the following apps and packages:
+This turborepo uses [PNPM](https://pnpm.io/) as a package manager. It includes the following apps and packages:
 
 ### Apps
 

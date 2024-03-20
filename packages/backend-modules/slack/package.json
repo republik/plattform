@@ -16,9 +16,6 @@
     "url": "https://github.com/republik/plattform/issues"
   },
   "homepage": "https://github.com/republik/plattform#readme",
-  "scripts": {
-    "link": "yarn link"
-  },
   "dependencies": {
     "@slack/rtm-api": "^6.0.0",
     "@slack/web-api": "^6.1.0"

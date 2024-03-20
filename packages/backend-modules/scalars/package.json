@@ -16,11 +16,9 @@
     "url": "https://github.com/republik/plattform/issues"
   },
   "homepage": "https://github.com/republik/plattform#readme",
-  "scripts": {
-    "link": "yarn link"
-  },
   "dependencies": {
-    "apollo-modules-node": "*",
+    "@orbiting/backend-modules-formats": "workspace:*",
+    "apollo-modules-node": "workspace:*",
     "graphql": "^15.3.0",
     "graphql-type-json": "^0.3.2"
   }

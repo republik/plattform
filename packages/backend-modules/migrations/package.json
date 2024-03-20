@@ -16,12 +16,12 @@
   },
   "homepage": "https://github.com/republik/plattform#readme",
   "scripts": {
-    "link": "yarn link",
     "migrate:db:create": "script/db/create.js",
     "migrate:db:import": "script/db/import.js",
     "migrate:create": "script/create.js"
   },
   "devDependencies": {
+    "@types/yargs": "^17.0.32",
     "moment": "^2.26.0",
     "yargs": "^13.2.2"
   },

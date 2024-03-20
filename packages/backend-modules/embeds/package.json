@@ -18,10 +18,16 @@
   },
   "homepage": "https://github.com/republik/plattform#readme",
   "dependencies": {
+    "@orbiting/backend-modules-auth": "workspace:*",
+    "@orbiting/backend-modules-dataloader": "workspace:*",
+    "@orbiting/backend-modules-scalars": "workspace:*",
+    "@orbiting/backend-modules-utils": "workspace:*",
     "apollo-modules-node": "*",
     "autolinker": "^3.14.1",
     "cheerio": "^1.0.0-rc.3",
     "d3-array": "^2.4.0",
-    "moment": "^2.26.0"
+    "debug": "^4.3.4",
+    "moment": "^2.26.0",
+    "redlock": "^4.1.0"
   }
 }

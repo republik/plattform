@@ -18,6 +18,9 @@
   },
   "homepage": "https://github.com/republik/plattform#readme",
   "dependencies": {
+    "@orbiting/backend-modules-base": "workspace:*",
+    "@orbiting/backend-modules-env": "workspace:*",
+    "@orbiting/backend-modules-search": "workspace:*",
     "bluebird": "^3.7.2",
     "body-parser": "^1.19.0",
     "debug": "^4.1.1",
