@@ -43,6 +43,26 @@ import withInNativeApp from '../lib/withInNativeApp'
 
 import { CAMPAIGN_META_ARTICLE_URL } from '@app/app/(campaign)/constants'
 
+/**
+ * Generate a list of ticks for a chart, starting at 0 and going to max, then from 0 to min
+ * at a given step size.
+ * @param {number} minimum value (expected to be negative)
+ * @param {number} max value (expected to be positive)
+ * @param {number[]} step size
+ */
+function getChartTicks(min, max, step) {
+  const ticks = [0]
+  // from 0 to max, add step
+  for (let i = 0; i <= max; i += step) {
+    ticks.push(i)
+  }
+  // from 0 to min, add step
+  for (let i = 0; i >= min; i -= step) {
+    ticks.push(i)
+  }
+  return Array.from(new Set(ticks)).sort((a, b) => a - b)
+}
+
 const statusQuery = gql`
   query CockpitStatus(
     $prev: YearMonthDate!
@@ -532,6 +552,16 @@ const Page = ({
             //   })),
           )
 
+          const [pendingVlauesMin, pendingValuesMax] = extent(
+            pendingValues,
+            (d) => d.value,
+          )
+          // round min down to next 100 and max up to next 100
+          const pendingValuesMinMax = [
+            Math.floor(pendingVlauesMin / 100) * 100,
+            Math.ceil(pendingValuesMax / 100) * 100,
+          ]
+
           return (
             <>
               <Interaction.Headline style={{ marginBottom: 20 }}>
@@ -660,12 +690,17 @@ const Page = ({
                     timeParse: '%Y-%m',
                     timeFormat: '%b %y',
                     xInterval: 'month',
-                    height: 300,
-                    domain: [-1250, 2100],
-                    yTicks: [
-                      -1250, -1000, -750, -500, -250, 0, 250, 500, 750, 1000,
-                      1250, 1500, 1750, 2000,
-                    ],
+                    height: 360,
+                    domain: pendingValuesMinMax,
+                    yTicks: getChartTicks(
+                      pendingValuesMinMax[0],
+                      pendingValuesMinMax[1],
+                      250,
+                    ),
+                    // [
+                    // -2000, -1750, -1500, -1250, -1000, -750, -500, -250, 0,
+                    // 250, 500, 750, 1000, 1250, 1500, 1750, 2000,
+                    // ],
                     // xAnnotations: [
                     //   {
                     //     x1: currentBucket.key,
