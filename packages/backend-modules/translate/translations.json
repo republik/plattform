@@ -2297,6 +2297,14 @@
       "value": "Notizbücher"
     },
     {
+      "key": "api/invoices/option/Goodie/TOTEBAG_BLACK/1",
+      "value": "Tasche (schwarz)"
+    },
+    {
+      "key": "api/invoices/option/Goodie/TOTEBAG_BLACK/other",
+      "value": "Taschen (schwarz)"
+    },
+    {
       "key": "api/invoices/option/Goodie/TOTEBAG/1",
       "value": "Tasche"
     },

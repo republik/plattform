@@ -181,7 +181,7 @@ export default async function Page({ params }) {
             </li>
           </ul>
         </div>
-        <CTA href={`${params.code}/angebot`} />
+        <CTA href={`/jetzt/${params.code}/angebot`} />
       </div>
     </>
   )
