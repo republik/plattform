@@ -717,6 +717,14 @@
       "value": "Da war doch noch etwas: Ihr Mitstreiter-Abonnement"
     },
     {
+      "key": "api/email/membership_owner_prolong_yearly_abo_winback_16/subject",
+      "value": "Ein Zurück-zur-Republik-Angebot für Sie"
+    },
+    {
+      "key": "api/email/membership_owner_prolong_yearly_abo_winback_24/subject",
+      "value": "Jetzt zurück zur Republik"
+    },
+    {
       "key": "api/email/membership_owner_autopay_notice/subject",
       "value": "Ihre Mitgliedschaft erneuert sich automatisch"
     },
@@ -2289,6 +2297,14 @@
       "value": "Notizbücher"
     },
     {
+      "key": "api/invoices/option/Goodie/TOTEBAG_BLACK/1",
+      "value": "Tasche (schwarz)"
+    },
+    {
+      "key": "api/invoices/option/Goodie/TOTEBAG_BLACK/other",
+      "value": "Taschen (schwarz)"
+    },
+    {
       "key": "api/invoices/option/Goodie/TOTEBAG/1",
       "value": "Tasche"
     },
@@ -2557,8 +2573,16 @@
       "value": "Datei bereits veröffentlicht"
     },
     {
+      "key": "api/publikator/file/error/privateAlready",
+      "value": "Datei bereits nicht veröffentlicht"
+    },
+    {
       "key": "api/publikator/file/error/notPrivate",
       "value": "Datei nicht als «privat» markiert"
+    },
+    {
+      "key": "api/publikator/file/error/notPublic",
+      "value": "Datei nicht veröffentlicht"
     },
     {
       "key": "api/publikator/file/error/notPending",

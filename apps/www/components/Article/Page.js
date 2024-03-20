@@ -690,38 +690,41 @@ const ArticlePage = ({
             hasNewsletterUtms ||
             (router.query.utm_source && router.query.utm_source === 'flyer-v1')
 
-          // For this proof of concept I chose to show the climate paynote
-          // only at the bottom. This could/should be evaluated.
-          // We could also suppress the second paynote. (Code commented below.)
-          // I wouldn't show both, since it's a very big paynote,
-          // and the text would be the same twice.
-          // const suppressSecondPayNote = climatePaynote
-
-          // TODO: REMOVE AFTER CAMPAIGN
-          const payNote =
-            meta.paynoteMode === 'noPaynote' ? null : (
-              <VerlegerKampagnePayNoteTop />
+          let payNote
+          let payNoteAfter
+          if (!isPage) {
+            // TODO: REMOVE AFTER CAMPAIGN
+            payNote =
+              meta.paynoteMode === 'noPaynote' ? null : (
+                <VerlegerKampagnePayNoteTop />
+              )
+            payNoteAfter =
+              meta.paynoteMode === 'noPaynote' ? null : (
+                <VerlegerKampagnePayNoteBottom />
+              )
+          } else {
+            // For this proof of concept I chose to show the climate paynote
+            // only at the bottom. This could/should be evaluated.
+            // We could also suppress the second paynote. (Code commented below.)
+            // I wouldn't show both, since it's a very big paynote,
+            // and the text would be the same twice.
+            // const suppressSecondPayNote = climatePaynote
+            payNote = (
+              <PayNote
+                seed={payNoteSeed}
+                tryOrBuy={payNoteTryOrBuy}
+                documentId={documentId}
+                repoId={repoId}
+                customPayNotes={meta.paynotes ?? []}
+                customMode={meta.paynoteMode}
+                customOnly={isPage || isFormat}
+                position='before'
+              />
             )
-          const payNoteAfter =
-            meta.paynoteMode === 'noPaynote' ? null : (
-              <VerlegerKampagnePayNoteBottom />
-            )
-
-          // const payNote = (
-          //   <PayNote
-          //     seed={payNoteSeed}
-          //     tryOrBuy={payNoteTryOrBuy}
-          //     documentId={documentId}
-          //     repoId={repoId}
-          //     customPayNotes={meta.paynotes ?? []}
-          //     customMode={meta.paynoteMode}
-          //     customOnly={isPage || isFormat}
-          //     position='before'
-          //   />
-          // )
-          // const payNoteAfter =
-          //   // !suppressSecondPayNote &&
-          //   payNote && cloneElement(payNote, { position: 'after' })
+            payNoteAfter =
+              // !suppressSecondPayNote &&
+              payNote && cloneElement(payNote, { position: 'after' })
+          }
 
           const ownDiscussion = meta.ownDiscussion
 

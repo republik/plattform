@@ -142,6 +142,9 @@ class SignIn extends Component {
                 nameOrEmail: me.name || me.email,
               }),
             }))
+            if (this.props.onSuccess) {
+              this.props.onSuccess(me)
+            }
             this.reloadOnSuccess()
           }}
         />
@@ -194,12 +197,13 @@ class SignIn extends Component {
           </>
         }
       />
-    );
+    )
   }
 }
 
 SignIn.propTypes = {
   signIn: PropTypes.func.isRequired,
+  onSuccess: PropTypes.func,
   noReload: PropTypes.bool,
 }
 

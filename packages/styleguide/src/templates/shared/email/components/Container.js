@@ -1,6 +1,6 @@
 import React from 'react'
 import { cssFor } from 'glamor'
-import { Mso } from '@republik/mdast-react-render'
+import { Mso } from '@republik/mdast-react-render/email'
 import Header from './Header'
 import SG from '../../../../theme/env'
 import { Editorial, Interaction } from '../../../../components/Typography'

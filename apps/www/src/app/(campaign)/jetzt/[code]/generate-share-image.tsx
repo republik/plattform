@@ -116,14 +116,14 @@ export async function generateShareImage({
   showPortrait,
   orientation = 'portrait',
 }: {
-  code: string
+  code?: string
   showPortrait?: boolean
   orientation?: 'portrait' | 'landscape'
 }) {
   const [width, height] =
     orientation === 'portrait' ? [1080, 1920] : [1920, 1080]
 
-  const data = await getInviteeData({ code })
+  const data = code ? await getInviteeData({ code }) : {}
 
   const sender = data?.sender
 
@@ -158,11 +158,18 @@ export async function generateShareImage({
         <Illustration size={orientation === 'landscape' ? 200 : 240} />
 
         <Message
-          lines={[
-            // eslint-disable-next-line no-irregular-whitespace
-            `Unabhängiger Journalismus lebt vom Einsatz vieler. Darum unterstütze ich die Republik.`,
-            `Du auch?`,
-          ]}
+          lines={
+            code
+              ? [
+                  // eslint-disable-next-line no-irregular-whitespace
+                  `Unabhängiger Journalismus lebt vom Einsatz vieler. Darum unterstütze ich die Republik.`,
+                  `Du auch?`,
+                ]
+              : [
+                  // eslint-disable-next-line no-irregular-whitespace
+                  `Unabhängiger Journalismus lebt vom Einsatz vieler. Unterstützen Sie die Republik mit einem Abo!`,
+                ]
+          }
           portrait={showPortrait ? sender?.portrait : null}
           orientation={orientation}
         />
@@ -184,8 +191,8 @@ export async function generateShareImage({
                 fontWeight: 500,
               }}
             >
-              Jetzt zum Einstiegspreis
-              ab&nbsp;CHF&nbsp;120&nbsp;für&nbsp;ein&nbsp;Jahr
+              {/* eslint-disable-next-line no-irregular-whitespace */}
+              {`Bis 31. März 2024 ab CHF 120 für ein Jahr`}
             </div>
             <div style={{ display: 'flex' }}>
               <div
@@ -200,7 +207,9 @@ export async function generateShareImage({
                   borderRadius: sizes['1'],
                 }}
               >
-                {`republik.ch/jetzt/${sender?.username ?? code}`}
+                {code
+                  ? `republik.ch/jetzt/${sender?.username ?? code}`
+                  : `republik.ch/jetzt`}
               </div>
             </div>
 

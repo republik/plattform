@@ -4,9 +4,9 @@ import { mediaQueries, useColorContext } from '@project-r/styleguide'
 import { css } from 'glamor'
 import { useMe } from '../../lib/context/MeContext'
 import MarketingHeader from './MarketingHeader'
-import MarketingNewsBox from './MarketingNewsBox'
 import Carousel, { CarouselProps } from './Carousel'
 import { HEADER_HEIGHT, HEADER_HEIGHT_MOBILE } from '../constants'
+import { VerlegerKampagnePayNoteTop } from 'components/VerlegerKampagne/VerlegerKampagneBanner'
 
 const Top: React.FC<CarouselProps> = (props) => {
   const { me } = useMe()
@@ -34,8 +34,9 @@ const Top: React.FC<CarouselProps> = (props) => {
             <Carousel {...props} />
           </div>
         </div>
-        <MarketingNewsBox me={me} />
+        {/* <MarketingNewsBox me={me} /> */}
       </div>
+      <VerlegerKampagnePayNoteTop />
     </div>
   )
 }

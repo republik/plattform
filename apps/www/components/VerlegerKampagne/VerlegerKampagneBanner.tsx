@@ -1,6 +1,7 @@
 import { useQuery } from '@apollo/client'
 import { CampaignLogo } from '@app/app/(campaign)/components/campaign-logo'
 import {
+  CAMPAIGN_MEMBER_BANNER_TEXT,
   CAMPAIGN_META_ARTICLE_URL,
   CAMPAIGN_REFERRALS_GOAL,
   CAMPAIGN_SLUG,
@@ -15,6 +16,7 @@ import ProgressBar from './ProgressBar'
 import './VerlegerKampagneBanner.css'
 import { verlegerKampagneColors } from './config'
 import { EventTrackingContext } from '@app/lib/matomo/event-tracking'
+import { useRouter } from 'next/router'
 
 const Center = ({
   children,
@@ -93,17 +95,15 @@ const topBannerStyles = {
 
 export function VerlegerKampagneBannerTop() {
   const { data } = useCampaignData()
+  const { asPath } = useRouter()
 
   return (
-    <EventTrackingContext category='CampaignBannerTop'>
+    <EventTrackingContext category='CampaignBannerTop' name={asPath}>
       <Center {...topBannerStyles.container} data-show-if-active-membership>
         <div {...topBannerStyles.wrapper}>
           <CampaignLogo inverted className={`${topBannerStyles.logo}`} />
           <div {...topBannerStyles.content}>
-            <div>
-              Bis zum 31. März suchen wir mit Ihnen zusammen{' '}
-              {CAMPAIGN_REFERRALS_GOAL} zusätzliche Verleger und Verlegerinnen.
-            </div>
+            <div>{CAMPAIGN_MEMBER_BANNER_TEXT}</div>
             <ProgressBar
               inverted
               from={data?.campaign.referrals.count || 0}
@@ -179,9 +179,10 @@ const bottomBannerStyles = {
 
 export function VerlegerKampagneBannerBottom() {
   const { data } = useCampaignData()
+  const { asPath } = useRouter()
 
   return (
-    <EventTrackingContext category='CampaignBannerBottom'>
+    <EventTrackingContext category='CampaignBannerBottom' name={asPath}>
       <Center
         {...bottomBannerStyles.container}
         wrapperStyle={css({
@@ -234,8 +235,10 @@ export function VerlegerKampagnePayNoteTop({
 }: {
   inNavigation?: boolean
 }) {
+  const { asPath } = useRouter()
+
   return (
-    <EventTrackingContext category='CampaignPayNoteTop'>
+    <EventTrackingContext category='CampaignPayNoteTop' name={asPath}>
       <Center
         {...bottomBannerStyles.container}
         wrapperStyle={css({
@@ -271,8 +274,10 @@ export function VerlegerKampagnePayNoteTop({
 }
 
 export function VerlegerKampagnePayNoteBottom() {
+  const { asPath } = useRouter()
+
   return (
-    <EventTrackingContext category='CampaignPayNoteBottom'>
+    <EventTrackingContext category='CampaignPayNoteBottom' name={asPath}>
       <Center
         {...bottomBannerStyles.container}
         wrapperStyle={css({
