@@ -26,6 +26,7 @@ export = (user: UserRow | User, additionalFields = {}): User | null => {
     // api read access protected by a resolver functions
     roles: user.roles || [],
     email: user.email,
+    referralCode: user.referralCode,
     verified: user.verified,
     // use resolver functions to access _raw
     // and expose more fields according to custom logic

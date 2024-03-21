@@ -15,3 +15,7 @@ yarn-error.log*
 .idea
 # Sentry Auth Token
 .sentryclirc
+
+# Generated GQL types
+!graphql/*/__generated__/gql/README.md
+graphql/*/__generated__/gql

@@ -15,7 +15,10 @@ module.exports = async (_, { slug, id, accessToken }, context) => {
 
   const { user: me, pgdb } = context
 
-  const user = await resolveUser({ slug, userId: id, pgdb })
+  let user
+  if (slug || id) {
+    user = await resolveUser({ slug, userId: id, pgdb })
+  }
 
   if (
     !user ||

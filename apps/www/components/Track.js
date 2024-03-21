@@ -94,7 +94,7 @@ const Track = () => {
       trackRoles(me)
       lastMeRef.current = me
     }
-    payload.disable(me?.activeMembership)
+    payload.disable(!!me?.activeMembership)
   }, [me, meLoading])
 
   const { inNativeAppVersion } = useInNativeApp()

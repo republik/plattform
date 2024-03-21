@@ -22,6 +22,7 @@
     "dev:postfinance:import": "concurrently 'tsc -w' 'sleep 3 && echo \"Starting import payments runner.\" && sleep 2 && NODE_ENV=development nodemon lib/scheduler/importPaymentsRunner.js'"
   },
   "dependencies": {
+    "@orbiting/backend-modules-referral-campaigns": "*",
     "apollo-modules-node": "*",
     "d3-array": "^2.4.0",
     "d3-dsv": "^1.2.0",

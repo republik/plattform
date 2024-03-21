@@ -18,6 +18,7 @@ import ChallengeAcceptedSVGDark from '../../public/static/challenge-accepted/cha
 import { useRouter } from 'next/router'
 import { useTheme } from 'next-themes'
 import { IconArrowRight } from '@republik/icons'
+import { EventTrackingContext } from '@app/lib/matomo/event-tracking'
 
 const styles = {
   p: css({
@@ -65,14 +66,19 @@ export const CAOverViewLink = () => (
   </Link>
 )
 
-export const CANewsLetterSignUp = () => (
-  <div {...css({ width: '100%' })}>
-    <h2 {...css({ ...fontStyles.sansSerifBold, fontSize: 19 })}>
-      Für den Newsletter anmelden
-    </h2>
-    <NewsletterSignUp name={NEWSLETTER_NAME} free />
-  </div>
-)
+export const CANewsLetterSignUp = () => {
+  const { asPath } = useRouter()
+  return (
+    <div {...css({ width: '100%' })}>
+      <h2 {...css({ ...fontStyles.sansSerifBold, fontSize: 19 })}>
+        Für den Newsletter anmelden
+      </h2>
+      <EventTrackingContext category='ChallengeAcceptedPayNote' name={asPath}>
+        <NewsletterSignUp name={NEWSLETTER_NAME} free />
+      </EventTrackingContext>
+    </div>
+  )
+}
 
 type CAInlineTeaserProps = {
   isMember: boolean

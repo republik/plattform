@@ -34,6 +34,9 @@ const { graphql: slots } = require('@orbiting/backend-modules-calendar')
 const {
   graphql: callToActions,
 } = require('@orbiting/backend-modules-call-to-actions')
+const {
+  graphql: referralCampaigns,
+} = require('@orbiting/backend-modules-referral-campaigns')
 const { graphql: datatrans } = require('@orbiting/backend-modules-datatrans')
 
 const loaderBuilders = {
@@ -120,6 +123,7 @@ const run = async (workerId, config) => {
     mailbox,
     slots,
     callToActions,
+    referralCampaigns,
     datatrans,
   ])
 

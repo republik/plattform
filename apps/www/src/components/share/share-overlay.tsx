@@ -14,18 +14,22 @@ import {
 import { ComponentPropsWithoutRef, useState } from 'react'
 import { ShareProps } from './types'
 import copyToClipboard from 'clipboard-copy'
+import { useTrackEvent } from '@app/lib/matomo/event-tracking'
 
 function ShareButton({
   icon: Icon,
   label,
   href,
+  name,
   onClick,
 }: {
   icon: React.ComponentType<ComponentPropsWithoutRef<typeof IconLogoFacebook>>
   label: string
   href?: string
+  name: string
   onClick?: (e: React.MouseEvent<HTMLAnchorElement>) => void
 }) {
+  const trackEvent = useTrackEvent()
   return (
     <a
       className={css({
@@ -41,7 +45,10 @@ function ShareButton({
       })}
       target='_blank'
       href={href}
-      onClick={onClick}
+      onClick={(e) => {
+        trackEvent({ action: `shareButton:${name}`, name: href })
+        onClick?.(e)
+      }}
       rel='noreferrer'
     >
       <Icon size={24} />

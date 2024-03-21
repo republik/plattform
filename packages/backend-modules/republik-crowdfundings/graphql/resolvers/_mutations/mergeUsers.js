@@ -256,7 +256,6 @@ module.exports = async (_, args, context) => {
     // try to move other stuff without failing
     const operations = [
       () => transaction.public.ballots.update(from, to),
-      () => transaction.public.cards.update(from, to),
       () => transaction.public.collectionDocumentItems.update(from, to),
       () => transaction.public.collectionMediaItems.update(from, to),
       () => transaction.public.devices.update(from, to),
@@ -286,6 +285,12 @@ module.exports = async (_, args, context) => {
           { objectUserId: to.userId },
         ),
       () => transaction.public.subscriptions.update(from, to),
+      () =>
+        transaction.public.referrals.update(
+          { referrerId: from.userId },
+          { referrerId: to.userId },
+        ),
+      () => transaction.public.userCampaignRewards.update(from, to),
     ]
     for (const operation of operations) {
       const savePoint = uuid()

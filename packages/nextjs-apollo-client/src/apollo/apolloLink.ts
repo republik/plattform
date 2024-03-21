@@ -51,11 +51,7 @@ export const createLink = ({
   const http = new HttpLink({
     uri: rewriteAPIHost(apiUrl),
     credentials: 'include',
-    headers: {
-      cookie: headers.cookie,
-      accept: headers.accept,
-      Authorization: headers.authorization,
-    },
+    headers: headers as Record<string, string>,
   })
 
   if (isClient && wsUrl) {

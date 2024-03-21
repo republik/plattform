@@ -3544,8 +3544,34 @@ input UploadUpdatedAtFilter {
 }
 
 type UploadVideoField {
+  alt(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+  ): String
+  blurUpThumb(
+    """Imgix transformations to apply to the image"""
+    imgixParams: ImgixParams
+
+    """
+    Controls the "punch" value (~contrast) of the blurhash decoding algorithm (defaults to 1.0)
+    """
+    punch: Float! = 1
+
+    """Image quality (defaults to 70%)"""
+    quality: Int! = 70
+
+    """Maximum image dimension (defaults to 24px)"""
+    size: Int! = 24
+  ): String
+  blurhash: String
   duration: Int
   framerate: Int
+  height: IntType!
   mp4Url(
     """Pick the exact resolution quality specified in the argument"""
     exactRes: VideoMp4Res
@@ -3556,12 +3582,23 @@ type UploadVideoField {
   muxAssetId: String!
   muxPlaybackId: String!
   streamingUrl: String!
+  thumbhash: String
   thumbnailUrl(
     """
     The file extension of the requested image format. Either png, jpg or gif
     """
     format: MuxThumbnailFormatType = jpg
   ): String!
+  title(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+  ): String
+  width: IntType!
 }
 
 """Specifies how to filter by width"""

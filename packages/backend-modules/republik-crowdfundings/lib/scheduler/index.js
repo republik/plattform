@@ -15,12 +15,17 @@ const { inform: informWinback } = require('./winbacks')
 const { inform: informFeedback } = require('./feedback')
 const { inform: informUpgrade } = require('./upgrade')
 const { run: membershipsOwnersHandler } = require('./owners')
+const { run: yearlyAboWinbacksHandler } = require('./yearlyAboWinbacks')
 const { deactivate } = require('./deactivate')
 const { changeover } = require('./changeover')
 const { importPayments } = require('./importPayments')
 const {
   sendPaymentReminders,
 } = require('../../lib/payments/paymentslip/sendPaymentReminders')
+
+const {
+  rewardReferrers,
+} = require('@orbiting/backend-modules-referral-campaigns')
 
 const surplus = require('@orbiting/backend-modules-republik/graphql/resolvers/RevenueStats/surplus')
 const {
@@ -77,6 +82,16 @@ const init = async (context) => {
 
   schedulers.push(
     intervalScheduler.init({
+      name: 'memberships-yearly-abo-winbacks',
+      context,
+      runFunc: yearlyAboWinbacksHandler,
+      lockTtlSecs,
+      runIntervalSecs: 60 * 10,
+    }),
+  )
+
+  schedulers.push(
+    intervalScheduler.init({
       name: 'feedback',
       context,
       runFunc: informFeedback,
@@ -122,6 +137,19 @@ const init = async (context) => {
 
   schedulers.push(
     intervalScheduler.init({
+      name: 'referral-rewards',
+      context,
+      runFunc: async (args, context) => {
+        const { pgdb } = context
+        await rewardReferrers(args, pgdb)
+      },
+      lockTtlSecs,
+      runIntervalSecs: 60 * 10,
+    }),
+  )
+
+  schedulers.push(
+    intervalScheduler.init({
       name: 'stats-cache',
       context,
       runFunc: (args, context) =>
@@ -138,8 +166,8 @@ const init = async (context) => {
             context,
           ),
         ]),
-      lockTtlSecs: 10,
-      runIntervalSecs: 60,
+      lockTtlSecs,
+      runIntervalSecs: 60 * 60,
     }),
   )
 

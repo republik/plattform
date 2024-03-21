@@ -1,10 +1,10 @@
 module.exports = {
-  plugins: ['react', 'react-hooks'],
+  plugins: ['@typescript-eslint'],
   extends: [
     'eslint:recommended',
-    'plugin:react/recommended',
-    'plugin:prettier/recommended',
     'plugin:@typescript-eslint/recommended',
+    'next',
+    'prettier',
   ],
   parser: '@typescript-eslint/parser',
   env: {
@@ -14,12 +14,13 @@ module.exports = {
     jest: true,
   },
   rules: {
-    'react-hooks/rules-of-hooks': 'error',
-    'react-hooks/exhaustive-deps': 'off',
     'react/jsx-no-target-blank': 'off',
     'react/display-name': 'off',
     'react/prop-types': 'off',
-    'no-unused-vars': 'warn',
+    'no-unused-vars': 'off',
+    '@typescript-eslint/no-unused-vars': ['warn'],
+    '@typescript-eslint/no-explicit-any': 'warn',
+    '@typescript-eslint/no-var-requires': 'warn',
     'no-empty': 'warn',
     // Rules to no longer require React to be imported (React >=17)
     'react/jsx-uses-react': 'off',

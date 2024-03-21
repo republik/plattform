@@ -13,6 +13,10 @@
       "value": "Community"
     },
     {
+      "key": "nav/genossenschaftsrat",
+      "value": "Genossenschaftsrat"
+    },
+    {
       "key": "nav/team",
       "value": "Team"
     },
@@ -434,7 +438,7 @@
     },
     {
       "key": "marketing/page/reasons/3/text",
-      "value": "Die Republik wird finanziert durch ihre rund 29’000 Abonnentinnen. Wir gehören niemandem – aber jedem unserer Mitglieder ein bisschen."
+      "value": "Die Republik wird finanziert durch ihre rund 27’000 Abonnentinnen. Wir gehören niemandem – aber jedem unserer Mitglieder ein bisschen."
     },
     {
       "key": "marketing/page/vision/headline",
@@ -2206,7 +2210,7 @@
     },
     {
       "key": "styleguide/comment/header/unpublishedByAdmin",
-      "value": "(von der Redaktion verborgen)"
+      "value": "(von der Moderation verborgen)"
     },
     {
       "key": "styleguide/comment/header/unavailable",
@@ -7012,6 +7016,14 @@
       "value": "Buchstaben zum Naschen, limitiertes Sonderangebot. Versand bis 22.12., nur innerhalb der Schweiz möglich."
     },
     {
+      "key": "Goodie/label/TOTEBAG_BLACK",
+      "value": "Republik-Tasche, schwarz"
+    },
+    {
+      "key": "Goodie/description/TOTEBAG_BLACK",
+      "value": "Mit Logo auf der Vorderseite und Manifest auf der Rückseite. Versand im April, nur in die Schweiz und nach Liechtenstein."
+    },
+    {
       "key": "option/TABLEBOOK/label/other",
       "value": "Republik bei Stromausfall"
     },
@@ -7225,7 +7237,7 @@
     },
     {
       "key": "article/payNote/220404-v1/before",
-      "value": "Journalismus kostet. Dass Sie diesen Beitrag trotzdem lesen können, verdanken Sie den rund 29’000 Leserinnen, die die Republik schon finanzieren. Wenn auch Sie unabhängigen Journalismus möglich machen wollen: Kommen Sie an Bord!"
+      "value": "Journalismus kostet. Dass Sie diesen Beitrag trotzdem lesen können, verdanken Sie den rund 27’000 Leserinnen, die die Republik schon finanzieren. Wenn auch Sie unabhängigen Journalismus möglich machen wollen: Kommen Sie an Bord!"
     },
     {
       "key": "article/payNote/220404-v1/after",
@@ -7245,7 +7257,7 @@
     },
     {
       "key": "article/tryNote/220404-v1/after",
-      "value": "Rund 29’000 Menschen machen die Republik heute schon möglich. Lernen Sie uns jetzt auch kennen – 21 Tage lang, kostenlos und unverbindlich:"
+      "value": "Rund 27’000 Menschen machen die Republik heute schon möglich. Lernen Sie uns jetzt auch kennen – 21 Tage lang, kostenlos und unverbindlich:"
     },
     {
       "key": "article/tryNote/220404-v2/before",

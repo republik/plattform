@@ -3,6 +3,7 @@ const {
   checkUsername,
   transformUser,
   Users,
+  Roles,
 } = require('@orbiting/backend-modules-auth')
 const { getKeyId, containsPrivateKey } = require('../../../lib/pgp')
 const {
@@ -175,7 +176,10 @@ module.exports = async (_, args, context) => {
     (isListed && !me._raw.isListed) ||
     (args.hasPublicProfile && !me.hasPublicProfile)
   ) {
-    const check = await isEligible(me.id, pgdb)
+    // Authors always have the option to make their profile public,
+    // we can skip the DB check if the user has the role 'author'.
+    const check =
+      Roles.userHasRole(me, 'author') || (await isEligible(me.id, pgdb))
     if (!check) {
       throw new Error(t('profile/notEligible'))
     }

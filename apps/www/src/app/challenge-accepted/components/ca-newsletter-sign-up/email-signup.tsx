@@ -6,7 +6,8 @@ import {
   NewsletterName,
   SignUpForNewsletterDocument,
   UpdateNewsletterSubscriptionDocument,
-} from '@app/graphql/republik-api/gql/graphql'
+} from '#graphql/republik-api/__generated__/gql/graphql'
+import { useTrackEvent } from '@app/lib/matomo/event-tracking'
 import { css } from '@app/styled-system/css'
 import { stack, wrap } from '@app/styled-system/patterns'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -59,6 +60,8 @@ export function EmailSignUp({
     },
   })
 
+  const trackEvent = useTrackEvent()
+
   // enable subscription if user is logged in and not subscribed
   async function enableSubscription() {
     try {
@@ -72,6 +75,7 @@ export function EmailSignUp({
       setSignUpSuccessfulText(
         'Sie haben sich für den Newsletter angemeldet. ✅',
       )
+      trackEvent({ action: 'newsletterSignupMember' })
     } catch (e) {
       console.error(e)
     } finally {
@@ -98,6 +102,7 @@ export function EmailSignUp({
       setSignUpSuccessfulText(
         'Wir haben Ihnen eine E-Mail geschickt, um die Anmeldung für den Newsletter zu bestätigen. ✅',
       )
+      trackEvent({ action: 'newsletterSignupEmail' })
     } catch (error) {
       console.error(error)
       form.setError(

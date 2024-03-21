@@ -1,0 +1,36 @@
+{
+  "name": "@orbiting/backend-modules-referral-campaigns",
+  "version": "1.0.0",
+  "description": "Library for yearly referral campaigns",
+  "main": "build/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/republik/plattform.git"
+  },
+  "author": "Luciana Kolbeck <luciana.kolbeck@republik.ch>",
+  "license": "AGPL-3.0",
+  "bugs": {
+    "url": "https://github.com/republik/plattform/issues"
+  },
+  "homepage": "https://github.com/republik/plattform#readme",
+  "scripts": {
+    "dev": "tsc -w",
+    "build": "tsc",
+    "test": "jest"
+  },
+  "types": "build/@types",
+  "dependencies": {
+    "@orbiting/backend-modules-scalars": "*",
+    "@orbiting/backend-modules-types": "*",
+    "apollo-modules-node": "*",
+    "crockford-base32": "^2.0.0",
+    "debug": "^4.1.1",
+    "pogi": "^2.11.1",
+    "stripe": "^8.119.0"
+  },
+  "devDependencies": {
+    "@faker-js/faker": "^8.4.1",
+    "@types/jest": "^29.5.12",
+    "ts-jest": "^29.1.2"
+  }
+}

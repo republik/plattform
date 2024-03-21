@@ -1,11 +1,6 @@
 import { css } from 'glamor'
 
-import {
-    IconLock,
-    IconPublic,
-    IconError,
-  IconReadTime,
-} from '@republik/icons'
+import { IconLock, IconPublic, IconError, IconReadTime } from '@republik/icons'
 
 import { IconButton, Label } from '@project-r/styleguide'
 
@@ -15,6 +10,7 @@ import { Tr, Td } from '../Table'
 
 import Destroy from './actions/Destroy'
 import Publish from './actions/Publish'
+import Unpublish from './actions/Unpublish'
 
 const timeFormat = swissTime.format('%d. %B %Y, %H:%M Uhr')
 
@@ -51,7 +47,7 @@ const statusMap = {
     disabled: false,
     colorName: 'primary',
     crumb: undefined,
-    Action: undefined,
+    Action: Unpublish,
   },
 }
 

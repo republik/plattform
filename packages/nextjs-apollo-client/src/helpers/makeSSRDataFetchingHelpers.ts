@@ -57,7 +57,7 @@ export function makeSSRDataFetchingHelpers<U>(
       const apolloClient = initializeApollo(null, {
         // Pass headers of the client-request to the apollo-link
         headers: context.req.headers,
-        onResponse: (response) => {
+        onResponse: (response: Response) => {
           const cookies = response.headers.get('Set-Cookie')
           if (cookies) {
             context.res.setHeader('Set-Cookie', cookies)

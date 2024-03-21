@@ -1,8 +1,8 @@
 module.exports = {
   root: true,
-  plugins: ['prettier'],
-  extends: ['plugin:prettier/recommended'],
-  rules: {
-    'prettier/prettier': 'warn',
+  settings: {
+    next: {
+      rootDir: ['docs', 'apps/*'],
+    },
   },
 }

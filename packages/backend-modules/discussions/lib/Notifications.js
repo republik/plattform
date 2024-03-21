@@ -1,5 +1,5 @@
 const htmlToText = require('html-to-text')
-const { renderEmail } = require('@republik/mdast-react-render')
+const { renderEmail } = require('@republik/mdast-react-render/email')
 
 const { transformUser } = require('@orbiting/backend-modules-auth')
 const {

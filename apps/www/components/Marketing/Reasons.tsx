@@ -10,7 +10,7 @@ import {
 } from '@project-r/styleguide'
 import Link from 'next/link'
 import { useTranslation } from '../../lib/withT'
-import { MarketingLandingPageCmsQuery } from '@app/graphql/cms/gql/graphql'
+import { MarketingLandingPageCmsQuery } from '#graphql/cms/__generated__/gql/graphql'
 
 type ReasonsProps = {
   inNativeApp: boolean

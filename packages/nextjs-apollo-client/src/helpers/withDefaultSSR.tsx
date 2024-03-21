@@ -61,7 +61,7 @@ export function makeWithDefaultSSR(
 
         const apolloClient = initializeApollo(null, {
           headers: ctx.req.headers,
-          onResponse: (response) => {
+          onResponse: (response: Response) => {
             const cookies = response.headers.get('Set-Cookie')
             if (cookies) {
               ctx.res.setHeader('Set-Cookie', cookies)

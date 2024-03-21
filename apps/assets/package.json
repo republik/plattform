@@ -32,6 +32,7 @@
     "@orbiting/backend-modules-publikator": "*",
     "@orbiting/backend-modules-push-notifications": "*",
     "@orbiting/backend-modules-redirections": "*",
+    "@orbiting/backend-modules-referral-campaigns": "*",
     "@orbiting/backend-modules-republik": "*",
     "@orbiting/backend-modules-republik-crowdfundings": "*",
     "@orbiting/backend-modules-scalars": "*",
