@@ -7,6 +7,7 @@ import { CAMPAIGN_SLUG } from '@app/app/(campaign)/constants'
 import { Logo } from '@app/app/(campaign)/components/logo'
 import { useState } from 'react'
 import { useSearchParams } from 'next/navigation'
+import { PUBLIC_BASE_URL } from 'lib/constants'
 import Link from 'next/link'
 
 const useCheckoutUrl = ({
@@ -18,7 +19,7 @@ const useCheckoutUrl = ({
 }): string => {
   const pageSearchParams = useSearchParams()
 
-  const url = new URL('/angebote', process.env.NEXT_PUBLIC_BASE_URL)
+  const url = new URL('/angebote', PUBLIC_BASE_URL)
 
   // Pass utm_* params to /angebote page
   for (const [k, v] of pageSearchParams) {
