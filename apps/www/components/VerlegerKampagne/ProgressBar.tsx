@@ -27,7 +27,7 @@ export default function ProgressBar({
   to: number
   inverted?: boolean
 }) {
-  const goalReachedRatio = from / to
+  const goalReachedRatio = Math.min(1, from / to)
   return (
     <div
       {...css({

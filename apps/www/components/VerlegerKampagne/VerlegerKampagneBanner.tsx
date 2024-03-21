@@ -1,7 +1,7 @@
 import { useQuery } from '@apollo/client'
 import { CampaignLogo } from '@app/app/(campaign)/components/campaign-logo'
 import {
-  CAMPAIGN_MEMBER_BANNER_TEXT,
+  getCampaignMemberBannerText,
   CAMPAIGN_META_ARTICLE_URL,
   CAMPAIGN_REFERRALS_GOAL,
   CAMPAIGN_SLUG,
@@ -103,7 +103,9 @@ export function VerlegerKampagneBannerTop() {
         <div {...topBannerStyles.wrapper}>
           <CampaignLogo inverted className={`${topBannerStyles.logo}`} />
           <div {...topBannerStyles.content}>
-            <div>{CAMPAIGN_MEMBER_BANNER_TEXT}</div>
+            <div>
+              {getCampaignMemberBannerText(data?.campaign.referrals.count || 0)}
+            </div>
             <ProgressBar
               inverted
               from={data?.campaign.referrals.count || 0}
@@ -112,7 +114,7 @@ export function VerlegerKampagneBannerTop() {
           </div>
           <div {...topBannerStyles.button}>
             <Button small inverted href='/jetzt-einladen'>
-              Jetzt mithelfen
+              Jetzt einladen
             </Button>
           </div>
         </div>
@@ -198,13 +200,10 @@ export function VerlegerKampagneBannerBottom() {
           </h2>
           <div>
             <p {...bottomBannerStyles.p}>
-              <Link href={CAMPAIGN_META_ARTICLE_URL}>
-                Bis zum 31. März suchen wir mit Ihnen zusammen{' '}
-                {CAMPAIGN_REFERRALS_GOAL} zusätzliche Verleger und Verlegerinnen
-              </Link>
-              . Mitmachen ist einfach: Teilen Sie Ihren persönlichen Link mit so
-              vielen Bekannten wie möglich und erzählen Sie ihnen, warum Sie die
-              Republik unterstützen.
+              In knapp drei Wochen haben wir gemeinsam 1000 neue Verlegerinnen
+              und Verleger an Bord geholt. Das ist grossartig! Wie viele
+              schaffen wir bis zum 31. März? Laden Sie jetzt weitere Freunde und
+              Bekannte zum vergünstigten Einstiegspreis ein.
             </p>
             {/* <p {...bottomBannerStyles.p}>
             Gemeinsam haben wir schon {data?.campaign?.referrals?.count || '-'}{' '}
@@ -222,7 +221,7 @@ export function VerlegerKampagneBannerBottom() {
             />
           </div>
           <div>
-            <Button href='/jetzt-einladen'>Jetzt mithelfen</Button>
+            <Button href='/jetzt-einladen'>Jetzt einladen</Button>
           </div>
         </div>
       </Center>

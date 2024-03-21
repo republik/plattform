@@ -45,9 +45,7 @@ export const CampaignProgress = async () => {
         ></div>
       </div>
 
-      <div>
-        {reached} von {CAMPAIGN_REFERRALS_GOAL}
-      </div>
+      <div>{reached}</div>
     </div>
   )
 }

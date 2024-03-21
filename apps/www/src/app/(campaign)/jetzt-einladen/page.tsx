@@ -80,7 +80,7 @@ export default async function Page() {
           hasRegularAbo={hasRegularAbo}
         />
 
-        <p>
+        {/* <p>
           Lassen Sie uns diese Verantwortung auf mehr Schultern verteilen:{' '}
           <Link href={CAMPAIGN_META_ARTICLE_URL}>
             Bis zum 31. März suchen wir {CAMPAIGN_REFERRALS_GOAL} zusätzliche
@@ -89,6 +89,18 @@ export default async function Page() {
           . Denn je mehr Menschen sich einsetzen, desto breiter ist die
           Grundlage für das, weshalb wir alle hier sind: unabhängiger
           Journalismus.
+        </p> */}
+
+        <p>
+          Ihr Einsatz wirkt: In genau drei Wochen haben wir gemeinsam 1000 neue
+          Verlegerinnen und Verleger an Bord geholt! Und wir bleiben dran – denn
+          je mehr Menschen sich engagieren, desto breiter ist die Grundlage für
+          unser gemeinsames Projekt: unabhängiger Journalismus.
+        </p>
+        <p>
+          Laden Sie heute noch weitere Freundinnen und Bekannte zum
+          vergünstigten Einstiegspreis ein. Wie viele schaffen wir bis zum 31.
+          März?
         </p>
 
         <p>Aktueller Zwischenstand:</p>
