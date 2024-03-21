@@ -20,6 +20,8 @@ const MissingPackageGrant = newAuthError(
 )
 
 const scopeConfigs = {
+  // AccessTokenScope CUSTOM_PLEDGE is deprecated.
+  // Use SUBMIT_PLEDGE instead.
   CUSTOM_PLEDGE: {
     exposeFields: [
       'email',
@@ -33,6 +35,8 @@ const scopeConfigs = {
     pledgePackages: ['PROLONG', 'TABLEBOOK'],
     ttlDays: 90,
   },
+  // AccessTokenScope CUSTOM_PLEDGE_EXTENDED is deprecated.
+  // Use SUBMIT_PLEDGE instead.
   CUSTOM_PLEDGE_EXTENDED: {
     exposeFields: [
       'email',
@@ -45,6 +49,19 @@ const scopeConfigs = {
     ],
     pledgePackages: ['PROLONG'],
     ttlDays: 120,
+  },
+  SUBMIT_PLEDGE: {
+    exposeFields: [
+      'email',
+      'firstName',
+      'lastName',
+      'address',
+      'hasAddress',
+      'paymentSources',
+      'customPackages',
+    ],
+    pledgePackages: ['*'],
+    ttlDays: 90,
   },
   CLAIM_CARD: {
     exposeFields: ['email', 'cards'],
@@ -181,12 +198,8 @@ const isFieldExposed = (user, field) =>
 
 const ensureCanPledgePackage = (user, packageName) => {
   if (
-    !(
-      user &&
-      user._scopeConfig &&
-      user._scopeConfig.pledgePackages &&
-      user._scopeConfig.pledgePackages.includes(packageName)
-    )
+    !user?._scopeConfig?.pledgePackages?.includes(packageName) &&
+    !user?._scopeConfig?.pledgePackages?.includes('*')
   ) {
     throw new MissingPackageGrant(null, { package: packageName })
   }
