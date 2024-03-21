@@ -49,7 +49,23 @@ export interface ProLitterisMessageService {
   makeMessage(msg: MessageRequest): Promise<MessageResponse | APIError | null>
 }
 
-export class ProLitterisAPI implements ProLitterisMessageService {
+type GetPixelArgs = {
+  startAt?: number
+  isCountStarted?: boolean
+  isMessageExisting?: boolean
+  minAccessReached?: boolean
+  yearForMinAccessReached?: string
+  createdDateFrom?: string
+  createdDateTo?: string
+}
+
+export interface ProLitterisTrackingService {
+  getPixelIds(args: GetPixelArgs | null): Promise<any>
+}
+
+export class ProLitterisAPI
+  implements ProLitterisMessageService, ProLitterisTrackingService
+{
   #baseURL: string = 'https://owen.prolitteris.ch/'
   #authentication: string
 
@@ -58,6 +74,18 @@ export class ProLitterisAPI implements ProLitterisMessageService {
       'base64',
     )
     this.#authentication = `OWEN ${auth}`
+  }
+
+  async getPixelIds(args: GetPixelArgs | null): Promise<any> {
+    const res = await this.#doRequest('/rest/api/1/pixel', 'GET', args)
+
+    if (res && res.ok) {
+      return await res.json()
+    }
+
+    console.log(res?.status)
+
+    return null
   }
 
   async makeMessage(
@@ -98,8 +126,11 @@ export class ProLitterisAPI implements ProLitterisMessageService {
     data: any,
   ): Promise<Response | null> {
     try {
-      const body = JSON.stringify(data)
-      return fetch(this.#baseURL + url, {
+      const body = method === 'POST' ? JSON.stringify(data) : undefined
+      const query =
+        method === 'GET' ? '?' + new URLSearchParams(data) : undefined
+
+      return fetch(this.#baseURL + url + query, {
         method: method,
         headers: {
           Authorization: this.#authentication,

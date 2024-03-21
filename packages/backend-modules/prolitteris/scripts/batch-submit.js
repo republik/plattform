@@ -81,7 +81,7 @@ async function prepareHandler(args) {
   }
 
   const ELASTIC_NODE =
-    process.env.ELASTIC_URL || 'http://elastic:elastic@localhost:9200'
+    process.env.ELASRIC_PROD_URL || 'http://elastic:elastic@localhost:9200'
 
   const esClient = new Client({
     node: ELASTIC_NODE,
@@ -124,7 +124,7 @@ async function prepareHandler(args) {
 
   const outputFileStream = fs.createWriteStream('prolitteris_input.jsonl')
   for (const hit of results.hits.hits) {
-    console.error('processing article %s', hit._source?.meta?.repoId)
+    console.error('processing article %s', hit?._source?.meta?.repoId)
     try {
       const doc = parse(ESDocumentSchema, hit._source)
 
@@ -192,8 +192,9 @@ async function prepareHandler(args) {
 }
 
 async function runBatchSubmission(args) {
-  const CHECKPOINT_FILE = 'prolitteris.checkpoint'
-  const NO_AUTHORS_FILE = 'prolitteris.no_authors'
+  const CHECKPOINT_FILE = 'checkpoint.prolitteris'
+  const NO_AUTHORS_FILE = 'no_authors.prolitteris'
+  const BLOCK_FILE = 'blocked.prolitteris'
   const PROLITTERIS_USER_NAME = process.env?.PROLITTERIS_USER_NAME
   if (!PROLITTERIS_USER_NAME) {
     console.error('ProLitteris Username not provied')
@@ -224,11 +225,28 @@ async function runBatchSubmission(args) {
   const checkPointFile = fs.createReadStream(CHECKPOINT_FILE)
   const noAuthorsFile = fs.createWriteStream(NO_AUTHORS_FILE)
 
+  const blockFile = await fsp
+    .access(BLOCK_FILE, fs.constants.F_OK)
+    .then(() => fs.createReadStream(BLOCK_FILE))
+    .catch((_err) => {
+      console.error('no block file')
+      return null
+    })
+
   const checkPoints = []
   for await (const checkPoint of readline.createInterface({
     input: checkPointFile,
   })) {
     checkPoints.push(checkPoint)
+  }
+
+  const blockedPixelUids = []
+  if (blockFile) {
+    for await (const blockedPixelId of readline.createInterface({
+      input: blockFile,
+    })) {
+      blockedPixelUids.push(blockedPixelId)
+    }
   }
 
   // capture Ctrl+C to save checkpoint file before exit
@@ -253,14 +271,22 @@ async function runBatchSubmission(args) {
        */
       const data = JSON.parse(line) // maybe we should validate the body
 
-      if (checkPoints.includes(data.pixelUid)) {
-        console.error('Skipping %s: already processed', data.pixelUid)
+      if (blockedPixelUids.includes(data.pixelUid)) {
+        console.error(
+          'Skipping %s: pixelUid is part of block list',
+          data.pixelUid,
+        )
         continue
       }
 
       if (data.participants.length === 0) {
         noAuthorsFile.write(data.pixelUid + '\n')
         console.error('Skipping %s: no authors', data.pixelUid)
+        continue
+      }
+
+      if (checkPoints.includes(data.pixelUid)) {
+        console.error('Skipping %s: already processed', data.pixelUid)
         continue
       }
 
@@ -272,12 +298,21 @@ async function runBatchSubmission(args) {
         res.createdAt,
       )
       checkPoints.push(data.pixelUid)
+      await waitInMilliseconds(500)
+      continue
     } catch (error) {
       console.error('Error submitting data: %s', error)
+      await waitInMilliseconds(500)
     }
   }
 
   await fsp.writeFile(CHECKPOINT_FILE, checkPoints.join('\n'))
+}
+
+function waitInMilliseconds(milliseconds = 1000) {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => resolve('done!'), milliseconds)
+  })
 }
 
 function readFileOrStdin(filepath) {
