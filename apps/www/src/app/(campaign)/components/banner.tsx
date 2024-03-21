@@ -1,6 +1,6 @@
 'use client'
 import { CampaignLogo } from '@app/app/(campaign)/components/campaign-logo'
-import { CAMPAIGN_MEMBER_BANNER_TEXT } from '@app/app/(campaign)/constants'
+import { getCampaignMemberBannerText } from '@app/app/(campaign)/constants'
 import {
   EventTrackingContext,
   useTrackEvent,
@@ -49,7 +49,7 @@ const ProgressBar = ({
             style={{
               // @ts-expect-error custom var
               '--progress-width': `${
-                (currentReferrals / referralsGoal) * 100
+                Math.min(1, currentReferrals / referralsGoal) * 100
               }%`,
             }}
           ></div>
@@ -87,7 +87,7 @@ const Button = () => {
         trackEvent({ action: 'linkClicked', name: '/jetzt-einladen' })
       }
     >
-      Jetzt mithelfen
+      Jetzt einladen
     </Link>
   )
 }
@@ -161,7 +161,7 @@ export function CampaignBanner({
                 gap: '3',
               })}
             >
-              <div>{CAMPAIGN_MEMBER_BANNER_TEXT}</div>
+              <div>{getCampaignMemberBannerText(currentReferrals)}</div>
 
               <ProgressBar
                 currentReferrals={currentReferrals}
