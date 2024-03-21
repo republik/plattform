@@ -10,6 +10,7 @@ import NewsletterSubscriptions from '../Account/NewsletterSubscriptions'
 import EmailForm, { checkEmail } from './EmailForm'
 
 import { Interaction } from '@project-r/styleguide'
+import { useTrackEvent } from '@app/lib/matomo/event-tracking'
 
 const SignUp = ({
   me,
@@ -25,6 +26,8 @@ const SignUp = ({
 }) => {
   const [state, setState] = useState(() => checkEmail({ value: '', t }))
   const [serverState, setServerState] = useState({})
+  const trackEvent = useTrackEvent()
+
   return (
     <>
       {showTitle && (
@@ -42,6 +45,11 @@ const SignUp = ({
           free={free}
           onlyName={name}
           smallButton={smallButton}
+          onSubscribe={() => {
+            trackEvent({
+              action: 'subscribeNewsletterMember',
+            })
+          }}
         />
       ) : serverState.success ? (
         <Interaction.P>{t('Auth/NewsletterSignUp/success')}</Interaction.P>
@@ -71,6 +79,7 @@ const SignUp = ({
             })
               .then(() => {
                 setServerState({ loading: false, success: true })
+                trackEvent({ action: 'newsletterSignupEmail' })
               })
               .catch((error) => {
                 setServerState({ loading: false, error })

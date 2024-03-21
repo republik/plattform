@@ -1,16 +1,17 @@
 import { NativeAppMessageSync } from '@app/components/native-app'
 import './root.css'
 
-import { MatomoTracking } from '@app/components/matomo-tracking'
+import { MatomoPageViewTracking } from '@app/lib/matomo/pageview-tracking'
 import { ThemeProvider } from '@app/components/theme-provider'
 import { ApolloWrapper } from '@app/lib/apollo/provider'
 import { css } from '@app/styled-system/css'
 import Script from 'next/script'
 import { ReactNode, Suspense } from 'react'
 import { Metadata } from 'next'
+import { PUBLIC_BASE_URL } from 'lib/constants'
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL),
+  metadataBase: new URL(PUBLIC_BASE_URL),
   title: {
     default: 'Republik',
     template: '%s – Republik',
@@ -35,10 +36,6 @@ export default async function RootLayout({
           color: 'text',
           textStyle: 'body',
           bg: 'pageBackground',
-          '& :where(a)': {
-            color: 'link',
-            textDecoration: 'underline',
-          },
         })}
         style={{
           height: '100dvh',
@@ -49,7 +46,7 @@ export default async function RootLayout({
             {children}
             <NativeAppMessageSync />
             <Suspense fallback={null}>
-              <MatomoTracking />
+              <MatomoPageViewTracking />
             </Suspense>
           </ApolloWrapper>
         </ThemeProvider>
@@ -68,7 +65,7 @@ export default async function RootLayout({
                   __html: `
             _paq.push(['enableLinkTracking']);
             ${
-              process.env.NEXT_PUBLIC_BASE_URL.indexOf('https') === 0
+              PUBLIC_BASE_URL.indexOf('https') === 0
                 ? "_paq.push(['setSecureCookie', true]);"
                 : ''
             }

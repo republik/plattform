@@ -60,135 +60,149 @@ const NewsletterSubscriptions = ({
   free,
   onlyName,
   smallButton,
-}) => (
-  <Query query={NEWSLETTER_SETTINGS} variables={{ onlyName }}>
-    {({ loading, error, data }) => {
-      if (loading || error) {
-        return <Loader loading={loading} error={error} />
-      }
+  onSubscribe,
+}) => {
+  return (
+    <Query query={NEWSLETTER_SETTINGS} variables={{ onlyName }}>
+      {({ loading, error, data }) => {
+        if (loading || error) {
+          return <Loader loading={loading} error={error} />
+        }
 
-      if (!data.me || !data.me.newsletterSettings) {
-        return (
-          <FrameBox style={{ margin: '10px 0', padding: 15 }}>
-            <P>{t('account/newsletterSubscriptions/unauthorized')}</P>
-          </FrameBox>
+        if (!data.me || !data.me.newsletterSettings) {
+          return (
+            <FrameBox style={{ margin: '10px 0', padding: 15 }}>
+              <P>{t('account/newsletterSubscriptions/unauthorized')}</P>
+            </FrameBox>
+          )
+        }
+
+        const { status } = data.me.newsletterSettings
+        const subscriptions = data.me.newsletterSettings.subscriptions.filter(
+          onlyName ? (subscription) => subscription.name === onlyName : Boolean,
         )
-      }
 
-      const { status } = data.me.newsletterSettings
-      const subscriptions = data.me.newsletterSettings.subscriptions.filter(
-        onlyName ? (subscription) => subscription.name === onlyName : Boolean,
-      )
-
-      return (
-        <Fragment>
-          {status !== 'subscribed' && (
-            <FrameBox style={{ margin: '10px 0', padding: 15 }}>
-              <Mutation mutation={RESUBSCRIBE_EMAIL}>
-                {(mutate, { loading, error, data: mutationData }) => (
-                  <>
-                    {status !== 'pending' && (
-                      <P>{t('account/newsletterSubscriptions/unsubscribed')}</P>
-                    )}
-                    {/* Show if the status has been set to pending */}
-                    {mutationData?.resubscribeEmail?.status === 'pending' && (
-                      <P>{t('account/newsletterSubscriptions/resubscribed')}</P>
-                    )}
-                    {/* Show if the status is pending an no new email has been requested */}
-                    {status === 'pending' && !mutationData && (
-                      <P>
-                        {t(
-                          'account/newsletterSubscriptions/resubscribeEmailPending',
-                        )}
-                      </P>
-                    )}
-                    {!mutationData && (
-                      <div style={{ marginTop: 10 }}>
-                        {error && <ErrorMessage error={error} />}
-                        {loading && <InlineSpinner size={40} />}
-                        {!loading && (
-                          <Button
-                            primary
-                            small={smallButton}
-                            onClick={() =>
-                              mutate({
-                                variables: {
-                                  userId: data.me.id,
-                                },
-                              })
-                            }
-                          >
-                            {status !== 'pending'
-                              ? t('account/newsletterSubscriptions/resubscribe')
-                              : t(
-                                  'account/newsletterSubscriptions/resendResubscribeEmail',
-                                )}
-                          </Button>
-                        )}
-                      </div>
-                    )}
-                  </>
-                )}
+        return (
+          <Fragment>
+            {status !== 'subscribed' && (
+              <FrameBox style={{ margin: '10px 0', padding: 15 }}>
+                <Mutation mutation={RESUBSCRIBE_EMAIL}>
+                  {(mutate, { loading, error, data: mutationData }) => (
+                    <>
+                      {status !== 'pending' && (
+                        <P>
+                          {t('account/newsletterSubscriptions/unsubscribed')}
+                        </P>
+                      )}
+                      {/* Show if the status has been set to pending */}
+                      {mutationData?.resubscribeEmail?.status === 'pending' && (
+                        <P>
+                          {t('account/newsletterSubscriptions/resubscribed')}
+                        </P>
+                      )}
+                      {/* Show if the status is pending an no new email has been requested */}
+                      {status === 'pending' && !mutationData && (
+                        <P>
+                          {t(
+                            'account/newsletterSubscriptions/resubscribeEmailPending',
+                          )}
+                        </P>
+                      )}
+                      {!mutationData && (
+                        <div style={{ marginTop: 10 }}>
+                          {error && <ErrorMessage error={error} />}
+                          {loading && <InlineSpinner size={40} />}
+                          {!loading && (
+                            <Button
+                              primary
+                              small={smallButton}
+                              onClick={() =>
+                                mutate({
+                                  variables: {
+                                    userId: data.me.id,
+                                  },
+                                })
+                              }
+                            >
+                              {status !== 'pending'
+                                ? t(
+                                    'account/newsletterSubscriptions/resubscribe',
+                                  )
+                                : t(
+                                    'account/newsletterSubscriptions/resendResubscribeEmail',
+                                  )}
+                            </Button>
+                          )}
+                        </div>
+                      )}
+                    </>
+                  )}
+                </Mutation>
+              </FrameBox>
+            )}
+            {!isMember && !free && (
+              <FrameBox style={{ margin: '10px 0', padding: 15 }}>
+                <P>{t('account/newsletterSubscriptions/noMembership')}</P>
+              </FrameBox>
+            )}
+            {subscriptions.map(({ name, subscribed }) => (
+              <Mutation key={name} mutation={UPDATE_NEWSLETTER_SUBSCRIPTION}>
+                {(mutate, { loading: mutating, error }) => {
+                  return (
+                    <>
+                      {onlyName &&
+                      !subscribed &&
+                      status === 'subscribed' &&
+                      !mutating ? (
+                        // renders just a button
+                        <Button
+                          primary
+                          small={smallButton}
+                          onClick={() => {
+                            mutate({
+                              variables: {
+                                name,
+                                subscribed: true,
+                              },
+                              onCompleted: () => {
+                                onSubscribe?.({ name })
+                              },
+                            })
+                          }}
+                        >
+                          {t(
+                            'account/newsletterSubscriptions/button/subscribe',
+                          )}
+                        </Button>
+                      ) : (
+                        <NewsletterItem
+                          subscribed={subscribed}
+                          mutating={mutating}
+                          name={name}
+                          t={t}
+                          status={status}
+                          onlyName={onlyName}
+                          onChange={(_, checked) => {
+                            mutate({
+                              variables: {
+                                name,
+                                subscribed: checked,
+                              },
+                            })
+                          }}
+                        />
+                      )}
+                      {error && <ErrorMessage error={error} />}
+                    </>
+                  )
+                }}
               </Mutation>
-            </FrameBox>
-          )}
-          {!isMember && !free && (
-            <FrameBox style={{ margin: '10px 0', padding: 15 }}>
-              <P>{t('account/newsletterSubscriptions/noMembership')}</P>
-            </FrameBox>
-          )}
-          {subscriptions.map(({ name, subscribed }) => (
-            <Mutation key={name} mutation={UPDATE_NEWSLETTER_SUBSCRIPTION}>
-              {(mutate, { loading: mutating, error }) => {
-                return (
-                  <>
-                    {onlyName &&
-                    !subscribed &&
-                    status === 'subscribed' &&
-                    !mutating ? (
-                      // renders just a button
-                      <Button
-                        primary
-                        small={smallButton}
-                        onClick={() => {
-                          mutate({
-                            variables: {
-                              name,
-                              subscribed: true,
-                            },
-                          })
-                        }}
-                      >
-                        {t('account/newsletterSubscriptions/button/subscribe')}
-                      </Button>
-                    ) : (
-                      <NewsletterItem
-                        subscribed={subscribed}
-                        mutating={mutating}
-                        name={name}
-                        t={t}
-                        status={status}
-                        onlyName={onlyName}
-                        onChange={(_, checked) => {
-                          mutate({
-                            variables: {
-                              name,
-                              subscribed: checked,
-                            },
-                          })
-                        }}
-                      />
-                    )}
-                    {error && <ErrorMessage error={error} />}
-                  </>
-                )
-              }}
-            </Mutation>
-          ))}
-        </Fragment>
-      )
-    }}
-  </Query>
-)
+            ))}
+          </Fragment>
+        )
+      }}
+    </Query>
+  )
+}
 
 export default compose(withT, withMembership)(NewsletterSubscriptions)

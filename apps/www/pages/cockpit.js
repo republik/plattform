@@ -1,45 +1,67 @@
-import { useEffect, useState } from 'react'
-import compose from 'lodash/flowRight'
-import { graphql } from '@apollo/client/react/hoc'
-import Router, { withRouter } from 'next/router'
-import { extent } from 'd3-array'
 import { gql } from '@apollo/client'
+import { graphql } from '@apollo/client/react/hoc'
+import { extent } from 'd3-array'
 import { timeMonth } from 'd3-time'
+import compose from 'lodash/flowRight'
+import Router, { withRouter } from 'next/router'
+import { useEffect, useState } from 'react'
 
 import {
-  P,
-  H2,
-  Editorial,
-  Interaction,
-  Loader,
-  LazyLoad,
-  ChartTitle,
+  Chart,
   ChartLead,
   ChartLegend,
-  Chart,
+  ChartTitle,
+  Editorial,
+  H2,
+  Interaction,
+  LazyLoad,
+  Loader,
+  P,
   mediaQueries,
 } from '@project-r/styleguide'
 
 import Frame from '../components/Frame'
 import { countFormat } from '../lib/utils/format'
 
-import { PackageItem, PackageBuffer } from '../components/Pledge/Accordion'
+import { PackageBuffer, PackageItem } from '../components/Pledge/Accordion'
 
+import { RawStatus } from '../components/Crowdfunding/Status'
 import {
   mapActionData,
   userSurviveActionsFragment,
 } from '../components/Crowdfunding/withSurviveStatus'
-import { RawStatus } from '../components/Crowdfunding/Status'
 import withT from '../lib/withT'
 
 import { ListWithQuery as TestimonialList } from '../components/Testimonial/List'
 
-import { CROWDFUNDING, CDN_FRONTEND_BASE_URL } from '../lib/constants'
-import withMe from '../lib/apollo/withMe'
-import { swissTime } from '../lib/utils/format'
-import withInNativeApp from '../lib/withInNativeApp'
 import Link from 'next/link'
 import { withDefaultSSR } from '../lib/apollo/helpers'
+import withMe from '../lib/apollo/withMe'
+import { CDN_FRONTEND_BASE_URL, CROWDFUNDING } from '../lib/constants'
+import { swissTime } from '../lib/utils/format'
+import withInNativeApp from '../lib/withInNativeApp'
+
+import { CAMPAIGN_META_ARTICLE_URL } from '@app/app/(campaign)/constants'
+
+/**
+ * Generate a list of ticks for a chart, starting at 0 and going to max, then from 0 to min
+ * at a given step size.
+ * @param {number} minimum value (expected to be negative)
+ * @param {number} max value (expected to be positive)
+ * @param {number[]} step size
+ */
+function getChartTicks(min, max, step) {
+  const ticks = [0]
+  // from 0 to max, add step
+  for (let i = 0; i <= max; i += step) {
+    ticks.push(i)
+  }
+  // from 0 to min, add step
+  for (let i = 0; i >= min; i -= step) {
+    ticks.push(i)
+  }
+  return Array.from(new Set(ticks)).sort((a, b) => a - b)
+}
 
 const statusQuery = gql`
   query CockpitStatus(
@@ -502,8 +524,6 @@ const Page = ({
             Math[i ? 'ceil' : 'floor'](Math.round(d / 1000) * 1000),
           )
 
-          console.log(data.membershipStats.lastSeen)
-
           const lastSeenBucket =
             data.membershipStats.lastSeen.buckets.slice(-1)[0]
           const lastSeen = lastSeenBucket.users
@@ -532,9 +552,34 @@ const Page = ({
             //   })),
           )
 
+          const [pendingVlauesMin, pendingValuesMax] = extent(
+            pendingValues,
+            (d) => d.value,
+          )
+          // round min down to next 100 and max up to next 100
+          const pendingValuesMinMax = [
+            Math.floor(pendingVlauesMin / 100) * 100,
+            Math.ceil(pendingValuesMax / 100) * 100,
+          ]
+
           return (
             <>
-              <div style={{ marginBottom: 60 }}>
+              <Interaction.Headline style={{ marginBottom: 20 }}>
+                Das Cockpit zum Stand unseres Unternehmens
+              </Interaction.Headline>
+              <P>
+                Die Aufgabe der Republik ist, brauchbaren Journalismus zu
+                machen. Einen, der die Köpfe klarer, das Handeln mutiger, die
+                Entscheidungen klüger macht. Und der das Gemeinsame stärkt: die
+                Freiheit, den Rechtsstaat, die Demokratie.
+              </P>
+              <P>
+                Die Grundlage dafür ist ein Geschäftsmodell für werbefreien,
+                unabhängigen, leserfinanzierten Journalismus. Um am Markt zu
+                bestehen und einen entscheidenden Unterschied im Mediensystem zu
+                machen, braucht die Republik eine starke Community.
+              </P>
+              <div style={{ margin: '60px 0' }}>
                 <RawStatus
                   t={t}
                   color='#fff'
@@ -558,22 +603,22 @@ const Page = ({
                   }
                 />
               </div>
-              <Interaction.Headline style={{ marginBottom: 20 }}>
-                Das Cockpit zum Stand unseres Unternehmens
-              </Interaction.Headline>
               <P>
-                Die Aufgabe der Republik ist, brauchbaren Journalismus zu
-                machen. Einen, der die Köpfe klarer, das Handeln mutiger, die
-                Entscheidungen klüger macht. Und der das Gemeinsame stärkt: die
-                Freiheit, den Rechtsstaat, die Demokratie.
+                An dieser Stelle machen wir, anders als in unserer finanziellen
+                Planung, keinen Unterschied zwischen weniger und mehr zahlenden
+                Verlegerinnen. Jeder Verleger, egal wie viel er zahlen kann,
+                unterstützt uns und leistet einen Beitrag. Es gibt Menschen in
+                unserer Community, die sich eine Jahresmitgliedschaft nicht
+                leisten können und deshalb einen vergünstigten Preis zahlen; es
+                gibt aber auch Mitglieder, die als Gönner mehr bezahlen. Im
+                Frühjahr 2023 kamen zudem Menschen an Bord, die zum
+                5-Jahres-Jubiläum ein 12-Monats-Abo zu einem frei wählbaren
+                Preis abschliessen konnten. Zwischen Mitte Februar und Anfang
+                April 2024 laufen diese Abonnements aus, was wir hier ebenfalls
+                abbilden.{' '}
+                <Editorial.A href={CAMPAIGN_META_ARTICLE_URL}>Hier</Editorial.A>{' '}
+                erfahren Sie mehr über unsere Kampagnen.
               </P>
-              <P>
-                Die Grundlage dafür ist ein Geschäftsmodell für werbefreien,
-                unabhängigen, leserfinanzierten Journalismus. Um am Markt zu
-                bestehen und einen entscheidenden Unterschied im Mediensystem zu
-                machen, braucht die Republik eine starke Community.
-              </P>
-
               <div style={{ marginTop: 20 }}>
                 <ChartTitle>
                   Aktuell {countFormat(activeCount)} Mitglieder
@@ -597,6 +642,7 @@ const Page = ({
                       '2021-01',
                       '2022-01',
                       '2023-01',
+                      '2024-01',
                     ],
                     height: 300,
                     domain: [0, 35000],
@@ -644,12 +690,17 @@ const Page = ({
                     timeParse: '%Y-%m',
                     timeFormat: '%b %y',
                     xInterval: 'month',
-                    height: 300,
-                    domain: [-1250, 2100],
-                    yTicks: [
-                      -1250, -1000, -750, -500, -250, 0, 250, 500, 750, 1000,
-                      1250, 1500, 1750, 2000,
-                    ],
+                    height: 360,
+                    domain: pendingValuesMinMax,
+                    yTicks: getChartTicks(
+                      pendingValuesMinMax[0],
+                      pendingValuesMinMax[1],
+                      250,
+                    ),
+                    // [
+                    // -2000, -1750, -1500, -1250, -1000, -750, -500, -250, 0,
+                    // 250, 500, 750, 1000, 1250, 1500, 1750, 2000,
+                    // ],
                     // xAnnotations: [
                     //   {
                     //     x1: currentBucket.key,
@@ -668,6 +719,11 @@ const Page = ({
                   Datenstand: {formatDateTime(new Date(updatedAt))}
                 </ChartLegend>
               </div>
+              <P>
+                Bei der Zahl der Abgänge ist zu berücksichtigen, dass die
+                12-Monats-Abos aus der 5-Jahres-Jubiläums-Kampagne das Bild
+                verzerren. Diese vergünstigten Abos laufen im Frühjahr 2024 aus.
+              </P>
               <H2>
                 {countFormat(lastSeen)} Verlegerinnen sind monatlich&nbsp;aktiv
               </H2>
@@ -705,6 +761,7 @@ const Page = ({
                           '2021-01',
                           '2022-01',
                           '2023-01',
+                          '2024-01',
                         ], // lastSeenBucket.key
                     yNice: 0,
                     yTicks: [0, 1000, 2000, 3000, 4000, 5000],

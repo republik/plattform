@@ -12,6 +12,10 @@ export const presetRepublik = definePreset({
       WebkitFontSmoothing: 'auto',
       MozOsxFontSmoothing: 'auto',
     },
+    ':where(a)': {
+      color: '{colors.link}',
+      textDecoration: 'underline',
+    },
   },
   // Useful for theme customization
   theme: {
@@ -30,6 +34,9 @@ export const presetRepublik = definePreset({
           white: { value: '#fff' },
           transparent: { value: 'transparent' },
           current: { value: 'currentColor' },
+        },
+        shadows: {
+          sm: { value: '0 0 6px 0 rgba(0, 0, 0, 0.35)' },
         },
         sizes: {
           full: { value: '100%' },
@@ -432,6 +439,10 @@ export const presetRepublik = definePreset({
       radixCollapsibleSlideUp: {
         from: { height: 'var(--radix-collapsible-content-height)' },
         to: { height: 0 },
+      },
+      progressGrow: {
+        from: { width: 0 },
+        to: { width: 'var(--progress-width)' },
       },
       spin: {
         from: { transform: 'rotate(0deg)' },
