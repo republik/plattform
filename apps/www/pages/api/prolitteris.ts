@@ -16,19 +16,27 @@ const {
 } = process.env
 
 enum LogLevel {
-  LOG = 'log',
-  INFO = 'info',
-  ERROR = 'error',
+  DEBUG = 0,
+  LOG = 1,
+  INFO = 2,
+  WARN = 3,
+  ERROR = 4,
 }
 
-function log(logLevel: LogLevel | 'error', id, ...args) {
+const DEBUG_ENABLED = Boolean(process.env.PROLITTERIS_DEBUG)
+
+function log(logLevel: LogLevel, id, ...args) {
+  if (logLevel < LogLevel.WARN && !DEBUG_ENABLED) return
   const msg = `ProLitteris API Req [${id}]`
   switch (logLevel) {
     case LogLevel.ERROR:
       console.error(chalk.red(msg), ...args)
       break
+    case LogLevel.WARN:
+      console.warn(chalk.yellow(msg), ...args)
+      break
     case LogLevel.INFO:
-      console.info(chalk.yellow(msg), ...args)
+      console.info(chalk.blue(msg), ...args)
       break
     default:
       console.log(msg, ...args)
