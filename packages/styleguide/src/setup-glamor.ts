@@ -1,0 +1,14 @@
+// @ts-expect-error plugins is not typed in the latest glamor release
+import { plugins } from 'glamor'
+
+function glamorPluginSpecificity({ selector, style }) {
+  const newSelector = selector
+    .split(',')
+    .map((s: string) =>
+      s.startsWith(':not(#\\#') ? s : `:not(#\\#styleguide) ${s}`,
+    )
+    .join(',')
+  return { selector: newSelector, style }
+}
+
+plugins.add(glamorPluginSpecificity)
