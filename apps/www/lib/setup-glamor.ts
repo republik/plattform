@@ -7,7 +7,11 @@ import { plugins } from 'glamor'
 function glamorPluginSpecificity({ selector, style }) {
   const newSelector = selector
     .split(',')
-    .map((s: string) => (s.startsWith(':not(#\\#') ? s : `:not(#\\#app) ${s}`))
+    .map((s: string) =>
+      s.startsWith(':not(#\\#') || s.startsWith(':root')
+        ? s
+        : `:not(#\\#app) ${s}`,
+    )
     .join(',')
 
   return { selector: newSelector, style }

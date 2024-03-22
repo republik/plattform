@@ -8,9 +8,12 @@ function glamorPluginSpecificity({ selector, style }) {
   const newSelector = selector
     .split(',')
     .map((s: string) =>
-      s.startsWith(':not(#\\#') ? s : `:not(#\\#styleguide) ${s}`,
+      s.startsWith(':not(#\\#') || s.startsWith(':root')
+        ? s
+        : `:not(#\\#styleguide) ${s}`,
     )
     .join(',')
+  console.log(selector, newSelector)
   return { selector: newSelector, style }
 }
 
