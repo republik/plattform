@@ -173,6 +173,14 @@ async function prepareHandler(args) {
             memberId: memberId ? memberId.toString() : undefined,
           }
 
+          if (!participant.firstName || !participant.surName) {
+            console.error(
+              'Skipping participant: first name or sur name is missing; %s',
+              JSON.stringify(participant),
+            )
+            continue
+          }
+
           article.participants.push(participant)
         }
       }

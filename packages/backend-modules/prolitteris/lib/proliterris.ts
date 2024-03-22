@@ -130,7 +130,13 @@ export class ProLitterisAPI
       const query =
         method === 'GET' ? '?' + new URLSearchParams(data) : undefined
 
-      return fetch(this.#baseURL + url + query, {
+      const endpoint = new URL(url, this.#baseURL)
+
+      if (query) {
+        endpoint.search = query
+      }
+
+      return fetch(endpoint, {
         method: method,
         headers: {
           Authorization: this.#authentication,
