@@ -13,7 +13,7 @@ function glamorPluginSpecificity({ selector, style }) {
         : `:not(#\\#styleguide) ${s}`,
     )
     .join(',')
-  console.log(selector, newSelector)
+
   return { selector: newSelector, style }
 }
 
