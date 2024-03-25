@@ -74,6 +74,7 @@ const textChildStyles = Object.keys(IMAGE_SIZES).reduce((styles, key) => {
     [mUp]: {
       [`& [${textAttribute}]`]: {
         marginLeft: size + 20,
+        marginBottom: '1em',
         // Text in ListItem
         [`& [${textAttribute}]`]: {
           marginLeft: 0,
