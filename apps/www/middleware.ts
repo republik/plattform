@@ -97,37 +97,11 @@ function curtainHOC(middleware: Middleware): Middleware {
 }
 
 /**
- * If the request is not HTTPS and the process.env.NEXT_PUBLIC_BASE_URL starts with https://
- * then redirect to the HTTPS version of the URL.
- * @param req
- * @returns Redirect or null
- */
-function redirectToHTTPS(req: NextRequest): NextResponse | null {
-  const reqUrl = new URL(req.url)
-
-  const baseURL = process.env.NEXT_PUBLIC_BASE_URL
-  if (
-    reqUrl.protocol === 'https:' ||
-    !baseURL ||
-    !baseURL.startsWith('https://')
-  ) {
-    return null
-  }
-
-  reqUrl.protocol = 'https'
-  return NextResponse.redirect(reqUrl.toString())
-}
-/**
  * Middleware used to conditionally redirect between the marketing and front page
  * depending on the user authentication status and roles.
  * @param req
  */
 async function middlewareFunc(req: NextRequest): Promise<NextResponse> {
-  const httpsUpgradeRedirect = redirectToHTTPS(req)
-  if (httpsUpgradeRedirect) {
-    return httpsUpgradeRedirect
-  }
-
   const resUrl = req.nextUrl.clone()
 
   // Rewrite if someone tries to directly access the front or the front-preview url
