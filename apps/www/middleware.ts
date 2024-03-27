@@ -102,7 +102,7 @@ function curtainHOC(middleware: Middleware): Middleware {
  * @returns possible NextResponse to redirect to https or null
  */
 function redirectToHTTPS(req: NextRequest): NextResponse | null {
-  const reqURL = new URL(req.nextUrl)
+  const reqURL = new URL(req.nextUrl.clone())
   const baseURL = process.env.NEXT_PUBLIC_BASE_URL
   if (
     !reqURL ||
@@ -113,10 +113,11 @@ function redirectToHTTPS(req: NextRequest): NextResponse | null {
     return null
   }
 
-  reqURL.protocol = 'https:'
   reqURL.host = new URL(baseURL).host
+  reqURL.protocol = 'https:'
+  reqURL.port = ''
 
-  return NextResponse.redirect(reqURL.toString())
+  return NextResponse.redirect(reqURL)
 }
 
 /**
