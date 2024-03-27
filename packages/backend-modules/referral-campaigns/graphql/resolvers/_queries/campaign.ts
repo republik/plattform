@@ -1,7 +1,7 @@
 import type { GraphqlContext } from '@orbiting/backend-modules-types'
 import type { Campaign } from '../../types'
 import { PGReferralsRepo } from '../../../lib/repo'
-import { transformCampagin } from '../../../lib/campaign'
+import { transformCampaign } from '../../../lib/campaign'
 
 type CampgainArgs = {
   slug: string
@@ -20,5 +20,5 @@ export = async function campaigns(
     return null
   }
 
-  return transformCampagin(campaign)
+  return transformCampaign(campaign)
 }

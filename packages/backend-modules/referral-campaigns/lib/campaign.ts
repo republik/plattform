@@ -4,7 +4,7 @@ import { Campaign } from '../graphql/types'
 import { CampaignRow } from './types'
 dayjs.extend(isBetween)
 
-export function transformCampagin(campaign: CampaignRow): Campaign {
+export function transformCampaign(campaign: CampaignRow): Campaign {
   const now = new Date()
 
   const isActive = dayjs(now).isBetween(campaign.beginDate, campaign.endDate)
