@@ -9,7 +9,7 @@ import { withDefaultSSR } from '../lib/apollo/helpers'
 
 const FeedPage = ({ t }) => {
   const meta = {
-    title: t('pages/feed/title'),
+    title: t('pages/feed/title') + 'fu',
     image: `${CDN_FRONTEND_BASE_URL}/static/social-media/logo.png`,
   }
 
