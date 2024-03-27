@@ -1,0 +1,10 @@
+{
+  "name": "@orbiting/backend-modules-lead-tracking",
+  "description": "Simplify from mailchimp lead tracking imports",
+  "authors": "Henning Dahlheim",
+  "version": "1.0.0",
+  "main": "",
+  "dependencies": {
+    "csv-parser": "^3.0.0"
+  }
+}
