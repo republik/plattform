@@ -70,7 +70,13 @@ export const CANewsLetterSignUp = () => {
   const { asPath } = useRouter()
   return (
     <div {...css({ width: '100%' })}>
-      <h2 {...css({ ...fontStyles.sansSerifBold, fontSize: 19 })}>
+      <h2
+        {...css({
+          ...fontStyles.sansSerifBold,
+          fontSize: 19,
+          marginBlock: '0.8em',
+        })}
+      >
         Für den Newsletter anmelden
       </h2>
       <EventTrackingContext category='ChallengeAcceptedPayNote' name={asPath}>

@@ -7,6 +7,8 @@ export default defineConfig({
   // Whether to use css reset
   preflight: true,
 
+  prefix: 'r',
+
   presets: [presetRepublik, presetChallengeAccepted, presetCampaign2024],
 
   // conditions:
