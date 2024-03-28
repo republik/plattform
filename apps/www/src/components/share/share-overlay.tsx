@@ -1,5 +1,5 @@
 'use client'
-import { css } from '@app/styled-system/css'
+import { css } from '@republik/theme/css'
 import * as Dialog from '@radix-ui/react-dialog'
 import { Root as VisuallyHidden } from '@radix-ui/react-visually-hidden'
 import {

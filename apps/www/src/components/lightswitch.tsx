@@ -1,6 +1,6 @@
 'use client'
 
-import { css } from '@app/styled-system/css'
+import { css } from '@republik/theme/css'
 import { IconComputer, IconLightMode, IconDarkMode } from '@republik/icons'
 import { useTheme } from 'next-themes'
 import { useEffect, useState } from 'react'

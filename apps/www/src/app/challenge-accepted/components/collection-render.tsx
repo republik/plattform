@@ -1,4 +1,4 @@
-import { css } from '@app/styled-system/css'
+import { css } from '@republik/theme/css'
 import { Collapsible } from './collapsible'
 import { ArticleTeaser } from './teasers/article-teaser'
 import { EventTeaser } from './teasers/event-teaser'

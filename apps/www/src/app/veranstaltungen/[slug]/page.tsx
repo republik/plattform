@@ -1,7 +1,7 @@
 import { useFragment } from '#graphql/cms/__generated__/gql'
 import { getCMSClient } from '@app/lib/apollo/cms-client'
 import { getMe } from '@app/lib/auth/me'
-import { css } from '@app/styled-system/css'
+import { css } from '@republik/theme/css'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { EventTeaser } from '../components/event-teaser'

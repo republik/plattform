@@ -5,7 +5,7 @@ import {
   EventTrackingContext,
   useTrackEvent,
 } from '@app/lib/matomo/event-tracking'
-import { css } from '@app/styled-system/css'
+import { css } from '@republik/theme/css'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 

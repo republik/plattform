@@ -1,7 +1,7 @@
 import { getCMSClient } from '@app/lib/apollo/cms-client'
 import { getMe } from '@app/lib/auth/me'
 import { EventTeaser } from './components/event-teaser'
-import { css } from '@app/styled-system/css'
+import { css } from '@republik/theme/css'
 import { useFragment } from '#graphql/cms/__generated__/gql'
 import {
   EventRecordFieldsFragmentDoc,

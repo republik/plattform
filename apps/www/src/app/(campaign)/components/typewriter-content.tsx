@@ -1,5 +1,5 @@
 import { Typewriter } from './typewriter'
-import { css } from '@app/styled-system/css'
+import { css } from '@republik/theme/css'
 
 const words = [
   'Die Republik',

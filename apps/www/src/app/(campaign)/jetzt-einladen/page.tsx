@@ -7,7 +7,7 @@ import {
   ShareLink,
 } from '@app/app/(campaign)/jetzt-einladen/share-components'
 import Container from '@app/components/container'
-import { css } from '@app/styled-system/css'
+import { css } from '@republik/theme/css'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import {

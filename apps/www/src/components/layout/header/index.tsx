@@ -1,7 +1,7 @@
 'use client'
 
-import { css } from '@app/styled-system/css'
-import { hstack } from '@app/styled-system/patterns'
+import { css } from '@republik/theme/css'
+import { hstack } from '@republik/theme/patterns'
 import Link from 'next/link'
 import { IconAccountBox, IconMic, IconSearchMenu } from '@republik/icons'
 import Image from 'next/image'

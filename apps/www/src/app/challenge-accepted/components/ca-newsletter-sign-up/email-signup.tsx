@@ -8,8 +8,8 @@ import {
   UpdateNewsletterSubscriptionDocument,
 } from '#graphql/republik-api/__generated__/gql/graphql'
 import { useTrackEvent } from '@app/lib/matomo/event-tracking'
-import { css } from '@app/styled-system/css'
-import { stack, wrap } from '@app/styled-system/patterns'
+import { css } from '@republik/theme/css'
+import { stack, wrap } from '@republik/theme/patterns'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useId, useState } from 'react'
 import { useForm } from 'react-hook-form'

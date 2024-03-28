@@ -1,6 +1,6 @@
 'use client'
 
-import { css } from '@app/styled-system/css'
+import { css } from '@republik/theme/css'
 import { Dispatch, SetStateAction } from 'react'
 import useResizeObserver from 'use-resize-observer'
 import { getSliderStepForValue } from './price-slider/helpers'
