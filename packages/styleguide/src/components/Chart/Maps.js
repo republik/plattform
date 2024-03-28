@@ -234,7 +234,9 @@ export class GenericMap extends Component {
               : tLabel(groupTitle)
             const body = mergeFragments(
               tooltipBody
-                ? formatLines(contextT(tooltipBody))
+                ? formatLines(
+                    d.empty ? missingDataLegend : contextT(tooltipBody),
+                  )
                 : [
                     groupTitle && title === groupTitle && tLabel(groupTitle),
                     replacements.formattedValue &&

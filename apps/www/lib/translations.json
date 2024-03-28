@@ -13,6 +13,10 @@
       "value": "Community"
     },
     {
+      "key": "nav/genossenschaftsrat",
+      "value": "Genossenschaftsrat"
+    },
+    {
       "key": "nav/team",
       "value": "Team"
     },
@@ -434,7 +438,7 @@
     },
     {
       "key": "marketing/page/reasons/3/text",
-      "value": "Die Republik wird finanziert durch ihre rund 29’000 Abonnentinnen. Wir gehören niemandem – aber jedem unserer Mitglieder ein bisschen."
+      "value": "Die Republik wird finanziert durch ihre rund 27’000 Abonnentinnen. Wir gehören niemandem – aber jedem unserer Mitglieder ein bisschen."
     },
     {
       "key": "marketing/page/vision/headline",
@@ -495,38 +499,6 @@
     {
       "key": "marketing/readAloud/lead2",
       "value": "Dürfen wir Sie benachrichtigen, sobald es losgeht?"
-    },
-    {
-      "key": "marketing/page/sections/description/briefings",
-      "value": "Durch die Woche mit der Republik: das Justizbriefing «Am Gericht» am Mittwoch, das «Briefing aus Bern» am Donnerstag und «Was diese Woche wichtig war» am Freitag."
-    },
-    {
-      "key": "marketing/page/sections/title/briefings",
-      "value": "Briefings"
-    },
-    {
-      "key": "marketing/page/sections/description/serien",
-      "value": "Die ganz grossen Geschichten der Republik lassen sich nicht in einem Stück erzählen. Dazu brauchts Platz – und mehrere Folgen."
-    },
-    {
-      "key": "marketing/page/sections/title/serien",
-      "value": "Serien"
-    },
-    {
-      "key": "marketing/page/sections/description/kolumnen",
-      "value": "Regelmässig eine Kolumne: am Dienstag von Daniel Strassberg oder Kunsthistorikerin Kia Vahland. Jeden Samstag von Daniel Binswanger."
-    },
-    {
-      "key": "marketing/page/sections/title/kolumnen",
-      "value": "Kolumnen"
-    },
-    {
-      "key": "marketing/page/sections/description/audio",
-      "value": "Wenn Sie gerade keine Hand frei haben – die Republik ist Journalismus fürs Ohr. Alle Beiträge erscheinen am Tag der Publikation als Audioversion, vorgelesen von grossartigen Stimmen."
-    },
-    {
-      "key": "marketing/page/sections/title/audio",
-      "value": "Alle Beiträge, auch zum Hören"
     },
     {
       "key": "marketing/page/vision/more",
@@ -929,6 +901,18 @@
       "value": "Die aktuellsten Beiträge der Republik. Jeden Morgen in Ihrem virtuellen Briefkasten."
     },
     {
+      "key": "account/newsletterSubscriptions/WDWWW/label",
+      "value": "Was diese Woche wichtig war"
+    },
+    {
+      "key": "account/newsletterSubscriptions/WDWWW/frequency",
+      "value": "Jeden Freitag"
+    },
+    {
+      "key": "account/newsletterSubscriptions/WDWWW/description",
+      "value": "Wir beobachten für Sie das Weltgeschehen, filtern das Wichtigste heraus, ordnen es ein – und schicken es Ihnen jeden Freitag ansprechend verpackt in Ihre Inbox."
+    },
+    {
       "key": "account/newsletterSubscriptions/PROJECTR/label",
       "value": "Project-R-Newsletter"
     },
@@ -954,15 +938,15 @@
     },
     {
       "key": "account/newsletterSubscriptions/CLIMATE/label",
-      "value": "Klimalabor-Newsletter"
+      "value": "Challenge-Accepted-Newsletter"
     },
     {
       "key": "account/newsletterSubscriptions/CLIMATE/frequency",
-      "value": "Ab Januar alle 1–2 Wochen"
+      "value": "Alle 2–3 Wochen"
     },
     {
       "key": "account/newsletterSubscriptions/CLIMATE/description",
-      "value": "Wir experimentieren und wollen zusammen mit Expertinnen und Ihnen herausfinden, was das ist: Journalismus, der uns in der Klimakrise wirklich weiterbringt. Im Newsletter informieren wir über den Stand des Projekts und Möglichkeiten zur Mitwirkung."
+      "value": "Die Klimakrise ist hier. Die Lage ist ernst. Challenge accepted. Ein frischer Blick auf die grossen Herausforderungen und auf Menschen, die sie anpacken. Und jede Menge Gelegenheiten, sich auszutauschen, voneinander zu lernen und sich gegenseitig zu inspirieren."
     },
     {
       "key": "account/newsletterSubscriptions/onlyName/subscribe",
@@ -2226,7 +2210,7 @@
     },
     {
       "key": "styleguide/comment/header/unpublishedByAdmin",
-      "value": "(von der Redaktion verborgen)"
+      "value": "(von der Moderation verborgen)"
     },
     {
       "key": "styleguide/comment/header/unavailable",
@@ -5688,10 +5672,6 @@
       "value": "Zum Magazin"
     },
     {
-      "key": "Onboarding/Page/climate/button",
-      "value": "Weiter ins Klimalabor"
-    },
-    {
       "key": "Onboarding/Page/more/account",
       "value": "Weitere Einstellungen finden Sie im {link}."
     },
@@ -5718,14 +5698,6 @@
     {
       "key": "Onboarding/Page/more/help/email",
       "value": "kontakt@republik.ch"
-    },
-    {
-      "key": "Onboarding/Page/climate/more/help",
-      "value": "Haben Sie Fragen oder benötigen Sie Hilfe? Wir sind gerne für Sie da. {email}"
-    },
-    {
-      "key": "Onboarding/Page/climate/more/help/email",
-      "value": "klimalabor@republik.ch"
     },
     {
       "key": "Onboarding/Section/button/continue",
@@ -5840,26 +5812,6 @@
       "value": "Später"
     },
     {
-      "key": "Onboarding/Page/climate/title",
-      "value": "Willkommen"
-    },
-    {
-      "key": "Onboarding/Page/climate/preface",
-      "value": "Sie sind eine von inzwischen {climate_lab_count} Personen, die am Klimalabor mitwirken. Schön, sind Sie dabei."
-    },
-    {
-      "key": "Onboarding/Page/climate/introduction",
-      "value": "Etwa alle zwei bis drei Wochen melden wir uns per Newsletter bei Ihnen: mit Lesenswertem zur Klimakrise aus der Republik und von anderswo, und mit dem aktuellen Stand unseres Projekts.<br /><br />\nIm Januar 2023 sind wir gestartet mit dem Klimalabor. Unser Ziel: Wir wollen ein journalistisches Angebot entwickeln, das in seiner Dringlichkeit und Ambition der Klimakrise gerecht wird. Das mehr Menschen erreicht als bisher und auch andere Medien und Journalistinnen inspiriert. Das anregt, das trotz düsterer Aussichten nach vorn blickt, das verlässlich und nützlich ist.<br /><br />\nSeitdem haben wir aus zahlreichen Veranstaltungen, Debatten und Gesprächen und Tausenden schriftlichen Anregungen ein klares Bild davon gewonnen, was Sie von uns erwarten. Nun sind wir daran, ein passendes Angebot zu entwickeln. <br /><br />\nWir freuen uns darauf, Ihnen bald mehr zu erzählen."
-    },
-    {
-      "key": "Climatelab/Onboarding/Postcard/heading",
-      "value": "Ein Blick in die Zukunft"
-    },
-    {
-      "key": "Climatelab/Onboarding/Postcard/paragraph1",
-      "value": "Im Klimalabor bieten wir Ihnen die Gelegenheit, Ihre Ideen, Ihre Bedürfnisse, Ihre Expertise einzubringen. Zum Start laden wir Sie ein, etwas Einzigartiges zum Gelingen des Klimalabors beizutragen: Ihre Vorstellungskraft.<br /><br />Stellen Sie sich vor, Sie reisen mit einer Zeitmaschine 60 Jahre in die Zukunft. Was sehen Sie, was löst das in Ihnen aus? Nehmen Sie sich einen Moment. Sammeln Sie Ihre Gedanken. Und dann schicken Sie eine Postkarte zurück ins Jahr 2023."
-    },
-    {
       "key": "Climatelab/Postcard/PostcardPreview/merci1",
       "value": "Danke für Ihre Postkarte. Sie wird uns helfen, zu verstehen, wie Sie in die Zukunft blicken. Darum wird es im Klimalabor immer wieder gehen: Wir wollen über die Zukunft nachdenken, den Blick für positive Entwicklungen schärfen und herausfinden, was es braucht, damit wir zuversichtlich und handlungsfähig bleiben."
     },
@@ -5870,86 +5822,6 @@
     {
       "key": "Climatelab/Postcard/PostcardPreview/credit",
       "value": "Illustration: «2083» von {credit}"
-    },
-    {
-      "key": "Climatelab/Onboarding/Mission/heading",
-      "value": "Mitwirken"
-    },
-    {
-      "key": "Climatelab/Onboarding/Mission/paragraph1",
-      "value": "Wir bieten Ihnen im Klimalabor vielfältige Möglichkeiten, sich einzubringen und mit anderen auszutauschen. Aktuell:"
-    },
-    {
-      "key": "Climatelab/Onboarding/Mission/bullet1",
-      "value": "Dialog: Sammeln und entdecken Sie mit uns {klimaheld}."
-    },
-    {
-      "key": "Climatelab/Onboarding/Mission/bullet2",
-      "value": "Interaktiv: {postcard}."
-    },
-    {
-      "key": "Climatelab/Onboarding/Mission/bullet3",
-      "value": "Live: Kommen Sie zu unserer ersten Klimalabor-Veranstaltung, {event}."
-    },
-    {
-      "key": "Climatelab/Onboarding/Mission/bullet1/klimaheldText",
-      "value": "wenig bekannte Klimaheldinnen"
-    },
-    {
-      "key": "Climatelab/Onboarding/Mission/bullet1/klimaheldHref",
-      "value": "/2023/01/31/mit-voller-kraft-gegen-die-klimakrise-diskutieren-sie-mit/diskussion"
-    },
-    {
-      "key": "Climatelab/Onboarding/Mission/bullet2/postcardText",
-      "value": "Machen Sie mit uns eine Zeitreise"
-    },
-    {
-      "key": "Climatelab/Onboarding/Mission/bullet2/postcardHref",
-      "value": "/2023/01/18/klimafreundliche-gruesse-aus-der-zukunft"
-    },
-    {
-      "key": "Climatelab/Onboarding/Mission/bullet3/eventText",
-      "value": "am 27. Februar in Zürich"
-    },
-    {
-      "key": "Climatelab/Onboarding/Mission/bullet3/eventHref",
-      "value": "/veranstaltung/klimalabor-februar-2023"
-    },
-    {
-      "key": "Climatelab/Onboarding/Invitation/heading",
-      "value": "Freunde und Bekannte einladen"
-    },
-    {
-      "key": "Climatelab/Onboarding/Invitation/paragraph1",
-      "value": "Die Klimakrise geht uns alle an. Laden Sie drei Freundinnen und Bekannte ein, die vom Klimalabor erfahren sollten."
-    },
-    {
-      "key": "Climatelab/Onboarding/CallToAction/heading",
-      "value": "In Klimajournalismus investieren"
-    },
-    {
-      "key": "Climatelab/Onboarding/CallToAction/paragraph1",
-      "value": "Investieren Sie in Klimajournalismus:"
-    },
-    {
-      "key": "Climatelab/Onboarding/ClimatePersonalInfo/heading",
-      "value": "Persönliche Angaben"
-    },
-    {
-      "key": "Climatelab/Onboarding/ClimatePersonalInfo/paragraph1",
-      "value": "Uns ist wichtig, dass Menschen aus unterschiedlichen Lebenswelten zusammenfinden, sich gegenseitig inspirieren und herausfordern. Damit wir die Diversität des Klimalabors tatsächlich im Blick haben, wären wir froh um ein paar Angaben zu Ihrer Person. Diese Angaben werden nicht auf Ihrem Profil angezeigt."
-    },
-    {
-      "key": "Climatelab/Onboarding/ClimatePersonalInfo/merci1",
-      "value": "Vielen Dank für Ihre Angaben."
-    },
-    {
-      "key": "Onboarding/Sections/ClimateProfile/paragraph1",
-      "value": "Das Profil ist Ihre Visitenkarte im Klimalabor."
-    },
-    {
-      "key": "Onboarding/Sections/ClimateProfile/paragraph2",
-      "value": "Wir verlinken Ihr Profil zum Beispiel, wenn Sie sich in Diskussionen einbringen."
     },
     {
       "key": "Climatelab/Postcard/PostcardDynamicComponent/noaccess/text",
@@ -7136,6 +7008,22 @@
       "value": "Lesha Berezovskiys Bildkolumne «Leben in Trümmern» als Buch. Lieferung innerhalb von 7 Werktagen."
     },
     {
+      "key": "Goodie/label/COOKIE",
+      "value": "Republik-Guetsliform"
+    },
+    {
+      "key": "Goodie/description/COOKIE",
+      "value": "Buchstaben zum Naschen, limitiertes Sonderangebot. Versand bis 22.12., nur innerhalb der Schweiz möglich."
+    },
+    {
+      "key": "Goodie/label/TOTEBAG_BLACK",
+      "value": "Republik-Tasche, schwarz"
+    },
+    {
+      "key": "Goodie/description/TOTEBAG_BLACK",
+      "value": "Mit Logo auf der Vorderseite und Manifest auf der Rückseite. Versand im April, nur in die Schweiz und nach Liechtenstein."
+    },
+    {
       "key": "option/TABLEBOOK/label/other",
       "value": "Republik bei Stromausfall"
     },
@@ -7178,6 +7066,14 @@
     {
       "key": "option/LESHA/label/other",
       "value": "Bücher «We Stay»"
+    },
+    {
+      "key": "option/COOKIE/label/1",
+      "value": "Republik-Guetsliform"
+    },
+    {
+      "key": "option/COOKIE/label/other",
+      "value": "Republik-Guetsliformen"
     },
     {
       "key": "package/customize/price/payMore/userPrice",
@@ -7341,7 +7237,7 @@
     },
     {
       "key": "article/payNote/220404-v1/before",
-      "value": "Journalismus kostet. Dass Sie diesen Beitrag trotzdem lesen können, verdanken Sie den rund 29’000 Leserinnen, die die Republik schon finanzieren. Wenn auch Sie unabhängigen Journalismus möglich machen wollen: Kommen Sie an Bord!"
+      "value": "Journalismus kostet. Dass Sie diesen Beitrag trotzdem lesen können, verdanken Sie den rund 27’000 Leserinnen, die die Republik schon finanzieren. Wenn auch Sie unabhängigen Journalismus möglich machen wollen: Kommen Sie an Bord!"
     },
     {
       "key": "article/payNote/220404-v1/after",
@@ -7361,7 +7257,7 @@
     },
     {
       "key": "article/tryNote/220404-v1/after",
-      "value": "Rund 29’000 Menschen machen die Republik heute schon möglich. Lernen Sie uns jetzt auch kennen – 21 Tage lang, kostenlos und unverbindlich:"
+      "value": "Rund 27’000 Menschen machen die Republik heute schon möglich. Lernen Sie uns jetzt auch kennen – 21 Tage lang, kostenlos und unverbindlich:"
     },
     {
       "key": "article/tryNote/220404-v2/before",
@@ -7953,27 +7849,27 @@
     },
     {
       "key": "ClimateTeaser/content/buttonAction",
-      "value": "Zum Klimalabor"
+      "value": "Mehr erfahren"
     },
     {
       "key": "ClimateInlineTeaser/content/title",
-      "value": "Zum Klimalabor"
+      "value": "Das Klimalabor der Republik"
     },
     {
       "key": "ClimateInlineTeaser/NonMember/content/text",
-      "value": "Die Klimakrise ist hier. Die Lage ist ernst. Was tun? Im Klimalabor der Republik machen wir uns gemeinsam mit Ihnen auf die Suche nach Antworten."
+      "value": "Die Klimakrise ist hier. Die Lage ist ernst. Was tun? Das Klimalabor ist unser Ort für Austausch und Experimente."
     },
     {
       "key": "ClimateInlineTeaser/NonMember/content/link",
-      "value": "Mehr erfahren und mitmachen"
+      "value": "Mehr erfahren"
     },
     {
       "key": "ClimateInlineTeaser/Member/content/text",
-      "value": "Die Klimakrise ist hier. Die Lage ist ernst. Was tun? Das Klimalabor ist unser Ort für Austausch und Experimente. Wo wir gerade stehen und was es gerade zu tun gibt:"
+      "value": "Die Klimakrise ist hier. Die Lage ist ernst. Was tun? Das Klimalabor ist unser Ort für Austausch und Experimente."
     },
     {
       "key": "ClimateInlineTeaser/Member/content/link",
-      "value": "zum Klimalabor"
+      "value": "Mehr erfahren"
     },
     {
       "key": "CallToActions/customComponents/FutureCampaignBanner/headline",

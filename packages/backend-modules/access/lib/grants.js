@@ -18,8 +18,6 @@ const membershipsLib = require('./memberships')
 
 const VOUCHER_CODE_LENGTH = 5
 
-const campaignTypesWithMemberRole = ['REGULAR']
-
 const evaluateConstraints = async (granter, campaign, email, t, pgdb) => {
   const errors = []
 
@@ -218,9 +216,11 @@ const claim = async (voucherCode, payload, user, t, pgdb, redis, mail) => {
     })
   }
 
-  const hasAddedMemberRole =
-    campaignTypesWithMemberRole.includes(campaign.type) &&
-    (await membershipsLib.addMemberRole(grant, recipient, pgdb))
+  const hasAddedMemberRole = await membershipsLib.addMemberRole(
+    grant,
+    recipient,
+    pgdb,
+  )
 
   const subscribeToEditorialNewsletters =
     campaign.config?.subscribeToEditorialNewsletters ||
@@ -346,9 +346,11 @@ const request = async (granter, campaignId, payload, t, pgdb, redis, mail) => {
     })
   }
 
-  const hasAddedMemberRole =
-    campaignTypesWithMemberRole.includes(campaign.type) &&
-    (await membershipsLib.addMemberRole(grant, granter, pgdb))
+  const hasAddedMemberRole = await membershipsLib.addMemberRole(
+    grant,
+    granter,
+    pgdb,
+  )
 
   const subscribeToEditorialNewsletters =
     campaign.config?.subscribeToEditorialNewsletters ||

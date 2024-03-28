@@ -186,12 +186,7 @@ const membershipResolver = {
     }
 
     const type = await membershipResolver.type(membership, null, context)
-
-    if (type.name === 'YEARLY_ABO') {
-      return false
-    }
-
-    return type.interval === 'year'
+    return type.autoPayMutable
   },
 
   async canAppendPeriod({ subscriptionId: stripeSubscriptionId, active }) {

@@ -5,9 +5,9 @@ import React, { ReactNode, useContext, useMemo } from 'react'
 import colors from '../../theme/colors'
 
 const getVariableColorKeys = (colors) => {
-  return [
-    ...new Set([...Object.keys(colors.light), ...Object.keys(colors.dark)]),
-  ]
+  return Array.from(
+    new Set([...Object.keys(colors.light), ...Object.keys(colors.dark)]),
+  )
 }
 
 // identify all variable color keys
@@ -63,7 +63,18 @@ const createScheme = (specificColors) => {
       opposite3: ['opposite100', 'opposite80', 'opposite60'].map(
         (key) => colorDefinitions[key],
       ),
-      discrete: [colorDefinitions.discrete],
+      discrete: [
+        'discrete1',
+        'discrete2',
+        'discrete3',
+        'discrete4',
+        'discrete5',
+        'discrete6',
+        'discrete7',
+        'discrete8',
+        'discrete9',
+        'discrete10',
+      ].map((key) => colorDefinitions[key]),
     },
     set: memoize(createColorRule, (...args) => args.join('.')),
     getCSSColor,
@@ -96,8 +107,8 @@ export const useColorContext = () => {
 
 export const ColorContextLocalExtension: React.FC<{
   children?: ReactNode
-  localColors: any
-  localMappings: any
+  localColors?: any
+  localMappings?: any
 }> = ({ children, localColors = colors, localMappings = {} }) => {
   const [{ schemeKey, colorDefinitions }] = useColorContext()
 

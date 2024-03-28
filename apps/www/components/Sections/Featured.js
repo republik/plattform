@@ -104,14 +104,18 @@ const Panel = ({
         .concat(formats.nodes)
         .sort((a, b) => ascending(a.meta.title, b.meta.title))
         .map(({ id, meta: formatMeta, linkedDocuments }) => (
-          <Link href={formatMeta.path} key={id} passHref>
-            <a {...styles.formatLink} onClick={() => closeHandler?.()}>
-              <FormatTag
-                color={formatMeta.color || colors[formatMeta.kind]}
-                label={formatMeta.title}
-                count={linkedDocuments.totalCount || null}
-              />
-            </a>
+          <Link
+            href={formatMeta.path}
+            key={id}
+            passHref
+            {...styles.formatLink}
+            onClick={() => closeHandler?.()}
+          >
+            <FormatTag
+              color={formatMeta.color || colors[formatMeta.kind]}
+              label={formatMeta.title}
+              count={linkedDocuments.totalCount || null}
+            />
           </Link>
         ))}
     </div>
@@ -244,12 +248,6 @@ const FeaturedSections = withT(({ t }) => {
             marginBottom: 24,
           }}
         >
-          <NavLink
-            large
-            href='/sie-haben-die-wahl-bei-einer-ausserordentlichen-urabstimmung'
-          >
-            {t('nav/vote')}
-          </NavLink>
           <NavLink large href='/cockpit'>
             {t('nav/cockpit')}
           </NavLink>

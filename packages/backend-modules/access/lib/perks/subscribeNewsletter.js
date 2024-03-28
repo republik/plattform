@@ -23,7 +23,7 @@ const give = async (
     pgdb,
   })
 
-  await mail.updateNewsletterSubscription({
+  await mail.updateNewsletterSubscriptions({
     user: recipient,
     name,
     subscribed: true,

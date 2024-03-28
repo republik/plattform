@@ -9,6 +9,7 @@ import {
 } from '@project-r/styleguide'
 import { findHighlight } from '../../lib/utils/mdast'
 import { formatExcerpt } from '../../lib/utils/format'
+import { sanitizeTextHTML } from '../../lib/sanitizeHTML'
 import Link from 'next/link'
 import { IconCheck } from '@republik/icons'
 
@@ -97,34 +98,35 @@ export const UserResult = ({ node }) => {
       }),
     [colorScheme],
   )
+
   return (
     <div>
       <div {...styles.root} {...colorScheme.set('borderColor', 'text')}>
         {portrait && (
-          <Link href={`/~${slug || id}`} passHref>
-            <a {...styles.link}>
-              <img
-                {...styles.profilePicture}
-                src={portrait}
-                alt={`${firstName} ${lastName}`}
-              />
-            </a>
+          <Link href={`/~${slug || id}`} passHref {...styles.link}>
+            <img
+              {...styles.profilePicture}
+              src={portrait}
+              alt={`${firstName} ${lastName}`}
+            />
           </Link>
         )}
         <div {...styles.meta}>
           <div {...styles.name} {...colorScheme.set('color', 'text')}>
-            <Link href={`/~${slug || id}`} passHref>
-              <a {...styles.link}>
+            <Link href={`/~${slug || id}`} passHref {...styles.link}>
+              {nameHighlight?.fragments[0] ? (
                 <span
                   {...styles.highlight}
                   {...highlightEMRule}
                   dangerouslySetInnerHTML={{
-                    __html: nameHighlight
-                      ? nameHighlight.fragments[0]
-                      : `${firstName} ${lastName}`,
+                    __html: sanitizeTextHTML(nameHighlight.fragments[0]),
                   }}
                 />
-              </a>
+              ) : (
+                <span {...styles.highlight} {...highlightEMRule}>
+                  {firstName} {lastName}
+                </span>
+              )}
             </Link>
           </div>
           {credential && (
@@ -153,7 +155,9 @@ export const UserResult = ({ node }) => {
           <span
             {...styles.highlight}
             dangerouslySetInnerHTML={{
-              __html: formatExcerpt(textHighlight.fragments[0]),
+              __html: formatExcerpt(
+                sanitizeTextHTML(textHighlight.fragments[0]),
+              ),
             }}
           />
         </Editorial.P>

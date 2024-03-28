@@ -1,0 +1,10 @@
+mutation UpdateNewsletterSubscription(
+  $name: NewsletterName!
+  $subscribed: Boolean!
+) {
+  updateNewsletterSubscription(name: $name, subscribed: $subscribed) {
+    id
+    name
+    subscribed
+  }
+}

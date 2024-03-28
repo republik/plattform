@@ -1,5 +1,4 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import {
   serifRegular14,
   serifRegular17,
@@ -71,7 +70,7 @@ const orderedListCompactStyle = merge(styles.orderedList, {
 
 type UnorderedListProps = {
   children: React.ReactNode
-  attributes?: React.HTMLAttributes<HTMLUListElement>
+  attributes?: React.ComponentPropsWithoutRef<'ul'>
   compact?: boolean
 }
 
@@ -92,7 +91,7 @@ export const UnorderedList = ({
 
 type OrderedListProps = {
   children: React.ReactNode
-  attributes?: React.HTMLAttributes<HTMLOListElement>
+  attributes?: React.ComponentPropsWithoutRef<'ol'>
   start?: number
   compact?: boolean
 }
@@ -116,7 +115,7 @@ export const OrderedList = ({
 
 type ListItemProps = {
   children: React.ReactNode
-  attributes?: React.HTMLAttributes<HTMLLIElement>
+  attributes?: React.ComponentPropsWithoutRef<'li'>
   style?: React.CSSProperties
 }
 
@@ -142,24 +141,28 @@ export const ListItem = ({
 type ListProps = {
   children: React.ReactNode
   data: {
+    compact?: boolean
     ordered?: boolean
     start?: number
-    compact?: boolean
   }
-  attributes?: React.HTMLAttributes<HTMLUListElement | HTMLOListElement>
+  attributes?: React.ComponentPropsWithoutRef<'ul' | 'ol'>
 }
 
-export const List = ({ children, data, attributes = {} }: ListProps) =>
-  data.ordered ? (
-    <OrderedList
-      start={data.start}
-      compact={data.compact}
-      attributes={attributes}
-    >
-      {children}
-    </OrderedList>
-  ) : (
-    <UnorderedList compact={data.compact} attributes={attributes}>
+export const List = ({ children, data, attributes = {} }: ListProps) => {
+  if (data.ordered) {
+    return (
+      <OrderedList
+        attributes={attributes}
+        start={data.start}
+        compact={data.compact}
+      >
+        {children}
+      </OrderedList>
+    )
+  }
+  return (
+    <UnorderedList attributes={attributes} compact={data.compact}>
       {children}
     </UnorderedList>
   )
+}

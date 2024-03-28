@@ -8,13 +8,7 @@ import withT from '../../lib/withT'
 
 import Loader from '../Loader'
 
-import CardLogo from '../Card/Logo'
-// // uncomment to show special card preview for profiles
-// import { cardFragment } from '../Card/fragments'
-import Card, { styles as cardStyles } from '../Card/Card'
-import { BACKGROUND_COLOR } from '../Card/Container'
-
-import { Logo, BrandMark, fontFamilies, inQuotes } from '@project-r/styleguide'
+import { Logo, fontFamilies, inQuotes } from '@project-r/styleguide'
 
 const WIDTH = 1200
 const HEIGHT = 628
@@ -99,55 +93,6 @@ const Item = ({
       loading={loading}
       error={error}
       render={() => {
-        const card = cards && cards.nodes && cards.nodes[0]
-
-        if (card) {
-          return (
-            <div
-              {...css({
-                backgroundColor: BACKGROUND_COLOR,
-                width: WIDTH,
-                height: HEIGHT,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                flexWrap: 'wrap',
-              })}
-            >
-              <Head>
-                <meta name='robots' content='noindex' />
-              </Head>
-              <div
-                {...cardStyles.cardInner}
-                style={{
-                  width: 380,
-                  height: 380 * 1.4,
-                  transform: 'rotate(-1.5deg)',
-                  margin: '30px 40px 30px -120px',
-                }}
-              >
-                <Card width={380} {...card} t={t} firstSlideOnly noEmoji />
-              </div>
-              <div
-                style={{
-                  marginLeft: 140,
-                  height: 190,
-                  width: 190,
-                }}
-              >
-                <BrandMark />
-              </div>
-              <div
-                style={{
-                  marginLeft: 40,
-                }}
-              >
-                <CardLogo size={190} />
-              </div>
-            </div>
-          )
-        }
-
         const headline = t(
           `testimonial/detail/share/package/${pkg}`,
           undefined,
@@ -210,18 +155,6 @@ const query = gql`
       statement
       portrait
       sequenceNumber
-      # # uncomment to show special card preview for profiles
-      # cards(first: 1) {
-      #   nodes {
-      #     id
-      #     ...Card
-      #     group {
-      #       id
-      #       name
-      #       slug
-      #     }
-      #   }
-      # }
     }
     statements(focus: $focus, first: 1) {
       totalCount
@@ -235,8 +168,6 @@ const query = gql`
     }
   }
 `
-// // re add fragment to query to show special card preview for profiles
-// ${cardFragment}
 
 export default compose(
   withT,

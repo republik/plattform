@@ -10,7 +10,7 @@ type SwitchImageProps = {
   }
   alt?: string
   maxWidth?: number
-} & React.ImgHTMLAttributes<HTMLImageElement>
+} & React.ComponentPropsWithoutRef<'img'>
 
 const SwitchImage = ({
   src,

@@ -30,7 +30,9 @@ const styles = {
     borderRadius: '2px',
   }),
   image: css({
-    '> span': { display: 'block !important' },
+    maxWidth: '100%',
+    height: 'auto',
+    display: 'block',
   }),
   count: css({
     position: 'absolute',
@@ -116,9 +118,14 @@ const PostcardFilter: React.FC<PostcardFilterProps> = ({
               }
             }}
             {...plainButtonRule}
-            {...styles.image}
           >
-            <AssetImage width={'200'} height={'133'} src={imageUrl} />
+            <AssetImage
+              {...styles.image}
+              width={'200'}
+              height={'133'}
+              src={imageUrl}
+              alt='Postcard image'
+            />
           </button>
         </div>
       </div>

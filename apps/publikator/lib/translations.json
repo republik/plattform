@@ -909,10 +909,6 @@
       "value": "Eingeschränkter Zugang auf Links"
     },
     {
-      "key": "metaData/climateLab",
-      "value": "Klimalabor"
-    },
-    {
       "key": "metaData/recommendations/heading",
       "value": "Vorgeschlagene Beiträge"
     },
@@ -959,10 +955,6 @@
     {
       "key": "metaData/recommendations/releaseScheduledFor",
       "value": "Die Publikation ist für {date} geplant."
-    },
-    {
-      "key": "metaData/discussionAllowedRoles",
-      "value": "Diskussion für Klimalabor-User öffnen"
     },
     {
       "key": "colorPicker/contrastInfo/title",
@@ -1694,7 +1686,7 @@
     },
     {
       "key": "styleguide/comment/header/unpublishedByAdmin",
-      "value": "(von der Redaktion verborgen)"
+      "value": "(von der Moderation verborgen)"
     },
     {
       "key": "styleguide/comment/header/unavailable",

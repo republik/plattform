@@ -12,11 +12,13 @@ jobs:
       group: ${{ github.workflow }}-${{ github.ref }}
       cancel-in-progress: true
     env:
-      API_URL: ${{ secrets.API_URL }}
+      DATO_CMS_API_URL: ${{ vars.DATO_CMS_API_URL }}
+      DATO_CMS_API_TOKEN: ${{ secrets.DATO_CMS_API_TOKEN }}
+      NEXT_PUBLIC_API_URL: ${{ vars.NEXT_PUBLIC_API_URL }}
+      NEXT_PUBLIC_BASE_URL: ${{ vars.NEXT_PUBLIC_BASE_URL }}
       SSG_DOCUMENTS_API_KEY: ${{ secrets.SSG_DOCUMENTS_API_KEY }}
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
       TURBO_TEAM: ${{ vars.TURBO_TEAM }}
-      PUBLIC_BASE_URL: https://republik.love
     steps:
       - uses: actions/checkout@v3
       - name: Use Node.js 18.x

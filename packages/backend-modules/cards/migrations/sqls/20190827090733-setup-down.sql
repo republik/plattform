@@ -1,3 +1,0 @@
-DROP TABLE IF EXISTS "cardDocuments";
-DROP TABLE IF EXISTS "cards";
-DROP TABLE IF EXISTS "cardGroups";

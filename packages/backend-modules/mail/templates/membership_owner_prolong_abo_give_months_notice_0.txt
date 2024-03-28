@@ -1,38 +1,44 @@
 Guten Tag
 
-Heute endet Ihr Republik-Abonnement. Herzlichen Dank für Ihr Interesse und Ihre
-Neugier bis hierhin!
+Heute endet Ihr Republik-Abonnement. In nur zwei Minuten können Sie diesen
+unglücklichen Lauf der Dinge ändern:
 
-Wir würden uns sehr freuen, wenn Sie weiter an Bord blieben {{prolong_url}} .
+Jetzt an Bord bleiben! {{prolong_url}}
 
-Ganz gleich, ob Sie uns einmal pro Woche, einmal pro Monat oder einmal pro Jahr
-lesen – mit Ihrem Beitrag stärken Sie kritischen Journalismus, die vierte Gewalt
-und die Demokratie.
+Wir schreiben Ihnen so direkt, weil Ihr Beitrag für unsere Arbeit
+überlebenswichtig ist.
 
-Wie Sie wissen, finanziert sich die Republik als unabhängiges und werbefreies
-Magazin über ihre Leserinnen und Leser: Es kommt also wirklich auf jede einzelne
-Person an.
+Die Republik finanziert sich durch ihre Leserinnen und Leser. Jeder Beitrag
+macht einen Unterschied.
 
-Nun haben Sie die Wahl:
+Wenn genügend Menschen für unseren Journalismus zahlen, können wir Politiker in
+die Pflicht nehmen, Expertinnen interviewen, Menschen mit speziellen Geschichten
+zu Wort kommen lassen, unsere App verbessern und den wohl höflichsten virtuellen
+Gesprächsraum der Schweizer Medienlandschaft pflegen. Wenn nicht, dann müssen
+wir das Feld den grossen Verlagen überlassen.
 
- * Sie bleiben weiterhin dabei mit der Jahresmitgliedschaft {{prolong_url}} :
-   Hiermit erhalten Sie nicht nur von Montag bis Samstag unser Magazin, sondern
-   werden auch Mitglied der Project R Genossenschaft und Teil unserer
-   Verlagsetage.
- * Das Monatsabonnement {{link_offer_monthly_abo}} : Das kostet nur CHF 22 im
-   Monat, wird Ihrer Kreditkarte belastet und verlängert sich automatisch – kann
-   dabei aber jederzeit und ohne Frist gekündigt werden. Sie erhalten hierbei
-   Zugriff auf das Magazin, sind aber nicht Teil der Genossenschaft.
- * Wollen Sie die Republik nicht mehr lesen? Kündigen Sie Ihre Mitgliedschaft
-   und teilen Sie uns mit, warum {{cancel_url}} . Es wäre wertvoll für uns, Ihre
-   Gründe zu kennen.
+Die Republik braucht Sie.
+
+Jetzt bezahlen! https://www.republik.ch/angebote?goto=account
 
 Sollten Sie nichts tun, verlieren Ihre Zugangsdaten am {{grace_end_date}} leider
-ihre Gültigkeit.
+ihre Gültigkeit. Das wäre sehr schade. Also lieber sofort dafür sorgen, dass
+unsere gemeinsame Reise weitergeht {{prolong_url}}.
 
 Herzlich
 
 Ihre Crew der Republik
+
+
+
+PS: Journalismus kostet zwar, doch wir wollen niemanden ausschliessen. Wenn Sie
+einen begründeten finanziellen Engpass haben sollten, dann melden Sie sich bei
+uns: kontakt@republik.ch . Wir finden eine Lösung.
+
+PPS: Falls Sie sich bewusst gegen das Bleiben entschieden haben, dann haben wir
+eine letzte Bitte: Nennen Sie uns zum Abschied Ihre Gründe
+https://www.republik.ch/angebote?goto=account ? Sie kennen uns mittlerweile so
+gut, dass Ihnen womöglich etwas aufgefallen ist, was wir übersehen haben.
 
 
 Republik AG

@@ -1,0 +1,7 @@
+query UserCampaignDetails($id: ID!) {
+  user(id: $id) {
+    username
+    referralCode
+    hasPublicProfile
+  }
+}

@@ -142,6 +142,9 @@ class SignIn extends Component {
                 nameOrEmail: me.name || me.email,
               }),
             }))
+            if (this.props.onSuccess) {
+              this.props.onSuccess(me)
+            }
             this.reloadOnSuccess()
           }}
         />
@@ -178,13 +181,13 @@ class SignIn extends Component {
         serverError={serverError}
         hints={
           <>
-            <Link href='/datenschutz' passHref>
+            <Link href='/datenschutz' passHref legacyBehavior>
               <Editorial.A>{t('signIn/privacy')}</Editorial.A>
             </Link>
             {' – '}
             {!inNativeIOSApp && (
               <>
-                <Link href='/faq' passHref>
+                <Link href='/faq' passHref legacyBehavior>
                   <Editorial.A>{t('signIn/faq')}</Editorial.A>
                 </Link>
                 {' – '}
@@ -200,6 +203,7 @@ class SignIn extends Component {
 
 SignIn.propTypes = {
   signIn: PropTypes.func.isRequired,
+  onSuccess: PropTypes.func,
   noReload: PropTypes.bool,
 }
 

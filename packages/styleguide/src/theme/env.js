@@ -1,19 +1,15 @@
-const ENV =
-  (typeof window !== 'undefined' &&
-    (window.ENV || (window.__NEXT_DATA__ && window.__NEXT_DATA__.env))) ||
-  process.env ||
-  {}
-
-const SG_ENV = {}
-
-const SG_PREFIX = /^(REACT_APP_)?SG_(.+)$/
-
-Object.keys(ENV).forEach((key) => {
-  const matches = key.match(SG_PREFIX)
-  if (matches) {
-    SG_ENV[matches[2]] = ENV[key]
-  }
-})
+const SG_ENV = {
+  COLORS: process.env.SG_COLORS,
+  DYNAMIC_COMPONENT_BASE_URLS: process.env.SG_DYNAMIC_COMPONENT_BASE_URLS,
+  FONT_FAMILIES: process.env.SG_FONT_FAMILIES,
+  FONT_STYLES: process.env.SG_FONT_STYLES,
+  FONT_FACES: process.env.SG_FONT_FACES,
+  BRAND_MARK_PATH: process.env.SG_BRAND_MARK_PATH,
+  BRAND_MARK_VIEWBOX: process.env.SG_BRAND_MARK_VIEWBOX,
+  LOGO_PATH: process.env.SG_LOGO_PATH,
+  LOGO_VIEWBOX: process.env.SG_LOGO_VIEWBOX,
+  LOGO_GRADIENT: process.env.SG_LOGO_GRADIENT,
+}
 
 export default SG_ENV
 

@@ -1,19 +1,12 @@
 import { useState, useRef, useEffect, Fragment } from 'react'
-import compose from 'lodash/flowRight'
-import { graphql } from '@apollo/client/react/hoc'
-import { gql } from '@apollo/client'
+import { gql, useQuery } from '@apollo/client'
 import { css } from 'glamor'
-import { withRouter } from 'next/router'
 import { IconButton } from '@project-r/styleguide'
-import withT, { t } from '../../lib/withT'
-import withMe from '../../lib/apollo/withMe'
+import { useTranslation } from '../../lib/withT'
 
 import Loader from '../Loader'
 import Frame, { MainContainer } from '../Frame'
 import Box from '../Frame/Box'
-import StatusError from '../StatusError'
-import { cardFragment } from '../Card/fragments'
-import CardDetails from '../Card/Details'
 import SubscribeMenu from '../Notifications/SubscribeMenu'
 import ActionBar from '../ActionBar'
 import { TESTIMONIAL_IMAGE_SIZE } from '../constants'
@@ -45,6 +38,7 @@ import Link from 'next/link'
 import { InnerPaynote } from '../Article/PayNote'
 import { useReportUserMutation } from './graphql/useReportUserMutation'
 import { IconReport } from '@republik/icons'
+import { useMe } from '../../lib/context/MeContext'
 
 const SIDEBAR_TOP = 20
 const PORTRAIT_SIZE_M = TESTIMONIAL_IMAGE_SIZE
@@ -242,42 +236,9 @@ const getPublicUser = gql`
           createdAt
         }
       }
-      cards(first: 1) {
-        nodes {
-          id
-          ...Card
-          group {
-            id
-            name
-            slug
-          }
-        }
-      }
-      # # uncomment to show candidacies during elections
-      # # and filter in backend to only return currently active elections
-      # candidacies {
-      #   election {
-      #     slug
-      #     description
-      #     beginDate
-      #     endDate
-      #     candidacyEndDate
-      #     discussion {
-      #       id
-      #     }
-      #   }
-      #   id
-      #   yearOfBirth
-      #   city
-      #   recommendation
-      #   comment {
-      #     id
-      #   }
-      # }
     }
   }
   ${documentListQueryFragment}
-  ${cardFragment}
 `
 
 const makeLoadMore = (fetchMore, dataType, variables) => () =>
@@ -304,7 +265,9 @@ const makeLoadMore = (fetchMore, dataType, variables) => () =>
     variables,
   })
 
-const LoadedProfile = (props) => {
+const LoadedProfile = ({ t, data: { user }, fetchMore, metaData }) => {
+  const { me, hasAccess } = useMe()
+
   const [state, setRawState] = useState({
     isEditing: false,
     showErrors: false,
@@ -416,14 +379,6 @@ const LoadedProfile = (props) => {
     }
   }
 
-  const {
-    t,
-    me,
-    hasAccess,
-    data: { user, fetchMore },
-    card,
-    metaData,
-  } = props
   const isMe = me && me.id === user.id
 
   const startEditing = () => {
@@ -620,15 +575,6 @@ const LoadedProfile = (props) => {
               errors={errors}
               dirty={dirty}
             />
-            {card && (
-              <div style={{ marginBottom: 40 }}>
-                <CardDetails
-                  card={card}
-                  postElection
-                  skipSpider={!card.user.portrait}
-                />
-              </div>
-            )}
             {layout.isMobile && isEditing && (
               <div style={{ marginBottom: 40 }}>
                 <Edit
@@ -662,6 +608,7 @@ const LoadedProfile = (props) => {
                           query: { edit: true },
                         }}
                         passHref
+                        legacyBehavior
                       >
                         <A>Kandidatur bearbeiten</A>
                       </Link>
@@ -709,14 +656,20 @@ const LoadedProfile = (props) => {
   )
 }
 
-const Profile = (props) => {
-  const {
-    t,
-    me,
-    data: { loading, error, user },
-  } = props
+const Profile = ({ user: foundUser }) => {
+  const { t } = useTranslation()
 
-  const card = user && user.cards && user.cards.nodes && user.cards.nodes[0]
+  const { loading, error, data, fetchMore } = useQuery(getPublicUser, {
+    variables: {
+      slug: foundUser.slug,
+      firstDocuments: 10,
+      firstComments: 10,
+    },
+  })
+  const user = data?.user
+
+  const card = user?.cards?.nodes?.[0]
+
   const metaData = {
     url: user ? `${PUBLIC_BASE_URL}/~${user.slug}` : undefined,
     image:
@@ -741,73 +694,19 @@ const Profile = (props) => {
         loading={loading}
         error={error}
         render={() => {
-          if (!user) {
-            return (
-              <StatusError statusCode={404} serverContext={props.serverContext}>
-                <Interaction.H2>
-                  {t('pages/profile/empty/title')}
-                </Interaction.H2>
-                {!!me && (
-                  <p>
-                    {t.elements('pages/profile/empty/content', {
-                      link: (
-                        <Link href={`/~${me.username || me.id}`} passHref>
-                          <A>{t('pages/profile/empty/content/linktext')}</A>
-                        </Link>
-                      ),
-                    })}
-                  </p>
-                )}
-              </StatusError>
-            )
-          }
-
-          return <LoadedProfile {...props} card={card} metaData={metaData} />
+          return (
+            <LoadedProfile
+              t={t}
+              data={data}
+              fetchMore={fetchMore}
+              card={card}
+              metaData={metaData}
+            />
+          )
         }}
       />
     </Frame>
   )
 }
 
-export default compose(
-  withT,
-  withMe,
-  withRouter,
-  graphql(getPublicUser, {
-    options: ({ router }) => ({
-      variables: {
-        slug: router.query.slug,
-        firstDocuments: 10,
-        firstComments: 10,
-      },
-    }),
-    props: ({ data, ownProps: { serverContext, router, me } }) => {
-      const { slug } = router.query
-      let redirect
-      if (slug === 'me') {
-        redirect = me
-      }
-      // redirect id slug to username if available
-      // - data.loading might be false during query transition
-      // - to avoid race conditions we limit it to the slug being the id
-      // - old slugs are handled by the 404 StatusError component
-      if (!data.loading && data.user?.username && data.user?.id === slug) {
-        redirect = data.user
-      }
-      if (redirect) {
-        const targetSlug = redirect.username || redirect.id
-        if (serverContext) {
-          serverContext.res.redirect(301, `/~${targetSlug}`)
-          throw new Error('redirect')
-        } else if (process.browser) {
-          // SSR does two two-passes: data (with serverContext) & render (without)
-          router.replace(`/~${targetSlug}`)
-        }
-      }
-
-      return {
-        data,
-      }
-    },
-  }),
-)(Profile)
+export default Profile

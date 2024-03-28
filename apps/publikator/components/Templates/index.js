@@ -32,6 +32,7 @@ const articleSchemaParams = {
   dynamicComponentIdentifiers,
   ...withArticleData,
   noEmpty: false,
+  hasEmailTemplate: true,
 }
 
 const schemas = {

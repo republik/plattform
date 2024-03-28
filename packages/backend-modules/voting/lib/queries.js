@@ -172,6 +172,7 @@ const buildQueries = (tableName) => {
 
   const numSubmittedByGroup = async (groupSlug, pgdb) => {
     const queries = []
+    const params = []
 
     Object.keys(tableMapping).forEach((key) => {
       const { hasGroupSlug, ballotsTable, name, foreignKey } = tableMapping[key]
@@ -181,8 +182,9 @@ const buildQueries = (tableName) => {
           FROM "${ballotsTable}" b
           JOIN "${name}" e
             ON b."${foreignKey}" = e.id
-          WHERE e."groupSlug" = '${groupSlug}'
+          WHERE e."groupSlug" = $${params.length + 1}
         `)
+        params.push(groupSlug)
       }
     })
 
@@ -197,7 +199,7 @@ const buildQueries = (tableName) => {
 
     debug('numSubmittedByGroup', submittedQuery)
 
-    return pgdb.queryOneField(submittedQuery)
+    return pgdb.queryOneField(submittedQuery, params)
   }
 
   const haveSameRestrictions = (entityA, entityB) => {

@@ -1,18 +1,11 @@
 Guten Tag
 
-Schön, dass Sie die Republik unterstützen. Und das zu einem Preis, der für Sie
-passt.
+Wir freuen uns sehr, dass Sie die Republik unterstützen möchten.
 
 Mit Ihrem neuen Abo erhalten Sie sechsmal pro Woche ein unabhängiges und
 werbefreies digitales Magazin für Politik, Wirtschaft, Gesellschaft und Kultur.
-
-Sie fördern aber auch eine wirklich unabhängige vierte Gewalt als zentrale
-Institution unserer Demokratie.
-
-Denn: Die Republik steht für die Verteidigung der demokratischen Institutionen
-und die Werte der Aufklärung. Für Treue zu Fakten, für Lösungen von Fall zu
-Fall, für Offenheit gegenüber Kritik, für Respektlosigkeit gegenüber der Macht
-und Respekt vor dem Menschen.
+Und Sie fördern eine wirklich unabhängige vierte Gewalt als zentrale Institution
+unserer Demokratie.
 
 Falls sich unsere Buchhaltung nicht irrt, ist allerdings der von Ihnen gewählte
 Abo-Beitrag in Höhe von CHF {{total}} noch ausstehend.

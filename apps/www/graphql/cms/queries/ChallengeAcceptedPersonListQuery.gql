@@ -1,0 +1,19 @@
+query ChallengeAcceptedPersonList {
+  hub: challengeAcceptedHub {
+    id
+    logo {
+      url
+    }
+  }
+  people: allChallengeAcceptedPeople(first: 50, orderBy: size_ASC) {
+    id
+    slug
+    name
+    size
+    portrait {
+      url
+      height
+      width
+    }
+  }
+}

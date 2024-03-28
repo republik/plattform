@@ -1,8 +1,5 @@
 module.exports = {
-  extends: [
-    '@republik/eslint-config-frontend',
-    'plugin:@next/next/recommended',
-  ],
+  extends: ['@republik/eslint-config-frontend'],
   rules: {
     'no-control-regex': 'off',
   },

@@ -6,6 +6,7 @@ import { useMe } from '../../lib/context/MeContext'
 import MarketingHeader from './MarketingHeader'
 import Carousel, { CarouselProps } from './Carousel'
 import { HEADER_HEIGHT, HEADER_HEIGHT_MOBILE } from '../constants'
+import { VerlegerKampagnePayNoteTop } from 'components/VerlegerKampagne/VerlegerKampagneBanner'
 
 const Top: React.FC<CarouselProps> = (props) => {
   const { me } = useMe()
@@ -33,7 +34,9 @@ const Top: React.FC<CarouselProps> = (props) => {
             <Carousel {...props} />
           </div>
         </div>
+        {/* <MarketingNewsBox me={me} /> */}
       </div>
+      <VerlegerKampagnePayNoteTop />
     </div>
   )
 }
@@ -53,7 +56,7 @@ const styles = {
     alignItems: 'center',
     width: '100%',
     [mediaQueries.mUp]: {
-      padding: '0 60px',
+      padding: '0 60px 24px',
     },
   }),
   panelContainer: css({
@@ -64,11 +67,11 @@ const styles = {
     justifyContent: 'flex-end',
     gap: 64,
     paddingTop: HEADER_HEIGHT_MOBILE,
-    margin: '64px 0 90px 0',
+    margin: '64px 0 40px 0',
     [mediaQueries.mUp]: {
       flexDirection: 'row',
       gap: 32,
-      margin: `120px 0 ${HEADER_HEIGHT + 80}px 0`,
+      margin: `90px 0 ${HEADER_HEIGHT}px 0`,
     },
     [mediaQueries.sDown]: {
       gap: 36,

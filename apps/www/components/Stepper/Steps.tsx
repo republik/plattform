@@ -36,14 +36,7 @@ const Step = ({ step, isActive, isLocked, style }: StepProp) => {
     className: isActive ? 'active' : undefined,
   }
 
-  return (
-    <motion.li
-      {...attributes}
-      {...style}
-      key={step}
-      disabled={isActive || isLocked}
-    />
-  )
+  return <motion.li {...attributes} style={style} key={step} />
 }
 
 type StepsProps = {

@@ -39,6 +39,11 @@ import createBlocks from './blocks'
 import createTeasers from './teasers'
 import createDynamicComponent from './dynamicComponent'
 import TeaserEmbedComment from '../../components/TeaserEmbedComment'
+import ifRule from '../shared/email/rules/ifRule'
+import elseRule from '../shared/email/rules/elseRule'
+import { If } from '../../components/Variables'
+import { FlyerAuthor } from '../../components/Flyer/Author'
+import authorRule from '../shared/email/rules/authorRule'
 
 const getProgressId = (node, index, parent, { ancestors }) => {
   if (parent.identifier === 'CENTER') {
@@ -155,12 +160,6 @@ const createSchema = ({
       key: 'discussion',
       ref: 'repo',
     },
-    // // disabled pending launch and backend support
-    // // https://github.com/orbiting/backends/compare/feat-article-email
-    // {
-    //   label: 'E-Mail-Betreff',
-    //   key: 'emailSubject'
-    // }
   ],
   titleBlockRule,
   titleBlockPrepend = null,
@@ -190,7 +189,7 @@ const createSchema = ({
   noEmpty = true,
   AudioPlayButton,
 } = {}) => {
-  const base = createBase({ metaBody, metaHeadlines })
+  const base = createBase({ metaBody, metaHeadlines, Link })
   const blocks = createBlocks({
     COVER_TYPE,
     base,
@@ -233,7 +232,7 @@ const createSchema = ({
     getPath,
     // // disabled pending launch and backend support
     // // https://github.com/orbiting/backends/compare/feat-article-email
-    // emailTemplate: hasEmailTemplate,
+    emailTemplate: 'article',
     rules: [
       {
         matchMdast: matchType('root'),
@@ -470,6 +469,20 @@ const createSchema = ({
                   ],
                 }),
                 editorModule: 'button',
+              },
+              // author block should not render anything in the web
+              {
+                ...authorRule,
+                component: () => null,
+              },
+              // if-else block should not render anything in the web
+              {
+                ...ifRule,
+                component: () => null,
+              },
+              {
+                ...elseRule,
+                component: () => null,
               },
               base.list,
               {

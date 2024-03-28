@@ -173,7 +173,9 @@ class Pledge extends Component {
     const pkg = this.getPkg({ query })
     const userPrice = !!query.userPrice
 
-    let requireShippingAddress = pkg ? pkg.name === 'BENEFACTOR' : false
+    let requireShippingAddress = pkg
+      ? ['ABO', 'BENEFACTOR'].includes(pkg.name)
+      : false
     const options = pkg
       ? pkg.options.map((option) => {
           const fieldKey = getOptionFieldKey(option)
@@ -300,7 +302,7 @@ class Pledge extends Component {
       }`,
       {
         accountLink: (
-          <Link key='account' href='/konto' passHref>
+          <Link key='account' href='/konto' passHref legacyBehavior>
             <A>{t(`pledge/form/instruction/${queryPackage}/accountText`)}</A>
           </Link>
         ),

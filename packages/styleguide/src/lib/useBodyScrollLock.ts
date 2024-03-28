@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, Ref } from 'react'
 import { disableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock'
 
 import warn from './warn'
@@ -36,7 +36,7 @@ export function isBodyScrollLocked() {
  */
 export function useBodyScrollLock<T extends HTMLElement>(
   lock = true,
-): [React.MutableRefObject<T>] {
+): [Ref<T>] {
   const ref = useRef<T>()
 
   const shouldLock = !!lock

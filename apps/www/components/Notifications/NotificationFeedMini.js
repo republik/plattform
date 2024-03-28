@@ -14,7 +14,7 @@ import {
 
 import { notificationsMiniQuery } from './enhancers'
 import { timeFormat } from '../../lib/utils/format'
-import withT from '../../lib/withT'
+import withT, { useTranslation } from '../../lib/withT'
 import Link from 'next/link'
 
 const dateFormat = timeFormat('%d.%m.')
@@ -24,11 +24,12 @@ const groupByDate = nest().key((n) => {
 })
 
 const NotificationFeedMini = ({
-  t,
   data: { notifications, loading, error },
   closeHandler,
 }) => {
   const [colorScheme] = useColorContext()
+  const { t } = useTranslation()
+
   return (
     <Loader
       style={{ minHeight: 60 }}
@@ -76,14 +77,11 @@ const NotificationFeedMini = ({
                               ) ?? '/'
                             }
                             passHref
+                            {...styles.cleanLink}
+                            onClick={() => closeHandler()}
                           >
-                            <a
-                              {...styles.cleanLink}
-                              onClick={() => closeHandler()}
-                            >
-                              {dateFormat(new Date(node.createdAt))}{' '}
-                              {node.content.title}
-                            </a>
+                            {dateFormat(new Date(node.createdAt))}{' '}
+                            {node.content.title}
                           </Link>
                         </div>
                       )
@@ -127,9 +125,5 @@ const styles = {
 
 export default compose(
   withT,
-  graphql(notificationsMiniQuery, {
-    options: {
-      fetchPolicy: 'cache-and-network',
-    },
-  }),
+  graphql(notificationsMiniQuery),
 )(NotificationFeedMini)

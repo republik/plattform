@@ -31,7 +31,7 @@ export const FigureImage: React.FC<{
   children: ReactNode
   images?: FigureImages
   alt?: string
-  attributes: React.HTMLAttributes<HTMLDivElement>
+  attributes: React.ComponentPropsWithoutRef<'div'>
   [x: string]: unknown
 }> = ({ children, images, alt, attributes, ...props }) => {
   const { noLazy } = useRenderContext()

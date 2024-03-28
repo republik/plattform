@@ -7,15 +7,18 @@ import { NextRequest } from 'next/server'
 async function fetchMeObject(
   req: NextRequest,
 ): Promise<{ me: null | { roles: string[] }; cookie: string }> {
-  const response = await fetch(`${process.env.API_URL}?query={me{roles}}`, {
-    method: 'GET',
-    //body: JSON.stringify({ query: 'query ' }),
-    headers: {
-      'Content-Type': 'application/json',
-      // Attach headers to the request to ensure `me` is returned
-      Cookie: req.headers.get('cookie'),
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}?query={me{roles}}`,
+    {
+      method: 'GET',
+      //body: JSON.stringify({ query: 'query ' }),
+      headers: {
+        'Content-Type': 'application/json',
+        // Attach headers to the request to ensure `me` is returned
+        Cookie: req.headers.get('cookie'),
+      },
     },
-  })
+  )
 
   if (response.ok) {
     const { data } = await response.json()

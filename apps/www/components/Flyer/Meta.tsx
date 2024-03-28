@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { CustomDescendant, renderSlateAsText } from '@project-r/styleguide'
+import { CustomElement, renderSlateAsText } from '@project-r/styleguide'
 
 import { PUBLIC_BASE_URL, ASSETS_SERVER_BASE_URL } from '../../lib/constants'
 import { useTranslation } from '../../lib/withT'
@@ -41,13 +41,13 @@ export const getShareImageUrls = (
 }
 
 const getTitleProps = (
-  value: CustomDescendant[],
+  value: CustomElement[],
   tileId: string,
   customDescription: string,
 ): Partial<MetaProps> => {
   const titleNode = value
     .find((node) => node.id === tileId)
-    ?.children.find((node) => node.type === 'flyerTitle')
+    ?.children.find((node: CustomElement) => node.type === 'flyerTitle')
 
   if (!titleNode) return {}
 
@@ -67,7 +67,7 @@ const FlyerMeta: React.FC<{
   documentId: string
   tileId?: string
   meta: MetaProps
-  value: CustomDescendant[]
+  value: CustomElement[]
 }> = ({ tileId, meta, documentId, value }) => {
   const { t } = useTranslation()
 

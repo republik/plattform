@@ -768,7 +768,11 @@
     },
     {
       "key": "account/newsletterSubscriptions/CLIMATE/label",
-      "value": "Klimalabor-Newsletter"
+      "value": "Challenge-Accepted-Newsletter"
+    },
+    {
+      "key": "account/newsletterSubscriptions/WDWWW/label",
+      "value": "Was diese Woche wichtig war"
     },
     {
       "key": "account/authSettings/title",

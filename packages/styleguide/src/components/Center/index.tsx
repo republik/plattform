@@ -113,9 +113,9 @@ const centerStyles = {
 
 type CenterProps = {
   children: React.ReactNode
-  attributes?: React.HTMLAttributes<HTMLDivElement>
+  attributes?: React.ComponentPropsWithoutRef<'div'>
   breakout?: boolean
-} & React.HTMLAttributes<HTMLDivElement>
+} & React.ComponentPropsWithoutRef<'div'>
 
 const Center = ({
   children,
@@ -138,8 +138,8 @@ const Center = ({
 export type BreakoutProps = {
   children: React.ReactNode
   size?: keyof typeof breakoutStyles
-  attributes?: React.HTMLAttributes<HTMLDivElement>
-} & React.HTMLAttributes<HTMLDivElement>
+  attributes?: React.ComponentPropsWithoutRef<'div'>
+} & React.ComponentPropsWithRef<'div'>
 
 export const Breakout = ({
   size,

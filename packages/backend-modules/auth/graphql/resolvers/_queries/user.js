@@ -3,19 +3,22 @@ const { resolveUser } = require('../../../lib/Users')
 const Roles = require('../../../lib/Roles')
 const transformUser = require('../../../lib/transformUser')
 
-module.exports = async (_, { slug, accessToken }, context) => {
+module.exports = async (_, { slug, id, accessToken }, context) => {
   // use access token to return user
-  if (!slug && accessToken) {
+  if (!slug && !id && accessToken) {
     return getUserByAccessToken(accessToken, context)
   }
 
-  if (!slug) {
+  if (!slug && !id) {
     return null
   }
 
   const { user: me, pgdb } = context
 
-  const user = await resolveUser({ slug, pgdb })
+  let user
+  if (slug || id) {
+    user = await resolveUser({ slug, userId: id, pgdb })
+  }
 
   if (
     !user ||
