@@ -23,7 +23,7 @@ export const metadata: Metadata = {
 }
 
 export default async function Page() {
-  const { me } = await getSenderData()
+  const { me, campaign } = await getSenderData()
 
   const url = `${PUBLIC_BASE_URL}/jetzt/${
     me?.hasPublicProfile ? me.username : me?.referralCode
@@ -32,6 +32,11 @@ export default async function Page() {
   const imageUrl = `${process.env.NEXT_PUBLIC_CDN_FRONTEND_BASE_URL}/jetzt/${
     me?.hasPublicProfile ? me.username : me?.referralCode
   }`
+
+  // Redirect to campaign thank you page
+  if (!campaign?.isActive) {
+    return redirect('/jetzt-danke')
+  }
 
   if (!me) {
     return redirect('/anmelden')
