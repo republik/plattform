@@ -1,3 +1,14 @@
+export type CampaignRow = {
+  id: string
+  name: string
+  slug: string
+  description: string
+  beginDate: string
+  endDate: string
+  createdAt: string
+  updatedAt: string
+}
+
 export type CampaignRewardRow = {
   id: string
   campaignId: string

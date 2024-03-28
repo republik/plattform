@@ -16,8 +16,9 @@ type Campaign {
   slug: String!
   name: String!
   description: String
-  beginDate: Date!
-  endDate: Date!
+  isActive: Boolean!
+  beginDate: DateTime!
+  endDate: DateTime!
   referrals: Referrals!
 }
 
