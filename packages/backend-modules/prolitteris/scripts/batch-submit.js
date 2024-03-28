@@ -345,15 +345,14 @@ async function processData(client, data) {
 
   // check if res is of type APIError
   if ('code' in res) {
-    const fieldErrors = res.fieldErrors
-      ?.map((f) => `field: ${f.field}; ${f.message}`)
-      .join('\n')
-    // throw error so that it can be logged to stderr
-    throw Error(
-      `API Error: ${res.code}; ${res.message}` + fieldErrors
-        ? `\n${fieldErrors}`
-        : '',
-    )
+    let msg = `API Error ${res.code} - ${res.message}`
+    if (res.fieldErrors) {
+      msg =
+        msg +
+        res.fieldErrors.map((f) => `field: ${f.field}; ${f.message}`).join('\n')
+    }
+
+    throw Error(msg)
   }
 
   return res
