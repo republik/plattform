@@ -1,4 +1,14 @@
-const DefaultMissingNode = ({ node, children }) => (
+import { MdastNode, MdastSchema } from './types'
+
+type DefaultMissingNodeProps = {
+  node: MdastNode
+  children: React.ReactNode
+  parent?: MdastNode
+  ancestors?: MdastNode[]
+  index?: number
+}
+
+const DefaultMissingNode = ({ node, children }: DefaultMissingNodeProps) => (
   <span
     style={{
       background: '#FF5555',
@@ -12,12 +22,27 @@ const DefaultMissingNode = ({ node, children }) => (
   </span>
 )
 
-export const renderMdast = (mdast, schema, options = {}) => {
+type RenderMdastOptions = {
+  ancestors?: MdastNode[]
+  MissingNode?: React.ComponentType<DefaultMissingNodeProps>
+}
+
+export const renderMdast = (
+  mdast: MdastNode[],
+  schema: MdastSchema,
+  options: RenderMdastOptions = {},
+) => {
   const { ancestors = [], MissingNode = DefaultMissingNode } = options
 
-  const rules = schema.rules.filter((rule) => rule.matchMdast && rule.component)
+  const rules = schema.rules.filter(
+    (rule) => !!rule.matchMdast && rule.component,
+  )
 
-  const visit = (node, index, nodeAncestors) => {
+  const visit = (
+    node: MdastNode,
+    index: number,
+    nodeAncestors: MdastNode[],
+  ) => {
     if (node.type === 'text') {
       return node.value
     }
@@ -83,11 +108,11 @@ export const renderMdast = (mdast, schema, options = {}) => {
     )
   }
 
-  const visitArray = (array, nodeAncestors) => {
+  const visitArray = (array: MdastNode[], nodeAncestors: MdastNode[]) => {
     return array.map((item, index) => visit(item, index, nodeAncestors))
   }
 
-  const visitChildren = (node, nodeAncestors) => {
+  const visitChildren = (node: MdastNode, nodeAncestors: MdastNode[]) => {
     if (!node.children || node.children.length === 0) {
       return null
     }

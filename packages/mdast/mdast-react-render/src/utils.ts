@@ -1,18 +1,36 @@
 import { parse, format } from 'url'
+import type { MdastNode, MdastNodeMatcher } from './types'
 
-export const matchType = (type) => (node) => node.type === type
-export const matchHeading = (depth) => (node) =>
-  node.type === 'heading' && node.depth === depth
-export const matchZone = (identifier) => (node) =>
-  node.type === 'zone' && node.identifier === identifier
+export function matchType(type: MdastNode['type']): MdastNodeMatcher {
+  return (node: MdastNode): boolean => node.type === type
+}
+
+export function matchHeading(depth: MdastNode['depth']): MdastNodeMatcher {
+  return (node: MdastNode): boolean =>
+    matchType('heading')(node) && node.depth === depth
+}
+
+export function matchZone(
+  identifier: MdastNode['identifier'],
+): MdastNodeMatcher {
+  return (node: MdastNode): boolean =>
+    matchType('heading')(node) && node.identifier === identifier
+}
+
 export const matchParagraph = matchType('paragraph')
 export const matchImage = matchType('image')
-export const matchImageParagraph = (node) =>
-  matchParagraph(node) &&
-  node.children.length === 1 &&
-  matchImage(node.children[0])
 
-export const imageSizeInfo = (url) => {
+export function matchImageParagraph(node: MdastNode): boolean {
+  return (
+    matchParagraph(node) &&
+    node.children.length === 1 &&
+    matchImage(node.children[0])
+  )
+}
+
+export function imageSizeInfo(
+  url: string,
+): { width: string; height: string } | null {
   const urlObject = parse(url, true)
   const { size } = urlObject.query
   if (!size || typeof size !== 'string') {
@@ -25,7 +43,7 @@ export const imageSizeInfo = (url) => {
   }
 }
 
-export const imageResizeUrl = (url, size) => {
+export function imageResizeUrl(url: string, size: string): string {
   if (!url) {
     return url
   }
@@ -37,6 +55,8 @@ export const imageResizeUrl = (url, size) => {
 
   urlObject.query.resize = size
   // ensure format calculates from query object
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   urlObject.search = undefined
 
   return format(urlObject)
