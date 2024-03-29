@@ -82,11 +82,13 @@ const styles = {
   }),
   play: css({
     position: 'absolute',
+    display: 'flex',
     top: '50%',
     left: '5%',
     right: '5%',
     marginTop: -18,
-    textAlign: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
     transition: 'opacity 200ms',
   }),
   progress: css({
@@ -113,6 +115,9 @@ const styles = {
     right: 10,
     bottom: 10,
     cursor: 'pointer',
+    display: 'flex',
+    alignItems: 'center',
+    gap: 5,
   }),
   time: css({
     color: '#fff',
