@@ -1,3 +1,4 @@
+import { getCampaignReferralsData } from '@app/app/(campaign)/campaign-data'
 import { CampaignLogo } from '@app/app/(campaign)/components/campaign-logo'
 import { UNELIGIBLE_RECEIVER_MEMBERSHIPS } from '@app/app/(campaign)/constants'
 import Container from '@app/components/container'
@@ -20,7 +21,16 @@ export default async function CampaignLayout({
 }: {
   children: ReactNode
 }) {
-  const me = await getMe()
+  const [me, { campaign }] = await Promise.all([
+    getMe(),
+    getCampaignReferralsData(),
+  ])
+
+  // Redirect to campaign over page
+  if (!campaign?.isActive) {
+    return redirect('/jetzt-vorbei')
+  }
+
   // User is logged in but has some kind of yearly subscription
   const meIsEligible = !UNELIGIBLE_RECEIVER_MEMBERSHIPS.includes(
     me?.activeMembership?.type.name,

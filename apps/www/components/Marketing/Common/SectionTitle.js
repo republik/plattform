@@ -21,5 +21,6 @@ const styles = {
   }),
   title: css({
     ...fontStyles.sansSerifMedium30,
+    marginBlock: '0.8em',
   }),
 }
