@@ -36,7 +36,11 @@ const VisibleCondition = ({ children, attributes, type, data }) => {
       {...styles.container}
       style={{ borderLeftColor: color }}
     >
-      <div {...styles.label} style={{ backgroundColor: color }}>
+      <div
+        {...styles.label}
+        style={{ backgroundColor: color }}
+        contentEditable={false}
+      >
         {type} {data.get('present')}
       </div>
       {children}

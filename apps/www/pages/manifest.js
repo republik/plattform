@@ -15,7 +15,6 @@ import {
   fontFamilies,
   mediaQueries,
   useColorContext,
-  ColorHtmlBodyColors,
 } from '@project-r/styleguide'
 
 import { PUBLIC_BASE_URL, CDN_FRONTEND_BASE_URL } from '../lib/constants'
@@ -98,11 +97,9 @@ export const Back = withInNativeApp(({ inNativeApp, label }) => {
   const [colorScheme] = useColorContext()
   if (!inNativeApp) return null
   return (
-    <Link href='/' passHref>
-      <a {...styles.back} {...colorScheme.set('color', 'logo')}>
-        <IconBack size={25} style={{ marginTop: -3 }} />
-        {label}
-      </a>
+    <Link href='/' {...styles.back} {...colorScheme.set('color', 'logo')}>
+      <IconBack size={25} style={{ marginTop: -3 }} />
+      {label}
     </Link>
   )
 })
@@ -143,7 +140,6 @@ ${PUBLIC_BASE_URL}
 
   return (
     <NarrowContainer>
-      <ColorHtmlBodyColors colorSchemeKey='auto' />
       <Head>
         <title>Manifest – Republik</title>
         <meta name='description' content={meta.description} />

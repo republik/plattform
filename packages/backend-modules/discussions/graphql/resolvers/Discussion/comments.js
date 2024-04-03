@@ -333,8 +333,6 @@ module.exports = async (discussion, args, context, info) => {
     }
   }
 
-  // query to load comments partially, including only fields necessary
-  // to sort and build tree
   const fields = [
     'c.id',
     'c."parentIds"',

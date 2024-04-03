@@ -1,0 +1,3198 @@
+schema {
+  query: queries
+  mutation: mutations
+  subscription: subscriptions
+}
+
+"""Entity describing ability and terms of granting a membership"""
+type AccessCampaign {
+  """Begin of campaign"""
+  beginAt: DateTime!
+  defaultMessage: String
+  description: String
+
+  """End of campaign"""
+  endAt: DateTime!
+  grants(
+    """Include grants with were invalidated (admin only)"""
+    withInvalidated: Boolean
+
+    """Include grants with were revoked (admin only)"""
+    withRevoked: Boolean
+  ): [AccessGrant!]!
+  id: ID!
+  perks: AccessCampaignPerks!
+  slots: AccessCampaignSlots!
+  title: String!
+}
+
+"""Entity describing available perks"""
+type AccessCampaignPerks {
+  giftableMemberships: Int
+}
+
+"""Entity describing state of slots: total, used and free"""
+type AccessCampaignSlots {
+  free: Int!
+  total: Int!
+  used: Int!
+}
+
+"""Entity describing an event that occured, linked to an AccessGrant"""
+type AccessEvent {
+  createdAt: DateTime!
+  event: String!
+  id: ID!
+}
+
+"""Entity representing a future, current or passed granted membership"""
+type AccessGrant {
+  """Beginning of sharing period"""
+  beginAt: DateTime
+
+  """Sharing period must begin before"""
+  beginBefore: DateTime!
+
+  """Campaign this membership grant belongs to"""
+  campaign: AccessCampaign!
+  createdAt: DateTime!
+
+  """Original recipient email address of grant."""
+  email: String
+
+  """Ending of sharing period"""
+  endAt: DateTime
+
+  """Events (Admin only)"""
+  events: [AccessEvent]
+  followupAt: DateTime
+
+  """Entity who granted membership (Admin only)"""
+  granter: User
+
+  """Name or email address of entity who granted membership"""
+  granterName: String!
+  id: ID!
+
+  """Date when grant was rendered invalid"""
+  invalidatedAt: DateTime
+
+  """Entity who received granted membership (Admin only)"""
+  recipient: User
+
+  """Name or email address of entity who received granted access"""
+  recipientName: String
+
+  """Date when grant was revoked"""
+  revokedAt: DateTime
+
+  """Status (Admin only)"""
+  status: String
+  updatedAt: DateTime!
+
+  """Voucher code claim this grant"""
+  voucherCode: String
+}
+
+type AccessGrantInfo {
+  granter: User!
+  granterName: String!
+  message: String
+}
+
+type AccessGrantStats {
+  """Returns events on access grants in daily buckets"""
+  events(
+    """An AccessCampaign.id"""
+    accessCampaignId: ID!
+
+    """Maximum day (DD-MM-YYYY)"""
+    max: Date!
+
+    """Minimum day (DD-MM-YYYY)"""
+    min: Date!
+  ): AccessGrantStatsEvents!
+
+  """Returns access grant states per in daily buckets."""
+  evolution(
+    """An AccessCampaign.id"""
+    accessCampaignId: ID!
+
+    """Maximum day (DD-MM-YYYY)"""
+    max: Date!
+
+    """Minimum day (DD-MM-YYYY)"""
+    min: Date!
+  ): AccessGrantStatsEvolution!
+}
+
+type AccessGrantStatsEvents {
+  buckets: [AccessGrantStatsEventsBucket!]
+  updatedAt: DateTime!
+}
+
+type AccessGrantStatsEventsBucket {
+  claims: Int!
+  date: Date!
+  invites: Int!
+  key: String!
+  pledges: Int!
+  revenue: Int!
+}
+
+type AccessGrantStatsEvolution {
+  buckets: [AccessGrantStatsPeriodBucket!]
+  updatedAt: DateTime!
+}
+
+type AccessGrantStatsPeriodBucket {
+  active: Int!
+  activeUnconverted: Int!
+  converted: Int!
+  date: Date!
+  key: String!
+}
+
+enum AccessRole {
+  ADMIN
+  EDITOR
+  MEMBER
+  PUBLIC
+}
+
+"""Scope of an access token"""
+enum AccessTokenScope {
+  """A token authorize a session (TTL: 5 days)"""
+  AUTHORIZE_SESSION
+
+  """A token to use mutation claimCard (TTL: 90 days)"""
+  CLAIM_CARD
+
+  """A token to access me.customPackages (TTL: 90 days)"""
+  CUSTOM_PLEDGE
+
+  """A token to access me.customPackages (TTL: 120 days)"""
+  CUSTOM_PLEDGE_EXTENDED
+
+  """A token access a invoices (TTL: 5 days)"""
+  INVOICE
+
+  """A token to access a users name and portrait (TTL: 30 days)"""
+  NOW_YOU_SEE_ME
+}
+
+enum Action {
+  create
+  delete
+}
+
+type AddPaymentMethodResponse {
+  stripeClientSecret: String
+  stripePublishableKey: String
+}
+
+type Address {
+  city: String!
+  country: String!
+  createdAt: DateTime!
+  id: ID!
+  line1: String!
+  line2: String
+  name: String
+  postalCode: String!
+  updatedAt: DateTime!
+}
+
+input AddressInput {
+  city: String!
+  country: String!
+  line1: String!
+  line2: String
+  name: String!
+  postalCode: String!
+}
+
+type AnserPageInfo {
+  endCursor: String
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+}
+
+type Answer {
+  drafted: Boolean
+  hasMatched: Boolean
+  id: ID!
+  payload: JSON!
+  question: QuestionInterface!
+  submitted: Boolean!
+}
+
+type AnswerConnection {
+  nodes: [Answer!]!
+  pageInfo: AnserPageInfo!
+  totalCount: Int!
+}
+
+input AnswerInput {
+  id: ID!
+  payload: JSON
+  questionId: ID!
+}
+
+"""Provide an entitiy type (e. g. `Document`) and its ID"""
+input AudioQueueEntityInput {
+  id: ID!
+  type: AudioQueueEntityType!
+}
+
+enum AudioQueueEntityType {
+  Document
+}
+
+"""An item in an audio queue."""
+type AudioQueueItem implements CollectionItemInterface {
+  collection: Collection!
+  createdAt: DateTime!
+  document: Document
+  id: ID!
+
+  """Sequence number of this item"""
+  sequence: Int!
+  updatedAt: DateTime!
+}
+
+type AudioSource implements PlayableMedia {
+  aac: String
+  durationMs: Int!
+  kind: AudioSourceKind
+  mediaId: ID!
+  mp3: String
+  ogg: String
+  userProgress: MediaProgress
+}
+
+enum AudioSourceKind {
+  podcast
+  readAloud
+  syntheticReadAloud
+}
+
+type Author {
+  email: String!
+  name: String!
+  user: User
+}
+
+enum Badge {
+  CROWDFUNDER
+  FREELANCER
+  PATRON
+  STAFF
+}
+
+input BooleanFilter {
+  field: Field!
+  value: Boolean!
+}
+
+type Calendar {
+  id: ID!
+  slots(from: DateTime, to: DateTime): [CalendarSlot!]
+  slug: String!
+}
+
+type CalendarSlot {
+  id: ID!
+  key: String!
+  userCanBook: Boolean!
+  userCanCancel: Boolean!
+  userHasBooked: Boolean!
+  users: [User!]!
+}
+
+type CallToAction {
+  """Timestamp when User acknowledged call to action"""
+  acknowledgedAt: DateTime
+  beginAt: DateTime!
+  createdAt: DateTime!
+  endAt: DateTime!
+  id: ID!
+  payload: CallToActionPayload!
+  response: JSON
+  updatedAt: DateTime!
+}
+
+type CallToActionBasicPayload {
+  linkHref: String!
+  linkLabel: String!
+  text: String!
+}
+
+type CallToActionComponentPayload {
+  customComponent: CallToActionCustomComponent!
+}
+
+type CallToActionCustomComponent {
+  args: JSON
+  key: String!
+}
+
+union CallToActionPayload = CallToActionBasicPayload | CallToActionComponentPayload
+
+type Campaign {
+  beginDate: DateTime!
+  description: String
+  endDate: DateTime!
+  id: ID!
+  isActive: Boolean!
+  name: String!
+  referrals: Referrals!
+  slug: String!
+}
+
+type Cancellation {
+  cancelledViaSupport: Boolean!
+  category: CancellationCategory!
+  createdAt: DateTime!
+  id: ID!
+  reason: String
+  revokedAt: DateTime
+  suppressConfirmation: Boolean!
+  suppressWinback: Boolean!
+  winbackCanBeSent: Boolean!
+  winbackSentAt: DateTime
+}
+
+type CancellationCategory {
+  label: String!
+  type: CancellationCategoryType!
+}
+
+enum CancellationCategoryType {
+  CROWFUNDING_ONLY
+  EDITORAL_NARCISSISTIC
+  EDITORIAL
+  EXPECTIONS
+  LOGIN_TECH
+  NO_MONEY
+  NO_TIME
+  OTHER
+  PAPER
+  RARELY_READ
+  SEVERAL_REASONS
+  SYSTEM
+  TOO_EXPENSIVE
+  TOO_MUCH_TO_READ
+  UNCERTAIN_FUTURE
+  VOID
+}
+
+input CancellationInput {
+  reason: String
+  suppressConfirmation: Boolean
+  suppressWinback: Boolean
+  type: CancellationCategoryType!
+}
+
+type Candidacy {
+  city: String
+  comment: Comment!
+  credential: Credential
+  election: Election!
+  id: ID!
+  isIncumbent: Boolean
+  postalCodeGeo: PostalCodeGeo
+  recommendation: String
+  user: User!
+  yearOfBirth: Int
+}
+
+type Collection {
+  id: ID!
+  items(after: String, before: String, first: Int, last: Int): CollectionItemConnection!
+  name: String!
+}
+
+type CollectionItem implements CollectionItemInterface {
+  collection: Collection!
+  createdAt: DateTime!
+  document: Document
+  id: ID!
+}
+
+type CollectionItemConnection {
+  nodes: [CollectionItem!]!
+  pageInfo: CollectionItemPageInfo!
+  totalCount: Int!
+}
+
+interface CollectionItemInterface {
+  collection: Collection!
+  createdAt: DateTime!
+  document: Document
+  id: ID!
+}
+
+type CollectionItemPageInfo {
+  endCursor: String
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+}
+
+type CollectionsStats {
+  evolution(
+    """Maximum month (YYYY-MM)"""
+    max: YearMonthDate!
+
+    """Minimum month (YYYY-MM)"""
+    min: YearMonthDate!
+
+    """Collection name"""
+    name: String!
+  ): CollectionsStatsEvolution!
+  last(
+    """Collection name"""
+    name: String!
+  ): CollectionsStatsBucket!
+}
+
+type CollectionsStatsBucket {
+  """Amount of documents"""
+  documents: Int!
+
+  """Bucket key (YYYY-MM)"""
+  key: String!
+
+  """Amount of media"""
+  medias: Int!
+
+  """Amount of records"""
+  records: Int!
+  updatedAt: DateTime!
+
+  """Amount of unqiue users"""
+  users: Int!
+}
+
+type CollectionsStatsEvolution {
+  buckets: [CollectionsStatsBucket!]
+  updatedAt: DateTime!
+}
+
+type Comment {
+  adminUnpublished: Boolean
+  author: User
+  comments: CommentConnection!
+  content: JSON
+  contentLength: Int
+  createdAt: DateTime!
+  depth: Int!
+  discussion: Discussion!
+  displayAuthor: DisplayUser!
+  downVotes: Int!
+  embed: Embed
+  featuredAt: DateTime
+  featuredTargets: [CommentFeaturedTarget!]
+  featuredText: String
+  hotness: Float!
+  id: ID!
+  mentioningDocument: MentioningDocument
+  numReports: Int
+  parent: Comment
+  parentIds: [ID!]!
+  preview(length: Int): Preview
+  published: Boolean!
+  score: Int!
+  tags: [String!]!
+  text: String
+  unreadNotifications: NotificationConnection
+  upVotes: Int!
+  updatedAt: DateTime!
+  userCanEdit: Boolean
+  userCanReport: Boolean!
+  userReportedAt: DateTime
+  userVote: CommentVote
+}
+
+type CommentAggregation {
+  beginDate: Date
+  count: Int!
+  discussion: Discussion!
+  endDate: Date
+}
+
+type CommentConnection {
+  directTotalCount: Int
+  focus: Comment
+  id: ID!
+  nodes: [Comment]!
+  pageInfo: DiscussionPageInfo
+  resolvedOrderBy: DiscussionOrder
+  totalCount: Int!
+}
+
+enum CommentFeaturedTarget {
+  DEFAULT
+  MARKETING
+}
+
+type CommentUpdate {
+  mutation: MutationType!
+  node: Comment!
+}
+
+enum CommentVote {
+  DOWN
+  UP
+}
+
+type Commit {
+  author: Author!
+  canDerive(type: DerivativeType!): Boolean!
+  date: DateTime!
+  derivatives: [Derivative!]
+  document: Document!
+  id: ID!
+  markdown: String!
+  message: String
+  parentIds: [ID!]!
+  repo: Repo!
+}
+
+type CommitConnection {
+  nodes: [Commit!]!
+  pageInfo: PublikatorPageInfo!
+  totalCount: Int!
+}
+
+type Company {
+  id: ID!
+  name: String!
+}
+
+type Contributor {
+  kind: String
+  name: String!
+  user: User
+}
+
+type Credential {
+  description: String!
+  id: ID!
+  isListed: Boolean!
+  verified: Boolean!
+}
+
+type Crop {
+  height: Int
+  width: Int
+  x: Int
+  y: Int
+}
+
+type Crowdfunding {
+  beginDate: DateTime!
+  createdAt: DateTime!
+  endDate: DateTime!
+  endVideo: Video
+  goals: [CrowdfundingGoal!]!
+  hasEnded: Boolean!
+  id: ID!
+  name: String!
+  packages: [Package!]!
+  status: CrowdfundingStatus!
+  updatedAt: DateTime!
+}
+
+type CrowdfundingGoal {
+  description: String
+  memberships: Int
+  money: Int!
+  people: Int!
+}
+
+type CrowdfundingStatus {
+  memberships: Int!
+  money: Int!
+  people: Int!
+}
+
+"""Date (format %d.%m.%Y)"""
+scalar Date
+
+input DateRangeFilter {
+  field: Field!
+  from: DateTime!
+  to: DateTime!
+}
+
+input DateRangeInput {
+  from: DateTime
+  to: DateTime
+}
+
+"""DateTime (format ISO-8601)"""
+scalar DateTime
+
+type Derivative {
+  createdAt: DateTime!
+  destroyedAt: DateTime
+  failedAt: DateTime
+  id: ID!
+  readyAt: DateTime
+  result: JSON
+  status: DerivativeStatus!
+  type: DerivativeType!
+  updatedAt: DateTime!
+}
+
+enum DerivativeStatus {
+  Destroyed
+  Failure
+  Pending
+  Ready
+}
+
+enum DerivativeType {
+  SyntheticReadAloud
+}
+
+type Device {
+  createdAt: DateTime!
+  id: ID!
+  information: DeviceInformation!
+  lastSeen: DateTime!
+  user: User!
+}
+
+type DeviceInformation {
+  appVersion: String!
+  model: String!
+  os: OSType!
+  osVersion: String!
+}
+
+input DeviceInformationInput {
+  appVersion: String!
+  model: String!
+  os: OSType!
+  osVersion: StringOrNumber!
+  userAgent: String
+}
+
+type Discussion {
+  closed: Boolean!
+  collapsable: Boolean!
+  comments(after: String, first: Int, flatDepth: Int, focusId: ID, includeParent: Boolean, orderBy: DiscussionOrder, orderDirection: OrderDirection, parentId: ID, tag: String): CommentConnection!
+  displayAuthor: DisplayUser
+  document: Document
+  id: ID!
+  isBoard: Boolean!
+  path: String
+  rules: DiscussionRules!
+  tagBuckets: [DiscussionTagBucket!]!
+  tagRequired: Boolean!
+  tags: [String!]!
+  title: String
+  userCanComment: Boolean!
+  userPreference: DiscussionPreferences
+  userSubscriptionsForCommenters(after: String, before: String, first: Int, last: Int): SubscriptionConnection!
+  userWaitUntil: DateTime
+}
+
+enum DiscussionNotificationChannel {
+  APP
+  EMAIL
+  WEB
+}
+
+enum DiscussionNotificationOption {
+  ALL
+  MY_CHILDREN
+  NONE
+}
+
+enum DiscussionOrder {
+  AUTO
+  DATE
+  FEATURED_AT
+  HOT
+  REPLIES
+  VOTES
+}
+
+type DiscussionPageInfo {
+  endCursor: String
+  hasNextPage: Boolean
+}
+
+type DiscussionPreferences {
+  anonymity: Boolean!
+  credential: Credential
+  notifications: DiscussionNotificationOption
+}
+
+input DiscussionPreferencesInput {
+  anonymity: Boolean
+  credential: String
+  notifications: DiscussionNotificationOption
+}
+
+type DiscussionRules {
+  allowedRoles: [String!]!
+  anonymity: Permission!
+  disableTopLevelComments: Boolean
+  maxLength: Int
+  minInterval: Int
+}
+
+type DiscussionSuspension {
+  beginAt: DateTime!
+  createdAt: DateTime!
+  endAt: DateTime!
+  id: ID!
+  issuer: User
+  reason: String
+  updatedAt: DateTime!
+  user: User!
+}
+
+type DiscussionTagBucket {
+  count: Int!
+  value: String!
+}
+
+type DiscussionsStats {
+  evolution(
+    """Maximum month (YYYY-MM)"""
+    max: YearMonthDate!
+
+    """Minimum month (YYYY-MM)"""
+    min: YearMonthDate!
+  ): DiscussionsStatsEvolution!
+  last: DiscussionsStatsBucket!
+}
+
+type DiscussionsStatsBucket {
+  """Amount of comments"""
+  comments: Int!
+
+  """Amount of discussions"""
+  discussions: Int!
+
+  """Bucket key (YYYY-MM)"""
+  key: String!
+  updatedAt: DateTime!
+
+  """Amount of unqiue users"""
+  users: Int!
+
+  """Amount of unqiue users which posted a comment"""
+  usersPosted: Int!
+
+  """Amount of unqiue users which voted on a comment"""
+  usersVoted: Int!
+}
+
+type DiscussionsStatsEvolution {
+  buckets: [DiscussionsStatsBucket!]
+  updatedAt: DateTime!
+}
+
+type DisplayUser {
+  anonymity: Boolean!
+  credential: Credential
+  id: ID!
+  name: String!
+  profilePicture: String
+  slug: String
+  username: String @deprecated(reason: "use `slug` instead")
+}
+
+enum DocumenSchemaType {
+  mdast
+  slate
+}
+
+type Document {
+  children(after: ID, before: ID, first: Int, last: Int, only: ID): DocumentBlockConnection!
+  content: JSON!
+  id: ID!
+  issuedForUserId: ID
+  linkedDocuments(after: ID, before: ID, feed: Boolean, first: Int, last: Int): DocumentConnection!
+  meta: Meta!
+  repoId: ID!
+  subscribedBy(after: String, before: String, filters: [EventObjectType!], first: Int, includeParents: Boolean, last: Int, onlyEligibles: Boolean, onlyMe: Boolean, uniqueUsers: Boolean): SubscriptionConnection!
+  subscribedByMe(includeParents: Boolean): Subscription @deprecated(reason: "use `subscribedBy` with `onlyMe: true` instead")
+  type: DocumenSchemaType!
+  unreadNotifications: NotificationConnection
+  userCollectionItem(collectionName: String!): CollectionItem
+  userCollectionItems: [CollectionItem!]!
+  userProgress: DocumentProgress
+}
+
+type DocumentBlock {
+  body: JSON!
+  id: ID!
+}
+
+type DocumentBlockConnection {
+  nodes: [DocumentBlock!]!
+  pageInfo: DocumentBlockPageInfo!
+  totalCount: Int!
+}
+
+type DocumentBlockPageInfo {
+  endCursor: String
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+}
+
+type DocumentConnection {
+  nodes: [Document!]!
+  pageInfo: DocumentPageInfo!
+  totalCount: Int!
+}
+
+input DocumentInput {
+  content: JSON!
+  type: DocumenSchemaType
+}
+
+type DocumentPageInfo {
+  endCursor: String
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+}
+
+type DocumentProgress implements CollectionItemInterface {
+  collection: Collection!
+  createdAt: DateTime!
+  document: Document
+  id: ID!
+  max: DocumentProgress
+  nodeId: String!
+  percentage: Float!
+  updatedAt: DateTime!
+}
+
+enum DocumentTextLengths {
+  LONG
+  MEDIUM
+  SHORT
+}
+
+type DocumentZone {
+  data: JSON!
+  document: Document
+  hash: String!
+  id: ID!
+  identifier: String!
+  node: JSON!
+  text: String
+  type: DocumenSchemaType!
+}
+
+type Election implements VotingInterface {
+  allowEmptyBallots: Boolean!
+  allowedMemberships: [VotingMembershipRequirement!]
+  allowedRoles: [String!]
+  beginDate: DateTime!
+  candidacies: [Candidacy!]!
+  candidacyBeginDate: DateTime!
+  candidacyEndDate: DateTime!
+  description: String
+  discussion: Discussion!
+  endDate: DateTime!
+  id: ID!
+  liveResult: Boolean!
+  numSeats: Int!
+  requireAddress: Boolean!
+  result: ElectionResult
+  slug: String!
+  turnout: ElectionTurnout!
+  userHasSubmitted: Boolean
+  userIsEligible: Boolean
+  userSubmitDate: DateTime
+}
+
+input ElectionBallotInput {
+  candidacyIds: [ID!]!
+  electionId: ID!
+}
+
+type ElectionCandidacyResult {
+  candidacy: Candidacy
+  count: Int!
+  elected: Boolean
+}
+
+input ElectionInput {
+  allowEmptyBallots: Boolean
+  allowedMemberships: [VotingMembershipRequirementInput!]
+  allowedRoles: [String!]
+  beginDate: DateTime!
+  candidacyBeginDate: DateTime!
+  candidacyEndDate: DateTime!
+  description: String!
+  endDate: DateTime!
+  groupSlug: String
+  numSeats: Int!
+  slug: String!
+}
+
+type ElectionResult {
+  candidacies: [ElectionCandidacyResult!]!
+  createdAt: DateTime
+  message: String
+  turnout: ElectionTurnout!
+  updatedAt: DateTime
+  video: Video
+}
+
+type ElectionTurnout {
+  eligible: Int!
+  submitted: Int!
+}
+
+union Embed = LinkPreview | TwitterEmbed | VimeoEmbed | YoutubeEmbed
+
+enum EmbedType {
+  TwitterEmbed
+  VimeoEmbed
+  YoutubeEmbed
+}
+
+type Employee {
+  greeting: String
+  group: String
+  name: String
+  pitch: String
+  subgroup: String
+  title: String
+  user: User
+}
+
+type Episode {
+  document: Document
+  image: String
+  label: String
+  lead: String
+  publishDate: DateTime
+  title: String
+}
+
+type Event {
+  date: Date
+  description: String
+  link: String
+  locationLink: String
+  metaDescription: String
+  slug: String
+  socialMediaImage: String
+  time: String
+  title: String
+  where: String
+}
+
+union EventObject = Comment | Document
+
+enum EventObjectType {
+  Comment
+  Document
+  ReadAloud
+}
+
+type Faq {
+  answer: String
+  category: String
+  question: String
+}
+
+enum Field {
+  avisierungstext
+  buchungsdatum
+  createdAt
+  dueDate
+  email
+  firstName
+  gutschrift
+  hidden
+  hrid
+  lastName
+  matched
+  method
+  mitteilung
+  paperInvoice
+  status
+  total
+  updatedAt
+  valuta
+  verified
+}
+
+type Goodie {
+  createdAt: DateTime!
+  id: ID!
+  name: String!
+  requireAddress: Boolean!
+  updatedAt: DateTime!
+}
+
+type Greeting {
+  id: ID!
+  text: String!
+}
+
+input ImageProperties {
+  bw: Boolean
+  height: Int
+  width: Int
+}
+
+scalar JSON
+
+type LinkPreview {
+  description: String
+  id: ID!
+  imageAlt: String
+  imageUrl: String
+  siteImageUrl: String
+  siteName: String!
+  title: String!
+  updatedAt: DateTime!
+  url: String!
+}
+
+type MailboxAddress {
+  address: String!
+  id: ID!
+  name: String
+  user: User
+}
+
+type MailboxConnection {
+  nodes: [MailboxRecord!]!
+  pageInfo: MailboxPageInfo!
+  totalCount: Int!
+}
+
+input MailboxFiltersInput {
+  email: String
+  hasError: Boolean
+  id: ID
+}
+
+type MailboxLink {
+  id: ID!
+  label: String!
+  type: String!
+  url: String!
+}
+
+type MailboxPageInfo {
+  endCursor: String
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+}
+
+type MailboxRecord {
+  bcc: [MailboxAddress!]
+  cc: [MailboxAddress!]
+  date: DateTime!
+  error: String
+  from: MailboxAddress
+  hasHtml: Boolean!
+  html: String
+  id: ID!
+  links: [MailboxLink!]
+  status: String
+  subject: String
+  template: String
+  to: [MailboxAddress!]
+  type: String
+}
+
+type MediaProgress implements CollectionItemInterface {
+  collection: Collection!
+  createdAt: DateTime!
+  document: Document
+  id: ID!
+  max: MediaProgress
+  mediaId: ID!
+  secs: Float!
+  updatedAt: DateTime!
+}
+
+type MediaResponse {
+  medium: String
+  publishDate: String
+  title: String
+  url: String
+}
+
+type MemberStats {
+  count: Int!
+}
+
+type Membership {
+  accessGranted: Boolean!
+  active: Boolean!
+  autoPay: Boolean!
+  autoPayIsMutable: Boolean!
+  canAppendPeriod: Boolean!
+  canProlong: Boolean!
+  canReset: Boolean!
+  cancellations: [Cancellation!]!
+  claimerName: String
+  createdAt: DateTime!
+  endDate: DateTime
+  giverName: String
+  graceEndDate: DateTime
+  id: ID!
+  initialInterval: MembershipTypeInterval!
+  initialPeriods: Int!
+  messageToClaimers: String
+  overdue: Boolean!
+  periods: [MembershipPeriod]!
+  pledge: Pledge!
+  reducedPrice: Boolean!
+  renew: Boolean!
+  sequenceNumber: Int
+  type: MembershipType!
+  updatedAt: DateTime!
+  user: User!
+  voucherCode: String
+}
+
+type MembershipPeriod {
+  beginDate: DateTime!
+  createdAt: DateTime!
+  endDate: DateTime!
+  id: ID!
+  isCurrent: Boolean!
+  kind: MembershipPeriodKind!
+  membership: Membership!
+  updatedAt: DateTime!
+}
+
+enum MembershipPeriodKind {
+  ADMIN
+  BONUS
+  CHANGEOVER
+  REGULAR
+}
+
+type MembershipPeriodStats {
+  days: [MembershipPeriodStatsDay!]!
+  id: ID!
+  totalMemberships: Int!
+}
+
+type MembershipPeriodStatsDay {
+  cancelCount: Int!
+  date: Date!
+  id: ID!
+  prolongCount: Int!
+}
+
+type MembershipPotStats {
+  donatedAmountOfMemberships: Int!
+  generatedAmountOfMemberships: Int!
+  surplusAmountOfDonatedMemberships: Int!
+  totalDonated: Int!
+}
+
+type MembershipStats {
+  """Returns age distribution for users with active memberships"""
+  ages: MembershipStatsAges!
+  count: Int!
+  countRange(max: DateTime!, min: DateTime!): Int!
+
+  """Returns membership evolution in monthly buckets."""
+  evolution(
+    """Maximum month (YYYY-MM)"""
+    max: YearMonthDate!
+
+    """Minimum month (YYYY-MM)"""
+    min: YearMonthDate!
+  ): MembershipStatsEvolution!
+
+  """Returns active membership counts per country/postalCode and year"""
+  geo: MembershipStatsGeo
+
+  """Returns active membership counts per city and year """
+  geoCities: MembershipStatsgeoCities
+  lastSeen(
+    """Maximum month (YYYY-MM)"""
+    max: YearMonthDate!
+
+    """Minimum month (YYYY-MM)"""
+    min: YearMonthDate!
+  ): MembershipStatsLastSeen!
+  monthlys: [MonthlyMembershipStat!]!
+
+  """
+  Returns name distribution for users with active memberships including sex categorization
+  """
+  names(first: Int): MembershipStatsNames!
+  periods(maxEndDate: Date!, membershipTypes: [String!], minEndDate: Date!): MembershipPeriodStats!
+}
+
+type MembershipStatsAges {
+  averageAge: Float
+  buckets: [MembershipStatsAgesBucket!]!
+  updatedAt: DateTime!
+}
+
+type MembershipStatsAgesBucket {
+  count: Int!
+  key: Int
+}
+
+type MembershipStatsEvolution {
+  buckets: [MembershipStatsEvolutionBucket!]
+  updatedAt: DateTime!
+}
+
+type MembershipStatsEvolutionBucket {
+  """Amount of memberships which are active (periods)"""
+  active: Int!
+
+  """Amount of active memberships at beginning of month"""
+  activeBeginningOfMonth: Int!
+
+  """Amount of still or again active crowdfunding memberships (periods)"""
+  activeCrowdfunders: Int!
+
+  """
+  Amount of still or again active crowdfunding memberships at end of month
+  """
+  activeCrowdfundersEndOfMonth: Int!
+
+  """Amount of active memberships at end of month"""
+  activeEndOfMonth: Int!
+
+  """Amount of active memberships at end of month with a donation"""
+  activeEndOfMonthWithDonation: Int!
+
+  """Amount of active memberships at end of month without a donation"""
+  activeEndOfMonthWithoutDonation: Int!
+
+  """Amount of still or again active loyalist memberships (periods)"""
+  activeLoyalists: Int!
+
+  """Amount of still or again active loyalist memberships at end of month"""
+  activeLoyalistsEndOfMonth: Int!
+
+  """Amount of memberships which ended and were cancelled as of now"""
+  cancelled: Int!
+
+  """Amount of memberships ended during month due to cancellation"""
+  cancelledEndOfMonth: Int!
+
+  """Amount of memberships which ended as of now"""
+  ended: Int!
+
+  """Amount of memberships ended during month"""
+  endedEndOfMonth: Int!
+
+  """Amount of memberships ending during month"""
+  ending: Int!
+
+  """Amount of memberships which expired as of now"""
+  expired: Int!
+
+  """Amount of memberships ended during month due to expiration"""
+  expiredEndOfMonth: Int!
+
+  """Amount of memberships gained during month"""
+  gaining: Int!
+
+  """Amount of memberships gained during month with donation"""
+  gainingWithDonation: Int!
+
+  """Amount of memberships gained during month without donation"""
+  gainingWithoutDonation: Int!
+
+  """Bucket key (YYYY-MM)"""
+  key: String!
+
+  """Amount of memberships which are overdue"""
+  overdue: Int!
+
+  """
+  Amount of all memberships pending at end of month (ending but still prolongable)
+  """
+  pending: Int!
+
+  """
+  Amount of all subscriptions (e.g. MONTHLY_ABO) pending at end of month (ending but still prolongable)
+  """
+  pendingSubscriptionsOnly: Int!
+
+  """Amount of memberships ending during month but still prolongable"""
+  prolongable: Int!
+}
+
+type MembershipStatsGeo {
+  buckets: [MembershipStatsGeoBucket!]!
+  updatedAt: DateTime!
+}
+
+type MembershipStatsGeoBucket {
+  buckets: [MembershipStatsGeoCountBucket!]!
+  country: String
+  key: String
+  lat: Float
+  lon: Float
+  postalCode: String
+}
+
+type MembershipStatsGeoCountBucket {
+  count: Int!
+  key: String
+}
+
+type MembershipStatsLastSeen {
+  buckets: [MembershipStatsLastSeenBucket!]
+  updatedAt: DateTime!
+}
+
+type MembershipStatsLastSeenBucket {
+  """Bucket key (YYYY-MM)"""
+  key: String!
+  users: Int!
+}
+
+type MembershipStatsNames {
+  buckets: [MembershipStatsNamesBucket!]!
+  updatedAt: DateTime!
+}
+
+type MembershipStatsNamesBucket {
+  count: Int!
+  key: String
+  sex: Sex
+}
+
+type MembershipStatsgeoCities {
+  buckets: [MembershipStatsgeoCitiesBucket!]!
+  updatedAt: DateTime!
+}
+
+type MembershipStatsgeoCitiesBucket {
+  buckets: [MembershipStatsgeoCitiesCountBucket!]!
+  key: String
+}
+
+type MembershipStatsgeoCitiesCountBucket {
+  count: Int!
+  key: String
+}
+
+type MembershipType {
+  createdAt: DateTime!
+  defaultPeriods: Int!
+  id: ID!
+  interval: MembershipTypeInterval!
+  maxPeriods: Int!
+  minPeriods: Int!
+  name: String!
+  requireAddress: Boolean!
+  updatedAt: DateTime!
+}
+
+enum MembershipTypeInterval {
+  day
+  month
+  week
+  year
+}
+
+type Memo {
+  author: Author!
+  content: JSON
+  createdAt: DateTime!
+  id: ID!
+  parentIds: [ID!]!
+  published: Boolean!
+  text: String
+  updatedAt: DateTime!
+}
+
+type MentioningDocument {
+  document: Document!
+  fragmentId: String
+  iconUrl: String!
+}
+
+type Meta {
+  audioCover(properties: ImageProperties): String
+  audioCoverCrop: Crop
+  audioSource: AudioSource
+  color: String
+  contributors: [Contributor!]!
+  credits: JSON
+  description: String
+  disableActionBar: Boolean
+  dossier: Document
+  emailSubject: String
+  estimatedConsumptionMinutes: Int
+  estimatedReadingMinutes: Int
+  externalBaseUrl: String
+  facebookDescription: String
+  facebookImage: String
+  facebookTitle: String
+  feed: Boolean
+  format: Document
+  gallery: Boolean
+  image: String
+  indicateChart: Boolean
+  indicateGallery: Boolean
+  indicateVideo: Boolean
+  isRestricted: Boolean
+  kind: String
+  lastPublishedAt: DateTime
+  linkedDiscussion: Discussion
+  newsletter: Newsletter
+  ownDiscussion: Discussion
+  path: String
+  paynoteMode: PaynoteMode
+  paynotes: [JSON]
+  podcast: Podcast
+  prepublication: Boolean
+  publishDate: DateTime
+  recommendations: DocumentConnection
+  section: Document
+  sendAsEmail: Boolean
+  seoDescription: String
+  seoTitle: String
+  series: Series
+  shareBackgroundImage: String
+  shareBackgroundImageInverted: String
+  shareFontSize: Int
+  shareInverted: Boolean
+  shareLogo: String
+  shareText: String
+  shareTextPosition: String
+  shortTitle: String
+  slug: String
+  subject: String @deprecated(reason: "parse `Document.content` instead")
+  suggestSubscription: Boolean
+  template: String
+  title: String
+  twitterDescription: String
+  twitterImage: String
+  twitterTitle: String
+  willBeReadAloud: Boolean
+}
+
+type Milestone implements MilestoneInterface {
+  author: Author!
+  commit: Commit!
+  date: DateTime!
+  immutable: Boolean!
+  message: String
+  name: String!
+}
+
+interface MilestoneInterface {
+  author: Author!
+  commit: Commit!
+  date: DateTime!
+  name: String!
+}
+
+type MonthlyMembershipStat {
+  day: Date!
+  newCount: Int!
+  renewableCount: Int!
+  renewedCount: Int!
+  renewedRatio: Float!
+}
+
+enum MutationType {
+  CREATED
+  DELETED
+  UPDATED
+}
+
+type Newsletter {
+  free: Boolean
+  name: String
+}
+
+enum NewsletterName {
+  ACCOMPLICE
+  CLIMATE
+  DAILY
+  PROJECTR
+  WDWWW
+  WEEKLY
+}
+
+type NewsletterSettings {
+  id: ID!
+  status: String!
+  subscriptions(name: NewsletterName): [NewsletterSubscription]
+}
+
+type NewsletterSubscription {
+  id: ID!
+  isEligible: Boolean! @deprecated(reason: "Eligability is handeld elsewhere. Subscription changes are always possible.")
+  name: NewsletterName!
+  subscribed: Boolean!
+}
+
+type Notification {
+  appPushesFailed: Int
+  appPushesSuccessful: Int
+  channels: [DiscussionNotificationChannel]!
+  content: NotificationContent!
+  createdAt: DateTime!
+  id: ID!
+  object: EventObject
+  readAt: DateTime
+  subscription: Subscription
+}
+
+type NotificationConnection {
+  nodes: [Notification!]!
+  pageInfo: SubscriptionPageInfo!
+  totalCount: Int!
+  unreadCount: Int!
+}
+
+type NotificationContent {
+  title: String!
+  url: String!
+}
+
+enum OSType {
+  android
+  ios
+}
+
+input OrderBy {
+  direction: OrderDirection!
+  field: Field!
+}
+
+enum OrderDirection {
+  ASC
+  DESC
+}
+
+type Package {
+  company: Company!
+  createdAt: DateTime!
+  group: PackageGroup!
+  id: ID!
+  name: String!
+  options: [PackageOption!]!
+  paymentMethods: [PaymentMethod!]!
+  suggestedTotal: Int
+  updatedAt: DateTime!
+}
+
+enum PackageGroup {
+  GIVE
+  HIDDEN
+  ME
+}
+
+type PackageOption {
+  accessGranted: Boolean
+  additionalPeriods: [MembershipPeriod!]
+  amount: Int
+  autoPay: Boolean
+  createdAt: DateTime!
+  defaultAmount: Int!
+  fixedPrice: Boolean!
+  id: ID!
+  maxAmount: Int
+  membership: Membership
+  minAmount: Int!
+  minUserPrice: Int!
+  optionGroup: String
+  package: Package!
+  payMoreSuggestion: Boolean!
+  periods: Int
+  price: Int!
+  reward: Reward
+  templateId: ID!
+  updatedAt: DateTime!
+  userPrice: Boolean!
+  vat: Int!
+}
+
+input PackageOptionInput {
+  amount: Int!
+  autoPay: Boolean
+  membershipId: ID
+  periods: Int
+  price: Int!
+  templateId: ID!
+}
+
+type PageInfo {
+  endCursor: String
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+}
+
+enum PaymentMethod {
+  PAYMENTSLIP
+  PAYPAL
+  POSTFINANCECARD
+  STRIPE
+}
+
+type PaymentSource {
+  brand: String!
+  expMonth: Int!
+  expYear: Int!
+  id: String!
+  isDefault: Boolean!
+  isExpired: Boolean!
+  last4: String!
+  status: PaymentSourceStatus!
+  wallet: PaymentSourceWallet
+}
+
+enum PaymentSourceStatus {
+  CANCELED
+  CHARGEABLE
+  CONSUMED
+  FAILED
+  PENDING
+}
+
+enum PaymentSourceWallet {
+  amex_express_checkout
+  apple_pay
+  google_pay
+  masterpass
+  samsung_pay
+  visa_checkout
+}
+
+enum PaymentStatus {
+  CANCELLED
+  PAID
+  REFUNDED
+  WAITING
+  WAITING_FOR_REFUND
+}
+
+enum PaynoteMode {
+  button
+  noPaynote
+  trialForm
+}
+
+enum Permission {
+  ALLOWED
+  ENFORCED
+  FORBIDDEN
+}
+
+interface PlayableMedia {
+  durationMs: Int!
+  mediaId: ID!
+  userProgress: MediaProgress
+}
+
+type Pledge {
+  createdAt: DateTime!
+  donation: Int!
+  id: ID!
+  memberships: [Membership!]!
+  options: [PackageOption!]!
+  package: Package!
+  payments: [PledgePayment!]!
+  reason: String
+  shippingAddress: Address
+  status: PledgeStatus!
+  total: Int!
+  updatedAt: DateTime!
+  user: User!
+}
+
+input PledgeInput {
+  accessToken: ID
+  address: AddressInput
+  messageToClaimers: String
+  options: [PackageOptionInput!]!
+  payload: JSON
+  reason: String
+  shippingAddress: AddressInput
+  total: Int!
+  user: UserInput
+}
+
+type PledgePayment {
+  createdAt: DateTime!
+  dueDate: DateTime
+  hrid: String
+  id: ID!
+  invoiceUrl: String
+  method: PaymentMethod!
+  paperInvoice: Boolean!
+  paymentslipUrl: String
+  pspId: String
+  reference(pretty: Boolean): String
+  remindersSentAt: [DateTime!]
+  status: PaymentStatus!
+  total: Int!
+  updatedAt: DateTime!
+  user: User
+}
+
+input PledgePaymentInput {
+  address: AddressInput
+  makeDefault: Boolean
+  method: PaymentMethod!
+  paperInvoice: Boolean
+  pledgeId: ID!
+  pspPayload: JSON
+  shippingAddress: AddressInput
+  sourceId: String
+}
+
+type PledgePayments {
+  count: Int!
+  items: [PledgePayment!]!
+}
+
+type PledgeResponse {
+  companyId: ID
+  emailVerify: Boolean
+  pfAliasId: String
+  pfSHA: String
+  pledgeId: ID
+  stripeClientSecret: String
+  stripePaymentIntentId: ID
+  stripePublishableKey: String
+  userId: ID
+}
+
+enum PledgeStatus {
+  CANCELLED
+  DRAFT
+  PAID_INVESTIGATE
+  SUCCESSFUL
+  WAITING_FOR_PAYMENT
+}
+
+type Podcast {
+  appleUrl: String
+  googleUrl: String
+  podigeeSlug: String
+  spotifyUrl: String
+}
+
+enum PortraitSize {
+  SHARE @deprecated(reason: "use `ImageProperties` instead")
+  SMALL @deprecated(reason: "use `ImageProperties` instead")
+}
+
+type PostalCodeGeo {
+  countryCode: String
+  countryName: String
+  lat: Float
+  lon: Float
+  postalCode: String
+}
+
+type PostfinancePayment {
+  avisierungstext: String!
+  buchungsdatum: Date!
+  createdAt: DateTime!
+  debitorName: String
+  gutschrift: Int!
+  hidden: Boolean!
+  iban: String!
+  id: ID!
+  image: String
+  konto: String!
+  matched: Boolean!
+  mitteilung: String
+  updatedAt: DateTime!
+  valuta: Date!
+}
+
+type PostfinancePayments {
+  count: Int!
+  items: [PostfinancePayment!]!
+}
+
+type Preview {
+  more: Boolean!
+  string: String!
+}
+
+enum ProgressState {
+  FINISHED
+  UNFINISHED
+}
+
+type Publication implements MilestoneInterface {
+  author: Author!
+  commit: Commit!
+  date: DateTime!
+  document: Document
+  live: Boolean!
+  name: String!
+  prepublication: Boolean!
+  scheduledAt: DateTime
+  sha: String!
+  updateMailchimp: Boolean!
+}
+
+type PublikatorPageInfo {
+  endCursor: String
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+}
+
+type PublishResponse {
+  publication: Publication
+  unresolvedRepoIds: [ID!]!
+}
+
+input PublishSettings {
+  ignoreUnresolvedRepoIds: Boolean
+  notifyFilters: [EventObjectType!]
+  prepublication: Boolean!
+  scheduledAt: DateTime
+  updateMailchimp: Boolean!
+}
+
+enum QRCodeErrorCorrectionLevel {
+  H
+  L
+  M
+  Q
+}
+
+interface QuestionInterface {
+  explanation: String
+  id: ID!
+  metadata: JSON
+  order: Int!
+  private: Boolean!
+  questionnaire: Questionnaire!
+  text: String!
+  turnout: QuestionTurnout!
+  userAnswer: Answer
+}
+
+type QuestionTurnout {
+  skipped: Int!
+  submitted: Int!
+  unattributed: Int!
+}
+
+type QuestionTypeChoice implements QuestionInterface {
+  cardinality: Int!
+  explanation: String
+  id: ID!
+  metadata: JSON
+  options: [QuestionTypeChoiceOption!]!
+  order: Int!
+  private: Boolean!
+  questionnaire: Questionnaire!
+  result(min: Int, top: Int): [QuestionTypeChoiceResult!]
+  text: String!
+  turnout: QuestionTurnout!
+  userAnswer: Answer
+}
+
+type QuestionTypeChoiceOption {
+  category: String
+  label: String!
+  requireAddress: Boolean
+  value: ID!
+}
+
+type QuestionTypeChoiceResult {
+  count: Int!
+  option: QuestionTypeChoiceOption!
+}
+
+type QuestionTypeDocument implements QuestionInterface {
+  explanation: String
+  id: ID!
+  metadata: JSON
+  order: Int!
+  private: Boolean!
+  questionnaire: Questionnaire!
+  result(min: Int, top: Int): [QuestionTypeDocumentResult!]
+  template: String
+  text: String!
+  turnout: QuestionTurnout!
+  userAnswer: Answer
+}
+
+type QuestionTypeDocumentResult {
+  count: Int!
+  document: Document
+}
+
+type QuestionTypeImageChoice implements QuestionInterface {
+  cardinality: Int!
+  explanation: String
+  id: ID!
+  metadata: JSON
+  options: [QuestionTypeImageChoiceOption!]!
+  order: Int!
+  private: Boolean!
+  questionnaire: Questionnaire!
+  result(min: Int, top: Int): [QuestionTypeImageChoiceResult!]
+  text: String!
+  turnout: QuestionTurnout!
+  userAnswer: Answer
+}
+
+type QuestionTypeImageChoiceOption {
+  category: String
+  imageUrl: String
+  label: String!
+  requireAddress: Boolean
+  value: ID!
+}
+
+type QuestionTypeImageChoiceResult {
+  count: Int!
+  option: QuestionTypeImageChoiceOption!
+}
+
+type QuestionTypeRange implements QuestionInterface {
+  explanation: String
+  id: ID!
+  kind: QuestionTypeRangeKind!
+  metadata: JSON
+  order: Int!
+  private: Boolean!
+  questionnaire: Questionnaire!
+  result: QuestionTypeRangeResult
+  text: String!
+  ticks: [QuestionTypeRangeTick!]!
+  turnout: QuestionTurnout!
+  userAnswer: Answer
+}
+
+enum QuestionTypeRangeKind {
+  continous
+  discrete
+}
+
+type QuestionTypeRangeResult {
+  deviation: Float
+  histogram(ticks: Int): [QuestionTypeRangeResultBin!]!
+  mean: Float!
+  median: Float!
+}
+
+type QuestionTypeRangeResultBin {
+  count: Int!
+  x0: Float!
+  x1: Float!
+}
+
+type QuestionTypeRangeTick {
+  label: String!
+  value: Int!
+}
+
+type QuestionTypeText implements QuestionInterface {
+  explanation: String
+  id: ID!
+  maxLength: Int
+  metadata: JSON
+  order: Int!
+  private: Boolean!
+  questionnaire: Questionnaire!
+  text: String!
+  turnout: QuestionTurnout!
+  userAnswer: Answer
+}
+
+type Questionnaire {
+  allowedMemberships: [VotingMembershipRequirement!]
+  allowedRoles: [String!]
+  beginDate: DateTime!
+  description: String
+  endDate: DateTime!
+  id: ID!
+  questions(
+    """select questions by order field"""
+    orderFilter: [Int!]
+
+    """shuffle and limit the result to the specified count"""
+    shuffle: Int
+  ): [QuestionInterface!]!
+  resubmitAnswers: Boolean!
+  revokeSubmissions: Boolean!
+  slug: String!
+  submissions(
+    after: String
+    before: String
+
+    """Filter submissions"""
+    filters: SubmissionsFilterInput
+    first: Int
+
+    """Find search term in answer values"""
+    search: String
+    sort: SubmissionsSortInput
+
+    """Find specific value in answers"""
+    value: String
+  ): SubmissionConnection
+  submitAnswersImmediately: Boolean!
+  turnout: QuestionnaireTurnout
+  unattributedAnswers: Boolean!
+  userHasSubmitted: Boolean
+  userIsEligible: Boolean
+  userSubmissionId: ID
+  userSubmitDate: DateTime
+}
+
+type QuestionnaireTurnout {
+  eligible: Int!
+  submitted: Int!
+}
+
+type Redirection {
+  createdAt: DateTime!
+  id: ID!
+  resource: JSON
+  source: String!
+  status: Int!
+  target: String!
+  updatedAt: DateTime!
+}
+
+type RedirectionConnection {
+  nodes: [Redirection!]!
+  pageInfo: RedirectionPageInfo!
+  totalCount: Int!
+}
+
+type RedirectionPageInfo {
+  endCursor: String
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+}
+
+enum ReferralCodeValidationResult {
+  IS_OWN
+  NOT_FOUND
+  OK
+}
+
+type Referrals {
+  count: Int!
+}
+
+type Repo {
+  commit(id: ID!): Commit
+  commits(after: String, before: String, first: Int): CommitConnection!
+  currentPhase: RepoPhase!
+  files: [RepoFile!]!
+  id: ID!
+  isArchived: Boolean!
+  isTemplate: Boolean!
+  latestCommit: Commit!
+  latestPublications: [Publication]!
+  memos: [Memo!]!
+  meta: RepoMeta!
+  milestones: [Milestone!]!
+  uncommittedChanges: [User!]!
+}
+
+type RepoChange {
+  commit: Commit
+  milestone: Milestone
+  mutation: RepoChangeMutationType!
+  repo: Repo
+}
+
+enum RepoChangeMutationType {
+  CREATED
+  DELETED
+  UPDATED
+}
+
+type RepoConnection {
+  nodes: [Repo]
+  pageInfo: PublikatorPageInfo!
+  phases: [RepoPhaseWithCount]
+  totalCount: Int!
+  totalDiskUsage: Int @deprecated(reason: "Do not use anymore. Part of GitHub heydays.")
+}
+
+type RepoFile {
+  author: Author!
+  createdAt: DateTime!
+  destroyedAt: DateTime
+  error: String
+  failedAt: DateTime
+  id: ID!
+  name: String!
+  readyAt: DateTime
+  status: RepoFileStatus!
+  updatedAt: DateTime!
+
+  """If file is not ready, returns an upload URL"""
+  url: String
+}
+
+enum RepoFileStatus {
+  Destroyed
+  Failure
+  Pending
+  Private
+  Public
+}
+
+type RepoMeta {
+  briefingUrl: String
+  creationDeadline: DateTime
+  productionDeadline: DateTime
+  publishDate: DateTime
+}
+
+input RepoOrderBy {
+  direction: OrderDirection!
+  field: RepoOrderField!
+}
+
+enum RepoOrderField {
+  CREATED_AT
+  NAME
+  PUSHED_AT
+  STARGAZERS
+  UPDATED_AT
+}
+
+type RepoPhase implements RepoPhaseInterface {
+  color: String!
+  key: RepoPhaseKey!
+  label: String!
+  lock: Boolean!
+}
+
+interface RepoPhaseInterface {
+  color: String!
+  key: RepoPhaseKey!
+  label: String!
+  lock: Boolean!
+}
+
+enum RepoPhaseKey {
+  cr
+  creation
+  draft
+  finalControl
+  finalEditing
+  production
+  proofReading
+  published
+  ready
+  scheduled
+  tc
+}
+
+type RepoPhaseWithCount implements RepoPhaseInterface {
+  color: String!
+  count: Int!
+  key: RepoPhaseKey!
+  label: String!
+  lock: Boolean!
+}
+
+input RepoPublishDateRange {
+  from: DateTime!
+  until: DateTime!
+}
+
+type RequestInfo {
+  city: String
+  country: String
+  ipAddress: String!
+  isApp: Boolean!
+  userAgent: String
+}
+
+input RequiredUserFields {
+  firstName: String!
+  lastName: String!
+}
+
+type RevenueStats {
+  """Returns revenue segments"""
+  segments: RevenueStatsSegments!
+
+  """
+  Returns surplus, an amount of money payments exceeds their pledge values ("revenue").
+  Example: [pledge total] - [memerships] - [goodies] = [surplus].
+  """
+  surplus(max: DateTime, min: DateTime!): RevenueStatsSurplus!
+}
+
+type RevenueStatsSegments {
+  buckets: [RevenueStatsSegmentsDateBucket!]!
+  updatedAt: DateTime!
+}
+
+type RevenueStatsSegmentsBucket {
+  key: String!
+  label: String!
+
+  """Share"""
+  share: Float!
+}
+
+type RevenueStatsSegmentsDateBucket {
+  buckets: [RevenueStatsSegmentsBucket!]!
+  key: String!
+}
+
+type RevenueStatsSurplus {
+  total: Int!
+  updatedAt: DateTime!
+}
+
+union Reward = Goodie | MembershipType
+
+type RoleStats {
+  count: Int
+}
+
+type SearchAggregation {
+  buckets: [SearchAggregationBucket!]
+  count: Int
+  key: String!
+  label: String!
+}
+
+type SearchAggregationBucket {
+  count: Int!
+  label: String!
+  value: String!
+}
+
+type SearchConnection {
+  aggregations(keys: [String!]): [SearchAggregation!]!
+  nodes: [SearchNode!]!
+  pageInfo: SearchPageInfo!
+  totalCount: Int!
+  trackingId: ID
+}
+
+union SearchEntity = Comment | Document | DocumentZone | User
+
+input SearchFilterInput {
+  audioSourceKind: AudioSourceKind
+  author: String
+  discussion: Boolean
+  dossier: String
+  feed: Boolean
+  format: String
+  formats: [String!]
+  hasAudio: Boolean
+  hasDossier: Boolean
+  hasFormat: Boolean
+  hasVideo: Boolean
+  id: ID
+  ids: [ID!]
+  isSeriesEpisode: Boolean
+  isSeriesMaster: Boolean
+  publishedAt: DateRangeInput
+  repoIds: [ID!]
+  scheduledAt: DateRangeInput
+  template: String
+  textLength: DocumentTextLengths
+  type: SearchTypes
+  userId: ID
+}
+
+input SearchGenericFilterInput {
+  key: String!
+  not: Boolean
+  value: String!
+}
+
+type SearchHighlight {
+  fragments: [String!]!
+  path: String!
+}
+
+type SearchNode {
+  entity: SearchEntity!
+  highlights: [SearchHighlight!]!
+  score: Float
+}
+
+type SearchPageInfo {
+  endCursor: String
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+}
+
+enum SearchProcessor {
+  formatFeedSamples
+}
+
+input SearchSortInput {
+  direction: OrderDirection
+  key: SearchSortKey!
+}
+
+enum SearchSortKey {
+  mostDebated
+  mostRead
+  publishedAt
+  relevance
+}
+
+enum SearchTypes {
+  Comment
+  Document
+  DocumentZone
+  User
+}
+
+type Series {
+  description: String
+  episodes: [Episode!]!
+  logo: String
+  logoDark: String
+  overview: Document
+  title: String!
+}
+
+type Session {
+  city: String
+  country: String
+  device: Device
+  email: String!
+  expiresAt: DateTime!
+  id: ID!
+  ipAddress: String!
+  isCurrent: Boolean!
+  phrase: String
+  userAgent: String
+}
+
+enum Sex {
+  BOTH
+  FEMALE
+  MALE
+}
+
+type SharedSecretResponse {
+  otpAuthUrl: String!
+  secret: String!
+  svg(errorCorrectionLevel: QRCodeErrorCorrectionLevel = M): String!
+}
+
+type SignInNotification {
+  body: String!
+  expiresAt: DateTime!
+  title: String!
+  verificationUrl: String!
+}
+
+type SignInResponse {
+  alternativeFirstFactors: [SignInTokenType!]!
+  expiresAt: DateTime!
+  phrase: String!
+  tokenType: SignInTokenType!
+}
+
+input SignInToken {
+  payload: String!
+  type: SignInTokenType!
+}
+
+enum SignInTokenType {
+  ACCESS_TOKEN
+  APP
+  EMAIL_CODE
+  EMAIL_TOKEN
+  SMS
+  TOTP
+}
+
+type StatementUser {
+  credentials: [Credential!]!
+  hasPublicProfile: Boolean!
+  id: ID!
+  name: String!
+  portrait(properties: ImageProperties): String
+  sequenceNumber: Int
+  slug: String
+  statement: String
+  updatedAt: DateTime!
+}
+
+type StatementUserConnection {
+  nodes: [StatementUser!]!
+  pageInfo: PageInfo
+  totalCount: Int!
+}
+
+input StringArrayFilter {
+  field: Field!
+  values: [String!]!
+}
+
+"""String or number (input is casted to string)"""
+scalar StringOrNumber
+
+type Submission {
+  answers: AnswerConnection!
+  createdAt: DateTime!
+  displayAuthor: DisplayUser!
+  id: ID!
+  questionnaire: Questionnaire!
+  updatedAt: DateTime!
+}
+
+type SubmissionConnection {
+  nodes: [Submission!]!
+  pageInfo: SubmissionPageInfo!
+  totalCount: Int!
+}
+
+input SubmissionFilterAnswer {
+  """Question wich must be answered"""
+  questionId: ID!
+
+  """Expected amount of characters in answer given"""
+  valueLength: SubmissionFilterAnswerValueLength
+}
+
+input SubmissionFilterAnswerValueLength {
+  """Expect a maximum amount of characters in answer given"""
+  max: Int
+
+  """Expect a minimum amount of characters in answer given"""
+  min: Int
+}
+
+type SubmissionPageInfo {
+  endCursor: String
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+}
+
+input SubmissionsFilterInput {
+  """Return only submissions with these answered questions"""
+  answers: [SubmissionFilterAnswer]
+
+  """Return only submission with this ID"""
+  id: ID
+
+  """Omit submission with this ID"""
+  not: ID
+
+  """Omit submissions with these IDs"""
+  notSubmissionIds: [ID!]
+
+  """Return only submissions with these IDs"""
+  submissionIds: [ID!]
+
+  """Return submission by these user IDs"""
+  userIds: [ID!]
+}
+
+enum SubmissionsSortBy {
+  createdAt
+  random
+}
+
+input SubmissionsSortInput {
+  by: SubmissionsSortBy!
+  direction: OrderDirection
+}
+
+type Subscription {
+  active: Boolean!
+  createdAt: DateTime!
+  filters: [EventObjectType!]
+  id: ID!
+  isEligibleForNotifications: Boolean!
+  object: SubscriptionObject
+  subject: User!
+  updatedAt: DateTime!
+}
+
+type SubscriptionConnection {
+  nodes: [Subscription!]!
+  pageInfo: SubscriptionPageInfo
+  totalCount: Int
+}
+
+union SubscriptionObject = Discussion | Document | User
+
+enum SubscriptionObjectType {
+  Document
+  User
+}
+
+type SubscriptionPageInfo {
+  endCursor: String
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+}
+
+type SyncPledgeResponse {
+  pledgeStatus: PledgeStatus!
+  updatedPledge: Boolean!
+}
+
+type TwitterEmbed {
+  createdAt: DateTime!
+  html: String!
+  id: ID!
+  image: String
+  more: String
+  playable: Boolean!
+  retrievedAt: DateTime!
+  text: String!
+  url: String!
+  userId: String!
+  userName: String!
+  userProfileImageUrl: String!
+  userScreenName: String!
+}
+
+type UnauthorizedSession {
+  enabledSecondFactors: [SignInTokenType]!
+  newUser: Boolean
+  requiredConsents: [String!]!
+  requiredFields: [String!]!
+  session: Session!
+}
+
+type UncommittedChangeUpdate {
+  action: Action!
+  repoId: ID!
+  user: User!
+}
+
+type Update {
+  metaDescription: String
+  publishedDateTime: DateTime
+  slug: String
+  socialMediaImage: String
+  text: String
+  title: String
+}
+
+type User {
+  """List of granted memberships by User"""
+  accessCampaigns(withPast: Boolean): [AccessCampaign!]
+
+  """List of memberships a User was granted"""
+  accessGrants(withPast: Boolean): [AccessGrant!]
+  accessToken(scope: AccessTokenScope!): ID
+  activeMembership: Membership
+  address: Address
+  adminNotes: String
+  age: Int
+  ageAccessRole: AccessRole
+
+  """
+  Returns a queue with audio items point to playable content. Use
+  mutations `addAudioQueueItem`, `moveAudioQueueItem`,
+  `removeAudioQueueItem` or `clearAudioQueue` to modify queue.
+  """
+  audioQueue: [AudioQueueItem!]
+  badges: [Badge]
+  biography: String
+  biographyContent: JSON
+  birthday: Date
+  calendar(slug: String!): Calendar
+
+  """
+  Call to actions for a user based on events, campaigns, etc.
+  Can target a specific user or a group of users.
+  """
+  callToActions: [CallToAction!]!
+  candidacies: [Candidacy!]!
+  checkMembershipSubscriptions: Boolean!
+  collection(name: String!): Collection
+  collectionItems(after: String, before: String, first: Int, last: Int, lastDays: Int, names: [String!]!, progress: ProgressState, uniqueDocuments: Boolean): CollectionItemConnection!
+  collections: [Collection!]!
+  comments(after: String, first: Int): CommentConnection!
+  createdAt: DateTime!
+  credentials: [Credential!]!
+  customPackages(crowdfundingName: String): [Package!]
+  defaultDiscussionNotificationOption: DiscussionNotificationOption
+  defaultPaymentSource: PaymentSource
+  deletedAt: DateTime
+  devices: [Device!]!
+  disclosures: String
+  discussionNotificationChannels: [DiscussionNotificationChannel!]!
+  documents(after: String, before: String, feed: Boolean, first: Int, last: Int): DocumentConnection!
+  email: String
+  emailAccessRole: AccessRole
+  enabledFirstFactors: [SignInTokenType!]!
+  enabledSecondFactors: [SignInTokenType!]!
+  facebookId: String
+  firstName: String
+  futureCampaignAboCount: Int
+  gender: String
+  hasAddress: Boolean
+  hasConsentedTo(name: String!): Boolean
+  hasDormantMembership: Boolean!
+  hasPublicProfile: Boolean
+  id: ID!
+  initials: String
+  isAdminUnlisted: Boolean
+  isBonusEligable: Boolean!
+  isEligibleForProfile: Boolean
+  isListed: Boolean!
+  isSuspended: Boolean
+  isUserOfCurrentSession: Boolean!
+  lastName: String
+  mailbox(after: String, before: String, filters: MailboxFiltersInput, first: Int, last: Int): MailboxConnection
+  memberships: [Membership!]!
+  name: String
+  newsletterSettings: NewsletterSettings!
+  paymentSources: [PaymentSource!]! @deprecated(reason: "use `defaultPaymentSource` instead")
+  pgpPublicKey: String
+  pgpPublicKeyId: String
+  phoneNumber: String
+  phoneNumberAccessRole: AccessRole
+  phoneNumberNote: String
+  pledges: [Pledge!]!
+  portrait(properties: ImageProperties, size: PortraitSize): String
+  preferredFirstFactor: SignInTokenType
+  prolitterisId: String
+  prolongBeforeDate: DateTime
+  publicUrl: String
+  referralCode: String
+  referrals(campaignSlug: String): Referrals
+  roles: [String!]!
+  sequenceNumber: Int
+  sessions: [Session!]
+  slug: String
+  statement: String
+  subscribedBy(after: String, before: String, first: Int, last: Int, onlyMe: Boolean): SubscriptionConnection!
+  subscribedByMe: Subscription
+  subscribedTo(after: String, before: String, first: Int, last: Int, objectType: SubscriptionObjectType): SubscriptionConnection!
+  suspendedUntil: DateTime
+  suspensions(withInactive: Boolean): [DiscussionSuspension!]
+  twitterHandle: String
+  updatedAt: DateTime!
+  username: String
+}
+
+type UserConnection {
+  nodes: [User]!
+  pageInfo: PageInfo
+  totalCount: Int!
+}
+
+input UserInput {
+  birthday: Date
+  email: String!
+  firstName: String
+  lastName: String
+  phoneNumber: String
+}
+
+type Users {
+  count: Int!
+  items: [User!]!
+}
+
+type Video {
+  hls: String!
+  mp4: String!
+  poster: String
+  subtitles: String
+  youtube: String
+}
+
+input VideoInput {
+  hls: String!
+  mp4: String!
+  poster: String
+  subtitles: String
+  youtube: String
+}
+
+type VimeoEmbed implements PlayableMedia {
+  aspectRatio: Float
+  createdAt: DateTime!
+  durationMs: Int!
+  id: ID!
+  mediaId: ID!
+  platform: String!
+  retrievedAt: DateTime!
+  src: VimeoSrc
+  thumbnail: String!
+  title: String!
+  userName: String!
+  userProfileImageUrl: String
+  userProgress: MediaProgress
+  userUrl: String!
+}
+
+type VimeoSrc {
+  hls: String
+  mp4: String
+  thumbnail: String
+}
+
+type Voting implements VotingInterface {
+  allowEmptyBallots: Boolean!
+  allowedMemberships: [VotingMembershipRequirement!]
+  allowedRoles: [String!]
+  beginDate: DateTime!
+  description: String
+  discussion: Discussion
+  endDate: DateTime!
+  groupSlug: String
+  groupTurnout: VotingTurnout
+  id: ID!
+  liveResult: Boolean!
+  name: String!
+  options: [VotingOption!]!
+  requireAddress: Boolean!
+  result: VotingResult
+  slug: String!
+  turnout: VotingTurnout!
+  userHasSubmitted: Boolean
+  userIsEligible: Boolean
+  userSubmitDate: DateTime
+}
+
+input VotingBallotInput {
+  optionId: ID
+  votingId: ID!
+}
+
+input VotingInput {
+  allowEmptyBallots: Boolean
+  allowedMemberships: [VotingMembershipRequirementInput!]
+  allowedRoles: [String!]
+  beginDate: DateTime!
+  description: String!
+  endDate: DateTime!
+  groupSlug: String
+  name: String!
+  options: [VotingOptionInput!]!
+  slug: String!
+}
+
+interface VotingInterface {
+  allowEmptyBallots: Boolean!
+  allowedMemberships: [VotingMembershipRequirement!]
+  allowedRoles: [String!]
+  beginDate: DateTime!
+  description: String
+  endDate: DateTime!
+  id: ID!
+  requireAddress: Boolean!
+  slug: String!
+  userHasSubmitted: Boolean
+  userIsEligible: Boolean
+  userSubmitDate: DateTime
+}
+
+type VotingMembershipRequirement {
+  createdBefore: DateTime!
+  membershipTypeId: ID!
+}
+
+input VotingMembershipRequirementInput {
+  createdBefore: DateTime!
+  membershipTypeId: ID!
+}
+
+type VotingOption {
+  description: String
+  id: ID!
+  label: String!
+  name: String!
+}
+
+input VotingOptionInput {
+  description: String
+  label: String
+  name: String!
+}
+
+type VotingOptionResult {
+  count: Int!
+  option: VotingOption
+  winner: Boolean
+}
+
+type VotingResult {
+  createdAt: DateTime!
+  groupTurnout: VotingTurnout
+  message: String
+  options: [VotingOptionResult!]!
+  turnout: VotingTurnout!
+  updatedAt: DateTime!
+  video: Video
+}
+
+type VotingTurnout {
+  eligible: Int!
+  submitted: Int!
+}
+
+type WebNotification {
+  body: String!
+  icon: String!
+  tag: String!
+  title: String!
+  url: String!
+}
+
+"""YearMonthDate (format YYYY-MM)"""
+scalar YearMonthDate
+
+type YoutubeEmbed implements PlayableMedia {
+  aspectRatio: Float
+  createdAt: DateTime!
+  durationMs: Int!
+  id: ID!
+  mediaId: ID!
+  platform: String!
+  retrievedAt: DateTime!
+  thumbnail: String!
+  title: String!
+  userName: String!
+  userProfileImageUrl: String
+  userProgress: MediaProgress
+  userUrl: String!
+}
+
+type mutations {
+  acknowledgeCallToAction(id: ID!, response: JSON): CallToAction!
+  activateMembership(id: ID!): Membership!
+
+  """
+  Add an item to `User.audioQueue`.
+  If `sequence` number is not provided, item will be appended.
+  An item might get a different `sequence` number assigned then provided.
+  """
+  addAudioQueueItem(entity: AudioQueueEntityInput!, sequence: Int): [AudioQueueItem!]!
+  addDocumentToCollection(collectionName: String!, documentId: ID!): CollectionItem!
+  addPaymentMethod(companyId: ID!, stripePlatformPaymentMethodId: ID!): AddPaymentMethodResponse!
+  addPaymentSource(pspPayload: JSON!, sourceId: String!): [PaymentSource!]!
+  addRedirection(resource: JSON, source: String!, status: Int, target: String!): Redirection!
+  addUserToRole(role: String!, userId: ID): User!
+  anonymizeUserAnswers(questionnaireId: ID!): Questionnaire!
+  appendPeriod(duration: Int!, durationUnit: MembershipTypeInterval!, id: ID!): Membership!
+  archive(repoIds: [ID!]!, unpublish: Boolean): RepoConnection!
+  authorizeSession(consents: [String!], email: String!, requiredFields: RequiredUserFields, tokens: [SignInToken!]!): Boolean!
+  bookCalendarSlot(id: ID!, userId: ID): CalendarSlot!
+  cancelCalendarSlot(id: ID!, userId: ID): CalendarSlot!
+  cancelCandidacy(slug: String!): Election!
+  cancelMembership(details: CancellationInput!, id: ID!, immediately: Boolean): Membership!
+  cancelPledge(pledgeId: ID!): Pledge
+
+  """Claim a granted membership with a voucher code"""
+  claimAccess(payload: JSON, voucherCode: String!): AccessGrant!
+  claimMembership(voucherCode: String!): Boolean!
+
+  """Clear all items in `User.audioQueue`."""
+  clearAudioQueue: [AudioQueueItem!]!
+  clearCollection(collectionName: String!): Collection!
+  clearProgress: Collection!
+  clearSession(sessionId: ID!, userId: ID): Boolean!
+  clearSessions(userId: ID): Boolean!
+  commit(document: DocumentInput!, isTemplate: Boolean, message: String!, parentId: ID, repoId: ID!): Commit!
+  createDiscussion(anonymity: Permission!, maxLength: Int, minInterval: Int, tagRequired: Boolean!, tags: [String!], title: String): ID!
+  createElection(electionInput: ElectionInput!): Election!
+  createVoting(votingInput: VotingInput!): Voting!
+  deleteRedirection(id: ID!): Boolean!
+  deleteUser(unpublishComments: Boolean, userId: ID!): User
+  denySession(email: String!, token: SignInToken!): Boolean!
+  downvoteComment(id: ID!): Comment!
+  editComment(content: String!, id: ID!, tags: [String!]): Comment!
+  editMemo(id: ID, text: String!): Memo!
+  editRepoMeta(briefingUrl: String, creationDeadline: DateTime, productionDeadline: DateTime, publishDate: DateTime, repoId: ID!): Repo!
+  featureComment(content: String, id: ID!, targets: [CommentFeaturedTarget!]): Comment!
+  finalizeElection(candidacyIds: [ID!], dry: Boolean!, message: String, slug: String!, video: VideoInput): ElectionResult!
+  finalizeQuestionnaire(dry: Boolean!, slug: String!): JSON!
+  finalizeVoting(dry: Boolean!, message: String, slug: String!, video: VideoInput, winner: String): VotingResult!
+  generateDerivative(commitId: ID!): Derivative!
+  generateMembership(userId: ID!): Membership!
+
+  """Grant a membership"""
+  grantAccess(
+    """An ID of an existing AccessCampaign"""
+    campaignId: ID!
+
+    """Recipient of a membership should be granted to"""
+    email: String
+
+    """An optional message to the recipient"""
+    message: String
+  ): AccessGrant!
+  hidePostfinancePayment(id: ID!): PostfinancePayment!
+  importPostfinanceCSV(csv: String!): String!
+  initTOTPSharedSecret: SharedSecretResponse!
+
+  """Invalidate access grant"""
+  invalidateAccess(id: ID!): Boolean!
+  manuallyMatchPostfinancePayment(id: ID!): PostfinancePayment!
+  markAllNotificationsAsRead: [Notification!]!
+  markNotificationAsRead(id: ID!): Notification!
+  mergeUsers(sourceUserId: ID!, targetUserId: ID!): User!
+
+  """
+  Move an existing item within `User.audioQueue`.
+  Unless `sequence` number exceeds maximum `sequence` number, an item will put onto `sequence` number.
+  """
+  moveAudioQueueItem(id: ID!, sequence: Int!): [AudioQueueItem!]!
+  moveMembership(membershipId: ID!, userId: ID!): Membership!
+  movePledge(pledgeId: ID!, userId: ID!): Pledge!
+  payPledge(pledgePayment: PledgePaymentInput): PledgeResponse!
+  placeMilestone(commitId: ID!, message: String!, name: String!, repoId: ID!): Milestone!
+  preferredFirstFactor(tokenType: SignInTokenType, userId: ID): User!
+  publish(commitId: ID!, repoId: ID!, settings: PublishSettings!): PublishResponse!
+  publishCredential(description: String): Credential
+  publishMemo(commitId: ID, id: ID, parentId: ID, repoId: ID!, text: String!): Memo!
+  reactivateMembership(id: ID!): Membership!
+  reclaimPledge(pledgeId: ID!): Boolean!
+  refreshQuestionnaireResult(slug: String!): Questionnaire
+  rematchPayments: String!
+
+  """Move an existing item from `User.audioQueue`."""
+  removeAudioQueueItem(id: ID!): [AudioQueueItem!]!
+  removeCredentialVerification(id: ID!): Credential
+  removeDevice(id: ID!): Boolean!
+  removeDocumentFromCollection(collectionName: String!, documentId: ID!): CollectionItem
+  removeDocumentProgress(documentId: ID!): DocumentProgress
+  removeMediaProgress(mediaId: ID!): MediaProgress
+  removeMilestone(name: String!, repoId: ID!): Boolean!
+  removeUserFromRole(role: String!, userId: ID): User!
+
+  """
+  Reorder existing items at once.
+  A non-existant item ID will be ignored.
+  If an item exists in queue but its ID is not submitted, it will be deleted.
+  """
+  reorderAudioQueue(ids: [ID!]!): [AudioQueueItem!]!
+
+  """Destroy repo file"""
+  repoFileDestroy(id: ID!): RepoFile!
+
+  """Make repo file private"""
+  repoFileMakePrivate(id: ID!): RepoFile!
+
+  """Make repo file public"""
+  repoFileMakePublic(id: ID!): RepoFile!
+
+  """Abort an upload, flags file as failed"""
+  repoFileUploadAbort(error: String!, id: ID!): RepoFile!
+
+  """Begin an upload, returns an upload URL to PUT file to"""
+  repoFileUploadBegin(name: String!, repoId: ID!): RepoFile!
+
+  """Commit an upload to file"""
+  repoFileUploadCommit(id: ID!): RepoFile!
+  reportComment(id: ID!): Comment!
+  reportUser(
+    """Reason for reporting the user. Max 500 characters."""
+    reason: String!
+    userId: ID!
+  ): Boolean!
+
+  """Request access for one-self"""
+  requestAccess(
+    """An ID of an existing AccessCampaign"""
+    campaignId: ID!
+    payload: JSON
+  ): AccessGrant!
+  requestNewsletterSubscription(context: String!, email: String!, name: NewsletterName!): Boolean!
+  resetAnswer(id: ID!): QuestionInterface!
+  resetMembership(id: ID!): Membership!
+  resetQuestionnaire(id: ID!): Questionnaire!
+  resolvePledgeToPayment(pledgeId: ID!, reason: String!): Pledge!
+  resubscribeEmail(userId: ID): NewsletterSettings!
+
+  """Revoke a granted membership"""
+  revokeAccess(id: ID!): Boolean!
+  revokeConsent(name: String!): User!
+  revokeQuestionnaire(id: ID!): Questionnaire!
+  rollAccessKey(userId: ID): User!
+  rollDeviceToken(newToken: String!, oldToken: String): Device! @deprecated(reason: "not used in app anymore. Will be evicted if no API calls are tracked anymore.")
+  sendPaymentReminders(dryRun: Boolean!): String!
+  sendPhoneNumberVerificationCode: Boolean!
+  sendTestNotification(commentId: ID, repoId: ID, simulateAllPossibleSubscriptions: Boolean): Boolean!
+  sendTestPushNotification(body: String, tag: String, title: String, type: String, url: String): Boolean!
+  setDefaultPaymentMethod(stripePlatformPaymentMethodId: ID!): [PaymentSource!]!
+  setDiscussionPreferences(discussionPreferences: DiscussionPreferencesInput!, id: ID!): Discussion!
+  setMembershipAutoPay(autoPay: Boolean!, id: ID!): Membership!
+  signIn(accessToken: ID, consents: [String!], context: String, email: String!, tokenType: SignInTokenType): SignInResponse!
+  signOut: Boolean!
+  startChallenge(sessionId: ID!, type: SignInTokenType!): Boolean!
+  submitAnswer(answer: AnswerInput!): QuestionInterface!
+  submitAnswerUnattributed(answer: AnswerInput!, pseudonym: ID!): QuestionInterface!
+  submitCandidacy(credential: String!, slug: String!): Candidacy!
+  submitComment(content: String!, discussionId: ID!, discussionPreferences: DiscussionPreferencesInput, id: ID, parentId: ID, tags: [String!]): Comment!
+  submitConsent(name: String!): User!
+  submitElectionBallot(candidacyIds: [ID!]!, electionId: ID!): Election!
+  submitPledge(consents: [String!], pledge: PledgeInput): PledgeResponse!
+  submitQuestionnaire(id: ID!): Questionnaire!
+  submitVotingBallot(optionId: ID, votingId: ID!): Voting!
+  subscribe(filters: [EventObjectType!], objectId: ID!, type: SubscriptionObjectType!): Subscription!
+  suspendUser(id: ID!, interval: String, intervalAmount: Int, reason: String): User!
+  syncPaymentIntent(companyId: ID!, stripePaymentIntentId: ID!): SyncPledgeResponse!
+  uncommittedChanges(action: Action!, repoId: ID!): Boolean!
+  unpublish(repoId: ID!): Boolean!
+  unpublishComment(id: ID!): Comment!
+  unpublishMemo(id: ID): Memo!
+  unsubscribe(filters: [EventObjectType!], subscriptionId: ID!): Subscription!
+  unsuspendUser(id: ID!): User!
+  unvoteComment(id: ID!): Comment!
+  updateAddress(address: AddressInput!, id: ID!): Address!
+  updateAdminNotes(notes: String, userId: ID!): User!
+  updateDiscussion(closed: Boolean, id: ID!): Discussion!
+  updateEmail(email: String!, userId: ID): User!
+  updateMe(address: AddressInput, ageAccessRole: AccessRole, biography: String, birthday: Date, disclosures: String, emailAccessRole: AccessRole, facebookId: String, firstName: String, gender: String, hasPublicProfile: Boolean, isListed: Boolean, lastName: String, pgpPublicKey: String, phoneNumber: String, phoneNumberAccessRole: AccessRole, phoneNumberNote: String, portrait: String, prolitterisId: String, publicUrl: String, statement: String, twitterHandle: String, username: String): User!
+  updateMembershipCancellation(details: CancellationInput!, id: ID!): Cancellation!
+  updateNewsletterSubscription(consents: [String!], email: String, mac: String, name: NewsletterName!, subscribed: Boolean!, userId: ID): NewsletterSubscription!
+  updateNotificationSettings(defaultDiscussionNotificationOption: DiscussionNotificationOption, discussionNotificationChannels: [DiscussionNotificationChannel!]): User!
+  updatePayment(paymentId: ID!, reason: String, status: PaymentStatus!): PledgePayment!
+  updatePostfinancePayment(mitteilung: String!, pfpId: ID!): PostfinancePayment!
+  updateRedirection(id: ID!, resource: JSON, source: String, status: Int, target: String): Redirection!
+  updateTwoFactorAuthentication(enabled: Boolean!, type: SignInTokenType!): Boolean!
+  updateUser(address: AddressInput, birthday: Date, firstName: String, lastName: String, phoneNumber: String, userId: ID!): User!
+  upsertDevice(information: DeviceInformationInput!, token: ID!): Device!
+  upsertDocumentProgress(documentId: ID!, nodeId: String!, percentage: Float!): DocumentProgress!
+  upsertMediaProgress(mediaId: ID!, secs: Float!): MediaProgress!
+  upvoteComment(id: ID!): Comment!
+  validateTOTPSharedSecret(totp: String): Boolean!
+  verifyCredential(id: ID!): Credential
+  verifyPhoneNumber(verificationCode: String!): Boolean!
+}
+
+type queries {
+  accessGrantInfo(id: ID!): AccessGrantInfo
+  accessGrantStats: AccessGrantStats!
+  activeDiscussions(first: Int, lastDays: Int!): [CommentAggregation!]!
+  adminUsers(limit: Int!, offset: Int, search: String): Users!
+  campaign(slug: String!): Campaign
+  cancellationCategories(showMore: Boolean): [CancellationCategory!]!
+  checkUsername(username: String): Boolean
+  collectionsStats: CollectionsStats!
+  comment(id: ID!): Comment!
+  commentPreview(content: String!, discussionId: ID!, id: ID, parentId: ID, tags: [String!]): Comment!
+  comments(after: String, discussionId: ID, discussionIds: [ID!], featured: Boolean, featuredTarget: CommentFeaturedTarget, first: Int, focusId: ID, lastId: ID, orderBy: DiscussionOrder, orderDirection: OrderDirection, toDepth: Int): CommentConnection!
+  crowdfunding(name: String!): Crowdfunding!
+  crowdfundings: [Crowdfunding]
+  discussion(id: ID!): Discussion
+  discussions: [Discussion!]!
+  discussionsStats: DiscussionsStats!
+  document(apiKey: String, path: String!): Document
+  documents(after: String, apiKey: String, before: String, dossier: String, feed: Boolean, first: Int, format: String, formats: [String!], hasDossier: Boolean, hasFormat: Boolean, hasSection: Boolean, last: Int, repoIds: [ID!], section: String, template: String): DocumentConnection!
+  draftPledge(id: ID!): Pledge!
+  echo: RequestInfo!
+  election(slug: String!): Election
+  elections: [Election!]!
+  embed(embedType: EmbedType!, id: ID!): Embed!
+  employees(
+    """filter for promoted authors"""
+    onlyPromotedAuthors: Boolean
+
+    """shuffle and limit the result to the specified count"""
+    shuffle: Int
+
+    """boost one famous female and one famous male employee"""
+    withBoosted: Boolean
+
+    """return employees with an onboarding greeting"""
+    withGreeting: Boolean
+
+    """return employees with a brief pitch"""
+    withPitch: Boolean
+  ): [Employee!]!
+  events: [Event!]!
+  faqs: [Faq!]!
+  greeting: Greeting
+  mailbox(after: String, before: String, filters: MailboxFiltersInput, first: Int, last: Int): MailboxConnection
+  me(accessToken: ID): User
+  mediaProgress(mediaId: ID!): MediaProgress
+  mediaResponses: [MediaResponse!]!
+  memberStats: MemberStats!
+  membershipPotStats: MembershipPotStats!
+  membershipStats: MembershipStats!
+  nextStatement(orderDirection: OrderDirection!, sequenceNumber: Int!): StatementUser!
+  notifications(after: String, before: String, filter: EventObjectType, first: Int, last: Int, lastDays: Int, onlyUnread: Boolean): NotificationConnection
+  payments(booleanFilter: BooleanFilter, dateRangeFilter: DateRangeFilter, limit: Int!, offset: Int, orderBy: OrderBy, search: String, stringArrayFilter: StringArrayFilter): PledgePayments!
+  paymentsCSV(companyName: String!, paymentIds: [ID!]): String!
+  pendingAppSignIn: SignInNotification
+  pledge(id: ID!): Pledge
+  pledges: [Pledge!]!
+  postfinancePayments(booleanFilter: BooleanFilter, dateRangeFilter: DateRangeFilter, limit: Int!, offset: Int, orderBy: OrderBy, search: String, stringArrayFilter: StringArrayFilter): PostfinancePayments!
+  questionnaire(slug: String!): Questionnaire
+  questionnaires: [Questionnaire!]!
+  redirection(externalBaseUrl: String, path: String!): Redirection
+  redirections(after: String, before: String, externalBaseUrl: String, first: Int, last: Int): RedirectionConnection!
+  repo(id: ID!): Repo!
+
+  """
+  This query is a cached version of repos query. It uses cached information
+  about repositories.
+  """
+  reposSearch(after: String, before: String, first: Int, isSeriesEpisode: Boolean, isSeriesMaster: Boolean, isTemplate: Boolean, last: Int, orderBy: RepoOrderBy, phases: [RepoPhaseKey!], publishDateRange: RepoPublishDateRange, search: String, template: String): RepoConnection!
+  revenueStats: RevenueStats!
+  roleStats(role: String!): RoleStats!
+  search(after: String, apiKey: String, before: String, filter: SearchFilterInput, filters: [SearchGenericFilterInput!], first: Int, processor: SearchProcessor, search: String, sort: SearchSortInput, trackingId: ID): SearchConnection!
+  statements(
+    after: String
+    first: Int!
+    focus: String
+
+    """Return statements of users which have a membership beyond this date"""
+    membershipAfter: DateTime
+    search: String
+    seed: Float
+  ): StatementUserConnection!
+  unauthorizedSession(email: String!, token: SignInToken!): UnauthorizedSession
+  updates: [Update!]!
+  user(accessToken: ID, id: ID, slug: String): User
+  users(hasPublicProfile: Boolean, isListed: Boolean, role: String, search: String!): [User]!
+  validateReferralCode(code: String!): ReferralCodeValidationResult
+  voting(slug: String!): Voting
+  votings: [Voting!]!
+}
+
+type subscriptions {
+  comment(discussionId: ID!): CommentUpdate!
+  greeting: Greeting!
+  notification: Notification!
+  repoChange(repoId: ID!): RepoChange!
+  repoUpdate(repoId: ID): Repo! @deprecated(reason: "use `repoChange` subscrption instead")
+  uncommittedChanges(repoId: ID!): UncommittedChangeUpdate!
+  webNotification: WebNotification!
+}

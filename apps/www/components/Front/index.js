@@ -31,7 +31,6 @@ import { cleanAsPath } from '../../lib/utils/link'
 import { useGetFrontQuery } from './graphql/getFrontQuery.graphql'
 import useAudioQueue from '../Audio/hooks/useAudioQueue'
 import TeaserAudioPlayButton from '../Audio/shared/TeaserAudioPlayButton'
-import ClimateLabTeaser from '../Climatelab/FrontTeaser/ClimateLabTeaser'
 import * as withData from './withData'
 import { IconCheckCircle } from '@republik/icons'
 
@@ -41,9 +40,12 @@ const styles = {
     padding: 15,
   }),
   more: css({
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    gap: '10px',
     backgroundColor: colors.negative.containerBg,
     color: colors.negative.text,
-    textAlign: 'center',
     padding: '20px 0',
   }),
 }
@@ -67,7 +69,6 @@ export const RenderFront = ({ front, nodes, isFrontExtract = false }) => {
         DiscussionLink,
         ...withData,
         ActionBar,
-        ClimateLabTeaser,
         t,
       }),
     [],
@@ -228,23 +229,21 @@ const Front = ({
           const end = (hasMore || finite) && (
             <div {...styles.more}>
               {finite && (
-                <div style={{ marginBottom: 10 }}>
-                  <IconCheckCircle size={32} style={{ marginBottom: 10 }} />
-                  <br />
+                <>
+                  <IconCheckCircle size={32} />
                   {t('front/finite')}
-                  <br />
-                </div>
+                </>
               )}
               {finite && (
-                <div style={{ marginBottom: 10 }}>
-                  <Link href='/feed' passHref>
+                <div>
+                  <Link href='/feed' passHref legacyBehavior>
                     <Editorial.A style={{ color: colors.negative.text }}>
                       {t('front/finite/feed')}
                     </Editorial.A>
                   </Link>
                 </div>
               )}
-              <div style={{ marginBottom: 10 }}>
+              <div>
                 {loadingMoreError && <ErrorMessage error={loadingMoreError} />}
                 {loadingMore && <InlineSpinner />}
                 {!infiniteScroll && hasMore && (
@@ -265,11 +264,16 @@ const Front = ({
                 )}
               </div>
               {front.meta.path === '/' && (
-                <div style={{ marginBottom: 10 }}>
+                <div>
                   {t.elements('front/chronology', {
                     years: intersperse(
                       archivedYears.map((year) => (
-                        <Link key={year} href={`/${year}`} passHref>
+                        <Link
+                          key={year}
+                          href={`/${year}`}
+                          passHref
+                          legacyBehavior
+                        >
                           <Editorial.A style={{ color: colors.negative.text }}>
                             {year}
                           </Editorial.A>

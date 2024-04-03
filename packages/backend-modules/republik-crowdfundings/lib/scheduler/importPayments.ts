@@ -80,6 +80,7 @@ async function withTransaction<T>(
 
 interface Report {
   unmatchedPaymentsAmount: number
+  possibleDuplicatePaymentsAmount: number
   paymentsImported: number
   filesImported: number
   matchingReport?: MatchPaymentReport
@@ -88,6 +89,7 @@ interface Report {
 async function notifyAccountants({
   unmatchedPaymentsAmount,
   paymentsImported,
+  possibleDuplicatePaymentsAmount,
   filesImported,
   matchingReport,
 }: Report) {
@@ -96,7 +98,8 @@ async function notifyAccountants({
     `📄 ${filesImported} file${filesImported === 1 ? '' : 's'} imported.`,
     `💵 ${paymentsImported} payment${
       paymentsImported === 1 ? '' : 's'
-    } imported.`,
+    } imported.
+    ${possibleDuplicatePaymentsAmount} possible duplicate payments found.`,
     '',
   ]
 
@@ -170,9 +173,10 @@ async function insertNewPayments(transaction: PgDb) {
   )
 
   const files = await extractTarFiles(possiblyTarFiles)
-  const paymentsImported = await insertPayments({ files, transaction })
+  const {insertPromises, duplicateWarnings} = await insertPayments({ files, transaction })
   return {
-    paymentsImported,
+    paymentsImported: insertPromises,
+    possibleDuplicatePaymentsAmount: duplicateWarnings,
     filesImported: files.length,
   }
 }
@@ -238,8 +242,8 @@ async function getIbanToIdMap(t: PgDb) {
 const insertPayments = async ({
   files,
   transaction,
-}: InsertPaymentsArguments): Promise<number> => {
-  if (!files.length) return 0
+}: InsertPaymentsArguments): Promise<{ insertPromises: number; duplicateWarnings: number }> => {
+  if (!files.length) return { insertPromises: 0, duplicateWarnings: 0}
   const records = getPostfinancePaymentRecords(
     files,
     await getIbanToIdMap(transaction),
@@ -248,12 +252,32 @@ const insertPayments = async ({
   const postfinancePaymentsTable = transaction.public
     .postfinancePayments as PgTable<PostfinancePaymentRecord>
 
+  // check for duplicates in transaction
+  const duplicates: string[] = []
+  const stringifiedRecords = records.map((r) => JSON.stringify(r))
+  stringifiedRecords.forEach(function (value, index, array) {
+    if (
+      array.indexOf(value, index + 1) !== -1 &&
+      duplicates.indexOf(value) === -1
+    ) {
+      duplicates.push(value)
+    }
+  })
+  if (duplicates.length > 0) {
+    console.warn('Found possible duplicates while importing payments: ', duplicates)
+  }
+  let duplicateCounter = duplicates.length
+
+  // insert and check for existing duplicates
   const insertPromises = records.map(async (record) => {
-    if (await exists(record, postfinancePaymentsTable)) return 0
+    if (await exists(record, postfinancePaymentsTable)) {
+      duplicateCounter++
+      console.warn('Possible duplicate payment imported: ', record)
+    }
     return await postfinancePaymentsTable.insert(record)
   })
-
-  return (await Promise.all(insertPromises)).reduce((a, b) => a + b, 0)
+  const insertPromisesCount = (await Promise.all(insertPromises)).reduce((a, b) => a + b, 0)
+  return { insertPromises: insertPromisesCount, duplicateWarnings: duplicateCounter }
 }
 
 interface PostfinancePaymentRecord {

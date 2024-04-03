@@ -1,7 +1,7 @@
 import React from 'react'
 import { css } from 'glamor'
 
-import { ColorContextLocalExtension } from '../Colors/ColorContext'
+import { InvertedColorScheme } from '../Colors/ColorContext'
 import {
   PADDING,
   TILE_MARGIN_RIGHT,
@@ -10,7 +10,6 @@ import {
 import { mUp } from '../../theme/mediaQueries'
 import SeriesNavTileContent from './SeriesNavTileContent'
 import { sansSerifRegular14, sansSerifRegular12 } from '../Typography/styles'
-import { localInvertedColors } from '../../theme/colors'
 
 const GRID_MIN_WIDTH = 300
 const OUTER_CONTAINER_PADDING = PADDING
@@ -98,9 +97,7 @@ const SeriesNavTile = ({
       data-repo-id={episode?.document?.repoId}
     >
       {isInverted ? (
-        <ColorContextLocalExtension localColors={localInvertedColors}>
-          {content}
-        </ColorContextLocalExtension>
+        <InvertedColorScheme>{content}</InvertedColorScheme>
       ) : (
         content
       )}

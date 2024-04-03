@@ -3,7 +3,7 @@ import compose from 'lodash/flowRight'
 import { withApollo } from '@apollo/client/react/hoc'
 import { css, merge } from 'glamor'
 import debounce from 'lodash/debounce'
-import uuid from 'uuid/v4'
+import { v4 as uuid } from 'uuid'
 
 import { colors, Interaction } from '@project-r/styleguide'
 

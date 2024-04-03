@@ -135,6 +135,7 @@ const PlaceholderLink = ({ repo, placeholderDate, children }) => {
         },
       }}
       passHref
+      legacyBehavior
     >
       {children}
     </Link>
@@ -148,10 +149,13 @@ const RepoLink = ({ repo, placeholderDate, children }) => {
       <a {...styles.link}>{children}</a>
     </PlaceholderLink>
   ) : (
-    <Link href={`/repo/${id}/tree`} passHref>
-      <a title={getTitle(repo)} {...styles.link}>
-        {children}
-      </a>
+    <Link
+      href={`/repo/${id}/tree`}
+      passHref
+      title={getTitle(repo)}
+      {...styles.link}
+    >
+      {children}
     </Link>
   )
 }

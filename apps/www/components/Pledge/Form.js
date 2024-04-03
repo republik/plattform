@@ -173,7 +173,9 @@ class Pledge extends Component {
     const pkg = this.getPkg({ query })
     const userPrice = !!query.userPrice
 
-    let requireShippingAddress = pkg ? pkg.name === 'BENEFACTOR' : false
+    let requireShippingAddress = pkg
+      ? ['ABO', 'BENEFACTOR'].includes(pkg.name)
+      : false
     const options = pkg
       ? pkg.options.map((option) => {
           const fieldKey = getOptionFieldKey(option)
@@ -300,7 +302,7 @@ class Pledge extends Component {
       }`,
       {
         accountLink: (
-          <Link key='account' href='/konto' passHref>
+          <Link key='account' href='/konto' passHref legacyBehavior>
             <A>{t(`pledge/form/instruction/${queryPackage}/accountText`)}</A>
           </Link>
         ),
@@ -431,11 +433,7 @@ class Pledge extends Component {
                       ownMembership={ownMembership}
                       customMe={customMe}
                       userPrice={userPrice}
-                      fixedPrice={[
-                        'MONTHLY_ABO',
-                        'YEARLY_ABO',
-                        'LESHA',
-                      ].includes(pkg.name)}
+                      fixedPrice={pkg.options.every((opt) => opt.fixedPrice)}
                       pkg={pkg}
                       packages={packages}
                       onChange={(fields) => {
@@ -510,6 +508,8 @@ const query = gql`
           price
           userPrice
           autoPay
+          fixedPrice
+          payMoreSuggestion
           minAmount
           maxAmount
           defaultAmount
@@ -559,6 +559,8 @@ const query = gql`
           price
           userPrice
           autoPay
+          fixedPrice
+          payMoreSuggestion
           minAmount
           maxAmount
           defaultAmount

@@ -1,5 +1,5 @@
 const { RedisPubSub } = require('graphql-redis-subscriptions')
-const { withFilter } = require('apollo-server')
+const { withFilter } = require('graphql-subscriptions')
 
 const { connect: connectRedis } = require('./Redis')
 

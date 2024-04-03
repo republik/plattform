@@ -1,5 +1,5 @@
 const htmlToText = require('html-to-text')
-const { renderEmail } = require('@republik/mdast-react-render')
+const { renderEmail } = require('@republik/mdast-react-render/email')
 
 const { transformUser } = require('@orbiting/backend-modules-auth')
 const {
@@ -242,7 +242,7 @@ const submitComment = async (comment, discussion, context, testUsers) => {
                   'api/comment/notification/answer/email/subject',
                   subjectParams,
                 ),
-            templateName: 'cf_comment_notification_new',
+            templateName: 'comment_notification_new',
             globalMergeVars: [
               {
                 name: 'NAME',

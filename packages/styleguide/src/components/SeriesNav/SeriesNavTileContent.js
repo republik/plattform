@@ -18,6 +18,7 @@ import { FigureImage } from '../Figure'
 const styles = {
   title: css({
     ...serifTitle16,
+    marginBlock: '0.8em',
     [mUp]: {
       ...serifTitle20,
     },
@@ -25,6 +26,7 @@ const styles = {
   titleInline: css({
     ...serifTitle16,
     marginBottom: 0,
+    marginTop: 12,
   }),
   lead: css({
     ...serifRegular15,
@@ -34,6 +36,7 @@ const styles = {
   }),
   label: css({
     marginTop: 0,
+    marginBottom: 12,
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
@@ -84,10 +87,13 @@ const SeriesNavTileContent = ({
 
   const LinkContainer = ({ children }) =>
     isLink ? (
-      <Link href={episode.document.meta.path} passHref>
-        <a {...styles.plainlink} onClick={onEpisodeClick}>
-          {children}
-        </a>
+      <Link
+        href={episode.document.meta.path}
+        {...styles.plainlink}
+        onClick={onEpisodeClick}
+        legacyBehavior={false}
+      >
+        {children}
       </Link>
     ) : (
       <>{children}</>

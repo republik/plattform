@@ -83,6 +83,8 @@ import ArticleRecommendationsFeed from './ArticleRecommendationsFeed'
 import TeaserAudioPlayButton from '../Audio/shared/TeaserAudioPlayButton'
 import useAudioQueue from '../Audio/hooks/useAudioQueue'
 import { IconEdit } from '@republik/icons'
+import { ArticleAudioPlayer } from '../Audio/AudioPlayer/ArticleAudioPlayer'
+import { reportError } from 'lib/errors/reportError'
 
 const LoadingComponent = () => <SmallLoader loading />
 
@@ -170,6 +172,14 @@ const ClimateLabInlineTeaser = dynamic(
   },
 )
 
+const ChallengeAcceptedInlineTeaser = dynamic(
+  () => import('../ChallengeAccepted/ChallengeAcceptedInlineTeaser'),
+  {
+    loading: LoadingComponent,
+    ssr: false,
+  },
+)
+
 const QuestionnaireSubmissions = dynamic(
   () => import('../Questionnaire/Submissions'),
   {
@@ -183,6 +193,20 @@ const EdgeQuestion = dynamic(() => import('../Climatelab/EdgeQuestion/index'), {
 
 const ClimateLabQuestionnaire = dynamic(
   () => import('../Climatelab/Questionnaire/Overview'),
+  {
+    loading: LoadingComponent,
+  },
+)
+
+const ClimateLabQuestionnaireV2 = dynamic(
+  () => import('../Climatelab/QuestionnaireChallengeAccepted/Overview'),
+  {
+    loading: LoadingComponent,
+  },
+)
+
+const PoliticsCommunityQuestionnaire = dynamic(
+  () => import('../PoliticsCommunityQuestionnaire/Overview'),
   {
     loading: LoadingComponent,
   },
@@ -299,7 +323,15 @@ const ArticlePage = ({
       path: cleanedPath,
     },
     skip: clientRedirection,
+    // When graphQLErrors happen, we still want to get partial data to render the page
+    errorPolicy: 'all',
   })
+
+  useEffect(() => {
+    if (articleError) {
+      reportError('Article Page getDocument Query', articleError)
+    }
+  }, [reportError, articleError])
 
   const article = articleData?.article
   const documentId = article?.id
@@ -310,7 +342,6 @@ const ArticlePage = ({
   const articleContent = article?.content
   const articleUnreadNotifications = article?.unreadNotifications
   const routerQuery = router.query
-  const isClimate = !!article?.content?.meta?.climate
 
   useProlitterisTracking(repoId, cleanedPath)
 
@@ -391,6 +422,8 @@ const ArticlePage = ({
     meta.audioSource.kind === 'syntheticReadAloud'
   const isReadAloud =
     hasMeta && meta.audioSource && meta.audioSource.kind === 'readAloud'
+
+  const hasAudioSource = !!meta?.audioSource
   const newsletterMeta =
     hasMeta && (meta.newsletter || meta.format?.meta?.newsletter)
 
@@ -439,8 +472,11 @@ const ArticlePage = ({
           CLIMATE_LAB_COUNTER: ClimateLabCounter,
           CLIMATE_LAB_INLINE_TEASER: ClimateLabInlineTeaser,
           CLIMATE_LAB_QUESTIONNAIRE: ClimateLabQuestionnaire,
+          POLITICS_COMMUNITY_QUESTIONNAIRE: PoliticsCommunityQuestionnaire,
+          CLIMATE_LAB_QUESTIONNAIRE_V2: ClimateLabQuestionnaireV2,
           POSTCARD: Postcard,
           POSTCARD_GALLERY: PostcardGallery,
+          CHALLENGE_ACCEPTED_INLINE_TEASER: ChallengeAcceptedInlineTeaser,
         },
         titleMargin: false,
         titleBreakout,
@@ -535,7 +571,6 @@ const ArticlePage = ({
     return (
       <PageLoader
         loading={articleLoading && !articleData}
-        error={articleError}
         render={() => {
           if (!article) {
             return (
@@ -618,11 +653,10 @@ const ArticlePage = ({
       hasOverviewNav={hasOverviewNav}
       stickySecondaryNav={hasStickySecondaryNav}
       pageColorSchemeKey={colorSchemeKey}
-      isClimate={isClimate}
+      location={meta?.template === 'article' ? 'article' : undefined}
     >
       <PageLoader
         loading={articleLoading && !articleData}
-        error={articleError}
         render={() => {
           if (!article || !schema) {
             return (
@@ -657,7 +691,6 @@ const ArticlePage = ({
           // I wouldn't show both, since it's a very big paynote,
           // and the text would be the same twice.
           // const suppressSecondPayNote = climatePaynote
-
           const payNote = (
             <PayNote
               seed={payNoteSeed}
@@ -670,7 +703,6 @@ const ArticlePage = ({
               position='before'
             />
           )
-
           const payNoteAfter =
             // !suppressSecondPayNote &&
             payNote && cloneElement(payNote, { position: 'after' })
@@ -699,9 +731,8 @@ const ArticlePage = ({
           const format = meta.format
 
           const isFreeNewsletter = !!newsletterMeta && newsletterMeta.free
-          const showNewsletterSignupTop = isFreeNewsletter && !me && isFormat
-          const showNewsletterSignupBottom =
-            isFreeNewsletter && !showNewsletterSignupTop
+          const showNewsletterSignupTop = isFormat && isFreeNewsletter
+          const showNewsletterSignupBottom = isFreeNewsletter && !isFormat
 
           const rawContentMeta = articleContent.meta
           const feedQueryVariables = rawContentMeta.feedQueryVariables
@@ -752,13 +783,12 @@ const ArticlePage = ({
                                     colors[format.meta.kind]
                                   }
                                 >
-                                  <Link href={format.meta.path} passHref>
-                                    <a
-                                      {...plainLinkRule}
-                                      href={format.meta.path}
-                                    >
-                                      {format.meta.title}
-                                    </a>
+                                  <Link
+                                    href={format.meta.path}
+                                    passHref
+                                    {...plainLinkRule}
+                                  >
+                                    {format.meta.title}
                                   </Link>
                                 </Editorial.Format>
                               )}
@@ -798,6 +828,15 @@ const ArticlePage = ({
                           isSyntheticReadAloud ||
                           isReadAloud ? (
                             <Center breakout={breakout}>
+                              {showNewsletterSignupTop && (
+                                <div style={{ marginTop: 10 }}>
+                                  <NewsletterSignUp
+                                    {...newsletterMeta}
+                                    smallButton
+                                    showDescription
+                                  />
+                                </div>
+                              )}
                               {actionBar && (
                                 <div
                                   ref={actionBarRef}
@@ -812,6 +851,14 @@ const ArticlePage = ({
                                   {actionBar}
                                 </div>
                               )}
+
+                              {(hasAudioSource ||
+                                article?.meta?.willBeReadAloud) && (
+                                <div style={{ marginTop: 32 }}>
+                                  <ArticleAudioPlayer document={article} />
+                                </div>
+                              )}
+
                               {isSection && !hideSectionNav && (
                                 <Breakout size='breakout'>
                                   <SectionNav
@@ -819,11 +866,6 @@ const ArticlePage = ({
                                     linkedDocuments={article.linkedDocuments}
                                   />
                                 </Breakout>
-                              )}
-                              {showNewsletterSignupTop && (
-                                <div style={{ marginTop: 10 }}>
-                                  <NewsletterSignUp {...newsletterMeta} />
-                                </div>
                               )}
                             </Center>
                           ) : (
@@ -853,12 +895,11 @@ const ArticlePage = ({
               )}
               {showNewsletterSignupBottom && (
                 <Center breakout={breakout}>
-                  {format && !me && (
-                    <Interaction.P>
-                      <strong>{format.meta.title}</strong>
-                    </Interaction.P>
-                  )}
-                  <NewsletterSignUp {...newsletterMeta} />
+                  <NewsletterSignUp
+                    showTitle
+                    showDescription
+                    {...newsletterMeta}
+                  />
                 </Center>
               )}
               {((hasAccess && meta.template === 'article') ||
@@ -902,6 +943,7 @@ const ArticlePage = ({
                   variables={feedQueryVariables}
                 />
               )}
+
               {me && hasActiveMembership && (
                 <ArticleRecommendationsFeed path={cleanedPath} />
               )}

@@ -19,9 +19,7 @@
     "link": "yarn link"
   },
   "dependencies": {},
-  "devDependencies": {
-    "typescript": "^4.7.2"
-  },
+  "devDependencies": {},
   "files": [
     "tsconfig-backend.json"
   ]

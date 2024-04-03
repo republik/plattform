@@ -59,5 +59,5 @@ module.exports = async (membership, user, t, pgdb) => {
     )
   }
 
-  return updatedMembership
+  return { updatedMembership, hasActiveMembership }
 }

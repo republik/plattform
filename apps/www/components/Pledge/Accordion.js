@@ -124,6 +124,8 @@ const query = gql`
           minAmount
           maxAmount
           defaultAmount
+          fixedPrice
+          payMoreSuggestion
           reward {
             __typename
             ... on MembershipType {
@@ -307,7 +309,12 @@ class Accordion extends Component {
                   </div>
                 )}
                 {pkgItems.map(({ name, title, price, pathname, query }) => (
-                  <Link key={name} href={{ pathname, query }} passHref>
+                  <Link
+                    key={name}
+                    href={{ pathname, query }}
+                    passHref
+                    legacyBehavior
+                  >
                     <PackageItem
                       t={t}
                       hover={hover}
@@ -323,7 +330,12 @@ class Accordion extends Component {
                 {!!links.length && (
                   <div {...styles.links}>
                     {links.map(({ pathname, query, text }, i) => (
-                      <Link key={i} href={{ pathname, query }} passHref>
+                      <Link
+                        key={i}
+                        href={{ pathname, query }}
+                        passHref
+                        legacyBehavior
+                      >
                         <Editorial.A>
                           {text}
                           <br />

@@ -1,7 +1,12 @@
 import { css } from 'glamor'
 
 import { IconButton } from '@project-r/styleguide'
-import { IconInstagram, IconLogoFacebook, IconLogoTwitter } from '@republik/icons'
+import {
+  IconInstagram,
+  IconLogoFacebook,
+  IconLogoMastodon,
+  IconLogoTwitter,
+} from '@republik/icons'
 
 const styles = {
   icons: css({
@@ -24,6 +29,11 @@ const SocialLinks = () => (
     <IconButton
       Icon={IconLogoTwitter}
       href='https://twitter.com/RepublikMagazin'
+      target='_blank'
+    />
+    <IconButton
+      Icon={IconLogoMastodon}
+      href='https://republik.social/@republik_magazin'
       target='_blank'
     />
   </div>

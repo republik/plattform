@@ -27,7 +27,6 @@
     "@orbiting/backend-modules-auth": "*",
     "@orbiting/backend-modules-base": "*",
     "@orbiting/backend-modules-base64u": "*",
-    "@orbiting/backend-modules-cards": "*",
     "@orbiting/backend-modules-collections": "*",
     "@orbiting/backend-modules-databroom": "*",
     "@orbiting/backend-modules-dataloader": "*",
@@ -46,6 +45,7 @@
     "@orbiting/backend-modules-publikator": "*",
     "@orbiting/backend-modules-push-notifications": "*",
     "@orbiting/backend-modules-redirections": "*",
+    "@orbiting/backend-modules-referral-campaigns": "*",
     "@orbiting/backend-modules-republik": "*",
     "@orbiting/backend-modules-republik-crowdfundings": "*",
     "@orbiting/backend-modules-scalars": "*",
@@ -64,6 +64,7 @@
     "jest": "^29.5.0",
     "jest-environment-node": "^29.5.0",
     "subscriptions-transport-ws": "^0.9.16",
+    "ts-jest": "^29.1.0",
     "why-is-node-running": "^2.1.2"
   },
   "dependencies": {

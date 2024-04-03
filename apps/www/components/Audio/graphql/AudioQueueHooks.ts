@@ -8,7 +8,7 @@ import { AudioPlayerItem } from '../types/AudioPlayerItem'
 export type AudioQueueItem = {
   id: string
   sequence: number
-  document: AudioPlayerItem
+  document?: AudioPlayerItem
 }
 
 const AudioQueueItemFragment = gql`

@@ -2,7 +2,7 @@ const dayjs = require('dayjs')
 
 const { Roles, transformUser } = require('@orbiting/backend-modules-auth')
 
-const { parse, stringify, isKeyValid } = require('../../../lib/utils')
+const { parse, isKeyValid, createEvaluateSlot } = require('../../../lib/utils')
 
 module.exports = async (_, args, context) => {
   const { id, userId } = args
@@ -48,6 +48,13 @@ module.exports = async (_, args, context) => {
     throw new Error(t('api/calendar/slot/error/404'))
   }
 
+  const date = dayjs(key)
+  const today = dayjs().startOf('day')
+  const isInFuture = !today.isAfter(date)
+  if (!isInFuture) {
+    throw new Error(t('api/calendar/slot/error/slotIsNotInFuture'))
+  }
+
   await pgdb.public.calendarSlots.updateOne(
     {
       calendarSlug: calendar.slug,
@@ -57,19 +64,6 @@ module.exports = async (_, args, context) => {
     },
     { revokedAt: new Date() },
   )
-
-  const today = dayjs().startOf('day')
-  const date = dayjs(key)
-
-  const isInFuture = !today.isAfter(date)
-
-  const isSlotAvailable =
-    userSlots.filter((slot) => slot.key === key && slot.userId !== user.id)
-      .length < calendar.limitSlotsPerKey
-
-  const userCanBook = isInFuture && isSlotAvailable
-  // const userHasBooked = false
-  const userCanCancel = false
 
   const slots = await pgdb.public.calendarSlots.find({
     calendarSlug,
@@ -83,14 +77,7 @@ module.exports = async (_, args, context) => {
         .then((users) => users.map(transformUser))
     : []
 
-  // @TODO: Cancel and restore
+  const evaluateSlot = createEvaluateSlot({ calendar, slots, user: me, users })
 
-  return {
-    id: stringify({ userId: user.id, calendarSlug: calendar.slug, key }),
-    key,
-    userCanBook,
-    userHasBooked: false,
-    userCanCancel,
-    users,
-  }
+  return evaluateSlot({ date, key })
 }

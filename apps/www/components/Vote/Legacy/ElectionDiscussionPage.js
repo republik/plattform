@@ -96,30 +96,32 @@ const DiscussionPage = ({ router, data, vt }) => {
                     ].map((id) => (
                       <div key={id} {...styles.tab}>
                         <P>
-                          <Link
-                            href={{
-                              pathname: '/vote/genossenschaft/diskutieren',
-                              query: {
-                                discussion:
-                                  (data[id] && data[id].discussion.slug) || id,
-                              },
-                            }}
-                            passHref
-                            scroll={false}
-                          >
-                            {selectedDiscussion === id ? (
-                              <Strong>
-                                {vt(`${DISCUSSION_TITLES[id]}Title`)}
-                                <span {...styles.count}>
-                                  <IconDiscussion
-                                    size={17}
-                                    fill={colors.primary}
-                                  />{' '}
-                                  {data[id] &&
-                                    data[id].discussion.comments.totalCount}
-                                </span>
-                              </Strong>
-                            ) : (
+                          {selectedDiscussion === id ? (
+                            <Strong>
+                              {vt(`${DISCUSSION_TITLES[id]}Title`)}
+                              <span {...styles.count}>
+                                <IconDiscussion
+                                  size={17}
+                                  fill={colors.primary}
+                                />{' '}
+                                {data[id] &&
+                                  data[id].discussion.comments.totalCount}
+                              </span>
+                            </Strong>
+                          ) : (
+                            <Link
+                              href={{
+                                pathname: '/vote/genossenschaft/diskutieren',
+                                query: {
+                                  discussion:
+                                    (data[id] && data[id].discussion.slug) ||
+                                    id,
+                                },
+                              }}
+                              passHref
+                              scroll={false}
+                              legacyBehavior
+                            >
                               <A>
                                 {vt(`${DISCUSSION_TITLES[id]}Title`)}
                                 <span {...styles.count}>
@@ -131,8 +133,8 @@ const DiscussionPage = ({ router, data, vt }) => {
                                     data[id].discussion.comments.totalCount}
                                 </span>
                               </A>
-                            )}
-                          </Link>
+                            </Link>
+                          )}
                         </P>
                       </div>
                     ))}

@@ -1,7 +1,7 @@
 import { graphql } from '@apollo/client/react/hoc'
 import { gql } from '@apollo/client'
 
-export const meQuery = gql`
+export const ME_QUERY = gql`
   query me {
     me {
       id
@@ -15,7 +15,7 @@ export const meQuery = gql`
 `
 
 export default (Component) =>
-  graphql(meQuery, {
+  graphql(ME_QUERY, {
     props: ({ data }) => {
       return {
         me: data.me,

@@ -22,13 +22,11 @@ vierte Gewalt. Und sind neu auch Teil der Project R Genossenschaft.
 
 {{else}}
 
+Wir freuen uns, dass Sie sich für eine Mitgliedschaft entschieden haben.
+
 Sie können ab sofort das Magazin lesen {{link_signin}} , an sämtlichen Debatten
 teilnehmen {{link_dialog}} und die Republik mit Ihren Freunden oder Feinden
 teilen {{link_account_share}} .
-
-Falls Sie Fragen zur Inbetriebnahme des Magazins haben:
-Hier finden Sie die Gebrauchsanleitung {{link_manual}} , die die wichtigsten
-davon klärt.
 
 {{/if}}
 
@@ -57,7 +55,9 @@ innerhalb von 7 Werktagen. {{/if}}{{#if goodies_has_mask}}Republik-Masken
 liefern wir Ihnen innerhalb von 7 Werktagen. {{/if}}{{/unless}}{{#if
 goodies_has_fondue}}Republik-Fondues werden am 26. Januar 2022 verschickt.
 {{/if}}{{#if goodies_has_mug}}Republik-Tassen liefern wir Ihnen innerhalb von 10
-Werktagen. {{/if}}
+Werktagen. {{/if}} {{#if goodies_has_cookie}} Der Versand der
+Republik-Guetsliformen erfolgt bis 22. Dezember. {{/if}}{{#if
+goodies_has_totebag_black}}Schwarze Taschen liefern wir im April. {{/if}}
 
 {{/if}} {{#if paymentslip}}
 

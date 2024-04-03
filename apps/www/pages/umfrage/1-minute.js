@@ -47,7 +47,7 @@ import ErrorMessage from '../../components/ErrorMessage'
 const SLUG = '1-minute'
 const description = t.elements('pages/meta/questionnaire/unauthorized', {
   buyLink: (
-    <Link href='/angebote' key='pledge' passHref>
+    <Link href='/angebote' key='pledge' passHref legacyBehavior>
       <A>{t('pages/meta/questionnaire/unauthorized/buyText')}</A>
     </Link>
   ),
@@ -155,7 +155,7 @@ const ThankYou = compose(withT)(({ t }) => {
             <Meta.P key={`p${i}`}>{paragraph}</Meta.P>
           ))}
       </div>
-      <NewsletterSignUp free skipTitle name='ACCOMPLICE' />
+      <NewsletterSignUp free name='ACCOMPLICE' />
       <div style={{ marginTop: 5 }}>
         <Label>{t('questionnaire/crowd/submitted/optout')}</Label>
       </div>
@@ -169,7 +169,7 @@ const NoThanks = compose(withT)(({ t }) => {
       <Headline>{t('questionnaire/crowd/submitted/title')}</Headline>
       <div {...styles.intro}>
         <P>{t('questionnaire/crowd/submitted/declined/intro')}</P>
-        <Link href='/' passHref>
+        <Link href='/' passHref legacyBehavior>
           <Button primary style={{ marginTop: 20 }}>
             {t('merci/action/read')}
           </Button>

@@ -863,7 +863,19 @@ class Submit extends Component {
                 <>
                   <br />
                   <br />
-                  <SignIn context='pledge' />
+                  <SignIn
+                    context='pledge'
+                    onSuccess={(me) => {
+                      contactState.onChange({
+                        values: {
+                          email: me.email,
+                        },
+                        dirty: {
+                          email: true,
+                        },
+                      })
+                    }}
+                  />
                 </>
               )}
               <br />
@@ -909,6 +921,7 @@ class Submit extends Component {
                   }}
                   replace
                   passHref
+                  legacyBehavior
                 >
                   <A>{t('pledge/contact/signIn/wrongToken')}</A>
                 </Link>

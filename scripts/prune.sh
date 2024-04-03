@@ -3,9 +3,17 @@ SERVER=${SERVER:-api}
 
 if [ "$SERVER" = "styleguide" ]
 then
-  npx turbo prune --scope="@project-r/styleguide"
+  echo "Running prune for styleguide"
+  npx turbo@1.10.12 prune --scope="@project-r/styleguide" -v
 else
-  npx turbo prune --scope="@orbiting/$SERVER-app"
+  echo "Running prune for $SERVER-app"
+  npx turbo@1.10.12 prune --scope="@orbiting/$SERVER-app" -v
+fi
+
+if [ ! -f out/yarn.lock ]
+then
+  echo "⚠️ Early exit 1 because no yarn.lock was found in the out directory."
+  exit 1
 fi
 
 if [ -f apps/www/.env ] || [ -f apps/api/.env ] || [ -f apps/assets/.env ]

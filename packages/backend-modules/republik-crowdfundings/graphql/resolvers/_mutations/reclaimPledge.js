@@ -101,6 +101,7 @@ module.exports = async (
         pgdb,
         userId: req.user.id,
         subscribeToEditorialNewsletters: true,
+        subscribeToOnboardingMails: true,
       })
     } catch (e) {
       // ignore issues with newsletter subscriptions

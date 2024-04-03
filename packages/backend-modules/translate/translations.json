@@ -242,7 +242,7 @@
     },
     {
       "key": "api/email/subscription/reactivated/subject",
-      "value": "Ihr Republik-Abo: Sie sind wieder da!"
+      "value": "Republik: Willkommen zurück!"
     },
     {
       "key": "api/users/merge/sourceAndTargetIdentical",
@@ -330,7 +330,7 @@
     },
     {
       "key": "api/email/pledge_abo/subject",
-      "value": "Ihre Mitgliedschaft: Willkommen bei der Republik"
+      "value": "Republik: Ihre Mitgliedschaft"
     },
     {
       "key": "api/email/pledge_abo_give/subject",
@@ -342,7 +342,7 @@
     },
     {
       "key": "api/email/pledge_monthly_abo/subject",
-      "value": "Ihr Abo: Willkommen bei der Republik"
+      "value": "Republik: Ihr Monats-Abo"
     },
     {
       "key": "api/email/pledge_donate/subject",
@@ -350,7 +350,7 @@
     },
     {
       "key": "api/email/pledge_benefactor/subject",
-      "value": "Ihre Mitgliedschaft: Willkommen bei der Republik"
+      "value": "Republik: Ihre Gönner-Mitgliedschaft"
     },
     {
       "key": "api/email/pledge_prolong/subject",
@@ -469,6 +469,22 @@
       "value": "Bücher «We Stay»"
     },
     {
+      "key": "api/email/option/goodie/cookie/1",
+      "value": "Republik-Guetsliform"
+    },
+    {
+      "key": "api/email/option/goodie/cookie/other",
+      "value": "Republik-Guetsliformen"
+    },
+    {
+      "key": "api/email/option/goodie/totebag_black/1",
+      "value": "Republik-Tasche, schwarz"
+    },
+    {
+      "key": "api/email/option/goodie/totebag_black/other",
+      "value": "Republik-Taschen, schwarz"
+    },
+    {
       "key": "api/email/option/membershiptype/abo/1",
       "value": "Jahresmitgliedschaft"
     },
@@ -502,11 +518,11 @@
     },
     {
       "key": "api/email/option/membershiptype/yearly_abo/1",
-      "value": "Mitstreiterinnen-Abo"
+      "value": "Jahresabo"
     },
     {
       "key": "api/email/option/membershiptype/yearly_abo/other",
-      "value": "Mitstreiterinnen-Abos"
+      "value": "Jahresabos"
     },
     {
       "key": "api/email/option/other/gifted_membership",
@@ -614,7 +630,7 @@
     },
     {
       "key": "api/email/membership_giver_prolong_notice/subject",
-      "value": "Ihre verschenkten Mitgliedschaften"
+      "value": "Ihre Grosszügigkeit jährt sich"
     },
     {
       "key": "api/email/membership_giver_claim_notice/subject",
@@ -626,11 +642,11 @@
     },
     {
       "key": "api/email/membership_claimer_onboarding/REPUBLIK/subject",
-      "value": "Ihr Abo: Willkommen bei der Republik"
+      "value": "Republik: Ihr Abo"
     },
     {
       "key": "api/email/membership_claimer_onboarding/PROJECT_R/subject",
-      "value": "Ihre Mitgliedschaft: Willkommen bei der Republik"
+      "value": "Republik: Ihre Mitgliedschaft"
     },
     {
       "key": "api/email/membership_claimer_onboarding/subject",
@@ -662,7 +678,7 @@
     },
     {
       "key": "api/email/membership_owner_prolong_notice/subject",
-      "value": "Bleiben Sie an Bord oder möchten Sie die Republik verlassen? Sie haben die Wahl"
+      "value": "Ihr Republik-Jubiläum!"
     },
     {
       "key": "api/email/membership_owner_prolong_yearly_abo_notice/subject",
@@ -670,7 +686,7 @@
     },
     {
       "key": "api/email/membership_owner_prolong_notice_7/subject",
-      "value": "Am {endDate} erneuert sich Ihre Mitgliedschaft"
+      "value": "Am {endDate} die Republik unterstützen"
     },
     {
       "key": "api/email/membership_owner_prolong_yearly_abo_notice_7/subject",
@@ -682,11 +698,11 @@
     },
     {
       "key": "api/email/membership_owner_prolong_notice_0/subject",
-      "value": "Ihre Mitgliedschaftsrechnung"
+      "value": "Die Republik braucht Sie"
     },
     {
       "key": "api/email/membership_owner_prolong_abo_give_months_notice_0/subject",
-      "value": "Ihr letzter Tag an Bord"
+      "value": "Ihr letzter Tag an Bord?"
     },
     {
       "key": "api/email/membership_owner_prolong_yearly_abo_notice_0/subject",
@@ -701,6 +717,14 @@
       "value": "Da war doch noch etwas: Ihr Mitstreiter-Abonnement"
     },
     {
+      "key": "api/email/membership_owner_prolong_yearly_abo_winback_16/subject",
+      "value": "Ein Zurück-zur-Republik-Angebot für Sie"
+    },
+    {
+      "key": "api/email/membership_owner_prolong_yearly_abo_winback_24/subject",
+      "value": "Jetzt zurück zur Republik"
+    },
+    {
       "key": "api/email/membership_owner_autopay_notice/subject",
       "value": "Ihre Mitgliedschaft erneuert sich automatisch"
     },
@@ -713,8 +737,20 @@
       "value": "Wechseln Sie zur Jahresmitgliedschaft!"
     },
     {
+      "key": "api/email/referral_campaign_referral_first/subject",
+      "value": "Sie haben Unterstützung geholt – weiter so!"
+    },
+    {
+      "key": "api/email/referral_campaign_referral_second/subject",
+      "value": "Ihr Handeln wirkt! Danke."
+    },
+    {
+      "key": "api/email/referral_campaign_referral_all/subject",
+      "value": "Sie haben Talent"
+    },
+    {
       "key": "api/email/membership_deactivated_abo_uncancelled/sequenceNumber/true/subject",
-      "value": "Ihre Mitgliedschaft Nr. {sequenceNumber} wurde deaktiviert"
+      "value": "Das Ende – oder ein fulminanter Neustart?"
     },
     {
       "key": "api/email/membership_deactivated_benefactor_abo_uncancelled/sequenceNumber/true/subject",
@@ -722,7 +758,7 @@
     },
     {
       "key": "api/email/membership_deactivated_abo_give_months_uncancelled/subject",
-      "value": "Ihr Republik-Abonnement wurde deaktiviert"
+      "value": "Das Ende – oder ein fulminanter Neustart?"
     },
     {
       "key": "api/email/membership_deactivated_yearly_abo_uncancelled/subject",
@@ -886,7 +922,11 @@
     },
     {
       "key": "api/newsletters/request/CLIMATE/subject",
-      "value": "Bestätigen Sie Ihre Anmeldung zum Klimalabor-Newsletter."
+      "value": "Bestätigen Sie Ihre Anmeldung zum Challenge-Accepted-Newsletter."
+    },
+    {
+      "key": "api/newsletters/request/WDWWW/subject",
+      "value": "Bestätigen Sie ihre Anmeldung zum Nachrichten-Briefing der Republik."
     },
     {
       "key": "api/newsletters/request/notSupported",
@@ -1229,10 +1269,6 @@
       "value": "Einladung von {granterName}"
     },
     {
-      "key": "api/access/email/recipient/invitation_klimalabor/subject",
-      "value": "Einladung zum Klimalabor der Republik"
-    },
-    {
       "key": "api/access/email/recipient/invitation_kampa202202/subject",
       "value": "Einladung von {granterName} für acht Wochen Republik"
     },
@@ -1249,10 +1285,6 @@
       "value": "Ihr Republik-Probezugang: Willkommen!"
     },
     {
-      "key": "api/access/email/recipient/onboarding_klimalabor/subject",
-      "value": "Willkommen im Klimalabor"
-    },
-    {
       "key": "api/access/email/recipient/onboarding_gifted_membership/subject",
       "value": "Willkommen an Bord"
     },
@@ -1263,10 +1295,6 @@
     {
       "key": "api/access/email/recipient/expired/subject",
       "value": "Ihre Reise ist beendet"
-    },
-    {
-      "key": "api/access/email/recipient/expired_klimalabor/subject",
-      "value": "Machen Sie es wie wir: Investieren Sie in Klimajournalismus"
     },
     {
       "key": "api/access/email/recipient/followup/subject",
@@ -2146,7 +2174,7 @@
     },
     {
       "key": "api/email/payment/reminder/isLast:true/packageName:YEARLY_ABO/subject",
-      "value": "Der von Ihnen festgelegte Betrag für Ihr neues Republik-Abo ist noch nicht bezahlt"
+      "value": "LETZTE MAHNUNG: Republik-Abo"
     },
     {
       "key": "api/email/payment/reminder/isLast:true/packageName:LESHA/subject",
@@ -2273,6 +2301,14 @@
       "value": "Notizbücher"
     },
     {
+      "key": "api/invoices/option/Goodie/TOTEBAG_BLACK/1",
+      "value": "Tasche (schwarz)"
+    },
+    {
+      "key": "api/invoices/option/Goodie/TOTEBAG_BLACK/other",
+      "value": "Taschen (schwarz)"
+    },
+    {
       "key": "api/invoices/option/Goodie/TOTEBAG/1",
       "value": "Tasche"
     },
@@ -2327,6 +2363,14 @@
     {
       "key": "api/invoices/option/Goodie/LESHA/other",
       "value": "Bücher «We Stay»"
+    },
+    {
+      "key": "api/invoices/option/Goodie/COOKIE/1",
+      "value": "Republik-Guetsliform"
+    },
+    {
+      "key": "api/invoices/option/Goodie/COOKIE/other",
+      "value": "Republik-Guetsliformen"
     },
     {
       "key": "api/invoices/option/MembershipType/ABO/1",
@@ -2501,6 +2545,14 @@
       "value": "Kalendereintrag bereits vorhanden"
     },
     {
+      "key": "api/calendar/slot/error/slotIsNotInFuture",
+      "value": "Kalendereintrag liegt in Vergangenheit"
+    },
+    {
+      "key": "api/calendar/slot/error/slotIsNotOnAllowedWeekday",
+      "value": "Kalendereintrag nicht verfügbar (Wochentag nicht möglich)"
+    },
+    {
       "key": "api/calendar/slot/error/slotIsNotAvailable",
       "value": "Kalendereintrag nicht mehr verfügbar"
     },
@@ -2525,8 +2577,16 @@
       "value": "Datei bereits veröffentlicht"
     },
     {
+      "key": "api/publikator/file/error/privateAlready",
+      "value": "Datei bereits nicht veröffentlicht"
+    },
+    {
       "key": "api/publikator/file/error/notPrivate",
       "value": "Datei nicht als «privat» markiert"
+    },
+    {
+      "key": "api/publikator/file/error/notPublic",
+      "value": "Datei nicht veröffentlicht"
     },
     {
       "key": "api/publikator/file/error/notPending",

@@ -2,13 +2,12 @@ import { css } from 'glamor'
 import Head from 'next/head'
 
 import compose from 'lodash/flowRight'
-import { withRouter } from 'next/router'
+import { useRouter, withRouter } from 'next/router'
 
 import withMe from '../lib/apollo/withMe'
-import withT from '../lib/withT'
+import { useTranslation } from '../lib/withT'
 import withInNativeApp from '../lib/withInNativeApp'
 import { intersperse } from '../lib/utils/helpers'
-
 
 import {
   HEADER_HEIGHT,
@@ -30,7 +29,6 @@ import {
   A,
   mediaQueries,
   useColorContext,
-  ColorHtmlBodyColors,
 } from '@project-r/styleguide'
 import Link from 'next/link'
 import { withDefaultSSR } from '../lib/apollo/helpers'
@@ -110,7 +108,9 @@ const fixAmpsInQuery = (rawQuery) => {
   return query
 }
 
-const Page = ({ router: { query: rawQuery }, t, me, inNativeApp }) => {
+const Page = ({ router: { query: rawQuery }, me, inNativeApp }) => {
+  const { t } = useTranslation()
+  const router = useRouter()
   const [colorScheme] = useColorContext()
   const query = fixAmpsInQuery(rawQuery)
   const { context, type } = query
@@ -140,7 +140,7 @@ const Page = ({ router: { query: rawQuery }, t, me, inNativeApp }) => {
   const logo = isProjectR ? (
     <a
       href='https://project-r.construction/'
-      rel='noopener'
+      rel='noreferrer'
       target='_blank'
       {...styles.logoProjectR}
     >
@@ -161,9 +161,10 @@ const Page = ({ router: { query: rawQuery }, t, me, inNativeApp }) => {
 
   const stickyBar = !isProjectR
 
+  const hasRedirect = router.query.redirect
+
   return (
     <div>
-      <ColorHtmlBodyColors colorSchemeKey='auto' />
       <Head>
         <title>{t('notifications/pageTitle')}</title>
         <meta name='robots' content='noindex' />
@@ -175,11 +176,9 @@ const Page = ({ router: { query: rawQuery }, t, me, inNativeApp }) => {
         >
           {logo}
         </div>
-        {inNativeApp && (
-          <Link href='/' passHref>
-            <a {...styles.close}>
-              <IconClose {...colorScheme.set('fill', 'text')} size={32} />
-            </a>
+        {inNativeApp && !hasRedirect && (
+          <Link href='/' passHref {...styles.close}>
+            <IconClose {...colorScheme.set('fill', 'text')} size={32} />
           </Link>
         )}
         <div
@@ -202,6 +201,7 @@ const Page = ({ router: { query: rawQuery }, t, me, inNativeApp }) => {
                     }}
                     params={link.params}
                     passHref
+                    legacyBehavior
                   >
                     <A>{link.label}</A>
                   </Link>
@@ -217,5 +217,5 @@ const Page = ({ router: { query: rawQuery }, t, me, inNativeApp }) => {
 }
 
 export default withDefaultSSR(
-  compose(withMe, withT, withRouter, withInNativeApp)(Page),
+  compose(withRouter, withMe, withInNativeApp)(Page),
 )

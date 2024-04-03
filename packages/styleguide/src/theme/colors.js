@@ -20,19 +20,6 @@ import { getJson } from './env'
  discrete = d3.schemeCategory10
  */
 
-const discrete = [
-  '#1f77b4',
-  '#ff7f0e',
-  '#2ca02c',
-  '#d62728',
-  '#9467bd',
-  '#8c564b',
-  '#e377c2',
-  '#7f7f7f',
-  '#bcbd22',
-  '#17becf',
-]
-
 const colorsDeprecated = {
   primary: '#00508C',
   primaryBg: '#BFE1FF',
@@ -70,7 +57,18 @@ const colorsDeprecated = {
   ],
   sequential3: ['rgb(8,48,107)', 'rgb(24,100,170)', 'rgb(75,151,201)'],
   opposite3: ['rgb(103,0,13)', 'rgb(187,21,26)', 'rgb(239,69,51)'],
-  discrete,
+  discrete: [
+    '#1f77b4',
+    '#ff7f0e',
+    '#2ca02c',
+    '#d62728',
+    '#9467bd',
+    '#8c564b',
+    '#e377c2',
+    '#7f7f7f',
+    '#bcbd22',
+    '#17becf',
+  ],
   negative: {
     containerBg: '#111',
     primaryBg: '#191919',
@@ -104,6 +102,7 @@ const colors = {
     dividerInverted: '#4C4D4C',
     primary: '#00AA00',
     primaryHover: '#008800',
+    primaryText: '#FFFFFF',
     text: '#282828',
     textInverted: '#F0F0F0',
     textSoft: '#757575',
@@ -140,7 +139,16 @@ const colors = {
     opposite80: 'rgb(187,21,26)',
     opposite60: 'rgb(239,69,51)',
     neutral: '#bbb',
-    discrete,
+    discrete1: '#1f77b4',
+    discrete2: '#ff7f0e',
+    discrete3: '#2ca02c',
+    discrete4: '#d62728',
+    discrete5: '#9467bd',
+    discrete6: '#8c564b',
+    discrete7: '#e377c2',
+    discrete8: '#7f7f7f',
+    discrete9: '#bcbd22',
+    discrete10: '#17becf',
     chartsInverted: '#000000',
     flyerBg: '#E6ECFF',
     flyerText: '#141414',
@@ -165,6 +173,7 @@ const colors = {
     dividerInverted: '#DADDDC',
     primary: '#00AA00',
     primaryHover: '#008800',
+    primaryText: '#FFFFFF',
     text: '#F0F0F0',
     textInverted: '#282828',
     textSoft: '#A9A9A9',
@@ -201,7 +210,16 @@ const colors = {
     opposite80: 'rgb(239,69,51)',
     opposite60: 'rgb(252, 138, 107)',
     neutral: '#bbb',
-    discrete,
+    discrete1: '#1f77b4',
+    discrete2: '#ff7f0e',
+    discrete3: '#2ca02c',
+    discrete4: '#d62728',
+    discrete5: '#9467bd',
+    discrete6: '#8c564b',
+    discrete7: '#e377c2',
+    discrete8: '#7f7f7f',
+    discrete9: '#bcbd22',
+    discrete10: '#17becf',
     chartsInverted: '#FFFFFF',
     flyerBg: '#001140',
     flyerText: '#F0F0F0',
@@ -227,11 +245,6 @@ const colors = {
       '#000000': 'chartsInverted',
     },
   },
-}
-
-export const localInvertedColors = {
-  light: colors.dark,
-  dark: colors.light,
 }
 
 // add all deprecated colors, but only if they don't exist in new colors (no overwrites)

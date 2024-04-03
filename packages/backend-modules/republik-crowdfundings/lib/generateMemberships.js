@@ -29,10 +29,19 @@ module.exports = async (pledgeId, pgdb, t, redis) => {
     throw new Error(t('api/unexpected'))
   }
 
+  const existingMemberships = await pgdb.public.memberships.count({
+    userId: user.id,
+  })
+
   // get ingredients
   const pkg = await pgdb.public.packages.findOne({ id: pledge.packageId })
 
+  const subscribeToOnboardingMails =
+    existingMemberships === 0 &&
+    ['ABO', 'MONTHLY_ABO', 'BENEFACTOR', 'YEARLY_ABO'].includes(pkg.name) // should not subscribe buyers of gift memberships to onbaording mails
+
   let hasRewards = false
+
   const pledgeOptions = await getPledgeOptionsTree(
     await pgdb.public.pledgeOptions.find({ pledgeId: pledge.id }),
     pgdb,
@@ -257,6 +266,7 @@ module.exports = async (pledgeId, pgdb, t, redis) => {
       pgdb,
       userId: user.id,
       isNew: !user.verified,
+      subscribeToOnboardingMails,
       subscribeToEditorialNewsletters,
     })
   } catch (e) {

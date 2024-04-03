@@ -7,9 +7,7 @@ import {
   RawHtml,
   fontFamilies,
   mediaQueries,
-  ColorHtmlBodyColors,
   ColorContextProvider,
-  useColorContext,
 } from '@project-r/styleguide'
 import OptionalLocalColorContext from './OptionalLocalColorContext'
 import Meta from './Meta'
@@ -30,6 +28,7 @@ import LegacyAppNoticeBox from './LegacyAppNoticeBox'
 import { useMe } from '../../lib/context/MeContext'
 import { checkRoles } from '../../lib/apollo/withMe'
 import CallToActionBanner from '../CallToActions/CallToActionBanner'
+import { DraftModeIndicator } from 'components/DraftModeIndicator'
 
 css.global('html', { boxSizing: 'border-box' })
 css.global('*, *:before, *:after', { boxSizing: 'inherit' })
@@ -76,6 +75,10 @@ const styles = {
   bodyGrower: css({
     flexGrow: 1,
   }),
+  page: css({
+    backgroundColor: 'var(--color-default)',
+    color: 'var(--color-text)',
+  }),
   content: css({
     paddingTop: FRAME_CONTENT_PADDING_MOBILE,
     paddingBottom: FRAME_CONTENT_PADDING_MOBILE * 2,
@@ -84,24 +87,6 @@ const styles = {
       paddingBottom: FRAME_CONTENT_PADDING * 2,
     },
   }),
-}
-
-/**
- * If a page has a custom color context that is to be applied to the page content
- * a wrapping div is rendered where the default color is applied to the background.
- */
-const OptionalContentBackground = ({
-  children,
-  hasCustomColorContext = false,
-}) => {
-  const [colorScheme] = useColorContext()
-  if (hasCustomColorContext) {
-    return (
-      <div {...colorScheme.set('backgroundColor', 'default')}>{children}</div>
-    )
-  } else {
-    return <>{children}</>
-  }
 }
 
 export const MainContainer = ({ children, maxWidth = '840px' }) => (
@@ -129,12 +114,14 @@ const Frame = ({
   isOnMarketingPage,
   pageColorSchemeKey,
   containerMaxWidth,
+  draftMode,
   /**
    * customContentColorContext are the colors passed to the color-context
    * that only wraps the content of the page.
    * (This will not be applied to the header, footer and body of the page)
    */
   customContentColorContext,
+  hideCTA = false,
 }) => {
   const { inNativeApp, inNativeAppLegacy } = useInNativeApp()
   const { t } = useTranslation()
@@ -157,7 +144,6 @@ const Frame = ({
   }, [hasSecondaryNav])
   return (
     <ColorContextProvider colorSchemeKey={pageColorSchemeKey}>
-      <ColorHtmlBodyColors colorSchemeKey={pageColorSchemeKey || 'auto'} />
       <noscript>
         <Box style={{ padding: 30 }}>
           <RawHtml
@@ -173,7 +159,8 @@ const Frame = ({
         {/* body growing only needed when rendering a footer */}
         <div
           {...(footer || inNativeApp ? styles.bodyGrower : undefined)}
-          {...(!isOnMarketingPage && padHeaderRule)}
+          {...padHeaderRule}
+          {...styles.page}
         >
           {!!meta && <Meta data={meta} />}
           <Header
@@ -201,10 +188,11 @@ const Frame = ({
             <OptionalLocalColorContext
               localColorVariables={customContentColorContext}
             >
-              <OptionalContentBackground
-                hasCustomColorContext={!!customContentColorContext}
-              >
-                <CallToActionBanner />
+              <div {...styles.page}>
+                {!hideCTA && <CallToActionBanner />}
+
+                {draftMode && <DraftModeIndicator />}
+
                 {raw ? (
                   <>{children}</>
                 ) : (
@@ -212,7 +200,7 @@ const Frame = ({
                     <Content>{children}</Content>
                   </MainContainer>
                 )}
-              </OptionalContentBackground>
+              </div>
             </OptionalLocalColorContext>
           </Header>
         </div>
@@ -240,6 +228,8 @@ Frame.propTypes = {
   pageColorSchemeKey: PropTypes.string,
   containerMaxWidth: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   customContentColorContext: PropTypes.object,
+  hideCTA: PropTypes.bool,
+  draftMode: PropTypes.bool,
 }
 
 export default Frame

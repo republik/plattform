@@ -20,10 +20,8 @@ export type ApolloClientOptions = {
   version?: string
   apiUrl: string
   wsUrl?: string
-  headers?: { [key: string]: string | number | boolean } | IncomingHttpHeaders
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  onResponse?: (response: any) => void
+  headers?: { [key: string]: string } | IncomingHttpHeaders
+  onResponse?: (response: Response) => void
   mobileConfigOptions?: {
     isInMobileApp: boolean
     createAppWorkerLink: () => ApolloLink

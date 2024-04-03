@@ -26,7 +26,7 @@ import UserProgress from './UserProgress'
 import ShareButtons from './ShareButtons'
 import { useMe } from '../../lib/context/MeContext'
 import useAudioQueue from '../Audio/hooks/useAudioQueue'
-import AudioInfo from './Audio/Info'
+
 import {
   AudioPlayerLocations,
   AudioPlayerActions,
@@ -352,16 +352,17 @@ const ActionBar = ({
     {
       title: t('bookmark/title/default'),
       element: (
-        <BookmarkButton
-          bookmarked={document && !!document.userBookmark}
-          documentId={document.id}
-          label={!forceShortLabel ? t('bookmark/label') : ''}
-          labelShort={
-            !forceShortLabel && isArticleBottom ? t('bookmark/label') : ''
-          }
-          disabled={meLoading || documentLoading}
-          attributes={{ ['data-show-if-active-membership']: true }}
-        />
+        <span data-show-if-active-membership style={{ marginRight: 24 }}>
+          <BookmarkButton
+            bookmarked={document && !!document.userBookmark}
+            documentId={document.id}
+            label={!forceShortLabel ? t('bookmark/label') : ''}
+            labelShort={
+              !forceShortLabel && isArticleBottom ? t('bookmark/label') : ''
+            }
+            disabled={meLoading || documentLoading}
+          />
+        </span>
       ),
       modes: [
         'articleTop',
@@ -482,7 +483,7 @@ const ActionBar = ({
           ? toggleAudioPlayback
           : play
         : toggleAudioPlayback,
-      modes: ['feed', 'seriesEpisode', 'articleTop'],
+      modes: ['feed', 'seriesEpisode'],
       show:
         meta.audioSource?.mp3 &&
         meta.audioSource?.kind !== 'syntheticReadAloud',
@@ -516,7 +517,7 @@ const ActionBar = ({
           ])
         }
       },
-      modes: ['feed', 'seriesEpisode', 'articleTop'],
+      modes: ['feed', 'seriesEpisode'],
       show:
         isAudioQueueAvailable &&
         meta.audioSource?.mp3 &&
@@ -533,15 +534,8 @@ const ActionBar = ({
       },
       label: t('PodcastButtons/title'),
       show: !!podcast && meta.template !== 'format',
-      modes: ['articleTop', 'articleBottom'],
+      modes: ['articleBottom'],
       group: mode === 'articleTop' ? 'audio' : undefined,
-    },
-    {
-      title: t('article/actionbar/audio/info/title'),
-      element: <AudioInfo document={document} handlePlay={play} />,
-      modes: ['articleTop'],
-      show: true, // meta.audioSource || meta.willBeReadAloud,
-      group: 'audio',
     },
   ]
 

@@ -66,13 +66,6 @@ export default class MyDocument extends Document {
     }
   }
 
-  constructor(props) {
-    super(props)
-    const { __NEXT_DATA__, env } = props
-    if (env) {
-      __NEXT_DATA__.env = this.props.env
-    }
-  }
   render() {
     const {
       css,
@@ -93,7 +86,9 @@ export default class MyDocument extends Document {
               ].join('\n'),
             }}
           />
-          {css ? <style dangerouslySetInnerHTML={{ __html: css }} /> : null}
+          {css ? (
+            <style data-glamor-ssr dangerouslySetInnerHTML={{ __html: css }} />
+          ) : null}
           <meta name='author' content='Republik' />
           <link
             rel='apple-touch-icon'

@@ -85,13 +85,12 @@ export const SortToggle = compose(withT)(
         }}
         passHref
         shallow
+        {...styles.link}
+        {...styles[selected ? 'linkSelected' : 'linkRegular']}
+        {...(!selected && linkHover)}
+        {...colorScheme.set('color', 'text')}
       >
-        <a
-          {...styles.link}
-          {...styles[selected ? 'linkSelected' : 'linkRegular']}
-          {...(!selected && linkHover)}
-          {...colorScheme.set('color', 'text')}
-        >
+        <span>
           {label}
           {direction && (
             <span
@@ -103,7 +102,7 @@ export const SortToggle = compose(withT)(
               {createElement(SORT_DIRECTION_ICONS[direction])}
             </span>
           )}
-        </a>
+        </span>
       </Link>
     )
   },

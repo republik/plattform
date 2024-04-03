@@ -30,6 +30,7 @@ const knownYears = {
   2020: { path: '/2020' },
   2021: { path: '/2021' },
   2022: { path: '/2022' },
+  // 2023: { path: '/2023' },
 }
 
 const getAll = gql`
@@ -222,7 +223,7 @@ const FrontOverview = ({
           : t.elements(`overview/lead/${me ? 'pledge' : 'signIn'}`)}
       </P>
       {!isMember && (
-        <Link key='pledgeBefore' href='/angebote' passHref>
+        <Link key='pledgeBefore' href='/angebote' passHref legacyBehavior>
           <Button white>{t('overview/lead/pledgeButton')}</Button>
         </Link>
       )}
@@ -271,7 +272,7 @@ const FrontOverview = ({
       />
 
       {!isMember && (
-        <Link key='pledgeAfter' href='/angebote' passHref>
+        <Link key='pledgeAfter' href='/angebote' passHref legacyBehavior>
           <Button white style={{ marginTop: 100 }}>
             {t('overview/after/pledgeButton')}
           </Button>

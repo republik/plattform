@@ -1,3 +1,5 @@
+import './setup-glamor'
+
 import * as allMediaQueries from './theme/mediaQueries'
 
 export { default as zIndex } from './theme/zIndex'
@@ -43,7 +45,8 @@ export {
   default as ColorContext,
   ColorContextProvider,
   ColorContextLocalExtension,
-  ColorHtmlBodyColors,
+  RootColorVariables,
+  InvertedColorScheme,
 } from './components/Colors/ColorContext'
 export { useColorContext } from './components/Colors/useColorContext'
 export {
@@ -201,7 +204,13 @@ export {
   flyerTemplate,
 } from './components/Editor/schema/flyer'
 export { RenderContextProvider } from './components/Editor/Render/Context'
+export type {
+  CustomDescendant,
+  CustomElement,
+} from './components/Editor/custom-types'
 
 export { FlyerTile, FlyerTileMeta } from './components/Flyer'
 export { FlyerDate } from './components/Flyer/Date'
 export { default as ErrorBoundary } from './components/ErrorBoundary'
+
+export { Author as EmailAuthor } from './templates/shared/email/components/Author'

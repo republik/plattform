@@ -3,7 +3,7 @@ import { Interaction, A } from '@project-r/styleguide'
 import PostcardGenerator from './PostcardGenerator'
 import { useMe } from '../../../lib/context/MeContext'
 import { t } from '../../../lib/withT'
-import { CLIMATE_LAB_LANDINGPAGE_URL } from '../constants'
+import { CLIMATE_LAB_URL } from '../constants'
 
 const PostcardDynamicComponent = () => {
   const { me } = useMe()
@@ -16,7 +16,7 @@ const PostcardDynamicComponent = () => {
         'Climatelab/Postcard/PostcardDynamicComponent/noaccess/text',
         {
           link: (
-            <A href={CLIMATE_LAB_LANDINGPAGE_URL}>
+            <A href={CLIMATE_LAB_URL}>
               {t(
                 'Climatelab/Postcard/PostcardDynamicComponent/noaccess/linkText',
               )}

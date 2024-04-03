@@ -51,6 +51,9 @@ const questionnaireData = gql`
       __typename
       id
       text
+      turnout {
+        submitted
+      }
       ... on QuestionTypeChoice {
         options {
           label
@@ -116,8 +119,8 @@ export const QUESTIONNAIRE_SUBMISSION_BOOL_QUERY = gql`
   }
 `
 
-export const QUESTIONNAIRE_SUBMISSIONS_QUERY = gql`
-  query getQuestionnaireSubmissions(
+export const QUESTIONNAIRE_WITH_SUBMISSIONS_QUERY = gql`
+  query getQuestionnaireWithSubmissions(
     $slug: String!
     $search: String
     $first: Int
@@ -149,6 +152,42 @@ export const QUESTIONNAIRE_SUBMISSIONS_QUERY = gql`
     }
   }
   ${questionnaireData}
+  ${submissionData}
+`
+
+// The same query as above but excluding the QuestionnaireFragment, which should improve query performance significantly in case the data is not needed.
+export const QUESTIONNAIRE_ONLY_SUBMISSIONS_QUERY = gql`
+  query getQuestionnaireOnlySubmissions(
+    $slug: String!
+    $search: String
+    $first: Int
+    $after: String
+    $sortBy: SubmissionsSortBy!
+    $sortDirection: OrderDirection
+    $answers: [SubmissionFilterAnswer]
+    $id: ID
+    $userIds: [ID!]
+  ) {
+    questionnaire(slug: $slug) {
+      id
+      results: submissions(
+        search: $search
+        first: $first
+        after: $after
+        sort: { by: $sortBy, direction: $sortDirection }
+        filters: { answers: $answers, id: $id, userIds: $userIds }
+      ) {
+        totalCount
+        pageInfo {
+          endCursor
+          hasNextPage
+        }
+        nodes {
+          ...QuestionnaireSubmissionFragment
+        }
+      }
+    }
+  }
   ${submissionData}
 `
 

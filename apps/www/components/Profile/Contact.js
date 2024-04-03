@@ -11,7 +11,14 @@ import { ADMIN_BASE_URL } from '../../lib/constants'
 import FieldSet, { styles as fieldSetStyles } from '../FieldSet'
 
 import { DEFAULT_VALUES } from './Page'
-import { IconLanguage, IconLogoFacebook, IconLogoTwitter, IconMailOutline, IconNoteAdd, IconVpnKey } from '@republik/icons'
+import {
+  IconLanguage,
+  IconLogoFacebook,
+  IconLogoTwitter,
+  IconMailOutline,
+  IconNoteAdd,
+  IconVpnKey,
+} from '@republik/icons'
 
 const isHTTPUrl = (url) =>
   isURL(url, { require_protocol: true, protocols: ['http', 'https'] })
@@ -58,7 +65,7 @@ const Contact = ({
   inNativeIOSApp,
   electionBallot,
 }) => {
-  const { me, isEditor } = useMe()
+  const { me } = useMe()
   const isSupporter = checkRoles(me, ['supporter'])
 
   if (isEditing) {
@@ -103,7 +110,7 @@ const Contact = ({
           additionalFieldProps={() => {
             return {
               renderInput: (props) => (
-                <textarea row={1} {...fieldSetStyles.autoSize} {...props} />
+                <textarea rows={1} {...fieldSetStyles.autoSize} {...props} />
               ),
             }
           }}
@@ -114,20 +121,18 @@ const Contact = ({
             },
           ]}
         />
-        {isEditor && (
-          <FieldSet
-            values={values}
-            errors={errors}
-            dirty={dirty}
-            onChange={onChange}
-            fields={[
-              {
-                label: t('profile/contact/prolitterisId/label'),
-                name: 'prolitterisId',
-              },
-            ]}
-          />
-        )}
+        <FieldSet
+          values={values}
+          errors={errors}
+          dirty={dirty}
+          onChange={onChange}
+          fields={[
+            {
+              label: t('profile/contact/prolitterisId/label'),
+              name: 'prolitterisId',
+            },
+          ]}
+        />
 
         {!!user.phoneNumber && (
           <Fragment>

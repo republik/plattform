@@ -25,7 +25,7 @@ import {
   hasMoreData,
   loadMoreSubmissions,
   QUERY_PARAM,
-  QUESTIONNAIRE_SUBMISSIONS_QUERY,
+  QUESTIONNAIRE_WITH_SUBMISSIONS_QUERY,
   SINGLE_SUBMISSION_QUERY,
   SORT_DIRECTION_PARAM,
   SORT_KEY_PARAM,
@@ -82,7 +82,7 @@ const Submissions = ({ slug, extract, share = {} }) => {
   }, [debouncedSearch])
   const pathname = router.asPath.split('?')[0]
   const { loading, error, data, previousData, fetchMore } = useQuery(
-    QUESTIONNAIRE_SUBMISSIONS_QUERY,
+    QUESTIONNAIRE_WITH_SUBMISSIONS_QUERY,
     {
       variables: {
         slug,
