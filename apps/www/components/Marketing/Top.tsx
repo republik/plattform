@@ -1,12 +1,12 @@
-import React from 'react'
-import Lead from './Lead'
 import { mediaQueries, useColorContext } from '@project-r/styleguide'
+import MarketingNewsBox from 'components/Marketing/MarketingNewsBox'
 import { css } from 'glamor'
+import React from 'react'
 import { useMe } from '../../lib/context/MeContext'
-import MarketingHeader from './MarketingHeader'
-import MarketingNewsBox from './MarketingNewsBox'
-import Carousel, { CarouselProps } from './Carousel'
 import { HEADER_HEIGHT, HEADER_HEIGHT_MOBILE } from '../constants'
+import Carousel, { CarouselProps } from './Carousel'
+import Lead from './Lead'
+import MarketingHeader from './MarketingHeader'
 
 const Top: React.FC<CarouselProps> = (props) => {
   const { me } = useMe()

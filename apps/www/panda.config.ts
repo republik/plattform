@@ -1,12 +1,15 @@
 import { defineConfig } from '@pandacss/dev'
 import { presetRepublik } from '@app/theme/preset'
 import { presetChallengeAccepted } from '@app/theme/preset-challenge-accepted'
+import { presetCampaign2024 } from '@app/theme/preset-campaign-2024'
 
 export default defineConfig({
   // Whether to use css reset
   preflight: true,
 
-  presets: [presetRepublik, presetChallengeAccepted],
+  prefix: 'r',
+
+  presets: [presetRepublik, presetChallengeAccepted, presetCampaign2024],
 
   // conditions:
   // Where to look for your css declarations

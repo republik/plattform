@@ -1,12 +1,13 @@
 import CollectionRenderer from '@app/app/challenge-accepted/components/collection-render'
 import Container from '@app/components/container'
 import { Share } from '@app/components/share/share'
-import type { PersonDetailQuery } from '@app/graphql/cms/gql/graphql'
+import type { PersonDetailQuery } from '#graphql/cms/__generated__/gql/graphql'
 import { css } from '@app/styled-system/css'
 import { hstack, vstack } from '@app/styled-system/patterns'
 import { IconShare } from '@republik/icons'
 import Image from 'next/image'
 import { StructuredText } from 'react-datocms'
+import { PUBLIC_BASE_URL } from 'lib/constants'
 
 type PersonDetailProps = {
   person: PersonDetailQuery['person']
@@ -137,7 +138,7 @@ export function PersonDetail({ person, isMember = false }: PersonDetailProps) {
           </div>
           <Share
             title={`Challenge Accepted: ${person.name} | Republik`}
-            url={`${process.env.NEXT_PUBLIC_BASE_URL}/challenge-accepted/person/${person.slug}`}
+            url={`${PUBLIC_BASE_URL}/challenge-accepted/person/${person.slug}`}
             emailSubject={`Challenge Accepted: ${person.name} | Republik`}
           >
             <div

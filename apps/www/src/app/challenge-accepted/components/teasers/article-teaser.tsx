@@ -10,7 +10,8 @@ import { getMe } from '@app/lib/auth/me'
 import {
   ArticleTeaserDocument,
   ArticleTeaserQuery,
-} from '@app/graphql/republik-api/gql/graphql'
+} from '#graphql/republik-api/__generated__/gql/graphql'
+import { PUBLIC_BASE_URL } from 'lib/constants'
 
 const getResizefromURL = (url, size) => {
   const imgURL = new URL(url)
@@ -74,7 +75,7 @@ type ArticleProps = {
 export const ArticleTeaser = async ({ path, image }: ArticleProps) => {
   // To support path with query params, we use the URL API
   // and extract the pathname from it.
-  const url = new URL(path, process.env.NEXT_PUBLIC_BASE_URL)
+  const url = new URL(path, PUBLIC_BASE_URL)
 
   const { data } = await getClient().query<ArticleTeaserQuery>({
     query: ArticleTeaserDocument,

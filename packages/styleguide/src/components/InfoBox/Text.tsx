@@ -17,6 +17,7 @@ const styles = {
     ':nth-of-type(2)': {
       marginTop: 0,
     },
+    marginBlock: '1em 0',
   }),
 }
 

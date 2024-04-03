@@ -1,14 +1,16 @@
 import { PageHeader } from '@app/components/layout/header'
-import Footer from './footer'
-import { css } from '@app/styled-system/css'
-import { getPlatformInformation } from '@app/lib/util/useragent/platform-information'
-import { CTABanner } from '../cta-banner'
-import { getMe } from '@app/lib/auth/me'
-import { PullToRefresh } from './pull-to-refresh'
-import { draftMode } from 'next/headers'
 import { DraftModeIndicator } from '@app/components/layout/header/draft-mode-indicator'
+import { getMe } from '@app/lib/auth/me'
+import { getPlatformInformation } from '@app/lib/util/useragent/platform-information'
+import { css } from '@app/styled-system/css'
+import { draftMode } from 'next/headers'
+import { CTABanner } from '../cta-banner'
+import Footer from './footer'
+import { PullToRefresh } from './pull-to-refresh'
 
 type LayoutProps = {
+  showHeader?: boolean
+  showFooter?: boolean
   children: React.ReactNode
 }
 
@@ -16,10 +18,14 @@ type LayoutProps = {
  * The page-layout component is used to wrap the entire page. It contains the
  * header, footer, and the main content of the page.
  */
-export async function PageLayout({ children }: LayoutProps) {
+export async function PageLayout({
+  showHeader = true,
+  showFooter = true,
+  children,
+}: LayoutProps) {
   const { isNativeApp } = getPlatformInformation()
-  const me = await getMe()
   const draftModeEnabled = draftMode().isEnabled
+  const me = await getMe()
 
   return (
     <div
@@ -30,15 +36,18 @@ export async function PageLayout({ children }: LayoutProps) {
         flexDirection: 'column',
       })}
     >
-      <PageHeader
-        isLoggedIn={!!me}
-        hasActiveMembership={!!me?.activeMembership?.id}
-        portrait={{
-          portrait: me?.portrait,
-          name: me?.name,
-          email: me?.email,
-        }}
-      />
+      {showHeader && (
+        <PageHeader
+          isLoggedIn={!!me}
+          hasActiveMembership={!!me?.activeMembership?.id}
+          portrait={{
+            portrait: me?.portrait,
+            name: me?.name,
+            email: me?.email,
+          }}
+        />
+      )}
+
       <CTABanner />
       {draftModeEnabled && <DraftModeIndicator />}
       {isNativeApp ? (
@@ -59,7 +68,7 @@ export async function PageLayout({ children }: LayoutProps) {
         </div>
       )}
 
-      {!isNativeApp && <Footer />}
+      {!isNativeApp && showFooter && <Footer />}
     </div>
   )
 }

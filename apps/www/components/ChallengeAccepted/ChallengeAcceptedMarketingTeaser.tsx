@@ -94,12 +94,14 @@ const styles = {
   title: css({
     ...fontStyles.sansSerifMedium,
     fontSize: 32,
+    marginBlock: '0.8em',
     [mediaQueries.mUp]: {
       fontSize: 48,
     },
   }),
   text: css({
     ...fontStyles.sansSerifRegular18,
+    marginBlock: '1em',
   }),
   actions: css({
     display: 'flex',

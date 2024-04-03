@@ -26,6 +26,7 @@ import { Body, Content } from '../../components/Layout'
 import Header from '../../components/Layout/Header'
 import { withDefaultSSR } from '../../lib/apollo'
 import Links from '../../components/Users/Links'
+import Campaigns from '../../components/Users/Campaigns'
 
 const styles = {
   row: css({
@@ -74,6 +75,7 @@ const SectionSwitch = ({ userId, section }) => {
         <AuthSettings userId={userId} />
         <Mailbox userId={userId} narrow={3} />
         <Links userId={userId} />
+        <Campaigns userId={userId} />
         <AdminNotes userId={userId} />
       </div>
       <div {...styles.fifty}>
