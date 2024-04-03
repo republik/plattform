@@ -1,6 +1,6 @@
 # How to use the import script
 
-To import emails from mail chimp csv use the following command
+To import emails from an exported mail chimp csv-file use the following command
 
 **Local**
 
