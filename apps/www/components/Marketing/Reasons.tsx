@@ -55,6 +55,7 @@ const Reasons = ({ inNativeApp, reasons }: ReasonsProps) => {
 const styles = {
   title: css({
     ...fontStyles.sansSerifMedium24,
+    marginBlock: '0.8em',
   }),
   buttons: css({
     display: 'flex',

@@ -168,6 +168,7 @@ const styles = {
   anonymous: css({
     display: 'inline-block',
     '& svg': {
+      display: 'inline',
       width: BUTTON_SIZE_MOBILE,
       height: BUTTON_SIZE_MOBILE,
       [mediaQueries.mUp]: {

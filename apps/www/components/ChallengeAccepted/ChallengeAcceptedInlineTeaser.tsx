@@ -16,7 +16,6 @@ import Image from 'next/image'
 import ChallengeAcceptedSVG from '../../public/static/challenge-accepted/challenge-accepted.svg'
 import ChallengeAcceptedSVGDark from '../../public/static/challenge-accepted/challenge-accepted_dark.svg'
 import { useRouter } from 'next/router'
-import { useTheme } from 'next-themes'
 import { IconArrowRight } from '@republik/icons'
 import { EventTrackingContext } from '@app/lib/matomo/event-tracking'
 
@@ -70,7 +69,13 @@ export const CANewsLetterSignUp = () => {
   const { asPath } = useRouter()
   return (
     <div {...css({ width: '100%' })}>
-      <h2 {...css({ ...fontStyles.sansSerifBold, fontSize: 19 })}>
+      <h2
+        {...css({
+          ...fontStyles.sansSerifBold,
+          fontSize: 19,
+          marginBlock: '0.8em',
+        })}
+      >
         Für den Newsletter anmelden
       </h2>
       <EventTrackingContext category='ChallengeAcceptedPayNote' name={asPath}>
@@ -193,7 +198,6 @@ function CABottomInlineTeaser({
 
 function ChallengeAcceptedInlineTeaser(props: { position?: 'top' | 'bottom' }) {
   const { hasActiveMembership, meLoading } = useMe()
-  const { resolvedTheme } = useTheme()
 
   const { data: challengeAcceptedNLData, loading: challengeAcceptedNLLoading } =
     useQuery<CANewsterQueryResult, CANewsletterQueryVariables>(
@@ -221,6 +225,8 @@ function ChallengeAcceptedInlineTeaser(props: { position?: 'top' | 'bottom' }) {
     <div
       {...css({
         backgroundColor: 'var(--color-default)',
+        '[data-theme="dark"] & [data-logo-light]': { display: 'none' },
+        '[data-theme="light"] & [data-logo-dark]': { display: 'none' },
       })}
     >
       <Center>
@@ -239,11 +245,14 @@ function ChallengeAcceptedInlineTeaser(props: { position?: 'top' | 'bottom' }) {
           ) && (
             <Link {...plainLinkRule} href='/challenge-accepted'>
               <Image
-                src={
-                  resolvedTheme === 'dark'
-                    ? ChallengeAcceptedSVGDark
-                    : ChallengeAcceptedSVG
-                }
+                data-logo-light
+                src={ChallengeAcceptedSVG}
+                alt='Challenge Accepted'
+                width={150}
+              />
+              <Image
+                data-logo-dark
+                src={ChallengeAcceptedSVGDark}
                 alt='Challenge Accepted'
                 width={150}
               />
