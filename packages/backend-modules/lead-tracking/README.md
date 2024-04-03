@@ -9,8 +9,8 @@ node packages/backend-modules/lead-tracking/scripts/import.js -t 'mailchimp_tag'
 ```
 
 
-**heroku** (not tested yet)
+**heroku**
 
 ```sh
-heroku run --no-tty node packages/backend-modules/lead-tracking/scripts/import.js -t 'mailchimp_tag' < path_to_csv.csv
+heroku run --app [app-name] --no-tty node packages/backend-modules/lead-tracking/scripts/import.js -t 'mailchimp_tag' < path_to_csv.csv
 ```
