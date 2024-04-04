@@ -5,8 +5,8 @@ import {
   formatEventDateRange,
   isFutureEvent,
 } from '@app/lib/util/time-format'
-import { css } from '@app/styled-system/css'
-import { hstack } from '@app/styled-system/patterns'
+import { css } from '@republik/theme/css'
+import { hstack } from '@republik/theme/patterns'
 import { IconCalendar, IconShare } from '@republik/icons'
 import { PUBLIC_BASE_URL } from 'lib/constants'
 import Link from 'next/link'

@@ -1,6 +1,6 @@
 import { TypewriterContent } from '@app/app/(campaign)/components/typewriter-content'
 import { CTA } from '@app/app/(campaign)/jetzt/call-to-action'
-import { css } from '@app/styled-system/css'
+import { css } from '@republik/theme/css'
 
 export default async function Page() {
   return (

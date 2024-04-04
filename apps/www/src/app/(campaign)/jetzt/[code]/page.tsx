@@ -1,7 +1,7 @@
 import { getInviteeData } from '@app/app/(campaign)/campaign-data'
 import { TypewriterContent } from '@app/app/(campaign)/components/typewriter-content'
 import { CTA } from '@app/app/(campaign)/jetzt/call-to-action'
-import { css } from '@app/styled-system/css'
+import { css } from '@republik/theme/css'
 import { Metadata } from 'next'
 import Image from 'next/image'
 import { ReactNode } from 'react'

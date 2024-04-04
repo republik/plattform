@@ -1,4 +1,4 @@
-import { css } from '@app/styled-system/css'
+import { css } from '@republik/theme/css'
 
 export const Logo = () => {
   return (
