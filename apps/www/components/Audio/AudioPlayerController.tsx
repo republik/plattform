@@ -32,7 +32,7 @@ import {
 } from './types/AudioActionTracking'
 import createPersistedState from '../../lib/hooks/use-persisted-state'
 import { useGlobalAudioState } from './globalAudioState'
-import { useFragment } from '#graphql/cms/__generated__/gql'
+import { getFragmentData } from '#graphql/cms/__generated__/gql'
 import { AudioQueueItemFragmentDoc } from '#graphql/republik-api/__generated__/gql/graphql'
 
 const DEFAULT_PLAYBACK_RATE = 1
@@ -500,7 +500,7 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
       await saveActiveItemProgress({ currentTime: duration, isPlaying: false })
       const { data } = await removeAudioQueueItem(activePlayerItem.id)
       // eslint-disable-next-line react-hooks/rules-of-hooks
-      const audioQueueItems = useFragment(
+      const audioQueueItems = getFragmentData(
         AudioQueueItemFragmentDoc,
         data.audioQueueItems,
       )
@@ -579,7 +579,7 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
         } else {
           const { data } = await addAudioQueueItem(item, 1)
           // eslint-disable-next-line react-hooks/rules-of-hooks
-          const queue = useFragment(
+          const queue = getFragmentData(
             AudioQueueItemFragmentDoc,
             data.audioQueueItems,
           )

@@ -23,7 +23,7 @@ import {
   ReorderAudioQueueDocument,
   ReorderAudioQueueMutation,
 } from '#graphql/republik-api/__generated__/gql/graphql'
-import { useFragment } from '#graphql/cms/__generated__/gql'
+import { getFragmentData } from '#graphql/cms/__generated__/gql'
 
 const usePersistedAudioState = createPersistedState<AudioQueueItem>(
   'audio-player-local-state',
@@ -73,9 +73,10 @@ const useAudioQueue = (): {
     skip: meLoading || !hasAccess,
     errorPolicy: 'all',
   })
-  const audioQueueItems =
-    useFragment(AudioQueueItemFragmentDoc, meWithAudioQueue?.me?.audioQueue) ||
-    []
+  const audioQueueItems = getFragmentData(
+    AudioQueueItemFragmentDoc,
+    meWithAudioQueue?.me?.audioQueue || [],
+  )
   const isLoading = meLoading || audioQueueIsLoading
 
   const [localAudioItem, setLocalAudioItem] =

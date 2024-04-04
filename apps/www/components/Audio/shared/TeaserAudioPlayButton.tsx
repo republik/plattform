@@ -4,7 +4,7 @@ import useAudioQueue from '../hooks/useAudioQueue'
 import { useAudioContext } from '../AudioProvider'
 import { AudioPlayerLocations } from '../types/AudioActionTracking'
 import { IconPauseCircle, IconPlayCircleOutline } from '@republik/icons'
-import { useFragment } from '#graphql/cms/__generated__/gql'
+import { getFragmentData } from '#graphql/cms/__generated__/gql'
 import { AudioQueueItemFragmentDoc } from '#graphql/republik-api/__generated__/gql/graphql'
 
 type FrontAudioPlayButtonProps = {
@@ -43,7 +43,7 @@ const TeaserAudioPlayButton = ({ documentId }: FrontAudioPlayButtonProps) => {
         } else {
           addAudioQueueItem({ id: documentId } as never, 1).then(({ data }) => {
             // eslint-disable-next-line react-hooks/rules-of-hooks
-            const audioQueueItems = useFragment(
+            const audioQueueItems = getFragmentData(
               AudioQueueItemFragmentDoc,
               data.audioQueueItems,
             )
