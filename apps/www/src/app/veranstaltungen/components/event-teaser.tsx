@@ -57,6 +57,9 @@ export const EventTeaser = ({ isPage, isMember, event }: EventProps) => {
           color: 'text',
           _hover: { color: 'textSoft' },
         },
+        '& :where(p a)': {
+          textDecoration: 'underline',
+        },
         '& em': { fontStyle: 'italic' },
       })}
     >
@@ -86,10 +89,12 @@ export const EventTeaser = ({ isPage, isMember, event }: EventProps) => {
               textStyle: 'h1Sans',
               fontSize: { base: '3xl', md: '4xl' },
               mt: '-0.1lh',
-              '& a': { textDecoration: 'none' },
             })}
           >
-            <Link href={`/veranstaltungen/${event.slug}`}>
+            <Link
+              className={css({ textDecoration: 'none' })}
+              href={`/veranstaltungen/${event.slug}`}
+            >
               {event.title} <CMSItemStatus status={event._status} />
             </Link>
           </h2>
@@ -105,8 +110,12 @@ export const EventTeaser = ({ isPage, isMember, event }: EventProps) => {
               fontSize: 's',
               color: 'textSoft',
             },
+
             '& dd': {
               fontWeight: 'medium',
+              '& a': {
+                textDecoration: 'underline',
+              },
             },
           })}
         >

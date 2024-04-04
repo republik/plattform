@@ -59,6 +59,10 @@ export const EventTeaser = ({ isMember, event }: EventProps) => {
         '& h2, & h3, & h4, & h5, & h6': {
           fontWeight: 'bold',
         },
+        '& p a': {
+          color: 'link',
+          textDecoration: 'underline',
+        },
       })}
     >
       <div

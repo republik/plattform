@@ -196,6 +196,10 @@ export default async function Page({ searchParams }) {
               '& h2, & h3, & h4, & h5, & h6': {
                 fontWeight: 'bold',
               },
+              '& p a': {
+                color: 'link',
+                textDecoration: 'underline',
+              },
             })}
           >
             <StructuredText data={hub.outro.value} />
