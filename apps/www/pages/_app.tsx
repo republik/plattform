@@ -1,7 +1,6 @@
 import '../lib/polyfill'
 import '@app/app/root.css'
 import '../globals.css'
-import '../lib/setup-glamor'
 
 import Head from 'next/head'
 import { ColorContextProvider, RootColorVariables } from '@project-r/styleguide'
