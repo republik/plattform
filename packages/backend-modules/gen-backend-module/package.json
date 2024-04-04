@@ -1,6 +1,6 @@
 {
   "name": "@orbiting/gen-backend-module",
-  "description": "description",
+  "description": "Script forgenerating a typescript compatible backend module",
   "author": "Henning Dahlheim <henning.dahlheim@republik.ch>",
   "version": "1.0.0",
   "type": "module",
