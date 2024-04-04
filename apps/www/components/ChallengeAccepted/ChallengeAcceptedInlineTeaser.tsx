@@ -225,8 +225,11 @@ function ChallengeAcceptedInlineTeaser(props: { position?: 'top' | 'bottom' }) {
     <div
       {...css({
         backgroundColor: 'var(--color-default)',
-        '[data-theme="dark"] & [data-logo-light]': { display: 'none' },
-        '[data-theme="light"] & [data-logo-dark]': { display: 'none' },
+
+        ':root[data-theme="dark"] & [data-logo-light], [data-theme="dark"] & [data-logo-light]':
+          { display: 'none' },
+        ':root[data-theme="light"] & [data-logo-dark], [data-theme="light"] & [data-logo-dark]':
+          { display: 'none' },
       })}
     >
       <Center>

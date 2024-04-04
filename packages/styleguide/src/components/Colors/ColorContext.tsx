@@ -150,7 +150,7 @@ export const ColorContextLocalExtension: React.FC<{
         ':root &, [data-theme="light"] &': {
           ...lightColorCSSDefs,
         },
-        '[data-theme="dark"] &': {
+        ':root[data-theme="dark"] &, [data-theme="dark"] &': {
           ...darkColorCSSDefs,
         },
       }),
