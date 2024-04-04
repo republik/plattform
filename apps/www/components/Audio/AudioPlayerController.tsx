@@ -17,7 +17,6 @@ import { useInNativeApp } from '../../lib/withInNativeApp'
 import { AudioEvent, AudioEventHandlers } from './types/AudioEvent'
 import notifyApp from '../../lib/react-native/NotifyApp'
 import useAudioQueue from './hooks/useAudioQueue'
-import { AudioQueueItem } from './graphql/AudioQueueHooks'
 import useNativeAppEvent from '../../lib/react-native/useNativeAppEvent'
 import { useMediaProgress } from './MediaProgress'
 import useInterval from '../../lib/hooks/useInterval'
@@ -26,13 +25,15 @@ import { trackEvent } from '../../lib/matomo'
 import { AudioElementState } from './AudioPlayer/AudioPlaybackElement'
 import useTimeout from '../../lib/hooks/useTimeout'
 import { clamp } from './helpers/clamp'
-import { AudioPlayerItem } from './types/AudioPlayerItem'
+import { AudioPlayerItem, AudioQueueItem } from './types/AudioPlayerItem'
 import {
   AudioPlayerLocations,
   AudioPlayerActions,
 } from './types/AudioActionTracking'
 import createPersistedState from '../../lib/hooks/use-persisted-state'
 import { useGlobalAudioState } from './globalAudioState'
+import { useFragment } from '#graphql/cms/__generated__/gql'
+import { AudioQueueItemFragmentDoc } from '#graphql/republik-api/__generated__/gql/graphql'
 
 const DEFAULT_PLAYBACK_RATE = 1
 const SKIP_FORWARD_TIME = 30
@@ -498,13 +499,18 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
       // Save the progress of the current track at 100%
       await saveActiveItemProgress({ currentTime: duration, isPlaying: false })
       const { data } = await removeAudioQueueItem(activePlayerItem.id)
+      // eslint-disable-next-line react-hooks/rules-of-hooks
+      const audioQueueItems = useFragment(
+        AudioQueueItemFragmentDoc,
+        data.audioQueueItems,
+      )
 
       console.log('Audio Controller: onQueueAdvance', {
         data,
         autoPlay,
       })
 
-      audioQueueRef.current = data.audioQueueItems
+      audioQueueRef.current = [...audioQueueItems]
       setInitialized(true)
       if (data.audioQueueItems.length === 0) {
         setActivePlayerItem(null)
@@ -517,7 +523,7 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
           activePlayerItem?.document?.meta?.path,
         ])
       } else {
-        const nextItem = data.audioQueueItems[0]
+        const nextItem = audioQueueItems[0]
         setupNextAudioItem(nextItem, autoPlay).catch(handleError)
         trackEvent([
           AudioPlayerLocations.AUDIO_PLAYER,
@@ -572,7 +578,11 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
           nextUp = audioQueue?.[0]
         } else {
           const { data } = await addAudioQueueItem(item, 1)
-          const queue = data.audioQueueItems
+          // eslint-disable-next-line react-hooks/rules-of-hooks
+          const queue = useFragment(
+            AudioQueueItemFragmentDoc,
+            data.audioQueueItems,
+          )
           if (!queue || queue.length === 0) {
             return
           }

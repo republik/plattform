@@ -1,5 +1,5 @@
 import { timeFormat } from 'd3-time-format'
-import { AudioQueueItem } from '../graphql/AudioQueueHooks'
+import { AudioQueueItem } from '../types/AudioPlayerItem'
 
 type AudioPlayerActions = {
   onPlay: () => void

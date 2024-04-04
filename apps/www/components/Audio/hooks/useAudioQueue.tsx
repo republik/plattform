@@ -1,28 +1,29 @@
 import { useInNativeApp } from '../../../lib/withInNativeApp'
 import compareVersion from '../../../lib/react-native/CompareVersion'
 import { NEW_AUDIO_API_VERSION } from '../constants'
-import {
-  AddAudioQueueItemMutationData,
-  AUDIO_QUEUE_QUERY,
-  AudioQueueItem,
-  ClearAudioQueueMutationData,
-  MoveAudioQueueItemMutationData,
-  RemoveAudioQueueItemMutationData,
-  ReorderAudioQueueMutationData,
-  useAddAudioQueueItemMutation,
-  useAudioQueueQuery,
-  useClearAudioQueueMutation,
-  useMoveAudioQueueItemMutation,
-  useRemoveAudioQueueItemMutation,
-  useReorderAudioQueueMutation,
-} from '../graphql/AudioQueueHooks'
 import { useMe } from '../../../lib/context/MeContext'
 import createPersistedState from '../../../lib/hooks/use-persisted-state'
-import { AudioPlayerItem } from '../types/AudioPlayerItem'
-import { ApolloError, FetchResult } from '@apollo/client'
+import { AudioPlayerItem, AudioQueueItem } from '../types/AudioPlayerItem'
+import { ApolloError, FetchResult, useMutation, useQuery } from '@apollo/client'
 import OptimisticQueueResponseHelper from '../helpers/OptimisticQueueResponseHelper'
 import { reportError } from 'lib/errors/reportError'
 import { useEffect } from 'react'
+import {
+  AddAudioQueueItemsDocument,
+  AddAudioQueueItemsMutation,
+  AudioQueueEntityType,
+  AudioQueueItemFragmentDoc,
+  AudioQueueQueryDocument,
+  ClearAudioQueueDocument,
+  ClearAudioQueueMutation,
+  MoveAudioQueueItemDocument,
+  MoveAudioQueueItemMutation,
+  RemoveAudioQueueItemDocument,
+  RemoveAudioQueueItemMutation,
+  ReorderAudioQueueDocument,
+  ReorderAudioQueueMutation,
+} from '#graphql/republik-api/__generated__/gql/graphql'
+import { useFragment } from '#graphql/cms/__generated__/gql'
 
 const usePersistedAudioState = createPersistedState<AudioQueueItem>(
   'audio-player-local-state',
@@ -44,18 +45,18 @@ const useAudioQueue = (): {
   addAudioQueueItem: (
     item: AudioPlayerItem,
     position?: number,
-  ) => Promise<FetchResult<AddAudioQueueItemMutationData>>
+  ) => Promise<FetchResult<AddAudioQueueItemsMutation>>
   removeAudioQueueItem: (
     audioItemId: string,
-  ) => Promise<FetchResult<RemoveAudioQueueItemMutationData>>
-  clearAudioQueue: () => Promise<FetchResult<ClearAudioQueueMutationData>>
+  ) => Promise<FetchResult<RemoveAudioQueueItemMutation>>
+  clearAudioQueue: () => Promise<FetchResult<ClearAudioQueueMutation>>
   moveAudioQueueItem: (
     audioItemId: string,
     position: number,
   ) => Promise<unknown>
   reorderAudioQueue: (
     reorderedQueueItems: AudioQueueItem[],
-  ) => Promise<FetchResult<ReorderAudioQueueMutationData>>
+  ) => Promise<FetchResult<ReorderAudioQueueMutation>>
   isAudioQueueAvailable: boolean
   checkIfHeadOfQueue: (documentId: string) => AudioQueueItem
   checkIfInQueue: (audioItemId: string) => AudioQueueItem
@@ -68,10 +69,13 @@ const useAudioQueue = (): {
     loading: audioQueueIsLoading,
     error: audioQueueHasError,
     refetch: refetchAudioQueue,
-  } = useAudioQueueQuery({
+  } = useQuery(AudioQueueQueryDocument, {
     skip: meLoading || !hasAccess,
     errorPolicy: 'all',
   })
+  const audioQueueItems =
+    useFragment(AudioQueueItemFragmentDoc, meWithAudioQueue?.me?.audioQueue) ||
+    []
   const isLoading = meLoading || audioQueueIsLoading
 
   const [localAudioItem, setLocalAudioItem] =
@@ -92,28 +96,28 @@ const useAudioQueue = (): {
     cache,
     { data: { audioQueueItems } },
   ) => {
-    const { me } = cache.readQuery({ query: AUDIO_QUEUE_QUERY })
+    const { me } = cache.readQuery({ query: AudioQueueQueryDocument })
     cache.writeQuery({
-      query: AUDIO_QUEUE_QUERY,
+      query: AudioQueueQueryDocument,
       data: {
         me: { ...me, audioQueue: audioQueueItems },
       },
     })
   }
 
-  const [addAudioQueueItem] = useAddAudioQueueItemMutation({
+  const [addAudioQueueItem] = useMutation(AddAudioQueueItemsDocument, {
     update: modifyApolloCacheWithUpdatedPlaylist,
   })
-  const [removeAudioQueueItem] = useRemoveAudioQueueItemMutation({
+  const [removeAudioQueueItem] = useMutation(RemoveAudioQueueItemDocument, {
     update: modifyApolloCacheWithUpdatedPlaylist,
   })
-  const [moveAudioQueueItem] = useMoveAudioQueueItemMutation({
+  const [moveAudioQueueItem] = useMutation(MoveAudioQueueItemDocument, {
     update: modifyApolloCacheWithUpdatedPlaylist,
   })
-  const [clearAudioQueue] = useClearAudioQueueMutation({
+  const [clearAudioQueue] = useMutation(ClearAudioQueueDocument, {
     update: modifyApolloCacheWithUpdatedPlaylist,
   })
-  const [reorderAudioQueue] = useReorderAudioQueueMutation({
+  const [reorderAudioQueue] = useMutation(ReorderAudioQueueDocument, {
     update: modifyApolloCacheWithUpdatedPlaylist,
   })
 
@@ -125,19 +129,19 @@ const useAudioQueue = (): {
   const handleAddQueueItem = async (
     item: AudioPlayerItem,
     position?: number,
-  ): Promise<FetchResult<AddAudioQueueItemMutationData>> => {
+  ): Promise<FetchResult<AddAudioQueueItemsMutation>> => {
     if (hasAccess) {
       return addAudioQueueItem({
         variables: {
           entity: {
             id: item.id,
-            type: 'Document',
+            type: AudioQueueEntityType.Document,
           },
           sequence: position,
         },
       })
     } else {
-      const mockAudioQueueItem = {
+      const mockAudioQueueItem: AudioQueueItem = {
         id: item.id,
         document: item,
         sequence: 0,
@@ -157,9 +161,8 @@ const useAudioQueue = (): {
    */
   const handleRemoveQueueItem = async (
     audioItemId: string,
-  ): Promise<FetchResult<RemoveAudioQueueItemMutationData>> => {
+  ): Promise<FetchResult<RemoveAudioQueueItemMutation>> => {
     if (hasAccess) {
-      const audioQueueItems = meWithAudioQueue?.me?.audioQueue || []
       return removeAudioQueueItem({
         variables: {
           id: audioItemId,
@@ -183,9 +186,8 @@ const useAudioQueue = (): {
   const handleMoveQueueItem = async (
     audioItemId: string,
     position: number,
-  ): Promise<FetchResult<MoveAudioQueueItemMutationData>> => {
+  ): Promise<FetchResult<MoveAudioQueueItemMutation>> => {
     if (hasAccess) {
-      const audioQueueItems = meWithAudioQueue?.me?.audioQueue || []
       return moveAudioQueueItem({
         variables: {
           id: audioItemId,
@@ -208,7 +210,7 @@ const useAudioQueue = (): {
   }
 
   const handleClearQueue = async (): Promise<
-    FetchResult<ClearAudioQueueMutationData>
+    FetchResult<ClearAudioQueueMutation>
   > => {
     if (hasAccess) {
       return clearAudioQueue({
@@ -228,7 +230,7 @@ const useAudioQueue = (): {
 
   const handleQueueReorder = async (
     reorderedQueue: AudioQueueItem[],
-  ): Promise<FetchResult<ReorderAudioQueueMutationData>> => {
+  ): Promise<FetchResult<ReorderAudioQueueMutation>> => {
     if (hasAccess) {
       return reorderAudioQueue({
         variables: {
@@ -254,8 +256,8 @@ const useAudioQueue = (): {
     if (!hasAccess && localAudioItem?.document?.id === documentId) {
       return localAudioItem
     }
-    if (meWithAudioQueue?.me?.audioQueue?.[0]?.document?.id === documentId) {
-      return meWithAudioQueue?.me?.audioQueue?.[0]
+    if (audioQueueItems[0]?.document?.id === documentId) {
+      return audioQueueItems[0]
     }
   }
 
@@ -263,7 +265,7 @@ const useAudioQueue = (): {
     if (!hasAccess && localAudioItem?.document?.id === documentId) {
       return localAudioItem
     }
-    return meWithAudioQueue?.me?.audioQueue?.find(
+    return audioQueueItems.find(
       (audioQueueItem) => audioQueueItem.document?.id === documentId,
     )
   }
@@ -272,15 +274,13 @@ const useAudioQueue = (): {
     if (!hasAccess && localAudioItem?.document?.id === documentId) {
       return 0
     }
-    return meWithAudioQueue?.me?.audioQueue?.findIndex(
-      (item) => item.document?.id === documentId,
-    )
+    return audioQueueItems.findIndex((item) => item.document?.id === documentId)
   }
 
   const resolvedQueue = !hasAccess
     ? [localAudioItem].filter(Boolean)
     : meWithAudioQueue
-    ? meWithAudioQueue?.me?.audioQueue ?? []
+    ? audioQueueItems ?? []
     : null
 
   // In case faulty audio queue items are in the queue, remove them
