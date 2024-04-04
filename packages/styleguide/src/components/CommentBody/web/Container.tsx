@@ -5,6 +5,7 @@ import { mUp } from '../../../theme/mediaQueries'
 import { serifRegular14, serifRegular16 } from '../../Typography/styles'
 import { Editorial } from '../../Typography'
 import { convertStyleToRem } from '../../Typography/utils'
+import { CommentBodyContainerProps } from '../interfaces'
 
 const styles = {
   container: css({
@@ -22,8 +23,12 @@ const styles = {
   }),
 }
 
-export default ({ children }) => (
-  <div {...styles.container} {...Editorial.fontRule}>
-    {children}
-  </div>
-)
+export default function CommentBodyContainer({
+  children,
+}: CommentBodyContainerProps) {
+  return (
+    <div {...styles.container} {...Editorial.fontRule}>
+      {children}
+    </div>
+  )
+}

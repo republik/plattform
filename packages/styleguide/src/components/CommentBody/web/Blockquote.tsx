@@ -5,6 +5,11 @@ import { useColorContext } from '../../Colors/useColorContext'
 import { mUp } from '../../../theme/mediaQueries'
 import { serifRegular14, serifRegular16 } from '../../Typography/styles'
 import { convertStyleToRem } from '../../Typography/utils'
+import {
+  BlockQuoteNestedProps,
+  BlockQuoteParagraphProps,
+  BlockQuoteProps,
+} from '../interfaces'
 
 const styles = {
   blockquote: css({
@@ -34,11 +39,11 @@ const styles = {
   }),
 }
 
-export const BlockQuoteParagraph = ({ children }) => (
+export const BlockQuoteParagraph = ({ children }: BlockQuoteParagraphProps) => (
   <p {...styles.paragraph}>{children}</p>
 )
 
-export const BlockQuoteNested = ({ children }) => {
+export const BlockQuoteNested = ({ children }: BlockQuoteNestedProps) => {
   const [colorScheme] = useColorContext()
   return (
     <div
@@ -52,7 +57,7 @@ export const BlockQuoteNested = ({ children }) => {
   )
 }
 
-export default ({ children }) => {
+export default function BlockQuote({ children }: BlockQuoteProps) {
   const [colorScheme] = useColorContext()
   return (
     <div

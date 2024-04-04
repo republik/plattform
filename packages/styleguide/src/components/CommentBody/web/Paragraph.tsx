@@ -12,6 +12,13 @@ import {
 } from '../../Typography/styles'
 import { convertStyleToRem } from '../../Typography/utils'
 import { useColorContext } from '../../Colors/useColorContext'
+import {
+  CodeProps,
+  DefinitionProps,
+  FeaturedTextProps,
+  HeadingProps,
+  ParagraphProps,
+} from '../interfaces'
 
 const styles = {
   p: css({
@@ -51,23 +58,25 @@ const styles = {
   }),
 }
 
-const Paragraph = ({ children }) => <p {...styles.p}>{children}</p>
+const Paragraph = ({ children }: ParagraphProps) => (
+  <p {...styles.p}>{children}</p>
+)
 
-export const FeaturedText = ({ children }) => (
+export const FeaturedText = ({ children }: FeaturedTextProps) => (
   <span {...styles.featuredText}>{children}</span>
 )
 
-export const Heading = ({ children }) => (
+export const Heading = ({ children }: HeadingProps) => (
   <Paragraph>
     <strong>{children}</strong>
   </Paragraph>
 )
 
-export const Definition = ({ children }) => (
+export const Definition = ({ children }: DefinitionProps) => (
   <p {...styles.definition}>{children}</p>
 )
 
-export const Code = ({ children }) => {
+export const Code = ({ children }: CodeProps) => {
   const [colorScheme] = useColorContext()
   return (
     <code {...styles.code} {...colorScheme.set('backgroundColor', 'hover')}>

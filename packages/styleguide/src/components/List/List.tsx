@@ -9,6 +9,7 @@ import { mUp } from '../../theme/mediaQueries'
 import { convertStyleToRem, pxToRem } from '../Typography/utils'
 import { editorialFontRule } from '../Typography/fontRules'
 import { useColorContext } from '../Colors/useColorContext'
+import { ChildrenProps } from '../../types/base'
 
 export const LIST_PADDING = 22
 const MARGIN = 8
@@ -68,8 +69,7 @@ const orderedListCompactStyle = merge(styles.orderedList, {
   },
 })
 
-type UnorderedListProps = {
-  children: React.ReactNode
+interface UnorderedListProps extends ChildrenProps {
   attributes?: React.ComponentPropsWithoutRef<'ul'>
   compact?: boolean
 }
@@ -89,8 +89,7 @@ export const UnorderedList = ({
   )
 }
 
-type OrderedListProps = {
-  children: React.ReactNode
+interface OrderedListProps extends ChildrenProps {
   attributes?: React.ComponentPropsWithoutRef<'ol'>
   start?: number
   compact?: boolean
@@ -113,7 +112,7 @@ export const OrderedList = ({
   )
 }
 
-type ListItemProps = {
+export interface ListItemProps extends ChildrenProps {
   children: React.ReactNode
   attributes?: React.ComponentPropsWithoutRef<'li'>
   style?: React.CSSProperties
@@ -138,13 +137,10 @@ export const ListItem = ({
   )
 }
 
-type ListProps = {
-  children: React.ReactNode
+export interface ListProps extends ChildrenProps {
   data: {
     compact?: boolean
-    ordered?: boolean
-    start?: number
-  }
+  } & ({ ordered: true; start?: number } | { ordered?: false })
   attributes?: React.ComponentPropsWithoutRef<'ul' | 'ol'>
 }
 

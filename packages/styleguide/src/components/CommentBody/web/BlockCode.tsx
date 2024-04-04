@@ -3,6 +3,7 @@ import { css } from 'glamor'
 
 import { mUp } from '../../../theme/mediaQueries'
 import { useColorContext } from '../../Colors/useColorContext'
+import { BlockCodeProps } from '../interfaces'
 const styles = {
   pre: css({
     margin: '20px auto',
@@ -25,7 +26,7 @@ const styles = {
   }),
 }
 
-export default ({ children }) => {
+export default function BlockCode({ children }: BlockCodeProps) {
   const [colorScheme] = useColorContext()
   return (
     <pre {...styles.pre}>

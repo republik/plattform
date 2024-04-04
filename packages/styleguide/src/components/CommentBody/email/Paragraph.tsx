@@ -1,6 +1,14 @@
 import React from 'react'
 import colors from '../../../theme/colors'
 import { fontFamilies } from '../../../theme/fonts'
+import {
+  CodeProps,
+  DefinitionProps,
+  HeadingProps,
+  LinkProps,
+  ParagraphProps,
+  StrikeThroughProps,
+} from '../interfaces'
 
 export const paragraphStyle = {
   color: colors.text,
@@ -35,27 +43,29 @@ const definitionStyle = {
   margin: '10px 0',
 }
 
-export const Link = ({ children, href, title }) => (
+export const Link = ({ children, href, title }: LinkProps) => (
   <a href={href} title={title} style={linkStyle}>
     {children}
   </a>
 )
 
-export const StrikeThrough = ({ children }) => (
+export const StrikeThrough = ({ children }: StrikeThroughProps) => (
   <span style={strikeThroughStyle}>{children}</span>
 )
 
-export const Code = ({ children }) => <code style={codeStyle}>{children}</code>
+export const Code = ({ children }: CodeProps) => (
+  <code style={codeStyle}>{children}</code>
+)
 
-export const Definition = ({ children }) => (
+export const Definition = ({ children }: DefinitionProps) => (
   <p style={definitionStyle}>{children}</p>
 )
 
-export const Paragraph = ({ children }) => (
+export const Paragraph = ({ children }: ParagraphProps) => (
   <p style={paragraphStyle}>{children}</p>
 )
 
-export const Heading = ({ children }) => (
+export const Heading = ({ children }: HeadingProps) => (
   <Paragraph>
     <strong>{children}</strong>
   </Paragraph>
