@@ -11,7 +11,7 @@ import { useTrackEvent } from '@app/lib/matomo/event-tracking'
 import { css } from '@republik/theme/css'
 import { stack, wrap } from '@republik/theme/patterns'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useId, useState } from 'react'
+import { ReactNode, useId, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
@@ -32,6 +32,7 @@ type EmailSignUpProps = {
   newsletterName: NewsletterName
   newsletterSetting?: { id: string; name: string; subscribed: boolean }
   id?: string
+  children?: ReactNode
 }
 
 export function EmailSignUp({
@@ -42,6 +43,7 @@ export function EmailSignUp({
   newsletterName,
   newsletterSetting,
   id,
+  children,
 }: EmailSignUpProps) {
   const fieldId = useId()
   const [signUpForNewsletter] = useMutation(SignUpForNewsletterDocument)
@@ -119,20 +121,25 @@ export function EmailSignUp({
   }
 
   return (
-    <div id={id}>
+    <div
+      id={id}
+      className={css({
+        fontSize: '2xl',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '4',
+      })}
+    >
+      {description && <p>{description}</p>}
       <h2
         className={css({
-          mb: '6',
-          textStyle: 'h1Sans',
+          // mb: '6',
+          // textStyle: 'h1Sans',
           fontWeight: 'bold',
         })}
-        style={{
-          letterSpacing: '-1px',
-        }}
       >
         {title || 'Für den Newsletter anmelden'}
       </h2>
-      {description}
       {!signUpSuccessfulText ? (
         <>
           {me && newsletterSetting?.subscribed === false ? (
@@ -147,7 +154,7 @@ export function EmailSignUp({
                 fontWeight: 'bold',
                 fontSize: 'xl',
                 cursor: 'pointer',
-                color: 'text',
+                color: 'contrast',
                 width: '100%',
                 md: {
                   width: 'auto',
@@ -236,7 +243,7 @@ export function EmailSignUp({
                     fontWeight: 'bold',
                     fontSize: 'xl',
                     cursor: 'pointer',
-                    color: 'text',
+                    color: 'contrast',
                     width: '100%',
                     md: {
                       width: 'auto',
@@ -279,9 +286,8 @@ export function EmailSignUp({
               </form>
             </>
           )}
-          {tagline && (
-            <p className={css({ fontSize: 'xl', mt: '4' })}>{tagline}</p>
-          )}
+
+          <div>{children}</div>
         </>
       ) : (
         <p

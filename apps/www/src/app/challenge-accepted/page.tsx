@@ -93,6 +93,16 @@ export default async function Page({ searchParams }) {
 
   return (
     <EventTrackingContext category='ChallengeAcceptedLandingPage'>
+      <Container>
+        <CANewsletterSignUp
+          me={me}
+          id='newsletter-top'
+          description={hub.newsletterSignupIntro}
+          title={hub.newsletterSignupTagline}
+        >
+          {<StructuredText data={hub.newsletterSignupBenefits?.value} />}
+        </CANewsletterSignUp>
+      </Container>
       <h1
         className={css({
           mt: '8',
@@ -131,12 +141,6 @@ export default async function Page({ searchParams }) {
             <StructuredText data={hub.introduction.value} />
           </section>
 
-          <CANewsletterSignUp
-            me={me}
-            id='newsletter-top'
-            tagline={hub.newsletterSignupTagline}
-          />
-
           <section>
             <h2
               className={css({
@@ -167,10 +171,9 @@ export default async function Page({ searchParams }) {
             />
           </section>
           <CANewsletterSignUp
-            title='Keine neuen Beiträge und Verstaltungen verpassen: für den
-                  Newsletter anmelden.'
             me={me}
-            tagline={hub.newsletterSignupTagline}
+            description={hub.newsletterSignupIntro}
+            title={hub.newsletterSignupTagline}
           />
 
           <section

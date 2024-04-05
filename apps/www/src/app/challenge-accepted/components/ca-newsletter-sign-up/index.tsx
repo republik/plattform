@@ -16,9 +16,8 @@ type CANewsletterSignUpProps = {
   // Tagline below the form
   tagline?: string
   id?: string
+  children?: ReactNode
 }
-
-const NEWSLETTER_NAME: NewsletterName = NewsletterName.Climate
 
 export async function CANewsletterSignUp({
   me,
@@ -26,17 +25,19 @@ export async function CANewsletterSignUp({
   description,
   tagline,
   id,
+  children,
 }: CANewsletterSignUpProps) {
   const { data } = await getClient().query({
     query: CaNewsletterDocument,
     variables: {
-      name: 'CLIMATE',
+      name: NewsletterName.Climate,
     },
   })
 
   const climateNLSettings = data?.me?.newsletterSettings?.subscriptions?.find(
-    (nl) => nl.name === NEWSLETTER_NAME,
+    (nl) => nl.name === NewsletterName.Climate,
   )
+
   if (me && climateNLSettings?.subscribed) {
     return null
   }
@@ -49,8 +50,10 @@ export async function CANewsletterSignUp({
       title={title}
       description={description}
       tagline={tagline}
-      newsletterName={NEWSLETTER_NAME}
+      newsletterName={NewsletterName.Climate}
       id={id}
-    />
+    >
+      {children}
+    </EmailSignUp>
   )
 }

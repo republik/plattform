@@ -5,6 +5,7 @@ query PersonDetail($slug: String!) {
       url
     }
     newsletterSignupTagline
+    newsletterSignupIntro
   }
   person: challengeAcceptedPerson(filter: { slug: { eq: $slug } }) {
     id
