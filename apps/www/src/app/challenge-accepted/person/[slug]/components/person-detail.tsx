@@ -132,6 +132,10 @@ export function PersonDetail({ person, isMember = false }: PersonDetailProps) {
               '& h2, & h3, & h4, & h5, & h6': {
                 fontWeight: 'bold',
               },
+              '& :where(a)': {
+                color: 'link',
+                textDecoration: 'underline',
+              },
             })}
           >
             <StructuredText data={person.bio.value} />
