@@ -42,7 +42,6 @@ const TeaserAudioPlayButton = ({ documentId }: FrontAudioPlayButtonProps) => {
           toggleAudioPlayback()
         } else {
           addAudioQueueItem({ id: documentId } as never, 1).then(({ data }) => {
-            // eslint-disable-next-line react-hooks/rules-of-hooks
             const audioQueueItems = getFragmentData(
               AudioQueueItemFragmentDoc,
               data.audioQueueItems,

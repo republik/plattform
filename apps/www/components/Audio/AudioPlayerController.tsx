@@ -499,7 +499,6 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
       // Save the progress of the current track at 100%
       await saveActiveItemProgress({ currentTime: duration, isPlaying: false })
       const { data } = await removeAudioQueueItem(activePlayerItem.id)
-      // eslint-disable-next-line react-hooks/rules-of-hooks
       const audioQueueItems = getFragmentData(
         AudioQueueItemFragmentDoc,
         data.audioQueueItems,
@@ -578,7 +577,6 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
           nextUp = audioQueue?.[0]
         } else {
           const { data } = await addAudioQueueItem(item, 1)
-          // eslint-disable-next-line react-hooks/rules-of-hooks
           const queue = getFragmentData(
             AudioQueueItemFragmentDoc,
             data.audioQueueItems,
