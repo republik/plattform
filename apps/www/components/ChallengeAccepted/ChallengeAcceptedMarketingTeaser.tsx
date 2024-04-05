@@ -39,9 +39,7 @@ function ChallengeAcceptedMarketingTeaser() {
             alt='Challenge Accepted'
             width={400}
             objectFit='contain'
-            style={{
-              maxWidth: '100%',
-            }}
+            {...styles.image}
           />{' '}
         </Link>
       </div>
@@ -53,12 +51,9 @@ function ChallengeAcceptedMarketingTeaser() {
           Challenge accepted.
         </h2>
         <p {...styles.text}>
-          Wir richten den Blick auf Menschen, die die Herausforderung annehmen.
-          Von der Anwältin zum Autohändler. Vom Bergbauern zur Bürgermeisterin.
-          Von der Schriftstellerin zum Skirennfahrer. Gemeinsam gehen wir der
-          Frage nach: Wie kommen wir aus dieser Krise wieder raus? Neugierig,
-          kritisch, konstruktiv. Mit Artikeln, Debatten, Veranstaltungen. Sind
-          Sie dabei?
+          Der Newsletter für alle, die sich der Klimakrise stellen. Und
+          gemeinsam Wege aus der Krise finden wollen. Neugierig, kritisch,
+          konstruktiv.
         </p>
         <div {...styles.actions}>
           <CANewsLetterSignUp />
@@ -78,7 +73,7 @@ const styles = {
   container: css({
     display: 'grid',
     gridTemplateColumns: '1fr',
-    gap: '1rem',
+    gap: '2rem',
     padding: '2rem',
     gridAutoRows: 'auto',
     [mediaQueries.mUp]: {
@@ -90,14 +85,14 @@ const styles = {
     justifyContent: 'center',
     alignItems: 'center',
   }),
-  image: css({}),
+  image: css({
+    width: 300,
+    maxWidth: '100%',
+  }),
   title: css({
-    ...fontStyles.sansSerifMedium,
+    ...fontStyles.sansSerifBold,
     fontSize: 32,
-    marginBlock: '0.8em',
-    [mediaQueries.mUp]: {
-      fontSize: 48,
-    },
+    marginBottom: '1.5rem',
   }),
   text: css({
     ...fontStyles.sansSerifRegular18,
