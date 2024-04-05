@@ -117,8 +117,9 @@ function CABottomInlineTeaser({
     return (
       <>
         <CAP>
-          Die Klimakrise ist hier. Die Lage ist ernst. Wir richten den Blick auf
-          Menschen, die in der Klimakrise einen Unterschied machen wollen.
+          Die Klimakrise ist hier. Die Lage ist ernst.{' '}
+          <em>Challenge accepted.</em> Alle Artikel, alle Veranstaltungen, alle
+          Newsletter auf einen Blick.
         </CAP>
         <div {...styles.actionWrapper}>
           <CAOverViewLink />
