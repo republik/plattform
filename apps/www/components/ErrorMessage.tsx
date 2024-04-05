@@ -4,7 +4,12 @@ import { useColorContext, Interaction, Label } from '@project-r/styleguide'
 
 const { P } = Interaction
 
-export const ErrorContainer = ({ children, style }) => {
+interface ErrorContainerProps {
+  children: React.ReactNode
+  style?: React.CSSProperties
+}
+
+export function ErrorContainer({ children, style }: ErrorContainerProps) {
   const [colorScheme] = useColorContext()
   return (
     <div {...colorScheme.set('color', 'error')} style={style}>
@@ -13,7 +18,13 @@ export const ErrorContainer = ({ children, style }) => {
   )
 }
 
-const ErrorMessage = ({ error, style, children }) => {
+interface ErrorMessageProps {
+  children?: React.ReactNode
+  error: Error
+  style?: React.CSSProperties
+}
+
+function ErrorMessage({ error, style, children }: ErrorMessageProps) {
   const [colorScheme] = useColorContext()
   return (
     <P style={{ margin: '20px 0', ...style }}>
@@ -25,7 +36,12 @@ const ErrorMessage = ({ error, style, children }) => {
   )
 }
 
-export const ErrorLabel = ({ error, children }) => {
+interface ErrorLabelProps {
+  children?: React.ReactNode
+  error: Error
+}
+
+export function ErrorLabel({ error, children }: ErrorLabelProps) {
   const [colorScheme] = useColorContext()
   return (
     <Label>
