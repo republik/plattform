@@ -44,12 +44,6 @@ function ChallengeAcceptedMarketingTeaser() {
         </Link>
       </div>
       <div>
-        <h2 {...styles.title}>
-          Die Klimakrise ist hier.
-          <br />
-          Die Lage ist ernst. <br />
-          Challenge accepted.
-        </h2>
         <p {...styles.text}>
           Der Newsletter für alle, die sich der Klimakrise stellen. Und
           gemeinsam Wege aus der Krise finden wollen. Neugierig, kritisch,
@@ -89,14 +83,9 @@ const styles = {
     width: 300,
     maxWidth: '100%',
   }),
-  title: css({
-    ...fontStyles.sansSerifBold,
-    fontSize: 32,
-    marginBottom: '1.5rem',
-  }),
   text: css({
-    ...fontStyles.sansSerifRegular18,
-    marginBlock: '1em',
+    ...fontStyles.sansSerifRegular19,
+    marginBlockEnd: '1em',
   }),
   actions: css({
     display: 'flex',
