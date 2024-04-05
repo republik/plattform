@@ -1,16 +1,18 @@
 import { useState } from 'react'
 import { css } from 'glamor'
 import { useTranslation } from '../../lib/withT'
-import { userProlitterisConsentFragment } from '../../lib/apollo/withMe'
 
-import Box from '../Frame/Box'
 import ErrorMessage from '../ErrorMessage'
 import { P } from './Elements'
 import { InlineSpinner, Checkbox, Loader } from '@project-r/styleguide'
 
-import { gql, useMutation } from '@apollo/client'
-import { useMe } from '../../lib/context/MeContext'
+import { useMutation, useQuery } from '@apollo/client'
 import { PROLITTERIS_OPT_OUT_CONSENT } from '../../lib/constants'
+import {
+  ProlitterisConsentQueryDocument,
+  RevokeProlitterisConsentDocument,
+  SubmitProlitterisConsentDocument,
+} from '#graphql/republik-api/__generated__/gql/graphql'
 
 const styles = {
   headline: css({
@@ -31,38 +33,30 @@ const styles = {
   }),
 }
 
-const CONSENT_TO_PROLITTERIS = gql`
-  mutation submitConsent {
-    submitConsent(name: "${PROLITTERIS_OPT_OUT_CONSENT}") {
-      id
-      ...ProlitterisConsent
-    }
-  }
-  ${userProlitterisConsentFragment}
-`
-
-const REVOKE_PROLITTERIS = gql`
-  mutation revokeConsent {
-    revokeConsent(name: "${PROLITTERIS_OPT_OUT_CONSENT}") {
-      id
-      ...ProlitterisConsent
-    }
-  }
-  ${userProlitterisConsentFragment}
-`
-
 const ProlitterisSettings = () => {
-  const { me, meLoading } = useMe()
   const { t } = useTranslation()
-  const [revokeOptOut] = useMutation(REVOKE_PROLITTERIS)
-  const [submitOptOut] = useMutation(CONSENT_TO_PROLITTERIS)
+  const { data, loading, error } = useQuery(ProlitterisConsentQueryDocument, {
+    variables: { prolitterisConsent: PROLITTERIS_OPT_OUT_CONSENT },
+  })
+  const [revokeOptOut] = useMutation(RevokeProlitterisConsentDocument, {
+    variables: {
+      prolitterisConsent: PROLITTERIS_OPT_OUT_CONSENT,
+    },
+  })
+  const [submitOptOut] = useMutation(SubmitProlitterisConsentDocument, {
+    variables: {
+      prolitterisConsent: PROLITTERIS_OPT_OUT_CONSENT,
+    },
+  })
+
   const [mutating, isMutating] = useState(false)
-  const [serverError, setServerError] = useState(false)
-  const isActive = me && me.prolitterisOptOut !== true
+  const [serverError, setServerError] = useState<Error | null>(null)
+  const isActive = data && data.me?.prolitterisOptOut !== true
 
   return (
     <Loader
-      loading={meLoading}
+      loading={loading}
+      error={error?.graphQLErrors?.[0]}
       render={() => (
         <>
           <P style={{ margin: '20px 0' }}>

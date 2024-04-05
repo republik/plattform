@@ -28,5 +28,27 @@ query Me {
       graceEndDate
       canProlong
     }
+    progressConsent: hasConsentedTo(name: "PROGRESS")
+  }
+}
+
+query ProlitterisConsentQuery($prolitterisConsent: String!) {
+  me {
+    id
+    prolitterisOptOut: hasConsentedTo(name: $prolitterisConsent)
+  }
+}
+
+mutation RevokeProlitterisConsent($prolitterisConsent: String!) {
+  revokeConsent(name: $prolitterisConsent) {
+    id
+    prolitterisOptOut: hasConsentedTo(name: $prolitterisConsent)
+  }
+}
+
+mutation SubmitProlitterisConsent($prolitterisConsent: String!) {
+  submitConsent(name: $prolitterisConsent) {
+    id
+    prolitterisOptOut: hasConsentedTo(name: $prolitterisConsent)
   }
 }
