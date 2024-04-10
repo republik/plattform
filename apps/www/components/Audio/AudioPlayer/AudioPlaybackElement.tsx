@@ -1,8 +1,8 @@
 import { AudioPlayerProps } from '../AudioPlayerController'
 import { useCallback, useEffect, useId, useRef, useState } from 'react'
 import useInterval from '../../../lib/hooks/useInterval'
-import { AudioQueueItem } from '../graphql/AudioQueueHooks'
 import { useMediaSession } from '../hooks/useMediaSession'
+import { AudioQueueItem } from '../types/AudioPlayerItem'
 
 const DEFAULT_SYNC_INTERVAL = 500 // in ms
 

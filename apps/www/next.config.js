@@ -3,7 +3,7 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true',
 })
 
-const { NODE_ENV, NEXT_PUBLIC_CDN_FRONTEND_BASE_URL } = process.env
+const isProduction = process.env.NODE_ENV === 'production'
 
 const buildId =
   process.env.SOURCE_VERSION?.substring(0, 10) ||
@@ -25,12 +25,35 @@ const unprefixedStyleguideEnvVariables = {
     }, []),
 }
 
+function appendProtocol(href) {
+  if (href && !href.startsWith('http')) {
+    return `${isProduction ? 'https' : 'http'}://${href}`
+  }
+  return href
+}
+
+const PUBLIC_BASE_URL = appendProtocol(
+  process.env.NEXT_PUBLIC_BASE_URL ||
+    process.env.VERCEL_BRANCH_URL ||
+    process.env.VERCEL_URL ||
+    process.env.NEXT_PUBLIC_VERCEL_URL,
+)
+
+const PUBLIC_CDN_URL =
+  appendProtocol(process.env.NEXT_PUBLIC_CDN_FRONTEND_BASE_URL) ||
+  PUBLIC_BASE_URL
+
 /**
  * @type {import('next').NextConfig}
  */
 const nextConfig = {
   generateBuildId: () => buildId,
-  env: { BUILD_ID: buildId, ...unprefixedStyleguideEnvVariables },
+  env: {
+    BUILD_ID: buildId,
+    PUBLIC_BASE_URL,
+    PUBLIC_CDN_URL,
+    ...unprefixedStyleguideEnvVariables,
+  },
   transpilePackages: [
     '@project-r/styleguide',
     '@republik/nextjs-apollo-client', // Ensures ES5 compatibility to work in IE11 and older safari versions
@@ -43,10 +66,7 @@ const nextConfig = {
     return config
   },
   poweredByHeader: false,
-  assetPrefix:
-    NODE_ENV === 'production' && NEXT_PUBLIC_CDN_FRONTEND_BASE_URL
-      ? NEXT_PUBLIC_CDN_FRONTEND_BASE_URL
-      : undefined,
+  assetPrefix: isProduction ? PUBLIC_CDN_URL : undefined,
   useFileSystemPublicRoutes: true,
   // , onDemandEntries: {
   //   // wait 5 minutes before disposing entries
@@ -65,6 +85,37 @@ const nextConfig = {
             exclude: ['error', 'warn', 'info'],
           }
         : false,
+  },
+  async headers() {
+    return [
+      // Migrated from custom express server
+      {
+        source: '/:path*',
+        headers: [
+          // Security headers, peviously handled by helmet
+          ...Object.entries({
+            // 'Content-Security-Policy': `default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests`,
+            // 'Cross-Origin-Opener-Policy': 'same-origin',
+            // 'Cross-Origin-Resource-Policy': 'same-origin',
+            // 'Origin-Agent-Cluster': '?1',
+            // Preload approval for 1 year
+            'Referrer-Policy': 'no-referrer',
+            'Strict-Transport-Security': `max-age=${
+              60 * 60 * 24 * 365
+            }; includeSubDomains; preload`,
+            'X-Content-Type-Options': 'nosniff',
+            'X-Download-Options': 'noopen',
+            'X-Frame-Options': 'SAMEORIGIN',
+            // removed by helmet by default, but we keep it for now
+            'X-Powered-By': 'Republik',
+            'X-XSS-Protection': '1; mode=block',
+          }).map(([key, value]) => ({
+            key,
+            value,
+          })),
+        ],
+      },
+    ]
   },
   async rewrites() {
     return {
@@ -142,7 +193,34 @@ const nextConfig = {
         destination: '/5-jahre-republik',
         permanent: true,
       },
-    ]
+      /**
+       * Migrated from custom express server
+       * WebFinger
+       * @see https://www.rfc-editor.org/rfc/rfc7033
+       *
+       * in use for Mastodon WebFinger redirect
+       * "Translate `user@domain` mentions to actor profile URIs."
+       * @see https://docs.joinmastodon.org/spec/webfinger/
+       *
+       */
+      process.env.MASTODON_BASE_URL && {
+        source: '/.well-known/webfinger',
+        destination: process.env.MASTODON_BASE_URL + '/.well-known/webfinger',
+        permanent: false,
+      },
+      // Migrated from custom express server
+      {
+        source: '/vote',
+        destination: '/503',
+        permanent: false,
+      },
+      // Migrated from custom express server
+      {
+        source: '/updates/wer-sind-sie',
+        destination: '/503',
+        permanent: false,
+      },
+    ].filter(Boolean)
   },
   experimental: {
     largePageDataBytes: 512 * 1000, // 512KB

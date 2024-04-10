@@ -47,6 +47,9 @@ const styles = {
       fontSize: 'inherit',
     },
   }),
+  checkboxItem: css({
+    marginBlock: '1em',
+  }),
 }
 
 const ErrorContainer = ({ children }) => (
@@ -97,7 +100,7 @@ const NotificationOptions = ({
           <Fragment>
             <P>{t('account/discussionNotificationChannels/intro')}</P>
             {DISCUSSION_NOTIFICATION_CHANNELS.map((channel) => (
-              <p key={channel}>
+              <p {...styles.checkboxItem} key={channel}>
                 <Checkbox
                   disabled={!!mutatingChannel}
                   checked={discussionNotificationChannels.indexOf(channel) > -1}

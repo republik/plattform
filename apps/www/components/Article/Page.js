@@ -653,6 +653,7 @@ const ArticlePage = ({
       hasOverviewNav={hasOverviewNav}
       stickySecondaryNav={hasStickySecondaryNav}
       pageColorSchemeKey={colorSchemeKey}
+      location={meta?.template === 'article' ? 'article' : undefined}
     >
       <PageLoader
         loading={articleLoading && !articleData}
@@ -690,7 +691,6 @@ const ArticlePage = ({
           // I wouldn't show both, since it's a very big paynote,
           // and the text would be the same twice.
           // const suppressSecondPayNote = climatePaynote
-
           const payNote = (
             <PayNote
               seed={payNoteSeed}
@@ -703,7 +703,6 @@ const ArticlePage = ({
               position='before'
             />
           )
-
           const payNoteAfter =
             // !suppressSecondPayNote &&
             payNote && cloneElement(payNote, { position: 'after' })
@@ -944,6 +943,7 @@ const ArticlePage = ({
                   variables={feedQueryVariables}
                 />
               )}
+
               {me && hasActiveMembership && (
                 <ArticleRecommendationsFeed path={cleanedPath} />
               )}

@@ -107,6 +107,12 @@ export const OrderedList = ({
       start={start}
       {...attributes}
       {...(compact ? orderedListCompactStyle : styles.orderedList)}
+      style={{
+        listStyleType: 'decimal',
+        marginBlock: '1em 0',
+        paddingInlineStart: 40,
+        ...attributes?.style,
+      }}
     >
       {children}
     </ol>

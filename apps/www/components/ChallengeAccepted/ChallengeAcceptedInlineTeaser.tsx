@@ -16,8 +16,8 @@ import Image from 'next/image'
 import ChallengeAcceptedSVG from '../../public/static/challenge-accepted/challenge-accepted.svg'
 import ChallengeAcceptedSVGDark from '../../public/static/challenge-accepted/challenge-accepted_dark.svg'
 import { useRouter } from 'next/router'
-import { useTheme } from 'next-themes'
 import { IconArrowRight } from '@republik/icons'
+import { EventTrackingContext } from '@app/lib/matomo/event-tracking'
 
 const styles = {
   p: css({
@@ -28,7 +28,7 @@ const styles = {
   }),
   a: css({
     color: 'var(--color-primary)',
-    ...fontStyles.sansSerifRegular23,
+    ...fontStyles.sansSerifRegular18,
     display: 'flex',
     alignItems: 'center',
     gap: '0.5rem',
@@ -65,14 +65,25 @@ export const CAOverViewLink = () => (
   </Link>
 )
 
-export const CANewsLetterSignUp = () => (
-  <div {...css({ width: '100%' })}>
-    <h2 {...css({ ...fontStyles.sansSerifBold, fontSize: 19 })}>
-      Für den Newsletter anmelden
-    </h2>
-    <NewsletterSignUp name={NEWSLETTER_NAME} free />
-  </div>
-)
+export const CANewsLetterSignUp = () => {
+  const { asPath } = useRouter()
+  return (
+    <div {...css({ width: '100%' })}>
+      <h2
+        {...css({
+          ...fontStyles.sansSerifBold,
+          fontSize: 19,
+          marginBottom: '1rem',
+        })}
+      >
+        15’000 sind schon dabei. Jetzt für den Newsletter anmelden.
+      </h2>
+      <EventTrackingContext category='ChallengeAcceptedPayNote' name={asPath}>
+        <NewsletterSignUp name={NEWSLETTER_NAME} free />
+      </EventTrackingContext>
+    </div>
+  )
+}
 
 type CAInlineTeaserProps = {
   isMember: boolean
@@ -84,37 +95,14 @@ function CATopInlineTeaser({ isMember, isNLSubscribed }: CAInlineTeaserProps) {
     return null
   }
 
-  if (isMember) {
-    return (
-      <>
-        <CAP>
-          Die Klimakrise ist hier. Die Lage ist ernst.{' '}
-          <em>Challenge accepted</em>. Wir richten den Blick auf Menschen, die
-          in der Klimakrise einen Unterschied machen wollen. Und gehen gemeinsam
-          der Frage nach: Wie kommen wir aus dieser Krise wieder raus?
-          Neugierig, kritisch, konstruktiv. Mit Artikeln, Debatten,
-          Veranstaltungen. Sind Sie dabei?
-        </CAP>
-        <div {...styles.actionWrapper}>
-          <CANewsLetterSignUp />
-          <CAOverViewLink />
-        </div>
-      </>
-    )
-  }
-
   return (
     <>
       <CAP>
-        Die Klimakrise ist hier. Die Lage ist ernst. <em>Challenge accepted</em>
-        . Wir richten den Blick auf Menschen, die in der Klimakrise einen
-        Unterschied machen wollen. Und gehen gemeinsam der Frage nach: Wie
-        kommen wir aus dieser Krise wieder raus? Neugierig, kritisch,
-        konstruktiv. Mit Artikeln, Debatten, Veranstaltungen. Sind Sie dabei?
+        Der Newsletter für alle, die sich der Klimakrise stellen. Und gemeinsam
+        Wege aus der Krise finden wollen. Neugierig, kritisch, konstruktiv.
       </CAP>
       <div {...styles.actionWrapper}>
         <CANewsLetterSignUp />
-        <CAOverViewLink />
       </div>
     </>
   )
@@ -129,26 +117,11 @@ function CABottomInlineTeaser({
     return (
       <>
         <CAP>
-          Die Klimakrise ist hier. Die Lage ist ernst. Wir richten den Blick auf
-          Menschen, die in der Klimakrise einen Unterschied machen wollen.
+          Die Klimakrise ist hier. Die Lage ist ernst.{' '}
+          <em>Challenge accepted.</em> Alle Artikel, alle Veranstaltungen, alle
+          Newsletter auf einen Blick.
         </CAP>
         <div {...styles.actionWrapper}>
-          <CAOverViewLink />
-        </div>
-      </>
-    )
-  }
-
-  if (isMember) {
-    return (
-      <>
-        <div {...styles.actionWrapper}>
-          <CAP>
-            Die Klimakrise ist hier. Die Lage ist ernst.{' '}
-            <em>Challenge accepted</em>. Wir richten den Blick auf Menschen, die
-            in der Klimakrise einen Unterschied machen wollen.
-          </CAP>
-          <CANewsLetterSignUp />
           <CAOverViewLink />
         </div>
       </>
@@ -158,28 +131,14 @@ function CABottomInlineTeaser({
   return (
     <>
       <CAP>
-        Dieser Artikel existiert, weil über 28&apos;000 Menschen die Republik
-        mit einer Mitgliedschaft unterstützen. Wollen Sie mehr davon, und liegt
-        Ihnen ein informierter, konstruktiver Austausch über die Klimakrise am
-        Herzen?
+        Inspirierende Menschen, die in der Klimakrise einen Unterschied machen.
+        Denkanstösse und konkrete Ideen zur grossen Frage: Wie kommen wir aus
+        dieser Krise wieder raus? Veranstaltungen für den persönlichen Austausch
+        und neue Begegnungen.
       </CAP>
       <div {...styles.actionWrapper}>
-        <Button
-          primary
-          onClick={() =>
-            router.push({
-              pathname: '/angebote',
-              query: {
-                utm_medium: 'website',
-                utm_campaign: 'challenge-accepted',
-                utm_source: 'republik',
-                utm_content: 'artikel-bottom',
-              },
-            })
-          }
-        >
-          Werden Sie jetzt Mitglied
-        </Button>
+        <CANewsLetterSignUp />
+        <CAOverViewLink />
       </div>
     </>
   )
@@ -187,7 +146,6 @@ function CABottomInlineTeaser({
 
 function ChallengeAcceptedInlineTeaser(props: { position?: 'top' | 'bottom' }) {
   const { hasActiveMembership, meLoading } = useMe()
-  const { resolvedTheme } = useTheme()
 
   const { data: challengeAcceptedNLData, loading: challengeAcceptedNLLoading } =
     useQuery<CANewsterQueryResult, CANewsletterQueryVariables>(
@@ -215,6 +173,12 @@ function ChallengeAcceptedInlineTeaser(props: { position?: 'top' | 'bottom' }) {
     <div
       {...css({
         backgroundColor: 'var(--color-default)',
+        '& [data-logo-dark]': {
+          display: 'var(--color-displayDark)',
+        },
+        '& [data-logo-light]': {
+          display: 'var(--color-displayLight)',
+        },
       })}
     >
       <Center>
@@ -222,7 +186,7 @@ function ChallengeAcceptedInlineTeaser(props: { position?: 'top' | 'bottom' }) {
           style={{
             display: 'flex',
             flexDirection: 'column',
-            gap: '1rem',
+            gap: '1.5rem',
             margin: '1rem 0',
           }}
         >
@@ -231,17 +195,20 @@ function ChallengeAcceptedInlineTeaser(props: { position?: 'top' | 'bottom' }) {
             hasActiveMembership &&
             !isSubscribedToNL
           ) && (
-            <Link {...plainLinkRule} href='/challenge-accepted'>
+            <>
               <Image
-                src={
-                  resolvedTheme === 'dark'
-                    ? ChallengeAcceptedSVGDark
-                    : ChallengeAcceptedSVG
-                }
+                data-logo-light
+                src={ChallengeAcceptedSVG}
                 alt='Challenge Accepted'
                 width={150}
               />
-            </Link>
+              <Image
+                data-logo-dark
+                src={ChallengeAcceptedSVGDark}
+                alt='Challenge Accepted'
+                width={150}
+              />
+            </>
           )}
           {props.position === 'top' && (
             <CATopInlineTeaser

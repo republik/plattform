@@ -15,6 +15,7 @@ const styles = {
     ...sansSerifMedium22,
     textDecoration: 'none',
     '& svg': {
+      display: 'inline',
       width: 22,
       height: 22,
       marginLeft: 8,
@@ -34,6 +35,7 @@ const styles = {
     ...sansSerifMedium16,
     textDecoration: 'none',
     '& svg': {
+      display: 'inline',
       marginTop: -1,
       width: 16,
       height: 16,

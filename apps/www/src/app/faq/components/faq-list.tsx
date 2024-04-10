@@ -1,7 +1,10 @@
 import { nest } from 'd3-collection'
 import FAQEntry from './faq-entry'
-import { FaqEntryRecord, FaqQuery } from '@app/graphql/cms/gql/graphql'
-import { css } from '@app/styled-system/css'
+import {
+  FaqEntryRecord,
+  FaqQuery,
+} from '#graphql/cms/__generated__/gql/graphql'
+import { css } from '@republik/theme/css'
 import { StructuredText } from 'react-datocms'
 
 type FAQListProps = {
