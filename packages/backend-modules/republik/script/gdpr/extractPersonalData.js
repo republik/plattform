@@ -777,7 +777,7 @@ Promise.props({ pgdb: PgDb.connect(), elastic: Elasticsearch.connect() })
     await save(
       destination,
       'direct-newsletter-signups',
-      'Newsletter Sign-Ups, die nicht über die Republik Webseite geschehen sind, in Verbindung mit einer Ad Campaign',
+      'Newsletter Sign-Ups, die nicht über die Republik Webseite geschehen sind, sondern durch das Angeben der Email beim Klicken auf Online-Werbung für die Republik-Newsletter (z.B. auf Instagram)',
       leadTrackingResults.map((leads) => pick(leads, ['email', 'leadTag'])),
     )
 
