@@ -1,12 +1,13 @@
 import CollectionRenderer from '@app/app/challenge-accepted/components/collection-render'
 import Container from '@app/components/container'
 import { Share } from '@app/components/share/share'
-import type { PersonDetailQuery } from '@app/graphql/cms/gql/graphql'
-import { css } from '@app/styled-system/css'
-import { hstack, vstack } from '@app/styled-system/patterns'
+import type { PersonDetailQuery } from '#graphql/cms/__generated__/gql/graphql'
+import { css } from '@republik/theme/css'
+import { hstack, vstack } from '@republik/theme/patterns'
 import { IconShare } from '@republik/icons'
 import Image from 'next/image'
 import { StructuredText } from 'react-datocms'
+import { PUBLIC_BASE_URL } from 'lib/constants'
 
 type PersonDetailProps = {
   person: PersonDetailQuery['person']
@@ -131,13 +132,17 @@ export function PersonDetail({ person, isMember = false }: PersonDetailProps) {
               '& h2, & h3, & h4, & h5, & h6': {
                 fontWeight: 'bold',
               },
+              '& :where(a)': {
+                color: 'link',
+                textDecoration: 'underline',
+              },
             })}
           >
             <StructuredText data={person.bio.value} />
           </div>
           <Share
             title={`Challenge Accepted: ${person.name} | Republik`}
-            url={`${process.env.NEXT_PUBLIC_BASE_URL}/challenge-accepted/person/${person.slug}`}
+            url={`${PUBLIC_BASE_URL}/challenge-accepted/person/${person.slug}`}
             emailSubject={`Challenge Accepted: ${person.name} | Republik`}
           >
             <div

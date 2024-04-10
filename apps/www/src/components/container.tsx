@@ -1,4 +1,4 @@
-import { css } from '@app/styled-system/css'
+import { css } from '@republik/theme/css'
 
 type ContainerProps = {
   children: React.ReactNode

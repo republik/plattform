@@ -82,10 +82,9 @@ const Subnav = ({ userId, section }) => (
     <Link
       href={`/users/${userId}`}
       {...styles.navLink}
-      data-active={section === 'index'}>
-      
-        Übersicht
-      
+      data-active={section === 'index'}
+    >
+      Übersicht
     </Link>
     <Link
       href={{
@@ -95,10 +94,9 @@ const Subnav = ({ userId, section }) => (
         },
       }}
       {...styles.navLink}
-      data-active={section === 'sessions'}>
-      
-        Sessions
-      
+      data-active={section === 'sessions'}
+    >
+      Sessions
     </Link>
     <Link
       href={{
@@ -108,10 +106,9 @@ const Subnav = ({ userId, section }) => (
         },
       }}
       {...styles.navLink}
-      data-active={section === 'access-grants'}>
-      
-        Access Grants
-      
+      data-active={section === 'access-grants'}
+    >
+      Access Grants
     </Link>
     <Link
       href={{
@@ -121,10 +118,9 @@ const Subnav = ({ userId, section }) => (
         },
       }}
       {...styles.navLink}
-      data-active={section === 'mailbox'}>
-      
-        E-Mails
-      
+      data-active={section === 'mailbox'}
+    >
+      E-Mails
     </Link>
     <Link
       href={{
@@ -134,10 +130,9 @@ const Subnav = ({ userId, section }) => (
         },
       }}
       {...styles.navLink}
-      data-active={section === 'dialog'}>
-      
-        Dialog
-      
+      data-active={section === 'dialog'}
+    >
+      Dialog
     </Link>
   </div>
 )
@@ -153,8 +148,7 @@ const ProfileHeader = ({ userId, section }) => {
             error={isInitialLoading && error}
             render={() => {
               const { user } = data
-              const { activeMembership } = user
-              const { memberships } = user
+              const { activeMembership, memberships = [] } = user || {}
               const periods = memberships?.map((m) => m.periods).flat()
               const lastPeriod = getLastPeriod(periods)
 

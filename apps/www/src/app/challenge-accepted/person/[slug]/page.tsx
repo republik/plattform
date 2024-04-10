@@ -2,16 +2,17 @@ import { CANewsletterSignUp } from '@app/app/challenge-accepted/components/ca-ne
 import Container from '@app/components/container'
 import { getCMSClient } from '@app/lib/apollo/cms-client'
 import { getMe } from '@app/lib/auth/me'
-import { css } from '@app/styled-system/css'
+import { css } from '@republik/theme/css'
 import { Metadata, ResolvingMetadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { PersonDetail } from './components/person-detail'
 
 import { PersonList } from '@app/app/challenge-accepted/person/[slug]/components/person-list'
-import { vstack } from '@app/styled-system/patterns'
+import { vstack } from '@republik/theme/patterns'
 import Image from 'next/image'
-import { PersonDetailDocument } from '@app/graphql/cms/gql/graphql'
+import { PersonDetailDocument } from '#graphql/cms/__generated__/gql/graphql'
+import { EventTrackingContext } from '@app/lib/matomo/event-tracking'
 
 type PageProps = {
   params: {
@@ -40,7 +41,7 @@ export default async function Page({ params: { slug } }: PageProps) {
   const isMember =
     me?.roles && Array.isArray(me.roles) && me.roles.includes('member')
 
-  const personData: typeof data['person'] = {
+  const personData: (typeof data)['person'] = {
     ...data.person,
     items: data.person.items.map((item) => {
       if (item.__typename !== 'EventRecord') {
@@ -54,7 +55,7 @@ export default async function Page({ params: { slug } }: PageProps) {
   }
 
   return (
-    <>
+    <EventTrackingContext category='ChallengeAcceptedPersonPage' name={slug}>
       <div
         className={css({
           display: 'flex',
@@ -133,7 +134,7 @@ export default async function Page({ params: { slug } }: PageProps) {
           </section>
         </div>
       </Container>
-    </>
+    </EventTrackingContext>
   )
 }
 

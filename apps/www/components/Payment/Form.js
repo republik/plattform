@@ -136,6 +136,9 @@ const styles = {
       height: '100%',
       opacity: 0,
     },
+    '& svg': {
+      display: 'inline',
+    },
   }),
   outlineOnPrevInputFocus: css({
     display: 'inline-block',
@@ -589,37 +592,38 @@ class PaymentForm extends Component {
             </form>
           </>
         )}
-        {requireShippingAddress && !paymentMethod?.startsWith('STRIPE-WALLET') && (
-          <div style={{ marginBottom: 40 }}>
-            <Label style={{ marginBottom: 10 }}>
-              {t('pledge/address/shipping/title')}
-            </Label>
-            <AddressForm
-              {...shippingAddressState}
-              afterEdit={
-                userAddress || packageGroup === 'GIVE' ? (
-                  <>
-                    <Checkbox
-                      checked={syncAddresses}
-                      onChange={(_, checked) => {
-                        setSyncAddresses(checked)
-                      }}
-                    >
-                      {t(
-                        `pledge/address/shipping/${
-                          userAddress ? 'updateAccount' : 'setAccount'
-                        }`,
-                      )}
-                    </Checkbox>
-                    <br style={{ clear: 'left' }} />
-                  </>
-                ) : undefined
-              }
-              existingAddress={userAddress}
-              name={userName}
-            />
-          </div>
-        )}
+        {requireShippingAddress &&
+          !paymentMethod?.startsWith('STRIPE-WALLET') && (
+            <div style={{ marginBottom: 40 }}>
+              <Label style={{ marginBottom: 10 }}>
+                {t('pledge/address/shipping/title')}
+              </Label>
+              <AddressForm
+                {...shippingAddressState}
+                afterEdit={
+                  userAddress || packageGroup === 'GIVE' ? (
+                    <>
+                      <Checkbox
+                        checked={syncAddresses}
+                        onChange={(_, checked) => {
+                          setSyncAddresses(checked)
+                        }}
+                      >
+                        {t(
+                          `pledge/address/shipping/${
+                            userAddress ? 'updateAccount' : 'setAccount'
+                          }`,
+                        )}
+                      </Checkbox>
+                      <br style={{ clear: 'left' }} />
+                    </>
+                  ) : undefined
+                }
+                existingAddress={userAddress}
+                name={userName}
+              />
+            </div>
+          )}
       </div>
     )
   }

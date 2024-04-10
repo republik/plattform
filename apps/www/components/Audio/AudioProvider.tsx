@@ -13,11 +13,10 @@ import createPersistedState from '../../lib/hooks/use-persisted-state'
 import { useInNativeApp, postMessage } from '../../lib/withInNativeApp'
 
 import { useMediaProgress } from './MediaProgress'
-import { AudioPlayerItem } from './types/AudioPlayerItem'
+import { AudioPlayerItem, AudioQueueItem } from './types/AudioPlayerItem'
 import useAudioQueue from './hooks/useAudioQueue'
 import EventEmitter from 'events'
 import { AudioPlayerLocations } from './types/AudioActionTracking'
-import { AudioQueueItem } from './graphql/AudioQueueHooks'
 
 export enum AudioContextEvent {
   TOGGLE_PLAYER = 'togglePlayer',
@@ -237,7 +236,8 @@ const AudioProvider = ({ children }) => {
         setIsExpanded,
         isPlaying,
         setIsPlaying,
-        autoPlayActive: autoPlayAudioPlayerItem === activePlayerItem,
+        autoPlayActive:
+          autoPlayAudioPlayerItem?.id === activePlayerItem?.document.id,
         toggleAudioPlayer,
         toggleAudioPlayback,
         checkIfActivePlayerItem,

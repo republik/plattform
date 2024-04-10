@@ -1,5 +1,4 @@
 export { renderMdast } from './render'
-export { renderEmail, Mso } from './email'
 export {
   matchHeading,
   matchImage,

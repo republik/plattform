@@ -1,4 +1,4 @@
-import { AudioQueueItem } from '../graphql/AudioQueueHooks'
+import { AudioQueueItem } from '../types/AudioPlayerItem'
 
 function hasQueueChanged(
   previous: AudioQueueItem[] | undefined,

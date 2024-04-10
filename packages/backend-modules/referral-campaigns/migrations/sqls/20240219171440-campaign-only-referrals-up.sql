@@ -1,0 +1,3 @@
+-- migrate up here: CREATE TABLE...
+ALTER TABLE "public"."referrals" ALTER COLUMN "referrerId" DROP NOT NULL;
+ALTER TABLE "public"."referrals" ALTER COLUMN "campaignId" SET NOT NULL;

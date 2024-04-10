@@ -1,5 +1,5 @@
 'use client'
-import { css } from '@app/styled-system/css'
+import { css } from '@republik/theme/css'
 import useResizeObserver from 'use-resize-observer'
 
 import { useMemo, useEffect, useRef } from 'react'
@@ -15,7 +15,7 @@ import {
 import { select } from 'd3-selection'
 import d3ForceLimit from 'd3-force-limit'
 import { useRouter } from 'next/navigation'
-import { ChallengeAcceptedPersonListQuery } from '@app/graphql/cms/gql/graphql'
+import { ChallengeAcceptedPersonListQuery } from '#graphql/cms/__generated__/gql/graphql'
 
 const RADIUS_LARGE = 110
 const RADIUS_MEDIUM = 75

@@ -302,6 +302,11 @@ const Footer = ({ t, me, signOut, isOnMarketingPage, hasActiveMembership }) => {
                 </FooterNavLink>
               </li>
               <li>
+                <FooterNavLink href='/format/genossenschaftsrat'>
+                  <a {...navLinkStyle}>{t('nav/genossenschaftsrat')}</a>
+                </FooterNavLink>
+              </li>
+              <li>
                 <FooterNavLink href='/komplizin'>
                   <a {...navLinkStyle}>Komplizen</a>
                 </FooterNavLink>
@@ -355,7 +360,11 @@ const Footer = ({ t, me, signOut, isOnMarketingPage, hasActiveMembership }) => {
               {...colorScheme.set('color', 'text')}
             >
               <IconOpensource
-                style={{ margin: '0 6px 5px 0', verticalAlign: 'middle' }}
+                style={{
+                  margin: '0 6px 5px 0',
+                  verticalAlign: 'middle',
+                  display: 'inline',
+                }}
                 size={20}
                 {...colorScheme.set('fill', 'text')}
               />
