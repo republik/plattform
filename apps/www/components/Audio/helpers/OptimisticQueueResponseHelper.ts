@@ -1,17 +1,13 @@
-import {
-  AddAudioQueueItemMutationData,
-  AudioQueueItem,
-  MoveAudioQueueItemMutationData,
-} from '../graphql/AudioQueueHooks'
+import { MoveAudioQueueItemMutation } from '#graphql/republik-api/__generated__/gql/graphql'
 import { isDev } from '../../../lib/constants'
-import { AudioPlayerItem } from '../types/AudioPlayerItem'
+import { AudioQueueItem } from '../types/AudioPlayerItem'
 
 const OptimisticQueueResponseHelper = {
   makeMoveQueueItemResponse: (
-    queue: AudioQueueItem[],
+    queue: readonly AudioQueueItem[],
     movedItemId: string,
     newPosition: number,
-  ): MoveAudioQueueItemMutationData | undefined => {
+  ): MoveAudioQueueItemMutation | undefined => {
     const currentIndexOfMovedItem = queue.findIndex(
       (item) => item.id === movedItemId,
     )
