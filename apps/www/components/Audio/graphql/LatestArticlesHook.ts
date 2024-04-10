@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client'
-import { AudioQueueItem } from './AudioQueueHooks'
 import { makeQueryHook } from '../../../lib/helpers/AbstractApolloGQLHooks.helper'
+import { AudioQueueItem } from '../types/AudioPlayerItem'
 
 const LATEST_ARTICLE_QUERIES = gql`
   query LatestArticles($count: Int!, $after: String) {

@@ -16,7 +16,6 @@ import CurrentlyPlaying from './ui/CurrentlyPlaying'
 import Queue from './ui/tabs/queue/Queue'
 import AudioControl, { AudioControlProps } from './controls/AudioControl'
 import LatestArticles from './ui/tabs/latest/LatestArticles'
-import { AudioQueueItem } from '../graphql/AudioQueueHooks'
 import AudioError from './ui/AudioError'
 import { useUserAgent } from '../../../lib/context/UserAgentContext'
 import downloadAudioSourceFile from '../helpers/DownloadAudioSource'
@@ -26,6 +25,7 @@ import {
   AudioPlayerActions,
 } from '../types/AudioActionTracking'
 import { IconExpandMore } from '@republik/icons'
+import { AudioQueueItem } from '../types/AudioPlayerItem'
 
 const styles = {
   root: css({

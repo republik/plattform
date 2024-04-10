@@ -1,9 +1,10 @@
 import { CMSItemStatus } from '@app/components/cms/item-status'
 import { Share } from '@app/components/share/share'
-import { formatEventDateRange } from '@app/lib/util/time-format'
-import { css } from '@app/styled-system/css'
-import { hstack, vstack } from '@app/styled-system/patterns'
+import { formatEventDateRange, isFutureEvent } from '@app/lib/util/time-format'
+import { css } from '@republik/theme/css'
+import { hstack, vstack } from '@republik/theme/patterns'
 import { IconCalendar, IconShare } from '@republik/icons'
+import { PUBLIC_BASE_URL } from 'lib/constants'
 import Link from 'next/link'
 import { ComponentPropsWithoutRef } from 'react'
 import { StructuredText } from 'react-datocms'
@@ -33,6 +34,8 @@ type EventProps = {
 }
 
 export const EventTeaser = ({ isPage, isMember, event }: EventProps) => {
+  const isActive = isFutureEvent(event.startAt, event.endAt)
+
   return (
     <div
       className={css({
@@ -47,13 +50,17 @@ export const EventTeaser = ({ isPage, isMember, event }: EventProps) => {
           '&::before': { content: '"–"', position: 'absolute', left: '0' },
         },
         '& ol': { listStyleType: 'decimal', pl: '6' },
-        '& h3, & h4, & h5, & h6': {
+        '& h3, & h4, & h5, & h6, & p > strong': {
           fontWeight: 'medium',
         },
         '& a': {
           color: 'text',
           _hover: { color: 'textSoft' },
         },
+        '& :where(p a)': {
+          textDecoration: 'underline',
+        },
+        '& em': { fontStyle: 'italic' },
       })}
     >
       <div
@@ -82,10 +89,12 @@ export const EventTeaser = ({ isPage, isMember, event }: EventProps) => {
               textStyle: 'h1Sans',
               fontSize: { base: '3xl', md: '4xl' },
               mt: '-0.1lh',
-              '& a': { textDecoration: 'none' },
             })}
           >
-            <Link href={`/veranstaltungen/${event.slug}`}>
+            <Link
+              className={css({ textDecoration: 'none' })}
+              href={`/veranstaltungen/${event.slug}`}
+            >
               {event.title} <CMSItemStatus status={event._status} />
             </Link>
           </h2>
@@ -101,8 +110,12 @@ export const EventTeaser = ({ isPage, isMember, event }: EventProps) => {
               fontSize: 's',
               color: 'textSoft',
             },
+
             '& dd': {
               fontWeight: 'medium',
+              '& a': {
+                textDecoration: 'underline',
+              },
             },
           })}
         >
@@ -125,45 +138,48 @@ export const EventTeaser = ({ isPage, isMember, event }: EventProps) => {
         </dl>
 
         <StructuredText data={event.description.value} />
-        {event.fullyBooked ? (
-          <p
-            className={css({
-              fontStyle: 'italic',
-            })}
-          >
-            Die Veranstaltung ist ausgebucht.
-          </p>
-        ) : (
-          <>
-            {event.membersOnly && !isMember ? (
-              <>
-                {event.nonMemberCta && (
-                  <div
-                    className={vstack({
-                      gap: '4',
-                      alignItems: 'flex-start',
-                      fontStyle: 'italic',
-                    })}
-                  >
-                    <StructuredText data={event.nonMemberCta.value} />
-                  </div>
-                )}
-              </>
-            ) : (
-              <>
-                {event.signUpLink && (
-                  <Link target='_blank' href={event.signUpLink}>
-                    Zur Anmeldung
-                  </Link>
-                )}
-              </>
-            )}
-          </>
-        )}
+
+        {isActive &&
+          (event.fullyBooked ? (
+            <p
+              className={css({
+                fontStyle: 'italic',
+              })}
+            >
+              Die Veranstaltung ist ausgebucht.
+            </p>
+          ) : (
+            <>
+              {event.membersOnly && !isMember ? (
+                <>
+                  {event.nonMemberCta && (
+                    <div
+                      className={vstack({
+                        gap: '4',
+                        alignItems: 'flex-start',
+                        fontStyle: 'italic',
+                      })}
+                    >
+                      <StructuredText data={event.nonMemberCta.value} />
+                    </div>
+                  )}
+                </>
+              ) : (
+                <>
+                  {event.signUpLink && (
+                    <Link target='_blank' href={event.signUpLink}>
+                      Zur Anmeldung
+                    </Link>
+                  )}
+                </>
+              )}
+            </>
+          ))}
+
         <div className={hstack({ gap: '4', mt: '2' })}>
           <Share
             title={event.title}
-            url={`${process.env.NEXT_PUBLIC_BASE_URL}/veranstaltungen/${event.slug}`}
+            url={`${PUBLIC_BASE_URL}/veranstaltungen/${event.slug}`}
             emailSubject={`Republik: ${event.title}`}
           >
             <div

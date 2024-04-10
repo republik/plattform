@@ -10,7 +10,7 @@ import {
 } from '@project-r/styleguide'
 import Link from 'next/link'
 import { useTranslation } from '../../lib/withT'
-import { MarketingLandingPageCmsQuery } from '@app/graphql/cms/gql/graphql'
+import { MarketingLandingPageCmsQuery } from '#graphql/cms/__generated__/gql/graphql'
 
 type ReasonsProps = {
   inNativeApp: boolean
@@ -55,6 +55,7 @@ const Reasons = ({ inNativeApp, reasons }: ReasonsProps) => {
 const styles = {
   title: css({
     ...fontStyles.sansSerifMedium24,
+    marginBlock: '0.8em',
   }),
   buttons: css({
     display: 'flex',

@@ -1,0 +1,130 @@
+fragment AudioQueueItem on AudioQueueItem {
+  id
+  sequence
+  document {
+    id
+    meta {
+      title
+      path
+      publishDate
+      image
+      audioCoverCrop {
+        x
+        y
+        width
+        height
+      }
+      coverForNativeApp: audioCover(properties: { width: 1024, height: 1024 })
+      coverMd: audioCover(properties: { width: 256, height: 256 })
+      coverSm: audioCover(properties: { width: 128, height: 128 })
+      audioSource {
+        mediaId
+        kind
+        mp3
+        aac
+        ogg
+        durationMs
+        userProgress {
+          id
+          secs
+        }
+      }
+      format {
+        id
+        meta {
+          title
+          color
+          shareLogo
+          shareBackgroundImage
+          shareBackgroundImageInverted
+        }
+      }
+    }
+  }
+}
+
+query AudioQueueQuery {
+  me {
+    id
+    audioQueue {
+      ...AudioQueueItem
+    }
+  }
+}
+
+mutation AddAudioQueueItems($entity: AudioQueueEntityInput!, $sequence: Int) {
+  audioQueueItems: addAudioQueueItem(entity: $entity, sequence: $sequence) {
+    ...AudioQueueItem
+  }
+}
+
+mutation MoveAudioQueueItem($id: ID!, $sequence: Int!) {
+  audioQueueItems: moveAudioQueueItem(id: $id, sequence: $sequence) {
+    ...AudioQueueItem
+  }
+}
+
+mutation RemoveAudioQueueItem($id: ID!) {
+  audioQueueItems: removeAudioQueueItem(id: $id) {
+    ...AudioQueueItem
+  }
+}
+
+mutation ClearAudioQueue {
+  audioQueueItems: clearAudioQueue {
+    id
+  }
+}
+
+mutation ReorderAudioQueue($ids: [ID!]!) {
+  audioQueueItems: reorderAudioQueue(ids: $ids) {
+    ...AudioQueueItem
+  }
+}
+
+query LatestArticles($count: Int!, $after: String) {
+  latestArticles: documents(first: $count, after: $after) {
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+    nodes {
+      id
+      meta {
+        title
+        path
+        publishDate
+        image
+        audioCoverCrop {
+          x
+          y
+          width
+          height
+        }
+        coverSm: audioCover(properties: { width: 128, height: 128 })
+        audioSource {
+          mediaId
+          kind
+          mp3
+          aac
+          ogg
+          durationMs
+          userProgress {
+            id
+            secs
+          }
+        }
+        format {
+          id
+          meta {
+            title
+            color
+            shareLogo
+            shareBackgroundImage
+            shareBackgroundImageInverted
+          }
+        }
+      }
+    }
+  }
+}

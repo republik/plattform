@@ -1,5 +1,30 @@
 {
   "extends": "@republik/tsconfig/nextjs.json",
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules"]
+  "compilerOptions": {
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "target": "ES2020",
+    "strictNullChecks": false,
+    "baseUrl": ".",
+    "paths": {
+      "@app/*": [
+        "./src/*"
+      ],
+      "#graphql/*": [
+        "./graphql/*"
+      ],
+    }
+  },
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }

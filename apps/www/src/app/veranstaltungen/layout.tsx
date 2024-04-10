@@ -1,6 +1,6 @@
 import Container from '@app/components/container'
 import { PageLayout } from '@app/components/layout'
-import { css } from '@app/styled-system/css'
+import { css } from '@republik/theme/css'
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
@@ -9,6 +9,8 @@ export const metadata: Metadata = {
     template: '%s – Veranstaltungen – Republik',
   },
 }
+
+export const revalidate = 60 // revalidate all event pages every minute
 
 export default async function Layout(props: { children: React.ReactNode }) {
   return (

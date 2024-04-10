@@ -86,7 +86,9 @@ export default class MyDocument extends Document {
               ].join('\n'),
             }}
           />
-          {css ? <style dangerouslySetInnerHTML={{ __html: css }} /> : null}
+          {css ? (
+            <style data-glamor-ssr dangerouslySetInnerHTML={{ __html: css }} />
+          ) : null}
           <meta name='author' content='Republik' />
           <link
             rel='apple-touch-icon'

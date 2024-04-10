@@ -1,8 +1,8 @@
-import { FaqDocument } from '@app/graphql/cms/gql/graphql'
+import { FaqDocument } from '#graphql/cms/__generated__/gql/graphql'
 import { getCMSClient } from '@app/lib/apollo/cms-client'
 import Container from '@app/components/container'
 import { PageLayout } from '@app/components/layout'
-import { css } from '@app/styled-system/css'
+import { css } from '@republik/theme/css'
 import FAQList from './components/faq-list'
 
 export default async function FAQPage() {

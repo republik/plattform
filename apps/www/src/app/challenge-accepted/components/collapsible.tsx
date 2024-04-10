@@ -1,6 +1,6 @@
 'use client'
 
-import { css } from '@app/styled-system/css'
+import { css } from '@republik/theme/css'
 import * as RadixCollapsible from '@radix-ui/react-collapsible'
 import { useState } from 'react'
 

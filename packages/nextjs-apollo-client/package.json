@@ -23,7 +23,7 @@
     "@types/react-dom": "^18.2.7",
     "cross-fetch": "^3.1.5",
     "graphql": "^15.3.0",
-    "next": "^14.0.4",
+    "next": "^14.1.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "rimraf": "^3.0.2",
@@ -33,7 +33,7 @@
   "peerDependencies": {
     "@apollo/client": "~3.8.4",
     "graphql": "^15.3.0",
-    "next": "^14.0.4",
+    "next": "^14.1.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "uuid": "^3.4.0"

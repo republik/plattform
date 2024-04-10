@@ -1,23 +1,16 @@
 Guten Tag
 
-{{#if waiting_for_payment}}
-
-Wir sind Ihnen sehr dankbar für Ihren grosszügigen Beitrag. Da er CHF 1000
-übersteigt, können Ihr Abonnement und Ihr Zugang erst nach Zahlungseingang
-aktiviert werden. Sie erhalten eine Bestätigung, wenn Ihre Überweisung bei uns
-eingetroffen ist.
-
-{{else if pledger_memberships_active_monthly}}
+{{#if pledger_memberships_active_monthly}}
 
 Mit Ihrem Monats-Abo haben Sie die Republik bereits kennengelernt. Dass Sie sich
 nun entschieden haben, uns längerfristig zu unterstützen, freut und ehrt uns.
-Herzlichen Dank für Ihr Vertrauen.
+Herzlichen Dank für Ihr Vertrauen!
 
 Wir werden Ihr neues Abo automatisch aktivieren, sobald die aktuelle Periode
 Ihres Monats-Abos ausgelaufen ist. So können Sie dann nahtlos weiterlesen (oder
 -hören).
 
-Mit dem Mitstreiterinnen-Abo erhalten Sie weiterhin von Montag bis Samstag ein
+Mit Ihrem neuen Jahresabo erhalten Sie weiterhin von Montag bis Samstag ein
 hochwertiges digitales Magazin. Und Sie sorgen dafür, dass unabhängiger
 Journalismus eine Zukunft hat.
 
@@ -27,25 +20,14 @@ Herzlich willkommen! Wir freuen uns sehr, Sie bei der Republik begrüssen zu
 dürfen, und bedanken uns für Ihre Unterstützung: Mit Ihrem Beitrag machen Sie
 unabhängigen Journalismus möglich.
 
-Und hier gleich das Wichtigste zum Start in der Übersicht:
+Wenn Sie zum ersten Mal hier sind, dann zeigen wir Ihnen in den kommenden Tagen
+Schritt für Schritt, wer wir sind und wie Sie das meiste aus Ihrem Abonnement
+herausholen können. Falls Sie jetzt schon eine Frage haben oder Unterstützung
+wünschen: In der Gebrauchsanleitung {{link_manual}} haben wir die einzelnen
+Schritte zur Nutzung unseres Magazins ausgeführt (und bebildert). Bei allen
+weiteren Anliegen melden Sie sich gerne direkt via kontakt@republik.ch bei uns.
 
- * Lesen und hören Sie die Republik: Unser Magazin erscheint von Montag bis
-   Samstag mit täglich ein bis drei neuen Beiträgen. In der Republik-App
-   {{link_app}} , auf der Website {{frontend_base_url}} und als Newsletter –
-   welche Newsletter und Benachrichtigungen Sie von uns erhalten, legen Sie in
-   Ihrem Konto {{link_account}} fest.
- * Diskutieren Sie mit anderen Leserinnen und der Redaktion! Auf der
-   Dialog-Seite {{link_dialog}} sehen Sie, was aktuell bei der Republik zu reden
-   gibt, in der Etikette {{link_etikette}} finden Sie unsere Grundsätze für
-   einen höflichen Dialog.
- * Lernen Sie unsere Crew kennen: Wir sind Ihr Team {{link_imprint}} .
-
-Haben Sie Fragen oder brauchen Sie Unterstützung? In der Gebrauchsanleitung
-{{link_manual}} haben wir die einzelnen Schritte zur Nutzung unseres Magazins
-ausgeführt (und bebildert). Bei allen weiteren Anliegen melden Sie sich gerne
-direkt via kontakt@republik.ch bei uns.
-
-Und nun wünschen wir Ihnen viel Freude mit der Republik.
+Und nun wünschen wir Ihnen viel Freude mit der Republik {{frontend_base_url}} .
 
 {{/if}}
 
@@ -74,7 +56,9 @@ innerhalb von 7 Werktagen. {{/if}}{{#if goodies_has_mask}}Republik-Masken
 liefern wir Ihnen innerhalb von 7 Werktagen. {{/if}}{{/unless}}{{#if
 goodies_has_fondue}}Republik-Fondues werden am 26. Januar 2022 verschickt.
 {{/if}}{{#if goodies_has_mug}}Republik-Tassen liefern wir Ihnen innerhalb von 10
-Werktagen. {{/if}}
+Werktagen. {{/if}} {{#if goodies_has_cookie}} Der Versand der
+Republik-Guetsliformen erfolgt bis 22. Dezember. {{/if}}{{#if
+goodies_has_totebag_black}}Schwarze Taschen liefern wir im April. {{/if}}
 
 {{/if}} {{#if paymentslip}}
 

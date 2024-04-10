@@ -3,11 +3,11 @@ import { css } from 'glamor'
 import { dateFormatter, formatMinutes } from '../../../shared'
 import AudioPlayerTitle from '../../AudioPlayerTitle'
 import AudioCover from '../../AudioCover'
-import { AudioQueueItem } from '../../../../graphql/AudioQueueHooks'
 import { useInNativeApp } from '../../../../../../lib/withInNativeApp'
 import { ReactNode } from 'react'
 import useMediaProgressQuery from '../../../../hooks/useMediaProgressQuery'
 import AudioCalloutMenu, { AudioListItemAction } from './AudioCalloutMenu'
+import { AudioQueueItem } from 'components/Audio/types/AudioPlayerItem'
 
 const styles = {
   root: css({

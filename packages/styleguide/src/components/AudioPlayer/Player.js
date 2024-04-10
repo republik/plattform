@@ -23,7 +23,14 @@ import {
   DefaultLink,
   progressbarStyle,
 } from './constants'
-import { IconClose, IconDownload, IconForward, IconPause, IconPlay, IconReplay } from '@republik/icons'
+import {
+  IconClose,
+  IconDownload,
+  IconForward,
+  IconPause,
+  IconPlay,
+  IconReplay,
+} from '@republik/icons'
 
 const CONTROLS_HEIGHT = 25
 const ICON_SPACING = 8
@@ -58,7 +65,7 @@ const styles = {
     '::-webkit-media-controls-panel': {
       display: 'none !important',
     },
-    '::--webkit-media-controls-play-button': {
+    '::-webkit-media-controls-play-button': {
       display: 'none !important',
     },
     '::-webkit-media-controls-start-playback-button': {
@@ -594,7 +601,7 @@ class AudioPlayer extends Component {
                   )}
                 />
               ) : (
-                  <IconPlay
+                <IconPlay
                   size={SIZE.play}
                   {...colorScheme.set(
                     'fill',

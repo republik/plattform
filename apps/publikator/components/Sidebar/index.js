@@ -10,7 +10,7 @@ const styles = {
     position: 'fixed',
     top: HEADER_HEIGHT,
     width: SIDEBAR_WIDTH,
-    right: -SIDEBAR_WIDTH,
+    right: -SIDEBAR_WIDTH * 1.1,
     transition: 'right 0.2s ease',
     '&.open': {
       right: 0,

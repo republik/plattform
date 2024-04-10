@@ -1,8 +1,8 @@
 'use client'
 import { useRouter } from 'next/navigation'
 
-import { css } from '@app/styled-system/css'
-import { wrap } from '@app/styled-system/patterns'
+import { css } from '@republik/theme/css'
+import { wrap } from '@republik/theme/patterns'
 import * as ToggleGroup from '@radix-ui/react-toggle-group'
 
 const itemStyle = css({
