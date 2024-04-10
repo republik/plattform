@@ -2,8 +2,8 @@ import CollectionRenderer from '@app/app/challenge-accepted/components/collectio
 import Container from '@app/components/container'
 import { Share } from '@app/components/share/share'
 import type { PersonDetailQuery } from '#graphql/cms/__generated__/gql/graphql'
-import { css } from '@app/styled-system/css'
-import { hstack, vstack } from '@app/styled-system/patterns'
+import { css } from '@republik/theme/css'
+import { hstack, vstack } from '@republik/theme/patterns'
 import { IconShare } from '@republik/icons'
 import Image from 'next/image'
 import { StructuredText } from 'react-datocms'
@@ -131,6 +131,10 @@ export function PersonDetail({ person, isMember = false }: PersonDetailProps) {
               '& ol': { listStyleType: 'decimal', pl: '6' },
               '& h2, & h3, & h4, & h5, & h6': {
                 fontWeight: 'bold',
+              },
+              '& :where(a)': {
+                color: 'link',
+                textDecoration: 'underline',
               },
             })}
           >

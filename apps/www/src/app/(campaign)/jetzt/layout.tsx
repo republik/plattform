@@ -1,10 +1,11 @@
+import { getCampaignReferralsData } from '@app/app/(campaign)/campaign-data'
 import { CampaignLogo } from '@app/app/(campaign)/components/campaign-logo'
 import { UNELIGIBLE_RECEIVER_MEMBERSHIPS } from '@app/app/(campaign)/constants'
 import Container from '@app/components/container'
 import { PageLayout } from '@app/components/layout'
 import { getMe } from '@app/lib/auth/me'
 import { EventTrackingContext } from '@app/lib/matomo/event-tracking'
-import { css } from '@app/styled-system/css'
+import { css } from '@republik/theme/css'
 import { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 import { ReactNode } from 'react'
@@ -20,7 +21,16 @@ export default async function CampaignLayout({
 }: {
   children: ReactNode
 }) {
-  const me = await getMe()
+  const [me, { campaign }] = await Promise.all([
+    getMe(),
+    getCampaignReferralsData(),
+  ])
+
+  // Redirect to campaign over page
+  if (!campaign?.isActive) {
+    return redirect('/jetzt-vorbei')
+  }
+
   // User is logged in but has some kind of yearly subscription
   const meIsEligible = !UNELIGIBLE_RECEIVER_MEMBERSHIPS.includes(
     me?.activeMembership?.type.name,

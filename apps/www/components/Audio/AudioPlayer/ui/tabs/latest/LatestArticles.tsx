@@ -4,11 +4,11 @@ import { A, Spinner } from '@project-r/styleguide'
 import NoAccess from '../shared/NoAccess'
 import { useLatestArticlesQuery } from '../../../../graphql/LatestArticlesHook'
 import { useTranslation } from '../../../../../../lib/withT'
-import { AudioQueueItem } from '../../../../graphql/AudioQueueHooks'
 import LoadingPlaceholder from '../shared/LoadingPlaceholder'
 import FilterButton from './FilterButton'
 import { useMe } from '../../../../../../lib/context/MeContext'
 import LatestArticleItem from './LatestArticleItem'
+import { AudioQueueItem } from 'components/Audio/types/AudioPlayerItem'
 
 const styles = {
   root: css({

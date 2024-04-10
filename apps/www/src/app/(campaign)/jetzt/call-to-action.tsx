@@ -1,6 +1,6 @@
 'use client'
 import { Logo } from '@app/app/(campaign)/components/logo'
-import { css } from '@app/styled-system/css'
+import { css } from '@republik/theme/css'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 

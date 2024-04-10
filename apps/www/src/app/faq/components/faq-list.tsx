@@ -4,7 +4,7 @@ import {
   FaqEntryRecord,
   FaqQuery,
 } from '#graphql/cms/__generated__/gql/graphql'
-import { css } from '@app/styled-system/css'
+import { css } from '@republik/theme/css'
 import { StructuredText } from 'react-datocms'
 
 type FAQListProps = {

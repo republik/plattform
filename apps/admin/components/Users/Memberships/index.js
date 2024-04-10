@@ -442,9 +442,9 @@ const Index = ({ userId }) => {
             loading={isInitialLoading}
             error={isInitialLoading && error}
             render={() => {
-              const {
-                user: { memberships },
-              } = data
+              const { user } = data
+              const { memberships = [] } = user || {}
+
               return (
                 <Section>
                   <SectionTitle>Memberships</SectionTitle>

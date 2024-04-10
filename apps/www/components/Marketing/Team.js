@@ -75,6 +75,7 @@ const styles = {
   pitch: css({
     ...fontStyles.serifTitle26,
     wordWrap: 'break-word',
+    marginBlock: '1em',
   }),
   employee: css({
     display: 'flex',

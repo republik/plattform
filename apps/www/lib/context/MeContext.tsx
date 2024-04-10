@@ -24,49 +24,49 @@ const IS_CLIMATELAB_MEMBER_STORAGE_KEY = 'me.isClimatelabMember'
 const CLIMATELAB_ONLY_ITEM_ATTRIBUTE = 'data-climatelab-only'
 
 // Rule to hide elements while a statically generated page is fetching the active-user
-css.global(`[${ME_PORTRAIT_ATTRIBUTE}="true"] [data-hide-if-me="true"]`, {
-  display: 'none',
+css.global(`:root[${ME_PORTRAIT_ATTRIBUTE}="true"] [data-hide-if-me="true"]`, {
+  display: 'none !important',
 })
 
-css.global('[data-show-if-me="true"]', {
-  display: 'none',
+css.global(':root [data-show-if-me="true"]', {
+  display: 'none !important',
 })
 
-css.global(`[${ME_PORTRAIT_ATTRIBUTE}="true"] [data-show-if-me="true"]`, {
-  display: 'block',
+css.global(`:root[${ME_PORTRAIT_ATTRIBUTE}="true"] [data-show-if-me="true"]`, {
+  display: 'block !important',
 })
 
 css.global(
-  `[${HAS_ACTIVE_MEMBERSHIP_ATTRIBUTE}="true"] [data-hide-if-active-membership="true"]`,
+  `:root[${HAS_ACTIVE_MEMBERSHIP_ATTRIBUTE}="true"] [data-hide-if-active-membership="true"]`,
   {
-    display: 'none',
+    display: 'none !important',
   },
 )
 
-css.global('[data-show-if-active-membership="true"]', {
-  display: 'none',
+css.global(':root [data-show-if-active-membership="true"]', {
+  display: 'none !important',
 })
 
 css.global(
-  `[${HAS_ACTIVE_MEMBERSHIP_ATTRIBUTE}="true"] [data-show-if-active-membership="true"]`,
+  `:root[${HAS_ACTIVE_MEMBERSHIP_ATTRIBUTE}="true"] [data-show-if-active-membership="true"]`,
   {
-    display: 'block',
+    display: 'block !important',
   },
 )
 
 // Climate-lab global styles
 
 css.global(
-  `[${IS_CLIMATELAB_MEMBER_ATTRIBUTE}="true"] [${CLIMATELAB_ONLY_ITEM_ATTRIBUTE}="true"]`,
+  `:root[${IS_CLIMATELAB_MEMBER_ATTRIBUTE}="true"] [${CLIMATELAB_ONLY_ITEM_ATTRIBUTE}="true"]`,
   {
-    display: 'block',
+    display: 'block !important',
   },
 )
 
 // Hide climate-lab only items for non-climate-lab members
 
-css.global(`[${CLIMATELAB_ONLY_ITEM_ATTRIBUTE}="true"]`, {
-  display: 'none',
+css.global(`:root [${CLIMATELAB_ONLY_ITEM_ATTRIBUTE}="true"]`, {
+  display: 'none !important',
 })
 
 export type MeObjectType = {

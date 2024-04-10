@@ -40,9 +40,12 @@ const styles = {
     padding: 15,
   }),
   more: css({
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    gap: '10px',
     backgroundColor: colors.negative.containerBg,
     color: colors.negative.text,
-    textAlign: 'center',
     padding: '20px 0',
   }),
 }
@@ -226,15 +229,13 @@ const Front = ({
           const end = (hasMore || finite) && (
             <div {...styles.more}>
               {finite && (
-                <div style={{ marginBottom: 10 }}>
-                  <IconCheckCircle size={32} style={{ marginBottom: 10 }} />
-                  <br />
+                <>
+                  <IconCheckCircle size={32} />
                   {t('front/finite')}
-                  <br />
-                </div>
+                </>
               )}
               {finite && (
-                <div style={{ marginBottom: 10 }}>
+                <div>
                   <Link href='/feed' passHref legacyBehavior>
                     <Editorial.A style={{ color: colors.negative.text }}>
                       {t('front/finite/feed')}
@@ -242,7 +243,7 @@ const Front = ({
                   </Link>
                 </div>
               )}
-              <div style={{ marginBottom: 10 }}>
+              <div>
                 {loadingMoreError && <ErrorMessage error={loadingMoreError} />}
                 {loadingMore && <InlineSpinner />}
                 {!infiniteScroll && hasMore && (
@@ -263,7 +264,7 @@ const Front = ({
                 )}
               </div>
               {front.meta.path === '/' && (
-                <div style={{ marginBottom: 10 }}>
+                <div>
                   {t.elements('front/chronology', {
                     years: intersperse(
                       archivedYears.map((year) => (

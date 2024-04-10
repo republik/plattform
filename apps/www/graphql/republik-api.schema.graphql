@@ -344,10 +344,11 @@ type CallToActionCustomComponent {
 union CallToActionPayload = CallToActionBasicPayload | CallToActionComponentPayload
 
 type Campaign {
-  beginDate: Date!
+  beginDate: DateTime!
   description: String
-  endDate: Date!
+  endDate: DateTime!
   id: ID!
+  isActive: Boolean!
   name: String!
   referrals: Referrals!
   slug: String!
@@ -3006,6 +3007,9 @@ type mutations {
 
   """Destroy repo file"""
   repoFileDestroy(id: ID!): RepoFile!
+
+  """Make repo file private"""
+  repoFileMakePrivate(id: ID!): RepoFile!
 
   """Make repo file public"""
   repoFileMakePublic(id: ID!): RepoFile!

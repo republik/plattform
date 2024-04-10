@@ -8,8 +8,8 @@ import CollectionRenderer from '@app/app/challenge-accepted/components/collectio
 import Container from '@app/components/container'
 import { getCMSClient } from '@app/lib/apollo/cms-client'
 import { getMe } from '@app/lib/auth/me'
-import { css } from '@app/styled-system/css'
-import { hstack, vstack } from '@app/styled-system/patterns'
+import { css } from '@republik/theme/css'
+import { hstack, vstack } from '@republik/theme/patterns'
 import Image from 'next/image'
 import { StructuredText } from 'react-datocms'
 import { Share } from '@app/components/share/share'
@@ -195,6 +195,10 @@ export default async function Page({ searchParams }) {
               '& ol': { listStyleType: 'decimal', pl: '6' },
               '& h2, & h3, & h4, & h5, & h6': {
                 fontWeight: 'bold',
+              },
+              '& p a': {
+                color: 'link',
+                textDecoration: 'underline',
               },
             })}
           >
